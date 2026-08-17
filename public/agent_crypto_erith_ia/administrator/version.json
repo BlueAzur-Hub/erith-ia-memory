@@ -1,27 +1,54 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.4.4R1 · ADMINISTRATOR MIRROR · MARKET MEMORY SINGLE TRUTH COUNTERS LOCK",
-  "build": "39.4.4R1",
-  "asset_token": "market-core-v2.0-alpha-build-39.4.4R1",
-  "published_at": "2026-08-17T18:33:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.5R1 · ADMINISTRATOR MIRROR · VISUAL ASSET LAYER REBASE LOCK",
+  "build": "39.4.5R1",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.5R1",
+  "published_at": "2026-08-17T21:12:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "Recovered application core protected; Market Memory collection preserved; only canonical/source/collector counter semantics are consolidated."
+    "status": "39.4.4R1 Market Memory single-truth counters preserved exactly; visual layer added externally only."
   },
   "files": {
     "app.js": {
-      "sha256": "3d9d225d204c68a7722f2a269ba176a896d1a2c2eda8e13bfd243f6c50e713de"
+      "sha256": "2e5f35ba1ada8afd219ddf33d334183a3ebcb85873eafcb7c6c7256ae76a97cb"
     },
     "index.html": {
-      "sha256": "970b5112fedf1c8ed92df72eab248cd0925ffb56fa9bd681b07f4fbca801a444"
+      "sha256": "cb519ef24472b1e06b64c8c4e332ad8ba36dbc45e45f341d842c12341cb060c5"
     },
     "js/app.js": {
-      "sha256": "e4cc1e7a0ca8f655a8492d7c383d90ce20df8c0710b7bdac30dc95f856bbf210"
+      "sha256": "c6f38ebc470ae234565663586a577bd8e8acd4a9f8b9a8b21d9ddd7abc37e8dd"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
+    },
+    "admin-visual-assets.css": {
+      "sha256": "b5a2e1d94bbbab8c64e70b43748f4681848e141bfa13d49f9534071878d451fe"
+    },
+    "js/admin-visual-assets-39.4.5R1.js": {
+      "sha256": "bf0b878d0e7c15b10daa5baa71e60e0abcfc13326c538846e4838381b4063c06"
+    },
+    "assets/visual/admin-analytical-memory.png": {
+      "sha256": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d"
+    },
+    "assets/visual/admin-chart-office.png": {
+      "sha256": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d"
+    },
+    "assets/visual/admin-command-observatory.png": {
+      "sha256": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f"
+    },
+    "assets/visual/admin-projects-orchestration.png": {
+      "sha256": "8c126098505aba7b5bc625ed454e98916c23f0f481144ded667b96a04375b991"
+    },
+    "assets/visual/admin-sources-archive.png": {
+      "sha256": "e880d937bfcf1e01664ce18d93674a58479a10e25548e4a7536fc6fbcec32aa3"
+    },
+    "assets/visual/admin-system-core.png": {
+      "sha256": "f5bf4751cc2e6ad3871d3f5ef0d378f18ad8690cf06056cb937b0333a0beebc0"
+    },
+    "assets/visual/admin-technical-reading-default.png": {
+      "sha256": "c011dc679bbf1093e7b1e96b6142061c4f463d5bc2c0d5d0b0d4b2edfe99073d"
     },
     "js/market-memory-39.3.js": {
       "sha256": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded"
@@ -44,10 +71,19 @@
   },
   "integrity": {
     "files": {
-      "app.js": "3d9d225d204c68a7722f2a269ba176a896d1a2c2eda8e13bfd243f6c50e713de",
-      "index.html": "970b5112fedf1c8ed92df72eab248cd0925ffb56fa9bd681b07f4fbca801a444",
-      "js/app.js": "e4cc1e7a0ca8f655a8492d7c383d90ce20df8c0710b7bdac30dc95f856bbf210",
+      "app.js": "2e5f35ba1ada8afd219ddf33d334183a3ebcb85873eafcb7c6c7256ae76a97cb",
+      "index.html": "cb519ef24472b1e06b64c8c4e332ad8ba36dbc45e45f341d842c12341cb060c5",
+      "js/app.js": "c6f38ebc470ae234565663586a577bd8e8acd4a9f8b9a8b21d9ddd7abc37e8dd",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
+      "admin-visual-assets.css": "b5a2e1d94bbbab8c64e70b43748f4681848e141bfa13d49f9534071878d451fe",
+      "js/admin-visual-assets-39.4.5R1.js": "bf0b878d0e7c15b10daa5baa71e60e0abcfc13326c538846e4838381b4063c06",
+      "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
+      "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
+      "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
+      "assets/visual/admin-projects-orchestration.png": "8c126098505aba7b5bc625ed454e98916c23f0f481144ded667b96a04375b991",
+      "assets/visual/admin-sources-archive.png": "e880d937bfcf1e01664ce18d93674a58479a10e25548e4a7536fc6fbcec32aa3",
+      "assets/visual/admin-system-core.png": "f5bf4751cc2e6ad3871d3f5ef0d378f18ad8690cf06056cb937b0333a0beebc0",
+      "assets/visual/admin-technical-reading-default.png": "c011dc679bbf1093e7b1e96b6142061c4f463d5bc2c0d5d0b0d4b2edfe99073d",
       "js/market-memory-39.3.js": "f070e3094c8246aae7c591397a74ed575fecced9fc7b870f259a44a0ef2c8ded",
       "js/analytical-memory-39.4.js": "c017038c82efc740832b35a119056b77f8fa379605d3a8e05d88b5dbe001369d",
       "style.css": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0",
@@ -56,13 +92,14 @@
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0"
     },
     "publication_identity": {
-      "build": "39.4.4R1",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.4R1",
+      "build": "39.4.5R1",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.5R1",
       "rule": "exact case"
     }
   },
   "protected_code": {
-    "application_core": "CODE FINALISÉ — recovered 39.4.3R1 core; do not edit except explicit operator request / publication identity",
+    "application_core": "CODE FINALISÉ — recovered 39.4.3R1 core; no functional edit in 39.4.5R1 except publication identity",
+    "market_memory": "CODE FINALISÉ — 39.4.4R1; do not edit except explicit operator request",
     "workspace_f5": "CODE FINALISÉ — 39.2.19",
     "math_core": "CODE FINALISÉ — 39.2.17",
     "metals_5_5": "CODE FINALISÉ — 39.2.20R1",
@@ -70,25 +107,28 @@
     "windows": "CODE FINALISÉ — existing protected window manager"
   },
   "market_memory_contract": {
-    "reader_model": "39.3.0 3/5/10 semantic model",
+    "module": "js/market-memory-39.4.4R1.js",
     "storage_backend": "existing Collector IndexedDB: agent_crypto_local_memory / memory / collector_memory_primary",
-    "canonical_identity": "collector_id + market_snapshot_id",
-    "same_snapshot": "update last_seen_at + increment observation_count; no new distinct observation",
-    "new_snapshot": "append one MARKET observation then write + reread verification",
-    "analytical_current": "separate existing CURRENT/Analytical Memory path",
-    "atlas_trigger": false,
+    "counter_truth": "canonical snapshots / source records / collectors are separate counters with one shared canonical snapshot truth",
+    "functional_delta_in_39_4_5R1": false
+  },
+  "visual_layer": {
+    "module": "js/admin-visual-assets-39.4.5R1.js",
+    "stylesheet": "admin-visual-assets.css",
+    "private_image_storage": "agent_crypto_private_visuals / visual_slots / technical-reading",
+    "core_rewrite": false,
+    "market_memory_write": false,
     "new_fetch": false,
     "new_timer": false,
     "new_websocket": false,
-    "core_app_rewrite": false,
-    "data_deletion": false,
-    "counter_truth": "one canonical snapshot count shared by Market Memory and Decision Board; source records and collectors remain separate facts"
+    "starts_atlas": false
   },
   "notes": [
-    "39.4.4 collection path is preserved; this R1 does not change market capture or IndexedDB write semantics.",
-    "Market Memory and Decision Board now use the same canonical snapshot count.",
-    "Source records and collectors are shown separately instead of being called distinct market snapshots.",
-    "CURRENT ledger no longer reports zero market observations from the separate Auto Memory store.",
-    "Application core remains protected; only publication identity changed in core files."
-  ]
+    "This build is rebased directly on 39.4.4R1. The older prebuilt 39.4.5 is obsolete and must not be uploaded.",
+    "Market Memory 39.4.4R1 script is preserved byte-for-byte.",
+    "Only visual CSS/JS/assets plus publication identity are added.",
+    "Future 39.5+ candidates prepared before this rebase are quarantined and must be rebuilt from this lineage after browser validation."
+  ],
+  "parent_build": "39.4.4R1",
+  "lineage": "39.4.4R1 -> 39.4.5R1"
 }

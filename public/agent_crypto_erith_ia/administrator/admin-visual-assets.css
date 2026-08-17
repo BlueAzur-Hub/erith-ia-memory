@@ -1,0 +1,129 @@
+/* ============================================================
+   Agent-Crypto Administrator 39.4.5R1 — VISUAL ASSET LAYER REBASE
+   Visual-only layer. No market, Atlas, Memory, Math Core or window logic.
+   CODE FINALISÉ CORE: this stylesheet must remain outside core styles.
+   ============================================================ */
+
+:root {
+  --admin-visual-edge: rgba(91, 226, 255, .16);
+  --admin-visual-gold: rgba(238, 191, 101, .18);
+}
+
+/* Chart office: background only. Canvas/UI stays above it. */
+body.atlas-administrator-mirror #analyste .chart-shell {
+  background-image:
+    linear-gradient(180deg, rgba(3,8,18,.43), rgba(3,8,18,.61)),
+    url("./assets/visual/admin-chart-office.png");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-blend-mode: normal;
+}
+
+/* Technical Reading default visual + private replacement slot. */
+body.atlas-administrator-mirror #detailPanel .detail-project-visual {
+  position: relative;
+  min-height: clamp(210px, 25vh, 360px);
+  overflow: hidden;
+  cursor: pointer;
+  background-image:
+    linear-gradient(180deg, rgba(2,7,14,.04) 0%, rgba(2,7,14,.22) 48%, rgba(2,7,14,.76) 100%),
+    var(--admin-private-tech-image, url("./assets/visual/admin-technical-reading-default.png"));
+  background-size: cover;
+  background-position: var(--admin-private-tech-x, 50%) var(--admin-private-tech-y, 18%);
+  border-bottom: 1px solid rgba(80,219,239,.22);
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual > span {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  z-index: 2;
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual::after {
+  content: "✎ Changer l’image";
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  padding: 5px 8px;
+  border: 1px solid rgba(92,225,239,.34);
+  border-radius: 999px;
+  color: #d9fbff;
+  background: rgba(3,12,22,.72);
+  font-size: 10px;
+  letter-spacing: .04em;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition: opacity .16s ease, transform .16s ease;
+  pointer-events: none;
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual:hover::after,
+body.atlas-administrator-mirror #detailPanel .detail-project-visual:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+body.atlas-administrator-mirror #detailPanel .detail-project-visual:focus-visible {
+  outline: 2px solid rgba(83,225,239,.68);
+  outline-offset: -3px;
+}
+
+.admin-visual-emblem {
+  width: clamp(64px, 6.8vw, 116px);
+  height: clamp(64px, 6.8vw, 116px);
+  object-fit: contain;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.38));
+  opacity: .94;
+  pointer-events: none;
+  user-select: none;
+}
+.admin-visual-emblem.is-analytical { width: clamp(58px, 6vw, 104px); height: clamp(76px, 8vw, 132px); }
+
+/* Emblems are appended only to section headers by the isolated visual JS. */
+body.atlas-administrator-mirror #sources > .section-head,
+body.atlas-administrator-mirror #backend > .section-head,
+body.atlas-administrator-mirror #planning .exchange-plan > .section-head,
+body.atlas-administrator-mirror #atlasAnalyticalMemory394 > .atlas-memory-intelligence-head {
+  gap: 16px;
+}
+
+/* Observatory: low-opacity visual atmosphere for Commandes only. */
+body.atlas-administrator-mirror #commandes {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+body.atlas-administrator-mirror #commandes::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(4,10,18,.76), rgba(4,10,18,.90)),
+    url("./assets/visual/admin-command-observatory.png") center center / cover no-repeat;
+  opacity: .52;
+  pointer-events: none;
+}
+
+/* Tiny private-slot controls created only after a local custom image exists. */
+.admin-private-visual-tools {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 7px 10px 0;
+}
+.admin-private-visual-tools button {
+  appearance: none;
+  border: 1px solid rgba(89,222,239,.28);
+  border-radius: 8px;
+  background: rgba(3,12,22,.78);
+  color: #d8f8ff;
+  padding: 5px 8px;
+  font-size: 10px;
+  cursor: pointer;
+}
+.admin-private-visual-tools button:hover { border-color: rgba(238,191,101,.52); }
+
+@media (max-width: 900px) {
+  .admin-visual-emblem { width: 72px; height: 72px; }
+  body.atlas-administrator-mirror #detailPanel .detail-project-visual { min-height: 230px; }
+}
