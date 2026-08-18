@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.9.0R1",
-  "release": "ADMINISTRATOR MIRROR · ARCHITECTURE FREEZE R1 · COMPACT HOME + RETROSPECTIVE LAYOUT REPAIR",
-  "published_at": "2026-08-18T19:56:00+02:00",
+  "build": "39.9.0R2",
+  "release": "ADMINISTRATOR MIRROR · ARCHITECTURE FREEZE R2 · FINAL MEMORY LAYOUT + FREEZE TRUTH REPAIR",
+  "published_at": "2026-08-18T20:19:00+02:00",
   "global_versioning": {
-    "primary_build": "39.9.0R1",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.9.0R1",
+    "primary_build": "39.9.0R2",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.9.0R2",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.9.0R1",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.9.0R1",
+    "canonical_build": "39.9.0R2",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.9.0R2",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -45,9 +45,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "e7365b19164e1a27baf55258c175af794302bfe6906a6af4d32d2a995fec7544",
-      "index.html": "eac7f85dda2f1f0b0e0e1e273ab0d351e23c6623e32fd49587b2530a7cf07b65",
-      "js/app.js": "64e37f48d6dc520e43d30791bb6144179f10c4d7d559a54095d736285c23053f",
+      "app.js": "1116631dc6b877da1f354405666e91dc7ffb033d5aaa271ebff6692908109851",
+      "index.html": "2620740603e41f416623810de0192bd9dc526f1060a818c89274b670e20ba04d",
+      "js/app.js": "a99efa5f766469ef68e042ade7831cfcdb0a17f9d5b0be394c38859a7847db40",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -69,12 +69,12 @@
       "js/retrospective-validation-39.6.0.js": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf",
       "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60",
       "js/memory-health-audit-39.8.0R2.js": "f889dcdb3bd437387717fd4404455ae4a647dc11d9d30d0e1ce53d30766bd1a4",
-      "js/layout-repair-39.9.0R1.js": "4ad96f2efb230fab4eda2227457405170f487a3a65e0eaecfdfcbfa4464eac8f",
-      "js/architecture-freeze-39.9.0R1.js": "da07fbd195a1d0824844ef80d557125badd43f3f631120db7aa9368ae937f6f1"
+      "js/layout-repair-39.9.0R2.js": "60f104ef2e19deef425ae2d07a22bbeaafcfb019fc6a5c6da6882a33b00daedd",
+      "js/architecture-freeze-39.9.0R2.js": "2a611f1c1d8bcd8caf0dba8d9a4df333dcca49d3a0663b4fd25d9827c7590fc4"
     }
   },
-  "parent_build": "39.9.0",
-  "lineage": "39.9.0 → 39.9.0R1 · compact home + retrospective layout repair; 39.9 freeze semantics preserved",
+  "parent_build": "39.9.0R1",
+  "lineage": "39.9.0R1 → 39.9.0R2 · final Decision/Dual/Retrospective layout isolation + Freeze truth synchronization",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -322,5 +322,22 @@
     "network_added": false,
     "images_shipped": 0,
     "css_modified": false
+  },
+  "layout_repair_39_9_0R2": {
+    "role": "Administrator final layout + Freeze truth repair before 40.0",
+    "home": "compact header preserved; no additional identity/subtitle line",
+    "decision_memory": "decisionMemoryV2 remains canonical direct child",
+    "dual_memory": "39.5 reader moved under dedicated auxiliary host; module byte-for-byte unchanged",
+    "retrospective": "39.6 reader moved under same dedicated auxiliary host; module byte-for-byte unchanged",
+    "collision_gate": "Freeze requires exactly one direct .decision-memory-v2 child: decisionMemoryV2",
+    "freeze_truth": "Freeze rerenders after existing atlasMemoryIntelligenceRender chain and explicit refresh; no timer/polling",
+    "memory_health_waiting": "warning/limit, never a critical PASS",
+    "writes_memory": false,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false,
+    "network_added": false,
+    "images_shipped": 0,
+    "css_file_modified": false
   }
 }
