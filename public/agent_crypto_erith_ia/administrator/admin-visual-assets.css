@@ -440,10 +440,10 @@ body.atlas-administrator-mirror #detailPanel .detail-compact-strip{
   width:100%!important;min-width:0!important;flex:0 0 auto!important;
 }
 
-/* 40.0.0R5 — VALIDATED METALLIC WINDOW MENU RECOVERY LOCK
+/* 40.0.0R6 — GRAPH WINDOW MENU OPAQUE RESTORE LOCK
    The 39.4.6R3 visual-only hide of the Graphique Administrator chrome is revoked.
-   Placement, metallic styling, ghost opacity, hover reveal and all five actions remain
-   owned by the unchanged canonical admin-windows.css / admin-window-manager.js contract. */
+   All five actions remain owned by the unchanged canonical admin-window-manager.js contract.
+   R6 restores the Graphique chrome as a permanently visible opaque metallic menu; other windows keep their validated ghost behavior. */
 
 
 /* ==========================================================================\n   39.4.6R4 — TECHNICAL READING FULL BACKGROUND + 10% GLASS LOCK\n\n   Operator contract:\n   - the selected/default Aerith image fills the ENTIRE Technical Reading frame;\n   - Classic functional DOM stays present above it;\n   - functional surfaces use at most 10% dark background alpha;\n   - image picker remains invisible: click exposed image / transparent gaps;\n   - no Market/Memory/Atlas/Math/data-source behavior is changed.\n   ========================================================================== */
@@ -1298,3 +1298,36 @@ body.atlas-administrator-mirror
   backdrop-filter:none!important;
   -webkit-backdrop-filter:none!important;
 }
+
+/* ============================================================================
+   40.0.0R6 — GRAPH WINDOW MENU OPAQUE RUNTIME OVERRIDE
+   Exact operator-requested restoration:
+   - Graphique + Lecture technique keeps the existing 5-button Window Manager menu;
+   - the menu is visible and opaque at rest (not hover-only);
+   - move / reduce-restore / detach-dock / maximize-restore / hide-recall semantics are untouched;
+   - Target Top, Market Flow, Market Snapshot, Math Core and bottom dock keep their existing validated ghost rules.
+   ============================================================================ */
+body.atlas-administrator-mirror #analyste.admin-native-anchor > .admin-native-controls {
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  background:linear-gradient(90deg,rgba(8,12,16,.12),rgba(13,18,22,.80))!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.18)!important;
+  backdrop-filter:blur(8px) saturate(105%)!important;
+}
+body.atlas-administrator-mirror #analyste.admin-native-anchor > .admin-native-controls .admin-native-control {
+  opacity:1!important;
+  border-color:rgba(215,226,234,.20)!important;
+  background:linear-gradient(180deg,rgba(36,47,55,.88),rgba(6,11,15,.94))!important;
+  color:#dce7ee!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055)!important;
+}
+body.atlas-administrator-mirror #analyste.admin-native-anchor > .admin-native-controls:hover,
+body.atlas-administrator-mirror #analyste.admin-native-anchor > .admin-native-controls:focus-within {
+  opacity:1!important;
+  background:linear-gradient(90deg,rgba(8,12,16,.20),rgba(13,18,22,.94))!important;
+  box-shadow:0 10px 26px rgba(0,0,0,.30)!important;
+}
+/* END 40.0.0R6 GRAPH MENU OPAQUE RESTORE */
+
