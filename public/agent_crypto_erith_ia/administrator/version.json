@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.5.0R1 · ADMINISTRATOR MIRROR · DUAL MEMORY + VISUAL CONSOLIDATION LOCK",
-  "build": "39.5.0R1",
-  "asset_token": "market-core-v2.0-alpha-build-39.5.0R1",
-  "published_at": "2026-08-18T02:26:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.6.0 · ADMINISTRATOR MIRROR · RETROSPECTIVE VALIDATION READER LOCK",
+  "build": "39.6.0",
+  "asset_token": "market-core-v2.0-alpha-build-39.6.0",
+  "published_at": "2026-08-18T02:32:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.5.0 Dual Memory Reader preserved; R8 ultra-light Technical Reading glass merged; Target Top / Market Flow Administrator decks moved above-right without changing ribbon logic."
+    "status": "39.6.0 Retrospective Validation Reader added read-only; 39.5.0 Dual Memory Reader, R8 ultra-light glass and ribbon above-right layout preserved."
   },
   "files": {
     "app.js": {
@@ -76,6 +76,9 @@
     },
     "administrator-version.json": {
       "sha256": "c0390561a2da1aa4809215ad48ec989300f7bfa54707a2387ac363e55422ce95"
+    },
+    "js/retrospective-validation-39.6.0.js": {
+      "sha256": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf"
     }
   },
   "integrity": {
@@ -144,8 +147,8 @@
     "Decorative family/source/analytical emblems are reduced again and remain out-of-flow background accents.",
     "Market Memory 39.4.4R1, Atlas, Math Core, sources, Window Manager, Target Top and Market Flow logic are not edited."
   ],
-  "parent_build": "39.4.6R7",
-  "lineage": "39.4.6R7 → 39.5.0 (Decision Board read-only dual memory reader; theme and protected memory engines inherited unchanged)",
+  "parent_build": "39.5.0R1",
+  "lineage": "39.5.0R1 → 39.6.0 (read-only retrospective validation; no protected engine or memory write)",
   "ribbon_lock": {
     "build": "39.4.6R7",
     "stylesheet": "admin-ribbons.css",
@@ -192,5 +195,21 @@
     "new_timer": false,
     "new_websocket": false,
     "memory_write": false
+  },
+  "retrospective_validation_reader": {
+    "module": "./js/retrospective-validation-39.6.0.js",
+    "analytical_source": "verified CURRENT from Analytical Memory 39.4",
+    "market_source": "canonical snapshots from Market Memory 39.4.4R1",
+    "pairing_rule": "first market snapshot strictly after analytical CURRENT close time",
+    "measurement": "EUR price return from frozen CURRENT payload to post-CURRENT market snapshot",
+    "forecast_accuracy_score": false,
+    "read_only": true,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false,
+    "memory_write": false,
+    "new_fetch": false,
+    "new_timer": false,
+    "new_websocket": false
   }
 }

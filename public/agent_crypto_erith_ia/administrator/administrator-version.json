@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.5.0R1",
-  "release": "ADMINISTRATOR MIRROR · DUAL MEMORY + VISUAL CONSOLIDATION LOCK",
-  "published_at": "2026-08-18T02:26:00+02:00",
+  "build": "39.6.0",
+  "release": "ADMINISTRATOR MIRROR · RETROSPECTIVE VALIDATION READER LOCK",
+  "published_at": "2026-08-18T02:32:00+02:00",
   "global_versioning": {
-    "primary_build": "39.5.0R1",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.5.0R1",
+    "primary_build": "39.6.0",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.6.0",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.5.0R1",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.5.0R1",
+    "canonical_build": "39.6.0",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.6.0",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -63,11 +63,12 @@
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
       "js/admin-visual-assets-39.4.5R3.js": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca",
       "admin-ribbons.css": "7e9b982dba8f4a3fdb76f8e736e5c56d2427ea258bbac046f1816c0ff4510ca4",
-      "js/decision-board-dual-memory-39.5.0.js": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6"
+      "js/decision-board-dual-memory-39.5.0.js": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6",
+      "js/retrospective-validation-39.6.0.js": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf"
     }
   },
-  "parent_build": "39.4.6R7",
-  "lineage": "39.4.6R7 → 39.5.0 · dual memory reader only",
+  "parent_build": "39.5.0R1",
+  "lineage": "39.5.0R1 → 39.6.0 · Retrospective Validation Reader read-only; R8 glass + ribbon above-right inherited unchanged",
   "ribbon_lock": {
     "build": "39.4.6R7",
     "stylesheet": "admin-ribbons.css",
@@ -127,5 +128,21 @@
     "market_flow_controls": "five-button Administrator deck above-right; zero grid-width reservation",
     "market_flow_speed": "115s Classic cadence preserved",
     "core_rewrite": false
+  },
+  "retrospective_validation_reader": {
+    "module": "./js/retrospective-validation-39.6.0.js",
+    "analytical_source": "verified CURRENT from Analytical Memory 39.4",
+    "market_source": "canonical snapshots from Market Memory 39.4.4R1",
+    "pairing_rule": "first market snapshot strictly after analytical CURRENT close time",
+    "measurement": "EUR price return from frozen CURRENT payload to post-CURRENT market snapshot",
+    "forecast_accuracy_score": false,
+    "read_only": true,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false,
+    "memory_write": false,
+    "new_fetch": false,
+    "new_timer": false,
+    "new_websocket": false
   }
 }
