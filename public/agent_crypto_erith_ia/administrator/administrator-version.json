@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.9.0",
-  "release": "ADMINISTRATOR MIRROR · MEMORY ARCHITECTURE FREEZE",
-  "published_at": "2026-08-18T19:27:00+02:00",
+  "build": "39.9.0R1",
+  "release": "ADMINISTRATOR MIRROR · ARCHITECTURE FREEZE R1 · COMPACT HOME + RETROSPECTIVE LAYOUT REPAIR",
+  "published_at": "2026-08-18T19:56:00+02:00",
   "global_versioning": {
-    "primary_build": "39.9.0",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.9.0",
+    "primary_build": "39.9.0R1",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.9.0R1",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.9.0",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.9.0",
+    "canonical_build": "39.9.0R1",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.9.0R1",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -45,9 +45,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "9cf66320e8dc4ad03ec12369c7b8819cdfad768599a81af4ff93e0f4cbb19300",
-      "index.html": "ef7bc93cefed0724b0144ddbb47503d8539c265f9212e6c61fcc04e6d74ebfa4",
-      "js/app.js": "783bea6578c4e19c000ed57e9972db09140835718bfedb6ce22cabce047cb71a",
+      "app.js": "e7365b19164e1a27baf55258c175af794302bfe6906a6af4d32d2a995fec7544",
+      "index.html": "eac7f85dda2f1f0b0e0e1e273ab0d351e23c6623e32fd49587b2530a7cf07b65",
+      "js/app.js": "64e37f48d6dc520e43d30791bb6144179f10c4d7d559a54095d736285c23053f",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -69,11 +69,12 @@
       "js/retrospective-validation-39.6.0.js": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf",
       "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60",
       "js/memory-health-audit-39.8.0R2.js": "f889dcdb3bd437387717fd4404455ae4a647dc11d9d30d0e1ce53d30766bd1a4",
-      "js/architecture-freeze-39.9.0.js": "f709ced516e15425bfbfa8e3417b64e7d7e3dc08be38c1c89b2dcb992ed87992"
+      "js/layout-repair-39.9.0R1.js": "4ad96f2efb230fab4eda2227457405170f487a3a65e0eaecfdfcbfa4464eac8f",
+      "js/architecture-freeze-39.9.0R1.js": "da07fbd195a1d0824844ef80d557125badd43f3f631120db7aa9368ae937f6f1"
     }
   },
-  "parent_build": "39.8.0R2",
-  "lineage": "39.8.0R2 → 39.9.0 · Architecture Freeze; Memory Health truth repair and near-zero Technical Reading glass preserved",
+  "parent_build": "39.9.0",
+  "lineage": "39.9.0 → 39.9.0R1 · compact home + retrospective layout repair; 39.9 freeze semantics preserved",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -298,6 +299,22 @@
     "technical_reading": "39.8.0R1 near-zero glass preserved",
     "critical_fail_policy": "one critical FAIL refuses freeze",
     "warnings_policy": "coverage/continuity limitations remain visible and do not masquerade as structural corruption",
+    "writes_memory": false,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false,
+    "network_added": false,
+    "images_shipped": 0,
+    "css_modified": false
+  },
+  "layout_repair_39_9_0R1": {
+    "role": "Administrator UI-only consolidation repair before 40.0",
+    "home": "extra Administrator Mirror validation line removed; existing header geometry preserved",
+    "retrospective": "39.6 reader moved outside Decision Board grid after creation; data and logic unchanged",
+    "decision_memory": "39.5 module untouched",
+    "retrospective_module": "39.6.0 module untouched byte-for-byte",
+    "memory_health": "39.8.0R2 untouched byte-for-byte",
+    "multi_collector": "39.7.0 untouched byte-for-byte",
     "writes_memory": false,
     "starts_atlas": false,
     "starts_nox": false,

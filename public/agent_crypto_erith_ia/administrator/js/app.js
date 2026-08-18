@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.9.0";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · MEMORY ARCHITECTURE FREEZE";
+  const ADMIN_BUILD = "39.9.0R1";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · ARCHITECTURE FREEZE R1 · COMPACT HOME + RETROSPECTIVE LAYOUT REPAIR";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -190,15 +190,11 @@
       engineBadge.title = `Moteur métier hérité de la Classic ${ENGINE_BUILD}`;
     }
 
-    const hero = q(".hero .title-block");
+    // 39.9.0R1 — COMPACT HOME LOCK
+    // The extra Administrator Mirror identity line was useful during validation,
+    // but it changes the home header height. Final UI keeps the existing header
+    // geometry and version indicators only.
     byId("administratorMirrorIdentity")?.remove();
-    if (hero) {
-      const identity = document.createElement("p");
-      identity.id = "administratorMirrorIdentity";
-      identity.className = "eyebrow administrator-mirror-identity";
-      identity.textContent = `ADMINISTRATOR MIRROR · WORKSPACE FREEDOM LOCK · BUILD ${ADMIN_BUILD} · ENGINE ${ENGINE_BUILD}`;
-      hero.appendChild(identity);
-    }
 
     const footer = byId("footerRelease");
     if (footer) footer.textContent = `Agent-Crypto @erith.IA · Build ${ADMIN_BUILD} · Administrator · Engine Market Core ${ENGINE_BUILD}`;
