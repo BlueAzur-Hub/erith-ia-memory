@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.7.1",
-  "release": "ADMINISTRATOR MIRROR · TECHNICAL READING ULTRA-CLEAR OPACITY LOCK",
-  "published_at": "2026-08-18T04:22:00+02:00",
+  "build": "39.8.0",
+  "release": "ADMINISTRATOR MIRROR · MEMORY HEALTH AUDIT READ-ONLY LOCK",
+  "published_at": "2026-08-18T04:30:00+02:00",
   "global_versioning": {
-    "primary_build": "39.7.1",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.7.1",
+    "primary_build": "39.8.0",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.8.0",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.7.1",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.7.1",
+    "canonical_build": "39.8.0",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.8.0",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -45,9 +45,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "034d8224cd7681118de5eca2fe34f035a7e17a2f46b989cbb4e9635ddcf1cd00",
-      "index.html": "f6fd2532c27d1da50a0cec516b378fb9b1f789236535035338562eab970df6e4",
-      "js/app.js": "4657fe25987d9da49c3122cee62fb9ae6308fbc76411b7d9cd99ab34d67d4133",
+      "app.js": "a143cfe38e13ec1e72831b3f757829a4b17b529ecf4172e723b7d1f51306cf92",
+      "index.html": "138e3421518605432fe127a355a5399773dc84b180dd8cdfb9344cf1b643bb4c",
+      "js/app.js": "4374f023e6a62fe943555d23de67b0915294cd8015526bce1a852051b2948863",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -67,11 +67,12 @@
       "admin-ribbons.css": "fc3712dc5986eb1b6cf1e9ad41e76c33cf798c650ef5203347409189c52278ec",
       "js/decision-board-dual-memory-39.5.0.js": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6",
       "js/retrospective-validation-39.6.0.js": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf",
-      "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60"
+      "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60",
+      "js/memory-health-audit-39.8.0.js": "edf2a1610f195ae5892e11dd1915fd80250a39c9565efa3a6d2178c5ae8c5e8e"
     }
   },
-  "parent_build": "39.7.0",
-  "lineage": "39.7.0 → 39.7.1 · Technical Reading ultra-clear opacity trim; read-only Multi-Collector preserved",
+  "parent_build": "39.7.1",
+  "lineage": "39.7.1 → 39.8.0 · read-only Memory Health / Audit; Multi-Collector and prior memories preserved",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -239,5 +240,22 @@
     "multi_collector_changed": false,
     "memory_changed": false,
     "visual_css_changed": false
+  },
+  "memory_health_audit": {
+    "module": "./js/memory-health-audit-39.8.0.js",
+    "role": "read-only structural memory diagnostic",
+    "reads": [
+      "Market Memory 39.4.4R1",
+      "Analytical Memory 39.4",
+      "Multi-Collector 39.7.0"
+    ],
+    "auto_repair": false,
+    "memory_write": false,
+    "new_fetch": false,
+    "new_timer": false,
+    "new_websocket": false,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false
   }
 }
