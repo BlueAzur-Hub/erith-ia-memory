@@ -45,9 +45,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "4887c89ea525d74c59251c4cb1740f30968297a35c9af4192cec44887854260b",
+      "app.js": "034d8224cd7681118de5eca2fe34f035a7e17a2f46b989cbb4e9635ddcf1cd00",
       "index.html": "f6fd2532c27d1da50a0cec516b378fb9b1f789236535035338562eab970df6e4",
-      "js/app.js": "6fd84fe268622a3f49c91d0de7ca2b36699ad77f6bde59ef9708f510678b7d98",
+      "js/app.js": "4657fe25987d9da49c3122cee62fb9ae6308fbc76411b7d9cd99ab34d67d4133",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -227,5 +227,17 @@
     "js_logic_modified": false,
     "functional_modules_modified": false,
     "images_shipped": 0
+  },
+  "publication_contract_repair_39_7_1": {
+    "scope": "same-build publication identity repair; no new feature and no new build",
+    "reason": "39.7.1 manifests/index were published while remote app.js and js/app.js still carried 39.7.0 identity; version controller therefore returned app_manifest_build_mismatch and could remain on GitHub en propagation",
+    "build_unchanged": "39.7.1",
+    "app_build_repaired": "39.7.1",
+    "admin_build_repaired": "39.7.1",
+    "asset_token": "market-core-v2.0-alpha-build-39.7.1",
+    "functional_code_changed": false,
+    "multi_collector_changed": false,
+    "memory_changed": false,
+    "visual_css_changed": false
   }
 }

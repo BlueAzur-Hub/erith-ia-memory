@@ -12,13 +12,13 @@
   },
   "files": {
     "app.js": {
-      "sha256": "4887c89ea525d74c59251c4cb1740f30968297a35c9af4192cec44887854260b"
+      "sha256": "034d8224cd7681118de5eca2fe34f035a7e17a2f46b989cbb4e9635ddcf1cd00"
     },
     "index.html": {
       "sha256": "f6fd2532c27d1da50a0cec516b378fb9b1f789236535035338562eab970df6e4"
     },
     "js/app.js": {
-      "sha256": "6fd84fe268622a3f49c91d0de7ca2b36699ad77f6bde59ef9708f510678b7d98"
+      "sha256": "4657fe25987d9da49c3122cee62fb9ae6308fbc76411b7d9cd99ab34d67d4133"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
@@ -75,7 +75,7 @@
       "sha256": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6"
     },
     "administrator-version.json": {
-      "sha256": "ee6d2e1db29af354150ff0232a0450f6e41b1d542ba4711997cd1669d653b67e"
+      "sha256": "759e6f0769ecdbc2d8bfe7290a650ee304c8cd144173ebe304178c26bbd25869"
     },
     "js/retrospective-validation-39.6.0.js": {
       "sha256": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf"
@@ -86,9 +86,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "4887c89ea525d74c59251c4cb1740f30968297a35c9af4192cec44887854260b",
+      "app.js": "034d8224cd7681118de5eca2fe34f035a7e17a2f46b989cbb4e9635ddcf1cd00",
       "index.html": "f6fd2532c27d1da50a0cec516b378fb9b1f789236535035338562eab970df6e4",
-      "js/app.js": "6fd84fe268622a3f49c91d0de7ca2b36699ad77f6bde59ef9708f510678b7d98",
+      "js/app.js": "4657fe25987d9da49c3122cee62fb9ae6308fbc76411b7d9cd99ab34d67d4133",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -152,7 +152,8 @@
     "Market Memory 39.4.4R1, Decision Board 39.5.0, Retrospective Validation 39.6.0, Atlas, Math Core, data sources and Window Manager are not edited.",
     "39.6.2 removes only the remaining Technical Reading card/row background fills; borders, text, interactions, geometry and functional modules remain unchanged.",
     "39.7.0 adds a read-only Multi-Collector Concordance reader: distinct collectors, bounded timestamp comparison, TOP5 EUR spread and source-independence separation; no memory write, Atlas/NØX/Aerith start, fetch, timer or WebSocket.",
-    "39.7.1 reduces the remaining Technical Reading panel opacity with an inline HTML override only: headers ~0.06, functional surfaces ~0.03, bodies transparent; no JS logic or memory module modified."
+    "39.7.1 reduces the remaining Technical Reading panel opacity with an inline HTML override only: headers ~0.06, functional surfaces ~0.03, bodies transparent; no JS logic or memory module modified.",
+    "39.7.1 same-build publication repair: app.js/js/app.js identity aligned to 39.7.1 and SHA registries regenerated mechanically; no feature, memory or CSS delta."
   ],
   "parent_build": "39.7.0",
   "lineage": "39.7.0 → 39.7.1 · Technical Reading ultra-clear opacity trim; Multi-Collector Concordance and memory readers preserved",
@@ -283,5 +284,14 @@
     "js_logic_modified": false,
     "images_shipped": 0,
     "functional_modules_modified": false
+  },
+  "publication_contract_repair_39_7_1": {
+    "scope": "same-build publication identity repair; 39.7.1 remains 39.7.1",
+    "reason": "remote app.js was still 39.7.0 while version.json announced 39.7.1, triggering app_manifest_build_mismatch before SHA validation",
+    "contract": "ATLAS_BUILD == manifest.build == publication_identity.build; ATLAS_ASSET_TOKEN == manifest.asset_token == publication_identity.asset_token; actual app SHA == files.app.js == integrity.files.app.js",
+    "functional_code_changed": false,
+    "visual_override_preserved": true,
+    "multi_collector_preserved": true,
+    "memory_changed": false
   }
 }
