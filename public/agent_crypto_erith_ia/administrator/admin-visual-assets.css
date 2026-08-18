@@ -440,9 +440,9 @@ body.atlas-administrator-mirror #detailPanel .detail-compact-strip{
   width:100%!important;min-width:0!important;flex:0 0 auto!important;
 }
 
-/* 40.0.0R7 — GRAPH WINDOW MENU RESTORE PRESERVED
+/* 40.0.0R8 — FAMILY WINDOW MENU LAYOUT RESTORE LOCK
    The historical 39.4.6R3 display:none removal remains preserved.
-   Visual opacity is now owned uniformly by admin-window-menu-uniform-40.0.0R7.css. */
+   Visual opacity is owned uniformly by admin-window-menu-uniform-40.0.0R8.css. */
 
 
 /* ==========================================================================\n   39.4.6R4 — TECHNICAL READING FULL BACKGROUND + 10% GLASS LOCK\n\n   Operator contract:\n   - the selected/default Aerith image fills the ENTIRE Technical Reading frame;\n   - Classic functional DOM stays present above it;\n   - functional surfaces use at most 10% dark background alpha;\n   - image picker remains invisible: click exposed image / transparent gaps;\n   - no Market/Memory/Atlas/Math/data-source behavior is changed.\n   ========================================================================== */
@@ -738,7 +738,11 @@ body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-colla
   padding-right:28px!important;
   overflow:hidden!important;
 }
-.atlas-layout-family.admin-family-emblem-host-r3 > :not(.admin-family-emblem-r3){
+/* 40.0.0R8 — IMPORTANT: native five-button window chrome is structural UI,
+   not family content. The old broad child selector forced the control deck to
+   position:relative!important, inserted it into the 3-column family grid and
+   clipped it to the first 54px cell (only ~2 buttons remained visible). */
+.atlas-layout-family.admin-family-emblem-host-r3 > :not(.admin-family-emblem-r3):not(.admin-native-controls){
   position:relative!important;
   z-index:1!important;
 }
