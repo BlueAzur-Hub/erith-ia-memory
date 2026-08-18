@@ -1,21 +1,21 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.7.0 · ADMINISTRATOR MIRROR · MULTI-COLLECTOR CONCORDANCE READ-ONLY LOCK",
-  "build": "39.7.0",
-  "asset_token": "market-core-v2.0-alpha-build-39.7.0",
-  "published_at": "2026-08-18T03:58:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.7.1 · ADMINISTRATOR MIRROR · TECHNICAL READING ULTRA-CLEAR OPACITY LOCK",
+  "build": "39.7.1",
+  "asset_token": "market-core-v2.0-alpha-build-39.7.1",
+  "published_at": "2026-08-18T04:22:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.7.0 read-only Multi-Collector Concordance; 39.6.2 Technical Reading full-clear lock, Retrospective 39.6.0, Dual Memory 39.5.0 and Market Memory 39.4.4R1 preserved."
+    "status": "39.7.1 visual opacity trim for Technical Reading; 39.7.0 Multi-Collector Concordance, 39.6.2 Technical Reading full-clear lock, 39.6.0 Retrospective, 39.5.0 Dual Memory and 39.4.4R1 Market Memory preserved."
   },
   "files": {
     "app.js": {
       "sha256": "4887c89ea525d74c59251c4cb1740f30968297a35c9af4192cec44887854260b"
     },
     "index.html": {
-      "sha256": "ae3b1844be6fe71f2fb134fd3928493e402f1c7b71657d435b7390e6eb4b9872"
+      "sha256": "f6fd2532c27d1da50a0cec516b378fb9b1f789236535035338562eab970df6e4"
     },
     "js/app.js": {
       "sha256": "6fd84fe268622a3f49c91d0de7ca2b36699ad77f6bde59ef9708f510678b7d98"
@@ -87,7 +87,7 @@
   "integrity": {
     "files": {
       "app.js": "4887c89ea525d74c59251c4cb1740f30968297a35c9af4192cec44887854260b",
-      "index.html": "ae3b1844be6fe71f2fb134fd3928493e402f1c7b71657d435b7390e6eb4b9872",
+      "index.html": "f6fd2532c27d1da50a0cec516b378fb9b1f789236535035338562eab970df6e4",
       "js/app.js": "6fd84fe268622a3f49c91d0de7ca2b36699ad77f6bde59ef9708f510678b7d98",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
@@ -110,8 +110,8 @@
       "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60"
     },
     "publication_identity": {
-      "build": "39.7.0",
-      "asset_token": "market-core-v2.0-alpha-build-39.7.0",
+      "build": "39.7.1",
+      "asset_token": "market-core-v2.0-alpha-build-39.7.1",
       "rule": "exact case"
     }
   },
@@ -134,7 +134,7 @@
     "module": "js/admin-visual-assets-39.4.5R3.js",
     "stylesheet": "admin-visual-assets.css",
     "assets": "pre-installed on GitHub; deliberately omitted from patch ZIP",
-    "strategy": "full-frame Technical Reading image + transparent legacy parent shells, fact cards and functional-row fills; semantic borders/text preserved; HELP LAYER hidden; no image asset delivery",
+    "strategy": "39.7.1 ultra-clear trim: Technical Reading base shell is lighter and internal windows use very light glass so the private image remains much more visible behind the information layer.",
     "private_image_storage": "agent_crypto_private_visuals / visual_slots / technical-reading",
     "core_rewrite": false,
     "market_memory_write": false,
@@ -151,10 +151,11 @@
     "Market Flow Classic 115 s cadence and hover/focus pause are preserved.",
     "Market Memory 39.4.4R1, Decision Board 39.5.0, Retrospective Validation 39.6.0, Atlas, Math Core, data sources and Window Manager are not edited.",
     "39.6.2 removes only the remaining Technical Reading card/row background fills; borders, text, interactions, geometry and functional modules remain unchanged.",
-    "39.7.0 adds a read-only Multi-Collector Concordance reader: distinct collectors, bounded timestamp comparison, TOP5 EUR spread and source-independence separation; no memory write, Atlas/NØX/Aerith start, fetch, timer or WebSocket."
+    "39.7.0 adds a read-only Multi-Collector Concordance reader: distinct collectors, bounded timestamp comparison, TOP5 EUR spread and source-independence separation; no memory write, Atlas/NØX/Aerith start, fetch, timer or WebSocket.",
+    "39.7.1 reduces the remaining Technical Reading panel opacity with an inline HTML override only: headers ~0.06, functional surfaces ~0.03, bodies transparent; no JS logic or memory module modified."
   ],
-  "parent_build": "39.6.2",
-  "lineage": "39.6.2 → 39.7.0 · read-only Multi-Collector Concordance; no Market Memory write and no visual rewrite",
+  "parent_build": "39.7.0",
+  "lineage": "39.7.0 → 39.7.1 · Technical Reading ultra-clear opacity trim; Multi-Collector Concordance and memory readers preserved",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -181,8 +182,9 @@
     "math_core_modified": false,
     "atlas_modified": false,
     "desktop_layout": "Full Market width: Graphique left + Lecture technique right; Source Dock collapsed by default; explicit source action reopens it",
-    "functional_glass": "39.6.2: visible fact cards and functional rows use transparent fills; borders/text semantics preserved; expanded bodies transparent",
-    "help_layer": "hidden in Administrator design"
+    "functional_glass": "39.7.1: section headers use ultra-light glass; cards and functional rows use ~0.03 alpha; expanded bodies remain transparent.",
+    "help_layer": "hidden in Administrator design",
+    "functional_surface_background_alpha_max": 0.03
   },
   "decorative_emblem_lock": {
     "layout_reservation": false,
@@ -270,5 +272,16 @@
     "new_fetch": false,
     "new_timer": false,
     "new_websocket": false
+  },
+  "design_39_7_1": {
+    "scope": "HTML inline opacity override only + publication identity",
+    "panel_shell_alpha_max": 0.12,
+    "section_header_alpha": 0.06,
+    "functional_surface_alpha": 0.03,
+    "expanded_bodies": "transparent",
+    "geometry_modified": false,
+    "js_logic_modified": false,
+    "images_shipped": 0,
+    "functional_modules_modified": false
   }
 }
