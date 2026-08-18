@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.9.0R2",
-  "release": "ADMINISTRATOR MIRROR · ARCHITECTURE FREEZE R2 · FINAL MEMORY LAYOUT + FREEZE TRUTH REPAIR",
-  "published_at": "2026-08-18T20:19:00+02:00",
+  "build": "40.0.0",
+  "release": "ADMINISTRATOR MIRROR · STABLE CANDIDATE 40.0 · FROZEN 39.x ARCHITECTURE",
+  "published_at": "2026-08-18T20:37:00+02:00",
   "global_versioning": {
     "primary_build": "39.9.0R2",
     "primary_label": "Agent-Crypto @erith.IA · Build 39.9.0R2",
@@ -10,8 +10,8 @@
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.9.0R2",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.9.0R2",
+    "canonical_build": "40.0.0",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-40.0.0",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -45,9 +45,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "1116631dc6b877da1f354405666e91dc7ffb033d5aaa271ebff6692908109851",
-      "index.html": "2620740603e41f416623810de0192bd9dc526f1060a818c89274b670e20ba04d",
-      "js/app.js": "a99efa5f766469ef68e042ade7831cfcdb0a17f9d5b0be394c38859a7847db40",
+      "app.js": "3e5d18510cf7ac123746875fd5715d67650028d5e8af9e04e5dd3008744a0dde",
+      "index.html": "9aeeda4b8da4d76625778dcf0f79650a76a6897ce6cd211bfe3dd970fc9d1e3d",
+      "js/app.js": "aa6a6752e6f96c0a9ab7129535fe4e8e4d2990e597a751aa95b1804fa3b03ae8",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -70,11 +70,11 @@
       "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60",
       "js/memory-health-audit-39.8.0R2.js": "f889dcdb3bd437387717fd4404455ae4a647dc11d9d30d0e1ce53d30766bd1a4",
       "js/layout-repair-39.9.0R2.js": "60f104ef2e19deef425ae2d07a22bbeaafcfb019fc6a5c6da6882a33b00daedd",
-      "js/architecture-freeze-39.9.0R2.js": "2a611f1c1d8bcd8caf0dba8d9a4df333dcca49d3a0663b4fd25d9827c7590fc4"
+      "js/architecture-freeze-40.0.0.js": "7213616c3b691bc33c24f82680b86145a7948832bba4257df816ffee878db92b"
     }
   },
-  "parent_build": "39.9.0R1",
-  "lineage": "39.9.0R1 → 39.9.0R2 · final Decision/Dual/Retrospective layout isolation + Freeze truth synchronization",
+  "parent_build": "39.9.0R2",
+  "lineage": "39.9.0R2 → 40.0.0 · stable candidate identity + final preflight only; no feature delta",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -339,5 +339,23 @@
     "network_added": false,
     "images_shipped": 0,
     "css_file_modified": false
+  },
+  "stable_candidate_40_0_0": {
+    "role": "identity + final read-only preflight over validated 39.9.0R2",
+    "feature_delta": false,
+    "market_logic_modified": false,
+    "memory_semantics_modified": false,
+    "layout_repair": "39.9.0R2 preserved byte-for-byte",
+    "technical_reading": "39.8.0R1 near-zero glass preserved",
+    "web_classic_modified": false,
+    "images_shipped": 0,
+    "css_modified": false,
+    "writes_memory": false,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false,
+    "starts_bridge": false,
+    "starts_ollama": false,
+    "final_validation": "Firefox operator validation required after GitHub publication"
   }
 }

@@ -1,24 +1,24 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.9.0R2 · ADMINISTRATOR MIRROR · ARCHITECTURE FREEZE R2 · FINAL MEMORY LAYOUT + FREEZE TRUTH REPAIR",
-  "build": "39.9.0R2",
-  "asset_token": "market-core-v2.0-alpha-build-39.9.0R2",
-  "published_at": "2026-08-18T20:19:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 40.0.0 · ADMINISTRATOR MIRROR · STABLE CANDIDATE 40.0 · FROZEN 39.x ARCHITECTURE",
+  "build": "40.0.0",
+  "asset_token": "market-core-v2.0-alpha-build-40.0.0",
+  "published_at": "2026-08-18T20:37:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.9.0R2 final Administrator consolidation repair only; compact home preserved, Decision Memory/Dual Memory/Retrospective structurally isolated, Freeze verdict synchronized with Memory Health. Market/Atlas/memory semantics unchanged."
+    "status": "40.0.0 Stable Candidate: validated 39.9.0R2 architecture carried forward with identity/preflight only; no market, memory, layout or visual feature delta."
   },
   "files": {
     "app.js": {
-      "sha256": "1116631dc6b877da1f354405666e91dc7ffb033d5aaa271ebff6692908109851"
+      "sha256": "3e5d18510cf7ac123746875fd5715d67650028d5e8af9e04e5dd3008744a0dde"
     },
     "index.html": {
-      "sha256": "2620740603e41f416623810de0192bd9dc526f1060a818c89274b670e20ba04d"
+      "sha256": "9aeeda4b8da4d76625778dcf0f79650a76a6897ce6cd211bfe3dd970fc9d1e3d"
     },
     "js/app.js": {
-      "sha256": "a99efa5f766469ef68e042ade7831cfcdb0a17f9d5b0be394c38859a7847db40"
+      "sha256": "aa6a6752e6f96c0a9ab7129535fe4e8e4d2990e597a751aa95b1804fa3b03ae8"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
@@ -89,15 +89,15 @@
     "js/layout-repair-39.9.0R2.js": {
       "sha256": "60f104ef2e19deef425ae2d07a22bbeaafcfb019fc6a5c6da6882a33b00daedd"
     },
-    "js/architecture-freeze-39.9.0R2.js": {
-      "sha256": "2a611f1c1d8bcd8caf0dba8d9a4df333dcca49d3a0663b4fd25d9827c7590fc4"
+    "js/architecture-freeze-40.0.0.js": {
+      "sha256": "7213616c3b691bc33c24f82680b86145a7948832bba4257df816ffee878db92b"
     }
   },
   "integrity": {
     "files": {
-      "app.js": "1116631dc6b877da1f354405666e91dc7ffb033d5aaa271ebff6692908109851",
-      "index.html": "2620740603e41f416623810de0192bd9dc526f1060a818c89274b670e20ba04d",
-      "js/app.js": "a99efa5f766469ef68e042ade7831cfcdb0a17f9d5b0be394c38859a7847db40",
+      "app.js": "3e5d18510cf7ac123746875fd5715d67650028d5e8af9e04e5dd3008744a0dde",
+      "index.html": "9aeeda4b8da4d76625778dcf0f79650a76a6897ce6cd211bfe3dd970fc9d1e3d",
+      "js/app.js": "aa6a6752e6f96c0a9ab7129535fe4e8e4d2990e597a751aa95b1804fa3b03ae8",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -120,11 +120,11 @@
       "administrator-version.json": "b50d87c2fc5019d35cbc9ad2bf60eb3ee8086652314ca1a6f6275a97b8b66c92",
       "js/memory-health-audit-39.8.0R2.js": "f889dcdb3bd437387717fd4404455ae4a647dc11d9d30d0e1ce53d30766bd1a4",
       "js/layout-repair-39.9.0R2.js": "60f104ef2e19deef425ae2d07a22bbeaafcfb019fc6a5c6da6882a33b00daedd",
-      "js/architecture-freeze-39.9.0R2.js": "2a611f1c1d8bcd8caf0dba8d9a4df333dcca49d3a0663b4fd25d9827c7590fc4"
+      "js/architecture-freeze-40.0.0.js": "7213616c3b691bc33c24f82680b86145a7948832bba4257df816ffee878db92b"
     },
     "publication_identity": {
-      "build": "39.9.0R1",
-      "asset_token": "market-core-v2.0-alpha-build-39.9.0R1",
+      "build": "40.0.0",
+      "asset_token": "market-core-v2.0-alpha-build-40.0.0",
       "rule": "exact case"
     }
   },
@@ -172,10 +172,11 @@
     "39.8.0R2 repairs Memory Health semantics: Core canonical identity/time reuse, strict positive price_eur payload checks, direct Collector storage-state evidence, and independent STRUCTURE / COVERAGE / CONTINUITY verdicts. No memory write, no image, no CSS/visual change.",
     "39.9.0 freezes the 39.x memory architecture with a read-only browser preflight. No market feature, memory write, image, CSS or automatic repair is added. Critical identity/wiring failures refuse the freeze; expected data coverage limits remain visible as warnings.",
     "39.9.0R1 restores the compact home header by removing the validation-only Administrator Mirror identity line and isolates Retrospective 39.6 outside the Decision Board grid; no memory, market, Atlas, CSS or image delta.",
-    "39.9.0R2 fixes the remaining Decision Board overlap by keeping only decisionMemoryV2 as a direct .decision-memory-v2 child; Dual Memory 39.5 and Retrospective 39.6 move into a dedicated auxiliary host. Freeze R2 synchronizes after the real memory render chain and treats Memory Health WAITING as a visible limit, never a false PASS."
+    "39.9.0R2 fixes the remaining Decision Board overlap by keeping only decisionMemoryV2 as a direct .decision-memory-v2 child; Dual Memory 39.5 and Retrospective 39.6 move into a dedicated auxiliary host. Freeze R2 synchronizes after the real memory render chain and treats Memory Health WAITING as a visible limit, never a false PASS.",
+    "40.0.0 is a stable candidate only: it carries forward validated 39.9.0R2 behavior, fixes publication identity consistency, and reruns the read-only freeze under the 40.0 identity. No web/ Classic file, image, CSS, market logic, memory semantics, Atlas/NØX/Aerith behavior or Bridge/Ollama behavior is changed."
   ],
-  "parent_build": "39.9.0R1",
-  "lineage": "39.9.0R1 → 39.9.0R2 · final Decision/Dual/Retrospective layout isolation + Freeze truth synchronization; no feature delta",
+  "parent_build": "39.9.0R2",
+  "lineage": "39.9.0R2 → 40.0.0 · stable candidate identity + final preflight only; no feature, memory or visual delta",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -412,5 +413,23 @@
     "network_added": false,
     "images_shipped": 0,
     "css_file_modified": false
+  },
+  "stable_candidate_40_0_0": {
+    "role": "identity + final read-only preflight over validated 39.9.0R2",
+    "feature_delta": false,
+    "market_logic_modified": false,
+    "memory_semantics_modified": false,
+    "layout_repair": "39.9.0R2 preserved byte-for-byte",
+    "technical_reading": "39.8.0R1 near-zero glass preserved",
+    "web_classic_modified": false,
+    "images_shipped": 0,
+    "css_modified": false,
+    "writes_memory": false,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false,
+    "starts_bridge": false,
+    "starts_ollama": false,
+    "final_validation": "Firefox operator validation required after GitHub publication"
   }
 }
