@@ -1,24 +1,24 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.5.0 · ADMINISTRATOR MIRROR · DECISION BOARD DUAL MEMORY READER LOCK",
-  "build": "39.5.0",
-  "asset_token": "market-core-v2.0-alpha-build-39.5.0",
-  "published_at": "2026-08-18T02:05:34+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.4.6R8 · ADMINISTRATOR MIRROR · TECHNICAL READING ULTRA-LIGHT GLASS LOCK",
+  "build": "39.4.6R8",
+  "asset_token": "market-core-v2.0-alpha-build-39.4.6R8",
+  "published_at": "2026-08-18T01:49:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.4.4R1 Market Memory preserved exactly; 39.4 Analytical Memory preserved exactly; 39.5.0 adds a read-only Decision Board reader for both memories without fusion or orchestration."
+    "status": "39.4.4R1 Market Memory preserved exactly; 39.4.6R8 removes the legacy 96% Classic detail artwork layer, the lower gradient reaching 98%, and the obsolete 300–330 px right-padding reservation that double-narrowed Graphique + Lecture technique."
   },
   "files": {
     "app.js": {
-      "sha256": "5b34ce6ad564cb9c7aa7f523fef9acab4a8fdfc7ea8955ecf5d89f0757b26588"
+      "sha256": "c1225bbe5ff0e8d5bf3b4adcd137d230b1577594cc7f2521715d5e006e5c75fe"
     },
     "index.html": {
-      "sha256": "80bdec06bf98108460ac2971654ca01105f275beec75f67fc7d258856f3ba49e"
+      "sha256": "034eeab993db5304522bb019dde061166b456f002ab30b103082b7001e2935f3"
     },
     "js/app.js": {
-      "sha256": "5d12b8d23291bbff29691297ee6cefda7b786d433d2be5ad0f95da7956e275ca"
+      "sha256": "e9a763f45c8d98ed32bea9f53928b7d868ab7de8b9c667c18c8492d45ce5120e"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
@@ -70,16 +70,13 @@
     },
     "admin-ribbons.css": {
       "sha256": "7e9b982dba8f4a3fdb76f8e736e5c56d2427ea258bbac046f1816c0ff4510ca4"
-    },
-    "js/decision-board-dual-memory-39.5.0.js": {
-      "sha256": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6"
     }
   },
   "integrity": {
     "files": {
-      "app.js": "5b34ce6ad564cb9c7aa7f523fef9acab4a8fdfc7ea8955ecf5d89f0757b26588",
-      "index.html": "80bdec06bf98108460ac2971654ca01105f275beec75f67fc7d258856f3ba49e",
-      "js/app.js": "5d12b8d23291bbff29691297ee6cefda7b786d433d2be5ad0f95da7956e275ca",
+      "app.js": "c1225bbe5ff0e8d5bf3b4adcd137d230b1577594cc7f2521715d5e006e5c75fe",
+      "index.html": "034eeab993db5304522bb019dde061166b456f002ab30b103082b7001e2935f3",
+      "js/app.js": "e9a763f45c8d98ed32bea9f53928b7d868ab7de8b9c667c18c8492d45ce5120e",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "0510ca01cf2b9051fe3d8742599c55f3ac1d799ca14f2a875620a4f77973a1e5",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -96,12 +93,11 @@
       "admin-windows.css": "3e03abe04a1e63ecdff59aa2147509cb946748fad49b7784ebd5bd2c1d16db39",
       "js/core/admin-window-manager.js": "98efeb7e055b91312eae23653d1ef099eb3cd684c19ab44f5ce0b9f28de688d0",
       "js/admin-visual-assets-39.4.5R3.js": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca",
-      "admin-ribbons.css": "7e9b982dba8f4a3fdb76f8e736e5c56d2427ea258bbac046f1816c0ff4510ca4",
-      "js/decision-board-dual-memory-39.5.0.js": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6"
+      "admin-ribbons.css": "7e9b982dba8f4a3fdb76f8e736e5c56d2427ea258bbac046f1816c0ff4510ca4"
     },
     "publication_identity": {
-      "build": "39.4.6R7",
-      "asset_token": "market-core-v2.0-alpha-build-39.4.6R7",
+      "build": "39.4.6R8",
+      "asset_token": "market-core-v2.0-alpha-build-39.4.6R8",
       "rule": "exact case"
     }
   },
@@ -134,17 +130,17 @@
     "starts_atlas": false
   },
   "notes": [
-    "39.4.6R7 is based directly on published 39.4.6R5.",
+    "39.4.6R8 is based directly on published 39.4.6R5.",
     "One-time migration clears only stale Administrator Graphique window geometry; all other window layouts persist.",
     "Docked Graphique + Lecture technique now stretches across the complete Market zone width.",
     "Technical Reading keeps the full-frame Aerith image while secondary Classic surfaces use 3–6% dark alpha; Source Dock starts collapsed and remains fully functional.",
     "Decorative family/source/analytical emblems are reduced again and remain out-of-flow background accents.",
     "Market Memory 39.4.4R1, Atlas, Math Core, sources, Window Manager, Target Top and Market Flow logic are not edited."
   ],
-  "parent_build": "39.4.6R7",
-  "lineage": "39.4.6R7 → 39.5.0 (Decision Board read-only dual memory reader; theme and protected memory engines inherited unchanged)",
+  "parent_build": "39.4.6R5",
+  "lineage": "39.4.4R1 -> 39.4.5R3 -> Visual R4 -> 39.4.6 -> 39.4.6R1 -> 39.4.6R2 -> 39.4.6R3 -> 39.4.6R4 -> 39.4.6R5 -> 39.4.6R8",
   "ribbon_lock": {
-    "build": "39.4.6R7",
+    "build": "39.4.6R8",
     "stylesheet": "admin-ribbons.css",
     "target_top": "native ribbon + full Administrator control deck in dedicated far-right grid column",
     "market_flow": "native ribbon + full Administrator control deck in dedicated far-right grid column; Classic 115 s cadence; hover/focus pause",
@@ -177,17 +173,5 @@
     "source_emblem_max_px": 44,
     "analytical_emblem_max_px": "44x64",
     "engine_modified": false
-  },
-  "decision_board_dual_memory": {
-    "module": "./js/decision-board-dual-memory-39.5.0.js",
-    "market_reader": "atlasMarketMemoryStats3944R1 + atlasMemoryIntelligenceCompute",
-    "analytical_reader": "atlasAnalyticalMemoryStats394",
-    "separation": "MARKET ≠ CURRENT; no fused counters, score, horizon or timeline",
-    "read_only": true,
-    "starts_atlas": false,
-    "new_fetch": false,
-    "new_timer": false,
-    "new_websocket": false,
-    "memory_write": false
   }
 }

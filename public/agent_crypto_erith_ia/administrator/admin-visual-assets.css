@@ -1016,3 +1016,77 @@ body.atlas-administrator-mirror
   background-image:none!important;
   filter:none!important;
 }
+
+/* ==========================================================================
+   39.4.6R8 — TECHNICAL READING ULTRA-LIGHT GLASS LOCK
+
+   Operator contract:
+   - preserve the validated R7 layout and full-frame private/default image;
+   - reduce ONLY Technical Reading glass/background coverage;
+   - keep text fully opaque and interactive controls functional;
+   - no Market / Memory / Atlas / Math / Window Manager behavior change.
+   ========================================================================== */
+
+body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel{
+  background:rgba(2,8,16,.002)!important;
+}
+
+body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle{
+  background:rgba(2,8,17,.008)!important;
+  border-color:rgba(98,236,255,.085)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Four top facts: light glass only. */
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip>span{
+  background:rgba(2,8,17,.025)!important;
+  border-color:rgba(98,236,255,.10)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Secondary Classic rows: almost clear. */
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow>summary,
+body.atlas-administrator-mirror #detailPanel .detail-grid>div,
+body.atlas-administrator-mirror #detailPanel .why-box,
+body.atlas-administrator-mirror #detailPanel .source-dock-command,
+body.atlas-administrator-mirror #detailPanel .source-dock-status,
+body.atlas-administrator-mirror #detailPanel .source-portal,
+body.atlas-administrator-mirror #detailPanel .source-dock-meta>span,
+body.atlas-administrator-mirror #detailPanel .broker-strip>div,
+body.atlas-administrator-mirror #detailPanel .diagnostic-strip>div,
+body.atlas-administrator-mirror #detailPanel .clean-lens-integrity>p,
+body.atlas-administrator-mirror #detailPanel button:not(.detail-panel-toggle),
+body.atlas-administrator-mirror #detailPanel a,
+body.atlas-administrator-mirror #detailPanel .source-dock-refresh{
+  background:rgba(2,8,17,.012)!important;
+  border-color:rgba(98,236,255,.075)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Small image identity chip also becomes glass-light. */
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>span{
+  background:rgba(2,8,17,.025)!important;
+  border-color:rgba(255,215,130,.12)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+
+/* Never reintroduce legacy dark overlays. */
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.clean-lens-detail-panel::before,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.clean-lens-detail-panel::after{
+  content:none!important;
+  display:none!important;
+  opacity:0!important;
+  background:none!important;
+}
