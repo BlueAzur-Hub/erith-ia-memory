@@ -1,17 +1,17 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "39.6.2",
-  "release": "ADMINISTRATOR MIRROR · TECHNICAL READING FULL-CLEAR SURFACES LOCK",
-  "published_at": "2026-08-18T03:45:00+02:00",
+  "build": "39.7.0",
+  "release": "ADMINISTRATOR MIRROR · MULTI-COLLECTOR CONCORDANCE READ-ONLY LOCK",
+  "published_at": "2026-08-18T03:58:00+02:00",
   "global_versioning": {
-    "primary_build": "39.6.2",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.6.2",
+    "primary_build": "39.7.0",
+    "primary_label": "Agent-Crypto @erith.IA · Build 39.7.0",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "39.6.2",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-39.6.2",
+    "canonical_build": "39.7.0",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-39.7.0",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -45,9 +45,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "a973405a59e9e87871c3466c2dfaf21507ee26512dd0c05983748f296bdad7b7",
-      "index.html": "4cf35200743d72b2c0f2bfb365edaa64e7945cb47417929dab1c87ce96ef4cfd",
-      "js/app.js": "17895f5bbfabc1f458f3ebde2e82191e01ed0baf677d9f9ae7a95de56417f27d",
+      "app.js": "4887c89ea525d74c59251c4cb1740f30968297a35c9af4192cec44887854260b",
+      "index.html": "ae3b1844be6fe71f2fb134fd3928493e402f1c7b71657d435b7390e6eb4b9872",
+      "js/app.js": "6fd84fe268622a3f49c91d0de7ca2b36699ad77f6bde59ef9708f510678b7d98",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -66,11 +66,12 @@
       "js/admin-visual-assets-39.4.5R3.js": "906705f079f1d1a8871c957a98a974f124002b1a13fa1aac14137b44733d26ca",
       "admin-ribbons.css": "fc3712dc5986eb1b6cf1e9ad41e76c33cf798c650ef5203347409189c52278ec",
       "js/decision-board-dual-memory-39.5.0.js": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6",
-      "js/retrospective-validation-39.6.0.js": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf"
+      "js/retrospective-validation-39.6.0.js": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf",
+      "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60"
     }
   },
-  "parent_build": "39.6.1",
-  "lineage": "39.6.1 → 39.6.2 · Technical Reading full-clear surfaces only; geometry, controls and functional modules preserved",
+  "parent_build": "39.6.2",
+  "lineage": "39.6.2 → 39.7.0 · read-only Multi-Collector Concordance; 39.6.2 Technical Reading visual lock preserved",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -181,5 +182,40 @@
     "atlas_modified": false,
     "math_core_modified": false,
     "legacy_parent_shells_cleared": true
+  },
+  "multi_collector_concordance": {
+    "module": "./js/multi-collector-concordance-39.7.0.js",
+    "market_source": "./js/market-memory-39.4.4R1.js public stats API",
+    "identity_fields": [
+      "collector_id",
+      "market_snapshot_id",
+      "generated_at/source_time",
+      "source",
+      "fingerprint when present"
+    ],
+    "recent_window_minutes": 20,
+    "comparison_assets": [
+      "BTC",
+      "ETH",
+      "BNB",
+      "XRP",
+      "SOL"
+    ],
+    "price_unit": "EUR price_eur only",
+    "minimum_comparable_assets": 3,
+    "mean_spread_confirmation_threshold_pct": 0.5,
+    "max_asset_spread_threshold_pct": 1.0,
+    "same_snapshot_preferred": true,
+    "near_time_fallback": true,
+    "source_independence_separate": true,
+    "fake_score": false,
+    "read_only": true,
+    "starts_atlas": false,
+    "starts_nox": false,
+    "starts_aerith": false,
+    "memory_write": false,
+    "new_fetch": false,
+    "new_timer": false,
+    "new_websocket": false
   }
 }
