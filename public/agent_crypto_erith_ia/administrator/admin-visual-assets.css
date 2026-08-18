@@ -1190,3 +1190,110 @@ body.atlas-administrator-mirror .atlas-help-layer{
   opacity:0!important;
   pointer-events:none!important;
 }
+
+
+/* ==========================================================================
+   39.6.2 — TECHNICAL READING FULL-CLEAR SURFACES LOCK
+
+   OPERATOR CONTRACT:
+   - preserve 39.6.1 geometry, image, text, semantic borders and interactions;
+   - remove ONLY the remaining dark/gradient fills from the visible
+     Technical Reading fact cards and functional rows;
+   - keep expanded bodies transparent;
+   - no Market / Memory / Atlas / Math / Window Manager behavior change.
+   ========================================================================== */
+
+/* Legacy parent shells were still carrying 44–48% dark backgrounds.
+   Clear the shells themselves before clearing their visible rows. */
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .atlas-detail-subwindow,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .atlas-source-dock{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Header toggle and the four primary fact cards: true clear background. */
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel > .detail-panel-toggle,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .detail-compact-strip > span{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Functional rows/cells: preserve text and borders, expose the portrait fully. */
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .atlas-detail-subwindow > summary,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .detail-grid > div,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .why-box,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .source-dock-command,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .source-dock-status,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .source-portal,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .source-dock-meta > span,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .broker-strip > div,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .diagnostic-strip > div,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .clean-lens-integrity > p{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Open sections must remain clear as well. */
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel details[open] > .atlas-detail-subwindow-body,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel details[open] > .source-dock-body,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .source-dock-portals,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .detail-grid,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .broker-strip,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens
+#detailPanel.clean-lens-detail-panel .diagnostic-strip{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
