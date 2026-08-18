@@ -1,24 +1,24 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Agent-Crypto @erith.IA · Build 39.8.0 · ADMINISTRATOR MIRROR · MEMORY HEALTH AUDIT READ-ONLY LOCK",
-  "build": "39.8.0",
-  "asset_token": "market-core-v2.0-alpha-build-39.8.0",
-  "published_at": "2026-08-18T04:30:00+02:00",
+  "release": "Agent-Crypto @erith.IA · Build 39.8.0R1 · ADMINISTRATOR MIRROR · TECHNICAL READING NEAR-ZERO GLASS VISUAL REPAIR",
+  "build": "39.8.0R1",
+  "asset_token": "market-core-v2.0-alpha-build-39.8.0R1",
+  "published_at": "2026-08-18T04:48:00+02:00",
   "mode": "Administrator",
   "engine": {
     "name": "Market Core V2.0-Alpha",
     "reference_build": "38.15.11",
-    "status": "39.8.0 ADMINISTRATOR MIRROR · MEMORY HEALTH AUDIT READ-ONLY LOCK; read-only memory architecture chain preserved."
+    "status": "39.8.0R1 visual-only near-zero glass repair for Technical Reading; Memory Health 39.8.0 logic unchanged and still under semantic review; Multi-Collector and prior memories preserved."
   },
   "files": {
     "app.js": {
-      "sha256": "a143cfe38e13ec1e72831b3f757829a4b17b529ecf4172e723b7d1f51306cf92"
+      "sha256": "1b4a9d9e793ef6a73d414232ad44e4e6003e26630d771670cb2b4e6e54b0090f"
     },
     "index.html": {
-      "sha256": "138e3421518605432fe127a355a5399773dc84b180dd8cdfb9344cf1b643bb4c"
+      "sha256": "549207d8c5adbf08940feb47164b81d4da3d117b5ca5934bb29f6a9a6b1f79a4"
     },
     "js/app.js": {
-      "sha256": "4374f023e6a62fe943555d23de67b0915294cd8015526bce1a852051b2948863"
+      "sha256": "718485cd1b3e9468799c75009bdddcace74b418ec53f094c0591df8c10fd41f5"
     },
     "js/market-memory-39.4.4R1.js": {
       "sha256": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c"
@@ -75,7 +75,7 @@
       "sha256": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6"
     },
     "administrator-version.json": {
-      "sha256": "1dc8571eaefa2f9701a43cbcee90444c6e9dd0e35b56acfd5437c212162102b5"
+      "sha256": "bad27e319573858d353f5ade44578972ea32966036996ab985af59f784e41dda"
     },
     "js/retrospective-validation-39.6.0.js": {
       "sha256": "38b7e61a0e5fe53fc0bb698f4d17d633bd8c834cd9643ed70fd0ac9c7121febf"
@@ -89,9 +89,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "a143cfe38e13ec1e72831b3f757829a4b17b529ecf4172e723b7d1f51306cf92",
-      "index.html": "138e3421518605432fe127a355a5399773dc84b180dd8cdfb9344cf1b643bb4c",
-      "js/app.js": "4374f023e6a62fe943555d23de67b0915294cd8015526bce1a852051b2948863",
+      "app.js": "1b4a9d9e793ef6a73d414232ad44e4e6003e26630d771670cb2b4e6e54b0090f",
+      "index.html": "549207d8c5adbf08940feb47164b81d4da3d117b5ca5934bb29f6a9a6b1f79a4",
+      "js/app.js": "718485cd1b3e9468799c75009bdddcace74b418ec53f094c0591df8c10fd41f5",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -111,11 +111,12 @@
       "admin-ribbons.css": "fc3712dc5986eb1b6cf1e9ad41e76c33cf798c650ef5203347409189c52278ec",
       "js/decision-board-dual-memory-39.5.0.js": "212dfc3613907d9abad43c58b12d6168fdb1b0542aa38df13ff2e3fcd29b51a6",
       "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60",
-      "js/memory-health-audit-39.8.0.js": "edf2a1610f195ae5892e11dd1915fd80250a39c9565efa3a6d2178c5ae8c5e8e"
+      "js/memory-health-audit-39.8.0.js": "edf2a1610f195ae5892e11dd1915fd80250a39c9565efa3a6d2178c5ae8c5e8e",
+      "administrator-version.json": "bad27e319573858d353f5ade44578972ea32966036996ab985af59f784e41dda"
     },
     "publication_identity": {
-      "build": "39.8.0",
-      "asset_token": "market-core-v2.0-alpha-build-39.8.0",
+      "build": "39.8.0R1",
+      "asset_token": "market-core-v2.0-alpha-build-39.8.0R1",
       "rule": "exact case"
     }
   },
@@ -158,10 +159,11 @@
     "39.7.0 adds a read-only Multi-Collector Concordance reader: distinct collectors, bounded timestamp comparison, TOP5 EUR spread and source-independence separation; no memory write, Atlas/NØX/Aerith start, fetch, timer or WebSocket.",
     "39.7.1 reduces the remaining Technical Reading panel opacity with an inline HTML override only: headers ~0.06, functional surfaces ~0.03, bodies transparent; no JS logic or memory module modified.",
     "39.7.1 same-build publication repair: app.js/js/app.js identity aligned to 39.7.1 and SHA registries regenerated mechanically; no feature, memory or CSS delta.",
-    "39.8.0 adds ADMINISTRATOR MIRROR · MEMORY HEALTH AUDIT READ-ONLY LOCK; no image asset, no CSS rewrite, no memory write, no Atlas/NØX/Aerith start."
+    "39.8.0 adds ADMINISTRATOR MIRROR · MEMORY HEALTH AUDIT READ-ONLY LOCK; no image asset, no CSS rewrite, no memory write, no Atlas/NØX/Aerith start.",
+    "39.8.0R1 is visual-only: removes remaining Technical Reading dark glass/blur. It does not repair or alter Memory Health 39.8.0 diagnostic logic, which remains under semantic review."
   ],
-  "parent_build": "39.7.1",
-  "lineage": "39.7.1 → 39.8.0 · read-only Memory Health / Audit; Multi-Collector and prior memories preserved",
+  "parent_build": "39.8.0",
+  "lineage": "39.8.0 → 39.8.0R1 · Technical Reading near-zero glass visual repair only; Memory Health 39.8.0 unchanged",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -188,9 +190,9 @@
     "math_core_modified": false,
     "atlas_modified": false,
     "desktop_layout": "Full Market width: Graphique left + Lecture technique right; Source Dock collapsed by default; explicit source action reopens it",
-    "functional_glass": "39.7.1: section headers use ultra-light glass; cards and functional rows use ~0.03 alpha; expanded bodies remain transparent.",
+    "functional_glass": "39.8.0R1: panel shell transparent, internal surfaces <= 0.018 alpha, no backdrop blur; text shadow only.",
     "help_layer": "hidden in Administrator design",
-    "functional_surface_background_alpha_max": 0.03
+    "functional_surface_background_alpha_max": 0.018
   },
   "decorative_emblem_lock": {
     "layout_reservation": false,
@@ -315,5 +317,15 @@
     "starts_atlas": false,
     "starts_nox": false,
     "starts_aerith": false
+  },
+  "design_39_8_0R1": {
+    "scope": "CODE ONLY visual repair in index.html + publication identity",
+    "panel_shell": "transparent",
+    "functional_surface_alpha_max": 0.018,
+    "backdrop_blur": "disabled",
+    "geometry_modified": false,
+    "memory_health_logic_modified": false,
+    "images_shipped": 0,
+    "assets_modified": false
   }
 }
