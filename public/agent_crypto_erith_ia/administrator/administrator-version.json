@@ -1,17 +1,17 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v28",
-  "build": "40.0.0",
-  "release": "ADMINISTRATOR MIRROR · STABLE CANDIDATE 40.0 · FROZEN 39.x ARCHITECTURE",
-  "published_at": "2026-08-18T20:37:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v29",
+  "build": "40.0.0R1",
+  "release": "ADMINISTRATOR MIRROR · WINDOW CONTROLS FUNCTIONAL RECOVERY LOCK",
+  "published_at": "2026-08-18T21:12:00+02:00",
   "global_versioning": {
-    "primary_build": "39.9.0R2",
-    "primary_label": "Agent-Crypto @erith.IA · Build 39.9.0R2",
+    "primary_build": "40.0.0R1",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.0.0R1",
     "version_manifest": "./version.json",
     "engine_reference": "Market Core 38.15.11"
   },
   "publication_identity_contract": {
-    "canonical_build": "40.0.0",
-    "canonical_asset_token": "market-core-v2.0-alpha-build-40.0.0",
+    "canonical_build": "40.0.0R1",
+    "canonical_asset_token": "market-core-v2.0-alpha-build-40.0.0R1",
     "case_sensitive": true,
     "historical_lock": "39.2.20R2 preserved"
   },
@@ -45,9 +45,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "3e5d18510cf7ac123746875fd5715d67650028d5e8af9e04e5dd3008744a0dde",
-      "index.html": "9aeeda4b8da4d76625778dcf0f79650a76a6897ce6cd211bfe3dd970fc9d1e3d",
-      "js/app.js": "aa6a6752e6f96c0a9ab7129535fe4e8e4d2990e597a751aa95b1804fa3b03ae8",
+      "app.js": "575cf913bffd110d627a9b874d7abd29424b3ca28e1de45865070cc0500fc1b1",
+      "index.html": "77571fb1b5bd618a89dda6ca27e65f58b6b7e45b176aaabdad1474319fba039c",
+      "js/app.js": "f488114337bfb7c4acbcac64424d681cd1bd9585c7a254794fee9a3595bdacb7",
       "js/market-memory-39.4.4R1.js": "f34041d816e2306deb45cfe68984104fa0bfcc7d97f99ae7a156d85541c7678c",
       "admin-visual-assets.css": "c3d5eda527dd8bfbfa36c66bf6ffdac3ffe7e37b9c06365a65548e29192e01c7",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
@@ -70,11 +70,12 @@
       "js/multi-collector-concordance-39.7.0.js": "b809793106c9de6e22056b7913e992f3da4b94a42b53722c5e5ce36452554b60",
       "js/memory-health-audit-39.8.0R2.js": "f889dcdb3bd437387717fd4404455ae4a647dc11d9d30d0e1ce53d30766bd1a4",
       "js/layout-repair-39.9.0R2.js": "60f104ef2e19deef425ae2d07a22bbeaafcfb019fc6a5c6da6882a33b00daedd",
-      "js/architecture-freeze-40.0.0.js": "7213616c3b691bc33c24f82680b86145a7948832bba4257df816ffee878db92b"
+      "admin-window-controls-recovery-40.0.0R1.css": "e9d64246993795f345bc3403eee0f0ea50fba6ef64e40ef42bf8c3a0ffc17c5e",
+      "js/architecture-freeze-40.0.0R1.js": "1113875ce1f9a52fe2a68af042e492c329f0715de37dbde21f92307a5807829a"
     }
   },
-  "parent_build": "39.9.0R2",
-  "lineage": "39.9.0R2 → 40.0.0 · stable candidate identity + final preflight only; no feature delta",
+  "parent_build": "40.0.0",
+  "lineage": "40.0.0 → 40.0.0R1 · restore validated direct Administrator window controls; preserve 40.0 market/memory work",
   "ribbon_lock": {
     "build": "39.6.1",
     "stylesheet": "admin-ribbons.css",
@@ -357,5 +358,18 @@
     "starts_bridge": false,
     "starts_ollama": false,
     "final_validation": "Firefox operator validation required after GitHub publication"
+  },
+  "window_controls_recovery_40_0_0R1": {
+    "basis": "validated Administrator direct-window contract visible in 39.4.5R2 and introduced as stable compact direct controls in 39.2.7",
+    "contract": "⠿ move · — reduce · □ detach/dock · ⤢ maximize/restore · × hide",
+    "stylesheet": "./admin-window-controls-recovery-40.0.0R1.css",
+    "manager": "./js/core/admin-window-manager.js",
+    "manager_modified": false,
+    "home_layout_delta": false,
+    "classic_web_delta": false,
+    "market_logic_delta": false,
+    "memory_logic_delta": false,
+    "atlas_bridge_delta": false,
+    "visibility": "direct controls visible at rest; hover is enhancement, not requirement"
   }
 }

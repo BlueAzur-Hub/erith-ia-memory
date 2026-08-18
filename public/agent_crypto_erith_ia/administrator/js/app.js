@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.0.0";
+  const ADMIN_BUILD = "40.0.0R1";
   const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · STABLE CANDIDATE 40.0 · FROZEN 39.x ARCHITECTURE";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -190,7 +190,7 @@
       engineBadge.title = `Moteur métier hérité de la Classic ${ENGINE_BUILD}`;
     }
 
-    // 40.0.0 — COMPACT HOME LOCK · inherited from validated 39.9.0R2
+    // 40.0.0R1 — COMPACT HOME LOCK · inherited from validated 39.9.0R2
     // The extra Administrator Mirror identity line was useful during validation,
     // but it changes the home header height. Final UI keeps the existing header
     // geometry and version indicators only.
