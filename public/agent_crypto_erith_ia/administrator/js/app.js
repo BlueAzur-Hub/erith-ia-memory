@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "39.8.0R2";
-  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · MEMORY HEALTH TRUTH REPAIR";
+  const ADMIN_BUILD = "39.9.0";
+  const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · MEMORY ARCHITECTURE FREEZE";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
