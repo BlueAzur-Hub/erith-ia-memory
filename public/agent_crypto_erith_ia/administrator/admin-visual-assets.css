@@ -1090,3 +1090,103 @@ body.atlas-administrator-mirror
   opacity:0!important;
   background:none!important;
 }
+
+
+/* ==========================================================================
+   39.6.1 — TECHNICAL READING NEAR-CLEAR GLASS + HELP-LAYER OFF LOCK
+
+   DESIGN-ONLY CONTRACT:
+   - preserve R7 full-frame image + full-width Graphique/Detail geometry;
+   - keep the private/default image visually dominant;
+   - functional text remains opaque; surfaces are effectively clear;
+   - remove the coarse whole-page HELP LAYER from Administrator presentation;
+   - do not alter Market / Memory / Atlas / Math / Window Manager behavior.
+   ========================================================================== */
+
+body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel{
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle{
+  background:rgba(2,8,17,.002)!important;
+  border-color:rgba(98,236,255,.055)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Primary facts: only 0.6% dark glass. */
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip>span{
+  background:rgba(2,8,17,.006)!important;
+  border-color:rgba(98,236,255,.065)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Secondary information: 0.2% dark glass — practically transparent. */
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow>summary,
+body.atlas-administrator-mirror #detailPanel .detail-grid>div,
+body.atlas-administrator-mirror #detailPanel .why-box,
+body.atlas-administrator-mirror #detailPanel .source-dock-command,
+body.atlas-administrator-mirror #detailPanel .source-dock-status,
+body.atlas-administrator-mirror #detailPanel .source-portal,
+body.atlas-administrator-mirror #detailPanel .source-dock-meta>span,
+body.atlas-administrator-mirror #detailPanel .broker-strip>div,
+body.atlas-administrator-mirror #detailPanel .diagnostic-strip>div,
+body.atlas-administrator-mirror #detailPanel .clean-lens-integrity>p,
+body.atlas-administrator-mirror #detailPanel button:not(.detail-panel-toggle),
+body.atlas-administrator-mirror #detailPanel a,
+body.atlas-administrator-mirror #detailPanel .source-dock-refresh{
+  background:rgba(2,8,17,.002)!important;
+  border-color:rgba(98,236,255,.050)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Expanded bodies must never create a dark slab over the portrait. */
+body.atlas-administrator-mirror #detailPanel details[open]>.atlas-detail-subwindow-body,
+body.atlas-administrator-mirror #detailPanel details[open]>.source-dock-body,
+body.atlas-administrator-mirror #detailPanel .source-dock-portals,
+body.atlas-administrator-mirror #detailPanel .detail-grid,
+body.atlas-administrator-mirror #detailPanel .broker-strip,
+body.atlas-administrator-mirror #detailPanel .diagnostic-strip{
+  background:transparent!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Identity tag: visible text, almost no plate. */
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>span{
+  background:rgba(2,8,17,.004)!important;
+  border-color:rgba(255,215,130,.08)!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Preserve text contrast without reintroducing glass panels. */
+body.atlas-administrator-mirror #detailPanel strong,
+body.atlas-administrator-mirror #detailPanel b,
+body.atlas-administrator-mirror #detailPanel span,
+body.atlas-administrator-mirror #detailPanel small,
+body.atlas-administrator-mirror #detailPanel em,
+body.atlas-administrator-mirror #detailPanel i,
+body.atlas-administrator-mirror #detailPanel p,
+body.atlas-administrator-mirror #detailPanel a,
+body.atlas-administrator-mirror #detailPanel button{
+  text-shadow:0 1px 2px rgba(0,0,0,.92),0 0 2px rgba(0,0,0,.68)!important;
+}
+
+/* Coarse HELP LAYER is deliberately absent in Administrator design.
+   Native browser titles / compact chart tooltip behavior are unaffected. */
+body.atlas-administrator-mirror #atlasHelpLayer,
+body.atlas-administrator-mirror .atlas-help-layer{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}

@@ -361,3 +361,82 @@
   #market-workspace .top5-track,
   #market-workspace .market-flow-viewport{grid-column:1!important;grid-row:2!important;}
 }
+
+
+/* ==========================================================================
+   39.6.1 — RIBBON CONTROL DECK IN-SECTION LOCK
+
+   DESIGN-ONLY CONTRACT:
+   - same Administrator control family as Market Snapshot;
+   - Target Top and Market Flow controls remain INSIDE their own section;
+   - controls are anchored top-right, never outside the ribbon;
+   - no third grid column, no crypto-card width reservation;
+   - Target cycle logic and Market Flow 115 s cadence remain untouched.
+   ========================================================================== */
+
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating),
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating){
+  position:relative!important;
+  overflow:hidden!important;
+}
+
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls,
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls{
+  position:absolute!important;
+  top:6px!important;
+  right:7px!important;
+  bottom:auto!important;
+  left:auto!important;
+  grid-column:auto!important;
+  grid-row:auto!important;
+  align-self:auto!important;
+  justify-self:auto!important;
+  width:max-content!important;
+  max-width:calc(100% - 14px)!important;
+  margin:0!important;
+  transform:none!important;
+  z-index:70!important;
+  opacity:.34!important;
+  pointer-events:auto!important;
+}
+
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating):hover > .admin-native-controls,
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating):hover > .admin-native-controls{
+  opacity:.60!important;
+}
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls:hover,
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls:focus-within,
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls:hover,
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls:focus-within{
+  opacity:1!important;
+}
+
+/* Compact deck: visible immediately, small enough not to dominate the ribbon. */
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls .admin-native-control,
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls .admin-native-control{
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  min-height:22px!important;
+  padding:0!important;
+}
+
+/* The data track keeps the full second column. Control deck is overlay chrome. */
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .top5-track,
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .market-flow-viewport{
+  grid-column:2!important;
+  min-width:0!important;
+  width:100%!important;
+}
+
+@media (max-width:680px){
+  #market-workspace .top5-ribbon:not(.admin-native-direct-floating),
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating){
+    padding-top:30px!important;
+  }
+  #market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls,
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls{
+    top:4px!important;
+    right:5px!important;
+  }
+}
