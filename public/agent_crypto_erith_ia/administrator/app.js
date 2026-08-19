@@ -4543,9 +4543,7 @@ function atlasCanvasWrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3
 }
 
 function atlasCleanLensResizeChart() {
-  const chart = state.chartEngineV2?.realChart;
-  if (!chart) return;
-  try { chart.resize(); } catch (error) { console.warn("Redimensionnement graphique ignoré", error); }
+  return atlasScheduleStableChartResize({ delay: 160, reason: "clean-lens" });
 }
 
 function atlasSetCleanLensCollapsed(collapsed, persist = true) {
@@ -4577,9 +4575,7 @@ function atlasSetCleanLensCollapsed(collapsed, persist = true) {
     try { localStorage.setItem(ATLAS_CLEAN_LENS_PANEL_KEY, isCollapsed ? "1" : "0"); } catch {}
   }
 
-  requestAnimationFrame(atlasCleanLensResizeChart);
-  setTimeout(atlasCleanLensResizeChart, 120);
-  setTimeout(atlasCleanLensResizeChart, 320);
+  atlasScheduleStableChartResize({ delay: 180, reason: "clean-lens-collapse" });
 }
 
 function atlasToggleCleanLensPanel(forceOpen = null) {
@@ -4634,7 +4630,7 @@ function initAtlasCleanLensPanel() {
   if (deck.dataset.cleanLensResizeBound !== "1") {
     deck.dataset.cleanLensResizeBound = "1";
     window.addEventListener("resize", () => {
-      requestAnimationFrame(atlasCleanLensResizeChart);
+      atlasScheduleStableChartResize({ delay: 180, reason: "clean-lens-window-resize" });
     }, { passive: true });
   }
 }
@@ -4688,8 +4684,7 @@ function initAtlasDetailWindows() {
         const coin = getSelectedCoin() || state.coins[0] || null;
         if (coin) atlasEnsureSourceDock(coin, { force: false });
       }
-      requestAnimationFrame(atlasCleanLensResizeChart);
-      setTimeout(atlasCleanLensResizeChart, 120);
+      atlasScheduleStableChartResize({ delay: 180, reason: "detail-window-toggle" });
     });
   });
 }
@@ -6253,6 +6248,71 @@ function atlasBuildBestAlignedComparisonEntries(entries, period, targetCount = A
   return [];
 }
 
+function atlasComparisonChartIds(chart) {
+  return Array.isArray(chart?.data?.datasets)
+    ? chart.data.datasets.map(dataset => dataset?.atlasCoin?.id).filter(Boolean)
+    : [];
+}
+
+function atlasSameOrderedIds(left = [], right = []) {
+  return left.length === right.length && left.every((value, index) => value === right[index]);
+}
+
+function atlasCanAtomicRefreshComparisonChart(chart, canvas, normalizedEntries) {
+  if (!chart || chart.canvas !== canvas || chart.$atlasMode !== "comparison") return false;
+  const currentIds = atlasComparisonChartIds(chart);
+  const nextIds = normalizedEntries.map(entry => entry?.coin?.id).filter(Boolean);
+  return nextIds.length > 1 && atlasSameOrderedIds(currentIds, nextIds);
+}
+
+function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, period, chartKey, comparisonFingerprint, bounds) {
+  if (!atlasCanAtomicRefreshComparisonChart(chart, canvas, normalizedEntries)) return false;
+
+  const ctx = canvas.getContext("2d");
+  const gradientWidth = canvas.getBoundingClientRect().width || canvas.clientWidth || 980;
+  const timeline = bounds.timeline;
+
+  normalizedEntries.forEach((entry, index) => {
+    const dataset = chart.data.datasets[index];
+    const palette = atlasCryptoPalette(entry.coin, index);
+    dataset.label = `${entry.coin.symbol}`;
+    dataset.atlasCoin = { id: entry.coin.id, symbol: entry.coin.symbol, name: entry.coin.name, image: entry.coin.image || "" };
+    dataset.atlasPrimaryColor = palette.primary;
+    dataset.atlasGradientCss = atlasCryptoGradientCss(entry.coin, index);
+    dataset.data = entry.data;
+    dataset.borderColor = atlasCryptoCanvasGradient(ctx, entry.coin, index, gradientWidth);
+    dataset.backgroundColor = palette.primary;
+    dataset.pointBackgroundColor = palette.primary;
+  });
+
+  chart.options.scales.x.min = bounds.startTime;
+  chart.options.scales.x.max = bounds.endTime;
+  chart.options.scales.y.min = bounds.min - bounds.yPad;
+  chart.options.scales.y.max = bounds.max + bounds.yPad;
+
+  chart.$atlasPeriod = Number(period || 1);
+  chart.$atlasTimeline = timeline;
+  chart.$atlasPreset = String(state.dataBroker?.comparison?.preset || "manual");
+  chart.$atlasVolumeVisible = state.chartViewV2.volume !== false;
+  chart.$atlasVolume = chart.$atlasVolumeVisible;
+  chart.$atlasShadowSeries = normalizedEntries.map((entry, index) => ({
+    rows: entry.data.filter(Boolean).map(point => ({ x: point.x, price: point.y, y: 1 })),
+    color: "#587488",
+    opacity: index === 0 ? 0.085 : Math.max(0.038, 0.065 - index * 0.006),
+    heightRatio: 0.88
+  }));
+
+  state.chartEngineV2.lastRenderedKey = chartKey;
+  state.chartEngineV2.lastFingerprint = comparisonFingerprint;
+  atlasRefreshChartScale(chart);
+  chart.update("none");
+  atlasHideChartRefresh();
+  atlasRenderChartValueOverlay(normalizedEntries, { comparison: true, period });
+  window.requestAnimationFrame(() => atlasPatchVisibleChartLiveEndpoints());
+  atlasChartStability40121.metrics.atomic_refresh_commits += 1;
+  return true;
+}
+
 function drawComparisonChart(canvas, entries, period, chartKey = "") {
   if (!canvas || !Array.isArray(entries) || entries.length < 1) {
     state.dataBroker.comparison.renderedIds = [];
@@ -6310,6 +6370,19 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
   );
 
   if (alreadyRendered) {
+    return normalizedEntries;
+  }
+
+  const existingChart = state.chartEngineV2.realChart;
+  if (atlasAtomicRefreshComparisonChart(
+    existingChart,
+    canvas,
+    normalizedEntries,
+    period,
+    chartKey,
+    comparisonFingerprint,
+    { min, max, yPad, timeline, startTime, endTime }
+  )) {
     return normalizedEntries;
   }
 
@@ -6624,8 +6697,17 @@ async function renderComparisonAnalystPanel(options = {}) {
   const ids = coins.map(coin => coin.id);
   const chartKey = `comparison:${ids.join(",")}:${period}`;
   const comparisonPreset = String(state.dataBroker?.comparison?.preset || "manual");
-  const strictAtomicComparison = ATLAS_SCANNER_PRESETS.has(comparisonPreset);
+  const visibleComparisonIds = atlasComparisonChartIds(state.chartEngineV2?.realChart);
+  const preservingVisibleComparison =
+    state.chartEngineV2?.realChart?.$atlasMode === "comparison"
+    && ids.length > 1
+    && atlasSameOrderedIds(visibleComparisonIds, ids);
+  const strictAtomicComparison = ATLAS_SCANNER_PRESETS.has(comparisonPreset) || preservingVisibleComparison;
   const requiredSeriesCount = strictAtomicComparison ? coins.length : 1;
+  if (preservingVisibleComparison) {
+    atlasChartStability40121.metrics.atomic_refresh_transactions += 1;
+    atlasChartStability40121.metrics.last_atomic_selection = ids.join(",");
+  }
   const previousChartState = state.dataBroker.chart;
   const previousComparisonState = {
     ...state.dataBroker.comparison,
@@ -7601,21 +7683,71 @@ function atlasStrictGraphContract(period, chart, chartResult, comparisonIds, cha
   };
 }
 
-function atlasScheduleStableChartResize() {
-  if (atlasStableResizeFrame) cancelAnimationFrame(atlasStableResizeFrame);
-  if (atlasStableResizeTimer) clearTimeout(atlasStableResizeTimer);
+function atlasChartStableGeometry() {
+  const canvas = els.mainChart;
+  const shell = canvas?.closest?.(".chart-shell") || canvas;
+  const rect = shell?.getBoundingClientRect?.();
+  if (!rect) return null;
+  const width = Math.max(0, Math.round(Number(rect.width || 0)));
+  const height = Math.max(0, Math.round(Number(rect.height || 0)));
+  if (!width || !height) return null;
+  return { width, height };
+}
 
-  atlasStableResizeFrame = requestAnimationFrame(() => {
+function atlasApplyStableChartResize(force = false, reason = "stable") {
+  const chart = state.chartEngineV2?.realChart;
+  if (!chart) return false;
+  const geometry = atlasChartStableGeometry();
+  if (!geometry) return false;
+
+  const sameGeometry =
+    Math.abs(geometry.width - atlasStableResizeLastWidth) < 1
+    && Math.abs(geometry.height - atlasStableResizeLastHeight) < 1;
+
+  if (!force && sameGeometry) {
+    atlasChartStability40121.metrics.resize_skipped += 1;
+    atlasChartStability40121.metrics.last_resize_reason = String(reason || "stable");
+    return false;
+  }
+
+  try {
+    chart.resize();
+    atlasStableResizeLastWidth = geometry.width;
+    atlasStableResizeLastHeight = geometry.height;
+    atlasChartStability40121.metrics.resize_executed += 1;
+    atlasChartStability40121.metrics.last_geometry = `${geometry.width}x${geometry.height}`;
+    atlasChartStability40121.metrics.last_resize_reason = String(reason || "stable");
+    return true;
+  } catch (error) {
+    console.warn("Redimensionnement graphique ignoré", error);
+    return false;
+  }
+}
+
+function atlasScheduleStableChartResize(options = {}) {
+  const config = typeof options === "number" ? { delay: options } : (options || {});
+  const delay = Math.max(0, Number(config.delay ?? 160));
+  const force = config.force === true;
+  const reason = String(config.reason || "stable");
+
+  atlasChartStability40121.metrics.resize_requested += 1;
+  if (atlasStableResizeFrame) {
+    cancelAnimationFrame(atlasStableResizeFrame);
     atlasStableResizeFrame = 0;
-    try { state.chartEngineV2?.realChart?.resize?.(); } catch {}
-    try { atlasCleanLensResizeChart?.(); } catch {}
-  });
+  }
+  if (atlasStableResizeTimer) {
+    clearTimeout(atlasStableResizeTimer);
+    atlasStableResizeTimer = 0;
+  }
 
   atlasStableResizeTimer = window.setTimeout(() => {
     atlasStableResizeTimer = 0;
-    try { state.chartEngineV2?.realChart?.resize?.(); } catch {}
-    try { atlasCleanLensResizeChart?.(); } catch {}
-  }, 180);
+    atlasStableResizeFrame = requestAnimationFrame(() => {
+      atlasStableResizeFrame = 0;
+      atlasApplyStableChartResize(force, reason);
+    });
+  }, delay);
+  return true;
 }
 
 const ATLAS_ADMIN_GRAPH_MODE_KEY = "atlas.admin.graph.mode.v2";
@@ -7678,8 +7810,7 @@ function atlasAdminGraphSet(mode, options = {}) {
       document.getElementById("market-workspace")?.scrollIntoView({ block: "start", behavior });
     } else {
       document.getElementById("analyste")?.scrollIntoView({ block: "start", behavior });
-      try { atlasScheduleStableChartResize(); } catch {}
-      window.setTimeout(() => { try { atlasScheduleStableChartResize(); } catch {} }, 240);
+      try { atlasScheduleStableChartResize({ delay: 180, reason: "admin-graph-open" }); } catch {}
     }
   });
   window.dispatchEvent(new CustomEvent("atlas:admin-graph", { detail: { mode: next, open: next !== "closed" } }));
@@ -12131,7 +12262,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.20",
+  interface: "Build 40.1.21",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12728,6 +12859,34 @@ function atlasBuildCryptoPageSnapshotCore() {
 let atlasStableResizeFrame = 0;
 
 let atlasStableResizeTimer = 0;
+
+let atlasStableResizeLastWidth = 0;
+
+let atlasStableResizeLastHeight = 0;
+
+const atlasChartStability40121 = {
+  build: "40.1.21",
+  contract: Object.freeze({
+    atomic_cache_to_direct: true,
+    preserve_visible_comparison_until_complete: true,
+    reuse_existing_comparison_chart: true,
+    single_resize_owner: "atlasScheduleStableChartResize",
+    geometry_guard: true,
+    intermediate_chart_destroy_for_same_selection: false
+  }),
+  metrics: {
+    resize_requested: 0,
+    resize_executed: 0,
+    resize_skipped: 0,
+    atomic_refresh_transactions: 0,
+    atomic_refresh_commits: 0,
+    last_geometry: null,
+    last_resize_reason: null,
+    last_atomic_selection: null
+  }
+};
+
+globalThis.__ATLAS_GRAPH_STABILITY_40121__ = atlasChartStability40121;
 
 function atlasSelectedCoin() {
   if (!Array.isArray(state.coins) || !state.coins.length) return null;
@@ -30928,12 +31087,10 @@ function atlasParallelMarketRender() {
       );
     }
     requestAnimationFrame(() => {
-      try {
-        state.chartEngineV2.realChart?.resize?.();
-      } catch {}
       if (typeof atlasRedrawCurrentChartV2 === "function") {
         atlasRedrawCurrentChartV2();
       }
+      atlasScheduleStableChartResize({ delay: 180, reason: "parallel-market-return" });
     });
   }
 
@@ -40322,7 +40479,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.20";
+const ATLAS_BUILD = "40.1.21";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -41705,7 +41862,10 @@ els.btnChartReset?.addEventListener("click", atlasResetGraphDefaults);
 
 els.btnChartClear?.addEventListener("click", atlasClearGraphSelection);
 
-window.addEventListener("resize", () => { if (state.chartEngineV2?.realChart) { requestAnimationFrame(() => state.chartEngineV2.realChart.resize()); }
+window.addEventListener("resize", () => {
+  if (state.chartEngineV2?.realChart) {
+    atlasScheduleStableChartResize({ delay: 180, reason: "window-resize" });
+  }
 });
 
 $("btnSeedWatch")?.addEventListener("click", seedWatch);
@@ -46993,8 +47153,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.20",
-  asset_token: "market-core-v2.0-alpha-build-40.1.20"
+  build: "40.1.21",
+  asset_token: "market-core-v2.0-alpha-build-40.1.21"
 });
 
 function atlasRuntimeTruth3813() {
