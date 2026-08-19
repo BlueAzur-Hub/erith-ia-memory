@@ -1,13 +1,13 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.42",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.42 · PARKER LEWIS CAN'T LOSE · LIVE BOOT REFERENCE HOTFIX",
+  "build": "40.1.43",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.43 · PARKER LEWIS CAN'T LOSE · ORACLE V1 MULTIVIEW THREADS",
   "status": "recovery_candidate_requires_firefox_validation",
   "prepared_at": "2026-08-19T20:24:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.42",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.42",
+    "primary_build": "40.1.43",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.43",
     "asset_token": "market-core-v2.0-alpha-build-40.1.37",
     "engine_reference": "Market Core 38.15.11"
   },
@@ -255,7 +255,7 @@
       "continuous_live_axis_rescale": false,
       "synthetic_terminal_point": false,
       "historical_canvas_ends_on_last_verified_candle": true,
-      "build": "40.1.42",
+      "build": "40.1.43",
       "live_top5_presentation_outside_canvas": true,
       "virtual_live_tooltip_endpoint": true,
       "websocket_canvas_mutation": false,
@@ -293,7 +293,7 @@
       "runtime_logic_modified": false
     },
     "live_presentation": {
-      "build": "40.1.42",
+      "build": "40.1.43",
       "owner": "app.js",
       "top5_hud_24h_source": "Binance WebSocket when 5/5 live; historical metric fallback otherwise",
       "legend_24h_source": "Binance WebSocket when live; historical metric fallback otherwise",
@@ -306,7 +306,7 @@
       "historical_canvas_semantics_unchanged": true
     },
     "vertical_shadow_bars": {
-      "build": "40.1.42",
+      "build": "40.1.43",
       "owner": "app.js",
       "geometry_source": "39.2.11",
       "metal_paint_source": "39.2.21",
@@ -320,7 +320,7 @@
       "canvas_scale_changed": false
     },
     "oracle_v0": {
-      "build": "40.1.42",
+      "build": "40.1.43",
       "owner": "app.js + index.html",
       "canvas": "#atlasOracleCanvas",
       "overlay_on_main_chart": true,
@@ -339,7 +339,7 @@
       "operator_toggle": "existing Afficher > Oracle button"
     },
     "window_manager_compact_minimize": {
-      "build": "40.1.42",
+      "build": "40.1.43",
       "owner": "js/core/admin-window-manager.js",
       "floating_windows_use_body_minibar": true,
       "minibar_draggable": true,
@@ -411,9 +411,9 @@
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256"
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.42",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.43",
   "parent_build": "40.1.40",
-  "lineage": "40.1.41 → 40.1.42 · emergency boot reference hotfix only; Oracle 1m/5m/15m and compact Math Core preserved.",
+  "lineage": "40.1.42 → 40.1.43 · Oracle V1 multiview presentation; Continuation + Top 5 threads; historical canvas contract unchanged.",
   "repository_cleanup": {
     "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
