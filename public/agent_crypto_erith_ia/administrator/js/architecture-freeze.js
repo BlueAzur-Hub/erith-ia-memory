@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.68 — PARKER LEWIS CAN'T LOSE · REGIME PERFORMANCE MATRIX LOCK
+     40.1.75 — PARKER LEWIS CAN'T LOSE · ORACLE DATA INTEGRITY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.68";
+  const BUILD_CURRENT = "40.1.75";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";

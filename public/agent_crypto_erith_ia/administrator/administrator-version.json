@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.68",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.68 · PARKER LEWIS CAN'T LOSE · REGIME PERFORMANCE MATRIX LOCK",
+  "build": "40.1.75",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.75 · PARKER LEWIS CAN'T LOSE · ORACLE DATA INTEGRITY LOCK",
   "status": "recovery_candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-20T00:44:00+02:00",
+  "prepared_at": "2026-08-20T01:02:00+02:00",
   "published_at": null,
   "global_versioning": {
     "primary_build": "40.1.67",
@@ -613,6 +613,148 @@
       "probability_output": false,
       "network_write": false,
       "main_chart_write": false
+    },
+    "oracle_multi_model_performance_lab": {
+      "build": "40.1.69",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "network_write": false,
+      "main_chart_write": false,
+      "trained_ai": false,
+      "probability_output": false,
+      "models": [
+        "trend",
+        "micro",
+        "breadth",
+        "risk_adjusted",
+        "oracle_v1",
+        "ensemble"
+      ],
+      "horizons": [
+        "1m",
+        "5m",
+        "15m"
+      ],
+      "same_sample_required": true,
+      "regime_segmentation": true,
+      "live_weights_modified": false
+    },
+    "oracle_adaptive_weighting_lab": {
+      "build": "40.1.70",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "network_write": false,
+      "main_chart_write": false,
+      "trained_ai": false,
+      "probability_output": false,
+      "components": [
+        "trend",
+        "micro",
+        "breadth",
+        "risk_adjusted"
+      ],
+      "candidate_only": true,
+      "applied_to_live": false,
+      "minimum_component_weight": 0.08,
+      "shrinkage_prior": 20,
+      "regime_preferred_min_cases": 12
+    },
+    "oracle_calibrated_confidence_v2": {
+      "build": "40.1.71",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "network_write": false,
+      "main_chart_write": false,
+      "trained_ai": false,
+      "probability_output": false,
+      "separate_from_data_confidence": true,
+      "score_bucket_width": 20,
+      "regime_bucket_min_cases": 8,
+      "shrinkage_prior": 18,
+      "guaranteed_probability": false
+    },
+    "oracle_evidence_explorer": {
+      "build": "40.1.72",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "network_write": false,
+      "main_chart_write": false,
+      "trained_ai": false,
+      "probability_output": false,
+      "read_only": true,
+      "filters": [
+        "asset",
+        "horizon",
+        "regime",
+        "verdict"
+      ],
+      "max_visible_rows": 60,
+      "indexeddb_source": "agent_crypto_oracle_evidence_v1"
+    },
+    "oracle_lab_dashboard": {
+      "build": "40.1.73",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "network_write": false,
+      "main_chart_write": false,
+      "trained_ai": false,
+      "probability_output": false,
+      "visible_dashboard": true,
+      "metrics": [
+        "evidence",
+        "resolved",
+        "pending",
+        "oracle_hit_rate",
+        "ensemble_hit_rate",
+        "best_naive",
+        "ensemble_advantage",
+        "envelope_coverage",
+        "envelope_width",
+        "model_performance",
+        "regime_performance",
+        "calibrated_confidence"
+      ]
+    },
+    "oracle_evidence_backup": {
+      "build": "40.1.74",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "network_write": false,
+      "main_chart_write": false,
+      "trained_ai": false,
+      "probability_output": false,
+      "local_file_export": true,
+      "formats": [
+        "json",
+        "csv",
+        "markdown"
+      ],
+      "json_merge_import": true,
+      "import_validation": true,
+      "max_rows": 50000
+    },
+    "oracle_data_integrity": {
+      "build": "40.1.75",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "network_write": false,
+      "main_chart_write": false,
+      "trained_ai": false,
+      "probability_output": false,
+      "read_only": true,
+      "checks": [
+        "timestamp",
+        "identity",
+        "constituents",
+        "quote_freshness",
+        "logical_duplicates",
+        "outcome_shape",
+        "resolution_lag",
+        "overdue_pending"
+      ],
+      "auto_repair": false,
+      "auto_delete": false,
+      "quality_score_descriptive": true
     }
   },
   "active_runtime_files": [
@@ -646,9 +788,9 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "b1adcde6cc9bae1f01ba7dca04e98961fb554e25e367bd6a6f9b6f7ffe89b657",
-      "index.html": "7362188526e49370bc34a8fa94c849ea4ac82c0124225637e8f0880b3139d90a",
-      "js/app.js": "020eb8716a1617dbb7ff5627f082887d5ff1b8e5c4cbb067f9c94111ed3b4751",
+      "app.js": "b493c4176f93d667bd6684902555e1f1b92dd8c0192aac2f03ddce6b3b4d67ef",
+      "index.html": "9d414c299a3008389415fe9e83c5e47ffff81d1e690d25a994918f95c624bb50",
+      "js/app.js": "45dd7c66e9b855f2798327038503bf2730f1ca7808f5e8a9f630931f5b188a08",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -658,7 +800,7 @@
       "js/core/admin-window-manager.js": "4f342d829506b8157d7340c05a98fb9d9aec4f9dcd671374d3e89f456a626b80",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "ec67943738b97b76e24085332a63de822ec414536dd628af3439ff54ee698bfb",
+      "js/architecture-freeze.js": "2f3d89aa2971186f8c5958b34de0652f422c16a9b64a9d6f0052bc15f23c3c19",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -684,15 +826,15 @@
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.1.68",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.68",
+      "build": "40.1.75",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.75",
       "status": "candidate_requires_firefox_validation",
-      "app_sha256": "b1adcde6cc9bae1f01ba7dca04e98961fb554e25e367bd6a6f9b6f7ffe89b657"
+      "app_sha256": "b493c4176f93d667bd6684902555e1f1b92dd8c0192aac2f03ddce6b3b4d67ef"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.68",
-  "parent_build": "40.1.67",
-  "lineage": "40.1.67 → 40.1.68 · adds descriptive performance by stored T0 regime across 1m/5m/15m; Oracle V1 and Ensemble are compared with the same naive Proof baselines on identical resolved rows; no model weights, scenarios or mainChart data are rewritten.",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.75",
+  "parent_build": "40.1.74",
+  "lineage": "40.1.74 → 40.1.75 · audits Evidence timestamps, constituents, quote freshness, duplicate logical observations, overdue pending outcomes and resolution lag; exposes a descriptive quality score without mutating evidence.",
   "repository_cleanup": {
     "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
@@ -724,6 +866,13 @@
     "40.1.65: TOP 5 can now remain selected in CONTINUATION; one deterministic composite history is computed from the five normalized real histories and fed to the existing scenario engine.",
     "40.1.66: Oracle Proof compares Always Up, Last Move, Momentum Simple and Top 5 naive baselines with Oracle V1 and Ensemble on the exact same resolved rows; displayed advantage is descriptive only.",
     "40.1.67: the Oracle readout now shows a compact 1m/5m/15m calibration matrix with direction hit-rate, envelope coverage, sample count and Ensemble advantage versus the best naive baseline; all values remain descriptive.",
-    "40.1.68: resolved Evidence is now segmented by the regime recorded at T0; each horizon exposes RΔ = Ensemble advantage versus the best naive baseline inside the current regime, on the same Proof sample. No model retuning occurs."
+    "40.1.68: resolved Evidence is now segmented by the regime recorded at T0; each horizon exposes RΔ = Ensemble advantage versus the best naive baseline inside the current regime, on the same Proof sample. No model retuning occurs.",
+    "40.1.69: segments stored Ensemble components into same-sample directional performance across 1m/5m/15m and current T0 regime; no live weights change.",
+    "40.1.70: derives transparent candidate component weights from resolved historical performance by horizon/regime; candidate weights are displayed but not applied to live Ensemble scores.",
+    "40.1.71: adds empirical confidence calibration by active horizon, score-magnitude bucket and regime when sample size permits; data confidence remains separate and no guaranteed probability is claimed.",
+    "40.1.72: adds a local read-only Evidence Explorer with filters and latest prediction/outcome rows from IndexedDB; no evidence semantics or market data are rewritten.",
+    "40.1.73: adds a visible Oracle Lab dashboard summarizing evidence, outcomes, horizon proof, model performance, regime proof, envelope width and calibrated confidence.",
+    "40.1.74: adds local JSON/CSV/Markdown exports and validated JSON merge-import for Oracle Evidence; no network write and no wallet/order action.",
+    "40.1.75: audits Evidence timestamps, constituents, quote freshness, duplicate logical observations, overdue pending outcomes and resolution lag; exposes a descriptive quality score without mutating evidence."
   ]
 }
