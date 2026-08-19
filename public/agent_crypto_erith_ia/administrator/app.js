@@ -45,7 +45,7 @@ const state = {
   chartCache: {},
   chartRenderToken: 0,
   comparisonRenderToken: 0,
-  chartViewV2: { view: "price", scale: "linear", volume: true, legend: false, comparisonLegend: false, analysis: true, marketColumns: "essential" },
+  chartViewV2: { view: "price", scale: "linear", volume: true, legend: false, comparisonLegend: false, analysis: true, oracle: true, marketColumns: "essential" },
   chartEngineV2: {
     token: 0,
     controller: null,
@@ -4777,7 +4777,7 @@ function atlasHideChartRefresh() {
 
 const ATLAS_CHART_V2_SETTINGS_KEY="agent_crypto_erith_ia_chart_v2_settings_v28_1_17";
 
-function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend===true,comparisonLegend:p.comparisonLegend===true,analysis:p.analysis!==false,marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
+function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend===true,comparisonLegend:p.comparisonLegend===true,analysis:p.analysis!==false,oracle:p.oracle!==false,marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
 
 function atlasWriteChartV2Settings(){try{localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY,JSON.stringify(state.chartViewV2));}catch{}}
 
@@ -4828,6 +4828,18 @@ function atlasChartV2SyncControls() {
   if (analysisOverlay) {
     analysisOverlay.hidden = !analysisActive;
     analysisOverlay.setAttribute("aria-hidden", analysisActive ? "false" : "true");
+  }
+
+  const oracleActive = state.chartViewV2.oracle !== false;
+  document.querySelectorAll("[data-chart-display='oracle']").forEach(button => {
+    button.classList.toggle("is-active", oracleActive);
+    button.setAttribute("aria-pressed", oracleActive ? "true" : "false");
+  });
+  const oraclePanel = document.getElementById("atlasOracleV0");
+  if (oraclePanel) {
+    oraclePanel.hidden = !oracleActive;
+    oraclePanel.setAttribute("aria-hidden", oracleActive ? "false" : "true");
+    if (oracleActive) requestAnimationFrame(() => atlasRenderOracleV0());
   }
 
   document.querySelectorAll("[data-market-columns]").forEach(button => {
@@ -4955,6 +4967,8 @@ function atlasChartV2SetOption(kind, value) {
     else state.chartViewV2.legend = !state.chartViewV2.legend;
   } else if (kind === "analysis") {
     state.chartViewV2.analysis = state.chartViewV2.analysis === false;
+  } else if (kind === "oracle") {
+    state.chartViewV2.oracle = state.chartViewV2.oracle === false;
   } else if (kind === "marketColumns") {
     state.chartViewV2.marketColumns = value === "complete" ? "complete" : "essential";
   }
@@ -4964,6 +4978,8 @@ function atlasChartV2SetOption(kind, value) {
   if (kind === "marketColumns") renderMarketTable();
   else if (kind === "analysis") {
     if (state.chartViewV2.analysis !== false) atlasChartOverlayUpdate();
+  } else if (kind === "oracle") {
+    if (state.chartViewV2.oracle !== false) atlasRenderOracleV0();
   } else atlasChartV2RedrawFromBroker();
 }
 
@@ -5151,7 +5167,7 @@ function atlasExternalChartTooltip(context) {
         liveObservedAt: Number(point.raw?.atlasLiveObservedAt || point.raw?.x)
       }] : [];
 
-  // 40.1.39 — virtual live endpoint for PRESENTATION only, on every horizon.
+  // 40.1.40 — virtual live endpoint for PRESENTATION only, on every horizon.
   // The historical canvas remains pure: no synthetic point is pushed into any
   // Chart.js dataset and no scale/update is triggered. At the last verified
   // historical point, the external value board may show current Binance 5/5
@@ -5582,7 +5598,7 @@ const atlasVolumeOverlayPlugin = {
         : [];
 
     series.forEach((entry, index) => {
-      atlasDrawCurveFollowingShadowBars({
+      const args = {
         ctx: chart.ctx,
         rows: entry.rows,
         xFor: value => xScale.getPixelForValue(value),
@@ -5599,13 +5615,31 @@ const atlasVolumeOverlayPlugin = {
         heightRatio: 0.88,
         seriesIndex: index,
         seriesCount: series.length
+      };
+
+      // Canonical 39.2.11 geometry + 39.2.21 Metal base paint.
+      atlasDrawCurveFollowingShadowBars(args);
+
+      // 40.1.40 — illuminated Metal pass. Same points, baseline and 88% height.
+      // This is paint only: no data mutation, no synthetic endpoint and no scale write.
+      chart.ctx.save();
+      chart.ctx.globalCompositeOperation = "screen";
+      atlasDrawCurveFollowingShadowBars({
+        ...args,
+        color: series.length === 1 ? "#b8d7e7" : "#a2c4d3",
+        opacity: series.length === 1
+          ? 0.075
+          : index === 0
+            ? 0.050
+            : Math.max(0.020, 0.038 - index * 0.004)
       });
+      chart.ctx.restore();
     });
   }
 };
 
-const ATLAS_VERTICAL_BAR_RENDERER_40139 = Object.freeze({
-  build: "40.1.39",
+const ATLAS_VERTICAL_BAR_RENDERER_40140 = Object.freeze({
+  build: "40.1.40",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -5613,18 +5647,32 @@ const ATLAS_VERTICAL_BAR_RENDERER_40139 = Object.freeze({
   baseline: "chartArea.bottom",
   height_ratio: 0.88,
   real_volume_modulates_opacity_only: true,
-  solo: Object.freeze({ color: "#5f7f92", opacity: 0.115 }),
-  comparison: Object.freeze({
-    color: "#587488",
-    lead_opacity: 0.085,
-    secondary_min_opacity: 0.038,
-    secondary_base_opacity: 0.065,
-    secondary_step: 0.006
+  base_metal: Object.freeze({
+    solo: Object.freeze({ color: "#5f7f92", opacity: 0.115 }),
+    comparison: Object.freeze({
+      color: "#587488",
+      lead_opacity: 0.085,
+      secondary_min_opacity: 0.038,
+      secondary_base_opacity: 0.065,
+      secondary_step: 0.006
+    })
+  }),
+  illumination: Object.freeze({
+    enabled: true,
+    composite: "screen",
+    solo_color: "#b8d7e7",
+    solo_opacity: 0.075,
+    comparison_color: "#a2c4d3",
+    comparison_lead_opacity: 0.050,
+    comparison_secondary_min_opacity: 0.020,
+    comparison_secondary_base_opacity: 0.038,
+    comparison_secondary_step: 0.004,
+    geometry_changed: false
   }),
   synthetic_live_endpoint: false,
   websocket_canvas_rescale: false
 });
-globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40139__ = ATLAS_VERTICAL_BAR_RENDERER_40139;
+globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40140__ = ATLAS_VERTICAL_BAR_RENDERER_40140;
 
 const atlasOverlayAxesPlugin = {
   id: "atlasOverlayAxes",
@@ -6115,6 +6163,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
     atlasChartV2RenderLegend(brokerChart.result.entries, { comparison: true });
   }
   atlasChartOverlayUpdate();
+  if (state.chartViewV2.oracle !== false) atlasRenderOracleV0();
 
   const chart = state.chartEngineV2?.realChart;
   if (chart?.tooltip?.opacity > 0) {
@@ -6123,6 +6172,318 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
   atlasChartStability40122.metrics.live_presentation_refreshes += 1;
   return true;
 }
+
+const ATLAS_ORACLE_V0_40140 = Object.freeze({
+  build: "40.1.40",
+  owner: "app.js + #atlasOracleCanvas",
+  mode: "dual-scenario-bull-bear",
+  inputs: Object.freeze(["Binance/CoinGecko 24h", "market 7d", "market 30d", "Atlas score", "Math Core current risk when available", "comparison basket context"]),
+  separate_canvas: true,
+  main_chart_mutation: false,
+  prediction: false,
+  financial_advice: false,
+  output: "normalized interpretative scenarios only"
+});
+globalThis.__ATLAS_ORACLE_V0_40140__ = ATLAS_ORACLE_V0_40140;
+
+const ATLAS_ORACLE_V0_ASSET_KEY = "agent_crypto_erith_ia_oracle_v0_asset";
+let atlasOracleV0AssetId = "";
+let atlasOracleV0ResizeObserver = null;
+
+function atlasOracleFinite(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function atlasOracleCandidateCoins() {
+  const selectedIds = atlasComparisonIds();
+  const ids = selectedIds.length ? selectedIds : [state.selectedCoinId].filter(Boolean);
+  const coins = ids.map(id => state.coins.find(coin => coin.id === id)).filter(Boolean);
+  if (!coins.length) {
+    const fallback = atlasSelectedCoin();
+    if (fallback) coins.push(fallback);
+  }
+  return coins.slice(0, 5);
+}
+
+function atlasOracleReadStoredAsset() {
+  try { return String(localStorage.getItem(ATLAS_ORACLE_V0_ASSET_KEY) || ""); }
+  catch { return ""; }
+}
+
+function atlasOracleSelectCoin() {
+  const candidates = atlasOracleCandidateCoins();
+  if (!candidates.length) return null;
+  if (!atlasOracleV0AssetId) atlasOracleV0AssetId = atlasOracleReadStoredAsset();
+  let coin = candidates.find(item => item.id === atlasOracleV0AssetId);
+  if (!coin) coin = candidates.find(item => item.id === state.selectedCoinId) || candidates[0];
+  atlasOracleV0AssetId = coin?.id || "";
+  return coin || null;
+}
+
+function atlasOracleSignedUnit(value, cap) {
+  const number = atlasOracleFinite(value);
+  if (number === null) return null;
+  return clamp(-1, 1, number / Math.max(0.001, Number(cap) || 1));
+}
+
+function atlasOracleHorizonCoherence(values) {
+  const clean = values.filter(Number.isFinite).filter(value => Math.abs(value) >= 0.05);
+  if (clean.length < 2) return 55;
+  const positive = clean.filter(value => value > 0).length;
+  const negative = clean.filter(value => value < 0).length;
+  const dominant = Math.max(positive, negative) / clean.length;
+  if (dominant >= 0.999) return 100;
+  if (dominant >= 0.66) return 76;
+  return 42;
+}
+
+function atlasOracleBuildModel(coin) {
+  if (!coin) return { status: "waiting" };
+  const quote = atlasCurrentQuoteForCoin(coin);
+  const quoteUsable = atlasQuoteIsUsable(quote);
+  const h24 = atlasOracleFinite(quoteUsable && Number.isFinite(Number(quote?.change24h)) ? quote.change24h : coin.change24h);
+  const h7 = atlasOracleFinite(coin.change7d);
+  const h30 = atlasOracleFinite(coin.change30d);
+
+  const weightedRows = [
+    [atlasOracleSignedUnit(h24, 8), 0.48],
+    [atlasOracleSignedUnit(h7, 16), 0.32],
+    [atlasOracleSignedUnit(h30, 28), 0.20]
+  ].filter(([value]) => value !== null);
+  const weightSum = weightedRows.reduce((sum, row) => sum + row[1], 0) || 1;
+  const horizonMomentum = weightedRows.reduce((sum, row) => sum + row[0] * row[1], 0) / weightSum;
+
+  const basket = atlasOracleCandidateCoins();
+  const basketMoves = basket.map(item => {
+    const q = atlasCurrentQuoteForCoin(item);
+    const value = atlasQuoteIsUsable(q) && Number.isFinite(Number(q?.change24h)) ? Number(q.change24h) : Number(item.change24h);
+    return Number.isFinite(value) ? value : null;
+  }).filter(Number.isFinite);
+  const basketAvg24 = basketMoves.length ? basketMoves.reduce((sum, value) => sum + value, 0) / basketMoves.length : 0;
+  const basketMomentum = atlasOracleSignedUnit(basketAvg24, 7) || 0;
+
+  const direction = clamp(-1, 1, horizonMomentum * 0.82 + basketMomentum * 0.18);
+  const directionScore = Math.round(direction * 100);
+  const bullStrength = Math.round(clamp(0, 100, 50 + directionScore * 0.5));
+  const bearStrength = 100 - bullStrength;
+
+  const quality = computeAtlasDataQuality(coin);
+  const coherence = atlasOracleHorizonCoherence([h24, h7, h30]);
+  const mathIsCurrent = String(state.math?.asset || "").includes(`(${coin.symbol})`);
+  const completeness = mathIsCurrent && Number.isFinite(Number(state.math?.completenessPct))
+    ? clamp(0, 100, Number(state.math.completenessPct))
+    : 70;
+  const liveTruth = quoteUsable ? 100 : 62;
+  const dataConfidence = Math.round(clamp(0, 100,
+    Number(quality?.score || 0) * 0.28 + completeness * 0.30 + coherence * 0.24 + liveTruth * 0.18
+  ));
+
+  const realizedVol = mathIsCurrent && Number.isFinite(Number(state.math?.realizedWindowPct)) ? Number(state.math.realizedWindowPct) : 2.5;
+  const drawdown = mathIsCurrent && Number.isFinite(Number(state.math?.maxDrawdownPct)) ? Number(state.math.maxDrawdownPct) : 1.5;
+  const riskEnvelope = clamp(1.2, 10,
+    1.25 + Math.abs(h24 || 0) * 0.16 + Math.abs(h7 || 0) * 0.055 + realizedVol * 0.30 + drawdown * 0.10
+  );
+  const bullAmplitude = clamp(0.8, 12, riskEnvelope * (0.72 + bullStrength / 190));
+  const bearAmplitude = clamp(0.8, 12, riskEnvelope * (0.72 + bearStrength / 190));
+
+  const bias = direction > 0.18 ? "HAUSSIER" : direction < -0.18 ? "BAISSIER" : "MIXTE";
+  const aerith = coherence >= 90 && dataConfidence >= 75
+    ? "Concordance forte"
+    : coherence < 60
+      ? "Contradictions à surveiller"
+      : "Lecture prudente";
+  const atlas = directionScore >= 18
+    ? "Momentum positif"
+    : directionScore <= -18
+      ? "Momentum négatif"
+      : "Momentum partagé";
+
+  return {
+    status: "ready",
+    coin,
+    quote,
+    quoteUsable,
+    price: atlasOracleFinite(quoteUsable ? quote.price : (coin.priceEur ?? coin.price)),
+    h24, h7, h30,
+    basketAvg24,
+    directionScore,
+    bullStrength,
+    bearStrength,
+    dataConfidence,
+    coherence,
+    realizedVol,
+    drawdown,
+    bullAmplitude,
+    bearAmplitude,
+    bias,
+    atlas,
+    aerith,
+    periodLabel: atlasChartPeriodLabel(Number(state.chartPeriodDays || 1))
+  };
+}
+
+function atlasOracleCurveValue(amplitude, t, sign) {
+  const progress = 0.18 * t + 0.82 * Math.pow(t, 1.22);
+  const wave = Math.sin(t * Math.PI * 3) * amplitude * 0.055 * (1 - t);
+  return 100 + sign * amplitude * progress + wave;
+}
+
+function atlasOracleDrawCanvas(model) {
+  const canvas = document.getElementById("atlasOracleCanvas");
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const cssWidth = Math.max(320, Math.round(rect.width || 640));
+  const cssHeight = Math.max(140, Math.round(rect.height || 160));
+  const ratio = Math.min(2, Math.max(1, Number(window.devicePixelRatio || 1)));
+  const width = Math.round(cssWidth * ratio), height = Math.round(cssHeight * ratio);
+  if (canvas.width !== width) canvas.width = width;
+  if (canvas.height !== height) canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const pad = { left: 34, right: 20, top: 18, bottom: 24 };
+  const w = cssWidth - pad.left - pad.right;
+  const h = cssHeight - pad.top - pad.bottom;
+  ctx.fillStyle = "rgba(3,10,18,.78)";
+  ctx.fillRect(0, 0, cssWidth, cssHeight);
+  ctx.strokeStyle = "rgba(125,179,202,.12)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 5; i += 1) {
+    const x = pad.left + w * i / 5;
+    ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + h); ctx.stroke();
+  }
+  for (let i = 0; i <= 4; i += 1) {
+    const y = pad.top + h * i / 4;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + w, y); ctx.stroke();
+  }
+
+  if (!model || model.status !== "ready") {
+    ctx.fillStyle = "rgba(220,235,244,.72)";
+    ctx.font = "700 12px system-ui, sans-serif";
+    ctx.fillText("Oracle en attente du Livecheck", pad.left, pad.top + h / 2);
+    return;
+  }
+
+  const maxAmp = Math.max(4, model.bullAmplitude, model.bearAmplitude) * 1.18;
+  const yFor = value => pad.top + h / 2 - ((value - 100) / maxAmp) * (h / 2 - 8);
+  const xFor = t => pad.left + t * w;
+
+  ctx.setLineDash([5, 5]);
+  ctx.strokeStyle = "rgba(241,248,252,.34)";
+  ctx.beginPath(); ctx.moveTo(pad.left, yFor(100)); ctx.lineTo(pad.left + w, yFor(100)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  const drawScenario = (sign, amplitude, color, fill, strength) => {
+    const points = [];
+    for (let i = 0; i <= 24; i += 1) {
+      const t = i / 24;
+      points.push([xFor(t), yFor(atlasOracleCurveValue(amplitude, t, sign))]);
+    }
+    ctx.beginPath();
+    points.forEach(([x,y], index) => index ? ctx.lineTo(x,y) : ctx.moveTo(x,y));
+    ctx.lineWidth = strength >= 60 ? 2.5 : 1.8;
+    ctx.strokeStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = strength >= 60 ? 7 : 3;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.lineTo(points[points.length-1][0], yFor(100));
+    ctx.lineTo(points[0][0], yFor(100));
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+  };
+
+  drawScenario(1, model.bullAmplitude, "#a8ff62", "rgba(120,255,83,.070)", model.bullStrength);
+  drawScenario(-1, model.bearAmplitude, "#ff6979", "rgba(255,75,96,.055)", model.bearStrength);
+
+  const biasY = yFor(100 + (model.directionScore / 100) * Math.max(model.bullAmplitude, model.bearAmplitude) * 0.55);
+  ctx.strokeStyle = "rgba(99,225,255,.82)";
+  ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(pad.left, yFor(100)); ctx.lineTo(pad.left + w, biasY); ctx.stroke();
+
+  ctx.font = "800 10px system-ui, sans-serif";
+  ctx.fillStyle = "#bfff86"; ctx.fillText(`HAUSSE ${model.bullStrength}/100`, pad.left + 4, pad.top + 12);
+  ctx.fillStyle = "#ff9aa4"; ctx.fillText(`BAISSE ${model.bearStrength}/100`, pad.left + 4, pad.top + h - 5);
+  ctx.textAlign = "right";
+  ctx.fillStyle = "rgba(222,238,246,.72)"; ctx.fillText("SCÉNARIOS NORMALISÉS · PAS UNE PRÉVISION", pad.left + w, pad.top + h + 18);
+  ctx.textAlign = "left";
+}
+
+function atlasRenderOracleV0() {
+  const root = document.getElementById("atlasOracleV0");
+  if (!root) return false;
+  if (state.chartViewV2.oracle === false || (typeof atlasParallelMarketDomain === "function" && atlasParallelMarketDomain() === "metals")) {
+    root.hidden = true;
+    root.setAttribute("aria-hidden", "true");
+    return false;
+  }
+  root.hidden = false;
+  root.setAttribute("aria-hidden", "false");
+
+  const coin = atlasOracleSelectCoin();
+  const model = atlasOracleBuildModel(coin);
+  const candidates = atlasOracleCandidateCoins();
+  const assetStrip = document.getElementById("atlasOracleAssets");
+  if (assetStrip) {
+    assetStrip.innerHTML = candidates.map((item, index) => {
+      const palette = atlasCryptoPalette(item, index);
+      return `<button type="button" data-oracle-asset-id="${escapeHtml(item.id)}" class="${item.id === coin?.id ? "is-active" : ""}" style="--oracle-asset-color:${escapeHtml(palette.primary)}">${escapeHtml(String(item.symbol || item.name).toUpperCase())}</button>`;
+    }).join("");
+  }
+
+  const set = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = String(value ?? "—"); };
+  if (!coin || model.status !== "ready") {
+    set("atlasOracleAsset", "EN ATTENTE");
+    set("atlasOracleBias", "Livecheck requis");
+    set("atlasOracleConfidence", "Confiance données —");
+    set("atlasOracleBull", "—");
+    set("atlasOracleBear", "—");
+    set("atlasOracleAtlas", "Atlas : en attente");
+    set("atlasOracleAerith", "Aerith : en attente");
+    set("atlasOracleInputs", "Aucune donnée exploitable");
+    atlasOracleDrawCanvas(model);
+    return false;
+  }
+
+  set("atlasOracleAsset", `${String(coin.symbol || coin.name).toUpperCase()} · ${model.periodLabel}`);
+  set("atlasOracleBias", `Biais mesuré : ${model.bias}`);
+  set("atlasOracleConfidence", `Confiance données ${model.dataConfidence}/100`);
+  set("atlasOracleBull", `Force ${model.bullStrength}/100 · amplitude test +${model.bullAmplitude.toFixed(2)} %`);
+  set("atlasOracleBear", `Force ${model.bearStrength}/100 · amplitude test −${model.bearAmplitude.toFixed(2)} %`);
+  set("atlasOracleAtlas", `Atlas : ${model.atlas} · score direction ${model.directionScore >= 0 ? "+" : ""}${model.directionScore}/100`);
+  set("atlasOracleAerith", `Aerith : ${model.aerith} · cohérence ${model.coherence}/100`);
+  set("atlasOracleInputs", `24 h ${model.h24 === null ? "—" : fmtPct(model.h24)} · 7 j ${model.h7 === null ? "—" : fmtPct(model.h7)} · 30 j ${model.h30 === null ? "—" : fmtPct(model.h30)} · panier ${fmtPct(model.basketAvg24)}`);
+  root.dataset.bias = model.bias.toLowerCase();
+  atlasOracleDrawCanvas(model);
+  return true;
+}
+
+function atlasInitOracleV0() {
+  const root = document.getElementById("atlasOracleV0");
+  const strip = document.getElementById("atlasOracleAssets");
+  if (!root || root.dataset.oracleInit === "1") return;
+  root.dataset.oracleInit = "1";
+  strip?.addEventListener("click", event => {
+    const button = event.target?.closest?.("[data-oracle-asset-id]");
+    if (!button) return;
+    atlasOracleV0AssetId = String(button.dataset.oracleAssetId || "");
+    try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
+    atlasRenderOracleV0();
+  });
+  if (typeof ResizeObserver === "function") {
+    atlasOracleV0ResizeObserver = new ResizeObserver(() => {
+      if (state.chartViewV2.oracle !== false) requestAnimationFrame(() => atlasRenderOracleV0());
+    });
+    atlasOracleV0ResizeObserver.observe(root);
+  }
+  atlasRenderOracleV0();
+}
+
+queueMicrotask(() => { try { atlasInitOracleV0(); } catch (_) {} });
 
 function atlasComparisonResultFingerprint(entries, period) {
   return `${Number(period || 1)}|${entries.map(entry => `${entry.coin.id}:${atlasChartResultFingerprint(entry.result)}`).join("|")}`;
@@ -12289,7 +12650,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.39",
+  interface: "Build 40.1.40",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12892,7 +13253,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.39",
+  build: "40.1.40",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -14074,6 +14435,7 @@ function renderAtlasMathCore() {
     simPanel.innerHTML = `<b>Scénario de simulation</b><span>${escapeHtml(scenario.reason)} · ${escapeHtml(scenario.human)}.</span>`;
   }
 
+  if (state.chartViewV2.oracle !== false) atlasRenderOracleV0();
   atlasV2SyncMathRail();
 }
 
@@ -34204,6 +34566,7 @@ function atlasWorkspaceCapture() {
       legend: state.chartViewV2.legend === true,
       comparisonLegend: state.chartViewV2.comparisonLegend === true,
       analysis: state.chartViewV2.analysis !== false,
+      oracle: state.chartViewV2.oracle !== false,
       marketColumns: state.chartViewV2.marketColumns === "complete" ? "complete" : "essential",
     },
     marketDomain: atlasParallelMarketDomain(),
@@ -34537,6 +34900,7 @@ function atlasWorkspaceSlotRecall(slotId) {
     comparisonLegend:
       savedView.comparisonLegend === true,
     analysis: savedView.analysis !== false,
+    oracle: savedView.oracle !== false,
     marketColumns:
       savedView.marketColumns === "complete"
         ? "complete"
@@ -34878,6 +35242,7 @@ function atlasWorkspaceRenderStrip(options = {}) {
     state.chartViewV2.volume !== false && !comparison ? "Volume" : null,
     (comparison ? state.chartViewV2.comparisonLegend : state.chartViewV2.legend) ? "Légende" : "Légende masquée",
     state.chartViewV2.analysis !== false ? "Analyse" : "Analyse masquée",
+    state.chartViewV2.oracle !== false ? "Oracle" : "Oracle masqué",
   ].filter(Boolean);
 
   const restored = options.restored === true;
@@ -34986,6 +35351,7 @@ function atlasWorkspaceRestoreAfterMarket() {
     legend: savedView.legend === true,
     comparisonLegend: savedView.comparisonLegend === true,
     analysis: savedView.analysis !== false,
+    oracle: savedView.oracle !== false,
     marketColumns: savedView.marketColumns === "complete" ? "complete" : "essential",
   };
 
@@ -40533,7 +40899,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.39";
+const ATLAS_BUILD = "40.1.40";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47207,8 +47573,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.39",
-  asset_token: "market-core-v2.0-alpha-build-40.1.39"
+  build: "40.1.40",
+  asset_token: "market-core-v2.0-alpha-build-40.1.40"
 });
 
 function atlasRuntimeTruth3813() {

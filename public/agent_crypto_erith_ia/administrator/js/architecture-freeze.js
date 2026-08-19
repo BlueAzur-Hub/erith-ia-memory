@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.39 — PARKER LEWIS CAN'T LOSE · CANONICAL VERTICAL BAR RENDERER RESTORE + TECHNICAL READING GREEN LOCK
+     40.1.40 — PARKER LEWIS CAN'T LOSE · ORACLE V0 + APPLE GREEN + ILLUMINATED METAL BARS LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -11,14 +11,14 @@
      - Report data-coverage limits as WARN, never as fake code failures.
 
      CONTRACT
-     - 40.1.39 keeps the Binance LIVE 24h value board available at the terminal historical point on every chart horizon and restores readable vertical shadow bars; no synthetic Chart.js endpoint, no market-analysis or memory semantic change.
+     - 40.1.40 keeps the Binance LIVE board outside historical datasets, illuminates the restored Metal bars without geometry changes, strengthens the whole positive 24h Technical Reading cell, and adds Oracle V0 on a separate canvas; no synthetic Chart.js endpoint or trading action.
      - NO automatic repair.
      - NO memory write.
      - NO network request from this module.
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.39";
+  const BUILD_CURRENT = "40.1.40";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -836,7 +836,8 @@
     const uniformMenuCss = uniformMenuCssContract();
     const cryptoCard = cryptoCardContract();
     const graphStability = globalThis.__ATLAS_GRAPH_STABILITY_40122__ || null;
-    const verticalBars = globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40139__ || null;
+    const verticalBars = globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40140__ || null;
+    const oracleV0 = globalThis.__ATLAS_ORACLE_V0_40140__ || null;
     const forbiddenOverrides = styleRows().filter(row => /admin-window-(?:controls-recovery|hover-ghost-contract)-40\.0\.0R[12]\.css/i.test(pathOnly(row.raw)));
 
     const checks = [
@@ -888,7 +889,7 @@
         graphStability
           ? `transactions=${Number(graphStability.metrics?.atomic_refresh_transactions || 0)} · commits=${Number(graphStability.metrics?.atomic_refresh_commits || 0)} · live-render=${Number(graphStability.metrics?.live_endpoint_render_commits || 0)} · live-ui=${Number(graphStability.metrics?.live_presentation_refreshes || 0)} · blocked=${Number(graphStability.metrics?.live_endpoint_blocked_calls || 0)} · resize=${Number(graphStability.metrics?.resize_executed || 0)}/${Number(graphStability.metrics?.resize_requested || 0)} · skip=${Number(graphStability.metrics?.resize_skipped || 0)}`
           : `contrat stabilité graphique ${BUILD_CURRENT} absent`),
-      check("Graphique · renderer vertical canonique 39.2.11 / Metal 39.2.21",
+      check("Graphique · renderer vertical canonique + Metal illuminé",
         verticalBars?.build === BUILD_CURRENT
           && verticalBars?.geometry_source === "39.2.11"
           && verticalBars?.metal_paint_source === "39.2.21"
@@ -896,18 +897,28 @@
           && verticalBars?.geometry === "bottom-to-curve-point-by-point"
           && verticalBars?.baseline === "chartArea.bottom"
           && Number(verticalBars?.height_ratio) === 0.88
-          && verticalBars?.real_volume_modulates_opacity_only === true
-          && verticalBars?.solo?.color === "#5f7f92"
-          && Number(verticalBars?.solo?.opacity) === 0.115
-          && verticalBars?.comparison?.color === "#587488"
-          && Number(verticalBars?.comparison?.lead_opacity) === 0.085
-          && Number(verticalBars?.comparison?.secondary_min_opacity) === 0.038
+          && verticalBars?.base_metal?.solo?.color === "#5f7f92"
+          && Number(verticalBars?.base_metal?.solo?.opacity) === 0.115
+          && verticalBars?.base_metal?.comparison?.color === "#587488"
+          && Number(verticalBars?.base_metal?.comparison?.lead_opacity) === 0.085
+          && verticalBars?.illumination?.enabled === true
+          && verticalBars?.illumination?.composite === "screen"
+          && verticalBars?.illumination?.geometry_changed === false
           && verticalBars?.synthetic_live_endpoint === false
           && verticalBars?.websocket_canvas_rescale === false,
-        verticalBars
-          ? `géométrie=${verticalBars.geometry_source} · peinture=${verticalBars.metal_paint_source} · ratio=${verticalBars.height_ratio} · solo=${verticalBars.solo?.color}/${verticalBars.solo?.opacity}`
-          : "contrat renderer vertical 40.1.39 absent"),
-      check("Lecture technique · vert positif renforcé", !!byId("atlasTechnicalReadingPositiveGreen40139"), "style positif 24 h scoped présent · négatif/neutre inchangés"),
+        verticalBars ? `géométrie=${verticalBars.geometry_source} · base=${verticalBars.metal_paint_source} · illumination=${verticalBars.illumination?.composite}` : "contrat renderer vertical 40.1.40 absent"),
+      check("Lecture technique · case 24 h vert pomme", !!byId("atlasOracleAppleGreenMetal40140"), "case positive entière renforcée · chiffre non propriétaire du signal"),
+      check("Oracle V0 · canvas séparé + hausse/baisse",
+        oracleV0?.build === BUILD_CURRENT
+          && oracleV0?.mode === "dual-scenario-bull-bear"
+          && oracleV0?.separate_canvas === true
+          && oracleV0?.main_chart_mutation === false
+          && oracleV0?.prediction === false
+          && oracleV0?.financial_advice === false
+          && !!byId("atlasOracleV0")
+          && !!byId("atlasOracleCanvas")
+          && byId("atlasOracleCanvas") !== byId("mainChart"),
+        oracleV0 ? `${oracleV0.mode} · canvas séparé · non prédictif` : "contrat Oracle V0 absent"),
       check("Target Top direct window controls", !!targetChrome && targetChrome.complete && targetChrome.interactive, targetChrome ? `5/5=${String(targetChrome.complete)} · interactif=${String(targetChrome.interactive)} · opacity runtime=${Number.isFinite(targetChrome.computedOpacity) ? targetChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Target Top absent"),
       check("Market Flow direct window controls", !!flowChrome && flowChrome.complete && flowChrome.interactive, flowChrome ? `5/5=${String(flowChrome.complete)} · interactif=${String(flowChrome.interactive)} · opacity runtime=${Number.isFinite(flowChrome.computedOpacity) ? flowChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Flow absent"),
       check("Market Flow · déplacement Target Top + viewport interne adapté", marketFlowFloatParityContract().ok === true, marketFlowFloatParityContract().detail),
@@ -1056,7 +1067,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique. 40.1.39 garde le tableau terminal virtuel Binance LIVE + variation 24 h disponible sur tous les horizons et restaure le renderer vertical canonique : géométrie 39.2.11 + peinture Metal 39.2.21 exacte, ratio 88 %. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
+      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique. 40.1.40 conserve le renderer canonique 39.2.11 / Metal 39.2.21, ajoute une passe lumineuse paint-only, une case 24 h vert pomme et Oracle V0 sur canvas séparé. Le canvas historique principal reste pur. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");
