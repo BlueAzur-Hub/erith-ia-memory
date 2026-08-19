@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.29 — LAYOUT PRESERVING FLOATING PLACEHOLDER + GLOBAL SHELL LOCK
+     40.1.30 — RESERVED PLACEHOLDER TRUTH + MULTI-NODE GEOMETRY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.29";
+  const BUILD_CURRENT = "40.1.30";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -632,20 +632,36 @@
     const managerOk = managerContract?.default_shell_portal === "document.body"
       && managerContract?.dock_restore === "layout-preserving-placeholder-original-parent"
       && managerContract?.layout_preserving_placeholders === true
+      && managerContract?.reserved_placeholder_css_zero_override === false
+      && managerContract?.multi_node_geometry === "visible-node-union"
       && managerContract?.floating_shell_z_order === "global-body";
 
     const sheet = [...document.styleSheets].find(item => pathOnly(item.href || "").endsWith("/admin-windows.css"));
     let horizontalCssOwner = false;
+    let reservedPlaceholderCssOwner = false;
+    let forbiddenReservedZeroRule = false;
     if (sheet) {
       try {
         for (const rule of [...sheet.cssRules]) {
           if (rule.type !== CSSRule.STYLE_RULE) continue;
           const selector = String(rule.selectorText || "").replace(/\s+/g, " ").trim();
-          if (selector !== ".admin-native-floating-shell .admin-native-controls-floating") continue;
-          const display = String(rule.style?.display || "").trim().toLowerCase();
-          const direction = String(rule.style?.flexDirection || "").trim().toLowerCase();
-          const wrap = String(rule.style?.flexWrap || "").trim().toLowerCase();
-          horizontalCssOwner = display === "flex" && (direction === "row" || direction === "") && wrap === "nowrap";
+          if (selector === ".admin-native-floating-shell .admin-native-controls-floating") {
+            const display = String(rule.style?.display || "").trim().toLowerCase();
+            const direction = String(rule.style?.flexDirection || "").trim().toLowerCase();
+            const wrap = String(rule.style?.flexWrap || "").trim().toLowerCase();
+            horizontalCssOwner = display === "flex" && (direction === "row" || direction === "") && wrap === "nowrap";
+          }
+          if (selector === '.admin-native-placeholder[data-admin-native-placeholder-reserved="1"]') {
+            const display = String(rule.style?.display || "").trim().toLowerCase();
+            const visibility = String(rule.style?.visibility || "").trim().toLowerCase();
+            reservedPlaceholderCssOwner = display === "block" && visibility === "hidden";
+          }
+          if (selector.includes(".admin-native-placeholder")
+            && !selector.includes(':not([data-admin-native-placeholder-reserved="1"])')
+            && String(rule.style?.height || "").trim() === "0px"
+            && String(rule.style?.getPropertyPriority?.("height") || "").toLowerCase() === "important") {
+            forbiddenReservedZeroRule = true;
+          }
         }
       } catch (_) {}
     }
@@ -684,9 +700,10 @@
       };
     });
     const runtimeOk = rows.every(row => row.parentBody && row.fixed && row.horizontal && row.reservationOk);
+    const cssReservationOk = reservedPlaceholderCssOwner && !forbiddenReservedZeroRule;
     return {
-      ok: managerOk && horizontalCssOwner && runtimeOk,
-      detail: `managerBodyDefault=${managerOk} · horizontalCss=${horizontalCssOwner} · shells=${rows.length}${rows.length ? " · " + rows.map(row => `${row.id}:body=${row.parentBody}/fixed=${row.fixed}/horizontal=${row.horizontal}/5=${row.buttons}/spacers=${row.reserved}/${row.placeholders}/layout=${row.reservationOk}`).join(" · ") : " · aucune shell ouverte"}`
+      ok: managerOk && horizontalCssOwner && cssReservationOk && runtimeOk,
+      detail: `managerBodyDefault=${managerOk} · horizontalCss=${horizontalCssOwner} · reservedPlaceholderCss=${cssReservationOk} · forbiddenZero=${forbiddenReservedZeroRule} · shells=${rows.length}${rows.length ? " · " + rows.map(row => `${row.id}:body=${row.parentBody}/fixed=${row.fixed}/horizontal=${row.horizontal}/5=${row.buttons}/spacers=${row.reserved}/${row.placeholders}/layout=${row.reservationOk}`).join(" · ") : " · aucune shell ouverte"}`
     };
   }
 
@@ -758,14 +775,14 @@
       check("Contrat Memory Health", readOnlyContractOk(healthContract) && healthContract.verdicts_separated === true, healthContract ? "lecture seule + verdicts séparés" : "sentinelle absente"),
       check("Ancien Memory Health retiré", countScriptSuffix("/js/memory-health-audit-39.8.0.js") === 0, "aucun doublon du lecteur 39.8.0 initial"),
       check("Window Manager", hasScriptSuffix("/js/core/admin-window-manager.js"), "script unique"),
-      check("Shells flottantes · body + 5 boutons + espace dock préservé", globalFloatingShellContract().ok === true, globalFloatingShellContract().detail),
+      check("Shells flottantes · body + boutons horizontaux + placeholder réel", globalFloatingShellContract().ok === true, globalFloatingShellContract().detail),
       check("Aucun override chrome R1/R2 chargé", forbiddenOverrides.length === 0, forbiddenOverrides.length ? forbiddenOverrides.map(row => row.raw).join(" · ") : "anciens overrides R1/R2 absents"),
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
       check("Graphique · historique pur + LIVE hors canvas",
-        graphStability?.build === "40.1.29"
+        graphStability?.build === "40.1.30"
           && graphStability?.contract?.atomic_cache_to_direct === true
           && graphStability?.contract?.preserve_visible_comparison_until_complete === true
           && graphStability?.contract?.reuse_existing_comparison_chart === true
@@ -777,7 +794,7 @@
           && graphStability?.contract?.synthetic_terminal_point === false,
         graphStability
           ? `transactions=${Number(graphStability.metrics?.atomic_refresh_transactions || 0)} · commits=${Number(graphStability.metrics?.atomic_refresh_commits || 0)} · live-render=${Number(graphStability.metrics?.live_endpoint_render_commits || 0)} · blocked=${Number(graphStability.metrics?.live_endpoint_blocked_calls || 0)} · resize=${Number(graphStability.metrics?.resize_executed || 0)}/${Number(graphStability.metrics?.resize_requested || 0)} · skip=${Number(graphStability.metrics?.resize_skipped || 0)}`
-          : "contrat stabilité graphique 40.1.29 absent"),
+          : "contrat stabilité graphique 40.1.30 absent"),
       check("Target Top direct window controls", !!targetChrome && targetChrome.complete && targetChrome.interactive, targetChrome ? `5/5=${String(targetChrome.complete)} · interactif=${String(targetChrome.interactive)} · opacity runtime=${Number.isFinite(targetChrome.computedOpacity) ? targetChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Target Top absent"),
       check("Market Flow direct window controls", !!flowChrome && flowChrome.complete && flowChrome.interactive, flowChrome ? `5/5=${String(flowChrome.complete)} · interactif=${String(flowChrome.interactive)} · opacity runtime=${Number.isFinite(flowChrome.computedOpacity) ? flowChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Flow absent"),
       check("Market Flow · déplacement Target Top + viewport interne adapté", marketFlowFloatParityContract().ok === true, marketFlowFloatParityContract().detail),
@@ -873,7 +890,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · SHELL LAYOUT PLACEHOLDER · AUCUNE MUTATION AUTOMATIQUE · 40.1.29 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · RESERVED PLACEHOLDER + UNION GEOMETRY · AUCUNE MUTATION AUTOMATIQUE · 40.1.30 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -891,8 +908,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.29 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.29</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.30 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.30</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -901,7 +918,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.29 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.30 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">

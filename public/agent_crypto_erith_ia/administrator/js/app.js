@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.29";
-  const ADMIN_RELEASE = "LAYOUT PRESERVING FLOATING PLACEHOLDER LOCK";
+  const ADMIN_BUILD = "40.1.30";
+  const ADMIN_RELEASE = "FLOATING SHELL GEOMETRY + RESERVED PLACEHOLDER TRUTH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -370,6 +370,21 @@
     } catch {}
   }
 
+  const GLOBAL_SHELL_GEOMETRY_40130_MIGRATION_KEY = `${STORAGE_PREFIX}:global-shell-union-placeholder-40130-migrated`;
+
+  function migrateGlobalShellWindowState40130() {
+    try {
+      if (localStorage.getItem(GLOBAL_SHELL_GEOMETRY_40130_MIGRATION_KEY) === "1") return;
+      // 40.1.30 fixes the CSS/JS placeholder contradiction and measures multi-node
+      // families from the union of their visible members. Purge only shell-window
+      // geometry once so no stale anchor-only dimensions survive.
+      GLOBAL_SHELL_WINDOW_IDS_40128.forEach(id => {
+        localStorage.removeItem(`${STORAGE_PREFIX}:window:${id}`);
+      });
+      localStorage.setItem(GLOBAL_SHELL_GEOMETRY_40130_MIGRATION_KEY, "1");
+    } catch {}
+  }
+
   const GRAPH_R6_MIGRATION_KEY = `${STORAGE_PREFIX}:graph-fullwidth-r6-migrated`;
 
   function migrateGraphWindowStateR6() {
@@ -405,6 +420,7 @@
     migrateMarketWindowState40127();
     migrateGlobalShellWindowState40128();
     migrateGlobalShellWindowState40129();
+    migrateGlobalShellWindowState40130();
     migrateGraphWindowStateR6();
 
     const factory = window.ErithAdminWindowManager;

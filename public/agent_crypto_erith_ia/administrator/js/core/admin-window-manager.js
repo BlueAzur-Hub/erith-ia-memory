@@ -369,9 +369,48 @@
       return win;
     }
 
+    function visibleNodeUnionRect(win) {
+      const rects = (win?.nodes || [])
+        .map(node => {
+          if (!(node instanceof HTMLElement)) return null;
+          const computed = window.getComputedStyle?.(node);
+          if (String(computed?.display || "").toLowerCase() === "none") return null;
+          if (String(computed?.visibility || "").toLowerCase() === "hidden") return null;
+          const rect = node.getBoundingClientRect?.();
+          if (!rect || rect.width <= 0 || rect.height <= 0) return null;
+          return rect;
+        })
+        .filter(Boolean);
+      if (!rects.length) return null;
+
+      const left = Math.min(...rects.map(rect => rect.left));
+      const top = Math.min(...rects.map(rect => rect.top));
+      const right = Math.max(...rects.map(rect => rect.right));
+      const bottom = Math.max(...rects.map(rect => rect.bottom));
+      return {
+        left,
+        top,
+        right,
+        bottom,
+        width: Math.max(1, right - left),
+        height: Math.max(1, bottom - top)
+      };
+    }
+
     function currentRect(win) {
-      const target = win.directFixed && win.floating ? win.anchor : (win.shell || win.anchor);
-      const rect = target?.getBoundingClientRect?.();
+      let rect = null;
+
+      if (win?.floating) {
+        const target = win.directFixed ? win.anchor : win.shell;
+        rect = target?.getBoundingClientRect?.() || null;
+      } else if (!win?.directFixed && (win?.nodes?.length || 0) > 1) {
+        // 40.1.30 — multi-node Administrator families must be measured as the
+        // union of every visible member, not only from the small family anchor.
+        rect = visibleNodeUnionRect(win) || win.anchor?.getBoundingClientRect?.() || null;
+      } else {
+        rect = win?.anchor?.getBoundingClientRect?.() || null;
+      }
+
       if (!rect) return win?.floating ? clampWindowGeometry(win, win.geometry || {}) : clampGeometry(win.geometry || {});
       const geometry = {
         x: rect.left,
@@ -418,10 +457,10 @@
       win.nodes.forEach(node => {
         if (!node.parentNode) return;
 
-        // 40.1.29 — preserve the native layout footprint while the real node
-        // lives inside a floating shell. The old hidden=true span reserved 0px,
-        // collapsing grids/flows and making sibling modules (notably Math Core)
-        // jump underneath the detached window.
+        // 40.1.30 — preserve the native layout footprint while the real node
+        // lives inside a floating shell. Reserved placeholders keep the measured
+        // grid/flex footprint; admin-windows.css no longer zeroes those reserved
+        // placeholders with !important.
         const rect = node.getBoundingClientRect?.();
         const computed = window.getComputedStyle?.(node);
         const rendered = !!rect
@@ -454,6 +493,10 @@
           marker.style.gridRow = computed?.gridRow || "auto";
           marker.style.alignSelf = computed?.alignSelf || "auto";
           marker.style.justifySelf = computed?.justifySelf || "auto";
+          marker.style.flexGrow = computed?.flexGrow || "0";
+          marker.style.flexShrink = computed?.flexShrink || "1";
+          marker.style.flexBasis = computed?.flexBasis || "auto";
+          marker.style.order = computed?.order || "0";
         } else {
           marker.hidden = true;
         }
@@ -466,7 +509,7 @@
     function resolvePortalHost(win) {
       const requested = win.resolvePortalHost?.(activeDomain, win);
       if (requested instanceof HTMLElement) return requested;
-      // 40.1.29 — every real floating shell must escape local stacking/overflow
+      // 40.1.30 — every real floating shell must escape local stacking/overflow
       // contexts by default. Placeholders still restore native nodes on dock.
       return document.body;
     }
@@ -963,11 +1006,13 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.29",
+    build: "40.1.30",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
     dock_restore: "layout-preserving-placeholder-original-parent",
     layout_preserving_placeholders: true,
+    reserved_placeholder_css_zero_override: false,
+    multi_node_geometry: "visible-node-union",
     direct_fixed_windows_use_shell: false,
     floating_shell_z_order: "global-body"
   });

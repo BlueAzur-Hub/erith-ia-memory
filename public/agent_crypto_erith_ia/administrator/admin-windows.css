@@ -264,7 +264,24 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
   overflow:auto!important;
 }
 .admin-native-moving{opacity:.94;box-shadow:0 44px 145px rgba(0,0,0,.82),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 34%,transparent)!important;}
-.admin-native-placeholder{height:0!important;margin:0!important;padding:0!important;border:0!important;}
+/* 40.1.30 — placeholder contract:
+   only non-reserved markers collapse to 0px.
+   Reserved markers keep the exact inline footprint measured before detachment. */
+.admin-native-placeholder:not([data-admin-native-placeholder-reserved="1"]){
+  height:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+}
+.admin-native-placeholder[data-admin-native-placeholder-reserved="1"]{
+  display:block!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  box-sizing:border-box!important;
+  padding:0!important;
+  border:0!important;
+}
 
 /* When Math Core leaves the crypto grid, Market Snapshot uses the available width.
    Same principle if the Market Snapshot is removed and Math Core stays docked. */
