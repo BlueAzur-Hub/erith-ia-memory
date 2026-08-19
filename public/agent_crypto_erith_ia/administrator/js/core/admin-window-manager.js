@@ -344,6 +344,7 @@
         placeholders: new Map(),
         shell: null,
         shellTitle: null,
+        shellSizingMode: null,
         floating: false,
         minimized: false,
         hidden: false,
@@ -421,7 +422,7 @@
       return win?.floating ? clampWindowGeometry(win, geometry) : clampGeometry(geometry);
     }
 
-    // 40.1.31 — directFixed geometry must outrank legacy dock CSS.
+    // 40.1.32 — directFixed geometry must outrank legacy dock CSS.
     // Graphique and Math Core still have old high-specificity !important
     // position/top rules in the canonical Classic-derived stylesheet.
     // A floating directFixed window therefore owns its geometry inline with
@@ -456,6 +457,80 @@
         if (!win.minimized) setManagedFloatingStyle(win, target, "height", `${safe.height}px`);
       }
       return safe;
+    }
+
+    // 40.1.32 — floating shells are not all the same height. On the first
+    // detach, measure the REAL shell after titlebar + nodes have been inserted,
+    // then fit its border-box height to content and cap only at the viewport.
+    // directFixed windows are deliberately excluded from this path.
+    function shellBoxMetrics(shell) {
+      const style = window.getComputedStyle?.(shell);
+      const px = value => Number.parseFloat(String(value || "0")) || 0;
+      return {
+        horizontal: px(style?.paddingLeft) + px(style?.paddingRight) + px(style?.borderLeftWidth) + px(style?.borderRightWidth),
+        verticalBorder: px(style?.borderTopWidth) + px(style?.borderBottomWidth)
+      };
+    }
+
+    function autoFitFloatingShell(win, shell, geometry = {}) {
+      if (!win || win.directFixed || !(shell instanceof HTMLElement)) {
+        return setGeometryOnTarget(win, geometry);
+      }
+
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const viewportMaxWidth = Math.max(MIN_WIDTH, vw - VIEWPORT_MARGIN * 2);
+      const viewportMaxHeight = Math.max(MIN_HEIGHT, vh - VIEWPORT_MARGIN * 2);
+      const base = clampGeometry(geometry || {});
+      const box = shellBoxMetrics(shell);
+
+      // Preserve the native content width when possible. The shell itself adds
+      // horizontal padding/borders around those real nodes.
+      const width = clamp(
+        Math.ceil((Number(base.width) || MIN_WIDTH) + box.horizontal),
+        Math.min(MIN_WIDTH, viewportMaxWidth),
+        viewportMaxWidth
+      );
+
+      shell.style.left = `${VIEWPORT_MARGIN}px`;
+      shell.style.top = `${VIEWPORT_MARGIN}px`;
+      shell.style.width = `${width}px`;
+      shell.style.height = "auto";
+      shell.style.maxHeight = "none";
+      shell.style.overflow = "visible";
+
+      // Force one layout pass at the final width, then read the complete shell:
+      // titlebar, floating controls, padding and every visible real node.
+      void shell.offsetHeight;
+      const naturalHeight = Math.max(
+        MIN_HEIGHT,
+        Math.ceil((Number(shell.scrollHeight) || Number(shell.offsetHeight) || MIN_HEIGHT) + box.verticalBorder)
+      );
+      const height = Math.min(naturalHeight, viewportMaxHeight);
+
+      // The window must remain fully visible after auto-fit. If the native dock
+      // was near the bottom of the viewport, move the floating shell upward only
+      // as much as required to keep the complete fitted window reachable.
+      const maxX = Math.max(VIEWPORT_MARGIN, vw - width - VIEWPORT_MARGIN);
+      const maxY = Math.max(VIEWPORT_MARGIN, vh - height - VIEWPORT_MARGIN);
+      const x = clamp(Number(base.x), VIEWPORT_MARGIN, maxX);
+      const y = clamp(Number(base.y), VIEWPORT_MARGIN, maxY);
+
+      shell.style.removeProperty("max-height");
+      shell.style.removeProperty("overflow");
+      shell.style.left = `${x}px`;
+      shell.style.top = `${y}px`;
+      shell.style.width = `${width}px`;
+      shell.style.height = `${height}px`;
+
+      const overflowed = naturalHeight > height + 1;
+      shell.dataset.adminNativeShellSizing = "content-plus-chrome";
+      shell.dataset.adminNativeShellNaturalHeight = String(naturalHeight);
+      shell.dataset.adminNativeShellFittedHeight = String(height);
+      shell.dataset.adminNativeShellViewportClamped = overflowed ? "1" : "0";
+      win.shellSizingMode = "content-plus-chrome";
+      win.geometry = { x, y, width, height };
+      return { ...win.geometry };
     }
 
     function persistGeometry(win) {
@@ -538,7 +613,7 @@
       return document.body;
     }
 
-    function buildShell(win, geometry) {
+    function buildShell(win, geometry, options = {}) {
       if (win.shell?.isConnected) return win.shell;
       createPlaceholders(win);
       const shell = document.createElement("section");
@@ -560,7 +635,15 @@
       resolvePortalHost(win).appendChild(shell);
       win.nodes.forEach(node => shell.appendChild(node));
       domainMask(win);
-      setGeometryOnTarget(win, geometry || currentRect(win));
+      const baseGeometry = geometry || currentRect(win);
+      if (options.autoFit === true) {
+        autoFitFloatingShell(win, shell, baseGeometry);
+      } else {
+        shell.dataset.adminNativeShellSizing = "stored-geometry";
+        shell.dataset.adminNativeShellViewportClamped = "unknown";
+        win.shellSizingMode = "stored-geometry";
+        setGeometryOnTarget(win, baseGeometry);
+      }
       shell.addEventListener("pointerdown", () => bringToFront(win, false), { passive: true });
       shell.addEventListener("pointerup", () => persistGeometry(win), { passive: true });
       return shell;
@@ -586,6 +669,7 @@
       oldShell.remove();
       win.shell = null;
       win.shellTitle = null;
+      win.shellSizingMode = null;
     }
 
     function setDirectFloating(win, floating, geometry) {
@@ -697,7 +781,7 @@
       updateDeck();
     }
 
-    function setFloating(win, floating, persist = true, geometry = null) {
+    function setFloating(win, floating, persist = true, geometry = null, options = {}) {
       if (!win) return;
       if (!!floating === win.floating && (floating ? (win.directFixed || win.shell) : true)) return;
 
@@ -722,10 +806,15 @@
       if (!geometry && !win.geometry && typeof win.preferredFloatGeometry === "function") {
         try { preferredGeometry = win.preferredFloatGeometry({ domain: activeDomain, window: win }); } catch {}
       }
+      const hadGeometry = !!win.geometry;
       const baseGeometry = clampWindowGeometry(win, geometry || win.geometry || preferredGeometry || currentRect(win));
+      const autoFitShell = !win.directFixed
+        && options.autoFitShell !== false
+        && !hadGeometry
+        && options.restorePersisted !== true;
       win.geometry = { ...baseGeometry };
       if (win.directFixed) setDirectFloating(win, true, baseGeometry);
-      else buildShell(win, baseGeometry);
+      else buildShell(win, baseGeometry, { autoFit: autoFitShell });
       win.floating = true;
       if (!win.directFixed) syncPortalHost(win);
       domainMask(win);
@@ -735,10 +824,10 @@
       if (persist) {
         patchState(win.id, {
           floating: true,
-          x: baseGeometry.x,
-          y: baseGeometry.y,
-          width: baseGeometry.width,
-          height: baseGeometry.height,
+          x: win.geometry?.x ?? baseGeometry.x,
+          y: win.geometry?.y ?? baseGeometry.y,
+          width: win.geometry?.width ?? baseGeometry.width,
+          height: win.geometry?.height ?? baseGeometry.height,
           z: Number((win.directFixed ? win.anchor : win.shell)?.style.zIndex) || zCounter
         });
       }
@@ -771,7 +860,7 @@
       win.restoreFloating = win.floating;
       win.restoreGeometry = win.floating ? { ...(win.geometry || currentRect(win)) } : null;
       if (win.minimized) setMinimized(win, false, false);
-      if (!win.floating) setFloating(win, true, false, currentRect(win));
+      if (!win.floating) setFloating(win, true, false, currentRect(win), { autoFitShell: false });
       win.maximized = true;
       const target = win.directFixed ? win.anchor : win.shell;
       target?.classList.add("admin-native-maximized");
@@ -987,7 +1076,7 @@
             y: Number(state.y),
             width: Number(state.width),
             height: Number(state.height)
-          });
+          }, { autoFitShell: false, restorePersisted: true });
           if (Number.isFinite(Number(state.z))) {
             zCounter = Math.max(zCounter, Number(state.z));
             const target = win.directFixed ? win.anchor : win.shell;
@@ -1034,13 +1123,18 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.31",
+    build: "40.1.32",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
     dock_restore: "layout-preserving-placeholder-original-parent",
     layout_preserving_placeholders: true,
     reserved_placeholder_css_zero_override: false,
     multi_node_geometry: "visible-node-union",
+    floating_shell_auto_fit: "first-detach-content-plus-chrome",
+    floating_shell_height_cap: "viewport-minus-24px",
+    floating_shell_overflow: "scroll-only-when-natural-height-exceeds-viewport",
+    floating_shell_saved_geometry_respected: true,
+    direct_fixed_auto_fit: false,
     direct_fixed_windows_use_shell: false,
     direct_fixed_position_owner: "inline-important",
     direct_fixed_geometry_owner: "inline-important",

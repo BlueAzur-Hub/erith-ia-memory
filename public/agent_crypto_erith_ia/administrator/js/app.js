@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.31";
+  const ADMIN_BUILD = "40.1.32";
   const ADMIN_RELEASE = "DIRECT FIXED INLINE IMPORTANT GEOMETRY OWNER LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -400,6 +400,21 @@
     } catch {}
   }
 
+  const GLOBAL_SHELL_AUTOFIT_40132_MIGRATION_KEY = `${STORAGE_PREFIX}:global-shell-natural-autofit-40132-migrated`;
+
+  function migrateGlobalShellAutoFit40132() {
+    try {
+      if (localStorage.getItem(GLOBAL_SHELL_AUTOFIT_40132_MIGRATION_KEY) === "1") return;
+      // 40.1.32 changes only shell sizing. Clear the eight shell-window geometries
+      // once so their first detach is measured from live content + floating chrome.
+      // directFixed Graphique / Target Top / Market Flow / Math Core are excluded.
+      GLOBAL_SHELL_WINDOW_IDS_40128.forEach(id => {
+        localStorage.removeItem(`${STORAGE_PREFIX}:window:${id}`);
+      });
+      localStorage.setItem(GLOBAL_SHELL_AUTOFIT_40132_MIGRATION_KEY, "1");
+    } catch {}
+  }
+
   const GRAPH_R6_MIGRATION_KEY = `${STORAGE_PREFIX}:graph-fullwidth-r6-migrated`;
 
   function migrateGraphWindowStateR6() {
@@ -437,6 +452,7 @@
     migrateGlobalShellWindowState40129();
     migrateGlobalShellWindowState40130();
     migrateDirectFixedWindowState40131();
+    migrateGlobalShellAutoFit40132();
     migrateGraphWindowStateR6();
 
     const factory = window.ErithAdminWindowManager;

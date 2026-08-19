@@ -6013,7 +6013,7 @@ function atlasLiveEndpointAnchorX(chart, datasets = []) {
 
 function atlasPatchVisibleChartLiveEndpoints(changedIds = [], options = {}) {
   /*
-    40.1.31 — Historical canvas purity lock.
+    40.1.32 — Historical canvas purity lock.
     Live observations remain available to the rest of the interface, but no
     synthetic terminal observation is ever appended to a historical dataset.
     The chart ends on the last verified historical candle, full stop.
@@ -12179,7 +12179,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.31",
+  interface: "Build 40.1.32",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12782,7 +12782,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.31",
+  build: "40.1.32",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -40397,7 +40397,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.31";
+const ATLAS_BUILD = "40.1.32";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47071,8 +47071,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.31",
-  asset_token: "market-core-v2.0-alpha-build-40.1.31"
+  build: "40.1.32",
+  asset_token: "market-core-v2.0-alpha-build-40.1.32"
 });
 
 function atlasRuntimeTruth3813() {
