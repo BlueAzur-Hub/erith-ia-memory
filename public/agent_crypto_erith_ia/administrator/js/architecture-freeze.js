@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.36 — PARKER LEWIS CAN'T LOSE · FOOTER IDENTITY LOCK
+     40.1.37 — PARKER LEWIS CAN'T LOSE · LIVE TOP5 PRESENTATION RESTORE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -11,14 +11,14 @@
      - Report data-coverage limits as WARN, never as fake code failures.
 
      CONTRACT
-     - NO feature delta to market analysis or memory semantics; graph live-endpoint decoupling only; no analysis or memory semantic change.
+     - 40.1.37 restores live Top 5 PRESENTATION outside the historical canvas; no synthetic Chart.js endpoint, no market-analysis or memory semantic change.
      - NO automatic repair.
      - NO memory write.
      - NO network request from this module.
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.36";
+  const BUILD_CURRENT = "40.1.37";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -596,7 +596,7 @@
   }
 
   function detachDragContinuityContract() {
-    const managerContract = window.ErithAdminWindowManagerContract || {};
+    const managerContract = globalThis.ErithAdminWindowManager?.contract || {};
     const ok =
       managerContract.build === BUILD_CURRENT
       && managerContract.drag_pointer_event_owner === "window-capture-phase"
@@ -880,9 +880,12 @@
           && graphStability?.contract?.live_websocket_canvas_updates === false
           && graphStability?.contract?.collector_canvas_updates === false
           && graphStability?.contract?.live_endpoint_commit_scope === "disabled"
-          && graphStability?.contract?.synthetic_terminal_point === false,
+          && graphStability?.contract?.synthetic_terminal_point === false
+          && graphStability?.contract?.live_top5_presentation_outside_canvas === true
+          && graphStability?.contract?.virtual_live_tooltip_endpoint === true
+          && graphStability?.contract?.websocket_canvas_mutation === false,
         graphStability
-          ? `transactions=${Number(graphStability.metrics?.atomic_refresh_transactions || 0)} · commits=${Number(graphStability.metrics?.atomic_refresh_commits || 0)} · live-render=${Number(graphStability.metrics?.live_endpoint_render_commits || 0)} · blocked=${Number(graphStability.metrics?.live_endpoint_blocked_calls || 0)} · resize=${Number(graphStability.metrics?.resize_executed || 0)}/${Number(graphStability.metrics?.resize_requested || 0)} · skip=${Number(graphStability.metrics?.resize_skipped || 0)}`
+          ? `transactions=${Number(graphStability.metrics?.atomic_refresh_transactions || 0)} · commits=${Number(graphStability.metrics?.atomic_refresh_commits || 0)} · live-render=${Number(graphStability.metrics?.live_endpoint_render_commits || 0)} · live-ui=${Number(graphStability.metrics?.live_presentation_refreshes || 0)} · blocked=${Number(graphStability.metrics?.live_endpoint_blocked_calls || 0)} · resize=${Number(graphStability.metrics?.resize_executed || 0)}/${Number(graphStability.metrics?.resize_requested || 0)} · skip=${Number(graphStability.metrics?.resize_skipped || 0)}`
           : `contrat stabilité graphique ${BUILD_CURRENT} absent`),
       check("Target Top direct window controls", !!targetChrome && targetChrome.complete && targetChrome.interactive, targetChrome ? `5/5=${String(targetChrome.complete)} · interactif=${String(targetChrome.interactive)} · opacity runtime=${Number.isFinite(targetChrome.computedOpacity) ? targetChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Target Top absent"),
       check("Market Flow direct window controls", !!flowChrome && flowChrome.complete && flowChrome.interactive, flowChrome ? `5/5=${String(flowChrome.complete)} · interactif=${String(flowChrome.interactive)} · opacity runtime=${Number.isFinite(flowChrome.computedOpacity) ? flowChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Flow absent"),
@@ -1032,7 +1035,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le dernier Top 5 valide pendant la récupération directe, exige le paquet complet avant commit visible, réutilise l’instance Chart.js pour une sélection identique et centralise les resize dans atlasScheduleStableChartResize avec garde de géométrie. Market Flow, Lecture Technique visuelle, Math Core, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
+      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique, tandis que 40.1.37 restaure les valeurs Top 5 Binance LIVE uniquement dans le HUD, la légende et le tableau terminal virtuel hors dataset. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");

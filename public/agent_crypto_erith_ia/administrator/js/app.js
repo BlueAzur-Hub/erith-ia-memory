@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.36";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FOOTER IDENTITY LOCK";
+  const ADMIN_BUILD = "40.1.37";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · LIVE TOP5 PRESENTATION RESTORE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 

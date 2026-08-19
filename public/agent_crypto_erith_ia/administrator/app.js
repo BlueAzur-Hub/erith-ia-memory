@@ -4840,6 +4840,22 @@ function atlasChartV2SyncControls() {
   if (panel) panel.dataset.marketColumns = atlasV2Mode() === "essential" ? "essential" : state.chartViewV2.marketColumns;
 }
 
+function atlasChartLivePresentation(coin, period = Number(state.chartPeriodDays || 1)) {
+  if (!coin || Number(period || 1) !== 1) return null;
+  const quote = atlasExchangeQuoteForCoin(coin?.id || "");
+  const price = Number(quote?.price);
+  const change24h = Number(quote?.change24h);
+  if (quote?.status !== "live" || !(Number.isFinite(price) && price > 0) || !Number.isFinite(change24h)) return null;
+  return { quote, price, change24h };
+}
+
+function atlasChartPresentationMetric(coin, fallback, period = Number(state.chartPeriodDays || 1)) {
+  const live = atlasChartLivePresentation(coin, period);
+  if (live) return { value: live.change24h, live: true, quote: live.quote };
+  const value = Number(fallback);
+  return { value: Number.isFinite(value) ? value : NaN, live: false, quote: null };
+}
+
 function atlasChartV2RenderLegend(entries = [], options = {}) {
   const node = document.getElementById("chartV2Legend");
   if (!node) return;
@@ -4861,11 +4877,16 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
     const gradient = atlasCryptoGradientCss(coin, index);
     const result = entry.result || options.result || null;
     const preset = String(state.dataBroker?.comparison?.preset || "manual");
-    const metric = Number.isFinite(Number(entry?.atlasMarketMetric))
+    const period = Number(state.dataBroker?.chart?.period || state.chartPeriodDays || 1);
+    const historicalMetric = Number.isFinite(Number(entry?.atlasMarketMetric))
       ? Number(entry.atlasMarketMetric)
-      : preset === "volume"
-        ? Number(coin?.volume24h)
-        : Number(result?.integrity?.metrics?.changePct);
+      : Number(result?.integrity?.metrics?.changePct);
+    const presentation = preset === "volume"
+      ? null
+      : atlasChartPresentationMetric(coin, historicalMetric, period);
+    const metric = preset === "volume"
+      ? Number(coin?.volume24h)
+      : Number(presentation?.value);
     const metricText = preset === "volume"
       ? (Number.isFinite(metric) ? fmtCompactEUR.format(metric) : "—")
       : (Number.isFinite(metric) ? fmtPct(metric) : "—");
@@ -5114,7 +5135,7 @@ function atlasExternalChartTooltip(context) {
   const point = tooltip.dataPoints?.[0] || null;
   const targetX = Number(point?.parsed?.x);
   const comparison = chart.$atlasMode === "comparison";
-  const rows = comparison
+  let rows = comparison
     ? atlasComparisonTooltipRows(chart, targetX, point?.dataIndex)
     : point ? [{
         coin: point.dataset?.atlasCoin || chart.$atlasCoin || {},
@@ -5129,6 +5150,40 @@ function atlasExternalChartTooltip(context) {
         liveKind: String(point.raw?.atlasLiveKind || ""),
         liveObservedAt: Number(point.raw?.atlasLiveObservedAt || point.raw?.x)
       }] : [];
+
+  // 40.1.37 — virtual live endpoint for PRESENTATION only.
+  // The historical canvas remains pure: no synthetic point is pushed into any
+  // Chart.js dataset and no scale/update is triggered. At the last historical
+  // point of a 24h chart, the external value board may show current Binance 5/5.
+  const hoveredData = Array.isArray(point?.dataset?.data) ? point.dataset.data : [];
+  const hoveredIndex = Number(point?.dataIndex);
+  const atHistoricalEndpoint = hoveredData.length > 0
+    && Number.isInteger(hoveredIndex)
+    && hoveredIndex >= hoveredData.length - 1;
+  if (atHistoricalEndpoint && Number(chart.$atlasPeriod || state.chartPeriodDays || 1) === 1) {
+    const datasets = atlasChartPriceDatasets(chart);
+    const virtual = datasets.map((dataset, index) => {
+      const coin = dataset?.atlasCoin || chart.$atlasCoin || null;
+      const live = atlasChartLivePresentation(coin, 1);
+      if (!coin || !live) return null;
+      return {
+        coin,
+        color: dataset.atlasPrimaryColor || dataset.borderColor,
+        gradientCss: dataset.atlasGradientCss || "",
+        rawPrice: live.price,
+        baseValue: 100 + live.change24h,
+        timestamp: Number(live.quote?.timestamp || Date.now()),
+        isLiveEndpoint: true,
+        liveSource: String(live.quote?.source || "Binance WebSocket"),
+        liveStatus: String(live.quote?.status || "live"),
+        liveKind: "live-binance",
+        liveObservedAt: Number(live.quote?.timestamp || Date.now()),
+        virtualLivePresentation: true,
+        virtualIndex: index
+      };
+    }).filter(Boolean);
+    if (virtual.length && virtual.length === datasets.length) rows = virtual;
+  }
 
   if (!rows.length) {
     atlasHideChartTooltip();
@@ -6013,14 +6068,37 @@ function atlasLiveEndpointAnchorX(chart, datasets = []) {
 
 function atlasPatchVisibleChartLiveEndpoints(changedIds = [], options = {}) {
   /*
-    40.1.33 — Historical canvas purity lock.
+    40.1.23 — Historical canvas purity lock.
     Live observations remain available to the rest of the interface, but no
     synthetic terminal observation is ever appended to a historical dataset.
     The chart ends on the last verified historical candle, full stop.
   */
   atlasChartStability40122.metrics.live_endpoint_blocked_calls += 1;
   return false;
+}
 
+function atlasRefreshChartLivePresentation(changedIds = []) {
+  // 40.1.37 — restore operator-facing live values outside the canvas only.
+  const brokerChart = state.dataBroker?.chart;
+  if (!brokerChart || brokerChart.status !== "ready" || !brokerChart.result) return false;
+
+  const ids = new Set((changedIds || []).filter(Boolean));
+  const visibleIds = brokerChart.result?.comparison
+    ? (brokerChart.result.entries || []).map(entry => entry?.coin?.id).filter(Boolean)
+    : [brokerChart.coinId || brokerChart.result?.coin?.id].filter(Boolean);
+  if (ids.size && visibleIds.length && !visibleIds.some(id => ids.has(id))) return false;
+
+  if (brokerChart.result?.comparison && Array.isArray(brokerChart.result.entries)) {
+    atlasChartV2RenderLegend(brokerChart.result.entries, { comparison: true });
+  }
+  atlasChartOverlayUpdate();
+
+  const chart = state.chartEngineV2?.realChart;
+  if (chart?.tooltip?.opacity > 0) {
+    window.requestAnimationFrame(() => atlasExternalChartTooltip({ chart, tooltip: chart.tooltip }));
+  }
+  atlasChartStability40122.metrics.live_presentation_refreshes += 1;
+  return true;
 }
 
 function atlasComparisonResultFingerprint(entries, period) {
@@ -7897,12 +7975,17 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     const coin = entry?.coin || {};
     const marketCoin = state.coins.find(item => item.id === coin.id) || coin;
     const metrics = entry?.result?.integrity?.metrics || {};
+    const historicalChange = Number.isFinite(Number(entry?.atlasMarketMetric))
+      ? Number(entry.atlasMarketMetric)
+      : Number(metrics.changePct);
+    const presentation = preset === "volume"
+      ? { value: historicalChange, live: false, quote: null }
+      : atlasChartPresentationMetric(marketCoin, historicalChange, period);
     return {
       coin,
       symbol: String(coin.symbol || coin.name || "ACTIF").toUpperCase(),
-      change: Number.isFinite(Number(entry?.atlasMarketMetric))
-        ? Number(entry.atlasMarketMetric)
-        : Number(metrics.changePct),
+      change: Number(presentation.value),
+      live: presentation.live === true,
       volume: Number.isFinite(Number(entry?.atlasMarketMetric)) && preset === "volume"
         ? Number(entry.atlasMarketMetric)
         : Number(marketCoin?.volume24h),
@@ -8095,9 +8178,12 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     + `</span>`;
 
   const truthLabel = String(truth.label || "source non mesurée");
+  const livePresentationCount = rows.filter(row => row.live).length;
   const displayedTruthLabel = options.preserved
     ? "historique conservé"
-    : truthLabel;
+    : livePresentationCount > 0
+      ? `${truthLabel} · LIVE BINANCE ${livePresentationCount}/${rows.length}`
+      : truthLabel;
   const displayedModeLabel = String(
     options.modeLabel || atlasChartOverlayModeLabel()
   );
@@ -12179,7 +12265,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.36",
+  interface: "Build 40.1.37",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12782,7 +12868,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.36",
+  build: "40.1.37",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -12793,7 +12879,10 @@ const atlasChartStability40122 = {
     live_websocket_canvas_updates: false,
     collector_canvas_updates: false,
     live_endpoint_commit_scope: "disabled",
-    synthetic_terminal_point: false
+    synthetic_terminal_point: false,
+    live_top5_presentation_outside_canvas: true,
+    virtual_live_tooltip_endpoint: true,
+    websocket_canvas_mutation: false
   }),
   metrics: {
     resize_requested: 0,
@@ -12803,6 +12892,7 @@ const atlasChartStability40122 = {
     atomic_refresh_commits: 0,
     live_endpoint_render_commits: 0,
     live_endpoint_blocked_calls: 0,
+    live_presentation_refreshes: 0,
     last_geometry: null,
     last_resize_reason: null,
     last_atomic_selection: null
@@ -13309,6 +13399,26 @@ function atlasRefreshMathFreshnessOnly() {
   document.querySelectorAll("[data-atlas-math-freshness]").forEach(node => {
     node.textContent = freshness;
   });
+}
+
+function atlasRefreshMathLiveSurface() {
+  const coin = atlasSelectedCoin();
+  if (!coin) return false;
+  const quote = atlasCurrentQuoteForCoin(coin);
+  if (!atlasQuoteIsUsable(quote)) return false;
+  const panel = document.getElementById("atlasMathCorePanel");
+  if (!panel) return false;
+  const card = [...panel.querySelectorAll(".atlas-math-card")]
+    .find(node => String(node.querySelector("span")?.textContent || "").trim() === "Prix observé");
+  if (!card) return false;
+  const value = card.querySelector("b");
+  const detail = card.querySelector("small");
+  if (value) value.textContent = atlasCurrentQuotePriceText(quote);
+  if (detail) {
+    detail.textContent = `${atlasQuoteStatusLabel(quote)} · ${quote.source} · ${atlasExactTimestampLabel(quote.timestamp)} · 24 h ${atlasCurrentQuoteChangeText(quote)}`;
+  }
+  card.dataset.atlasMathLiveQuote = String(quote.status || "available");
+  return true;
 }
 
 function atlasMathCoverageLabel(data) {
@@ -13888,7 +13998,7 @@ function renderAtlasMathCore() {
     panel.innerHTML = [
       atlasMathCard("Actif et fenêtre", coin ? coin.symbol : "—", coin ? `${coin.name} · ${periodLabel}` : "Livecheck requis", coin && currentQuote && atlasQuoteIsUsable(currentQuote) ? `${atlasMarketQuoteTruthLabel(currentQuote)} · ${atlasCurrentQuotePriceText(currentQuote)} · ${atlasMarketQuoteFreshnessLabel(currentQuote)}` : coin ? `${source} · prix observé indisponible` : "", "wide"),
       atlasMathCard("Market Frame", marketFrameContext.currentFrameId ? atlasMarketFrameShortId() : "Indisponible", `${marketFrameContext.validatedAssets}/${marketFrameContext.requestedAssets} actifs validés · ${atlasBrokerModeLabel(marketFrameContext.currentFrameMode)}`, marketFrameContext.chartUsesCurrentFrame ? "Contexte graphique rattaché au frame courant" : "Graphique rattaché à un frame antérieur traçable", "wide"),
-      atlasMathCard("Prix observé", currentQuote && atlasQuoteIsUsable(currentQuote) ? atlasCurrentQuotePriceText(currentQuote) : "Indisponible", currentQuote && atlasQuoteIsUsable(currentQuote) ? `${atlasQuoteStatusLabel(currentQuote)} · ${currentQuote.source} · ${atlasExactTimestampLabel(currentQuote.timestamp)}` : "Aucune cotation exploitable"),
+      atlasMathCard("Prix observé", currentQuote && atlasQuoteIsUsable(currentQuote) ? atlasCurrentQuotePriceText(currentQuote) : "Indisponible", currentQuote && atlasQuoteIsUsable(currentQuote) ? `${atlasQuoteStatusLabel(currentQuote)} · ${currentQuote.source} · ${atlasExactTimestampLabel(currentQuote.timestamp)} · 24 h ${atlasCurrentQuoteChangeText(currentQuote)}` : "Aucune cotation exploitable"),
       atlasMathCard("Qualité de série", Number.isFinite(metrics.completenessPct) ? `${metrics.completenessPct.toFixed(1)} %` : "Indisponible", `${pointCount} points observés / ${metrics.expectedPoints || "?"} attendus · ${metrics.largeGaps ?? "?"} grand(s) écart(s)`),
       atlasMathCard("Granularité", stepLabel, `${metrics.returnsCount} rendements logarithmiques · source ${source}`),
       atlasMathCard("Volatilité réalisée", atlasMathFormatPct(metrics.realizedWindowPct), `Fenêtre ${periodLabel} · unité % de la fenêtre`, `Annualisée : ${atlasMathFormatPct(metrics.realizedAnnualizedPct)}`),
@@ -35678,6 +35788,7 @@ function atlasExchangeScheduleUiPatch(changedCoinId = null) {
     try {
       const ids = changedCoinId ? [changedCoinId] : Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP);
       atlasPatchTickerSpot(ids);
+      atlasRefreshChartLivePresentation(ids);
       ids.forEach(id => {
         const coin = state.coins.find(item => item.id === id);
         if (coin) atlasPatchMarketRowSpot(coin);
@@ -35688,6 +35799,7 @@ function atlasExchangeScheduleUiPatch(changedCoinId = null) {
         atlasRefreshSelectedDetailOnly();
         renderMultiHorizon();
         atlasRenderBrokerStrip();
+        atlasRefreshMathLiveSurface();
       }
       atlasRenderExchangeFeedStatus();
     } catch (error) {
@@ -40397,7 +40509,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.36";
+const ATLAS_BUILD = "40.1.37";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47071,8 +47183,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.36",
-  asset_token: "market-core-v2.0-alpha-build-40.1.36"
+  build: "40.1.37",
+  asset_token: "market-core-v2.0-alpha-build-40.1.37"
 });
 
 function atlasRuntimeTruth3813() {
