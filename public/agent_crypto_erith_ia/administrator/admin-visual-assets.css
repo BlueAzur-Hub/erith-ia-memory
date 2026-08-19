@@ -627,11 +627,91 @@ body.atlas-administrator-mirror #detailPanel p{
 
 /* ==========================================================================\n   39.4.6R5 — TECHNICAL READING SIDE DOCK + DECORATIVE EMBLEM SCALE LOCK\n\n   Operator contract:\n   - desktop restores the canonical Graphique | Lecture technique side-by-side layout;\n   - the selected/default Aerith image still fills the whole Technical Reading frame;\n   - existing Classic functional DOM remains over the image on <=10% alpha surfaces;\n   - decorative emblems are background accents only: small, <=10% opacity, no layout reservation;\n   - no Market/Memory/Atlas/Math/data-source behavior is changed.\n   ========================================================================== */
 
-/* 40.1.7 — TECHNICAL READING CLASSIC GEOMETRY OWNER RESTORE
-   The Administrator visual layer deliberately no longer owns #analyste grid
-   columns/rows or Chart/Detail placement. The existing Classic style.css
-   remains the sole geometry owner for Graphique + Lecture technique.
-   Administrator keeps only its visual treatment and window chrome. */
+/* DESKTOP: hard-lock the two-column composition. The old Classic rule that
+   placed Detail below the chart is intentionally superseded only here. */
+@media (min-width:1081px){
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) clamp(318px,22vw,366px)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:8px!important;
+    row-gap:0!important;
+    align-items:stretch!important;
+    width:100%!important;
+    overflow:visible!important;
+  }
+
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .chart-panel{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-width:0!important;
+    width:100%!important;
+    height:auto!important;
+    align-self:stretch!important;
+    margin:0!important;
+  }
+
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > #detailPanel.clean-lens-detail-panel:not([hidden]){
+    grid-column:2!important;
+    grid-row:1!important;
+    position:relative!important;
+    inset:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    align-self:stretch!important;
+    overflow:hidden!important;
+    scrollbar-gutter:auto!important;
+  }
+
+  /* Expanded Detail owns the second column; the narrow vertical rail is only
+     useful while Detail is collapsed. */
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .detail-panel-rail{
+    display:none!important;
+  }
+}
+
+/* SMALLER VIEWPORTS: stack cleanly instead of allowing the panel to become a
+   tiny orphaned card. */
+@media (max-width:1080px){
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto minmax(420px,72vh)!important;
+    row-gap:8px!important;
+    column-gap:0!important;
+  }
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .chart-panel{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > #detailPanel.clean-lens-detail-panel:not([hidden]){
+    grid-column:1!important;
+    grid-row:2!important;
+    position:relative!important;
+    inset:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:420px!important;
+    max-height:none!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .detail-panel-rail{
+    display:none!important;
+  }
+}
 
 /* Keep R4 full-frame Aerith behaviour once the panel is back in its column. */
 body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
