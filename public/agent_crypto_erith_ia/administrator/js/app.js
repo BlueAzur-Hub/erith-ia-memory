@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.35";
-  const ADMIN_RELEASE = "PARKER LEWIS · CANONICAL MODULE FILENAMES LOCK";
+  const ADMIN_BUILD = "40.1.36";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FOOTER IDENTITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -199,7 +199,7 @@
     byId("administratorMirrorIdentity")?.remove();
 
     const footer = byId("footerRelease");
-    if (footer) footer.textContent = `Agent-Crypto @erith.IA · Build ${ADMIN_BUILD} · Administrator · Engine Market Core ${ENGINE_BUILD}`;
+    if (footer) footer.textContent = `Agent-Crypto @erith.IA · Market Core · Build ${ADMIN_BUILD} · Version : Parker Lewis Can't Lose`;
   }
 
   function updateLayoutButton(button, free) {
