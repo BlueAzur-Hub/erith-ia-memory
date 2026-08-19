@@ -187,18 +187,65 @@
       if (event.button !== 0 && event.pointerType === "mouse") return;
 
       const button = event.currentTarget;
+      const pointerId = event.pointerId;
       const startX = event.clientX;
       const startY = event.clientY;
       const initial = currentRect(win);
+      let originX = startX;
+      let originY = startY;
       let dragBase = initial;
       let moved = false;
       let target = null;
-      button?.setPointerCapture?.(event.pointerId);
+      let finished = false;
+
+      // 40.1.33 — drag continuity must survive DOM reparenting.
+      // Shell windows move their REAL nodes into document.body at first detach.
+      // Firefox can drop element-level pointer capture when the pressed button is
+      // reparented, so the drag lifecycle is owned by window capture listeners.
+      // Pointer capture remains a best-effort enhancement, never the sole owner.
+      const capturePointer = () => {
+        if (!(button instanceof HTMLElement) || !button.isConnected) return;
+        try { button.setPointerCapture?.(pointerId); } catch {}
+      };
+
+      const releasePointer = () => {
+        if (!(button instanceof HTMLElement)) return;
+        try {
+          if (button.hasPointerCapture?.(pointerId)) button.releasePointerCapture?.(pointerId);
+        } catch {}
+      };
+
+      const cleanup = () => {
+        window.removeEventListener("pointermove", move, true);
+        window.removeEventListener("pointerup", end, true);
+        window.removeEventListener("pointercancel", end, true);
+        window.removeEventListener("blur", abort, true);
+        releasePointer();
+      };
+
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        cleanup();
+        if (target) {
+          document.body.classList.remove("admin-native-dragging");
+          target.classList.remove("admin-native-moving");
+        }
+        if (moved) {
+          set.suppressNextClick = true;
+          win.geometry = currentRect(win);
+          persistGeometry(win);
+        }
+      };
+
+      const abort = () => finish();
 
       const move = moveEvent => {
-        const dx = moveEvent.clientX - startX;
-        const dy = moveEvent.clientY - startY;
-        if (!moved && Math.hypot(dx, dy) < 6) return;
+        if (moveEvent.pointerId !== pointerId || finished) return;
+        let dx = moveEvent.clientX - originX;
+        let dy = moveEvent.clientY - originY;
+        if (!moved && Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY) < 6) return;
+
         if (!moved) {
           moved = true;
           if (!win.floating) {
@@ -216,17 +263,32 @@
                 }) || initial;
               } catch {}
             }
+
             setFloating(win, true, true, detachGeometry);
+
+            // The pressed control may have moved to a different DOM parent.
+            // Rebase the gesture from the fitted floating geometry and reacquire
+            // capture when Firefox still allows it. No mouse-up/re-click required.
             dragBase = currentRect(win);
+            originX = moveEvent.clientX;
+            originY = moveEvent.clientY;
+            dx = 0;
+            dy = 0;
+            capturePointer();
           } else {
             dragBase = currentRect(win);
           }
+
           bringToFront(win);
           target = win.directFixed ? win.anchor : win.shell;
-          if (!target) return;
+          if (!target) {
+            finish();
+            return;
+          }
           document.body.classList.add("admin-native-dragging");
           target.classList.add("admin-native-moving");
         }
+
         if (!target) return;
         const safe = clampWindowGeometry(win, {
           x: dragBase.x + dx,
@@ -236,27 +298,20 @@
         });
         setManagedFloatingStyle(win, target, "left", `${safe.x}px`);
         setManagedFloatingStyle(win, target, "top", `${safe.y}px`);
+        moveEvent.preventDefault?.();
       };
 
       const end = endEvent => {
-        button?.releasePointerCapture?.(endEvent.pointerId);
-        button?.removeEventListener("pointermove", move);
-        button?.removeEventListener("pointerup", end);
-        button?.removeEventListener("pointercancel", end);
-        if (target) {
-          document.body.classList.remove("admin-native-dragging");
-          target.classList.remove("admin-native-moving");
-        }
-        if (moved) {
-          set.suppressNextClick = true;
-          win.geometry = currentRect(win);
-          persistGeometry(win);
-        }
+        if (endEvent.pointerId !== pointerId || finished) return;
+        finish();
       };
 
-      button?.addEventListener("pointermove", move);
-      button?.addEventListener("pointerup", end);
-      button?.addEventListener("pointercancel", end);
+      capturePointer();
+      window.addEventListener("pointermove", move, true);
+      window.addEventListener("pointerup", end, true);
+      window.addEventListener("pointercancel", end, true);
+      window.addEventListener("blur", abort, true);
+      event.preventDefault?.();
     }
 
     function createControlSet(win, host, mini = false, floatingChrome = false) {
@@ -1123,7 +1178,7 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.32",
+    build: "40.1.33",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
     dock_restore: "layout-preserving-placeholder-original-parent",
@@ -1134,6 +1189,10 @@
     floating_shell_height_cap: "viewport-minus-24px",
     floating_shell_overflow: "scroll-only-when-natural-height-exceeds-viewport",
     floating_shell_saved_geometry_respected: true,
+    drag_pointer_event_owner: "window-capture-phase",
+    drag_reparent_continuity: true,
+    drag_pointer_capture_reacquire: true,
+    drag_single_gesture_detach_move: true,
     direct_fixed_auto_fit: false,
     direct_fixed_windows_use_shell: false,
     direct_fixed_position_owner: "inline-important",
