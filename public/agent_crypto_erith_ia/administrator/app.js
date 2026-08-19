@@ -45,7 +45,7 @@ const state = {
   chartCache: {},
   chartRenderToken: 0,
   comparisonRenderToken: 0,
-  chartViewV2: { view: "price", scale: "linear", volume: true, legend: false, comparisonLegend: false, analysis: true, oracle: true, oracleHorizon: "5m", oracleView: "continuation", marketColumns: "essential" },
+  chartViewV2: { view: "price", scale: "linear", volume: true, legend: false, comparisonLegend: false, analysis: true, oracle: true, oracleHorizon: "5m", oracleView: "continuation", oracleZoom: "auto", marketColumns: "essential" },
   chartEngineV2: {
     token: 0,
     controller: null,
@@ -4777,7 +4777,7 @@ function atlasHideChartRefresh() {
 
 const ATLAS_CHART_V2_SETTINGS_KEY="agent_crypto_erith_ia_chart_v2_settings_v28_1_17";
 
-function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend===true,comparisonLegend:p.comparisonLegend===true,analysis:p.analysis!==false,oracle:p.oracle!==false,oracleHorizon:["1m","5m","15m"].includes(p.oracleHorizon)?p.oracleHorizon:"5m",oracleView:["continuation","top5"].includes(p.oracleView)?p.oracleView:"continuation",marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
+function atlasReadChartV2Settings(){try{const p=JSON.parse(localStorage.getItem(ATLAS_CHART_V2_SETTINGS_KEY)||"{}");state.chartViewV2={view:p.view==="base100"?"base100":"price",scale:p.scale==="logarithmic"?"logarithmic":"linear",volume:p.volume!==false,legend:p.legend===true,comparisonLegend:p.comparisonLegend===true,analysis:p.analysis!==false,oracle:p.oracle!==false,oracleHorizon:["1m","5m","15m"].includes(p.oracleHorizon)?p.oracleHorizon:"5m",oracleView:["continuation","top5"].includes(p.oracleView)?p.oracleView:"continuation",oracleZoom:["auto","1x","2x","4x"].includes(p.oracleZoom)?p.oracleZoom:"auto",marketColumns:p.marketColumns==="complete"?"complete":"essential"};}catch{} return state.chartViewV2;}
 
 function atlasWriteChartV2Settings(){try{localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY,JSON.stringify(state.chartViewV2));}catch{}}
 
@@ -5167,7 +5167,7 @@ function atlasExternalChartTooltip(context) {
         liveObservedAt: Number(point.raw?.atlasLiveObservedAt || point.raw?.x)
       }] : [];
 
-  // 40.1.48 — virtual live endpoint for PRESENTATION only, on every horizon.
+  // 40.1.52 — virtual live endpoint for PRESENTATION only, on every horizon.
   // The historical canvas remains pure: no synthetic point is pushed into any
   // Chart.js dataset and no scale/update is triggered. At the last verified
   // historical point, the external value board may show current Binance 5/5
@@ -5620,7 +5620,7 @@ const atlasVolumeOverlayPlugin = {
       // Canonical 39.2.11 geometry + 39.2.21 Metal base paint.
       atlasDrawCurveFollowingShadowBars(args);
 
-      // 40.1.48 — illuminated Metal pass. Same points, baseline and 88% height.
+      // 40.1.52 — illuminated Metal pass. Same points, baseline and 88% height.
       // This is paint only: no data mutation, no synthetic endpoint and no scale write.
       chart.ctx.save();
       chart.ctx.globalCompositeOperation = "screen";
@@ -5638,8 +5638,8 @@ const atlasVolumeOverlayPlugin = {
   }
 };
 
-const ATLAS_VERTICAL_BAR_RENDERER_40148 = Object.freeze({
-  build: "40.1.48",
+const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
+  build: "40.1.52",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -5672,7 +5672,7 @@ const ATLAS_VERTICAL_BAR_RENDERER_40148 = Object.freeze({
   synthetic_live_endpoint: false,
   websocket_canvas_rescale: false
 });
-globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40148__ = ATLAS_VERTICAL_BAR_RENDERER_40148;
+globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40149__ = ATLAS_VERTICAL_BAR_RENDERER_40149;
 
 const atlasOverlayAxesPlugin = {
   id: "atlasOverlayAxes",
@@ -6173,8 +6173,8 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
   return true;
 }
 
-const ATLAS_ORACLE_V1_40148 = Object.freeze({
-  build: "40.1.48",
+const ATLAS_ORACLE_V1_40149 = Object.freeze({
+  build: "40.1.52",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6194,10 +6194,15 @@ const ATLAS_ORACLE_V1_40148 = Object.freeze({
   live_micro_buffer: "session memory only · bounded 20 min · Binance LIVE quotes · no historical canvas write",
   live_micro_horizons: Object.freeze(["1m", "5m", "15m"]),
   top5_aggregate_focus: true,
+  visual_zoom: Object.freeze(["auto", "1x", "2x", "4x"]),
+  visual_zoom_anchor: "MAINTENANT",
+  visual_zoom_data_mutation: false,
+  visual_zoom_score_mutation: false,
+  visual_zoom_main_chart_mutation: false,
   financial_advice: false,
   output: "normalized interpretative continuation scenarios only"
 });
-globalThis.__ATLAS_ORACLE_V1_40148__ = ATLAS_ORACLE_V1_40148;
+globalThis.__ATLAS_ORACLE_V1_40149__ = ATLAS_ORACLE_V1_40149;
 
 const ATLAS_ORACLE_V0_ASSET_KEY = "agent_crypto_erith_ia_oracle_v0_asset";
 let atlasOracleV0AssetId = "";
@@ -6378,6 +6383,19 @@ function atlasOracleViewSpec() {
   return key === "top5"
     ? { key, label: "TOP 5", description: "Fils directionnels normalisés du panier sélectionné" }
     : { key: "continuation", label: "CONTINUATION", description: "Historique réel prolongé par scénarios hausse / biais / baisse" };
+}
+
+function atlasOracleZoomSpec() {
+  const key = ["auto", "1x", "2x", "4x"].includes(state.chartViewV2.oracleZoom)
+    ? state.chartViewV2.oracleZoom
+    : "auto";
+  const factor = key === "4x" ? 4 : key === "2x" ? 2 : 1;
+  return {
+    key,
+    factor,
+    label: key === "auto" ? "AUTO" : `×${factor}`,
+    automatic: key === "auto"
+  };
 }
 
 function atlasOracleHistoricalTail(coin) {
@@ -6602,6 +6620,9 @@ function atlasOracleDrawCanvas(model) {
   const anchorX = pad.left + w * anchorRatio;
   const view = atlasOracleViewSpec();
   const horizon = atlasOracleHorizonSpec();
+  const zoom = atlasOracleZoomSpec();
+  const zoomFactor = Math.max(1, Number(zoom.factor || 1));
+  const zoomX = x => anchorX + (x - anchorX) * zoomFactor;
 
   const bg = ctx.createLinearGradient(0, 0, cssWidth, cssHeight);
   bg.addColorStop(0, "rgba(2,8,16,.98)");
@@ -6648,8 +6669,9 @@ function atlasOracleDrawCanvas(model) {
     ? candidateModels.reduce((max, row) => Math.max(max, row.bullAmplitude, row.bearAmplitude), 0)
     : Math.max(model.bullAmplitude, model.bearAmplitude);
   const maxAmp = Math.max(.55, scenarioDeviation, tailDeviation * 1.12) * 1.32;
-  const yFor = value => pad.top + h / 2 - ((value - 100) / maxAmp) * (h / 2 - 16);
-  const xOracle = t => anchorX + t * (w * (1-anchorRatio));
+  const visibleAmp = Math.max(.08, maxAmp / zoomFactor);
+  const yFor = value => pad.top + h / 2 - ((value - 100) / visibleAmp) * (h / 2 - 16);
+  const xOracle = t => zoomX(anchorX + t * (w * (1-anchorRatio)));
 
   // Baseline and relative scale labels.
   ctx.setLineDash([5, 5]);
@@ -6659,8 +6681,8 @@ function atlasOracleDrawCanvas(model) {
   ctx.textAlign = "right";
   ctx.font = "800 8px ui-monospace, monospace";
   [-1,-.5,0,.5,1].forEach(unit => {
-    const value = 100 + maxAmp * unit;
-    const label = unit === 0 ? "0.00%" : `${unit > 0 ? "+" : ""}${(maxAmp*unit).toFixed(2)}%`;
+    const value = 100 + visibleAmp * unit;
+    const label = unit === 0 ? "0.00%" : `${unit > 0 ? "+" : ""}${(visibleAmp*unit).toFixed(2)}%`;
     ctx.fillStyle = unit === 0 ? "rgba(235,245,249,.74)" : "rgba(132,164,179,.62)";
     ctx.fillText(label, cssWidth - 7, yFor(value) + 3);
   });
@@ -6671,10 +6693,14 @@ function atlasOracleDrawCanvas(model) {
     if (tail.length < 2) return;
     const firstX = pad.left + 7;
     const tailW = Math.max(20, anchorX - firstX);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(pad.left, pad.top, w, h);
+    ctx.clip();
     ctx.beginPath();
     tail.forEach((point, index) => {
       const t = index / Math.max(1, tail.length - 1);
-      const x = firstX + t * tailW;
+      const x = zoomX(firstX + t * tailW);
       const y = yFor(point.value);
       index ? ctx.lineTo(x,y) : ctx.moveTo(x,y);
     });
@@ -6686,6 +6712,7 @@ function atlasOracleDrawCanvas(model) {
     ctx.stroke();
     ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
+    ctx.restore();
   };
 
   const scenarioPoints = (amplitude, sign, waveScale, directionScale = 1) => {
@@ -6700,6 +6727,10 @@ function atlasOracleDrawCanvas(model) {
   };
   const drawPath = (points, color, width = 2, glowPx = 5, alpha = 1) => {
     if (!points.length) return;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(pad.left, pad.top, w, h);
+    ctx.clip();
     ctx.beginPath();
     points.forEach(([x,y], index) => index ? ctx.lineTo(x,y) : ctx.moveTo(x,y));
     ctx.lineWidth = width;
@@ -6710,6 +6741,7 @@ function atlasOracleDrawCanvas(model) {
     ctx.stroke();
     ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
+    ctx.restore();
   };
 
   // Explicit NOW separator: nothing to the right is historical data.
@@ -6791,17 +6823,22 @@ function atlasOracleDrawCanvas(model) {
     ctx.fillStyle = "#ff9aa4"; ctx.fillText(`BAISSE ${model.bearStrength}/100`, anchorX + 10, pad.top + h - 8);
   }
 
-  // Horizon ticks in Oracle field.
+  // Horizon ticks in Oracle field. Zoom changes only the visible viewport:
+  // the underlying horizon, data, confidence and scenario scores are untouched.
   ctx.font = "800 8px ui-monospace, monospace";
   ctx.textAlign = "center";
   ctx.fillStyle = "rgba(137,165,177,.67)";
+  const visibleFraction = 1 / zoomFactor;
   for (let i = 1; i <= 5; i += 1) {
-    const t = i / 5;
+    const t = visibleFraction * i / 5;
     const mins = horizon.minutes * t;
     const label = horizon.minutes === 1 ? `+${Math.round(mins*60)}s` : `+${Number.isInteger(mins) ? mins : mins.toFixed(1)}m`;
     ctx.fillText(label, xOracle(t), pad.top + h + 17);
   }
   ctx.textAlign = "left";
+  ctx.fillStyle = "rgba(255,224,154,.72)";
+  ctx.font = "900 8px ui-monospace, monospace";
+  ctx.fillText(`ZOOM ${zoom.label}`, pad.left + 5, pad.top + h + 17);
 }
 
 function atlasRenderOracleV0() {
@@ -6834,7 +6871,14 @@ function atlasRenderOracleV0() {
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", active ? "true" : "false");
   });
+  const zoom = atlasOracleZoomSpec();
+  document.querySelectorAll("[data-oracle-zoom]").forEach(button => {
+    const active = button.dataset.oracleZoom === zoom.key;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
   root.dataset.oracleView = view.key;
+  root.dataset.oracleZoom = zoom.key;
 
   const assetStrip = document.getElementById("atlasOracleAssets");
   if (assetStrip) {
@@ -6954,6 +6998,21 @@ function atlasInitOracleV0() {
       atlasOracleV0AssetId = state.selectedCoinId || atlasOracleCandidateCoins()[0]?.id || "";
     }
     try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
+    atlasWriteChartV2Settings();
+    atlasRenderOracleV0();
+  });
+  root.querySelector("[data-oracle-zooms]")?.addEventListener("click", event => {
+    const reset = event.target?.closest?.("[data-oracle-zoom-reset]");
+    if (reset) {
+      state.chartViewV2.oracleZoom = "auto";
+      atlasWriteChartV2Settings();
+      atlasRenderOracleV0();
+      return;
+    }
+    const button = event.target?.closest?.("[data-oracle-zoom]");
+    const key = String(button?.dataset?.oracleZoom || "");
+    if (!button || !["auto","1x","2x","4x"].includes(key)) return;
+    state.chartViewV2.oracleZoom = key;
     atlasWriteChartV2Settings();
     atlasRenderOracleV0();
   });
@@ -13133,7 +13192,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.48",
+  interface: "Build 40.1.52",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -13736,7 +13795,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.48",
+  build: "40.1.52",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -14175,6 +14234,20 @@ function atlasV2ApplyMathDock(position, options = {}) {
   const math = document.getElementById("math");
   const topDock = document.getElementById("mathTopDock");
   if (!grid || !market || !math || !topDock) return;
+
+  // 40.1.50 — canonical Math Core state owner integration.
+  // Native Dessus / Latéral / Réduire changes DOM placement. If the same real
+  // #math node is still owned as a directFixed floating Administrator window,
+  // first release that floating geometry through the existing Window Manager.
+  // This prevents the mixed state observed in 40.1.48: node back in the grid
+  // while admin-native-direct-floating and stale fixed geometry remain active.
+  const adminWindows = globalThis.ErithAdministratorWindows;
+  const adminMathWindow = adminWindows?.getWindow?.("math-core");
+  if (adminMathWindow) {
+    if (adminMathWindow.maximized) adminWindows.maximize("math-core", false);
+    if (adminMathWindow.minimized) adminWindows.minimize("math-core", false);
+    if (adminMathWindow.floating) adminWindows.float("math-core", false);
+  }
 
   grid.classList.remove("math-dock-side", "math-dock-rail", "math-dock-top");
   math.classList.remove("is-side", "is-rail", "is-top");
@@ -41389,7 +41462,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.48";
+const ATLAS_BUILD = "40.1.52";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -41549,7 +41622,7 @@ function atlasVersionControlState(mode, options = {}) {
       `Nouvelle version disponible, Build ${build}. Cliquer pour charger.`
     );
   } else if (stateMode === "syncing") {
-    // 40.1.48 — GitHub Pages propagation is a publication state, not an application fault.
+    // 40.1.52 — GitHub Pages propagation is a publication state, not an application fault.
     // Keep the badge in the normal/green family while still exposing the exact state text.
     control.classList.add("ok");
     text.textContent = `Build ${ATLAS_BUILD} actif · GitHub en propagation`;
@@ -48065,8 +48138,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.48",
-  asset_token: "market-core-v2.0-alpha-build-40.1.48"
+  build: "40.1.52",
+  asset_token: "market-core-v2.0-alpha-build-40.1.52"
 });
 
 function atlasRuntimeTruth3813() {
