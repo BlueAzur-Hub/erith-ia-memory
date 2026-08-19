@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.75",
+  build: "40.1.76",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.75",
+  build: "40.1.76",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6327,6 +6327,7 @@ function atlasOracleEvidenceBuildObservation({ model, coin, candidateModels, vie
   const constituents = atlasOracleEvidenceConstituents(model, candidateModels);
   const regime = typeof atlasOracleRegimeClassify === "function" ? atlasOracleRegimeClassify(model) : null;
   const ensemble = typeof atlasOracleEnsembleModel === "function" ? atlasOracleEnsembleModel(model) : null;
+  const shadowV2 = typeof atlasOracleShadowV2Snapshot === "function" ? atlasOracleShadowV2Snapshot(model, regime, horizon, now) : null;
   return {
     schema:"atlas.oracle.evidence.v1",
     id:`${now}-${assetKey}-${horizon.key}-${view.key}`,
@@ -6390,6 +6391,7 @@ function atlasOracleEvidenceBuildObservation({ model, coin, candidateModels, vie
     aerith:{ label:String(model?.aerith || "") },
     regime:regime ? { key:regime.key, label:regime.label, score:Number(regime.score||0), drivers:Array.isArray(regime.drivers)?regime.drivers:[] } : null,
     ensemble:ensemble ? { label:ensemble.label, score:Number(ensemble.score||0), disagreement:Number(ensemble.disagreement||0), components:ensemble.components || {} } : null,
+    shadow_v2:shadowV2,
     outcomes:{ "1m":null, "5m":null, "15m":null }
   };
 }
@@ -6576,6 +6578,7 @@ async function atlasOracleOutcomeRun() {
     if (typeof atlasOracleEvidenceExplorerRefresh === "function") atlasOracleEvidenceExplorerRefresh().catch(()=>{});
     if (typeof atlasOracleMultiModelPerformanceRefresh === "function") atlasOracleMultiModelPerformanceRefresh(null,true).catch(()=>{});
     if (typeof atlasOracleAdaptiveWeightsRefresh === "function") atlasOracleAdaptiveWeightsRefresh(null,true).catch(()=>{});
+    if (typeof atlasOracleShadowV2Refresh === "function") atlasOracleShadowV2Refresh(true).catch(()=>{});
     if (typeof atlasOracleLabDashboardRefresh === "function") atlasOracleLabDashboardRefresh(true).catch(()=>{});
     if (typeof atlasOracleIntegrityRefresh === "function") atlasOracleIntegrityRefresh(true).catch(()=>{});
     return { ...atlasOracleOutcomeStatusState, changed };
@@ -7116,6 +7119,148 @@ async function atlasOracleAdaptiveWeightsRefresh(regimeKey=null,force=false){
 globalThis.AtlasOracleAdaptiveWeights=Object.freeze({refresh:atlasOracleAdaptiveWeightsRefresh,compute:atlasOracleAdaptiveWeightsComputeRows,state:()=>atlasOracleAdaptiveWeightsState,fixed:ATLAS_ORACLE_FIXED_WEIGHTS});
 
 
+/* ============================================================
+   40.1.76 — ORACLE V2 SHADOW CHALLENGER
+   Prospective-only challenger. Candidate weights are frozen into each NEW
+   Evidence observation at T0, before its future outcome exists. V2 never
+   changes the live Oracle V1 / Ensemble score in this build.
+   ============================================================ */
+let atlasOracleShadowV2State={updated_at:0,horizons:{},live:null};
+let atlasOracleShadowV2LastRefresh=0;
+
+function atlasOracleShadowV2Candidate(horizonKey,regimeKey){
+  const state=atlasOracleAdaptiveWeightsState||{};
+  const regime=state?.regimes?.[String(regimeKey||"")]||null;
+  const regimeCandidate=regime?.horizons?.[horizonKey]||null;
+  const globalCandidate=state?.horizons?.[horizonKey]||null;
+  if(regimeCandidate && Number(regimeCandidate.cases)>=12 && !regimeCandidate.fallback){
+    return {...regimeCandidate,scope:`régime ${regime.label||regimeKey}`,scope_key:"regime"};
+  }
+  if(globalCandidate && Number(globalCandidate.cases)>=12 && !globalCandidate.fallback){
+    return {...globalCandidate,scope:"global",scope_key:"global"};
+  }
+  return {cases:Number(globalCandidate?.cases||regimeCandidate?.cases||0),weights:{...ATLAS_ORACLE_FIXED_WEIGHTS},fallback:true,scope:"fallback fixe",scope_key:"fallback",reason:"moins de 12 cas résolus avant T0"};
+}
+
+function atlasOracleShadowV2Snapshot(model,regime,horizon,now=Date.now()){
+  if(!model||model.status!=="ready") return null;
+  const hkey=String(horizon?.key||atlasOracleHorizonSpec().key);
+  const rkey=String(regime?.key||"waiting");
+  const legacy=atlasOracleEnsembleModel(model);
+  const candidate=atlasOracleShadowV2Candidate(hkey,rkey);
+  const w=candidate?.weights||ATLAS_ORACLE_FIXED_WEIGHTS;
+  const components=legacy?.components||{};
+  const score=ATLAS_ORACLE_ADAPTIVE_COMPONENTS.reduce((sum,key)=>sum+Number(components[key]||0)*Number(w[key]||0),0);
+  const prediction=atlasOracleProofDirectionFromScore(score,20);
+  const eligible=!candidate.fallback && Number(candidate.cases)>=12 && Number(atlasOracleAdaptiveWeightsState?.updated_at||0)>0 && Number(atlasOracleAdaptiveWeightsState.updated_at)<=Number(now);
+  return {
+    schema:"atlas.oracle.shadow.v2.v1",
+    prospective:true,
+    eligible,
+    captured_at:Number(now),
+    horizon_key:hkey,
+    regime_key:rkey,
+    regime_label:String(regime?.label||rkey),
+    source_scope:String(candidate.scope||"fallback"),
+    source_scope_key:String(candidate.scope_key||"fallback"),
+    training_cases:Number(candidate.cases||0),
+    training_state_updated_at:Number(atlasOracleAdaptiveWeightsState?.updated_at||0),
+    weights:Object.fromEntries(ATLAS_ORACLE_ADAPTIVE_COMPONENTS.map(key=>[key,Number(w[key]||0)])),
+    components:Object.fromEntries(ATLAS_ORACLE_ADAPTIVE_COMPONENTS.map(key=>[key,Number(components[key]||0)])),
+    score:Number(score),
+    label:score>20?"HAUSSIER":score<-20?"BAISSIER":"MIXTE",
+    prediction,
+    applied_to_live:false,
+    reason:eligible?"poids candidats figés à T0 depuis résultats résolus antérieurs":"shadow non qualifié : échantillon d'entraînement insuffisant"
+  };
+}
+
+function atlasOracleShadowV2ComputeScope(rows,horizonKey){
+  const proofNames=["always_up","last_move","momentum_simple","top5_naive","oracle_v1","ensemble"];
+  const cohort=(Array.isArray(rows)?rows:[]).filter(row=>{
+    const sh=row?.shadow_v2;
+    if(!(sh?.schema==="atlas.oracle.shadow.v2.v1" && sh?.prospective===true && sh?.eligible===true && String(sh?.horizon_key||"")===horizonKey && String(row?.horizon_key||"")===horizonKey)) return false;
+    if(!["up","down","flat"].includes(String(row?.outcomes?.[horizonKey]?.direction||""))) return false;
+    if(!["up","down","flat"].includes(String(sh?.prediction||""))) return false;
+    const p=atlasOracleProofPredictions(row,horizonKey);
+    return proofNames.every(name=>["up","down","flat"].includes(String(p?.[name]||"")));
+  });
+  let v2hits=0,v1hits=0;
+  cohort.forEach(row=>{
+    const actual=String(row.outcomes[horizonKey].direction);
+    if(String(row?.shadow_v2?.prediction||"")===actual) v2hits++;
+    const v1=atlasOracleCalibrationPredictedDirection(Number(row?.oracle?.direction_score));
+    if(v1===actual) v1hits++;
+  });
+  const proof=atlasOracleProofComputeRows(cohort,horizonKey);
+  const cases=Number(proof?.cases||0);
+  const v2Rate=cases?v2hits/cases*100:null, v1Rate=cases?v1hits/cases*100:null;
+  const best=proof?.best_naive||null;
+  const baseRate=Number(best?.hit_rate);
+  return {
+    horizon_key:horizonKey,cases,v2_hits:v2hits,v1_hits:v1hits,
+    v2_hit_rate:v2Rate,v1_hit_rate:v1Rate,best_naive:best,
+    v2_vs_v1:cases&&Number.isFinite(v2Rate)&&Number.isFinite(v1Rate)?v2Rate-v1Rate:null,
+    v2_vs_naive:cases&&Number.isFinite(v2Rate)&&Number.isFinite(baseRate)?v2Rate-baseRate:null,
+    same_sample:true,
+    sample_quality:cases>=100?"FORT":cases>=30?"MOYEN":cases>=12?"FAIBLE":"MINCE"
+  };
+}
+
+function atlasOracleShadowV2ComputeRows(rows){
+  const horizons={};
+  ["1m","5m","15m"].forEach(key=>{horizons[key]=atlasOracleShadowV2ComputeScope(rows,key);});
+  return {updated_at:Date.now(),horizons};
+}
+
+function atlasOracleShadowV2RenderLive(model,regime){
+  const h=atlasOracleHorizonSpec();
+  const snap=atlasOracleShadowV2Snapshot(model,regime,h,Date.now());
+  atlasOracleShadowV2State.live=snap;
+  const node=document.getElementById("atlasOracleShadowV2LiveStatus");
+  if(node){
+    if(!snap){node.textContent="V2S —";node.title="Shadow V2 indisponible";}
+    else {
+      node.textContent=snap.eligible?`V2S ${snap.score>=0?"+":""}${Math.round(snap.score)} · n${snap.training_cases}`:`V2S ATTENTE · n${snap.training_cases}`;
+      node.title=`Oracle V2 Shadow ${snap.label} · score ${snap.score.toFixed(1)} · ${snap.source_scope} · entraînement descriptif n=${snap.training_cases} · poids T${Math.round(snap.weights.trend*100)} M${Math.round(snap.weights.micro*100)} B${Math.round(snap.weights.breadth*100)} R${Math.round(snap.weights.risk_adjusted*100)} · CHALLENGER SHADOW UNIQUEMENT, jamais appliqué au score live`;
+    }
+  }
+  return snap;
+}
+
+function atlasOracleShadowV2Render(state=atlasOracleShadowV2State){
+  const set=(id,text)=>{const n=document.getElementById(id);if(n)n.textContent=text;};
+  ["1m","5m","15m"].forEach(key=>{
+    const row=state?.horizons?.[key]||{};
+    const fmt=v=>Number.isFinite(Number(v))?`${Number(v).toFixed(0)}%`:"—";
+    const edge=v=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(0)} pt`:"—";
+    set(`atlasOracleShadow${key}V2`,fmt(row.v2_hit_rate));
+    set(`atlasOracleShadow${key}V1`,fmt(row.v1_hit_rate));
+    set(`atlasOracleShadow${key}Baseline`,fmt(row.best_naive?.hit_rate));
+    set(`atlasOracleShadow${key}VsV1`,edge(row.v2_vs_v1));
+    set(`atlasOracleShadow${key}VsNaive`,edge(row.v2_vs_naive));
+    set(`atlasOracleShadow${key}N`,`n${Number(row.cases||0)}`);
+  });
+  const active=state?.horizons?.[atlasOracleHorizonSpec().key]||{};
+  const status=document.getElementById("atlasOracleShadowV2State");
+  if(status){
+    if(!active.cases) status.textContent="PROSPECTIF · en collecte";
+    else if(Number(active.v2_vs_naive)>=5) status.textContent=`V2 AVANTAGE +${Number(active.v2_vs_naive).toFixed(0)} · n${active.cases}`;
+    else if(Number(active.v2_vs_naive)<=-5) status.textContent=`V2 SANS AVANTAGE ${Number(active.v2_vs_naive).toFixed(0)} · n${active.cases}`;
+    else status.textContent=`V2 INCONCLUANT · n${active.cases}`;
+  }
+  return state;
+}
+
+async function atlasOracleShadowV2Refresh(force=false){
+  const now=Date.now();
+  if(!force && now-atlasOracleShadowV2LastRefresh<10000 && atlasOracleShadowV2State.updated_at) return atlasOracleShadowV2Render(atlasOracleShadowV2State);
+  atlasOracleShadowV2LastRefresh=now;
+  try{atlasOracleShadowV2State=atlasOracleShadowV2ComputeRows(await atlasOracleEvidenceAll());return atlasOracleShadowV2Render(atlasOracleShadowV2State);}catch(error){const n=document.getElementById("atlasOracleShadowV2State");if(n)n.textContent=`V2 ! ${String(error?.message||error)}`;return atlasOracleShadowV2State;}
+}
+
+globalThis.AtlasOracleShadowV2=Object.freeze({refresh:atlasOracleShadowV2Refresh,compute:atlasOracleShadowV2ComputeRows,snapshot:atlasOracleShadowV2Snapshot,state:()=>atlasOracleShadowV2State});
+
 
 /* ============================================================
    40.1.71 — ORACLE CALIBRATED CONFIDENCE V2
@@ -7256,7 +7401,7 @@ function atlasOracleLabDashboardCompute(rows){
   const active=atlasOracleHorizonSpec().key, proof=horizons[active].proof;
   const adv=Number(proof?.ensemble_advantage),cases=Number(proof?.cases||0);
   const verdict=cases<20?"ÉCHANTILLON FAIBLE":adv>=5?"AVANTAGE OBSERVÉ":adv<=-5?"AUCUN AVANTAGE":"INCONCLUANT";
-  return {updated_at:Date.now(),evidence:source.length,resolved,pending,horizons,active,regime_key:regimeKey,regime:regimeGroup,verdict,confidence:{...atlasOracleConfidenceCalibrationState},adaptive:{...atlasOracleAdaptiveWeightsState},integrity:atlasOracleLabDashboardState?.integrity||null};
+  return {updated_at:Date.now(),evidence:source.length,resolved,pending,horizons,active,regime_key:regimeKey,regime:regimeGroup,verdict,confidence:{...atlasOracleConfidenceCalibrationState},adaptive:{...atlasOracleAdaptiveWeightsState},shadow_v2:typeof atlasOracleShadowV2ComputeRows==="function"?atlasOracleShadowV2ComputeRows(source):null,integrity:atlasOracleLabDashboardState?.integrity||null};
 }
 function atlasOracleLabDashboardRender(state=atlasOracleLabDashboardState){
   const set=(id,text)=>{const n=document.getElementById(id);if(n)n.textContent=text;};
@@ -7268,6 +7413,7 @@ function atlasOracleLabDashboardRender(state=atlasOracleLabDashboardState){
   const activeRow=state.horizons?.[state.active]?.models; ATLAS_ORACLE_MODEL_KEYS.forEach(key=>{const m=activeRow?.models?.[key];set(`atlasOracleLabModel_${key}`,Number.isFinite(Number(m?.hit_rate))?`${Number(m.hit_rate).toFixed(0)}% · n${m.cases}`:"—");});
   const rp=state.regime?.horizons?.[state.active]; set("atlasOracleLabRegimeProof",rp?.proof_cases?`ENS ${Number(rp.ensemble_hit_rate).toFixed(0)}% · naïf ${Number(rp.best_naive?.hit_rate).toFixed(0)}% · RΔ ${Number(rp.ensemble_advantage)>=0?"+":""}${Number(rp.ensemble_advantage).toFixed(0)} · n${rp.proof_cases}`:"Aucun échantillon comparable");
   const status=document.getElementById("atlasOracleLabDashboardState"); if(status)status.textContent=`${state.verdict||"—"} · horizon ${String(state.active||"").toUpperCase()}`;
+  if(state.shadow_v2){ atlasOracleShadowV2State=state.shadow_v2; atlasOracleShadowV2Render(atlasOracleShadowV2State); }
   return state;
 }
 async function atlasOracleLabDashboardRefresh(force=false){const now=Date.now();if(!force&&now-atlasOracleLabDashboardLastRefresh<10000&&atlasOracleLabDashboardState.updated_at)return atlasOracleLabDashboardRender(atlasOracleLabDashboardState);atlasOracleLabDashboardLastRefresh=now;try{atlasOracleLabDashboardState=atlasOracleLabDashboardCompute(await atlasOracleEvidenceAll());return atlasOracleLabDashboardRender(atlasOracleLabDashboardState);}catch(error){const s=document.getElementById("atlasOracleLabDashboardState");if(s)s.textContent=`Dashboard indisponible · ${String(error?.message||error)}`;return atlasOracleLabDashboardState;}}
@@ -7282,7 +7428,7 @@ globalThis.AtlasOracleLabDashboard=Object.freeze({refresh:atlasOracleLabDashboar
 function atlasOracleBackupDownload(filename,mime,text){const blob=new Blob([text],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);}
 function atlasOracleBackupCsvEscape(value){const s=String(value??"");return /[\",\n]/.test(s)?`"${s.replaceAll('"','""')}"`:s;}
 async function atlasOracleBackupExportJson(){const rows=await atlasOracleEvidenceAll();const payload={schema:"atlas.oracle.evidence.backup.v1",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"unknown"),exported_at:new Date().toISOString(),count:rows.length,rows};atlasOracleBackupDownload(`agent_crypto_oracle_evidence_${String(ATLAS_BUILD).replaceAll('.', '_')}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));return payload;}
-async function atlasOracleBackupExportCsv(){const rows=await atlasOracleEvidenceAll();const head=["t0_utc","asset","symbol","view","horizon","regime","oracle_score","ensemble_score","actual_return_pct","actual_direction","resolution_method"];const lines=[head.join(",")];rows.slice().sort((a,b)=>Number(a.t0)-Number(b.t0)).forEach(row=>{const key=String(row.horizon_key||""),out=row?.outcomes?.[key]||{};const values=[row.created_at_utc||new Date(Number(row.t0||0)).toISOString(),row.asset_key,row.symbol,row.view,key,row?.regime?.label||"",row?.oracle?.direction_score,row?.ensemble?.score,Number.isFinite(Number(out.realized_return_pct))?Number(out.realized_return_pct):"",out.direction||"",out.resolution_method||""];lines.push(values.map(atlasOracleBackupCsvEscape).join(","));});atlasOracleBackupDownload(`agent_crypto_oracle_evidence_${String(ATLAS_BUILD).replaceAll('.', '_')}.csv`,"text/csv;charset=utf-8",lines.join("\n"));return rows.length;}
+async function atlasOracleBackupExportCsv(){const rows=await atlasOracleEvidenceAll();const head=["t0_utc","asset","symbol","view","horizon","regime","oracle_score","ensemble_score","shadow_v2_score","shadow_v2_prediction","shadow_v2_eligible","actual_return_pct","actual_direction","resolution_method"];const lines=[head.join(",")];rows.slice().sort((a,b)=>Number(a.t0)-Number(b.t0)).forEach(row=>{const key=String(row.horizon_key||""),out=row?.outcomes?.[key]||{};const values=[row.created_at_utc||new Date(Number(row.t0||0)).toISOString(),row.asset_key,row.symbol,row.view,key,row?.regime?.label||"",row?.oracle?.direction_score,row?.ensemble?.score,Number.isFinite(Number(row?.shadow_v2?.score))?Number(row.shadow_v2.score):"",row?.shadow_v2?.prediction||"",row?.shadow_v2?.eligible===true?"true":row?.shadow_v2?"false":"",Number.isFinite(Number(out.realized_return_pct))?Number(out.realized_return_pct):"",out.direction||"",out.resolution_method||""];lines.push(values.map(atlasOracleBackupCsvEscape).join(","));});atlasOracleBackupDownload(`agent_crypto_oracle_evidence_${String(ATLAS_BUILD).replaceAll('.', '_')}.csv`,"text/csv;charset=utf-8",lines.join("\n"));return rows.length;}
 async function atlasOracleBackupExportMd(){const rows=await atlasOracleEvidenceAll();const state=atlasOracleLabDashboardCompute(rows);const lines=["# Agent-Crypto — Oracle Lab Snapshot","",`- Build : ${ATLAS_BUILD}`,`- Export : ${new Date().toISOString()}`,`- Evidence : ${state.evidence}`,`- Issues résolues : ${state.resolved}`,`- Pending : ${state.pending}`,`- Verdict actif : ${state.verdict}`,"","## Horizons","","| Horizon | Oracle | Ensemble | Baseline | Avantage | Enveloppe / largeur | n |","|---|---:|---:|---:|---:|---:|---:|"];["1m","5m","15m"].forEach(k=>{const x=state.horizons[k],c=x.calibration,p=x.proof;lines.push(`| ${k} | ${c.cases?c.hit_rate.toFixed(1)+"%":"—"} | ${p.cases?p.models.ensemble.hit_rate.toFixed(1)+"%":"—"} | ${p.cases?p.best_naive.hit_rate.toFixed(1)+"%":"—"} | ${p.cases?(p.ensemble_advantage>=0?"+":"")+p.ensemble_advantage.toFixed(1)+" pt":"—"} | ${c.cases?c.envelope_coverage.toFixed(1)+"% / "+(Number.isFinite(Number(x.envelope_width))?x.envelope_width.toFixed(2):"—")+"%":"—"} | ${p.cases||c.cases||0} |`);});lines.push("","Lecture descriptive uniquement · aucune recommandation financière · aucune probabilité garantie.");atlasOracleBackupDownload(`agent_crypto_oracle_lab_snapshot_${String(ATLAS_BUILD).replaceAll('.', '_')}.md`,"text/markdown;charset=utf-8",lines.join("\n"));return state;}
 function atlasOracleBackupValidateRow(row){return !!(row&&typeof row==="object"&&String(row.id||"").trim()&&Number(row.t0)>0&&String(row.asset_key||"").trim()&&["1m","5m","15m"].includes(String(row.horizon_key||"")));}
 async function atlasOracleBackupImportFile(file){const status=document.getElementById("atlasOracleBackupStatus");try{const raw=JSON.parse(await file.text());const rows=Array.isArray(raw)?raw:Array.isArray(raw?.rows)?raw.rows:[];const valid=rows.filter(atlasOracleBackupValidateRow).slice(0,ATLAS_ORACLE_EVIDENCE_MAX_ROWS);if(!valid.length)throw new Error("aucune observation valide");for(const row of valid)await atlasOracleEvidencePut(row);await atlasOracleEvidencePruneIfNeeded();if(status)status.textContent=`Import ${valid.length} observation(s) · fusion par id`;await atlasOracleEvidenceRefreshStatus();await atlasOracleOutcomeRun();await atlasOracleEvidenceExplorerRefresh();await atlasOracleLabDashboardRefresh(true);if(typeof atlasOracleIntegrityRefresh==="function")await atlasOracleIntegrityRefresh(true);return valid.length;}catch(error){if(status)status.textContent=`Import refusé · ${String(error?.message||error)}`;return 0;}}
@@ -8294,6 +8440,7 @@ function atlasRenderOracleV0() {
   atlasOracleMultiModelPerformanceRefresh(currentRegime?.key).catch(()=>{});
   atlasOracleAdaptiveWeightsRefresh(currentRegime?.key).catch(()=>{});
   const currentEnsemble = atlasOracleEnsembleRender(model);
+  atlasOracleShadowV2RenderLive(model,currentRegime);
   atlasOracleConfidenceCalibrationRefresh(model,currentRegime,currentEnsemble).then(()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
   return true;
 }
@@ -8312,7 +8459,7 @@ function atlasInitOracleV0() {
   atlasOracleHorizonMatrixRefresh(true).catch(()=>{});
   atlasOracleRegimePerformanceRefresh(null,true).catch(()=>{});
   atlasOracleMultiModelPerformanceRefresh(null,true).catch(()=>{});
-  atlasOracleAdaptiveWeightsRefresh(null,true).catch(()=>{});
+  atlasOracleAdaptiveWeightsRefresh(null,true).then(()=>atlasOracleShadowV2Refresh(true)).catch(()=>{});
   atlasOracleEvidenceExplorerInit();
   atlasOracleLabDashboardRefresh(true).catch(()=>{});
   atlasOracleBackupInit();
@@ -15160,7 +15307,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.75",
+  build: "40.1.76",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -42827,7 +42974,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.75";
+const ATLAS_BUILD = "40.1.76";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -49503,8 +49650,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.75",
-  asset_token: "market-core-v2.0-alpha-build-40.1.75"
+  build: "40.1.76",
+  asset_token: "market-core-v2.0-alpha-build-40.1.76"
 });
 
 function atlasRuntimeTruth3813() {
