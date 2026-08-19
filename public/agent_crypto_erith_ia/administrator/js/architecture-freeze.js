@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.55 — PARKER LEWIS CAN'T LOSE · MATH CORE RAIL + ORACLE PERSISTENT VIEW CUMULATIVE LOCK
+     40.1.58 — PARKER LEWIS CAN'T LOSE · MATH CORE RAIL + ORACLE PERSISTENT VIEW CUMULATIVE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.55";
+  const BUILD_CURRENT = "40.1.58";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";

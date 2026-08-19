@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.55",
+  build: "40.1.58",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.55",
+  build: "40.1.58",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6207,6 +6207,7 @@ globalThis.__ATLAS_ORACLE_V1_40149__ = ATLAS_ORACLE_V1_40149;
 const ATLAS_ORACLE_V0_ASSET_KEY = "agent_crypto_erith_ia_oracle_v0_asset";
 const ATLAS_ORACLE_VIEW_STATE_KEY = "agent_crypto_erith_ia_oracle_view_state_v1";
 let atlasOracleV0AssetId = "";
+let atlasOracleSurface = "grand";
 
 // 40.1.54 — persist OPERATOR VIEW only. Never store model outputs, scores,
 // confidence, scenarios, prices, micro buffers or calculated market state.
@@ -6214,8 +6215,9 @@ function atlasOracleNormalizeViewState(raw = {}) {
   const view = ["continuation","top5"].includes(raw.view) ? raw.view : (state.chartViewV2.oracleView || "continuation");
   const horizon = ["1m","5m","15m"].includes(raw.horizon) ? raw.horizon : (state.chartViewV2.oracleHorizon || "5m");
   const zoom = ["auto","1x","2x","4x"].includes(raw.zoom) ? raw.zoom : (state.chartViewV2.oracleZoom || "auto");
+  const surface = ["grand","composite"].includes(raw.surface) ? raw.surface : (atlasOracleSurface === "composite" ? "composite" : "grand");
   const asset = String(raw.asset || "").trim();
-  return { view, asset, horizon, zoom };
+  return { view, asset, horizon, zoom, surface };
 }
 
 function atlasOracleReadPersistentViewState() {
@@ -6227,7 +6229,8 @@ function atlasOracleReadPersistentViewState() {
       view: state.chartViewV2.oracleView,
       asset: atlasOracleReadStoredAsset(),
       horizon: state.chartViewV2.oracleHorizon,
-      zoom: state.chartViewV2.oracleZoom
+      zoom: state.chartViewV2.oracleZoom,
+      surface: atlasOracleSurface
     };
   }
   return atlasOracleNormalizeViewState(raw);
@@ -6238,7 +6241,8 @@ function atlasOracleWritePersistentViewState() {
     view: state.chartViewV2.oracleView,
     asset: atlasOracleV0AssetId,
     horizon: state.chartViewV2.oracleHorizon,
-    zoom: state.chartViewV2.oracleZoom
+    zoom: state.chartViewV2.oracleZoom,
+    surface: atlasOracleSurface
   });
   try {
     localStorage.setItem(ATLAS_ORACLE_VIEW_STATE_KEY, JSON.stringify(next));
@@ -6253,6 +6257,7 @@ function atlasOracleRestorePersistentViewState() {
   state.chartViewV2.oracleView = saved.view;
   state.chartViewV2.oracleHorizon = saved.horizon;
   state.chartViewV2.oracleZoom = saved.zoom;
+  atlasOracleSurface = saved.surface === "composite" ? "composite" : "grand";
   atlasOracleV0AssetId = saved.asset;
   atlasWriteChartV2Settings();
   atlasOracleWritePersistentViewState();
@@ -6448,6 +6453,43 @@ function atlasOracleZoomSpec() {
     label: key === "auto" ? "AUTO" : `×${factor}`,
     automatic: key === "auto"
   };
+}
+
+function atlasOracleSurfaceSpec() {
+  const key = atlasOracleSurface === "composite" ? "composite" : "grand";
+  return key === "composite"
+    ? { key, label: "MIXTE", anchorRatio: .70, fullHistory: true }
+    : { key: "grand", label: "GRAND", anchorRatio: .42, fullHistory: false };
+}
+
+function atlasOracleHistoricalSeries(coin) {
+  const chart = state.chartEngineV2?.realChart;
+  const datasets = Array.isArray(chart?.data?.datasets) ? chart.data.datasets : [];
+  if (!datasets.length || !coin) return [];
+  const symbol = String(coin.symbol || "").toUpperCase();
+  const dataset = datasets.find(row => row?.atlasCoin?.id === coin.id)
+    || datasets.find(row => String(row?.atlasCoin?.symbol || "").toUpperCase() === symbol)
+    || datasets[0];
+  const rows = Array.isArray(dataset?.data) ? dataset.data : [];
+  let clean = rows.map(point => ({ x: Number(point?.x), y: Number(point?.y) }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y));
+  if (clean.length < 2) return [];
+  // Keep the complete time span while bounding paint cost on light machines.
+  if (clean.length > 420) {
+    const step = (clean.length - 1) / 419;
+    clean = Array.from({ length: 420 }, (_, i) => clean[Math.min(clean.length - 1, Math.round(i * step))]);
+  }
+  const last = Number(clean[clean.length - 1]?.y);
+  if (!Number.isFinite(last) || Math.abs(last) < 1e-12) return [];
+  return clean.map((point, index) => ({ x: point.x, value: (point.y / last) * 100, index }));
+}
+
+function atlasOracleHistoryForModel(row, surfaceKey = "grand") {
+  if (surfaceKey === "composite" && row?.coin) {
+    const full = atlasOracleHistoricalSeries(row.coin);
+    if (full.length >= 2) return full;
+  }
+  return Array.isArray(row?.historicalTail) ? row.historicalTail : [];
 }
 
 function atlasOracleHistoricalTail(coin) {
@@ -6668,7 +6710,8 @@ function atlasOracleDrawCanvas(model) {
   const pad = { left: 42, right: 50, top: 28, bottom: 40 };
   const w = cssWidth - pad.left - pad.right;
   const h = cssHeight - pad.top - pad.bottom;
-  const anchorRatio = 0.42;
+  const surface = atlasOracleSurfaceSpec();
+  const anchorRatio = Number(surface.anchorRatio || .42);
   const anchorX = pad.left + w * anchorRatio;
   const view = atlasOracleViewSpec();
   const horizon = atlasOracleHorizonSpec();
@@ -6714,8 +6757,8 @@ function atlasOracleDrawCanvas(model) {
   const candidates = atlasOracleCandidateCoins();
   const candidateModels = candidates.map(coin => atlasOracleBuildModel(coin)).filter(row => row?.status === "ready");
   const tails = view.key === "top5"
-    ? candidateModels.flatMap(row => row.historicalTail || [])
-    : (model.historicalTail || []);
+    ? candidateModels.flatMap(row => atlasOracleHistoryForModel(row, surface.key))
+    : atlasOracleHistoryForModel(model, surface.key);
   const tailDeviation = tails.reduce((max, point) => Math.max(max, Math.abs(Number(point.value || 100) - 100)), 0);
   const scenarioDeviation = view.key === "top5"
     ? candidateModels.reduce((max, row) => Math.max(max, row.bullAmplitude, row.bearAmplitude), 0)
@@ -6741,7 +6784,7 @@ function atlasOracleDrawCanvas(model) {
   ctx.textAlign = "left";
 
   const drawTail = (row, color, width = 2.15, alpha = .9) => {
-    const tail = Array.isArray(row?.historicalTail) ? row.historicalTail : [];
+    const tail = atlasOracleHistoryForModel(row, surface.key);
     if (tail.length < 2) return;
     const firstX = pad.left + 7;
     const tailW = Math.max(20, anchorX - firstX);
@@ -6833,7 +6876,7 @@ function atlasOracleDrawCanvas(model) {
     });
     ctx.textAlign = "left";
     ctx.fillStyle = "rgba(174,219,236,.78)"; ctx.font = "900 9px system-ui, sans-serif";
-    ctx.fillText("FILS HISTORIQUES RÉELS", pad.left + 5, pad.top + 13);
+    ctx.fillText(surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "FILS HISTORIQUES RÉELS", pad.left + 5, pad.top + 13);
     ctx.fillStyle = "rgba(178,255,225,.84)"; ctx.fillText("FILS ORACLE TOP 5", anchorX + 10, pad.top + 13);
   } else {
     const palette = atlasCryptoPalette(model.coin, 0);
@@ -6870,7 +6913,7 @@ function atlasOracleDrawCanvas(model) {
     if (centerEnd) { ctx.fillStyle = assetColor; ctx.fillText("BIAIS", centerEnd[0]+5, centerEnd[1]+3); }
 
     ctx.fillStyle = "rgba(174,219,236,.78)"; ctx.font = "900 9px system-ui, sans-serif";
-    ctx.fillText("HISTORIQUE RÉEL", pad.left + 5, pad.top + 13);
+    ctx.fillText(surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "HISTORIQUE RÉEL", pad.left + 5, pad.top + 13);
     ctx.fillStyle = "#bfff86"; ctx.fillText(`HAUSSE ${model.bullStrength}/100`, anchorX + 10, pad.top + 13);
     ctx.fillStyle = "#ff9aa4"; ctx.fillText(`BAISSE ${model.bearStrength}/100`, anchorX + 10, pad.top + h - 8);
   }
@@ -6923,6 +6966,13 @@ function atlasRenderOracleV0() {
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", active ? "true" : "false");
   });
+  const surface = atlasOracleSurfaceSpec();
+  document.querySelectorAll("[data-oracle-surface]").forEach(button => {
+    const active = button.dataset.oracleSurface === surface.key;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+  });
+  root.dataset.oracleSurface = surface.key;
   const zoom = atlasOracleZoomSpec();
   document.querySelectorAll("[data-oracle-zoom]").forEach(button => {
     const active = button.dataset.oracleZoom === zoom.key;
@@ -6968,6 +7018,10 @@ function atlasRenderOracleV0() {
     set("atlasOracleAtlas", "Atlas : en attente");
     set("atlasOracleAerith", "Aerith : en attente");
     set("atlasOracleInputs", "Aucune donnée exploitable");
+    set("atlasOracleOperatorIdentity", "EN ATTENTE");
+    set("atlasOracleOperatorState", `${surface.label} · ${view.label} · ${horizon.label} · ${zoom.label}`);
+    set("atlasOracleOperatorBias", "BIAIS —");
+    set("atlasOracleOperatorConfidence", "CONFIANCE —");
     setWidth("atlasOracleBullMeter", 0); setWidth("atlasOracleBearMeter", 0);
     atlasOracleDrawCanvas(model);
     return false;
@@ -7005,6 +7059,10 @@ function atlasRenderOracleV0() {
   const breadthText = Number(model.basketMicroCoverage || 0) ? ` · largeur courte ${Number(model.basketMicroBreadthPositive||0)}/${Number(model.basketMicroCoverage||0)} positive` : "";
   set("atlasOracleAerith", `Aerith : ${model.aerith} · cohérence ${model.coherence}/100${breadthText}`);
   set("atlasOracleInputs", `1 h ${pct(model.h1)} · 24 h ${pct(model.h24)} · 7 j ${pct(model.h7)} · 30 j ${pct(model.h30)} · micro ${pct(model.aggregate ? model.basketMicroAvg : model.micro?.changePct)} · panier 24 h ${pct(model.basketAvg24)}`);
+  set("atlasOracleOperatorIdentity", `${symbol} · ${view.label}`);
+  set("atlasOracleOperatorState", `${surface.label} · ${view.label} · ${horizon.label} · ${zoom.label}`);
+  set("atlasOracleOperatorBias", `BIAIS ${model.bias}`);
+  set("atlasOracleOperatorConfidence", `CONFIANCE ${model.dataConfidence}/100`);
   root.dataset.bias = model.bias.toLowerCase();
   atlasOracleDrawCanvas(model);
   return true;
@@ -7031,6 +7089,14 @@ function atlasInitOracleV0() {
     if (!button) return;
     atlasOracleV0AssetId = String(button.dataset.oracleAssetId || "");
     try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
+    atlasOracleWritePersistentViewState();
+    atlasRenderOracleV0();
+  });
+  root.querySelector("[data-oracle-surfaces]")?.addEventListener("click", event => {
+    const button = event.target?.closest?.("[data-oracle-surface]");
+    const key = String(button?.dataset?.oracleSurface || "");
+    if (!button || !["grand","composite"].includes(key)) return;
+    atlasOracleSurface = key;
     atlasOracleWritePersistentViewState();
     atlasRenderOracleV0();
   });
@@ -13251,7 +13317,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.55",
+  interface: "Build 40.1.58",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -13854,7 +13920,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.55",
+  build: "40.1.58",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -41521,7 +41587,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.55";
+const ATLAS_BUILD = "40.1.58";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48197,8 +48263,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.55",
-  asset_token: "market-core-v2.0-alpha-build-40.1.55"
+  build: "40.1.58",
+  asset_token: "market-core-v2.0-alpha-build-40.1.58"
 });
 
 function atlasRuntimeTruth3813() {
