@@ -417,10 +417,47 @@
       win.placeholders.clear();
       win.nodes.forEach(node => {
         if (!node.parentNode) return;
-        const marker = document.createElement("span");
+
+        // 40.1.29 — preserve the native layout footprint while the real node
+        // lives inside a floating shell. The old hidden=true span reserved 0px,
+        // collapsing grids/flows and making sibling modules (notably Math Core)
+        // jump underneath the detached window.
+        const rect = node.getBoundingClientRect?.();
+        const computed = window.getComputedStyle?.(node);
+        const rendered = !!rect
+          && rect.width > 0
+          && rect.height > 0
+          && String(computed?.display || "").toLowerCase() !== "none"
+          && String(computed?.visibility || "").toLowerCase() !== "hidden";
+
+        const marker = document.createElement("div");
         marker.className = "admin-native-placeholder";
         marker.dataset.adminNativePlaceholder = win.id;
-        marker.hidden = true;
+        marker.dataset.adminNativePlaceholderReserved = rendered ? "1" : "0";
+        marker.setAttribute("aria-hidden", "true");
+        marker.style.pointerEvents = "none";
+        marker.style.userSelect = "none";
+
+        if (rendered) {
+          marker.style.display = "block";
+          marker.style.visibility = "hidden";
+          marker.style.boxSizing = "border-box";
+          marker.style.width = "auto";
+          marker.style.minWidth = "0";
+          marker.style.height = `${Math.max(1, Math.round(rect.height))}px`;
+          marker.style.minHeight = `${Math.max(1, Math.round(rect.height))}px`;
+          marker.style.marginTop = computed?.marginTop || "0px";
+          marker.style.marginRight = computed?.marginRight || "0px";
+          marker.style.marginBottom = computed?.marginBottom || "0px";
+          marker.style.marginLeft = computed?.marginLeft || "0px";
+          marker.style.gridColumn = computed?.gridColumn || "auto";
+          marker.style.gridRow = computed?.gridRow || "auto";
+          marker.style.alignSelf = computed?.alignSelf || "auto";
+          marker.style.justifySelf = computed?.justifySelf || "auto";
+        } else {
+          marker.hidden = true;
+        }
+
         node.parentNode.insertBefore(marker, node);
         win.placeholders.set(node, marker);
       });
@@ -429,7 +466,7 @@
     function resolvePortalHost(win) {
       const requested = win.resolvePortalHost?.(activeDomain, win);
       if (requested instanceof HTMLElement) return requested;
-      // 40.1.28 — every real floating shell must escape local stacking/overflow
+      // 40.1.29 — every real floating shell must escape local stacking/overflow
       // contexts by default. Placeholders still restore native nodes on dock.
       return document.body;
     }
@@ -926,10 +963,11 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.28",
+    build: "40.1.29",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
-    dock_restore: "placeholder-original-parent",
+    dock_restore: "layout-preserving-placeholder-original-parent",
+    layout_preserving_placeholders: true,
     direct_fixed_windows_use_shell: false,
     floating_shell_z_order: "global-body"
   });
