@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.34 — FREEZE AUDIT IDENTITY + LEGACY ADMIN CSS CLEANUP LOCK
+     40.1.35 — PARKER LEWIS · CANONICAL MODULE FILENAMES LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.34";
+  const BUILD_CURRENT = "40.1.35";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -90,13 +90,13 @@
   function scriptOrder() {
     const expected = [
       "./app.js",
-      "./js/market-memory-39.3.js",
-      "./js/analytical-memory-39.4.js",
-      "./js/market-memory-39.4.4R1.js",
-      "./js/decision-board-dual-memory-39.5.0.js",
-      "./js/retrospective-validation-39.6.0.js",
-      "./js/multi-collector-concordance-39.7.0.js",
-      "./js/memory-health-audit-39.8.0R2.js",
+      "./js/market-memory.js",
+      "./js/analytical-memory.js",
+      "./js/market-memory-collector.js",
+      "./js/decision-board.js",
+      "./js/retrospective-validation.js",
+      "./js/multi-collector-concordance.js",
+      "./js/memory-health-audit.js",
       "./js/admin-visual-assets.js",
       "./js/core/admin-window-manager.js",
       "./js/app.js",
@@ -774,6 +774,25 @@
     };
   }
 
+  function canonicalModuleFilenameContract() {
+    const forbidden = [
+      /\/js\/market-memory-\d/i,
+      /\/js\/analytical-memory-\d/i,
+      /\/js\/decision-board-dual-memory-\d/i,
+      /\/js\/retrospective-validation-\d/i,
+      /\/js\/multi-collector-concordance-\d/i,
+      /\/js\/memory-health-audit-\d/i
+    ];
+    const legacy = scriptRows()
+      .map(row => pathOnly(row.raw))
+      .filter(path => forbidden.some(rx => rx.test(path)));
+    return {
+      ok: legacy.length === 0,
+      legacy,
+      detail: legacy.length ? `anciens noms actifs: ${legacy.join(" · ")}` : "noms fonctionnels canoniques uniquement"
+    };
+  }
+
   function derive() {
     const build = runtimeBuild();
     const token = runtimeToken();
@@ -831,14 +850,15 @@
       check("Cache-busters JS", cache.stale.length === 0 && cache.rows.length === 13, cache.stale.length ? `${cache.stale.length} script(s) local(aux) avec version obsolète` : `${cache.rows.length} script(s) locaux alignés`),
       check("Cache-busters CSS admin", styles.every(row => row.count === 1 && row.current), styles.map(row => `${row.name}:${row.count === 1 && row.current ? "OK" : row.raw}`).join(" · ")),
       check("Ordre des scripts", order.unique && order.ordered, order.unique ? (order.ordered ? "13/13 scripts uniques dans l’ordre canonique" : "ordre de chargement non canonique") : "script absent ou dupliqué"),
-      check("Market Memory 39.4.4R1", typeof globalThis.atlasMarketMemoryStats3944R1 === "function" && hasScriptSuffix("/js/market-memory-39.4.4R1.js"), "API stats + script unique"),
+      check("Noms modules canoniques", canonicalModuleFilenameContract().ok, canonicalModuleFilenameContract().detail),
+      check("Market Memory 39.4.4R1", typeof globalThis.atlasMarketMemoryStats3944R1 === "function" && hasScriptSuffix("/js/market-memory-collector.js"), "API stats + script unique"),
       check("Core identité/temps mémoire", typeof atlasMemoryCanonicalSnapshotId === "function" && typeof atlasMemoryRecordTime === "function", "résolveurs canoniques du Core disponibles"),
-      check("Analytical Memory 39.4", typeof globalThis.atlasAnalyticalMemoryStats394 === "function" && hasScriptSuffix("/js/analytical-memory-39.4.js"), "API stats + script unique"),
-      check("Dual Memory 39.5", !!globalThis.atlasDecisionBoardDualMemory3950 && hasScriptSuffix("/js/decision-board-dual-memory-39.5.0.js"), "API + script unique"),
-      check("Retrospective 39.6", hasScriptSuffix("/js/retrospective-validation-39.6.0.js"), "script unique · état de données non bloquant"),
-      check("Multi-Collector 39.7", !!globalThis.atlasMultiCollectorConcordance3970 && hasScriptSuffix("/js/multi-collector-concordance-39.7.0.js"), "API + script unique"),
+      check("Analytical Memory 39.4", typeof globalThis.atlasAnalyticalMemoryStats394 === "function" && hasScriptSuffix("/js/analytical-memory.js"), "API stats + script unique"),
+      check("Dual Memory 39.5", !!globalThis.atlasDecisionBoardDualMemory3950 && hasScriptSuffix("/js/decision-board.js"), "API + script unique"),
+      check("Retrospective 39.6", hasScriptSuffix("/js/retrospective-validation.js"), "script unique · état de données non bloquant"),
+      check("Multi-Collector 39.7", !!globalThis.atlasMultiCollectorConcordance3970 && hasScriptSuffix("/js/multi-collector-concordance.js"), "API + script unique"),
       check("Contrat Multi-Collector", readOnlyContractOk(multiContract), multiContract ? "lecture seule vérifiée" : "sentinelle absente"),
-      check("Memory Health 39.8.0R2", !!globalThis.atlasMemoryHealth3980R2 && hasScriptSuffix("/js/memory-health-audit-39.8.0R2.js"), "Truth Repair API + script unique"),
+      check("Memory Health 39.8.0R2", !!globalThis.atlasMemoryHealth3980R2 && hasScriptSuffix("/js/memory-health-audit.js"), "Truth Repair API + script unique"),
       check("Contrat Memory Health", readOnlyContractOk(healthContract) && healthContract.verdicts_separated === true, healthContract ? "lecture seule + verdicts séparés" : "sentinelle absente"),
       check("Ancien Memory Health retiré", countScriptSuffix("/js/memory-health-audit-39.8.0.js") === 0, "aucun doublon du lecteur 39.8.0 initial"),
       check("Window Manager", hasScriptSuffix("/js/core/admin-window-manager.js"), "script unique"),
