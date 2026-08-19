@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.26 — MARKET FLOW FLOATING VIEWPORT ADAPTATION + FREEZE TRUTH LOCK
+     40.1.27 — MARKET FLOW FLOATING VIEWPORT ADAPTATION + FREEZE TRUTH LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.26";
+  const BUILD_CURRENT = "40.1.27";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -607,6 +607,20 @@
     };
   }
 
+  function marketSnapshotBodyPortalContract() {
+    const shell = document.querySelector('[data-admin-native-shell="market"]');
+    if (!shell) {
+      return { ok: true, detail: "docked · shell flottante absente (portal body prêt)" };
+    }
+    const parentIsBody = shell.parentElement === document.body;
+    const position = String(getComputedStyle(shell).position || "").toLowerCase();
+    const z = Number.parseInt(getComputedStyle(shell).zIndex || "0", 10) || 0;
+    return {
+      ok: parentIsBody && position === "fixed",
+      detail: `parent=${shell.parentElement === document.body ? "body" : shell.parentElement?.id || shell.parentElement?.tagName || "—"} · position=${position || "—"} · z=${z}`
+    };
+  }
+
   function derive() {
     const build = runtimeBuild();
     const token = runtimeToken();
@@ -681,7 +695,7 @@
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
       check("Graphique · historique pur + LIVE hors canvas",
-        graphStability?.build === "40.1.26"
+        graphStability?.build === "40.1.27"
           && graphStability?.contract?.atomic_cache_to_direct === true
           && graphStability?.contract?.preserve_visible_comparison_until_complete === true
           && graphStability?.contract?.reuse_existing_comparison_chart === true
@@ -693,11 +707,12 @@
           && graphStability?.contract?.synthetic_terminal_point === false,
         graphStability
           ? `transactions=${Number(graphStability.metrics?.atomic_refresh_transactions || 0)} · commits=${Number(graphStability.metrics?.atomic_refresh_commits || 0)} · live-render=${Number(graphStability.metrics?.live_endpoint_render_commits || 0)} · blocked=${Number(graphStability.metrics?.live_endpoint_blocked_calls || 0)} · resize=${Number(graphStability.metrics?.resize_executed || 0)}/${Number(graphStability.metrics?.resize_requested || 0)} · skip=${Number(graphStability.metrics?.resize_skipped || 0)}`
-          : "contrat stabilité graphique 40.1.26 absent"),
+          : "contrat stabilité graphique 40.1.27 absent"),
       check("Target Top direct window controls", !!targetChrome && targetChrome.complete && targetChrome.interactive, targetChrome ? `5/5=${String(targetChrome.complete)} · interactif=${String(targetChrome.interactive)} · opacity runtime=${Number.isFinite(targetChrome.computedOpacity) ? targetChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Target Top absent"),
       check("Market Flow direct window controls", !!flowChrome && flowChrome.complete && flowChrome.interactive, flowChrome ? `5/5=${String(flowChrome.complete)} · interactif=${String(flowChrome.interactive)} · opacity runtime=${Number.isFinite(flowChrome.computedOpacity) ? flowChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Flow absent"),
       check("Market Flow · déplacement Target Top + viewport interne adapté", marketFlowFloatParityContract().ok === true, marketFlowFloatParityContract().detail),
       check("Market Snapshot direct window controls", !!marketChrome && marketChrome.complete && marketChrome.interactive, marketChrome ? `5/5=${String(marketChrome.complete)} · interactif=${String(marketChrome.interactive)} · opacity runtime=${Number.isFinite(marketChrome.computedOpacity) ? marketChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Snapshot absent"),
+      check("Market Snapshot · shell flottante hors stacking local", marketSnapshotBodyPortalContract().ok === true, marketSnapshotBodyPortalContract().detail),
       check("Math Core direct window controls", !!mathChrome && mathChrome.complete && mathChrome.interactive, mathChrome ? `5/5=${String(mathChrome.complete)} · interactif=${String(mathChrome.interactive)} · opacity runtime=${Number.isFinite(mathChrome.computedOpacity) ? mathChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Math Core absent"),
       check("Menus familles Administrator · 5 boutons non rognés", familyChromeLayoutOk,
         familyChromes.length
@@ -788,7 +803,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · MARKET FLOW SAFE FLOAT · AUCUNE MUTATION AUTOMATIQUE · 40.1.26 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · MARKET FLOW SAFE FLOAT · AUCUNE MUTATION AUTOMATIQUE · 40.1.27 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -806,8 +821,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.26 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.26</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.27 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.27</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -816,7 +831,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.26 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.27 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">
