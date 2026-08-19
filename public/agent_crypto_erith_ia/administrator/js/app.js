@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.23";
-  const ADMIN_RELEASE = "GRAPH HISTORICAL CANVAS PURITY LOCK";
+  const ADMIN_BUILD = "40.1.24";
+  const ADMIN_RELEASE = "FREEZE WINDOW MENU TRUTH AUDIT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 

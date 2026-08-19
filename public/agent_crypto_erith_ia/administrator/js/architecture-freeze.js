@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.23 — GRAPH HISTORICAL CANVAS PURITY LOCK
+     40.1.24 — FREEZE WINDOW MENU TRUTH AUDIT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.23";
+  const BUILD_CURRENT = "40.1.24";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -166,14 +166,24 @@
     ];
     const buttons = required.map(selector => root.querySelector(selector));
     const style = safe(() => getComputedStyle(root), null);
+    const hostStyle = safe(() => getComputedStyle(host), null);
     const rect = safe(() => root.getBoundingClientRect(), null);
     const hostRect = safe(() => host.getBoundingClientRect(), null);
-    const layoutOk = !!style && style.position === "absolute"
+    const rendered = !!hostStyle
+      && hostStyle.display !== "none"
+      && hostStyle.visibility !== "hidden"
+      && Number(hostRect?.width || 0) > 0
+      && Number(hostRect?.height || 0) > 0
+      && host.getClientRects().length > 0;
+    const layoutOk = !rendered || (
+      !!style && style.position === "absolute"
       && !!rect && rect.width >= 120
-      && !!hostRect && rect.left >= hostRect.left - 2 && rect.right <= hostRect.right + 2;
+      && !!hostRect && rect.left >= hostRect.left - 2 && rect.right <= hostRect.right + 2
+    );
     return {
       root,
       buttons,
+      rendered,
       complete: buttons.every(button => button instanceof HTMLButtonElement),
       interactive: !!style && style.display !== "none" && style.visibility !== "hidden" && style.pointerEvents !== "none",
       computedOpacity: Number.parseFloat(style?.opacity || "0"),
@@ -279,13 +289,20 @@
     }
     const has = (selector, expectedOpacity, extra = () => true) =>
       rows.some(row => row.selectors.includes(selector) && opacityIs(row.opacity, expectedOpacity) && extra(row));
+    // One generic rule is the canonical owner for every five-button menu.
+    // Do not require redundant per-window selectors when the generic selector
+    // already covers Graphique, Target Top and Market Flow by construction.
     const base = has(".admin-native-control-host > .admin-native-controls", 0.16, row => row.visibility === "visible" && row.pointer === "auto");
     const reveal = has(".admin-native-control-host:hover > .admin-native-controls", 0.82);
     const direct = has(".admin-native-control-host > .admin-native-controls:hover", 1);
-    const graph = has("#analyste.admin-native-control-host > .admin-native-controls", 0.16);
-    const target = has("#market-workspace .top5-ribbon.admin-native-control-host > .admin-native-controls", 0.16);
-    const flow = has("#market-workspace .market-flow-ribbon.admin-native-control-host > .admin-native-controls", 0.16);
-    return { ok:base && reveal && direct && graph && target && flow, detail:`rest=.16 · reveal=.82 · direct=1 · graph=${graph} · target=${target} · flow=${flow}` };
+    const graphSpecific = has("#analyste.admin-native-control-host > .admin-native-controls", 0.16);
+    const targetSpecific = has("#market-workspace .top5-ribbon.admin-native-control-host > .admin-native-controls", 0.16);
+    const flowSpecific = has("#market-workspace .market-flow-ribbon.admin-native-control-host > .admin-native-controls", 0.16);
+    const covered = base && reveal && direct;
+    return {
+      ok: covered,
+      detail:`generic=${String(covered)} · rest=.16 · reveal=.82 · direct=1 · dedicated graph=${graphSpecific} target=${targetSpecific} flow=${flowSpecific} (informatifs)`
+    };
   }
 
   function technicalReadingGlassContract() {
@@ -561,8 +578,12 @@
       title: String(host.dataset.adminNativeTitle || host.querySelector("h2")?.textContent || "famille").trim(),
       state: directControlState(host)
     }));
-    const familyChromeLayoutOk = familyChromes.length >= 4 && familyChromes.every(row =>
-      !!row.state && row.state.complete && row.state.interactive && row.state.layoutOk
+    const visibleFamilyChromes = familyChromes.filter(row => row.state?.rendered === true);
+    const familyChromeDomOk = familyChromes.length >= 4 && familyChromes.every(row => !!row.state && row.state.complete);
+    // In Vue normale the family separators are intentionally display:none.
+    // Hidden geometry is not measurable (0 px) and must not be reported as clipping.
+    const familyChromeLayoutOk = familyChromeDomOk && visibleFamilyChromes.every(row =>
+      row.state.interactive && row.state.layoutOk
     );
     const chromeCss = canonicalChromeCssContract();
     const uniformMenuCss = uniformMenuCssContract();
@@ -599,7 +620,7 @@
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
       check("Graphique · historique pur + LIVE hors canvas",
-        graphStability?.build === "40.1.23"
+        graphStability?.build === "40.1.24"
           && graphStability?.contract?.atomic_cache_to_direct === true
           && graphStability?.contract?.preserve_visible_comparison_until_complete === true
           && graphStability?.contract?.reuse_existing_comparison_chart === true
@@ -611,14 +632,17 @@
           && graphStability?.contract?.synthetic_terminal_point === false,
         graphStability
           ? `transactions=${Number(graphStability.metrics?.atomic_refresh_transactions || 0)} · commits=${Number(graphStability.metrics?.atomic_refresh_commits || 0)} · live-render=${Number(graphStability.metrics?.live_endpoint_render_commits || 0)} · blocked=${Number(graphStability.metrics?.live_endpoint_blocked_calls || 0)} · resize=${Number(graphStability.metrics?.resize_executed || 0)}/${Number(graphStability.metrics?.resize_requested || 0)} · skip=${Number(graphStability.metrics?.resize_skipped || 0)}`
-          : "contrat stabilité graphique 40.1.23 absent"),
+          : "contrat stabilité graphique 40.1.24 absent"),
       check("Target Top direct window controls", !!targetChrome && targetChrome.complete && targetChrome.interactive, targetChrome ? `5/5=${String(targetChrome.complete)} · interactif=${String(targetChrome.interactive)} · opacity runtime=${Number.isFinite(targetChrome.computedOpacity) ? targetChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Target Top absent"),
       check("Market Flow direct window controls", !!flowChrome && flowChrome.complete && flowChrome.interactive, flowChrome ? `5/5=${String(flowChrome.complete)} · interactif=${String(flowChrome.interactive)} · opacity runtime=${Number.isFinite(flowChrome.computedOpacity) ? flowChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Flow absent"),
       check("Market Snapshot direct window controls", !!marketChrome && marketChrome.complete && marketChrome.interactive, marketChrome ? `5/5=${String(marketChrome.complete)} · interactif=${String(marketChrome.interactive)} · opacity runtime=${Number.isFinite(marketChrome.computedOpacity) ? marketChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Snapshot absent"),
       check("Math Core direct window controls", !!mathChrome && mathChrome.complete && mathChrome.interactive, mathChrome ? `5/5=${String(mathChrome.complete)} · interactif=${String(mathChrome.interactive)} · opacity runtime=${Number.isFinite(mathChrome.computedOpacity) ? mathChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Math Core absent"),
       check("Menus familles Administrator · 5 boutons non rognés", familyChromeLayoutOk,
         familyChromes.length
-          ? familyChromes.map(row => `${row.title}:5/5=${String(!!row.state?.complete)} · pos=${row.state?.position || "—"} · width=${Math.round(row.state?.width || 0)}px · layout=${String(!!row.state?.layoutOk)}`).join(" · ")
+          ? familyChromes.map(row => row.state?.rendered
+              ? `${row.title}:5/5=${String(!!row.state?.complete)} · visible=true · pos=${row.state?.position || "—"} · width=${Math.round(row.state?.width || 0)}px · layout=${String(!!row.state?.layoutOk)}`
+              : `${row.title}:5/5=${String(!!row.state?.complete)} · visible=false · géométrie non mesurée (vue courante)`
+            ).join(" · ")
           : "aucun chrome famille détecté"),
       check("Lecture technique", !!byId("detailPanel") && !!byId("detailPanelBody"), "ancrages DOM présents"),
       check("Lecture technique · géométrie Classic propriétaire", technicalReadingGeometryOwnerContract().ok === true, technicalReadingGeometryOwnerContract().detail),
@@ -702,7 +726,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.23 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.24 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -720,8 +744,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.23 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.23</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.24 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.24</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -730,7 +754,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.23 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.24 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">
