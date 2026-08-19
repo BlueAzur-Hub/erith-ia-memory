@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_version_manifest_v4",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.4 · MARKET FLOW COMPACT BUTTON VISUAL LOCK",
-  "build": "40.1.4",
-  "asset_token": "market-core-v2.0-alpha-build-40.1.4",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.5 · MARKET FLOW CLASSIC MOTION OWNER RESTORE LOCK",
+  "build": "40.1.5",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.5",
   "status": "recovery_candidate_requires_firefox_validation",
   "prepared_at": "2026-08-19T05:12:00+02:00",
   "published_at": null,
@@ -13,7 +13,7 @@
     "status": "protected"
   },
   "parent_build": "40.1.3",
-  "lineage": "40.1.3 → 40.1.4 · visual-only removal of the Market Flow label/cartouche column; preserve the existing green cycle button and all crypto click behavior",
+  "lineage": "40.1.3 → 40.1.5 · visual-only removal of the Market Flow label/cartouche column; preserve the existing green cycle button and all crypto click behavior",
   "files": {
     "app.js": {
       "sha256": "5fcf42840b5fc2062caf21dabbabae81086db606e7e2cfeeefcf6833a0383795"
@@ -247,10 +247,10 @@
     "Sticky top 8px, viewport-bounded internal scroll, contained overscroll and stable scrollbar are restored for the dock host.",
     "app.js dock runtime is unchanged except Build identity; Window Manager, memory modules, Graph, ribbons, Technical Reading and Classic are untouched.",
     "style.css cache token is bumped so Firefox cannot reuse the pre-restore stylesheet.",
-    "40.1.4 changes Market Flow presentation/motion only: admin-ribbons.css stops redefining the animation and returns movement ownership to the existing Classic style.css ticker-safe contract.",
+    "40.1.5 changes Market Flow presentation/motion only: admin-ribbons.css stops redefining the animation and returns movement ownership to the existing Classic style.css ticker-safe contract.",
     "The large fixed MARKET FLOW text cartouche is removed visually; the existing #marketFlowCycle button remains as a compact borderless cycle trigger.",
     "The existing mode order is preserved exactly: all → positive → negative → all; filtering logic and localStorage key are unchanged.",
     "No Market data source, refresh cadence, Atlas, Math Core, graph, memory, Crypto Card, Window Manager or Classic code is functionally changed.",
-    "Firefox operator validation is required before declaring Build 40.1.4 stable."
+    "Firefox operator validation is required before declaring Build 40.1.5 stable."
   ]
 }
