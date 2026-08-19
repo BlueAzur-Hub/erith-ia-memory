@@ -118,7 +118,6 @@
    This deliberately removes the 39.4.6+ duplicate motion/layout contract. */
 #market-workspace .market-flow-ribbon {
   display: block !important;
-  position: relative !important;
   min-height: 54px !important;
   padding: 0 !important;
   overflow: hidden !important;
@@ -345,18 +344,10 @@
 }
 
 /* ============================================================================
-   40.1.24 — MARKET FLOW SAFE FLOAT GEOMETRY LOCK
+   40.1.25 — MARKET FLOW / TARGET TOP FLOAT PARITY LOCK
 
-   Market Flow is a native horizontal ribbon, not a 90px minimum panel.
-   When the Administrator move/float control detaches it, keep the native
-   54px strip height and allow horizontal resizing only. Maximized mode remains
-   explicitly available from the window controls.
+   Direct floating position is owned exclusively by admin-windows.css through
+   .admin-native-direct-floating, exactly like Target Top. Do not set an
+   unconditional position:relative on Market Flow: it would override the fixed
+   floating owner and turn Window Manager left/top into destructive relative offsets.
    ============================================================================ */
-#market-workspace .market-flow-ribbon.admin-native-direct-floating:not(.admin-native-maximized) {
-  min-height: 54px !important;
-  height: 54px !important;
-  max-height: 54px !important;
-  resize: horizontal !important;
-  overflow: hidden !important;
-}
-

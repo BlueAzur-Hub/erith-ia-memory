@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.24";
-  const ADMIN_RELEASE = "MARKET FLOW SAFE FLOAT + FREEZE TRUTH LOCK";
+  const ADMIN_BUILD = "40.1.25";
+  const ADMIN_RELEASE = "MARKET FLOW TARGET TOP FLOAT PARITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -51,18 +51,6 @@
     return null;
   }
 
-  function marketFlowFloatGeometry(rawRect = null) {
-    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    const rect = rawRect || q("#market-workspace .market-flow-ribbon")?.getBoundingClientRect?.() || null;
-    const width = Math.min(1180, Math.max(420, vw - 24));
-    const height = 54;
-    const right = Number(rect?.right || (vw - 12));
-    const x = Math.max(12, Math.min(vw - width - 12, right - width));
-    const y = Math.max(12, Math.min(vh - height - 12, Number(rect?.top || 96)));
-    return { x, y, width, height };
-  }
-
   function nativeDefinitions() {
     return [
       {
@@ -86,9 +74,6 @@
         title: "Market Flow",
         tone: "cyan",
         directFixed: true,
-        preferredFloatGeometry: () => marketFlowFloatGeometry(),
-        dragFloatGeometry: ({ rawRect }) => marketFlowFloatGeometry(rawRect),
-        geometryPolicy: { minHeight: 54, maxHeight: 54, maxWidth: 1180, keepFullyVisible: true },
         resolveEntries: () => [entry(q("#market-workspace .market-flow-ribbon"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0]
       },
@@ -306,15 +291,15 @@
     } catch {}
   }
 
-  const MARKET_FLOW_40124_MIGRATION_KEY = `${STORAGE_PREFIX}:market-flow-safe-float-40124-migrated`;
+  const MARKET_FLOW_40125_MIGRATION_KEY = `${STORAGE_PREFIX}:market-flow-target-top-parity-40125-migrated`;
 
-  function migrateMarketFlowWindowState40124() {
+  function migrateMarketFlowWindowState40125() {
     try {
-      if (localStorage.getItem(MARKET_FLOW_40124_MIGRATION_KEY) === "1") return;
-      // Purge only stale Market Flow floating geometry created by the old
-      // generic 90px/window clamp. Other operator window layouts are preserved.
+      if (localStorage.getItem(MARKET_FLOW_40125_MIGRATION_KEY) === "1") return;
+      // 40.1.25: Market Flow now uses the exact same directFixed detach/move
+      // path as Target Top. Clear only its stale 40.1.24 geometry once.
       localStorage.removeItem(`${STORAGE_PREFIX}:window:market-flow`);
-      localStorage.setItem(MARKET_FLOW_40124_MIGRATION_KEY, "1");
+      localStorage.setItem(MARKET_FLOW_40125_MIGRATION_KEY, "1");
     } catch {}
   }
 
@@ -348,7 +333,7 @@
     keepGlobalVersionVisible();
 
     migrateRibbonWindowStateR2();
-    migrateMarketFlowWindowState40124();
+    migrateMarketFlowWindowState40125();
     migrateGraphWindowStateR6();
 
     const factory = window.ErithAdminWindowManager;
