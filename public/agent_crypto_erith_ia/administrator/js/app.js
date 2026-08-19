@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.25";
-  const ADMIN_RELEASE = "MARKET FLOW TARGET TOP FLOAT PARITY LOCK";
+  const ADMIN_BUILD = "40.1.26";
+  const ADMIN_RELEASE = "MARKET FLOW FLOATING VIEWPORT ADAPTATION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -74,6 +74,9 @@
         title: "Market Flow",
         tone: "cyan",
         directFixed: true,
+        // 40.1.26: Target Top owns the external move pattern; Market Flow only
+        // adapts its native ticker-strip height while detached. No custom x/y path.
+        geometryPolicy: { minHeight: 54, maxHeight: 54 },
         resolveEntries: () => [entry(q("#market-workspace .market-flow-ribbon"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0]
       },
@@ -296,10 +299,22 @@
   function migrateMarketFlowWindowState40125() {
     try {
       if (localStorage.getItem(MARKET_FLOW_40125_MIGRATION_KEY) === "1") return;
-      // 40.1.25: Market Flow now uses the exact same directFixed detach/move
+      // 40.1.26: Market Flow now uses the exact same directFixed detach/move
       // path as Target Top. Clear only its stale 40.1.24 geometry once.
       localStorage.removeItem(`${STORAGE_PREFIX}:window:market-flow`);
       localStorage.setItem(MARKET_FLOW_40125_MIGRATION_KEY, "1");
+    } catch {}
+  }
+
+  const MARKET_FLOW_40126_MIGRATION_KEY = `${STORAGE_PREFIX}:market-flow-floating-viewport-40126-migrated`;
+
+  function migrateMarketFlowWindowState40126() {
+    try {
+      if (localStorage.getItem(MARKET_FLOW_40126_MIGRATION_KEY) === "1") return;
+      // 40.1.26 changes the detached internal contract: discard only the prior
+      // Market Flow floating geometry so the first detach is measured cleanly.
+      localStorage.removeItem(`${STORAGE_PREFIX}:window:market-flow`);
+      localStorage.setItem(MARKET_FLOW_40126_MIGRATION_KEY, "1");
     } catch {}
   }
 
@@ -334,6 +349,7 @@
 
     migrateRibbonWindowStateR2();
     migrateMarketFlowWindowState40125();
+    migrateMarketFlowWindowState40126();
     migrateGraphWindowStateR6();
 
     const factory = window.ErithAdminWindowManager;
