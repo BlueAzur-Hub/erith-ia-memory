@@ -8919,6 +8919,11 @@ function atlasHelpTargetFromNode(node) {
   if (!(node instanceof Element)) return null;
   const marketRow = node.closest?.("[data-market-help-id]");
   if (marketRow) return marketRow;
+
+  // Administrator intentionally suppresses the generic coarse help surface,
+  // but never by hiding the shared #atlasHelpLayer: the Crypto Card uses it.
+  if (document.body?.classList?.contains("atlas-administrator-mirror")) return null;
+
   const candidate = node.closest?.("input, textarea, select, button[id], button.period-btn, button.compare-btn, [data-math-position], [data-market-action], [data-compare-primary], [data-compare-remove], [data-market-open]");
   return candidate && atlasHelpDefinitionFor(candidate) ? candidate : null;
 }
@@ -12126,7 +12131,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.0",
+  interface: "Build 40.1.1",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40317,7 +40322,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.0";
+const ATLAS_BUILD = "40.1.1";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -46988,8 +46993,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.0",
-  asset_token: "market-core-v2.0-alpha-build-40.1.0"
+  build: "40.1.1",
+  asset_token: "market-core-v2.0-alpha-build-40.1.1"
 });
 
 function atlasRuntimeTruth3813() {

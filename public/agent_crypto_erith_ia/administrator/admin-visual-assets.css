@@ -1185,15 +1185,9 @@ body.atlas-administrator-mirror #detailPanel button{
   text-shadow:0 1px 2px rgba(0,0,0,.92),0 0 2px rgba(0,0,0,.68)!important;
 }
 
-/* Coarse HELP LAYER is deliberately absent in Administrator design.
-   Native browser titles / compact chart tooltip behavior are unaffected. */
-body.atlas-administrator-mirror #atlasHelpLayer,
-body.atlas-administrator-mirror .atlas-help-layer{
-  display:none!important;
-  visibility:hidden!important;
-  opacity:0!important;
-  pointer-events:none!important;
-}
+/* Administrator help routing is owned by app.js, not by a blanket CSS hide.
+   Generic coarse help is suppressed at the source in atlasHelpTargetFromNode().
+   The shared #atlasHelpLayer must remain available to the canonical Crypto Card. */
 
 
 /* ==========================================================================
