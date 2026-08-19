@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.6";
+  const ADMIN_BUILD = "40.1.7";
   const ADMIN_RELEASE = "ADMINISTRATOR MIRROR · FAMILY WINDOW MENU LAYOUT RESTORE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

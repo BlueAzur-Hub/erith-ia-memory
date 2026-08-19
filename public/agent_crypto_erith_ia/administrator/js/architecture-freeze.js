@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.6 — PUBLICATION VERSION TRUTH REPAIR LOCK
+     40.1.7 — TECHNICAL READING CLASSIC GEOMETRY OWNER RESTORE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -11,14 +11,14 @@
      - Report data-coverage limits as WARN, never as fake code failures.
 
      CONTRACT
-     - NO feature delta to market analysis, memory semantics or design.
+     - NO feature delta to market analysis or memory semantics; Technical Reading geometry ownership only.
      - NO automatic repair.
      - NO memory write.
      - NO network request from this module.
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.6";
+  const BUILD_CURRENT = "40.1.7";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -468,6 +468,40 @@
     return hits;
   }
 
+  function technicalReadingGeometryOwnerContract() {
+    const classic = document.querySelector('#analyste.champagne-clean-lens');
+    const chart = classic?.querySelector(':scope > .chart-panel');
+    const detail = classic?.querySelector(':scope > #detailPanel.clean-lens-detail-panel');
+    if (!(classic instanceof HTMLElement) || !(chart instanceof HTMLElement) || !(detail instanceof HTMLElement)) {
+      return { ok:false, detail:'ancrages Graphique/Lecture technique absents' };
+    }
+    const offenders = [];
+    for (const sheet of [...document.styleSheets]) {
+      const href = String(sheet.href || '');
+      if (!href.includes('admin-visual-assets.css')) continue;
+      let rules = [];
+      try { rules = [...(sheet.cssRules || [])]; } catch (_) { continue; }
+      const walk = list => {
+        for (const rule of list) {
+          if (rule.cssRules) { walk([...rule.cssRules]); continue; }
+          const selector = String(rule.selectorText || '');
+          if (!selector.includes('#analyste')) continue;
+          const style = rule.style;
+          if (!style) continue;
+          const geom = ['grid-template-columns','grid-template-rows','grid-column','grid-row','justify-self','align-self'];
+          const used = geom.filter(name => String(style.getPropertyValue(name) || '').trim());
+          if (used.length) offenders.push(`${selector} => ${used.join(',')}`);
+        }
+      };
+      walk(rules);
+    }
+    const computed = getComputedStyle(classic);
+    return {
+      ok: offenders.length === 0 && computed.display === 'grid',
+      detail: offenders.length ? offenders.join(' · ') : `Classic owner actif · grid=${computed.gridTemplateColumns || '—'}`
+    };
+  }
+
   function derive() {
     const build = runtimeBuild();
     const token = runtimeToken();
@@ -545,6 +579,7 @@
           ? familyChromes.map(row => `${row.title}:5/5=${String(!!row.state?.complete)} · pos=${row.state?.position || "—"} · width=${Math.round(row.state?.width || 0)}px · layout=${String(!!row.state?.layoutOk)}`).join(" · ")
           : "aucun chrome famille détecté"),
       check("Lecture technique", !!byId("detailPanel") && !!byId("detailPanelBody"), "ancrages DOM présents"),
+      check("Lecture technique · géométrie Classic propriétaire", technicalReadingGeometryOwnerContract().ok === true, technicalReadingGeometryOwnerContract().detail),
       check("Near-zero glass lock", technicalReadingGlassContract().ok === true, technicalReadingGlassContract().detail),
       check("Fiche Crypto native · Flottante / Latérale", cryptoCard.ok === true, cryptoCard.detail),
       check("Workspace marché", !!byId("market-workspace") && !!byId("analyste"), "ancrages marché/graphe présents"),
@@ -625,7 +660,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.6 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.7 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -643,8 +678,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.6 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.6</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.7 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.7</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -653,7 +688,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.6 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.7 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">
@@ -678,7 +713,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? "40.1.6 : Graphique, Target Top, Market Flow, Market Snapshot, Math Core, Fiche Crypto et les autres fenêtres Administrator partagent le même chrome métallique : .16 au repos, .82 au survol de la fenêtre, 1 au survol direct ; 5/5 actions conservées ; aucune règle display:none destructive. Les limites de couverture restent visibles ; aucune n’est transformée en faux défaut structurel."
+      ? "40.1.7 : Graphique, Target Top, Market Flow, Market Snapshot, Math Core, Fiche Crypto et les autres fenêtres Administrator partagent le même chrome métallique : .16 au repos, .82 au survol de la fenêtre, 1 au survol direct ; 5/5 actions conservées ; aucune règle display:none destructive. Les limites de couverture restent visibles ; aucune n’est transformée en faux défaut structurel."
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");
@@ -710,7 +745,7 @@
 
   function markdown(data = derive()) {
     const lines = [
-      "# Agent-Crypto — Administrator Consolidation 40.1.6", "",
+      "# Agent-Crypto — Administrator Consolidation 40.1.7", "",
       `- Généré : ${data.generatedAt}`,
       `- Verdict : ${data.label}`,
       `- FAIL critiques : ${data.criticalFails.length}`,
@@ -722,11 +757,11 @@
       lines.push(`- ${state} · ${row.name} · ${row.detail}`);
     }
     lines.push(
-      "", "## Validation finale 40.1.6", "",
+      "", "## Validation finale 40.1.7", "",
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
       "- Aucune nouvelle fonction n’a été ajoutée depuis le freeze 39.9.0R2 validé.",
-      "- Le candidat 40.1.6 exige une validation réelle dans Firefox après publication opérateur.",
+      "- Le candidat 40.1.7 exige une validation réelle dans Firefox après publication opérateur.",
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );
     return lines.join("\n");
