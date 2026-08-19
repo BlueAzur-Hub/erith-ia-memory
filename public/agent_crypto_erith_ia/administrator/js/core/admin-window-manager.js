@@ -854,6 +854,12 @@
       const bar = document.createElement("div");
       bar.className = `admin-native-minibar admin-native-tone-${win.tone}${floatingCompact ? " is-floating-compact" : ""}`;
       bar.dataset.adminNativeMinibar = win.id;
+      // 40.1.48 — compact restore bars must remain interactive even when
+      // neighboring native windows overlap the same workspace area.
+      bar.style.setProperty("position", floatingCompact ? "fixed" : "relative", "important");
+      bar.style.setProperty("z-index", "2147481250", "important");
+      bar.style.setProperty("pointer-events", "auto", "important");
+      bar.style.setProperty("isolation", "isolate", "important");
       const title = document.createElement("strong");
       title.className = "admin-native-minibar-title";
       title.textContent = win.title;
@@ -875,6 +881,8 @@
 
       const restore = createButton("admin-native-minibar-restore", "+  Restaurer", `Restaurer ${win.title}`);
       const hide = createButton("admin-native-minibar-hide", "×", `Masquer ${win.title}`);
+      restore.style.setProperty("pointer-events", "auto", "important");
+      hide.style.setProperty("pointer-events", "auto", "important");
       restore.addEventListener("click", () => setMinimized(win, false));
       hide.addEventListener("click", () => setHidden(win, true));
       bar.append(restore, hide);
@@ -1284,7 +1292,7 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.47",
+    build: "40.1.48",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
     dock_restore: "layout-preserving-placeholder-original-parent",
@@ -1300,6 +1308,8 @@
     drag_pointer_capture_reacquire: true,
     drag_single_gesture_detach_move: true,
     floating_minimize_compact_bar: true,
+    docked_minimize_restore_pointer_guard: true,
+    minimized_bar_overlap_safe_z_index: true,
     floating_minimize_drag_persists_position: true,
     math_core_compact_score_live: true,
     direct_fixed_auto_fit: false,

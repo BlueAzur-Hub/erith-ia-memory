@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.47";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE LIVE MICRO + TOP 5 AGGREGATE + MATH CORE INLINE CONTROLS + GREEN PROPAGATION LOCK";
+  const ADMIN_BUILD = "40.1.48";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · MATH CORE COMPLETE INLINE STRIP + MINIMIZED RESTORE RECOVERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -108,7 +108,11 @@
           return { x: Math.max(12, vw - width - 18), y: Math.max(72, Math.min(118, Math.round(vh * 0.11))), width, height };
         },
         resolveEntries: () => [entry(byId("math"))].filter(Boolean),
-        resolveAnchor: nodes => nodes[0]
+        resolveAnchor: nodes => nodes[0],
+        resolveControlHosts: () => {
+          const host = byId("math")?.querySelector?.(".atlas-math-dock-actions");
+          return host ? [host] : [byId("math")].filter(Boolean);
+        }
       },
       {
         id: "analyse-decision",
@@ -440,17 +444,22 @@
     if (versionText) observer.observe(versionText, { childList: true, characterData: true, subtree: true });
   }
 
-  function installMathCoreInlineWindowControls40147() {
+  function installMathCoreInlineWindowControls40148() {
     const math = byId("math");
+    const head = math?.querySelector?.(".atlas-math-dock-head");
     const dockActions = math?.querySelector?.(".atlas-math-dock-actions");
-    const controls = math?.querySelector?.(":scope > .admin-native-controls")
+    const controls = dockActions?.querySelector?.(".admin-native-controls")
+      || math?.querySelector?.(":scope > .admin-native-controls")
       || math?.querySelector?.(".admin-native-controls");
-    if (!(dockActions instanceof HTMLElement) || !(controls instanceof HTMLElement)) return false;
+    if (!(head instanceof HTMLElement) || !(dockActions instanceof HTMLElement) || !(controls instanceof HTMLElement)) return false;
 
     const firstDockButton = dockActions.querySelector("[data-math-position]");
     if (!(firstDockButton instanceof HTMLElement)) return false;
 
-    controls.classList.add("atlas-math-inline-window-controls-40147");
+    // 40.1.48 — the complete Window Manager strip belongs to the Math Core
+    // header itself.  The action row is a single nowrap line; it is never
+    // hidden off-canvas by justify-content:flex-end/overflow scrolling.
+    controls.classList.add("atlas-math-inline-window-controls-40148");
     controls.style.setProperty("position", "static", "important");
     controls.style.setProperty("inset", "auto", "important");
     controls.style.setProperty("left", "auto", "important");
@@ -462,43 +471,68 @@
     controls.style.setProperty("flex-direction", "row", "important");
     controls.style.setProperty("flex-wrap", "nowrap", "important");
     controls.style.setProperty("align-items", "center", "important");
-    controls.style.setProperty("gap", "5px", "important");
+    controls.style.setProperty("justify-content", "flex-start", "important");
+    controls.style.setProperty("gap", "4px", "important");
     controls.style.setProperty("margin", "0", "important");
+    controls.style.setProperty("padding", "0", "important");
+    controls.style.setProperty("min-height", "0", "important");
+    controls.style.setProperty("background", "transparent", "important");
+    controls.style.setProperty("box-shadow", "none", "important");
+    controls.style.setProperty("backdrop-filter", "none", "important");
     controls.style.setProperty("opacity", "1", "important");
     controls.style.setProperty("pointer-events", "auto", "important");
-    controls.style.setProperty("z-index", "auto", "important");
+    controls.style.setProperty("z-index", "3", "important");
+    controls.style.setProperty("flex", "0 0 auto", "important");
 
     controls.querySelectorAll("button").forEach(button => {
       button.style.setProperty("position", "static", "important");
       button.style.setProperty("margin", "0", "important");
       button.style.setProperty("transform", "none", "important");
+      button.style.setProperty("width", "27px", "important");
+      button.style.setProperty("min-width", "27px", "important");
+      button.style.setProperty("height", "27px", "important");
+      button.style.setProperty("min-height", "27px", "important");
+      button.style.setProperty("padding", "0", "important");
+      button.style.setProperty("opacity", "1", "important");
     });
 
     const maximize = controls.querySelector(".admin-native-maximize");
     if (maximize) maximize.textContent = "↗";
 
+    // One complete action line: [⠿] [−] [□] [↗] [×] | [Dessus] [Latéral] [Réduire]
+    head.classList.add("atlas-math-head-inline-controls-40148");
+    dockActions.classList.add("atlas-math-actions-inline-40148");
     dockActions.style.setProperty("display", "flex", "important");
+    dockActions.style.setProperty("width", "100%", "important");
+    dockActions.style.setProperty("max-width", "100%", "important");
     dockActions.style.setProperty("align-items", "center", "important");
     dockActions.style.setProperty("justify-content", "flex-end", "important");
     dockActions.style.setProperty("flex-wrap", "nowrap", "important");
     dockActions.style.setProperty("white-space", "nowrap", "important");
-    dockActions.style.setProperty("gap", "6px", "important");
-    dockActions.style.setProperty("overflow-x", "auto", "important");
-    dockActions.style.setProperty("overflow-y", "hidden", "important");
+    dockActions.style.setProperty("gap", "5px", "important");
+    dockActions.style.setProperty("overflow", "visible", "important");
+    dockActions.style.setProperty("min-width", "0", "important");
 
-    dockActions.insertBefore(controls, firstDockButton);
-
-    let separator = dockActions.querySelector(".atlas-math-inline-window-separator-40147");
-    if (!separator) {
-      separator = document.createElement("span");
-      separator.className = "atlas-math-inline-window-separator-40147";
-      separator.textContent = "|";
-      separator.setAttribute("aria-hidden", "true");
-      separator.style.cssText = "display:inline-flex;align-items:center;justify-content:center;color:rgba(255,226,161,.52);font-weight:900;line-height:1;padding:0 1px;flex:0 0 auto;";
-      dockActions.insertBefore(separator, firstDockButton);
+    if (controls.parentElement !== dockActions || controls.nextElementSibling !== firstDockButton) {
+      dockActions.insertBefore(controls, firstDockButton);
     }
 
-    dockActions.dataset.mathInlineWindowControls = "40147";
+    let separator = dockActions.querySelector(".atlas-math-inline-window-separator-40148");
+    if (!separator) {
+      separator = document.createElement("span");
+      separator.className = "atlas-math-inline-window-separator-40148";
+      separator.textContent = "|";
+      separator.setAttribute("aria-hidden", "true");
+      separator.style.cssText = "display:inline-flex;align-items:center;justify-content:center;color:rgba(255,226,161,.58);font-weight:900;line-height:1;padding:0 1px;flex:0 0 auto;";
+    }
+    dockActions.insertBefore(separator, firstDockButton);
+
+    dockActions.querySelectorAll("[data-math-position]").forEach(button => {
+      button.style.setProperty("flex", "0 0 auto", "important");
+      button.style.setProperty("white-space", "nowrap", "important");
+    });
+
+    dockActions.dataset.mathInlineWindowControls = "40148";
     return true;
   }
 
@@ -531,7 +565,21 @@
     });
 
     const state = manager.init();
-    installMathCoreInlineWindowControls40147();
+    installMathCoreInlineWindowControls40148();
+
+    // 40.1.48 — restore guard for compact bars.  Some stacked Administrator
+    // surfaces can overlap a minimized bar visually; capture-phase recovery
+    // guarantees that + Restaurer always reopens the intended window.
+    document.addEventListener("pointerdown", event => {
+      const restore = event.target?.closest?.(".admin-native-minibar-restore");
+      const bar = restore?.closest?.("[data-admin-native-minibar]");
+      const id = bar?.dataset?.adminNativeMinibar;
+      if (!id) return;
+      event.preventDefault();
+      event.stopPropagation();
+      manager.minimize(id, false);
+    }, true);
+
     window.ErithAdministratorWindows = manager;
     installAdminBar(manager);
     installDomainObserver(manager);
