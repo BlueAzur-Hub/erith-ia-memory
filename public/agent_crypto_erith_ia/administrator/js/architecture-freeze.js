@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.22 — GRAPH LIVE ENDPOINT RESCALE PURGE LOCK
+     40.1.23 — GRAPH HISTORICAL CANVAS PURITY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.22";
+  const BUILD_CURRENT = "40.1.23";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -598,8 +598,8 @@
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
-      check("Graphique · refresh atomique + LIVE découplé",
-        graphStability?.build === "40.1.22"
+      check("Graphique · historique pur + LIVE hors canvas",
+        graphStability?.build === "40.1.23"
           && graphStability?.contract?.atomic_cache_to_direct === true
           && graphStability?.contract?.preserve_visible_comparison_until_complete === true
           && graphStability?.contract?.reuse_existing_comparison_chart === true
@@ -607,10 +607,11 @@
           && graphStability?.contract?.geometry_guard === true
           && graphStability?.contract?.live_websocket_canvas_updates === false
           && graphStability?.contract?.collector_canvas_updates === false
-          && graphStability?.contract?.live_endpoint_commit_scope === "chart-render-only",
+          && graphStability?.contract?.live_endpoint_commit_scope === "disabled"
+          && graphStability?.contract?.synthetic_terminal_point === false,
         graphStability
           ? `transactions=${Number(graphStability.metrics?.atomic_refresh_transactions || 0)} · commits=${Number(graphStability.metrics?.atomic_refresh_commits || 0)} · live-render=${Number(graphStability.metrics?.live_endpoint_render_commits || 0)} · blocked=${Number(graphStability.metrics?.live_endpoint_blocked_calls || 0)} · resize=${Number(graphStability.metrics?.resize_executed || 0)}/${Number(graphStability.metrics?.resize_requested || 0)} · skip=${Number(graphStability.metrics?.resize_skipped || 0)}`
-          : "contrat stabilité graphique 40.1.22 absent"),
+          : "contrat stabilité graphique 40.1.23 absent"),
       check("Target Top direct window controls", !!targetChrome && targetChrome.complete && targetChrome.interactive, targetChrome ? `5/5=${String(targetChrome.complete)} · interactif=${String(targetChrome.interactive)} · opacity runtime=${Number.isFinite(targetChrome.computedOpacity) ? targetChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Target Top absent"),
       check("Market Flow direct window controls", !!flowChrome && flowChrome.complete && flowChrome.interactive, flowChrome ? `5/5=${String(flowChrome.complete)} · interactif=${String(flowChrome.interactive)} · opacity runtime=${Number.isFinite(flowChrome.computedOpacity) ? flowChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Flow absent"),
       check("Market Snapshot direct window controls", !!marketChrome && marketChrome.complete && marketChrome.interactive, marketChrome ? `5/5=${String(marketChrome.complete)} · interactif=${String(marketChrome.interactive)} · opacity runtime=${Number.isFinite(marketChrome.computedOpacity) ? marketChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Snapshot absent"),
@@ -701,7 +702,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.22 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.23 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -719,8 +720,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.22 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.22</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.23 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.23</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -729,7 +730,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.22 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.23 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">
@@ -754,7 +755,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? "40.1.22 : le graphique conserve le dernier Top 5 valide pendant la récupération directe, exige le paquet complet avant commit visible, réutilise l’instance Chart.js pour une sélection identique et centralise les resize dans atlasScheduleStableChartResize avec garde de géométrie. Market Flow, Lecture Technique visuelle, Math Core, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés."
+      ? "40.1.23 : le graphique conserve le dernier Top 5 valide pendant la récupération directe, exige le paquet complet avant commit visible, réutilise l’instance Chart.js pour une sélection identique et centralise les resize dans atlasScheduleStableChartResize avec garde de géométrie. Market Flow, Lecture Technique visuelle, Math Core, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés."
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");
@@ -786,7 +787,7 @@
 
   function markdown(data = derive()) {
     const lines = [
-      "# Agent-Crypto — Administrator Consolidation 40.1.22", "",
+      "# Agent-Crypto — Administrator Consolidation 40.1.23", "",
       `- Généré : ${data.generatedAt}`,
       `- Verdict : ${data.label}`,
       `- FAIL critiques : ${data.criticalFails.length}`,
@@ -798,11 +799,11 @@
       lines.push(`- ${state} · ${row.name} · ${row.detail}`);
     }
     lines.push(
-      "", "## Validation finale 40.1.22", "",
+      "", "## Validation finale 40.1.23", "",
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
       "- Aucune nouvelle fonction n’a été ajoutée depuis le freeze 39.9.0R2 validé.",
-      "- Le candidat 40.1.22 exige une validation réelle dans Firefox après publication opérateur.",
+      "- Le candidat 40.1.23 exige une validation réelle dans Firefox après publication opérateur.",
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );
     return lines.join("\n");

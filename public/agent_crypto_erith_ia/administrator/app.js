@@ -5233,7 +5233,7 @@ function atlasRenderComparisonCaption(
     + `${unavailableCount ? ` · ${unavailableCount} indisponible${unavailableCount > 1 ? "s" : ""}` : ""}`
     + ` · ${truth.label}`
     + ` · plus ancien historique : ${exact}`
-    + ` · point terminal séparé des historiques.`;
+    + ` · historique seul · cotation live hors canvas.`;
 
   atlasSetChartCaptionText(status);
 }
@@ -6013,108 +6013,14 @@ function atlasLiveEndpointAnchorX(chart, datasets = []) {
 
 function atlasPatchVisibleChartLiveEndpoints(changedIds = [], options = {}) {
   /*
-    40.1.22 — Historical canvas stability lock.
-    Live Binance / Collector observations continue to feed the rest of the UI,
-    but they may not rewrite or rescale the visible historical chart between
-    actual chart renders. A terminal live observation is committed only once
-    as part of a chart-render transaction.
+    40.1.23 — Historical canvas purity lock.
+    Live observations remain available to the rest of the interface, but no
+    synthetic terminal observation is ever appended to a historical dataset.
+    The chart ends on the last verified historical candle, full stop.
   */
-  if (options?.scope !== "chart-render") {
-    atlasChartStability40122.metrics.live_endpoint_blocked_calls += 1;
-    return false;
-  }
+  atlasChartStability40122.metrics.live_endpoint_blocked_calls += 1;
+  return false;
 
-  const chart = state.chartEngineV2?.realChart;
-  if (!chart || !Array.isArray(chart.data?.datasets) || !chart.data.datasets.length) return false;
-
-  const datasets = atlasChartPriceDatasets(chart);
-  if (!datasets.length) return false;
-
-  const visibleIds = new Set(datasets
-    .map(dataset => (dataset?.atlasCoin || chart.$atlasCoin || null)?.id || '')
-    .filter(Boolean));
-  const changed = new Set((changedIds || []).filter(Boolean));
-  if (changed.size && ![...changed].some(id => visibleIds.has(id))) return false;
-
-  const comparison = chart.$atlasMode === "comparison";
-  const base100 = comparison || chart.$atlasView === "base100";
-  const sharedX = atlasLiveEndpointAnchorX(chart, datasets);
-  if (!Number.isFinite(sharedX)) return false;
-
-  let touched = false;
-
-  datasets.forEach(dataset => {
-    const coin = dataset?.atlasCoin || chart.$atlasCoin || null;
-    const coinId = coin?.id || "";
-    if (!coinId) return;
-
-    const data = Array.isArray(dataset.data) ? dataset.data : [];
-    if (!data.length) return;
-
-    const firstHistorical = data.find(point =>
-      point?.atlasLiveEndpoint !== true
-      && Number.isFinite(Number(point?.rawPrice))
-      && Number(point.rawPrice) > 0
-    );
-    const firstPrice = Number(firstHistorical?.rawPrice);
-    if (base100 && !(Number.isFinite(firstPrice) && firstPrice > 0)) return;
-
-    const quote = atlasCurrentChartObservation(coin, chart);
-    const livePrice = Number(quote?.price);
-    const quoteIsUsable = Number.isFinite(livePrice)
-      && livePrice > 0;
-
-    const last = data[data.length - 1];
-    if (!quoteIsUsable) {
-      if (last?.atlasLiveEndpoint === true && Number(last.x) !== sharedX) {
-        last.x = sharedX;
-        touched = true;
-      }
-      return;
-    }
-
-    const livePoint = {
-      x: sharedX,
-      y: base100 ? livePrice / firstPrice * 100 : livePrice,
-      rawPrice: livePrice,
-      baseValue: livePrice / firstPrice * 100,
-      atlasLiveEndpoint: true,
-      atlasLiveSource: String(quote.source || "Observation actuelle"),
-      atlasLiveStatus: String(quote.status || ""),
-      atlasLiveKind: atlasObservationKind(quote),
-      atlasLiveObservedAt: Number(quote.timestamp || Date.now())
-    };
-
-    if (last?.atlasLiveEndpoint === true) {
-      const changedPoint = Number(last.x) !== livePoint.x
-        || Number(last.y) !== livePoint.y
-        || Number(last.rawPrice) !== livePoint.rawPrice;
-      Object.assign(last, livePoint);
-      touched = touched || changedPoint;
-    } else {
-      data.push(livePoint);
-      touched = true;
-    }
-
-    dataset.atlasLiveQuote = quote;
-  });
-
-  atlasRefreshComparisonEndpointTruth(
-    datasets.map(dataset => dataset?.atlasCoin).filter(Boolean),
-    chart
-  );
-
-  if (!touched) return false;
-
-  atlasRefreshChartScale(chart);
-  chart.update("none");
-
-  if (chart.tooltip?.opacity > 0) {
-    requestAnimationFrame(() => atlasExternalChartTooltip({ chart, tooltip: chart.tooltip }));
-  }
-
-  atlasChartStability40122.metrics.live_endpoint_render_commits += 1;
-  return true;
 }
 
 function atlasComparisonResultFingerprint(entries, period) {
@@ -6321,7 +6227,6 @@ function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, per
   chart.update("none");
   atlasHideChartRefresh();
   atlasRenderChartValueOverlay(normalizedEntries, { comparison: true, period });
-  window.requestAnimationFrame(() => atlasPatchVisibleChartLiveEndpoints([], { scope: "chart-render" }));
   atlasChartStability40122.metrics.atomic_refresh_commits += 1;
   return true;
 }
@@ -6543,8 +6448,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
     );
     state.chartEngineV2.realChart.update("none");
     atlasRenderChartValueOverlay(normalizedEntries, { comparison: true, period });
-    window.requestAnimationFrame(() => atlasPatchVisibleChartLiveEndpoints([], { scope: "chart-render" }));
-    return normalizedEntries;
+      return normalizedEntries;
   }
 
   const ctx = canvas.getContext("2d");
@@ -12275,7 +12179,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.22",
+  interface: "Build 40.1.23",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12878,7 +12782,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.22",
+  build: "40.1.23",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -12888,7 +12792,8 @@ const atlasChartStability40122 = {
     intermediate_chart_destroy_for_same_selection: false,
     live_websocket_canvas_updates: false,
     collector_canvas_updates: false,
-    live_endpoint_commit_scope: "chart-render-only"
+    live_endpoint_commit_scope: "disabled",
+    synthetic_terminal_point: false
   }),
   metrics: {
     resize_requested: 0,
@@ -40492,7 +40397,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.22";
+const ATLAS_BUILD = "40.1.23";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47166,8 +47071,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.22",
-  asset_token: "market-core-v2.0-alpha-build-40.1.22"
+  build: "40.1.23",
+  asset_token: "market-core-v2.0-alpha-build-40.1.23"
 });
 
 function atlasRuntimeTruth3813() {

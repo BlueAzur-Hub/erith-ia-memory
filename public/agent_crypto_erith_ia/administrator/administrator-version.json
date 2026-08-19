@@ -1,19 +1,19 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v32",
-  "build": "40.1.22",
-  "release": "GRAPH LIVE ENDPOINT RESCALE PURGE LOCK",
+  "schema": "agent_crypto_administrator_mirror_manifest_v33",
+  "build": "40.1.23",
+  "release": "GRAPH HISTORICAL CANVAS PURITY LOCK",
   "status": "recovery_candidate_requires_transformer_firefox_validation",
   "prepared_at": "2026-08-19T09:40:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.22",
-    "primary_label": "Build 40.1.22 · Administrator",
-    "asset_token": "market-core-v2.0-alpha-build-40.1.22",
+    "primary_build": "40.1.23",
+    "primary_label": "Build 40.1.23 · Administrator",
+    "asset_token": "market-core-v2.0-alpha-build-40.1.23",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
-    "direct_parent": "40.1.21",
-    "method": "graph-only stability delta: stop Binance WebSocket and Scanner Collector from mutating or rescaling the visible historical canvas; allow the separated terminal live observation only once inside an actual chart-render transaction; preserve 40.1.21 atomic cache→direct refresh and single resize owner; no CSS, Market Flow, Technical Reading visual/geometry, Math Core, memory, source acquisition or Atlas/NØX/Aerith semantic change",
+    "direct_parent": "40.1.22",
+    "method": "graph-only truth restore: remove the synthetic terminal live observation from the historical canvas entirely; Binance LIVE remains in the live UI but never mutates or extends the historical datasets; preserve 40.1.21 atomic cache→direct refresh and single resize owner; no CSS, Market Flow, Technical Reading visual/geometry, Math Core, memory, source acquisition or Atlas/NØX/Aerith semantic change",
     "oracles": {
       "technical_reading": [
         "39.6.2 FULL-CLEAR SURFACES LOCK",
@@ -28,7 +28,7 @@
         "40.0.0R6"
       ],
       "market_flow": [
-        "40.1.17 validated Market Flow visual state; byte-untouched by 40.1.22"
+        "40.1.17 validated Market Flow visual state; byte-untouched by 40.1.23"
       ],
       "graph_stability": [
         "40.1.21 Transformer Book Firefox test: graph still jumps/recenters after cache→direct lock",
@@ -171,8 +171,10 @@
       "transformer_book_firefox_validation_required": true,
       "live_websocket_canvas_updates": false,
       "collector_canvas_updates": false,
-      "live_endpoint_commit_scope": "chart-render-only",
-      "continuous_live_axis_rescale": false
+      "live_endpoint_commit_scope": "disabled",
+      "continuous_live_axis_rescale": false,
+      "synthetic_terminal_point": false,
+      "historical_canvas_ends_on_last_verified_candle": true
     }
   },
   "active_runtime_files": [
@@ -206,9 +208,9 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "6e43827923483b1d5319d8bcfc98298d9faca3a511298e983bc05350b3242028",
-      "index.html": "69d40953cf67a87797979d410f5de29c7186986bfe354f3528c14a903d103c54",
-      "js/app.js": "6e9d3b90937c6b29dbb87e2e458dc93f20614a0fb216e8c967861bc89750ebe2",
+      "app.js": "1c0f1b01ca9e9c8bd551c665b93ce31b2a76f1c6cfba9f29594d979ab6421285",
+      "index.html": "5601adfca4d59cc20b50ce5dfa280e5f8eac4cb26e44dd84c159ca87e2a09b3b",
+      "js/app.js": "714b0533a55e3b75fbcb79706fb29904eb0b24054ec6b9e019f7bdeba51a8933",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "4c775582bcaf00880520f2eee2318d61a8fc9d8e559c55d0ad9320e7b070b2d7",
@@ -225,7 +227,7 @@
       "js/memory-health-audit-39.8.0R2.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "580244b2624e14623b5a27a0e3cbdfdf3b91883cb1980474c6dc0a99b5b72c1d",
+      "js/architecture-freeze.js": "d508dad219b1b03e5fe89217e928627a6457830007d1aeb9b6bc5af0709d342e",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
