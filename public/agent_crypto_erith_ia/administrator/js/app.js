@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.30";
-  const ADMIN_RELEASE = "FLOATING SHELL GEOMETRY + RESERVED PLACEHOLDER TRUTH LOCK";
+  const ADMIN_BUILD = "40.1.31";
+  const ADMIN_RELEASE = "DIRECT FIXED INLINE IMPORTANT GEOMETRY OWNER LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -385,6 +385,21 @@
     } catch {}
   }
 
+  const DIRECT_FIXED_GEOMETRY_40131_MIGRATION_KEY = `${STORAGE_PREFIX}:direct-fixed-inline-important-40131-migrated`;
+
+  function migrateDirectFixedWindowState40131() {
+    try {
+      if (localStorage.getItem(DIRECT_FIXED_GEOMETRY_40131_MIGRATION_KEY) === "1") return;
+      // 40.1.31 fixes legacy !important dock rules overriding the directFixed
+      // Window Manager geometry. Only the two affected directFixed windows can
+      // contain stale jump coordinates from prior tests.
+      ["graphique", "math-core"].forEach(id => {
+        localStorage.removeItem(`${STORAGE_PREFIX}:window:${id}`);
+      });
+      localStorage.setItem(DIRECT_FIXED_GEOMETRY_40131_MIGRATION_KEY, "1");
+    } catch {}
+  }
+
   const GRAPH_R6_MIGRATION_KEY = `${STORAGE_PREFIX}:graph-fullwidth-r6-migrated`;
 
   function migrateGraphWindowStateR6() {
@@ -421,6 +436,7 @@
     migrateGlobalShellWindowState40128();
     migrateGlobalShellWindowState40129();
     migrateGlobalShellWindowState40130();
+    migrateDirectFixedWindowState40131();
     migrateGraphWindowStateR6();
 
     const factory = window.ErithAdminWindowManager;

@@ -234,8 +234,8 @@
           width: dragBase.width,
           height: win.geometry?.height || dragBase.height
         });
-        target.style.left = `${safe.x}px`;
-        target.style.top = `${safe.y}px`;
+        setManagedFloatingStyle(win, target, "left", `${safe.x}px`);
+        setManagedFloatingStyle(win, target, "top", `${safe.y}px`);
       };
 
       const end = endEvent => {
@@ -421,15 +421,39 @@
       return win?.floating ? clampWindowGeometry(win, geometry) : clampGeometry(geometry);
     }
 
+    // 40.1.31 — directFixed geometry must outrank legacy dock CSS.
+    // Graphique and Math Core still have old high-specificity !important
+    // position/top rules in the canonical Classic-derived stylesheet.
+    // A floating directFixed window therefore owns its geometry inline with
+    // !important while detached, then releases every override when docked.
+    function setManagedFloatingStyle(win, target, property, value) {
+      if (!(target instanceof HTMLElement)) return;
+      const direct = win?.directFixed === true;
+      target.style.setProperty(property, String(value), direct ? "important" : "");
+    }
+
+    function applyDirectFixedGeometryOwnership(win, target) {
+      if (!win?.directFixed || !(target instanceof HTMLElement)) return;
+      setManagedFloatingStyle(win, target, "position", "fixed");
+      setManagedFloatingStyle(win, target, "right", "auto");
+      setManagedFloatingStyle(win, target, "bottom", "auto");
+      setManagedFloatingStyle(win, target, "transform", "none");
+      setManagedFloatingStyle(win, target, "min-width", "0");
+      setManagedFloatingStyle(win, target, "max-width", `calc(100vw - ${VIEWPORT_MARGIN * 2}px)`);
+      setManagedFloatingStyle(win, target, "min-height", "0");
+      setManagedFloatingStyle(win, target, "max-height", `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`);
+    }
+
     function setGeometryOnTarget(win, geometry) {
       const safe = clampWindowGeometry(win, geometry);
       win.geometry = { ...safe };
       const target = win.directFixed ? win.anchor : win.shell;
       if (target) {
-        target.style.left = `${safe.x}px`;
-        target.style.top = `${safe.y}px`;
-        target.style.width = `${safe.width}px`;
-        if (!win.minimized) target.style.height = `${safe.height}px`;
+        if (win.directFixed) applyDirectFixedGeometryOwnership(win, target);
+        setManagedFloatingStyle(win, target, "left", `${safe.x}px`);
+        setManagedFloatingStyle(win, target, "top", `${safe.y}px`);
+        setManagedFloatingStyle(win, target, "width", `${safe.width}px`);
+        if (!win.minimized) setManagedFloatingStyle(win, target, "height", `${safe.height}px`);
       }
       return safe;
     }
@@ -569,6 +593,7 @@
       if (!node) return;
       if (floating) {
         node.classList.add("admin-native-direct-floating");
+        applyDirectFixedGeometryOwnership(win, node);
         setGeometryOnTarget(win, geometry || currentRect(win));
         if (!win.directPointerUp) {
           win.directPointerUp = () => persistGeometry(win);
@@ -576,7 +601,11 @@
         }
       } else {
         node.classList.remove("admin-native-direct-floating", "admin-native-maximized");
-        ["left", "top", "width", "height", "zIndex"].forEach(key => { node.style[key] = ""; });
+        [
+          "position", "left", "top", "right", "bottom", "width", "height",
+          "min-width", "max-width", "min-height", "max-height",
+          "transform", "z-index"
+        ].forEach(property => node.style.removeProperty(property));
       }
     }
 
@@ -585,7 +614,7 @@
       const target = win.directFixed ? win.anchor : win.shell;
       if (!target) return;
       zCounter += 1;
-      target.style.zIndex = String(zCounter);
+      setManagedFloatingStyle(win, target, "z-index", String(zCounter));
       if (persist) patchState(win.id, { z: zCounter });
     }
 
@@ -747,12 +776,11 @@
       const target = win.directFixed ? win.anchor : win.shell;
       target?.classList.add("admin-native-maximized");
       if (target) {
-        Object.assign(target.style, {
-          left: `${VIEWPORT_MARGIN}px`,
-          top: `${VIEWPORT_MARGIN}px`,
-          width: `calc(100vw - ${VIEWPORT_MARGIN * 2}px)`,
-          height: `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`
-        });
+        if (win.directFixed) applyDirectFixedGeometryOwnership(win, target);
+        setManagedFloatingStyle(win, target, "left", `${VIEWPORT_MARGIN}px`);
+        setManagedFloatingStyle(win, target, "top", `${VIEWPORT_MARGIN}px`);
+        setManagedFloatingStyle(win, target, "width", `calc(100vw - ${VIEWPORT_MARGIN * 2}px)`);
+        setManagedFloatingStyle(win, target, "height", `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`);
       }
       bringToFront(win, false);
       refreshControlState(win);
@@ -963,7 +991,7 @@
           if (Number.isFinite(Number(state.z))) {
             zCounter = Math.max(zCounter, Number(state.z));
             const target = win.directFixed ? win.anchor : win.shell;
-            if (target) target.style.zIndex = String(Number(state.z));
+            if (target) setManagedFloatingStyle(win, target, "z-index", String(Number(state.z)));
           }
         }
         if (state.minimized === true) setMinimized(win, true, false);
@@ -1006,7 +1034,7 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.30",
+    build: "40.1.31",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
     dock_restore: "layout-preserving-placeholder-original-parent",
@@ -1014,6 +1042,10 @@
     reserved_placeholder_css_zero_override: false,
     multi_node_geometry: "visible-node-union",
     direct_fixed_windows_use_shell: false,
+    direct_fixed_position_owner: "inline-important",
+    direct_fixed_geometry_owner: "inline-important",
+    direct_fixed_z_order_owner: "inline-important",
+    direct_fixed_dock_css_override_safe: true,
     floating_shell_z_order: "global-body"
   });
 
