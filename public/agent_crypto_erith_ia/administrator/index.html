@@ -3,23 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="40.1.38" />
+  <meta name="atlas-build" content="40.1.39" />
   <meta name="atlas-engine-build" content="38.15.11" />
-  <meta name="administrator-build" content="40.1.38" />
-  <meta name="administrator-release" content="PARKER LEWIS CAN'T LOSE · LIVE BOARD ALL-PERIODS + VERTICAL BARS VISIBILITY LOCK" />
+  <meta name="administrator-build" content="40.1.39" />
+  <meta name="administrator-release" content="PARKER LEWIS CAN'T LOSE · CANONICAL VERTICAL BAR RENDERER RESTORE + TECHNICAL READING GREEN LOCK" />
   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.1.38" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.1.39" />
   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
-  <title>Agent-Crypto @erith.IA — Build 40.1.38 · Administrator</title>
+  <title>Agent-Crypto @erith.IA — Build 40.1.39 · Administrator</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.1.38" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.1.39" />
   <link rel="stylesheet" href="./admin-metal.css?v=administrator-build-39.1" />
-  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.1.38" />
-  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.1.38" />
-  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.1.38" />
-  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.1.38" />
+  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.1.39" />
+  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.1.39" />
+  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.1.39" />
+  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.1.39" />
+  <style id="atlasTechnicalReadingPositiveGreen40139">
+    /* 40.1.39 — Lecture Technique: positive 24h signal gets a clearer green hierarchy only. */
+    #detailCompactStrip[data-change-state="pos"] [data-detail-semantic="change"] {
+      border-color: rgba(77,255,157,.78) !important;
+      background: linear-gradient(135deg,rgba(29,163,94,.28),rgba(20,91,67,.14)) !important;
+      box-shadow: inset 0 0 0 1px rgba(117,255,183,.14), 0 0 16px rgba(57,238,139,.22) !important;
+    }
+    #detailCompactStrip[data-change-state="pos"] [data-detail-semantic="change"] small {
+      color: rgba(199,255,224,.94) !important;
+    }
+    #detailCompactStrip[data-change-state="pos"] #detailCompactChange.pos {
+      color: #72ffb2 !important;
+      text-shadow: 0 0 8px rgba(65,255,155,.66), 0 0 16px rgba(65,255,155,.28) !important;
+      font-weight: 950 !important;
+    }
+  </style>
 </head>
-<body class="atlas-administrator-mirror" data-administrator-build="40.1.38">
+<body class="atlas-administrator-mirror" data-administrator-build="40.1.39">
   <div class="ambient" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"></div>
 
@@ -72,9 +88,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version Agent-Crypto installée : Build 40.1.38, mode Administrator"
+            aria-label="Version Agent-Crypto installée : Build 40.1.39, mode Administrator"
           >
-            <span id="atlasVersionControlText">Build 40.1.38 · Administrator</span>
+            <span id="atlasVersionControlText">Build 40.1.39 · Administrator</span>
           </button>
           <span class="pill admin-engine-badge" id="administratorEngineBadge">ENGINE · Market Core 38.15.11</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
@@ -90,7 +106,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.1.38 · Administrator</span>
+          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.1.39 · Administrator</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -3908,7 +3924,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.1.38 · Version : Parker Lewis Can't Lose</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.1.39 · Version : Parker Lewis Can't Lose</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3918,18 +3934,18 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-40.1.38"></script>
-  <script src="./js/market-memory.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/analytical-memory.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/market-memory-collector.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/decision-board.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/retrospective-validation.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/memory-health-audit.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/admin-visual-assets.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/app.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/layout-repair.js?v=administrator-build-40.1.38"></script>
-  <script src="./js/architecture-freeze.js?v=administrator-build-40.1.38"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-40.1.39"></script>
+  <script src="./js/market-memory.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/analytical-memory.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/market-memory-collector.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/decision-board.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/retrospective-validation.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/memory-health-audit.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/admin-visual-assets.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/app.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/layout-repair.js?v=administrator-build-40.1.39"></script>
+  <script src="./js/architecture-freeze.js?v=administrator-build-40.1.39"></script>
 </body>
 </html>
