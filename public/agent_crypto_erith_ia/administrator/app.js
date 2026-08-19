@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.76",
+  build: "40.1.77",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.76",
+  build: "40.1.77",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6327,7 +6327,8 @@ function atlasOracleEvidenceBuildObservation({ model, coin, candidateModels, vie
   const constituents = atlasOracleEvidenceConstituents(model, candidateModels);
   const regime = typeof atlasOracleRegimeClassify === "function" ? atlasOracleRegimeClassify(model) : null;
   const ensemble = typeof atlasOracleEnsembleModel === "function" ? atlasOracleEnsembleModel(model) : null;
-  const shadowV2 = typeof atlasOracleShadowV2Snapshot === "function" ? atlasOracleShadowV2Snapshot(model, regime, horizon, now) : null;
+  const shadowV2Horizons = typeof atlasOracleShadowV2Snapshots === "function" ? atlasOracleShadowV2Snapshots(model, regime, now) : null;
+  const shadowV2 = shadowV2Horizons?.[String(horizon?.key || "")] || (typeof atlasOracleShadowV2Snapshot === "function" ? atlasOracleShadowV2Snapshot(model, regime, horizon, now) : null);
   return {
     schema:"atlas.oracle.evidence.v1",
     id:`${now}-${assetKey}-${horizon.key}-${view.key}`,
@@ -6392,6 +6393,7 @@ function atlasOracleEvidenceBuildObservation({ model, coin, candidateModels, vie
     regime:regime ? { key:regime.key, label:regime.label, score:Number(regime.score||0), drivers:Array.isArray(regime.drivers)?regime.drivers:[] } : null,
     ensemble:ensemble ? { label:ensemble.label, score:Number(ensemble.score||0), disagreement:Number(ensemble.disagreement||0), components:ensemble.components || {} } : null,
     shadow_v2:shadowV2,
+    shadow_v2_horizons:shadowV2Horizons,
     outcomes:{ "1m":null, "5m":null, "15m":null }
   };
 }
@@ -7120,7 +7122,7 @@ globalThis.AtlasOracleAdaptiveWeights=Object.freeze({refresh:atlasOracleAdaptive
 
 
 /* ============================================================
-   40.1.76 — ORACLE V2 SHADOW CHALLENGER
+   40.1.77 — ORACLE V2 SHADOW CHALLENGER
    Prospective-only challenger. Candidate weights are frozen into each NEW
    Evidence observation at T0, before its future outcome exists. V2 never
    changes the live Oracle V1 / Ensemble score in this build.
@@ -7175,20 +7177,54 @@ function atlasOracleShadowV2Snapshot(model,regime,horizon,now=Date.now()){
   };
 }
 
+function atlasOracleShadowV2Snapshots(model,regime,now=Date.now()){
+  const specs=[{key:"1m",minutes:1},{key:"5m",minutes:5},{key:"15m",minutes:15}];
+  return Object.fromEntries(specs.map(spec=>[spec.key,atlasOracleShadowV2Snapshot(model,regime,spec,now)]));
+}
+
+function atlasOracleShadowV2SnapshotForRow(row,horizonKey){
+  const multi=row?.shadow_v2_horizons?.[horizonKey];
+  if(multi?.schema==="atlas.oracle.shadow.v2.v1" && multi?.prospective===true && String(multi?.horizon_key||"")===horizonKey) return multi;
+  // 40.1.76 compatibility: preserve only the horizon that was genuinely frozen at T0.
+  const legacy=row?.shadow_v2;
+  if(legacy?.schema==="atlas.oracle.shadow.v2.v1" && legacy?.prospective===true && String(legacy?.horizon_key||"")===horizonKey && String(row?.horizon_key||"")===horizonKey) return legacy;
+  return null;
+}
+
+function atlasOracleShadowV2Diagnostics(rows,horizonKey){
+  let captured=0,eligible=0,pending=0,resolved=0,rejected=0,sameSampleRejected=0;
+  (Array.isArray(rows)?rows:[]).forEach(row=>{
+    const sh=atlasOracleShadowV2SnapshotForRow(row,horizonKey);
+    if(!sh) return;
+    captured++;
+    if(!(sh.eligible===true && ["up","down","flat"].includes(String(sh.prediction||"")))){ rejected++; return; }
+    eligible++;
+    const actual=String(row?.outcomes?.[horizonKey]?.direction||"");
+    if(["up","down","flat"].includes(actual)) resolved++; else pending++;
+    if(["up","down","flat"].includes(actual)){
+      const p=atlasOracleProofPredictions(row,horizonKey);
+      const names=["always_up","last_move","momentum_simple","top5_naive","oracle_v1","ensemble"];
+      if(!names.every(name=>["up","down","flat"].includes(String(p?.[name]||"")))) sameSampleRejected++;
+    }
+  });
+  return {captured,eligible,pending,resolved,rejected,same_sample_rejected:sameSampleRejected};
+}
+
 function atlasOracleShadowV2ComputeScope(rows,horizonKey){
   const proofNames=["always_up","last_move","momentum_simple","top5_naive","oracle_v1","ensemble"];
-  const cohort=(Array.isArray(rows)?rows:[]).filter(row=>{
-    const sh=row?.shadow_v2;
-    if(!(sh?.schema==="atlas.oracle.shadow.v2.v1" && sh?.prospective===true && sh?.eligible===true && String(sh?.horizon_key||"")===horizonKey && String(row?.horizon_key||"")===horizonKey)) return false;
+  const source=Array.isArray(rows)?rows:[];
+  const cohort=source.filter(row=>{
+    const sh=atlasOracleShadowV2SnapshotForRow(row,horizonKey);
+    if(!(sh?.eligible===true && ["up","down","flat"].includes(String(sh?.prediction||"")))) return false;
     if(!["up","down","flat"].includes(String(row?.outcomes?.[horizonKey]?.direction||""))) return false;
-    if(!["up","down","flat"].includes(String(sh?.prediction||""))) return false;
     const p=atlasOracleProofPredictions(row,horizonKey);
     return proofNames.every(name=>["up","down","flat"].includes(String(p?.[name]||"")));
   });
   let v2hits=0,v1hits=0;
   cohort.forEach(row=>{
     const actual=String(row.outcomes[horizonKey].direction);
-    if(String(row?.shadow_v2?.prediction||"")===actual) v2hits++;
+    const sh=atlasOracleShadowV2SnapshotForRow(row,horizonKey);
+    if(String(sh?.prediction||"")===actual) v2hits++;
     const v1=atlasOracleCalibrationPredictedDirection(Number(row?.oracle?.direction_score));
     if(v1===actual) v1hits++;
   });
@@ -7203,6 +7239,7 @@ function atlasOracleShadowV2ComputeScope(rows,horizonKey){
     v2_vs_v1:cases&&Number.isFinite(v2Rate)&&Number.isFinite(v1Rate)?v2Rate-v1Rate:null,
     v2_vs_naive:cases&&Number.isFinite(v2Rate)&&Number.isFinite(baseRate)?v2Rate-baseRate:null,
     same_sample:true,
+    diagnostics:atlasOracleShadowV2Diagnostics(source,horizonKey),
     sample_quality:cases>=100?"FORT":cases>=30?"MOYEN":cases>=12?"FAIBLE":"MINCE"
   };
 }
@@ -7241,6 +7278,12 @@ function atlasOracleShadowV2Render(state=atlasOracleShadowV2State){
     set(`atlasOracleShadow${key}VsNaive`,edge(row.v2_vs_naive));
     set(`atlasOracleShadow${key}N`,`n${Number(row.cases||0)}`);
   });
+  const diag=document.getElementById("atlasOracleShadowV2Diagnostics");
+  if(diag){
+    const parts=["1m","5m","15m"].map(key=>{const d=state?.horizons?.[key]?.diagnostics||{};return `${key.toUpperCase()} E${Number(d.eligible||0)} P${Number(d.pending||0)} R${Number(d.resolved||0)} X${Number(d.rejected||0)}`;});
+    diag.textContent=`DIAG SHADOW · ${parts.join(" · ")}`;
+    diag.title="E=éligible T0 · P=pending · R=issue résolue · X=snapshot rejeté/non qualifié. Les lignes 40.1.76 ne sont jamais rétro-remplies sur un horizon non figé à T0.";
+  }
   const active=state?.horizons?.[atlasOracleHorizonSpec().key]||{};
   const status=document.getElementById("atlasOracleShadowV2State");
   if(status){
@@ -7259,7 +7302,7 @@ async function atlasOracleShadowV2Refresh(force=false){
   try{atlasOracleShadowV2State=atlasOracleShadowV2ComputeRows(await atlasOracleEvidenceAll());return atlasOracleShadowV2Render(atlasOracleShadowV2State);}catch(error){const n=document.getElementById("atlasOracleShadowV2State");if(n)n.textContent=`V2 ! ${String(error?.message||error)}`;return atlasOracleShadowV2State;}
 }
 
-globalThis.AtlasOracleShadowV2=Object.freeze({refresh:atlasOracleShadowV2Refresh,compute:atlasOracleShadowV2ComputeRows,snapshot:atlasOracleShadowV2Snapshot,state:()=>atlasOracleShadowV2State});
+globalThis.AtlasOracleShadowV2=Object.freeze({refresh:atlasOracleShadowV2Refresh,compute:atlasOracleShadowV2ComputeRows,snapshot:atlasOracleShadowV2Snapshot,snapshots:atlasOracleShadowV2Snapshots,diagnostics:atlasOracleShadowV2Diagnostics,state:()=>atlasOracleShadowV2State});
 
 
 /* ============================================================
@@ -15307,7 +15350,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.76",
+  build: "40.1.77",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -42974,7 +43017,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.76";
+const ATLAS_BUILD = "40.1.77";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -49650,8 +49693,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.76",
-  asset_token: "market-core-v2.0-alpha-build-40.1.76"
+  build: "40.1.77",
+  asset_token: "market-core-v2.0-alpha-build-40.1.77"
 });
 
 function atlasRuntimeTruth3813() {

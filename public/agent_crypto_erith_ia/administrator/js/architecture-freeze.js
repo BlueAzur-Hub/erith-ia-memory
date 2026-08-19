@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.76 — PARKER LEWIS CAN'T LOSE · ORACLE V2 SHADOW CHALLENGER LOCK
+     40.1.77 — PARKER LEWIS CAN'T LOSE · ORACLE V2 SHADOW CHALLENGER LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.76";
+  const BUILD_CURRENT = "40.1.77";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
