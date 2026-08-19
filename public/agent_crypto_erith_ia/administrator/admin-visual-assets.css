@@ -990,8 +990,18 @@ body.atlas-administrator-mirror #detailPanel .source-portal{
    No data / Market / Memory / Atlas / Math / Window Manager behavior changes.
    ========================================================================== */
 
-/* 40.1.7 — Classic detail-width reservation is no longer neutralized here.
-   The Administrator no longer creates a competing second-column geometry. */
+/* DOCK WIDTH — remove only the obsolete Classic reservation while Detail is
+   already a real second column in Administrator. */
+@media (min-width:1081px){
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
+    --atlas-open-detail-width:0px!important;
+    padding-right:0!important;
+    width:100%!important;
+    max-width:none!important;
+    box-sizing:border-box!important;
+  }
+}
 
 /* TECHNICAL READING IMAGE — purge the legacy Classic artwork + near-opaque
    lower gradient. The private/default Aerith <img> remains the single visual
