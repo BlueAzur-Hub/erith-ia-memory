@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.67",
+  build: "40.1.68",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.67",
+  build: "40.1.68",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6569,6 +6569,7 @@ async function atlasOracleOutcomeRun() {
     if (typeof atlasOracleCalibrationRefresh === "function") atlasOracleCalibrationRefresh().catch(()=>{});
     if (typeof atlasOracleProofRefresh === "function") atlasOracleProofRefresh().catch(()=>{});
     if (typeof atlasOracleHorizonMatrixRefresh === "function") atlasOracleHorizonMatrixRefresh().catch(()=>{});
+    if (typeof atlasOracleRegimePerformanceRefresh === "function") atlasOracleRegimePerformanceRefresh(null,true).catch(()=>{});
     return { ...atlasOracleOutcomeStatusState, changed };
   } catch (error) {
     atlasOracleOutcomeStatusState.lastError = String(error?.message || error || "erreur");
@@ -6848,6 +6849,113 @@ globalThis.AtlasOracleHorizonMatrix = Object.freeze({
   refresh:atlasOracleHorizonMatrixRefresh,
   compute:atlasOracleHorizonMatrixComputeRows,
   state:()=>atlasOracleHorizonMatrixState
+});
+
+/* ============================================================
+   40.1.68 — ORACLE REGIME PERFORMANCE MATRIX
+   Replays the already-resolved Evidence Ledger inside each T0 regime.
+   For every regime × horizon, Oracle V1 / Ensemble are compared with the
+   same naive Proof baselines on the exact same rows. Descriptive only:
+   no model weight is changed and no current Oracle score reads outcomes.
+   ============================================================ */
+let atlasOracleRegimePerformanceState = { updated_at:0, current_key:null, current_label:"", groups:{} };
+let atlasOracleRegimePerformanceLastRefresh = 0;
+
+function atlasOracleRegimePerformanceComputeRows(rows) {
+  const source = Array.isArray(rows) ? rows : [];
+  const groups = {};
+  source.forEach(row => {
+    const key = String(row?.regime?.key || "").trim();
+    if (!key || key === "waiting") return;
+    if (!groups[key]) groups[key] = { key, label:String(row?.regime?.label || key), rows:[] };
+    groups[key].rows.push(row);
+  });
+  const result = {};
+  Object.values(groups).forEach(group => {
+    const horizons = {};
+    ["1m","5m","15m"].forEach(horizonKey => {
+      const calibration = atlasOracleCalibrationComputeRows(group.rows,horizonKey);
+      const proof = atlasOracleProofComputeRows(group.rows,horizonKey);
+      const oracleRate = Number(proof?.models?.oracle_v1?.hit_rate);
+      const ensembleRate = Number(proof?.models?.ensemble?.hit_rate);
+      const bestNaiveRate = Number(proof?.best_naive?.hit_rate);
+      horizons[horizonKey] = {
+        key:horizonKey,
+        calibration_cases:Number(calibration?.cases||0),
+        oracle_hit_rate:Number.isFinite(oracleRate) ? oracleRate : null,
+        ensemble_hit_rate:Number.isFinite(ensembleRate) ? ensembleRate : null,
+        proof_cases:Number(proof?.cases||0),
+        best_naive:proof?.best_naive ? { key:proof.best_naive.key, hit_rate:bestNaiveRate } : null,
+        oracle_advantage:Number.isFinite(Number(proof?.oracle_advantage)) ? Number(proof.oracle_advantage) : null,
+        ensemble_advantage:Number.isFinite(Number(proof?.ensemble_advantage)) ? Number(proof.ensemble_advantage) : null,
+        envelope_coverage:Number.isFinite(Number(calibration?.envelope_coverage)) ? Number(calibration.envelope_coverage) : null,
+        sample_quality:String(proof?.sample_quality||"VIDE")
+      };
+    });
+    result[group.key] = { key:group.key, label:group.label, observations:group.rows.length, horizons };
+  });
+  return { updated_at:Date.now(), current_key:null, current_label:"", groups:result };
+}
+
+function atlasOracleRegimePerformanceRender(regimeKey = atlasOracleRegimePerformanceState.current_key) {
+  const key = String(regimeKey || "").trim();
+  const group = atlasOracleRegimePerformanceState?.groups?.[key] || null;
+  atlasOracleRegimePerformanceState.current_key = key || null;
+  atlasOracleRegimePerformanceState.current_label = group?.label || key || "";
+  const labels = {"1m":"1 MIN","5m":"5 MIN","15m":"15 MIN"};
+  ["1m","5m","15m"].forEach(horizonKey => {
+    const node = document.getElementById(`atlasOracleHorizonMatrix${horizonKey}`);
+    if (!node) return;
+    const meta = node.querySelector("span");
+    const globalRow = atlasOracleHorizonMatrixState?.horizons?.[horizonKey] || {};
+    const env = Number(globalRow.envelope_coverage), adv = Number(globalRow.ensemble_advantage), proofCases = Number(globalRow.proof_cases||0), cases = Number(globalRow.cases||0);
+    const regimeRow = group?.horizons?.[horizonKey] || {};
+    const rCases = Number(regimeRow.proof_cases||0), rAdv = Number(regimeRow.ensemble_advantage), rEns = Number(regimeRow.ensemble_hit_rate), rOracle = Number(regimeRow.oracle_hit_rate), rBest = Number(regimeRow.best_naive?.hit_rate);
+    if (meta) {
+      const base = cases ? `ENV ${Number.isFinite(env)?env.toFixed(0):"—"}% · Δ ${proofCases&&Number.isFinite(adv)?`${adv>=0?"+":""}${adv.toFixed(0)}`:"—"}` : "ENV — · Δ —";
+      const regimeSuffix = rCases && Number.isFinite(rAdv) ? ` · RΔ ${rAdv>=0?"+":""}${rAdv.toFixed(0)}` : " · RΔ —";
+      meta.textContent = `${base}${regimeSuffix}`;
+    }
+    node.dataset.regimePerformance = rCases && Number.isFinite(rAdv) ? (rAdv > 0 ? "positive" : rAdv < 0 ? "negative" : "neutral") : "empty";
+    const hit = Number(globalRow.direction_hit_rate);
+    const baseTitle = cases
+      ? `${labels[horizonKey]} · direction correcte ${Number.isFinite(hit)?hit.toFixed(1):"—"}% · enveloppe couverte ${Number.isFinite(env)?env.toFixed(1):"—"}% · n=${cases} issue(s) résolue(s) · Proof commun n=${proofCases} · avantage Ensemble vs meilleur naïf ${proofCases&&Number.isFinite(adv)?`${adv>=0?"+":""}${adv.toFixed(1)} pt`:"indisponible"}`
+      : `${labels[horizonKey]} · aucune issue résolue`;
+    const regimeTitle = group
+      ? `Régime ${group.label} · ${labels[horizonKey]} · même échantillon Proof n=${rCases} · Oracle ${rCases&&Number.isFinite(rOracle)?rOracle.toFixed(1):"—"}% · Ensemble ${rCases&&Number.isFinite(rEns)?rEns.toFixed(1):"—"}% · meilleur naïf ${rCases&&Number.isFinite(rBest)?rBest.toFixed(1):"—"}% · avantage Ensemble ${rCases&&Number.isFinite(rAdv)?`${rAdv>=0?"+":""}${rAdv.toFixed(1)} pt`:"indisponible"} · descriptif seulement`
+      : "Régime courant sans historique résolu comparable";
+    node.title = `${baseTitle} · ${regimeTitle}`;
+  });
+  const active = atlasOracleHorizonSpec().key;
+  const activeRow = group?.horizons?.[active] || null;
+  const root = document.getElementById("atlasOracleV0");
+  if (root) {
+    root.dataset.oracleRegimeProofKey = key || "none";
+    root.dataset.oracleRegimeProofAdvantage = Number.isFinite(Number(activeRow?.ensemble_advantage)) ? String(Number(activeRow.ensemble_advantage).toFixed(1)) : "";
+  }
+  return group;
+}
+
+async function atlasOracleRegimePerformanceRefresh(regimeKey = null, force = false) {
+  const now = Date.now();
+  const requestedKey = String(regimeKey || document.getElementById("atlasOracleV0")?.dataset?.oracleRegime || atlasOracleRegimePerformanceState.current_key || "").trim();
+  if (!force && now - atlasOracleRegimePerformanceLastRefresh < 10_000 && atlasOracleRegimePerformanceState.updated_at) {
+    return atlasOracleRegimePerformanceRender(requestedKey);
+  }
+  atlasOracleRegimePerformanceLastRefresh = now;
+  const rows = await atlasOracleEvidenceAll();
+  const next = atlasOracleRegimePerformanceComputeRows(rows);
+  next.current_key = requestedKey || null;
+  next.current_label = next.groups?.[requestedKey]?.label || requestedKey || "";
+  atlasOracleRegimePerformanceState = next;
+  return atlasOracleRegimePerformanceRender(requestedKey);
+}
+
+globalThis.AtlasOracleRegimePerformance = Object.freeze({
+  refresh:atlasOracleRegimePerformanceRefresh,
+  compute:atlasOracleRegimePerformanceComputeRows,
+  render:atlasOracleRegimePerformanceRender,
+  state:()=>atlasOracleRegimePerformanceState
 });
 
 // 40.1.54 — persist OPERATOR VIEW only. Never store model outputs, scores,
@@ -7822,7 +7930,8 @@ function atlasRenderOracleV0() {
   atlasOracleCalibrationRefresh().catch(()=>{});
   atlasOracleProofRefresh().catch(()=>{});
   atlasOracleHorizonMatrixRefresh().catch(()=>{});
-  atlasOracleRegimeRender(model);
+  const currentRegime = atlasOracleRegimeRender(model);
+  atlasOracleRegimePerformanceRefresh(currentRegime?.key).catch(()=>{});
   atlasOracleEnsembleRender(model);
   return true;
 }
@@ -7839,6 +7948,7 @@ function atlasInitOracleV0() {
   atlasOracleCalibrationRefresh(true).catch(()=>{});
   atlasOracleProofRefresh(true).catch(()=>{});
   atlasOracleHorizonMatrixRefresh(true).catch(()=>{});
+  atlasOracleRegimePerformanceRefresh(null,true).catch(()=>{});
   strip?.addEventListener("click", event => {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
@@ -14682,7 +14792,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.67",
+  build: "40.1.68",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -42349,7 +42459,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.67";
+const ATLAS_BUILD = "40.1.68";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -49025,8 +49135,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.67",
-  asset_token: "market-core-v2.0-alpha-build-40.1.67"
+  build: "40.1.68",
+  asset_token: "market-core-v2.0-alpha-build-40.1.68"
 });
 
 function atlasRuntimeTruth3813() {
