@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.65",
+  build: "40.1.66",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.65",
+  build: "40.1.66",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6567,6 +6567,7 @@ async function atlasOracleOutcomeRun() {
     atlasOracleOutcomeStatusState.lastError = null;
     await atlasOracleOutcomeRefreshStatus(changed ? await atlasOracleEvidenceAll() : rows);
     if (typeof atlasOracleCalibrationRefresh === "function") atlasOracleCalibrationRefresh().catch(()=>{});
+    if (typeof atlasOracleProofRefresh === "function") atlasOracleProofRefresh().catch(()=>{});
     return { ...atlasOracleOutcomeStatusState, changed };
   } catch (error) {
     atlasOracleOutcomeStatusState.lastError = String(error?.message || error || "erreur");
@@ -6646,6 +6647,139 @@ async function atlasOracleCalibrationRefresh(force = false) {
 }
 
 globalThis.AtlasOracleCalibration = Object.freeze({ refresh:atlasOracleCalibrationRefresh, compute:atlasOracleCalibrationComputeRows, state:()=>atlasOracleCalibrationState });
+
+
+/* ============================================================
+   40.1.66 — ORACLE PROOF & BASELINE ENGINE
+   Compares Oracle V1 and the deterministic ensemble against transparent
+   naive baselines on the exact same resolved evidence rows.
+   Descriptive only: no trained-AI probability, no order signal and no
+   optimization from future outcomes.
+   ============================================================ */
+let atlasOracleProofState = {
+  horizon_key:"15m", cases:0, updated_at:0,
+  models:{}, best_naive:null, oracle_advantage:null, ensemble_advantage:null
+};
+let atlasOracleProofLastRefresh = 0;
+
+function atlasOracleProofDirectionFromScore(score, threshold = 10) {
+  const value = Number(score);
+  if (!Number.isFinite(value)) return null;
+  if (value > threshold) return "up";
+  if (value < -threshold) return "down";
+  return "flat";
+}
+
+function atlasOracleProofLastMoveDirection(row, horizonKey) {
+  const micro = Number(row?.micro?.change_pct);
+  const impulse = Number(row?.market?.historical_impulse_pct);
+  const value = Number.isFinite(micro) ? micro : impulse;
+  return Number.isFinite(value) ? atlasOracleOutcomeDirection(value, horizonKey) : null;
+}
+
+function atlasOracleProofMomentumDirection(row) {
+  const h1 = Number(row?.market?.change_1h_pct);
+  const impulse = Number(row?.market?.historical_impulse_pct);
+  const h24 = Number(row?.market?.change_24h_pct);
+  if (![h1, impulse, h24].every(Number.isFinite)) return null;
+  const norm = (value, cap) => clamp(-100,100,value/Math.max(.001,cap)*100);
+  const score = norm(h1,3.5)*.55 + norm(impulse,1.5)*.30 + norm(h24,8)*.15;
+  return atlasOracleProofDirectionFromScore(score, 10);
+}
+
+function atlasOracleProofBasketNaiveDirection(row) {
+  const up = Number(row?.basket?.breadth_positive || 0);
+  const down = Number(row?.basket?.breadth_negative || 0);
+  const coverage = Number(row?.basket?.coverage || 0);
+  if (coverage > 0 && up !== down) return up > down ? "up" : "down";
+  const avg24 = Number(row?.basket?.avg_24h_pct);
+  if (!Number.isFinite(avg24)) return null;
+  return atlasOracleProofDirectionFromScore(avg24, .25);
+}
+
+function atlasOracleProofPredictions(row, horizonKey) {
+  const ensembleScore = Number(row?.ensemble?.score);
+  return {
+    always_up:"up",
+    last_move:atlasOracleProofLastMoveDirection(row, horizonKey),
+    momentum_simple:atlasOracleProofMomentumDirection(row),
+    top5_naive:atlasOracleProofBasketNaiveDirection(row),
+    oracle_v1:atlasOracleCalibrationPredictedDirection(row?.oracle?.direction_score),
+    ensemble:Number.isFinite(ensembleScore) ? atlasOracleProofDirectionFromScore(ensembleScore,20) : null
+  };
+}
+
+function atlasOracleProofComputeRows(rows, horizonKey) {
+  const names = ["always_up","last_move","momentum_simple","top5_naive","oracle_v1","ensemble"];
+  const resolved = (Array.isArray(rows) ? rows : [])
+    .map(row => ({ row, outcome:row?.outcomes?.[horizonKey] }))
+    .filter(item => ["up","down","flat"].includes(String(item.outcome?.direction || "")));
+  const eligible = resolved.map(item => ({...item, predictions:atlasOracleProofPredictions(item.row,horizonKey)}))
+    .filter(item => names.every(name => ["up","down","flat"].includes(item.predictions[name])));
+  const cases = eligible.length;
+  const models = {};
+  names.forEach(name => {
+    let hits = 0;
+    eligible.forEach(item => { if (item.predictions[name] === item.outcome.direction) hits++; });
+    models[name] = { cases, hits, hit_rate:cases ? hits/cases*100 : null };
+  });
+  const naiveNames = ["always_up","last_move","momentum_simple","top5_naive"];
+  let bestNaive = null;
+  naiveNames.forEach(name => {
+    const metric = models[name];
+    if (!metric || !Number.isFinite(metric.hit_rate)) return;
+    if (!bestNaive || metric.hit_rate > bestNaive.hit_rate) bestNaive = { key:name, ...metric };
+  });
+  const oracleRate = Number(models.oracle_v1?.hit_rate);
+  const ensembleRate = Number(models.ensemble?.hit_rate);
+  const bestRate = Number(bestNaive?.hit_rate);
+  return {
+    horizon_key:horizonKey,
+    cases,
+    models,
+    best_naive:bestNaive,
+    oracle_advantage:Number.isFinite(oracleRate) && Number.isFinite(bestRate) ? oracleRate-bestRate : null,
+    ensemble_advantage:Number.isFinite(ensembleRate) && Number.isFinite(bestRate) ? ensembleRate-bestRate : null,
+    sample_quality:cases >= 100 ? "RENFORCÉ" : cases >= 30 ? "MODÉRÉ" : cases > 0 ? "FAIBLE" : "VIDE",
+    updated_at:Date.now(),
+    trained_ai:false,
+    probability:false
+  };
+}
+
+function atlasOracleProofLabel(key) {
+  return ({always_up:"Toujours hausse",last_move:"Dernier mouvement",momentum_simple:"Momentum simple",top5_naive:"Panier Top 5 naïf",oracle_v1:"Oracle V1",ensemble:"Ensemble"})[key] || key;
+}
+
+async function atlasOracleProofRefresh(force = false) {
+  const now = Date.now();
+  if (!force && now - atlasOracleProofLastRefresh < 10_000) return atlasOracleProofState;
+  atlasOracleProofLastRefresh = now;
+  const rows = await atlasOracleEvidenceAll();
+  const horizonKey = atlasOracleHorizonSpec().key;
+  atlasOracleProofState = atlasOracleProofComputeRows(rows,horizonKey);
+  const node = document.getElementById("atlasOracleProofStatus");
+  if (node) {
+    const p = atlasOracleProofState;
+    if (!p.cases) {
+      node.textContent = "PROOF n0";
+      node.title = `Aucune issue ${horizonKey} commune aux baselines, Oracle V1 et Ensemble`;
+    } else {
+      const adv = Number(p.ensemble_advantage);
+      node.textContent = `PROOF ${adv>=0?"+":""}${adv.toFixed(0)} · n${p.cases}`;
+      const lines = ["always_up","last_move","momentum_simple","top5_naive","oracle_v1","ensemble"].map(key => `${atlasOracleProofLabel(key)} ${p.models[key].hit_rate.toFixed(1)}%`);
+      node.title = `Proof descriptif ${horizonKey} · même échantillon n=${p.cases} · ${lines.join(" · ")} · meilleur naïf ${atlasOracleProofLabel(p.best_naive?.key)} ${p.best_naive?.hit_rate?.toFixed(1)}% · avantage Oracle ${Number(p.oracle_advantage)>=0?"+":""}${Number(p.oracle_advantage).toFixed(1)} pt · avantage Ensemble ${adv>=0?"+":""}${adv.toFixed(1)} pt · échantillon ${p.sample_quality} · aucune probabilité garantie`;
+    }
+  }
+  return atlasOracleProofState;
+}
+
+globalThis.AtlasOracleProof = Object.freeze({
+  refresh:atlasOracleProofRefresh,
+  compute:atlasOracleProofComputeRows,
+  predictions:atlasOracleProofPredictions,
+  state:()=>atlasOracleProofState
+});
 
 // 40.1.54 — persist OPERATOR VIEW only. Never store model outputs, scores,
 // confidence, scenarios, prices, micro buffers or calculated market state.
@@ -7617,6 +7751,7 @@ function atlasRenderOracleV0() {
   atlasOracleDrawCanvas(model);
   atlasOracleEvidenceMaybeCapture({ model, coin, candidateModels, view, horizon, surface });
   atlasOracleCalibrationRefresh().catch(()=>{});
+  atlasOracleProofRefresh().catch(()=>{});
   atlasOracleRegimeRender(model);
   atlasOracleEnsembleRender(model);
   return true;
@@ -7632,6 +7767,7 @@ function atlasInitOracleV0() {
   atlasOracleOutcomeSchedule();
   atlasOracleOutcomeRefreshStatus().catch(()=>{});
   atlasOracleCalibrationRefresh(true).catch(()=>{});
+  atlasOracleProofRefresh(true).catch(()=>{});
   strip?.addEventListener("click", event => {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
@@ -13872,7 +14008,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.65",
+  interface: "Build 40.1.66",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -14475,7 +14611,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.65",
+  build: "40.1.66",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -42142,7 +42278,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.65";
+const ATLAS_BUILD = "40.1.66";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48818,8 +48954,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.65",
-  asset_token: "market-core-v2.0-alpha-build-40.1.65"
+  build: "40.1.66",
+  asset_token: "market-core-v2.0-alpha-build-40.1.66"
 });
 
 function atlasRuntimeTruth3813() {
