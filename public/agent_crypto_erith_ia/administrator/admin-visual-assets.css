@@ -1380,3 +1380,88 @@ body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small
     grid-template-columns:minmax(0,3fr) minmax(292px,.82fr)!important;
   }
 }
+
+/* ============================================================================
+   40.1.17 — TECHNICAL READING SIDE-DOCK RECOVERY LOCK
+
+   Historical geometry oracle: 39.4.6R6/R7, visually validated again in 39.9.0R2.
+   Restore only the desktop Graphique | Lecture technique composition:
+   - Graphique left;
+   - Lecture technique right, same row, full useful height;
+   - no second width reservation;
+   - full-clear Technical Reading surfaces remain untouched;
+   - no Market/Math/Memory/business behavior change.
+   ============================================================================ */
+@media (min-width:1081px){
+  body.atlas-administrator-mirror
+  #market-zone > #analyste.champagne-clean-lens:not(.admin-native-direct-floating),
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.admin-native-direct-floating){
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    justify-self:stretch!important;
+    align-self:stretch!important;
+    grid-column:1 / -1!important;
+    box-sizing:border-box!important;
+  }
+
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
+    --atlas-open-detail-width:0px!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) clamp(330px,22vw,380px)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:8px!important;
+    row-gap:0!important;
+    align-items:stretch!important;
+    padding-right:0!important;
+    width:100%!important;
+    max-width:none!important;
+    overflow:visible!important;
+  }
+
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > .chart-panel{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    height:auto!important;
+    margin:0!important;
+    align-self:stretch!important;
+  }
+
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > #detailPanel.clean-lens-detail-panel:not([hidden]){
+    grid-column:2!important;
+    grid-row:1!important;
+    position:relative!important;
+    inset:auto!important;
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0!important;
+    align-self:stretch!important;
+    overflow:hidden!important;
+  }
+
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > .detail-panel-rail{
+    display:none!important;
+  }
+}

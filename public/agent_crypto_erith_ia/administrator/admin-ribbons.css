@@ -108,8 +108,8 @@
   white-space: nowrap !important;
 }
 
-/* MARKET FLOW — CLASSIC MOTION OWNER RESTORE.
-   The Administrator layer owns ONLY the compact cycle button / outer column.
+/* MARKET FLOW — CLASSIC MOTION OWNER + ZERO-COLUMN BUTTON RESTORE.
+   The Administrator layer owns ONLY the compact overlaid cycle button; no outer column is reserved.
    The native Classic style.css remains the sole owner of:
    - .market-flow-viewport
    - .ticker-track
@@ -117,19 +117,19 @@
    - .ticker-item motion and crypto click targets
    This deliberately removes the 39.4.6+ duplicate motion/layout contract. */
 #market-workspace .market-flow-ribbon {
-  display: grid !important;
-  grid-template-columns: 44px minmax(0, 1fr) !important;
-  align-items: stretch !important;
+  display: block !important;
+  position: relative !important;
   min-height: 54px !important;
   padding: 0 !important;
   overflow: hidden !important;
 }
 
 #market-workspace #marketFlowCycle.market-flow-label {
-  grid-column: 1 !important;
-  grid-row: 1 !important;
-  align-self: center !important;
-  justify-self: center !important;
+  position: absolute !important;
+  left: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 6 !important;
   display: grid !important;
   place-items: center !important;
   min-width: 30px !important;
@@ -149,7 +149,7 @@
   transition: opacity .14s ease !important;
 }
 
-/* 40.1.14 — compact cycle control follows the Administrator ghost language.
+/* 40.1.16 — compact cycle control follows the Administrator ghost language without reserving ribbon width.
    Existing control only: no new button, no overlay, no crypto click interception. */
 #market-workspace .market-flow-ribbon:hover #marketFlowCycle.market-flow-label {
   opacity: .72 !important;
@@ -215,8 +215,8 @@
     padding-top:30px!important;
   }
   #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) {
-    display:grid!important;
-    grid-template-columns:44px minmax(0,1fr)!important;
+    display:block!important;
+    grid-template-columns:none!important;
     padding-top:30px!important;
   }
   #market-workspace #targetTop5Cycle { grid-column:1!important; grid-row:1!important; }
@@ -254,4 +254,92 @@
   min-width:22px!important;
   min-height:22px!important;
   padding:0!important;
+}
+
+/* ============================================================================
+   40.1.17 — MARKET FLOW ZERO-HOST VISUAL RECOVERY LOCK
+
+   Visible regression corrected:
+   - no structural/opaque label host may reserve space at the left of Market Flow;
+   - the existing #marketFlowCycle is a small overlaid ghost control only;
+   - the viewport owns the complete ribbon width;
+   - ticker motion/click behavior remains owned by Classic style.css / app.js.
+   ============================================================================ */
+@media (min-width:681px){
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating){
+    display:block!important;
+    grid-template-columns:none!important;
+    grid-template-rows:none!important;
+    position:relative!important;
+    padding:0!important;
+    margin:0!important;
+    overflow:hidden!important;
+  }
+
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .market-flow-viewport{
+    display:block!important;
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:auto!important;
+    width:100%!important;
+    max-width:none!important;
+    min-width:0!important;
+    height:100%!important;
+    margin:0!important;
+    padding-left:0!important;
+    padding-right:0!important;
+    grid-column:auto!important;
+    grid-row:auto!important;
+    z-index:1!important;
+  }
+
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label{
+    -webkit-appearance:none!important;
+    appearance:none!important;
+    position:absolute!important;
+    left:8px!important;
+    right:auto!important;
+    top:50%!important;
+    bottom:auto!important;
+    transform:translateY(-50%)!important;
+    display:grid!important;
+    place-items:center!important;
+    grid-template-columns:none!important;
+    grid-template-rows:none!important;
+    align-self:auto!important;
+    justify-self:auto!important;
+    box-sizing:border-box!important;
+    min-width:30px!important;
+    width:30px!important;
+    max-width:30px!important;
+    min-height:30px!important;
+    height:30px!important;
+    max-height:30px!important;
+    padding:0!important;
+    margin:0!important;
+    border:1px solid rgba(97,240,176,.42)!important;
+    border-radius:8px!important;
+    color:#61f0b0!important;
+    background:rgba(3,22,24,.72)!important;
+    box-shadow:inset 0 0 0 1px rgba(97,240,176,.06)!important;
+    overflow:hidden!important;
+    isolation:auto!important;
+    z-index:30!important;
+    opacity:.52!important;
+  }
+
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label > span{
+    display:none!important;
+  }
+
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating):hover > #marketFlowCycle.market-flow-label{
+    opacity:.78!important;
+  }
+
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label:hover,
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label:focus-visible{
+    opacity:1!important;
+  }
 }
