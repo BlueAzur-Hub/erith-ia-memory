@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.33";
-  const ADMIN_RELEASE = "SINGLE GESTURE DETACH DRAG CONTINUITY LOCK";
+  const ADMIN_BUILD = "40.1.34";
+  const ADMIN_RELEASE = "FREEZE AUDIT IDENTITY + LEGACY ADMIN CSS CLEANUP LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -405,7 +405,7 @@
   function migrateGlobalShellAutoFit40132() {
     try {
       if (localStorage.getItem(GLOBAL_SHELL_AUTOFIT_40132_MIGRATION_KEY) === "1") return;
-      // 40.1.33 changes only shell sizing. Clear the eight shell-window geometries
+      // 40.1.32 changes only shell sizing. Clear the eight shell-window geometries
       // once so their first detach is measured from live content + floating chrome.
       // directFixed Graphique / Target Top / Market Flow / Math Core are excluded.
       GLOBAL_SHELL_WINDOW_IDS_40128.forEach(id => {
