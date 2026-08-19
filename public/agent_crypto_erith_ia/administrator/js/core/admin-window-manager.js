@@ -409,7 +409,10 @@
         restoreFloating: false,
         directPointerUp: null,
         minimizeBar: null,
-        minimizeBarTitle: null
+        minimizeBarTitle: null,
+        minimizeBarScore: null,
+        minimizeBarScoreObserver: null,
+        minimizeBarDragCleanup: null
       };
 
       win.nodes.forEach(node => node.dataset.adminNativeWindow = win.id);
@@ -758,38 +761,132 @@
     }
 
     function removeMinimizeBar(win) {
-      if (!win?.minimizeBar) return;
-      win.minimizeBar.remove();
+      if (!win) return;
+      try { win.minimizeBarDragCleanup?.(); } catch {}
+      win.minimizeBarDragCleanup = null;
+      try { win.minimizeBarScoreObserver?.disconnect?.(); } catch {}
+      win.minimizeBarScoreObserver = null;
+      if (win.minimizeBar) win.minimizeBar.remove();
       win.minimizeBar = null;
       win.minimizeBarTitle = null;
+      win.minimizeBarScore = null;
+    }
+
+    function floatingMinibarPosition(win, bar) {
+      const state = getState(win.id);
+      const rect = currentRect(win);
+      const width = Math.min(340, Math.max(250, Number(state.minWidth) || 310));
+      const height = 44;
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const x = clamp(VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vw - width - VIEWPORT_MARGIN), Number(state.minX ?? rect.x ?? VIEWPORT_MARGIN));
+      const y = clamp(VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vh - height - VIEWPORT_MARGIN), Number(state.minY ?? rect.y ?? VIEWPORT_MARGIN));
+      bar.style.setProperty("left", `${Math.round(x)}px`, "important");
+      bar.style.setProperty("top", `${Math.round(y)}px`, "important");
+      bar.style.setProperty("right", "auto", "important");
+      bar.style.setProperty("bottom", "auto", "important");
+      return { x, y, width, height };
+    }
+
+    function wireFloatingMinibarDrag(win, bar) {
+      let drag = null;
+      const cleanupWindow = () => {
+        window.removeEventListener("pointermove", move, true);
+        window.removeEventListener("pointerup", up, true);
+        window.removeEventListener("pointercancel", up, true);
+        window.removeEventListener("blur", up, true);
+      };
+      const move = event => {
+        if (!drag || event.pointerId !== drag.pointerId) return;
+        const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        const rect = bar.getBoundingClientRect();
+        const x = clamp(VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vw - rect.width - VIEWPORT_MARGIN), drag.x + event.clientX - drag.clientX);
+        const y = clamp(VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vh - rect.height - VIEWPORT_MARGIN), drag.y + event.clientY - drag.clientY);
+        bar.style.setProperty("left", `${Math.round(x)}px`, "important");
+        bar.style.setProperty("top", `${Math.round(y)}px`, "important");
+        event.preventDefault();
+      };
+      const up = event => {
+        if (!drag || (event?.pointerId != null && event.pointerId !== drag.pointerId)) return;
+        const rect = bar.getBoundingClientRect();
+        const full = win.geometry || currentRect(win);
+        win.geometry = { ...full, x: rect.left, y: rect.top };
+        patchState(win.id, { minX: rect.left, minY: rect.top, x: rect.left, y: rect.top, width: full.width, height: full.height });
+        drag = null;
+        cleanupWindow();
+      };
+      const down = event => {
+        if (event.button !== 0 || event.target?.closest?.("button")) return;
+        const rect = bar.getBoundingClientRect();
+        drag = { pointerId: event.pointerId, clientX: event.clientX, clientY: event.clientY, x: rect.left, y: rect.top };
+        window.addEventListener("pointermove", move, true);
+        window.addEventListener("pointerup", up, true);
+        window.addEventListener("pointercancel", up, true);
+        window.addEventListener("blur", up, true);
+        try { bar.setPointerCapture?.(event.pointerId); } catch {}
+        event.preventDefault();
+      };
+      bar.addEventListener("pointerdown", down);
+      win.minimizeBarDragCleanup = () => {
+        cleanupWindow();
+        bar.removeEventListener("pointerdown", down);
+      };
     }
 
     function ensureMinimizeBar(win) {
       if (win?.minimizeBar?.isConnected) return win.minimizeBar;
+      const floatingCompact = !!win?.floating;
       const active = visibleEntry(win)?.node || win.anchor;
       let parent = active?.parentNode || null;
       let before = active || null;
       const marker = win.placeholders.get(active);
-      if (marker?.parentNode) {
+      if (!floatingCompact && marker?.parentNode) {
         parent = marker.parentNode;
         before = marker;
+      }
+      if (floatingCompact) {
+        parent = document.body;
+        before = null;
       }
       if (!parent) return null;
 
       const bar = document.createElement("div");
-      bar.className = `admin-native-minibar admin-native-tone-${win.tone}`;
+      bar.className = `admin-native-minibar admin-native-tone-${win.tone}${floatingCompact ? " is-floating-compact" : ""}`;
       bar.dataset.adminNativeMinibar = win.id;
       const title = document.createElement("strong");
       title.className = "admin-native-minibar-title";
       title.textContent = win.title;
+      bar.append(title);
+
+      if (win.id === "math-core") {
+        const score = document.createElement("span");
+        score.className = "admin-native-minibar-score";
+        const source = document.getElementById("atlasMathRailScore");
+        const sync = () => { score.textContent = String(source?.textContent || "—").trim() || "—"; };
+        sync();
+        bar.classList.add("has-live-score");
+        bar.append(score);
+        if (source && typeof MutationObserver === "function") {
+          win.minimizeBarScoreObserver = new MutationObserver(sync);
+          win.minimizeBarScoreObserver.observe(source, { childList: true, characterData: true, subtree: true });
+        }
+      }
+
       const restore = createButton("admin-native-minibar-restore", "+  Restaurer", `Restaurer ${win.title}`);
       const hide = createButton("admin-native-minibar-hide", "×", `Masquer ${win.title}`);
       restore.addEventListener("click", () => setMinimized(win, false));
       hide.addEventListener("click", () => setHidden(win, true));
-      bar.append(title, restore, hide);
-      parent.insertBefore(bar, before);
+      bar.append(restore, hide);
+      if (before) parent.insertBefore(bar, before); else parent.appendChild(bar);
       win.minimizeBar = bar;
       win.minimizeBarTitle = title;
+
+      if (floatingCompact) {
+        floatingMinibarPosition(win, bar);
+        wireFloatingMinibarDrag(win, bar);
+        bringToFront(win, false);
+      }
       return bar;
     }
 
@@ -814,10 +911,19 @@
       if (!win) return;
       if (minimized && win.maximized) setMaximized(win, false, false);
       if (minimized && win.hidden) win.hidden = false;
+      if (minimized && win.floating) {
+        const rect = currentRect(win);
+        if (!win.geometry) win.geometry = rect;
+        else win.geometry = { ...win.geometry, x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+      }
+      if (!minimized && win.floating && win.minimizeBar?.isConnected) {
+        const miniRect = win.minimizeBar.getBoundingClientRect();
+        if (win.geometry) win.geometry = { ...win.geometry, x: miniRect.left, y: miniRect.top };
+      }
       win.minimized = !!minimized;
-      if (win.floating && !win.geometry) win.geometry = currentRect(win);
       applyPresentationState(win);
-      if (persist) patchState(win.id, { minimized: win.minimized, hidden: win.hidden });
+      if (!win.minimized && win.floating && win.geometry) setGeometryOnTarget(win, win.geometry);
+      if (persist) patchState(win.id, { minimized: win.minimized, hidden: win.hidden, x: win.geometry?.x, y: win.geometry?.y, width: win.geometry?.width, height: win.geometry?.height });
       updateDeck();
     }
 
@@ -1178,7 +1284,7 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.40",
+    build: "40.1.41",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
     dock_restore: "layout-preserving-placeholder-original-parent",
@@ -1193,6 +1299,9 @@
     drag_reparent_continuity: true,
     drag_pointer_capture_reacquire: true,
     drag_single_gesture_detach_move: true,
+    floating_minimize_compact_bar: true,
+    floating_minimize_drag_persists_position: true,
+    math_core_compact_score_live: true,
     direct_fixed_auto_fit: false,
     direct_fixed_windows_use_shell: false,
     direct_fixed_position_owner: "inline-important",

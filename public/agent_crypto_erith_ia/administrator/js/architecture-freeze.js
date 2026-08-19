@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.40 — PARKER LEWIS CAN'T LOSE · ORACLE V0 + APPLE GREEN + ILLUMINATED METAL BARS LOCK
+     40.1.41 — PARKER LEWIS CAN'T LOSE · ORACLE CONTINUATION 1M/5M/15M + COMPACT MATH CORE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -11,14 +11,14 @@
      - Report data-coverage limits as WARN, never as fake code failures.
 
      CONTRACT
-     - 40.1.40 keeps the Binance LIVE board outside historical datasets, illuminates the restored Metal bars without geometry changes, strengthens the whole positive 24h Technical Reading cell, and adds Oracle V0 on a separate canvas; no synthetic Chart.js endpoint or trading action.
+     - 40.1.41 keeps the Binance LIVE board outside historical datasets, illuminates the restored Metal bars without geometry changes, strengthens the whole positive 24h Technical Reading cell, and adds Oracle V0 on a separate canvas; no synthetic Chart.js endpoint or trading action.
      - NO automatic repair.
      - NO memory write.
      - NO network request from this module.
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.40";
+  const BUILD_CURRENT = "40.1.41";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -836,8 +836,8 @@
     const uniformMenuCss = uniformMenuCssContract();
     const cryptoCard = cryptoCardContract();
     const graphStability = globalThis.__ATLAS_GRAPH_STABILITY_40122__ || null;
-    const verticalBars = globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40140__ || null;
-    const oracleV0 = globalThis.__ATLAS_ORACLE_V0_40140__ || null;
+    const verticalBars = globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40141__ || null;
+    const oracleV0 = globalThis.__ATLAS_ORACLE_V0_40141__ || null;
     const forbiddenOverrides = styleRows().filter(row => /admin-window-(?:controls-recovery|hover-ghost-contract)-40\.0\.0R[12]\.css/i.test(pathOnly(row.raw)));
 
     const checks = [
@@ -864,6 +864,9 @@
       check("Contrat Memory Health", readOnlyContractOk(healthContract) && healthContract.verdicts_separated === true, healthContract ? "lecture seule + verdicts séparés" : "sentinelle absente"),
       check("Ancien Memory Health retiré", countScriptSuffix("/js/memory-health-audit-39.8.0.js") === 0, "aucun doublon du lecteur 39.8.0 initial"),
       check("Window Manager", hasScriptSuffix("/js/core/admin-window-manager.js"), "script unique"),
+      check("Math Core réduit · mini-module flottant mobile",
+        globalThis.ErithAdminWindowManager?.contract?.floating_minimize_compact_bar === true,
+        "réduction flottante compacte · position restaurée après déplacement"),
       check("DirectFixed · propriétaire géométrie inline !important", directFixedGeometryOwnerContract().ok === true, directFixedGeometryOwnerContract().detail),
       check("Déplacement · détacher + glisser sans perdre la prise", detachDragContinuityContract().ok === true, detachDragContinuityContract().detail),
       check("Shells flottantes · body + placeholder + auto-fit contenu/chrome", globalFloatingShellContract().ok === true, globalFloatingShellContract().detail),
@@ -906,19 +909,25 @@
           && verticalBars?.illumination?.geometry_changed === false
           && verticalBars?.synthetic_live_endpoint === false
           && verticalBars?.websocket_canvas_rescale === false,
-        verticalBars ? `géométrie=${verticalBars.geometry_source} · base=${verticalBars.metal_paint_source} · illumination=${verticalBars.illumination?.composite}` : "contrat renderer vertical 40.1.40 absent"),
-      check("Lecture technique · case 24 h vert pomme", !!byId("atlasOracleAppleGreenMetal40140"), "case positive entière renforcée · chiffre non propriétaire du signal"),
+        verticalBars ? `géométrie=${verticalBars.geometry_source} · base=${verticalBars.metal_paint_source} · illumination=${verticalBars.illumination?.composite}` : "contrat renderer vertical 40.1.41 absent"),
+      check("Lecture technique · case 24 h vert pomme", !!byId("atlasOracleOverlay40141"), "case positive entière renforcée · chiffre non propriétaire du signal"),
       check("Oracle V0 · canvas séparé + hausse/baisse",
         oracleV0?.build === BUILD_CURRENT
-          && oracleV0?.mode === "dual-scenario-bull-bear"
+          && oracleV0?.mode === "historical-tail-to-dual-scenario-continuation"
+          && oracleV0?.overlay_on_main_chart === true
+          && oracleV0?.historical_tail_read_only === true
+          && Array.isArray(oracleV0?.horizons)
+          && oracleV0.horizons.join(",") === "1m,5m,15m"
+          && oracleV0?.default_horizon === "5m"
           && oracleV0?.separate_canvas === true
           && oracleV0?.main_chart_mutation === false
+          && oracleV0?.main_chart_dataset_write === false
           && oracleV0?.prediction === false
           && oracleV0?.financial_advice === false
           && !!byId("atlasOracleV0")
           && !!byId("atlasOracleCanvas")
           && byId("atlasOracleCanvas") !== byId("mainChart"),
-        oracleV0 ? `${oracleV0.mode} · canvas séparé · non prédictif` : "contrat Oracle V0 absent"),
+        oracleV0 ? `${oracleV0.mode} · 1m/5m/15m · overlay read-only` : "contrat Oracle V0 absent"),
       check("Target Top direct window controls", !!targetChrome && targetChrome.complete && targetChrome.interactive, targetChrome ? `5/5=${String(targetChrome.complete)} · interactif=${String(targetChrome.interactive)} · opacity runtime=${Number.isFinite(targetChrome.computedOpacity) ? targetChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Target Top absent"),
       check("Market Flow direct window controls", !!flowChrome && flowChrome.complete && flowChrome.interactive, flowChrome ? `5/5=${String(flowChrome.complete)} · interactif=${String(flowChrome.interactive)} · opacity runtime=${Number.isFinite(flowChrome.computedOpacity) ? flowChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Market Flow absent"),
       check("Market Flow · déplacement Target Top + viewport interne adapté", marketFlowFloatParityContract().ok === true, marketFlowFloatParityContract().detail),
@@ -1067,7 +1076,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique. 40.1.40 conserve le renderer canonique 39.2.11 / Metal 39.2.21, ajoute une passe lumineuse paint-only, une case 24 h vert pomme et Oracle V0 sur canvas séparé. Le canvas historique principal reste pur. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
+      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique. 40.1.41 conserve le renderer canonique 39.2.11 / Metal 39.2.21, ajoute une passe lumineuse paint-only, une case 24 h vert pomme et Oracle V0 sur canvas séparé. Le canvas historique principal reste pur. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");

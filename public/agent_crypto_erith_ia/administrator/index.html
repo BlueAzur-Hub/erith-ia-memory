@@ -3,44 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="40.1.40" />
+  <meta name="atlas-build" content="40.1.41" />
   <meta name="atlas-engine-build" content="38.15.11" />
-  <meta name="administrator-build" content="40.1.40" />
-  <meta name="administrator-release" content="PARKER LEWIS CAN'T LOSE · ORACLE V0 + APPLE GREEN + ILLUMINATED METAL BARS LOCK" />
+  <meta name="administrator-build" content="40.1.41" />
+  <meta name="administrator-release" content="PARKER LEWIS CAN'T LOSE · ORACLE CONTINUATION 1M/5M/15M + COMPACT MATH CORE LOCK" />
   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.1.40" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.1.41" />
   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
-  <title>Agent-Crypto @erith.IA — Build 40.1.40 · Administrator</title>
+  <title>Agent-Crypto @erith.IA — Build 40.1.41 · Administrator</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.1.40" />
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.1.41" />
   <link rel="stylesheet" href="./admin-metal.css?v=administrator-build-39.1" />
-  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.1.40" />
-  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.1.40" />
-  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.1.40" />
-  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.1.40" />
-  <style id="atlasOracleAppleGreenMetal40140">
-    /* 40.1.40 — code-only UI: apple-green positive cell + Oracle V0. */
+  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.1.41" />
+  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.1.41" />
+  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.1.41" />
+  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.1.41" />
+  <style id="atlasOracleOverlay40141">
+    /* 40.1.41 — code-only: apple-green 24h cell + Oracle overlay + compact floating minibar. */
     #detailCompactStrip[data-change-state="pos"] [data-detail-semantic="change"] {
       border-color: rgba(164,255,91,.96) !important;
       background: linear-gradient(135deg,rgba(125,255,70,.42),rgba(28,171,91,.24)) !important;
       box-shadow: inset 0 0 0 1px rgba(216,255,183,.22), 0 0 18px rgba(122,255,78,.30) !important;
     }
-    #detailCompactStrip[data-change-state="pos"] [data-detail-semantic="change"] small {
-      color: #e2ffd0 !important;
-      text-shadow: 0 0 7px rgba(151,255,93,.35) !important;
-    }
-    #detailCompactStrip[data-change-state="pos"] #detailCompactChange.pos {
-      color: #f3ffe9 !important;
-      text-shadow: 0 1px 2px rgba(0,0,0,.45) !important;
-      font-weight: 950 !important;
-    }
+    #detailCompactStrip[data-change-state="pos"] [data-detail-semantic="change"] small {color:#e2ffd0!important;text-shadow:0 0 7px rgba(151,255,93,.35)!important}
+    #detailCompactStrip[data-change-state="pos"] #detailCompactChange.pos {color:#f3ffe9!important;text-shadow:0 1px 2px rgba(0,0,0,.45)!important;font-weight:950!important}
+    .chart-shell{position:relative!important}
     #atlasOracleV0 {
-      margin-top:8px; padding:10px 12px; border-radius:14px;
-      border:1px solid rgba(98,236,255,.26);
-      background:linear-gradient(135deg,rgba(4,14,26,.96),rgba(7,24,34,.91));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 12px 30px rgba(0,0,0,.22);
+      position:absolute; inset:0; z-index:34; margin:0; padding:10px 12px; border-radius:14px; overflow:auto;
+      border:1px solid rgba(98,236,255,.32);
+      background:linear-gradient(135deg,rgba(3,12,23,.985),rgba(5,22,32,.975));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.03),0 12px 30px rgba(0,0,0,.28);
+      backdrop-filter:blur(5px);
     }
-    #atlasOracleV0[hidden]{display:none !important}
+    #atlasOracleV0[hidden]{display:none!important}
     .atlas-oracle-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:8px}
     .atlas-oracle-title{display:flex;flex-direction:column;gap:2px}
     .atlas-oracle-title>span{font-size:9px;letter-spacing:.18em;color:#62ecff;font-weight:950}
@@ -48,10 +43,14 @@
     .atlas-oracle-title>small{font-size:10px;color:#8fa8ba}
     .atlas-oracle-status{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
     .atlas-oracle-status span{padding:5px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font-size:9px;font-weight:900;color:#d9e8ef;background:rgba(255,255,255,.045)}
-    .atlas-oracle-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,.65fr);gap:9px}
-    .atlas-oracle-screen{min-width:0;border:1px solid rgba(98,236,255,.16);border-radius:11px;overflow:hidden;background:rgba(0,0,0,.18)}
-    #atlasOracleCanvas{display:block;width:100%;height:160px}
-    .atlas-oracle-readout{display:grid;gap:6px}
+    .atlas-oracle-horizons{display:flex;gap:5px;align-items:center;justify-content:flex-end;margin:0 0 8px}
+    .atlas-oracle-horizons span{font-size:8px;letter-spacing:.15em;color:#7f96a5;font-weight:950;margin-right:2px}
+    .atlas-oracle-horizons button{min-width:44px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.13);background:rgba(255,255,255,.045);color:#b9cad4;font:900 9px/1 system-ui,sans-serif;cursor:pointer}
+    .atlas-oracle-horizons button.is-active{color:#06131b;background:#9cf65d;border-color:#c5ff9e;box-shadow:0 0 14px rgba(153,255,92,.30)}
+    .atlas-oracle-grid{display:grid;grid-template-columns:minmax(0,1.72fr) minmax(250px,.58fr);gap:9px}
+    .atlas-oracle-screen{min-width:0;border:1px solid rgba(98,236,255,.18);border-radius:11px;overflow:hidden;background:rgba(0,0,0,.18)}
+    #atlasOracleCanvas{display:block;width:100%;height:280px}
+    .atlas-oracle-readout{display:grid;gap:6px;align-content:start}
     .atlas-oracle-card{padding:8px 9px;border-radius:10px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.035);display:flex;flex-direction:column;gap:2px}
     .atlas-oracle-card small{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#8197a7;font-weight:900}
     .atlas-oracle-card b{font-size:11px;color:#e6f1f6}
@@ -63,10 +62,14 @@
     .atlas-oracle-assets button{border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.045);color:#dbe8ee;padding:4px 8px;font-size:9px;font-weight:950;cursor:pointer}
     .atlas-oracle-assets button.is-active{border-color:var(--oracle-asset-color,#62ecff);box-shadow:0 0 12px color-mix(in srgb,var(--oracle-asset-color,#62ecff) 30%,transparent);color:#fff}
     .atlas-oracle-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:7px;font-size:9px;color:#7f96a5}
-    @media(max-width:900px){.atlas-oracle-grid{grid-template-columns:1fr}.atlas-oracle-head{flex-direction:column}.atlas-oracle-status{justify-content:flex-start}}
+    .admin-native-minibar.is-floating-compact{position:fixed!important;z-index:2147482500!important;margin:0!important;width:min(340px,calc(100vw - 24px))!important;min-height:44px!important;cursor:grab!important;user-select:none!important;touch-action:none!important;grid-template-columns:minmax(0,1fr) auto 32px!important}
+    .admin-native-minibar.is-floating-compact.has-live-score{grid-template-columns:minmax(0,1fr) auto auto 32px!important}
+    .admin-native-minibar.is-floating-compact:active{cursor:grabbing!important}
+    .admin-native-minibar-score{display:inline-grid;place-items:center;min-width:34px;height:28px;padding:0 7px;border:1px solid rgba(255,218,137,.34);border-radius:8px;color:#ffe2a1;background:rgba(255,210,112,.08);font:950 12px/1 ui-monospace,monospace}
+    @media(max-width:900px){.atlas-oracle-grid{grid-template-columns:1fr}.atlas-oracle-head{flex-direction:column}.atlas-oracle-status{justify-content:flex-start}#atlasOracleCanvas{height:230px}}
   </style>
 </head>
-<body class="atlas-administrator-mirror" data-administrator-build="40.1.40">
+<body class="atlas-administrator-mirror" data-administrator-build="40.1.41">
   <div class="ambient" aria-hidden="true"></div>
   <div class="grid-overlay" aria-hidden="true"></div>
 
@@ -119,9 +122,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version Agent-Crypto installée : Build 40.1.40, mode Administrator"
+            aria-label="Version Agent-Crypto installée : Build 40.1.41, mode Administrator"
           >
-            <span id="atlasVersionControlText">Build 40.1.40 · Administrator</span>
+            <span id="atlasVersionControlText">Build 40.1.41 · Administrator</span>
           </button>
           <span class="pill admin-engine-badge" id="administratorEngineBadge">ENGINE · Market Core 38.15.11</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
@@ -137,7 +140,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.1.40 · Administrator</span>
+          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.1.41 · Administrator</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -486,6 +489,41 @@
           </div>
           <div class="chart-v2-legend" id="chartV2Legend" hidden></div>
           <canvas id="mainChart" width="980" height="260" aria-label="Graphique prix ou comparaison normalisée. Survole librement les courbes pour afficher les valeurs."></canvas>
+        <section class="atlas-oracle-v0" id="atlasOracleV0" aria-label="Oracle V0 Atlas et Aerith Crypto" aria-live="polite">
+          <header class="atlas-oracle-head">
+            <div class="atlas-oracle-title">
+              <span>ATLAS · AERITH CRYPTO</span>
+              <strong>ORACLE V0 · HAUSSE / BAISSE</strong>
+              <small id="atlasOracleAsset">EN ATTENTE</small>
+            </div>
+            <div class="atlas-oracle-status">
+              <span id="atlasOracleBias">Livecheck requis</span>
+              <span id="atlasOracleConfidence">Confiance données —</span>
+            </div>
+          </header>
+          <div class="atlas-oracle-horizons" data-oracle-horizons role="group" aria-label="Horizon de scénario Oracle">
+            <span>HORIZON</span>
+            <button type="button" data-oracle-horizon="1m" aria-pressed="false">1 MIN</button>
+            <button type="button" data-oracle-horizon="5m" class="is-active" aria-pressed="true">5 MIN</button>
+            <button type="button" data-oracle-horizon="15m" aria-pressed="false">15 MIN</button>
+          </div>
+          <div class="atlas-oracle-grid">
+            <div class="atlas-oracle-screen">
+              <canvas id="atlasOracleCanvas" width="640" height="160" aria-label="Continuation interprétative normalisée depuis le dernier point historique réel, horizons 1, 5 ou 15 minutes"></canvas>
+            </div>
+            <div class="atlas-oracle-readout">
+              <div class="atlas-oracle-card is-bull"><small>Oracle hausse</small><b id="atlasOracleBull">—</b></div>
+              <div class="atlas-oracle-card is-bear"><small>Oracle baisse</small><b id="atlasOracleBear">—</b></div>
+              <div class="atlas-oracle-card"><small>Atlas</small><b id="atlasOracleAtlas">Atlas : en attente</b></div>
+              <div class="atlas-oracle-card"><small>Aerith</small><b id="atlasOracleAerith">Aerith : en attente</b></div>
+            </div>
+          </div>
+          <div class="atlas-oracle-assets" id="atlasOracleAssets" aria-label="Actifs disponibles pour Oracle"></div>
+          <footer class="atlas-oracle-foot">
+            <span id="atlasOracleInputs">Aucune donnée exploitable</span>
+            <span>Scénarios relatifs · pas une prévision · aucune recommandation financière</span>
+          </footer>
+        </section>
           <div class="atlas-chart-tooltip" id="atlasChartTooltip" role="tooltip" aria-hidden="true" hidden></div>
           <div class="atlas-chart-refresh" id="atlasChartRefresh" role="status" aria-live="polite" aria-hidden="true" hidden><span id="atlasChartRefreshText">Mise à jour du graphe…</span></div>
 
@@ -683,35 +721,7 @@
             </span>
           </div>
         </div>
-        <section class="atlas-oracle-v0" id="atlasOracleV0" aria-label="Oracle V0 Atlas et Aerith Crypto" aria-live="polite">
-          <header class="atlas-oracle-head">
-            <div class="atlas-oracle-title">
-              <span>ATLAS · AERITH CRYPTO</span>
-              <strong>ORACLE V0 · HAUSSE / BAISSE</strong>
-              <small id="atlasOracleAsset">EN ATTENTE</small>
-            </div>
-            <div class="atlas-oracle-status">
-              <span id="atlasOracleBias">Livecheck requis</span>
-              <span id="atlasOracleConfidence">Confiance données —</span>
-            </div>
-          </header>
-          <div class="atlas-oracle-grid">
-            <div class="atlas-oracle-screen">
-              <canvas id="atlasOracleCanvas" width="640" height="160" aria-label="Scénarios interprétatifs normalisés hausse et baisse, distincts du graphique historique"></canvas>
-            </div>
-            <div class="atlas-oracle-readout">
-              <div class="atlas-oracle-card is-bull"><small>Oracle hausse</small><b id="atlasOracleBull">—</b></div>
-              <div class="atlas-oracle-card is-bear"><small>Oracle baisse</small><b id="atlasOracleBear">—</b></div>
-              <div class="atlas-oracle-card"><small>Atlas</small><b id="atlasOracleAtlas">Atlas : en attente</b></div>
-              <div class="atlas-oracle-card"><small>Aerith</small><b id="atlasOracleAerith">Aerith : en attente</b></div>
-            </div>
-          </div>
-          <div class="atlas-oracle-assets" id="atlasOracleAssets" aria-label="Actifs disponibles pour Oracle"></div>
-          <footer class="atlas-oracle-foot">
-            <span id="atlasOracleInputs">Aucune donnée exploitable</span>
-            <span>Scénarios relatifs · pas une prévision · aucune recommandation financière</span>
-          </footer>
-        </section>
+
 
         <div class="atlas-metals-domain-status"
              id="atlasMetalsDomainStatus"
@@ -3985,7 +3995,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.1.40 · Version : Parker Lewis Can't Lose</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.1.41 · Version : Parker Lewis Can't Lose</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -3995,18 +4005,18 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-40.1.40"></script>
-  <script src="./js/market-memory.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/analytical-memory.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/market-memory-collector.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/decision-board.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/retrospective-validation.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/memory-health-audit.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/admin-visual-assets.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/app.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/layout-repair.js?v=administrator-build-40.1.40"></script>
-  <script src="./js/architecture-freeze.js?v=administrator-build-40.1.40"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-40.1.41"></script>
+  <script src="./js/market-memory.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/analytical-memory.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/market-memory-collector.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/decision-board.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/retrospective-validation.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/memory-health-audit.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/admin-visual-assets.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/app.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/layout-repair.js?v=administrator-build-40.1.41"></script>
+  <script src="./js/architecture-freeze.js?v=administrator-build-40.1.41"></script>
 </body>
 </html>
