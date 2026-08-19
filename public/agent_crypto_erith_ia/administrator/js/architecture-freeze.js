@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.17 — MARKET FLOW ZERO-HOST + TECHNICAL READING SIDE-DOCK RECOVERY LOCK
+     40.1.18 — MARKET FLOW ZERO-HOST + TECHNICAL READING SIDE-DOCK RECOVERY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.17";
+  const BUILD_CURRENT = "40.1.18";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -660,7 +660,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.17 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.18 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -678,8 +678,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.17 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.17</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.18 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.18</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -688,7 +688,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.17 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.18 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">
@@ -713,7 +713,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? "40.1.17 : Market Flow ne réserve plus de colonne opaque à gauche ; le bouton de cycle existant reste superposé. Lecture technique reprend le side-dock R6/R7 à droite du Graphique, sur la même ligne et toute la hauteur utile. Aucun moteur métier, ticker, clic crypto, Math Core ou mémoire n’est modifié."
+      ? "40.1.18 : Market Flow ne réserve plus de colonne opaque à gauche ; le bouton de cycle existant reste superposé. Lecture technique reprend le side-dock R6/R7 à droite du Graphique, sur la même ligne et toute la hauteur utile. Aucun moteur métier, ticker, clic crypto, Math Core ou mémoire n’est modifié."
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");
@@ -745,7 +745,7 @@
 
   function markdown(data = derive()) {
     const lines = [
-      "# Agent-Crypto — Administrator Consolidation 40.1.17", "",
+      "# Agent-Crypto — Administrator Consolidation 40.1.18", "",
       `- Généré : ${data.generatedAt}`,
       `- Verdict : ${data.label}`,
       `- FAIL critiques : ${data.criticalFails.length}`,
@@ -757,11 +757,11 @@
       lines.push(`- ${state} · ${row.name} · ${row.detail}`);
     }
     lines.push(
-      "", "## Validation finale 40.1.17", "",
+      "", "## Validation finale 40.1.18", "",
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
       "- Aucune nouvelle fonction n’a été ajoutée depuis le freeze 39.9.0R2 validé.",
-      "- Le candidat 40.1.17 exige une validation réelle dans Firefox après publication opérateur.",
+      "- Le candidat 40.1.18 exige une validation réelle dans Firefox après publication opérateur.",
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );
     return lines.join("\n");

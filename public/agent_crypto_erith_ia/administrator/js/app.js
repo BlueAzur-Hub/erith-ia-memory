@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.17";
+  const ADMIN_BUILD = "40.1.18";
   const ADMIN_RELEASE = "MARKET FLOW ZERO-COLUMN GHOST BUTTON RESTORE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
