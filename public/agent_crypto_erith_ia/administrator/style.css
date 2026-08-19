@@ -9768,7 +9768,7 @@ html[data-atlas-mode="advanced"] .atlas-v2-nav-advanced {
   border-color: rgba(57,230,226,.25);
 }
 
-.atlas-math-dock.is-rail > :not(.atlas-math-rail-trigger) {
+.atlas-math-dock.is-rail > :not(.atlas-math-rail-trigger):not(.admin-native-controls) {
   display: none !important;
 }
 
@@ -11445,7 +11445,7 @@ html[data-atlas-mode="essential"] .chart-v2-period-truth {
     0 10px 30px rgba(0,0,0,.18);
 }
 
-.atlas-math-dock.is-rail > :not(.atlas-math-rail-trigger) {
+.atlas-math-dock.is-rail > :not(.atlas-math-rail-trigger):not(.admin-native-controls) {
   display: none !important;
 }
 
