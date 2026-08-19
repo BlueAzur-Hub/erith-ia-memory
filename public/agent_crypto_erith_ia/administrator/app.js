@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.52",
+  build: "40.1.55",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.52",
+  build: "40.1.55",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6205,7 +6205,59 @@ const ATLAS_ORACLE_V1_40149 = Object.freeze({
 globalThis.__ATLAS_ORACLE_V1_40149__ = ATLAS_ORACLE_V1_40149;
 
 const ATLAS_ORACLE_V0_ASSET_KEY = "agent_crypto_erith_ia_oracle_v0_asset";
+const ATLAS_ORACLE_VIEW_STATE_KEY = "agent_crypto_erith_ia_oracle_view_state_v1";
 let atlasOracleV0AssetId = "";
+
+// 40.1.54 — persist OPERATOR VIEW only. Never store model outputs, scores,
+// confidence, scenarios, prices, micro buffers or calculated market state.
+function atlasOracleNormalizeViewState(raw = {}) {
+  const view = ["continuation","top5"].includes(raw.view) ? raw.view : (state.chartViewV2.oracleView || "continuation");
+  const horizon = ["1m","5m","15m"].includes(raw.horizon) ? raw.horizon : (state.chartViewV2.oracleHorizon || "5m");
+  const zoom = ["auto","1x","2x","4x"].includes(raw.zoom) ? raw.zoom : (state.chartViewV2.oracleZoom || "auto");
+  const asset = String(raw.asset || "").trim();
+  return { view, asset, horizon, zoom };
+}
+
+function atlasOracleReadPersistentViewState() {
+  let raw = null;
+  try { raw = JSON.parse(localStorage.getItem(ATLAS_ORACLE_VIEW_STATE_KEY) || "null"); } catch {}
+  if (!raw || typeof raw !== "object") {
+    // One-time compatibility path from the pre-40.1.54 scattered stores.
+    raw = {
+      view: state.chartViewV2.oracleView,
+      asset: atlasOracleReadStoredAsset(),
+      horizon: state.chartViewV2.oracleHorizon,
+      zoom: state.chartViewV2.oracleZoom
+    };
+  }
+  return atlasOracleNormalizeViewState(raw);
+}
+
+function atlasOracleWritePersistentViewState() {
+  const next = atlasOracleNormalizeViewState({
+    view: state.chartViewV2.oracleView,
+    asset: atlasOracleV0AssetId,
+    horizon: state.chartViewV2.oracleHorizon,
+    zoom: state.chartViewV2.oracleZoom
+  });
+  try {
+    localStorage.setItem(ATLAS_ORACLE_VIEW_STATE_KEY, JSON.stringify(next));
+    // Keep old stores synchronized for rollback/backward compatibility.
+    localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, next.asset);
+  } catch {}
+  return next;
+}
+
+function atlasOracleRestorePersistentViewState() {
+  const saved = atlasOracleReadPersistentViewState();
+  state.chartViewV2.oracleView = saved.view;
+  state.chartViewV2.oracleHorizon = saved.horizon;
+  state.chartViewV2.oracleZoom = saved.zoom;
+  atlasOracleV0AssetId = saved.asset;
+  atlasWriteChartV2Settings();
+  atlasOracleWritePersistentViewState();
+  return saved;
+}
 let atlasOracleV0ResizeObserver = null;
 const ATLAS_ORACLE_TOP5_FOCUS = "__top5__";
 const ATLAS_ORACLE_LIVE_BUFFER_MS = 20 * 60 * 1000;
@@ -6963,6 +7015,7 @@ function atlasInitOracleV0() {
   const strip = document.getElementById("atlasOracleAssets");
   if (!root || root.dataset.oracleInit === "1") return;
   root.dataset.oracleInit = "1";
+  atlasOracleRestorePersistentViewState();
   strip?.addEventListener("click", event => {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
@@ -6970,6 +7023,7 @@ function atlasInitOracleV0() {
       state.chartViewV2.oracleView = "top5";
       try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
       atlasWriteChartV2Settings();
+      atlasOracleWritePersistentViewState();
       atlasRenderOracleV0();
       return;
     }
@@ -6977,6 +7031,7 @@ function atlasInitOracleV0() {
     if (!button) return;
     atlasOracleV0AssetId = String(button.dataset.oracleAssetId || "");
     try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
+    atlasOracleWritePersistentViewState();
     atlasRenderOracleV0();
   });
   root.querySelector("[data-oracle-horizons]")?.addEventListener("click", event => {
@@ -6985,6 +7040,7 @@ function atlasInitOracleV0() {
     if (!button || !["1m","5m","15m"].includes(key)) return;
     state.chartViewV2.oracleHorizon = key;
     atlasWriteChartV2Settings();
+    atlasOracleWritePersistentViewState();
     atlasRenderOracleV0();
   });
   root.querySelector("[data-oracle-views]")?.addEventListener("click", event => {
@@ -6999,6 +7055,7 @@ function atlasInitOracleV0() {
     }
     try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
     atlasWriteChartV2Settings();
+    atlasOracleWritePersistentViewState();
     atlasRenderOracleV0();
   });
   root.querySelector("[data-oracle-zooms]")?.addEventListener("click", event => {
@@ -7006,6 +7063,7 @@ function atlasInitOracleV0() {
     if (reset) {
       state.chartViewV2.oracleZoom = "auto";
       atlasWriteChartV2Settings();
+      atlasOracleWritePersistentViewState();
       atlasRenderOracleV0();
       return;
     }
@@ -7014,6 +7072,7 @@ function atlasInitOracleV0() {
     if (!button || !["auto","1x","2x","4x"].includes(key)) return;
     state.chartViewV2.oracleZoom = key;
     atlasWriteChartV2Settings();
+    atlasOracleWritePersistentViewState();
     atlasRenderOracleV0();
   });
   if (typeof ResizeObserver === "function") {
@@ -13192,7 +13251,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.52",
+  interface: "Build 40.1.55",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -13795,7 +13854,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.52",
+  build: "40.1.55",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -41462,7 +41521,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.52";
+const ATLAS_BUILD = "40.1.55";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48138,8 +48197,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.52",
-  asset_token: "market-core-v2.0-alpha-build-40.1.52"
+  build: "40.1.55",
+  asset_token: "market-core-v2.0-alpha-build-40.1.55"
 });
 
 function atlasRuntimeTruth3813() {

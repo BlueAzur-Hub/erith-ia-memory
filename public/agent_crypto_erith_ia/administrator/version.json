@@ -1,10 +1,10 @@
 {
   "schema": "agent_crypto_version_manifest_v8",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.52 · PARKER LEWIS CAN'T LOSE · ORACLE VISUAL ZOOM LOCK",
-  "build": "40.1.52",
-  "asset_token": "market-core-v2.0-alpha-build-40.1.52",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.55 · PARKER LEWIS CAN'T LOSE · MATH CORE RAIL + ORACLE PERSISTENT VIEW CUMULATIVE LOCK",
+  "build": "40.1.55",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.55",
   "status": "recovery_candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-19T22:25:00+02:00",
+  "prepared_at": "2026-08-19T22:47:00+02:00",
   "published_at": null,
   "mode": "Administrator",
   "engine": {
@@ -12,12 +12,12 @@
     "reference_build": "38.15.11",
     "status": "protected"
   },
-  "parent_build": "40.1.51",
-  "lineage": "40.1.51 → 40.1.52 · adds Oracle visual-only zoom AUTO/×1/×2/×4/↺ centered on MAINTENANT. Math Core canonical dock/window synchronization and side-header containment are preserved. Zoom does not alter Oracle inputs, scores, horizons, LIVE micro-buffer, Top 5 aggregate logic or historical mainChart datasets.",
+  "parent_build": "40.1.52",
+  "lineage": "40.1.52 → 40.1.53 + 40.1.54 → 40.1.55 · cumulative lock combining the Math Core reduced-rail header suppression restore with the dedicated Oracle operator view-state persistence. No Oracle calculated output is persisted and no Window Manager behavior is rewritten.",
   "files": {
-    "app.js": "c844eacd04ac470a68ce6178dda02710623e472751b89eb9dea5d30e7fd5138a",
-    "index.html": "012ea87a119340a097cf7d08377b87d6c2fbfb9f62016dac334b2494e09cce2c",
-    "js/app.js": "772618a4dc4eac8f983813b85260493e561de1c1b2fc6b6400289ebe69217274",
+    "app.js": "8c4acdc153307355372abc5ede9510d51b60d660aa8891ef18a48eb0f638ebfd",
+    "index.html": "c2a48d04e8523c8258bd5402ee1610d6f4b06d6edf2bd2a6b0b8205f56c52734",
+    "js/app.js": "66f664b69cc288b8045a3cf70bb0cb97b5807f06422069ee230db4645d0d472a",
     "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
     "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
     "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -27,7 +27,7 @@
     "js/core/admin-window-manager.js": "4f342d829506b8157d7340c05a98fb9d9aec4f9dcd671374d3e89f456a626b80",
     "js/admin-visual-assets.js": "4975dd2798501c0f3615706e50a744121d6346b871d11ab0b80203f5badf190a",
     "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-    "js/architecture-freeze.js": "5d1b9a995be4722756934657f31b88baac08a996de4afefa3aa97d1d563fb2ef",
+    "js/architecture-freeze.js": "f9e39f88f62fa339278c4c1499de9d2823ad539d9e74460989a23ae73f8bbc0a",
     "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
     "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
     "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -35,7 +35,7 @@
     "assets/visual/admin-sources-archive.png": "e880d937bfcf1e01664ce18d93674a58479a10e25548e4a7536fc6fbcec32aa3",
     "assets/visual/admin-system-core.png": "f5bf4751cc2e6ad3871d3f5ef0d378f18ad8690cf06056cb937b0333a0beebc0",
     "assets/visual/admin-technical-reading-default.png": "c011dc679bbf1093e7b1e96b6142061c4f463d5bc2c0d5d0b0d4b2edfe99073d",
-    "administrator-version.json": "f22084d2d4a70b8ac4573018293ce75e7f9361b5060d3b17afe937e192af4cf4",
+    "administrator-version.json": "d83a45887a3e391dbb74f2f7104b6066a26d4c43c2f55b9634d3490e6714a67b",
     "js/market-memory.js": "a961e6cd2565c785fe36e744dd5dd77ceae3ee1c3b96346faea2bc69e163aea6",
     "js/analytical-memory.js": "42eb4bbb585b71d696238e6ab845ea5705f03bc65244d809d61df913a45ec720",
     "js/market-memory-collector.js": "18b489a1201aacc08acb4d9d4dab3de4129e8bea6deb983227ab962f4602de30",
@@ -46,9 +46,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "c844eacd04ac470a68ce6178dda02710623e472751b89eb9dea5d30e7fd5138a",
-      "index.html": "012ea87a119340a097cf7d08377b87d6c2fbfb9f62016dac334b2494e09cce2c",
-      "js/app.js": "772618a4dc4eac8f983813b85260493e561de1c1b2fc6b6400289ebe69217274",
+      "app.js": "8c4acdc153307355372abc5ede9510d51b60d660aa8891ef18a48eb0f638ebfd",
+      "index.html": "c2a48d04e8523c8258bd5402ee1610d6f4b06d6edf2bd2a6b0b8205f56c52734",
+      "js/app.js": "66f664b69cc288b8045a3cf70bb0cb97b5807f06422069ee230db4645d0d472a",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -58,7 +58,7 @@
       "js/core/admin-window-manager.js": "4f342d829506b8157d7340c05a98fb9d9aec4f9dcd671374d3e89f456a626b80",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "5d1b9a995be4722756934657f31b88baac08a996de4afefa3aa97d1d563fb2ef",
+      "js/architecture-freeze.js": "f9e39f88f62fa339278c4c1499de9d2823ad539d9e74460989a23ae73f8bbc0a",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -66,7 +66,7 @@
       "assets/visual/admin-sources-archive.png": "e880d937bfcf1e01664ce18d93674a58479a10e25548e4a7536fc6fbcec32aa3",
       "assets/visual/admin-system-core.png": "f5bf4751cc2e6ad3871d3f5ef0d378f18ad8690cf06056cb937b0333a0beebc0",
       "assets/visual/admin-technical-reading-default.png": "c011dc679bbf1093e7b1e96b6142061c4f463d5bc2c0d5d0b0d4b2edfe99073d",
-      "administrator-version.json": "f22084d2d4a70b8ac4573018293ce75e7f9361b5060d3b17afe937e192af4cf4",
+      "administrator-version.json": "d83a45887a3e391dbb74f2f7104b6066a26d4c43c2f55b9634d3490e6714a67b",
       "metals_quote_adapter_contract.json": "e0565991e07494797924473ffd85b33f82535c215c02e197a4b7fb95ed025ad9",
       "assets/images/missions_de_vie_constellation_bg.png": "da745320778106b7f0a362610903007e6db9c814cc4b46db3a4c59f08d0ce358",
       "js/market-memory.js": "a961e6cd2565c785fe36e744dd5dd77ceae3ee1c3b96346faea2bc69e163aea6",
@@ -78,10 +78,10 @@
       "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a"
     },
     "publication_identity": {
-      "build": "40.1.52",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.52",
+      "build": "40.1.55",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.55",
       "app_build_marker_required": true,
-      "app_sha256": "c844eacd04ac470a68ce6178dda02710623e472751b89eb9dea5d30e7fd5138a",
+      "app_sha256": "8c4acdc153307355372abc5ede9510d51b60d660aa8891ef18a48eb0f638ebfd",
       "status": "candidate_requires_firefox_validation"
     }
   },
@@ -423,6 +423,26 @@
     "version_awareness": {
       "github_propagation_visual_state": "ok/green informational; not warn/red",
       "syncing_text": "Build <current> actif · GitHub en propagation"
+    },
+    "oracle_operator_view_state": {
+      "build": "40.1.55",
+      "dedicated_state_key": "agent_crypto_erith_ia_oracle_view_state_v1",
+      "persisted_fields": [
+        "view",
+        "asset",
+        "horizon",
+        "zoom"
+      ],
+      "calculated_outputs_persisted": false,
+      "legacy_storage_compatibility": true,
+      "enabled": true
+    },
+    "math_core_rail_header_restore": {
+      "build": "40.1.55",
+      "complete_header_hidden_in_rail": true,
+      "canonical_rail_renderer_preserved": true,
+      "window_manager_modified": false,
+      "enabled": true
     }
   },
   "notes": [
@@ -482,7 +502,10 @@
     "40.1.50: Math Core state synchronization is consolidated into atlasV2ApplyMathDock; no parallel event bridge or second window implementation remains.",
     "40.1.51: only the native side presentation is compacted; top and floating Math Core keep their existing geometry and controls.",
     "40.1.52: Oracle receives visual-only AUTO/×1/×2/×4 zoom centered on MAINTENANT; no data, score, horizon or mainChart mutation.",
-    "40.1.52: Math Core 40.1.50/40.1.51 dock-state and side-header locks are preserved unchanged."
+    "40.1.52: Math Core 40.1.50/40.1.51 dock-state and side-header locks are preserved unchanged.",
+    "40.1.55: cumulative release includes the 40.1.53 Math Core reduced-rail header suppression restore.",
+    "40.1.55: cumulative release includes the 40.1.54 dedicated Oracle view/asset/horizon/zoom persistence and migration.",
+    "40.1.55: Oracle calculated outputs and market data remain live/recomputed, never restored from persistence."
   ],
   "autonomous_mirror": {
     "administrator_style_owner": "./style.css",

@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.52";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE VISUAL ZOOM LOCK";
+  const ADMIN_BUILD = "40.1.55";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · MATH CORE RAIL + ORACLE PERSISTENT VIEW CUMULATIVE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
