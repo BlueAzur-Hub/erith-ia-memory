@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.37 — PARKER LEWIS CAN'T LOSE · LIVE TOP5 PRESENTATION RESTORE LOCK
+     40.1.38 — PARKER LEWIS CAN'T LOSE · LIVE BOARD ALL-PERIODS + VERTICAL BARS VISIBILITY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -11,14 +11,14 @@
      - Report data-coverage limits as WARN, never as fake code failures.
 
      CONTRACT
-     - 40.1.37 restores live Top 5 PRESENTATION outside the historical canvas; no synthetic Chart.js endpoint, no market-analysis or memory semantic change.
+     - 40.1.38 keeps the Binance LIVE 24h value board available at the terminal historical point on every chart horizon and restores readable vertical shadow bars; no synthetic Chart.js endpoint, no market-analysis or memory semantic change.
      - NO automatic repair.
      - NO memory write.
      - NO network request from this module.
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.37";
+  const BUILD_CURRENT = "40.1.38";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -1035,7 +1035,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique, tandis que 40.1.37 restaure les valeurs Top 5 Binance LIVE uniquement dans le HUD, la légende et le tableau terminal virtuel hors dataset. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
+      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique. 40.1.38 garde le tableau terminal virtuel Binance LIVE + variation 24 h disponible sur tous les horizons et restaure la lisibilité des barres verticales acier sans modifier leur géométrie 88 %. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");

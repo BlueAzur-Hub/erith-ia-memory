@@ -5151,16 +5151,17 @@ function atlasExternalChartTooltip(context) {
         liveObservedAt: Number(point.raw?.atlasLiveObservedAt || point.raw?.x)
       }] : [];
 
-  // 40.1.37 — virtual live endpoint for PRESENTATION only.
+  // 40.1.38 — virtual live endpoint for PRESENTATION only, on every horizon.
   // The historical canvas remains pure: no synthetic point is pushed into any
-  // Chart.js dataset and no scale/update is triggered. At the last historical
-  // point of a 24h chart, the external value board may show current Binance 5/5.
+  // Chart.js dataset and no scale/update is triggered. At the last verified
+  // historical point, the external value board may show current Binance 5/5
+  // with the live 24h variation, independently of the selected chart horizon.
   const hoveredData = Array.isArray(point?.dataset?.data) ? point.dataset.data : [];
   const hoveredIndex = Number(point?.dataIndex);
   const atHistoricalEndpoint = hoveredData.length > 0
     && Number.isInteger(hoveredIndex)
     && hoveredIndex >= hoveredData.length - 1;
-  if (atHistoricalEndpoint && Number(chart.$atlasPeriod || state.chartPeriodDays || 1) === 1) {
+  if (atHistoricalEndpoint) {
     const datasets = atlasChartPriceDatasets(chart);
     const virtual = datasets.map((dataset, index) => {
       const coin = dataset?.atlasCoin || chart.$atlasCoin || null;
@@ -5219,7 +5220,7 @@ function atlasExternalChartTooltip(context) {
   const tooltipTitle = !everyRowIsCurrent
     ? `PRIX HISTORIQUE · VARIATION ${tooltipPeriodLabel}`
     : allKinds("live-binance")
-      ? `PRIX LIVE BINANCE · VARIATION ${tooltipPeriodLabel}`
+      ? "PRIX LIVE BINANCE · VARIATION 24h"
       : allKinds("collected")
         ? "OBSERVATIONS COLLECTÉES"
         : allKinds("conserved")
@@ -5764,7 +5765,8 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
       rows: volumeRows,
       // Cold-steel bars: geometry and real-volume modulation remain unchanged.
       color: "#5f7f92",
-      opacity: 0.115,
+      // 40.1.38: restore readable steel shadow bars without changing geometry.
+      opacity: 0.16,
       heightRatio: 0.88
     }];
 
@@ -6295,7 +6297,8 @@ function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, per
   chart.$atlasShadowSeries = normalizedEntries.map((entry, index) => ({
     rows: entry.data.filter(Boolean).map(point => ({ x: point.x, price: point.y, y: 1 })),
     color: "#587488",
-    opacity: index === 0 ? 0.085 : Math.max(0.038, 0.065 - index * 0.006),
+    // 40.1.38: keep Metal colors, but restore the validated vertical-bar readability.
+    opacity: index === 0 ? 0.16 : Math.max(0.075, 0.125 - index * 0.010),
     heightRatio: 0.88
   }));
 
@@ -6455,12 +6458,13 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
                   // Comparison shadow bars are structural, not a second set of
                   // crypto-colored curves. Keep them steel-neutral and quiet.
                   color: "#587488",
+                  // 40.1.38: visibility only; same bottom/curve-following 88% geometry.
                   opacity:
                     index === 0
-                      ? 0.085
+                      ? 0.16
                       : Math.max(
-                          0.038,
-                          0.065 - index * 0.006
+                          0.075,
+                          0.125 - index * 0.010
                         ),
                   heightRatio: 0.88
                 })
@@ -12265,7 +12269,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.37",
+  interface: "Build 40.1.38",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -12868,7 +12872,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.37",
+  build: "40.1.38",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -40509,7 +40513,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.37";
+const ATLAS_BUILD = "40.1.38";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47183,8 +47187,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.37",
-  asset_token: "market-core-v2.0-alpha-build-40.1.37"
+  build: "40.1.38",
+  asset_token: "market-core-v2.0-alpha-build-40.1.38"
 });
 
 function atlasRuntimeTruth3813() {
