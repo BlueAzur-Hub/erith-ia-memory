@@ -5167,7 +5167,7 @@ function atlasExternalChartTooltip(context) {
         liveObservedAt: Number(point.raw?.atlasLiveObservedAt || point.raw?.x)
       }] : [];
 
-  // 40.1.41 — virtual live endpoint for PRESENTATION only, on every horizon.
+  // 40.1.42 — virtual live endpoint for PRESENTATION only, on every horizon.
   // The historical canvas remains pure: no synthetic point is pushed into any
   // Chart.js dataset and no scale/update is triggered. At the last verified
   // historical point, the external value board may show current Binance 5/5
@@ -5620,7 +5620,7 @@ const atlasVolumeOverlayPlugin = {
       // Canonical 39.2.11 geometry + 39.2.21 Metal base paint.
       atlasDrawCurveFollowingShadowBars(args);
 
-      // 40.1.41 — illuminated Metal pass. Same points, baseline and 88% height.
+      // 40.1.42 — illuminated Metal pass. Same points, baseline and 88% height.
       // This is paint only: no data mutation, no synthetic endpoint and no scale write.
       chart.ctx.save();
       chart.ctx.globalCompositeOperation = "screen";
@@ -5638,8 +5638,8 @@ const atlasVolumeOverlayPlugin = {
   }
 };
 
-const ATLAS_VERTICAL_BAR_RENDERER_40141 = Object.freeze({
-  build: "40.1.41",
+const ATLAS_VERTICAL_BAR_RENDERER_40142 = Object.freeze({
+  build: "40.1.42",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -5672,7 +5672,7 @@ const ATLAS_VERTICAL_BAR_RENDERER_40141 = Object.freeze({
   synthetic_live_endpoint: false,
   websocket_canvas_rescale: false
 });
-globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40141__ = ATLAS_VERTICAL_BAR_RENDERER_40140;
+globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40142__ = ATLAS_VERTICAL_BAR_RENDERER_40142;
 
 const atlasOverlayAxesPlugin = {
   id: "atlasOverlayAxes",
@@ -6173,8 +6173,8 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
   return true;
 }
 
-const ATLAS_ORACLE_V0_40141 = Object.freeze({
-  build: "40.1.41",
+const ATLAS_ORACLE_V0_40142 = Object.freeze({
+  build: "40.1.42",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-dual-scenario-continuation",
   horizons: Object.freeze(["1m", "5m", "15m"]),
@@ -6189,7 +6189,7 @@ const ATLAS_ORACLE_V0_40141 = Object.freeze({
   financial_advice: false,
   output: "normalized interpretative continuation scenarios only"
 });
-globalThis.__ATLAS_ORACLE_V0_40141__ = ATLAS_ORACLE_V0_40141;
+globalThis.__ATLAS_ORACLE_V0_40142__ = ATLAS_ORACLE_V0_40142;
 
 const ATLAS_ORACLE_V0_ASSET_KEY = "agent_crypto_erith_ia_oracle_v0_asset";
 let atlasOracleV0AssetId = "";
@@ -12750,7 +12750,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.41",
+  interface: "Build 40.1.42",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -13353,7 +13353,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.41",
+  build: "40.1.42",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -41002,7 +41002,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.41";
+const ATLAS_BUILD = "40.1.42";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47676,8 +47676,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.41",
-  asset_token: "market-core-v2.0-alpha-build-40.1.41"
+  build: "40.1.42",
+  asset_token: "market-core-v2.0-alpha-build-40.1.42"
 });
 
 function atlasRuntimeTruth3813() {

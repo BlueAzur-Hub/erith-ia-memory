@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.41";
+  const ADMIN_BUILD = "40.1.42";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE CONTINUATION 1M/5M/15M + COMPACT MATH CORE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
