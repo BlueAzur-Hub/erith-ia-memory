@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.18 — MARKET FLOW ZERO-HOST + TECHNICAL READING SIDE-DOCK RECOVERY LOCK
+     40.1.19 — TECHNICAL READING AUTONOMOUS CLASSIC MIRROR LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.18";
+  const BUILD_CURRENT = "40.1.19";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -469,12 +469,14 @@
   }
 
   function technicalReadingGeometryOwnerContract() {
-    const classic = document.querySelector('#analyste.champagne-clean-lens');
-    const chart = classic?.querySelector(':scope > .chart-panel');
-    const detail = classic?.querySelector(':scope > #detailPanel.clean-lens-detail-panel');
-    if (!(classic instanceof HTMLElement) || !(chart instanceof HTMLElement) || !(detail instanceof HTMLElement)) {
+    const root = document.querySelector('#analyste.champagne-clean-lens');
+    const chart = root?.querySelector(':scope > .chart-panel');
+    const detail = root?.querySelector(':scope > #detailPanel.clean-lens-detail-panel');
+    const body = detail?.querySelector(':scope > .detail-panel-body');
+    if (!(root instanceof HTMLElement) || !(chart instanceof HTMLElement) || !(detail instanceof HTMLElement) || !(body instanceof HTMLElement)) {
       return { ok:false, detail:'ancrages Graphique/Lecture technique absents' };
     }
+
     const offenders = [];
     for (const sheet of [...document.styleSheets]) {
       const href = String(sheet.href || '');
@@ -484,21 +486,46 @@
       const walk = list => {
         for (const rule of list) {
           if (rule.cssRules) { walk([...rule.cssRules]); continue; }
-          const selector = String(rule.selectorText || '');
-          if (!selector.includes('#analyste')) continue;
+          const selector = String(rule.selectorText || '').replace(/\s+/g,' ').trim();
           const style = rule.style;
           if (!style) continue;
-          const geom = ['grid-template-columns','grid-template-rows','grid-column','grid-row','justify-self','align-self'];
+          const rootGeom = selector.endsWith('#analyste.champagne-clean-lens:not(.detail-collapsed)') ||
+            selector.endsWith('#analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating)');
+          const chartGeom = /> \.chart-panel(?:\b|$)/.test(selector);
+          const detailGeom = /> #detailPanel\.clean-lens-detail-panel/.test(selector);
+          if (!(rootGeom || chartGeom || detailGeom)) continue;
+          const geom = [
+            'display','position','inset','top','right','bottom','left',
+            'width','min-width','max-width','height','min-height','max-height',
+            'padding-right','grid-template-columns','grid-template-rows','grid-column','grid-row',
+            'justify-self','align-self'
+          ];
           const used = geom.filter(name => String(style.getPropertyValue(name) || '').trim());
           if (used.length) offenders.push(`${selector} => ${used.join(',')}`);
         }
       };
       walk(rules);
     }
-    const computed = getComputedStyle(classic);
+
+    const rootStyle = getComputedStyle(root);
+    const detailStyle = getComputedStyle(detail);
+    const bodyStyle = getComputedStyle(body);
+    const padRight = parseFloat(rootStyle.paddingRight || '0') || 0;
+    const runtimeOk =
+      rootStyle.display === 'block' &&
+      rootStyle.position === 'relative' &&
+      padRight > 0 &&
+      detailStyle.position === 'absolute' &&
+      detailStyle.top === '0px' &&
+      detailStyle.bottom === '0px' &&
+      detailStyle.height !== 'auto' &&
+      (bodyStyle.overflowY === 'auto' || bodyStyle.overflowY === 'scroll');
+
     return {
-      ok: offenders.length === 0 && computed.display === 'grid',
-      detail: offenders.length ? offenders.join(' · ') : `Classic owner actif · grid=${computed.gridTemplateColumns || '—'}`
+      ok: offenders.length === 0 && runtimeOk,
+      detail: offenders.length
+        ? offenders.join(' · ')
+        : `Mirror local actif · root=${rootStyle.display}/${rootStyle.position} · dock=${detailStyle.position} · scroll=${bodyStyle.overflowY}`
     };
   }
 
@@ -660,7 +687,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.18 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.19 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -678,8 +705,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.18 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.18</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.19 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.19</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -688,7 +715,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.18 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.19 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">
@@ -713,7 +740,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? "40.1.18 : Market Flow ne réserve plus de colonne opaque à gauche ; le bouton de cycle existant reste superposé. Lecture technique reprend le side-dock R6/R7 à droite du Graphique, sur la même ligne et toute la hauteur utile. Aucun moteur métier, ticker, clic crypto, Math Core ou mémoire n’est modifié."
+      ? "40.1.19 : Lecture technique reprend le contrat Classic depuis le style.css LOCAL de l’Administrator : Graphique maître de hauteur, dock absolu à droite, contenu en scroll interne. Les overrides géométriques admin-visual-assets sont supprimés. Market Flow, moteur métier, Math Core et mémoire restent inchangés."
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");
@@ -745,7 +772,7 @@
 
   function markdown(data = derive()) {
     const lines = [
-      "# Agent-Crypto — Administrator Consolidation 40.1.18", "",
+      "# Agent-Crypto — Administrator Consolidation 40.1.19", "",
       `- Généré : ${data.generatedAt}`,
       `- Verdict : ${data.label}`,
       `- FAIL critiques : ${data.criticalFails.length}`,
@@ -757,11 +784,11 @@
       lines.push(`- ${state} · ${row.name} · ${row.detail}`);
     }
     lines.push(
-      "", "## Validation finale 40.1.18", "",
+      "", "## Validation finale 40.1.19", "",
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
       "- Aucune nouvelle fonction n’a été ajoutée depuis le freeze 39.9.0R2 validé.",
-      "- Le candidat 40.1.18 exige une validation réelle dans Firefox après publication opérateur.",
+      "- Le candidat 40.1.19 exige une validation réelle dans Firefox après publication opérateur.",
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );
     return lines.join("\n");

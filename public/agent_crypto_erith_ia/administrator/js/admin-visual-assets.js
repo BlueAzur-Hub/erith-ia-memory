@@ -11,7 +11,7 @@
   const STORE = "visual_slots";
   const TECH_KEY = "technical-reading";
   const DEFAULT_TECH = "./assets/visual/admin-technical-reading-default.png";
-  const CLASSIC_MISSIONS = "../web/assets/images/missions_de_vie_constellation_bg.png";
+  const CLASSIC_MISSIONS = "./assets/images/missions_de_vie_constellation_bg.png";
   let techObjectUrl = null;
 
   function openDb() {

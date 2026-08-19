@@ -292,7 +292,7 @@ body.atlas-administrator-mirror #missions-vie.life-missions-intro{
   padding:38px 42px!important;
   background:
     linear-gradient(90deg,rgba(3,10,18,.86) 0 34%,rgba(3,10,18,.47) 67%,rgba(3,10,18,.26)),
-    url("../web/assets/images/missions_de_vie_constellation_bg.png") center/cover no-repeat!important;
+    url("./assets/images/missions_de_vie_constellation_bg.png") center/cover no-repeat!important;
   border:1px solid rgba(255,215,130,.18)!important;
 }
 body.atlas-administrator-mirror #missions-vie .life-missions-atmosphere{
@@ -456,7 +456,6 @@ body.atlas-administrator-mirror #detailPanel .detail-compact-strip{
 /* The full right panel becomes the image canvas. */
 body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel.clean-lens-detail-panel{
-  position:relative!important;
   isolation:isolate!important;
   overflow:hidden!important;
   background:rgba(2,8,16,.02)!important;
@@ -644,92 +643,6 @@ body.atlas-administrator-mirror #detailPanel p{
 
 /* ==========================================================================\n   39.4.6R5 — TECHNICAL READING SIDE DOCK + DECORATIVE EMBLEM SCALE LOCK\n\n   Operator contract:\n   - desktop restores the canonical Graphique | Lecture technique side-by-side layout;\n   - the selected/default Aerith image still fills the whole Technical Reading frame;\n   - existing Classic functional DOM remains over the image on <=10% alpha surfaces;\n   - decorative emblems are background accents only: small, <=10% opacity, no layout reservation;\n   - no Market/Memory/Atlas/Math/data-source behavior is changed.\n   ========================================================================== */
 
-/* DESKTOP: hard-lock the two-column composition. The old Classic rule that
-   placed Detail below the chart is intentionally superseded only here. */
-@media (min-width:1081px){
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed){
-    display:grid!important;
-    grid-template-columns:minmax(0,1fr) clamp(318px,22vw,366px)!important;
-    grid-template-rows:minmax(0,1fr)!important;
-    column-gap:8px!important;
-    row-gap:0!important;
-    align-items:stretch!important;
-    width:100%!important;
-    overflow:visible!important;
-  }
-
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .chart-panel{
-    grid-column:1!important;
-    grid-row:1!important;
-    min-width:0!important;
-    width:100%!important;
-    height:auto!important;
-    align-self:stretch!important;
-    margin:0!important;
-  }
-
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > #detailPanel.clean-lens-detail-panel:not([hidden]){
-    grid-column:2!important;
-    grid-row:1!important;
-    position:relative!important;
-    inset:auto!important;
-    display:flex!important;
-    flex-direction:column!important;
-    width:100%!important;
-    min-width:0!important;
-    max-width:none!important;
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    margin:0!important;
-    align-self:stretch!important;
-    overflow:hidden!important;
-    scrollbar-gutter:auto!important;
-  }
-
-  /* Expanded Detail owns the second column; the narrow vertical rail is only
-     useful while Detail is collapsed. */
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .detail-panel-rail{
-    display:none!important;
-  }
-}
-
-/* SMALLER VIEWPORTS: stack cleanly instead of allowing the panel to become a
-   tiny orphaned card. */
-@media (max-width:1080px){
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed){
-    display:grid!important;
-    grid-template-columns:minmax(0,1fr)!important;
-    grid-template-rows:auto minmax(420px,72vh)!important;
-    row-gap:8px!important;
-    column-gap:0!important;
-  }
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .chart-panel{
-    grid-column:1!important;
-    grid-row:1!important;
-    width:100%!important;
-    min-width:0!important;
-  }
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > #detailPanel.clean-lens-detail-panel:not([hidden]){
-    grid-column:1!important;
-    grid-row:2!important;
-    position:relative!important;
-    inset:auto!important;
-    display:flex!important;
-    flex-direction:column!important;
-    width:100%!important;
-    max-width:none!important;
-    height:100%!important;
-    min-height:420px!important;
-    max-height:none!important;
-    margin:0!important;
-    overflow:hidden!important;
-  }
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) > .detail-panel-rail{
-    display:none!important;
-  }
-}
-
 /* Keep R4 full-frame Aerith behaviour once the panel is back in its column. */
 body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel.clean-lens-detail-panel{
@@ -846,67 +759,6 @@ body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-colla
 
 /* ==========================================================================\n   39.4.6R6 — FULL-WIDTH TECHNICAL READING + LOW-GLASS VISIBILITY LOCK\n\n   Operator contract:\n   - docked Graphique + Lecture technique spans the complete Market zone width;\n   - a one-time JS migration clears only stale Graphique floating geometry;\n   - Aerith remains the full-frame Technical Reading background;\n   - secondary functional surfaces are 3–6% dark alpha (never above 10%);\n   - Source Dock starts collapsed but remains fully functional/openable;\n   - decorative emblems stay small background accents and never reserve layout.\n   ========================================================================== */
 
-/* DOCKED DESKTOP — occupy the complete available Market width. */
-@media (min-width:1081px){
-  body.atlas-administrator-mirror #market-zone > #analyste.champagne-clean-lens:not(.admin-native-direct-floating),
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.admin-native-direct-floating){
-    position:relative!important;
-    left:auto!important;
-    right:auto!important;
-    top:auto!important;
-    bottom:auto!important;
-    transform:none!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    height:auto!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    justify-self:stretch!important;
-    align-self:stretch!important;
-    grid-column:1 / -1!important;
-    box-sizing:border-box!important;
-  }
-
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
-    display:grid!important;
-    grid-template-columns:minmax(0,1fr) clamp(330px,22vw,380px)!important;
-    grid-template-rows:minmax(0,1fr)!important;
-    column-gap:8px!important;
-    row-gap:0!important;
-    align-items:stretch!important;
-    overflow:visible!important;
-  }
-
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > .chart-panel{
-    grid-column:1!important;
-    grid-row:1!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    margin:0!important;
-    align-self:stretch!important;
-  }
-
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > #detailPanel.clean-lens-detail-panel:not([hidden]){
-    grid-column:2!important;
-    grid-row:1!important;
-    position:relative!important;
-    inset:auto!important;
-    display:flex!important;
-    flex-direction:column!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    margin:0!important;
-    align-self:stretch!important;
-    overflow:hidden!important;
-  }
-}
-
 /* TECHNICAL READING — keep Aerith visually dominant. */
 body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel{
   background:rgba(2,8,16,.01)!important;
@@ -1008,19 +860,6 @@ body.atlas-administrator-mirror #detailPanel .source-portal{
       operator-selected Aerith image despite the R6 3–6% functional glass.
    No data / Market / Memory / Atlas / Math / Window Manager behavior changes.
    ========================================================================== */
-
-/* DOCK WIDTH — remove only the obsolete Classic reservation while Detail is
-   already a real second column in Administrator. */
-@media (min-width:1081px){
-  body.atlas-administrator-mirror
-  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
-    --atlas-open-detail-width:0px!important;
-    padding-right:0!important;
-    width:100%!important;
-    max-width:none!important;
-    box-sizing:border-box!important;
-  }
-}
 
 /* TECHNICAL READING IMAGE — purge the legacy Classic artwork + near-opaque
    lower gradient. The private/default Aerith <img> remains the single visual
@@ -1382,105 +1221,11 @@ body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small
   text-shadow:0 1px 2px rgba(0,0,0,.92),0 0 2px rgba(0,0,0,.68)!important;
 }
 
-
 /* ============================================================================
-   40.1.15 — GRAPH HEADER CLASSIC WIDTH CORRELATION RESTORE LOCK
+   40.1.19 — AUTONOMOUS CLASSIC MIRROR OWNERSHIP LOCK
 
-   Oracle: Classic 38.15.11 style.css.
-   The graph header DOM and toolbar rules are already shared with Classic.
-   The remaining disparity came from the Administrator side-dock reserving a
-   wider fixed/clamped Technical Reading column. Restore ONLY the canonical
-   Classic desktop width ratio while preserving Administrator vertical stretch,
-   full-height Technical Reading, window chrome and all interactions.
+   Geometry is owned by Administrator ./style.css, which carries the validated
+   Classic Technical Reading contract locally. This visual layer intentionally
+   does not redefine #analyste / direct chart / direct #detailPanel geometry.
+   Metal, private portrait, glass and window chrome remain Administrator-owned.
    ============================================================================ */
-@media (min-width:1081px){
-  body.atlas-administrator-mirror
-  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
-    grid-template-columns:minmax(0,3fr) minmax(292px,.82fr)!important;
-  }
-}
-
-/* ============================================================================
-   40.1.17 — TECHNICAL READING SIDE-DOCK RECOVERY LOCK
-
-   Historical geometry oracle: 39.4.6R6/R7, visually validated again in 39.9.0R2.
-   Restore only the desktop Graphique | Lecture technique composition:
-   - Graphique left;
-   - Lecture technique right, same row, full useful height;
-   - no second width reservation;
-   - full-clear Technical Reading surfaces remain untouched;
-   - no Market/Math/Memory/business behavior change.
-   ============================================================================ */
-@media (min-width:1081px){
-  body.atlas-administrator-mirror
-  #market-zone > #analyste.champagne-clean-lens:not(.admin-native-direct-floating),
-  body.atlas-administrator-mirror
-  #analyste.champagne-clean-lens:not(.admin-native-direct-floating){
-    position:relative!important;
-    left:auto!important;
-    right:auto!important;
-    top:auto!important;
-    bottom:auto!important;
-    transform:none!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    margin-left:0!important;
-    margin-right:0!important;
-    justify-self:stretch!important;
-    align-self:stretch!important;
-    grid-column:1 / -1!important;
-    box-sizing:border-box!important;
-  }
-
-  body.atlas-administrator-mirror
-  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating){
-    --atlas-open-detail-width:0px!important;
-    display:grid!important;
-    grid-template-columns:minmax(0,1fr) clamp(330px,22vw,380px)!important;
-    grid-template-rows:minmax(0,1fr)!important;
-    column-gap:8px!important;
-    row-gap:0!important;
-    align-items:stretch!important;
-    padding-right:0!important;
-    width:100%!important;
-    max-width:none!important;
-    overflow:visible!important;
-  }
-
-  body.atlas-administrator-mirror
-  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > .chart-panel{
-    grid-column:1!important;
-    grid-row:1!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    height:auto!important;
-    margin:0!important;
-    align-self:stretch!important;
-  }
-
-  body.atlas-administrator-mirror
-  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > #detailPanel.clean-lens-detail-panel:not([hidden]){
-    grid-column:2!important;
-    grid-row:1!important;
-    position:relative!important;
-    inset:auto!important;
-    display:flex!important;
-    flex-direction:column!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    height:auto!important;
-    min-height:0!important;
-    max-height:none!important;
-    margin:0!important;
-    align-self:stretch!important;
-    overflow:hidden!important;
-  }
-
-  body.atlas-administrator-mirror
-  #analyste.champagne-clean-lens:not(.detail-collapsed):not(.admin-native-direct-floating) > .detail-panel-rail{
-    display:none!important;
-  }
-}
