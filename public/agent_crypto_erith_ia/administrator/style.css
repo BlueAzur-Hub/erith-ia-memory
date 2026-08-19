@@ -25813,3 +25813,66 @@ html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision
     grid-template-columns:minmax(0,1fr) !important;
   }
 }
+
+
+/* ============================================================
+   BUILD 40.1.2 — FICHE CRYPTO LATERAL DOCK RESTORE LOCK
+   Exact restoration of the native 28.3.47/28.3.48 contract.
+   Runtime remains owned by app.js; this block restores only the
+   missing dock geometry/sticky surface that 40.1.1 did not carry.
+   ============================================================ */
+
+/* 28.3.47: keep at least 980px for Market and 320px for the card.
+   When Math Core is reduced to its native rail, the rail remains a
+   third independent column instead of squeezing the Crypto Card. */
+.market-workspace-grid.market-card-dock-active.math-dock-rail {
+  grid-template-columns:
+    minmax(980px, 1fr)
+    minmax(320px, 390px)
+    var(--atlas-canonical-side-rail-width, 64px) !important;
+  align-items: start !important;
+  column-gap: 6px !important;
+}
+
+/* Math Core “Dessus” lives outside the Market grid: Market + card.
+   Math Core “Latéral” never reaches this state because app.js disables
+   the Crypto Card lateral mode while the Math side column is occupied. */
+.market-workspace-grid.market-card-dock-active:not(.math-dock-rail):not(.math-dock-side) {
+  grid-template-columns:
+    minmax(980px, 1fr)
+    minmax(320px, 390px) !important;
+  align-items: start !important;
+  column-gap: 6px !important;
+}
+
+/* 28.3.48: same card surface, now docked; sticky, viewport bounded,
+   internal scrolling, contained overscroll and stable scrollbar. */
+#atlasMarketCardDockHost.atlas-market-card-dock-host {
+  box-sizing: border-box;
+  position: sticky;
+  top: 8px;
+  z-index: 30;
+  align-self: start;
+  width: 100%;
+  min-width: 320px;
+  max-width: 390px;
+  max-height: calc(100dvh - 16px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: 14px 15px;
+  border: 1px solid rgba(112, 244, 255, .34);
+  border-radius: 15px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(112, 244, 255, .10), transparent 36%),
+    linear-gradient(145deg, rgba(4, 14, 27, .985), rgba(9, 20, 35, .965));
+  color: #eaf8ff;
+  box-shadow: 0 22px 64px rgba(0, 0, 0, .34), inset 0 0 0 1px rgba(255, 216, 122, .055);
+  backdrop-filter: blur(18px) saturate(1.08);
+  pointer-events: auto;
+}
+
+#atlasMarketCardDockHost.atlas-market-card-dock-host[hidden] {
+  display: none !important;
+}
