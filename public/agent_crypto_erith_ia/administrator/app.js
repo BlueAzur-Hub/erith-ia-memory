@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.58",
+  build: "40.1.64",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.58",
+  build: "40.1.64",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6208,6 +6208,442 @@ const ATLAS_ORACLE_V0_ASSET_KEY = "agent_crypto_erith_ia_oracle_v0_asset";
 const ATLAS_ORACLE_VIEW_STATE_KEY = "agent_crypto_erith_ia_oracle_view_state_v1";
 let atlasOracleV0AssetId = "";
 let atlasOracleSurface = "grand";
+
+/* ============================================================
+   40.1.60 — ORACLE EVIDENCE COLLECTOR
+   Local, append-only T0 observations for later measurement.
+   - dedicated IndexedDB; no GitHub/network write;
+   - at most one observation/minute per active operator context;
+   - never stores future outcomes at capture time;
+   - no mutation of mainChart or historical datasets.
+   ============================================================ */
+const ATLAS_ORACLE_EVIDENCE_DB_NAME = "agent_crypto_oracle_evidence_v1";
+const ATLAS_ORACLE_EVIDENCE_DB_VERSION = 1;
+const ATLAS_ORACLE_EVIDENCE_STORE = "observations";
+const ATLAS_ORACLE_EVIDENCE_CAPTURE_MS = 60_000;
+const ATLAS_ORACLE_EVIDENCE_MAX_ROWS = 50_000;
+let atlasOracleEvidenceDbPromise = null;
+const atlasOracleEvidenceLastCapture = new Map();
+let atlasOracleEvidenceStatusState = { count:0, lastAt:0, lastError:null };
+
+function atlasOracleEvidenceOpen() {
+  if (atlasOracleEvidenceDbPromise) return atlasOracleEvidenceDbPromise;
+  atlasOracleEvidenceDbPromise = new Promise((resolve, reject) => {
+    if (typeof indexedDB === "undefined") return reject(new Error("IndexedDB indisponible"));
+    const request = indexedDB.open(ATLAS_ORACLE_EVIDENCE_DB_NAME, ATLAS_ORACLE_EVIDENCE_DB_VERSION);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(ATLAS_ORACLE_EVIDENCE_STORE)) {
+        const store = db.createObjectStore(ATLAS_ORACLE_EVIDENCE_STORE, { keyPath:"id" });
+        store.createIndex("t0", "t0", { unique:false });
+        store.createIndex("horizon_key", "horizon_key", { unique:false });
+        store.createIndex("asset_key", "asset_key", { unique:false });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error("Ouverture Oracle Evidence refusée"));
+  }).catch(error => {
+    atlasOracleEvidenceStatusState.lastError = String(error?.message || error || "IndexedDB error");
+    atlasOracleEvidenceDbPromise = null;
+    throw error;
+  });
+  return atlasOracleEvidenceDbPromise;
+}
+
+async function atlasOracleEvidenceAll() {
+  const db = await atlasOracleEvidenceOpen();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(ATLAS_ORACLE_EVIDENCE_STORE, "readonly");
+    const request = tx.objectStore(ATLAS_ORACLE_EVIDENCE_STORE).getAll();
+    request.onsuccess = () => resolve(Array.isArray(request.result) ? request.result : []);
+    request.onerror = () => reject(request.error || new Error("Lecture Oracle Evidence refusée"));
+  });
+}
+
+async function atlasOracleEvidencePut(row) {
+  const db = await atlasOracleEvidenceOpen();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(ATLAS_ORACLE_EVIDENCE_STORE, "readwrite");
+    tx.objectStore(ATLAS_ORACLE_EVIDENCE_STORE).put(row);
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error || new Error("Écriture Oracle Evidence refusée"));
+    tx.onabort = () => reject(tx.error || new Error("Écriture Oracle Evidence annulée"));
+  });
+  return row;
+}
+
+async function atlasOracleEvidenceDelete(ids) {
+  if (!Array.isArray(ids) || !ids.length) return 0;
+  const db = await atlasOracleEvidenceOpen();
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction(ATLAS_ORACLE_EVIDENCE_STORE, "readwrite");
+    const store = tx.objectStore(ATLAS_ORACLE_EVIDENCE_STORE);
+    ids.forEach(id => store.delete(id));
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error || new Error("Nettoyage Oracle Evidence refusé"));
+  });
+  return ids.length;
+}
+
+async function atlasOracleEvidenceRefreshStatus() {
+  try {
+    const rows = await atlasOracleEvidenceAll();
+    atlasOracleEvidenceStatusState.count = rows.length;
+    atlasOracleEvidenceStatusState.lastAt = rows.reduce((max,row)=>Math.max(max,Number(row?.t0||0)),0);
+    const node = document.getElementById("atlasOracleEvidenceStatus");
+    if (node) {
+      node.textContent = `MÉMOIRE ${rows.length}`;
+      node.title = rows.length
+        ? `${rows.length} observation(s) T0 locales · dernière ${new Date(atlasOracleEvidenceStatusState.lastAt).toLocaleTimeString("fr-FR")}`
+        : "Oracle Evidence Ledger local · aucune observation enregistrée";
+    }
+    return rows.length;
+  } catch (error) {
+    atlasOracleEvidenceStatusState.lastError = String(error?.message || error || "erreur");
+    const node = document.getElementById("atlasOracleEvidenceStatus");
+    if (node) { node.textContent = "MÉMOIRE !"; node.title = atlasOracleEvidenceStatusState.lastError; }
+    return 0;
+  }
+}
+
+function atlasOracleEvidenceConstituents(model, candidateModels = []) {
+  const rows = model?.aggregate ? candidateModels : [model];
+  return (Array.isArray(rows) ? rows : []).filter(row => row?.status === "ready" && row?.coin?.id && Number(row?.price) > 0).map(row => ({
+    id:String(row.coin.id),
+    symbol:String(row.coin.symbol || row.coin.name || row.coin.id).toUpperCase(),
+    price_t0:Number(row.price),
+    quote_timestamp:Number(row.quote?.timestamp || Date.now()),
+    quote_source:String(row.quote?.source || row.coin?.source || state.mainSource || "unknown")
+  }));
+}
+
+function atlasOracleEvidenceBuildObservation({ model, coin, candidateModels, view, horizon, surface }) {
+  const now = Date.now();
+  const symbol = model?.aggregate ? "TOP5" : String(coin?.symbol || coin?.name || "UNKNOWN").toUpperCase();
+  const assetKey = model?.aggregate ? "top5" : String(coin?.id || symbol).toLowerCase();
+  const micro = model?.aggregate ? null : model?.micro;
+  const constituents = atlasOracleEvidenceConstituents(model, candidateModels);
+  const regime = typeof atlasOracleRegimeClassify === "function" ? atlasOracleRegimeClassify(model) : null;
+  const ensemble = typeof atlasOracleEnsembleModel === "function" ? atlasOracleEnsembleModel(model) : null;
+  return {
+    schema:"atlas.oracle.evidence.v1",
+    id:`${now}-${assetKey}-${horizon.key}-${view.key}`,
+    t0:now,
+    created_at_utc:new Date(now).toISOString(),
+    build:String(typeof ATLAS_BUILD !== "undefined" ? ATLAS_BUILD : "unknown"),
+    model_version:"oracle-v1-scenario-engine",
+    asset_key:assetKey,
+    symbol,
+    aggregate:model?.aggregate === true,
+    constituents,
+    view:view.key,
+    surface:surface.key,
+    horizon_key:horizon.key,
+    horizon_minutes:Number(horizon.minutes),
+    data_truth:{
+      quote_usable:model?.quoteUsable !== false,
+      main_source:String(state.mainSource || "unknown"),
+      period_days:Number(state.chartPeriodDays || 1),
+      period_label:String(model?.periodLabel || "")
+    },
+    market:{
+      price_eur:Number.isFinite(Number(model?.price)) ? Number(model.price) : null,
+      change_1h_pct:Number.isFinite(Number(model?.h1)) ? Number(model.h1) : null,
+      change_24h_pct:Number.isFinite(Number(model?.h24)) ? Number(model.h24) : null,
+      change_7d_pct:Number.isFinite(Number(model?.h7)) ? Number(model.h7) : null,
+      change_30d_pct:Number.isFinite(Number(model?.h30)) ? Number(model.h30) : null,
+      historical_impulse_pct:Number.isFinite(Number(model?.historicalImpulse)) ? Number(model.historicalImpulse) : null
+    },
+    micro:{
+      change_pct:Number.isFinite(Number(model?.aggregate ? model?.basketMicroAvg : micro?.changePct)) ? Number(model.aggregate ? model.basketMicroAvg : micro.changePct) : null,
+      samples:Number(model?.aggregate ? model?.basketMicroSamples : micro?.samples || 0),
+      span_ms:Number(model?.aggregate ? 0 : micro?.spanMs || 0),
+      maturity:Number(model?.aggregate ? 0 : micro?.maturity || 0),
+      noise_pct:Number.isFinite(Number(model?.aggregate ? model?.basketMicroDispersion : micro?.noisePct)) ? Number(model.aggregate ? model.basketMicroDispersion : micro.noisePct) : null,
+      spread_bps:Number.isFinite(Number(micro?.spreadBps)) ? Number(micro.spreadBps) : null
+    },
+    basket:{
+      avg_24h_pct:Number(model?.basketAvg24 || 0),
+      micro_avg_pct:Number.isFinite(Number(model?.basketMicroAvg)) ? Number(model.basketMicroAvg) : null,
+      micro_dispersion_pct:Number.isFinite(Number(model?.basketMicroDispersion)) ? Number(model.basketMicroDispersion) : null,
+      breadth_positive:Number(model?.basketMicroBreadthPositive || 0),
+      breadth_negative:Number(model?.basketMicroBreadthNegative || 0),
+      coverage:Number(model?.basketMicroCoverage || 0)
+    },
+    math:{
+      realized_vol_pct:Number(model?.realizedVol || 0),
+      drawdown_pct:Number(model?.drawdown || 0),
+      coherence:Number(model?.coherence || 0)
+    },
+    oracle:{
+      bias:String(model?.bias || "MIXTE"),
+      direction_score:Number(model?.directionScore || 0),
+      bull_strength:Number(model?.bullStrength || 0),
+      bear_strength:Number(model?.bearStrength || 0),
+      data_confidence:Number(model?.dataConfidence || 0),
+      bull_envelope_pct:Number(model?.bullAmplitude || 0),
+      bear_envelope_pct:Number(model?.bearAmplitude || 0)
+    },
+    atlas:{ label:String(model?.atlas || "") },
+    aerith:{ label:String(model?.aerith || "") },
+    regime:regime ? { key:regime.key, label:regime.label, score:Number(regime.score||0), drivers:Array.isArray(regime.drivers)?regime.drivers:[] } : null,
+    ensemble:ensemble ? { label:ensemble.label, score:Number(ensemble.score||0), disagreement:Number(ensemble.disagreement||0), components:ensemble.components || {} } : null,
+    outcomes:{ "1m":null, "5m":null, "15m":null }
+  };
+}
+
+async function atlasOracleEvidencePruneIfNeeded() {
+  const rows = await atlasOracleEvidenceAll();
+  if (rows.length <= ATLAS_ORACLE_EVIDENCE_MAX_ROWS) return 0;
+  rows.sort((a,b)=>Number(a?.t0||0)-Number(b?.t0||0));
+  return atlasOracleEvidenceDelete(rows.slice(0, rows.length-ATLAS_ORACLE_EVIDENCE_MAX_ROWS).map(row=>row.id));
+}
+
+function atlasOracleEvidenceMaybeCapture(context) {
+  const { model, coin, candidateModels, view, horizon, surface } = context || {};
+  if (!model || model.status !== "ready" || !horizon?.key || !view?.key) return false;
+  const assetKey = model.aggregate ? "top5" : String(coin?.id || "");
+  if (!assetKey) return false;
+  const key = `${assetKey}|${view.key}|${horizon.key}|${surface.key}`;
+  const now = Date.now();
+  const last = Number(atlasOracleEvidenceLastCapture.get(key) || 0);
+  if (now - last < ATLAS_ORACLE_EVIDENCE_CAPTURE_MS) return false;
+  atlasOracleEvidenceLastCapture.set(key, now);
+  const row = atlasOracleEvidenceBuildObservation({ model, coin, candidateModels, view, horizon, surface });
+  atlasOracleEvidencePut(row).then(async () => {
+    atlasOracleEvidenceStatusState.lastError = null;
+    await atlasOracleEvidenceRefreshStatus();
+    if (atlasOracleEvidenceStatusState.count % 100 === 0) atlasOracleEvidencePruneIfNeeded().catch(()=>{});
+    if (typeof atlasOracleOutcomeSchedule === "function") atlasOracleOutcomeSchedule();
+  }).catch(error => {
+    atlasOracleEvidenceStatusState.lastError = String(error?.message || error || "erreur");
+    atlasOracleEvidenceLastCapture.delete(key);
+    atlasOracleEvidenceRefreshStatus().catch(()=>{});
+  });
+  return true;
+}
+
+globalThis.AtlasOracleEvidence = Object.freeze({
+  list: atlasOracleEvidenceAll,
+  count: atlasOracleEvidenceRefreshStatus,
+  refresh: atlasOracleEvidenceRefreshStatus,
+  database: ATLAS_ORACLE_EVIDENCE_DB_NAME,
+  store: ATLAS_ORACLE_EVIDENCE_STORE
+});
+
+
+/* ============================================================
+   40.1.61 — ORACLE OUTCOME RESOLVER
+   Resolves evidence only from observed prices. Missing acceptable samples stay
+   pending; no interpolation or synthetic future price is created.
+   ============================================================ */
+const ATLAS_ORACLE_OUTCOME_HORIZONS = Object.freeze({
+  "1m":{ ms:60_000, nearestToleranceMs:45_000, directToleranceMs:45_000 },
+  "5m":{ ms:300_000, nearestToleranceMs:75_000, directToleranceMs:60_000 },
+  "15m":{ ms:900_000, nearestToleranceMs:120_000, directToleranceMs:90_000 }
+});
+let atlasOracleOutcomeTimer = 0;
+let atlasOracleOutcomeRunning = false;
+let atlasOracleOutcomeStatusState = { resolved:0, pending:0, lastRunAt:0, lastError:null };
+
+function atlasOracleOutcomeNearestLive(assetId, targetAt, toleranceMs) {
+  const rows = atlasOracleLiveSeries.get(assetId) || [];
+  let best = null, bestDelta = Infinity;
+  rows.forEach(row => {
+    const t = Number(row?.t), price = Number(row?.price);
+    if (!(Number.isFinite(t) && Number.isFinite(price) && price > 0)) return;
+    const delta = Math.abs(t - targetAt);
+    if (delta < bestDelta) { bestDelta = delta; best = row; }
+  });
+  if (!best || bestDelta > toleranceMs) return null;
+  return { price:Number(best.price), t:Number(best.t), method:"oracle_live_nearest", lag_ms:Number(best.t)-targetAt };
+}
+
+function atlasOracleOutcomeDirectNearDue(assetId, targetAt, now, toleranceMs) {
+  if (Math.abs(now - targetAt) > toleranceMs) return null;
+  const quote = atlasExchangeQuoteForCoin(assetId, now);
+  if (!quote || !atlasQuoteIsUsable(quote) || !(Number(quote.price) > 0)) return null;
+  return { price:Number(quote.price), t:Number(quote.timestamp || now), method:"direct_quote_near_due", lag_ms:Number(quote.timestamp || now)-targetAt };
+}
+
+function atlasOracleOutcomeObservedPrice(assetId, targetAt, now, spec) {
+  return atlasOracleOutcomeNearestLive(assetId, targetAt, spec.nearestToleranceMs)
+    || atlasOracleOutcomeDirectNearDue(assetId, targetAt, now, spec.directToleranceMs)
+    || null;
+}
+
+function atlasOracleOutcomePathStats(assetId, startPrice, t0, targetAt) {
+  const rows = (atlasOracleLiveSeries.get(assetId) || []).filter(row => Number(row?.t) >= t0 && Number(row?.t) <= targetAt && Number(row?.price) > 0);
+  if (!rows.length || !(Number(startPrice) > 0)) return { mfe_pct:null, mae_pct:null, samples:0 };
+  const returns = rows.map(row => (Number(row.price)/Number(startPrice)-1)*100).filter(Number.isFinite);
+  return {
+    mfe_pct:returns.length ? Math.max(...returns) : null,
+    mae_pct:returns.length ? Math.min(...returns) : null,
+    samples:returns.length
+  };
+}
+
+function atlasOracleOutcomeDirection(value, horizonKey) {
+  const thresholds = { "1m":0.025, "5m":0.05, "15m":0.10 };
+  const limit = Number(thresholds[horizonKey] || 0.05);
+  const v = Number(value);
+  if (!Number.isFinite(v)) return "unknown";
+  if (v > limit) return "up";
+  if (v < -limit) return "down";
+  return "flat";
+}
+
+function atlasOracleOutcomeResolveRow(row, horizonKey, now) {
+  const spec = ATLAS_ORACLE_OUTCOME_HORIZONS[horizonKey];
+  if (!spec || !row || row.outcomes?.[horizonKey]) return null;
+  const t0 = Number(row.t0 || 0), targetAt = t0 + spec.ms;
+  if (!(t0 > 0) || now < targetAt) return null;
+  const constituents = (Array.isArray(row.constituents) ? row.constituents : []).filter(item => item?.id && Number(item?.price_t0) > 0);
+  if (!constituents.length) return null;
+  const resolved = constituents.map(item => {
+    const observed = atlasOracleOutcomeObservedPrice(String(item.id), targetAt, now, spec);
+    if (!observed) return null;
+    const start = Number(item.price_t0);
+    const ret = (Number(observed.price)/start - 1)*100;
+    return {
+      id:String(item.id), symbol:String(item.symbol||item.id), price_t0:start,
+      price_target:Number(observed.price), observed_at:Number(observed.t), return_pct:ret,
+      method:observed.method, lag_ms:Number(observed.lag_ms||0),
+      path:atlasOracleOutcomePathStats(String(item.id), start, t0, targetAt)
+    };
+  }).filter(Boolean);
+  if (resolved.length !== constituents.length) return null;
+  const realized = atlasOracleMean(resolved.map(item=>item.return_pct));
+  const mfe = atlasOracleMean(resolved.map(item=>item.path?.mfe_pct).filter(Number.isFinite));
+  const mae = atlasOracleMean(resolved.map(item=>item.path?.mae_pct).filter(Number.isFinite));
+  return {
+    target_at:targetAt,
+    target_at_utc:new Date(targetAt).toISOString(),
+    resolved_at:now,
+    resolved_at_utc:new Date(now).toISOString(),
+    realized_return_pct:Number(realized||0),
+    direction:atlasOracleOutcomeDirection(realized,horizonKey),
+    max_favorable_pct:Number.isFinite(Number(mfe)) ? Number(mfe) : null,
+    max_adverse_pct:Number.isFinite(Number(mae)) ? Number(mae) : null,
+    resolution_method:[...new Set(resolved.map(item=>item.method))].join("+"),
+    max_abs_lag_ms:Math.max(...resolved.map(item=>Math.abs(Number(item.lag_ms||0))),0),
+    constituents:resolved
+  };
+}
+
+async function atlasOracleOutcomeRefreshStatus(rows = null) {
+  const source = Array.isArray(rows) ? rows : await atlasOracleEvidenceAll();
+  let resolved = 0, pending = 0;
+  source.forEach(row => Object.keys(ATLAS_ORACLE_OUTCOME_HORIZONS).forEach(key => row?.outcomes?.[key] ? resolved++ : pending++));
+  atlasOracleOutcomeStatusState = { ...atlasOracleOutcomeStatusState, resolved, pending };
+  const node = document.getElementById("atlasOracleOutcomeStatus");
+  if (node) {
+    node.textContent = `ISSUES ${resolved}`;
+    node.title = `${resolved} issue(s) observée(s) · ${pending} horizon(s) encore en attente · aucune valeur future synthétique`;
+  }
+  return atlasOracleOutcomeStatusState;
+}
+
+async function atlasOracleOutcomeRun() {
+  if (atlasOracleOutcomeRunning) return atlasOracleOutcomeStatusState;
+  atlasOracleOutcomeRunning = true;
+  try {
+    const rows = await atlasOracleEvidenceAll();
+    const now = Date.now();
+    let changed = 0;
+    for (const row of rows) {
+      let next = null;
+      for (const key of Object.keys(ATLAS_ORACLE_OUTCOME_HORIZONS)) {
+        const outcome = atlasOracleOutcomeResolveRow(next || row, key, now);
+        if (!outcome) continue;
+        if (!next) next = { ...row, outcomes:{ ...(row.outcomes || {}) } };
+        next.outcomes[key] = outcome;
+      }
+      if (next) { await atlasOracleEvidencePut(next); changed++; }
+    }
+    atlasOracleOutcomeStatusState.lastRunAt = now;
+    atlasOracleOutcomeStatusState.lastError = null;
+    await atlasOracleOutcomeRefreshStatus(changed ? await atlasOracleEvidenceAll() : rows);
+    if (typeof atlasOracleCalibrationRefresh === "function") atlasOracleCalibrationRefresh().catch(()=>{});
+    return { ...atlasOracleOutcomeStatusState, changed };
+  } catch (error) {
+    atlasOracleOutcomeStatusState.lastError = String(error?.message || error || "erreur");
+    const node = document.getElementById("atlasOracleOutcomeStatus");
+    if (node) { node.textContent = "ISSUES !"; node.title = atlasOracleOutcomeStatusState.lastError; }
+    return atlasOracleOutcomeStatusState;
+  } finally { atlasOracleOutcomeRunning = false; }
+}
+
+function atlasOracleOutcomeSchedule() {
+  if (atlasOracleOutcomeTimer) return;
+  setTimeout(()=>atlasOracleOutcomeRun().catch(()=>{}), 2500);
+  atlasOracleOutcomeTimer = window.setInterval(()=>atlasOracleOutcomeRun().catch(()=>{}), 15_000);
+}
+
+globalThis.AtlasOracleOutcome = Object.freeze({ run:atlasOracleOutcomeRun, status:atlasOracleOutcomeRefreshStatus });
+
+
+/* ============================================================
+   40.1.62 — ORACLE CALIBRATION BOARD
+   Descriptive measurement from resolved evidence only.
+   A hit-rate is not a guaranteed probability and is never used as an order signal.
+   ============================================================ */
+let atlasOracleCalibrationState = { horizon_key:"15m", cases:0, hit_rate:null, envelope_coverage:null, up_rate:null, down_rate:null, flat_rate:null, updated_at:0 };
+let atlasOracleCalibrationLastRefresh = 0;
+
+function atlasOracleCalibrationPredictedDirection(score) {
+  const value = Number(score || 0);
+  if (value > 10) return "up";
+  if (value < -10) return "down";
+  return "flat";
+}
+
+function atlasOracleCalibrationComputeRows(rows, horizonKey) {
+  const resolved = (Array.isArray(rows) ? rows : []).map(row => ({ row, outcome:row?.outcomes?.[horizonKey] })).filter(item => Number.isFinite(Number(item.outcome?.realized_return_pct)));
+  const cases = resolved.length;
+  if (!cases) return { horizon_key:horizonKey, cases:0, hit_rate:null, envelope_coverage:null, up_rate:null, down_rate:null, flat_rate:null, mean_abs_return:null, updated_at:Date.now() };
+  let hits=0, covered=0, up=0, down=0, flat=0, absSum=0;
+  resolved.forEach(({row,outcome}) => {
+    const actual = String(outcome.direction || "unknown");
+    const predicted = atlasOracleCalibrationPredictedDirection(row?.oracle?.direction_score);
+    if (actual === predicted) hits++;
+    if (actual === "up") up++; else if (actual === "down") down++; else if (actual === "flat") flat++;
+    const ret = Number(outcome.realized_return_pct), bull = Number(row?.oracle?.bull_envelope_pct), bear = Number(row?.oracle?.bear_envelope_pct);
+    if (Number.isFinite(ret) && Number.isFinite(bull) && Number.isFinite(bear) && ret <= bull && ret >= -bear) covered++;
+    if (Number.isFinite(ret)) absSum += Math.abs(ret);
+  });
+  return {
+    horizon_key:horizonKey,
+    cases,
+    hit_rate:hits/cases*100,
+    envelope_coverage:covered/cases*100,
+    up_rate:up/cases*100,
+    down_rate:down/cases*100,
+    flat_rate:flat/cases*100,
+    mean_abs_return:absSum/cases,
+    updated_at:Date.now()
+  };
+}
+
+async function atlasOracleCalibrationRefresh(force = false) {
+  const now = Date.now();
+  if (!force && now - atlasOracleCalibrationLastRefresh < 10_000) return atlasOracleCalibrationState;
+  atlasOracleCalibrationLastRefresh = now;
+  const rows = await atlasOracleEvidenceAll();
+  const horizonKey = atlasOracleHorizonSpec().key;
+  atlasOracleCalibrationState = atlasOracleCalibrationComputeRows(rows, horizonKey);
+  const node = document.getElementById("atlasOracleCalibrationStatus");
+  if (node) {
+    const c = atlasOracleCalibrationState;
+    node.textContent = c.cases ? `CAL ${c.hit_rate.toFixed(0)}% · n${c.cases}` : "CAL n0";
+    node.title = c.cases
+      ? `Calibration descriptive ${horizonKey} · direction correcte ${c.hit_rate.toFixed(1)}% · enveloppe couverte ${c.envelope_coverage.toFixed(1)}% · hausse observée ${c.up_rate.toFixed(1)}% · baisse ${c.down_rate.toFixed(1)}% · neutre ${c.flat_rate.toFixed(1)}%`
+      : `Aucune issue ${horizonKey} résolue pour calibrer l'Oracle`;
+  }
+  return atlasOracleCalibrationState;
+}
+
+globalThis.AtlasOracleCalibration = Object.freeze({ refresh:atlasOracleCalibrationRefresh, compute:atlasOracleCalibrationComputeRows, state:()=>atlasOracleCalibrationState });
 
 // 40.1.54 — persist OPERATOR VIEW only. Never store model outputs, scores,
 // confidence, scenarios, prices, micro buffers or calculated market state.
@@ -6686,6 +7122,86 @@ function atlasOracleBuildAggregateModel(models) {
   };
 }
 
+/* ============================================================
+   40.1.63 — ORACLE REGIME ENGINE
+   Deterministic classification only: direction, breadth, micro impulse,
+   volatility and coherence. No LLM and no causal claim.
+   ============================================================ */
+function atlasOracleRegimeClassify(model) {
+  if (!model || model.status !== "ready") return { key:"waiting", label:"EN ATTENTE", score:0, drivers:[] };
+  const direction = Number(model.directionScore || 0);
+  const vol = Math.max(0, Number(model.realizedVol || 0));
+  const coherence = Number(model.coherence || 0);
+  const micro = Number(model.aggregate ? model.basketMicroAvg : model.micro?.changePct || 0);
+  const coverage = Math.max(0, Number(model.basketMicroCoverage || 0));
+  const breadth = coverage ? (Number(model.basketMicroBreadthPositive||0)-Number(model.basketMicroBreadthNegative||0))/coverage : 0;
+  const drivers = [`direction ${direction>=0?"+":""}${direction}`, `vol ${vol.toFixed(2)}%`, `coh ${Math.round(coherence)}`, `breadth ${breadth.toFixed(2)}`, `micro ${micro>=0?"+":""}${micro.toFixed(2)}%`];
+  if (coherence < 55 && Math.abs(direction) < 35) return { key:"contradictory", label:"CONTRADICTOIRE", score:direction, drivers };
+  if (vol >= 5.0 && Math.abs(direction) < 30) return { key:"high_volatility", label:"VOLATILITÉ FORTE", score:direction, drivers };
+  if (direction >= 35 && (coverage < 2 || breadth >= 0.20)) return { key:"bull_impulse", label:"IMPULSION HAUSSIÈRE", score:direction, drivers };
+  if (direction <= -35 && (coverage < 2 || breadth <= -0.20)) return { key:"bear_impulse", label:"IMPULSION BAISSIÈRE", score:direction, drivers };
+  if (Math.abs(direction) <= 12 && vol <= 2.7 && Math.abs(micro) <= 0.18) return { key:"calm_sideways", label:"CALME / LATÉRAL", score:direction, drivers };
+  if (Math.abs(micro) >= 0.18 && Math.abs(direction) >= 18 && Math.sign(micro) !== Math.sign(direction)) return { key:"reversal_watch", label:"RETOURNEMENT À SURVEILLER", score:direction, drivers };
+  if (direction >= 18) return { key:"bull_trend", label:"TENDANCE HAUSSIÈRE", score:direction, drivers };
+  if (direction <= -18) return { key:"bear_trend", label:"TENDANCE BAISSIÈRE", score:direction, drivers };
+  return { key:"mixed", label:"MIXTE", score:direction, drivers };
+}
+
+/* ============================================================
+   40.1.64 — ORACLE MULTI-MODEL ENSEMBLE
+   Transparent deterministic ensemble; NOT a trained AI probability model.
+   Components intentionally use different views of the same measured state.
+   ============================================================ */
+function atlasOracleEnsembleModel(model) {
+  if (!model || model.status !== "ready") return { label:"EN ATTENTE", score:0, disagreement:0, components:{} };
+  const h = atlasOracleHorizonSpec();
+  const signed = (value, cap) => Number.isFinite(Number(value)) ? clamp(-100,100,Number(value)/Math.max(.001,cap)*100) : 0;
+  const trend = clamp(-100,100,
+    signed(model.h1,3.5)*.18 + signed(model.h24,8)*.34 + signed(model.h7,16)*.26 + signed(model.h30,28)*.12 + signed(model.historicalImpulse,1.5)*.10
+  );
+  const microValue = Number(model.aggregate ? model.basketMicroAvg : model.micro?.changePct);
+  const microNoise = Math.abs(Number(model.aggregate ? model.basketMicroDispersion : model.micro?.noisePct || 0));
+  const microRaw = signed(microValue, Number(h.microCap||.55));
+  const micro = clamp(-100,100,microRaw * clamp(.35,1,1-microNoise/Math.max(.1,Number(h.microCap||.55))*.35));
+  const coverage = Math.max(0,Number(model.basketMicroCoverage||0));
+  const breadthBalance = coverage ? (Number(model.basketMicroBreadthPositive||0)-Number(model.basketMicroBreadthNegative||0))/coverage : 0;
+  const breadth = clamp(-100,100,breadthBalance*72 + signed(model.basketAvg24,7)*.28);
+  const riskPenalty = clamp(.35,1,(Number(model.coherence||0)/100) * (1/(1+Math.max(0,Number(model.realizedVol||0))/12)) * 1.35);
+  const riskAdjusted = clamp(-100,100,Number(model.directionScore||0)*riskPenalty);
+  const components = { trend, micro, breadth, risk_adjusted:riskAdjusted };
+  const weights = { trend:.30, micro:.25, breadth:.25, risk_adjusted:.20 };
+  const score = Object.entries(components).reduce((sum,[key,value])=>sum+value*weights[key],0);
+  const values = Object.values(components);
+  const disagreement = atlasOracleStd(values);
+  const label = score > 20 ? "HAUSSIER" : score < -20 ? "BAISSIER" : "MIXTE";
+  return { label, score:Math.round(score), disagreement:Math.round(disagreement), components, weights, trained_ai:false, probability:false };
+}
+
+function atlasOracleEnsembleRender(model) {
+  const ensemble = atlasOracleEnsembleModel(model);
+  const node = document.getElementById("atlasOracleEnsembleStatus");
+  if (node) {
+    node.textContent = `ENS ${ensemble.score>=0?"+":""}${ensemble.score} · Δ${ensemble.disagreement}`;
+    const c = ensemble.components;
+    node.title = `Ensemble déterministe ${ensemble.label} · trend ${c.trend.toFixed(0)} · micro ${c.micro.toFixed(0)} · breadth ${c.breadth.toFixed(0)} · risk ${c.risk_adjusted.toFixed(0)} · désaccord ${ensemble.disagreement} · aucune probabilité IA entraînée`;
+  }
+  const root = document.getElementById("atlasOracleV0");
+  if (root) { root.dataset.oracleEnsemble = ensemble.label.toLowerCase(); root.dataset.oracleEnsembleScore = String(ensemble.score); }
+  return ensemble;
+}
+
+function atlasOracleRegimeRender(model) {
+  const regime = atlasOracleRegimeClassify(model);
+  const node = document.getElementById("atlasOracleRegimeStatus");
+  if (node) {
+    node.textContent = `RÉGIME ${regime.label}`;
+    node.title = `${regime.label} · ${regime.drivers.join(" · ")} · classification déterministe, pas causalité`;
+  }
+  const root = document.getElementById("atlasOracleV0");
+  if (root) root.dataset.oracleRegime = regime.key;
+  return regime;
+}
+
 function atlasOracleCurveValue(amplitude, t, sign, waveScale = 0.055) {
   const progress = 0.18 * t + 0.82 * Math.pow(t, 1.22);
   const wave = Math.sin(t * Math.PI * 3) * amplitude * waveScale * (1 - t);
@@ -7019,7 +7535,7 @@ function atlasRenderOracleV0() {
     set("atlasOracleAerith", "Aerith : en attente");
     set("atlasOracleInputs", "Aucune donnée exploitable");
     set("atlasOracleOperatorIdentity", "EN ATTENTE");
-    set("atlasOracleOperatorState", `${surface.label} · ${view.label} · ${horizon.label} · ${zoom.label}`);
+    set("atlasOracleOperatorState", `${surface.label} · ${horizon.label} · ${zoom.label}`);
     set("atlasOracleOperatorBias", "BIAIS —");
     set("atlasOracleOperatorConfidence", "CONFIANCE —");
     setWidth("atlasOracleBullMeter", 0); setWidth("atlasOracleBearMeter", 0);
@@ -7060,11 +7576,15 @@ function atlasRenderOracleV0() {
   set("atlasOracleAerith", `Aerith : ${model.aerith} · cohérence ${model.coherence}/100${breadthText}`);
   set("atlasOracleInputs", `1 h ${pct(model.h1)} · 24 h ${pct(model.h24)} · 7 j ${pct(model.h7)} · 30 j ${pct(model.h30)} · micro ${pct(model.aggregate ? model.basketMicroAvg : model.micro?.changePct)} · panier 24 h ${pct(model.basketAvg24)}`);
   set("atlasOracleOperatorIdentity", `${symbol} · ${view.label}`);
-  set("atlasOracleOperatorState", `${surface.label} · ${view.label} · ${horizon.label} · ${zoom.label}`);
-  set("atlasOracleOperatorBias", `BIAIS ${model.bias}`);
-  set("atlasOracleOperatorConfidence", `CONFIANCE ${model.dataConfidence}/100`);
+  set("atlasOracleOperatorState", `${surface.label} · ${horizon.label} · ${zoom.label}`);
+  set("atlasOracleOperatorBias", `${model.bias}`);
+  set("atlasOracleOperatorConfidence", `CONF. ${model.dataConfidence}/100`);
   root.dataset.bias = model.bias.toLowerCase();
   atlasOracleDrawCanvas(model);
+  atlasOracleEvidenceMaybeCapture({ model, coin, candidateModels, view, horizon, surface });
+  atlasOracleCalibrationRefresh().catch(()=>{});
+  atlasOracleRegimeRender(model);
+  atlasOracleEnsembleRender(model);
   return true;
 }
 
@@ -7074,6 +7594,10 @@ function atlasInitOracleV0() {
   if (!root || root.dataset.oracleInit === "1") return;
   root.dataset.oracleInit = "1";
   atlasOracleRestorePersistentViewState();
+  atlasOracleEvidenceRefreshStatus().catch(()=>{});
+  atlasOracleOutcomeSchedule();
+  atlasOracleOutcomeRefreshStatus().catch(()=>{});
+  atlasOracleCalibrationRefresh(true).catch(()=>{});
   strip?.addEventListener("click", event => {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
@@ -13317,7 +13841,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.58",
+  interface: "Build 40.1.64",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -13920,7 +14444,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.58",
+  build: "40.1.64",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -41587,7 +42111,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.58";
+const ATLAS_BUILD = "40.1.64";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48263,8 +48787,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.58",
-  asset_token: "market-core-v2.0-alpha-build-40.1.58"
+  build: "40.1.64",
+  asset_token: "market-core-v2.0-alpha-build-40.1.64"
 });
 
 function atlasRuntimeTruth3813() {

@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.58",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.58 · PARKER LEWIS CAN'T LOSE · ORACLE PREMIUM OPERATOR VIEW CUMULATIVE LOCK",
+  "build": "40.1.64",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.64 · PARKER LEWIS CAN'T LOSE · ORACLE MULTI-MODEL ENSEMBLE CUMULATIVE LOCK",
   "status": "recovery_candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-19T23:00:00+02:00",
+  "prepared_at": "2026-08-19T23:54:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.58",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.58",
-    "asset_token": "market-core-v2.0-alpha-build-40.1.58",
+    "primary_build": "40.1.64",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.64",
+    "asset_token": "market-core-v2.0-alpha-build-40.1.64",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
@@ -51,7 +51,7 @@
     "classic_web_modified": false,
     "image_assets_modified": false,
     "business_runtime_rewritten": false,
-    "window_manager_modified": true,
+    "window_manager_modified": false,
     "market_memory_semantics_modified": false,
     "analytical_memory_semantics_modified": false,
     "decision_memory_semantics_modified": false,
@@ -335,7 +335,7 @@
       "canvas_scale_changed": false
     },
     "oracle_v0": {
-      "build": "40.1.52",
+      "build": "40.1.64",
       "owner": "app.js + index.html",
       "canvas": "#atlasOracleCanvas",
       "overlay_on_main_chart": true,
@@ -430,6 +430,77 @@
       ],
       "calculated_outputs_persisted": false,
       "main_chart_dataset_mutation": false
+    },
+    "oracle_operator_strip": {
+      "build": "40.1.64",
+      "source_build": "40.1.59",
+      "enabled": true,
+      "one_line": true,
+      "calculation_modified": false,
+      "main_chart_modified": false
+    },
+    "oracle_evidence_ledger": {
+      "build": "40.1.64",
+      "enabled": true,
+      "database": "agent_crypto_oracle_evidence_v1",
+      "store": "observations",
+      "capture_min_interval_ms": 60000,
+      "future_outcome_at_capture": false,
+      "network_write": false,
+      "main_chart_write": false,
+      "max_rows": 50000
+    },
+    "oracle_outcome_resolver": {
+      "build": "40.1.64",
+      "enabled": true,
+      "horizons": [
+        "1m",
+        "5m",
+        "15m"
+      ],
+      "observed_prices_only": true,
+      "nearest_live_preferred": true,
+      "synthetic_future_price": false,
+      "unresolved_stays_pending": true
+    },
+    "oracle_calibration_board": {
+      "build": "40.1.64",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "metrics": [
+        "directional_hit_rate",
+        "scenario_envelope_coverage",
+        "observed_up_down_flat_rates"
+      ],
+      "guaranteed_probability": false
+    },
+    "oracle_regime_engine": {
+      "build": "40.1.64",
+      "enabled": true,
+      "deterministic": true,
+      "inputs": [
+        "direction",
+        "breadth",
+        "micro_impulse",
+        "volatility",
+        "coherence"
+      ],
+      "llm": false,
+      "causal_claim": false
+    },
+    "oracle_multi_model_ensemble": {
+      "build": "40.1.64",
+      "enabled": true,
+      "deterministic": true,
+      "components": [
+        "trend",
+        "micro",
+        "breadth",
+        "risk_adjusted"
+      ],
+      "trained_ai": false,
+      "probability_output": false,
+      "disagreement_metric": true
     }
   },
   "active_runtime_files": [
@@ -501,9 +572,9 @@
       "app_sha256": "773910ea43cb9cf690f0077fdd9ddc4a5bf04d5dd24029652de03b7e762e57c7"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.58",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.64",
   "parent_build": "40.1.57",
-  "lineage": "40.1.57 → 40.1.58 · cumulative Premium Operator View: Grand Graph + real-history MIXTE composite + persistent surface selection + compact operator board. Historical datasets remain untouched; only operator presentation choices persist.",
+  "lineage": "40.1.63 → 40.1.64 · adds a transparent four-component deterministic ensemble (trend, micro, breadth, risk-adjusted) with disagreement score. It is explicitly not a trained predictive AI and does not mutate historical datasets.",
   "repository_cleanup": {
     "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
