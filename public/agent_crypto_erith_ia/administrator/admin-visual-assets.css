@@ -1297,147 +1297,68 @@ body.atlas-administrator-mirror
 }
 
 /* ============================================================================
-   TECHNICAL READING — CONSOLIDATED CURRENT VISUAL CONTRACT
-   Sources preserved in cascade order:
-   - 39.7.1 Ultra Clear
-   - 39.8.0R1 Near-Zero Glass
-   Ownership moved from index.html inline styles into admin-visual-assets.css.
-   No selector/value redesign in this consolidation.
+   TECHNICAL READING — CURRENT VISUAL OWNER · FULL-CLEAR SURFACES
+   Historical oracle: 39.6.2.
+   Geometry remains the restored R5/R6/R7 side-dock contract.
+   Remove the remaining dark fills while preserving borders, text and interaction.
    ============================================================================ */
-
-/* --- 39.7.1 Ultra Clear — preserved rules --- */
-#detailPanel.clean-lens-detail-panel {
-      background: linear-gradient(180deg,
-        rgba(5, 10, 18, 0.12) 0%,
-        rgba(5, 10, 18, 0.06) 36%,
-        rgba(5, 10, 18, 0.10) 100%) !important;
-      box-shadow:
-        inset 0 0 0 1px rgba(101, 217, 255, 0.16),
-        0 12px 30px rgba(0, 0, 0, 0.16) !important;
-      backdrop-filter: blur(3px) saturate(112%);
-    }
-
-    #detailPanel.clean-lens-detail-panel::before,
-    #detailPanel.clean-lens-detail-panel::after,
-    #detailPanel .detail-panel-body::before,
-    #detailPanel .detail-panel-body::after,
-    #detailPanel .detail-project-visual::before,
-    #detailPanel .detail-project-visual::after {
-      background: transparent !important;
-      opacity: 0.12 !important;
-      box-shadow: none !important;
-    }
-
-    #detailPanel .detail-panel-toggle,
-    #detailPanel .detail-panel-toggle-state,
-    #detailPanel details > summary,
-    #detailPanel .detail-compact-strip,
-    #detailPanel .atlas-detail-subwindow,
-    #detailPanel .atlas-detail-subwindow > summary,
-    #detailPanel .atlas-detail-subwindow-body,
-    #detailPanel .source-dock-body,
-    #detailPanel .source-dock-command,
-    #detailPanel .source-dock-status,
-    #detailPanel .source-dock-refresh,
-    #detailPanel .source-dock-portals,
-    #detailPanel .source-dock-meta,
-    #detailPanel .source-dock-meta span,
-    #detailPanel .detail-grid > div,
-    #detailPanel .broker-strip > div,
-    #detailPanel .diagnostic-strip > div,
-    #detailPanel .clean-lens-why-box,
-    #detailPanel #detailIntegrityWindow p,
-    #detailPanel .source-portal,
-    #detailPanel [data-window-state] {
-      background: rgba(6, 10, 16, 0.03) !important;
-      box-shadow: none !important;
-      backdrop-filter: blur(1.5px) saturate(106%);
-    }
-
-    #detailPanel .detail-panel-toggle,
-    #detailPanel details > summary,
-    #detailPanel .detail-compact-strip {
-      background: rgba(6, 10, 16, 0.06) !important;
-    }
-
-    #detailPanel details[open] > .atlas-detail-subwindow-body,
-    #detailPanel details[open] > .source-dock-body,
-    #detailPanel .detail-panel-body {
-      background: transparent !important;
-    }
-
-    #detailPanel .source-portal.is-disabled,
-    #detailPanel .source-dock-refresh:disabled {
-      opacity: 0.72;
-    }
-
-/* --- 39.8.0R1 Near-Zero Glass — preserved rules --- */
-/* 39.8.0R1 — CODE ONLY visual repair.
-       The private/default portrait is the visual layer.
-       Technical Reading UI must not darken it. */
-    body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel {
-      background: transparent !important;
-      background-color: transparent !important;
-      box-shadow: inset 0 0 0 1px rgba(101,217,255,.16) !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel::before,
-    body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel::after,
-    body.atlas-administrator-mirror #detailPanel .detail-panel-body::before,
-    body.atlas-administrator-mirror #detailPanel .detail-panel-body::after,
-    body.atlas-administrator-mirror #detailPanel .detail-project-visual::before,
-    body.atlas-administrator-mirror #detailPanel .detail-project-visual::after {
-      background: transparent !important;
-      background-image: none !important;
-      opacity: 0 !important;
-      box-shadow: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    body.atlas-administrator-mirror #detailPanel .detail-panel-body,
-    body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow,
-    body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow-body,
-    body.atlas-administrator-mirror #detailPanel .source-dock-body,
-    body.atlas-administrator-mirror #detailPanel .source-dock-command,
-    body.atlas-administrator-mirror #detailPanel .source-dock-status,
-    body.atlas-administrator-mirror #detailPanel .source-dock-portals,
-    body.atlas-administrator-mirror #detailPanel .source-dock-meta,
-    body.atlas-administrator-mirror #detailPanel .source-dock-meta span,
-    body.atlas-administrator-mirror #detailPanel .detail-grid > div,
-    body.atlas-administrator-mirror #detailPanel .broker-strip > div,
-    body.atlas-administrator-mirror #detailPanel .diagnostic-strip > div,
-    body.atlas-administrator-mirror #detailPanel .clean-lens-why-box,
-    body.atlas-administrator-mirror #detailPanel #detailIntegrityWindow p,
-    body.atlas-administrator-mirror #detailPanel [data-window-state] {
-      background: rgba(3,8,14,.008) !important;
-      background-color: rgba(3,8,14,.008) !important;
-      box-shadow: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    body.atlas-administrator-mirror #detailPanel .detail-panel-toggle,
-    body.atlas-administrator-mirror #detailPanel details > summary,
-    body.atlas-administrator-mirror #detailPanel .detail-compact-strip,
-    body.atlas-administrator-mirror #detailPanel .source-dock-refresh,
-    body.atlas-administrator-mirror #detailPanel .source-portal {
-      background: rgba(3,8,14,.018) !important;
-      background-color: rgba(3,8,14,.018) !important;
-      box-shadow: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-    }
-
-    body.atlas-administrator-mirror #detailPanel details[open] > .atlas-detail-subwindow-body,
-    body.atlas-administrator-mirror #detailPanel details[open] > .source-dock-body {
-      background: transparent !important;
-      background-color: transparent !important;
-    }
-
-    body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small,p,button,summary) {
-      text-shadow: 0 1px 2px rgba(0,0,0,.95), 0 0 4px rgba(0,0,0,.78);
-    }
-
+body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel::before,
+body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel::after,
+body.atlas-administrator-mirror #detailPanel .detail-panel-body::before,
+body.atlas-administrator-mirror #detailPanel .detail-panel-body::after,
+body.atlas-administrator-mirror #detailPanel .detail-project-visual::before,
+body.atlas-administrator-mirror #detailPanel .detail-project-visual::after{
+  content:none!important;
+  display:none!important;
+  opacity:0!important;
+  background:none!important;
+  background-image:none!important;
+  box-shadow:none!important;
+}
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow,
+body.atlas-administrator-mirror #detailPanel .atlas-source-dock,
+body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle,
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip,
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip>span,
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow>summary,
+body.atlas-administrator-mirror #detailPanel .detail-grid>div,
+body.atlas-administrator-mirror #detailPanel .why-box,
+body.atlas-administrator-mirror #detailPanel .clean-lens-why-box,
+body.atlas-administrator-mirror #detailPanel .source-dock-command,
+body.atlas-administrator-mirror #detailPanel .source-dock-status,
+body.atlas-administrator-mirror #detailPanel .source-portal,
+body.atlas-administrator-mirror #detailPanel .source-dock-meta,
+body.atlas-administrator-mirror #detailPanel .source-dock-meta>span,
+body.atlas-administrator-mirror #detailPanel .broker-strip>div,
+body.atlas-administrator-mirror #detailPanel .diagnostic-strip>div,
+body.atlas-administrator-mirror #detailPanel .clean-lens-integrity>p,
+body.atlas-administrator-mirror #detailPanel #detailIntegrityWindow p,
+body.atlas-administrator-mirror #detailPanel [data-window-state],
+body.atlas-administrator-mirror #detailPanel button:not(.detail-panel-toggle),
+body.atlas-administrator-mirror #detailPanel a,
+body.atlas-administrator-mirror #detailPanel .source-dock-refresh,
+body.atlas-administrator-mirror #detailPanel details[open]>.atlas-detail-subwindow-body,
+body.atlas-administrator-mirror #detailPanel details[open]>.source-dock-body,
+body.atlas-administrator-mirror #detailPanel .detail-panel-body,
+body.atlas-administrator-mirror #detailPanel .source-dock-portals,
+body.atlas-administrator-mirror #detailPanel .detail-grid,
+body.atlas-administrator-mirror #detailPanel .broker-strip,
+body.atlas-administrator-mirror #detailPanel .diagnostic-strip{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small,p,button,summary){
+  text-shadow:0 1px 2px rgba(0,0,0,.92),0 0 2px rgba(0,0,0,.68)!important;
+}
