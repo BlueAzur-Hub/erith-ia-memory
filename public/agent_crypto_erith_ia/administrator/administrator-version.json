@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.64",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.64 · PARKER LEWIS CAN'T LOSE · ORACLE MULTI-MODEL ENSEMBLE CUMULATIVE LOCK",
+  "build": "40.1.65",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.65 · PARKER LEWIS CAN'T LOSE · TOP 5 COMPOSITE CONTINUATION LOCK",
   "status": "recovery_candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-19T23:54:00+02:00",
+  "prepared_at": "2026-08-20T00:15:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.64",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.64",
-    "asset_token": "market-core-v2.0-alpha-build-40.1.64",
+    "primary_build": "40.1.65",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.65",
+    "asset_token": "market-core-v2.0-alpha-build-40.1.65",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
@@ -335,7 +335,7 @@
       "canvas_scale_changed": false
     },
     "oracle_v0": {
-      "build": "40.1.64",
+      "build": "40.1.65",
       "owner": "app.js + index.html",
       "canvas": "#atlasOracleCanvas",
       "overlay_on_main_chart": true,
@@ -432,7 +432,7 @@
       "main_chart_dataset_mutation": false
     },
     "oracle_operator_strip": {
-      "build": "40.1.64",
+      "build": "40.1.65",
       "source_build": "40.1.59",
       "enabled": true,
       "one_line": true,
@@ -440,7 +440,7 @@
       "main_chart_modified": false
     },
     "oracle_evidence_ledger": {
-      "build": "40.1.64",
+      "build": "40.1.65",
       "enabled": true,
       "database": "agent_crypto_oracle_evidence_v1",
       "store": "observations",
@@ -451,7 +451,7 @@
       "max_rows": 50000
     },
     "oracle_outcome_resolver": {
-      "build": "40.1.64",
+      "build": "40.1.65",
       "enabled": true,
       "horizons": [
         "1m",
@@ -464,7 +464,7 @@
       "unresolved_stays_pending": true
     },
     "oracle_calibration_board": {
-      "build": "40.1.64",
+      "build": "40.1.65",
       "enabled": true,
       "resolved_evidence_only": true,
       "metrics": [
@@ -475,7 +475,7 @@
       "guaranteed_probability": false
     },
     "oracle_regime_engine": {
-      "build": "40.1.64",
+      "build": "40.1.65",
       "enabled": true,
       "deterministic": true,
       "inputs": [
@@ -489,7 +489,7 @@
       "causal_claim": false
     },
     "oracle_multi_model_ensemble": {
-      "build": "40.1.64",
+      "build": "40.1.65",
       "enabled": true,
       "deterministic": true,
       "components": [
@@ -501,6 +501,38 @@
       "trained_ai": false,
       "probability_output": false,
       "disagreement_metric": true
+    },
+    "oracle_top5_composite_continuation": {
+      "build": "40.1.65",
+      "enabled": true,
+      "view": "continuation",
+      "asset": "top5",
+      "constituents": [
+        "BTC",
+        "ETH",
+        "BNB",
+        "XRP",
+        "SOL"
+      ],
+      "history_method": "arithmetic mean of individually normalized verified histories aligned from MAINTENANT backward",
+      "history_anchor": 100,
+      "horizons": [
+        "1m",
+        "5m",
+        "15m"
+      ],
+      "surfaces": [
+        "grand",
+        "composite"
+      ],
+      "scenario_engine_reused": true,
+      "evidence_ledger_integrated": true,
+      "outcome_resolver_integrated": true,
+      "regime_engine_integrated": true,
+      "ensemble_integrated": true,
+      "main_chart_write": false,
+      "synthetic_historical_points": false,
+      "existing_top5_view_modified": false
     }
   },
   "active_runtime_files": [
@@ -534,9 +566,9 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "773910ea43cb9cf690f0077fdd9ddc4a5bf04d5dd24029652de03b7e762e57c7",
-      "index.html": "0d253043c2033c1322345704a4a65b75caf88f7fad3bec09ab254d10bdf73ffa",
-      "js/app.js": "eb31dade53eff1ff30015dcdcad7336e94409c9b4f2e1916dbaf1164e984a115",
+      "app.js": "3cad0ef5284fd1269409cbbbb54ade584de0b24b4759cc5544962430e9292550",
+      "index.html": "6cb57e053b38ddbd9733361f6b1d0b64a9879a551429ca8ddd12823c37ab4052",
+      "js/app.js": "cd1171086698ed738b2ab7b782b1c31cea9a6bf6bf0df47a1020df5f2494929b",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -546,7 +578,7 @@
       "js/core/admin-window-manager.js": "4f342d829506b8157d7340c05a98fb9d9aec4f9dcd671374d3e89f456a626b80",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "02930425a7bb12cf539e3849d66a8fe734615be9720831462b5bd3866465595f",
+      "js/architecture-freeze.js": "e2e3e3e019890579bc56a9d0f5e1b33a4d58a8936366b0d2d418afe70b57137c",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -562,7 +594,13 @@
       "js/decision-board.js": "ec228d783870a9ac7180810e1c4a9b3732df7c74aab0d436776c4c4981638cfd",
       "js/retrospective-validation.js": "bee2fe28801879ec6e618558c673b15e94689fdec2215fd1c5947c220e0b67d8",
       "js/multi-collector-concordance.js": "9fecda63998a65a710ac8614228892c351a8a2c9e4ddd178b9513a83ae8761ac",
-      "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a"
+      "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a",
+      "publication_identity": {
+        "build": "40.1.65",
+        "asset_token": "market-core-v2.0-alpha-build-40.1.65",
+        "status": "candidate_requires_firefox_validation",
+        "app_sha256": "3cad0ef5284fd1269409cbbbb54ade584de0b24b4759cc5544962430e9292550"
+      }
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
@@ -572,9 +610,9 @@
       "app_sha256": "773910ea43cb9cf690f0077fdd9ddc4a5bf04d5dd24029652de03b7e762e57c7"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.64",
-  "parent_build": "40.1.57",
-  "lineage": "40.1.63 → 40.1.64 · adds a transparent four-component deterministic ensemble (trend, micro, breadth, risk-adjusted) with disagreement score. It is explicitly not a trained predictive AI and does not mutate historical datasets.",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.65",
+  "parent_build": "40.1.64",
+  "lineage": "40.1.64 → 40.1.65 · completes CONTINUATION with a TOP 5 composite basket built from the mean of the five normalized verified historical series; the composite ends at 100 at MAINTENANT and receives the existing Oracle scenario engine without mutating mainChart or the existing TOP 5 view.",
   "repository_cleanup": {
     "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
@@ -602,6 +640,7 @@
     "40.1.58: Oracle calculated outputs and market data remain live/recomputed, never restored from persistence.",
     "Grand Graph is a presentation lock only; Firefox visual validation required.",
     "MIXTE is a safe composite of real main-chart history plus Oracle scenarios in atlasOracleCanvas; it does not inject future points into mainChart.",
-    "Premium cumulative candidate. Persistent state includes view, asset, horizon, zoom and surface only; no calculated Oracle output is persisted."
+    "Premium cumulative candidate. Persistent state includes view, asset, horizon, zoom and surface only; no calculated Oracle output is persisted.",
+    "40.1.65: TOP 5 can now remain selected in CONTINUATION; one deterministic composite history is computed from the five normalized real histories and fed to the existing scenario engine."
   ]
 }

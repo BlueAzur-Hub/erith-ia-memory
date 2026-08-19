@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.64",
+  build: "40.1.65",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.64",
+  build: "40.1.65",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6194,6 +6194,8 @@ const ATLAS_ORACLE_V1_40149 = Object.freeze({
   live_micro_buffer: "session memory only · bounded 20 min · Binance LIVE quotes · no historical canvas write",
   live_micro_horizons: Object.freeze(["1m", "5m", "15m"]),
   top5_aggregate_focus: true,
+  top5_composite_continuation: true,
+  top5_composite_history: "mean of five normalized verified historical series · ends at 100 at MAINTENANT · read-only",
   visual_zoom: Object.freeze(["auto", "1x", "2x", "4x"]),
   visual_zoom_anchor: "MAINTENANT",
   visual_zoom_data_mutation: false,
@@ -6921,11 +6923,36 @@ function atlasOracleHistoricalSeries(coin) {
 }
 
 function atlasOracleHistoryForModel(row, surfaceKey = "grand") {
+  if (row?.aggregate) {
+    const composite = surfaceKey === "composite" ? row?.historicalFull : row?.historicalTail;
+    return Array.isArray(composite) ? composite : [];
+  }
   if (surfaceKey === "composite" && row?.coin) {
     const full = atlasOracleHistoricalSeries(row.coin);
     if (full.length >= 2) return full;
   }
   return Array.isArray(row?.historicalTail) ? row.historicalTail : [];
+}
+
+/* 40.1.65 — TOP 5 COMPOSITE CONTINUATION
+   Average the five already-normalized real historical series into one
+   deterministic basket curve ending at 100 at MAINTENANT. No synthetic
+   historical points and no write to mainChart. */
+function atlasOracleCompositeHistory(models, surfaceKey = "grand") {
+  const histories = (Array.isArray(models) ? models : [])
+    .map(row => atlasOracleHistoryForModel(row, surfaceKey))
+    .filter(rows => Array.isArray(rows) && rows.length >= 2);
+  if (!histories.length) return [];
+  const minLength = Math.min(...histories.map(rows => rows.length));
+  if (minLength < 2) return [];
+  const aligned = histories.map(rows => rows.slice(-minLength));
+  return Array.from({ length:minLength }, (_, index) => {
+    const points = aligned.map(rows => rows[index]).filter(Boolean);
+    const value = atlasOracleMean(points.map(point => point?.value));
+    const xValues = points.map(point => Number(point?.x)).filter(Number.isFinite);
+    const x = xValues.length ? atlasOracleMean(xValues) : index;
+    return { x:Number(x), value:Number(value), index };
+  }).filter(point => Number.isFinite(point.x) && Number.isFinite(point.value));
 }
 
 function atlasOracleHistoricalTail(coin) {
@@ -7075,6 +7102,9 @@ function atlasOracleBuildAggregateModel(models) {
   const rows = (Array.isArray(models) ? models : []).filter(row => row?.status === "ready");
   if (!rows.length) return { status:"waiting" };
   const avg = key => atlasOracleMean(rows.map(row => row?.[key]));
+  const historicalTail = atlasOracleCompositeHistory(rows, "grand");
+  const historicalFull = atlasOracleCompositeHistory(rows, "composite");
+  const historicalImpulse = atlasOracleTailImpulse(historicalTail, 5);
   const directionScore = Math.round(avg("directionScore") || 0);
   const bullStrength = Math.round(clamp(0,100,50 + directionScore * .5));
   const bearStrength = 100 - bullStrength;
@@ -7111,8 +7141,9 @@ function atlasOracleBuildAggregateModel(models) {
     drawdown:avg("drawdown") || 0,
     bullAmplitude:avg("bullAmplitude") || .1,
     bearAmplitude:avg("bearAmplitude") || .1,
-    historicalTail:[],
-    historicalImpulse:avg("historicalImpulse"),
+    historicalTail,
+    historicalFull,
+    historicalImpulse:Number.isFinite(Number(historicalImpulse)) ? Number(historicalImpulse) : avg("historicalImpulse"),
     micro:null,
     bias,
     atlas:`Panier ${positive}/${rows.length} orienté${positive>1?'s':''} hausse · ${negative}/${rows.length} baisse`,
@@ -7395,7 +7426,7 @@ function atlasOracleDrawCanvas(model) {
     ctx.fillText(surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "FILS HISTORIQUES RÉELS", pad.left + 5, pad.top + 13);
     ctx.fillStyle = "rgba(178,255,225,.84)"; ctx.fillText("FILS ORACLE TOP 5", anchorX + 10, pad.top + 13);
   } else {
-    const palette = atlasCryptoPalette(model.coin, 0);
+    const palette = model.aggregate ? { primary:"#62ecff" } : atlasCryptoPalette(model.coin, 0);
     const assetColor = palette.primary || "#62ecff";
     drawTail(model, assetColor, 2.7, .96);
 
@@ -7429,7 +7460,10 @@ function atlasOracleDrawCanvas(model) {
     if (centerEnd) { ctx.fillStyle = assetColor; ctx.fillText("BIAIS", centerEnd[0]+5, centerEnd[1]+3); }
 
     ctx.fillStyle = "rgba(174,219,236,.78)"; ctx.font = "900 9px system-ui, sans-serif";
-    ctx.fillText(surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "HISTORIQUE RÉEL", pad.left + 5, pad.top + 13);
+    const historyLabel = model.aggregate
+      ? (surface.key === "composite" ? "HISTORIQUE TOP 5 COMPOSITE RÉEL" : "TOP 5 COMPOSITE RÉEL")
+      : (surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "HISTORIQUE RÉEL");
+    ctx.fillText(historyLabel, pad.left + 5, pad.top + 13);
     ctx.fillStyle = "#bfff86"; ctx.fillText(`HAUSSE ${model.bullStrength}/100`, anchorX + 10, pad.top + 13);
     ctx.fillStyle = "#ff9aa4"; ctx.fillText(`BAISSE ${model.bearStrength}/100`, anchorX + 10, pad.top + h - 8);
   }
@@ -7467,7 +7501,7 @@ function atlasRenderOracleV0() {
   const horizon = atlasOracleHorizonSpec();
   const view = atlasOracleViewSpec();
   const candidates = atlasOracleCandidateCoins();
-  const aggregateFocus = view.key === "top5" && atlasOracleV0AssetId === ATLAS_ORACLE_TOP5_FOCUS;
+  const aggregateFocus = atlasOracleV0AssetId === ATLAS_ORACLE_TOP5_FOCUS;
   const candidateModels = candidates.map(item => atlasOracleBuildModel(item)).filter(row => row?.status === "ready");
   const coin = aggregateFocus ? (candidates[0] || null) : atlasOracleSelectCoin();
   const model = aggregateFocus ? atlasOracleBuildAggregateModel(candidateModels) : atlasOracleBuildModel(coin);
@@ -7602,7 +7636,6 @@ function atlasInitOracleV0() {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
       atlasOracleV0AssetId = ATLAS_ORACLE_TOP5_FOCUS;
-      state.chartViewV2.oracleView = "top5";
       try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
       atlasWriteChartV2Settings();
       atlasOracleWritePersistentViewState();
@@ -7640,8 +7673,6 @@ function atlasInitOracleV0() {
     state.chartViewV2.oracleView = key;
     if (key === "top5") {
       atlasOracleV0AssetId = ATLAS_ORACLE_TOP5_FOCUS;
-    } else if (atlasOracleV0AssetId === ATLAS_ORACLE_TOP5_FOCUS) {
-      atlasOracleV0AssetId = state.selectedCoinId || atlasOracleCandidateCoins()[0]?.id || "";
     }
     try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
     atlasWriteChartV2Settings();
@@ -13841,7 +13872,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.64",
+  interface: "Build 40.1.65",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -14444,7 +14475,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.64",
+  build: "40.1.65",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -42111,7 +42142,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.64";
+const ATLAS_BUILD = "40.1.65";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48787,8 +48818,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.64",
-  asset_token: "market-core-v2.0-alpha-build-40.1.64"
+  build: "40.1.65",
+  asset_token: "market-core-v2.0-alpha-build-40.1.65"
 });
 
 function atlasRuntimeTruth3813() {
