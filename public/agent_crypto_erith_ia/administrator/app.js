@@ -5167,7 +5167,7 @@ function atlasExternalChartTooltip(context) {
         liveObservedAt: Number(point.raw?.atlasLiveObservedAt || point.raw?.x)
       }] : [];
 
-  // 40.1.46 — virtual live endpoint for PRESENTATION only, on every horizon.
+  // 40.1.45 — virtual live endpoint for PRESENTATION only, on every horizon.
   // The historical canvas remains pure: no synthetic point is pushed into any
   // Chart.js dataset and no scale/update is triggered. At the last verified
   // historical point, the external value board may show current Binance 5/5
@@ -5620,7 +5620,7 @@ const atlasVolumeOverlayPlugin = {
       // Canonical 39.2.11 geometry + 39.2.21 Metal base paint.
       atlasDrawCurveFollowingShadowBars(args);
 
-      // 40.1.46 — illuminated Metal pass. Same points, baseline and 88% height.
+      // 40.1.45 — illuminated Metal pass. Same points, baseline and 88% height.
       // This is paint only: no data mutation, no synthetic endpoint and no scale write.
       chart.ctx.save();
       chart.ctx.globalCompositeOperation = "screen";
@@ -5638,8 +5638,8 @@ const atlasVolumeOverlayPlugin = {
   }
 };
 
-const ATLAS_VERTICAL_BAR_RENDERER_40146 = Object.freeze({
-  build: "40.1.46",
+const ATLAS_VERTICAL_BAR_RENDERER_40145 = Object.freeze({
+  build: "40.1.45",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -5672,7 +5672,7 @@ const ATLAS_VERTICAL_BAR_RENDERER_40146 = Object.freeze({
   synthetic_live_endpoint: false,
   websocket_canvas_rescale: false
 });
-globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40146__ = ATLAS_VERTICAL_BAR_RENDERER_40146;
+globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40145__ = ATLAS_VERTICAL_BAR_RENDERER_40145;
 
 const atlasOverlayAxesPlugin = {
   id: "atlasOverlayAxes",
@@ -6173,8 +6173,8 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
   return true;
 }
 
-const ATLAS_ORACLE_V1_40146 = Object.freeze({
-  build: "40.1.46",
+const ATLAS_ORACLE_V1_40145 = Object.freeze({
+  build: "40.1.45",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6191,18 +6191,129 @@ const ATLAS_ORACLE_V1_40146 = Object.freeze({
   synthetic_future_prices: false,
   prediction: false,
   top5_threads: "normalized directional scenarios only",
+  live_micro_buffer: "session memory only · bounded 20 min · Binance LIVE quotes · no historical canvas write",
+  live_micro_horizons: Object.freeze(["1m", "5m", "15m"]),
+  top5_aggregate_focus: true,
   financial_advice: false,
   output: "normalized interpretative continuation scenarios only"
 });
-globalThis.__ATLAS_ORACLE_V1_40146__ = ATLAS_ORACLE_V1_40146;
+globalThis.__ATLAS_ORACLE_V1_40145__ = ATLAS_ORACLE_V1_40145;
 
 const ATLAS_ORACLE_V0_ASSET_KEY = "agent_crypto_erith_ia_oracle_v0_asset";
 let atlasOracleV0AssetId = "";
 let atlasOracleV0ResizeObserver = null;
+const ATLAS_ORACLE_TOP5_FOCUS = "__top5__";
+const ATLAS_ORACLE_LIVE_BUFFER_MS = 20 * 60 * 1000;
+const ATLAS_ORACLE_LIVE_MIN_SAMPLE_MS = 1500;
+const atlasOracleLiveSeries = new Map();
 
 function atlasOracleFinite(value) {
   const number = Number(value);
   return Number.isFinite(number) ? number : null;
+}
+
+function atlasOracleMean(values) {
+  const clean = (Array.isArray(values) ? values : []).map(Number).filter(Number.isFinite);
+  return clean.length ? clean.reduce((sum, value) => sum + value, 0) / clean.length : null;
+}
+
+function atlasOracleStd(values) {
+  const clean = (Array.isArray(values) ? values : []).map(Number).filter(Number.isFinite);
+  if (clean.length < 2) return 0;
+  const mean = atlasOracleMean(clean) || 0;
+  const variance = clean.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / (clean.length - 1);
+  return Math.sqrt(Math.max(0, variance));
+}
+
+function atlasOracleRecordLiveQuote(coinOrId, quote = null, now = Date.now()) {
+  const coinId = typeof coinOrId === "string" ? coinOrId : coinOrId?.id;
+  if (!coinId || !ATLAS_EXCHANGE_PRODUCT_MAP?.[coinId]) return false;
+  const row = quote || atlasExchangeQuoteForCoin(coinId, now);
+  if (!row || !atlasQuoteIsUsable(row)) return false;
+  const price = Number(row.price);
+  const timestamp = Number(row.timestamp || now);
+  if (!(Number.isFinite(price) && price > 0 && Number.isFinite(timestamp))) return false;
+
+  const series = atlasOracleLiveSeries.get(coinId) || [];
+  const cutoff = now - ATLAS_ORACLE_LIVE_BUFFER_MS;
+  while (series.length && Number(series[0]?.t) < cutoff) series.shift();
+  const last = series[series.length - 1] || null;
+  const point = {
+    t: timestamp,
+    price,
+    bid: Number.isFinite(Number(row.bid)) ? Number(row.bid) : null,
+    ask: Number.isFinite(Number(row.ask)) ? Number(row.ask) : null,
+    change24h: Number.isFinite(Number(row.change24h)) ? Number(row.change24h) : null
+  };
+  if (last && timestamp <= Number(last.t)) {
+    series[series.length - 1] = point;
+  } else if (last && timestamp - Number(last.t) < ATLAS_ORACLE_LIVE_MIN_SAMPLE_MS) {
+    series[series.length - 1] = point;
+  } else {
+    series.push(point);
+  }
+  while (series.length > 900) series.shift();
+  atlasOracleLiveSeries.set(coinId, series);
+  return true;
+}
+
+function atlasOracleCaptureLiveQuotes(ids = null) {
+  const targets = Array.isArray(ids) && ids.length ? ids : Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP || {});
+  targets.filter(Boolean).forEach(id => {
+    try { atlasOracleRecordLiveQuote(id); } catch (_) {}
+  });
+}
+
+function atlasOracleMicroStats(coinOrId, horizon = atlasOracleHorizonSpec(), now = Date.now()) {
+  const coinId = typeof coinOrId === "string" ? coinOrId : coinOrId?.id;
+  if (!coinId) return null;
+  const source = atlasOracleLiveSeries.get(coinId) || [];
+  const windowMs = Math.max(60_000, Number(horizon?.minutes || 5) * 60_000);
+  const cutoff = now - windowMs;
+  const rows = source.filter(row => Number(row?.t) >= cutoff && Number(row?.t) <= now + 5_000 && Number.isFinite(Number(row?.price)));
+  if (!rows.length) return { status:"warming", samples:0, spanMs:0, maturity:0, changePct:null, noisePct:null, spreadBps:null };
+  const first = rows[0], last = rows[rows.length - 1];
+  const spanMs = Math.max(0, Number(last.t) - Number(first.t));
+  const maturity = clamp(0, 1, spanMs / windowMs);
+  const changePct = rows.length >= 2 && Number(first.price) > 0
+    ? (Number(last.price) / Number(first.price) - 1) * 100
+    : null;
+  const stepReturns = [];
+  for (let i = 1; i < rows.length; i += 1) {
+    const prev = Number(rows[i-1]?.price), current = Number(rows[i]?.price);
+    if (prev > 0 && current > 0) stepReturns.push((current / prev - 1) * 100);
+  }
+  const mid = Number(last.bid) > 0 && Number(last.ask) > 0 ? (Number(last.bid) + Number(last.ask)) / 2 : null;
+  const spreadBps = mid && Number(last.ask) >= Number(last.bid)
+    ? ((Number(last.ask) - Number(last.bid)) / mid) * 10_000
+    : null;
+  return {
+    status: rows.length >= 2 ? "ready" : "warming",
+    samples: rows.length,
+    spanMs,
+    maturity,
+    changePct: Number.isFinite(changePct) ? changePct : null,
+    noisePct: stepReturns.length >= 2 ? atlasOracleStd(stepReturns) : 0,
+    spreadBps: Number.isFinite(spreadBps) ? spreadBps : null,
+    latestPrice: Number(last.price),
+    latestAt: Number(last.t)
+  };
+}
+
+function atlasOracleTailImpulse(tail, lookback = 5) {
+  const rows = Array.isArray(tail) ? tail : [];
+  if (rows.length < 2) return null;
+  const start = rows[Math.max(0, rows.length - Math.max(2, Number(lookback) || 5))];
+  const end = rows[rows.length - 1];
+  const a = Number(start?.value), b = Number(end?.value);
+  return a > 0 && Number.isFinite(b) ? (b / a - 1) * 100 : null;
+}
+
+function atlasOracleDurationLabel(ms) {
+  const sec = Math.max(0, Math.round(Number(ms || 0) / 1000));
+  if (sec < 60) return `${sec}s`;
+  const min = Math.floor(sec / 60), rem = sec % 60;
+  return rem ? `${min}m${String(rem).padStart(2,"0")}` : `${min}m`;
 }
 
 function atlasOracleCandidateCoins() {
@@ -6253,9 +6364,9 @@ function atlasOracleHorizonSpec() {
     ? state.chartViewV2.oracleHorizon
     : "5m";
   const table = {
-    "1m": { key: "1m", label: "1 MIN", minutes: 1, amplitudeScale: 0.085, waveScale: 0.070 },
-    "5m": { key: "5m", label: "5 MIN", minutes: 5, amplitudeScale: 0.180, waveScale: 0.055 },
-    "15m": { key: "15m", label: "15 MIN", minutes: 15, amplitudeScale: 0.320, waveScale: 0.045 }
+    "1m": { key: "1m", label: "1 MIN", minutes: 1, amplitudeScale: 0.085, waveScale: 0.070, microCap: 0.20 },
+    "5m": { key: "5m", label: "5 MIN", minutes: 5, amplitudeScale: 0.180, waveScale: 0.055, microCap: 0.55 },
+    "15m": { key: "15m", label: "15 MIN", minutes: 15, amplitudeScale: 0.320, waveScale: 0.045, microCap: 1.20 }
   };
   return table[key] || table["5m"];
 }
@@ -6281,7 +6392,7 @@ function atlasOracleHistoricalTail(coin) {
   const clean = rows.map(point => ({ x: Number(point?.x), y: Number(point?.y) }))
     .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y));
   if (clean.length < 2) return [];
-  const tail = clean.slice(-Math.min(18, clean.length));
+  const tail = clean.slice(-Math.min(28, clean.length));
   const last = Number(tail[tail.length - 1]?.y);
   if (!Number.isFinite(last) || Math.abs(last) < 1e-12) return [];
   return tail.map((point, index) => ({
@@ -6295,15 +6406,24 @@ function atlasOracleBuildModel(coin) {
   if (!coin) return { status: "waiting" };
   const quote = atlasCurrentQuoteForCoin(coin);
   const quoteUsable = atlasQuoteIsUsable(quote);
+  const h1 = atlasOracleFinite(coin.change1h);
   const h24 = atlasOracleFinite(quoteUsable && Number.isFinite(Number(quote?.change24h)) ? quote.change24h : coin.change24h);
   const h7 = atlasOracleFinite(coin.change7d);
   const h30 = atlasOracleFinite(coin.change30d);
+  const oracleHorizon = atlasOracleHorizonSpec();
+  const historicalTail = atlasOracleHistoricalTail(coin);
+  const historicalImpulse = atlasOracleTailImpulse(historicalTail, 5);
+  const micro = atlasOracleMicroStats(coin, oracleHorizon);
+  const microMaturity = Number(micro?.maturity || 0);
 
   const weightedRows = [
-    [atlasOracleSignedUnit(h24, 8), 0.48],
-    [atlasOracleSignedUnit(h7, 16), 0.32],
-    [atlasOracleSignedUnit(h30, 28), 0.20]
-  ].filter(([value]) => value !== null);
+    [atlasOracleSignedUnit(h24, 8), 0.30],
+    [atlasOracleSignedUnit(h7, 16), 0.20],
+    [atlasOracleSignedUnit(h30, 28), 0.10],
+    [atlasOracleSignedUnit(h1, 3.5), 0.12],
+    [atlasOracleSignedUnit(historicalImpulse, 1.5), 0.10],
+    [atlasOracleSignedUnit(micro?.changePct, Number(oracleHorizon.microCap || .55)), 0.18 * microMaturity]
+  ].filter(([value, weight]) => value !== null && weight > 0.001);
   const weightSum = weightedRows.reduce((sum, row) => sum + row[1], 0) || 1;
   const horizonMomentum = weightedRows.reduce((sum, row) => sum + row[0] * row[1], 0) / weightSum;
 
@@ -6314,33 +6434,47 @@ function atlasOracleBuildModel(coin) {
     return Number.isFinite(value) ? value : null;
   }).filter(Number.isFinite);
   const basketAvg24 = basketMoves.length ? basketMoves.reduce((sum, value) => sum + value, 0) / basketMoves.length : 0;
-  const basketMomentum = atlasOracleSignedUnit(basketAvg24, 7) || 0;
 
-  const direction = clamp(-1, 1, horizonMomentum * 0.82 + basketMomentum * 0.18);
+  const basketMicroRows = basket.map(item => atlasOracleMicroStats(item, oracleHorizon)).filter(row => row?.status === "ready" && Number.isFinite(Number(row.changePct)));
+  const basketMicroAvg = atlasOracleMean(basketMicroRows.map(row => row.changePct));
+  const basketMicroDispersion = atlasOracleStd(basketMicroRows.map(row => row.changePct));
+  const basketMicroBreadthPositive = basketMicroRows.filter(row => Number(row.changePct) > 0.005).length;
+  const basketMicroBreadthNegative = basketMicroRows.filter(row => Number(row.changePct) < -0.005).length;
+  const basketMicroCoverage = basketMicroRows.length;
+  const basketMicroSamples = basketMicroRows.reduce((sum, row) => sum + Number(row.samples || 0), 0);
+  const basketMicroMaturity = atlasOracleMean(basketMicroRows.map(row => row.maturity)) || 0;
+
+  const basket24Momentum = atlasOracleSignedUnit(basketAvg24, 7) || 0;
+  const basketShortMomentum = atlasOracleSignedUnit(basketMicroAvg, Number(oracleHorizon.microCap || .55)) || 0;
+  const basketMomentum = clamp(-1, 1, basket24Momentum * (0.82 - basketMicroMaturity * .18) + basketShortMomentum * (.18 + basketMicroMaturity * .18));
+
+  const direction = clamp(-1, 1, horizonMomentum * 0.80 + basketMomentum * 0.20);
   const directionScore = Math.round(direction * 100);
   const bullStrength = Math.round(clamp(0, 100, 50 + directionScore * 0.5));
   const bearStrength = 100 - bullStrength;
 
   const quality = computeAtlasDataQuality(coin);
-  const coherence = atlasOracleHorizonCoherence([h24, h7, h30]);
+  const coherence = atlasOracleHorizonCoherence([h1, h24, h7, h30, historicalImpulse, micro?.changePct]);
   const mathIsCurrent = String(state.math?.asset || "").includes(`(${coin.symbol})`);
   const completeness = mathIsCurrent && Number.isFinite(Number(state.math?.completenessPct))
     ? clamp(0, 100, Number(state.math.completenessPct))
     : 70;
   const liveTruth = quoteUsable ? 100 : 62;
+  const microBonus = micro?.status === "ready" ? Math.round(4 * microMaturity) : 0;
   const dataConfidence = Math.round(clamp(0, 100,
-    Number(quality?.score || 0) * 0.28 + completeness * 0.30 + coherence * 0.24 + liveTruth * 0.18
+    Number(quality?.score || 0) * 0.27 + completeness * 0.29 + coherence * 0.23 + liveTruth * 0.17 + microBonus
   ));
 
   const realizedVol = mathIsCurrent && Number.isFinite(Number(state.math?.realizedWindowPct)) ? Number(state.math.realizedWindowPct) : 2.5;
   const drawdown = mathIsCurrent && Number.isFinite(Number(state.math?.maxDrawdownPct)) ? Number(state.math.maxDrawdownPct) : 1.5;
+  const microNoise = Number.isFinite(Number(micro?.noisePct)) ? Number(micro.noisePct) : 0;
   const riskEnvelope = clamp(1.2, 10,
-    1.25 + Math.abs(h24 || 0) * 0.16 + Math.abs(h7 || 0) * 0.055 + realizedVol * 0.30 + drawdown * 0.10
+    1.25 + Math.abs(h24 || 0) * 0.15 + Math.abs(h7 || 0) * 0.05 + realizedVol * 0.29 + drawdown * 0.10 + microNoise * 0.45
   );
-  const oracleHorizon = atlasOracleHorizonSpec();
   const horizonEnvelope = riskEnvelope * oracleHorizon.amplitudeScale;
-  const bullAmplitude = clamp(0.06, 3.2, horizonEnvelope * (0.72 + bullStrength / 190));
-  const bearAmplitude = clamp(0.06, 3.2, horizonEnvelope * (0.72 + bearStrength / 190));
+  const shortTilt = clamp(-.22, .22, (atlasOracleSignedUnit(micro?.changePct, oracleHorizon.microCap) || 0) * microMaturity * .16);
+  const bullAmplitude = clamp(0.06, 3.2, horizonEnvelope * (0.72 + bullStrength / 190 + Math.max(0, shortTilt)));
+  const bearAmplitude = clamp(0.06, 3.2, horizonEnvelope * (0.72 + bearStrength / 190 + Math.max(0, -shortTilt)));
 
   const bias = direction > 0.18 ? "HAUSSIER" : direction < -0.18 ? "BAISSIER" : "MIXTE";
   const aerith = coherence >= 90 && dataConfidence >= 75
@@ -6356,12 +6490,19 @@ function atlasOracleBuildModel(coin) {
 
   return {
     status: "ready",
+    aggregate: false,
     coin,
     quote,
     quoteUsable,
     price: atlasOracleFinite(quoteUsable ? quote.price : (coin.priceEur ?? coin.price)),
-    h24, h7, h30,
+    h1, h24, h7, h30,
     basketAvg24,
+    basketMicroAvg,
+    basketMicroDispersion,
+    basketMicroBreadthPositive,
+    basketMicroBreadthNegative,
+    basketMicroCoverage,
+    basketMicroSamples,
     directionScore,
     bullStrength,
     bearStrength,
@@ -6372,11 +6513,64 @@ function atlasOracleBuildModel(coin) {
     bullAmplitude,
     bearAmplitude,
     oracleHorizon,
-    historicalTail: atlasOracleHistoricalTail(coin),
+    historicalTail,
+    historicalImpulse,
+    micro,
     bias,
     atlas,
     aerith,
     periodLabel: atlasChartPeriodLabel(Number(state.chartPeriodDays || 1))
+  };
+}
+
+function atlasOracleBuildAggregateModel(models) {
+  const rows = (Array.isArray(models) ? models : []).filter(row => row?.status === "ready");
+  if (!rows.length) return { status:"waiting" };
+  const avg = key => atlasOracleMean(rows.map(row => row?.[key]));
+  const directionScore = Math.round(avg("directionScore") || 0);
+  const bullStrength = Math.round(clamp(0,100,50 + directionScore * .5));
+  const bearStrength = 100 - bullStrength;
+  const positive = rows.filter(row => Number(row.directionScore) > 5).length;
+  const negative = rows.filter(row => Number(row.directionScore) < -5).length;
+  const microRows = rows.filter(row => row.micro?.status === "ready" && Number.isFinite(Number(row.micro?.changePct)));
+  const basketMicroAvg = atlasOracleMean(microRows.map(row => row.micro.changePct));
+  const basketMicroDispersion = atlasOracleStd(microRows.map(row => row.micro.changePct));
+  const basketMicroSamples = microRows.reduce((sum,row)=>sum+Number(row.micro?.samples||0),0);
+  const basketMicroBreadthPositive = microRows.filter(row => Number(row.micro.changePct) > .005).length;
+  const basketMicroBreadthNegative = microRows.filter(row => Number(row.micro.changePct) < -.005).length;
+  const dataConfidence = Math.round(avg("dataConfidence") || 0);
+  const coherence = Math.round(avg("coherence") || 0);
+  const bias = directionScore > 18 ? "HAUSSIER" : directionScore < -18 ? "BAISSIER" : "MIXTE";
+  return {
+    status:"ready",
+    aggregate:true,
+    coin:null,
+    price:null,
+    h1:avg("h1"), h24:avg("h24"), h7:avg("h7"), h30:avg("h30"),
+    basketAvg24:avg("h24") || 0,
+    basketMicroAvg,
+    basketMicroDispersion,
+    basketMicroBreadthPositive,
+    basketMicroBreadthNegative,
+    basketMicroCoverage:microRows.length,
+    basketMicroSamples,
+    directionScore,
+    bullStrength,
+    bearStrength,
+    dataConfidence,
+    coherence,
+    realizedVol:avg("realizedVol") || 0,
+    drawdown:avg("drawdown") || 0,
+    bullAmplitude:avg("bullAmplitude") || .1,
+    bearAmplitude:avg("bearAmplitude") || .1,
+    historicalTail:[],
+    historicalImpulse:avg("historicalImpulse"),
+    micro:null,
+    bias,
+    atlas:`Panier ${positive}/${rows.length} orienté${positive>1?'s':''} hausse · ${negative}/${rows.length} baisse`,
+    aerith:coherence >= 85 ? "Concordance Top 5 forte" : coherence >= 65 ? "Concordance Top 5 prudente" : "Divergences Top 5 visibles",
+    aggregateCount:rows.length,
+    oracleHorizon:atlasOracleHorizonSpec()
   };
 }
 
@@ -6531,15 +6725,20 @@ function atlasOracleDrawCanvas(model) {
   ctx.shadowColor = "#ffe09a"; ctx.shadowBlur = 9; ctx.strokeStyle = "#ffe09a"; ctx.lineWidth = 1.2; ctx.stroke(); ctx.shadowBlur = 0;
 
   if (view.key === "top5") {
+    const aggregateFocus = atlasOracleV0AssetId === ATLAS_ORACLE_TOP5_FOCUS;
     candidateModels.forEach((row, index) => {
       const palette = atlasCryptoPalette(row.coin, index);
       const color = palette.primary || ATLAS_COMPARISON_COLORS[index % ATLAS_COMPARISON_COLORS.length];
-      drawTail(row, color, index === 0 ? 2.3 : 1.7, index === 0 ? .92 : .72);
+      const focused = !aggregateFocus && row.coin?.id === atlasOracleV0AssetId;
+      const tailWidth = aggregateFocus ? 1.9 : (focused ? 2.8 : 1.35);
+      const tailAlpha = aggregateFocus ? .82 : (focused ? 1 : .50);
+      drawTail(row, color, tailWidth, tailAlpha);
       const signedAmp = Math.max(.08, (row.directionScore >= 0 ? row.bullAmplitude : row.bearAmplitude));
       const sign = row.directionScore >= 0 ? 1 : -1;
-      const strength = .30 + Math.abs(row.directionScore) / 100 * .70;
+      const microTilt = row.micro?.status === "ready" ? clamp(-.20,.20,(Number(row.micro.changePct)||0) / Math.max(.1,Number(horizon.microCap||.55)) * .12) : 0;
+      const strength = clamp(.24,1.12,.30 + Math.abs(row.directionScore) / 100 * .70 + Math.abs(microTilt));
       const points = scenarioPoints(signedAmp, sign, Number(horizon.waveScale || .055), strength);
-      drawPath(points, color, index === 0 ? 2.7 : 2.0, index === 0 ? 9 : 5, index === 0 ? 1 : .84);
+      drawPath(points, color, aggregateFocus ? 2.15 : (focused ? 3.1 : 1.45), aggregateFocus ? 6 : (focused ? 11 : 3), aggregateFocus ? .91 : (focused ? 1 : .54));
       const end = points[points.length-1];
       if (end) {
         ctx.font = "950 9px system-ui, sans-serif";
@@ -6616,11 +6815,15 @@ function atlasRenderOracleV0() {
   root.hidden = false;
   root.setAttribute("aria-hidden", "false");
 
-  const coin = atlasOracleSelectCoin();
-  const model = atlasOracleBuildModel(coin);
-  const candidates = atlasOracleCandidateCoins();
+  if (!atlasOracleV0AssetId) atlasOracleV0AssetId = atlasOracleReadStoredAsset();
   const horizon = atlasOracleHorizonSpec();
   const view = atlasOracleViewSpec();
+  const candidates = atlasOracleCandidateCoins();
+  const aggregateFocus = view.key === "top5" && atlasOracleV0AssetId === ATLAS_ORACLE_TOP5_FOCUS;
+  const candidateModels = candidates.map(item => atlasOracleBuildModel(item)).filter(row => row?.status === "ready");
+  const coin = aggregateFocus ? (candidates[0] || null) : atlasOracleSelectCoin();
+  const model = aggregateFocus ? atlasOracleBuildAggregateModel(candidateModels) : atlasOracleBuildModel(coin);
+
   document.querySelectorAll("[data-oracle-horizon]").forEach(button => {
     const active = button.dataset.oracleHorizon === horizon.key;
     button.classList.toggle("is-active", active);
@@ -6635,12 +6838,12 @@ function atlasRenderOracleV0() {
 
   const assetStrip = document.getElementById("atlasOracleAssets");
   if (assetStrip) {
-    const aggregateActive = view.key === "top5";
+    const aggregateActive = aggregateFocus;
     const aggregate = `<button type="button" data-oracle-asset-group="top5" class="${aggregateActive ? "is-active" : ""}" aria-pressed="${aggregateActive ? "true" : "false"}">TOP 5</button>`;
     const assets = candidates.map((item, index) => {
       const palette = atlasCryptoPalette(item, index);
-      const focused = item.id === coin?.id;
-      const klass = focused ? (aggregateActive ? "is-focus" : "is-active") : "";
+      const focused = !aggregateActive && item.id === coin?.id;
+      const klass = focused ? (view.key === "top5" ? "is-focus" : "is-active") : "";
       return `<button type="button" data-oracle-asset-id="${escapeHtml(item.id)}" class="${klass}" style="--oracle-asset-color:${escapeHtml(palette.primary)}" aria-pressed="${focused ? "true" : "false"}">${escapeHtml(String(item.symbol || item.name).toUpperCase())}</button>`;
     }).join("");
     assetStrip.innerHTML = aggregate + assets;
@@ -6648,17 +6851,19 @@ function atlasRenderOracleV0() {
 
   const set = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = String(value ?? "—"); };
   const setWidth = (id, value) => { const node = document.getElementById(id); if (node) node.style.width = `${clamp(0,100,Number(value)||0)}%`; };
+  const pct = value => Number.isFinite(Number(value)) ? fmtPct(Number(value)) : "—";
   set("atlasOracleViewLabel", view.label);
   set("atlasOracleHeroView", view.label);
   set("atlasOracleHeroHorizon", horizon.label);
 
-  if (!coin || model.status !== "ready") {
+  if (!model || model.status !== "ready") {
     set("atlasOracleAsset", "EN ATTENTE");
     set("atlasOracleBias", "Livecheck requis");
     set("atlasOracleConfidence", "Confiance données —");
     set("atlasOracleHeroAsset", "—");
     set("atlasOraclePrice", "—");
     set("atlasOracleHeroBias", "EN ATTENTE");
+    set("atlasOracleMicro", "En chauffe après Livecheck");
     set("atlasOracleBull", "—");
     set("atlasOracleBear", "—");
     set("atlasOracleCoherence", "—");
@@ -6672,23 +6877,38 @@ function atlasRenderOracleV0() {
     return false;
   }
 
-  const symbol = String(coin.symbol || coin.name).toUpperCase();
+  const symbol = model.aggregate ? "TOP 5" : String(coin?.symbol || coin?.name || "—").toUpperCase();
   set("atlasOracleAsset", `${symbol} · ${view.label} · ORACLE ${horizon.label}`);
   set("atlasOracleBias", `Biais mesuré : ${model.bias}`);
   set("atlasOracleConfidence", `Confiance données ${model.dataConfidence}/100`);
   set("atlasOracleHeroAsset", symbol);
-  set("atlasOraclePrice", Number.isFinite(model.price) ? fmtEUR.format(model.price) : "—");
+  set("atlasOraclePrice", model.aggregate ? `${model.aggregateCount || candidateModels.length}/5 LIVE` : (Number.isFinite(model.price) ? fmtEUR.format(model.price) : "—"));
   set("atlasOracleHeroBias", model.bias);
+
+  if (model.aggregate) {
+    const microCoverage = Number(model.basketMicroCoverage || 0);
+    const breadth = `${Number(model.basketMicroBreadthPositive||0)}↑ / ${Number(model.basketMicroBreadthNegative||0)}↓`;
+    set("atlasOracleMicro", microCoverage
+      ? `${horizon.label} ${pct(model.basketMicroAvg)} · largeur ${breadth} · ${microCoverage}/5 actifs · ${Number(model.basketMicroSamples||0)} pts · dispersion ${pct(model.basketMicroDispersion)}`
+      : `${horizon.label} · buffer LIVE en chauffe · largeur courte en attente`);
+  } else {
+    const micro = model.micro;
+    set("atlasOracleMicro", micro?.status === "ready"
+      ? `${horizon.label} ${pct(micro.changePct)} · ${micro.samples} pts / ${atlasOracleDurationLabel(micro.spanMs)} · spread ${Number.isFinite(Number(micro.spreadBps)) ? Number(micro.spreadBps).toFixed(2)+" bp" : "—"} · impulsion hist. ${pct(model.historicalImpulse)}`
+      : `${horizon.label} · buffer LIVE en chauffe · ${Number(micro?.samples||0)} pt(s) / ${atlasOracleDurationLabel(micro?.spanMs||0)} · impulsion hist. ${pct(model.historicalImpulse)}`);
+  }
+
   set("atlasOracleBull", `Force ${model.bullStrength}/100 · enveloppe +${model.bullAmplitude.toFixed(2)} %`);
   set("atlasOracleBear", `Force ${model.bearStrength}/100 · enveloppe −${model.bearAmplitude.toFixed(2)} %`);
   setWidth("atlasOracleBullMeter", model.bullStrength);
   setWidth("atlasOracleBearMeter", model.bearStrength);
   set("atlasOracleCoherence", `${model.coherence}/100`);
   set("atlasOracleVolatility", `${Number(model.realizedVol || 0).toFixed(2)} %`);
-  set("atlasOracleBasket", fmtPct(model.basketAvg24));
-  set("atlasOracleAtlas", `Atlas : ${model.atlas} · score direction ${model.directionScore >= 0 ? "+" : ""}${model.directionScore}/100`);
-  set("atlasOracleAerith", `Aerith : ${model.aerith} · cohérence ${model.coherence}/100`);
-  set("atlasOracleInputs", `24 h ${model.h24 === null ? "—" : fmtPct(model.h24)} · 7 j ${model.h7 === null ? "—" : fmtPct(model.h7)} · 30 j ${model.h30 === null ? "—" : fmtPct(model.h30)} · panier ${fmtPct(model.basketAvg24)}`);
+  set("atlasOracleBasket", pct(model.basketAvg24));
+  set("atlasOracleAtlas", `Atlas : ${model.atlas} · score direction ${model.directionScore >= 0 ? "+" : ""}${model.directionScore}/100${Number.isFinite(Number(model.historicalImpulse)) ? ` · impulsion ${pct(model.historicalImpulse)}` : ""}`);
+  const breadthText = Number(model.basketMicroCoverage || 0) ? ` · largeur courte ${Number(model.basketMicroBreadthPositive||0)}/${Number(model.basketMicroCoverage||0)} positive` : "";
+  set("atlasOracleAerith", `Aerith : ${model.aerith} · cohérence ${model.coherence}/100${breadthText}`);
+  set("atlasOracleInputs", `1 h ${pct(model.h1)} · 24 h ${pct(model.h24)} · 7 j ${pct(model.h7)} · 30 j ${pct(model.h30)} · micro ${pct(model.aggregate ? model.basketMicroAvg : model.micro?.changePct)} · panier 24 h ${pct(model.basketAvg24)}`);
   root.dataset.bias = model.bias.toLowerCase();
   atlasOracleDrawCanvas(model);
   return true;
@@ -6702,7 +6922,9 @@ function atlasInitOracleV0() {
   strip?.addEventListener("click", event => {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
+      atlasOracleV0AssetId = ATLAS_ORACLE_TOP5_FOCUS;
       state.chartViewV2.oracleView = "top5";
+      try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
       atlasWriteChartV2Settings();
       atlasRenderOracleV0();
       return;
@@ -6726,6 +6948,12 @@ function atlasInitOracleV0() {
     const key = String(button?.dataset?.oracleView || "");
     if (!button || !["continuation","top5"].includes(key)) return;
     state.chartViewV2.oracleView = key;
+    if (key === "top5") {
+      atlasOracleV0AssetId = ATLAS_ORACLE_TOP5_FOCUS;
+    } else if (atlasOracleV0AssetId === ATLAS_ORACLE_TOP5_FOCUS) {
+      atlasOracleV0AssetId = state.selectedCoinId || atlasOracleCandidateCoins()[0]?.id || "";
+    }
+    try { localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, atlasOracleV0AssetId); } catch {}
     atlasWriteChartV2Settings();
     atlasRenderOracleV0();
   });
@@ -12905,7 +13133,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 40.1.46",
+  interface: "Build 40.1.45",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -13508,7 +13736,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.46",
+  build: "40.1.45",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -36439,6 +36667,7 @@ function atlasExchangeScheduleUiPatch(changedCoinId = null) {
     try {
       const ids = changedCoinId ? [changedCoinId] : Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP);
       atlasPatchTickerSpot(ids);
+      atlasOracleCaptureLiveQuotes(ids);
       atlasRefreshChartLivePresentation(ids);
       ids.forEach(id => {
         const coin = state.coins.find(item => item.id === id);
@@ -41160,7 +41389,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.46";
+const ATLAS_BUILD = "40.1.45";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47834,8 +48063,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.46",
-  asset_token: "market-core-v2.0-alpha-build-40.1.46"
+  build: "40.1.45",
+  asset_token: "market-core-v2.0-alpha-build-40.1.45"
 });
 
 function atlasRuntimeTruth3813() {
