@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.24 — FREEZE WINDOW MENU TRUTH AUDIT LOCK
+     40.1.24 — MARKET FLOW SAFE FLOAT + FREEZE TRUTH LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -726,7 +726,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.24 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · MARKET FLOW SAFE FLOAT · AUCUNE MUTATION AUTOMATIQUE · 40.1.24 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 

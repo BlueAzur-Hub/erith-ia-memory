@@ -68,6 +68,48 @@
       };
     }
 
+    // 40.1.24 — compact direct-floating geometry policy.
+    // Large Administrator panels keep the historical clamp unchanged.
+    // Native ribbons may opt into their real height/width and full viewport containment.
+    function clampWindowGeometry(win, geometry = {}) {
+      const policy = win?.geometryPolicy || null;
+      if (!policy) return clampGeometry(geometry);
+
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const viewportMaxWidth = Math.max(1, vw - VIEWPORT_MARGIN * 2);
+      const viewportMaxHeight = Math.max(1, vh - VIEWPORT_MARGIN * 2);
+      const configuredMinWidth = Number(policy.minWidth);
+      const configuredMinHeight = Number(policy.minHeight);
+      const configuredMaxWidth = Number(policy.maxWidth);
+      const configuredMaxHeight = Number(policy.maxHeight);
+      const minWidth = Number.isFinite(configuredMinWidth) && configuredMinWidth > 0 ? configuredMinWidth : MIN_WIDTH;
+      const minHeight = Number.isFinite(configuredMinHeight) && configuredMinHeight > 0 ? configuredMinHeight : MIN_HEIGHT;
+      const maxWidth = Math.max(1, Math.min(
+        Number.isFinite(configuredMaxWidth) && configuredMaxWidth > 0 ? configuredMaxWidth : viewportMaxWidth,
+        viewportMaxWidth
+      ));
+      const maxHeight = Math.max(1, Math.min(
+        Number.isFinite(configuredMaxHeight) && configuredMaxHeight > 0 ? configuredMaxHeight : viewportMaxHeight,
+        viewportMaxHeight
+      ));
+      const width = clamp(geometry.width || Math.min(1180, vw * .82), Math.min(minWidth, maxWidth), maxWidth);
+      const height = clamp(geometry.height || Math.min(760, vh * .80), Math.min(minHeight, maxHeight), maxHeight);
+      const fullyVisible = policy.keepFullyVisible === true;
+      const maxX = fullyVisible
+        ? Math.max(VIEWPORT_MARGIN, vw - width - VIEWPORT_MARGIN)
+        : Math.max(VIEWPORT_MARGIN, vw - Math.min(190, width));
+      const maxY = fullyVisible
+        ? Math.max(VIEWPORT_MARGIN, vh - height - VIEWPORT_MARGIN)
+        : Math.max(VIEWPORT_MARGIN, vh - 50);
+      return {
+        x: clamp(geometry.x ?? VIEWPORT_MARGIN * 2, VIEWPORT_MARGIN, maxX),
+        y: clamp(geometry.y ?? VIEWPORT_MARGIN * 2, VIEWPORT_MARGIN, maxY),
+        width,
+        height
+      };
+    }
+
     function entryNode(entry) {
       return entry?.node instanceof HTMLElement ? entry.node : null;
     }
@@ -148,6 +190,7 @@
       const startX = event.clientX;
       const startY = event.clientY;
       const initial = currentRect(win);
+      let dragBase = initial;
       let moved = false;
       let target = null;
       button?.setPointerCapture?.(event.pointerId);
@@ -158,7 +201,26 @@
         if (!moved && Math.hypot(dx, dy) < 6) return;
         if (!moved) {
           moved = true;
-          if (!win.floating) setFloating(win, true, true, initial);
+          if (!win.floating) {
+            let detachGeometry = initial;
+            if (typeof win.dragFloatGeometry === "function") {
+              try {
+                const rawRect = win.anchor?.getBoundingClientRect?.() || null;
+                detachGeometry = win.dragFloatGeometry({
+                  geometry: initial,
+                  rawRect,
+                  startX,
+                  startY,
+                  viewportWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+                  viewportHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+                }) || initial;
+              } catch {}
+            }
+            setFloating(win, true, true, detachGeometry);
+            dragBase = currentRect(win);
+          } else {
+            dragBase = currentRect(win);
+          }
           bringToFront(win);
           target = win.directFixed ? win.anchor : win.shell;
           if (!target) return;
@@ -166,11 +228,11 @@
           target.classList.add("admin-native-moving");
         }
         if (!target) return;
-        const safe = clampGeometry({
-          x: initial.x + dx,
-          y: initial.y + dy,
-          width: initial.width,
-          height: win.geometry?.height || initial.height
+        const safe = clampWindowGeometry(win, {
+          x: dragBase.x + dx,
+          y: dragBase.y + dy,
+          width: dragBase.width,
+          height: win.geometry?.height || dragBase.height
         });
         target.style.left = `${safe.x}px`;
         target.style.top = `${safe.y}px`;
@@ -275,6 +337,8 @@
         anchor,
         directFixed: def.directFixed === true,
         preferredFloatGeometry: typeof def.preferredFloatGeometry === "function" ? def.preferredFloatGeometry : null,
+        dragFloatGeometry: typeof def.dragFloatGeometry === "function" ? def.dragFloatGeometry : null,
+        geometryPolicy: def.geometryPolicy && typeof def.geometryPolicy === "object" ? { ...def.geometryPolicy } : null,
         resolvePortalHost: typeof def.resolvePortalHost === "function" ? def.resolvePortalHost : null,
         controlSets: [],
         placeholders: new Map(),
@@ -308,17 +372,18 @@
     function currentRect(win) {
       const target = win.directFixed && win.floating ? win.anchor : (win.shell || win.anchor);
       const rect = target?.getBoundingClientRect?.();
-      if (!rect) return clampGeometry(win.geometry || {});
-      return clampGeometry({
+      if (!rect) return win?.floating ? clampWindowGeometry(win, win.geometry || {}) : clampGeometry(win.geometry || {});
+      const geometry = {
         x: rect.left,
         y: rect.top,
         width: rect.width,
         height: win.minimized && win.geometry?.height ? win.geometry.height : rect.height
-      });
+      };
+      return win?.floating ? clampWindowGeometry(win, geometry) : clampGeometry(geometry);
     }
 
     function setGeometryOnTarget(win, geometry) {
-      const safe = clampGeometry(geometry);
+      const safe = clampWindowGeometry(win, geometry);
       win.geometry = { ...safe };
       const target = win.directFixed ? win.anchor : win.shell;
       if (target) {
@@ -546,7 +611,7 @@
       if (!geometry && !win.geometry && typeof win.preferredFloatGeometry === "function") {
         try { preferredGeometry = win.preferredFloatGeometry({ domain: activeDomain, window: win }); } catch {}
       }
-      const baseGeometry = clampGeometry(geometry || win.geometry || preferredGeometry || currentRect(win));
+      const baseGeometry = clampWindowGeometry(win, geometry || win.geometry || preferredGeometry || currentRect(win));
       win.geometry = { ...baseGeometry };
       if (win.directFixed) setDirectFloating(win, true, baseGeometry);
       else buildShell(win, baseGeometry);
@@ -783,7 +848,7 @@
         const step = 30;
         const x = VIEWPORT_MARGIN + (index % 7) * step;
         const y = VIEWPORT_MARGIN + (index % 7) * step;
-        const safe = clampGeometry({ x, y, width, height: win.geometry?.height || height });
+        const safe = clampWindowGeometry(win, { x, y, width, height: win.geometry?.height || height });
         win.geometry = safe;
         setGeometryOnTarget(win, safe);
         bringToFront(win, false);

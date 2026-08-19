@@ -343,3 +343,20 @@
     opacity:1!important;
   }
 }
+
+/* ============================================================================
+   40.1.24 — MARKET FLOW SAFE FLOAT GEOMETRY LOCK
+
+   Market Flow is a native horizontal ribbon, not a 90px minimum panel.
+   When the Administrator move/float control detaches it, keep the native
+   54px strip height and allow horizontal resizing only. Maximized mode remains
+   explicitly available from the window controls.
+   ============================================================================ */
+#market-workspace .market-flow-ribbon.admin-native-direct-floating:not(.admin-native-maximized) {
+  min-height: 54px !important;
+  height: 54px !important;
+  max-height: 54px !important;
+  resize: horizontal !important;
+  overflow: hidden !important;
+}
+
