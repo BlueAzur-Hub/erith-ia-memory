@@ -108,36 +108,40 @@
   white-space: nowrap !important;
 }
 
-/* MARKET FLOW — compact cycle trigger + native Classic motion ownership.
-   Administrator owns only the ribbon geometry/clipping. The animation itself
-   remains owned by style.css (ticker-safe + the validated Classic cadence). */
+/* MARKET FLOW — compact cycle button only.
+   Crypto cards remain fully clickable and keep their existing graph-selection role.
+   The existing #marketFlowCycle button remains the ONLY three-state filter control.
+   No label column, no cartouche, no new JavaScript behavior. */
 #market-workspace .market-flow-ribbon {
-  display: grid !important;
-  grid-template-columns: 38px minmax(0, 1fr) !important;
-  align-items: stretch !important;
+  display: block !important;
+  position: relative !important;
   min-height: 54px !important;
-  padding-right: 0 !important;
+  padding: 0 !important;
   overflow: hidden !important;
   isolation: isolate !important;
 }
 
-/* Keep the existing three-state cycle function, but remove the large
-   MARKET FLOW cartouche requested by the operator. Only the native cycle
-   glyph remains as a compact, borderless trigger. */
 #market-workspace #marketFlowCycle.market-flow-label {
-  grid-column: 1 !important;
-  grid-row: 1 !important;
-  position: relative !important;
-  z-index: 3 !important;
-  min-width: 38px !important;
-  width: 38px !important;
-  padding: 0 !important;
+  position: absolute !important;
+  left: 8px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 6 !important;
+  display: grid !important;
   place-items: center !important;
+  min-width: 30px !important;
+  width: 30px !important;
+  min-height: 30px !important;
+  height: 30px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 1px solid rgba(97,240,176,.42) !important;
+  border-radius: 8px !important;
+  color: #61f0b0 !important;
+  background: rgba(3,22,24,.88) !important;
+  box-shadow: inset 0 0 0 1px rgba(97,240,176,.06) !important;
   overflow: hidden !important;
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  outline-offset: -2px !important;
+  cursor: pointer !important;
 }
 
 #market-workspace #marketFlowCycle.market-flow-label > span {
@@ -145,44 +149,58 @@
 }
 
 #market-workspace #marketFlowCycle.market-flow-label .market-flow-cycle-icon {
-  width: 30px !important;
-  height: 30px !important;
+  display: inline-grid !important;
+  place-items: center !important;
+  width: auto !important;
+  height: auto !important;
   border: 0 !important;
   border-radius: 0 !important;
+  color: currentColor !important;
   background: transparent !important;
   box-shadow: none !important;
+  pointer-events: none !important;
 }
 
 #market-workspace #marketFlowCycle.market-flow-label:hover,
-#market-workspace #marketFlowCycle.market-flow-label:focus-visible,
-#market-workspace #marketFlowCycle.market-flow-label[data-flow-mode="positive"],
+#market-workspace #marketFlowCycle.market-flow-label:focus-visible {
+  border-color: rgba(97,240,176,.72) !important;
+  color: #8dffd0 !important;
+  background: rgba(4,30,29,.94) !important;
+  box-shadow: 0 0 12px rgba(97,240,176,.10) !important;
+}
+
+#market-workspace #marketFlowCycle.market-flow-label[data-flow-mode="positive"] {
+  color: #61f0b0 !important;
+}
+
 #market-workspace #marketFlowCycle.market-flow-label[data-flow-mode="negative"] {
-  border: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  color: #ff718d !important;
+  border-color: rgba(255,113,141,.42) !important;
+  background: rgba(31,10,20,.88) !important;
 }
 
 #market-workspace #marketFlowCycle:focus-visible {
   outline: 2px solid rgba(98,236,255,.88) !important;
-  outline-offset: -3px !important;
+  outline-offset: 2px !important;
 }
 
+/* The viewport owns the full ribbon width. Only a small left inset is reserved
+   so moving/clickable crypto cards never pass underneath the cycle button. */
 #market-workspace .market-flow-viewport {
-  grid-column: 2 !important;
-  grid-row: 1 !important;
   position: relative !important;
   z-index: 1 !important;
   min-width: 0 !important;
   width: 100% !important;
   height: 100% !important;
+  box-sizing: border-box !important;
+  padding-left: 44px !important;
   overflow: hidden !important;
   contain: paint !important;
   isolation: isolate !important;
 }
 
 /* Do not redefine animation-name, duration, transform or keyframes here.
-   That 39.4.6 reimplementation was the regression. style.css already owns
-   ticker-safe and the final 155 s Market Flow cadence. */
+   style.css remains the owner of the native Market Flow motion. */
 #market-workspace .market-flow-viewport .ticker-track {
   position: relative !important;
   z-index: 1 !important;
@@ -191,12 +209,7 @@
   min-width: max-content !important;
 }
 
-/* A moving target stops while the operator points, focuses or clicks it. */
-#market-workspace .market-flow-viewport:hover .ticker-track,
-#market-workspace .market-flow-viewport:focus-within .ticker-track {
-  animation-play-state: paused !important;
-}
-
+/* Moving crypto cards retain their native click target and graph-selection role. */
 #market-workspace .ticker-item {
   flex: 0 0 auto !important;
   transform: none !important;
@@ -244,9 +257,6 @@
   #market-workspace .top5-item {
     flex: 0 0 190px !important;
   }
-  #market-workspace .market-flow-ribbon {
-    grid-template-columns: 38px minmax(0, 1fr) !important;
-  }
 }
 
 @media (max-width: 680px) {
@@ -256,15 +266,11 @@
     padding-top:30px!important;
   }
   #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) {
-    grid-template-columns: 38px minmax(0,1fr) !important;
-    grid-template-rows: minmax(38px,auto) !important;
+    display:block!important;
     padding-top:30px!important;
   }
   #market-workspace #targetTop5Cycle { grid-column:1!important; grid-row:1!important; }
-  #market-workspace #marketFlowCycle { grid-column:1!important; grid-row:1!important; }
   #market-workspace .top5-track { grid-column:1!important; grid-row:2!important; }
-  #market-workspace .market-flow-viewport { grid-column:2!important; grid-row:1!important; }
-  #market-workspace .market-flow-label { display:grid!important; min-height:38px!important; }
   #market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls,
   #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls {
     top:4px!important;
