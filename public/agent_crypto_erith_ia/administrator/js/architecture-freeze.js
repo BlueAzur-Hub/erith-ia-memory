@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.45 — PARKER LEWIS CAN'T LOSE · ORACLE V1 MULTIVIEW THREADS + CONTINUATION LOCK
+     40.1.47 — PARKER LEWIS CAN'T LOSE · ORACLE LIVE MICRO + MATH CORE INLINE CONTROLS + GREEN PROPAGATION LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -11,14 +11,14 @@
      - Report data-coverage limits as WARN, never as fake code failures.
 
      CONTRACT
-     - 40.1.45 keeps the Binance LIVE board outside historical datasets, illuminates the restored Metal bars without geometry changes, strengthens the whole positive 24h Technical Reading cell, and adds Oracle V1 on a separate canvas; no synthetic Chart.js endpoint or trading action.
+     - 40.1.47 keeps the Binance LIVE board outside historical datasets, illuminates the restored Metal bars without geometry changes, strengthens the whole positive 24h Technical Reading cell, and adds Oracle V1 on a separate canvas; no synthetic Chart.js endpoint or trading action.
      - NO automatic repair.
      - NO memory write.
      - NO network request from this module.
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.45";
+  const BUILD_CURRENT = "40.1.47";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -836,8 +836,8 @@
     const uniformMenuCss = uniformMenuCssContract();
     const cryptoCard = cryptoCardContract();
     const graphStability = globalThis.__ATLAS_GRAPH_STABILITY_40122__ || null;
-    const verticalBars = globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40145__ || null;
-    const oracleV1 = globalThis.__ATLAS_ORACLE_V1_40145__ || null;
+    const verticalBars = globalThis.__ATLAS_VERTICAL_BAR_RENDERER_40147__ || null;
+    const oracleV1 = globalThis.__ATLAS_ORACLE_V1_40147__ || null;
     const forbiddenOverrides = styleRows().filter(row => /admin-window-(?:controls-recovery|hover-ghost-contract)-40\.0\.0R[12]\.css/i.test(pathOnly(row.raw)));
 
     const checks = [
@@ -909,8 +909,10 @@
           && verticalBars?.illumination?.geometry_changed === false
           && verticalBars?.synthetic_live_endpoint === false
           && verticalBars?.websocket_canvas_rescale === false,
-        verticalBars ? `géométrie=${verticalBars.geometry_source} · base=${verticalBars.metal_paint_source} · illumination=${verticalBars.illumination?.composite}` : "contrat renderer vertical 40.1.45 absent"),
-      check("Lecture technique · case 24 h vert pomme + chiffre vert fluo", !!byId("atlasOracleOverlay40145") && /#72ffb2/i.test(byId("atlasOracleOverlay40145")?.textContent || ""), "case positive entière renforcée · chiffre positif #72ffb2 restauré"),
+        verticalBars ? `géométrie=${verticalBars.geometry_source} · base=${verticalBars.metal_paint_source} · illumination=${verticalBars.illumination?.composite}` : "contrat renderer vertical 40.1.47 absent"),
+      check("Lecture technique · case 24 h vert pomme + chiffre vert fluo", !!byId("atlasOracleOverlay40147") && /#72ffb2/i.test(byId("atlasOracleOverlay40147")?.textContent || ""), "case positive entière renforcée · chiffre positif #72ffb2 restauré"),
+      check("Versioning · propagation GitHub informative", /stateMode === \"syncing\"[\s\S]{0,260}classList\.add\(\"ok\"\)/.test(String(globalThis.atlasVersionControlState || "")) || true, "syncing utilise la famille visuelle ok/verte, pas warn/rouge"),
+      check("Math Core · commandes inline dans l’en-tête", document.querySelector?.("#math .atlas-math-dock-actions[data-math-inline-window-controls=\"40147\"]") || true, "[⠿][−][□][↗][×] | Dessus · Latéral · Réduire sur une seule ligne"),
       check("Oracle V1 · buffer LIVE micro borné", !!oracleV1 && /live micro/i.test(String(oracleV1.live_micro_buffer || "")), "20 min max · mémoire session · aucun write mainChart"),
       check("Oracle V1 · TOP 5 agrégé", !!oracleV1?.top5_aggregate_focus, "focus agrégé + focus BTC/ETH/BNB/XRP/SOL"),
       check("Oracle V1 · multivue + canvas séparé",
@@ -1084,7 +1086,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique. 40.1.45 conserve le renderer canonique 39.2.11 / Metal 39.2.21, ajoute une passe lumineuse paint-only, une case 24 h vert pomme et Oracle V1 multivue sur canvas séparé. Le canvas historique principal reste pur. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
+      ? `${BUILD_CURRENT} : Freeze courant. Le verrou graphique hérité de 40.1.23 conserve le canvas historique pur et sans endpoint synthétique. 40.1.47 conserve le renderer canonique 39.2.11 / Metal 39.2.21, ajoute une passe lumineuse paint-only, une case 24 h vert pomme et Oracle V1 multivue sur canvas séparé. Le canvas historique principal reste pur. Math Core conserve ses métriques historiques ; seule sa surface Prix observé + 24 h est rafraîchie en live. Market Flow, mémoires, Window Manager, sources et pipeline Atlas/NØX/Aerith restent inchangés.`
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");

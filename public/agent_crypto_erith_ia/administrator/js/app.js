@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.45";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE CONTINUATION 1M/5M/15M + COMPACT MATH CORE LOCK";
+  const ADMIN_BUILD = "40.1.47";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE LIVE MICRO + TOP 5 AGGREGATE + MATH CORE INLINE CONTROLS + GREEN PROPAGATION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -440,6 +440,68 @@
     if (versionText) observer.observe(versionText, { childList: true, characterData: true, subtree: true });
   }
 
+  function installMathCoreInlineWindowControls40147() {
+    const math = byId("math");
+    const dockActions = math?.querySelector?.(".atlas-math-dock-actions");
+    const controls = math?.querySelector?.(":scope > .admin-native-controls")
+      || math?.querySelector?.(".admin-native-controls");
+    if (!(dockActions instanceof HTMLElement) || !(controls instanceof HTMLElement)) return false;
+
+    const firstDockButton = dockActions.querySelector("[data-math-position]");
+    if (!(firstDockButton instanceof HTMLElement)) return false;
+
+    controls.classList.add("atlas-math-inline-window-controls-40147");
+    controls.style.setProperty("position", "static", "important");
+    controls.style.setProperty("inset", "auto", "important");
+    controls.style.setProperty("left", "auto", "important");
+    controls.style.setProperty("right", "auto", "important");
+    controls.style.setProperty("top", "auto", "important");
+    controls.style.setProperty("bottom", "auto", "important");
+    controls.style.setProperty("transform", "none", "important");
+    controls.style.setProperty("display", "inline-flex", "important");
+    controls.style.setProperty("flex-direction", "row", "important");
+    controls.style.setProperty("flex-wrap", "nowrap", "important");
+    controls.style.setProperty("align-items", "center", "important");
+    controls.style.setProperty("gap", "5px", "important");
+    controls.style.setProperty("margin", "0", "important");
+    controls.style.setProperty("opacity", "1", "important");
+    controls.style.setProperty("pointer-events", "auto", "important");
+    controls.style.setProperty("z-index", "auto", "important");
+
+    controls.querySelectorAll("button").forEach(button => {
+      button.style.setProperty("position", "static", "important");
+      button.style.setProperty("margin", "0", "important");
+      button.style.setProperty("transform", "none", "important");
+    });
+
+    const maximize = controls.querySelector(".admin-native-maximize");
+    if (maximize) maximize.textContent = "↗";
+
+    dockActions.style.setProperty("display", "flex", "important");
+    dockActions.style.setProperty("align-items", "center", "important");
+    dockActions.style.setProperty("justify-content", "flex-end", "important");
+    dockActions.style.setProperty("flex-wrap", "nowrap", "important");
+    dockActions.style.setProperty("white-space", "nowrap", "important");
+    dockActions.style.setProperty("gap", "6px", "important");
+    dockActions.style.setProperty("overflow-x", "auto", "important");
+    dockActions.style.setProperty("overflow-y", "hidden", "important");
+
+    dockActions.insertBefore(controls, firstDockButton);
+
+    let separator = dockActions.querySelector(".atlas-math-inline-window-separator-40147");
+    if (!separator) {
+      separator = document.createElement("span");
+      separator.className = "atlas-math-inline-window-separator-40147";
+      separator.textContent = "|";
+      separator.setAttribute("aria-hidden", "true");
+      separator.style.cssText = "display:inline-flex;align-items:center;justify-content:center;color:rgba(255,226,161,.52);font-weight:900;line-height:1;padding:0 1px;flex:0 0 auto;";
+      dockActions.insertBefore(separator, firstDockButton);
+    }
+
+    dockActions.dataset.mathInlineWindowControls = "40147";
+    return true;
+  }
+
   function boot() {
     installGlobalVersionIdentity();
     keepGlobalVersionVisible();
@@ -469,6 +531,7 @@
     });
 
     const state = manager.init();
+    installMathCoreInlineWindowControls40147();
     window.ErithAdministratorWindows = manager;
     installAdminBar(manager);
     installDomainObserver(manager);
