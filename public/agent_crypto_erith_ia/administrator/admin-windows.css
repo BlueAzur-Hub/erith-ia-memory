@@ -221,7 +221,13 @@ details.admin-native-anchor > summary .admin-native-controls{top:50%;right:8px;t
 }
 /* Once a real panel is detached, only the floating chrome remains visible. */
 .admin-native-floating-shell .admin-native-controls-native{display:none!important;}
-.admin-native-floating-shell .admin-native-controls-floating{display:block!important;}
+.admin-native-floating-shell .admin-native-controls-floating{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+}
 .admin-native-floating-shell > [data-admin-native-window]{margin-left:0!important;margin-right:0!important;}
 /* Single complex workspaces stay in their original DOM parent while floating.
    This is critical for Graphique/Lecture and the domain-moving Math Core. */

@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.27";
-  const ADMIN_RELEASE = "MARKET SNAPSHOT BODY PORTAL Z-ORDER LOCK";
+  const ADMIN_BUILD = "40.1.28";
+  const ADMIN_RELEASE = "GLOBAL FLOATING SHELL BODY PORTAL + HORIZONTAL CHROME LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -90,11 +90,6 @@
           entry(byId("atlasMetalsMarketRegistry"), "metals")
         ].filter(Boolean),
         resolveAnchor: nodes => byId("marketSnapshotPanel") || nodes[0],
-        // 40.1.27: a detached Market Snapshot must escape marketWorkspaceGrid
-        // stacking/overflow contexts. The Window Manager placeholders restore the
-        // real nodes to their native parents when docking, so only the floating
-        // shell is portaled globally.
-        resolvePortalHost: () => document.body,
         resolveControlHosts: (nodes, entries) => entries
           .filter(item => item.node.id === "marketSnapshotPanel" || item.node.id === "atlasMetalsMarketSnapshot")
           .map(item => item.node)
@@ -335,6 +330,31 @@
     } catch {}
   }
 
+  const GLOBAL_SHELL_PORTAL_40128_MIGRATION_KEY = `${STORAGE_PREFIX}:global-shell-body-portal-40128-migrated`;
+  const GLOBAL_SHELL_WINDOW_IDS_40128 = Object.freeze([
+    "market",
+    "analyse-decision",
+    "intelligence-memoire-creation",
+    "preparation-operations",
+    "experimentation-systeme",
+    "missions-de-vie",
+    "mesure-audience",
+    "sources"
+  ]);
+
+  function migrateGlobalShellWindowState40128() {
+    try {
+      if (localStorage.getItem(GLOBAL_SHELL_PORTAL_40128_MIGRATION_KEY) === "1") return;
+      // 40.1.28 changes the DEFAULT shell portal for every non-directFixed
+      // Administrator window. Clear only those shell-window geometries once so
+      // their first body-level detach is measured from the native dock.
+      GLOBAL_SHELL_WINDOW_IDS_40128.forEach(id => {
+        localStorage.removeItem(`${STORAGE_PREFIX}:window:${id}`);
+      });
+      localStorage.setItem(GLOBAL_SHELL_PORTAL_40128_MIGRATION_KEY, "1");
+    } catch {}
+  }
+
   const GRAPH_R6_MIGRATION_KEY = `${STORAGE_PREFIX}:graph-fullwidth-r6-migrated`;
 
   function migrateGraphWindowStateR6() {
@@ -368,6 +388,7 @@
     migrateMarketFlowWindowState40125();
     migrateMarketFlowWindowState40126();
     migrateMarketWindowState40127();
+    migrateGlobalShellWindowState40128();
     migrateGraphWindowStateR6();
 
     const factory = window.ErithAdminWindowManager;

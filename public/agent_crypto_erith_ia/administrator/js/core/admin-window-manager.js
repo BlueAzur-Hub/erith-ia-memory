@@ -429,7 +429,9 @@
     function resolvePortalHost(win) {
       const requested = win.resolvePortalHost?.(activeDomain, win);
       if (requested instanceof HTMLElement) return requested;
-      return win.anchor?.parentElement || document.body;
+      // 40.1.28 — every real floating shell must escape local stacking/overflow
+      // contexts by default. Placeholders still restore native nodes on dock.
+      return document.body;
     }
 
     function buildShell(win, geometry) {
@@ -923,5 +925,17 @@
     };
   }
 
-  window.ErithAdminWindowManager = Object.freeze({ create: createManager });
+  const WINDOW_MANAGER_CONTRACT = Object.freeze({
+    build: "40.1.28",
+    default_shell_portal: "document.body",
+    explicit_portal_override_supported: true,
+    dock_restore: "placeholder-original-parent",
+    direct_fixed_windows_use_shell: false,
+    floating_shell_z_order: "global-body"
+  });
+
+  window.ErithAdminWindowManager = Object.freeze({
+    create: createManager,
+    contract: WINDOW_MANAGER_CONTRACT
+  });
 })();
