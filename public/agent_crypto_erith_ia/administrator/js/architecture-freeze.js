@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.19 — TECHNICAL READING AUTONOMOUS CLASSIC MIRROR LOCK
+     40.1.20 — TECHNICAL READING NEAR-ZERO GLASS OWNER RESTORE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -11,14 +11,14 @@
      - Report data-coverage limits as WARN, never as fake code failures.
 
      CONTRACT
-     - NO feature delta to market analysis or memory semantics; Technical Reading geometry ownership only.
+     - NO feature delta to market analysis or memory semantics; Technical Reading transparency ownership only.
      - NO automatic repair.
      - NO memory write.
      - NO network request from this module.
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.19";
+  const BUILD_CURRENT = "40.1.20";
   const ENGINE_CURRENT = "38.15.11";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
@@ -687,7 +687,7 @@
       runtimeTruth: truth,
       health,
       multi,
-      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.19 CANDIDAT À VALIDER DANS FIREFOX"
+      contract: "ARCHITECTURE GELÉE · AUCUNE MUTATION AUTOMATIQUE · 40.1.20 CANDIDAT À VALIDER DANS FIREFOX"
     };
   }
 
@@ -705,8 +705,8 @@
     root.innerHTML = `
       <div class="atlas-memory-intelligence-head">
         <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.19 · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final 40.1.19</h5>
+          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · 40.1.20 · READ ONLY</p>
+          <h5 id="architectureFreezeTitle">Contrôle final 40.1.20</h5>
           <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
         </div>
         <span class="pill warn" id="architectureFreezeBadge">En attente</span>
@@ -715,7 +715,7 @@
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
         <article><span>Limites</span><b id="architectureFreezeWarnings">—</b><small>Couverture ou données manquantes : visibles mais non maquillées en panne.</small></article>
-        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.19 ; validation Firefox opérateur requise.</small></article>
+        <article><span>Verdict</span><b id="architectureFreezeState">—</b><small>Préflight local 40.1.20 ; validation Firefox opérateur requise.</small></article>
       </div>
       <div class="atlas-memory-intelligence-grid" id="architectureFreezeGrid"></div>
       <div class="atlas-memory-intelligence-actions">
@@ -740,7 +740,7 @@
     setText("architectureFreezeWarnings", data.warnings.length ? `${data.warnings.length} limite(s)` : "0");
     setText("architectureFreezeState", data.label);
     setText("architectureFreezeContract", data.pass
-      ? "40.1.19 : Lecture technique reprend le contrat Classic depuis le style.css LOCAL de l’Administrator : Graphique maître de hauteur, dock absolu à droite, contenu en scroll interne. Les overrides géométriques admin-visual-assets sont supprimés. Market Flow, moteur métier, Math Core et mémoire restent inchangés."
+      ? "40.1.20 : Lecture technique conserve strictement la géométrie autonome 40.1.19. admin-visual-assets.css restaure le Near-zero Glass validé 39.8.0R1 : surfaces secondaires à 0.008, surfaces primaires à 0.018, sans backdrop blur. Market Flow, Graphique, moteur métier, Math Core, Window Manager et mémoire restent inchangés."
       : "CANDIDAT REFUSÉ : corriger les FAIL critiques avant validation stable.");
 
     const badge = byId("architectureFreezeBadge");
@@ -772,7 +772,7 @@
 
   function markdown(data = derive()) {
     const lines = [
-      "# Agent-Crypto — Administrator Consolidation 40.1.19", "",
+      "# Agent-Crypto — Administrator Consolidation 40.1.20", "",
       `- Généré : ${data.generatedAt}`,
       `- Verdict : ${data.label}`,
       `- FAIL critiques : ${data.criticalFails.length}`,
@@ -784,11 +784,11 @@
       lines.push(`- ${state} · ${row.name} · ${row.detail}`);
     }
     lines.push(
-      "", "## Validation finale 40.1.19", "",
+      "", "## Validation finale 40.1.20", "",
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
       "- Aucune nouvelle fonction n’a été ajoutée depuis le freeze 39.9.0R2 validé.",
-      "- Le candidat 40.1.19 exige une validation réelle dans Firefox après publication opérateur.",
+      "- Le candidat 40.1.20 exige une validation réelle dans Firefox après publication opérateur.",
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );
     return lines.join("\n");

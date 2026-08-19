@@ -1155,12 +1155,22 @@ body.atlas-administrator-mirror
 }
 
 /* ============================================================================
-   TECHNICAL READING — CURRENT VISUAL OWNER · FULL-CLEAR SURFACES
-   Historical oracle: 39.6.2.
-   Geometry remains the restored R5/R6/R7 side-dock contract.
-   Remove the remaining dark fills while preserving borders, text and interaction.
+   TECHNICAL READING — CURRENT VISUAL OWNER · NEAR-ZERO GLASS
+   Historical oracles: 39.6.2 FULL-CLEAR + 39.8.0R1 NEAR-ZERO GLASS.
+   40.1.20 scope: transparency only.
+
+   CONTRACT:
+   - preserve 40.1.19 autonomous Classic-mirror geometry exactly;
+   - preserve portrait, text, borders, DOM and interactions;
+   - remove dark slabs from Technical Reading;
+   - keep functional surfaces at <= 0.018 alpha;
+   - no backdrop blur;
+   - no Market Flow / Graph / Math / Window Manager / memory behavior change.
    ============================================================================ */
-body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel{
+
+/* Panel shell and legacy overlays: fully clear. */
+body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel{
   background:transparent!important;
   background-color:transparent!important;
   background-image:none!important;
@@ -1173,43 +1183,12 @@ body.atlas-administrator-mirror #detailPanel.clean-lens-detail-panel::after,
 body.atlas-administrator-mirror #detailPanel .detail-panel-body::before,
 body.atlas-administrator-mirror #detailPanel .detail-panel-body::after,
 body.atlas-administrator-mirror #detailPanel .detail-project-visual::before,
-body.atlas-administrator-mirror #detailPanel .detail-project-visual::after{
+body.atlas-administrator-mirror #detailPanel .detail-project-visual::after,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel::before,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel::after{
   content:none!important;
   display:none!important;
   opacity:0!important;
-  background:none!important;
-  background-image:none!important;
-  box-shadow:none!important;
-}
-body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow,
-body.atlas-administrator-mirror #detailPanel .atlas-source-dock,
-body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle,
-body.atlas-administrator-mirror #detailPanel .detail-compact-strip,
-body.atlas-administrator-mirror #detailPanel .detail-compact-strip>span,
-body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow>summary,
-body.atlas-administrator-mirror #detailPanel .detail-grid>div,
-body.atlas-administrator-mirror #detailPanel .why-box,
-body.atlas-administrator-mirror #detailPanel .clean-lens-why-box,
-body.atlas-administrator-mirror #detailPanel .source-dock-command,
-body.atlas-administrator-mirror #detailPanel .source-dock-status,
-body.atlas-administrator-mirror #detailPanel .source-portal,
-body.atlas-administrator-mirror #detailPanel .source-dock-meta,
-body.atlas-administrator-mirror #detailPanel .source-dock-meta>span,
-body.atlas-administrator-mirror #detailPanel .broker-strip>div,
-body.atlas-administrator-mirror #detailPanel .diagnostic-strip>div,
-body.atlas-administrator-mirror #detailPanel .clean-lens-integrity>p,
-body.atlas-administrator-mirror #detailPanel #detailIntegrityWindow p,
-body.atlas-administrator-mirror #detailPanel [data-window-state],
-body.atlas-administrator-mirror #detailPanel button:not(.detail-panel-toggle),
-body.atlas-administrator-mirror #detailPanel a,
-body.atlas-administrator-mirror #detailPanel .source-dock-refresh,
-body.atlas-administrator-mirror #detailPanel details[open]>.atlas-detail-subwindow-body,
-body.atlas-administrator-mirror #detailPanel details[open]>.source-dock-body,
-body.atlas-administrator-mirror #detailPanel .detail-panel-body,
-body.atlas-administrator-mirror #detailPanel .source-dock-portals,
-body.atlas-administrator-mirror #detailPanel .detail-grid,
-body.atlas-administrator-mirror #detailPanel .broker-strip,
-body.atlas-administrator-mirror #detailPanel .diagnostic-strip{
   background:transparent!important;
   background-color:transparent!important;
   background-image:none!important;
@@ -1217,12 +1196,100 @@ body.atlas-administrator-mirror #detailPanel .diagnostic-strip{
   backdrop-filter:none!important;
   -webkit-backdrop-filter:none!important;
 }
+
+/* Structural bodies: clear.  The duplicated high-specificity selector is in the
+   SAME canonical owner rule so Classic-mirror !important rules cannot darken it. */
+body.atlas-administrator-mirror #detailPanel .detail-panel-body,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-panel-body,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-portals,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-grid,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .broker-strip,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .diagnostic-strip{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* 0.8% glass — historical 39.8.0R1 value for secondary information. */
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow,
+body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow-body,
+body.atlas-administrator-mirror #detailPanel .source-dock-body,
+body.atlas-administrator-mirror #detailPanel .source-dock-command,
+body.atlas-administrator-mirror #detailPanel .source-dock-status,
+body.atlas-administrator-mirror #detailPanel .source-dock-meta,
+body.atlas-administrator-mirror #detailPanel .source-dock-meta>span,
+body.atlas-administrator-mirror #detailPanel .detail-grid>div,
+body.atlas-administrator-mirror #detailPanel .broker-strip>div,
+body.atlas-administrator-mirror #detailPanel .diagnostic-strip>div,
+body.atlas-administrator-mirror #detailPanel .clean-lens-why-box,
+body.atlas-administrator-mirror #detailPanel #detailIntegrityWindow p,
+body.atlas-administrator-mirror #detailPanel [data-window-state],
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .atlas-detail-subwindow,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .atlas-detail-subwindow-body,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-body,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-command,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-status,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-meta,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-meta>span,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .atlas-primary-detail-window .clean-lens-detail-grid>div,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .broker-strip>div,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .diagnostic-strip>div,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .clean-lens-why-box,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel #detailIntegrityWindow p,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel [data-window-state]{
+  background:rgba(3,8,14,.008)!important;
+  background-color:rgba(3,8,14,.008)!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* 1.8% glass — historical 39.8.0R1 maximum for headers and primary facts. */
+body.atlas-administrator-mirror #detailPanel .detail-panel-toggle,
+body.atlas-administrator-mirror #detailPanel details>summary,
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip,
+body.atlas-administrator-mirror #detailPanel .detail-compact-strip>span,
+body.atlas-administrator-mirror #detailPanel .source-dock-refresh,
+body.atlas-administrator-mirror #detailPanel .source-portal,
+body.atlas-administrator-mirror #detailPanel button:not(.detail-panel-toggle),
+body.atlas-administrator-mirror #detailPanel a,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel>.detail-panel-toggle,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel details>summary,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-compact-strip,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-compact-strip>span,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-refresh,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-portal,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel button:not(.detail-panel-toggle),
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel a{
+  background:rgba(3,8,14,.018)!important;
+  background-color:rgba(3,8,14,.018)!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Expanded bodies never become slabs. */
+body.atlas-administrator-mirror #detailPanel details[open]>.atlas-detail-subwindow-body,
+body.atlas-administrator-mirror #detailPanel details[open]>.source-dock-body,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel details[open]>.atlas-detail-subwindow-body,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel details[open]>.source-dock-body{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+}
+
+/* Text contrast only; no opaque plate. */
 body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small,p,button,summary){
-  text-shadow:0 1px 2px rgba(0,0,0,.92),0 0 2px rgba(0,0,0,.68)!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.95),0 0 4px rgba(0,0,0,.78)!important;
 }
 
 /* ============================================================================
-   40.1.19 — AUTONOMOUS CLASSIC MIRROR OWNERSHIP LOCK
+   40.1.20 — AUTONOMOUS CLASSIC MIRROR + NEAR-ZERO GLASS LOCK
 
    Geometry is owned by Administrator ./style.css, which carries the validated
    Classic Technical Reading contract locally. This visual layer intentionally
