@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.66";
+  const ADMIN_BUILD = "40.1.67";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE PREMIUM OPERATOR VIEW CUMULATIVE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

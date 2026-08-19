@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.66",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.66 · PARKER LEWIS CAN'T LOSE · ORACLE PROOF BASELINE ENGINE LOCK",
+  "build": "40.1.67",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.67 · PARKER LEWIS CAN'T LOSE · CALIBRATION HORIZON MATRIX LOCK",
   "status": "recovery_candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-20T00:24:00+02:00",
+  "prepared_at": "2026-08-20T00:32:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.66",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.66",
-    "asset_token": "market-core-v2.0-alpha-build-40.1.66",
+    "primary_build": "40.1.67",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.67",
+    "asset_token": "market-core-v2.0-alpha-build-40.1.67",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
@@ -561,6 +561,30 @@
       "future_data_used": false,
       "network_write": false,
       "main_chart_write": false
+    },
+    "oracle_calibration_horizon_matrix": {
+      "build": "40.1.67",
+      "enabled": true,
+      "resolved_evidence_only": true,
+      "horizons": [
+        "1m",
+        "5m",
+        "15m"
+      ],
+      "metrics": [
+        "directional_hit_rate",
+        "envelope_coverage",
+        "ensemble_advantage_vs_best_naive",
+        "sample_count"
+      ],
+      "proof_sample_reference": "same-sample proof engine per horizon",
+      "active_horizon_highlight": true,
+      "right_readout_visible": true,
+      "trained_ai": false,
+      "probability_output": false,
+      "future_data_used": false,
+      "network_write": false,
+      "main_chart_write": false
     }
   },
   "active_runtime_files": [
@@ -594,9 +618,9 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "749742553a05186d11944cda6f62fe8d334322a8da99d111f4cae6582d9d99d8",
-      "index.html": "238107a95299e587477d0e92db3c4bca7151a1494f57f80c79f1cace170dd42d",
-      "js/app.js": "ebd3a298c1d38cb122c703d3f2b6d994beaf297d766f9d005e12290df66cc1d9",
+      "app.js": "914e611386ddd690945f1c86fd18631792491ed3f00f2e0b47283283a5c50a94",
+      "index.html": "b30184fc5fe8252cdf0c692f722d1cf84db5572a1277823bf5c5558568ae6b20",
+      "js/app.js": "d111f7df83e850be2b66a02a6f1fb015f445e73f939f12777d573d8180a6710b",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -606,7 +630,7 @@
       "js/core/admin-window-manager.js": "4f342d829506b8157d7340c05a98fb9d9aec4f9dcd671374d3e89f456a626b80",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "6d442c835dc63dd57fa7313b795c09865f213d86f918cbef50097338383e13d1",
+      "js/architecture-freeze.js": "b0d1ef77e5113ef9663e05b2aff2e8a9082fc2e0cb1ec6655b86a14f2abdc6f1",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -624,23 +648,23 @@
       "js/multi-collector-concordance.js": "9fecda63998a65a710ac8614228892c351a8a2c9e4ddd178b9513a83ae8761ac",
       "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a",
       "publication_identity": {
-        "build": "40.1.66",
-        "asset_token": "market-core-v2.0-alpha-build-40.1.66",
+        "build": "40.1.67",
+        "asset_token": "market-core-v2.0-alpha-build-40.1.67",
         "status": "candidate_requires_firefox_validation",
-        "app_sha256": "749742553a05186d11944cda6f62fe8d334322a8da99d111f4cae6582d9d99d8"
+        "app_sha256": "914e611386ddd690945f1c86fd18631792491ed3f00f2e0b47283283a5c50a94"
       }
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.1.66",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.66",
+      "build": "40.1.67",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.67",
       "status": "candidate_requires_firefox_validation",
-      "app_sha256": "749742553a05186d11944cda6f62fe8d334322a8da99d111f4cae6582d9d99d8"
+      "app_sha256": "914e611386ddd690945f1c86fd18631792491ed3f00f2e0b47283283a5c50a94"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.66",
-  "parent_build": "40.1.65",
-  "lineage": "40.1.65 → 40.1.66 · compares Oracle V1 and the deterministic ensemble with transparent naive baselines on the exact same resolved Evidence rows; no future data, no trained-AI probability and no mainChart mutation.",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.67",
+  "parent_build": "40.1.66",
+  "lineage": "40.1.66 → 40.1.67 · adds a three-horizon descriptive calibration matrix (1m/5m/15m) from the existing resolved Evidence Ledger and Proof Engine; no model weights, outcomes, scenarios or mainChart data are rewritten.",
   "repository_cleanup": {
     "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
@@ -670,6 +694,7 @@
     "MIXTE is a safe composite of real main-chart history plus Oracle scenarios in atlasOracleCanvas; it does not inject future points into mainChart.",
     "Premium cumulative candidate. Persistent state includes view, asset, horizon, zoom and surface only; no calculated Oracle output is persisted.",
     "40.1.65: TOP 5 can now remain selected in CONTINUATION; one deterministic composite history is computed from the five normalized real histories and fed to the existing scenario engine.",
-    "40.1.66: Oracle Proof compares Always Up, Last Move, Momentum Simple and Top 5 naive baselines with Oracle V1 and Ensemble on the exact same resolved rows; displayed advantage is descriptive only."
+    "40.1.66: Oracle Proof compares Always Up, Last Move, Momentum Simple and Top 5 naive baselines with Oracle V1 and Ensemble on the exact same resolved rows; displayed advantage is descriptive only.",
+    "40.1.67: the Oracle readout now shows a compact 1m/5m/15m calibration matrix with direction hit-rate, envelope coverage, sample count and Ensemble advantage versus the best naive baseline; all values remain descriptive."
   ]
 }

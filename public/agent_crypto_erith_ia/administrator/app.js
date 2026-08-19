@@ -5639,7 +5639,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.66",
+  build: "40.1.67",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6174,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.66",
+  build: "40.1.67",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -6568,6 +6568,7 @@ async function atlasOracleOutcomeRun() {
     await atlasOracleOutcomeRefreshStatus(changed ? await atlasOracleEvidenceAll() : rows);
     if (typeof atlasOracleCalibrationRefresh === "function") atlasOracleCalibrationRefresh().catch(()=>{});
     if (typeof atlasOracleProofRefresh === "function") atlasOracleProofRefresh().catch(()=>{});
+    if (typeof atlasOracleHorizonMatrixRefresh === "function") atlasOracleHorizonMatrixRefresh().catch(()=>{});
     return { ...atlasOracleOutcomeStatusState, changed };
   } catch (error) {
     atlasOracleOutcomeStatusState.lastError = String(error?.message || error || "erreur");
@@ -6779,6 +6780,74 @@ globalThis.AtlasOracleProof = Object.freeze({
   compute:atlasOracleProofComputeRows,
   predictions:atlasOracleProofPredictions,
   state:()=>atlasOracleProofState
+});
+
+/* ============================================================
+   40.1.67 — ORACLE CALIBRATION HORIZON MATRIX
+   Reads the same resolved Evidence Ledger across 1m / 5m / 15m.
+   Direction hit-rate and envelope coverage are descriptive. The delta
+   shown per horizon is Ensemble advantage versus the best naive baseline
+   on the exact same Proof sample. No model output is rewritten.
+   ============================================================ */
+let atlasOracleHorizonMatrixState = { updated_at:0, horizons:{} };
+let atlasOracleHorizonMatrixLastRefresh = 0;
+
+function atlasOracleHorizonMatrixComputeRows(rows) {
+  const source = Array.isArray(rows) ? rows : [];
+  const horizons = {};
+  ["1m","5m","15m"].forEach(key => {
+    const calibration = atlasOracleCalibrationComputeRows(source,key);
+    const proof = atlasOracleProofComputeRows(source,key);
+    horizons[key] = {
+      key,
+      cases:Number(calibration.cases||0),
+      direction_hit_rate:Number.isFinite(Number(calibration.hit_rate)) ? Number(calibration.hit_rate) : null,
+      envelope_coverage:Number.isFinite(Number(calibration.envelope_coverage)) ? Number(calibration.envelope_coverage) : null,
+      proof_cases:Number(proof.cases||0),
+      ensemble_advantage:Number.isFinite(Number(proof.ensemble_advantage)) ? Number(proof.ensemble_advantage) : null,
+      best_naive:proof.best_naive ? { key:proof.best_naive.key, hit_rate:Number(proof.best_naive.hit_rate) } : null,
+      sample_quality:String(proof.sample_quality||"VIDE")
+    };
+  });
+  return { updated_at:Date.now(), horizons };
+}
+
+function atlasOracleHorizonMatrixRender(state = atlasOracleHorizonMatrixState) {
+  const labels = {"1m":"1 MIN","5m":"5 MIN","15m":"15 MIN"};
+  ["1m","5m","15m"].forEach(key => {
+    const row = state?.horizons?.[key] || {};
+    const node = document.getElementById(`atlasOracleHorizonMatrix${key}`);
+    if (!node) return;
+    const hit = Number(row.direction_hit_rate), env = Number(row.envelope_coverage), adv = Number(row.ensemble_advantage);
+    const cases = Number(row.cases||0), proofCases = Number(row.proof_cases||0);
+    const value = node.querySelector("b"), meta = node.querySelector("span");
+    if (value) value.textContent = cases && Number.isFinite(hit) ? `${hit.toFixed(0)}% · n${cases}` : "n0";
+    if (meta) meta.textContent = cases
+      ? `ENV ${Number.isFinite(env)?env.toFixed(0):"—"}% · Δ ${proofCases&&Number.isFinite(adv)?`${adv>=0?"+":""}${adv.toFixed(0)}`:"—"}`
+      : "ENV — · Δ —";
+    node.dataset.quality = String(row.sample_quality||"VIDE").toLowerCase();
+    node.title = cases
+      ? `${labels[key]} · direction correcte ${Number.isFinite(hit)?hit.toFixed(1):"—"}% · enveloppe couverte ${Number.isFinite(env)?env.toFixed(1):"—"}% · n=${cases} issue(s) résolue(s) · Proof commun n=${proofCases} · avantage Ensemble vs meilleur naïf ${proofCases&&Number.isFinite(adv)?`${adv>=0?"+":""}${adv.toFixed(1)} pt`:"indisponible"} · échantillon ${row.sample_quality||"VIDE"}`
+      : `${labels[key]} · aucune issue résolue`;
+  });
+  const active = atlasOracleHorizonSpec().key;
+  document.querySelectorAll("[data-oracle-horizon-matrix]").forEach(node => node.classList.toggle("is-active", node.dataset.oracleHorizonMatrix === active));
+  return state;
+}
+
+async function atlasOracleHorizonMatrixRefresh(force = false) {
+  const now = Date.now();
+  if (!force && now - atlasOracleHorizonMatrixLastRefresh < 10_000) return atlasOracleHorizonMatrixRender(atlasOracleHorizonMatrixState);
+  atlasOracleHorizonMatrixLastRefresh = now;
+  const rows = await atlasOracleEvidenceAll();
+  atlasOracleHorizonMatrixState = atlasOracleHorizonMatrixComputeRows(rows);
+  return atlasOracleHorizonMatrixRender(atlasOracleHorizonMatrixState);
+}
+
+globalThis.AtlasOracleHorizonMatrix = Object.freeze({
+  refresh:atlasOracleHorizonMatrixRefresh,
+  compute:atlasOracleHorizonMatrixComputeRows,
+  state:()=>atlasOracleHorizonMatrixState
 });
 
 // 40.1.54 — persist OPERATOR VIEW only. Never store model outputs, scores,
@@ -7752,6 +7821,7 @@ function atlasRenderOracleV0() {
   atlasOracleEvidenceMaybeCapture({ model, coin, candidateModels, view, horizon, surface });
   atlasOracleCalibrationRefresh().catch(()=>{});
   atlasOracleProofRefresh().catch(()=>{});
+  atlasOracleHorizonMatrixRefresh().catch(()=>{});
   atlasOracleRegimeRender(model);
   atlasOracleEnsembleRender(model);
   return true;
@@ -7768,6 +7838,7 @@ function atlasInitOracleV0() {
   atlasOracleOutcomeRefreshStatus().catch(()=>{});
   atlasOracleCalibrationRefresh(true).catch(()=>{});
   atlasOracleProofRefresh(true).catch(()=>{});
+  atlasOracleHorizonMatrixRefresh(true).catch(()=>{});
   strip?.addEventListener("click", event => {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
@@ -14611,7 +14682,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.66",
+  build: "40.1.67",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -42278,7 +42349,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.66";
+const ATLAS_BUILD = "40.1.67";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48954,8 +49025,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.66",
-  asset_token: "market-core-v2.0-alpha-build-40.1.66"
+  build: "40.1.67",
+  asset_token: "market-core-v2.0-alpha-build-40.1.67"
 });
 
 function atlasRuntimeTruth3813() {
