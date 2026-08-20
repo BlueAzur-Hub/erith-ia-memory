@@ -728,6 +728,7 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "nofomo", level: "advanced", target: "closest-collapse", group: "decision" },
 
   { id: "math", level: "essential", target: "self", group: "analysis" },
+  { id: "oracle-analysis-suite", level: "advanced", target: "self", group: "analysis" },
   { id: "multi-horizon", level: "advanced", target: "self", group: "analysis" },
   { id: "lecture-froide", level: "advanced", target: "closest-collapse", group: "analysis" },
   { id: "risques", level: "advanced", target: "closest-collapse", group: "analysis" },
@@ -6337,9 +6338,9 @@ function atlasRuntimeMarkRefresh40214(name,targetId){const s=atlasRuntimeObserva
 function atlasRuntimeNavigationSnapshot40214(){let nav=null;try{nav=(performance.getEntriesByType("navigation")||[])[0]||null;}catch{}const positive=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;let type=String(nav?.type||"");if(!type){try{type=performance?.navigation?.type===1?"reload":performance?.navigation?.type===2?"back_forward":"navigate";}catch{type="unknown";}}return {type:type||"unknown",dom_content_loaded_ms:positive(nav?.domContentLoadedEventEnd),load_ms:positive(nav?.loadEventEnd),dom_interactive_ms:positive(nav?.domInteractive),response_end_ms:positive(nav?.responseEnd),transfer_size:Number.isFinite(Number(nav?.transferSize))?Number(nav.transferSize):null,decoded_body_size:Number.isFinite(Number(nav?.decodedBodySize))?Number(nav.decodedBodySize):null};}
 function atlasRuntimeResourceSnapshot40214(){let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const sum=k=>entries.reduce((a,e)=>{const v=Number(e?.[k]);return a+(Number.isFinite(v)&&v>0?v:0);},0);const measured=k=>entries.filter(e=>Number.isFinite(Number(e?.[k]))&&Number(e[k])>0).length;const largest=entries.map(e=>({name:String(e?.name||""),initiator_type:String(e?.initiatorType||""),transfer_size:Number(e?.transferSize)||0,decoded_body_size:Number(e?.decodedBodySize)||0,duration_ms:Number(e?.duration)||0})).sort((a,b)=>Math.max(b.transfer_size,b.decoded_body_size)-Math.max(a.transfer_size,a.decoded_body_size)).slice(0,5);return {resource_requests_total:entries.length,transfer_bytes_measured:sum("transferSize"),transfer_entries_measured:measured("transferSize"),decoded_bytes_measured:sum("decodedBodySize"),decoded_entries_measured:measured("decodedBodySize"),largest_resources:largest};}
 function atlasRuntimeView40214(){const raw=String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");if(raw)return raw;try{return typeof atlasV2Mode==="function"?atlasV2Mode():"unknown";}catch{return "unknown";}}
-function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;return {schema:"atlas.runtime.observatory.v1",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.15"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v}]))},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
+function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;return {schema:"atlas.runtime.observatory.v1",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.16"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v}]))},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
 function atlasRuntimeFmtMs40214(v){return Number.isFinite(Number(v))?`${Math.round(Number(v))} ms`:"—";}
-function atlasRuntimeRender40214(){const stateNode=document.getElementById("atlasRuntimeState40214"),note=document.getElementById("atlasRuntimeNote40214");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState40214;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow40214());const r=atlasRuntimeSnapshot40214();const view={essential:"BASIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"}`;if(note){const o=r.oracle,n=r.navigation;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs40214(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs40214(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs40214(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.outcome_max_ms)} · Evidence ${o.evidence_reads} req · DB ${o.evidence_db_scans}× μ${atlasRuntimeFmtMs40214(o.evidence_db_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.evidence_db_max_ms)} · reuse ${o.evidence_cache_hits+o.evidence_inflight_hits} · UI* ${o.instrumented_ui_refresh_calls} (${o.instrumented_ui_refresh_hidden_calls} masqués)`;}return r;}
+function atlasRuntimeRender40214(){const stateNode=document.getElementById("atlasRuntimeState40214"),note=document.getElementById("atlasRuntimeNote40214");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState40214;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow40214());const r=atlasRuntimeSnapshot40214();const view={essential:"BASIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"}`;if(note){const o=r.oracle,n=r.navigation;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs40214(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs40214(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs40214(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.outcome_max_ms)} · Evidence ${o.evidence_reads} req · DB ${o.evidence_db_scans}× μ${atlasRuntimeFmtMs40214(o.evidence_db_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.evidence_db_max_ms)} · reuse ${o.evidence_cache_hits+o.evidence_inflight_hits} · Explorer ${o.evidence_explorer_rendered?"ON":"OFF"}/${o.evidence_explorer_deferred_skips} skip · UI* ${o.instrumented_ui_refresh_calls} (${o.instrumented_ui_refresh_hidden_calls} masqués)`;}return r;}
 window.addEventListener("pageshow",event=>{const s=atlasRuntimeObservatoryState40214;s.pageshow_count+=1;s.last_pageshow_persisted=event.persisted===true;if(event.persisted===true)s.pageshow_persisted_count+=1;atlasRuntimeRender40214();},{passive:true});
 globalThis.AtlasRuntimeObservatory40214=Object.freeze({snapshot:atlasRuntimeSnapshot40214,render:atlasRuntimeRender40214,passive_only:true,storage_write:false,network_request_added:false,business_runtime_changed:false});
 
@@ -7532,11 +7533,25 @@ globalThis.AtlasOracleCalibratedConfidence=Object.freeze({refresh:atlasOracleCon
 
 
 
+/* 40.2.16 — ORACLE GENERAL SECTION SUMMARY
+   Visual-only synthesis. Reads existing DOM/state; no storage/network/model writes. */
+function atlasOracleSuiteSummarySync40216(){
+  const text=id=>String(document.getElementById(id)?.textContent||"—").trim()||"—";
+  const set=(id,value)=>{const n=document.getElementById(id);if(n)n.textContent=value;};
+  set("atlasOracleSuiteEvidence",text("atlasOracleLabEvidence"));
+  set("atlasOracleSuiteResolved",text("atlasOracleLabResolved"));
+  const infra=atlasOracleInfrastructureState4020?.summary||{};
+  const assets=Number(infra.asset_count||0),dual=Number(infra.dual_fresh||0);
+  set("atlasOracleSuiteSources",assets?`${dual}/${assets}`:"—");
+  const quality=text("atlasOracleLabIntegrity");
+  set("atlasOracleSuiteQuality",quality.replace(/^QUAL\s*/i,"")||"—");
+}
+
 /* ============================================================
    40.1.72 — ORACLE EVIDENCE EXPLORER
    Read-only local explorer over the existing IndexedDB ledger.
    ============================================================ */
-let atlasOracleEvidenceExplorerState={filters:{asset:"all",horizon:"all",regime:"all",verdict:"all"},last_rows:0};
+let atlasOracleEvidenceExplorerState={filters:{asset:"all",horizon:"all",regime:"all",verdict:"all"},last_rows:0,rendered:false,deferred_skips:0};
 
 function atlasOracleEscapeHtml(value){return String(value??"").replace(/[&<>\"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;","'":"&#39;"}[ch]));}
 function atlasOracleEvidenceVerdict(row){
@@ -7576,12 +7591,28 @@ function atlasOracleEvidenceExplorerRender(rows){
   const status=document.getElementById("atlasOracleExplorerStatus"); if(status)status.textContent=`${filtered.length}/${source.length} affichées · ${resolved} résolues · ${source.length-resolved} pending`;
   atlasOracleEvidenceExplorerState.last_rows=source.length; return filtered;
 }
-async function atlasOracleEvidenceExplorerRefresh(){try{return atlasOracleEvidenceExplorerRender(await atlasOracleEvidenceAll());}catch(error){const s=document.getElementById("atlasOracleExplorerStatus");if(s)s.textContent=`Explorer indisponible · ${String(error?.message||error)}`;return [];}}
+function atlasOracleEvidenceExplorerDemanded40216(){
+  const root=document.getElementById("oracle-evidence-explorer");
+  const suite=document.getElementById("oracle-analysis-suite");
+  return Boolean(root?.open && (!suite || suite.open));
+}
+function atlasOracleEvidenceExplorerRelease40216(){
+  const body=document.getElementById("atlasOracleExplorerRows");
+  if(body)body.innerHTML='<tr><td colspan="8">Explorer différé · aucune ligne construite tant que la sous-section reste fermée.</td></tr>';
+  const status=document.getElementById("atlasOracleExplorerStatus");
+  if(status)status.textContent="Différé · ouvrir l’Explorer pour construire les lignes.";
+  atlasOracleEvidenceExplorerState.rendered=false;
+}
+async function atlasOracleEvidenceExplorerRefresh(){
+  if(!atlasOracleEvidenceExplorerDemanded40216()){atlasOracleEvidenceExplorerState.deferred_skips+=1;return [];}
+  try{const result=atlasOracleEvidenceExplorerRender(await atlasOracleEvidenceAll());atlasOracleEvidenceExplorerState.rendered=true;return result;}catch(error){const s=document.getElementById("atlasOracleExplorerStatus");if(s)s.textContent=`Explorer indisponible · ${String(error?.message||error)}`;return [];}
+}
 function atlasOracleEvidenceExplorerInit(){
   const root=document.getElementById("oracle-evidence-explorer"); if(!root||root.dataset.oracleExplorerInit==="1")return; root.dataset.oracleExplorerInit="1";
   ["atlasOracleExplorerAsset","atlasOracleExplorerHorizon","atlasOracleExplorerRegime","atlasOracleExplorerVerdict"].forEach(id=>document.getElementById(id)?.addEventListener("change",()=>atlasOracleEvidenceExplorerRefresh()));
   document.getElementById("atlasOracleExplorerRefresh")?.addEventListener("click",()=>atlasOracleEvidenceExplorerRefresh());
-  atlasOracleEvidenceExplorerRefresh();
+  root.addEventListener("toggle",()=>{if(root.open)atlasOracleEvidenceExplorerRefresh();else atlasOracleEvidenceExplorerRelease40216();});
+  atlasOracleEvidenceExplorerRelease40216();
 }
 globalThis.AtlasOracleEvidenceExplorer=Object.freeze({refresh:atlasOracleEvidenceExplorerRefresh,state:()=>atlasOracleEvidenceExplorerState});
 
@@ -7622,6 +7653,7 @@ function atlasOracleLabDashboardRender(state=atlasOracleLabDashboardState){
   if(state.shadow_v2){ atlasOracleShadowV2State=state.shadow_v2; atlasOracleShadowV2Render(atlasOracleShadowV2State); }
   if(typeof atlasOracleInfrastructureRender4020==="function") atlasOracleInfrastructureRender4020();
   if(typeof atlasOracleSourceHealthPerformanceRefresh4027==="function") atlasOracleSourceHealthPerformanceRefresh4027().catch(()=>{});
+  if(typeof atlasOracleSuiteSummarySync40216==="function") atlasOracleSuiteSummarySync40216();
   return state;
 }
 async function atlasOracleLabDashboardRefresh(force=false){const now=Date.now();if(!force&&now-atlasOracleLabDashboardLastRefresh<10000&&atlasOracleLabDashboardState.updated_at)return atlasOracleLabDashboardRender(atlasOracleLabDashboardState);atlasOracleLabDashboardLastRefresh=now;try{atlasOracleLabDashboardState=atlasOracleLabDashboardCompute(await atlasOracleEvidenceAll());return atlasOracleLabDashboardRender(atlasOracleLabDashboardState);}catch(error){const s=document.getElementById("atlasOracleLabDashboardState");if(s)s.textContent=`Dashboard indisponible · ${String(error?.message||error)}`;return atlasOracleLabDashboardState;}}
@@ -7646,7 +7678,7 @@ function atlasOracleSourceObservationForCoin4020(coin,now=Date.now()){
 }
 function atlasOracleSourceFabricCompute4020(now=Date.now()){const assets=atlasOracleInfrastructureScopeCoins4020().map(c=>atlasOracleSourceObservationForCoin4020(c,now));const deviations=assets.map(x=>x.deviation_pct).filter(Number.isFinite),ages=assets.map(x=>x.max_age_ms).filter(Number.isFinite);return {updated_at:now,assets,summary:{asset_count:assets.length,dual_fresh:assets.filter(x=>x.fresh_count>=2).length,dual_usable:assets.filter(x=>x.usable_count>=2).length,max_deviation_pct:deviations.length?Math.max(...deviations):null,max_age_ms:ages.length?Math.max(...ages):null}};}
 function atlasOracleInfrastructureAgeLabel4020(ms){if(!Number.isFinite(Number(ms)))return "—";const sec=Math.max(0,Number(ms))/1000;if(sec<90)return `${Math.round(sec)} s`;const min=sec/60;if(min<90)return `${Math.round(min)} min`;return `${(min/60).toFixed(1)} h`;}
-function atlasOracleInfrastructureRender4020(){const root=document.getElementById("oracle-infrastructure-observatory");if(!root)return null;const r=atlasOracleSourceFabricCompute4020();atlasOracleInfrastructureState4020=r;const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};const sum=r.summary;set("atlasOracleInfraAssets",String(sum.asset_count||0));set("atlasOracleInfraDual",`${sum.dual_fresh||0}/${sum.asset_count||0}`);set("atlasOracleInfraDeviation",Number.isFinite(Number(sum.max_deviation_pct))?`${Number(sum.max_deviation_pct).toFixed(3)} %`:"—");set("atlasOracleInfraAge",atlasOracleInfrastructureAgeLabel4020(sum.max_age_ms));const rows=document.getElementById("atlasOracleInfraRows");if(rows)rows.innerHTML=r.assets.map(x=>`<tr><td><b>${atlasOracleEscapeHtml(x.symbol)}</b></td><td>${x.usable_count}/2 <small>${x.sources.filter(q=>q.usable).map(q=>`${q.family} ${atlasQuoteStatusLabel(q)}`).join(" · ")||"aucune"}</small></td><td>${x.fresh_count}/2</td><td>${Number.isFinite(Number(x.deviation_pct))?Number(x.deviation_pct).toFixed(3)+" %":"—"}</td><td>${atlasOracleInfrastructureAgeLabel4020(x.max_age_ms)}</td></tr>`).join("")||'<tr><td colspan="5">Aucun actif exploitable.</td></tr>';const status=document.getElementById("atlasOracleInfrastructureState");if(status)status.textContent=sum.asset_count?`QUORUM FRAIS ${sum.dual_fresh}/${sum.asset_count}`:"AUCUN ACTIF";if(typeof atlasOracleSourceRiskRender4021==="function")atlasOracleSourceRiskRender4021(r);if(typeof atlasOracleResourceBudgetRender4022==="function")atlasOracleResourceBudgetRender4022();if(typeof atlasOracleSourceHistoryMaybeRecord4024==="function")atlasOracleSourceHistoryMaybeRecord4024(r);if(typeof atlasOracleRobustAggregateRender4025==="function")atlasOracleRobustAggregateRender4025(r);return r;}
+function atlasOracleInfrastructureRender4020(){const root=document.getElementById("oracle-infrastructure-observatory");if(!root)return null;const r=atlasOracleSourceFabricCompute4020();atlasOracleInfrastructureState4020=r;const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};const sum=r.summary;set("atlasOracleInfraAssets",String(sum.asset_count||0));set("atlasOracleInfraDual",`${sum.dual_fresh||0}/${sum.asset_count||0}`);set("atlasOracleInfraDeviation",Number.isFinite(Number(sum.max_deviation_pct))?`${Number(sum.max_deviation_pct).toFixed(3)} %`:"—");set("atlasOracleInfraAge",atlasOracleInfrastructureAgeLabel4020(sum.max_age_ms));const rows=document.getElementById("atlasOracleInfraRows");if(rows)rows.innerHTML=r.assets.map(x=>`<tr><td><b>${atlasOracleEscapeHtml(x.symbol)}</b></td><td>${x.usable_count}/2 <small>${x.sources.filter(q=>q.usable).map(q=>`${q.family} ${atlasQuoteStatusLabel(q)}`).join(" · ")||"aucune"}</small></td><td>${x.fresh_count}/2</td><td>${Number.isFinite(Number(x.deviation_pct))?Number(x.deviation_pct).toFixed(3)+" %":"—"}</td><td>${atlasOracleInfrastructureAgeLabel4020(x.max_age_ms)}</td></tr>`).join("")||'<tr><td colspan="5">Aucun actif exploitable.</td></tr>';const status=document.getElementById("atlasOracleInfrastructureState");if(status)status.textContent=sum.asset_count?`QUORUM FRAIS ${sum.dual_fresh}/${sum.asset_count}`:"AUCUN ACTIF";if(typeof atlasOracleSourceRiskRender4021==="function")atlasOracleSourceRiskRender4021(r);if(typeof atlasOracleResourceBudgetRender4022==="function")atlasOracleResourceBudgetRender4022();if(typeof atlasOracleSourceHistoryMaybeRecord4024==="function")atlasOracleSourceHistoryMaybeRecord4024(r);if(typeof atlasOracleRobustAggregateRender4025==="function")atlasOracleRobustAggregateRender4025(r);if(typeof atlasOracleSuiteSummarySync40216==="function")atlasOracleSuiteSummarySync40216();return r;}
 globalThis.AtlasOracleSourceFabric4020=Object.freeze({compute:atlasOracleSourceFabricCompute4020,render:atlasOracleInfrastructureRender4020,state:()=>atlasOracleInfrastructureState4020,new_network_requests:false,model_input:false});
 
 /* 40.2.1 — SOURCE RISK + HEARTBEAT/DEVIATION ADVISORY LOCK
@@ -7773,7 +7805,7 @@ function atlasOracleIntegrityAuditRows(rows,now=Date.now()){
   return {updated_at:Date.now(),score,rows:source.length,weighted_issues:weight,issues};
 }
 function atlasOracleIntegrityRender(state=atlasOracleIntegrityState){const set=(id,text)=>{const n=document.getElementById(id);if(n)n.textContent=text;};set("atlasOracleLabIntegrity",Number.isFinite(Number(state.score))?`${Number(state.score).toFixed(0)}/100`:"—");const list=document.getElementById("atlasOracleIntegrityWarnings");if(list){const labels={invalid_t0:"Horodatage T0 invalide",future_t0:"T0 futur",missing_identity:"Identité/horizon manquant",missing_constituents:"Constituants manquants",invalid_constituent_price:"Prix T0 invalide",stale_quote_t0:"Quote T0 > 5 min",duplicate_logical:"Doublon logique",invalid_outcome:"Issue invalide",excess_resolution_lag:"Résolution trop éloignée",overdue_pending:"Issue en retard"};const active=Object.entries(state.issues||{}).filter(([,n])=>Number(n)>0);list.innerHTML=active.length?active.map(([k,n])=>`<span><b>${atlasOracleEscapeHtml(labels[k]||k)}</b><small>${Number(n)}</small></span>`).join(""):'<span class="is-ok"><b>Aucune anomalie détectée</b><small>audit local</small></span>';}
- const status=document.getElementById("atlasOracleIntegrityStatus");if(status)status.textContent=Number.isFinite(Number(state.score))?`QUAL ${Number(state.score).toFixed(0)}/100 · ${state.weighted_issues||0} pts anomalie` : "QUAL —";atlasOracleLabDashboardState.integrity=state;return state;}
+ const status=document.getElementById("atlasOracleIntegrityStatus");if(status)status.textContent=Number.isFinite(Number(state.score))?`QUAL ${Number(state.score).toFixed(0)}/100 · ${state.weighted_issues||0} pts anomalie` : "QUAL —";atlasOracleLabDashboardState.integrity=state;if(typeof atlasOracleSuiteSummarySync40216==="function")atlasOracleSuiteSummarySync40216();return state;}
 async function atlasOracleIntegrityRefresh(force=false){const now=Date.now();if(!force&&now-atlasOracleIntegrityLastRefresh<15000&&atlasOracleIntegrityState.updated_at)return atlasOracleIntegrityRender(atlasOracleIntegrityState);atlasOracleIntegrityLastRefresh=now;try{atlasOracleIntegrityState=atlasOracleIntegrityAuditRows(await atlasOracleEvidenceAll(),now);return atlasOracleIntegrityRender(atlasOracleIntegrityState);}catch(error){const s=document.getElementById("atlasOracleIntegrityStatus");if(s)s.textContent=`QUAL ! ${String(error?.message||error)}`;return atlasOracleIntegrityState;}}
 globalThis.AtlasOracleIntegrity=Object.freeze({refresh:atlasOracleIntegrityRefresh,audit:atlasOracleIntegrityAuditRows,state:()=>atlasOracleIntegrityState});
 
@@ -8780,6 +8812,7 @@ function atlasInitOracleV0() {
   atlasOracleMultiModelPerformanceRefresh(null,true).catch(()=>{});
   atlasOracleAdaptiveWeightsRefresh(null,true).then(()=>atlasOracleShadowV2Refresh(true)).catch(()=>{});
   atlasOracleEvidenceExplorerInit();
+  document.getElementById("oracle-analysis-suite")?.addEventListener("toggle",event=>{if(!event.currentTarget.open)atlasOracleEvidenceExplorerRelease40216();else if(document.getElementById("oracle-evidence-explorer")?.open)atlasOracleEvidenceExplorerRefresh();});
   atlasOracleLabDashboardRefresh(true).catch(()=>{});
   atlasOracleBackupInit();
   atlasOracleIntegrityRefresh(true).catch(()=>{});
@@ -44544,7 +44577,7 @@ globalThis.AtlasStorageRetirement4023=Object.freeze({plan:atlasStorageRetirement
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.15";
+const ATLAS_BUILD = "40.2.16";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
