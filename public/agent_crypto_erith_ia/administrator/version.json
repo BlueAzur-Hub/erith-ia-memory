@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_version_manifest_v8",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.90 · PARKER LEWIS CAN'T LOSE · OPERATOR GRAPH SESSION PROFILE V2 LOCK",
-  "build": "40.1.90",
-  "asset_token": "market-core-v2.0-alpha-build-40.1.90",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.91 · PARKER LEWIS CAN'T LOSE · OPERATOR GRAPH INTENT PROFILE V3 LOCK",
+  "build": "40.1.91",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.91",
   "status": "candidate_requires_firefox_validation",
   "prepared_at": "2026-08-20T03:20:00+02:00",
   "published_at": null,
@@ -13,7 +13,7 @@
     "status": "protected"
   },
   "parent_build": "40.1.83",
-  "lineage": "40.1.83 → 40.1.90 · remplacement du miroir market-profile v1 par un Operator Graph Session Profile V2 écrit uniquement par les changements explicites du graphe ; les sauvegardes génériques, renderers, beforeunload et pagehide ne peuvent plus rétrograder Top 5 vers Solo ; Oracle reste isolé.",
+  "lineage": "40.1.83 → 40.1.91 · remplacement du miroir market-profile v1 par un Operator Graph Intent Profile V3 écrit uniquement par les contrôles humains du graphe ; les helpers internes, renderers, sauvegardes génériques, beforeunload et pagehide ne peuvent plus rétrograder Top 5 vers Solo ; Oracle reste isolé.",
   "files": {
     "app.js": "86f190bc44b2b2601beaf513127a7165129f55fd4bc685c68184d476dcbec16b",
     "index.html": "e17474741de6670da507b3aa89a82471e70bfcbb4d7367cc039d332c87e96aa5",
@@ -78,8 +78,8 @@
       "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a"
     },
     "publication_identity": {
-      "build": "40.1.90",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.90",
+      "build": "40.1.91",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.91",
       "app_build_marker_required": true,
       "app_sha256": "86f190bc44b2b2601beaf513127a7165129f55fd4bc685c68184d476dcbec16b",
       "status": "candidate_requires_firefox_validation"
@@ -802,7 +802,7 @@
       "quality_score_descriptive": true
     },
     "oracle_v2_shadow_challenger": {
-      "build": "40.1.90",
+      "build": "40.1.91",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -838,7 +838,7 @@
       "main_chart_write": false
     },
     "oracle_v2_shadow_multihorizon_surgery": {
-      "build": "40.1.90",
+      "build": "40.1.91",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -874,7 +874,7 @@
       "main_chart_write": false
     },
     "graph_profiles": {
-      "market_profile_key": "agent_crypto_erith_ia_graph_profile_market_v1",
+      "market_profile_key": "agent_crypto_erith_ia_operator_graph_intent_v3",
       "oracle_profile_key": "agent_crypto_erith_ia_oracle_view_state_v1",
       "legacy_market_settings_key": "agent_crypto_erith_ia_chart_v2_settings_v28_1_17",
       "boot_profile": "market",
@@ -902,8 +902,8 @@
     }
   },
   "notes": [
-    "40.1.90 crée deux profils de persistance indépendants : Marché (graphe principal) et Oracle (vue/horizon/zoom/actif/surface).",
-    "Le profil Marché est restauré depuis agent_crypto_erith_ia_graph_profile_market_v1 ; au premier boot 40.1.90, la migration préfère last_valid_graph puis workspace_state.",
+    "40.1.91 crée deux profils de persistance indépendants : Marché (graphe principal) et Oracle (vue/horizon/zoom/actif/surface).",
+    "Le profil Marché V3 est restauré depuis agent_crypto_erith_ia_operator_graph_intent_v3 ; au premier boot 40.1.91, la migration ignore le V2 potentiellement contaminé et préfère last_valid_graph puis workspace_state.",
     "Oracle ne s’ouvre plus automatiquement au rechargement et ses contrôles n’écrivent plus dans agent_crypto_erith_ia_chart_v2_settings_v28_1_17.",
     "Les slots de mémoire restaurent le profil Marché uniquement ; Oracle conserve son propre profil lorsqu’il est ouvert explicitement.",
     "Oracle Evidence/Outcome/Calibration/V2 Shadow et le Window Manager sont inchangés fonctionnellement.",
@@ -983,10 +983,10 @@
     "40.1.75: audits Evidence timestamps, constituents, quote freshness, duplicate logical observations, overdue pending outcomes and resolution lag; exposes a descriptive quality score without mutating evidence.",
     "40.1.76: adds a prospective Oracle V2 Shadow challenger. Candidate weights are frozen at T0 into new Evidence only; old rows may train candidates but never count as V2 test cases. V2 remains read-only and does not alter Oracle V1 or live Ensemble scores.",
     "40.1.77: surgical Shadow V2 routing fix. Each NEW T0 Evidence row freezes independent 1m/5m/15m challenger snapshots; diagnostics expose eligible/pending/resolved/rejected. No legacy missing horizon is fabricated and no live Oracle score changes.",
-    "40.1.90: Operator Graph Session Profile V2 remplace le market-profile v1 comme autorité du contexte graphe Marché.",
-    "40.1.90: Top 5/Solo/période/vue/échelle sont checkpointés immédiatement après l’action opérateur ; renderer et lifecycle ne peuvent pas réécrire ce profil.",
-    "40.1.90: migration V2 = workspace_state → last_valid_graph → legacy market-profile v1 ; après création V2, seul V2 est restauré.",
-    "40.1.90: Oracle conserve son store dédié et reste fermé au rechargement ; Evidence, V2 Shadow, Math Core et Window Manager restent fonctionnellement inchangés."
+    "40.1.91: Operator Graph Intent Profile V3 remplace le market-profile v1 comme autorité du contexte graphe Marché.",
+    "40.1.91: Top 5/Solo/période/vue/échelle sont checkpointés immédiatement après l’action opérateur ; renderer et lifecycle ne peuvent pas réécrire ce profil.",
+    "40.1.91: migration V2 = workspace_state → last_valid_graph → legacy market-profile v1 ; après création V2, seul V2 est restauré.",
+    "40.1.91: Oracle conserve son store dédié et reste fermé au rechargement ; Evidence, V2 Shadow, Math Core et Window Manager restent fonctionnellement inchangés."
   ],
   "autonomous_mirror": {
     "administrator_style_owner": "./style.css",
