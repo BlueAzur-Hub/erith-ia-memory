@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.16";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · RUNTIME OBSERVATORY LOCK";
+  const ADMIN_BUILD = "40.2.17";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · MARKET FLOW RUNTIME GATE + BOOK SUPPORT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
