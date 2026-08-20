@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.21 — PARKER LEWIS CAN'T LOSE · WORKSPACE PROFILES + LIVECHECK PRESET LOCK
+     40.2.24 — PARKER LEWIS CAN'T LOSE · PORTABLE WORKSPACE PROFILES + STORAGE LINEAGE V2 LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.21";
+  const BUILD_CURRENT = "40.2.24";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -869,9 +869,19 @@
         typeof globalThis.ErithAdministratorWindows?.snapshot === "function"
           && typeof globalThis.ErithAdministratorWindows?.applySnapshot === "function"
           && globalThis.ErithAdministratorWorkspaceProfiles?.schema === "agent_crypto_workspace_profile_v1"
+          && typeof globalThis.ErithAdministratorWorkspaceProfiles?.exportSelected === "function"
+          && typeof globalThis.ErithAdministratorWorkspaceProfiles?.importPortable === "function"
+          && typeof globalThis.ErithAdministratorWorkspaceProfiles?.exportLibrary === "function"
+          && typeof globalThis.ErithAdministratorWorkspaceProfiles?.importLibrary === "function"
           && !!byId("adminWorkspaceProfilesToggle")
           && !!byId("adminWorkspaceProfilesPanel"),
-        "snapshot/apply Window Manager + profils IndexedDB · V7 non propriétaire"),
+        "snapshot/apply + profils IndexedDB + transfert JSON · V7 non propriétaire"),
+      check("Storage Lineage V2 · read-only",
+        globalThis.AtlasStorageLineage40224?.automatic_cleanup === false
+          && globalThis.AtlasStorageLineage40224?.deletion_enabled === false
+          && !!byId("btnAtlasStorageLineage40224")
+          && !!byId("atlasStorageLineage40224"),
+        "audit opérateur différé · aucune suppression automatique"),
       check("Math Core réduit · mini-module flottant mobile",
         globalThis.ErithAdminWindowManager?.contract?.floating_minimize_compact_bar === true,
         "réduction flottante compacte · position restaurée après déplacement"),

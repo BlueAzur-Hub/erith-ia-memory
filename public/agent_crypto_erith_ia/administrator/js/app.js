@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.21";
+  const ADMIN_BUILD = "40.2.24";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · WORKSPACE PROFILES + LIVECHECK PRESET LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -419,6 +419,152 @@
     return profile;
   }
 
+
+  // 40.2.24 — Workspace Profiles Transfer Lock.
+  // Portable files contain presentation state only. No Graph Context V7,
+  // market data, Oracle Evidence, credentials or business-memory payload.
+  const WORKSPACE_PROFILE_EXPORT_SCHEMA = "agent_crypto_workspace_profile_export_v1";
+  const WORKSPACE_PROFILE_BUNDLE_SCHEMA = "agent_crypto_workspace_profile_bundle_v1";
+
+  function workspaceProfilePortableWindowState(raw) {
+    const source = raw?.windows && typeof raw.windows === "object" ? raw.windows : {};
+    const windows = {};
+    Object.entries(source).forEach(([rawId, rawState]) => {
+      const id = String(rawId || "").trim();
+      if (!/^[a-z0-9][a-z0-9_-]{0,63}$/i.test(id) || !rawState || typeof rawState !== "object") return;
+      const geometry = rawState.geometry && typeof rawState.geometry === "object" ? rawState.geometry : null;
+      const safeNumber = value => Number.isFinite(Number(value)) ? Number(value) : null;
+      const cleanGeometry = geometry ? {
+        x: safeNumber(geometry.x), y: safeNumber(geometry.y),
+        width: safeNumber(geometry.width), height: safeNumber(geometry.height)
+      } : null;
+      windows[id] = {
+        floating: rawState.floating === true,
+        minimized: rawState.minimized === true,
+        hidden: rawState.hidden === true,
+        maximized: rawState.maximized === true,
+        geometry: cleanGeometry && Object.values(cleanGeometry).every(Number.isFinite) ? cleanGeometry : null
+      };
+    });
+    return { schema: "erith.admin.workspace.window-state.v1", windows };
+  }
+
+  function workspaceProfilePortable(profile) {
+    if (!profile || profile.schema !== WORKSPACE_PROFILE_SCHEMA) throw new Error("Profil de bureau invalide");
+    const label = String(profile.label || "").replace(/\s+/g, " ").trim().slice(0, 64);
+    if (!label) throw new Error("Nom de profil invalide");
+    const mathDock = String(profile.math_dock || "side").toLowerCase();
+    return {
+      schema: WORKSPACE_PROFILE_SCHEMA,
+      source_profile_id: String(profile.source_profile_id || profile.id || "").slice(0, 160),
+      label,
+      math_dock: ["top", "side", "rail"].includes(mathDock) ? mathDock : "side",
+      window_state: workspaceProfilePortableWindowState(profile.window_state),
+      analytical_context_owned: false,
+      graph_context_v7_owned: false
+    };
+  }
+
+  function workspaceProfileDownload(filename, payload) {
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function workspaceProfileFilename(label, suffix = "profile") {
+    const slug = String(label || "workspace")
+      .normalize?.("NFD")?.replace(/[\u0300-\u036f]/g, "") || String(label || "workspace");
+    return `agent_crypto_${suffix}_${slug.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 48) || "workspace"}.json`;
+  }
+
+  async function workspaceProfileExportSelected(manager, id) {
+    const profile = await workspaceProfileResolve(manager, id);
+    if (!profile) throw new Error("Profil introuvable");
+    const portable = workspaceProfilePortable(profile);
+    const payload = {
+      schema: WORKSPACE_PROFILE_EXPORT_SCHEMA,
+      build: ADMIN_BUILD,
+      exported_at: new Date().toISOString(),
+      contains_analytical_context: false,
+      contains_graph_context_v7: false,
+      contains_market_data: false,
+      profile: portable
+    };
+    workspaceProfileDownload(workspaceProfileFilename(portable.label), payload);
+    return payload;
+  }
+
+  async function workspaceProfileImportPortable(raw) {
+    const envelope = raw && typeof raw === "object" ? raw : {};
+    if (envelope.schema !== WORKSPACE_PROFILE_EXPORT_SCHEMA || !envelope.profile) throw new Error("Fichier profil non reconnu");
+    const portable = workspaceProfilePortable({ ...envelope.profile, schema: WORKSPACE_PROFILE_SCHEMA });
+    const sourceId = String(envelope.profile?.source_profile_id || "").slice(0, 160);
+    const custom = await workspaceProfileListCustom().catch(() => []);
+    const existing = custom.find(row => sourceId && String(row?.source_profile_id || "") === sourceId) || null;
+    const now = new Date().toISOString();
+    const imported = {
+      ...portable,
+      id: existing?.id || workspaceProfileId(),
+      builtin: false,
+      source_profile_id: sourceId || existing?.source_profile_id || "",
+      imported_from_build: String(envelope.build || "unknown").slice(0, 64),
+      created_at: existing?.created_at || now,
+      updated_at: now
+    };
+    await workspaceProfilePutCustom(imported);
+    return imported;
+  }
+
+
+  // 40.2.24 — Portable Profile Library Lock.
+  // A bundle is merely a collection of the same validated portable layouts.
+  async function workspaceProfileExportLibrary() {
+    const custom = await workspaceProfileListCustom();
+    const profiles = custom.map(workspaceProfilePortable);
+    const payload = {
+      schema: WORKSPACE_PROFILE_BUNDLE_SCHEMA,
+      build: ADMIN_BUILD,
+      exported_at: new Date().toISOString(),
+      contains_analytical_context: false,
+      contains_graph_context_v7: false,
+      contains_market_data: false,
+      count: profiles.length,
+      profiles
+    };
+    workspaceProfileDownload(`agent_crypto_workspace_profiles_${String(ADMIN_BUILD).replaceAll(".", "_")}.json`, payload);
+    return payload;
+  }
+
+  async function workspaceProfileImportLibrary(raw) {
+    const envelope = raw && typeof raw === "object" ? raw : {};
+    if (envelope.schema !== WORKSPACE_PROFILE_BUNDLE_SCHEMA || !Array.isArray(envelope.profiles)) throw new Error("Bibliothèque de profils non reconnue");
+    let imported = 0;
+    let updated = 0;
+    const knownSources = new Set((await workspaceProfileListCustom().catch(() => []))
+      .map(item => String(item?.source_profile_id || "")).filter(Boolean));
+    const rows = envelope.profiles.slice(0, 100);
+    for (const row of rows) {
+      const single = {
+        schema: WORKSPACE_PROFILE_EXPORT_SCHEMA,
+        build: envelope.build,
+        exported_at: envelope.exported_at,
+        profile: row
+      };
+      const sourceId = String(row?.source_profile_id || "");
+      const existed = Boolean(sourceId && knownSources.has(sourceId));
+      await workspaceProfileImportPortable(single);
+      if (sourceId) knownSources.add(sourceId);
+      if (existed) updated += 1; else imported += 1;
+    }
+    return { imported, updated, total: imported + updated };
+  }
+
   function installWorkspaceProfilesStyles() {
     if (byId("adminWorkspaceProfilesStyles")) return;
     const style = document.createElement("style");
@@ -514,8 +660,14 @@
       <div class="admin-workspace-profiles-actions">
         <button type="button" data-workspace-profile-rename data-workspace-profile-custom-only disabled>RENOMMER</button>
         <button type="button" data-workspace-profile-delete data-workspace-profile-custom-only disabled>SUPPRIMER</button>
+        <button type="button" data-workspace-profile-export>EXPORTER JSON</button>
+        <button type="button" data-workspace-profile-import>IMPORTER JSON</button>
+        <button type="button" data-workspace-profile-export-all>EXPORTER TOUS</button>
+        <button type="button" data-workspace-profile-import-all>IMPORTER TOUS</button>
+        <input type="file" accept="application/json,.json" data-workspace-profile-import-file hidden>
+        <input type="file" accept="application/json,.json" data-workspace-profile-import-all-file hidden>
       </div>
-      <div class="admin-workspace-profiles-status" data-workspace-profile-status>LiveCheck prédéfini + profils IndexedDB · composition visuelle uniquement · V7 inchangé.</div>
+      <div class="admin-workspace-profiles-status" data-workspace-profile-status>LiveCheck prédéfini + profils IndexedDB · export/import visuel uniquement · V7 inchangé.</div>
     `;
     document.body.appendChild(panel);
 
@@ -565,6 +717,8 @@
         // Rename changes only the label; the saved layout stays the saved layout.
         renamed.window_state = current.window_state;
         renamed.math_dock = current.math_dock;
+        renamed.source_profile_id = current.source_profile_id || "";
+        renamed.imported_from_build = current.imported_from_build || "";
         await workspaceProfilePutCustom(renamed);
         await workspaceProfilesRefresh(panel, id, manager);
         workspaceProfilesSetStatus(panel, `Renommé : ${renamed.label}.`, "ok");
@@ -589,6 +743,60 @@
       }
     });
 
+
+    panel.querySelector("[data-workspace-profile-export]")?.addEventListener("click", async () => {
+      const id = String(select?.value || "");
+      if (!id) { workspaceProfilesSetStatus(panel, "Choisis un profil à exporter.", "fail"); return; }
+      try {
+        const payload = await workspaceProfileExportSelected(manager, id);
+        workspaceProfilesSetStatus(panel, `Exporté : ${payload.profile.label} · disposition uniquement.`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Export impossible : ${error?.message || error}`, "fail");
+      }
+    });
+
+    const importFile = panel.querySelector("[data-workspace-profile-import-file]");
+    panel.querySelector("[data-workspace-profile-import]")?.addEventListener("click", () => importFile?.click());
+    importFile?.addEventListener("change", async () => {
+      const file = importFile.files?.[0];
+      importFile.value = "";
+      if (!file) return;
+      try {
+        const raw = JSON.parse(await file.text());
+        const imported = await workspaceProfileImportPortable(raw);
+        await workspaceProfilesRefresh(panel, imported.id, manager);
+        if (name) name.value = imported.label;
+        workspaceProfilesSetStatus(panel, `Importé : ${imported.label} · prêt à charger.`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Import refusé : ${error?.message || error}`, "fail");
+      }
+    });
+
+
+    panel.querySelector("[data-workspace-profile-export-all]")?.addEventListener("click", async () => {
+      try {
+        const payload = await workspaceProfileExportLibrary();
+        workspaceProfilesSetStatus(panel, `Bibliothèque exportée : ${payload.count} profil(s).`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Export bibliothèque impossible : ${error?.message || error}`, "fail");
+      }
+    });
+
+    const importAllFile = panel.querySelector("[data-workspace-profile-import-all-file]");
+    panel.querySelector("[data-workspace-profile-import-all]")?.addEventListener("click", () => importAllFile?.click());
+    importAllFile?.addEventListener("change", async () => {
+      const file = importAllFile.files?.[0];
+      importAllFile.value = "";
+      if (!file) return;
+      try {
+        const result = await workspaceProfileImportLibrary(JSON.parse(await file.text()));
+        await workspaceProfilesRefresh(panel, "", manager);
+        workspaceProfilesSetStatus(panel, `Bibliothèque importée : ${result.imported} nouveau(x) · ${result.updated} mis à jour.`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Import bibliothèque refusé : ${error?.message || error}`, "fail");
+      }
+    });
+
     // Deferred by design: opening the profile panel performs the first IndexedDB
     // listing. Hidden profile UI adds no IndexedDB work to Administrator boot.
     if (select instanceof HTMLSelectElement) {
@@ -606,6 +814,10 @@
       capture: label => workspaceProfileCapture(manager, label),
       save: async label => { const profile = workspaceProfileCapture(manager, label); await workspaceProfilePutCustom(profile); return profile; },
       load: async id => { const profile = await workspaceProfileResolve(manager, id); if (!profile) throw new Error("Profil introuvable"); return workspaceProfileApply(manager, profile); },
+      exportSelected: id => workspaceProfileExportSelected(manager, id),
+      importPortable: workspaceProfileImportPortable,
+      exportLibrary: workspaceProfileExportLibrary,
+      importLibrary: workspaceProfileImportLibrary,
       remove: workspaceProfileDeleteCustom
     });
   }
