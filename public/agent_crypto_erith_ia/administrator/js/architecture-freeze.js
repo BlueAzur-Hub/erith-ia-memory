@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.19 — PARKER LEWIS CAN'T LOSE · TECHNICAL READING PORTRAIT FIT + ORACLE ACCENT HIERARCHY LOCK
+     40.2.21 — PARKER LEWIS CAN'T LOSE · WORKSPACE PROFILES + LIVECHECK PRESET LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.19";
+  const BUILD_CURRENT = "40.2.21";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -865,6 +865,13 @@
       check("Contrat Memory Health", readOnlyContractOk(healthContract) && healthContract.verdicts_separated === true, healthContract ? "lecture seule + verdicts séparés" : "sentinelle absente"),
       check("Ancien Memory Health retiré", countScriptSuffix("/js/memory-health-audit-39.8.0.js") === 0, "aucun doublon du lecteur 39.8.0 initial"),
       check("Window Manager", hasScriptSuffix("/js/core/admin-window-manager.js"), "script unique"),
+      check("Workspace Profiles · visual-only API",
+        typeof globalThis.ErithAdministratorWindows?.snapshot === "function"
+          && typeof globalThis.ErithAdministratorWindows?.applySnapshot === "function"
+          && globalThis.ErithAdministratorWorkspaceProfiles?.schema === "agent_crypto_workspace_profile_v1"
+          && !!byId("adminWorkspaceProfilesToggle")
+          && !!byId("adminWorkspaceProfilesPanel"),
+        "snapshot/apply Window Manager + profils IndexedDB · V7 non propriétaire"),
       check("Math Core réduit · mini-module flottant mobile",
         globalThis.ErithAdminWindowManager?.contract?.floating_minimize_compact_bar === true,
         "réduction flottante compacte · position restaurée après déplacement"),

@@ -1225,6 +1225,90 @@
       return floating.length;
     }
 
+    // 40.2.20 — Workspace Profiles Foundation.
+    // Profiles are a presentation-layer snapshot only. They do not own market
+    // domain, Graph Context V7, Oracle state, selected assets or business data.
+    // The profile layer can therefore capture/restore the Window Manager without
+    // creating a second analytical-memory authority.
+    function snapshot() {
+      const state = {};
+      windows.forEach((win, id) => {
+        const rect = win.floating ? currentRect(win) : null;
+        state[id] = {
+          floating: win.floating === true,
+          minimized: win.minimized === true,
+          hidden: win.hidden === true,
+          maximized: win.maximized === true,
+          geometry: rect ? {
+            x: Number(rect.x),
+            y: Number(rect.y),
+            width: Number(rect.width),
+            height: Number(rect.height)
+          } : null
+        };
+      });
+      return {
+        schema: "erith.admin.workspace.window-state.v1",
+        windows: state
+      };
+    }
+
+    function applySnapshot(rawSnapshot, options = {}) {
+      const snapshotState = rawSnapshot && typeof rawSnapshot === "object" ? rawSnapshot : {};
+      const source = snapshotState.windows && typeof snapshotState.windows === "object"
+        ? snapshotState.windows
+        : {};
+      const persist = options.persist === true;
+      const applied = [];
+
+      windows.forEach((win, id) => {
+        const saved = source[id];
+        if (!saved || typeof saved !== "object") return;
+
+        // Normalize every managed presentation state before applying the saved
+        // one. All calls reuse the existing canonical state owners; no CSS or
+        // geometry path is reimplemented by the profile feature.
+        if (win.maximized) setMaximized(win, false, false);
+        if (win.minimized) setMinimized(win, false, false);
+        if (win.hidden) setHidden(win, false, false);
+        if (win.floating) setFloating(win, false, false);
+
+        const geometry = saved.geometry && typeof saved.geometry === "object"
+          ? saved.geometry
+          : null;
+        if (saved.floating === true) {
+          setFloating(win, true, false, geometry, {
+            autoFitShell: false,
+            restorePersisted: true
+          });
+        }
+        if (saved.maximized === true) setMaximized(win, true, false);
+        if (saved.minimized === true) setMinimized(win, true, false);
+        if (saved.hidden === true) setHidden(win, true, false);
+
+        if (persist) {
+          const current = win.floating ? currentRect(win) : null;
+          patchState(win.id, {
+            floating: win.floating === true,
+            minimized: win.minimized === true,
+            hidden: win.hidden === true,
+            maximized: win.maximized === true,
+            x: current?.x,
+            y: current?.y,
+            width: current?.width,
+            height: current?.height
+          });
+        }
+        applied.push(id);
+      });
+
+      updateDeck();
+      document.dispatchEvent(new CustomEvent("erith:admin-window-profile-applied", {
+        detail: { ids: applied.slice(), persisted: persist }
+      }));
+      return snapshot();
+    }
+
     function init() {
       const storedFree = readStorage(layoutKey, defaultFree ? "1" : "0") !== "0";
       setFree(storedFree);
@@ -1283,6 +1367,8 @@
       toggleDeck,
       setDeckOpen,
       getWindow: id => windows.get(id) || null,
+      snapshot,
+      applySnapshot,
       minimize: (id, value = true) => setMinimized(windows.get(id), value),
       hide: (id, value = true) => setHidden(windows.get(id), value),
       float: (id, value = true) => setFloating(windows.get(id), value),

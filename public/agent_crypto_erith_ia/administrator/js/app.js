@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.19";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · TECHNICAL READING PORTRAIT FIT + ORACLE ACCENT HIERARCHY LOCK";
+  const ADMIN_BUILD = "40.2.21";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · WORKSPACE PROFILES + LIVECHECK PRESET LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -236,6 +236,13 @@
     deck.title = "Ouvrir le gestionnaire des fenêtres opérationnelles";
     deck.addEventListener("click", () => manager.toggleDeck());
 
+    const profiles = document.createElement("button");
+    profiles.type = "button";
+    profiles.id = "adminWorkspaceProfilesToggle";
+    profiles.textContent = "PROFILS";
+    profiles.title = "Sauvegarder ou charger une composition de bureau";
+    profiles.addEventListener("click", () => toggleWorkspaceProfilesPanel(manager));
+
     const cascade = document.createElement("button");
     cascade.type = "button";
     cascade.textContent = "CASCADE";
@@ -253,8 +260,362 @@
     classic.textContent = `CLASSIC ${ENGINE_BUILD}`;
     classic.title = `Ouvrir la Classic Final ${ENGINE_BUILD}`;
 
-    bar.append(brand, layout, deck, cascade, reset, classic);
+    bar.append(brand, layout, deck, profiles, cascade, reset, classic);
     document.body.appendChild(bar);
+    installWorkspaceProfilesPanel(manager);
+  }
+
+  const WORKSPACE_PROFILE_SCHEMA = "agent_crypto_workspace_profile_v1";
+  const WORKSPACE_PROFILE_DB = "agent_crypto_workspace_profiles_v1";
+  const WORKSPACE_PROFILE_STORE = "profiles";
+
+  const WORKSPACE_PROFILE_BUILTIN_LIVECHECK = "builtin:livecheck";
+
+  function workspaceProfileBuiltins(manager) {
+    const current = manager.snapshot();
+    const keep = new Set(["graphique", "math-core"]);
+    const windows = {};
+    Object.entries(current?.windows || {}).forEach(([id, state]) => {
+      windows[id] = {
+        floating: false,
+        minimized: false,
+        hidden: !keep.has(id),
+        maximized: false,
+        geometry: null
+      };
+    });
+    return [{
+      schema: WORKSPACE_PROFILE_SCHEMA,
+      id: WORKSPACE_PROFILE_BUILTIN_LIVECHECK,
+      label: "LiveCheck · Graphique + Lecture + Math dessus",
+      builtin: true,
+      created_at: null,
+      updated_at: null,
+      math_dock: "top",
+      window_state: { schema: "erith.admin.workspace.window-state.v1", windows },
+      analytical_context_owned: false,
+      graph_context_v7_owned: false
+    }];
+  }
+
+  function workspaceProfileBuiltin(manager, id) {
+    return workspaceProfileBuiltins(manager).find(profile => profile.id === String(id || "")) || null;
+  }
+
+  function workspaceProfileOpenDb() {
+    return new Promise((resolve, reject) => {
+      if (!globalThis.indexedDB) {
+        reject(new Error("IndexedDB indisponible"));
+        return;
+      }
+      const request = indexedDB.open(WORKSPACE_PROFILE_DB, 1);
+      request.onupgradeneeded = () => {
+        const db = request.result;
+        if (!db.objectStoreNames.contains(WORKSPACE_PROFILE_STORE)) {
+          const store = db.createObjectStore(WORKSPACE_PROFILE_STORE, { keyPath: "id" });
+          store.createIndex("label", "label", { unique: false });
+          store.createIndex("updated_at", "updated_at", { unique: false });
+        }
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error || new Error("Ouverture IndexedDB impossible"));
+      request.onblocked = () => reject(new Error("IndexedDB bloqué"));
+    });
+  }
+
+  async function workspaceProfileDb(action, mode = "readonly") {
+    const db = await workspaceProfileOpenDb();
+    try {
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction(WORKSPACE_PROFILE_STORE, mode);
+        const store = tx.objectStore(WORKSPACE_PROFILE_STORE);
+        let request;
+        let requestResult;
+        try { request = action(store); }
+        catch (error) { reject(error); return; }
+        if (request) {
+          request.onsuccess = () => {
+            requestResult = request.result;
+            if (mode === "readonly") resolve(requestResult);
+          };
+          request.onerror = () => reject(request.error || tx.error || new Error("IndexedDB profile request failed"));
+        }
+        tx.oncomplete = () => {
+          if (mode !== "readonly") resolve(request ? requestResult : true);
+          else if (!request) resolve(true);
+        };
+        tx.onerror = () => reject(tx.error || new Error("IndexedDB profile transaction failed"));
+        tx.onabort = () => reject(tx.error || new Error("IndexedDB profile transaction aborted"));
+      });
+    } finally {
+      try { db.close(); } catch {}
+    }
+  }
+
+  const workspaceProfileListCustom = async () => {
+    const rows = await workspaceProfileDb(store => store.getAll());
+    return (Array.isArray(rows) ? rows : [])
+      .filter(row => row?.schema === WORKSPACE_PROFILE_SCHEMA && row?.builtin !== true)
+      .sort((a, b) => String(a.label || "").localeCompare(String(b.label || ""), "fr", { sensitivity: "base" }));
+  };
+
+  const workspaceProfileGetCustom = id => workspaceProfileDb(store => store.get(String(id || "")));
+  const workspaceProfilePutCustom = profile => workspaceProfileDb(store => store.put(profile), "readwrite");
+  const workspaceProfileDeleteCustom = id => workspaceProfileDb(store => store.delete(String(id || "")), "readwrite");
+
+  async function workspaceProfileResolve(manager, id) {
+    const value = String(id || "");
+    if (value.startsWith("builtin:")) return workspaceProfileBuiltin(manager, value);
+    return value ? workspaceProfileGetCustom(value) : null;
+  }
+
+  function workspaceProfileId() {
+    if (globalThis.crypto?.randomUUID) return `custom:${crypto.randomUUID()}`;
+    return `custom:${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  }
+
+  function workspaceProfileCurrentMathDock() {
+    const value = String(byId("math")?.dataset?.mathDock || "side").toLowerCase();
+    return ["top", "side", "rail"].includes(value) ? value : "side";
+  }
+
+  function workspaceProfileCapture(manager, label, existing = null) {
+    const cleanLabel = String(label || "").replace(/\s+/g, " ").trim().slice(0, 64);
+    if (!cleanLabel) throw new Error("Nom de profil requis");
+    const now = new Date().toISOString();
+    return {
+      schema: WORKSPACE_PROFILE_SCHEMA,
+      id: existing?.id || workspaceProfileId(),
+      label: cleanLabel,
+      builtin: false,
+      created_at: existing?.created_at || now,
+      updated_at: now,
+      math_dock: workspaceProfileCurrentMathDock(),
+      window_state: manager.snapshot(),
+      analytical_context_owned: false,
+      graph_context_v7_owned: false
+    };
+  }
+
+  function workspaceProfileApplyMathDock(profile) {
+    const value = String(profile?.math_dock || "").toLowerCase();
+    if (!["top", "side", "rail"].includes(value)) return false;
+    if (typeof globalThis.atlasV2ApplyMathDock === "function") {
+      globalThis.atlasV2ApplyMathDock(value, { persist: false });
+      return true;
+    }
+    const button = document.querySelector(`[data-math-position="${value}"]`);
+    if (button instanceof HTMLElement) { button.click(); return true; }
+    return false;
+  }
+
+  function workspaceProfileApply(manager, profile) {
+    if (!profile || profile.schema !== WORKSPACE_PROFILE_SCHEMA) throw new Error("Profil de bureau invalide");
+    workspaceProfileApplyMathDock(profile);
+    manager.applySnapshot(profile.window_state, { persist: false });
+    document.dispatchEvent(new CustomEvent("erith:workspace-profile-loaded", {
+      detail: { id: profile.id, label: profile.label, builtin: profile.builtin === true }
+    }));
+    return profile;
+  }
+
+  function installWorkspaceProfilesStyles() {
+    if (byId("adminWorkspaceProfilesStyles")) return;
+    const style = document.createElement("style");
+    style.id = "adminWorkspaceProfilesStyles";
+    style.textContent = `
+      .admin-workspace-profiles-panel{position:fixed;left:12px;bottom:54px;z-index:2147482800;width:min(440px,calc(100vw - 24px));padding:10px;border:1px solid rgba(98,236,255,.28);border-radius:12px;background:linear-gradient(145deg,rgba(3,13,23,.97),rgba(8,21,32,.95));box-shadow:0 18px 48px rgba(0,0,0,.46),inset 0 0 0 1px rgba(255,255,255,.025);color:#eaf8fb;font:800 10px/1.25 system-ui,sans-serif}
+      .admin-workspace-profiles-panel[hidden]{display:none!important}
+      .admin-workspace-profiles-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+      .admin-workspace-profiles-head strong{font-size:11px;letter-spacing:.08em;color:#bdf7ff}
+      .admin-workspace-profiles-panel button,.admin-workspace-profiles-panel select,.admin-workspace-profiles-panel input{min-height:29px;border:1px solid rgba(255,255,255,.14);border-radius:8px;background:rgba(255,255,255,.055);color:#eaf8fb;font:850 10px/1.1 system-ui,sans-serif}
+      .admin-workspace-profiles-panel button{padding:5px 8px;cursor:pointer}
+      .admin-workspace-profiles-panel button:hover{border-color:rgba(98,236,255,.42);background:rgba(98,236,255,.08)}
+      .admin-workspace-profiles-panel button:disabled{opacity:.38;cursor:not-allowed}
+      .admin-workspace-profiles-panel select,.admin-workspace-profiles-panel input{width:100%;padding:5px 8px}
+      .admin-workspace-profiles-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;margin-bottom:6px}
+      .admin-workspace-profiles-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+      .admin-workspace-profiles-status{margin-top:7px;padding:6px 7px;border:1px solid rgba(255,255,255,.08);border-radius:8px;color:#93aab7;background:rgba(255,255,255,.025)}
+      .admin-workspace-profiles-status[data-state="ok"]{border-color:rgba(71,223,145,.28);color:#bff7d8}
+      .admin-workspace-profiles-status[data-state="fail"]{border-color:rgba(255,92,117,.32);color:#ffc3cc}
+      @media(max-width:700px){.admin-workspace-profiles-panel{left:8px;bottom:48px;width:calc(100vw - 16px)}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function workspaceProfilesSetStatus(panel, text, state = "") {
+    const node = panel?.querySelector?.("[data-workspace-profile-status]");
+    if (!node) return;
+    node.textContent = String(text || "");
+    if (state) node.dataset.state = state; else delete node.dataset.state;
+  }
+
+  async function workspaceProfilesRefresh(panel, selectedId = "", manager = globalThis.ErithAdministratorWindows) {
+    const select = panel?.querySelector?.("[data-workspace-profile-select]");
+    if (!(select instanceof HTMLSelectElement)) return [];
+    let custom = [];
+    let storageError = null;
+    try { custom = await workspaceProfileListCustom(); }
+    catch (error) { storageError = error; }
+    const builtins = manager ? workspaceProfileBuiltins(manager) : [];
+    select.innerHTML = "";
+
+    if (builtins.length) {
+      const group = document.createElement("optgroup");
+      group.label = "Prédéfinis";
+      builtins.forEach(profile => {
+        const option = document.createElement("option");
+        option.value = profile.id;
+        option.textContent = profile.label;
+        group.appendChild(option);
+      });
+      select.appendChild(group);
+    }
+
+    const customGroup = document.createElement("optgroup");
+    customGroup.label = "Mes profils";
+    if (!custom.length) {
+      const empty = document.createElement("option");
+      empty.value = "";
+      empty.textContent = "Aucun profil personnalisé";
+      customGroup.appendChild(empty);
+    } else {
+      custom.forEach(profile => {
+        const option = document.createElement("option");
+        option.value = profile.id;
+        option.textContent = profile.label;
+        customGroup.appendChild(option);
+      });
+    }
+    select.appendChild(customGroup);
+
+    if (selectedId && [...select.options].some(option => option.value === selectedId)) select.value = selectedId;
+    else if (builtins.length) select.value = builtins[0].id;
+
+    const deletable = select.value.startsWith("custom:");
+    panel.querySelectorAll("[data-workspace-profile-custom-only]").forEach(button => { button.disabled = !deletable; });
+    if (storageError) workspaceProfilesSetStatus(panel, `Profils personnalisés indisponibles : ${storageError?.message || storageError} · LiveCheck reste disponible.`, "fail");
+    return [...builtins, ...custom];
+  }
+
+  function installWorkspaceProfilesPanel(manager) {
+    installWorkspaceProfilesStyles();
+    byId("adminWorkspaceProfilesPanel")?.remove();
+    const panel = document.createElement("aside");
+    panel.id = "adminWorkspaceProfilesPanel";
+    panel.className = "admin-workspace-profiles-panel";
+    panel.hidden = true;
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-label", "Profils de bureau Administrator");
+    panel.innerHTML = `
+      <div class="admin-workspace-profiles-head"><strong>PROFILS DE BUREAU</strong><button type="button" data-workspace-profile-close aria-label="Fermer">×</button></div>
+      <div class="admin-workspace-profiles-grid"><select data-workspace-profile-select aria-label="Profil sauvegardé"></select><button type="button" data-workspace-profile-load>CHARGER</button></div>
+      <div class="admin-workspace-profiles-grid"><input data-workspace-profile-name maxlength="64" placeholder="Nom du profil actuel" aria-label="Nom du profil"><button type="button" data-workspace-profile-save>SAUVER ACTUEL</button></div>
+      <div class="admin-workspace-profiles-actions">
+        <button type="button" data-workspace-profile-rename data-workspace-profile-custom-only disabled>RENOMMER</button>
+        <button type="button" data-workspace-profile-delete data-workspace-profile-custom-only disabled>SUPPRIMER</button>
+      </div>
+      <div class="admin-workspace-profiles-status" data-workspace-profile-status>LiveCheck prédéfini + profils IndexedDB · composition visuelle uniquement · V7 inchangé.</div>
+    `;
+    document.body.appendChild(panel);
+
+    const select = panel.querySelector("[data-workspace-profile-select]");
+    const name = panel.querySelector("[data-workspace-profile-name]");
+    panel.querySelector("[data-workspace-profile-close]")?.addEventListener("click", () => { panel.hidden = true; });
+    select?.addEventListener("change", async () => {
+      const id = String(select.value || "");
+      const profile = id ? await workspaceProfileResolve(manager, id).catch(() => null) : null;
+      if (profile && name) name.value = profile.label || "";
+      const enabled = id.startsWith("custom:");
+      panel.querySelectorAll("[data-workspace-profile-custom-only]").forEach(button => { button.disabled = !enabled; });
+    });
+
+    panel.querySelector("[data-workspace-profile-load]")?.addEventListener("click", async () => {
+      const id = String(select?.value || "");
+      if (!id) { workspaceProfilesSetStatus(panel, "Choisis un profil à charger.", "fail"); return; }
+      try {
+        const profile = await workspaceProfileResolve(manager, id);
+        if (!profile) throw new Error("Profil introuvable");
+        workspaceProfileApply(manager, profile);
+        workspaceProfilesSetStatus(panel, `Chargé : ${profile.label} · contexte V7 conservé.`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Chargement impossible : ${error?.message || error}`, "fail");
+      }
+    });
+
+    panel.querySelector("[data-workspace-profile-save]")?.addEventListener("click", async () => {
+      try {
+        const profile = workspaceProfileCapture(manager, name?.value || "");
+        await workspaceProfilePutCustom(profile);
+        await workspaceProfilesRefresh(panel, profile.id, manager);
+        if (name) name.value = profile.label;
+        workspaceProfilesSetStatus(panel, `Sauvegardé : ${profile.label} · IndexedDB.`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Sauvegarde impossible : ${error?.message || error}`, "fail");
+      }
+    });
+
+    panel.querySelector("[data-workspace-profile-rename]")?.addEventListener("click", async () => {
+      const id = String(select?.value || "");
+      if (!id.startsWith("custom:")) return;
+      try {
+        const current = await workspaceProfileGetCustom(id);
+        if (!current) throw new Error("Profil introuvable");
+        const renamed = workspaceProfileCapture(manager, name?.value || current.label, current);
+        // Rename changes only the label; the saved layout stays the saved layout.
+        renamed.window_state = current.window_state;
+        renamed.math_dock = current.math_dock;
+        await workspaceProfilePutCustom(renamed);
+        await workspaceProfilesRefresh(panel, id, manager);
+        workspaceProfilesSetStatus(panel, `Renommé : ${renamed.label}.`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Renommage impossible : ${error?.message || error}`, "fail");
+      }
+    });
+
+    panel.querySelector("[data-workspace-profile-delete]")?.addEventListener("click", async () => {
+      const id = String(select?.value || "");
+      if (!id.startsWith("custom:")) return;
+      const profile = await workspaceProfileGetCustom(id).catch(() => null);
+      const label = profile?.label || "ce profil";
+      if (!globalThis.confirm?.(`Supprimer ${label} ?`)) return;
+      try {
+        await workspaceProfileDeleteCustom(id);
+        await workspaceProfilesRefresh(panel, "", manager);
+        if (name) name.value = "";
+        workspaceProfilesSetStatus(panel, `Supprimé : ${label}.`, "ok");
+      } catch (error) {
+        workspaceProfilesSetStatus(panel, `Suppression impossible : ${error?.message || error}`, "fail");
+      }
+    });
+
+    // Deferred by design: opening the profile panel performs the first IndexedDB
+    // listing. Hidden profile UI adds no IndexedDB work to Administrator boot.
+    if (select instanceof HTMLSelectElement) {
+      const option = document.createElement("option");
+      option.value = WORKSPACE_PROFILE_BUILTIN_LIVECHECK;
+      option.textContent = "LiveCheck · Graphique + Lecture + Math dessus";
+      select.appendChild(option);
+    }
+
+    globalThis.ErithAdministratorWorkspaceProfiles = Object.freeze({
+      schema: WORKSPACE_PROFILE_SCHEMA,
+      builtins: () => workspaceProfileBuiltins(manager),
+      list: workspaceProfileListCustom,
+      get: id => workspaceProfileResolve(manager, id),
+      capture: label => workspaceProfileCapture(manager, label),
+      save: async label => { const profile = workspaceProfileCapture(manager, label); await workspaceProfilePutCustom(profile); return profile; },
+      load: async id => { const profile = await workspaceProfileResolve(manager, id); if (!profile) throw new Error("Profil introuvable"); return workspaceProfileApply(manager, profile); },
+      remove: workspaceProfileDeleteCustom
+    });
+  }
+
+  function toggleWorkspaceProfilesPanel(manager) {
+    let panel = byId("adminWorkspaceProfilesPanel");
+    if (!panel) { installWorkspaceProfilesPanel(manager); panel = byId("adminWorkspaceProfilesPanel"); }
+    if (!panel) return;
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) workspaceProfilesRefresh(panel, panel.querySelector("[data-workspace-profile-select]")?.value || "", manager).catch(error => workspaceProfilesSetStatus(panel, String(error?.message || error), "fail"));
   }
 
   function syncDomainWindows(manager) {
