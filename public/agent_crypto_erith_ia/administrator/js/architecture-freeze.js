@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.12 — PARKER LEWIS CAN'T LOSE · OPTIONAL THIRD SOURCE ADAPTER READINESS LOCK
+     40.2.13 — PARKER LEWIS CAN'T LOSE · MANIFEST + FREEZE TRUTH REPAIR LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.12";
+  const BUILD_CURRENT = "40.2.13";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -912,8 +912,8 @@
           && verticalBars?.websocket_canvas_rescale === false,
         verticalBars ? `géométrie=${verticalBars.geometry_source} · base=${verticalBars.metal_paint_source} · illumination=${verticalBars.illumination?.composite}` : "contrat renderer vertical 40.1.52 absent"),
       check("Lecture technique · case 24 h vert pomme + chiffre vert fluo", !!byId("atlasOracleOverlay40148") && /#72ffb2/i.test(byId("atlasOracleOverlay40148")?.textContent || ""), "case positive entière renforcée · chiffre positif #72ffb2 restauré"),
-      check("Versioning · propagation GitHub informative", /stateMode === \"syncing\"[\s\S]{0,260}classList\.add\(\"ok\"\)/.test(String(globalThis.atlasVersionControlState || "")) || true, "syncing utilise la famille visuelle ok/verte, pas warn/rouge"),
-      check("Math Core · commandes inline dans l’en-tête", document.querySelector?.("#math .atlas-math-dock-actions[data-math-inline-window-controls=\"40148\"]") || true, "[⠿][−][□][↗][×] | Dessus · Latéral · Réduire sur une seule ligne"),
+      check("Versioning · propagation GitHub informative", /stateMode === \"syncing\"[\s\S]{0,260}classList\.add\(\"ok\"\)/.test(String(globalThis.atlasVersionControlState || "")), "syncing utilise la famille visuelle ok/verte, pas warn/rouge"),
+      check("Math Core · commandes inline dans l’en-tête", document.querySelector?.("#math .atlas-math-dock-actions[data-math-inline-window-controls=\"40148\"]"), "[⠿][−][□][↗][×] | Dessus · Latéral · Réduire sur une seule ligne"),
       check("Oracle V1 · buffer LIVE micro borné", !!oracleV1 && /live micro/i.test(String(oracleV1.live_micro_buffer || "")), "20 min max · mémoire session · aucun write mainChart"),
       check("Oracle V1 · TOP 5 agrégé", !!oracleV1?.top5_aggregate_focus, "focus agrégé + focus BTC/ETH/BNB/XRP/SOL"),
       check("Oracle V1 · zoom visuel isolé", Array.isArray(oracleV1?.visual_zoom) && oracleV1.visual_zoom.includes("4x") && oracleV1.visual_zoom_data_mutation === false && oracleV1.visual_zoom_score_mutation === false && oracleV1.visual_zoom_main_chart_mutation === false, "AUTO/×1/×2/×4 · ancre MAINTENANT · zéro mutation data/score/mainChart"),
@@ -1135,7 +1135,8 @@
       "", `## Validation finale ${BUILD_CURRENT}`, "",
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
-      "- Aucune nouvelle fonction n’a été ajoutée depuis le freeze 39.9.0R2 validé.",
+      "- Les contrôles Versioning/Math Core ne disposent plus d’un passe-droit `|| true` : leur PASS exige désormais la condition réelle.",
+      "- Ce candidat ne modifie aucune logique métier ; il répare la vérité des manifests et des contrôles Freeze courants.",
       `- Le candidat ${BUILD_CURRENT} exige une validation réelle dans Firefox après publication opérateur.`,
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );

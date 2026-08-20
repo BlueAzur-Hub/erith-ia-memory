@@ -1,19 +1,19 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.2.12",
-  "release": "Agent-Crypto @erith.IA · Build 40.2.12 · PARKER LEWIS CAN'T LOSE · VERSION TRUTH + STATIC TECHNICAL AUTHORITY LOCK",
+  "build": "40.2.13",
+  "release": "Agent-Crypto @erith.IA · Build 40.2.13 · PARKER LEWIS CAN'T LOSE · MANIFEST + FREEZE TRUTH REPAIR LOCK",
   "status": "candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-20T17:55:00Z",
+  "prepared_at": "2026-08-20T19:23:00Z",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.2.12",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.2.12",
-    "asset_token": "market-core-v2.0-alpha-build-40.2.12",
+    "primary_build": "40.2.13",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.2.13",
+    "asset_token": "market-core-v2.0-alpha-build-40.2.13",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
-    "direct_parent": "40.2.11",
-    "method": "40.2.11 → 40.2.12 · corrige les metas HTML atlas-build / administrator-build / asset token qui provoquaient CACHE/VERSION INCOHÉRENTS ; unifie le hash admin-visual-assets.js ; corrige la filiation directe ; verrouille l’asset statique Lecture Technique contre la reprise asynchrone de l’ancien picker IndexedDB, sans écrire dans V7 ni dans le stockage.",
+    "direct_parent": "40.2.12",
+    "method": "40.2.12 → 40.2.13 · maintenance truth-only : aligne la filiation et les hashes des manifests sur les fichiers réellement livrés ; supprime deux faux PASS `|| true` dans Architecture Freeze ; remplace une assertion historique obsolète. Aucun comportement Marché, Graphique, V7, Oracle, Math Core, Lecture Technique ou Window Manager n’est modifié.",
     "oracles": {
       "technical_reading": [
         "39.6.2 FULL-CLEAR SURFACES LOCK",
@@ -50,7 +50,7 @@
   "protected_base": {
     "classic_web_modified": false,
     "image_assets_modified": false,
-    "business_runtime_rewritten": true,
+    "business_runtime_rewritten": false,
     "window_manager_modified": false,
     "market_memory_semantics_modified": false,
     "analytical_memory_semantics_modified": false,
@@ -945,9 +945,9 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "3612d270a8269f6b7c5b92341b0c10b1973a395b6e713a5d2eafabd50f75b019",
-      "index.html": "2d097a2da7730fb31aba8f85591620f26f42a56b4c0cc1ef04b0e8eb99111adc",
-      "js/app.js": "765548e46c9e4930d4924452d782f9a50d59c0a70212e0710318331ac3f6310c",
+      "app.js": "250266f46a77bf171dfc51b388c6ea79751b1ef2d65a026352d7ff09ce4cb3cb",
+      "index.html": "20c74f265f5a3f028b4ddfb13831793da61eac7b3bb7a32aea1db88183b28824",
+      "js/app.js": "5dcfb2daa5555f1520de20de1d2b84f7a6d45e2a1e76c6d5c36b279396a1fe86",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -957,7 +957,7 @@
       "js/core/admin-window-manager.js": "4f342d829506b8157d7340c05a98fb9d9aec4f9dcd671374d3e89f456a626b80",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "7427dfba55efcc3e074acf9af819e2cabd2e294d92aaa708f529acdbfaac4889",
+      "js/architecture-freeze.js": "3db492002f86a96cefc69cd9ddc23046e1a397112ba4e62557ba149a58c4a954",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -985,17 +985,17 @@
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.2.12",
-      "asset_token": "market-core-v2.0-alpha-build-40.2.12",
+      "build": "40.2.13",
+      "asset_token": "market-core-v2.0-alpha-build-40.2.13",
       "status": "candidate_requires_firefox_validation",
-      "app_sha256": "3612d270a8269f6b7c5b92341b0c10b1973a395b6e713a5d2eafabd50f75b019"
+      "app_sha256": "250266f46a77bf171dfc51b388c6ea79751b1ef2d65a026352d7ff09ce4cb3cb"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.2.12",
-  "parent_build": "40.2.10",
-  "lineage": "40.2.11 → 40.2.12 · corrige les metas HTML atlas-build / administrator-build / asset token qui provoquaient CACHE/VERSION INCOHÉRENTS ; unifie le hash admin-visual-assets.js ; corrige la filiation directe ; verrouille l’asset statique Lecture Technique contre la reprise asynchrone de l’ancien picker IndexedDB, sans écrire dans V7 ni dans le stockage.",
+  "asset_token": "market-core-v2.0-alpha-build-40.2.13",
+  "parent_build": "40.2.12",
+  "lineage": "40.2.12 → 40.2.13 · MANIFEST + FREEZE TRUTH REPAIR ; aucun changement métier, visuel ou de stockage.",
   "repository_cleanup": {
-    "runtime_behavior_changed": true,
+    "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
     "freeze_export_filename_current_build": true,
     "classic_build_history_preserved": true,
@@ -1008,10 +1008,10 @@
     "delete_candidates_in_current_manifest": false
   },
   "notes": [
-    "Candidat cumulatif ; validation Firefox opérateur requise.",
-    "Graph Context V7 / Boot Read Barrier conservé ; Lecture Technique reste sous autorité opérateur même en Vue Basique.",
-    "Oracle Source Fabric / Source Risk / Resource Budget / Storage Health / Source Health T0 réintroduits depuis la branche cumulative, avec correctifs ciblés.",
-    "Technical Reading : images statiques du repo uniquement ; aucun Blob, FileReader, IndexedDB image ou localStorage image.",
-    "Assets de thèmes livrés dans un ZIP séparé afin de conserver le ZIP code canonique à 7 fichiers."
+    "Maintenance truth-only ; validation Firefox opérateur requise.",
+    "Filiation directe : 40.2.12 → 40.2.13 ; hashes des fichiers modifiés synchronisés avec le package livré.",
+    "Architecture Freeze : suppression des deux passe-droits `|| true` sur Versioning/propagation et Math Core inline ; un FAIL éventuel est désormais réel et doit rester visible.",
+    "Graph Context V7 / Boot Read Barrier, Oracle, Evidence, Math Core, Lecture Technique, Graphique, Market Flow et Window Manager : logique inchangée.",
+    "Technical Reading : cycle statique 40.2.12 conservé sans modification ; cette build ne change ni images ni autorité visuelle."
   ]
 }

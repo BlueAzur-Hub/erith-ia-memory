@@ -44469,7 +44469,7 @@ globalThis.AtlasStorageRetirement4023=Object.freeze({plan:atlasStorageRetirement
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.12";
+const ATLAS_BUILD = "40.2.13";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
