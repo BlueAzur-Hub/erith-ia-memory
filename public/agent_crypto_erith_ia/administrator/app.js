@@ -3507,7 +3507,11 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
     state.dataBroker.comparison.preset = options.preset || "empty";
     state.dataBroker.comparison.status = "idle";
     state.dataBroker.comparison.error = null;
+    if (options.explicitEmpty === true) {
+      atlasWorkspaceSelectionIntentWrite("explicit-empty");
+    }
     atlasRenderComparisonControls();
+    atlasWorkspaceScheduleSave?.(80);
     return;
   }
 
@@ -3533,7 +3537,9 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   state.dataBroker.comparison.preset = options.preset || state.dataBroker.comparison.preset || (unique.length > 1 ? "manual" : "solo");
   state.dataBroker.comparison.status = "idle";
   state.dataBroker.comparison.error = null;
+  atlasWorkspaceSelectionIntentWrite("selected");
   atlasRenderComparisonControls();
+  atlasWorkspaceScheduleSave?.(80);
   queueMicrotask(() => { void atlasRefreshSpotBook({ force: true }); });
 }
 
@@ -3655,7 +3661,7 @@ function atlasRenderComparisonControls() {
       const id = button.dataset.compareRemove;
       const ids = atlasComparisonIds().filter(value => value !== id);
       if (!ids.length) {
-        atlasSetComparisonIds([], null, { preset: "empty" });
+        atlasSetComparisonIds([], null, { preset: "empty", explicitEmpty: true });
         renderAnalystPanel({ comparisonRemove: true });
         return;
       }
@@ -3767,7 +3773,7 @@ function atlasRenderEmptyGraphSelection() {
 
 function atlasClearGraphSelection() {
   atlasTrackAudience("chart_comparison_changed", { ids: [], period: Number(state.chartPeriodDays || 1), action: "clear" });
-  atlasSetComparisonIds([], null, { preset: "empty" });
+  atlasSetComparisonIds([], null, { preset: "empty", explicitEmpty: true });
   atlasRenderEmptyGraphSelection();
 }
 
@@ -5639,7 +5645,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.77",
+  build: "40.1.82",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6174,7 +6180,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.77",
+  build: "40.1.82",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -15350,7 +15356,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.77",
+  build: "40.1.82",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -36613,6 +36619,7 @@ function atlasAdminOpenWorkspace(options = {}) {
 }
 
 const ATLAS_WORKSPACE_STATE_KEY = "agent_crypto_erith_ia_workspace_state_v2";
+const ATLAS_WORKSPACE_SELECTION_INTENT_KEY = "agent_crypto_erith_ia_workspace_selection_intent_v1";
 
 const ATLAS_WORKSPACE_PERIODS = Object.freeze([1, 7, 30, 60, 90, 365, 36500]);
 
@@ -36635,16 +36642,100 @@ function atlasWorkspaceReadJson(key) {
   }
 }
 
+function atlasWorkspaceSelectionIntentRead() {
+  const stored = atlasWorkspaceReadJson(ATLAS_WORKSPACE_SELECTION_INTENT_KEY);
+  const mode = String(stored?.mode || "");
+  return ["selected", "explicit-empty"].includes(mode) ? mode : "";
+}
+
+function atlasWorkspaceSelectionIntentWrite(mode) {
+  const normalized = ["selected", "explicit-empty"].includes(String(mode || ""))
+    ? String(mode)
+    : "";
+  if (!normalized) return false;
+  try {
+    localStorage.setItem(
+      ATLAS_WORKSPACE_SELECTION_INTENT_KEY,
+      JSON.stringify({
+        schema: "agent_crypto_workspace_selection_intent_v1",
+        mode: normalized,
+        savedAt: new Date().toISOString(),
+        release: ATLAS_RELEASE
+      })
+    );
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function atlasWorkspaceSnapshotHasSelection(snapshot) {
+  if (!snapshot || typeof snapshot !== "object") return false;
+  const ids = Array.isArray(snapshot.comparisonIds)
+    ? snapshot.comparisonIds.filter(Boolean)
+    : [];
+  return ids.length > 0 || !!snapshot.selectedCoinId;
+}
+
+function atlasWorkspaceSnapshotExplicitEmpty(snapshot) {
+  return snapshot?.selectionIntent === "explicit-empty"
+    || atlasWorkspaceSelectionIntentRead() === "explicit-empty";
+}
+
+function atlasWorkspaceRecoverGraphSnapshot(current, lastValid, reason = "transient-empty") {
+  if (!current || !lastValid || !atlasWorkspaceSnapshotHasSelection(lastValid)) return current;
+  return {
+    ...current,
+    graphMode: lastValid.graphMode,
+    period: lastValid.period,
+    selectedCoinId: lastValid.selectedCoinId,
+    comparisonIds: Array.isArray(lastValid.comparisonIds)
+      ? [...lastValid.comparisonIds]
+      : [],
+    comparisonPreset: lastValid.comparisonPreset,
+    selectionCleared: false,
+    selectionIntent: "selected",
+    chartView: lastValid.chartView && typeof lastValid.chartView === "object"
+      ? { ...lastValid.chartView }
+      : current.chartView,
+    graphRecovery: {
+      source: "last_valid_graph",
+      reason,
+      recoveredAt: new Date().toISOString(),
+      lastValidSavedAt: lastValid.savedAt || null
+    }
+  };
+}
+
 function atlasWorkspaceRead() {
   const current = atlasWorkspaceReadJson(ATLAS_WORKSPACE_STATE_KEY);
   const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
   if (!current && !lastValid) return null;
+  if (!current) return lastValid;
+  if (!lastValid) return current;
 
-  /* Build 39.2.19 — Boot Hydration Persistence Lock
-     The current workspace is the operator's preference truth.
-     last_valid_graph is only a recovery fallback when no current workspace exists;
-     it must never overwrite a newer Solo/Top/Scanner preset, period or chart options. */
-  return current || lastValid;
+  /* Build 40.1.82 — Workspace Graph Persistence Recovery Lock.
+     Current UI preferences still win, except when the crypto graph snapshot is
+     empty without an explicit operator clear. In that one case, recover only
+     the graph selection/view from last_valid_graph instead of booting into a
+     transient empty state. */
+  const cryptoDomain = current.marketDomain !== "metals";
+  const currentHasSelection = atlasWorkspaceSnapshotHasSelection(current);
+  const explicitEmpty = atlasWorkspaceSnapshotExplicitEmpty(current);
+  if (cryptoDomain && !currentHasSelection && !explicitEmpty
+      && atlasWorkspaceSnapshotHasSelection(lastValid)) {
+    console.warn("Workspace graph recovery: transient empty current state replaced by last valid graph selection.", {
+      currentSavedAt: current.savedAt || null,
+      lastValidSavedAt: lastValid.savedAt || null
+    });
+    return atlasWorkspaceRecoverGraphSnapshot(
+      current,
+      lastValid,
+      "boot-current-empty-without-explicit-clear"
+    );
+  }
+
+  return current;
 }
 
 function atlasWorkspaceCapture() {
@@ -36670,6 +36761,9 @@ function atlasWorkspaceCapture() {
     comparisonIds: atlasComparisonIds(),
     comparisonPreset: state.dataBroker?.comparison?.preset || "solo",
     selectionCleared: state.graphSelectionCleared === true,
+    selectionIntent: atlasComparisonIds().length
+      ? "selected"
+      : (atlasWorkspaceSelectionIntentRead() || "transient-empty"),
     chartView: {
       view: state.chartViewV2.view === "base100" ? "base100" : "price",
       scale: state.chartViewV2.scale === "logarithmic" ? "logarithmic" : "linear",
@@ -36992,7 +37086,8 @@ function atlasWorkspaceSlotRecall(slotId) {
     saved.selectionCleared === true && !ids.length;
 
   atlasSetComparisonIds(ids, primary, {
-    preset
+    preset,
+    explicitEmpty: saved.selectionCleared === true && !ids.length
   });
 
   const savedView = saved.chartView
@@ -37222,7 +37317,23 @@ function atlasWorkspaceWrite() {
      This prevents the initial Solo state from overwriting a saved Top/Scanner view. */
   if (!atlasWorkspaceRestored) return null;
 
-  const snapshot = atlasWorkspaceCapture();
+  let snapshot = atlasWorkspaceCapture();
+
+  /* Build 40.1.82: an in-flight empty graph must never poison the canonical
+     workspace. Preserve newer non-graph UI preferences, but reuse the last
+     coherent graph selection/view unless the operator explicitly clicked Vider. */
+  if (atlasParallelMarketDomain() !== "metals"
+      && !atlasWorkspaceSnapshotHasSelection(snapshot)
+      && !atlasWorkspaceSnapshotExplicitEmpty(snapshot)) {
+    const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
+    if (atlasWorkspaceSnapshotHasSelection(lastValid)) {
+      snapshot = atlasWorkspaceRecoverGraphSnapshot(
+        snapshot,
+        lastValid,
+        "write-transient-empty-protection"
+      );
+    }
+  }
 
   try {
     localStorage.setItem(ATLAS_WORKSPACE_STATE_KEY, JSON.stringify(snapshot));
@@ -37439,6 +37550,11 @@ function atlasWorkspaceRestoreAfterMarket() {
 
   state.chartPeriodDays = period;
   state.graphSelectionCleared = saved.selectionCleared === true && !ids.length;
+  if (ids.length) {
+    atlasWorkspaceSelectionIntentWrite("selected");
+  } else if (saved.selectionIntent === "explicit-empty") {
+    atlasWorkspaceSelectionIntentWrite("explicit-empty");
+  }
   state.selectedCoinId = primary;
   state.dataBroker.comparison.ids = ids;
   state.dataBroker.comparison.pendingIds = [];
@@ -43017,7 +43133,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.77";
+const ATLAS_BUILD = "40.1.82";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -49693,8 +49809,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.77",
-  asset_token: "market-core-v2.0-alpha-build-40.1.77"
+  build: "40.1.82",
+  asset_token: "market-core-v2.0-alpha-build-40.1.82"
 });
 
 function atlasRuntimeTruth3813() {
