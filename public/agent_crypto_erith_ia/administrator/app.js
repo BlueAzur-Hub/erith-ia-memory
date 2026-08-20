@@ -5714,7 +5714,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.96",
+  build: "40.1.97",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6249,7 +6249,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.96",
+  build: "40.1.97",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -15427,7 +15427,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.96",
+  build: "40.1.97",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -37231,7 +37231,7 @@ function atlasGraphSessionV4IntentSemantic(control) {
 }
 
 /* =========================================================
-   40.1.96 — GRAPH SESSION CONTEXT V7 · INDEXEDDB PERSISTENCE RECOVERY LOCK
+   40.1.97 — GRAPH SESSION CONTEXT V7 · BOOT READ BARRIER LOCK
    Root-cause correction after 40.1.90–40.1.96 browser tests:
    - V3/V5/V6 remained "non initialisée" although their boot code executed.
    - Therefore the new localStorage keys were never durably created.
@@ -37255,6 +37255,10 @@ let atlasGraphContextV7Memory = null;
 let atlasGraphContextV7DbPromise = null;
 let atlasGraphContextV7InitPromise = null;
 let atlasGraphContextV7PersistChain = Promise.resolve();
+let atlasGraphContextV7BootPhase = "reading";
+let atlasGraphContextV7BootBlockedWrites = 0;
+let atlasGraphContextV7BootLastBlockedAction = "";
+let atlasGraphContextV7TrustedGestureUntil = 0;
 let atlasGraphContextV7Persistence = {
   backend:"IndexedDB",
   state:"loading",
@@ -37263,6 +37267,30 @@ let atlasGraphContextV7Persistence = {
   lastWriteAt:"",
   verifiedSequence:0
 };
+
+function atlasGraphContextV7MarkTrustedGesture(event) {
+  if (event?.isTrusted !== true) return;
+  atlasGraphContextV7TrustedGestureUntil = Math.max(atlasGraphContextV7TrustedGestureUntil, performance.now() + 1800);
+}
+
+["pointerdown","click","keydown","change"].forEach(type => {
+  document.addEventListener(type, atlasGraphContextV7MarkTrustedGesture, true);
+});
+
+function atlasGraphContextV7HasTrustedGesture() {
+  return performance.now() <= atlasGraphContextV7TrustedGestureUntil;
+}
+
+function atlasGraphContextV7BlockWrite(lastAction="boot-write") {
+  atlasGraphContextV7BootBlockedWrites += 1;
+  atlasGraphContextV7BootLastBlockedAction = String(lastAction || "boot-write");
+  try {
+    document.documentElement.dataset.atlasGraphBootBlockedWrites = String(atlasGraphContextV7BootBlockedWrites);
+    document.documentElement.dataset.atlasGraphBootBlockedAction = atlasGraphContextV7BootLastBlockedAction;
+  } catch {}
+  atlasGraphContextV7RefreshStatusUi?.();
+  return false;
+}
 
 function atlasGraphContextV7DetailWindowsNormalize(raw = {}) {
   const source = raw && typeof raw === "object" ? raw : {};
@@ -37439,7 +37467,9 @@ function atlasGraphContextV7PersistenceLabel() {
   const stateLabel = ({loading:"DB chargement",pending:"DB écriture",ok:"DB OK",error:"DB ERREUR"})[atlasGraphContextV7Persistence.state] || "DB ?";
   const probe = atlasGraphContextV7Persistence.localStorageProbe;
   const ls = probe && probe !== "unknown" ? ` · LS ${probe}` : "";
-  return `${stateLabel}${ls}`;
+  const phase = atlasGraphContextV7BootPhase !== "ready" ? ` · BOOT ${String(atlasGraphContextV7BootPhase).toUpperCase()}` : "";
+  const blocked = atlasGraphContextV7BootBlockedWrites ? ` · boot-block ${atlasGraphContextV7BootBlockedWrites}` : "";
+  return `${stateLabel}${phase}${blocked}${ls}`;
 }
 
 function atlasGraphContextV7RefreshStatusUi() {
@@ -37469,7 +37499,7 @@ function atlasGraphContextV7QueuePersist(payload,lastAction="operator") {
       atlasGraphContextV7Persistence.state = "error";
       atlasGraphContextV7Persistence.lastError = String(error?.message || error || "IndexedDB error");
       atlasGraphContextV7RefreshStatusUi();
-      console.error("40.1.96 Graph Context V7 persistence failure",lastAction,error);
+      console.error("40.1.97 Graph Context V7 persistence failure",lastAction,error);
       return null;
     });
   return atlasGraphContextV7PersistChain;
@@ -37477,6 +37507,9 @@ function atlasGraphContextV7QueuePersist(payload,lastAction="operator") {
 
 function atlasGraphContextV7Store(next,lastAction="operator",options={}) {
   if (!next || atlasGraphContextV7Restoring) return false;
+  const systemWrite = options.system === true;
+  if (atlasGraphContextV7BootPhase !== "ready" && !systemWrite) return atlasGraphContextV7BlockWrite(lastAction);
+  if (!systemWrite && !atlasGraphContextV7HasTrustedGesture()) return atlasGraphContextV7BlockWrite(`synthetic:${lastAction}`);
   const previous = atlasGraphContextV7Read();
   const normalized = atlasGraphContextV7Normalize(next);
   const payload = {
@@ -37488,7 +37521,7 @@ function atlasGraphContextV7Store(next,lastAction="operator",options={}) {
     lastAction:String(lastAction || "operator")
   };
   atlasGraphContextV7Memory = payload;
-  if (options.operator !== false) atlasGraphContextV7OperatorTouched = true;
+  if (options.operator !== false && !systemWrite) atlasGraphContextV7OperatorTouched = true;
   try {
     document.documentElement.dataset.atlasGraphContext = "v7";
     document.documentElement.dataset.atlasGraphContextAction = payload.lastAction;
@@ -37651,9 +37684,16 @@ function atlasGraphContextV7ApplyRuntime(context,{controls=true}={}) {
 
 function atlasGraphContextV7Bootstrap() {
   atlasGraphContextV7ProbeLocalStorage();
-  const neutral = atlasGraphContextV7SeedNeutral("v7-bootstrap-neutral");
+  atlasGraphContextV7BootPhase = "reading";
   atlasGraphContextV7Persistence.state = "loading";
-  atlasGraphContextV7ApplyRuntime(neutral,{controls:true});
+  atlasGraphContextV7Ready = false;
+  atlasGraphContextV7Memory = null;
+  try {
+    document.documentElement.dataset.atlasGraphContext = "v7";
+    document.documentElement.dataset.atlasGraphBootPhase = atlasGraphContextV7BootPhase;
+  } catch {}
+  // 40.1.97: DO NOT seed/apply Vide before IndexedDB has been read.
+  // The neutral state is created only after a confirmed missing-row result.
   atlasGraphContextV7RefreshStatusUi();
   return true;
 }
@@ -37662,31 +37702,73 @@ async function atlasGraphContextV7Initialize() {
   if (atlasGraphContextV7InitPromise) return atlasGraphContextV7InitPromise;
   atlasGraphContextV7InitPromise = (async () => {
     let persisted = null;
-    try { persisted = await atlasGraphContextV7DbRead(); }
-    catch (error) {
+    let readFailed = false;
+    atlasGraphContextV7BootPhase = "reading";
+    try {
+      persisted = await atlasGraphContextV7DbRead();
+    } catch (error) {
+      readFailed = true;
       atlasGraphContextV7Persistence.state = "error";
       atlasGraphContextV7Persistence.lastError = String(error?.message || error || "IndexedDB read error");
     }
-    if (!atlasGraphContextV7OperatorTouched && persisted) atlasGraphContextV7Memory = persisted;
-    if (!atlasGraphContextV7Memory) atlasGraphContextV7Memory = atlasGraphContextV7Normalize({activeSurface:"market",market:atlasGraphContextV7NeutralMarket(),oracle:{}});
-    atlasGraphContextV7Ready = true;
-    const context = atlasGraphContextV7Read();
-    atlasGraphContextV7ApplyRuntime(context,{controls:true});
-    if (atlasGraphContextV7Persistence.state !== "error") atlasGraphContextV7Persistence.state = persisted ? "ok" : "pending";
-    if (!persisted || atlasGraphContextV7OperatorTouched) await atlasGraphContextV7QueuePersist(context,persisted?"v7-early-operator-commit":"v7-first-db-seed");
-    else {
+
+    atlasGraphContextV7BootPhase = "applying";
+    try { document.documentElement.dataset.atlasGraphBootPhase = atlasGraphContextV7BootPhase; } catch {}
+
+    if (persisted) {
+      // Persisted IndexedDB is the sole restart authority. No boot/runtime state may outrank it.
+      atlasGraphContextV7Memory = atlasGraphContextV7Normalize(persisted);
+    } else if (!readFailed) {
+      // Confirmed first use only: create a neutral context after the database returned no row.
+      atlasGraphContextV7Memory = atlasGraphContextV7Normalize({
+        activeSurface:"market",
+        market:atlasGraphContextV7NeutralMarket(),
+        oracle:{}
+      });
+    }
+
+    if (atlasGraphContextV7Memory) atlasGraphContextV7ApplyRuntime(atlasGraphContextV7Read(),{controls:true});
+    atlasGraphContextV7Ready = !readFailed;
+
+    if (!readFailed && persisted) {
+      atlasGraphContextV7Persistence.state = "ok";
       atlasGraphContextV7Persistence.verifiedSequence = Number(persisted.sequence || 0);
       atlasGraphContextV7Persistence.lastWriteAt = persisted.savedAt || "";
-      atlasGraphContextV7RefreshStatusUi();
+    } else if (!readFailed && atlasGraphContextV7Memory) {
+      atlasGraphContextV7Persistence.state = "pending";
+      // First-ever row creation is a system seed, never an operator event.
+      await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),"v7-first-db-seed");
     }
-    if (Array.isArray(state.coins) && state.coins.length) {
+
+    // If market data arrived while IndexedDB was being read, restore it now while
+    // the write barrier is still closed. This prevents render/fallback code from
+    // converting the persisted Top5 state into Vide/Solo before restoration ends.
+    if (!readFailed && Array.isArray(state.coins) && state.coins.length) {
       atlasWorkspaceRestored = false;
-      try { atlasWorkspaceRestoreAfterMarket(); } catch (error) { console.warn("40.1.96 V7 post-IDB restore",error); }
+      try { atlasWorkspaceRestoreAfterMarket(); }
+      catch (error) { console.warn("40.1.97 V7 boot-barrier post-IDB restore",error); }
     }
-    return context;
+
+    atlasGraphContextV7BootPhase = readFailed ? "error" : "ready";
+    try { document.documentElement.dataset.atlasGraphBootPhase = atlasGraphContextV7BootPhase; } catch {}
+    atlasGraphContextV7RefreshStatusUi();
+    return atlasGraphContextV7Read();
   })();
   return atlasGraphContextV7InitPromise;
 }
+
+try {
+  globalThis.__AGENT_CRYPTO_GRAPH_CONTEXT_V7_40197__ = Object.freeze({
+    build:"40.1.97",
+    backend:"IndexedDB",
+    row_id:ATLAS_GRAPH_CONTEXT_V7_ROW_ID,
+    boot_read_barrier:true,
+    neutral_before_db_read:false,
+    boot_writes_blocked:true,
+    synthetic_writes_blocked:true,
+    localStorage_restart_authority:false
+  });
+} catch {}
 
 function atlasOperatorGraphProfileResolve(workspaceSaved = null) {
   const stored = atlasOperatorGraphProfileRead();
@@ -38558,7 +38640,7 @@ function atlasWorkspaceRestoreAfterMarket() {
   const savedWorkspace = atlasWorkspaceRead();
   const sessionSaved = atlasGraphContextV7Read();
   if (!sessionSaved) return false;
-  const sessionResolution = { session: sessionSaved, source: "graph-session-context-v6" };
+  const sessionResolution = { session: sessionSaved, source: "graph-session-context-v7" };
 
   const saved = savedWorkspace || {};
   const graphSaved = atlasGraphContextV7NormalizeMarket(sessionSaved?.market || atlasGraphContextV7NeutralMarket());
@@ -38691,7 +38773,7 @@ function atlasWorkspaceRestoreAfterMarket() {
     persist:false, save:false, source:"workspace-restore"
   });
 
-  /* V6 restores the last ACTIVE surface plus its isolated Market/Oracle sub-profiles.
+  /* V7 restores the last ACTIVE surface plus its isolated Market/Oracle sub-profiles.
      Legacy V1–V4 graph stores are never consulted here; no boot default may
      replace the V6 context selected explicitly by the operator. */
   const oracleSaved = atlasGraphContextV7NormalizeOracle(sessionSaved?.oracle || atlasOracleReadPersistentViewState?.() || {});
@@ -38713,7 +38795,7 @@ function atlasWorkspaceRestoreAfterMarket() {
   atlasChartV2SyncControls();
   atlasRenderOracleV0();
 
-  console.info("40.1.96 graph context V6 restored", {
+  console.info("40.1.97 graph context V7 restored", {
     sessionSource: sessionResolution.source,
     activeSurface: state.chartViewV2.oracle ? "oracle" : "market",
     preset: state.dataBroker.comparison.preset,
@@ -44190,7 +44272,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.96";
+const ATLAS_BUILD = "40.1.97";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -45623,8 +45705,8 @@ atlasSafeBoot("runtime responsive validation 28.1.15", atlasInitRuntimeStability
 
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 
-atlasSafeBoot("Graph Session Context V7 bootstrap", atlasGraphContextV7Bootstrap);
-void atlasGraphContextV7Initialize().catch(error => console.error("40.1.96 Graph Context V7 init", error));
+atlasSafeBoot("Graph Session Context V7 boot-read barrier", atlasGraphContextV7Bootstrap);
+void atlasGraphContextV7Initialize().catch(error => console.error("40.1.97 Graph Context V7 boot-read barrier", error));
 
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 
@@ -45831,7 +45913,7 @@ document.addEventListener("click", event => {
   window.setTimeout(atlasWorkspaceRenderStrip, 860);
 }, true);
 
-/* 40.1.96 — legacy trusted operator checkpoint retired by V6.
+/* 40.1.97 — legacy trusted operator checkpoint retired by V6.
    Human intent is accepted even before market/workspace hydration completes.
    Synthetic/internal .click() events are ignored, preventing render/default
    routines from silently replacing Top5/Vide/Oracle with Solo. */
@@ -50915,8 +50997,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.96",
-  asset_token: "market-core-v2.0-alpha-build-40.1.96"
+  build: "40.1.97",
+  asset_token: "market-core-v2.0-alpha-build-40.1.97"
 });
 
 function atlasRuntimeTruth3813() {
