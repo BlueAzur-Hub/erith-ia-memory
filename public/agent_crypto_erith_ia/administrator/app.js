@@ -39,13 +39,13 @@ const state = {
   watchIds: ["bitcoin","ethereum","solana","binancecoin","ripple","tether","usd-coin","usds","cardano","tron","dogecoin","chainlink","toncoin","avalanche-2","polkadot","litecoin","sui","aptos","arbitrum","optimism","polygon-ecosystem-token","uniswap","aave","ondo-finance","maker","pendle","near","bittensor","render-token","internet-computer","shiba-inu","pepe","monero","zcash"],
   sourceStatus: [],
   sourceStatusExpectedTotal: 2,
-  selectedCoinId: "bitcoin",
-  graphSelectionCleared: false,
+  selectedCoinId: null,
+  graphSelectionCleared: true,
   chartPeriodDays: 1,
   chartCache: {},
   chartRenderToken: 0,
   comparisonRenderToken: 0,
-  chartViewV2: { view: "price", scale: "linear", volume: true, legend: false, comparisonLegend: false, analysis: true, oracle: true, oracleHorizon: "5m", oracleView: "continuation", oracleZoom: "auto", marketColumns: "essential" },
+  chartViewV2: { view: "price", scale: "linear", volume: true, legend: false, comparisonLegend: false, analysis: true, oracle: false, oracleHorizon: "5m", oracleView: "continuation", oracleZoom: "auto", marketColumns: "essential" },
   chartEngineV2: {
     token: 0,
     controller: null,
@@ -116,10 +116,10 @@ const state = {
       error: null
     },
     comparison: {
-      mode: "single",
-      preset: "solo",
+      mode: "empty",
+      preset: "empty",
       limit: 5,
-      ids: ["bitcoin"],
+      ids: [],
       results: {},
       renderedIds: [],
       pendingIds: [],
@@ -3647,6 +3647,7 @@ function atlasRenderComparisonControls() {
       const ids = atlasComparisonIds().filter(value => value !== id);
       atlasSetComparisonIds([id, ...ids], id, { preset: "manual" });
       atlasGraphSessionV4CommitMarket("handler-comparison-primary");
+      atlasGraphContextV5CommitMarket("handler-comparison-primary");
       atlasBrokerSeedSpot(coin);
       renderScore(coin);
       renderMarketTable();
@@ -3664,11 +3665,13 @@ function atlasRenderComparisonControls() {
       if (!ids.length) {
         atlasSetComparisonIds([], null, { preset: "empty", explicitEmpty: true });
         atlasGraphSessionV4CommitMarket("handler-comparison-remove-empty");
+        atlasGraphContextV5CommitMarket("handler-comparison-remove-empty");
         renderAnalystPanel({ comparisonRemove: true });
         return;
       }
       atlasSetComparisonIds(ids, ids[0], { preset: ids.length > 1 ? "manual" : "solo" });
       atlasGraphSessionV4CommitMarket("handler-comparison-remove");
+      atlasGraphContextV5CommitMarket("handler-comparison-remove");
       requestAnimationFrame(() => {
         void renderAnalystPanel({ comparisonRemove: true, forceSingle: ids.length === 1 });
       });
@@ -5020,24 +5023,28 @@ function atlasChartV2SetOption(kind, value) {
     const opening = state.chartViewV2.oracle === false;
     state.chartViewV2.oracle = opening;
     if (opening) {
-      const session = atlasGraphSessionV4Read?.();
-      const savedOracle = session?.oracle || atlasOracleReadPersistentViewState();
+      const session = atlasGraphContextV5Read?.() || atlasGraphContextV5SeedNeutral?.("oracle-open-seed");
+      const savedOracle = atlasGraphContextV5NormalizeOracle(session?.oracle || atlasOracleReadPersistentViewState());
       state.chartViewV2.oracleView = savedOracle.view;
       state.chartViewV2.oracleHorizon = savedOracle.horizon;
       state.chartViewV2.oracleZoom = savedOracle.zoom;
       atlasOracleSurface = savedOracle.surface;
       atlasOracleV0AssetId = savedOracle.asset;
-      atlasGraphSessionV4SetSurface("oracle", "user-open-oracle");
+      atlasGraphContextV5PatchOracle(savedOracle, "user-open-oracle", true);
+      atlasGraphContextV5SetSurface("oracle", "user-open-oracle");
     } else {
-      atlasGraphSessionV4CommitOracle("user-close-oracle-save", { activate:false });
-      atlasGraphSessionV4SetSurface("market", "user-close-oracle");
+      atlasGraphContextV5PatchOracle(atlasGraphContextV5CaptureOracle(), "user-close-oracle-save", false);
+      atlasGraphContextV5SetSurface("market", "user-close-oracle");
     }
     oracleToggle = true;
   } else if (kind === "marketColumns") {
     state.chartViewV2.marketColumns = value === "complete" ? "complete" : "essential";
   }
 
-  if (!oracleToggle) atlasWriteChartV2Settings();
+  if (!oracleToggle) {
+    atlasWriteChartV2Settings();
+    atlasGraphContextV5CommitMarket?.(`chart-option:${kind}`);
+  }
   atlasChartV2SyncControls();
   if (kind === "marketColumns") renderMarketTable();
   else if (kind === "analysis") {
@@ -5704,7 +5711,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.93",
+  build: "40.1.94",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6239,7 +6246,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.93",
+  build: "40.1.94",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -7611,11 +7618,8 @@ function atlasOracleWritePersistentViewState() {
     // Keep old stores synchronized for rollback/backward compatibility.
     localStorage.setItem(ATLAS_ORACLE_V0_ASSET_KEY, next.asset);
   } catch {}
-  if (!atlasGraphSessionV4Restoring) {
-    const session = atlasGraphSessionV4Read?.();
-    if (session) {
-      atlasGraphSessionV4Store({ ...session, oracle:next }, "oracle-view-change");
-    }
+  if (!atlasGraphContextV5Restoring && typeof atlasGraphContextV5PatchOracle === "function") {
+    atlasGraphContextV5PatchOracle(next, "oracle-view-change", state.chartViewV2.oracle !== false);
   }
   return next;
 }
@@ -14622,6 +14626,7 @@ function atlasInitMarketRibbonInteractions() {
     if (event.type === "keydown") event.preventDefault();
     atlasToggleComparisonCoin(coin);
     atlasGraphSessionV4CommitMarket("handler-ribbon-toggle");
+    atlasGraphContextV5CommitMarket("handler-ribbon-toggle");
   };
 
   els.top5Track?.addEventListener("click", act);
@@ -14725,7 +14730,7 @@ function renderMarketTable() {
       if (e.target !== row && e.target.closest("button,a,input,select")) return;
       if (key) e.preventDefault();
       const c = state.coins.find(x => x.id === row.dataset.id);
-      if (c) { atlasToggleComparisonCoin(c); atlasGraphSessionV4CommitMarket("handler-market-row-toggle"); }
+      if (c) { atlasToggleComparisonCoin(c); atlasGraphSessionV4CommitMarket("handler-market-row-toggle"); atlasGraphContextV5CommitMarket("handler-market-row-toggle"); }
     };
     row.addEventListener("click", act);
     row.addEventListener("keydown", act);
@@ -14734,7 +14739,7 @@ function renderMarketTable() {
     e.stopPropagation();
     const action = String(b.dataset.marketAction || "");
     atlasMarketHandleAction(action, state.coins.find(c => c.id === b.dataset.coinId), e);
-    if (["open","compare"].includes(action)) atlasGraphSessionV4CommitMarket(`handler-market-${action}`);
+    if (["open","compare"].includes(action)) atlasGraphSessionV4CommitMarket(`handler-market-${action}`); atlasGraphContextV5CommitMarket(`handler-market-${action}`);
   }));
 }
 
@@ -15420,7 +15425,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.93",
+  build: "40.1.94",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -37223,6 +37228,250 @@ function atlasGraphSessionV4IntentSemantic(control) {
   return false;
 }
 
+/* =========================================================
+   40.1.94 — GRAPH CONTEXT V5 BOOT AUTHORITY LOCK
+   One graph authority for restart truth. V1/V2/V3/V4/workspace graph fields
+   are retained only for rollback diagnostics and NEVER imported into V5.
+   First V5 boot is deliberately neutral (Vide) so a stale Solo snapshot
+   cannot become authoritative again. After the first explicit operator action,
+   Market and Oracle contexts persist under one stable key across builds.
+   ========================================================= */
+const ATLAS_GRAPH_CONTEXT_V5_KEY = "agent_crypto_erith_ia_graph_context_v5";
+const ATLAS_GRAPH_CONTEXT_V5_SCHEMA = "agent_crypto_graph_context_v5";
+let atlasGraphContextV5Restoring = false;
+
+function atlasGraphContextV5NeutralMarket() {
+  return {
+    period: 1,
+    selectedCoinId: null,
+    comparisonIds: [],
+    comparisonPreset: "empty",
+    selectionCleared: true,
+    selectionIntent: "explicit-empty",
+    graphMode: "normal",
+    chartView: {
+      view: "price", scale: "linear", volume: true,
+      legend: false, comparisonLegend: false, analysis: true,
+      marketColumns: "essential"
+    }
+  };
+}
+
+function atlasGraphContextV5NormalizeMarket(raw = {}) {
+  const source = raw && typeof raw === "object" ? raw : {};
+  const rawIds = Array.isArray(source.comparisonIds) ? source.comparisonIds.filter(Boolean) : [];
+  const ids = rawIds.filter((id, index, list) => list.indexOf(id) === index).slice(0, ATLAS_COMPARISON_MAX_SERIES);
+  const explicitEmpty = source.selectionIntent === "explicit-empty" || source.selectionCleared === true || source.comparisonPreset === "empty";
+  let preset = ATLAS_WORKSPACE_PRESETS.includes(String(source.comparisonPreset || ""))
+    ? String(source.comparisonPreset)
+    : ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty";
+  if (!ids.length) preset = "empty";
+  if (ids.length === 1 && !ATLAS_SCANNER_PRESETS.has(preset)) preset = "solo";
+  const selected = ids.length
+    ? (ids.includes(String(source.selectedCoinId || "")) ? String(source.selectedCoinId) : ids[0])
+    : null;
+  const view = source.chartView && typeof source.chartView === "object" ? source.chartView : {};
+  return {
+    period: ATLAS_WORKSPACE_PERIODS.includes(Number(source.period)) ? Number(source.period) : 1,
+    selectedCoinId: selected,
+    comparisonIds: ids,
+    comparisonPreset: preset,
+    selectionCleared: !ids.length && explicitEmpty,
+    selectionIntent: ids.length ? "selected" : "explicit-empty",
+    graphMode: ATLAS_ADMIN_GRAPH_MODES.includes(String(source.graphMode || "")) ? String(source.graphMode) : "normal",
+    chartView: {
+      view: view.view === "base100" ? "base100" : "price",
+      scale: view.scale === "logarithmic" ? "logarithmic" : "linear",
+      volume: view.volume !== false,
+      legend: view.legend === true,
+      comparisonLegend: view.comparisonLegend === true,
+      analysis: view.analysis !== false,
+      marketColumns: view.marketColumns === "complete" ? "complete" : "essential"
+    }
+  };
+}
+
+function atlasGraphContextV5NormalizeOracle(raw = {}) {
+  const source = raw && typeof raw === "object" ? raw : {};
+  return {
+    view: ["continuation","top5"].includes(String(source.view || "")) ? String(source.view) : "continuation",
+    asset: String(source.asset || "").trim(),
+    horizon: ["1m","5m","15m"].includes(String(source.horizon || "")) ? String(source.horizon) : "5m",
+    zoom: ["auto","1x","2x","4x"].includes(String(source.zoom || "")) ? String(source.zoom) : "auto",
+    surface: ["grand","composite"].includes(String(source.surface || "")) ? String(source.surface) : "grand"
+  };
+}
+
+function atlasGraphContextV5Normalize(raw = {}) {
+  const source = raw && typeof raw === "object" ? raw : {};
+  return {
+    schema: ATLAS_GRAPH_CONTEXT_V5_SCHEMA,
+    activeSurface: source.activeSurface === "oracle" ? "oracle" : "market",
+    market: atlasGraphContextV5NormalizeMarket(source.market || atlasGraphContextV5NeutralMarket()),
+    oracle: atlasGraphContextV5NormalizeOracle(source.oracle || {}),
+    savedAt: String(source.savedAt || ""),
+    savedAtMs: Number(source.savedAtMs || 0),
+    sequence: Math.max(0, Number(source.sequence || 0)),
+    lastAction: String(source.lastAction || "v5-neutral")
+  };
+}
+
+function atlasGraphContextV5Read() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(ATLAS_GRAPH_CONTEXT_V5_KEY) || "null");
+    if (!raw || raw.schema !== ATLAS_GRAPH_CONTEXT_V5_SCHEMA) return null;
+    return atlasGraphContextV5Normalize(raw);
+  } catch { return null; }
+}
+
+function atlasGraphContextV5Store(next, lastAction = "operator") {
+  if (!next || atlasGraphContextV5Restoring) return false;
+  const previous = atlasGraphContextV5Read();
+  const normalized = atlasGraphContextV5Normalize(next);
+  const payload = {
+    ...normalized,
+    schema: ATLAS_GRAPH_CONTEXT_V5_SCHEMA,
+    savedAt: new Date().toISOString(),
+    savedAtMs: Date.now(),
+    sequence: Math.max(Number(previous?.sequence || 0), Number(normalized.sequence || 0)) + 1,
+    lastAction: String(lastAction || "operator")
+  };
+  try {
+    localStorage.setItem(ATLAS_GRAPH_CONTEXT_V5_KEY, JSON.stringify(payload));
+    document.documentElement.dataset.atlasGraphContext = "v5";
+    document.documentElement.dataset.atlasGraphContextAction = payload.lastAction;
+    document.documentElement.dataset.atlasGraphContextSurface = payload.activeSurface;
+    document.documentElement.dataset.atlasGraphContextPreset = payload.market.comparisonPreset;
+    return payload;
+  } catch { return false; }
+}
+
+function atlasGraphContextV5SeedNeutral(lastAction = "v5-first-boot-neutral") {
+  const existing = atlasGraphContextV5Read();
+  if (existing) return existing;
+  const oracleLegacy = typeof atlasOracleReadPersistentViewState === "function"
+    ? atlasOracleReadPersistentViewState()
+    : { view:"continuation", asset:"", horizon:"5m", zoom:"auto", surface:"grand" };
+  return atlasGraphContextV5Store({
+    activeSurface: "market",
+    market: atlasGraphContextV5NeutralMarket(),
+    oracle: atlasGraphContextV5NormalizeOracle(oracleLegacy)
+  }, lastAction);
+}
+
+function atlasGraphContextV5CaptureMarket() {
+  const ids = atlasComparisonIds();
+  return atlasGraphContextV5NormalizeMarket({
+    period: Number(state.chartPeriodDays || 1),
+    selectedCoinId: state.selectedCoinId || null,
+    comparisonIds: ids,
+    comparisonPreset: state.dataBroker?.comparison?.preset || (ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty"),
+    selectionCleared: state.graphSelectionCleared === true,
+    selectionIntent: ids.length ? "selected" : "explicit-empty",
+    graphMode: atlasWorkspaceCurrentGraphMode(),
+    chartView: {
+      view: state.chartViewV2.view,
+      scale: state.chartViewV2.scale,
+      volume: state.chartViewV2.volume,
+      legend: state.chartViewV2.legend,
+      comparisonLegend: state.chartViewV2.comparisonLegend,
+      analysis: state.chartViewV2.analysis,
+      marketColumns: state.chartViewV2.marketColumns
+    }
+  });
+}
+
+function atlasGraphContextV5CaptureOracle() {
+  return atlasGraphContextV5NormalizeOracle({
+    view: state.chartViewV2.oracleView,
+    asset: atlasOracleV0AssetId,
+    horizon: state.chartViewV2.oracleHorizon,
+    zoom: state.chartViewV2.oracleZoom,
+    surface: atlasOracleSurface
+  });
+}
+
+function atlasGraphContextV5CommitMarket(lastAction = "user-market") {
+  const current = atlasGraphContextV5Read() || atlasGraphContextV5SeedNeutral("v5-seed-before-market") || {};
+  return atlasGraphContextV5Store({
+    ...current,
+    activeSurface: "market",
+    market: atlasGraphContextV5CaptureMarket(),
+    oracle: current.oracle || atlasGraphContextV5CaptureOracle()
+  }, lastAction);
+}
+
+function atlasGraphContextV5PatchMarket(patch = {}, lastAction = "user-market-semantic") {
+  const current = atlasGraphContextV5Read() || atlasGraphContextV5SeedNeutral("v5-seed-before-market-patch") || {};
+  const market = atlasGraphContextV5NormalizeMarket({
+    ...(current.market || atlasGraphContextV5NeutralMarket()),
+    ...patch,
+    chartView: patch.chartView && typeof patch.chartView === "object"
+      ? { ...(current.market?.chartView || {}), ...patch.chartView }
+      : { ...(current.market?.chartView || {}) }
+  });
+  return atlasGraphContextV5Store({ ...current, activeSurface:"market", market }, lastAction);
+}
+
+function atlasGraphContextV5PatchOracle(patch = {}, lastAction = "user-oracle", activate = true) {
+  const current = atlasGraphContextV5Read() || atlasGraphContextV5SeedNeutral("v5-seed-before-oracle") || {};
+  const oracle = atlasGraphContextV5NormalizeOracle({ ...(current.oracle || {}), ...patch });
+  return atlasGraphContextV5Store({
+    ...current,
+    activeSurface: activate ? "oracle" : current.activeSurface,
+    oracle
+  }, lastAction);
+}
+
+function atlasGraphContextV5SetSurface(surface = "market", lastAction = "user-surface") {
+  const current = atlasGraphContextV5Read() || atlasGraphContextV5SeedNeutral("v5-seed-before-surface") || {};
+  return atlasGraphContextV5Store({
+    ...current,
+    activeSurface: surface === "oracle" ? "oracle" : "market",
+    market: current.market || atlasGraphContextV5CaptureMarket(),
+    oracle: current.oracle || atlasGraphContextV5CaptureOracle()
+  }, lastAction);
+}
+
+function atlasGraphContextV5Prehydrate() {
+  const context = atlasGraphContextV5Read() || atlasGraphContextV5SeedNeutral();
+  if (!context) return false;
+  const market = context.market;
+  const oracle = context.oracle;
+  atlasGraphContextV5Restoring = true;
+  try {
+    state.chartPeriodDays = market.period;
+    state.selectedCoinId = market.selectedCoinId;
+    state.graphSelectionCleared = market.selectionCleared === true;
+    state.dataBroker.comparison.ids = [...market.comparisonIds];
+    state.dataBroker.comparison.mode = market.comparisonIds.length > 1 ? "compare" : market.comparisonIds.length === 1 ? "single" : "empty";
+    state.dataBroker.comparison.preset = market.comparisonPreset;
+    state.dataBroker.comparison.pendingIds = [];
+    state.dataBroker.comparison.unavailableIds = [];
+    state.dataBroker.comparison.results = {};
+    state.dataBroker.comparison.renderedIds = [];
+    state.chartViewV2 = {
+      ...state.chartViewV2,
+      ...market.chartView,
+      oracle: context.activeSurface === "oracle",
+      oracleView: oracle.view,
+      oracleHorizon: oracle.horizon,
+      oracleZoom: oracle.zoom
+    };
+    atlasOracleSurface = oracle.surface;
+    atlasOracleV0AssetId = oracle.asset;
+    document.documentElement.dataset.atlasGraphContext = "v5";
+    document.documentElement.dataset.atlasGraphContextSurface = context.activeSurface;
+    document.documentElement.dataset.atlasGraphContextPreset = market.comparisonPreset;
+  } finally {
+    atlasGraphContextV5Restoring = false;
+  }
+  try { atlasRenderComparisonControls(); } catch {}
+  try { atlasChartV2SyncControls(); } catch {}
+  try { atlasWorkspaceRenderStrip(); } catch {}
+  return true;
+}
+
 function atlasOperatorGraphProfileResolve(workspaceSaved = null) {
   const stored = atlasOperatorGraphProfileRead();
   if (stored) return { profile: stored, source: "operator-intent-v3" };
@@ -37760,6 +38009,8 @@ function atlasWorkspaceSlotRecall(slotId) {
     }
   }
 
+  atlasGraphContextV5CommitMarket(`workspace-slot-${slot}`);
+  atlasGraphContextV5SetSurface("market", `workspace-slot-${slot}`);
   atlasWorkspaceWrite();
   atlasWorkspaceRenderStrip();
   atlasWorkspaceSlotsRender();
@@ -38064,13 +38315,13 @@ function atlasWorkspaceRenderStrip(options = {}) {
   root.dataset.state = restored ? "restored" : "current";
   kicker.textContent = restored ? "SESSION RESTAURÉE" : "ESPACE MÉMORISÉ";
   primary.textContent = `${atlasWorkspacePresetLabel()} · ${period} · ${view} · ${scale} · ${atlasWorkspaceSelectionLabel()}`;
-  const sessionV4 = atlasGraphSessionV4Read?.();
-  const marketV4 = sessionV4?.market || null;
-  const intentLabel = marketV4
-    ? ({ "rank-5":"Top 5", "rank-3":"Top 3", solo:"Solo", gainers:"Hausses 5", losers:"Baisses 5", volume:"Volumes 5", manual:"Manuel", empty:"Vide" }[marketV4.comparisonPreset] || marketV4.comparisonPreset || "—")
-    : "à initialiser";
-  const surfaceLabel = sessionV4?.activeSurface === "oracle" ? "Oracle" : "Marché";
-  secondary.textContent = `${displays.join(" · ")} · Vue ${graphMode} · SESSION V4: ${surfaceLabel}/${intentLabel} · choix locaux uniquement`;
+  const contextV5 = atlasGraphContextV5Read?.();
+  const marketV5 = contextV5?.market || null;
+  const intentLabel = marketV5
+    ? ({ "rank-5":"Top 5", "rank-3":"Top 3", solo:"Solo", gainers:"Hausses 5", losers:"Baisses 5", volume:"Volumes 5", manual:"Manuel", empty:"Vide" }[marketV5.comparisonPreset] || marketV5.comparisonPreset || "—")
+    : "non initialisée";
+  const surfaceLabel = contextV5?.activeSurface === "oracle" ? "Oracle" : "Marché";
+  secondary.textContent = `${displays.join(" · ")} · Vue ${graphMode} · CONTEXTE V5: ${surfaceLabel}/${intentLabel} · choix locaux uniquement`;
   atlasWorkspaceSlotsRender();
 
   if (restored) {
@@ -38086,18 +38337,11 @@ function atlasWorkspaceRestoreAfterMarket() {
   if (atlasWorkspaceRestored || !Array.isArray(state.coins) || !state.coins.length) return false;
 
   const savedWorkspace = atlasWorkspaceRead();
-  const sessionResolution = atlasGraphSessionV4Resolve(savedWorkspace);
-  const sessionSaved = sessionResolution.session;
-  if (!savedWorkspace && !sessionSaved?.market) {
-    atlasWorkspaceRestored = true;
-    atlasGraphSessionV4Seed("first-market-ready");
-    atlasWorkspaceRenderStrip();
-    atlasWorkspaceScheduleSave(80);
-    return false;
-  }
+  const sessionSaved = atlasGraphContextV5Read() || atlasGraphContextV5SeedNeutral("restore-after-market-seed");
+  const sessionResolution = { session: sessionSaved, source: "graph-context-v5" };
 
   const saved = savedWorkspace || {};
-  const graphSaved = sessionSaved?.market || atlasOperatorGraphProfileNormalize(saved);
+  const graphSaved = atlasGraphContextV5NormalizeMarket(sessionSaved?.market || atlasGraphContextV5NeutralMarket());
   const requestedIds = Array.isArray(graphSaved.comparisonIds) ? graphSaved.comparisonIds.filter(Boolean) : [];
   const availableIds = new Set(state.coins.map(coin => coin.id));
   const missingSavedIds = requestedIds.filter(id => !availableIds.has(id));
@@ -38106,6 +38350,7 @@ function atlasWorkspaceRestoreAfterMarket() {
   atlasWorkspaceRestored = true;
   atlasOperatorGraphProfileRestoring = true;
   atlasGraphSessionV4Restoring = true;
+  atlasGraphContextV5Restoring = true;
 
   const forceAdminWorkspace = atlasAdminForceWorkspaceIsActive();
   const activeInterfaceMode = atlasV2Mode();
@@ -38226,9 +38471,10 @@ function atlasWorkspaceRestoreAfterMarket() {
     persist:false, save:false, source:"workspace-restore"
   });
 
-  /* V4 restores the last ACTIVE surface as well as the isolated sub-profiles.
-     No default Solo/Vide value is allowed to replace an early operator intent. */
-  const oracleSaved = atlasGraphSessionV4OracleNormalize(sessionSaved?.oracle || atlasOracleReadPersistentViewState?.() || {});
+  /* V5 restores the last ACTIVE surface plus its isolated Market/Oracle sub-profiles.
+     Legacy V1–V4 graph stores are never consulted here; no boot default may
+     replace the V5 context selected explicitly by the operator. */
+  const oracleSaved = atlasGraphContextV5NormalizeOracle(sessionSaved?.oracle || atlasOracleReadPersistentViewState?.() || {});
   state.chartViewV2.oracleView = oracleSaved.view;
   state.chartViewV2.oracleHorizon = oracleSaved.horizon;
   state.chartViewV2.oracleZoom = oracleSaved.zoom;
@@ -38242,19 +38488,12 @@ function atlasWorkspaceRestoreAfterMarket() {
 
   atlasOperatorGraphProfileRestoring = false;
   atlasGraphSessionV4Restoring = false;
-
-  if (sessionResolution.source !== "graph-session-v4") {
-    atlasGraphSessionV4Store({
-      activeSurface: state.chartViewV2.oracle ? "oracle" : "market",
-      market: graphSaved,
-      oracle: oracleSaved
-    }, `migration:${sessionResolution.source}`);
-  }
+  atlasGraphContextV5Restoring = false;
 
   atlasChartV2SyncControls();
   atlasRenderOracleV0();
 
-  console.info("40.1.93 graph session V4 restored", {
+  console.info("40.1.94 graph context V5 restored", {
     sessionSource: sessionResolution.source,
     activeSurface: state.chartViewV2.oracle ? "oracle" : "market",
     preset: state.dataBroker.comparison.preset,
@@ -43731,7 +43970,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.93";
+const ATLAS_BUILD = "40.1.94";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -45085,6 +45324,7 @@ document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
       state.networkGovernor.pendingPeriod = null;
       atlasApplyRequestedPeriod(requested);
       atlasGraphSessionV4CommitMarket(`handler-period:${requested}`);
+      atlasGraphContextV5CommitMarket(`handler-period:${requested}`);
     }, ATLAS_PERIOD_DEBOUNCE_MS);
   });
 });
@@ -45092,16 +45332,19 @@ document.querySelectorAll(".period-btn[data-period]").forEach(btn => {
 els.btnChartSolo?.addEventListener("click", () => {
   atlasResetComparison(getSelectedCoin() || state.coins?.[0] || null);
   atlasGraphSessionV4CommitMarket("handler-solo");
+  atlasGraphContextV5CommitMarket("handler-solo");
 });
 
 els.btnChartTop3?.addEventListener("click", () => {
   atlasSelectTopComparison(3);
   atlasGraphSessionV4CommitMarket("handler-top3");
+  atlasGraphContextV5CommitMarket("handler-top3");
 });
 
 els.btnChartTop5?.addEventListener("click", () => {
   atlasSelectTopComparison(5);
   atlasGraphSessionV4CommitMarket("handler-top5");
+  atlasGraphContextV5CommitMarket("handler-top5");
 });
 
 els.btnChartGainers?.addEventListener("click", event => {
@@ -45122,9 +45365,9 @@ els.btnChartVolume5?.addEventListener("click", event => {
   atlasScannerStart("volume", 5, { period: Number(state.chartPeriodDays || 1), source: "button-28.2.57" });
 });
 
-els.btnChartReset?.addEventListener("click", () => { atlasResetGraphDefaults(); atlasGraphSessionV4CommitMarket("handler-reset"); });
+els.btnChartReset?.addEventListener("click", () => { atlasResetGraphDefaults(); atlasGraphSessionV4CommitMarket("handler-reset"); atlasGraphContextV5CommitMarket("handler-reset"); });
 
-els.btnChartClear?.addEventListener("click", () => { atlasClearGraphSelection(); atlasGraphSessionV4CommitMarket("handler-clear"); });
+els.btnChartClear?.addEventListener("click", () => { atlasClearGraphSelection(); atlasGraphSessionV4CommitMarket("handler-clear"); atlasGraphContextV5CommitMarket("handler-clear"); });
 
 window.addEventListener("resize", () => {
   if (state.chartEngineV2?.realChart) {
@@ -45163,6 +45406,8 @@ atlasSafeBoot("Agent-Crypto V2 global shell", atlasInitV2Shell);
 atlasSafeBoot("runtime responsive validation 28.1.15", atlasInitRuntimeStability);
 
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
+
+atlasSafeBoot("Graph Context V5 prehydrate", atlasGraphContextV5Prehydrate);
 
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 
@@ -45369,7 +45614,7 @@ document.addEventListener("click", event => {
   window.setTimeout(atlasWorkspaceRenderStrip, 860);
 }, true);
 
-/* 40.1.93 — trusted operator checkpoint.
+/* 40.1.94 — legacy trusted operator checkpoint retired by V5.
    Human intent is accepted even before market/workspace hydration completes.
    Synthetic/internal .click() events are ignored, preventing render/default
    routines from silently replacing Top5/Vide/Oracle with Solo. */
@@ -45403,8 +45648,7 @@ function atlasGraphSessionV4TrustedUserEvent(event) {
   }, control.matches?.(".period-btn[data-period]") ? 420 : 0);
 }
 
-document.addEventListener("click", atlasGraphSessionV4TrustedUserEvent, false);
-document.addEventListener("keydown", atlasGraphSessionV4TrustedUserEvent, false);
+/* V4 trusted listener retired in 40.1.94. V5 commits from the real control handlers after runtime mutation. */
 
 window.addEventListener("atlas:admin-graph", () => {
   atlasWorkspaceRenderStrip();
@@ -50454,8 +50698,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.93",
-  asset_token: "market-core-v2.0-alpha-build-40.1.93"
+  build: "40.1.94",
+  asset_token: "market-core-v2.0-alpha-build-40.1.94"
 });
 
 function atlasRuntimeTruth3813() {
