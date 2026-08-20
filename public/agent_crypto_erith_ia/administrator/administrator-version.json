@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.95",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.95 · PARKER LEWIS CAN'T LOSE · GRAPH SESSION CONTEXT V6 · FULL VIEW AUTHORITY LOCK",
+  "build": "40.1.96",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.96 · PARKER LEWIS CAN'T LOSE · GRAPH SESSION CONTEXT V7 · INDEXEDDB PERSISTENCE RECOVERY LOCK",
   "status": "candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-20T04:05:00+02:00",
+  "prepared_at": "2026-08-20T05:10:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.95",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.95",
-    "asset_token": "market-core-v2.0-alpha-build-40.1.95",
+    "primary_build": "40.1.96",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.96",
+    "asset_token": "market-core-v2.0-alpha-build-40.1.96",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
@@ -757,7 +757,7 @@
       "quality_score_descriptive": true
     },
     "oracle_v2_shadow_challenger": {
-      "build": "40.1.95",
+      "build": "40.1.96",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -793,7 +793,7 @@
       "main_chart_write": false
     },
     "oracle_v2_shadow_multihorizon_surgery": {
-      "build": "40.1.95",
+      "build": "40.1.96",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -829,36 +829,31 @@
       "main_chart_write": false
     },
     "graph_profiles": {
-      "market_profile_key": "agent_crypto_erith_ia_operator_graph_intent_v3",
-      "oracle_profile_key": "agent_crypto_erith_ia_oracle_view_state_v1",
-      "legacy_market_settings_key": "agent_crypto_erith_ia_chart_v2_settings_v28_1_17",
-      "boot_profile": "market",
-      "oracle_auto_open_on_reload": false,
-      "market_profile_authoritative": true,
-      "first_migration_preference": [
-        "last_valid_graph",
-        "workspace_state"
-      ],
-      "oracle_controls_write_market_settings": false,
-      "workspace_slots_restore": "market_only",
-      "renderer_proof_key": "agent_crypto_erith_ia_workspace_last_valid_graph_v1",
-      "workspace_shell_key": "agent_crypto_erith_ia_workspace_state_v2",
-      "evidence_ledger_modified": false
+      "authority": "Graph Session Context V7",
+      "schema": "agent_crypto_graph_session_context_v7",
+      "backend": "IndexedDB",
+      "database": "agent_crypto_ui_state_v1",
+      "store": "state",
+      "row_id": "graph_session_context_v7",
+      "market_and_oracle_same_record": true,
+      "lecture_technique_included": true,
+      "detail_subwindows_included": true,
+      "legacy_graph_stores_imported": false,
+      "localstorage_restart_authority": false,
+      "evidence_ledger_modified": false,
+      "firefox_validation_required": true
     },
     "graph_persistence": {
-      "owner": "agent_crypto_erith_ia_operator_graph_profile_v2",
-      "legacy_market_profile_v1_authoritative": false,
-      "generic_workspace_can_write_operator_profile": false,
-      "explicit_operator_commit_points": [
-        "comparison/selection",
-        "period",
-        "view/scale/display",
-        "graph mode",
-        "market control bubble checkpoint"
-      ],
-      "restore_write_lock": true,
-      "oracle_profile_isolated": true,
-      "reload_target": "last explicit Market graph context",
+      "schema": "agent_crypto_graph_session_context_v7",
+      "backend": "IndexedDB",
+      "database": "agent_crypto_ui_state_v1",
+      "store": "state",
+      "row_id": "graph_session_context_v7",
+      "write_visibility": "RAM mirror immediate",
+      "durability": "IndexedDB put + exact sequence/savedAtMs reread verification",
+      "localstorage_probe": "diagnostic only; never restart authority",
+      "boot_gate": "market restore waits until IndexedDB context init completes",
+      "legacy_contexts": "ignored as restart truth",
       "firefox_validation_required": true
     }
   },
@@ -923,23 +918,23 @@
       "js/multi-collector-concordance.js": "9fecda63998a65a710ac8614228892c351a8a2c9e4ddd178b9513a83ae8761ac",
       "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a",
       "publication_identity": {
-        "build": "40.1.95",
-        "asset_token": "market-core-v2.0-alpha-build-40.1.95",
+        "build": "40.1.96",
+        "asset_token": "market-core-v2.0-alpha-build-40.1.96",
         "status": "candidate_requires_firefox_validation",
         "app_sha256": "e98082e8744cb509c5ac5ee453bcd403e1b0cc9aada60ad682a86e9d24819885"
       }
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.1.95",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.95",
+      "build": "40.1.96",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.96",
       "status": "candidate_requires_firefox_validation",
       "app_sha256": "53bf22c4eeeb2c25607899f3ee93cb8a284d6c11802d796f15e031e82508b256"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.95",
-  "parent_build": "40.1.93",
-  "lineage": "40.1.94 → 40.1.95 · Graph Session Context V6 étend l’autorité de reprise à toute la vue graphique : sélection Marché, surface Oracle, Lecture Technique et sous-fenêtres ; les mises à jour Marché ne ferment plus implicitement Oracle.",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.96",
+  "parent_build": "40.1.95",
+  "lineage": "40.1.95 → 40.1.96 · Graph Session Context V7 abandonne les nouvelles clés localStorage qui ne s’initialisaient pas et déplace toute la persistance de vue vers un IndexedDB dédié avec relecture vérifiée.",
   "repository_cleanup": {
     "runtime_behavior_changed": true,
     "freeze_identity_current_build": true,
@@ -954,6 +949,8 @@
     "delete_candidates_in_current_manifest": false
   },
   "notes": [
+    "40.1.96 : contexte graphique V7 persisté dans IndexedDB dédié ; localStorage n’est plus l’autorité de reprise de la vue.",
+    "Chaque écriture V7 est relue avant statut DB OK ; un probe localStorage expose QuotaExceededError/StorageError sans bloquer la vue.",
     "40.1.91 crée deux profils de persistance indépendants : Marché (graphe principal) et Oracle (vue/horizon/zoom/actif/surface).",
     "Le profil Marché V3 est restauré depuis agent_crypto_erith_ia_operator_graph_intent_v3 ; au premier boot 40.1.91, la migration ignore le V2 potentiellement contaminé et préfère last_valid_graph puis workspace_state.",
     "Oracle ne s’ouvre plus automatiquement au rechargement et ses contrôles n’écrivent plus dans agent_crypto_erith_ia_chart_v2_settings_v28_1_17.",
