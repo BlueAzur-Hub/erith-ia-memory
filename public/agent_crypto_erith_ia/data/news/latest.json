@@ -1,15 +1,15 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.2",
-  "generated_at": "2026-08-20T19:48:47.829445+00:00",
+  "generated_at": "2026-08-20T21:47:13.519809+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
   "collector": "github-actions",
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 16,
-    "critical_24h": 16,
+    "events_24h": 15,
+    "critical_24h": 15,
     "strong_24h": 0,
     "sources_ok": 11,
     "sources_total": 11,
@@ -26,7 +26,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 7,
-      "latency_ms": 273,
+      "latency_ms": 221,
       "error": null
     },
     {
@@ -36,7 +36,7 @@
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
       "fetched_count": 28,
-      "qualified_count": 0,
+      "qualified_count": 1,
       "latency_ms": 253,
       "error": null
     },
@@ -48,7 +48,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 100,
+      "latency_ms": 144,
       "error": null
     },
     {
@@ -59,7 +59,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 2,
-      "latency_ms": 187,
+      "latency_ms": 379,
       "error": null
     },
     {
@@ -70,7 +70,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 23,
-      "latency_ms": 337,
+      "latency_ms": 436,
       "error": null
     },
     {
@@ -81,7 +81,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 28,
-      "latency_ms": 96,
+      "latency_ms": 204,
       "error": null
     },
     {
@@ -92,7 +92,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 22,
-      "latency_ms": 142,
+      "latency_ms": 282,
       "error": null
     },
     {
@@ -103,7 +103,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 14,
-      "latency_ms": 589,
+      "latency_ms": 684,
       "error": null
     },
     {
@@ -114,7 +114,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 65,
+      "latency_ms": 122,
       "error": null
     },
     {
@@ -123,9 +123,9 @@
       "group": "world",
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
-      "fetched_count": 23,
-      "qualified_count": 3,
-      "latency_ms": 230,
+      "fetched_count": 24,
+      "qualified_count": 4,
+      "latency_ms": 358,
       "error": null
     },
     {
@@ -136,7 +136,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 204,
+      "latency_ms": 110,
       "error": null
     }
   ],
@@ -165,11 +165,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-08-20T10:46:21+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.198047+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.198047+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.889467+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.889467+00:00",
       "freshness": {
         "iso": "2026-08-20T10:46:21+00:00",
-        "hours": 9.04,
+        "hours": 11.01,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -233,11 +233,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-08-20T05:40:54+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.205166+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.205166+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.892950+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.892950+00:00",
       "freshness": {
         "iso": "2026-08-20T05:40:54+00:00",
-        "hours": 14.13,
+        "hours": 16.11,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -302,11 +302,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-08-20T04:29:56+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.206269+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.206269+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.893613+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.893613+00:00",
       "freshness": {
         "iso": "2026-08-20T04:29:56+00:00",
-        "hours": 15.31,
+        "hours": 17.29,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -370,11 +370,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-08-20T17:46:08+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.978611+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.978611+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.734007+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.734007+00:00",
       "freshness": {
         "iso": "2026-08-20T17:46:08+00:00",
-        "hours": 2.04,
+        "hours": 4.02,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -509,11 +509,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-19T18:20:35+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.994934+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.994934+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.744080+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.744080+00:00",
       "freshness": {
         "iso": "2026-08-19T18:20:35+00:00",
-        "hours": 25.47,
+        "hours": 27.44,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -916,11 +916,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-20T16:33:38+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.980796+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.980796+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.735396+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.735396+00:00",
       "freshness": {
         "iso": "2026-08-20T16:33:38+00:00",
-        "hours": 3.25,
+        "hours": 5.23,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1443,11 +1443,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-19T16:10:04+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.998527+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.998527+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.746130+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.746130+00:00",
       "freshness": {
         "iso": "2026-08-19T16:10:04+00:00",
-        "hours": 27.65,
+        "hours": 29.62,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1486,6 +1486,73 @@
         "crypto",
         "macro",
         "geopolitics"
+      ],
+      "observation_only": true
+    },
+    {
+      "id": "feed_f57bd915707cb82b",
+      "event_id": "feed_f57bd915707cb82b",
+      "fingerprint": "f57bd915707cb82b",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "La dette des Etats-Unis dépasse le seuil des 40 000 milliards $",
+      "body": "La dette américaine progresse à une vitesse fulgurante, avec même deux ans d'avance sur les prévisions du bureau du Congrès. L'une des raisons, c'est le poids des taux d'intérêts qui augmentent, reflet des craintes des marchés d'une inflation durable, à cause de la guerre au Moyen-Orient et de la hausse des prix de l'énergie. Le déficit progresse à 6% ou 7%, au lieu des 3% promis par Donald Trump. A cela il faut ajouter une dette privée colossale, liée aux investissements massifs dans l'IA.",
+      "source_name": "France 24",
+      "source_url": "https://www.france24.com/fr/%C3%A9missions/info-%C3%A9co/20260820-la-dette-des-etats-unis-d%C3%A9passe-le-seuil-des-40-000-milliards",
+      "source_host": "france24.com",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 1,
+      "source_names": [
+        "France 24"
+      ],
+      "source_urls": [
+        "https://www.france24.com/fr/%C3%A9missions/info-%C3%A9co/20260820-la-dette-des-etats-unis-d%C3%A9passe-le-seuil-des-40-000-milliards"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-08-20T19:00:34+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.809512+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.809512+00:00",
+      "freshness": {
+        "iso": "2026-08-20T19:00:34+00:00",
+        "hours": 2.78,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 72,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 92,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "macro",
+        "geopolitics",
+        "energy"
       ],
       "observation_only": true
     },
@@ -1908,15 +1975,15 @@
       "observation_only": true
     },
     {
-      "id": "feed_9777d3cab0fd6a4a",
-      "event_id": "feed_9777d3cab0fd6a4a",
-      "fingerprint": "9777d3cab0fd6a4a",
+      "id": "feed_77b5f27098698dd2",
+      "event_id": "feed_77b5f27098698dd2",
+      "fingerprint": "77b5f27098698dd2",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "MiCA cracks down on USDT in Europe... but no one else cares",
-      "body": "USDT is disappearing from regulated European platforms, but there is little sign that it has resulted in weakening global demand for Tether.",
+      "headline": "Here’s what happened in crypto today",
+      "body": "Need to know what happened in crypto today? Here is the latest news on daily trends and events impacting Bitcoin price, blockchain, DeFi, Web3 and crypto regulation.",
       "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/magazine/mica-cracks-down-on-usdt-in-europe-but-global-demand-remains-high",
+      "source_url": "https://cointelegraph.com/news/what-happened-in-crypto-today",
       "source_host": "cointelegraph.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
@@ -1925,18 +1992,18 @@
         "Cointelegraph"
       ],
       "source_urls": [
-        "https://cointelegraph.com/magazine/mica-cracks-down-on-usdt-in-europe-but-global-demand-remains-high"
+        "https://cointelegraph.com/news/what-happened-in-crypto-today"
       ],
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-08-20T13:30:00+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.938277+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.938277+00:00",
+      "event_time": "2026-08-20T19:50:32+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.657634+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.657634+00:00",
       "freshness": {
-        "iso": "2026-08-20T13:30:00+00:00",
-        "hours": 6.31,
-        "label": "Fraîche · moins de 12 h",
+        "iso": "2026-08-20T19:50:32+00:00",
+        "hours": 1.94,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
@@ -1949,10 +2016,11 @@
       },
       "direction": "orientation mixte selon la décision",
       "assets": [
-        "USDT"
+        "BTC"
       ],
       "sectors": [
-        "Stablecoins"
+        "DeFi",
+        "Layer 1"
       ],
       "manipulation": {
         "score": 30,
@@ -1976,15 +2044,15 @@
       "observation_only": true
     },
     {
-      "id": "feed_77b5f27098698dd2",
-      "event_id": "feed_77b5f27098698dd2",
-      "fingerprint": "77b5f27098698dd2",
+      "id": "feed_9777d3cab0fd6a4a",
+      "event_id": "feed_9777d3cab0fd6a4a",
+      "fingerprint": "9777d3cab0fd6a4a",
       "version": "V1.1-alpha.26.47.2",
       "origin": "github_news_collector",
-      "headline": "Here’s what happened in crypto today",
-      "body": "Need to know what happened in crypto today? Here is the latest news on daily trends and events impacting Bitcoin price, blockchain, DeFi, Web3 and crypto regulation.",
+      "headline": "MiCA cracks down on USDT in Europe... but no one else cares",
+      "body": "USDT is disappearing from regulated European platforms, but there is little sign that it has resulted in weakening global demand for Tether.",
       "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/what-happened-in-crypto-today",
+      "source_url": "https://cointelegraph.com/magazine/mica-cracks-down-on-usdt-in-europe-but-global-demand-remains-high",
       "source_host": "cointelegraph.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
@@ -1993,17 +2061,17 @@
         "Cointelegraph"
       ],
       "source_urls": [
-        "https://cointelegraph.com/news/what-happened-in-crypto-today"
+        "https://cointelegraph.com/magazine/mica-cracks-down-on-usdt-in-europe-but-global-demand-remains-high"
       ],
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-08-20T13:12:56+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.940062+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.940062+00:00",
+      "event_time": "2026-08-20T13:30:00+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.665150+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.665150+00:00",
       "freshness": {
-        "iso": "2026-08-20T13:12:56+00:00",
-        "hours": 6.6,
+        "iso": "2026-08-20T13:30:00+00:00",
+        "hours": 8.29,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2017,11 +2085,10 @@
       },
       "direction": "orientation mixte selon la décision",
       "assets": [
-        "BTC"
+        "USDT"
       ],
       "sectors": [
-        "DeFi",
-        "Layer 1"
+        "Stablecoins"
       ],
       "manipulation": {
         "score": 30,
@@ -2271,11 +2338,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-20T15:00:00+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.040920+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.040920+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.794862+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.794862+00:00",
       "freshness": {
         "iso": "2026-08-20T15:00:00+00:00",
-        "hours": 4.81,
+        "hours": 6.79,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2335,11 +2402,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-20T15:00:00+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.042210+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.042210+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.795552+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.795552+00:00",
       "freshness": {
         "iso": "2026-08-20T15:00:00+00:00",
-        "hours": 4.81,
+        "hours": 6.79,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2399,12 +2466,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-18T19:55:10+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.135174+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.135174+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.763357+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.763357+00:00",
       "freshness": {
         "iso": "2026-08-18T19:55:10+00:00",
-        "hours": 47.89,
-        "label": "Récente · moins de 48 h",
+        "hours": 49.87,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -2465,11 +2532,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-18T17:15:48+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.136311+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.136311+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.764068+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.764068+00:00",
       "freshness": {
         "iso": "2026-08-18T17:15:48+00:00",
-        "hours": 50.55,
+        "hours": 52.52,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2531,77 +2598,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-14T20:16:34+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.137514+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.137514+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.764811+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.764811+00:00",
       "freshness": {
         "iso": "2026-08-14T20:16:34+00:00",
-        "hours": 143.54,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [
-        "Exchanges"
-      ],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_3da9545f808c28d7",
-      "event_id": "feed_3da9545f808c28d7",
-      "fingerprint": "3da9545f808c28d7",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "SEC Charges Toms River Trio in Connection with Alleged $47 Million Fraud Targeting Orthodox Jewish Communities",
-      "body": "The Securities and Exchange Commission today charged three Toms River, New Jersey residents for their roles in an affinity investment fraud that raised approximately $47 million from more than 87 investors, who were primarily members of Orthodox Jewish…",
-      "source_name": "U.S. SEC",
-      "source_url": "https://www.sec.gov/newsroom/press-releases/2026-74-sec-charges-toms-river-trio-connection-alleged-47-million-fraud-targeting-orthodox-jewish",
-      "source_host": "sec.gov",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "U.S. SEC"
-      ],
-      "source_urls": [
-        "https://www.sec.gov/newsroom/press-releases/2026-74-sec-charges-toms-river-trio-connection-alleged-47-million-fraud-targeting-orthodox-jewish"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-08-13T20:32:19+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.138708+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.138708+00:00",
-      "freshness": {
-        "iso": "2026-08-13T20:32:19+00:00",
-        "hours": 167.27,
+        "hours": 145.51,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2663,11 +2664,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-19T16:35:53+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.169612+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.169612+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.876437+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.876437+00:00",
       "freshness": {
         "iso": "2026-08-19T16:35:53+00:00",
-        "hours": 27.22,
+        "hours": 29.19,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2730,12 +2731,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-20T18:54:18+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.184046+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.184046+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.883567+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.883567+00:00",
       "freshness": {
         "iso": "2026-08-20T18:54:18+00:00",
-        "hours": 0.91,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 2.88,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -2794,11 +2795,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-19T19:49:51+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.210386+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.210386+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.895922+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.895922+00:00",
       "freshness": {
         "iso": "2026-08-19T19:49:51+00:00",
-        "hours": 23.98,
+        "hours": 25.96,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2860,11 +2861,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-19T19:48:33+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.211383+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.211383+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.896519+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.896519+00:00",
       "freshness": {
         "iso": "2026-08-19T19:48:33+00:00",
-        "hours": 24.0,
+        "hours": 25.98,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3322,12 +3323,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-20T18:44:08+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.976901+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.976901+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.732897+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.732897+00:00",
       "freshness": {
         "iso": "2026-08-20T18:44:08+00:00",
-        "hours": 1.08,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.05,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -3386,11 +3387,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-20T14:02:44+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.983371+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.983371+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.736984+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.736984+00:00",
       "freshness": {
         "iso": "2026-08-20T14:02:44+00:00",
-        "hours": 5.77,
+        "hours": 7.74,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3452,11 +3453,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-19T21:36:50+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.989874+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.989874+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.740501+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.740501+00:00",
       "freshness": {
         "iso": "2026-08-19T21:36:50+00:00",
-        "hours": 22.2,
+        "hours": 24.17,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3519,11 +3520,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-19T14:30:24+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.000800+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.000800+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.747545+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.747545+00:00",
       "freshness": {
         "iso": "2026-08-19T14:30:24+00:00",
-        "hours": 29.31,
+        "hours": 31.28,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3885,6 +3886,70 @@
       "observation_only": true
     },
     {
+      "id": "feed_a210dd285db30c4f",
+      "event_id": "feed_a210dd285db30c4f",
+      "fingerprint": "a210dd285db30c4f",
+      "version": "V1.1-alpha.26.47.2",
+      "origin": "github_news_collector",
+      "headline": "CFTC chair says agency will move forward on crypto regulation if CLARITY fails",
+      "body": "Michael Selig said at a meeting of the Innovation Advisory Committee that he had directed CFTC staff to explore developer protections and other crypto-related policies.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/cftc-chair-crypto-regulation-without-clarity-act-congress",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/cftc-chair-crypto-regulation-without-clarity-act-congress"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-08-20T20:56:23+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.655317+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.655317+00:00",
+      "freshness": {
+        "iso": "2026-08-20T20:56:23+00:00",
+        "hours": 0.85,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "regulation"
+      ],
+      "observation_only": true
+    },
+    {
       "id": "feed_d3234c5822fdccb6",
       "event_id": "feed_d3234c5822fdccb6",
       "fingerprint": "d3234c5822fdccb6",
@@ -3908,11 +3973,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-20T05:52:30+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.950805+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.950805+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.676152+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.676152+00:00",
       "freshness": {
         "iso": "2026-08-20T05:52:30+00:00",
-        "hours": 13.94,
+        "hours": 15.91,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3974,11 +4039,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-19T15:50:58+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.963114+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.963114+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.687602+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.687602+00:00",
       "freshness": {
         "iso": "2026-08-19T15:50:58+00:00",
-        "hours": 27.96,
+        "hours": 29.94,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4038,11 +4103,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-19T15:19:21+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.965993+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.965993+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.690217+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.690217+00:00",
       "freshness": {
         "iso": "2026-08-19T15:19:21+00:00",
-        "hours": 28.49,
+        "hours": 30.46,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4982,11 +5047,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-08-19T20:33:51+00:00",
-      "first_seen_at": "2026-08-20T19:48:46.953225+00:00",
-      "last_seen_at": "2026-08-20T19:48:46.953225+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.678453+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.678453+00:00",
       "freshness": {
         "iso": "2026-08-19T20:33:51+00:00",
-        "hours": 23.25,
+        "hours": 25.22,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5323,11 +5388,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-19T16:12:27+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.118985+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.118985+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.703291+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.703291+00:00",
       "freshness": {
         "iso": "2026-08-19T16:12:27+00:00",
-        "hours": 27.61,
+        "hours": 29.58,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5389,11 +5454,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-08-19T11:19:12+00:00",
-      "first_seen_at": "2026-08-20T19:48:47.123462+00:00",
-      "last_seen_at": "2026-08-20T19:48:47.123462+00:00",
+      "first_seen_at": "2026-08-20T21:47:12.707172+00:00",
+      "last_seen_at": "2026-08-20T21:47:12.707172+00:00",
       "freshness": {
         "iso": "2026-08-19T11:19:12+00:00",
-        "hours": 32.49,
+        "hours": 34.47,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5413,69 +5478,6 @@
       ],
       "manipulation": {
         "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 6,
-      "matched_topics": [
-        "security"
-      ],
-      "observation_only": true
-    },
-    {
-      "id": "feed_28894741ca808392",
-      "event_id": "feed_28894741ca808392",
-      "fingerprint": "28894741ca808392",
-      "version": "V1.1-alpha.26.47.2",
-      "origin": "github_news_collector",
-      "headline": "Piratage du fisc : Lecornu veut une \"nouvelle unité\" pour lutter contre les cyberattaques",
-      "body": "Le Premier ministre Sébastien Lecornu a demandé, mercredi, à l'Agence nationale de la sécurité des systèmes d'information de constituer une \"nouvelle unité cyber\". Cette création devrait apporter une \"réponse opérationnelle plus réactive\" aux cyberattaques qui visent la France, comme le récent vol des données du Fisc.",
-      "source_name": "France 24",
-      "source_url": "https://www.france24.com/fr/france/20260819-piratage-du-fisc-l-ex%C3%A9cutif-veut-une-nouvelle-unit%C3%A9-pour-lutter-contre-les-cyberattaques",
-      "source_host": "france24.com",
-      "source_group": "world",
-      "source_class": "Presse mondiale reconnue",
-      "source_count": 1,
-      "source_names": [
-        "France 24"
-      ],
-      "source_urls": [
-        "https://www.france24.com/fr/france/20260819-piratage-du-fisc-l-ex%C3%A9cutif-veut-une-nouvelle-unit%C3%A9-pour-lutter-contre-les-cyberattaques"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-08-19T15:13:15+00:00",
-      "first_seen_at": "2026-08-20T07:59:41.504754+00:00",
-      "last_seen_at": "2026-08-20T07:59:41.504754+00:00",
-      "freshness": {
-        "iso": "2026-08-19T15:13:15+00:00",
-        "hours": 16.77,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 72,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 88,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 18,
         "level": "Faible"
       },
       "priced": {
