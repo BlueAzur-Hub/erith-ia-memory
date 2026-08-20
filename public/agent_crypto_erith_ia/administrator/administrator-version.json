@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.82",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.82 · PARKER LEWIS CAN'T LOSE · WORKSPACE GRAPH RECOVERY + EVIDENCE EXPLORER HEADER SURGERY LOCK",
-  "status": "recovery_candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-20T02:24:00+02:00",
+  "build": "40.1.83",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.83 · PARKER LEWIS CAN'T LOSE · MARKET BASE + ORACLE ISOLATED GRAPH PROFILES LOCK",
+  "status": "candidate_requires_firefox_validation",
+  "prepared_at": "2026-08-20T02:45:00+02:00",
   "published_at": null,
   "global_versioning": {
     "primary_build": "40.1.67",
@@ -757,7 +757,7 @@
       "quality_score_descriptive": true
     },
     "oracle_v2_shadow_challenger": {
-      "build": "40.1.82",
+      "build": "40.1.83",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -793,7 +793,7 @@
       "main_chart_write": false
     },
     "oracle_v2_shadow_multihorizon_surgery": {
-      "build": "40.1.82",
+      "build": "40.1.83",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -827,6 +827,23 @@
       "future_data_used_at_t0": false,
       "network_write": false,
       "main_chart_write": false
+    },
+    "graph_profiles": {
+      "market_profile_key": "agent_crypto_erith_ia_graph_profile_market_v1",
+      "oracle_profile_key": "agent_crypto_erith_ia_oracle_view_state_v1",
+      "legacy_market_settings_key": "agent_crypto_erith_ia_chart_v2_settings_v28_1_17",
+      "boot_profile": "market",
+      "oracle_auto_open_on_reload": false,
+      "market_profile_authoritative": true,
+      "first_migration_preference": [
+        "last_valid_graph",
+        "workspace_state"
+      ],
+      "oracle_controls_write_market_settings": false,
+      "workspace_slots_restore": "market_only",
+      "renderer_proof_key": "agent_crypto_erith_ia_workspace_last_valid_graph_v1",
+      "workspace_shell_key": "agent_crypto_erith_ia_workspace_state_v2",
+      "evidence_ledger_modified": false
     }
   },
   "active_runtime_files": [
@@ -860,9 +877,9 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "c44c124668983058ef541f4206271339aa77729329ca7a5f4d040067fbc2946c",
-      "index.html": "1972deb8a1450b03491ebe490e79a6875a322d3a9648b7727b3bf3e00c4ac9a5",
-      "js/app.js": "677f5414e923dc53e37ff8bcc892b4266ae0367989a57b1c708382f57509b0d3",
+      "app.js": "48d1aaeba7ac59f9f12344caed02f931116cb59d5beb8c2480774d42600165d2",
+      "index.html": "cb0ab3eb2eec84276214c98df0afd78664d163994bc220a95a5157a35ecc7811",
+      "js/app.js": "af959858500b143b6fe22cdfbaf1e5ec046b0343cc8999e3626bf499c73a48af",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -872,7 +889,7 @@
       "js/core/admin-window-manager.js": "4f342d829506b8157d7340c05a98fb9d9aec4f9dcd671374d3e89f456a626b80",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "bab5937b1f596dff47abb92f02119ab1f4aeb5fd7659b0e315e2e36fee6321e6",
+      "js/architecture-freeze.js": "909394f9fce7e0e73e75bfc0887fa2b3cc8fafdef7947130e5227ff77544cf18",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -890,23 +907,23 @@
       "js/multi-collector-concordance.js": "9fecda63998a65a710ac8614228892c351a8a2c9e4ddd178b9513a83ae8761ac",
       "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a",
       "publication_identity": {
-        "build": "40.1.68",
-        "asset_token": "market-core-v2.0-alpha-build-40.1.68",
+        "build": "40.1.83",
+        "asset_token": "market-core-v2.0-alpha-build-40.1.83",
         "status": "candidate_requires_firefox_validation",
-        "app_sha256": "b1adcde6cc9bae1f01ba7dca04e98961fb554e25e367bd6a6f9b6f7ffe89b657"
+        "app_sha256": "48d1aaeba7ac59f9f12344caed02f931116cb59d5beb8c2480774d42600165d2"
       }
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.1.82",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.82",
+      "build": "40.1.83",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.83",
       "status": "candidate_requires_firefox_validation",
-      "app_sha256": "c44c124668983058ef541f4206271339aa77729329ca7a5f4d040067fbc2946c"
+      "app_sha256": "48d1aaeba7ac59f9f12344caed02f931116cb59d5beb8c2480774d42600165d2"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.82",
-  "parent_build": "40.1.77",
-  "lineage": "40.1.77 → 40.1.82 · maintenance surgery rebased directly on deployed 40.1.77: recover transient empty graph workspaces from last_valid_graph unless the operator explicitly clears the graph; save selection intent immediately; repair Oracle Evidence Explorer summary geometry. Prepared 40.1.78–40.1.81 remain shelved and are not included.",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.83",
+  "parent_build": "40.1.82",
+  "lineage": "40.1.82 → 40.1.83 · retour à la base de persistance du graphe : le profil Marché devient l’autorité atomique du graphe principal ; le profil Oracle est isolé dans son propre store et ne peut plus réécrire les réglages Marché ; le boot ouvre toujours Marché ; la première migration préfère last_valid_graph à l’ancien workspace mixte.",
   "repository_cleanup": {
     "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
@@ -921,6 +938,11 @@
     "delete_candidates_in_current_manifest": false
   },
   "notes": [
+    "40.1.83 crée deux profils de persistance indépendants : Marché (graphe principal) et Oracle (vue/horizon/zoom/actif/surface).",
+    "Le profil Marché est restauré depuis agent_crypto_erith_ia_graph_profile_market_v1 ; au premier boot 40.1.83, la migration préfère last_valid_graph puis workspace_state.",
+    "Oracle ne s’ouvre plus automatiquement au rechargement et ses contrôles n’écrivent plus dans agent_crypto_erith_ia_chart_v2_settings_v28_1_17.",
+    "Les slots de mémoire restaurent le profil Marché uniquement ; Oracle conserve son propre profil lorsqu’il est ouvert explicitement.",
+    "Oracle Evidence/Outcome/Calibration/V2 Shadow et le Window Manager sont inchangés fonctionnellement.",
     "40.1.45: Oracle receives bounded LIVE short-horizon observations, TOP 5 aggregate focus/readout and compact frame-fit title; no synthetic future price is written into historical datasets.",
     "40.1.48: propagation is no longer styled as warning/red; the explicit GitHub propagation text remains visible and true failures remain red/fail.",
     "40.1.48: Math Core header owns the complete Window Manager strip before Dessus/Latéral/Réduire on one line; duplicate bottom placement is removed by moving the same live control node, not cloning it.",
@@ -948,6 +970,6 @@
     "40.1.75: audits Evidence timestamps, constituents, quote freshness, duplicate logical observations, overdue pending outcomes and resolution lag; exposes a descriptive quality score without mutating evidence.",
     "40.1.76: adds a prospective Oracle V2 Shadow challenger. Candidate weights are frozen at T0 into new Evidence only; old rows may train candidates but never count as V2 test cases. V2 remains read-only and does not alter Oracle V1 or live Ensemble scores.",
     "40.1.77: surgical Shadow V2 routing fix. Each NEW T0 Evidence row freezes independent 1m/5m/15m challenger snapshots; diagnostics expose eligible/pending/resolved/rejected. No legacy missing horizon is fabricated and no live Oracle score changes.",
-    "40.1.82: Workspace Graph Persistence Recovery + Evidence Explorer Header Surgery. A transient empty graph can no longer outrank a coherent last_valid_graph unless Vider was explicitly requested; non-empty selection intent is persisted before chart hydration completes. Oracle Evidence Explorer regains its missing collapse icon and dedicated readable summary grid. Oracle V1/V2, Ensemble, Evidence rows, Math Core and protected Window Manager are unchanged."
+    "40.1.83: Workspace Graph Persistence Recovery + Evidence Explorer Header Surgery. A transient empty graph can no longer outrank a coherent last_valid_graph unless Vider was explicitly requested; non-empty selection intent is persisted before chart hydration completes. Oracle Evidence Explorer regains its missing collapse icon and dedicated readable summary grid. Oracle V1/V2, Ensemble, Evidence rows, Math Core and protected Window Manager are unchanged."
   ]
 }
