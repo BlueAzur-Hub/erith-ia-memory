@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.92 — PARKER LEWIS CAN'T LOSE · OPERATOR GRAPH INTENT PROFILE V3 · VERSIONING CONSISTENCY LOCK
+     40.1.93 — PARKER LEWIS CAN'T LOSE · GRAPH SESSION CONTEXT V4 · EARLY INTENT RESTORE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.92";
+  const BUILD_CURRENT = "40.1.93";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;

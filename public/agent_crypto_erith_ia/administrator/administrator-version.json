@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.92",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.92 · PARKER LEWIS CAN'T LOSE · OPERATOR GRAPH INTENT PROFILE V3 · VERSIONING CONSISTENCY LOCK",
+  "build": "40.1.93",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.93 · PARKER LEWIS CAN'T LOSE · GRAPH SESSION CONTEXT V4 · EARLY INTENT RESTORE LOCK",
   "status": "candidate_requires_firefox_validation",
-  "prepared_at": "2026-08-20T03:47:00+02:00",
+  "prepared_at": "2026-08-20T04:05:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.92",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.92",
-    "asset_token": "market-core-v2.0-alpha-build-40.1.92",
+    "primary_build": "40.1.93",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.93",
+    "asset_token": "market-core-v2.0-alpha-build-40.1.93",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
@@ -757,7 +757,7 @@
       "quality_score_descriptive": true
     },
     "oracle_v2_shadow_challenger": {
-      "build": "40.1.92",
+      "build": "40.1.93",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -793,7 +793,7 @@
       "main_chart_write": false
     },
     "oracle_v2_shadow_multihorizon_surgery": {
-      "build": "40.1.92",
+      "build": "40.1.93",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -923,23 +923,23 @@
       "js/multi-collector-concordance.js": "9fecda63998a65a710ac8614228892c351a8a2c9e4ddd178b9513a83ae8761ac",
       "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a",
       "publication_identity": {
-        "build": "40.1.92",
-        "asset_token": "market-core-v2.0-alpha-build-40.1.92",
+        "build": "40.1.93",
+        "asset_token": "market-core-v2.0-alpha-build-40.1.93",
         "status": "candidate_requires_firefox_validation",
-        "app_sha256": "86f190bc44b2b2601beaf513127a7165129f55fd4bc685c68184d476dcbec16b"
+        "app_sha256": "e98082e8744cb509c5ac5ee453bcd403e1b0cc9aada60ad682a86e9d24819885"
       }
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.1.92",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.92",
+      "build": "40.1.93",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.93",
       "status": "candidate_requires_firefox_validation",
-      "app_sha256": "a4a5d5cabeec4680aee3cf2055da35bee89f6894b4b06648c9e2bbc95174a593"
+      "app_sha256": "e98082e8744cb509c5ac5ee453bcd403e1b0cc9aada60ad682a86e9d24819885"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.92",
-  "parent_build": "40.1.91",
-  "lineage": "40.1.91 → 40.1.92 · normalisation stricte du versionnage et de la propagation : build/runtime/meta/cache tokens/manifests alignés ; release V3 cohérente ; Window Manager protégé reconnu comme source 40.1.48 sans modifier son fichier.",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.93",
+  "parent_build": "40.1.92",
+  "lineage": "40.1.92 → 40.1.93 · Graph Session Context V4 : sauvegarde opérateur acceptée avant hydratation complète, surface active Marché/Oracle mémorisée, profils Marché et Oracle isolés, événements synthétiques ignorés.",
   "repository_cleanup": {
     "runtime_behavior_changed": true,
     "freeze_identity_current_build": true,
@@ -994,6 +994,11 @@
     "40.1.92: versionnage publication aligné sur 40.1.92 dans runtime, shell Administrator, meta HTML, cache-busters et manifests.",
     "40.1.92: release canonique = OPERATOR GRAPH INTENT PROFILE V3 · VERSIONING CONSISTENCY LOCK ; aucun renommage V2/V3 contradictoire dans les identités courantes.",
     "40.1.92: Architecture Freeze distingue désormais BUILD_CURRENT=40.1.92 du Window Manager protégé source 40.1.48 ; admin-window-manager.js reste byte-identical.",
-    "40.1.92: parent direct = 40.1.91 ; aucune modification du comportement de persistance graphe V3 par rapport à 40.1.91."
+    "40.1.92: parent direct = 40.1.91 ; aucune modification du comportement de persistance graphe V3 par rapport à 40.1.91.",
+    "40.1.93: Graph Session Context V4 mémorise la surface active Marché ou Oracle ainsi que deux sous-profils isolés.",
+    "40.1.93: une action humaine de graphe est persistée même si atlasWorkspaceRestored est encore false ; elle devient prioritaire lors de la restauration tardive.",
+    "40.1.93: les événements click synthétiques ne peuvent pas modifier le profil V4 ; Top5, Solo, Vide et périodes ne sont plus écrasés par un défaut runtime.",
+    "40.1.93: Oracle peut rester la surface active après Ctrl+F5 et retrouve vue/actif/horizon/zoom/surface sans modifier le profil Marché.",
+    "40.1.93: Window Manager byte-identical ; Evidence/V2 Shadow/Math Core inchangés."
   ]
 }
