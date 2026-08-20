@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.13 — PARKER LEWIS CAN'T LOSE · MANIFEST + FREEZE TRUTH REPAIR LOCK
+     40.2.14 — PARKER LEWIS CAN'T LOSE · RUNTIME OBSERVATORY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.13";
+  const BUILD_CURRENT = "40.2.14";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -1136,7 +1136,7 @@
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
       "- Les contrôles Versioning/Math Core ne disposent plus d’un passe-droit `|| true` : leur PASS exige désormais la condition réelle.",
-      "- Ce candidat ne modifie aucune logique métier ; il répare la vérité des manifests et des contrôles Freeze courants.",
+      "- Ce candidat ajoute uniquement l’observabilité runtime passive 40.2.14 ; aucune cadence, décision métier ni autorité de stockage n’est modifiée.",
       `- Le candidat ${BUILD_CURRENT} exige une validation réelle dans Firefox après publication opérateur.`,
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );

@@ -6314,6 +6314,33 @@ let atlasOracleEvidenceDbPromise = null;
 const atlasOracleEvidenceLastCapture = new Map();
 let atlasOracleEvidenceStatusState = { count:0, lastAt:0, lastError:null };
 
+/* 40.2.14 — RUNTIME OBSERVATORY LOCK
+   Passive browser/runtime instrumentation only.
+   - no timer added; no network request; no storage write; no model input;
+   - measures navigation/resource timing only when Firefox exposes it;
+   - records Oracle Outcome/Evidence durations and UI refresh calls without gating them;
+   - never invents unavailable metrics and never changes Basique/Intermédiaire/Administration semantics. */
+const atlasRuntimeObservatoryState40214 = {
+  started_at: Date.now(),
+  evidence_reads: 0, evidence_total_ms: 0, evidence_max_ms: 0,
+  outcome_runs: 0, outcome_total_ms: 0, outcome_max_ms: 0, outcome_skips: 0,
+  refresh_calls: 0, refresh_hidden_calls: 0, refresh_by_name: Object.create(null),
+  pageshow_count: 0, pageshow_persisted_count: 0, last_pageshow_persisted: null,
+  first_render_ms: null
+};
+function atlasRuntimeNow40214(){try{return typeof performance!=="undefined"&&typeof performance.now==="function"?performance.now():Date.now();}catch{return Date.now();}}
+function atlasRuntimeRecordDuration40214(kind,ms){const value=Number(ms);if(!Number.isFinite(value)||value<0)return;const s=atlasRuntimeObservatoryState40214;if(kind==="evidence"){s.evidence_reads+=1;s.evidence_total_ms+=value;s.evidence_max_ms=Math.max(s.evidence_max_ms,value);}else if(kind==="outcome"){s.outcome_runs+=1;s.outcome_total_ms+=value;s.outcome_max_ms=Math.max(s.outcome_max_ms,value);}}
+function atlasRuntimeTargetHidden40214(targetId){const node=document.getElementById(targetId);if(!node)return null;if(node.hidden||node.closest?.("[hidden]"))return true;if(typeof HTMLDetailsElement!=="undefined"&&node instanceof HTMLDetailsElement&&!node.open)return true;return false;}
+function atlasRuntimeMarkRefresh40214(name,targetId){const s=atlasRuntimeObservatoryState40214,key=String(name||"refresh");s.refresh_calls+=1;const hidden=atlasRuntimeTargetHidden40214(targetId);if(hidden===true)s.refresh_hidden_calls+=1;const row=s.refresh_by_name[key]||{calls:0,hidden_calls:0,target:String(targetId||"")};row.calls+=1;if(hidden===true)row.hidden_calls+=1;s.refresh_by_name[key]=row;return hidden;}
+function atlasRuntimeNavigationSnapshot40214(){let nav=null;try{nav=(performance.getEntriesByType("navigation")||[])[0]||null;}catch{}const positive=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;let type=String(nav?.type||"");if(!type){try{type=performance?.navigation?.type===1?"reload":performance?.navigation?.type===2?"back_forward":"navigate";}catch{type="unknown";}}return {type:type||"unknown",dom_content_loaded_ms:positive(nav?.domContentLoadedEventEnd),load_ms:positive(nav?.loadEventEnd),dom_interactive_ms:positive(nav?.domInteractive),response_end_ms:positive(nav?.responseEnd),transfer_size:Number.isFinite(Number(nav?.transferSize))?Number(nav.transferSize):null,decoded_body_size:Number.isFinite(Number(nav?.decodedBodySize))?Number(nav.decodedBodySize):null};}
+function atlasRuntimeResourceSnapshot40214(){let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const sum=k=>entries.reduce((a,e)=>{const v=Number(e?.[k]);return a+(Number.isFinite(v)&&v>0?v:0);},0);const measured=k=>entries.filter(e=>Number.isFinite(Number(e?.[k]))&&Number(e[k])>0).length;const largest=entries.map(e=>({name:String(e?.name||""),initiator_type:String(e?.initiatorType||""),transfer_size:Number(e?.transferSize)||0,decoded_body_size:Number(e?.decodedBodySize)||0,duration_ms:Number(e?.duration)||0})).sort((a,b)=>Math.max(b.transfer_size,b.decoded_body_size)-Math.max(a.transfer_size,a.decoded_body_size)).slice(0,5);return {resource_requests_total:entries.length,transfer_bytes_measured:sum("transferSize"),transfer_entries_measured:measured("transferSize"),decoded_bytes_measured:sum("decodedBodySize"),decoded_entries_measured:measured("decodedBodySize"),largest_resources:largest};}
+function atlasRuntimeView40214(){const raw=String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");if(raw)return raw;try{return typeof atlasV2Mode==="function"?atlasV2Mode():"unknown";}catch{return "unknown";}}
+function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;return {schema:"atlas.runtime.observatory.v1",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.14"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v}]))},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
+function atlasRuntimeFmtMs40214(v){return Number.isFinite(Number(v))?`${Math.round(Number(v))} ms`:"—";}
+function atlasRuntimeRender40214(){const stateNode=document.getElementById("atlasRuntimeState40214"),note=document.getElementById("atlasRuntimeNote40214");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState40214;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow40214());const r=atlasRuntimeSnapshot40214();const view={essential:"BASIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"}`;if(note){const o=r.oracle,n=r.navigation;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs40214(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs40214(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs40214(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.outcome_max_ms)} · Evidence ${o.evidence_reads}× μ${atlasRuntimeFmtMs40214(o.evidence_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.evidence_max_ms)} · UI* ${o.instrumented_ui_refresh_calls} (${o.instrumented_ui_refresh_hidden_calls} masqués)`;}return r;}
+window.addEventListener("pageshow",event=>{const s=atlasRuntimeObservatoryState40214;s.pageshow_count+=1;s.last_pageshow_persisted=event.persisted===true;if(event.persisted===true)s.pageshow_persisted_count+=1;atlasRuntimeRender40214();},{passive:true});
+globalThis.AtlasRuntimeObservatory40214=Object.freeze({snapshot:atlasRuntimeSnapshot40214,render:atlasRuntimeRender40214,passive_only:true,storage_write:false,network_request_added:false,business_runtime_changed:false});
+
 function atlasOracleEvidenceOpen() {
   if (atlasOracleEvidenceDbPromise) return atlasOracleEvidenceDbPromise;
   atlasOracleEvidenceDbPromise = new Promise((resolve, reject) => {
@@ -6339,13 +6366,14 @@ function atlasOracleEvidenceOpen() {
 }
 
 async function atlasOracleEvidenceAll() {
+  const runtimeStarted40214 = atlasRuntimeNow40214();
   const db = await atlasOracleEvidenceOpen();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(ATLAS_ORACLE_EVIDENCE_STORE, "readonly");
     const request = tx.objectStore(ATLAS_ORACLE_EVIDENCE_STORE).getAll();
     request.onsuccess = () => resolve(Array.isArray(request.result) ? request.result : []);
     request.onerror = () => reject(request.error || new Error("Lecture Oracle Evidence refusée"));
-  });
+  }).finally(() => atlasRuntimeRecordDuration40214("evidence", atlasRuntimeNow40214() - runtimeStarted40214));
 }
 
 async function atlasOracleEvidencePut(row) {
@@ -6506,10 +6534,10 @@ function atlasOracleEvidenceMaybeCapture(context) {
   atlasOracleEvidencePut(row).then(async () => {
     atlasOracleEvidenceStatusState.lastError = null;
     await atlasOracleEvidenceRefreshStatus();
-    if (typeof atlasOracleEvidenceExplorerRefresh === "function") atlasOracleEvidenceExplorerRefresh().catch(()=>{});
-    if (typeof atlasOracleLabDashboardRefresh === "function") atlasOracleLabDashboardRefresh().catch(()=>{});
-    if (typeof atlasOracleIntegrityRefresh === "function") atlasOracleIntegrityRefresh().catch(()=>{});
-    if (typeof atlasOracleEvidenceSourceHealthRender4026 === "function") atlasOracleEvidenceSourceHealthRender4026().catch?.(()=>{});
+    if (typeof atlasOracleEvidenceExplorerRefresh === "function") { atlasRuntimeMarkRefresh40214("capture:evidence_explorer", "oracle-evidence-explorer"); atlasOracleEvidenceExplorerRefresh().catch(()=>{}); }
+    if (typeof atlasOracleLabDashboardRefresh === "function") { atlasRuntimeMarkRefresh40214("capture:lab_dashboard", "oracle-lab-dashboard"); atlasOracleLabDashboardRefresh().catch(()=>{}); }
+    if (typeof atlasOracleIntegrityRefresh === "function") { atlasRuntimeMarkRefresh40214("capture:integrity", "oracle-lab-dashboard"); atlasOracleIntegrityRefresh().catch(()=>{}); }
+    if (typeof atlasOracleEvidenceSourceHealthRender4026 === "function") { atlasRuntimeMarkRefresh40214("capture:source_health", "oracle-infrastructure-observatory"); atlasOracleEvidenceSourceHealthRender4026().catch?.(()=>{}); }
     if (atlasOracleEvidenceStatusState.count % 100 === 0) atlasOracleEvidencePruneIfNeeded().catch(()=>{});
     if (typeof atlasOracleOutcomeSchedule === "function") atlasOracleOutcomeSchedule();
   }).catch(error => {
@@ -6642,7 +6670,8 @@ async function atlasOracleOutcomeRefreshStatus(rows = null) {
 }
 
 async function atlasOracleOutcomeRun() {
-  if (atlasOracleOutcomeRunning) return atlasOracleOutcomeStatusState;
+  if (atlasOracleOutcomeRunning) { atlasRuntimeObservatoryState40214.outcome_skips += 1; return atlasOracleOutcomeStatusState; }
+  const runtimeStarted40214 = atlasRuntimeNow40214();
   atlasOracleOutcomeRunning = true;
   try {
     const rows = await atlasOracleEvidenceAll();
@@ -6661,23 +6690,27 @@ async function atlasOracleOutcomeRun() {
     atlasOracleOutcomeStatusState.lastRunAt = now;
     atlasOracleOutcomeStatusState.lastError = null;
     await atlasOracleOutcomeRefreshStatus(changed ? await atlasOracleEvidenceAll() : rows);
-    if (typeof atlasOracleCalibrationRefresh === "function") atlasOracleCalibrationRefresh().catch(()=>{});
-    if (typeof atlasOracleProofRefresh === "function") atlasOracleProofRefresh().catch(()=>{});
-    if (typeof atlasOracleHorizonMatrixRefresh === "function") atlasOracleHorizonMatrixRefresh().catch(()=>{});
-    if (typeof atlasOracleRegimePerformanceRefresh === "function") atlasOracleRegimePerformanceRefresh(null,true).catch(()=>{});
-    if (typeof atlasOracleEvidenceExplorerRefresh === "function") atlasOracleEvidenceExplorerRefresh().catch(()=>{});
-    if (typeof atlasOracleMultiModelPerformanceRefresh === "function") atlasOracleMultiModelPerformanceRefresh(null,true).catch(()=>{});
-    if (typeof atlasOracleAdaptiveWeightsRefresh === "function") atlasOracleAdaptiveWeightsRefresh(null,true).catch(()=>{});
-    if (typeof atlasOracleShadowV2Refresh === "function") atlasOracleShadowV2Refresh(true).catch(()=>{});
-    if (typeof atlasOracleLabDashboardRefresh === "function") atlasOracleLabDashboardRefresh(true).catch(()=>{});
-    if (typeof atlasOracleIntegrityRefresh === "function") atlasOracleIntegrityRefresh(true).catch(()=>{});
+    if (typeof atlasOracleCalibrationRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:calibration", "atlasOracleV0"); atlasOracleCalibrationRefresh().catch(()=>{}); }
+    if (typeof atlasOracleProofRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:proof", "atlasOracleV0"); atlasOracleProofRefresh().catch(()=>{}); }
+    if (typeof atlasOracleHorizonMatrixRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:horizon_matrix", "atlasOracleV0"); atlasOracleHorizonMatrixRefresh().catch(()=>{}); }
+    if (typeof atlasOracleRegimePerformanceRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:regime_performance", "oracle-lab-dashboard"); atlasOracleRegimePerformanceRefresh(null,true).catch(()=>{}); }
+    if (typeof atlasOracleEvidenceExplorerRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:evidence_explorer", "oracle-evidence-explorer"); atlasOracleEvidenceExplorerRefresh().catch(()=>{}); }
+    if (typeof atlasOracleMultiModelPerformanceRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:multi_model", "oracle-lab-dashboard"); atlasOracleMultiModelPerformanceRefresh(null,true).catch(()=>{}); }
+    if (typeof atlasOracleAdaptiveWeightsRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:adaptive_weights", "oracle-lab-dashboard"); atlasOracleAdaptiveWeightsRefresh(null,true).catch(()=>{}); }
+    if (typeof atlasOracleShadowV2Refresh === "function") { atlasRuntimeMarkRefresh40214("outcome:shadow_v2", "oracle-lab-dashboard"); atlasOracleShadowV2Refresh(true).catch(()=>{}); }
+    if (typeof atlasOracleLabDashboardRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:lab_dashboard", "oracle-lab-dashboard"); atlasOracleLabDashboardRefresh(true).catch(()=>{}); }
+    if (typeof atlasOracleIntegrityRefresh === "function") { atlasRuntimeMarkRefresh40214("outcome:integrity", "oracle-lab-dashboard"); atlasOracleIntegrityRefresh(true).catch(()=>{}); }
     return { ...atlasOracleOutcomeStatusState, changed };
   } catch (error) {
     atlasOracleOutcomeStatusState.lastError = String(error?.message || error || "erreur");
     const node = document.getElementById("atlasOracleOutcomeStatus");
     if (node) { node.textContent = "ISSUES !"; node.title = atlasOracleOutcomeStatusState.lastError; }
     return atlasOracleOutcomeStatusState;
-  } finally { atlasOracleOutcomeRunning = false; }
+  } finally {
+    atlasOracleOutcomeRunning = false;
+    atlasRuntimeRecordDuration40214("outcome", atlasRuntimeNow40214() - runtimeStarted40214);
+    atlasRuntimeRender40214();
+  }
 }
 
 function atlasOracleOutcomeSchedule() {
@@ -7588,7 +7621,7 @@ function atlasOracleResourceVisibilityCommit4022(now=Date.now()){const delta=Mat
 document.addEventListener("visibilitychange",()=>{atlasOracleResourceVisibilityCommit4022();atlasOracleResourceBudgetRender4022();},{passive:true});
 try{if(typeof PerformanceObserver==="function"&&Array.isArray(PerformanceObserver.supportedEntryTypes)&&PerformanceObserver.supportedEntryTypes.includes("longtask")){const obs=new PerformanceObserver(list=>{for(const e of list.getEntries()){atlasOracleResourceBudgetState4022.long_tasks+=1;atlasOracleResourceBudgetState4022.long_task_ms+=Number(e.duration||0);}atlasOracleResourceBudgetRender4022();});obs.observe({type:"longtask",buffered:true});}}catch{}
 function atlasOracleResourceBudgetSnapshot4022(){const now=Date.now(),delta=Math.max(0,now-atlasOracleResourceBudgetState4022.last_visibility_at),visible=atlasOracleResourceBudgetState4022.visible_ms+(atlasOracleResourceBudgetState4022.last_visibility==="visible"?delta:0),hidden=atlasOracleResourceBudgetState4022.hidden_ms+(atlasOracleResourceBudgetState4022.last_visibility==="hidden"?delta:0);let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const relevant=entries.filter(e=>/binance|coingecko|githubusercontent|github\.io|ecb|eurofxref/i.test(String(e?.name||"")));const sizes=relevant.map(e=>Number(e.transferSize)).filter(v=>Number.isFinite(v)&&v>0);return {started_at:atlasOracleResourceBudgetState4022.started_at,visible_ms:visible,hidden_ms:hidden,resource_requests:relevant.length,measured_transfer_bytes:sizes.reduce((a,b)=>a+b,0),measured_transfer_entries:sizes.length,long_tasks:atlasOracleResourceBudgetState4022.long_tasks,long_task_ms:atlasOracleResourceBudgetState4022.long_task_ms,longtask_supported:typeof PerformanceObserver==="function"&&Array.isArray(PerformanceObserver.supportedEntryTypes)&&PerformanceObserver.supportedEntryTypes.includes("longtask"),websocket_bytes_measured:false,watts:null,wh:null};}
-function atlasOracleResourceBudgetRender4022(){const root=document.getElementById("oracle-infrastructure-observatory");if(!root)return null;const r=atlasOracleResourceBudgetSnapshot4022(),stateNode=document.getElementById("atlasOracleResourceState"),note=document.getElementById("atlasOracleResourceNote");if(stateNode)stateNode.textContent=`${r.resource_requests} req · ${typeof atlasStorageHealthBytesLabel40198==="function"?atlasStorageHealthBytesLabel40198(r.measured_transfer_bytes):Math.round(r.measured_transfer_bytes/1024)+" Kio"}`;if(note)note.textContent=`visible ${Math.round(r.visible_ms/60000)} min · masqué ${Math.round(r.hidden_ms/60000)} min · long tasks ${r.longtask_supported?r.long_tasks:"non exposées"} · WebSocket non mesuré · pas des Wh`;return r;}
+function atlasOracleResourceBudgetRender4022(){const root=document.getElementById("oracle-infrastructure-observatory");if(!root)return null;const r=atlasOracleResourceBudgetSnapshot4022(),stateNode=document.getElementById("atlasOracleResourceState"),note=document.getElementById("atlasOracleResourceNote");if(stateNode)stateNode.textContent=`${r.resource_requests} req · ${typeof atlasStorageHealthBytesLabel40198==="function"?atlasStorageHealthBytesLabel40198(r.measured_transfer_bytes):Math.round(r.measured_transfer_bytes/1024)+" Kio"}`;if(note)note.textContent=`visible ${Math.round(r.visible_ms/60000)} min · masqué ${Math.round(r.hidden_ms/60000)} min · long tasks ${r.longtask_supported?r.long_tasks:"non exposées"} · WebSocket non mesuré · pas des Wh`;if(typeof atlasRuntimeRender40214==="function")atlasRuntimeRender40214();return r;}
 globalThis.AtlasOracleResourceBudget4022=Object.freeze({snapshot:atlasOracleResourceBudgetSnapshot4022,render:atlasOracleResourceBudgetRender4022,watts_estimated:false,wh_estimated:false,background_collection_changed:false});
 
 
@@ -44469,7 +44502,7 @@ globalThis.AtlasStorageRetirement4023=Object.freeze({plan:atlasStorageRetirement
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.13";
+const ATLAS_BUILD = "40.2.14";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
