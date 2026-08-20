@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.24 — PARKER LEWIS CAN'T LOSE · PORTABLE WORKSPACE PROFILES + STORAGE LINEAGE V2 LOCK
+     40.2.25 — PARKER LEWIS CAN'T LOSE · RUNTIME VISIBILITY OBSERVATORY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.24";
+  const BUILD_CURRENT = "40.2.25";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -1153,7 +1153,7 @@
       "- 0 FAIL critique requis.",
       "- Les limites de couverture/continuité peuvent rester visibles si elles ne sont pas des défauts structurels.",
       "- Les contrôles Versioning/Math Core ne disposent plus d’un passe-droit `|| true` : leur PASS exige désormais la condition réelle.",
-      "- Ce candidat regroupe visuellement les surfaces Oracle et diffère uniquement le rendu de l’Explorer Evidence ; aucune cadence, décision métier ni autorité de stockage n’est modifiée.",
+      "- Ce candidat instrumente passivement les appels UI Oracle déjà connus par état VISIBLE / RÉDUIT / MASQUÉ / REPLIÉ ; aucune cadence, décision métier, coupure de moteur ni autorité de stockage n’est modifiée.",
       `- Le candidat ${BUILD_CURRENT} exige une validation réelle dans Firefox après publication opérateur.`,
       "- Aucun ordre financier, aucune recommandation et aucune réparation automatique ne sont produits par ce module."
     );
