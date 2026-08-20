@@ -732,6 +732,9 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "lecture-froide", level: "advanced", target: "closest-collapse", group: "analysis" },
   { id: "risques", level: "advanced", target: "closest-collapse", group: "analysis" },
   { id: "debutant", level: "advanced", target: "closest-collapse", group: "analysis" },
+  { id: "oracle-evidence-explorer", level: "advanced", target: "self", group: "analysis" },
+  { id: "oracle-lab-dashboard", level: "advanced", target: "self", group: "analysis" },
+  { id: "oracle-infrastructure-observatory", level: "advanced", target: "self", group: "analysis" },
 
   { id: "auto-reader", level: "advanced", target: "closest-collapse", group: "memory" },
   { id: "shared-memory", level: "advanced", target: "closest-collapse", group: "memory" },
@@ -753,6 +756,7 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "sources", level: "adaptive", target: "closest-collapse", group: "system" },
   { id: "mesure-audience", level: "diagnostic", target: "self", group: "system" },
   { id: "local-ai-hub", level: "advanced", target: "closest-collapse", group: "system" },
+  { id: "atlasStorageHealth40198", level: "advanced", target: "self", group: "system" },
 
   { id: "missions-vie", level: "project", target: "self", group: "projects" },
   { id: "forge-aerith", level: "project", target: "self", group: "projects" },
@@ -2185,7 +2189,14 @@ function atlasV2ApplyMode(mode, options = {}) {
     atlasV2ApplyMathDock("side", { persist: false });
     const topDock = document.getElementById("mathTopDock");
     if (topDock) topDock.hidden = true;
-    atlasSetCleanLensCollapsed(true, false);
+    // 40.2.10+ — Basic view no longer owns Lecture Technique visibility.
+    // Preserve the V7/operator state exactly as in intermediate/administrator modes.
+    let detailCollapsed = document.getElementById("analyste")?.classList.contains("detail-collapsed") === true;
+    try {
+      const graphContext = typeof atlasGraphContextV7Read === "function" ? atlasGraphContextV7Read() : null;
+      if (graphContext?.market) detailCollapsed = graphContext.market.detailCollapsed === true;
+    } catch (_) {}
+    atlasSetCleanLensCollapsed(detailCollapsed, false);
     const marketPanel = document.getElementById("marketSnapshotPanel");
     if (marketPanel) marketPanel.dataset.marketColumns = "essential";
   } else {
@@ -5714,7 +5725,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.2.2",
+  build: "40.2.11",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6249,7 +6260,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.2.2",
+  build: "40.2.11",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -7604,7 +7615,7 @@ globalThis.AtlasOracleSourceHistory4024=Object.freeze({list:atlasOracleSourceHis
    Two-source exploratory center only. With n=2 this is a midpoint/median,
    not enough sources for outlier-resistant consensus. Binance display unchanged. */
 function atlasOracleRobustAggregateCompute4025(fabric=atlasOracleInfrastructureState4020){return {updated_at:Date.now(),assets:(fabric?.assets||[]).map(a=>{const usable=(a.sources||[]).filter(q=>q.usable&&Number.isFinite(Number(q.price))).map(q=>({family:q.family,price:Number(q.price)}));const prices=usable.map(q=>q.price);const center=atlasOracleInfrastructureMedian4020(prices);const min=prices.length?Math.min(...prices):null,max=prices.length?Math.max(...prices):null;const halfBand=Number.isFinite(center)&&prices.length>=2?(max-min)/2:null;return {coin_id:a.coin_id,symbol:a.symbol,n:prices.length,center_eur:center,min_eur:min,max_eur:max,half_band_eur:halfBand,deviation_pct:a.deviation_pct,method:prices.length>=3?"median":"midpoint/median n≤2",consensus_robust:prices.length>=3};}),model_input:false,display_price_changed:false};}
-function atlasOracleRobustAggregateRender4025(fabric=atlasOracleInfrastructureState4020){const r=atlasOracleRobustAggregateCompute4025(fabric),body=document.getElementById("atlasOracleRobustRows4025"),stateNode=document.getElementById("atlasOracleRobustState4025");if(body)body.innerHTML=r.assets.map(a=>`<tr><td><b>${atlasOracleEscapeHtml(a.symbol)}</b></td><td>${a.n}</td><td>${Number.isFinite(a.center_eur)?atlasEuro(a.center_eur):"—"}</td><td>${Number.isFinite(a.half_band_eur)?"± "+atlasEuro(a.half_band_eur):"—"}</td><td>${Number.isFinite(Number(a.deviation_pct))?Number(a.deviation_pct).toFixed(3)+" %":"—"}</td><td>${a.consensus_robust?"médiane":"exploratoire n≤2"}</td></tr>`).join("")||'<tr><td colspan="6">Aucune paire de source exploitable.</td></tr>';if(stateNode)stateNode.textContent=r.assets.some(a=>a.n>=2)?"LAB ACTIF · PRIX BINANCE INCHANGÉ":"ATTENTE QUORUM";return r;}
+function atlasOracleRobustAggregateRender4025(fabric=atlasOracleInfrastructureState4020){const r=atlasOracleRobustAggregateCompute4025(fabric),body=document.getElementById("atlasOracleRobustRows4025"),stateNode=document.getElementById("atlasOracleRobustState4025");if(body)body.innerHTML=r.assets.map(a=>`<tr><td><b>${atlasOracleEscapeHtml(a.symbol)}</b></td><td>${a.n}</td><td>${Number.isFinite(a.center_eur)?atlasOracleEscapeHtml(fmtEUR.format(a.center_eur)):"—"}</td><td>${Number.isFinite(a.half_band_eur)?"± "+atlasOracleEscapeHtml(fmtEUR.format(a.half_band_eur)):"—"}</td><td>${Number.isFinite(Number(a.deviation_pct))?Number(a.deviation_pct).toFixed(3)+" %":"—"}</td><td>${a.consensus_robust?"médiane":"exploratoire n≤2"}</td></tr>`).join("")||'<tr><td colspan="6">Aucune paire de source exploitable.</td></tr>';if(stateNode)stateNode.textContent=r.assets.some(a=>a.n>=2)?"LAB ACTIF · PRIX BINANCE INCHANGÉ":"ATTENTE QUORUM";return r;}
 globalThis.AtlasOracleRobustAggregate4025=Object.freeze({compute:atlasOracleRobustAggregateCompute4025,render:atlasOracleRobustAggregateRender4025,model_input:false,display_price_changed:false,outlier_resistant_with_two_sources:false});
 
 
@@ -15538,7 +15549,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.2.2",
+  build: "40.2.11",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -38844,7 +38855,9 @@ function atlasWorkspaceRestoreAfterMarket() {
 
   const detailCollapsed = graphSaved.detailCollapsed === true;
   atlasGraphContextV7ApplyPeripheralState(graphSaved);
-  atlasSetCleanLensCollapsed(atlasV2IsExpandedMode() ? detailCollapsed : true, false);
+  // 40.2.10+ — Restore the saved V7 operator choice in every V2 view.
+  // Basic mode must never re-close Lecture Technique behind the operator's back.
+  atlasSetCleanLensCollapsed(detailCollapsed, false);
 
   const adminWorkspace = saved.adminWorkspace && typeof saved.adminWorkspace === "object" ? saved.adminWorkspace : {};
   const savedModule = String(adminWorkspace.lastModule || "");
@@ -44456,7 +44469,7 @@ globalThis.AtlasStorageRetirement4023=Object.freeze({plan:atlasStorageRetirement
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.9";
+const ATLAS_BUILD = "40.2.11";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -51205,8 +51218,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.2.2",
-  asset_token: "market-core-v2.0-alpha-build-40.2.2"
+  build: ATLAS_BUILD,
+  asset_token: ATLAS_ASSET_TOKEN
 });
 
 function atlasRuntimeTruth3813() {
