@@ -5691,7 +5691,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.91",
+  build: "40.1.92",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6226,7 +6226,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.91",
+  build: "40.1.92",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -15398,7 +15398,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.91",
+  build: "40.1.92",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -43437,7 +43437,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.91";
+const ATLAS_BUILD = "40.1.92";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -50132,8 +50132,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.91",
-  asset_token: "market-core-v2.0-alpha-build-40.1.91"
+  build: "40.1.92",
+  asset_token: "market-core-v2.0-alpha-build-40.1.92"
 });
 
 function atlasRuntimeTruth3813() {

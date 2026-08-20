@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.1.91 — PARKER LEWIS CAN'T LOSE · OPERATOR GRAPH SESSION PROFILE V2 LOCK
+     40.1.92 — PARKER LEWIS CAN'T LOSE · OPERATOR GRAPH INTENT PROFILE V3 · VERSIONING CONSISTENCY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,8 +18,9 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.1.91";
+  const BUILD_CURRENT = "40.1.92";
   const ENGINE_CURRENT = "38.15.11";
+  const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
   const ROOT_ID = "atlasArchitectureFreeze";
 
@@ -584,21 +585,21 @@
       };
     });
     const contractOk =
-      managerContract.build === BUILD_CURRENT
+      managerContract.build === WINDOW_MANAGER_SOURCE_BUILD
       && managerContract.direct_fixed_position_owner === "inline-important"
       && managerContract.direct_fixed_geometry_owner === "inline-important"
       && managerContract.direct_fixed_z_order_owner === "inline-important"
       && managerContract.direct_fixed_dock_css_override_safe === true;
     return {
       ok: contractOk && rows.every(row => row.present && row.ok),
-      detail:`contract=${String(contractOk)} · ${rows.map(row => `${row.id}:${row.detail}`).join(" · ")}`
+      detail:`contract=${String(contractOk)} · manager=${String(managerContract.build || "—")} · source attendu=${WINDOW_MANAGER_SOURCE_BUILD} · ${rows.map(row => `${row.id}:${row.detail}`).join(" · ")}`
     };
   }
 
   function detachDragContinuityContract() {
     const managerContract = globalThis.ErithAdminWindowManager?.contract || {};
     const ok =
-      managerContract.build === BUILD_CURRENT
+      managerContract.build === WINDOW_MANAGER_SOURCE_BUILD
       && managerContract.drag_pointer_event_owner === "window-capture-phase"
       && managerContract.drag_reparent_continuity === true
       && managerContract.drag_pointer_capture_reacquire === true
@@ -607,7 +608,7 @@
       ok,
       detail: ok
         ? "window capture-phase · reparent-safe · capture reacquire · one gesture"
-        : `owner=${String(managerContract.drag_pointer_event_owner || "—")} · reparent=${String(managerContract.drag_reparent_continuity)} · reacquire=${String(managerContract.drag_pointer_capture_reacquire)} · oneGesture=${String(managerContract.drag_single_gesture_detach_move)}`
+        : `manager=${String(managerContract.build || "—")} / source attendu=${WINDOW_MANAGER_SOURCE_BUILD} · owner=${String(managerContract.drag_pointer_event_owner || "—")} · reparent=${String(managerContract.drag_reparent_continuity)} · reacquire=${String(managerContract.drag_pointer_capture_reacquire)} · oneGesture=${String(managerContract.drag_single_gesture_detach_move)}`
     };
   }
 
