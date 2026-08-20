@@ -3510,6 +3510,7 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
     if (options.explicitEmpty === true) {
       atlasWorkspaceSelectionIntentWrite("explicit-empty");
     }
+    atlasOperatorGraphProfileCommit?.(options.explicitEmpty === true ? "selection-empty" : "selection-transient-empty");
     atlasRenderComparisonControls();
     atlasWorkspaceScheduleSave?.(80);
     return;
@@ -3538,6 +3539,7 @@ function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
   state.dataBroker.comparison.status = "idle";
   state.dataBroker.comparison.error = null;
   atlasWorkspaceSelectionIntentWrite("selected");
+  atlasOperatorGraphProfileCommit?.(`selection:${state.dataBroker.comparison.preset}`);
   atlasRenderComparisonControls();
   atlasWorkspaceScheduleSave?.(80);
   queueMicrotask(() => { void atlasRefreshSpotBook({ force: true }); });
@@ -4793,7 +4795,7 @@ function atlasReadChartV2Settings(){
       legend:p.legend===true,
       comparisonLegend:p.comparisonLegend===true,
       analysis:p.analysis!==false,
-      /* 40.1.83 — MARKET BASE PROFILE.
+      /* 40.1.90 — OPERATOR GRAPH PROFILE V2.
          Oracle is a separate secondary profile and never auto-opens from this
          shared Market settings store. */
       oracle:false,
@@ -4809,8 +4811,8 @@ function atlasReadChartV2Settings(){
 }
 
 function atlasWriteChartV2Settings(){
-  /* 40.1.83 — write MARKET settings only.
-     Oracle view/horizon/zoom are persisted exclusively by the Oracle profile. */
+  /* 40.1.90 — MARKET settings remain separate from Oracle.
+     Explicit Market control changes also checkpoint the operator profile. */
   try{
     localStorage.setItem(ATLAS_CHART_V2_SETTINGS_KEY,JSON.stringify({
       view:state.chartViewV2.view==="base100"?"base100":"price",
@@ -4822,6 +4824,7 @@ function atlasWriteChartV2Settings(){
       marketColumns:state.chartViewV2.marketColumns==="complete"?"complete":"essential"
     }));
   }catch{}
+  atlasOperatorGraphProfileCommit?.("chart-view");
 }
 
 function atlasChartV2ComparisonMode(){return atlasComparisonActive();}
@@ -5012,7 +5015,7 @@ function atlasChartV2SetOption(kind, value) {
   } else if (kind === "analysis") {
     state.chartViewV2.analysis = state.chartViewV2.analysis === false;
   } else if (kind === "oracle") {
-    /* 40.1.83 — Oracle is an isolated profile.
+    /* 40.1.90 — Oracle is an isolated profile.
        Opening Oracle restores Oracle-only state; closing it returns to the
        untouched Market profile. Oracle visibility is session-only, therefore
        a page reload always starts from the Market base. */
@@ -5691,7 +5694,7 @@ const atlasVolumeOverlayPlugin = {
 };
 
 const ATLAS_VERTICAL_BAR_RENDERER_40149 = Object.freeze({
-  build: "40.1.83",
+  build: "40.1.90",
   geometry_source: "39.2.11",
   metal_paint_source: "39.2.21",
   verified_commit: "1e6664505b2e3401e34639f0bb88aa121093103b",
@@ -6226,7 +6229,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
 }
 
 const ATLAS_ORACLE_V1_40149 = Object.freeze({
-  build: "40.1.83",
+  build: "40.1.90",
   owner: "app.js + #atlasOracleCanvas",
   mode: "historical-tail-to-multiview-interpretative-continuation",
   views: Object.freeze(["continuation", "top5"]),
@@ -8545,7 +8548,7 @@ function atlasInitOracleV0() {
   const strip = document.getElementById("atlasOracleAssets");
   if (!root || root.dataset.oracleInit === "1") return;
   root.dataset.oracleInit = "1";
-  /* 40.1.83 — Market is the boot base. Oracle hydrates only after an
+  /* 40.1.90 — Market is the boot base. Oracle hydrates only after an
      explicit operator click on the Oracle control. */
   atlasOracleEvidenceRefreshStatus().catch(()=>{});
   atlasOracleOutcomeSchedule();
@@ -15398,7 +15401,7 @@ let atlasStableResizeLastWidth = 0;
 let atlasStableResizeLastHeight = 0;
 
 const atlasChartStability40122 = {
-  build: "40.1.83",
+  build: "40.1.90",
   contract: Object.freeze({
     atomic_cache_to_direct: true,
     preserve_visible_comparison_until_complete: true,
@@ -36754,7 +36757,7 @@ function atlasWorkspaceRead() {
   const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
   if (!current && !lastValid) return null;
 
-  /* 40.1.83 — back to the base workspace rule.
+  /* 40.1.90 — back to the base workspace rule.
      Workspace state owns shell/admin preferences. Graph truth is restored by
      the isolated Market Graph Profile and is never merged here. */
   return current || lastValid;
@@ -36762,6 +36765,144 @@ function atlasWorkspaceRead() {
 
 
 const ATLAS_MARKET_GRAPH_PROFILE_KEY = "agent_crypto_erith_ia_graph_profile_market_v1";
+
+/* =========================================================
+   40.1.90 — OPERATOR GRAPH SESSION PROFILE V2
+   The graph context is no longer a mirror of generic workspace saves.
+   Only explicit graph-context changes commit this profile. Renderer,
+   pagehide and shell persistence can no longer demote Top 5 to Solo.
+   ========================================================= */
+const ATLAS_OPERATOR_GRAPH_PROFILE_KEY = "agent_crypto_erith_ia_operator_graph_profile_v2";
+let atlasOperatorGraphProfileRestoring = false;
+
+function atlasOperatorGraphProfileNormalize(raw = {}) {
+  const rawIds = Array.isArray(raw.comparisonIds) ? raw.comparisonIds.filter(Boolean) : [];
+  const ids = rawIds.filter((id, index, list) => list.indexOf(id) === index).slice(0, ATLAS_COMPARISON_MAX_SERIES);
+  const selected = String(raw.selectedCoinId || "").trim() || ids[0] || null;
+  let preset = ATLAS_WORKSPACE_PRESETS.includes(String(raw.comparisonPreset || ""))
+    ? String(raw.comparisonPreset)
+    : ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty";
+  if (ids.length === 1 && preset !== "solo") preset = "solo";
+  if (!ids.length && preset !== "empty") preset = "empty";
+  const sourceView = raw.chartView && typeof raw.chartView === "object" ? raw.chartView : {};
+  const selectionIntent = ids.length
+    ? "selected"
+    : (raw.selectionIntent === "explicit-empty" || raw.selectionCleared === true ? "explicit-empty" : "transient-empty");
+
+  return {
+    schema: "agent_crypto_operator_graph_profile_v2",
+    release: ATLAS_RELEASE,
+    savedAt: raw.savedAt || new Date().toISOString(),
+    savedAtMs: Number(raw.savedAtMs) || Date.now(),
+    sequence: Math.max(0, Number(raw.sequence) || 0),
+    lastAction: String(raw.lastAction || "legacy-migration"),
+    migratedFrom: raw.migratedFrom || null,
+    graphMode: ATLAS_ADMIN_GRAPH_MODES.includes(String(raw.graphMode || "")) ? String(raw.graphMode) : "normal",
+    period: ATLAS_WORKSPACE_PERIODS.includes(Number(raw.period)) ? Number(raw.period) : 1,
+    selectedCoinId: selected,
+    comparisonIds: ids,
+    comparisonPreset: preset,
+    selectionCleared: selectionIntent === "explicit-empty" && !ids.length,
+    selectionIntent,
+    chartView: {
+      view: sourceView.view === "base100" ? "base100" : "price",
+      scale: sourceView.scale === "logarithmic" ? "logarithmic" : "linear",
+      volume: sourceView.volume !== false,
+      legend: sourceView.legend === true,
+      comparisonLegend: sourceView.comparisonLegend === true,
+      analysis: sourceView.analysis !== false,
+      marketColumns: sourceView.marketColumns === "complete" ? "complete" : "essential"
+    }
+  };
+}
+
+function atlasOperatorGraphProfileRead() {
+  const stored = atlasWorkspaceReadJson(ATLAS_OPERATOR_GRAPH_PROFILE_KEY);
+  return stored?.schema === "agent_crypto_operator_graph_profile_v2"
+    ? atlasOperatorGraphProfileNormalize(stored)
+    : null;
+}
+
+function atlasOperatorGraphProfileStore(profile) {
+  if (!profile) return false;
+  const previous = atlasOperatorGraphProfileRead();
+  const normalized = atlasOperatorGraphProfileNormalize(profile);
+  const payload = {
+    ...normalized,
+    schema: "agent_crypto_operator_graph_profile_v2",
+    release: ATLAS_RELEASE,
+    savedAt: new Date().toISOString(),
+    savedAtMs: Date.now(),
+    sequence: Math.max(Number(previous?.sequence) || 0, Number(normalized.sequence) || 0) + 1
+  };
+  try {
+    localStorage.setItem(ATLAS_OPERATOR_GRAPH_PROFILE_KEY, JSON.stringify(payload));
+    return payload;
+  } catch {
+    return false;
+  }
+}
+
+function atlasOperatorGraphProfileCapture(lastAction = "operator") {
+  const ids = atlasComparisonIds();
+  return atlasOperatorGraphProfileNormalize({
+    graphMode: atlasWorkspaceCurrentGraphMode(),
+    period: Number(state.chartPeriodDays || 1),
+    selectedCoinId: state.selectedCoinId || null,
+    comparisonIds: ids,
+    comparisonPreset: state.dataBroker?.comparison?.preset || (ids.length > 1 ? "manual" : ids.length === 1 ? "solo" : "empty"),
+    selectionCleared: state.graphSelectionCleared === true,
+    selectionIntent: ids.length ? "selected" : (atlasWorkspaceSelectionIntentRead() || "transient-empty"),
+    chartView: {
+      view: state.chartViewV2.view === "base100" ? "base100" : "price",
+      scale: state.chartViewV2.scale === "logarithmic" ? "logarithmic" : "linear",
+      volume: state.chartViewV2.volume !== false,
+      legend: state.chartViewV2.legend === true,
+      comparisonLegend: state.chartViewV2.comparisonLegend === true,
+      analysis: state.chartViewV2.analysis !== false,
+      marketColumns: state.chartViewV2.marketColumns === "complete" ? "complete" : "essential"
+    },
+    lastAction
+  });
+}
+
+function atlasOperatorGraphProfileCommit(lastAction = "operator") {
+  if (!atlasWorkspaceRestored || atlasOperatorGraphProfileRestoring) return false;
+  if (typeof atlasParallelMarketDomain === "function" && atlasParallelMarketDomain() === "metals") return false;
+  const snapshot = atlasOperatorGraphProfileCapture(lastAction);
+  if (!atlasWorkspaceSnapshotHasSelection(snapshot) && snapshot.selectionIntent !== "explicit-empty") return false;
+  const stored = atlasOperatorGraphProfileStore(snapshot);
+  if (stored) {
+    document.documentElement.dataset.atlasGraphProfile = "operator-v2";
+    document.documentElement.dataset.atlasGraphProfileAction = String(lastAction || "operator");
+  }
+  return !!stored;
+}
+
+function atlasOperatorGraphProfileResolve(workspaceSaved = null) {
+  const stored = atlasOperatorGraphProfileRead();
+  if (stored) return { profile: stored, source: "operator-profile-v2" };
+
+  /* One-time migration: prefer the base workspace intent, then renderer proof,
+     and use the 40.1.90 market-profile mirror only as the last fallback. */
+  const current = workspaceSaved || atlasWorkspaceReadJson(ATLAS_WORKSPACE_STATE_KEY);
+  const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
+  const legacyMarket = atlasWorkspaceReadJson(ATLAS_MARKET_GRAPH_PROFILE_KEY);
+  const candidates = [
+    ["workspace-state", current],
+    ["last-valid-graph", lastValid],
+    ["legacy-market-profile-v1", legacyMarket]
+  ];
+  for (const [source, candidate] of candidates) {
+    if (!candidate || typeof candidate !== "object") continue;
+    if (!atlasWorkspaceSnapshotHasSelection(candidate) && !atlasWorkspaceSnapshotExplicitEmpty(candidate)) continue;
+    return {
+      profile: atlasOperatorGraphProfileNormalize({ ...candidate, migratedFrom: source, lastAction: "migration" }),
+      source
+    };
+  }
+  return { profile: null, source: "none" };
+}
 
 function atlasMarketGraphProfileNormalize(raw = {}) {
   const rawIds = Array.isArray(raw.comparisonIds) ? raw.comparisonIds.filter(Boolean) : [];
@@ -36823,7 +36964,7 @@ function atlasMarketGraphProfileResolve(workspaceSaved = null) {
   const stored = atlasMarketGraphProfileRead();
   if (stored) return { profile: stored, source: "market-profile" };
 
-  /* First 40.1.83 boot: return to the last coherent Market graph baseline.
+  /* First 40.1.90 boot: return to the last coherent Market graph baseline.
      Prefer last_valid_graph over the mixed workspace snapshot. This is a
      one-time migration only; afterwards the Market profile is authoritative. */
   const lastValid = atlasWorkspaceReadJson(ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY);
@@ -37445,8 +37586,10 @@ function atlasWorkspaceWrite() {
     return snapshot;
   }
 
-  /* 40.1.83 — Market profile = operator intent, independent from Oracle. */
-  atlasMarketGraphProfileWrite(snapshot);
+  /* 40.1.90 — generic workspace persistence is shell/history only.
+     It MUST NOT write the operator graph profile. The former 40.1.90
+     market-profile mirror could overwrite Top 5 with a transient Solo state
+     during renderer/lifecycle saves. */
 
   const chart = state.dataBroker?.chart;
   const ids = atlasComparisonIds();
@@ -37590,8 +37733,9 @@ function atlasWorkspaceRenderStrip(options = {}) {
 function atlasWorkspaceRestoreAfterMarket() {
   if (atlasWorkspaceRestored || !Array.isArray(state.coins) || !state.coins.length) return false;
 
-  const saved = atlasWorkspaceRead();
-  if (!saved) {
+  const savedWorkspace = atlasWorkspaceRead();
+  const graphResolution = atlasOperatorGraphProfileResolve(savedWorkspace);
+  if (!savedWorkspace && !graphResolution.profile) {
     atlasWorkspaceRestored = true;
     state.chartViewV2.oracle = false;
     atlasWorkspaceRenderStrip();
@@ -37599,16 +37743,15 @@ function atlasWorkspaceRestoreAfterMarket() {
     return false;
   }
 
-  const graphResolution = atlasMarketGraphProfileResolve(saved);
-  const graphSaved = graphResolution.profile || atlasMarketGraphProfileNormalize(saved);
-
+  const saved = savedWorkspace || {};
+  const graphSaved = graphResolution.profile || atlasOperatorGraphProfileNormalize(saved);
   const requestedIds = Array.isArray(graphSaved.comparisonIds) ? graphSaved.comparisonIds.filter(Boolean) : [];
   const availableIds = new Set(state.coins.map(coin => coin.id));
   const missingSavedIds = requestedIds.filter(id => !availableIds.has(id));
   if (missingSavedIds.length && state.coins.length < 200 && !atlasStartup.completed) return false;
 
   atlasWorkspaceRestored = true;
-  if (graphResolution.source !== "market-profile" && graphSaved) atlasMarketGraphProfileStore(graphSaved);
+  atlasOperatorGraphProfileRestoring = true;
 
   const forceAdminWorkspace = atlasAdminForceWorkspaceIsActive();
   const activeInterfaceMode = atlasV2Mode();
@@ -37729,11 +37872,18 @@ function atlasWorkspaceRestoreAfterMarket() {
     persist:false, save:false, source:"workspace-restore"
   });
 
-  console.info("40.1.83 graph profiles restored", {
-    marketProfileSource: graphResolution.source,
-    marketPreset: state.dataBroker.comparison.preset,
-    marketIds: [...ids],
+  /* Commit one clean V2 baseline after all Market state has been restored. */
+  const restoreBaseline = atlasOperatorGraphProfileCapture("restore-baseline");
+  restoreBaseline.migratedFrom = graphResolution.source;
+  atlasOperatorGraphProfileStore(restoreBaseline);
+  atlasOperatorGraphProfileRestoring = false;
+
+  console.info("40.1.90 operator graph profile restored", {
+    profileSource: graphResolution.source,
+    preset: state.dataBroker.comparison.preset,
+    ids: [...ids],
     period,
+    view: state.chartViewV2.view,
     oracleBoot: "closed"
   });
 
@@ -43204,7 +43354,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.1.83";
+const ATLAS_BUILD = "40.1.90";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -44832,8 +44982,23 @@ document.addEventListener("click", event => {
   window.setTimeout(atlasWorkspaceRenderStrip, 860);
 }, true);
 
+/* 40.1.90 — second-phase operator checkpoint. This listener runs in bubble
+   phase, after the target control has changed state. It is intentionally
+   narrower than generic workspace persistence and ignores Oracle-only clicks. */
+document.addEventListener("click", event => {
+  const control = event.target.closest(
+    ".period-btn, [data-chart-view], [data-chart-scale], [data-chart-display], "
+    + ".compare-btn, [data-compare-primary], [data-compare-remove], [data-market-open], "
+    + "[data-admin-graph-cycle], [data-admin-graph-mode], [data-market-columns]"
+  );
+  if (!control) return;
+  if (control.matches?.("[data-chart-display='oracle']") || control.id === "btnChartOracle") return;
+  queueMicrotask(() => atlasOperatorGraphProfileCommit?.("operator-control"));
+}, false);
+
 window.addEventListener("atlas:admin-graph", () => {
   atlasWorkspaceRenderStrip();
+  atlasOperatorGraphProfileCommit?.("graph-mode");
   atlasWorkspaceScheduleSave(140);
 });
 
@@ -49880,8 +50045,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "40.1.83",
-  asset_token: "market-core-v2.0-alpha-build-40.1.83"
+  build: "40.1.90",
+  asset_token: "market-core-v2.0-alpha-build-40.1.90"
 });
 
 function atlasRuntimeTruth3813() {

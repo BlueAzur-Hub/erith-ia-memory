@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.1.83";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE DATA INTEGRITY LOCK";
+  const ADMIN_BUILD = "40.1.90";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · OPERATOR GRAPH SESSION PROFILE V2 LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
