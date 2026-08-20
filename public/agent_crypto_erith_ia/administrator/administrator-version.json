@@ -1,19 +1,19 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v34",
-  "build": "40.1.94",
-  "release": "Agent-Crypto @erith.IA · Build 40.1.94 · PARKER LEWIS CAN'T LOSE · GRAPH CONTEXT V5 · BOOT AUTHORITY LOCK",
+  "build": "40.1.95",
+  "release": "Agent-Crypto @erith.IA · Build 40.1.95 · PARKER LEWIS CAN'T LOSE · GRAPH SESSION CONTEXT V6 · FULL VIEW AUTHORITY LOCK",
   "status": "candidate_requires_firefox_validation",
   "prepared_at": "2026-08-20T04:05:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.1.94",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.94",
-    "asset_token": "market-core-v2.0-alpha-build-40.1.94",
+    "primary_build": "40.1.95",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.1.95",
+    "asset_token": "market-core-v2.0-alpha-build-40.1.95",
     "engine_reference": "Market Core 38.15.11"
   },
   "source": {
     "direct_parent": "40.1.93",
-    "method": "Graph persistence authority rebuild from 40.1.93: hard-wired Solo bootstrap and legacy graph-store migration removed from restart truth; Graph Context V5 starts neutral Vide once, prehydrates before market boot, and thereafter persists only explicit Market/Oracle context under one stable key. Protected Window Manager remains sourced from canonical 40.1.48.",
+    "method": "Graph persistence authority rebuild from 40.1.93: hard-wired Solo bootstrap and legacy graph-store migration removed from restart truth; Graph Session Context V6 starts neutral Vide once, prehydrates before market boot, and thereafter persists only explicit Market/Oracle context under one stable key. Protected Window Manager remains sourced from canonical 40.1.48.",
     "oracles": {
       "technical_reading": [
         "39.6.2 FULL-CLEAR SURFACES LOCK",
@@ -757,7 +757,7 @@
       "quality_score_descriptive": true
     },
     "oracle_v2_shadow_challenger": {
-      "build": "40.1.94",
+      "build": "40.1.95",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -793,7 +793,7 @@
       "main_chart_write": false
     },
     "oracle_v2_shadow_multihorizon_surgery": {
-      "build": "40.1.94",
+      "build": "40.1.95",
       "enabled": true,
       "prospective_only": true,
       "new_observations_only": true,
@@ -923,23 +923,23 @@
       "js/multi-collector-concordance.js": "9fecda63998a65a710ac8614228892c351a8a2c9e4ddd178b9513a83ae8761ac",
       "js/memory-health-audit.js": "26490c53b39eeed2bdf711d92de5eea9d7376b3f042b694a6de99c5e72e7c33a",
       "publication_identity": {
-        "build": "40.1.94",
-        "asset_token": "market-core-v2.0-alpha-build-40.1.94",
+        "build": "40.1.95",
+        "asset_token": "market-core-v2.0-alpha-build-40.1.95",
         "status": "candidate_requires_firefox_validation",
         "app_sha256": "e98082e8744cb509c5ac5ee453bcd403e1b0cc9aada60ad682a86e9d24819885"
       }
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.1.94",
-      "asset_token": "market-core-v2.0-alpha-build-40.1.94",
+      "build": "40.1.95",
+      "asset_token": "market-core-v2.0-alpha-build-40.1.95",
       "status": "candidate_requires_firefox_validation",
       "app_sha256": "53bf22c4eeeb2c25607899f3ee93cb8a284d6c11802d796f15e031e82508b256"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.1.94",
+  "asset_token": "market-core-v2.0-alpha-build-40.1.95",
   "parent_build": "40.1.93",
-  "lineage": "40.1.93 → 40.1.94 · Graph Context V5 devient l’unique autorité de reprise : démarrage neutre Vide sans migration des profils graphe V1–V4 contaminés, préhydratation synchrone avant boot marché, sauvegarde Marché/Oracle explicite.",
+  "lineage": "40.1.94 → 40.1.95 · Graph Session Context V6 étend l’autorité de reprise à toute la vue graphique : sélection Marché, surface Oracle, Lecture Technique et sous-fenêtres ; les mises à jour Marché ne ferment plus implicitement Oracle.",
   "repository_cleanup": {
     "runtime_behavior_changed": true,
     "freeze_identity_current_build": true,
@@ -1000,10 +1000,14 @@
     "40.1.93: les événements click synthétiques ne peuvent pas modifier le profil V4 ; Top5, Solo, Vide et périodes ne sont plus écrasés par un défaut runtime.",
     "40.1.93: Oracle peut rester la surface active après Ctrl+F5 et retrouve vue/actif/horizon/zoom/surface sans modifier le profil Marché.",
     "40.1.93: Window Manager byte-identical ; Evidence/V2 Shadow/Math Core inchangés.",
-    "40.1.94: supprime la règle implicite de boot Solo (state par défaut devient Vide/neutre) et interdit sa promotion en vérité persistante.",
-    "40.1.94: Graph Context V5 utilise une nouvelle clé stable et n’importe aucun contexte Marché depuis workspace/last-valid/profile V1/V3/V4.",
-    "40.1.94: préhydrate V5 avant le démarrage marché et restaure ensuite exactement Market + Oracle depuis la même autorité.",
-    "40.1.94: Oracle actif, vue, horizon, zoom, surface et actif sont conservés ; les changements Oracle alimentent V5 sans modifier le profil Marché.",
-    "40.1.94: anciens stores conservés pour rollback diagnostic mais ignorés par la restauration V5."
+    "40.1.95: supprime la règle implicite de boot Solo (state par défaut devient Vide/neutre) et interdit sa promotion en vérité persistante.",
+    "40.1.95: Graph Session Context V6 utilise une nouvelle clé stable et n’importe aucun contexte Marché depuis workspace/last-valid/profile V1/V3/V4.",
+    "40.1.95: préhydrate V5 avant le démarrage marché et restaure ensuite exactement Market + Oracle depuis la même autorité.",
+    "40.1.95: Oracle actif, vue, horizon, zoom, surface et actif sont conservés ; les changements Oracle alimentent V5 sans modifier le profil Marché.",
+    "40.1.95: anciens stores conservés pour rollback diagnostic mais ignorés par la restauration V5.",
+    "40.1.95: Graph Session Context V6 sauvegarde Lecture Technique ouverte/réduite et les sous-fenêtres de détail avec le contexte du graphe.",
+    "40.1.95: les écritures du profil Marché préservent activeSurface ; seul un vrai open/close Oracle change Marché ↔ Oracle.",
+    "40.1.95: la restauration Lecture Technique ne dépend plus de l’égalité de release du vieux workspace ; un changement de build ne la réduit plus automatiquement.",
+    "40.1.95: migration autorisée uniquement depuis le précédent Graph Context V5, puis V6 devient l’unique autorité de reprise."
   ]
 }
