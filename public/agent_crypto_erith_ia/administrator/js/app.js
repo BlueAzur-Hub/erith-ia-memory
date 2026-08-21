@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.34";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET CAUSAL ROLE ENGINE LOCK";
+  const ADMIN_BUILD = "40.2.40";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET FINAL LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -263,6 +263,84 @@
     window_manager_modified: false,
   });
   globalThis.ErithNewsToMarketCausalRoleContract40234 = NEWS_TO_MARKET_CAUSAL_ROLE_CONTRACT_40234;
+
+
+  const NEWS_TO_MARKET_OPERATOR_INTELLIGENCE_CONTRACT_40235 = Object.freeze({
+    build: "40.2.35",
+    code_only: true,
+    deterministic_local: true,
+    explanatory_layer_added: true,
+    fact_extraction_from_loaded_news_only: true,
+    mechanism_chain_explanatory_not_predictive: true,
+    initial_catalyst_requires_positive_evidence: true,
+    technical_trigger_separate_from_external_catalyst: true,
+    demand_context_requires_explicit_text_match: true,
+    causal_claim_allowed: false,
+    external_ai_required: false,
+    new_network_request_added: false,
+    timer_added: false,
+    websocket_added: false,
+    storage_write_added: false,
+    oracle_model_modified: false,
+    evidence_capture_changed: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithNewsToMarketOperatorIntelligenceContract40235 = NEWS_TO_MARKET_OPERATOR_INTELLIGENCE_CONTRACT_40235;
+
+
+
+  const EVENT_REACTION_TIMELINE_CONTRACT_40236 = Object.freeze({
+    build: "40.2.36", code_only: true, local_chart_cache_only: true, fetch_added: false,
+    event_timestamp_anchor: true, windows_minutes: Object.freeze([-15,0,15,60,240]),
+    causality_inferred: false, timeline_missing_data_is_explicit: true,
+    timer_added: false, websocket_added: false, storage_write_added: false,
+    oracle_model_modified: false, evidence_capture_changed: false, window_manager_modified: false,
+  });
+  globalThis.ErithEventReactionTimelineContract40236 = EVENT_REACTION_TIMELINE_CONTRACT_40236;
+
+
+
+  const ROLE_EVIDENCE_QUALITY_CONTRACT_40237 = Object.freeze({
+    build:"40.2.37", code_only:true, role_quality_not_causal_probability:true,
+    transparent_components:true, source_independence_not_invented:true,
+    timeline_coverage_component:true, causal_probability_calculated:false,
+    new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false,
+    oracle_model_modified:false, evidence_capture_changed:false, window_manager_modified:false,
+  });
+  globalThis.ErithRoleEvidenceQualityContract40237 = ROLE_EVIDENCE_QUALITY_CONTRACT_40237;
+
+
+
+  const CROSS_LAYER_MARKET_EXPLANATION_CONTRACT_40238 = Object.freeze({
+    build:"40.2.38", code_only:true, independent_layers_preserved:true,
+    news_market_oracle_atlas_compared_not_fused:true, descriptive_convergence_only:true,
+    oracle_model_modified:false, atlas_model_modified:false, causal_claim_allowed:false,
+    new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false,
+    evidence_capture_changed:false, window_manager_modified:false,
+  });
+  globalThis.ErithCrossLayerMarketExplanationContract40238 = CROSS_LAYER_MARKET_EXPLANATION_CONTRACT_40238;
+
+
+
+  const ORACLE_NEWS_CONTEXT_INTEGRATION_CONTRACT_40239 = Object.freeze({
+    build:"40.2.39", code_only:true, compact_summary_only:true, source_of_truth:"news-sentinel",
+    timeline_quality_cross_layer_reused:true, oracle_forecast_math_changed:false,
+    oracle_v2_changed:false, evidence_capture_changed:false, causal_claim_allowed:false,
+    new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false, window_manager_modified:false,
+  });
+  globalThis.ErithOracleNewsContextIntegrationContract40239 = ORACLE_NEWS_CONTEXT_INTEGRATION_CONTRACT_40239;
+
+
+
+  const NEWS_TO_MARKET_FINAL_LOCK_CONTRACT_40240 = Object.freeze({
+    build:"40.2.40", final_lock:true, cumulative_from:"40.2.35-40.2.39",
+    css_fit_overflow_responsive_only:true, new_intelligence_added:false, code_only:true,
+    image_generation_added:false, oracle_model_modified:false, oracle_v2_changed:false,
+    atlas_model_modified:false, evidence_capture_changed:false, causal_claim_allowed:false,
+    new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false, window_manager_modified:false,
+  });
+  globalThis.ErithNewsToMarketFinalLockContract40240 = NEWS_TO_MARKET_FINAL_LOCK_CONTRACT_40240;
+
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);

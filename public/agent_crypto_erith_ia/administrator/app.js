@@ -6386,7 +6386,7 @@ function atlasRuntimeWindowSnapshot40225(){
 function atlasRuntimeNavigationSnapshot40214(){let nav=null;try{nav=(performance.getEntriesByType("navigation")||[])[0]||null;}catch{}const positive=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;let type=String(nav?.type||"");if(!type){try{type=performance?.navigation?.type===1?"reload":performance?.navigation?.type===2?"back_forward":"navigate";}catch{type="unknown";}}return {type:type||"unknown",dom_content_loaded_ms:positive(nav?.domContentLoadedEventEnd),load_ms:positive(nav?.loadEventEnd),dom_interactive_ms:positive(nav?.domInteractive),response_end_ms:positive(nav?.responseEnd),transfer_size:Number.isFinite(Number(nav?.transferSize))?Number(nav.transferSize):null,decoded_body_size:Number.isFinite(Number(nav?.decodedBodySize))?Number(nav.decodedBodySize):null};}
 function atlasRuntimeResourceSnapshot40214(){let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const sum=k=>entries.reduce((a,e)=>{const v=Number(e?.[k]);return a+(Number.isFinite(v)&&v>0?v:0);},0);const measured=k=>entries.filter(e=>Number.isFinite(Number(e?.[k]))&&Number(e[k])>0).length;const largest=entries.map(e=>({name:String(e?.name||""),initiator_type:String(e?.initiatorType||""),transfer_size:Number(e?.transferSize)||0,decoded_body_size:Number(e?.decodedBodySize)||0,duration_ms:Number(e?.duration)||0})).sort((a,b)=>Math.max(b.transfer_size,b.decoded_body_size)-Math.max(a.transfer_size,a.decoded_body_size)).slice(0,5);return {resource_requests_total:entries.length,transfer_bytes_measured:sum("transferSize"),transfer_entries_measured:measured("transferSize"),decoded_bytes_measured:sum("decodedBodySize"),decoded_entries_measured:measured("decodedBodySize"),largest_resources:largest};}
 function atlasRuntimeView40214(){const raw=String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");if(raw)return raw;try{return typeof atlasV2Mode==="function"?atlasV2Mode():"unknown";}catch{return "unknown";}}
-function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.34"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
+function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.40"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
 function atlasRuntimeFmtMs40214(v){return Number.isFinite(Number(v))?`${Math.round(Number(v))} ms`:"—";}
 function atlasRuntimeVisibilityLabel40225(row){return row?`${Number(row.calls||0)}×/${atlasRuntimeFmtMs40214(row.total_ms)}`:"0×/0 ms";}
 /* 40.2.26 — REDUCED / COLLAPSED RUNTIME ATTRIBUTION LOCK
@@ -8992,6 +8992,7 @@ function atlasRenderOracleV0() {
     atlasOracleDrawCanvas(model);
     atlasOracleRuntimeStethoscope40232D(model);
     atlasRenderOracleNewsContext40234(model, coin);
+    atlasRenderOracleNewsContext40235(model, coin);
     return false;
   }
 
@@ -9046,6 +9047,7 @@ function atlasRenderOracleV0() {
   atlasOracleConfidenceCalibrationRefresh(model,currentRegime,currentEnsemble).then(()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
   atlasOracleRuntimeStethoscope40232D(model);
   atlasRenderOracleNewsContext40234(model, coin);
+  atlasRenderOracleNewsContext40235(model, coin);
   return true;
 }
 
@@ -18724,6 +18726,282 @@ globalThis.AtlasNewsToMarketCausalRole40234 = Object.freeze({
   automatic_action: false
 });
 
+
+/* ============================================================
+   40.2.35 — NEWS-TO-MARKET OPERATOR INTELLIGENCE
+   CODE ONLY · explanatory layer over 40.2.34.
+   Turns terse role labels into an auditable operator explanation.
+   It never asks an LLM, never creates a causal probability and never
+   adds network/timer/WebSocket/storage activity.
+   ============================================================ */
+
+function newsMarketRawArticleText40235(event) {
+  return [event?.headline, event?.body].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+}
+
+function newsMarketFormatCompactAmount40235(value, unit) {
+  const n = Number(String(value || "").replace(",", "."));
+  if (!Number.isFinite(n)) return null;
+  const fr = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 }).format(n);
+  const u = String(unit || "").toLowerCase();
+  if (/billion|bn/.test(u)) return `${fr} Md$`;
+  if (/million|mn/.test(u)) return `${fr} M$`;
+  return `${fr} $`;
+}
+
+function newsMarketExtractFacts40235(event) {
+  const raw = newsMarketRawArticleText40235(event);
+  const lower = raw.toLowerCase();
+  const facts = [];
+  const amounts = [];
+  const amountRe = /\$\s*([0-9]+(?:[.,][0-9]+)?)\s*(billion|million|bn|mn)\b/gi;
+  for (const match of raw.matchAll(amountRe)) {
+    const label = newsMarketFormatCompactAmount40235(match[1], match[2]);
+    if (label && !amounts.includes(label)) amounts.push(label);
+  }
+  const priceMatch = raw.match(/(?:tops?|above|over|toward|towards|surges?\s+toward)\s*\$\s*([0-9][0-9,]*)/i);
+  const rangeMatch = raw.match(/\b(one|two|three|four|five|six|seven|eight|nine|ten|\d+)[-\s]?week\s+range\b/i);
+  const weekFr = {one:"une",two:"deux",three:"trois",four:"quatre",five:"cinq",six:"six",seven:"sept",eight:"huit",nine:"neuf",ten:"dix"};
+  if (rangeMatch && /breaks? out|breakout/.test(lower)) {
+    const w = weekFr[String(rangeMatch[1]).toLowerCase()] || rangeMatch[1];
+    facts.push(`Bitcoin casse un range de ${w} semaine${String(rangeMatch[1]).toLowerCase()==="one" ? "" : "s"}.`);
+  }
+  if (priceMatch) {
+    const value = Number(String(priceMatch[1]).replace(/,/g,""));
+    if (Number.isFinite(value)) facts.push(`BTC franchit la zone des ${new Intl.NumberFormat("fr-FR",{maximumFractionDigits:0}).format(value)} $.`);
+  }
+  if (amounts.length && /short|bearish bet/.test(lower)) {
+    facts.push(`${amounts[0]} de positions baissières / short sont mentionnées comme liquidées ou forcées au rachat.`);
+  }
+  if (!facts.length && event?.headline) facts.push(String(event.headline));
+  return { facts, amounts, raw };
+}
+
+function newsMarketContextEvents40235(selected, events = null) {
+  if (!selected) return [];
+  const source = Array.isArray(events) ? events : (Array.isArray(newsFeedState?.events) ? newsFeedState.events : []);
+  const selectedTs = newsMarketEventTime40234(selected);
+  const selectedAssets = new Set((selected?.assets || []).map(v => String(v).toUpperCase()));
+  return source.filter(event => {
+    if (!event || event === selected) return false;
+    const ts = newsMarketEventTime40234(event);
+    if (selectedTs && ts && Math.abs(ts-selectedTs) > 72*60*60*1000) return false;
+    if (newsMarketSharedAsset40234(selected,event)) return true;
+    const raw = newsMarketRawArticleText40235(event).toLowerCase();
+    if (selectedAssets.has("BTC") && /\b(bitcoin|btc)\b/.test(raw)) return true;
+    if (selectedAssets.has("ETH") && /\b(ethereum|ether|eth)\b/.test(raw)) return true;
+    if (selectedAssets.has("XRP") && /\bxrp\b|\bripple\b/.test(raw)) return true;
+    if (selectedAssets.has("SOL") && /\bsolana\b|\bsol\b/.test(raw)) return true;
+    if (selectedAssets.has("BNB") && /\bbnb\b|\bbinance coin\b/.test(raw)) return true;
+    return false;
+  });
+}
+
+function newsMarketRawRoleMatch40235(event, rule) {
+  if (!event || !rule?.re) return null;
+  const raw = newsMarketRawArticleText40235(event);
+  if (!raw || !rule.re.test(raw)) return null;
+  return newsMarketRoleMatch40234({...event,event_label:"",direction:"",matched_topics:[]}, rule);
+}
+
+function newsMarketBestRawRole40235(events, rules) {
+  const matches=[];
+  for (const event of events || []) for (const rule of rules || []) {
+    const match=newsMarketRawRoleMatch40235(event,rule); if(match) matches.push(match);
+  }
+  matches.sort((a,b)=>Number(b?.evidence?.score??-1)-Number(a?.evidence?.score??-1)||Number(b?.source_count||1)-Number(a?.source_count||1)||Date.parse(b?.event_time||0)-Date.parse(a?.event_time||0));
+  return matches[0]||null;
+}
+
+function newsMarketInitialCatalyst40235(selected, contextEvents) {
+  const t0=newsMarketEventTime40234(selected);
+  if (!t0) return null;
+  const eligible=(contextEvents||[]).filter(event=>{
+    const ts=newsMarketEventTime40234(event);
+    return ts && ts<=t0+15*60*1000 && ts>=t0-6*60*60*1000;
+  });
+  return newsMarketBestRawRole40235(eligible,[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.catalyst_positive,NEWS_MARKET_CAUSAL_ROLE_RULES_40234.catalyst_negative]);
+}
+
+function newsMarketDemandContext40235(selected, contextEvents) {
+  return newsMarketBestRawRole40235(contextEvents,[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_up,NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_down]);
+}
+
+const NEWS_MARKET_SUPPORTING_AMPLIFIER_RULE_40235 = Object.freeze({
+  id:"short-liquidation-support",label:"SHORTS / PARIS BAISSIERS LIQUIDÉS",direction:"HAUSSIER",
+  re:/\bshort(?:s|ing)?\b.{0,130}\b(liquidat|wiped|forced|squeeze|lost|lose)\b|\bbearish(?:\s+[a-z0-9-]+){0,3}\s+bets?\b.{0,130}\b(liquidat|wiped|forced|lost|lose)\b|\bliquidation\b.{0,130}\bshort|bearish bets?\b/i
+});
+function newsMarketSupportingAmplifiers40235(selected, contextEvents) {
+  const source=[selected,...(contextEvents||[])];
+  const matches=[];
+  for(const event of source){
+    const match=newsMarketBestRawRole40235([event],[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_up,NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_down,NEWS_MARKET_SUPPORTING_AMPLIFIER_RULE_40235]);
+    if(match) matches.push({...match,facts:newsMarketExtractFacts40235(event)});
+  }
+  return matches.slice(0,4);
+}
+
+function newsMarketCurrentMarketConfirmation40235(selected, baseAnalysis) {
+  let top5=[]; try{top5=atlasCuratedTopCoins(5);}catch{}
+  const rows=(top5||[]).map(c=>({symbol:String(c?.symbol||c?.name||"").toUpperCase(),change:Number(c?.change24h)})).filter(r=>r.symbol&&Number.isFinite(r.change));
+  const positive=rows.filter(r=>r.change>0).length, negative=rows.filter(r=>r.change<0).length;
+  const target=(selected?.assets||[]).map(v=>String(v).toUpperCase())[0]||null;
+  let focus=null; try{focus=target?findCoinByQuery(target):null;}catch{}
+  const focusChange=Number(focus?.change24h);
+  const focusText=focus&&Number.isFinite(focusChange)?`${String(focus.symbol||target).toUpperCase()} ${focusChange>=0?"+":""}${focusChange.toFixed(2)} % / 24 h`:"actif principal non comparable";
+  const breadth=rows.length?`Top 5 : ${positive}/${rows.length} positifs${negative?` · ${negative} négatif${negative>1?"s":""}`:""}`:"Top 5 indisponible";
+  const tone=rows.length&&positive===rows.length?"largeur fortement positive":rows.length&&positive>negative?"largeur positive":rows.length&&negative>positive?"largeur négative":"largeur mixte";
+  return {breadth,focus:focusText,tone,rows,positive,negative,count:rows.length,base:baseAnalysis?.reaction||null};
+}
+
+function newsMarketMechanism40235(analysis) {
+  const amp=analysis?.amplifier;
+  if (amp?.id==="short-squeeze") return {
+    title:"SHORT SQUEEZE / LIQUIDATIONS",
+    direction:"HAUSSIER",
+    steps:["Hausse initiale / cassure du range","Vendeurs à levier sous pression","Liquidations forcées","Rachat des positions short","Demande supplémentaire","Hausse potentiellement amplifiée"],
+    explains:"Le mécanisme peut expliquer pourquoi une hausse déjà engagée s’accélère brutalement.",
+    does_not_explain:"Il ne démontre pas ce qui a déclenché la première impulsion haussière."
+  };
+  if (amp?.id==="long-squeeze") return {
+    title:"LONG SQUEEZE / LIQUIDATIONS",
+    direction:"BAISSIER",
+    steps:["Baisse initiale","Acheteurs à levier sous pression","Liquidations forcées","Ventes supplémentaires","Offre additionnelle","Baisse potentiellement amplifiée"],
+    explains:"Le mécanisme peut expliquer l’accélération d’une baisse déjà engagée.",
+    does_not_explain:"Il ne démontre pas ce qui a déclenché la première impulsion baissière."
+  };
+  return {title:"MÉCANISME NON QUALIFIÉ",direction:"INDÉTERMINÉ",steps:["Événement qualifié","Réaction marché à observer"],explains:"Aucun mécanisme d’amplification suffisamment explicite n’est détecté.",does_not_explain:"Aucune cause initiale n’est fabriquée en l’absence de preuve."};
+}
+
+function newsMarketOperatorIntelligence40235(current=null, context={}) {
+  const selected=current||(()=>{try{return newsFeedLeadEvent();}catch{return null;}})();
+  const base=newsMarketCausalRole40234(selected,context);
+  if(!selected) return {schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"no-event",base,causal_claim:false,external_ai_used:false};
+  const contextEvents=newsMarketContextEvents40235(selected,context?.events);
+  const rawAmplifier=newsMarketBestRawRole40235([selected,...contextEvents],[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_up,NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_down]);
+  const technical=newsMarketBestRawRole40235([selected],[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.technical_trigger]);
+  const catalyst=newsMarketInitialCatalyst40235(selected,contextEvents);
+  const flow=newsMarketDemandContext40235(selected,contextEvents);
+  const adjustedBase={...base,amplifier:rawAmplifier||base?.amplifier||null,technical_trigger:technical||base?.technical_trigger||null,catalyst};
+  const mechanism=newsMarketMechanism40235(adjustedBase);
+  const facts=newsMarketExtractFacts40235(selected);
+  const supporting=newsMarketSupportingAmplifiers40235(selected,contextEvents);
+  const confirmation=newsMarketCurrentMarketConfirmation40235(selected,adjustedBase);
+  const role=adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:flow?`FLUX ${flow.direction}`:technical?"DÉCLENCHEUR TECHNIQUE":catalyst?"CATALYSEUR POSSIBLE":"RÔLE NON QUALIFIÉ";
+  return {
+    schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"observed",event:selected,
+    base:adjustedBase,facts,mechanism,initial_catalyst:catalyst,technical_trigger:technical,flow,supporting_amplifiers:supporting,market_confirmation:confirmation,
+    verdict:{role,amplifier:adjustedBase.amplifier?"PLAUSIBLE":"NON DÉMONTRÉ",initial_catalyst:catalyst?"POSSIBLE":"NON IDENTIFIÉ",context:flow?"POSSIBLE":"NON QUALIFIÉ",causality:"NON ÉTABLIE"},
+    causal_claim:false,causal_probability:null,external_ai_used:false,network_request_added:false,timer_added:false,storage_write_added:false
+  };
+}
+
+function newsMarketSupportingAmountLine40235(narrative){
+  const labels=[];
+  for(const row of narrative?.supporting_amplifiers||[]) for(const amount of row?.facts?.amounts||[]) if(!labels.includes(amount)) labels.push(amount);
+  const billion=labels.filter(label=>/Md\$/.test(label)); const shown=(billion.length?billion:labels).slice(0,4);
+  return shown.length?`Montants de liquidation / paris baissiers mentionnés : ${shown.join(" · ")} · articles potentiellement redondants, montants non additionnés automatiquement.`:"Aucun montant supplémentaire qualifié dans les articles liés.";
+}
+
+function renderNewsMarketOperatorIntelligence40235(current=null){
+  const n=newsMarketOperatorIntelligence40235(current);
+  const root=document.getElementById("newsMarketOperatorIntelligence40235"); if(!root)return n;
+  const set=(id,v)=>{const node=document.getElementById(id);if(node)node.textContent=String(v??"—");};
+  if(n.status!=="observed"){
+    set("newsMarketEventFact40235","Aucun événement principal qualifié.");set("newsMarketEventProof40235","News Sentinel en attente.");
+    set("newsMarketMechanismTitle40235","MÉCANISME NON QUALIFIÉ");set("newsMarketExplains40235","Aucune explication produite sans événement.");set("newsMarketDoesNotExplain40235","Aucune causalité inventée.");
+    set("newsMarketDemand40235","NON QUALIFIÉ");set("newsMarketDemandNote40235","Aucun contexte de flux détecté.");set("newsMarketMarketConfirmation40235","Marché à comparer.");set("newsMarketVerdict40235","INFORMATION INSUFFISANTE");set("newsMarketVerdictNote40235","Causalité non évaluable.");
+    const steps=document.getElementById("newsMarketMechanismSteps40235");if(steps)steps.replaceChildren(); root.dataset.state="no-event"; return n;
+  }
+  const proof=n.base?.amplifier?.evidence||newsMarketEvidence40234(n.event);
+  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||n.event?.headline||"Événement qualifié");
+  set("newsMarketEventProof40235",`${n.event?.source_name||n.event?.source_host||"Source"} · preuve ${String(proof?.level||"inconnue").toLowerCase()}${proof?.score!=null?` · ${proof.score}/100`:""} · ${newsMarketSupportingAmountLine40235(n)}`);
+  set("newsMarketMechanismTitle40235",`${n.mechanism.title} · ${n.mechanism.direction}`);
+  const steps=document.getElementById("newsMarketMechanismSteps40235"); if(steps){steps.replaceChildren();(n.mechanism.steps||[]).forEach((label,index)=>{const li=document.createElement("li");li.dataset.step=String(index+1);const span=document.createElement("span");span.textContent=label;li.appendChild(span);steps.appendChild(li);});}
+  set("newsMarketExplains40235",n.mechanism.explains);
+  set("newsMarketDoesNotExplain40235",n.initial_catalyst?`Un catalyseur distinct est seulement classé POSSIBLE : ${n.initial_catalyst.label}. Cela ne prouve pas qu’il a déclenché le mouvement.`:n.mechanism.does_not_explain);
+  set("newsMarketDemand40235",n.flow?`${n.flow.label} · ${n.flow.direction} · À CONFIRMER`:"NON QUALIFIÉ");
+  set("newsMarketDemandNote40235",n.flow?`${newsMarketRoleEvidenceLine40234(n.flow)} · facteur de contexte possible, pas cause démontrée.`:"Aucun flux demande/offre explicite suffisamment lié à l’actif n’est détecté dans l’archive chargée.");
+  set("newsMarketMarketConfirmation40235",`${n.market_confirmation.breadth} · ${n.market_confirmation.focus} · ${n.market_confirmation.tone}.`);
+  set("newsMarketVerdict40235",`${n.verdict.role} · ${n.verdict.amplifier}`);
+  set("newsMarketVerdictNote40235",`Catalyseur initial : ${n.verdict.initial_catalyst} · contexte favorable : ${n.verdict.context} · causalité globale : ${n.verdict.causality}.`);
+  root.dataset.state="observed"; root.dataset.direction=String(n.mechanism.direction||"indéterminé").toLowerCase();
+  if(typeof renderNewsMarketReactionTimeline40236==="function") renderNewsMarketReactionTimeline40236(n.event,n);
+  if(typeof renderNewsMarketRoleQuality40237==="function") renderNewsMarketRoleQuality40237(n.event,n);
+  if(typeof renderNewsMarketCrossLayer40238==="function") renderNewsMarketCrossLayer40238(n.event,{narrative:n});
+  return n;
+}
+
+function atlasRenderOracleNewsContext40235(model=null,coin=null){
+  if(typeof atlasRenderOracleNewsContext40239==="function") return atlasRenderOracleNewsContext40239(model,coin);
+  const base=atlasRenderOracleNewsContext40234(model,coin);
+  const detail=document.getElementById("atlasOracleNewsDetail40235"); if(!detail)return base;
+  let symbol=null; try{const aggregate=atlasOracleV0AssetId===ATLAS_ORACLE_TOP5_FOCUS||Boolean(model?.aggregate);const selected=coin||(!aggregate&&typeof atlasOracleSelectCoin==="function"?atlasOracleSelectCoin():null);symbol=aggregate?"TOP 5":String(selected?.symbol||selected?.name||"").toUpperCase();}catch{}
+  const event=newsMarketEventForOracle40234(symbol); const n=newsMarketOperatorIntelligence40235(event);
+  detail.textContent=n.status==="observed"?`${n.mechanism.explains} Catalyseur initial : ${n.verdict.initial_catalyst}. Causalité : ${n.verdict.causality}.`:"Aucune explication News→Marché qualifiée.";
+  return n;
+}
+
+globalThis.AtlasNewsToMarketOperatorIntelligence40235=Object.freeze({compute:newsMarketOperatorIntelligence40235,render:renderNewsMarketOperatorIntelligence40235,oracle_context:atlasRenderOracleNewsContext40235,deterministic:true,code_only:true,external_ai_used:false,causal_claim:false,network_request_added:false,timer_added:false,websocket_added:false,storage_write_added:false});
+
+
+
+/* ============================================================
+   40.2.36 — EVENT REACTION TIMELINE
+   Reads only already-cached historical chart series. No fetch.
+   Anchors descriptive price observations around the news timestamp.
+   ============================================================ */
+function newsMarketMedianStep40236(series){const diffs=[];for(let i=1;i<(series||[]).length;i++){const d=Number(series[i]?.[0])-Number(series[i-1]?.[0]);if(Number.isFinite(d)&&d>0)diffs.push(d);}diffs.sort((a,b)=>a-b);return diffs.length?diffs[Math.floor(diffs.length/2)]:null;}
+function newsMarketNearestPoint40236(series,targetTs,toleranceMs){let best=null,bestGap=Infinity;for(const p of series||[]){const ts=Number(p?.[0]),price=Number(p?.[1]);if(!Number.isFinite(ts)||!Number.isFinite(price)||price<=0)continue;const gap=Math.abs(ts-targetTs);if(gap<bestGap){best={ts,price,gap};bestGap=gap;}}return best&&best.gap<=toleranceMs?best:null;}
+function newsMarketHistoricalSeries40236(event){
+  const symbol=(event?.assets||[]).map(v=>String(v).toUpperCase())[0]||null; if(!symbol)return {status:"missing-asset",symbol:null};
+  let coin=null;try{coin=findCoinByQuery(symbol);}catch{} if(!coin)return {status:"coin-unavailable",symbol};
+  const eventTs=newsMarketEventTime40234(event); if(!eventTs)return {status:"timestamp-unavailable",symbol,coin};
+  const candidates=[];
+  for(const days of [1,7,30]) for(const family of ["binance","coingecko"]){let result=null;try{result=atlasGetStoredChartResult(coin,days,family);}catch{} if(result?.series?.length){const series=result.series;const first=Number(series[0]?.[0]),last=Number(series[series.length-1]?.[0]);if(Number.isFinite(first)&&Number.isFinite(last)&&eventTs>=first&&eventTs<=last)candidates.push({days,family,result,series,step:newsMarketMedianStep40236(series)||Infinity});}}
+  candidates.sort((a,b)=>a.step-b.step||a.days-b.days); const best=candidates[0]||null;
+  return best?{status:"ready",symbol,coin,eventTs,...best}:{status:"outside-cache",symbol,coin,eventTs};
+}
+function newsMarketReactionTimeline40236(event=null,narrative=null){
+  const selected=event||narrative?.event||(()=>{try{return newsFeedLeadEvent();}catch{return null;}})(); if(!selected)return {schema:"atlas.news_reaction_timeline.v1",build:"40.2.36",status:"no-event",causal_claim:false};
+  const hist=newsMarketHistoricalSeries40236(selected); if(hist.status!=="ready")return {schema:"atlas.news_reaction_timeline.v1",build:"40.2.36",status:hist.status,symbol:hist.symbol||null,event_time:selected?.event_time||null,causal_claim:false,fetch_added:false};
+  const step=Number.isFinite(hist.step)?hist.step:5*60*1000; const tolerance=Math.max(12*60*1000,step*1.7); const t0=newsMarketNearestPoint40236(hist.series,hist.eventTs,tolerance);
+  if(!t0)return {schema:"atlas.news_reaction_timeline.v1",build:"40.2.36",status:"t0-missing",symbol:hist.symbol,event_time:selected?.event_time||null,source_family:hist.family,causal_claim:false,fetch_added:false};
+  const specs=[[-15,"T−15 min"],[0,"T0"],[15,"T+15 min"],[60,"T+1 h"],[240,"T+4 h"]];
+  const points=specs.map(([minutes,label])=>{const p=newsMarketNearestPoint40236(hist.series,hist.eventTs+minutes*60000,tolerance);const delta=p&&t0?((p.price-t0.price)/t0.price)*100:null;return {minutes,label,ts:p?.ts||null,price:p?.price||null,delta_pct:Number.isFinite(delta)?delta:null,gap_ms:p?.gap??null};});
+  const n=narrative||newsMarketOperatorIntelligence40235(selected); const direction=String(n?.mechanism?.direction||n?.base?.amplifier?.direction||"").toUpperCase(); const expected=direction.includes("HAUSS")||direction.includes("DEMANDE")?1:direction.includes("BAISS")||direction.includes("OFFRE")?-1:0;
+  const preferred=[60,15,240].map(m=>points.find(p=>p.minutes===m&&Number.isFinite(p.delta_pct))).find(Boolean)||null; let alignment="NON QUALIFIÉ";
+  if(preferred&&expected){if(Math.abs(preferred.delta_pct)<0.05)alignment="RÉACTION FAIBLE / QUASI NEUTRE";else alignment=Math.sign(preferred.delta_pct)===expected?"ALIGNÉE":"CONTRADICTOIRE";}
+  return {schema:"atlas.news_reaction_timeline.v1",build:"40.2.36",status:"ready",symbol:hist.symbol,event_time:selected?.event_time||null,source_family:hist.family,period_days:hist.days,median_step_ms:Number.isFinite(hist.step)?hist.step:null,t0_price:t0.price,points,alignment,alignment_basis:preferred?.label||null,alignment_delta_pct:preferred?.delta_pct??null,expected_direction:expected>0?"HAUSSIER":expected<0?"BAISSIER":"INDÉTERMINÉ",causal_claim:false,fetch_added:false,timer_added:false,storage_write_added:false};
+}
+function newsMarketFmtTimelinePct40236(v){return Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(2)} %`:"—";}
+function newsMarketFmtTimelinePrice40236(v){return Number.isFinite(Number(v))?new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:Number(v)<10?4:2}).format(Number(v)):"—";}
+function renderNewsMarketReactionTimeline40236(event=null,narrative=null){const root=document.getElementById("newsMarketReactionTimeline40236");if(!root)return null;const t=newsMarketReactionTimeline40236(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");}; if(t.status!=="ready"){set("newsMarketTimelineState40236","DONNÉES HISTORIQUES INSUFFISANTES");set("newsMarketTimelineMeta40236",`${t.symbol||"Actif"} · ${t.status} · aucun fetch ajouté`);for(const key of ["M15","T0","P15","P60","P240"])set(`newsMarketTimeline${key}40236`,"—");set("newsMarketTimelineAlignment40236","NON QUALIFIÉ");set("newsMarketTimelineAlignmentNote40236","La série déjà en cache ne couvre pas suffisamment le timestamp ; aucune réaction n’est inventée.");root.dataset.state="missing";return t;} set("newsMarketTimelineState40236",`${t.symbol} · réaction autour de T0`);set("newsMarketTimelineMeta40236",`${new Date(t.event_time).toLocaleString("fr-FR")} · cache ${t.source_family} · pas médian ${Math.round((t.median_step_ms||0)/60000)||"—"} min`);const map={"-15":"M15","0":"T0","15":"P15","60":"P60","240":"P240"};for(const p of t.points||[]){const key=map[String(p.minutes)];if(!key)continue;set(`newsMarketTimeline${key}40236`,p.minutes===0?`${newsMarketFmtTimelinePrice40236(p.price)} · base`:newsMarketFmtTimelinePct40236(p.delta_pct));}set("newsMarketTimelineAlignment40236",t.alignment);set("newsMarketTimelineAlignmentNote40236",`${t.alignment_basis||"Fenêtre"} ${newsMarketFmtTimelinePct40236(t.alignment_delta_pct)} · direction attendue ${t.expected_direction.toLowerCase()} · proximité temporelle ≠ causalité.`);root.dataset.state="ready";root.dataset.alignment=String(t.alignment||"").toLowerCase();return t;}
+globalThis.AtlasNewsMarketReactionTimeline40236=Object.freeze({compute:newsMarketReactionTimeline40236,render:renderNewsMarketReactionTimeline40236,local_cache_only:true,fetch_added:false,causal_claim:false,timer_added:false,storage_write_added:false});
+
+
+
+/* 40.2.37 — ROLE EVIDENCE QUALITY · quality of the reading, never causal probability. */
+function newsMarketUniqueRoleSources40237(narrative){const set=new Set();for(const r of narrative?.supporting_amplifiers||[]){const s=String(r?.source_name||"").trim().toLowerCase();if(s)set.add(s);}if(!set.size&&narrative?.event?.source_name)set.add(String(narrative.event.source_name).toLowerCase());return set.size;}
+function newsMarketRoleQuality40237(event=null,narrative=null){const n=narrative||newsMarketOperatorIntelligence40235(event);if(n?.status!=="observed")return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"no-event",causal_probability:null};const e=n.base?.amplifier?.evidence||newsMarketEvidence40234(n.event);const sourceEvidence=Math.max(0,Math.min(30,(Number(e?.score)||0)*.30));const independentSources=newsMarketUniqueRoleSources40237(n);const confirmations=Math.min(15,(Math.min(independentSources,3)/3)*15);const timestamp=newsMarketEventTime40234(n.event)?10:0;const asset=(n.event?.assets||[]).length?10:0;const mechanism=n.base?.amplifier||n.flow||n.technical_trigger?15:0;const timeline=typeof newsMarketReactionTimeline40236==="function"?newsMarketReactionTimeline40236(n.event,n):null;const timelinePoints=timeline?.status==="ready"?(timeline.points||[]).filter(p=>Number.isFinite(p?.price)).length:0;const timelineScore=timelinePoints>=4?10:timelinePoints>=2?5:0;const market=n.market_confirmation?.count>=5?10:n.market_confirmation?.count?5:0;const total=Math.round((sourceEvidence+confirmations+timestamp+asset+mechanism+timelineScore+market)*10)/10;const label=total>=85?"FORTE":total>=65?"ÉLEVÉE":total>=45?"MOYENNE":"FAIBLE";return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"ready",score:total,label,components:{source_evidence:{points:sourceEvidence,max:30,detail:`preuve source ${e?.score??"—"}/100`},independent_sources:{points:confirmations,max:15,detail:`${independentSources} source${independentSources>1?"s":""} distincte${independentSources>1?"s":""} détectée${independentSources>1?"s":""}`},timestamp:{points:timestamp,max:10,detail:timestamp?"timestamp exploitable":"timestamp absent"},asset:{points:asset,max:10,detail:asset?"actif explicite":"actif absent"},mechanism:{points:mechanism,max:15,detail:mechanism?n.mechanism?.title||"mécanisme explicite":"mécanisme non qualifié"},timeline:{points:timelineScore,max:10,detail:`${timelinePoints}/5 points temporels disponibles`},market:{points:market,max:10,detail:n.market_confirmation?.breadth||"marché indisponible"}},causal_probability:null,causal_probability_calculated:false,causal_claim:false};}
+function renderNewsMarketRoleQuality40237(event=null,narrative=null){const root=document.getElementById("newsMarketRoleQuality40237");if(!root)return null;const q=newsMarketRoleQuality40237(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(q.status!=="ready"){set("newsMarketRoleQualityScore40237","INFORMATION INSUFFISANTE");set("newsMarketRoleQualityNote40237","Aucun score causal n’est calculé.");root.dataset.state="missing";return q;}set("newsMarketRoleQualityScore40237",`${q.label} · ${q.score.toFixed(1)}/100`);set("newsMarketRoleQualityNote40237","Solidité de la lecture du rôle · ce score n’est PAS une probabilité de causalité.");for(const [key,row] of Object.entries(q.components)){set(`newsMarketRoleQuality_${key}_40237`,`${row.points.toFixed(1)}/${row.max}`);set(`newsMarketRoleQuality_${key}_note_40237`,row.detail);}set("newsMarketCausalProbability40237","NON CALCULÉE");root.dataset.state="ready";root.dataset.quality=q.label.toLowerCase();return q;}
+globalThis.AtlasNewsMarketRoleQuality40237=Object.freeze({compute:newsMarketRoleQuality40237,render:renderNewsMarketRoleQuality40237,causal_probability_calculated:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
+
+
+
+/* 40.2.38 — CROSS-LAYER MARKET EXPLANATION · compare independent layers, never force agreement. */
+function newsMarketText40238(id){return String(document.getElementById(id)?.textContent||"").trim();}
+function newsMarketCrossLayer40238(event=null,context={}){const n=context?.narrative||newsMarketOperatorIntelligence40235(event);if(n?.status!=="observed")return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"no-event",causal_claim:false};const timeline=typeof newsMarketReactionTimeline40236==="function"?newsMarketReactionTimeline40236(n.event,n):null;const quality=typeof newsMarketRoleQuality40237==="function"?newsMarketRoleQuality40237(n.event,n):null;const model=context?.model||null;const oracleBias=String(model?.bias||newsMarketText40238("atlasOracleHeroBias")||"INDISPONIBLE").toUpperCase();const oracleBull=Number.isFinite(Number(model?.bullStrength))?`Force hausse ${model.bullStrength}/100`:newsMarketText40238("atlasOracleBull")||"Oracle indisponible";const oracleRegime=newsMarketText40238("atlasOracleRegimeStatus")||"Régime indisponible";const atlasLine=Number.isFinite(Number(model?.directionScore))?`Momentum ${model?.atlas||""} · direction ${model.directionScore>=0?"+":""}${model.directionScore}/100`:newsMarketText40238("atlasOracleAtlas")||"Atlas indisponible";const newsDir=String(n.mechanism?.direction||"").toUpperCase();const marketPositive=Number(n.market_confirmation?.positive||0)>Number(n.market_confirmation?.negative||0);const newsBull=newsDir.includes("HAUSS");const newsBear=newsDir.includes("BAISS");const oracleBullish=oracleBias.includes("HAUSS");const oracleBearish=oracleBias.includes("BAISS");const atlasBullish=/momentum positif|direction \+/i.test(atlasLine);const atlasBearish=/momentum négatif|direction -/i.test(atlasLine);let convergence="COUVERTURE PARTIELLE";if(newsBull&&marketPositive&&oracleBullish&&atlasBullish)convergence="CONVERGENCE DESCRIPTIVE HAUSSIÈRE";else if(newsBear&&!marketPositive&&oracleBearish&&atlasBearish)convergence="CONVERGENCE DESCRIPTIVE BAISSIÈRE";else if((newsBull&&oracleBearish)||(newsBear&&oracleBullish))convergence="LECTURE MIXTE / CONTRADICTOIRE";else if(newsBull||newsBear)convergence="CONVERGENCE PARTIELLE";return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"ready",layers:{news:`${n.mechanism?.title||"Rôle non qualifié"} · ${n.mechanism?.direction||"indéterminé"}`,reaction:timeline?.status==="ready"?`${timeline.alignment} · ${timeline.alignment_basis||"fenêtre"} ${newsMarketFmtTimelinePct40236(timeline.alignment_delta_pct)}`:"Timeline indisponible",market:`${n.market_confirmation?.breadth||"Top 5 indisponible"} · ${n.market_confirmation?.focus||"actif indisponible"}`,oracle:`${oracleBias} · ${oracleRegime} · ${oracleBull}`,atlas:atlasLine},quality:quality?.status==="ready"?`${quality.label} · ${quality.score.toFixed(1)}/100`:"non qualifiée",convergence,conclusion:`${convergence}. Les couches restent indépendantes ; cohérence descriptive ≠ cause démontrée.`,causal_claim:false};}
+function renderNewsMarketCrossLayer40238(event=null,context={}){const root=document.getElementById("newsMarketCrossLayer40238");if(!root)return null;const x=newsMarketCrossLayer40238(event,context);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(x.status!=="ready"){set("newsMarketCrossLayerVerdict40238","INFORMATION INSUFFISANTE");root.dataset.state="missing";return x;}for(const key of ["news","reaction","market","oracle","atlas"])set(`newsMarketCrossLayer_${key}_40238`,x.layers[key]);set("newsMarketCrossLayerQuality40238",x.quality);set("newsMarketCrossLayerVerdict40238",x.convergence);set("newsMarketCrossLayerNote40238",x.conclusion);set("decisionNewsExplanation40238",`${x.convergence} · causalité non établie`);root.dataset.state="ready";root.dataset.convergence=x.convergence.toLowerCase();return x;}
+globalThis.AtlasNewsMarketCrossLayer40238=Object.freeze({compute:newsMarketCrossLayer40238,render:renderNewsMarketCrossLayer40238,independent_layers:true,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
+
+
+
+/* 40.2.39 — ORACLE NEWS CONTEXT INTEGRATION · compact context, News Sentinel remains source of truth. */
+function atlasRenderOracleNewsContext40239(model=null,coin=null){const root=document.getElementById("atlasOracleNewsContext40234"),role=document.getElementById("atlasOracleNewsRole40234"),causal=document.getElementById("atlasOracleNewsCausality40234"),detail=document.getElementById("atlasOracleNewsDetail40235"),qualityNode=document.getElementById("atlasOracleNewsQuality40239"),timelineNode=document.getElementById("atlasOracleNewsTimeline40239");if(!root||!role||!causal)return null;let symbol=null;try{const aggregate=atlasOracleV0AssetId===ATLAS_ORACLE_TOP5_FOCUS||Boolean(model?.aggregate);const selected=coin||(!aggregate&&typeof atlasOracleSelectCoin==="function"?atlasOracleSelectCoin():null);symbol=aggregate?"TOP 5":String(selected?.symbol||selected?.name||"").toUpperCase();}catch{}const event=newsMarketEventForOracle40234(symbol);const n=newsMarketOperatorIntelligence40235(event);if(n.status!=="observed"){role.textContent=symbol?`Aucune news qualifiée pour ${symbol}`:"Aucune news qualifiée";if(detail)detail.textContent="News Sentinel ne fournit aucun mécanisme explicatif qualifié.";if(qualityNode)qualityNode.textContent="Solidité —";if(timelineNode)timelineNode.textContent="Timeline —";causal.textContent="Causalité non évaluée · News Sentinel reste la source de vérité.";root.dataset.state="neutral";return n;}const t=newsMarketReactionTimeline40236(n.event,n);const q=newsMarketRoleQuality40237(n.event,n);const x=newsMarketCrossLayer40238(n.event,{narrative:n,model});role.textContent=`${n.mechanism.title} · ${n.verdict.role}`;const amounts=[];for(const r of n.supporting_amplifiers||[])for(const a of r?.facts?.amounts||[])if(!amounts.includes(a))amounts.push(a);const preferredAmounts=(amounts.filter(a=>/Md\$/.test(a)).length?amounts.filter(a=>/Md\$/.test(a)):amounts).slice(0,3);if(detail)detail.textContent=`${preferredAmounts.length?`${preferredAmounts.join(" · ")} mentionné${preferredAmounts.length>1?"s":""} · `:""}${n.mechanism.explains} Catalyseur initial : ${n.verdict.initial_catalyst}.`;if(qualityNode)qualityNode.textContent=q.status==="ready"?`Solidité ${q.label} · ${q.score.toFixed(1)}/100 · pas une probabilité causale`:"Solidité non qualifiée";if(timelineNode)timelineNode.textContent=t.status==="ready"?`Réaction ${t.alignment.toLowerCase()} · ${t.alignment_basis||"fenêtre"} ${newsMarketFmtTimelinePct40236(t.alignment_delta_pct)}`:"Réaction temporelle non disponible";causal.textContent=`${x.status==="ready"?`${x.convergence} · `:""}causalité globale NON ÉTABLIE · détails dans News Sentinel`;root.dataset.state="active";if(typeof renderNewsMarketCrossLayer40238==="function")renderNewsMarketCrossLayer40238(n.event,{narrative:n,model});return {narrative:n,timeline:t,quality:q,cross_layer:x};}
+globalThis.AtlasOracleNewsContextIntegration40239=Object.freeze({render:atlasRenderOracleNewsContext40239,source_of_truth:"news-sentinel",compact_summary_only:true,oracle_model_modified:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
+
+
 function newsCurrentEvent(manualEvent = null) {
   if (manualEvent) return manualEvent;
   return newsFeedLeadEvent() || readNewsEvents().slice(-1)[0] || null;
@@ -18863,7 +19141,9 @@ function renderNewsSentinel(event = null) {
       bridge.dataset.state = newsFeedState.status;
     }
     renderNewsMarketDrivers40234(null);
+    renderNewsMarketOperatorIntelligence40235(null);
     atlasRenderOracleNewsContext40234();
+    atlasRenderOracleNewsContext40235();
     renderNewsHistory(manualEvents);
     return;
   }
@@ -18895,7 +19175,9 @@ function renderNewsSentinel(event = null) {
     bridge.dataset.state = "active";
   }
   renderNewsMarketDrivers40234(current);
+  renderNewsMarketOperatorIntelligence40235(current);
   atlasRenderOracleNewsContext40234();
+  atlasRenderOracleNewsContext40235();
   renderNewsHistory(manualEvents, current.origin === "github_news_collector" ? null : current.id);
 }
 
@@ -45521,7 +45803,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.34";
+const ATLAS_BUILD = "40.2.40";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

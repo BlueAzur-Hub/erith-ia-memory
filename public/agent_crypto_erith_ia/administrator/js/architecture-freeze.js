@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.34 — PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET CAUSAL ROLE ENGINE LOCK
+     40.2.40 — PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET CAUSAL ROLE ENGINE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.34";
+  const BUILD_CURRENT = "40.2.40";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -985,6 +985,53 @@
           && Boolean(document.getElementById("newsMarketDrivers40234"))
           && Boolean(document.getElementById("atlasOracleNewsContext40234")),
         "catalyseur/amplificateur/flux/réaction séparés · causalité toujours non établie · archive+marché existants uniquement · zéro IA/réseau/timer"),
+      check("News-to-Market Operator Intelligence 40.2.35",
+        globalThis.ErithNewsToMarketOperatorIntelligenceContract40235?.deterministic_local === true
+          && globalThis.ErithNewsToMarketOperatorIntelligenceContract40235?.explanatory_layer_added === true
+          && globalThis.ErithNewsToMarketOperatorIntelligenceContract40235?.causal_claim_allowed === false
+          && globalThis.AtlasNewsToMarketOperatorIntelligence40235?.external_ai_used === false
+          && Boolean(document.getElementById("newsMarketOperatorIntelligence40235")),
+        "faits + mécanisme + ce que cela explique/n’explique pas + contexte demande + verdict · aucune IA externe"),
+
+      check("Event Reaction Timeline 40.2.36",
+        globalThis.ErithEventReactionTimelineContract40236?.local_chart_cache_only === true
+          && globalThis.ErithEventReactionTimelineContract40236?.fetch_added === false
+          && globalThis.ErithEventReactionTimelineContract40236?.causality_inferred === false
+          && globalThis.AtlasNewsMarketReactionTimeline40236?.local_cache_only === true
+          && Boolean(document.getElementById("newsMarketReactionTimeline40236")),
+        "T−15/T0/+15/+1h/+4h depuis cache historique existant · aucun fetch · causalité non inférée"),
+
+      check("Role Evidence Quality 40.2.37",
+        globalThis.ErithRoleEvidenceQualityContract40237?.role_quality_not_causal_probability === true
+          && globalThis.ErithRoleEvidenceQualityContract40237?.causal_probability_calculated === false
+          && globalThis.AtlasNewsMarketRoleQuality40237?.causal_probability_calculated === false
+          && Boolean(document.getElementById("newsMarketRoleQuality40237")),
+        "solidité transparente du rôle · probabilité de causalité NON CALCULÉE"),
+
+      check("Cross-Layer Market Explanation 40.2.38",
+        globalThis.ErithCrossLayerMarketExplanationContract40238?.independent_layers_preserved === true
+          && globalThis.ErithCrossLayerMarketExplanationContract40238?.news_market_oracle_atlas_compared_not_fused === true
+          && globalThis.ErithCrossLayerMarketExplanationContract40238?.causal_claim_allowed === false
+          && globalThis.AtlasNewsMarketCrossLayer40238?.independent_layers === true
+          && Boolean(document.getElementById("newsMarketCrossLayer40238")),
+        "News + réaction + marché + Oracle + Atlas comparés sans fusion/recalibrage · convergence descriptive seulement"),
+
+      check("Oracle News Context Integration 40.2.39",
+        globalThis.ErithOracleNewsContextIntegrationContract40239?.source_of_truth === "news-sentinel"
+          && globalThis.ErithOracleNewsContextIntegrationContract40239?.oracle_forecast_math_changed === false
+          && globalThis.AtlasOracleNewsContextIntegration40239?.compact_summary_only === true
+          && Boolean(document.getElementById("atlasOracleNewsQuality40239"))
+          && Boolean(document.getElementById("atlasOracleNewsTimeline40239")),
+        "résumé compact rôle + timeline + solidité dans Oracle · News Sentinel reste source de vérité · calcul Oracle inchangé"),
+
+      check("News-to-Market Final Lock 40.2.40",
+        globalThis.ErithNewsToMarketFinalLockContract40240?.final_lock === true
+          && globalThis.ErithNewsToMarketFinalLockContract40240?.css_fit_overflow_responsive_only === true
+          && globalThis.ErithNewsToMarketFinalLockContract40240?.new_intelligence_added === false
+          && globalThis.ErithNewsToMarketFinalLockContract40240?.oracle_v2_changed === false
+          && globalThis.ErithNewsToMarketFinalLockContract40240?.window_manager_modified === false,
+        "final fit/overflow/responsive · cumulative 40.2.35→40.2.39 préservée · aucun moteur modifié"),
+
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
           && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"
