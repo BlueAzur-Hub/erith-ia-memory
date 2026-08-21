@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.27 — PARKER LEWIS CAN'T LOSE · WORKSPACE RUNTIME CONTRACT CHECKPOINT LOCK
+     40.2.28 — PARKER LEWIS CAN'T LOSE · STORAGE LINEAGE DECISION LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.27";
+  const BUILD_CURRENT = "40.2.28";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -882,6 +882,16 @@
           && !!byId("btnAtlasStorageLineage40224")
           && !!byId("atlasStorageLineage40224"),
         "audit opérateur différé · aucune suppression automatique"),
+      check("Storage Lineage Decision 40.2.28",
+        globalThis.ErithStorageLineageDecisionContract40228?.operator_triggered_only === true
+          && globalThis.ErithStorageLineageDecisionContract40228?.read_only === true
+          && globalThis.ErithStorageLineageDecisionContract40228?.automatic_boot_scan === false
+          && globalThis.ErithStorageLineageDecisionContract40228?.deletion_enabled === false
+          && globalThis.ErithStorageLineageDecisionContract40228?.retirement_gate === "CLOSED"
+          && globalThis.ErithStorageLineageDecisionContract40228?.no_exact_reference_is_not_retirement_proof === true
+          && globalThis.AtlasStorageLineageDecision40228?.deletion_enabled === false
+          && globalThis.AtlasStorageLineageDecision40228?.retirement_gate === "CLOSED",
+        "audit décisionnel opérateur · ACTIVE/LEGACY/MIGRATED/REVIEW · RETIRABLE_PROVEN fermé · aucune suppression"),
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
           && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"

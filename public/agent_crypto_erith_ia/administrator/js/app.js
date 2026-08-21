@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.27";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · WORKSPACE RUNTIME CONTRACT CHECKPOINT LOCK";
+  const ADMIN_BUILD = "40.2.28";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · STORAGE LINEAGE DECISION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -25,6 +25,28 @@
     evidence_basis: Object.freeze(["40.2.25 runtime visibility", "40.2.26 reduced/collapsed attribution"])
   });
   globalThis.ErithWorkspaceRuntimeContract40227 = WORKSPACE_RUNTIME_CONTRACT_40227;
+
+  const STORAGE_LINEAGE_DECISION_CONTRACT_40228 = Object.freeze({
+    build: "40.2.28",
+    operator_triggered_only: true,
+    read_only: true,
+    automatic_boot_scan: false,
+    automatic_cleanup: false,
+    deletion_enabled: false,
+    migration_enabled: false,
+    retirement_gate: "CLOSED",
+    decision_states: Object.freeze(["ACTIVE", "ACTIVE_LEGACY", "MIGRATED", "REVIEW_REQUIRED", "RETIRABLE_PROVEN"]),
+    no_exact_reference_is_not_retirement_proof: true,
+    retirable_proven_requires_positive_non_ownership_proof: true,
+    current_business_reference_ledger: true,
+    storage_write_added: false,
+    network_request_added: false,
+    timer_added: false,
+    performance_optimization_added: false,
+    window_manager_modified: false,
+    runtime_checkpoint_40_2_27_preserved: true
+  });
+  globalThis.ErithStorageLineageDecisionContract40228 = STORAGE_LINEAGE_DECISION_CONTRACT_40228;
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);

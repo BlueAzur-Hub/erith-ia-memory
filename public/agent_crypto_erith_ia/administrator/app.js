@@ -6386,7 +6386,7 @@ function atlasRuntimeWindowSnapshot40225(){
 function atlasRuntimeNavigationSnapshot40214(){let nav=null;try{nav=(performance.getEntriesByType("navigation")||[])[0]||null;}catch{}const positive=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;let type=String(nav?.type||"");if(!type){try{type=performance?.navigation?.type===1?"reload":performance?.navigation?.type===2?"back_forward":"navigate";}catch{type="unknown";}}return {type:type||"unknown",dom_content_loaded_ms:positive(nav?.domContentLoadedEventEnd),load_ms:positive(nav?.loadEventEnd),dom_interactive_ms:positive(nav?.domInteractive),response_end_ms:positive(nav?.responseEnd),transfer_size:Number.isFinite(Number(nav?.transferSize))?Number(nav.transferSize):null,decoded_body_size:Number.isFinite(Number(nav?.decodedBodySize))?Number(nav.decodedBodySize):null};}
 function atlasRuntimeResourceSnapshot40214(){let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const sum=k=>entries.reduce((a,e)=>{const v=Number(e?.[k]);return a+(Number.isFinite(v)&&v>0?v:0);},0);const measured=k=>entries.filter(e=>Number.isFinite(Number(e?.[k]))&&Number(e[k])>0).length;const largest=entries.map(e=>({name:String(e?.name||""),initiator_type:String(e?.initiatorType||""),transfer_size:Number(e?.transferSize)||0,decoded_body_size:Number(e?.decodedBodySize)||0,duration_ms:Number(e?.duration)||0})).sort((a,b)=>Math.max(b.transfer_size,b.decoded_body_size)-Math.max(a.transfer_size,a.decoded_body_size)).slice(0,5);return {resource_requests_total:entries.length,transfer_bytes_measured:sum("transferSize"),transfer_entries_measured:measured("transferSize"),decoded_bytes_measured:sum("decodedBodySize"),decoded_entries_measured:measured("decodedBodySize"),largest_resources:largest};}
 function atlasRuntimeView40214(){const raw=String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");if(raw)return raw;try{return typeof atlasV2Mode==="function"?atlasV2Mode():"unknown";}catch{return "unknown";}}
-function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.27"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
+function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.28"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
 function atlasRuntimeFmtMs40214(v){return Number.isFinite(Number(v))?`${Math.round(Number(v))} ms`:"—";}
 function atlasRuntimeVisibilityLabel40225(row){return row?`${Number(row.calls||0)}×/${atlasRuntimeFmtMs40214(row.total_ms)}`:"0×/0 ms";}
 /* 40.2.26 — REDUCED / COLLAPSED RUNTIME ATTRIBUTION LOCK
@@ -44772,9 +44772,84 @@ function atlasStorageLineageExport40224(){
   atlasOracleBackupDownload(`agent_crypto_storage_lineage_v2_${String(ATLAS_BUILD).replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(audit,null,2));
   return audit;
 }
-document.getElementById("btnAtlasStorageLineage40224")?.addEventListener("click",()=>atlasStorageLineageRender40224());
-document.getElementById("btnAtlasStorageLineageExport40224")?.addEventListener("click",()=>atlasStorageLineageExport40224());
 globalThis.AtlasStorageLineage40224=Object.freeze({audit:atlasStorageLineageAudit40224,render:atlasStorageLineageRender40224,exportJson:atlasStorageLineageExport40224,automatic_cleanup:false,deletion_enabled:false});
+
+/* ============================================================
+   40.2.28 — STORAGE LINEAGE DECISION LOCK
+   Operator-triggered, read-only decision layer over Lineage V2.
+   - exact current-business references are distinguished from legacy fallback;
+   - no exact current-business reference never means safe-to-delete;
+   - RETIRABLE_PROVEN remains empty in this build;
+   - no automatic deletion, migration, localStorage write or network request.
+   ============================================================ */
+const ATLAS_STORAGE_LINEAGE_DECISION_SCHEMA_40228="agent_crypto.storage_lineage_decision.v1";
+const ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228=Object.freeze(["ACTIVE","ACTIVE_LEGACY","MIGRATED","REVIEW_REQUIRED","RETIRABLE_PROVEN"]);
+const ATLAS_STORAGE_LINEAGE_DECISION_LEDGER_40228=Object.freeze({
+  "agent_crypto_scanner_live_archive_v1":Object.freeze({family:"Scanner archive",decision:"ACTIVE",owner_hint:"ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY",owner_proof:"référence métier exacte : constante + read/write Scanner Collector",evidence:"app.js · ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY"}),
+  "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50":Object.freeze({family:"Historiques graphiques",decision:"ACTIVE",owner_hint:"ATLAS_CHART_LOCAL_CACHE_KEY",owner_proof:"référence métier exacte : cache historique graphique courant",evidence:"app.js · ATLAS_CHART_LOCAL_CACHE_KEY"}),
+  "agent_crypto_scanner_live_pending_v1":Object.freeze({family:"Scanner pending",decision:"ACTIVE",owner_hint:"ATLAS_SCANNER_COLLECTOR_PENDING_KEY",owner_proof:"référence métier exacte : file pending Scanner Collector",evidence:"app.js · ATLAS_SCANNER_COLLECTOR_PENDING_KEY"}),
+  "agent_crypto_erith_ia_market_cache_v1_1_alpha_26_34_source_lock":Object.freeze({family:"Cache marché historique",decision:"REVIEW_REQUIRED",owner_hint:"ancien cache source-lock",owner_proof:"pré-audit 40.2.28 : aucune référence métier exacte dans le bundle parent 40.2.27 ; absence de référence ≠ preuve de retrait",evidence:"trace statique parent 40.2.27"}),
+  "agent_crypto_erith_ia_market_cache_v1_1_alpha_21":Object.freeze({family:"Cache marché historique",decision:"REVIEW_REQUIRED",owner_hint:"ancien cache marché",owner_proof:"pré-audit 40.2.28 : aucune référence métier exacte dans le bundle parent 40.2.27 ; absence de référence ≠ preuve de retrait",evidence:"trace statique parent 40.2.27"}),
+  "agent_crypto_erith_ia_news_feed_cache_v1":Object.freeze({family:"News",decision:"ACTIVE",owner_hint:"NEWS_SENTINEL_FEED_CACHE_KEY",owner_proof:"référence métier exacte : cache News Sentinel courant",evidence:"app.js · NEWS_SENTINEL_FEED_CACHE_KEY"}),
+  "agent_crypto_erith_ia_market_cache_top250_v4":Object.freeze({family:"Cache marché",decision:"ACTIVE",owner_hint:"MARKET_CACHE_KEY",owner_proof:"référence métier exacte : cache marché canonique courant",evidence:"app.js · MARKET_CACHE_KEY"}),
+  "agent_crypto_erith_ia_market_cache_top50_v2":Object.freeze({family:"Cache marché legacy",decision:"ACTIVE_LEGACY",owner_hint:"LEGACY_MARKET_CACHE_KEYS",owner_proof:"référence métier exacte : fallback de lecture/migration encore accepté",evidence:"app.js · LEGACY_MARKET_CACHE_KEYS + loadMarketCache"})
+});
+function atlasStorageLineageDecisionClassify40228(row){
+  const key=String(row?.key||"");
+  const exact=ATLAS_STORAGE_LINEAGE_DECISION_LEDGER_40228[key];
+  if(exact)return {...exact,retirement_authorized:false};
+  if(ATLAS_STORAGE_RETIREMENT_CANDIDATES_4023.includes(key))return {family:"Graph legacy",decision:"MIGRATED",owner_hint:"Graph Context V7",owner_proof:"clé listée par le planner 40.2.3 comme mémoire graphe remplacée par V7 ; retrait encore interdit sans backup + validation V7",evidence:"ATLAS_STORAGE_RETIREMENT_CANDIDATES_4023",retirement_authorized:false};
+  const v2=atlasStorageLineageClassify40224(key);
+  return {family:v2.family||"Non classé",decision:"REVIEW_REQUIRED",owner_hint:v2.owner_hint||"À tracer",owner_proof:v2.owner_proof||"non prouvé",evidence:"Lineage V2 · classification prudente",retirement_authorized:false};
+}
+function atlasStorageLineageDecisionAudit40228(snapshot=atlasStorageHealthLocalSnapshot40198()){
+  const sourceRows=Array.isArray(snapshot?.rows)?snapshot.rows:[];
+  const rows=sourceRows.map(row=>{const classified=atlasStorageLineageDecisionClassify40228(row);return {key:String(row.key||""),bytes:Number(row.bytes||0),...classified};}).sort((a,b)=>b.bytes-a.bytes);
+  const summary=Object.fromEntries(ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228.map(state=>[state,{count:0,bytes:0}]));
+  rows.forEach(row=>{const bucket=summary[row.decision]||summary.REVIEW_REQUIRED;bucket.count+=1;bucket.bytes+=Number(row.bytes||0);});
+  const health=globalThis.__AGENT_CRYPTO_STORAGE_HEALTH_LAST_40198__||null;
+  const retirable=rows.filter(row=>row.decision==="RETIRABLE_PROVEN");
+  return {
+    schema:ATLAS_STORAGE_LINEAGE_DECISION_SCHEMA_40228,
+    build:String(ATLAS_BUILD),
+    parent_lineage_schema:ATLAS_STORAGE_LINEAGE_SCHEMA_40224,
+    captured_at:new Date().toISOString(),
+    operator_triggered_only:true,
+    read_only:true,
+    automatic_boot_scan:false,
+    automatic_cleanup:false,
+    deletion_enabled:false,
+    migration_enabled:false,
+    retirement_gate:"CLOSED",
+    decision_states:[...ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228],
+    graph_context_v7_observed_ok:Boolean(health?.graph?.ok),
+    count:rows.length,
+    total_bytes:rows.reduce((sum,row)=>sum+Number(row.bytes||0),0),
+    summary,
+    retirable_proven_count:retirable.length,
+    retirable_proven_bytes:retirable.reduce((sum,row)=>sum+Number(row.bytes||0),0),
+    decision:"NO_RETIREMENT_AUTHORIZED",
+    proof_rule:"RETIRABLE_PROVEN exige une preuve positive de non-propriété métier ; absence de référence exacte seule insuffisante",
+    rows
+  };
+}
+function atlasStorageLineageDecisionRender40228(){
+  const node=document.getElementById("atlasStorageLineage40224");if(!node)return null;
+  const audit=atlasStorageLineageDecisionAudit40228();
+  const summary=ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228.map(state=>{const x=audit.summary[state];return `${state} ${x.count} · ${atlasStorageHealthBytesLabel40198(x.bytes)}`;});
+  const top=audit.rows.slice(0,20).map((r,i)=>`${i+1}. ${r.key} · ${atlasStorageHealthBytesLabel40198(r.bytes)} · ${r.decision} · ${r.family} · ${r.owner_proof}`);
+  node.textContent=[`STORAGE LINEAGE DECISION 40.2.28 · ${audit.count} clé(s) · ${atlasStorageHealthBytesLabel40198(audit.total_bytes)}`,summary.join(" | "),`RETIREMENT GATE ${audit.retirement_gate} · RETIRABLE_PROVEN ${audit.retirable_proven_count} · aucune suppression autorisée`,`Graph Context V7 observé : ${audit.graph_context_v7_observed_ok?"OK":"NON PROUVÉ DANS CETTE CAPTURE"}`,"",...top,"",`Décision : ${audit.decision}`,audit.proof_rule].join("\n");
+  globalThis.__AGENT_CRYPTO_STORAGE_LINEAGE_DECISION_LAST_40228__=audit;
+  return audit;
+}
+function atlasStorageLineageBundleExport40228(){
+  const payload={schema:"agent_crypto.storage_lineage_bundle.v3",build:String(ATLAS_BUILD),exported_at:new Date().toISOString(),lineage_v2:atlasStorageLineageAudit40224(),decision_40_2_28:atlasStorageLineageDecisionAudit40228()};
+  atlasOracleBackupDownload(`agent_crypto_storage_lineage_decision_${String(ATLAS_BUILD).replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
+  return payload;
+}
+document.getElementById("btnAtlasStorageLineage40224")?.addEventListener("click",()=>atlasStorageLineageDecisionRender40228());
+document.getElementById("btnAtlasStorageLineageExport40224")?.addEventListener("click",()=>atlasStorageLineageBundleExport40228());
+globalThis.AtlasStorageLineageDecision40228=Object.freeze({audit:atlasStorageLineageDecisionAudit40228,render:atlasStorageLineageDecisionRender40228,exportJson:atlasStorageLineageBundleExport40228,states:ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
 
 /* ============================================================
    14 — VERSION CONTROL — PROTECTED CORE
@@ -44782,7 +44857,7 @@ globalThis.AtlasStorageLineage40224=Object.freeze({audit:atlasStorageLineageAudi
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.27";
+const ATLAS_BUILD = "40.2.28";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
