@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.03";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FAMILY STATE MIGRATION LOCK";
+  const ADMIN_BUILD = "40.3.04";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · CANONICAL ADMIN SEQUENCE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 

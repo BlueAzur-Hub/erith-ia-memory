@@ -1133,14 +1133,18 @@ html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-adm
   html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-center-toggle{min-width:108px!important;min-height:26px!important}
 }
 
-/* 40.3.02 topology: 04 now owns its six system/experiment members immediately
-   after its native header, then Mesure d'audience. No visual inheritance from 03. */
+/* 40.3.04 canonical sequence: 04 owns its six system/experiment members,
+   then the complete Missions de vie block, then Mesure d'audience and Sources.
+   No visual inheritance from 03 and no family header is split from its members. */
 body.atlas-family-atomic-40302 main.shell > section.atlas-layout-family-system + [data-layout-family="system"],
 body.atlas-family-atomic-40302 main.shell > section.atlas-layout-family-system + [data-layout-family="experiment"]{
   margin-top:0!important;
 }
-body.atlas-family-atomic-40302 main.shell > [data-layout-family="system"] + #mesure-audience,
-body.atlas-family-atomic-40302 main.shell > [data-layout-family="experiment"] + #mesure-audience{
+body.atlas-canonical-admin-sequence-40304 main.shell > [data-layout-family="system"] + #missions-vie,
+body.atlas-canonical-admin-sequence-40304 main.shell > [data-layout-family="experiment"] + #missions-vie{
+  margin-top:10px!important;
+}
+body.atlas-canonical-admin-sequence-40304 main.shell > details[data-collapse-key="aerith-terre-vivante"] + #mesure-audience{
   margin-top:10px!important;
 }
 

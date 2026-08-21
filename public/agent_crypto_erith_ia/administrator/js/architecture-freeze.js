@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.03 — PARKER LEWIS CAN'T LOSE · FAMILY STATE MIGRATION LOCK
+     40.3.04 — PARKER LEWIS CAN'T LOSE · CANONICAL ADMIN SEQUENCE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.03";
+  const BUILD_CURRENT = "40.3.04";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -372,14 +372,16 @@
     const h04 = document.querySelector(".atlas-layout-family-system");
     const audience = document.getElementById("mesure-audience");
     const sources = document.getElementById("liveSourcesCollapse");
-    const ordered = [h01,h02,h03,missions,h04,audience,sources].every(direct)
-      && [h01,h02,h03,missions,h04,audience].every((node,index,array) => index === array.length-1 || Boolean(node.compareDocumentPosition(array[index+1]) & Node.DOCUMENT_POSITION_FOLLOWING));
+    // 40.3.04 supersedes only the relative placement of Missions vs 04.
+    // 40.3.02 remains the atomic-ownership contract: every header/member is a direct
+    // child and 04 owns exactly its six system/experiment members contiguously.
+    const ordered = [h01,h02,h03,h04,missions,audience,sources].every(direct)
+      && [h01,h02,h03].every((node,index,array) => index === array.length-1 || Boolean(node.compareDocumentPosition(array[index+1]) & Node.DOCUMENT_POSITION_FOLLOWING));
     const sys = [...(shell?.children || [])].filter(node => ["system","experiment"].includes(String(node.dataset?.layoutFamily || "")));
-    const systemAtomic = direct(h04) && direct(audience) && sys.length === 6
-      && sys.every(node => Boolean(h04.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)
-        && Boolean(node.compareDocumentPosition(audience) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const systemAtomic = direct(h04) && sys.length === 6
+      && sys.every(node => Boolean(h04.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING));
     const lastSystem = sys[sys.length-1];
-    const adjacency = h04?.nextElementSibling === sys[0] && lastSystem?.nextElementSibling === audience;
+    const adjacency = h04?.nextElementSibling === sys[0] && !!lastSystem;
     const manager = globalThis.ErithAdministratorWindows;
     const expected = {
       "analyse-decision":["analysis"],
@@ -406,6 +408,36 @@
     return {
       ok: bodyAtomic && bodyCommand && ordered && systemAtomic && adjacency && ownership && dynamicAnalysisOwned && portalOk && essential,
       detail:`atomic=${String(bodyAtomic)} · command=${String(bodyCommand)} · order=${String(ordered)} · 04-members=${sys.length}/6:${String(systemAtomic)} · adjacency=${String(adjacency)} · ownership=${String(ownership)} · dynamic-analysis=${String(dynamicAnalysisOwned)} · drawer-portal=${String(portalOk)} · essential=${essential}/6`
+    };
+  }
+
+
+  function canonicalAdminSequenceContract40304() {
+    const bodyOk = document.body?.classList?.contains("atlas-canonical-admin-sequence-40304") === true;
+    const shell = document.querySelector("main.shell");
+    const direct = node => !!node && node.parentElement === shell;
+    const h01 = document.querySelector(".atlas-layout-family-analysis");
+    const h02 = document.querySelector(".atlas-layout-family-intelligence");
+    const h03 = document.querySelector(".atlas-layout-family-operations");
+    const h04 = document.querySelector(".atlas-layout-family-system");
+    const missions = document.getElementById("missions-vie");
+    const audience = document.getElementById("mesure-audience");
+    const sources = document.getElementById("liveSourcesCollapse");
+    const sequence = [h01,h02,h03,h04,missions,audience,sources];
+    const orderOk = sequence.every(direct) && sequence.every((node,index) => index === sequence.length - 1
+      || Boolean(node.compareDocumentPosition(sequence[index+1]) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const sys = [...(shell?.children || [])].filter(node => ["system","experiment"].includes(String(node.dataset?.layoutFamily || "")));
+    const missionKeys = new Set(["fonds-erith","association-erith","aerith-enfance","aerith-animaux","aerith-terre-vivante"]);
+    const missionMembers = [...(shell?.children || [])].filter(node => node instanceof HTMLDetailsElement && missionKeys.has(String(node.dataset?.collapseKey || "")));
+    const systemContiguous = sys.length === 6 && h04?.nextElementSibling === sys[0] && sys[sys.length-1]?.nextElementSibling === missions;
+    const missionsContiguous = missionMembers.length === 5 && missions?.nextElementSibling === missionMembers[0]
+      && missionMembers[missionMembers.length-1]?.nextElementSibling === audience;
+    const ownerSystem = globalThis.ErithAdministratorWindows?.getWindow?.("experimentation-systeme");
+    const ownerMissions = globalThis.ErithAdministratorWindows?.getWindow?.("missions-de-vie");
+    const ownershipOk = ownerSystem?.nodes?.length === 7 && ownerMissions?.nodes?.length === 6;
+    return {
+      ok: bodyOk && orderOk && systemContiguous && missionsContiguous && ownershipOk,
+      detail:`body=${String(bodyOk)} · order=01>02>03>04>Missions>Audience>Sources:${String(orderOk)} · 04=6/6:${String(systemContiguous)} · missions=5/5:${String(missionsContiguous)} · owners=${String(ownershipOk)}`
     };
   }
 
@@ -1312,6 +1344,7 @@
       check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
       check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
       check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
+      check("Parcours · ordre canonique 01→02→03→04→Missions→Audience→Sources 40.3.04", canonicalAdminSequenceContract40304().ok === true, canonicalAdminSequenceContract40304().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
