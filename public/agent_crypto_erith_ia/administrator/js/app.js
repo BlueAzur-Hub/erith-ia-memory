@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.02";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATOMIC FAMILY + COMMANDLINE SURGERY LOCK";
+  const ADMIN_BUILD = "40.3.03";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FAMILY STATE MIGRATION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1382,6 +1382,47 @@
     } catch {}
   }
 
+  // 40.3.03 — topology-aware one-time migration.
+  // 40.3.00–40.3.02 changed semantic ownership for the four Administrator
+  // families and Missions de vie while intentionally keeping the historical
+  // Window Manager storage namespace. Old minimized/hidden/floating state can
+  // therefore be semantically stale even though the DOM is correct. Clear ONLY
+  // these five family-window records once, before manager.init(). Every other
+  // operator window state is preserved. Future 40.3.03 family changes persist
+  // normally because this migration is marker-gated.
+  const FAMILY_TOPOLOGY_40303_MIGRATION_KEY = `${STORAGE_PREFIX}:family-topology-40303-migrated`;
+  const FAMILY_TOPOLOGY_40303_WINDOW_IDS = Object.freeze([
+    "analyse-decision",
+    "intelligence-memoire-creation",
+    "preparation-operations",
+    "experimentation-systeme",
+    "missions-de-vie"
+  ]);
+
+  function migrateFamilyTopologyWindowState40303() {
+    try {
+      if (localStorage.getItem(FAMILY_TOPOLOGY_40303_MIGRATION_KEY) === "1") return false;
+      FAMILY_TOPOLOGY_40303_WINDOW_IDS.forEach(id => {
+        localStorage.removeItem(`${STORAGE_PREFIX}:window:${id}`);
+      });
+      localStorage.setItem(FAMILY_TOPOLOGY_40303_MIGRATION_KEY, "1");
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  globalThis.ErithFamilyTopologyStateMigration40303 = Object.freeze({
+    build: ADMIN_BUILD,
+    key: FAMILY_TOPOLOGY_40303_MIGRATION_KEY,
+    window_ids: FAMILY_TOPOLOGY_40303_WINDOW_IDS,
+    one_time: true,
+    before_window_manager_init: true,
+    scoped_family_state_only: true,
+    unrelated_window_state_preserved: true,
+    namespace_changed: false
+  });
+
   const GRAPH_R6_MIGRATION_KEY = `${STORAGE_PREFIX}:graph-fullwidth-r6-migrated`;
 
   function migrateGraphWindowStateR6() {
@@ -1513,6 +1554,7 @@
     migrateDirectFixedWindowState40131();
     migrateGlobalShellAutoFit40132();
     migrateGraphWindowStateR6();
+    migrateFamilyTopologyWindowState40303();
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {

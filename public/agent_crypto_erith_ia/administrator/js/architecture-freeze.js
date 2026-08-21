@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.02 — PARKER LEWIS CAN'T LOSE · ATOMIC FAMILY + COMMANDLINE SURGERY LOCK
+     40.3.03 — PARKER LEWIS CAN'T LOSE · FAMILY STATE MIGRATION LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.02";
+  const BUILD_CURRENT = "40.3.03";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -406,6 +406,34 @@
     return {
       ok: bodyAtomic && bodyCommand && ordered && systemAtomic && adjacency && ownership && dynamicAnalysisOwned && portalOk && essential,
       detail:`atomic=${String(bodyAtomic)} · command=${String(bodyCommand)} · order=${String(ordered)} · 04-members=${sys.length}/6:${String(systemAtomic)} · adjacency=${String(adjacency)} · ownership=${String(ownership)} · dynamic-analysis=${String(dynamicAnalysisOwned)} · drawer-portal=${String(portalOk)} · essential=${essential}/6`
+    };
+  }
+
+
+  function familyStateMigrationContract40303() {
+    const bodyOk = document.body?.classList?.contains("atlas-family-state-migration-40303") === true;
+    const contract = globalThis.ErithFamilyTopologyStateMigration40303;
+    const expected = [
+      "analyse-decision",
+      "intelligence-memoire-creation",
+      "preparation-operations",
+      "experimentation-systeme",
+      "missions-de-vie"
+    ];
+    const ids = Array.isArray(contract?.window_ids) ? [...contract.window_ids] : [];
+    const idsOk = ids.length === expected.length && expected.every((id,index) => ids[index] === id);
+    let markerOk = false;
+    try { markerOk = !!contract?.key && localStorage.getItem(contract.key) === "1"; } catch {}
+    return {
+      ok: bodyOk
+        && contract?.build === "40.3.03"
+        && contract?.one_time === true
+        && contract?.before_window_manager_init === true
+        && contract?.scoped_family_state_only === true
+        && contract?.unrelated_window_state_preserved === true
+        && contract?.namespace_changed === false
+        && idsOk && markerOk,
+      detail:`body=${String(bodyOk)} · ids=${ids.length}/5:${String(idsOk)} · marker=${String(markerOk)} · scoped=${String(contract?.scoped_family_state_only === true)} · preserve-unrelated=${String(contract?.unrelated_window_state_preserved === true)}`
     };
   }
 
@@ -1283,6 +1311,7 @@
       check("Familles · 04 devant Mesure d’audience + menus 02/03/04 à droite 40.3.00", adminFamilyOrderMenuContract40300().ok === true, adminFamilyOrderMenuContract40300().detail),
       check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
       check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
+      check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
