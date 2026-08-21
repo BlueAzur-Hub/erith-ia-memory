@@ -960,9 +960,9 @@ body.atlas-book-nav-40299 .atlas-v2-nav-advanced.atlas-admin-dock:not([hidden]){
 
 
 /* ============================================================================
-   40.3.00 — ADMIN FAMILY ORDER + MENU ALIGNMENT LOCK
-   - family 04 header is intentionally placed at the end of the Administrator
-     family sequence, immediately before Mesure d'audience;
+   40.3.00 — ADMIN FAMILY MENU ALIGNMENT LOCK (ORDER SUPERSEDED)
+   - the 40.3.00 temporary family-order experiment is no longer authoritative;
+   - 40.3.06 restores canonical header-first 04 topology;
    - the transparent-emblem stacking rule must NEVER take position ownership
      from native Window Manager controls;
    - illustrated family controls stay on the right, just left of the emblem;
@@ -982,9 +982,6 @@ body.atlas-family-order-40300 main.shell > section.atlas-layout-family-system{
   isolation:isolate!important;
   margin-top:26px!important;
   margin-bottom:10px!important;
-}
-body.atlas-family-order-40300 main.shell > section.atlas-layout-family-system + #mesure-audience{
-  margin-top:0!important;
 }
 @media (max-width:1366px){
   body.atlas-family-order-40300.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-native-controls{

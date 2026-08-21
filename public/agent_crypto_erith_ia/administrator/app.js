@@ -2283,14 +2283,66 @@ function atlasInitV2Shell() {
     button.addEventListener("click", () => atlasV2ApplyMathDock(button.dataset.mathPosition));
   });
 
+  // 40.3.06 — essential navigation must cooperate with the Administrator Window Manager.
+  // A plain scrollIntoView() is insufficient when a family/window is hidden, floating,
+  // or hidden by the V2 presentation mode. Atlas additionally exposes a wrapper id
+  // (#atlas-local-ai-collapse) while the V2 manifest owns the inner #local-ai-hub id.
+  const essentialOwner40306 = Object.freeze({
+    analyste: "graphique",
+    "atlas-local-ai-collapse": "intelligence-memoire-creation",
+    "oracle-analysis-suite": "analyse-decision",
+    sources: "sources"
+  });
+  const essentialManifest40306 = Object.freeze({
+    "atlas-local-ai-collapse": "local-ai-hub",
+    "oracle-analysis-suite": "oracle-analysis-suite",
+    sources: "sources"
+  });
+  const essentialNavigate40306 = button => {
+    const id = String(button?.dataset?.atlasEssentialTarget || "").trim();
+    const target = id ? document.getElementById(id) : null;
+    if (!target) return false;
+
+    const manager = globalThis.ErithAdministratorWindows;
+    const ownerId = essentialOwner40306[id] || "";
+    const win = ownerId && manager?.getWindow?.(ownerId);
+    if (win) {
+      if (win.hidden === true) manager.hide(ownerId, false);
+      if (win.floating === true) {
+        manager.focus(ownerId);
+        return true;
+      }
+    }
+
+    const detail = target instanceof HTMLDetailsElement ? target : target.closest?.("details.atlas-collapse");
+    const wasOpen = detail instanceof HTMLDetailsElement ? detail.open === true : null;
+    const manifestId = essentialManifest40306[id] || "";
+    const manifestEntry = manifestId ? atlasV2ManifestEntry(manifestId) : null;
+    const hiddenByMode = target.hidden === true || target.getClientRects().length === 0;
+    if (hiddenByMode && manifestEntry) {
+      const opened = atlasV2OpenAdvancedForTarget(`#${manifestId}`, { updateHash: false, scroll: false });
+      if (!opened) return false;
+      if (detail instanceof HTMLDetailsElement && wasOpen !== null) detail.open = wasOpen;
+    }
+
+    // If the family is docked/minimized, Atlas and Oracle are compact representatives;
+    // keep that state and only scroll to the representative. Do not force Reduce/Restore.
+    const behavior = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ? "auto" : "smooth";
+    requestAnimationFrame(() => target.scrollIntoView({ behavior, block: "start" }));
+    return true;
+  };
+  globalThis.ErithEssentialNavigation40306 = Object.freeze({
+    build: "40.3.06",
+    owner_restore: true,
+    floating_focus_without_document_scroll: true,
+    atlas_manifest_bridge: "local-ai-hub",
+    preserve_detail_open_state: true
+  });
+
   document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").forEach(button => {
     button.addEventListener("click", event => {
       event.preventDefault();
-      const id = String(button.dataset.atlasEssentialTarget || "").trim();
-      const target = id ? document.getElementById(id) : null;
-      if (!target) return;
-      const behavior = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ? "auto" : "smooth";
-      target.scrollIntoView({ behavior, block: "start" });
+      essentialNavigate40306(button);
     });
   });
 
@@ -46088,7 +46140,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.05";
+const ATLAS_BUILD = "40.3.06";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
