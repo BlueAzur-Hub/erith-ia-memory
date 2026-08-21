@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.79";
+  const ADMIN_BUILD = "40.2.80";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · STORAGE RELIEF + BREAKOUT/CELestial PORTABLE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
