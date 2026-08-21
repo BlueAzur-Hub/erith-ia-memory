@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.41";
+  const ADMIN_BUILD = "40.2.55";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET FINAL LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -343,7 +343,7 @@
 
 
   const ORACLE_RESTORE_NEWS_PLACEMENT_CONTRACT_40241 = Object.freeze({
-    build:"40.2.41", code_only:true, corrective_layout:true,
+    build:"40.2.55", code_only:true, corrective_layout:true,
     oracle_news_context_unmounted:true, oracle_operator_outer_frame_removed:true,
     oracle_bull_bear_metrics_restored_to_primary_readout:true,
     news_report_moved_to_dedicated_news_accordion:true,
