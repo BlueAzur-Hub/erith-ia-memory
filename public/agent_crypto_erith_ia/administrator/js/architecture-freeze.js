@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.06 — PARKER LEWIS CAN'T LOSE · ADMIN TOPOLOGY + ATLAS NAV RECOVERY LOCK
+     40.3.07 — PARKER LEWIS CAN'T LOSE · FAMILY 04 TRAILING BOUNDARY + TECH LOAD PRIORITY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.06";
+  const BUILD_CURRENT = "40.3.07";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -443,6 +443,54 @@
     return {
       ok: !oldMarkerPresent && currentMarker && canonicalBoundary,
       detail:`40305-marker-absent=${String(!oldMarkerPresent)} · 40306-marker=${String(currentMarker)} · 04-header>members>Missions=${String(canonicalBoundary)}`
+    };
+  }
+
+  function family04TrailingBoundaryContract40307() {
+    const bodyOk = document.body?.classList?.contains("atlas-family04-trailing-boundary-40307") === true;
+    const shell = document.querySelector("main.shell");
+    const direct = node => !!node && node.parentElement === shell;
+    const h03 = document.querySelector(".atlas-layout-family-operations");
+    const h04 = document.querySelector(".atlas-layout-family-system");
+    const missions = document.getElementById("missions-vie");
+    const audience = document.getElementById("mesure-audience");
+    const sources = document.getElementById("liveSourcesCollapse");
+    const sys = [...(shell?.children || [])].filter(node => ["system","experiment"].includes(String(node.dataset?.layoutFamily || "")));
+    const physical = shell?.querySelector?.(':scope > details[data-collapse-key="physical-security"]') || null;
+    const boundary = sys.length === 6
+      && sys[sys.length - 1] === physical
+      && physical?.nextElementSibling === h04
+      && h04?.nextElementSibling === missions;
+    const orderOk = [h03, sys[0], h04, missions, audience, sources].every(direct)
+      && Boolean(h03.compareDocumentPosition(sys[0]) & Node.DOCUMENT_POSITION_FOLLOWING)
+      && Boolean(h04.compareDocumentPosition(missions) & Node.DOCUMENT_POSITION_FOLLOWING)
+      && Boolean(missions.compareDocumentPosition(audience) & Node.DOCUMENT_POSITION_FOLLOWING)
+      && Boolean(audience.compareDocumentPosition(sources) & Node.DOCUMENT_POSITION_FOLLOWING);
+    const owner = globalThis.ErithAdministratorWindows?.getWindow?.("experimentation-systeme");
+    const ownershipOk = owner?.anchor === h04
+      && owner?.nodes?.length === 7
+      && sys.every(node => owner.nodes.includes(node));
+    return {
+      ok: bodyOk && boundary && orderOk && ownershipOk,
+      detail:`body=${String(bodyOk)} · system-members=${sys.length}/6 · physical>04>Missions=${String(boundary)} · order=${String(orderOk)} · owner=${String(ownershipOk)}`
+    };
+  }
+
+  function technicalLoadPriorityContract40307() {
+    const contract = globalThis.ErithTechnicalLoadPriority40307;
+    const portraitCount = document.querySelectorAll("#detailPanel .admin-tech-portrait-r3").length;
+    const noChartPreloadDuplicate = !document.querySelector('link[rel="preload"][href*="admin-chart-office.png"]');
+    return {
+      ok: contract?.build === "40.3.07"
+        && contract?.saved_detail_state_preserved === true
+        && contract?.collapsed_boot_defers_asset === true
+        && contract?.open_boot_loads_asset === true
+        && contract?.technical_fetch_priority_open === "auto"
+        && contract?.technical_fetch_priority_collapsed === "low"
+        && contract?.chart_background_duplicate_request_added === false
+        && noChartPreloadDuplicate
+        && portraitCount === 1,
+      detail:`contract=${contract?.build || "—"} · saved-state=${String(contract?.saved_detail_state_preserved === true)} · collapsed-defer=${String(contract?.collapsed_boot_defers_asset === true)} · portrait=${portraitCount}/1 · extra-chart-preload=${String(!noChartPreloadDuplicate)}`
     };
   }
 
@@ -1367,9 +1415,9 @@
       check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
       check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
       check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
-      check("Parcours · ordre canonique 01→02→03→04→Missions→Audience→Sources 40.3.04", canonicalAdminSequenceContract40304().ok === true, canonicalAdminSequenceContract40304().detail),
-      check("Parcours · régression trailing-header 40.3.05 neutralisée en 40.3.06", family04TrailingHeaderContract40305().ok === true, family04TrailingHeaderContract40305().detail),
+      check("Parcours · frontière opérateur Sécurité physique→04→Missions 40.3.07", family04TrailingBoundaryContract40307().ok === true, family04TrailingBoundaryContract40307().detail),
       check("Navigation · Atlas/Oracle coopèrent avec Window Manager 40.3.06", essentialNavigationContract40306().ok === true, essentialNavigationContract40306().detail),
+      check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),

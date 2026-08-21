@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.06";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ADMIN TOPOLOGY + ATLAS NAV RECOVERY LOCK";
+  const ADMIN_BUILD = "40.3.07";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FAMILY 04 TRAILING BOUNDARY + TECH LOAD PRIORITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -529,8 +529,8 @@
         tone: "orange",
         resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-system", ["system", "experiment"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
-        // 40.3.06 — docked Reduce keeps the real 04 header. Native flow is canonical:
-        // 04 header first, then its six owned system/experiment members, then Missions de vie.
+        // 40.3.07 — docked Reduce keeps the real 04 header. Operator-canonical native flow:
+        // six owned system/experiment members, then trailing 04 boundary header, then Missions de vie.
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {

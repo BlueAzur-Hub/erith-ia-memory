@@ -962,7 +962,8 @@ body.atlas-book-nav-40299 .atlas-v2-nav-advanced.atlas-admin-dock:not([hidden]){
 /* ============================================================================
    40.3.00 — ADMIN FAMILY MENU ALIGNMENT LOCK (ORDER SUPERSEDED)
    - the 40.3.00 temporary family-order experiment is no longer authoritative;
-   - 40.3.06 restores canonical header-first 04 topology;
+   - 40.3.06 header-first topology was rejected by operator review;
+   - 40.3.07 restores the trailing 04 boundary after Sécurité physique;
    - the transparent-emblem stacking rule must NEVER take position ownership
      from native Window Manager controls;
    - illustrated family controls stay on the right, just left of the emblem;
@@ -1145,3 +1146,17 @@ body.atlas-canonical-admin-sequence-40304 main.shell > details[data-collapse-key
   margin-top:10px!important;
 }
 
+
+/* ============================================================================
+   40.3.07 — FAMILY 04 TRAILING BOUNDARY LOCK
+   Operator-canonical visual sequence:
+   system/experiment content -> Sécurité physique -> 04 boundary -> Missions de vie.
+   The 04 boundary remains the Window Manager anchor but no longer sits before
+   its owned content in native page flow. No control geometry ownership change.
+   ============================================================================ */
+body.atlas-family04-trailing-boundary-40307 main.shell > details[data-collapse-key="physical-security"] + section.atlas-layout-family-system{
+  margin-top:10px!important;
+}
+body.atlas-family04-trailing-boundary-40307 main.shell > section.atlas-layout-family-system + #missions-vie{
+  margin-top:10px!important;
+}
