@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.64 — PARKER LEWIS CAN'T LOSE · PUBLICATION INTEGRITY REPAIR + TECHNICAL FRAMING LOCK
+     40.2.65 — PARKER LEWIS CAN'T LOSE · PUBLICATION INTEGRITY REPAIR + TECHNICAL FRAMING LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.64";
+  const BUILD_CURRENT = "40.2.65";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
