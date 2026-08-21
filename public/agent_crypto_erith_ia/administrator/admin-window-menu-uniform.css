@@ -629,14 +629,14 @@ body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3::a
 body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3 {
   position:absolute!important;
   right:14px!important;
-  top:50%!important;
+  top:clamp(56px,4.2vw,70px)!important;
   bottom:auto!important;
-  width:58px!important;
-  height:58px!important;
+  width:54px!important;
+  height:54px!important;
   transform:translateY(-50%)!important;
   object-fit:contain!important;
-  opacity:.08!important;
-  filter:drop-shadow(0 0 10px rgba(98,236,255,.12))!important;
+  opacity:.075!important;
+  filter:drop-shadow(0 0 10px rgba(98,236,255,.11))!important;
   pointer-events:none!important;
   z-index:0!important;
 }
@@ -645,7 +645,7 @@ body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > 
   z-index:1!important;
 }
 
-/* 40.2.97 — Family Emblem Alignment Lock: family emblems align on the right-side signal axis, not the lower corner. */
+/* 40.2.98 — Family Emblem Alignment Lock: family emblems align on the right-side signal axis, not the lower corner. */
 
 /* Sources archive emblem belongs to the real Sources row, small and non-reserving. */
 body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 {
@@ -694,7 +694,7 @@ body.atlas-section-air-40292 #atlasAnalyticalMemory394.admin-analytical-emblem-h
 /* Book: emblems remain legible but never steal width. */
 @media (max-width:1366px) {
   body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3 {
-    width:42px!important;height:42px!important;right:10px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;opacity:.07!important;filter:none!important;
+    width:40px!important;height:40px!important;right:10px!important;top:56px!important;bottom:auto!important;transform:translateY(-50%)!important;opacity:.065!important;filter:none!important;
   }
   body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 {padding-right:50px!important}
   body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 > .admin-summary-emblem-r3 {
@@ -849,4 +849,43 @@ body.atlas-section-density-40293 #local-ai-hub.atlas-analysis-running-40293 .atl
   body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236,
   body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-role-quality-40237,
   body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238{margin:5px 0!important;padding:7px 8px!important}
+}
+
+
+/* ============================================================================
+   40.2.98 — FAMILY BOUNDARY + EMBLEM SIGNAL ALIGNMENT LOCK
+   - cumulative over 40.2.95/96/97;
+   - family headers are hard top-level siblings in the Administrator shell;
+   - visual bleed is cut at every family transition;
+   - 03 Operations -> 04 System receives an explicit larger break;
+   - existing transparent emblems stay non-reserving and align with the right signal axis;
+   - no business/runtime ownership change.
+   ============================================================================ */
+body.atlas-family-boundaries-40298 main.shell > section.atlas-layout-family {
+  clear:both!important;
+  isolation:isolate!important;
+  position:relative!important;
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+}
+body.atlas-family-boundaries-40298 main.shell > [data-layout-family] + section.atlas-layout-family {
+  margin-top:24px!important;
+}
+body.atlas-family-boundaries-40298 main.shell > [data-layout-family="operations"] + section.atlas-layout-family-system {
+  margin-top:36px!important;
+}
+body.atlas-family-boundaries-40298 main.shell > section.atlas-layout-family-system {
+  clear:both!important;
+  isolation:isolate!important;
+  z-index:2!important;
+}
+body.atlas-family-boundaries-40298 main.shell > [data-layout-family="operations"] {
+  position:relative!important;
+  z-index:1!important;
+}
+@media (max-width:1366px) {
+  body.atlas-family-boundaries-40298 main.shell > [data-layout-family] + section.atlas-layout-family {margin-top:20px!important}
+  body.atlas-family-boundaries-40298 main.shell > [data-layout-family="operations"] + section.atlas-layout-family-system {margin-top:30px!important}
 }

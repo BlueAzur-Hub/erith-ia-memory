@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.97 — PARKER LEWIS CAN'T LOSE · FAMILY EMBLEM ALIGNMENT LOCK
+     40.2.98 — PARKER LEWIS CAN'T LOSE · FAMILY BOUNDARY + EMBLEM SIGNAL ALIGNMENT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.97";
+  const BUILD_CURRENT = "40.2.98";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -303,6 +303,24 @@
     return {
       ok: bodyOk && !!progress && !!localHub && oracleSubsections >= 2 && !!news,
       detail:`body=${String(bodyOk)} · progress=${String(!!progress)} · hub=${String(!!localHub)} · oracleSubsections=${oracleSubsections} · news=${String(!!news)}`
+    };
+  }
+
+
+  function familyBoundaryContract40298() {
+    const bodyOk = document.body?.classList?.contains("atlas-family-boundaries-40298") === true;
+    const shell = document.querySelector("main.shell");
+    const operations = document.querySelector(".atlas-layout-family-operations");
+    const system = document.querySelector(".atlas-layout-family-system");
+    const previous = system?.previousElementSibling || null;
+    const topLevelSiblings = !!shell && operations?.parentElement === shell && system?.parentElement === shell;
+    const operationsEndsBeforeSystem = previous?.dataset?.layoutFamily === "operations";
+    const systemNotNestedInOperations = !system?.closest?.('[data-layout-family="operations"]');
+    const operationsEmblem = operations?.querySelector?.(':scope > .admin-family-emblem-r3[data-for="projects"]');
+    const systemEmblem = system?.querySelector?.(':scope > .admin-family-emblem-r3[data-for="system"]');
+    return {
+      ok: bodyOk && topLevelSiblings && operationsEndsBeforeSystem && systemNotNestedInOperations && !!operationsEmblem && !!systemEmblem,
+      detail:`body=${String(bodyOk)} · siblings=${String(topLevelSiblings)} · 03-end=${String(operationsEndsBeforeSystem)} · 04-outside-03=${String(systemNotNestedInOperations)} · emblems=${Number(!!operationsEmblem)+Number(!!systemEmblem)}/2`
     };
   }
 
@@ -1153,6 +1171,7 @@
       check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract40289().ok === true, graphToolbarStateContract40289().detail),
       check("Sections · air + emblèmes transparents 40.2.92", sectionAirEmblemContract40292().ok === true, sectionAirEmblemContract40292().detail),
       check("Sections · hiérarchie compacte + sous-sections bordées + Atlas viewport 40.2.93", sectionDensityAtlasViewportContract40293().ok === true, sectionDensityAtlasViewportContract40293().detail),
+      check("Sections · frontières familles + emblèmes sur axe signal 40.2.98", familyBoundaryContract40298().ok === true, familyBoundaryContract40298().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
