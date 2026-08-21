@@ -7792,6 +7792,27 @@ function atlasOracleSuiteSummarySync40216(){
   set("atlasOracleSuiteSources",assets?`${dual}/${assets}`:"—");
   const quality=text("atlasOracleLabIntegrity");
   set("atlasOracleSuiteQuality",quality.replace(/^QUAL\s*/i,"")||"—");
+  if(typeof atlasOracleCollapsedPreviewSync40296==="function") atlasOracleCollapsedPreviewSync40296();
+}
+
+/* 40.2.96 — ORACLE COLLAPSED BIAS PREVIEW
+   UI-only mirror of existing Oracle V1 DOM values; no model/network/storage writes. */
+function atlasOracleCollapsedPreviewSync40296(){
+  const preview=document.getElementById("atlasOracleCollapsedPreview40296");
+  if(!preview)return false;
+  const text=id=>String(document.getElementById(id)?.textContent||"—").trim()||"—";
+  const set=(id,value)=>{const n=document.getElementById(id);if(n)n.textContent=value;};
+  set("atlasOracleCollapsedBias40296",text("atlasOracleBias"));
+  set("atlasOracleCollapsedConfidence40296",text("atlasOracleConfidence"));
+  set("atlasOracleCollapsedHorizon40296",text("atlasOracleHeroHorizon"));
+  set("atlasOracleCollapsedBull40296",text("atlasOracleBull"));
+  set("atlasOracleCollapsedBear40296",text("atlasOracleBear"));
+  const copyWidth=(fromId,toId)=>{const from=document.getElementById(fromId),to=document.getElementById(toId);if(from&&to)to.style.width=from.style.width||"0%";};
+  copyWidth("atlasOracleBullMeter","atlasOracleCollapsedBullMeter40296");
+  copyWidth("atlasOracleBearMeter","atlasOracleCollapsedBearMeter40296");
+  const raw=(document.getElementById("atlasOracleV0")?.dataset?.bias||text("atlasOracleBias")).toLowerCase();
+  preview.dataset.bias=raw.includes("hauss")?"haussier":raw.includes("baiss")?"baissier":raw.includes("mixte")?"mixte":"unknown";
+  return true;
 }
 
 /* ============================================================
@@ -9048,6 +9069,7 @@ function atlasRenderOracleV0() {
     atlasOracleRuntimeStethoscope40232D(model);
     atlasRenderOracleNewsContext40234(model, coin);
     atlasRenderOracleNewsContext40235(model, coin);
+    atlasOracleCollapsedPreviewSync40296();
     return false;
   }
 
@@ -9103,6 +9125,7 @@ function atlasRenderOracleV0() {
   atlasOracleRuntimeStethoscope40232D(model);
   atlasRenderOracleNewsContext40234(model, coin);
   atlasRenderOracleNewsContext40235(model, coin);
+  atlasOracleCollapsedPreviewSync40296();
   return true;
 }
 
@@ -46056,7 +46079,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.95";
+const ATLAS_BUILD = "40.2.96";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
