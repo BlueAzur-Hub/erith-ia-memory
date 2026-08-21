@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.58 — PARKER LEWIS CAN'T LOSE · CHRONOSXP REFERENCE COORDINATES ALIGNMENT LOCK
+     40.2.60 — PARKER LEWIS CAN'T LOSE · PUBLICATION INTEGRITY REPAIR + TECHNICAL FRAMING LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.58";
+  const BUILD_CURRENT = "40.2.60";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
