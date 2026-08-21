@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.04";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · CANONICAL ADMIN SEQUENCE LOCK";
+  const ADMIN_BUILD = "40.3.05";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FAMILY 04 TRAILING HEADER LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -529,7 +529,9 @@
         tone: "orange",
         resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-system", ["system", "experiment"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
-        // 40.3.01/40.3.02 — docked Reduce keeps the real family header with its six owned members.
+        // 40.3.05 — docked Reduce keeps the real 04 header. In native flow the six owned
+        // system/experiment members intentionally precede the trailing header, restoring the
+        // operator-validated visual sequence without changing semantic ownership.
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {
