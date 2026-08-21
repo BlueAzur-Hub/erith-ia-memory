@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.28";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · STORAGE LINEAGE DECISION LOCK";
+  const ADMIN_BUILD = "40.2.29";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · STORAGE OWNERSHIP PROOF LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -47,6 +47,27 @@
     runtime_checkpoint_40_2_27_preserved: true
   });
   globalThis.ErithStorageLineageDecisionContract40228 = STORAGE_LINEAGE_DECISION_CONTRACT_40228;
+
+  const STORAGE_OWNERSHIP_PROOF_CONTRACT_40229 = Object.freeze({
+    build: "40.2.29",
+    operator_triggered_only: true,
+    read_only: true,
+    automatic_boot_scan: false,
+    automatic_cleanup: false,
+    deletion_enabled: false,
+    migration_enabled: false,
+    retirement_gate: "CLOSED",
+    positive_owner_proof_only: true,
+    unresolved_absence_is_not_non_ownership_proof: true,
+    retirable_proven_predeclared: 0,
+    storage_write_added: false,
+    network_request_added: false,
+    timer_added: false,
+    performance_optimization_added: false,
+    window_manager_modified: false,
+    parent_decision_40_2_28_preserved: true
+  });
+  globalThis.ErithStorageOwnershipProofContract40229 = STORAGE_OWNERSHIP_PROOF_CONTRACT_40229;
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);

@@ -6386,7 +6386,7 @@ function atlasRuntimeWindowSnapshot40225(){
 function atlasRuntimeNavigationSnapshot40214(){let nav=null;try{nav=(performance.getEntriesByType("navigation")||[])[0]||null;}catch{}const positive=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;let type=String(nav?.type||"");if(!type){try{type=performance?.navigation?.type===1?"reload":performance?.navigation?.type===2?"back_forward":"navigate";}catch{type="unknown";}}return {type:type||"unknown",dom_content_loaded_ms:positive(nav?.domContentLoadedEventEnd),load_ms:positive(nav?.loadEventEnd),dom_interactive_ms:positive(nav?.domInteractive),response_end_ms:positive(nav?.responseEnd),transfer_size:Number.isFinite(Number(nav?.transferSize))?Number(nav.transferSize):null,decoded_body_size:Number.isFinite(Number(nav?.decodedBodySize))?Number(nav.decodedBodySize):null};}
 function atlasRuntimeResourceSnapshot40214(){let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const sum=k=>entries.reduce((a,e)=>{const v=Number(e?.[k]);return a+(Number.isFinite(v)&&v>0?v:0);},0);const measured=k=>entries.filter(e=>Number.isFinite(Number(e?.[k]))&&Number(e[k])>0).length;const largest=entries.map(e=>({name:String(e?.name||""),initiator_type:String(e?.initiatorType||""),transfer_size:Number(e?.transferSize)||0,decoded_body_size:Number(e?.decodedBodySize)||0,duration_ms:Number(e?.duration)||0})).sort((a,b)=>Math.max(b.transfer_size,b.decoded_body_size)-Math.max(a.transfer_size,a.decoded_body_size)).slice(0,5);return {resource_requests_total:entries.length,transfer_bytes_measured:sum("transferSize"),transfer_entries_measured:measured("transferSize"),decoded_bytes_measured:sum("decodedBodySize"),decoded_entries_measured:measured("decodedBodySize"),largest_resources:largest};}
 function atlasRuntimeView40214(){const raw=String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");if(raw)return raw;try{return typeof atlasV2Mode==="function"?atlasV2Mode():"unknown";}catch{return "unknown";}}
-function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.28"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
+function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.29"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
 function atlasRuntimeFmtMs40214(v){return Number.isFinite(Number(v))?`${Math.round(Number(v))} ms`:"—";}
 function atlasRuntimeVisibilityLabel40225(row){return row?`${Number(row.calls||0)}×/${atlasRuntimeFmtMs40214(row.total_ms)}`:"0×/0 ms";}
 /* 40.2.26 — REDUCED / COLLAPSED RUNTIME ATTRIBUTION LOCK
@@ -44847,9 +44847,80 @@ function atlasStorageLineageBundleExport40228(){
   atlasOracleBackupDownload(`agent_crypto_storage_lineage_decision_${String(ATLAS_BUILD).replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
   return payload;
 }
-document.getElementById("btnAtlasStorageLineage40224")?.addEventListener("click",()=>atlasStorageLineageDecisionRender40228());
-document.getElementById("btnAtlasStorageLineageExport40224")?.addEventListener("click",()=>atlasStorageLineageBundleExport40228());
 globalThis.AtlasStorageLineageDecision40228=Object.freeze({audit:atlasStorageLineageDecisionAudit40228,render:atlasStorageLineageDecisionRender40228,exportJson:atlasStorageLineageBundleExport40228,states:ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
+
+/* ============================================================
+   40.2.29 — STORAGE OWNERSHIP PROOF LOCK
+   Operator-triggered, read-only positive ownership proof over 40.2.28.
+   - upgrades REVIEW_REQUIRED only when an exact current code owner is positively known;
+   - exact symbolic key + read/write/fallback path counts as positive ownership proof;
+   - absence of a literal reference is never converted to retirement proof;
+   - RETIRABLE_PROVEN remains empty and the retirement gate stays CLOSED;
+   - no deletion, migration, localStorage write, timer, fetch or WebSocket is added.
+   ============================================================ */
+const ATLAS_STORAGE_OWNERSHIP_PROOF_SCHEMA_40229="agent_crypto.storage_ownership_proof.v1";
+const ATLAS_STORAGE_OWNERSHIP_PROOF_LEDGER_40229=Object.freeze({
+  "agent_crypto_erith_ia_market_cache_v1_1_alpha_26_37_top50":Object.freeze({family:"Cache marché legacy",decision:"ACTIVE_LEGACY",owner_hint:"LEGACY_MARKET_CACHE_KEYS",proof_grade:"EXACT_SYMBOLIC_FALLBACK",owner_proof:"preuve positive parent 40.2.28 : clé exacte dans LEGACY_MARKET_CACHE_KEYS, lue par loadMarketCache comme fallback accepté",evidence:"app.js · LEGACY_MARKET_CACHE_KEYS → loadMarketCache"}),
+  "agent_crypto_history_v2":Object.freeze({family:"Historique décisionnel",decision:"ACTIVE",owner_hint:"ATLAS_HISTORY_V2_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : constante exacte avec localStorage.getItem + localStorage.setItem",evidence:"app.js · ATLAS_HISTORY_V2_KEY"}),
+  "agent_crypto_current_journal_v33":Object.freeze({family:"Journal CURRENT",decision:"ACTIVE",owner_hint:"ATLAS_CURRENT_JOURNAL_33_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : constante exacte avec lecture + écriture du journal CURRENT",evidence:"app.js · ATLAS_CURRENT_JOURNAL_33_KEY"}),
+  "agent_crypto_erith_ia_auto_reader_v1_1_alpha_13":Object.freeze({family:"Auto Reader",decision:"ACTIVE",owner_hint:"AUTO_MEMORY_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : readAutoMemory/writeAutoMemory et effacement opérateur ciblé utilisent cette clé exacte",evidence:"app.js · AUTO_MEMORY_KEY"}),
+  "agent_crypto_erith_ia_watch_profiles_v3":Object.freeze({family:"Watch profiles",decision:"ACTIVE",owner_hint:"WATCH_PROFILE_STORAGE_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : profil watch lu et écrit via la constante exacte",evidence:"app.js · WATCH_PROFILE_STORAGE_KEY"}),
+  "agent_crypto_erith_ia_source_dock_v27_2":Object.freeze({family:"Sources",decision:"ACTIVE",owner_hint:"ATLAS_SOURCE_DOCK_CACHE_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : cache Source Dock lu et écrit via la constante exacte",evidence:"app.js · ATLAS_SOURCE_DOCK_CACHE_KEY"}),
+  "agent_crypto_erith_ia_news_visit_v2":Object.freeze({family:"News",decision:"ACTIVE",owner_hint:"NEWS_SENTINEL_VISIT_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : état de visite News Sentinel lu et écrit via la constante exacte",evidence:"app.js · NEWS_SENTINEL_VISIT_KEY"}),
+  "agent_crypto_erith_ia_workspace_last_valid_graph_v1":Object.freeze({family:"Workspace",decision:"ACTIVE",owner_hint:"ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : dernier graphe valide relu et sauvegardé via la constante exacte",evidence:"app.js · ATLAS_WORKSPACE_LAST_VALID_GRAPH_KEY"}),
+  "agent_crypto_erith_ia_workspace_state_v2":Object.freeze({family:"Workspace",decision:"ACTIVE",owner_hint:"ATLAS_WORKSPACE_STATE_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : état workspace relu et sauvegardé via la constante exacte",evidence:"app.js · ATLAS_WORKSPACE_STATE_KEY"}),
+  "agent_crypto_erith_ia_memory_truth_v27_2_5":Object.freeze({family:"Memory Truth",decision:"ACTIVE",owner_hint:"ATLAS_MEMORY_TRUTH_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : mémoire truth lue et écrite via la constante exacte",evidence:"app.js · ATLAS_MEMORY_TRUTH_KEY"}),
+  "agent_crypto_erith_ia_watchlist_v2_alpha_26_8":Object.freeze({family:"Watchlist",decision:"ACTIVE",owner_hint:"WATCH_STORAGE_KEY",proof_grade:"EXACT_READ_WRITE",owner_proof:"preuve positive parent 40.2.28 : watchlist courante lue, écrite et nettoyée via la constante exacte",evidence:"app.js · WATCH_STORAGE_KEY"})
+});
+function atlasStorageOwnershipProofClassify40229(row){
+  const key=String(row?.key||"");
+  const positive=ATLAS_STORAGE_OWNERSHIP_PROOF_LEDGER_40229[key];
+  if(positive)return {...positive,positive_ownership_proof:true,retirement_authorized:false};
+  const base=atlasStorageLineageDecisionClassify40228(row);
+  return {...base,proof_grade:base.decision==="REVIEW_REQUIRED"?"UNRESOLVED":"INHERITED_POSITIVE",positive_ownership_proof:base.decision==="ACTIVE"||base.decision==="ACTIVE_LEGACY",retirement_authorized:false};
+}
+function atlasStorageOwnershipProofAudit40229(snapshot=atlasStorageHealthLocalSnapshot40198()){
+  const sourceRows=Array.isArray(snapshot?.rows)?snapshot.rows:[];
+  const rows=sourceRows.map(row=>{const classified=atlasStorageOwnershipProofClassify40229(row);return {key:String(row.key||""),bytes:Number(row.bytes||0),...classified};}).sort((a,b)=>b.bytes-a.bytes);
+  const summary=Object.fromEntries(ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228.map(state=>[state,{count:0,bytes:0}]));
+  rows.forEach(row=>{const bucket=summary[row.decision]||summary.REVIEW_REQUIRED;bucket.count+=1;bucket.bytes+=Number(row.bytes||0);});
+  const newlyProven=rows.filter(row=>Object.prototype.hasOwnProperty.call(ATLAS_STORAGE_OWNERSHIP_PROOF_LEDGER_40229,row.key));
+  const retirable=rows.filter(row=>row.decision==="RETIRABLE_PROVEN");
+  const health=globalThis.__AGENT_CRYPTO_STORAGE_HEALTH_LAST_40198__||null;
+  return {
+    schema:ATLAS_STORAGE_OWNERSHIP_PROOF_SCHEMA_40229,
+    build:String(ATLAS_BUILD),
+    parent_decision_schema:ATLAS_STORAGE_LINEAGE_DECISION_SCHEMA_40228,
+    proof_scope:"positive exact owner references in parent 40.2.28 app.js; unresolved keys remain REVIEW_REQUIRED",
+    captured_at:new Date().toISOString(),
+    operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,
+    storage_write_added:false,network_request_added:false,timer_added:false,retirement_gate:"CLOSED",
+    graph_context_v7_observed_ok:Boolean(health?.graph?.ok),
+    count:rows.length,total_bytes:rows.reduce((sum,row)=>sum+Number(row.bytes||0),0),summary,
+    newly_proven_owner_count:newlyProven.length,newly_proven_owner_bytes:newlyProven.reduce((sum,row)=>sum+Number(row.bytes||0),0),
+    retirable_proven_count:retirable.length,retirable_proven_bytes:retirable.reduce((sum,row)=>sum+Number(row.bytes||0),0),
+    decision:"NO_RETIREMENT_AUTHORIZED",
+    proof_rule:"La preuve positive d’un propriétaire interdit le retrait ; l’absence de référence dans ce scope reste REVIEW_REQUIRED et ne prouve jamais la non-propriété.",
+    rows
+  };
+}
+function atlasStorageOwnershipProofRender40229(){
+  const node=document.getElementById("atlasStorageLineage40224");if(!node)return null;
+  const audit=atlasStorageOwnershipProofAudit40229();
+  const summary=ATLAS_STORAGE_LINEAGE_DECISION_STATES_40228.map(state=>{const x=audit.summary[state];return `${state} ${x.count} · ${atlasStorageHealthBytesLabel40198(x.bytes)}`;});
+  const top=audit.rows.slice(0,20).map((r,i)=>`${i+1}. ${r.key} · ${atlasStorageHealthBytesLabel40198(r.bytes)} · ${r.decision} · ${r.family} · ${r.proof_grade||"—"} · ${r.owner_proof}`);
+  node.textContent=[`STORAGE OWNERSHIP PROOF 40.2.29 · ${audit.count} clé(s) · ${atlasStorageHealthBytesLabel40198(audit.total_bytes)}`,summary.join(" | "),`PROPRIÉTAIRES POSITIVEMENT PROUVÉS DANS CE PASSAGE ${audit.newly_proven_owner_count} · ${atlasStorageHealthBytesLabel40198(audit.newly_proven_owner_bytes)}`,`RETIREMENT GATE ${audit.retirement_gate} · RETIRABLE_PROVEN ${audit.retirable_proven_count} · aucune suppression autorisée`,`Graph Context V7 observé : ${audit.graph_context_v7_observed_ok?"OK":"NON PROUVÉ DANS CETTE CAPTURE"}`,"",...top,"",`Décision : ${audit.decision}`,audit.proof_rule].join("\n");
+  globalThis.__AGENT_CRYPTO_STORAGE_OWNERSHIP_PROOF_LAST_40229__=audit;
+  return audit;
+}
+function atlasStorageOwnershipProofExport40229(){
+  const payload={schema:"agent_crypto.storage_lineage_bundle.v4",build:String(ATLAS_BUILD),exported_at:new Date().toISOString(),lineage_v2:atlasStorageLineageAudit40224(),decision_40_2_28:atlasStorageLineageDecisionAudit40228(),ownership_proof_40_2_29:atlasStorageOwnershipProofAudit40229()};
+  atlasOracleBackupDownload(`agent_crypto_storage_ownership_proof_${String(ATLAS_BUILD).replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
+  return payload;
+}
+document.getElementById("btnAtlasStorageLineage40224")?.addEventListener("click",()=>atlasStorageOwnershipProofRender40229());
+document.getElementById("btnAtlasStorageLineageExport40224")?.addEventListener("click",()=>atlasStorageOwnershipProofExport40229());
+globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwnershipProofAudit40229,render:atlasStorageOwnershipProofRender40229,exportJson:atlasStorageOwnershipProofExport40229,ledger:ATLAS_STORAGE_OWNERSHIP_PROOF_LEDGER_40229,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
 
 /* ============================================================
    14 — VERSION CONTROL — PROTECTED CORE
@@ -44857,7 +44928,7 @@ globalThis.AtlasStorageLineageDecision40228=Object.freeze({audit:atlasStorageLin
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.28";
+const ATLAS_BUILD = "40.2.29";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.28 — PARKER LEWIS CAN'T LOSE · STORAGE LINEAGE DECISION LOCK
+     40.2.29 — PARKER LEWIS CAN'T LOSE · STORAGE OWNERSHIP PROOF LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.28";
+  const BUILD_CURRENT = "40.2.29";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -892,6 +892,17 @@
           && globalThis.AtlasStorageLineageDecision40228?.deletion_enabled === false
           && globalThis.AtlasStorageLineageDecision40228?.retirement_gate === "CLOSED",
         "audit décisionnel opérateur · ACTIVE/LEGACY/MIGRATED/REVIEW · RETIRABLE_PROVEN fermé · aucune suppression"),
+      check("Storage Ownership Proof 40.2.29",
+        globalThis.ErithStorageOwnershipProofContract40229?.operator_triggered_only === true
+          && globalThis.ErithStorageOwnershipProofContract40229?.read_only === true
+          && globalThis.ErithStorageOwnershipProofContract40229?.automatic_boot_scan === false
+          && globalThis.ErithStorageOwnershipProofContract40229?.deletion_enabled === false
+          && globalThis.ErithStorageOwnershipProofContract40229?.retirement_gate === "CLOSED"
+          && globalThis.ErithStorageOwnershipProofContract40229?.positive_owner_proof_only === true
+          && globalThis.ErithStorageOwnershipProofContract40229?.unresolved_absence_is_not_non_ownership_proof === true
+          && globalThis.AtlasStorageOwnershipProof40229?.deletion_enabled === false
+          && globalThis.AtlasStorageOwnershipProof40229?.retirement_gate === "CLOSED",
+        "preuve positive de propriété uniquement · REVIEW conservateur · RETIRABLE_PROVEN fermé · aucune suppression"),
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
           && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"
