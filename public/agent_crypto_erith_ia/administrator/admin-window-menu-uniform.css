@@ -705,3 +705,146 @@ body.atlas-section-air-40292 #atlasAnalyticalMemory394.admin-analytical-emblem-h
   body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body {padding-left:6px!important}
 }
 
+
+
+/* ============================================================================
+   40.2.93 — COMPACT SECTION HIERARCHY + BORDERED SUBSECTIONS LOCK · VISUAL ONLY
+
+   Operator correction after 40.2.92:
+   - remove only the redundant intermediate wrapper/frame;
+   - keep true business subsections visibly outlined;
+   - recover vertical and peripheral space throughout accordion families;
+   - do not touch Graphique, Lecture technique, Oracle calculations, News logic,
+     Celestial transport, network, timers or Window Manager geometry.
+   ============================================================================ */
+body.atlas-section-density-40293{
+  --atlas-density-gap:6px;
+  --atlas-density-pad-x:8px;
+  --atlas-density-pad-y:6px;
+  --atlas-subframe-line:rgba(126,224,255,.18);
+  --atlas-subframe-bg:rgba(3,12,20,.22);
+}
+
+/* Recover space around expanded families while keeping the outer accordion frame. */
+body.atlas-section-density-40293 details.atlas-collapse[data-layout-family] > .atlas-collapse-body{
+  padding:6px 8px 8px!important;
+}
+body.atlas-section-density-40293 details.atlas-collapse[data-layout-family] > .atlas-collapse-body > section.panel.glass{
+  margin:0!important;
+}
+
+/* Main summaries stay readable, but lose excess vertical air. */
+body.atlas-section-density-40293 details.atlas-collapse[data-layout-family] > summary.atlas-collapse-summary{
+  padding-top:9px!important;
+  padding-bottom:9px!important;
+}
+
+/* ORACLE — outer frame -> bordered subsection -> metric cards. No wrapper level 1.5. */
+body.atlas-section-density-40293 #oracle-analysis-suite > .atlas-oracle-suite-body{
+  padding:5px 6px 7px!important;
+}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection{
+  margin:0 0 6px!important;
+  border:1px solid var(--atlas-subframe-line)!important;
+  border-radius:11px!important;
+  background:linear-gradient(135deg,rgba(126,224,255,.025),rgba(255,255,255,.008))!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012)!important;
+  overflow:hidden!important;
+}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection:last-child{margin-bottom:0!important}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection + .atlas-oracle-suite-subsection{
+  border-top:1px solid var(--atlas-subframe-line)!important;
+}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-summary{
+  min-height:44px!important;
+  padding:7px 9px!important;
+  border:0!important;
+  border-bottom:1px solid rgba(126,224,255,.10)!important;
+  border-radius:0!important;
+  background:linear-gradient(90deg,rgba(126,224,255,.050),rgba(4,12,18,.045) 48%,transparent)!important;
+  box-shadow:inset 2px 0 0 rgba(126,224,255,.42)!important;
+}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body{
+  padding:6px 8px 8px!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body > .panel.glass,
+body.atlas-section-density-40293 #oracle-analysis-suite #oracle-lab-dashboard,
+body.atlas-section-density-40293 #oracle-analysis-suite #oracle-infrastructure-observatory{
+  margin:0!important;
+  padding-left:0!important;
+  padding-right:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+/* Oracle instrument internals: retain useful boxes, trim only outer spacing. */
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-long-shadow-40273{margin-top:6px!important;padding:9px!important}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-long-grid-40282{gap:6px!important}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-long-card-40282{padding:8px!important}
+body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-infra-modules{gap:6px!important}
+
+/* NEWS -> MARCHÉ — remove only the global wrapper; true subsections get their box back. */
+body.atlas-section-density-40293 #news-market-explanation > .news-market-report-body-40241{
+  padding:5px 7px 7px!important;
+}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235{
+  padding:5px 3px 3px!important;
+}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236,
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-role-quality-40237,
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238{
+  margin:6px 0!important;
+  padding:8px 9px!important;
+  border:1px solid rgba(126,224,255,.16)!important;
+  border-radius:10px!important;
+  background:rgba(3,12,20,.20)!important;
+  box-shadow:none!important;
+}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236{border-left:2px solid rgba(112,211,255,.56)!important}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-role-quality-40237{border-left:2px solid rgba(185,167,255,.58)!important}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238{border-left:2px solid rgba(115,240,209,.60)!important}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-market-verdict-40235{
+  margin-top:6px!important;
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+  border:1px solid rgba(255,211,119,.20)!important;
+  border-left:2px solid rgba(255,211,119,.60)!important;
+  border-radius:10px!important;
+}
+
+/* Evidence Explorer / Astro / Celestial / News: reclaim perimeter without flattening cards. */
+body.atlas-section-density-40293 :is(#oracle-evidence-explorer,#astrocycle-4055,#celestial-sentinel-4055,#news-sentinel) > .atlas-collapse-body{
+  padding:6px 8px 8px!important;
+}
+body.atlas-section-density-40293 :is(#oracle-evidence-explorer,#astrocycle-4055,#celestial-sentinel-4055,#news-sentinel) > .atlas-collapse-body > section.panel.glass{
+  margin:0!important;
+}
+
+/* Local Atlas pipeline: when CURRENT starts, the pipeline becomes the viewport anchor. */
+body.atlas-section-density-40293 #atlasAnalysisProgressCard{
+  scroll-margin-top:10px!important;
+  margin-top:6px!important;
+  margin-bottom:6px!important;
+}
+body.atlas-section-density-40293 #local-ai-hub.atlas-analysis-running-40293 #atlasAnalysisProgressCard{
+  border-color:rgba(91,224,255,.42)!important;
+  box-shadow:0 0 0 1px rgba(91,224,255,.08),0 10px 26px rgba(0,0,0,.16)!important;
+}
+body.atlas-section-density-40293 #local-ai-hub.atlas-analysis-running-40293 .atlas-analysis-progress-nodes{gap:6px!important}
+
+@media(max-width:1366px){
+  body.atlas-section-density-40293 details.atlas-collapse[data-layout-family] > .atlas-collapse-body{padding:5px 6px 7px!important}
+  body.atlas-section-density-40293 details.atlas-collapse[data-layout-family] > summary.atlas-collapse-summary{padding-top:8px!important;padding-bottom:8px!important}
+  body.atlas-section-density-40293 #oracle-analysis-suite > .atlas-oracle-suite-body{padding:4px 5px 6px!important}
+  body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection{margin-bottom:5px!important;border-radius:9px!important}
+  body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-summary{min-height:42px!important;padding:6px 8px!important}
+  body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body{padding:5px 6px 7px!important}
+  body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236,
+  body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-role-quality-40237,
+  body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238{margin:5px 0!important;padding:7px 8px!important}
+}

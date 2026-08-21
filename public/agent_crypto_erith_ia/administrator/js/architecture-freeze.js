@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.92 — PARKER LEWIS CAN'T LOSE · SECTION AIR + EMBLEMS LOCK
+     40.2.93 — PARKER LEWIS CAN'T LOSE · COMPACT SECTION HIERARCHY + ATLAS CURRENT VIEWPORT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.92";
+  const BUILD_CURRENT = "40.2.93";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -291,6 +291,18 @@
     return {
       ok: bodyOk && !!oracle && !!news && !!system && !!projects && !!sources && !!analytical,
       detail:`body=${String(bodyOk)} · oracle=${String(!!oracle)} · news=${String(!!news)} · system=${String(!!system)} · projects=${String(!!projects)} · sources=${String(!!sources)} · analytical=${String(!!analytical)}`
+    };
+  }
+
+  function sectionDensityAtlasViewportContract40293() {
+    const bodyOk = document.body?.classList?.contains("atlas-section-density-40293") === true;
+    const progress = document.getElementById("atlasAnalysisProgressCard");
+    const localHub = document.getElementById("local-ai-hub");
+    const oracleSubsections = Number(document.querySelectorAll?.("#oracle-analysis-suite .atlas-oracle-suite-subsection")?.length || 0);
+    const news = document.getElementById("newsMarketOperatorIntelligence40235");
+    return {
+      ok: bodyOk && !!progress && !!localHub && oracleSubsections >= 2 && !!news,
+      detail:`body=${String(bodyOk)} · progress=${String(!!progress)} · hub=${String(!!localHub)} · oracleSubsections=${oracleSubsections} · news=${String(!!news)}`
     };
   }
 
@@ -1140,6 +1152,7 @@
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
       check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract40289().ok === true, graphToolbarStateContract40289().detail),
       check("Sections · air + emblèmes transparents 40.2.92", sectionAirEmblemContract40292().ok === true, sectionAirEmblemContract40292().detail),
+      check("Sections · hiérarchie compacte + sous-sections bordées + Atlas viewport 40.2.93", sectionDensityAtlasViewportContract40293().ok === true, sectionDensityAtlasViewportContract40293().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),

@@ -22094,6 +22094,34 @@ function atlasLocalReportStoreCore(mode, result, snapshot, options = {}) {
   return report;
 }
 
+function atlasAnalysisViewportAdapt40293(card, phase) {
+  if (!card) return false;
+  const hub = document.getElementById("local-ai-hub");
+  const owner = card.closest?.("details.atlas-local-ai-collapse");
+  const running = ["atlas", "nox", "aerith"].includes(String(phase || ""));
+  hub?.classList.toggle("atlas-analysis-running-40293", running);
+
+  if (!running) {
+    if (["idle", "history", "observer", "done", "error"].includes(String(phase || ""))) {
+      delete card.dataset.viewportFocused40293;
+    }
+    return false;
+  }
+  if (card.dataset.viewportFocused40293 === "1") return true;
+  card.dataset.viewportFocused40293 = "1";
+  if (owner && !owner.open) owner.open = true;
+
+  window.requestAnimationFrame(() => {
+    try {
+      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
+      card.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start", inline: "nearest" });
+    } catch (_) {
+      try { card.scrollIntoView(true); } catch (_) {}
+    }
+  });
+  return true;
+}
+
 function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = "") {
   const card = document.getElementById("atlasAnalysisProgressCard");
   if (!card) return false;
@@ -22109,6 +22137,7 @@ function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = ""
     ? 100
     : atlasLocalReportsProgressPercent(safeCompleted, 4);
   card.dataset.phase = phase;
+  atlasAnalysisViewportAdapt40293(card, phase);
 
   const bar = document.getElementById("atlasAnalysisProgressBar");
   const pct = document.getElementById("atlasAnalysisProgressPercent");
@@ -46012,7 +46041,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.92";
+const ATLAS_BUILD = "40.2.93";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
