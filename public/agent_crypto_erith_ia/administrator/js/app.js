@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.00";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ADMIN FAMILY ORDER + MENU ALIGNMENT LOCK";
+  const ADMIN_BUILD = "40.3.01";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FAMILY COMPACT REDUCE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -476,28 +476,38 @@
         title: "Analyse & décision",
         tone: "cyan",
         resolveEntries: () => groupFrom(".atlas-layout-family-analysis", ".atlas-layout-family-intelligence").map(node => entry(node)),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-analysis")) || nodes[0]
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-analysis")) || nodes[0],
+        // 40.3.01 — docked Reduce keeps the native 01 header + Oracle summary.
+        resolveCompactNodes: () => [q(".atlas-layout-family-analysis"), byId("oracle-analysis-suite")].filter(Boolean),
+        resolveCompactCollapsedDetails: () => [byId("oracle-analysis-suite")].filter(Boolean)
       },
       {
         id: "intelligence-memoire-creation",
         title: "Intelligence, mémoire & création",
         tone: "violet",
         resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-intelligence", ["intelligence", "creation"]),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-intelligence")) || nodes[0]
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-intelligence")) || nodes[0],
+        // 40.3.01 — docked Reduce keeps the native 02 header + Atlas CURRENT summary.
+        resolveCompactNodes: () => [q(".atlas-layout-family-intelligence"), byId("atlas-local-ai-collapse")].filter(Boolean),
+        resolveCompactCollapsedDetails: () => [byId("atlas-local-ai-collapse")].filter(Boolean)
       },
       {
         id: "preparation-operations",
         title: "Préparation & opérations",
         tone: "gold",
         resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-operations", ["operations"]),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-operations")) || nodes[0]
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-operations")) || nodes[0],
+        // 40.3.01 — docked Reduce keeps the real family header, never a generic minibar.
+        resolveCompactNodes: () => [q(".atlas-layout-family-operations")].filter(Boolean)
       },
       {
         id: "experimentation-systeme",
         title: "Expérimentation & système",
         tone: "orange",
         resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-system", ["system", "experiment"]),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0]
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
+        // 40.3.01 — docked Reduce keeps the real family header at its canonical end position.
+        resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {
         id: "missions-de-vie",

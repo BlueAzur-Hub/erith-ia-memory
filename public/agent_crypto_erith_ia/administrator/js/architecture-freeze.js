@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.00 — PARKER LEWIS CAN'T LOSE · ADMIN FAMILY ORDER + MENU ALIGNMENT LOCK
+     40.3.01 — PARKER LEWIS CAN'T LOSE · FAMILY COMPACT REDUCE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.00";
+  const BUILD_CURRENT = "40.3.01";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -356,6 +356,28 @@
     return {
       ok: bodyOk && directOrder && membersBeforeHeader && controlsRight,
       detail:`body=${String(bodyOk)} · 04→audience=${String(directOrder)} · system/experiment-before-04=${familyMembers.length}/6:${String(membersBeforeHeader)} · menus-right=${controls.length}/3:${String(controlsRight)}`
+    };
+  }
+
+
+  function familyCompactReduceContract40301() {
+    const bodyOk = document.body?.classList?.contains("atlas-family-compact-reduce-40301") === true;
+    const wm = globalThis.ErithAdminWindowManager?.contract;
+    const manager = globalThis.ErithAdministratorWindows;
+    const ids = ["analyse-decision","intelligence-memoire-creation","preparation-operations","experimentation-systeme"];
+    const wins = ids.map(id => manager?.getWindow?.(id)).filter(Boolean);
+    const configured = wins.length === 4 && wins.every(win => typeof win.resolveCompactNodes === "function");
+    const analysis = manager?.getWindow?.("analyse-decision");
+    const intelligence = manager?.getWindow?.("intelligence-memoire-creation");
+    const collapsedResolvers = typeof analysis?.resolveCompactCollapsedDetails === "function" && typeof intelligence?.resolveCompactCollapsedDetails === "function";
+    const representatives = !!document.getElementById("oracle-analysis-suite") && !!document.getElementById("atlas-local-ai-collapse");
+    return {
+      ok: bodyOk
+        && wm?.build === "40.3.01"
+        && wm?.docked_family_compact_representative === true
+        && wm?.floating_family_minimize_uses_historical_minibar === true
+        && configured && collapsedResolvers && representatives,
+      detail:`body=${String(bodyOk)} · wm=${wm?.build || "—"} · compact=${String(wm?.docked_family_compact_representative === true)} · configured=${wins.length}/4:${String(configured)} · reps=${String(representatives)}`
     };
   }
 
@@ -1209,6 +1231,7 @@
       check("Sections · frontières familles + emblèmes sur axe signal 40.2.98", familyBoundaryContract40298().ok === true, familyBoundaryContract40298().detail),
       check("Navigation · Book 2×3 + boutons internes + ADMIN unique 40.2.99", bookNavigationContract40299().ok === true, bookNavigationContract40299().detail),
       check("Familles · 04 devant Mesure d’audience + menus 02/03/04 à droite 40.3.00", adminFamilyOrderMenuContract40300().ok === true, adminFamilyOrderMenuContract40300().detail),
+      check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),

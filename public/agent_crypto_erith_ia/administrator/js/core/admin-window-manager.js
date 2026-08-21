@@ -175,6 +175,67 @@
       });
     }
 
+    // 40.3.01 — docked family compact presentation.
+    // This extends Reduce only for definitions that explicitly opt in.
+    // Other windows keep the historical minibar path untouched.
+    function compactNodes(win) {
+      if (!win || typeof win.resolveCompactNodes !== "function") return [];
+      let raw = [];
+      try { raw = win.resolveCompactNodes(win.nodes, win.entries) || []; } catch { raw = []; }
+      return [...new Set((Array.isArray(raw) ? raw : [raw]).filter(node => node instanceof HTMLElement && win.nodes.includes(node)))];
+    }
+
+    function compactCollapsedDetails(win) {
+      if (!win || typeof win.resolveCompactCollapsedDetails !== "function") return [];
+      let raw = [];
+      try { raw = win.resolveCompactCollapsedDetails(win.nodes, win.entries) || []; } catch { raw = []; }
+      return [...new Set((Array.isArray(raw) ? raw : [raw]).filter(node => node instanceof HTMLDetailsElement && win.nodes.includes(node)))];
+    }
+
+    function supportsDockedCompact(win) {
+      return !win?.floating && compactNodes(win).length > 0;
+    }
+
+    function activateDockedCompact(win) {
+      if (!supportsDockedCompact(win)) return false;
+      const keep = new Set(compactNodes(win));
+      if (!win.compactPresentationActive) {
+        win.compactPresentationActive = true;
+        win.compactDetailOpenState.clear();
+        compactCollapsedDetails(win).forEach(detail => {
+          win.compactDetailOpenState.set(detail, detail.open === true);
+          if (!win.compactDetailToggleHandlers.has(detail)) {
+            const handler = () => {
+              if (win.minimized && !win.floating && detail.open) detail.open = false;
+            };
+            detail.addEventListener("toggle", handler);
+            win.compactDetailToggleHandlers.set(detail, handler);
+          }
+        });
+      }
+      compactCollapsedDetails(win).forEach(detail => { if (detail.open) detail.open = false; });
+      win.nodes.forEach(node => setNodeSuppressed(node, !keep.has(node)));
+      win.anchor.classList.add("admin-native-family-compact");
+      keep.forEach(node => node.classList.add("admin-native-family-compact-visible"));
+      return true;
+    }
+
+    function deactivateDockedCompact(win, restoreDetails = true) {
+      if (!win) return;
+      win.nodes.forEach(node => {
+        setNodeSuppressed(node, false);
+        node.classList.remove("admin-native-family-compact-visible");
+      });
+      win.anchor?.classList?.remove("admin-native-family-compact");
+      if (restoreDetails && win.compactPresentationActive) {
+        win.compactDetailOpenState.forEach((wasOpen, detail) => {
+          if (detail instanceof HTMLDetailsElement && detail.isConnected) detail.open = wasOpen === true;
+        });
+      }
+      win.compactDetailOpenState.clear();
+      win.compactPresentationActive = false;
+    }
+
     function resolveHomeTarget(win) {
       const preferred = visibleEntry(win)?.node || win.anchor;
       if (preferred?.parentElement) return preferred;
@@ -395,6 +456,11 @@
         dragFloatGeometry: typeof def.dragFloatGeometry === "function" ? def.dragFloatGeometry : null,
         geometryPolicy: def.geometryPolicy && typeof def.geometryPolicy === "object" ? { ...def.geometryPolicy } : null,
         resolvePortalHost: typeof def.resolvePortalHost === "function" ? def.resolvePortalHost : null,
+        resolveCompactNodes: typeof def.resolveCompactNodes === "function" ? def.resolveCompactNodes : null,
+        resolveCompactCollapsedDetails: typeof def.resolveCompactCollapsedDetails === "function" ? def.resolveCompactCollapsedDetails : null,
+        compactPresentationActive: false,
+        compactDetailOpenState: new Map(),
+        compactDetailToggleHandlers: new Map(),
         controlSets: [],
         placeholders: new Map(),
         shell: null,
@@ -900,6 +966,16 @@
 
     function applyPresentationState(win) {
       const suppressed = win.minimized || win.hidden;
+      const dockedCompact = win.minimized && !win.hidden && !win.floating && supportsDockedCompact(win);
+
+      if (dockedCompact) {
+        removeMinimizeBar(win);
+        activateDockedCompact(win);
+        refreshControlState(win);
+        return;
+      }
+
+      if (win.compactPresentationActive) deactivateDockedCompact(win, true);
       if (win.minimized && !win.hidden) ensureMinimizeBar(win);
       else removeMinimizeBar(win);
 
@@ -940,6 +1016,7 @@
       const next = !!hidden;
       if (next) {
         if (win.maximized) setMaximized(win, false, false);
+        if (win.compactPresentationActive) deactivateDockedCompact(win, true);
         if (win.floating) setFloating(win, false, false);
         win.minimized = false;
         removeMinimizeBar(win);
@@ -953,6 +1030,7 @@
     function setFloating(win, floating, persist = true, geometry = null, options = {}) {
       if (!win) return;
       if (!!floating === win.floating && (floating ? (win.directFixed || win.shell) : true)) return;
+      if (floating && win.compactPresentationActive) deactivateDockedCompact(win, true);
 
       if (!floating) {
         if (win.maximized) {
@@ -1184,6 +1262,7 @@
           target?.classList.remove("admin-native-maximized");
         }
         if (win.minimized || win.hidden) {
+          if (win.compactPresentationActive) deactivateDockedCompact(win, true);
           win.minimized = false;
           win.hidden = false;
           removeMinimizeBar(win);
@@ -1378,7 +1457,8 @@
   }
 
   const WINDOW_MANAGER_CONTRACT = Object.freeze({
-    build: "40.1.48",
+    build: "40.3.01",
+    base_build: "40.1.48",
     default_shell_portal: "document.body",
     explicit_portal_override_supported: true,
     dock_restore: "layout-preserving-placeholder-original-parent",
@@ -1395,6 +1475,11 @@
     drag_single_gesture_detach_move: true,
     floating_minimize_compact_bar: true,
     docked_minimize_restore_pointer_guard: true,
+    docked_family_compact_representative: true,
+    docked_family_compact_preserves_native_header: true,
+    docked_family_compact_collapses_representative_details: true,
+    docked_family_compact_restores_detail_open_state: true,
+    floating_family_minimize_uses_historical_minibar: true,
     minimized_bar_overlap_safe_z_index: true,
     floating_minimize_drag_persists_position: true,
     math_core_compact_score_live: true,
