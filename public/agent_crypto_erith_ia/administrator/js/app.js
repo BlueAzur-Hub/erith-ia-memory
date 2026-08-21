@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.29";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · STORAGE OWNERSHIP PROOF LOCK";
+  const ADMIN_BUILD = "40.2.31";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE V2 SHADOW EVALUATION GATE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -68,6 +68,91 @@
     parent_decision_40_2_28_preserved: true
   });
   globalThis.ErithStorageOwnershipProofContract40229 = STORAGE_OWNERSHIP_PROOF_CONTRACT_40229;
+
+
+  const VISUAL_CONTINUITY_CONTRACT_40230 = Object.freeze({
+    build: "40.2.30",
+    visual_only: true,
+    existing_repository_assets_only: true,
+    technical_portrait_complete_foreground_preserved: true,
+    technical_portrait_letterbox_backdrop_fill: true,
+    intelligence_family_emblem_added: true,
+    asset_used_for_intelligence_family: "./assets/visual/admin-analytical-memory.png",
+    image_generation_added: false,
+    storage_write_added: false,
+    network_request_added: false,
+    timer_added: false,
+    oracle_model_modified: false,
+    evidence_semantics_changed: false,
+    window_manager_modified: false,
+    market_flow_modified: false
+  });
+  globalThis.ErithVisualContinuityContract40230 = VISUAL_CONTINUITY_CONTRACT_40230;
+
+  function applyVisualContinuity40230() {
+    const intelligence = document.querySelector(".atlas-layout-family-intelligence");
+    if (intelligence) {
+      intelligence.classList.add("admin-family-emblem-host-r3", "atlas-visual-continuity-40230");
+      if (!intelligence.querySelector('.admin-family-emblem-r3[data-for="intelligence-40230"]')) {
+        const img = document.createElement("img");
+        img.className = "admin-family-emblem-r3";
+        img.dataset.for = "intelligence-40230";
+        img.src = "./assets/visual/admin-analytical-memory.png";
+        img.alt = "";
+        img.setAttribute("aria-hidden", "true");
+        img.loading = "lazy";
+        img.decoding = "async";
+        intelligence.appendChild(img);
+      }
+    }
+    const detail = document.getElementById("detailPanel");
+    if (detail) detail.classList.add("atlas-tech-letterbox-fill-40230");
+    return Boolean(intelligence && detail);
+  }
+
+  function bindVisualContinuity40230() {
+    if (document.documentElement.dataset.visualContinuity40230 === "1") return;
+    document.documentElement.dataset.visualContinuity40230 = "1";
+    applyVisualContinuity40230();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindVisualContinuity40230, { once: true });
+  else bindVisualContinuity40230();
+
+  globalThis.ErithVisualContinuity40230 = Object.freeze({
+    build: "40.2.30",
+    apply: applyVisualContinuity40230,
+    visual_only: true,
+    existing_repository_assets_only: true,
+    storage_write_added: false,
+    network_request_added: false,
+    timer_added: false
+  });
+
+  const ORACLE_V2_EVALUATION_CONTRACT_40231 = Object.freeze({
+    build: "40.2.31",
+    operator_triggered_only: true,
+    read_only: true,
+    same_t0_required: true,
+    prospective_shadow_only: true,
+    horizons: Object.freeze(["1m", "5m", "15m"]),
+    comparison_models: Object.freeze(["oracle_v2_shadow", "oracle_v1", "ensemble", "best_naive"]),
+    minimum_cases_per_horizon_for_data_ready: 100,
+    coherent_advantage_rule: "V2 >= V1 and V2 >= best naive on all 3 horizons, with >0 edge on at least one horizon",
+    source_health_stratification: true,
+    regime_stratification: true,
+    automatic_promotion: false,
+    model_weights_changed: false,
+    oracle_v1_changed: false,
+    shadow_snapshot_changed: false,
+    evidence_capture_changed: false,
+    outcome_resolution_changed: false,
+    storage_write_added: false,
+    network_request_added: false,
+    timer_added: false,
+    window_manager_modified: false
+  });
+  globalThis.ErithOracleV2EvaluationContract40231 = ORACLE_V2_EVALUATION_CONTRACT_40231;
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);

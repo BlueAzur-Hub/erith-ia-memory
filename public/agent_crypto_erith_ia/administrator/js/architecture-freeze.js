@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.29 — PARKER LEWIS CAN'T LOSE · STORAGE OWNERSHIP PROOF LOCK
+     40.2.31 — PARKER LEWIS CAN'T LOSE · ORACLE V2 SHADOW EVALUATION GATE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.29";
+  const BUILD_CURRENT = "40.2.31";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -903,6 +903,33 @@
           && globalThis.AtlasStorageOwnershipProof40229?.deletion_enabled === false
           && globalThis.AtlasStorageOwnershipProof40229?.retirement_gate === "CLOSED",
         "preuve positive de propriété uniquement · REVIEW conservateur · RETIRABLE_PROVEN fermé · aucune suppression"),
+      check("Visual Continuity 40.2.30",
+        globalThis.ErithVisualContinuityContract40230?.visual_only === true
+          && globalThis.ErithVisualContinuityContract40230?.existing_repository_assets_only === true
+          && globalThis.ErithVisualContinuityContract40230?.technical_portrait_complete_foreground_preserved === true
+          && globalThis.ErithVisualContinuityContract40230?.technical_portrait_letterbox_backdrop_fill === true
+          && globalThis.ErithVisualContinuityContract40230?.intelligence_family_emblem_added === true
+          && globalThis.ErithVisualContinuityContract40230?.oracle_model_modified === false
+          && globalThis.ErithVisualContinuityContract40230?.window_manager_modified === false
+          && globalThis.ErithVisualContinuity40230?.visual_only === true
+          && Boolean(document.querySelector('.atlas-layout-family-intelligence .admin-family-emblem-r3[data-for="intelligence-40230"]'))
+          && document.getElementById("detailPanel")?.classList.contains("atlas-tech-letterbox-fill-40230") === true,
+        "portrait complet conservé · letterbox rempli par le même asset temporel · famille 02 illustrée · aucun moteur touché"),
+      check("Oracle V2 Evaluation Gate 40.2.31",
+        globalThis.ErithOracleV2EvaluationContract40231?.operator_triggered_only === true
+          && globalThis.ErithOracleV2EvaluationContract40231?.read_only === true
+          && globalThis.ErithOracleV2EvaluationContract40231?.same_t0_required === true
+          && globalThis.ErithOracleV2EvaluationContract40231?.prospective_shadow_only === true
+          && globalThis.ErithOracleV2EvaluationContract40231?.automatic_promotion === false
+          && globalThis.ErithOracleV2EvaluationContract40231?.model_weights_changed === false
+          && globalThis.ErithOracleV2EvaluationContract40231?.oracle_v1_changed === false
+          && globalThis.ErithOracleV2EvaluationContract40231?.shadow_snapshot_changed === false
+          && globalThis.AtlasOracleV2Evaluation40231?.read_only === true
+          && globalThis.AtlasOracleV2Evaluation40231?.automatic_promotion === false
+          && globalThis.AtlasOracleV2Evaluation40231?.model_weights_changed === false
+          && Boolean(document.getElementById("atlasOracleV2EvaluationGate40231"))
+          && Boolean(document.getElementById("btnAtlasOracleV2Eval40231")),
+        "audit opérateur same-T0 · prospectif Shadow · V1/ENS/naïf comparables · aucun retuning · promotion bloquée"),
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
           && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"

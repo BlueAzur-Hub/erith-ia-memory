@@ -6386,7 +6386,7 @@ function atlasRuntimeWindowSnapshot40225(){
 function atlasRuntimeNavigationSnapshot40214(){let nav=null;try{nav=(performance.getEntriesByType("navigation")||[])[0]||null;}catch{}const positive=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;let type=String(nav?.type||"");if(!type){try{type=performance?.navigation?.type===1?"reload":performance?.navigation?.type===2?"back_forward":"navigate";}catch{type="unknown";}}return {type:type||"unknown",dom_content_loaded_ms:positive(nav?.domContentLoadedEventEnd),load_ms:positive(nav?.loadEventEnd),dom_interactive_ms:positive(nav?.domInteractive),response_end_ms:positive(nav?.responseEnd),transfer_size:Number.isFinite(Number(nav?.transferSize))?Number(nav.transferSize):null,decoded_body_size:Number.isFinite(Number(nav?.decodedBodySize))?Number(nav.decodedBodySize):null};}
 function atlasRuntimeResourceSnapshot40214(){let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const sum=k=>entries.reduce((a,e)=>{const v=Number(e?.[k]);return a+(Number.isFinite(v)&&v>0?v:0);},0);const measured=k=>entries.filter(e=>Number.isFinite(Number(e?.[k]))&&Number(e[k])>0).length;const largest=entries.map(e=>({name:String(e?.name||""),initiator_type:String(e?.initiatorType||""),transfer_size:Number(e?.transferSize)||0,decoded_body_size:Number(e?.decodedBodySize)||0,duration_ms:Number(e?.duration)||0})).sort((a,b)=>Math.max(b.transfer_size,b.decoded_body_size)-Math.max(a.transfer_size,a.decoded_body_size)).slice(0,5);return {resource_requests_total:entries.length,transfer_bytes_measured:sum("transferSize"),transfer_entries_measured:measured("transferSize"),decoded_bytes_measured:sum("decodedBodySize"),decoded_entries_measured:measured("decodedBodySize"),largest_resources:largest};}
 function atlasRuntimeView40214(){const raw=String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");if(raw)return raw;try{return typeof atlasV2Mode==="function"?atlasV2Mode():"unknown";}catch{return "unknown";}}
-function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.29"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
+function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.31"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
 function atlasRuntimeFmtMs40214(v){return Number.isFinite(Number(v))?`${Math.round(Number(v))} ms`:"—";}
 function atlasRuntimeVisibilityLabel40225(row){return row?`${Number(row.calls||0)}×/${atlasRuntimeFmtMs40214(row.total_ms)}`:"0×/0 ms";}
 /* 40.2.26 — REDUCED / COLLAPSED RUNTIME ATTRIBUTION LOCK
@@ -7531,6 +7531,134 @@ async function atlasOracleShadowV2Refresh(force=false){
 }
 
 globalThis.AtlasOracleShadowV2=Object.freeze({refresh:atlasOracleShadowV2Refresh,compute:atlasOracleShadowV2ComputeRows,snapshot:atlasOracleShadowV2Snapshot,snapshots:atlasOracleShadowV2Snapshots,diagnostics:atlasOracleShadowV2Diagnostics,state:()=>atlasOracleShadowV2State});
+
+
+/* ============================================================
+   40.2.31 — ORACLE V2 SHADOW EVALUATION GATE LOCK
+   Operator-triggered, read-only, same-T0 prospective comparison.
+   No retuning, no promotion, no Evidence write, no timer, no network.
+   ============================================================ */
+const ATLAS_ORACLE_V2_EVAL_HORIZONS_40231=Object.freeze(["1m","5m","15m"]);
+const ATLAS_ORACLE_V2_EVAL_MIN_CASES_40231=100;
+let atlasOracleV2EvaluationState40231={schema:"atlas.oracle.v2.eval_gate.v1",build:"40.2.31",status:"IDLE",captured_at:null,cutoff_t0:null,horizons:{},source_health:null,regimes:[],read_only:true,automatic_promotion:false};
+
+function atlasOracleV2EvalPairedRows40231(rows,horizonKey){
+  const names=["always_up","last_move","momentum_simple","top5_naive","oracle_v1","ensemble"];
+  return (Array.isArray(rows)?rows:[]).filter(row=>{
+    const sh=atlasOracleShadowV2SnapshotForRow(row,horizonKey);
+    if(!(sh?.eligible===true && ["up","down","flat"].includes(String(sh?.prediction||""))))return false;
+    if(!["up","down","flat"].includes(String(row?.outcomes?.[horizonKey]?.direction||"")))return false;
+    const p=atlasOracleProofPredictions(row,horizonKey);
+    return names.every(name=>["up","down","flat"].includes(String(p?.[name]||"")));
+  });
+}
+
+function atlasOracleV2EvalScope40231(rows,horizonKey){
+  const paired=atlasOracleV2EvalPairedRows40231(rows,horizonKey);
+  const shadow=atlasOracleShadowV2ComputeScope(paired,horizonKey);
+  const proof=atlasOracleProofComputeRows(paired,horizonKey);
+  const finite=value=>value===null||value===undefined||value===""?null:(Number.isFinite(Number(value))?Number(value):null);
+  const ensemble=finite(proof?.models?.ensemble?.hit_rate);
+  const naive=finite(proof?.best_naive?.hit_rate);
+  const v2=finite(shadow?.v2_hit_rate),v1=finite(shadow?.v1_hit_rate);
+  const edgeV1=finite(shadow?.v2_vs_v1),edgeNaive=finite(shadow?.v2_vs_naive);
+  return {
+    horizon_key:horizonKey,
+    cases:Number(shadow?.cases||0),
+    paired_cases:paired.length,
+    v2_hit_rate:v2,
+    v1_hit_rate:v1,
+    ensemble_hit_rate:ensemble,
+    best_naive_hit_rate:naive,
+    best_naive_name:String(proof?.best_naive?.name||""),
+    v2_vs_v1:edgeV1,
+    v2_vs_ensemble:v2!==null&&ensemble!==null?v2-ensemble:null,
+    v2_vs_naive:edgeNaive,
+    same_sample:true,
+    prospective_only:true,
+    data_ready:Number(shadow?.cases||0)>=ATLAS_ORACLE_V2_EVAL_MIN_CASES_40231
+  };
+}
+
+function atlasOracleV2EvalSourceHealth40231(rows){
+  const annotated=(Array.isArray(rows)?rows:[]).filter(row=>row?.source_health_t0?.schema==="atlas.oracle.source_health_t0.v1"&&row?.source_health_t0?.prospective===true);
+  const buckets={ok:annotated.filter(row=>String(row?.source_health_t0?.level||"").toUpperCase()==="OK"),degraded:annotated.filter(row=>String(row?.source_health_t0?.level||"").toUpperCase()!=="OK")};
+  const horizons={};
+  ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.forEach(h=>{horizons[h]={ok:atlasOracleV2EvalScope40231(buckets.ok,h),degraded:atlasOracleV2EvalScope40231(buckets.degraded,h)};});
+  return {annotated:annotated.length,ok:buckets.ok.length,degraded:buckets.degraded.length,horizons};
+}
+
+function atlasOracleV2EvalRegimes40231(rows){
+  const groups=new Map();
+  (Array.isArray(rows)?rows:[]).forEach(row=>{
+    const key=String(row?.regime?.key||"").trim(); if(!key)return;
+    if(!groups.has(key))groups.set(key,{key,label:String(row?.regime?.label||key),rows:[]});
+    groups.get(key).rows.push(row);
+  });
+  return [...groups.values()].map(group=>{
+    const horizons=Object.fromEntries(ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.map(h=>[h,atlasOracleV2EvalScope40231(group.rows,h)]));
+    const maxCases=Math.max(...ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.map(h=>Number(horizons[h]?.cases||0)));
+    return {key:group.key,label:group.label,rows:group.rows.length,max_cases:maxCases,horizons};
+  }).filter(group=>group.max_cases>=30).sort((a,b)=>b.max_cases-a.max_cases||a.label.localeCompare(b.label));
+}
+
+function atlasOracleV2EvaluationCompute40231(rows){
+  const source=(Array.isArray(rows)?rows:[]).filter(row=>Number(row?.t0)>0);
+  const cutoff=source.length?Math.max(...source.map(row=>Number(row.t0)||0)):null;
+  const frozen=cutoff?source.filter(row=>Number(row.t0)<=cutoff):[];
+  const horizons=Object.fromEntries(ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.map(h=>[h,atlasOracleV2EvalScope40231(frozen,h)]));
+  const dataReady=ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.every(h=>Number(horizons[h]?.cases||0)>=ATLAS_ORACLE_V2_EVAL_MIN_CASES_40231);
+  const nonNegative=dataReady&&ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.every(h=>Number(horizons[h]?.v2_vs_v1)>=0&&Number(horizons[h]?.v2_vs_naive)>=0);
+  const strict=dataReady&&ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.some(h=>Number(horizons[h]?.v2_vs_v1)>0||Number(horizons[h]?.v2_vs_naive)>0);
+  const status=!dataReady?"INSUFFICIENT":nonNegative&&strict?"ADVANTAGE_COHERENT":"MIXED";
+  return {
+    schema:"atlas.oracle.v2.eval_gate.v1",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.31"),captured_at:new Date().toISOString(),cutoff_t0:cutoff,
+    operator_triggered_only:true,read_only:true,same_t0_required:true,prospective_shadow_only:true,
+    horizons,source_health:atlasOracleV2EvalSourceHealth40231(frozen),regimes:atlasOracleV2EvalRegimes40231(frozen),
+    minimum_cases_per_horizon:ATLAS_ORACLE_V2_EVAL_MIN_CASES_40231,data_ready:dataReady,status,
+    coherent_advantage_rule:"V2 >= V1 and V2 >= best naive on all 3 horizons, with >0 edge on at least one horizon",
+    automatic_promotion:false,model_weights_changed:false,oracle_v1_changed:false,shadow_snapshot_changed:false,evidence_capture_changed:false,outcome_resolution_changed:false,
+    storage_write_added:false,network_request_added:false,timer_added:false
+  };
+}
+
+function atlasOracleV2EvalFmt40231(value,suffix="%"){
+  const n=Number(value);return Number.isFinite(n)?`${n.toFixed(1)}${suffix}`:"—";
+}
+function atlasOracleV2EvalDelta40231(value){const n=Number(value);return Number.isFinite(n)?`${n>=0?"+":""}${n.toFixed(1)} pt`:"—";}
+
+function atlasOracleV2EvaluationRender40231(state=atlasOracleV2EvaluationState40231){
+  const root=document.getElementById("atlasOracleV2EvaluationGate40231"),status=document.getElementById("atlasOracleV2EvalState40231"),body=document.getElementById("atlasOracleV2EvalRows40231"),note=document.getElementById("atlasOracleV2EvalNote40231");
+  if(root)root.dataset.evalState=String(state?.status||"IDLE").toLowerCase();
+  if(status){
+    const label=state?.status==="ADVANTAGE_COHERENT"?"AVANTAGE COHÉRENT · PROMOTION TOUJOURS BLOQUÉE":state?.status==="MIXED"?"RÉSULTAT MIXTE · RESTE SHADOW":state?.status==="INSUFFICIENT"?"ÉCHANTILLON INSUFFISANT · RESTE SHADOW":"NON LANCÉ · PROMOTION BLOQUÉE";
+    status.textContent=label;
+  }
+  if(body&&state?.horizons){
+    body.innerHTML=ATLAS_ORACLE_V2_EVAL_HORIZONS_40231.map(h=>{const x=state.horizons[h]||{};return `<tr><td>${h.toUpperCase()}</td><td>n${Number(x.cases||0)}</td><td>${atlasOracleV2EvalFmt40231(x.v2_hit_rate)}</td><td>${atlasOracleV2EvalFmt40231(x.v1_hit_rate)}</td><td>${atlasOracleV2EvalFmt40231(x.ensemble_hit_rate)}</td><td>${atlasOracleV2EvalFmt40231(x.best_naive_hit_rate)}</td><td>${atlasOracleV2EvalDelta40231(x.v2_vs_v1)}</td><td>${atlasOracleV2EvalDelta40231(x.v2_vs_naive)}</td></tr>`;}).join("");
+  }
+  if(note&&state?.captured_at){
+    const sh=state.source_health||{};
+    note.textContent=`Cutoff T0 ${state.cutoff_t0?new Date(Number(state.cutoff_t0)).toISOString():"—"} · règle gelée n≥${state.minimum_cases_per_horizon} par horizon · source-health ${Number(sh.annotated||0)} annoté(s) / OK ${Number(sh.ok||0)} / dégradé ${Number(sh.degraded||0)} · régimes comparables ${Array.isArray(state.regimes)?state.regimes.length:0} · lecture seule · aucun retuning · aucune promotion automatique.`;
+  }
+  return state;
+}
+
+async function atlasOracleV2EvaluationRun40231(){
+  const button=document.getElementById("btnAtlasOracleV2Eval40231"); if(button)button.disabled=true;
+  try{
+    const rows=await atlasOracleEvidenceAll();
+    atlasOracleV2EvaluationState40231=atlasOracleV2EvaluationCompute40231(rows);
+    return atlasOracleV2EvaluationRender40231(atlasOracleV2EvaluationState40231);
+  }catch(error){
+    atlasOracleV2EvaluationState40231={...atlasOracleV2EvaluationState40231,status:"ERROR",captured_at:new Date().toISOString(),error:String(error?.message||error)};
+    const node=document.getElementById("atlasOracleV2EvalState40231");if(node)node.textContent=`ÉVALUATION INDISPONIBLE · ${atlasOracleV2EvaluationState40231.error}`;
+    return atlasOracleV2EvaluationState40231;
+  }finally{if(button)button.disabled=false;}
+}
+
+document.getElementById("btnAtlasOracleV2Eval40231")?.addEventListener("click",()=>void atlasOracleV2EvaluationRun40231());
+globalThis.AtlasOracleV2Evaluation40231=Object.freeze({run:atlasOracleV2EvaluationRun40231,compute:atlasOracleV2EvaluationCompute40231,render:atlasOracleV2EvaluationRender40231,state:()=>atlasOracleV2EvaluationState40231,read_only:true,same_t0_required:true,prospective_shadow_only:true,automatic_promotion:false,model_weights_changed:false,oracle_v1_changed:false,shadow_snapshot_changed:false});
 
 
 /* ============================================================
@@ -44928,7 +45056,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.29";
+const ATLAS_BUILD = "40.2.31";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
