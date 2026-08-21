@@ -387,3 +387,92 @@ body.atlas-semantic-color-icons-40290 .atlas-collapse-summary>.atlas-section-ico
   body.atlas-semantic-color-icons-40290 .atlas-heading-icon-40290 svg{width:13px!important;height:13px!important}
 }
 
+/* ============================================================================
+   40.2.91 — ASTROCYCLE PLANETARY COLOR SEMANTICS · VISUAL ONLY
+
+   Operator mapping:
+   Saturne = rouge · Mars = orange · Soleil = jaune · Vénus = vert
+   Mercure = bleu · Lune = blanc/argent · Jupiter = doré.
+
+   Contract:
+   - planet color is a semantic accent, not a market signal;
+   - active/next timing state remains separate from planet identity;
+   - ChronosXP calculations, clock cadence, celestial transport and market logic unchanged;
+   - no layout/size/position ownership is introduced here.
+   ============================================================================ */
+body.atlas-astro-planet-colors-40291 {
+  --astro-saturn:#ff6f7d;
+  --astro-mars:#ff9d63;
+  --astro-sun:#ffe46f;
+  --astro-venus:#78e6a2;
+  --astro-mercury:#72bcff;
+  --astro-moon:#f3f6ff;
+  --astro-jupiter:#ffd17a;
+}
+
+body.atlas-astro-planet-colors-40291 [data-planet40291="saturn"]{--astro-planet:var(--astro-saturn);--astro-planet-rgb:255,111,125}
+body.atlas-astro-planet-colors-40291 [data-planet40291="mars"]{--astro-planet:var(--astro-mars);--astro-planet-rgb:255,157,99}
+body.atlas-astro-planet-colors-40291 [data-planet40291="sun"]{--astro-planet:var(--astro-sun);--astro-planet-rgb:255,228,111}
+body.atlas-astro-planet-colors-40291 [data-planet40291="venus"]{--astro-planet:var(--astro-venus);--astro-planet-rgb:120,230,162}
+body.atlas-astro-planet-colors-40291 [data-planet40291="mercury"]{--astro-planet:var(--astro-mercury);--astro-planet-rgb:114,188,255}
+body.atlas-astro-planet-colors-40291 [data-planet40291="moon"]{--astro-planet:var(--astro-moon);--astro-planet-rgb:243,246,255}
+body.atlas-astro-planet-colors-40291 [data-planet40291="jupiter"]{--astro-planet:var(--astro-jupiter);--astro-planet-rgb:255,209,122}
+
+/* 24 planetary-hour cells: thin planet rail + subtle atmosphere only. */
+body.atlas-astro-planet-colors-40291 .atlas-astro-hour-4055[data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb),.34)!important;
+  background:
+    linear-gradient(180deg,rgba(var(--astro-planet-rgb),.075),rgba(4,12,21,.61) 48%,rgba(4,12,21,.66))!important;
+  box-shadow:
+    inset 0 2px 0 rgba(var(--astro-planet-rgb),.55),
+    inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+body.atlas-astro-planet-colors-40291 .atlas-astro-hour-4055[data-planet40291] b{
+  color:var(--astro-planet)!important;
+  text-shadow:0 0 9px rgba(var(--astro-planet-rgb),.12)!important;
+}
+body.atlas-astro-planet-colors-40291 .atlas-astro-hour-4055[data-planet40291] small{
+  color:#9bafbb!important;
+}
+
+/* Current timing state = brighter planet color. Next = moderate preview.
+   State does not replace planet identity with a generic green/gold. */
+body.atlas-astro-planet-colors-40291 .atlas-astro-hour-4055[data-planet40291][data-state="active"]{
+  border-color:rgba(var(--astro-planet-rgb),.84)!important;
+  background:
+    linear-gradient(180deg,rgba(var(--astro-planet-rgb),.16),rgba(var(--astro-planet-rgb),.065) 42%,rgba(4,12,21,.67))!important;
+  box-shadow:
+    inset 0 2px 0 rgba(var(--astro-planet-rgb),.92),
+    inset 0 0 0 1px rgba(255,255,255,.055),
+    0 0 17px rgba(var(--astro-planet-rgb),.16)!important;
+}
+body.atlas-astro-planet-colors-40291 .atlas-astro-hour-4055[data-planet40291][data-state="next"]{
+  border-color:rgba(var(--astro-planet-rgb),.56)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(var(--astro-planet-rgb),.72),
+    0 0 10px rgba(var(--astro-planet-rgb),.075)!important;
+}
+
+/* Current / next KPI cards receive the same planet identity. */
+body.atlas-astro-planet-colors-40291 .atlas-astro-kpis-4055 article[data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb),.34)!important;
+  background:
+    linear-gradient(135deg,rgba(var(--astro-planet-rgb),.09),rgba(3,12,22,.55) 48%)!important;
+  box-shadow:inset 3px 0 0 rgba(var(--astro-planet-rgb),.66)!important;
+}
+body.atlas-astro-planet-colors-40291 .atlas-astro-kpis-4055 article[data-planet40291] b{
+  color:var(--astro-planet)!important;
+  text-shadow:0 0 10px rgba(var(--astro-planet-rgb),.12)!important;
+}
+
+/* Book: keep the color code, reduce glow only. */
+@media (max-width:1366px){
+  body.atlas-astro-planet-colors-40291 .atlas-astro-hour-4055[data-planet40291],
+  body.atlas-astro-planet-colors-40291 .atlas-astro-kpis-4055 article[data-planet40291]{
+    box-shadow:inset 0 2px 0 rgba(var(--astro-planet-rgb),.58)!important;
+  }
+  body.atlas-astro-planet-colors-40291 .atlas-astro-hour-4055[data-planet40291][data-state="active"]{
+    box-shadow:inset 0 2px 0 rgba(var(--astro-planet-rgb),.90),0 0 9px rgba(var(--astro-planet-rgb),.10)!important;
+  }
+}
+

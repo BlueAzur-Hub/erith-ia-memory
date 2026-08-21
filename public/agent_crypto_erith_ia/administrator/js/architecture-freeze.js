@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.90 — PARKER LEWIS CAN'T LOSE · SEMANTIC COLOR + ICONOGRAPHY LOCK
+     40.2.91 — PARKER LEWIS CAN'T LOSE · ASTROCYCLE PLANETARY COLOR SEMANTICS LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.90";
+  const BUILD_CURRENT = "40.2.91";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -277,6 +277,20 @@
     return {
       ok: !!toolbar && !!reading && !!period && !!comparison && !!stylesheet && requiredLabels && requiredReading && fiche && maxNeutral && clearPresent && buttonCount >= 20,
       detail:`toolbar=${String(!!toolbar)} · rows=${[reading,period,comparison].filter(Boolean).length}/3 · lecture=${String(requiredReading)} · fiche=${String(fiche)} · max=${String(maxNeutral)} · clear=${String(clearPresent)} · buttons=${buttonCount} · css=${String(!!stylesheet)}`
+    };
+  }
+
+  function astroPlanetColorContract40291() {
+    const bodyOk = document.body?.classList?.contains("atlas-astro-planet-colors-40291") === true;
+    const timeline = [...(document.querySelectorAll?.("#atlasAstroTimeline4055 .atlas-astro-hour-4055") || [])];
+    const tones = new Set(timeline.map(node => String(node.dataset.planet40291 || "")).filter(Boolean));
+    const expected = ["saturn","mars","sun","venus","mercury","moon","jupiter"];
+    const allTones = expected.every(tone => tones.has(tone));
+    const currentCard = document.getElementById("atlasAstroHour4055")?.closest?.("article");
+    const nextCard = document.getElementById("atlasAstroNext4055")?.closest?.("article");
+    return {
+      ok: bodyOk && timeline.length === 24 && allTones && !!currentCard?.dataset?.planet40291 && !!nextCard?.dataset?.planet40291,
+      detail:`body=${String(bodyOk)} · timeline=${timeline.length}/24 · tones=${tones.size}/7 · current=${currentCard?.dataset?.planet40291 || "—"} · next=${nextCard?.dataset?.planet40291 || "—"}`
     };
   }
 
@@ -1111,6 +1125,7 @@
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
       check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract40289().ok === true, graphToolbarStateContract40289().detail),
+      check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
