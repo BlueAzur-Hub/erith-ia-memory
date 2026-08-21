@@ -4002,6 +4002,35 @@ function atlasChartSetPeriodButtons(days, loading = false) {
   });
 }
 
+
+/* ============================================================
+   40.2.78 — STORAGE RELIEF · VERIFIED INDEXEDDB MIGRATION
+   - active heavy localStorage payloads can be copied to IndexedDB;
+   - exact payload + SHA-256 readback required before operator retirement;
+   - NO automatic deletion;
+   - synchronous read-through mirror keeps Scanner/Chart consumers compatible;
+   - when localStorage writes fail, active payloads fall back to IndexedDB.
+   ============================================================ */
+const ATLAS_STORAGE_RELIEF_40278_DB="agent_crypto_storage_relief_40278";
+const ATLAS_STORAGE_RELIEF_40278_STORE="payloads";
+const ATLAS_STORAGE_RELIEF_TARGETS_40278=Object.freeze([
+  "agent_crypto_scanner_live_archive_v1",
+  "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50"
+]);
+const ATLAS_STORAGE_RELIEF_PRELOAD_40278=Object.freeze([...ATLAS_STORAGE_RELIEF_TARGETS_40278,"agent_crypto_celestial_portable_v1","agent_crypto_breakout_context_v1"]);
+const atlasStorageReliefRuntime40278={mirror:Object.create(null),ready:false,lastCopy:null,lastRetire:null,dbPromise:null};
+function atlasStorageReliefOpen40278(){if(atlasStorageReliefRuntime40278.dbPromise)return atlasStorageReliefRuntime40278.dbPromise;atlasStorageReliefRuntime40278.dbPromise=new Promise((resolve,reject)=>{const req=indexedDB.open(ATLAS_STORAGE_RELIEF_40278_DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(ATLAS_STORAGE_RELIEF_40278_STORE))db.createObjectStore(ATLAS_STORAGE_RELIEF_40278_STORE,{keyPath:"id"});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error("Storage Relief IndexedDB"));}).catch(error=>{atlasStorageReliefRuntime40278.dbPromise=null;throw error;});return atlasStorageReliefRuntime40278.dbPromise;}
+async function atlasStorageReliefGet40278(id){const db=await atlasStorageReliefOpen40278();try{return await new Promise((resolve,reject)=>{const req=db.transaction(ATLAS_STORAGE_RELIEF_40278_STORE,"readonly").objectStore(ATLAS_STORAGE_RELIEF_40278_STORE).get(id);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error||new Error("Storage Relief read"));});}finally{db.close();atlasStorageReliefRuntime40278.dbPromise=null;}}
+async function atlasStorageReliefPut40278(id,payload,meta={}){const db=await atlasStorageReliefOpen40278();try{await new Promise((resolve,reject)=>{const tx=db.transaction(ATLAS_STORAGE_RELIEF_40278_STORE,"readwrite");tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error("Storage Relief write"));tx.objectStore(ATLAS_STORAGE_RELIEF_40278_STORE).put({id,payload:String(payload??""),bytes:new Blob([String(payload??"")]).size,updated_at:new Date().toISOString(),...meta});});return true;}finally{db.close();atlasStorageReliefRuntime40278.dbPromise=null;}}
+async function atlasStorageReliefSha40278(payload){const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(String(payload??"")));return [...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,"0")).join("");}
+function atlasStorageReliefReadSync40278(key){try{const local=localStorage.getItem(key);if(local!==null)return local;}catch(_){}return Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime40278.mirror,key)?atlasStorageReliefRuntime40278.mirror[key]:null;}
+function atlasStorageReliefWriteSync40278(key,payload){const raw=String(payload??"");atlasStorageReliefRuntime40278.mirror[key]=raw;let localOk=false;try{localStorage.setItem(key,raw);localOk=true;}catch(_){}if(ATLAS_STORAGE_RELIEF_PRELOAD_40278.includes(key)||!localOk){void atlasStorageReliefSha40278(raw).then(sha=>atlasStorageReliefPut40278(key,raw,{sha256:sha,verified:false,source:localOk?"mirror":"quota-fallback"})).catch(()=>{});}return {ok:true,local:localOk,indexeddb:true};}
+async function atlasStorageReliefBootstrap40278(){for(const key of ATLAS_STORAGE_RELIEF_PRELOAD_40278){try{const row=await atlasStorageReliefGet40278(key);if(row&&typeof row.payload==="string"&&!Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime40278.mirror,key))atlasStorageReliefRuntime40278.mirror[key]=row.payload;}catch(_){}}atlasStorageReliefRuntime40278.ready=true;window.dispatchEvent(new Event("atlas:storage-relief-ready"));return true;}
+async function atlasStorageReliefCopyTargets40278(){const rows=[];for(const key of ATLAS_STORAGE_RELIEF_TARGETS_40278){let raw=null;try{raw=localStorage.getItem(key);}catch(_){}if(raw===null){const existing=await atlasStorageReliefGet40278(key).catch(()=>null);rows.push({key,state:existing?.payload?"IDB EXISTANT":"ABSENT",bytes:existing?.bytes||0});continue;}const sha=await atlasStorageReliefSha40278(raw);await atlasStorageReliefPut40278(key,raw,{sha256:sha,verified:false,source:"operator-copy"});const readback=await atlasStorageReliefGet40278(key);const readSha=readback?await atlasStorageReliefSha40278(readback.payload):"";const verified=!!readback&&readback.payload===raw&&readSha===sha;if(verified){await atlasStorageReliefPut40278(key,raw,{sha256:sha,verified:true,verified_at:new Date().toISOString(),source:"operator-copy"});atlasStorageReliefRuntime40278.mirror[key]=raw;}rows.push({key,state:verified?"VÉRIFIÉ":"ÉCHEC",bytes:new Blob([raw]).size,sha256:sha});}atlasStorageReliefRuntime40278.lastCopy={at:new Date().toISOString(),rows};return atlasStorageReliefRuntime40278.lastCopy;}
+async function atlasStorageReliefRetireVerified40278(){const rows=[];for(const key of ATLAS_STORAGE_RELIEF_TARGETS_40278){let raw=null;try{raw=localStorage.getItem(key);}catch(_){}if(raw===null){rows.push({key,state:"DÉJÀ ABSENT"});continue;}const record=await atlasStorageReliefGet40278(key).catch(()=>null);const localSha=await atlasStorageReliefSha40278(raw);const idbSha=record?await atlasStorageReliefSha40278(record.payload):"";const verified=!!record&&record.verified===true&&record.payload===raw&&record.sha256===localSha&&idbSha===localSha;if(!verified){rows.push({key,state:"REFUSÉ · COPIE NON VÉRIFIÉE"});continue;}atlasStorageReliefRuntime40278.mirror[key]=record.payload;try{localStorage.removeItem(key);}catch(error){rows.push({key,state:`ÉCHEC RETRAIT · ${String(error?.name||error)}`});continue;}const reread=atlasStorageReliefReadSync40278(key);let parseOk=true;try{JSON.parse(reread||"null");}catch(_){parseOk=false;}rows.push({key,state:parseOk?"RETIRÉ DU LOCALSTORAGE · IDB ACTIF":"REFUSÉ · RELECTURE INVALIDE",bytes:record.bytes||0});}atlasStorageReliefRuntime40278.lastRetire={at:new Date().toISOString(),rows};return atlasStorageReliefRuntime40278.lastRetire;}
+const atlasStorageReliefReady40278=atlasStorageReliefBootstrap40278().catch(()=>false);
+globalThis.AtlasStorageRelief40278=Object.freeze({build:"40.2.78",targets:ATLAS_STORAGE_RELIEF_TARGETS_40278,readSync:atlasStorageReliefReadSync40278,writeSync:atlasStorageReliefWriteSync40278,copyTargets:atlasStorageReliefCopyTargets40278,retireVerified:atlasStorageReliefRetireVerified40278,ready:atlasStorageReliefReady40278,automatic_deletion:false,operator_retirement_only:true,checksum:"SHA-256",read_through_indexeddb:true});
+
 const ATLAS_CHART_LOCAL_CACHE_KEY = "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50";
 
 const ATLAS_CHART_MAX_FUTURE_MS = 5 * 60 * 1000;
@@ -4241,7 +4270,8 @@ function atlasValidateChartSeries({ c, days, prices, payload = null, sourceMode 
 
 function atlasReadLocalChartStore() {
   try {
-    const parsed = JSON.parse(localStorage.getItem(ATLAS_CHART_LOCAL_CACHE_KEY) || "{}");
+    const raw = globalThis.AtlasStorageRelief40278?.readSync?.(ATLAS_CHART_LOCAL_CACHE_KEY) ?? localStorage.getItem(ATLAS_CHART_LOCAL_CACHE_KEY);
+    const parsed = JSON.parse(raw || "{}");
     return parsed && typeof parsed === "object" ? parsed : {};
   } catch {
     return {};
@@ -4249,7 +4279,8 @@ function atlasReadLocalChartStore() {
 }
 
 function atlasWriteLocalChartStore(store) {
-  try { localStorage.setItem(ATLAS_CHART_LOCAL_CACHE_KEY, JSON.stringify(store)); } catch {}
+  const raw = JSON.stringify(store || {});
+  try { if (globalThis.AtlasStorageRelief40278?.writeSync) globalThis.AtlasStorageRelief40278.writeSync(ATLAS_CHART_LOCAL_CACHE_KEY, raw); else localStorage.setItem(ATLAS_CHART_LOCAL_CACHE_KEY, raw); } catch {}
 }
 
 function atlasStoreChartResult(c, days, result, familyOverride = null) {
@@ -45074,7 +45105,8 @@ const atlasScannerCollectorRuntime = {
 
 function atlasScannerCollectorRead(key) {
   try {
-    const rows = JSON.parse(localStorage.getItem(key) || "[]");
+    const raw = globalThis.AtlasStorageRelief40278?.readSync?.(key) ?? localStorage.getItem(key);
+    const rows = JSON.parse(raw || "[]");
     return Array.isArray(rows) ? rows : [];
   } catch {
     return [];
@@ -45083,7 +45115,8 @@ function atlasScannerCollectorRead(key) {
 
 function atlasScannerCollectorWrite(key, rows, limit) {
   const safe = (Array.isArray(rows) ? rows : []).slice(-Math.max(1, Number(limit) || 1));
-  try { localStorage.setItem(key, JSON.stringify(safe)); } catch {}
+  const raw = JSON.stringify(safe);
+  try { if (globalThis.AtlasStorageRelief40278?.writeSync && key === ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY) globalThis.AtlasStorageRelief40278.writeSync(key, raw); else localStorage.setItem(key, raw); } catch {}
   return safe;
 }
 
@@ -45586,6 +45619,18 @@ window.addEventListener("pageshow",()=>void atlasStorageHealthRender40198(),{pas
 queueMicrotask(()=>void atlasStorageHealthRender40198());
 globalThis.AtlasStorageHealth40198=Object.freeze({compute:atlasStorageHealthCompute40198,render:atlasStorageHealthRender40198,build:ATLAS_STORAGE_HEALTH_40198_BUILD,automatic_cleanup:false});
 
+/* 40.2.78 — operator UI for verified storage relief. */
+async function atlasStorageReliefRender40278(message=""){
+  const node=document.getElementById("atlasStorageReliefStatus40278");if(!node)return null;
+  const rows=[];for(const key of ATLAS_STORAGE_RELIEF_TARGETS_40278){let local=null;try{local=localStorage.getItem(key);}catch(_){}const rec=await atlasStorageReliefGet40278(key).catch(()=>null);rows.push(`${key} · local ${local===null?"ABSENT":atlasStorageHealthBytesLabel40198(new Blob([local]).size)} · IndexedDB ${rec?.payload?`${atlasStorageHealthBytesLabel40198(rec.bytes||new Blob([rec.payload]).size)}${rec.verified?" · VÉRIFIÉ":" · copie"}`:"ABSENT"}`);}node.textContent=[`STORAGE RELIEF 40.2.78 · ${message||"copie vérifiée → retrait opérateur uniquement"}`,...rows,"Aucune suppression automatique. Scanner/Graphique relisent IndexedDB via miroir synchrone si la copie localStorage est retirée."].join("\n");return rows;}
+async function atlasStorageReliefCopyUi40278(){const btn=document.getElementById("btnAtlasStorageReliefCopy40278");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefCopyTargets40278();await atlasStorageReliefRender40278(`COPIE TERMINÉE · ${r.rows.filter(x=>x.state==="VÉRIFIÉ").length}/${r.rows.length} vérifiée(s)`);await atlasStorageHealthRender40198();return r;}finally{if(btn)btn.disabled=false;}}
+async function atlasStorageReliefRetireUi40278(){const ok=window.confirm("Retirer uniquement les copies localStorage dont la copie IndexedDB vient d’être vérifiée SHA-256 ? Les clés non vérifiées resteront intactes.");if(!ok)return null;const btn=document.getElementById("btnAtlasStorageReliefRetire40278");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefRetireVerified40278();await atlasStorageReliefRender40278("RETRAIT OPÉRATEUR CONTRÔLÉ");await atlasStorageHealthRender40198();return r;}finally{if(btn)btn.disabled=false;}}
+document.getElementById("btnAtlasStorageReliefCopy40278")?.addEventListener("click",()=>void atlasStorageReliefCopyUi40278());
+document.getElementById("btnAtlasStorageReliefRetire40278")?.addEventListener("click",()=>void atlasStorageReliefRetireUi40278());
+window.addEventListener("atlas:storage-relief-ready",()=>void atlasStorageReliefRender40278(),{passive:true});
+queueMicrotask(()=>void atlasStorageReliefRender40278());
+
+
 
 /* ============================================================
    40.2.3 — STORAGE RETIREMENT PLANNER LOCK
@@ -45824,7 +45869,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.73";
+const ATLAS_BUILD = "40.2.78";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.68 — PARKER LEWIS CAN'T LOSE · CELESTIAL SENTINEL INSTITUTIONAL FEED + EVIDENCE TIMELINE + CROSS-MARKET OBSERVATION LOCK
+     40.2.78 — PARKER LEWIS CAN'T LOSE · IDENTITY + ROLLING SOURCE + BREAKOUT CONFIRMATION + CELESTIAL PORTABLE + STORAGE RELIEF LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.70";
+  const BUILD_CURRENT = "40.2.78";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -98,7 +98,6 @@
       "./js/retrospective-validation.js",
       "./js/multi-collector-concordance.js",
       "./js/memory-health-audit.js",
-      "./js/admin-visual-assets.js",
       "./js/core/admin-window-manager.js",
       "./js/app.js",
       "./js/layout-repair.js",
@@ -850,9 +849,9 @@
       check("Meta asset token", meta("atlas-asset-token") === TOKEN_CURRENT, `meta=${meta("atlas-asset-token") || "—"}`),
       check("Engine lock", meta("atlas-engine-build") === ENGINE_CURRENT, `engine=${meta("atlas-engine-build") || "—"}`),
       check("DOM build identity", bodyBuild === BUILD_CURRENT || rootBuild === BUILD_CURRENT, `body=${bodyBuild || "—"} · html=${rootBuild || "—"}`),
-      check("Cache-busters JS", cache.stale.length === 0 && cache.rows.length === 13, cache.stale.length ? `${cache.stale.length} script(s) local(aux) avec version obsolète` : `${cache.rows.length} script(s) locaux alignés`),
+      check("Cache-busters JS", cache.stale.length === 0 && cache.rows.length === 12, cache.stale.length ? `${cache.stale.length} script(s) local(aux) avec version obsolète` : `${cache.rows.length} script(s) locaux alignés`),
       check("Cache-busters CSS admin", styles.every(row => row.count === 1 && row.current), styles.map(row => `${row.name}:${row.count === 1 && row.current ? "OK" : row.raw}`).join(" · ")),
-      check("Ordre des scripts", order.unique && order.ordered, order.unique ? (order.ordered ? "13/13 scripts uniques dans l’ordre canonique" : "ordre de chargement non canonique") : "script absent ou dupliqué"),
+      check("Ordre des scripts", order.unique && order.ordered, order.unique ? (order.ordered ? "12/12 scripts uniques dans l’ordre canonique" : "ordre de chargement non canonique") : "script absent ou dupliqué"),
       check("Noms modules canoniques", canonicalModuleFilenameContract().ok, canonicalModuleFilenameContract().detail),
       check("Market Memory 39.4.4R1", typeof globalThis.atlasMarketMemoryStats3944R1 === "function" && hasScriptSuffix("/js/market-memory-collector.js"), "API stats + script unique"),
       check("Core identité/temps mémoire", typeof atlasMemoryCanonicalSnapshotId === "function" && typeof atlasMemoryRecordTime === "function", "résolveurs canoniques du Core disponibles"),
