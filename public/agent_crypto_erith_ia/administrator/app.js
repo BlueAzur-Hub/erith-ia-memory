@@ -2928,15 +2928,20 @@ function atlasAdminCenterSet(open, options = {}) {
     } catch {}
   }
 
+  // 40.3.02 — Command Center selection must never scroll the document.
+  // The drawer is a fixed body portal; scrollIntoView() used its DOM position at
+  // the end of <body> and could throw Firefox to the bottom of the page.
+  // Scroll the drawer itself only when a targeted cluster needs visibility.
   if (next && target && options.scrollTarget !== false) {
     const cluster = drawer.querySelector(`[data-admin-cluster="${target}"]`);
     if (cluster) {
       window.setTimeout(() => {
-        cluster.scrollIntoView({
-          block: "nearest",
-          inline: "nearest",
-          behavior: options.instant ? "auto" : "smooth"
-        });
+        const top = Math.max(0, Number(cluster.offsetTop || 0) - 8);
+        if (typeof drawer.scrollTo === "function") {
+          drawer.scrollTo({ top, left: 0, behavior: options.instant ? "auto" : "smooth" });
+        } else {
+          drawer.scrollTop = top;
+        }
       }, 30);
     }
   }
@@ -2976,7 +2981,7 @@ function initAtlasAdminCommandCenter() {
       const alreadyOpen = !drawer.hidden;
       const alreadySelected = button.classList.contains("is-selected");
       if (alreadyOpen && alreadySelected) atlasAdminCenterSet(false);
-      else atlasAdminCenterSet(true, { target });
+      else atlasAdminCenterSet(true, { target, scrollTarget: true });
     });
   });
 
@@ -46083,7 +46088,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.01";
+const ATLAS_BUILD = "40.3.02";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

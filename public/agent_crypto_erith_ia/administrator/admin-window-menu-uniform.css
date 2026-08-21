@@ -1000,3 +1000,147 @@ body.atlas-family-order-40300 main.shell > section.atlas-layout-family-system + 
    Oracle/Atlas compact representatives reuse their existing collapsed UI.
    No new geometry rule is owned here.
    ========================================================================== */
+
+/* ============================================================================
+   40.3.02 — ATOMIC FAMILY + COMMANDLINE SURGERY LOCK
+   - supersedes the 40.2.99 2x3 Book override in Administrator advanced mode;
+   - restores the pre-existing single horizontal Home/Admin command line;
+   - buttons are deliberately smaller, with horizontal scroll only as fallback;
+   - Command Center drawer remains a portal; JS scrolls the drawer, never document.
+   ============================================================================ */
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-interface-bar .atlas-v2-nav{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  gap:4px!important;
+  width:100%!important;
+  min-width:0!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  scrollbar-width:thin!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-nav-essential.atlas-quick-dock{
+  display:flex!important;
+  flex:0 0 auto!important;
+  grid-template-columns:none!important;
+  align-items:center!important;
+  gap:3px!important;
+  width:auto!important;
+  min-width:max-content!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-nav-essential.atlas-quick-dock>.atlas-quick-link{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:66px!important;
+  min-height:28px!important;
+  padding:4px 7px!important;
+  gap:4px!important;
+  font-size:9px!important;
+  line-height:1!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-nav-essential .atlas-quick-icon{
+  font-size:10px!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-nav-advanced.atlas-admin-dock:not([hidden]){
+  display:flex!important;
+  flex:1 0 auto!important;
+  align-items:center!important;
+  width:auto!important;
+  min-width:max-content!important;
+  min-height:30px!important;
+  margin:0!important;
+  padding:0 0 0 5px!important;
+  border:0!important;
+  border-left:1px solid rgba(98,236,255,.18)!important;
+  border-radius:0!important;
+  background:none!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-command-bar{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  gap:3px!important;
+  width:auto!important;
+  min-width:max-content!important;
+  min-height:28px!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-command-shortcuts{
+  display:flex!important;
+  flex-flow:row nowrap!important;
+  align-items:center!important;
+  gap:3px!important;
+  min-width:max-content!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-command-shortcuts button{
+  flex:0 0 auto!important;
+  min-width:68px!important;
+  min-height:28px!important;
+  padding:4px 6px!important;
+  gap:4px!important;
+  font-size:9px!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-command-shortcuts button b{
+  font-size:8px!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-graph-toggle{
+  flex:0 0 auto!important;
+  width:auto!important;
+  min-width:86px!important;
+  min-height:28px!important;
+  padding:4px 6px!important;
+  gap:5px!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-center-toggle{
+  flex:0 0 auto!important;
+  grid-column:auto!important;
+  min-width:116px!important;
+  min-height:28px!important;
+  padding:4px 7px!important;
+  gap:6px!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-graph-toggle span,
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-center-toggle span{
+  font-size:8.5px!important;
+}
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-graph-toggle b,
+html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-center-toggle b{
+  font-size:7.5px!important;
+}
+@media (max-width:1366px){
+  html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-interface-bar .atlas-v2-nav,
+  html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-command-bar{
+    display:flex!important;
+    flex-flow:row nowrap!important;
+  }
+  html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-nav-essential.atlas-quick-dock{
+    display:flex!important;
+    grid-template-columns:none!important;
+    gap:2px!important;
+  }
+  html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-v2-nav-essential.atlas-quick-dock>.atlas-quick-link{
+    min-width:60px!important;
+    min-height:26px!important;
+    padding:3px 5px!important;
+    font-size:8.5px!important;
+  }
+  html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-command-shortcuts button{
+    min-width:62px!important;
+    min-height:26px!important;
+    padding:3px 5px!important;
+    font-size:8.5px!important;
+  }
+  html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-graph-toggle{min-width:80px!important;min-height:26px!important}
+  html[data-atlas-mode="advanced"] body.atlas-commandline-compact-40302 .atlas-admin-center-toggle{min-width:108px!important;min-height:26px!important}
+}
+
+/* 40.3.02 topology: 04 now owns its six system/experiment members immediately
+   after its native header, then Mesure d'audience. No visual inheritance from 03. */
+body.atlas-family-atomic-40302 main.shell > section.atlas-layout-family-system + [data-layout-family="system"],
+body.atlas-family-atomic-40302 main.shell > section.atlas-layout-family-system + [data-layout-family="experiment"]{
+  margin-top:0!important;
+}
+body.atlas-family-atomic-40302 main.shell > [data-layout-family="system"] + #mesure-audience,
+body.atlas-family-atomic-40302 main.shell > [data-layout-family="experiment"] + #mesure-audience{
+  margin-top:10px!important;
+}
+

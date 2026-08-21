@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.01";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FAMILY COMPACT REDUCE LOCK";
+  const ADMIN_BUILD = "40.3.02";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATOMIC FAMILY + COMMANDLINE SURGERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -375,12 +375,35 @@
     return siblingRange(start, end);
   }
 
-  // 40.3.00 — family ownership is semantic, not dependent on visual DOM adjacency.
-  function familyEntriesByLayout(headerSelector, layoutNames = []) {
+  // 40.3.02 — family ownership is semantic AND top-level.
+  // Nested analytical widgets inside Atlas/Oracle are never allowed to become
+  // movable siblings of another Administrator family.
+  function familyEntriesByTopLevelLayout(headerSelector, layoutNames = []) {
+    const shell = q("main.shell");
     const header = q(headerSelector);
-    const selectors = layoutNames.map(name => `[data-layout-family="${name}"]`).join(",");
-    const members = selectors ? [...document.querySelectorAll(selectors)] : [];
-    return [header, ...members].filter((node, index, list) => node instanceof HTMLElement && list.indexOf(node) === index).map(node => entry(node));
+    const allowed = new Set(layoutNames.map(name => String(name || "").trim()).filter(Boolean));
+    const members = shell
+      ? [...shell.children].filter(node => node instanceof HTMLElement && allowed.has(String(node.dataset.layoutFamily || "")))
+      : [];
+    return [header, ...members]
+      .filter((node, index, list) => node instanceof HTMLElement && node.parentElement === shell && list.indexOf(node) === index)
+      .map(node => entry(node));
+  }
+
+  const ADMIN_MISSION_KEYS_40302 = new Set([
+    "fonds-erith", "association-erith", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"
+  ]);
+
+  function missionEntries40302() {
+    const shell = q("main.shell");
+    if (!shell) return [];
+    const intro = byId("missions-vie");
+    const members = [...shell.children].filter(node =>
+      node instanceof HTMLDetailsElement && ADMIN_MISSION_KEYS_40302.has(String(node.dataset.collapseKey || ""))
+    );
+    return [intro, ...members]
+      .filter((node, index, list) => node instanceof HTMLElement && node.parentElement === shell && list.indexOf(node) === index)
+      .map(node => entry(node));
   }
 
   function entry(node, domain = "all") {
@@ -475,9 +498,9 @@
         id: "analyse-decision",
         title: "Analyse & décision",
         tone: "cyan",
-        resolveEntries: () => groupFrom(".atlas-layout-family-analysis", ".atlas-layout-family-intelligence").map(node => entry(node)),
+        resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-analysis", ["analysis"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-analysis")) || nodes[0],
-        // 40.3.01 — docked Reduce keeps the native 01 header + Oracle summary.
+        // 40.3.01/40.3.02 — docked Reduce keeps the native 01 header + Oracle summary; ownership is now top-level atomic.
         resolveCompactNodes: () => [q(".atlas-layout-family-analysis"), byId("oracle-analysis-suite")].filter(Boolean),
         resolveCompactCollapsedDetails: () => [byId("oracle-analysis-suite")].filter(Boolean)
       },
@@ -485,9 +508,9 @@
         id: "intelligence-memoire-creation",
         title: "Intelligence, mémoire & création",
         tone: "violet",
-        resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-intelligence", ["intelligence", "creation"]),
+        resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-intelligence", ["intelligence", "creation"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-intelligence")) || nodes[0],
-        // 40.3.01 — docked Reduce keeps the native 02 header + Atlas CURRENT summary.
+        // 40.3.01/40.3.02 — docked Reduce keeps the native 02 header + Atlas CURRENT summary; ownership is now top-level atomic.
         resolveCompactNodes: () => [q(".atlas-layout-family-intelligence"), byId("atlas-local-ai-collapse")].filter(Boolean),
         resolveCompactCollapsedDetails: () => [byId("atlas-local-ai-collapse")].filter(Boolean)
       },
@@ -495,25 +518,25 @@
         id: "preparation-operations",
         title: "Préparation & opérations",
         tone: "gold",
-        resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-operations", ["operations"]),
+        resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-operations", ["operations"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-operations")) || nodes[0],
-        // 40.3.01 — docked Reduce keeps the real family header, never a generic minibar.
+        // 40.3.01/40.3.02 — docked Reduce keeps the real family header, never a generic minibar.
         resolveCompactNodes: () => [q(".atlas-layout-family-operations")].filter(Boolean)
       },
       {
         id: "experimentation-systeme",
         title: "Expérimentation & système",
         tone: "orange",
-        resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-system", ["system", "experiment"]),
+        resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-system", ["system", "experiment"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
-        // 40.3.01 — docked Reduce keeps the real family header at its canonical end position.
+        // 40.3.01/40.3.02 — docked Reduce keeps the real family header with its six owned members.
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {
         id: "missions-de-vie",
         title: "Missions de vie",
         tone: "gold",
-        resolveEntries: () => groupFrom("#missions-vie", "#mesure-audience").map(node => entry(node)),
+        resolveEntries: () => missionEntries40302(),
         resolveAnchor: nodes => byId("missions-vie") || nodes[0]
       },
       {

@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.01 — PARKER LEWIS CAN'T LOSE · FAMILY COMPACT REDUCE LOCK
+     40.3.02 — PARKER LEWIS CAN'T LOSE · ATOMIC FAMILY + COMMANDLINE SURGERY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.01";
+  const BUILD_CURRENT = "40.3.02";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -344,9 +344,10 @@
     const bodyOk = document.body?.classList?.contains("atlas-family-order-40300") === true;
     const systemHeader = document.querySelector(".atlas-layout-family-system");
     const audience = document.getElementById("mesure-audience");
-    const directOrder = !!systemHeader && systemHeader.nextElementSibling === audience;
-    const familyMembers = [...document.querySelectorAll('[data-layout-family="system"],[data-layout-family="experiment"]')];
-    const membersBeforeHeader = !!systemHeader && familyMembers.length >= 6 && familyMembers.every(node => Boolean(node.compareDocumentPosition(systemHeader) & Node.DOCUMENT_POSITION_FOLLOWING));
+    // 40.3.02 supersedes the temporary 40.3.00 topology where the 04 header
+    // sat after its children. Preserve only the durable 40.3.00 invariants:
+    // 04 remains before Audience and menus 02/03/04 remain right-owned.
+    const headerBeforeAudience = !!systemHeader && !!audience && Boolean(systemHeader.compareDocumentPosition(audience) & Node.DOCUMENT_POSITION_FOLLOWING);
     const headers = ["intelligence","operations","system"].map(name => document.querySelector(`.atlas-layout-family-${name}`)).filter(Boolean);
     const controls = headers.map(header => header.querySelector(":scope > .admin-native-controls")).filter(Boolean);
     const controlsRight = controls.length === 3 && controls.every(node => {
@@ -354,8 +355,57 @@
       return style.position === "absolute" && style.left === "auto" && style.right !== "auto";
     });
     return {
-      ok: bodyOk && directOrder && membersBeforeHeader && controlsRight,
-      detail:`body=${String(bodyOk)} · 04→audience=${String(directOrder)} · system/experiment-before-04=${familyMembers.length}/6:${String(membersBeforeHeader)} · menus-right=${controls.length}/3:${String(controlsRight)}`
+      ok: bodyOk && headerBeforeAudience && controlsRight,
+      detail:`body=${String(bodyOk)} · 04-before-audience=${String(headerBeforeAudience)} · menus-right=${controls.length}/3:${String(controlsRight)} · topology=40302-supersedes-temporary-40300`
+    };
+  }
+
+  function atomicFamilyCommandlineContract40302() {
+    const bodyAtomic = document.body?.classList?.contains("atlas-family-atomic-40302") === true;
+    const bodyCommand = document.body?.classList?.contains("atlas-commandline-compact-40302") === true;
+    const shell = document.querySelector("main.shell");
+    const direct = node => !!node && node.parentElement === shell;
+    const h01 = document.querySelector(".atlas-layout-family-analysis");
+    const h02 = document.querySelector(".atlas-layout-family-intelligence");
+    const h03 = document.querySelector(".atlas-layout-family-operations");
+    const missions = document.getElementById("missions-vie");
+    const h04 = document.querySelector(".atlas-layout-family-system");
+    const audience = document.getElementById("mesure-audience");
+    const sources = document.getElementById("liveSourcesCollapse");
+    const ordered = [h01,h02,h03,missions,h04,audience,sources].every(direct)
+      && [h01,h02,h03,missions,h04,audience].every((node,index,array) => index === array.length-1 || Boolean(node.compareDocumentPosition(array[index+1]) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const sys = [...(shell?.children || [])].filter(node => ["system","experiment"].includes(String(node.dataset?.layoutFamily || "")));
+    const systemAtomic = direct(h04) && direct(audience) && sys.length === 6
+      && sys.every(node => Boolean(h04.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)
+        && Boolean(node.compareDocumentPosition(audience) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const lastSystem = sys[sys.length-1];
+    const adjacency = h04?.nextElementSibling === sys[0] && lastSystem?.nextElementSibling === audience;
+    const manager = globalThis.ErithAdministratorWindows;
+    const expected = {
+      "analyse-decision":["analysis"],
+      "intelligence-memoire-creation":["intelligence","creation"],
+      "preparation-operations":["operations"],
+      "experimentation-systeme":["system","experiment"]
+    };
+    const ownership = Object.entries(expected).every(([id,tones]) => {
+      const win = manager?.getWindow?.(id);
+      if (!win || !win.anchor || win.anchor.parentElement !== shell) return false;
+      return win.nodes.every(node => node === win.anchor || (node.parentElement === shell && tones.includes(String(node.dataset?.layoutFamily || ""))));
+    });
+    const analysisWindow = manager?.getWindow?.("analyse-decision");
+    const astro = document.getElementById("astrocycle-4055");
+    const celestial = document.getElementById("celestial-sentinel-4055");
+    const dynamicAnalysisOwned = [astro, celestial].every(node => node instanceof HTMLElement
+      && node.parentElement === shell
+      && node.dataset.layoutFamily === "analysis"
+      && node.dataset.adminNativeWindow === "analyse-decision"
+      && analysisWindow?.nodes?.includes?.(node));
+    const drawer = document.getElementById("atlasAdminCenterDrawer");
+    const portalOk = drawer?.parentElement === document.body;
+    const essential = document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").length === 6;
+    return {
+      ok: bodyAtomic && bodyCommand && ordered && systemAtomic && adjacency && ownership && dynamicAnalysisOwned && portalOk && essential,
+      detail:`atomic=${String(bodyAtomic)} · command=${String(bodyCommand)} · order=${String(ordered)} · 04-members=${sys.length}/6:${String(systemAtomic)} · adjacency=${String(adjacency)} · ownership=${String(ownership)} · dynamic-analysis=${String(dynamicAnalysisOwned)} · drawer-portal=${String(portalOk)} · essential=${essential}/6`
     };
   }
 
@@ -1232,6 +1282,7 @@
       check("Navigation · Book 2×3 + boutons internes + ADMIN unique 40.2.99", bookNavigationContract40299().ok === true, bookNavigationContract40299().detail),
       check("Familles · 04 devant Mesure d’audience + menus 02/03/04 à droite 40.3.00", adminFamilyOrderMenuContract40300().ok === true, adminFamilyOrderMenuContract40300().detail),
       check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
+      check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
