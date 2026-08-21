@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.88 — PARKER LEWIS CAN'T LOSE · CELESTIAL RYZEN → BOOK READ-ONLY HANDOFF LOCK
+     40.2.89 — PARKER LEWIS CAN'T LOSE · GRAPH TOOLBAR TURQUOISE ACTIVE + WHITE TEXT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.88";
+  const BUILD_CURRENT = "40.2.89";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -260,8 +260,8 @@
     };
   }
 
-  function graphToolbarStateContract40287() {
-    const toolbar = document.querySelector?.("#analyste .chart-v2-toolbar.atlas-graph-toolbar-metallic-40287");
+  function graphToolbarStateContract40289() {
+    const toolbar = document.querySelector?.("#analyste .chart-v2-toolbar.atlas-graph-toolbar-metallic-40289");
     const reading = toolbar?.querySelector?.(".chart-v2-toolbar-reading");
     const period = toolbar?.querySelector?.(".chart-v2-toolbar-period");
     const comparison = toolbar?.querySelector?.(".chart-v2-toolbar-comparison");
@@ -1097,7 +1097,7 @@
       check("Aucun override chrome R1/R2 chargé", forbiddenOverrides.length === 0, forbiddenOverrides.length ? forbiddenOverrides.map(row => row.raw).join(" · ") : "anciens overrides R1/R2 absents"),
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
-      check("Graphique · états menu actif bleu/blanc · désactivé gris 40.2.87", graphToolbarStateContract40287().ok === true, graphToolbarStateContract40287().detail),
+      check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract40289().ok === true, graphToolbarStateContract40289().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
