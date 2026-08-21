@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.26 — PARKER LEWIS CAN'T LOSE · REDUCED / COLLAPSED RUNTIME ATTRIBUTION LOCK
+     40.2.27 — PARKER LEWIS CAN'T LOSE · WORKSPACE RUNTIME CONTRACT CHECKPOINT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.26";
+  const BUILD_CURRENT = "40.2.27";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -882,6 +882,17 @@
           && !!byId("btnAtlasStorageLineage40224")
           && !!byId("atlasStorageLineage40224"),
         "audit opérateur différé · aucune suppression automatique"),
+      check("Workspace Runtime Contract 40.2.27",
+        globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
+          && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"
+          && globalThis.ErithWorkspaceRuntimeContract40227?.views_own_business_engines === false
+          && globalThis.ErithWorkspaceRuntimeContract40227?.workspace_profile_owns_analytical_context === false
+          && globalThis.ErithWorkspaceRuntimeContract40227?.graph_context_v7_is_analytical_authority === true
+          && globalThis.ErithWorkspaceRuntimeContract40227?.oracle_visibility_dependency_allowed === false
+          && globalThis.ErithWorkspaceRuntimeContract40227?.targeted_render_optimization_added === false
+          && globalThis.ErithWorkspaceRuntimeContract40227?.render_gate_added === false
+          && globalThis.ErithWorkspaceRuntimeContract40227?.engine_stop_added === false,
+        "checkpoint uniquement · X=masquer · vues/profils non propriétaires des moteurs · V7 autorité analytique · aucune chirurgie"),
       check("Math Core réduit · mini-module flottant mobile",
         globalThis.ErithAdminWindowManager?.contract?.floating_minimize_compact_bar === true,
         "réduction flottante compacte · position restaurée après déplacement"),

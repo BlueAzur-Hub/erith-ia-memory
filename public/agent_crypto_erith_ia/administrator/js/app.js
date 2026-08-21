@@ -1,10 +1,30 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.26";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · REDUCED / COLLAPSED RUNTIME ATTRIBUTION LOCK";
+  const ADMIN_BUILD = "40.2.27";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · WORKSPACE RUNTIME CONTRACT CHECKPOINT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
+
+  const WORKSPACE_RUNTIME_CONTRACT_40227 = Object.freeze({
+    build: "40.2.27",
+    checkpoint_only: true,
+    x_semantics: "mask_presentation_only",
+    reset_windows_semantics: "restore_native_presentation_only",
+    minimized_semantics: "presentation_reduced_engine_state_unchanged",
+    collapsed_semantics: "section_collapsed_engine_state_unchanged",
+    views_own_business_engines: false,
+    workspace_profile_owns_analytical_context: false,
+    graph_context_v7_is_analytical_authority: true,
+    oracle_visibility_dependency_allowed: false,
+    targeted_render_optimization_added: false,
+    render_gate_added: false,
+    engine_stop_added: false,
+    dom_removal_added: false,
+    storage_retirement_added: false,
+    evidence_basis: Object.freeze(["40.2.25 runtime visibility", "40.2.26 reduced/collapsed attribution"])
+  });
+  globalThis.ErithWorkspaceRuntimeContract40227 = WORKSPACE_RUNTIME_CONTRACT_40227;
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);
