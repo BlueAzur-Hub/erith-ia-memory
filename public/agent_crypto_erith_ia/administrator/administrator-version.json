@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v35",
-  "build": "40.2.70",
-  "release": "Agent-Crypto @erith.IA · Build 40.2.70 · PARKER LEWIS CAN'T LOSE · SECTION HEADER GEOMETRY REPAIR + ICONOGRAPHY COMPATIBILITY LOCK",
-  "status": "candidate_requires_firefox_section_header_validation",
-  "prepared_at": "2026-08-21T10:05:00Z",
+  "build": "40.2.73",
+  "release": "Agent-Crypto @erith.IA · Build 40.2.73 · PARKER LEWIS CAN'T LOSE · ROLLING HIGH + CELESTIAL PORTABLE REDUNDANCY + ORACLE LONG-HORIZON SHADOW LOCK",
+  "status": "candidate_requires_firefox_rolling_celestial_shadow_validation",
+  "prepared_at": "2026-08-21T10:04:00Z",
   "published_at": null,
   "global_versioning": {
     "primary_build": "40.2.70",
@@ -1638,6 +1638,41 @@
       "opacity_changed": false,
       "window_manager_changed": false,
       "business_logic_changed": false
+    },
+    "rolling_high_breakout_40271": {
+      "horizons_days": [
+        7,
+        30,
+        60,
+        90
+      ],
+      "recent_exclusion_minutes": 30,
+      "confirm_minutes": [
+        5,
+        15,
+        30
+      ],
+      "oracle_model_input": false,
+      "financial_signal": false
+    },
+    "celestial_portable_40272": {
+      "schema": "atlas.celestial.portable.v1",
+      "ryzen_producer": true,
+      "transformer_book_read_only": true,
+      "book_fetch_disabled": true,
+      "causal_claim": false
+    },
+    "oracle_long_shadow_40273": {
+      "horizons": [
+        "30m",
+        "1h"
+      ],
+      "prospective_only": true,
+      "retrofit_old_rows": false,
+      "v1_changed": false,
+      "ensemble_changed": false,
+      "weights_changed": false,
+      "evaluation_gate_changed": false
     }
   },
   "active_runtime_files": [
@@ -1671,8 +1706,8 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "48ec950ce4f7a1acd852b84ead1a21c0912275bf3865716c88b6834f32018e73",
-      "index.html": "881ed270ff582f7560f4841c294bf55e3e463144fdc88682aec2ca2f14daeca9",
+      "app.js": "2b109e2470806c691105b98d423e53cae1b116c34e7bfe869d5a7e798dd511f0",
+      "index.html": "a1a5baaf02ec5ab4517f5fb0490653d229f1be51aa1cc312d188f35ea57022fa",
       "js/app.js": "64dbc02bc25dd66b42694f3414dab7d693027e3f0abc34e0b1ba49ae185d35e9",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
@@ -1711,15 +1746,15 @@
     },
     "self_hash_policy": "self entry excluded; version.json carries administrator-version.json SHA-256",
     "publication_identity": {
-      "build": "40.2.70",
-      "asset_token": "market-core-v2.0-alpha-build-40.2.70",
-      "status": "candidate_requires_firefox_section_header_validation",
-      "app_sha256": "48ec950ce4f7a1acd852b84ead1a21c0912275bf3865716c88b6834f32018e73"
+      "build": "40.2.73",
+      "asset_token": "market-core-v2.0-alpha-build-40.2.73",
+      "status": "candidate_requires_firefox_rolling_celestial_shadow_validation",
+      "app_sha256": "2b109e2470806c691105b98d423e53cae1b116c34e7bfe869d5a7e798dd511f0"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.2.70",
-  "parent_build": "40.2.69",
-  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial cumulative → 40.2.69 single-image authority/iconography → 40.2.70 section header geometry repair.",
+  "asset_token": "market-core-v2.0-alpha-build-40.2.73",
+  "parent_build": "40.2.70",
+  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial institutional layer → 40.2.69 single-image authority/iconography → 40.2.70 header geometry repair → 40.2.71 Rolling High → 40.2.72 Celestial portable redundancy → 40.2.73 Oracle long-horizon Shadow.",
   "repository_cleanup": {
     "runtime_behavior_changed": false,
     "freeze_identity_current_build": true,
@@ -1735,83 +1770,15 @@
     "observability_only": true
   },
   "notes": [
-    "PROFILS : sauvegarde/chargement/renommage/suppression de compositions visuelles dans un IndexedDB séparé ; aucune lecture/écriture de profils au boot.",
-    "LiveCheck prédéfini : Graphique + Lecture Technique visibles, Math Core en mode Dessus ; autres fenêtres Administrator rangées/masquées par le profil.",
-    "Graph Context V7 reste l’unique autorité du contexte analytique ; les profils ne possèdent ni actif, ni horizon, ni Oracle, ni sélection marché.",
-    "Window Manager modifié uniquement par API additive snapshot/applySnapshot ; move/minimize/detach/maximize/hide, portails, géométrie et z-order historiques inchangés.",
-    "Math rail : aucun CSS spéculatif ajouté ; le code courant cache déjà atlas-math-rail-trigger hors état is-rail.",
-    "Fiche Crypto Flottante/Latérale et fallback Book inchangés.",
-    "Lecture Technique 40.2.19 conservée en object-fit contain ; aucun asset image modifié.",
-    "40.2.22 interne : export/import JSON d’un profil de bureau ; payload visuel uniquement, sans V7, marché, Evidence ni secret.",
-    "40.2.23 interne : export/import de la bibliothèque de profils ; import borné et sanitisé, fusion par source_profile_id.",
-    "40.2.24 : Storage Lineage Audit V2 déclenché uniquement sur action opérateur ; classification prudente, aucune suppression/migration.",
-    "Le profil Transformer Book reste personnel tant que son export réel n’a pas été importé/validé ; aucun preset Book n’est inventé.",
-    "40.2.25 : instrumentation seulement. Aucun panneau n’est déchargé, aucun rendu n’est bloqué, aucun moteur n’est coupé.",
-    "Runtime distingue VISIBLE / RÉDUIT / MASQUÉ / REPLIÉ pour les refresh Oracle déjà instrumentés et cumule appels + durée.",
-    "Le Window Manager reste byte-identical à 40.2.24 ; X = masquer et RESET FENÊTRES = restaurer/raccrocher restent inchangés.",
-    "Transformer Book : aucune modification de Market Flow, Graphique, Oracle, Math Core, profils ou Fiche Crypto.",
-    "40.2.26 : stéthoscope d’attribution uniquement ; aucun changement de comportement des fenêtres ou moteurs.",
-    "Runtime affiche R top / C top et expose top 5 R/X/C dans le snapshot passif.",
-    "Aucune optimisation 40.2.27 n’est pré-appliquée : une éventuelle chirurgie dépendra des mesures réelles Ryzen / Transformer Book.",
-    "40.2.27 : checkpoint de stabilité uniquement ; aucune optimisation de rendu ni suppression n’est introduite.",
-    "Preuve Book 40.2.26 : X reste à 0×/0 ms malgré 4 fenêtres masquées ; R/C travaillent encore mais aucun contributeur unique ne domine assez pour justifier une coupe ciblée.",
-    "Contrat figé : X=MASQUER ; Réduit/Replié=présentation ; vues et profils ne possèdent pas les moteurs métier ; Graph Context V7 reste l’autorité analytique.",
-    "Runtime Attribution 40.2.26 est conservé comme stéthoscope passif ; ses durées cumulées ne sont pas interprétées comme temps CPU ou énergie.",
-    "Storage Lineage V2 reste lecture seule ; aucune retraite de clé n’est autorisée par 40.2.27.",
-    "40.2.28 : audit décisionnel stockage uniquement ; aucun nettoyage automatique, aucune migration, aucune suppression.",
-    "Absence de référence exacte n’est jamais assimilée à une preuve de retrait ; les deux anciens caches source-lock/alpha-21 restent REVIEW_REQUIRED.",
-    "Le checkpoint runtime 40.2.27 reste protégé ; le DCL Book observé à 11217 ms n’est pas modifié par cette build.",
-    "40.2.29 : preuve positive de propriété stockage uniquement ; aucune suppression, migration ou écriture stockage ajoutée.",
-    "Les clés REVIEW_REQUIRED ne changent de statut que lorsqu’un propriétaire exact est démontré par constante + chemin de lecture/écriture/fallback dans le parent 40.2.28.",
-    "Aucune absence de référence n’est convertie en preuve de non-propriété ; RETIRABLE_PROVEN reste pré-déclaré à 0 et le retirement gate reste CLOSED.",
-    "40.2.32A : hiérarchie visuelle du verdict Oracle uniquement ; aucun calcul ou flux métier modifié.",
-    "40.2.32B : séparation visuelle Historique / Maintenant / Scénario renforcée sur le canvas ; aucune donnée ou projection recalculée.",
-    "40.2.32C : hiérarchie opérateur / contexte / laboratoire par CSS ; aucune donnée Oracle ou Evidence modifiée.",
-    "40.2.32D : stéthoscope Oracle passif alimenté par les états runtime existants ; aucun timer, fetch, WebSocket ou moteur ajouté.",
-    "40.2.32 cumulative : A+B+C+D regroupés dans une seule pile CODE ONLY ; aucune génération d’image ni modification de modèle.",
-    "40.2.33 Final Lock : finition fit/overflow/contraste uniquement ; pile 40.2.32 A-D conservée sans nouveau comportement métier.",
-    "40.2.34 : moteur déterministe News→Market séparant catalyseur, amplificateur, flux et réaction ; source News Sentinel, résumé Oracle/Decision ; causalité jamais affirmée ; zéro IA externe, fetch, timer ou écriture stockage ajoutés.",
-    "40.2.35 : explanation operator-grade des News→Marché — faits, chaîne mécanistique, ce qui est expliqué / non expliqué, flux de demande et verdict ; moteur local déterministe, causalité non établie.",
-    "40.2.36 : timeline réaction prix T−15/T0/+15/+1h/+4h depuis les historiques déjà en cache ; aucun fetch ; données manquantes explicitement signalées.",
-    "40.2.37 : solidité transparente de la lecture du rôle ; score de qualité ≠ probabilité de causalité, jamais calculée.",
-    "40.2.38 : lecture croisée News + réaction prix + marché + Oracle + Atlas ; couches comparées mais non fusionnées/recalibrées.",
-    "40.2.39 : Oracle reçoit un résumé compact rôle/timeline/solidité ; News Sentinel reste la source de vérité événementielle.",
-    "40.2.40 : Final Lock CSS/fit/overflow/responsive de la branche 40.2.35→40.2.39 ; aucune nouvelle intelligence ni moteur modifié.",
-    "40.2.41 : correction de placement — rapport News→Marché complet dans un accordéon News dédié ; super Oracle restauré sans cartouche News ; bandeau opérateur sans cadre externe ; icônes inline existantes réutilisées ; CODE ONLY.",
-    "40.2.66→40.2.68 : Celestial Sentinel devient opérationnel à la demande : NASA DONKI + NOAA SWPC, timeline de preuves et lecture Cieux × Marchés depuis historiques déjà présents. Aucun polling, aucun fetch marché, aucune écriture stockage, aucune causalité ou valeur future inventée.",
-    "40.2.69 : Lecture technique passe à une autorité unique de src ; aucune réaffectation au retour d’onglet si le thème n’a pas changé. Icônes de sections ajoutées en SVG/CSS inline uniquement. Opacité 40.2.65 inchangée.",
-    "40.2.70 : correction de géométrie des en-têtes d’accordéons après ajout des icônes 40.2.69 ; Celestial/News/Oracle/Astro réalignés sans toucher au contenu ni aux moteurs."
+    "CODE ONLY for the new interface features; no image assets added or replaced.",
+    "Rolling High and long-horizon Shadow are observational research layers, never financial signals.",
+    "Celestial portable import preserves provenance and never claims causal influence on markets.",
+    "Window Manager and protected geometry remain unchanged from 40.2.70."
   ],
   "release_notes": [
-    "40.2.42 : Multi-Collector Truth Observatory — expose les identités, fraîcheur relative et motif exact d’absence de paire sans déduire une présence en ligne.",
-    "40.2.43 : Manual Collector Exchange — réutilise les contrôles JSON existants export/import ; aucun backend, token ou nouveau schéma de stockage.",
-    "40.2.44 : Concordance Completion UI — le moteur 39.7/33.0 existant reste autorité ; la couche 40.2.55 ne fabrique aucune paire.",
-    "40.2.45 : Memory Health Coverage — clarification de couverture multi-collecteur, structure/couverture/continuité restent séparées.",
-    "40.2.46 : Celestial Clock Foundation — Paris / Europe/Paris, lever/coucher/crépuscules calculés localement ; validation ChronosXP requise.",
-    "40.2.47 : Planetary Day & Hour Engine — jour planétaire au lever, 12 heures diurnes + 12 nocturnes variables, ordre chaldéen.",
-    "40.2.48 : AstroCycle Operator Clock — ligne Date · Heure · Jour planétaire · Heure planétaire + panneau détaillé.",
-    "40.2.49 : Technical Reading Solar Sync — mode AUTO alimenté par la Celestial Clock ; boutons manuels conservés.",
-    "40.2.50 : Cieux & Cultures Router — liens documentaires vers les modules V2 existants, aucune ingestion automatique.",
-    "40.2.51 : Celestial Sentinel V1 — registre local et sources institutionnelles prêtes ; aucun fetch ajouté.",
-    "40.2.52 : Celestial × Market Timeline — cadre d’observation préparé, aucune causalité et aucun historique inventé.",
-    "40.2.53 : AstroCycle Research Harness — pré-enregistrement placebo / hors-échantillon ; aucun modèle Oracle recalibré.",
-    "40.2.54 : Visual Heritage Reconnect — réutilisation CSS des assets PNG déjà présents ; aucun binaire modifié ou embarqué.",
-    "40.2.55 : Final Lock cumulatif — candidate à valider sur Ryzen + Transformer Book + ChronosXP.",
-    "40.2.56 : Publication Identity Repair Lock — identité build/token/meta/cache-busters réalignée ; hashes SHA-256 courants recalculés ; aucune logique Market/Oracle/V7/Window Manager/News/AstroCycle modifiée.",
-    "40.2.58 : ChronosXP Reference Coordinates Alignment Lock — AstroCycle utilise désormais 48°27′ N / 1°30′ E avec Europe/Paris, conformément à la configuration opérateur observée ; aucune compensation temporelle arbitraire ; heures ChronosXP encore à valider.",
-    "40.2.58 : Technical Reading Chronology & Lunar Routing Lock — header céleste compact sur une ligne ; AUTO n’utilise plus le lever comme bascule immédiate vers JOUR ; AUBE se prolonge 90 min après lever, SOIR commence 90 min avant coucher, NUIT va du crépuscule civil à minuit, LUNAIRE de minuit au crépuscule civil ; boutons manuels et assets existants conservés.",
-    "40.2.59 : Technical Reading Framing & Thematic Focal Lock — cadrage visuel par thème, backdrop fill et respiration des portraits ; moteurs inchangés.",
-    "40.2.64 : Publication Integrity Repair — réalignement complet build/token/metas/runtime/app SHA-256 après 40.2.59 ; cadrage 40.2.59 conservé ; aucun moteur modifié.",
-    "40.2.66 : Celestial Sentinel Institutional Feed — lecture manuelle NASA DONKI CME + NOAA SWPC Kp, session-only, erreurs explicites, ESA référence documentaire.",
-    "40.2.67 : Celestial Evidence Timeline — normalisation des événements institutionnels avec source et T0 ; sélection opérateur, 8 preuves max affichées.",
-    "40.2.68 : Celestial × Market Observation — T−24h/T0/T+1h/T+4h/T+24h calculés uniquement depuis historiques Agent-Crypto déjà disponibles ; horizons futurs = à venir, absences = —, aucune interpolation ni causalité.",
-    "40.2.69 : Technical Reading Single Image Authority — suppression du double propriétaire de img.src ; le picker IndexedDB reste disponible mais ne pilote plus directement l’image.",
-    "40.2.69 : au boot, une seule source visible est choisie : image privée persistée OU asset correspondant au créneau céleste courant.",
-    "40.2.69 : retour d’onglet/pageshow sans réaffectation de src si le thème n’a pas changé ; les swaps ultérieurs sont préchargés avant remplacement.",
-    "40.2.69 : Semantic Section Iconography — icônes inline SVG/CSS, aucun nouvel asset image.",
-    "40.2.70 : Celestial Sentinel et AstroCycle retrouvent une grille d’en-tête canonique icône + texte + Déplier.",
-    "40.2.70 : News Sentinel veille événementielle utilise explicitement quatre colonnes pour éviter le titre centré et le bouton Déplier étiré.",
-    "40.2.70 : icônes code-only 40.2.69 conservées ; aucun nouvel asset image.",
-    "40.2.70 : Lecture technique, opacité, Graphique, Oracle métier, Celestial feed, V7 et Window Manager inchangés."
+    "40.2.71 — Rolling High / Breakout Context: 7/30/60/90-day local highs from existing cached real series; current 30-minute zone excluded from reference peak; 5m/15m/30m prospective confirmation; descriptive only.",
+    "40.2.72 — Celestial Portable Redundancy: NASA/NOAA manual snapshot persists on Ryzen, rides shared-memory export/import, restores read-only on Transformer Book; Book institutional fetch disabled.",
+    "40.2.73 — Oracle Long-Horizon Shadow: new Evidence rows freeze Oracle V1 T0 direction for 30m/1h; outcomes resolve only from later observed local chart/direct data; old rows are never retrofabricated; V1/ENS/weights/Evaluation Gate unchanged.",
+    "40.2.70 section-header geometry and 40.2.69 code-only iconography / single-image Technical Reading authority preserved."
   ]
 }
