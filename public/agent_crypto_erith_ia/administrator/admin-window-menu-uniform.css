@@ -628,15 +628,15 @@ body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3::a
 }
 body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3 {
   position:absolute!important;
-  right:12px!important;
-  top:auto!important;
-  bottom:8px!important;
-  width:72px!important;
-  height:72px!important;
-  transform:none!important;
+  right:14px!important;
+  top:50%!important;
+  bottom:auto!important;
+  width:58px!important;
+  height:58px!important;
+  transform:translateY(-50%)!important;
   object-fit:contain!important;
-  opacity:.10!important;
-  filter:drop-shadow(0 0 12px rgba(98,236,255,.16))!important;
+  opacity:.08!important;
+  filter:drop-shadow(0 0 10px rgba(98,236,255,.12))!important;
   pointer-events:none!important;
   z-index:0!important;
 }
@@ -644,6 +644,8 @@ body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > 
   position:relative!important;
   z-index:1!important;
 }
+
+/* 40.2.97 — Family Emblem Alignment Lock: family emblems align on the right-side signal axis, not the lower corner. */
 
 /* Sources archive emblem belongs to the real Sources row, small and non-reserving. */
 body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 {
@@ -692,7 +694,7 @@ body.atlas-section-air-40292 #atlasAnalyticalMemory394.admin-analytical-emblem-h
 /* Book: emblems remain legible but never steal width. */
 @media (max-width:1366px) {
   body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3 {
-    width:54px!important;height:54px!important;right:8px!important;bottom:6px!important;opacity:.08!important;filter:none!important;
+    width:42px!important;height:42px!important;right:10px!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;opacity:.07!important;filter:none!important;
   }
   body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 {padding-right:50px!important}
   body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 > .admin-summary-emblem-r3 {

@@ -7795,7 +7795,7 @@ function atlasOracleSuiteSummarySync40216(){
   if(typeof atlasOracleCollapsedPreviewSync40296==="function") atlasOracleCollapsedPreviewSync40296();
 }
 
-/* 40.2.96 — ORACLE COLLAPSED BIAS PREVIEW
+/* 40.2.97 — ORACLE COLLAPSED BIAS PREVIEW
    UI-only mirror of existing Oracle V1 DOM values; no model/network/storage writes. */
 function atlasOracleCollapsedPreviewSync40296(){
   const preview=document.getElementById("atlasOracleCollapsedPreview40296");
@@ -46079,7 +46079,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.96";
+const ATLAS_BUILD = "40.2.97";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
