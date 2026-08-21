@@ -22122,6 +22122,20 @@ function atlasAnalysisViewportAdapt40293(card, phase) {
   return true;
 }
 
+function atlasCollapsedCurrentSync40295() {
+  const sourceCard = document.getElementById("atlasAnalysisProgressCard");
+  const preview = document.getElementById("atlasCollapsedCurrentPreview40295");
+  if (!sourceCard || !preview) return false;
+  preview.dataset.phase = String(sourceCard.dataset.phase || "idle");
+  const copyText = (fromId, toId) => { const from=document.getElementById(fromId); const to=document.getElementById(toId); if(from&&to) to.textContent=from.textContent||"—"; };
+  copyText("atlasAnalysisProgressTitle","atlasCollapsedCurrentTitle40295");
+  copyText("atlasAnalysisProgressPercent","atlasCollapsedCurrentPercent40295");
+  copyText("atlasAnalysisProgressState","atlasCollapsedCurrentState40295");
+  const sourceBar=document.getElementById("atlasAnalysisProgressBar"); const previewBar=document.getElementById("atlasCollapsedCurrentBar40295");
+  if(sourceBar&&previewBar) previewBar.style.width=sourceBar.style.width||"0%";
+  return true;
+}
+
 function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = "") {
   const card = document.getElementById("atlasAnalysisProgressCard");
   if (!card) return false;
@@ -22180,6 +22194,7 @@ function atlasAnalysisProgressRender(completed = 0, phase = "idle", message = ""
     ? "Les prix live continuent ; Atlas/Aerith restent au repos jusqu’au prochain snapshot canonique qualifié ou à une relance opérateur explicite."
     : "Un seul snapshot figé est utilisé pour les rapports et la conclusion.");
   if (stateNode) stateNode.textContent = phase === "done" ? "REPOS" : phase === "history" ? "HISTORIQUE" : phase === "observer" ? "STOP POSTE" : phase.toUpperCase();
+  atlasCollapsedCurrentSync40295();
   return true;
 }
 
@@ -46041,7 +46056,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.94";
+const ATLAS_BUILD = "40.2.95";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -52567,6 +52582,7 @@ function atlasBookRoleUiLock3812(reason = "book-ui-lock") {
     set("atlasCurrentTruth33Status", `CURRENT produit sur le Ryzen et consulté en lecture seule sur ce Book · Atlas 4/4 · NØX · Aerith · ${shortFp}. Le LIVE du Book reste séparé.`);
     const note = document.getElementById("atlasSharedSynthesisNote");
     if (note) note.textContent = "IMPORT RYZEN · CURRENT en lecture seule sur le Transformer Book · aucun Ollama/Bridge local";
+    atlasCollapsedCurrentSync40295();
   }
   return { locked:true, reason };
 }
