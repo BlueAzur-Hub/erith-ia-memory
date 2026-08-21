@@ -6386,7 +6386,7 @@ function atlasRuntimeWindowSnapshot40225(){
 function atlasRuntimeNavigationSnapshot40214(){let nav=null;try{nav=(performance.getEntriesByType("navigation")||[])[0]||null;}catch{}const positive=v=>Number.isFinite(Number(v))&&Number(v)>0?Number(v):null;let type=String(nav?.type||"");if(!type){try{type=performance?.navigation?.type===1?"reload":performance?.navigation?.type===2?"back_forward":"navigate";}catch{type="unknown";}}return {type:type||"unknown",dom_content_loaded_ms:positive(nav?.domContentLoadedEventEnd),load_ms:positive(nav?.loadEventEnd),dom_interactive_ms:positive(nav?.domInteractive),response_end_ms:positive(nav?.responseEnd),transfer_size:Number.isFinite(Number(nav?.transferSize))?Number(nav.transferSize):null,decoded_body_size:Number.isFinite(Number(nav?.decodedBodySize))?Number(nav.decodedBodySize):null};}
 function atlasRuntimeResourceSnapshot40214(){let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const sum=k=>entries.reduce((a,e)=>{const v=Number(e?.[k]);return a+(Number.isFinite(v)&&v>0?v:0);},0);const measured=k=>entries.filter(e=>Number.isFinite(Number(e?.[k]))&&Number(e[k])>0).length;const largest=entries.map(e=>({name:String(e?.name||""),initiator_type:String(e?.initiatorType||""),transfer_size:Number(e?.transferSize)||0,decoded_body_size:Number(e?.decodedBodySize)||0,duration_ms:Number(e?.duration)||0})).sort((a,b)=>Math.max(b.transfer_size,b.decoded_body_size)-Math.max(a.transfer_size,a.decoded_body_size)).slice(0,5);return {resource_requests_total:entries.length,transfer_bytes_measured:sum("transferSize"),transfer_entries_measured:measured("transferSize"),decoded_bytes_measured:sum("decodedBodySize"),decoded_entries_measured:measured("decodedBodySize"),largest_resources:largest};}
 function atlasRuntimeView40214(){const raw=String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");if(raw)return raw;try{return typeof atlasV2Mode==="function"?atlasV2Mode():"unknown";}catch{return "unknown";}}
-function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.33"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
+function atlasRuntimeSnapshot40214(){const s=atlasRuntimeObservatoryState40214,nav=atlasRuntimeNavigationSnapshot40214(),res=atlasRuntimeResourceSnapshot40214(),windows=atlasRuntimeWindowSnapshot40225();let domNodes=null;try{domNodes=document.getElementsByTagName("*").length;}catch{}const avg=(total,count)=>count?total/count:null;const visibility=Object.fromEntries(Object.entries(s.refresh_visibility).map(([k,v])=>[k,{calls:Number(v.calls||0),total_ms:Number(v.total_ms||0),mean_ms:avg(Number(v.total_ms||0),Number(v.calls||0)),max_ms:Number(v.max_ms||0)}]));return {schema:"atlas.runtime.observatory.v3",build:String(typeof ATLAS_BUILD!=="undefined"?ATLAS_BUILD:"40.2.34"),captured_at:new Date().toISOString(),view:atlasRuntimeView40214(),visibility:String(document.visibilityState||"unknown"),dom_nodes:Number.isFinite(Number(domNodes))?Number(domNodes):null,navigation:nav,resources:res,pageshow:{count:s.pageshow_count,persisted_count:s.pageshow_persisted_count,last_persisted:s.last_pageshow_persisted},windows,oracle:{outcome_runs:s.outcome_runs,outcome_skips:s.outcome_skips,outcome_mean_ms:avg(s.outcome_total_ms,s.outcome_runs),outcome_max_ms:s.outcome_max_ms,evidence_reads:s.evidence_reads,evidence_mean_ms:avg(s.evidence_total_ms,s.evidence_reads),evidence_max_ms:s.evidence_max_ms,evidence_db_scans:s.evidence_db_scans,evidence_db_mean_ms:avg(s.evidence_db_total_ms,s.evidence_db_scans),evidence_db_max_ms:s.evidence_db_max_ms,evidence_cache_hits:s.evidence_cache_hits,evidence_inflight_hits:s.evidence_inflight_hits,instrumented_ui_refresh_calls:s.refresh_calls,instrumented_ui_refresh_hidden_calls:s.refresh_hidden_calls,refresh_visibility:visibility,evidence_explorer_deferred_skips:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Number(atlasOracleEvidenceExplorerState.deferred_skips||0):0),evidence_explorer_rendered:(typeof atlasOracleEvidenceExplorerState!=="undefined"?Boolean(atlasOracleEvidenceExplorerState.rendered):false),refresh_by_name:Object.fromEntries(Object.entries(s.refresh_by_name).map(([k,v])=>[k,{...v,visibility:{...(v.visibility||{})},visibility_ms:{...(v.visibility_ms||{})}}])),refresh_attribution:{minimized:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"minimized",5),hidden:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"hidden",5),collapsed:atlasRuntimeVisibilityAttribution40226(s.refresh_by_name,"collapsed",5)}},first_observatory_render_ms:s.first_render_ms,unsupported:{session_restore_exact:true,websocket_bytes:true,watts:true,wh:true},market_flow_runtime:(globalThis.__AGENT_CRYPTO_MARKET_FLOW_RUNTIME_40217__||null),visibility_instrumentation:"40.2.26-passive-reduced-collapsed-attribution",business_runtime_changed:false,storage_write:false,network_request_added:false,oracle_model_input:false};}
 function atlasRuntimeFmtMs40214(v){return Number.isFinite(Number(v))?`${Math.round(Number(v))} ms`:"—";}
 function atlasRuntimeVisibilityLabel40225(row){return row?`${Number(row.calls||0)}×/${atlasRuntimeFmtMs40214(row.total_ms)}`:"0×/0 ms";}
 /* 40.2.26 — REDUCED / COLLAPSED RUNTIME ATTRIBUTION LOCK
@@ -8991,6 +8991,7 @@ function atlasRenderOracleV0() {
     setWidth("atlasOracleBullMeter", 0); setWidth("atlasOracleBearMeter", 0);
     atlasOracleDrawCanvas(model);
     atlasOracleRuntimeStethoscope40232D(model);
+    atlasRenderOracleNewsContext40234(model, coin);
     return false;
   }
 
@@ -9044,6 +9045,7 @@ function atlasRenderOracleV0() {
   atlasOracleShadowV2RenderLive(model,currentRegime);
   atlasOracleConfidenceCalibrationRefresh(model,currentRegime,currentEnsemble).then(()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
   atlasOracleRuntimeStethoscope40232D(model);
+  atlasRenderOracleNewsContext40234(model, coin);
   return true;
 }
 
@@ -17343,12 +17345,19 @@ function atlasLocalCompactNews() {
 
 function atlasStrictNewsContract() {
   const compact = atlasLocalCompactNews();
+  let causalRoles = null;
+  try {
+    causalRoles = typeof newsMarketCausalRole40234 === "function"
+      ? newsMarketCausalRole40234(typeof newsFeedLeadEvent === "function" ? newsFeedLeadEvent() : null)
+      : null;
+  } catch {}
   return {
     status: compact?.status || null,
     archive_time: atlasStrictTimestamp(compact?.archive_time),
     counts_24h: compact?.counts_24h || null,
     lead_event: compact?.lead || null,
-    rule: "Les limites générales de données ne constituent pas une actualité ni une alerte News Sentinel."
+    market_driver_roles_40_2_34: causalRoles,
+    rule: "Les limites générales de données ne constituent pas une actualité ni une alerte News Sentinel. Les rôles cause/amplificateur/flux restent descriptifs et ne prouvent jamais une causalité."
   };
 }
 
@@ -18335,6 +18344,386 @@ function renderNewsFeedOverview() {
   renderNewsFeedList();
 }
 
+
+/* ============================================================
+   40.2.34 — NEWS-TO-MARKET CAUSAL ROLE ENGINE
+   CODE ONLY · deterministic local interpretation.
+   Reads the already-loaded News Sentinel archive + current market state.
+   No new fetch, timer, WebSocket, storage write, external AI, trading action
+   or causal claim. A role is plausible context, never proof of cause.
+   ============================================================ */
+
+const NEWS_MARKET_CAUSAL_ROLE_RULES_40234 = Object.freeze({
+  amplifier_up: Object.freeze({
+    id: "short-squeeze",
+    label: "SHORT SQUEEZE / LIQUIDATIONS",
+    direction: "HAUSSIER",
+    re: /\bshort squeeze\b|\bshorts?\b.{0,110}\b(liquidat(?:e|ed|ion|ions|é|és|ées)?|wiped out|forced (?:to )?buy|buy back|covered|squeezed)\b|\bbearish bets?\b.{0,110}\b(liquidat|wiped|forced|lose|lost)\b|\bforced out of\b.{0,90}\bshort\b|\bliquidation orders?\b.{0,110}\b(push|higher|rally|surge)\b/i
+  }),
+  amplifier_down: Object.freeze({
+    id: "long-squeeze",
+    label: "LONG SQUEEZE / LIQUIDATIONS",
+    direction: "BAISSIER",
+    re: /\blong squeeze\b|\blongs?\b.{0,110}\b(liquidat(?:e|ed|ion|ions|é|és|ées)?|wiped out|forced (?:to )?sell)\b|\bforced out of\b.{0,90}\blong\b/i
+  }),
+  flow_up: Object.freeze({
+    id: "demand-inflows",
+    label: "ETF / FLUX ENTRANTS",
+    direction: "DEMANDE",
+    re: /\b(etf|institutional|institutionnel|fund|fonds)\b.{0,110}\b(inflows?|net inflow|afflux|accumulat(?:ion|ing)|purchases?|buying)\b|\binflows?\b.{0,110}\b(etf|bitcoin|crypto|institutional)\b|\btreasury\b.{0,80}\b(buy|purchase|accumulat)\b/i
+  }),
+  flow_down: Object.freeze({
+    id: "supply-outflows",
+    label: "ETF / FLUX SORTANTS",
+    direction: "OFFRE / VENTE",
+    re: /\b(etf|institutional|institutionnel|fund|fonds)\b.{0,110}\b(outflows?|redemptions?|sorties?|selling)\b|\boutflows?\b.{0,110}\b(etf|bitcoin|crypto|institutional)\b/i
+  }),
+  catalyst_positive: Object.freeze({
+    id: "positive-catalyst",
+    label: "CATALYSEUR POSITIF POSSIBLE",
+    direction: "HAUSSIER POSSIBLE",
+    re: /\b(approv(?:e|ed|al)|greenlight|autorisation|autorisé|rate cut|cuts? rates|baisse des taux|listing|listed|adoption|partnership|partenariat|launch|lancement)\b/i
+  }),
+  catalyst_negative: Object.freeze({
+    id: "negative-catalyst",
+    label: "CATALYSEUR NÉGATIF POSSIBLE",
+    direction: "BAISSIER POSSIBLE",
+    re: /\b(hack|exploit|breach|piratage|ban|interdiction|lawsuit|procès|sanction|delist|delisting|bankrupt|bankruptcy|insolvency|insolvable|withdrawals? suspended|retraits? suspendus?)\b/i
+  }),
+  technical_trigger: Object.freeze({
+    id: "technical-breakout",
+    label: "CASSURE TECHNIQUE OBSERVÉE",
+    direction: "DÉCLENCHEUR TECHNIQUE PLAUSIBLE",
+    re: /\bbreaks? out\b|\bbreakout\b|\bcassure\b.{0,70}\b(range|résistance|resistance)\b|\b(range|résistance|resistance)\b.{0,70}\b(break|breakout|cassure)\b/i
+  })
+});
+
+function newsMarketEventText40234(event) {
+  return [
+    event?.headline,
+    event?.body,
+    event?.event_label,
+    event?.direction,
+    Array.isArray(event?.matched_topics) ? event.matched_topics.join(" ") : ""
+  ].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+}
+
+function newsMarketEventTime40234(event) {
+  const parsed = Date.parse(event?.event_time || event?.last_seen_at || event?.first_seen_at || "");
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function newsMarketEvidence40234(event) {
+  const score = Number(event?.evidence?.score);
+  const safeScore = Number.isFinite(score) ? Math.max(0, Math.min(100, score)) : null;
+  const level = String(event?.evidence?.level || (safeScore === null ? "INCONNUE" : safeScore >= 82 ? "ÉLEVÉE" : safeScore >= 65 ? "ASSEZ ÉLEVÉE" : safeScore >= 45 ? "MOYENNE" : "FAIBLE"));
+  return { score: safeScore, level };
+}
+
+function newsMarketSharedAsset40234(left, right) {
+  const a = new Set(Array.isArray(left?.assets) ? left.assets.map(v => String(v).toUpperCase()) : []);
+  const b = new Set(Array.isArray(right?.assets) ? right.assets.map(v => String(v).toUpperCase()) : []);
+  if (!a.size || !b.size) return false;
+  return [...a].some(symbol => b.has(symbol));
+}
+
+function newsMarketRelatedEvents40234(current, events = null) {
+  if (!current) return [];
+  const source = Array.isArray(events) ? events : (Array.isArray(newsFeedState?.events) ? newsFeedState.events : []);
+  const currentId = current?.id || current?.event_id || null;
+  const currentAssets = Array.isArray(current?.assets) ? current.assets : [];
+  const now = Date.now();
+  const cutoff = now - 72 * 60 * 60 * 1000;
+  return source.filter(event => {
+    if (!event) return false;
+    const id = event?.id || event?.event_id || null;
+    if (currentId && id === currentId) return false;
+    const ts = newsMarketEventTime40234(event);
+    if (ts && ts < cutoff) return false;
+    if (currentAssets.length) return newsMarketSharedAsset40234(current, event);
+    return false;
+  });
+}
+
+function newsMarketRoleMatch40234(event, rule) {
+  if (!event || !rule?.re) return null;
+  const text = newsMarketEventText40234(event);
+  if (!text || !rule.re.test(text)) return null;
+  const evidence = newsMarketEvidence40234(event);
+  return {
+    id: rule.id,
+    label: rule.label,
+    direction: rule.direction,
+    event_id: event?.event_id || event?.id || null,
+    headline: event?.headline || null,
+    source_name: event?.source_name || event?.source_host || null,
+    source_count: Math.max(1, Number(event?.source_count || 1)),
+    event_time: event?.event_time || null,
+    evidence,
+    causal_claim: false
+  };
+}
+
+function newsMarketBestRole40234(events, rules) {
+  const matches = [];
+  for (const event of events || []) {
+    for (const rule of rules || []) {
+      const match = newsMarketRoleMatch40234(event, rule);
+      if (match) matches.push(match);
+    }
+  }
+  matches.sort((a, b) => {
+    const evidence = Number(b?.evidence?.score ?? -1) - Number(a?.evidence?.score ?? -1);
+    if (evidence) return evidence;
+    const sources = Number(b?.source_count || 1) - Number(a?.source_count || 1);
+    if (sources) return sources;
+    return Date.parse(b?.event_time || 0) - Date.parse(a?.event_time || 0);
+  });
+  return matches[0] || null;
+}
+
+function newsMarketReaction40234(current, context = {}) {
+  let reaction = context?.reaction || null;
+  if (!reaction) {
+    try { reaction = atlasProductNewsReaction(current); } catch {}
+  }
+  let top5 = Array.isArray(context?.top5Coins) ? context.top5Coins : null;
+  if (!top5) {
+    try { top5 = atlasCuratedTopCoins(5); } catch { top5 = []; }
+  }
+  const rows = (top5 || []).map(coin => ({
+    symbol: String(coin?.symbol || coin?.name || "").toUpperCase(),
+    change24h: Number.isFinite(Number(coin?.change24h)) ? Number(coin.change24h) : null
+  })).filter(row => row.symbol && row.change24h !== null);
+  const positive = rows.filter(row => row.change24h > 0).length;
+  const negative = rows.filter(row => row.change24h < 0).length;
+  const flat = rows.length - positive - negative;
+  const focusRows = Array.isArray(reaction?.assets) ? reaction.assets.filter(row => row?.status === "observed" && Number.isFinite(Number(row?.change24h))) : [];
+  const focusText = focusRows.length
+    ? focusRows.map(row => `${row.symbol} ${Number(row.change24h) >= 0 ? "+" : ""}${Number(row.change24h).toFixed(2)} % / 24 h`).join(" · ")
+    : "Actif comparable indisponible";
+  const breadth = rows.length
+    ? `${positive}/${rows.length} positifs${negative ? ` · ${negative} négatif${negative > 1 ? "s" : ""}` : ""}${flat ? ` · ${flat} stable${flat > 1 ? "s" : ""}` : ""}`
+    : "Top 5 indisponible";
+  return {
+    status: rows.length || focusRows.length ? "observed" : "insufficient-data",
+    breadth,
+    positive,
+    negative,
+    flat,
+    count: rows.length,
+    focus: focusText,
+    reaction_label: reaction?.reaction || "Réaction marché non qualifiée",
+    causal_claim: false
+  };
+}
+
+function newsMarketCausalRole40234(current = null, context = {}) {
+  const selected = current || (() => { try { return newsFeedLeadEvent(); } catch { return null; } })();
+  if (!selected) {
+    return {
+      schema: "atlas.news_to_market.causal_role.v1",
+      build: "40.2.34",
+      status: "no-event",
+      event_id: null,
+      amplifier: null,
+      catalyst: null,
+      technical_trigger: null,
+      flow: null,
+      concomitance: null,
+      reaction: newsMarketReaction40234(null, context),
+      causality: "NON ÉVALUABLE",
+      causal_claim: false,
+      external_ai_used: false
+    };
+  }
+
+  const feedEvents = Array.isArray(context?.events) ? context.events : (Array.isArray(newsFeedState?.events) ? newsFeedState.events : []);
+  const related = newsMarketRelatedEvents40234(selected, feedEvents);
+  const scope = [selected, ...related];
+  const amplifier = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_up, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_down]);
+  const flow = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_up, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_down]);
+  const catalyst = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.catalyst_positive, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.catalyst_negative]);
+  const technicalTrigger = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.technical_trigger]);
+  const usedRoleEventIds = new Set([amplifier?.event_id, flow?.event_id, catalyst?.event_id, technicalTrigger?.event_id].filter(Boolean));
+  const concomitantEvent = scope
+    .filter(event => !usedRoleEventIds.has(event?.event_id || event?.id || null))
+    .sort((a, b) => Number(b?.evidence?.score || 0) - Number(a?.evidence?.score || 0))[0] || null;
+  const concomitance = concomitantEvent ? {
+    type: "CONCOMITANCE",
+    label: "ÉVÉNEMENT LIÉ · RÔLE NON DÉMONTRÉ",
+    direction: "INDÉTERMINÉ",
+    event_id: concomitantEvent?.event_id || concomitantEvent?.id || null,
+    headline: concomitantEvent?.headline || null,
+    source_name: concomitantEvent?.source_name || concomitantEvent?.source_host || null,
+    source_count: Math.max(1, Number(concomitantEvent?.source_count || 1)),
+    event_time: concomitantEvent?.event_time || null,
+    evidence: newsMarketEvidence40234(concomitantEvent),
+    causal_claim: false
+  } : null;
+  const reaction = newsMarketReaction40234(selected, context);
+  const legacyDirection = String(selected?.direction || "").toLowerCase();
+  const primaryDirection = String(amplifier?.direction || catalyst?.direction || "").toLowerCase();
+  const semanticConflict = Boolean(
+    (legacyDirection.includes("nég") || legacyDirection.includes("neg") || legacyDirection.includes("baiss"))
+    && (primaryDirection.includes("hauss") || primaryDirection.includes("demande"))
+  ) || Boolean(
+    (legacyDirection.includes("posit") || legacyDirection.includes("hauss"))
+    && primaryDirection.includes("baiss")
+  );
+
+  const primaryRole = amplifier
+    ? { type: "AMPLIFICATEUR", ...amplifier }
+    : catalyst
+      ? { type: "CATALYSEUR", ...catalyst }
+      : flow
+        ? { type: "FLUX", ...flow }
+        : technicalTrigger
+          ? { type: "DÉCLENCHEUR TECHNIQUE", ...technicalTrigger }
+          : concomitance
+            ? concomitance
+            : null;
+
+  return {
+    schema: "atlas.news_to_market.causal_role.v1",
+    build: "40.2.34",
+    status: "observed",
+    event_id: selected?.event_id || selected?.id || null,
+    headline: selected?.headline || null,
+    assets: Array.isArray(selected?.assets) ? [...selected.assets] : [],
+    related_events_examined: related.length,
+    amplifier,
+    catalyst,
+    technical_trigger: technicalTrigger,
+    flow,
+    concomitance,
+    reaction,
+    primary_role: primaryRole,
+    semantic_conflict_with_legacy_direction: semanticConflict,
+    legacy_direction: selected?.direction || null,
+    causality: "NON ÉTABLIE",
+    limitation: "Rôle plausible ≠ cause prouvée. Le moteur sépare catalyseur, amplificateur, flux et réaction ; aucune concordance temporelle ou directionnelle ne suffit à démontrer une causalité.",
+    causal_claim: false,
+    external_ai_used: false,
+    network_request_added: false,
+    automatic_action: false
+  };
+}
+
+function newsMarketRoleEvidenceLine40234(role) {
+  if (!role) return "Aucune preuve positive dans l’archive chargée.";
+  const evidence = role.evidence || {};
+  const score = Number.isFinite(Number(evidence.score)) ? `${Number(evidence.score)}/100` : "score —";
+  const sourceCount = Number(role.source_count || 1);
+  return `Preuve ${String(evidence.level || "inconnue").toLowerCase()} · ${score} · ${sourceCount} source${sourceCount > 1 ? "s" : ""} · ${role.source_name || "source non qualifiée"}`;
+}
+
+function renderNewsMarketDrivers40234(current = null) {
+  const analysis = newsMarketCausalRole40234(current);
+  const set = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = String(value ?? "—"); };
+  const root = document.getElementById("newsMarketDrivers40234");
+  if (!root) return analysis;
+
+  if (analysis.status === "no-event") {
+    set("newsMarketAmplifier40234", "NON QUALIFIÉ");
+    set("newsMarketAmplifierNote40234", "Aucun événement News Sentinel sélectionné.");
+    set("newsMarketCatalyst40234", "NON IDENTIFIÉ");
+    set("newsMarketCatalystNote40234", "Aucune source actuelle ne démontre un déclencheur initial.");
+    set("newsMarketFlow40234", "NON QUALIFIÉ");
+    set("newsMarketFlowNote40234", "Aucun flux demande/offre qualifié dans l’archive chargée.");
+    set("newsMarketReaction40234", "MARCHÉ À COMPARER");
+    set("newsMarketReactionNote40234", analysis.reaction?.breadth || "Top 5 indisponible");
+    set("newsMarketCausality40234", "NON ÉVALUABLE");
+    set("newsMarketCausalityNote40234", "Rôle plausible ≠ causalité prouvée.");
+    set("decisionNewsRole40234", "Rôle causal non qualifié");
+    root.dataset.state = "no-event";
+    root.dataset.semanticConflict = "false";
+    return analysis;
+  }
+
+  const amplifier = analysis.amplifier;
+  const catalyst = analysis.catalyst;
+  const flow = analysis.flow;
+  const technical = analysis.technical_trigger;
+  set("newsMarketAmplifier40234", amplifier ? `${amplifier.label} · ${amplifier.direction} PLAUSIBLE` : "AUCUN AMPLIFICATEUR PROUVÉ");
+  set("newsMarketAmplifierNote40234", amplifier ? newsMarketRoleEvidenceLine40234(amplifier) : "Aucun mécanisme d’amplification détecté par les règles 40.2.34.");
+  set("newsMarketCatalyst40234", catalyst ? `${catalyst.label}` : "NON IDENTIFIÉ");
+  set("newsMarketCatalystNote40234", catalyst
+    ? newsMarketRoleEvidenceLine40234(catalyst)
+    : technical
+      ? `${technical.label} · elle décrit un déclencheur de marché plausible, pas une cause externe. ${newsMarketRoleEvidenceLine40234(technical)}`
+      : "Aucune source actuelle ne démontre le déclencheur initial.");
+  set("newsMarketFlow40234", flow ? `${flow.label} · ${flow.direction}` : "NON QUALIFIÉ");
+  set("newsMarketFlowNote40234", flow ? newsMarketRoleEvidenceLine40234(flow) : "Aucun flux demande/offre positivement détecté dans les événements liés.");
+  set("newsMarketReaction40234", analysis.reaction?.count ? `TOP 5 · ${analysis.reaction.breadth}` : "RÉACTION PARTIELLE");
+  set("newsMarketReactionNote40234", `${analysis.reaction?.focus || "Actif non comparable"} · ${analysis.reaction?.reaction_label || "réaction non qualifiée"}`);
+  set("newsMarketCausality40234", "NON ÉTABLIE");
+  set("newsMarketCausalityNote40234", analysis.semantic_conflict_with_legacy_direction
+    ? `Contradiction sémantique exposée : taxonomie héritée « ${analysis.legacy_direction || "—"} » ≠ rôle marché détecté. ${analysis.limitation}`
+    : analysis.limitation);
+  set("decisionNewsRole40234", analysis.primary_role
+    ? `${analysis.primary_role.type} · ${analysis.primary_role.label}`
+    : "Rôle non déterminé · causalité non établie");
+  root.dataset.state = "observed";
+  root.dataset.semanticConflict = analysis.semantic_conflict_with_legacy_direction ? "true" : "false";
+  return analysis;
+}
+
+function newsMarketEventForOracle40234(symbol = null) {
+  const target = String(symbol || "").toUpperCase();
+  if (!target || target === "TOP 5") {
+    try { return newsFeedLeadEvent(); } catch { return null; }
+  }
+  const events = Array.isArray(newsFeedState?.events) ? newsFeedState.events : [];
+  return events.find(event => Array.isArray(event?.assets) && event.assets.some(asset => String(asset).toUpperCase() === target)) || null;
+}
+
+function atlasRenderOracleNewsContext40234(model = null, coin = null) {
+  const root = document.getElementById("atlasOracleNewsContext40234");
+  const roleNode = document.getElementById("atlasOracleNewsRole40234");
+  const noteNode = document.getElementById("atlasOracleNewsCausality40234");
+  if (!root || !roleNode || !noteNode) return null;
+  let symbol = null;
+  try {
+    const aggregate = atlasOracleV0AssetId === ATLAS_ORACLE_TOP5_FOCUS || Boolean(model?.aggregate);
+    const selected = coin || (!aggregate && typeof atlasOracleSelectCoin === "function" ? atlasOracleSelectCoin() : null);
+    symbol = aggregate ? "TOP 5" : String(selected?.symbol || selected?.name || "").toUpperCase();
+  } catch {}
+  const event = newsMarketEventForOracle40234(symbol);
+  const analysis = newsMarketCausalRole40234(event);
+  if (!event || analysis.status === "no-event") {
+    roleNode.textContent = symbol ? `Aucune news qualifiée pour ${symbol}` : "Aucune news qualifiée";
+    noteNode.textContent = "Causalité non évaluée · News Sentinel reste la source de vérité événementielle.";
+    root.dataset.state = "neutral";
+    return analysis;
+  }
+  const primary = analysis.primary_role;
+  roleNode.textContent = primary
+    ? `${primary.type} · ${primary.label}`
+    : `${symbol || "Marché"} · rôle causal non déterminé`;
+  const evidence = primary?.evidence;
+  noteNode.textContent = `${evidence?.score != null ? `preuve ${evidence.score}/100 · ` : ""}causalité globale ${analysis.causality.toLowerCase()}${analysis.semantic_conflict_with_legacy_direction ? " · taxonomie héritée en conflit" : ""}`;
+  root.dataset.state = primary ? "active" : "neutral";
+  return analysis;
+}
+
+globalThis.AtlasNewsToMarketCausalRole40234 = Object.freeze({
+  compute: newsMarketCausalRole40234,
+  render: renderNewsMarketDrivers40234,
+  oracle_context: atlasRenderOracleNewsContext40234,
+  deterministic: true,
+  code_only: true,
+  external_ai_used: false,
+  existing_news_archive_only: true,
+  existing_market_state_only: true,
+  causal_claim: false,
+  network_request_added: false,
+  timer_added: false,
+  websocket_added: false,
+  storage_write_added: false,
+  automatic_action: false
+});
+
 function newsCurrentEvent(manualEvent = null) {
   if (manualEvent) return manualEvent;
   return newsFeedLeadEvent() || readNewsEvents().slice(-1)[0] || null;
@@ -18473,6 +18862,8 @@ function renderNewsSentinel(event = null) {
       bridge.dataset.tone = tone;
       bridge.dataset.state = newsFeedState.status;
     }
+    renderNewsMarketDrivers40234(null);
+    atlasRenderOracleNewsContext40234();
     renderNewsHistory(manualEvents);
     return;
   }
@@ -18503,10 +18894,16 @@ function renderNewsSentinel(event = null) {
     bridge.dataset.tone = newsToneClass(current.decision.tone);
     bridge.dataset.state = "active";
   }
+  renderNewsMarketDrivers40234(current);
+  atlasRenderOracleNewsContext40234();
   renderNewsHistory(manualEvents, current.origin === "github_news_collector" ? null : current.id);
 }
 
 function newsOutputText(event, duplicate = false) {
+  const roles40234 = newsMarketCausalRole40234(event);
+  const amplifier40234 = roles40234?.amplifier ? `${roles40234.amplifier.label} · ${roles40234.amplifier.direction} plausible` : "non qualifié";
+  const catalyst40234 = roles40234?.catalyst?.label || "non identifié";
+  const flow40234 = roles40234?.flow ? `${roles40234.flow.label} · ${roles40234.flow.direction}` : "non qualifié";
   return [
     "NEWS SENTINEL — ANALYSE DÉTERMINISTE",
     "",
@@ -18523,6 +18920,14 @@ function newsOutputText(event, duplicate = false) {
     `Risque de manipulation : ${event.manipulation.level} (${event.manipulation.score}/100)`,
     `Déjà intégré au prix : ${event.priced.label}`,
     `Lecture marché : ${event.priced.detail}`,
+    "",
+    "NEWS → MARKET · RÔLES 40.2.34",
+    `Amplificateur : ${amplifier40234}`,
+    `Catalyseur initial : ${catalyst40234}`,
+    `Flux / demande : ${flow40234}`,
+    `Réaction : ${roles40234?.reaction?.breadth || "non qualifiée"} · ${roles40234?.reaction?.focus || "—"}`,
+    `Causalité globale : ${roles40234?.causality || "NON ÉVALUABLE"}`,
+    roles40234?.semantic_conflict_with_legacy_direction ? `Contradiction sémantique : taxonomie héritée « ${roles40234.legacy_direction || "—"} » ≠ rôle marché détecté.` : "Contradiction sémantique : aucune détectée.",
     "",
     `Décision Atlas : ${event.decision.action}`,
     `À vérifier : ${event.decision.checks}`,
@@ -45116,7 +45521,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.33";
+const ATLAS_BUILD = "40.2.34";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

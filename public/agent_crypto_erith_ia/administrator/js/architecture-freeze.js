@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.33 — PARKER LEWIS CAN'T LOSE · ORACLE OPERATOR CONSOLE FINAL LOCK
+     40.2.34 — PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET CAUSAL ROLE ENGINE LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.33";
+  const BUILD_CURRENT = "40.2.34";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -972,6 +972,19 @@
           && globalThis.ErithOracleOperatorConsoleFinalContract40233?.oracle_model_modified === false
           && globalThis.ErithOracleOperatorConsoleFinalContract40233?.window_manager_modified === false,
         "final fit/overflow/contraste · cumulative A-D préservée · aucun comportement métier ajouté"),
+      check("News-to-Market Causal Role 40.2.34",
+        globalThis.ErithNewsToMarketCausalRoleContract40234?.deterministic_local === true
+          && globalThis.ErithNewsToMarketCausalRoleContract40234?.existing_news_archive_only === true
+          && globalThis.ErithNewsToMarketCausalRoleContract40234?.existing_market_state_only === true
+          && globalThis.ErithNewsToMarketCausalRoleContract40234?.causal_claim_allowed === false
+          && globalThis.ErithNewsToMarketCausalRoleContract40234?.external_ai_required === false
+          && globalThis.ErithNewsToMarketCausalRoleContract40234?.new_network_request_added === false
+          && globalThis.ErithNewsToMarketCausalRoleContract40234?.timer_added === false
+          && globalThis.AtlasNewsToMarketCausalRole40234?.deterministic === true
+          && globalThis.AtlasNewsToMarketCausalRole40234?.causal_claim === false
+          && Boolean(document.getElementById("newsMarketDrivers40234"))
+          && Boolean(document.getElementById("atlasOracleNewsContext40234")),
+        "catalyseur/amplificateur/flux/réaction séparés · causalité toujours non établie · archive+marché existants uniquement · zéro IA/réseau/timer"),
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
           && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"

@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.33";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE OPERATOR CONSOLE FINAL LOCK";
+  const ADMIN_BUILD = "40.2.34";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET CAUSAL ROLE ENGINE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -241,6 +241,28 @@
     window_manager_modified: false,
   });
   globalThis.ErithOracleOperatorConsoleFinalContract40233 = ORACLE_OPERATOR_CONSOLE_FINAL_CONTRACT_40233;
+
+  const NEWS_TO_MARKET_CAUSAL_ROLE_CONTRACT_40234 = Object.freeze({
+    build: "40.2.34",
+    code_only: true,
+    deterministic_local: true,
+    existing_news_archive_only: true,
+    existing_market_state_only: true,
+    role_classes: Object.freeze(["CATALYSEUR", "AMPLIFICATEUR", "FLUX", "RÉACTION", "CONCOMITANCE"]),
+    semantic_conflict_exposed: true,
+    causal_claim_allowed: false,
+    external_ai_required: false,
+    new_network_request_added: false,
+    timer_added: false,
+    websocket_added: false,
+    storage_write_added: false,
+    automatic_action_added: false,
+    news_collector_modified: false,
+    oracle_model_modified: false,
+    evidence_capture_changed: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithNewsToMarketCausalRoleContract40234 = NEWS_TO_MARKET_CAUSAL_ROLE_CONTRACT_40234;
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);
