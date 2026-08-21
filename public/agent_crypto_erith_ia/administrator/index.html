@@ -385,6 +385,40 @@
   </style>
 
 
+  <style id="atlasTechnicalReadingFrameLock40259">
+    /* 40.2.59 — Technical Reading framing only.
+       Preserve the repository portraits, reopen left/right breathing room for the overlays,
+       and restore theme-specific focal stability without changing Market/Oracle runtimes. */
+    body.atlas-administrator-mirror #detailPanel.atlas-tech-frame-lock-40259{
+      background-image:linear-gradient(180deg,rgba(3,10,18,.58),rgba(3,10,18,.76)),var(--atlas-tech-backdrop-image,none)!important;
+      background-size:cover!important;
+      background-position:var(--atlas-tech-bg-x,50%) var(--atlas-tech-bg-y,50%)!important;
+      background-repeat:no-repeat!important;
+    }
+    body.atlas-administrator-mirror #detailPanel.atlas-tech-frame-lock-40259 .detail-project-visual.admin-tech-r3{
+      position:relative!important;
+      overflow:hidden!important;
+      background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.12))!important;
+    }
+    body.atlas-administrator-mirror #detailPanel.atlas-tech-frame-lock-40259 .detail-project-visual.admin-tech-r3>.admin-tech-portrait-r3{
+      position:absolute!important;
+      inset:48px 0 0 0!important;
+      width:100%!important;
+      height:calc(100% - 48px)!important;
+      max-width:100%!important;
+      max-height:calc(100% - 48px)!important;
+      object-fit:contain!important;
+      object-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%)!important;
+      transform:scale(var(--admin-tech-scale,.95))!important;
+      transform-origin:center center!important;
+      background:transparent!important;
+      filter:drop-shadow(0 12px 22px rgba(0,0,0,.40))!important;
+      z-index:1!important;
+    }
+    body.atlas-administrator-mirror #detailPanel.atlas-tech-frame-lock-40259 .atlas-tech-static-tint{opacity:.22!important}
+  </style>
+
+
   <style id="atlasTechnicalPortraitOracleAccent40219">
     /* 40.2.26 — CODE ONLY workspace portability + storage lineage cumulative lock.
        A) Technical Reading: preserve the complete phone-format portrait.
@@ -4992,7 +5026,7 @@
   <script id="atlasTechnicalStaticThemeController40212">
   (() => {
     "use strict";
-    const BUILD = "40.2.12";
+    const BUILD = "40.2.59";
     const BASE = "./assets/visual/technical-reading/";
     const DEFAULT_IMAGE = "./assets/visual/admin-technical-reading-default.png";
     const THEMES = Object.freeze({
@@ -5001,6 +5035,13 @@
       dusk:  {label:"Soir",    file:"technical-soir-aerith9.png"},
       night: {label:"Nuit",    file:"technical-nuit-cyber.png"},
       lunar: {label:"Lunaire", file:"technical-lunaire-aerith9-mirror.png"}
+    });
+    const FRAMING = Object.freeze({
+      dawn:  {x:"58%", y:"52%", scale:"0.95", bgX:"62%", bgY:"50%"},
+      day:   {x:"56%", y:"50%", scale:"0.95", bgX:"58%", bgY:"48%"},
+      dusk:  {x:"55%", y:"49%", scale:"0.96", bgX:"56%", bgY:"48%"},
+      night: {x:"50%", y:"50%", scale:"0.94", bgX:"50%", bgY:"42%"},
+      lunar: {x:"50%", y:"49%", scale:"0.93", bgX:"50%", bgY:"40%"}
     });
     let mode = "auto";
     let timer = 0;
@@ -5066,7 +5107,7 @@
     }
     function ensureToolbar(){
       const p=panel(), h=host(); if(!p||!h) return null;
-      p.classList.add("atlas-tech-static-cycle");disableLegacyPicker(h);
+      p.classList.add("atlas-tech-static-cycle","atlas-tech-letterbox-fill-40230","atlas-tech-frame-lock-40259");disableLegacyPicker(h);
       let bar=p.querySelector(".atlas-tech-static-toolbar");
       if(!bar){
         bar=document.createElement("div");bar.className="atlas-tech-static-toolbar";bar.setAttribute("aria-label","Thème temporel de Lecture technique");
@@ -5087,6 +5128,12 @@
     function apply(){
       const p=panel(), img=portrait(), bar=ensureToolbar();if(!p||!img||!bar)return false;bindStaticAuthority(img);
       const theme=resolvedTheme(), cfg=THEMES[theme];p.dataset.techTheme=theme;
+      const frame=FRAMING[theme]||FRAMING.day;
+      p.style.setProperty("--admin-tech-x", frame.x);
+      p.style.setProperty("--admin-tech-y", frame.y);
+      p.style.setProperty("--admin-tech-scale", frame.scale);
+      p.style.setProperty("--atlas-tech-bg-x", frame.bgX);
+      p.style.setProperty("--atlas-tech-bg-y", frame.bgY);
       const wanted=BASE+cfg.file;
       p.style.setProperty("--atlas-tech-backdrop-image", `url("${wanted}")`);
       if(img.dataset.atlasStaticWanted!==wanted){
