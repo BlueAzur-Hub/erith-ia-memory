@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.31";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE V2 SHADOW EVALUATION GATE LOCK";
+  const ADMIN_BUILD = "40.2.33";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE OPERATOR CONSOLE FINAL LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -153,6 +153,94 @@
     window_manager_modified: false
   });
   globalThis.ErithOracleV2EvaluationContract40231 = ORACLE_V2_EVALUATION_CONTRACT_40231;
+
+  const ORACLE_VERDICT_HIERARCHY_CONTRACT_40232A = Object.freeze({
+    build: "40.2.32A",
+    visual_only: true,
+    verdict_priority_only: true,
+    existing_oracle_values_only: true,
+    oracle_model_modified: false,
+    evidence_capture_changed: false,
+    storage_write_added: false,
+    network_request_added: false,
+    timer_added: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithOracleVerdictHierarchyContract40232A = ORACLE_VERDICT_HIERARCHY_CONTRACT_40232A;
+
+  const ORACLE_TIME_FIELD_CONTRACT_40232B = Object.freeze({
+    build: "40.2.32B",
+    visual_only: true,
+    historical_now_scenario_emphasis: true,
+    canvas_data_unchanged: true,
+    forecast_math_changed: false,
+    oracle_model_modified: false,
+    network_request_added: false,
+    timer_added: false,
+    storage_write_added: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithOracleTimeFieldContract40232B = ORACLE_TIME_FIELD_CONTRACT_40232B;
+
+  const ORACLE_INFORMATION_HIERARCHY_CONTRACT_40232C = Object.freeze({
+    build: "40.2.32C",
+    visual_only: true,
+    same_dom_content: true,
+    operator_context_lab_levels: true,
+    oracle_model_modified: false,
+    evidence_capture_changed: false,
+    network_request_added: false,
+    timer_added: false,
+    storage_write_added: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithOracleInformationHierarchyContract40232C = ORACLE_INFORMATION_HIERARCHY_CONTRACT_40232C;
+
+  const ORACLE_RUNTIME_STETHOSCOPE_CONTRACT_40232D = Object.freeze({
+    build: "40.2.32D",
+    passive_read_only: true,
+    existing_state_only: true,
+    timer_added: false,
+    network_request_added: false,
+    websocket_added: false,
+    engine_start_added: false,
+    oracle_model_modified: false,
+    evidence_capture_changed: false,
+    storage_write_added: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithOracleRuntimeStethoscopeContract40232D = ORACLE_RUNTIME_STETHOSCOPE_CONTRACT_40232D;
+
+  const ORACLE_OPERATOR_VISUAL_STACK_CONTRACT_40232 = Object.freeze({
+    build: "40.2.32",
+    cumulative: true,
+    contains: Object.freeze(["40.2.32A", "40.2.32B", "40.2.32C", "40.2.32D"]),
+    code_only: true,
+    image_generation_added: false,
+    oracle_model_modified: false,
+    evidence_capture_changed: false,
+    network_request_added: false,
+    timer_added: false,
+    storage_write_added: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithOracleOperatorVisualStackContract40232 = ORACLE_OPERATOR_VISUAL_STACK_CONTRACT_40232;
+
+  const ORACLE_OPERATOR_CONSOLE_FINAL_CONTRACT_40233 = Object.freeze({
+    build: "40.2.33",
+    final_lock: true,
+    fit_overflow_contrast_only: true,
+    inherits_cumulative_40_2_32: true,
+    code_only: true,
+    image_generation_added: false,
+    oracle_model_modified: false,
+    evidence_capture_changed: false,
+    network_request_added: false,
+    timer_added: false,
+    storage_write_added: false,
+    window_manager_modified: false,
+  });
+  globalThis.ErithOracleOperatorConsoleFinalContract40233 = ORACLE_OPERATOR_CONSOLE_FINAL_CONTRACT_40233;
 
   const byId = id => document.getElementById(id);
   const q = selector => document.querySelector(selector);

@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.31 — PARKER LEWIS CAN'T LOSE · ORACLE V2 SHADOW EVALUATION GATE LOCK
+     40.2.33 — PARKER LEWIS CAN'T LOSE · ORACLE OPERATOR CONSOLE FINAL LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.31";
+  const BUILD_CURRENT = "40.2.33";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -930,6 +930,48 @@
           && Boolean(document.getElementById("atlasOracleV2EvaluationGate40231"))
           && Boolean(document.getElementById("btnAtlasOracleV2Eval40231")),
         "audit opérateur same-T0 · prospectif Shadow · V1/ENS/naïf comparables · aucun retuning · promotion bloquée"),
+      check("Oracle Verdict Hierarchy 40.2.32A",
+        globalThis.ErithOracleVerdictHierarchyContract40232A?.visual_only === true
+          && globalThis.ErithOracleVerdictHierarchyContract40232A?.existing_oracle_values_only === true
+          && globalThis.ErithOracleVerdictHierarchyContract40232A?.oracle_model_modified === false
+          && globalThis.ErithOracleVerdictHierarchyContract40232A?.network_request_added === false
+          && Boolean(document.getElementById("atlasOracleV0")),
+        "hiérarchie verdict uniquement · valeurs Oracle existantes · aucun moteur touché"),
+      check("Oracle Time Field 40.2.32B",
+        globalThis.ErithOracleTimeFieldContract40232B?.visual_only === true
+          && globalThis.ErithOracleTimeFieldContract40232B?.historical_now_scenario_emphasis === true
+          && globalThis.ErithOracleTimeFieldContract40232B?.canvas_data_unchanged === true
+          && globalThis.ErithOracleTimeFieldContract40232B?.forecast_math_changed === false,
+        "historique/NOW/scénario renforcés · données canvas et calculs inchangés"),
+      check("Oracle Information Hierarchy 40.2.32C",
+        globalThis.ErithOracleInformationHierarchyContract40232C?.visual_only === true
+          && globalThis.ErithOracleInformationHierarchyContract40232C?.same_dom_content === true
+          && globalThis.ErithOracleInformationHierarchyContract40232C?.operator_context_lab_levels === true
+          && globalThis.ErithOracleInformationHierarchyContract40232C?.oracle_model_modified === false,
+        "opérateur/context/lab hiérarchisés · mêmes données et mêmes nœuds métier"),
+      check("Oracle Runtime Stethoscope 40.2.32D",
+        globalThis.ErithOracleRuntimeStethoscopeContract40232D?.passive_read_only === true
+          && globalThis.ErithOracleRuntimeStethoscopeContract40232D?.existing_state_only === true
+          && globalThis.ErithOracleRuntimeStethoscopeContract40232D?.timer_added === false
+          && globalThis.ErithOracleRuntimeStethoscopeContract40232D?.network_request_added === false
+          && globalThis.AtlasOracleRuntimeStethoscope40232D?.passive === true
+          && Boolean(document.getElementById("atlasOracleRuntimeStethoscope40232D")),
+        "stéthoscope passif · états existants uniquement · aucun poller/socket/moteur ajouté"),
+      check("Oracle Operator Visual Stack 40.2.32",
+        globalThis.ErithOracleOperatorVisualStackContract40232?.cumulative === true
+          && globalThis.ErithOracleOperatorVisualStackContract40232?.code_only === true
+          && globalThis.ErithOracleOperatorVisualStackContract40232?.image_generation_added === false
+          && globalThis.ErithOracleOperatorVisualStackContract40232?.oracle_model_modified === false
+          && globalThis.ErithOracleOperatorVisualStackContract40232?.window_manager_modified === false,
+        "A+B+C+D cumulés · CODE ONLY · aucun modèle, Evidence ou Window Manager modifié"),
+      check("Oracle Operator Console Final 40.2.33",
+        globalThis.ErithOracleOperatorConsoleFinalContract40233?.final_lock === true
+          && globalThis.ErithOracleOperatorConsoleFinalContract40233?.fit_overflow_contrast_only === true
+          && globalThis.ErithOracleOperatorConsoleFinalContract40233?.inherits_cumulative_40_2_32 === true
+          && globalThis.ErithOracleOperatorConsoleFinalContract40233?.code_only === true
+          && globalThis.ErithOracleOperatorConsoleFinalContract40233?.oracle_model_modified === false
+          && globalThis.ErithOracleOperatorConsoleFinalContract40233?.window_manager_modified === false,
+        "final fit/overflow/contraste · cumulative A-D préservée · aucun comportement métier ajouté"),
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
           && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"

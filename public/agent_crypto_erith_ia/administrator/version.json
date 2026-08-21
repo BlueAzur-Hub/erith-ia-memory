@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_version_manifest_v8",
-  "release": "Agent-Crypto @erith.IA · Build 40.2.31 · PARKER LEWIS CAN'T LOSE · ORACLE V2 SHADOW EVALUATION GATE LOCK",
-  "build": "40.2.31",
-  "asset_token": "market-core-v2.0-alpha-build-40.2.31",
+  "release": "Agent-Crypto @erith.IA · Build 40.2.33 · PARKER LEWIS CAN'T LOSE · ORACLE OPERATOR CONSOLE FINAL LOCK",
+  "build": "40.2.33",
+  "asset_token": "market-core-v2.0-alpha-build-40.2.33",
   "status": "candidate_requires_firefox_validation",
   "prepared_at": "2026-08-21T00:56:58Z",
   "published_at": null,
@@ -12,8 +12,8 @@
     "reference_build": "38.15.11",
     "status": "protected"
   },
-  "parent_build": "40.2.30",
-  "lineage": "40.2.30 → 40.2.31 · Oracle V2 Shadow evaluation gate only; operator-triggered same-T0 prospective comparison against V1, Ensemble and best naive; no retuning, promotion, Evidence write, network or timer",
+  "parent_build": "40.2.32",
+  "lineage": "40.2.32 → 40.2.33 · final Oracle operator console polish/fit lock; cumulative A-D preserved, no new business behavior",
   "files": {
     "app.js": "d449194b96dce6b7fdc05e5bff1e8188c2fd333df8f7d35e04f02f059a614c86",
     "index.html": "4cab5d7c1bf76d4880e411fc194f8efec45caf786b94bf4579d091e7b449358f",
@@ -54,9 +54,9 @@
   },
   "integrity": {
     "files": {
-      "app.js": "c41627bd752106bf8ffc4d5b98af6743cb744a52c792e9202a0eae3209e19565",
-      "index.html": "6d34d6d65ca724024ebc6026860189174b03f5f400bfda73d001df03894134fc",
-      "js/app.js": "c121d30d9eb9758d6ba5506bd777aab888e3c2d47aa7322cbe2c0ce9cb79abf9",
+      "app.js": "48aee80739a9b3f04dce9f2927e6f3a6a5ed161573488a5fbca0313ae9c6a3c4",
+      "index.html": "971fcd86a993039cfd3757063606fc22f3dd33eaf8208229b629b0016afd2d80",
+      "js/app.js": "3ed7df24c61f6f87fcd4941a024de2dfdae95daf413edf4a5d74435eb128d82e",
       "style.css": "f4b955e550c2a3e48e6a7aab6e24ea01165c215f1ff18284b85c006cc05cae9c",
       "admin-metal.css": "6e0e0e4ba80f76a297880afb84abb42223e9637de37fcd3b078e88562aaa50a9",
       "admin-windows.css": "9a47d0515d8bbb6f8a351e19752013c880288e9135b28c662117a254221d5973",
@@ -66,7 +66,7 @@
       "js/core/admin-window-manager.js": "55431f875227d01d51dfef83a84a58fea991c678cf84210025c51a0325b7ccd8",
       "js/admin-visual-assets.js": "641500d875654df483d9c05d807bb2fe8667157493f52bb087b5b4671f6d69ae",
       "js/layout-repair.js": "8ce4b3dd22e7deac9edff69e1ebc505545c1a55e9474439e53f0069d5b7b1178",
-      "js/architecture-freeze.js": "9298d74e5d7734c5db9aeb3421857b924e7adf0c3e30ce3e4d8892629bb7a808",
+      "js/architecture-freeze.js": "4f4d122e8dfcf37229d85cf32b2d4a33efdea5a92aa8d2fff4c26d847f1c1b3e",
       "assets/visual/admin-analytical-memory.png": "b36f937e409ee47fec2b14951ba00e4cf2b673453238453ac38ebe98a383715d",
       "assets/visual/admin-chart-office.png": "d3eeea63d9afcb6bd026f668ab57795e19ba8f30dbff61343f059888ad33370d",
       "assets/visual/admin-command-observatory.png": "bd8b078254a55fa58efba4ae8e6d2e4a932e62c7a5e2b8ea0d908833b8ee6c8f",
@@ -74,7 +74,7 @@
       "assets/visual/admin-sources-archive.png": "e880d937bfcf1e01664ce18d93674a58479a10e25548e4a7536fc6fbcec32aa3",
       "assets/visual/admin-system-core.png": "f5bf4751cc2e6ad3871d3f5ef0d378f18ad8690cf06056cb937b0333a0beebc0",
       "assets/visual/admin-technical-reading-default.png": "c011dc679bbf1093e7b1e96b6142061c4f463d5bc2c0d5d0b0d4b2edfe99073d",
-      "administrator-version.json": "9adff4dc312d4ded239f0a454acb7e707dec3ccfaff501a0a82a61afeb2420d2",
+      "administrator-version.json": "06ec3a09a0e12394f864df6d73cbb722d0cc3423899e36af4b2227cdf4f8df6f",
       "metals_quote_adapter_contract.json": "e0565991e07494797924473ffd85b33f82535c215c02e197a4b7fb95ed025ad9",
       "assets/images/missions_de_vie_constellation_bg.png": "da745320778106b7f0a362610903007e6db9c814cc4b46db3a4c59f08d0ce358",
       "js/market-memory.js": "a961e6cd2565c785fe36e744dd5dd77ceae3ee1c3b96346faea2bc69e163aea6",
@@ -94,10 +94,10 @@
       "assets/visual/technical-reading/technical-soir-aerith9.png": "9fe0d3a041c6c0fe13cdb25c8c16e0c719b4759d7c30299776abd5a81324ec89"
     },
     "publication_identity": {
-      "build": "40.2.31",
-      "asset_token": "market-core-v2.0-alpha-build-40.2.31",
+      "build": "40.2.33",
+      "asset_token": "market-core-v2.0-alpha-build-40.2.33",
       "app_build_marker_required": true,
-      "app_sha256": "c41627bd752106bf8ffc4d5b98af6743cb744a52c792e9202a0eae3209e19565",
+      "app_sha256": "48aee80739a9b3f04dce9f2927e6f3a6a5ed161573488a5fbca0313ae9c6a3c4",
       "status": "candidate_requires_firefox_validation"
     }
   },
@@ -1328,6 +1328,86 @@
       "network_request_added": false,
       "timer_added": false,
       "window_manager_modified": false
+    },
+    "oracle_verdict_hierarchy_40_2_32a": {
+      "build": "40.2.32A",
+      "visual_only": true,
+      "existing_oracle_values_only": true,
+      "oracle_model_modified": false,
+      "evidence_capture_changed": false,
+      "network_request_added": false,
+      "timer_added": false,
+      "storage_write_added": false,
+      "window_manager_modified": false
+    },
+    "oracle_time_field_40_2_32b": {
+      "build": "40.2.32B",
+      "visual_only": true,
+      "historical_now_scenario_emphasis": true,
+      "canvas_data_unchanged": true,
+      "forecast_math_changed": false,
+      "oracle_model_modified": false,
+      "network_request_added": false,
+      "timer_added": false,
+      "storage_write_added": false,
+      "window_manager_modified": false
+    },
+    "oracle_information_hierarchy_40_2_32c": {
+      "build": "40.2.32C",
+      "visual_only": true,
+      "same_dom_content": true,
+      "operator_context_lab_levels": true,
+      "oracle_model_modified": false,
+      "evidence_capture_changed": false,
+      "network_request_added": false,
+      "timer_added": false,
+      "storage_write_added": false,
+      "window_manager_modified": false
+    },
+    "oracle_runtime_stethoscope_40_2_32d": {
+      "build": "40.2.32D",
+      "passive_read_only": true,
+      "existing_state_only": true,
+      "timer_added": false,
+      "network_request_added": false,
+      "websocket_added": false,
+      "engine_start_added": false,
+      "oracle_model_modified": false,
+      "evidence_capture_changed": false,
+      "storage_write_added": false,
+      "window_manager_modified": false
+    },
+    "oracle_operator_visual_stack_40_2_32": {
+      "build": "40.2.32",
+      "cumulative": true,
+      "contains": [
+        "40.2.32A",
+        "40.2.32B",
+        "40.2.32C",
+        "40.2.32D"
+      ],
+      "code_only": true,
+      "image_generation_added": false,
+      "oracle_model_modified": false,
+      "evidence_capture_changed": false,
+      "network_request_added": false,
+      "timer_added": false,
+      "storage_write_added": false,
+      "window_manager_modified": false
+    },
+    "oracle_operator_console_final_40_2_33": {
+      "build": "40.2.33",
+      "final_lock": true,
+      "fit_overflow_contrast_only": true,
+      "inherits_cumulative_40_2_32": true,
+      "code_only": true,
+      "image_generation_added": false,
+      "oracle_model_modified": false,
+      "evidence_capture_changed": false,
+      "network_request_added": false,
+      "timer_added": false,
+      "storage_write_added": false,
+      "window_manager_modified": false
     }
   },
   "notes": [
@@ -1358,7 +1438,13 @@
     "Le DCL Book observé à 11217 ms reste une mesure runtime, pas la variable modifiée par 40.2.28 ; aucun patch performance n’est introduit.",
     "40.2.29 : preuve positive de propriété stockage uniquement ; aucune suppression, migration ou écriture stockage ajoutée.",
     "Les clés REVIEW_REQUIRED ne changent de statut que lorsqu’un propriétaire exact est démontré par constante + chemin de lecture/écriture/fallback dans le parent 40.2.28.",
-    "Aucune absence de référence n’est convertie en preuve de non-propriété ; RETIRABLE_PROVEN reste pré-déclaré à 0 et le retirement gate reste CLOSED."
+    "Aucune absence de référence n’est convertie en preuve de non-propriété ; RETIRABLE_PROVEN reste pré-déclaré à 0 et le retirement gate reste CLOSED.",
+    "40.2.32A : hiérarchie visuelle du verdict Oracle uniquement ; aucun calcul ou flux métier modifié.",
+    "40.2.32B : séparation visuelle Historique / Maintenant / Scénario renforcée sur le canvas ; aucune donnée ou projection recalculée.",
+    "40.2.32C : hiérarchie opérateur / contexte / laboratoire par CSS ; aucune donnée Oracle ou Evidence modifiée.",
+    "40.2.32D : stéthoscope Oracle passif alimenté par les états runtime existants ; aucun timer, fetch, WebSocket ou moteur ajouté.",
+    "40.2.32 cumulative : A+B+C+D regroupés dans une seule pile CODE ONLY ; aucune génération d’image ni modification de modèle.",
+    "40.2.33 Final Lock : finition fit/overflow/contraste uniquement ; pile 40.2.32 A-D conservée sans nouveau comportement métier."
   ],
   "autonomous_mirror": {
     "administrator_style_owner": "./style.css",
