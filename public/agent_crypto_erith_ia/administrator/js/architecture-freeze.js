@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.87 — PARKER LEWIS CAN'T LOSE · GRAPH TOOLBAR WHITE ACTIVE TEXT LOCK
+     40.2.88 — PARKER LEWIS CAN'T LOSE · CELESTIAL RYZEN → BOOK READ-ONLY HANDOFF LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.87";
+  const BUILD_CURRENT = "40.2.88";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -277,6 +277,22 @@
     return {
       ok: !!toolbar && !!reading && !!period && !!comparison && !!stylesheet && requiredLabels && requiredReading && fiche && maxNeutral && clearPresent && buttonCount >= 20,
       detail:`toolbar=${String(!!toolbar)} · rows=${[reading,period,comparison].filter(Boolean).length}/3 · lecture=${String(requiredReading)} · fiche=${String(fiche)} · max=${String(maxNeutral)} · clear=${String(clearPresent)} · buttons=${buttonCount} · css=${String(!!stylesheet)}`
+    };
+  }
+
+  function celestialRyzenBookContract40288() {
+    const root=document.getElementById("atlasCelestialHandoff40288");
+    const exportButton=document.getElementById("atlasCelestialExport40288");
+    const importButton=document.getElementById("atlasCelestialImport40288");
+    const api=globalThis.AgentCryptoCelestialPortable40288 || globalThis.AgentCryptoCelestialPortable40272;
+    const sentinel=globalThis.__AGENT_CRYPTO_CELESTIAL_SENTINEL_40268__;
+    const transport=api?.transport === "manual_shared_memory_json";
+    const readonly=api?.read_only_on_book === true;
+    const noGithub=api?.github_publication_required === false;
+    const modelLocked=api?.oracle_model_input === false && api?.causal_claim === false;
+    return {
+      ok:!!root && !!exportButton && !!importButton && transport && readonly && noGithub && modelLocked && !!sentinel,
+      detail:`ui=${String(!!root)} · export=${String(!!exportButton)} · import=${String(!!importButton)} · transport=${String(transport)} · bookRO=${String(readonly)} · github=${String(!noGithub?"required":"not-required")} · Oracle=${String(api?.oracle_model_input)}`
     };
   }
 
@@ -1082,6 +1098,7 @@
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
       check("Graphique · états menu actif bleu/blanc · désactivé gris 40.2.87", graphToolbarStateContract40287().ok === true, graphToolbarStateContract40287().detail),
+      check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
       check("Graphique · historique pur + LIVE hors canvas",
