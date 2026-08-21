@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.40";
+  const ADMIN_BUILD = "40.2.41";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET FINAL LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -340,6 +340,19 @@
     new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false, window_manager_modified:false,
   });
   globalThis.ErithNewsToMarketFinalLockContract40240 = NEWS_TO_MARKET_FINAL_LOCK_CONTRACT_40240;
+
+
+  const ORACLE_RESTORE_NEWS_PLACEMENT_CONTRACT_40241 = Object.freeze({
+    build:"40.2.41", code_only:true, corrective_layout:true,
+    oracle_news_context_unmounted:true, oracle_operator_outer_frame_removed:true,
+    oracle_bull_bear_metrics_restored_to_primary_readout:true,
+    news_report_moved_to_dedicated_news_accordion:true,
+    existing_inline_svg_geometry_reused:true, image_asset_added:false, image_generation_added:false,
+    news_intelligence_changed:false, oracle_model_modified:false, oracle_v2_changed:false,
+    atlas_model_modified:false, evidence_capture_changed:false, window_manager_modified:false,
+    new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false
+  });
+  globalThis.ErithOracleRestoreNewsPlacementContract40241 = ORACLE_RESTORE_NEWS_PLACEMENT_CONTRACT_40241;
 
 
   const byId = id => document.getElementById(id);

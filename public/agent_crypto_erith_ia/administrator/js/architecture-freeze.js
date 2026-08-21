@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.40 — PARKER LEWIS CAN'T LOSE · NEWS-TO-MARKET CAUSAL ROLE ENGINE LOCK
+     40.2.41 — PARKER LEWIS CAN'T LOSE · ORACLE RESTORE + NEWS REPORT PLACEMENT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.40";
+  const BUILD_CURRENT = "40.2.41";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -982,8 +982,7 @@
           && globalThis.ErithNewsToMarketCausalRoleContract40234?.timer_added === false
           && globalThis.AtlasNewsToMarketCausalRole40234?.deterministic === true
           && globalThis.AtlasNewsToMarketCausalRole40234?.causal_claim === false
-          && Boolean(document.getElementById("newsMarketDrivers40234"))
-          && Boolean(document.getElementById("atlasOracleNewsContext40234")),
+          && Boolean(document.getElementById("newsMarketDrivers40234")),
         "catalyseur/amplificateur/flux/réaction séparés · causalité toujours non établie · archive+marché existants uniquement · zéro IA/réseau/timer"),
       check("News-to-Market Operator Intelligence 40.2.35",
         globalThis.ErithNewsToMarketOperatorIntelligenceContract40235?.deterministic_local === true
@@ -1019,10 +1018,8 @@
       check("Oracle News Context Integration 40.2.39",
         globalThis.ErithOracleNewsContextIntegrationContract40239?.source_of_truth === "news-sentinel"
           && globalThis.ErithOracleNewsContextIntegrationContract40239?.oracle_forecast_math_changed === false
-          && globalThis.AtlasOracleNewsContextIntegration40239?.compact_summary_only === true
-          && Boolean(document.getElementById("atlasOracleNewsQuality40239"))
-          && Boolean(document.getElementById("atlasOracleNewsTimeline40239")),
-        "résumé compact rôle + timeline + solidité dans Oracle · News Sentinel reste source de vérité · calcul Oracle inchangé"),
+          && globalThis.AtlasOracleNewsContextIntegration40239?.compact_summary_only === true,
+        "contrat historique 40.2.39 conservé · résumé Oracle volontairement démonté par 40.2.41 · calcul Oracle inchangé"),
 
       check("News-to-Market Final Lock 40.2.40",
         globalThis.ErithNewsToMarketFinalLockContract40240?.final_lock === true
@@ -1032,6 +1029,19 @@
           && globalThis.ErithNewsToMarketFinalLockContract40240?.window_manager_modified === false,
         "final fit/overflow/responsive · cumulative 40.2.35→40.2.39 préservée · aucun moteur modifié"),
 
+
+      check("Oracle Restore + News Report Placement 40.2.41",
+        globalThis.ErithOracleRestoreNewsPlacementContract40241?.corrective_layout === true
+          && globalThis.ErithOracleRestoreNewsPlacementContract40241?.oracle_news_context_unmounted === true
+          && globalThis.ErithOracleRestoreNewsPlacementContract40241?.oracle_operator_outer_frame_removed === true
+          && globalThis.ErithOracleRestoreNewsPlacementContract40241?.news_report_moved_to_dedicated_news_accordion === true
+          && globalThis.ErithOracleRestoreNewsPlacementContract40241?.image_generation_added === false
+          && globalThis.ErithOracleRestoreNewsPlacementContract40241?.oracle_model_modified === false
+          && globalThis.ErithOracleRestoreNewsPlacementContract40241?.window_manager_modified === false
+          && !Boolean(document.getElementById("atlasOracleNewsContext40234"))
+          && Boolean(document.getElementById("news-market-explanation"))
+          && Boolean(document.getElementById("newsMarketOperatorIntelligence40235")),
+        "super Oracle restauré · rapport complet News→Marché déplacé dans son accordéon News · icônes inline existantes réutilisées · CODE ONLY"),
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
           && globalThis.ErithWorkspaceRuntimeContract40227?.x_semantics === "mask_presentation_only"
