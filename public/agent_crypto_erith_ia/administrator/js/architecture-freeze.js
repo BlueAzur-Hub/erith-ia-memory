@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.84 — PARKER LEWIS CAN'T LOSE · FICHE HOVER TOOLBAR FIX LOCK
+     40.2.85 — PARKER LEWIS CAN'T LOSE · GRAPH TOOLBAR METALLIC + BOOK LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.84";
+  const BUILD_CURRENT = "40.2.85";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -257,6 +257,24 @@
       base,
       hover,
       detail: base.map(row => `${row.selector}:${row.got || "—"}`).join(" · ")
+    };
+  }
+
+  function graphToolbarMetallicContract40285() {
+    const toolbar = document.querySelector?.("#analyste .chart-v2-toolbar.atlas-graph-toolbar-metallic-40285");
+    const reading = toolbar?.querySelector?.(".chart-v2-toolbar-reading");
+    const period = toolbar?.querySelector?.(".chart-v2-toolbar-period");
+    const comparison = toolbar?.querySelector?.(".chart-v2-toolbar-comparison");
+    const labels = [...(toolbar?.querySelectorAll?.(".chart-v2-toolbar-label") || [])].map(node => String(node.textContent || "").trim().toLowerCase());
+    const readingGroups = [...(reading?.querySelectorAll?.(".chart-v2-toggle-group > span") || [])].map(node => String(node.textContent || "").trim().toLowerCase());
+    const stylesheet = [...document.styleSheets].find(item => pathOnly(item.href || "").endsWith("/admin-window-menu-uniform.css"));
+    const buttonCount = Number(toolbar?.querySelectorAll?.(".chart-v2-toggle,.period-btn,.compare-btn")?.length || 0);
+    const fiche = !!toolbar?.querySelector?.("#atlasTop5NativeFicheToggle40284");
+    const requiredLabels = ["lecture","période","comparaison"].every(label => labels.includes(label));
+    const requiredReading = ["vue","échelle","afficher"].every(label => readingGroups.includes(label));
+    return {
+      ok: !!toolbar && !!reading && !!period && !!comparison && !!stylesheet && requiredLabels && requiredReading && fiche && buttonCount >= 20,
+      detail:`toolbar=${String(!!toolbar)} · rows=${[reading,period,comparison].filter(Boolean).length}/3 · lecture=${String(requiredReading)} · fiche=${String(fiche)} · buttons=${buttonCount} · css=${String(!!stylesheet)}`
     };
   }
 
@@ -1061,6 +1079,7 @@
       check("Aucun override chrome R1/R2 chargé", forbiddenOverrides.length === 0, forbiddenOverrides.length ? forbiddenOverrides.map(row => row.raw).join(" · ") : "anciens overrides R1/R2 absents"),
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
+      check("Graphique · menu Lecture/Vue/Échelle/Afficher métallique 40.2.85", graphToolbarMetallicContract40285().ok === true, graphToolbarMetallicContract40285().detail),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
       check("Graphique · historique pur + LIVE hors canvas",

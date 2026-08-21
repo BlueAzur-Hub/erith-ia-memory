@@ -92,3 +92,128 @@ body.atlas-administrator-mirror .admin-native-control-host > .admin-native-contr
     opacity:.88!important;
   }
 }
+
+/* ============================================================================
+   40.2.85 — GRAPH ANALYST TOOLBAR METALLIC CONSOLIDATION · VISUAL ONLY
+
+   Scope is deliberately bounded to the existing Graphique Analyste toolbar:
+   Lecture / Vue / Échelle / Afficher / Période / Comparaison.
+   No DOM ownership, display mode, click handler, data source or chart geometry is changed.
+   ============================================================================ */
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 {
+  --atlas-gm-border:rgba(183,202,214,.22);
+  --atlas-gm-border-soft:rgba(183,202,214,.13);
+  --atlas-gm-text:rgba(231,240,245,.88);
+  --atlas-gm-muted:rgba(177,196,208,.72);
+  --atlas-gm-label:#b9eff8;
+  --atlas-gm-active:#effdff;
+  --atlas-gm-active-border:rgba(98,236,255,.62);
+  min-width:0!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toolbar-row {
+  border:1px solid var(--atlas-gm-border-soft)!important;
+  border-radius:10px!important;
+  background:linear-gradient(180deg,rgba(36,47,55,.28),rgba(5,10,14,.44))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 4px 12px rgba(0,0,0,.08)!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toolbar-label,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle-group > span {
+  color:var(--atlas-gm-label)!important;
+  font-weight:950!important;
+  letter-spacing:.105em!important;
+  text-transform:uppercase!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.5)!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toolbar-label {
+  font-size:8.5px!important;
+}
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle-group > span {
+  font-size:7.5px!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle-group,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-tabs,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-action-group {
+  border:1px solid rgba(183,202,214,.10)!important;
+  border-radius:8px!important;
+  background:linear-gradient(180deg,rgba(23,32,38,.32),rgba(4,8,12,.38))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.022)!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-btn,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-btn {
+  min-height:25px!important;
+  border:1px solid var(--atlas-gm-border)!important;
+  border-radius:7px!important;
+  background:linear-gradient(180deg,rgba(49,62,71,.48),rgba(7,13,18,.72))!important;
+  color:var(--atlas-gm-text)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 1px 2px rgba(0,0,0,.20)!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.55)!important;
+  transition:border-color .12s ease,background .12s ease,color .12s ease,box-shadow .12s ease,transform .12s ease!important;
+  white-space:nowrap!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle:hover,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-btn:hover,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-btn:hover {
+  border-color:rgba(195,219,232,.42)!important;
+  background:linear-gradient(180deg,rgba(67,84,95,.66),rgba(10,18,24,.86))!important;
+  color:#f5fbff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 3px 10px rgba(0,0,0,.22)!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle:focus-visible,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-btn:focus-visible,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-btn:focus-visible {
+  outline:2px solid rgba(98,236,255,.72)!important;
+  outline-offset:1px!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle.is-active,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle[aria-pressed="true"],
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-btn.active,
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-btn.active {
+  border-color:var(--atlas-gm-active-border)!important;
+  background:linear-gradient(180deg,rgba(41,82,91,.86),rgba(7,33,42,.92))!important;
+  color:var(--atlas-gm-active)!important;
+  box-shadow:inset 0 0 0 1px rgba(180,248,255,.11),0 0 0 1px rgba(35,187,207,.12),0 0 12px rgba(50,209,231,.12)!important;
+}
+
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-btn-max:not(.active) {
+  border-color:rgba(255,215,130,.30)!important;
+  color:#ffe2a4!important;
+}
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-btn-clear:not(.active) {
+  border-color:rgba(255,92,117,.27)!important;
+  color:#ffc6ce!important;
+}
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 #atlasTop5NativeFicheToggle40284.is-active {
+  border-color:rgba(93,235,175,.58)!important;
+  background:linear-gradient(180deg,rgba(35,94,74,.82),rgba(6,39,31,.92))!important;
+  color:#d9ffec!important;
+}
+body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-period-truth {
+  color:rgba(181,199,211,.70)!important;
+  font-weight:800!important;
+}
+
+/* Transformer Book / compact desktop: tighten only spacing and typography.
+   Existing toolbar wrapping/geometry remains the owner. */
+@media (max-width:1366px) {
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toolbar-row {padding:2px 3px!important}
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-control-deck,
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-tabs,
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-actions {gap:3px!important}
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle-group,
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-tabs,
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-action-group {padding:1px 2px!important}
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle,
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .period-btn,
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .compare-btn {min-height:24px!important;padding:3px 6px!important;font-size:8.5px!important}
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toolbar-label {font-size:7.5px!important;letter-spacing:.08em!important}
+  body.atlas-administrator-mirror #analyste .atlas-graph-toolbar-metallic-40285 .chart-v2-toggle-group > span {font-size:7px!important;letter-spacing:.07em!important}
+}
