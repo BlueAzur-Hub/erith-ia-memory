@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.2.98";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · STORAGE RELIEF + BREAKOUT/CELestial PORTABLE LOCK";
+  const ADMIN_BUILD = "40.3.00";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ADMIN FAMILY ORDER + MENU ALIGNMENT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -375,6 +375,14 @@
     return siblingRange(start, end);
   }
 
+  // 40.3.00 — family ownership is semantic, not dependent on visual DOM adjacency.
+  function familyEntriesByLayout(headerSelector, layoutNames = []) {
+    const header = q(headerSelector);
+    const selectors = layoutNames.map(name => `[data-layout-family="${name}"]`).join(",");
+    const members = selectors ? [...document.querySelectorAll(selectors)] : [];
+    return [header, ...members].filter((node, index, list) => node instanceof HTMLElement && list.indexOf(node) === index).map(node => entry(node));
+  }
+
   function entry(node, domain = "all") {
     return node instanceof HTMLElement ? { node, domain } : null;
   }
@@ -474,21 +482,21 @@
         id: "intelligence-memoire-creation",
         title: "Intelligence, mémoire & création",
         tone: "violet",
-        resolveEntries: () => groupFrom(".atlas-layout-family-intelligence", ".atlas-layout-family-operations").map(node => entry(node)),
+        resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-intelligence", ["intelligence", "creation"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-intelligence")) || nodes[0]
       },
       {
         id: "preparation-operations",
         title: "Préparation & opérations",
         tone: "gold",
-        resolveEntries: () => groupFrom(".atlas-layout-family-operations", ".atlas-layout-family-system").map(node => entry(node)),
+        resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-operations", ["operations"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-operations")) || nodes[0]
       },
       {
         id: "experimentation-systeme",
         title: "Expérimentation & système",
         tone: "orange",
-        resolveEntries: () => groupFrom(".atlas-layout-family-system", "#missions-vie").map(node => entry(node)),
+        resolveEntries: () => familyEntriesByLayout(".atlas-layout-family-system", ["system", "experiment"]),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0]
       },
       {

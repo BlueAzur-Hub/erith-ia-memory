@@ -2283,10 +2283,14 @@ function atlasInitV2Shell() {
     button.addEventListener("click", () => atlasV2ApplyMathDock(button.dataset.mathPosition));
   });
 
-  document.querySelectorAll(".atlas-v2-nav-essential a").forEach(link => {
-    link.addEventListener("click", () => {
-      const hash = link.getAttribute("href");
-      if (hash) atlasV2OpenAdvancedForTarget(hash, { updateHash: false, scroll: false });
+  document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      const id = String(button.dataset.atlasEssentialTarget || "").trim();
+      const target = id ? document.getElementById(id) : null;
+      if (!target) return;
+      const behavior = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ? "auto" : "smooth";
+      target.scrollIntoView({ behavior, block: "start" });
     });
   });
 
@@ -46079,7 +46083,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.2.98";
+const ATLAS_BUILD = "40.3.00";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

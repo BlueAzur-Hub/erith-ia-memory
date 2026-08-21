@@ -889,3 +889,106 @@ body.atlas-family-boundaries-40298 main.shell > [data-layout-family="operations"
   body.atlas-family-boundaries-40298 main.shell > [data-layout-family] + section.atlas-layout-family {margin-top:20px!important}
   body.atlas-family-boundaries-40298 main.shell > [data-layout-family="operations"] + section.atlas-layout-family-system {margin-top:30px!important}
 }
+
+
+/* ============================================================================
+   40.2.99 — BOOK NAVIGATION COMPACT LOCK
+   - Essential navigation is one 6-button row above 1366 px.
+   - Transformer Book / <=1366 px uses a stable 2x3 grid.
+   - The duplicate ADMIN kicker is visually suppressed in favor of the existing
+     Administration view selector.
+   - Buttons are internal controls, not URL/hash navigation anchors.
+   ============================================================================ */
+body.atlas-book-nav-40299 .atlas-v2-interface-bar .atlas-v2-nav{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+}
+body.atlas-book-nav-40299 .atlas-v2-nav-essential.atlas-quick-dock{
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:6px!important;
+  width:100%!important;
+  min-width:0!important;
+  align-items:stretch!important;
+}
+body.atlas-book-nav-40299 .atlas-v2-nav-essential.atlas-quick-dock>.atlas-quick-link{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  justify-content:center!important;
+  align-items:center!important;
+  white-space:nowrap!important;
+  font:inherit;
+  cursor:pointer!important;
+}
+body.atlas-book-nav-40299 .atlas-admin-command-kicker.atlas-visually-hidden{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+body.atlas-book-nav-40299 .atlas-v2-nav-advanced.atlas-admin-dock:not([hidden]){
+  width:100%!important;
+  margin-top:6px!important;
+}
+@media (max-width:1366px){
+  body.atlas-book-nav-40299 .atlas-v2-nav-essential.atlas-quick-dock{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  body.atlas-book-nav-40299 .atlas-v2-nav-essential.atlas-quick-dock>.atlas-quick-link{
+    min-height:34px!important;
+    padding:6px 8px!important;
+    font-size:clamp(10px,1.05vw,12px)!important;
+  }
+  body.atlas-book-nav-40299 .atlas-v2-nav-essential .atlas-quick-icon{
+    flex:0 0 auto!important;
+  }
+}
+@media (max-width:700px){
+  body.atlas-book-nav-40299 .atlas-v2-nav-essential.atlas-quick-dock{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+
+
+/* ============================================================================
+   40.3.00 — ADMIN FAMILY ORDER + MENU ALIGNMENT LOCK
+   - family 04 header is intentionally placed at the end of the Administrator
+     family sequence, immediately before Mesure d'audience;
+   - the transparent-emblem stacking rule must NEVER take position ownership
+     from native Window Manager controls;
+   - illustrated family controls stay on the right, just left of the emblem;
+   - no Window Manager source modification.
+   ============================================================================ */
+body.atlas-family-order-40300.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-native-controls{
+  position:absolute!important;
+  top:50%!important;
+  right:82px!important;
+  bottom:auto!important;
+  left:auto!important;
+  transform:translateY(-50%)!important;
+  z-index:2147481200!important;
+}
+body.atlas-family-order-40300 main.shell > section.atlas-layout-family-system{
+  clear:both!important;
+  isolation:isolate!important;
+  margin-top:26px!important;
+  margin-bottom:10px!important;
+}
+body.atlas-family-order-40300 main.shell > section.atlas-layout-family-system + #mesure-audience{
+  margin-top:0!important;
+}
+@media (max-width:1366px){
+  body.atlas-family-order-40300.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-native-controls{
+    right:62px!important;
+  }
+  body.atlas-family-order-40300 main.shell > section.atlas-layout-family-system{margin-top:22px!important}
+}

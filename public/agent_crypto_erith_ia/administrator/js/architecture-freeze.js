@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.98 — PARKER LEWIS CAN'T LOSE · FAMILY BOUNDARY + EMBLEM SIGNAL ALIGNMENT LOCK
+     40.3.00 — PARKER LEWIS CAN'T LOSE · ADMIN FAMILY ORDER + MENU ALIGNMENT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.98";
+  const BUILD_CURRENT = "40.3.00";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -312,15 +312,50 @@
     const shell = document.querySelector("main.shell");
     const operations = document.querySelector(".atlas-layout-family-operations");
     const system = document.querySelector(".atlas-layout-family-system");
-    const previous = system?.previousElementSibling || null;
     const topLevelSiblings = !!shell && operations?.parentElement === shell && system?.parentElement === shell;
-    const operationsEndsBeforeSystem = previous?.dataset?.layoutFamily === "operations";
+    const operationsBeforeSystem = !!operations && !!system && Boolean(operations.compareDocumentPosition(system) & Node.DOCUMENT_POSITION_FOLLOWING);
     const systemNotNestedInOperations = !system?.closest?.('[data-layout-family="operations"]');
     const operationsEmblem = operations?.querySelector?.(':scope > .admin-family-emblem-r3[data-for="projects"]');
     const systemEmblem = system?.querySelector?.(':scope > .admin-family-emblem-r3[data-for="system"]');
     return {
-      ok: bodyOk && topLevelSiblings && operationsEndsBeforeSystem && systemNotNestedInOperations && !!operationsEmblem && !!systemEmblem,
-      detail:`body=${String(bodyOk)} · siblings=${String(topLevelSiblings)} · 03-end=${String(operationsEndsBeforeSystem)} · 04-outside-03=${String(systemNotNestedInOperations)} · emblems=${Number(!!operationsEmblem)+Number(!!systemEmblem)}/2`
+      ok: bodyOk && topLevelSiblings && operationsBeforeSystem && systemNotNestedInOperations && !!operationsEmblem && !!systemEmblem,
+      detail:`body=${String(bodyOk)} · siblings=${String(topLevelSiblings)} · 03-before-04=${String(operationsBeforeSystem)} · 04-outside-03=${String(systemNotNestedInOperations)} · emblems=${Number(!!operationsEmblem)+Number(!!systemEmblem)}/2`
+    };
+  }
+
+
+  function bookNavigationContract40299() {
+    const bodyOk = document.body?.classList?.contains("atlas-book-nav-40299") === true;
+    const dock = document.querySelector(".atlas-v2-nav-essential.atlas-quick-dock");
+    const buttons = [...(dock?.querySelectorAll?.("button[data-atlas-essential-target]") || [])];
+    const expected = ["livecheck","market-workspace","analyste","atlas-local-ai-collapse","oracle-analysis-suite","sources"];
+    const ids = buttons.map(node => String(node.dataset.atlasEssentialTarget || ""));
+    const targetsOk = expected.every((id, index) => ids[index] === id && !!document.getElementById(id));
+    const noHref = Number(dock?.querySelectorAll?.("a[href]")?.length || 0) === 0;
+    const kicker = document.getElementById("atlasCommandKicker");
+    const singleAdminVisual = !!kicker?.classList?.contains("atlas-visually-hidden") && !!document.getElementById("btnAdminAccountToggle");
+    return {
+      ok: bodyOk && buttons.length === 6 && targetsOk && noHref && singleAdminVisual,
+      detail:`body=${String(bodyOk)} · buttons=${buttons.length}/6 · order=${ids.join(">") || "—"} · noHref=${String(noHref)} · singleAdmin=${String(singleAdminVisual)}`
+    };
+  }
+
+  function adminFamilyOrderMenuContract40300() {
+    const bodyOk = document.body?.classList?.contains("atlas-family-order-40300") === true;
+    const systemHeader = document.querySelector(".atlas-layout-family-system");
+    const audience = document.getElementById("mesure-audience");
+    const directOrder = !!systemHeader && systemHeader.nextElementSibling === audience;
+    const familyMembers = [...document.querySelectorAll('[data-layout-family="system"],[data-layout-family="experiment"]')];
+    const membersBeforeHeader = !!systemHeader && familyMembers.length >= 6 && familyMembers.every(node => Boolean(node.compareDocumentPosition(systemHeader) & Node.DOCUMENT_POSITION_FOLLOWING));
+    const headers = ["intelligence","operations","system"].map(name => document.querySelector(`.atlas-layout-family-${name}`)).filter(Boolean);
+    const controls = headers.map(header => header.querySelector(":scope > .admin-native-controls")).filter(Boolean);
+    const controlsRight = controls.length === 3 && controls.every(node => {
+      const style = getComputedStyle(node);
+      return style.position === "absolute" && style.left === "auto" && style.right !== "auto";
+    });
+    return {
+      ok: bodyOk && directOrder && membersBeforeHeader && controlsRight,
+      detail:`body=${String(bodyOk)} · 04→audience=${String(directOrder)} · system/experiment-before-04=${familyMembers.length}/6:${String(membersBeforeHeader)} · menus-right=${controls.length}/3:${String(controlsRight)}`
     };
   }
 
@@ -1172,6 +1207,8 @@
       check("Sections · air + emblèmes transparents 40.2.92", sectionAirEmblemContract40292().ok === true, sectionAirEmblemContract40292().detail),
       check("Sections · hiérarchie compacte + sous-sections bordées + Atlas viewport 40.2.93", sectionDensityAtlasViewportContract40293().ok === true, sectionDensityAtlasViewportContract40293().detail),
       check("Sections · frontières familles + emblèmes sur axe signal 40.2.98", familyBoundaryContract40298().ok === true, familyBoundaryContract40298().detail),
+      check("Navigation · Book 2×3 + boutons internes + ADMIN unique 40.2.99", bookNavigationContract40299().ok === true, bookNavigationContract40299().detail),
+      check("Familles · 04 devant Mesure d’audience + menus 02/03/04 à droite 40.3.00", adminFamilyOrderMenuContract40300().ok === true, adminFamilyOrderMenuContract40300().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
