@@ -1160,3 +1160,111 @@ body.atlas-family04-trailing-boundary-40307 main.shell > details[data-collapse-k
 body.atlas-family04-trailing-boundary-40307 main.shell > section.atlas-layout-family-system + #missions-vie{
   margin-top:10px!important;
 }
+
+
+/* ============================================================================
+   40.3.09 — BOOK COMMAND CENTER + STATUS COMPACTION LOCK
+   - Transformer Book: Command Center is the sole entry for Decision / Analysis /
+     System / Projects / graph-view management; essential six links remain.
+   - Desktop keeps the complete advanced shortcut row.
+   - Livecheck status strip owns exactly five visible grid items; redundant labels
+     are shortened and the time label is visually removed while its value remains.
+   - No handler, Window Manager, market engine, Atlas or Oracle behavior change.
+   ============================================================================ */
+body.atlas-status-strip-40309 #sourceTimeCard>.atlas-status-time-label-40309{
+  display:none!important;
+}
+body.atlas-status-strip-40309 #livecheck.command-bar{
+  grid-template-columns:minmax(150px,.82fr) minmax(145px,.76fr) minmax(170px,.92fr) minmax(260px,1.30fr) minmax(300px,1.42fr)!important;
+  gap:6px!important;
+}
+body.atlas-status-strip-40309 #sourceTimeCard{
+  min-width:0!important;
+  flex:1 1 auto!important;
+}
+body.atlas-status-strip-40309 #decisionCard,
+body.atlas-status-strip-40309 #sourceActiveCard,
+body.atlas-status-strip-40309 #sourceTimeCard{
+  min-inline-size:0!important;
+}
+body.atlas-status-strip-40309 #decisionCard>strong,
+body.atlas-status-strip-40309 #sourceActiveCard>strong,
+body.atlas-status-strip-40309 #atlasCelestialClockHeader4055{
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+@media (max-width:1366px){
+  html[data-atlas-mode="advanced"] body.atlas-book-command-center-40309 .atlas-admin-command-shortcuts,
+  html[data-atlas-mode="advanced"] body.atlas-book-command-center-40309 .atlas-admin-graph-toggle{
+    display:none!important;
+  }
+  html[data-atlas-mode="advanced"] body.atlas-book-command-center-40309 .atlas-v2-nav-advanced.atlas-admin-dock:not([hidden]){
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:auto!important;
+    padding-left:3px!important;
+    border-left:1px solid rgba(98,236,255,.18)!important;
+  }
+  html[data-atlas-mode="advanced"] body.atlas-book-command-center-40309 .atlas-admin-command-bar,
+  html[data-atlas-mode="advanced"] body.atlas-book-command-center-40309 .atlas-admin-center-toggle{
+    width:auto!important;
+    min-width:auto!important;
+  }
+  html[data-atlas-mode="advanced"] body.atlas-book-command-center-40309 .atlas-admin-center-toggle{
+    min-height:26px!important;
+    padding:3px 7px!important;
+  }
+  body.atlas-status-strip-40309 #livecheck.command-bar{
+    grid-template-columns:minmax(136px,.72fr) minmax(128px,.68fr) minmax(135px,.78fr) minmax(220px,1.28fr) minmax(245px,1.36fr)!important;
+    gap:5px!important;
+  }
+  body.atlas-status-strip-40309 #livecheck.command-bar>.btn{
+    min-width:0!important;
+    padding-inline:8px!important;
+  }
+  body.atlas-status-strip-40309 #livecheck.command-bar>.source-card{
+    min-width:0!important;
+    padding-inline:7px!important;
+  }
+}
+
+
+/* ============================================================================
+   40.3.09 — ADMIN PRESENTATION AUTHORITY LOCK
+   Root cause repair after Firefox operator review:
+   - 04 remains a TRAILING boundary after Physical Security, before Missions;
+   - therefore the visual START of the System/Experiment run is Storage, not 04;
+   - explicitly close the gold 03 reading after Plan exchange and open a new
+     teal/system run before Storage without duplicating the numbered 04 header;
+   - this supersedes historical boundary selectors that expected the 04 header
+     to precede its members.
+   ============================================================================ */
+body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198{
+  position:relative!important;
+  margin-top:38px!important;
+}
+body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198::before{
+  content:""!important;
+  position:absolute!important;
+  left:18px!important;
+  right:18px!important;
+  top:-20px!important;
+  height:1px!important;
+  pointer-events:none!important;
+  background:linear-gradient(90deg,rgba(255,211,119,.58),rgba(105,226,224,.46) 46%,rgba(105,226,224,.10) 82%,transparent)!important;
+  box-shadow:0 0 14px rgba(105,226,224,.08)!important;
+}
+body.atlas-admin-presentation-authority-40309 main.shell > #atlasStorageHealth40198{
+  border-top-color:rgba(105,226,224,.34)!important;
+}
+body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="physical-security"] + section.atlas-layout-family-system{
+  margin-top:12px!important;
+}
+body.atlas-admin-presentation-authority-40309 main.shell > section.atlas-layout-family-system + #missions-vie{
+  margin-top:10px!important;
+}
+@media (max-width:1366px){
+  body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198{margin-top:30px!important}
+  body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198::before{top:-16px!important}
+}

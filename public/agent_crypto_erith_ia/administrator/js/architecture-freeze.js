@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.07 — PARKER LEWIS CAN'T LOSE · FAMILY 04 TRAILING BOUNDARY + TECH LOAD PRIORITY LOCK
+     40.3.09 — PARKER LEWIS CAN'T LOSE · ADMIN PRESENTATION AUTHORITY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.08";
+  const BUILD_CURRENT = "40.3.09";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -530,8 +530,8 @@
     };
   }
 
-  function essentialNavigationContract40306() {
-    const contract = globalThis.ErithEssentialNavigation40306;
+  function essentialNavigationContract40309() {
+    const contract = globalThis.ErithEssentialNavigation40309;
     const atlasButton = document.querySelector('.atlas-v2-nav-essential [data-atlas-essential-target="atlas-local-ai-collapse"]');
     const atlasTarget = document.getElementById("atlas-local-ai-collapse");
     const atlasManifestTarget = document.getElementById("local-ai-hub");
@@ -539,13 +539,35 @@
     const allTargets = [...document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]")]
       .every(button => !!document.getElementById(String(button.dataset.atlasEssentialTarget || "")));
     return {
-      ok: contract?.build === "40.3.06"
-        && contract?.owner_restore === true
+      ok: contract?.build === "40.3.09"
+        && contract?.explicit_operator_intent === true
+        && contract?.restore_hidden_owner === true
+        && contract?.restore_minimized_owner === true
+        && contract?.open_requested_details === true
         && contract?.floating_focus_without_document_scroll === true
         && contract?.atlas_manifest_bridge === "local-ai-hub"
-        && contract?.preserve_detail_open_state === true
         && !!atlasButton && !!atlasTarget && !!atlasManifestTarget && !!oracleButton && allTargets,
-      detail:`contract=${contract?.build || "—"} · owner-restore=${String(contract?.owner_restore === true)} · atlas-bridge=${contract?.atlas_manifest_bridge || "—"} · all-targets=${String(allTargets)}`
+      detail:`contract=${contract?.build || "—"} · min-restore=${String(contract?.restore_minimized_owner === true)} · open-details=${String(contract?.open_requested_details === true)} · all-targets=${String(allTargets)}`
+    };
+  }
+
+  function adminPresentationAuthorityContract40309() {
+    const bodyOk = document.body?.classList?.contains("atlas-admin-presentation-authority-40309") === true;
+    const shell = document.querySelector("main.shell");
+    const planning = document.querySelector('details[data-collapse-key="planning"]');
+    const storage = document.getElementById("atlasStorageHealth40198");
+    const physical = document.querySelector('details[data-collapse-key="physical-security"]');
+    const family04 = document.querySelector("section.atlas-layout-family-system");
+    const missions = document.getElementById("missions-vie");
+    const intermediateHidden = globalThis.ATLAS_V2_INTERMEDIATE_HIDDEN_IDS || null;
+    const direct = node => node instanceof HTMLElement && node.parentElement === shell;
+    const boundary = direct(planning) && direct(storage) && planning.nextElementSibling === storage
+      && direct(physical) && direct(family04) && physical.nextElementSibling === family04
+      && direct(missions) && family04.nextElementSibling === missions;
+    const missionsVisibleStructurally = !intermediateHidden || !intermediateHidden.has?.("missions-vie");
+    return {
+      ok: bodyOk && boundary && missionsVisibleStructurally,
+      detail:`body=${String(bodyOk)} · Plan>Storage=${String(planning?.nextElementSibling === storage)} · Physical>04>Missions=${String(physical?.nextElementSibling === family04 && family04?.nextElementSibling === missions)} · intermediate-missions-intro=${String(missionsVisibleStructurally)}`
     };
   }
 
@@ -1453,7 +1475,8 @@
       check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
       check("Parcours · frontière opérateur Sécurité physique→04→Missions 40.3.07", family04TrailingBoundaryContract40307().ok === true, family04TrailingBoundaryContract40307().detail),
       check("Fenêtres · propriété 03/04 disjointe + ordre 04 trailing 40.3.08", family04OwnershipOrderContract40308().ok === true, family04OwnershipOrderContract40308().detail),
-      check("Navigation · Atlas/Oracle coopèrent avec Window Manager 40.3.06", essentialNavigationContract40306().ok === true, essentialNavigationContract40306().detail),
+      check("Navigation · intention Atlas/Oracle restaure la famille réduite 40.3.09", essentialNavigationContract40309().ok === true, essentialNavigationContract40309().detail),
+      check("Présentation · frontière 03/04 + Missions structurelle 40.3.09", adminPresentationAuthorityContract40309().ok === true, adminPresentationAuthorityContract40309().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),

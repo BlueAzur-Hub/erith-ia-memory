@@ -707,13 +707,14 @@ function atlasStrictTimestamp(value) {
 }
 
 const ATLAS_V2_INTERMEDIATE_HIDDEN_IDS = new Set([
-  "missions-vie",
   "fonds-erith-ia",
   "association-erith-ia",
   "aerith-enfance",
   "aerith-animaux",
   "aerith-terre-vivante"
 ]);
+
+globalThis.ATLAS_V2_INTERMEDIATE_HIDDEN_IDS = ATLAS_V2_INTERMEDIATE_HIDDEN_IDS;
 
 const ATLAS_V2_INTERMEDIATE_QUERY_VALUE = "intermediate";
 
@@ -2129,7 +2130,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (description) description.textContent = administrator
     ? "Administration locale · Atlas · Aerith · analyse · mémoire · décision · système · projets."
     : operator
-      ? "Analyse · décision · mémoire · opérations · système · audience · sources. Missions de vie masquées."
+      ? "Analyse · décision · mémoire · opérations · système · Missions de vie · audience · sources. Projets Missions détaillés masqués."
       : "Graphique · Target Top 5 · Market Flow · Market Snapshot · Sources.";
 
   const accountToggle = document.getElementById("btnAdminAccountToggle");
@@ -2283,66 +2284,72 @@ function atlasInitV2Shell() {
     button.addEventListener("click", () => atlasV2ApplyMathDock(button.dataset.mathPosition));
   });
 
-  // 40.3.06 — essential navigation must cooperate with the Administrator Window Manager.
-  // A plain scrollIntoView() is insufficient when a family/window is hidden, floating,
-  // or hidden by the V2 presentation mode. Atlas additionally exposes a wrapper id
-  // (#atlas-local-ai-collapse) while the V2 manifest owns the inner #local-ai-hub id.
-  const essentialOwner40306 = Object.freeze({
+  // 40.3.09 — explicit essential-navigation intent owns presentation recovery.
+  // If the operator clicks Atlas/Oracle while its family is reduced, the click means
+  // “show me that module”: restore the owner, open the requested <details>, then navigate.
+  // This removes the former contradiction where the compact-family toggle guard immediately
+  // closed a details element that the top navigation had just targeted.
+  const essentialOwner40309 = Object.freeze({
     analyste: "graphique",
     "atlas-local-ai-collapse": "intelligence-memoire-creation",
     "oracle-analysis-suite": "analyse-decision",
     sources: "sources"
   });
-  const essentialManifest40306 = Object.freeze({
+  const essentialManifest40309 = Object.freeze({
     "atlas-local-ai-collapse": "local-ai-hub",
     "oracle-analysis-suite": "oracle-analysis-suite",
     sources: "sources"
   });
-  const essentialNavigate40306 = button => {
+  const essentialNavigate40309 = button => {
     const id = String(button?.dataset?.atlasEssentialTarget || "").trim();
     const target = id ? document.getElementById(id) : null;
     if (!target) return false;
 
     const manager = globalThis.ErithAdministratorWindows;
-    const ownerId = essentialOwner40306[id] || "";
+    const ownerId = essentialOwner40309[id] || "";
     const win = ownerId && manager?.getWindow?.(ownerId);
     if (win) {
       if (win.hidden === true) manager.hide(ownerId, false);
-      if (win.floating === true) {
-        manager.focus(ownerId);
-        return true;
-      }
+      if (win.minimized === true) manager.minimize(ownerId, false);
     }
 
     const detail = target instanceof HTMLDetailsElement ? target : target.closest?.("details.atlas-collapse");
-    const wasOpen = detail instanceof HTMLDetailsElement ? detail.open === true : null;
-    const manifestId = essentialManifest40306[id] || "";
+    const manifestId = essentialManifest40309[id] || "";
     const manifestEntry = manifestId ? atlasV2ManifestEntry(manifestId) : null;
     const hiddenByMode = target.hidden === true || target.getClientRects().length === 0;
     if (hiddenByMode && manifestEntry) {
       const opened = atlasV2OpenAdvancedForTarget(`#${manifestId}`, { updateHash: false, scroll: false });
       if (!opened) return false;
-      if (detail instanceof HTMLDetailsElement && wasOpen !== null) detail.open = wasOpen;
     }
 
-    // If the family is docked/minimized, Atlas and Oracle are compact representatives;
-    // keep that state and only scroll to the representative. Do not force Reduce/Restore.
+    // Explicit navigation is allowed to open the requested disclosure. MDN/HTML define
+    // details.open as the actual visibility authority; do it after owner restoration so the
+    // Window Manager compact guard is no longer active.
+    if (detail instanceof HTMLDetailsElement) detail.open = true;
+
+    if (win?.floating === true) {
+      manager.focus(ownerId);
+      return true;
+    }
+
     const behavior = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ? "auto" : "smooth";
-    requestAnimationFrame(() => target.scrollIntoView({ behavior, block: "start" }));
+    requestAnimationFrame(() => requestAnimationFrame(() => target.scrollIntoView({ behavior, block: "start" })));
     return true;
   };
-  globalThis.ErithEssentialNavigation40306 = Object.freeze({
-    build: "40.3.06",
-    owner_restore: true,
+  globalThis.ErithEssentialNavigation40309 = Object.freeze({
+    build: "40.3.09",
+    explicit_operator_intent: true,
+    restore_hidden_owner: true,
+    restore_minimized_owner: true,
+    open_requested_details: true,
     floating_focus_without_document_scroll: true,
-    atlas_manifest_bridge: "local-ai-hub",
-    preserve_detail_open_state: true
+    atlas_manifest_bridge: "local-ai-hub"
   });
 
   document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").forEach(button => {
     button.addEventListener("click", event => {
       event.preventDefault();
-      essentialNavigate40306(button);
+      essentialNavigate40309(button);
     });
   });
 
@@ -46140,7 +46147,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.08";
+const ATLAS_BUILD = "40.3.09";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
