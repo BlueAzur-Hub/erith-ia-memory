@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.07";
+  const BUILD_CURRENT = "40.3.08";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -473,6 +473,42 @@
     return {
       ok: bodyOk && boundary && orderOk && ownershipOk,
       detail:`body=${String(bodyOk)} · system-members=${sys.length}/6 · physical>04>Missions=${String(boundary)} · order=${String(orderOk)} · owner=${String(ownershipOk)}`
+    };
+  }
+
+  function family04OwnershipOrderContract40308() {
+    const bodyOk = document.body?.classList?.contains("atlas-family04-owner-order-40308") === true;
+    const shell = document.querySelector("main.shell");
+    const direct = node => !!node && node.parentElement === shell;
+    const h03 = document.querySelector(".atlas-layout-family-operations");
+    const h04 = document.querySelector(".atlas-layout-family-system");
+    const storage = document.getElementById("atlasStorageHealth40198");
+    const keys04 = ["simulation","commandes","backend","safety","physical-security"];
+    const members04 = [storage, ...keys04.map(key => shell?.querySelector?.(`:scope > details[data-collapse-key="${key}"]`) || null)].filter(Boolean);
+    const keys03 = ["situation","questionnaire","briefing","planning"];
+    const members03 = keys03.map(key => shell?.querySelector?.(`:scope > details[data-collapse-key="${key}"]`) || null).filter(Boolean);
+    const owner03 = globalThis.ErithAdministratorWindows?.getWindow?.("preparation-operations");
+    const owner04 = globalThis.ErithAdministratorWindows?.getWindow?.("experimentation-systeme");
+    const expected03 = [h03, ...members03];
+    const expected04 = [...members04, h04];
+    const sameOrder = (actual, expected) => Array.isArray(actual)
+      && actual.length === expected.length
+      && actual.every((node, index) => node === expected[index]);
+    const disjoint = owner03?.nodes?.every?.(node => !expected04.includes(node)) === true
+      && owner04?.nodes?.every?.(node => !expected03.includes(node)) === true;
+    const domBoundary = members04.length === 6
+      && members04.every(direct)
+      && members03.every(direct)
+      && members04[members04.length - 1]?.nextElementSibling === h04
+      && h04?.nextElementSibling?.id === "missions-vie";
+    const ownerBoundary = sameOrder(owner03?.nodes, expected03)
+      && sameOrder(owner04?.nodes, expected04)
+      && owner03?.anchor === h03
+      && owner04?.anchor === h04
+      && disjoint;
+    return {
+      ok: bodyOk && domBoundary && ownerBoundary,
+      detail:`body=${String(bodyOk)} · 03=${owner03?.nodes?.length || 0}/5 · 04=${owner04?.nodes?.length || 0}/7 · physical>04>Missions=${String(domBoundary)} · exact-owner-order=${String(ownerBoundary)} · disjoint=${String(disjoint)}`
     };
   }
 
@@ -1416,6 +1452,7 @@
       check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
       check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
       check("Parcours · frontière opérateur Sécurité physique→04→Missions 40.3.07", family04TrailingBoundaryContract40307().ok === true, family04TrailingBoundaryContract40307().detail),
+      check("Fenêtres · propriété 03/04 disjointe + ordre 04 trailing 40.3.08", family04OwnershipOrderContract40308().ok === true, family04OwnershipOrderContract40308().detail),
       check("Navigation · Atlas/Oracle coopèrent avec Window Manager 40.3.06", essentialNavigationContract40306().ok === true, essentialNavigationContract40306().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),

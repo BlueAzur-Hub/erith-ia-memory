@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.07";
+  const ADMIN_BUILD = "40.3.08";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FAMILY 04 TRAILING BOUNDARY + TECH LOAD PRIORITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -390,6 +390,41 @@
       .map(node => entry(node));
   }
 
+  // 40.3.08 — hard semantic ownership boundary for the two lower Administrator families.
+  // The 03 owner is explicit and can never absorb System/Experiment nodes by proximity.
+  // The 04 owner follows native DOM order: six System/Experiment members first, trailing 04 boundary last.
+  const ADMIN_OPERATION_KEYS_40308 = new Set([
+    "situation", "questionnaire", "briefing", "planning"
+  ]);
+  const ADMIN_SYSTEM_KEYS_40308 = new Set([
+    "simulation", "commandes", "backend", "safety", "physical-security"
+  ]);
+
+  function preparationEntries40308() {
+    const shell = q("main.shell");
+    const header = q(".atlas-layout-family-operations");
+    if (!shell || !(header instanceof HTMLElement)) return [];
+    return [...shell.children]
+      .filter(node => node instanceof HTMLElement && (
+        node === header
+        || (node instanceof HTMLDetailsElement && ADMIN_OPERATION_KEYS_40308.has(String(node.dataset.collapseKey || "")))
+      ))
+      .map(node => entry(node));
+  }
+
+  function systemEntriesTrailing40308() {
+    const shell = q("main.shell");
+    const header = q(".atlas-layout-family-system");
+    if (!shell || !(header instanceof HTMLElement)) return [];
+    return [...shell.children]
+      .filter(node => node instanceof HTMLElement && (
+        node === header
+        || node.id === "atlasStorageHealth40198"
+        || (node instanceof HTMLDetailsElement && ADMIN_SYSTEM_KEYS_40308.has(String(node.dataset.collapseKey || "")))
+      ))
+      .map(node => entry(node));
+  }
+
   const ADMIN_MISSION_KEYS_40302 = new Set([
     "fonds-erith", "association-erith", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"
   ]);
@@ -518,7 +553,9 @@
         id: "preparation-operations",
         title: "Préparation & opérations",
         tone: "gold",
-        resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-operations", ["operations"]),
+        // 40.3.08 — explicit 03 membership: header + Situation/Questionnaire/Briefing/Planning only.
+        // No System/Experiment node can be absorbed by semantic proximity or DOM adjacency.
+        resolveEntries: () => preparationEntries40308(),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-operations")) || nodes[0],
         // 40.3.01/40.3.02 — docked Reduce keeps the real family header, never a generic minibar.
         resolveCompactNodes: () => [q(".atlas-layout-family-operations")].filter(Boolean)
@@ -527,10 +564,10 @@
         id: "experimentation-systeme",
         title: "Expérimentation & système",
         tone: "orange",
-        resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-system", ["system", "experiment"]),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
-        // 40.3.07 — docked Reduce keeps the real 04 header. Operator-canonical native flow:
-        // six owned system/experiment members, then trailing 04 boundary header, then Missions de vie.
+        // 40.3.08 — explicit trailing-owner order matches the real docked DOM exactly:
+        // Storage + Simulation + Commands + Backend + Safety + Physical Security -> 04 boundary.
+        resolveEntries: () => systemEntriesTrailing40308(),
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[nodes.length - 1],
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {
