@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.89 — PARKER LEWIS CAN'T LOSE · GRAPH TOOLBAR TURQUOISE ACTIVE + WHITE TEXT LOCK
+     40.2.90 — PARKER LEWIS CAN'T LOSE · SEMANTIC COLOR + ICONOGRAPHY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.89";
+  const BUILD_CURRENT = "40.2.90";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -277,6 +277,19 @@
     return {
       ok: !!toolbar && !!reading && !!period && !!comparison && !!stylesheet && requiredLabels && requiredReading && fiche && maxNeutral && clearPresent && buttonCount >= 20,
       detail:`toolbar=${String(!!toolbar)} · rows=${[reading,period,comparison].filter(Boolean).length}/3 · lecture=${String(requiredReading)} · fiche=${String(fiche)} · max=${String(maxNeutral)} · clear=${String(clearPresent)} · buttons=${buttonCount} · css=${String(!!stylesheet)}`
+    };
+  }
+
+  function semanticColorIconContract40290() {
+    const body = document.body;
+    const shortcuts = Number(document.querySelectorAll?.("#atlasAdminCommandBar .atlas-admin-shortcut-icon-40290")?.length || 0);
+    const headings = Number(document.querySelectorAll?.(".atlas-icon-heading-40290 .atlas-heading-icon-40290")?.length || 0);
+    const familyTones = ["analysis","intelligence","operations","system"].every(name => !!document.querySelector?.(`.atlas-layout-family-${name}`));
+    const stylesheet = [...document.styleSheets].find(item => pathOnly(item.href || "").endsWith("/admin-window-menu-uniform.css"));
+    const classOk = body?.classList?.contains("atlas-semantic-color-icons-40290") === true;
+    return {
+      ok: classOk && shortcuts >= 6 && headings >= 11 && familyTones && !!stylesheet,
+      detail:`body=${String(classOk)} · command-icons=${shortcuts}/6 · heading-icons=${headings}/11 · families=${String(familyTones)} · css=${String(!!stylesheet)}`
     };
   }
 
@@ -1098,6 +1111,7 @@
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
       check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract40289().ok === true, graphToolbarStateContract40289().detail),
+      check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
