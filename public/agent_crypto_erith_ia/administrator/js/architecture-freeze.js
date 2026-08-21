@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.2.91 — PARKER LEWIS CAN'T LOSE · ASTROCYCLE PLANETARY COLOR SEMANTICS LOCK
+     40.2.92 — PARKER LEWIS CAN'T LOSE · SECTION AIR + EMBLEMS LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.2.91";
+  const BUILD_CURRENT = "40.2.92";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -277,6 +277,20 @@
     return {
       ok: !!toolbar && !!reading && !!period && !!comparison && !!stylesheet && requiredLabels && requiredReading && fiche && maxNeutral && clearPresent && buttonCount >= 20,
       detail:`toolbar=${String(!!toolbar)} · rows=${[reading,period,comparison].filter(Boolean).length}/3 · lecture=${String(requiredReading)} · fiche=${String(fiche)} · max=${String(maxNeutral)} · clear=${String(clearPresent)} · buttons=${buttonCount} · css=${String(!!stylesheet)}`
+    };
+  }
+
+  function sectionAirEmblemContract40292() {
+    const bodyOk = document.body?.classList?.contains("atlas-section-air-40292") === true;
+    const oracle = document.getElementById("oracle-analysis-suite");
+    const news = document.getElementById("news-market-explanation");
+    const system = document.querySelector('.atlas-layout-family-system > .admin-family-emblem-r3[data-for="system"]');
+    const projects = document.querySelector('.atlas-layout-family-operations > .admin-family-emblem-r3[data-for="projects"]');
+    const sources = document.querySelector('#liveSourcesCollapse > summary .admin-summary-emblem-r3[data-for="sources"]');
+    const analytical = document.querySelector('#atlasAnalyticalMemory394 > .admin-analytical-emblem-r3');
+    return {
+      ok: bodyOk && !!oracle && !!news && !!system && !!projects && !!sources && !!analytical,
+      detail:`body=${String(bodyOk)} · oracle=${String(!!oracle)} · news=${String(!!news)} · system=${String(!!system)} · projects=${String(!!projects)} · sources=${String(!!sources)} · analytical=${String(!!analytical)}`
     };
   }
 
@@ -1125,6 +1139,7 @@
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
       check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract40289().ok === true, graphToolbarStateContract40289().detail),
+      check("Sections · air + emblèmes transparents 40.2.92", sectionAirEmblemContract40292().ok === true, sectionAirEmblemContract40292().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),

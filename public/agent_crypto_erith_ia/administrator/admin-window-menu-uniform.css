@@ -476,3 +476,232 @@ body.atlas-astro-planet-colors-40291 .atlas-astro-kpis-4055 article[data-planet4
   }
 }
 
+/* ============================================================================
+   40.2.92 — SECTION AIR + TRANSPARENT EMBLEM SCALE LOCK · VISUAL ONLY
+
+   Intent:
+   - reduce "frame inside frame inside frame" without flattening information;
+   - keep one outer accordion/frame as the structural owner;
+   - inner analytical sections become open surfaces with rails/dividers;
+   - reuse already-published transparent Administrator emblems with zero layout reservation;
+   - preserve the 40.2.90 semantic palette and 40.2.91 AstroCycle planet colors.
+
+   Historical composition contract restored:
+   SYSTEM -> Expérimentation & système family
+   PROJECTS -> Préparation & opérations family
+   SOURCES -> actual Sources collapsed row
+   ANALYTICAL MEMORY -> one restrained watermark, never scattered thumbnails.
+   ============================================================================ */
+body.atlas-section-air-40292 {
+  --atlas-air-line:rgba(126,224,255,.16);
+  --atlas-air-soft:rgba(126,224,255,.035);
+  --atlas-air-text:#edf7fb;
+}
+
+/* The accordion is already the frame. Its body does not need a second shell. */
+body.atlas-section-air-40292 details.atlas-collapse[data-layout-family] > .atlas-collapse-body {
+  border:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
+
+/* Generic nested panel: keep spacing/content, remove redundant shell/shadow only. */
+body.atlas-section-air-40292 details.atlas-collapse[data-layout-family] > .atlas-collapse-body > section.panel.glass {
+  box-shadow:none!important;
+}
+
+/* ORACLE: outer Oracle accordion owns the frame. Inner subsections become open rails. */
+body.atlas-section-air-40292 #oracle-analysis-suite > .atlas-oracle-suite-body {
+  padding:8px 10px 10px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-suite-subsection {
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-suite-subsection + .atlas-oracle-suite-subsection {
+  border-top:1px solid rgba(126,224,255,.12)!important;
+}
+body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-summary {
+  min-height:48px!important;
+  padding:9px 10px!important;
+  border:0!important;
+  border-radius:0!important;
+  border-bottom:1px solid rgba(126,224,255,.10)!important;
+  background:linear-gradient(90deg,rgba(126,224,255,.055),rgba(4,12,18,.08) 45%,transparent)!important;
+  box-shadow:inset 2px 0 0 rgba(126,224,255,.42)!important;
+}
+body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body {
+  padding:5px 4px 11px 10px!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body > .panel.glass,
+body.atlas-section-air-40292 #oracle-analysis-suite #oracle-lab-dashboard,
+body.atlas-section-air-40292 #oracle-analysis-suite #oracle-infrastructure-observatory {
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding-left:4px!important;
+  padding-right:4px!important;
+}
+
+/* Long Shadow remains a logical instrument, but loses the extra heavy outer box. */
+body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-long-shadow-40273 {
+  border-color:rgba(126,224,255,.10)!important;
+  background:linear-gradient(90deg,rgba(126,224,255,.028),transparent 42%)!important;
+  box-shadow:none!important;
+}
+
+/* NEWS -> MARKET: the report accordion owns the outside frame. */
+body.atlas-section-air-40292 #news-market-explanation > .news-market-report-body-40241 {
+  padding:6px 10px 10px!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 {
+  margin:0!important;
+  padding:8px 6px 6px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+/* Secondary report sections become rails/dividers; their inner metric cards stay intact. */
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236,
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-role-quality-40237,
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238 {
+  margin:8px 0!important;
+  padding:10px 10px 9px 12px!important;
+  border-radius:0!important;
+  border-top:1px solid rgba(126,224,255,.12)!important;
+  border-right:0!important;
+  border-bottom:0!important;
+  background:linear-gradient(90deg,rgba(126,224,255,.022),transparent 48%)!important;
+  box-shadow:none!important;
+}
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236 {
+  border-left:2px solid rgba(112,211,255,.52)!important;
+}
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-role-quality-40237 {
+  border-left:2px solid rgba(185,167,255,.54)!important;
+}
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238 {
+  border-left:2px solid rgba(115,240,209,.56)!important;
+}
+
+/* Keep verdict visually distinct, but lighter than a full nested panel. */
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-market-verdict-40235 {
+  margin-top:8px!important;
+  border-width:1px 0 0 2px!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+/* Generic nested panels get air: one less shadow and slightly tighter vertical rhythm. */
+body.atlas-section-air-40292 details.atlas-collapse[data-layout-family] > .atlas-collapse-body > section.panel.glass:not(#newsMarketOperatorIntelligence40235) {
+  box-shadow:none!important;
+}
+
+/* --------------------------------------------------------------------------
+   EXISTING TRANSPARENT EMBLEMS — no new files, no layout reservation.
+   These nodes are already injected by adminVisualAssets40269 from repository assets.
+   -------------------------------------------------------------------------- */
+body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 {
+  position:relative!important;
+  min-height:0!important;
+  padding-right:0!important;
+  overflow:hidden!important;
+}
+body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3::after {
+  content:none!important;
+}
+body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3 {
+  position:absolute!important;
+  right:12px!important;
+  top:auto!important;
+  bottom:8px!important;
+  width:72px!important;
+  height:72px!important;
+  transform:none!important;
+  object-fit:contain!important;
+  opacity:.10!important;
+  filter:drop-shadow(0 0 12px rgba(98,236,255,.16))!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > :not(.admin-family-emblem-r3) {
+  position:relative!important;
+  z-index:1!important;
+}
+
+/* Sources archive emblem belongs to the real Sources row, small and non-reserving. */
+body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 {
+  position:relative!important;
+  min-height:0!important;
+  padding-right:66px!important;
+  overflow:hidden!important;
+}
+body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 > .admin-summary-emblem-r3 {
+  position:absolute!important;
+  right:10px!important;
+  top:50%!important;
+  width:54px!important;
+  height:54px!important;
+  transform:translateY(-50%)!important;
+  object-fit:contain!important;
+  opacity:.10!important;
+  filter:drop-shadow(0 0 10px rgba(98,236,255,.14))!important;
+  pointer-events:none!important;
+}
+
+/* Analytical Memory: one watermark only, as requested historically. */
+body.atlas-section-air-40292 #atlasAnalyticalMemory394.admin-analytical-emblem-host-r3 {
+  position:relative!important;
+  padding-right:0!important;
+  overflow:hidden!important;
+}
+body.atlas-section-air-40292 #atlasAnalyticalMemory394.admin-analytical-emblem-host-r3 > .admin-analytical-emblem-r3 {
+  position:absolute!important;
+  right:14px!important;
+  top:50%!important;
+  width:50px!important;
+  height:76px!important;
+  transform:translateY(-50%)!important;
+  object-fit:contain!important;
+  opacity:.09!important;
+  filter:drop-shadow(0 0 11px rgba(131,173,255,.14))!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+body.atlas-section-air-40292 #atlasAnalyticalMemory394.admin-analytical-emblem-host-r3 > :not(.admin-analytical-emblem-r3) {
+  position:relative!important;
+  z-index:1!important;
+}
+
+/* Book: emblems remain legible but never steal width. */
+@media (max-width:1366px) {
+  body.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3 {
+    width:54px!important;height:54px!important;right:8px!important;bottom:6px!important;opacity:.08!important;filter:none!important;
+  }
+  body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 {padding-right:50px!important}
+  body.atlas-section-air-40292 #liveSourcesCollapse > summary.admin-summary-emblem-host-r3 > .admin-summary-emblem-r3 {
+    width:40px!important;height:40px!important;right:7px!important;opacity:.08!important;filter:none!important;
+  }
+  body.atlas-section-air-40292 #atlasAnalyticalMemory394.admin-analytical-emblem-host-r3 > .admin-analytical-emblem-r3 {
+    width:38px!important;height:58px!important;right:8px!important;opacity:.07!important;filter:none!important;
+  }
+  body.atlas-section-air-40292 #oracle-analysis-suite > .atlas-oracle-suite-body {padding:6px 7px 8px!important}
+  body.atlas-section-air-40292 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body {padding-left:6px!important}
+}
+
