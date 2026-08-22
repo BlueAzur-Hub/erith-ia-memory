@@ -328,6 +328,10 @@
             }
 
             setFloating(win, true, true, detachGeometry, { autoFitShell: false });
+            // 40.3.19 — compact only the shell HEIGHT once, after real nodes are
+            // inside it and before the drag continues. This removes the giant
+            // grey union-height plate without making the shell transparent.
+            fitDragDetachedShellHeight40319(win);
 
             // The pressed control may have moved to a different DOM parent.
             // Rebase the gesture from the fitted floating geometry and reacquire
@@ -339,6 +343,12 @@
             dy = 0;
             capturePointer();
           } else {
+            // A shell restored from an older stored geometry may still carry the
+            // oversized union height. Normalize it only when the operator
+            // actually moves that window; never reset saved layouts on load.
+            if (!win.directFixed && win.shell && win.shellSizingMode === "stored-geometry") {
+              fitDragDetachedShellHeight40319(win);
+            }
             dragBase = currentRect(win);
           }
 
@@ -660,6 +670,59 @@
       return { ...win.geometry };
     }
 
+    // 40.3.19 — drag-detach height fit, recovered from the real operator symptom.
+    // The grey plate is not an empty-shell problem: it is the legitimate shell
+    // retaining the large docked union height while its real nodes have already
+    // been reparented into a much more compact floating stack.
+    //
+    // Keep the validated 40.3.17 visual shell/background and every real node.
+    // On the first drag-detach (or first move of a restored stored-geometry shell),
+    // perform ONE height-only content measurement. Width, x-position, window
+    // ownership, menus and saved workspace data remain untouched.
+    function fitDragDetachedShellHeight40319(win) {
+      if (!win || win.directFixed || !win.floating || !(win.shell instanceof HTMLElement)) return false;
+      if (win.maximized || win.minimized || win.hidden) return false;
+
+      const shell = win.shell;
+      const rect = shell.getBoundingClientRect?.();
+      if (!rect || rect.width <= 1) return false;
+
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const viewportMaxHeight = Math.max(MIN_HEIGHT, vh - VIEWPORT_MARGIN * 2);
+      const computed = window.getComputedStyle?.(shell);
+      const px = value => Number.parseFloat(String(value || "0")) || 0;
+      const borderY = px(computed?.borderTopWidth) + px(computed?.borderBottomWidth);
+
+      // Height only. No width rewrite, no descendant scan, no observer, no loop.
+      shell.style.setProperty("height", "auto");
+      shell.style.setProperty("max-height", "none");
+      shell.style.setProperty("overflow", "visible");
+      void shell.offsetHeight;
+
+      const naturalHeight = Math.max(
+        MIN_HEIGHT,
+        Math.ceil((Number(shell.scrollHeight) || Number(shell.offsetHeight) || MIN_HEIGHT) + borderY)
+      );
+      const height = Math.min(naturalHeight, viewportMaxHeight);
+      const x = clamp(rect.left, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vw - Math.min(190, rect.width)));
+      const y = clamp(rect.top, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vh - height - VIEWPORT_MARGIN));
+
+      shell.style.removeProperty("max-height");
+      shell.style.removeProperty("overflow");
+      setManagedFloatingStyle(win, shell, "left", `${x}px`);
+      setManagedFloatingStyle(win, shell, "top", `${y}px`);
+      setManagedFloatingStyle(win, shell, "height", `${height}px`);
+
+      shell.dataset.adminNativeShellSizing = "drag-height-fit-40319";
+      shell.dataset.adminNativeShellNaturalHeight = String(naturalHeight);
+      shell.dataset.adminNativeShellFittedHeight = String(height);
+      shell.dataset.adminNativeShellViewportClamped = naturalHeight > height + 1 ? "1" : "0";
+      win.shellSizingMode = "drag-height-fit-40319";
+      win.geometry = { x, y, width: rect.width, height };
+      return true;
+    }
+
     function persistGeometry(win) {
       if (!win?.floating || win.maximized) return;
       const rect = currentRect(win);
@@ -766,60 +829,13 @@
       return document.body;
     }
 
-    // 40.3.18 — floating shell ghost-surface guard.
-    // The global shell is only chrome/transport. It must never become a large
-    // opaque viewport plate when every real managed node is non-rendered.
-    // No observer or polling loop is introduced: one synchronous check plus one
-    // requestAnimationFrame recheck per detach is enough to catch post-reparent layout.
-    function floatingShellPayloadState(win) {
-      const shell = win?.shell;
-      if (!(shell instanceof HTMLElement)) return { visible: false, count: 0, area: 0 };
-      let count = 0;
-      let area = 0;
-      (win.nodes || []).forEach(node => {
-        if (!(node instanceof HTMLElement) || !shell.contains(node) || node.hidden) return;
-        const style = window.getComputedStyle?.(node);
-        if (String(style?.display || "").toLowerCase() === "none") return;
-        if (String(style?.visibility || "").toLowerCase() === "hidden") return;
-        const rect = node.getBoundingClientRect?.();
-        if (!rect || rect.width <= 1 || rect.height <= 1) return;
-        count += 1;
-        area += rect.width * rect.height;
-      });
-      return { visible: count > 0 && area > 4, count, area };
-    }
-
-    function syncFloatingShellPayloadVisibility(win) {
-      if (!win || win.directFixed || !(win.shell instanceof HTMLElement)) return true;
-      const state = floatingShellPayloadState(win);
-      const shell = win.shell;
-      shell.dataset.adminNativeShellEmpty = state.visible ? "0" : "1";
-      shell.dataset.adminNativeShellPayloadCount = String(state.count);
-      shell.dataset.adminNativeShellPayloadArea = String(Math.round(state.area));
-      if (!state.visible) {
-        shell.hidden = true;
-        shell.style.setProperty("opacity", "0", "important");
-        shell.style.setProperty("pointer-events", "none", "important");
-        return false;
-      }
-      shell.style.removeProperty("opacity");
-      shell.style.removeProperty("pointer-events");
-      return true;
-    }
-
     function buildShell(win, geometry, options = {}) {
       if (win.shell?.isConnected) return win.shell;
       createPlaceholders(win);
       const shell = document.createElement("section");
       shell.className = `admin-native-floating-shell admin-native-tone-${win.tone}`;
       shell.dataset.adminNativeShell = win.id;
-      shell.dataset.adminNativeShellEmpty = "pending";
       shell.setAttribute("aria-label", `Fenêtre flottante ${win.title}`);
-      // Prevent the historical opaque shell from flashing before the real nodes
-      // have been reparented and measured. opacity:0 preserves child computed
-      // visibility and geometry, unlike visibility:hidden which is inherited.
-      shell.style.setProperty("opacity", "0", "important");
-      shell.style.setProperty("pointer-events", "none", "important");
 
       const titlebar = document.createElement("header");
       titlebar.className = "admin-native-floating-titlebar";
@@ -1057,8 +1073,7 @@
 
       if (win.floating && !win.directFixed && win.shell) {
         win.nodes.forEach(node => setNodeSuppressed(node, false));
-        const payloadVisible = syncFloatingShellPayloadVisibility(win);
-        win.shell.hidden = suppressed || !payloadVisible;
+        win.shell.hidden = suppressed;
       } else if (win.floating && win.directFixed) {
         setNodeSuppressed(win.anchor, suppressed);
       } else {
@@ -1143,14 +1158,6 @@
       if (!win.directFixed) syncPortalHost(win);
       domainMask(win);
       applyPresentationState(win);
-      // One post-reparent layout confirmation. This is deliberately not a timer,
-      // observer or recurring loop; it only prevents a stale/empty shell first paint.
-      if (!win.directFixed && win.shell && typeof requestAnimationFrame === "function") {
-        const shellAtDetach = win.shell;
-        requestAnimationFrame(() => {
-          if (win.floating && win.shell === shellAtDetach) applyPresentationState(win);
-        });
-      }
       bringToFront(win, false);
       refreshControlState(win);
       if (persist) {
@@ -1665,15 +1672,15 @@
     ,placeholder_measurement_batch_40315: "all-reads-before-dom-writes"
     ,compact_family_placeholder_policy_40317: "anchor-marker-18px"
     ,preserve_full_placeholder_default_40317: true
+    ,drag_detach_height_fit_40319: true
+    ,drag_detach_height_fit_scope_40319: "shell-height-only-one-layout-pass"
+    ,drag_detach_shell_visual_40319: "40.3.17-preserved"
+    ,drag_detach_width_rewrite_40319: false
+    ,drag_detach_observer_40319: false
+    ,drag_detach_timer_40319: false
     ,floating_surface_backdrop_blur_40315: false
     ,floating_surface_repeating_background_40315: false
     ,maximized_surface_40315: "97vw x 97vh"
-    ,empty_floating_shell_guard_40318: true
-    ,floating_shell_global_fill_40318: false
-    ,floating_shell_first_paint_hidden_40318: true
-    ,floating_shell_payload_recheck_40318: "one-requestAnimationFrame-per-detach"
-    ,floating_shell_observer_40318: false
-    ,window_menu_actions_preserved_40318: true
   });
 
   window.ErithAdminWindowManager = Object.freeze({
