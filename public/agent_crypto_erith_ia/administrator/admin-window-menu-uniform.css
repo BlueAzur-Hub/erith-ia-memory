@@ -1334,3 +1334,79 @@ body.atlas-surface-performance-40315 .admin-native-moving{
     max-width:calc(100% - 16px)!important;
   }
 }
+
+
+/* ============================================================================
+   40.3.16 — NATIVE FAMILY BOUNDARY PRESENTATION AUTHORITY LOCK
+   Firefox/operator contract:
+   - DO NOT move the trailing 04 header. Canonical native flow remains:
+     Plan -> Storage -> Simulation -> Tests -> Backend -> Safety -> Physical -> 04 -> Missions.
+   - 03 owns only its native header + Situation/Questionnaire/Briefing/Plan.
+   - 04 ownership stays Storage..Physical + trailing 04 anchor (40.3.08 contract).
+   - This block only consolidates docked presentation: no CSS order trick, no scale,
+     no absolute/fixed family positioning, no animated/blurred separator.
+   ============================================================================ */
+body.atlas-native-family-boundary-40316 main.shell > section.atlas-layout-family-operations,
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="situation"],
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="questionnaire"],
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="briefing"],
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="planning"],
+body.atlas-native-family-boundary-40316 main.shell > #atlasStorageHealth40198,
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="simulation"],
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="commandes"],
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="backend"],
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="safety"],
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="physical-security"],
+body.atlas-native-family-boundary-40316 main.shell > section.atlas-layout-family-system,
+body.atlas-native-family-boundary-40316 main.shell > #missions-vie{
+  float:none!important;
+  transform:none!important;
+  order:0!important;
+  z-index:auto!important;
+}
+
+/* Supersede the old cross-family stacking hierarchy while docked. The floating
+   Window Manager selectors no longer match once family nodes leave main.shell. */
+body.atlas-native-family-boundary-40316 main.shell > section.atlas-layout-family-operations,
+body.atlas-native-family-boundary-40316 main.shell > section.atlas-layout-family-system{
+  isolation:auto!important;
+}
+
+/* END 03: real static air + a cheap 2px rail. No blur, filter or animation. */
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198{
+  position:relative!important;
+  margin-top:44px!important;
+}
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198::before{
+  content:""!important;
+  position:absolute!important;
+  left:14px!important;
+  right:14px!important;
+  top:-24px!important;
+  height:2px!important;
+  pointer-events:none!important;
+  background:linear-gradient(90deg,rgba(255,211,119,.66),rgba(105,226,224,.58) 48%,rgba(105,226,224,.16) 82%,transparent)!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+
+/* 04 is the trailing close of the System/Experiment run. Keep it close to
+   Physical Security, then give Missions its own unmistakable native gap. */
+body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="physical-security"] + section.atlas-layout-family-system{
+  margin-top:14px!important;
+}
+body.atlas-native-family-boundary-40316 main.shell > section.atlas-layout-family-system + #missions-vie{
+  margin-top:28px!important;
+}
+
+@media(max-width:1366px){
+  body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198{
+    margin-top:34px!important;
+  }
+  body.atlas-native-family-boundary-40316 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198::before{
+    top:-19px!important;
+  }
+  body.atlas-native-family-boundary-40316 main.shell > section.atlas-layout-family-system + #missions-vie{
+    margin-top:22px!important;
+  }
+}

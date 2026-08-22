@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.15";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · LOW-COST FLOATING SURFACE + NATIVE 97% CONTENT LOCK";
+  const ADMIN_BUILD = "40.3.16";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · NATIVE FAMILY BOUNDARY PRESENTATION AUTHORITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1692,6 +1692,22 @@
       floating_backdrop_blur: false,
       floating_repeating_background: false,
       parent_build: "40.3.14"
+    });
+    globalThis.ErithNativeFamilyBoundary40316 = Object.freeze({
+      build: "40.3.16",
+      parent_build: "40.3.15",
+      dom_topology_changed: false,
+      window_manager_changed_in_build: false,
+      local_storage_migration: false,
+      css_order_rewrite: false,
+      family_position_absolute_or_fixed: false,
+      family_transform_scale: false,
+      plan_storage_boundary_px: 44,
+      physical_04_boundary_px: 14,
+      family04_missions_boundary_px: 28,
+      family03_owner: "header+situation+questionnaire+briefing+planning",
+      family04_owner: "storage+simulation+commandes+backend+safety+physical-security+trailing-04",
+      trailing_04_preserved: true
     });
     installAdminBar(manager);
     installDomainObserver(manager);
