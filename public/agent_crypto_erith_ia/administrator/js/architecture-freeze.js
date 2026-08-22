@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.16 — PARKER LEWIS CAN'T LOSE · NATIVE FAMILY BOUNDARY PRESENTATION AUTHORITY LOCK
+     40.3.17 — PARKER LEWIS CAN'T LOSE · PASSIVE BRIDGE SUPERVISION + COMPACT FAMILY PLACEHOLDER RECOVERY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.16";
+  const BUILD_CURRENT = "40.3.17";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -559,42 +559,16 @@
     };
   }
 
-  function nativeFamilyBoundaryContract40316() {
-    const bodyOk = document.body?.classList?.contains("atlas-native-family-boundary-40316") === true;
-    const c = globalThis.ErithNativeFamilyBoundary40316;
-    const shell = document.querySelector("main.shell");
-    const h03 = document.querySelector("section.atlas-layout-family-operations");
-    const planning = shell?.querySelector?.(':scope > details[data-collapse-key="planning"]');
-    const storage = document.getElementById("atlasStorageHealth40198");
-    const physical = shell?.querySelector?.(':scope > details[data-collapse-key="physical-security"]');
-    const h04 = document.querySelector("section.atlas-layout-family-system");
-    const missions = document.getElementById("missions-vie");
-    const direct = node => node instanceof HTMLElement && node.parentElement === shell;
-    const topology = [h03,planning,storage,physical,h04,missions].every(direct)
-      && planning?.nextElementSibling === storage
-      && physical?.nextElementSibling === h04
-      && h04?.nextElementSibling === missions;
-    const wmBoundary = family04OwnershipOrderContract40308().ok === true;
-    const styleOf = node => node ? getComputedStyle(node) : null;
-    const dockNodes = [h03,planning,storage,physical,h04,missions];
-    const nativeFlow = dockNodes.every(node => {
-      const s=styleOf(node);
-      return !!s && s.float === "none" && s.transform === "none" && !["absolute","fixed"].includes(s.position);
-    });
-    const h03Style=styleOf(h03), h04Style=styleOf(h04);
-    const noCrossFamilyStack = h03Style?.zIndex === "auto" && h04Style?.zIndex === "auto";
-    const px = node => Number.parseFloat(styleOf(node)?.marginTop || "0") || 0;
-    const spacing = px(storage) >= 34 && px(h04) >= 10 && px(missions) >= 20;
+  function bridgePassivePerformanceContract40317() {
+    const bodyOk = document.body?.classList?.contains("atlas-bridge-passive-performance-40317") === true;
+    const c = globalThis.ErithBridgePassivePerformance40317;
+    const wm = globalThis.ErithAdminWindowManager?.contract || globalThis.ErithAdminWindowManagerContract || {};
     return {
-      ok: bodyOk
-        && c?.build === "40.3.16"
-        && c?.dom_topology_changed === false
-        && c?.window_manager_changed_in_build === false
-        && c?.local_storage_migration === false
-        && c?.css_order_rewrite === false
-        && c?.trailing_04_preserved === true
-        && topology && wmBoundary && nativeFlow && noCrossFamilyStack && spacing,
-      detail:`body=${String(bodyOk)} · Plan>Storage=${String(planning?.nextElementSibling === storage)} · Physical>04>Missions=${String(physical?.nextElementSibling === h04 && h04?.nextElementSibling === missions)} · WM=${String(wmBoundary)} · native-flow=${String(nativeFlow)} · z-auto=${String(noCrossFamilyStack)} · gaps=${px(storage).toFixed(0)}/${px(h04).toFixed(0)}/${px(missions).toFixed(0)}`
+      ok: bodyOk && c?.build === "40.3.17" && c?.bridge_health_is_analysis_trigger === false
+        && c?.focus_pageshow_restart_analysis === false && c?.one_supervision_timer === true
+        && c?.compact_family_placeholder_policy === true
+        && wm?.compact_family_placeholder_policy_40317 === "anchor-marker-18px",
+      detail: `body=${String(bodyOk)} · passiveHealth=${String(c?.bridge_health_is_analysis_trigger === false)} · focusNoRestart=${String(c?.focus_pageshow_restart_analysis === false)} · oneTimer=${String(c?.one_supervision_timer === true)} · placeholder=${String(wm?.compact_family_placeholder_policy_40317 || "")}`
     };
   }
 
@@ -1629,7 +1603,7 @@
       check("Rôles + viewport · isolation Basic/Intermédiaire et propriétaire unique 40.3.12", roleIsolationViewportOwnershipContract40312().ok === true, roleIsolationViewportOwnershipContract40312().detail),
       check("Performance · transition rôle unique + reflow Window Deck borné 40.3.14", roleTransitionPerformanceContract40314().ok === true, roleTransitionPerformanceContract40314().detail),
       check("Surface Firefox · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract40315().ok === true, surfacePerformanceContract40315().detail),
-      check("Sections · autorité native 03/04 sans permutation 40.3.16", nativeFamilyBoundaryContract40316().ok === true, nativeFamilyBoundaryContract40316().detail),
+      check("Performance · Bridge passif + placeholders famille compacts 40.3.17", bridgePassivePerformanceContract40317().ok === true, bridgePassivePerformanceContract40317().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),

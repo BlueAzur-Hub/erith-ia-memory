@@ -1,20 +1,20 @@
 {
-  "schema": "agent_crypto_administrator_mirror_manifest_v35",
-  "build": "40.3.16",
-  "release": "PARKER LEWIS CAN'T LOSE · NATIVE FAMILY BOUNDARY PRESENTATION AUTHORITY LOCK",
-  "status": "candidate_requires_firefox_native_family_boundary_presentation_validation",
-  "prepared_at": "2026-08-22T03:28:00+02:00",
+  "schema": "agent_crypto_administrator_mirror_manifest_v36",
+  "build": "40.3.17",
+  "release": "PARKER LEWIS CAN'T LOSE · PASSIVE BRIDGE SUPERVISION + COMPACT FAMILY PLACEHOLDER RECOVERY LOCK",
+  "status": "candidate_requires_firefox_bridge_passive_placeholder_recovery_validation",
+  "prepared_at": "2026-08-22T03:55:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.3.16",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.3.16",
-    "asset_token": "market-core-v2.0-alpha-build-40.3.16",
+    "primary_build": "40.3.17",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.3.17",
+    "asset_token": "market-core-v2.0-alpha-build-40.3.17",
     "engine_reference": "Market Core 38.15.11",
-    "method": "Strict 40.3.14 parent; remove expensive full-window glass/compositor blur; disable drag auto-fit; batch placeholder reads; header 100%, cockpit content ~97% native layout."
+    "method": "Strict 40.3.15 parent; passive Bridge health + one supervision timer + compact family placeholders."
   },
   "source": {
     "direct_parent": "40.3.15",
-    "method": "Strict 40.3.15 parent; bounded 03/04 presentation-authority consolidation only. No DOM topology move, no Window Manager edit, no localStorage migration.",
+    "method": "Strict 40.3.15 parent; bounded Firefox/Bridge scheduling + Window Manager placeholder correction.",
     "oracles": {
       "technical_reading": [
         "39.6.2 FULL-CLEAR SURFACES LOCK",
@@ -105,7 +105,7 @@
         "math-core"
       ],
       "layout_preserving_placeholders": true,
-      "detached_shell_page_reflow": false,
+      "detached_shell_page_reflow": "compact-family marker only for 01/02/03/04/Missions; full preservation elsewhere",
       "market_math_grid_footprint_preserved": true,
       "reserved_placeholder_css_zero_override": false,
       "multi_node_geometry": "visible-node-union",
@@ -154,7 +154,8 @@
       "workspace_snapshot_api": "ErithAdministratorWindows.snapshot/applySnapshot · presentation only",
       "workspace_profile_geometry_owner": "existing Window Manager currentRect/setFloating/setMaximized paths",
       "role_isolation_api_40312": "neutralizePresentation / restorePersistedPresentation",
-      "saved_admin_z_order_restored": true
+      "saved_admin_z_order_restored": true,
+      "compact_family_placeholder_policy_40316": "anchor-marker-18px"
     },
     "technical_reading": {
       "visual_owner": "admin-visual-assets.css",
@@ -1750,6 +1751,15 @@
       "command_center_automatic_scroll_scope": "internal drawer only",
       "explicit_operator_navigation": "one final framing per explicit navigation path",
       "firefox_runtime_proof_required": true
+    },
+    "bridge_passive_performance_40316": {
+      "build": "40.3.17",
+      "parent": "40.3.15",
+      "health_status_only": true,
+      "focus_pageshow_restart_analysis": false,
+      "pageshow_snapshot_schedule": false,
+      "one_supervision_timer": true,
+      "recent_health_focus_probe_suppression_ms": 30000
     }
   },
   "active_runtime_files": [
@@ -1783,11 +1793,11 @@
   ],
   "integrity": {
     "files": {
-      "app.js": "59191b57c897e23743744503cad7ec86914eee221ae51c982135ef3a02ce4fb4",
-      "index.html": "2cba24c75cc9b9e0706045c644d7fa79582e4bb731ccbd2d1ea88b19dcb29e67",
-      "js/app.js": "a4e2fb5c7b0c3870221ece0034b53751c52b8ff92d3f9956f7b2a2fae359d7a1",
-      "js/architecture-freeze.js": "3d3cd66ce8e1c4736c39bcd6ebb65a16cb70417935a566a40699d3ed1fb2d60a",
-      "js/core/admin-window-manager.js": "e906d5fb40a4260a498d8c6bfa8c0250193e6403abbb9fa48ae4a3d8dd0f806a",
+      "app.js": "25bbe9c7b10fb7ac133607e9583583a61ddaa79efc36259a0ebd817223dda0de",
+      "index.html": "48a833c11b673f1f5f00ce0cbfb793c832ca1fd96f8b3d1597f89ec6d4ea7f87",
+      "js/app.js": "ced69cf39c0d63d397c034c9cf4191cca90a12b21d34115e254981cc34cfd8a5",
+      "js/architecture-freeze.js": "bedfff91d1f12c32745fe25cd5343ff40830adf42609a90d49d1def790617733",
+      "js/core/admin-window-manager.js": "75249a68e9d5b726d218daa215f5a08a9d905f5cedc1ccd2b00fc667d482929a",
       "assets/visual/technical-reading/technical-random-01.png": "a72154af058f563dc269f9757d9bd470a8b6bd1bf5e2a4b0628d3f1ddbb02881",
       "assets/visual/technical-reading/technical-random-02.png": "efac84a34f0889a367b87f2dcf2ac9f64e28e7233c2673afd83049d739d06fa5",
       "assets/visual/technical-reading/technical-random-03.png": "08afaee60212428dc2e80ce6cdf2c569d4d5603e05a5668f66b9a88f9827b51a",
@@ -1797,19 +1807,19 @@
       "assets/visual/technical-reading/technical-random-07.png": "ecf0469228ca754236957b0917df141774f5aa649f5f55b173ae31f884ff1d5d",
       "assets/visual/technical-reading/technical-random-08.png": "dae3cf1fcb22d0e2c14291679d766a095b39836237e1e69660c364e6c0df2401",
       "assets/visual/technical-reading/technical-random-09.png": "6549a553b24091299f5e9cfff9dace3227e5903f8c61a57067fba6f0fa0e6971",
-      "admin-window-menu-uniform.css": "f1bc53a2b1cd61e1c27dc75e2aa08746559676752dadf31d9918309a0d799ae3"
+      "admin-window-menu-uniform.css": "4052d99d2b004764b2b021dc76731f64f6ee7e75367a9b8fff583ca0425fbe00"
     },
     "self_hash_policy": "manifest self hash intentionally omitted; version.json records administrator-version.json candidate hash",
     "publication_identity": {
-      "build": "40.3.16",
-      "asset_token": "market-core-v2.0-alpha-build-40.3.16",
+      "build": "40.3.15",
+      "asset_token": "market-core-v2.0-alpha-build-40.3.15",
       "status": "candidate_requires_firefox_low_cost_floating_surface_native_97_validation",
       "app_sha256": "2eb42ac03f9144a828d45181ee030e7f7aa97e75b4cd1330ddfa21968a6ea790"
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.3.16",
+  "asset_token": "market-core-v2.0-alpha-build-40.3.15",
   "parent_build": "40.3.15",
-  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial institutional → 40.2.69 image authority/iconography → 40.2.70 header geometry → 40.2.71 Rolling High → 40.2.72 Celestial portable → 40.2.73 Long Shadow → 40.2.74 identity → 40.2.75 canonical rolling source → 40.2.76 measured breakout confirmation → 40.2.77 Celestial portable operational lock → 40.2.78 verified IndexedDB storage relief. → 40.2.79 Technical Reading one-click Random library + Book readability pass. → 40.2.80 Technical Reading Random library completion: nine-image one-click RND library in the existing canonical folder → 40.2.81 runtime identity + ChronosXP operator confirmation lock → 40.2.82 Oracle Long Horizon Shadow operator view with due/missing coverage diagnostics. → 40.2.84 Fiche hover toolbar correction: opt-in control moved to Graphique > Lecture > Afficher; native Fiche bridge hardened; Target Top card click remains graph comparison → 40.2.85 Graph toolbar metallic consolidation: existing Lecture/Vue/Échelle/Afficher/Période/Comparaison controls receive one bounded metallic visual layer plus compact Transformer Book spacing; no handler or chart geometry ownership change → 40.2.86 Graph toolbar state semantics: inactive available neutral; active blue + gold; disabled grey; Max neutral; Fiche shares active grammar; Book text floor raised without geometry change. → 40.2.87 Graph toolbar active-text refinement: active blue metallic + white text; inactive neutral; disabled grey; Fiche shares active grammar; Max remains neutral; publication manifest hashes synchronized to actual payload. → 40.2.88 Celestial Ryzen→Book read-only handoff: manual Shared Memory JSON transport, producer provenance preservation, Book fetch lock, compact operator diagnostics, no GitHub publication requirement. → 40.2.89 Graph toolbar turquoise active pass: luminous cyan/turquoise active surface + white text; inactive neutral; disabled grey; no handler or geometry change; Celestial 40.2.88 preserved. → 40.2.90 semantic color/iconography pass: blue-night Administrator base preserved; semantic accents and code-only SVG icons added to Command Center, family headers and major section headings; no handler, data, chart, Oracle, Celestial or Window Manager behavior change. → 40.2.91 AstroCycle planetary color semantics: Saturn red, Mars orange, Sun yellow, Venus green, Mercury blue, Moon white/silver, Jupiter gold; timeline and current/next cards only; ChronosXP and all market logic unchanged. → 40.2.92 Section Air: redundant nested shells removed from Oracle and News→Market; existing transparent System/Projects/Sources/Analytical emblems restored as non-reserving accents; semantic colors and AstroCycle unchanged → 40.2.93 compact section hierarchy + Atlas CURRENT viewport → 40.2.94 publication identity consistency → 40.2.95 Atlas + Oracle essential navigation + collapsed CURRENT preview → 40.2.96 Oracle section identity + collapsed live bias/strength preview → 40.2.97 family emblem alignment → 40.2.98 family boundary + emblem signal alignment cumulative repair → 40.2.99 Book navigation compact + single Administration entry + internal button navigation → 40.3.00 Administrator family order: 04 header immediately before Mesure d’audience + semantic 02/03/04 family routing + native menus restored right → 40.3.01 family compact reduce: 01 native header + collapsed Oracle; 02 native header + collapsed Atlas CURRENT; 03/04 native headers only; Hide unchanged; floating minibar preserved. → 40.3.02 heavy surgery: atomic top-level family ownership + 04 block reconstructed after Missions/before Audience + one-line compact Home/Admin commandline + Command Center no-document-jump lock → 40.3.03 targeted family-state migration: stale persisted states for 01/02/03/04 + Missions de vie cleared once before Window Manager init; all unrelated window state preserved → 40.3.04 canonical Administrator sequence 01→02→03→04→Missions→Audience→Sources → 40.3.05 trailing 04 header recovery → 40.3.06 topology + Atlas navigation recovery → 40.3.07 trailing 04 boundary + Technical Reading load priority → 40.3.08 hard 03/04 ownership boundary → 40.3.09 Book Command Center + status compaction → 40.3.10 passive viewport authority + Missions restore → 40.3.11 passive viewport + canonical role visibility → 40.3.12 role isolation + viewport ownership recovery → 40.3.13 canonical family 04 hierarchy + native dock flow → 40.3.14 Firefox role-transition performance recovery → 40.3.16 native family boundary presentation authority",
+  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial institutional → 40.2.69 image authority/iconography → 40.2.70 header geometry → 40.2.71 Rolling High → 40.2.72 Celestial portable → 40.2.73 Long Shadow → 40.2.74 identity → 40.2.75 canonical rolling source → 40.2.76 measured breakout confirmation → 40.2.77 Celestial portable operational lock → 40.2.78 verified IndexedDB storage relief. → 40.2.79 Technical Reading one-click Random library + Book readability pass. → 40.2.80 Technical Reading Random library completion: nine-image one-click RND library in the existing canonical folder → 40.2.81 runtime identity + ChronosXP operator confirmation lock → 40.2.82 Oracle Long Horizon Shadow operator view with due/missing coverage diagnostics. → 40.2.84 Fiche hover toolbar correction: opt-in control moved to Graphique > Lecture > Afficher; native Fiche bridge hardened; Target Top card click remains graph comparison → 40.2.85 Graph toolbar metallic consolidation: existing Lecture/Vue/Échelle/Afficher/Période/Comparaison controls receive one bounded metallic visual layer plus compact Transformer Book spacing; no handler or chart geometry ownership change → 40.2.86 Graph toolbar state semantics: inactive available neutral; active blue + gold; disabled grey; Max neutral; Fiche shares active grammar; Book text floor raised without geometry change. → 40.2.87 Graph toolbar active-text refinement: active blue metallic + white text; inactive neutral; disabled grey; Fiche shares active grammar; Max remains neutral; publication manifest hashes synchronized to actual payload. → 40.2.88 Celestial Ryzen→Book read-only handoff: manual Shared Memory JSON transport, producer provenance preservation, Book fetch lock, compact operator diagnostics, no GitHub publication requirement. → 40.2.89 Graph toolbar turquoise active pass: luminous cyan/turquoise active surface + white text; inactive neutral; disabled grey; no handler or geometry change; Celestial 40.2.88 preserved. → 40.2.90 semantic color/iconography pass: blue-night Administrator base preserved; semantic accents and code-only SVG icons added to Command Center, family headers and major section headings; no handler, data, chart, Oracle, Celestial or Window Manager behavior change. → 40.2.91 AstroCycle planetary color semantics: Saturn red, Mars orange, Sun yellow, Venus green, Mercury blue, Moon white/silver, Jupiter gold; timeline and current/next cards only; ChronosXP and all market logic unchanged. → 40.2.92 Section Air: redundant nested shells removed from Oracle and News→Market; existing transparent System/Projects/Sources/Analytical emblems restored as non-reserving accents; semantic colors and AstroCycle unchanged → 40.2.93 compact section hierarchy + Atlas CURRENT viewport → 40.2.94 publication identity consistency → 40.2.95 Atlas + Oracle essential navigation + collapsed CURRENT preview → 40.2.96 Oracle section identity + collapsed live bias/strength preview → 40.2.97 family emblem alignment → 40.2.98 family boundary + emblem signal alignment cumulative repair → 40.2.99 Book navigation compact + single Administration entry + internal button navigation → 40.3.00 Administrator family order: 04 header immediately before Mesure d’audience + semantic 02/03/04 family routing + native menus restored right → 40.3.01 family compact reduce: 01 native header + collapsed Oracle; 02 native header + collapsed Atlas CURRENT; 03/04 native headers only; Hide unchanged; floating minibar preserved. → 40.3.02 heavy surgery: atomic top-level family ownership + 04 block reconstructed after Missions/before Audience + one-line compact Home/Admin commandline + Command Center no-document-jump lock → 40.3.03 targeted family-state migration: stale persisted states for 01/02/03/04 + Missions de vie cleared once before Window Manager init; all unrelated window state preserved → 40.3.04 canonical Administrator sequence 01→02→03→04→Missions→Audience→Sources → 40.3.05 trailing 04 header recovery → 40.3.06 topology + Atlas navigation recovery → 40.3.07 trailing 04 boundary + Technical Reading load priority → 40.3.08 hard 03/04 ownership boundary → 40.3.09 Book Command Center + status compaction → 40.3.10 passive viewport authority + Missions restore → 40.3.11 passive viewport + canonical role visibility → 40.3.12 role isolation + viewport ownership recovery → 40.3.13 canonical family 04 hierarchy + native dock flow → 40.3.14 Firefox role-transition performance recovery",
   "repository_cleanup": {
     "runtime_behavior_changed": true,
     "freeze_identity_current_build": true,
@@ -1861,26 +1871,22 @@
     "The historical floating shell backdrop-filter blur(18px) is overridden to none in the last-loaded Administrator CSS.",
     "The historical repeating floating-shell background is replaced by a simple opaque dark gradient.",
     "Pointer drag no longer runs content-plus-chrome auto-fit before the first movement.",
-    "Placeholder geometry reads are batched before DOM insertion to reduce Firefox layout thrash.",
-    "40.3.16 preserves the operator-canonical trailing topology: Plan → Storage → Simulation → Tests → Backend → Safety → Physical Security → 04 → Missions.",
-    "40.3.16 does not move 04, does not rewrite Window Manager ownership, and does not clear or migrate localStorage.",
-    "40.3.16 replaces overlapping historical family-presentation effects with one final static docked authority: native flow, z-index auto, no CSS order/transform.",
-    "40.3.16 strengthens only the three semantic gaps: end-03 Plan→Storage, Physical→trailing-04, trailing-04→Missions; separators use no blur/filter/animation."
+    "Placeholder geometry reads are batched before DOM insertion to reduce Firefox layout thrash."
   ],
   "release_notes": [
-    "Trailing 04 topology preserved exactly; no DOM relocation.",
-    "03/04 Window Manager ownership remains the validated 40.3.08 order.",
-    "Final CSS authority removes cross-family z-index stacking while docked and forbids CSS reorder/transform for the 03→04 chain.",
-    "Plan→Storage gets a lightweight static family break; 04 remains close to Physical Security; Missions receives a distinct following gap.",
-    "No Window Manager change in this build; 40.3.15 Firefox performance changes remain intact.",
-    "No localStorage reset/migration; Market Core, Classic, Missions visibility and Technical Reading persistence untouched."
+    "Header/menu full width; cockpit sections/details/footer ~97% centered.",
+    "No global scale() or zoom.",
+    "Floating shells/directFixed windows: backdrop-filter disabled; heavy repeating glass background removed.",
+    "Drag-detach: auto-fit disabled; native measured geometry preserved.",
+    "Placeholder measurements batched before DOM writes.",
+    "40.3.14 role-transition batching retained; Market Core and Classic untouched."
   ],
   "files": {
-    "app.js": "59191b57c897e23743744503cad7ec86914eee221ae51c982135ef3a02ce4fb4",
-    "index.html": "2cba24c75cc9b9e0706045c644d7fa79582e4bb731ccbd2d1ea88b19dcb29e67",
-    "js/app.js": "a4e2fb5c7b0c3870221ece0034b53751c52b8ff92d3f9956f7b2a2fae359d7a1",
-    "js/architecture-freeze.js": "3d3cd66ce8e1c4736c39bcd6ebb65a16cb70417935a566a40699d3ed1fb2d60a",
-    "js/core/admin-window-manager.js": "e906d5fb40a4260a498d8c6bfa8c0250193e6403abbb9fa48ae4a3d8dd0f806a",
+    "app.js": "a4114476764ce228bf5f34419f718b61ae307055409bb6a9b35373bc246c8328",
+    "index.html": "d6e0d04d1b2b8f358033bd123ae7989a6fa9043cd71e324f8466755249d26295",
+    "js/app.js": "c6dc482f514b6c3c465ec7e68de75d08fce8df20ad456716e9caf92ddafbf167",
+    "js/architecture-freeze.js": "c46efa22c4d49c9b557538e4b7d58c522acf3217f2661a726e3fd3ef905712bd",
+    "js/core/admin-window-manager.js": "61e622f334cc7d6be98612def18461f205e4f6c038feb275d330d33c6e2b0582",
     "assets/visual/technical-reading/technical-random-01.png": "a72154af058f563dc269f9757d9bd470a8b6bd1bf5e2a4b0628d3f1ddbb02881",
     "assets/visual/technical-reading/technical-random-02.png": "efac84a34f0889a367b87f2dcf2ac9f64e28e7233c2673afd83049d739d06fa5",
     "assets/visual/technical-reading/technical-random-03.png": "08afaee60212428dc2e80ce6cdf2c569d4d5603e05a5668f66b9a88f9827b51a",
@@ -1890,7 +1896,7 @@
     "assets/visual/technical-reading/technical-random-07.png": "ecf0469228ca754236957b0917df141774f5aa649f5f55b173ae31f884ff1d5d",
     "assets/visual/technical-reading/technical-random-08.png": "dae3cf1fcb22d0e2c14291679d766a095b39836237e1e69660c364e6c0df2401",
     "assets/visual/technical-reading/technical-random-09.png": "6549a553b24091299f5e9cfff9dace3227e5903f8c61a57067fba6f0fa0e6971",
-    "admin-window-menu-uniform.css": "f1bc53a2b1cd61e1c27dc75e2aa08746559676752dadf31d9918309a0d799ae3"
+    "admin-window-menu-uniform.css": "4052d99d2b004764b2b021dc76731f64f6ee7e75367a9b8fff583ca0425fbe00"
   },
   "features": {
     "graph_toolbar_metallic_40285": {
@@ -2357,6 +2363,7 @@
     }
   },
   "window_manager_modified": true,
-  "window_manager_change_scope": "inherited 40.3.15 performance changes only; 40.3.16 Window Manager payload byte-identical to parent",
-  "window_manager_base_build": "40.3.01"
+  "window_manager_change_scope": "bounded: drag detach skips content auto-fit; placeholder measurements batched; no business-engine ownership change",
+  "window_manager_base_build": "40.3.01",
+  "lineage_note": "40.3.17 presentation-boundary candidate was not published and is not a parent of this release."
 }

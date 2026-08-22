@@ -21449,8 +21449,10 @@ function atlasLocalBridgeAutoTick(reason = "interval") {
 }
 
 function atlasLocalBridgeAutoStart(options = {}) {
-  atlasLocalBridgeAutoStop();
-  if (!atlasLocalBridgeAdministratorActive()) return false;
+  if (!atlasLocalBridgeAdministratorActive()) {
+    atlasLocalBridgeAutoStop();
+    return false;
+  }
 
   if (options.immediate !== false) {
     window.setTimeout(
@@ -21459,16 +21461,22 @@ function atlasLocalBridgeAutoStart(options = {}) {
     );
   }
 
-  atlasLocalBridgeAutoTimer = window.setInterval(() => {
-    atlasLocalBridgeAutoTick("interval");
-  }, ATLAS_LOCAL_BRIDGE_AUTO_INTERVAL_MS);
+  // 40.3.17 — keep one stable supervision timer. Focus/visibility events may
+  // ask for a freshness check, but they no longer destroy/recreate the timer.
+  if (!atlasLocalBridgeAutoTimer) {
+    atlasLocalBridgeAutoTimer = window.setInterval(() => {
+      atlasLocalBridgeAutoTick("interval");
+    }, ATLAS_LOCAL_BRIDGE_AUTO_INTERVAL_MS);
+  }
 
   return true;
 }
 
 function atlasLocalBridgeAutoSync(reason = "sync") {
   if (atlasLocalBridgeAdministratorActive()) {
-    return atlasLocalBridgeAutoStart({ immediate: true, reason });
+    const age = atlasLocalBridgeLastAutoProbeAt ? Date.now() - atlasLocalBridgeLastAutoProbeAt : Infinity;
+    const recent = atlasLocalDialogueState.connected === true && age >= 0 && age < 30_000;
+    return atlasLocalBridgeAutoStart({ immediate: !recent, reason });
   }
   atlasLocalBridgeAutoStop();
   return false;
@@ -21575,21 +21583,14 @@ async function atlasLocalBridgeProbe(options = {}) {
           ? `Dialogue local prêt avec ${model}.`
           : ""
       );
-      if (
-        announce
-        || [
-          "administration-open",
-          "initial",
-          "visibility-return",
-          "window-focus",
-          "network-online",
-          "request-failure",
-          "health-retry-386"
-        ].includes(String(options?.reason || ""))
-      ) {
+      // 40.3.17 — health is status, not an analysis trigger.
+      // Returning to Firefox, pageshow, focus, or a routine /health success must
+      // never rebuild the full Atlas/Aerith transaction. Automatic analysis is
+      // owned by a genuinely new canonical market snapshot (or explicit AUTO).
+      if (announce && String(options?.reason || "") === "request-failure") {
         atlasLocalReportsState.autoRetryCount = 0;
         atlasLocalReportsClearAutoTimer();
-        atlasLocalReportsScheduleAutomatic("bridge-ready", { delayMs: 500 });
+        atlasLocalReportsScheduleAutomatic("request-failure", { delayMs: 1800 });
       }
 
       return payload;
@@ -21948,9 +21949,10 @@ function atlasLocalBridgeRequestFailure(error, path = "") {
 
   atlasLocalDialogueSetConnection(false, label);
 
-  // Make the automatic health watcher responsible for recovery.
+  // 40.3.17 — health watcher owns connection recovery only.
+  // It must not pre-schedule a second Atlas/Aerith transaction while the first
+  // failed request is still unwinding.
   atlasLocalBridgeAutoStart({ immediate: true, reason: "request-failure" });
-  atlasLocalReportsScheduleAutomatic("bridge-ready", { delayMs: 3500 });
   return kind;
 }
 
@@ -44787,8 +44789,9 @@ function atlasInitLocalBridgeAutoHealth() {
   });
 
   window.addEventListener("pageshow", () => {
+    // 40.3.17 — BFCache/page restoration refreshes Bridge status only.
+    // Canonical snapshot ownership decides whether analysis is needed.
     atlasLocalBridgeAutoSync("visibility-return");
-    atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 900 });
   });
 
   window.setTimeout(() => {
@@ -46181,7 +46184,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.16";
+const ATLAS_BUILD = "40.3.17";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

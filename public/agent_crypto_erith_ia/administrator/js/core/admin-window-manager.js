@@ -457,6 +457,7 @@
         preferredFloatGeometry: typeof def.preferredFloatGeometry === "function" ? def.preferredFloatGeometry : null,
         dragFloatGeometry: typeof def.dragFloatGeometry === "function" ? def.dragFloatGeometry : null,
         geometryPolicy: def.geometryPolicy && typeof def.geometryPolicy === "object" ? { ...def.geometryPolicy } : null,
+        placeholderPolicy: clean(def.placeholderPolicy || "preserve") || "preserve",
         resolvePortalHost: typeof def.resolvePortalHost === "function" ? def.resolvePortalHost : null,
         resolveCompactNodes: typeof def.resolveCompactNodes === "function" ? def.resolveCompactNodes : null,
         resolveCompactCollapsedDetails: typeof def.resolveCompactCollapsedDetails === "function" ? def.resolveCompactCollapsedDetails : null,
@@ -714,34 +715,44 @@
       measurements.forEach(item => {
         const {node,parent,rendered}=item;
         if (!parent || node.parentNode !== parent) return;
+        const compactFamily = win.placeholderPolicy === "compact-family";
+        const reserve = rendered && (!compactFamily || node === win.anchor);
         const marker=document.createElement("div");
         marker.className="admin-native-placeholder";
         marker.dataset.adminNativePlaceholder=win.id;
-        marker.dataset.adminNativePlaceholderReserved=rendered ? "1" : "0";
+        marker.dataset.adminNativePlaceholderReserved=reserve ? "1" : "0";
+        marker.dataset.adminNativePlaceholderPolicy=win.placeholderPolicy || "preserve";
         marker.setAttribute("aria-hidden","true");
         marker.style.pointerEvents="none";
         marker.style.userSelect="none";
-        if (rendered) {
+        if (reserve) {
+          const reservedHeight = compactFamily ? 18 : item.height;
           marker.style.display="block";
           marker.style.visibility="hidden";
           marker.style.boxSizing="border-box";
           marker.style.width="auto";
           marker.style.minWidth="0";
-          marker.style.height=`${item.height}px`;
-          marker.style.minHeight=`${item.height}px`;
-          marker.style.marginTop=item.marginTop;
+          marker.style.height=`${reservedHeight}px`;
+          marker.style.minHeight=`${reservedHeight}px`;
+          marker.style.marginTop=compactFamily ? "0px" : item.marginTop;
           marker.style.marginRight=item.marginRight;
-          marker.style.marginBottom=item.marginBottom;
+          marker.style.marginBottom=compactFamily ? "0px" : item.marginBottom;
           marker.style.marginLeft=item.marginLeft;
           marker.style.gridColumn=item.gridColumn;
           marker.style.gridRow=item.gridRow;
           marker.style.alignSelf=item.alignSelf;
           marker.style.justifySelf=item.justifySelf;
-          marker.style.flexGrow=item.flexGrow;
-          marker.style.flexShrink=item.flexShrink;
-          marker.style.flexBasis=item.flexBasis;
+          marker.style.flexGrow="0";
+          marker.style.flexShrink="0";
+          marker.style.flexBasis=compactFamily ? "18px" : item.flexBasis;
           marker.style.order=item.order;
-        } else marker.hidden=true;
+        } else {
+          marker.hidden=true;
+          marker.style.display="none";
+          marker.style.height="0";
+          marker.style.minHeight="0";
+          marker.style.margin="0";
+        }
         parent.insertBefore(marker,node);
         win.placeholders.set(node,marker);
       });
@@ -1596,6 +1607,8 @@
     restore_persisted_single_pass_40314: true
     ,drag_detach_auto_fit_disabled_40315: true
     ,placeholder_measurement_batch_40315: "all-reads-before-dom-writes"
+    ,compact_family_placeholder_policy_40317: "anchor-marker-18px"
+    ,preserve_full_placeholder_default_40317: true
     ,floating_surface_backdrop_blur_40315: false
     ,floating_surface_repeating_background_40315: false
     ,maximized_surface_40315: "97vw x 97vh"

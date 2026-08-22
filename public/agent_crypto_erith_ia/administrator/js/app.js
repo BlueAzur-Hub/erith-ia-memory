@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.16";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · NATIVE FAMILY BOUNDARY PRESENTATION AUTHORITY LOCK";
+  const ADMIN_BUILD = "40.3.17";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · PASSIVE BRIDGE SUPERVISION + COMPACT FAMILY PLACEHOLDER RECOVERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -531,6 +531,7 @@
       },
       {
         id: "analyse-decision",
+        placeholderPolicy: "compact-family",
         title: "Analyse & décision",
         tone: "cyan",
         resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-analysis", ["analysis"]),
@@ -541,6 +542,7 @@
       },
       {
         id: "intelligence-memoire-creation",
+        placeholderPolicy: "compact-family",
         title: "Intelligence, mémoire & création",
         tone: "violet",
         resolveEntries: () => familyEntriesByTopLevelLayout(".atlas-layout-family-intelligence", ["intelligence", "creation"]),
@@ -551,6 +553,7 @@
       },
       {
         id: "preparation-operations",
+        placeholderPolicy: "compact-family",
         title: "Préparation & opérations",
         tone: "gold",
         // 40.3.08 — explicit 03 membership: header + Situation/Questionnaire/Briefing/Planning only.
@@ -562,6 +565,7 @@
       },
       {
         id: "experimentation-systeme",
+        placeholderPolicy: "compact-family",
         title: "Expérimentation & système",
         tone: "orange",
         // 40.3.08 — explicit trailing-owner order matches the real docked DOM exactly:
@@ -572,6 +576,7 @@
       },
       {
         id: "missions-de-vie",
+        placeholderPolicy: "compact-family",
         title: "Missions de vie",
         tone: "gold",
         resolveEntries: () => missionEntries40302(),
@@ -1693,21 +1698,16 @@
       floating_repeating_background: false,
       parent_build: "40.3.14"
     });
-    globalThis.ErithNativeFamilyBoundary40316 = Object.freeze({
-      build: "40.3.16",
+    globalThis.ErithBridgePassivePerformance40317 = Object.freeze({
+      build: "40.3.17",
       parent_build: "40.3.15",
-      dom_topology_changed: false,
-      window_manager_changed_in_build: false,
-      local_storage_migration: false,
-      css_order_rewrite: false,
-      family_position_absolute_or_fixed: false,
-      family_transform_scale: false,
-      plan_storage_boundary_px: 44,
-      physical_04_boundary_px: 14,
-      family04_missions_boundary_px: 28,
-      family03_owner: "header+situation+questionnaire+briefing+planning",
-      family04_owner: "storage+simulation+commandes+backend+safety+physical-security+trailing-04",
-      trailing_04_preserved: true
+      bridge_health_is_analysis_trigger: false,
+      focus_pageshow_restart_analysis: false,
+      pageshow_snapshot_schedule: false,
+      one_supervision_timer: true,
+      recent_health_focus_probe_suppression_ms: 30000,
+      compact_family_placeholder_policy: true,
+      preserved_full_placeholder_windows: ["market", "graphique", "target-top", "market-flow", "math-core"]
     });
     installAdminBar(manager);
     installDomainObserver(manager);
