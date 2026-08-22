@@ -1221,7 +1221,7 @@ async function atlasAccessSubmit(event) {
     // requested target once; a plain unlock restores workspace without scrolling.
     window.requestAnimationFrame(() => {
       if (pending) atlasV2OpenAdvancedForTarget(pending);
-      else atlasAdminOpenWorkspace({ source: "unlock-40312" });
+      else atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
     });
     return true;
   } catch (error) {
@@ -2052,22 +2052,37 @@ function atlasV2ApplySemanticRoleIsolation40312(mode) {
 
   for (const node of semanticMembers) {
     if (publicMode) {
+      // 40.3.22 — remember the visibility state that existed immediately after
+      // the V2 manifest pass.  40.3.12 hid semantic family nodes in Basic but
+      // never restored family headers that are not themselves manifest entries.
+      // Snapshot only once: repeated Essential-mode applications must not turn
+      // the original visible state into "hidden" merely because our own guard
+      // already hid the node during the first pass.
+      if (node.dataset.atlasRoleIsolation40312 !== "public-blocked") {
+        node.dataset.atlasRoleIsolationPreviousHidden40322 = node.hidden ? "1" : "0";
+      }
       node.dataset.atlasRoleIsolation40312 = "public-blocked";
       node.hidden = true;
       node.setAttribute("aria-hidden", "true");
     } else if (node.dataset.atlasRoleIsolation40312 === "public-blocked") {
-      // SectionVisibility already decided whether this node is allowed in the
-      // target mode.  Remove only our Basic-view marker; never override the
-      // Intermediate/Administrator visibility decision here.
+      const previousHidden = node.dataset.atlasRoleIsolationPreviousHidden40322 === "1";
+      if (!previousHidden) {
+        node.hidden = false;
+        node.setAttribute("aria-hidden", "false");
+      }
       delete node.dataset.atlasRoleIsolation40312;
+      delete node.dataset.atlasRoleIsolationPreviousHidden40322;
     }
   }
   return semanticMembers.length;
 }
 
 globalThis.ErithRoleIsolation40312 = Object.freeze({
-  build: "40.3.12",
+  build: "40.3.22",
+  base_build: "40.3.12",
   public_semantic_family_block: true,
+  public_visibility_snapshot_before_block: true,
+  administrator_family_header_restore: true,
   intermediate_private_missions_hidden: true,
   administrator_workspace_persistence_preserved: true,
   local_storage_rewrite_for_neutral_view: false
@@ -2307,7 +2322,7 @@ function atlasInitV2Shell() {
       atlasV2SyncShareableUrl("advanced");
       atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
       atlasV2ApplyMode("advanced", { persist: false, silentAuth: true });
-      window.requestAnimationFrame(() => atlasAdminOpenWorkspace({ source: "owner-return-40312" }));
+      window.requestAnimationFrame(() => atlasAdminCenterSet(false, { persist: false, scrollTarget: false }));
     } else {
       atlasAccessOpen();
     }
@@ -3059,19 +3074,10 @@ function initAtlasAdminCommandCenter() {
   if (drawer.parentElement !== document.body) document.body.appendChild(drawer);
 
   const restoreCenter = () => {
-    if (!atlasV2IsExpandedMode()) {
-      atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
-      return;
-    }
-    const forcedOpen = atlasAdminForceWorkspaceIsActive();
-    atlasAdminCenterSet(forcedOpen || atlasAdminCenterSavedOpen(), {
-      persist: forcedOpen,
-      target: forcedOpen
-        ? (atlasAdminClusterForModule(atlasAdminLastModuleRead()) || atlasAdminCenterSavedTarget() || "analysis")
-        : atlasAdminCenterSavedTarget(),
-      scrollTarget: false,
-      instant: true
-    });
+    // 40.3.22 — Command Center is an explicit operator surface.
+    // Boot/auth/role restoration may select Administration, but never opens this
+    // overlay by itself.  Only the visible Command Center/cluster controls may.
+    atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
   };
 
   toggle.addEventListener("click", () => atlasAdminCenterSet(drawer.hidden));
@@ -3114,13 +3120,26 @@ function initAtlasAdminCommandCenter() {
   window.addEventListener("atlas:v2mode", event => {
     if (!atlasV2IsExpandedMode(event.detail?.mode)) {
       atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
-    } else {
-      window.requestAnimationFrame(restoreCenter);
     }
   });
 
   window.requestAnimationFrame(restoreCenter);
 }
+
+globalThis.ErithCommandCenterExplicit40322 = Object.freeze({
+  build: "40.3.22",
+  parent_build: "40.3.21",
+  automatic_boot_open: false,
+  automatic_auth_open: false,
+  automatic_role_return_open: false,
+  automatic_workspace_restore_open: false,
+  explicit_toggle_open: true,
+  explicit_cluster_open: true,
+  fixed_body_portal_preserved: true,
+  saved_target_preserved: true,
+  saved_open_state_restore_disabled: true,
+  admin_mode_force_decoupled_from_center_open: true
+});
 
 /* ============================================================
    FIN 01 — HEADER / MENU
@@ -38295,22 +38314,13 @@ function atlasAdminOpenWorkspace(options = {}) {
   }
 
   const lastModule = atlasAdminLastModuleRead();
-  const target = atlasAdminClusterForModule(lastModule)
-    || atlasAdminCenterSavedTarget()
-    || "analysis";
-
   const selector = document.getElementById("atlasV2AdvancedModuleSelect");
   if (selector && lastModule && [...selector.options].some(option => option.value === lastModule)) {
     selector.value = lastModule;
   }
 
-  atlasAdminCenterSet(true, {
-    persist: true,
-    target,
-    scrollTarget: false,
-    instant: true
-  });
-
+  // 40.3.22 — entering Administration must not imply opening Command Center.
+  atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
   return true;
 }
 
@@ -40372,28 +40382,29 @@ function atlasWorkspaceRestoreAfterMarket() {
 
   const savedClusterCandidate = String(adminWorkspace.activeCluster || atlasAdminClusterForModule(savedModule) || "");
   const savedCluster = ATLAS_ADMIN_CLUSTERS.includes(savedClusterCandidate) ? savedClusterCandidate : "";
-  const forceAdminCenter = forceAdminWorkspace;
-  const restoredAdminCluster = forceAdminCenter ? (atlasAdminClusterForModule(savedModule) || savedCluster || "analysis") : savedCluster;
-  const restoredAdminCenterOpen = forceAdminCenter || adminWorkspace.centerOpen === true;
+  const restoredAdminCluster = savedCluster;
 
   try {
     if (restoredAdminCluster) localStorage.setItem(ATLAS_ADMIN_CENTER_TARGET_KEY, restoredAdminCluster);
-    localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, restoredAdminCenterOpen ? "1" : "0");
+    // 40.3.22 — Command Center open/closed is transient operator intent.
+    // Never resurrect an old open overlay from workspace/localStorage.
+    localStorage.setItem(ATLAS_ADMIN_CENTER_KEY, "0");
   } catch {}
 
   if (atlasV2IsExpandedMode()) {
     atlasAdminGraphSet(savedGraphMode, { persist:false, instant:true, scroll:false, closeCenter:false });
     window.setTimeout(() => {
-      atlasAdminCenterSet(restoredAdminCenterOpen, {
-        persist: forceAdminCenter,
+      atlasAdminCenterSet(false, {
+        persist: false,
         target: restoredAdminCluster,
         scrollTarget: false,
         instant: true
       });
-      if (forceAdminCenter) atlasAdminForceWorkspaceRelease();
+      if (forceAdminWorkspace) atlasAdminForceWorkspaceRelease();
     }, 60);
   } else {
     atlasAdminCenterSet(false, { persist:false, scrollTarget:false });
+    if (forceAdminWorkspace) atlasAdminForceWorkspaceRelease();
   }
 
   atlasParallelMarketSetDomain(saved.marketDomain === "metals" ? "metals" : "crypto", {
@@ -46184,7 +46195,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.21";
+const ATLAS_BUILD = "40.3.22";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

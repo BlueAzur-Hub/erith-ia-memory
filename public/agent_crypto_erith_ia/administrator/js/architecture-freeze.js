@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.21 — PARKER LEWIS CAN'T LOSE · TECHNICAL READING + COMMAND CENTER VISUAL CONTINUITY RECOVERY LOCK
+     40.3.22 — PARKER LEWIS CAN'T LOSE · ADMIN FAMILY RETURN + EXPLICIT COMMAND CENTER RECOVERY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.21";
+  const BUILD_CURRENT = "40.3.22";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -654,6 +654,46 @@
         && fixedOwnerDeclared
         && computedPosition === "fixed",
       detail:`body=${String(bodyOk)} · body-portal=${String(portalParentOk)} · owner=${String(fixedOwnerDeclared)} · position=${computedPosition || "—"}`
+    };
+  }
+
+  function familyRoleReturnContract40322() {
+    const isolation = globalThis.ErithRoleIsolation40312;
+    const migration = globalThis.ErithFamilyRoleReturnMigration40322;
+    const expected = ["analyse-decision","intelligence-memoire-creation","preparation-operations","experimentation-systeme","missions-de-vie"];
+    const ids = Array.isArray(migration?.window_ids) ? migration.window_ids : [];
+    return {
+      ok: isolation?.build === "40.3.22"
+        && isolation?.base_build === "40.3.12"
+        && isolation?.public_visibility_snapshot_before_block === true
+        && isolation?.administrator_family_header_restore === true
+        && migration?.build === "40.3.22"
+        && migration?.parent_build === "40.3.21"
+        && migration?.one_time === true
+        && migration?.before_window_manager_init === true
+        && migration?.clears_only_large_family_presentation_state === true
+        && migration?.direct_fixed_state_preserved === true
+        && expected.every(id => ids.includes(id))
+        && ids.length === expected.length,
+      detail:`isolation=${String(isolation?.build || "—")} · restore=${String(isolation?.administrator_family_header_restore === true)} · migration=${String(migration?.build || "—")} · ids=${ids.length}/${expected.length} · directFixed=${String(migration?.direct_fixed_state_preserved === true)}`
+    };
+  }
+
+  function commandCenterExplicitContract40322() {
+    const contract = globalThis.ErithCommandCenterExplicit40322;
+    return {
+      ok: contract?.build === "40.3.22"
+        && contract?.parent_build === "40.3.21"
+        && contract?.automatic_boot_open === false
+        && contract?.automatic_auth_open === false
+        && contract?.automatic_role_return_open === false
+        && contract?.automatic_workspace_restore_open === false
+        && contract?.explicit_toggle_open === true
+        && contract?.explicit_cluster_open === true
+        && contract?.fixed_body_portal_preserved === true
+        && contract?.saved_open_state_restore_disabled === true
+        && contract?.admin_mode_force_decoupled_from_center_open === true,
+      detail:`boot=${String(contract?.automatic_boot_open)} · auth=${String(contract?.automatic_auth_open)} · role=${String(contract?.automatic_role_return_open)} · workspace=${String(contract?.automatic_workspace_restore_open)} · explicit=${String(contract?.explicit_toggle_open === true)}`
     };
   }
 
@@ -1672,6 +1712,8 @@
       check("Performance · Bridge passif + placeholders famille compacts 40.3.17", bridgePassivePerformanceContract40317().ok === true, bridgePassivePerformanceContract40317().detail),
       check("Lecture Technique · image conservée en vue réduite + priorité basse 40.3.21", technicalImageContinuityContract40321().ok === true, technicalImageContinuityContract40321().detail),
       check("Command Center · portail fixe au body + atmosphère non propriétaire 40.3.21", commandCenterPortalContract40321().ok === true, commandCenterPortalContract40321().detail),
+      check("Familles Admin · retour Basic→Admin restaure 01/02/03/04 + reset présentation ciblé 40.3.22", familyRoleReturnContract40322().ok === true, familyRoleReturnContract40322().detail),
+      check("Command Center · ouverture uniquement sur intention opérateur 40.3.22", commandCenterExplicitContract40322().ok === true, commandCenterExplicitContract40322().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),

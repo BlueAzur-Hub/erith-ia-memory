@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.21";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · TECHNICAL READING + COMMAND CENTER VISUAL CONTINUITY RECOVERY LOCK";
+  const ADMIN_BUILD = "40.3.22";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ADMIN FAMILY RETURN + EXPLICIT COMMAND CENTER RECOVERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1468,6 +1468,39 @@
     namespace_changed: false
   });
 
+  const FAMILY_ROLE_RETURN_40322_MIGRATION_KEY = `${STORAGE_PREFIX}:family-role-return-40322-migrated`;
+
+  function migrateFamilyRoleReturnWindowState40322() {
+    try {
+      if (localStorage.getItem(FAMILY_ROLE_RETURN_40322_MIGRATION_KEY) === "1") return false;
+      // 40.3.22 — recover only the five large Administrator families from stale
+      // pre-rewrite hidden/minimized/floating geometry.  Graphique, Math Core,
+      // Target Top, Market Flow, Market, Audience and Sources stay untouched.
+      FAMILY_TOPOLOGY_40303_WINDOW_IDS.forEach(id => {
+        localStorage.removeItem(`${STORAGE_PREFIX}:window:${id}`);
+      });
+      localStorage.setItem(FAMILY_ROLE_RETURN_40322_MIGRATION_KEY, "1");
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  globalThis.ErithFamilyRoleReturnMigration40322 = Object.freeze({
+    build: "40.3.22",
+    parent_build: "40.3.21",
+    key: FAMILY_ROLE_RETURN_40322_MIGRATION_KEY,
+    window_ids: FAMILY_TOPOLOGY_40303_WINDOW_IDS,
+    one_time: true,
+    before_window_manager_init: true,
+    clears_only_large_family_presentation_state: true,
+    direct_fixed_state_preserved: true,
+    market_state_preserved: true,
+    audience_sources_state_preserved: true,
+    v7_state_preserved: true,
+    bridge_state_preserved: true
+  });
+
   const GRAPH_R6_MIGRATION_KEY = `${STORAGE_PREFIX}:graph-fullwidth-r6-migrated`;
 
   function migrateGraphWindowStateR6() {
@@ -1629,6 +1662,7 @@
     migrateGlobalShellAutoFit40132();
     migrateGraphWindowStateR6();
     migrateFamilyTopologyWindowState40303();
+    migrateFamilyRoleReturnWindowState40322();
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
