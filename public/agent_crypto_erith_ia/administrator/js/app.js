@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.17";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · PASSIVE BRIDGE SUPERVISION + COMPACT FAMILY PLACEHOLDER RECOVERY LOCK";
+  const ADMIN_BUILD = "40.3.18";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · EMPTY FLOATING SHELL GUARD + WINDOW MENU PRESERVATION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1708,6 +1708,23 @@
       recent_health_focus_probe_suppression_ms: 30000,
       compact_family_placeholder_policy: true,
       preserved_full_placeholder_windows: ["market", "graphique", "target-top", "market-flow", "math-core"]
+    });
+    globalThis.ErithFloatingShellGuard40318 = Object.freeze({
+      build: "40.3.18",
+      parent_build: "40.3.17",
+      floating_shell_global_fill: false,
+      empty_shell_visible: false,
+      first_paint_hidden_until_payload_check: true,
+      payload_recheck: "one-requestAnimationFrame-per-detach",
+      observer_added: false,
+      interval_added: false,
+      timeout_added: false,
+      direct_fixed_surface_changed: false,
+      window_menu_actions_changed: false,
+      section_topology_changed: false,
+      bridge_behavior_changed: false,
+      oracle_behavior_changed: false,
+      atlas_pipeline_changed: false
     });
     installAdminBar(manager);
     installDomainObserver(manager);

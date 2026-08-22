@@ -1334,3 +1334,40 @@ body.atlas-surface-performance-40315 .admin-native-moving{
     max-width:calc(100% - 16px)!important;
   }
 }
+
+
+/* ============================================================================
+   40.3.18 — EMPTY FLOATING SHELL GUARD + WINDOW MENU PRESERVATION LOCK
+   Historical lesson recovered from 39.2.14: a global floating backdrop must not
+   paint a large opaque plate across unrelated Administrator panels.
+
+   Ownership:
+   - .admin-native-floating-shell = transport/chrome only, transparent canvas;
+   - real moved nodes keep their own native/Metal surfaces;
+   - titlebar stays readable and opaque enough to remain a window handle;
+   - empty shells are never rendered;
+   - directFixed tools (Graphique / Target / Flow / Math) are untouched;
+   - all five Window Manager actions remain owned by canonical JS.
+   ============================================================================ */
+body.atlas-floating-shell-guard-40318 .admin-native-floating-shell{
+  background:transparent!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  box-shadow:none!important;
+}
+body.atlas-floating-shell-guard-40318 .admin-native-floating-shell[data-admin-native-shell-empty="1"],
+body.atlas-floating-shell-guard-40318 .admin-native-floating-shell[hidden]{
+  display:none!important;
+}
+body.atlas-floating-shell-guard-40318 .admin-native-floating-shell .admin-native-floating-titlebar{
+  background:linear-gradient(180deg,rgba(28,36,43,.97),rgba(7,11,15,.985))!important;
+  border-color:rgba(215,226,234,.16)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 7px 18px rgba(0,0,0,.22)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+/* Real content provides the visible panel surfaces. Keep only a thin shell edge
+   so a legitimate multi-node floating family still reads as one movable window. */
+body.atlas-floating-shell-guard-40318 .admin-native-floating-shell[data-admin-native-shell-empty="0"]{
+  border-color:color-mix(in srgb,var(--native-accent,#72d8ff) 26%,rgba(205,220,232,.12))!important;
+}

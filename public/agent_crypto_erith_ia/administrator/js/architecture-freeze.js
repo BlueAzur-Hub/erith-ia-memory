@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.17 — PARKER LEWIS CAN'T LOSE · PASSIVE BRIDGE SUPERVISION + COMPACT FAMILY PLACEHOLDER RECOVERY LOCK
+     40.3.18 — PARKER LEWIS CAN'T LOSE · EMPTY FLOATING SHELL GUARD + WINDOW MENU PRESERVATION LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.17";
+  const BUILD_CURRENT = "40.3.18";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -569,6 +569,41 @@
         && c?.compact_family_placeholder_policy === true
         && wm?.compact_family_placeholder_policy_40317 === "anchor-marker-18px",
       detail: `body=${String(bodyOk)} · passiveHealth=${String(c?.bridge_health_is_analysis_trigger === false)} · focusNoRestart=${String(c?.focus_pageshow_restart_analysis === false)} · oneTimer=${String(c?.one_supervision_timer === true)} · placeholder=${String(wm?.compact_family_placeholder_policy_40317 || "")}`
+    };
+  }
+
+  function floatingShellGuardContract40318() {
+    const bodyOk = document.body?.classList?.contains("atlas-floating-shell-guard-40318") === true;
+    const c = globalThis.ErithFloatingShellGuard40318;
+    const wm = globalThis.ErithAdminWindowManager?.contract || {};
+    const shells = [...document.querySelectorAll(".admin-native-floating-shell")];
+    const visibleEmpty = shells.filter(shell => {
+      if (shell.dataset.adminNativeShellEmpty !== "1") return false;
+      const style = getComputedStyle(shell);
+      return !shell.hidden && style.display !== "none" && style.visibility !== "hidden";
+    }).length;
+    const shellFillOk = shells.every(shell => {
+      const style = getComputedStyle(shell);
+      return shell.dataset.adminNativeShellEmpty === "1" || style.backgroundColor === "rgba(0, 0, 0, 0)" || style.backgroundImage === "none";
+    });
+    return {
+      ok: bodyOk
+        && c?.build === "40.3.18"
+        && c?.floating_shell_global_fill === false
+        && c?.empty_shell_visible === false
+        && c?.observer_added === false
+        && c?.interval_added === false
+        && c?.timeout_added === false
+        && c?.direct_fixed_surface_changed === false
+        && c?.window_menu_actions_changed === false
+        && c?.section_topology_changed === false
+        && wm?.empty_floating_shell_guard_40318 === true
+        && wm?.floating_shell_global_fill_40318 === false
+        && wm?.floating_shell_observer_40318 === false
+        && wm?.window_menu_actions_preserved_40318 === true
+        && visibleEmpty === 0
+        && shellFillOk,
+      detail:`body=${String(bodyOk)} · shells=${shells.length} · visible-empty=${visibleEmpty} · transparent=${String(shellFillOk)} · actions=${String(wm?.window_menu_actions_preserved_40318 === true)}`
     };
   }
 
@@ -1604,6 +1639,7 @@
       check("Performance · transition rôle unique + reflow Window Deck borné 40.3.14", roleTransitionPerformanceContract40314().ok === true, roleTransitionPerformanceContract40314().detail),
       check("Surface Firefox · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract40315().ok === true, surfacePerformanceContract40315().detail),
       check("Performance · Bridge passif + placeholders famille compacts 40.3.17", bridgePassivePerformanceContract40317().ok === true, bridgePassivePerformanceContract40317().detail),
+      check("Fenêtres · shell flottante sans plaque fantôme 40.3.18", floatingShellGuardContract40318().ok === true, floatingShellGuardContract40318().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),

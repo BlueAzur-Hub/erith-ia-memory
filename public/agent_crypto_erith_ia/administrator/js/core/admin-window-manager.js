@@ -766,13 +766,60 @@
       return document.body;
     }
 
+    // 40.3.18 — floating shell ghost-surface guard.
+    // The global shell is only chrome/transport. It must never become a large
+    // opaque viewport plate when every real managed node is non-rendered.
+    // No observer or polling loop is introduced: one synchronous check plus one
+    // requestAnimationFrame recheck per detach is enough to catch post-reparent layout.
+    function floatingShellPayloadState(win) {
+      const shell = win?.shell;
+      if (!(shell instanceof HTMLElement)) return { visible: false, count: 0, area: 0 };
+      let count = 0;
+      let area = 0;
+      (win.nodes || []).forEach(node => {
+        if (!(node instanceof HTMLElement) || !shell.contains(node) || node.hidden) return;
+        const style = window.getComputedStyle?.(node);
+        if (String(style?.display || "").toLowerCase() === "none") return;
+        if (String(style?.visibility || "").toLowerCase() === "hidden") return;
+        const rect = node.getBoundingClientRect?.();
+        if (!rect || rect.width <= 1 || rect.height <= 1) return;
+        count += 1;
+        area += rect.width * rect.height;
+      });
+      return { visible: count > 0 && area > 4, count, area };
+    }
+
+    function syncFloatingShellPayloadVisibility(win) {
+      if (!win || win.directFixed || !(win.shell instanceof HTMLElement)) return true;
+      const state = floatingShellPayloadState(win);
+      const shell = win.shell;
+      shell.dataset.adminNativeShellEmpty = state.visible ? "0" : "1";
+      shell.dataset.adminNativeShellPayloadCount = String(state.count);
+      shell.dataset.adminNativeShellPayloadArea = String(Math.round(state.area));
+      if (!state.visible) {
+        shell.hidden = true;
+        shell.style.setProperty("opacity", "0", "important");
+        shell.style.setProperty("pointer-events", "none", "important");
+        return false;
+      }
+      shell.style.removeProperty("opacity");
+      shell.style.removeProperty("pointer-events");
+      return true;
+    }
+
     function buildShell(win, geometry, options = {}) {
       if (win.shell?.isConnected) return win.shell;
       createPlaceholders(win);
       const shell = document.createElement("section");
       shell.className = `admin-native-floating-shell admin-native-tone-${win.tone}`;
       shell.dataset.adminNativeShell = win.id;
+      shell.dataset.adminNativeShellEmpty = "pending";
       shell.setAttribute("aria-label", `Fenêtre flottante ${win.title}`);
+      // Prevent the historical opaque shell from flashing before the real nodes
+      // have been reparented and measured. opacity:0 preserves child computed
+      // visibility and geometry, unlike visibility:hidden which is inherited.
+      shell.style.setProperty("opacity", "0", "important");
+      shell.style.setProperty("pointer-events", "none", "important");
 
       const titlebar = document.createElement("header");
       titlebar.className = "admin-native-floating-titlebar";
@@ -1010,7 +1057,8 @@
 
       if (win.floating && !win.directFixed && win.shell) {
         win.nodes.forEach(node => setNodeSuppressed(node, false));
-        win.shell.hidden = suppressed;
+        const payloadVisible = syncFloatingShellPayloadVisibility(win);
+        win.shell.hidden = suppressed || !payloadVisible;
       } else if (win.floating && win.directFixed) {
         setNodeSuppressed(win.anchor, suppressed);
       } else {
@@ -1095,6 +1143,14 @@
       if (!win.directFixed) syncPortalHost(win);
       domainMask(win);
       applyPresentationState(win);
+      // One post-reparent layout confirmation. This is deliberately not a timer,
+      // observer or recurring loop; it only prevents a stale/empty shell first paint.
+      if (!win.directFixed && win.shell && typeof requestAnimationFrame === "function") {
+        const shellAtDetach = win.shell;
+        requestAnimationFrame(() => {
+          if (win.floating && win.shell === shellAtDetach) applyPresentationState(win);
+        });
+      }
       bringToFront(win, false);
       refreshControlState(win);
       if (persist) {
@@ -1612,6 +1668,12 @@
     ,floating_surface_backdrop_blur_40315: false
     ,floating_surface_repeating_background_40315: false
     ,maximized_surface_40315: "97vw x 97vh"
+    ,empty_floating_shell_guard_40318: true
+    ,floating_shell_global_fill_40318: false
+    ,floating_shell_first_paint_hidden_40318: true
+    ,floating_shell_payload_recheck_40318: "one-requestAnimationFrame-per-detach"
+    ,floating_shell_observer_40318: false
+    ,window_menu_actions_preserved_40318: true
   });
 
   window.ErithAdminWindowManager = Object.freeze({
