@@ -1268,29 +1268,3 @@ body.atlas-admin-presentation-authority-40309 main.shell > section.atlas-layout-
   body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198{margin-top:30px!important}
   body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198::before{top:-16px!important}
 }
-
-
-/* ============================================================================
-   40.3.13 — CANONICAL FAMILY 04 HIERARCHY + NATIVE DOCK FLOW LOCK
-   Structural repair after Firefox operator review:
-   - 03 ends after Plan exchange;
-   - the real 04 header starts its own section BEFORE Storage;
-   - Storage + Simulation + Tests + Backend + Safety + Physical Security follow 04;
-   - Missions starts only after the last 04 member;
-   - no wrapper, clone, z-index mask or artificial overlap compensation.
-   ============================================================================ */
-body.atlas-family04-canonical-hierarchy-40313 main.shell > details[data-collapse-key="planning"] + section.atlas-layout-family-system{
-  position:relative!important;
-  margin-top:38px!important;
-}
-body.atlas-family04-canonical-hierarchy-40313 main.shell > section.atlas-layout-family-system + #atlasStorageHealth40198{
-  margin-top:10px!important;
-}
-body.atlas-family04-canonical-hierarchy-40313 main.shell > details[data-collapse-key="physical-security"] + #missions-vie{
-  margin-top:10px!important;
-}
-@media (max-width:1366px){
-  body.atlas-family04-canonical-hierarchy-40313 main.shell > details[data-collapse-key="planning"] + section.atlas-layout-family-system{
-    margin-top:30px!important;
-  }
-}

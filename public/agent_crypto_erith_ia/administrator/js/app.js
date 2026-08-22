@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.13";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · CANONICAL FAMILY 04 HIERARCHY + NATIVE DOCK FLOW LOCK";
+  const ADMIN_BUILD = "40.3.14";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FIREFOX ROLE TRANSITION PERFORMANCE RECOVERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -390,9 +390,9 @@
       .map(node => entry(node));
   }
 
-  // 40.3.13 — hard semantic ownership boundary for the two lower Administrator families.
+  // 40.3.08 — hard semantic ownership boundary for the two lower Administrator families.
   // The 03 owner is explicit and can never absorb System/Experiment nodes by proximity.
-  // The 04 owner follows one native truth: 04 header first, then its six owned members.
+  // The 04 owner follows native DOM order: six System/Experiment members first, trailing 04 boundary last.
   const ADMIN_OPERATION_KEYS_40308 = new Set([
     "situation", "questionnaire", "briefing", "planning"
   ]);
@@ -412,16 +412,16 @@
       .map(node => entry(node));
   }
 
-  function systemEntriesCanonical40313() {
+  function systemEntriesTrailing40308() {
     const shell = q("main.shell");
     const header = q(".atlas-layout-family-system");
-    const storage = byId("atlasStorageHealth40198");
     if (!shell || !(header instanceof HTMLElement)) return [];
-    const details = [...ADMIN_SYSTEM_KEYS_40308]
-      .map(key => shell.querySelector(`:scope > details[data-collapse-key="${key}"]`))
-      .filter(node => node instanceof HTMLDetailsElement);
-    return [header, storage, ...details]
-      .filter((node, index, list) => node instanceof HTMLElement && node.parentElement === shell && list.indexOf(node) === index)
+    return [...shell.children]
+      .filter(node => node instanceof HTMLElement && (
+        node === header
+        || node.id === "atlasStorageHealth40198"
+        || (node instanceof HTMLDetailsElement && ADMIN_SYSTEM_KEYS_40308.has(String(node.dataset.collapseKey || "")))
+      ))
       .map(node => entry(node));
   }
 
@@ -564,10 +564,10 @@
         id: "experimentation-systeme",
         title: "Expérimentation & système",
         tone: "orange",
-        // 40.3.13 — canonical native order: 04 header -> Storage -> Simulation -> Commands -> Backend -> Safety -> Physical Security.
-        // Docked mode therefore keeps the family in normal document flow; only an explicit detach may move the real nodes.
-        resolveEntries: () => systemEntriesCanonical40313(),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
+        // 40.3.08 — explicit trailing-owner order matches the real docked DOM exactly:
+        // Storage + Simulation + Commands + Backend + Safety + Physical Security -> 04 boundary.
+        resolveEntries: () => systemEntriesTrailing40308(),
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[nodes.length - 1],
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {
@@ -1592,12 +1592,19 @@
     }
   }
 
-  function syncWindowPresentationRole40312(manager, role = presentationRole40312()) {
+  let activeWindowPresentationRole40314 = "";
+
+  function syncWindowPresentationRole40314(manager, role = presentationRole40312()) {
     if (!manager) return role;
-    if (role === "administrator") manager.restorePersistedPresentation?.();
+    const nextRole = ["public", "operator", "administrator"].includes(role) ? role : presentationRole40312();
+    if (activeWindowPresentationRole40314 === nextRole) return nextRole;
+
+    if (nextRole === "administrator") manager.restorePersistedPresentation?.();
     else manager.neutralizePresentation?.();
-    document.documentElement.dataset.adminWindowPresentationRole40312 = role;
-    return role;
+
+    activeWindowPresentationRole40314 = nextRole;
+    document.documentElement.dataset.adminWindowPresentationRole40314 = nextRole;
+    return nextRole;
   }
 
   function boot() {
@@ -1631,7 +1638,10 @@
 
     const bootRole40312 = presentationRole40312();
     const state = manager.init({ restorePersistedPresentation: bootRole40312 === "administrator" });
-    syncWindowPresentationRole40312(manager, bootRole40312);
+    // 40.3.14 — init already applied the correct presentation exactly once.
+    // Do not immediately replay the same neutralize/restore transaction.
+    activeWindowPresentationRole40314 = bootRole40312;
+    document.documentElement.dataset.adminWindowPresentationRole40314 = bootRole40312;
     installMathCoreInlineWindowControls40148();
 
     // 40.1.48 — restore guard for compact bars.  Some stacked Administrator
@@ -1652,7 +1662,7 @@
       const role = ["public", "operator", "administrator"].includes(event?.detail?.role)
         ? event.detail.role
         : presentationRole40312();
-      syncWindowPresentationRole40312(manager, role);
+      syncWindowPresentationRole40314(manager, role);
     });
     globalThis.ErithWindowRoleIsolation40312 = Object.freeze({
       build: "40.3.12",
@@ -1661,6 +1671,16 @@
       administrator_restores_persisted_geometry: true,
       neutralization_persists: false,
       manager_api: "restorePersistedPresentation/neutralizePresentation"
+    });
+    globalThis.ErithWindowRoleTransition40314 = Object.freeze({
+      build: "40.3.14",
+      same_role_transition_is_noop: true,
+      boot_replay_removed: true,
+      one_window_manager_transaction_per_real_role_change: true,
+      persisted_restore_single_pass: true,
+      role_transition_forces_geometry_snapshot: false,
+      hidden_window_deck_live_rebuild: false,
+      inherited_role_isolation_40312: true
     });
     installAdminBar(manager);
     installDomainObserver(manager);

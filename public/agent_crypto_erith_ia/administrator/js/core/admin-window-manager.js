@@ -24,6 +24,8 @@
     let deck = null;
     let deckList = null;
     let deckCount = null;
+    let deckBatchDepth40314 = 0;
+    let deckBatchPending40314 = false;
     let activeDomain = clean(options.domain || document.documentElement.dataset.atlasMarketDomain || "crypto") || "crypto";
     const displayBackups = new WeakMap();
 
@@ -1158,7 +1160,15 @@
     }
 
     function updateDeck() {
+      if (deckBatchDepth40314 > 0) {
+        deckBatchPending40314 = true;
+        return;
+      }
       if (!deckList) return;
+      // 40.3.14 — the Window Deck is an operator tool, not a live mirror.
+      // When hidden, rebuilding every row only burns main-thread time.
+      // setDeckOpen(true) rebuilds it once immediately before display.
+      if (deck?.hidden) return;
       deckList.innerHTML = "";
       const entries = [...windows.values()];
       if (deckCount) deckCount.textContent = String(entries.length);
@@ -1182,6 +1192,19 @@
         row.append(name, state, focus, dock, min, hide);
         deckList.appendChild(row);
       });
+    }
+
+    function withDeckBatch40314(callback) {
+      deckBatchDepth40314 += 1;
+      try {
+        return callback();
+      } finally {
+        deckBatchDepth40314 = Math.max(0, deckBatchDepth40314 - 1);
+        if (deckBatchDepth40314 === 0 && deckBatchPending40314) {
+          deckBatchPending40314 = false;
+          updateDeck();
+        }
+      }
     }
 
     function installDeck() {
@@ -1333,6 +1356,7 @@
     }
 
     function applySnapshot(rawSnapshot, options = {}) {
+      return withDeckBatch40314(() => {
       const snapshotState = rawSnapshot && typeof rawSnapshot === "object" ? rawSnapshot : {};
       const source = snapshotState.windows && typeof snapshotState.windows === "object"
         ? snapshotState.windows
@@ -1385,7 +1409,15 @@
       document.dispatchEvent(new CustomEvent("erith:admin-window-profile-applied", {
         detail: { ids: applied.slice(), persisted: persist }
       }));
+      if (options.captureResult === false) {
+        return {
+          schema: "erith.admin.workspace.window-apply-result.v1",
+          applied: applied.slice(),
+          persisted: persist
+        };
+      }
       return snapshot();
+      });
     }
 
     function persistedPresentationSnapshot() {
@@ -1415,38 +1447,37 @@
     }
 
     function neutralizePresentation() {
-      return applySnapshot(neutralPresentationSnapshot(), { persist: false });
+      return applySnapshot(neutralPresentationSnapshot(), {
+        persist: false,
+        captureResult: false
+      });
     }
 
     function restorePersistedPresentation() {
-      // Start from native/docked presentation, then replay the exact historical
-      // persisted state without writing it back.  Keep the legacy z-order path
-      // too: switching Basic/Intermediate must not flatten the saved Admin desk.
-      neutralizePresentation();
-      windows.forEach(win => {
-        const state = getState(win.id);
-        if (state.floating === true) {
-          setFloating(win, true, false, {
-            x: Number(state.x),
-            y: Number(state.y),
-            width: Number(state.width),
-            height: Number(state.height)
-          }, { autoFitShell: false, restorePersisted: true });
-          if (Number.isFinite(Number(state.z))) {
-            zCounter = Math.max(zCounter, Number(state.z));
-            const target = win.directFixed ? win.anchor : win.shell;
-            if (target) setManagedFloatingStyle(win, target, "z-index", String(Number(state.z)));
-          }
-        }
-        if (state.minimized === true) setMinimized(win, true, false);
-        if (state.maximized === true) setMaximized(win, true, false);
-        if (state.hidden === true) setHidden(win, true, false);
+      return withDeckBatch40314(() => {
+        // 40.3.14 — one pass only. applySnapshot already normalizes any current
+        // presentation before applying the saved one. The former extra global
+        // neutralization doubled DOM moves and forced additional layout work.
+        const result = applySnapshot(persistedPresentationSnapshot(), {
+          persist: false,
+          captureResult: false
+        });
+        // z-order is intentionally replayed from the persistent source without
+        // writing anything back.
+        windows.forEach(win => {
+          if (!win.floating) return;
+          const state = getState(win.id);
+          if (!Number.isFinite(Number(state.z))) return;
+          zCounter = Math.max(zCounter, Number(state.z));
+          const target = win.directFixed ? win.anchor : win.shell;
+          if (target) setManagedFloatingStyle(win, target, "z-index", String(Number(state.z)));
+        });
+        updateDeck();
+        document.dispatchEvent(new CustomEvent("erith:admin-window-persisted-presentation-restored", {
+          detail: { persisted: false, singlePass: true }
+        }));
+        return result;
       });
-      updateDeck();
-      document.dispatchEvent(new CustomEvent("erith:admin-window-persisted-presentation-restored", {
-        detail: { persisted: false }
-      }));
-      return snapshot();
     }
 
     function init(options = {}) {
@@ -1466,7 +1497,6 @@
       } else {
         neutralizePresentation();
       }
-      updateDeck();
       return { count: windows.size, free: isFree(), domain: activeDomain };
     }
 
@@ -1542,7 +1572,12 @@
     role_isolation_api_40312: true,
     init_restore_persisted_presentation_option: true,
     neutralize_presentation_without_persist: true,
-    restore_persisted_presentation_without_persist: true
+    restore_persisted_presentation_without_persist: true,
+    batched_deck_reflow_40314: true,
+    one_deck_rebuild_per_multiwindow_transaction_40314: true,
+    hidden_deck_rebuild_deferred_40314: true,
+    role_transition_capture_snapshot_disabled_40314: true,
+    restore_persisted_single_pass_40314: true
   });
 
   window.ErithAdminWindowManager = Object.freeze({
