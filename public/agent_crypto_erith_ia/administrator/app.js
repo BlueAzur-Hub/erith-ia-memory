@@ -22445,6 +22445,14 @@ function atlasLocalFrenchCommentFallback(mode, snapshot) {
   return `#### ${mode === "market" ? "8" : mode === "top5" ? "4" : mode === "math" ? "3" : "4"}. Commentaire local borné\n\n${lines.join("\n")}`;
 }
 
+function atlasLocalNormalizeAtlasSuiteClaims(text) {
+  const replacement = "- Suite Atlas : ce rapport est une lecture individuelle du même snapshot CURRENT ; le croisement des quatre rapports est effectué après 4/4 par la conclusion Aerith-10.";
+  return String(text || "").replace(
+    /^[-*]\s+[^\n]*(?:Atlas reports|rapports Atlas)[^\n]*(?:not available|unavailable|not provided|indisponib|non disponibles?|absents?|cross[‑-]?check|cross[‑-]?checking)[^\n]*$/gmi,
+    replacement
+  );
+}
+
 function atlasLocalReportTruthPolish(mode, result, snapshot) {
   if (!result || typeof result !== "object") return result;
   let answer = atlasNormalizeAnalyticalSafetyLanguage(String(result.answer || "").replace(/\r\n?/g, "\n"));
@@ -22475,8 +22483,9 @@ function atlasLocalReportTruthPolish(mode, result, snapshot) {
     answer = answer.replace(/^[-*]\s+Événement directeur\s*:\s*.*$/mi, canonicalLine);
   }
 
+  answer = atlasLocalNormalizeAtlasSuiteClaims(answer);
   answer = atlasNormalizeAnalyticalSafetyLanguage(answer);
-  return { ...result, answer, language_normalized: true, evidence_normalized: !!evidence };
+  return { ...result, answer, language_normalized: true, evidence_normalized: !!evidence, atlas_suite_context_normalized: true };
 }
 
 function atlasLocalConclusionEvidenceSection(snapshot) {
@@ -22486,19 +22495,27 @@ function atlasLocalConclusionEvidenceSection(snapshot) {
   const lead = contract.news?.lead_event || null;
   if (!evidence) return "";
   const source = evidence.source_name || lead?.source_name || "source non précisée";
+  const sourceTruth = contract.source_truth_v2 || atlasSourceTruthBuild(contract);
+  const newsDescriptor = Array.isArray(sourceTruth?.descriptors)
+    ? sourceTruth.descriptors.find(row => row?.id === "news-sentinel")
+    : null;
   const scope = [...(Array.isArray(evidence.assets) ? evidence.assets : []), ...(Array.isArray(evidence.sectors) ? evidence.sectors : [])].filter(Boolean);
   const proofScore = Number(lead?.evidence?.score ?? lead?.evidence_score);
   const impactScore = Number(lead?.impact?.score ?? lead?.impact_score);
   const scoreParts = [];
   if (Number.isFinite(proofScore)) scoreParts.push(`preuve ${proofScore}/100`);
   if (Number.isFinite(impactScore)) scoreParts.push(`impact ${impactScore}/100`);
+  const archiveLabel = newsDescriptor
+    ? `${newsDescriptor.provider || "News Sentinel"} · ${newsDescriptor.mode || "ARCHIVE"} · ${newsDescriptor.freshness || "UNKNOWN"}`
+    : "News Sentinel · archive";
   return [
     "#### 5. News Sentinel — événement et preuve",
     "",
     `- Événement directeur : ${evidence.headline || lead?.headline || "événement non nommé"}.`,
-    `- Source : ${source} · preuve ${evidence.proof_quality || "INCONNUE"}.`,
+    `- Provenance éditoriale : ${source} · conservée dans ${archiveLabel}.`,
+    "- Disponibilité : l'état du collecteur/archive et la disponibilité réseau directe de la source éditoriale sont deux faits distincts ; aucune disponibilité directe n'est déduite sans test dédié.",
+    `- Preuve : ${evidence.proof_quality || "INCONNUE"} · confiance ${evidence.confidence || "À_VÉRIFIER"} · ${Number(evidence.independent_sources || 0)} source(s) indépendante(s) sur ${Number(evidence.reported_sources || 0)} reprise(s).`,
     `- Impact potentiel : ${evidence.impact_potential || "INCONNU"}${scope.length ? ` · actifs/secteurs : ${scope.join(", ")}` : " · portée à qualifier"}.`,
-    `- Confiance : ${evidence.confidence || "À_VÉRIFIER"} · ${Number(evidence.independent_sources || 0)} source(s) indépendante(s) sur ${Number(evidence.reported_sources || 0)} reprise(s).`,
     scoreParts.length ? `- Scores source secondaires : ${scoreParts.join(" · ")} · ils ne remplacent pas la taxonomie preuve / impact / confiance.` : "- Aucun score source secondaire disponible.",
     "- Action : observation uniquement ; aucun ordre automatique.",
     "- La proximité temporelle entre une actualité et un mouvement de prix ne démontre pas la causalité."
@@ -22522,7 +22539,15 @@ async function atlasLocalReportRequestReliable(mode, snapshot, token) {
         mode,
         snapshot,
         response_language: "fr-FR",
-        language_lock: "french_only_except_standard_crypto_acronyms"
+        language_lock: "french_only_except_standard_crypto_acronyms",
+        report_suite_context: {
+          schema: "atlas_report_suite_context_v1",
+          current_mode: mode,
+          planned_modes: ATLAS_LOCAL_REPORT_MODES.slice(),
+          reports_are_produced_sequentially: true,
+          cross_report_review_stage: "aerith_conclusion_after_4_4",
+          rule: "Un rapport Atlas individuel ne doit pas déclarer les autres rapports indisponibles ; le croisement 4/4 appartient à la conclusion Aerith."
+        }
       });
       if (token !== atlasLocalReportsState.runToken) return null;
       const polished = atlasLocalReportTruthPolish(mode, result, snapshot);
@@ -45872,14 +45897,26 @@ function atlasSourceTruthBuild(contract) {
     limitations: Number(row?.points || 0) < 2 ? ["Série insuffisante"] : []
   })));
   const news = contract?.news || {};
+  const newsLead = news?.lead_event || null;
+  const newsArchiveAvailable = !!(newsLead && (news.archive_time || newsLead.event_time));
+  const newsCollectorStatus = String(news.status || "").trim();
+  const newsLimitations = [];
+  if (!newsLead) newsLimitations.push("Aucun événement directeur");
+  if (newsArchiveAvailable && newsCollectorStatus && !/^(ready|ok|loaded)$/i.test(newsCollectorStatus)) {
+    newsLimitations.push(`État du collecteur au moment du snapshot : ${newsCollectorStatus}; l'événement reste disponible via l'archive News Sentinel.`);
+  }
+  if (newsLead?.source_name) {
+    newsLimitations.push(`Provenance éditoriale déclarée par l'archive : ${newsLead.source_name}; Source Truth ne déduit pas la disponibilité réseau directe de cette source.`);
+  }
   descriptors.push(atlasSourceTruthDescriptor({
     id: "news-sentinel",
-    provider: news?.lead_event?.source_name || "News Sentinel",
-    rawMode: news.status === "ready" ? "archive-composite" : news.status,
-    status: news.status,
-    timestamp: news.archive_time || news?.lead_event?.event_time,
+    provider: "News Sentinel",
+    rawMode: newsArchiveAvailable ? "archive-composite" : newsCollectorStatus,
+    status: newsArchiveAvailable ? "archive-ready" : newsCollectorStatus,
+    timestamp: news.archive_time || newsLead?.event_time,
     role: "Veille d'événements et preuves",
-    limitations: news?.lead_event ? [] : ["Aucun événement directeur"]
+    instrument: newsLead?.source_name ? `Source éditoriale déclarée : ${newsLead.source_name}` : null,
+    limitations: newsLimitations
   }));
   descriptors.push(atlasSourceTruthDescriptor({
     id: "coinbase-advanced-trade",
@@ -46195,7 +46232,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.23";
+const ATLAS_BUILD = "40.3.24";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
