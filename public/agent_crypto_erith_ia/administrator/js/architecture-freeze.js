@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.12 — PARKER LEWIS CAN'T LOSE · ROLE ISOLATION + VIEWPORT OWNERSHIP RECOVERY LOCK
+     40.3.13 — PARKER LEWIS CAN'T LOSE · CANONICAL FAMILY 04 HIERARCHY + NATIVE DOCK FLOW LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.12";
+  const BUILD_CURRENT = "40.3.13";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -447,6 +447,10 @@
   }
 
   function family04TrailingBoundaryContract40307() {
+    if (document.body?.classList?.contains("atlas-family04-canonical-hierarchy-40313") === true) {
+      const current = family04CanonicalHierarchyContract40313();
+      return { ok: current.ok, detail:`superseded-by-40.3.13 · ${current.detail}` };
+    }
     const bodyOk = document.body?.classList?.contains("atlas-family04-trailing-boundary-40307") === true;
     const shell = document.querySelector("main.shell");
     const direct = node => !!node && node.parentElement === shell;
@@ -477,6 +481,10 @@
   }
 
   function family04OwnershipOrderContract40308() {
+    if (document.body?.classList?.contains("atlas-family04-canonical-hierarchy-40313") === true) {
+      const current = family04CanonicalHierarchyContract40313();
+      return { ok: current.ok, detail:`superseded-by-40.3.13 · ${current.detail}` };
+    }
     const bodyOk = document.body?.classList?.contains("atlas-family04-owner-order-40308") === true;
     const shell = document.querySelector("main.shell");
     const direct = node => !!node && node.parentElement === shell;
@@ -509,6 +517,46 @@
     return {
       ok: bodyOk && domBoundary && ownerBoundary,
       detail:`body=${String(bodyOk)} · 03=${owner03?.nodes?.length || 0}/5 · 04=${owner04?.nodes?.length || 0}/7 · physical>04>Missions=${String(domBoundary)} · exact-owner-order=${String(ownerBoundary)} · disjoint=${String(disjoint)}`
+    };
+  }
+
+  function family04CanonicalHierarchyContract40313() {
+    const bodyOk = document.body?.classList?.contains("atlas-family04-canonical-hierarchy-40313") === true;
+    const shell = document.querySelector("main.shell");
+    const direct = node => node instanceof HTMLElement && node.parentElement === shell;
+    const h03 = document.querySelector("section.atlas-layout-family-operations");
+    const h04 = document.querySelector("section.atlas-layout-family-system");
+    const storage = document.getElementById("atlasStorageHealth40198");
+    const missions = document.getElementById("missions-vie");
+    const keys03 = ["situation","questionnaire","briefing","planning"];
+    const keys04 = ["simulation","commandes","backend","safety","physical-security"];
+    const members03 = keys03.map(key => shell?.querySelector?.(`:scope > details[data-collapse-key="${key}"]`) || null);
+    const members04 = [storage, ...keys04.map(key => shell?.querySelector?.(`:scope > details[data-collapse-key="${key}"]`) || null)];
+    const expected03 = [h03, ...members03];
+    const expected04 = [h04, ...members04];
+    const owner03 = globalThis.ErithAdministratorWindows?.getWindow?.("preparation-operations");
+    const owner04 = globalThis.ErithAdministratorWindows?.getWindow?.("experimentation-systeme");
+    const sameOrder = (actual, expected) => Array.isArray(actual)
+      && actual.length === expected.length
+      && actual.every((node, index) => node === expected[index]);
+    const dom03 = expected03.every(direct)
+      && members03.every(Boolean)
+      && members03[0]?.previousElementSibling === h03
+      && members03[members03.length - 1]?.nextElementSibling === h04;
+    const dom04 = expected04.every(direct)
+      && members04.every(Boolean)
+      && h04?.nextElementSibling === storage
+      && members04.slice(0, -1).every((node, index) => node?.nextElementSibling === members04[index + 1])
+      && members04[members04.length - 1]?.nextElementSibling === missions;
+    const ownership = sameOrder(owner03?.nodes, expected03)
+      && sameOrder(owner04?.nodes, expected04)
+      && owner03?.anchor === h03
+      && owner04?.anchor === h04
+      && owner03.nodes.every(node => !expected04.includes(node))
+      && owner04.nodes.every(node => !expected03.includes(node));
+    return {
+      ok: bodyOk && dom03 && dom04 && ownership,
+      detail:`body=${String(bodyOk)} · 03=header+4:${String(dom03)} · 04=header+6:${String(dom04)} · native-owner-order=${String(ownership)} · 04>Storage>...>Physical>Missions=${String(dom04)}`
     };
   }
 
@@ -561,13 +609,18 @@
     const missions = document.getElementById("missions-vie");
     const intermediateHidden = globalThis.ATLAS_V2_INTERMEDIATE_HIDDEN_IDS || null;
     const direct = node => node instanceof HTMLElement && node.parentElement === shell;
-    const boundary = direct(planning) && direct(storage) && planning.nextElementSibling === storage
-      && direct(physical) && direct(family04) && physical.nextElementSibling === family04
-      && direct(missions) && family04.nextElementSibling === missions;
+    const canonical40313 = document.body?.classList?.contains("atlas-family04-canonical-hierarchy-40313") === true;
+    const boundary = canonical40313
+      ? direct(planning) && direct(family04) && planning.nextElementSibling === family04
+        && direct(storage) && family04.nextElementSibling === storage
+        && direct(physical) && direct(missions) && physical.nextElementSibling === missions
+      : direct(planning) && direct(storage) && planning.nextElementSibling === storage
+        && direct(physical) && direct(family04) && physical.nextElementSibling === family04
+        && direct(missions) && family04.nextElementSibling === missions;
     const missionsVisibleStructurally = !intermediateHidden || !intermediateHidden.has?.("missions-vie");
     return {
       ok: bodyOk && boundary && missionsVisibleStructurally,
-      detail:`body=${String(bodyOk)} · Plan>Storage=${String(planning?.nextElementSibling === storage)} · Physical>04>Missions=${String(physical?.nextElementSibling === family04 && family04?.nextElementSibling === missions)} · intermediate-missions-intro=${String(missionsVisibleStructurally)}`
+      detail:`body=${String(bodyOk)} · hierarchy=${canonical40313 ? "Plan>04>Storage>...>Physical>Missions" : "Plan>Storage>...>Physical>04>Missions"}:${String(boundary)} · intermediate-missions-intro=${String(missionsVisibleStructurally)}`
     };
   }
 
@@ -1535,12 +1588,13 @@
       check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
       check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
       check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
-      check("Parcours · frontière opérateur Sécurité physique→04→Missions 40.3.07", family04TrailingBoundaryContract40307().ok === true, family04TrailingBoundaryContract40307().detail),
-      check("Fenêtres · propriété 03/04 disjointe + ordre 04 trailing 40.3.08", family04OwnershipOrderContract40308().ok === true, family04OwnershipOrderContract40308().detail),
+      check("Parcours · frontière 40.3.07 superseded par hiérarchie canonique 40.3.13", family04TrailingBoundaryContract40307().ok === true, family04TrailingBoundaryContract40307().detail),
+      check("Fenêtres · propriété 03/04 40.3.08 superseded par ordre natif 40.3.13", family04OwnershipOrderContract40308().ok === true, family04OwnershipOrderContract40308().detail),
       check("Navigation · intention Atlas/Oracle restaure la famille réduite 40.3.09", essentialNavigationContract40309().ok === true, essentialNavigationContract40309().detail),
       check("Présentation · frontière 03/04 + Missions structurelle 40.3.09", adminPresentationAuthorityContract40309().ok === true, adminPresentationAuthorityContract40309().detail),
       check("Viewport passif · Market/Spot sans restauration document + Missions privées 40.3.11", passiveViewportRoleContract40311().ok === true, passiveViewportRoleContract40311().detail),
       check("Rôles + viewport · isolation Basic/Intermédiaire et propriétaire unique 40.3.12", roleIsolationViewportOwnershipContract40312().ok === true, roleIsolationViewportOwnershipContract40312().detail),
+      check("Hiérarchie 03/04 · 04 précède ses membres + flux docké natif 40.3.13", family04CanonicalHierarchyContract40313().ok === true, family04CanonicalHierarchyContract40313().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),

@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.12";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ROLE ISOLATION + VIEWPORT OWNERSHIP RECOVERY LOCK";
+  const ADMIN_BUILD = "40.3.13";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · CANONICAL FAMILY 04 HIERARCHY + NATIVE DOCK FLOW LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -390,9 +390,9 @@
       .map(node => entry(node));
   }
 
-  // 40.3.08 — hard semantic ownership boundary for the two lower Administrator families.
+  // 40.3.13 — hard semantic ownership boundary for the two lower Administrator families.
   // The 03 owner is explicit and can never absorb System/Experiment nodes by proximity.
-  // The 04 owner follows native DOM order: six System/Experiment members first, trailing 04 boundary last.
+  // The 04 owner follows one native truth: 04 header first, then its six owned members.
   const ADMIN_OPERATION_KEYS_40308 = new Set([
     "situation", "questionnaire", "briefing", "planning"
   ]);
@@ -412,16 +412,16 @@
       .map(node => entry(node));
   }
 
-  function systemEntriesTrailing40308() {
+  function systemEntriesCanonical40313() {
     const shell = q("main.shell");
     const header = q(".atlas-layout-family-system");
+    const storage = byId("atlasStorageHealth40198");
     if (!shell || !(header instanceof HTMLElement)) return [];
-    return [...shell.children]
-      .filter(node => node instanceof HTMLElement && (
-        node === header
-        || node.id === "atlasStorageHealth40198"
-        || (node instanceof HTMLDetailsElement && ADMIN_SYSTEM_KEYS_40308.has(String(node.dataset.collapseKey || "")))
-      ))
+    const details = [...ADMIN_SYSTEM_KEYS_40308]
+      .map(key => shell.querySelector(`:scope > details[data-collapse-key="${key}"]`))
+      .filter(node => node instanceof HTMLDetailsElement);
+    return [header, storage, ...details]
+      .filter((node, index, list) => node instanceof HTMLElement && node.parentElement === shell && list.indexOf(node) === index)
       .map(node => entry(node));
   }
 
@@ -564,10 +564,10 @@
         id: "experimentation-systeme",
         title: "Expérimentation & système",
         tone: "orange",
-        // 40.3.08 — explicit trailing-owner order matches the real docked DOM exactly:
-        // Storage + Simulation + Commands + Backend + Safety + Physical Security -> 04 boundary.
-        resolveEntries: () => systemEntriesTrailing40308(),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[nodes.length - 1],
+        // 40.3.13 — canonical native order: 04 header -> Storage -> Simulation -> Commands -> Backend -> Safety -> Physical Security.
+        // Docked mode therefore keeps the family in normal document flow; only an explicit detach may move the real nodes.
+        resolveEntries: () => systemEntriesCanonical40313(),
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {
