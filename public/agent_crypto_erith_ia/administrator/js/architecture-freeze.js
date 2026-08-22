@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.20 — PARKER LEWIS CAN'T LOSE · CANONICAL 04 FLOW + NATIVE FLOATING AUTOFIT RECOVERY LOCK
+     40.3.21 — PARKER LEWIS CAN'T LOSE · TECHNICAL READING + COMMAND CENTER VISUAL CONTINUITY RECOVERY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.20";
+  const BUILD_CURRENT = "40.3.21";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -605,21 +605,55 @@
     };
   }
 
-  function technicalLoadPriorityContract40307() {
-    const contract = globalThis.ErithTechnicalLoadPriority40307;
+  function technicalImageContinuityContract40321() {
+    const contract = globalThis.ErithTechnicalImageContinuity40321 || globalThis.ErithTechnicalLoadPriority40307;
     const portraitCount = document.querySelectorAll("#detailPanel .admin-tech-portrait-r3").length;
     const noChartPreloadDuplicate = !document.querySelector('link[rel="preload"][href*="admin-chart-office.png"]');
+    const bodyOk = document.body?.classList?.contains("atlas-tech-image-continuity-40321") === true;
     return {
-      ok: contract?.build === "40.3.07"
+      ok: bodyOk
+        && contract?.build === "40.3.21"
+        && contract?.parent_build === "40.3.20"
         && contract?.saved_detail_state_preserved === true
-        && contract?.collapsed_boot_defers_asset === true
+        && contract?.collapsed_boot_defers_asset === false
+        && contract?.collapsed_boot_keeps_asset === true
         && contract?.open_boot_loads_asset === true
         && contract?.technical_fetch_priority_open === "auto"
         && contract?.technical_fetch_priority_collapsed === "low"
+        && contract?.technical_loading_collapsed === "eager"
+        && contract?.auto_boundary_updates_when_collapsed === true
+        && contract?.private_image_click_preserved === true
+        && contract?.private_image_indexeddb_preserved === true
+        && contract?.random_library_count === 9
+        && contract?.single_src_authority_preserved === true
+        && contract?.observer_added === false
+        && contract?.timer_added === false
+        && contract?.geometry_changed === false
+        && contract?.window_manager_changed === false
         && contract?.chart_background_duplicate_request_added === false
         && noChartPreloadDuplicate
         && portraitCount === 1,
-      detail:`contract=${contract?.build || "—"} · saved-state=${String(contract?.saved_detail_state_preserved === true)} · collapsed-defer=${String(contract?.collapsed_boot_defers_asset === true)} · portrait=${portraitCount}/1 · extra-chart-preload=${String(!noChartPreloadDuplicate)}`
+      detail:`body=${String(bodyOk)} · contract=${contract?.build || "—"} · saved-state=${String(contract?.saved_detail_state_preserved === true)} · reduced-image=${String(contract?.collapsed_boot_keeps_asset === true)} · collapsed-defer=${String(contract?.collapsed_boot_defers_asset === true)} · priority=${String(contract?.technical_fetch_priority_collapsed || "—")} · RND=${String(contract?.random_library_count || 0)} · portrait=${portraitCount}/1`
+    };
+  }
+
+  function commandCenterPortalContract40321() {
+    const drawer = byId("atlasAdminCenterDrawer");
+    const styleNode = document.querySelector("style[data-atlas-command-center-portal-40321]");
+    const css = String(styleNode?.textContent || "");
+    const bodyOk = document.body?.classList?.contains("atlas-command-center-portal-40321") === true;
+    const portalParentOk = !!drawer && drawer.parentElement === document.body;
+    const computedPosition = drawer ? String(getComputedStyle(drawer).position || "") : "";
+    const fixedOwnerDeclared = css.includes("body > #atlasAdminCenterDrawer.atlas-admin-command-drawer")
+      && css.includes("admin-command-observatory-r3")
+      && css.includes("position: fixed !important")
+      && css.includes("z-index: 2000 !important");
+    return {
+      ok: bodyOk
+        && portalParentOk
+        && fixedOwnerDeclared
+        && computedPosition === "fixed",
+      detail:`body=${String(bodyOk)} · body-portal=${String(portalParentOk)} · owner=${String(fixedOwnerDeclared)} · position=${computedPosition || "—"}`
     };
   }
 
@@ -1636,7 +1670,8 @@
       check("Performance · transition rôle unique + reflow Window Deck borné 40.3.14", roleTransitionPerformanceContract40314().ok === true, roleTransitionPerformanceContract40314().detail),
       check("Surface Firefox héritée · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract40315().ok === true, surfacePerformanceContract40315().detail),
       check("Performance · Bridge passif + placeholders famille compacts 40.3.17", bridgePassivePerformanceContract40317().ok === true, bridgePassivePerformanceContract40317().detail),
-      check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
+      check("Lecture Technique · image conservée en vue réduite + priorité basse 40.3.21", technicalImageContinuityContract40321().ok === true, technicalImageContinuityContract40321().detail),
+      check("Command Center · portail fixe au body + atmosphère non propriétaire 40.3.21", commandCenterPortalContract40321().ok === true, commandCenterPortalContract40321().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
       check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
