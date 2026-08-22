@@ -706,6 +706,9 @@ function atlasStrictTimestamp(value) {
   return Number.isFinite(date.getTime()) ? date.toISOString() : null;
 }
 
+// 40.3.11/40.3.12 — canonical role visibility.
+// Intermediate keeps the structural Missions marker but the five detailed
+// programmes remain Administrator-only.
 const ATLAS_V2_INTERMEDIATE_HIDDEN_IDS = new Set([
   "fonds-erith-ia",
   "association-erith-ia",
@@ -899,10 +902,15 @@ function atlasCaptureUiContinuity() {
   };
 }
 
-function atlasRestoreUiContinuity(snapshot) {
+function atlasRestoreUiContinuity(snapshot, options = {}) {
   if (!snapshot) return;
+  // 40.3.10 — PASSIVE VIEWPORT AUTHORITY.
+  // Live market/spot patches must never fight a human wheel/touch scroll.
+  // Browser scroll anchoring owns passive document continuity; this helper only
+  // restores document coordinates when a caller explicitly requests it.
+  const restoreDocumentScroll = options.restoreDocumentScroll === true;
   requestAnimationFrame(() => {
-    window.scrollTo(snapshot.windowX, snapshot.windowY);
+    if (restoreDocumentScroll) window.scrollTo(snapshot.windowX, snapshot.windowY);
     const tableShell = els.marketRows?.closest?.(".table-wrap, .market-table-wrap, [data-scroll-shell]") || null;
     if (tableShell) {
       tableShell.scrollLeft = snapshot.tableX;
@@ -923,6 +931,16 @@ function atlasRestoreUiContinuity(snapshot) {
     }
   });
 }
+
+globalThis.ErithPassiveViewportAuthority40310 = Object.freeze({
+  build: "40.3.10",
+  passive_market_patch_document_scroll: false,
+  passive_spot_patch_document_scroll: false,
+  browser_scroll_anchoring_kept: true,
+  table_scroll_preserved: true,
+  focused_control_prevent_scroll: true,
+  user_scroll_authority: true
+});
 
 function commandError(message, details = {}) { return { ok: false, error: message, ...details };
 }
@@ -1005,29 +1023,18 @@ function initAtlasCollapsibleLayout() {
     });
   });
 
-  const openTargetFromHash = () => {
-    const hash = String(window.location.hash || "").trim();
-    if (!hash || hash === "#") return;
-    let target = null;
-    try { target = document.querySelector(hash); } catch {}
-    if (!target) return;
-    const container = target.closest(".atlas-collapse");
-    if (container) {
-      container.open = true;
-      const icon = container.querySelector(".atlas-collapse-icon");
-      if (icon) icon.textContent = "▼";
-    }
-    const behavior = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ? "auto" : "smooth";
-    const scrollTarget = () => target.scrollIntoView({ behavior, block: "start" });
-    requestAnimationFrame(scrollTarget);
-    window.setTimeout(scrollTarget, 220);
-  };
-
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener("click", () => setTimeout(openTargetFromHash, 30));
+  // 40.3.12 — VIEWPORT OWNERSHIP CONSOLIDATION.
+  // The historical hash router used to open a target, scroll once on the next
+  // frame, then scroll again +220 ms.  It is deliberately retired here.
+  // Explicit operator navigation is owned by the modern V2/essential routers;
+  // boot, hash restoration and passive recomposition never drive the document.
+  globalThis.ErithLegacyHashRouter40312 = Object.freeze({
+    build: "40.3.12",
+    retired: true,
+    automatic_hash_scroll: false,
+    delayed_second_scroll: false,
+    explicit_navigation_owned_by_modern_router: true
   });
-  window.addEventListener("hashchange", openTargetFromHash);
-  openTargetFromHash();
 }
 
 function atlasInitNavigationSpy() {
@@ -1144,7 +1151,10 @@ function atlasAccessOpen(pendingHash = "") {
   atlasAccessSyncDialog();
   if (dialog?.showModal) dialog.showModal();
   else dialog?.setAttribute("open", "");
-  window.setTimeout(() => document.getElementById("atlasAccessSecret")?.focus(), 30);
+  window.setTimeout(() => {
+    const secret = document.getElementById("atlasAccessSecret");
+    try { secret?.focus({ preventScroll: true }); } catch {}
+  }, 30);
 }
 
 function atlasAccessClose() {
@@ -1207,11 +1217,12 @@ async function atlasAccessSubmit(event) {
     atlasV2ApplyMode("advanced", { persist: false });
     const pending = atlasAccessPendingHash;
     atlasAccessPendingHash = "";
-    if (pending) {
-      window.setTimeout(() => atlasV2OpenAdvancedForTarget(pending), 60);
-    } else {
-      window.setTimeout(() => atlasAdminOpenWorkspace({ source: "unlock" }), 60);
-    }
+    // One post-auth transaction only.  Pending explicit navigation may frame its
+    // requested target once; a plain unlock restores workspace without scrolling.
+    window.requestAnimationFrame(() => {
+      if (pending) atlasV2OpenAdvancedForTarget(pending);
+      else atlasAdminOpenWorkspace({ source: "unlock-40312" });
+    });
     return true;
   } catch (error) {
     atlasAccessSetStatus(error?.message || "Échec du verrou local.", "error");
@@ -1232,8 +1243,9 @@ function atlasAccessLock() {
   atlasV2WriteSetting(ATLAS_V2_MODE_KEY, returnMode);
   atlasV2SyncShareableUrl(returnMode);
   atlasV2ApplyMode(returnMode, { persist: false, silentAuth: true });
-  try { history.replaceState(null, "", `${location.pathname}${location.search}#analyste`); } catch {}
-  document.getElementById("analyste")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Locking changes role only; it is not a navigation request.  Clear the stale
+  // Administrator anchor without moving the Firefox document viewport.
+  try { history.replaceState(null, "", `${location.pathname}${location.search}`); } catch {}
 }
 
 function atlasInitLocalAccess() {
@@ -2029,6 +2041,38 @@ function atlasV2ApplySectionVisibility(mode) {
   }
 }
 
+function atlasV2ApplySemanticRoleIsolation40312(mode) {
+  const shell = document.querySelector("main.shell");
+  if (!shell) return 0;
+  const publicMode = mode === "essential";
+  const semanticMembers = [...shell.children].filter(node =>
+    node instanceof HTMLElement
+      && (node.classList.contains("atlas-layout-family") || !!String(node.dataset.layoutFamily || "").trim())
+  );
+
+  for (const node of semanticMembers) {
+    if (publicMode) {
+      node.dataset.atlasRoleIsolation40312 = "public-blocked";
+      node.hidden = true;
+      node.setAttribute("aria-hidden", "true");
+    } else if (node.dataset.atlasRoleIsolation40312 === "public-blocked") {
+      // SectionVisibility already decided whether this node is allowed in the
+      // target mode.  Remove only our Basic-view marker; never override the
+      // Intermediate/Administrator visibility decision here.
+      delete node.dataset.atlasRoleIsolation40312;
+    }
+  }
+  return semanticMembers.length;
+}
+
+globalThis.ErithRoleIsolation40312 = Object.freeze({
+  build: "40.3.12",
+  public_semantic_family_block: true,
+  intermediate_private_missions_hidden: true,
+  administrator_workspace_persistence_preserved: true,
+  local_storage_rewrite_for_neutral_view: false
+});
+
 function atlasV2SyncMixedSectionLabels(mode) {
   const advanced = atlasV2IsExpandedMode(mode);
   setText(
@@ -2152,6 +2196,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (intermediateToggle) intermediateToggle.setAttribute("aria-label", "Ouvrir la vue intermédiaire");
 
   atlasV2ApplySectionVisibility(next);
+  atlasV2ApplySemanticRoleIsolation40312(next);
   atlasV2SyncMixedSectionLabels(next);
 
   const liveSourcesCollapse = document.getElementById("liveSourcesCollapse");
@@ -2262,7 +2307,7 @@ function atlasInitV2Shell() {
       atlasV2SyncShareableUrl("advanced");
       atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
       atlasV2ApplyMode("advanced", { persist: false, silentAuth: true });
-      window.setTimeout(() => atlasAdminOpenWorkspace({ source: "owner-return" }), 40);
+      window.requestAnimationFrame(() => atlasAdminOpenWorkspace({ source: "owner-return-40312" }));
     } else {
       atlasAccessOpen();
     }
@@ -2271,13 +2316,11 @@ function atlasInitV2Shell() {
   document.getElementById("btnBasicViewToggle")?.addEventListener("click", () => {
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
     atlasV2ApplyMode("essential", { persist: false, syncUrl: true });
-    window.requestAnimationFrame(() => document.getElementById("accueil")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   });
 
   document.getElementById("btnIntermediateViewToggle")?.addEventListener("click", () => {
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "intermediate");
     atlasV2ApplyMode("intermediate", { persist: false, syncUrl: true });
-    window.requestAnimationFrame(() => document.getElementById("accueil")?.scrollIntoView({ behavior: "smooth", block: "start" }));
   });
 
   document.querySelectorAll("[data-math-position]").forEach(button => {
@@ -2364,7 +2407,7 @@ function atlasInitV2Shell() {
     atlasV2OpenAdvancedForTarget(hash);
   });
 
-  window.addEventListener("hashchange", () => atlasV2HandleHashTarget({ scroll: true }));
+  window.addEventListener("hashchange", () => atlasV2HandleHashTarget({ scroll: false }));
   let selectorScheduled = false;
   const scheduleSelectorSync = () => {
     if (selectorScheduled) return;
@@ -14456,7 +14499,7 @@ function atlasPatchSpotDom(changedIds = []) {
   atlasRenderBrokerStrip();
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
   atlasEnsureMarketDomIntegrity();
-  atlasRestoreUiContinuity(continuity);
+  atlasRestoreUiContinuity(continuity, { restoreDocumentScroll: false });
 }
 
 function atlasPatchMarketSnapshotDom() {
@@ -14477,7 +14520,7 @@ function atlasPatchMarketSnapshotDom() {
   renderSimulation();
   atlasRefreshSelectedDetailOnly();
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
-  atlasRestoreUiContinuity(continuity);
+  atlasRestoreUiContinuity(continuity, { restoreDocumentScroll: false });
 }
 
 function atlasBrokerSeedSpot(coin) {
@@ -22188,7 +22231,6 @@ function atlasLocalReportStoreCore(mode, result, snapshot, options = {}) {
 function atlasAnalysisViewportAdapt40293(card, phase) {
   if (!card) return false;
   const hub = document.getElementById("local-ai-hub");
-  const owner = card.closest?.("details.atlas-local-ai-collapse");
   const running = ["atlas", "nox", "aerith"].includes(String(phase || ""));
   hub?.classList.toggle("atlas-analysis-running-40293", running);
 
@@ -22198,18 +22240,10 @@ function atlasAnalysisViewportAdapt40293(card, phase) {
     }
     return false;
   }
-  if (card.dataset.viewportFocused40293 === "1") return true;
-  card.dataset.viewportFocused40293 = "1";
-  if (owner && !owner.open) owner.open = true;
 
-  window.requestAnimationFrame(() => {
-    try {
-      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
-      card.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start", inline: "nearest" });
-    } catch (_) {
-      try { card.scrollIntoView(true); } catch (_) {}
-    }
-  });
+  // 40.3.12 — CURRENT computes and renders; it never drives the camera or
+  // opens its owner.  Only a deliberate operator navigation may do that.
+  card.dataset.viewportFocused40293 = "1";
   return true;
 }
 
@@ -46147,7 +46181,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.09";
+const ATLAS_BUILD = "40.3.12";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47915,10 +47949,17 @@ window.setTimeout(atlasR3EnsureMathPresence, 0);
 
 window.setTimeout(atlasR3EnsureMathPresence, 900);
 
-window.addEventListener("atlas:v2mode", event => {
-  if (event?.detail?.mode === "advanced" && atlasAdminForceWorkspaceIsActive()) {
-    window.setTimeout(() => atlasAdminOpenWorkspace({ source: "mode-event" }), 0);
-  }
+globalThis.ErithViewportOwnership40312 = Object.freeze({
+  build: "40.3.12",
+  mode_change_document_scroll: false,
+  authentication_document_scroll: false,
+  lock_document_scroll: false,
+  atlas_current_document_scroll: false,
+  legacy_hash_router_document_scroll: false,
+  hashchange_second_scroll: false,
+  passive_market_document_scroll: false,
+  explicit_operator_navigation_single_frame: true,
+  command_center_internal_scroll_allowed: true
 });
 
 atlasScannerCollectorInit();

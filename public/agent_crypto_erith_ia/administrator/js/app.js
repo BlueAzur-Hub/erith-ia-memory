@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.09";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ADMIN PRESENTATION AUTHORITY LOCK";
+  const ADMIN_BUILD = "40.3.12";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ROLE ISOLATION + VIEWPORT OWNERSHIP RECOVERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1578,6 +1578,28 @@
     return true;
   }
 
+  function presentationRole40312() {
+    const role = String(document.body?.dataset?.atlasRole || document.documentElement?.dataset?.atlasRole || "").trim();
+    if (["public", "operator", "administrator"].includes(role)) return role;
+    try {
+      const owner = sessionStorage.getItem("agent_crypto_local_access_session_v1") === "owner";
+      const queryIntermediate = new URL(window.location.href).searchParams.get("view") === "intermediate";
+      if (queryIntermediate) return "operator";
+      const storedMode = localStorage.getItem("agent_crypto_erith_ia_v2_interface_mode") || "essential";
+      return owner && storedMode === "advanced" ? "administrator" : storedMode === "intermediate" ? "operator" : "public";
+    } catch {
+      return "public";
+    }
+  }
+
+  function syncWindowPresentationRole40312(manager, role = presentationRole40312()) {
+    if (!manager) return role;
+    if (role === "administrator") manager.restorePersistedPresentation?.();
+    else manager.neutralizePresentation?.();
+    document.documentElement.dataset.adminWindowPresentationRole40312 = role;
+    return role;
+  }
+
   function boot() {
     installGlobalVersionIdentity();
     keepGlobalVersionVisible();
@@ -1607,7 +1629,9 @@
       definitions: nativeDefinitions()
     });
 
-    const state = manager.init();
+    const bootRole40312 = presentationRole40312();
+    const state = manager.init({ restorePersistedPresentation: bootRole40312 === "administrator" });
+    syncWindowPresentationRole40312(manager, bootRole40312);
     installMathCoreInlineWindowControls40148();
 
     // 40.1.48 — restore guard for compact bars.  Some stacked Administrator
@@ -1624,6 +1648,20 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
+    window.addEventListener("atlas:v2mode", event => {
+      const role = ["public", "operator", "administrator"].includes(event?.detail?.role)
+        ? event.detail.role
+        : presentationRole40312();
+      syncWindowPresentationRole40312(manager, role);
+    });
+    globalThis.ErithWindowRoleIsolation40312 = Object.freeze({
+      build: "40.3.12",
+      basic_restores_admin_geometry: false,
+      intermediate_restores_admin_geometry: false,
+      administrator_restores_persisted_geometry: true,
+      neutralization_persists: false,
+      manager_api: "restorePersistedPresentation/neutralizePresentation"
+    });
     installAdminBar(manager);
     installDomainObserver(manager);
     syncDomainWindows(manager);

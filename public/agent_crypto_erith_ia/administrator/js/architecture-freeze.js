@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.09 — PARKER LEWIS CAN'T LOSE · ADMIN PRESENTATION AUTHORITY LOCK
+     40.3.12 — PARKER LEWIS CAN'T LOSE · ROLE ISOLATION + VIEWPORT OWNERSHIP RECOVERY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.09";
+  const BUILD_CURRENT = "40.3.12";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -568,6 +568,68 @@
     return {
       ok: bodyOk && boundary && missionsVisibleStructurally,
       detail:`body=${String(bodyOk)} · Plan>Storage=${String(planning?.nextElementSibling === storage)} · Physical>04>Missions=${String(physical?.nextElementSibling === family04 && family04?.nextElementSibling === missions)} · intermediate-missions-intro=${String(missionsVisibleStructurally)}`
+    };
+  }
+
+  function passiveViewportRoleContract40311() {
+    const contract = globalThis.ErithPassiveViewportAuthority40310;
+    const intermediateHidden = globalThis.ATLAS_V2_INTERMEDIATE_HIDDEN_IDS || null;
+    const missionIds = ["fonds-erith-ia", "association-erith-ia", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"];
+    const missionsHidden = missionIds.every(id => intermediateHidden?.has?.(id));
+    return {
+      ok: contract?.passive_market_patch_document_scroll === false
+        && contract?.passive_spot_patch_document_scroll === false
+        && contract?.browser_scroll_anchoring_kept === true
+        && contract?.table_scroll_preserved === true
+        && contract?.focused_control_prevent_scroll === true
+        && contract?.user_scroll_authority === true
+        && missionsHidden,
+      detail:`passive-scroll=${String(contract?.passive_market_patch_document_scroll === false && contract?.passive_spot_patch_document_scroll === false)} · missions-hidden=${String(missionsHidden)}`
+    };
+  }
+
+  function roleIsolationViewportOwnershipContract40312() {
+    const bodyOk = document.body?.classList?.contains("atlas-role-isolation-viewport-ownership-40312") === true;
+    const role = globalThis.ErithRoleIsolation40312;
+    const windows = globalThis.ErithWindowRoleIsolation40312;
+    const viewport = globalThis.ErithViewportOwnership40312;
+    const legacyHash = globalThis.ErithLegacyHashRouter40312;
+    const wm = globalThis.ErithAdminWindowManager?.contract;
+    const missionIds = ["fonds-erith-ia", "association-erith-ia", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"];
+    const missionsHidden = missionIds.every(id => globalThis.ATLAS_V2_INTERMEDIATE_HIDDEN_IDS?.has?.(id));
+    const leakedSemanticNodes = [
+      document.getElementById("atlasBreakoutContext40271"),
+      document.getElementById("news-market-explanation"),
+      document.getElementById("atlasMultiCollectorOperator")?.closest?.("[data-layout-family]")
+    ].filter(Boolean);
+    const semanticTagged = leakedSemanticNodes.length === 3 && leakedSemanticNodes.every(node => !!String(node.dataset.layoutFamily || "").trim());
+    return {
+      ok: bodyOk
+        && role?.build === "40.3.12"
+        && role?.public_semantic_family_block === true
+        && role?.local_storage_rewrite_for_neutral_view === false
+        && windows?.build === "40.3.12"
+        && windows?.basic_restores_admin_geometry === false
+        && windows?.intermediate_restores_admin_geometry === false
+        && windows?.administrator_restores_persisted_geometry === true
+        && windows?.neutralization_persists === false
+        && wm?.role_isolation_api_40312 === true
+        && wm?.neutralize_presentation_without_persist === true
+        && wm?.restore_persisted_presentation_without_persist === true
+        && viewport?.build === "40.3.12"
+        && viewport?.mode_change_document_scroll === false
+        && viewport?.authentication_document_scroll === false
+        && viewport?.lock_document_scroll === false
+        && viewport?.atlas_current_document_scroll === false
+        && viewport?.legacy_hash_router_document_scroll === false
+        && viewport?.hashchange_second_scroll === false
+        && viewport?.passive_market_document_scroll === false
+        && viewport?.explicit_operator_navigation_single_frame === true
+        && legacyHash?.retired === true
+        && legacyHash?.automatic_hash_scroll === false
+        && missionsHidden
+        && semanticTagged,
+      detail:`body=${String(bodyOk)} · role=${role?.build || "—"} · wm-role=${String(wm?.role_isolation_api_40312 === true)} · viewport=${viewport?.build || "—"} · missions-hidden=${String(missionsHidden)} · semantic-leaks-covered=${String(semanticTagged)}`
     };
   }
 
@@ -1477,6 +1539,8 @@
       check("Fenêtres · propriété 03/04 disjointe + ordre 04 trailing 40.3.08", family04OwnershipOrderContract40308().ok === true, family04OwnershipOrderContract40308().detail),
       check("Navigation · intention Atlas/Oracle restaure la famille réduite 40.3.09", essentialNavigationContract40309().ok === true, essentialNavigationContract40309().detail),
       check("Présentation · frontière 03/04 + Missions structurelle 40.3.09", adminPresentationAuthorityContract40309().ok === true, adminPresentationAuthorityContract40309().detail),
+      check("Viewport passif · Market/Spot sans restauration document + Missions privées 40.3.11", passiveViewportRoleContract40311().ok === true, passiveViewportRoleContract40311().detail),
+      check("Rôles + viewport · isolation Basic/Intermédiaire et propriétaire unique 40.3.12", roleIsolationViewportOwnershipContract40312().ok === true, roleIsolationViewportOwnershipContract40312().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),

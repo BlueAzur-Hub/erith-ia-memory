@@ -1388,18 +1388,41 @@
       return snapshot();
     }
 
-    function init() {
-      const storedFree = readStorage(layoutKey, defaultFree ? "1" : "0") !== "0";
-      setFree(storedFree);
-      definitions.forEach(def => {
-        const win = resolveDefinition(def);
-        if (!win?.id || windows.has(win.id)) return;
-        windows.set(win.id, win);
+    function persistedPresentationSnapshot() {
+      const state = {};
+      windows.forEach((win, id) => {
+        const saved = getState(id);
+        const geometry = [saved.x, saved.y, saved.width, saved.height].every(value => Number.isFinite(Number(value)))
+          ? { x: Number(saved.x), y: Number(saved.y), width: Number(saved.width), height: Number(saved.height) }
+          : null;
+        state[id] = {
+          floating: saved.floating === true,
+          minimized: saved.minimized === true,
+          hidden: saved.hidden === true,
+          maximized: saved.maximized === true,
+          geometry
+        };
       });
+      return { schema: "erith.admin.workspace.window-state.v1", windows: state };
+    }
 
-      const storedDomain = readStorage(domainKey, activeDomain);
-      setDomain(storedDomain || activeDomain);
+    function neutralPresentationSnapshot() {
+      const state = {};
+      windows.forEach((_win, id) => {
+        state[id] = { floating: false, minimized: false, hidden: false, maximized: false, geometry: null };
+      });
+      return { schema: "erith.admin.workspace.window-state.v1", windows: state };
+    }
 
+    function neutralizePresentation() {
+      return applySnapshot(neutralPresentationSnapshot(), { persist: false });
+    }
+
+    function restorePersistedPresentation() {
+      // Start from native/docked presentation, then replay the exact historical
+      // persisted state without writing it back.  Keep the legacy z-order path
+      // too: switching Basic/Intermediate must not flatten the saved Admin desk.
+      neutralizePresentation();
       windows.forEach(win => {
         const state = getState(win.id);
         if (state.floating === true) {
@@ -1419,6 +1442,30 @@
         if (state.maximized === true) setMaximized(win, true, false);
         if (state.hidden === true) setHidden(win, true, false);
       });
+      updateDeck();
+      document.dispatchEvent(new CustomEvent("erith:admin-window-persisted-presentation-restored", {
+        detail: { persisted: false }
+      }));
+      return snapshot();
+    }
+
+    function init(options = {}) {
+      const storedFree = readStorage(layoutKey, defaultFree ? "1" : "0") !== "0";
+      setFree(storedFree);
+      definitions.forEach(def => {
+        const win = resolveDefinition(def);
+        if (!win?.id || windows.has(win.id)) return;
+        windows.set(win.id, win);
+      });
+
+      const storedDomain = readStorage(domainKey, activeDomain);
+      setDomain(storedDomain || activeDomain);
+
+      if (options.restorePersistedPresentation !== false) {
+        restorePersistedPresentation();
+      } else {
+        neutralizePresentation();
+      }
       updateDeck();
       return { count: windows.size, free: isFree(), domain: activeDomain };
     }
@@ -1448,6 +1495,8 @@
       getWindow: id => windows.get(id) || null,
       snapshot,
       applySnapshot,
+      restorePersistedPresentation,
+      neutralizePresentation,
       minimize: (id, value = true) => setMinimized(windows.get(id), value),
       hide: (id, value = true) => setHidden(windows.get(id), value),
       float: (id, value = true) => setFloating(windows.get(id), value),
@@ -1489,7 +1538,11 @@
     direct_fixed_geometry_owner: "inline-important",
     direct_fixed_z_order_owner: "inline-important",
     direct_fixed_dock_css_override_safe: true,
-    floating_shell_z_order: "global-body"
+    floating_shell_z_order: "global-body",
+    role_isolation_api_40312: true,
+    init_restore_persisted_presentation_option: true,
+    neutralize_presentation_without_persist: true,
+    restore_persisted_presentation_without_persist: true
   });
 
   window.ErithAdminWindowManager = Object.freeze({
