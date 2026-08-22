@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.22 — PARKER LEWIS CAN'T LOSE · ADMIN FAMILY RETURN + EXPLICIT COMMAND CENTER RECOVERY LOCK
+     40.3.23 — PARKER LEWIS CAN'T LOSE · FIREFOX COMPOSITOR ISOLATION LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.22";
+  const BUILD_CURRENT = "40.3.23";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
