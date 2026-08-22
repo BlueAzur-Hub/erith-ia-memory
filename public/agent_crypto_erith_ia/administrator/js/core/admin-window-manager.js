@@ -327,11 +327,13 @@
               } catch {}
             }
 
-            setFloating(win, true, true, detachGeometry, { autoFitShell: false });
-            // 40.3.19 — compact only the shell HEIGHT once, after real nodes are
-            // inside it and before the drag continues. This removes the giant
-            // grey union-height plate without making the shell transparent.
-            fitDragDetachedShellHeight40319(win);
+            // 40.3.20 — restore the native 40.1.32 first-detach contract.
+            // The real nodes are reparented first, then autoFitFloatingShell()
+            // measures the actual floating content + chrome exactly once.
+            // 40.3.15 disabled this path for Firefox performance; the later
+            // Bridge/passive-supervision repairs removed the continuous load,
+            // so the bounded first-detach measurement can safely own geometry again.
+            setFloating(win, true, true, detachGeometry);
 
             // The pressed control may have moved to a different DOM parent.
             // Rebase the gesture from the fitted floating geometry and reacquire
@@ -343,9 +345,10 @@
             dy = 0;
             capturePointer();
           } else {
-            // A shell restored from an older stored geometry may still carry the
-            // oversized union height. Normalize it only when the operator
-            // actually moves that window; never reset saved layouts on load.
+            // A shell restored from 40.3.15/17/19 stored geometry may still
+            // carry the old docked-union height. Keep the 40.3.19 height-only
+            // normalizer solely as a legacy fallback when the operator moves it;
+            // never reset saved layouts at boot.
             if (!win.directFixed && win.shell && win.shellSizingMode === "stored-geometry") {
               fitDragDetachedShellHeight40319(win);
             }
@@ -1678,6 +1681,11 @@
     ,drag_detach_width_rewrite_40319: false
     ,drag_detach_observer_40319: false
     ,drag_detach_timer_40319: false
+    ,native_first_detach_autofit_40320: true
+    ,native_first_detach_autofit_owner_40320: "autoFitFloatingShell"
+    ,native_first_detach_autofit_layout_passes_40320: 1
+    ,legacy_stored_geometry_height_fallback_40320: true
+    ,saved_workspace_reset_40320: false
     ,floating_surface_backdrop_blur_40315: false
     ,floating_surface_repeating_background_40315: false
     ,maximized_surface_40315: "97vw x 97vh"

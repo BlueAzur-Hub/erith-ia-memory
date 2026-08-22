@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.19";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · DRAG HEIGHT FIT + 40.3.17 VISUAL RECOVERY LOCK";
+  const ADMIN_BUILD = "40.3.20";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · CANONICAL 04 FLOW + NATIVE FLOATING AUTOFIT RECOVERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -390,9 +390,10 @@
       .map(node => entry(node));
   }
 
-  // 40.3.08 — hard semantic ownership boundary for the two lower Administrator families.
-  // The 03 owner is explicit and can never absorb System/Experiment nodes by proximity.
-  // The 04 owner follows native DOM order: six System/Experiment members first, trailing 04 boundary last.
+  // 40.3.20 — restore the canonical lower Administrator hierarchy.
+  // The 03 owner remains explicit: header + Situation/Questionnaire/Briefing/Plan.
+  // The 04 owner is again a real opening header: 04 -> Storage -> Simulation ->
+  // Tests/Commands -> Backend -> Safety -> Physical Security -> Missions.
   const ADMIN_OPERATION_KEYS_40308 = new Set([
     "situation", "questionnaire", "briefing", "planning"
   ]);
@@ -412,16 +413,16 @@
       .map(node => entry(node));
   }
 
-  function systemEntriesTrailing40308() {
+  function systemEntriesCanonical40320() {
     const shell = q("main.shell");
     const header = q(".atlas-layout-family-system");
+    const storage = byId("atlasStorageHealth40198");
     if (!shell || !(header instanceof HTMLElement)) return [];
-    return [...shell.children]
-      .filter(node => node instanceof HTMLElement && (
-        node === header
-        || node.id === "atlasStorageHealth40198"
-        || (node instanceof HTMLDetailsElement && ADMIN_SYSTEM_KEYS_40308.has(String(node.dataset.collapseKey || "")))
-      ))
+    const details = [...ADMIN_SYSTEM_KEYS_40308]
+      .map(key => shell.querySelector(`:scope > details[data-collapse-key="${key}"]`))
+      .filter(node => node instanceof HTMLDetailsElement);
+    return [header, storage, ...details]
+      .filter((node, index, list) => node instanceof HTMLElement && node.parentElement === shell && list.indexOf(node) === index)
       .map(node => entry(node));
   }
 
@@ -568,10 +569,11 @@
         placeholderPolicy: "compact-family",
         title: "Expérimentation & système",
         tone: "orange",
-        // 40.3.08 — explicit trailing-owner order matches the real docked DOM exactly:
-        // Storage + Simulation + Commands + Backend + Safety + Physical Security -> 04 boundary.
-        resolveEntries: () => systemEntriesTrailing40308(),
-        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[nodes.length - 1],
+        // 40.3.20 — canonical docked order: 04 header -> Storage -> Simulation ->
+        // Commands -> Backend -> Safety -> Physical Security. The header opens
+        // the family it names; an explicit detach may move the real nodes.
+        resolveEntries: () => systemEntriesCanonical40320(),
+        resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
       {
@@ -1708,6 +1710,23 @@
       recent_health_focus_probe_suppression_ms: 30000,
       compact_family_placeholder_policy: true,
       preserved_full_placeholder_windows: ["market", "graphique", "target-top", "market-flow", "math-core"]
+    });
+    globalThis.ErithCanonicalSectionsAutofit40320 = Object.freeze({
+      build: "40.3.20",
+      parent_build: "40.3.19",
+      family03_order: ["03", "situation", "questionnaire", "briefing", "planning"],
+      family04_order: ["04", "storage", "simulation", "commandes", "backend", "safety", "physical-security"],
+      missions_after_physical_security: true,
+      family04_header_is_opening_boundary: true,
+      trailing_family04_boundary_retired: true,
+      native_first_detach_autofit_restored: true,
+      native_first_detach_autofit_owner: "autoFitFloatingShell",
+      legacy_stored_geometry_height_fallback_preserved: true,
+      saved_workspace_reset: false,
+      bridge_behavior_changed: false,
+      atlas_pipeline_changed: false,
+      oracle_behavior_changed: false,
+      graph_context_v7_changed: false
     });
     installAdminBar(manager);
     installDomainObserver(manager);

@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.19 — PARKER LEWIS CAN'T LOSE · DRAG HEIGHT FIT + 40.3.17 VISUAL RECOVERY LOCK
+     40.3.20 — PARKER LEWIS CAN'T LOSE · CANONICAL 04 FLOW + NATIVE FLOATING AUTOFIT RECOVERY LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.19";
+  const BUILD_CURRENT = "40.3.20";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -512,6 +512,41 @@
     };
   }
 
+  function canonicalSectionsAutofitContract40320() {
+    const bodyOk = document.body?.classList?.contains("atlas-family04-canonical-hierarchy-40320") === true;
+    const shell = document.querySelector("main.shell");
+    const direct = node => !!node && node.parentElement === shell;
+    const h03 = document.querySelector(".atlas-layout-family-operations");
+    const h04 = document.querySelector(".atlas-layout-family-system");
+    const storage = document.getElementById("atlasStorageHealth40198");
+    const missions = document.getElementById("missions-vie");
+    const audience = document.getElementById("mesure-audience");
+    const sources = document.getElementById("liveSourcesCollapse");
+    const getDetail = key => shell?.querySelector?.(`:scope > details[data-collapse-key="${key}"]`) || null;
+    const family03 = [h03, ...["situation","questionnaire","briefing","planning"].map(getDetail)];
+    const family04 = [h04, storage, ...["simulation","commandes","backend","safety","physical-security"].map(getDetail)];
+    const exactChain = [...family03, ...family04, missions, audience, sources];
+    const domOk = exactChain.every(direct) && exactChain.every((node,index) => index === exactChain.length - 1 || node.nextElementSibling === exactChain[index+1]);
+    const manager = globalThis.ErithAdministratorWindows;
+    const owner03 = manager?.getWindow?.("preparation-operations");
+    const owner04 = manager?.getWindow?.("experimentation-systeme");
+    const same = (actual, expected) => Array.isArray(actual) && actual.length === expected.length && actual.every((node,index) => node === expected[index]);
+    const ownershipOk = owner03?.anchor === h03 && owner04?.anchor === h04 && same(owner03?.nodes, family03) && same(owner04?.nodes, family04);
+    const c = globalThis.ErithCanonicalSectionsAutofit40320;
+    const wm = globalThis.ErithAdminWindowManager?.contract || {};
+    const autoFitOk = c?.native_first_detach_autofit_restored === true
+      && c?.native_first_detach_autofit_owner === "autoFitFloatingShell"
+      && wm?.native_first_detach_autofit_40320 === true
+      && wm?.native_first_detach_autofit_owner_40320 === "autoFitFloatingShell"
+      && wm?.native_first_detach_autofit_layout_passes_40320 === 1
+      && wm?.legacy_stored_geometry_height_fallback_40320 === true
+      && wm?.saved_workspace_reset_40320 === false;
+    return {
+      ok: bodyOk && domOk && ownershipOk && autoFitOk,
+      detail:`body=${String(bodyOk)} · 03>04>Storage>…>Physical>Missions=${String(domOk)} · owners=${String(ownershipOk)} · native-autofit=${String(autoFitOk)}`
+    };
+  }
+
   function roleTransitionPerformanceContract40314() {
     const bodyOk = document.body?.classList?.contains("atlas-role-transition-performance-40314") === true;
     const transition = globalThis.ErithWindowRoleTransition40314;
@@ -550,9 +585,7 @@
         && c?.content_surface === "97%"
         && c?.transform_scale === false
         && c?.global_zoom === false
-        && c?.drag_detach_auto_fit === false
         && c?.floating_backdrop_blur === false
-        && wm?.drag_detach_auto_fit_disabled_40315 === true
         && wm?.placeholder_measurement_batch_40315 === "all-reads-before-dom-writes"
         && wm?.floating_surface_backdrop_blur_40315 === false,
       detail:`body=${String(bodyOk)} · header=${hratio.toFixed(3)} · content=${cratio.toFixed(3)} · drag-autofit=${String(c?.drag_detach_auto_fit)} · blur=${String(c?.floating_backdrop_blur)}`
@@ -1595,14 +1628,13 @@
       check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
       check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
       check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
-      check("Parcours · frontière opérateur Sécurité physique→04→Missions 40.3.07", family04TrailingBoundaryContract40307().ok === true, family04TrailingBoundaryContract40307().detail),
-      check("Fenêtres · propriété 03/04 disjointe + ordre 04 trailing 40.3.08", family04OwnershipOrderContract40308().ok === true, family04OwnershipOrderContract40308().detail),
+      check("Parcours · séquence canonique 01→02→03→04→Missions→Audience→Sources 40.3.04", canonicalAdminSequenceContract40304().ok === true, canonicalAdminSequenceContract40304().detail),
+      check("Sections + fenêtres · 03/04 canoniques + auto-fit natif 40.3.20", canonicalSectionsAutofitContract40320().ok === true, canonicalSectionsAutofitContract40320().detail),
       check("Navigation · intention Atlas/Oracle restaure la famille réduite 40.3.09", essentialNavigationContract40309().ok === true, essentialNavigationContract40309().detail),
-      check("Présentation · frontière 03/04 + Missions structurelle 40.3.09", adminPresentationAuthorityContract40309().ok === true, adminPresentationAuthorityContract40309().detail),
       check("Viewport passif · Market/Spot sans restauration document + Missions privées 40.3.11", passiveViewportRoleContract40311().ok === true, passiveViewportRoleContract40311().detail),
       check("Rôles + viewport · isolation Basic/Intermédiaire et propriétaire unique 40.3.12", roleIsolationViewportOwnershipContract40312().ok === true, roleIsolationViewportOwnershipContract40312().detail),
       check("Performance · transition rôle unique + reflow Window Deck borné 40.3.14", roleTransitionPerformanceContract40314().ok === true, roleTransitionPerformanceContract40314().detail),
-      check("Surface Firefox · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract40315().ok === true, surfacePerformanceContract40315().detail),
+      check("Surface Firefox héritée · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract40315().ok === true, surfacePerformanceContract40315().detail),
       check("Performance · Bridge passif + placeholders famille compacts 40.3.17", bridgePassivePerformanceContract40317().ok === true, bridgePassivePerformanceContract40317().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),

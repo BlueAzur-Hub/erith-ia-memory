@@ -1334,3 +1334,30 @@ body.atlas-surface-performance-40315 .admin-native-moving{
     max-width:calc(100% - 16px)!important;
   }
 }
+
+
+/* ============================================================================
+   40.3.20 — CANONICAL FAMILY 04 HIERARCHY + NATIVE FLOW RECOVERY
+   Recovered from the already-proven structural intent of 40.3.13, now applied
+   only after the Firefox/Bridge continuous-load repairs are in place.
+   Native document truth:
+   03 -> Situation -> Questionnaire -> Briefing -> Plan
+   04 -> Storage -> Simulation -> Tests -> Backend -> Safety -> Physical
+   -> Missions -> Audience -> Sources.
+   No wrapper, clone, backdrop or z-index mask is introduced.
+   ============================================================================ */
+body.atlas-family04-canonical-hierarchy-40320 main.shell > details[data-collapse-key="planning"] + section.atlas-layout-family-system{
+  position:relative!important;
+  margin-top:38px!important;
+}
+body.atlas-family04-canonical-hierarchy-40320 main.shell > section.atlas-layout-family-system + #atlasStorageHealth40198{
+  margin-top:10px!important;
+}
+body.atlas-family04-canonical-hierarchy-40320 main.shell > details[data-collapse-key="physical-security"] + #missions-vie{
+  margin-top:10px!important;
+}
+@media (max-width:1366px){
+  body.atlas-family04-canonical-hierarchy-40320 main.shell > details[data-collapse-key="planning"] + section.atlas-layout-family-system{
+    margin-top:30px!important;
+  }
+}
