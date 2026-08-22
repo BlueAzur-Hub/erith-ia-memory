@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.14";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · FIREFOX ROLE TRANSITION PERFORMANCE RECOVERY LOCK";
+  const ADMIN_BUILD = "40.3.15";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · LOW-COST FLOATING SURFACE + NATIVE 97% CONTENT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1681,6 +1681,17 @@
       role_transition_forces_geometry_snapshot: false,
       hidden_window_deck_live_rebuild: false,
       inherited_role_isolation_40312: true
+    });
+    globalThis.ErithSurfacePerformance40315 = Object.freeze({
+      build: "40.3.15",
+      header_surface: "100%",
+      content_surface: "97%",
+      transform_scale: false,
+      global_zoom: false,
+      drag_detach_auto_fit: false,
+      floating_backdrop_blur: false,
+      floating_repeating_background: false,
+      parent_build: "40.3.14"
     });
     installAdminBar(manager);
     installDomainObserver(manager);

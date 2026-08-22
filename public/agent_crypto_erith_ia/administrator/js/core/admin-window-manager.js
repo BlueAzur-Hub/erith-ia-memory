@@ -327,7 +327,7 @@
               } catch {}
             }
 
-            setFloating(win, true, true, detachGeometry);
+            setFloating(win, true, true, detachGeometry, { autoFitShell: false });
 
             // The pressed control may have moved to a different DOM parent.
             // Rebase the gesture from the fitted floating geometry and reacquire
@@ -677,15 +677,13 @@
       });
     }
 
+    // 40.3.15 — batch placeholder measurements before DOM writes.
+    // Keeps the 40.1.29 layout-preservation contract without interleaving
+    // getBoundingClientRect/getComputedStyle with insertBefore for every node.
     function createPlaceholders(win) {
       win.placeholders.clear();
-      win.nodes.forEach(node => {
-        if (!node.parentNode) return;
-
-        // 40.1.30 — preserve the native layout footprint while the real node
-        // lives inside a floating shell. Reserved placeholders keep the measured
-        // grid/flex footprint; admin-windows.css no longer zeroes those reserved
-        // placeholders with !important.
+      const measurements = win.nodes.map(node => {
+        if (!node.parentNode) return null;
         const rect = node.getBoundingClientRect?.();
         const computed = window.getComputedStyle?.(node);
         const rendered = !!rect
@@ -693,41 +691,59 @@
           && rect.height > 0
           && String(computed?.display || "").toLowerCase() !== "none"
           && String(computed?.visibility || "").toLowerCase() !== "hidden";
+        return {
+          node,
+          parent: node.parentNode,
+          rendered,
+          height: rendered ? Math.max(1, Math.round(rect.height)) : 0,
+          marginTop: computed?.marginTop || "0px",
+          marginRight: computed?.marginRight || "0px",
+          marginBottom: computed?.marginBottom || "0px",
+          marginLeft: computed?.marginLeft || "0px",
+          gridColumn: computed?.gridColumn || "auto",
+          gridRow: computed?.gridRow || "auto",
+          alignSelf: computed?.alignSelf || "auto",
+          justifySelf: computed?.justifySelf || "auto",
+          flexGrow: computed?.flexGrow || "0",
+          flexShrink: computed?.flexShrink || "1",
+          flexBasis: computed?.flexBasis || "auto",
+          order: computed?.order || "0"
+        };
+      }).filter(Boolean);
 
-        const marker = document.createElement("div");
-        marker.className = "admin-native-placeholder";
-        marker.dataset.adminNativePlaceholder = win.id;
-        marker.dataset.adminNativePlaceholderReserved = rendered ? "1" : "0";
-        marker.setAttribute("aria-hidden", "true");
-        marker.style.pointerEvents = "none";
-        marker.style.userSelect = "none";
-
+      measurements.forEach(item => {
+        const {node,parent,rendered}=item;
+        if (!parent || node.parentNode !== parent) return;
+        const marker=document.createElement("div");
+        marker.className="admin-native-placeholder";
+        marker.dataset.adminNativePlaceholder=win.id;
+        marker.dataset.adminNativePlaceholderReserved=rendered ? "1" : "0";
+        marker.setAttribute("aria-hidden","true");
+        marker.style.pointerEvents="none";
+        marker.style.userSelect="none";
         if (rendered) {
-          marker.style.display = "block";
-          marker.style.visibility = "hidden";
-          marker.style.boxSizing = "border-box";
-          marker.style.width = "auto";
-          marker.style.minWidth = "0";
-          marker.style.height = `${Math.max(1, Math.round(rect.height))}px`;
-          marker.style.minHeight = `${Math.max(1, Math.round(rect.height))}px`;
-          marker.style.marginTop = computed?.marginTop || "0px";
-          marker.style.marginRight = computed?.marginRight || "0px";
-          marker.style.marginBottom = computed?.marginBottom || "0px";
-          marker.style.marginLeft = computed?.marginLeft || "0px";
-          marker.style.gridColumn = computed?.gridColumn || "auto";
-          marker.style.gridRow = computed?.gridRow || "auto";
-          marker.style.alignSelf = computed?.alignSelf || "auto";
-          marker.style.justifySelf = computed?.justifySelf || "auto";
-          marker.style.flexGrow = computed?.flexGrow || "0";
-          marker.style.flexShrink = computed?.flexShrink || "1";
-          marker.style.flexBasis = computed?.flexBasis || "auto";
-          marker.style.order = computed?.order || "0";
-        } else {
-          marker.hidden = true;
-        }
-
-        node.parentNode.insertBefore(marker, node);
-        win.placeholders.set(node, marker);
+          marker.style.display="block";
+          marker.style.visibility="hidden";
+          marker.style.boxSizing="border-box";
+          marker.style.width="auto";
+          marker.style.minWidth="0";
+          marker.style.height=`${item.height}px`;
+          marker.style.minHeight=`${item.height}px`;
+          marker.style.marginTop=item.marginTop;
+          marker.style.marginRight=item.marginRight;
+          marker.style.marginBottom=item.marginBottom;
+          marker.style.marginLeft=item.marginLeft;
+          marker.style.gridColumn=item.gridColumn;
+          marker.style.gridRow=item.gridRow;
+          marker.style.alignSelf=item.alignSelf;
+          marker.style.justifySelf=item.justifySelf;
+          marker.style.flexGrow=item.flexGrow;
+          marker.style.flexShrink=item.flexShrink;
+          marker.style.flexBasis=item.flexBasis;
+          marker.style.order=item.order;
+        } else marker.hidden=true;
+        parent.insertBefore(marker,node);
+        win.placeholders.set(node,marker);
       });
     }
 
@@ -1115,10 +1131,10 @@
       target?.classList.add("admin-native-maximized");
       if (target) {
         if (win.directFixed) applyDirectFixedGeometryOwnership(win, target);
-        setManagedFloatingStyle(win, target, "left", `${VIEWPORT_MARGIN}px`);
-        setManagedFloatingStyle(win, target, "top", `${VIEWPORT_MARGIN}px`);
-        setManagedFloatingStyle(win, target, "width", `calc(100vw - ${VIEWPORT_MARGIN * 2}px)`);
-        setManagedFloatingStyle(win, target, "height", `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`);
+        setManagedFloatingStyle(win, target, "left", "1.5vw");
+        setManagedFloatingStyle(win, target, "top", "1.5vh");
+        setManagedFloatingStyle(win, target, "width", "97vw");
+        setManagedFloatingStyle(win, target, "height", "97vh");
       }
       bringToFront(win, false);
       refreshControlState(win);
@@ -1578,6 +1594,11 @@
     hidden_deck_rebuild_deferred_40314: true,
     role_transition_capture_snapshot_disabled_40314: true,
     restore_persisted_single_pass_40314: true
+    ,drag_detach_auto_fit_disabled_40315: true
+    ,placeholder_measurement_batch_40315: "all-reads-before-dom-writes"
+    ,floating_surface_backdrop_blur_40315: false
+    ,floating_surface_repeating_background_40315: false
+    ,maximized_surface_40315: "97vw x 97vh"
   });
 
   window.ErithAdminWindowManager = Object.freeze({

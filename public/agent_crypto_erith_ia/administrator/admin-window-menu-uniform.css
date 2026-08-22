@@ -1268,3 +1268,69 @@ body.atlas-admin-presentation-authority-40309 main.shell > section.atlas-layout-
   body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198{margin-top:30px!important}
   body.atlas-admin-presentation-authority-40309 main.shell > details[data-collapse-key="planning"] + #atlasStorageHealth40198::before{top:-16px!important}
 }
+
+
+/* ============================================================================
+   40.3.15 — LOW-COST FLOATING SURFACE + NATIVE 97% CONTENT LOCK
+   Operator intent:
+   - header/menu keeps the full shell width;
+   - cockpit content uses ~97% of the viewport, centered, without transform/zoom;
+   - floating windows keep a dark native surface but NO full-window backdrop blur;
+   - drag does not trigger content auto-fit/re-measure before movement.
+   ============================================================================ */
+body.atlas-surface-performance-40315 main.shell{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  transform:none!important;
+}
+body.atlas-surface-performance-40315 main.shell > header#accueil{
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+body.atlas-surface-performance-40315.atlas-family-boundaries-40298 main.shell > section,
+body.atlas-surface-performance-40315 main.shell > details,
+body.atlas-surface-performance-40315 main.shell > footer{
+  width:97%!important;
+  max-width:97%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+body.atlas-surface-performance-40315 main.shell > section + section,
+body.atlas-surface-performance-40315 main.shell > details + section,
+body.atlas-surface-performance-40315 main.shell > section + details,
+body.atlas-surface-performance-40315 main.shell > details + details{
+  margin-top:10px!important;
+}
+
+/* The old 39.2.15 floating shell paints a viewport-sized blurred glass layer.
+   On Firefox this is expensive while scrolling/moving because the pixels behind
+   the fixed surface must be recomposited. Keep the dark cockpit, remove the GPU-heavy glass. */
+body.atlas-surface-performance-40315 .admin-native-floating-shell,
+body.atlas-surface-performance-40315 .admin-native-direct-floating{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  background:linear-gradient(180deg,rgba(8,12,16,.995),rgba(5,9,13,.995))!important;
+  box-shadow:0 18px 52px rgba(0,0,0,.48),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 14%,transparent)!important;
+}
+body.atlas-surface-performance-40315 .admin-native-floating-titlebar,
+body.atlas-surface-performance-40315 .admin-native-floating-shell .admin-native-controls,
+body.atlas-surface-performance-40315 .admin-native-direct-floating > .admin-native-controls{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+body.atlas-surface-performance-40315 .admin-native-moving{
+  opacity:1!important;
+  box-shadow:0 16px 42px rgba(0,0,0,.45),0 0 0 1px color-mix(in srgb,var(--native-accent,#72d8ff) 24%,transparent)!important;
+}
+@media(max-width:1366px){
+  body.atlas-surface-performance-40315.atlas-family-boundaries-40298 main.shell > section,
+  body.atlas-surface-performance-40315 main.shell > details,
+  body.atlas-surface-performance-40315 main.shell > footer{
+    width:calc(100% - 16px)!important;
+    max-width:calc(100% - 16px)!important;
+  }
+}

@@ -2,7 +2,7 @@
   "use strict";
 
   /* ============================================================
-     40.3.14 — PARKER LEWIS CAN'T LOSE · FIREFOX ROLE TRANSITION PERFORMANCE RECOVERY LOCK
+     40.3.15 — PARKER LEWIS CAN'T LOSE · LOW-COST FLOATING SURFACE + NATIVE 97% CONTENT LOCK
 
      PURPOSE
      - Re-run the validated 39.x architecture checks under the current recovery identity.
@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.14";
+  const BUILD_CURRENT = "40.3.15";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -531,6 +531,31 @@
         && wm?.role_transition_capture_snapshot_disabled_40314 === true
         && wm?.restore_persisted_single_pass_40314 === true,
       detail:`body=${String(bodyOk)} · same-role-noop=${String(transition?.same_role_transition_is_noop === true)} · boot-replay=${String(transition?.boot_replay_removed === true)} · single-pass=${String(wm?.restore_persisted_single_pass_40314 === true)} · deck-batch=${String(wm?.batched_deck_reflow_40314 === true)} · hidden-deck-deferred=${String(wm?.hidden_deck_rebuild_deferred_40314 === true)}`
+    };
+  }
+
+  function surfacePerformanceContract40315() {
+    const bodyOk = document.body?.classList?.contains("atlas-surface-performance-40315") === true;
+    const c = globalThis.ErithSurfacePerformance40315;
+    const wm = globalThis.ErithAdminWindowManager?.contract;
+    const header = document.querySelector("main.shell > header#accueil");
+    const content = document.querySelector("main.shell > section:not(#marche)") || document.querySelector("main.shell > section");
+    const viewport = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const hratio = header && viewport ? header.getBoundingClientRect().width / viewport : 0;
+    const cratio = content && viewport ? content.getBoundingClientRect().width / viewport : 0;
+    return {
+      ok: bodyOk
+        && c?.build === "40.3.15"
+        && c?.header_surface === "100%"
+        && c?.content_surface === "97%"
+        && c?.transform_scale === false
+        && c?.global_zoom === false
+        && c?.drag_detach_auto_fit === false
+        && c?.floating_backdrop_blur === false
+        && wm?.drag_detach_auto_fit_disabled_40315 === true
+        && wm?.placeholder_measurement_batch_40315 === "all-reads-before-dom-writes"
+        && wm?.floating_surface_backdrop_blur_40315 === false,
+      detail:`body=${String(bodyOk)} · header=${hratio.toFixed(3)} · content=${cratio.toFixed(3)} · drag-autofit=${String(c?.drag_detach_auto_fit)} · blur=${String(c?.floating_backdrop_blur)}`
     };
   }
 
@@ -1564,6 +1589,7 @@
       check("Viewport passif · Market/Spot sans restauration document + Missions privées 40.3.11", passiveViewportRoleContract40311().ok === true, passiveViewportRoleContract40311().detail),
       check("Rôles + viewport · isolation Basic/Intermédiaire et propriétaire unique 40.3.12", roleIsolationViewportOwnershipContract40312().ok === true, roleIsolationViewportOwnershipContract40312().detail),
       check("Performance · transition rôle unique + reflow Window Deck borné 40.3.14", roleTransitionPerformanceContract40314().ok === true, roleTransitionPerformanceContract40314().detail),
+      check("Surface Firefox · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract40315().ok === true, surfacePerformanceContract40315().detail),
       check("Lecture Technique · vue sauvegardée + chargement différé si réduite 40.3.07", technicalLoadPriorityContract40307().ok === true, technicalLoadPriorityContract40307().detail),
       check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
       check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
