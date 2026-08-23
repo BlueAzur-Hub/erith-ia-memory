@@ -1,16 +1,18 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.27";
-  const RELEASE = "PARKER LEWIS CAN'T LOSE · INTERMEDIATE-FIRST VIEW BUDGET + PERSISTENT VISUAL CACHE";
+  const BUILD = "40.3.28";
+  const RELEASE = "PARKER LEWIS CAN'T LOSE · INTERMEDIATE-FIRST + FIREFOX NO-LAZY-PAINT + PERSISTENT VISUAL CACHE";
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
 
-  // Do NOT invalidate the 40.3.26 image cache: 40.3.27 must reuse it.
+  // Never invalidate the visual blobs when moving from 40.3.26/27 to 40.3.28.
   const GENERATION = "administrator-visuals-2026-08-23-v1";
   const CHART_OFFICE = "./assets/visual/admin-chart-office.png";
 
+  // Keep the 40.3.27 key so the selected Basique / Intermédiaire /
+  // Administrator mode survives this build without migration or reset.
   const VIEW_STORAGE_KEY = "erith_admin_view_mode_40327";
   const VALID_VIEWS = new Set(["basic", "intermediate", "admin"]);
   const DEFAULT_VIEW = "intermediate";
@@ -45,8 +47,7 @@
     return next;
   }
 
-  // Critical: this executes in <head>, before body parsing. The Intermediate
-  // render budget is therefore active before the heavy Administrator nodes exist.
+  // Executes in <head>: daily view ownership exists before the large body is parsed.
   let runtimeView = setRuntimeView(readView(), false);
 
   function absolute(input) {
@@ -142,7 +143,7 @@
       try {
         await write({ id, generation: GENERATION, blob, mime: blob.type || "", bytes: blob.size, cached_at: Date.now() });
       } catch (_) {
-        // Cache persistence is an optimization. A failed write must never block the interface.
+        // Persistent cache is an optimization only; never block the interface.
       }
       stats.network += 1;
       return { url: objectUrlFor(id, blob), source: "network", cached: false, bytes: blob.size };
@@ -234,11 +235,11 @@
     if (badge) badge.textContent = `Build ${BUILD} · ${modeLabel(mode)}`;
 
     const footer = document.getElementById("footerRelease");
-    if (footer) {
-      footer.textContent = `Agent-Crypto @erith.IA · Market Core · Build ${BUILD} · Version : Parker Lewis Can't Lose`;
-    }
+    if (footer) footer.textContent = `Agent-Crypto @erith.IA · Market Core · Build ${BUILD} · Version : Parker Lewis Can't Lose`;
 
     document.documentElement.dataset.administratorBuildRuntime = BUILD;
+    document.documentElement.dataset.firefoxPaintPolicy = "eager-visible";
+    document.documentElement.dataset.lazyPaintBlanking = "disabled";
   }
 
   function markProjectNavigation() {
@@ -252,6 +253,7 @@
         text.includes("creation") ||
         text.includes("mission")
       ) {
+        // Keep the 40.3.27 class name for CSS/browser-cache compatibility.
         node.classList.add("atlas-admin-project-nav-40327");
       }
     }
@@ -268,9 +270,8 @@
       }, true);
     }
 
-    // 40.3.27 owns only the DEFAULT/persistence choice. The native view manager
-    // still owns the actual business visibility logic. We request the saved mode
-    // after all DOMContentLoaded listeners have completed; no DOM is reparented.
+    // Native view manager keeps visibility/business ownership. 40.3.28 only
+    // restores the saved mode and the paint budget; no DOM is reparented.
     queueMicrotask(() => {
       const desired = normalizeView(readView());
       runtimeView = setRuntimeView(desired, false);
@@ -284,13 +285,13 @@
   }
 
   function bootViewBudget() {
-    document.documentElement.classList.add("atlas-view-budget-40327");
+    document.documentElement.classList.add("atlas-view-budget-40327", "atlas-view-budget-40328");
     markProjectNavigation();
     bindViewButtons();
     patchVersionIdentity(runtimeView);
   }
 
-  globalThis.AgentCryptoVisualCache40327 = Object.freeze({
+  const api = Object.freeze({
     build: BUILD,
     release: RELEASE,
     database: DB_NAME,
@@ -312,11 +313,14 @@
       return runtimeView;
     },
     dom_reparenting: false,
-    project_series_in_intermediate: false
+    project_series_in_intermediate: false,
+    lazy_visible_paint: false,
+    firefox_grey_frame_mitigation: "content-visibility-auto-disabled-on-daily-visible-surfaces"
   });
 
-  // Compatibility alias for any 40.3.26 diagnostics that still probe it.
-  globalThis.AgentCryptoVisualCache40326 = globalThis.AgentCryptoVisualCache40327;
+  globalThis.AgentCryptoVisualCache40328 = api;
+  globalThis.AgentCryptoVisualCache40327 = api;
+  globalThis.AgentCryptoVisualCache40326 = api;
 
   document.documentElement.dataset.visualCacheBuild = BUILD;
   void bootChartBackground();
