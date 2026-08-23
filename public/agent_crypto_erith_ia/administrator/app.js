@@ -24665,11 +24665,12 @@ function atlasAnalyticalTruthInit() {
     if (document.visibilityState === "visible") atlasAnalyticalTruthSchedule(500);
   });
 
-  /* Additif uniquement : les fonctions Target, Scanner, Graphique,
-     Market Flow et leurs transactions restent celles de la 28.1.96.
-     L'empreinte attend la fin de toute transaction avant de lire l'état. */
-  document.addEventListener("click", () => atlasAnalyticalTruthSchedule(700), true);
-  document.addEventListener("change", () => atlasAnalyticalTruthSchedule(700), true);
+  /* 40.3.50 — OPERATOR INTERACTION SNAPSHOT DECOUPLING LOCK.
+     A generic click/change must never rebuild the full analytical snapshot.
+     atlasBuildCryptoPageSnapshot() remains owned by the explicit transactional
+     market/chart/report paths already present in this runtime. This removes the
+     delayed 700 ms full-page snapshot + SHA-256 rebuild that could seize Firefox
+     immediately after ordinary operator interactions. No new timer/observer. */
 
   atlasAnalyticalTruthSchedule(2200);
   return true;
@@ -46418,7 +46419,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.49";
+const ATLAS_BUILD = "40.3.50";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
