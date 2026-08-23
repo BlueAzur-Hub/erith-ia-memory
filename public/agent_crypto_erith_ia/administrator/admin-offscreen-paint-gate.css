@@ -1,0 +1,21 @@
+/*
+  Agent-Crypto @erith.IA — Administrator 40.3.33
+  OFFSCREEN PAINT SLEEP + WAKE BUFFER LOCK
+
+  Paint-only budget for the very long Administrator document.
+  Existing native DOM ownership and geometry are preserved.
+  No display/layout/position/contain/content-visibility/transform owner is added.
+*/
+html.atlas-offscreen-paint-gate-40333
+body.atlas-administrator-mirror
+.atlas-offscreen-paint-sleep-40333 {
+  visibility: hidden !important;
+}
+
+@media print {
+  html.atlas-offscreen-paint-gate-40333
+  body.atlas-administrator-mirror
+  .atlas-offscreen-paint-sleep-40333 {
+    visibility: visible !important;
+  }
+}
