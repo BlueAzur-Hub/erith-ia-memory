@@ -2572,21 +2572,87 @@ function atlasScheduleRuntimeValidation(reason = "scheduled") {
   }, 90);
 }
 
+const atlasRuntimeReturn40332 = {
+  snapshot: null,
+  fast_returns: 0,
+  full_restores: 0,
+  last_reason: null,
+  last_path: null
+};
+
+function atlasRuntimeReturnSnapshot40332() {
+  const math = document.getElementById("math");
+  return {
+    width: Math.max(0, Number(window.innerWidth) || 0),
+    height: Math.max(0, Number(window.innerHeight) || 0),
+    dpr: Number(window.devicePixelRatio) || 1,
+    mode: atlasV2Mode(),
+    role: document.documentElement.dataset.atlasRole || "",
+    viewport: document.documentElement.dataset.atlasViewport || atlasRuntimeViewportProfile(),
+    mathDock: math?.dataset?.mathDock || "",
+    mathParent: math?.parentElement?.id || ""
+  };
+}
+
+function atlasRuntimeReturnSnapshotEqual40332(a, b) {
+  if (!a || !b) return false;
+  return a.width === b.width
+    && a.height === b.height
+    && a.dpr === b.dpr
+    && a.mode === b.mode
+    && a.role === b.role
+    && a.viewport === b.viewport
+    && a.mathDock === b.mathDock
+    && a.mathParent === b.mathParent;
+}
+
+function atlasRuntimeCaptureReturn40332() {
+  atlasRuntimeReturn40332.snapshot = atlasRuntimeReturnSnapshot40332();
+  return atlasRuntimeReturn40332.snapshot;
+}
+
+function atlasRuntimeFastReturn40332(reason) {
+  const previous = atlasRuntimeReturn40332.snapshot;
+  const current = atlasRuntimeReturnSnapshot40332();
+  if (!atlasRuntimeReturnSnapshotEqual40332(previous, current)) return false;
+
+  /* 40.3.32 — ordinary tab/window return must not rebuild the Administrator.
+     Initial boot already classified sections and applied the active V2 mode.
+     Re-running that pipeline traversed the long document, re-applied role
+     visibility, re-parented Math Core and rendered Math again merely because
+     Firefox became visible. Keep the painted DOM exactly as-is. */
+  atlasSyncReleaseLabels();
+  atlasRuntimeReturn40332.fast_returns += 1;
+  atlasRuntimeReturn40332.last_reason = reason;
+  atlasRuntimeReturn40332.last_path = "fast";
+  document.documentElement.dataset.atlasReturnPath = "fast-40.3.32";
+  return true;
+}
+
 function atlasRestoreRuntimeUi(reason = "restore") {
+  const ordinaryReturn = reason === "visibility-return" || reason === "pageshow";
+  if (ordinaryReturn && atlasRuntimeFastReturn40332(reason)) return true;
+
+  atlasRuntimeReturn40332.full_restores += 1;
+  atlasRuntimeReturn40332.last_reason = reason;
+  atlasRuntimeReturn40332.last_path = "full";
+  document.documentElement.dataset.atlasReturnPath = "full-40.3.32";
+
   atlasV2ClassifySections();
+  /* atlasV2ApplyMode already owns canonical Math docking. Do not call
+     atlasV2ApplyMathDock a second time during the same restore. */
   atlasV2ApplyMode(atlasV2Mode(), { persist: false });
-  atlasV2ApplyMathDock(
-    atlasV2Mode() === "essential" ? "rail" : atlasV2MathDockPosition(),
-    { persist: false }
-  );
   atlasChartV2SyncControls?.();
   atlasSyncReleaseLabels();
   atlasSyncResponsiveRuntime();
   atlasScheduleRuntimeValidation(reason);
+  atlasRuntimeCaptureReturn40332();
+  return false;
 }
 
 function atlasInitRuntimeStability() {
   atlasSyncResponsiveRuntime();
+  atlasRuntimeCaptureReturn40332();
 
   let resizeQueued = false;
   const onResize = () => {
@@ -2595,6 +2661,7 @@ function atlasInitRuntimeStability() {
     requestAnimationFrame(() => {
       resizeQueued = false;
       atlasSyncResponsiveRuntime();
+      atlasRuntimeCaptureReturn40332();
       atlasScheduleRuntimeValidation("resize");
     });
   };
@@ -2609,22 +2676,32 @@ function atlasInitRuntimeStability() {
   });
 
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) atlasRestoreRuntimeUi("visibility-return");
+    if (!document.hidden) requestAnimationFrame(() => atlasRestoreRuntimeUi("visibility-return"));
   });
 
   window.addEventListener("atlas:v2mode", () => {
+    atlasRuntimeCaptureReturn40332();
     atlasScheduleStableChartResize();
     atlasScheduleRuntimeValidation("mode-change");
   });
 
   window.addEventListener("atlas:viewport", () => {
+    atlasRuntimeCaptureReturn40332();
     atlasScheduleRuntimeValidation("viewport-change");
   });
 
   requestAnimationFrame(() => {
+    atlasRuntimeCaptureReturn40332();
     atlasScheduleRuntimeValidation("initial");
   });
 }
+
+globalThis.AtlasRuntimeReturn40332 = Object.freeze({
+  build: "40.3.32",
+  policy: "ordinary visibility/pageshow return = no DOM rebuild when viewport/mode/dock unchanged",
+  state: () => ({ ...atlasRuntimeReturn40332, snapshot: atlasRuntimeReturn40332.snapshot ? { ...atlasRuntimeReturn40332.snapshot } : null }),
+  capture: atlasRuntimeCaptureReturn40332
+});
 
 const ATLAS_HELP_DEFINITIONS = Object.freeze({
   searchInput: { title: "Filtrer le MARKET SNAPSHOT", body: "Saisis le nom, le symbole ou une partie du nom d’une crypto. Le filtre ne change pas les données ; il réduit seulement les lignes visibles.", example: "Exemple : bitcoin, ETH, sol ou tether." },
@@ -46255,7 +46332,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.31";
+const ATLAS_BUILD = "40.3.32";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
