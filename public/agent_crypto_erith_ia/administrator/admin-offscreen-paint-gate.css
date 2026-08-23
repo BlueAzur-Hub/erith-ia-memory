@@ -1,21 +1,31 @@
 /*
-  Agent-Crypto @erith.IA — Administrator 40.3.33
-  OFFSCREEN PAINT SLEEP + WAKE BUFFER LOCK
+  Agent-Crypto @erith.IA — Administrator 40.3.34
+  SCROLL PAINT CONTINUITY + IDLE SLEEP LOCK
 
-  Paint-only budget for the very long Administrator document.
-  Existing native DOM ownership and geometry are preserved.
-  No display/layout/position/contain/content-visibility/transform owner is added.
+  40.3.33 proved that visibility sleep can reduce far-off paint, but operator captures
+  show grey surfaces during movement while the DOM still exists. 40.3.34 therefore
+  keeps sleeping sections paint-visible for the whole active scroll/movement phase,
+  and only re-arms far-off sleep after the document becomes idle.
+
+  No layout/display/position/transform/content-visibility/contain owner is added.
 */
-html.atlas-offscreen-paint-gate-40333
+html.atlas-scroll-paint-continuity-40334:not(.atlas-scroll-paint-moving-40334)
 body.atlas-administrator-mirror
-.atlas-offscreen-paint-sleep-40333 {
+.atlas-offscreen-paint-sleep-40334 {
   visibility: hidden !important;
 }
 
+/* During active movement, sleeping marks are intentionally non-operative. */
+html.atlas-scroll-paint-continuity-40334.atlas-scroll-paint-moving-40334
+body.atlas-administrator-mirror
+.atlas-offscreen-paint-sleep-40334 {
+  visibility: visible !important;
+}
+
 @media print {
-  html.atlas-offscreen-paint-gate-40333
+  html.atlas-scroll-paint-continuity-40334
   body.atlas-administrator-mirror
-  .atlas-offscreen-paint-sleep-40333 {
+  .atlas-offscreen-paint-sleep-40334 {
     visibility: visible !important;
   }
 }
