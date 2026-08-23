@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.39";
+  const ADMIN_BUILD = "40.3.40";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · SCROLL PAINT CONTINUITY + IDLE SLEEP LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
