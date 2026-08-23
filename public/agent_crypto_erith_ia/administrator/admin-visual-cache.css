@@ -1,147 +1,16 @@
 /*
-  Agent-Crypto @erith.IA — Administrator hotfix 40.3.29
-  BALANCED FIREFOX PAINT BUDGET + PERSISTENT VISUAL CACHE
+  Agent-Crypto @erith.IA — Administrator 40.3.30
+  CANONICAL RECOVERY + VERSION TRUTH LOCK — visual cache owner preserved from 40.3.26
 
-  CODE ONLY / PRESENTATION ONLY
-  - Keep the persistent visual blobs introduced in 40.3.26.
-  - Keep Intermediate as the daily view budget introduced in 40.3.27.
-  - Revert the 40.3.28 eager-paint regression: the complete long document must
-    never be forced into the active Firefox paint tree at once.
-  - Closed heavy sections are removed from layout/paint.
-  - Open heavy sections are isolated and rendered progressively by viewport.
-  - No DOM ownership, no market/oracle/math/bridge rewrite.
+  The graph office background is no longer a blocking CSS URL request.
+  admin-visual-cache.js resolves it from persistent IndexedDB first and only
+  reaches the network on a cache miss. The graph remains fully usable while
+  the decorative background is still resolving.
 */
-
 :root {
   --agent-crypto-chart-office-cached: none;
 }
 
 body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-panel::before {
   background-image: var(--agent-crypto-chart-office-cached) !important;
-}
-
-/* ============================================================
-   DAILY VIEW BUDGET
-   ============================================================ */
-html[data-atlas-view-runtime="basic"] .atlas-admin-only-40327,
-html[data-atlas-view-runtime="intermediate"] .atlas-admin-only-40327,
-html[data-atlas-view-runtime="basic"] .atlas-admin-project-nav-40327,
-html[data-atlas-view-runtime="intermediate"] .atlas-admin-project-nav-40327 {
-  display: none !important;
-}
-
-/* 03 · Preparation & operations — Administrator only. */
-html[data-atlas-view-runtime="basic"] .atlas-layout-family-operations,
-html[data-atlas-view-runtime="intermediate"] .atlas-layout-family-operations,
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="situation"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="situation"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="questionnaire"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="questionnaire"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="briefing"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="briefing"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="planning"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="planning"] {
-  display: none !important;
-}
-
-/* 04 · Experimentation & system — Administrator only. */
-html[data-atlas-view-runtime="basic"] .atlas-layout-family-system,
-html[data-atlas-view-runtime="intermediate"] .atlas-layout-family-system,
-html[data-atlas-view-runtime="basic"] #atlasStorageHealth40198,
-html[data-atlas-view-runtime="intermediate"] #atlasStorageHealth40198,
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="simulation"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="simulation"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="commandes"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="commandes"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="backend"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="backend"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="safety"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="safety"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="physical-security"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="physical-security"] {
-  display: none !important;
-}
-
-/* Creation / local infrastructure — absent from daily views. */
-html[data-atlas-view-runtime="basic"] #forge-aerith,
-html[data-atlas-view-runtime="intermediate"] #forge-aerith,
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="forge-aerith"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="forge-aerith"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="auto-reader"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="auto-reader"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="shared-memory"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="shared-memory"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="github-memory"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="github-memory"] {
-  display: none !important;
-}
-
-/* ERITH.IA project / Missions de vie — never part of Basic/Intermediate. */
-html[data-atlas-view-runtime="basic"] #missions-vie,
-html[data-atlas-view-runtime="intermediate"] #missions-vie,
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="fonds-erith"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="fonds-erith"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="association-erith"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="association-erith"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="aerith-enfance"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-enfance"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="aerith-animaux"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-animaux"],
-html[data-atlas-view-runtime="basic"] details[data-collapse-key="aerith-terre-vivante"],
-html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-terre-vivante"] {
-  display: none !important;
-}
-
-/* ============================================================
-   40.3.29 — BALANCED FIREFOX PAINT POLICY
-
-   40.3.28 forced content-visibility:visible / contain:none on the huge daily
-   document. That makes Firefox lay out and paint too much at once and is the
-   source of the severe slowdown. Restore progressive rendering, but only on
-   bounded subsection bodies so a single giant lazy surface cannot blank the
-   whole viewport.
-   ============================================================ */
-
-/* Native closed top-level sections: their body is explicitly absent. */
-html[data-atlas-view-runtime="intermediate"] main.shell > details:not([open]) > .atlas-collapse-body,
-html[data-atlas-view-runtime="basic"] main.shell > details:not([open]) > .atlas-collapse-body,
-html[data-atlas-view-runtime="intermediate"] .atlas-budget-section-40325:not([open]) > .atlas-budget-body-40325,
-html[data-atlas-view-runtime="basic"] .atlas-budget-section-40325:not([open]) > .atlas-budget-body-40325 {
-  display: none !important;
-}
-
-/* Open top-level bodies: isolate invalidation and render by viewport. */
-html[data-atlas-view-runtime="intermediate"] main.shell > details[open] > .atlas-collapse-body,
-html[data-atlas-view-runtime="basic"] main.shell > details[open] > .atlas-collapse-body {
-  contain: layout paint style !important;
-  content-visibility: auto !important;
-  contain-intrinsic-size: auto 720px !important;
-}
-
-/* Atlas heavy sub-sections are smaller bounded paint islands. */
-html[data-atlas-view-runtime="intermediate"] .atlas-budget-section-40325[open] > .atlas-budget-body-40325,
-html[data-atlas-view-runtime="basic"] .atlas-budget-section-40325[open] > .atlas-budget-body-40325 {
-  contain: layout paint style !important;
-  content-visibility: auto !important;
-  contain-intrinsic-size: auto 560px !important;
-}
-
-/* Memory/Audit descendants are the most expensive cards/tables. Skip them while
-   genuinely off-screen instead of forcing eager rasterisation of every report. */
-html[data-atlas-view-runtime="intermediate"] #atlasBudgetMemory40325 .atlas-budget-body-40325 > *,
-html[data-atlas-view-runtime="basic"] #atlasBudgetMemory40325 .atlas-budget-body-40325 > *,
-html[data-atlas-view-runtime="intermediate"] #atlasBudgetMemory40325 #atlasMemoryIntelligence > *,
-html[data-atlas-view-runtime="basic"] #atlasBudgetMemory40325 #atlasMemoryIntelligence > * {
-  contain: layout paint !important;
-  content-visibility: auto !important;
-  contain-intrinsic-size: auto 420px !important;
-}
-
-/* No height/opacity animation on large disclosures: opening must be one layout
-   decision, not hundreds of animated frames. */
-html[data-atlas-view-runtime="intermediate"] .atlas-budget-section-40325 > .atlas-budget-body-40325,
-html[data-atlas-view-runtime="basic"] .atlas-budget-section-40325 > .atlas-budget-body-40325,
-html[data-atlas-view-runtime="intermediate"] main.shell > details > .atlas-collapse-body,
-html[data-atlas-view-runtime="basic"] main.shell > details > .atlas-collapse-body {
-  transition: none !important;
 }
