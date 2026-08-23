@@ -528,10 +528,24 @@ const atlasMoveStrengthClass = (value) => {
 
 const clamp = (min, max, value) => Math.max(min, Math.min(max, value));
 
-function setText(el, value) { if (el) el.textContent = value;
+// 40.3.46 — IDEMPOTENT DOM WRITE LOCK.
+// Presentation renderers run frequently across a very large document. Writing the same
+// text/HTML still invalidates DOM/style work in browsers, so the common writers now mutate
+// only when the serialized value actually changes.
+function setText(el, value) {
+  if (!el) return false;
+  const next = value == null ? "" : String(value);
+  if (el.textContent === next) return false;
+  el.textContent = next;
+  return true;
 }
 
-function setHTML(el, value) { if (el) el.innerHTML = value;
+function setHTML(el, value) {
+  if (!el) return false;
+  const next = value == null ? "" : String(value);
+  if (el.innerHTML === next) return false;
+  el.innerHTML = next;
+  return true;
 }
 
 function escapeHtml(str) { return String(str ?? "").replace(/[&<>'"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;" }[c]));
@@ -16942,8 +16956,10 @@ function atlasV2SyncMathRail() {
   setText(document.getElementById("atlasMathRailScore"), scoreText);
 
   if (rail) {
-    rail.dataset.mathRailBand = band.id;
-    rail.style.setProperty("--math-rail-color", band.color);
+    if (rail.dataset.mathRailBand !== band.id) rail.dataset.mathRailBand = band.id;
+    if (rail.style.getPropertyValue("--math-rail-color") !== band.color) {
+      rail.style.setProperty("--math-rail-color", band.color);
+    }
   }
 }
 
@@ -17058,7 +17074,7 @@ function atlasMathSourceCard(source, freshness, universe = "") {
 function atlasRefreshMathFreshnessOnly() {
   const freshness = atlasMathFreshnessLabel(atlasSelectedCoin());
   document.querySelectorAll("[data-atlas-math-freshness]").forEach(node => {
-    node.textContent = freshness;
+    setText(node, freshness);
   });
 }
 
@@ -17074,9 +17090,9 @@ function atlasRefreshMathLiveSurface() {
   if (!card) return false;
   const value = card.querySelector("b");
   const detail = card.querySelector("small");
-  if (value) value.textContent = atlasCurrentQuotePriceText(quote);
+  if (value) setText(value, atlasCurrentQuotePriceText(quote));
   if (detail) {
-    detail.textContent = `${atlasQuoteStatusLabel(quote)} · ${quote.source} · ${atlasExactTimestampLabel(quote.timestamp)} · 24 h ${atlasCurrentQuoteChangeText(quote)}`;
+    setText(detail, `${atlasQuoteStatusLabel(quote)} · ${quote.source} · ${atlasExactTimestampLabel(quote.timestamp)} · 24 h ${atlasCurrentQuoteChangeText(quote)}`);
   }
   card.dataset.atlasMathLiveQuote = String(quote.status || "available");
   return true;
@@ -44087,22 +44103,22 @@ function updateAutoCountdown() {
   atlasRenderAutoTruthLive();
   if (!els.autoNextRead) return;
   if (!state.auto?.enabled) {
-    els.autoNextRead.textContent = "Auto OFF";
+    setText(els.autoNextRead, "Auto OFF");
     return;
   }
   if (!atlasPulseVisible()) {
-    els.autoNextRead.textContent = "Suspendu · onglet masqué";
+    setText(els.autoNextRead, "Suspendu · onglet masqué");
     return;
   }
   if (state.auto?.livecheckBusy) {
-    els.autoNextRead.textContent = "Lecture en cours";
+    setText(els.autoNextRead, "Lecture en cours");
     return;
   }
   if (!state.auto?.nextAt) {
-    els.autoNextRead.textContent = "Préparation";
+    setText(els.autoNextRead, "Préparation");
     return;
   }
-  els.autoNextRead.textContent = formatAutoDelay(new Date(state.auto.nextAt).getTime() - Date.now());
+  setText(els.autoNextRead, formatAutoDelay(new Date(state.auto.nextAt).getTime() - Date.now()));
 }
 
 function scheduleAutoRead(ms = null) {
@@ -46402,7 +46418,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.45";
+const ATLAS_BUILD = "40.3.46";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
