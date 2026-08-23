@@ -548,58 +548,6 @@ function setHTML(el, value) {
   return true;
 }
 
-// 40.3.47 — SCROLL-QUIET PRESENTATION BUDGET LOCK.
-// Data, WebSocket, Oracle, Evidence, Bridge and analysis cadence keep running while the
-// operator scrolls. Only presentation-only refresh callbacks are delayed for a short,
-// bounded quiet window and coalesced by key. This gives Firefox/APZ paint time without
-// hiding content, changing section topology, or introducing content-visibility tricks.
-const atlasPresentationBudget40347 = {
-  activeUntil: 0,
-  flushTimer: 0,
-  pending: new Map()
-};
-
-function atlasPresentationFlush40347() {
-  atlasPresentationBudget40347.flushTimer = 0;
-  const remaining = atlasPresentationBudget40347.activeUntil - performance.now();
-  if (remaining > 0) {
-    atlasPresentationBudget40347.flushTimer = window.setTimeout(
-      atlasPresentationFlush40347,
-      Math.ceil(remaining) + 16
-    );
-    return;
-  }
-  const pending = [...atlasPresentationBudget40347.pending.values()];
-  atlasPresentationBudget40347.pending.clear();
-  if (!pending.length) return;
-  requestAnimationFrame(() => {
-    for (const callback of pending) {
-      try { callback(); } catch (error) { console.warn("[40.3.47 presentation flush]", error); }
-    }
-  });
-}
-
-function atlasPresentationMarkScroll40347() {
-  atlasPresentationBudget40347.activeUntil = performance.now() + 180;
-  if (atlasPresentationBudget40347.flushTimer) return;
-  atlasPresentationBudget40347.flushTimer = window.setTimeout(atlasPresentationFlush40347, 196);
-}
-
-function atlasRunPresentationQuiet40347(key, callback) {
-  if (typeof callback !== "function") return false;
-  if (performance.now() >= atlasPresentationBudget40347.activeUntil) {
-    callback();
-    return true;
-  }
-  atlasPresentationBudget40347.pending.set(String(key || "presentation"), callback);
-  if (!atlasPresentationBudget40347.flushTimer) {
-    atlasPresentationBudget40347.flushTimer = window.setTimeout(atlasPresentationFlush40347, 196);
-  }
-  return false;
-}
-
-window.addEventListener("scroll", atlasPresentationMarkScroll40347, { passive: true });
-
 function escapeHtml(str) { return String(str ?? "").replace(/[&<>'"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;" }[c]));
 }
 
@@ -2582,10 +2530,7 @@ function atlasInitV2Shell() {
     if (location.hash) requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));
   });
 
-  window.setInterval(() => atlasRunPresentationQuiet40347("v2-math-decision", () => {
-    atlasV2SyncMathRail();
-    atlasV2DecisionLockRefresh();
-  }), 2000);
+  window.setInterval(() => { atlasV2SyncMathRail(); atlasV2DecisionLockRefresh(); }, 2000);
 }
 
 const ATLAS_RUNTIME_EXPECTED_CONTROLS = Object.freeze({
@@ -19935,10 +19880,7 @@ function initNewsSentinelV1() {
   void loadNewsLiveFeed({ automatic: true });
 
   if (newsFeedState.countdownTimer) clearInterval(newsFeedState.countdownTimer);
-  newsFeedState.countdownTimer = window.setInterval(
-    () => atlasRunPresentationQuiet40347("news-countdown", newsFeedUpdateCountdown),
-    1000
-  );
+  newsFeedState.countdownTimer = window.setInterval(newsFeedUpdateCountdown, 1000);
 }
 
 /* ============================================================
@@ -44242,10 +44184,7 @@ function startAutoReader() {
   renderAutoReader();
 
   if (state.auto.countdownTimer) clearInterval(state.auto.countdownTimer);
-  state.auto.countdownTimer = setInterval(
-    () => atlasRunPresentationQuiet40347("auto-countdown", updateAutoCountdown),
-    1000
-  );
+  state.auto.countdownTimer = setInterval(updateAutoCountdown, 1000);
 
   if (atlasPulseVisible()) {
     setTimeout(() => void atlasRunStartupLivecheck(), 50);
@@ -45013,13 +44952,7 @@ async function atlasInitAudienceModule() {
     }
   });
   ["pointerdown", "keydown", "touchstart"].forEach(type => window.addEventListener(type, atlasAudienceMarkActivity, { passive: true }));
-  let atlasAudienceScrollMarkAt40347 = 0;
-  window.addEventListener("scroll", () => {
-    const now = performance.now();
-    if (now - atlasAudienceScrollMarkAt40347 < 250) return;
-    atlasAudienceScrollMarkAt40347 = now;
-    atlasAudienceMarkActivity();
-  }, { passive: true });
+  window.addEventListener("scroll", atlasAudienceMarkActivity, { passive: true });
   window.addEventListener("pagehide", () => atlasAudienceCloseSession("pagehide"), { capture: true });
   window.addEventListener("pageshow", event => {
     if (!event.persisted) return;
@@ -45031,10 +44964,7 @@ async function atlasInitAudienceModule() {
   });
   document.getElementById("btnAudienceExport")?.addEventListener("click", atlasAudienceExportDiagnostic);
   atlasAudienceState.heartbeatTimer = window.setInterval(() => void atlasAudienceHeartbeat(), ATLAS_AUDIENCE_HEARTBEAT_MS);
-  atlasAudienceState.renderTimer = window.setInterval(
-    () => atlasRunPresentationQuiet40347("audience-status", atlasRenderAudienceStatus),
-    1000
-  );
+  atlasAudienceState.renderTimer = window.setInterval(atlasRenderAudienceStatus, 1000);
 }
 
 const ATLAS_LOCAL_BRIDGE_AUTO_INTERVAL_MS = 60000;
@@ -46488,7 +46418,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.47";
+const ATLAS_BUILD = "40.3.48";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48026,10 +47956,7 @@ loadQuestionnaire();
 
 renderAtlasMathCore();
 
-window.setInterval(
-  () => atlasRunPresentationQuiet40347("math-freshness", atlasRefreshMathFreshnessOnly),
-  60 * 1000
-);
+window.setInterval(atlasRefreshMathFreshnessOnly, 60 * 1000);
 
 window.atlasNewsDecisionRiskLine = function atlasNewsDecisionRiskLine() {
   const summary = newsFeedState.payload?.summary || {};
