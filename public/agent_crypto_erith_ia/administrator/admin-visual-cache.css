@@ -1,16 +1,112 @@
 /*
-  Agent-Crypto @erith.IA — Administrator 40.3.26
-  PERSISTENT VISUAL CACHE LOCK — CODE ONLY
+  Agent-Crypto @erith.IA — Administrator 40.3.27
+  INTERMEDIATE-FIRST RENDER BUDGET + PERSISTENT VISUAL CACHE LOCK
 
-  The graph office background is no longer a blocking CSS URL request.
-  admin-visual-cache.js resolves it from persistent IndexedDB first and only
-  reaches the network on a cache miss. The graph remains fully usable while
-  the decorative background is still resolving.
+  CODE ONLY / PRESENTATION ONLY
+  - 40.3.26 persistent chart-office cache is preserved.
+  - Intermediate is the daily default surface.
+  - Project / Creation / Missions and deep Administrator families do not paint
+    in Basic or Intermediate.
+  - No DOM reparenting. No business engine ownership. No Atlas rewrite.
 */
+
 :root {
   --agent-crypto-chart-office-cached: none;
 }
 
 body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-panel::before {
   background-image: var(--agent-crypto-chart-office-cached) !important;
+}
+
+/* ============================================================
+   40.3.27 — VIEW BUDGET
+   The runtime script writes data-atlas-view-runtime before body parsing.
+   display:none removes these surfaces from layout + paint without moving any
+   canonical node. Administrator restores them by changing only that dataset.
+   ============================================================ */
+
+html[data-atlas-view-runtime="basic"] .atlas-admin-only-40327,
+html[data-atlas-view-runtime="intermediate"] .atlas-admin-only-40327,
+html[data-atlas-view-runtime="basic"] .atlas-admin-project-nav-40327,
+html[data-atlas-view-runtime="intermediate"] .atlas-admin-project-nav-40327 {
+  display: none !important;
+}
+
+/* 03 · Preparation & operations — Administrator only. */
+html[data-atlas-view-runtime="basic"] .atlas-layout-family-operations,
+html[data-atlas-view-runtime="intermediate"] .atlas-layout-family-operations,
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="situation"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="situation"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="questionnaire"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="questionnaire"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="briefing"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="briefing"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="planning"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="planning"] {
+  display: none !important;
+}
+
+/* 04 · Experimentation & system — Administrator only. */
+html[data-atlas-view-runtime="basic"] .atlas-layout-family-system,
+html[data-atlas-view-runtime="intermediate"] .atlas-layout-family-system,
+html[data-atlas-view-runtime="basic"] #atlasStorageHealth40198,
+html[data-atlas-view-runtime="intermediate"] #atlasStorageHealth40198,
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="simulation"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="simulation"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="commandes"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="commandes"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="backend"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="backend"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="safety"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="safety"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="physical-security"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="physical-security"] {
+  display: none !important;
+}
+
+/* Creation / local infrastructure — daily Intermediate keeps Atlas/Aerith
+   CURRENT, but not the workshop or machine-memory maintenance tools. */
+html[data-atlas-view-runtime="basic"] #forge-aerith,
+html[data-atlas-view-runtime="intermediate"] #forge-aerith,
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="forge-aerith"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="forge-aerith"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="auto-reader"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="auto-reader"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="shared-memory"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="shared-memory"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="github-memory"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="github-memory"] {
+  display: none !important;
+}
+
+/* ERITH.IA project / Missions de vie — completely absent from daily views. */
+html[data-atlas-view-runtime="basic"] #missions-vie,
+html[data-atlas-view-runtime="intermediate"] #missions-vie,
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="fonds-erith"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="fonds-erith"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="association-erith"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="association-erith"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="aerith-enfance"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-enfance"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="aerith-animaux"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-animaux"],
+html[data-atlas-view-runtime="basic"] details[data-collapse-key="aerith-terre-vivante"],
+html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-terre-vivante"] {
+  display: none !important;
+}
+
+/* Closed native details: cheap without wrappers or node movement. */
+html[data-atlas-view-runtime="intermediate"] main.shell > details:not([open]),
+html[data-atlas-view-runtime="basic"] main.shell > details:not([open]) {
+  content-visibility: auto;
+  contain: layout paint style;
+  contain-intrinsic-size: auto 64px;
+}
+
+/* Open heavy bodies are isolated from global paint invalidation. */
+html[data-atlas-view-runtime="intermediate"] main.shell > details[open] > .atlas-collapse-body,
+html[data-atlas-view-runtime="basic"] main.shell > details[open] > .atlas-collapse-body {
+  content-visibility: auto;
+  contain: layout paint style;
+  contain-intrinsic-size: auto 720px;
 }
