@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.37";
+  const BUILD = "40.3.38";
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
@@ -188,16 +188,16 @@
 })();
 
 /* ==========================================================================
-   40.3.37 OWNER CONSOLIDATION
+   40.3.38 CANONICAL VISUAL OWNER
    Directional prewake / true-idle paint runtime formerly loaded as a separate
    js/admin-offscreen-paint-gate.js file. Runtime logic preserved here.
    ========================================================================== */
 (() => {
   "use strict";
 
-  const BUILD = "40.3.37";
-  const ROOT_CLASS = "atlas-directional-paint-window-40337";
-  const SLEEP_CLASS = "atlas-offscreen-paint-sleep-40337";
+  const BUILD = "40.3.38";
+  const ROOT_CLASS = "atlas-directional-paint-window-40338";
+  const SLEEP_CLASS = "atlas-offscreen-paint-sleep-40338";
   const WAKE_MARGIN = "9000px 0px 9000px 0px";
   const SCROLL_IDLE_MS = 750;
   const BOOT_IDLE_MS = 1400;
@@ -551,8 +551,10 @@
     sleepFarTargets
   });
 
-  globalThis.AtlasScrollPaint40337 = api;
-  globalThis.AtlasOffscreenPaint40337 = api;
+  globalThis.AtlasScrollPaint40338 = api;
+  globalThis.AtlasScrollPaint40337 = api; /* compatibility alias */
+  globalThis.AtlasOffscreenPaint40338 = api;
+  globalThis.AtlasOffscreenPaint40337 = api; /* compatibility alias */
   globalThis.AtlasScrollPaint40335 = api; /* compatibility alias */
   globalThis.AtlasOffscreenPaint40335 = api; /* compatibility alias */
 
