@@ -1,16 +1,15 @@
 /*
-  Agent-Crypto @erith.IA — Administrator 40.3.28
-  INTERMEDIATE-FIRST + EAGER VISIBLE PAINT + PERSISTENT VISUAL CACHE LOCK
+  Agent-Crypto @erith.IA — Administrator hotfix 40.3.29
+  BALANCED FIREFOX PAINT BUDGET + PERSISTENT VISUAL CACHE
 
   CODE ONLY / PRESENTATION ONLY
-  - 40.3.26 persistent chart-office cache is preserved.
-  - 40.3.27 Intermediate-first view budget is preserved.
-  - Project / Creation / Missions and deep Administrator families do not paint
-    in Basic or Intermediate.
-  - Visible/open content is painted eagerly: no content-visibility:auto on the
-    daily surface, to avoid Firefox grey/blank repaint windows while scrolling
-    or returning to the tab.
-  - No DOM reparenting. No business engine ownership. No Atlas rewrite.
+  - Keep the persistent visual blobs introduced in 40.3.26.
+  - Keep Intermediate as the daily view budget introduced in 40.3.27.
+  - Revert the 40.3.28 eager-paint regression: the complete long document must
+    never be forced into the active Firefox paint tree at once.
+  - Closed heavy sections are removed from layout/paint.
+  - Open heavy sections are isolated and rendered progressively by viewport.
+  - No DOM ownership, no market/oracle/math/bridge rewrite.
 */
 
 :root {
@@ -22,12 +21,8 @@ body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-panel::bef
 }
 
 /* ============================================================
-   40.3.28 — VIEW BUDGET
-   The runtime script writes data-atlas-view-runtime before body parsing.
-   display:none removes Administrator-only surfaces from layout + paint without
-   moving canonical nodes. Administrator restores them by dataset only.
+   DAILY VIEW BUDGET
    ============================================================ */
-
 html[data-atlas-view-runtime="basic"] .atlas-admin-only-40327,
 html[data-atlas-view-runtime="intermediate"] .atlas-admin-only-40327,
 html[data-atlas-view-runtime="basic"] .atlas-admin-project-nav-40327,
@@ -67,8 +62,7 @@ html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="physical
   display: none !important;
 }
 
-/* Creation / local infrastructure — daily Intermediate keeps Atlas/Aerith
-   CURRENT, but not the workshop or machine-memory maintenance tools. */
+/* Creation / local infrastructure — absent from daily views. */
 html[data-atlas-view-runtime="basic"] #forge-aerith,
 html[data-atlas-view-runtime="intermediate"] #forge-aerith,
 html[data-atlas-view-runtime="basic"] details[data-collapse-key="forge-aerith"],
@@ -82,7 +76,7 @@ html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="github-m
   display: none !important;
 }
 
-/* ERITH.IA project / Missions de vie — completely absent from daily views. */
+/* ERITH.IA project / Missions de vie — never part of Basic/Intermediate. */
 html[data-atlas-view-runtime="basic"] #missions-vie,
 html[data-atlas-view-runtime="intermediate"] #missions-vie,
 html[data-atlas-view-runtime="basic"] details[data-collapse-key="fonds-erith"],
@@ -99,29 +93,55 @@ html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-t
 }
 
 /* ============================================================
-   40.3.28 — FIREFOX NO-LAZY-PAINT LOCK
+   40.3.29 — BALANCED FIREFOX PAINT POLICY
 
-   40.3.27 used content-visibility:auto on visible/open heavy bodies. That can
-   intentionally postpone paint until a region approaches the viewport. On this
-   very large Administrator document, Firefox can then expose a grey/blank frame
-   while it catches up. Daily views already remove the expensive Administrator
-   families with display:none, so visible content is now painted normally.
+   40.3.28 forced content-visibility:visible / contain:none on the huge daily
+   document. That makes Firefox lay out and paint too much at once and is the
+   source of the severe slowdown. Restore progressive rendering, but only on
+   bounded subsection bodies so a single giant lazy surface cannot blank the
+   whole viewport.
    ============================================================ */
-html[data-atlas-view-runtime="intermediate"] main.shell > details[open] > .atlas-collapse-body,
-html[data-atlas-view-runtime="basic"] main.shell > details[open] > .atlas-collapse-body,
-html[data-atlas-view-runtime="intermediate"] .atlas-budget-body-40325,
-html[data-atlas-view-runtime="basic"] .atlas-budget-body-40325,
-html[data-atlas-view-runtime="intermediate"] #atlasMemoryIntelligence > *,
-html[data-atlas-view-runtime="basic"] #atlasMemoryIntelligence > * {
-  content-visibility: visible !important;
-  contain-intrinsic-size: none !important;
+
+/* Native closed top-level sections: their body is explicitly absent. */
+html[data-atlas-view-runtime="intermediate"] main.shell > details:not([open]) > .atlas-collapse-body,
+html[data-atlas-view-runtime="basic"] main.shell > details:not([open]) > .atlas-collapse-body,
+html[data-atlas-view-runtime="intermediate"] .atlas-budget-section-40325:not([open]) > .atlas-budget-body-40325,
+html[data-atlas-view-runtime="basic"] .atlas-budget-section-40325:not([open]) > .atlas-budget-body-40325 {
+  display: none !important;
 }
 
-/* Keep closed native details native. Their descendants are already excluded
-   from active rendering by <details>; no synthetic lazy-paint layer is needed. */
-html[data-atlas-view-runtime="intermediate"] main.shell > details:not([open]),
-html[data-atlas-view-runtime="basic"] main.shell > details:not([open]) {
-  contain: none !important;
-  content-visibility: visible !important;
-  contain-intrinsic-size: none !important;
+/* Open top-level bodies: isolate invalidation and render by viewport. */
+html[data-atlas-view-runtime="intermediate"] main.shell > details[open] > .atlas-collapse-body,
+html[data-atlas-view-runtime="basic"] main.shell > details[open] > .atlas-collapse-body {
+  contain: layout paint style !important;
+  content-visibility: auto !important;
+  contain-intrinsic-size: auto 720px !important;
+}
+
+/* Atlas heavy sub-sections are smaller bounded paint islands. */
+html[data-atlas-view-runtime="intermediate"] .atlas-budget-section-40325[open] > .atlas-budget-body-40325,
+html[data-atlas-view-runtime="basic"] .atlas-budget-section-40325[open] > .atlas-budget-body-40325 {
+  contain: layout paint style !important;
+  content-visibility: auto !important;
+  contain-intrinsic-size: auto 560px !important;
+}
+
+/* Memory/Audit descendants are the most expensive cards/tables. Skip them while
+   genuinely off-screen instead of forcing eager rasterisation of every report. */
+html[data-atlas-view-runtime="intermediate"] #atlasBudgetMemory40325 .atlas-budget-body-40325 > *,
+html[data-atlas-view-runtime="basic"] #atlasBudgetMemory40325 .atlas-budget-body-40325 > *,
+html[data-atlas-view-runtime="intermediate"] #atlasBudgetMemory40325 #atlasMemoryIntelligence > *,
+html[data-atlas-view-runtime="basic"] #atlasBudgetMemory40325 #atlasMemoryIntelligence > * {
+  contain: layout paint !important;
+  content-visibility: auto !important;
+  contain-intrinsic-size: auto 420px !important;
+}
+
+/* No height/opacity animation on large disclosures: opening must be one layout
+   decision, not hundreds of animated frames. */
+html[data-atlas-view-runtime="intermediate"] .atlas-budget-section-40325 > .atlas-budget-body-40325,
+html[data-atlas-view-runtime="basic"] .atlas-budget-section-40325 > .atlas-budget-body-40325,
+html[data-atlas-view-runtime="intermediate"] main.shell > details > .atlas-collapse-body,
+html[data-atlas-view-runtime="basic"] main.shell > details > .atlas-collapse-body {
+  transition: none !important;
 }

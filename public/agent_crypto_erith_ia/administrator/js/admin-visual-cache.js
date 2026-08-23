@@ -1,18 +1,21 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.28";
-  const RELEASE = "PARKER LEWIS CAN'T LOSE · INTERMEDIATE-FIRST + FIREFOX NO-LAZY-PAINT + PERSISTENT VISUAL CACHE";
+  /*
+    40.3.29 is a presentation/cache hotfix layered on the canonical 40.3.26
+    application. Do not rewrite the canonical app build meta at runtime: doing
+    so created the false CACHE/VERSION INCOHERENTS banner in 40.3.27/28.
+  */
+  const PATCH_BUILD = "40.3.29";
+  const RELEASE = "PARKER LEWIS CAN'T LOSE · BALANCED FIREFOX PAINT BUDGET + PERSISTENT VISUAL CACHE";
+  const BASE_BUILD = String(document.querySelector('meta[name="administrator-build"]')?.content || document.querySelector('meta[name="atlas-build"]')?.content || "40.3.26").trim();
+
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
-
-  // Never invalidate the visual blobs when moving from 40.3.26/27 to 40.3.28.
   const GENERATION = "administrator-visuals-2026-08-23-v1";
   const CHART_OFFICE = "./assets/visual/admin-chart-office.png";
 
-  // Keep the 40.3.27 key so the selected Basique / Intermédiaire /
-  // Administrator mode survives this build without migration or reset.
   const VIEW_STORAGE_KEY = "erith_admin_view_mode_40327";
   const VALID_VIEWS = new Set(["basic", "intermediate", "admin"]);
   const DEFAULT_VIEW = "intermediate";
@@ -27,12 +30,8 @@
   }
 
   function readView() {
-    try {
-      const saved = localStorage.getItem(VIEW_STORAGE_KEY);
-      return normalizeView(saved || DEFAULT_VIEW);
-    } catch (_) {
-      return DEFAULT_VIEW;
-    }
+    try { return normalizeView(localStorage.getItem(VIEW_STORAGE_KEY) || DEFAULT_VIEW); }
+    catch (_) { return DEFAULT_VIEW; }
   }
 
   function persistView(mode) {
@@ -42,12 +41,12 @@
   function setRuntimeView(mode, persist = false) {
     const next = normalizeView(mode);
     document.documentElement.dataset.atlasViewRuntime = next;
-    document.documentElement.dataset.atlasViewBudgetBuild = BUILD;
+    document.documentElement.dataset.atlasViewBudgetBuild = PATCH_BUILD;
     if (persist) persistView(next);
     return next;
   }
 
-  // Executes in <head>: daily view ownership exists before the large body is parsed.
+  /* Runs in <head>, before the large Administrator body is parsed. */
   let runtimeView = setRuntimeView(readView(), false);
 
   function absolute(input) {
@@ -142,9 +141,7 @@
       if (!blob || !blob.size || (blob.type && !blob.type.startsWith("image/"))) throw new Error("invalid visual blob");
       try {
         await write({ id, generation: GENERATION, blob, mime: blob.type || "", bytes: blob.size, cached_at: Date.now() });
-      } catch (_) {
-        // Persistent cache is an optimization only; never block the interface.
-      }
+      } catch (_) {}
       stats.network += 1;
       return { url: objectUrlFor(id, blob), source: "network", cached: false, bytes: blob.size };
     } catch (error) {
@@ -187,13 +184,14 @@
     return true;
   }
 
-  function scheduleNetwork(task) {
+  function scheduleIdle(task, timeout = 2200) {
     const run = () => { try { void task(); } catch (_) {} };
-    if (typeof requestIdleCallback === "function") requestIdleCallback(run, { timeout: 1400 });
-    else requestAnimationFrame(run);
+    if (typeof requestIdleCallback === "function") requestIdleCallback(run, { timeout });
+    else setTimeout(run, 32);
   }
 
   async function bootChartBackground() {
+    /* Fast path: cached blob only. Never wait for network before first paint. */
     try {
       const local = await resolve(CHART_OFFICE, { allowNetwork: false });
       if (local?.url) {
@@ -202,44 +200,15 @@
       }
     } catch (_) {}
 
-    scheduleNetwork(async () => {
+    /* Cold-cache network work is deliberately deferred. */
+    scheduleIdle(async () => {
       try {
         const resolved = await resolve(CHART_OFFICE, { allowNetwork: true });
         if (resolved?.url) setChartBackground(resolved.url, resolved.source);
       } catch (_) {
         setChartBackground(CHART_OFFICE, "direct-fallback");
       }
-    });
-  }
-
-  function modeLabel(mode) {
-    if (mode === "basic") return "Basique";
-    if (mode === "admin") return "Administrator";
-    return "Intermédiaire";
-  }
-
-  function patchVersionIdentity(mode = runtimeView) {
-    const buildMeta = document.querySelector('meta[name="atlas-build"]');
-    const adminMeta = document.querySelector('meta[name="administrator-build"]');
-    const releaseMeta = document.querySelector('meta[name="administrator-release"]');
-    const tokenMeta = document.querySelector('meta[name="atlas-asset-token"]');
-
-    if (buildMeta) buildMeta.content = BUILD;
-    if (adminMeta) adminMeta.content = BUILD;
-    if (releaseMeta) releaseMeta.content = RELEASE;
-    if (tokenMeta) tokenMeta.content = `market-core-v2.0-alpha-build-${BUILD}`;
-
-    document.title = `Agent-Crypto @erith.IA — Build ${BUILD} · ${modeLabel(mode)}`;
-
-    const badge = document.getElementById("atlasVersionControlText");
-    if (badge) badge.textContent = `Build ${BUILD} · ${modeLabel(mode)}`;
-
-    const footer = document.getElementById("footerRelease");
-    if (footer) footer.textContent = `Agent-Crypto @erith.IA · Market Core · Build ${BUILD} · Version : Parker Lewis Can't Lose`;
-
-    document.documentElement.dataset.administratorBuildRuntime = BUILD;
-    document.documentElement.dataset.firefoxPaintPolicy = "eager-visible";
-    document.documentElement.dataset.lazyPaintBlanking = "disabled";
+    }, 2800);
   }
 
   function markProjectNavigation() {
@@ -247,13 +216,7 @@
     for (const node of candidates) {
       const text = String(node.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
       if (!text) continue;
-      if (
-        text.includes("projet") ||
-        text.includes("création") ||
-        text.includes("creation") ||
-        text.includes("mission")
-      ) {
-        // Keep the 40.3.27 class name for CSS/browser-cache compatibility.
+      if (text.includes("projet") || text.includes("création") || text.includes("creation") || text.includes("mission")) {
         node.classList.add("atlas-admin-project-nav-40327");
       }
     }
@@ -266,13 +229,14 @@
       if (!(button instanceof HTMLElement)) continue;
       button.addEventListener("click", () => {
         runtimeView = setRuntimeView(button.dataset.atlasViewMode || DEFAULT_VIEW, true);
-        queueMicrotask(() => patchVersionIdentity(runtimeView));
       }, true);
     }
 
-    // Native view manager keeps visibility/business ownership. 40.3.28 only
-    // restores the saved mode and the paint budget; no DOM is reparented.
-    queueMicrotask(() => {
+    /* Do not synchronously target.click() during DOMContentLoaded. In 40.3.27/28
+       that could ask the native manager to traverse the enormous document while
+       Firefox was still parsing/painting. The early dataset already enforces the
+       daily paint budget; native mode restoration is deferred until idle. */
+    scheduleIdle(() => {
       const desired = normalizeView(readView());
       runtimeView = setRuntimeView(desired, false);
       const target = buttons.find(btn => normalizeView(btn.dataset.atlasViewMode) === desired);
@@ -280,19 +244,25 @@
         try { target.click(); } catch (_) {}
       }
       runtimeView = setRuntimeView(desired, false);
-      patchVersionIdentity(runtimeView);
-    });
+    }, 1600);
   }
 
   function bootViewBudget() {
-    document.documentElement.classList.add("atlas-view-budget-40327", "atlas-view-budget-40328");
+    document.documentElement.classList.add("atlas-view-budget-40327", "atlas-view-budget-40329");
     markProjectNavigation();
     bindViewButtons();
-    patchVersionIdentity(runtimeView);
+
+    /* Preserve canonical app identity to avoid the false 40.3.26/40.3.28 cache
+       mismatch. Patch identity is diagnostic-only and never replaces app meta. */
+    document.documentElement.dataset.administratorBuildRuntime = BASE_BUILD;
+    document.documentElement.dataset.visualCachePatchBuild = PATCH_BUILD;
+    document.documentElement.dataset.firefoxPaintPolicy = "sectional-progressive";
+    document.documentElement.dataset.lazyPaintBlanking = "bounded-subsections";
   }
 
   const api = Object.freeze({
-    build: BUILD,
+    build: BASE_BUILD,
+    patch_build: PATCH_BUILD,
     release: RELEASE,
     database: DB_NAME,
     generation: GENERATION,
@@ -309,20 +279,19 @@
     get_view: () => runtimeView,
     set_view: mode => {
       runtimeView = setRuntimeView(mode, true);
-      patchVersionIdentity(runtimeView);
       return runtimeView;
     },
     dom_reparenting: false,
     project_series_in_intermediate: false,
-    lazy_visible_paint: false,
-    firefox_grey_frame_mitigation: "content-visibility-auto-disabled-on-daily-visible-surfaces"
+    firefox_paint_policy: "progressive-bounded-subsections"
   });
 
+  globalThis.AgentCryptoVisualCache40329 = api;
   globalThis.AgentCryptoVisualCache40328 = api;
   globalThis.AgentCryptoVisualCache40327 = api;
   globalThis.AgentCryptoVisualCache40326 = api;
 
-  document.documentElement.dataset.visualCacheBuild = BUILD;
+  document.documentElement.dataset.visualCacheBuild = PATCH_BUILD;
   void bootChartBackground();
 
   if (document.readyState === "loading") {
