@@ -31,3 +31,25 @@ body.atlas-administrator-mirror.atlas-firefox-compositor-40323 #missions-vie .li
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+
+
+/* ============================================================================
+   Agent-Crypto @erith.IA — Build 40.3.39
+   PARKER LEWIS CAN'T LOSE · FIREFOX GLOBAL BACKDROP COMPOSITOR LOCK
+
+   Cross-interface evidence:
+   - the transient grey repaint sheet is reproducible in Administrator AND Web Classic;
+   - both families contain backdrop-filter glass surfaces;
+   - 40.3.23 disabled backdrop-filter only on a bounded selector list.
+
+   40.3.39 changes ONE rendering variable in Administrator: every remaining
+   backdrop-filter is neutralized under the Administrator body. No layout,
+   visibility, position, transform, opacity, geometry, data, storage, chart,
+   Window Manager or navigation rule is changed here.
+   ============================================================================ */
+body.atlas-administrator-mirror *,
+body.atlas-administrator-mirror *::before,
+body.atlas-administrator-mirror *::after {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
