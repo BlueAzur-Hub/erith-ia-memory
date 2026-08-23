@@ -1,0 +1,16 @@
+/*
+  Agent-Crypto @erith.IA — Administrator 40.3.26
+  PERSISTENT VISUAL CACHE LOCK — CODE ONLY
+
+  The graph office background is no longer a blocking CSS URL request.
+  admin-visual-cache.js resolves it from persistent IndexedDB first and only
+  reaches the network on a cache miss. The graph remains fully usable while
+  the decorative background is still resolving.
+*/
+:root {
+  --agent-crypto-chart-office-cached: none;
+}
+
+body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-panel::before {
+  background-image: var(--agent-crypto-chart-office-cached) !important;
+}
