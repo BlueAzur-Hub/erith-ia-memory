@@ -327,9 +327,12 @@
               } catch {}
             }
 
-            // 40.3.42 — detach keeps the native x/width geometry, reparents the
-            // real nodes, then the central setFloating() path applies only the
-            // proven 40.3.19 height fit. No full content-plus-chrome auto-fit.
+            // 40.3.20 — restore the native 40.1.32 first-detach contract.
+            // The real nodes are reparented first, then autoFitFloatingShell()
+            // measures the actual floating content + chrome exactly once.
+            // 40.3.15 disabled this path for Firefox performance; the later
+            // Bridge/passive-supervision repairs removed the continuous load,
+            // so the bounded first-detach measurement can safely own geometry again.
             setFloating(win, true, true, detachGeometry);
 
             // The pressed control may have moved to a different DOM parent.
@@ -723,90 +726,12 @@
       return true;
     }
 
-    // 40.3.42 — persisted floating geometry grey-plate recovery.
-    // A saved shell may carry a historical docked-union / maximized-like height
-    // even though its current real content is much shorter. On restore, measure
-    // the reparented shell exactly once and SHRINK only when the saved height is
-    // materially oversized. Never expand a stored window, never rewrite width,
-    // never reset x/y unless the shorter height would leave the shell unreachable.
-    function normalizePersistedShellHeight40342(win) {
-      if (!win || win.directFixed || !win.floating || !(win.shell instanceof HTMLElement)) return false;
-      if (win.maximized || win.minimized || win.hidden) return false;
-
-      const shell = win.shell;
-      const rect = shell.getBoundingClientRect?.();
-      if (!rect || rect.width <= 1 || rect.height <= 1) return false;
-
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-      const viewportMaxHeight = Math.max(MIN_HEIGHT, vh - VIEWPORT_MARGIN * 2);
-      const computed = window.getComputedStyle?.(shell);
-      const px = value => Number.parseFloat(String(value || "0")) || 0;
-      const borderY = px(computed?.borderTopWidth) + px(computed?.borderBottomWidth);
-      const previousHeight = Math.min(viewportMaxHeight, Math.max(MIN_HEIGHT, Math.round(rect.height)));
-
-      shell.style.setProperty("height", "auto");
-      shell.style.setProperty("max-height", "none");
-      shell.style.setProperty("overflow", "visible");
-      void shell.offsetHeight;
-
-      const naturalHeight = Math.max(
-        MIN_HEIGHT,
-        Math.ceil((Number(shell.scrollHeight) || Number(shell.offsetHeight) || MIN_HEIGHT) + borderY)
-      );
-      const fittedHeight = Math.min(naturalHeight, viewportMaxHeight);
-      const shrinkDelta = previousHeight - fittedHeight;
-      const shrinkThreshold = Math.max(96, Math.round(previousHeight * 0.12));
-      const shouldShrink = shrinkDelta >= shrinkThreshold;
-
-      shell.style.removeProperty("max-height");
-      shell.style.removeProperty("overflow");
-
-      if (!shouldShrink) {
-        setManagedFloatingStyle(win, shell, "height", `${previousHeight}px`);
-        shell.dataset.adminNativePersistedHeight40342 = "kept";
-        shell.dataset.adminNativeShellNaturalHeight = String(naturalHeight);
-        shell.dataset.adminNativeShellFittedHeight = String(previousHeight);
-        return false;
-      }
-
-      const x = clamp(rect.left, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vw - Math.min(190, rect.width)));
-      const y = clamp(rect.top, VIEWPORT_MARGIN, Math.max(VIEWPORT_MARGIN, vh - fittedHeight - VIEWPORT_MARGIN));
-      setManagedFloatingStyle(win, shell, "left", `${x}px`);
-      setManagedFloatingStyle(win, shell, "top", `${y}px`);
-      setManagedFloatingStyle(win, shell, "height", `${fittedHeight}px`);
-
-      shell.dataset.adminNativePersistedHeight40342 = "shrunk";
-      shell.dataset.adminNativeShellSizing = "persisted-height-recovery-40342";
-      shell.dataset.adminNativeShellNaturalHeight = String(naturalHeight);
-      shell.dataset.adminNativeShellFittedHeight = String(fittedHeight);
-      shell.dataset.adminNativeShellViewportClamped = naturalHeight > fittedHeight + 1 ? "1" : "0";
-      win.shellSizingMode = "persisted-height-recovery-40342";
-      win.geometry = { x, y, width: rect.width, height: fittedHeight };
-
-      // Persist only the corrected presentation geometry so the same stale plate
-      // is not rebuilt on every boot. Business state and window visibility stay intact.
-      const saved = getState(win.id);
-      writeStorage(stateKey(win.id), JSON.stringify({
-        ...saved,
-        floating: true,
-        x,
-        y,
-        width: rect.width,
-        height: fittedHeight
-      }));
-      return true;
-    }
-
     function persistGeometry(win) {
       if (!win?.floating || win.maximized) return;
       const rect = currentRect(win);
-      // 40.3.42 — persist what Firefox is actually rendering. The historical
-      // win.geometry.height fallback could re-save an obsolete oversized shell
-      // after a manual resize or a recovery shrink.
       const safe = {
         ...rect,
-        height: rect.height
+        height: win.geometry?.height || rect.height
       };
       win.geometry = { ...safe };
       patchState(win.id, {
@@ -1225,22 +1150,15 @@
       }
       const hadGeometry = !!win.geometry;
       const baseGeometry = clampWindowGeometry(win, geometry || win.geometry || preferredGeometry || currentRect(win));
-      // 40.3.42 — retire the 40.3.20 full content-plus-chrome auto-fit as the
-      // default detach owner. It temporarily rewrites width/height/overflow and
-      // forces a full shell layout. Keep the proven 40.3.19 height-only fit.
-      const firstDetachHeightFit40342 = !win.directFixed
+      const autoFitShell = !win.directFixed
+        && options.autoFitShell !== false
         && !hadGeometry
         && options.restorePersisted !== true;
-      const autoFitShell = false;
       win.geometry = { ...baseGeometry };
       if (win.directFixed) setDirectFloating(win, true, baseGeometry);
       else buildShell(win, baseGeometry, { autoFit: autoFitShell });
       win.floating = true;
-      if (!win.directFixed && win.shell) {
-        if (options.restorePersisted === true) normalizePersistedShellHeight40342(win);
-        else if (firstDetachHeightFit40342) fitDragDetachedShellHeight40319(win);
-        syncPortalHost(win);
-      }
+      if (!win.directFixed) syncPortalHost(win);
       domainMask(win);
       applyPresentationState(win);
       bringToFront(win, false);
@@ -1719,7 +1637,7 @@
     layout_preserving_placeholders: true,
     reserved_placeholder_css_zero_override: false,
     multi_node_geometry: "visible-node-union",
-    floating_shell_auto_fit: "first-detach-height-only-40342",
+    floating_shell_auto_fit: "first-detach-content-plus-chrome",
     floating_shell_height_cap: "viewport-minus-24px",
     floating_shell_overflow: "scroll-only-when-natural-height-exceeds-viewport",
     floating_shell_saved_geometry_respected: true,
@@ -1768,14 +1686,6 @@
     ,native_first_detach_autofit_layout_passes_40320: 1
     ,legacy_stored_geometry_height_fallback_40320: true
     ,saved_workspace_reset_40320: false
-    ,native_first_detach_autofit_superseded_40342: true
-    ,first_detach_geometry_owner_40342: "40.3.19-height-only-fit"
-    ,persisted_shell_height_revalidation_40342: "shrink-only-one-layout-pass"
-    ,persisted_shell_width_rewrite_40342: false
-    ,persisted_shell_height_expansion_40342: false
-    ,persist_geometry_uses_rendered_rect_height_40342: true
-    ,saved_workspace_reset_40342: false
-    ,placeholder_contract_changed_40342: false
     ,floating_surface_backdrop_blur_40315: false
     ,floating_surface_repeating_background_40315: false
     ,maximized_surface_40315: "97vw x 97vh"

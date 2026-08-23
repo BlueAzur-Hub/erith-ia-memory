@@ -1361,3 +1361,30 @@ body.atlas-family04-canonical-hierarchy-40320 main.shell > details[data-collapse
     margin-top:30px!important;
   }
 }
+
+
+/* ============================================================================
+   40.3.44 — FAMILY CONTROL RIGHT-EDGE + EMBLEM NON-RESERVING LOCK
+   Operator evidence: family 01 is the canonical placement reference.
+   The historical 40.3.00 illustrated-family rule moved controls left by 82px
+   to reserve the emblem. That reservation made 02/03/04 controls drift away
+   from the common right-edge target. Restore native family control geometry
+   (right:16px) and move the decorative emblem to the left of the controls.
+   Presentation only: no Window Manager behavior, no section order, no resize.
+   ============================================================================ */
+body.atlas-administrator-mirror.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-native-controls{
+  position:absolute!important;
+  top:50%!important;
+  right:16px!important;
+  bottom:auto!important;
+  left:auto!important;
+  transform:translateY(-50%)!important;
+  z-index:2147481200!important;
+}
+body.atlas-administrator-mirror.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3{
+  right:184px!important;
+}
+@media (max-width:1366px){
+  body.atlas-administrator-mirror.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-native-controls{right:16px!important;}
+  body.atlas-administrator-mirror.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3{right:178px!important;}
+}
