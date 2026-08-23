@@ -1,12 +1,15 @@
 /*
-  Agent-Crypto @erith.IA — Administrator 40.3.27
-  INTERMEDIATE-FIRST RENDER BUDGET + PERSISTENT VISUAL CACHE LOCK
+  Agent-Crypto @erith.IA — Administrator 40.3.28
+  INTERMEDIATE-FIRST + EAGER VISIBLE PAINT + PERSISTENT VISUAL CACHE LOCK
 
   CODE ONLY / PRESENTATION ONLY
   - 40.3.26 persistent chart-office cache is preserved.
-  - Intermediate is the daily default surface.
+  - 40.3.27 Intermediate-first view budget is preserved.
   - Project / Creation / Missions and deep Administrator families do not paint
     in Basic or Intermediate.
+  - Visible/open content is painted eagerly: no content-visibility:auto on the
+    daily surface, to avoid Firefox grey/blank repaint windows while scrolling
+    or returning to the tab.
   - No DOM reparenting. No business engine ownership. No Atlas rewrite.
 */
 
@@ -19,10 +22,10 @@ body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-panel::bef
 }
 
 /* ============================================================
-   40.3.27 — VIEW BUDGET
+   40.3.28 — VIEW BUDGET
    The runtime script writes data-atlas-view-runtime before body parsing.
-   display:none removes these surfaces from layout + paint without moving any
-   canonical node. Administrator restores them by changing only that dataset.
+   display:none removes Administrator-only surfaces from layout + paint without
+   moving canonical nodes. Administrator restores them by dataset only.
    ============================================================ */
 
 html[data-atlas-view-runtime="basic"] .atlas-admin-only-40327,
@@ -95,18 +98,30 @@ html[data-atlas-view-runtime="intermediate"] details[data-collapse-key="aerith-t
   display: none !important;
 }
 
-/* Closed native details: cheap without wrappers or node movement. */
-html[data-atlas-view-runtime="intermediate"] main.shell > details:not([open]),
-html[data-atlas-view-runtime="basic"] main.shell > details:not([open]) {
-  content-visibility: auto;
-  contain: layout paint style;
-  contain-intrinsic-size: auto 64px;
+/* ============================================================
+   40.3.28 — FIREFOX NO-LAZY-PAINT LOCK
+
+   40.3.27 used content-visibility:auto on visible/open heavy bodies. That can
+   intentionally postpone paint until a region approaches the viewport. On this
+   very large Administrator document, Firefox can then expose a grey/blank frame
+   while it catches up. Daily views already remove the expensive Administrator
+   families with display:none, so visible content is now painted normally.
+   ============================================================ */
+html[data-atlas-view-runtime="intermediate"] main.shell > details[open] > .atlas-collapse-body,
+html[data-atlas-view-runtime="basic"] main.shell > details[open] > .atlas-collapse-body,
+html[data-atlas-view-runtime="intermediate"] .atlas-budget-body-40325,
+html[data-atlas-view-runtime="basic"] .atlas-budget-body-40325,
+html[data-atlas-view-runtime="intermediate"] #atlasMemoryIntelligence > *,
+html[data-atlas-view-runtime="basic"] #atlasMemoryIntelligence > * {
+  content-visibility: visible !important;
+  contain-intrinsic-size: none !important;
 }
 
-/* Open heavy bodies are isolated from global paint invalidation. */
-html[data-atlas-view-runtime="intermediate"] main.shell > details[open] > .atlas-collapse-body,
-html[data-atlas-view-runtime="basic"] main.shell > details[open] > .atlas-collapse-body {
-  content-visibility: auto;
-  contain: layout paint style;
-  contain-intrinsic-size: auto 720px;
+/* Keep closed native details native. Their descendants are already excluded
+   from active rendering by <details>; no synthetic lazy-paint layer is needed. */
+html[data-atlas-view-runtime="intermediate"] main.shell > details:not([open]),
+html[data-atlas-view-runtime="basic"] main.shell > details:not([open]) {
+  contain: none !important;
+  content-visibility: visible !important;
+  contain-intrinsic-size: none !important;
 }
