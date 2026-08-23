@@ -1037,39 +1037,129 @@ function initAtlasCollapsibleLayout() {
   });
 }
 
-function atlasInitNavigationSpy() {
-  const links = [...document.querySelectorAll('.nav a[href^="#"]')];
-  const entries = links.map(link => {
-    const id = decodeURIComponent(String(link.getAttribute("href") || "").slice(1));
-    return { link, id, target: document.getElementById(id) };
-  }).filter(entry => entry.target);
-  if (!entries.length) return;
-  let scheduled = false;
-  const update = () => {
-    scheduled = false;
+// 40.3.45 — SCROLL LAYOUT-READ ELIMINATION LOCK.
+// Firefox checkerboarding was still reproducible while the page was otherwise healthy.
+// Two independent scroll owners used target.offsetTop inside rAF callbacks. If a periodic
+// renderer had dirtied layout just before the scroll frame, those reads could force a
+// synchronous layout of the very large Administrator document. Geometry is now cached
+// outside the scroll hot path. Scroll only compares cached numbers and updates state when
+// the active section actually changes.
+const atlasViewportTracker40345 = {
+  navEntries: [],
+  advancedEntries: [],
+  navActiveId: "",
+  advancedActiveId: "",
+  applyScheduled: false,
+  geometryScheduled: false,
+  listenersBound: false
+};
+
+function atlasViewportCollectGeometry40345() {
+  atlasViewportTracker40345.navEntries.forEach(entry => {
+    entry.top = Number(entry.target?.offsetTop || 0);
+  });
+
+  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+  atlasViewportTracker40345.advancedEntries = selector && Array.isArray(ATLAS_V2_SECTION_MANIFEST)
+    ? ATLAS_V2_SECTION_MANIFEST
+        .filter(entry => !["essential", "adaptive"].includes(entry.level))
+        .map(entry => ({
+          id: entry.id,
+          target: document.getElementById(entry.id),
+          top: 0
+        }))
+        .filter(entry => entry.target && !entry.target.hidden)
+    : [];
+  atlasViewportTracker40345.advancedEntries.forEach(entry => {
+    entry.top = Number(entry.target?.offsetTop || 0);
+  });
+}
+
+function atlasViewportApply40345() {
+  const navEntries = atlasViewportTracker40345.navEntries;
+  if (navEntries.length) {
     const probe = window.scrollY + Math.min(window.innerHeight * 0.32, 260);
-    let active = entries[0];
-    for (const entry of entries) {
-      if (entry.target.offsetTop <= probe) active = entry;
+    let active = navEntries[0];
+    for (const entry of navEntries) {
+      if (entry.top <= probe) active = entry;
       else break;
     }
-    for (const entry of entries) {
-      const selected = entry === active;
-      entry.link.classList.toggle("is-active", selected);
-      if (selected) entry.link.setAttribute("aria-current", "location");
-      else entry.link.removeAttribute("aria-current");
+    if (active?.id && active.id !== atlasViewportTracker40345.navActiveId) {
+      atlasViewportTracker40345.navActiveId = active.id;
+      for (const entry of navEntries) {
+        const selected = entry === active;
+        entry.link.classList.toggle("is-active", selected);
+        if (selected) entry.link.setAttribute("aria-current", "location");
+        else entry.link.removeAttribute("aria-current");
+      }
     }
-  };
-  const schedule = () => {
-    if (scheduled) return;
-    scheduled = true;
-    requestAnimationFrame(update);
-  };
-  window.addEventListener("scroll", schedule, { passive: true });
-  window.addEventListener("resize", schedule, { passive: true });
-  window.addEventListener("hashchange", schedule);
-  for (const { link } of entries) link.addEventListener("click", () => setTimeout(schedule, 0));
-  update();
+  }
+
+  if (typeof atlasV2IsExpandedMode === "function" && atlasV2IsExpandedMode()) {
+    const selector = document.getElementById("atlasV2AdvancedModuleSelect");
+    const entries = atlasViewportTracker40345.advancedEntries;
+    if (selector && entries.length) {
+      const probe = window.scrollY + Math.min(window.innerHeight * 0.3, 240);
+      let current = "";
+      for (const entry of entries) {
+        if (entry.top <= probe) current = entry.id;
+      }
+      if (
+        current
+        && current !== atlasViewportTracker40345.advancedActiveId
+        && [...selector.options].some(option => option.value === current)
+      ) {
+        atlasViewportTracker40345.advancedActiveId = current;
+        if (selector.value !== current) selector.value = current;
+      }
+    }
+  }
+}
+
+function atlasViewportScheduleApply40345() {
+  if (atlasViewportTracker40345.applyScheduled) return;
+  atlasViewportTracker40345.applyScheduled = true;
+  requestAnimationFrame(() => {
+    atlasViewportTracker40345.applyScheduled = false;
+    atlasViewportApply40345();
+  });
+}
+
+function atlasViewportScheduleGeometry40345() {
+  if (atlasViewportTracker40345.geometryScheduled) return;
+  atlasViewportTracker40345.geometryScheduled = true;
+  requestAnimationFrame(() => {
+    atlasViewportTracker40345.geometryScheduled = false;
+    atlasViewportCollectGeometry40345();
+    atlasViewportApply40345();
+  });
+}
+
+function atlasViewportBind40345() {
+  if (atlasViewportTracker40345.listenersBound) return;
+  atlasViewportTracker40345.listenersBound = true;
+  window.addEventListener("scroll", atlasViewportScheduleApply40345, { passive: true });
+  window.addEventListener("resize", atlasViewportScheduleGeometry40345, { passive: true });
+  window.addEventListener("hashchange", atlasViewportScheduleGeometry40345);
+  window.addEventListener("atlas:v2mode", atlasViewportScheduleGeometry40345);
+  window.addEventListener("pageshow", atlasViewportScheduleGeometry40345);
+  window.addEventListener("load", atlasViewportScheduleGeometry40345, { once: true });
+  document.addEventListener("toggle", atlasViewportScheduleGeometry40345, true);
+}
+
+function atlasInitNavigationSpy() {
+  const links = [...document.querySelectorAll('.nav a[href^="#"]')];
+  atlasViewportTracker40345.navEntries = links.map(link => {
+    const id = decodeURIComponent(String(link.getAttribute("href") || "").slice(1));
+    return { link, id, target: document.getElementById(id), top: 0 };
+  }).filter(entry => entry.target);
+  if (!atlasViewportTracker40345.navEntries.length) return;
+
+  atlasViewportBind40345();
+  for (const { link } of atlasViewportTracker40345.navEntries) {
+    link.addEventListener("click", () => setTimeout(atlasViewportScheduleGeometry40345, 0));
+  }
+  atlasViewportScheduleGeometry40345();
 }
 
 const ATLAS_ACCESS_CONFIG_KEY = "agent_crypto_local_access_v1";
@@ -2292,23 +2382,10 @@ function atlasV2OpenSelectedModule() {
 }
 
 function atlasV2SyncAdvancedSelectorFromViewport() {
-  if (!atlasV2IsExpandedMode()) return;
-  const selector = document.getElementById("atlasV2AdvancedModuleSelect");
-  if (!selector) return;
-
-  const probe = window.scrollY + Math.min(window.innerHeight * 0.3, 240);
-  let current = "";
-
-  for (const entry of ATLAS_V2_SECTION_MANIFEST) {
-    if (["essential", "adaptive"].includes(entry.level)) continue;
-    const target = document.getElementById(entry.id);
-    if (!target || target.hidden) continue;
-    if (target.offsetTop <= probe) current = entry.id;
-  }
-
-  if (current && [...selector.options].some(option => option.value === current)) {
-    selector.value = current;
-  }
+  // 40.3.45 — geometry is owned by atlasViewportTracker40345 and refreshed
+  // outside the scroll hot path. This compatibility entry point performs no
+  // layout reads and only applies the cached viewport state.
+  atlasViewportApply40345();
 }
 
 function atlasInitV2Shell() {
@@ -2423,17 +2500,10 @@ function atlasInitV2Shell() {
   });
 
   window.addEventListener("hashchange", () => atlasV2HandleHashTarget({ scroll: false }));
-  let selectorScheduled = false;
-  const scheduleSelectorSync = () => {
-    if (selectorScheduled) return;
-    selectorScheduled = true;
-    requestAnimationFrame(() => {
-      selectorScheduled = false;
-      atlasV2SyncAdvancedSelectorFromViewport();
-    });
-  };
-  window.addEventListener("scroll", scheduleSelectorSync, { passive: true });
-  window.addEventListener("resize", scheduleSelectorSync, { passive: true });
+  // 40.3.45 — Navigation Spy + advanced selector share one passive viewport
+  // tracker. No independent offsetTop reader remains attached to scroll.
+  atlasViewportBind40345();
+  atlasViewportScheduleGeometry40345();
 
   const initialV2Mode = atlasV2Mode();
   if (initialV2Mode === "intermediate") atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "intermediate");
@@ -46332,7 +46402,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.44";
+const ATLAS_BUILD = "40.3.45";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
