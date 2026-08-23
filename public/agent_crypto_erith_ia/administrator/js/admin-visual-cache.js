@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.41";
+  const BUILD = "40.3.42";
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
@@ -188,7 +188,7 @@
 })();
 
 /* ==========================================================================
-   40.3.41 — NATIVE SCROLL RESTORE
+   40.3.42 — NATIVE SCROLL RESTORE
 
    The 40.3.33 -> 40.3.38 offscreen sleep/prewake experiment is intentionally
    retired. No scroll/wheel/touch/key listener, IntersectionObserver,

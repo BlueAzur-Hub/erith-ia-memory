@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.41";
+  const BUILD_CURRENT = "40.3.42";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -1325,7 +1325,7 @@
       && managerContract?.layout_preserving_placeholders === true
       && managerContract?.reserved_placeholder_css_zero_override === false
       && managerContract?.multi_node_geometry === "visible-node-union"
-      && managerContract?.floating_shell_auto_fit === "first-detach-content-plus-chrome"
+      && managerContract?.floating_shell_auto_fit === "first-detach-height-only-40342"
       && managerContract?.floating_shell_height_cap === "viewport-minus-24px"
       && managerContract?.floating_shell_saved_geometry_respected === true
       && managerContract?.direct_fixed_auto_fit === false
