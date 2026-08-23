@@ -327,13 +327,14 @@
               } catch {}
             }
 
-            // 40.3.20 — restore the native 40.1.32 first-detach contract.
-            // The real nodes are reparented first, then autoFitFloatingShell()
-            // measures the actual floating content + chrome exactly once.
-            // 40.3.15 disabled this path for Firefox performance; the later
-            // Bridge/passive-supervision repairs removed the continuous load,
-            // so the bounded first-detach measurement can safely own geometry again.
-            setFloating(win, true, true, detachGeometry);
+            // 40.3.49 — operator drag-detach recovery.
+            // The Fil Crypto already proved two things: 40.3.15 disabled the
+            // full first-detach auto-fit for Firefox performance, and 40.3.19
+            // removed the giant drag plate by fitting HEIGHT only after the real
+            // nodes had been reparented. Keep that proven drag path local here.
+            // IMPORTANT: persisted restore/setFloating ownership is untouched.
+            setFloating(win, true, true, detachGeometry, { autoFitShell: false });
+            fitDragDetachedShellHeight40319(win);
 
             // The pressed control may have moved to a different DOM parent.
             // Rebase the gesture from the fitted floating geometry and reacquire
@@ -1686,6 +1687,12 @@
     ,native_first_detach_autofit_layout_passes_40320: 1
     ,legacy_stored_geometry_height_fallback_40320: true
     ,saved_workspace_reset_40320: false
+    ,operator_first_drag_autofit_retired_40349: true
+    ,operator_first_drag_geometry_owner_40349: "40.3.19-height-only-fit"
+    ,persisted_restore_geometry_changed_40349: false
+    ,placeholder_contract_changed_40349: false
+    ,new_timer_40349: false
+    ,new_observer_40349: false
     ,floating_surface_backdrop_blur_40315: false
     ,floating_surface_repeating_background_40315: false
     ,maximized_surface_40315: "97vw x 97vh"
