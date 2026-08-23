@@ -1,31 +1,27 @@
 /*
-  Agent-Crypto @erith.IA — Administrator 40.3.34
-  SCROLL PAINT CONTINUITY + IDLE SLEEP LOCK
+  Agent-Crypto @erith.IA — Administrator 40.3.35
+  DIRECTIONAL PREWAKE + TRUE IDLE SLEEP LOCK
 
-  40.3.33 proved that visibility sleep can reduce far-off paint, but operator captures
-  show grey surfaces during movement while the DOM still exists. 40.3.34 therefore
-  keeps sleeping sections paint-visible for the whole active scroll/movement phase,
-  and only re-arms far-off sleep after the document becomes idle.
+  40.3.34 was close but had two internal defects:
+  1) finishMotion() called the idle sleep pass while state.moving was still true,
+     so post-scroll sleep returned early and never re-armed;
+  2) movement used a global wake-all / moving visibility override, forcing every
+     sleeping heavy surface visible at once and creating a large repaint burst.
 
+  40.3.35 keeps only far-off surfaces hidden, prewakes a directional viewport
+  corridor before paint, and sleeps far targets only after motion is truly idle.
   No layout/display/position/transform/content-visibility/contain owner is added.
 */
-html.atlas-scroll-paint-continuity-40334:not(.atlas-scroll-paint-moving-40334)
+html.atlas-directional-paint-window-40335
 body.atlas-administrator-mirror
-.atlas-offscreen-paint-sleep-40334 {
+.atlas-offscreen-paint-sleep-40335 {
   visibility: hidden !important;
 }
 
-/* During active movement, sleeping marks are intentionally non-operative. */
-html.atlas-scroll-paint-continuity-40334.atlas-scroll-paint-moving-40334
-body.atlas-administrator-mirror
-.atlas-offscreen-paint-sleep-40334 {
-  visibility: visible !important;
-}
-
 @media print {
-  html.atlas-scroll-paint-continuity-40334
+  html.atlas-directional-paint-window-40335
   body.atlas-administrator-mirror
-  .atlas-offscreen-paint-sleep-40334 {
+  .atlas-offscreen-paint-sleep-40335 {
     visibility: visible !important;
   }
 }

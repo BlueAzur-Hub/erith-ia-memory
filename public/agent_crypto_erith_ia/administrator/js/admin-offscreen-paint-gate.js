@@ -1,14 +1,16 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.34";
-  const ROOT_CLASS = "atlas-scroll-paint-continuity-40334";
-  const MOVING_CLASS = "atlas-scroll-paint-moving-40334";
-  const SLEEP_CLASS = "atlas-offscreen-paint-sleep-40334";
-  const WAKE_MARGIN = "6000px 0px 6000px 0px";
-  const SCROLL_IDLE_MS = 650;
-  const BOOT_IDLE_MS = 1100;
-  const SLEEP_BUFFER_PX = 5200;
+  const BUILD = "40.3.35";
+  const ROOT_CLASS = "atlas-directional-paint-window-40335";
+  const SLEEP_CLASS = "atlas-offscreen-paint-sleep-40335";
+  const WAKE_MARGIN = "9000px 0px 9000px 0px";
+  const SCROLL_IDLE_MS = 750;
+  const BOOT_IDLE_MS = 1400;
+  const SLEEP_BUFFER_PX = 7600;
+  const MOTION_AHEAD_PX = 10000;
+  const MOTION_BEHIND_PX = 2600;
+  const MOTION_NEUTRAL_PX = 7000;
   const FLOATING_SELECTOR = ".admin-native-floating-shell,.admin-native-direct-floating,[data-admin-native-shell]";
 
   const TARGET_SELECTORS = Object.freeze([
@@ -28,17 +30,22 @@
     supported: "IntersectionObserver" in window,
     enabled: false,
     moving: false,
+    direction: "idle",
     targets: 0,
     sleeping: 0,
     sleeps: 0,
     wakes: 0,
     callbacks: 0,
     motion_starts: 0,
+    motion_frames: 0,
+    band_wakes: 0,
     idle_passes: 0,
     last_path: "boot",
     last_target: null,
     wake_margin: WAKE_MARGIN,
     sleep_buffer_px: SLEEP_BUFFER_PX,
+    motion_ahead_px: MOTION_AHEAD_PX,
+    motion_behind_px: MOTION_BEHIND_PX,
     scroll_idle_ms: SCROLL_IDLE_MS
   };
 
@@ -46,6 +53,9 @@
   let targets = [];
   let targetSet = new Set();
   let idleTimer = 0;
+  let motionRaf = 0;
+  let lastScrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
+  let directionHint = "idle";
 
   function collectTargets() {
     const set = new Set();
@@ -75,7 +85,7 @@
   }
 
   function setAwake(element, awake, reason) {
-    if (!(element instanceof Element)) return;
+    if (!(element instanceof Element)) return false;
     if (!awake && mustStayAwake(element)) awake = true;
 
     const wasSleeping = element.classList.contains(SLEEP_CLASS);
@@ -83,14 +93,19 @@
       element.classList.remove(SLEEP_CLASS);
       state.sleeping = Math.max(0, state.sleeping - 1);
       state.wakes += 1;
-    } else if (!awake && !wasSleeping) {
+      state.last_path = reason;
+      state.last_target = element.id || element.dataset?.adminNativeWindow || element.tagName;
+      return true;
+    }
+    if (!awake && !wasSleeping) {
       element.classList.add(SLEEP_CLASS);
       state.sleeping += 1;
       state.sleeps += 1;
+      state.last_path = reason;
+      state.last_target = element.id || element.dataset?.adminNativeWindow || element.tagName;
+      return true;
     }
-
-    state.last_path = reason;
-    state.last_target = element.id || element.dataset?.adminNativeWindow || element.tagName;
+    return false;
   }
 
   function wakeAll(reason = "manual") {
@@ -142,11 +157,66 @@
     return state.sleeping;
   }
 
+  function resolveDirection(currentY) {
+    const delta = currentY - lastScrollY;
+    if (Math.abs(delta) >= 2) return delta > 0 ? "down" : "up";
+    return directionHint === "down" || directionHint === "up" ? directionHint : "neutral";
+  }
+
+  function wakeMotionBand(reason = "motion-band") {
+    motionRaf = 0;
+    if (document.hidden) return 0;
+
+    const currentY = Math.max(0, window.scrollY || window.pageYOffset || 0);
+    const direction = resolveDirection(currentY);
+    lastScrollY = currentY;
+    directionHint = "idle";
+    state.direction = direction;
+
+    const viewportHeight = Math.max(window.innerHeight || 0, 1);
+    let topLimit;
+    let bottomLimit;
+    if (direction === "down") {
+      topLimit = -MOTION_BEHIND_PX;
+      bottomLimit = viewportHeight + MOTION_AHEAD_PX;
+    } else if (direction === "up") {
+      topLimit = -MOTION_AHEAD_PX;
+      bottomLimit = viewportHeight + MOTION_BEHIND_PX;
+    } else {
+      topLimit = -MOTION_NEUTRAL_PX;
+      bottomLimit = viewportHeight + MOTION_NEUTRAL_PX;
+    }
+
+    let changed = 0;
+    for (const element of targets) {
+      if (!(element instanceof Element)) continue;
+      if (mustStayAwake(element)) {
+        if (setAwake(element, true, reason + "-protected")) changed += 1;
+        continue;
+      }
+      const rect = element.getBoundingClientRect();
+      if (rect.bottom >= topLimit && rect.top <= bottomLimit) {
+        if (setAwake(element, true, reason + "-" + direction)) changed += 1;
+      }
+    }
+
+    state.motion_frames += 1;
+    state.band_wakes += changed;
+    state.last_path = reason + "-" + direction;
+    return changed;
+  }
+
+  function scheduleMotionBand(reason = "motion") {
+    if (motionRaf) return;
+    motionRaf = window.requestAnimationFrame(() => wakeMotionBand(reason));
+  }
+
   function finishMotion(reason = "motion-idle") {
     idleTimer = 0;
-    sleepFarTargets(reason);
+    /* 40.3.34 bug fix: clear moving BEFORE the idle sleep pass. */
     state.moving = false;
-    document.documentElement.classList.remove(MOVING_CLASS);
+    state.direction = "idle";
+    sleepFarTargets(reason);
     state.last_path = reason;
   }
 
@@ -155,14 +225,14 @@
     idleTimer = window.setTimeout(() => finishMotion(reason), delay);
   }
 
-  function markMoving(reason = "scroll") {
+  function markMoving(reason = "scroll", hint = "idle") {
+    if (hint === "down" || hint === "up") directionHint = hint;
     if (!state.moving) {
       state.moving = true;
       state.motion_starts += 1;
-      document.documentElement.classList.add(MOVING_CLASS);
-      /* Remove stale 40.3.34 sleep marks before the next paint. */
-      wakeAll(reason + "-prewake");
     }
+    /* Never wake all targets. Only the directional viewport corridor is prewoken. */
+    scheduleMotionBand(reason + "-prewake");
     state.last_path = reason;
     scheduleIdle(reason + "-idle");
   }
@@ -178,7 +248,7 @@
     observer = new IntersectionObserver((entries) => {
       state.callbacks += 1;
       for (const entry of entries) {
-        /* 40.3.34 observer is wake-only. Sleep is deferred to the idle pass. */
+        /* Wake-only safety net. Sleeping is owned exclusively by the idle pass. */
         if (entry.isIntersecting) setAwake(entry.target, true, "observer-prewake");
       }
     }, { root: null, rootMargin: WAKE_MARGIN, threshold: 0 });
@@ -192,14 +262,18 @@
   function refresh() {
     if (idleTimer) window.clearTimeout(idleTimer);
     idleTimer = 0;
+    if (motionRaf) window.cancelAnimationFrame(motionRaf);
+    motionRaf = 0;
     state.moving = false;
-    document.documentElement.classList.remove(MOVING_CLASS);
+    state.direction = "idle";
     wakeAll("refresh");
     observer?.disconnect();
     observer = null;
     rebuildTargetSet(collectTargets());
     attachObserver();
+    lastScrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
     wakeHashTarget("refresh-hash");
+    scheduleMotionBand("refresh-band");
     scheduleIdle("refresh-idle", BOOT_IDLE_MS);
     return { ...state };
   }
@@ -207,24 +281,34 @@
   function onScrollKey(event) {
     if (event.defaultPrevented) return;
     const key = event.key;
-    if (["ArrowDown", "ArrowUp", "PageDown", "PageUp", "Home", "End", " "].includes(key)) {
-      markMoving("keyboard-scroll");
+    if (["ArrowDown", "PageDown", "End", " "].includes(key)) {
+      markMoving("keyboard-scroll", "down");
+    } else if (["ArrowUp", "PageUp", "Home"].includes(key)) {
+      markMoving("keyboard-scroll", "up");
     }
   }
 
   function init() {
-    document.documentElement.classList.remove("atlas-offscreen-paint-gate-40333");
-    document.querySelectorAll(".atlas-offscreen-paint-sleep-40333").forEach((node) => {
-      node.classList.remove("atlas-offscreen-paint-sleep-40333");
+    document.documentElement.classList.remove(
+      "atlas-offscreen-paint-gate-40333",
+      "atlas-scroll-paint-continuity-40334",
+      "atlas-scroll-paint-moving-40334"
+    );
+    document.querySelectorAll(
+      ".atlas-offscreen-paint-sleep-40333,.atlas-offscreen-paint-sleep-40334"
+    ).forEach((node) => {
+      node.classList.remove("atlas-offscreen-paint-sleep-40333", "atlas-offscreen-paint-sleep-40334");
     });
     document.documentElement.classList.add(ROOT_CLASS);
 
     rebuildTargetSet(collectTargets());
     attachObserver();
+    lastScrollY = Math.max(0, window.scrollY || window.pageYOffset || 0);
     wakeHashTarget("initial-hash");
 
-    /* wheel/keydown fire before the scroll paint; scroll covers scrollbar drag and programmatic movement. */
-    window.addEventListener("wheel", () => markMoving("wheel"), { passive: true, capture: true });
+    window.addEventListener("wheel", (event) => {
+      markMoving("wheel", event.deltaY > 0 ? "down" : event.deltaY < 0 ? "up" : "idle");
+    }, { passive: true, capture: true });
     window.addEventListener("scroll", () => markMoving("scroll"), { passive: true, capture: true });
     window.addEventListener("keydown", onScrollKey, { capture: true });
     window.addEventListener("touchmove", () => markMoving("touchmove"), { passive: true, capture: true });
@@ -244,33 +328,36 @@
     }, true);
 
     window.addEventListener("hashchange", () => {
-      markMoving("hashchange");
       wakeHashTarget("hashchange");
+      markMoving("hashchange");
     }, { passive: true });
 
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
-        markMoving("visibility-return");
+        /* Do not impersonate a scroll on visibility return; 40.3.32 owns runtime return. */
+        scheduleMotionBand("visibility-return-band");
+        scheduleIdle("visibility-return-idle", 950);
       }
     }, { passive: true });
 
     window.addEventListener("beforeprint", () => wakeAll("print"), { passive: true });
 
-    /* Do not hide anything during initial construction; arm far-off sleep only after boot settles. */
+    /* Initial construction remains fully visible; far-off sleep arms only after boot settles. */
+    scheduleMotionBand("boot-band");
     scheduleIdle("boot-idle", BOOT_IDLE_MS);
   }
 
   const api = Object.freeze({
     build: BUILD,
-    policy: "scroll continuity first; observer wake-only; far-off sleep only after idle; no DOM relocation/content-visibility/contain",
+    policy: "directional prewake corridor; no wake-all on movement; observer wake-only; true idle far-off sleep; no DOM relocation/content-visibility/contain",
     state: () => ({ ...state }),
     wakeAll,
     refresh,
     sleepFarTargets
   });
 
-  globalThis.AtlasScrollPaint40334 = api;
-  globalThis.AtlasOffscreenPaint40334 = api;
+  globalThis.AtlasScrollPaint40335 = api;
+  globalThis.AtlasOffscreenPaint40335 = api;
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init, { once: true });

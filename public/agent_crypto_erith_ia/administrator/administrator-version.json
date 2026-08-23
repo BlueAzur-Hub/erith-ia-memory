@@ -1,20 +1,20 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v36",
-  "build": "40.3.34",
-  "release": "PARKER LEWIS CAN'T LOSE · SCROLL PAINT CONTINUITY + IDLE SLEEP LOCK",
-  "status": "candidate_requires_firefox_scroll_paint_continuity_idle_sleep_validation",
-  "prepared_at": "2026-08-23T06:27:00+02:00",
+  "build": "40.3.35",
+  "release": "PARKER LEWIS CAN'T LOSE · DIRECTIONAL PREWAKE + TRUE IDLE SLEEP LOCK",
+  "status": "candidate_requires_firefox_directional_prewake_true_idle_sleep_validation",
+  "prepared_at": "2026-08-23T06:38:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.3.34",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.3.34",
-    "asset_token": "market-core-v2.0-alpha-build-40.3.34",
+    "primary_build": "40.3.35",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.3.35",
+    "asset_token": "market-core-v2.0-alpha-build-40.3.35",
     "engine_reference": "Market Core 38.15.11",
-    "method": "40.3.33 -> 40.3.34 CODE ONLY corrective paint surgery: keep all large sections paint-visible during active movement; observer wakes only; far-off paint sleep returns only after idle."
+    "method": "40.3.34 -> 40.3.35 CODE ONLY paint-owner correction: remove wake-all burst, directional prewake, and restore true idle sleep."
   },
   "source": {
-    "direct_parent": "40.3.33",
-    "method": "40.3.33 -> 40.3.34 CODE ONLY scroll-paint continuity correction from operator evidence; no business engine/topology/protected-owner change.",
+    "direct_parent": "40.3.34",
+    "method": "40.3.34 -> 40.3.35 CODE ONLY internal paint-gate correction after source re-read; no business engine/topology/protected-owner change.",
     "oracles": {
       "technical_reading": [
         "39.6.2 FULL-CLEAR SURFACES LOCK",
@@ -47,7 +47,7 @@
       "web_required_for_runtime": false,
       "classic_link_is_optional_navigation": true
     },
-    "reconstruction_note": "40.3.34 is built directly from the local transmitted 40.3.33 package. 40.3.31 storage relief and 40.3.32 visibility-return fast path remain inherited."
+    "reconstruction_note": "40.3.35 is built directly from the locally generated 40.3.34 package; 40.3.31 storage relief and 40.3.32 visibility-return fast path remain inherited."
   },
   "protected_base": {
     "classic_web_modified": false,
@@ -1825,6 +1825,19 @@
       "native_dom_topology_preserved": true,
       "layout_geometry_preserved": true,
       "protected_owners_modified": false
+    },
+    "directional_prewake_true_idle_sleep_40335": {
+      "behavior_owner": "js/admin-offscreen-paint-gate.js",
+      "visual_owner": "admin-offscreen-paint-gate.css",
+      "scope": "paint visibility only; directional motion prewake; true idle far-off sleep",
+      "observer_mode": "wake-only",
+      "wake_margin": "9000px 0px 9000px 0px",
+      "movement_wake_all": false,
+      "request_animation_frame_motion_scan": true,
+      "idle_sleep_ms": 750,
+      "sleep_buffer_px": 7600,
+      "native_dom_topology_preserved": true,
+      "layout_geometry_preserved": true
     }
   },
   "active_runtime_files": [
@@ -2096,11 +2109,35 @@
       "math_changed": false,
       "image_assets_changed": false,
       "firefox_operator_validation_required": true
+    },
+    "directional_prewake_true_idle_sleep_40335": {
+      "build": "40.3.35",
+      "parent_build": "40.3.34",
+      "mission": "remove 40.3.34 global repaint burst while restoring real idle far-off sleep",
+      "bugfix_finish_motion_order": "state.moving=false before sleepFarTargets()",
+      "movement_wake_all": false,
+      "moving_css_global_visibility_override": false,
+      "observer_mode": "wake-only",
+      "wake_margin": "9000px 0px 9000px 0px",
+      "directional_motion_band": true,
+      "motion_ahead_px": 10000,
+      "motion_behind_px": 2600,
+      "neutral_motion_px": 7000,
+      "motion_scan_scheduler": "single requestAnimationFrame",
+      "idle_sleep_ms": 750,
+      "sleep_buffer_px": 7600,
+      "dom_reparenting": false,
+      "content_visibility_used": false,
+      "contain_used": false,
+      "recurring_timer_added": false,
+      "protected_window_manager_modified": false,
+      "protected_firefox_compositor_modified": false,
+      "protected_window_menu_modified": false
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.3.34",
-  "parent_build": "40.3.33",
-  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial institutional → 40.2.69 image authority/iconography → 40.2.70 header geometry → 40.2.71 Rolling High → 40.2.72 Celestial portable → 40.2.73 Long Shadow → 40.2.74 identity → 40.2.75 canonical rolling source → 40.2.76 measured breakout confirmation → 40.2.77 Celestial portable operational lock → 40.2.78 verified IndexedDB storage relief. → 40.2.79 Technical Reading one-click Random library + Book readability pass. → 40.2.80 Technical Reading Random library completion: nine-image one-click RND library in the existing canonical folder → 40.2.81 runtime identity + ChronosXP operator confirmation lock → 40.2.82 Oracle Long Horizon Shadow operator view with due/missing coverage diagnostics. → 40.2.84 Fiche hover toolbar correction: opt-in control moved to Graphique > Lecture > Afficher; native Fiche bridge hardened; Target Top card click remains graph comparison → 40.2.85 Graph toolbar metallic consolidation: existing Lecture/Vue/Échelle/Afficher/Période/Comparaison controls receive one bounded metallic visual layer plus compact Transformer Book spacing; no handler or chart geometry ownership change → 40.2.86 Graph toolbar state semantics: inactive available neutral; active blue + gold; disabled grey; Max neutral; Fiche shares active grammar; Book text floor raised without geometry change. → 40.2.87 Graph toolbar active-text refinement: active blue metallic + white text; inactive neutral; disabled grey; Fiche shares active grammar; Max remains neutral; publication manifest hashes synchronized to actual payload. → 40.2.88 Celestial Ryzen→Book read-only handoff: manual Shared Memory JSON transport, producer provenance preservation, Book fetch lock, compact operator diagnostics, no GitHub publication requirement. → 40.2.89 Graph toolbar turquoise active pass: luminous cyan/turquoise active surface + white text; inactive neutral; disabled grey; no handler or geometry change; Celestial 40.2.88 preserved. → 40.2.90 semantic color/iconography pass: blue-night Administrator base preserved; semantic accents and code-only SVG icons added to Command Center, family headers and major section headings; no handler, data, chart, Oracle, Celestial or Window Manager behavior change. → 40.2.91 AstroCycle planetary color semantics: Saturn red, Mars orange, Sun yellow, Venus green, Mercury blue, Moon white/silver, Jupiter gold; timeline and current/next cards only; ChronosXP and all market logic unchanged. → 40.2.92 Section Air: redundant nested shells removed from Oracle and News→Market; existing transparent System/Projects/Sources/Analytical emblems restored as non-reserving accents; semantic colors and AstroCycle unchanged → 40.2.93 compact section hierarchy + Atlas CURRENT viewport → 40.2.94 publication identity consistency → 40.2.95 Atlas + Oracle essential navigation + collapsed CURRENT preview → 40.2.96 Oracle section identity + collapsed live bias/strength preview → 40.2.97 family emblem alignment → 40.2.98 family boundary + emblem signal alignment cumulative repair → 40.2.99 Book navigation compact + single Administration entry + internal button navigation → 40.3.00 Administrator family order: 04 header immediately before Mesure d’audience + semantic 02/03/04 family routing + native menus restored right → 40.3.01 family compact reduce: 01 native header + collapsed Oracle; 02 native header + collapsed Atlas CURRENT; 03/04 native headers only; Hide unchanged; floating minibar preserved. → 40.3.02 heavy surgery: atomic top-level family ownership + 04 block reconstructed after Missions/before Audience + one-line compact Home/Admin commandline + Command Center no-document-jump lock → 40.3.03 targeted family-state migration: stale persisted states for 01/02/03/04 + Missions de vie cleared once before Window Manager init; all unrelated window state preserved → 40.3.04 canonical Administrator sequence 01→02→03→04→Missions→Audience→Sources → 40.3.05 trailing 04 header recovery → 40.3.06 topology + Atlas navigation recovery → 40.3.07 trailing 04 boundary + Technical Reading load priority → 40.3.08 hard 03/04 ownership boundary → 40.3.09 Book Command Center + status compaction → 40.3.10 passive viewport authority + Missions restore → 40.3.11 passive viewport + canonical role visibility → 40.3.12 role isolation + viewport ownership recovery → 40.3.13 canonical family 04 hierarchy + native dock flow → 40.3.14 Firefox role-transition performance recovery → 40.3.15 low-cost floating surface/native 97% → 40.3.17 passive Bridge supervision + compact family placeholder recovery → 40.3.19 drag-height fit from 40.3.17; 40.3.18 rejected → 40.3.20 canonical 04 opening hierarchy + native first-detach auto-fit restoration → 40.3.21 Technical Reading reduced-view image continuity recovery → 40.3.22 Administrator family return + explicit Command Center recovery → 40.3.23 Firefox compositor isolation → 40.3.24 Atlas CURRENT context + Source Truth semantic lock → 40.3.25 Atlas sectional collapse + paint budget lock → 40.3.26 40.3.25 reactivity recovery + persistent visual cache lock → 40.3.30 canonical recovery + version truth lock from 40.3.26; 40.3.27–40.3.29 non-canonical experiments excluded from the publication lineage → 40.3.31 async heavy storage + main-thread relief lock → 40.3.32 visibility return fast path + runtime restore dedup lock → 40.3.33 offscreen paint sleep + wake buffer lock → 40.3.34 scroll paint continuity + idle sleep lock",
+  "asset_token": "market-core-v2.0-alpha-build-40.3.35",
+  "parent_build": "40.3.34",
+  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial institutional → 40.2.69 image authority/iconography → 40.2.70 header geometry → 40.2.71 Rolling High → 40.2.72 Celestial portable → 40.2.73 Long Shadow → 40.2.74 identity → 40.2.75 canonical rolling source → 40.2.76 measured breakout confirmation → 40.2.77 Celestial portable operational lock → 40.2.78 verified IndexedDB storage relief. → 40.2.79 Technical Reading one-click Random library + Book readability pass. → 40.2.80 Technical Reading Random library completion: nine-image one-click RND library in the existing canonical folder → 40.2.81 runtime identity + ChronosXP operator confirmation lock → 40.2.82 Oracle Long Horizon Shadow operator view with due/missing coverage diagnostics. → 40.2.84 Fiche hover toolbar correction: opt-in control moved to Graphique > Lecture > Afficher; native Fiche bridge hardened; Target Top card click remains graph comparison → 40.2.85 Graph toolbar metallic consolidation: existing Lecture/Vue/Échelle/Afficher/Période/Comparaison controls receive one bounded metallic visual layer plus compact Transformer Book spacing; no handler or chart geometry ownership change → 40.2.86 Graph toolbar state semantics: inactive available neutral; active blue + gold; disabled grey; Max neutral; Fiche shares active grammar; Book text floor raised without geometry change. → 40.2.87 Graph toolbar active-text refinement: active blue metallic + white text; inactive neutral; disabled grey; Fiche shares active grammar; Max remains neutral; publication manifest hashes synchronized to actual payload. → 40.2.88 Celestial Ryzen→Book read-only handoff: manual Shared Memory JSON transport, producer provenance preservation, Book fetch lock, compact operator diagnostics, no GitHub publication requirement. → 40.2.89 Graph toolbar turquoise active pass: luminous cyan/turquoise active surface + white text; inactive neutral; disabled grey; no handler or geometry change; Celestial 40.2.88 preserved. → 40.2.90 semantic color/iconography pass: blue-night Administrator base preserved; semantic accents and code-only SVG icons added to Command Center, family headers and major section headings; no handler, data, chart, Oracle, Celestial or Window Manager behavior change. → 40.2.91 AstroCycle planetary color semantics: Saturn red, Mars orange, Sun yellow, Venus green, Mercury blue, Moon white/silver, Jupiter gold; timeline and current/next cards only; ChronosXP and all market logic unchanged. → 40.2.92 Section Air: redundant nested shells removed from Oracle and News→Market; existing transparent System/Projects/Sources/Analytical emblems restored as non-reserving accents; semantic colors and AstroCycle unchanged → 40.2.93 compact section hierarchy + Atlas CURRENT viewport → 40.2.94 publication identity consistency → 40.2.95 Atlas + Oracle essential navigation + collapsed CURRENT preview → 40.2.96 Oracle section identity + collapsed live bias/strength preview → 40.2.97 family emblem alignment → 40.2.98 family boundary + emblem signal alignment cumulative repair → 40.2.99 Book navigation compact + single Administration entry + internal button navigation → 40.3.00 Administrator family order: 04 header immediately before Mesure d’audience + semantic 02/03/04 family routing + native menus restored right → 40.3.01 family compact reduce: 01 native header + collapsed Oracle; 02 native header + collapsed Atlas CURRENT; 03/04 native headers only; Hide unchanged; floating minibar preserved. → 40.3.02 heavy surgery: atomic top-level family ownership + 04 block reconstructed after Missions/before Audience + one-line compact Home/Admin commandline + Command Center no-document-jump lock → 40.3.03 targeted family-state migration: stale persisted states for 01/02/03/04 + Missions de vie cleared once before Window Manager init; all unrelated window state preserved → 40.3.04 canonical Administrator sequence 01→02→03→04→Missions→Audience→Sources → 40.3.05 trailing 04 header recovery → 40.3.06 topology + Atlas navigation recovery → 40.3.07 trailing 04 boundary + Technical Reading load priority → 40.3.08 hard 03/04 ownership boundary → 40.3.09 Book Command Center + status compaction → 40.3.10 passive viewport authority + Missions restore → 40.3.11 passive viewport + canonical role visibility → 40.3.12 role isolation + viewport ownership recovery → 40.3.13 canonical family 04 hierarchy + native dock flow → 40.3.14 Firefox role-transition performance recovery → 40.3.15 low-cost floating surface/native 97% → 40.3.17 passive Bridge supervision + compact family placeholder recovery → 40.3.19 drag-height fit from 40.3.17; 40.3.18 rejected → 40.3.20 canonical 04 opening hierarchy + native first-detach auto-fit restoration → 40.3.21 Technical Reading reduced-view image continuity recovery → 40.3.22 Administrator family return + explicit Command Center recovery → 40.3.23 Firefox compositor isolation → 40.3.24 Atlas CURRENT context + Source Truth semantic lock → 40.3.25 Atlas sectional collapse + paint budget lock → 40.3.26 40.3.25 reactivity recovery + persistent visual cache lock → 40.3.30 canonical recovery + version truth lock from 40.3.26; 40.3.27–40.3.29 non-canonical experiments excluded from the publication lineage → 40.3.31 async heavy storage + main-thread relief lock → 40.3.32 visibility return fast path + runtime restore dedup lock → 40.3.33 offscreen paint sleep + wake buffer lock → 40.3.34 scroll paint continuity + idle sleep lock → 40.3.35 directional prewake + true idle sleep lock",
   "repository_cleanup": {
     "runtime_behavior_changed": true,
     "freeze_identity_current_build": true,
@@ -2190,7 +2227,10 @@
     "40.3.33 — 40.3.31 async storage relief and 40.3.32 visibility-return fast path are preserved. Protected Window Manager/compositor/menu owners remain byte-identical.",
     "40.3.34 — movement-first paint continuity: active scroll disables 40.3.34 sleep and prewakes current targets.",
     "40.3.34 — far-off sleep is evaluated only after idle; IntersectionObserver is wake-only with 6000px 0px 6000px 0px.",
-    "40.3.34 — protected Window Manager/compositor/menu owners remain byte-identical."
+    "40.3.34 — protected Window Manager/compositor/menu owners remain byte-identical.",
+    "40.3.35 — fixes a real 40.3.34 logic bug: finishMotion now clears moving before the idle sleep pass, so far-off sleep can actually re-arm.",
+    "40.3.35 — removes 40.3.34 wakeAll + global moving visibility override; movement prewakes only a directional viewport corridor in one requestAnimationFrame.",
+    "40.3.35 — IntersectionObserver remains wake-only; no DOM relocation/content-visibility/contain and protected Window Manager/compositor/menu owners remain byte-identical."
   ],
   "release_notes": [
     "40.3.21 restores the 40.2.65/40.2.69/40.2.80 Technical Reading visual contract on top of 40.3.20.",
@@ -2232,13 +2272,16 @@
     "No Market Core, Oracle, Atlas decision logic, Math formulas, Bridge, storage deletion semantics, Window Manager, Firefox compositor CSS, window menu CSS or image binary change.",
     "40.3.34 is a direct corrective child of 40.3.33: operator captures show that the 40.3.33 visibility sleep can leave a grey surface during document movement even though the DOM remains present.",
     "40.3.34 changes the paint gate to wake-only observation with 6000px 0px 6000px 0px prewake, disables sleep during active scroll/movement, and re-arms only far-off sleep after 650 ms idle.",
-    "No section wrapper, DOM relocation, content-visibility, contain, Market Core, Oracle, Math, Bridge, storage deletion, Window Manager, Firefox compositor CSS, window menu CSS or image binary change."
+    "No section wrapper, DOM relocation, content-visibility, contain, Market Core, Oracle, Math, Bridge, storage deletion, Window Manager, Firefox compositor CSS, window menu CSS or image binary change.",
+    "40.3.35 corrects the 40.3.34 implementation itself: the previous idle pass was blocked by state.moving and therefore never re-slept after active movement.",
+    "Movement no longer makes every sleeping section visible at once. A directional 10,000px-ahead / 2,600px-behind corridor is prewoken once per animation frame, with a 9,000px wake-only IntersectionObserver safety net.",
+    "After 750 ms true idle, only surfaces farther than the 7,600px viewport buffer sleep. No Market Core, Oracle, Math, Bridge, storage, Technical Reading design, Window Manager, Firefox compositor CSS, menu CSS or image binary change."
   ],
   "files": {
-    "app.js": "c2d7baaedff6b7b732808cc29c9c6e32085f7a5c277b9baa93532385e84bd51b",
-    "index.html": "d4d5a2056e84a20cf854b7c4ffe76f5fbb643a074e2e72d63c64eab61f4311fd",
-    "js/app.js": "684812e2a8378600c552a4ea983493acde29ea045b89b97ebd02810d99063340",
-    "js/architecture-freeze.js": "388c7e87d8f05278513e90d84f4fbbb68fd71988ecf6424abb43526380f5d7d7",
+    "app.js": "71d55515f4106ed10876eb310f2e11e368117d388613d87be2b2193ff74c4be3",
+    "index.html": "07ff191256fc4f1f7f8f83d573263ee35695bbbb918229a07d7ba11b4e536623",
+    "js/app.js": "108fbcdc546c4feabcd3f614423b4f9bfda5bda359c7f668d29c950645f9b1b0",
+    "js/architecture-freeze.js": "5e2a1acbe7f0ea331da17291530bd7a29420b83ab44c1d286995cb96075a24dc",
     "js/core/admin-window-manager.js": "de2bfbd49f56c712197604a6ef29b5454b0cd8e91121954e518ba35899ef1f97",
     "assets/visual/technical-reading/technical-random-01.png": "a72154af058f563dc269f9757d9bd470a8b6bd1bf5e2a4b0628d3f1ddbb02881",
     "assets/visual/technical-reading/technical-random-02.png": "efac84a34f0889a367b87f2dcf2ac9f64e28e7233c2673afd83049d739d06fa5",
@@ -2251,10 +2294,10 @@
     "assets/visual/technical-reading/technical-random-09.png": "6549a553b24091299f5e9cfff9dace3227e5903f8c61a57067fba6f0fa0e6971",
     "admin-window-menu-uniform.css": "445c5668cb00eeb52e9184454684404c15250515d68ae71bdd3acf00ffd268c7",
     "admin-firefox-compositor.css": "dbfe0c29803151354cd2121a63e8d96c1fa18e088bd47a34284b020208ba0ba0",
-    "admin-visual-cache.css": "a8a5545594df55f78c334b077a86955efc26041a7dc26729ea293f085ae97a48",
-    "js/admin-visual-cache.js": "b0a46c8121c7026ca9a19403dda46cb59717e5485763c7c1399c3e3948390ee5",
-    "admin-offscreen-paint-gate.css": "4805ea6773c64d9a1f4159042795faf03e81356f5ef47ae377a0e297736aad62",
-    "js/admin-offscreen-paint-gate.js": "8a92ba4c01920656b8d1836b34d58aaf5dc9cf4f33f445c6e34f5bc599528869"
+    "admin-visual-cache.css": "652d50d0bf7485057c9bb0f263e218c9256a180b233a81d4355ed2c7bf22ac1c",
+    "js/admin-visual-cache.js": "eb01510505d3bf0f24b5ec418a10057df8365dc0a134447352cd0b2d98f16a86",
+    "admin-offscreen-paint-gate.css": "8789aabe0d3fe457f7deb91a013c49569a597c7534b39ff5ba4c97e8dd40c90b",
+    "js/admin-offscreen-paint-gate.js": "23098bf363e9da8ce3b0366dbcce65ac0a56cfb45a78b502b8ca2b5dfbcbb874"
   },
   "features": {
     "graph_toolbar_metallic_40285": {
@@ -2954,12 +2997,36 @@
       "math_changed": false,
       "image_assets_changed": false,
       "firefox_operator_validation_required": true
+    },
+    "directional_prewake_true_idle_sleep_40335": {
+      "build": "40.3.35",
+      "parent_build": "40.3.34",
+      "mission": "remove 40.3.34 global repaint burst while restoring real idle far-off sleep",
+      "bugfix_finish_motion_order": "state.moving=false before sleepFarTargets()",
+      "movement_wake_all": false,
+      "moving_css_global_visibility_override": false,
+      "observer_mode": "wake-only",
+      "wake_margin": "9000px 0px 9000px 0px",
+      "directional_motion_band": true,
+      "motion_ahead_px": 10000,
+      "motion_behind_px": 2600,
+      "neutral_motion_px": 7000,
+      "motion_scan_scheduler": "single requestAnimationFrame",
+      "idle_sleep_ms": 750,
+      "sleep_buffer_px": 7600,
+      "dom_reparenting": false,
+      "content_visibility_used": false,
+      "contain_used": false,
+      "recurring_timer_added": false,
+      "protected_window_manager_modified": false,
+      "protected_firefox_compositor_modified": false,
+      "protected_window_menu_modified": false
     }
   },
   "window_manager_modified": false,
   "window_manager_change_scope": "none",
   "window_manager_base_build": "40.3.20",
-  "lineage_note": "40.3.34 corrects only the 40.3.33 offscreen paint owner: no immediate observer-sleep during movement; far-off sleep is idle-only.",
+  "lineage_note": "40.3.35 corrects only the 40.3.34 offscreen paint owner: no wake-all during movement, directional prewake, and true post-motion idle sleep.",
   "section_topology_changed": false,
-  "section_topology_scope": "none in 40.3.34; exact 40.3.33 DOM topology preserved"
+  "section_topology_scope": "none in 40.3.35; exact 40.3.34 DOM topology preserved"
 }
