@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.60";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE OPERATOR HUD GEOMETRY LOCK";
+  const ADMIN_BUILD = "40.3.61";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ADMINISTRATOR PARCOURS DEFAULT COLLAPSE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1952,6 +1952,108 @@
     return true;
   }
 
+
+  // 40.3.61 — ADMINISTRATOR PARCOURS DEFAULT COLLAPSE LOCK
+  // Operator request: a hard reload must start the four main Administrator
+  // families in their existing docked compact presentation instead of
+  // restoring them fully expanded. This is presentation-only: the business
+  // engines keep their existing lifecycle and Window Manager remains canonical.
+  const ADMIN_DEFAULT_COLLAPSED_FAMILY_IDS_40361 = Object.freeze([
+    "analyse-decision",
+    "intelligence-memoire-creation",
+    "preparation-operations",
+    "experimentation-systeme"
+  ]);
+
+  function administratorHashFamily40361() {
+    const raw = String(location.hash || "").replace(/^#/, "");
+    if (!raw) return "";
+    let decoded = raw;
+    try { decoded = decodeURIComponent(raw); } catch {}
+    const target = byId(decoded);
+    if (!(target instanceof HTMLElement)) return "";
+
+    const layout = String(
+      target.dataset.layoutFamily
+      || target.closest?.("[data-layout-family]")?.dataset?.layoutFamily
+      || ""
+    ).trim().toLowerCase();
+
+    if (layout === "analysis" || target.closest?.(".atlas-layout-family-analysis")) return "analyse-decision";
+    if (layout === "intelligence" || layout === "creation" || target.closest?.(".atlas-layout-family-intelligence")) return "intelligence-memoire-creation";
+    if (layout === "operations" || target.closest?.(".atlas-layout-family-operations")) return "preparation-operations";
+    if (layout === "system" || layout === "experiment" || target.closest?.(".atlas-layout-family-system")) return "experimentation-systeme";
+    return "";
+  }
+
+  function stageAdministratorDefaultFamilyCollapse40361() {
+    const directFamily = administratorHashFamily40361();
+    const staged = [];
+    const skipped = [];
+    const failed = [];
+
+    ADMIN_DEFAULT_COLLAPSED_FAMILY_IDS_40361.forEach(id => {
+      const key = `${STORAGE_PREFIX}:window:${id}`;
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem(key) || "{}") || {}; } catch { saved = {}; }
+
+      const directTarget = directFamily === id;
+      const next = {
+        ...saved,
+        floating: false,
+        minimized: !directTarget,
+        hidden: false,
+        maximized: false
+      };
+
+      const unchanged =
+        saved.floating === next.floating
+        && saved.minimized === next.minimized
+        && saved.hidden === next.hidden
+        && saved.maximized === next.maximized;
+
+      if (unchanged) {
+        skipped.push(id);
+        return;
+      }
+
+      try {
+        localStorage.setItem(key, JSON.stringify(next));
+        staged.push(id);
+      } catch {
+        failed.push(id);
+      }
+    });
+
+    document.documentElement.dataset.adminDefaultFamilyCollapse40361 = "1";
+    document.documentElement.dataset.adminDefaultFamilyDirectHash40361 = directFamily || "none";
+
+    globalThis.ErithAdministratorDefaultFamilyCollapse40361 = Object.freeze({
+      build: "40.3.61",
+      parent: "40.3.60",
+      families: ADMIN_DEFAULT_COLLAPSED_FAMILY_IDS_40361,
+      default_state: "docked compact / minimized",
+      direct_hash_family_opens: true,
+      persisted_previous_open_state_replayed_on_hard_reload: false,
+      presentation_only: true,
+      business_engines_stopped: false,
+      window_manager_modified: false,
+      market_core_modified: false,
+      oracle_modified: false,
+      atlas_current_modified: false,
+      forge_iframe_modified: false,
+      new_timer: false,
+      new_observer: false,
+      new_listener: false,
+      new_scheduler: false,
+      staged: Object.freeze(staged.slice()),
+      unchanged: Object.freeze(skipped.slice()),
+      failed: Object.freeze(failed.slice())
+    });
+
+    return { directFamily, staged, skipped, failed };
+  }
+
   function boot() {
     installGlobalVersionIdentity();
     keepGlobalVersionVisible();
@@ -1969,6 +2071,7 @@
     migrateGraphWindowStateR6();
     migrateFamilyTopologyWindowState40303();
     migrateFamilyRoleReturnWindowState40322();
+    stageAdministratorDefaultFamilyCollapse40361();
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
