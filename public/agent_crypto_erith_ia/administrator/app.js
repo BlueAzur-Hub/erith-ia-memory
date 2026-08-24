@@ -1151,6 +1151,182 @@ function atlasViewportScheduleGeometry40345() {
   });
 }
 
+
+
+/* ============================================================
+   40.3.97 — VISIBILITY RESUME FIRST-PAINT SERIALIZATION LOCK
+
+   Operator evidence:
+   - 40.3.96 is fluid during ordinary use;
+   - a very brief grey full-page flash can still occur when returning
+     to the tab;
+   - historical offscreen paint sleep was retired in 40.3.40;
+   - current runtime still has many independent visibility/pageshow
+     resume owners accumulated across Market, News, Exchange, Bridge,
+     CURRENT/Journal, Book and presentation layers.
+
+   Contract:
+   1. hidden-side pause/flush work remains immediate;
+   2. on visible return, reserve one browser paint before app resume work;
+   3. deduplicate resume owners by key;
+   4. run at most ONE resume owner per animation frame;
+   5. no recurring timer, no new observer, no content/layout/paint rewrite;
+   6. Market/Fiche Crypto/Graphique/Math/Window Manager semantics unchanged.
+   ============================================================ */
+const ATLAS_VISIBILITY_RESUME_40397_BUILD = "40.3.97";
+
+const atlasVisibilityResumeState40397 = {
+  epoch: 0,
+  hiddenAt: 0,
+  visibleAt: 0,
+  returnCount: 0,
+  queue: new Map(),
+  draining: false,
+  drainEpoch: 0,
+  sequence: 0,
+  executed: 0,
+  deduped: 0,
+  cancelled: 0,
+  lastReason: "",
+  lastKey: "",
+  lastError: ""
+};
+
+function atlasVisibilityEpoch40397(reason = "visibility") {
+  atlasVisibilityResumeState40397.epoch += 1;
+  atlasVisibilityResumeState40397.lastReason = String(reason || "visibility");
+  return atlasVisibilityResumeState40397.epoch;
+}
+
+function atlasVisibilityMark40397() {
+  if (document.visibilityState === "hidden") {
+    atlasVisibilityEpoch40397("hidden");
+    atlasVisibilityResumeState40397.hiddenAt = performance.now();
+    atlasVisibilityResumeState40397.queue.clear();
+    atlasVisibilityResumeState40397.draining = false;
+    return;
+  }
+  atlasVisibilityEpoch40397("visible");
+  atlasVisibilityResumeState40397.visibleAt = performance.now();
+  atlasVisibilityResumeState40397.returnCount += 1;
+}
+
+document.addEventListener("visibilitychange", atlasVisibilityMark40397, {
+  capture: true,
+  passive: true
+});
+
+function atlasVisibilityResumeAbort40397(epoch) {
+  if (document.visibilityState === "hidden"
+      || Number(epoch) !== Number(atlasVisibilityResumeState40397.epoch)) {
+    atlasVisibilityResumeState40397.queue.clear();
+    atlasVisibilityResumeState40397.draining = false;
+    atlasVisibilityResumeState40397.cancelled += 1;
+    return true;
+  }
+  return false;
+}
+
+function atlasVisibilityResumeNext40397(epoch) {
+  if (atlasVisibilityResumeAbort40397(epoch)) return;
+
+  const rows = [...atlasVisibilityResumeState40397.queue.entries()]
+    .sort((a, b) => {
+      const pa = Number(a[1]?.priority || 100);
+      const pb = Number(b[1]?.priority || 100);
+      if (pa !== pb) return pa - pb;
+      return Number(a[1]?.sequence || 0) - Number(b[1]?.sequence || 0);
+    });
+
+  if (!rows.length) {
+    atlasVisibilityResumeState40397.draining = false;
+    atlasVisibilityResumeState40397.drainEpoch = 0;
+    return;
+  }
+
+  const [key, task] = rows[0];
+  atlasVisibilityResumeState40397.queue.delete(key);
+  atlasVisibilityResumeState40397.lastKey = key;
+
+  try {
+    task.fn();
+    atlasVisibilityResumeState40397.executed += 1;
+  } catch (error) {
+    atlasVisibilityResumeState40397.lastError = String(error?.message || error || "");
+    console.warn(`40.3.97 resume owner ${key}:`, error);
+  }
+
+  requestAnimationFrame(() => atlasVisibilityResumeNext40397(epoch));
+}
+
+function atlasVisibilityResumeDrain40397(epoch) {
+  if (atlasVisibilityResumeAbort40397(epoch)) return;
+
+  /* First rAF callback is empty. Firefox can paint the already-present DOM
+     before the second rAF starts application resume work. */
+  requestAnimationFrame(() => {
+    if (atlasVisibilityResumeAbort40397(epoch)) return;
+    requestAnimationFrame(() => atlasVisibilityResumeNext40397(epoch));
+  });
+}
+
+function atlasVisibilityResumeQueue40397(key, fn, priority = 100, reason = "visibility-return") {
+  if (typeof fn !== "function" || document.visibilityState === "hidden") return false;
+
+  const normalizedKey = String(key || "anonymous");
+  if (atlasVisibilityResumeState40397.queue.has(normalizedKey)) {
+    atlasVisibilityResumeState40397.deduped += 1;
+  }
+
+  atlasVisibilityResumeState40397.queue.set(normalizedKey, {
+    fn,
+    priority: Number(priority) || 100,
+    reason: String(reason || "visibility-return"),
+    sequence: ++atlasVisibilityResumeState40397.sequence
+  });
+
+  if (!atlasVisibilityResumeState40397.draining) {
+    atlasVisibilityResumeState40397.draining = true;
+    atlasVisibilityResumeState40397.drainEpoch = atlasVisibilityResumeState40397.epoch;
+    atlasVisibilityResumeDrain40397(atlasVisibilityResumeState40397.drainEpoch);
+  }
+  return true;
+}
+
+function atlasVisibilityResumePageShow40397(event, key, fn, priority = 100) {
+  if (event?.persisted === true) {
+    return atlasVisibilityResumeQueue40397(key, fn, priority, "pageshow-bfcache");
+  }
+  return false;
+}
+
+globalThis.AtlasVisibilityResume40397 = Object.freeze({
+  build: ATLAS_VISIBILITY_RESUME_40397_BUILD,
+  queue: atlasVisibilityResumeQueue40397,
+  state: () => ({
+    epoch: atlasVisibilityResumeState40397.epoch,
+    return_count: atlasVisibilityResumeState40397.returnCount,
+    pending_keys: [...atlasVisibilityResumeState40397.queue.keys()],
+    draining: atlasVisibilityResumeState40397.draining,
+    executed: atlasVisibilityResumeState40397.executed,
+    deduped: atlasVisibilityResumeState40397.deduped,
+    cancelled: atlasVisibilityResumeState40397.cancelled,
+    last_reason: atlasVisibilityResumeState40397.lastReason,
+    last_key: atlasVisibilityResumeState40397.lastKey,
+    last_error: atlasVisibilityResumeState40397.lastError
+  }),
+  first_paint_reserved: true,
+  owners_per_frame: 1,
+  recurring_timer: false,
+  observer: false,
+  storage_write: false,
+  network_owner_added: false,
+  fiche_crypto_changed: false,
+  graph_changed: false,
+  market_math_changed: false,
+  window_manager_changed: false
+});
+
 function atlasViewportBind40345() {
   if (atlasViewportTracker40345.listenersBound) return;
   atlasViewportTracker40345.listenersBound = true;
@@ -1158,7 +1334,11 @@ function atlasViewportBind40345() {
   window.addEventListener("resize", atlasViewportScheduleGeometry40345, { passive: true });
   window.addEventListener("hashchange", atlasViewportScheduleGeometry40345);
   window.addEventListener("atlas:v2mode", atlasViewportScheduleGeometry40345);
-  window.addEventListener("pageshow", atlasViewportScheduleGeometry40345);
+  window.addEventListener("pageshow", event => {
+    if (!atlasVisibilityResumePageShow40397(event, "viewport-geometry", atlasViewportScheduleGeometry40345, 20)) {
+      atlasViewportScheduleGeometry40345();
+    }
+  });
   window.addEventListener("load", atlasViewportScheduleGeometry40345, { once: true });
   document.addEventListener("toggle", atlasViewportScheduleGeometry40345, true);
 }
@@ -2783,13 +2963,23 @@ function atlasInitRuntimeStability() {
   window.addEventListener("orientationchange", onResize, { passive: true });
 
   window.addEventListener("pageshow", event => {
-    requestAnimationFrame(() => {
-      atlasRestoreRuntimeUi(event.persisted ? "pageshow-cache" : "pageshow");
-    });
+    if (atlasVisibilityResumePageShow40397(
+      event,
+      "runtime-ui",
+      () => atlasRestoreRuntimeUi("pageshow-cache"),
+      10
+    )) return;
+    requestAnimationFrame(() => atlasRestoreRuntimeUi("pageshow"));
   });
 
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) requestAnimationFrame(() => atlasRestoreRuntimeUi("visibility-return"));
+    if (document.hidden) return;
+    atlasVisibilityResumeQueue40397(
+      "runtime-ui",
+      () => atlasRestoreRuntimeUi("visibility-return"),
+      10,
+      "visibility-return"
+    );
   });
 
   window.addEventListener("atlas:v2mode", () => {
@@ -6804,7 +6994,15 @@ function atlasRuntimeVisibilityAttribution40226(refreshByName,state,limit=5){
 function atlasRuntimeTopHidden40225(refreshByName){const row=atlasRuntimeVisibilityAttribution40226(refreshByName,"hidden",1)[0]||null;return row?{name:row.name,hidden:row.calls,hidden_ms:row.total_ms}:null;}
 function atlasRuntimeAttributionLabel40226(row){return row?`${row.name} ${Number(row.calls||0)}×/${atlasRuntimeFmtMs40214(row.total_ms)}`:"—";}
 function atlasRuntimeRender40214(){const stateNode=document.getElementById("atlasRuntimeState40214"),note=document.getElementById("atlasRuntimeNote40214");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState40214;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow40214());const r=atlasRuntimeSnapshot40214();const view={essential:"BASIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"} · W ${r.windows.visible}/${r.windows.minimized}/${r.windows.hidden}`;if(note){const o=r.oracle,n=r.navigation,v=o.refresh_visibility||{},top=atlasRuntimeTopHidden40225(o.refresh_by_name),rTop=atlasRuntimeVisibilityAttribution40226(o.refresh_by_name,"minimized",1)[0]||null,cTop=atlasRuntimeVisibilityAttribution40226(o.refresh_by_name,"collapsed",1)[0]||null;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs40214(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs40214(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs40214(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.outcome_max_ms)} · Evidence ${o.evidence_reads} req · DB ${o.evidence_db_scans}× μ${atlasRuntimeFmtMs40214(o.evidence_db_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.evidence_db_max_ms)} · reuse ${o.evidence_cache_hits+o.evidence_inflight_hits} · Explorer ${o.evidence_explorer_rendered?"ON":"OFF"}/${o.evidence_explorer_deferred_skips} skip · Flow ${r.market_flow_runtime?`${String(r.market_flow_runtime.profile||"—").toUpperCase()}/${String(r.market_flow_runtime.state||"—").toUpperCase()}`:"—"} · UI V ${atlasRuntimeVisibilityLabel40225(v.visible)} · R ${atlasRuntimeVisibilityLabel40225(v.minimized)} · X ${atlasRuntimeVisibilityLabel40225(v.hidden)} · C ${atlasRuntimeVisibilityLabel40225(v.collapsed)}${rTop?` · R top ${atlasRuntimeAttributionLabel40226(rTop)}`:""}${cTop?` · C top ${atlasRuntimeAttributionLabel40226(cTop)}`:""}${top?` · X top ${top.name} ${top.hidden}×/${atlasRuntimeFmtMs40214(top.hidden_ms)}`:""}`;}return r;}
-window.addEventListener("pageshow",event=>{const s=atlasRuntimeObservatoryState40214;s.pageshow_count+=1;s.last_pageshow_persisted=event.persisted===true;if(event.persisted===true)s.pageshow_persisted_count+=1;atlasRuntimeRender40214();},{passive:true});
+window.addEventListener("pageshow",event=>{
+  const s=atlasRuntimeObservatoryState40214;
+  s.pageshow_count+=1;
+  s.last_pageshow_persisted=event.persisted===true;
+  if(event.persisted===true)s.pageshow_persisted_count+=1;
+  if (!atlasVisibilityResumePageShow40397(event, "runtime-observatory-ui", atlasRuntimeRender40214, 96)) {
+    atlasRuntimeRender40214();
+  }
+},{passive:true});
 globalThis.AtlasRuntimeObservatory40214=Object.freeze({snapshot:atlasRuntimeSnapshot40214,render:atlasRuntimeRender40214,passive_only:true,storage_write:false,network_request_added:false,business_runtime_changed:false});
 
 function atlasOracleEvidenceOpen() {
@@ -8426,7 +8624,12 @@ globalThis.AtlasOracleSourceRisk4021=Object.freeze({compute:atlasOracleSourceRis
    Activity/performance proxy only. Never converts browser activity to watts/Wh/CO2. */
 const atlasOracleResourceBudgetState4022={started_at:Date.now(),visible_ms:0,hidden_ms:0,last_visibility_at:Date.now(),last_visibility:document.visibilityState==="hidden"?"hidden":"visible",long_tasks:0,long_task_ms:0};
 function atlasOracleResourceVisibilityCommit4022(now=Date.now()){const delta=Math.max(0,now-atlasOracleResourceBudgetState4022.last_visibility_at);if(atlasOracleResourceBudgetState4022.last_visibility==="hidden")atlasOracleResourceBudgetState4022.hidden_ms+=delta;else atlasOracleResourceBudgetState4022.visible_ms+=delta;atlasOracleResourceBudgetState4022.last_visibility_at=now;atlasOracleResourceBudgetState4022.last_visibility=document.visibilityState==="hidden"?"hidden":"visible";}
-document.addEventListener("visibilitychange",()=>{atlasOracleResourceVisibilityCommit4022();atlasOracleResourceBudgetRender4022();},{passive:true});
+document.addEventListener("visibilitychange",()=>{
+  atlasOracleResourceVisibilityCommit4022();
+  if (document.visibilityState === "visible") {
+    atlasVisibilityResumeQueue40397("resource-budget-ui", atlasOracleResourceBudgetRender4022, 95, "visibility-return");
+  }
+},{passive:true});
 try{if(typeof PerformanceObserver==="function"&&Array.isArray(PerformanceObserver.supportedEntryTypes)&&PerformanceObserver.supportedEntryTypes.includes("longtask")){const obs=new PerformanceObserver(list=>{for(const e of list.getEntries()){atlasOracleResourceBudgetState4022.long_tasks+=1;atlasOracleResourceBudgetState4022.long_task_ms+=Number(e.duration||0);}atlasOracleResourceBudgetRender4022();});obs.observe({type:"longtask",buffered:true});}}catch{}
 function atlasOracleResourceBudgetSnapshot4022(){const now=Date.now(),delta=Math.max(0,now-atlasOracleResourceBudgetState4022.last_visibility_at),visible=atlasOracleResourceBudgetState4022.visible_ms+(atlasOracleResourceBudgetState4022.last_visibility==="visible"?delta:0),hidden=atlasOracleResourceBudgetState4022.hidden_ms+(atlasOracleResourceBudgetState4022.last_visibility==="hidden"?delta:0);let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const relevant=entries.filter(e=>/binance|coingecko|githubusercontent|github\.io|ecb|eurofxref/i.test(String(e?.name||"")));const sizes=relevant.map(e=>Number(e.transferSize)).filter(v=>Number.isFinite(v)&&v>0);return {started_at:atlasOracleResourceBudgetState4022.started_at,visible_ms:visible,hidden_ms:hidden,resource_requests:relevant.length,measured_transfer_bytes:sizes.reduce((a,b)=>a+b,0),measured_transfer_entries:sizes.length,long_tasks:atlasOracleResourceBudgetState4022.long_tasks,long_task_ms:atlasOracleResourceBudgetState4022.long_task_ms,longtask_supported:typeof PerformanceObserver==="function"&&Array.isArray(PerformanceObserver.supportedEntryTypes)&&PerformanceObserver.supportedEntryTypes.includes("longtask"),websocket_bytes_measured:false,watts:null,wh:null};}
 function atlasOracleResourceBudgetRender4022(){const root=document.getElementById("oracle-infrastructure-observatory");if(!root)return null;const r=atlasOracleResourceBudgetSnapshot4022(),stateNode=document.getElementById("atlasOracleResourceState"),note=document.getElementById("atlasOracleResourceNote");if(stateNode)stateNode.textContent=`${r.resource_requests} req · ${typeof atlasStorageHealthBytesLabel40198==="function"?atlasStorageHealthBytesLabel40198(r.measured_transfer_bytes):Math.round(r.measured_transfer_bytes/1024)+" Kio"}`;if(note)note.textContent=`visible ${Math.round(r.visible_ms/60000)} min · masqué ${Math.round(r.hidden_ms/60000)} min · long tasks ${r.longtask_supported?r.long_tasks:"non exposées"} · WebSocket non mesuré · pas des Wh`;if(typeof atlasRuntimeRender40214==="function")atlasRuntimeRender40214();return r;}
@@ -13906,8 +14109,11 @@ function atlasInitMarketPulseController() {
   state.marketPulse.initialized = true;
 
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "hidden") atlasPauseMarketPulse();
-    else atlasResumeMarketPulse();
+    if (document.visibilityState === "hidden") {
+      atlasPauseMarketPulse();
+      return;
+    }
+    atlasVisibilityResumeQueue40397("market-pulse", atlasResumeMarketPulse, 30, "visibility-return");
   });
 
   window.addEventListener("pagehide", atlasPauseMarketPulse);
@@ -14088,8 +14294,18 @@ function atlasInitMarketFlowRuntime40217() {
     atlasMarketFlowRuntime40217.mutation = new MutationObserver(() => atlasApplyMarketFlowRuntime40217());
     atlasMarketFlowRuntime40217.mutation.observe(ribbon, { attributes: true, attributeFilter: ["class", "style", "hidden"] });
   }
-  document.addEventListener("visibilitychange", atlasApplyMarketFlowRuntime40217, { passive: true });
-  window.addEventListener("pageshow", atlasApplyMarketFlowRuntime40217, { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      atlasApplyMarketFlowRuntime40217();
+      return;
+    }
+    atlasVisibilityResumeQueue40397("market-flow-ui", atlasApplyMarketFlowRuntime40217, 40, "visibility-return");
+  }, { passive: true });
+  window.addEventListener("pageshow", event => {
+    if (!atlasVisibilityResumePageShow40397(event, "market-flow-ui", atlasApplyMarketFlowRuntime40217, 40)) {
+      atlasApplyMarketFlowRuntime40217();
+    }
+  }, { passive: true });
   window.addEventListener("resize", atlasApplyMarketFlowRuntime40217, { passive: true });
   atlasApplyMarketFlowRuntime40217();
 }
@@ -20334,7 +20550,12 @@ function initNewsSentinelV1() {
       renderNewsFeedOverview();
       return;
     }
-    void loadNewsLiveFeed({ automatic: true });
+    atlasVisibilityResumeQueue40397(
+      "news-live",
+      () => void loadNewsLiveFeed({ automatic: true }),
+      120,
+      "visibility-return"
+    );
   });
 
   window.addEventListener("online", () => {
@@ -25353,7 +25574,8 @@ function atlasAnalyticalTruthInit() {
 
   window.addEventListener("online", () => atlasAnalyticalTruthSchedule(500));
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") atlasAnalyticalTruthRender();
+    if (document.visibilityState !== "visible") return;
+    atlasVisibilityResumeQueue40397("analytical-truth-ui", atlasAnalyticalTruthRender, 70, "visibility-return");
   });
 
   /* 40.3.50 — OPERATOR INTERACTION SNAPSHOT DECOUPLING LOCK.
@@ -42229,10 +42451,11 @@ function atlasInitExchangeFeed() {
     atlasExchangeRuntime.watchdogTimer = window.setInterval(atlasExchangeWatchdog, 5_000);
   }
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
+    if (document.hidden) return;
+    atlasVisibilityResumeQueue40397("exchange-feed", () => {
       atlasExchangeWatchdog();
       atlasStartExchangeFeed();
-    }
+    }, 35, "visibility-return");
   });
   window.addEventListener("online", () => atlasStartExchangeFeed());
   window.addEventListener("offline", () => {
@@ -45666,8 +45889,10 @@ async function atlasInitAudienceModule() {
   window.addEventListener("offline", () => { atlasAudienceMarkActivity(); atlasRenderAudienceStatus(); });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
-      atlasAudienceMarkActivity();
-      void atlasTrackAudience("session_resumed", { duration_seconds: atlasAudienceDurationSeconds() }, { allowDuplicate: true });
+      atlasVisibilityResumeQueue40397("audience-resume", () => {
+        atlasAudienceMarkActivity();
+        void atlasTrackAudience("session_resumed", { duration_seconds: atlasAudienceDurationSeconds() }, { allowDuplicate: true });
+      }, 140, "visibility-return");
     } else {
       void atlasTrackAudience("session_hidden", { duration_seconds: atlasAudienceDurationSeconds() }, { allowDuplicate: true, skipNetwork: true });
     }
@@ -45681,11 +45906,13 @@ async function atlasInitAudienceModule() {
   window.addEventListener("pagehide", () => atlasAudienceCloseSession("pagehide"), { capture: true });
   window.addEventListener("pageshow", event => {
     if (!event.persisted) return;
-    atlasAudienceState.closing = false;
-    atlasAudienceState.session.state = "active";
-    atlasAudienceState.session.closed_at = null;
-    atlasAudienceMarkActivity();
-    void atlasTrackAudience("session_restored", { bfcache: true, duration_seconds: atlasAudienceDurationSeconds() }, { allowDuplicate: true });
+    atlasVisibilityResumeQueue40397("audience-resume", () => {
+      atlasAudienceState.closing = false;
+      atlasAudienceState.session.state = "active";
+      atlasAudienceState.session.closed_at = null;
+      atlasAudienceMarkActivity();
+      void atlasTrackAudience("session_restored", { bfcache: true, duration_seconds: atlasAudienceDurationSeconds() }, { allowDuplicate: true });
+    }, 140, "pageshow-bfcache");
   });
   document.getElementById("btnAudienceExport")?.addEventListener("click", atlasAudienceExportDiagnostic);
   atlasAudienceState.heartbeatTimer = window.setInterval(() => void atlasAudienceHeartbeat(), ATLAS_AUDIENCE_HEARTBEAT_MS);
@@ -45711,14 +45938,24 @@ function atlasInitLocalBridgeAutoHealth() {
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
-      atlasLocalBridgeAutoSync("visibility-return");
+      atlasVisibilityResumeQueue40397(
+        "local-bridge",
+        () => atlasLocalBridgeAutoSync("visibility-return"),
+        130,
+        "visibility-return"
+      );
     }
     // Hidden tab does not stop local Bridge supervision.
     // Browser throttling may slow timers, but the app never disables them itself.
   });
 
   window.addEventListener("focus", () => {
-    atlasLocalBridgeAutoSync("window-focus");
+    atlasVisibilityResumeQueue40397(
+      "local-bridge",
+      () => atlasLocalBridgeAutoSync("window-focus"),
+      130,
+      "window-focus"
+    );
   });
 
   window.addEventListener("online", () => {
@@ -45731,9 +45968,17 @@ function atlasInitLocalBridgeAutoHealth() {
     atlasExchangeStableGateCancelTimer();
   });
 
-  window.addEventListener("pageshow", () => {
-    // 40.3.17 — BFCache/page restoration refreshes Bridge status only.
-    // Canonical snapshot ownership decides whether analysis is needed.
+  window.addEventListener("pageshow", event => {
+    // 40.3.97: BFCache Bridge catch-up joins the same deduplicated resume owner.
+    if (event.persisted) {
+      atlasVisibilityResumeQueue40397(
+        "local-bridge",
+        () => atlasLocalBridgeAutoSync("visibility-return"),
+        130,
+        "pageshow-bfcache"
+      );
+      return;
+    }
     atlasLocalBridgeAutoSync("visibility-return");
   });
 
@@ -46711,16 +46956,18 @@ function atlasScannerCollectorInit() {
   });
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
-    const now = Date.now();
-    const captureAge = now - Number(atlasScannerCollectorRuntime.lastSavedAt || 0);
-    const latestAge = now - Number(atlasScannerCollectorRuntime.latestBridgeReadAt || 0);
-    const heavyBootBusy = !!state.auto?.livecheckBusy || !!state.chartEngineV2?.loading || !!atlasLocalReportsState?.running;
-    if (!heavyBootBusy && captureAge >= ATLAS_SCANNER_COLLECTOR_INTERVAL_MS) {
-      atlasScannerCollectorCapture("visibility-resume");
-    }
-    if (!heavyBootBusy && latestAge >= ATLAS_SCANNER_COLLECTOR_INTERVAL_MS) {
-      void atlasScannerCollectorFetchLatest({ silent: true });
-    }
+    atlasVisibilityResumeQueue40397("scanner-collector", () => {
+      const now = Date.now();
+      const captureAge = now - Number(atlasScannerCollectorRuntime.lastSavedAt || 0);
+      const latestAge = now - Number(atlasScannerCollectorRuntime.latestBridgeReadAt || 0);
+      const heavyBootBusy = !!state.auto?.livecheckBusy || !!state.chartEngineV2?.loading || !!atlasLocalReportsState?.running;
+      if (!heavyBootBusy && captureAge >= ATLAS_SCANNER_COLLECTOR_INTERVAL_MS) {
+        atlasScannerCollectorCapture("visibility-resume");
+      }
+      if (!heavyBootBusy && latestAge >= ATLAS_SCANNER_COLLECTOR_INTERVAL_MS) {
+        void atlasScannerCollectorFetchLatest({ silent: true });
+      }
+    }, 110, "visibility-return");
   });
   window.setTimeout(() => {
     if (!state.auto?.livecheckBusy && !state.chartEngineV2?.loading) void atlasScannerCollectorFetchLatest({ silent: true });
@@ -47476,7 +47723,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.96";
+const ATLAS_BUILD = "40.3.97";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -49059,7 +49306,13 @@ atlasSafeBoot("silent local market fallback", atlasPrimeMarketCacheSilently);
 
 requestAnimationFrame(() => atlasSafeBoot("market snapshot integrity", atlasEnsureMarketDomIntegrity));
 
-window.addEventListener("pageshow", () => {
+window.addEventListener("pageshow", event => {
+  if (atlasVisibilityResumePageShow40397(
+    event,
+    "market-integrity",
+    () => atlasSafeBoot("market snapshot pageshow integrity", atlasEnsureMarketDomIntegrity),
+    50
+  )) return;
   requestAnimationFrame(() => atlasSafeBoot("market snapshot pageshow integrity", atlasEnsureMarketDomIntegrity));
 });
 
@@ -49120,15 +49373,17 @@ document.addEventListener("visibilitychange", () => {
     atlasSourceDockClearRetryTimer();
     return;
   }
-  // renderAutoReader() already owns renderMemoryTruth(); do not render it twice.
-  renderAutoReader();
-  const coin = getSelectedCoin() || null;
-  if (!coin || state.sourceDock.activeCoinId !== coin.id) return;
-  if (atlasSourceDockRetryRemaining(coin.id) <= 0 && state.sourceDock.failures?.[coin.id]) {
-    void atlasLoadSourceDockMetadata(coin, { retry: true });
-  } else {
-    atlasSourceDockScheduleRetry(coin);
-  }
+  atlasVisibilityResumeQueue40397("auto-reader-source-dock", () => {
+    // renderAutoReader() already owns renderMemoryTruth(); do not render it twice.
+    renderAutoReader();
+    const coin = getSelectedCoin() || null;
+    if (!coin || state.sourceDock.activeCoinId !== coin.id) return;
+    if (atlasSourceDockRetryRemaining(coin.id) <= 0 && state.sourceDock.failures?.[coin.id]) {
+      void atlasLoadSourceDockMetadata(coin, { retry: true });
+    } else {
+      atlasSourceDockScheduleRetry(coin);
+    }
+  }, 60, "visibility-return");
 });
 
 initAtlasCleanLensPanel();
@@ -49307,7 +49562,10 @@ window.setTimeout(atlasSyncMarketUniverseControls, 900);
 
 window.addEventListener("atlas:v2mode", atlasR3EnsureMathPresence);
 
-window.addEventListener("pageshow", () => window.requestAnimationFrame(atlasR3EnsureMathPresence));
+window.addEventListener("pageshow", event => {
+  if (atlasVisibilityResumePageShow40397(event, "math-presence", atlasR3EnsureMathPresence, 55)) return;
+  window.requestAnimationFrame(atlasR3EnsureMathPresence);
+});
 
 window.setTimeout(atlasR3EnsureMathPresence, 0);
 
@@ -51569,7 +51827,13 @@ atlasDeviceComputeApply=function atlasDeviceComputeApply36(options={}){
 };
 
 document.addEventListener("visibilitychange",()=>{
-  if (!document.hidden && atlasBookMirrorObserver36()) void atlasBookMirrorFetch36({reason:"visibility"});
+  if (document.hidden || !atlasBookMirrorObserver36()) return;
+  atlasVisibilityResumeQueue40397(
+    "book-mirror",
+    () => void atlasBookMirrorFetch36({reason:"visibility"}),
+    125,
+    "visibility-return"
+  );
 });
 
 window.setTimeout(()=>{
@@ -52442,12 +52706,14 @@ window.addEventListener("online", () => {
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) return;
-  try {
-    if (typeof atlasBookMirrorObserver36 === "function" && atlasBookMirrorObserver36()) {
-      void atlasBookMirrorFetch36({ reason:"visibility-384" });
-      void atlasExchangeRefreshDirectRest383({ force:true });
-    }
-  } catch (_) {}
+  atlasVisibilityResumeQueue40397("book-mirror", () => {
+    try {
+      if (typeof atlasBookMirrorObserver36 === "function" && atlasBookMirrorObserver36()) {
+        void atlasBookMirrorFetch36({ reason:"visibility-384" });
+        void atlasExchangeRefreshDirectRest383({ force:true });
+      }
+    } catch (_) {}
+  }, 125, "visibility-return");
 });
 
 // Boot self-heal: fixes an already-closed 38.3 CURRENT journal entry without a click.
@@ -54425,10 +54691,16 @@ atlasCurrentJournalWrite33 = function atlasCurrentJournalWrite333812(records) {
   try { if (atlasBookReadOnly3812()) atlasBookRoleUiLock3812(`boot:${delay}`); } catch (_) {}
 }, delay));
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) try { if (atlasBookReadOnly3812()) atlasBookRoleUiLock3812("visibility"); } catch (_) {}
+  if (document.hidden) return;
+  atlasVisibilityResumeQueue40397("book-role-ui", () => {
+    try { if (atlasBookReadOnly3812()) atlasBookRoleUiLock3812("visibility"); } catch (_) {}
+  }, 80, "visibility-return");
 });
-window.addEventListener("pageshow", () => {
-  try { if (atlasBookReadOnly3812()) atlasBookRoleUiLock3812("pageshow"); } catch (_) {}
+window.addEventListener("pageshow", event => {
+  const task = () => {
+    try { if (atlasBookReadOnly3812()) atlasBookRoleUiLock3812("pageshow"); } catch (_) {}
+  };
+  if (!atlasVisibilityResumePageShow40397(event, "book-role-ui", task, 80)) task();
 });
 
 const atlasRcStaticAudit3811Base3812 = atlasRcStaticAudit;
@@ -54554,14 +54826,19 @@ queueMicrotask(() => {
   try { atlasRuntimeTruthApply3813("boot"); } catch (_) {}
   try { atlasCurrentMemoryEventReconcile3813("boot"); } catch (_) {}
 });
-window.addEventListener("pageshow", () => {
-  try { atlasRuntimeTruthApply3813("pageshow"); } catch (_) {}
-  try { atlasCurrentMemoryEventReconcile3813("pageshow"); } catch (_) {}
+window.addEventListener("pageshow", event => {
+  const task = () => {
+    try { atlasRuntimeTruthApply3813("pageshow"); } catch (_) {}
+    try { atlasCurrentMemoryEventReconcile3813("pageshow"); } catch (_) {}
+  };
+  if (!atlasVisibilityResumePageShow40397(event, "runtime-truth-memory", task, 90)) task();
 });
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "visible") return;
-  try { atlasRuntimeTruthApply3813("visibility"); } catch (_) {}
-  try { atlasCurrentMemoryEventReconcile3813("visibility"); } catch (_) {}
+  atlasVisibilityResumeQueue40397("runtime-truth-memory", () => {
+    try { atlasRuntimeTruthApply3813("visibility"); } catch (_) {}
+    try { atlasCurrentMemoryEventReconcile3813("visibility"); } catch (_) {}
+  }, 90, "visibility-return");
 });
 
 const atlasRcStaticAudit3812Base3813 = atlasRcStaticAudit;
@@ -54803,10 +55080,15 @@ atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore38
 };
 
 queueMicrotask(() => { try { atlasCurrentJournalHydrate3814("boot"); } catch (_) {} });
-window.addEventListener("pageshow", () => { try { atlasCurrentJournalHydrate3814("pageshow"); } catch (_) {} });
+window.addEventListener("pageshow", event => {
+  const task = () => { try { atlasCurrentJournalHydrate3814("pageshow"); } catch (_) {} };
+  if (!atlasVisibilityResumePageShow40397(event, "current-journal", task, 100)) task();
+});
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "visible") return;
-  try { atlasCurrentJournalHydrate3814("visibility"); } catch (_) {}
+  atlasVisibilityResumeQueue40397("current-journal", () => {
+    try { atlasCurrentJournalHydrate3814("visibility"); } catch (_) {}
+  }, 100, "visibility-return");
 });
 
 const atlasRcStaticAudit3813Base3814 = atlasRcStaticAudit;
