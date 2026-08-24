@@ -16052,18 +16052,52 @@ function atlasKnowledgeLibraryEntries() {
     .sort((a, b) => a.term.localeCompare(b.term, "fr", { sensitivity: "base" }));
 }
 
-function atlasKnowledgeLibraryRender(filterValue = null) {
-  const grid = document.getElementById("atlasKnowledgeLibraryGrid");
-  if (!grid) return 0;
+function atlasKnowledgeLibraryRows(filterValue = null) {
   const input = document.getElementById("atlasKnowledgeSearch");
-  const query = String(filterValue == null ? input?.value || "" : filterValue).trim().toLocaleLowerCase("fr-FR");
-  const rows = atlasKnowledgeLibraryEntries().filter(row => {
+  const raw = String(filterValue == null ? input?.value || "" : filterValue).trim();
+  const query = raw.toLocaleLowerCase("fr-FR");
+  const entries = atlasKnowledgeLibraryEntries();
+  const rows = entries.filter(row => {
     if (!query) return true;
     return `${row.term} ${row.definition}`.toLocaleLowerCase("fr-FR").includes(query);
   });
+  return { raw, query, rows, total: entries.length };
+}
+
+function atlasKnowledgeLibraryUpdateSummary40357(filterValue = null) {
+  const state = atlasKnowledgeLibraryRows(filterValue);
+  const details = document.getElementById("atlasKnowledgeLibraryDetails");
+  setText(document.getElementById("atlasKnowledgeCount"), `${state.rows.length}/${state.total} termes`);
+  setText(document.getElementById("atlasKnowledgeLibraryStatus"), state.query
+    ? `${state.rows.length} terme(s) correspondent à « ${state.raw} » · détails matérialisés uniquement à l’ouverture.`
+    : details?.open
+      ? `${state.total} définitions permanentes chargées · disponibles même en STOP / lecture seule.`
+      : `${state.total} définitions permanentes disponibles · cartes non résidentes tant que le dictionnaire reste fermé.`);
+  return state;
+}
+
+function atlasKnowledgeLibraryRelease40357() {
+  const grid = document.getElementById("atlasKnowledgeLibraryGrid");
+  if (grid) {
+    grid.replaceChildren();
+    grid.dataset.atlasKnowledgeResident40357 = "0";
+  }
+  return atlasKnowledgeLibraryUpdateSummary40357();
+}
+
+function atlasKnowledgeLibraryRender(filterValue = null) {
+  const grid = document.getElementById("atlasKnowledgeLibraryGrid");
+  if (!grid) return 0;
+  const details = document.getElementById("atlasKnowledgeLibraryDetails");
+  const state = atlasKnowledgeLibraryUpdateSummary40357(filterValue);
+  if (details && !details.open) {
+    grid.replaceChildren();
+    grid.dataset.atlasKnowledgeResident40357 = "0";
+    return state.rows.length;
+  }
   grid.replaceChildren();
   const fragment = document.createDocumentFragment();
-  rows.forEach(row => {
+  state.rows.forEach(row => {
     const article = document.createElement("article");
     const title = document.createElement("b");
     const body = document.createElement("p");
@@ -16073,12 +16107,11 @@ function atlasKnowledgeLibraryRender(filterValue = null) {
     fragment.appendChild(article);
   });
   grid.appendChild(fragment);
-  const total = atlasKnowledgeLibraryEntries().length;
-  setText(document.getElementById("atlasKnowledgeCount"), `${rows.length}/${total} termes`);
-  setText(document.getElementById("atlasKnowledgeLibraryStatus"), query
-    ? `${rows.length} terme(s) correspondent à « ${String(filterValue == null ? input?.value || "" : filterValue).trim()} ». Aucun moteur local n’est utilisé.`
-    : `${total} définitions permanentes chargées · disponibles même en STOP / lecture seule.`);
-  return rows.length;
+  grid.dataset.atlasKnowledgeResident40357 = "1";
+  setText(document.getElementById("atlasKnowledgeLibraryStatus"), state.query
+    ? `${state.rows.length} terme(s) correspondent à « ${state.raw} ». Aucun moteur local n’est utilisé.`
+    : `${state.total} définitions permanentes chargées · disponibles même en STOP / lecture seule.`);
+  return state.rows.length;
 }
 
 function atlasKnowledgeLibraryOpen() {
@@ -16091,16 +16124,28 @@ function atlasKnowledgeLibraryOpen() {
 
 function atlasKnowledgeLibraryInit() {
   const input = document.getElementById("atlasKnowledgeSearch");
-  if (!input || input.dataset.atlasKnowledgeReady === "1") return atlasKnowledgeLibraryRender();
+  const details = document.getElementById("atlasKnowledgeLibraryDetails");
+  if (!input) return 0;
+  if (input.dataset.atlasKnowledgeReady === "1") {
+    return details?.open ? atlasKnowledgeLibraryRender() : atlasKnowledgeLibraryRelease40357().rows.length;
+  }
   input.dataset.atlasKnowledgeReady = "1";
-  input.addEventListener("input", () => atlasKnowledgeLibraryRender());
+  input.addEventListener("input", () => {
+    if (details?.open) atlasKnowledgeLibraryRender();
+    else atlasKnowledgeLibraryUpdateSummary40357();
+  });
   document.getElementById("btnAtlasKnowledgeClear")?.addEventListener("click", () => {
     input.value = "";
-    atlasKnowledgeLibraryRender("");
+    if (details?.open) atlasKnowledgeLibraryRender("");
+    else atlasKnowledgeLibraryUpdateSummary40357("");
     input.focus();
   });
   document.getElementById("btnAtlasBookOpenDictionary")?.addEventListener("click", atlasKnowledgeLibraryOpen);
-  return atlasKnowledgeLibraryRender();
+  details?.addEventListener("toggle", () => {
+    if (details.open) atlasKnowledgeLibraryRender();
+    else atlasKnowledgeLibraryRelease40357();
+  });
+  return details?.open ? atlasKnowledgeLibraryRender() : atlasKnowledgeLibraryRelease40357().rows.length;
 }
 
 function atlasBookReadOnlyKnowledgeRefresh() {
@@ -46587,7 +46632,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.56";
+const ATLAS_BUILD = "40.3.57";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47809,8 +47854,54 @@ function atlasMultiCollectorAgeLabel(time, newest) {
   const hours = Math.round(minutes/60);
   return `${hours} h derrière la trace la plus récente`;
 }
+let atlasMultiCollectorDraft40357 = null;
+function atlasMultiCollectorOperatorDetails40357() {
+  return document.getElementById("atlasMultiCollectorDetails40357");
+}
+function atlasMultiCollectorOperatorCaptureDraft40357() {
+  const alias = document.getElementById("atlasOperatorAlias");
+  const role = document.getElementById("atlasOperatorRole");
+  if (!alias && !role) return;
+  atlasMultiCollectorDraft40357 = { alias: alias?.value ?? "", role: role?.value ?? "owner" };
+}
+function atlasMultiCollectorOperatorRestoreDraft40357() {
+  if (!atlasMultiCollectorDraft40357) return;
+  const alias = document.getElementById("atlasOperatorAlias");
+  const role = document.getElementById("atlasOperatorRole");
+  if (alias) alias.value = atlasMultiCollectorDraft40357.alias;
+  if (role) role.value = atlasMultiCollectorDraft40357.role;
+}
+function atlasMultiCollectorOperatorBindMounted40357() {
+  document.getElementById("btnAtlasOperatorSave")?.addEventListener("click", atlasOperatorProfileWrite);
+  document.getElementById("btnAtlasOperatorApplyDevice")?.addEventListener("click", atlasOperatorApplyDeviceRole);
+  document.getElementById("btnAtlasOperatorExport")?.addEventListener("click", atlasOperatorExportHandoff);
+}
+function atlasMultiCollectorOperatorMount40357() {
+  const details = atlasMultiCollectorOperatorDetails40357();
+  const mount = document.getElementById("atlasMultiCollectorMount40357");
+  const template = document.getElementById("atlasMultiCollectorTemplate40357");
+  if (!details?.open || !mount || !template) return null;
+  let root = document.getElementById("atlasMultiCollectorOperator");
+  if (!root) {
+    mount.replaceChildren(template.content.cloneNode(true));
+    mount.dataset.atlasMultiCollectorMounted40357 = "1";
+    atlasMultiCollectorOperatorBindMounted40357();
+    root = document.getElementById("atlasMultiCollectorOperator");
+  }
+  return root;
+}
+function atlasMultiCollectorOperatorRelease40357() {
+  atlasMultiCollectorOperatorCaptureDraft40357();
+  const mount = document.getElementById("atlasMultiCollectorMount40357");
+  if (mount) {
+    mount.replaceChildren();
+    mount.dataset.atlasMultiCollectorMounted40357 = "0";
+  }
+}
 function atlasMultiCollectorOperatorRender() {
-  const root = document.getElementById("atlasMultiCollectorOperator");
+  const details = atlasMultiCollectorOperatorDetails40357();
+  if (details && !details.open) return null;
+  const root = document.getElementById("atlasMultiCollectorOperator") || atlasMultiCollectorOperatorMount40357();
   if (!root) return null;
   const data = atlasMultiCollectorOperatorCompute();
   const { profile, memory, deviceRole, localCollector } = data;
@@ -47892,12 +47983,34 @@ function atlasOperatorExportHandoff() {
   downloadTextFile(`agent_crypto_operator_handoff_${stamp}.md`,"text/markdown;charset=utf-8",atlasOperatorHandoffMarkdown());
 }
 function atlasMultiCollectorOperatorInit() {
-  document.getElementById("btnAtlasOperatorSave")?.addEventListener("click", atlasOperatorProfileWrite);
-  document.getElementById("btnAtlasOperatorApplyDevice")?.addEventListener("click", atlasOperatorApplyDeviceRole);
-  document.getElementById("btnAtlasOperatorExport")?.addEventListener("click", atlasOperatorExportHandoff);
-  window.addEventListener("atlas:device-role", atlasMultiCollectorOperatorRender);
-  return atlasMultiCollectorOperatorRender();
+  const details = atlasMultiCollectorOperatorDetails40357();
+  if (!details) return null;
+  if (details.dataset.atlasMultiCollectorReady40357 === "1") {
+    return details.open ? atlasMultiCollectorOperatorRender() : null;
+  }
+  details.dataset.atlasMultiCollectorReady40357 = "1";
+  details.addEventListener("toggle", () => {
+    if (details.open) {
+      atlasMultiCollectorOperatorMount40357();
+      atlasMultiCollectorOperatorRender();
+      atlasMultiCollectorOperatorRestoreDraft40357();
+    } else {
+      atlasMultiCollectorOperatorRelease40357();
+    }
+  });
+  window.addEventListener("atlas:device-role", () => {
+    if (details.open) atlasMultiCollectorOperatorRender();
+  });
+  if (details.open) {
+    atlasMultiCollectorOperatorMount40357();
+    const rendered = atlasMultiCollectorOperatorRender();
+    atlasMultiCollectorOperatorRestoreDraft40357();
+    return rendered;
+  }
+  atlasMultiCollectorOperatorRelease40357();
+  return null;
 }
+
 
 els.btnSaveCollectorId?.addEventListener("click", () => { setCollectorId(els.collectorIdInput?.value); renderSharedMemory(); renderAutoReader();
 });
