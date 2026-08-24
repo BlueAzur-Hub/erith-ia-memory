@@ -14628,7 +14628,9 @@ const ATLAS_MARKET_REGISTRY_PATHS = Object.freeze({
 
 const ATLAS_PUBLIC_CRYPTO_MARKET_PATHS = Object.freeze({
   latest: "../data/crypto/latest.json",
-  status: "../data/crypto/status.json"
+  status: "../data/crypto/status.json",
+  extended: "../data/crypto/extended.json",
+  extendedStatus: "../data/crypto/extended_status.json"
 });
 
 const ATLAS_MARKET_CONTRACT_FALLBACK = Object.freeze(
@@ -15503,28 +15505,46 @@ async function atlasMarketExtendedLookup403100(rawQuery) {
   renderMarketTable();
 
   try {
-    const searchPayload = await fetchJsonWithRetry(
-      `https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(q)}`,
+    /* 40.3.102 canonical architecture:
+       Firefox reads static GitHub Pages JSON only.
+       CoinGecko collection belongs to GitHub Actions, exactly like Top 250. */
+    const cacheBust = `atlas=${Date.now()}`;
+    const payload = await fetchJsonWithRetry(
+      `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.extended}?${cacheBust}`,
       { signal: controller.signal, networkKind: "source" },
       10000,
-      0
+      1
     );
     if (requestId !== atlasMarketExternal403100.requestId) return null;
 
-    const candidate = atlasMarketExternalCandidate403100(searchPayload, q);
-    if (!candidate?.id) throw new Error("aucun actif CoinGecko correspondant");
+    if (payload?.schema !== "agent_crypto_public_extended_market_snapshot_v1") {
+      throw new Error("snapshot étendu absent ou schéma invalide");
+    }
 
-    const marketPayload = await fetchJsonWithRetry(
-      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&ids=${encodeURIComponent(candidate.id)}&sparkline=false&locale=fr&precision=full&price_change_percentage=24h,7d,30d`,
-      { signal: controller.signal, networkKind: "market" },
-      12000,
-      0
-    );
-    if (requestId !== atlasMarketExternal403100.requestId) return null;
+    const generatedAt = Date.parse(payload?.generated_at || "");
+    if (!Number.isFinite(generatedAt) || Date.now() - generatedAt > 3 * 60 * 60 * 1000) {
+      throw new Error("snapshot étendu trop ancien");
+    }
 
-    const marketCoin = Array.isArray(marketPayload) ? marketPayload[0] : null;
-    const normalized = atlasMarketExternalNormalize403100(candidate, marketCoin);
-    if (!normalized) throw new Error("données marché CoinGecko incomplètes");
+    const candidate = atlasMarketExternalCandidate403100(payload, q);
+    if (!candidate?.id) {
+      throw new Error(`aucun actif exact trouvé dans les rangs ${payload?.rank_min || 251}-${payload?.rank_max || 1000}`);
+    }
+
+    const normalized = {
+      ...candidate,
+      symbol: String(candidate.symbol || "").toUpperCase(),
+      source: "CoinGecko · snapshot public étendu GitHub Actions",
+      sourceMode: "github-public-extended",
+      externalLookup403100: true,
+      externalLookup403102: true,
+      snapshotId: payload.snapshot_id || null,
+      snapshotGeneratedAt: payload.generated_at || null
+    };
+
+    if (!Number.isFinite(Number(normalized.priceEur ?? normalized.price)) || Number(normalized.priceEur ?? normalized.price) <= 0) {
+      throw new Error("prix EUR étendu invalide");
+    }
 
     atlasMarketExternal403100.status = "ready";
     atlasMarketExternal403100.result = normalized;
@@ -15535,14 +15555,21 @@ async function atlasMarketExtendedLookup403100(rawQuery) {
   } catch (error) {
     if (error?.name === "AbortError") return null;
     if (requestId !== atlasMarketExternal403100.requestId) return null;
+
+    const message = String(error?.message || error || "");
     atlasMarketExternal403100.status = "error";
     atlasMarketExternal403100.result = null;
-    atlasMarketExternal403100.error = String(error?.message || error || "recherche étendue indisponible");
+    atlasMarketExternal403100.error =
+      /HTTP 404|snapshot étendu absent/i.test(message)
+        ? "snapshot étendu non publié · attendre le collecteur GitHub Actions 40.3.102"
+        : message || "snapshot public étendu indisponible";
     atlasMarketExternal403100.completedAt = new Date().toISOString();
     renderMarketTable();
     return null;
   } finally {
-    if (requestId === atlasMarketExternal403100.requestId) atlasMarketExternal403100.controller = null;
+    if (requestId === atlasMarketExternal403100.requestId) {
+      atlasMarketExternal403100.controller = null;
+    }
   }
 }
 
@@ -15556,7 +15583,7 @@ function atlasMarketExternalTruth403100(rawQuery) {
   if (atlasMarketExternal403100.status === "searching") return `recherche hors Top 250 ${q.toUpperCase()} en cours`;
   if (atlasMarketExternal403100.status === "ready" && atlasMarketExternal403100.result) {
     const coin = atlasMarketExternal403100.result;
-    return `${coin.symbol} trouvé hors Top 250 · rang ${coin.rank ?? "—"} · CoinGecko`;
+    return `${coin.symbol} trouvé hors Top 250 · rang ${coin.rank ?? "—"} · snapshot public GitHub Actions`;
   }
   if (atlasMarketExternal403100.status === "error") {
     return `recherche hors Top 250 : ${atlasMarketExternal403100.error || "indisponible"}`;
@@ -15569,7 +15596,7 @@ function atlasMarketExternalRowMarkup403100(rawQuery) {
   if (!q || atlasMarketExternal403100.query.toLowerCase() !== q.toLowerCase()) return "";
 
   if (atlasMarketExternal403100.status === "searching") {
-    return `<tr class="asset-row"><td colspan="11" class="empty">Recherche exacte hors Top 250 · ${escapeHtml(q.toUpperCase())} · CoinGecko…</td></tr>`;
+    return `<tr class="asset-row"><td colspan="11" class="empty">Recherche exacte hors Top 250 · ${escapeHtml(q.toUpperCase())} · snapshot public GitHub Actions…</td></tr>`;
   }
 
   const c = atlasMarketExternal403100.result;
@@ -15585,7 +15612,7 @@ function atlasMarketExternalRowMarkup403100(rawQuery) {
   return `<tr class="asset-row" data-market-external403100="${escapeHtml(c.id)}">
     <td>${escapeHtml(rankLabel)}</td>
     <td><div class="coin-cell"><i class="market-identity-rail"></i>${image}<div><strong class="market-coin-name">${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">Hors Top 250</span></div></div></td>
-    <td><div class="price-dual"><strong>${escapeHtml(price)}</strong><small>CoinGecko · recherche explicite</small></div></td>
+    <td><div class="price-dual"><strong>${escapeHtml(price)}</strong><small>Snapshot public étendu · GitHub Actions</small></div></td>
     <td class="${clsPct(c.change24h)}"><span class="market-move-pill ${clsPct(c.change24h)}">${escapeHtml(move24)}</span></td>
     <td class="${clsPct(c.change7d)}">${escapeHtml(move7)}</td>
     <td class="market-col-advanced">${escapeHtml(atlasFormatMarketCapEUR(c.marketCap))}</td>
@@ -48399,7 +48426,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.101";
+const ATLAS_BUILD = "40.3.102";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -57835,5 +57862,62 @@ try{
     recurring_timer:false,
     observer:false,
     network_added:false
+  });
+}catch(_){}
+
+
+/* 40.3.101 — MARKET EXTENDED LOOKUP ZERO-ATTEMPT BUG FIX
+   fetchJsonWithRetry(url,...,attempts) uses:
+     for (attempt = 1; attempt <= attempts; attempt++)
+   40.3.100 passed attempts=0 for both CoinGecko calls, so NO HTTP request
+   could ever be sent and the helper immediately threw "Source indisponible".
+   40.3.101 uses exactly one attempt for each explicit Enter lookup.
+   No polling/retry loop/background fetch is added. */
+try{
+  globalThis.AtlasMarketExtendedLookupFix403101=Object.freeze({
+    build:"40.3.101",
+    root_cause:"fetchJsonWithRetry attempts=0 => request loop never executes",
+    search_attempts:1,
+    market_attempts:1,
+    user_action_required:"Enter",
+    top250_mutation:false,
+    polling:false,
+    recurring_retry:false,
+    livecheck_dependency_added:false
+  });
+}catch(_){}
+
+
+/* ============================================================
+   40.3.102 — PUBLIC EXTENDED MARKET ARCHITECTURE LOCK
+
+   The two failed 40.3.100/.101 attempts were browser-direct CoinGecko lookups.
+   That contradicted the already-canonical public Market architecture:
+   GitHub Actions collects CoinGecko; Firefox consumes static JSON.
+
+   Final contract:
+   - Top 250: data/crypto/latest.json (unchanged)
+   - ranks 251..1000: data/crypto/extended.json
+   - ARK #851 is inside the extended rank window when CoinGecko publishes it
+   - explicit Enter only
+   - no browser-direct CoinGecko API request
+   - no Top 250 mutation
+   - no polling/storage/Oracle/Math mutation
+   ============================================================ */
+try{
+  globalThis.AtlasPublicExtendedMarket403102=Object.freeze({
+    build:"40.3.102",
+    canonical_top250_path:ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.latest,
+    extended_path:ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.extended,
+    rank_min:251,
+    rank_max:1000,
+    collector_owner:"GitHub Actions",
+    browser_direct_coingecko:false,
+    explicit_enter_only:true,
+    top250_mutation:false,
+    polling:false,
+    storage_write:false,
+    oracle_math_changed:false,
+    fiche_crypto_changed:false
   });
 }catch(_){}
