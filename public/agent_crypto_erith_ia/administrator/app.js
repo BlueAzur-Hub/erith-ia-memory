@@ -2332,6 +2332,16 @@ function atlasV2ApplyMode(mode, options = {}) {
     element.hidden = !expanded;
   });
 
+  // 40.3.65 AETHER — Basic owns only its four daily quick links.
+  // Atlas/Oracle return automatically in Intermediate/Administrator.
+  for (const targetId40365 of ["atlas-local-ai-collapse", "oracle-analysis-suite"]) {
+    const quick40365 = document.querySelector(`.atlas-v2-nav-essential [data-atlas-essential-target="${targetId40365}"]`);
+    if (!quick40365) continue;
+    const hide40365 = next === "essential";
+    quick40365.hidden = hide40365;
+    quick40365.setAttribute("aria-hidden", hide40365 ? "true" : "false");
+  }
+
   const commandKicker = document.getElementById("atlasCommandKicker");
   const commandTitle = document.getElementById("atlasCommandTitle");
   if (commandKicker) commandKicker.textContent = operator ? "INTERMÉDIAIRE" : "ADMIN";
@@ -46735,7 +46745,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.64";
+const ATLAS_BUILD = "40.3.65";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

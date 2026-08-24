@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="40.3.64" />
+  <meta name="atlas-build" content="40.3.65" />
   <meta name="atlas-engine-build" content="38.15.11" />
-  <meta name="administrator-build" content="40.3.64" />
-  <meta name="administrator-release" content="PARKER LEWIS CAN'T LOSE · BASIC CONTRACT + ORACLE LAYOUT + NEWS EVENT-ROLE DEBT SETTLEMENT LOCK" />
+  <meta name="administrator-build" content="40.3.65" />
+  <meta name="administrator-release" content="PARKER LEWIS CAN'T LOSE · AETHER BASIC COMMAND STATUS + TRANSFORMER CONTRACT LOCK" />
   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.3.64" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.3.65" />
   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
-  <title>Agent-Crypto @erith.IA — Build 40.3.64 · Administrator</title>
+  <title>Agent-Crypto @erith.IA — Build 40.3.65 · Administrator</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.3.64" />
-  <link rel="stylesheet" href="./admin-metal.css?v=administrator-build-40.3.64" />
-  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.3.64" />
-  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.3.64" />
-  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.3.64" />
-  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.3.64" />
-  <link rel="stylesheet" href="./admin-firefox-compositor.css?v=administrator-build-40.3.64" />
-  <link rel="stylesheet" href="./admin-visual-cache.css?v=administrator-build-40.3.64" />
-<script src="./js/admin-visual-cache.js?v=administrator-build-40.3.64"></script>
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.3.65" />
+  <link rel="stylesheet" href="./admin-metal.css?v=administrator-build-40.3.65" />
+  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.3.65" />
+  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.3.65" />
+  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.3.65" />
+  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.3.65" />
+  <link rel="stylesheet" href="./admin-firefox-compositor.css?v=administrator-build-40.3.65" />
+  <link rel="stylesheet" href="./admin-visual-cache.css?v=administrator-build-40.3.65" />
+<script src="./js/admin-visual-cache.js?v=administrator-build-40.3.65"></script>
   <style data-atlas-command-center-portal-40321="true">
     /* 40.3.21 — the Command Center is a body portal, never a bottom-of-document panel.
        admin-visual-assets.css gives .admin-command-observatory-r3 its atmosphere,
@@ -1779,6 +1779,89 @@
       html[data-atlas-view="essential"] body.atlas-status-strip-40309 #sourceActiveCard,
       html[data-atlas-view="essential"] body.atlas-status-strip-40309 #sourceTimeCard{
         grid-column:1 / -1!important;
+      }
+    }
+  </style>
+
+
+  <style id="atlas-aether-basic-contract-40365">
+    /* 40.3.65 AETHER — canonical Basic command/status order.
+       40.3.64 created five columns but an older essential grid-area contract still
+       declared only live / refresh / source / time, leaving Decision to auto-placement. */
+    html[data-atlas-view="essential"] body.atlas-status-strip-40309 #livecheck.command-bar,
+    html[data-atlas-mode="essential"] body.atlas-status-strip-40309 #livecheck.command-bar{
+      display:grid!important;
+      grid-template-columns:minmax(150px,.82fr) minmax(145px,.76fr) minmax(170px,.92fr) minmax(260px,1.30fr) minmax(300px,1.42fr)!important;
+      grid-template-areas:"live refresh decision source time"!important;
+      gap:6px!important;
+      align-items:stretch!important;
+    }
+    html[data-atlas-view="essential"] #btnLivecheck,
+    html[data-atlas-mode="essential"] #btnLivecheck{grid-area:live!important}
+    html[data-atlas-view="essential"] #btnRefresh,
+    html[data-atlas-mode="essential"] #btnRefresh{grid-area:refresh!important}
+    html[data-atlas-view="essential"] #decisionCard,
+    html[data-atlas-mode="essential"] #decisionCard{grid-area:decision!important}
+    html[data-atlas-view="essential"] #sourceActiveCard,
+    html[data-atlas-mode="essential"] #sourceActiveCard{grid-area:source!important}
+    html[data-atlas-view="essential"] #sourceTimeCard,
+    html[data-atlas-mode="essential"] #sourceTimeCard{grid-area:time!important}
+
+    html[data-atlas-view="essential"] body.atlas-status-strip-40309 #decisionCard,
+    html[data-atlas-view="essential"] body.atlas-status-strip-40309 #sourceActiveCard,
+    html[data-atlas-view="essential"] body.atlas-status-strip-40309 #sourceTimeCard,
+    html[data-atlas-mode="essential"] body.atlas-status-strip-40309 #decisionCard,
+    html[data-atlas-mode="essential"] body.atlas-status-strip-40309 #sourceActiveCard,
+    html[data-atlas-mode="essential"] body.atlas-status-strip-40309 #sourceTimeCard{
+      min-width:0!important;
+      min-inline-size:0!important;
+      overflow:hidden!important;
+      align-content:center!important;
+    }
+    html[data-atlas-view="essential"] #decisionCard strong,
+    html[data-atlas-view="essential"] #sourceActiveCard strong,
+    html[data-atlas-mode="essential"] #decisionCard strong,
+    html[data-atlas-mode="essential"] #sourceActiveCard strong{
+      display:block!important;
+      min-width:0!important;
+      max-width:100%!important;
+      white-space:nowrap!important;
+      overflow:hidden!important;
+      text-overflow:ellipsis!important;
+      line-height:1.18!important;
+    }
+    html[data-atlas-view="essential"] #sourceTimeCard,
+    html[data-atlas-mode="essential"] #sourceTimeCard{
+      white-space:nowrap!important;
+    }
+
+    @media (max-width:1366px) and (min-width:901px){
+      html[data-atlas-view="essential"] body.atlas-status-strip-40309 #livecheck.command-bar,
+      html[data-atlas-mode="essential"] body.atlas-status-strip-40309 #livecheck.command-bar{
+        grid-template-columns:minmax(136px,.72fr) minmax(128px,.68fr) minmax(135px,.78fr) minmax(220px,1.28fr) minmax(245px,1.36fr)!important;
+        grid-template-areas:"live refresh decision source time"!important;
+        gap:5px!important;
+      }
+    }
+
+    /* Transformer Book / compact laptop — Basic navigation is exactly four
+       daily links on one physical row. Atlas and Oracle are mode-hidden by JS. */
+    @media (min-width:620px) and (max-width:1366px){
+      html[data-atlas-view="essential"] .atlas-v2-nav-essential.atlas-quick-dock,
+      html[data-atlas-mode="essential"] .atlas-v2-nav-essential.atlas-quick-dock{
+        display:grid!important;
+        grid-template-columns:repeat(4,minmax(0,1fr))!important;
+        grid-template-rows:1fr!important;
+        gap:6px!important;
+        width:100%!important;
+        min-width:0!important;
+        overflow:hidden!important;
+      }
+      html[data-atlas-view="essential"] .atlas-v2-nav-essential .atlas-quick-link,
+      html[data-atlas-mode="essential"] .atlas-v2-nav-essential .atlas-quick-link{
+        min-width:0!important;
+        width:100%!important;
+        white-space:nowrap!important;
       }
     }
   </style>
@@ -5966,14 +6049,14 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-40.3.64"></script>
-  <script src="./js/market-memory.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/analytical-memory.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/market-memory-collector.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/decision-board.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/retrospective-validation.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/memory-health-audit.js?v=administrator-build-40.3.64"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-40.3.65"></script>
+  <script src="./js/market-memory.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/analytical-memory.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/market-memory-collector.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/decision-board.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/retrospective-validation.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/memory-health-audit.js?v=administrator-build-40.3.65"></script>
   <script id="adminVisualAssets40269">
 (() => {
   "use strict";
@@ -6110,10 +6193,10 @@
 })();
 </script>
 
-  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/app.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/layout-repair.js?v=administrator-build-40.3.64"></script>
-  <script src="./js/architecture-freeze.js?v=administrator-build-40.3.64"></script>
+  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/app.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/layout-repair.js?v=administrator-build-40.3.65"></script>
+  <script src="./js/architecture-freeze.js?v=administrator-build-40.3.65"></script>
 <script id="atlasTechnicalStaticThemeController40269">
 (() => {
   "use strict";
