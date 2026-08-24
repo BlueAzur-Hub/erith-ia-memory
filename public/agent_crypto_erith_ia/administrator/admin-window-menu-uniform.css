@@ -1388,3 +1388,11 @@ body.atlas-administrator-mirror.atlas-section-air-40292 .atlas-layout-family.adm
   body.atlas-administrator-mirror.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-native-controls{right:16px!important;}
   body.atlas-administrator-mirror.atlas-section-air-40292 .atlas-layout-family.admin-family-emblem-host-r3 > .admin-family-emblem-r3{right:178px!important;}
 }
+
+
+/* 40.3.66 — AETHER SHARED TOP NAVIGATION CONTRACT LOCK
+   The same top navigation surface is exposed in Basic, Intermediate and Administrator.
+   View-specific content contracts remain unchanged. */
+html[data-atlas-view="essential"] body.atlas-book-nav-40299 .atlas-v2-nav-essential.atlas-quick-dock{
+  display:flex!important;grid-template-columns:none!important;flex-flow:row nowrap!important;width:auto!important;min-width:max-content!important;gap:5px!important;
+}

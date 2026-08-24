@@ -2328,19 +2328,17 @@ function atlasV2ApplyMode(mode, options = {}) {
     liveSourcesCollapse.setAttribute("aria-hidden", "false");
   }
 
+  // 40.3.66 AETHER — the top navigation is a shared operator bar.
+  // Basic, Intermediate and Administrator expose the same navigation surface;
+  // the view contract still owns which page sections are resident/visible.
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
-    element.hidden = !expanded;
+    element.hidden = false;
+    element.setAttribute("aria-hidden", "false");
   });
-
-  // 40.3.65 AETHER — Basic owns only its four daily quick links.
-  // Atlas/Oracle return automatically in Intermediate/Administrator.
-  for (const targetId40365 of ["atlas-local-ai-collapse", "oracle-analysis-suite"]) {
-    const quick40365 = document.querySelector(`.atlas-v2-nav-essential [data-atlas-essential-target="${targetId40365}"]`);
-    if (!quick40365) continue;
-    const hide40365 = next === "essential";
-    quick40365.hidden = hide40365;
-    quick40365.setAttribute("aria-hidden", hide40365 ? "true" : "false");
-  }
+  document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").forEach(element => {
+    element.hidden = false;
+    element.setAttribute("aria-hidden", "false");
+  });
 
   const commandKicker = document.getElementById("atlasCommandKicker");
   const commandTitle = document.getElementById("atlasCommandTitle");
@@ -18665,6 +18663,7 @@ function newsFeedFilteredEvents() {
     if (filter === "primary") return event.source_group === "primary";
     if (filter === "crypto") return event.source_group === "crypto";
     if (filter === "world") return event.source_group === "world" || event.source_group === "finance";
+    if (filter === "drivers") return newsMarketDriverDomains40367(event).length > 0;
     return true;
   });
 }
@@ -18952,6 +18951,7 @@ function renderNewsFeedOverview() {
 
   newsFeedUpdateCountdown();
   renderNewsFeedList();
+  renderNewsMacroFlowCoverage40367();
 }
 
 
@@ -19385,6 +19385,112 @@ function newsMarketExtractFacts40235(event) {
   return { facts, amounts, raw };
 }
 
+
+/* ============================================================
+   40.3.67 — AETHER NEWS MACRO / MONEY-FLOW SOURCE COVERAGE
+   Reads only the News Sentinel archive already loaded in this page.
+   Coverage is descriptive: it never converts proximity into causality.
+   ============================================================ */
+const NEWS_MARKET_DRIVER_RULES_40367 = Object.freeze({
+  macro_liquidity: Object.freeze({
+    label: "Macro / liquidité",
+    re: /\b(treasury|u\.?s\.? treasury|buybacks?|liquidity support|long[- ]end|bond yields?|treasury yields?|federal reserve|\bfed\b|interest rates?|rate cuts?|rate hikes?|liquidity|dollar)\b/i
+  }),
+  institutional_flows: Object.freeze({
+    label: "ETF / institutionnels",
+    re: /\b(etf|institutional|asset manager|fund flows?)\b.{0,140}\b(inflows?|outflows?|redemptions?|subscriptions?|buying|selling|demand)\b|\b(inflows?|outflows?|redemptions?)\b.{0,140}\b(etf|bitcoin|ether|ethereum|institutional|fund)\b/i
+  }),
+  regulation: Object.freeze({
+    label: "Réglementation",
+    re: /\b(clarity act|genius act|market structure bill|digital asset market structure|crypto legislation|regulation|regulatory|\bsec\b|\bcftc\b)\b/i
+  }),
+  leverage: Object.freeze({
+    label: "Levier / liquidations",
+    re: /\b(short squeeze|long squeeze|shorts?|longs?|bearish bets?|liquidations?)\b.{0,140}\b(liquidat|wiped|forced|squeeze|lost|lose|covered|buy back|sell)\b|\b(liquidations?|wiped out)\b.{0,140}\b(shorts?|longs?|bearish bets?)\b/i
+  })
+});
+
+const NEWS_MARKET_MONEY_FLOW_RULES_40367 = Object.freeze({
+  flow_up: Object.freeze({
+    id: "demand-inflows-40367",
+    label: "ETF / FLUX ENTRANTS",
+    direction: "DEMANDE",
+    re: /\b(etf|institutional|institutionnel|asset manager|fund|fonds)\b.{0,150}\b(net inflows?|inflows?|subscriptions?|accumulat(?:ion|ing)|purchases?|buying|demand)\b|\b(net inflows?|inflows?|subscriptions?)\b.{0,150}\b(etf|bitcoin|ether|ethereum|crypto|institutional|fund)\b/i
+  }),
+  flow_down: Object.freeze({
+    id: "supply-outflows-40367",
+    label: "ETF / FLUX SORTANTS",
+    direction: "OFFRE / VENTE",
+    re: /\b(etf|institutional|institutionnel|asset manager|fund|fonds)\b.{0,150}\b(net outflows?|outflows?|redemptions?|selling)\b|\b(net outflows?|outflows?|redemptions?)\b.{0,150}\b(etf|bitcoin|ether|ethereum|crypto|institutional|fund)\b/i
+  })
+});
+
+function newsMarketDriverDomains40367(event) {
+  const declared=Array.isArray(event?.driver_domains)?event.driver_domains.map(v=>String(v)):[];
+  const out=[];
+  for(const key of declared) if(Object.prototype.hasOwnProperty.call(NEWS_MARKET_DRIVER_RULES_40367,key)&&!out.includes(key)) out.push(key);
+  const raw=newsMarketRawArticleText40235(event);
+  for(const [key,rule] of Object.entries(NEWS_MARKET_DRIVER_RULES_40367)) if(rule.re.test(raw)&&!out.includes(key)) out.push(key);
+  return out;
+}
+
+function newsMarketDriverCoverage40367(events=null) {
+  const rows=Array.isArray(events)?events:(Array.isArray(newsFeedState?.events)?newsFeedState.events:[]);
+  const cutoff=Date.now()-7*24*60*60*1000;
+  const rank=event=>{
+    const evidence=Number(event?.evidence?.score||0);
+    const sources=Math.max(1,Number(event?.source_count||1));
+    const ts=newsMarketEventTime40234(event)||0;
+    return evidence*1e12+sources*1e10+ts;
+  };
+  const result={};
+  for(const key of Object.keys(NEWS_MARKET_DRIVER_RULES_40367)){
+    const candidates=rows.filter(event=>{
+      const ts=newsMarketEventTime40234(event);
+      return (!ts||ts>=cutoff)&&newsMarketDriverDomains40367(event).includes(key);
+    }).sort((a,b)=>rank(b)-rank(a));
+    const best=candidates[0]||null;
+    const score=best?Number(best?.evidence?.score||0):0;
+    result[key]={
+      status:best?(score>=65?"QUALIFIÉ":"PARTIEL"):"NON QUALIFIÉ",
+      count:candidates.length,
+      best,
+      evidence:score,
+      causal_claim:false
+    };
+  }
+  return result;
+}
+
+function renderNewsMacroFlowCoverage40367() {
+  const root=document.getElementById("newsMacroFlowCoverage40367");
+  if(!root)return null;
+  const coverage=newsMarketDriverCoverage40367();
+  const targets={
+    macro_liquidity:["newsDriverMacro40367","newsDriverMacroNote40367"],
+    institutional_flows:["newsDriverFlows40367","newsDriverFlowsNote40367"],
+    regulation:["newsDriverReg40367","newsDriverRegNote40367"],
+    leverage:["newsDriverLeverage40367","newsDriverLeverageNote40367"]
+  };
+  for(const [key,[valueId,noteId]] of Object.entries(targets)){
+    const row=coverage[key];
+    const value=document.getElementById(valueId),note=document.getElementById(noteId);
+    if(value)value.textContent=row.status;
+    if(value)value.dataset.state=row.status.toLowerCase().replace(/\s+/g,"-");
+    if(note){
+      const event=row.best;
+      const source=event?(event.source_name||event.source_host||"Source qualifiée"):"Aucune source qualifiée";
+      const headline=event?String(event.headline||"Événement qualifié"):"Archive sans événement correspondant.";
+      note.textContent=event?`${source} · preuve ${row.evidence}/100 · ${headline}`:headline;
+      note.title=note.textContent;
+    }
+  }
+  const summary=newsFeedState?.payload?.summary?.driver_coverage||null;
+  root.dataset.collectorCoverage=summary?"declared":"fallback";
+  root.dataset.causalClaim="false";
+  return coverage;
+}
+
 function newsMarketContextEvents40235(selected, events = null) {
   if (!selected) return [];
   const source = Array.isArray(events) ? events : (Array.isArray(newsFeedState?.events) ? newsFeedState.events : []);
@@ -19401,7 +19507,11 @@ function newsMarketContextEvents40235(selected, events = null) {
     if (selectedAssets.has("XRP") && /\bxrp\b|\bripple\b/.test(raw)) return true;
     if (selectedAssets.has("SOL") && /\bsolana\b|\bsol\b/.test(raw)) return true;
     if (selectedAssets.has("BNB") && /\bbnb\b|\bbinance coin\b/.test(raw)) return true;
-    return false;
+    // 40.3.67: global macro/liquidity, institutional-flow and regulation context
+    // can matter to a crypto-wide move even when the headline does not name BTC/ETH.
+    return newsMarketDriverDomains40367(event).some(domain =>
+      domain === "macro_liquidity" || domain === "institutional_flows" || domain === "regulation"
+    );
   });
 }
 
@@ -19444,7 +19554,15 @@ function newsMarketInitialCatalyst40235(selected, contextEvents) {
 }
 
 function newsMarketDemandContext40235(selected, contextEvents) {
-  return newsMarketBestRawRole40235(contextEvents,[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_up,NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_down]);
+  return newsMarketBestRawRole40235(
+    [selected,...(contextEvents||[])].filter(Boolean),
+    [
+      NEWS_MARKET_MONEY_FLOW_RULES_40367.flow_up,
+      NEWS_MARKET_MONEY_FLOW_RULES_40367.flow_down,
+      NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_up,
+      NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_down
+    ]
+  );
 }
 
 const NEWS_MARKET_SUPPORTING_AMPLIFIER_RULE_40235 = Object.freeze({
@@ -46745,7 +46863,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.65";
+const ATLAS_BUILD = "40.3.67";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
