@@ -47055,7 +47055,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.86";
+const ATLAS_BUILD = "40.3.87";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55149,5 +55149,21 @@ try {
     new_timer: false,
     new_observer: false,
     new_scheduler: false
+  });
+} catch (_) {}
+
+/* 40.3.87 — AETHER FIREFOX FULL-VIEWPORT DECORATIVE LAYER ISOLATION LOCK */
+try {
+  globalThis.__AETHER_FIREFOX_FULL_VIEWPORT_LAYER_40387__ = Object.freeze({
+    build: "40.3.87",
+    parent: "40.3.86",
+    hypothesis: "full_viewport_fixed_decorative_layers",
+    wheel_specific_hypothesis_retired: true,
+    ambient_grid_firefox_disabled: true,
+    timers_added: false,
+    observers_added: false,
+    market_core_changed: false,
+    oracle_math_news_changed: false,
+    window_manager_changed: false
   });
 } catch (_) {}

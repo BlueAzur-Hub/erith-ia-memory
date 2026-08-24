@@ -53,3 +53,27 @@ body.atlas-administrator-mirror *::after {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+
+
+/* ============================================================================
+   Agent-Crypto @erith.IA — Build 40.3.87
+   PARKER LEWIS CAN'T LOSE · AETHER FIREFOX FULL-VIEWPORT DECORATIVE LAYER
+   ISOLATION LOCK
+
+   Field evidence after 40.3.86:
+   - the grey repaint sheet still reproduces;
+   - wheel-specific DOM activity is therefore not accepted as the owner;
+   - the failure leaves the Administrator body/background visible while large
+     document content fails to repaint.
+
+   This pass changes one compositor variable only on Firefox:
+   retire the two decorative full-viewport fixed layers (.ambient/.grid-overlay).
+   They carry no data, hit targets, layout, Window Manager or analytical logic.
+   No timer, observer, scheduler, transform or content-visibility rule is added.
+   ============================================================================ */
+@supports (-moz-appearance:none) {
+  body.atlas-administrator-mirror .ambient,
+  body.atlas-administrator-mirror .grid-overlay {
+    display:none !important;
+  }
+}
