@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.79";
+  const ADMIN_BUILD = "40.3.80";
   const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · AETHER TRUST ADMINISTRATOR PORTAL UI LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
