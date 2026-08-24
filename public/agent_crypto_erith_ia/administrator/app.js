@@ -1311,8 +1311,14 @@ async function atlasAccessSubmit(event) {
       }
     }
 
+    const bridgeAuth40375 = await atlasBridgeAuthLogin40375(secret);
+    if (bridgeAuth40375.reachable && !bridgeAuth40375.ok) {
+      atlasAccessSetStatus(bridgeAuth40375.payload?.error || "Bridge : authentification Administrator refusée.", "error");
+      return false;
+    }
+
     atlasAccessSetSession(ATLAS_ACCESS_OWNER_ROLE);
-    atlasAccessSetStatus("Accès Christophe validé.", "ok");
+    atlasAccessSetStatus(bridgeAuth40375.ok ? "Accès Christophe + Bridge validés." : "Accès Christophe validé · Bridge hors ligne.", "ok");
     atlasV2SyncShareableUrl("advanced");
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
     /* R4 : le déverrouillage doit ouvrir réellement l’espace administrateur.
@@ -1344,6 +1350,7 @@ function atlasAccessLock() {
     if (storedReturnMode === "intermediate") returnMode = "intermediate";
     sessionStorage.removeItem(ATLAS_ACCESS_RETURN_MODE_KEY);
   } catch {}
+  void atlasBridgeAuthLogout40375();
   atlasAccessClearSession();
   atlasAccessPendingHash = "";
   atlasV2WriteSetting(ATLAS_V2_MODE_KEY, returnMode);
@@ -22515,7 +22522,8 @@ async function atlasLocalBridgeRequest(path, payload, timeoutMs = ATLAS_LOCAL_BR
       signal: controller.signal,
       headers: {
         "Accept": "application/json",
-        "Content-Type": "application/json; charset=utf-8"
+        "Content-Type": "application/json; charset=utf-8",
+        ...atlasBridgeAuthHeaders40375()
       },
       body: JSON.stringify(payload)
     });
@@ -46050,7 +46058,7 @@ async function atlasFetchBridgeHistory(c, days, options = {}) {
       method: "GET",
       cache: "no-store",
       signal: controller.signal,
-      headers: { "Accept": "application/json" }
+      headers: { "Accept": "application/json", ...atlasBridgeAuthHeaders40375() }
     });
     bridgeReached = true;
     const payload = await response.json().catch(() => ({}));
@@ -47003,7 +47011,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.74";
+const ATLAS_BUILD = "40.3.78";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -54999,3 +55007,164 @@ queueMicrotask(()=>{
   if (!atlasBookMirrorPublisherEligible40374()) return;
   void atlasBookMirrorPublisherProbe40374();
 });
+
+
+/* ============================================================
+   40.3.75 — BRIDGE ADMIN AUTHENTICATION FOUNDATION
+   Supersedes the transitional 40.3.74 loopback publisher path.
+   Administrator password remains browser-local for UI gating, and the same
+   operator secret enrolls/authenticates the Ryzen Bridge over loopback.
+   Bridge session tokens are sessionStorage-only and never written to GitHub.
+   ============================================================ */
+const ATLAS_BRIDGE_AUTH_40375_TOKEN_KEY="agent_crypto_bridge_auth_40375_token";
+const ATLAS_BRIDGE_AUTH_40375_EXPIRES_KEY="agent_crypto_bridge_auth_40375_expires";
+const ATLAS_BRIDGE_AUTH_40375_CAPS_KEY="agent_crypto_bridge_auth_40375_caps";
+
+function atlasBridgeAuthToken40375(){
+  try{return String(sessionStorage.getItem(ATLAS_BRIDGE_AUTH_40375_TOKEN_KEY)||"").trim();}catch(_){return "";}
+}
+function atlasBridgeAuthHeaders40375(){
+  const token=atlasBridgeAuthToken40375();
+  return token?{"Authorization":`Bearer ${token}`}:{ };
+}
+function atlasBridgeAuthRemember40375(payload){
+  const token=String(payload?.token||"").trim();
+  if(!token)return false;
+  try{
+    sessionStorage.setItem(ATLAS_BRIDGE_AUTH_40375_TOKEN_KEY,token);
+    sessionStorage.setItem(ATLAS_BRIDGE_AUTH_40375_EXPIRES_KEY,String(payload?.expires_at||""));
+    sessionStorage.setItem(ATLAS_BRIDGE_AUTH_40375_CAPS_KEY,JSON.stringify(payload?.capabilities||[]));
+  }catch(_){return false;}
+  return true;
+}
+function atlasBridgeAuthClear40375(){
+  try{
+    sessionStorage.removeItem(ATLAS_BRIDGE_AUTH_40375_TOKEN_KEY);
+    sessionStorage.removeItem(ATLAS_BRIDGE_AUTH_40375_EXPIRES_KEY);
+    sessionStorage.removeItem(ATLAS_BRIDGE_AUTH_40375_CAPS_KEY);
+  }catch(_){}
+}
+async function atlasBridgeAuthFetch40375(path,options={},timeoutMs=3500){
+  const controller=new AbortController();
+  const timer=window.setTimeout(()=>controller.abort(),timeoutMs);
+  try{
+    const response=await fetch(`${ATLAS_LOCAL_BRIDGE_BASE}${path}`,{
+      cache:"no-store",signal:controller.signal,
+      ...options,
+      headers:{"Accept":"application/json",...(options.headers||{})}
+    });
+    const payload=await response.json().catch(()=>({}));
+    return {reachable:true,ok:response.ok&&payload?.ok!==false,status:response.status,payload};
+  }catch(error){return {reachable:false,ok:false,status:0,error};}
+  finally{window.clearTimeout(timer);}
+}
+async function atlasBridgeAuthLogin40375(secret){
+  if(!atlasDeviceComputeAllowed())return {reachable:false,ok:false,observer:true};
+  const status=await atlasBridgeAuthFetch40375("/auth/status",{method:"GET"},2600);
+  if(!status.reachable)return status;
+  if(!status.ok)return {...status,error:new Error(status.payload?.error||"Bridge auth status refusé")};
+  const endpoint=status.payload?.configured?"/auth/login":"/auth/register";
+  const result=await atlasBridgeAuthFetch40375(endpoint,{
+    method:"POST",
+    headers:{"Content-Type":"application/json; charset=utf-8"},
+    body:JSON.stringify({secret:String(secret||""),role:"owner",client:"administrator"})
+  },8000);
+  if(result.ok)atlasBridgeAuthRemember40375(result.payload);
+  return result;
+}
+async function atlasBridgeAuthLogout40375(){
+  const token=atlasBridgeAuthToken40375();
+  atlasBridgeAuthClear40375();
+  if(!token||!atlasDeviceComputeAllowed())return false;
+  try{await atlasBridgeAuthFetch40375("/auth/logout",{method:"POST",headers:{"Content-Type":"application/json; charset=utf-8","Authorization":`Bearer ${token}`},body:"{}"},2200);}catch(_){}
+  return true;
+}
+function atlasBridgeAuthCapabilities40375(){
+  try{const rows=JSON.parse(sessionStorage.getItem(ATLAS_BRIDGE_AUTH_40375_CAPS_KEY)||"[]");return Array.isArray(rows)?rows:[];}catch(_){return [];}
+}
+function atlasBridgeAuthStatusText40375(){
+  const token=atlasBridgeAuthToken40375();
+  if(!atlasDeviceComputeAllowed())return "Book · aucun Bridge local";
+  return token?"Bridge · session Administrator authentifiée":"Bridge · session Administrator non authentifiée";
+}
+
+// 40.3.74 was deliberately transitional. From 40.3.75 onward it must never
+// own a publish attempt; the single trusted owner returns to Bridge :8787.
+atlasBookMirrorPublisherEligible40374=function atlasBookMirrorPublisherEligible40374Superseded(){return false;};
+
+
+/* 40.3.76 — BRIDGE CAPABILITY POLICY + AUDIT TRUTH */
+async function atlasBridgeCapabilityRefresh40376(){
+  const token=atlasBridgeAuthToken40375();
+  if(!token||!atlasDeviceComputeAllowed())return [];
+  const result=await atlasBridgeAuthFetch40375("/capabilities",{method:"GET",headers:{...atlasBridgeAuthHeaders40375()}},2800);
+  if(!result.ok)return [];
+  try{sessionStorage.setItem(ATLAS_BRIDGE_AUTH_40375_CAPS_KEY,JSON.stringify(result.payload?.capabilities||[]));}catch(_){}
+  return result.payload?.capabilities||[];
+}
+function atlasBridgeCapabilityHas40376(name){return atlasBridgeAuthCapabilities40375().includes(String(name||""));}
+const atlasBridgeAuthRemember40375Base40376=atlasBridgeAuthRemember40375;
+atlasBridgeAuthRemember40375=function atlasBridgeAuthRemember4037540376(payload){
+  const ok=atlasBridgeAuthRemember40375Base40376(payload);
+  if(ok)queueMicrotask(()=>void atlasBridgeCapabilityRefresh40376());
+  return ok;
+};
+
+
+/* ============================================================
+   40.3.77 — RYZEN → BOOK ZERO-CLICK RESTRICTED BRIDGE HANDOFF
+   Bridge :8787 becomes the single trusted publication owner.
+   No second publisher process, no generic GitHub write, no Book action.
+   ============================================================ */
+const atlasBookMirrorBridgeState40377={busy:false,lastFp:"",lastError:"",credentialReady:null,lastAt:null};
+async function atlasBookMirrorBridgeStatus40377(){
+  if(!atlasDeviceComputeAllowed()||!atlasAccessIsAuthorized()||!atlasBridgeAuthToken40375())return false;
+  const r=await atlasBridgeAuthFetch40375("/book-mirror/status",{method:"GET",headers:{...atlasBridgeAuthHeaders40375()}},5000);
+  if(!r.ok){atlasBookMirrorBridgeState40377.lastError=String(r.payload?.error||r.error?.message||"status Book indisponible");return false;}
+  atlasBookMirrorBridgeState40377.credentialReady=r.payload?.credential_ready===true;
+  atlasBookMirrorBridgeState40377.lastError=atlasBookMirrorBridgeState40377.credentialReady?"":"Credential GitHub local absent";
+  return r.payload;
+}
+async function atlasBookMirrorBridgePublish40377(reason="current-complete"){
+  if(atlasBookMirrorBridgeState40377.busy||!atlasDeviceComputeAllowed()||!atlasAccessIsAuthorized())return false;
+  if(!atlasBridgeCapabilityHas40376("book_mirror.publish"))await atlasBridgeCapabilityRefresh40376();
+  if(!atlasBridgeCapabilityHas40376("book_mirror.publish"))return false;
+  const payload=atlasBookMirrorPayload36();
+  const fp=String(payload?.fingerprint||"").trim();
+  if(!payload?.package||!fp||fp===atlasBookMirrorBridgeState40377.lastFp)return false;
+  atlasBookMirrorBridgeState40377.busy=true;
+  try{
+    const r=await atlasBridgeAuthFetch40375("/book-mirror/publish",{
+      method:"POST",headers:{"Content-Type":"application/json; charset=utf-8",...atlasBridgeAuthHeaders40375()},body:JSON.stringify(payload)
+    },30000);
+    if(!r.ok)throw new Error(r.payload?.error||"Publication Book refusée");
+    atlasBookMirrorBridgeState40377.lastFp=String(r.payload?.fingerprint||fp);
+    atlasBookMirrorBridgeState40377.lastAt=new Date().toISOString();
+    atlasBookMirrorBridgeState40377.credentialReady=true;
+    atlasBookMirrorBridgeState40377.lastError="";
+    try{atlasBookMirrorRender36("ready",`Ryzen → Book · ${r.payload?.changed===false?"miroir déjà à jour":"CURRENT publié"} · ${atlasBookMirrorBridgeState40377.lastFp.slice(0,22)}…`);}catch(_){}
+    return r.payload;
+  }catch(error){
+    atlasBookMirrorBridgeState40377.lastError=String(error?.message||error||"publication Book indisponible");
+    try{atlasBookMirrorRender36("warning",`Ryzen → Book en attente · ${atlasBookMirrorBridgeState40377.lastError}`);}catch(_){}
+    return false;
+  }finally{atlasBookMirrorBridgeState40377.busy=false;}
+}
+const atlasSharedSynthesisBuildAndStoreBase40377=atlasSharedSynthesisBuildAndStore;
+atlasSharedSynthesisBuildAndStore=function atlasSharedSynthesisBuildAndStore40377(snapshot,fingerprint){
+  const pkg=atlasSharedSynthesisBuildAndStoreBase40377(snapshot,fingerprint);
+  if(pkg&&atlasDeviceComputeAllowed()&&atlasAccessIsAuthorized())queueMicrotask(()=>void atlasBookMirrorBridgePublish40377("current-complete"));
+  return pkg;
+};
+const atlasSharedSynthesisActivateBase40377=atlasSharedSynthesisActivate;
+atlasSharedSynthesisActivate=function atlasSharedSynthesisActivate40377(pkg,source){
+  const clean=atlasSharedSynthesisActivateBase40377(pkg,source);
+  const src=String(source||"").toLowerCase();
+  if(clean&&atlasDeviceComputeAllowed()&&atlasAccessIsAuthorized()&&["local","restore"].includes(src))queueMicrotask(()=>void atlasBookMirrorBridgePublish40377(`synthesis-${src}`));
+  return clean;
+};
+queueMicrotask(()=>{if(atlasDeviceComputeAllowed()&&atlasAccessIsAuthorized())void atlasBookMirrorBridgeStatus40377();});
+
+
+/* 40.3.78 — Bridge / Control Center operator truth, no new runtime owner. */
+const ATLAS_BRIDGE_CONTROL_CENTER_40378=Object.freeze({control_center:"2.3.2R10",bridge:"1.9.9",auth:"Administrator",book_mirror_owner:"Bridge restricted capability",wine_compatibility:"required"});
