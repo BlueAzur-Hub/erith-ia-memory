@@ -18,7 +18,7 @@
      - NO Atlas / NØX / Aerith / Bridge / Ollama start.
      ============================================================ */
 
-  const BUILD_CURRENT = "40.3.51";
+  const BUILD_CURRENT = "40.3.52";
   const ENGINE_CURRENT = "38.15.11";
   const WINDOW_MANAGER_SOURCE_BUILD = "40.1.48";
   const TOKEN_CURRENT = `market-core-v2.0-alpha-build-${BUILD_CURRENT}`;
@@ -1882,26 +1882,7 @@
     };
   }
 
-  function ensureRoot() {
-    let root = byId(ROOT_ID);
-    if (root) return root;
-    const anchor = byId("atlasMemoryHealth3980") || byId("atlasMemoryIntelligence");
-    if (!anchor) return null;
-
-    root = document.createElement("section");
-    root.id = ROOT_ID;
-    root.className = "atlas-memory-intelligence";
-    root.dataset.state = "waiting";
-    root.setAttribute("aria-labelledby", "architectureFreezeTitle");
-    root.innerHTML = `
-      <div class="atlas-memory-intelligence-head">
-        <div>
-          <p class="eyebrow">ADMINISTRATOR CONSOLIDATION · ${BUILD_CURRENT} · READ ONLY</p>
-          <h5 id="architectureFreezeTitle">Contrôle final ${BUILD_CURRENT}</h5>
-          <p>Vérifie que les briques validées sont présentes, alignées et non contradictoires. Aucun correctif automatique.</p>
-        </div>
-        <span class="pill warn" id="architectureFreezeBadge">En attente</span>
-      </div>
+  const FREEZE_BODY_TEMPLATE_40352 = `
       <div class="atlas-memory-ledger-35">
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
@@ -1913,17 +1894,91 @@
         <button type="button" id="btnArchitectureFreezeRefresh">Relancer le contrôle</button>
         <button type="button" id="btnArchitectureFreezeExport">Exporter Freeze Audit .md</button>
       </div>
-      <p id="architectureFreezeContract">Aucun verdict tant que le préflight n’a pas été exécuté.</p>`;
+      <p id="architectureFreezeContract">Audit matérialisé à la demande uniquement.</p>`;
+
+  function releaseFreezeBody40352(root = byId(ROOT_ID)) {
+    const mount = byId("architectureFreezeMount40352");
+    if (!root || !mount) return false;
+    if (mount.dataset.freezeMounted40352 === "0"
+        && mount.querySelector("[data-architecture-freeze-placeholder-40352]")) return true;
+    mount.innerHTML = '<p class="atlas-local-response-empty" data-architecture-freeze-placeholder-40352="1">Freeze Audit fermé · les contrôles complets ne sont pas matérialisés.</p>';
+    mount.dataset.freezeMounted40352 = "0";
+    root.dataset.state = "deferred";
+    const badge = byId("architectureFreezeBadge");
+    if (badge) {
+      badge.textContent = "À la demande";
+      badge.className = "pill warn";
+    }
+    return true;
+  }
+
+  function ensureFreezeBody40352(root = byId(ROOT_ID)) {
+    const mount = byId("architectureFreezeMount40352");
+    if (!root || !mount) return false;
+    if (mount.dataset.freezeMounted40352 !== "1") {
+      mount.innerHTML = FREEZE_BODY_TEMPLATE_40352;
+      mount.dataset.freezeMounted40352 = "1";
+    }
+    // Refresh remains owned by the existing delegated document click listener.
+    // Do not add a second heavy audit execution path here.
+    const exporter = byId("btnArchitectureFreezeExport");
+    if (exporter && exporter.dataset.freezeBound40352 !== "1") {
+      exporter.dataset.freezeBound40352 = "1";
+      exporter.addEventListener("click", exportMarkdown);
+    }
+    return true;
+  }
+
+  function ensureRoot() {
+    let root = byId(ROOT_ID);
+    if (root) return root;
+    const anchor = byId("atlasMemoryHealth3980") || byId("atlasMemoryIntelligence");
+    if (!anchor) return null;
+
+    root = document.createElement("details");
+    root.id = ROOT_ID;
+    root.className = "atlas-memory-intelligence atlas-architecture-freeze-deferred-40352 atlas-collapse glass atlas-tone-intelligence";
+    root.dataset.state = "deferred";
+    root.dataset.atlasFreezeDeferred40352 = "1";
+    root.setAttribute("aria-labelledby", "architectureFreezeTitle");
+    root.innerHTML = `
+      <summary class="atlas-collapse-summary">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-copy">
+          <span class="eyebrow">ADMINISTRATOR CONSOLIDATION · ${BUILD_CURRENT} · READ ONLY · À LA DEMANDE</span>
+          <span class="atlas-collapse-title" id="architectureFreezeTitle">Freeze / Architecture / Diagnostics</span>
+          <span class="atlas-collapse-subtitle">Ouvrir uniquement pour exécuter et matérialiser l’audit complet.</span>
+        </span>
+        <span class="pill warn" id="architectureFreezeBadge">À la demande</span>
+        <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
+      </summary>
+      <div class="atlas-collapse-body" id="architectureFreezeMount40352" data-freeze-mounted-40352="0">
+        <p class="atlas-local-response-empty" data-architecture-freeze-placeholder-40352="1">Freeze Audit fermé · les contrôles complets ne sont pas matérialisés.</p>
+      </div>`;
 
     anchor.insertAdjacentElement("afterend", root);
-    byId("btnArchitectureFreezeRefresh")?.addEventListener("click", render);
-    byId("btnArchitectureFreezeExport")?.addEventListener("click", exportMarkdown);
+    root.addEventListener("toggle", () => {
+      const state = root.querySelector(":scope > summary .atlas-collapse-state");
+      if (state) state.textContent = root.open ? (state.dataset.openLabel || "Replier") : (state.dataset.closedLabel || "Déplier");
+      if (root.open) {
+        ensureFreezeBody40352(root);
+        render({ force: true });
+      } else {
+        releaseFreezeBody40352(root);
+      }
+    });
     return root;
   }
 
-  function render() {
+  function render(options = {}) {
     const root = ensureRoot();
     if (!root) return null;
+    const force = options?.force === true;
+    if (!root.open && !force) {
+      releaseFreezeBody40352(root);
+      return { build: BUILD_CURRENT, deferred: true, checks: [], criticalFails: [], warnings: [] };
+    }
+    ensureFreezeBody40352(root);
     const data = derive();
     const passed = data.checks.filter(row => row.ok).length;
     setText("architectureFreezeCount", `${passed}/${data.checks.length} PASS`);
@@ -2050,6 +2105,6 @@
   globalThis.__AGENT_CRYPTO_ARCHITECTURE_FREEZE__ = freezeContract;
   globalThis.atlasArchitectureFreeze = Object.freeze({ derive, render, markdown });
 
-  queueMicrotask(() => { try { render(); } catch (_) {} });
-  window.addEventListener("load", () => { try { render(); } catch (_) {} }, { once: true });
+  queueMicrotask(() => { try { ensureRoot(); } catch (_) {} });
+  window.addEventListener("load", () => { try { ensureRoot(); } catch (_) {} }, { once: true });
 })();

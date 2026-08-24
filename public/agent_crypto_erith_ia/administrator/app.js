@@ -1376,6 +1376,7 @@ function atlasInitLocalAccess() {
     button.addEventListener("click", () => atlasLocalReportsExport(button.dataset.atlasReportExport));
   });
   atlasLocalReportResidencyInit40351();
+  atlasSharedConclusionResidencyInit40352();
   atlasSharedSynthesisInit();
   atlasKnowledgeLibraryInit();
   atlasBookReadOnlyKnowledgeRefresh();
@@ -22379,6 +22380,82 @@ globalThis.AtlasReportDeferredResidency40351 = Object.freeze({
   market_core_modified: false
 });
 
+
+/* ============================================================
+   40.3.52 — ATLAS INTERNAL PROGRESSIVE RESIDENCY LOCK · PART 1
+
+   TARGET
+   - Conclusion Aerith complète: stored answer remains authoritative.
+   - Closed <details>: long Markdown-derived DOM is not resident.
+   - Open <details>: materialize from the already stored synthesis package.
+   - Close: release generated nodes again.
+   ============================================================ */
+
+const ATLAS_SHARED_CONCLUSION_DEFERRED_PLACEHOLDER_40352 =
+  '<p class="atlas-local-response-empty" data-atlas-shared-conclusion-deferred-40352="1">Conclusion Aerith conservée · ouvrir pour matérialiser la lecture complète.</p>';
+
+function atlasSharedConclusionReleaseDom40352() {
+  const node = document.getElementById("atlasSharedConclusionContent");
+  if (!node) return false;
+  const hasConclusion = !!atlasSharedSynthesisState?.package?.conclusion?.answer;
+  if (hasConclusion
+      && node.dataset.atlasConclusionResident40352 === "0"
+      && node.querySelector("[data-atlas-shared-conclusion-deferred-40352]")) return true;
+  if (!hasConclusion
+      && node.dataset.atlasConclusionResident40352 === "0"
+      && String(node.textContent || "").trim() === "Aucune conclusion conservée.") return true;
+  node.innerHTML = hasConclusion
+    ? ATLAS_SHARED_CONCLUSION_DEFERRED_PLACEHOLDER_40352
+    : '<p class="atlas-local-response-empty">Aucune conclusion conservée.</p>';
+  node.dataset.atlasConclusionResident40352 = "0";
+  return true;
+}
+
+function atlasSharedConclusionRenderOnDemand40352({ force = false } = {}) {
+  const details = document.getElementById("atlasSharedConclusionDetails");
+  const node = document.getElementById("atlasSharedConclusionContent");
+  const answer = atlasSharedSynthesisState?.package?.conclusion?.answer;
+  if (!node) return false;
+  if (!answer) {
+    node.innerHTML = '<p class="atlas-local-response-empty">Aucune conclusion conservée.</p>';
+    node.dataset.atlasConclusionResident40352 = "0";
+    return false;
+  }
+  if (!force && !details?.open) return atlasSharedConclusionReleaseDom40352();
+  atlasSharedSynthesisRenderMarkdown(node, answer);
+  node.dataset.atlasConclusionResident40352 = "1";
+  return true;
+}
+
+function atlasSharedConclusionResidencyInit40352() {
+  const details = document.getElementById("atlasSharedConclusionDetails");
+  if (!details || details.dataset.atlasDeferredResidency40352 === "1") return false;
+  details.dataset.atlasDeferredResidency40352 = "1";
+  details.addEventListener("toggle", () => {
+    if (details.open) atlasSharedConclusionRenderOnDemand40352({ force: true });
+    else atlasSharedConclusionReleaseDom40352();
+  });
+  if (!details.open) atlasSharedConclusionReleaseDom40352();
+  return true;
+}
+
+globalThis.AtlasInternalProgressiveResidency40352 = Object.freeze({
+  build: "40.3.52",
+  parent: "40.3.51",
+  scope: Object.freeze([
+    "shared_aerith_full_conclusion",
+    "current_journal_visual_body",
+    "architecture_freeze_full_audit_grid"
+  ]),
+  data_plane_changed: false,
+  analytical_state_changed: false,
+  market_core_modified: false,
+  window_manager_modified: false,
+  timer_added: false,
+  observer_added: false,
+  reparenting_added: false
+});
+
 function atlasLocalCommentFilterStatus(warnings) {
   const items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
   if (!items.length) {
@@ -38024,7 +38101,7 @@ function atlasSharedSynthesisRenderCore() {
   setText(document.getElementById("atlasSharedSynthesisConclusion"), synthesisHistorical ? "Historique" : "Disponible");
   setText(document.getElementById("atlasSharedSynthesisPersistence"), atlasSharedSynthesisPersistenceLabel());
   atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedSynthesisContent"), pkg.summary_markdown);
-  atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedConclusionContent"), pkg.conclusion.answer);
+  atlasSharedConclusionRenderOnDemand40352();
   setText(
     document.getElementById("atlasSharedSynthesisNote"),
     `${synthesisHistorical ? "Historique conservé — fingerprint différent du snapshot courant" : (atlasSharedSynthesisState.source === "local" ? "Produite sur ce poste" : atlasSharedSynthesisState.source === "import" ? "Importée" : "Restaurée")} · lecture seule · ${(activePkg || pkg).origin?.provider || "local"} · ${(activePkg || pkg).origin?.model || "modèle"}`
@@ -46508,7 +46585,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.51";
+const ATLAS_BUILD = "40.3.52";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -50175,24 +50252,109 @@ atlasCurrentJournalRender33 = function atlasCurrentJournalRender35() {
   return records;
 };
 
-function atlasCurrentJournalInit35() {
+const ATLAS_CURRENT_JOURNAL_BODY_TEMPLATE_40352 = `
+  <div class="atlas-current-journal-33-actions">
+    <button type="button" id="btnAtlasCurrentJournalRefresh33">Actualiser</button>
+    <button type="button" id="btnAtlasCurrentJournalExport33">Exporter journal CURRENT .md</button>
+  </div>
+  <div class="atlas-current-journal-33-list" id="atlasCurrentJournal33List" aria-live="polite">
+    <p class="atlas-local-response-empty">Chargement de l’index CURRENT…</p>
+  </div>
+  <section class="atlas-current-journal-detail-35" id="atlasCurrentJournalDetail35" hidden aria-live="polite">
+    <div class="atlas-current-journal-detail-35-head">
+      <div><span class="eyebrow">ARCHIVE CURRENT · LECTURE SEULE</span><b id="atlasCurrentJournalDetailTitle35">CURRENT</b><small id="atlasCurrentJournalDetailMeta35">Sélectionne un CURRENT du journal.</small></div>
+      <button type="button" id="btnAtlasCurrentJournalClose35">Fermer</button>
+    </div>
+    <div class="atlas-current-journal-detail-35-body" id="atlasCurrentJournalDetailBody35"></div>
+  </section>`;
+
+function atlasCurrentJournalReleaseDom40352() {
+  const mount = document.getElementById("atlasCurrentJournalMount40352");
+  if (!mount) return false;
+  if (mount.dataset.atlasCurrentJournalMounted40352 === "0"
+      && mount.querySelector("[data-atlas-current-journal-placeholder-40352]")) return true;
+  mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-current-journal-placeholder-40352="1">Journal CURRENT fermé · index conservé en mémoire locale.</p>';
+  mount.dataset.atlasCurrentJournalMounted40352 = "0";
+  return true;
+}
+
+function atlasCurrentJournalBindInteractions40352() {
   const list = document.getElementById("atlasCurrentJournal33List");
-  list?.addEventListener("click", event => {
-    const article = event.target?.closest?.("article[data-fingerprint]");
-    if (article) void atlasCurrentJournalOpen35(article.dataset.fingerprint);
-  });
-  list?.addEventListener("keydown", event => {
-    if (!["Enter", " "].includes(event.key)) return;
-    const article = event.target?.closest?.("article[data-fingerprint]");
-    if (!article) return;
-    event.preventDefault();
-    void atlasCurrentJournalOpen35(article.dataset.fingerprint);
-  });
-  document.getElementById("btnAtlasCurrentJournalClose35")?.addEventListener("click", () => {
-    const root = document.getElementById("atlasCurrentJournalDetail35");
-    if (root) root.hidden = true;
-  });
+  if (list && list.dataset.atlasCurrentJournalBound40352 !== "1") {
+    list.dataset.atlasCurrentJournalBound40352 = "1";
+    list.addEventListener("click", event => {
+      const article = event.target?.closest?.("article[data-fingerprint]");
+      if (article) void atlasCurrentJournalOpen35(article.dataset.fingerprint);
+    });
+    list.addEventListener("keydown", event => {
+      if (!["Enter", " "].includes(event.key)) return;
+      const article = event.target?.closest?.("article[data-fingerprint]");
+      if (!article) return;
+      event.preventDefault();
+      void atlasCurrentJournalOpen35(article.dataset.fingerprint);
+    });
+  }
+
+  const close = document.getElementById("btnAtlasCurrentJournalClose35");
+  if (close && close.dataset.atlasCurrentJournalBound40352 !== "1") {
+    close.dataset.atlasCurrentJournalBound40352 = "1";
+    close.addEventListener("click", () => {
+      const detail = document.getElementById("atlasCurrentJournalDetail35");
+      if (detail) {
+        detail.hidden = true;
+        const body = document.getElementById("atlasCurrentJournalDetailBody35");
+        if (body) body.replaceChildren();
+      }
+    });
+  }
+
+  const refresh = document.getElementById("btnAtlasCurrentJournalRefresh33");
+  if (refresh && refresh.dataset.atlasCurrentJournalBound40352 !== "1") {
+    refresh.dataset.atlasCurrentJournalBound40352 = "1";
+    refresh.addEventListener("click", atlasCurrentJournalRender33);
+  }
+
+  const exporter = document.getElementById("btnAtlasCurrentJournalExport33");
+  if (exporter && exporter.dataset.atlasCurrentJournalBound40352 !== "1") {
+    exporter.dataset.atlasCurrentJournalBound40352 = "1";
+    exporter.addEventListener("click", atlasCurrentJournalExportMarkdown33);
+  }
+}
+
+function atlasCurrentJournalMount40352() {
+  const root = document.getElementById("atlasCurrentJournal33");
+  const mount = document.getElementById("atlasCurrentJournalMount40352");
+  if (!root || !mount) return false;
+  if (mount.dataset.atlasCurrentJournalMounted40352 !== "1") {
+    mount.innerHTML = ATLAS_CURRENT_JOURNAL_BODY_TEMPLATE_40352;
+    mount.dataset.atlasCurrentJournalMounted40352 = "1";
+  }
+  atlasCurrentJournalBindInteractions40352();
   try { atlasCurrentJournalRender33(); } catch (_) {}
+  return true;
+}
+
+function atlasCurrentJournalInit35() {
+  const root = document.getElementById("atlasCurrentJournal33");
+  if (!root) return false;
+
+  if (root.dataset.atlasCurrentJournalToggleBound40352 !== "1") {
+    root.dataset.atlasCurrentJournalToggleBound40352 = "1";
+    root.addEventListener("toggle", () => {
+      const state = root.querySelector(":scope > summary .atlas-collapse-state");
+      if (state) state.textContent = root.open ? (state.dataset.openLabel || "Replier") : (state.dataset.closedLabel || "Déplier");
+      if (root.open) atlasCurrentJournalMount40352();
+      else atlasCurrentJournalReleaseDom40352();
+    });
+  }
+
+  const state = root.querySelector(":scope > summary .atlas-collapse-state");
+  if (state) state.textContent = root.open ? (state.dataset.openLabel || "Replier") : (state.dataset.closedLabel || "Déplier");
+  if (root.open) atlasCurrentJournalMount40352();
+  else atlasCurrentJournalReleaseDom40352();
+
+  try { atlasCurrentJournalRender33(); } catch (_) {}
+  return true;
 }
 
 const atlasCurrentRenderBanner35Base = atlasCurrentRenderBanner;
