@@ -1245,6 +1245,8 @@ function atlasAccessSyncDialog() {
   if (submit) submit.textContent = configured ? "Déverrouiller l’administration" : "Créer l’accès Christophe";
   if (secret) secret.autocomplete = configured ? "current-password" : "new-password";
   atlasAccessSetStatus(configured ? "Administration verrouillée." : "Première configuration locale.");
+  try { atlasAccessPortalEnsureBackground40379(); } catch (_) {}
+  try { queueMicrotask(() => void atlasAccessPortalRefresh40379()); } catch (_) {}
 }
 
 function atlasAccessOpen(pendingHash = "") {
@@ -47011,7 +47013,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.78";
+const ATLAS_BUILD = "40.3.79";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55168,3 +55170,51 @@ queueMicrotask(()=>{if(atlasDeviceComputeAllowed()&&atlasAccessIsAuthorized())vo
 
 /* 40.3.78 — Bridge / Control Center operator truth, no new runtime owner. */
 const ATLAS_BRIDGE_CONTROL_CENTER_40378=Object.freeze({control_center:"2.3.2R10",bridge:"1.9.9",auth:"Administrator",book_mirror_owner:"Bridge restricted capability",wine_compatibility:"required"});
+
+
+/* ============================================================
+   40.3.79 — AETHER TRUST ADMINISTRATOR PORTAL UI LOCK
+   UI is real DOM/CSS above one already-approved immutable background asset.
+   No new image generation, no image mutation, no timer/observer/scheduler.
+   Bridge/API behavior remains 40.3.75→40.3.78.
+   ============================================================ */
+function atlasAccessPortalEnsureBackground40379(){
+  const image=document.getElementById("atlasAccessPortalBg40379");
+  if(!image||image.getAttribute("src"))return false;
+  const src=String(image.dataset.src||"").trim();
+  if(!src)return false;
+  image.setAttribute("src",src);
+  return true;
+}
+function atlasAccessPortalState40379(id,text,state=""){
+  const node=document.getElementById(id);if(!node)return;
+  node.textContent=String(text||"—");
+  node.classList.toggle("is-ok",state==="ok");
+  node.classList.toggle("is-warn",state==="warn");
+  node.classList.toggle("is-error",state==="error");
+}
+async function atlasAccessPortalRefresh40379(){
+  const ryzen=atlasDeviceComputeAllowed();
+  atlasAccessPortalState40379("atlasAccessInterfaceState40379",atlasAccessIsAuthorized()?"AUTHENTIFIÉE":"VERROUILLÉE",atlasAccessIsAuthorized()?"ok":"warn");
+  atlasAccessPortalState40379("atlasAccessDeviceState40379",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
+  const top=document.getElementById("atlasAccessTopBridge40379");
+  if(!ryzen){
+    if(top)top.textContent="BOOK · LECTURE SEULE";
+    atlasAccessPortalState40379("atlasAccessBridgeState40379","AUCUN · BOOK","warn");
+    atlasAccessPortalState40379("atlasAccessBridgeAuthState40379","NON REQUIS","warn");
+    return;
+  }
+  if(top)top.textContent="BRIDGE LOCAL · V1.9.9";
+  let result=null;
+  try{result=await atlasBridgeAuthFetch40375("/auth/status",{method:"GET"},2600);}catch(_){}
+  if(!result?.reachable){
+    atlasAccessPortalState40379("atlasAccessBridgeState40379","HORS LIGNE","error");
+    atlasAccessPortalState40379("atlasAccessBridgeAuthState40379","INDISPONIBLE","error");
+    return;
+  }
+  atlasAccessPortalState40379("atlasAccessBridgeState40379","CONNECTÉ · V1.9.9","ok");
+  const token=atlasBridgeAuthToken40375();
+  if(token){atlasAccessPortalState40379("atlasAccessBridgeAuthState40379","SESSION VALIDÉE","ok");return;}
+  atlasAccessPortalState40379("atlasAccessBridgeAuthState40379",result.payload?.configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",result.payload?.configured?"ok":"warn");
+}
+try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40379__=Object.freeze({build:"40.3.79",background:"assets/visual/admin-auth-aether-trust-portal-40379.png",ui_authority:"DOM/CSS",background_mutated:false,new_image_generated:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
