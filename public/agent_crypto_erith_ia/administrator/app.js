@@ -47060,19 +47060,23 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    - NO delete, clear, put, add, readwrite transaction, schema upgrade,
      timer, observer, migration, network request or automatic boot scan.
    ============================================================ */
-const ATLAS_STORAGE_MEASUREMENT_40390_BUILD="40.3.90";
+const ATLAS_STORAGE_MEASUREMENT_40390_BUILD="40.3.91";
 const ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX=160;
 const ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA="agent_crypto.storage_indexeddb_measurement.v1";
 const ATLAS_STORAGE_MEASUREMENT_40390_CATALOG=Object.freeze({
-  "agent_crypto_storage_relief_40278":Object.freeze({owner:"Storage Relief",family:"payload mirror / primary",retention:"clés ciblées actives",max_rows:null}),
+  "agent_crypto_storage_relief_40278":Object.freeze({owner:"Storage Relief",family:"payload mirror / primary",retention:"clés ciblées actives · pas de limite de lignes générique",max_rows:null}),
   "agent_crypto_oracle_evidence_v1":Object.freeze({owner:"Oracle Evidence",family:"observations T0",retention:"ring buffer",max_rows:50000}),
   "agent_crypto_oracle_source_history_v1":Object.freeze({owner:"Oracle Source History",family:"désaccord sources",retention:"ring buffer",max_rows:10000}),
   "agent_crypto_learning_notebook":Object.freeze({owner:"Learning Notebook",family:"pédagogie",retention:"1 agrégat courant",max_rows:1}),
-  "agent_crypto_metals_public_report_memory_v2":Object.freeze({owner:"Metals Public Report",family:"rapport Métaux",retention:"1 rapport courant · limite payload 5 Mio",max_rows:1}),
+  "agent_crypto_metals_public_report_memory_v2":Object.freeze({owner:"Metals Public Report",family:"rapport Métaux public",retention:"1 rapport courant · limite payload 5 Mio",max_rows:1}),
+  "agent_crypto_metals_report_memory":Object.freeze({owner:"Metals Report Memory",family:"rapport Métaux local",retention:"1 rapport courant",max_rows:1}),
   "agent_crypto_erith_ia_persistence":Object.freeze({owner:"Shared Synthesis",family:"Ryzen / Book synthèse",retention:"1 synthèse CURRENT · import max 5 Mio",max_rows:1}),
   "agent_crypto_ui_state_v1":Object.freeze({owner:"Graph Context V7",family:"état UI autoritaire",retention:"1 contexte graphe",max_rows:1}),
   "agent_crypto_local_memory":Object.freeze({owner:"Collector Memory",family:"mémoire locale",retention:"1 agrégat · 500 entrées internes max",max_rows:1}),
-  "agent_crypto_current_archive_v35":Object.freeze({owner:"CURRENT Archive",family:"rapports Atlas/Aerith",retention:"30 CURRENT max",max_rows:30})
+  "agent_crypto_current_archive_v35":Object.freeze({owner:"CURRENT Archive",family:"rapports Atlas/Aerith",retention:"30 CURRENT max",max_rows:30}),
+  "agent_crypto_workspace_profiles_v1":Object.freeze({owner:"Workspace Profiles",family:"profils opérateur",retention:"profils créés explicitement par l’opérateur · non borné génériquement",max_rows:null}),
+  "agent_crypto_visual_cache_v1":Object.freeze({owner:"Technical Visual Cache",family:"cache visuel privé local",retention:"assets mis en cache à la demande · non borné génériquement",max_rows:null}),
+  "agent_crypto_private_visuals":Object.freeze({owner:"Private Visual Slots",family:"images privées choisies localement",retention:"slots possédés par l’opérateur · suppression explicite uniquement",max_rows:null})
 });
 function atlasStorageMeasureBytes40390(value){
   try{const raw=JSON.stringify(value);return raw==null?0:new TextEncoder().encode(raw).byteLength;}
@@ -47164,7 +47168,7 @@ async function atlasStorageMeasureDatabase40390(descriptor){
   finally{try{db?.close();}catch{}}
   row.records=row.stores.reduce((sum,s)=>sum+Number(s.records||0),0);
   row.bytes_estimated=row.stores.reduce((sum,s)=>sum+Number(s.bytes_estimated||0),0);
-  row.retention_pressure=Number.isFinite(Number(row.max_rows))&&Number(row.max_rows)>=0?row.records>Number(row.max_rows):false;
+  row.retention_pressure=row.max_rows!==null&&row.max_rows!==undefined&&Number.isFinite(Number(row.max_rows))&&Number(row.max_rows)>=0?row.records>Number(row.max_rows):false;
   return row;
 }
 async function atlasStorageMeasurementCompute40390(){
@@ -47182,7 +47186,7 @@ async function atlasStorageMeasurementCompute40390(){
     schema:ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA,build:ATLAS_STORAGE_MEASUREMENT_40390_BUILD,captured_at:new Date().toISOString(),
     status:"MEASURED",read_only:true,operator_triggered_only:true,automatic_boot_scan:false,deletion_enabled:false,clear_enabled:false,migration_enabled:false,
     sample_max_per_store:ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX,
-    local_storage:{keys:local.count,bytes:local.total_bytes},
+    local_storage:{keys:local.count,bytes:local.total_bytes,largest:local.rows.slice(0,12).map(row=>({key:row.key,bytes:row.bytes}))},
     origin:{usage:Number(origin?.usage)||null,quota:Number(origin?.quota)||null},persisted,
     database_count:databases.length,total_records:totalRecords,indexeddb_bytes_estimated:totalEstimated,
     known_database_count:databases.filter(row=>Object.prototype.hasOwnProperty.call(ATLAS_STORAGE_MEASUREMENT_40390_CATALOG,row.name)).length,
@@ -47194,28 +47198,29 @@ async function atlasStorageMeasurementCompute40390(){
 function atlasStorageMeasurementRender40390(result){
   const node=document.getElementById("atlasStorageMeasurement40390");if(!node)return result;
   const r=result||globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__;
-  if(!r){node.textContent="STORAGE MEASUREMENT 40.3.90 · aucune mesure disponible.";return null;}
+  if(!r){node.textContent="STORAGE MEASUREMENT 40.3.91 · aucune mesure disponible.";return null;}
   if(r.status!=="MEASURED"){
-    node.textContent=`STORAGE MEASUREMENT 40.3.90 · ${r.status} · aucune mutation · indexedDB.databases() requis pour garantir qu’aucune base absente ne soit créée.`;
+    node.textContent=`STORAGE MEASUREMENT 40.3.91 · ${r.status} · aucune mutation · indexedDB.databases() requis pour garantir qu’aucune base absente ne soit créée.`;
     return r;
   }
   const top=r.databases.slice().sort((a,b)=>Number(b.bytes_estimated||0)-Number(a.bytes_estimated||0));
   const lines=[
-    `STORAGE MEASUREMENT 40.3.90 · ${r.database_count} DB · ${r.total_records} enregistrement(s) · IndexedDB ≈ ${atlasStorageHealthBytesLabel40198(r.indexeddb_bytes_estimated)} · localStorage ${r.local_storage.keys} clé(s) / ${atlasStorageHealthBytesLabel40198(r.local_storage.bytes)}`,
+    `STORAGE MEASUREMENT 40.3.91 · ${r.database_count} DB · ${r.total_records} enregistrement(s) · IndexedDB ≈ ${atlasStorageHealthBytesLabel40198(r.indexeddb_bytes_estimated)} · localStorage ${r.local_storage.keys} clé(s) / ${atlasStorageHealthBytesLabel40198(r.local_storage.bytes)}`,
     `Origine : ${Number.isFinite(Number(r.origin?.usage))?atlasStorageHealthBytesLabel40198(r.origin.usage):"usage non exposé"} / ${Number.isFinite(Number(r.origin?.quota))?atlasStorageHealthBytesLabel40198(r.origin.quota):"quota non exposé"} · persistant ${r.persisted===true?"OUI":r.persisted===false?"NON":"INCONNU"} · durée ${r.duration_ms} ms`,
     `Cataloguées ${r.known_database_count}/${r.database_count} · inconnues ${r.unknown_database_count} · pression rétention ${r.retention_pressure.length?r.retention_pressure.join(", "):"AUCUNE DÉTECTÉE"}`,
+    `Plus grosses clés localStorage : ${(r.local_storage.largest||[]).slice(0,6).map(row=>`${row.key} ${atlasStorageHealthBytesLabel40198(row.bytes)}`).join(" · ")||"aucune"}`,
     ""
   ];
   top.forEach((db,i)=>{
     lines.push(`${i+1}. ${db.name} · ${db.owner} · ${db.records} row(s) · ≈ ${atlasStorageHealthBytesLabel40198(db.bytes_estimated)} · rétention ${db.retention}${db.retention_pressure?" · AU-DESSUS DE LA BORNE":" "}${db.error?` · ERREUR ${db.error}`:""}`);
     db.stores.forEach(st=>lines.push(`   ↳ ${st.store} · ${st.records} row(s) · échantillon ${st.sampled}/${st.records} · ≈ ${atlasStorageHealthBytesLabel40198(st.bytes_estimated)} · max échantillon ${atlasStorageHealthBytesLabel40198(st.largest_sample_bytes)} · doublons exacts échantillon ${st.duplicate_exact_sample} · ${st.oldest_sample_at||"date —"} → ${st.newest_sample_at||"date —"}`));
   });
-  lines.push("","AUTORITÉ 40.3.90 : MESURE UNIQUEMENT · DELETE NON · CLEAR NON · MIGRATION NON · WRITE NON.");
+  lines.push("","AUTORITÉ 40.3.91 : MESURE UNIQUEMENT · DELETE NON · CLEAR NON · MIGRATION NON · WRITE NON.");
   node.textContent=lines.join("\n");return r;
 }
 async function atlasStorageMeasurementRun40390(){
   const btn=document.getElementById("btnAtlasStorageMeasure40390"),node=document.getElementById("atlasStorageMeasurement40390");
-  if(btn)btn.disabled=true;if(node)node.textContent="STORAGE MEASUREMENT 40.3.90 · mesure manuelle en cours…";
+  if(btn)btn.disabled=true;if(node)node.textContent="STORAGE MEASUREMENT 40.3.91 · mesure manuelle en cours…";
   try{
     const result=await atlasStorageMeasurementCompute40390();
     globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__=result;
@@ -47228,7 +47233,7 @@ async function atlasStorageMeasurementRun40390(){
 }
 function atlasStorageMeasurementExport40390(){
   const payload=globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__;
-  if(!payload){const node=document.getElementById("atlasStorageMeasurement40390");if(node)node.textContent="STORAGE MEASUREMENT 40.3.90 · lancer « Mesurer IndexedDB » avant export.";return null;}
+  if(!payload){const node=document.getElementById("atlasStorageMeasurement40390");if(node)node.textContent="STORAGE MEASUREMENT 40.3.91 · lancer « Mesurer IndexedDB » avant export.";return null;}
   atlasOracleBackupDownload(`agent_crypto_storage_measurement_${ATLAS_STORAGE_MEASUREMENT_40390_BUILD.replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
   return payload;
 }
@@ -47241,12 +47246,138 @@ globalThis.AtlasStorageMeasurement40390=Object.freeze({
 });
 
 /* ============================================================
+   40.3.91 — VERIFIED LOCALSTORAGE RELIEF & RETENTION TRUTH LOCK
+   Evidence-based follow-up to the operator measurement.
+   - no IndexedDB delete / clear / prune;
+   - Oracle Evidence and Source History retention unchanged;
+   - only the two historical Storage Relief targets may be retired
+     from localStorage, after exact payload + SHA-256 verification;
+   - operator click + explicit browser confirmation required;
+   - no timer, observer, scheduler, network request or automatic cleanup.
+   ============================================================ */
+const ATLAS_STORAGE_RELIEF_40391_BUILD="40.3.91";
+const ATLAS_STORAGE_RELIEF_40391_SCHEMA="agent_crypto.storage_verified_localstorage_relief.v1";
+let atlasStorageReliefLast40391=null;
+
+async function atlasStorageReliefPlan40391(){
+  const before=atlasStorageHealthLocalSnapshot40198();
+  const rows=[];
+  for(const key of ATLAS_STORAGE_RELIEF_TARGETS_40278){
+    let raw=null;try{raw=localStorage.getItem(key);}catch{}
+    const record=await atlasStorageReliefGet40278(key).catch(()=>null);
+    const localBytes=raw===null?0:new Blob([raw]).size;
+    let localSha="",idbSha="";
+    if(raw!==null)localSha=await atlasStorageReliefSha40278(raw).catch(()=>"");
+    if(record?.payload)idbSha=await atlasStorageReliefSha40278(record.payload).catch(()=>"");
+    const exact=raw!==null&&!!record&&typeof record.payload==="string"&&record.payload===raw&&!!localSha&&localSha===idbSha;
+    const verified=exact&&record.verified===true&&record.sha256===localSha;
+    rows.push({
+      key,
+      local_present:raw!==null,
+      local_bytes:localBytes,
+      idb_present:!!record?.payload,
+      idb_bytes:Number(record?.bytes)||0,
+      exact_payload_match:exact,
+      sha256_verified:verified,
+      idb_primary:atlasStorageReliefRuntime40278.primaryActive&&atlasStorageReliefIsAsyncPrimary40331(key),
+      state:raw===null?"LOCAL ABSENT":verified?"RETIRABLE · SHA-256 VÉRIFIÉ":exact?"COPIE EXACTE · MARQUAGE VÉRIFIÉ REQUIS":"VÉRIFICATION REQUISE"
+    });
+  }
+  const reclaimable=rows.filter(row=>row.local_present&&row.sha256_verified);
+  return {
+    schema:ATLAS_STORAGE_RELIEF_40391_SCHEMA,
+    build:ATLAS_STORAGE_RELIEF_40391_BUILD,
+    captured_at:new Date().toISOString(),
+    automatic_cleanup:false,
+    indexeddb_delete:false,
+    oracle_evidence_prune:false,
+    oracle_source_history_prune:false,
+    targets:rows,
+    local_storage_before:{keys:before.count,bytes:before.total_bytes},
+    reclaimable_keys:reclaimable.length,
+    reclaimable_bytes:reclaimable.reduce((sum,row)=>sum+row.local_bytes,0)
+  };
+}
+function atlasStorageReliefRender40391(report){
+  const node=document.getElementById("atlasStorageRelief40391");if(!node)return report;
+  const r=report||atlasStorageReliefLast40391;
+  if(!r){node.textContent="RELIEF 40.3.91 · EN ATTENTE · aucune suppression automatique.";return null;}
+  const lines=[
+    `RELIEF 40.3.91 · ${r.status||"PLAN"} · localStorage avant ${atlasStorageHealthBytesLabel40198(r.local_storage_before?.bytes||0)}${r.local_storage_after?` → après ${atlasStorageHealthBytesLabel40198(r.local_storage_after.bytes||0)} · libéré ${atlasStorageHealthBytesLabel40198(r.reclaimed_bytes||0)}`:""}`,
+    `Autorité : opérateur uniquement · IndexedDB DELETE NON · Oracle prune NON · Source History prune NON`,
+    ...((r.targets||[]).map(row=>`${row.key} · ${row.state} · local ${atlasStorageHealthBytesLabel40198(row.local_bytes||0)} · IDB ${atlasStorageHealthBytesLabel40198(row.idb_bytes||0)}`)),
+  ];
+  if(Array.isArray(r.retirement_rows))lines.push(...r.retirement_rows.map(row=>`retrait · ${row.key} · ${row.state}`));
+  node.textContent=lines.join("\n");return r;
+}
+async function atlasStorageReliefRun40391(){
+  const btn=document.getElementById("btnAtlasStorageRelief40391");if(btn)btn.disabled=true;
+  try{
+    const beforeHealth=atlasStorageHealthLocalSnapshot40198();
+    const copy=await atlasStorageReliefCopyTargets40278();
+    const plan=await atlasStorageReliefPlan40391();
+    atlasStorageReliefLast40391={...plan,status:"VÉRIFIÉ · EN ATTENTE CONFIRMATION",copy_rows:copy.rows};
+    atlasStorageReliefRender40391(atlasStorageReliefLast40391);
+    const candidates=plan.targets.filter(row=>row.local_present&&row.sha256_verified);
+    if(!candidates.length){
+      atlasStorageReliefLast40391={...atlasStorageReliefLast40391,status:"AUCUNE COPIE LOCALSTORAGE RETIRABLE"};
+      return atlasStorageReliefRender40391(atlasStorageReliefLast40391);
+    }
+    const bytes=candidates.reduce((sum,row)=>sum+row.local_bytes,0);
+    const ok=window.confirm(
+      `40.3.91 · ${candidates.length} copie(s) localStorage sont identiques à leur copie IndexedDB vérifiée SHA-256 (${atlasStorageHealthBytesLabel40198(bytes)}). `+
+      `Retirer uniquement ces copies localStorage ? Aucun enregistrement IndexedDB, Oracle Evidence ou Source History ne sera supprimé.`
+    );
+    if(!ok){
+      atlasStorageReliefLast40391={...atlasStorageReliefLast40391,status:"ANNULÉ PAR OPÉRATEUR"};
+      return atlasStorageReliefRender40391(atlasStorageReliefLast40391);
+    }
+    const retirement=await atlasStorageReliefRetireVerified40278();
+    const afterHealth=atlasStorageHealthLocalSnapshot40198();
+    const result={
+      ...plan,
+      status:"TERMINÉ · RETRAIT LOCALSTORAGE VÉRIFIÉ",
+      copy_rows:copy.rows,
+      retirement_rows:retirement.rows,
+      local_storage_before:{keys:beforeHealth.count,bytes:beforeHealth.total_bytes},
+      local_storage_after:{keys:afterHealth.count,bytes:afterHealth.total_bytes},
+      reclaimed_bytes:Math.max(0,beforeHealth.total_bytes-afterHealth.total_bytes),
+      completed_at:new Date().toISOString()
+    };
+    atlasStorageReliefLast40391=result;
+    atlasStorageReliefRender40391(result);
+    await atlasStorageHealthRender40198().catch(()=>null);
+    await atlasStorageMeasurementRun40390().catch(()=>null);
+    return result;
+  }finally{if(btn)btn.disabled=false;}
+}
+document.getElementById("btnAtlasStorageRelief40391")?.addEventListener("click",()=>void atlasStorageReliefRun40391());
+globalThis.AtlasStorageRelief40391=Object.freeze({
+  build:ATLAS_STORAGE_RELIEF_40391_BUILD,
+  schema:ATLAS_STORAGE_RELIEF_40391_SCHEMA,
+  plan:atlasStorageReliefPlan40391,
+  run:atlasStorageReliefRun40391,
+  render:atlasStorageReliefRender40391,
+  automatic_cleanup:false,
+  indexeddb_delete:false,
+  indexeddb_clear:false,
+  oracle_evidence_prune:false,
+  oracle_source_history_prune:false,
+  operator_confirmation_required:true,
+  checksum:"SHA-256",
+  new_timer:false,
+  new_observer:false,
+  new_scheduler:false,
+  network_request_added:false
+});
+
+/* ============================================================
    14 — VERSION CONTROL — PROTECTED CORE
    Build 29.3.06 : deterministic human-readable controller
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.90";
+const ATLAS_BUILD = "40.3.91";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
