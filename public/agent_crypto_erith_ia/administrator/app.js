@@ -24574,6 +24574,49 @@ function atlasAnalyticalSourceSummary(sourceTruth) {
   return parts.join(" · ");
 }
 
+/* ============================================================
+   40.3.58 — ATLAS ACTIVE DETAIL RESIDENCY WAVE 2
+   Analytical Proof is already a native closed <details>. Keep its five
+   evidence lists in an inert <template> until the operator opens it.
+   The seven compact Truth cards remain resident and authoritative.
+   No timer, observer, data mutation or analytical rebuild is added.
+   ============================================================ */
+function atlasAnalyticalTruthProofMount40358() {
+  const details = document.getElementById("atlasAnalyticalTruthDetails");
+  const mount = document.getElementById("atlasAnalyticalTruthProofMount40358");
+  const template = document.getElementById("atlasAnalyticalTruthProofTemplate40358");
+  if (!details || !mount || !template || !details.open) return false;
+  if (mount.dataset.atlasProofMounted40358 === "1") return true;
+  mount.replaceChildren(template.content.cloneNode(true));
+  mount.dataset.atlasProofMounted40358 = "1";
+  return true;
+}
+
+function atlasAnalyticalTruthProofRelease40358() {
+  const mount = document.getElementById("atlasAnalyticalTruthProofMount40358");
+  if (!mount) return false;
+  mount.replaceChildren();
+  mount.dataset.atlasProofMounted40358 = "0";
+  return true;
+}
+
+function atlasAnalyticalTruthProofInit40358() {
+  const details = document.getElementById("atlasAnalyticalTruthDetails");
+  if (!details || details.dataset.atlasProofReady40358 === "1") return !!details;
+  details.dataset.atlasProofReady40358 = "1";
+  details.addEventListener("toggle", () => {
+    if (details.open) {
+      atlasAnalyticalTruthProofMount40358();
+      atlasAnalyticalTruthRender();
+    } else {
+      atlasAnalyticalTruthProofRelease40358();
+    }
+  });
+  if (details.open) atlasAnalyticalTruthProofMount40358();
+  else atlasAnalyticalTruthProofRelease40358();
+  return true;
+}
+
 function atlasAnalyticalTruthRender(envelope = null) {
   const panel = document.getElementById("atlasAnalyticalTruth");
   if (!panel) return false;
@@ -24643,24 +24686,30 @@ function atlasAnalyticalTruthRender(envelope = null) {
   atlasAnalyticalSetText("atlasTruthContradictionsDetail", contradictions ? `${contradictions.counts?.stop || 0} stop gate · ${contradictions.counts?.to_verify || 0} à vérifier.` : "Limites et stop gates structurés.");
   atlasAnalyticalSetText("atlasTruthAnalysis", analysis);
   atlasAnalyticalSetText("atlasTruthAnalysisDetail", analysisDetail);
-  atlasAnalyticalList("atlasTruthContextList", current ? [
-    `Interface : ${current.application?.interface_release || ATLAS_RELEASE}`,
-    `Graphique : ${current.graph?.period_label || "—"} · ${current.graph?.view || "—"} · ${current.graph?.scale || "—"}`,
-    `Séries : ${(current.graph?.selected_symbols || []).join(" · ") || "—"}`,
-    `Scanner : ${current.scanner?.status || "—"} · ${current.scanner?.collected_at || "aucun snapshot"}`,
-    `Empreinte : ${currentFingerprint || "—"}`
-  ] : []);
-  atlasAnalyticalList("atlasTruthSourceList", sourceTruth?.descriptors?.map(row => `${row.provider} · ${row.mode} · ${row.freshness}${row.instrument ? ` · ${row.instrument}` : ""}`) || []);
-  atlasAnalyticalList("atlasTruthEvidenceList", evidenceEvent ? [
-    `${evidenceEvent.headline}`,
-    `Impact potentiel : ${evidenceEvent.impact_potential}`,
-    `Confiance : ${evidenceEvent.confidence}`,
-    `Preuve : ${evidenceEvent.proof_quality}`,
-    `Sources : ${evidenceEvent.reported_sources} reprise(s) · ${evidenceEvent.independent_sources} indépendante(s)`,
-    "Action : observation uniquement"
-  ] : []);
-  atlasAnalyticalList("atlasTruthMathList", quality?.gates?.map(gate => `${gate.metric} · ${gate.status} · ${gate.reason}`) || []);
-  atlasAnalyticalList("atlasTruthContradictionList", contradictions?.items?.map(row => `[${row.severity}] ${row.statement}${row.stop_gate ? " · STOP" : ""}`) || []);
+  const proofDetails40358 = document.getElementById("atlasAnalyticalTruthDetails");
+  if (proofDetails40358?.open) {
+    atlasAnalyticalTruthProofMount40358();
+    atlasAnalyticalList("atlasTruthContextList", current ? [
+      `Interface : ${current.application?.interface_release || ATLAS_RELEASE}`,
+      `Graphique : ${current.graph?.period_label || "—"} · ${current.graph?.view || "—"} · ${current.graph?.scale || "—"}`,
+      `Séries : ${(current.graph?.selected_symbols || []).join(" · ") || "—"}`,
+      `Scanner : ${current.scanner?.status || "—"} · ${current.scanner?.collected_at || "aucun snapshot"}`,
+      `Empreinte : ${currentFingerprint || "—"}`
+    ] : []);
+    atlasAnalyticalList("atlasTruthSourceList", sourceTruth?.descriptors?.map(row => `${row.provider} · ${row.mode} · ${row.freshness}${row.instrument ? ` · ${row.instrument}` : ""}`) || []);
+    atlasAnalyticalList("atlasTruthEvidenceList", evidenceEvent ? [
+      `${evidenceEvent.headline}`,
+      `Impact potentiel : ${evidenceEvent.impact_potential}`,
+      `Confiance : ${evidenceEvent.confidence}`,
+      `Preuve : ${evidenceEvent.proof_quality}`,
+      `Sources : ${evidenceEvent.reported_sources} reprise(s) · ${evidenceEvent.independent_sources} indépendante(s)`,
+      "Action : observation uniquement"
+    ] : []);
+    atlasAnalyticalList("atlasTruthMathList", quality?.gates?.map(gate => `${gate.metric} · ${gate.status} · ${gate.reason}`) || []);
+    atlasAnalyticalList("atlasTruthContradictionList", contradictions?.items?.map(row => `[${row.severity}] ${row.statement}${row.stop_gate ? " · STOP" : ""}`) || []);
+  } else {
+    atlasAnalyticalTruthProofRelease40358();
+  }
   atlasAnalyticalSetText(
     "atlasAnalyticalTruthStatus",
     current
@@ -24871,6 +24920,7 @@ function atlasAnalyticalTruthSchedule(delay = 650) {
 function atlasAnalyticalTruthInit() {
   if (atlasAnalyticalTruthState.initialized) return true;
   atlasAnalyticalTruthState.initialized = true;
+  atlasAnalyticalTruthProofInit40358();
   atlasAnalyticalTruthRender();
 
   window.addEventListener("online", () => atlasAnalyticalTruthSchedule(500));
@@ -46632,7 +46682,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.57";
+const ATLAS_BUILD = "40.3.58";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -50965,28 +51015,100 @@ function atlasScannerTruthRows37(kind,hostId,titleId) {
   return {ready:true,count:rows.length,latest,basket};
 }
 
-function atlasScannerTruthRender37() {
+/* ============================================================
+   40.3.58 — SCANNER TRUTH DETAIL RESIDENCY
+   Keep Scanner header + four provenance/meta cards resident. The 5/5/5
+   ranked rows, action and status live in an inert template while closed.
+   Livecheck may still refresh the lightweight summary, but hidden ranking
+   DOM is neither built nor rewritten until the operator opens details.
+   ============================================================ */
+function atlasScannerTruthDetailMount40358() {
+  const details=document.getElementById("atlasScannerTruthDetails40358");
+  const mount=document.getElementById("atlasScannerTruthMount40358");
+  const template=document.getElementById("atlasScannerTruthTemplate40358");
+  if (!details || !mount || !template || !details.open) return false;
+  if (mount.dataset.atlasScannerMounted40358 === "1") return true;
+  mount.replaceChildren(template.content.cloneNode(true));
+  mount.dataset.atlasScannerMounted40358="1";
+  document.getElementById("btnAtlasScannerTruthRefresh37")?.addEventListener("click",atlasScannerTruthRender37);
+  return true;
+}
+
+function atlasScannerTruthDetailRelease40358() {
+  const mount=document.getElementById("atlasScannerTruthMount40358");
+  if (!mount) return false;
+  mount.replaceChildren();
+  mount.dataset.atlasScannerMounted40358="0";
+  return true;
+}
+
+function atlasScannerTruthSummary40358() {
   const root=document.getElementById("atlasScannerTruth37");
   if (!root) return null;
-  const gain=atlasScannerTruthRows37("gainers","atlasScannerGainersRows37","atlasScannerGainersTitle37");
-  const loss=atlasScannerTruthRows37("losers","atlasScannerLosersRows37","atlasScannerLosersTitle37");
-  const volume=atlasScannerTruthRows37("volume","atlasScannerVolumeRows37","atlasScannerVolumeTitle37");
-  const latest=gain.latest||loss.latest||volume.latest||null;
-  const ready=gain.ready&&loss.ready&&volume.ready;
+  const entries=["gainers","losers","volume"].map(kind=>{
+    const {latest,basket}=atlasScannerTruthBasket37(kind);
+    const count=Array.isArray(basket?.assets)?Math.min(5,basket.assets.length):0;
+    return {kind,latest,basket,count,ready:count>0};
+  });
+  const latest=entries.find(row=>row.latest)?.latest||null;
+  const ready=entries.every(row=>row.ready);
   root.dataset.state=ready?"ready":(latest?"partial":"waiting");
   const badge=document.getElementById("atlasScannerTruthBadge37");
   if (badge) {
     badge.textContent=ready?"3 scanners lisibles":latest?"Partiel":"En attente";
     badge.className=`pill ${ready?"ok":"warn"}`;
   }
+  const detailBadge=document.getElementById("atlasScannerTruthDetailBadge40358");
+  if (detailBadge) {
+    detailBadge.textContent=ready?"5 / 5 / 5":latest?"Partiel":"À la demande";
+    detailBadge.className=`pill ${ready?"ok":"warn"}`;
+  }
   setText(document.getElementById("atlasScannerTruthSnapshot37"),latest?.collected_at ? new Date(latest.collected_at).toLocaleString("fr-FR") : "—");
   setText(document.getElementById("atlasScannerTruthSnapshotDetail37"),latest
     ? `${latest?.collector_id||"collecteur local"} · marché ${latest?.market?.timestamp ? new Date(latest.market.timestamp).toLocaleString("fr-FR") : "heure inconnue"}`
     : "Aucun snapshot scanner mémorisé.");
+  return {ready,latest,entries};
+}
+
+function atlasScannerTruthDetailInit40358() {
+  const details=document.getElementById("atlasScannerTruthDetails40358");
+  if (!details || details.dataset.atlasScannerReady40358 === "1") return !!details;
+  details.dataset.atlasScannerReady40358="1";
+  details.addEventListener("toggle",()=>{
+    const stateNode=details.querySelector(":scope > summary .atlas-collapse-state");
+    if (stateNode) stateNode.textContent=details.open ? (stateNode.dataset.openLabel||"Replier") : (stateNode.dataset.closedLabel||"Déplier");
+    if (details.open) {
+      atlasScannerTruthDetailMount40358();
+      atlasScannerTruthRender37();
+    } else {
+      atlasScannerTruthDetailRelease40358();
+      atlasScannerTruthSummary40358();
+    }
+  });
+  if (details.open) atlasScannerTruthDetailMount40358();
+  else atlasScannerTruthDetailRelease40358();
+  return true;
+}
+
+function atlasScannerTruthRender37() {
+  const root=document.getElementById("atlasScannerTruth37");
+  if (!root) return null;
+  const summary=atlasScannerTruthSummary40358();
+  const details=document.getElementById("atlasScannerTruthDetails40358");
+  if (!details?.open) {
+    atlasScannerTruthDetailRelease40358();
+    return {...(summary||{}),deferred:true};
+  }
+  atlasScannerTruthDetailMount40358();
+  const gain=atlasScannerTruthRows37("gainers","atlasScannerGainersRows37","atlasScannerGainersTitle37");
+  const loss=atlasScannerTruthRows37("losers","atlasScannerLosersRows37","atlasScannerLosersTitle37");
+  const volume=atlasScannerTruthRows37("volume","atlasScannerVolumeRows37","atlasScannerVolumeTitle37");
+  const latest=gain.latest||loss.latest||volume.latest||summary?.latest||null;
+  const ready=gain.ready&&loss.ready&&volume.ready;
   setText(document.getElementById("atlasScannerTruthStatus37"),ready
     ? "Hausses 5 / Baisses 5 / Volumes 5 : classement et provenance cotation affichés séparément. Observation uniquement."
     : "Le scanner attend un Market Snapshot suffisamment complet ; aucune valeur n’est inventée.");
-  return {ready,latest,gain,loss,volume};
+  return {ready,latest,gain,loss,volume,deferred:false};
 }
 
 const atlasAfterLivecheck37Base=atlasAfterLivecheck;
@@ -51027,9 +51149,9 @@ atlasDeviceComputeApply=function atlasDeviceComputeApply37(options={}){
 
 window.setTimeout(()=>{
   try { atlasQuestionRouterInit37(); } catch (_) {}
+  try { atlasScannerTruthDetailInit40358(); } catch (_) {}
   try { atlasScannerTruthRender37(); } catch (_) {}
   try { atlasQuestionBookUi37(); } catch (_) {}
-  document.getElementById("btnAtlasScannerTruthRefresh37")?.addEventListener("click",atlasScannerTruthRender37);
 },0);
 
 

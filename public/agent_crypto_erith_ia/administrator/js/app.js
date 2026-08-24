@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.57";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATLAS HIDDEN DOM RESIDENCY WAVE 1 LOCK";
+  const ADMIN_BUILD = "40.3.58";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATLAS ACTIVE DETAIL RESIDENCY WAVE 2 LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
