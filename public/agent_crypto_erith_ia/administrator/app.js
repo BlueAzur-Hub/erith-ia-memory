@@ -47476,7 +47476,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.94";
+const ATLAS_BUILD = "40.3.95";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55897,6 +55897,17 @@ function atlasGreyProbeCapture40393(trigger="button"){
       transform_3d:false,
       will_change:false
     },
+    document_background_40395:{
+      safe_mode:document.body?.classList.contains("atlas-safe-document-background-40395")===true,
+      scope:"BODY background only",
+      safe_background:"#06101d",
+      decorative_body_background_disabled_in_safe_mode:true,
+      ambient_layer_changed:false,
+      grid_overlay_changed:false,
+      panel_backgrounds_changed:false,
+      animations_changed:false,
+      layout_changed:false
+    },
     runtime_observatory:runtime,
     window_manager:windows,
     limits:{
@@ -56092,6 +56103,91 @@ try{
     content_visibility:false,
     transform_3d:false,
     will_change:false,
+    storage_write:false,
+    network_request:false,
+    timer:false,
+    observer:false,
+    scheduler:false
+  });
+}catch(_){}
+
+
+/* ============================================================
+   40.3.95 — FULL-DOCUMENT BACKGROUND PAINT A/B LOCK
+   Evidence-driven BODY background test.
+   SAFE is default-on, ORIGINAL is one-click restore.
+   No storage / timer / observer / scheduler / network.
+   ============================================================ */
+const ATLAS_DOCUMENT_BACKGROUND_40395_BUILD="40.3.95";
+const ATLAS_DOCUMENT_BACKGROUND_40395_CLASS="atlas-safe-document-background-40395";
+
+function atlasDocumentBackgroundSafe40395(){
+  return document.body?.classList.contains(ATLAS_DOCUMENT_BACKGROUND_40395_CLASS)===true;
+}
+function atlasDocumentBackgroundRender40395(){
+  const safe=atlasDocumentBackgroundSafe40395();
+  const btn=document.getElementById("btnAtlasDocumentBackgroundToggle40395");
+  if(btn){
+    btn.setAttribute("aria-pressed",safe?"true":"false");
+    btn.textContent=`Fond pleine-page · ${safe?"SAFE":"ORIGINAL"}`;
+  }
+  return safe;
+}
+function atlasDocumentBackgroundSet40395(safe){
+  document.body?.classList.toggle(ATLAS_DOCUMENT_BACKGROUND_40395_CLASS,Boolean(safe));
+  return atlasDocumentBackgroundRender40395();
+}
+function atlasDocumentBackgroundToggle40395(){
+  return atlasDocumentBackgroundSet40395(!atlasDocumentBackgroundSafe40395());
+}
+
+document.getElementById("btnAtlasDocumentBackgroundToggle40395")
+  ?.addEventListener("click",atlasDocumentBackgroundToggle40395);
+atlasDocumentBackgroundRender40395();
+
+globalThis.AtlasDocumentBackground40395=Object.freeze({
+  build:ATLAS_DOCUMENT_BACKGROUND_40395_BUILD,
+  safe:atlasDocumentBackgroundSafe40395,
+  setSafe:atlasDocumentBackgroundSet40395,
+  toggle:atlasDocumentBackgroundToggle40395,
+  scope:"BODY background only",
+  safe_background:"#06101d",
+  default_safe:true,
+  ambient_layer_changed:false,
+  grid_overlay_changed:false,
+  panel_backgrounds_changed:false,
+  animations_changed:false,
+  layout_changed:false,
+  content_visibility:false,
+  transform_3d:false,
+  will_change:false,
+  storage_write:false,
+  network_request:false,
+  timer:false,
+  observer:false,
+  scheduler:false,
+  market_core_changed:false,
+  oracle_changed:false,
+  news_changed:false,
+  bridge_changed:false,
+  book_mirror_changed:false,
+  window_manager_changed:false
+});
+
+try{
+  globalThis.__AGENT_CRYPTO_DOCUMENT_BACKGROUND_40395__=Object.freeze({
+    build:"40.3.95",
+    parent:"40.3.94",
+    evidence:"grey reproduced with family 02 paint isolation ON; BODY still carried multi-layer background over ~16.6k px",
+    scope:"BODY background only",
+    default_safe:true,
+    ab_toggle:true,
+    safe_background:"#06101d",
+    ambient_layer_changed:false,
+    grid_overlay_changed:false,
+    panel_backgrounds_changed:false,
+    animations_changed:false,
+    layout_changed:false,
     storage_write:false,
     network_request:false,
     timer:false,
