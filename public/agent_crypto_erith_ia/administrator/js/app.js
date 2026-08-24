@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.54";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATLAS MEMORY COMPACT HEADER GEOMETRY LOCK";
+  const ADMIN_BUILD = "40.3.55";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATLAS MEMORY HEALTH DEFERRED RESIDENCY + COMPACT HEADER POLISH";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -2086,4 +2086,141 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
   else boot();
+
+  /* ============================================================
+     40.3.55 — ATLAS MEMORY HEALTH DEFERRED RESIDENCY
+     Presentation-only. Memory Health derives the same read-only truth,
+     but its large card grid is resident only while the operator opens it.
+     No timer, observer, scheduler, storage write, engine or WM change.
+     ============================================================ */
+  function initAtlasMemoryHealthDeferred40355() {
+    const originalApi = globalThis.atlasMemoryHealth3980R2;
+    const source = document.getElementById("atlasMemoryHealth3980");
+    if (!originalApi || typeof originalApi.derive !== "function" || typeof originalApi.render !== "function" || !source) return false;
+    if (source.dataset.atlasMemoryHealthDeferred40355 === "1") return true;
+
+    const originalBodyTemplate = source.innerHTML;
+    const details = document.createElement("details");
+    details.id = "atlasMemoryHealth3980";
+    details.className = `${source.className || "atlas-memory-intelligence"} atlas-collapse glass atlas-tone-intelligence atlas-memory-health-deferred-40355`;
+    details.dataset.state = source.dataset.state || "waiting";
+    details.dataset.atlasMemoryHealthDeferred40355 = "1";
+    details.setAttribute("aria-labelledby", "atlasMemoryHealthCompactTitle40355");
+    details.innerHTML = `
+      <summary class="atlas-collapse-summary atlas-memory-health-summary-40355">
+        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
+        <span class="atlas-collapse-copy">
+          <span class="eyebrow">MEMORY HEALTH · 39.8.0R2 · READ ONLY</span>
+          <span class="atlas-collapse-title" id="atlasMemoryHealthTitle3980R2">Structure · couverture · continuité</span>
+          <span class="atlas-collapse-subtitle" id="atlasMemoryHealthCompactSubtitle40355">Diagnostic mémoire détaillé uniquement à l’ouverture.</span>
+        </span>
+        <span class="pill warn" id="atlasMemoryHealthCompactBadge40355">EN ATTENTE</span>
+        <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
+      </summary>
+      <div class="atlas-collapse-body" id="atlasMemoryHealthMount40355" data-atlas-memory-health-mounted-40355="0"></div>`;
+    source.replaceWith(details);
+
+    const mount = () => document.getElementById("atlasMemoryHealthMount40355");
+    const stateNode = () => details.querySelector(":scope > summary > .atlas-collapse-state");
+    const iconNode = () => details.querySelector(":scope > summary > .atlas-collapse-icon");
+    const compact = (data = null) => {
+      let truth = data;
+      try { if (!truth) truth = originalApi.derive(); } catch (_) { truth = null; }
+      const badge = document.getElementById("atlasMemoryHealthCompactBadge40355");
+      const subtitle = document.getElementById("atlasMemoryHealthCompactSubtitle40355");
+      const structure = truth?.verdicts?.structure?.label || truth?.status?.label || "EN ATTENTE";
+      const coverage = truth?.verdicts?.coverage?.label || "—";
+      const continuity = truth?.verdicts?.continuity?.label || "—";
+      if (badge) {
+        badge.textContent = String(structure).replace(/^STRUCTURE\s+/i, "");
+        badge.className = `pill ${truth?.status?.code === "ok" ? "ok" : "warn"}`;
+      }
+      if (subtitle) subtitle.textContent = `Structure ${structure} · couverture ${coverage} · continuité ${continuity} · détails à la demande.`;
+      details.dataset.state = truth?.status?.code || "waiting";
+      return truth;
+    };
+    const bindMountedActions = () => {
+      document.getElementById("btnMemoryHealthRefresh3980R2")?.addEventListener("click", () => wrappedApi.render());
+      document.getElementById("btnMemoryHealthExport3980R2")?.addEventListener("click", () => {
+        let body = "";
+        try { body = originalApi.markdown(); } catch (_) { body = ""; }
+        if (!body) return;
+        const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+        if (typeof globalThis.downloadTextFile === "function") {
+          globalThis.downloadTextFile(`agent_crypto_memory_health_${stamp}.md`, "text/markdown;charset=utf-8", body);
+        }
+      });
+    };
+    const mountBody = () => {
+      const host = mount();
+      if (!host || host.dataset.atlasMemoryHealthMounted40355 === "1") return;
+      host.innerHTML = originalBodyTemplate;
+      host.dataset.atlasMemoryHealthMounted40355 = "1";
+      try { originalApi.render(); } catch (_) {}
+      bindMountedActions();
+      compact();
+    };
+    const releaseBody = () => {
+      const host = mount();
+      if (!host) return;
+      host.replaceChildren();
+      host.dataset.atlasMemoryHealthMounted40355 = "0";
+      compact();
+    };
+    const syncState = () => {
+      const opened = details.open === true;
+      const state = stateNode();
+      const icon = iconNode();
+      if (state) state.textContent = opened ? (state.dataset.openLabel || "Replier") : (state.dataset.closedLabel || "Déplier");
+      if (icon) icon.textContent = opened ? "▼" : "▶";
+      if (opened) mountBody(); else releaseBody();
+    };
+
+    const wrappedApi = Object.freeze({
+      derive: (...args) => originalApi.derive(...args),
+      markdown: (...args) => originalApi.markdown(...args),
+      render: (...args) => {
+        if (details.open) {
+          mountBody();
+          let data = null;
+          try { data = originalApi.render(...args); } catch (_) {}
+          compact(data || null);
+          return data;
+        }
+        return compact();
+      }
+    });
+    globalThis.atlasMemoryHealth3980R2 = wrappedApi;
+    globalThis.atlasMemoryHealth3980 = wrappedApi;
+
+    details.addEventListener("toggle", syncState);
+    compact();
+    syncState();
+
+    globalThis.AtlasMemoryHealthDeferredResidency40355 = Object.freeze({
+      build: "40.3.55",
+      parent: "40.3.54",
+      scope: "memory_health_presentation_only",
+      closed_full_dom_resident: false,
+      read_only_truth_preserved: true,
+      derive_preserved: true,
+      markdown_preserved: true,
+      new_timer: false,
+      new_observer: false,
+      new_scheduler: false,
+      storage_write_added: false,
+      window_manager_modified: false,
+      market_core_modified: false
+    });
+    return true;
+  }
+
+  function bootAtlasMemoryHealthDeferred40355() {
+    if (initAtlasMemoryHealthDeferred40355()) return;
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAtlasMemoryHealthDeferred40355, { once: true });
+    }
+  }
+  queueMicrotask(bootAtlasMemoryHealthDeferred40355);
+
 })();
