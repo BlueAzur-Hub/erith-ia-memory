@@ -47476,7 +47476,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.95";
+const ATLAS_BUILD = "40.3.96";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -56193,5 +56193,90 @@ try{
     timer:false,
     observer:false,
     scheduler:false
+  });
+}catch(_){}
+
+
+/* ============================================================
+   40.3.96 — AETHER CUMULATIVE DEBT / MENU TRUTH LEDGER
+   Documentation-only runtime authority. No handler, timer,
+   observer, scheduler, storage or network behavior is added.
+   ============================================================ */
+try{
+  globalThis.__AGENT_CRYPTO_CUMULATIVE_TRUTH_40396__=Object.freeze({
+    build:"40.3.96",
+    parent:"40.3.95",
+    market_core:"38.15.11",
+    code_only:true,
+    views:Object.freeze({
+      count:3,
+      names:Object.freeze(["Vue Basique","Vue intermédiaire","Administration"]),
+      basic:Object.freeze({
+        top_navigation_visible:4,
+        top_navigation:Object.freeze(["Livecheck","Marché","Graphique","Sources"]),
+        atlas_hidden:true,
+        oracle_hidden:true
+      }),
+      intermediate:Object.freeze({
+        essential_navigation:6,
+        command_bar_controls:6,
+        top_controls_total:12,
+        command_center_entries:16,
+        projects_cluster_label:"Création",
+        projects_cluster_entries:1
+      }),
+      administration:Object.freeze({
+        essential_navigation:6,
+        command_bar_controls:6,
+        top_controls_total:12,
+        command_center_entries:17,
+        projects_cluster_label:"Projets",
+        projects_cluster_entries:2,
+        authenticated_owner_view:true
+      })
+    }),
+    command_center:Object.freeze({
+      decision:4,
+      analysis:5,
+      system:6,
+      projects_admin:2,
+      creation_intermediate:1,
+      note:"59 details elements exist in the document but they are content collapsibles, not 59 navigation submenus."
+    }),
+    debts_settled:Object.freeze([
+      "ChronosXP canonical planetary palette restored",
+      "ChronosXP header hierarchy restored across all three views",
+      "Firefox BODY SAFE background retained",
+      "Firefox ambient/grid prior retirement acknowledged and preserved",
+      "Firefox direct top-level glass paint simplified",
+      "obsolete 40.3.94/40.3.95 A-B buttons removed from normal operator workflow",
+      "menu/submenu counts recorded as runtime truth"
+    ]),
+    preserved:Object.freeze([
+      "40.3.91 storage measurement/retention truth",
+      "40.3.92 Oracle operator truth ownership",
+      "40.3.93 grey forensic probe",
+      "40.3.94 family 02 paint isolation",
+      "40.3.95 BODY safe background",
+      "News canonical collector",
+      "Bridge / Book Mirror",
+      "Window Manager",
+      "images/assets"
+    ]),
+    deferred:Object.freeze([
+      "Aether Analytical Memory Journal runtime implementation",
+      "Oracle Evidence read latency optimization",
+      "40.4.0 Presentation Plane rewrite",
+      "deeper nested paint simplification only if grey plates remain reproducible"
+    ]),
+    new_timer:false,
+    new_observer:false,
+    new_scheduler:false,
+    storage_write:false,
+    network_request:false,
+    image_changed:false,
+    oracle_math_changed:false,
+    market_core_changed:false,
+    window_manager_changed:false
   });
 }catch(_){}

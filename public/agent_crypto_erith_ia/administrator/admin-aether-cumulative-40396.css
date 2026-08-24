@@ -1,0 +1,172 @@
+/* ==========================================================================
+   Agent-Crypto @erith.IA — Build 40.3.96
+   AETHER CUMULATIVE UI DEBT SETTLEMENT & FIREFOX OUTER-PAINT LOCK
+   CODE ONLY · loaded last as a bounded cumulative authority layer.
+   ========================================================================== */
+
+/* 1. CANONICAL PLANETARY COLOR AUTHORITY
+   color = planet identity; intensity = temporal state. */
+[data-planet40291="saturn"]{
+  --astro-planet:#ff6f7d; --astro-planet-rgb:255,111,125;
+}
+[data-planet40291="mars"]{
+  --astro-planet:#ff9d63; --astro-planet-rgb:255,157,99;
+}
+[data-planet40291="sun"]{
+  --astro-planet:#ffe46f; --astro-planet-rgb:255,228,111;
+}
+[data-planet40291="venus"]{
+  --astro-planet:#78e6a2; --astro-planet-rgb:120,230,162;
+}
+[data-planet40291="mercury"]{
+  --astro-planet:#72bcff; --astro-planet-rgb:114,188,255;
+}
+[data-planet40291="moon"]{
+  --astro-planet:#f3f6ff; --astro-planet-rgb:243,246,255;
+}
+[data-planet40291="jupiter"]{
+  --astro-planet:#ffd17a; --astro-planet-rgb:255,209,122;
+}
+[data-planet40291="neutral"]{
+  --astro-planet:#d7e2ea; --astro-planet-rgb:215,226,234;
+}
+
+/* 2. CHRONOSXP HEADER — same DOM in Basic / Intermediate / Administrator.
+   date white · time white/dominant · day/hour canonical planet colors. */
+#sourceTimeCard{
+  min-width:430px;
+  overflow:hidden;
+}
+#atlasCelestialClockHeader4055{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  flex-wrap:nowrap !important;
+  gap:6px !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  margin-top:2px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  font:850 9.35px/1.05 system-ui,sans-serif !important;
+  letter-spacing:0 !important;
+  text-transform:none !important;
+}
+#atlasCelestialClockHeader4055 > span{
+  flex:0 0 auto;
+  min-width:0;
+  text-transform:none !important;
+}
+#atlasCelestialClockHeader4055 .atlas-chrono-date-40341{
+  color:#f7f9fc !important;
+  font-weight:900 !important;
+}
+#atlasCelestialClockHeader4055 .atlas-chrono-time-40341{
+  color:#fff !important;
+  font-size:11.05px !important;
+  font-weight:1000 !important;
+  letter-spacing:.025em !important;
+  text-shadow:0 0 7px rgba(255,255,255,.13) !important;
+}
+#atlasCelestialClockHeader4055 .atlas-chrono-separator-40341{
+  color:#71899a !important;
+  font-size:8.6px !important;
+  font-weight:700 !important;
+  opacity:.72 !important;
+}
+#atlasCelestialClockHeader4055 .atlas-chrono-planet-40341{
+  color:var(--astro-planet,#d7e2ea) !important;
+  font-weight:950 !important;
+  text-shadow:0 0 7px rgba(var(--astro-planet-rgb,215,226,234),.20) !important;
+}
+#atlasCelestialClockHeader4055 .atlas-chrono-glyph-40341{
+  display:inline-block !important;
+  margin-right:3px !important;
+  color:var(--astro-planet,#d7e2ea) !important;
+  font-size:1.06em !important;
+  line-height:1 !important;
+}
+
+/* AstroCycle detailed timeline/current-next uses the same planet identity. */
+.atlas-astro-hour-4055[data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.28) !important;
+  background:linear-gradient(180deg,
+    rgba(var(--astro-planet-rgb,215,226,234),.055),
+    rgba(4,12,21,.62)) !important;
+}
+.atlas-astro-hour-4055[data-planet40291] b{
+  color:var(--astro-planet,#d7e2ea) !important;
+}
+.atlas-astro-hour-4055[data-state="active"][data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.76) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--astro-planet-rgb,215,226,234),.10),
+    0 0 16px rgba(var(--astro-planet-rgb,215,226,234),.15) !important;
+  background:linear-gradient(180deg,
+    rgba(var(--astro-planet-rgb,215,226,234),.16),
+    rgba(4,12,21,.68)) !important;
+}
+.atlas-astro-hour-4055[data-state="next"][data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.52) !important;
+  background:linear-gradient(180deg,
+    rgba(var(--astro-planet-rgb,215,226,234),.095),
+    rgba(4,12,21,.64)) !important;
+}
+.atlas-astro-kpis-4055 article[data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.34) !important;
+  box-shadow:inset 0 2px 0 rgba(var(--astro-planet-rgb,215,226,234),.35) !important;
+}
+.atlas-astro-kpis-4055 article[data-planet40291] b{
+  color:var(--astro-planet,#d7e2ea) !important;
+}
+
+@media (max-width:1366px) and (min-width:901px){
+  #sourceTimeCard{min-width:390px !important}
+  #atlasCelestialClockHeader4055{gap:4px !important;font-size:8.85px !important}
+  #atlasCelestialClockHeader4055 .atlas-chrono-time-40341{font-size:10.45px !important}
+  #atlasCelestialClockHeader4055 .atlas-chrono-separator-40341{font-size:8px !important}
+}
+
+/* 3. FIREFOX SAFE PAINT — OUTERMOST → INWARD.
+   Prior authority retained:
+   40.3.39 backdrop filters neutralized;
+   40.3.87 .ambient/.grid-overlay retired in Firefox;
+   40.3.94 family 02 paint isolation;
+   40.3.95 BODY full-document decorative background disabled.
+
+   40.3.96 advances one layer inward:
+   only direct main.shell > .glass surfaces are simplified.
+   Nested charts/cards/images are not selected. */
+@supports (-moz-appearance:none){
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396{
+    background-color:#06101d !important;
+    background-image:none !important;
+    background-attachment:scroll !important;
+  }
+
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 .ambient,
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 .grid-overlay{
+    display:none !important;
+  }
+
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > .glass{
+    background-color:rgba(6,16,29,.955) !important;
+    background-image:none !important;
+    box-shadow:0 4px 14px rgba(0,0,0,.18) !important;
+  }
+
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > details.atlas-collapse.glass,
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > section.panel.glass,
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > header.hero.glass{
+    isolation:isolate;
+  }
+}
+
+/* 4. OPERATOR UX: old .94/.95 A/B controls leave the normal workflow.
+   Historical runtime functions remain available; stable SAFE profile is default. */
+#btnAtlasPaintIsolationToggle40394,
+#btnAtlasDocumentBackgroundToggle40395{
+  display:none !important;
+}
