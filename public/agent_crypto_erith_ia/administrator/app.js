@@ -47013,7 +47013,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.80";
+const ATLAS_BUILD = "40.3.81";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55218,3 +55218,7 @@ async function atlasAccessPortalRefresh40380(){
   atlasAccessPortalState40380("atlasAccessBridgeAuthState40380",result.payload?.configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",result.payload?.configured?"ok":"warn");
 }
 try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40380__=Object.freeze({build:"40.3.80",background:"assets/visual/admin-auth-aether-trust-portal-40380.png",ui_authority:"DOM/CSS",background_mutated:false,new_image_generated:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
+
+
+/* 40.3.81 — AETHER TRUST ADMIN PORTAL CODE POLISH LOCK · CODE ONLY */
+try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40381__=Object.freeze({build:"40.3.81",parent:"40.3.80",background:"assets/visual/admin-auth-aether-trust-portal-40380.png",background_byte_identical:true,ui_authority:"DOM/CSS",password_field_polish:true,side_legibility_polish:true,central_portal_preserved:true,image_generated:false,image_asset_modified:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}

@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.80";
+  const BUILD = "40.3.81";
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
