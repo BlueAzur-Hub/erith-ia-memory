@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.52";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATLAS INTERNAL PROGRESSIVE RESIDENCY LOCK";
+  const ADMIN_BUILD = "40.3.53";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ATLAS MEMORY PRESENTATION RESIDENCY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -1647,9 +1647,315 @@
     return nextRole;
   }
 
+
+  /* ============================================================
+     40.3.53 — ATLAS MEMORY PRESENTATION RESIDENCY LOCK
+
+     Scope: Atlas internal Presentation Plane only.
+     - Market Memory: compact shell while closed; detailed grids/actions on demand.
+     - Analytical Memory: compact shell while closed; CURRENT details on demand.
+     - Decision Board: HOT operator summary remains resident; deep cards/news details on demand.
+     - Data/analytical memory, Market Core, Window Manager, Oracle and Graphique are unchanged.
+     - No timer, observer, scheduler, CSS paint-skipping gate or runtime reparenting is introduced.
+     ============================================================ */
+
+  const ATLAS_MARKET_MEMORY_BODY_TEMPLATE_40353 = `
+    <div class="atlas-memory-ledger-35" id="atlasMemoryLedger35" aria-label="Séparation mémoire marché et CURRENT">
+      <article><span>Snapshots canoniques</span><b id="atlasMemoryMarketCount35">0</b><small>États marché distincts après regroupement des relevés de plusieurs collecteurs.</small></article>
+      <article><span>CURRENT analytiques</span><b id="atlasMemoryCurrentCount35">0</b><small>Un cycle fermé Atlas 4/4 → NØX → Aerith = une unité analytique.</small></article>
+      <article><span>Collecteurs</span><b id="atlasMemoryCollectorCount35">0</b><small>Origines mémoire connues ; une trace ne prouve jamais qu’une machine est en ligne.</small></article>
+      <article><span>Base 3 / 5 / 10</span><b id="atlasMemoryBasis35">MARKET MEMORY</b><small id="atlasMemoryBasisDetail35">Les horizons utilisent uniquement les observations marché ; les CURRENT restent séparés.</small></article>
+    </div>
+    <div class="atlas-memory-horizon-grid" aria-label="Tendances mémoire multi-horizon">
+      <article><span>3 relevés</span><b id="atlasMemoryTrend3">—</b><small id="atlasMemoryTrend3Detail">Collecte insuffisante.</small></article>
+      <article><span>5 relevés</span><b id="atlasMemoryTrend5">—</b><small id="atlasMemoryTrend5Detail">Collecte insuffisante.</small></article>
+      <article><span>10 relevés</span><b id="atlasMemoryTrend10">—</b><small id="atlasMemoryTrend10Detail">Collecte insuffisante.</small></article>
+    </div>
+    <div class="atlas-memory-intelligence-grid">
+      <article><span>Persistance du mouvement</span><b id="atlasMemoryPersistence">—</b><small id="atlasMemoryPersistenceDetail">BTC / ETH / SOL.</small></article>
+      <article><span>Confirmation collecteurs</span><b id="atlasMemoryCollectors">—</b><small id="atlasMemoryCollectorsDetail">Comparaison des dernières observations disponibles.</small></article>
+      <article><span>Local ↔ GitHub</span><b id="atlasMemoryDivergence">—</b><small id="atlasMemoryDivergenceDetail">Écart de prix entre mémoires lorsque comparable.</small></article>
+      <article><span>Secteurs persistants</span><b id="atlasMemorySectors">—</b><small id="atlasMemorySectorsDetail">Catégories répétées dans la mémoire.</small></article>
+      <article><span>Anomalie volume / capitalisation</span><b id="atlasMemoryAnomaly">—</b><small id="atlasMemoryAnomalyDetail">Lecture descriptive du dernier snapshot.</small></article>
+      <article><span>Pump isolé</span><b id="atlasMemoryPump">—</b><small id="atlasMemoryPumpDetail">Mouvement fort sans continuité suffisante.</small></article>
+      <article class="atlas-memory-ledger-34"><span>Capture mémoire CURRENT</span><b id="atlasMemoryCurrentLedger34">En attente</b><small id="atlasMemoryCurrentLedger34Detail">Les CURRENT terminés sont distingués des simples observations marché.</small><em class="pill warn" id="atlasMemoryCurrentLedger34Badge">En attente d’un CURRENT</em></article>
+      <article class="atlas-memory-confidence"><span>Confiance de continuité des données</span><b id="atlasMemoryConfidence">—</b><small id="atlasMemoryConfidenceDetail">Ne mesure pas la probabilité d’une hausse ou d’une baisse.</small></article>
+    </div>
+    <div class="atlas-memory-intelligence-actions">
+      <button type="button" id="btnAtlasMemoryRefresh">Actualiser la lecture mémoire</button>
+      <button type="button" id="btnAtlasMemoryReconcile34">Diagnostic · Réconcilier CURRENT</button>
+      <button type="button" id="btnAtlasMemoryExport">Exporter Market Memory .md</button>
+    </div>
+    <p id="atlasMemoryIntelligenceStatus">La lecture démarre dès que plusieurs observations marché distinctes sont présentes ; elle ne lance jamais Atlas.</p>`;
+
+  const ATLAS_ANALYTICAL_MEMORY_BODY_TEMPLATE_40353 = `
+    <div class="atlas-memory-ledger-35" aria-label="Analytical Memory séparée">
+      <article><span>Unités analytiques</span><b id="atlasAnalyticalMemoryCount394">0</b><small>CURRENT distincts réellement conservés dans la mémoire locale.</small></article>
+      <article><span>CURRENT vérifiés</span><b id="atlasAnalyticalMemoryVerified394">0</b><small>Unités reconnues par la couche CURRENT canonique ; aucune observation marché convertie.</small></article>
+      <article><span>Journal fermé</span><b id="atlasAnalyticalMemoryJournal394">0</b><small>Entrées Atlas 4/4 + NØX + Aerith réellement journalisées.</small></article>
+      <article><span>Journal sans payload</span><b id="atlasAnalyticalMemoryJournalOnly394">0</b><small>Anciennes preuves visibles mais jamais transformées artificiellement en mémoire détaillée.</small></article>
+    </div>
+    <div class="atlas-memory-intelligence-grid">
+      <article><span>Dernier CURRENT</span><b id="atlasAnalyticalMemoryLatest394">—</b><small id="atlasAnalyticalMemoryLatestDetail394">Aucune unité analytique détaillée disponible.</small></article>
+      <article><span>Chaîne analytique</span><b id="atlasAnalyticalMemoryChain394">Atlas → NØX → Aerith</b><small>Une seule unité après fermeture complète ; le LIVE ultérieur ne réécrit pas cette analyse.</small></article>
+      <article><span>Contexte marché lié</span><b id="atlasAnalyticalMemoryMarket394">—</b><small id="atlasAnalyticalMemoryMarketDetail394">Le payload figé du CURRENT reste distinct du Market Memory évolutif.</small></article>
+      <article><span>Rôle</span><b>Relecture rétrospective</b><small>Comparer ce que le système avait conclu. Aucun signal, ordre ou déclenchement Atlas.</small></article>
+    </div>
+    <div class="atlas-memory-intelligence-actions">
+      <button type="button" id="btnAtlasAnalyticalMemoryRefresh394">Actualiser Analytical Memory</button>
+      <button type="button" id="btnAtlasAnalyticalMemoryExport394">Exporter Analytical Memory .md</button>
+    </div>
+    <p id="atlasAnalyticalMemoryStatus394">Analytical Memory ne lance jamais Atlas et ne participe jamais aux horizons Market Memory 3 / 5 / 10.</p>`;
+
+  const ATLAS_DECISION_BOARD_DEEP_TEMPLATE_40353 = `
+    <div class="decision-board-grid" id="decisionBoardGrid">
+      <article class="decision-card"><b>Mouvements à vérifier</b><span>Livecheck requis.</span></article>
+      <article class="decision-card"><b>Repères à comparer</b><span>BTC / ETH / SOL après données live.</span></article>
+      <article class="decision-card"><b>Anomalies</b><span>Aucune lecture sans source réelle.</span></article>
+      <article class="decision-card"><b>Lecture secteurs</b><span>En attente de mémoire Atlas.</span></article>
+      <article class="decision-card"><b>Mémoire comparable</b><span>Snapshots Ryzen / Book / GitHub après collecte.</span></article>
+      <article class="decision-card decision-card-wide"><b>Décision froide</b><span>Observer, comparer et valider humainement.</span></article>
+    </div>
+    <div class="decision-news-bridge" id="decisionNewsBridge">
+      <div><span>Contexte News Sentinel</span><b id="decisionNewsState">Chargement de l’archive mondiale</b></div>
+      <div><span>Impact / preuve</span><b id="decisionNewsImpact">En attente</b></div>
+      <div><span>Décision événementielle</span><b id="decisionNewsAction">Collecte à vérifier</b></div>
+      <div><span>Rôle News → marché</span><b id="decisionNewsRole40234">Rôle causal non qualifié</b></div>
+      <div><span>Lecture croisée</span><b id="decisionNewsExplanation40238">Convergence non évaluée</b></div>
+    </div>`;
+
+  function atlasCollapseState40353(root) {
+    const state = root?.querySelector?.(":scope > summary .atlas-collapse-state");
+    if (!state) return;
+    state.textContent = root.open ? (state.dataset.openLabel || "Replier") : (state.dataset.closedLabel || "Déplier");
+  }
+
+  function atlasMarketMemoryRelease40353() {
+    const mount = document.getElementById("atlasMemoryIntelligenceMount40353");
+    if (!mount) return false;
+    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-memory-placeholder-40353="1">Market Memory conservée · ouvrir pour matérialiser les horizons, la continuité et les diagnostics.</p>';
+    mount.dataset.atlasMemoryMounted40353 = "0";
+    return true;
+  }
+
+  function atlasMarketMemoryMount40353() {
+    const mount = document.getElementById("atlasMemoryIntelligenceMount40353");
+    if (!mount) return false;
+    if (mount.dataset.atlasMemoryMounted40353 !== "1") {
+      mount.innerHTML = ATLAS_MARKET_MEMORY_BODY_TEMPLATE_40353;
+      mount.dataset.atlasMemoryMounted40353 = "1";
+    }
+    const refresh = document.getElementById("btnAtlasMemoryRefresh");
+    if (refresh && refresh.dataset.atlasDeferred40353 !== "1") {
+      refresh.dataset.atlasDeferred40353 = "1";
+      refresh.addEventListener("click", () => { try { globalThis.atlasMemoryIntelligenceRender?.(); } catch (_) {} });
+    }
+    const reconcile = document.getElementById("btnAtlasMemoryReconcile34");
+    if (reconcile && reconcile.dataset.atlasDeferred40353 !== "1") {
+      reconcile.dataset.atlasDeferred40353 = "1";
+      reconcile.addEventListener("click", () => { try { globalThis.atlasMemoryCurrentReconcileManual34?.(); } catch (_) {} });
+    }
+    const exporter = document.getElementById("btnAtlasMemoryExport");
+    if (exporter && exporter.dataset.atlasDeferred40353 !== "1") {
+      exporter.dataset.atlasDeferred40353 = "1";
+      exporter.addEventListener("click", () => { try { globalThis.atlasMemoryIntelligenceExport?.(); } catch (_) {} });
+    }
+    try { globalThis.atlasAutomation341UiPolish?.(); } catch (_) {}
+    try { globalThis.atlasMemoryIntelligenceRender?.(); } catch (_) {}
+    return true;
+  }
+
+  function atlasAnalyticalMemoryRelease40353() {
+    const mount = document.getElementById("atlasAnalyticalMemoryMount40353");
+    if (!mount) return false;
+    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-analytical-memory-placeholder-40353="1">Analytical Memory conservée · ouvrir pour matérialiser les CURRENT détaillés.</p>';
+    mount.dataset.atlasAnalyticalMemoryMounted40353 = "0";
+    return true;
+  }
+
+  function atlasAnalyticalMemoryMarkdown40353(data) {
+    const safe = data || {};
+    const latestAssets = Array.isArray(safe.latestAssets) ? safe.latestAssets : [];
+    const wanted = new Set(["BTC", "ETH", "BNB", "XRP", "SOL"]);
+    const marketLine = latestAssets.filter(asset => wanted.has(String(asset?.symbol || "").toUpperCase())).map(asset => {
+      const symbol = String(asset?.symbol || "?").toUpperCase();
+      const change = Number(asset?.change_24h_pct);
+      return Number.isFinite(change) ? `${symbol} ${change >= 0 ? "+" : ""}${change.toFixed(2)} %` : `${symbol} —`;
+    }).join(" · ") || "Payload marché lié indisponible dans cette unité.";
+    return [
+      "# Agent-Crypto — Analytical Memory", "",
+      `- Build : ${ADMIN_BUILD}`,
+      `- Généré : ${new Date().toISOString()}`,
+      `- CURRENT détaillés : ${Number(safe.count || 0)}`,
+      `- CURRENT vérifiés : ${Number(safe.verifiedCount || 0)}`,
+      `- CURRENT fermés au journal : ${Number(safe.journalCount || 0)}`,
+      `- Journal sans payload détaillé : ${Number(safe.journalOnlyCount || 0)}`,
+      `- Collecteurs : ${Array.isArray(safe.collectors) ? safe.collectors.length : 0}`, "",
+      "## Dernier CURRENT", "",
+      `- Fingerprint : ${safe.latestFingerprint || "—"}`,
+      `- Heure : ${safe.latestAt || "—"}`,
+      `- Marché lié : ${marketLine}`, "",
+      "## Contrat de séparation", "",
+      "- Analytical Memory contient uniquement des CURRENT analytiques réellement fermés ou reconnus par la mémoire canonique.",
+      "- Market Memory conserve séparément les observations marché et ses horizons 3 / 5 / 10.",
+      "- Une entrée de journal sans payload détaillé reste une preuve historique partielle ; aucun paquet n’est inventé.",
+      "- Analytical Memory ne déclenche jamais Atlas, NØX, Aerith, Bridge ou Ollama.",
+      "- Aucun ordre financier, recommandation ou prévision n’est produit."
+    ].join("\n");
+  }
+
+  function atlasAnalyticalMemoryExport40353() {
+    const data = globalThis.atlasAnalyticalMemoryStats394?.() || {};
+    const text = atlasAnalyticalMemoryMarkdown40353(data);
+    const name = `agent_crypto_analytical_memory_${new Date().toISOString().slice(0, 10)}.md`;
+    if (typeof globalThis.downloadTextFile === "function") globalThis.downloadTextFile(name, "text/markdown", text);
+    return text;
+  }
+
+  function atlasAnalyticalMemoryMount40353() {
+    const mount = document.getElementById("atlasAnalyticalMemoryMount40353");
+    if (!mount) return false;
+    if (mount.dataset.atlasAnalyticalMemoryMounted40353 !== "1") {
+      mount.innerHTML = ATLAS_ANALYTICAL_MEMORY_BODY_TEMPLATE_40353;
+      mount.dataset.atlasAnalyticalMemoryMounted40353 = "1";
+    }
+    const refresh = document.getElementById("btnAtlasAnalyticalMemoryRefresh394");
+    if (refresh && refresh.dataset.atlasDeferred40353 !== "1") {
+      refresh.dataset.atlasDeferred40353 = "1";
+      refresh.addEventListener("click", () => { try { globalThis.atlasAnalyticalMemoryRender394?.(); } catch (_) {} });
+    }
+    const exporter = document.getElementById("btnAtlasAnalyticalMemoryExport394");
+    if (exporter && exporter.dataset.atlasDeferred40353 !== "1") {
+      exporter.dataset.atlasDeferred40353 = "1";
+      exporter.addEventListener("click", atlasAnalyticalMemoryExport40353);
+    }
+    try { globalThis.atlasAnalyticalMemoryRender394?.(); } catch (_) {}
+    return true;
+  }
+
+  function atlasDecisionBoardDeepRelease40353() {
+    const mount = document.getElementById("atlasDecisionBoardDeepMount40353");
+    if (!mount) return false;
+    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-decision-detail-placeholder-40353="1">Decision Board compact · ouvrir pour matérialiser les cartes et le contexte News.</p>';
+    mount.dataset.atlasDecisionDetailMounted40353 = "0";
+    return true;
+  }
+
+  function atlasDecisionBoardDeepMount40353() {
+    const mount = document.getElementById("atlasDecisionBoardDeepMount40353");
+    if (!mount) return false;
+    if (mount.dataset.atlasDecisionDetailMounted40353 !== "1") {
+      mount.innerHTML = ATLAS_DECISION_BOARD_DEEP_TEMPLATE_40353;
+      mount.dataset.atlasDecisionDetailMounted40353 = "1";
+    }
+    try { globalThis.renderDecisionBoard?.(); } catch (_) {}
+    try { globalThis.atlasDecisionBoardDualMemory3950?.render?.(); } catch (_) {}
+    return true;
+  }
+
+  function atlasDecisionBoardCompactStatus40353() {
+    const status = document.getElementById("decisionBoardStatus");
+    const verdict = document.getElementById("decisionBoardVerdict");
+    let summary = null;
+    try { summary = globalThis.atlasOperatorSummaryRender35?.() || null; } catch (_) {}
+    const marketCount = Number(summary?.split?.marketRecords?.length || 0);
+    const currentCount = Number(summary?.split?.currentRecords?.length || 0);
+    if (status) {
+      status.textContent = summary?.currentOk
+        ? `CURRENT · mémoire ${marketCount}`
+        : summary?.direct === 5 && summary?.stable
+          ? `Prêt · mémoire ${marketCount}`
+          : `Détails à la demande · ${marketCount} mémoire`;
+      status.className = `pill ${summary?.currentOk || (summary?.direct === 5 && summary?.stable) ? "ok" : "warn"}`;
+    }
+    if (verdict) {
+      verdict.textContent = summary?.currentOk
+        ? `Decision Board compact · CURRENT fermé · ${marketCount} observation(s) marché · ${currentCount} CURRENT analytique(s) · ouvrir les détails pour matérialiser les cartes.`
+        : `Decision Board compact · détails à la demande · ${marketCount} observation(s) marché disponibles.`;
+    }
+    return summary;
+  }
+
+  function atlasDecisionBoardWrap40353() {
+    const base = globalThis.renderDecisionBoard;
+    if (typeof base !== "function" || base.__atlasMemoryResidency40353) return false;
+    const wrapped = function renderDecisionBoard40353(...args) {
+      const result = base.apply(this, args);
+      const details = document.getElementById("atlasDecisionBoardDetails");
+      if (!details?.open) atlasDecisionBoardCompactStatus40353();
+      return result;
+    };
+    try { Object.defineProperty(wrapped, "__atlasMemoryResidency40353", { value: true }); } catch (_) {}
+    globalThis.renderDecisionBoard = wrapped;
+    atlasDecisionBoardCompactStatus40353();
+    return true;
+  }
+
+  function initAtlasMemoryResidency40353() {
+    atlasDecisionBoardWrap40353();
+    const market = document.getElementById("atlasMemoryIntelligence");
+    if (market && market.dataset.atlasResidencyBound40353 !== "1") {
+      market.dataset.atlasResidencyBound40353 = "1";
+      market.addEventListener("toggle", () => {
+        atlasCollapseState40353(market);
+        if (market.open) atlasMarketMemoryMount40353();
+        else atlasMarketMemoryRelease40353();
+      });
+      atlasCollapseState40353(market);
+      if (market.open) atlasMarketMemoryMount40353(); else atlasMarketMemoryRelease40353();
+    }
+
+    const analytical = document.getElementById("atlasAnalyticalMemory394");
+    if (analytical && analytical.dataset.atlasResidencyBound40353 !== "1") {
+      analytical.dataset.atlasResidencyBound40353 = "1";
+      analytical.addEventListener("toggle", () => {
+        atlasCollapseState40353(analytical);
+        if (analytical.open) atlasAnalyticalMemoryMount40353();
+        else atlasAnalyticalMemoryRelease40353();
+      });
+      atlasCollapseState40353(analytical);
+      if (analytical.open) atlasAnalyticalMemoryMount40353(); else atlasAnalyticalMemoryRelease40353();
+    }
+
+    const decision = document.getElementById("atlasDecisionBoardDetails");
+    if (decision && decision.dataset.atlasResidencyBound40353 !== "1") {
+      decision.dataset.atlasResidencyBound40353 = "1";
+      decision.addEventListener("toggle", () => {
+        atlasCollapseState40353(decision);
+        if (decision.open) atlasDecisionBoardDeepMount40353();
+        else atlasDecisionBoardDeepRelease40353();
+      });
+      atlasCollapseState40353(decision);
+      if (decision.open) atlasDecisionBoardDeepMount40353(); else atlasDecisionBoardDeepRelease40353();
+    }
+
+    globalThis.AtlasMemoryPresentationResidency40353 = Object.freeze({
+      build: "40.3.53",
+      parent: "40.3.52",
+      scope: Object.freeze(["market_memory_presentation", "analytical_memory_presentation", "decision_board_deep_details"]),
+      market_memory_closed_full_dom_resident: false,
+      analytical_memory_closed_full_dom_resident: false,
+      decision_board_hot_operator_summary_preserved: true,
+      decision_board_deep_closed_full_dom_resident: false,
+      atlas_report_residency_40351_preserved: true,
+      atlas_internal_residency_40352_preserved: true,
+      data_plane_changed: false,
+      analytical_state_changed: false,
+      market_core_changed: false,
+      window_manager_changed: false,
+      timer_added: false,
+      observer_added: false,
+      scheduler_added: false,
+      content_visibility_added: false,
+      reparenting_added: false
+    });
+    return true;
+  }
+
   function boot() {
     installGlobalVersionIdentity();
     keepGlobalVersionVisible();
+    initAtlasMemoryResidency40353();
 
     migrateRibbonWindowStateR2();
     migrateMarketFlowWindowState40125();
