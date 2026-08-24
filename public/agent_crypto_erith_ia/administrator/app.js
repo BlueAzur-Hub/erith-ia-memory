@@ -1246,7 +1246,7 @@ function atlasAccessSyncDialog() {
   if (secret) secret.autocomplete = configured ? "current-password" : "new-password";
   atlasAccessSetStatus(configured ? "Administration verrouillée." : "Première configuration locale.");
   try { atlasAccessPortalEnsureBackground40380(); } catch (_) {}
-  try { queueMicrotask(() => void atlasAccessPortalRefresh40380()); } catch (_) {}
+  try { queueMicrotask(() => void atlasAccessPortalRefresh40382()); } catch (_) {}
 }
 
 function atlasAccessOpen(pendingHash = "") {
@@ -47013,7 +47013,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.81";
+const ATLAS_BUILD = "40.3.82";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55222,3 +55222,71 @@ try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40380__=Object.freeze({build:"40.3.80
 
 /* 40.3.81 — AETHER TRUST ADMIN PORTAL CODE POLISH LOCK · CODE ONLY */
 try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40381__=Object.freeze({build:"40.3.81",parent:"40.3.80",background:"assets/visual/admin-auth-aether-trust-portal-40380.png",background_byte_identical:true,ui_authority:"DOM/CSS",password_field_polish:true,side_legibility_polish:true,central_portal_preserved:true,image_generated:false,image_asset_modified:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
+
+
+/* ============================================================
+   40.3.82 — AETHER TRUST SANCTUARY SYSTEM UI WEAVE LOCK
+   Blank-canvas sanctuary is immutable background. Runtime truth is DOM only.
+   No version, port or model is hard-coded into the background.
+   No timer, observer or scheduler added.
+   ============================================================ */
+function atlasAccessPortalSetDot40382(id,state=""){
+  const node=document.getElementById(id);if(!node)return;
+  node.classList.toggle("is-ok",state==="ok");
+  node.classList.toggle("is-error",state==="error");
+}
+function atlasAccessPortalText40382(id,text){const node=document.getElementById(id);if(node)node.textContent=String(text||"—");}
+async function atlasAccessPortalRefresh40382(){
+  try{atlasAccessPortalEnsureBackground40380();}catch(_){}
+  const ryzen=atlasDeviceComputeAllowed();
+  const authorized=atlasAccessIsAuthorized();
+  atlasAccessPortalState40380("atlasAccessInterfaceState40380",authorized?"AUTHENTIFIÉE":"VERROUILLÉE",authorized?"ok":"warn");
+  atlasAccessPortalState40380("atlasAccessDeviceState40380",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
+  atlasAccessPortalText40382("atlasAccessDeviceTop40382",ryzen?"RYZEN PRODUCTEUR":"BOOK · LECTURE SEULE");
+  atlasAccessPortalText40382("atlasAccessSystemState40382",ryzen?"LOCAL":"LECTURE SEULE");
+  atlasAccessPortalSetDot40382("atlasAccessSystemDot40382",ryzen?"ok":"");
+  if(!ryzen){
+    atlasAccessPortalText40382("atlasAccessTopBridge40380","NON REQUIS");
+    atlasAccessPortalSetDot40382("atlasAccessBridgeDot40382","");
+    atlasAccessPortalState40380("atlasAccessBridgeState40380","AUCUN · BOOK","warn");
+    atlasAccessPortalState40380("atlasAccessBridgeAuthState40380","NON REQUIS","warn");
+    atlasAccessPortalState40380("atlasAccessBookMirrorState40382","LECTURE SEULE","ok");
+    atlasAccessPortalText40382("atlasAccessBridgeMeta40382","AUCUN BRIDGE LOCAL REQUIS");
+    atlasAccessPortalText40382("atlasAccessBridgePolicy40382","Le Transformer Book consomme seulement les données partagées.");
+    return;
+  }
+  let result=null;
+  try{result=await atlasBridgeAuthFetch40375("/auth/status",{method:"GET"},2600);}catch(_){}
+  if(!result?.reachable){
+    atlasAccessPortalText40382("atlasAccessTopBridge40380","HORS LIGNE");
+    atlasAccessPortalSetDot40382("atlasAccessBridgeDot40382","error");
+    atlasAccessPortalState40380("atlasAccessBridgeState40380","HORS LIGNE","error");
+    atlasAccessPortalState40380("atlasAccessBridgeAuthState40380","INDISPONIBLE","error");
+    atlasAccessPortalState40380("atlasAccessBookMirrorState40382","INDISPONIBLE","error");
+    atlasAccessPortalText40382("atlasAccessBridgeMeta40382","BRIDGE NON JOIGNABLE");
+    atlasAccessPortalText40382("atlasAccessBridgePolicy40382","Loopback local attendu · aucun état distant supposé.");
+    return;
+  }
+  const bridgeVersion=String(result.payload?.bridge_version||result.payload?.version||"").trim();
+  const bridgeLabel=bridgeVersion?`CONNECTÉ · ${bridgeVersion}`:"CONNECTÉ";
+  atlasAccessPortalText40382("atlasAccessTopBridge40380",bridgeLabel);
+  atlasAccessPortalSetDot40382("atlasAccessBridgeDot40382","ok");
+  atlasAccessPortalState40380("atlasAccessBridgeState40380",bridgeLabel,"ok");
+  atlasAccessPortalText40382("atlasAccessBridgeMeta40382",bridgeVersion?`VERSION ${bridgeVersion} · LOOPBACK LOCAL`:"VERSION DÉTECTÉE · LOOPBACK LOCAL");
+  atlasAccessPortalText40382("atlasAccessBridgePolicy40382","Capacités restreintes · refus par défaut · audit local");
+  const token=atlasBridgeAuthToken40375();
+  if(token){
+    atlasAccessPortalState40380("atlasAccessBridgeAuthState40380","SESSION VALIDÉE","ok");
+    let mirrorReady=null;
+    try{
+      await atlasBookMirrorBridgeStatus40377();
+      mirrorReady=atlasBookMirrorBridgeState40377.credentialReady;
+    }catch(_){}
+    atlasAccessPortalState40380("atlasAccessBookMirrorState40382",mirrorReady===true?"PRÊT · BORNÉ":mirrorReady===false?"CREDENTIAL LOCAL REQUIS":"CAPACITÉ BORNÉE",mirrorReady===true?"ok":"warn");
+    return;
+  }
+  const configured=result.payload?.configured===true;
+  atlasAccessPortalState40380("atlasAccessBridgeAuthState40380",configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",configured?"ok":"warn");
+  atlasAccessPortalState40380("atlasAccessBookMirrorState40382","APRÈS AUTH","warn");
+}
+try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40382__=Object.freeze({build:"40.3.82",parent:"40.3.81",background:"assets/visual/admin-auth-aether-trust-sanctuary-40382.png",background_source:"approved_existing_asset",background_byte_preserved:true,ui_authority:"DOM/CSS/JS",dynamic_bridge_version:true,hardcoded_bridge_version_in_portal:false,hardcoded_bridge_port_in_portal:false,hardcoded_model_in_portal:false,book_mirror_truth:true,rich_code_dock:true,central_portal_preserved:true,image_generated_in_build:false,image_edited_in_build:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
