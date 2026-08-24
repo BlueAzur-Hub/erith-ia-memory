@@ -4029,7 +4029,10 @@ function atlasCryptoCanvasGradient(ctx, coin, fallbackIndex = 0, width = 980) {
 }
 
 function atlasExpectedChartContextKey(ids = atlasComparisonIds(), period = Number(state.chartPeriodDays || 1)) {
-  const normalizedIds = Array.isArray(ids) ? ids.filter(Boolean).slice(0, ATLAS_COMPARISON_MAX_SERIES) : [];
+  let normalizedIds = Array.isArray(ids) ? ids.filter(Boolean).slice(0, ATLAS_COMPARISON_MAX_SERIES) : [];
+  const external403105 = atlasExternalGraphCoin403105();
+  if (!normalizedIds.length && external403105?.id) normalizedIds = [external403105.id];
+
   const days = Number(period || 1);
   if (!normalizedIds.length) return `empty:${days}`;
   if (normalizedIds.length === 1) return `single:${normalizedIds[0]}:${days}`;
@@ -15739,7 +15742,12 @@ function atlasMarketExternalRowMarkup403100(rawQuery) {
   const move24 = Number.isFinite(Number(c.change24h)) ? fmtPct(c.change24h) : "—";
   const move7 = Number.isFinite(Number(c.change7d)) ? fmtPct(c.change7d) : "—";
 
-  return `<tr class="asset-row" data-market-external403100="${escapeHtml(c.id)}">
+  return `<tr class="asset-row atlas-market-external-row-403104"
+    data-market-external403100="${escapeHtml(c.id)}"
+    data-market-help-id="${escapeHtml(c.id)}"
+    data-crypto-id="${escapeHtml(c.id)}"
+    tabindex="0"
+    aria-label="${escapeHtml(`${c.name} ${c.symbol}. Actif hors Top 250. Survol ou focus : Fiche Crypto.`)}">
     <td>${escapeHtml(rankLabel)}</td>
     <td><div class="coin-cell"><i class="market-identity-rail"></i>${image}<div><strong class="market-coin-name">${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">Hors Top 250</span></div></div></td>
     <td><div class="price-dual"><strong>${escapeHtml(price)}</strong><small>Snapshot public étendu · GitHub Actions</small></div></td>
@@ -15750,7 +15758,13 @@ function atlasMarketExternalRowMarkup403100(rawQuery) {
     <td class="spark-cell"><small>EXTERNE</small></td>
     <td class="market-col-advanced">—</td>
     <td class="market-col-advanced">Observer</td>
-    <td><div class="market-row-actions"><a href="${escapeHtml(cg)}" target="_blank" rel="noopener noreferrer">CoinGecko ↗</a></div></td>
+    <td><div class="market-row-actions">
+      <button type="button"
+        data-market-external-action="chart-1y"
+        data-coin-id="${escapeHtml(c.id)}"
+        title="Charger l’historique réel 1 an dans le graphique">Graphique 1 an</button>
+      <a href="${escapeHtml(cg)}" target="_blank" rel="noopener noreferrer">CoinGecko ↗</a>
+    </div></td>
   </tr>`;
 }
 
@@ -15768,6 +15782,129 @@ globalThis.AtlasMarketExtendedLookup403100 = Object.freeze({
   polling: false,
   storage_write: false
 });
+
+
+
+/* ============================================================
+   40.3.105 — EXTENDED ASSET HISTORICAL GRAPH BRIDGE
+
+   Market universe ownership stays unchanged:
+   - canonical Top 250 remains state.coins
+   - extended asset remains a read-only external result
+
+   Graph ownership is separate:
+   - explicit "Graphique 1 an" can select the current external asset
+   - getSelectedCoin() may resolve that one external graph selection
+   - comparison basket stays canonical-only
+   - existing historical chart engine is reused
+   - default external period = 365 days
+   ============================================================ */
+const atlasExternalGraphSelection403105 = {
+  coin: null,
+  selected_at: 0,
+  default_period_days: 365
+};
+
+function atlasExternalGraphCoin403105() {
+  const coin = atlasExternalGraphSelection403105.coin;
+  if (!coin?.id) return null;
+  if (String(state.selectedCoinId || "") !== String(coin.id)) return null;
+  if (state.graphSelectionCleared) return null;
+  return coin;
+}
+
+function atlasSelectExtendedGraph403105(coin, period = 365) {
+  if (!atlasMarketHelpIsExternal403104(coin) || !coin?.id) return false;
+
+  const normalizedPeriod = [1, 7, 30, 60, 90, 365, 36500].includes(Number(period))
+    ? Number(period)
+    : 365;
+
+  atlasClearComparisonCompletionTimer();
+  if (state.chartEngineV2?.controller) {
+    try { state.chartEngineV2.controller.abort(); } catch (_) {}
+  }
+
+  atlasExternalGraphSelection403105.coin = { ...coin, externalGraph403105: true };
+  atlasExternalGraphSelection403105.selected_at = Date.now();
+
+  state.graphSelectionCleared = false;
+  state.selectedCoinId = coin.id;
+  state.chartPeriodDays = normalizedPeriod;
+
+  state.dataBroker.comparison.ids = [];
+  state.dataBroker.comparison.pendingIds = [];
+  state.dataBroker.comparison.unavailableIds = [];
+  state.dataBroker.comparison.results = {};
+  state.dataBroker.comparison.renderedIds = [];
+  state.dataBroker.comparison.mode = "single";
+  state.dataBroker.comparison.preset = "external-solo";
+  state.dataBroker.comparison.status = "idle";
+  state.dataBroker.comparison.error = null;
+
+  state.dataBroker.chart = {
+    status: "loading",
+    coinId: coin.id,
+    period: normalizedPeriod,
+    source: "CoinGecko",
+    mode: "single-external-history",
+    timestamp: null,
+    pointCount: 0,
+    contextKey: `single:${coin.id}:${normalizedPeriod}`,
+    result: null,
+    error: null
+  };
+
+  atlasChartSetPeriodButtons(normalizedPeriod, true);
+  atlasRenderComparisonControls();
+  renderMarketTable();
+
+  requestAnimationFrame(() => {
+    void renderAnalystPanel({ selection: true, forceSingle: true, external403105: true });
+  });
+
+  document.getElementById("analyste")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+  return true;
+}
+
+function atlasExtendedGraphAction403105(event) {
+  const control = event.target?.closest?.("[data-market-external-action]");
+  if (!control) return false;
+  const id = String(control.dataset.coinId || "");
+  const action = String(control.dataset.marketExternalAction || "");
+  if (action !== "chart-1y") return false;
+
+  const coin = atlasMarketHelpCoinResolve403104(id);
+  if (!atlasMarketHelpIsExternal403104(coin)) return false;
+
+  event.preventDefault?.();
+  event.stopPropagation?.();
+  return atlasSelectExtendedGraph403105(coin, 365);
+}
+
+try {
+  globalThis.AtlasExtendedHistoryGraph403105 = Object.freeze({
+    build: "40.3.105",
+    select: atlasSelectExtendedGraph403105,
+    state: () => ({
+      coin_id: atlasExternalGraphSelection403105.coin?.id || null,
+      selected_at: atlasExternalGraphSelection403105.selected_at || 0,
+      period_days: Number(state.chartPeriodDays || 1)
+    }),
+    default_period_days: 365,
+    top250_mutation: false,
+    comparison_injection: false,
+    oracle_injection: false,
+    historical_engine_reused: true,
+    browser_history_request_on_explicit_graph_action: true,
+    polling: false,
+    new_storage_class: false
+  });
+} catch (_) {}
 
 function atlasMarketRowsForCurrentView() {
   const query = (els.searchInput?.value || "").trim();
@@ -16443,7 +16580,14 @@ function atlasApplyCanonicalSnapshot(snapshot, mode) {
   state.liveOk = true;
   atlasSetSourceLock(mode, state.timestamp, snapshot.sourceReason || "Toutes les données de marché et d’analyse proviennent de CoinGecko.", true, snapshot.snapshotId || null);
   atlasBrokerCommitMarket({ ...snapshot, coins: state.coins, timestamp: state.timestamp, snapshotId: snapshot.snapshotId || null }, mode);
-  if (!state.graphSelectionCleared && (!state.selectedCoinId || !state.coins.some(c => c.id === state.selectedCoinId))) state.selectedCoinId = state.coins[0]?.id || "bitcoin";
+  const externalGraphActive403105 = !!atlasExternalGraphCoin403105();
+  if (
+    !state.graphSelectionCleared
+    && !externalGraphActive403105
+    && (!state.selectedCoinId || !state.coins.some(c => c.id === state.selectedCoinId))
+  ) {
+    state.selectedCoinId = state.coins[0]?.id || "bitcoin";
+  }
   saveMarketCache();
   atlasRememberGoodMarket(`snapshot ${mode || "direct"} validé`);
   atlasWorkspaceRestoreAfterMarket();
@@ -16625,7 +16769,13 @@ function atlasActionReasonForCoin(c) {
 function renderBeginnerSummary() { if (!els.beginnerSummary) return; if (!state.liveOk || !state.coins.length) { els.beginnerSummary.textContent = "Le marché n’est pas lisible pour l’instant. Aucune source marché principale n’a fourni un tableau fiable. Donc : pas de prix, pas de conclusion, pas de tableau fictif."; if (els.advancedGrid) { els.advancedGrid.innerHTML = ` <div><b>État</b><span>Livecheck absent ou échec</span></div> <div><b>Tableau</b><span>Bloqué</span></div> <div><b>Données</b><span>Non récupérées</span></div> <div><b>Règle</b><span>Pas de source live, pas de prix</span></div>`; } return; } const btc = state.coins.find(c => c.id === "bitcoin"); const eth = state.coins.find(c => c.id === "ethereum"); const first = state.coins[0]; els.beginnerSummary.textContent = `Marché lisible depuis ${state.mainSource}. ` + `Le tableau montre des données de marché réelles : prix, variation, volume et capitalisation. ` + `Bitcoin et Ethereum servent de repères. ` + `Les stablecoins ne sont pas des opportunités de hausse : ils servent surtout à lire stabilité et liquidité. ` + `Ce cockpit aide à observer, pas à acheter.`; if (els.advancedGrid) { const ratio = first?.volume24h && first?.marketCap ? ((first.volume24h / first.marketCap) * 100).toFixed(2) + " %" : "Donnée manquante"; els.advancedGrid.innerHTML = ` <div><b>Source</b><span>${escapeHtml(state.mainSource || "—")}</span></div> <div><b>Actifs chargés</b><span>${state.coins.length}</span></div> <div><b>BTC 24h</b><span>${btc ? atlasFmtMarketPct(btc.change24h) : "Donnée manquante"}</span></div> <div><b>ETH 24h</b><span>${eth ? atlasFmtMarketPct(eth.change24h) : "Donnée manquante"}</span></div> <div><b>Premier actif</b><span>${first ? escapeHtml(first.name) : "—"}</span></div> <div><b>Type</b><span>${escapeHtml(classifyAsset(first))}</span></div> <div><b>Vol/Market cap</b><span>${ratio}</span></div> <div><b>Données manquantes</b><span>Sécurité · social · on-chain</span></div>`; }
 }
 
-function getSelectedCoin() { if (!state.coins.length || state.graphSelectionCleared) return null; const selected = state.coins.find(c => c.id === state.selectedCoinId); return selected || state.coins[0];
+function getSelectedCoin() {
+  if (state.graphSelectionCleared) return null;
+  const selected = state.coins.find(c => c.id === state.selectedCoinId);
+  if (selected) return selected;
+  const external403105 = atlasExternalGraphCoin403105();
+  if (external403105) return external403105;
+  return state.coins[0] || null;
 }
 
 function safeMoney(value) { return atlasFormatEUR(value);
@@ -17041,6 +17191,10 @@ function renderMarketTable() {
     atlasMarketHandleAction(action, state.coins.find(c => c.id === b.dataset.coinId), e);
     if (["open","compare"].includes(action)) atlasGraphContextV7CommitMarket(`handler-market-${action}`);
   }));
+
+  els.marketRows.querySelectorAll("[data-market-external-action]").forEach(control => {
+    control.addEventListener("click", atlasExtendedGraphAction403105);
+  });
 }
 
 function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="11" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
@@ -32233,15 +32387,115 @@ function atlasHelpDefinitionFor(target) {
   return ATLAS_HELP_DEFINITIONS[target.id] || null;
 }
 
+
+
+/* ============================================================
+   40.3.104 — EXTENDED MARKET -> NATIVE FICHE CRYPTO BRIDGE
+
+   40.3.102 correctly kept ARK/out-of-Top250 outside state.coins.
+   Side effect: the native Fiche resolver only searched state.coins, so an
+   extended row could never own the Fiche even though its public snapshot data
+   was already available.
+
+   40.3.104 keeps the architecture:
+   - Top 250 state.coins unchanged
+   - extended asset remains external/read-only
+   - existing Fiche Crypto markup/surface reused
+   - no duplicate card
+   - no comparison/watch/alert/source action injected
+   ============================================================ */
+function atlasMarketHelpCoinResolve403104(coinId) {
+  const id = String(coinId || "").trim();
+  if (!id) return null;
+
+  const canonical = state.coins.find(item => item.id === id);
+  if (canonical) return canonical;
+
+  const external = atlasMarketExternal403100?.result;
+  if (
+    external
+    && String(external.id || "") === id
+    && atlasMarketExternal403100.status === "ready"
+  ) {
+    return external;
+  }
+  return null;
+}
+
+function atlasMarketHelpIsExternal403104(coin) {
+  return !!coin && (
+    coin.externalLookup403102 === true
+    || coin.externalLookup403100 === true
+    || coin.sourceMode === "github-public-extended"
+  );
+}
+
+function atlasMarketHelpSnapshot403104(coin) {
+  if (!atlasMarketHelpIsExternal403104(coin)) {
+    return atlasMarketSnapshotSurface(coin);
+  }
+
+  const priceEur = Number.isFinite(Number(coin?.priceEur ?? coin?.price))
+    ? Number(coin.priceEur ?? coin.price)
+    : null;
+  const priceUsd = Number.isFinite(Number(coin?.priceUsd))
+    ? Number(coin.priceUsd)
+    : null;
+  const change24h = Number.isFinite(Number(coin?.change24h))
+    ? Number(coin.change24h)
+    : null;
+  const change7d = Number.isFinite(Number(coin?.change7d))
+    ? Number(coin.change7d)
+    : null;
+  const change30d = Number.isFinite(Number(coin?.change30d))
+    ? Number(coin.change30d)
+    : null;
+  const snapshotAt = coin?.snapshotGeneratedAt || coin?.lastUpdated || null;
+
+  return {
+    coin,
+    quote: null,
+    quoteUsable: false,
+    priceEur,
+    priceUsd,
+    change24h,
+    directChange24h: null,
+    marketChange24h: change24h,
+    change7d,
+    change30d,
+    observedBasis: "market",
+    truthLabel: "SNAPSHOT PUBLIC ÉTENDU",
+    freshnessLabel: snapshotAt ? atlasBrokerAgeLabel(snapshotAt) : "horodatage étendu indisponible",
+    marketFrameLabel: coin?.snapshotId ? String(coin.snapshotId) : "Frame étendue",
+    marketSourceLabel: "CoinGecko · GitHub Actions"
+  };
+}
+
+try {
+  globalThis.AtlasExtendedNativeFiche403104 = Object.freeze({
+    build: "40.3.104",
+    native_fiche_reused: true,
+    duplicate_fiche_created: false,
+    top250_mutation: false,
+    comparison_injection: false,
+    watch_injection: false,
+    alert_injection: false,
+    source_dock_injection: false,
+    browser_direct_coingecko: false,
+    resolver: atlasMarketHelpCoinResolve403104
+  });
+} catch (_) {}
+
 function atlasMarketHelpDefinition(row) {
   const coinId = atlasNativeMarketHelpCoinId40284(row);
-  const coin = state.coins.find(item => item.id === coinId);
+  const coin = atlasMarketHelpCoinResolve403104(coinId);
   if (!coin) return null;
+  const external403104 = atlasMarketHelpIsExternal403104(coin);
   const interactionSurface = row?.matches?.("[data-top5-id]") ? "carte" : "ligne";
   const selection = atlasComparisonIds();
-  const compared = selection.includes(coin.id);
+  const compared = !external403104 && selection.includes(coin.id);
   const score = scoreCoin(coin);
-  const snapshot = atlasMarketSnapshotSurface(coin);
+  const snapshot = atlasMarketHelpSnapshot403104(coin);
   const ratio = coin.volume24h && coin.marketCap ? coin.volume24h / coin.marketCap * 100 : null;
   const priceUsd = atlasHasPositiveQuote(snapshot.priceUsd) ? atlasFormatUSD(snapshot.priceUsd) : "USD —";
   const image = coin.image
@@ -32250,9 +32504,11 @@ function atlasMarketHelpDefinition(row) {
   return {
     rich: true,
     marketCoinId: coin.id,
-    liveText: `${coin.name} ${coin.symbol}. ${compared ? `Présent dans la comparaison. Clique la ${interactionSurface} pour le retirer.` : `Clique la ${interactionSurface} pour l’ajouter à la comparaison.`}`,
+    liveText: external403104
+      ? `${coin.name} ${coin.symbol}. Actif hors Top 250, snapshot public étendu en observation uniquement.`
+      : `${coin.name} ${coin.symbol}. ${compared ? `Présent dans la comparaison. Clique la ${interactionSurface} pour le retirer.` : `Clique la ${interactionSurface} pour l’ajouter à la comparaison.`}`,
     html: `${atlasMarketCardToolbarMarkup()}
-      <div class="atlas-help-market-head">${image}<span><strong>${escapeHtml(coin.name)}</strong><b>${escapeHtml(coin.symbol)}</b><small>Rang ${escapeHtml(coin.rank ?? "—")} · ${escapeHtml(classifyAsset(coin))}</small></span></div>
+      <div class="atlas-help-market-head">${image}<span><strong>${escapeHtml(coin.name)}</strong><b>${escapeHtml(coin.symbol)}</b><small>Rang ${escapeHtml(coin.rank ?? "—")} · ${escapeHtml(external403104 ? "Hors Top 250 · snapshot public étendu" : classifyAsset(coin))}</small></span></div>
       <div class="atlas-help-market-grid">
         <span><small>Prix direct EUR</small><strong data-help-live="price-eur">${escapeHtml(snapshot.quoteUsable ? atlasCurrentQuotePriceText(snapshot.quote) : atlasFormatEUR(snapshot.priceEur))}</strong></span>
         <span><small>Prix USD marché</small><strong>${escapeHtml(priceUsd)}</strong></span>
@@ -32263,14 +32519,18 @@ function atlasMarketHelpDefinition(row) {
         <span><small>Capitalisation</small><strong>${escapeHtml(atlasFormatMarketCapEUR(coin.marketCap))}</strong></span>
         <span><small>Volume 24 h</small><strong>${escapeHtml(num(coin.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR)))}</strong></span>
         <span><small>Score Atlas</small><strong>${escapeHtml(score.score ?? "—")}</strong></span>
-        <span><small>Décision</small><strong>${escapeHtml(beginnerDecision(coin))}</strong></span>
+        <span><small>Décision</small><strong>${escapeHtml(external403104 ? "Observer · externe" : beginnerDecision(coin))}</strong></span>
       </div>
       <div class="atlas-help-market-sources">
         <span><b>Cotation et 24 h observés</b><em data-help-live="observed-source">${escapeHtml(snapshot.truthLabel)} · ${escapeHtml(snapshot.freshnessLabel)}</em></span>
         <span><b>Référence marché 24 h</b><em data-help-live="market-reference">${escapeHtml(Number.isFinite(snapshot.marketChange24h) ? fmtPct(snapshot.marketChange24h) : "—")} · ${escapeHtml(snapshot.marketSourceLabel)} · ${escapeHtml(snapshot.marketFrameLabel)}</em></span>
-        <span><b>Pourquoi cette décision</b><em>${escapeHtml(atlasActionReasonForCoin(coin))}</em></span>
+        <span><b>Pourquoi cette décision</b><em>${escapeHtml(external403104 ? "Actif hors univers canonique Top 250 · lecture factuelle du snapshot public étendu uniquement." : atlasActionReasonForCoin(coin))}</em></span>
       </div>
-      <div class="atlas-help-market-action ${compared ? "is-remove" : "is-add"}">${compared ? `Sélectionné ${selection.indexOf(coin.id) + 1}/${selection.length} · clique la ${interactionSurface} ou appuie sur Entrée pour retirer` : `Non sélectionné · clique la ${interactionSurface} ou appuie sur Entrée pour ajouter · ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES}`}</div>`
+      <div class="atlas-help-market-action ${external403104 ? "" : (compared ? "is-remove" : "is-add")}">${external403104
+        ? "Hors Top 250 · observation + historique graphique à la demande · non injecté dans Oracle, Watchlist ou comparaison."
+        : (compared
+          ? `Sélectionné ${selection.indexOf(coin.id) + 1}/${selection.length} · clique la ${interactionSurface} ou appuie sur Entrée pour retirer`
+          : `Non sélectionné · clique la ${interactionSurface} ou appuie sur Entrée pour ajouter · ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES}`)}</div>`
   };
 }
 
@@ -44050,9 +44310,26 @@ async function fetchCoinGeckoChartDirect(c, days, options = {}) {
   const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(c.id)}/market_chart?vs_currency=eur&days=${encodeURIComponent(apiDays)}&precision=full`;
   const payload=await atlasFetchJson(url,{signal:options.signal,timeoutMs:Number(options.timeoutMs||ATLAS_CHART_DIRECT_TIMEOUT_MS)});
   const prices=atlasNormalizeChartPayload(payload), volumeSeries=atlasNormalizeVolumePayload(payload);
-  const integrity=atlasValidateChartSeries({c,days:period,prices,payload,sourceMode:"coingecko-direct"});
+  const external403105=atlasMarketHelpIsExternal403104(c);
+  const sourceMode403105=external403105?"coingecko-direct-extended-history":"coingecko-direct";
+  const integrity=atlasValidateChartSeries({c,days:period,prices,payload,sourceMode:sourceMode403105});
   if(!integrity.ok)throw new Error(`série CoinGecko refusée · ${integrity.reason}`);
-  return {series:prices,volumeSeries,source:"CoinGecko market_chart EUR · direct",blocked:false,kind:"coingecko-direct",sourceMode:"coingecko-direct",periodDays:period,apiDays,pointCount:prices.length,generatedAt:new Date(integrity.metrics.lastTimestamp).toISOString(),integrity};
+  return {
+    series:prices,
+    volumeSeries,
+    source:external403105
+      ?`CoinGecko market_chart EUR · historique externe ${atlasChartPeriodLabel(period)}`
+      :"CoinGecko market_chart EUR · direct",
+    blocked:false,
+    kind:sourceMode403105,
+    sourceMode:sourceMode403105,
+    periodDays:period,
+    apiDays,
+    pointCount:prices.length,
+    generatedAt:new Date(integrity.metrics.lastTimestamp).toISOString(),
+    integrity,
+    externalHistory403105:external403105
+  };
 }
 
 async function fetchChartSeries(c, days, options = {}) {
@@ -48556,7 +48833,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.103";
+const ATLAS_BUILD = "40.3.105";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -58243,3 +58520,52 @@ try{
     new_browser_direct_coingecko:false
   });
 }catch(_){}
+
+
+try {
+  globalThis.__AGENT_CRYPTO_CASCADE_403104__ = Object.freeze({
+    build: "40.3.104",
+    parent: "40.3.103",
+    mission: "bridge explicit out-of-Top250 row to existing native Fiche Crypto",
+    external_row_native_help_target: true,
+    native_fiche_template_reused: true,
+    duplicate_fiche_created: false,
+    top250_state_mutated: false,
+    external_comparison_added: false,
+    external_oracle_added: false,
+    external_watch_added: false,
+    external_alert_added: false,
+    external_source_dock_added: false,
+    fiche_positioning_changed: false,
+    target_top_hover_changed: false,
+    graph_fiche_changed: false,
+    window_manager_changed: false,
+    new_timer: false,
+    new_observer: false,
+    new_network_owner: false
+  });
+} catch (_) {}
+
+
+try {
+  globalThis.__AGENT_CRYPTO_CASCADE_403105__ = Object.freeze({
+    build: "40.3.105",
+    parent: "40.3.104",
+    mission: "external Market asset historical graph without Top250 promotion",
+    external_default_history_days: 365,
+    existing_chart_engine_reused: true,
+    existing_coingecko_market_chart_route_reused: true,
+    historical_values_invented: false,
+    top250_mutation: false,
+    comparison_injection: false,
+    oracle_injection: false,
+    watch_injection: false,
+    alert_injection: false,
+    fiche_surface_changed: false,
+    fiche_positioning_changed: false,
+    market_core_changed: false,
+    new_recurring_timer: false,
+    new_observer: false,
+    new_market_snapshot_network_owner: false
+  });
+} catch (_) {}
