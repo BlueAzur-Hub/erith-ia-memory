@@ -13658,14 +13658,31 @@ function atlasResumeMarketPulse() {
   state.marketPulse.paused = false;
   if (!state.auto?.enabled || !atlasPulseVisible()) return;
 
+  /* 40.3.59 — VISIBILITY RESUME WORK COALESCING LOCK.
+     A tab return is not a market event. Reuse still-fresh market/spot/chart
+     state instead of forcing three refresh families to wake together. The
+     canonical 5 min / 30 s / 5 min cadences remain authoritative. */
   if (!state.liveOk || !state.coins.length) {
-    setTimeout(() => void runLivecheck({ reason: "visibility-resume" }), 50);
+    setTimeout(() => void runLivecheck({ reason: "visibility-resume-missing-market" }), 80);
     return;
   }
 
-  setTimeout(() => void refreshMarketOnly({ force: true, reason: "visibility-resume" }), 50);
-  setTimeout(() => void atlasRefreshSpotBook({ force: true }), 1200);
-  setTimeout(() => void atlasMaybeRefreshHistoricalChart(), 2600);
+  const snapshotAt = Date.parse(state.timestamp || state.sourceLock?.timestamp || "");
+  const marketReference = Math.max(
+    Number(state.marketPulse.lastMarketSuccessAt || 0),
+    Number.isFinite(snapshotAt) ? snapshotAt : 0
+  );
+  const marketAgeMs = marketReference > 0 ? Math.max(0, Date.now() - marketReference) : Infinity;
+
+  if (marketAgeMs >= ATLAS_MARKET_REFRESH_MS) {
+    setTimeout(() => void refreshMarketOnly({ reason: "visibility-resume-stale-market" }), 120);
+  } else {
+    scheduleAutoRead(Math.max(1000, ATLAS_MARKET_REFRESH_MS - marketAgeMs));
+  }
+
+  // Both owners already implement their own freshness gates when force=false.
+  setTimeout(() => void atlasRefreshSpotBook({ force: false }), 900);
+  setTimeout(() => void atlasMaybeRefreshHistoricalChart({ force: false }), 1800);
 }
 
 function atlasInitMarketPulseController() {
@@ -24925,7 +24942,7 @@ function atlasAnalyticalTruthInit() {
 
   window.addEventListener("online", () => atlasAnalyticalTruthSchedule(500));
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") atlasAnalyticalTruthSchedule(500);
+    if (document.visibilityState === "visible") atlasAnalyticalTruthRender();
   });
 
   /* 40.3.50 — OPERATOR INTERACTION SNAPSHOT DECOUPLING LOCK.
@@ -24935,7 +24952,8 @@ function atlasAnalyticalTruthInit() {
      delayed 700 ms full-page snapshot + SHA-256 rebuild that could seize Firefox
      immediately after ordinary operator interactions. No new timer/observer. */
 
-  atlasAnalyticalTruthSchedule(2200);
+  /* 40.3.59: no autonomous full analytical snapshot at boot. Explicit market,
+     chart and CURRENT/report transaction owners remain the only builders. */
   return true;
 }
 
@@ -44296,7 +44314,11 @@ function renderAutoReader(snapshot = null, previous = null) {
 
     const intelligence = atlasProductWatchlistIntelligence();
     const reaction = atlasProductNewsReaction();
-    const autoSnapshot = atlasBuildCryptoPageSnapshot();
+    /* 40.3.59: Auto Reader is a presentation owner. Rendering it must never
+       create a transactional Atlas snapshot merely because the tab returns,
+       a countdown ticks or a compact panel rerenders. Read the last snapshot
+       already produced by an explicit analytical owner instead. */
+    const autoSnapshot = atlasLocalDialogueState?.lastSnapshot || atlasLocalReportsState?.lastCompletedSnapshot || null;
     const historyCompare = atlasHistoryV2Compare(autoSnapshot);
     const rcRuntime = atlasRcRuntimeAudit(autoSnapshot);
 
@@ -46249,13 +46271,24 @@ function atlasScannerCollectorInit() {
     void atlasScannerCollectorFetchLatest({ silent: true });
   });
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") {
-      atlasScannerCollectorCapture("visibility-resume", { forceFlush: true });
+    if (document.visibilityState !== "visible") return;
+    const now = Date.now();
+    const captureAge = now - Number(atlasScannerCollectorRuntime.lastSavedAt || 0);
+    const latestAge = now - Number(atlasScannerCollectorRuntime.latestBridgeReadAt || 0);
+    const heavyBootBusy = !!state.auto?.livecheckBusy || !!state.chartEngineV2?.loading || !!atlasLocalReportsState?.running;
+    if (!heavyBootBusy && captureAge >= ATLAS_SCANNER_COLLECTOR_INTERVAL_MS) {
+      atlasScannerCollectorCapture("visibility-resume");
+    }
+    if (!heavyBootBusy && latestAge >= ATLAS_SCANNER_COLLECTOR_INTERVAL_MS) {
       void atlasScannerCollectorFetchLatest({ silent: true });
     }
   });
-  window.setTimeout(() => void atlasScannerCollectorFetchLatest({ silent: true }), 1800);
-  window.setTimeout(() => atlasScannerCollectorCapture("startup", { forceFlush: true }), 5000);
+  window.setTimeout(() => {
+    if (!state.auto?.livecheckBusy && !state.chartEngineV2?.loading) void atlasScannerCollectorFetchLatest({ silent: true });
+  }, 1800);
+  window.setTimeout(() => {
+    if (!state.auto?.livecheckBusy && !state.chartEngineV2?.loading) atlasScannerCollectorCapture("startup");
+  }, 5000);
 }
 
 const ATLAS_SOURCE_TRUTH_SCHEMA = "agent_crypto_source_truth_v2";
@@ -46682,7 +46715,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.58";
+const ATLAS_BUILD = "40.3.59";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -48321,12 +48354,13 @@ els.sourceDockPortals?.addEventListener("click", event => {
 });
 
 document.addEventListener("visibilitychange", () => {
-  renderAutoReader();
-  renderMemoryTruth();
   if (document.hidden) {
+    atlasRenderAutoTruthLive();
     atlasSourceDockClearRetryTimer();
     return;
   }
+  // renderAutoReader() already owns renderMemoryTruth(); do not render it twice.
+  renderAutoReader();
   const coin = getSelectedCoin() || null;
   if (!coin || state.sourceDock.activeCoinId !== coin.id) return;
   if (atlasSourceDockRetryRemaining(coin.id) <= 0 && state.sourceDock.failures?.[coin.id]) {
