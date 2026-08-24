@@ -15192,6 +15192,241 @@ try {
   });
 } catch (_) {}
 
+
+
+/* ============================================================
+   40.3.100 — MARKET EXTENDED EXACT LOOKUP
+
+   Canonical Market remains Top 250.
+   Network lookup happens ONLY after explicit Enter in Market search and ONLY
+   when no exact ticker/name/id exists in the loaded Top 250.
+
+   Result stays outside state.coins:
+   - no Top 250 mutation
+   - no comparison basket mutation
+   - no Oracle/Math/Watchlist mutation
+   - no polling
+   - no storage write
+   ============================================================ */
+const atlasMarketExternal403100 = {
+  query: "",
+  status: "idle",
+  result: null,
+  error: "",
+  controller: null,
+  requestId: 0,
+  completedAt: null
+};
+
+function atlasMarketExactTop250403100(rawQuery) {
+  const q = String(rawQuery || "").trim().toLowerCase();
+  if (!q) return null;
+  return (state.coins || []).find(coin =>
+    String(coin?.symbol || "").trim().toLowerCase() === q
+    || String(coin?.name || "").trim().toLowerCase() === q
+    || String(coin?.id || "").trim().toLowerCase() === q
+  ) || null;
+}
+
+function atlasMarketExternalReset403100(nextQuery = "") {
+  try { atlasMarketExternal403100.controller?.abort?.(); } catch (_) {}
+  atlasMarketExternal403100.controller = null;
+  atlasMarketExternal403100.query = String(nextQuery || "").trim();
+  atlasMarketExternal403100.status = "idle";
+  atlasMarketExternal403100.result = null;
+  atlasMarketExternal403100.error = "";
+  atlasMarketExternal403100.completedAt = null;
+}
+
+function atlasMarketExternalCandidate403100(payload, rawQuery) {
+  const q = String(rawQuery || "").trim().toLowerCase();
+  const rows = Array.isArray(payload?.coins) ? payload.coins : [];
+  if (!q || !rows.length) return null;
+
+  const score = coin => {
+    const symbol = String(coin?.symbol || coin?.api_symbol || "").trim().toLowerCase();
+    const name = String(coin?.name || "").trim().toLowerCase();
+    const id = String(coin?.id || "").trim().toLowerCase();
+    if (symbol === q) return 0;
+    if (name === q || id === q) return 1;
+    if (symbol.startsWith(q)) return 2;
+    if (name.startsWith(q) || id.startsWith(q)) return 3;
+    return 9;
+  };
+
+  return rows
+    .map((coin, index) => ({ coin, index, tier: score(coin) }))
+    .sort((a, b) => a.tier - b.tier || a.index - b.index)[0]?.coin || null;
+}
+
+function atlasMarketExternalNormalize403100(searchCoin, marketCoin) {
+  if (!searchCoin?.id || !marketCoin) return null;
+  const rank = Number(marketCoin.market_cap_rank ?? searchCoin.market_cap_rank);
+  const priceEur = Number(marketCoin.current_price);
+  if (!Number.isFinite(priceEur) || priceEur <= 0) return null;
+  const timestamp = Number.isFinite(Date.parse(marketCoin.last_updated || ""))
+    ? marketCoin.last_updated
+    : new Date().toISOString();
+
+  return {
+    id: String(searchCoin.id),
+    rank: Number.isFinite(rank) ? rank : null,
+    name: String(marketCoin.name || searchCoin.name || searchCoin.id),
+    symbol: String(marketCoin.symbol || searchCoin.symbol || searchCoin.api_symbol || "").toUpperCase(),
+    image: marketCoin.image || searchCoin.large || searchCoin.thumb || "",
+    price: priceEur,
+    priceEur,
+    priceUsd: null,
+    change24h: Number.isFinite(Number(marketCoin.price_change_percentage_24h_in_currency ?? marketCoin.price_change_percentage_24h))
+      ? Number(marketCoin.price_change_percentage_24h_in_currency ?? marketCoin.price_change_percentage_24h)
+      : null,
+    change7d: Number.isFinite(Number(marketCoin.price_change_percentage_7d_in_currency))
+      ? Number(marketCoin.price_change_percentage_7d_in_currency)
+      : null,
+    change30d: Number.isFinite(Number(marketCoin.price_change_percentage_30d_in_currency))
+      ? Number(marketCoin.price_change_percentage_30d_in_currency)
+      : null,
+    marketCap: Number.isFinite(Number(marketCoin.market_cap)) ? Number(marketCoin.market_cap) : null,
+    volume24h: Number.isFinite(Number(marketCoin.total_volume)) ? Number(marketCoin.total_volume) : null,
+    lastUpdated: timestamp,
+    source: "CoinGecko extended lookup",
+    sourceMode: "explicit-outside-top250",
+    externalLookup403100: true
+  };
+}
+
+async function atlasMarketExtendedLookup403100(rawQuery) {
+  const q = String(rawQuery || "").trim();
+  if (q.length < 2) return null;
+
+  const exactLocal = atlasMarketExactTop250403100(q);
+  if (exactLocal) {
+    atlasMarketExternalReset403100(q);
+    atlasMarketExternal403100.status = "inside-top250";
+    renderMarketTable();
+    return exactLocal;
+  }
+
+  try { atlasMarketExternal403100.controller?.abort?.(); } catch (_) {}
+  const controller = new AbortController();
+  const requestId = ++atlasMarketExternal403100.requestId;
+  atlasMarketExternal403100.controller = controller;
+  atlasMarketExternal403100.query = q;
+  atlasMarketExternal403100.status = "searching";
+  atlasMarketExternal403100.result = null;
+  atlasMarketExternal403100.error = "";
+  renderMarketTable();
+
+  try {
+    const searchPayload = await fetchJsonWithRetry(
+      `https://api.coingecko.com/api/v3/search?query=${encodeURIComponent(q)}`,
+      { signal: controller.signal, networkKind: "source" },
+      10000,
+      0
+    );
+    if (requestId !== atlasMarketExternal403100.requestId) return null;
+
+    const candidate = atlasMarketExternalCandidate403100(searchPayload, q);
+    if (!candidate?.id) throw new Error("aucun actif CoinGecko correspondant");
+
+    const marketPayload = await fetchJsonWithRetry(
+      `https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&ids=${encodeURIComponent(candidate.id)}&sparkline=false&locale=fr&precision=full&price_change_percentage=24h,7d,30d`,
+      { signal: controller.signal, networkKind: "market" },
+      12000,
+      0
+    );
+    if (requestId !== atlasMarketExternal403100.requestId) return null;
+
+    const marketCoin = Array.isArray(marketPayload) ? marketPayload[0] : null;
+    const normalized = atlasMarketExternalNormalize403100(candidate, marketCoin);
+    if (!normalized) throw new Error("données marché CoinGecko incomplètes");
+
+    atlasMarketExternal403100.status = "ready";
+    atlasMarketExternal403100.result = normalized;
+    atlasMarketExternal403100.error = "";
+    atlasMarketExternal403100.completedAt = new Date().toISOString();
+    renderMarketTable();
+    return normalized;
+  } catch (error) {
+    if (error?.name === "AbortError") return null;
+    if (requestId !== atlasMarketExternal403100.requestId) return null;
+    atlasMarketExternal403100.status = "error";
+    atlasMarketExternal403100.result = null;
+    atlasMarketExternal403100.error = String(error?.message || error || "recherche étendue indisponible");
+    atlasMarketExternal403100.completedAt = new Date().toISOString();
+    renderMarketTable();
+    return null;
+  } finally {
+    if (requestId === atlasMarketExternal403100.requestId) atlasMarketExternal403100.controller = null;
+  }
+}
+
+function atlasMarketExternalTruth403100(rawQuery) {
+  const q = String(rawQuery || "").trim();
+  if (!q || atlasMarketExternal403100.query.toLowerCase() !== q.toLowerCase()) {
+    return atlasMarketExactTop250403100(q)
+      ? ""
+      : (q ? "Entrée : recherche exacte hors Top 250" : "");
+  }
+  if (atlasMarketExternal403100.status === "searching") return `recherche hors Top 250 ${q.toUpperCase()} en cours`;
+  if (atlasMarketExternal403100.status === "ready" && atlasMarketExternal403100.result) {
+    const coin = atlasMarketExternal403100.result;
+    return `${coin.symbol} trouvé hors Top 250 · rang ${coin.rank ?? "—"} · CoinGecko`;
+  }
+  if (atlasMarketExternal403100.status === "error") {
+    return `recherche hors Top 250 : ${atlasMarketExternal403100.error || "indisponible"}`;
+  }
+  return atlasMarketExactTop250403100(q) ? "" : "Entrée : recherche exacte hors Top 250";
+}
+
+function atlasMarketExternalRowMarkup403100(rawQuery) {
+  const q = String(rawQuery || "").trim();
+  if (!q || atlasMarketExternal403100.query.toLowerCase() !== q.toLowerCase()) return "";
+
+  if (atlasMarketExternal403100.status === "searching") {
+    return `<tr class="asset-row"><td colspan="11" class="empty">Recherche exacte hors Top 250 · ${escapeHtml(q.toUpperCase())} · CoinGecko…</td></tr>`;
+  }
+
+  const c = atlasMarketExternal403100.result;
+  if (atlasMarketExternal403100.status !== "ready" || !c) return "";
+
+  const rankLabel = Number.isFinite(Number(c.rank)) ? String(c.rank) : "—";
+  const price = atlasFormatEUR(c.priceEur);
+  const cg = `https://www.coingecko.com/fr/coins/${encodeURIComponent(c.id)}`;
+  const image = c.image ? `<img src="${escapeHtml(c.image)}" alt="" loading="lazy">` : "";
+  const move24 = Number.isFinite(Number(c.change24h)) ? fmtPct(c.change24h) : "—";
+  const move7 = Number.isFinite(Number(c.change7d)) ? fmtPct(c.change7d) : "—";
+
+  return `<tr class="asset-row" data-market-external403100="${escapeHtml(c.id)}">
+    <td>${escapeHtml(rankLabel)}</td>
+    <td><div class="coin-cell"><i class="market-identity-rail"></i>${image}<div><strong class="market-coin-name">${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">Hors Top 250</span></div></div></td>
+    <td><div class="price-dual"><strong>${escapeHtml(price)}</strong><small>CoinGecko · recherche explicite</small></div></td>
+    <td class="${clsPct(c.change24h)}"><span class="market-move-pill ${clsPct(c.change24h)}">${escapeHtml(move24)}</span></td>
+    <td class="${clsPct(c.change7d)}">${escapeHtml(move7)}</td>
+    <td class="market-col-advanced">${escapeHtml(atlasFormatMarketCapEUR(c.marketCap))}</td>
+    <td class="market-col-advanced">${escapeHtml(num(c.volume24h, fmtCompactEUR.format.bind(fmtCompactEUR)))}</td>
+    <td class="spark-cell"><small>EXTERNE</small></td>
+    <td class="market-col-advanced">—</td>
+    <td class="market-col-advanced">Observer</td>
+    <td><div class="market-row-actions"><a href="${escapeHtml(cg)}" target="_blank" rel="noopener noreferrer">CoinGecko ↗</a></div></td>
+  </tr>`;
+}
+
+globalThis.AtlasMarketExtendedLookup403100 = Object.freeze({
+  build: "40.3.100",
+  search: atlasMarketExtendedLookup403100,
+  state: () => ({
+    query: atlasMarketExternal403100.query,
+    status: atlasMarketExternal403100.status,
+    result: atlasMarketExternal403100.result ? { ...atlasMarketExternal403100.result } : null,
+    error: atlasMarketExternal403100.error
+  }),
+  explicit_enter_only: true,
+  top250_mutation: false,
+  polling: false,
+  storage_write: false
+});
+
 function atlasMarketRowsForCurrentView() {
   const query = (els.searchInput?.value || "").trim();
   const filtered = state.coins
@@ -16409,11 +16644,15 @@ function renderMarketTable() {
   );
   const limit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.marketVisibleLimit)) ? Number(state.marketVisibleLimit) : 50;
   const rows = filtered.slice(0, limit);
-  if (!rows.length) { renderEmptyMarket("Aucun actif ne correspond au filtre."); return; }
+  const externalRow403100 = atlasMarketExternalRowMarkup403100(q);
+  if (!rows.length && !externalRow403100) {
+    renderEmptyMarket(q ? "Aucun actif Top 250 ne correspond · appuie sur Entrée pour une recherche exacte hors Top 250." : "Aucun actif ne correspond au filtre.");
+    return;
+  }
 
   const selection = atlasComparisonIds();
   const profiles = atlasWatchReadProfiles();
-  els.marketRows.innerHTML = rows.map(c => {
+  els.marketRows.innerHTML = externalRow403100 + rows.map(c => {
     const s = scoreCoin(c);
     const compared = selection.includes(c.id);
     const primary = c.id === state.selectedCoinId && compared;
@@ -16435,9 +16674,11 @@ function renderMarketTable() {
     : null;
   const primaryLabel = primaryCoin ? `${primaryCoin.symbol} principal` : "aucune sélection";
   const searchTruth40398 = atlasMarketSearchTruth40398(q);
+  const externalTruth403100 = atlasMarketExternalTruth403100(q);
+  const searchTruthCombined403100 = [searchTruth40398, externalTruth403100].filter(Boolean).join(" · ");
   const note = essential
-    ? `${rows.length}/${filtered.length} affichés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · ${atlasMarketFrameShortId()} · ${state.mainSource} · ${updated}${searchTruth40398 ? ` · ${searchTruth40398}` : ""}`
-    : `${rows.length}/${filtered.length} affichés · univers ${state.coins.length}/250 validés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · colonnes ${state.chartViewV2.marketColumns === 'complete' ? 'complètes' : 'essentielles'} · filtre ${state.assetFilter} · tri ${state.sortKey} · ${updated}${searchTruth40398 ? ` · ${searchTruth40398}` : ""}`;
+    ? `${rows.length}/${filtered.length} affichés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · ${atlasMarketFrameShortId()} · ${state.mainSource} · ${updated}${searchTruthCombined403100 ? ` · ${searchTruthCombined403100}` : ""}`
+    : `${rows.length}/${filtered.length} affichés · univers ${state.coins.length}/250 validés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · colonnes ${state.chartViewV2.marketColumns === 'complete' ? 'complètes' : 'essentielles'} · filtre ${state.assetFilter} · tri ${state.sortKey} · ${updated}${searchTruthCombined403100 ? ` · ${searchTruthCombined403100}` : ""}`;
   setText(els.tableNote, note);
 
   [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => {
@@ -23574,6 +23815,94 @@ function atlasLocalReportsSetBusy(busy) {
     if (!busy) button.removeAttribute("data-was-disabled");
   });
 }
+
+
+
+/* ============================================================
+   40.3.100 — ATLAS ACTIVITY DOM CHURN LOCK
+
+   Operator observation:
+   "activité Atlas = ralentissements" can be normal compute pressure, but
+   repeated identical UI writes must not add avoidable style/layout work.
+
+   This layer does NOT throttle analysis, Ollama, reports, Market or Oracle.
+   It only suppresses duplicate presentation writes for:
+   - progress card
+   - suite status
+   - busy/disabled controls
+
+   No timer, observer, scheduler or network owner is added.
+   ============================================================ */
+const atlasActivityChurnState403100 = {
+  progressSignature: "",
+  suiteSignature: "",
+  busySignature: "",
+  progressCalls: 0,
+  progressSuppressed: 0,
+  suiteCalls: 0,
+  suiteSuppressed: 0,
+  busyCalls: 0,
+  busySuppressed: 0
+};
+
+const atlasAnalysisProgressRender403100Base = atlasAnalysisProgressRender;
+atlasAnalysisProgressRender = function atlasAnalysisProgressRender403100(completed = 0, phase = "idle", message = "") {
+  atlasActivityChurnState403100.progressCalls += 1;
+  const signature = JSON.stringify([
+    Math.max(0, Math.min(4, Number(completed) || 0)),
+    String(phase || "idle"),
+    String(message || ""),
+    typeof atlasDeviceComputeAllowed === "function" ? atlasDeviceComputeAllowed() : true
+  ]);
+  if (signature === atlasActivityChurnState403100.progressSignature) {
+    atlasActivityChurnState403100.progressSuppressed += 1;
+    return true;
+  }
+  atlasActivityChurnState403100.progressSignature = signature;
+  return atlasAnalysisProgressRender403100Base(completed, phase, message);
+};
+
+const atlasLocalReportsSetSuiteStatus403100Base = atlasLocalReportsSetSuiteStatus;
+atlasLocalReportsSetSuiteStatus = function atlasLocalReportsSetSuiteStatus403100(message, tone = "idle") {
+  atlasActivityChurnState403100.suiteCalls += 1;
+  const signature = `${String(tone || "idle")}::${String(message || "")}`;
+  if (signature === atlasActivityChurnState403100.suiteSignature) {
+    atlasActivityChurnState403100.suiteSuppressed += 1;
+    return true;
+  }
+  atlasActivityChurnState403100.suiteSignature = signature;
+  return atlasLocalReportsSetSuiteStatus403100Base(message, tone);
+};
+
+const atlasLocalReportsSetBusy403100Base = atlasLocalReportsSetBusy;
+atlasLocalReportsSetBusy = function atlasLocalReportsSetBusy403100(busy) {
+  atlasActivityChurnState403100.busyCalls += 1;
+  const computeAllowed = typeof atlasDeviceComputeAllowed === "function"
+    ? atlasDeviceComputeAllowed()
+    : true;
+  const signature = `${busy ? "1" : "0"}::${computeAllowed ? "compute" : "observer"}`;
+  if (signature === atlasActivityChurnState403100.busySignature) {
+    atlasActivityChurnState403100.busySuppressed += 1;
+    return true;
+  }
+  atlasActivityChurnState403100.busySignature = signature;
+  const result = atlasLocalReportsSetBusy403100Base(busy);
+  try {
+    document.body.dataset.atlasActivity403100 = busy ? "running" : "rest";
+  } catch (_) {}
+  return result;
+};
+
+globalThis.AtlasActivityChurn403100 = Object.freeze({
+  build: "40.3.100",
+  state: () => ({ ...atlasActivityChurnState403100 }),
+  analysis_compute_changed: false,
+  report_order_changed: false,
+  bridge_changed: false,
+  recurring_timer: false,
+  observer: false,
+  scheduler: false
+});
 
 function atlasLocalReportsValidSnapshot(snapshot) {
   return atlasLocalReportsReadiness(snapshot).ready;
@@ -47885,7 +48214,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.99";
+const ATLAS_BUILD = "40.3.100";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -49384,7 +49713,25 @@ $("btnAnalyzeNews")?.addEventListener("click", analyzeNews);
 
 $("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
 
-els.searchInput?.addEventListener("input", renderMarketTable);
+els.searchInput?.addEventListener("input", () => {
+  const q = String(els.searchInput?.value || "").trim();
+  if (atlasMarketExternal403100.query && atlasMarketExternal403100.query.toLowerCase() !== q.toLowerCase()) {
+    atlasMarketExternalReset403100(q);
+  }
+  renderMarketTable();
+});
+els.searchInput?.addEventListener("keydown", event => {
+  if (event.key !== "Enter") return;
+  const q = String(els.searchInput?.value || "").trim();
+  if (!q) return;
+  if (atlasMarketExactTop250403100(q)) {
+    atlasMarketExternalReset403100(q);
+    renderMarketTable();
+    return;
+  }
+  event.preventDefault();
+  void atlasMarketExtendedLookup403100(q);
+});
 
 document.querySelectorAll(".filter-btn[data-filter]").forEach(btn => { btn.addEventListener("click", () => { state.assetFilter = btn.dataset.filter || "all"; document.querySelectorAll(".filter-btn[data-filter]").forEach(b => b.classList.toggle("active", b === btn)); renderMarketTable(); });
 });
@@ -51717,6 +52064,18 @@ const ATLAS_CURRENT_JOURNAL_BODY_TEMPLATE_40352 = `
   <div class="atlas-current-journal-33-list" id="atlasCurrentJournal33List" aria-live="polite">
     <p class="atlas-local-response-empty">Chargement de l’index CURRENT…</p>
   </div>
+  <section class="atlas-current-journal-detail-35" id="atlasAetherAnalyticalMemory403100" aria-live="polite">
+    <div class="atlas-current-journal-detail-35-head">
+      <div>
+        <span class="eyebrow">AETHER ANALYTICAL MEMORY · DELTA V1</span>
+        <b id="atlasAetherAnalyticalMemoryTitle403100">En attente de deux CURRENT</b>
+        <small id="atlasAetherAnalyticalMemoryMeta403100">Lecture dérivée du Journal CURRENT existant · aucune nouvelle base.</small>
+      </div>
+    </div>
+    <div class="atlas-current-journal-detail-35-body" id="atlasAetherAnalyticalMemoryBody403100">
+      <p>Deux cycles CURRENT vérifiés permettent de comparer ce qui change et ce qui se répète.</p>
+    </div>
+  </section>
   <section class="atlas-current-journal-detail-35" id="atlasCurrentJournalDetail35" hidden aria-live="polite">
     <div class="atlas-current-journal-detail-35-head">
       <div><span class="eyebrow">ARCHIVE CURRENT · LECTURE SEULE</span><b id="atlasCurrentJournalDetailTitle35">CURRENT</b><small id="atlasCurrentJournalDetailMeta35">Sélectionne un CURRENT du journal.</small></div>
@@ -55537,6 +55896,154 @@ atlasCurrentJournalRender33 = function atlasCurrentJournalRender3815() {
 
 
 /* ============================================================
+   40.3.100 — AETHER ANALYTICAL MEMORY · DELTA V1
+
+   Reuses the existing append-only CURRENT Journal (max 30).
+   No new DB/store/key/timer/model call is created.
+
+   Aether reads the two latest CURRENT witnesses and produces a deterministic
+   comparison:
+   - cycle/fingerprint continuity
+   - Top 5 additions/removals
+   - 24h movement changes where frozen values exist
+   - source direct/derived count changes
+   Human remains final authority.
+   ============================================================ */
+function atlasAetherAnalyticalAssets403100(row) {
+  const assets = row?.canonical_target_assets_3815
+    || row?.canonical_target_assets_3814
+    || [];
+  return Array.isArray(assets) ? assets.filter(Boolean).slice(0, 5) : [];
+}
+
+function atlasAetherAnalyticalDelta403100(records = atlasCurrentJournalRead33()) {
+  const rows = (Array.isArray(records) ? records : [])
+    .filter(row => row?.fingerprint)
+    .slice()
+    .sort((a, b) => Date.parse(a?.completed_at || 0) - Date.parse(b?.completed_at || 0));
+
+  const current = rows.at(-1) || null;
+  const previous = rows.at(-2) || null;
+
+  if (!current || !previous) {
+    return {
+      ready: false,
+      count: rows.length,
+      current,
+      previous,
+      summary: rows.length
+        ? "Un CURRENT existe. Le premier delta sera disponible au prochain CURRENT vérifié."
+        : "Aucun CURRENT vérifié à comparer."
+    };
+  }
+
+  const currentAssets = atlasAetherAnalyticalAssets403100(current);
+  const previousAssets = atlasAetherAnalyticalAssets403100(previous);
+  const currentMap = new Map(currentAssets.map(asset => [String(asset?.symbol || "").toUpperCase(), asset]).filter(([symbol]) => symbol));
+  const previousMap = new Map(previousAssets.map(asset => [String(asset?.symbol || "").toUpperCase(), asset]).filter(([symbol]) => symbol));
+
+  const added = [...currentMap.keys()].filter(symbol => !previousMap.has(symbol));
+  const removed = [...previousMap.keys()].filter(symbol => !currentMap.has(symbol));
+  const shared = [...currentMap.keys()].filter(symbol => previousMap.has(symbol));
+
+  const moves = shared.map(symbol => {
+    const before = Number(previousMap.get(symbol)?.change_24h_pct);
+    const after = Number(currentMap.get(symbol)?.change_24h_pct);
+    if (!Number.isFinite(before) || !Number.isFinite(after)) return null;
+    return { symbol, before, after, delta: after - before };
+  }).filter(Boolean);
+
+  const strongest = moves.slice().sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))[0] || null;
+  const sameTop5 = added.length === 0 && removed.length === 0 && currentMap.size >= 5 && previousMap.size >= 5;
+
+  const directDelta = Number(current.direct_count || 0) - Number(previous.direct_count || 0);
+  const derivedDelta = Number(current.derived_count || 0) - Number(previous.derived_count || 0);
+
+  const parts = [];
+  parts.push(sameTop5
+    ? "Top 5 stable entre les deux CURRENT."
+    : `Top 5 modifié${added.length ? ` · + ${added.join(", ")}` : ""}${removed.length ? ` · − ${removed.join(", ")}` : ""}.`);
+  if (strongest) {
+    parts.push(`Plus fort changement 24 h mémorisé : ${strongest.symbol} ${strongest.before >= 0 ? "+" : ""}${strongest.before.toFixed(2)} % → ${strongest.after >= 0 ? "+" : ""}${strongest.after.toFixed(2)} % (${strongest.delta >= 0 ? "+" : ""}${strongest.delta.toFixed(2)} pt).`);
+  }
+  if (directDelta || derivedDelta) {
+    parts.push(`Couverture Binance : directes ${directDelta >= 0 ? "+" : ""}${directDelta} · dérivées ${derivedDelta >= 0 ? "+" : ""}${derivedDelta}.`);
+  } else {
+    parts.push(`Couverture Binance stable : ${Number(current.direct_count || 0)}/5 directes · ${Number(current.derived_count || 0)} dérivée(s).`);
+  }
+
+  return {
+    ready: true,
+    count: rows.length,
+    current,
+    previous,
+    added,
+    removed,
+    shared,
+    moves,
+    strongest,
+    sameTop5,
+    directDelta,
+    derivedDelta,
+    summary: parts.join(" ")
+  };
+}
+
+function atlasAetherAnalyticalMemoryRender403100(records = atlasCurrentJournalRead33()) {
+  const title = document.getElementById("atlasAetherAnalyticalMemoryTitle403100");
+  const meta = document.getElementById("atlasAetherAnalyticalMemoryMeta403100");
+  const body = document.getElementById("atlasAetherAnalyticalMemoryBody403100");
+  if (!title || !meta || !body) return null;
+
+  const delta = atlasAetherAnalyticalDelta403100(records);
+  if (!delta.ready) {
+    atlasSetText40399(title, "En attente de deux CURRENT");
+    atlasSetText40399(meta, `Journal CURRENT : ${delta.count}/2 minimum · aucune donnée ancienne fabriquée.`);
+    body.innerHTML = `<p>${escapeHtml(delta.summary)}</p>`;
+    return delta;
+  }
+
+  const currentAt = delta.current?.completed_at ? new Date(delta.current.completed_at).toLocaleString("fr-FR") : "date inconnue";
+  const previousAt = delta.previous?.completed_at ? new Date(delta.previous.completed_at).toLocaleString("fr-FR") : "date inconnue";
+  atlasSetText40399(title, `CURRENT #${delta.count} ↔ #${delta.count - 1}`);
+  atlasSetText40399(meta, `${previousAt} → ${currentAt} · lecture comparative déterministe · humain décide`);
+  body.innerHTML = `
+    <p>${escapeHtml(delta.summary)}</p>
+    <div class="atlas-current-journal-detail-35-grid">
+      <article><span>Répétition</span><b>${delta.sameTop5 ? "Top 5 stable" : "Top 5 différent"}</b><small>${escapeHtml(delta.shared.length ? delta.shared.join(" · ") : "Aucun actif commun figé")}</small></article>
+      <article><span>Entrées</span><b>${escapeHtml(delta.added.length ? delta.added.join(" · ") : "Aucune")}</b><small>Actifs nouveaux dans le Top 5 CURRENT.</small></article>
+      <article><span>Sorties</span><b>${escapeHtml(delta.removed.length ? delta.removed.join(" · ") : "Aucune")}</b><small>Actifs absents du CURRENT suivant.</small></article>
+      <article><span>Provenance</span><b>${Number(delta.current?.direct_count || 0)}/5 directes</b><small>Fingerprint ${escapeHtml(String(delta.current?.fingerprint || "").slice(0, 18))}…</small></article>
+    </div>`;
+  return delta;
+}
+
+const atlasCurrentJournalRender403100Base = atlasCurrentJournalRender33;
+atlasCurrentJournalRender33 = function atlasCurrentJournalRender403100() {
+  const records = atlasCurrentJournalRender403100Base();
+  try { atlasAetherAnalyticalMemoryRender403100(records); } catch (_) {}
+  return records;
+};
+
+document.addEventListener("agentcrypto:current-finalized", () => {
+  queueMicrotask(() => {
+    try { atlasAetherAnalyticalMemoryRender403100(); } catch (_) {}
+  });
+});
+
+globalThis.AtlasAetherAnalyticalMemory403100 = Object.freeze({
+  build: "40.3.100",
+  compute: atlasAetherAnalyticalDelta403100,
+  render: atlasAetherAnalyticalMemoryRender403100,
+  source: "existing append-only CURRENT Journal",
+  storage_added: false,
+  model_call_added: false,
+  financial_action: false,
+  human_final_authority: true
+});
+
+
+/* ============================================================
    38.15.5 — CLASSIC STABILITY FREEZE
 
    Goal: keep the Classic interface and its data contracts intact while removing
@@ -56853,5 +57360,34 @@ try {
     new_timer: false,
     new_observer: false,
     new_network_owner: false
+  });
+} catch (_) {}
+
+
+try {
+  globalThis.__AGENT_CRYPTO_CASCADE_403100__ = Object.freeze({
+    build: "40.3.100",
+    parent: "40.3.99",
+    batch: 1,
+    advances: Object.freeze([
+      "Atlas Activity duplicate presentation writes suppressed",
+      "Market exact out-of-Top250 lookup on explicit Enter",
+      "Aether Analytical Memory Delta V1 from existing append-only CURRENT Journal"
+    ]),
+    inherited: Object.freeze([
+      "40.3.96 SAFE PAINT",
+      "40.3.97 visibility resume serialization",
+      "40.3.98 paint-floor/semantic return/cold boot/exact search",
+      "40.3.99 Intermediate first-paint parity"
+    ]),
+    fiche_crypto_changed: false,
+    target_top_hover_changed: false,
+    graph_fiche_changed: false,
+    market_top250_changed: false,
+    oracle_math_changed: false,
+    window_manager_changed: false,
+    images_changed: false,
+    new_recurring_timer: false,
+    new_observer: false
   });
 } catch (_) {}
