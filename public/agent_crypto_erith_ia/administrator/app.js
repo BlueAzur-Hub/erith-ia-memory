@@ -7216,6 +7216,7 @@ function atlasOracleEvidenceOpen() {
    the existing retained snapshot actually useful instead of repeatedly rescanning
    ~28 Mio of Evidence after every short reuse window / local write. */
 const ATLAS_ORACLE_EVIDENCE_READ_CACHE_MS_40215 = 15000;
+const ATLAS_ORACLE_OUTCOME_KEYS_403108=Object.freeze(["1m","5m","15m"]);
 const atlasOracleEvidenceReadCache40215 = {
   rows:null,
   index_by_id:new Map(),
@@ -7228,22 +7229,116 @@ const atlasOracleEvidenceReadCache40215 = {
   incremental_deletes_403101:0,
   summary_count_403103:0,
   summary_last_at_403103:0,
-  status_fast_hits_403103:0
+  status_fast_hits_403103:0,
+
+  // 40.3.107 cold-status authority.
+  summary_valid_403107:false,
+  summary_source_403107:"none",
+  cold_status_reads_403107:0,
+
+  // 40.3.108 pending-outcome authority.
+  pending_ids_403108:new Set(),
+  outcome_resolved_403108:0,
+  outcome_pending_403108:0,
+  outcome_summary_valid_403108:false,
+  outcome_runs_403108:0,
+  outcome_rows_scanned_403108:0,
+  outcome_idle_refreshes_skipped_403108:0
 };
+
+
+
+function atlasOracleOutcomeRowCounts403108(row){
+  let resolved=0,pending=0;
+  for(const key of ATLAS_ORACLE_OUTCOME_KEYS_403108){
+    if(row?.outcomes?.[key])resolved+=1;
+    else pending+=1;
+  }
+  return {resolved,pending};
+}
+
+async function atlasOracleEvidenceColdSummary403107(){
+  const c=atlasOracleEvidenceReadCache40215;
+  const db=await atlasOracleEvidenceOpen();
+  const tx=db.transaction(ATLAS_ORACLE_EVIDENCE_STORE,"readonly");
+  const store=tx.objectStore(ATLAS_ORACLE_EVIDENCE_STORE);
+
+  const countPromise=new Promise((resolve,reject)=>{
+    const req=store.count();
+    req.onsuccess=()=>resolve(Number(req.result)||0);
+    req.onerror=()=>reject(req.error||new Error("Oracle Evidence count refusé"));
+  });
+
+  const lastPromise=new Promise((resolve,reject)=>{
+    let index=null;
+    try{index=store.index("t0");}
+    catch(error){reject(error);return;}
+    const req=index.openKeyCursor(null,"prev");
+    req.onsuccess=()=>{
+      const cursor=req.result;
+      resolve(cursor?Number(cursor.key||0):0);
+    };
+    req.onerror=()=>reject(req.error||new Error("Oracle Evidence dernier T0 refusé"));
+  });
+
+  const [count,lastAt]=await Promise.all([countPromise,lastPromise]);
+  c.summary_count_403103=count;
+  c.summary_last_at_403103=Number.isFinite(lastAt)&&lastAt>0?lastAt:0;
+  c.summary_valid_403107=true;
+  c.summary_source_403107="indexeddb-count+t0-key";
+  c.cold_status_reads_403107+=1;
+  return {count,lastAt:c.summary_last_at_403103};
+}
+
+function atlasOracleEvidencePendingRows403108(rows){
+  const source=Array.isArray(rows)?rows:[];
+  const c=atlasOracleEvidenceReadCache40215;
+  if(c.outcome_summary_valid_403108 && source===c.rows){
+    const out=[];
+    for(const id of c.pending_ids_403108){
+      const index=c.index_by_id.get(String(id));
+      if(Number.isInteger(index) && index>=0 && index<source.length){
+        const row=source[index];
+        if(row)out.push(row);
+      }
+    }
+    return out;
+  }
+  return source.filter(row=>ATLAS_ORACLE_OUTCOME_KEYS_403108.some(key=>!row?.outcomes?.[key]));
+}
 
 function atlasOracleEvidenceCacheSetRows403101(rows){
   const c=atlasOracleEvidenceReadCache40215;
   c.rows=Array.isArray(rows)?rows:[];
   c.index_by_id=new Map();
+  c.pending_ids_403108=new Set();
+
   let lastAt403103=0;
+  let resolved403108=0;
+  let pending403108=0;
+
   c.rows.forEach((row,index)=>{
     const id=String(row?.id||"");
     if(id)c.index_by_id.set(id,index);
+
     const t0=Number(row?.t0||0);
     if(Number.isFinite(t0)&&t0>lastAt403103)lastAt403103=t0;
+
+    const counts=atlasOracleOutcomeRowCounts403108(row);
+    resolved403108+=counts.resolved;
+    pending403108+=counts.pending;
+    if(id&&counts.pending>0)c.pending_ids_403108.add(id);
   });
+
   c.summary_count_403103=c.rows.length;
   c.summary_last_at_403103=lastAt403103;
+  c.summary_valid_403107=true;
+  c.summary_source_403107="full-evidence-cache";
+
+  c.outcome_resolved_403108=resolved403108;
+  c.outcome_pending_403108=pending403108;
+  c.outcome_summary_valid_403108=true;
+
   c.cached_at=Date.now();
   return c.rows;
 }
@@ -7251,20 +7346,44 @@ function atlasOracleEvidenceCacheSetRows403101(rows){
 function atlasOracleEvidenceCachePut403101(row){
   const c=atlasOracleEvidenceReadCache40215;
   if(!Array.isArray(c.rows) || !row?.id)return false;
+
   const id=String(row.id);
   const index=c.index_by_id.get(id);
   const existed=Number.isInteger(index) && index>=0 && index<c.rows.length;
+  const previous=existed?c.rows[index]:null;
+
+  if(c.outcome_summary_valid_403108){
+    if(previous){
+      const before=atlasOracleOutcomeRowCounts403108(previous);
+      c.outcome_resolved_403108=Math.max(0,Number(c.outcome_resolved_403108||0)-before.resolved);
+      c.outcome_pending_403108=Math.max(0,Number(c.outcome_pending_403108||0)-before.pending);
+    }
+  }
+
   if(existed){
     c.rows[index]=row;
   }else{
     c.index_by_id.set(id,c.rows.length);
     c.rows.push(row);
   }
+
+  if(c.outcome_summary_valid_403108){
+    const after=atlasOracleOutcomeRowCounts403108(row);
+    c.outcome_resolved_403108+=after.resolved;
+    c.outcome_pending_403108+=after.pending;
+    if(after.pending>0)c.pending_ids_403108.add(id);
+    else c.pending_ids_403108.delete(id);
+  }
+
   c.summary_count_403103=c.rows.length;
+  c.summary_valid_403107=true;
+  c.summary_source_403107="incremental-cache-put";
+
   const t0=Number(row?.t0||0);
   if(Number.isFinite(t0)&&t0>Number(c.summary_last_at_403103||0)){
     c.summary_last_at_403103=t0;
   }
+
   c.cached_at=Date.now();
   c.incremental_puts_403101+=1;
   return true;
@@ -7288,8 +7407,16 @@ function atlasOracleEvidenceInvalidateReadCache40215(){
   c.cached_at=0;
   c.in_flight=null;
   c.in_flight_generation=-1;
+
   c.summary_count_403103=0;
   c.summary_last_at_403103=0;
+  c.summary_valid_403107=false;
+  c.summary_source_403107="invalidated";
+
+  c.pending_ids_403108=new Set();
+  c.outcome_resolved_403108=0;
+  c.outcome_pending_403108=0;
+  c.outcome_summary_valid_403108=false;
 }
 
 async function atlasOracleEvidenceAll(options = null) {
@@ -7334,6 +7461,23 @@ async function atlasOracleEvidenceAll(options = null) {
 
 
 
+
+
+try{
+  globalThis.AtlasOracleEvidenceColdStatus403107=Object.freeze({
+    build:"40.3.107",
+    cold_status_strategy:"IndexedDB count() + t0 index openKeyCursor(prev)",
+    full_evidence_payload_required_for_status:false,
+    full_evidence_scan_preserved_for_analytical_consumers:true,
+    evidence_retention_changed:false,
+    source_history_changed:false,
+    oracle_math_changed:false,
+    timer_added:false,
+    observer_added:false,
+    network_added:false
+  });
+}catch(_){}
+
 try{
   globalThis.AtlasOracleEvidenceWarmMirror403101=Object.freeze({
     build:"40.3.101",
@@ -7347,6 +7491,14 @@ try{
       status_fast_hits:atlasOracleEvidenceReadCache40215.status_fast_hits_403103||0,
       summary_count:atlasOracleEvidenceReadCache40215.summary_count_403103||0,
       summary_last_at:atlasOracleEvidenceReadCache40215.summary_last_at_403103||0,
+      summary_valid:atlasOracleEvidenceReadCache40215.summary_valid_403107===true,
+      summary_source:atlasOracleEvidenceReadCache40215.summary_source_403107||"none",
+      cold_status_reads:atlasOracleEvidenceReadCache40215.cold_status_reads_403107||0,
+      pending_rows:atlasOracleEvidenceReadCache40215.pending_ids_403108?.size||0,
+      outcome_resolved:atlasOracleEvidenceReadCache40215.outcome_resolved_403108||0,
+      outcome_pending:atlasOracleEvidenceReadCache40215.outcome_pending_403108||0,
+      outcome_rows_scanned:atlasOracleEvidenceReadCache40215.outcome_rows_scanned_403108||0,
+      outcome_idle_refreshes_skipped:atlasOracleEvidenceReadCache40215.outcome_idle_refreshes_skipped_403108||0,
       in_flight:Boolean(atlasOracleEvidenceReadCache40215.in_flight)
     }),
     fresh_read_supported:true,
@@ -7394,8 +7546,12 @@ async function atlasOracleEvidenceDelete(ids) {
 async function atlasOracleEvidenceRefreshStatus() {
   try {
     const c=atlasOracleEvidenceReadCache40215;
-    if(!Array.isArray(c.rows)){
-      await atlasOracleEvidenceAll();
+
+    // 40.3.107: the cold badge must not pull the complete Evidence payload.
+    if(Array.isArray(c.rows)){
+      c.status_fast_hits_403103+=1;
+    }else if(!c.summary_valid_403107){
+      await atlasOracleEvidenceColdSummary403107();
     }else{
       c.status_fast_hits_403103+=1;
     }
@@ -7677,9 +7833,19 @@ function atlasOracleOutcomeResolveRow(row, horizonKey, now) {
 }
 
 async function atlasOracleOutcomeRefreshStatus(rows = null) {
-  const source = Array.isArray(rows) ? rows : await atlasOracleEvidenceAll();
-  let resolved = 0, pending = 0;
-  source.forEach(row => Object.keys(ATLAS_ORACLE_OUTCOME_HORIZONS).forEach(key => row?.outcomes?.[key] ? resolved++ : pending++));
+  const c=atlasOracleEvidenceReadCache40215;
+  let resolved=0,pending=0;
+
+  if(c.outcome_summary_valid_403108){
+    resolved=Number(c.outcome_resolved_403108||0);
+    pending=Number(c.outcome_pending_403108||0);
+  }else{
+    const source = Array.isArray(rows) ? rows : await atlasOracleEvidenceAll();
+    resolved = 0;
+    pending = 0;
+    source.forEach(row => ATLAS_ORACLE_OUTCOME_KEYS_403108.forEach(key => row?.outcomes?.[key] ? resolved++ : pending++));
+  }
+
   atlasOracleOutcomeStatusState = { ...atlasOracleOutcomeStatusState, resolved, pending };
   const node = document.getElementById("atlasOracleOutcomeStatus");
   if (node) {
@@ -7695,9 +7861,14 @@ async function atlasOracleOutcomeRun() {
   atlasOracleOutcomeRunning = true;
   try {
     const rows = await atlasOracleEvidenceAll();
+    const pendingRows403108 = atlasOracleEvidencePendingRows403108(rows);
+    const c403108=atlasOracleEvidenceReadCache40215;
+    c403108.outcome_runs_403108+=1;
+    c403108.outcome_rows_scanned_403108+=pendingRows403108.length;
+
     const now = Date.now();
     let changed = 0;
-    for (const row of rows) {
+    for (const row of pendingRows403108) {
       let next = null;
       for (const key of Object.keys(ATLAS_ORACLE_OUTCOME_HORIZONS)) {
         const outcome = atlasOracleOutcomeResolveRow(next || row, key, now);
@@ -7709,7 +7880,20 @@ async function atlasOracleOutcomeRun() {
     }
     atlasOracleOutcomeStatusState.lastRunAt = now;
     atlasOracleOutcomeStatusState.lastError = null;
-    await atlasOracleOutcomeRefreshStatus(changed ? await atlasOracleEvidenceAll() : rows);
+    await atlasOracleOutcomeRefreshStatus();
+
+    // 40.3.108: no newly resolved outcome = no analytical truth changed.
+    // Do not redraw the whole Oracle laboratory every 15 seconds for zero delta.
+    if(!changed){
+      c403108.outcome_idle_refreshes_skipped_403108+=1;
+      return {
+        ...atlasOracleOutcomeStatusState,
+        changed:0,
+        pending_rows_checked:pendingRows403108.length,
+        heavy_refresh_skipped:true
+      };
+    }
+
     if (typeof atlasOracleCalibrationRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:calibration", "atlasOracleV0", ()=>atlasOracleCalibrationRefresh()).catch(()=>{});
     if (typeof atlasOracleProofRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:proof", "atlasOracleV0", ()=>atlasOracleProofRefresh()).catch(()=>{});
     if (typeof atlasOracleHorizonMatrixRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:horizon_matrix", "atlasOracleV0", ()=>atlasOracleHorizonMatrixRefresh()).catch(()=>{});
@@ -7720,7 +7904,12 @@ async function atlasOracleOutcomeRun() {
     if (typeof atlasOracleShadowV2Refresh === "function") atlasRuntimeInvokeRefresh40225("outcome:shadow_v2", "oracle-lab-dashboard", ()=>atlasOracleShadowV2Refresh(true)).catch(()=>{});
     if (typeof atlasOracleLabDashboardRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:lab_dashboard", "oracle-models-calibration", ()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
     if (typeof atlasOracleIntegrityRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:integrity", "oracle-models-calibration", ()=>atlasOracleIntegrityRefresh(true)).catch(()=>{});
-    return { ...atlasOracleOutcomeStatusState, changed };
+    return {
+      ...atlasOracleOutcomeStatusState,
+      changed,
+      pending_rows_checked:pendingRows403108.length,
+      heavy_refresh_skipped:false
+    };
   } catch (error) {
     atlasOracleOutcomeStatusState.lastError = String(error?.message || error || "erreur");
     const node = document.getElementById("atlasOracleOutcomeStatus");
@@ -7740,6 +7929,32 @@ function atlasOracleOutcomeSchedule() {
 }
 
 globalThis.AtlasOracleOutcome = Object.freeze({ run:atlasOracleOutcomeRun, status:atlasOracleOutcomeRefreshStatus });
+
+
+try{
+  globalThis.AtlasOracleOutcomePending403108=Object.freeze({
+    build:"40.3.108",
+    strategy:"pending-id set synchronized with Evidence warm mirror",
+    full_rows_checked_every_tick:false,
+    heavy_panel_refresh_when_changed_only:true,
+    outcome_semantics_changed:false,
+    missing_sample_stays_pending:true,
+    evidence_retention_changed:false,
+    oracle_math_changed:false,
+    timer_cadence_changed:false,
+    observer_added:false,
+    network_added:false,
+    state:()=>({
+      pending_rows:atlasOracleEvidenceReadCache40215.pending_ids_403108?.size||0,
+      resolved_horizons:atlasOracleEvidenceReadCache40215.outcome_resolved_403108||0,
+      pending_horizons:atlasOracleEvidenceReadCache40215.outcome_pending_403108||0,
+      runs:atlasOracleEvidenceReadCache40215.outcome_runs_403108||0,
+      rows_scanned:atlasOracleEvidenceReadCache40215.outcome_rows_scanned_403108||0,
+      idle_heavy_refreshes_skipped:atlasOracleEvidenceReadCache40215.outcome_idle_refreshes_skipped_403108||0
+    })
+  });
+}catch(_){}
+
 
 /* ============================================================
    40.2.73 — ORACLE LONG-HORIZON SHADOW · 30M + 1H
@@ -48108,9 +48323,46 @@ globalThis.AtlasStorageHealth40198=Object.freeze({compute:atlasStorageHealthComp
 /* 40.2.78 — operator UI for verified storage relief. */
 async function atlasStorageReliefRender40278(message=""){
   const node=document.getElementById("atlasStorageReliefStatus40278");if(!node)return null;
-  const rows=[];for(const key of ATLAS_STORAGE_RELIEF_TARGETS_40278){let local=null;try{local=localStorage.getItem(key);}catch(_){}const rec=await atlasStorageReliefGet40278(key).catch(()=>null);rows.push(`${key} · local ${local===null?"ABSENT":atlasStorageHealthBytesLabel40198(new Blob([local]).size)} · IndexedDB ${rec?.payload?`${atlasStorageHealthBytesLabel40198(rec.bytes||new Blob([rec.payload]).size)}${rec.verified?" · VÉRIFIÉ":" · copie"}`:"ABSENT"}`);}const primary=atlasStorageReliefRuntime40278.primaryActive?"40.3.31 IDB PRIMARY · gros payloads hors écriture synchrone localStorage":"40.3.31 activation IDB en cours";node.textContent=[`STORAGE RELIEF 40.2.78 + ${primary} · ${message||"copie locale conservée · aucune suppression automatique"}`,...rows,"Scanner archive + pending + cache graphique écrivent désormais de façon asynchrone dans IndexedDB après activation. Les copies localStorage existantes restent intactes tant que l’opérateur ne demande aucun retrait."].join("\n");return rows;}
+  const bulkRows403110=await atlasStorageReliefBulkRead403101().catch(()=>new Map());
+  const rows=[];
+  for(const key of ATLAS_STORAGE_RELIEF_TARGETS_40278){
+    let local=null;try{local=localStorage.getItem(key);}catch(_){}
+    const rec=bulkRows403110.get(String(key))||null;
+    rows.push(`${key} · local ${local===null?"ABSENT":atlasStorageHealthBytesLabel40198(new Blob([local]).size)} · IndexedDB ${rec?.payload?`${atlasStorageHealthBytesLabel40198(rec.bytes||new Blob([rec.payload]).size)}${rec.verified?" · VÉRIFIÉ":" · copie"}`:"ABSENT"}`);
+  }
+  const primary=atlasStorageReliefRuntime40278.primaryActive?"40.3.31 IDB PRIMARY · gros payloads hors écriture synchrone localStorage":"40.3.31 activation IDB en cours";
+  node.textContent=[
+    `STORAGE RELIEF 40.2.78 + ${primary} · ${message||"copie locale conservée · aucune suppression automatique"}`,
+    ...rows,
+    `40.3.110 · Ownership : ${ATLAS_STORAGE_RELIEF_PRELOAD_40278.length} clés actives autorisées · DB Primary/Mirror · suppression générique interdite.`,
+    "Scanner archive + pending + cache graphique écrivent désormais de façon asynchrone dans IndexedDB après activation. Les copies localStorage existantes restent intactes tant que l’opérateur ne demande aucun retrait."
+  ].join("\n");
+  return rows;
+}
 async function atlasStorageReliefCopyUi40278(){const btn=document.getElementById("btnAtlasStorageReliefCopy40278");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefCopyTargets40278();await atlasStorageReliefRender40278(`COPIE TERMINÉE · ${r.rows.filter(x=>x.state==="VÉRIFIÉ").length}/${r.rows.length} vérifiée(s)`);await atlasStorageHealthRender40198();return r;}finally{if(btn)btn.disabled=false;}}
 async function atlasStorageReliefRetireUi40278(){const ok=window.confirm("Retirer uniquement les copies localStorage dont la copie IndexedDB vient d’être vérifiée SHA-256 ? Les clés non vérifiées resteront intactes.");if(!ok)return null;const btn=document.getElementById("btnAtlasStorageReliefRetire40278");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefRetireVerified40278();await atlasStorageReliefRender40278("RETRAIT OPÉRATEUR CONTRÔLÉ");await atlasStorageHealthRender40198();return r;}finally{if(btn)btn.disabled=false;}}
+
+
+try{
+  globalThis.AtlasStorageOwnership403110=Object.freeze({
+    build:"40.3.110",
+    database:ATLAS_STORAGE_RELIEF_40278_DB,
+    classification:"ACTIVE PRIMARY/MIRROR",
+    allowed_keys:[...ATLAS_STORAGE_RELIEF_PRELOAD_40278],
+    max_rows:ATLAS_STORAGE_RELIEF_PRELOAD_40278.length,
+    generic_database_delete:false,
+    generic_row_cleanup:false,
+    operator_relief_plan_bulk_read:true,
+    status_bulk_read:true,
+    oracle_evidence_prune:false,
+    oracle_source_history_prune:false,
+    automatic_cleanup:false,
+    timer_added:false,
+    observer_added:false,
+    network_added:false
+  });
+}catch(_){}
+
 document.getElementById("btnAtlasStorageReliefCopy40278")?.addEventListener("click",()=>void atlasStorageReliefCopyUi40278());
 document.getElementById("btnAtlasStorageReliefRetire40278")?.addEventListener("click",()=>void atlasStorageReliefRetireUi40278());
 window.addEventListener("atlas:storage-relief-ready",()=>{const node=document.getElementById("atlasStorageReliefStatus40278");if(node)node.textContent=atlasStorageReliefRuntime40278.primaryActive?"STORAGE RELIEF 40.2.78 + 40.3.31 · IDB PRIMARY ACTIF · gros payloads hors écriture localStorage synchrone · copies locales conservées":"STORAGE RELIEF 40.2.78 + 40.3.31 · activation IDB différée · copies locales conservées";},{passive:true});
@@ -48362,7 +48614,7 @@ const ATLAS_STORAGE_MEASUREMENT_40390_BUILD="40.3.91";
 const ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX=160;
 const ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA="agent_crypto.storage_indexeddb_measurement.v1";
 const ATLAS_STORAGE_MEASUREMENT_40390_CATALOG=Object.freeze({
-  "agent_crypto_storage_relief_40278":Object.freeze({owner:"Storage Relief",family:"payload mirror / primary",retention:"clés ciblées actives · pas de limite de lignes générique",max_rows:null}),
+  "agent_crypto_storage_relief_40278":Object.freeze({owner:"Storage Relief",family:"payload mirror / primary",retention:"5 clés actives autorisées · Primary/Mirror",max_rows:ATLAS_STORAGE_RELIEF_PRELOAD_40278.length}),
   "agent_crypto_oracle_evidence_v1":Object.freeze({owner:"Oracle Evidence",family:"observations T0",retention:"ring buffer",max_rows:50000}),
   "agent_crypto_oracle_source_history_v1":Object.freeze({owner:"Oracle Source History",family:"désaccord sources",retention:"ring buffer",max_rows:10000}),
   "agent_crypto_learning_notebook":Object.freeze({owner:"Learning Notebook",family:"pédagogie",retention:"1 agrégat courant",max_rows:1}),
@@ -48560,9 +48812,11 @@ let atlasStorageReliefLast40391=null;
 async function atlasStorageReliefPlan40391(){
   const before=atlasStorageHealthLocalSnapshot40198();
   const rows=[];
+  const bulkRows403110=await atlasStorageReliefBulkRead403101().catch(()=>new Map());
+
   for(const key of ATLAS_STORAGE_RELIEF_TARGETS_40278){
     let raw=null;try{raw=localStorage.getItem(key);}catch{}
-    const record=await atlasStorageReliefGet40278(key).catch(()=>null);
+    const record=bulkRows403110.get(String(key))||null;
     const localBytes=raw===null?0:new Blob([raw]).size;
     let localSha="",idbSha="";
     if(raw!==null)localSha=await atlasStorageReliefSha40278(raw).catch(()=>"");
@@ -48675,7 +48929,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.106";
+const ATLAS_BUILD = "40.3.110";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -58171,6 +58425,187 @@ globalThis.AtlasAetherAnalyticalMemoryV3403103=Object.freeze({
   human_final_authority:true
 });
 
+
+
+/* ============================================================
+   40.3.109 — AETHER ANALYTICAL MEMORY · TRANSITION LEDGER V4
+
+   V1: latest CURRENT delta.
+   V2: latest two archived package comparison.
+   V3: recurrence over latest 12 CURRENT.
+   V4: structural transition ledger over the bounded Journal (max 30).
+
+   Deterministic memory only:
+   - stable composition segments
+   - Top5 entries/exits between cycles
+   - persistent core across the window
+   - composition churn rate
+   - latest composition change
+
+   No forecast, no model call, no new storage.
+   ============================================================ */
+const ATLAS_AETHER_TRANSITION_WINDOW_403109=30;
+
+function atlasAetherTransitionLedger403109(records=atlasCurrentJournalRead33()){
+  const rows=(Array.isArray(records)?records:[])
+    .filter(row=>row?.fingerprint)
+    .slice()
+    .sort((a,b)=>Date.parse(a?.completed_at||0)-Date.parse(b?.completed_at||0))
+    .slice(-ATLAS_AETHER_TRANSITION_WINDOW_403109);
+
+  if(rows.length<2){
+    return {ready:false,count:rows.length,window:ATLAS_AETHER_TRANSITION_WINDOW_403109};
+  }
+
+  const snapshots=rows.map(row=>{
+    const ordered=atlasAetherAnalyticalAssets403100(row)
+      .map(asset=>String(asset?.symbol||"").toUpperCase())
+      .filter(Boolean);
+    const composition=[...ordered].sort();
+    return {
+      row,
+      ordered,
+      composition,
+      signature:composition.join("|"),
+      ordered_signature:ordered.join("|")
+    };
+  });
+
+  const transitions=[];
+  for(let i=1;i<snapshots.length;i++){
+    const before=snapshots[i-1],after=snapshots[i];
+    const beforeSet=new Set(before.composition),afterSet=new Set(after.composition);
+    const added=after.composition.filter(symbol=>!beforeSet.has(symbol));
+    const removed=before.composition.filter(symbol=>!afterSet.has(symbol));
+    transitions.push({
+      at:after.row?.completed_at||null,
+      composition_changed:before.signature!==after.signature,
+      order_changed:before.ordered_signature!==after.ordered_signature,
+      added,
+      removed,
+      churn:added.length+removed.length,
+      direct_delta:Number(after.row?.direct_count||0)-Number(before.row?.direct_count||0),
+      derived_delta:Number(after.row?.derived_count||0)-Number(before.row?.derived_count||0)
+    });
+  }
+
+  const segments=[];
+  for(const snap of snapshots){
+    const last=segments.at(-1);
+    if(last&&last.signature===snap.signature){
+      last.count+=1;
+      last.end_at=snap.row?.completed_at||last.end_at;
+    }else{
+      segments.push({
+        signature:snap.signature,
+        assets:snap.composition,
+        count:1,
+        start_at:snap.row?.completed_at||null,
+        end_at:snap.row?.completed_at||null
+      });
+    }
+  }
+
+  let persistentCore=new Set(snapshots[0]?.composition||[]);
+  for(const snap of snapshots.slice(1)){
+    const set=new Set(snap.composition);
+    persistentCore=new Set([...persistentCore].filter(symbol=>set.has(symbol)));
+  }
+
+  const changed=transitions.filter(row=>row.composition_changed);
+  const totalChurn=transitions.reduce((sum,row)=>sum+row.churn,0);
+  const latestChanged=[...changed].reverse()[0]||null;
+  const currentSegment=segments.at(-1)||null;
+
+  return {
+    ready:true,
+    count:rows.length,
+    window:ATLAS_AETHER_TRANSITION_WINDOW_403109,
+    transitions:transitions.length,
+    composition_changes:changed.length,
+    composition_stability_ratio:transitions.length?(transitions.length-changed.length)/transitions.length:null,
+    total_churn:totalChurn,
+    average_churn:transitions.length?totalChurn/transitions.length:null,
+    persistent_core:[...persistentCore].sort(),
+    current_segment:currentSegment,
+    segment_count:segments.length,
+    latest_change:latestChanged,
+    recent_changes:changed.slice(-5),
+    segments
+  };
+}
+
+function atlasAetherTransitionRender403109(records=atlasCurrentJournalRead33()){
+  const body=document.getElementById("atlasAetherAnalyticalMemoryBody403100");
+  if(!body)return null;
+
+  let node=document.getElementById("atlasAetherAnalyticalMemoryV4403109");
+  if(!node){
+    node=document.createElement("section");
+    node.id="atlasAetherAnalyticalMemoryV4403109";
+    node.className="atlas-current-journal-detail-35-grid";
+    body.appendChild(node);
+  }
+
+  const result=atlasAetherTransitionLedger403109(records);
+  if(!result.ready){
+    node.innerHTML=`<article><span>Transition Ledger V4</span><b>En attente</b><small>${result.count}/2 CURRENT minimum · fenêtre ${result.window}.</small></article>`;
+    return result;
+  }
+
+  const stability=Number.isFinite(result.composition_stability_ratio)
+    ?`${(result.composition_stability_ratio*100).toFixed(0)} %`
+    :"—";
+  const core=result.persistent_core.length?result.persistent_core.join(" · "):"Aucun noyau commun complet";
+  const latest=result.latest_change
+    ?`${result.latest_change.at||"date —"}${result.latest_change.added.length?` · +${result.latest_change.added.join(",")}`:""}${result.latest_change.removed.length?` · −${result.latest_change.removed.join(",")}`:""}`
+    :"Aucun changement de composition dans la fenêtre";
+
+  node.innerHTML=`
+    <article>
+      <span>Transition Ledger V4</span>
+      <b>${result.count} CURRENT · ${result.segment_count} segment(s)</b>
+      <small>Journal borné · aucune donnée historique fabriquée.</small>
+    </article>
+    <article>
+      <span>Stabilité composition</span>
+      <b>${escapeHtml(stability)}</b>
+      <small>${result.composition_changes}/${result.transitions} transition(s) ont changé le Top 5 · churn moyen ${Number(result.average_churn||0).toFixed(2)} actif(s).</small>
+    </article>
+    <article>
+      <span>Noyau persistant</span>
+      <b>${escapeHtml(core)}</b>
+      <small>Présent dans tous les CURRENT de la fenêtre.</small>
+    </article>
+    <article>
+      <span>Dernier changement</span>
+      <b>${escapeHtml(latest)}</b>
+      <small>Segment courant : ${result.current_segment?.count||0} CURRENT · ${escapeHtml((result.current_segment?.assets||[]).join(" · ")||"—")}.</small>
+    </article>`;
+  return result;
+}
+
+const atlasAetherAnalyticalMemoryRender403109Base=atlasAetherAnalyticalMemoryRender403100;
+atlasAetherAnalyticalMemoryRender403100=function atlasAetherAnalyticalMemoryRender403109(records=atlasCurrentJournalRead33()){
+  const result=atlasAetherAnalyticalMemoryRender403109Base(records);
+  try{atlasAetherTransitionRender403109(records);}catch(_){}
+  return result;
+};
+
+globalThis.AtlasAetherAnalyticalMemoryV4403109=Object.freeze({
+  build:"40.3.109",
+  window:ATLAS_AETHER_TRANSITION_WINDOW_403109,
+  compute:atlasAetherTransitionLedger403109,
+  render:atlasAetherTransitionRender403109,
+  source:"existing CURRENT Journal",
+  archive_scan_added:false,
+  new_storage:false,
+  model_call_added:false,
+  forecast:false,
+  financial_action:false,
+  human_final_authority:true
+});
+
 try {
   globalThis.__AGENT_CRYPTO_CASCADE_403100__ = Object.freeze({
     build: "40.3.100",
@@ -58428,3 +58863,35 @@ try {
     new_network_owner: false
   });
 } catch (_) {}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_CASCADE_403110__=Object.freeze({
+    build:"40.3.110",
+    parent:"40.3.106",
+    cascade:Object.freeze([
+      "40.3.107 Oracle Evidence cold status: count + last t0 key without full payload",
+      "40.3.108 Oracle Outcome pending set + zero-delta heavy refresh gate",
+      "40.3.109 Aether Analytical Memory Transition Ledger V4",
+      "40.3.110 Storage Relief ownership bound + bulk readonly operator reads"
+    ]),
+    recovery_403106_preserved:true,
+    rejected_403105_graph_absent:true,
+    extended_market_lookup_preserved:true,
+    extended_native_fiche_preserved:true,
+    external_graph_enabled:false,
+    oracle_same_asset_history_lock_preserved:true,
+    fiche_positioning_changed:false,
+    target_top_hover_changed:false,
+    market_core_changed:false,
+    oracle_math_changed:false,
+    evidence_retention_changed:false,
+    source_history_changed:false,
+    storage_delete_added:false,
+    window_manager_changed:false,
+    images_changed:false,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_network_owner:false
+  });
+}catch(_){}
