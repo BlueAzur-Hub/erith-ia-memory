@@ -47476,7 +47476,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.93";
+const ATLAS_BUILD = "40.3.94";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55889,6 +55889,14 @@ function atlasGreyProbeCapture40393(trigger="button"){
     long_tasks_armed_total:atlasGreyProbeState40393.long_tasks.length,
     dom_probe:sample,
     animations,
+    paint_isolation_40394:{
+      enabled:document.body?.classList.contains("atlas-paint-isolation-40394")===true,
+      scope:"family 02 · intelligence-memory-creation",
+      strategy:"contain:paint on bounded internal surfaces + isolation on two major semantic shells",
+      content_visibility:false,
+      transform_3d:false,
+      will_change:false
+    },
     runtime_observatory:runtime,
     window_manager:windows,
     limits:{
@@ -56014,5 +56022,80 @@ try{
     book_mirror_changed:false,
     window_manager_changed:false,
     image_changed:false
+  });
+}catch(_){}
+
+
+/* ============================================================
+   40.3.94 — LARGE STATIC PAINT SURFACE ISOLATION LOCK
+   Scope: family 02 only. Evidence-driven A/B control.
+   No timer / observer / scheduler / storage / network.
+   ============================================================ */
+const ATLAS_PAINT_ISOLATION_40394_BUILD="40.3.94";
+const ATLAS_PAINT_ISOLATION_40394_CLASS="atlas-paint-isolation-40394";
+
+function atlasPaintIsolationState40394(){
+  return document.body?.classList.contains(ATLAS_PAINT_ISOLATION_40394_CLASS)===true;
+}
+function atlasPaintIsolationRender40394(){
+  const enabled=atlasPaintIsolationState40394();
+  const btn=document.getElementById("btnAtlasPaintIsolationToggle40394");
+  if(btn){
+    btn.setAttribute("aria-pressed",enabled?"true":"false");
+    btn.textContent=`Isolation paint 02 · ${enabled?"ON":"OFF"}`;
+  }
+  return enabled;
+}
+function atlasPaintIsolationSet40394(enabled){
+  document.body?.classList.toggle(ATLAS_PAINT_ISOLATION_40394_CLASS,Boolean(enabled));
+  return atlasPaintIsolationRender40394();
+}
+function atlasPaintIsolationToggle40394(){
+  return atlasPaintIsolationSet40394(!atlasPaintIsolationState40394());
+}
+
+document.getElementById("btnAtlasPaintIsolationToggle40394")
+  ?.addEventListener("click",atlasPaintIsolationToggle40394);
+atlasPaintIsolationRender40394();
+
+globalThis.AtlasPaintIsolation40394=Object.freeze({
+  build:ATLAS_PAINT_ISOLATION_40394_BUILD,
+  family:"02-intelligence-memory-creation",
+  enabled:atlasPaintIsolationState40394,
+  set:atlasPaintIsolationSet40394,
+  toggle:atlasPaintIsolationToggle40394,
+  css_strategy:"isolation boundaries + contain:paint on bounded internal surfaces",
+  content_visibility:false,
+  transform_3d:false,
+  will_change:false,
+  storage_write:false,
+  network_request:false,
+  timer:false,
+  observer:false,
+  scheduler:false,
+  market_core_changed:false,
+  oracle_changed:false,
+  news_changed:false,
+  bridge_changed:false,
+  book_mirror_changed:false,
+  window_manager_changed:false
+});
+
+try{
+  globalThis.__AGENT_CRYPTO_PAINT_ISOLATION_40394__=Object.freeze({
+    build:"40.3.94",
+    parent:"40.3.93",
+    evidence:"40.3.93 grey capture: no large positioned overlay, no Long Task, normal DOM, family 02 subtree ~8.8k px",
+    scope:"family 02 only",
+    default_on:true,
+    ab_toggle:true,
+    content_visibility:false,
+    transform_3d:false,
+    will_change:false,
+    storage_write:false,
+    network_request:false,
+    timer:false,
+    observer:false,
+    scheduler:false
   });
 }catch(_){}
