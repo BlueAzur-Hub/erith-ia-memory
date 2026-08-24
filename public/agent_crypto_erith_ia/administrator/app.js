@@ -20225,7 +20225,9 @@ function atlasMemoryIntelligenceRender() {
   set("atlasMemoryConfidence", `${data.confidence.label} · ${data.confidence.score}/100`);
   set("atlasMemoryConfidenceDetail", `${data.records} snapshots distincts · ${data.collectors_count} collecteur(s) · fil principal ${data.primary_records} relevés · ce score mesure la continuité des données, jamais la probabilité d’un gain.`);
   const badge=document.getElementById("atlasMemoryIntelligenceBadge");
-  if(badge){badge.textContent=`${data.records} snapshots · confiance ${data.confidence.label}`;badge.className=`pill ${data.records>=3?"ok":"warn"}`;}
+  if(badge){badge.textContent=`${data.records} SNAPSHOTS`;badge.className=`pill ${data.records>=3?"ok":"warn"}`;}
+  const compactSubtitle40354=document.getElementById("atlasMarketMemorySummarySubtitle40354");
+  if(compactSubtitle40354) compactSubtitle40354.textContent=`Confiance ${data.confidence.label} · ${data.collectors_count} collecteur(s) · détails à la demande · CURRENT séparés.`;
   set("atlasMemoryIntelligenceStatus", data.records>=3
     ? `Memory Intelligence active · dernier relevé ${data.latest_at?new Date(data.latest_at).toLocaleString("fr-FR"):"—"} · observation uniquement.`
     : `Memory Intelligence en collecte · ${data.records}/3 snapshots distincts minimum pour une première lecture.`);
@@ -46585,7 +46587,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.53";
+const ATLAS_BUILD = "40.3.54";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
