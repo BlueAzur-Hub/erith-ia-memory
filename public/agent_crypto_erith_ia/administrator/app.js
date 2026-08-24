@@ -2328,16 +2328,24 @@ function atlasV2ApplyMode(mode, options = {}) {
     liveSourcesCollapse.setAttribute("aria-hidden", "false");
   }
 
-  // 40.3.66 AETHER — the top navigation is a shared operator bar.
-  // Basic, Intermediate and Administrator expose the same navigation surface;
-  // the view contract still owns which page sections are resident/visible.
+  // 40.3.68 AETHER — shared BAR geometry, view-owned COMMAND scope.
+  // Basic keeps the same physical top bar but exposes only its daily commands:
+  // Livecheck · Marché · Graphique · Sources. Intermediate/Administrator restore
+  // Atlas, Oracle and the advanced command dock. No business engine is stopped.
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
-    element.hidden = false;
-    element.setAttribute("aria-hidden", "false");
+    const hide40368 = next === "essential";
+    element.hidden = hide40368;
+    element.setAttribute("aria-hidden", hide40368 ? "true" : "false");
   });
+  const basicHiddenTargets40368 = new Set([
+    "atlas-local-ai-collapse",
+    "oracle-analysis-suite"
+  ]);
   document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").forEach(element => {
-    element.hidden = false;
-    element.setAttribute("aria-hidden", "false");
+    const target40368 = String(element.dataset.atlasEssentialTarget || "");
+    const hide40368 = next === "essential" && basicHiddenTargets40368.has(target40368);
+    element.hidden = hide40368;
+    element.setAttribute("aria-hidden", hide40368 ? "true" : "false");
   });
 
   const commandKicker = document.getElementById("atlasCommandKicker");
@@ -10113,6 +10121,14 @@ function atlasRenderComparisonDetail(entries, period) {
   atlasRenderBrokerStrip();
 }
 
+function atlasComparisonRequiresFullSelection40369(preset = state.dataBroker?.comparison?.preset) {
+  // 40.3.69 — named canonical baskets must never silently degrade.
+  // Manual selection may still render the best available subset; Top 3/Top 5
+  // and scanner baskets are atomic: either the requested basket is complete,
+  // or the previous complete picture is preserved / the state is explicit.
+  return ["rank-3", "rank-5", "gainers", "losers", "volume"].includes(String(preset || ""));
+}
+
 async function renderComparisonAnalystPanel(options = {}) {
   if ((atlasScannerTransaction || atlasScannerQueuedRequest) && options.allowDuringScanner !== true) return;
   const coins = atlasComparisonCoins();
@@ -10143,7 +10159,7 @@ async function renderComparisonAnalystPanel(options = {}) {
     state.chartEngineV2?.realChart?.$atlasMode === "comparison"
     && ids.length > 1
     && atlasSameOrderedIds(visibleComparisonIds, ids);
-  const strictAtomicComparison = ATLAS_SCANNER_PRESETS.has(comparisonPreset) || preservingVisibleComparison;
+  const strictAtomicComparison = atlasComparisonRequiresFullSelection40369(comparisonPreset) || preservingVisibleComparison;
   const requiredSeriesCount = strictAtomicComparison ? coins.length : 1;
   if (preservingVisibleComparison) {
     atlasChartStability40122.metrics.atomic_refresh_transactions += 1;
@@ -10366,10 +10382,17 @@ async function renderComparisonAnalystPanel(options = {}) {
   } else {
     state.dataBroker.comparison.renderedIds = previousRenderedIds;
     state.dataBroker.comparison.status = "blocked";
+    if (strictAtomicComparison) {
+      const available40369 = new Set(normalizedEntries.map(entry => entry?.coin?.id).filter(Boolean));
+      const missing40369 = coins.filter(coin => !available40369.has(coin.id)).map(coin => String(coin.symbol || coin.id).toUpperCase());
+      state.dataBroker.comparison.error = missing40369.length
+        ? `panier ${coins.length}/${coins.length} incomplet · manquant: ${missing40369.join(", ")}`
+        : "panier canonique non alignable";
+    }
   }
 
   if (state.dataBroker.comparison.status === "blocked") {
-    state.dataBroker.comparison.error = "comparaison incomplète";
+    state.dataBroker.comparison.error = state.dataBroker.comparison.error || "comparaison incomplète";
     if (previousChartState?.status === "ready") {
       state.dataBroker.chart = previousChartState;
       state.dataBroker.comparison = previousComparisonState;
@@ -42789,6 +42812,22 @@ async function atlasFetchComparisonSeriesResilient(coin, period, options = {}) {
       return { coin, result, attempts: 1, source: "binance-eur-direct-24h-truth" };
     } catch (error) {
       if (atlasComparisonAbortError(error)) throw error;
+      const storedTruth40369 = atlasGetStoredChartResult(coin, period, "binance");
+      if (storedTruth40369?.series?.length) {
+        return {
+          coin,
+          result: {
+            ...storedTruth40369,
+            sourceFamily: "binance",
+            sourceMode: "browser-cache",
+            truthRoute: "target-top5-24h-binance-eur-cache-preserved-40369",
+            refreshWarning: `Binance EUR direct temporairement indisponible · dernière série Binance réelle conservée`,
+            technicalReason: String(error?.message || error || "erreur inconnue")
+          },
+          attempts: 1,
+          source: "binance-eur-direct-24h-preserved-cache-40369"
+        };
+      }
       return {
         coin,
         result: {
@@ -46863,7 +46902,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.67";
+const ATLAS_BUILD = "40.3.69";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
