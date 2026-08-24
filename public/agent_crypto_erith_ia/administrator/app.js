@@ -47003,7 +47003,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.73";
+const ATLAS_BUILD = "40.3.74";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -54786,4 +54786,216 @@ function atlasClassicAnalysisModeInit38155() {
 
 queueMicrotask(() => {
   try { atlasClassicAnalysisModeInit38155(); } catch (_) {}
+});
+
+
+/* ============================================================
+   40.3.74 — AETHER RYZEN → BOOK CURRENT MIRROR PUBLICATION LOCK
+   One bounded trusted-local publication path:
+   - the public page NEVER stores a GitHub token;
+   - Ryzen may POST the already-built Book mirror payload only to
+     a loopback-only companion on 127.0.0.1:8788;
+   - the companion owns GitHub authentication outside the browser;
+   - Transformer Book remains fetch-only, STOP/read-only, no Bridge/Ollama;
+   - one completed local synthesis -> at most one publish attempt per fingerprint;
+   - no recurring publisher timer, no new Atlas/NØX/Aerith scheduler.
+   ============================================================ */
+
+const ATLAS_BOOK_MIRROR_PUBLISHER_40374_BASE = "http://127.0.0.1:8788";
+const ATLAS_BOOK_MIRROR_PUBLISHER_40374_LAST_FP_KEY = "agent_crypto_book_mirror_40374_last_published_fingerprint";
+const ATLAS_BOOK_MIRROR_PUBLISHER_40374_TIMEOUT_MS = 12_000;
+const atlasBookMirrorPublisherState40374 = {
+  busy:false,
+  ready:null,
+  lastError:"",
+  lastPublishedFingerprint:"",
+  lastPublishedAt:null,
+  authMode:""
+};
+
+function atlasBookMirrorPublisherEligible40374() {
+  try {
+    return !atlasBookMirrorObserver36()
+      && atlasDeviceComputeAllowed()
+      && atlasAccessIsAuthorized();
+  } catch (_) { return false; }
+}
+
+function atlasBookMirrorPublisherLastFp40374() {
+  try { return String(localStorage.getItem(ATLAS_BOOK_MIRROR_PUBLISHER_40374_LAST_FP_KEY) || "").trim(); }
+  catch (_) { return ""; }
+}
+
+function atlasBookMirrorPublisherRemember40374(fp) {
+  const value=String(fp||"").trim();
+  if (!value) return false;
+  atlasBookMirrorPublisherState40374.lastPublishedFingerprint=value;
+  atlasBookMirrorPublisherState40374.lastPublishedAt=new Date().toISOString();
+  try { localStorage.setItem(ATLAS_BOOK_MIRROR_PUBLISHER_40374_LAST_FP_KEY,value); } catch (_) {}
+  return true;
+}
+
+function atlasBookMirrorPublisherRender40374() {
+  if (!atlasBookMirrorPublisherEligible40374()) return false;
+  const badge=document.getElementById("atlasBookMirrorBadge36");
+  const stateNode=document.getElementById("atlasBookMirrorState36");
+  const stateDetail=document.getElementById("atlasBookMirrorStateDetail36");
+  const checked=document.getElementById("atlasBookMirrorCheck36");
+  const checkedDetail=document.getElementById("atlasBookMirrorCheckDetail36");
+  const fpNode=document.getElementById("atlasBookMirrorFingerprint36");
+  const status=document.getElementById("atlasBookMirrorStatus36");
+  const exportBtn=document.getElementById("btnAtlasBookMirrorExport36");
+  if (exportBtn) exportBtn.textContent="Secours · préparer book_mirror.json";
+
+  if (atlasBookMirrorPublisherState40374.busy) {
+    if (badge) { badge.textContent="Publication…"; badge.className="pill warn"; }
+    if (stateNode) stateNode.textContent="Ryzen · publication locale";
+    if (stateDetail) stateDetail.textContent="Compagnon 40.3.74 en cours · token absent du navigateur.";
+    if (status) status.textContent="Publication du CURRENT vers le miroir Book…";
+    return true;
+  }
+
+  if (atlasBookMirrorPublisherState40374.ready === true) {
+    if (badge) { badge.textContent=atlasBookMirrorPublisherState40374.lastPublishedFingerprint ? "Publié" : "Publisher prêt"; badge.className="pill ok"; }
+    if (stateNode) stateNode.textContent=atlasBookMirrorPublisherState40374.lastPublishedFingerprint ? "Miroir Ryzen publié" : "Publisher local prêt";
+    if (stateDetail) stateDetail.textContent=`Compagnon loopback 40.3.74 · ${atlasBookMirrorPublisherState40374.authMode||"auth locale"} · aucune clé dans la page.`;
+    if (checked && atlasBookMirrorPublisherState40374.lastPublishedAt) checked.textContent=new Date(atlasBookMirrorPublisherState40374.lastPublishedAt).toLocaleString("fr-FR");
+    if (checkedDetail) checkedDetail.textContent="Le Book vérifie ensuite ./book_mirror.json automatiquement toutes les 20 s.";
+    const fp=atlasBookMirrorPublisherState40374.lastPublishedFingerprint || atlasBookMirrorPublisherLastFp40374();
+    if (fpNode && fp) { fpNode.textContent=`${fp.slice(0,24)}${fp.length>24?"…":""}`; fpNode.title=fp; }
+    if (status) status.textContent=fp
+      ? "CURRENT Ryzen publié · le Transformer Book peut l’importer automatiquement en lecture seule."
+      : "Publisher local prêt · prochain CURRENT complet publié automatiquement.";
+    return true;
+  }
+
+  if (atlasBookMirrorPublisherState40374.ready === false) {
+    if (badge) { badge.textContent="Publisher absent"; badge.className="pill warn"; }
+    if (stateNode) stateNode.textContent="Ryzen · publication automatique indisponible";
+    if (stateDetail) stateDetail.textContent="Démarre le compagnon local 40.3.74 sur le Ryzen ; le JSON manuel reste un secours.";
+    if (checkedDetail) checkedDetail.textContent=atlasBookMirrorPublisherState40374.lastError || "Compagnon 127.0.0.1:8788 non joignable.";
+    if (status) status.textContent="Aucune donnée supprimée · la synthèse reste locale tant que le publisher n’est pas prêt.";
+    return true;
+  }
+  return false;
+}
+
+const atlasBookMirrorRender36Base40374 = atlasBookMirrorRender36;
+atlasBookMirrorRender36 = function atlasBookMirrorRender3640374(stateName,message) {
+  const result=atlasBookMirrorRender36Base40374(stateName,message);
+  try { atlasBookMirrorPublisherRender40374(); } catch (_) {}
+  return result;
+};
+
+async function atlasBookMirrorPublisherRequest40374(path, options={}) {
+  const controller=new AbortController();
+  const timer=window.setTimeout(()=>controller.abort(),ATLAS_BOOK_MIRROR_PUBLISHER_40374_TIMEOUT_MS);
+  try {
+    const response=await fetch(`${ATLAS_BOOK_MIRROR_PUBLISHER_40374_BASE}${path}`,{
+      cache:"no-store",
+      signal:controller.signal,
+      headers:{Accept:"application/json",...(options.headers||{})},
+      ...options
+    });
+    const payload=await response.json().catch(()=>({}));
+    if (!response.ok || payload?.ok===false) throw new Error(payload?.error||`Publisher HTTP ${response.status}`);
+    return payload;
+  } finally { window.clearTimeout(timer); }
+}
+
+async function atlasBookMirrorPublisherProbe40374() {
+  if (!atlasBookMirrorPublisherEligible40374()) return false;
+  try {
+    const payload=await atlasBookMirrorPublisherRequest40374("/health",{method:"GET"});
+    atlasBookMirrorPublisherState40374.ready=payload?.ready===true;
+    atlasBookMirrorPublisherState40374.authMode=String(payload?.auth_mode||"");
+    atlasBookMirrorPublisherState40374.lastError=payload?.ready===true ? "" : String(payload?.detail||"Authentification GitHub locale requise.");
+    atlasBookMirrorPublisherRender40374();
+    return atlasBookMirrorPublisherState40374.ready;
+  } catch (error) {
+    atlasBookMirrorPublisherState40374.ready=false;
+    atlasBookMirrorPublisherState40374.lastError=error?.name==="AbortError" ? "Publisher local : délai dépassé." : String(error?.message||error||"publisher indisponible");
+    atlasBookMirrorPublisherRender40374();
+    return false;
+  }
+}
+
+async function atlasBookMirrorAutoPublish40374(reason="current") {
+  if (!atlasBookMirrorPublisherEligible40374() || atlasBookMirrorPublisherState40374.busy) return false;
+  const payload=atlasBookMirrorPayload36();
+  const fp=String(payload?.fingerprint||"").trim();
+  if (!payload?.package || !fp) return false;
+  const last=atlasBookMirrorPublisherState40374.lastPublishedFingerprint || atlasBookMirrorPublisherLastFp40374();
+  if (fp===last) {
+    atlasBookMirrorPublisherState40374.ready=true;
+    atlasBookMirrorPublisherState40374.lastPublishedFingerprint=fp;
+    atlasBookMirrorPublisherRender40374();
+    return {ok:true,changed:false,fingerprint:fp};
+  }
+
+  atlasBookMirrorPublisherState40374.busy=true;
+  atlasBookMirrorPublisherRender40374();
+  try {
+    const result=await atlasBookMirrorPublisherRequest40374("/book-mirror/publish",{
+      method:"POST",
+      headers:{"Content-Type":"application/json; charset=utf-8","X-Agent-Crypto-Reason":String(reason||"current")},
+      body:JSON.stringify(payload)
+    });
+    atlasBookMirrorPublisherState40374.ready=true;
+    atlasBookMirrorPublisherState40374.authMode=String(result?.auth_mode||atlasBookMirrorPublisherState40374.authMode||"");
+    atlasBookMirrorPublisherState40374.lastError="";
+    atlasBookMirrorPublisherRemember40374(String(result?.fingerprint||fp));
+    atlasBookMirrorPublisherRender40374();
+    return result;
+  } catch (error) {
+    atlasBookMirrorPublisherState40374.ready=false;
+    atlasBookMirrorPublisherState40374.lastError=error?.name==="AbortError" ? "Publication locale : délai dépassé." : String(error?.message||error||"publication refusée");
+    atlasBookMirrorPublisherRender40374();
+    return false;
+  } finally {
+    atlasBookMirrorPublisherState40374.busy=false;
+    atlasBookMirrorPublisherRender40374();
+  }
+}
+
+// Final owner hook: a completed local synthesis is already the canonical payload
+// used by the existing manual Book export. We only publish that same object.
+const atlasSharedSynthesisBuildAndStoreBase40374 = atlasSharedSynthesisBuildAndStore;
+atlasSharedSynthesisBuildAndStore = function atlasSharedSynthesisBuildAndStore40374(snapshot,fingerprint) {
+  const pkg=atlasSharedSynthesisBuildAndStoreBase40374(snapshot,fingerprint);
+  if (pkg && atlasBookMirrorPublisherEligible40374()) {
+    queueMicrotask(()=>void atlasBookMirrorAutoPublish40374("current-complete"));
+  }
+  return pkg;
+};
+
+// A restored Ryzen synthesis is also a legitimate latest-known Book handoff.
+// Import sources are excluded to avoid echoing a Book/import payload back to GitHub.
+const atlasSharedSynthesisActivateBase40374 = atlasSharedSynthesisActivate;
+atlasSharedSynthesisActivate = function atlasSharedSynthesisActivate40374(pkg,source) {
+  const clean=atlasSharedSynthesisActivateBase40374(pkg,source);
+  const src=String(source||"").toLowerCase();
+  if (clean && atlasBookMirrorPublisherEligible40374() && ["local","restore"].includes(src)) {
+    queueMicrotask(()=>void atlasBookMirrorAutoPublish40374(`synthesis-${src}`));
+  }
+  return clean;
+};
+
+// Role application may find an already complete CURRENT after reload. One bounded
+// probe/publish attempt is enough; no publisher interval is introduced.
+const atlasDeviceComputeApplyBase40374 = atlasDeviceComputeApply;
+atlasDeviceComputeApply = function atlasDeviceComputeApply40374(options={}) {
+  const result=atlasDeviceComputeApplyBase40374(options);
+  if (atlasBookMirrorPublisherEligible40374()) {
+    queueMicrotask(async()=>{
+      const ready=await atlasBookMirrorPublisherProbe40374();
+      if (ready) await atlasBookMirrorAutoPublish40374("role-apply");
+    });
+  }
+  return result;
+};
+
+queueMicrotask(()=>{
+  if (!atlasBookMirrorPublisherEligible40374()) return;
+  void atlasBookMirrorPublisherProbe40374();
 });
