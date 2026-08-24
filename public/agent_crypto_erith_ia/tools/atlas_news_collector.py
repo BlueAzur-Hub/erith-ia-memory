@@ -25,8 +25,8 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any, Iterable
 
-VERSION = "V1.1-alpha.26.47.4"
-BUILD = "40.3.88"
+VERSION = "V1.1-alpha.26.47.5"
+BUILD = "40.3.89"
 SCHEMA = "atlas_news_sentinel_world_to_market_v1"
 ROOT = Path("public/agent_crypto_erith_ia/data/news")
 MAX_EVENTS = 120
@@ -721,6 +721,7 @@ def collect() -> int:
     payload = {
         "schema": SCHEMA, "version": VERSION, "generated_at": generated_at, "status": status_value,
         "observation_only": True, "archive_only": True, "collector": "github-actions",
+        "collector_build": BUILD, "sources_configured": len(SOURCES), "causal_claim": False,
         "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
         "summary": summary, "source_status": statuses, "events": events,
     }
@@ -729,8 +730,10 @@ def collect() -> int:
         "schema": "atlas_news_sentinel_status_v1", "version": VERSION, "updated_at": generated_at,
         "status": status_value, "events_count": len(events), "events_24h": summary["events_24h"],
         "sources_ok": summary["sources_ok"], "sources_total": summary["sources_total"],
-        "sources_failed": summary["sources_failed"], "message": payload["message"],
-        "driver_coverage_build": BUILD,
+        "sources_failed": summary["sources_failed"], "sources_configured": len(SOURCES),
+        "collector_build": BUILD, "driver_coverage_build": BUILD,
+        "driver_coverage": summary["driver_coverage"], "causal_claim": False,
+        "message": payload["message"],
     }
     (ROOT / "status.json").write_text(json.dumps(status_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     history_path = ROOT / "history" / f"{generated_at[:10]}.jsonl"
@@ -813,7 +816,10 @@ def self_test() -> int:
     assert summary["driver_coverage"]["institutional_flows"]["events_72h"] >= 1
     assert summary["driver_coverage"]["regulation"]["events_72h"] >= 1
     assert summary["causal_claim"] is False
-    print("Atlas News Sentinel canonical 40.3.88 self-test: OK")
+    assert len(SOURCES) == 15
+    assert BUILD == "40.3.89"
+    assert VERSION == "V1.1-alpha.26.47.5"
+    print("Atlas News Sentinel canonical 40.3.89 self-test: OK")
     return 0
 
 
