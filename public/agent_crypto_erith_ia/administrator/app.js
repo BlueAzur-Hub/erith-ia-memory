@@ -6746,6 +6746,33 @@ function atlasRuntimeInvokeRefresh40225(name,targetId,invoke){
   if(result&&typeof result.finally==="function")return result.finally(()=>atlasRuntimeRecordRefreshDuration40225(mark,atlasRuntimeNow40214()-started));
   atlasRuntimeRecordRefreshDuration40225(mark,atlasRuntimeNow40214()-started);return result;
 }
+
+/* 40.3.84 — FIREFOX HIDDEN RUNTIME RESIDENCY LOCK
+   Purely presentational refreshes are not materialized while their owner is
+   hidden/minimized/collapsed. Business resolution and prospective model state
+   keep their existing cadence. No timer/observer/scheduler is added. */
+const atlasRuntimeDeferredRefreshState40384={total:0,by_name:Object.create(null),by_visibility:Object.create(null)};
+function atlasRuntimeDeferPresentationalRefresh40384(name,targetId,invoke){
+  const visibility=atlasRuntimeTargetVisibility40225(targetId),state=atlasRuntimeVisibilityBucket40225(visibility.state);
+  if(state!=="visible"){
+    atlasRuntimeDeferredRefreshState40384.total+=1;
+    atlasRuntimeDeferredRefreshState40384.by_name[name]=(atlasRuntimeDeferredRefreshState40384.by_name[name]||0)+1;
+    atlasRuntimeDeferredRefreshState40384.by_visibility[state]=(atlasRuntimeDeferredRefreshState40384.by_visibility[state]||0)+1;
+    return Promise.resolve({deferred:true,state,target:String(targetId||"")});
+  }
+  try{return Promise.resolve(atlasRuntimeInvokeRefresh40225(name,targetId,invoke));}
+  catch(error){return Promise.reject(error);}
+}
+function atlasOracleLabRefreshOnDemand40384(force=true){
+  const tasks=[];
+  if(typeof atlasOracleRegimePerformanceRefresh==="function")tasks.push(atlasRuntimeDeferPresentationalRefresh40384("ondemand:regime_performance","oracle-models-calibration",()=>atlasOracleRegimePerformanceRefresh(null,force)));
+  if(typeof atlasOracleMultiModelPerformanceRefresh==="function")tasks.push(atlasRuntimeDeferPresentationalRefresh40384("ondemand:multi_model","oracle-models-calibration",()=>atlasOracleMultiModelPerformanceRefresh(null,force)));
+  if(typeof atlasOracleConfidenceCalibrationRefresh==="function")tasks.push(atlasRuntimeDeferPresentationalRefresh40384("ondemand:confidence_calibration","oracle-models-calibration",()=>atlasOracleConfidenceCalibrationRefresh(null,null,null,force)));
+  if(typeof atlasOracleLabDashboardRefresh==="function")tasks.push(atlasRuntimeDeferPresentationalRefresh40384("ondemand:lab_dashboard","oracle-models-calibration",()=>atlasOracleLabDashboardRefresh(force)));
+  if(typeof atlasOracleIntegrityRefresh==="function")tasks.push(atlasRuntimeDeferPresentationalRefresh40384("ondemand:integrity","oracle-models-calibration",()=>atlasOracleIntegrityRefresh(force)));
+  return Promise.allSettled(tasks);
+}
+globalThis.AtlasHiddenRuntimeResidency40384=Object.freeze({state:()=>({total:atlasRuntimeDeferredRefreshState40384.total,by_name:{...atlasRuntimeDeferredRefreshState40384.by_name},by_visibility:{...atlasRuntimeDeferredRefreshState40384.by_visibility}}),refreshLab:atlasOracleLabRefreshOnDemand40384,new_timer:false,new_observer:false,new_scheduler:false});
 function atlasRuntimeWindowSnapshot40225(){
   const manager=globalThis.ErithAdministratorWindows;let snapshot=null;
   try{snapshot=typeof manager?.snapshot==="function"?manager.snapshot():null;}catch{}
@@ -7014,10 +7041,10 @@ function atlasOracleEvidenceMaybeCapture(context) {
   atlasOracleEvidencePut(row).then(async () => {
     atlasOracleEvidenceStatusState.lastError = null;
     await atlasOracleEvidenceRefreshStatus();
-    if (typeof atlasOracleEvidenceExplorerRefresh === "function") atlasRuntimeInvokeRefresh40225("capture:evidence_explorer", "oracle-evidence-explorer", ()=>atlasOracleEvidenceExplorerRefresh()).catch(()=>{});
-    if (typeof atlasOracleLabDashboardRefresh === "function") atlasRuntimeInvokeRefresh40225("capture:lab_dashboard", "oracle-lab-dashboard", ()=>atlasOracleLabDashboardRefresh()).catch(()=>{});
-    if (typeof atlasOracleIntegrityRefresh === "function") atlasRuntimeInvokeRefresh40225("capture:integrity", "oracle-lab-dashboard", ()=>atlasOracleIntegrityRefresh()).catch(()=>{});
-    if (typeof atlasOracleEvidenceSourceHealthRender4026 === "function") { const measured=atlasRuntimeInvokeRefresh40225("capture:source_health", "oracle-infrastructure-observatory", ()=>atlasOracleEvidenceSourceHealthRender4026()); measured?.catch?.(()=>{}); }
+    if (typeof atlasOracleEvidenceExplorerRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("capture:evidence_explorer", "oracle-evidence-explorer", ()=>atlasOracleEvidenceExplorerRefresh()).catch(()=>{});
+    if (typeof atlasOracleLabDashboardRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("capture:lab_dashboard", "oracle-models-calibration", ()=>atlasOracleLabDashboardRefresh()).catch(()=>{});
+    if (typeof atlasOracleIntegrityRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("capture:integrity", "oracle-models-calibration", ()=>atlasOracleIntegrityRefresh()).catch(()=>{});
+    if (typeof atlasOracleEvidenceSourceHealthRender4026 === "function") { const measured=atlasRuntimeDeferPresentationalRefresh40384("capture:source_health", "oracle-infrastructure-observatory", ()=>atlasOracleEvidenceSourceHealthRender4026()); measured?.catch?.(()=>{}); }
     if (atlasOracleEvidenceStatusState.count % 100 === 0) atlasOracleEvidencePruneIfNeeded().catch(()=>{});
     if (typeof atlasOracleOutcomeSchedule === "function") atlasOracleOutcomeSchedule();
   }).catch(error => {
@@ -7170,16 +7197,16 @@ async function atlasOracleOutcomeRun() {
     atlasOracleOutcomeStatusState.lastRunAt = now;
     atlasOracleOutcomeStatusState.lastError = null;
     await atlasOracleOutcomeRefreshStatus(changed ? await atlasOracleEvidenceAll() : rows);
-    if (typeof atlasOracleCalibrationRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:calibration", "atlasOracleV0", ()=>atlasOracleCalibrationRefresh()).catch(()=>{});
-    if (typeof atlasOracleProofRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:proof", "atlasOracleV0", ()=>atlasOracleProofRefresh()).catch(()=>{});
-    if (typeof atlasOracleHorizonMatrixRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:horizon_matrix", "atlasOracleV0", ()=>atlasOracleHorizonMatrixRefresh()).catch(()=>{});
-    if (typeof atlasOracleRegimePerformanceRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:regime_performance", "oracle-lab-dashboard", ()=>atlasOracleRegimePerformanceRefresh(null,true)).catch(()=>{});
-    if (typeof atlasOracleEvidenceExplorerRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:evidence_explorer", "oracle-evidence-explorer", ()=>atlasOracleEvidenceExplorerRefresh()).catch(()=>{});
-    if (typeof atlasOracleMultiModelPerformanceRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:multi_model", "oracle-lab-dashboard", ()=>atlasOracleMultiModelPerformanceRefresh(null,true)).catch(()=>{});
+    if (typeof atlasOracleCalibrationRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:calibration", "atlasOracleV0", ()=>atlasOracleCalibrationRefresh()).catch(()=>{});
+    if (typeof atlasOracleProofRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:proof", "atlasOracleV0", ()=>atlasOracleProofRefresh()).catch(()=>{});
+    if (typeof atlasOracleHorizonMatrixRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:horizon_matrix", "atlasOracleV0", ()=>atlasOracleHorizonMatrixRefresh()).catch(()=>{});
+    if (typeof atlasOracleRegimePerformanceRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:regime_performance", "oracle-models-calibration", ()=>atlasOracleRegimePerformanceRefresh(null,true)).catch(()=>{});
+    if (typeof atlasOracleEvidenceExplorerRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:evidence_explorer", "oracle-evidence-explorer", ()=>atlasOracleEvidenceExplorerRefresh()).catch(()=>{});
+    if (typeof atlasOracleMultiModelPerformanceRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:multi_model", "oracle-models-calibration", ()=>atlasOracleMultiModelPerformanceRefresh(null,true)).catch(()=>{});
     if (typeof atlasOracleAdaptiveWeightsRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:adaptive_weights", "oracle-lab-dashboard", ()=>atlasOracleAdaptiveWeightsRefresh(null,true)).catch(()=>{});
     if (typeof atlasOracleShadowV2Refresh === "function") atlasRuntimeInvokeRefresh40225("outcome:shadow_v2", "oracle-lab-dashboard", ()=>atlasOracleShadowV2Refresh(true)).catch(()=>{});
-    if (typeof atlasOracleLabDashboardRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:lab_dashboard", "oracle-lab-dashboard", ()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
-    if (typeof atlasOracleIntegrityRefresh === "function") atlasRuntimeInvokeRefresh40225("outcome:integrity", "oracle-lab-dashboard", ()=>atlasOracleIntegrityRefresh(true)).catch(()=>{});
+    if (typeof atlasOracleLabDashboardRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:lab_dashboard", "oracle-models-calibration", ()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
+    if (typeof atlasOracleIntegrityRefresh === "function") atlasRuntimeDeferPresentationalRefresh40384("outcome:integrity", "oracle-models-calibration", ()=>atlasOracleIntegrityRefresh(true)).catch(()=>{});
     return { ...atlasOracleOutcomeStatusState, changed };
   } catch (error) {
     atlasOracleOutcomeStatusState.lastError = String(error?.message || error || "erreur");
@@ -7221,7 +7248,7 @@ function atlasOracleLongShadowCompute40273(rows){return atlasOracleLongShadowCom
 function atlasOracleLongShadowRender40273(rows=null){const apply=source=>{const h=atlasOracleLongShadowCompute40282(source||[],Date.now());atlasOracleLongShadowState40273={...atlasOracleLongShadowState40273,horizons:h};const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};const pct=v=>Number.isFinite(Number(v))?`${Number(v).toFixed(1)} %`:"—",ret=v=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(3)} %`:"—";const status=x=>{if(!x?.matured)return "EN COLLECTE";if(Number(x.coverage)>=95)return "COUVERTURE FORTE";if(Number(x.coverage)>=80)return "COUVERTURE BONNE";return "COUVERTURE À SURVEILLER";};const methodText=x=>{const m=Object.entries(x?.methods||{}).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${k} ×${n}`).slice(0,2).join(" · ")||"—";const lag=Number.isFinite(Number(x?.median_lag_min))?` · retard médian ${Number(x.median_lag_min).toFixed(1)} min`:"";return m+lag;};const directionText=x=>`↑ ${x?.directions?.up||0} · ↓ ${x?.directions?.down||0} · = ${x?.directions?.flat||0}`;const f=(k,p)=>{const x=h[k]||{};set(`atlasOracleLong${p}Resolved40273`,String(x.resolved||0));set(`atlasOracleLong${p}Pending40273`,String(x.waiting||0));set(`atlasOracleLong${p}Missing40282`,String(x.due_missing||0));set(`atlasOracleLong${p}Coverage40282`,pct(x.coverage));set(`atlasOracleLong${p}Hit40273`,pct(x.hit_rate));set(`atlasOracleLong${p}Return40273`,ret(x.avg_return));set(`atlasOracleLong${p}Median40282`,ret(x.median_return));set(`atlasOracleLong${p}Abs40282`,ret(x.avg_abs_return)?.replace(/^\+/,""));set(`atlasOracleLong${p}Directions40282`,directionText(x));set(`atlasOracleLong${p}Method40282`,methodText(x));set(`atlasOracleLong${p}Window40282`,x.first_t0&&x.last_t0?`${atlasOracleLongFmtT040282(x.first_t0)} → ${atlasOracleLongFmtT040282(x.last_t0)}`:"—");set(`atlasOracleLong${p}Status40282`,status(x));};f("30m","30");f("1h","1h");const vals=Object.values(h),eligible=vals.reduce((s,x)=>s+(x.eligible||0),0),resolved=vals.reduce((s,x)=>s+(x.resolved||0),0),waiting=vals.reduce((s,x)=>s+(x.waiting||0),0),missing=vals.reduce((s,x)=>s+(x.due_missing||0),0),matured=resolved+missing,coverage=matured?resolved/matured*100:null;set("atlasOracleLongEligible40282",String(eligible));set("atlasOracleLongResolved40282",String(resolved));set("atlasOracleLongWaiting40282",String(waiting));set("atlasOracleLongMissing40282",String(missing));set("atlasOracleLongCoverage40282",pct(coverage));const stateNode=document.getElementById("atlasOracleLongShadowState40273");if(stateNode)stateNode.textContent=resolved?`PROSPECTIF · ${resolved} résolution(s)`:`PROSPECTIF · n0`;return h;};if(Array.isArray(rows))return apply(rows);return atlasOracleEvidenceAll().then(apply).catch(()=>null);}
 async function atlasOracleLongShadowRun40273(force=false){const now=Date.now();if(atlasOracleLongShadowState40273.running)return atlasOracleLongShadowState40273;if(!force&&now-Number(atlasOracleLongShadowState40273.last_run_at||0)<60_000)return atlasOracleLongShadowState40273;atlasOracleLongShadowState40273.running=true;try{const rows=await atlasOracleEvidenceAll();let changed=0;for(const row of rows){if(row?.long_shadow?.schema!=="atlas.oracle.long-shadow.v1")continue;let next=null;for(const key of Object.keys(ATLAS_ORACLE_LONG_SHADOW_40273)){const outcome=atlasOracleLongShadowResolveRow40273(next||row,key,now);if(!outcome)continue;if(!next)next={...row,long_shadow_outcomes:{...(row.long_shadow_outcomes||{})}};next.long_shadow_outcomes[key]=outcome;}if(next){await atlasOracleEvidencePut(next);changed++;}}const fresh=changed?await atlasOracleEvidenceAll():rows;atlasOracleLongShadowState40273.last_run_at=now;await atlasOracleLongShadowRender40273(fresh);return {...atlasOracleLongShadowState40273,changed};}finally{atlasOracleLongShadowState40273.running=false;}}
 globalThis.AtlasOracleLongShadow40273=Object.freeze({build:"40.2.73",operator_view_build:"40.2.82",run:atlasOracleLongShadowRun40273,render:atlasOracleLongShadowRender40273,state:()=>atlasOracleLongShadowState40273,horizons:Object.keys(ATLAS_ORACLE_LONG_SHADOW_40273),prospective_only:true,retrofit_old_rows:false,oracle_v1_changed:false,ensemble_changed:false,weights_changed:false,evaluation_gate_changed:false});
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>{setTimeout(()=>{atlasOracleLongShadowRender40273();atlasOracleLongShadowRun40273(true);},3500);},{once:true});else setTimeout(()=>{atlasOracleLongShadowRender40273();atlasOracleLongShadowRun40273(true);},3500);
+/* 40.3.84: Long Shadow boot scan is owned by atlasOracleOutcomeSchedule after explicit Oracle initialization. */
 
 /* ============================================================
    40.1.62 — ORACLE CALIBRATION BOARD
@@ -9460,12 +9487,12 @@ function atlasRenderOracleV0() {
   atlasOracleProofRefresh().catch(()=>{});
   atlasOracleHorizonMatrixRefresh().catch(()=>{});
   const currentRegime = atlasOracleRegimeRender(model);
-  atlasOracleRegimePerformanceRefresh(currentRegime?.key).catch(()=>{});
-  atlasOracleMultiModelPerformanceRefresh(currentRegime?.key).catch(()=>{});
+  atlasRuntimeDeferPresentationalRefresh40384("render:regime_performance","oracle-models-calibration",()=>atlasOracleRegimePerformanceRefresh(currentRegime?.key)).catch(()=>{});
+  atlasRuntimeDeferPresentationalRefresh40384("render:multi_model","oracle-models-calibration",()=>atlasOracleMultiModelPerformanceRefresh(currentRegime?.key)).catch(()=>{});
   atlasOracleAdaptiveWeightsRefresh(currentRegime?.key).catch(()=>{});
   const currentEnsemble = atlasOracleEnsembleRender(model);
   atlasOracleShadowV2RenderLive(model,currentRegime);
-  atlasOracleConfidenceCalibrationRefresh(model,currentRegime,currentEnsemble).then(()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
+  atlasRuntimeDeferPresentationalRefresh40384("render:confidence_calibration","oracle-models-calibration",()=>atlasOracleConfidenceCalibrationRefresh(model,currentRegime,currentEnsemble)).then(()=>atlasRuntimeDeferPresentationalRefresh40384("render:lab_dashboard","oracle-models-calibration",()=>atlasOracleLabDashboardRefresh(true))).catch(()=>{});
   atlasOracleRuntimeStethoscope40232D(model);
   atlasRenderOracleNewsContext40234(model, coin);
   atlasRenderOracleNewsContext40235(model, coin);
@@ -9486,14 +9513,15 @@ function atlasInitOracleV0() {
   atlasOracleCalibrationRefresh(true).catch(()=>{});
   atlasOracleProofRefresh(true).catch(()=>{});
   atlasOracleHorizonMatrixRefresh(true).catch(()=>{});
-  atlasOracleRegimePerformanceRefresh(null,true).catch(()=>{});
-  atlasOracleMultiModelPerformanceRefresh(null,true).catch(()=>{});
+  atlasRuntimeDeferPresentationalRefresh40384("init:regime_performance","oracle-models-calibration",()=>atlasOracleRegimePerformanceRefresh(null,true)).catch(()=>{});
+  atlasRuntimeDeferPresentationalRefresh40384("init:multi_model","oracle-models-calibration",()=>atlasOracleMultiModelPerformanceRefresh(null,true)).catch(()=>{});
   atlasOracleAdaptiveWeightsRefresh(null,true).then(()=>atlasOracleShadowV2Refresh(true)).catch(()=>{});
   atlasOracleEvidenceExplorerInit();
   document.getElementById("oracle-analysis-suite")?.addEventListener("toggle",event=>{if(!event.currentTarget.open)atlasOracleEvidenceExplorerRelease40216();else if(document.getElementById("oracle-evidence-explorer")?.open)atlasOracleEvidenceExplorerRefresh();});
-  atlasOracleLabDashboardRefresh(true).catch(()=>{});
+  document.getElementById("oracle-models-calibration")?.addEventListener("toggle",event=>{if(event.currentTarget.open)atlasOracleLabRefreshOnDemand40384(true).catch(()=>{});});
+  atlasRuntimeDeferPresentationalRefresh40384("init:lab_dashboard","oracle-models-calibration",()=>atlasOracleLabDashboardRefresh(true)).catch(()=>{});
   atlasOracleBackupInit();
-  atlasOracleIntegrityRefresh(true).catch(()=>{});
+  atlasRuntimeDeferPresentationalRefresh40384("init:integrity","oracle-models-calibration",()=>atlasOracleIntegrityRefresh(true)).catch(()=>{});
   strip?.addEventListener("click", event => {
     const aggregate = event.target?.closest?.("[data-oracle-asset-group='top5']");
     if (aggregate) {
@@ -47013,7 +47041,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.83";
+const ATLAS_BUILD = "40.3.85";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55086,3 +55114,9 @@ try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40382__=Object.freeze({build:"40.3.82
 
 /* 40.3.83 — persistent Bridge trust + legacy publisher retirement truth. */
 try{globalThis.__AGENT_CRYPTO_TRUST_40383__=Object.freeze({build:"40.3.83",parent:"40.3.82",bridge_control_center:"2.3.2R12",bridge_engine:"1.9.10",bridge_auth_storage:"persistent_local_trust",book_mirror_owner:"Bridge restricted capability :8787",legacy_dedicated_publisher_retired:true,new_timer:false,new_observer:false,new_scheduler:false,window_manager_modified:false});}catch(_){}
+
+/* 40.3.84 audit marker */
+try{globalThis.__AGENT_CRYPTO_RUNTIME_40384__=Object.freeze({build:"40.3.84",parent:"40.3.83",hidden_presentational_refresh_deferred:true,lab_materialize_on_open:true,long_shadow_duplicate_boot_scan_removed:true,outcome_resolver_cadence_changed:false,adaptive_weights_cadence_changed:false,shadow_v2_prospective_changed:false,new_timer:false,new_observer:false,new_scheduler:false,window_manager_modified:false});}catch(_){}
+
+/* 40.3.85 — SECTION 01 RESPONSIBILITY CONSOLIDATION */
+try{globalThis.__AGENT_CRYPTO_SECTION01_40385__=Object.freeze({build:"40.3.85",parent:"40.3.84",graphique:"prix+historique observé",math_core:"mesures+intégrité",news_sentinel:"contexte sourcé+causalité prudente",oracle:"scénario court de continuation",decision_board:"synthèse+contradictions+limites",section_relocation:false,model_math_changed:false,news_algorithm_changed:false,oracle_algorithm_changed:false,new_timer:false,new_observer:false,new_scheduler:false});}catch(_){}
