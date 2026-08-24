@@ -8147,6 +8147,104 @@ async function atlasOracleConfidenceCalibrationRefresh(model=null,regime=null,en
 globalThis.AtlasOracleCalibratedConfidence=Object.freeze({refresh:atlasOracleConfidenceCalibrationRefresh,compute:atlasOracleConfidenceCalibrationComputeRows,state:()=>atlasOracleConfidenceCalibrationState});
 
 
+/* ============================================================
+   40.3.92 — ORACLE OPERATOR TRUTH OWNER RECONCILIATION LOCK
+   40.3.84 correctly deferred the heavy hidden Oracle Lab presentation,
+   but MEILLEUR MODÈLE / CONF. CALIBRÉE live outside that hidden owner.
+   Their truth must therefore be hydrated by the visible Oracle operator
+   surface, without waking the whole hidden laboratory.
+
+   Contract:
+   - reads existing Oracle Evidence only;
+   - computes only the active 1m/5m/15m horizon + current regime slice;
+   - shares one Evidence snapshot for model performance + confidence;
+   - recomputes only when horizon / resolved count / regime / score bin changes;
+   - no timer, observer, scheduler, network request or storage write;
+   - no model, weight, outcome, V2, Long Shadow or Evidence mutation.
+   ============================================================ */
+const atlasOracleOperatorTruthState40392={marker:"",in_flight:null,last_at:0,last_rows:0,last_horizon:null,last_resolved:0};
+
+function atlasOracleOperatorTruthRenderCached40392(regimeKey=null){
+  const mm=typeof atlasOracleMultiModelPerformanceRender==="function"?atlasOracleMultiModelPerformanceRender(regimeKey):null;
+  const cc=typeof atlasOracleConfidenceCalibrationRender==="function"?atlasOracleConfidenceCalibrationRender(atlasOracleConfidenceCalibrationState):null;
+  return {model:mm,confidence:cc,cached:true};
+}
+
+async function atlasOracleOperatorTruthReconcile40392(model=null,regime=null,ensemble=null,force=false){
+  const visibility=atlasRuntimeTargetVisibility40225("atlasOracleV0");
+  const bucket=atlasRuntimeVisibilityBucket40225(visibility.state);
+  if(bucket!=="visible")return {deferred:true,state:bucket,target:"atlasOracleV0"};
+
+  const horizonKey=atlasOracleHorizonSpec().key;
+  const regimeKey=String(regime?.key||document.getElementById("atlasOracleV0")?.dataset?.oracleRegime||"");
+  const liveEnsemble=ensemble||((model&&typeof atlasOracleEnsembleModel==="function")?atlasOracleEnsembleModel(model):null);
+  const liveScore=Number(liveEnsemble?.score);
+  const scoreBin=Number.isFinite(liveScore)&&typeof atlasOracleConfidenceBin==="function"?atlasOracleConfidenceBin(liveScore).key:"none";
+  const resolved=Number(atlasOracleOutcomeStatusState?.resolved||0);
+  const marker=`${horizonKey}|${resolved}|${regimeKey||"none"}|${scoreBin}`;
+
+  if(!force&&atlasOracleOperatorTruthState40392.marker===marker){
+    return atlasOracleOperatorTruthRenderCached40392(regimeKey);
+  }
+  if(atlasOracleOperatorTruthState40392.in_flight)return atlasOracleOperatorTruthState40392.in_flight;
+
+  const run=(async()=>{
+    const rows=await atlasOracleEvidenceAll();
+
+    /* Active horizon only: do not rematerialize the hidden multi-horizon Lab. */
+    const globalRow=atlasOracleModelPerformanceComputeScope(rows,horizonKey);
+    atlasOracleMultiModelPerformanceState={
+      ...atlasOracleMultiModelPerformanceState,
+      updated_at:Date.now(),
+      current_regime:regimeKey||null,
+      horizons:{...(atlasOracleMultiModelPerformanceState?.horizons||{}),[horizonKey]:globalRow},
+      regimes:{...(atlasOracleMultiModelPerformanceState?.regimes||{})}
+    };
+    if(regimeKey){
+      const regimeRows=rows.filter(row=>String(row?.regime?.key||"")===regimeKey);
+      const prior=atlasOracleMultiModelPerformanceState.regimes?.[regimeKey]||{};
+      atlasOracleMultiModelPerformanceState.regimes[regimeKey]={
+        ...prior,
+        key:regimeKey,
+        label:String(regime?.label||prior.label||regimeKey),
+        observations:regimeRows.length,
+        horizons:{...(prior.horizons||{}),[horizonKey]:atlasOracleModelPerformanceComputeScope(regimeRows,horizonKey)}
+      };
+    }
+    atlasOracleMultiModelPerformanceRender(regimeKey);
+
+    if(Number.isFinite(liveScore)){
+      atlasOracleConfidenceCalibrationState=atlasOracleConfidenceCalibrationComputeRows(rows,horizonKey,regimeKey,liveScore);
+      atlasOracleConfidenceCalibrationRender(atlasOracleConfidenceCalibrationState);
+    }else{
+      atlasOracleConfidenceCalibrationRender({...atlasOracleConfidenceCalibrationState,cases:0,calibrated:null,horizon_key:horizonKey,regime_key:regimeKey});
+    }
+
+    atlasOracleOperatorTruthState40392.marker=marker;
+    atlasOracleOperatorTruthState40392.last_at=Date.now();
+    atlasOracleOperatorTruthState40392.last_rows=rows.length;
+    atlasOracleOperatorTruthState40392.last_horizon=horizonKey;
+    atlasOracleOperatorTruthState40392.last_resolved=resolved;
+    return {ok:true,marker,rows:rows.length,horizon_key:horizonKey,resolved,model_cases:Number(globalRow?.cases||0),confidence_cases:Number(atlasOracleConfidenceCalibrationState?.cases||0)};
+  })();
+  atlasOracleOperatorTruthState40392.in_flight=run;
+  try{return await run;}finally{if(atlasOracleOperatorTruthState40392.in_flight===run)atlasOracleOperatorTruthState40392.in_flight=null;}
+}
+
+globalThis.AtlasOracleOperatorTruth40392=Object.freeze({
+  reconcile:atlasOracleOperatorTruthReconcile40392,
+  state:()=>({...atlasOracleOperatorTruthState40392,in_flight:Boolean(atlasOracleOperatorTruthState40392.in_flight)}),
+  owner:"atlasOracleV0",
+  hidden_lab_owner:"oracle-models-calibration",
+  active_horizon_only:true,
+  storage_write:false,
+  model_changed:false,
+  new_timer:false,
+  new_observer:false,
+  new_scheduler:false
+});
+
+
 
 /* 40.2.18 — ORACLE GENERAL SECTION SUMMARY
    Visual-only synthesis. Reads existing DOM/state; no storage/network/model writes. */
@@ -9490,11 +9588,12 @@ function atlasRenderOracleV0() {
   atlasOracleHorizonMatrixRefresh().catch(()=>{});
   const currentRegime = atlasOracleRegimeRender(model);
   atlasRuntimeDeferPresentationalRefresh40384("render:regime_performance","oracle-models-calibration",()=>atlasOracleRegimePerformanceRefresh(currentRegime?.key)).catch(()=>{});
-  atlasRuntimeDeferPresentationalRefresh40384("render:multi_model","oracle-models-calibration",()=>atlasOracleMultiModelPerformanceRefresh(currentRegime?.key)).catch(()=>{});
   atlasOracleAdaptiveWeightsRefresh(currentRegime?.key).catch(()=>{});
   const currentEnsemble = atlasOracleEnsembleRender(model);
   atlasOracleShadowV2RenderLive(model,currentRegime);
-  atlasRuntimeDeferPresentationalRefresh40384("render:confidence_calibration","oracle-models-calibration",()=>atlasOracleConfidenceCalibrationRefresh(model,currentRegime,currentEnsemble)).then(()=>atlasRuntimeDeferPresentationalRefresh40384("render:lab_dashboard","oracle-models-calibration",()=>atlasOracleLabDashboardRefresh(true))).catch(()=>{});
+  /* 40.3.92: primary operator truth belongs to the visible Oracle surface,
+     while the full calibration laboratory remains residency-gated. */
+  atlasOracleOperatorTruthReconcile40392(model,currentRegime,currentEnsemble).then(()=>atlasRuntimeDeferPresentationalRefresh40384("render:lab_dashboard","oracle-models-calibration",()=>atlasOracleLabDashboardRefresh(true))).catch(()=>{});
   atlasOracleRuntimeStethoscope40232D(model);
   atlasRenderOracleNewsContext40234(model, coin);
   atlasRenderOracleNewsContext40235(model, coin);
@@ -47377,7 +47476,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.91";
+const ATLAS_BUILD = "40.3.93";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55489,3 +55588,431 @@ try {
     window_manager_changed: false
   });
 } catch (_) {}
+
+
+/* 40.3.92 — Oracle operator truth owner reconciliation audit marker. */
+try{globalThis.__AGENT_CRYPTO_ORACLE_TRUTH_40392__=Object.freeze({build:"40.3.92",parent:"40.3.91",operator_truth_owner:"atlasOracleV0",hidden_lab_owner:"oracle-models-calibration",active_horizon_only:true,shared_evidence_snapshot:true,recompute_marker:"horizon|resolved|regime|ensemble_score_bin",oracle_model_changed:false,oracle_weights_changed:false,outcome_resolver_changed:false,evidence_mutation:false,storage_changed:false,market_core_changed:false,window_manager_modified:false,new_timer:false,new_observer:false,new_scheduler:false});}catch(_){}
+
+
+/* ============================================================
+   40.3.93 — GREY PLATE FORENSIC PROBE LOCK
+   DIAGNOSTIC ONLY — no Firefox/CSS/compositor fix is attempted.
+
+   Runtime contract:
+   - dormant until explicit operator arming;
+   - wheel/scroll listeners exist only while armed;
+   - Long Task PerformanceObserver exists only while armed and is
+     disconnected on disarm;
+   - wheel/scroll hot path performs no DOM traversal/computed-style reads;
+   - geometry/style sampling happens only on explicit CAPTURE;
+   - Ctrl+Alt+G provides a keyboard capture when the grey plate is visible;
+   - no localStorage/IndexedDB write, network request, timer or scheduler;
+   - no Market/Oracle/News/Bridge/Book/Window Manager mutation.
+   ============================================================ */
+const ATLAS_GREY_PROBE_40393_BUILD="40.3.93";
+const ATLAS_GREY_PROBE_40393_SCHEMA="agent_crypto.grey_plate_forensic_probe.v1";
+
+const atlasGreyProbeState40393={
+  armed:false,
+  armed_at:null,
+  events:[],
+  long_tasks:[],
+  observer:null,
+  last_capture:null,
+  max_events:180,
+  max_long_tasks:80
+};
+
+function atlasGreyProbePush40393(list,row,max){
+  list.push(row);
+  if(list.length>max)list.splice(0,list.length-max);
+}
+
+function atlasGreyProbeWheel40393(event){
+  if(!atlasGreyProbeState40393.armed)return;
+  atlasGreyProbePush40393(atlasGreyProbeState40393.events,{
+    kind:"wheel",
+    at:performance.now(),
+    event_ts:Number(event?.timeStamp)||0,
+    delta_y:Number(event?.deltaY)||0,
+    delta_x:Number(event?.deltaX)||0,
+    delta_mode:Number(event?.deltaMode)||0,
+    scroll_y:Number(window.scrollY)||0
+  },atlasGreyProbeState40393.max_events);
+}
+
+function atlasGreyProbeScroll40393(){
+  if(!atlasGreyProbeState40393.armed)return;
+  atlasGreyProbePush40393(atlasGreyProbeState40393.events,{
+    kind:"scroll",
+    at:performance.now(),
+    scroll_y:Number(window.scrollY)||0,
+    scroll_x:Number(window.scrollX)||0
+  },atlasGreyProbeState40393.max_events);
+}
+
+function atlasGreyProbeKey40393(event){
+  if(!atlasGreyProbeState40393.armed)return;
+  if(event?.ctrlKey&&event?.altKey&&!event?.shiftKey&&String(event?.key||"").toLowerCase()==="g"){
+    event.preventDefault();
+    atlasGreyProbeCapture40393("keyboard");
+  }
+}
+
+function atlasGreyProbeLongTaskStart40393(){
+  if(atlasGreyProbeState40393.observer)return;
+  try{
+    const supported=typeof PerformanceObserver==="function"
+      && Array.from(PerformanceObserver.supportedEntryTypes||[]).includes("longtask");
+    if(!supported)return;
+    const observer=new PerformanceObserver(list=>{
+      if(!atlasGreyProbeState40393.armed)return;
+      for(const entry of list.getEntries()){
+        atlasGreyProbePush40393(atlasGreyProbeState40393.long_tasks,{
+          start_time:Number(entry.startTime)||0,
+          duration_ms:Number(entry.duration)||0
+        },atlasGreyProbeState40393.max_long_tasks);
+      }
+    });
+    observer.observe({type:"longtask"});
+    atlasGreyProbeState40393.observer=observer;
+  }catch(_){}
+}
+
+function atlasGreyProbeLongTaskStop40393(){
+  try{atlasGreyProbeState40393.observer?.disconnect();}catch(_){}
+  atlasGreyProbeState40393.observer=null;
+}
+
+function atlasGreyProbeArm40393(){
+  if(atlasGreyProbeState40393.armed)return atlasGreyProbeRender40393();
+  atlasGreyProbeState40393.armed=true;
+  atlasGreyProbeState40393.armed_at=new Date().toISOString();
+  atlasGreyProbeState40393.events.length=0;
+  atlasGreyProbeState40393.long_tasks.length=0;
+  window.addEventListener("wheel",atlasGreyProbeWheel40393,{passive:true,capture:true});
+  window.addEventListener("scroll",atlasGreyProbeScroll40393,{passive:true});
+  window.addEventListener("keydown",atlasGreyProbeKey40393,true);
+  atlasGreyProbeLongTaskStart40393();
+  return atlasGreyProbeRender40393();
+}
+
+function atlasGreyProbeDisarm40393(){
+  window.removeEventListener("wheel",atlasGreyProbeWheel40393,true);
+  window.removeEventListener("scroll",atlasGreyProbeScroll40393);
+  window.removeEventListener("keydown",atlasGreyProbeKey40393,true);
+  atlasGreyProbeLongTaskStop40393();
+  atlasGreyProbeState40393.armed=false;
+  return atlasGreyProbeRender40393();
+}
+
+function atlasGreyProbeElementKey40393(node){
+  if(!(node instanceof Element))return null;
+  const cls=String(node.getAttribute("class")||"").trim().replace(/\s+/g," ").slice(0,180);
+  return `${String(node.tagName||"").toLowerCase()}${node.id?`#${node.id}`:""}${cls?`.${cls.replace(/\s+/g,".")}`:""}`;
+}
+
+function atlasGreyProbeElementSummary40393(node,cache){
+  if(!(node instanceof Element))return null;
+  if(cache.has(node))return cache.get(node);
+
+  let rect=null,style=null;
+  try{rect=node.getBoundingClientRect();}catch(_){}
+  try{style=getComputedStyle(node);}catch(_){}
+
+  const vw=Math.max(1,window.innerWidth||1);
+  const vh=Math.max(1,window.innerHeight||1);
+  const iw=rect?Math.max(0,Math.min(rect.right,vw)-Math.max(rect.left,0)):0;
+  const ih=rect?Math.max(0,Math.min(rect.bottom,vh)-Math.max(rect.top,0)):0;
+  const ratio=(iw*ih)/(vw*vh);
+
+  const row={
+    key:atlasGreyProbeElementKey40393(node),
+    tag:String(node.tagName||"").toLowerCase(),
+    id:String(node.id||""),
+    class_name:String(node.getAttribute("class")||"").trim().replace(/\s+/g," ").slice(0,220),
+    role:String(node.getAttribute("role")||""),
+    position:String(style?.position||""),
+    z_index:String(style?.zIndex||""),
+    display:String(style?.display||""),
+    visibility:String(style?.visibility||""),
+    opacity:String(style?.opacity||""),
+    pointer_events:String(style?.pointerEvents||""),
+    background_color:String(style?.backgroundColor||""),
+    background_image:String(style?.backgroundImage||"").slice(0,320),
+    transform:String(style?.transform||"").slice(0,180),
+    filter:String(style?.filter||"").slice(0,180),
+    backdrop_filter:String(style?.backdropFilter||style?.webkitBackdropFilter||"").slice(0,180),
+    contain:String(style?.contain||""),
+    content_visibility:String(style?.contentVisibility||""),
+    will_change:String(style?.willChange||""),
+    mix_blend_mode:String(style?.mixBlendMode||""),
+    viewport_area_ratio:Number(ratio.toFixed(4)),
+    rect:rect?{
+      left:Math.round(rect.left),top:Math.round(rect.top),
+      right:Math.round(rect.right),bottom:Math.round(rect.bottom),
+      width:Math.round(rect.width),height:Math.round(rect.height)
+    }:null
+  };
+  cache.set(node,row);
+  return row;
+}
+
+function atlasGreyProbeSample40393(){
+  const vw=Math.max(1,window.innerWidth||1);
+  const vh=Math.max(1,window.innerHeight||1);
+  const coords=[
+    ["tl",0.12,0.14],["tc",0.50,0.14],["tr",0.88,0.14],
+    ["ml",0.12,0.50],["mc",0.50,0.50],["mr",0.88,0.50],
+    ["bl",0.12,0.86],["bc",0.50,0.86],["br",0.88,0.86]
+  ];
+  const cache=new Map();
+  const samples=[];
+
+  for(const [name,xr,yr] of coords){
+    const x=Math.max(0,Math.min(vw-1,Math.round(vw*xr)));
+    const y=Math.max(0,Math.min(vh-1,Math.round(vh*yr)));
+    let stack=[];
+    try{stack=(document.elementsFromPoint(x,y)||[]).slice(0,7);}catch(_){}
+    samples.push({
+      name,x,y,
+      stack:stack.map(node=>atlasGreyProbeElementSummary40393(node,cache)).filter(Boolean)
+    });
+  }
+
+  const rows=[...cache.values()];
+  const large_overlay_candidates=rows.filter(row=>
+    row.viewport_area_ratio>=0.35 &&
+    ["fixed","sticky","absolute"].includes(row.position) &&
+    row.display!=="none" &&
+    row.visibility!=="hidden" &&
+    Number(row.opacity||1)>0
+  ).sort((a,b)=>b.viewport_area_ratio-a.viewport_area_ratio);
+
+  const topKeys=samples.map(sample=>sample.stack[0]?.key||"NONE");
+  const counts={};
+  for(const key of topKeys)counts[key]=(counts[key]||0)+1;
+  const dominant=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]||["NONE",0];
+  const bodyLike=samples.filter(sample=>["html","body","NONE"].includes(sample.stack[0]?.tag||"NONE")).length;
+
+  const interpretation=large_overlay_candidates.length
+    ?"LARGE_POSITIONED_DOM_SURFACE_PRESENT"
+    :bodyLike>=5
+      ?"DOM_EMPTY_OR_BODY_DOMINANT_AT_SAMPLE_POINTS"
+      :"NO_LARGE_POSITIONED_DOM_SURFACE_AT_SAMPLE_POINTS";
+
+  return {
+    samples,
+    large_overlay_candidates:large_overlay_candidates.slice(0,12),
+    dominant_top:{key:dominant[0],points:dominant[1]},
+    body_like_top_points:bodyLike,
+    interpretation
+  };
+}
+
+function atlasGreyProbeRecentInput40393(now){
+  const events=atlasGreyProbeState40393.events;
+  const lastWheel=[...events].reverse().find(row=>row.kind==="wheel")||null;
+  const lastScroll=[...events].reverse().find(row=>row.kind==="scroll")||null;
+  const wheelAge=lastWheel?now-Number(lastWheel.at||0):Infinity;
+  const scrollAge=lastScroll?now-Number(lastScroll.at||0):Infinity;
+  const inferred=wheelAge<=1000
+    ?"WHEEL_RECENT"
+    :scrollAge<=1000
+      ?"SCROLL_WITHOUT_RECENT_WHEEL"
+      :"IDLE_OR_UNKNOWN";
+
+  return {
+    inferred,
+    last_wheel_age_ms:Number.isFinite(wheelAge)?Math.round(wheelAge):null,
+    last_scroll_age_ms:Number.isFinite(scrollAge)?Math.round(scrollAge):null
+  };
+}
+
+function atlasGreyProbeCapture40393(trigger="button"){
+  const now=performance.now();
+
+  const visual=window.visualViewport?{
+    width:Number(window.visualViewport.width)||0,
+    height:Number(window.visualViewport.height)||0,
+    offset_left:Number(window.visualViewport.offsetLeft)||0,
+    offset_top:Number(window.visualViewport.offsetTop)||0,
+    page_left:Number(window.visualViewport.pageLeft)||0,
+    page_top:Number(window.visualViewport.pageTop)||0,
+    scale:Number(window.visualViewport.scale)||1
+  }:null;
+
+  const sample=atlasGreyProbeSample40393();
+  const recentLong=atlasGreyProbeState40393.long_tasks.filter(row=>now-Number(row.start_time||0)<=5000);
+
+  let runtime=null;
+  let windows=null;
+  let animations=null;
+
+  try{runtime=globalThis.AtlasRuntimeObservatory40214?.snapshot?.()||null;}catch(_){}
+  try{windows=globalThis.ErithAdministratorWindows?.snapshot?.()||null;}catch(_){}
+  try{
+    const rows=document.getAnimations?.()||[];
+    animations={
+      count:rows.length,
+      running:rows.filter(animation=>String(animation.playState||"")==="running").length
+    };
+  }catch(_){}
+
+  const report={
+    schema:ATLAS_GREY_PROBE_40393_SCHEMA,
+    build:ATLAS_GREY_PROBE_40393_BUILD,
+    captured_at:new Date().toISOString(),
+    trigger,
+    armed:atlasGreyProbeState40393.armed,
+    armed_at:atlasGreyProbeState40393.armed_at,
+    browser:{
+      user_agent:String(navigator.userAgent||""),
+      platform:String(navigator.platform||""),
+      dpr:Number(window.devicePixelRatio)||1
+    },
+    document:{
+      visibility:String(document.visibilityState||""),
+      has_focus:Boolean(document.hasFocus?.()),
+      ready_state:String(document.readyState||""),
+      scroll_x:Number(window.scrollX)||0,
+      scroll_y:Number(window.scrollY)||0,
+      viewport_width:Number(window.innerWidth)||0,
+      viewport_height:Number(window.innerHeight)||0,
+      document_width:Number(document.documentElement?.scrollWidth)||0,
+      document_height:Number(document.documentElement?.scrollHeight)||0
+    },
+    visual_viewport:visual,
+    recent_input:atlasGreyProbeRecentInput40393(now),
+    recent_events:atlasGreyProbeState40393.events.slice(-80),
+    long_tasks_last_5s:recentLong,
+    long_tasks_armed_total:atlasGreyProbeState40393.long_tasks.length,
+    dom_probe:sample,
+    animations,
+    runtime_observatory:runtime,
+    window_manager:windows,
+    limits:{
+      pixel_capture:false,
+      compositor_internal_state:false,
+      interpretation_rule:"Visible grey + normal DOM sample + no large positioned DOM surface strengthens paint/compositor suspicion but is not proof by itself."
+    }
+  };
+
+  atlasGreyProbeState40393.last_capture=report;
+  atlasGreyProbeRender40393(report);
+  return report;
+}
+
+function atlasGreyProbeRender40393(report=null){
+  const stateNode=document.getElementById("atlasGreyProbeState40393");
+  const out=document.getElementById("atlasGreyProbeOutput40393");
+  const arm=document.getElementById("btnAtlasGreyProbeArm40393");
+  const disarm=document.getElementById("btnAtlasGreyProbeDisarm40393");
+
+  if(arm)arm.disabled=atlasGreyProbeState40393.armed;
+  if(disarm)disarm.disabled=!atlasGreyProbeState40393.armed;
+  if(stateNode){
+    stateNode.textContent=atlasGreyProbeState40393.armed
+      ?"ARMÉE · Ctrl+Alt+G quand le gris apparaît"
+      :"DÉSARMÉE · aucun suivi scroll actif";
+  }
+
+  const r=report||atlasGreyProbeState40393.last_capture;
+  if(!out)return r;
+
+  if(!r){
+    out.textContent="FORENSIC 40.3.93 · aucune capture · la sonde DOM ne lit pas les pixels et ne modifie pas le rendu.";
+    return null;
+  }
+
+  const overlays=r.dom_probe?.large_overlay_candidates||[];
+  const recent=r.recent_input||{};
+
+  out.textContent=[
+    `CAPTURE ${r.captured_at} · ${recent.inferred||"—"} · scrollY ${Math.round(r.document?.scroll_y||0)}`,
+    `DOM : ${r.dom_probe?.interpretation||"—"} · surfaces positionnées ≥35% viewport ${overlays.length} · top dominant ${r.dom_probe?.dominant_top?.key||"—"} (${r.dom_probe?.dominant_top?.points||0}/9)`,
+    `Long tasks 5 s : ${(r.long_tasks_last_5s||[]).length} · animations ${r.animations?.running??"—"}/${r.animations?.count??"—"}`,
+    overlays.length
+      ?`Suspect principal : ${overlays[0].key} · ${Math.round((overlays[0].viewport_area_ratio||0)*100)}% viewport · ${overlays[0].position} · z ${overlays[0].z_index}`
+      :"Aucune grande surface DOM positionnée détectée dans les piles échantillonnées.",
+    "Limite : pixels/compositeur Firefox non lisibles depuis la page. DOM normal pendant une nappe visible = indice paint/compositor, pas preuve absolue."
+  ].join("\n");
+
+  return r;
+}
+
+function atlasGreyProbeExport40393(){
+  const report=atlasGreyProbeState40393.last_capture;
+  if(!report){
+    atlasGreyProbeRender40393();
+    return null;
+  }
+  const blob=new Blob([JSON.stringify(report,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;
+  link.download=`Agent-Crypto_Grey_Plate_Forensic_${ATLAS_GREY_PROBE_40393_BUILD}_${new Date().toISOString().replace(/[:.]/g,"-")}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  return report;
+}
+
+document.getElementById("btnAtlasGreyProbeArm40393")?.addEventListener("click",()=>atlasGreyProbeArm40393());
+document.getElementById("btnAtlasGreyProbeCapture40393")?.addEventListener("click",()=>atlasGreyProbeCapture40393("button"));
+document.getElementById("btnAtlasGreyProbeDisarm40393")?.addEventListener("click",()=>atlasGreyProbeDisarm40393());
+document.getElementById("btnAtlasGreyProbeExport40393")?.addEventListener("click",()=>atlasGreyProbeExport40393());
+atlasGreyProbeRender40393();
+
+globalThis.AtlasGreyPlateForensic40393=Object.freeze({
+  build:ATLAS_GREY_PROBE_40393_BUILD,
+  schema:ATLAS_GREY_PROBE_40393_SCHEMA,
+  arm:atlasGreyProbeArm40393,
+  capture:atlasGreyProbeCapture40393,
+  disarm:atlasGreyProbeDisarm40393,
+  exportJson:atlasGreyProbeExport40393,
+  state:()=>({
+    armed:atlasGreyProbeState40393.armed,
+    armed_at:atlasGreyProbeState40393.armed_at,
+    event_count:atlasGreyProbeState40393.events.length,
+    long_task_count:atlasGreyProbeState40393.long_tasks.length,
+    has_capture:Boolean(atlasGreyProbeState40393.last_capture)
+  }),
+  automatic:false,
+  storage_write:false,
+  network_request:false,
+  timer:false,
+  scheduler:false,
+  observer_only_while_armed:true,
+  observer_disconnected_on_disarm:true,
+  hot_path_layout_reads:false,
+  pixel_capture:false
+});
+
+try{
+  globalThis.__AGENT_CRYPTO_GREY_FORENSIC_40393__=Object.freeze({
+    build:"40.3.93",
+    parent:"40.3.92",
+    purpose:"diagnostic_only",
+    wheel_only_hypothesis_retired:true,
+    scrollbar_can_reproduce:true,
+    operator_arm_required:true,
+    keyboard_capture:"Ctrl+Alt+G",
+    hot_path_layout_reads:false,
+    dom_sampling_on_capture_only:true,
+    temporary_longtask_observer:true,
+    observer_disconnected_on_disarm:true,
+    storage_write:false,
+    network_request:false,
+    new_timer:false,
+    new_scheduler:false,
+    market_core_changed:false,
+    oracle_changed:false,
+    news_changed:false,
+    bridge_changed:false,
+    book_mirror_changed:false,
+    window_manager_changed:false,
+    image_changed:false
+  });
+}catch(_){}
