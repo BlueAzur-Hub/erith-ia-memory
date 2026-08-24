@@ -748,6 +748,8 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "math", level: "essential", target: "self", group: "analysis" },
   { id: "oracle-analysis-suite", level: "advanced", target: "self", group: "analysis" },
   { id: "multi-horizon", level: "advanced", target: "self", group: "analysis" },
+  { id: "astrocycle-4055", level: "advanced", target: "self", group: "analysis" },
+  { id: "celestial-sentinel-4055", level: "advanced", target: "self", group: "analysis" },
   { id: "lecture-froide", level: "advanced", target: "closest-collapse", group: "analysis" },
   { id: "risques", level: "advanced", target: "closest-collapse", group: "analysis" },
   { id: "debutant", level: "advanced", target: "closest-collapse", group: "analysis" },
@@ -2296,7 +2298,7 @@ function atlasV2ApplyMode(mode, options = {}) {
     ? "Administration locale · Atlas · Aerith · analyse · mémoire · décision · système · projets."
     : operator
       ? "Analyse · décision · mémoire · opérations · système · Missions de vie · audience · sources. Projets Missions détaillés masqués."
-      : "Graphique · Target Top 5 · Market Flow · Market Snapshot · Sources.";
+      : "Graphique + Lecture technique · Target Top 5 + Market Flow · Market Snapshot + Math Core · Sources.";
 
   const accountToggle = document.getElementById("btnAdminAccountToggle");
   const accountText = document.getElementById("adminAccountLinkText");
@@ -9144,14 +9146,17 @@ function atlasOracleDrawCanvas(model) {
   ctx.strokeStyle = "rgba(255,221,142,.76)";
   ctx.beginPath(); ctx.moveTo(anchorX, pad.top); ctx.lineTo(anchorX, pad.top+h); ctx.stroke();
   ctx.setLineDash([]);
+  // 40.3.64 visual debt settlement: keep the 28 px plot padding restored in 40.3.62.
+  // Only lower the NOW badge so it does not collide with the absolute operator HUD.
+  const nowBadgeY40364 = pad.top + 20;
   ctx.fillStyle = "rgba(5,17,27,.90)";
-  ctx.fillRect(anchorX - 38, pad.top + 2, 76, 15);
+  ctx.fillRect(anchorX - 38, nowBadgeY40364, 76, 15);
   ctx.strokeStyle = "rgba(255,224,154,.52)";
-  ctx.strokeRect(anchorX - 38, pad.top + 2, 76, 15);
+  ctx.strokeRect(anchorX - 38, nowBadgeY40364, 76, 15);
   ctx.fillStyle = "#ffe09a";
   ctx.font = "950 9px system-ui, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("MAINTENANT", anchorX, pad.top + 12);
+  ctx.fillText("MAINTENANT", anchorX, nowBadgeY40364 + 10);
   ctx.beginPath(); ctx.arc(anchorX, yFor(100), 6.8, 0, Math.PI*2); ctx.strokeStyle = "rgba(255,224,154,.36)"; ctx.lineWidth = 2; ctx.stroke();
   ctx.beginPath(); ctx.arc(anchorX, yFor(100), 4.2, 0, Math.PI*2); ctx.fillStyle = "#fff0bb"; ctx.fill();
   ctx.shadowColor = "#ffe09a"; ctx.shadowBlur = 11; ctx.strokeStyle = "#ffe09a"; ctx.lineWidth = 1.2; ctx.stroke(); ctx.shadowBlur = 0;
@@ -19406,6 +19411,18 @@ function newsMarketBestRawRole40235(events, rules) {
   return matches[0]||null;
 }
 
+// 40.3.64 — keep the article that actually supplied a detected mechanism.
+// The legacy role object remains untouched for all existing consumers.
+function newsMarketBestRawRoleWithEvent40364(events, rules) {
+  const candidates=[];
+  for (const event of events || []) for (const rule of rules || []) {
+    const match=newsMarketRawRoleMatch40235(event,rule);
+    if(match) candidates.push({match,event});
+  }
+  candidates.sort((a,b)=>Number(b?.match?.evidence?.score??-1)-Number(a?.match?.evidence?.score??-1)||Number(b?.match?.source_count||1)-Number(a?.match?.source_count||1)||Date.parse(b?.match?.event_time||0)-Date.parse(a?.match?.event_time||0));
+  return candidates[0]||null;
+}
+
 function newsMarketInitialCatalyst40235(selected, contextEvents) {
   const t0=newsMarketEventTime40234(selected);
   if (!t0) return null;
@@ -19471,19 +19488,21 @@ function newsMarketOperatorIntelligence40235(current=null, context={}) {
   const base=newsMarketCausalRole40234(selected,context);
   if(!selected) return {schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"no-event",base,causal_claim:false,external_ai_used:false};
   const contextEvents=newsMarketContextEvents40235(selected,context?.events);
-  const rawAmplifier=newsMarketBestRawRole40235([selected,...contextEvents],[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_up,NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_down]);
+  const amplifierCandidate40364=newsMarketBestRawRoleWithEvent40364([selected,...contextEvents],[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_up,NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_down]);
+  const rawAmplifier=amplifierCandidate40364?.match||null;
+  const mechanismEvent40364=amplifierCandidate40364?.event||selected;
   const technical=newsMarketBestRawRole40235([selected],[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.technical_trigger]);
   const catalyst=newsMarketInitialCatalyst40235(selected,contextEvents);
   const flow=newsMarketDemandContext40235(selected,contextEvents);
   const adjustedBase={...base,amplifier:rawAmplifier||base?.amplifier||null,technical_trigger:technical||base?.technical_trigger||null,catalyst};
   const mechanism=newsMarketMechanism40235(adjustedBase);
-  const facts=newsMarketExtractFacts40235(selected);
+  const facts=newsMarketExtractFacts40235(mechanismEvent40364);
   const supporting=newsMarketSupportingAmplifiers40235(selected,contextEvents);
   const confirmation=newsMarketCurrentMarketConfirmation40235(selected,adjustedBase);
   const role=adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:flow?`FLUX ${flow.direction}`:technical?"DÉCLENCHEUR TECHNIQUE":catalyst?"CATALYSEUR POSSIBLE":"RÔLE NON QUALIFIÉ";
   return {
-    schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"observed",event:selected,
-    base:adjustedBase,facts,mechanism,initial_catalyst:catalyst,technical_trigger:technical,flow,supporting_amplifiers:supporting,market_confirmation:confirmation,
+    schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"observed",event:mechanismEvent40364,lead_event:selected,
+    event_role_pairing_build:"40.3.64",base:adjustedBase,facts,mechanism,initial_catalyst:catalyst,technical_trigger:technical,flow,supporting_amplifiers:supporting,market_confirmation:confirmation,
     verdict:{role,amplifier:adjustedBase.amplifier?"PLAUSIBLE":"NON DÉMONTRÉ",initial_catalyst:catalyst?"POSSIBLE":"NON IDENTIFIÉ",context:flow?"POSSIBLE":"NON QUALIFIÉ",causality:"NON ÉTABLIE"},
     causal_claim:false,causal_probability:null,external_ai_used:false,network_request_added:false,timer_added:false,storage_write_added:false
   };
@@ -46716,7 +46735,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.63";
+const ATLAS_BUILD = "40.3.64";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
