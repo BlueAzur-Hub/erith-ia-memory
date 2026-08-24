@@ -1,20 +1,20 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v36",
-  "build": "40.3.50",
-  "release": "PARKER LEWIS CAN'T LOSE · OPERATOR INTERACTION SNAPSHOT DECOUPLING LOCK",
-  "status": "candidate_requires_firefox_repeated_click_freeze_validation",
-  "prepared_at": "2026-08-23T11:46:00+02:00",
+  "build": "40.3.51",
+  "release": "PARKER LEWIS CAN'T LOSE · ATLAS REPORT DEFERRED DOM RESIDENCY LOCK",
+  "status": "candidate_requires_firefox_deferred_report_residency_validation",
+  "prepared_at": "2026-08-24T03:28:00+02:00",
   "published_at": null,
   "global_versioning": {
-    "primary_build": "40.3.50",
-    "primary_label": "Agent-Crypto @erith.IA · Build 40.3.50",
-    "asset_token": "market-core-v2.0-alpha-build-40.3.50",
+    "primary_build": "40.3.51",
+    "primary_label": "Agent-Crypto @erith.IA · Build 40.3.51",
+    "asset_token": "market-core-v2.0-alpha-build-40.3.51",
     "engine_reference": "Market Core 38.15.11",
-    "method": "40.3.49 -> 40.3.50 CODE ONLY: remove the two global capture-phase click/change triggers that rebuilt the complete analytical page snapshot 700 ms after ordinary operator interactions; explicit transactional snapshot owners remain unchanged; no new timer or observer."
+    "method": "40.3.50 -> 40.3.51 CODE ONLY: keep the four Atlas local report answers in analytical state while their report cards are closed; materialize Markdown-derived DOM only when an operator opens one report and release that generated DOM again on close; automatic 4/4 completion no longer opens all reports; no new timer, observer, reparenting, storage mutation, Window Manager change or Market Core change."
   },
   "source": {
-    "direct_parent": "40.3.49",
-    "method": "40.3.49 -> 40.3.50 CODE ONLY: remove the two global capture-phase click/change triggers that rebuilt the complete analytical page snapshot 700 ms after ordinary operator interactions; explicit transactional snapshot owners remain unchanged; no new timer or observer.",
+    "direct_parent": "40.3.50",
+    "method": "40.3.50 -> 40.3.51 CODE ONLY: keep the four Atlas local report answers in analytical state while their report cards are closed; materialize Markdown-derived DOM only when an operator opens one report and release that generated DOM again on close; automatic 4/4 completion no longer opens all reports; no new timer, observer, reparenting, storage mutation, Window Manager change or Market Core change.",
     "oracles": {
       "technical_reading": [
         "39.6.2 FULL-CLEAR SURFACES LOCK",
@@ -47,7 +47,7 @@
       "web_required_for_runtime": false,
       "classic_link_is_optional_navigation": true
     },
-    "reconstruction_note": "40.3.49 operator feedback: ordinary clicks frequently left Firefox unresponsive for several seconds. Inspection found atlasAnalyticalTruthInit() attached capture-phase click/change listeners to atlasAnalyticalTruthSchedule(700), whose callback can synchronously rebuild atlasBuildCryptoPageSnapshot(), analytical envelope, SHA-256 fingerprint and truth UI. 40.3.50 removes only those generic interaction triggers; explicit market/chart/report snapshot calls remain."
+    "reconstruction_note": "40.3.50 improved operator click responsiveness but Firefox could still show large grey/unpainted regions. Static inspection of the current source found that atlasSharedSynthesisHydrateReports() eagerly rebuilt all four Atlas report bodies on restore, atlasLocalReportsRunAll() rendered each report body as it completed, and 4/4 completion called atlasLocalReportsOpenAll(). 40.3.51 tests one bounded hypothesis: closed Atlas report cards must not keep their full generated report DOM resident. Report data, copy/export, CURRENT, Oracle, Bridge and Market Core remain intact."
   },
   "protected_base": {
     "classic_web_modified": false,
@@ -2239,11 +2239,28 @@
       "window_manager_changed": false,
       "new_timer": false,
       "new_observer": false
+    },
+    "atlas_report_deferred_dom_residency_40351": {
+      "status": "candidate_requires_firefox_deferred_report_residency_validation",
+      "scope": "four Atlas local report bodies only",
+      "closed_report_full_dom_resident": false,
+      "open_report_materializes_from_state": true,
+      "close_report_releases_generated_dom": true,
+      "automatic_4_4_open_all_reports": false,
+      "shared_read_reports_opens_first_available_only": true,
+      "copy_export_state_authority_preserved": true,
+      "report_state_preserved": true,
+      "window_manager_changed": false,
+      "new_timer": false,
+      "new_observer": false,
+      "reparenting_added": false,
+      "market_core_changed": false,
+      "payload_files": 11
     }
   },
-  "asset_token": "market-core-v2.0-alpha-build-40.3.50",
-  "parent_build": "40.3.49",
-  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial institutional → 40.2.69 image authority/iconography → 40.2.70 header geometry → 40.2.71 Rolling High → 40.2.72 Celestial portable → 40.2.73 Long Shadow → 40.2.74 identity → 40.2.75 canonical rolling source → 40.2.76 measured breakout confirmation → 40.2.77 Celestial portable operational lock → 40.2.78 verified IndexedDB storage relief. → 40.2.79 Technical Reading one-click Random library + Book readability pass. → 40.2.80 Technical Reading Random library completion: nine-image one-click RND library in the existing canonical folder → 40.2.81 runtime identity + ChronosXP operator confirmation lock → 40.2.82 Oracle Long Horizon Shadow operator view with due/missing coverage diagnostics. → 40.2.84 Fiche hover toolbar correction: opt-in control moved to Graphique > Lecture > Afficher; native Fiche bridge hardened; Target Top card click remains graph comparison → 40.2.85 Graph toolbar metallic consolidation: existing Lecture/Vue/Échelle/Afficher/Période/Comparaison controls receive one bounded metallic visual layer plus compact Transformer Book spacing; no handler or chart geometry ownership change → 40.2.86 Graph toolbar state semantics: inactive available neutral; active blue + gold; disabled grey; Max neutral; Fiche shares active grammar; Book text floor raised without geometry change. → 40.2.87 Graph toolbar active-text refinement: active blue metallic + white text; inactive neutral; disabled grey; Fiche shares active grammar; Max remains neutral; publication manifest hashes synchronized to actual payload. → 40.2.88 Celestial Ryzen→Book read-only handoff: manual Shared Memory JSON transport, producer provenance preservation, Book fetch lock, compact operator diagnostics, no GitHub publication requirement. → 40.2.89 Graph toolbar turquoise active pass: luminous cyan/turquoise active surface + white text; inactive neutral; disabled grey; no handler or geometry change; Celestial 40.2.88 preserved. → 40.2.90 semantic color/iconography pass: blue-night Administrator base preserved; semantic accents and code-only SVG icons added to Command Center, family headers and major section headings; no handler, data, chart, Oracle, Celestial or Window Manager behavior change. → 40.2.91 AstroCycle planetary color semantics: Saturn red, Mars orange, Sun yellow, Venus green, Mercury blue, Moon white/silver, Jupiter gold; timeline and current/next cards only; ChronosXP and all market logic unchanged. → 40.2.92 Section Air: redundant nested shells removed from Oracle and News→Market; existing transparent System/Projects/Sources/Analytical emblems restored as non-reserving accents; semantic colors and AstroCycle unchanged → 40.2.93 compact section hierarchy + Atlas CURRENT viewport → 40.2.94 publication identity consistency → 40.2.95 Atlas + Oracle essential navigation + collapsed CURRENT preview → 40.2.96 Oracle section identity + collapsed live bias/strength preview → 40.2.97 family emblem alignment → 40.2.98 family boundary + emblem signal alignment cumulative repair → 40.2.99 Book navigation compact + single Administration entry + internal button navigation → 40.3.00 Administrator family order: 04 header immediately before Mesure d’audience + semantic 02/03/04 family routing + native menus restored right → 40.3.01 family compact reduce: 01 native header + collapsed Oracle; 02 native header + collapsed Atlas CURRENT; 03/04 native headers only; Hide unchanged; floating minibar preserved. → 40.3.02 heavy surgery: atomic top-level family ownership + 04 block reconstructed after Missions/before Audience + one-line compact Home/Admin commandline + Command Center no-document-jump lock → 40.3.03 targeted family-state migration: stale persisted states for 01/02/03/04 + Missions de vie cleared once before Window Manager init; all unrelated window state preserved → 40.3.04 canonical Administrator sequence 01→02→03→04→Missions→Audience→Sources → 40.3.05 trailing 04 header recovery → 40.3.06 topology + Atlas navigation recovery → 40.3.07 trailing 04 boundary + Technical Reading load priority → 40.3.08 hard 03/04 ownership boundary → 40.3.09 Book Command Center + status compaction → 40.3.10 passive viewport authority + Missions restore → 40.3.11 passive viewport + canonical role visibility → 40.3.12 role isolation + viewport ownership recovery → 40.3.13 canonical family 04 hierarchy + native dock flow → 40.3.14 Firefox role-transition performance recovery → 40.3.15 low-cost floating surface/native 97% → 40.3.17 passive Bridge supervision + compact family placeholder recovery → 40.3.19 drag-height fit from 40.3.17; 40.3.18 rejected → 40.3.20 canonical 04 opening hierarchy + native first-detach auto-fit restoration → 40.3.21 Technical Reading reduced-view image continuity recovery → 40.3.22 Administrator family return + explicit Command Center recovery → 40.3.23 Firefox compositor isolation → 40.3.24 Atlas CURRENT context + Source Truth semantic lock → 40.3.25 Atlas sectional collapse + paint budget lock → 40.3.26 40.3.25 reactivity recovery + persistent visual cache lock → 40.3.30 canonical recovery + version truth lock from 40.3.26; 40.3.27–40.3.29 non-canonical experiments excluded from the publication lineage → 40.3.31 async heavy storage + main-thread relief lock → 40.3.32 visibility return fast path + runtime restore dedup lock → 40.3.33 offscreen paint sleep + wake buffer lock → 40.3.34 scroll paint continuity + idle sleep lock → 40.3.35 directional prewake + true idle sleep lock → 40.3.36 technical reading classic opacity mirror lock → 40.3.37 owner consolidation + canonical 11-file payload lock → 40.3.38 Technical Reading metallic depth opacity lock → 40.3.39 Firefox global backdrop compositor lock → 40.3.40 native scroll restore + offscreen paint runtime retirement lock → 40.3.41 ChronosXP header semantic color + clock emphasis lock → 40.3.42 Window Manager persisted-height + first-detach geometry recovery lock → 40.3.43 canonical section subtitle stack + header alignment lock → 40.3.44 Window Manager 40.3.41 rollback + family control right-edge lock → 40.3.45 scroll layout-read elimination lock → 40.3.46 idempotent DOM write lock → 40.3.47 scroll-quiet presentation budget rejected for severe freeze regression → 40.3.48 40.3.47 scheduler rollback to 40.3.46 runtime → 40.3.49 first-drag height-only detach recovery lock → 40.3.50 operator interaction snapshot decoupling lock",
+  "asset_token": "market-core-v2.0-alpha-build-40.3.51",
+  "parent_build": "40.3.50",
+  "lineage": "40.2.65 visual checkpoint → 40.2.68 Celestial institutional → 40.2.69 image authority/iconography → 40.2.70 header geometry → 40.2.71 Rolling High → 40.2.72 Celestial portable → 40.2.73 Long Shadow → 40.2.74 identity → 40.2.75 canonical rolling source → 40.2.76 measured breakout confirmation → 40.2.77 Celestial portable operational lock → 40.2.78 verified IndexedDB storage relief. → 40.2.79 Technical Reading one-click Random library + Book readability pass. → 40.2.80 Technical Reading Random library completion: nine-image one-click RND library in the existing canonical folder → 40.2.81 runtime identity + ChronosXP operator confirmation lock → 40.2.82 Oracle Long Horizon Shadow operator view with due/missing coverage diagnostics. → 40.2.84 Fiche hover toolbar correction: opt-in control moved to Graphique > Lecture > Afficher; native Fiche bridge hardened; Target Top card click remains graph comparison → 40.2.85 Graph toolbar metallic consolidation: existing Lecture/Vue/Échelle/Afficher/Période/Comparaison controls receive one bounded metallic visual layer plus compact Transformer Book spacing; no handler or chart geometry ownership change → 40.2.86 Graph toolbar state semantics: inactive available neutral; active blue + gold; disabled grey; Max neutral; Fiche shares active grammar; Book text floor raised without geometry change. → 40.2.87 Graph toolbar active-text refinement: active blue metallic + white text; inactive neutral; disabled grey; Fiche shares active grammar; Max remains neutral; publication manifest hashes synchronized to actual payload. → 40.2.88 Celestial Ryzen→Book read-only handoff: manual Shared Memory JSON transport, producer provenance preservation, Book fetch lock, compact operator diagnostics, no GitHub publication requirement. → 40.2.89 Graph toolbar turquoise active pass: luminous cyan/turquoise active surface + white text; inactive neutral; disabled grey; no handler or geometry change; Celestial 40.2.88 preserved. → 40.2.90 semantic color/iconography pass: blue-night Administrator base preserved; semantic accents and code-only SVG icons added to Command Center, family headers and major section headings; no handler, data, chart, Oracle, Celestial or Window Manager behavior change. → 40.2.91 AstroCycle planetary color semantics: Saturn red, Mars orange, Sun yellow, Venus green, Mercury blue, Moon white/silver, Jupiter gold; timeline and current/next cards only; ChronosXP and all market logic unchanged. → 40.2.92 Section Air: redundant nested shells removed from Oracle and News→Market; existing transparent System/Projects/Sources/Analytical emblems restored as non-reserving accents; semantic colors and AstroCycle unchanged → 40.2.93 compact section hierarchy + Atlas CURRENT viewport → 40.2.94 publication identity consistency → 40.2.95 Atlas + Oracle essential navigation + collapsed CURRENT preview → 40.2.96 Oracle section identity + collapsed live bias/strength preview → 40.2.97 family emblem alignment → 40.2.98 family boundary + emblem signal alignment cumulative repair → 40.2.99 Book navigation compact + single Administration entry + internal button navigation → 40.3.00 Administrator family order: 04 header immediately before Mesure d’audience + semantic 02/03/04 family routing + native menus restored right → 40.3.01 family compact reduce: 01 native header + collapsed Oracle; 02 native header + collapsed Atlas CURRENT; 03/04 native headers only; Hide unchanged; floating minibar preserved. → 40.3.02 heavy surgery: atomic top-level family ownership + 04 block reconstructed after Missions/before Audience + one-line compact Home/Admin commandline + Command Center no-document-jump lock → 40.3.03 targeted family-state migration: stale persisted states for 01/02/03/04 + Missions de vie cleared once before Window Manager init; all unrelated window state preserved → 40.3.04 canonical Administrator sequence 01→02→03→04→Missions→Audience→Sources → 40.3.05 trailing 04 header recovery → 40.3.06 topology + Atlas navigation recovery → 40.3.07 trailing 04 boundary + Technical Reading load priority → 40.3.08 hard 03/04 ownership boundary → 40.3.09 Book Command Center + status compaction → 40.3.10 passive viewport authority + Missions restore → 40.3.11 passive viewport + canonical role visibility → 40.3.12 role isolation + viewport ownership recovery → 40.3.13 canonical family 04 hierarchy + native dock flow → 40.3.14 Firefox role-transition performance recovery → 40.3.15 low-cost floating surface/native 97% → 40.3.17 passive Bridge supervision + compact family placeholder recovery → 40.3.19 drag-height fit from 40.3.17; 40.3.18 rejected → 40.3.20 canonical 04 opening hierarchy + native first-detach auto-fit restoration → 40.3.21 Technical Reading reduced-view image continuity recovery → 40.3.22 Administrator family return + explicit Command Center recovery → 40.3.23 Firefox compositor isolation → 40.3.24 Atlas CURRENT context + Source Truth semantic lock → 40.3.25 Atlas sectional collapse + paint budget lock → 40.3.26 40.3.25 reactivity recovery + persistent visual cache lock → 40.3.30 canonical recovery + version truth lock from 40.3.26; 40.3.27–40.3.29 non-canonical experiments excluded from the publication lineage → 40.3.31 async heavy storage + main-thread relief lock → 40.3.32 visibility return fast path + runtime restore dedup lock → 40.3.33 offscreen paint sleep + wake buffer lock → 40.3.34 scroll paint continuity + idle sleep lock → 40.3.35 directional prewake + true idle sleep lock → 40.3.36 technical reading classic opacity mirror lock → 40.3.37 owner consolidation + canonical 11-file payload lock → 40.3.38 Technical Reading metallic depth opacity lock → 40.3.39 Firefox global backdrop compositor lock → 40.3.40 native scroll restore + offscreen paint runtime retirement lock → 40.3.41 ChronosXP header semantic color + clock emphasis lock → 40.3.42 Window Manager persisted-height + first-detach geometry recovery lock → 40.3.43 canonical section subtitle stack + header alignment lock → 40.3.44 Window Manager 40.3.41 rollback + family control right-edge lock → 40.3.45 scroll layout-read elimination lock → 40.3.46 idempotent DOM write lock → 40.3.47 scroll-quiet presentation budget rejected for severe freeze regression → 40.3.48 40.3.47 scheduler rollback to 40.3.46 runtime → 40.3.49 first-drag height-only detach recovery lock → 40.3.50 operator interaction snapshot decoupling lock → 40.3.51 Atlas report deferred DOM residency lock",
   "repository_cleanup": {
     "runtime_behavior_changed": true,
     "freeze_identity_current_build": true,
@@ -2344,7 +2361,8 @@
     "Historical evidence: 40.3.28/40.3.29 already documented the grey/blank versus eager-paint slowdown tradeoff; 40.3.33 then reintroduced an offscreen visibility-sleep family. 40.3.40 retires that Administrator-specific experiment instead of tuning its buffers again.",
     "ChronosXP calculations, Europe/Paris timezone, planetary-hour schedule and one-second existing clock cadence are unchanged; no new timer or observer is added.",
     "40.3.45 CODE ONLY · Market Core 38.15.11, Oracle, Evidence, Bridge, image assets and Classic web protected.",
-    "40.3.49 CODE ONLY · Market Core 38.15.11, Oracle, Evidence, Bridge, image assets and Classic web protected."
+    "40.3.49 CODE ONLY · Market Core 38.15.11, Oracle, Evidence, Bridge, image assets and Classic web protected.",
+    "40.3.51 CODE ONLY · targeted Presentation Plane test on the four Atlas report bodies. Market Core 38.15.11, Oracle, Evidence, Bridge semantics, Window Manager, images and Classic web protected."
   ],
   "release_notes": [
     "40.3.21 restores the 40.2.65/40.2.69/40.2.80 Technical Reading visual contract on top of 40.3.20.",
@@ -2410,13 +2428,14 @@
     "40.3.44 — reject 40.3.42 Window Manager height-recovery experiment; restore exact 40.3.41 Window Manager; align illustrated family five-button controls to native right:16px and move emblems left without reserving width. 40.3.43 subtitle stack preserved.",
     "40.3.45 — 40.3.45 removes geometry reads from the scroll callback itself. Geometry is refreshed on resize, mode/hash/toggle/pageshow/load transitions, while scroll only compares cached numbers and changes active navigation when the active section actually changes.",
     "40.3.49 — first-drag Window Manager detach uses the bounded 40.3.19 height-only fit instead of full native autoFitFloatingShell; persistent restore/placeholders/timers unchanged.",
-    "40.3.50 — ordinary operator click/change no longer schedules a full analytical snapshot rebuild; explicit transactional snapshot owners remain; 40.3.49 first-drag height-only Window Manager recovery is preserved unchanged."
+    "40.3.50 — ordinary operator click/change no longer schedules a full analytical snapshot rebuild; explicit transactional snapshot owners remain; 40.3.49 first-drag height-only Window Manager recovery is preserved unchanged.",
+    "40.3.51 — four Atlas local report bodies become demand-resident: closed cards keep only a lightweight placeholder; opening one card materializes its stored report, closing it releases the generated nodes, restore no longer rebuilds all four bodies, and automatic 4/4 completion no longer opens all reports."
   ],
   "files": {
-    "app.js": "b5515ec962012dffdb5d0e0f794dd31b4edbf712447e260149b93512b2ce0c27",
-    "index.html": "8716d64d04728a0328f93ee5ebdd75fcab4c25b130f43ffe6130e7424462fbf3",
-    "js/app.js": "d9964021a680524b4b45852609658c43b57af5051b743752d825d075b10cc31e",
-    "js/architecture-freeze.js": "4608141596476c120f51db28a3f0715ed4ba1045c464efb2bdbc17edfc5a8882",
+    "app.js": "0c55fb42c9ac5be16731b1637cb0c74794482a44648a89a849de934f5b8980a3",
+    "index.html": "4b9342265143d5f1667793a0e3b2ad444f14bda697bf907236b37b08cd8f06b0",
+    "js/app.js": "12c2a55d89d0e2e3eb27ec4a9abe305414b797542400080334670a606e5b79d0",
+    "js/architecture-freeze.js": "7108385d15cee5625a3f94444052070be8486ae7528c36c3306caded60f3ee02",
     "js/core/admin-window-manager.js": "1a586cfbf7b5b2cd65289e4b01de49e8a49c961fc5fdd0e7b4fc913cff80ed5b",
     "assets/visual/technical-reading/technical-random-01.png": "a72154af058f563dc269f9757d9bd470a8b6bd1bf5e2a4b0628d3f1ddbb02881",
     "assets/visual/technical-reading/technical-random-02.png": "efac84a34f0889a367b87f2dcf2ac9f64e28e7233c2673afd83049d739d06fa5",
@@ -2430,7 +2449,7 @@
     "admin-window-menu-uniform.css": "dbf9f2ae2c9f779214679bbaacf7ac477a727926ad7a847c0fcd849fe41a635b",
     "admin-firefox-compositor.css": "ab2b6bf93a80d5e93808d7274e3499e5022107616059cbf90b7888b085a773fb",
     "admin-visual-cache.css": "45f77dc9da159315be57c14e4cf7622e2acadaff8c31f058016ba08dde228267",
-    "js/admin-visual-cache.js": "ae077ede40b3f2b4ce28eec3c0844302c33d1afff1cb75f7f1f1dcbfcedc0b68",
+    "js/admin-visual-cache.js": "f34a263fc33da2de74118f4189e4095b6e7602d7eeed148c9ace7da6cf7be073",
     "version.json": "external_sha256_manifest_authoritative",
     "administrator-version.json": "external_sha256_manifest_authoritative"
   },
@@ -3381,12 +3400,28 @@
       "placeholder_contract_changed": false,
       "new_timer": false,
       "new_observer": false
+    },
+    "atlas_report_deferred_dom_residency_40351": {
+      "status": "candidate_requires_firefox_deferred_report_residency_validation",
+      "scope": "four Atlas local report bodies only",
+      "closed_report_full_dom_resident": false,
+      "open_report_materializes_from_state": true,
+      "close_report_releases_generated_dom": true,
+      "automatic_4_4_open_all_reports": false,
+      "shared_read_reports_opens_first_available_only": true,
+      "copy_export_state_authority_preserved": true,
+      "report_state_preserved": true,
+      "window_manager_changed": false,
+      "new_timer": false,
+      "new_observer": false,
+      "reparenting_added": false,
+      "market_core_changed": false
     }
   },
   "window_manager_modified": false,
-  "window_manager_change_scope": "40.3.49 does not modify js/core/admin-window-manager.js; owner remains byte-identical to validated 40.3.41/40.3.44 rollback state.",
+  "window_manager_change_scope": "40.3.51 does not modify js/core/admin-window-manager.js; owner remains byte-identical to the 40.3.50 payload.",
   "window_manager_base_build": "40.3.41",
-  "lineage_note": "40.3.49 rejects the 40.3.47 scroll-quiet presentation scheduler after operator-observed severe freeze regression and restores the 40.3.46 runtime behavior while keeping 40.3.45 scroll-layout-read elimination and 40.3.46 idempotent DOM writes.",
+  "lineage_note": "40.3.51 keeps the validated 40.3.50 operator-interaction decoupling and adds only bounded deferred DOM residency for the four Atlas report bodies.",
   "section_topology_changed": false,
-  "section_topology_scope": "none"
+  "section_topology_scope": "none; existing Atlas report cards and IDs preserved"
 }

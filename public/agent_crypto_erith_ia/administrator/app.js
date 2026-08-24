@@ -1375,6 +1375,7 @@ function atlasInitLocalAccess() {
   document.querySelectorAll("[data-atlas-report-export]").forEach(button => {
     button.addEventListener("click", () => atlasLocalReportsExport(button.dataset.atlasReportExport));
   });
+  atlasLocalReportResidencyInit40351();
   atlasSharedSynthesisInit();
   atlasKnowledgeLibraryInit();
   atlasBookReadOnlyKnowledgeRefresh();
@@ -22295,6 +22296,89 @@ function atlasLocalSetReport(node, markdown) {
   return !!String(node.textContent || "").trim();
 }
 
+
+/* ============================================================
+   40.3.51 — ATLAS REPORT DEFERRED DOM RESIDENCY LOCK
+
+   PURPOSE
+   - Keep the four Atlas report answers in analytical state while their
+     <details> cards are closed.
+   - Materialize the heavy Markdown-derived DOM only for the report the
+     operator actually opens.
+   - Release that generated report DOM again when the card is closed.
+   - No timer, observer, reparenting, storage mutation or engine change.
+   ============================================================ */
+
+const ATLAS_LOCAL_REPORT_DEFERRED_PLACEHOLDER_40351 =
+  '<p class="atlas-local-response-empty" data-atlas-report-deferred-40351="1">Rapport prêt · ouvrir cette lecture pour matérialiser son contenu.</p>';
+
+function atlasLocalReportCard40351(mode) {
+  return document.querySelector(`[data-atlas-report-card="${mode}"]`);
+}
+
+function atlasLocalReportReleaseDom40351(mode) {
+  const ids = ATLAS_LOCAL_REPORT_IDS[mode];
+  const node = ids ? document.getElementById(ids.content) : null;
+  if (!node) return false;
+  const hasReport = !!atlasLocalReportResult(mode)?.answer;
+  if (hasReport
+      && node.dataset.atlasReportResident40351 === "0"
+      && node.querySelector("[data-atlas-report-deferred-40351]")) return true;
+  node.innerHTML = hasReport
+    ? ATLAS_LOCAL_REPORT_DEFERRED_PLACEHOLDER_40351
+    : '<p class="atlas-local-response-empty">Aucun rapport généré.</p>';
+  node.dataset.atlasReportResident40351 = "0";
+  return true;
+}
+
+function atlasLocalReportRenderOnDemand40351(mode, { force = false } = {}) {
+  const ids = ATLAS_LOCAL_REPORT_IDS[mode];
+  const node = ids ? document.getElementById(ids.content) : null;
+  const report = atlasLocalReportResult(mode);
+  if (!node) return false;
+  if (!report?.answer) {
+    if (!String(node.textContent || "").trim()) {
+      node.innerHTML = '<p class="atlas-local-response-empty">Aucun rapport généré.</p>';
+    }
+    node.dataset.atlasReportResident40351 = "0";
+    return false;
+  }
+  const card = atlasLocalReportCard40351(mode);
+  if (!force && !card?.open) return atlasLocalReportReleaseDom40351(mode);
+  const rendered = atlasLocalSetReport(node, report.answer);
+  node.dataset.atlasReportResident40351 = rendered ? "1" : "0";
+  return rendered;
+}
+
+function atlasLocalReportResidencyInit40351() {
+  ATLAS_LOCAL_REPORT_MODES.forEach(mode => {
+    const card = atlasLocalReportCard40351(mode);
+    if (!card || card.dataset.atlasDeferredResidency40351 === "1") return;
+    card.dataset.atlasDeferredResidency40351 = "1";
+    card.addEventListener("toggle", () => {
+      if (card.open) atlasLocalReportRenderOnDemand40351(mode, { force: true });
+      else atlasLocalReportReleaseDom40351(mode);
+    });
+    if (!card.open && atlasLocalReportResult(mode)?.answer) {
+      atlasLocalReportReleaseDom40351(mode);
+    }
+  });
+}
+
+globalThis.AtlasReportDeferredResidency40351 = Object.freeze({
+  build: "40.3.51",
+  scope: "four_atlas_local_report_bodies_only",
+  closed_card_full_report_dom: false,
+  open_card_materializes_from_state: true,
+  close_card_releases_generated_dom: true,
+  copy_export_use_state_not_dom: true,
+  timer_added: false,
+  observer_added: false,
+  reparenting_added: false,
+  window_manager_modified: false,
+  market_core_modified: false
+});
+
 function atlasLocalCommentFilterStatus(warnings) {
   const items = Array.isArray(warnings) ? warnings.filter(Boolean) : [];
   if (!items.length) {
@@ -22416,17 +22500,17 @@ function atlasLocalReportStoreCore(mode, result, snapshot, options = {}) {
   };
 
   const ids = ATLAS_LOCAL_REPORT_IDS[mode];
-  const contentNode = document.getElementById(ids.content);
-  if (!atlasLocalSetReport(contentNode, report.answer)) return null;
-
   atlasLocalReportsState.reports[mode] = report;
+  atlasLocalReportRenderOnDemand40351(mode);
   setText(document.getElementById(ids.meta), `${report.snapshotLabel} · ${report.model}`);
   atlasLocalReportSetCardState(mode, "Prêt", "ready");
   document.querySelector(`[data-atlas-report-copy="${mode}"]`)?.removeAttribute("disabled");
   document.querySelector(`[data-atlas-report-export="${mode}"]`)?.removeAttribute("disabled");
 
   if (options.open === true) {
-    document.querySelector(`[data-atlas-report-card="${mode}"]`)?.setAttribute("open", "");
+    const card = atlasLocalReportCard40351(mode);
+    card?.setAttribute("open", "");
+    atlasLocalReportRenderOnDemand40351(mode, { force: true });
   }
   return report;
 }
@@ -22850,7 +22934,7 @@ async function atlasLocalReportsRunAll(options = {}) {
         atlasLocalDialogueState.connected = true;
         atlasLocalDialogueState.provider = result?.provider || atlasLocalDialogueState.provider;
         atlasLocalDialogueState.model = result?.model || atlasLocalDialogueState.model;
-        const stored = atlasLocalReportStore(mode, result, snapshot, { open: true });
+        const stored = atlasLocalReportStore(mode, result, snapshot, { open: false });
         if (stored) {
           completed += 1;
           atlasCurrentStage(snapshot, "ATLAS_RUNNING", `atlas_${mode}_ready`, { completed });
@@ -22880,7 +22964,7 @@ async function atlasLocalReportsRunAll(options = {}) {
               ? `${previous.snapshotLabel} · dernier rapport conservé`
               : `${previous.snapshotLabel} · HISTORIQUE · fingerprint différent`
           );
-          atlasLocalSetReport(document.getElementById(ids.content), previous.answer);
+          atlasLocalReportRenderOnDemand40351(mode);
         } else {
           atlasLocalReportSetCardState(mode, "À relancer", "wait");
           setText(document.getElementById(ids.meta), "Rapport non généré");
@@ -22909,7 +22993,6 @@ async function atlasLocalReportsRunAll(options = {}) {
       if (snapshot?.strict_contract?.nox_no_fomo_v1) {
         atlasCurrentStage(snapshot, "NOX_READY", "nox_no_fomo_ready", { completed: 4 });
       }
-      atlasLocalReportsOpenAll();
       document.getElementById("btnAtlasLocalConclusion")?.removeAttribute("disabled");
       atlasAnalysisProgressRender(4, "nox", "Atlas 4/4 CURRENT · NØX contrôle FOMO, contradictions et causalités avant transmission à Aerith.");
       atlasLocalDialogueSetConnection(
@@ -23268,8 +23351,14 @@ function atlasLocalReportsExport(mode) {
   atlasLocalReportsSetSuiteStatus(`${report.label} exporté.`, "ready");
 }
 
-function atlasLocalReportsOpenAll() {
-  document.querySelectorAll("[data-atlas-report-card]").forEach(card => card.setAttribute("open", ""));
+function atlasLocalReportsOpenFirst40351() {
+  const mode = ATLAS_LOCAL_REPORT_MODES.find(item => atlasLocalReportResult(item)?.answer)
+    || ATLAS_LOCAL_REPORT_MODES[0];
+  const card = atlasLocalReportCard40351(mode);
+  if (!card) return false;
+  card.setAttribute("open", "");
+  atlasLocalReportRenderOnDemand40351(mode, { force: true });
+  return true;
 }
 
 function atlasLocalReportsReadyForFingerprint(fingerprint = "") {
@@ -37960,7 +38049,7 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
       const report = atlasSharedSynthesisClone(pkg.reports[mode]);
       atlasLocalReportsState.reports[mode] = report;
       const ids = ATLAS_LOCAL_REPORT_IDS[mode];
-      atlasLocalSetReport(document.getElementById(ids.content), report.answer);
+      atlasLocalReportRenderOnDemand40351(mode);
       setText(
         document.getElementById(ids.meta),
         `${report.snapshotLabel || pkg.snapshot_label} · ${restoredHistorical ? "historique" : (source === "import" ? "importé" : "conservé")} · ${report.model || pkg.origin?.model || "modèle"}`
@@ -38383,7 +38472,7 @@ function atlasExportDiagnosticBundle() {
 
 function atlasSharedSynthesisReadReports() {
   if (!atlasSharedSynthesisState.package) return false;
-  atlasLocalReportsOpenAll();
+  atlasLocalReportsOpenFirst40351();
   document.getElementById("atlasLocalReportSuite")?.scrollIntoView({ behavior: "smooth", block: "start" });
   return true;
 }
@@ -46419,7 +46508,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.50";
+const ATLAS_BUILD = "40.3.51";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
