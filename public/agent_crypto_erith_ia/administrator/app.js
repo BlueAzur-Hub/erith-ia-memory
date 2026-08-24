@@ -9162,17 +9162,18 @@ function atlasOracleDrawCanvas(model) {
   ctx.strokeStyle = "rgba(255,221,142,.76)";
   ctx.beginPath(); ctx.moveTo(anchorX, pad.top); ctx.lineTo(anchorX, pad.top+h); ctx.stroke();
   ctx.setLineDash([]);
-  // 40.3.64 visual debt settlement: keep the 28 px plot padding restored in 40.3.62.
-  // Only lower the NOW badge so it does not collide with the absolute operator HUD.
-  const nowBadgeY40364 = pad.top + 20;
+  // 40.3.73 presentation-only clearance: preserve the canonical 28 px plot padding.
+  // The HUD remains an absolute overlay; only labels are moved below its visual footprint.
+  const oracleTopLabelY40373 = pad.top + 50;
+  const nowBadgeY40373 = pad.top + 64;
   ctx.fillStyle = "rgba(5,17,27,.90)";
-  ctx.fillRect(anchorX - 38, nowBadgeY40364, 76, 15);
+  ctx.fillRect(anchorX - 38, nowBadgeY40373, 76, 15);
   ctx.strokeStyle = "rgba(255,224,154,.52)";
-  ctx.strokeRect(anchorX - 38, nowBadgeY40364, 76, 15);
+  ctx.strokeRect(anchorX - 38, nowBadgeY40373, 76, 15);
   ctx.fillStyle = "#ffe09a";
   ctx.font = "950 9px system-ui, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("MAINTENANT", anchorX, nowBadgeY40364 + 10);
+  ctx.fillText("MAINTENANT", anchorX, nowBadgeY40373 + 10);
   ctx.beginPath(); ctx.arc(anchorX, yFor(100), 6.8, 0, Math.PI*2); ctx.strokeStyle = "rgba(255,224,154,.36)"; ctx.lineWidth = 2; ctx.stroke();
   ctx.beginPath(); ctx.arc(anchorX, yFor(100), 4.2, 0, Math.PI*2); ctx.fillStyle = "#fff0bb"; ctx.fill();
   ctx.shadowColor = "#ffe09a"; ctx.shadowBlur = 11; ctx.strokeStyle = "#ffe09a"; ctx.lineWidth = 1.2; ctx.stroke(); ctx.shadowBlur = 0;
@@ -9202,8 +9203,8 @@ function atlasOracleDrawCanvas(model) {
     });
     ctx.textAlign = "left";
     ctx.fillStyle = "rgba(174,219,236,.78)"; ctx.font = "900 9px system-ui, sans-serif";
-    ctx.fillText(surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "FILS HISTORIQUES RÉELS", pad.left + 5, pad.top + 13);
-    ctx.fillStyle = "rgba(178,255,225,.84)"; ctx.fillText("FILS ORACLE TOP 5", anchorX + 10, pad.top + 13);
+    ctx.fillText(surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "FILS HISTORIQUES RÉELS", pad.left + 5, oracleTopLabelY40373);
+    ctx.fillStyle = "rgba(178,255,225,.84)"; ctx.fillText("FILS ORACLE TOP 5", anchorX + 10, oracleTopLabelY40373);
   } else {
     const palette = model.aggregate ? { primary:"#62ecff" } : atlasCryptoPalette(model.coin, 0);
     const assetColor = palette.primary || "#62ecff";
@@ -9242,8 +9243,8 @@ function atlasOracleDrawCanvas(model) {
     const historyLabel = model.aggregate
       ? (surface.key === "composite" ? "HISTORIQUE TOP 5 COMPOSITE RÉEL" : "TOP 5 COMPOSITE RÉEL")
       : (surface.key === "composite" ? "HISTORIQUE PRINCIPAL RÉEL" : "HISTORIQUE RÉEL");
-    ctx.fillText(historyLabel, pad.left + 5, pad.top + 13);
-    ctx.fillStyle = "#bfff86"; ctx.fillText(`HAUSSE ${model.bullStrength}/100`, anchorX + 10, pad.top + 13);
+    ctx.fillText(historyLabel, pad.left + 5, oracleTopLabelY40373);
+    ctx.fillStyle = "#bfff86"; ctx.fillText(`HAUSSE ${model.bullStrength}/100`, anchorX + 10, oracleTopLabelY40373);
     ctx.fillStyle = "#ff9aa4"; ctx.fillText(`BAISSE ${model.bearStrength}/100`, anchorX + 10, pad.top + h - 8);
   }
 
@@ -47002,7 +47003,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.72";
+const ATLAS_BUILD = "40.3.73";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
