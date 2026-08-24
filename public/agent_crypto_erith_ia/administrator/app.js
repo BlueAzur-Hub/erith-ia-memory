@@ -3149,8 +3149,10 @@ function initAtlasHelpLayerV1() {
     atlasHideMarketCardDock({ clearSelection:true });
     atlasHideHelpLayer(true);
   });
+  // 40.3.86 — Firefox wheel hot-path: an idle/closed help surface owns no
+  // per-scroll DOM work. The active tooltip is still dismissed immediately.
   window.addEventListener("scroll", () => {
-    if (atlasMarketCardEffectiveMode() !== "dock") atlasHideHelpLayer(true);
+    if (atlasHelpActiveTarget && atlasMarketCardEffectiveMode() !== "dock") atlasHideHelpLayer(true);
   }, { passive: true });
   window.addEventListener("resize", () => {
     atlasHideHelpLayer(true);
@@ -45473,8 +45475,16 @@ function atlasRenderAudienceStatus(errorText = "") {
   setText(document.getElementById("audienceQueueState"), `Journal local : ${count} événement${count > 1 ? "s" : ""} · doublons évités : ${counters.suppressed}`);
 }
 
+const ATLAS_AUDIENCE_ACTIVITY_HOTPATH_MIN_MS_40386 = 900;
 function atlasAudienceMarkActivity() {
   const now = Date.now();
+  // 40.3.86 — activity truth does not need one ISO allocation + session write
+  // for every wheel-generated scroll event. Idle semantics are minute-scale;
+  // a sub-second coalescing guard preserves them without introducing a timer.
+  if (
+    atlasAudienceState.session.state === "active"
+    && now - Number(atlasAudienceState.lastActivityAt || 0) < ATLAS_AUDIENCE_ACTIVITY_HOTPATH_MIN_MS_40386
+  ) return;
   atlasAudienceState.lastActivityAt = now;
   atlasAudienceState.session.last_seen_at = new Date(now).toISOString();
   atlasAudienceState.session.state = "active";
@@ -45564,7 +45574,11 @@ async function atlasInitAudienceModule() {
     }
   });
   ["pointerdown", "keydown", "touchstart"].forEach(type => window.addEventListener(type, atlasAudienceMarkActivity, { passive: true }));
-  window.addEventListener("scroll", atlasAudienceMarkActivity, { passive: true });
+  // 40.3.86 — scrollend is a semantic activity signal and removes audience
+  // bookkeeping from the wheel scroll hot-loop on browsers that expose it.
+  // Older browsers keep the passive scroll fallback, protected by the guard above.
+  const atlasAudienceScrollActivityEvent40386 = "onscrollend" in window ? "scrollend" : "scroll";
+  window.addEventListener(atlasAudienceScrollActivityEvent40386, atlasAudienceMarkActivity, { passive: true });
   window.addEventListener("pagehide", () => atlasAudienceCloseSession("pagehide"), { capture: true });
   window.addEventListener("pageshow", event => {
     if (!event.persisted) return;
@@ -47041,7 +47055,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.85";
+const ATLAS_BUILD = "40.3.86";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55120,3 +55134,20 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_40384__=Object.freeze({build:"40.3.84",par
 
 /* 40.3.85 — SECTION 01 RESPONSIBILITY CONSOLIDATION */
 try{globalThis.__AGENT_CRYPTO_SECTION01_40385__=Object.freeze({build:"40.3.85",parent:"40.3.84",graphique:"prix+historique observé",math_core:"mesures+intégrité",news_sentinel:"contexte sourcé+causalité prudente",oracle:"scénario court de continuation",decision_board:"synthèse+contradictions+limites",section_relocation:false,model_math_changed:false,news_algorithm_changed:false,oracle_algorithm_changed:false,new_timer:false,new_observer:false,new_scheduler:false});}catch(_){}
+
+/* 40.3.86 — AETHER FIREFOX WHEEL HOT-PATH LOCK */
+try {
+  globalThis.__AETHER_FIREFOX_WHEEL_PATH_40386__ = Object.freeze({
+    build: "40.3.86",
+    parent: "40.3.85",
+    idle_help_scroll_dom_work: false,
+    audience_scrollend_preferred: true,
+    audience_fallback_coalesced_ms: ATLAS_AUDIENCE_ACTIVITY_HOTPATH_MIN_MS_40386,
+    viewport_navigation_scheduler_changed: false,
+    market_core_changed: false,
+    oracle_math_news_algorithms_changed: false,
+    new_timer: false,
+    new_observer: false,
+    new_scheduler: false
+  });
+} catch (_) {}
