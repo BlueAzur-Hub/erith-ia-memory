@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  ATLAS_NEWS_VERSION: V1.1-alpha.26.47.2
+  ATLAS_NEWS_VERSION: V1.1-alpha.26.47.3
 
 concurrency:
   group: atlas-news-sentinel-world-to-market
@@ -26,12 +26,12 @@ jobs:
           fetch-depth: 0
 
       - name: Validate collector
-        run: python public/agent_crypto_erith_ia/tools/atlas_news_collector.py --self-test
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_collector_aether_40367.py --self-test
 
-      - name: Collect qualified world and crypto news
+      - name: Collect qualified world, macro, flow and crypto news
         id: collect_news
         continue-on-error: true
-        run: python public/agent_crypto_erith_ia/tools/atlas_news_collector.py
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_collector_aether_40367.py
 
       - name: Commit News Sentinel archive
         if: always()
