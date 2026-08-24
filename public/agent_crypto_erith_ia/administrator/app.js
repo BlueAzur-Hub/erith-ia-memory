@@ -7855,12 +7855,57 @@ async function atlasOracleOutcomeRefreshStatus(rows = null) {
   return atlasOracleOutcomeStatusState;
 }
 
+
+
+/* ============================================================
+   40.3.111 — ORACLE RETAINED EVIDENCE BACKGROUND READ LOCK
+
+   Code-review correction to 40.3.108:
+   the pending-set optimization happened AFTER atlasOracleEvidenceAll(), so
+   a 15 s scheduler could still re-scan IndexedDB when the 15 s cache window
+   expired.
+
+   Background resolver contract:
+   - if a retained Evidence snapshot exists, use it regardless of display-cache age;
+   - same-tab puts/deletes already synchronize that retained snapshot after commit;
+   - if no retained snapshot exists, perform one normal Evidence read;
+   - operator/analytical readers keep their existing freshness policy;
+   - no timer cadence, Evidence semantics, retention or Oracle math changes.
+   ============================================================ */
+function atlasOracleEvidenceBackgroundRows403111(){
+  const c=atlasOracleEvidenceReadCache40215;
+  if(Array.isArray(c.rows)){
+    c.db_scans_avoided_403101+=1;
+    return Promise.resolve(c.rows);
+  }
+  return atlasOracleEvidenceAll();
+}
+
+try{
+  globalThis.AtlasOracleEvidenceBackground403111=Object.freeze({
+    build:"40.3.111",
+    strategy:"retained synchronized Evidence snapshot for scheduled background resolvers",
+    outcome_scheduler_uses_retained_rows:true,
+    long_shadow_uses_retained_rows:true,
+    operator_read_policy_changed:false,
+    analytical_read_policy_changed:false,
+    cache_ttl_changed:false,
+    timer_cadence_changed:false,
+    evidence_semantics_changed:false,
+    evidence_retention_changed:false,
+    source_history_changed:false,
+    oracle_math_changed:false,
+    observer_added:false,
+    network_added:false
+  });
+}catch(_){}
+
 async function atlasOracleOutcomeRun() {
   if (atlasOracleOutcomeRunning) { atlasRuntimeObservatoryState40214.outcome_skips += 1; return atlasOracleOutcomeStatusState; }
   const runtimeStarted40214 = atlasRuntimeNow40214();
   atlasOracleOutcomeRunning = true;
   try {
-    const rows = await atlasOracleEvidenceAll();
+    const rows = await atlasOracleEvidenceBackgroundRows403111();
     const pendingRows403108 = atlasOracleEvidencePendingRows403108(rows);
     const c403108=atlasOracleEvidenceReadCache40215;
     c403108.outcome_runs_403108+=1;
@@ -7974,7 +8019,7 @@ function atlasOracleLongFmtT040282(ms){const v=Number(ms);if(!(v>0))return "—"
 function atlasOracleLongShadowCompute40282(rows,now=Date.now()){const out={};for(const [key,spec] of Object.entries(ATLAS_ORACLE_LONG_SHADOW_40273)){let eligible=0,resolved=0,waiting=0,due_missing=0,hits=0,sum=0,absSum=0,firstT0=Infinity,lastT0=0;const returns=[],lags=[],methods={},directions={up:0,down:0,flat:0,unknown:0};for(const row of rows||[]){if(row?.long_shadow?.schema!=="atlas.oracle.long-shadow.v1"||row?.long_shadow?.prospective!==true)continue;const t0=Number(row.t0||0);if(!(t0>0))continue;eligible++;firstT0=Math.min(firstT0,t0);lastT0=Math.max(lastT0,t0);const actual=row?.long_shadow_outcomes?.[key],pred=String(row?.long_shadow?.predictions?.[key]||"");if(!actual){if(now<t0+Number(spec.ms||0))waiting++;else due_missing++;continue;}resolved++;const ret=Number(actual.realized_return_pct);if(Number.isFinite(ret)){sum+=ret;absSum+=Math.abs(ret);returns.push(ret);}const dir=String(actual.direction||"unknown");directions[dir]=(directions[dir]||0)+1;if(pred&&pred===dir)hits++;const method=String(actual.resolution_method||"unknown");methods[method]=(methods[method]||0)+1;for(const c of Array.isArray(actual.constituents)?actual.constituents:[]){const lag=Number(c?.lag_ms);if(Number.isFinite(lag))lags.push(Math.abs(lag)/60000);}}const matured=resolved+due_missing,coverage=matured?resolved/matured*100:null;out[key]={label:spec.label,eligible,resolved,waiting,due_missing,matured,coverage,hit_rate:resolved?hits/resolved*100:null,avg_return:resolved?sum/resolved:null,median_return:atlasOracleLongMedian40282(returns),avg_abs_return:resolved?absSum/resolved:null,median_lag_min:atlasOracleLongMedian40282(lags),methods,directions,first_t0:Number.isFinite(firstT0)?firstT0:null,last_t0:lastT0||null};}return out;}
 function atlasOracleLongShadowCompute40273(rows){return atlasOracleLongShadowCompute40282(rows,Date.now());}
 function atlasOracleLongShadowRender40273(rows=null){const apply=source=>{const h=atlasOracleLongShadowCompute40282(source||[],Date.now());atlasOracleLongShadowState40273={...atlasOracleLongShadowState40273,horizons:h};const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};const pct=v=>Number.isFinite(Number(v))?`${Number(v).toFixed(1)} %`:"—",ret=v=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(3)} %`:"—";const status=x=>{if(!x?.matured)return "EN COLLECTE";if(Number(x.coverage)>=95)return "COUVERTURE FORTE";if(Number(x.coverage)>=80)return "COUVERTURE BONNE";return "COUVERTURE À SURVEILLER";};const methodText=x=>{const m=Object.entries(x?.methods||{}).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${k} ×${n}`).slice(0,2).join(" · ")||"—";const lag=Number.isFinite(Number(x?.median_lag_min))?` · retard médian ${Number(x.median_lag_min).toFixed(1)} min`:"";return m+lag;};const directionText=x=>`↑ ${x?.directions?.up||0} · ↓ ${x?.directions?.down||0} · = ${x?.directions?.flat||0}`;const f=(k,p)=>{const x=h[k]||{};set(`atlasOracleLong${p}Resolved40273`,String(x.resolved||0));set(`atlasOracleLong${p}Pending40273`,String(x.waiting||0));set(`atlasOracleLong${p}Missing40282`,String(x.due_missing||0));set(`atlasOracleLong${p}Coverage40282`,pct(x.coverage));set(`atlasOracleLong${p}Hit40273`,pct(x.hit_rate));set(`atlasOracleLong${p}Return40273`,ret(x.avg_return));set(`atlasOracleLong${p}Median40282`,ret(x.median_return));set(`atlasOracleLong${p}Abs40282`,ret(x.avg_abs_return)?.replace(/^\+/,""));set(`atlasOracleLong${p}Directions40282`,directionText(x));set(`atlasOracleLong${p}Method40282`,methodText(x));set(`atlasOracleLong${p}Window40282`,x.first_t0&&x.last_t0?`${atlasOracleLongFmtT040282(x.first_t0)} → ${atlasOracleLongFmtT040282(x.last_t0)}`:"—");set(`atlasOracleLong${p}Status40282`,status(x));};f("30m","30");f("1h","1h");const vals=Object.values(h),eligible=vals.reduce((s,x)=>s+(x.eligible||0),0),resolved=vals.reduce((s,x)=>s+(x.resolved||0),0),waiting=vals.reduce((s,x)=>s+(x.waiting||0),0),missing=vals.reduce((s,x)=>s+(x.due_missing||0),0),matured=resolved+missing,coverage=matured?resolved/matured*100:null;set("atlasOracleLongEligible40282",String(eligible));set("atlasOracleLongResolved40282",String(resolved));set("atlasOracleLongWaiting40282",String(waiting));set("atlasOracleLongMissing40282",String(missing));set("atlasOracleLongCoverage40282",pct(coverage));const stateNode=document.getElementById("atlasOracleLongShadowState40273");if(stateNode)stateNode.textContent=resolved?`PROSPECTIF · ${resolved} résolution(s)`:`PROSPECTIF · n0`;return h;};if(Array.isArray(rows))return apply(rows);return atlasOracleEvidenceAll().then(apply).catch(()=>null);}
-async function atlasOracleLongShadowRun40273(force=false){const now=Date.now();if(atlasOracleLongShadowState40273.running)return atlasOracleLongShadowState40273;if(!force&&now-Number(atlasOracleLongShadowState40273.last_run_at||0)<60_000)return atlasOracleLongShadowState40273;atlasOracleLongShadowState40273.running=true;try{const rows=await atlasOracleEvidenceAll();let changed=0;for(const row of rows){if(row?.long_shadow?.schema!=="atlas.oracle.long-shadow.v1")continue;let next=null;for(const key of Object.keys(ATLAS_ORACLE_LONG_SHADOW_40273)){const outcome=atlasOracleLongShadowResolveRow40273(next||row,key,now);if(!outcome)continue;if(!next)next={...row,long_shadow_outcomes:{...(row.long_shadow_outcomes||{})}};next.long_shadow_outcomes[key]=outcome;}if(next){await atlasOracleEvidencePut(next);changed++;}}const fresh=changed?await atlasOracleEvidenceAll():rows;atlasOracleLongShadowState40273.last_run_at=now;await atlasOracleLongShadowRender40273(fresh);return {...atlasOracleLongShadowState40273,changed};}finally{atlasOracleLongShadowState40273.running=false;}}
+async function atlasOracleLongShadowRun40273(force=false){const now=Date.now();if(atlasOracleLongShadowState40273.running)return atlasOracleLongShadowState40273;if(!force&&now-Number(atlasOracleLongShadowState40273.last_run_at||0)<60_000)return atlasOracleLongShadowState40273;atlasOracleLongShadowState40273.running=true;try{const rows=await atlasOracleEvidenceBackgroundRows403111();let changed=0;for(const row of rows){if(row?.long_shadow?.schema!=="atlas.oracle.long-shadow.v1")continue;let next=null;for(const key of Object.keys(ATLAS_ORACLE_LONG_SHADOW_40273)){const outcome=atlasOracleLongShadowResolveRow40273(next||row,key,now);if(!outcome)continue;if(!next)next={...row,long_shadow_outcomes:{...(row.long_shadow_outcomes||{})}};next.long_shadow_outcomes[key]=outcome;}if(next){await atlasOracleEvidencePut(next);changed++;}}const fresh=changed?(Array.isArray(atlasOracleEvidenceReadCache40215.rows)?atlasOracleEvidenceReadCache40215.rows:rows):rows;atlasOracleLongShadowState40273.last_run_at=now;await atlasOracleLongShadowRender40273(fresh);return {...atlasOracleLongShadowState40273,changed};}finally{atlasOracleLongShadowState40273.running=false;}}
 globalThis.AtlasOracleLongShadow40273=Object.freeze({build:"40.2.73",operator_view_build:"40.2.82",run:atlasOracleLongShadowRun40273,render:atlasOracleLongShadowRender40273,state:()=>atlasOracleLongShadowState40273,horizons:Object.keys(ATLAS_ORACLE_LONG_SHADOW_40273),prospective_only:true,retrofit_old_rows:false,oracle_v1_changed:false,ensemble_changed:false,weights_changed:false,evaluation_gate_changed:false});
 /* 40.3.84: Long Shadow boot scan is owned by atlasOracleOutcomeSchedule after explicit Oracle initialization. */
 
@@ -48929,7 +48974,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.110";
+const ATLAS_BUILD = "40.3.111";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -58891,6 +58936,33 @@ try{
     window_manager_changed:false,
     images_changed:false,
     new_recurring_timer:false,
+    new_observer:false,
+    new_network_owner:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_CODE_REVIEW_403111__=Object.freeze({
+    build:"40.3.111",
+    parent:"40.3.110",
+    review_finding:"40.3.108 pending-set still paid atlasOracleEvidenceAll() before filtering; cache TTL and scheduler cadence could align into repeated full scans",
+    corrected:true,
+    rejected_403105_graph_absent:true,
+    recovery_403106_preserved:true,
+    cascade_403107_403110_preserved:true,
+    outcome_background_full_scan_after_warmup:false,
+    long_shadow_background_full_scan_after_warmup:false,
+    operator_evidence_refresh_policy_changed:false,
+    fiche_crypto_changed:false,
+    target_top_hover_changed:false,
+    market_core_changed:false,
+    oracle_math_changed:false,
+    evidence_retention_changed:false,
+    source_history_changed:false,
+    window_manager_changed:false,
+    images_changed:false,
+    new_timer:false,
     new_observer:false,
     new_network_owner:false
   });
