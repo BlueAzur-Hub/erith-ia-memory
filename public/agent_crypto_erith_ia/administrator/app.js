@@ -11604,6 +11604,14 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
     }
   }
 
+  const manualTop5Drift40370 = atlasManualCanonicalTop5Drift40370();
+  if (manualTop5Drift40370) {
+    secondarySummaryItems.unshift({
+      className: "atlas-hud-detail",
+      text: `sélection libre Top 5 ${manualTop5Drift40370.selectedIds.length}/5 · manquant ${manualTop5Drift40370.missingSymbols.join("/")} · Target Top 5 = restaurer`
+    });
+  }
+
   if (options.preserved) {
     secondarySummaryItems.push({
       className: "atlas-hud-detail",
@@ -12240,6 +12248,33 @@ function atlasTargetCycleCurrentPreset() {
   );
 }
 
+function atlasManualCanonicalTop5Drift40370() {
+  // 40.3.70 — a click on a Top 5 ribbon card intentionally enters manual
+  // comparison mode. If that manual selection is only a proper subset of the
+  // canonical BTC/ETH/BNB/XRP/SOL basket, expose it as such and make the next
+  // Target Top 5 action restore the full basket. Never auto-overwrite manual
+  // operator intent on boot.
+  if (String(state.dataBroker?.comparison?.preset || "") !== "manual") return null;
+  const selectedIds40370 = atlasComparisonIds();
+  const canonicalIds40370 = atlasCuratedTopIds(5);
+  if (!selectedIds40370.length || canonicalIds40370.length !== 5) return null;
+  if (selectedIds40370.length >= canonicalIds40370.length) return null;
+  if (!selectedIds40370.every(id => canonicalIds40370.includes(id))) return null;
+  const missingIds40370 = canonicalIds40370.filter(id => !selectedIds40370.includes(id));
+  const symbolFor40370 = id => String(
+    state.coins.find(coin => coin.id === id)?.symbol
+    || ({bitcoin:"BTC",ethereum:"ETH",binancecoin:"BNB",ripple:"XRP",solana:"SOL"}[id])
+    || id
+  ).toUpperCase();
+  return {
+    selectedIds: [...selectedIds40370],
+    canonicalIds: [...canonicalIds40370],
+    missingIds: missingIds40370,
+    selectedSymbols: selectedIds40370.map(symbolFor40370),
+    missingSymbols: missingIds40370.map(symbolFor40370)
+  };
+}
+
 function atlasTargetCycleNextPreset(value) {
   const current = atlasTargetCycleIsPreset(value)
     ? String(value)
@@ -12306,7 +12341,8 @@ function atlasSyncTargetTopFiveCycleLabel() {
     : String(state.dataBroker?.comparison?.preset || "rank-5");
 
   const cyclePreset = atlasTargetCycleCurrentPreset();
-  const nextPreset = atlasTargetCycleNextPreset(cyclePreset);
+  const manualTop5Drift40370 = atlasManualCanonicalTop5Drift40370();
+  const nextPreset = manualTop5Drift40370 ? "rank-5" : atlasTargetCycleNextPreset(cyclePreset);
   const display = atlasTargetTopFiveDisplay(displayedPreset);
   const nextDisplay = atlasTargetTopFiveDisplay(nextPreset);
 
@@ -12324,15 +12360,18 @@ function atlasSyncTargetTopFiveCycleLabel() {
     : "manual";
 
   label.textContent = display.label;
-  symbols.textContent =
-    symbolLine || "BTC · ETH · BNB · XRP · SOL";
+  symbols.textContent = manualTop5Drift40370
+    ? `${symbolLine || manualTop5Drift40370.selectedSymbols.join(" · ")} · manque ${manualTop5Drift40370.missingSymbols.join("/")}`
+    : (symbolLine || "BTC · ETH · BNB · XRP · SOL");
 
-  root.title =
-    `Mode affiché : ${display.shortLabel}`
-    + ` · Cycle automatique : ${
-      atlasTargetTopFiveDisplay(cyclePreset).shortLabel
-    }`
-    + ` · Cliquer pour : ${nextDisplay.shortLabel}`;
+  root.dataset.top5Recovery40370 = manualTop5Drift40370 ? "true" : "false";
+  root.title = manualTop5Drift40370
+    ? `Sélection libre ${manualTop5Drift40370.selectedIds.length}/5 du Top 5 · manquant ${manualTop5Drift40370.missingSymbols.join("/")} · cliquer pour restaurer Target Top 5`
+    : `Mode affiché : ${display.shortLabel}`
+      + ` · Cycle automatique : ${
+        atlasTargetTopFiveDisplay(cyclePreset).shortLabel
+      }`
+      + ` · Cliquer pour : ${nextDisplay.shortLabel}`;
 
   root.setAttribute(
     "aria-label",
@@ -12348,6 +12387,7 @@ function atlasSyncTargetTopFiveCycleLabel() {
 }
 
 function atlasTargetTopFiveCyclePreset() {
+  if (atlasManualCanonicalTop5Drift40370()) return "rank-5";
   return atlasTargetCycleNextPreset(
     atlasTargetCycleCurrentPreset()
   );
@@ -46902,7 +46942,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.69";
+const ATLAS_BUILD = "40.3.70";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
