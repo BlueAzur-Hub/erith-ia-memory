@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.59";
-  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · COLD BOOT + VISIBILITY RESUME COALESCING LOCK";
+  const ADMIN_BUILD = "40.3.60";
+  const ADMIN_RELEASE = "PARKER LEWIS CAN'T LOSE · ORACLE OPERATOR HUD GEOMETRY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 

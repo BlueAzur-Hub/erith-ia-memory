@@ -9000,7 +9000,8 @@ function atlasOracleDrawCanvas(model) {
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.clearRect(0, 0, cssWidth, cssHeight);
 
-  const pad = { left: 42, right: 50, top: 28, bottom: 40 };
+  // 40.3.60 visual-only: reserve vertical room for the two-tier operator HUD; Oracle values/data stay unchanged.
+  const pad = { left: 42, right: 50, top: 52, bottom: 40 };
   const w = cssWidth - pad.left - pad.right;
   const h = cssHeight - pad.top - pad.bottom;
   const surface = atlasOracleSurfaceSpec();
@@ -46715,7 +46716,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.59";
+const ATLAS_BUILD = "40.3.60";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
