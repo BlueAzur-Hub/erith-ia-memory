@@ -2307,6 +2307,67 @@ function atlasV2EntryVisibleInMode(entry, mode) {
   return false;
 }
 
+
+
+/* ============================================================
+   40.3.99 — INTERMEDIATE / ADMIN ROLE TRANSITION IDEMPOTENCE
+
+   Intermediate and Administrator intentionally share visualMode="advanced".
+   The role difference is content authority, not a second visual theme.
+
+   Do not rewrite hidden/aria/dataset/text/class values when already correct:
+   on a 15k+ px page, repeated no-op DOM mutations still invalidate style/layout
+   and are especially wasteful in operator/intermediate role transitions.
+   ============================================================ */
+function atlasSetHiddenAria40399(node, hidden) {
+  if (!node) return false;
+  const nextHidden = Boolean(hidden);
+  const nextAria = nextHidden ? "true" : "false";
+  let changed = false;
+
+  if (node.hidden !== nextHidden) {
+    node.hidden = nextHidden;
+    changed = true;
+  }
+  if (node.getAttribute("aria-hidden") !== nextAria) {
+    node.setAttribute("aria-hidden", nextAria);
+    changed = true;
+  }
+  return changed;
+}
+
+function atlasSetDataset40399(node, key, value) {
+  if (!node?.dataset) return false;
+  const next = String(value ?? "");
+  if (String(node.dataset[key] ?? "") === next) return false;
+  node.dataset[key] = next;
+  return true;
+}
+
+function atlasSetText40399(node, value) {
+  if (!node) return false;
+  const next = String(value ?? "");
+  if (node.textContent === next) return false;
+  node.textContent = next;
+  return true;
+}
+
+function atlasSetAttr40399(node, name, value) {
+  if (!node) return false;
+  const next = String(value);
+  if (node.getAttribute(name) === next) return false;
+  node.setAttribute(name, next);
+  return true;
+}
+
+function atlasToggleClass40399(node, name, active) {
+  if (!node?.classList) return false;
+  const next = Boolean(active);
+  if (node.classList.contains(name) === next) return false;
+  node.classList.toggle(name, next);
+  return true;
+}
+
 function atlasV2ApplySectionVisibility(mode) {
   const expanded = atlasV2IsExpandedMode(mode);
   const resolved = new Map();
@@ -2321,21 +2382,14 @@ function atlasV2ApplySectionVisibility(mode) {
   }
 
   for (const [target, visible] of resolved) {
-    target.hidden = !visible;
-    target.setAttribute("aria-hidden", visible ? "false" : "true");
+    atlasSetHiddenAria40399(target, !visible);
   }
 
   const risk = document.getElementById("risques");
-  if (risk) {
-    risk.hidden = !expanded;
-    risk.setAttribute("aria-hidden", expanded ? "false" : "true");
-  }
+  atlasSetHiddenAria40399(risk, !expanded);
 
   const newsRegistry = document.getElementById("newsSourceRegistry");
-  if (newsRegistry) {
-    newsRegistry.hidden = !expanded;
-    newsRegistry.setAttribute("aria-hidden", expanded ? "false" : "true");
-  }
+  atlasSetHiddenAria40399(newsRegistry, !expanded);
 }
 
 function atlasV2ApplySemanticRoleIsolation40312(mode) {
@@ -2358,14 +2412,12 @@ function atlasV2ApplySemanticRoleIsolation40312(mode) {
       if (node.dataset.atlasRoleIsolation40312 !== "public-blocked") {
         node.dataset.atlasRoleIsolationPreviousHidden40322 = node.hidden ? "1" : "0";
       }
-      node.dataset.atlasRoleIsolation40312 = "public-blocked";
-      node.hidden = true;
-      node.setAttribute("aria-hidden", "true");
+      atlasSetDataset40399(node, "atlasRoleIsolation40312", "public-blocked");
+      atlasSetHiddenAria40399(node, true);
     } else if (node.dataset.atlasRoleIsolation40312 === "public-blocked") {
       const previousHidden = node.dataset.atlasRoleIsolationPreviousHidden40322 === "1";
       if (!previousHidden) {
-        node.hidden = false;
-        node.setAttribute("aria-hidden", "false");
+        atlasSetHiddenAria40399(node, false);
       }
       delete node.dataset.atlasRoleIsolation40312;
       delete node.dataset.atlasRoleIsolationPreviousHidden40322;
@@ -2464,23 +2516,23 @@ function atlasV2ApplyMode(mode, options = {}) {
   const operator = next === "intermediate";
   const expanded = administrator || operator;
 
-  document.documentElement.dataset.atlasMode = visualMode;
-  document.body.dataset.atlasMode = visualMode;
-  document.documentElement.dataset.atlasView = next;
-  document.body.dataset.atlasView = next;
+  atlasSetDataset40399(document.documentElement, "atlasMode", visualMode);
+  atlasSetDataset40399(document.body, "atlasMode", visualMode);
+  atlasSetDataset40399(document.documentElement, "atlasView", next);
+  atlasSetDataset40399(document.body, "atlasView", next);
 
   document.querySelectorAll("[data-atlas-view-mode]").forEach(button => {
     const active = button.dataset.atlasViewMode === next;
-    button.classList.toggle("is-active", active);
-    button.setAttribute("aria-pressed", active ? "true" : "false");
+    atlasToggleClass40399(button, "is-active", active);
+    atlasSetAttr40399(button, "aria-pressed", active ? "true" : "false");
   });
 
   const title = document.getElementById("atlasV2ModeTitle");
   const description = document.getElementById("atlasV2ModeDescription");
 
   const role = administrator ? "administrator" : operator ? "operator" : "public";
-  document.documentElement.dataset.atlasRole = role;
-  document.body.dataset.atlasRole = role;
+  atlasSetDataset40399(document.documentElement, "atlasRole", role);
+  atlasSetDataset40399(document.body, "atlasRole", role);
 
   if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Vue intermédiaire" : "Marché public";
   if (description) description.textContent = administrator
@@ -2512,10 +2564,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   atlasV2SyncMixedSectionLabels(next);
 
   const liveSourcesCollapse = document.getElementById("liveSourcesCollapse");
-  if (liveSourcesCollapse) {
-    liveSourcesCollapse.hidden = false;
-    liveSourcesCollapse.setAttribute("aria-hidden", "false");
-  }
+  atlasSetHiddenAria40399(liveSourcesCollapse, false);
 
   // 40.3.68 AETHER — shared BAR geometry, view-owned COMMAND scope.
   // Basic keeps the same physical top bar but exposes only its daily commands:
@@ -2523,8 +2572,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   // Atlas, Oracle and the advanced command dock. No business engine is stopped.
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
     const hide40368 = next === "essential";
-    element.hidden = hide40368;
-    element.setAttribute("aria-hidden", hide40368 ? "true" : "false");
+    atlasSetHiddenAria40399(element, hide40368);
   });
   const basicHiddenTargets40368 = new Set([
     "atlas-local-ai-collapse",
@@ -2533,8 +2581,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").forEach(element => {
     const target40368 = String(element.dataset.atlasEssentialTarget || "");
     const hide40368 = next === "essential" && basicHiddenTargets40368.has(target40368);
-    element.hidden = hide40368;
-    element.setAttribute("aria-hidden", hide40368 ? "true" : "false");
+    atlasSetHiddenAria40399(element, hide40368);
   });
 
   const commandKicker = document.getElementById("atlasCommandKicker");
@@ -2543,15 +2590,15 @@ function atlasV2ApplyMode(mode, options = {}) {
   if (commandTitle) commandTitle.textContent = operator ? "Vue intermédiaire Agent-Crypto" : "Administration Agent-Crypto";
 
   const missionsQuickLink = document.getElementById("atlasMissionsQuickLink");
-  if (missionsQuickLink) missionsQuickLink.hidden = operator;
+  if (missionsQuickLink && missionsQuickLink.hidden !== operator) missionsQuickLink.hidden = operator;
   const privateMissionsGroup = document.getElementById("atlasPrivateMissionsOptionGroup");
   if (privateMissionsGroup) {
-    privateMissionsGroup.hidden = operator;
-    privateMissionsGroup.disabled = operator;
+    if (privateMissionsGroup.hidden !== operator) privateMissionsGroup.hidden = operator;
+    if (privateMissionsGroup.disabled !== operator) privateMissionsGroup.disabled = operator;
   }
-  setText(document.getElementById("atlasProjectsClusterLabel"), operator ? "Création" : "Projets");
-  setText(document.getElementById("atlasProjectsShortcutLabel"), operator ? "Création" : "Projets");
-  setText(document.getElementById("atlasProjectsShortcutCount"), operator ? "1" : "2");
+  atlasSetText40399(document.getElementById("atlasProjectsClusterLabel"), operator ? "Création" : "Projets");
+  atlasSetText40399(document.getElementById("atlasProjectsShortcutLabel"), operator ? "Création" : "Projets");
+  atlasSetText40399(document.getElementById("atlasProjectsShortcutCount"), operator ? "1" : "2");
 
   const selector = document.getElementById("atlasV2AdvancedModuleSelect");
   if (operator && selector && ATLAS_V2_INTERMEDIATE_HIDDEN_IDS.has(selector.value)) selector.value = "";
@@ -2904,26 +2951,61 @@ function atlasRuntimeCaptureReturn40332() {
   return atlasRuntimeReturn40332.snapshot;
 }
 
+function atlasRuntimeReturnSemanticEqual40398(a, b) {
+  if (!a || !b) return false;
+  return a.mode === b.mode
+    && a.role === b.role
+    && a.mathDock === b.mathDock
+    && a.mathParent === b.mathParent;
+}
+
 function atlasRuntimeFastReturn40332(reason) {
   const previous = atlasRuntimeReturn40332.snapshot;
   const current = atlasRuntimeReturnSnapshot40332();
-  if (!atlasRuntimeReturnSnapshotEqual40332(previous, current)) return false;
+  const exactSame = atlasRuntimeReturnSnapshotEqual40332(previous, current);
+  const semanticSame = atlasRuntimeReturnSemanticEqual40398(previous, current);
+  const returnReason = reason === "visibility-return"
+    || reason === "pageshow"
+    || reason === "pageshow-cache";
 
-  /* 40.3.32 — ordinary tab/window return must not rebuild the Administrator.
-     Initial boot already classified sections and applied the active V2 mode.
-     Re-running that pipeline traversed the long document, re-applied role
-     visibility, re-parented Math Core and rendered Math again merely because
-     Firefox became visible. Keep the painted DOM exactly as-is. */
+  if (!exactSame && !(returnReason && semanticSame)) return false;
+
+  /* 40.3.98 — Firefox may report a transient viewport geometry drift when a
+     tab/window/BFCache page becomes visible again. That must NOT trigger the
+     full V2 restore pipeline: it toggles visibility across a very long page and
+     can expose only the BODY paint floor (#06101d) for a frame.
+
+     Preserve the already-painted DOM when semantic ownership is unchanged.
+     Geometry catch-up is queued separately after the first paint by 40.3.97. */
+  if (!exactSame && returnReason && semanticSame) {
+    document.documentElement.dataset.atlasReturnGeometryDrift = "1";
+    atlasVisibilityResumeQueue40397(
+      "runtime-geometry-catchup",
+      () => {
+        atlasSyncResponsiveRuntime();
+        atlasRuntimeCaptureReturn40332();
+        atlasScheduleRuntimeValidation("return-geometry-catchup-40.3.98");
+        delete document.documentElement.dataset.atlasReturnGeometryDrift;
+      },
+      45,
+      "return-geometry-drift"
+    );
+  } else {
+    delete document.documentElement.dataset.atlasReturnGeometryDrift;
+  }
+
   atlasSyncReleaseLabels();
   atlasRuntimeReturn40332.fast_returns += 1;
   atlasRuntimeReturn40332.last_reason = reason;
-  atlasRuntimeReturn40332.last_path = "fast";
-  document.documentElement.dataset.atlasReturnPath = "fast-40.3.32";
+  atlasRuntimeReturn40332.last_path = exactSame ? "fast-exact" : "fast-semantic";
+  document.documentElement.dataset.atlasReturnPath = exactSame
+    ? "fast-exact-40.3.98"
+    : "fast-semantic-40.3.98";
   return true;
 }
 
 function atlasRestoreRuntimeUi(reason = "restore") {
-  const ordinaryReturn = reason === "visibility-return" || reason === "pageshow";
+  const ordinaryReturn = reason === "visibility-return" || reason === "pageshow" || reason === "pageshow-cache";
   if (ordinaryReturn && atlasRuntimeFastReturn40332(reason)) return true;
 
   atlasRuntimeReturn40332.full_restores += 1;
@@ -15032,12 +15114,90 @@ function atlasPatchMarketRowSpot(coin) {
   atlasPatchOpenMarketHelp(coin);
 }
 
+
+
+/* ============================================================
+   40.3.98 — MARKET EXACT SEARCH PRIORITY LOCK
+   Exact ticker/name/id wins before prefixes and substrings.
+   Top 250 remains canonical; no new network owner.
+   ============================================================ */
+function atlasMarketSearchTier40398(coin, rawQuery) {
+  const q = String(rawQuery || "").trim().toLowerCase();
+  if (!q) return 0;
+
+  const symbol = String(coin?.symbol || "").trim().toLowerCase();
+  const name = String(coin?.name || "").trim().toLowerCase();
+  const id = String(coin?.id || "").trim().toLowerCase();
+
+  if (symbol === q) return 0;
+  if (name === q || id === q) return 1;
+  if (symbol.startsWith(q)) return 2;
+  if (name.startsWith(q) || id.startsWith(q)) return 3;
+
+  const words = name.split(/[\s._\-\/]+/g).filter(Boolean);
+  if (words.some(word => word.startsWith(q))) return 4;
+
+  if (symbol.includes(q)) return 5;
+  if (name.includes(q) || id.includes(q)) return 6;
+  return 99;
+}
+
+function atlasMarketSearchMatches40398(coin, rawQuery) {
+  return atlasMarketSearchTier40398(coin, rawQuery) < 99;
+}
+
+function atlasMarketSearchSort40398(coins, rawQuery) {
+  const q = String(rawQuery || "").trim();
+  const base = sortAssets(Array.isArray(coins) ? coins : []);
+  if (!q) return base;
+
+  return base
+    .map((coin, index) => ({
+      coin,
+      index,
+      tier: atlasMarketSearchTier40398(coin, q)
+    }))
+    .sort((a, b) => a.tier - b.tier || a.index - b.index)
+    .map(row => row.coin);
+}
+
+function atlasMarketSearchTruth40398(rawQuery) {
+  const q = String(rawQuery || "").trim();
+  if (!q) return "";
+
+  const exactTicker = (state.coins || []).find(
+    coin => String(coin?.symbol || "").trim().toLowerCase() === q.toLowerCase()
+  );
+  if (exactTicker) {
+    return `recherche ${q.toUpperCase()} · ticker exact Top 250 : ${String(exactTicker.symbol || "").toUpperCase()}`;
+  }
+
+  const exactName = (state.coins || []).find(
+    coin =>
+      String(coin?.name || "").trim().toLowerCase() === q.toLowerCase()
+      || String(coin?.id || "").trim().toLowerCase() === q.toLowerCase()
+  );
+  if (exactName) return `recherche ${q} · actif exact Top 250 : ${exactName.name}`;
+
+  return `recherche ${q} · aucun ticker exact dans le Top 250 · correspondances partielles seulement`;
+}
+
+try {
+  globalThis.AtlasMarketSearch40398 = Object.freeze({
+    build: "40.3.98",
+    exact_ticker_first: true,
+    prefix_before_substring: true,
+    top250_changed: false,
+    outside_top250_fetch_added: false
+  });
+} catch (_) {}
+
 function atlasMarketRowsForCurrentView() {
-  const query = (els.searchInput?.value || "").toLowerCase().trim();
+  const query = (els.searchInput?.value || "").trim();
   const filtered = state.coins
-    .filter(coin => !query || coin.name.toLowerCase().includes(query) || coin.symbol.toLowerCase().includes(query))
+    .filter(coin => !query || atlasMarketSearchMatches40398(coin, query))
     .filter(matchAssetFilter);
-  return sortAssets(filtered).slice(0, 50);
+  return atlasMarketSearchSort40398(filtered, query).slice(0, 50);
 }
 
 function atlasPatchMarketRowSnapshot(row, coin, selection) {
@@ -16240,11 +16400,12 @@ function renderMarketTable() {
   if (!atlasHasDisplayableMarket()) { renderEmptyMarket("Livecheck requis. Aucun prix inventé."); return; }
   if (!state.liveOk) state.liveOk = true;
 
-  const q = (els.searchInput?.value || "").toLowerCase().trim();
-  const filtered = sortAssets(
+  const q = (els.searchInput?.value || "").trim();
+  const filtered = atlasMarketSearchSort40398(
     state.coins
-      .filter(c => !q || c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q))
-      .filter(matchAssetFilter)
+      .filter(c => !q || atlasMarketSearchMatches40398(c, q))
+      .filter(matchAssetFilter),
+    q
   );
   const limit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.marketVisibleLimit)) ? Number(state.marketVisibleLimit) : 50;
   const rows = filtered.slice(0, limit);
@@ -16273,9 +16434,10 @@ function renderMarketTable() {
     ? state.coins.find(coin => coin.id === state.selectedCoinId)
     : null;
   const primaryLabel = primaryCoin ? `${primaryCoin.symbol} principal` : "aucune sélection";
+  const searchTruth40398 = atlasMarketSearchTruth40398(q);
   const note = essential
-    ? `${rows.length}/${filtered.length} affichés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · ${atlasMarketFrameShortId()} · ${state.mainSource} · ${updated}`
-    : `${rows.length}/${filtered.length} affichés · univers ${state.coins.length}/250 validés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · colonnes ${state.chartViewV2.marketColumns === 'complete' ? 'complètes' : 'essentielles'} · filtre ${state.assetFilter} · tri ${state.sortKey} · ${updated}`;
+    ? `${rows.length}/${filtered.length} affichés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · ${atlasMarketFrameShortId()} · ${state.mainSource} · ${updated}${searchTruth40398 ? ` · ${searchTruth40398}` : ""}`
+    : `${rows.length}/${filtered.length} affichés · univers ${state.coins.length}/250 validés · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · colonnes ${state.chartViewV2.marketColumns === 'complete' ? 'complètes' : 'essentielles'} · filtre ${state.assetFilter} · tri ${state.sortKey} · ${updated}${searchTruth40398 ? ` · ${searchTruth40398}` : ""}`;
   setText(els.tableNote, note);
 
   [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row => {
@@ -47723,7 +47885,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.97";
+const ATLAS_BUILD = "40.3.99";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -49236,6 +49398,81 @@ if (advancedButton && advancedPanel) { advancedButton.type = "button"; advancedB
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
 }
 
+/* ============================================================
+   40.3.98 — COLD BOOT FIRST-PAINT SERIALIZATION LOCK
+   Hard reload / CTRL+F5 path is separate from 40.3.97 tab return.
+
+   Critical shell/market bootstrap remains synchronous.
+   Non-critical hydration waits for two paint opportunities, then
+   ONE owner starts per animation frame in original relative order.
+   ============================================================ */
+const atlasColdBootState40398 = {
+  queue: [],
+  started: false,
+  running: false,
+  executed: 0,
+  lastLabel: "",
+  lastError: ""
+};
+
+function atlasColdBootDefer40398(label, fn) {
+  if (typeof fn !== "function") return false;
+  atlasColdBootState40398.queue.push({ label: String(label || "boot"), fn });
+  return true;
+}
+
+function atlasColdBootNext40398() {
+  const task = atlasColdBootState40398.queue.shift();
+  if (!task) {
+    atlasColdBootState40398.running = false;
+    return;
+  }
+
+  atlasColdBootState40398.lastLabel = task.label;
+  try {
+    const result = atlasSafeBoot(task.label, task.fn);
+    if (result && typeof result.catch === "function") {
+      result.catch(error => {
+        atlasColdBootState40398.lastError = String(error?.message || error || "");
+        console.warn(`40.3.98 deferred boot ${task.label}:`, error);
+      });
+    }
+    atlasColdBootState40398.executed += 1;
+  } catch (error) {
+    atlasColdBootState40398.lastError = String(error?.message || error || "");
+  }
+
+  requestAnimationFrame(atlasColdBootNext40398);
+}
+
+function atlasColdBootStart40398() {
+  if (atlasColdBootState40398.started) return;
+  atlasColdBootState40398.started = true;
+  atlasColdBootState40398.running = true;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(atlasColdBootNext40398);
+  });
+}
+
+globalThis.AtlasColdBoot40398 = Object.freeze({
+  build: "40.3.98",
+  state: () => ({
+    queued: atlasColdBootState40398.queue.map(row => row.label),
+    started: atlasColdBootState40398.started,
+    running: atlasColdBootState40398.running,
+    executed: atlasColdBootState40398.executed,
+    last_label: atlasColdBootState40398.lastLabel,
+    last_error: atlasColdBootState40398.lastError
+  }),
+  first_paint_frames_reserved: 2,
+  owners_started_per_frame: 1,
+  recurring_timer: false,
+  observer: false,
+  paint_profile_changed: false
+});
+
+
 atlasSafeBoot("release labels 28.1.15", atlasSyncReleaseLabels);
 
 atlasSafeBoot("storage migration 28.1.15", atlasMigrateStorage28111);
@@ -49249,7 +49486,9 @@ atlasSafeBoot("runtime responsive validation 28.1.15", atlasInitRuntimeStability
 atlasSafeBoot("Graphique Analyste V2 controls", atlasInitChartV2Controls);
 
 atlasSafeBoot("Graph Session Context V7 boot-read barrier", atlasGraphContextV7Bootstrap);
-void atlasGraphContextV7Initialize().catch(error => console.error("Graph Context V7 boot-read barrier", error));
+atlasColdBootDefer40398("Graph Context V7 initialize", () =>
+  atlasGraphContextV7Initialize().catch(error => console.error("Graph Context V7 boot-read barrier", error))
+);
 
 atlasSafeBoot("Graphique Max coverage truth", atlasRenderChartMaxTruth);
 
@@ -49276,35 +49515,35 @@ atlasSafeBoot("score", () => renderScore(null));
 
 atlasSafeBoot("watch ids", loadWatchIds);
 
-atlasSafeBoot("watch memory V3", atlasWatchSyncProfiles);
+atlasColdBootDefer40398("watch memory V3", atlasWatchSyncProfiles);
 
-atlasSafeBoot("watchlist", renderWatchlist);
+atlasColdBootDefer40398("watchlist", renderWatchlist);
 
-atlasSafeBoot("risk grid", renderRiskGrid);
+atlasColdBootDefer40398("risk grid", renderRiskGrid);
 
-atlasSafeBoot("cold read", () => renderColdRead(false));
+atlasColdBootDefer40398("cold read", () => renderColdRead(false));
 
-atlasSafeBoot("auto reader render", renderAutoReader);
+atlasColdBootDefer40398("auto reader render", renderAutoReader);
 
-atlasSafeBoot("shared memory render", renderSharedMemory);
+atlasColdBootDefer40398("shared memory render", renderSharedMemory);
 
-atlasSafeBoot("memory truth render", renderMemoryTruth);
+atlasColdBootDefer40398("memory truth render", renderMemoryTruth);
 
-atlasSafeBoot("memory coverage render", atlasRenderMemoryCoverage);
+atlasColdBootDefer40398("memory coverage render", atlasRenderMemoryCoverage);
 
-atlasSafeBoot("Memory Intelligence 32.0", atlasMemoryIntelligenceInit);
+atlasColdBootDefer40398("Memory Intelligence 32.0", atlasMemoryIntelligenceInit);
 
-atlasSafeBoot("Multi-Collector & Operator Console 33.0", atlasMultiCollectorOperatorInit);
+atlasColdBootDefer40398("Multi-Collector & Operator Console 33.0", atlasMultiCollectorOperatorInit);
 
-atlasSafeBoot("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
+atlasColdBootDefer40398("github memory initial state", () => loadGithubSharedMemory(false, "auto"));
 
-atlasSafeBoot("beginner summary", renderBeginnerSummary);
+atlasColdBootDefer40398("beginner summary", renderBeginnerSummary);
 
-atlasSafeBoot("data broker strip", atlasRenderBrokerStrip);
+atlasColdBootDefer40398("data broker strip", atlasRenderBrokerStrip);
 
-atlasSafeBoot("silent local market fallback", atlasPrimeMarketCacheSilently);
+atlasColdBootDefer40398("silent local market fallback", atlasPrimeMarketCacheSilently);
 
-requestAnimationFrame(() => atlasSafeBoot("market snapshot integrity", atlasEnsureMarketDomIntegrity));
+atlasColdBootDefer40398("market snapshot integrity", atlasEnsureMarketDomIntegrity);
 
 window.addEventListener("pageshow", event => {
   if (atlasVisibilityResumePageShow40397(
@@ -49316,9 +49555,12 @@ window.addEventListener("pageshow", event => {
   requestAnimationFrame(() => atlasSafeBoot("market snapshot pageshow integrity", atlasEnsureMarketDomIntegrity));
 });
 
-requestAnimationFrame(() => atlasSafeBoot("analyst panel", renderAnalystPanel));
+atlasColdBootDefer40398("analyst panel", renderAnalystPanel);
 
-atlasSafeBoot("auto reader start", startAutoReader);
+atlasColdBootDefer40398("auto reader start", startAutoReader);
+atlasColdBootDefer40398("questionnaire hydrate", loadQuestionnaire);
+atlasColdBootDefer40398("Math Core first render", renderAtlasMathCore);
+atlasColdBootStart40398();
 
 document.getElementById("btnSaveQuestionnaire")?.addEventListener("click", () => { saveQuestionnaire(); const out = document.getElementById("questionnaireOutput"); if (out) out.textContent = "Fiche sauvegardée localement dans ce navigateur.";
 });
@@ -49331,9 +49573,6 @@ document.getElementById("btnDownloadBrief")?.addEventListener("click", downloadS
 
 document.getElementById("btnClearQuestionnaire")?.addEventListener("click", clearQuestionnaire);
 
-loadQuestionnaire();
-
-renderAtlasMathCore();
 
 window.setInterval(atlasRefreshMathFreshnessOnly, 60 * 1000);
 
@@ -56562,3 +56801,57 @@ try{
     window_manager_changed:false
   });
 }catch(_){}
+
+
+try {
+  globalThis.__AGENT_CRYPTO_CUMULATIVE_40398__ = Object.freeze({
+    build: "40.3.98",
+    parent: "40.3.97",
+    screenshot_paint_floor: "#06101d",
+    screenshot_paint_floor_rgb: "6,16,29",
+    interpretation: "BODY remained painted while higher document surfaces temporarily disappeared/not-presented",
+    fixes: Object.freeze([
+      "pageshow-cache now treated as ordinary return",
+      "transient viewport geometry drift no longer triggers full V2 restore when semantic ownership is unchanged",
+      "geometry catch-up runs separately after first paint",
+      "hard reload non-critical hydration starts after two paint frames and one owner per frame",
+      "Market exact ticker/name/id search priority"
+    ]),
+    market_top250_changed: false,
+    outside_top250_network_search_added: false,
+    fiche_crypto_changed: false,
+    graph_changed: false,
+    safe_paint_40396_changed: false,
+    visibility_serialization_40397_preserved: true,
+    new_recurring_timer: false,
+    new_observer: false,
+    new_network_owner: false
+  });
+} catch (_) {}
+
+
+try {
+  globalThis.__AGENT_CRYPTO_INTERMEDIATE_PARITY_40399__ = Object.freeze({
+    build: "40.3.99",
+    parent: "40.3.98",
+    css_files_split_by_view: false,
+    shared_visual_mode_intermediate_admin: "advanced",
+    intermediate_role: "operator",
+    administrator_role: "administrator",
+    first_paint_preseed: true,
+    url_intermediate_preseed: true,
+    no_storage_write_in_preseed: true,
+    idempotent_visibility_writes: true,
+    idempotent_role_dataset_writes: true,
+    idempotent_navigation_writes: true,
+    fiche_crypto_changed: false,
+    target_top_fiche_hover_changed: false,
+    graph_fiche_changed: false,
+    market_core_changed: false,
+    safe_paint_css_changed: false,
+    new_css_file: false,
+    new_timer: false,
+    new_observer: false,
+    new_network_owner: false
+  });
+} catch (_) {}
