@@ -7225,17 +7225,25 @@ const atlasOracleEvidenceReadCache40215 = {
   in_flight_generation:-1,
   db_scans_avoided_403101:0,
   incremental_puts_403101:0,
-  incremental_deletes_403101:0
+  incremental_deletes_403101:0,
+  summary_count_403103:0,
+  summary_last_at_403103:0,
+  status_fast_hits_403103:0
 };
 
 function atlasOracleEvidenceCacheSetRows403101(rows){
   const c=atlasOracleEvidenceReadCache40215;
   c.rows=Array.isArray(rows)?rows:[];
   c.index_by_id=new Map();
+  let lastAt403103=0;
   c.rows.forEach((row,index)=>{
     const id=String(row?.id||"");
     if(id)c.index_by_id.set(id,index);
+    const t0=Number(row?.t0||0);
+    if(Number.isFinite(t0)&&t0>lastAt403103)lastAt403103=t0;
   });
+  c.summary_count_403103=c.rows.length;
+  c.summary_last_at_403103=lastAt403103;
   c.cached_at=Date.now();
   return c.rows;
 }
@@ -7245,11 +7253,17 @@ function atlasOracleEvidenceCachePut403101(row){
   if(!Array.isArray(c.rows) || !row?.id)return false;
   const id=String(row.id);
   const index=c.index_by_id.get(id);
-  if(Number.isInteger(index) && index>=0 && index<c.rows.length){
+  const existed=Number.isInteger(index) && index>=0 && index<c.rows.length;
+  if(existed){
     c.rows[index]=row;
   }else{
     c.index_by_id.set(id,c.rows.length);
     c.rows.push(row);
+  }
+  c.summary_count_403103=c.rows.length;
+  const t0=Number(row?.t0||0);
+  if(Number.isFinite(t0)&&t0>Number(c.summary_last_at_403103||0)){
+    c.summary_last_at_403103=t0;
   }
   c.cached_at=Date.now();
   c.incremental_puts_403101+=1;
@@ -7274,6 +7288,8 @@ function atlasOracleEvidenceInvalidateReadCache40215(){
   c.cached_at=0;
   c.in_flight=null;
   c.in_flight_generation=-1;
+  c.summary_count_403103=0;
+  c.summary_last_at_403103=0;
 }
 
 async function atlasOracleEvidenceAll(options = null) {
@@ -7328,6 +7344,9 @@ try{
       db_scans_avoided:atlasOracleEvidenceReadCache40215.db_scans_avoided_403101||0,
       incremental_puts:atlasOracleEvidenceReadCache40215.incremental_puts_403101||0,
       incremental_deletes:atlasOracleEvidenceReadCache40215.incremental_deletes_403101||0,
+      status_fast_hits:atlasOracleEvidenceReadCache40215.status_fast_hits_403103||0,
+      summary_count:atlasOracleEvidenceReadCache40215.summary_count_403103||0,
+      summary_last_at:atlasOracleEvidenceReadCache40215.summary_last_at_403103||0,
       in_flight:Boolean(atlasOracleEvidenceReadCache40215.in_flight)
     }),
     fresh_read_supported:true,
@@ -7374,17 +7393,26 @@ async function atlasOracleEvidenceDelete(ids) {
 
 async function atlasOracleEvidenceRefreshStatus() {
   try {
-    const rows = await atlasOracleEvidenceAll();
-    atlasOracleEvidenceStatusState.count = rows.length;
-    atlasOracleEvidenceStatusState.lastAt = rows.reduce((max,row)=>Math.max(max,Number(row?.t0||0)),0);
+    const c=atlasOracleEvidenceReadCache40215;
+    if(!Array.isArray(c.rows)){
+      await atlasOracleEvidenceAll();
+    }else{
+      c.status_fast_hits_403103+=1;
+    }
+
+    const count=Number(c.summary_count_403103||0);
+    const lastAt=Number(c.summary_last_at_403103||0);
+    atlasOracleEvidenceStatusState.count=count;
+    atlasOracleEvidenceStatusState.lastAt=lastAt;
+
     const node = document.getElementById("atlasOracleEvidenceStatus");
     if (node) {
-      node.textContent = `MÉMOIRE ${rows.length}`;
-      node.title = rows.length
-        ? `${rows.length} observation(s) T0 locales · dernière ${new Date(atlasOracleEvidenceStatusState.lastAt).toLocaleTimeString("fr-FR")}`
+      node.textContent = `MÉMOIRE ${count}`;
+      node.title = count && lastAt
+        ? `${count} observation(s) T0 locales · dernière ${new Date(lastAt).toLocaleTimeString("fr-FR")}`
         : "Oracle Evidence Ledger local · aucune observation enregistrée";
     }
-    return rows.length;
+    return count;
   } catch (error) {
     atlasOracleEvidenceStatusState.lastError = String(error?.message || error || "erreur");
     const node = document.getElementById("atlasOracleEvidenceStatus");
@@ -7392,6 +7420,24 @@ async function atlasOracleEvidenceRefreshStatus() {
     return 0;
   }
 }
+
+
+
+try{
+  globalThis.AtlasOracleEvidenceStatusO1403103=Object.freeze({
+    build:"40.3.103",
+    strategy:"cache summary count/lastAt; no full-array reduce on every status refresh",
+    cold_cache_behavior:"one atlasOracleEvidenceAll scan, then summary",
+    warm_cache_behavior:"O(1) status render",
+    capture_status_path_changed:true,
+    evidence_rows_changed:false,
+    retention_changed:false,
+    source_history_changed:false,
+    oracle_math_changed:false,
+    timer_added:false,
+    observer_added:false
+  });
+}catch(_){}
 
 function atlasOracleEvidenceConstituents(model, candidateModels = []) {
   const rows = model?.aggregate ? candidateModels : [model];
@@ -15482,6 +15528,107 @@ function atlasMarketExternalNormalize403100(searchCoin, marketCoin) {
   };
 }
 
+
+
+/* ============================================================
+   40.3.103 — PUBLIC EXTENDED MARKET WARM INDEX
+
+   40.3.102 moved extended lookup to GitHub Pages static JSON.
+   40.3.103 avoids re-downloading/re-scanning the 251..1000 snapshot for every
+   explicit lookup during the same operator session.
+
+   - 15 minute in-memory reuse
+   - exact id/symbol/name maps
+   - no preload: still loaded only after explicit Enter
+   - no timer, no storage, no CoinGecko browser request
+   ============================================================ */
+const ATLAS_EXTENDED_MARKET_CACHE_MS_403103=15*60*1000;
+const atlasExtendedMarketCache403103={
+  payload:null,
+  loaded_at:0,
+  by_id:new Map(),
+  by_symbol:new Map(),
+  by_name:new Map(),
+  fetches:0,
+  hits:0
+};
+
+function atlasExtendedMarketIndex403103(payload){
+  const cache=atlasExtendedMarketCache403103;
+  cache.payload=payload;
+  cache.loaded_at=Date.now();
+  cache.by_id=new Map();
+  cache.by_symbol=new Map();
+  cache.by_name=new Map();
+
+  for(const coin of (Array.isArray(payload?.coins)?payload.coins:[])){
+    const id=String(coin?.id||"").trim().toLowerCase();
+    const symbol=String(coin?.symbol||"").trim().toLowerCase();
+    const name=String(coin?.name||"").trim().toLowerCase();
+    if(id&&!cache.by_id.has(id))cache.by_id.set(id,coin);
+    if(symbol&&!cache.by_symbol.has(symbol))cache.by_symbol.set(symbol,coin);
+    if(name&&!cache.by_name.has(name))cache.by_name.set(name,coin);
+  }
+  return payload;
+}
+
+function atlasExtendedMarketExact403103(rawQuery){
+  const q=String(rawQuery||"").trim().toLowerCase();
+  if(!q)return null;
+  const cache=atlasExtendedMarketCache403103;
+  return cache.by_symbol.get(q)||cache.by_name.get(q)||cache.by_id.get(q)||null;
+}
+
+async function atlasExtendedMarketSnapshot403103(signal){
+  const cache=atlasExtendedMarketCache403103;
+  const now=Date.now();
+
+  if(
+    cache.payload?.schema==="agent_crypto_public_extended_market_snapshot_v1"
+    && now-Number(cache.loaded_at||0)<=ATLAS_EXTENDED_MARKET_CACHE_MS_403103
+  ){
+    cache.hits+=1;
+    return cache.payload;
+  }
+
+  const cacheBust=`atlas=${now}`;
+  const payload=await fetchJsonWithRetry(
+    `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.extended}?${cacheBust}`,
+    {signal,networkKind:"source"},
+    10000,
+    1
+  );
+
+  if(payload?.schema!=="agent_crypto_public_extended_market_snapshot_v1"){
+    throw new Error("snapshot étendu absent ou schéma invalide");
+  }
+
+  const generatedAt=Date.parse(payload?.generated_at||"");
+  if(!Number.isFinite(generatedAt)||Date.now()-generatedAt>3*60*60*1000){
+    throw new Error("snapshot étendu trop ancien");
+  }
+
+  cache.fetches+=1;
+  return atlasExtendedMarketIndex403103(payload);
+}
+
+globalThis.AtlasExtendedMarketWarmIndex403103=Object.freeze({
+  build:"40.3.103",
+  state:()=>({
+    loaded:Boolean(atlasExtendedMarketCache403103.payload),
+    loaded_at:atlasExtendedMarketCache403103.loaded_at,
+    rows:Array.isArray(atlasExtendedMarketCache403103.payload?.coins)?atlasExtendedMarketCache403103.payload.coins.length:0,
+    fetches:atlasExtendedMarketCache403103.fetches,
+    hits:atlasExtendedMarketCache403103.hits
+  }),
+  cache_ms:ATLAS_EXTENDED_MARKET_CACHE_MS_403103,
+  explicit_enter_only:true,
+  preload:false,
+  storage_write:false,
+  browser_direct_coingecko:false,
+  polling:false
+});
+
 async function atlasMarketExtendedLookup403100(rawQuery) {
   const q = String(rawQuery || "").trim();
   if (q.length < 2) return null;
@@ -15505,28 +15652,11 @@ async function atlasMarketExtendedLookup403100(rawQuery) {
   renderMarketTable();
 
   try {
-    /* 40.3.102 canonical architecture:
-       Firefox reads static GitHub Pages JSON only.
-       CoinGecko collection belongs to GitHub Actions, exactly like Top 250. */
-    const cacheBust = `atlas=${Date.now()}`;
-    const payload = await fetchJsonWithRetry(
-      `${ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.extended}?${cacheBust}`,
-      { signal: controller.signal, networkKind: "source" },
-      10000,
-      1
-    );
+    /* 40.3.103: static GitHub Pages snapshot + in-memory exact index. */
+    const payload = await atlasExtendedMarketSnapshot403103(controller.signal);
     if (requestId !== atlasMarketExternal403100.requestId) return null;
 
-    if (payload?.schema !== "agent_crypto_public_extended_market_snapshot_v1") {
-      throw new Error("snapshot étendu absent ou schéma invalide");
-    }
-
-    const generatedAt = Date.parse(payload?.generated_at || "");
-    if (!Number.isFinite(generatedAt) || Date.now() - generatedAt > 3 * 60 * 60 * 1000) {
-      throw new Error("snapshot étendu trop ancien");
-    }
-
-    const candidate = atlasMarketExternalCandidate403100(payload, q);
+    const candidate = atlasExtendedMarketExact403103(q);
     if (!candidate?.id) {
       throw new Error(`aucun actif exact trouvé dans les rangs ${payload?.rank_min || 251}-${payload?.rank_max || 1000}`);
     }
@@ -48426,7 +48556,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.102";
+const ATLAS_BUILD = "40.3.103";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -57767,6 +57897,161 @@ globalThis.AtlasAetherAnalyticalMemoryV2403101=Object.freeze({
   human_final_authority:true
 });
 
+
+
+/* ============================================================
+   40.3.103 — AETHER ANALYTICAL MEMORY · RECURRENCE V3
+
+   Bounded deterministic reading over the existing Journal CURRENT.
+   No archive scan is required for this layer (V2 already owns archive deltas).
+
+   Window: latest 12 CURRENT maximum.
+   Measures:
+   - Top 5 transition stability
+   - latest stable streak
+   - asset recurrence frequency
+   - average direct/derived Binance coverage
+   - fingerprint uniqueness
+
+   These are memory observations, not forecasts or recommendations.
+   ============================================================ */
+const ATLAS_AETHER_RECURRENCE_WINDOW_403103=12;
+
+function atlasAetherRecurrence403103(records=atlasCurrentJournalRead33()){
+  const rows=(Array.isArray(records)?records:[])
+    .filter(row=>row?.fingerprint)
+    .slice()
+    .sort((a,b)=>Date.parse(a?.completed_at||0)-Date.parse(b?.completed_at||0))
+    .slice(-ATLAS_AETHER_RECURRENCE_WINDOW_403103);
+
+  if(rows.length<2){
+    return {ready:false,count:rows.length,window:ATLAS_AETHER_RECURRENCE_WINDOW_403103};
+  }
+
+  const signatures=rows.map(row=>
+    atlasAetherAnalyticalAssets403100(row)
+      .map(asset=>String(asset?.symbol||"").toUpperCase())
+      .filter(Boolean)
+      .join("|")
+  );
+
+  let stableTransitions=0;
+  for(let i=1;i<signatures.length;i++){
+    if(signatures[i]&&signatures[i]===signatures[i-1])stableTransitions+=1;
+  }
+
+  let latestStableStreak=1;
+  for(let i=signatures.length-1;i>0;i--){
+    if(signatures[i]&&signatures[i]===signatures[i-1])latestStableStreak+=1;
+    else break;
+  }
+
+  const frequency=new Map();
+  for(const row of rows){
+    for(const asset of atlasAetherAnalyticalAssets403100(row)){
+      const symbol=String(asset?.symbol||"").toUpperCase();
+      if(symbol)frequency.set(symbol,(frequency.get(symbol)||0)+1);
+    }
+  }
+
+  const recurrence=[...frequency.entries()]
+    .map(([symbol,count])=>({symbol,count,ratio:count/rows.length}))
+    .sort((a,b)=>b.count-a.count||a.symbol.localeCompare(b.symbol))
+    .slice(0,8);
+
+  const directValues=rows.map(row=>Number(row?.direct_count)).filter(Number.isFinite);
+  const derivedValues=rows.map(row=>Number(row?.derived_count)).filter(Number.isFinite);
+  const avg=values=>values.length?values.reduce((sum,value)=>sum+value,0)/values.length:null;
+
+  const uniqueFingerprints=new Set(rows.map(row=>String(row?.fingerprint||"")).filter(Boolean)).size;
+
+  return {
+    ready:true,
+    count:rows.length,
+    window:ATLAS_AETHER_RECURRENCE_WINDOW_403103,
+    transitions:Math.max(0,rows.length-1),
+    stableTransitions,
+    stabilityRatio:rows.length>1?stableTransitions/(rows.length-1):null,
+    latestStableStreak,
+    recurrence,
+    averageDirect:avg(directValues),
+    averageDerived:avg(derivedValues),
+    uniqueFingerprints,
+    firstAt:rows[0]?.completed_at||null,
+    lastAt:rows.at(-1)?.completed_at||null
+  };
+}
+
+function atlasAetherRecurrenceRender403103(records=atlasCurrentJournalRead33()){
+  const body=document.getElementById("atlasAetherAnalyticalMemoryBody403100");
+  if(!body)return null;
+
+  let node=document.getElementById("atlasAetherAnalyticalMemoryV3403103");
+  if(!node){
+    node=document.createElement("section");
+    node.id="atlasAetherAnalyticalMemoryV3403103";
+    node.className="atlas-current-journal-detail-35-grid";
+    body.appendChild(node);
+  }
+
+  const result=atlasAetherRecurrence403103(records);
+  if(!result.ready){
+    node.innerHTML=`<article><span>Récurrence V3</span><b>En attente</b><small>${result.count}/2 CURRENT minimum · fenêtre maximale ${result.window}.</small></article>`;
+    return result;
+  }
+
+  const pct=Number.isFinite(result.stabilityRatio)?`${(result.stabilityRatio*100).toFixed(0)} %`:"—";
+  const recurrence=result.recurrence.length
+    ?result.recurrence.map(row=>`${row.symbol} ${row.count}/${result.count}`).join(" · ")
+    :"Aucune fréquence exploitable";
+  const direct=Number.isFinite(result.averageDirect)?result.averageDirect.toFixed(1):"—";
+  const derived=Number.isFinite(result.averageDerived)?result.averageDerived.toFixed(1):"—";
+
+  node.innerHTML=`
+    <article>
+      <span>Récurrence V3 · fenêtre</span>
+      <b>${result.count} CURRENT</b>
+      <small>${escapeHtml(result.firstAt||"—")} → ${escapeHtml(result.lastAt||"—")}</small>
+    </article>
+    <article>
+      <span>Stabilité Top 5</span>
+      <b>${escapeHtml(pct)}</b>
+      <small>${result.stableTransitions}/${result.transitions} transition(s) identiques · série actuelle ${result.latestStableStreak} CURRENT.</small>
+    </article>
+    <article>
+      <span>Actifs récurrents</span>
+      <b>${escapeHtml(recurrence)}</b>
+      <small>Fréquence d’apparition dans le Top 5 mémorisé · aucune projection.</small>
+    </article>
+    <article>
+      <span>Couverture moyenne</span>
+      <b>${escapeHtml(direct)}/5 directes</b>
+      <small>Dérivées moyennes ${escapeHtml(derived)} · ${result.uniqueFingerprints}/${result.count} fingerprint(s) distinct(s).</small>
+    </article>`;
+  return result;
+}
+
+const atlasAetherAnalyticalMemoryRender403103Base=atlasAetherAnalyticalMemoryRender403100;
+atlasAetherAnalyticalMemoryRender403100=function atlasAetherAnalyticalMemoryRender403103(records=atlasCurrentJournalRead33()){
+  const result=atlasAetherAnalyticalMemoryRender403103Base(records);
+  try{atlasAetherRecurrenceRender403103(records);}catch(_){}
+  return result;
+};
+
+globalThis.AtlasAetherAnalyticalMemoryV3403103=Object.freeze({
+  build:"40.3.103",
+  window:ATLAS_AETHER_RECURRENCE_WINDOW_403103,
+  compute:atlasAetherRecurrence403103,
+  render:atlasAetherRecurrenceRender403103,
+  source:"existing CURRENT Journal",
+  archive_scan_added:false,
+  new_storage:false,
+  model_call_added:false,
+  forecast:false,
+  financial_action:false,
+  human_final_authority:true
+});
+
 try {
   globalThis.__AGENT_CRYPTO_CASCADE_403100__ = Object.freeze({
     build: "40.3.100",
@@ -57919,5 +58204,42 @@ try{
     storage_write:false,
     oracle_math_changed:false,
     fiche_crypto_changed:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_CASCADE_403103__=Object.freeze({
+    build:"40.3.103",
+    parent:"40.3.102",
+    batch:3,
+    advances:Object.freeze([
+      "Oracle Evidence status becomes O(1) on warm mirror instead of reducing all rows after every capture",
+      "Extended public Market snapshot gets a 15-minute in-memory exact index",
+      "Aether Analytical Memory Recurrence V3 over the latest 12 CURRENT"
+    ]),
+    inherited:Object.freeze([
+      "40.3.96 SAFE PAINT",
+      "40.3.97 visibility serialization",
+      "40.3.98 cold boot / semantic return",
+      "40.3.99 Intermediate first paint",
+      "40.3.100 cascade batch 1",
+      "40.3.101 cascade batch 2 / nav canonical",
+      "40.3.102 GitHub Actions extended Market architecture"
+    ]),
+    fiche_crypto_changed:false,
+    target_top_hover_changed:false,
+    graph_fiche_changed:false,
+    market_top250_changed:false,
+    market_extended_collector_changed:false,
+    oracle_math_changed:false,
+    oracle_evidence_retention_changed:false,
+    source_history_changed:false,
+    storage_delete_added:false,
+    window_manager_changed:false,
+    images_changed:false,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_browser_direct_coingecko:false
   });
 }catch(_){}
