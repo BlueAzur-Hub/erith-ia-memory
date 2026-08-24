@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.56";
+  const BUILD = "40.3.63";
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
@@ -189,11 +189,44 @@
 
 /* ==========================================================================
    40.3.42 — NATIVE SCROLL RESTORE
-
-   The 40.3.33 -> 40.3.38 offscreen sleep/prewake experiment is intentionally
-   retired. No scroll/wheel/touch/key listener, IntersectionObserver,
-   getBoundingClientRect paint polling, wake corridor, idle sleep timer or
-   visibility:hidden paint class is owned by this file anymore.
-
-   Persistent IndexedDB visual caching from 40.3.26 remains active above.
+   Offscreen sleep/prewake remains retired. Persistent visual cache above.
    ========================================================================== */
+(() => {
+  "use strict";
+  const BUILD="40.3.63";
+  const add=Document.prototype.addEventListener;
+  const remove=Document.prototype.removeEventListener;
+  const winAdd=Window.prototype.addEventListener;
+  const setI=globalThis.setInterval.bind(globalThis);
+  const setT=globalThis.setTimeout.bind(globalThis);
+  const clock=()=>globalThis.performance?.now?.()??Date.now();
+  const stats={resumeQueued:0,resumeRun:0,resumeDedup:0,oracleRetimed:0,bootRetimed:0,coalesced:0};
+  let lastInput=0,resumeUntil=0,resumeGen=0;
+  const activity=()=>{lastInput=clock();};
+  add.call(document,"pointerdown",activity,{capture:true,passive:true});
+  add.call(document,"keydown",activity,{capture:true,passive:true});
+  add.call(document,"wheel",activity,{capture:true,passive:true});
+  winAdd.call(window,"scroll",activity,{capture:true,passive:true});
+  add.call(document,"visibilitychange",()=>{if(!document.hidden){resumeGen++;resumeUntil=clock()+2600;}},{capture:true,passive:true});
+  const busy=()=>{try{return Boolean((typeof state!=="undefined"&&(state?.auto?.livecheckBusy||state?.chartEngineV2?.loading))||(typeof atlasLocalReportsState!=="undefined"&&atlasLocalReportsState?.running)||(typeof atlasLocalConclusionState!=="undefined"&&atlasLocalConclusionState?.running));}catch{return false;}};
+  const idle=(fn,timeout=1600)=>{if(typeof requestIdleCallback==="function")return requestIdleCallback(()=>{try{fn();}catch{}},{timeout});return setT(()=>{try{fn();}catch{}},32);};
+
+  const wrappers=new WeakMap(),queued=new Set(),jobs=[];
+  let draining=false;
+  const cap=o=>typeof o==="boolean"?o:Boolean(o?.capture);
+  const invoke=(l,ctx,e)=>typeof l==="function"?l.call(ctx,e):l?.handleEvent?.call(l,e);
+  function drain(){if(draining)return;draining=true;const step=()=>{if(document.hidden){jobs.length=0;queued.clear();draining=false;return;}const j=jobs.shift();if(j){queued.delete(j.w);stats.resumeRun++;try{invoke(j.l,document,j.e);}catch{}}if(!jobs.length){draining=false;return;}idle(step,180);};requestAnimationFrame(()=>idle(step,220));}
+  function wrap(l,o){if(!l)return l;let m=wrappers.get(l);if(!m){m=new Map();wrappers.set(l,m);}const k=cap(o)?1:0;if(m.has(k))return m.get(k);const w=function(e){if(document.hidden)return invoke(l,this,e);if(queued.has(w)){stats.resumeDedup++;return;}queued.add(w);jobs.push({w,l,e});stats.resumeQueued++;drain();};m.set(k,w);return w;}
+  Document.prototype.addEventListener=function(t,l,o){return add.call(this,t,this===document&&t==="visibilitychange"?wrap(l,o):l,o);};
+  Document.prototype.removeEventListener=function(t,l,o){const w=this===document&&t==="visibilitychange"&&l?wrappers.get(l)?.get(cap(o)?1:0):null;return remove.call(this,t,w||l,o);};
+
+  const src=h=>{try{return typeof h==="function"?Function.prototype.toString.call(h):"";}catch{return "";}};
+  const quiet=(h,a)=>idle(()=>{if(document.hidden||clock()-lastInput<1400||clock()<resumeUntil||busy())return;try{h(...a);}catch{}},3500);
+  globalThis.setInterval=function(h,d,...a){const s=src(h),ms=Number(d)||0;if(typeof h==="function"&&ms===15000&&s.includes("atlasOracleOutcomeRun")&&s.includes("atlasOracleLongShadowRun40273")){stats.oracleRetimed++;return setI(()=>quiet(h,a),60000);}return setI(h,d,...a);};
+  globalThis.setTimeout=function(h,d,...a){const s=src(h),ms=Number(d)||0;if(typeof h==="function"&&ms===2500&&s.includes("atlasOracleOutcomeRun")&&s.includes("atlasOracleLongShadowRun40273")){stats.bootRetimed++;return setT(()=>quiet(h,a),6500);}if(typeof h==="function"&&ms===3500&&s.includes("atlasOracleLongShadowRun40273(true)")){stats.bootRetimed++;return setT(()=>quiet(h,a),70000);}return setT(h,d,...a);};
+  window.setInterval=globalThis.setInterval;window.setTimeout=globalThis.setTimeout;
+
+  function coalesce(name,ms=2000,normalize=null){const base=globalThis[name];if(typeof base!=="function"||base.__perf40363)return;let at=-Infinity,result,gen=-1;const f=function(...a){const t=clock(),res=t<resumeUntil;if((res&&gen===resumeGen)||t-at<ms){stats.coalesced++;return result;}at=t;if(res)gen=resumeGen;if(normalize)a=normalize(a,res);result=base.apply(this,a);return result;};Object.defineProperty(f,"__perf40363",{value:true});globalThis[name]=f;}
+  function install(){coalesce("atlasBookMirrorFetch36",5000);coalesce("atlasExchangeRefreshDirectRest383",4000,(a,res)=>res&&a[0]&&typeof a[0]==="object"?[{...a[0],force:false},...a.slice(1)]:a);coalesce("atlasCurrentJournalHydrate3814",2200);coalesce("atlasRuntimeTruthApply3813",1800);coalesce("atlasCurrentMemoryEventReconcile3813",2200);coalesce("atlasBookRoleUiLock3812",1800);coalesce("atlasRestoreRuntimeUi",1400);document.documentElement.dataset.firefoxFreezeRecovery40363="1";globalThis.ErithFirefoxFreezeRecovery40363=Object.freeze({build:BUILD,parent:"40.3.62",visibility_resume:"serial_idle",oracle_background_ms:60000,full_snapshot_semantics_changed:false,market_core_changed:false,oracle_math_changed:false,window_manager_changed:false,stats:()=>Object.freeze({...stats,queue:jobs.length})});}
+  if(document.readyState==="loading")add.call(document,"DOMContentLoaded",()=>requestAnimationFrame(()=>idle(install,1200)),{once:true});else requestAnimationFrame(()=>idle(install,1200));
+})();
