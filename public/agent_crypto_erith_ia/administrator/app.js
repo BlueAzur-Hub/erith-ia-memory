@@ -18028,7 +18028,8 @@ function atlasStrictNewsContract() {
     counts_24h: compact?.counts_24h || null,
     lead_event: compact?.lead || null,
     market_driver_roles_40_2_34: causalRoles,
-    rule: "Les limites générales de données ne constituent pas une actualité ni une alerte News Sentinel. Les rôles cause/amplificateur/flux restent descriptifs et ne prouvent jamais une causalité."
+    market_driver_truth_40_3_72: causalRoles?.driver_truth_40_3_72 || null,
+    rule: "Les limites générales de données ne constituent pas une actualité ni une alerte News Sentinel. Macro/liquidité, flux, déclencheur technique, levier et réaction sont qualifiés séparément ; aucune chaîne ne prouve automatiquement une causalité."
   };
 }
 
@@ -19212,10 +19213,16 @@ function newsMarketCausalRole40234(current = null, context = {}) {
   }
 
   const feedEvents = Array.isArray(context?.events) ? context.events : (Array.isArray(newsFeedState?.events) ? newsFeedState.events : []);
-  const related = newsMarketRelatedEvents40234(selected, feedEvents);
+  const related = typeof newsMarketContextEvents40235 === "function"
+    ? newsMarketContextEvents40235(selected, feedEvents)
+    : newsMarketRelatedEvents40234(selected, feedEvents);
   const scope = [selected, ...related];
+  const driverTruth40372 = typeof newsMarketDriverTruth40372 === "function" ? newsMarketDriverTruth40372(selected, related) : null;
   const amplifier = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_up, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.amplifier_down]);
-  const flow = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_up, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_down]);
+  const flowRules40372 = typeof NEWS_MARKET_MONEY_FLOW_RULES_40367 !== "undefined"
+    ? [NEWS_MARKET_MONEY_FLOW_RULES_40367.flow_up, NEWS_MARKET_MONEY_FLOW_RULES_40367.flow_down, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_up, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_down]
+    : [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_up, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.flow_down];
+  const flow = newsMarketBestRole40234(scope, flowRules40372);
   const catalyst = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.catalyst_positive, NEWS_MARKET_CAUSAL_ROLE_RULES_40234.catalyst_negative]);
   const technicalTrigger = newsMarketBestRole40234(scope, [NEWS_MARKET_CAUSAL_ROLE_RULES_40234.technical_trigger]);
   const usedRoleEventIds = new Set([amplifier?.event_id, flow?.event_id, catalyst?.event_id, technicalTrigger?.event_id].filter(Boolean));
@@ -19245,14 +19252,14 @@ function newsMarketCausalRole40234(current = null, context = {}) {
     && primaryDirection.includes("baiss")
   );
 
-  const primaryRole = amplifier
-    ? { type: "AMPLIFICATEUR", ...amplifier }
-    : catalyst
-      ? { type: "CATALYSEUR", ...catalyst }
-      : flow
-        ? { type: "FLUX", ...flow }
-        : technicalTrigger
-          ? { type: "DÉCLENCHEUR TECHNIQUE", ...technicalTrigger }
+  const primaryRole = catalyst
+    ? { type: "CATALYSEUR POSSIBLE", ...catalyst }
+    : flow
+      ? { type: "FLUX / DEMANDE", ...flow }
+      : technicalTrigger
+        ? { type: "DÉCLENCHEUR TECHNIQUE", ...technicalTrigger }
+        : amplifier
+          ? { type: "AMPLIFICATEUR", ...amplifier }
           : concomitance
             ? concomitance
             : null;
@@ -19272,6 +19279,7 @@ function newsMarketCausalRole40234(current = null, context = {}) {
     concomitance,
     reaction,
     primary_role: primaryRole,
+    driver_truth_40_3_72: driverTruth40372,
     semantic_conflict_with_legacy_direction: semanticConflict,
     legacy_direction: selected?.direction || null,
     causality: "NON ÉTABLIE",
@@ -19318,22 +19326,29 @@ function renderNewsMarketDrivers40234(current = null) {
   const catalyst = analysis.catalyst;
   const flow = analysis.flow;
   const technical = analysis.technical_trigger;
-  set("newsMarketAmplifier40234", amplifier ? `${amplifier.label} · ${amplifier.direction} PLAUSIBLE` : "AUCUN AMPLIFICATEUR PROUVÉ");
-  set("newsMarketAmplifierNote40234", amplifier ? newsMarketRoleEvidenceLine40234(amplifier) : "Aucun mécanisme d’amplification détecté par les règles 40.2.34.");
-  set("newsMarketCatalyst40234", catalyst ? `${catalyst.label}` : "NON IDENTIFIÉ");
+  const truth40372 = analysis.driver_truth_40_3_72 || {};
+  const macro40372 = truth40372.macro_liquidity || null;
+  const institutional40372 = truth40372.institutional_flows || null;
+  const leverage40372 = truth40372.leverage || null;
+  set("newsMarketAmplifier40234", amplifier ? `${amplifier.label} · ${amplifier.direction} PLAUSIBLE` : leverage40372?.event ? `LEVIER / LIQUIDATIONS · ${leverage40372.status}` : "AUCUN AMPLIFICATEUR PROUVÉ");
+  set("newsMarketAmplifierNote40234", amplifier ? newsMarketRoleEvidenceLine40234(amplifier) : newsMarketDriverTruthLine40372(leverage40372, "Aucun mécanisme d’amplification positivement qualifié."));
+  set("newsMarketCatalyst40234", catalyst ? `${catalyst.label}` : macro40372?.event ? `CONTEXTE MACRO / LIQUIDITÉ · ${macro40372.status}` : "NON IDENTIFIÉ");
   set("newsMarketCatalystNote40234", catalyst
     ? newsMarketRoleEvidenceLine40234(catalyst)
     : technical
       ? `${technical.label} · elle décrit un déclencheur de marché plausible, pas une cause externe. ${newsMarketRoleEvidenceLine40234(technical)}`
-      : "Aucune source actuelle ne démontre le déclencheur initial.");
-  set("newsMarketFlow40234", flow ? `${flow.label} · ${flow.direction}` : "NON QUALIFIÉ");
-  set("newsMarketFlowNote40234", flow ? newsMarketRoleEvidenceLine40234(flow) : "Aucun flux demande/offre positivement détecté dans les événements liés.");
+      : macro40372?.event
+        ? `${newsMarketDriverTruthLine40372(macro40372)} · contexte observé, pas déclencheur causal démontré.`
+        : "Aucune source actuelle ne démontre le déclencheur initial.");
+  set("newsMarketFlow40234", flow ? `${flow.label} · ${flow.direction}` : institutional40372?.event ? `FLUX INSTITUTIONNELS · ${institutional40372.status}` : "NON QUALIFIÉ");
+  set("newsMarketFlowNote40234", flow ? newsMarketRoleEvidenceLine40234(flow) : newsMarketDriverTruthLine40372(institutional40372, "Aucun flux demande/offre positivement détecté dans les événements liés."));
   set("newsMarketReaction40234", analysis.reaction?.count ? `TOP 5 · ${analysis.reaction.breadth}` : "RÉACTION PARTIELLE");
   set("newsMarketReactionNote40234", `${analysis.reaction?.focus || "Actif non comparable"} · ${analysis.reaction?.reaction_label || "réaction non qualifiée"}`);
   set("newsMarketCausality40234", "NON ÉTABLIE");
+  const chainTruth40372 = `Macro ${macro40372?.status || "NON QUALIFIÉ"} · Flux ${institutional40372?.status || (flow ? "PARTIEL" : "NON QUALIFIÉ")} · Levier ${leverage40372?.status || (amplifier ? "PARTIEL" : "NON QUALIFIÉ")}`;
   set("newsMarketCausalityNote40234", analysis.semantic_conflict_with_legacy_direction
-    ? `Contradiction sémantique exposée : taxonomie héritée « ${analysis.legacy_direction || "—"} » ≠ rôle marché détecté. ${analysis.limitation}`
-    : analysis.limitation);
+    ? `Contradiction sémantique exposée : taxonomie héritée « ${analysis.legacy_direction || "—"} » ≠ rôle marché détecté. ${chainTruth40372}. ${analysis.limitation}`
+    : `${chainTruth40372}. ${analysis.limitation}`);
   set("decisionNewsRole40234", analysis.primary_role
     ? `${analysis.primary_role.type} · ${analysis.primary_role.label}`
     : "Rôle non déterminé · causalité non établie");
@@ -19525,6 +19540,41 @@ function newsMarketDriverCoverage40367(events=null) {
   return result;
 }
 
+function newsMarketDriverTruth40372(selected, contextEvents = null) {
+  const scope = [selected, ...(Array.isArray(contextEvents) ? contextEvents : [])].filter(Boolean);
+  const rank = event => {
+    const evidence = Number(event?.evidence?.score || 0);
+    const sources = Math.max(1, Number(event?.source_count || 1));
+    const ts = newsMarketEventTime40234(event) || 0;
+    return evidence * 1e12 + sources * 1e10 + ts;
+  };
+  const result = {};
+  for (const domain of Object.keys(NEWS_MARKET_DRIVER_RULES_40367)) {
+    const candidates = scope
+      .filter(event => newsMarketDriverDomains40367(event).includes(domain))
+      .sort((a, b) => rank(b) - rank(a));
+    const event = candidates[0] || null;
+    const evidence = event ? Number(event?.evidence?.score || 0) : 0;
+    const status = !event ? "NON QUALIFIÉ" : evidence >= 65 ? "QUALIFIÉ" : evidence >= 45 ? "PARTIEL" : "NON QUALIFIÉ";
+    result[domain] = {
+      status,
+      event,
+      evidence,
+      source_name: event?.source_name || event?.source_host || null,
+      headline: event?.headline || null,
+      causal_claim: false
+    };
+  }
+  return result;
+}
+
+function newsMarketDriverTruthLine40372(row, fallback = "Aucune source liée qualifiée.") {
+  if (!row?.event) return fallback;
+  const source = row.source_name || "Source qualifiée";
+  const score = Number.isFinite(Number(row.evidence)) ? `${Number(row.evidence)}/100` : "score —";
+  return `${source} · ${row.status} · preuve ${score} · ${row.headline || "événement qualifié"}`;
+}
+
 function renderNewsMacroFlowCoverage40367() {
   const root=document.getElementById("newsMacroFlowCoverage40367");
   if(!root)return null;
@@ -19685,16 +19735,23 @@ function newsMarketOperatorIntelligence40235(current=null, context={}) {
   const technical=newsMarketBestRawRole40235([selected],[NEWS_MARKET_CAUSAL_ROLE_RULES_40234.technical_trigger]);
   const catalyst=newsMarketInitialCatalyst40235(selected,contextEvents);
   const flow=newsMarketDemandContext40235(selected,contextEvents);
-  const adjustedBase={...base,amplifier:rawAmplifier||base?.amplifier||null,technical_trigger:technical||base?.technical_trigger||null,catalyst};
+  const driverTruth40372=newsMarketDriverTruth40372(selected,contextEvents);
+  const adjustedBase={...base,amplifier:rawAmplifier||base?.amplifier||null,technical_trigger:technical||base?.technical_trigger||null,catalyst,driver_truth_40_3_72:driverTruth40372};
   const mechanism=newsMarketMechanism40235(adjustedBase);
   const facts=newsMarketExtractFacts40235(mechanismEvent40364);
   const supporting=newsMarketSupportingAmplifiers40235(selected,contextEvents);
   const confirmation=newsMarketCurrentMarketConfirmation40235(selected,adjustedBase);
-  const role=adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:flow?`FLUX ${flow.direction}`:technical?"DÉCLENCHEUR TECHNIQUE":catalyst?"CATALYSEUR POSSIBLE":"RÔLE NON QUALIFIÉ";
+  const marketTruth40372=confirmation.count>=5?"QUALIFIÉ":confirmation.count>0?"PARTIEL":"NON QUALIFIÉ";
+  const technicalTruth40372=technical?(Number(technical?.evidence?.score||0)>=65?"QUALIFIÉ":"PARTIEL"):"NON QUALIFIÉ";
+  const flowTruth40372=flow?(Number(flow?.evidence?.score||0)>=65?"QUALIFIÉ":"PARTIEL"):(driverTruth40372.institutional_flows?.status||"NON QUALIFIÉ");
+  const leverageTruth40372=adjustedBase.amplifier?(Number(adjustedBase.amplifier?.evidence?.score||0)>=65?"QUALIFIÉ":"PARTIEL"):(driverTruth40372.leverage?.status||"NON QUALIFIÉ");
+  const macroTruth40372=driverTruth40372.macro_liquidity?.status||"NON QUALIFIÉ";
+  const causalChain40372={macro_liquidity:macroTruth40372,institutional_flows:flowTruth40372,technical_trigger:technicalTruth40372,leverage_amplifier:leverageTruth40372,market_reaction:marketTruth40372,causal_claim:false};
+  const role=catalyst?"CATALYSEUR POSSIBLE":flow?`FLUX ${flow.direction}`:technical?"DÉCLENCHEUR TECHNIQUE":adjustedBase.amplifier?`AMPLIFICATEUR ${adjustedBase.amplifier.direction}`:"RÔLE NON QUALIFIÉ";
   return {
     schema:"atlas.news_to_market.operator_intelligence.v1",build:"40.2.35",status:"observed",event:mechanismEvent40364,lead_event:selected,
-    event_role_pairing_build:"40.3.64",base:adjustedBase,facts,mechanism,initial_catalyst:catalyst,technical_trigger:technical,flow,supporting_amplifiers:supporting,market_confirmation:confirmation,
-    verdict:{role,amplifier:adjustedBase.amplifier?"PLAUSIBLE":"NON DÉMONTRÉ",initial_catalyst:catalyst?"POSSIBLE":"NON IDENTIFIÉ",context:flow?"POSSIBLE":"NON QUALIFIÉ",causality:"NON ÉTABLIE"},
+    event_role_pairing_build:"40.3.64",causal_role_truth_build:"40.3.72",base:adjustedBase,facts,mechanism,initial_catalyst:catalyst,technical_trigger:technical,flow,driver_truth_40_3_72:driverTruth40372,causal_chain_40_3_72:causalChain40372,supporting_amplifiers:supporting,market_confirmation:confirmation,
+    verdict:{role,amplifier:adjustedBase.amplifier?leverageTruth40372:"NON DÉMONTRÉ",initial_catalyst:catalyst?"POSSIBLE":"NON IDENTIFIÉ",context:flowTruth40372,macro_liquidity:macroTruth40372,technical_trigger:technicalTruth40372,market_reaction:marketTruth40372,causality:"NON ÉTABLIE"},
     causal_claim:false,causal_probability:null,external_ai_used:false,network_request_added:false,timer_added:false,storage_write_added:false
   };
 }
@@ -19722,12 +19779,15 @@ function renderNewsMarketOperatorIntelligence40235(current=null){
   set("newsMarketMechanismTitle40235",`${n.mechanism.title} · ${n.mechanism.direction}`);
   const steps=document.getElementById("newsMarketMechanismSteps40235"); if(steps){steps.replaceChildren();(n.mechanism.steps||[]).forEach((label,index)=>{const li=document.createElement("li");li.dataset.step=String(index+1);const span=document.createElement("span");span.textContent=label;li.appendChild(span);steps.appendChild(li);});}
   set("newsMarketExplains40235",n.mechanism.explains);
-  set("newsMarketDoesNotExplain40235",n.initial_catalyst?`Un catalyseur distinct est seulement classé POSSIBLE : ${n.initial_catalyst.label}. Cela ne prouve pas qu’il a déclenché le mouvement.`:n.mechanism.does_not_explain);
-  set("newsMarketDemand40235",n.flow?`${n.flow.label} · ${n.flow.direction} · À CONFIRMER`:"NON QUALIFIÉ");
-  set("newsMarketDemandNote40235",n.flow?`${newsMarketRoleEvidenceLine40234(n.flow)} · facteur de contexte possible, pas cause démontrée.`:"Aucun flux demande/offre explicite suffisamment lié à l’actif n’est détecté dans l’archive chargée.");
+  const macroTruth40372=n.driver_truth_40_3_72?.macro_liquidity||null;
+  const flowDomainTruth40372=n.driver_truth_40_3_72?.institutional_flows||null;
+  set("newsMarketDoesNotExplain40235",n.initial_catalyst?`Un catalyseur distinct est seulement classé POSSIBLE : ${n.initial_catalyst.label}. Cela ne prouve pas qu’il a déclenché le mouvement.`:macroTruth40372?.event?`${newsMarketDriverTruthLine40372(macroTruth40372)} · contexte macro/liquidité observé, pas cause initiale démontrée.`:n.mechanism.does_not_explain);
+  set("newsMarketDemand40235",n.flow?`${n.flow.label} · ${n.flow.direction} · ${n.verdict.context}`:flowDomainTruth40372?.event?`FLUX INSTITUTIONNELS · ${flowDomainTruth40372.status}`:"NON QUALIFIÉ");
+  set("newsMarketDemandNote40235",n.flow?`${newsMarketRoleEvidenceLine40234(n.flow)} · facteur de contexte possible, pas cause démontrée.`:newsMarketDriverTruthLine40372(flowDomainTruth40372,"Aucun flux demande/offre explicite suffisamment lié à l’actif n’est détecté dans l’archive chargée."));
   set("newsMarketMarketConfirmation40235",`${n.market_confirmation.breadth} · ${n.market_confirmation.focus} · ${n.market_confirmation.tone}.`);
-  set("newsMarketVerdict40235",`${n.verdict.role} · ${n.verdict.amplifier}`);
-  set("newsMarketVerdictNote40235",`Catalyseur initial : ${n.verdict.initial_catalyst} · contexte favorable : ${n.verdict.context} · causalité globale : ${n.verdict.causality}.`);
+  set("newsMarketVerdict40235",`${n.verdict.role} · causalité ${n.verdict.causality}`);
+  const chain40372=n.causal_chain_40_3_72||{};
+  set("newsMarketVerdictNote40235",`Macro/liquidité ${chain40372.macro_liquidity||"NON QUALIFIÉ"} → flux ${chain40372.institutional_flows||"NON QUALIFIÉ"} → cassure ${chain40372.technical_trigger||"NON QUALIFIÉ"} → levier ${chain40372.leverage_amplifier||"NON QUALIFIÉ"} → marché ${chain40372.market_reaction||"NON QUALIFIÉ"}. Causalité globale : ${n.verdict.causality}.`);
   root.dataset.state="observed"; root.dataset.direction=String(n.mechanism.direction||"indéterminé").toLowerCase();
   if(typeof renderNewsMarketReactionTimeline40236==="function") renderNewsMarketReactionTimeline40236(n.event,n);
   if(typeof renderNewsMarketRoleQuality40237==="function") renderNewsMarketRoleQuality40237(n.event,n);
@@ -46942,7 +47002,7 @@ globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwne
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.71";
+const ATLAS_BUILD = "40.3.72";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
