@@ -47049,13 +47049,204 @@ document.getElementById("btnAtlasStorageLineage40224")?.addEventListener("click"
 document.getElementById("btnAtlasStorageLineageExport40224")?.addEventListener("click",()=>atlasStorageOwnershipProofExport40229());
 globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwnershipProofAudit40229,render:atlasStorageOwnershipProofRender40229,exportJson:atlasStorageOwnershipProofExport40229,ledger:ATLAS_STORAGE_OWNERSHIP_PROOF_LEDGER_40229,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
 
+
+/* ============================================================
+   40.3.90 — STORAGE / INDEXEDDB MEASUREMENT LOCK
+   Operator-triggered, read-only and bounded.
+   - inventories only databases already exposed by indexedDB.databases();
+   - exact object-store record counts;
+   - max 160 sampled records/store for approximate JSON payload sizing;
+   - exposes known owner / retention contracts without changing them;
+   - NO delete, clear, put, add, readwrite transaction, schema upgrade,
+     timer, observer, migration, network request or automatic boot scan.
+   ============================================================ */
+const ATLAS_STORAGE_MEASUREMENT_40390_BUILD="40.3.90";
+const ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX=160;
+const ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA="agent_crypto.storage_indexeddb_measurement.v1";
+const ATLAS_STORAGE_MEASUREMENT_40390_CATALOG=Object.freeze({
+  "agent_crypto_storage_relief_40278":Object.freeze({owner:"Storage Relief",family:"payload mirror / primary",retention:"clés ciblées actives",max_rows:null}),
+  "agent_crypto_oracle_evidence_v1":Object.freeze({owner:"Oracle Evidence",family:"observations T0",retention:"ring buffer",max_rows:50000}),
+  "agent_crypto_oracle_source_history_v1":Object.freeze({owner:"Oracle Source History",family:"désaccord sources",retention:"ring buffer",max_rows:10000}),
+  "agent_crypto_learning_notebook":Object.freeze({owner:"Learning Notebook",family:"pédagogie",retention:"1 agrégat courant",max_rows:1}),
+  "agent_crypto_metals_public_report_memory_v2":Object.freeze({owner:"Metals Public Report",family:"rapport Métaux",retention:"1 rapport courant · limite payload 5 Mio",max_rows:1}),
+  "agent_crypto_erith_ia_persistence":Object.freeze({owner:"Shared Synthesis",family:"Ryzen / Book synthèse",retention:"1 synthèse CURRENT · import max 5 Mio",max_rows:1}),
+  "agent_crypto_ui_state_v1":Object.freeze({owner:"Graph Context V7",family:"état UI autoritaire",retention:"1 contexte graphe",max_rows:1}),
+  "agent_crypto_local_memory":Object.freeze({owner:"Collector Memory",family:"mémoire locale",retention:"1 agrégat · 500 entrées internes max",max_rows:1}),
+  "agent_crypto_current_archive_v35":Object.freeze({owner:"CURRENT Archive",family:"rapports Atlas/Aerith",retention:"30 CURRENT max",max_rows:30})
+});
+function atlasStorageMeasureBytes40390(value){
+  try{const raw=JSON.stringify(value);return raw==null?0:new TextEncoder().encode(raw).byteLength;}
+  catch{try{return new Blob([String(value??"")]).size;}catch{return 0;}}
+}
+function atlasStorageMeasureSignature40390(value){
+  let raw="";try{raw=JSON.stringify(value)??"";}catch{raw=String(value??"");}
+  let h=2166136261;for(let i=0;i<raw.length;i++){h^=raw.charCodeAt(i);h=Math.imul(h,16777619);}
+  return (h>>>0).toString(16).padStart(8,"0");
+}
+function atlasStorageMeasureTimestamp40390(value){
+  if(!value||typeof value!=="object")return null;
+  const keys=["updated_at","savedAt","saved_at","captured_at","created_at","created_at_utc","generated_at","completed_at","snapshot_at","t0","timestamp","reset_at"];
+  for(const key of keys){
+    const raw=value[key];if(raw==null)continue;
+    const n=typeof raw==="number"?raw:Date.parse(String(raw));
+    if(Number.isFinite(n)&&n>0)return n;
+  }
+  return null;
+}
+function atlasStorageMeasureRequest40390(request,label){
+  return new Promise((resolve,reject)=>{
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error||new Error(label||"IndexedDB request"));
+  });
+}
+async function atlasStorageMeasureStore40390(db,storeName){
+  const store=String(storeName||"");
+  const txCount=db.transaction(store,"readonly");
+  const exactCount=Number(await atlasStorageMeasureRequest40390(txCount.objectStore(store).count(),"IndexedDB count"))||0;
+  const tx=db.transaction(store,"readonly"),objectStore=tx.objectStore(store);
+  const sampleMax=Math.min(ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX,exactCount);
+  const samples=[];
+  if(sampleMax>0){
+    await new Promise((resolve,reject)=>{
+      const req=objectStore.openCursor();
+      req.onerror=()=>reject(req.error||new Error("IndexedDB cursor"));
+      req.onsuccess=()=>{
+        const cursor=req.result;
+        if(!cursor||samples.length>=sampleMax){resolve();return;}
+        const value=cursor.value,bytes=atlasStorageMeasureBytes40390(value),timestamp=atlasStorageMeasureTimestamp40390(value);
+        samples.push({bytes,timestamp,signature:atlasStorageMeasureSignature40390(value)});
+        cursor.continue();
+      };
+    });
+  }
+  const sampled=samples.length,bytesSample=samples.reduce((sum,row)=>sum+Number(row.bytes||0),0);
+  const avg=sampled?bytesSample/sampled:0,estimated=Math.round(avg*exactCount);
+  const largest=samples.reduce((m,row)=>Math.max(m,Number(row.bytes||0)),0);
+  const times=samples.map(row=>Number(row.timestamp)).filter(Number.isFinite);
+  const sigCount=new Map();samples.forEach(row=>sigCount.set(row.signature,(sigCount.get(row.signature)||0)+1));
+  const duplicateSample=[...sigCount.values()].reduce((sum,n)=>sum+(n>1?n-1:0),0);
+  return {
+    store,records:exactCount,sampled,sample_cap:ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX,
+    bytes_estimated:estimated,bytes_sample_total:bytesSample,bytes_sample_average:Math.round(avg),
+    largest_sample_bytes:largest,duplicate_exact_sample:duplicateSample,
+    oldest_sample_at:times.length?new Date(Math.min(...times)).toISOString():null,
+    newest_sample_at:times.length?new Date(Math.max(...times)).toISOString():null,
+    size_method:sampled===exactCount?"full JSON approximation":"bounded sample × exact count"
+  };
+}
+async function atlasStorageMeasureOpenExisting40390(name,listedVersion){
+  return new Promise((resolve,reject)=>{
+    let upgradeAttempt=false;
+    const req=indexedDB.open(name);
+    req.onupgradeneeded=()=>{
+      upgradeAttempt=true;
+      try{req.transaction.abort();}catch{}
+    };
+    req.onsuccess=()=>{
+      if(upgradeAttempt){try{req.result.close();}catch{};reject(new Error("Base apparue pendant la mesure ; ouverture annulée"));return;}
+      resolve(req.result);
+    };
+    req.onerror=()=>reject(req.error||new Error(`Ouverture IndexedDB refusée · ${name}`));
+    req.onblocked=()=>reject(new Error(`IndexedDB bloquée · ${name}`));
+  });
+}
+async function atlasStorageMeasureDatabase40390(descriptor){
+  const name=String(descriptor?.name||"");const listedVersion=Number(descriptor?.version||0)||null;
+  const contract=ATLAS_STORAGE_MEASUREMENT_40390_CATALOG[name]||{owner:"Non catalogué",family:"origine",retention:"à qualifier",max_rows:null};
+  const row={name,listed_version:listedVersion,owner:contract.owner,family:contract.family,retention:contract.retention,max_rows:contract.max_rows,stores:[],error:null};
+  let db=null;
+  try{
+    db=await atlasStorageMeasureOpenExisting40390(name,listedVersion);
+    row.actual_version=Number(db.version||0)||null;
+    const names=Array.from(db.objectStoreNames||[]);
+    for(const store of names)row.stores.push(await atlasStorageMeasureStore40390(db,store));
+  }catch(error){row.error=String(error?.message||error);}
+  finally{try{db?.close();}catch{}}
+  row.records=row.stores.reduce((sum,s)=>sum+Number(s.records||0),0);
+  row.bytes_estimated=row.stores.reduce((sum,s)=>sum+Number(s.bytes_estimated||0),0);
+  row.retention_pressure=Number.isFinite(Number(row.max_rows))&&Number(row.max_rows)>=0?row.records>Number(row.max_rows):false;
+  return row;
+}
+async function atlasStorageMeasurementCompute40390(){
+  const started=performance?.now?.()??Date.now(),local=atlasStorageHealthLocalSnapshot40198();
+  let origin=null,persisted=null;try{origin=await navigator.storage?.estimate?.();}catch{}try{persisted=await navigator.storage?.persisted?.();}catch{}
+  if(!globalThis.indexedDB||typeof indexedDB.databases!=="function"){
+    return {schema:ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA,build:ATLAS_STORAGE_MEASUREMENT_40390_BUILD,captured_at:new Date().toISOString(),
+      status:"UNSUPPORTED_ENUMERATION",read_only:true,operator_triggered_only:true,automatic_boot_scan:false,deletion_enabled:false,clear_enabled:false,migration_enabled:false,
+      local_storage:{keys:local.count,bytes:local.total_bytes},origin,persisted,databases:[],duration_ms:Math.round((performance?.now?.()??Date.now())-started)};
+  }
+  const listed=(await indexedDB.databases()).filter(row=>row&&row.name).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  const databases=[];for(const descriptor of listed)databases.push(await atlasStorageMeasureDatabase40390(descriptor));
+  const totalEstimated=databases.reduce((sum,row)=>sum+Number(row.bytes_estimated||0),0),totalRecords=databases.reduce((sum,row)=>sum+Number(row.records||0),0);
+  return {
+    schema:ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA,build:ATLAS_STORAGE_MEASUREMENT_40390_BUILD,captured_at:new Date().toISOString(),
+    status:"MEASURED",read_only:true,operator_triggered_only:true,automatic_boot_scan:false,deletion_enabled:false,clear_enabled:false,migration_enabled:false,
+    sample_max_per_store:ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX,
+    local_storage:{keys:local.count,bytes:local.total_bytes},
+    origin:{usage:Number(origin?.usage)||null,quota:Number(origin?.quota)||null},persisted,
+    database_count:databases.length,total_records:totalRecords,indexeddb_bytes_estimated:totalEstimated,
+    known_database_count:databases.filter(row=>Object.prototype.hasOwnProperty.call(ATLAS_STORAGE_MEASUREMENT_40390_CATALOG,row.name)).length,
+    unknown_database_count:databases.filter(row=>!Object.prototype.hasOwnProperty.call(ATLAS_STORAGE_MEASUREMENT_40390_CATALOG,row.name)).length,
+    retention_pressure:databases.filter(row=>row.retention_pressure).map(row=>row.name),
+    databases,duration_ms:Math.round((performance?.now?.()??Date.now())-started)
+  };
+}
+function atlasStorageMeasurementRender40390(result){
+  const node=document.getElementById("atlasStorageMeasurement40390");if(!node)return result;
+  const r=result||globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__;
+  if(!r){node.textContent="STORAGE MEASUREMENT 40.3.90 · aucune mesure disponible.";return null;}
+  if(r.status!=="MEASURED"){
+    node.textContent=`STORAGE MEASUREMENT 40.3.90 · ${r.status} · aucune mutation · indexedDB.databases() requis pour garantir qu’aucune base absente ne soit créée.`;
+    return r;
+  }
+  const top=r.databases.slice().sort((a,b)=>Number(b.bytes_estimated||0)-Number(a.bytes_estimated||0));
+  const lines=[
+    `STORAGE MEASUREMENT 40.3.90 · ${r.database_count} DB · ${r.total_records} enregistrement(s) · IndexedDB ≈ ${atlasStorageHealthBytesLabel40198(r.indexeddb_bytes_estimated)} · localStorage ${r.local_storage.keys} clé(s) / ${atlasStorageHealthBytesLabel40198(r.local_storage.bytes)}`,
+    `Origine : ${Number.isFinite(Number(r.origin?.usage))?atlasStorageHealthBytesLabel40198(r.origin.usage):"usage non exposé"} / ${Number.isFinite(Number(r.origin?.quota))?atlasStorageHealthBytesLabel40198(r.origin.quota):"quota non exposé"} · persistant ${r.persisted===true?"OUI":r.persisted===false?"NON":"INCONNU"} · durée ${r.duration_ms} ms`,
+    `Cataloguées ${r.known_database_count}/${r.database_count} · inconnues ${r.unknown_database_count} · pression rétention ${r.retention_pressure.length?r.retention_pressure.join(", "):"AUCUNE DÉTECTÉE"}`,
+    ""
+  ];
+  top.forEach((db,i)=>{
+    lines.push(`${i+1}. ${db.name} · ${db.owner} · ${db.records} row(s) · ≈ ${atlasStorageHealthBytesLabel40198(db.bytes_estimated)} · rétention ${db.retention}${db.retention_pressure?" · AU-DESSUS DE LA BORNE":" "}${db.error?` · ERREUR ${db.error}`:""}`);
+    db.stores.forEach(st=>lines.push(`   ↳ ${st.store} · ${st.records} row(s) · échantillon ${st.sampled}/${st.records} · ≈ ${atlasStorageHealthBytesLabel40198(st.bytes_estimated)} · max échantillon ${atlasStorageHealthBytesLabel40198(st.largest_sample_bytes)} · doublons exacts échantillon ${st.duplicate_exact_sample} · ${st.oldest_sample_at||"date —"} → ${st.newest_sample_at||"date —"}`));
+  });
+  lines.push("","AUTORITÉ 40.3.90 : MESURE UNIQUEMENT · DELETE NON · CLEAR NON · MIGRATION NON · WRITE NON.");
+  node.textContent=lines.join("\n");return r;
+}
+async function atlasStorageMeasurementRun40390(){
+  const btn=document.getElementById("btnAtlasStorageMeasure40390"),node=document.getElementById("atlasStorageMeasurement40390");
+  if(btn)btn.disabled=true;if(node)node.textContent="STORAGE MEASUREMENT 40.3.90 · mesure manuelle en cours…";
+  try{
+    const result=await atlasStorageMeasurementCompute40390();
+    globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__=result;
+    atlasStorageMeasurementRender40390(result);
+    return result;
+  }catch(error){
+    const result={schema:ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA,build:ATLAS_STORAGE_MEASUREMENT_40390_BUILD,status:"ERROR",captured_at:new Date().toISOString(),read_only:true,error:String(error?.message||error)};
+    globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__=result;atlasStorageMeasurementRender40390(result);return result;
+  }finally{if(btn)btn.disabled=false;}
+}
+function atlasStorageMeasurementExport40390(){
+  const payload=globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__;
+  if(!payload){const node=document.getElementById("atlasStorageMeasurement40390");if(node)node.textContent="STORAGE MEASUREMENT 40.3.90 · lancer « Mesurer IndexedDB » avant export.";return null;}
+  atlasOracleBackupDownload(`agent_crypto_storage_measurement_${ATLAS_STORAGE_MEASUREMENT_40390_BUILD.replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
+  return payload;
+}
+document.getElementById("btnAtlasStorageMeasure40390")?.addEventListener("click",()=>void atlasStorageMeasurementRun40390());
+document.getElementById("btnAtlasStorageMeasureExport40390")?.addEventListener("click",()=>atlasStorageMeasurementExport40390());
+globalThis.AtlasStorageMeasurement40390=Object.freeze({
+  measure:atlasStorageMeasurementRun40390,compute:atlasStorageMeasurementCompute40390,render:atlasStorageMeasurementRender40390,exportJson:atlasStorageMeasurementExport40390,
+  build:ATLAS_STORAGE_MEASUREMENT_40390_BUILD,schema:ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA,sample_max_per_store:ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX,
+  read_only:true,operator_triggered_only:true,automatic_boot_scan:false,deletion_enabled:false,clear_enabled:false,migration_enabled:false,new_timer:false,new_observer:false,network_request_added:false
+});
+
 /* ============================================================
    14 — VERSION CONTROL — PROTECTED CORE
    Build 29.3.06 : deterministic human-readable controller
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.89";
+const ATLAS_BUILD = "40.3.90";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
