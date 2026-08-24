@@ -1,0 +1,175 @@
+name: Atlas Public Crypto Extended
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "22,52 * * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/atlas-public-crypto-extended.yml"
+      - "public/agent_crypto_erith_ia/tools/collect_public_crypto_extended.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atlas-public-crypto-extended-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install collector dependency
+        run: python -m pip install --disable-pip-version-check requests==2.32.5
+
+      - name: Collect CoinGecko ranks 251 to 1000
+        run: >-
+          python public/agent_crypto_erith_ia/tools/collect_public_crypto_extended.py
+          --root public/agent_crypto_erith_ia
+          --timeout 25
+
+      - name: Validate extended snapshot contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("public/agent_crypto_erith_ia/data/crypto")
+          snapshot_path = root / "extended.json"
+          status_path = root / "extended_status.json"
+
+          if not status_path.is_file():
+              raise SystemExit("extended_status.json missing")
+          status = json.loads(status_path.read_text(encoding="utf-8"))
+          if status.get("schema") != "agent_crypto_public_extended_market_collector_status_v1":
+              raise SystemExit("invalid extended status schema")
+
+          if not snapshot_path.is_file():
+              raise SystemExit("extended.json missing")
+          payload = json.loads(snapshot_path.read_text(encoding="utf-8"))
+          if payload.get("schema") != "agent_crypto_public_extended_market_snapshot_v1":
+              raise SystemExit("invalid extended snapshot schema")
+
+          coins = payload.get("coins") or []
+          if len(coins) < 400:
+              raise SystemExit(f"extended universe insufficient: {len(coins)}")
+          if int(payload.get("rank_min") or 0) != 251 or int(payload.get("rank_max") or 0) != 1000:
+              raise SystemExit("invalid extended rank range")
+
+          ids = set()
+          for coin in coins:
+              coin_id = str(coin.get("id") or "")
+              rank = int(coin.get("rank") or 0)
+              if not coin_id or coin_id in ids:
+                  raise SystemExit("missing or duplicate extended coin id")
+              ids.add(coin_id)
+              if not (251 <= rank <= 1000):
+                  raise SystemExit(f"rank outside extended contract: {coin_id}={rank}")
+              if coin.get("source") != "CoinGecko" or coin.get("sourceMode") != "github-public-extended":
+                  raise SystemExit(f"invalid provenance: {coin_id}")
+
+          integrity = payload.get("integrity") or {}
+          if integrity.get("canonical_top250_mutated") is not False:
+              raise SystemExit("Top250 mutation lock missing")
+          if integrity.get("browser_direct_market_fetch_required") is not False:
+              raise SystemExit("browser independence lock missing")
+          if integrity.get("orders_generated") is not False or integrity.get("wallet_actions_generated") is not False:
+              raise SystemExit("financial action lock missing")
+
+          security = status.get("security") or {}
+          if security.get("api_key_required") is not False:
+              raise SystemExit("no-key contract missing")
+          if security.get("browser_direct_market_fetch_required") is not False:
+              raise SystemExit("browser direct lock missing")
+
+          print({
+              "status": status.get("status"),
+              "assets": len(coins),
+              "range": "251-1000",
+              "snapshot": payload.get("snapshot_id"),
+          })
+          PY
+
+      - name: Commit extended public crypto data
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          data_dir="public/agent_crypto_erith_ia/data/crypto"
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
+
+          for name in extended.json extended_status.json; do
+            if [ -f "$data_dir/$name" ]; then
+              cp "$data_dir/$name" "$temp_dir/$name"
+            fi
+          done
+
+          for attempt in 1 2 3; do
+            echo "Publication extended snapshot · tentative $attempt/3"
+            git fetch origin main
+            git reset --hard origin/main
+
+            mkdir -p "$data_dir"
+            for name in extended.json extended_status.json; do
+              if [ -f "$temp_dir/$name" ]; then
+                cp "$temp_dir/$name" "$data_dir/$name"
+              fi
+            done
+
+            git add "$data_dir/extended.json" "$data_dir/extended_status.json" 2>/dev/null || true
+            if git diff --cached --quiet; then
+              echo "No extended crypto data change to commit."
+              exit 0
+            fi
+
+            git commit -m "archive public extended crypto market snapshot"
+            if git push origin HEAD:main; then
+              echo "Extended crypto snapshot published."
+              exit 0
+            fi
+
+            echo "Remote main changed; retrying non-destructively."
+            sleep $((attempt * 2))
+          done
+
+          echo "Unable to publish extended crypto snapshot after 3 attempts."
+          exit 1
+
+      - name: Require usable extended snapshot
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("public/agent_crypto_erith_ia/data/crypto")
+          path = root / "extended.json"
+          if not path.is_file():
+              raise SystemExit("No usable extended crypto snapshot")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          coins = payload.get("coins") or []
+          if len(coins) < 400:
+              raise SystemExit(f"Extended snapshot incomplete: {len(coins)}")
+          print(f"Extended snapshot ready: {len(coins)} assets · ranks 251-1000")
+          PY
