@@ -1,16 +1,16 @@
-/* Agent-Crypto @erith.IA — 40.4.20
-   MODULAR PRESENTATION BOUNDARY / PROJECTS LAZY-BODY TRANSITION TRUTH
+/* Agent-Crypto @erith.IA — 40.4.21
+   MODULAR PRESENTATION BOUNDARY / PROJECTS + OPERATIONS TRUE LAZY-BODY TRANSITION TRUTH
    Presentation is externalized; shared truth/state/memory/engines remain in the main runtime. */
 (()=>{
   "use strict";
-  const BUILD="40.4.20";
+  const BUILD="40.4.21";
   const REGISTRY=Object.freeze({
     build:BUILD,
-    mode:"atlas-oracle-operations-system-parser-mounted-projects-lazy-body",
+    mode:"atlas-oracle-system-parser-mounted-projects-operations-lazy-body",
     extraction_active:true,
     runtime_mutation:false,
     network_fetch:true,
-    network_fetch_scope:"Projects only: same-origin views/projects.html on first project disclosure",
+    network_fetch_scope:"Projects + Operations only: same-origin canonical fragment fetched on first own disclosure",
     duplicate_engine:false,
     hosts:Object.freeze({atlas:"atlas-view-host",oracle:"oracle-view-host",operations:"operations-view-host",system:"system-view-host",projects:"projects-view-host"}),
     fragments:Object.freeze({atlas:"./views/atlas.html",oracle:"./views/oracle.html",operations:"./views/operations.html",system:"./views/system.html",projects:"./views/projects.html"}),
@@ -33,12 +33,12 @@
       rule:"presentation moved; Atlas truth/state/memory remain shared and persistent"
     }),
     operations:Object.freeze({
-      status:"external-presentation-parser-mounted",
+      status:"external-presentation-shell-mounted-body-lazy",
       family:"03 · Préparation & opérations",
       canonical_fragment:"./views/operations.html",
       transport:"./js/views/operations-presentation.js",
       anchors:Object.freeze(["atlasLayoutFamily03","situation","questionnaire","briefing","planning"]),
-      rule:"presentation moved; operator state/questionnaire/briefing/planning logic remain shared in the main runtime"
+      rule:"family 03 header + four detail shells exist at boot; bodies hydrate from views/operations.html on first own disclosure; operator state/questionnaire/briefing/planning logic remain shared in the main runtime"
     }),
     system:Object.freeze({
       status:"external-presentation-parser-mounted",
@@ -65,7 +65,9 @@
       "one Atlas truth/state owner",
       "Atlas family 02 IDs exist before downstream runtime scripts execute",
       "Oracle suite IDs exist before downstream runtime scripts execute",
-      "Operations family 03 IDs exist before downstream runtime scripts execute",
+      "Operations family 03 header + four detail shells exist before downstream runtime scripts execute",
+      "Always-connected Operations proxy anchors preserve role routing while bodies are not yet hydrated",
+      "Operations bodies are not parsed into the live DOM until their own disclosure opens",
       "System family 04 IDs exist before downstream runtime scripts execute",
       "Grey Plate Forensic follows family 04 Reduce/Hide/Detach ownership",
       "Missions hero + five project detail shells exist before downstream runtime scripts execute",
@@ -79,9 +81,10 @@
   });
   function snapshot(){
     const projectLazy=globalThis.ErithProjectsPresentation40420?.snapshot?.()||null;
+    const operationsLazy=globalThis.ErithOperationsPresentation40421?.snapshot?.()||null;
     const ids=[...REGISTRY.oracle.anchors,...REGISTRY.atlas.anchors,...REGISTRY.operations.anchors,...REGISTRY.system.anchors,...REGISTRY.projects.anchors];
     const present=Object.fromEntries(ids.map(id=>[id,!!document.getElementById(id)]));
-    return Object.freeze({build:BUILD,mode:REGISTRY.mode,present,projects_lazy:projectLazy,checked_at:new Date().toISOString()});
+    return Object.freeze({build:BUILD,mode:REGISTRY.mode,present,projects_lazy:projectLazy,operations_lazy:operationsLazy,checked_at:new Date().toISOString()});
   }
   function publish(){try{globalThis.__AGENT_CRYPTO_PRESENTATION_BOUNDARY_SNAPSHOT_40405__=snapshot();}catch(_){}}
   try{globalThis.AgentCryptoPresentationBoundaries40405=Object.freeze({...REGISTRY,snapshot});}catch(_){}

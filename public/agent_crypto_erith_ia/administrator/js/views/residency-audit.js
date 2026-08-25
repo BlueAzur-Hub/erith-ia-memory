@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.20
+/* Agent-Crypto @erith.IA — 40.4.21
    RESIDENCY AUDIT TRUTH + OPERATOR EVIDENCE LOCK
    Read-only manual diagnostic. No automatic sweep, timer, observer, fetch,
    storage write, engine mutation or presentation mutation.
@@ -9,7 +9,7 @@
    The legacy cached_subtree_nodes alias is preserved and now means detached nodes. */
 (()=>{
   "use strict";
-  const BUILD="40.4.20";
+  const BUILD="40.4.21";
   const PROTECTED=Object.freeze(["#analyste","#detailPanel"]);
   const EXPECTED_FAMILIES=Object.freeze(["projects","operations","system","atlas","oracle"]);
   const now=()=>new Date().toISOString();
@@ -65,6 +65,10 @@
       });
     });
     const rollup=familyRollup(registrations);
+    const lazyTransports=Object.freeze({
+      projects:globalThis.ErithProjectsPresentation40420?.snapshot?.()||null,
+      operations:globalThis.ErithOperationsPresentation40421?.snapshot?.()||null
+    });
     const totalRecords=rollup.reduce((n,item)=>n+item.records,0);
     const detachedRecords=rollup.reduce((n,item)=>n+item.detached_records,0);
     const trackedNodes=rollup.reduce((n,item)=>n+item.tracked_subtree_nodes,0);
@@ -86,6 +90,7 @@
       detached_subtree_nodes:detachedNodes,
       cached_subtree_nodes:detachedNodes,
       family_rollup:rollup,
+      lazy_transports:lazyTransports,
       measurements,
       registrations,
       healthy:violations.length===0,

@@ -1,376 +1,134 @@
-/* Agent-Crypto @erith.IA — 40.4.3
-   OPERATIONS PRESENTATION EXTRACTION / PARSER-BLOCKING TRANSITION MOUNT
-   Generated transport mirror of views/operations.html for boot-parity.
-   No fetch, timer, observer, engine duplication or state mutation. */
+/* Agent-Crypto @erith.IA — 40.4.21
+   OPERATIONS 03 TRUE BODY LAZY HYDRATION / RUNTIME ACTION REBIND LOCK
+   Family header + four stable <details> shells mount during parsing so role visibility,
+   canonical order and Window Manager ownership remain available before shared runtime init.
+   Heavy bodies are read from views/operations.html only when their own disclosure opens.
+   One same-origin static fetch is shared/cached for the session. Existing questionnaire
+   and command actions are rebound only inside the hydrated body; no duplicate engine owner.
+   No timer, observer, WebSocket, storage policy change or business-state mutation added. */
 (()=>{
   "use strict";
-  const BUILD="40.4.3";
+  const BUILD="40.4.21";
+  const SOURCE="./views/operations.html";
   const host=document.getElementById("operations-view-host");
-  if(!host) return;
-  const html=`    <section class="atlas-layout-family atlas-layout-family-operations" aria-labelledby="atlasLayoutFamily03">
-      <span class="atlas-layout-family-index" aria-hidden="true">03</span>
-      <div class="atlas-layout-family-copy">
-        <p>PARCOURS ADMINISTRATEUR</p>
-        <h2 id="atlasLayoutFamily03" class="atlas-icon-heading-40290" data-semantic-tone-40290="operations"><span class="atlas-heading-icon-40290" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5z"></path><path d="m8 10 2 2 4-4M8 16h8"></path></svg></span>Préparation & opérations</h2>
-        <span>Suivre l’état du projet, cadrer l’opérateur et préparer les accès sans action financière réelle.</span>
-      </div>
-      <span class="atlas-layout-family-signal" aria-hidden="true"></span>
-    </section>
+  if(!host)return;
+  const shellHtml="<section aria-labelledby=\"atlasLayoutFamily03\" class=\"atlas-layout-family atlas-layout-family-operations\">\n<span aria-hidden=\"true\" class=\"atlas-layout-family-index\">03</span>\n<div class=\"atlas-layout-family-copy\">\n<p>PARCOURS ADMINISTRATEUR</p>\n<h2 class=\"atlas-icon-heading-40290\" data-semantic-tone-40290=\"operations\" id=\"atlasLayoutFamily03\"><span aria-hidden=\"true\" class=\"atlas-heading-icon-40290\"><svg aria-hidden=\"true\" viewbox=\"0 0 24 24\"><path d=\"M5 5h14v14H5z\"></path><path d=\"m8 10 2 2 4-4M8 16h8\"></path></svg></span>Préparation &amp; opérations</h2>\n<span>Suivre l’état du projet, cadrer l’opérateur et préparer les accès sans action financière réelle.</span>\n</div>\n<span aria-hidden=\"true\" class=\"atlas-layout-family-signal\"></span>\n</section>\n\n<details class=\"atlas-collapse glass atlas-family-member atlas-tone-operations\" data-collapse-key=\"situation\" data-layout-family=\"operations\" data-operations-lazy-shell-40421=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">Situation du projet</span>\n<span class=\"atlas-collapse-subtitle\">Synthèse d’état</span>\n<span id=\"situation\" data-operations-lazy-anchor-40421=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span></summary>\n<div class=\"atlas-collapse-body\" data-operations-lazy-body-40421=\"situation\" data-operations-hydration-40421=\"placeholder\"></div>\n</details>\n\n<details class=\"atlas-collapse glass atlas-family-member atlas-tone-operations\" data-collapse-key=\"questionnaire\" data-layout-family=\"operations\" data-operations-lazy-shell-40421=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">Questionnaire opérateur</span>\n<span class=\"atlas-collapse-subtitle\">Cadre humain et limites</span>\n<span id=\"questionnaire\" data-operations-lazy-anchor-40421=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span></summary>\n<div class=\"atlas-collapse-body\" data-operations-lazy-body-40421=\"questionnaire\" data-operations-hydration-40421=\"placeholder\"></div>\n</details>\n\n<details class=\"atlas-collapse glass atlas-family-member atlas-tone-operations\" data-collapse-key=\"briefing\" data-layout-family=\"operations\" data-operations-lazy-shell-40421=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">Briefing opérateur</span>\n<span class=\"atlas-collapse-subtitle\">Lecture de contexte</span>\n<span id=\"briefing\" data-operations-lazy-anchor-40421=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span></summary>\n<div class=\"atlas-collapse-body\" data-operations-lazy-body-40421=\"briefing\" data-operations-hydration-40421=\"placeholder\"></div>\n</details>\n\n<details class=\"atlas-collapse glass atlas-family-member atlas-tone-operations\" data-collapse-key=\"planning\" data-layout-family=\"operations\" data-operations-lazy-shell-40421=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">Plan exchange / accès déporté</span>\n<span class=\"atlas-collapse-subtitle\">Préparation hors GitHub Pages</span>\n<span id=\"planning\" data-operations-lazy-anchor-40421=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span></summary>\n<div class=\"atlas-collapse-body\" data-operations-lazy-body-40421=\"planning\" data-operations-hydration-40421=\"placeholder\"></div>\n</details>\n";
+  const KEYS=Object.freeze(["situation", "questionnaire", "briefing", "planning"]);
+  const ANCHORS=Object.freeze({"situation": "situation", "questionnaire": "questionnaire", "briefing": "briefing", "planning": "planning"});
+  let sourcePromise=null;
+  let sourceTemplate=null;
+  let sourceFetchCount=0;
+  let hydrationCount=0;
+  let actionBindCount=0;
+  let lastError="";
 
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="situation" data-layout-family="operations">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Situation du projet</span>
-        <span class="atlas-collapse-subtitle">Synthèse d’état</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-
-
-
-
-
-
-
-    <section class="panel glass situation-layer" id="situation">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">SITUATION DU PROJET</p>
-          <h2>Où on en est maintenant</h2>
-          <p class="situation-intro">
-            Vue de synthèse : ce qui fonctionne déjà, ce qui est seulement préparé, et ce qui reste strictement verrouillé.
-          </p>
-        </div>
-        <span class="pill" id="situationReleaseBadge">Market Core V2.0-Alpha · Build 38.15.11 · Math Core V3</span>
-      </div>
-
-      <div class="situation-grid">
-        <article class="situation-card ok">
-          <b>Actif maintenant</b>
-          <span>Marché live, graphiques, sources, watchlist, tests simples, simulation locale.</span>
-          <em>Utilisable dans la page publique.</em>
-        </article>
-        <article class="situation-card plan">
-          <b>Préparé seulement</b>
-          <span>Backend privé, accès renforcé, Kraken lecture seule, sécurité physique.</span>
-          <em>Planifié, non connecté.</em>
-        </article>
-        <article class="situation-card lock">
-          <b>Verrouillé</b>
-          <span>Wallet réel, clé privée, clé de retrait, ordre réel, trading automatique.</span>
-          <em>Interdit dans GitHub Pages.</em>
-        </article>
-        <article class="situation-card next">
-          <b>Prochaine vraie décision</b>
-          <span>Collecter les informations de session avant de choisir matériel, accès, sources et règles de risque.</span>
-          <em>Ne pas brûler les étapes.</em>
-        </article>
-      </div>
-
-      <div class="situation-steps">
-        <div class="step done"><b>1</b><span>Observatoire public</span></div>
-        <div class="step done"><b>2</b><span>Lecture humaine</span></div>
-        <div class="step active"><b>3</b><span>Simulation locale</span></div>
-        <div class="step wait"><b>4</b><span>Session infos</span></div>
-        <div class="step locked"><b>5</b><span>Backend privé</span></div>
-        <div class="step locked"><b>6</b><span>Kraken lecture seule</span></div>
-        <div class="step locked"><b>7</b><span>Réel verrouillé</span></div>
-      </div>
-
-      <div class="decision-board">
-        <div>
-          <h3>À faire ensuite</h3>
-          <ul>
-            <li>Confirmer les cryptos prioritaires.</li>
-            <li>Définir le montant virtuel de simulation.</li>
-            <li>Définir les sources d’actualité obligatoires.</li>
-            <li>Choisir les règles de risque interdit.</li>
-            <li>Décrire la future machine privée.</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Pas encore</h3>
-          <ul>
-            <li>Pas de clé Kraken réelle.</li>
-            <li>Pas de wallet réel connecté.</li>
-            <li>Pas de seed phrase.</li>
-            <li>Pas de trading automatique.</li>
-            <li>Pas d’accès distant public.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="situation-actions">
-        <button class="cmd-preset" data-command="situation">Situation</button>
-        <button class="cmd-preset" data-command="next_steps">Prochaines étapes</button>
-        <button class="cmd-preset" data-command="boundaries">Limites verrouillées</button>
-      </div>
-    </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="questionnaire" data-layout-family="operations">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Questionnaire opérateur</span>
-        <span class="atlas-collapse-subtitle">Cadre humain et limites</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-
-
-    <section class="panel glass questionnaire-layer" id="questionnaire">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">QUESTIONNAIRE SESSION</p>
-          <h2>Fiche de clarification avant backend privé</h2>
-          <p class="questionnaire-intro">
-            À remplir pendant la discussion. Données locales navigateur uniquement. Ne jamais saisir de seed phrase, clé API, mot de passe ou information nominative.
-          </p>
-        </div>
-        <span class="pill warn">Aucune clé ici</span>
-      </div>
-
-      <div class="questionnaire-warning">
-        <b>Règle absolue</b>
-        <span>Cette fiche sert à noter des orientations. Elle ne doit contenir aucun secret, aucun identifiant, aucun nom personnel, aucune clé Kraken, aucune seed phrase.</span>
-      </div>
-
-      <div class="questionnaire-grid">
-        <label>
-          <span>Objectif de la session</span>
-          <textarea id="qObjective" placeholder="Ex. observer, simuler, préparer une future lecture seule Kraken..."></textarea>
-        </label>
-        <label>
-          <span>Cryptos prioritaires</span>
-          <textarea id="qAssets" placeholder="Ex. BTC, ETH, SOL, stablecoins, autres à surveiller..."></textarea>
-        </label>
-        <label>
-          <span>Montant virtuel de simulation</span>
-          <textarea id="qVirtualAmount" placeholder="Ex. 100 € virtuels, micro-transactions simulées de 5 €..."></textarea>
-        </label>
-        <label>
-          <span>Risques interdits</span>
-          <textarea id="qRisks" placeholder="Ex. pas de levier, pas de margin, pas de retrait, pas de token inconnu..."></textarea>
-        </label>
-        <label>
-          <span>Sources d'information</span>
-          <textarea id="qNews" placeholder="Ex. Reuters, AFP, AMF, Kraken status, CoinDesk..."></textarea>
-        </label>
-        <label>
-          <span>Machine privée envisagée</span>
-          <textarea id="qMachine" placeholder="Ex. PC local, mini-serveur, disponibilité, sauvegarde, réseau privé..."></textarea>
-        </label>
-        <label>
-          <span>Accès renforcé</span>
-          <textarea id="qAccess" placeholder="Ex. 2 opérateurs autorisés, clés physiques, VPN privé, logs..."></textarea>
-        </label>
-        <label>
-          <span>Sécurité physique / wallet matériel</span>
-          <textarea id="qPhysical" placeholder="Ex. Ledger comme coffre froid, validation humaine, clé physique..."></textarea>
-        </label>
-      </div>
-
-      <div class="questionnaire-actions">
-        <button class="btn small primary" id="btnSaveQuestionnaire">Sauvegarder localement</button>
-        <button class="btn small" id="btnBuildBrief">Générer note de reprise</button>
-        <button class="btn small" id="btnCopyBrief">Copier la note</button>
-        <button class="btn small" id="btnDownloadBrief">Télécharger .md</button>
-        <button class="btn small danger" id="btnClearQuestionnaire">Effacer la fiche</button>
-      </div>
-
-      <div class="questionnaire-output">
-        <h3>Note de reprise générée</h3>
-        <pre id="questionnaireOutput">Aucune note générée. Remplis quelques champs puis clique “Générer note de reprise”.</pre>
-      </div>
-
-      <div class="export-brief-help">
-        <b>Export propre</b><em class="export-fix-note">Export corrigé · vrais retours ligne Markdown.</em>
-        <span>La note générée peut être copiée ou téléchargée en Markdown. Vérifie qu’elle ne contient aucun secret avant partage.</span>
-      </div>
-
-      <p class="rule-line warn-lock">
-        Cette fiche reste locale au navigateur. Elle ne connecte rien et ne remplace pas un audit sécurité.
-      </p>
-    </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="briefing" data-layout-family="operations">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Briefing opérateur</span>
-        <span class="atlas-collapse-subtitle">Lecture de contexte</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-
-    <section class="panel glass briefing-layer" id="briefing">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">BRIEFING TERRAIN</p>
-          <h2>Préparer la session avec le partenaire</h2>
-          <p class="briefing-intro">
-            Objectif : collecter les bonnes informations avant toute décision technique. Aucun nom personnel, aucune clé, aucun wallet réel dans l’interface publique.
-          </p>
-        </div>
-        <span class="pill">Préparation</span>
-      </div>
-
-      <div class="briefing-grid">
-        <article>
-          <b>1. Objectif exact</b>
-          <span>Observer seulement, simuler, ou préparer une future action semi-automatique ?</span>
-          <em>À clarifier avant backend.</em>
-        </article>
-        <article>
-          <b>2. Référence exchange</b>
-          <span>Confirmer Kraken comme référence principale et Bybit comme comparaison API.</span>
-          <em>Lecture seule d’abord.</em>
-        </article>
-        <article>
-          <b>3. Machine privée</b>
-          <span>Définir où tournera le futur backend et qui peut y accéder.</span>
-          <em>Jamais depuis GitHub Pages.</em>
-        </article>
-        <article>
-          <b>4. Sécurité physique</b>
-          <span>Étudier wallet matériel, clé physique, double validation et arrêt d’urgence.</span>
-          <em>Le matériel protège, l’IA ne pilote pas seule.</em>
-        </article>
-      </div>
-
-      <div class="question-board">
-        <div>
-          <h3>Questions à poser</h3>
-          <ul>
-            <li>Quel montant virtuel utiliser pour la simulation ?</li>
-            <li>Quelles cryptos suivre en priorité ?</li>
-            <li>Quel niveau de risque est interdit ?</li>
-            <li>Quels journaux / sources doivent être surveillés ?</li>
-            <li>Quel matériel est envisagé pour la machine privée ?</li>
-            <li>Quel système d’accès renforcé est préféré ?</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Décisions à ne pas prendre trop vite</h3>
-          <ul>
-            <li>Pas de clé Kraken réelle maintenant.</li>
-            <li>Pas de wallet réel connecté maintenant.</li>
-            <li>Pas de trading automatique.</li>
-            <li>Pas d’accès distant public.</li>
-            <li>Pas de seed phrase ou clé privée dans un fichier.</li>
-            <li>Pas d’argent réel avant dry-run long.</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="briefing-actions">
-        <button class="cmd-preset" data-command="briefing">Briefing session</button>
-        <button class="cmd-preset" data-command="questions">Questions à poser</button>
-        <button class="cmd-preset" data-command="do_not_do">À ne pas faire</button>
-      </div>
-
-      <p class="rule-line warn-lock">
-        Règle session : collecter, noter, clarifier. Ne pas créer de clé, ne pas connecter de wallet, ne pas activer d’argent réel.
-      </p>
-    </section>
-      </div>
-    </details>
-
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-operations" data-collapse-key="planning" data-layout-family="operations">
-      <summary class="atlas-collapse-summary">
-        <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
-        <span class="atlas-collapse-title">Plan exchange / accès déporté</span>
-        <span class="atlas-collapse-subtitle">Préparation hors GitHub Pages</span>
-      </summary>
-      <div class="atlas-collapse-body">
-
-
-
-
-    <section class="planning-deck" id="planning">
-      <article class="panel glass exchange-plan">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">EXCHANGE & WALLET PLAN</p>
-            <h2>Kraken d’abord · Bybit en référence API</h2>
-            <p class="planning-intro">
-              Plan validé avec opérateur autorisé : semi-automatique, simulation avant réel, accès réservé à deux personnes.
-            </p>
-          </div>
-          <span class="pill warn">Aucun ordre réel</span>
-        </div>
-
-        <div class="exchange-grid">
-          <div class="exchange-card primary">
-            <b>Kraken</b>
-            <span>Référence wallet / compte / sécurité.</span>
-            <em>Priorité : lecture seule, sandbox, paper trading.</em>
-          </div>
-          <div class="exchange-card">
-            <b>Bybit</b>
-            <span>Référence API trading à comparer.</span>
-            <em>À étudier avant intégration.</em>
-          </div>
-          <div class="exchange-card">
-            <b>Binance</b>
-            <span>Inspiration command layer / données marché.</span>
-            <em>Pas de clé privée dans le frontend.</em>
-          </div>
-        </div>
-
-        <div class="phase-track">
-          <div class="phase done"><b>1</b><span>Observer</span></div>
-          <div class="phase active"><b>2</b><span>Commander</span></div>
-          <div class="phase"><b>3</b><span>Simuler</span></div>
-          <div class="phase"><b>4</b><span>Valider humain</span></div>
-          <div class="phase locked"><b>5</b><span>Réel verrouillé</span></div>
-        </div>
-      </article>
-
-      <article class="panel glass remote-plan">
-        <div class="section-head compact">
-          <div>
-            <p class="eyebrow">ACCÈS DÉPORTÉ</p>
-            <h2>À préparer hors GitHub Pages</h2>
-          </div>
-        </div>
-        <div class="remote-checklist">
-          <div><b>Accès</b><span>2 opérateurs autorisés uniquement</span></div>
-          <div><b>Clés</b><span>jamais dans le dépôt public</span></div>
-          <div><b>Mode</b><span>lecture seule puis simulation</span></div>
-          <div><b>Sécurité</b><span>logs + arrêt urgence</span></div>
-        </div>
-        <p class="rule-line warn-lock">
-          L’accès distant et les clés exchange exigent un backend local ou serveur sécurisé. GitHub Pages reste public et observation-only.
-        </p>
-      </article>
-    </section>
-      </div>
-    </details>
-
-
-
-
-`;
-  host.insertAdjacentHTML("beforebegin",html);
+  host.insertAdjacentHTML("beforebegin",shellHtml);
   host.remove();
-  try{
-    globalThis.__AGENT_CRYPTO_OPERATIONS_PRESENTATION_MOUNT_40403__=Object.freeze({
-      build:BUILD,
-      source:"./views/operations.html",
-      transport:"parser-blocking generated mirror",
-      extracted_family:"03 · Préparation & opérations",
-      inserted_before_downstream_runtime:true,
-      network_fetch:false,
-      new_timer:false,
-      new_observer:false,
-      duplicate_engine:false,
-      runtime_state_mutation:false
+
+  function detailFor(key){return document.querySelector(`details[data-operations-lazy-shell-40421="true"][data-collapse-key="${key}"]`);}
+
+  async function sourceDocument(){
+    if(sourceTemplate)return sourceTemplate;
+    if(sourcePromise)return sourcePromise;
+    sourceFetchCount+=1;
+    sourcePromise=fetch(SOURCE,{credentials:"same-origin",cache:"default"})
+      .then(response=>{if(!response.ok)throw new Error(`Operations source HTTP ${response.status}`);return response.text();})
+      .then(text=>{const template=document.createElement("template");template.innerHTML=text;sourceTemplate=template;lastError="";return template;})
+      .catch(error=>{lastError=String(error?.message||error||"Operations source unavailable");sourcePromise=null;throw error;});
+    return sourcePromise;
+  }
+
+  function bindOnce(node,tag,handler){
+    if(!(node instanceof HTMLElement)||node.dataset[tag]==="1")return false;
+    node.dataset[tag]="1";
+    node.addEventListener("click",handler);
+    actionBindCount+=1;
+    return true;
+  }
+
+  function bindRuntimeActions(key,body){
+    body.querySelectorAll('.cmd-preset[data-command]').forEach(button=>{
+      bindOnce(button,'operationsCommandBound40421',()=>{
+        try{globalThis.runCommandFromInput?.(button.dataset.command);}catch(error){console.warn(`Agent-Crypto ${BUILD} · Operations command bridge failed`,error);}
+      });
     });
-  }catch(_){}
+    if(key!=="questionnaire")return;
+    try{globalThis.loadQuestionnaire?.();}catch(_){}
+    bindOnce(document.getElementById('btnSaveQuestionnaire'),'operationsQuestionnaireBound40421',()=>{
+      try{globalThis.saveQuestionnaire?.();const out=document.getElementById('questionnaireOutput');if(out)out.textContent='Fiche sauvegardée localement dans ce navigateur.';}catch(error){console.warn(`Agent-Crypto ${BUILD} · Questionnaire save bridge failed`,error);}
+    });
+    bindOnce(document.getElementById('btnBuildBrief'),'operationsQuestionnaireBound40421',()=>{try{globalThis.buildSessionBrief?.();}catch(error){console.warn(`Agent-Crypto ${BUILD} · Questionnaire brief bridge failed`,error);}});
+    bindOnce(document.getElementById('btnCopyBrief'),'operationsQuestionnaireBound40421',()=>{try{void globalThis.copySessionBrief?.();}catch(error){console.warn(`Agent-Crypto ${BUILD} · Questionnaire copy bridge failed`,error);}});
+    bindOnce(document.getElementById('btnDownloadBrief'),'operationsQuestionnaireBound40421',()=>{try{globalThis.downloadSessionBrief?.();}catch(error){console.warn(`Agent-Crypto ${BUILD} · Questionnaire download bridge failed`,error);}});
+    bindOnce(document.getElementById('btnClearQuestionnaire'),'operationsQuestionnaireBound40421',()=>{try{globalThis.clearQuestionnaire?.();}catch(error){console.warn(`Agent-Crypto ${BUILD} · Questionnaire clear bridge failed`,error);}});
+  }
+
+  function reconcileAfterHydration(key,body){
+    bindRuntimeActions(key,body);
+    if(key==="situation"){try{globalThis.atlasSyncReleaseLabels?.();}catch(_){}}
+    try{globalThis.atlasV2ClassifySections?.();}catch(_){}
+    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation40312?.(mode);}catch(_){}
+    try{window.dispatchEvent(new CustomEvent("erith:operations-hydrated",{detail:{build:BUILD,key}}));}catch(_){}
+  }
+
+  async function hydrate(key){
+    key=String(key||"");
+    if(!KEYS.includes(key))return false;
+    const detail=detailFor(key);
+    if(!(detail instanceof HTMLDetailsElement))return false;
+    const body=detail.querySelector(':scope > .atlas-collapse-body');
+    if(!(body instanceof HTMLElement))return false;
+    if(body.dataset.operationsHydration40421==="ready"){bindRuntimeActions(key,body);return true;}
+    if(body.dataset.operationsHydration40421==="loading"){try{await sourcePromise;}catch(_){}return body.dataset.operationsHydration40421==="ready";}
+    body.dataset.operationsHydration40421="loading";
+    try{
+      const template=await sourceDocument();
+      const sourceDetail=template.content.querySelector(`details[data-collapse-key="${key}"]`);
+      const sourceBody=sourceDetail?.querySelector(':scope > .atlas-collapse-body');
+      if(!(sourceBody instanceof HTMLElement))throw new Error(`Operations body missing: ${key}`);
+      const children=[...sourceBody.childNodes].map(node=>node.cloneNode(true));
+      // Keep the canonical routing anchor permanently connected in the summary shell.
+      // Remove only the matching source section id from the hydrated clone to prevent duplicate IDs.
+      children.forEach(node=>{
+        if(!(node instanceof Element))return;
+        const candidates=[node,...node.querySelectorAll('[id]')];
+        candidates.forEach(candidate=>{
+          if(candidate.id===ANCHORS[key]){candidate.dataset.operationsSourceAnchor40421=ANCHORS[key];candidate.removeAttribute('id');}
+        });
+      });
+      body.replaceChildren(...children);
+      body.dataset.operationsHydration40421="ready";
+      hydrationCount+=1;
+      reconcileAfterHydration(key,body);
+      return true;
+    }catch(error){
+      body.dataset.operationsHydration40421="error";
+      body.dataset.operationsHydrationError40421=String(error?.message||error||"unknown");
+      console.warn(`Agent-Crypto ${BUILD} · Operations body hydration failed`,key,error);
+      return false;
+    }
+  }
+
+  function bindDetail(detail){
+    if(!(detail instanceof HTMLDetailsElement)||detail.dataset.operationsLazyBound40421==="1")return;
+    detail.dataset.operationsLazyBound40421="1";
+    const ensure=()=>{if(detail.open)hydrate(detail.dataset.collapseKey);};
+    detail.addEventListener('toggle',()=>{if(detail.open)queueMicrotask(ensure);});
+    // Existing closed-body lifecycle restores its fragment before emitting this event.
+    detail.addEventListener('erith:presentation-resident',ensure);
+  }
+  KEYS.map(detailFor).forEach(bindDetail);
+
+  function keyForHash(hash=location.hash){const id=decodeURIComponent(String(hash||'').replace(/^#/,''));return KEYS.includes(id)?id:'';}
+  function hydrateHashIfOpen(){const key=keyForHash();if(!key)return;const detail=detailFor(key);if(detail?.open)hydrate(key);}
+  window.addEventListener('hashchange',hydrateHashIfOpen,{passive:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',hydrateHashIfOpen,{once:true});else hydrateHashIfOpen();
+
+  function snapshot(){
+    const rows=KEYS.map(key=>{const detail=detailFor(key);const body=detail?.querySelector(':scope > .atlas-collapse-body');return Object.freeze({key,open:detail?.open===true,body_state:body?.dataset?.operationsHydration40421||'detached-or-missing',anchor_present:!!document.getElementById(ANCHORS[key])});});
+    return Object.freeze({build:BUILD,source:SOURCE,strategy:'parser-shell + on-demand operations body hydration',full_source_tags:255,boot_shell_tags:39,deferred_tags:216,source_fetch_count:sourceFetchCount,hydration_count:hydrationCount,action_bind_count:actionBindCount,last_error:lastError||null,rows:Object.freeze(rows),window_manager_shell_parity:true,questionnaire_rebind:true,command_rebind:true,new_timer:false,new_observer:false,storage_policy_changed:false,business_engine_changed:false});
+  }
+  const api=Object.freeze({build:BUILD,source:SOURCE,ensureBody:hydrate,snapshot,keys:KEYS,anchors:ANCHORS,window_manager_shell_parity:true,network_fetch:'same-origin static source on first Operations disclosure only',new_timer:false,new_observer:false,storage_policy_changed:false,business_engine_changed:false});
+  globalThis.ErithOperationsPresentation40421=api;
+  globalThis.__AGENT_CRYPTO_OPERATIONS_PRESENTATION_MOUNT_40421__=snapshot();
 })();

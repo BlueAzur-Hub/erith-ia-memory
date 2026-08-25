@@ -5,7 +5,7 @@
    Same-node detach only: no clone, fetch, timer, observer, storage write or engine OFF. */
 (()=>{
   "use strict";
-  const BUILD="40.4.20";
+  const BUILD="40.4.21";
   const DEFINITIONS=Object.freeze([
     Object.freeze({id:"projects",label:"Projet @erith.IA · Missions de vie",source:"./views/projects.html",roots:Object.freeze(["#missions-vie",'[data-collapse-key="fonds-erith"]','[data-collapse-key="association-erith"]','[data-collapse-key="aerith-enfance"]','[data-collapse-key="aerith-animaux"]','[data-collapse-key="aerith-terre-vivante"]']),risk:"low"}),
     Object.freeze({id:"operations",label:"03 · Préparation & opérations",source:"./views/operations.html",roots:Object.freeze([".atlas-layout-family-operations",'[data-collapse-key="situation"]','[data-collapse-key="questionnaire"]','[data-collapse-key="briefing"]','[data-collapse-key="planning"]']),risk:"low"}),
