@@ -5,7 +5,7 @@
    Same-node detach only: no clone, fetch, timer, observer, storage write or engine OFF. */
 (()=>{
   "use strict";
-  const BUILD="40.4.11";
+  const BUILD="40.4.17";
   const DEFINITIONS=Object.freeze([
     Object.freeze({id:"projects",label:"Projet @erith.IA · Missions de vie",source:"./views/projects.html",roots:Object.freeze(["#missions-vie",'[data-collapse-key="fonds-erith"]','[data-collapse-key="association-erith"]','[data-collapse-key="aerith-enfance"]','[data-collapse-key="aerith-animaux"]','[data-collapse-key="aerith-terre-vivante"]']),risk:"low"}),
     Object.freeze({id:"operations",label:"03 · Préparation & opérations",source:"./views/operations.html",roots:Object.freeze([".atlas-layout-family-operations",'[data-collapse-key="situation"]','[data-collapse-key="questionnaire"]','[data-collapse-key="briefing"]','[data-collapse-key="planning"]']),risk:"low"}),
@@ -14,6 +14,11 @@
     Object.freeze({id:"oracle",label:"Oracle · Analyse prospective & preuves",source:"./views/oracle.html",roots:Object.freeze(["#oracle-models-calibration",'[data-collapse-key="oracle-sources-runtime"]',"#oracle-evidence-explorer"]),risk:"high"})
   ]);
   const registrations=[];
+  /* 40.4.17 — protected cockpit exclusion. Demand-residency is for extracted
+     Administrator families only. Graphique + Lecture Technique are canonical
+     always-resident cockpit owners and must never be detached by this registry. */
+  const PROTECTED_COCKPIT_SELECTORS=Object.freeze(["#analyste","#detailPanel"]);
+  const protectedCockpitNode=node=>Boolean(node?.closest?.(PROTECTED_COCKPIT_SELECTORS.join(",")));
   let bridgesBound=false,loadSweepBound=false;
   const uniq=items=>[...new Set(items.filter(Boolean))];
   const nodesFor=def=>uniq(def.roots.flatMap(selector=>[...document.querySelectorAll(selector)]));
@@ -35,7 +40,9 @@
   function registerClosedBodyFamily(config={}){
     const id=String(config.id||"").trim();if(!id||registrations.some(reg=>reg.id===id))return registrations.find(reg=>reg.id===id)||null;
     const selectors=Object.freeze([...(config.selectors||[])].map(String));
-    const details=uniq(selectors.flatMap(selector=>[...document.querySelectorAll(selector)])).filter(node=>node instanceof HTMLDetailsElement);
+    const details=uniq(selectors.flatMap(selector=>[...document.querySelectorAll(selector)]))
+      .filter(node=>node instanceof HTMLDetailsElement)
+      .filter(node=>!protectedCockpitNode(node));
     const reg={id,label:String(config.label||id),selectors,details,records:[],registered_at:new Date().toISOString()};
     details.forEach(detail=>{const record=ensureRecord(reg,detail);record.registration_id=id;detail.querySelector(":scope > summary")?.addEventListener("click",()=>{if(!detail.open)restoreRecord(record);},true);detail.addEventListener("toggle",()=>{if(detail.open)restoreRecord(record);else detachRecord(record);});});
     registrations.push(reg);bindBridges();scheduleInitialSweep();restoreForHash(location.hash);return reg;
@@ -59,6 +66,6 @@
       })))
     })));
   }
-  const api=Object.freeze({build:BUILD,mode:"measurement-only-until-registered",definitions:DEFINITIONS,measurementSnapshot,residencySnapshot,registerClosedBodyFamily,restoreForHash,activeRegistrations:()=>registrations.length,clone_used:false,fetch_added:false,timer_added:false,observer_added:false,storage_write_added:false,engine_state_changed:false});
+  const api=Object.freeze({build:BUILD,mode:"measurement-only-until-registered",definitions:DEFINITIONS,measurementSnapshot,residencySnapshot,registerClosedBodyFamily,restoreForHash,activeRegistrations:()=>registrations.length,clone_used:false,fetch_added:false,timer_added:false,observer_added:false,storage_write_added:false,engine_state_changed:false,technical_reading_protected:true,protected_cockpit_selectors:PROTECTED_COCKPIT_SELECTORS});
   globalThis.ErithPresentationLifecycle=api;globalThis.ErithPresentationLifecycle40411=api;
 })();
