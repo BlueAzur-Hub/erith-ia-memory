@@ -50367,8 +50367,36 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    Build 29.3.06 : deterministic human-readable controller
    ============================================================ */
 
+
+
+/* ============================================================
+   40.3.120 — BASIC STATUS STRIP GEOMETRY LOCK
+   Presentation only. Second operator line in Basic.
+   ============================================================ */
+try {
+  globalThis.__AGENT_CRYPTO_BASIC_STATUS_403120__ = Object.freeze({
+    build: "40.3.120",
+    parent: "40.3.119",
+    scope: "Basic second operator/status line geometry only",
+    basic_navigation_changed: false,
+    status_order: Object.freeze(["Relancer maintenant", "Rafraîchir marché", "Décision", "Sources", "Chronos"]),
+    chronosxp_palette_preserved: true,
+    decision_source_typography_403118_preserved: true,
+    market_core_changed: false,
+    oracle_changed: false,
+    graph_context_v7_changed: false,
+    firefox_paint_changed: false,
+    window_manager_changed: false,
+    bridge_changed: false,
+    image_asset_changed: false,
+    new_timer: false,
+    new_observer: false,
+    new_network_owner: false
+  });
+} catch (_) {}
+
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.119";
+const ATLAS_BUILD = "40.3.120";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

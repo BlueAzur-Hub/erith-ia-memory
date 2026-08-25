@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.119";
-  const ADMIN_RELEASE = "AETHER FINAL CONSOLIDATION · ORACLE CORE + STATUS READABILITY + HIDDEN UI SLIM";
+  const ADMIN_BUILD = "40.3.120";
+  const ADMIN_RELEASE = "AETHER BASIC STATUS STRIP GEOMETRY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
