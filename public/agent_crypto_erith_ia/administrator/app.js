@@ -4100,6 +4100,9 @@ function atlasComparisonCompletionKey(ids = atlasComparisonIds(), period = Numbe
 }
 
 function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
+  if(globalThis.__atlasExternalChartContext403113?.active === true){
+    atlasExternalChartClear403113("canonical-comparison");
+  }
   if (atlasScannerTransaction && options.keepScanner !== true) {
     atlasScannerCancel("nouvelle sélection");
   }
@@ -5619,7 +5622,8 @@ function atlasChartV2EffectiveScale(){return atlasChartV2EffectiveView()==="base
    Graph Context V7 selection semantics are intentionally untouched.
    ============================================================ */
 function atlasChartV2OraclePresentationAllowed403112(){
-  return atlasV2Mode() !== "essential";
+  return atlasV2Mode() !== "essential"
+    && globalThis.__atlasExternalChartContext403113?.active !== true;
 }
 
 function atlasChartV2OracleVisible403112(){
@@ -11661,6 +11665,9 @@ function atlasScheduleChartAutoRetry(c, period, reason = "réponse réseau tardi
 
 function atlasPrepareChartSelection(coin, period = 1, options = {}) {
   if (!coin?.id) return;
+  if(globalThis.__atlasExternalChartContext403113?.active === true){
+    atlasExternalChartClear403113("canonical-chart-selection");
+  }
   if (state.chartEngineV2?.controller) {
     try { state.chartEngineV2.controller.abort(); } catch {}
   }
@@ -11680,6 +11687,12 @@ function atlasPrepareChartSelection(coin, period = 1, options = {}) {
 }
 
 async function renderAnalystPanel(options = {}) {
+  if(globalThis.__atlasExternalChartContext403113?.active === true && options.external403113 !== true){
+    return atlasExternalChartRender403113(
+      atlasExternalChartPeriod403113(),
+      {forceRefresh:false}
+    );
+  }
   if ((atlasScannerTransaction || atlasScannerQueuedRequest) && options.allowDuringScanner !== true) return;
   if (!options.forceSingle && atlasComparisonActive()) return renderComparisonAnalystPanel(options);
   const c = getSelectedCoin();
@@ -12056,6 +12069,12 @@ function atlasChartCacheCoverageByPeriod() {
 
 function atlasApplyRequestedPeriod(period) {
   const nextPeriod = Number(period || 1);
+
+  if(globalThis.__atlasExternalChartContext403113?.active === true){
+    void atlasExternalChartRender403113(nextPeriod,{forceRefresh:false});
+    return;
+  }
+
   const pendingPreset = atlasScannerTransaction?.preset || atlasScannerQueuedRequest?.preset || null;
   const committedPreset = String(state.dataBroker?.comparison?.preset || "");
   const scannerPreset = pendingPreset || (ATLAS_SCANNER_PRESETS.has(committedPreset) ? committedPreset : null);
@@ -16063,6 +16082,334 @@ function atlasMarketExternalTruth403100(rawQuery) {
   return atlasMarketExactTop250403100(q) ? "" : "Entrée : recherche exacte hors Top 250";
 }
 
+
+
+/* ============================================================
+   40.3.113 — EXTERNAL CHART CONTEXT
+
+   Real historical chart for an out-of-Top250 asset, without promoting the
+   asset into canonical Market / comparison / Oracle / Graph Context V7.
+   ============================================================ */
+const atlasExternalChartContext403113 = {
+  active:false,
+  coin:null,
+  period:365,
+  result:null,
+  resultPeriod:null,
+  loading:false,
+  error:"",
+  token:0,
+  controller:null,
+  openedAt:0
+};
+
+globalThis.__atlasExternalChartContext403113 = atlasExternalChartContext403113;
+
+function atlasExternalChartActive403113(){
+  return atlasExternalChartContext403113.active === true
+    && !!atlasExternalChartContext403113.coin?.id;
+}
+
+function atlasExternalChartPeriod403113(){
+  const raw=Number(atlasExternalChartContext403113.period||365);
+  return [1,7,30,60,90,365,36500].includes(raw)?raw:365;
+}
+
+function atlasExternalChartClear403113(reason="canonical-action"){
+  const ctx=atlasExternalChartContext403113;
+  try{ctx.controller?.abort?.();}catch(_){}
+  ctx.controller=null;
+  ctx.loading=false;
+  ctx.active=false;
+  ctx.coin=null;
+  ctx.result=null;
+  ctx.resultPeriod=null;
+  ctx.error="";
+  ctx.token+=1;
+
+  try{
+    document.documentElement.dataset.atlasExternalChart="off";
+    document.body.dataset.atlasExternalChart="off";
+    document.body.dataset.atlasExternalChartReason=String(reason||"canonical-action");
+  }catch(_){}
+
+  try{atlasChartV2SyncControls?.();}catch(_){}
+  return true;
+}
+
+function atlasExternalChartDetail403113(coin,period,result=null,mode="loading"){
+  if(!coin)return;
+
+  const periodLabel=atlasChartPeriodLabel(period);
+  const metrics=result?.integrity?.metrics||{};
+  const points=Number(metrics.pointCount??result?.series?.length??0);
+  const coverageHours=Number(metrics.coverageHours);
+  const coverage=Number.isFinite(coverageHours)
+    ? (coverageHours<48?`${coverageHours.toFixed(1)} h`:`${(coverageHours/24).toFixed(1)} j`)
+    : "—";
+  const lastPrice=Number(metrics.lastPrice);
+  const lastAt=Number(metrics.lastTimestamp);
+  const firstAt=Number(metrics.firstTimestamp);
+  const priceNow=Number(coin?.priceEur??coin?.price);
+
+  setText(els.selectedAssetTitle,`${coin.name} — ${coin.symbol} · HORS TOP 250`);
+  atlasRenderCompactDetailSummary(coin);
+
+  if(els.assetDetailGrid){
+    els.assetDetailGrid.innerHTML=`
+      <div><b>Actif</b><span>${escapeHtml(coin.name)} (${escapeHtml(coin.symbol)})</span></div>
+      <div><b>Statut</b><span>Hors Top 250 · contexte graphique externe</span></div>
+      <div><b>Rang snapshot</b><span>${escapeHtml(String(coin.rank??"—"))}</span></div>
+      <div><b>Prix snapshot EUR</b><span>${Number.isFinite(priceNow)?escapeHtml(atlasFormatEUR(priceNow)):"—"}</span></div>
+      <div><b>Période graphique</b><span>${escapeHtml(periodLabel)}</span></div>
+      <div><b>Source historique</b><span>${escapeHtml(result?.source||"CoinGecko market_chart EUR")}</span></div>
+      <div><b>Points / couverture</b><span>${points||"—"} · ${escapeHtml(coverage)}</span></div>
+      <div><b>Premier point</b><span>${Number.isFinite(firstAt)?escapeHtml(atlasChartLabelFull(firstAt)):"—"}</span></div>
+      <div><b>Dernier point</b><span>${Number.isFinite(lastPrice)?escapeHtml(atlasFormatEUR(lastPrice)):"—"} · ${Number.isFinite(lastAt)?escapeHtml(atlasChartLabelFull(lastAt)):"—"}</span></div>
+      <div><b>Intégrité</b><span>${mode==="valid"?"Validée":mode==="blocked"?"Indisponible":"Chargement"}</span></div>
+      <div><b>Oracle</b><span>Isolé · non alimenté par cet actif externe</span></div>
+      <div><b>Comparaison</b><span>Non injecté dans le panier canonique</span></div>`;
+  }
+
+  atlasSetCompactReading(
+    `Lecture : ${String(coin.symbol||coin.name||"ACTIF").toUpperCase()} est affiché dans un contexte historique externe isolé du Top 250 et de l’Oracle.`
+  );
+}
+
+function atlasExternalChartDraw403113(coin,period,result){
+  const safeResult={
+    ...result,
+    coin,
+    periodDays:Number(period||365),
+    externalChart403113:true,
+    externalMarket:true
+  };
+  const key=`external:${coin.id}:${Number(period||365)}`;
+
+  drawLineChart(
+    els.mainChart,
+    safeResult.series,
+    `${coin.symbol} ${atlasChartPeriodLabel(period)} · EXTERNE`,
+    safeResult,
+    key
+  );
+
+  atlasExternalChartDetail403113(coin,period,safeResult,"valid");
+
+  if(els.chartCaption){
+    const points=Number(safeResult?.integrity?.metrics?.pointCount??safeResult?.series?.length??0);
+    atlasSetChartCaptionText(
+      `${coin.symbol} · Hors Top 250 · historique réel ${atlasChartPeriodLabel(period)} · ${points} pts · ${safeResult.source||"CoinGecko"} · contexte externe isolé.`
+    );
+  }
+  return safeResult;
+}
+
+async function atlasExternalChartRender403113(period=atlasExternalChartPeriod403113(),options={}){
+  const ctx=atlasExternalChartContext403113;
+  const coin=ctx.coin;
+  if(!ctx.active||!coin?.id)return false;
+
+  const normalized=[1,7,30,60,90,365,36500].includes(Number(period))
+    ?Number(period)
+    :365;
+
+  if(ctx.loading&&ctx.period===normalized&&options.force!==true){
+    return true;
+  }
+
+  ctx.period=normalized;
+
+  if(ctx.result&&ctx.resultPeriod===normalized&&options.forceRefresh!==true){
+    atlasChartSetPeriodButtons(normalized,false);
+    atlasExternalChartDraw403113(coin,normalized,ctx.result);
+    return true;
+  }
+
+  try{ctx.controller?.abort?.();}catch(_){}
+  const controller=new AbortController();
+  const token=++ctx.token;
+  ctx.controller=controller;
+  ctx.loading=true;
+  ctx.error="";
+
+  if(state.chartEngineV2?.controller){
+    try{state.chartEngineV2.controller.abort();}catch(_){}
+  }
+  state.chartRenderToken+=1;
+  if(state.chartEngineV2){
+    state.chartEngineV2.activeRequestKey="";
+    state.chartEngineV2.loading=false;
+  }
+
+  document.documentElement.dataset.atlasExternalChart="on";
+  document.body.dataset.atlasExternalChart="on";
+
+  atlasChartV2SyncControls();
+  atlasChartSetPeriodButtons(normalized,true);
+  setText(els.selectedAssetTitle,`${coin.name} — ${coin.symbol} · HORS TOP 250`);
+  atlasExternalChartDetail403113(coin,normalized,null,"loading");
+
+  drawChartLoading(
+    els.mainChart,
+    `${coin.symbol} ${atlasChartPeriodLabel(normalized)} · historique externe`,
+    `Atlas charge la série historique réelle CoinGecko sans modifier le Top 250, la comparaison ni l’Oracle.`
+  );
+
+  if(els.chartCaption){
+    atlasSetChartCaptionText(
+      `${coin.symbol} · historique externe ${atlasChartPeriodLabel(normalized)} · chargement réel en cours.`
+    );
+  }
+
+  const stored=atlasGetStoredChartResult(coin,normalized,"coingecko");
+  if(stored){
+    const storedWithCoin={...stored,coin,externalChart403113:true};
+    ctx.result=storedWithCoin;
+    ctx.resultPeriod=normalized;
+    atlasExternalChartDraw403113(coin,normalized,storedWithCoin);
+    if(!atlasChartNeedsRefresh(stored,normalized)){
+      ctx.loading=false;
+      ctx.controller=null;
+      atlasChartSetPeriodButtons(normalized,false);
+      return true;
+    }
+  }
+
+  try{
+    const result=await fetchChartSeries(coin,normalized,{
+      signal:controller.signal,
+      fallback:stored
+    });
+
+    if(token!==ctx.token||!ctx.active||ctx.coin?.id!==coin.id||ctx.period!==normalized){
+      return false;
+    }
+
+    if(result?.blocked||!Array.isArray(result?.series)||!result.series.length){
+      if(stored){
+        const fallback={
+          ...stored,
+          coin,
+          externalChart403113:true,
+          refreshWarning:"Actualisation externe indisponible · dernière série réelle conservée."
+        };
+        ctx.result=fallback;
+        ctx.resultPeriod=normalized;
+        atlasExternalChartDraw403113(coin,normalized,fallback);
+      }else{
+        ctx.error=String(result?.technicalReason||result?.reason||"Historique externe indisponible");
+        atlasExternalChartDetail403113(coin,normalized,result,"blocked");
+        drawChartMessage(
+          els.mainChart,
+          "blocked",
+          `${coin.symbol} · historique externe indisponible`,
+          ctx.error,
+          "Aucune série n’est inventée. Réessaie plus tard."
+        );
+        if(els.chartCaption){
+          atlasSetChartCaptionText(
+            `${coin.symbol} · historique externe temporairement indisponible · aucune donnée synthétique.`
+          );
+        }
+      }
+      return false;
+    }
+
+    const safe={...result,coin,externalChart403113:true};
+    atlasStoreChartResult(coin,normalized,safe,"coingecko");
+    ctx.result=safe;
+    ctx.resultPeriod=normalized;
+    atlasExternalChartDraw403113(coin,normalized,safe);
+    return true;
+  }catch(error){
+    if(error?.name==="AbortError")return false;
+    if(token!==ctx.token||!ctx.active)return false;
+
+    ctx.error=String(error?.message||error||"Historique externe indisponible");
+
+    if(stored){
+      const fallback={
+        ...stored,
+        coin,
+        externalChart403113:true,
+        refreshWarning:"Actualisation externe indisponible · dernière série réelle conservée."
+      };
+      ctx.result=fallback;
+      ctx.resultPeriod=normalized;
+      atlasExternalChartDraw403113(coin,normalized,fallback);
+    }else{
+      atlasExternalChartDetail403113(coin,normalized,null,"blocked");
+      drawChartMessage(
+        els.mainChart,
+        "blocked",
+        `${coin.symbol} · historique externe indisponible`,
+        ctx.error,
+        "Aucune série n’est inventée. Réessaie plus tard."
+      );
+    }
+    return false;
+  }finally{
+    if(token===ctx.token){
+      ctx.loading=false;
+      ctx.controller=null;
+      atlasChartSetPeriodButtons(normalized,false);
+    }
+  }
+}
+
+function atlasExternalChartOpen403113(coin,period=365){
+  if(!atlasMarketHelpIsExternal403104(coin)||!coin?.id)return false;
+
+  const ctx=atlasExternalChartContext403113;
+  try{ctx.controller?.abort?.();}catch(_){}
+
+  ctx.active=true;
+  ctx.coin={...coin,externalChart403113:true};
+  ctx.period=[1,7,30,60,90,365,36500].includes(Number(period))?Number(period):365;
+  ctx.result=null;
+  ctx.resultPeriod=null;
+  ctx.loading=false;
+  ctx.error="";
+  ctx.openedAt=Date.now();
+
+  document.documentElement.dataset.atlasExternalChart="on";
+  document.body.dataset.atlasExternalChart="on";
+
+  atlasChartV2SyncControls();
+  void atlasExternalChartRender403113(ctx.period,{force:true});
+
+  document.getElementById("analyste")?.scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+  return true;
+}
+
+globalThis.AtlasExternalChart403113=Object.freeze({
+  build:"40.3.113",
+  open:atlasExternalChartOpen403113,
+  render:atlasExternalChartRender403113,
+  clear:atlasExternalChartClear403113,
+  state:()=>({
+    active:atlasExternalChartContext403113.active,
+    coin_id:atlasExternalChartContext403113.coin?.id||null,
+    symbol:atlasExternalChartContext403113.coin?.symbol||null,
+    period:atlasExternalChartContext403113.period,
+    loading:atlasExternalChartContext403113.loading,
+    error:atlasExternalChartContext403113.error||null
+  }),
+  canonical_selected_coin_mutation:false,
+  canonical_comparison_mutation:false,
+  graph_context_v7_mutation:false,
+  oracle_candidate_injection:false,
+  top250_mutation:false,
+  historical_cache_reused:true,
+  default_period_days:365,
+  new_timer:false,
+  new_observer:false
+});
+
 function atlasMarketExternalRowMarkup403100(rawQuery) {
   const q = String(rawQuery || "").trim();
   if (!q || atlasMarketExternal403100.query.toLowerCase() !== q.toLowerCase()) return "";
@@ -16097,7 +16444,12 @@ function atlasMarketExternalRowMarkup403100(rawQuery) {
     <td class="spark-cell"><small>EXTERNE</small></td>
     <td class="market-col-advanced">—</td>
     <td class="market-col-advanced">Observer</td>
-    <td><div class="market-row-actions"><a href="${escapeHtml(cg)}" target="_blank" rel="noopener noreferrer">CoinGecko ↗</a></div></td>
+    <td><div class="market-row-actions">
+      <button type="button"
+        data-market-external-chart403113="${escapeHtml(c.id)}"
+        title="Afficher l’historique réel dans un contexte graphique externe isolé">Graphique</button>
+      <a href="${escapeHtml(cg)}" target="_blank" rel="noopener noreferrer">CoinGecko ↗</a>
+    </div></td>
   </tr>`;
 }
 
@@ -17388,6 +17740,16 @@ function renderMarketTable() {
     atlasMarketHandleAction(action, state.coins.find(c => c.id === b.dataset.coinId), e);
     if (["open","compare"].includes(action)) atlasGraphContextV7CommitMarket(`handler-market-${action}`);
   }));
+
+  els.marketRows.querySelectorAll("[data-market-external-chart403113]").forEach(button => {
+    button.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      const id=String(button.dataset.marketExternalChart403113||"");
+      const coin=atlasMarketHelpCoinResolve403104(id);
+      if(coin)atlasExternalChartOpen403113(coin,365);
+    });
+  });
 }
 
 function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="11" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
@@ -32720,7 +33082,7 @@ function atlasMarketHelpDefinition(row) {
         <span><b>Pourquoi cette décision</b><em>${escapeHtml(external403104 ? "Actif hors univers canonique Top 250 · lecture factuelle du snapshot public étendu uniquement." : atlasActionReasonForCoin(coin))}</em></span>
       </div>
       <div class="atlas-help-market-action ${external403104 ? "" : (compared ? "is-remove" : "is-add")}">${external403104
-        ? "Hors Top 250 · fiche d’observation · non injecté dans le graphique, Oracle, Watchlist ou comparaison."
+        ? "Hors Top 250 · graphique historique externe disponible · non injecté dans Oracle, Watchlist ou comparaison."
         : (compared
           ? `Sélectionné ${selection.indexOf(coin.id) + 1}/${selection.length} · clique la ${interactionSurface} ou appuie sur Entrée pour retirer`
           : `Non sélectionné · clique la ${interactionSurface} ou appuie sur Entrée pour ajouter · ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES}`)}</div>`
@@ -49048,7 +49410,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.112";
+const ATLAS_BUILD = "40.3.113";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -59070,5 +59432,35 @@ try{
     new_timer:false,
     new_observer:false,
     new_network_owner:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_EXTERNAL_CHART_403113__=Object.freeze({
+    build:"40.3.113",
+    parent:"40.3.112",
+    architecture:"isolated visual chart context",
+    default_period_days:365,
+    period_buttons:Object.freeze([1,7,30,60,90,365,36500]),
+    state_selectedCoinId_mutation:false,
+    state_coins_mutation:false,
+    comparison_mutation:false,
+    graph_context_v7_mutation:false,
+    oracle_candidate_injection:false,
+    oracle_visible_while_external:false,
+    canonical_state_restored_on_next_canonical_action:true,
+    historical_source:"existing CoinGecko market_chart route + existing chart cache",
+    synthetic_history:false,
+    rejected_403105_coupling_absent:true,
+    view_parity_403112_preserved:true,
+    oracle_same_asset_lock_403106_preserved:true,
+    fiche_positioning_changed:false,
+    target_top_hover_changed:false,
+    market_core_changed:false,
+    oracle_math_changed:false,
+    new_timer:false,
+    new_observer:false,
+    new_network_primitive:false
   });
 }catch(_){}
