@@ -1,4 +1,13 @@
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis atlas-oracle-suite" id="oracle-analysis-suite" data-collapse-key="oracle-analysis-suite" data-layout-family="analysis">
+/* Agent-Crypto @erith.IA — 40.4.2
+   ORACLE PRESENTATION EXTRACTION / PARSER-BLOCKING TRANSITION MOUNT
+   Generated transport mirror of views/oracle.html for boot-parity.
+   No fetch, timer, observer, engine duplication or state mutation. */
+(()=>{
+  "use strict";
+  const BUILD="40.4.2";
+  const host=document.getElementById("oracle-view-host");
+  if(!host) return;
+  const html=`    <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis atlas-oracle-suite" id="oracle-analysis-suite" data-collapse-key="oracle-analysis-suite" data-layout-family="analysis">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-oracle-suite-title"><strong>Oracle — Analyse prospective & preuves</strong><small>Calibration · Evidence · Source Health · Infrastructure · Runtime</small></span>
@@ -95,4 +104,23 @@
 
 
       </div>
-    </details>
+    </details>`;
+  host.insertAdjacentHTML("beforebegin",html);
+  host.remove();
+  try{
+    globalThis.__AGENT_CRYPTO_ORACLE_PRESENTATION_MOUNT_40402__=Object.freeze({
+      build:BUILD,
+      source:"./views/oracle.html",
+      transport:"parser-blocking generated mirror",
+      extracted_suite:"Oracle — Analyse prospective & preuves",
+      inserted_before_downstream_runtime:true,
+      network_fetch:false,
+      new_timer:false,
+      new_observer:false,
+      duplicate_engine:false,
+      oracle_engine_moved:false,
+      evidence_history_moved:false,
+      runtime_state_reset:false
+    });
+  }catch(_){}
+})();
