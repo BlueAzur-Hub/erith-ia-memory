@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.6";
+  const ADMIN_BUILD = "40.4.7";
   const ADMIN_RELEASE = "AETHER ORACLE COMPACT SUMMARY + ACCORDION TEXT CONTINUITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

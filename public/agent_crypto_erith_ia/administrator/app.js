@@ -2511,7 +2511,7 @@ function atlasV2ApplyMode(mode, options = {}) {
     mode = "essential";
   }
   const next = ATLAS_V2_ALLOWED_MODES.has(mode) ? mode : "essential";
-  const visualMode = next === "intermediate" ? "advanced" : next;
+  const visualMode = "advanced"; // 40.4.7: Classic/Intermediate/Admin share one visual shell; atlasView owns scope.
   const administrator = next === "advanced" && atlasAccessIsAuthorized();
   const operator = next === "intermediate";
   const expanded = administrator || operator;
@@ -2556,7 +2556,7 @@ function atlasV2ApplyMode(mode, options = {}) {
 
   const basicToggle = document.getElementById("btnBasicViewToggle");
   const intermediateToggle = document.getElementById("btnIntermediateViewToggle");
-  if (basicToggle) basicToggle.setAttribute("aria-label", "Ouvrir la vue basique");
+  if (basicToggle) basicToggle.setAttribute("aria-label", "Ouvrir la vue classique");
   if (intermediateToggle) intermediateToggle.setAttribute("aria-label", "Ouvrir la vue intermédiaire");
 
   atlasV2ApplySectionVisibility(next);
@@ -7284,7 +7284,7 @@ function atlasRuntimeVisibilityAttribution40226(refreshByName,state,limit=5){
 }
 function atlasRuntimeTopHidden40225(refreshByName){const row=atlasRuntimeVisibilityAttribution40226(refreshByName,"hidden",1)[0]||null;return row?{name:row.name,hidden:row.calls,hidden_ms:row.total_ms}:null;}
 function atlasRuntimeAttributionLabel40226(row){return row?`${row.name} ${Number(row.calls||0)}×/${atlasRuntimeFmtMs40214(row.total_ms)}`:"—";}
-function atlasRuntimeRender40214(){const stateNode=document.getElementById("atlasRuntimeState40214"),note=document.getElementById("atlasRuntimeNote40214");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState40214;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow40214());const r=atlasRuntimeSnapshot40214();const view={essential:"BASIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"} · W ${r.windows.visible}/${r.windows.minimized}/${r.windows.hidden}`;if(note){const o=r.oracle,n=r.navigation,v=o.refresh_visibility||{},top=atlasRuntimeTopHidden40225(o.refresh_by_name),rTop=atlasRuntimeVisibilityAttribution40226(o.refresh_by_name,"minimized",1)[0]||null,cTop=atlasRuntimeVisibilityAttribution40226(o.refresh_by_name,"collapsed",1)[0]||null;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs40214(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs40214(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs40214(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.outcome_max_ms)} · Evidence ${o.evidence_reads} req · DB ${o.evidence_db_scans}× μ${atlasRuntimeFmtMs40214(o.evidence_db_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.evidence_db_max_ms)} · reuse ${o.evidence_cache_hits+o.evidence_inflight_hits} · Explorer ${o.evidence_explorer_rendered?"ON":"OFF"}/${o.evidence_explorer_deferred_skips} skip · Flow ${r.market_flow_runtime?`${String(r.market_flow_runtime.profile||"—").toUpperCase()}/${String(r.market_flow_runtime.state||"—").toUpperCase()}`:"—"} · UI V ${atlasRuntimeVisibilityLabel40225(v.visible)} · R ${atlasRuntimeVisibilityLabel40225(v.minimized)} · X ${atlasRuntimeVisibilityLabel40225(v.hidden)} · C ${atlasRuntimeVisibilityLabel40225(v.collapsed)}${rTop?` · R top ${atlasRuntimeAttributionLabel40226(rTop)}`:""}${cTop?` · C top ${atlasRuntimeAttributionLabel40226(cTop)}`:""}${top?` · X top ${top.name} ${top.hidden}×/${atlasRuntimeFmtMs40214(top.hidden_ms)}`:""}`;}return r;}
+function atlasRuntimeRender40214(){const stateNode=document.getElementById("atlasRuntimeState40214"),note=document.getElementById("atlasRuntimeNote40214");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState40214;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow40214());const r=atlasRuntimeSnapshot40214();const view={essential:"CLASSIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"} · W ${r.windows.visible}/${r.windows.minimized}/${r.windows.hidden}`;if(note){const o=r.oracle,n=r.navigation,v=o.refresh_visibility||{},top=atlasRuntimeTopHidden40225(o.refresh_by_name),rTop=atlasRuntimeVisibilityAttribution40226(o.refresh_by_name,"minimized",1)[0]||null,cTop=atlasRuntimeVisibilityAttribution40226(o.refresh_by_name,"collapsed",1)[0]||null;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs40214(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs40214(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs40214(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.outcome_max_ms)} · Evidence ${o.evidence_reads} req · DB ${o.evidence_db_scans}× μ${atlasRuntimeFmtMs40214(o.evidence_db_mean_ms)}/max ${atlasRuntimeFmtMs40214(o.evidence_db_max_ms)} · reuse ${o.evidence_cache_hits+o.evidence_inflight_hits} · Explorer ${o.evidence_explorer_rendered?"ON":"OFF"}/${o.evidence_explorer_deferred_skips} skip · Flow ${r.market_flow_runtime?`${String(r.market_flow_runtime.profile||"—").toUpperCase()}/${String(r.market_flow_runtime.state||"—").toUpperCase()}`:"—"} · UI V ${atlasRuntimeVisibilityLabel40225(v.visible)} · R ${atlasRuntimeVisibilityLabel40225(v.minimized)} · X ${atlasRuntimeVisibilityLabel40225(v.hidden)} · C ${atlasRuntimeVisibilityLabel40225(v.collapsed)}${rTop?` · R top ${atlasRuntimeAttributionLabel40226(rTop)}`:""}${cTop?` · C top ${atlasRuntimeAttributionLabel40226(cTop)}`:""}${top?` · X top ${top.name} ${top.hidden}×/${atlasRuntimeFmtMs40214(top.hidden_ms)}`:""}`;}return r;}
 window.addEventListener("pageshow",event=>{
   const s=atlasRuntimeObservatoryState40214;
   s.pageshow_count+=1;
@@ -50454,7 +50454,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.6";
+const ATLAS_BUILD = "40.4.7";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60736,6 +60736,35 @@ try{
     source_health_changed:false,
     graph_context_v7_changed:false,
     market_core_changed:false,
+    window_manager_changed:false,
+    images_changed:false,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_CLASSIC_VISUAL_PARITY_40407__=Object.freeze({
+    build:"40.4.7",
+    parent:"40.4.6",
+    user_label:"Vue Classique",
+    internal_mode_key:"essential",
+    visual_mode:"advanced",
+    scope_authority:"atlasView",
+    classic_navigation:Object.freeze(["Livecheck","Marché","Graphique","Sources"]),
+    atlas_hidden:true,
+    oracle_hidden:true,
+    operator_dock_hidden:true,
+    classic_capability_scope_preserved:true,
+    intermediate_visual_shell_shared:true,
+    administrator_visual_shell_shared:true,
+    storage_migration:false,
+    market_core_changed:false,
+    oracle_engine_changed:false,
+    atlas_engine_changed:false,
+    graph_context_v7_changed:false,
     window_manager_changed:false,
     images_changed:false,
     new_fetch:false,
