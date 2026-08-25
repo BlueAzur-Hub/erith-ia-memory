@@ -50454,7 +50454,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.0";
+const ATLAS_BUILD = "40.4.1";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60647,3 +60647,27 @@ try{globalThis.__AGENT_CRYPTO_ORACLE_CORE_403117__=Object.freeze({build:"40.3.11
 
 
 try{globalThis.__AGENT_CRYPTO_FINAL_CONSOLIDATION_403119__=Object.freeze({build:"40.3.119",parent:"40.3.118",cascade:Object.freeze(["40.3.117 Oracle independent core","40.3.118 Decision/Sources/Chronos readability","40.3.119 hidden Oracle UI slim"]),market_extended_native_403116_preserved:true,market_1000_render_storm_fix_preserved:true,oracle_on_hidden_engine_continues:true,oracle_off_stops_new_independent_work:true,extended_oracle_injection:false,graph_context_v7_changed:false,fiche_crypto_changed:false,target_top_click_changed:false,market_core_changed:false,window_manager_changed:false,images_changed:false,stylesheets_changed:false,new_timer:false,new_observer:false,new_network_owner:false});}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_ATLAS_EXTRACTION_40401__=Object.freeze({
+    build:"40.4.1",
+    parent:"40.4.0",
+    scope:"presentation-family-02-only",
+    canonical_fragment:"./views/atlas.html",
+    runtime_transport:"./js/views/atlas-presentation.js",
+    index_monolith_reduced:true,
+    atlas_dom_order_preserved:true,
+    atlas_ids_preserved:true,
+    atlas_truth_state_memory_shared:true,
+    oracle_changed:false,
+    market_core_changed:false,
+    graph_context_v7_changed:false,
+    window_manager_changed:false,
+    bridge_changed:false,
+    images_changed:false,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false
+  });
+}catch(_){}

@@ -1,9 +1,13 @@
-<!-- Agent-Crypto 40.4.1 — ATLAS PRESENTATION FRAGMENT
-     Canonical extracted Administrator family 02 presentation.
-     Presentation only: Atlas truth/state/memory remain in shared runtime.
-     Runtime transport in 40.4.1 is parser-blocking js/views/atlas-presentation.js
-     so all historical IDs exist before downstream runtime scripts execute. -->
-    <section class="atlas-layout-family atlas-layout-family-intelligence" aria-labelledby="atlasLayoutFamily02">
+/* Agent-Crypto @erith.IA — 40.4.1
+   ATLAS PRESENTATION EXTRACTION / PARSER-BLOCKING TRANSITION MOUNT
+   Generated transport mirror of views/atlas.html for boot-parity.
+   No fetch, timer, observer, engine duplication or state mutation. */
+(()=>{
+  "use strict";
+  const BUILD="40.4.1";
+  const host=document.getElementById("atlas-view-host");
+  if(!host) return;
+  const html=`    <section class="atlas-layout-family atlas-layout-family-intelligence" aria-labelledby="atlasLayoutFamily02">
       <span class="atlas-layout-family-index" aria-hidden="true">02</span>
       <div class="atlas-layout-family-copy">
         <p>PARCOURS ADMINISTRATEUR</p>
@@ -933,3 +937,22 @@
       </div>
     </details>
 
+`;
+  host.insertAdjacentHTML("beforebegin",html);
+  host.remove();
+  try{
+    globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_MOUNT_40401__=Object.freeze({
+      build:BUILD,
+      source:"./views/atlas.html",
+      transport:"parser-blocking generated mirror",
+      extracted_family:"02 · Intelligence, mémoire & création",
+      inserted_before_downstream_runtime:true,
+      network_fetch:false,
+      new_timer:false,
+      new_observer:false,
+      duplicate_engine:false,
+      atlas_truth_state_moved:false,
+      runtime_state_reset:false
+    });
+  }catch(_){}
+})();
