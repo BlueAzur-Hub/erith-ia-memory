@@ -50454,7 +50454,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.3";
+const ATLAS_BUILD = "40.4.4";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60664,6 +60664,30 @@ try{
     market_core_changed:false,
     graph_context_v7_changed:false,
     window_manager_changed:false,
+    bridge_changed:false,
+    images_changed:false,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_SYSTEM_EXTRACTION_40404__=Object.freeze({
+    build:"40.4.4",
+    parent:"40.4.3",
+    scope:"presentation-family-04-plus-grey-ownership",
+    canonical_fragment:"./views/system.html",
+    runtime_transport:"./js/views/system-presentation.js",
+    index_monolith_reduced:true,
+    family04_runtime_order:Object.freeze(["04","storage","grey-plate-forensic","simulation","commandes","backend","safety","physical-security"]),
+    grey_plate_forensic_family_owned:true,
+    market_core_changed:false,
+    oracle_changed:false,
+    atlas_changed:false,
+    graph_context_v7_changed:false,
+    window_manager_core_changed:false,
     bridge_changed:false,
     images_changed:false,
     new_fetch:false,

@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.3";
+  const ADMIN_BUILD = "40.4.4";
   const ADMIN_RELEASE = "AETHER HEADER 100% + MAIN CONTENT 99% WIDTH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -426,6 +426,25 @@
       .map(node => entry(node));
   }
 
+  // 40.4.4 — Grey Plate Forensic is a real member of family 04.
+  // 40.3.93 introduced the forensic panel after the canonical 40.3.20 family
+  // membership list had already been frozen, so Reduce/Hide/Detach could leave
+  // the probe visible outside its 04 owner. Keep the historical 40.3.20 helper
+  // untouched and route the current definition through this explicit owner.
+  function systemEntriesCanonical40404() {
+    const shell = q("main.shell");
+    const header = q(".atlas-layout-family-system");
+    const storage = byId("atlasStorageHealth40198");
+    const greyForensic = byId("atlasGreyPlateForensic40393");
+    if (!shell || !(header instanceof HTMLElement)) return [];
+    const details = [...ADMIN_SYSTEM_KEYS_40308]
+      .map(key => shell.querySelector(`:scope > details[data-collapse-key="${key}"]`))
+      .filter(node => node instanceof HTMLDetailsElement);
+    return [header, storage, greyForensic, ...details]
+      .filter((node, index, list) => node instanceof HTMLElement && node.parentElement === shell && list.indexOf(node) === index)
+      .map(node => entry(node));
+  }
+
   const ADMIN_MISSION_KEYS_40302 = new Set([
     "fonds-erith", "association-erith", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"
   ]);
@@ -572,7 +591,7 @@
         // 40.3.20 — canonical docked order: 04 header -> Storage -> Simulation ->
         // Commands -> Backend -> Safety -> Physical Security. The header opens
         // the family it names; an explicit detach may move the real nodes.
-        resolveEntries: () => systemEntriesCanonical40320(),
+        resolveEntries: () => systemEntriesCanonical40404(),
         resolveAnchor: nodes => nodes.find(node => node.classList.contains("atlas-layout-family-system")) || nodes[0],
         resolveCompactNodes: () => [q(".atlas-layout-family-system")].filter(Boolean)
       },
@@ -2142,6 +2161,17 @@
       floating_backdrop_blur: false,
       floating_repeating_background: false,
       parent_build: "40.3.14"
+    });
+    globalThis.ErithFamily04GreyForensic40404 = Object.freeze({
+      build: "40.4.4",
+      parent_build: "40.4.3",
+      canonical_order: Object.freeze(["04", "storage", "grey-plate-forensic", "simulation", "commandes", "backend", "safety", "physical-security"]),
+      grey_plate_forensic_owner: "04 · Expérimentation & système",
+      compact_reduce_suppresses_grey_forensic: true,
+      hide_and_detach_follow_family04: true,
+      window_manager_core_file_changed: false,
+      ownership_definition_owner: "js/app.js",
+      system_presentation_fragment: "./views/system.html"
     });
     globalThis.ErithBridgePassivePerformance40317 = Object.freeze({
       build: "40.3.17",
