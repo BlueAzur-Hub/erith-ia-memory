@@ -16594,12 +16594,18 @@ function atlasMarketExternalRowMarkup403100(rawQuery) {
   const move24 = Number.isFinite(Number(c.change24h)) ? fmtPct(c.change24h) : "—";
   const move7 = Number.isFinite(Number(c.change7d)) ? fmtPct(c.change7d) : "—";
 
-  return `<tr class="asset-row atlas-market-external-row-403104"
+  const active403116=atlasMarketExtendedActive403116(c.id);
+
+  return `<tr class="asset-row atlas-market-external-row-403104 ${active403116?"is-selected is-compared":""}"
     data-market-external403100="${escapeHtml(c.id)}"
+    data-market-extended-toggle403116="${escapeHtml(c.id)}"
     data-market-help-id="${escapeHtml(c.id)}"
     data-crypto-id="${escapeHtml(c.id)}"
     tabindex="0"
-    aria-label="${escapeHtml(`${c.name} ${c.symbol}. Actif hors Top 250. Survol ou focus : Fiche Crypto.`)}">
+    role="button"
+    aria-selected="${active403116?"true":"false"}"
+    aria-pressed="${active403116?"true":"false"}"
+    aria-label="${escapeHtml(`${c.name} ${c.symbol}. Actif hors Top 250. Clic : ${active403116?"retirer le graphique externe":"afficher le graphique historique externe"}. Survol ou focus : Fiche Crypto.`)}">
     <td>${escapeHtml(rankLabel)}</td>
     <td><div class="coin-cell"><i class="market-identity-rail"></i>${image}<div><strong class="market-coin-name">${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">Hors Top 250</span></div></div></td>
     <td><div class="price-dual"><strong>${escapeHtml(price)}</strong><small>Snapshot public étendu · GitHub Actions</small></div></td>
@@ -16611,9 +16617,6 @@ function atlasMarketExternalRowMarkup403100(rawQuery) {
     <td class="market-col-advanced">—</td>
     <td class="market-col-advanced">Observer</td>
     <td><div class="market-row-actions">
-      <button type="button"
-        data-market-external-chart403113="${escapeHtml(c.id)}"
-        title="Afficher l’historique réel dans un contexte graphique externe isolé">Graphique</button>
       <a href="${escapeHtml(cg)}" target="_blank" rel="noopener noreferrer">CoinGecko ↗</a>
     </div></td>
   </tr>`;
@@ -17204,7 +17207,12 @@ function atlasEnsureMarketDomIntegrity() {
 
   if (!state.liveOk) state.liveOk = true;
 
-  const rowCount = els.marketRows?.querySelectorAll?.("tr[data-id]")?.length || 0;
+  // 40.3.116: every real Market row counts, including Extended rows.
+  // In .115 a page made only of ranks >250 looked "empty" here and triggered
+  // a complete tbody rebuild on every Binance spot patch.
+  const rowCount = els.marketRows?.querySelectorAll?.(
+    "tr[data-id], tr[data-market-extended-id403115], tr[data-market-external403100]"
+  )?.length || 0;
   if (!rowCount) renderMarketTable();
 
   const topFiveCount = els.top5Track?.querySelectorAll?.("[data-top5-id]")?.length || 0;
@@ -17215,6 +17223,47 @@ function atlasEnsureMarketDomIntegrity() {
 
   return true;
 }
+
+
+/* ============================================================
+   40.3.116 — EXTENDED MARKET FIREFOX RENDER-STORM OBSERVATORY
+   No timer. Counters are incremented only by existing calls.
+   ============================================================ */
+const atlasMarketRenderHealth403116={
+  integrity_checks:0,
+  integrity_repairs:0,
+  last_row_count:0,
+  last_limit:50
+};
+
+const atlasEnsureMarketDomIntegrity403116Core=atlasEnsureMarketDomIntegrity;
+atlasEnsureMarketDomIntegrity=function(){
+  atlasMarketRenderHealth403116.integrity_checks+=1;
+
+  const count=els.marketRows?.querySelectorAll?.(
+    "tr[data-id], tr[data-market-extended-id403115], tr[data-market-external403100]"
+  )?.length||0;
+
+  atlasMarketRenderHealth403116.last_row_count=count;
+  atlasMarketRenderHealth403116.last_limit=atlasMarketUniverseLimit403115();
+
+  if(!count&&atlasHasDisplayableMarket()){
+    atlasMarketRenderHealth403116.integrity_repairs+=1;
+  }
+
+  return atlasEnsureMarketDomIntegrity403116Core();
+};
+
+try{
+  globalThis.AtlasMarketRenderHealth403116=Object.freeze({
+    build:"40.3.116",
+    state:()=>({...atlasMarketRenderHealth403116}),
+    expected_1000_view_rows:"1..100 visible rows count as valid Market DOM",
+    old_bug:"extended-only page caused renderMarketTable() on each Binance spot patch",
+    timer_added:false,
+    observer_added:false
+  });
+}catch(_){}
 
 function atlasRenderMarketCoreAtomic() {
   if (!atlasHasDisplayableMarket()) {
@@ -18085,6 +18134,113 @@ function atlasMarketUniversePageShift403115(delta){
   return true;
 }
 
+
+
+/* ============================================================
+   40.3.116 — MARKET EXTENDED NATIVE ROW CLICK
+
+   Historical interaction principle:
+   the crypto row itself is the primary interaction surface.
+
+   CORE:
+     existing behavior remains byte-for-byte in its row handler:
+     atlasToggleComparisonCoin(c)
+
+   EXTENDED:
+     cannot enter canonical Comparison / Oracle.
+     Therefore row click toggles the isolated External Chart context:
+       first click  = show real external history
+       second click = remove external visual owner and restore canonical graph
+
+   Native Fiche hover/focus remains independent.
+   CoinGecko link remains a separate explicit action.
+   ============================================================ */
+
+function atlasMarketExtendedActive403116(coinId){
+  return globalThis.__atlasExternalChartContext403113?.active===true
+    && String(globalThis.__atlasExternalChartContext403113?.coin?.id||"")===String(coinId||"");
+}
+
+function atlasMarketExtendedVisual403116(coinId,active){
+  if(!els.marketRows)return;
+  const safe=CSS.escape(String(coinId||""));
+  els.marketRows
+    .querySelectorAll(`[data-market-extended-toggle403116="${safe}"]`)
+    .forEach(row=>{
+      row.classList.toggle("is-selected",!!active);
+      row.classList.toggle("is-compared",!!active);
+      row.setAttribute("aria-selected",active?"true":"false");
+      row.setAttribute("aria-pressed",active?"true":"false");
+    });
+}
+
+function atlasMarketExtendedToggle403116(coin){
+  if(!coin?.id||!atlasMarketHelpIsExternal403104(coin))return false;
+
+  if(atlasMarketExtendedActive403116(coin.id)){
+    atlasExternalChartClear403113("extended-row-toggle-off");
+    atlasMarketExtendedVisual403116(coin.id,false);
+
+    // Restore only the already-existing canonical graph state.
+    requestAnimationFrame(()=>{
+      void renderAnalystPanel({marketExtendedToggle403116:true});
+    });
+    return true;
+  }
+
+  const previous=globalThis.__atlasExternalChartContext403113?.coin?.id||null;
+  if(previous)atlasMarketExtendedVisual403116(previous,false);
+
+  const opened=atlasExternalChartOpen403113(coin,365);
+  if(opened)atlasMarketExtendedVisual403116(coin.id,true);
+  return opened;
+}
+
+function atlasMarketExtendedEnsureDelegation403116(){
+  if(!els.marketRows||els.marketRows.dataset.extendedDelegation403116==="1")return;
+
+  const activate=event=>{
+    const row=event.target?.closest?.("[data-market-extended-toggle403116]");
+    if(!row||!els.marketRows.contains(row))return;
+
+    // Native links/buttons keep their own action and never trigger the row.
+    if(event.target!==row&&event.target.closest("a,button,input,select,label"))return;
+
+    if(event.type==="keydown"){
+      if(!["Enter"," "].includes(event.key))return;
+      event.preventDefault();
+    }
+
+    const id=String(row.dataset.marketExtendedToggle403116||"");
+    const coin=atlasMarketUniverseFind403115(id);
+    if(!coin)return;
+
+    event.stopPropagation();
+    atlasMarketExtendedToggle403116(coin);
+  };
+
+  els.marketRows.addEventListener("click",activate);
+  els.marketRows.addEventListener("keydown",activate);
+  els.marketRows.dataset.extendedDelegation403116="1";
+}
+
+try{
+  globalThis.AtlasMarketExtendedNativeClick403116=Object.freeze({
+    build:"40.3.116",
+    toggle:atlasMarketExtendedToggle403116,
+    active:atlasMarketExtendedActive403116,
+    delegation:atlasMarketExtendedEnsureDelegation403116,
+    core_row_behavior_changed:false,
+    extended_row_click:"isolated chart toggle",
+    extended_second_click:"restore canonical chart",
+    separate_graph_button:false,
+    fiche_hover_preserved:true,
+    comparison_extended_injection:false,
+    oracle_extended_injection:false,
+    graph_context_v7_write:false
+  });
+}catch(_){}
+
 function atlasMarketExtendedUniverseRowMarkup403115(c){
   const rankLabel=Number.isFinite(Number(c?.rank))?String(c.rank):"—";
   const price=atlasFormatEUR(c?.priceEur??c?.price);
@@ -18094,13 +18250,19 @@ function atlasMarketExtendedUniverseRowMarkup403115(c){
   const move7=Number.isFinite(Number(c?.change7d))?fmtPct(c.change7d):"—";
   const cap=atlasMarketUniverseLimit403115();
 
-  return `<tr class="asset-row atlas-market-external-row-403104 atlas-market-extended-row-403115"
+  const active403116=atlasMarketExtendedActive403116(c.id);
+
+  return `<tr class="asset-row atlas-market-external-row-403104 atlas-market-extended-row-403115 ${active403116?"is-selected is-compared":""}"
     data-market-row-id403115="${escapeHtml(c.id)}"
     data-market-extended-id403115="${escapeHtml(c.id)}"
+    data-market-extended-toggle403116="${escapeHtml(c.id)}"
     data-market-help-id="${escapeHtml(c.id)}"
     data-crypto-id="${escapeHtml(c.id)}"
     tabindex="0"
-    aria-label="${escapeHtml(`${c.name} ${c.symbol}. Market Extended rang ${rankLabel} sur ${cap}. Survol ou focus : Fiche Crypto.`)}">
+    role="button"
+    aria-selected="${active403116?"true":"false"}"
+    aria-pressed="${active403116?"true":"false"}"
+    aria-label="${escapeHtml(`${c.name} ${c.symbol}. Market Extended rang ${rankLabel} sur ${cap}. Clic : ${active403116?"retirer le graphique externe":"afficher le graphique historique externe"}. Survol ou focus : Fiche Crypto.`)}">
     <td>${escapeHtml(rankLabel)}</td>
     <td><div class="coin-cell"><i class="market-identity-rail"></i>${image}<div><strong class="market-coin-name">${escapeHtml(c.name)}</strong><br><small>${escapeHtml(c.symbol)}</small><br><span class="asset-badge">Market Extended</span></div></div></td>
     <td><div class="price-dual"><strong>${escapeHtml(price)}</strong><small>Snapshot public étendu · GitHub Actions</small></div></td>
@@ -18112,9 +18274,6 @@ function atlasMarketExtendedUniverseRowMarkup403115(c){
     <td class="market-col-advanced">—</td>
     <td class="market-col-advanced">Observer</td>
     <td><div class="market-row-actions">
-      <button type="button"
-        data-market-external-chart403113="${escapeHtml(c.id)}"
-        title="Afficher l’historique réel dans le contexte graphique externe isolé">Graphique</button>
       <a href="${escapeHtml(cg)}" target="_blank" rel="noopener noreferrer">CoinGecko ↗</a>
     </div></td>
   </tr>`;
@@ -18314,15 +18473,7 @@ function renderMarketTable() {
     if(["open","compare"].includes(action))atlasGraphContextV7CommitMarket(`handler-market-${action}`);
   }));
 
-  els.marketRows.querySelectorAll("[data-market-external-chart403113]").forEach(button=>{
-    button.addEventListener("click",event=>{
-      event.preventDefault();
-      event.stopPropagation();
-      const id=String(button.dataset.marketExternalChart403113||"");
-      const coin=atlasMarketUniverseFind403115(id);
-      if(coin)atlasExternalChartOpen403113(coin,365);
-    });
-  });
+  atlasMarketExtendedEnsureDelegation403116();
 }
 function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="11" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
 }
@@ -50001,7 +50152,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.115";
+const ATLAS_BUILD = "40.3.116";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60157,5 +60308,34 @@ try{
     rejected_403105_coupling_absent:true,
     external_chart_403113_preserved:true,
     external_presentation_403114_preserved:true
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_MARKET_EXTENDED_NATIVE_403116__=Object.freeze({
+    build:"40.3.116",
+    parent:"40.3.115",
+    fixes:Object.freeze([
+      "Extended-only pages now count as valid Market DOM",
+      "Binance spot patches no longer rebuild a 100-row Extended tbody because canonical rows are absent",
+      "Extended crypto row itself toggles its isolated historical graph",
+      "second click on the same Extended row removes the external visual owner",
+      "separate Graphique button removed",
+      "one delegated Extended interaction handler replaces per-row graph-button handlers"
+    ]),
+    historical_core_row_handler_changed:false,
+    core_comparison_behavior_changed:false,
+    core_solo_behavior_changed:false,
+    extended_comparison_injection:false,
+    extended_oracle_injection:false,
+    graph_context_v7_changed:false,
+    market_universe_1000_403115_preserved:true,
+    external_chart_403113_preserved:true,
+    external_presentation_403114_preserved:true,
+    new_timer:false,
+    new_observer:false,
+    new_network_owner:false,
+    images_changed:false
   });
 }catch(_){}
