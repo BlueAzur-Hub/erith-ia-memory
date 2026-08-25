@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.10";
-  const ADMIN_RELEASE = "AETHER VERSION TRUTH + PUBLICATION IDENTITY LOCK";
+  const ADMIN_BUILD = "40.4.16";
+  const ADMIN_RELEASE = "AETHER ORACLE HEAVY SUBSECTION DEMAND RESIDENCY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
