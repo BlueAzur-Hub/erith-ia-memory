@@ -50424,8 +50424,37 @@ try {
   });
 } catch (_) {}
 
+
+
+/* ============================================================
+   40.3.122 — HEADER 100% + MAIN CONTENT 99% WIDTH LOCK
+   Presentation geometry only. Header untouched; docked page content widened.
+   ============================================================ */
+try {
+  globalThis.__AGENT_CRYPTO_MAIN_WIDTH_403122__ = Object.freeze({
+    build: "40.3.122",
+    parent: "40.3.121",
+    header_width_percent: 100,
+    main_docked_content_width_percent: 99,
+    header_navigation_changed: false,
+    shared_status_row_changed: false,
+    floating_window_geometry_changed: false,
+    market_core_changed: false,
+    oracle_changed: false,
+    atlas_changed: false,
+    graph_context_v7_changed: false,
+    firefox_paint_changed: false,
+    window_manager_changed: false,
+    bridge_changed: false,
+    images_changed: false,
+    new_timer: false,
+    new_observer: false,
+    new_network_owner: false
+  });
+} catch (_) {}
+
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.121";
+const ATLAS_BUILD = "40.3.122";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

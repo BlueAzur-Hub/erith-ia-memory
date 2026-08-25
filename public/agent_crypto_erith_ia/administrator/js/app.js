@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.3.121";
-  const ADMIN_RELEASE = "AETHER THREE-VIEW HEADER CONTINUITY + SHARED STATUS STRIP LOCK";
+  const ADMIN_BUILD = "40.3.122";
+  const ADMIN_RELEASE = "AETHER HEADER 100% + MAIN CONTENT 99% WIDTH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
