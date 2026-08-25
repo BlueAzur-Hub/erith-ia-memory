@@ -2566,13 +2566,13 @@ function atlasV2ApplyMode(mode, options = {}) {
   const liveSourcesCollapse = document.getElementById("liveSourcesCollapse");
   atlasSetHiddenAria40399(liveSourcesCollapse, false);
 
-  // 40.3.68 AETHER — shared BAR geometry, view-owned COMMAND scope.
-  // Basic keeps the same physical top bar but exposes only its daily commands:
-  // Livecheck · Marché · Graphique · Sources. Intermediate/Administrator restore
-  // Atlas, Oracle and the advanced command dock. No business engine is stopped.
+  // 40.3.121 AETHER — progressive capability reveal on one physical header.
+  // Basic: Livecheck · Marché · Graphique · Sources.
+  // Intermediate: Basic + Atlas · Oracle only.
+  // Administrator: Intermediate + full operator dock. No business engine is stopped.
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
-    const hide40368 = next === "essential";
-    atlasSetHiddenAria40399(element, hide40368);
+    const hide403121 = next !== "advanced";
+    atlasSetHiddenAria40399(element, hide403121);
   });
   const basicHiddenTargets40368 = new Set([
     "atlas-local-ai-collapse",
@@ -50395,8 +50395,37 @@ try {
   });
 } catch (_) {}
 
+
+
+/* ============================================================
+   40.3.121 — THREE-VIEW HEADER CONTINUITY + SHARED STATUS STRIP LOCK
+   Presentation authority only. No engine/network/storage/image change.
+   ============================================================ */
+try {
+  globalThis.__AGENT_CRYPTO_HEADER_CONTINUITY_403121__ = Object.freeze({
+    build: "40.3.121",
+    parent: "40.3.120",
+    basic: Object.freeze(["Livecheck", "Marché", "Graphique", "Sources"]),
+    intermediate: Object.freeze(["Livecheck", "Marché", "Graphique", "Atlas", "Oracle", "Sources"]),
+    administrator_adds: Object.freeze(["Décision", "Analyse", "Système", "Projets", "Vue", "Command Center"]),
+    status_row_shared: Object.freeze(["Relancer maintenant", "Rafraîchir marché", "Décision", "Sources", "Chronos"]),
+    source_last_in_navigation_family: true,
+    same_physical_header: true,
+    market_core_changed: false,
+    oracle_changed: false,
+    graph_context_v7_changed: false,
+    firefox_paint_changed: false,
+    window_manager_changed: false,
+    bridge_changed: false,
+    images_changed: false,
+    new_timer: false,
+    new_observer: false,
+    new_network_owner: false
+  });
+} catch (_) {}
+
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.120";
+const ATLAS_BUILD = "40.3.121";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
