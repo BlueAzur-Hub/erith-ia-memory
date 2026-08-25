@@ -1,31 +1,126 @@
-/* Agent-Crypto @erith.IA — 40.4.5
-   @ERITH.IA MISSIONS DE VIE PRESENTATION EXTRACTION / PARSER-BLOCKING TRANSITION MOUNT
-   Generated transport mirror of views/projects.html for boot-parity.
-   Includes the Missions de vie intro + five project programs only. Audience and Sources remain independent.
-   No fetch, timer, observer, engine duplication or state mutation. */
+/* Agent-Crypto @erith.IA — 40.4.20
+   PROJECT @ERITH.IA TRUE BODY LAZY HYDRATION / WINDOW MANAGER SHELL PARITY LOCK
+   The Missions hero + five top-level <details> shells are parser-mounted so canonical
+   layout, role visibility and Window Manager ownership remain available at boot.
+   Heavy project bodies are read from views/projects.html only when their own disclosure
+   is opened. One same-origin static fetch is shared and cached in memory for the session.
+   No timer, observer, engine duplication, storage write or business-state mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.4.5";
+  const BUILD="40.4.20";
+  const SOURCE="./views/projects.html";
   const host=document.getElementById("projects-view-host");
-  if(!host) return;
-  const html="    <section class=\"life-missions-intro glass\" id=\"missions-vie\" aria-labelledby=\"missions-vie-title\">\n      <img\n        class=\"life-missions-atmosphere\"\n        src=\"./assets/images/missions_de_vie_constellation_bg.png\"\n        alt=\"\"\n        width=\"2048\"\n        height=\"768\"\n        loading=\"lazy\"\n        decoding=\"async\"\n        fetchpriority=\"low\"\n        aria-hidden=\"true\"\n      />\n      <div class=\"life-missions-copy\">\n        <p class=\"eyebrow\">✦ ERITH.IA · MISSIONS DE VIE</p>\n        <h2 id=\"missions-vie-title\">Financer la création et protéger le vivant</h2>\n        <p>Ces cinq programmes sont des cadres de conception. Ils ne collectent aucun argent dans cette page, ne promettent aucun rendement et ne remplacent ni un conseil juridique ni les obligations fiscales. Chaque lancement réel exigera une structure, des comptes séparés, des partenaires vérifiés et un rapport d’impact public.</p>\n      </div>\n      <span class=\"pill warn\">Conception · aucun paiement actif</span>\n    </section>\n\n    <details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"fonds-erith\">\n      <summary class=\"atlas-collapse-summary\">\n        <span class=\"atlas-collapse-icon\" aria-hidden=\"true\">▶</span>\n        <span class=\"atlas-collapse-title\">✦ Fonds ERITH.IA — Crypto + Monnaies</span>\n        <span class=\"atlas-collapse-subtitle\">Financer l’infrastructure, la recherche et la création</span>\n      </summary>\n      <div class=\"atlas-collapse-body\">\n        <section class=\"panel glass life-project\" id=\"fonds-erith-ia\">\n          <div class=\"life-project-head\"><div><p class=\"eyebrow\">PROGRAMME 01</p><h2>Transformer une activité financière prudente en capacité de création</h2></div><span class=\"life-status\">Phase : simulation</span></div>\n          <div class=\"life-grid\">\n            <article><b>Mission</b><span>Financer les serveurs locaux, abonnements de données, stockage, développement, accessibilité, traduction et production d’@erith.IA.</span></article>\n            <article><b>Origines possibles</b><span>Résultats nets réellement réalisés, mécénat, subventions, prestations et dons autorisés — jamais les dépôts confiés par le public.</span></article>\n            <article><b>Comptabilité</b><span>Trésorerie séparée, journal des frais, fiscalité provisionnée, réserve de sécurité et validation humaine de chaque affectation.</span></article>\n            <article><b>Interdit au lancement</b><span>Promesse de rendement, gestion de fonds pour autrui, trading autonome, dette cachée, confusion entre simulation et argent réel.</span></article>\n          </div>\n          <div class=\"life-roadmap\"><span>1 · Observation</span><span>2 · Simulation</span><span>3 · Lecture exchange</span><span>4 · Ordre manuel borné</span><span>5 · Affectation auditée</span></div>\n          <p class=\"life-rule\"><b>Principe :</b> seuls des gains nets après frais, impôts, pertes et réserves peuvent être proposés au financement. L’interface publique ne reçoit aucune clé, aucun wallet et aucun ordre.</p>\n        </section>\n      </div>\n    </details>\n\n    <details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"association-erith\">\n      <summary class=\"atlas-collapse-summary\">\n        <span class=\"atlas-collapse-icon\" aria-hidden=\"true\">▶</span>\n        <span class=\"atlas-collapse-title\">⚖ Association ERITH.IA</span>\n        <span class=\"atlas-collapse-subtitle\">Architecture internationale, gouvernance non lucrative et relais locaux</span>\n      </summary>\n      <div class=\"atlas-collapse-body\">\n        <section class=\"panel glass life-project\" id=\"association-erith-ia\">\n          <div class=\"life-project-head\"><div><p class=\"eyebrow\">PROGRAMME 02</p><h2>Une structure internationale pour porter les missions d’intérêt général</h2></div><span class=\"life-status\">Étude Estonie · relais locaux</span></div>\n          <div class=\"life-grid\">\n            <article><b>Objet proposé</b><span>Éducation numérique, recherche ouverte, inclusion, protection de l’enfance, bien-être animal, biodiversité et soutien à des partenaires de terrain.</span></article>\n            <article><b>Siège candidat</b><span>Étudier une association estonienne MTÜ administrable en ligne. Ce choix reste soumis à validation juridique, bancaire, comptable et fiscale avant toute création.</span></article>\n            <article><b>Gouvernance</b><span>Au moins deux fondateurs pour une MTÜ, statuts clairs, conseil collégial, conflits d’intérêts déclarés, comptes annuels et fonds affectés par mission.</span></article>\n            <article><b>Relais France — option 1</b><span>Créer une association française distincte, soumise au droit français, avec ses propres dirigeants, comptes, conventions et responsabilités locales.</span></article>\n            <article><b>Relais France — option 2</b><span>Déclarer un établissement secondaire comparable à une succursale de la structure étrangère. Sa capacité reste limitée par le droit du pays d’origine et par le droit français.</span></article>\n            <article><b>Dons entre structures</b><span>La structure internationale pourra financer un relais français ou un partenaire local lorsque ce versement respecte les statuts des deux organismes, l’affectation du don et l’origine des fonds.</span></article>\n            <article><b>Reçus fiscaux français</b><span>Aucun reçu ne sera émis automatiquement. L’éligibilité dépendra de l’intérêt général, de la gestion désintéressée, de l’absence de cercle restreint et, de préférence, d’un rescrit fiscal préalable.</span></article>\n            <article><b>Séparation financière</b><span>Activité économique, dons, réserves et budgets Enfance, Animaux et Terre Vivante restent dans des comptes, journaux et rapports distincts.</span></article>\n            <article><b>Limite e-Residency</b><span>L’identité numérique estonienne facilite l’administration à distance, mais ne confère ni résidence physique ni résidence fiscale et ne supprime aucune obligation dans le pays de résidence.</span></article>\n          </div>\n          <div class=\"life-links\" aria-label=\"Sources officielles association\">\n            <a href=\"https://www.e-resident.gov.ee/blog/posts/how-to-start-a-non-profit-organisation-in-estonia/\" target=\"_blank\" rel=\"noopener noreferrer\">Estonie · créer une MTÜ</a>\n            <a href=\"https://www.e-resident.gov.ee/fr/\" target=\"_blank\" rel=\"noopener noreferrer\">e-Residency officielle</a>\n            <a href=\"https://ariregister.rik.ee/eng\" target=\"_blank\" rel=\"noopener noreferrer\">Registre estonien officiel</a>\n            <a href=\"https://www.associations.gouv.fr/lassociation-etrangere\" target=\"_blank\" rel=\"noopener noreferrer\">France · association étrangère</a>\n            <a href=\"https://www.associations.gouv.fr/dons-donations-et-legs\" target=\"_blank\" rel=\"noopener noreferrer\">France · dons et relais</a>\n            <a href=\"https://www.associations.gouv.fr/faq/thematiques/droits-des-associations/impots\" target=\"_blank\" rel=\"noopener noreferrer\">France · reçus fiscaux</a>\n          </div>\n          <p class=\"life-rule\"><b>Architecture proposée :</b> une structure internationale coordonne les missions ; un relais français distinct ou un établissement secondaire déclaré porte les actions en France. Chaque transfert possède une convention, une affectation, un justificatif et un contrôle. Aucun reçu fiscal ni avantage n’est promis avant validation officielle.</p>\n        </section>\n      </div>\n    </details>\n\n    <details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"aerith-enfance\">\n      <summary class=\"atlas-collapse-summary\">\n        <span class=\"atlas-collapse-icon\" aria-hidden=\"true\">▶</span>\n        <span class=\"atlas-collapse-title\">🕊 Aerith Enfance</span>\n        <span class=\"atlas-collapse-subtitle\">Protection, éducation et autonomie des enfants confiés</span>\n      </summary>\n      <div class=\"atlas-collapse-body\">\n        <section class=\"panel glass life-project\" id=\"aerith-enfance\">\n          <div class=\"life-project-head\"><div><p class=\"eyebrow\">PROGRAMME 03</p><h2>Soutenir les enfants protégés et les structures qui les accompagnent</h2></div><span class=\"life-status\">Partenariats requis</span></div>\n          <div class=\"life-grid\">\n            <article><b>Champ français</b><span>Travailler avec l’Aide sociale à l’enfance, les MECS, foyers de l’enfance, pouponnières, villages d’enfants et associations habilitées.</span></article>\n            <article><b>Actions finançables</b><span>Fournitures, accès numérique, culture, santé, soutien scolaire, mobilité, équipement des lieux de vie et accompagnement des jeunes majeurs.</span></article>\n            <article><b>Protection</b><span>Aucun contact direct non encadré avec des mineurs ; partenaires vérifiés, règles de signalement, honorabilité, consentement et minimisation des données.</span></article>\n            <article><b>Mesure d’impact</b><span>Nombre de structures soutenues, dépenses justifiées, bénéficiaires agrégés, continuité scolaire, accès aux soins et passage à l’autonomie.</span></article>\n          </div>\n          <div class=\"life-links\"><a href=\"https://solidarites.gouv.fr/protection-enfance\" target=\"_blank\" rel=\"noopener noreferrer\">Ministère · protection de l’enfance</a><a href=\"https://solidarites.gouv.fr/laide-sociale-lenfance-acteur-majeur-de-la-protection-de-lenfance\" target=\"_blank\" rel=\"noopener noreferrer\">ASE et établissements</a></div>\n          <p class=\"life-rule\"><b>Terminologie :</b> en France, le projet ne doit pas se limiter au mot « orphelinat ». La protection concerne aussi des enfants dont les parents sont vivants mais qui sont en danger ou ne peuvent temporairement assurer leur prise en charge.</p>\n        </section>\n      </div>\n    </details>\n\n    <details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"aerith-animaux\">\n      <summary class=\"atlas-collapse-summary\">\n        <span class=\"atlas-collapse-icon\" aria-hidden=\"true\">▶</span>\n        <span class=\"atlas-collapse-title\">🐾 Aerith Animaux</span>\n        <span class=\"atlas-collapse-subtitle\">Refuges, soins, familles d’accueil et lutte contre l’abandon</span>\n      </summary>\n      <div class=\"atlas-collapse-body\">\n        <section class=\"panel glass life-project\" id=\"aerith-animaux\">\n          <div class=\"life-project-head\"><div><p class=\"eyebrow\">PROGRAMME 04</p><h2>Renforcer les refuges et associations de protection animale</h2></div><span class=\"life-status\">Audit partenaires</span></div>\n          <div class=\"life-grid\">\n            <article><b>Urgences</b><span>Soins vétérinaires, nourriture, quarantaine, transports, stérilisation, identification et équipements liés aux vagues de chaleur.</span></article>\n            <article><b>Structures</b><span>Refuges déclarés, associations sans refuge et réseaux de familles d’accueil respectant les obligations administratives et sanitaires.</span></article>\n            <article><b>Prévention</b><span>Adoption responsable, lutte contre l’abandon, soutien à la stérilisation et information sur les besoins réels des animaux.</span></article>\n            <article><b>Traçabilité</b><span>Factures vétérinaires, nombre d’animaux aidés, durée de prise en charge, adoptions responsables et fonds d’urgence disponibles.</span></article>\n          </div>\n          <div class=\"life-links\"><a href=\"https://agriculture.gouv.fr/la-lutte-contre-labandon-des-animaux-de-compagnie\" target=\"_blank\" rel=\"noopener noreferrer\">Ministère · lutte contre l’abandon</a><a href=\"https://www.mesdemarches.agriculture.gouv.fr/demarches/particulier/vivre-avec-un-animal-de-compagnie/article/declarer-un-etablissement-d-302\" target=\"_blank\" rel=\"noopener noreferrer\">Déclaration refuge / association</a></div>\n        </section>\n      </div>\n    </details>\n\n    <details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"aerith-terre-vivante\">\n      <summary class=\"atlas-collapse-summary\">\n        <span class=\"atlas-collapse-icon\" aria-hidden=\"true\">▶</span>\n        <span class=\"atlas-collapse-title\">🌿 Aerith Terre Vivante</span>\n        <span class=\"atlas-collapse-subtitle\">Nature, biodiversité, eau, sols et éducation environnementale</span>\n      </summary>\n      <div class=\"atlas-collapse-body\">\n        <section class=\"panel glass life-project\" id=\"aerith-terre-vivante\">\n          <div class=\"life-project-head\"><div><p class=\"eyebrow\">PROGRAMME 05</p><h2>Protéger et restaurer les milieux vivants</h2></div><span class=\"life-status\">Cadre territorial</span></div>\n          <div class=\"life-grid\">\n            <article><b>Axes</b><span>Restauration d’habitats, biodiversité locale, eau et rivières, sols, pollinisateurs, forêts, littoral et réduction des déchets.</span></article>\n            <article><b>Méthode</b><span>Financer des projets territoriaux mesurables avec associations, scientifiques, collectivités et gestionnaires d’espaces naturels.</span></article>\n            <article><b>Éducation</b><span>Ateliers, données ouvertes, sciences participatives, contenus pédagogiques et équipements de terrain.</span></article>\n            <article><b>Indicateurs</b><span>Surface restaurée, habitats suivis, qualité de l’eau, espèces protégées, bénévoles mobilisés et résultats publiés sur plusieurs années.</span></article>\n          </div>\n          <div class=\"life-links\"><a href=\"https://www.ecologie.gouv.fr/politiques-publiques/participation-associations-dialogue-environnemental-agrement-habilitation\" target=\"_blank\" rel=\"noopener noreferrer\">Agrément environnement</a><a href=\"https://www.ecologie.gouv.fr/politiques-publiques/subventions-aux-associations\" target=\"_blank\" rel=\"noopener noreferrer\">Subventions aux associations</a></div>\n          <p class=\"life-rule\"><b>Règle d’impact :</b> financer moins de projets, mais exiger un objectif, une mesure initiale, un budget, un responsable, une preuve de réalisation et un suivi après financement.</p>\n        </section>\n      </div>\n    </details>\n\n\n";
-  host.insertAdjacentHTML("beforebegin",html);
+  if(!host)return;
+  const shellHtml="<section aria-labelledby=\"missions-vie-title\" class=\"life-missions-intro glass\" id=\"missions-vie\">\n<img alt=\"\" aria-hidden=\"true\" class=\"life-missions-atmosphere\" decoding=\"async\" fetchpriority=\"low\" height=\"768\" loading=\"lazy\" src=\"./assets/images/missions_de_vie_constellation_bg.png\" width=\"2048\"/>\n<div class=\"life-missions-copy\">\n<p class=\"eyebrow\">✦ ERITH.IA · MISSIONS DE VIE</p>\n<h2 id=\"missions-vie-title\">Financer la création et protéger le vivant</h2>\n<p>Ces cinq programmes sont des cadres de conception. Ils ne collectent aucun argent dans cette page, ne promettent aucun rendement et ne remplacent ni un conseil juridique ni les obligations fiscales. Chaque lancement réel exigera une structure, des comptes séparés, des partenaires vérifiés et un rapport d’impact public.</p>\n</div>\n<span class=\"pill warn\">Conception · aucun paiement actif</span>\n</section>\n\n<details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"fonds-erith\" data-project-lazy-shell-40420=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">✦ Fonds ERITH.IA — Crypto + Monnaies</span>\n<span class=\"atlas-collapse-subtitle\">Financer l’infrastructure, la recherche et la création</span>\n<span id=\"fonds-erith-ia\" data-project-lazy-anchor-40420=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span>\n</summary>\n<div class=\"atlas-collapse-body\" data-project-lazy-body-40420=\"fonds-erith\" data-project-hydration-40420=\"placeholder\"></div>\n</details>\n\n<details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"association-erith\" data-project-lazy-shell-40420=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">⚖ Association ERITH.IA</span>\n<span class=\"atlas-collapse-subtitle\">Architecture internationale, gouvernance non lucrative et relais locaux</span>\n<span id=\"association-erith-ia\" data-project-lazy-anchor-40420=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span>\n</summary>\n<div class=\"atlas-collapse-body\" data-project-lazy-body-40420=\"association-erith\" data-project-hydration-40420=\"placeholder\"></div>\n</details>\n\n<details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"aerith-enfance\" data-project-lazy-shell-40420=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">🕊 Aerith Enfance</span>\n<span class=\"atlas-collapse-subtitle\">Protection, éducation et autonomie des enfants confiés</span>\n<span id=\"aerith-enfance\" data-project-lazy-anchor-40420=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span>\n</summary>\n<div class=\"atlas-collapse-body\" data-project-lazy-body-40420=\"aerith-enfance\" data-project-hydration-40420=\"placeholder\"></div>\n</details>\n\n<details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"aerith-animaux\" data-project-lazy-shell-40420=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">🐾 Aerith Animaux</span>\n<span class=\"atlas-collapse-subtitle\">Refuges, soins, familles d’accueil et lutte contre l’abandon</span>\n<span id=\"aerith-animaux\" data-project-lazy-anchor-40420=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span>\n</summary>\n<div class=\"atlas-collapse-body\" data-project-lazy-body-40420=\"aerith-animaux\" data-project-hydration-40420=\"placeholder\"></div>\n</details>\n\n<details class=\"atlas-collapse glass life-project-collapse\" data-collapse-key=\"aerith-terre-vivante\" data-project-lazy-shell-40420=\"true\">\n<summary class=\"atlas-collapse-summary\">\n<span aria-hidden=\"true\" class=\"atlas-collapse-icon\">▶</span>\n<span class=\"atlas-collapse-title\">🌿 Aerith Terre Vivante</span>\n<span class=\"atlas-collapse-subtitle\">Nature, biodiversité, eau, sols et éducation environnementale</span>\n<span id=\"aerith-terre-vivante\" data-project-lazy-anchor-40420=\"true\" aria-hidden=\"true\" style=\"display:inline-block;width:0;height:0;overflow:hidden;pointer-events:none\"></span>\n</summary>\n<div class=\"atlas-collapse-body\" data-project-lazy-body-40420=\"aerith-terre-vivante\" data-project-hydration-40420=\"placeholder\"></div>\n</details>\n";
+  const KEYS=Object.freeze(["fonds-erith", "association-erith", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"]);
+  const ANCHORS=Object.freeze({"fonds-erith": "fonds-erith-ia", "association-erith": "association-erith-ia", "aerith-enfance": "aerith-enfance", "aerith-animaux": "aerith-animaux", "aerith-terre-vivante": "aerith-terre-vivante"});
+  let sourcePromise=null;
+  let sourceTemplate=null;
+  let sourceFetchCount=0;
+  let hydrationCount=0;
+  let lastError="";
+
+  host.insertAdjacentHTML("beforebegin",shellHtml);
   host.remove();
-  try{
-    globalThis.__AGENT_CRYPTO_PROJECTS_PRESENTATION_MOUNT_40405__=Object.freeze({
-      build:BUILD,
-      source:"./views/projects.html",
-      transport:"parser-blocking generated mirror",
-      extracted_family:"@erith.IA · Missions de vie",
-      programs:Object.freeze(["Fonds ERITH.IA","Association ERITH.IA","Aerith Enfance","Aerith Animaux","Aerith Terre Vivante"]),
-      audience_excluded:true,
-      sources_excluded:true,
-      inserted_before_downstream_runtime:true,
-      network_fetch:false,
-      new_timer:false,
-      new_observer:false,
-      duplicate_engine:false,
-      runtime_state_mutation:false
-    });
-  }catch(_){}
+
+  const detailsByKey=()=>Object.fromEntries(KEYS.map(key=>[key,document.querySelector(`details[data-project-lazy-shell-40420="true"][data-collapse-key="${key}"]`)]));
+
+  async function sourceDocument(){
+    if(sourceTemplate)return sourceTemplate;
+    if(sourcePromise)return sourcePromise;
+    sourceFetchCount+=1;
+    sourcePromise=fetch(SOURCE,{credentials:"same-origin",cache:"default"})
+      .then(response=>{if(!response.ok)throw new Error(`Projects source HTTP ${response.status}`);return response.text();})
+      .then(text=>{
+        const template=document.createElement("template");
+        template.innerHTML=text;
+        sourceTemplate=template;
+        lastError="";
+        return template;
+      })
+      .catch(error=>{lastError=String(error?.message||error||"Projects source unavailable");sourcePromise=null;throw error;});
+    return sourcePromise;
+  }
+
+  function reconcileAfterHydration(key){
+    try{globalThis.atlasV2ClassifySections?.();}catch(_ ){}
+    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation40312?.(mode);}catch(_ ){}
+    try{window.dispatchEvent(new CustomEvent("erith:projects-hydrated",{detail:{build:BUILD,key}}));}catch(_ ){}
+  }
+
+  async function hydrate(key){
+    key=String(key||"");
+    if(!KEYS.includes(key))return false;
+    const detail=document.querySelector(`details[data-project-lazy-shell-40420="true"][data-collapse-key="${key}"]`);
+    if(!(detail instanceof HTMLDetailsElement))return false;
+    const body=detail.querySelector(":scope > .atlas-collapse-body");
+    if(!(body instanceof HTMLElement))return false;
+    if(body.dataset.projectHydration40420==="ready")return true;
+    if(body.dataset.projectHydration40420==="loading"){
+      try{await sourcePromise;}catch(_ ){}
+      return body.dataset.projectHydration40420==="ready";
+    }
+    body.dataset.projectHydration40420="loading";
+    try{
+      const template=await sourceDocument();
+      const sourceDetail=template.content.querySelector(`details[data-collapse-key="${key}"]`);
+      const sourceBody=sourceDetail?.querySelector(":scope > .atlas-collapse-body");
+      if(!(sourceBody instanceof HTMLElement))throw new Error(`Projects body missing: ${key}`);
+      const children=[...sourceBody.childNodes].map(node=>node.cloneNode(true));
+      const anchorId=ANCHORS[key];
+      // Keep the canonical routing anchor in the always-connected summary shell.
+      // The autonomous source fragment retains its canonical id, but the hydrated clone
+      // must not create a duplicate id in the live document.
+      children.forEach(node=>{
+        if(!(node instanceof Element))return;
+        const matches=[];
+        if(node.id===anchorId)matches.push(node);
+        matches.push(...node.querySelectorAll(`[id="${CSS.escape(anchorId)}"]`));
+        matches.forEach(match=>{
+          match.dataset.projectSourceAnchor40420=anchorId;
+          match.removeAttribute("id");
+        });
+      });
+      body.replaceChildren(...children);
+      body.dataset.projectHydration40420="ready";
+      hydrationCount+=1;
+      reconcileAfterHydration(key);
+      return true;
+    }catch(error){
+      body.dataset.projectHydration40420="error";
+      body.dataset.projectHydrationError40420=String(error?.message||error||"unknown");
+      console.warn(`Agent-Crypto ${BUILD} · Project body hydration failed`,key,error);
+      return false;
+    }
+  }
+
+  function bindDetail(detail){
+    if(!(detail instanceof HTMLDetailsElement)||detail.dataset.projectLazyBound40420==="1")return;
+    detail.dataset.projectLazyBound40420="1";
+    const ensure=()=>{if(detail.open)hydrate(detail.dataset.collapseKey);};
+    detail.addEventListener("toggle",()=>{if(detail.open)queueMicrotask(ensure);});
+    // 40.4.20 parity bridge: the existing lifecycle emits this after restoring a
+    // demand-resident body. This covers programmatic opens used by the canonical
+    // router/Window Manager without adding a timer, observer or second lifecycle owner.
+    detail.addEventListener("erith:presentation-resident",ensure);
+  }
+  Object.values(detailsByKey()).forEach(bindDetail);
+
+  // A hash to an inner Project anchor opens the existing shell through the canonical
+  // app router; its toggle then hydrates only that body. No extra navigation owner.
+  function keyForHash(hash=location.hash){
+    const id=decodeURIComponent(String(hash||"").replace(/^#/,""));
+    return Object.entries(ANCHORS).find(([,anchor])=>anchor===id)?.[0]||"";
+  }
+  function hydrateHashIfOpen(){const key=keyForHash();if(!key)return;const detail=document.querySelector(`details[data-collapse-key="${key}"]`);if(detail?.open)hydrate(key);}
+  window.addEventListener("hashchange",hydrateHashIfOpen,{passive:true});
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",hydrateHashIfOpen,{once:true});else hydrateHashIfOpen();
+
+  function snapshot(){
+    const rows=KEYS.map(key=>{const detail=document.querySelector(`details[data-collapse-key="${key}"]`);const body=detail?.querySelector(":scope > .atlas-collapse-body");return Object.freeze({key,open:detail?.open===true,body_state:body?.dataset?.projectHydration40420||"detached-or-missing",anchor_present:!!document.getElementById(ANCHORS[key])});});
+    return Object.freeze({build:BUILD,source:SOURCE,strategy:"parser-shell + on-demand body hydration",full_source_tags:177,boot_shell_tags:42,deferred_tags:135,source_fetch_count:sourceFetchCount,hydration_count:hydrationCount,last_error:lastError||null,rows:Object.freeze(rows),window_manager_shell_parity:true,audience_excluded:true,sources_excluded:true,new_timer:false,new_observer:false,storage_write_added:false,business_engine_changed:false});
+  }
+  const api=Object.freeze({build:BUILD,source:SOURCE,ensureBody:hydrate,snapshot,keys:KEYS,anchors:ANCHORS,window_manager_shell_parity:true,network_fetch:"same-origin static source on first disclosure only",new_timer:false,new_observer:false,storage_write_added:false,business_engine_changed:false});
+  globalThis.ErithProjectsPresentation40420=api;
+  globalThis.__AGENT_CRYPTO_PROJECTS_PRESENTATION_MOUNT_40420__=snapshot();
 })();

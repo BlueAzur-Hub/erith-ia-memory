@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.19
+/* Agent-Crypto @erith.IA — 40.4.20
    RESIDENCY AUDIT TRUTH + OPERATOR EVIDENCE LOCK
    Read-only manual diagnostic. No automatic sweep, timer, observer, fetch,
    storage write, engine mutation or presentation mutation.
@@ -9,7 +9,7 @@
    The legacy cached_subtree_nodes alias is preserved and now means detached nodes. */
 (()=>{
   "use strict";
-  const BUILD="40.4.19";
+  const BUILD="40.4.20";
   const PROTECTED=Object.freeze(["#analyste","#detailPanel"]);
   const EXPECTED_FAMILIES=Object.freeze(["projects","operations","system","atlas","oracle"]);
   const now=()=>new Date().toISOString();

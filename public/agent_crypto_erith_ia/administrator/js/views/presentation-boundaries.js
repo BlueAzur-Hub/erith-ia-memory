@@ -1,15 +1,16 @@
-/* Agent-Crypto @erith.IA — 40.4.6
-   MODULAR PRESENTATION BOUNDARY / ATLAS 02 + ORACLE SUITE + OPERATIONS 03 + SYSTEM 04 + PROJECTS EXTRACTION
+/* Agent-Crypto @erith.IA — 40.4.20
+   MODULAR PRESENTATION BOUNDARY / PROJECTS LAZY-BODY TRANSITION TRUTH
    Presentation is externalized; shared truth/state/memory/engines remain in the main runtime. */
 (()=>{
   "use strict";
-  const BUILD="40.4.6";
+  const BUILD="40.4.20";
   const REGISTRY=Object.freeze({
     build:BUILD,
-    mode:"atlas-oracle-operations-system-projects-extracted-boot-parity",
+    mode:"atlas-oracle-operations-system-parser-mounted-projects-lazy-body",
     extraction_active:true,
     runtime_mutation:false,
-    network_fetch:false,
+    network_fetch:true,
+    network_fetch_scope:"Projects only: same-origin views/projects.html on first project disclosure",
     duplicate_engine:false,
     hosts:Object.freeze({atlas:"atlas-view-host",oracle:"oracle-view-host",operations:"operations-view-host",system:"system-view-host",projects:"projects-view-host"}),
     fragments:Object.freeze({atlas:"./views/atlas.html",oracle:"./views/oracle.html",operations:"./views/operations.html",system:"./views/system.html",projects:"./views/projects.html"}),
@@ -20,9 +21,8 @@
       suite:"Oracle — Analyse prospective & preuves",
       canonical_fragment:"./views/oracle.html",
       transport:"./js/views/oracle-presentation.js",
-      ui_continuity:"./js/views/oracle-ui-continuity.js",
       anchors:Object.freeze(["oracle-analysis-suite","oracle-lab-dashboard","oracle-infrastructure-observatory","oracle-evidence-explorer"]),
-      rule:"presentation moved; 40.4.6 restores valid collapsed live summary markup + exclusive heavy accordion; Oracle engine/Evidence/history remain shared and persistent"
+      rule:"presentation moved; Oracle engine/Evidence/history remain shared and persistent"
     }),
     atlas:Object.freeze({
       status:"external-presentation-parser-mounted",
@@ -49,12 +49,12 @@
       rule:"presentation moved; Grey Plate Forensic is explicitly owned by family 04; system/simulation/security logic remains shared in the main runtime"
     }),
     projects:Object.freeze({
-      status:"external-presentation-parser-mounted",
+      status:"external-presentation-shell-mounted-body-lazy",
       family:"@erith.IA · Missions de vie",
       canonical_fragment:"./views/projects.html",
       transport:"./js/views/projects-presentation.js",
       anchors:Object.freeze(["missions-vie","fonds-erith-ia","association-erith-ia","aerith-enfance","aerith-animaux","aerith-terre-vivante"]),
-      rule:"presentation moved; mission Window Manager ownership remains missionEntries40302; Audience and Sources remain independent top-level families"
+      rule:"Missions hero + five detail shells exist at boot for missionEntries40302; project bodies hydrate on first own disclosure from views/projects.html; Audience and Sources remain independent"
     }),
     invariants:Object.freeze([
       "one document",
@@ -65,12 +65,12 @@
       "one Atlas truth/state owner",
       "Atlas family 02 IDs exist before downstream runtime scripts execute",
       "Oracle suite IDs exist before downstream runtime scripts execute",
-      "Oracle collapsed summary remains inside valid summary phrasing content",
-      "Oracle heavy submenus are exclusive-open presentation only",
       "Operations family 03 IDs exist before downstream runtime scripts execute",
       "System family 04 IDs exist before downstream runtime scripts execute",
       "Grey Plate Forensic follows family 04 Reduce/Hide/Detach ownership",
-      "Missions de vie IDs exist before downstream runtime scripts execute",
+      "Missions hero + five project detail shells exist before downstream runtime scripts execute",
+      "Always-connected Project summary proxy anchors preserve role routing while bodies are detached or not yet hydrated",
+      "Project bodies are not parsed into the live DOM until their own disclosure opens",
       "Audience remains outside Missions de vie extraction",
       "Sources remain outside Missions de vie extraction",
       "view extraction must not reset retained runtime state",
@@ -78,11 +78,12 @@
     ])
   });
   function snapshot(){
+    const projectLazy=globalThis.ErithProjectsPresentation40420?.snapshot?.()||null;
     const ids=[...REGISTRY.oracle.anchors,...REGISTRY.atlas.anchors,...REGISTRY.operations.anchors,...REGISTRY.system.anchors,...REGISTRY.projects.anchors];
     const present=Object.fromEntries(ids.map(id=>[id,!!document.getElementById(id)]));
-    return Object.freeze({build:BUILD,mode:REGISTRY.mode,present,checked_at:new Date().toISOString()});
+    return Object.freeze({build:BUILD,mode:REGISTRY.mode,present,projects_lazy:projectLazy,checked_at:new Date().toISOString()});
   }
-  function publish(){try{globalThis.__AGENT_CRYPTO_PRESENTATION_BOUNDARY_SNAPSHOT_40406__=snapshot();}catch(_){}}
-  try{globalThis.AgentCryptoPresentationBoundaries40406=Object.freeze({...REGISTRY,snapshot});}catch(_){}
+  function publish(){try{globalThis.__AGENT_CRYPTO_PRESENTATION_BOUNDARY_SNAPSHOT_40405__=snapshot();}catch(_){}}
+  try{globalThis.AgentCryptoPresentationBoundaries40405=Object.freeze({...REGISTRY,snapshot});}catch(_){}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",publish,{once:true});else publish();
 })();
