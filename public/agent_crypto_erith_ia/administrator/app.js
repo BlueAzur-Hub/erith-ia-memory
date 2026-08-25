@@ -50427,12 +50427,12 @@ try {
 
 
 /* ============================================================
-   40.3.122 — HEADER 100% + MAIN CONTENT 99% WIDTH LOCK
+   40.4.0 — HEADER 100% + MAIN CONTENT 99% WIDTH LOCK
    Presentation geometry only. Header untouched; docked page content widened.
    ============================================================ */
 try {
   globalThis.__AGENT_CRYPTO_MAIN_WIDTH_403122__ = Object.freeze({
-    build: "40.3.122",
+    build: "40.4.0",
     parent: "40.3.121",
     header_width_percent: 100,
     main_docked_content_width_percent: 99,
@@ -50454,7 +50454,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.122";
+const ATLAS_BUILD = "40.4.0";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
