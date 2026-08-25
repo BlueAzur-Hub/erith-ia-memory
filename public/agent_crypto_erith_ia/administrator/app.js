@@ -50454,7 +50454,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.2";
+const ATLAS_BUILD = "40.4.3";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60651,7 +60651,7 @@ try{globalThis.__AGENT_CRYPTO_FINAL_CONSOLIDATION_403119__=Object.freeze({build:
 
 try{
   globalThis.__AGENT_CRYPTO_ATLAS_EXTRACTION_40401__=Object.freeze({
-    build:"40.4.2",
+    build:"40.4.3",
     parent:"40.4.0",
     scope:"presentation-family-02-only",
     canonical_fragment:"./views/atlas.html",
