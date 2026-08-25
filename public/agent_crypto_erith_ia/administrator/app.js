@@ -5596,9 +5596,19 @@ function atlasWriteChartV2Settings(){
 
 function atlasChartV2ComparisonMode(){return atlasComparisonActive();}
 
-function atlasChartV2EffectiveView(){return atlasChartV2ComparisonMode()?"base100":state.chartViewV2.view;}
+function atlasChartV2EffectiveView(){
+  if(atlasExternalChartActive403113()){
+    return atlasExternalPresentation403114().view;
+  }
+  return atlasChartV2ComparisonMode()?"base100":state.chartViewV2.view;
+}
 
-function atlasChartV2EffectiveScale(){return atlasChartV2EffectiveView()==="base100"?"linear":state.chartViewV2.scale;}
+function atlasChartV2EffectiveScale(){
+  if(atlasExternalChartActive403113()){
+    return atlasExternalPresentation403114().scale;
+  }
+  return atlasChartV2EffectiveView()==="base100"?"linear":state.chartViewV2.scale;
+}
 
 
 
@@ -5657,10 +5667,10 @@ try{
 }catch(_){}
 
 function atlasChartV2SyncControls() {
-  const comparison = atlasChartV2ComparisonMode();
+  const comparison = atlasChartV2PresentationComparisonMode403114();
   const view = atlasChartV2EffectiveView();
   const scale = atlasChartV2EffectiveScale();
-  const legendActive = comparison ? state.chartViewV2.comparisonLegend : state.chartViewV2.legend;
+  const legendActive = atlasChartV2PresentationLegend403114();
 
   document.querySelectorAll("[data-chart-view]").forEach(button => {
     const active = button.dataset.chartView === view;
@@ -5677,7 +5687,7 @@ function atlasChartV2SyncControls() {
   });
 
   document.querySelectorAll("[data-chart-display='volume']").forEach(button => {
-    const active = state.chartViewV2.volume && !comparison;
+    const active = atlasChartV2PresentationVolume403114() && !comparison;
     button.classList.toggle("is-active", active);
     button.disabled = comparison;
     button.setAttribute("aria-pressed", active ? "true" : "false");
@@ -5688,7 +5698,7 @@ function atlasChartV2SyncControls() {
     button.setAttribute("aria-pressed", legendActive ? "true" : "false");
   });
 
-  const analysisActive = state.chartViewV2.analysis !== false;
+  const analysisActive = atlasChartV2PresentationAnalysis403114();
   document.querySelectorAll("[data-chart-display='analysis']").forEach(button => {
     button.classList.toggle("is-active", analysisActive);
     button.setAttribute("aria-pressed", analysisActive ? "true" : "false");
@@ -5826,6 +5836,14 @@ function atlasChartV2RedrawFromBroker() {
 }
 
 function atlasChartV2SetOption(kind, value) {
+  if(
+    atlasExternalChartActive403113()
+    && ["view","scale","volume","legend","analysis"].includes(String(kind||""))
+  ){
+    atlasExternalChartSetPresentation403114(kind,value);
+    return;
+  }
+
   const comparison = atlasChartV2ComparisonMode();
   let oracleToggle = false;
 
@@ -6660,7 +6678,8 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
   const firstPrice = rows[0].price;
   const view = atlasChartV2EffectiveView();
   const scaleType = atlasChartV2EffectiveScale();
-  const showVolume = state.chartViewV2.volume && !atlasChartV2ComparisonMode();
+  const showVolume = atlasChartV2PresentationVolume403114()
+    && !atlasChartV2PresentationComparisonMode403114();
 
   const points = rows.map(row => ({
     x: row.t,
@@ -6689,7 +6708,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
     result
   );
   state.chartEngineV2.lastRenderedKey = chartKey;
-  state.chartEngineV2.lastFingerprint = `${atlasChartResultFingerprint(result)}:${view}:${scaleType}:${state.chartViewV2.volume}:${atlasChartV2ComparisonMode()?state.chartViewV2.comparisonLegend:state.chartViewV2.legend}`;
+  state.chartEngineV2.lastFingerprint = `${atlasChartResultFingerprint(result)}:${view}:${scaleType}:${atlasChartV2PresentationVolume403114()}:${atlasChartV2PresentationLegend403114()}`;
 
   if (window.Chart) {
     const ctx = canvas.getContext("2d");
@@ -16100,7 +16119,20 @@ const atlasExternalChartContext403113 = {
   error:"",
   token:0,
   controller:null,
-  openedAt:0
+  openedAt:0,
+
+  // 40.3.114 — ephemeral presentation state.
+  // Never persisted into chartViewV2 / Graph Context V7.
+  view403114:"price",
+  scale403114:"linear",
+  volume403114:true,
+  legend403114:false,
+  analysis403114:true,
+
+  // Paint/churn observatory.
+  lastPresentationKey403114:"",
+  drawCount403114:0,
+  suppressedRedraws403114:0
 };
 
 globalThis.__atlasExternalChartContext403113 = atlasExternalChartContext403113;
@@ -16109,6 +16141,108 @@ function atlasExternalChartActive403113(){
   return atlasExternalChartContext403113.active === true
     && !!atlasExternalChartContext403113.coin?.id;
 }
+
+
+function atlasExternalPresentation403114(){
+  const ctx=atlasExternalChartContext403113;
+  return {
+    view:ctx.view403114==="base100"?"base100":"price",
+    scale:ctx.view403114==="base100"
+      ?"linear"
+      :(ctx.scale403114==="logarithmic"?"logarithmic":"linear"),
+    volume:ctx.volume403114!==false,
+    legend:ctx.legend403114===true,
+    analysis:ctx.analysis403114!==false
+  };
+}
+
+function atlasChartV2PresentationComparisonMode403114(){
+  return atlasExternalChartActive403113()
+    ? false
+    : atlasChartV2ComparisonMode();
+}
+
+function atlasChartV2PresentationVolume403114(){
+  return atlasExternalChartActive403113()
+    ? atlasExternalPresentation403114().volume
+    : state.chartViewV2.volume;
+}
+
+function atlasChartV2PresentationLegend403114(){
+  if(atlasExternalChartActive403113()){
+    return atlasExternalPresentation403114().legend;
+  }
+  return atlasChartV2ComparisonMode()
+    ? state.chartViewV2.comparisonLegend
+    : state.chartViewV2.legend;
+}
+
+function atlasChartV2PresentationAnalysis403114(){
+  return atlasExternalChartActive403113()
+    ? atlasExternalPresentation403114().analysis
+    : state.chartViewV2.analysis !== false;
+}
+
+function atlasExternalChartPresentationKey403114(coin,period,result){
+  const p=atlasExternalPresentation403114();
+  return [
+    String(coin?.id||""),
+    Number(period||365),
+    atlasChartResultFingerprint(result),
+    p.view,
+    p.scale,
+    p.volume?1:0,
+    p.legend?1:0,
+    p.analysis?1:0
+  ].join("|");
+}
+
+function atlasExternalChartSetPresentation403114(kind,value){
+  const ctx=atlasExternalChartContext403113;
+  if(!atlasExternalChartActive403113())return false;
+
+  if(kind==="view"){
+    ctx.view403114=value==="base100"?"base100":"price";
+    if(ctx.view403114==="base100")ctx.scale403114="linear";
+  }else if(kind==="scale"){
+    if(ctx.view403114!=="base100"){
+      ctx.scale403114=value==="logarithmic"?"logarithmic":"linear";
+    }
+  }else if(kind==="volume"){
+    ctx.volume403114=!ctx.volume403114;
+  }else if(kind==="legend"){
+    ctx.legend403114=!ctx.legend403114;
+  }else if(kind==="analysis"){
+    ctx.analysis403114=!ctx.analysis403114;
+  }else{
+    return false;
+  }
+
+  atlasChartV2SyncControls();
+  void atlasExternalChartRender403113(
+    atlasExternalChartPeriod403113(),
+    {forceRefresh:false, presentation403114:true}
+  );
+  return true;
+}
+
+try{
+  globalThis.AtlasExternalPresentation403114=Object.freeze({
+    build:"40.3.114",
+    presentation:atlasExternalPresentation403114,
+    set:atlasExternalChartSetPresentation403114,
+    state:()=>({
+      active:atlasExternalChartActive403113(),
+      ...atlasExternalPresentation403114(),
+      draws:atlasExternalChartContext403113.drawCount403114||0,
+      suppressed_redraws:atlasExternalChartContext403113.suppressedRedraws403114||0
+    }),
+    canonical_chartViewV2_write:false,
+    graph_context_v7_write:false,
+    underlying_comparison_forces_base100:false,
+    repeated_identical_canvas_redraw:false
+  });
+}catch(_){}
 
 function atlasExternalChartPeriod403113(){
   const raw=Number(atlasExternalChartContext403113.period||365);
@@ -16126,6 +16260,13 @@ function atlasExternalChartClear403113(reason="canonical-action"){
   ctx.resultPeriod=null;
   ctx.error="";
   ctx.token+=1;
+
+  ctx.view403114="price";
+  ctx.scale403114="linear";
+  ctx.volume403114=true;
+  ctx.legend403114=false;
+  ctx.analysis403114=true;
+  ctx.lastPresentationKey403114="";
 
   try{
     document.documentElement.dataset.atlasExternalChart="off";
@@ -16185,14 +16326,29 @@ function atlasExternalChartDraw403113(coin,period,result){
     externalMarket:true
   };
   const key=`external:${coin.id}:${Number(period||365)}`;
-
-  drawLineChart(
-    els.mainChart,
-    safeResult.series,
-    `${coin.symbol} ${atlasChartPeriodLabel(period)} · EXTERNE`,
-    safeResult,
-    key
+  const presentationKey403114=atlasExternalChartPresentationKey403114(
+    coin,
+    period,
+    safeResult
   );
+
+  const alreadyPainted403114 =
+    atlasExternalChartContext403113.lastPresentationKey403114===presentationKey403114
+    && !!state.chartEngineV2?.realChart;
+
+  if(alreadyPainted403114){
+    atlasExternalChartContext403113.suppressedRedraws403114+=1;
+  }else{
+    drawLineChart(
+      els.mainChart,
+      safeResult.series,
+      `${coin.symbol} ${atlasChartPeriodLabel(period)} · EXTERNE`,
+      safeResult,
+      key
+    );
+    atlasExternalChartContext403113.lastPresentationKey403114=presentationKey403114;
+    atlasExternalChartContext403113.drawCount403114+=1;
+  }
 
   atlasExternalChartDetail403113(coin,period,safeResult,"valid");
 
@@ -16373,6 +16529,13 @@ function atlasExternalChartOpen403113(coin,period=365){
   ctx.error="";
   ctx.openedAt=Date.now();
 
+  ctx.view403114="price";
+  ctx.scale403114="linear";
+  ctx.volume403114=true;
+  ctx.legend403114=false;
+  ctx.analysis403114=true;
+  ctx.lastPresentationKey403114="";
+
   document.documentElement.dataset.atlasExternalChart="on";
   document.body.dataset.atlasExternalChart="on";
 
@@ -16397,7 +16560,10 @@ globalThis.AtlasExternalChart403113=Object.freeze({
     symbol:atlasExternalChartContext403113.coin?.symbol||null,
     period:atlasExternalChartContext403113.period,
     loading:atlasExternalChartContext403113.loading,
-    error:atlasExternalChartContext403113.error||null
+    error:atlasExternalChartContext403113.error||null,
+    presentation:atlasExternalPresentation403114(),
+    draws:atlasExternalChartContext403113.drawCount403114||0,
+    suppressed_redraws:atlasExternalChartContext403113.suppressedRedraws403114||0
   }),
   canonical_selected_coin_mutation:false,
   canonical_comparison_mutation:false,
@@ -49410,7 +49576,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.113";
+const ATLAS_BUILD = "40.3.114";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -59462,5 +59628,45 @@ try{
     new_timer:false,
     new_observer:false,
     new_network_primitive:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_EXTERNAL_PRESENTATION_403114__=Object.freeze({
+    build:"40.3.114",
+    parent:"40.3.113",
+    findings:Object.freeze([
+      "parked canonical comparison could force external single chart into Base100",
+      "external view controls could mutate canonical chartViewV2 and Graph Context V7",
+      "generic runtime refreshes could redraw identical external Chart.js canvas"
+    ]),
+    fixes:Object.freeze([
+      "external visual comparison mode is always single",
+      "external view/scale/volume/legend/analysis are ephemeral",
+      "external control changes never persist into Graph Context V7",
+      "external presentation fingerprint suppresses identical redraws"
+    ]),
+    default_external_view:"price",
+    default_external_scale:"linear",
+    default_external_volume:true,
+    canonical_state_write:false,
+    graph_context_v7_write:false,
+    oracle_candidate_write:false,
+    top250_write:false,
+    rejected_403105_coupling_absent:true,
+    corrected_view_parity_403112_preserved:true,
+    external_chart_403113_preserved:true,
+    fiche_positioning_changed:false,
+    target_top_hover_changed:false,
+    market_core_changed:false,
+    oracle_math_changed:false,
+    evidence_retention_changed:false,
+    source_history_changed:false,
+    window_manager_changed:false,
+    images_changed:false,
+    new_timer:false,
+    new_observer:false,
+    new_network_owner:false
   });
 }catch(_){}
