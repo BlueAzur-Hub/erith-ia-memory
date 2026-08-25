@@ -2633,6 +2633,17 @@ function atlasV2ApplyMode(mode, options = {}) {
     if (marketPanel) marketPanel.dataset.marketColumns = state.chartViewV2?.marketColumns || "essential";
   }
 
+  atlasSetDataset40399(
+    document.documentElement,
+    "atlasOraclePresentation",
+    next === "essential" ? "hidden-by-view" : "operator-state"
+  );
+  atlasSetDataset40399(
+    document.body,
+    "atlasOraclePresentation",
+    next === "essential" ? "hidden-by-view" : "operator-state"
+  );
+
   atlasChartV2SyncControls?.();
   if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
 
@@ -5586,6 +5597,61 @@ function atlasChartV2EffectiveView(){return atlasChartV2ComparisonMode()?"base10
 
 function atlasChartV2EffectiveScale(){return atlasChartV2EffectiveView()==="base100"?"linear":state.chartViewV2.scale;}
 
+
+
+/* ============================================================
+   40.3.112 — BASIC VIEW ORACLE PRESENTATION ISOLATION
+
+   CONTRACT FROM THE EXISTING UI LINEAGE
+   -------------------------------------
+   Basic:
+     Livecheck · Marché · Graphique · Sources
+     public presentation only
+
+   Intermediate / Administrator:
+     operator surfaces may expose Oracle
+
+   IMPORTANT:
+   state.chartViewV2.oracle is an operator preference, not a Basic-view flag.
+   Basic must therefore HIDE Oracle without writing oracle=false.
+   Returning to Intermediate/Admin restores the exact previous Oracle state.
+
+   Graph Context V7 selection semantics are intentionally untouched.
+   ============================================================ */
+function atlasChartV2OraclePresentationAllowed403112(){
+  return atlasV2Mode() !== "essential";
+}
+
+function atlasChartV2OracleVisible403112(){
+  return atlasChartV2OraclePresentationAllowed403112()
+    && state.chartViewV2.oracle !== false;
+}
+
+try{
+  globalThis.AtlasViewParity403112=Object.freeze({
+    build:"40.3.112",
+    base:"40.3.111",
+    basic_top_navigation:Object.freeze(["Livecheck","Marché","Graphique","Sources"]),
+    basic_oracle_control_visible:false,
+    basic_oracle_panel_visible:false,
+    operator_oracle_preference_mutated_on_basic_switch:false,
+    graph_context_v7_changed:false,
+    graph_selection_semantics_changed:false,
+    user_clear_semantics_changed:false,
+    intermediate_oracle_restored_from_state:true,
+    administrator_oracle_restored_from_state:true,
+    rejected_403105_external_graph_absent:true,
+    fiche_crypto_changed:false,
+    target_top_hover_changed:false,
+    market_core_changed:false,
+    oracle_math_changed:false,
+    new_css_override:false,
+    new_timer:false,
+    new_observer:false,
+    new_network_owner:false
+  });
+}catch(_){}
+
 function atlasChartV2SyncControls() {
   const comparison = atlasChartV2ComparisonMode();
   const view = atlasChartV2EffectiveView();
@@ -5629,16 +5695,20 @@ function atlasChartV2SyncControls() {
     analysisOverlay.setAttribute("aria-hidden", analysisActive ? "false" : "true");
   }
 
-  const oracleActive = state.chartViewV2.oracle !== false;
+  const oracleStoredActive = state.chartViewV2.oracle !== false;
+  const oraclePresentationAllowed403112 = atlasChartV2OraclePresentationAllowed403112();
+  const oracleVisible403112 = oraclePresentationAllowed403112 && oracleStoredActive;
+
   document.querySelectorAll("[data-chart-display='oracle']").forEach(button => {
-    button.classList.toggle("is-active", oracleActive);
-    button.setAttribute("aria-pressed", oracleActive ? "true" : "false");
+    atlasSetHiddenAria40399(button, !oraclePresentationAllowed403112);
+    button.classList.toggle("is-active", oracleVisible403112);
+    button.setAttribute("aria-pressed", oracleVisible403112 ? "true" : "false");
   });
+
   const oraclePanel = document.getElementById("atlasOracleV0");
   if (oraclePanel) {
-    oraclePanel.hidden = !oracleActive;
-    oraclePanel.setAttribute("aria-hidden", oracleActive ? "false" : "true");
-    if (oracleActive) requestAnimationFrame(() => atlasRenderOracleV0());
+    atlasSetHiddenAria40399(oraclePanel, !oracleVisible403112);
+    if (oracleVisible403112) requestAnimationFrame(() => atlasRenderOracleV0());
   }
 
   document.querySelectorAll("[data-market-columns]").forEach(button => {
@@ -5768,6 +5838,10 @@ function atlasChartV2SetOption(kind, value) {
   } else if (kind === "analysis") {
     state.chartViewV2.analysis = state.chartViewV2.analysis === false;
   } else if (kind === "oracle") {
+    if(!atlasChartV2OraclePresentationAllowed403112()){
+      atlasChartV2SyncControls();
+      return;
+    }
     /* 40.1.93 — Oracle and Market keep isolated sub-profiles, while V4 also
        remembers which surface the operator actually left active. */
     const opening = state.chartViewV2.oracle === false;
@@ -6985,7 +7059,7 @@ function atlasRefreshChartLivePresentation(changedIds = []) {
     atlasChartV2RenderLegend(brokerChart.result.entries, { comparison: true });
   }
   atlasChartOverlayUpdate();
-  if (state.chartViewV2.oracle !== false) atlasRenderOracleV0();
+  if (atlasChartV2OracleVisible403112()) atlasRenderOracleV0();
 
   const chart = state.chartEngineV2?.realChart;
   if (chart?.tooltip?.opacity > 0) {
@@ -10468,11 +10542,11 @@ function atlasInitOracleV0() {
   });
   if (typeof ResizeObserver === "function") {
     atlasOracleV0ResizeObserver = new ResizeObserver(() => {
-      if (state.chartViewV2.oracle !== false) requestAnimationFrame(() => atlasRenderOracleV0());
+      if (atlasChartV2OracleVisible403112()) requestAnimationFrame(() => atlasRenderOracleV0());
     });
     atlasOracleV0ResizeObserver.observe(root);
   }
-  atlasRenderOracleV0();
+  if (atlasChartV2OracleVisible403112()) atlasRenderOracleV0();
 }
 
 queueMicrotask(() => { try { atlasInitOracleV0(); } catch (_) {} });
@@ -19241,7 +19315,7 @@ function renderAtlasMathCore() {
     simPanel.innerHTML = `<b>Scénario de simulation</b><span>${escapeHtml(scenario.reason)} · ${escapeHtml(scenario.human)}.</span>`;
   }
 
-  if (state.chartViewV2.oracle !== false) atlasRenderOracleV0();
+  if (atlasChartV2OracleVisible403112()) atlasRenderOracleV0();
   atlasV2SyncMathRail();
 }
 
@@ -42575,7 +42649,7 @@ function atlasWorkspaceRenderStrip(options = {}) {
     state.chartViewV2.volume !== false && !comparison ? "Volume" : null,
     (comparison ? state.chartViewV2.comparisonLegend : state.chartViewV2.legend) ? "Légende" : "Légende masquée",
     state.chartViewV2.analysis !== false ? "Analyse" : "Analyse masquée",
-    state.chartViewV2.oracle !== false ? "Oracle" : "Oracle masqué",
+    atlasChartV2OracleVisible403112() ? "Oracle" : "Oracle masqué",
   ].filter(Boolean);
 
   const restored = options.restored === true;
@@ -48974,7 +49048,7 @@ globalThis.AtlasStorageRelief40391=Object.freeze({
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.3.111";
+const ATLAS_BUILD = "40.3.112";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -58955,6 +59029,37 @@ try{
     long_shadow_background_full_scan_after_warmup:false,
     operator_evidence_refresh_policy_changed:false,
     fiche_crypto_changed:false,
+    target_top_hover_changed:false,
+    market_core_changed:false,
+    oracle_math_changed:false,
+    evidence_retention_changed:false,
+    source_history_changed:false,
+    window_manager_changed:false,
+    images_changed:false,
+    new_timer:false,
+    new_observer:false,
+    new_network_owner:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_VIEW_PARITY_403112__=Object.freeze({
+    build:"40.3.112",
+    parent:"40.3.111",
+    discarded_prepared_build:"old 40.3.112 Graph Default Recovery",
+    graph_context_v7_changed:false,
+    selection_cleared_semantics_changed:false,
+    explicit_empty_semantics_changed:false,
+    basic_oracle_visible:false,
+    basic_oracle_preference_destroyed:false,
+    intermediate_oracle_restored_from_state:true,
+    administrator_oracle_restored_from_state:true,
+    recovery_403106_preserved:true,
+    cascade_403107_403111_preserved:true,
+    rejected_403105_external_graph_absent:true,
+    extended_market_and_native_fiche_preserved:true,
+    fiche_positioning_changed:false,
     target_top_hover_changed:false,
     market_core_changed:false,
     oracle_math_changed:false,
