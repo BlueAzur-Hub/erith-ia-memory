@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.5";
-  const ADMIN_RELEASE = "AETHER PROJECT @ERITH.IA MISSIONS PRESENTATION EXTRACTION BOOT PARITY LOCK";
+  const ADMIN_BUILD = "40.4.6";
+  const ADMIN_RELEASE = "AETHER ORACLE COMPACT SUMMARY + ACCORDION TEXT CONTINUITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -470,6 +470,18 @@
     keys: Object.freeze(["fonds-erith", "association-erith", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"]),
     audience_is_independent: true,
     sources_are_independent: true
+  });
+
+  // 40.4.6 — Oracle presentation-only debt settlement.
+  // Engine, Evidence, Source Health and Window Manager ownership stay unchanged.
+  const ORACLE_UI_CONTINUITY_40406 = Object.freeze({
+    build: "40.4.6",
+    suite: "oracle-analysis-suite",
+    collapsed_summary: "bias + confidence + horizon + bull/bear bars",
+    accordion_members: Object.freeze(["oracle-models-calibration", "oracle-sources-runtime", "oracle-evidence-explorer"]),
+    one_heavy_subsection_open_at_once: true,
+    engine_changed: false,
+    window_manager_changed: false
   });
 
   function entry(node, domain = "all") {

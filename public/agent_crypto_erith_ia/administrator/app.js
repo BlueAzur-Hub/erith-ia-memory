@@ -50454,7 +50454,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.5";
+const ATLAS_BUILD = "40.4.6";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60714,6 +60714,29 @@ try{
     graph_context_v7_changed:false,
     window_manager_core_changed:false,
     bridge_changed:false,
+    images_changed:false,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_ORACLE_UI_40406__=Object.freeze({
+    build:"40.4.6",
+    parent:"40.4.5",
+    scope:"Oracle presentation compact summary and accordion text continuity",
+    collapsed_preview_valid_summary_markup:true,
+    one_heavy_subsection_open_at_once:true,
+    menu_labels_shortened:true,
+    oracle_engine_changed:false,
+    evidence_changed:false,
+    outcome_changed:false,
+    source_health_changed:false,
+    graph_context_v7_changed:false,
+    market_core_changed:false,
+    window_manager_changed:false,
     images_changed:false,
     new_fetch:false,
     new_timer:false,

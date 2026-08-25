@@ -1,9 +1,9 @@
-/* Agent-Crypto @erith.IA — 40.4.5
+/* Agent-Crypto @erith.IA — 40.4.6
    MODULAR PRESENTATION BOUNDARY / ATLAS 02 + ORACLE SUITE + OPERATIONS 03 + SYSTEM 04 + PROJECTS EXTRACTION
    Presentation is externalized; shared truth/state/memory/engines remain in the main runtime. */
 (()=>{
   "use strict";
-  const BUILD="40.4.5";
+  const BUILD="40.4.6";
   const REGISTRY=Object.freeze({
     build:BUILD,
     mode:"atlas-oracle-operations-system-projects-extracted-boot-parity",
@@ -20,8 +20,9 @@
       suite:"Oracle — Analyse prospective & preuves",
       canonical_fragment:"./views/oracle.html",
       transport:"./js/views/oracle-presentation.js",
+      ui_continuity:"./js/views/oracle-ui-continuity.js",
       anchors:Object.freeze(["oracle-analysis-suite","oracle-lab-dashboard","oracle-infrastructure-observatory","oracle-evidence-explorer"]),
-      rule:"presentation moved; Oracle engine/Evidence/history remain shared and persistent"
+      rule:"presentation moved; 40.4.6 restores valid collapsed live summary markup + exclusive heavy accordion; Oracle engine/Evidence/history remain shared and persistent"
     }),
     atlas:Object.freeze({
       status:"external-presentation-parser-mounted",
@@ -64,6 +65,8 @@
       "one Atlas truth/state owner",
       "Atlas family 02 IDs exist before downstream runtime scripts execute",
       "Oracle suite IDs exist before downstream runtime scripts execute",
+      "Oracle collapsed summary remains inside valid summary phrasing content",
+      "Oracle heavy submenus are exclusive-open presentation only",
       "Operations family 03 IDs exist before downstream runtime scripts execute",
       "System family 04 IDs exist before downstream runtime scripts execute",
       "Grey Plate Forensic follows family 04 Reduce/Hide/Detach ownership",
@@ -79,7 +82,7 @@
     const present=Object.fromEntries(ids.map(id=>[id,!!document.getElementById(id)]));
     return Object.freeze({build:BUILD,mode:REGISTRY.mode,present,checked_at:new Date().toISOString()});
   }
-  function publish(){try{globalThis.__AGENT_CRYPTO_PRESENTATION_BOUNDARY_SNAPSHOT_40405__=snapshot();}catch(_){}}
-  try{globalThis.AgentCryptoPresentationBoundaries40405=Object.freeze({...REGISTRY,snapshot});}catch(_){}
+  function publish(){try{globalThis.__AGENT_CRYPTO_PRESENTATION_BOUNDARY_SNAPSHOT_40406__=snapshot();}catch(_){}}
+  try{globalThis.AgentCryptoPresentationBoundaries40406=Object.freeze({...REGISTRY,snapshot});}catch(_){}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",publish,{once:true});else publish();
 })();
