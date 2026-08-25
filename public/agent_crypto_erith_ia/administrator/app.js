@@ -12545,16 +12545,13 @@ function initAtlasAdminGraphToggle() {
     });
   });
 
-  window.addEventListener("atlas:v2mode", event => {
-    const mode = event.detail?.mode;
-    if (mode === "essential") {
-      atlasAdminGraphSet("normal", { persist: false, instant: true, scroll: false, closeCenter: false });
-    } else if (atlasV2IsExpandedMode(mode)) {
-      atlasAdminGraphSet(atlasAdminGraphRead(), { persist: false, instant: true, scroll: false, closeCenter: false });
-    }
+  window.addEventListener("atlas:v2mode", () => {
+    // 40.4.9 — Classique/Intermédiaire/Admin share the same persisted Graphique
+    // presentation. View changes reveal capabilities; they do not reset graph geometry.
+    atlasAdminGraphSet(atlasAdminGraphRead(), { persist: false, instant: true, scroll: false, closeCenter: false });
   });
 
-  const initialMode = atlasV2IsExpandedMode() ? atlasAdminGraphRead() : "normal";
+  const initialMode = atlasAdminGraphRead();
   atlasAdminGraphSet(initialMode, { persist: false, instant: true, scroll: false, closeCenter: false });
 }
 
@@ -50444,7 +50441,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.8";
+const ATLAS_BUILD = "40.4.9";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60792,5 +60789,24 @@ try{
     new_fetch:false,
     new_timer:false,
     new_observer:false
+  });
+
+  globalThis.__AGENT_CRYPTO_CLASSIC_EXACT_FORMAT_PARITY_40409__=Object.freeze({
+    build:"40.4.9",
+    parent:"40.4.8",
+    classic_label:"Vue Classique",
+    same_common_dom:true,
+    same_common_css:true,
+    legacy_basic_geometry_retired:true,
+    status_strip_copy_from_intermediate:true,
+    chart_toolbar_copy_from_intermediate:true,
+    market_geometry_copy_from_intermediate:true,
+    lecture_technique_copy_from_intermediate:true,
+    scope_difference_only:Object.freeze(["Atlas","Oracle","Administrator dock"]),
+    market_core_modified:false,
+    oracle_model_modified:false,
+    atlas_model_modified:false,
+    window_manager_modified:false,
+    image_modified:false
   });
 }catch(_){}
