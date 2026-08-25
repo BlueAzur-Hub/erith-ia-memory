@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.4";
-  const ADMIN_RELEASE = "AETHER HEADER 100% + MAIN CONTENT 99% WIDTH LOCK";
+  const ADMIN_BUILD = "40.4.5";
+  const ADMIN_RELEASE = "AETHER PROJECT @ERITH.IA MISSIONS PRESENTATION EXTRACTION BOOT PARITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
@@ -460,6 +460,17 @@
       .filter((node, index, list) => node instanceof HTMLElement && node.parentElement === shell && list.indexOf(node) === index)
       .map(node => entry(node));
   }
+
+  // 40.4.5 — Presentation extraction only. missionEntries40302 remains the
+  // canonical Window Manager owner for Missions de vie; no membership rewrite.
+  const PROJECTS_PRESENTATION_EXTRACTION_40405 = Object.freeze({
+    build: "40.4.5",
+    owner: "missionEntries40302",
+    intro: "missions-vie",
+    keys: Object.freeze(["fonds-erith", "association-erith", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"]),
+    audience_is_independent: true,
+    sources_are_independent: true
+  });
 
   function entry(node, domain = "all") {
     return node instanceof HTMLElement ? { node, domain } : null;

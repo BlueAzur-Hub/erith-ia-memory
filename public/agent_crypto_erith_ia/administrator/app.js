@@ -50454,7 +50454,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.4";
+const ATLAS_BUILD = "40.4.5";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60683,6 +60683,31 @@ try{
     index_monolith_reduced:true,
     family04_runtime_order:Object.freeze(["04","storage","grey-plate-forensic","simulation","commandes","backend","safety","physical-security"]),
     grey_plate_forensic_family_owned:true,
+    market_core_changed:false,
+    oracle_changed:false,
+    atlas_changed:false,
+    graph_context_v7_changed:false,
+    window_manager_core_changed:false,
+    bridge_changed:false,
+    images_changed:false,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_PROJECTS_EXTRACTION_40405__=Object.freeze({
+    build:"40.4.5",
+    parent:"40.4.4",
+    scope:"presentation-projects-missions-de-vie",
+    canonical_fragment:"./views/projects.html",
+    runtime_transport:"./js/views/projects-presentation.js",
+    index_monolith_reduced:true,
+    mission_window_owner_preserved:"missionEntries40302",
+    audience_extracted:false,
+    sources_extracted:false,
     market_core_changed:false,
     oracle_changed:false,
     atlas_changed:false,
