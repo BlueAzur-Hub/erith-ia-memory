@@ -50441,7 +50441,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.9";
+const ATLAS_BUILD = "40.4.10";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -50875,8 +50875,16 @@ async function atlasVerifyRemotePublication(remote) {
     };
   }
 
+  // 40.4.10 — VERSION TRUTH LOCK. The canonical manifest stores payload
+  // hashes in top-level `files`; older manifests may expose an object under
+  // integrity.files. Accept both shapes, preferring the canonical owner.
+  const integrityFiles = remote?.manifest?.integrity?.files;
   const expectedHash = String(
-    remote?.manifest?.integrity?.files?.["app.js"] || ""
+    remote?.manifest?.files?.["app.js"]
+    || (integrityFiles && typeof integrityFiles === "object"
+      ? integrityFiles["app.js"]
+      : "")
+    || ""
   ).trim().toLowerCase();
 
   if (expectedHash) {
@@ -60808,5 +60816,24 @@ try{
     atlas_model_modified:false,
     window_manager_modified:false,
     image_modified:false
+  });
+}catch(_){}
+
+
+try{
+  globalThis.__AGENT_CRYPTO_VERSION_TRUTH_40410__=Object.freeze({
+    build:"40.4.10",
+    parent:"40.4.9",
+    version_manifest_token_owner:"market-core-v2.0-alpha-build-40.4.10",
+    canonical_hash_owner:"version.json.files.app.js",
+    footer_identity:"Build 40.4.10 · Version : Parker Lewis Can't Lose",
+    market_core_changed:false,
+    oracle_changed:false,
+    atlas_changed:false,
+    window_manager_changed:false,
+    image_changed:false,
+    new_timer:false,
+    new_observer:false,
+    new_network_owner:false
   });
 }catch(_){}

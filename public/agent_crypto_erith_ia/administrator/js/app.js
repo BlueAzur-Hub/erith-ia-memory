@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.9";
-  const ADMIN_RELEASE = "AETHER CLASSIC INTERMEDIATE COMMON WORKSPACE PARITY LOCK";
+  const ADMIN_BUILD = "40.4.10";
+  const ADMIN_RELEASE = "AETHER VERSION TRUTH + PUBLICATION IDENTITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
