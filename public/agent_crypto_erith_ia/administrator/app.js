@@ -2511,7 +2511,7 @@ function atlasV2ApplyMode(mode, options = {}) {
     mode = "essential";
   }
   const next = ATLAS_V2_ALLOWED_MODES.has(mode) ? mode : "essential";
-  const visualMode = "advanced"; // 40.4.7: Classic/Intermediate/Admin share one visual shell; atlasView owns scope.
+  const visualMode = "advanced"; // 40.4.8: shared shell + shared common workspace; atlasView owns only capability scope.
   const administrator = next === "advanced" && atlasAccessIsAuthorized();
   const operator = next === "intermediate";
   const expanded = administrator || operator;
@@ -2603,35 +2603,28 @@ function atlasV2ApplyMode(mode, options = {}) {
   const selector = document.getElementById("atlasV2AdvancedModuleSelect");
   if (operator && selector && ATLAS_V2_INTERMEDIATE_HIDDEN_IDS.has(selector.value)) selector.value = "";
 
-  if (!expanded) {
-    const legacy = document.querySelector("[data-collapse-key='mode-debutant-avance']");
-    if (legacy) legacy.hidden = true;
-    /* Public contract: Math Core V3 always remains visible beside Market.
-       A previously stored top/rail admin position must never hide it. */
-    atlasV2ApplyMathDock("side", { persist: false });
-    const topDock = document.getElementById("mathTopDock");
-    if (topDock) topDock.hidden = true;
-    // 40.2.10+ — Basic view no longer owns Lecture Technique visibility.
-    // Preserve the V7/operator state exactly as in intermediate/administrator modes.
-    let detailCollapsed = document.getElementById("analyste")?.classList.contains("detail-collapsed") === true;
-    try {
-      const graphContext = typeof atlasGraphContextV7Read === "function" ? atlasGraphContextV7Read() : null;
-      if (graphContext?.market) detailCollapsed = graphContext.market.detailCollapsed === true;
-    } catch (_) {}
-    atlasSetCleanLensCollapsed(detailCollapsed, false);
-    const marketPanel = document.getElementById("marketSnapshotPanel");
-    if (marketPanel) marketPanel.dataset.marketColumns = "essential";
-  } else {
-    atlasV2ApplyMathDock(atlasV2MathDockPosition(), { persist: false });
-    let detailCollapsed = true;
-    try {
+  // 40.4.8 — Classic and Intermediate share the exact same common-workspace
+  // presentation. `atlasView` continues to own capability scope (Atlas/Oracle/families),
+  // but it must not move Math Core, Lecture Technique, Market columns or Graph controls.
+  const legacy = document.querySelector("[data-collapse-key='mode-debutant-avance']");
+  if (legacy && next === "essential") legacy.hidden = true;
+
+  atlasV2ApplyMathDock(atlasV2MathDockPosition(), { persist: false });
+
+  let detailCollapsed = document.getElementById("analyste")?.classList.contains("detail-collapsed") === true;
+  try {
+    const graphContext = typeof atlasGraphContextV7Read === "function" ? atlasGraphContextV7Read() : null;
+    if (graphContext?.market && typeof graphContext.market.detailCollapsed === "boolean") {
+      detailCollapsed = graphContext.market.detailCollapsed === true;
+    } else {
       const storedDetailState = localStorage.getItem(ATLAS_CLEAN_LENS_PANEL_KEY);
-      detailCollapsed = storedDetailState === null ? true : storedDetailState === "1";
-    } catch {}
-    atlasSetCleanLensCollapsed(detailCollapsed, false);
-    const marketPanel = document.getElementById("marketSnapshotPanel");
-    if (marketPanel) marketPanel.dataset.marketColumns = state.chartViewV2?.marketColumns || "essential";
-  }
+      if (storedDetailState !== null) detailCollapsed = storedDetailState === "1";
+    }
+  } catch (_) {}
+  atlasSetCleanLensCollapsed(detailCollapsed, false);
+
+  const marketPanel = document.getElementById("marketSnapshotPanel");
+  if (marketPanel) marketPanel.dataset.marketColumns = state.chartViewV2?.marketColumns || "essential";
 
   atlasSetDataset40399(
     document.documentElement,
@@ -5739,7 +5732,7 @@ function atlasChartV2SyncControls() {
   });
 
   const panel = document.getElementById("marketSnapshotPanel");
-  if (panel) panel.dataset.marketColumns = atlasV2Mode() === "essential" ? "essential" : state.chartViewV2.marketColumns;
+  if (panel) panel.dataset.marketColumns = state.chartViewV2.marketColumns === "complete" ? "complete" : "essential";
 }
 
 function atlasChartLivePresentation(coin, period = Number(state.chartPeriodDays || 1)) {
@@ -20640,14 +20633,11 @@ function atlasR3EnsureMathPresence() {
   const math = document.getElementById("math");
   const grid = document.getElementById("marketWorkspaceGrid");
   if (!math || !grid) return;
-  const essential = atlasV2Mode() === "essential";
-  if (essential) {
-    math.hidden = false;
-    math.setAttribute("aria-hidden", "false");
-    if (math.parentElement !== grid || math.dataset.mathDock !== "side") {
-      atlasV2ApplyMathDock("side", { persist: false });
-    }
-  }
+  math.hidden = false;
+  math.setAttribute("aria-hidden", "false");
+  // 40.4.8 — do not force a Classic-only side dock. The common workspace
+  // follows the same persisted Math position in Classic/Intermediate/Admin.
+  atlasV2ApplyMathDock(atlasV2MathDockPosition(), { persist: false });
 }
 
 const ATLAS_MATH_GATES_SCHEMA = "agent_crypto_math_quality_gates_v2";
@@ -50454,7 +50444,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.7";
+const ATLAS_BUILD = "40.4.8";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60760,6 +60750,38 @@ try{
     classic_capability_scope_preserved:true,
     intermediate_visual_shell_shared:true,
     administrator_visual_shell_shared:true,
+    storage_migration:false,
+    market_core_changed:false,
+    oracle_engine_changed:false,
+    atlas_engine_changed:false,
+    graph_context_v7_changed:false,
+    window_manager_changed:false,
+    images_changed:false,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false
+  });
+}catch(_){}
+
+
+
+try{
+  globalThis.__AGENT_CRYPTO_CLASSIC_COMMON_WORKSPACE_PARITY_40408__=Object.freeze({
+    build:"40.4.8",
+    parent:"40.4.7",
+    user_label:"Vue Classique",
+    internal_mode_key:"essential",
+    shared_visual_mode:"advanced",
+    scope_authority:"atlasView",
+    classic_navigation:Object.freeze(["Livecheck","Marché","Graphique","Sources"]),
+    intermediate_adds:Object.freeze(["Atlas","Oracle"]),
+    administrator_adds_operator_dock:true,
+    graph_toolbar_shared:true,
+    market_controls_shared:true,
+    math_dock_shared:true,
+    technical_reading_state_shared:true,
+    market_columns_state_shared:true,
+    classic_specific_common_workspace_hides:false,
     storage_migration:false,
     market_core_changed:false,
     oracle_engine_changed:false,
