@@ -1795,8 +1795,12 @@ function atlasAccessOpen(pendingHash = "") {
   }
   const dialog = document.getElementById("atlasAccessDialog");
   atlasAccessSyncDialog();
-  if (dialog?.showModal) dialog.showModal();
-  else dialog?.setAttribute("open", "");
+  // 40.4.49 — idempotent gate: a fast second click must never throw
+  // showModal() on an already-open dialog or create a second transition.
+  if (!dialog?.open) {
+    if (dialog?.showModal) dialog.showModal();
+    else dialog?.setAttribute("open", "");
+  }
   window.setTimeout(() => {
     const secret = document.getElementById("atlasAccessSecret");
     try { secret?.focus({ preventScroll: true }); } catch {}
@@ -3072,22 +3076,31 @@ function atlasV2SyncAdvancedSelectorFromViewport() {
   atlasViewportApply40345();
 }
 
+function atlasAdminAccountToggleAction40449() {
+  if (atlasAccessIsAuthorized() && atlasV2Mode() === "advanced") {
+    atlasAccessLock();
+  } else if (atlasAccessIsAuthorized()) {
+    atlasV2SyncShareableUrl("advanced");
+    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
+    atlasV2ApplyMode("advanced", { persist: false, silentAuth: true });
+    window.requestAnimationFrame(() => atlasAdminCenterSet(false, { persist: false, scrollTarget: false }));
+  } else {
+    atlasAccessOpen();
+  }
+}
+
 function atlasInitV2Shell() {
   atlasV2ClassifySections();
   atlasInitLocalAccess();
 
-  document.getElementById("btnAdminAccountToggle")?.addEventListener("click", () => {
-    if (atlasAccessIsAuthorized() && atlasV2Mode() === "advanced") {
-      atlasAccessLock();
-    } else if (atlasAccessIsAuthorized()) {
-      atlasV2SyncShareableUrl("advanced");
-      atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
-      atlasV2ApplyMode("advanced", { persist: false, silentAuth: true });
-      window.requestAnimationFrame(() => atlasAdminCenterSet(false, { persist: false, scrollTarget: false }));
-    } else {
-      atlasAccessOpen();
-    }
-  });
+  const adminAccountToggle40449 = document.getElementById("btnAdminAccountToggle");
+  adminAccountToggle40449?.addEventListener("click", atlasAdminAccountToggleAction40449);
+
+  // The header can receive trusted input before the parser-blocking shared
+  // runtime has installed this canonical handler. Consume that one queued
+  // intent after the access form/close handlers are ready; no timer/retry loop.
+  const queuedAdminIntent40449 = globalThis.ErithAdminEntryIntentGate40449?.consume?.() === true;
+  if (queuedAdminIntent40449) queueMicrotask(atlasAdminAccountToggleAction40449);
 
   document.getElementById("btnBasicViewToggle")?.addEventListener("click", () => {
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "essential");
@@ -50861,7 +50874,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.48";
+const ATLAS_BUILD = "40.4.49";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

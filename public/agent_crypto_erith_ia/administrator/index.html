@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="40.4.48" />
+  <meta name="atlas-build" content="40.4.49" />
   <meta name="atlas-engine-build" content="38.15.11" />
-  <meta name="administrator-build" content="40.4.48" />
-  <meta name="administrator-release" content="AETHER LEARNING CSS AUTONOMOUS OWNER + LEGACY DEBT LEDGER CLOSURE + FINAL RESIDENCY INVENTORY LOCK" />
+  <meta name="administrator-build" content="40.4.49" />
+  <meta name="administrator-release" content="AETHER ADMIN FIRST-CLICK INTENT GATE + ATLAS CURRENT TRUTH + RUNTIME IDENTITY LOCK" />
   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.48" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.49" />
   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
-  <title>Agent-Crypto @erith.IA — Build 40.4.48 · Administrator</title>
+  <title>Agent-Crypto @erith.IA — Build 40.4.49 · Administrator</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
 
   <script id="atlasFirstPaintRolePreseed40399">
@@ -51,15 +51,53 @@
       } catch (_) {}
     })();
   </script>
-  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-metal.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-firefox-compositor.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-visual-cache.css?v=administrator-build-40.4.48" />
-<script src="./js/admin-visual-cache.js?v=administrator-build-40.4.48"></script>
+  <script data-atlas-admin-first-click-intent-gate-40449="true">
+    /* 40.4.49 — FIRST-CLICK ADMIN INTENT GATE
+       The header is paintable before the 3 MB shared runtime finishes parsing.
+       A trusted click arriving in that interval must never be lost.
+       This gate stores one intent only, owns no auth/session/storage state,
+       and removes itself as soon as the canonical app.js handler is ready. */
+    (() => {
+      const state = { pending: false, ready: false, clickedAt: 0 };
+      const capture = event => {
+        if (state.ready || event?.isTrusted !== true) return;
+        const target = event.target instanceof Element ? event.target.closest("#btnAdminAccountToggle") : null;
+        if (!target) return;
+        state.pending = true;
+        state.clickedAt = Date.now();
+        target.setAttribute("aria-busy", "true");
+        document.documentElement.dataset.adminEntryIntent40449 = "queued";
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      };
+      document.addEventListener("click", capture, true);
+      globalThis.ErithAdminEntryIntentGate40449 = Object.freeze({
+        consume() {
+          state.ready = true;
+          document.removeEventListener("click", capture, true);
+          const button = document.getElementById("btnAdminAccountToggle");
+          button?.removeAttribute("aria-busy");
+          const pending = state.pending === true;
+          state.pending = false;
+          document.documentElement.dataset.adminEntryIntent40449 = pending ? "consumed" : "ready";
+          return pending;
+        },
+        snapshot() { return { pending: state.pending, ready: state.ready, clicked_at: state.clickedAt }; },
+        recurring_listener: false,
+        auth_owner: false,
+        storage_owner: false
+      });
+    })();
+  </script>
+  <link rel="stylesheet" href="./style.css?v=market-core-v2.0-alpha-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-metal.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-windows.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-visual-assets.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-window-menu-uniform.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-firefox-compositor.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-visual-cache.css?v=administrator-build-40.4.49" />
+<script src="./js/admin-visual-cache.js?v=administrator-build-40.4.49"></script>
   <style data-atlas-command-center-portal-40321="true">
     /* 40.3.21 — the Command Center is a body portal, never a bottom-of-document panel.
        admin-visual-assets.css gives .admin-command-observatory-r3 its atmosphere,
@@ -2089,9 +2127,9 @@
       background-attachment:scroll !important;
     }
   </style>
-  <link rel="stylesheet" href="./admin-chronos.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-firefox-safe-paint.css?v=administrator-build-40.4.48" />
-  <link rel="stylesheet" href="./admin-learning-journey.css?v=administrator-build-40.4.48" />
+  <link rel="stylesheet" href="./admin-chronos.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-firefox-safe-paint.css?v=administrator-build-40.4.49" />
+  <link rel="stylesheet" href="./admin-learning-journey.css?v=administrator-build-40.4.49" />
 
   <style id="atlas-header-data-readability-403118">
     /* 40.3.118 — STATUS DATA READABILITY. Typography only; no status geometry owner changes. */
@@ -2348,11 +2386,11 @@
   </style>
 
 
-  <link rel="stylesheet" href="./admin-oracle.css?v=administrator-build-40.4.48" />
+  <link rel="stylesheet" href="./admin-oracle.css?v=administrator-build-40.4.49" />
 
-  <link rel="stylesheet" href="./admin-book-comfort.css?v=administrator-build-40.4.48" />
+  <link rel="stylesheet" href="./admin-book-comfort.css?v=administrator-build-40.4.49" />
 </head>
-<body class="atlas-main-width-403122 atlas-firefox-safe-paint-40396 atlas-safe-document-background-40395 atlas-paint-isolation-40394 atlas-administrator-mirror atlas-semantic-color-icons-40290 atlas-astro-planet-colors-40291 atlas-section-air-40292 atlas-section-density-40293 atlas-family-boundaries-40298 atlas-book-nav-40299 atlas-family-order-40300 atlas-family-compact-reduce-40301 atlas-family-atomic-40302 atlas-commandline-compact-40302 atlas-family-state-migration-40303 atlas-canonical-admin-sequence-40304 atlas-family04-canonical-hierarchy-40320 atlas-book-command-center-40309 atlas-status-strip-40309 atlas-passive-viewport-authority-40310 atlas-role-isolation-viewport-ownership-40312 atlas-role-transition-performance-40314 atlas-header-single-row-40428 atlas-surface-performance-40315 atlas-bridge-passive-performance-40317 atlas-tech-image-continuity-40321 atlas-command-center-portal-40321 atlas-firefox-compositor-40323" data-administrator-build="40.4.48">
+<body class="atlas-main-width-403122 atlas-firefox-safe-paint-40396 atlas-safe-document-background-40395 atlas-paint-isolation-40394 atlas-administrator-mirror atlas-semantic-color-icons-40290 atlas-astro-planet-colors-40291 atlas-section-air-40292 atlas-section-density-40293 atlas-family-boundaries-40298 atlas-book-nav-40299 atlas-family-order-40300 atlas-family-compact-reduce-40301 atlas-family-atomic-40302 atlas-commandline-compact-40302 atlas-family-state-migration-40303 atlas-canonical-admin-sequence-40304 atlas-family04-canonical-hierarchy-40320 atlas-book-command-center-40309 atlas-status-strip-40309 atlas-passive-viewport-authority-40310 atlas-role-isolation-viewport-ownership-40312 atlas-role-transition-performance-40314 atlas-header-single-row-40428 atlas-surface-performance-40315 atlas-bridge-passive-performance-40317 atlas-tech-image-continuity-40321 atlas-command-center-portal-40321 atlas-firefox-compositor-40323" data-administrator-build="40.4.49">
   <script id="atlasFirstPaintBodyRolePreseed40399">
     (() => {
       try {
@@ -2416,9 +2454,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version Agent-Crypto installée : Build 40.4.48, mode Administrator"
+            aria-label="Version Agent-Crypto installée : Build 40.4.49, mode Administrator"
           >
-            <span id="atlasVersionControlText">Build 40.4.48</span>
+            <span id="atlasVersionControlText">Build 40.4.49</span>
           </button>
           <span class="pill admin-engine-badge" id="administratorEngineBadge">ENGINE · Market Core 38.15.11</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
@@ -2434,7 +2472,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.4.48 · Administrator</span>
+          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.4.49 · Administrator</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -3838,7 +3876,7 @@
     <!-- Oracle true-lazy presentation — canonical owner.
          Live summary + three subsection shells mount at parse time; heavy bodies hydrate from views/oracle.html on first own disclosure. -->
     <div id="oracle-view-host" data-oracle-presentation-host="true-lazy" aria-hidden="true"></div>
-    <script src="./js/views/oracle-presentation.js?v=administrator-build-40.4.48"></script>
+    <script src="./js/views/oracle-presentation.js?v=administrator-build-40.4.49"></script>
 
 
     <details class="atlas-collapse glass news-sentinel-collapse atlas-family-member atlas-tone-analysis" id="news-sentinel" data-collapse-key="news-sentinel" data-layout-family="analysis" data-analysis-owner-40385="news-contexte-sources-causalite-prudente">
@@ -4407,30 +4445,30 @@
          Auto Reader + Shared Memory + GitHub Memory bodies are stripped before DOM insertion
          and hydrate only on first own disclosure. Their runtime/data owners remain resident. -->
     <div id="atlas-view-host" data-atlas-presentation-host="40.4.6" aria-hidden="true"></div>
-    <script src="./js/views/atlas-peripheral-lazy.js?v=administrator-build-40.4.48"></script>
-    <script src="./js/views/atlas-presentation.js?v=administrator-build-40.4.48"></script>
+    <script src="./js/views/atlas-peripheral-lazy.js?v=administrator-build-40.4.49"></script>
+    <script src="./js/views/atlas-presentation.js?v=administrator-build-40.4.49"></script>
 
     <!-- 40.4.21 — Operations family 03 true lazy-body transition.
          Parser mounts only family 03 header + four stable detail shells.
          Each Operations body hydrates from views/operations.html only when its own disclosure opens.
          Canonical order + role visibility + Window Manager shell ownership remain available at boot. -->
     <div id="operations-view-host" data-operations-presentation-host="40.4.21" data-operations-lazy-body="true" aria-hidden="true"></div>
-    <script src="./js/views/operations-presentation.js?v=administrator-build-40.4.48"></script>
+    <script src="./js/views/operations-presentation.js?v=administrator-build-40.4.49"></script>
 
-    <!-- 40.4.47 safe DOM recovery preserved · 40.4.48 canonical CSS-owner closure.
+    <!-- 40.4.47 safe DOM recovery preserved · 40.4.49 canonical CSS-owner closure.
          System mounts valid HTML first;
          Learning presentation then removes only the validated DOM sibling range.
          This intentionally retires the 40.4.44 string parser gate after operator regression. -->
     <div id="system-view-host" data-system-presentation-host="40.4.24" data-learning-journey-parser-gate="retired-safe-dom-detach" aria-hidden="true"></div>
-    <script src="./js/views/system-presentation.js?v=administrator-build-40.4.48"></script>
-    <script src="./js/views/learning-presentation.js?v=administrator-build-40.4.48"></script>
+    <script src="./js/views/system-presentation.js?v=administrator-build-40.4.49"></script>
+    <script src="./js/views/learning-presentation.js?v=administrator-build-40.4.49"></script>
 
     <!-- 40.4.20 — @erith.IA Missions de vie modular transition.
          Parser mounts only the Missions hero + five stable detail shells.
          Each project body hydrates from views/projects.html only when its own disclosure opens.
          This preserves canonical order + Window Manager membership without parsing the full project payload at boot. -->
     <div id="projects-view-host" data-projects-presentation-host="40.4.20" data-projects-lazy-body="true" aria-hidden="true"></div>
-    <script src="./js/views/projects-presentation.js?v=administrator-build-40.4.48"></script>
+    <script src="./js/views/projects-presentation.js?v=administrator-build-40.4.49"></script>
 
     <details class="atlas-collapse glass life-project-collapse" data-collapse-key="mesure-audience" id="mesure-audience">
       <summary class="atlas-collapse-summary">
@@ -4497,7 +4535,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.48 · Version : Parker Lewis Can't Lose</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.49 · Version : Parker Lewis Can't Lose</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -4507,14 +4545,14 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-40.4.48"></script>
-  <script src="./js/market-memory.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/analytical-memory.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/market-memory-collector.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/decision-board.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/retrospective-validation.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/memory-health-audit.js?v=administrator-build-40.4.48"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-40.4.49"></script>
+  <script src="./js/market-memory.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/analytical-memory.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/market-memory-collector.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/decision-board.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/retrospective-validation.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/multi-collector-concordance.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/memory-health-audit.js?v=administrator-build-40.4.49"></script>
   <script id="adminVisualAssets40269">
 (() => {
   "use strict";
@@ -4651,17 +4689,17 @@
 })();
 </script>
 
-  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/views/presentation-boundaries.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/views/view-lifecycle.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/app.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/views/projects-demand-residency.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/views/operations-demand-residency.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/views/system-demand-residency.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/views/atlas-family-demand-residency.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/views/residency-audit.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/layout-repair.js?v=administrator-build-40.4.48"></script>
-  <script src="./js/architecture-freeze.js?v=administrator-build-40.4.48"></script>
+  <script src="./js/core/admin-window-manager.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/views/presentation-boundaries.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/views/view-lifecycle.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/app.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/views/projects-demand-residency.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/views/operations-demand-residency.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/views/system-demand-residency.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/views/atlas-family-demand-residency.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/views/residency-audit.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/layout-repair.js?v=administrator-build-40.4.49"></script>
+  <script src="./js/architecture-freeze.js?v=administrator-build-40.4.49"></script>
 <script id="atlasTechnicalStaticThemeController40269">
 (() => {
   "use strict";
