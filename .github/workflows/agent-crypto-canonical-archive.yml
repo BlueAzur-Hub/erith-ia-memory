@@ -1,0 +1,88 @@
+name: Agent-Crypto canonical archive
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - public/agent_crypto_erith_ia/administrator/version.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-canonical-archive
+  cancel-in-progress: false
+
+jobs:
+  archive:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build canonical archive from manifest
+        id: build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, zipfile
+
+          root = Path("public/agent_crypto_erith_ia/administrator")
+          manifest_path = root / "version.json"
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          build = str(manifest.get("build") or "").strip()
+          if not build:
+              raise SystemExit("version.json: build absent")
+
+          files = list((manifest.get("files") or {}).keys())
+          for required in ("version.json", "administrator-version.json"):
+              if required not in files:
+                  files.append(required)
+
+          missing = [rel for rel in files if not (root / rel).is_file()]
+          if missing:
+              raise SystemExit("fichiers manifest absents: " + ", ".join(missing))
+
+          archive_dir = Path("coordination/inter_ai_dialogues/agent_crypto")
+          archive_dir.mkdir(parents=True, exist_ok=True)
+          safe_build = build.replace(".", "_")
+          out = archive_dir / f"AGENT_CRYPTO_BUILD_{safe_build}_AUTO_CANONICAL.zip"
+
+          with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
+              for rel in files:
+                  src = root / rel
+                  arc = Path("public/agent_crypto_erith_ia/administrator") / rel
+                  zf.write(src, arcname=arc.as_posix())
+
+          digest = hashlib.sha256(out.read_bytes()).hexdigest()
+          sha_path = Path(str(out) + ".sha256")
+          sha_path.write_text(f"{digest}  {out.name}\n", encoding="utf-8")
+
+          with open(Path("/tmp/agent_crypto_archive_env"), "w", encoding="utf-8") as fh:
+              fh.write(f"BUILD={build}\n")
+              fh.write(f"ARCHIVE={out.as_posix()}\n")
+              fh.write(f"SHA={sha_path.as_posix()}\n")
+          print(out)
+          print(digest)
+          PY
+          cat /tmp/agent_crypto_archive_env >> "$GITHUB_ENV"
+
+      - name: Commit canonical archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Archive Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$ARCHIVE" "$SHA"
+          if git diff --cached --quiet; then
+            echo "Archive already canonical; nothing to commit."
+            exit 0
+          fi
+          git commit -m "coordination: archive Agent-Crypto ${BUILD} canonical"
+          git push origin HEAD:main
