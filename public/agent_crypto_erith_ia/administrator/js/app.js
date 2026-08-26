@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.26";
+  const ADMIN_BUILD = "40.4.27";
   const ADMIN_RELEASE = "AETHER TRANSFORMER BOOK MENU COMFORT + CLICK TARGET LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
