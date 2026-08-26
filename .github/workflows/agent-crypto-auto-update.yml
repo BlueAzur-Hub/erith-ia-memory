@@ -1,0 +1,195 @@
+name: Agent-Crypto guarded auto update
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/auto_update/request.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-guarded-auto-update
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate and apply staged Administrator update
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re, shutil
+
+          repo = Path('.')
+          root = repo / 'public/agent_crypto_erith_ia/administrator'
+          stage = repo / 'coordination/inter_ai_dialogues/agent_crypto/auto_update'
+          request_path = stage / 'request.json'
+          payload = stage / 'payload'
+
+          req = json.loads(request_path.read_text(encoding='utf-8'))
+          if req.get('schema') != 'agent_crypto_auto_update_request_v1':
+              raise SystemExit('STOP CRITIQUE: schema auto-update invalide')
+          if req.get('critical') is not False:
+              raise SystemExit('STOP CRITIQUE: requête marquée critique')
+          if req.get('delete'):
+              raise SystemExit('STOP CRITIQUE: suppression automatique interdite')
+
+          build = str(req.get('build') or '').strip()
+          parent = str(req.get('parent_build') or '').strip()
+          files = req.get('files') or []
+          if not build or not parent or not isinstance(files, list) or not files:
+              raise SystemExit('STOP CRITIQUE: requête incomplète')
+          if len(set(files)) != len(files):
+              raise SystemExit('STOP CRITIQUE: fichiers dupliqués dans la requête')
+          for rel in files:
+              p = Path(rel)
+              if p.is_absolute() or '..' in p.parts:
+                  raise SystemExit(f'STOP CRITIQUE: chemin interdit {rel}')
+              if not (payload / p).is_file():
+                  raise SystemExit(f'STOP CRITIQUE: payload absent {rel}')
+          for required in ('version.json', 'administrator-version.json'):
+              if required not in files:
+                  raise SystemExit(f'STOP CRITIQUE: {required} absent du payload')
+
+          current = json.loads((root / 'version.json').read_text(encoding='utf-8'))
+          current_build = str(current.get('build') or '')
+          if current_build != parent:
+              raise SystemExit(f'STOP CRITIQUE: parent attendu {parent}, GitHub est {current_build}')
+
+          def version_tuple(v):
+              try:
+                  return tuple(int(x) for x in v.split('.'))
+              except Exception:
+                  raise SystemExit(f'STOP CRITIQUE: version invalide {v}')
+          if version_tuple(build) <= version_tuple(parent):
+              raise SystemExit('STOP CRITIQUE: downgrade ou version non croissante')
+
+          budget_markers = (
+              'setInterval(',
+              'MutationObserver',
+              'IntersectionObserver',
+              'new WebSocket',
+              'localStorage.setItem'
+          )
+          before_budget = {}
+          for rel in ('app.js', 'js/app.js'):
+              text = (root / rel).read_text(encoding='utf-8', errors='replace')
+              before_budget[rel] = {m: text.count(m) for m in budget_markers}
+
+          for rel in files:
+              src = payload / rel
+              dst = root / rel
+              dst.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(src, dst)
+
+          manifest = json.loads((root / 'version.json').read_text(encoding='utf-8'))
+          admin_manifest = json.loads((root / 'administrator-version.json').read_text(encoding='utf-8'))
+          if str(manifest.get('build')) != build or str(admin_manifest.get('build')) != build:
+              raise SystemExit('STOP CRITIQUE: manifests non alignés sur la build')
+          if manifest.get('asset_token') != f'market-core-v2.0-alpha-build-{build}':
+              raise SystemExit('STOP CRITIQUE: asset_token incohérent')
+          engine = manifest.get('engine') or {}
+          if str(engine.get('reference_build')) != '38.15.11':
+              raise SystemExit('STOP CRITIQUE: Market Core 38.15.11 modifié')
+          if str(manifest.get('mode')) != 'Administrator':
+              raise SystemExit('STOP CRITIQUE: mode publication différent de Administrator')
+
+          forbidden_true = re.compile(r'\b(trade_endpoint|canonical_price_created|financial_signal|write_capability)\s*[":=]+\s*true\b', re.I)
+          for rel in files:
+              p = root / rel
+              if p.suffix.lower() in {'.js', '.json', '.html', '.css', '.md'}:
+                  text = p.read_text(encoding='utf-8', errors='replace')
+                  if forbidden_true.search(text):
+                      raise SystemExit(f'STOP CRITIQUE: capacité interdite activée dans {rel}')
+
+          for rel in ('app.js', 'js/app.js'):
+              text = (root / rel).read_text(encoding='utf-8', errors='replace')
+              after = {m: text.count(m) for m in budget_markers}
+              for marker in budget_markers:
+                  if after[marker] > before_budget[rel][marker]:
+                      raise SystemExit(f'STOP CRITIQUE: budget runtime augmenté {rel} {marker}: {before_budget[rel][marker]} -> {after[marker]}')
+
+          pb = root / 'js/views/private-backend-sources.js'
+          if pb.is_file() and 'setInterval(' in pb.read_text(encoding='utf-8', errors='replace'):
+              raise SystemExit('STOP CRITIQUE: polling permanent interdit dans private-backend-sources.js')
+
+          hashes = manifest.get('files') or {}
+          for rel, expected in hashes.items():
+              p = root / rel
+              if not p.is_file():
+                  raise SystemExit(f'STOP CRITIQUE: fichier manifest absent {rel}')
+              actual = hashlib.sha256(p.read_bytes()).hexdigest()
+              if actual != expected:
+                  raise SystemExit(f'STOP CRITIQUE: hash manifest faux {rel}')
+          for rel in files:
+              if rel not in ('version.json', 'administrator-version.json') and rel not in hashes:
+                  raise SystemExit(f'STOP CRITIQUE: fichier modifié non déclaré dans version.json: {rel}')
+
+          index = (root / 'index.html').read_text(encoding='utf-8', errors='replace')
+          ids = re.findall(r'\bid=["\']([^"\']+)["\']', index)
+          if len(ids) != len(set(ids)):
+              dup = sorted({x for x in ids if ids.count(x) > 1})[:10]
+              raise SystemExit('STOP CRITIQUE: IDs HTML dupliqués: ' + ', '.join(dup))
+
+          receipt_dir = repo / 'coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts'
+          receipt_dir.mkdir(parents=True, exist_ok=True)
+          receipt = {
+              'schema': 'agent_crypto_auto_update_receipt_v1',
+              'build': build,
+              'parent_build': parent,
+              'status': 'VALIDATED_PENDING_JS_SYNTAX',
+              'market_core': '38.15.11',
+              'files': files,
+              'critical_stop': False
+          }
+          (receipt_dir / f'{build}.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          Path('/tmp/agent_crypto_auto_env').write_text(f'BUILD={build}\nPARENT={parent}\n', encoding='utf-8')
+          PY
+          cat /tmp/agent_crypto_auto_env >> "$GITHUB_ENV"
+
+      - name: JavaScript syntax gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          if [ -f "$ROOT/js/views/private-backend-sources.js" ]; then
+            node --check "$ROOT/js/views/private-backend-sources.js"
+          fi
+
+      - name: Finalize receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, os
+          p = Path('coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts') / f"{os.environ['BUILD']}.json"
+          data = json.loads(p.read_text(encoding='utf-8'))
+          data['status'] = 'PASS'
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit validated update atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Auto-Update Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts
+          git rm -r coordination/inter_ai_dialogues/agent_crypto/auto_update
+          git commit -m "agent-crypto: auto deploy ${BUILD} from ${PARENT}"
+          git push origin HEAD:main
