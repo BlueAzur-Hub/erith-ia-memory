@@ -2600,28 +2600,27 @@ function atlasV2SyncShareableUrl(mode, options = {}) {
   } catch {}
 }
 
-// 40.4.38 — Administrator canonical URL checkpoint.
-// 40.4.37 field evidence showed Administrator returning to Web-Classic-class
-// responsiveness once the authenticated owner no longer carried a contradictory
-// ?view=intermediate authority. Keep that proven lock and retire the temporary
-// ?admin_diag differential query from the production URL. Hash and unrelated
-// query parameters are preserved. No reload, timer, observer or storage write.
-function atlasV2CanonicalizeAdministratorUrl40438(reason = "mode-apply") {
+// 40.4.39 — CANONICAL OWNER: Administrator role/URL truth.
+// Introduced as a bounded recovery in 40.4.37/40.4.38, now promoted to a
+// permanent functional owner: authenticated Administrator never carries a
+// contradictory Intermediate URL authority. Legacy admin_diag is retired on
+// sight for backward-compatible cleanup. No reload, timer, observer or storage write.
+function atlasV2CanonicalizeAdministratorUrl(reason = "mode-apply") {
   if (!atlasAccessIsAuthorized()) return false;
   try {
     const url = new URL(window.location.href);
     const hadView = url.searchParams.has("view");
     const hadRetiredDiagnostic = url.searchParams.has("admin_diag");
     if (!hadView && !hadRetiredDiagnostic) {
-      document.documentElement.dataset.adminUrlTruth40438 = "canonical";
-      document.documentElement.dataset.adminUrlTruthReason40438 = reason;
+      document.documentElement.dataset.adminUrlTruth = "canonical";
+      document.documentElement.dataset.adminUrlTruthReason = reason;
       return false;
     }
     url.searchParams.delete("view");
     url.searchParams.delete("admin_diag");
     history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
-    document.documentElement.dataset.adminUrlTruth40438 = "canonicalized";
-    document.documentElement.dataset.adminUrlTruthReason40438 = reason;
+    document.documentElement.dataset.adminUrlTruth = "canonicalized";
+    document.documentElement.dataset.adminUrlTruthReason = reason;
     return true;
   } catch {
     return false;
@@ -2774,7 +2773,7 @@ function atlasV2ApplyMode(mode, options = {}) {
 
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, next);
   if (options.syncUrl === true) atlasV2SyncShareableUrl(next, { push: options.pushUrl === true });
-  if (administrator) atlasV2CanonicalizeAdministratorUrl40438("advanced-mode-applied");
+  if (administrator) atlasV2CanonicalizeAdministratorUrl("advanced-mode-applied");
   atlasScheduleStableChartResize();
   atlasScheduleRuntimeValidation("mode-apply");
   window.dispatchEvent(new CustomEvent("atlas:v2mode", { detail: { mode: next, role } }));
@@ -50574,7 +50573,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.38";
+const ATLAS_BUILD = "40.4.39";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -52068,7 +52067,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   }
 
   const snapshot = {
-    build:"40.4.38",
+    build:"40.4.39",
     scope,
     auto_reader_ready:!!$("auto-reader"),
     shared_ready:!!$("shared-memory"),
@@ -52081,7 +52080,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   return snapshot;
 }
 try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25-compat",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
-try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.38",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
+try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.39",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
 atlasRebindDeferredMemoryPanels40425("all");
 

@@ -1,0 +1,130 @@
+{
+  "schema": "agent_crypto_administrator_ownership_v1",
+  "build": "40.4.39",
+  "parent_build": "40.4.38",
+  "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
+  "rules": {
+    "market_core_protected": "38.15.11",
+    "runtime_truth_precedes_presentation": true,
+    "no_new_timer_observer_network_storage_owner": true,
+    "firefox_operator_runtime_is_final_authority": true
+  },
+  "owners": [
+    {
+      "component": "Market Core / live market runtime",
+      "owner": "app.js",
+      "state": "PROTECTED",
+      "notes": "38.15.11 behavior unchanged."
+    },
+    {
+      "component": "Administrator role + canonical URL truth",
+      "owner": "app.js::atlasV2CanonicalizeAdministratorUrl",
+      "state": "CANONICAL",
+      "introduced": "40.4.37",
+      "canonicalized": "40.4.39"
+    },
+    {
+      "component": "Administrator Window Manager",
+      "owner": "js/core/admin-window-manager.js",
+      "state": "PROTECTED_CANONICAL",
+      "notes": "40.4.39 does not modify manager behavior."
+    },
+    {
+      "component": "Administrator Atlas primary family visibility",
+      "owner": "js/app.js::ensureAdministratorAtlasVisible",
+      "state": "CANONICAL",
+      "introduced": "40.4.36",
+      "canonicalized": "40.4.39"
+    },
+    {
+      "component": "Presentation boundary registry",
+      "owner": "js/views/presentation-boundaries.js",
+      "state": "CANONICAL"
+    },
+    {
+      "component": "Projects presentation",
+      "owner": "js/views/projects-presentation.js + js/views/projects-demand-residency.js + views/projects.html",
+      "state": "TRUE_LAZY_COMPLETE"
+    },
+    {
+      "component": "Operations presentation",
+      "owner": "js/views/operations-presentation.js + js/views/operations-demand-residency.js + views/operations.html",
+      "state": "TRUE_LAZY_COMPLETE"
+    },
+    {
+      "component": "System peripheral presentation",
+      "owner": "js/views/system-presentation.js + views/system.html",
+      "state": "TRUE_LAZY_COMPLETE",
+      "protected_resident": [
+        "Storage Health",
+        "Grey Plate Forensic",
+        "Simulation + Learning runtime"
+      ]
+    },
+    {
+      "component": "Atlas presentation",
+      "owner": "js/views/atlas-presentation.js",
+      "state": "CANONICAL"
+    },
+    {
+      "component": "Atlas peripheral lazy presentation",
+      "owner": "js/views/atlas-peripheral-lazy.js + views/atlas.html",
+      "state": "TRUE_LAZY_PARTIAL",
+      "covered": [
+        "Auto Reader body",
+        "Shared Memory body",
+        "GitHub Memory body",
+        "Book/Knowledge bodies",
+        "CURRENT audit heavy bodies"
+      ]
+    },
+    {
+      "component": "Atlas CURRENT pipeline",
+      "owner": "app.js shared runtime + IndexedDB truth",
+      "state": "PROTECTED",
+      "notes": "4/4 → NØX → Aerith verified; no further extraction without proof."
+    },
+    {
+      "component": "Oracle presentation",
+      "owner": "js/views/oracle-presentation.js + js/views/oracle-demand-residency.js + js/views/oracle-ui-continuity.js",
+      "state": "NEXT_MIGRATION_TARGET",
+      "notes": "Demand-residency exists; true-lazy body hydration remains planned."
+    },
+    {
+      "component": "Learning Journey 01→11 presentation CSS",
+      "owner": "admin-learning-journey-recovery-40422.css",
+      "state": "TRANSITIONAL_FILENAME",
+      "target": "admin-learning-journey.css",
+      "notes": "Functional owner is real; historical build number in permanent filename remains debt. Rename deferred to bounded file-level surgery."
+    },
+    {
+      "component": "Learning Journey runtime / progress / IndexedDB",
+      "owner": "app.js existing learning engine",
+      "state": "PROTECTED",
+      "notes": "Presentation may be lazy later; state machine remains resident."
+    },
+    {
+      "component": "Firefox compositor policy",
+      "owner": "admin-firefox-compositor.css",
+      "state": "CANONICAL_MONITOR",
+      "notes": "No new optimization while Administrator remains Web-Classic-class responsive."
+    },
+    {
+      "component": "Historical cumulative CSS",
+      "owner": "admin-aether-cumulative-40396.css",
+      "state": "AUDIT_REQUIRED",
+      "notes": "Do not merge/delete before selector ownership proof."
+    },
+    {
+      "component": "Offscreen paint gate legacy files",
+      "owner": "admin-offscreen-paint-gate.css + js/admin-offscreen-paint-gate.js",
+      "state": "AUDIT_REQUIRED",
+      "notes": "Historical runtime was retired in lineage; physical file references require proof before deletion."
+    }
+  ],
+  "next": {
+    "40.4.40": "Oracle true-lazy presentation wave; audit and surgery in same build, no separate validation-only build.",
+    "40.4.41": "Learning Journey presentation true-lazy + canonical CSS filename if Oracle checkpoint remains clean.",
+    "40.4.42": "Administrator cumulative migration acceptance/final debt map; no feature expansion."
+  }
+}
