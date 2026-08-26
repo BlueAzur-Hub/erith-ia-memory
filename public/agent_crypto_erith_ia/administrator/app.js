@@ -50543,7 +50543,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.30";
+const ATLAS_BUILD = "40.4.31";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -51933,7 +51933,7 @@ function atlasMultiCollectorOperatorInit() {
 
 
 /* ============================================================
-   40.4.30 — ATLAS PERIPHERAL / AUTO READER LATE-HYDRATION ACTION REBIND
+   40.4.31 — ATLAS PRESENTATION LATE-HYDRATION ACTION REBIND
    Auto Reader + Shared Memory + GitHub Memory presentation can now appear after app.js boot.
    Existing data/runtime owners remain unchanged; this function only refreshes
    cached DOM references, binds the historical actions once and renders current state.
@@ -51942,6 +51942,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   const auto = scope === "all" || scope === "auto-reader";
   const shared = scope === "all" || scope === "shared-memory";
   const github = scope === "all" || scope === "github-memory";
+  const currentAudit = scope === "all" || scope === "current-audit";
   const refresh = (prop, id) => { els[prop] = $(id); return els[prop]; };
   const bindOnce = (node, type, key, handler) => {
     if (!node || node.dataset[key] === "1") return false;
@@ -52010,19 +52011,30 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
     try { renderMemoryTruth(); } catch (_) {}
   }
 
+  if (currentAudit) {
+    // 40.4.31: these four panels are presentation-only readers of state already
+    // owned by the historical Atlas runtime. Hydration must only replay renderers.
+    try { atlasStableStackRender(); } catch (_) {}
+    try { atlasAnalyticalTruthRender(); } catch (_) {}
+    try { atlasRenderSnapshotLiveTruth(); } catch (_) {}
+    try { atlasCurrentTruthRender33(); } catch (_) {}
+    try { if (typeof atlasBookRoleUiLock3812 === "function") atlasBookRoleUiLock3812("current-audit-hydration-40431"); } catch (_) {}
+  }
+
   const snapshot = {
-    build:"40.4.30",
+    build:"40.4.31",
     scope,
     auto_reader_ready:!!$("auto-reader"),
     shared_ready:!!$("shared-memory"),
     github_ready:!!$("github-memory"),
+    current_audit_roots_ready:["atlasStableStack","atlasAnalyticalTruth","atlasFrameTruth","atlasCurrentTruth33"].every(id=>!!$(id)),
     checked_at:new Date().toISOString()
   };
   try { globalThis.__AGENT_CRYPTO_ATLAS_PERIPHERAL_REBIND_40425__ = snapshot; } catch (_) {}
   return snapshot;
 }
 try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25-compat",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
-try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.30",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
+try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.31",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
 atlasRebindDeferredMemoryPanels40425("all");
 

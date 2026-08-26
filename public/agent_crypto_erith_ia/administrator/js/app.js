@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.30";
+  const ADMIN_BUILD = "40.4.31";
   const ADMIN_RELEASE = "AETHER ATLAS AUTO READER BODY LAZY HYDRATION + RUNTIME PARITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
