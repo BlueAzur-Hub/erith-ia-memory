@@ -45067,7 +45067,7 @@ function atlasExchangeQuoteForCoin(coinOrId, now = Date.now()) {
 
 
 /* ============================================================
-   40.4.54 — SOURCE TRUTH CEX WAVE 1 · BINANCE PRIMARY ACCESSOR
+   40.4.55 — SOURCE TRUTH CEX WAVE 1 · BINANCE PRIMARY ACCESSOR
 
    Read-only accessor over the already-running Binance direct EUR WebSocket
    owner.  Kraken/Coinbase presentation may compare against this observation,
@@ -45099,7 +45099,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.54",
+    build:"40.4.55",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -50942,7 +50942,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.54";
+const ATLAS_BUILD = "40.4.55";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -51433,7 +51433,7 @@ async function atlasVersionCheck(options = {}) {
     atlasVersionAwarenessState.remoteToken = remote.token;
     atlasVersionAwarenessState.lastCheckedAt = Date.now();
 
-    // 40.4.54 — GitHub Pages can briefly publish build and token from
+    // 40.4.55 — GitHub Pages can briefly publish build and token from
     // different propagation edges.  A structurally readable manifest with a
     // token mismatch is a publication-sync state, not a network/application
     // failure.  Remote app verification still gates any actual update.

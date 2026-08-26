@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_private_backend_sources_v2",
-  "build": "40.4.54",
-  "backend_version": "1.0.0",
+  "build": "40.4.55",
+  "backend_version": "1.1.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
   "mode": "READ_ONLY_PUBLIC_MARKET_DATA",
@@ -75,5 +75,20 @@
     "manifest_token_mismatch": "SYNCING_NOT_FAILURE",
     "network_or_json_failure": "FAILURE",
     "remote_app_verification_still_required_before_update": true
+  },
+  "dex_defi_context_wave_2_40455": {
+    "owner": "private backend 127.0.0.1:8790 + js/views/private-backend-sources.js",
+    "sources": [
+      "DEX Screener public API",
+      "GeckoTerminal public API",
+      "DefiLlama free API"
+    ],
+    "mode": "READ_ONLY_CONTEXT_ONLY",
+    "trigger": "operator_only",
+    "cache_seconds": 60,
+    "cex_primary_unchanged": "Binance",
+    "canonical_price_created": false,
+    "trading_endpoint": false,
+    "notes": "DEX symbol/pool discovery is context and never identity proof or CEX price replacement."
   }
 }

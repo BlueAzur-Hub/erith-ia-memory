@@ -1,11 +1,11 @@
-/* Agent-Crypto @erith.IA — 40.4.54
-   SOURCE TRUTH CEX WAVE 1 · PRIVATE LOCAL BACKEND V1
+/* Agent-Crypto @erith.IA — 40.4.55
+   SOURCE TRUTH CEX WAVE 1 + DEX/DEFI CONTEXT WAVE 2 · PRIVATE LOCAL BACKEND V1.1
    Binance direct EUR WebSocket stays primary runtime owner.
    Kraken + Coinbase remain loopback read-only controls.
    No timer, observer, storage write, wallet, order or trading endpoint. */
 (()=>{
   "use strict";
-  const BUILD="40.4.54";
+  const BUILD="40.4.55";
   const API="http://127.0.0.1:8790";
   const BACKEND_SELECTOR='details[data-collapse-key="backend"]';
   const ASSETS=Object.freeze(["BTC","ETH","BNB","XRP","SOL"]);
@@ -13,9 +13,10 @@
   let mounted=false,inflight=null,lastTruth=null;
 
   const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-  const num=value=>Number.isFinite(Number(value))?Number(value):null;
+  const num=value=>(value===null||value===undefined||value==="")?null:(Number.isFinite(Number(value))?Number(value):null);
   const eur=value=>{const n=num(value);return n===null?"—":new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:n<10?4:2}).format(n);};
   const pct=value=>{const n=num(value);return n===null?"—":`${n.toFixed(3)} %`;};
+  const usd=value=>{const n=num(value);if(n===null)return "—";const abs=Math.abs(n);const compact=abs>=1e9?`${(n/1e9).toFixed(2)} Md$`:abs>=1e6?`${(n/1e6).toFixed(2)} M$`:abs>=1e3?`${(n/1e3).toFixed(1)} k$`:`${n.toFixed(abs<10?4:2)} $`;return compact;};
   const backendDetails=()=>document.querySelector(BACKEND_SELECTOR);
   const backendBody=()=>backendDetails()?.querySelector(":scope > .atlas-collapse-body")||backendDetails()?.querySelector(".atlas-collapse-body")||null;
 
@@ -42,6 +43,13 @@
         <tbody id="privateBackendRows4053">${ASSETS.map(a=>`<tr><th>${a}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>EN ATTENTE</td></tr>`).join("")}</tbody>
       </table></div>
       <p class="private-backend-note" id="privateBackendNote4053">La concordance compare des observations indépendantes ; Binance reste la source LIVE primaire d'Agent-Crypto et aucune médiane ne remplace son prix.</p>
+      <section class="private-context-v2" id="privateDexDefiContext4055" aria-labelledby="privateDexDefiTitle4055">
+        <div class="private-context-head"><div><p class="eyebrow">DEX / DEFI CONTEXT · READ ONLY</p><h4 id="privateDexDefiTitle4055">DEX Screener + GeckoTerminal + DefiLlama</h4><p>Contexte de liquidité et d'activité décentralisée séparé de la vérité CEX. Aucun prix DEX n'est promu prix canonique.</p></div><span class="pill warn" id="privateDexDefiStatus4055">NON LU</span></div>
+        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateDexDefiRefresh4055">Actualiser contexte DEX / DeFi</button><span id="privateDexDefiDetail4055">À la demande · cache local 60 s · aucune boucle</span></div>
+        <div class="private-defi-grid" id="privateDefiSummary4055"><article><span>DefiLlama</span><b>EN ATTENTE</b><small>DEX volume par chaîne</small></article><article><span>DEX Screener</span><b>EN ATTENTE</b><small>pool liquide découvert</small></article><article><span>GeckoTerminal</span><b>EN ATTENTE</b><small>pool liquide recoupé</small></article></div>
+        <div class="private-backend-table-wrap"><table class="private-backend-table private-context-table"><thead><tr><th>Actif</th><th>DEX Screener</th><th>Liquidité</th><th>GeckoTerminal</th><th>Réserve</th><th>Rôle</th></tr></thead><tbody id="privateDexDefiRows4055">${ASSETS.map(a=>`<tr><th>${a}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>CONTEXTE</td></tr>`).join("")}</tbody></table></div>
+        <p class="private-backend-note">Découverte par symbole/pool : utile pour le contexte de liquidité, mais insuffisante pour prouver l'identité d'un actif. Binance/Kraken/Coinbase restent la couche CEX.</p>
+      </section>
     </section>`;}
 
   function setStatus(text,tone="warn",detail=""){
@@ -88,12 +96,40 @@
     const note=document.getElementById("privateBackendNote4053");if(note)note.textContent=`Source Truth CEX · écart cohérent ≤ ${COHERENT} % · surveillance ≤ ${WATCH} % · Binance reste primaire · aucune exécution.`;
     try{document.dispatchEvent(new CustomEvent("erith:cex-source-truth",{detail:lastTruth}));}catch(_){}
   }
+  function contextPoolLabel(item){
+    if(!item||item.status!=="ok")return "—";
+    const chain=item.chain||item.network||"?",dex=item.dex||"pool",name=item.name||`${item.base_symbol||"?"}/${item.quote_symbol||"?"}`;
+    return `${chain} · ${dex} · ${name}`;
+  }
+  function renderContext(data){
+    const tbody=document.getElementById("privateDexDefiRows4055");if(!tbody)return;
+    const rows=Array.isArray(data?.assets)?data.assets:[];let dsOk=0,gtOk=0;
+    tbody.innerHTML=ASSETS.map(asset=>{
+      const row=rows.find(r=>r.asset===asset)||{},ds=row.dexscreener||{},gt=row.geckoterminal||{};
+      if(ds.status==="ok")dsOk++;if(gt.status==="ok")gtOk++;
+      return `<tr><th>${asset}</th><td>${esc(contextPoolLabel(ds))}</td><td>${esc(usd(ds.liquidity_usd))}</td><td>${esc(contextPoolLabel(gt))}</td><td>${esc(usd(gt.reserve_usd))}</td><td><span class="is-muted">CONTEXTE</span></td></tr>`;
+    }).join("");
+    const llama=data?.defillama||{},chains=Array.isArray(llama.chains)?llama.chains:[];
+    const summary=document.getElementById("privateDefiSummary4055");
+    if(summary){
+      const chainCards=chains.map(c=>`<article><span>DefiLlama · ${esc(c.chain)}</span><b>${esc(usd(c.dex_volume_24h_usd))}</b><small>volume DEX 24 h · contexte</small></article>`).join("");
+      summary.innerHTML=chainCards+`<article><span>DEX Screener</span><b>${dsOk}/${ASSETS.length}</b><small>pools canoniques trouvés</small></article><article><span>GeckoTerminal</span><b>${gtOk}/${ASSETS.length}</b><small>pools recoupés</small></article>`;
+    }
+    const status=document.getElementById("privateDexDefiStatus4055");if(status){status.className=`pill ${(dsOk||gtOk||chains.length)?"ok":"warn"}`;status.textContent=(dsOk||gtOk||chains.length)?"CONTEXT READY":"PARTIEL";}
+    const detail=document.getElementById("privateDexDefiDetail4055");if(detail)detail.textContent=`DEX Screener ${dsOk}/5 · GeckoTerminal ${gtOk}/5 · DefiLlama ${chains.length}/${3} chaîne(s) · context only`;
+    try{document.dispatchEvent(new CustomEvent("erith:dex-defi-context",{detail:data}));}catch(_){}
+  }
+  async function refreshContext(){
+    const badge=document.getElementById("privateDexDefiStatus4055");if(badge){badge.className="pill warn";badge.textContent="LECTURE…";}
+    try{const data=await getJson(`/context?assets=${encodeURIComponent(ASSETS.join(","))}`);renderContext(data);return data;}catch(error){if(badge){badge.className="pill warn";badge.textContent="INDISPONIBLE";}const d=document.getElementById("privateDexDefiDetail4055");if(d)d.textContent=`Contexte DEX / DeFi indisponible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`;return null;}
+  }
+
   async function probe(){if(inflight)return inflight;setStatus("TEST…","warn","Connexion à 127.0.0.1:8790…");inflight=getJson("/health").then(data=>{renderHealth(data);return data;}).catch(error=>{setStatus("OFFLINE","warn",`Backend local indisponible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`);return null;}).finally(()=>{inflight=null;});return inflight;}
   async function refresh(){setStatus("LECTURE…","warn","Binance LIVE + Kraken + Coinbase…");try{const data=await getJson(`/quotes?assets=${encodeURIComponent(ASSETS.join(","))}`);renderQuotes(data);}catch(error){setStatus("INDISPONIBLE","warn",`Lecture sources impossible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`);}}
-  function mount(){if(mounted&&document.getElementById("privateBackendV1"))return true;const body=backendBody();if(!body)return false;if(!document.getElementById("privateBackendV1"))body.insertAdjacentHTML("beforeend",shell());document.getElementById("privateBackendHealth4053")?.addEventListener("click",probe);document.getElementById("privateBackendRefresh4053")?.addEventListener("click",refresh);mounted=true;probe();return true;}
+  function mount(){if(mounted&&document.getElementById("privateBackendV1"))return true;const body=backendBody();if(!body)return false;if(!document.getElementById("privateBackendV1"))body.insertAdjacentHTML("beforeend",shell());document.getElementById("privateBackendHealth4053")?.addEventListener("click",probe);document.getElementById("privateBackendRefresh4053")?.addEventListener("click",refresh);document.getElementById("privateDexDefiRefresh4055")?.addEventListener("click",refreshContext);mounted=true;probe();return true;}
   function bind(){const detail=backendDetails();if(!detail)return false;if(detail.dataset.privateBackend4054!=="1"){detail.dataset.privateBackend4054="1";detail.addEventListener("toggle",()=>{if(detail.open)mount();});}if(detail.open)mount();return true;}
   bind();
-  // 40.4.54 canonical System true-lazy handoff: system-presentation replaces the
+  // 40.4.55 canonical System true-lazy handoff: system-presentation replaces the
   // backend body only after its asynchronous hydration completes. Re-mount the
   // Source Truth panel after that owner signals the real body is resident.
   window.addEventListener("erith:system-hydrated",event=>{
@@ -106,5 +142,5 @@
   // non-bubbling, so bind directly on the backend <details> when available.
   const detail=backendDetails();
   detail?.addEventListener("erith:presentation-resident",()=>{mounted=false;bind();if(detail.open)mount();});
-  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.0.0",api:API,mode:"READ_ONLY",mount,probe,refresh,snapshot:()=>lastTruth,system_hydration_rebind:true,new_timer:false,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false});
+  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.1.0",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,snapshot:()=>lastTruth,system_hydration_rebind:true,new_timer:false,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false});
 })();
