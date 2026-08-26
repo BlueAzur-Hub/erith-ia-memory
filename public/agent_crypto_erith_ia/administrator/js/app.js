@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.52";
+  const ADMIN_BUILD = "40.4.53";
   const ADMIN_RELEASE = "AETHER CLOSED CURRENT REST UI CONVERGENCE + SAME-SNAPSHOT REOPEN GUARD LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";

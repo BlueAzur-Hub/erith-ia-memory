@@ -50895,7 +50895,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.52";
+const ATLAS_BUILD = "40.4.53";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -61559,7 +61559,7 @@ function atlasCurrentPendingAutoKick4051(reason="bridge-ready") {
 
     if (!marketId) return false;
 
-    // 40.4.52 — the transaction proof is stronger than boot-order-dependent
+    // 40.4.53 — the transaction proof is stronger than boot-order-dependent
     // lastDone hydration.  If the exact canonical snapshot already has a
     // verified CLOSED CURRENT, never reopen it merely because the persisted
     // market-id gate has not finished restoring yet.
@@ -61615,7 +61615,7 @@ try {
 
 
 /* ============================================================
-   40.4.52 — CLOSED CURRENT REST UI CONVERGENCE
+   40.4.53 — CLOSED CURRENT REST UI CONVERGENCE
 
    40.4.51 correctly re-armed a genuinely NEW canonical snapshot after
    auth/Bridge readiness, but operator export showed a boot-order race where
@@ -61652,7 +61652,7 @@ function atlasCurrentRestUiConverge4052(reason="bridge-ready") {
 
 try {
   globalThis.__AGENT_CRYPTO_CURRENT_REST_UI_40452__ = Object.freeze({
-    build:"40.4.52",
+    build:"40.4.53",
     parent:"40.4.51",
     exact_canonical_market_id_required:true,
     verified_closed_transaction_required:true,

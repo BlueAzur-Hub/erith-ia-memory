@@ -1,0 +1,51 @@
+{
+  "schema": "agent_crypto_private_backend_sources_v1",
+  "build": "40.4.53",
+  "backend_version": "1.0.0",
+  "endpoint": "http://127.0.0.1:8790",
+  "binding": "loopback_only",
+  "mode": "READ_ONLY_PUBLIC_MARKET_DATA",
+  "cache": {
+    "type": "memory_only",
+    "ttl_seconds": 15,
+    "persistent": false
+  },
+  "sources": [
+    {
+      "id": "kraken",
+      "role": "secondary_spot_eur_control",
+      "endpoint_family": "https://api.kraken.com/0/public/Ticker",
+      "authentication": "none",
+      "write_capability": false
+    },
+    {
+      "id": "coinbase",
+      "role": "secondary_spot_eur_control",
+      "endpoint_family": "https://api.exchange.coinbase.com/products/{product_id}/stats",
+      "authentication": "none",
+      "write_capability": false
+    }
+  ],
+  "forbidden": [
+    "orders",
+    "trading",
+    "wallet",
+    "withdrawal",
+    "seed",
+    "signature",
+    "private_exchange_api"
+  ],
+  "concordance": {
+    "purpose": "technical observation only",
+    "coherent_max_spread_pct": 0.25,
+    "watch_max_spread_pct": 0.75,
+    "canonical_price_created": false,
+    "financial_signal": false
+  },
+  "bridge_separation": {
+    "ollama_bridge_port": 8787,
+    "private_backend_port": 8790,
+    "same_process": false,
+    "reason": "separate IA-local ownership from external read-only source ownership"
+  }
+}
