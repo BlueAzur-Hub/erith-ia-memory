@@ -1,0 +1,79 @@
+/* Agent-Crypto @erith.IA — Transformer Book menu comfort
+   Introduced in 40.4.26. Presentation only: larger readable/clickable navigation
+   targets on compact desktop/tablet viewports. No chart, runtime or business logic. */
+
+@media (max-width: 1500px) {
+  .atlas-view-switcher{
+    gap:8px !important;
+    align-items:center !important;
+  }
+  .atlas-view-switcher .atlas-view-button{
+    min-height:42px !important;
+    padding:8px 14px !important;
+    gap:8px !important;
+    font-size:13px !important;
+    line-height:1.1 !important;
+    white-space:nowrap !important;
+  }
+  .atlas-view-switcher .atlas-view-button-icon{
+    width:18px !important;
+    height:18px !important;
+    flex:0 0 18px !important;
+  }
+
+  .atlas-v2-interface-bar .atlas-v2-nav{
+    min-height:46px !important;
+    gap:8px !important;
+    overscroll-behavior-x:contain;
+  }
+  .atlas-v2-interface-bar .atlas-quick-link,
+  .atlas-admin-command-shortcuts > button,
+  .atlas-admin-graph-toggle,
+  .atlas-admin-center-toggle{
+    min-height:40px !important;
+    padding:8px 12px !important;
+    gap:7px !important;
+    font-size:12.5px !important;
+    line-height:1.12 !important;
+    white-space:nowrap !important;
+    flex:0 0 auto !important;
+  }
+  .atlas-v2-interface-bar .atlas-quick-icon,
+  .atlas-admin-shortcut-icon-40290{
+    width:17px !important;
+    height:17px !important;
+    min-width:17px !important;
+  }
+  .atlas-admin-command-shortcuts > button > span,
+  .atlas-admin-graph-toggle > span,
+  .atlas-admin-center-toggle > span{
+    font-size:12.5px !important;
+    font-weight:850 !important;
+  }
+  .atlas-admin-command-shortcuts > button > b,
+  .atlas-admin-graph-toggle > b,
+  .atlas-admin-center-toggle > b{
+    font-size:11.5px !important;
+  }
+}
+
+@media (max-width: 1180px), (pointer: coarse) {
+  .atlas-view-switcher .atlas-view-button{
+    min-height:44px !important;
+    padding-inline:15px !important;
+    font-size:13.5px !important;
+  }
+  .atlas-v2-interface-bar .atlas-quick-link,
+  .atlas-admin-command-shortcuts > button,
+  .atlas-admin-graph-toggle,
+  .atlas-admin-center-toggle{
+    min-height:44px !important;
+    padding:9px 13px !important;
+    font-size:13px !important;
+  }
+  .atlas-v2-interface-bar .atlas-v2-nav,
+  .atlas-v2-nav-essential.atlas-quick-dock,
+  .atlas-admin-command-bar{
+    scrollbar-width:thin !important;
+  }
+}
