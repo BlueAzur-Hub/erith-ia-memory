@@ -26496,6 +26496,80 @@ function atlasLocalConclusionTruthPolish(answer, snapshot) {
   return text;
 }
 
+/* ============================================================
+   40.4.58 — SOURCE INTELLIGENCE V2 → ATLAS OPTIONAL READ-ONLY TRANSPORT
+
+   Source Intelligence is auxiliary context only. It is appended to the
+   transport copy sent to the local Bridge after the canonical CURRENT
+   fingerprint already exists. Therefore it cannot create/reopen a CURRENT,
+   alter the market snapshot identity, or become an execution price/signal.
+   Atlas receives no direct Internet capability: the browser only passes the
+   last bounded local-backend contract when available.
+   ============================================================ */
+function atlasSourceIntelligenceTransport4058() {
+  try {
+    const api = globalThis.ErithPrivateBackendSources4054;
+    const intel = api?.sourceIntelligence?.();
+    if (!intel || String(intel.schema || "") !== "agent_crypto_source_intelligence_v2") return null;
+    return {
+      schema: "agent_crypto_source_intelligence_atlas_context_v1",
+      source_schema: intel.schema,
+      generated_at_utc: intel.generated_at_utc || null,
+      state: intel.state || "partial",
+      cex: intel.cex || null,
+      dex: intel.dex || null,
+      defi: intel.defi || null,
+      freshness: intel.freshness || null,
+      provenance: intel.provenance || null,
+      safeguards: {
+        read_only_context: true,
+        optional: true,
+        canonical_price_created: false,
+        dex_price_promoted: false,
+        financial_signal: false,
+        missing_data_fabricated: false,
+        atlas_direct_internet_access: false,
+        current_fingerprint_participation: false,
+        current_cadence_unchanged: true
+      }
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
+function atlasSnapshotWithSourceIntelligence4058(snapshot) {
+  const intel = atlasSourceIntelligenceTransport4058();
+  if (!intel || !snapshot || typeof snapshot !== "object") return snapshot;
+  const contract = snapshot.strict_contract;
+  if (!contract || typeof contract !== "object") return snapshot;
+  return {
+    ...snapshot,
+    strict_contract: {
+      ...contract,
+      source_intelligence_v2: intel
+    },
+    source_intelligence_transport_v1: {
+      attached: true,
+      optional: true,
+      transaction_identity_excluded: true,
+      build: "40.4.58"
+    }
+  };
+}
+
+try {
+  globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
+    build: "40.4.58",
+    mode: "OPTIONAL_READ_ONLY_CONTEXT",
+    owner: "app.js transport copy + ErithPrivateBackendSources4054",
+    atlas_direct_internet_access: false,
+    current_fingerprint_participation: false,
+    current_cadence_unchanged: true,
+    trading_or_execution_capability: false
+  });
+} catch (_) {}
+
 async function atlasLocalReportRequestReliable(mode, snapshot, token) {
   let lastError = null;
   for (let attempt = 1; attempt <= 2; attempt += 1) {
@@ -26504,7 +26578,7 @@ async function atlasLocalReportRequestReliable(mode, snapshot, token) {
       const result = await atlasLocalBridgeRequest("/summary", {
         profile: "atlas",
         mode,
-        snapshot,
+        snapshot: atlasSnapshotWithSourceIntelligence4058(snapshot),
         response_language: "fr-FR",
         language_lock: "french_only_except_standard_crypto_acronyms",
         report_suite_context: {
@@ -27354,7 +27428,7 @@ async function atlasLocalConclusionRun(options = {}) {
   try {
     const result = await atlasLocalBridgeRequest("/conclusion", {
       profile: "aerith",
-      snapshot,
+      snapshot: atlasSnapshotWithSourceIntelligence4058(snapshot),
       report_fingerprint: fingerprint,
       report_modes: ATLAS_LOCAL_REPORT_MODES.slice(),
       reports: Object.fromEntries(ATLAS_LOCAL_REPORT_MODES.map(mode => {
@@ -27638,7 +27712,7 @@ async function atlasLocalDialogueRunSummary(mode = "market") {
     const result = await atlasLocalBridgeRequest("/summary", {
       profile: atlasLocalDialogueState.profile,
       mode,
-      snapshot,
+      snapshot: atlasSnapshotWithSourceIntelligence4058(snapshot),
       response_language: "fr-FR",
       language_lock: "french_only_except_standard_crypto_acronyms"
     });
@@ -45099,7 +45173,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.57",
+    build:"40.4.58",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -50942,7 +51016,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.57";
+const ATLAS_BUILD = "40.4.58";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55365,7 +55439,7 @@ function atlasQuestionFreeContext37(profile, question) {
   return {
     profile,
     question,
-    snapshot,
+    snapshot:atlasSnapshotWithSourceIntelligence4058(snapshot),
     pedagogy_contract:atlasPedagogyV2QuestionContract(question,snapshot),
     current_reports:currentReports,
     current_conclusion:

@@ -1,11 +1,11 @@
-/* Agent-Crypto @erith.IA — 40.4.57
-   SOURCE INTELLIGENCE V1.1 · IDENTITY HARDENING · PRIVATE LOCAL BACKEND V1.3
+/* Agent-Crypto @erith.IA — 40.4.58
+   SOURCE INTELLIGENCE V1.2 · AUTO READ-ONLY · PRIVATE LOCAL BACKEND V1.3
    Binance direct EUR WebSocket stays primary runtime owner.
    Kraken + Coinbase remain loopback read-only controls.
    No timer, observer, storage write, wallet, order or trading endpoint. */
 (()=>{
   "use strict";
-  const BUILD="40.4.57";
+  const BUILD="40.4.58";
   const API="http://127.0.0.1:8790";
   const BACKEND_SELECTOR='details[data-collapse-key="backend"]';
   const ASSETS=Object.freeze(["BTC","ETH","BNB","XRP","SOL"]);
@@ -29,7 +29,7 @@
       </div><span class="pill warn" id="privateBackendStatus4053">NON TESTÉ</span></div>
       <div class="private-backend-actions">
         <button class="btn" type="button" id="privateBackendHealth4053">Tester backend</button>
-        <button class="btn primary" type="button" id="privateBackendRefresh4053">Actualiser Source Truth CEX</button>
+        <button class="btn primary" type="button" id="privateBackendRefresh4053">Forcer Source Truth CEX</button>
         <span id="privateBackendDetail4053">Binance runtime + 127.0.0.1:8790 · déclenchement opérateur uniquement</span>
       </div>
       <div class="private-backend-source-grid" id="privateBackendSources4053" aria-live="polite">
@@ -45,14 +45,14 @@
       <p class="private-backend-note" id="privateBackendNote4053">La concordance compare des observations indépendantes ; Binance reste la source LIVE primaire d'Agent-Crypto et aucune médiane ne remplace son prix.</p>
       <section class="private-context-v2" id="privateDexDefiContext4055" aria-labelledby="privateDexDefiTitle4055">
         <div class="private-context-head"><div><p class="eyebrow">DEX / DEFI CONTEXT · READ ONLY</p><h4 id="privateDexDefiTitle4055">DEX Screener + GeckoTerminal + DefiLlama</h4><p>Contexte de liquidité et d'activité décentralisée séparé de la vérité CEX. Aucun prix DEX n'est promu prix canonique.</p></div><span class="pill warn" id="privateDexDefiStatus4055">NON LU</span></div>
-        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateDexDefiRefresh4055">Actualiser contexte DEX / DeFi</button><span id="privateDexDefiDetail4055">À la demande · cache local 90 s · aucune boucle</span></div>
+        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateDexDefiRefresh4055">Forcer contexte DEX / DeFi</button><span id="privateDexDefiDetail4055">À la demande · cache local 90 s · aucune boucle</span></div>
         <div class="private-defi-grid" id="privateDefiSummary4055"><article><span>DefiLlama</span><b>EN ATTENTE</b><small>DEX volume par chaîne</small></article><article><span>DEX Screener</span><b>EN ATTENTE</b><small>pool liquide découvert</small></article><article><span>GeckoTerminal</span><b>EN ATTENTE</b><small>pool liquide recoupé</small></article></div>
         <div class="private-backend-table-wrap"><table class="private-backend-table private-context-table"><thead><tr><th>Actif</th><th>DEX Screener</th><th>Liquidité</th><th>GeckoTerminal</th><th>Réserve</th><th>Rôle</th></tr></thead><tbody id="privateDexDefiRows4055">${ASSETS.map(a=>`<tr><th>${a}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>CONTEXTE</td></tr>`).join("")}</tbody></table></div>
         <p class="private-backend-note">Découverte par symbole/pool : utile pour le contexte de liquidité, mais insuffisante pour prouver l'identité d'un actif. Binance/Kraken/Coinbase restent la couche CEX.</p>
       </section>
       <section class="private-intelligence-v1" id="privateSourceIntelligence4056" aria-labelledby="privateSourceIntelligenceTitle4056">
-        <div class="private-context-head"><div><p class="eyebrow">SOURCE INTELLIGENCE V1.1 · IDENTITY HARDENED</p><h4 id="privateSourceIntelligenceTitle4056">Fraîcheur · provenance · identité bornée · anomalies</h4><p>Les pools DEX sont filtrés par chaîne + alias avant synthèse. Aucun prix canonique supplémentaire, aucune prévision, aucune exécution.</p></div><span class="pill warn" id="privateSourceIntelligenceStatus4056">EN ATTENTE</span></div>
-        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateSourceIntelligenceRefresh4056">Actualiser Source Intelligence</button><span id="privateSourceIntelligenceDetail4056">CEX + DEX/DeFi · contrat destiné aux consommateurs internes, Atlas non rebranché · identité d’abord</span></div>
+        <div class="private-context-head"><div><p class="eyebrow">SOURCE INTELLIGENCE V1.2 · AUTO READ ONLY</p><h4 id="privateSourceIntelligenceTitle4056">Fraîcheur · provenance · identité bornée · anomalies</h4><p>Les pools DEX sont filtrés par chaîne + alias avant synthèse. Aucun prix canonique supplémentaire, aucune prévision, aucune exécution.</p></div><span class="pill warn" id="privateSourceIntelligenceStatus4056">EN ATTENTE</span></div>
+        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateSourceIntelligenceRefresh4056">Forcer actualisation</button><span id="privateSourceIntelligenceDetail4056">AUTO · démarrage borné + CURRENT fermé · bouton = secours manuel · Atlas lecture seule optionnelle</span></div>
         <div class="private-intelligence-grid" id="privateSourceIntelligenceGrid4056">
           <article><span>CEX</span><b>EN ATTENTE</b><small>concordance</small></article>
           <article><span>DEX</span><b>EN ATTENTE</b><small>couverture contexte</small></article>
@@ -96,14 +96,14 @@
     return {providers:vals.length,spread_pct:spread,verdict};
   }
   function renderQuotes(data){
-    const tbody=document.getElementById("privateBackendRows4053");if(!tbody)return;
+    const tbody=document.getElementById("privateBackendRows4053");
     const rows=data?.assets||[];let binanceOk=0,krakenOk=0,coinbaseOk=0;
     const truthAssets=ASSETS.map(asset=>{
       const row=rows.find(r=>r.asset===asset)||{},bq=binance(asset),bp=num(bq?.price_eur),kq=providerQuote(asset,"kraken",row.quotes),cq=providerQuote(asset,"coinbase",row.quotes),kp=num(kq?.price_eur),cp=num(cq?.price_eur);
       if(bp!==null)binanceOk+=1;if(kp!==null)krakenOk+=1;if(cp!==null)coinbaseOk+=1;
       const c=consensus([bp,kp,cp]);return {asset,binance:bp,kraken:kp,coinbase:cp,consensus:c,binance_source:bq?.source||null,observed:{binance_ms:num(bq?.observed_at_ms),kraken_utc:kq?.observed_at_utc||null,coinbase_utc:cq?.observed_at_utc||null}};
     });
-    tbody.innerHTML=truthAssets.map(row=>{const verdict=String(row.consensus.verdict||"insufficient").toUpperCase();const cls=verdict==="COHERENT"?"is-ok":verdict==="WATCH"?"is-watch":verdict==="DIVERGENT"?"is-bad":"is-muted";return `<tr><th>${row.asset}</th><td>${eur(row.binance)}</td><td>${eur(row.kraken)}</td><td>${eur(row.coinbase)}</td><td>${pct(row.consensus.spread_pct)}</td><td><span class="${cls}">${esc(verdict)}</span></td></tr>`;}).join("");
+    if(tbody)tbody.innerHTML=truthAssets.map(row=>{const verdict=String(row.consensus.verdict||"insufficient").toUpperCase();const cls=verdict==="COHERENT"?"is-ok":verdict==="WATCH"?"is-watch":verdict==="DIVERGENT"?"is-bad":"is-muted";return `<tr><th>${row.asset}</th><td>${eur(row.binance)}</td><td>${eur(row.kraken)}</td><td>${eur(row.coinbase)}</td><td>${pct(row.consensus.spread_pct)}</td><td><span class="${cls}">${esc(verdict)}</span></td></tr>`;}).join("");
     const providers=[binanceOk,krakenOk,coinbaseOk].filter(n=>n>0).length;
     setStatus(providers>=2?"CEX READY":"PARTIEL",providers>=2?"ok":"warn",`Binance ${binanceOk}/5 · Kraken ${krakenOk}/5 · Coinbase ${coinbaseOk}/5 · ${providers}/3 source(s)`);
     lastTruth=Object.freeze({schema:"agent_crypto_cex_source_truth_v1",build:BUILD,observed_at_utc:data?.observed_at_utc||new Date().toISOString(),primary:"binance",controls:Object.freeze(["kraken","coinbase"]),assets:Object.freeze(truthAssets.map(x=>Object.freeze(x))),canonical_price_created:false,financial_signal:false});
@@ -124,14 +124,15 @@
     return {text:"INDISP.",tone:"warn"};
   }
   function renderContext(data){
-    const tbody=document.getElementById("privateDexDefiRows4055");if(!tbody)return;
+    const tbody=document.getElementById("privateDexDefiRows4055");
     const rows=Array.isArray(data?.assets)?data.assets:[];let dsOk=0,gtOk=0,bounded=0,reviews=0;
-    tbody.innerHTML=ASSETS.map(asset=>{
+    const renderedRows=ASSETS.map(asset=>{
       const row=rows.find(r=>r.asset===asset)||{},ds=row.dexscreener||{},gt=row.geckoterminal||{},identity=row.identity||{},label=identityLabel(row);
       if(ds.status==="ok")dsOk++;if(gt.status==="ok")gtOk++;if(identity.status==="bounded")bounded++;if(identity.liquidity_review===true)reviews++;
       const ratio=num(identity.liquidity_ratio);const role=ratio!==null&&identity.liquidity_review?`${label.text} · ${ratio.toFixed(1)}×`:`${label.text}`;
       return `<tr><th>${asset}</th><td>${esc(contextPoolLabel(ds))}</td><td>${esc(usd(ds.liquidity_usd))}</td><td>${esc(contextPoolLabel(gt))}</td><td>${esc(usd(gt.reserve_usd))}</td><td><span class="${label.tone==="ok"?"is-ok":"is-muted"}">${esc(role)}</span></td></tr>`;
     }).join("");
+    if(tbody)tbody.innerHTML=renderedRows;
     const llama=data?.defillama||{},chains=Array.isArray(llama.chains)?llama.chains:[];
     const summary=document.getElementById("privateDefiSummary4055");
     if(summary){
@@ -166,13 +167,13 @@
     chains.forEach(x=>{const a=ageSeconds(x?.observed_at_utc);if(a!==null)ages.push(a);});
     const maxAge=ages.length?Math.max(...ages):null;
     const ready=cexComparable===ASSETS.length&&identityBounded>=Math.max(1,ASSETS.length-1)&&chains.length>0;
-    return Object.freeze({schema:"agent_crypto_source_intelligence_v2",build:BUILD,generated_at_utc:new Date().toISOString(),state:ready?"ready":"partial",cex:Object.freeze({primary:"binance",controls:Object.freeze(["kraken","coinbase"]),comparable_assets:cexComparable,total_assets:ASSETS.length,max_spread_pct:spreads.length?Math.max(...spreads):null}),dex:Object.freeze({dexscreener_ok:dsOk,geckoterminal_ok:gtOk,total_assets:ASSETS.length,context_only:true,identity_bounded:identityBounded,identity_review:identityReview,liquidity_review:liquidityReviews,address_level_proof:false}),defi:Object.freeze({chains_ok:chains.length,chains:Object.freeze(chains.map(x=>x.chain))}),freshness:Object.freeze({max_age_seconds:maxAge,samples:ages.length}),provenance:Object.freeze({spot_primary:"Binance direct EUR WebSocket",cex_controls:Object.freeze(["Kraken Public","Coinbase Exchange"]),dex_context:Object.freeze(["DEX Screener","GeckoTerminal"]),defi_context:"DefiLlama"}),rules:Object.freeze({canonical_price_created:false,dex_price_promoted:false,financial_signal:false,missing_data_fabricated:false,atlas_consumer_enabled:false,identity_level:"CHAIN_ALIAS_ONLY",address_level_identity_proof:false,wrong_chain_symbol_collision_rejected:true})});
+    return Object.freeze({schema:"agent_crypto_source_intelligence_v2",build:BUILD,generated_at_utc:new Date().toISOString(),state:ready?"ready":"partial",cex:Object.freeze({primary:"binance",controls:Object.freeze(["kraken","coinbase"]),comparable_assets:cexComparable,total_assets:ASSETS.length,max_spread_pct:spreads.length?Math.max(...spreads):null}),dex:Object.freeze({dexscreener_ok:dsOk,geckoterminal_ok:gtOk,total_assets:ASSETS.length,context_only:true,identity_bounded:identityBounded,identity_review:identityReview,liquidity_review:liquidityReviews,address_level_proof:false}),defi:Object.freeze({chains_ok:chains.length,chains:Object.freeze(chains.map(x=>x.chain))}),freshness:Object.freeze({max_age_seconds:maxAge,samples:ages.length}),provenance:Object.freeze({spot_primary:"Binance direct EUR WebSocket",cex_controls:Object.freeze(["Kraken Public","Coinbase Exchange"]),dex_context:Object.freeze(["DEX Screener","GeckoTerminal"]),defi_context:"DefiLlama"}),rules:Object.freeze({canonical_price_created:false,dex_price_promoted:false,financial_signal:false,missing_data_fabricated:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY",identity_level:"CHAIN_ALIAS_ONLY",address_level_identity_proof:false,wrong_chain_symbol_collision_rejected:true})});
   }
   function renderSourceIntelligence(){
     const intel=buildSourceIntelligence();if(!intel)return null;lastIntelligence=intel;
     const badge=document.getElementById("privateSourceIntelligenceStatus4056");if(badge){badge.className=`pill ${intel.state==="ready"?"ok":"warn"}`;badge.textContent=intel.state==="ready"?"INTELLIGENCE BORNÉE":"PARTIEL";}
     const grid=document.getElementById("privateSourceIntelligenceGrid4056");if(grid){grid.innerHTML=`<article><span>CEX</span><b>${intel.cex.comparable_assets}/${intel.cex.total_assets}</b><small>écart max ${pct(intel.cex.max_spread_pct)}</small></article><article><span>DEX</span><b>${intel.dex.dexscreener_ok}/${intel.dex.total_assets} + ${intel.dex.geckoterminal_ok}/${intel.dex.total_assets}</b><small>DS + GeckoTerminal</small></article><article><span>Identité DEX</span><b>${intel.dex.identity_bounded}/${intel.dex.total_assets}</b><small>chaîne + alias · adresse non prouvée</small></article><article><span>Anomalies</span><b>${intel.dex.liquidity_review}</b><small>ratio liquidité/réserve ≥ 20×</small></article><article><span>DeFi</span><b>${intel.defi.chains_ok}/3</b><small>${esc(intel.defi.chains.join(" · ")||"—")}</small></article><article><span>Fraîcheur</span><b>${freshnessText(intel.freshness.max_age_seconds)}</b><small>${intel.freshness.samples} observation(s) horodatée(s)</small></article>`;}
-    const d=document.getElementById("privateSourceIntelligenceDetail4056");if(d)d.textContent=`CEX ${intel.cex.comparable_assets}/5 · identité DEX ${intel.dex.identity_bounded}/5 · revue ${intel.dex.identity_review} · anomalies ${intel.dex.liquidity_review} · DeFi ${intel.defi.chains_ok}/3 · Atlas OFF`;
+    const d=document.getElementById("privateSourceIntelligenceDetail4056");if(d)d.textContent=`CEX ${intel.cex.comparable_assets}/5 · identité DEX ${intel.dex.identity_bounded}/5 · revue ${intel.dex.identity_review} · anomalies ${intel.dex.liquidity_review} · DeFi ${intel.defi.chains_ok}/3 · Atlas AUTO READ ONLY`;
     try{document.dispatchEvent(new CustomEvent("erith:source-intelligence",{detail:intel}));}catch(_){}
     return intel;
   }
@@ -186,6 +187,43 @@
 
   async function probe(){if(inflight)return inflight;setStatus("TEST…","warn","Connexion à 127.0.0.1:8790…");inflight=getJson("/health").then(data=>{renderHealth(data);return data;}).catch(error=>{setStatus("OFFLINE","warn",`Backend local indisponible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`);return null;}).finally(()=>{inflight=null;});return inflight;}
   async function refresh(){setStatus("LECTURE…","warn","Binance LIVE + Kraken + Coinbase…");try{const data=await getJson(`/quotes?assets=${encodeURIComponent(ASSETS.join(","))}`);renderQuotes(data);return data;}catch(error){setStatus("INDISPONIBLE","warn",`Lecture sources impossible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`);return null;}}
+  const AUTO_MIN_INTERVAL_MS=240000;
+  const AUTO_STARTUP_RETRY_MS=Object.freeze([5000,15000,30000]);
+  const autoState={started:false,running:false,lastRunAt:0,lastSuccessAt:0,lastReason:"",lastFingerprint:"",retryTimer:0,pending:null};
+  function autoSnapshot(){return Object.freeze({started:autoState.started,running:autoState.running,last_run_at:autoState.lastRunAt||null,last_success_at:autoState.lastSuccessAt||null,last_reason:autoState.lastReason||null,last_fingerprint:autoState.lastFingerprint||null,min_interval_ms:AUTO_MIN_INTERVAL_MS,polling:false});}
+  async function autoRefresh(reason="automatic",options={}){
+    const fingerprint=String(options?.fingerprint||"").trim();
+    if(fingerprint&&fingerprint===autoState.lastFingerprint&&lastIntelligence)return lastIntelligence;
+    if(autoState.running){autoState.pending={reason,fingerprint};return lastIntelligence;}
+    const now=Date.now();
+    if(options?.force!==true&&autoState.lastSuccessAt&&(now-autoState.lastSuccessAt)<AUTO_MIN_INTERVAL_MS)return lastIntelligence;
+    autoState.running=true;autoState.lastRunAt=now;autoState.lastReason=String(reason||"automatic");
+    try{
+      const health=await getJson("/health",3500);
+      if(health?.status!=="ready"||health?.read_only!==true)return null;
+      const intel=await refreshAll();
+      if(intel){autoState.lastSuccessAt=Date.now();if(fingerprint)autoState.lastFingerprint=fingerprint;try{document.dispatchEvent(new CustomEvent("erith:source-intelligence-auto",{detail:{reason:autoState.lastReason,fingerprint:fingerprint||null,intelligence:intel}}));}catch(_){}return intel;}
+      return null;
+    }catch(_){return null;}
+    finally{
+      autoState.running=false;
+      const pending=autoState.pending;autoState.pending=null;
+      if(pending)window.setTimeout(()=>void autoRefresh(pending.reason,{fingerprint:pending.fingerprint,force:true}),250);
+    }
+  }
+  function scheduleStartupRetry(index){
+    if(index>=AUTO_STARTUP_RETRY_MS.length||autoState.lastSuccessAt)return false;
+    if(autoState.retryTimer)window.clearTimeout(autoState.retryTimer);
+    autoState.retryTimer=window.setTimeout(async()=>{autoState.retryTimer=0;const intel=await autoRefresh("startup-retry",{force:true});if(!intel)scheduleStartupRetry(index+1);},AUTO_STARTUP_RETRY_MS[index]);
+    return true;
+  }
+  function startAutomatic(){
+    if(autoState.started)return false;autoState.started=true;
+    const first=async()=>{const intel=await autoRefresh("startup",{force:true});if(!intel)scheduleStartupRetry(0);};
+    if(typeof window.requestIdleCallback==="function")window.requestIdleCallback(()=>void first(),{timeout:2500});
+    else window.setTimeout(()=>void first(),900);
+    return true;
+  }
   function mount(){if(mounted&&document.getElementById("privateBackendV1"))return true;const body=backendBody();if(!body)return false;if(!document.getElementById("privateBackendV1"))body.insertAdjacentHTML("beforeend",shell());document.getElementById("privateBackendHealth4053")?.addEventListener("click",probe);document.getElementById("privateBackendRefresh4053")?.addEventListener("click",refresh);document.getElementById("privateDexDefiRefresh4055")?.addEventListener("click",refreshContext);document.getElementById("privateSourceIntelligenceRefresh4056")?.addEventListener("click",refreshAll);mounted=true;probe();return true;}
   function bind(){const detail=backendDetails();if(!detail)return false;if(detail.dataset.privateBackend4054!=="1"){detail.dataset.privateBackend4054="1";detail.addEventListener("toggle",()=>{if(detail.open)mount();});}if(detail.open)mount();return true;}
   bind();
@@ -202,5 +240,10 @@
   // non-bubbling, so bind directly on the backend <details> when available.
   const detail=backendDetails();
   detail?.addEventListener("erith:presentation-resident",()=>{mounted=false;bind();if(detail.open)mount();});
-  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.3.0",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,new_timer:false,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:false});
+  document.addEventListener("agentcrypto:current-finalized",event=>{
+    const fingerprint=String(event?.detail?.fingerprint||"").trim();
+    void autoRefresh("current-finalized",{fingerprint,force:true});
+  });
+  startAutomatic();
+  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.3.0",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,autoRefresh,automationSnapshot:autoSnapshot,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,automatic_startup:true,automatic_current_finalized:true,operator_click_required:false,polling:false,bounded_startup_retry:true,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY"});
 })();

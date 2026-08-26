@@ -1,6 +1,6 @@
 {
-  "schema": "agent_crypto_private_backend_sources_v4",
-  "build": "40.4.57",
+  "schema": "agent_crypto_private_backend_sources_v5",
+  "build": "40.4.58",
   "backend_version": "1.3.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
@@ -136,11 +136,12 @@
       "liquidity_anomaly_review",
       "defi_chain_coverage"
     ],
-    "trigger": "operator_only",
-    "atlas_consumer_enabled": false,
+    "trigger": "automatic_startup_and_current_finalized_with_manual_fallback",
+    "atlas_consumer_enabled": true,
     "canonical_price_created": false,
     "financial_signal": false,
-    "missing_data_fabricated": false
+    "missing_data_fabricated": false,
+    "atlas_consumer_mode": "OPTIONAL_READ_ONLY"
   },
   "identity_hardening_40457": {
     "owner": "Private Backend V1.3.0 + js/views/private-backend-sources.js",
@@ -153,5 +154,38 @@
     "canonical_price_created": false,
     "financial_signal": false,
     "operator_trigger_only": true
+  },
+  "automation_40458": {
+    "owner": "js/views/private-backend-sources.js",
+    "operator_click_required": false,
+    "startup": "one idle attempt + at most 3 bounded retries when local backend is unavailable",
+    "startup_retry_delays_ms": [
+      5000,
+      15000,
+      30000
+    ],
+    "current_trigger": "agentcrypto:current-finalized",
+    "current_fingerprint_dedup": true,
+    "minimum_nonforced_refresh_ms": 240000,
+    "polling": false,
+    "persistent_timer": false,
+    "storage_write": false,
+    "network_owner": "existing loopback read-only backend only"
+  },
+  "atlas_optional_consumer_40458": {
+    "owner": "app.js::atlasSnapshotWithSourceIntelligence4058",
+    "source_contract": "agent_crypto_source_intelligence_v2",
+    "transport_contract": "agent_crypto_source_intelligence_atlas_context_v1",
+    "mode": "OPTIONAL_READ_ONLY_CONTEXT",
+    "attached_after_current_fingerprint": true,
+    "current_fingerprint_participation": false,
+    "current_cadence_unchanged": true,
+    "atlas_direct_internet_access": false,
+    "canonical_price_created": false,
+    "dex_price_promoted": false,
+    "financial_signal": false,
+    "missing_data_fabricated": false,
+    "bridge_update_required": false,
+    "bridge_reason": "existing Bridge validates strict_contract and transports additional read-only fields without changing canonical fingerprint"
   }
 }

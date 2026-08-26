@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.57",
-  "parent_build": "40.4.55",
+  "build": "40.4.58",
+  "parent_build": "40.4.57",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -158,7 +158,7 @@
     {
       "component": "Private Local Backend / public source matrix",
       "owner": "public client: js/views/private-backend-sources.js + private-backend-sources.css · local companion: private_backend.py V1.3.0",
-      "state": "SOURCE_INTELLIGENCE_IDENTITY_HARDENED_READ_ONLY",
+      "state": "SOURCE_INTELLIGENCE_AUTO_READ_ONLY_ATLAS_OPTIONAL",
       "introduced": "40.4.53",
       "endpoint": "127.0.0.1:8790",
       "sources": [
@@ -166,7 +166,7 @@
         "Kraken Public Spot REST (control)",
         "Coinbase Exchange public market data (control)"
       ],
-      "notes": "40.4.57 rejects wrong-chain DEX symbol collisions, keeps chain+alias identity explicitly bounded/non-canonical, prevents reversed-pair price misuse, and flags >=20x liquidity/reserve disagreement. Atlas consumer remains disabled."
+      "notes": "40.4.58 keeps Private Backend V1.3.0 unchanged, derives Source Intelligence headlessly, refreshes it automatically at bounded startup and after each finalized CURRENT, and exposes it to Atlas only as optional read-only transport context. No polling, storage write, canonical-price promotion or direct Atlas Internet access."
     },
     {
       "component": "Version awareness / GitHub Pages propagation truth",
@@ -177,10 +177,10 @@
     }
   ],
   "next": {
-    "after_40_4_57": "Operator smoke test identity-bounded DEX context. Only after this PASS may 40.4.58 feed Source Intelligence V2 into Atlas as optional read-only context without changing CURRENT cadence."
+    "after_40_4_58": "Observe automatic startup + CURRENT-finalized refresh. Next product work may add token-address proof for selected DEX assets or extend source intelligence coverage, without reopening CURRENT cadence."
   },
   "migration_summary": {
-    "state": "FUNCTIONALLY_COMPLETE_CURRENT_REARM_PENDING_OPERATOR_SMOKE_TEST",
+    "state": "FUNCTIONALLY_COMPLETE_SOURCE_INTELLIGENCE_AUTO_ATLAS_OPTIONAL",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -199,7 +199,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Identity-hardening operator validation, then optional Atlas Source Intelligence V2 consumer; Notion support/operations desk remains parallel documentation work."
+    "next_product_work": "Automatic Source Intelligence is now operator-click-free and optional Atlas read-only context; next meaningful work is address-level DEX identity proof or additional read-only source coverage."
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
@@ -221,11 +221,11 @@
   },
   "source_intelligence_v1_40456": {
     "owner": "js/views/private-backend-sources.js + Private Backend V1.3.0",
-    "state": "READ_ONLY_FACT_CONTRACT_IDENTITY_HARDENED",
+    "state": "AUTO_READ_ONLY_FACT_CONTRACT_IDENTITY_HARDENED_ATLAS_OPTIONAL",
     "contract": "agent_crypto_source_intelligence_v2",
     "identity_level": "CHAIN_ALIAS_ONLY",
     "address_level_proof": false,
-    "atlas_consumer_enabled": false,
+    "atlas_consumer_enabled": true,
     "new_polling": false,
     "storage_owner_added": false,
     "trade_endpoint": false
@@ -236,5 +236,15 @@
     "liquidity_ratio_review_threshold": 20.0,
     "canonical_price_created": false,
     "financial_signal": false
+  },
+  "automation_40458": {
+    "operator_click_required": false,
+    "startup_bounded": true,
+    "current_finalized_event": true,
+    "polling": false,
+    "backend_version_unchanged": "1.3.0",
+    "atlas_context_optional_read_only": true,
+    "current_fingerprint_unchanged": true,
+    "current_cadence_unchanged": true
   }
 }
