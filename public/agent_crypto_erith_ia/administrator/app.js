@@ -1700,7 +1700,8 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.15.11",
+  engine_reference: "38.15.11",
+  web_classic_build: "38.15.13",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1727,7 +1728,8 @@ const ATLAS_RC_CONTRACT = Object.freeze({
 
 function atlasRcStaticAudit() {
   const checks = {
-    build: ATLAS_BUILD === ATLAS_RC_CONTRACT.build,
+    interface_build_truth: ATLAS_BUILD === String(document.querySelector('meta[name="atlas-build"]')?.content || ATLAS_BUILD),
+    engine_reference_truth: ATLAS_RC_CONTRACT.engine_reference === "38.15.11",
     stable_stack:
       ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
       && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
@@ -1799,7 +1801,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
   const failed = Object.entries(audit?.checks || {}).filter(([,ok]) => !ok).map(([key]) => key);
-  return `RC 38.15.11 CLASSIC FINAL FROZEN REFERENCE · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `ENGINE RC ${ATLAS_RC_CONTRACT.engine_reference} · WEB CLASSIC ${ATLAS_RC_CONTRACT.web_classic_build} · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -50543,7 +50545,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.31";
+const ATLAS_BUILD = "40.4.35";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -50740,7 +50742,7 @@ function atlasVersionControlState(mode, options = {}) {
     );
   } else {
     control.classList.add("ok");
-    text.textContent = ATLAS_RELEASE;
+    text.textContent = `Build ${ATLAS_BUILD}`;
     control.setAttribute(
       "aria-label",
       `Version installée : Build ${ATLAS_BUILD}. Cliquer pour vérifier GitHub.`
@@ -51943,6 +51945,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   const shared = scope === "all" || scope === "shared-memory";
   const github = scope === "all" || scope === "github-memory";
   const currentAudit = scope === "all" || scope === "current-audit";
+  const bookKnowledge = scope === "all" || scope === "book-knowledge";
   const refresh = (prop, id) => { els[prop] = $(id); return els[prop]; };
   const bindOnce = (node, type, key, handler) => {
     if (!node || node.dataset[key] === "1") return false;
@@ -52021,20 +52024,35 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
     try { if (typeof atlasBookRoleUiLock3812 === "function") atlasBookRoleUiLock3812("current-audit-hydration-40431"); } catch (_) {}
   }
 
+
+  if (bookKnowledge) {
+    // 40.4.34 — Book/Knowledge presentation appears late; runtimes/memory stay owned elsewhere.
+    bindOnce($("btnAtlasBookExport"),"click","atlasBind40434",atlasBookExportToBook);
+    bindOnce($("btnAtlasBookImport"),"click","atlasBind40434",atlasBookImportFromRyzen);
+    bindOnce($("btnAtlasBookReadSynthesis"),"click","atlasBind40434",atlasBookReadImportedSynthesis);
+    bindOnce($("btnAtlasBookMirrorCheck36"),"click","atlasBind40434",()=>void atlasBookMirrorFetch36({reason:"manual"}));
+    bindOnce($("btnAtlasBookMirrorExport36"),"click","atlasBind40434",atlasBookMirrorExport36);
+    try { atlasKnowledgeLibraryInit(); } catch (_) {}
+    try { atlasBookReadOnlyKnowledgeRefresh(); } catch (_) {}
+    try { atlasBookMirrorRender36(); } catch (_) {}
+    try { if (typeof atlasBookRoleUiLock3812 === "function") atlasBookRoleUiLock3812("book-knowledge-hydration-40434"); } catch (_) {}
+  }
+
   const snapshot = {
-    build:"40.4.31",
+    build:"40.4.35",
     scope,
     auto_reader_ready:!!$("auto-reader"),
     shared_ready:!!$("shared-memory"),
     github_ready:!!$("github-memory"),
     current_audit_roots_ready:["atlasStableStack","atlasAnalyticalTruth","atlasFrameTruth","atlasCurrentTruth33"].every(id=>!!$(id)),
+    book_knowledge_ready:!!$("atlasBookReadOnlyKnowledge") && !!$("atlasKnowledgeLibrary"),
     checked_at:new Date().toISOString()
   };
   try { globalThis.__AGENT_CRYPTO_ATLAS_PERIPHERAL_REBIND_40425__ = snapshot; } catch (_) {}
   return snapshot;
 }
 try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25-compat",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
-try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.31",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
+try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.35",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
 atlasRebindDeferredMemoryPanels40425("all");
 
@@ -56909,7 +56927,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit389() {
       && typeof atlasCanonicalCurrentProof389 === "function"
       && typeof atlasCanonicalCurrentJournalEnsure389 === "function"
       && typeof atlasCanonicalCurrentMemoryEnsure389 === "function"
-      && typeof atlasCurrentStateWrite389 === "function"
+      && typeof atlasCurrentStateWrite === "function"
   };
   report.pass = Object.values(report.checks).every(Boolean);
   return report;
@@ -57754,8 +57772,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
   const report = atlasRcStaticAudit3811Base3812();
   report.checks = {
     ...(report.checks || {}),
-    book_role_ui_lock_3812: typeof atlasBookRoleUiLock3812 === "function" && typeof atlasBookReadOnly3812 === "function" && typeof atlasLocalBridgeProbe3812 === "function",
-    journal_memory_exact_bind_3812: typeof atlasCurrentMemoryJournalObservation3812 === "function" && typeof atlasCurrentMemoryJournalRecord3812 === "function" && typeof atlasCurrentJournalWrite333812 === "function",
+    book_role_ui_lock_3812: typeof atlasBookRoleUiLock3812 === "function" && typeof atlasBookReadOnly3812 === "function" && typeof atlasLocalBridgeProbe === "function",
+    journal_memory_exact_bind_3812: typeof atlasCurrentMemoryJournalObservation3812 === "function" && typeof atlasCurrentMemoryJournalRecord3812 === "function" && typeof atlasCurrentJournalWrite33 === "function",
     market_poll_5m_conserved_3812: ATLAS_MARKET_REFRESH_MS === 5 * 60 * 1000
   };
   report.pass = Object.values(report.checks).every(Boolean);
@@ -58142,7 +58160,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit3814() {
   const report = atlasRcStaticAudit3813Base3814();
   report.checks = {
     ...(report.checks || {}),
-    journal_append_only_3814: typeof atlasCurrentJournalMergeAppendOnly3814 === "function" && typeof atlasCurrentJournalWrite333814 === "function",
+    journal_append_only_3814: typeof atlasCurrentJournalMergeAppendOnly3814 === "function" && typeof atlasCurrentJournalWrite33 === "function",
     journal_self_contained_bind_3814: typeof atlasCurrentJournalPackageWitness3814 === "function" && typeof atlasCurrentMemoryRecordFromJournalSelfContained3814 === "function",
     journal_memory_reconcile_all_3814: typeof atlasCurrentMemoryReconcileAll3814 === "function" && typeof atlasCurrentJournalHydrate3814 === "function",
     runtime_truth_3813_conserved_3814: typeof atlasRuntimeTruth3813 === "function" && typeof atlasRuntimeTruthApply3813 === "function",

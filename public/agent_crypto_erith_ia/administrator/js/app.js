@@ -1,9 +1,10 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.31";
-  const ADMIN_RELEASE = "AETHER ATLAS AUTO READER BODY LAZY HYDRATION + RUNTIME PARITY LOCK";
+  const ADMIN_BUILD = "40.4.35";
+  const ADMIN_RELEASE = "AETHER FINAL CUMULATIVE DEBT SETTLEMENT + FIREFOX BOOK CHECKPOINT LOCK";
   const ENGINE_BUILD = "38.15.11";
+  const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
   const WORKSPACE_RUNTIME_CONTRACT_40227 = Object.freeze({
@@ -734,8 +735,8 @@
 
     const classic = document.createElement("a");
     classic.href = "../web/index.html";
-    classic.textContent = `CLASSIC ${ENGINE_BUILD}`;
-    classic.title = `Ouvrir la Classic Final ${ENGINE_BUILD}`;
+    classic.textContent = `CLASSIC ${CLASSIC_WEB_BUILD}`;
+    classic.title = `Ouvrir la Web Classique ${CLASSIC_WEB_BUILD} · Engine ${ENGINE_BUILD}`;
 
     bar.append(brand, layout, deck, profiles, cascade, reset, classic);
     document.body.appendChild(bar);

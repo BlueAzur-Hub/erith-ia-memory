@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.31
+/* Agent-Crypto @erith.IA — 40.4.35
    ATLAS PRESENTATION LAZY OWNER · CURRENT AUDIT WAVE 1
    Existing 40.4.30 owners are preserved: Auto Reader + Shared Memory + GitHub Memory
    presentation bodies hydrate on first disclosure while their runtimes remain resident.
@@ -9,12 +9,16 @@
    and asks app.js to render the already-owned state. No timer, observer or storage owner added. */
 (()=>{
   "use strict";
-  const BUILD="40.4.31";
+  const BUILD="40.4.35";
   const SOURCE="./views/atlas.html";
   const TARGETS=Object.freeze({
     "auto-reader":Object.freeze({label:"Atlas Auto Reader"}),
     "shared-memory":Object.freeze({label:"Shared Memory"}),
     "github-memory":Object.freeze({label:"GitHub Memory"})
+  });
+  const BOOK_KNOWLEDGE_SECTIONS=Object.freeze({
+    "book-readonly":Object.freeze({id:"atlasBookReadOnlyKnowledge",titleId:"atlasBookReadOnlyTitle",eyebrow:"SHARED READ-ONLY KNOWLEDGE · RYZEN → BOOK",title:"Miroir et lecture Book",subtitle:"Runtime et mémoire conservés · présentation chargée à la demande"}),
+    "knowledge-library":Object.freeze({id:"atlasKnowledgeLibrary",titleId:"atlasKnowledgeLibraryTitle",eyebrow:"BIBLIOTHÈQUE PÉDAGOGIQUE PERMANENTE · SANS BRIDGE",title:"Dictionnaire Crypto / Banque / Bourse",subtitle:"56 définitions conservées · cartes et contrôles chargés à la demande"})
   });
   const AUDIT_SECTIONS=Object.freeze({
     "stable-stack":Object.freeze({
@@ -52,6 +56,7 @@
   let fetchCount=0;
   const hydrated=new Set();
   const auditHydrated=new Set();
+  let bookKnowledgeHydrated=false;
 
   function escRe(value){return String(value).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
   function detailsBounds(source,key){
@@ -106,6 +111,7 @@
     let next=String(source||"");
     for(const key of Object.keys(TARGETS)) next=stripBody(next,key);
     for(const [key,spec] of Object.entries(AUDIT_SECTIONS)) next=stripAuditSection(next,key,spec);
+    for(const [key,spec] of Object.entries(BOOK_KNOWLEDGE_SECTIONS)) next=stripAuditSection(next,key,spec);
     return next;
   }
   function targetDetails(key){return document.querySelector(`details[data-collapse-key="${key}"]`);}
@@ -192,6 +198,28 @@
       return false;
     }
   }
+  async function hydrateBookKnowledge(){
+    if(bookKnowledgeHydrated)return true;
+    const roots=Object.entries(BOOK_KNOWLEDGE_SECTIONS).map(([key,spec])=>[key,spec,document.getElementById(spec.id)]);
+    if(roots.some(([, ,root])=>!root))return false;
+    roots.forEach(([, ,root])=>root.dataset.atlasBookKnowledgeHydration40434="loading");
+    try{
+      const source=await sourceText();
+      for(const [key,spec,root] of roots){
+        const template=document.createElement("template");
+        template.innerHTML=auditInnerHtml(source,spec);
+        root.replaceChildren(template.content.cloneNode(true));
+        root.dataset.atlasBookKnowledgeHydration40434="ready";
+      }
+      bookKnowledgeHydrated=true;
+      try{globalThis.AgentCryptoAtlasPeripheralRebind?.rebind?.("book-knowledge");}catch(error){console.warn("[40.4.34] Atlas Book/Knowledge rebind",error);}
+      roots.forEach(([key,,root])=>{try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`book-knowledge:${key}`,build:BUILD}}));}catch(_){}});
+      return true;
+    }catch(error){
+      roots.forEach(([, ,root])=>root.dataset.atlasBookKnowledgeHydration40434="error");
+      return false;
+    }
+  }
   function attachPeripheral(){
     for(const key of Object.keys(TARGETS)){
       const details=targetDetails(key);
@@ -210,7 +238,15 @@
       if(button)button.addEventListener("click",()=>hydrateAudit(key));
     }
   }
-  function attach(){attachPeripheral();attachAudit();}
+  function attachBookKnowledge(){
+    for(const [key,spec] of Object.entries(BOOK_KNOWLEDGE_SECTIONS)){
+      const root=document.getElementById(spec.id);
+      if(!root||root.dataset.atlasBookKnowledgeReady40434==="1")continue;
+      root.dataset.atlasBookKnowledgeReady40434="1";
+      root.querySelector(`[data-atlas-current-audit-open-40431="${key}"]`)?.addEventListener("click",()=>hydrateBookKnowledge());
+    }
+  }
+  function attach(){attachPeripheral();attachAudit();attachBookKnowledge();}
 
   Element.prototype.insertAdjacentHTML=function(position,html){
     if(armed&&this?.id==="atlas-view-host"&&String(position).toLowerCase()==="beforebegin"&&typeof html==="string"){
@@ -224,12 +260,14 @@
           source:SOURCE,
           targets:Object.keys(TARGETS),
           current_audit_targets:Object.keys(AUDIT_SECTIONS),
+          book_knowledge_targets:Object.keys(BOOK_KNOWLEDGE_SECTIONS),
           boot_bodies_absent:true,
           current_audit_roots_resident:true,
           current_audit_bodies_absent_at_boot:true,
           fetch_count:()=>fetchCount,
           hydrated:()=>[...hydrated],
           current_audit_hydrated:()=>[...auditHydrated],
+          book_knowledge_hydrated:()=>bookKnowledgeHydrated,
           runtime_owner:"app.js",
           auto_reader_runtime_preserved:true,
           auto_reader_collection_boot_preserved:true,
