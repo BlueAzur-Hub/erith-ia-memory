@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.40",
-  "parent_build": "40.4.39",
+  "build": "40.4.41",
+  "parent_build": "40.4.40",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -86,16 +86,16 @@
     },
     {
       "component": "Oracle presentation",
-      "owner": "js/views/oracle-presentation.js + js/views/oracle-demand-residency.js + js/views/oracle-ui-continuity.js + views/oracle.html",
-      "state": "TRUE_LAZY_COMPLETE",
-      "notes": "Outer live summary + three subsection shells resident; heavy bodies hydrate from one cached same-origin static source read on first own disclosure. Existing closed-body lifecycle and exclusive-accordion continuity are preserved."
+      "owner": "js/views/oracle-presentation.js + views/oracle.html",
+      "state": "TRUE_LAZY_COMPLETE_CANONICAL",
+      "notes": "40.4.41 consolidates true-lazy hydration + exclusive accordion into one production presentation owner. oracle-ui-continuity.js and oracle-demand-residency.js remain historical files only and are no longer loaded by index.html."
     },
     {
       "component": "Learning Journey 01→11 presentation CSS",
       "owner": "admin-learning-journey-recovery-40422.css",
       "state": "NEXT_MIGRATION_TARGET",
       "target": "admin-learning-journey.css",
-      "notes": "Functional owner is real; historical build number in permanent filename remains debt. Rename deferred to bounded file-level surgery."
+      "notes": "Next bounded debt: canonicalize CSS filename and then decide Learning presentation residency without touching runtime/progress/IndexedDB."
     },
     {
       "component": "Learning Journey runtime / progress / IndexedDB",
@@ -123,7 +123,7 @@
     }
   ],
   "next": {
-    "40.4.41": "Learning Journey presentation true-lazy + canonical CSS filename; runtime/progress/IndexedDB remain protected.",
-    "40.4.42": "Administrator cumulative migration acceptance/final debt map; no feature expansion."
+    "40.4.42": "Learning Journey canonical CSS owner + presentation residency audit/surgery if static proof is clean.",
+    "40.4.43": "Administrator cumulative migration acceptance/final debt map; no feature expansion."
   }
 }
