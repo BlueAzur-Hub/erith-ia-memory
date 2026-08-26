@@ -1283,7 +1283,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
-  build: "38.15.12",
+  build: "38.15.13",
   control_center: "V2.3.2R5",
   bridge: "V1.9.5",
   model: "gpt-oss:20b-32k",
@@ -1382,7 +1382,7 @@ function atlasRcRuntimeAudit(snapshot = null) {
 function atlasRcSummaryLine() {
   const audit = atlasRcStaticAudit();
   const failed = Object.entries(audit?.checks || {}).filter(([,ok]) => !ok).map(([key]) => key);
-  return `RC 38.15.12 CLASSIC HISTORICAL CANVAS STABILITY LOCK · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
+  return `RC 38.15.13 CLASSIC LEARNING JOURNEY 01→11 PRESENTATION RECOVERY LOCK · 38.14 CONSERVÉ · audit statique ${audit.pass ? "PASS" : `FAIL [${failed.join(", ") || "inconnu"}]`} · Control Center ${ATLAS_RC_CONTRACT.control_center} · Bridge ${ATLAS_RC_CONTRACT.bridge} · ${ATLAS_RC_CONTRACT.model}`;
 }
 
 const ATLAS_HISTORY_V2_KEY = "agent_crypto_history_v2";
@@ -12173,7 +12173,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.15.12",
+  interface: "Build 38.15.13",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.5",
   bridgeNumeric: "1.9.5",
@@ -40374,7 +40374,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.15.12";
+const ATLAS_BUILD = "38.15.13";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47048,8 +47048,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "38.15.12",
-  asset_token: "market-core-v2.0-alpha-build-38.15.12"
+  build: "38.15.13",
+  asset_token: "market-core-v2.0-alpha-build-38.15.13"
 });
 
 function atlasRuntimeTruth3813() {

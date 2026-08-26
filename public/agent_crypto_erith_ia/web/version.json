@@ -1,25 +1,33 @@
 {
   "schema": "agent_crypto_version_manifest_v3",
-  "release": "Market Core V2.0-Alpha · Build 38.15.12 · CLASSIC HISTORICAL CANVAS STABILITY LOCK",
-  "build": "38.15.12",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.12",
+  "release": "Market Core V2.0-Alpha · Build 38.15.13 · CLASSIC LEARNING JOURNEY 01→11 PRESENTATION RECOVERY LOCK",
+  "build": "38.15.13",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.13",
   "status": "classic_candidate_requires_operator_validation",
-  "parent_build": "38.15.11",
-  "prepared_at": "2026-08-19T10:17:00+02:00",
+  "parent_build": "38.15.12",
+  "prepared_at": "2026-08-26T04:53:00+02:00",
   "published_at": null,
   "files": {
     "app.js": {
-      "sha256": "01dbca56e9b8e4b23da7925e23f295d9b13dedfb230ba9ad5ee2a3c679f86aea"
+      "sha256": "8058560e7b302784a653e504bd2b9cbd0eafd45d4ac2d23eca368d49a97787ba"
     },
     "index.html": {
-      "sha256": "9ff8a4c833aacf88d34e9725c51213f49e34736d9717f0e08c09696888dbffde"
+      "sha256": "d22ea956de84158ff5b7824132b7fde5377620cf3454a7585c2bea8a01916a6d"
     },
     "style.css": {
-      "sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
+      "sha256": "bea94ca99f5adae12e9e1f745982e0a1f22209069d96977a6f801884ab2e95ba"
     }
   },
   "contracts": {
+    "base_authority": {
+      "build": "38.15.12",
+      "commit": "4409f7185eadd167f54f00054797a67c767ed393",
+      "app_sha256": "01dbca56e9b8e4b23da7925e23f295d9b13dedfb230ba9ad5ee2a3c679f86aea",
+      "index_sha256": "9ff8a4c833aacf88d34e9725c51213f49e34736d9717f0e08c09696888dbffde",
+      "style_sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
+    },
     "historical_canvas": {
+      "preserved_from_38_15_12": true,
       "synthetic_live_terminal_point": false,
       "binance_websocket_canvas_mutation": false,
       "collector_canvas_mutation": false,
@@ -27,21 +35,30 @@
       "preserve_visible_same_selection_until_complete": true,
       "reuse_existing_comparison_chart": true
     },
-    "resize": {
-      "owner": "atlasScheduleStableChartResize",
-      "geometry_guard": true
-    },
-    "classic_theme": {
-      "modified": false,
-      "style_sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
+    "learning_journey": {
+      "presentation_source": "Administrator 40.4.22 · commit 081a50c24fdce23d2f708dc00674c5116cf95626",
+      "historical_presentation_source": "web/index.html @ f9257c10cffa5fbe7d3a538fe58db7680b0ade30 · Build 28.3.44",
+      "module_count": 11,
+      "presentation_only": true,
+      "shared_learning_runtime_preserved": true,
+      "indexeddb_schema_changed": false,
+      "storage_delete_or_clear_added": false,
+      "market_core_changed": false,
+      "graph_engine_changed": false,
+      "atlas_changed": false,
+      "oracle_changed": false,
+      "bridge_changed": false,
+      "new_timer": false,
+      "new_observer": false,
+      "new_network_owner": false
     }
   },
   "notes": [
-    "Built directly from the exact published Build 38.15.11 Classic reference; the user backup matches the public files after CRLF-to-LF normalization.",
-    "Backports only the graph stability contract validated on Administrator Build 40.1.23 on both Ryzen and Transformer Book.",
-    "The historical canvas ends on the last verified historical observation; Binance LIVE and Collector observations stay outside the canvas.",
-    "Preserves live prices in cards, market rows, active detail, Multi-Horizon and source diagnostics.",
-    "Preserves Classic colors, shadow-series palette, DOM, layout and style.css byte-for-byte.",
-    "Preserves Atlas, NØX, Aerith, CURRENT, Journal, Memory, IndexedDB, Bridge and Ollama semantics."
+    "Built directly from byte-verified Classic Build 38.15.12. The reconstructed base app.js matches the authoritative 38.15.12 SHA-256 exactly.",
+    "Restores only the missing Learning Journey 01→11 cockpit, integrated lesson, five guided steps, notebook/integrity controls and Expert Roadmap presentation inside the existing Simulation section.",
+    "The existing 38.15.12 learning engine remains the runtime owner; no learning state machine or IndexedDB schema is rewritten.",
+    "The 40.4.22 recovery CSS is merged into Classic style.css so the CLEAN_UPLOAD remains four files; one byte-identical duplicate rule block is removed and the checkbox rule is scoped to the cockpit.",
+    "Market Core, historical graph stability, Binance LIVE, Atlas, NØX, Aerith, CURRENT, Journal, Memory, Bridge and Ollama semantics remain outside the surgery.",
+    "Firefox operator validation is still required before declaring the build final."
   ]
 }
