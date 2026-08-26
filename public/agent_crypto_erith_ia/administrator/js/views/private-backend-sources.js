@@ -92,6 +92,19 @@
   async function refresh(){setStatus("LECTURE…","warn","Binance LIVE + Kraken + Coinbase…");try{const data=await getJson(`/quotes?assets=${encodeURIComponent(ASSETS.join(","))}`);renderQuotes(data);}catch(error){setStatus("INDISPONIBLE","warn",`Lecture sources impossible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`);}}
   function mount(){if(mounted&&document.getElementById("privateBackendV1"))return true;const body=backendBody();if(!body)return false;if(!document.getElementById("privateBackendV1"))body.insertAdjacentHTML("beforeend",shell());document.getElementById("privateBackendHealth4053")?.addEventListener("click",probe);document.getElementById("privateBackendRefresh4053")?.addEventListener("click",refresh);mounted=true;probe();return true;}
   function bind(){const detail=backendDetails();if(!detail)return false;if(detail.dataset.privateBackend4054!=="1"){detail.dataset.privateBackend4054="1";detail.addEventListener("toggle",()=>{if(detail.open)mount();});}if(detail.open)mount();return true;}
-  bind();document.addEventListener("erith:presentation-resident",event=>{const family=String(event?.detail?.family||""),key=String(event?.detail?.key||"");if(family==="system"||key.includes("backend"))bind();});
-  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.0.0",api:API,mode:"READ_ONLY",mount,probe,refresh,snapshot:()=>lastTruth,new_timer:false,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false});
+  bind();
+  // 40.4.54 canonical System true-lazy handoff: system-presentation replaces the
+  // backend body only after its asynchronous hydration completes. Re-mount the
+  // Source Truth panel after that owner signals the real body is resident.
+  window.addEventListener("erith:system-hydrated",event=>{
+    if(String(event?.detail?.key||"")!=="backend")return;
+    mounted=false;
+    bind();
+    mount();
+  });
+  // Compatibility with same-node residency restoration. The lifecycle event is
+  // non-bubbling, so bind directly on the backend <details> when available.
+  const detail=backendDetails();
+  detail?.addEventListener("erith:presentation-resident",()=>{mounted=false;bind();if(detail.open)mount();});
+  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.0.0",api:API,mode:"READ_ONLY",mount,probe,refresh,snapshot:()=>lastTruth,system_hydration_rebind:true,new_timer:false,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false});
 })();
