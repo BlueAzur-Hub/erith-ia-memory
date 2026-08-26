@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.44",
-  "parent_build": "40.4.43",
+  "build": "40.4.45",
+  "parent_build": "40.4.44",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -87,16 +87,16 @@
     },
     {
       "component": "Oracle presentation",
-      "owner": "js/views/oracle-presentation.js + views/oracle.html",
+      "owner": "js/views/oracle-presentation.js + admin-oracle.css + views/oracle.html",
       "state": "TRUE_LAZY_COMPLETE_CANONICAL",
-      "notes": "40.4.41 consolidates true-lazy hydration + exclusive accordion into one production presentation owner. oracle-ui-continuity.js and oracle-demand-residency.js remain historical files only and are no longer loaded by index.html."
+      "notes": "40.4.45 migrates the remaining historical 40.4.6 inline Oracle UI CSS into admin-oracle.css. Former oracle-ui-continuity.js and oracle-demand-residency.js are inert tombstones and remain unloaded."
     },
     {
       "component": "Learning Journey 01→11 presentation CSS",
-      "owner": "admin-learning-journey.css (canonical entry) → legacy recovery stylesheet import",
-      "state": "CANONICAL_ENTRYPOINT_LEGACY_FILE_REQUIRED",
-      "target": "Physical retirement of admin-learning-journey-recovery-40422.css after byte-for-byte migration into canonical file.",
-      "notes": "index.html no longer loads the recovery filename directly. Visual parity remains exact through a single @import compatibility dependency."
+      "owner": "admin-learning-journey.css → exact legacy byte-source import",
+      "state": "CANONICAL_ENTRYPOINT_LEGACY_BYTE_SOURCE_HOLD",
+      "target": "Autonomous canonical CSS copy after exact byte-equivalence proof; do not delete recovery source before then.",
+      "notes": "40.4.45 intentionally does not fake physical retirement: the recovery stylesheet is still required by one @import."
     },
     {
       "component": "Learning Journey runtime / progress / IndexedDB",
@@ -119,17 +119,17 @@
     {
       "component": "Historical cumulative CSS",
       "owner": "admin-aether-cumulative-40396.css",
-      "state": "AUDIT_REQUIRED",
+      "state": "HOLD_AUDIT_REQUIRED",
       "notes": "Do not merge/delete before selector ownership proof."
     },
     {
       "component": "Offscreen paint gate legacy files",
       "owner": "admin-offscreen-paint-gate.css + js/admin-offscreen-paint-gate.js",
-      "state": "AUDIT_REQUIRED",
-      "notes": "Historical runtime was retired in lineage; physical file references require proof before deletion."
+      "state": "HOLD_AUDIT_REQUIRED",
+      "notes": "Not loaded by current index, but repo-wide dynamic-reference proof is still required before tombstoning/deletion."
     }
   ],
   "next": {
-    "40.4.45": "Physical legacy CSS retirement + final dead-owner/file audit only. No feature/runtime expansion."
+    "40.4.46": "Remaining cumulative/offscreen owner proof + retirement wave 2; then Administrator migration debt ledger closure."
   }
 }

@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.44
+/* Agent-Crypto @erith.IA — 40.4.45
    LEARNING JOURNEY TRUE-LAZY PARSER GATE / CANONICAL PRESENTATION OWNER
    Loaded immediately BEFORE system-presentation.js. It intercepts only the one
    parser-mount call on #system-view-host, removes the recovered Learning 01→11
@@ -10,7 +10,7 @@
    market/business network owner, storage policy, IndexedDB schema or reset is added. */
 (()=>{
   "use strict";
-  const BUILD="40.4.44";
+  const BUILD="40.4.45";
   const SOURCE="./views/system.html";
   const HOST_ID="system-view-host";
   const FIRST_ID="learningExerciseGuide";
@@ -140,7 +140,8 @@
   function snapshot(){return Object.freeze({build:BUILD,state:body?.dataset?.learningHydration||"parser-gate-armed",source:SOURCE,source_fetch_count:sourceFetchCount,hydration_count:hydrationCount,parser_strip_count:parserStripCount,parser_stripped_chars:parserStrippedChars,parser_learning_removed_before_dom:parserStripCount>0,last_error:lastError||null,runtime_owner:"app.js",runtime_rebind:"atlasRebindLearningRuntime",indexeddb_schema_changed:false,learning_state_reset:false,new_timer:false,new_observer:false,new_storage_owner:false,business_engine_changed:false});}
   const api=Object.freeze({build:BUILD,source:SOURCE,ensure,snapshot,runtime_owner:"app.js",parser_gate:true,indexeddb_schema_changed:false,learning_state_reset:false,new_timer:false,new_observer:false,new_storage_owner:false,business_engine_changed:false});
   globalThis.ErithLearningPresentation=api;
+  globalThis.ErithLearningPresentation40445=api;
   globalThis.ErithLearningPresentation40444=api;
   globalThis.ErithLearningPresentation40443=api; // compatibility alias for 40.4.43 callers
-  globalThis.__AGENT_CRYPTO_LEARNING_PRESENTATION_40444__=snapshot();
+  globalThis.__AGENT_CRYPTO_LEARNING_PRESENTATION_40445__=snapshot();
 })();
