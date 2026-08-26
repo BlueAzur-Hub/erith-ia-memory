@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.35";
-  const ADMIN_RELEASE = "AETHER FINAL CUMULATIVE DEBT SETTLEMENT + FIREFOX BOOK CHECKPOINT LOCK";
+  const ADMIN_BUILD = "40.4.36";
+  const ADMIN_RELEASE = "AETHER ATLAS ADMIN ROLE TRANSITION VISIBILITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -1677,13 +1677,41 @@
 
   let activeWindowPresentationRole40314 = "";
 
+  // 40.4.36 — Atlas is the primary Administrator work surface.  During an
+  // authenticated role transition the V2 visibility pass runs before the Window
+  // Manager restores persisted presentation.  A persisted compact family state
+  // could therefore hide family 02 again after V2 had correctly revealed it,
+  // making Atlas appear only after a later reload/re-entry.  Re-open only the
+  // Intelligence family after the canonical restore; inner Atlas disclosures and
+  // their true-lazy bodies keep their own open/closed state and hydration owners.
+  const ADMIN_ATLAS_PRIMARY_FAMILY_40436 = "intelligence-memoire-creation";
+
+  function ensureAdministratorAtlasVisible40436(manager, reason = "role-transition") {
+    if (!manager || presentationRole40312() !== "administrator") return false;
+    try { manager.minimize?.(ADMIN_ATLAS_PRIMARY_FAMILY_40436, false); } catch (_) {}
+
+    const family = q(".atlas-layout-family-intelligence");
+    const atlas = byId("atlas-local-ai-collapse");
+    for (const node of [family, atlas]) {
+      if (!(node instanceof HTMLElement)) continue;
+      if (node.hidden) node.hidden = false;
+      if (node.getAttribute("aria-hidden") === "true") node.setAttribute("aria-hidden", "false");
+    }
+
+    document.documentElement.dataset.adminAtlasVisibility40436 = atlas ? "visible" : "missing";
+    document.documentElement.dataset.adminAtlasVisibilityReason40436 = reason;
+    return Boolean(atlas);
+  }
+
   function syncWindowPresentationRole40314(manager, role = presentationRole40312()) {
     if (!manager) return role;
     const nextRole = ["public", "operator", "administrator"].includes(role) ? role : presentationRole40312();
     if (activeWindowPresentationRole40314 === nextRole) return nextRole;
 
-    if (nextRole === "administrator") manager.restorePersistedPresentation?.();
-    else manager.neutralizePresentation?.();
+    if (nextRole === "administrator") {
+      manager.restorePersistedPresentation?.();
+      ensureAdministratorAtlasVisible40436(manager, "role-transition");
+    } else manager.neutralizePresentation?.();
 
     activeWindowPresentationRole40314 = nextRole;
     document.documentElement.dataset.adminWindowPresentationRole40314 = nextRole;
@@ -2031,6 +2059,7 @@
 
   function stageAdministratorDefaultFamilyCollapse40361() {
     const directFamily = administratorHashFamily40361();
+    const bootRole40436 = presentationRole40312();
     const staged = [];
     const skipped = [];
     const failed = [];
@@ -2041,10 +2070,12 @@
       try { saved = JSON.parse(localStorage.getItem(key) || "{}") || {}; } catch { saved = {}; }
 
       const directTarget = directFamily === id;
+      const atlasPrimaryAtAdminBoot40436 =
+        id === ADMIN_ATLAS_PRIMARY_FAMILY_40436 && bootRole40436 === "administrator";
       const next = {
         ...saved,
         floating: false,
-        minimized: !directTarget,
+        minimized: !(directTarget || atlasPrimaryAtAdminBoot40436),
         hidden: false,
         maximized: false
       };
@@ -2135,6 +2166,7 @@
     // Do not immediately replay the same neutralize/restore transaction.
     activeWindowPresentationRole40314 = bootRole40312;
     document.documentElement.dataset.adminWindowPresentationRole40314 = bootRole40312;
+    if (bootRole40312 === "administrator") ensureAdministratorAtlasVisible40436(manager, "administrator-boot");
     installMathCoreInlineWindowControls40148();
 
     // 40.1.48 — restore guard for compact bars.  Some stacked Administrator
@@ -2174,6 +2206,20 @@
       role_transition_forces_geometry_snapshot: false,
       hidden_window_deck_live_rebuild: false,
       inherited_role_isolation_40312: true
+    });
+    globalThis.ErithAdministratorAtlasVisibility40436 = Object.freeze({
+      build: "40.4.36",
+      family: ADMIN_ATLAS_PRIMARY_FAMILY_40436,
+      administrator_boot_visible: true,
+      administrator_role_transition_visible: true,
+      inner_disclosures_forced_open: false,
+      lazy_hydration_changed: false,
+      atlas_runtime_changed: false,
+      market_core_changed: false,
+      timer_added: false,
+      observer_added: false,
+      storage_owner_added: false,
+      reconcile: reason => ensureAdministratorAtlasVisible40436(manager, reason || "manual-diagnostic")
     });
     globalThis.ErithSurfacePerformance40315 = Object.freeze({
       build: "40.3.15",
