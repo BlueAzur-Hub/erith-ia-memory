@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.51",
-  "parent_build": "40.4.50",
+  "build": "40.4.52",
+  "parent_build": "40.4.51",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -151,7 +151,7 @@
       "component": "Atlas CURRENT pending canonical snapshot rearm",
       "owner": "app.js::atlasCurrentPendingAutoKick4051",
       "state": "CANONICAL_HANDOFF_GUARD",
-      "introduced": "40.4.51",
+      "introduced": "40.4.52",
       "notes": "Reuses the existing single CURRENT scheduler after successful Administrator auth or Bridge-ready transition only when a qualified canonical market snapshot differs from the last closed CURRENT. Same-snapshot health checks remain status-only; no new timer/observer/network/storage owner."
     }
   ],
@@ -179,5 +179,8 @@
       "new-canonical-snapshot auth/Bridge handoff"
     ],
     "next_product_work": "Notion support/operations desk, backend-private planning, then Web Classic only when explicitly resumed."
+  },
+  "current_truth": {
+    "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
   }
 }

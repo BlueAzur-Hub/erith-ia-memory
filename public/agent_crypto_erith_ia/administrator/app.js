@@ -1902,7 +1902,11 @@ async function atlasAccessSubmit(event) {
     // existing single CURRENT scheduler after successful authentication.
     // Same-snapshot CLOSED CURRENT is rejected by the canonical market-id gate.
     queueMicrotask(() => {
-      try { atlasCurrentPendingAutoKick4051("post-auth"); } catch (_) {}
+      try {
+        if (!atlasCurrentRestUiConverge4052("post-auth")) {
+          atlasCurrentPendingAutoKick4051("post-auth");
+        }
+      } catch (_) {}
     });
     atlasAccessSubmitBusy40429 = false;
     atlasAccessSetBusy40429(false);
@@ -25312,7 +25316,11 @@ async function atlasLocalBridgeProbe(options = {}) {
       // stranded merely because readiness returned after the original event.
       // The helper below reuses the existing single scheduler only when the
       // canonical market id differs from the last successfully closed CURRENT.
-      try { atlasCurrentPendingAutoKick4051("bridge-ready"); } catch (_) {}
+      try {
+        if (!atlasCurrentRestUiConverge4052("bridge-ready")) {
+          atlasCurrentPendingAutoKick4051("bridge-ready");
+        }
+      } catch (_) {}
       // 40.3.17 — health is status, not an analysis trigger for an already-consumed snapshot.
       // Returning to Firefox, pageshow, focus, or a routine /health success must
       // never rebuild the full Atlas/Aerith transaction. Automatic analysis is
@@ -50887,7 +50895,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.51";
+const ATLAS_BUILD = "40.4.52";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -61550,8 +61558,17 @@ function atlasCurrentPendingAutoKick4051(reason="bridge-ready") {
       : "";
 
     if (!marketId) return false;
-    if (lastDone && marketId === lastDone) {
+
+    // 40.4.52 — the transaction proof is stronger than boot-order-dependent
+    // lastDone hydration.  If the exact canonical snapshot already has a
+    // verified CLOSED CURRENT, never reopen it merely because the persisted
+    // market-id gate has not finished restoring yet.
+    let closedProof = null;
+    try { closedProof = typeof atlasCanonicalCurrentProof389 === "function" ? atlasCanonicalCurrentProof389(null) : null; } catch (_) {}
+    const proofMarketId = String(closedProof?.marketId || "").trim();
+    if ((lastDone && marketId === lastDone) || (proofMarketId && marketId === proofMarketId)) {
       try { atlasAutomation341SetRestStatus(marketId); } catch (_) {}
+      try { atlasCurrentRestUiConverge4052(`same-canonical-${String(reason || "bridge-ready")}`); } catch (_) {}
       return false;
     }
 
@@ -61595,3 +61612,61 @@ try {
     indexeddb_schema_changed:false
   });
 } catch (_) {}
+
+
+/* ============================================================
+   40.4.52 — CLOSED CURRENT REST UI CONVERGENCE
+
+   40.4.51 correctly re-armed a genuinely NEW canonical snapshot after
+   auth/Bridge readiness, but operator export showed a boot-order race where
+   the exact already-consumed snapshot could display 0 % / IDLE while the
+   Decision Board and transaction proof already said CURRENT CLOSED.
+
+   This owner never computes.  It only converges presentation when the current
+   canonical market id exactly matches the verified CLOSED transaction proof.
+   ============================================================ */
+function atlasCurrentRestUiConverge4052(reason="bridge-ready") {
+  try {
+    if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;
+    if (typeof atlasCanonicalCurrentProof389 !== "function") return false;
+    const proof = atlasCanonicalCurrentProof389(null);
+    if (!proof?.marketId || !proof?.fingerprint) return false;
+
+    const snapshot = typeof atlasBuildCryptoPageSnapshot === "function"
+      ? atlasBuildCryptoPageSnapshot()
+      : null;
+    if (!snapshot) return false;
+    const marketId = typeof atlasAutomation341SnapshotId === "function"
+      ? String(atlasAutomation341SnapshotId(snapshot) || "").trim()
+      : "";
+    if (!marketId || marketId !== String(proof.marketId || "").trim()) return false;
+
+    if (atlasLocalReportsState?.running || atlasLocalConclusionState?.running) return false;
+    try { atlasAutomation341SetRestStatus(marketId); } catch (_) {}
+    try { atlasCanonicalCurrentUiTruth389(`rest-ui-4052:${String(reason || "bridge-ready")}`); } catch (_) {}
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+try {
+  globalThis.__AGENT_CRYPTO_CURRENT_REST_UI_40452__ = Object.freeze({
+    build:"40.4.52",
+    parent:"40.4.51",
+    exact_canonical_market_id_required:true,
+    verified_closed_transaction_required:true,
+    same_snapshot_scheduler_reopen:false,
+    presentation_convergence_only:true,
+    atlas_engine_changed:false,
+    current_engine_changed:false,
+    bridge_protocol_changed:false,
+    ollama_call_added:false,
+    indexeddb_write_added:false,
+    storage_write_added:false,
+    timer_added:false,
+    observer_added:false,
+    network_owner_added:false
+  });
+} catch (_) {}
+
