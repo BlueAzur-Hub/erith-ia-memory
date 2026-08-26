@@ -45066,6 +45066,53 @@ function atlasExchangeQuoteForCoin(coinOrId, now = Date.now()) {
 }
 
 
+/* ============================================================
+   40.4.54 — SOURCE TRUTH CEX WAVE 1 · BINANCE PRIMARY ACCESSOR
+
+   Read-only accessor over the already-running Binance direct EUR WebSocket
+   owner.  Kraken/Coinbase presentation may compare against this observation,
+   but cannot mutate exchange state or create a canonical execution price.
+   ============================================================ */
+const ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054 = Object.freeze({
+  BTC:"bitcoin", ETH:"ethereum", BNB:"binancecoin", XRP:"ripple", SOL:"solana"
+});
+function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
+  const asset=String(symbol||"").trim().toUpperCase();
+  const coinId=ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054[asset];
+  if(!coinId)return null;
+  const quote=atlasExchangeQuoteForCoin(coinId,now);
+  const price=Number(quote?.price);
+  if(quote?.status!=="live"||!Number.isFinite(price)||price<=0)return null;
+  return Object.freeze({
+    provider:"binance",
+    role:"primary_live_direct_eur",
+    asset,
+    coin_id:coinId,
+    status:"ok",
+    price_eur:price,
+    bid_eur:Number.isFinite(Number(quote?.bid))?Number(quote.bid):null,
+    ask_eur:Number.isFinite(Number(quote?.ask))?Number(quote.ask):null,
+    change_24h_pct:Number.isFinite(Number(quote?.change24h))?Number(quote.change24h):null,
+    observed_at_ms:Number(quote?.timestamp||now),
+    source:String(quote?.source||"Binance direct EUR WebSocket")
+  });
+}
+try {
+  globalThis.ErithCexPrimary4054=Object.freeze({
+    build:"40.4.54",
+    mode:"READ_ONLY",
+    source:"Binance direct EUR WebSocket",
+    symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
+    quote:atlasCexPrimaryBinanceQuote4054,
+    trade_endpoint:false,
+    storage_owner_added:false,
+    network_owner_added:false,
+    timer_added:false,
+    observer_added:false
+  });
+} catch (_) {}
+
+
 // A simulation is an execution-like action, even when it is 100 % fictitious.
 // Therefore it may use a fresh exchange quote, but never a delayed market
 // snapshot merely because that snapshot is still displayable.
@@ -50895,7 +50942,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.53";
+const ATLAS_BUILD = "40.4.54";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -51270,11 +51317,13 @@ async function atlasFetchVersionManifest(stamp = Date.now()) {
   if (!build) throw new Error("version_manifest_build_missing");
 
   const expectedToken = atlasVersionExpectedToken(build);
-  if (!token || token !== expectedToken) {
-    throw new Error("version_manifest_token_invalid");
-  }
-
-  return { manifest, build, token };
+  return {
+    manifest,
+    build,
+    token,
+    expectedToken,
+    tokenValid: Boolean(token && token === expectedToken)
+  };
 }
 
 function atlasVersionExtractAppBuild(source) {
@@ -51383,6 +51432,24 @@ async function atlasVersionCheck(options = {}) {
     atlasVersionAwarenessState.remoteBuild = remote.build;
     atlasVersionAwarenessState.remoteToken = remote.token;
     atlasVersionAwarenessState.lastCheckedAt = Date.now();
+
+    // 40.4.54 — GitHub Pages can briefly publish build and token from
+    // different propagation edges.  A structurally readable manifest with a
+    // token mismatch is a publication-sync state, not a network/application
+    // failure.  Remote app verification still gates any actual update.
+    if (remote.tokenValid !== true) {
+      atlasVersionHandleSyncing40199(
+        remote.build || ATLAS_BUILD,
+        remote.token || remote.expectedToken || ATLAS_ASSET_TOKEN,
+        {
+          reason: "manifest_token_propagating",
+          expectedToken: remote.expectedToken || "",
+          observedToken: remote.token || ""
+        },
+        { userInitiated }
+      );
+      return false;
+    }
 
     if (comparison > 0) {
       const publication = await atlasVerifyRemotePublication(remote);
@@ -61652,7 +61719,7 @@ function atlasCurrentRestUiConverge4052(reason="bridge-ready") {
 
 try {
   globalThis.__AGENT_CRYPTO_CURRENT_REST_UI_40452__ = Object.freeze({
-    build:"40.4.53",
+    build:"40.4.52",
     parent:"40.4.51",
     exact_canonical_market_id_required:true,
     verified_closed_transaction_required:true,

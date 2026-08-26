@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.53",
+  "build": "40.4.54",
   "parent_build": "40.4.52",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
@@ -158,18 +158,26 @@
     {
       "component": "Private Local Backend / public source matrix",
       "owner": "public client: js/views/private-backend-sources.js + private-backend-sources.css · local companion: private_backend.py V1.0.0",
-      "state": "READ_ONLY_WAVE_1",
+      "state": "SOURCE_TRUTH_CEX_WAVE_1_READ_ONLY",
       "introduced": "40.4.53",
       "endpoint": "127.0.0.1:8790",
       "sources": [
-        "Kraken Public Spot REST",
-        "Coinbase Exchange public market data"
+        "Binance direct EUR WebSocket (primary)",
+        "Kraken Public Spot REST (control)",
+        "Coinbase Exchange public market data (control)"
       ],
-      "notes": "Backend implementation is a Ryzen-local companion bundle, not required to be published. Separate from Ollama Bridge 8787. Operator-demand GET only; bounded in-memory cache; no API key, account, wallet, order, withdrawal, signature or trading endpoint."
+      "notes": "40.4.54 merges the existing Binance direct EUR WebSocket observation with Kraken/Coinbase loopback reads. Binance remains primary; concordance is descriptive only and creates no canonical execution price."
+    },
+    {
+      "component": "Version awareness / GitHub Pages propagation truth",
+      "owner": "app.js atlasFetchVersionManifest + atlasVersionCheck",
+      "state": "CANONICAL_SYNC_AWARE",
+      "introduced": "40.4.54",
+      "notes": "Readable manifest with transient build/token edge mismatch is classified as GitHub propagation, not application failure. Actual remote app verification remains mandatory before update."
     }
   ],
   "next": {
-    "after_40_4_51": "Operator smoke test: with a new canonical snapshot pending and Bridge returning ready, CURRENT must leave HISTORIQUE 0/4 automatically without manual market refresh or second action; same consumed snapshot must remain at rest."
+    "after_40_4_54": "Operator smoke test Source Truth CEX: local backend ready, Binance primary live, Kraken/Coinbase controls, no canonical price fabrication. Then Wave 2 DEX/DeFi sources."
   },
   "migration_summary": {
     "state": "FUNCTIONALLY_COMPLETE_CURRENT_REARM_PENDING_OPERATOR_SMOKE_TEST",
@@ -191,7 +199,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Notion support/operations desk, backend-private planning, then Web Classic only when explicitly resumed."
+    "next_product_work": "Source Truth CEX Wave 2: DEX Screener + GeckoTerminal + DefiLlama, then Notion support/operations desk."
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"

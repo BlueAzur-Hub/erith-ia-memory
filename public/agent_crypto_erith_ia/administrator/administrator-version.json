@@ -1,12 +1,12 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v36",
-  "build": "40.4.53",
-  "release": "AETHER PRIVATE LOCAL BACKEND V1 + KRAKEN/COINBASE READ-ONLY SOURCE MATRIX",
+  "build": "40.4.54",
+  "release": "AETHER SOURCE TRUTH CEX WAVE 1 + VERSION PROPAGATION TRUTH LOCK",
   "status": "candidate_requires_firefox_operator_validation",
-  "prepared_at": "2026-08-26T14:44:00Z",
+  "prepared_at": "2026-08-26T15:12:00Z",
   "published_at": null,
-  "global_versioning": "40.4.53",
-  "source": "40.4.52",
+  "global_versioning": "40.4.54",
+  "source": "40.4.53",
   "protected_base": {
     "classic_web_modified": false,
     "image_assets_modified": false,
@@ -7062,5 +7062,20 @@
     ]
   },
   "publication_revision": "R1",
-  "publication_revision_reason": "40.4.53 manifest token/publication identity repair; no functional backend change"
+  "publication_revision_reason": "40.4.53 manifest token/publication identity repair; no functional backend change",
+  "private_backend_source_truth_cex_4054": {
+    "backend_version": "1.0.0",
+    "primary": "Binance direct EUR WebSocket",
+    "controls": [
+      "Kraken Public",
+      "Coinbase Exchange"
+    ],
+    "read_only": true,
+    "canonical_price_created": false,
+    "trading": false
+  },
+  "version_awareness_4054": {
+    "manifest_token_propagation_is_syncing": true,
+    "remote_app_verification_preserved": true
+  }
 }

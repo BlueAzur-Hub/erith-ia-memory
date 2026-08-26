@@ -1,6 +1,6 @@
 {
-  "schema": "agent_crypto_private_backend_sources_v1",
-  "build": "40.4.53",
+  "schema": "agent_crypto_private_backend_sources_v2",
+  "build": "40.4.54",
   "backend_version": "1.0.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
@@ -11,6 +11,14 @@
     "persistent": false
   },
   "sources": [
+    {
+      "id": "binance",
+      "role": "primary_live_direct_eur",
+      "endpoint_family": "existing Binance direct EUR WebSocket runtime",
+      "authentication": "none",
+      "write_capability": false,
+      "backend_transport": false
+    },
     {
       "id": "kraken",
       "role": "secondary_spot_eur_control",
@@ -47,5 +55,25 @@
     "private_backend_port": 8790,
     "same_process": false,
     "reason": "separate IA-local ownership from external read-only source ownership"
+  },
+  "source_truth_cex": {
+    "primary": {
+      "id": "binance",
+      "owner": "app.js existing direct EUR WebSocket",
+      "network_owner_added": false
+    },
+    "controls": [
+      "kraken",
+      "coinbase"
+    ],
+    "merge_owner": "js/views/private-backend-sources.js",
+    "canonical_price_created": false,
+    "financial_signal": false,
+    "operator_refresh_only": true
+  },
+  "version_awareness": {
+    "manifest_token_mismatch": "SYNCING_NOT_FAILURE",
+    "network_or_json_failure": "FAILURE",
+    "remote_app_verification_still_required_before_update": true
   }
 }
