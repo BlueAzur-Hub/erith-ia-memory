@@ -2600,6 +2600,30 @@ function atlasV2SyncShareableUrl(mode, options = {}) {
   } catch {}
 }
 
+// 40.4.37 — Administrator URL truth lock.
+// Intermediate is the only shareable query-owned view. Once the authenticated
+// owner has actually entered advanced/Administrator, a stale ?view=intermediate
+// must never remain as a contradictory bootstrap authority. Hash and unrelated
+// query parameters are preserved. No reload, timer, observer or storage write.
+function atlasV2CanonicalizeAdministratorUrl40437(reason = "mode-apply") {
+  if (!atlasAccessIsAuthorized()) return false;
+  try {
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("view")) {
+      document.documentElement.dataset.adminUrlTruth40437 = "canonical";
+      document.documentElement.dataset.adminUrlTruthReason40437 = reason;
+      return false;
+    }
+    url.searchParams.delete("view");
+    history.replaceState(history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    document.documentElement.dataset.adminUrlTruth40437 = "canonicalized";
+    document.documentElement.dataset.adminUrlTruthReason40437 = reason;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function atlasV2Mode() {
   const urlMode = atlasV2ModeFromUrl();
   if (urlMode) return urlMode;
@@ -2746,6 +2770,7 @@ function atlasV2ApplyMode(mode, options = {}) {
 
   if (options.persist !== false) atlasV2WriteSetting(ATLAS_V2_MODE_KEY, next);
   if (options.syncUrl === true) atlasV2SyncShareableUrl(next, { push: options.pushUrl === true });
+  if (administrator) atlasV2CanonicalizeAdministratorUrl40437("advanced-mode-applied");
   atlasScheduleStableChartResize();
   atlasScheduleRuntimeValidation("mode-apply");
   window.dispatchEvent(new CustomEvent("atlas:v2mode", { detail: { mode: next, role } }));
@@ -50545,7 +50570,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.36";
+const ATLAS_BUILD = "40.4.37";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -52039,7 +52064,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   }
 
   const snapshot = {
-    build:"40.4.36",
+    build:"40.4.37",
     scope,
     auto_reader_ready:!!$("auto-reader"),
     shared_ready:!!$("shared-memory"),
@@ -52052,7 +52077,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   return snapshot;
 }
 try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25-compat",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
-try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.36",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
+try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.37",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
 atlasRebindDeferredMemoryPanels40425("all");
 
