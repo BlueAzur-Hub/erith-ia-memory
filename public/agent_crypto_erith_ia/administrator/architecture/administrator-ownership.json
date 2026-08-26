@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.46",
-  "parent_build": "40.4.45",
+  "build": "40.4.47",
+  "parent_build": "40.4.46",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -60,7 +60,7 @@
         "Grey Plate Forensic",
         "Simulation runtime"
       ],
-      "notes": "40.4.44 Learning parser gate filters the recovered Learning range from System shellHtml before insertAdjacentHTML parsing. Storage Health, Grey Plate, Simulation runtime remain parser-resident; peripheral System bodies remain lazy."
+      "notes": "40.4.47 rolls back the unsafe string parser gate. System mounts valid HTML first; Learning is removed afterward as a validated DOM sibling range. Storage/Grey/Simulation remain structurally intact."
     },
     {
       "component": "Atlas presentation",
@@ -118,9 +118,9 @@
     },
     {
       "component": "Learning Journey presentation transport",
-      "owner": "js/views/learning-presentation.js + views/system.html",
-      "state": "TRUE_LAZY_PARSER_COMPLETE_CANONICAL",
-      "notes": "40.4.44 prefilters System shellHtml before browser parsing, inserts compact shell, fetches source once on first demand, then calls canonical Learning runtime rebind."
+      "owner": "js/views/system-presentation.js → js/views/learning-presentation.js + views/system.html",
+      "state": "TRUE_LAZY_DOM_RESIDENCY_SAFE_POST_PARSE_CANONICAL",
+      "notes": "40.4.47: System HTML parses structurally valid first; Learning 01→11 is then safely detached as DOM siblings before app.js captures refs. First demand hydrates from views/system.html and rebinds runtime. 40.4.44 string parser gate retired after operator regression."
     },
     {
       "component": "Chronos / planetary presentation",
@@ -136,6 +136,6 @@
     }
   ],
   "next": {
-    "40.4.47": "Learning recovery CSS autonomous-copy proof + final Administrator debt-ledger closure. No runtime expansion."
+    "40.4.48": "Only after Firefox operator confirms Simulation + Learning modules restored: resume autonomous Learning CSS owner / debt-ledger closure."
   }
 }

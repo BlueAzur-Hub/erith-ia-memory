@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_legacy_retirement_v1",
-  "build": "40.4.46",
-  "parent_build": "40.4.45",
+  "build": "40.4.47",
+  "parent_build": "40.4.46",
   "purpose": "Retire proven dead owners without deleting protected or still-referenced implementation files.",
   "policy": {
     "loaded_reference_required_before_keep": true,
@@ -73,9 +73,16 @@
       "replacement_owner": "none — runtime intentionally retired in 40.3.40",
       "loaded_by_index": false,
       "proof": "Current index has no reference; canonical lineage records offscreen paint runtime retirement in 40.3.40."
+    },
+    {
+      "path": "js/views/learning-presentation.js::string-parser-gate",
+      "state": "RETIRED_REGRESSION",
+      "retired_in": "40.4.47",
+      "reason": "Operator evidence: Learning/Simulation modules disappeared after pre-parse substring removal. Replaced by safe post-parse DOM sibling detachment.",
+      "replacement": "System mount first → safe DOM detach → on-demand hydration"
     }
   ],
   "retired_count": 6,
   "hold_count": 1,
-  "next": "40.4.47 — make Learning canonical CSS autonomous, then close the Administrator migration debt ledger."
+  "next": "Do not resume legacy retirement until 40.4.47 operator confirms Simulation + Learning 01→11 restored."
 }
