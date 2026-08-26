@@ -1114,6 +1114,7 @@ const atlasViewportTracker40345 = {
   advancedActiveId: "",
   applyScheduled: false,
   geometryScheduled: false,
+  settleScheduled40429: false,
   listenersBound: false
 };
 
@@ -1195,6 +1196,21 @@ function atlasViewportScheduleGeometry40345() {
     atlasViewportTracker40345.geometryScheduled = false;
     atlasViewportCollectGeometry40345();
     atlasViewportApply40345();
+  });
+}
+
+// 40.4.29 — the existing viewport owner gets one settled follow-up frame.
+// This is not a second resize system: it coalesces into atlasViewportTracker40345
+// and exists only because Firefox can report transition/F11 geometry before the
+// final browser chrome/workspace layout has committed. No timer or observer.
+function atlasViewportScheduleSettledGeometry40429() {
+  if (atlasViewportTracker40345.settleScheduled40429) return;
+  atlasViewportTracker40345.settleScheduled40429 = true;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      atlasViewportTracker40345.settleScheduled40429 = false;
+      atlasViewportScheduleGeometry40345();
+    });
   });
 }
 
@@ -1378,7 +1394,10 @@ function atlasViewportBind40345() {
   if (atlasViewportTracker40345.listenersBound) return;
   atlasViewportTracker40345.listenersBound = true;
   window.addEventListener("scroll", atlasViewportScheduleApply40345, { passive: true });
-  window.addEventListener("resize", atlasViewportScheduleGeometry40345, { passive: true });
+  window.addEventListener("resize", () => {
+    atlasViewportScheduleGeometry40345();
+    atlasViewportScheduleSettledGeometry40429();
+  }, { passive: true });
   window.addEventListener("hashchange", atlasViewportScheduleGeometry40345);
   window.addEventListener("atlas:v2mode", atlasViewportScheduleGeometry40345);
   window.addEventListener("pageshow", event => {
@@ -1412,6 +1431,20 @@ const ATLAS_ACCESS_SESSION_KEY = "agent_crypto_local_access_session_v1";
 const ATLAS_ACCESS_OWNER_ROLE = "owner";
 
 let atlasAccessPendingHash = "";
+
+let atlasAccessSubmitBusy40429 = false;
+function atlasAccessSetBusy40429(busy) {
+  const submit = document.getElementById("atlasAccessSubmit");
+  if (!submit) return;
+  const active = busy === true;
+  submit.disabled = active;
+  submit.setAttribute("aria-busy", active ? "true" : "false");
+  if (active) submit.textContent = "Validation…";
+  else {
+    const configured = !!atlasAccessReadConfig()?.profiles?.owner?.hash;
+    submit.textContent = configured ? "Déverrouiller l’administration" : "Créer l’accès Christophe";
+  }
+}
 
 function atlasAccessReadConfig() {
   try {
@@ -1505,6 +1538,9 @@ function atlasAccessClose() {
 
 async function atlasAccessSubmit(event) {
   event.preventDefault();
+  if (atlasAccessSubmitBusy40429) return false;
+  atlasAccessSubmitBusy40429 = true;
+  atlasAccessSetBusy40429(true);
   const secret = String(document.getElementById("atlasAccessSecret")?.value || "");
   const confirm = String(document.getElementById("atlasAccessConfirm")?.value || "");
   const config = atlasAccessReadConfig();
@@ -1512,6 +1548,8 @@ async function atlasAccessSubmit(event) {
 
   if (secret.length < 6) {
     atlasAccessSetStatus("Le mot de passe local doit contenir au moins 6 caractères.", "error");
+    atlasAccessSubmitBusy40429 = false;
+    atlasAccessSetBusy40429(false);
     return false;
   }
 
@@ -1519,6 +1557,8 @@ async function atlasAccessSubmit(event) {
     if (!configured) {
       if (secret !== confirm) {
         atlasAccessSetStatus("Les deux saisies ne correspondent pas.", "error");
+        atlasAccessSubmitBusy40429 = false;
+        atlasAccessSetBusy40429(false);
         return false;
       }
       const salt = atlasAccessRandomHex(18);
@@ -1536,6 +1576,8 @@ async function atlasAccessSubmit(event) {
       const hash = await atlasAccessDigest(config.profiles.owner.salt, secret);
       if (hash !== config.profiles.owner.hash) {
         atlasAccessSetStatus("Mot de passe local incorrect.", "error");
+        atlasAccessSubmitBusy40429 = false;
+        atlasAccessSetBusy40429(false);
         return false;
       }
     }
@@ -1543,6 +1585,8 @@ async function atlasAccessSubmit(event) {
     const bridgeAuth40375 = await atlasBridgeAuthLogin40375(secret);
     if (bridgeAuth40375.reachable && !bridgeAuth40375.ok) {
       atlasAccessSetStatus(bridgeAuth40375.payload?.error || "Bridge : authentification Administrator refusée.", "error");
+      atlasAccessSubmitBusy40429 = false;
+      atlasAccessSetBusy40429(false);
       return false;
     }
 
@@ -1555,6 +1599,10 @@ async function atlasAccessSubmit(event) {
        de refermer le Command Center quelques millisecondes plus tard. */
     atlasAdminForceWorkspaceOpen();
     atlasAccessClose();
+    // 40.4.29 — authentication semantics are unchanged. Once local + Bridge
+    // validation has succeeded, give Firefox one paint to retire the gate before
+    // expanding the large Administrator workspace.
+    await new Promise(resolve => requestAnimationFrame(resolve));
     atlasV2ApplyMode("advanced", { persist: false });
     const pending = atlasAccessPendingHash;
     atlasAccessPendingHash = "";
@@ -1563,10 +1611,17 @@ async function atlasAccessSubmit(event) {
     window.requestAnimationFrame(() => {
       if (pending) atlasV2OpenAdvancedForTarget(pending);
       else atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
+      // Reuse the canonical resize owners exactly once after the role transition.
+      // The tracker performs one coalesced settled follow-up frame for Firefox/F11.
+      window.dispatchEvent(new Event("resize"));
     });
+    atlasAccessSubmitBusy40429 = false;
+    atlasAccessSetBusy40429(false);
     return true;
   } catch (error) {
     atlasAccessSetStatus(error?.message || "Échec du verrou local.", "error");
+    atlasAccessSubmitBusy40429 = false;
+    atlasAccessSetBusy40429(false);
     return false;
   }
 }
@@ -50488,7 +50543,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.28";
+const ATLAS_BUILD = "40.4.29";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
