@@ -1,7 +1,7 @@
 {
-  "schema": "agent_crypto_private_backend_sources_v2",
-  "build": "40.4.55",
-  "backend_version": "1.1.0",
+  "schema": "agent_crypto_private_backend_sources_v3",
+  "build": "40.4.56",
+  "backend_version": "1.2.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
   "mode": "READ_ONLY_PUBLIC_MARKET_DATA",
@@ -30,6 +30,27 @@
       "id": "coinbase",
       "role": "secondary_spot_eur_control",
       "endpoint_family": "https://api.exchange.coinbase.com/products/{product_id}/stats",
+      "authentication": "none",
+      "write_capability": false
+    },
+    {
+      "id": "dexscreener",
+      "role": "dex_liquidity_context_only",
+      "endpoint_family": "https://api.dexscreener.com/latest/dex/search",
+      "authentication": "none",
+      "write_capability": false
+    },
+    {
+      "id": "geckoterminal",
+      "role": "dex_pool_crosscheck_context_only",
+      "endpoint_family": "https://api.geckoterminal.com/api/v2/search/pools",
+      "authentication": "none",
+      "write_capability": false
+    },
+    {
+      "id": "defillama",
+      "role": "defi_aggregate_context_only",
+      "endpoint_family": "https://api.llama.fi/overview/dexs/{chain}",
       "authentication": "none",
       "write_capability": false
     }
@@ -85,10 +106,38 @@
     ],
     "mode": "READ_ONLY_CONTEXT_ONLY",
     "trigger": "operator_only",
-    "cache_seconds": 60,
+    "cache_seconds": 90,
     "cex_primary_unchanged": "Binance",
     "canonical_price_created": false,
     "trading_endpoint": false,
-    "notes": "DEX symbol/pool discovery is context and never identity proof or CEX price replacement."
+    "notes": "DEX symbol/pool discovery is context and never identity proof or CEX price replacement. 40.4.56 accepts direct/reversed asset-stable DEX Screener pairs, falls back to asset-alias search, limits GeckoTerminal concurrency, and extends the operator context timeout."
+  },
+  "context_cache": {
+    "type": "memory_only",
+    "ttl_seconds": 90,
+    "persistent": false,
+    "operator_triggered": true
+  },
+  "source_intelligence_v1_40456": {
+    "owner": "js/views/private-backend-sources.js",
+    "inputs": [
+      "Binance live primary",
+      "Kraken/Coinbase CEX controls",
+      "DEX Screener/GeckoTerminal context",
+      "DefiLlama chain context"
+    ],
+    "contract": "agent_crypto_source_intelligence_v1",
+    "fields": [
+      "freshness",
+      "provenance",
+      "cex_concordance",
+      "dex_coverage",
+      "defi_chain_coverage"
+    ],
+    "trigger": "operator_only",
+    "atlas_consumer_enabled": false,
+    "canonical_price_created": false,
+    "financial_signal": false,
+    "missing_data_fabricated": false
   }
 }

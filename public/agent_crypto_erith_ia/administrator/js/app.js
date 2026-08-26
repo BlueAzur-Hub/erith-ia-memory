@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.55";
-  const ADMIN_RELEASE = "AETHER DEX/DEFI CONTEXT WAVE 2 + CEX DISPLAY TRUTH LOCK";
+  const ADMIN_BUILD = "40.4.56";
+  const ADMIN_RELEASE = "AETHER SOURCE INTELLIGENCE V1 + DEX CONTEXT RELIABILITY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

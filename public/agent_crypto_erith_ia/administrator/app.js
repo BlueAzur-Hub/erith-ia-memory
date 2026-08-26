@@ -45099,7 +45099,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.55",
+    build:"40.4.56",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -50942,7 +50942,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.55";
+const ATLAS_BUILD = "40.4.56";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

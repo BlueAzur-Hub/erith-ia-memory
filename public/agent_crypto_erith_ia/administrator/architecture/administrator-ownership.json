@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.55",
-  "parent_build": "40.4.52",
+  "build": "40.4.56",
+  "parent_build": "40.4.55",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -157,8 +157,8 @@
     },
     {
       "component": "Private Local Backend / public source matrix",
-      "owner": "public client: js/views/private-backend-sources.js + private-backend-sources.css · local companion: private_backend.py V1.1.0",
-      "state": "SOURCE_TRUTH_CEX_WAVE_1_READ_ONLY",
+      "owner": "public client: js/views/private-backend-sources.js + private-backend-sources.css · local companion: private_backend.py V1.2.0",
+      "state": "SOURCE_INTELLIGENCE_V1_READ_ONLY",
       "introduced": "40.4.53",
       "endpoint": "127.0.0.1:8790",
       "sources": [
@@ -166,7 +166,7 @@
         "Kraken Public Spot REST (control)",
         "Coinbase Exchange public market data (control)"
       ],
-      "notes": "40.4.55 merges the existing Binance direct EUR WebSocket observation with Kraken/Coinbase loopback reads. Binance remains primary; concordance is descriptive only and creates no canonical execution price."
+      "notes": "40.4.56 preserves Binance primary + Kraken/Coinbase controls, repairs DEX Screener bidirectional pool discovery, limits GeckoTerminal concurrency, and emits a freshness/provenance Source Intelligence fact contract. Atlas does not consume it automatically yet."
     },
     {
       "component": "Version awareness / GitHub Pages propagation truth",
@@ -177,7 +177,7 @@
     }
   ],
   "next": {
-    "after_40_4_54": "Operator smoke test Source Truth CEX: local backend ready, Binance primary live, Kraken/Coinbase controls, no canonical price fabrication. Then Wave 2 DEX/DeFi sources."
+    "after_40_4_56": "Operator smoke test DEX Screener recovery + Source Intelligence freshness/provenance. Then 40.4.57 may feed the fact contract into Atlas as an optional read-only context input without changing CURRENT cadence."
   },
   "migration_summary": {
     "state": "FUNCTIONALLY_COMPLETE_CURRENT_REARM_PENDING_OPERATOR_SMOKE_TEST",
@@ -199,7 +199,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Source Truth CEX Wave 2: DEX Screener + GeckoTerminal + DefiLlama, then Notion support/operations desk."
+    "next_product_work": "Source Intelligence operator validation, then optional Atlas context consumer; Notion support/operations desk remains parallel documentation work."
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
@@ -218,5 +218,13 @@
     "canonical_price_created": false,
     "trading_endpoint": false,
     "notes": "DEX symbol/pool discovery is context and never identity proof or CEX price replacement."
+  },
+  "source_intelligence_v1_40456": {
+    "owner": "js/views/private-backend-sources.js + Private Backend V1.2.0",
+    "state": "READ_ONLY_FACT_CONTRACT_READY_FOR_FUTURE_ATLAS_CONSUMER",
+    "atlas_consumer_enabled": false,
+    "new_polling": false,
+    "storage_owner_added": false,
+    "trade_endpoint": false
   }
 }
