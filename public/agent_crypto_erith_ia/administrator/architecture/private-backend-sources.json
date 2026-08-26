@@ -1,7 +1,7 @@
 {
-  "schema": "agent_crypto_private_backend_sources_v3",
-  "build": "40.4.56",
-  "backend_version": "1.2.0",
+  "schema": "agent_crypto_private_backend_sources_v4",
+  "build": "40.4.57",
+  "backend_version": "1.3.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
   "mode": "READ_ONLY_PUBLIC_MARKET_DATA",
@@ -110,7 +110,7 @@
     "cex_primary_unchanged": "Binance",
     "canonical_price_created": false,
     "trading_endpoint": false,
-    "notes": "DEX symbol/pool discovery is context and never identity proof or CEX price replacement. 40.4.56 accepts direct/reversed asset-stable DEX Screener pairs, falls back to asset-alias search, limits GeckoTerminal concurrency, and extends the operator context timeout."
+    "notes": "DEX context remains non-canonical. 40.4.57 adds asset-specific network gates, rejects wrong-chain symbol collisions, preserves direct/reversed stable pairs, and flags >=20x liquidity/reserve disagreement for review."
   },
   "context_cache": {
     "type": "memory_only",
@@ -126,12 +126,14 @@
       "DEX Screener/GeckoTerminal context",
       "DefiLlama chain context"
     ],
-    "contract": "agent_crypto_source_intelligence_v1",
+    "contract": "agent_crypto_source_intelligence_v2",
     "fields": [
       "freshness",
       "provenance",
       "cex_concordance",
       "dex_coverage",
+      "dex_identity_bounded",
+      "liquidity_anomaly_review",
       "defi_chain_coverage"
     ],
     "trigger": "operator_only",
@@ -139,5 +141,17 @@
     "canonical_price_created": false,
     "financial_signal": false,
     "missing_data_fabricated": false
+  },
+  "identity_hardening_40457": {
+    "owner": "Private Backend V1.3.0 + js/views/private-backend-sources.js",
+    "identity_level": "CHAIN_ALIAS_ONLY",
+    "address_level_proof": false,
+    "wrong_chain_symbol_collision_rejected": true,
+    "reversed_pair_price_reuse_forbidden": true,
+    "liquidity_ratio_review_threshold": 20.0,
+    "atlas_consumer_enabled": false,
+    "canonical_price_created": false,
+    "financial_signal": false,
+    "operator_trigger_only": true
   }
 }

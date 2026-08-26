@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.56",
+  "build": "40.4.57",
   "parent_build": "40.4.55",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
@@ -157,8 +157,8 @@
     },
     {
       "component": "Private Local Backend / public source matrix",
-      "owner": "public client: js/views/private-backend-sources.js + private-backend-sources.css · local companion: private_backend.py V1.2.0",
-      "state": "SOURCE_INTELLIGENCE_V1_READ_ONLY",
+      "owner": "public client: js/views/private-backend-sources.js + private-backend-sources.css · local companion: private_backend.py V1.3.0",
+      "state": "SOURCE_INTELLIGENCE_IDENTITY_HARDENED_READ_ONLY",
       "introduced": "40.4.53",
       "endpoint": "127.0.0.1:8790",
       "sources": [
@@ -166,7 +166,7 @@
         "Kraken Public Spot REST (control)",
         "Coinbase Exchange public market data (control)"
       ],
-      "notes": "40.4.56 preserves Binance primary + Kraken/Coinbase controls, repairs DEX Screener bidirectional pool discovery, limits GeckoTerminal concurrency, and emits a freshness/provenance Source Intelligence fact contract. Atlas does not consume it automatically yet."
+      "notes": "40.4.57 rejects wrong-chain DEX symbol collisions, keeps chain+alias identity explicitly bounded/non-canonical, prevents reversed-pair price misuse, and flags >=20x liquidity/reserve disagreement. Atlas consumer remains disabled."
     },
     {
       "component": "Version awareness / GitHub Pages propagation truth",
@@ -177,7 +177,7 @@
     }
   ],
   "next": {
-    "after_40_4_56": "Operator smoke test DEX Screener recovery + Source Intelligence freshness/provenance. Then 40.4.57 may feed the fact contract into Atlas as an optional read-only context input without changing CURRENT cadence."
+    "after_40_4_57": "Operator smoke test identity-bounded DEX context. Only after this PASS may 40.4.58 feed Source Intelligence V2 into Atlas as optional read-only context without changing CURRENT cadence."
   },
   "migration_summary": {
     "state": "FUNCTIONALLY_COMPLETE_CURRENT_REARM_PENDING_OPERATOR_SMOKE_TEST",
@@ -199,7 +199,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Source Intelligence operator validation, then optional Atlas context consumer; Notion support/operations desk remains parallel documentation work."
+    "next_product_work": "Identity-hardening operator validation, then optional Atlas Source Intelligence V2 consumer; Notion support/operations desk remains parallel documentation work."
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
@@ -220,11 +220,21 @@
     "notes": "DEX symbol/pool discovery is context and never identity proof or CEX price replacement."
   },
   "source_intelligence_v1_40456": {
-    "owner": "js/views/private-backend-sources.js + Private Backend V1.2.0",
-    "state": "READ_ONLY_FACT_CONTRACT_READY_FOR_FUTURE_ATLAS_CONSUMER",
+    "owner": "js/views/private-backend-sources.js + Private Backend V1.3.0",
+    "state": "READ_ONLY_FACT_CONTRACT_IDENTITY_HARDENED",
+    "contract": "agent_crypto_source_intelligence_v2",
+    "identity_level": "CHAIN_ALIAS_ONLY",
+    "address_level_proof": false,
     "atlas_consumer_enabled": false,
     "new_polling": false,
     "storage_owner_added": false,
     "trade_endpoint": false
+  },
+  "identity_hardening_40457": {
+    "wrong_chain_symbol_collision_rejected": true,
+    "reversed_pair_price_reuse_forbidden": true,
+    "liquidity_ratio_review_threshold": 20.0,
+    "canonical_price_created": false,
+    "financial_signal": false
   }
 }
