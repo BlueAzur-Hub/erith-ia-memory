@@ -988,8 +988,55 @@ function renderHumanCommand(result) { if (!els.commandHuman) return; const summa
 function renderCommandOutput(result) { renderHumanCommand(result); if (els.commandOutput) { els.commandOutput.textContent = ""; }
 }
 
-function runCommandFromInput(commandText = null) { const text = commandText ?? els.commandInput?.value ?? ""; if (els.commandInput && commandText !== null) { const label = document.querySelector(`.cmd-preset[data-command="${CSS.escape(commandText)}"]`)?.textContent?.trim(); els.commandInput.value = label || commandText; } const result = parseCommandLine(text); if (els.commandOutput) els.commandOutput.dataset.userRan = "1"; renderCommandOutput(result);
+function runCommandFromInput(commandText = null) { const text = commandText ?? els.commandInput?.value ?? ""; if (els.commandInput && commandText !== null) { const label = document.querySelector(`.cmd-preset[data-command="${CSS.escape(commandText)}"]`)?.textContent?.trim(); els.commandInput.value = label || commandText; } const result = parseCommandLine(text); globalThis.__AGENT_CRYPTO_LAST_COMMAND_RESULT_40424__ = result; if (els.commandOutput) els.commandOutput.dataset.userRan = "1"; renderCommandOutput(result); return result;
 }
+
+/* 40.4.24 — System peripheral late-hydration bridge.
+   Commandes is no longer guaranteed to exist when the shared runtime captures `els`.
+   Rebind only the pre-existing command owner after the canonical body is hydrated. */
+function atlasRebindSystemCommandRuntime40424(root = document) {
+  const scope = root instanceof Element ? root : document;
+  const input = scope.querySelector?.("#commandInput") || document.getElementById("commandInput");
+  const output = scope.querySelector?.("#commandOutput") || document.getElementById("commandOutput");
+  const human = scope.querySelector?.("#commandHuman") || document.getElementById("commandHuman");
+  const run = scope.querySelector?.("#btnRunCommand") || document.getElementById("btnRunCommand");
+  if (input) els.commandInput = input;
+  if (output) els.commandOutput = output;
+  if (human) els.commandHuman = human;
+  if (run) els.btnRunCommand = run;
+
+  let bound = 0;
+  if (run && run.dataset.systemRuntimeBound40424 !== "1") {
+    run.dataset.systemRuntimeBound40424 = "1";
+    run.addEventListener("click", () => runCommandFromInput());
+    bound += 1;
+  }
+  if (input && input.dataset.systemRuntimeBound40424 !== "1") {
+    input.dataset.systemRuntimeBound40424 = "1";
+    input.addEventListener("keydown", event => { if (event.key === "Enter") runCommandFromInput(); });
+    bound += 1;
+  }
+  scope.querySelectorAll?.(".cmd-preset[data-command]").forEach(button => {
+    if (button.dataset.systemRuntimeBound40424 === "1") return;
+    button.dataset.systemRuntimeBound40424 = "1";
+    button.addEventListener("click", () => runCommandFromInput(button.dataset.command));
+    bound += 1;
+  });
+  const replay = globalThis.__AGENT_CRYPTO_LAST_COMMAND_RESULT_40424__;
+  if (replay && (els.commandHuman || els.commandOutput)) {
+    try { renderCommandOutput(replay); } catch {}
+  }
+  return Object.freeze({
+    build: "40.4.24",
+    bound_count: bound,
+    command_input: !!els.commandInput,
+    command_output: !!els.commandOutput,
+    command_human: !!els.commandHuman,
+    run_button: !!els.btnRunCommand,
+    pending_result_replayed: !!replay
+  });
+}
+globalThis.atlasRebindSystemCommandRuntime40424 = atlasRebindSystemCommandRuntime40424;
 
 function atlasFeedbackTargetBelongsToLearningViewport(target) {
   if (!target) return false;
@@ -50441,7 +50488,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.23";
+const ATLAS_BUILD = "40.4.24";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
