@@ -566,6 +566,7 @@ const ATLAS_LEARNING_DYNAMIC_REFS_40442 = Object.freeze({
     "learningFoundationStepCards":"learningFoundationStepCards",
     "learningFoundationLab":"learningFoundationLab",
     "learningFoundationStatus":"learningFoundationStatus",
+    "btnResetLearningJourney":"btnResetLearningJourney",
     "learningEvidenceLock":"learningEvidenceLock",
     "learningStepReadTitle":"learningStepReadTitle",
     "learningStepOpenTitle":"learningStepOpenTitle",
@@ -573,14 +574,23 @@ const ATLAS_LEARNING_DYNAMIC_REFS_40442 = Object.freeze({
     "learningStepVerifyTitle":"learningStepVerifyTitle",
     "learningStepNoteTitle":"learningStepNoteTitle",
     "learningStepNote":"learningStepNote",
+    "btnMarkLessonRead":"btnMarkLessonRead",
+    "btnExportLearningNotebook":"btnExportLearningNotebook",
+    "btnVerifyLearningIntegrity":"btnVerifyLearningIntegrity",
+    "btnExportLearningIntegrity":"btnExportLearningIntegrity",
     "learningIntegrityPanel":"learningIntegrityPanel",
     "learningRestartNotice":"learningRestartNotice",
     "learningStepRead":"learningStepRead",
     "learningStepOpen":"learningStepOpen",
     "learningStepPractice":"learningStepPractice",
     "learningStepVerify":"learningStepVerify",
+    "btnContinueLearning":"btnContinueLearning",
+    "btnOpenLearningPractice":"btnOpenLearningPractice",
+    "btnOpenLearningProofs":"btnOpenLearningProofs",
     "learningCompletionAction":"learningCompletionAction",
     "learningCompletionActionHint":"learningCompletionActionHint",
+    "btnCompleteLearningSession":"btnCompleteLearningSession",
+    "btnExportLearningSession":"btnExportLearningSession",
     "learningCockpitReading":"learningCockpitReading",
     "expertRoadmapGrid":"expertRoadmapGrid",
     "expertRoadmapBadge":"expertRoadmapBadge",
@@ -748,6 +758,7 @@ function atlasLearningRuntimeBoundarySnapshot40442() {
 }
 
 globalThis.atlasRebindLearningRuntime40442=atlasRebindLearningRuntime40442;
+globalThis.atlasRebindLearningRuntime=atlasRebindLearningRuntime40442;
 globalThis.ErithLearningRuntimeBoundary40442=Object.freeze({
   build:"40.4.42",
   rebind:atlasRebindLearningRuntime40442,
@@ -757,6 +768,7 @@ globalThis.ErithLearningRuntimeBoundary40442=Object.freeze({
   indexeddb_schema_changed:false,
   learning_state_reset:false
 });
+globalThis.ErithLearningRuntimeBoundary=globalThis.ErithLearningRuntimeBoundary40442;
 
 
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
@@ -33248,6 +33260,15 @@ function atlasRiskFoundationNavigateStageIfNeeded(stage, options = {}) {
 function scrollToLearningTarget(targetId, options = {}) {
   const id = String(targetId || "").trim();
   if (!id) return false;
+  // 40.4.43 — Learning presentation may be absent until its shell opens.
+  // Ask the canonical presentation owner to hydrate once, then reuse the
+  // existing scheduled positioning path. No timer/observer/storage owner is added.
+  if (!document.getElementById(id) && typeof globalThis.ErithLearningPresentation40443?.ensure === "function") {
+    globalThis.ErithLearningPresentation40443.ensure(id).then(ok => {
+      if (ok) atlasLearningScheduleTarget(() => document.getElementById(id), options);
+    }).catch(()=>{});
+    return true;
+  }
   // Resolve the target after the current render cycle. Several cockpit actions
   // rebuild their DOM before the next step is shown; resolving here prevents
   // a scroll toward an element that has just been replaced.
@@ -50839,7 +50860,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.42";
+const ATLAS_BUILD = "40.4.43";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
