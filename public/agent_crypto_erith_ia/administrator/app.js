@@ -50573,7 +50573,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.39";
+const ATLAS_BUILD = "40.4.40";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -52067,7 +52067,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   }
 
   const snapshot = {
-    build:"40.4.39",
+    build:ATLAS_BUILD,
     scope,
     auto_reader_ready:!!$("auto-reader"),
     shared_ready:!!$("shared-memory"),
@@ -52080,7 +52080,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
   return snapshot;
 }
 try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25-compat",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
-try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.39",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
+try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:ATLAS_BUILD,rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
 atlasRebindDeferredMemoryPanels40425("all");
 

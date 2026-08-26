@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.39",
-  "parent_build": "40.4.38",
+  "build": "40.4.40",
+  "parent_build": "40.4.39",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -86,14 +86,14 @@
     },
     {
       "component": "Oracle presentation",
-      "owner": "js/views/oracle-presentation.js + js/views/oracle-demand-residency.js + js/views/oracle-ui-continuity.js",
-      "state": "NEXT_MIGRATION_TARGET",
-      "notes": "Demand-residency exists; true-lazy body hydration remains planned."
+      "owner": "js/views/oracle-presentation.js + js/views/oracle-demand-residency.js + js/views/oracle-ui-continuity.js + views/oracle.html",
+      "state": "TRUE_LAZY_COMPLETE",
+      "notes": "Outer live summary + three subsection shells resident; heavy bodies hydrate from one cached same-origin static source read on first own disclosure. Existing closed-body lifecycle and exclusive-accordion continuity are preserved."
     },
     {
       "component": "Learning Journey 01→11 presentation CSS",
       "owner": "admin-learning-journey-recovery-40422.css",
-      "state": "TRANSITIONAL_FILENAME",
+      "state": "NEXT_MIGRATION_TARGET",
       "target": "admin-learning-journey.css",
       "notes": "Functional owner is real; historical build number in permanent filename remains debt. Rename deferred to bounded file-level surgery."
     },
@@ -123,8 +123,7 @@
     }
   ],
   "next": {
-    "40.4.40": "Oracle true-lazy presentation wave; audit and surgery in same build, no separate validation-only build.",
-    "40.4.41": "Learning Journey presentation true-lazy + canonical CSS filename if Oracle checkpoint remains clean.",
+    "40.4.41": "Learning Journey presentation true-lazy + canonical CSS filename; runtime/progress/IndexedDB remain protected.",
     "40.4.42": "Administrator cumulative migration acceptance/final debt map; no feature expansion."
   }
 }
