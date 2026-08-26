@@ -50543,7 +50543,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.29";
+const ATLAS_BUILD = "40.4.30";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -51933,12 +51933,13 @@ function atlasMultiCollectorOperatorInit() {
 
 
 /* ============================================================
-   40.4.25 — ATLAS PERIPHERAL LATE-HYDRATION ACTION REBIND
-   Shared Memory + GitHub Memory presentation can now appear after app.js boot.
+   40.4.30 — ATLAS PERIPHERAL / AUTO READER LATE-HYDRATION ACTION REBIND
+   Auto Reader + Shared Memory + GitHub Memory presentation can now appear after app.js boot.
    Existing data/runtime owners remain unchanged; this function only refreshes
    cached DOM references, binds the historical actions once and renders current state.
    ============================================================ */
 function atlasRebindDeferredMemoryPanels40425(scope = "all") {
+  const auto = scope === "all" || scope === "auto-reader";
   const shared = scope === "all" || scope === "shared-memory";
   const github = scope === "all" || scope === "github-memory";
   const refresh = (prop, id) => { els[prop] = $(id); return els[prop]; };
@@ -51948,6 +51949,27 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
     node.dataset[key] = "1";
     return true;
   };
+
+  if (auto) {
+    [
+      ["autoModeStatus","autoModeStatus"],["btnAutoToggle","btnAutoToggle"],
+      ["btnAutoNow","btnAutoNow"],["autoLastRead","autoLastRead"],
+      ["autoNextRead","autoNextRead"],["autoActiveCadence","autoActiveCadence"],
+      ["autoSnapshots","autoSnapshots"],["autoMarketPulse","autoMarketPulse"],
+      ["autoWatchStatus","autoWatchStatus"],["autoReaderOutput","autoReaderOutput"],
+      ["autoReaderTruth","autoReaderTruth"],["autoVisibilityTruth","autoVisibilityTruth"],
+      ["autoLastSnapshotTruth","autoLastSnapshotTruth"],["autoCollectorTruth","autoCollectorTruth"],
+      ["autoGithubWriteTruth","autoGithubWriteTruth"]
+    ].forEach(([prop,id]) => refresh(prop,id));
+    bindOnce(els.btnAutoToggle,"click","atlasBind40430",toggleAutoReader);
+    bindOnce(els.btnAutoNow,"click","atlasBind40430",() => {
+      atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" });
+      refreshMarketOnly({ reason: "manual-auto-reader" });
+    });
+    try { renderAutoReader(); } catch (_) {}
+    try { atlasRenderAutoTruthLive(); } catch (_) {}
+    try { updateAutoCountdown(); } catch (_) {}
+  }
 
   if (shared) {
     [
@@ -51988,11 +52010,19 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
     try { renderMemoryTruth(); } catch (_) {}
   }
 
-  const snapshot = {build:"40.4.25",scope,shared_ready:!!$("shared-memory"),github_ready:!!$("github-memory"),checked_at:new Date().toISOString()};
+  const snapshot = {
+    build:"40.4.30",
+    scope,
+    auto_reader_ready:!!$("auto-reader"),
+    shared_ready:!!$("shared-memory"),
+    github_ready:!!$("github-memory"),
+    checked_at:new Date().toISOString()
+  };
   try { globalThis.__AGENT_CRYPTO_ATLAS_PERIPHERAL_REBIND_40425__ = snapshot; } catch (_) {}
   return snapshot;
 }
-try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
+try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25-compat",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
+try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:"40.4.30",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
 atlasRebindDeferredMemoryPanels40425("all");
 

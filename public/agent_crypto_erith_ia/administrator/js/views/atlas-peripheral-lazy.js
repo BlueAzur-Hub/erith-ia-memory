@@ -1,15 +1,16 @@
-/* Agent-Crypto @erith.IA — 40.4.25
-   ATLAS PERIPHERAL TRUE LAZY HYDRATION
-   Shared Memory + GitHub Memory presentation bodies only.
-   Atlas truth/state/memory engines stay in app.js; GitHub auto-load still runs at boot.
-   This parser-time preprocessor strips only the two known presentation bodies before
+/* Agent-Crypto @erith.IA — 40.4.30
+   ATLAS PERIPHERAL + AUTO READER BODY LAZY HYDRATION
+   Auto Reader + Shared Memory + GitHub Memory presentation bodies only.
+   Auto Reader runtime/collection stays resident in app.js; GitHub auto-load still runs at boot.
+   This parser-time preprocessor strips only the three known presentation bodies before
    atlas-presentation.js inserts the family, then hydrates the requested body from
    views/atlas.html on first disclosure. No timer, observer or storage owner added. */
 (()=>{
   "use strict";
-  const BUILD="40.4.25";
+  const BUILD="40.4.30";
   const SOURCE="./views/atlas.html";
   const TARGETS=Object.freeze({
+    "auto-reader":Object.freeze({label:"Atlas Auto Reader"}),
     "shared-memory":Object.freeze({label:"Shared Memory"}),
     "github-memory":Object.freeze({label:"GitHub Memory"})
   });
@@ -83,7 +84,10 @@
       body.dataset.atlasHydrated40425="1";
       details.dataset.atlasHydration40425="ready";
       hydrated.add(key);
-      try{globalThis.AgentCryptoAtlasPeripheralRebind40425?.rebind?.(key);}catch(error){console.warn("[40.4.25] Atlas rebind",error);}
+      try{
+        const owner=globalThis.AgentCryptoAtlasPeripheralRebind||globalThis.AgentCryptoAtlasPeripheralRebind40425;
+        owner?.rebind?.(key);
+      }catch(error){console.warn("[40.4.30] Atlas rebind",error);}
       try{details.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key,build:BUILD}}));}catch(_){}
       return true;
     }catch(error){
@@ -108,7 +112,25 @@
       armed=false;
       Element.prototype.insertAdjacentHTML=nativeInsert;
       attach();
-      try{globalThis.__AGENT_CRYPTO_ATLAS_PERIPHERAL_LAZY_40425__=Object.freeze({build:BUILD,source:SOURCE,targets:Object.keys(TARGETS),boot_bodies_absent:true,fetch_count:()=>fetchCount,hydrated:()=>[...hydrated],runtime_owner:"app.js",github_auto_load_preserved:true,new_timer:false,new_observer:false,storage_owner_added:false});}catch(_){}
+      try{
+        const contract=Object.freeze({
+          build:BUILD,
+          source:SOURCE,
+          targets:Object.keys(TARGETS),
+          boot_bodies_absent:true,
+          fetch_count:()=>fetchCount,
+          hydrated:()=>[...hydrated],
+          runtime_owner:"app.js",
+          auto_reader_runtime_preserved:true,
+          auto_reader_collection_boot_preserved:true,
+          github_auto_load_preserved:true,
+          new_timer:false,
+          new_observer:false,
+          storage_owner_added:false
+        });
+        globalThis.AgentCryptoAtlasPeripheralLazy=contract;
+        globalThis.__AGENT_CRYPTO_ATLAS_PERIPHERAL_LAZY_40425__=contract;
+      }catch(_){}
       return result;
     }
     return nativeInsert.call(this,position,html);
