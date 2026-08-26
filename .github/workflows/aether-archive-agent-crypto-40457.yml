@@ -1,0 +1,50 @@
+name: Aether archive Agent-Crypto 40.4.57
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/aether-archive-agent-crypto-40457.yml
+
+permissions:
+  contents: write
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build public 40.4.57 archive from canonical GitHub files
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_57_AETHER_SOURCE_INTELLIGENCE_IDENTITY_HARDENING_DEX_CHAIN_LIQUIDITY_TRUTH_LOCK_CLEAN_UPLOAD_9_FILES.zip"
+          rm -f "$OUT"
+          zip -9 "$OUT" \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/js/views/private-backend-sources.js \
+            public/agent_crypto_erith_ia/administrator/private-backend-sources.css \
+            public/agent_crypto_erith_ia/administrator/architecture/administrator-ownership.json \
+            public/agent_crypto_erith_ia/administrator/architecture/private-backend-sources.json \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json
+          sha256sum "$OUT"
+
+      - name: Commit archive and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_57_AETHER_SOURCE_INTELLIGENCE_IDENTITY_HARDENING_DEX_CHAIN_LIQUIDITY_TRUTH_LOCK_CLEAN_UPLOAD_9_FILES.zip"
+          git config user.name "Aether Archive Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/aether-archive-agent-crypto-40457.yml
+          git add "$OUT"
+          git commit -m "coordination: archive Agent-Crypto 40.4.57 build"
+          git push origin HEAD:main
