@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.43",
-  "parent_build": "40.4.42",
+  "build": "40.4.44",
+  "parent_build": "40.4.43",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -60,7 +60,7 @@
         "Grey Plate Forensic",
         "Simulation runtime"
       ],
-      "notes": "Learning presentation is no longer resident after System mount; 40.4.43 strips it before app.js capture and hydrates it on demand."
+      "notes": "40.4.44 Learning parser gate filters the recovered Learning range from System shellHtml before insertAdjacentHTML parsing. Storage Health, Grey Plate, Simulation runtime remain parser-resident; peripheral System bodies remain lazy."
     },
     {
       "component": "Atlas presentation",
@@ -93,16 +93,16 @@
     },
     {
       "component": "Learning Journey 01→11 presentation CSS",
-      "owner": "admin-learning-journey-recovery-40422.css",
-      "state": "TRANSITIONAL_FILENAME_FINAL_RETIREMENT_PENDING",
-      "target": "admin-learning-journey.css",
-      "notes": "Behavior unchanged in 40.4.43. Physical canonical CSS rename/legacy file retirement is deferred to final owner cleanup so presentation hydration and stylesheet migration are not mixed in one risk surface."
+      "owner": "admin-learning-journey.css (canonical entry) → legacy recovery stylesheet import",
+      "state": "CANONICAL_ENTRYPOINT_LEGACY_FILE_REQUIRED",
+      "target": "Physical retirement of admin-learning-journey-recovery-40422.css after byte-for-byte migration into canonical file.",
+      "notes": "index.html no longer loads the recovery filename directly. Visual parity remains exact through a single @import compatibility dependency."
     },
     {
       "component": "Learning Journey runtime / progress / IndexedDB",
-      "owner": "app.js existing learning engine + atlasRebindLearningRuntime40442 (97 complete DOM refs)",
-      "state": "PROTECTED_RUNTIME_TRUE_LAZY_PRESENTATION",
-      "notes": "40.4.43 expands rebind coverage to all 97 contiguous Learning/Expert refs. Runtime, progress and IndexedDB remain resident; presentation is hydrated by js/views/learning-presentation.js."
+      "owner": "app.js learning engine + atlasRebindLearningRuntime (97 complete DOM refs)",
+      "state": "PROTECTED_RUNTIME_TRUE_LAZY_PARSER_PRESENTATION",
+      "notes": "97/97 Learning/Expert refs rebind after demand hydration. No reset/schema/storage migration."
     },
     {
       "component": "Firefox compositor policy",
@@ -113,8 +113,8 @@
     {
       "component": "Learning Journey presentation transport",
       "owner": "js/views/learning-presentation.js + views/system.html",
-      "state": "TRUE_LAZY_RESIDENCY_COMPLETE",
-      "notes": "Recovered Learning DOM is removed before app.js parses; first disclosure/hash fetches canonical System source once and calls the 40.4.42 rebind boundary. System presentation still transiently parses the recovered block before stripping; parser-transport rewrite is not claimed."
+      "state": "TRUE_LAZY_PARSER_COMPLETE_CANONICAL",
+      "notes": "40.4.44 prefilters System shellHtml before browser parsing, inserts compact shell, fetches source once on first demand, then calls canonical Learning runtime rebind."
     },
     {
       "component": "Historical cumulative CSS",
@@ -130,6 +130,6 @@
     }
   ],
   "next": {
-    "40.4.44": "Canonical Learning CSS owner + legacy owner retirement + Administrator final migration acceptance. No feature expansion."
+    "40.4.45": "Physical legacy CSS retirement + final dead-owner/file audit only. No feature/runtime expansion."
   }
 }

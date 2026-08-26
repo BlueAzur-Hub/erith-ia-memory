@@ -33263,8 +33263,9 @@ function scrollToLearningTarget(targetId, options = {}) {
   // 40.4.43 — Learning presentation may be absent until its shell opens.
   // Ask the canonical presentation owner to hydrate once, then reuse the
   // existing scheduled positioning path. No timer/observer/storage owner is added.
-  if (!document.getElementById(id) && typeof globalThis.ErithLearningPresentation40443?.ensure === "function") {
-    globalThis.ErithLearningPresentation40443.ensure(id).then(ok => {
+  const learningPresentation = globalThis.ErithLearningPresentation || globalThis.ErithLearningPresentation40444 || globalThis.ErithLearningPresentation40443;
+  if (!document.getElementById(id) && typeof learningPresentation?.ensure === "function") {
+    learningPresentation.ensure(id).then(ok => {
       if (ok) atlasLearningScheduleTarget(() => document.getElementById(id), options);
     }).catch(()=>{});
     return true;
@@ -50860,7 +50861,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.43";
+const ATLAS_BUILD = "40.4.44";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
