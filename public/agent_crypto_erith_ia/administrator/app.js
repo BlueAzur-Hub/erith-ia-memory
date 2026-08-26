@@ -1897,6 +1897,13 @@ async function atlasAccessSubmit(event) {
       // The tracker performs one coalesced settled follow-up frame for Firefox/F11.
       window.dispatchEvent(new Event("resize"));
     });
+    // 40.4.51 — if a genuinely new canonical snapshot arrived while the
+    // Administrator gate or Bridge readiness was unavailable, re-arm the
+    // existing single CURRENT scheduler after successful authentication.
+    // Same-snapshot CLOSED CURRENT is rejected by the canonical market-id gate.
+    queueMicrotask(() => {
+      try { atlasCurrentPendingAutoKick4051("post-auth"); } catch (_) {}
+    });
     atlasAccessSubmitBusy40429 = false;
     atlasAccessSetBusy40429(false);
     return true;
@@ -25300,7 +25307,13 @@ async function atlasLocalBridgeProbe(options = {}) {
           ? `Dialogue local prêt avec ${model}.`
           : ""
       );
-      // 40.3.17 — health is status, not an analysis trigger.
+      // 40.4.51 — Bridge health remains status for an already-consumed
+      // snapshot, but a newly qualified canonical snapshot must not stay
+      // stranded merely because readiness returned after the original event.
+      // The helper below reuses the existing single scheduler only when the
+      // canonical market id differs from the last successfully closed CURRENT.
+      try { atlasCurrentPendingAutoKick4051("bridge-ready"); } catch (_) {}
+      // 40.3.17 — health is status, not an analysis trigger for an already-consumed snapshot.
       // Returning to Firefox, pageshow, focus, or a routine /health success must
       // never rebuild the full Atlas/Aerith transaction. Automatic analysis is
       // owned by a genuinely new canonical market snapshot (or explicit AUTO).
@@ -50874,7 +50887,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.50";
+const ATLAS_BUILD = "40.4.51";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -61485,5 +61498,100 @@ try {
     timer_added:false,
     observer_added:false,
     network_owner_added:false
+  });
+} catch (_) {}
+
+
+/* ============================================================
+   40.4.51 — AETHER PENDING CURRENT REARM AFTER AUTH / BRIDGE READY
+
+   Operator evidence on 40.4.50:
+   - a new canonical CoinGecko snapshot (15:26:23) correctly demoted the prior
+     13:51:03 package to HISTORIQUE;
+   - the Ryzen later proved Bridge + Ollama ready and the UI displayed
+     "Snapshot qualifié · analyse autorisée · lancement Atlas automatique";
+   - yet CURRENT remained 0/4.
+
+   The existing 40.3.17 health rule intentionally refuses to treat routine
+   /health success as a fresh-analysis trigger. That is correct for a consumed
+   snapshot, but it leaves a real handoff gap when the NEW snapshot event occurs
+   while auth/Bridge readiness is unavailable.
+
+   40.4.51 closes only that handoff gap. It never opens a same-snapshot CLOSED
+   CURRENT, adds no timer/observer/network/storage owner, and reuses the existing
+   single atlasLocalReportsScheduleAutomatic() timer.
+   ============================================================ */
+function atlasCurrentPendingAutoKick4051(reason="bridge-ready") {
+  try {
+    if (typeof atlasAccessIsAuthorized === "function" && !atlasAccessIsAuthorized()) return false;
+    if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;
+    if (!atlasLocalDialogueState?.connected) return false;
+
+    const snapshot = typeof atlasBuildCryptoPageSnapshot === "function"
+      ? atlasBuildCryptoPageSnapshot()
+      : null;
+    if (!snapshot) return false;
+
+    const qualification = typeof atlasCurrentQualification === "function"
+      ? atlasCurrentQualification(snapshot)
+      : null;
+    if (
+      !qualification?.qualified
+      || Number(qualification?.direct_count || 0) !== 5
+      || Number(qualification?.derived_count || 0) !== 0
+      || qualification?.stable_ready !== true
+    ) return false;
+
+    const marketId = typeof atlasAutomation341SnapshotId === "function"
+      ? String(atlasAutomation341SnapshotId(snapshot) || "").trim()
+      : "";
+    const lastDone = typeof atlasAutomation341ReadLastCurrentMarketId === "function"
+      ? String(atlasAutomation341ReadLastCurrentMarketId() || "").trim()
+      : "";
+
+    if (!marketId) return false;
+    if (lastDone && marketId === lastDone) {
+      try { atlasAutomation341SetRestStatus(marketId); } catch (_) {}
+      return false;
+    }
+
+    if (typeof atlasAutomation341IsBusy === "function" && atlasAutomation341IsBusy()) {
+      try { atlasAutomation341RememberPendingMarket(marketId); } catch (_) {}
+      return false;
+    }
+
+    // Never replace an already-armed CURRENT timer with health churn.
+    if (atlasLocalReportsState?.autoTimer) return true;
+
+    if (atlasLocalReportsState?.automaticCycleClosed) {
+      atlasLocalReportsOpenAutomaticCycle(`rearm-${String(reason || "bridge-ready")}`);
+    }
+
+    atlasLocalReportsSetSuiteStatus(
+      "Nouveau snapshot canonique qualifié · Bridge prêt · reprise automatique Atlas-10.",
+      "loading"
+    );
+    return atlasLocalReportsScheduleAutomatic("bridge-ready", { delayMs: 300 }) !== false;
+  } catch (_) {
+    return false;
+  }
+}
+
+try {
+  globalThis.__AGENT_CRYPTO_CURRENT_REARM_40451__ = Object.freeze({
+    build:"40.4.51",
+    parent:"40.4.50",
+    trigger_scope:"new-canonical-snapshot-only",
+    rearm_points:Object.freeze(["post-auth","bridge-ready"]),
+    same_snapshot_reopen:false,
+    existing_scheduler_reused:true,
+    new_timer:false,
+    new_observer:false,
+    new_network_owner:false,
+    new_storage_owner:false,
+    market_core_changed:false,
+    oracle_changed:false,
+    learning_changed:false,
+    indexeddb_schema_changed:false
   });
 } catch (_) {}

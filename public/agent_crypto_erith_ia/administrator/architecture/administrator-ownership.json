@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.50",
-  "parent_build": "40.4.49",
+  "build": "40.4.51",
+  "parent_build": "40.4.50",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -146,13 +146,20 @@
       "state": "CANONICAL_PRESENTATION_GUARD",
       "introduced": "40.4.50",
       "notes": "Clears stale in-memory historical presentation flag only when transaction fingerprint and consumed canonical market id both match the already-closed CURRENT. No engine/storage/Bridge/Ollama ownership."
+    },
+    {
+      "component": "Atlas CURRENT pending canonical snapshot rearm",
+      "owner": "app.js::atlasCurrentPendingAutoKick4051",
+      "state": "CANONICAL_HANDOFF_GUARD",
+      "introduced": "40.4.51",
+      "notes": "Reuses the existing single CURRENT scheduler after successful Administrator auth or Bridge-ready transition only when a qualified canonical market snapshot differs from the last closed CURRENT. Same-snapshot health checks remain status-only; no new timer/observer/network/storage owner."
     }
   ],
   "next": {
-    "after_40_4_49": "No Atlas/CURRENT engine change. Operator smoke test: first Administration click must open/queue the sas once; existing CURRENT must remain idle until a new canonical snapshot qualifies."
+    "after_40_4_51": "Operator smoke test: with a new canonical snapshot pending and Bridge returning ready, CURRENT must leave HISTORIQUE 0/4 automatically without manual market refresh or second action; same consumed snapshot must remain at rest."
   },
   "migration_summary": {
-    "state": "FUNCTIONALLY_COMPLETE_ENTRY_GATE_FIX_PENDING_OPERATOR_SMOKE_TEST",
+    "state": "FUNCTIONALLY_COMPLETE_CURRENT_REARM_PENDING_OPERATOR_SMOKE_TEST",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -168,7 +175,8 @@
       "Firefox compositor/paint",
       "Transformer Book operator parity",
       "GitHub Pages propagation/cache truth",
-      "Administrator first-click entry latency"
+      "Administrator first-click entry latency",
+      "new-canonical-snapshot auth/Bridge handoff"
     ],
     "next_product_work": "Notion support/operations desk, backend-private planning, then Web Classic only when explicitly resumed."
   }
