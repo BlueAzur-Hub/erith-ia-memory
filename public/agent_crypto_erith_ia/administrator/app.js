@@ -50488,7 +50488,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.27";
+const ATLAS_BUILD = "40.4.28";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -50647,7 +50647,7 @@ function atlasVersionControlState(mode, options = {}) {
     control.setAttribute("aria-label", "Vérification GitHub en cours");
   } else if (stateMode === "available") {
     control.classList.add("warn");
-    text.textContent = `Nouvelle version disponible · Build ${build}`;
+    text.textContent = `MAJ disponible · ${build}`;
     control.setAttribute(
       "aria-label",
       `Nouvelle version disponible, Build ${build}. Cliquer pour charger.`
