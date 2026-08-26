@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.47",
-  "parent_build": "40.4.46",
+  "build": "40.4.48",
+  "parent_build": "40.4.47",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -93,16 +93,15 @@
     },
     {
       "component": "Learning Journey 01→11 presentation CSS",
-      "owner": "admin-learning-journey.css → exact legacy byte-source import",
-      "state": "CANONICAL_ENTRYPOINT_LEGACY_BYTE_SOURCE_HOLD",
-      "target": "Autonomous canonical CSS copy after exact byte-equivalence proof; do not delete recovery source before then.",
-      "notes": "40.4.45 intentionally does not fake physical retirement: the recovery stylesheet is still required by one @import."
+      "owner": "admin-learning-journey.css",
+      "state": "CANONICAL_AUTONOMOUS",
+      "notes": "40.4.48 copies the exact validated 40.4.22 rule body into the canonical stylesheet. No @import remains; the recovery filename is historical-only."
     },
     {
       "component": "Learning Journey runtime / progress / IndexedDB",
       "owner": "app.js learning engine + atlasRebindLearningRuntime (97 complete DOM refs)",
-      "state": "PROTECTED_RUNTIME_TRUE_LAZY_PARSER_PRESENTATION",
-      "notes": "97/97 Learning/Expert refs rebind after demand hydration. No reset/schema/storage migration."
+      "state": "PROTECTED_RUNTIME_TRUE_LAZY_SAFE_DOM_PRESENTATION",
+      "notes": "97/97 Learning/Expert refs rebind after demand hydration. 40.4.47 safe DOM detachment retained; no parser-string interception, reset, schema or storage migration."
     },
     {
       "component": "Firefox compositor policy",
@@ -120,7 +119,7 @@
       "component": "Learning Journey presentation transport",
       "owner": "js/views/system-presentation.js → js/views/learning-presentation.js + views/system.html",
       "state": "TRUE_LAZY_DOM_RESIDENCY_SAFE_POST_PARSE_CANONICAL",
-      "notes": "40.4.47: System HTML parses structurally valid first; Learning 01→11 is then safely detached as DOM siblings before app.js captures refs. First demand hydrates from views/system.html and rebinds runtime. 40.4.44 string parser gate retired after operator regression."
+      "notes": "40.4.47 safe System-first DOM detachment preserved unchanged in 40.4.48. First demand hydrates from views/system.html and rebinds runtime."
     },
     {
       "component": "Chronos / planetary presentation",
@@ -136,6 +135,26 @@
     }
   ],
   "next": {
-    "40.4.48": "Only after Firefox operator confirms Simulation + Learning modules restored: resume autonomous Learning CSS owner / debt-ledger closure."
+    "after_40_4_48": "No further Administrator migration surgery unless smoke test exposes a concrete regression. Move to operator inventory/documentation/product work."
+  },
+  "migration_summary": {
+    "state": "ADMINISTRATOR_MIGRATION_DEBT_CLOSED_PENDING_OPERATOR_SMOKE_TEST",
+    "functional_migrations_complete": true,
+    "legacy_runtime_owners_active": 0,
+    "legacy_css_dependencies_active": 0,
+    "protected": [
+      "Market Core 38.15.11",
+      "Atlas CURRENT pipeline",
+      "Learning runtime + IndexedDB",
+      "Oracle engine/Evidence",
+      "Window Manager behavior",
+      "Firefox performance checkpoint"
+    ],
+    "monitor_only": [
+      "Firefox compositor/paint",
+      "Transformer Book operator parity",
+      "GitHub Pages propagation/cache truth"
+    ],
+    "next_product_work": "Notion support/operations desk, backend-private planning, then Web Classic only when explicitly resumed."
   }
 }
