@@ -50874,7 +50874,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.49";
+const ATLAS_BUILD = "40.4.50";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -61376,3 +61376,114 @@ try{
     new_network_owner:false
   });
 }catch(_){}
+
+
+/* ============================================================
+   40.4.50 — AETHER CURRENT PRESENTATION TRUTH CONVERGENCE
+
+   Live .49 export proved a presentation contradiction on the Ryzen:
+   the compact Atlas progress card could say HISTORIQUE / CURRENT à produire
+   while the same page certified CURRENT fermé, Atlas 4/4, NØX, Aerith and the
+   same canonical market snapshot already consumed.
+
+   Cause boundary:
+   a persisted package can still carry state.historical=true from an earlier
+   fingerprint demotion. Late UI hydration trusted that stale presentation flag
+   even when the canonical transaction fingerprint + canonical market id prove
+   that this package is the already-closed CURRENT.
+
+   This layer clears ONLY the stale in-memory presentation flag when all of the
+   existing canonical witnesses agree. It never starts Atlas, never writes
+   IndexedDB/localStorage, never calls Bridge/Ollama, and never promotes a Book
+   import to producer CURRENT.
+   ============================================================ */
+function atlasCurrentPresentationPackageMatches4050(pkg, source="stored") {
+  try {
+    if (!pkg || typeof pkg !== "object") return false;
+    if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;
+    const src = String(source || "").toLowerCase();
+    if (src === "import" || pkg?.handoff?.source === "ryzen_import") return false;
+
+    const tx = typeof atlasCurrentMemoryPackageTransactionFingerprint387 === "function"
+      ? atlasCurrentMemoryPackageTransactionFingerprint387(pkg)
+      : String(pkg?.status?.transaction_fingerprint || pkg?.transaction_fingerprint || "").trim();
+    const closed = String(
+      (typeof atlasCurrentClosedAnalysisFingerprint === "function" ? atlasCurrentClosedAnalysisFingerprint() : "")
+      || (typeof atlasCurrentStateRead === "function" ? atlasCurrentStateRead()?.fingerprint : "")
+      || ""
+    ).trim();
+    if (!tx || !closed) return false;
+    const norm = value => typeof atlasCurrentMemoryNormalizeFingerprint387 === "function"
+      ? atlasCurrentMemoryNormalizeFingerprint387(value)
+      : String(value || "").trim();
+    if (norm(tx) !== norm(closed)) return false;
+
+    const pkgMarket = typeof atlasCanonicalCurrentPackageMarketId389 === "function"
+      ? atlasCanonicalCurrentPackageMarketId389(pkg)
+      : String(pkg?.canonical_market_snapshot_id || pkg?.snapshot?.strict_contract?.market?.snapshot_id || "").trim();
+    const consumedMarket = typeof atlasAutomation341ReadLastCurrentMarketId === "function"
+      ? String(atlasAutomation341ReadLastCurrentMarketId() || "").trim()
+      : "";
+    return !!pkgMarket && !!consumedMarket && pkgMarket === consumedMarket;
+  } catch (_) { return false; }
+}
+
+function atlasCurrentPresentationNormalizePackage4050(pkg, source="stored") {
+  if (!atlasCurrentPresentationPackageMatches4050(pkg, source)) return pkg;
+  try {
+    pkg.state = {
+      ...(pkg.state || {}),
+      historical:false,
+      current:true,
+      restored_current_4050:true,
+      restored_at:new Date().toISOString()
+    };
+    if (pkg.status && typeof pkg.status === "object") pkg.status.current_state = "CURRENT";
+  } catch (_) {}
+  return pkg;
+}
+
+const atlasSharedSynthesisActivateBase4050 = atlasSharedSynthesisActivate;
+atlasSharedSynthesisActivate = function atlasSharedSynthesisActivate4050(pkg, source) {
+  const normalized = atlasCurrentPresentationNormalizePackage4050(pkg, source);
+  const active = atlasSharedSynthesisActivateBase4050(normalized, source);
+  if (atlasCurrentPresentationPackageMatches4050(active, source)) {
+    queueMicrotask(() => {
+      try { atlasCanonicalCurrentUiTruth389("post-activate-4050"); } catch (_) {}
+    });
+  }
+  return active;
+};
+
+const atlasSharedSynthesisHydrateReportsBase4050 = atlasSharedSynthesisHydrateReports;
+atlasSharedSynthesisHydrateReports = function atlasSharedSynthesisHydrateReports4050(pkg, source="stored") {
+  const normalized = atlasCurrentPresentationNormalizePackage4050(pkg, source);
+  if (atlasSharedSynthesisState?.package === pkg && normalized) atlasSharedSynthesisState.package = normalized;
+  const result = atlasSharedSynthesisHydrateReportsBase4050(normalized, source);
+  if (atlasCurrentPresentationPackageMatches4050(normalized, source)) {
+    queueMicrotask(() => {
+      try { atlasCanonicalCurrentUiTruth389("post-hydrate-4050"); } catch (_) {}
+    });
+  }
+  return result;
+};
+
+try {
+  globalThis.__AGENT_CRYPTO_CURRENT_PRESENTATION_TRUTH_40450__ = Object.freeze({
+    build:"40.4.50",
+    parent:"40.4.49",
+    presentation_only:true,
+    canonical_transaction_required:true,
+    canonical_market_id_required:true,
+    book_import_promotion:false,
+    atlas_engine_changed:false,
+    current_engine_changed:false,
+    indexeddb_write_added:false,
+    storage_write_added:false,
+    bridge_call_added:false,
+    ollama_call_added:false,
+    timer_added:false,
+    observer_added:false,
+    network_owner_added:false
+  });
+} catch (_) {}

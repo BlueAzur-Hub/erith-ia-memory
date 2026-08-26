@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.49",
-  "parent_build": "40.4.48",
+  "build": "40.4.50",
+  "parent_build": "40.4.49",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -139,6 +139,13 @@
       "owner": "admin-offscreen-paint-gate.css + js/admin-offscreen-paint-gate.js",
       "state": "RETIRED_TOMBSTONE",
       "notes": "40.3.40 already retired the offscreen paint runtime from canonical execution; current index does not load either file. 40.4.46 replaces both historical implementations with inert tombstones."
+    },
+    {
+      "component": "Atlas CURRENT presentation truth after late synthesis hydration",
+      "owner": "app.js::atlasCurrentPresentationNormalizePackage4050",
+      "state": "CANONICAL_PRESENTATION_GUARD",
+      "introduced": "40.4.50",
+      "notes": "Clears stale in-memory historical presentation flag only when transaction fingerprint and consumed canonical market id both match the already-closed CURRENT. No engine/storage/Bridge/Ollama ownership."
     }
   ],
   "next": {
