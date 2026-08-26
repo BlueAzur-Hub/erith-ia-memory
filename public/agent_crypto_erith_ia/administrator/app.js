@@ -50488,7 +50488,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.24";
+const ATLAS_BUILD = "40.4.25";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -51876,26 +51876,71 @@ function atlasMultiCollectorOperatorInit() {
 }
 
 
-els.btnSaveCollectorId?.addEventListener("click", () => { setCollectorId(els.collectorIdInput?.value); renderSharedMemory(); renderAutoReader();
-});
 
-els.btnExportAutoMemory?.addEventListener("click", exportAutoMemory);
+/* ============================================================
+   40.4.25 — ATLAS PERIPHERAL LATE-HYDRATION ACTION REBIND
+   Shared Memory + GitHub Memory presentation can now appear after app.js boot.
+   Existing data/runtime owners remain unchanged; this function only refreshes
+   cached DOM references, binds the historical actions once and renders current state.
+   ============================================================ */
+function atlasRebindDeferredMemoryPanels40425(scope = "all") {
+  const shared = scope === "all" || scope === "shared-memory";
+  const github = scope === "all" || scope === "github-memory";
+  const refresh = (prop, id) => { els[prop] = $(id); return els[prop]; };
+  const bindOnce = (node, type, key, handler) => {
+    if (!node || node.dataset[key] === "1") return false;
+    node.addEventListener(type, handler);
+    node.dataset[key] = "1";
+    return true;
+  };
 
-$("btnRecalculateCoverage")?.addEventListener("click", () => {
-  atlasRenderMemoryCoverage();
-  const button = $("btnRecalculateCoverage");
-  if (button) {
-    const previous = button.textContent;
-    button.textContent = "Couverture recalculée";
-    setTimeout(() => { button.textContent = previous || "Recalculer"; }, 1200);
+  if (shared) {
+    [
+      ["collectorIdInput","collectorIdInput"],["collectorIdentityBadge","collectorIdentityBadge"],
+      ["btnSaveCollectorId","btnSaveCollectorId"],["btnExportAutoMemory","btnExportAutoMemory"],
+      ["autoMemoryImport","autoMemoryImport"],["btnClearAutoMemory","btnClearAutoMemory"],
+      ["sharedCollectorId","sharedCollectorId"],["sharedLocalCount","sharedLocalCount"],
+      ["sharedCollectorsCount","sharedCollectorsCount"],["sharedLastImport","sharedLastImport"],
+      ["sharedMemoryOutput","sharedMemoryOutput"]
+    ].forEach(([prop,id]) => refresh(prop,id));
+    bindOnce(els.btnSaveCollectorId,"click","atlasBind40425",() => { setCollectorId(els.collectorIdInput?.value); renderSharedMemory(); renderAutoReader(); });
+    bindOnce(els.btnExportAutoMemory,"click","atlasBind40425",exportAutoMemory);
+    bindOnce($("btnRecalculateCoverage"),"click","atlasBind40425",() => {
+      atlasRenderMemoryCoverage();
+      const button = $("btnRecalculateCoverage");
+      if (button) {
+        const previous = button.textContent;
+        button.textContent = "Couverture recalculée";
+        setTimeout(() => { button.textContent = previous || "Recalculer"; }, 1200);
+      }
+    });
+    bindOnce(els.autoMemoryImport,"change","atlasBind40425",() => importAutoMemoryFile(els.autoMemoryImport.files?.[0]));
+    bindOnce(els.btnClearAutoMemory,"click","atlasBind40425",clearAutoMemory);
+    try { renderSharedMemory(); } catch (_) {}
   }
-});
 
-els.autoMemoryImport?.addEventListener("change", () => importAutoMemoryFile(els.autoMemoryImport.files?.[0]));
+  if (github) {
+    [
+      ["githubMemoryStatus","githubMemoryStatus"],["btnLoadGithubMemory","btnLoadGithubMemory"],
+      ["githubMemoryAuto","githubMemoryAuto"],["githubMemoryAutoAttempt","githubMemoryAutoAttempt"],
+      ["githubMemorySuccess","githubMemorySuccess"],["githubMemoryLatest","githubMemoryLatest"],
+      ["githubMemoryRecords","githubMemoryRecords"],["githubMemoryLocal","githubMemoryLocal"],
+      ["githubMemoryAdded","githubMemoryAdded"],["githubMemoryCollectors","githubMemoryCollectors"],
+      ["githubMemoryFusion","githubMemoryFusion"],["githubMemoryWrite","githubMemoryWrite"],
+      ["collectorTruthList","collectorTruthList"],["githubMemoryOutput","githubMemoryOutput"]
+    ].forEach(([prop,id]) => refresh(prop,id));
+    bindOnce(els.btnLoadGithubMemory,"click","atlasBind40425",() => loadGithubSharedMemory(true,"manual"));
+    try { renderMemoryTruth(); } catch (_) {}
+  }
 
-els.btnClearAutoMemory?.addEventListener("click", clearAutoMemory);
+  const snapshot = {build:"40.4.25",scope,shared_ready:!!$("shared-memory"),github_ready:!!$("github-memory"),checked_at:new Date().toISOString()};
+  try { globalThis.__AGENT_CRYPTO_ATLAS_PERIPHERAL_REBIND_40425__ = snapshot; } catch (_) {}
+  return snapshot;
+}
+try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
-els.btnLoadGithubMemory?.addEventListener("click", () => loadGithubSharedMemory(true, "manual"));
+atlasRebindDeferredMemoryPanels40425("all");
+
 
 $("btnLivecheck")?.addEventListener("click", runFoundationLivecheck);
 
