@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.37";
-  const ADMIN_RELEASE = "AETHER ADMINISTRATOR DIFFERENTIAL CONTENTION AUDIT + ROLE URL TRUTH LOCK";
+  const ADMIN_BUILD = "40.4.38";
+  const ADMIN_RELEASE = "AETHER ADMINISTRATOR PERFORMANCE CHECKPOINT + DIAGNOSTIC RETIREMENT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -1677,26 +1677,6 @@
 
   let activeWindowPresentationRole40314 = "";
 
-  // 40.4.37 — differential Administrator contention audit.
-  // Opt-in only: ?admin_diag=windows-off keeps Administrator capabilities and
-  // business runtimes intact but asks the canonical Window Manager to use its
-  // existing neutral docked presentation instead of replaying persisted floating/
-  // minimized geometry. This adds no timer/observer/listener and writes no state.
-  // It is a comparison instrument against Web Classic, not a production mode.
-  const ADMIN_DIAG_QUERY_KEY_40437 = "admin_diag";
-  const ADMIN_DIAG_WINDOWS_OFF_40437 = "windows-off";
-  function administratorDifferentialMode40437() {
-    try {
-      const value = new URL(window.location.href).searchParams.get(ADMIN_DIAG_QUERY_KEY_40437);
-      return value === ADMIN_DIAG_WINDOWS_OFF_40437 ? value : "";
-    } catch {
-      return "";
-    }
-  }
-  function administratorWindowPresentationEnabled40437() {
-    return administratorDifferentialMode40437() !== ADMIN_DIAG_WINDOWS_OFF_40437;
-  }
-
   // 40.4.36 — Atlas is the primary Administrator work surface.  During an
   // authenticated role transition the V2 visibility pass runs before the Window
   // Manager restores persisted presentation.  A persisted compact family state
@@ -1729,17 +1709,12 @@
     if (activeWindowPresentationRole40314 === nextRole) return nextRole;
 
     if (nextRole === "administrator") {
-      if (administratorWindowPresentationEnabled40437()) {
-        manager.restorePersistedPresentation?.();
-        ensureAdministratorAtlasVisible40436(manager, "role-transition");
-      } else {
-        manager.neutralizePresentation?.();
-      }
+      manager.restorePersistedPresentation?.();
+      ensureAdministratorAtlasVisible40436(manager, "role-transition");
     } else manager.neutralizePresentation?.();
 
     activeWindowPresentationRole40314 = nextRole;
     document.documentElement.dataset.adminWindowPresentationRole40314 = nextRole;
-    document.documentElement.dataset.adminDifferential40437 = administratorDifferentialMode40437() || "normal";
     return nextRole;
   }
 
@@ -2186,14 +2161,12 @@
     });
 
     const bootRole40312 = presentationRole40312();
-    const windowsEnabled40437 = administratorWindowPresentationEnabled40437();
-    const state = manager.init({ restorePersistedPresentation: bootRole40312 === "administrator" && windowsEnabled40437 });
+    const state = manager.init({ restorePersistedPresentation: bootRole40312 === "administrator" });
     // 40.3.14 — init already applied the correct presentation exactly once.
     // Do not immediately replay the same neutralize/restore transaction.
     activeWindowPresentationRole40314 = bootRole40312;
     document.documentElement.dataset.adminWindowPresentationRole40314 = bootRole40312;
-    if (bootRole40312 === "administrator" && windowsEnabled40437) ensureAdministratorAtlasVisible40436(manager, "administrator-boot");
-    document.documentElement.dataset.adminDifferential40437 = administratorDifferentialMode40437() || "normal";
+    if (bootRole40312 === "administrator") ensureAdministratorAtlasVisible40436(manager, "administrator-boot");
     installMathCoreInlineWindowControls40148();
 
     // 40.1.48 — restore guard for compact bars.  Some stacked Administrator
@@ -2233,22 +2206,6 @@
       role_transition_forces_geometry_snapshot: false,
       hidden_window_deck_live_rebuild: false,
       inherited_role_isolation_40312: true
-    });
-    globalThis.ErithAdministratorDifferential40437 = Object.freeze({
-      build: "40.4.37",
-      parent: "40.4.36",
-      query_parameter: "admin_diag",
-      windows_off_value: "windows-off",
-      default_behavior_changed: false,
-      administrator_capabilities_preserved: true,
-      market_core_changed: false,
-      atlas_current_changed: false,
-      oracle_engine_changed: false,
-      timer_added: false,
-      observer_added: false,
-      listener_added: false,
-      storage_write_added: false,
-      mode: administratorDifferentialMode40437
     });
     globalThis.ErithAdministratorAtlasVisibility40436 = Object.freeze({
       build: "40.4.36",
