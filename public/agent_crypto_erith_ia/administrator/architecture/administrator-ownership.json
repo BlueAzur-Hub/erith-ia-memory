@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.41",
-  "parent_build": "40.4.40",
+  "build": "40.4.42",
+  "parent_build": "40.4.41",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -93,15 +93,15 @@
     {
       "component": "Learning Journey 01→11 presentation CSS",
       "owner": "admin-learning-journey-recovery-40422.css",
-      "state": "NEXT_MIGRATION_TARGET",
+      "state": "TRANSITIONAL_FILENAME",
       "target": "admin-learning-journey.css",
-      "notes": "Next bounded debt: canonicalize CSS filename and then decide Learning presentation residency without touching runtime/progress/IndexedDB."
+      "notes": "CSS behavior preserved in 40.4.42; filename canonicalization is coupled to the true-lazy presentation cut in 40.4.43 so no transport/style split is introduced."
     },
     {
       "component": "Learning Journey runtime / progress / IndexedDB",
-      "owner": "app.js existing learning engine",
-      "state": "PROTECTED",
-      "notes": "Presentation may be lazy later; state machine remains resident."
+      "owner": "app.js existing learning engine + atlasRebindLearningRuntime40442",
+      "state": "PROTECTED_REBIND_BOUNDARY_READY",
+      "notes": "40.4.42 adds an idempotent DOM-reference/action rebind boundary for future late hydration. Learning state machine, progress and IndexedDB remain resident and unchanged."
     },
     {
       "component": "Firefox compositor policy",
@@ -123,7 +123,7 @@
     }
   ],
   "next": {
-    "40.4.42": "Learning Journey canonical CSS owner + presentation residency audit/surgery if static proof is clean.",
-    "40.4.43": "Administrator cumulative migration acceptance/final debt map; no feature expansion."
+    "40.4.43": "Learning Journey true-lazy presentation + canonical admin-learning-journey.css owner; call atlasRebindLearningRuntime40442 after hydration.",
+    "40.4.44": "Administrator final legacy-owner cleanup + cumulative migration acceptance; no feature expansion."
   }
 }

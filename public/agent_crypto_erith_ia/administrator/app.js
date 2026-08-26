@@ -493,6 +493,272 @@ const els = {
   multiHorizonTechnical: $("multiHorizonTechnical")
 };
 
+/* ============================================================
+   40.4.42 — LEARNING RUNTIME REBIND BOUNDARY
+   Presentation may become late-hydrated in the next migration wave.
+   Runtime/progress/IndexedDB remain owned by app.js. This boundary only
+   refreshes DOM references and idempotently rebinds existing Learning UI
+   actions after presentation hydration. No timer/observer/network/storage
+   owner is added and no Learning state is reset or migrated.
+   ============================================================ */
+const ATLAS_LEARNING_DYNAMIC_REFS_40442 = Object.freeze({
+    "learningCockpitStatus":"learningCockpitStatus",
+    "learningCockpitProfile":"learningCockpitProfile",
+    "learningCockpitCapital":"learningCockpitCapital",
+    "learningCockpitProgress":"learningCockpitProgress",
+    "learningCockpitModules":"learningCockpitModules",
+    "learningCockpitPortfolio":"learningCockpitPortfolio",
+    "learningCockpitExposure":"learningCockpitExposure",
+    "learningCockpitLastProof":"learningCockpitLastProof",
+    "learningCockpitLastProofTime":"learningCockpitLastProofTime",
+    "learningCockpitModule":"learningCockpitModule",
+    "learningCockpitGoal":"learningCockpitGoal",
+    "learningCockpitModuleState":"learningCockpitModuleState",
+    "learningCockpitDuration":"learningCockpitDuration",
+    "learningCockpitRisk":"learningCockpitRisk",
+    "learningPrimaryActionPanel":"learningPrimaryActionPanel",
+    "learningBreadcrumb":"learningBreadcrumb",
+    "learningPrimaryStep":"learningPrimaryStep",
+    "learningPrimaryActionTitle":"learningPrimaryActionTitle",
+    "learningPrimaryActionText":"learningPrimaryActionText",
+    "btnLearningPrimaryAction":"btnLearningPrimaryAction",
+    "learningCompletionPanel":"learningCompletionPanel",
+    "learningCompletionTitle":"learningCompletionTitle",
+    "learningCompletionDate":"learningCompletionDate",
+    "learningCompletionBadge":"learningCompletionBadge",
+    "learningCompletionSteps":"learningCompletionSteps",
+    "learningCompletionNotes":"learningCompletionNotes",
+    "learningCompletionTakeaway":"learningCompletionTakeaway",
+    "learningCompletionProgress":"learningCompletionProgress",
+    "learningCompletionSessions":"learningCompletionSessions",
+    "learningCompletionNextModule":"learningCompletionNextModule",
+    "btnLearningNextModule":"btnLearningNextModule",
+    "btnLearningReviewCompleted":"btnLearningReviewCompleted",
+    "btnLearningExportCompleted":"btnLearningExportCompleted",
+    "btnLearningOpenNotebook":"btnLearningOpenNotebook",
+    "learningExerciseGuide":"learningExerciseGuide",
+    "learningExerciseBreadcrumb":"learningExerciseBreadcrumb",
+    "learningExerciseGuideTitle":"learningExerciseGuideTitle",
+    "learningExerciseGuideText":"learningExerciseGuideText",
+    "btnLearningExerciseGuidePrimary":"btnLearningExerciseGuidePrimary",
+    "btnLearningExerciseBack":"btnLearningExerciseBack",
+    "learningNotebookGrid":"learningNotebookGrid",
+    "learningSecondaryActions":"learningSecondaryActions",
+    "learningHelpMode":"learningHelpMode",
+    "learningHelpModeHint":"learningHelpModeHint",
+    "learningSessionTitle":"learningSessionTitle",
+    "learningSessionProgress":"learningSessionProgress",
+    "learningSessionNote":"learningSessionNote",
+    "learningSessionNotesFree":"learningSessionNotesFree",
+    "learningNotesCounter":"learningNotesCounter",
+    "learningTakeawayCounter":"learningTakeawayCounter",
+    "learningLessonPanel":"learningLessonPanel",
+    "learningLessonTitle":"learningLessonTitle",
+    "learningLessonIntro":"learningLessonIntro",
+    "learningLessonConcepts":"learningLessonConcepts",
+    "learningLessonExample":"learningLessonExample",
+    "learningLessonInterface":"learningLessonInterface",
+    "learningLessonSafety":"learningLessonSafety",
+    "learningFoundationPanel":"learningFoundationPanel",
+    "learningFoundationTitle":"learningFoundationTitle",
+    "learningFoundationPromise":"learningFoundationPromise",
+    "learningFoundationRoute":"learningFoundationRoute",
+    "learningFoundationStepCards":"learningFoundationStepCards",
+    "learningFoundationLab":"learningFoundationLab",
+    "learningFoundationStatus":"learningFoundationStatus",
+    "learningEvidenceLock":"learningEvidenceLock",
+    "learningStepReadTitle":"learningStepReadTitle",
+    "learningStepOpenTitle":"learningStepOpenTitle",
+    "learningStepPracticeTitle":"learningStepPracticeTitle",
+    "learningStepVerifyTitle":"learningStepVerifyTitle",
+    "learningStepNoteTitle":"learningStepNoteTitle",
+    "learningStepNote":"learningStepNote",
+    "learningIntegrityPanel":"learningIntegrityPanel",
+    "learningRestartNotice":"learningRestartNotice",
+    "learningStepRead":"learningStepRead",
+    "learningStepOpen":"learningStepOpen",
+    "learningStepPractice":"learningStepPractice",
+    "learningStepVerify":"learningStepVerify",
+    "learningCompletionAction":"learningCompletionAction",
+    "learningCompletionActionHint":"learningCompletionActionHint",
+    "learningCockpitReading":"learningCockpitReading",
+    "expertRoadmapGrid":"expertRoadmapGrid",
+    "expertRoadmapBadge":"expertRoadmapBadge",
+    "expertRoadmapProgressText":"expertRoadmapProgressText",
+    "expertRoadmapMasteryText":"expertRoadmapMasteryText",
+    "expertRoadmapProgressBar":"expertRoadmapProgressBar",
+    "btnExportExpertRoadmap":"btnExportExpertRoadmap",
+    "btnResetExpertRoadmap":"btnResetExpertRoadmap",
+});
+
+function atlasLearningRefreshDomRefs40442() {
+  let present = 0;
+  Object.entries(ATLAS_LEARNING_DYNAMIC_REFS_40442).forEach(([key,id]) => {
+    const node = document.getElementById(id);
+    els[key] = node || null;
+    if (node) present += 1;
+  });
+  return present;
+}
+
+function atlasLearningBindOnce40442(node, tag, type, handler, options) {
+  if (!(node instanceof HTMLElement) || node.dataset[tag] === "1") return false;
+  node.addEventListener(type, handler, options);
+  node.dataset[tag] = "1";
+  return true;
+}
+
+function atlasLearningMark40442(node, tag) {
+  if (node instanceof HTMLElement) node.dataset[tag] = "1";
+}
+
+function atlasLearningMarkResidentBindings40442() {
+  atlasLearningRefreshDomRefs40442();
+  atlasLearningMark40442(els.expertRoadmapGrid, "learning40442RoadmapChange");
+  atlasLearningMark40442(els.expertRoadmapGrid, "learning40442RoadmapInput");
+  atlasLearningMark40442(els.btnExportExpertRoadmap, "learning40442ExportRoadmap");
+  atlasLearningMark40442(els.btnResetExpertRoadmap, "learning40442ResetRoadmap");
+  atlasLearningMark40442(els.learningHelpMode, "learning40442HelpMode");
+  document.querySelectorAll("[data-learning-step]").forEach(node => atlasLearningMark40442(node, "learning40442StepChange"));
+  document.querySelectorAll("[data-learning-step-action]").forEach(node => atlasLearningMark40442(node, "learning40442StepAction"));
+  atlasLearningMark40442(els.learningSessionNotesFree, "learning40442NotesFree");
+  atlasLearningMark40442(els.learningSessionNote, "learning40442Takeaway");
+  atlasLearningMark40442(els.learningFoundationPanel, "learning40442Foundation");
+  [
+    [els.btnMarkLessonRead,"learning40442MarkRead"],
+    [els.btnLearningPrimaryAction,"learning40442Primary"],
+    [els.btnLearningNextModule,"learning40442Next"],
+    [els.btnLearningReviewCompleted,"learning40442Review"],
+    [els.btnLearningExportCompleted,"learning40442ExportCompleted"],
+    [els.btnLearningOpenNotebook,"learning40442OpenNotebook"],
+    [els.btnLearningExerciseGuidePrimary,"learning40442GuidePrimary"],
+    [els.btnLearningExerciseBack,"learning40442GuideBack"],
+    [els.btnContinueLearning,"learning40442Continue"],
+    [els.btnOpenLearningPractice,"learning40442Practice"],
+    [els.btnOpenLearningProofs,"learning40442Proofs"],
+    [els.btnCompleteLearningSession,"learning40442Complete"],
+    [els.btnResetLearningJourney,"learning40442ResetJourney"],
+    [els.btnExportLearningSession,"learning40442ExportSession"],
+    [els.btnExportLearningNotebook,"learning40442ExportNotebook"],
+    [els.btnVerifyLearningIntegrity,"learning40442VerifyIntegrity"],
+    [els.btnExportLearningIntegrity,"learning40442ExportIntegrity"]
+  ].forEach(([node,tag]) => atlasLearningMark40442(node,tag));
+  atlasLearningMark40442(document.getElementById("btnPreviewLegacyLearning"), "learning40442LegacyPreview");
+  atlasLearningMark40442(document.getElementById("btnImportLegacyLearning"), "learning40442LegacyImport");
+  atlasLearningMark40442(document.getElementById("btnIgnoreLegacyLearning"), "learning40442LegacyIgnore");
+  atlasLearningMark40442(document.getElementById("btnRestoreLegacyLearningRecovery"), "learning40442LegacyRestore");
+}
+
+function atlasLearningRoadmapInputHandler40442(event) {
+  if (!event.target.matches?.("[data-roadmap-note]")) return;
+  const card = event.target.closest?.("[data-roadmap-key]");
+  if (!card) return;
+  clearTimeout(card._roadmapTimer);
+  card._roadmapTimer = setTimeout(() => saveExpertRoadmapNote(card), 350);
+}
+
+function atlasLearningNotesFreeHandler40442() {
+  clearTimeout(els.learningSessionNotesFree?._saveTimer);
+  if (els.learningSessionNotesFree) els.learningSessionNotesFree._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNotesFree.value, "notes_free"), 220);
+}
+
+function atlasLearningTakeawayHandler40442() {
+  clearTimeout(els.learningSessionNote?._saveTimer);
+  if (els.learningSessionNote) els.learningSessionNote._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNote.value, "takeaway"), 220);
+}
+
+function atlasRebindLearningRuntime40442(root = document) {
+  const present = atlasLearningRefreshDomRefs40442();
+  let bound = 0;
+  const bind=(node,tag,type,handler,options)=>{ if(atlasLearningBindOnce40442(node,tag,type,handler,options)) bound += 1; };
+
+  bind(els.expertRoadmapGrid,"learning40442RoadmapChange","change",event=>{ const card=event.target.closest?.("[data-roadmap-key]"); if(card) updateExpertRoadmapFromCard(card); });
+  bind(els.expertRoadmapGrid,"learning40442RoadmapInput","input",atlasLearningRoadmapInputHandler40442);
+  bind(els.btnExportExpertRoadmap,"learning40442ExportRoadmap","click",exportExpertRoadmap);
+  bind(els.btnResetExpertRoadmap,"learning40442ResetRoadmap","click",resetExpertRoadmap);
+  bind(els.learningHelpMode,"learning40442HelpMode","change",()=>saveLearningHelpMode(els.learningHelpMode.value));
+
+  (root?.querySelectorAll?.("[data-learning-step]") || []).forEach(input=>bind(input,"learning40442StepChange","change",()=>saveLearningStep(input.dataset.learningStep,input.checked)));
+  (root?.querySelectorAll?.("[data-learning-step-action]") || []).forEach(button=>bind(button,"learning40442StepAction","click",event=>{
+    event.preventDefault(); event.stopPropagation();
+    const cockpit=loadLearningCockpitState();
+    const action=learningActionState(cockpit);
+    const requested=button.dataset.learningStepAction;
+    if(action.key!==requested){ renderLearningJourneyCockpit(); setActionFeedback("info","Étape encore verrouillée",`Termine d’abord : ${action.title}.`); return; }
+    handleLearningPrimaryAction();
+  }));
+
+  bind(els.learningSessionNotesFree,"learning40442NotesFree","input",atlasLearningNotesFreeHandler40442);
+  bind(els.learningSessionNote,"learning40442Takeaway","input",atlasLearningTakeawayHandler40442);
+  bind(els.learningFoundationPanel,"learning40442Foundation","click",event=>{
+    const button=event.target.closest?.("[data-foundation-action]"); if(!button)return;
+    event.preventDefault(); event.stopPropagation(); atlasLearningBeginNavigationGuard(); button.blur?.(); handleFoundationAction(button.dataset.foundationAction);
+  });
+  bind(els.btnMarkLessonRead,"learning40442MarkRead","click",()=>{ atlasLearningBeginNavigationGuard(); markIntegratedLessonRead(); });
+  bind(els.btnLearningPrimaryAction,"learning40442Primary","click",()=>{ atlasLearningBeginNavigationGuard(); handleLearningPrimaryAction(); });
+  bind(els.btnLearningNextModule,"learning40442Next","click",startNextLearningModule);
+  bind(els.btnLearningReviewCompleted,"learning40442Review","click",showCompletedLearningReview);
+  bind(els.btnLearningExportCompleted,"learning40442ExportCompleted","click",exportLearningSession);
+  bind(els.btnLearningOpenNotebook,"learning40442OpenNotebook","click",()=>{ atlasLearningReviewOpen=true; renderLearningJourneyCockpit(); if(els.learningSecondaryActions)els.learningSecondaryActions.open=true; scrollToLearningTarget("learningSecondaryActions"); });
+  bind(els.btnLearningExerciseGuidePrimary,"learning40442GuidePrimary","click",handleLearningExerciseGuidePrimary);
+  bind(els.btnLearningExerciseBack,"learning40442GuideBack","click",()=>returnToLearningCockpit(false));
+  bind(els.btnContinueLearning,"learning40442Continue","click",()=>continueLearningJourney(false));
+  bind(els.btnOpenLearningPractice,"learning40442Practice","click",()=>continueLearningJourney(true));
+  bind(els.btnOpenLearningProofs,"learning40442Proofs","click",()=>scrollToLearningTarget("transactionProofLedger"));
+  bind(els.btnCompleteLearningSession,"learning40442Complete","click",completeLearningSession);
+  bind(els.btnResetLearningJourney,"learning40442ResetJourney","click",resetEntireLearningJourney);
+  bind(els.btnExportLearningSession,"learning40442ExportSession","click",exportLearningSession);
+  bind(els.btnExportLearningNotebook,"learning40442ExportNotebook","click",exportLearningNotebook);
+  bind(els.btnVerifyLearningIntegrity,"learning40442VerifyIntegrity","click",verifyLearningIntegrity);
+  bind(els.btnExportLearningIntegrity,"learning40442ExportIntegrity","click",exportLearningIntegrityReport);
+
+  bind(document.getElementById("btnPreviewLegacyLearning"),"learning40442LegacyPreview","click",toggleLegacyLearningPreview);
+  bind(document.getElementById("btnImportLegacyLearning"),"learning40442LegacyImport","click",event=>{ if(event.__atlasRecoveryHandled)return; event.__atlasRecoveryHandled=true; importLegacyLearningData(); });
+  bind(document.getElementById("btnIgnoreLegacyLearning"),"learning40442LegacyIgnore","click",ignoreLegacyLearningData);
+  bind(document.getElementById("btnRestoreLegacyLearningRecovery"),"learning40442LegacyRestore","click",restoreLegacyLearningRecovery);
+
+  try{ renderExpertRoadmap(); }catch(_){}
+  try{ renderLearningJourneyCockpit(); }catch(_){}
+  try{ renderLearningPersistenceNotice(atlasLearningStorageLastResult); }catch(_){}
+  try{ globalThis.atlasV2ClassifySections?.(); }catch(_){}
+  try{
+    const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";
+    globalThis.atlasV2ApplySectionVisibility?.(mode);
+    globalThis.atlasV2ApplySemanticRoleIsolation40312?.(mode);
+  }catch(_){}
+  try{ window.dispatchEvent(new CustomEvent("erith:learning-runtime-rebound",{detail:{build:"40.4.42",present,bound}})); }catch(_){}
+  return Object.freeze({build:"40.4.42",present_refs:present,bound_now:bound,indexeddb_schema_changed:false,learning_state_reset:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});
+}
+
+function atlasLearningRuntimeBoundarySnapshot40442() {
+  const present=Object.entries(ATLAS_LEARNING_DYNAMIC_REFS_40442).filter(([,id])=>!!document.getElementById(id)).length;
+  return Object.freeze({
+    build:"40.4.42",
+    dynamic_ref_count:Object.keys(ATLAS_LEARNING_DYNAMIC_REFS_40442).length,
+    present_refs:present,
+    runtime_owner:"app.js",
+    presentation_late_hydration_ready:true,
+    indexeddb_schema_changed:false,
+    learning_state_reset:false,
+    new_timer:false,
+    new_observer:false,
+    new_network_owner:false,
+    new_storage_owner:false
+  });
+}
+
+globalThis.atlasRebindLearningRuntime40442=atlasRebindLearningRuntime40442;
+globalThis.ErithLearningRuntimeBoundary40442=Object.freeze({
+  build:"40.4.42",
+  rebind:atlasRebindLearningRuntime40442,
+  refresh:atlasLearningRefreshDomRefs40442,
+  snapshot:atlasLearningRuntimeBoundarySnapshot40442,
+  runtime_owner:"app.js",
+  indexeddb_schema_changed:false,
+  learning_state_reset:false
+});
+
+
 const fmtEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 });
 
 const fmtCompactEUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", notation: "compact", maximumFractionDigits: 2 });
@@ -50573,7 +50839,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.41";
+const ATLAS_BUILD = "40.4.42";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -51565,7 +51831,7 @@ window.setTimeout(() => {
 
 els.expertRoadmapGrid?.addEventListener("change", event => { const card = event.target.closest?.("[data-roadmap-key]"); if (card) updateExpertRoadmapFromCard(card); });
 
-els.expertRoadmapGrid?.addEventListener("input", event => { if (!event.target.matches?.("[data-roadmap-note]")) return; const card = event.target.closest?.("[data-roadmap-key]"); if (!card) return; clearTimeout(card._roadmapTimer); card._roadmapTimer = setTimeout(() => saveExpertRoadmapNote(card), 350); });
+els.expertRoadmapGrid?.addEventListener("input", atlasLearningRoadmapInputHandler40442);
 
 els.btnExportExpertRoadmap?.addEventListener("click", exportExpertRoadmap);
 
@@ -51593,9 +51859,9 @@ document.querySelectorAll("[data-learning-step-action]").forEach(button => {
   });
 });
 
-els.learningSessionNotesFree?.addEventListener("input", () => { clearTimeout(els.learningSessionNotesFree._saveTimer); els.learningSessionNotesFree._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNotesFree.value, "notes_free"), 220); });
+els.learningSessionNotesFree?.addEventListener("input", atlasLearningNotesFreeHandler40442);
 
-els.learningSessionNote?.addEventListener("input", () => { clearTimeout(els.learningSessionNote._saveTimer); els.learningSessionNote._saveTimer = setTimeout(() => saveLearningSessionNotes(els.learningSessionNote.value, "takeaway"), 220); });
+els.learningSessionNote?.addEventListener("input", atlasLearningTakeawayHandler40442);
 
 els.learningFoundationPanel?.addEventListener("click", event => {
   const button = event.target.closest?.("[data-foundation-action]");
@@ -51669,6 +51935,9 @@ window.AgentCryptoRecoverLegacyLearning = importLegacyLearningData;
 document.getElementById("btnIgnoreLegacyLearning")?.addEventListener("click", ignoreLegacyLearningData);
 
 document.getElementById("btnRestoreLegacyLearningRecovery")?.addEventListener("click", restoreLegacyLearningRecovery);
+
+// 40.4.42: resident parser-mounted controls are already wired above; mark them so the late-hydration rebind API stays idempotent.
+atlasLearningMarkResidentBindings40442();
 
 els.transactionProofFilter?.addEventListener("change", renderTransactionProofLedger);
 
