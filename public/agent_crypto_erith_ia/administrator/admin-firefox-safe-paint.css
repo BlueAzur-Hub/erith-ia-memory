@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Agent-Crypto @erith.IA — canonical Firefox safe-paint owner
+   Consolidated from the validated 40.3.96 cumulative layer in Build 40.4.46.
+   Presentation/compositor only · no runtime, storage, market, Oracle or Atlas ownership.
+   ========================================================================== */
+
+/* FIREFOX SAFE PAINT — OUTERMOST → INWARD.
+   Prior authority retained:
+   40.3.39 backdrop filters neutralized;
+   40.3.87 .ambient/.grid-overlay retired in Firefox;
+   40.3.94 family 02 paint isolation;
+   40.3.95 BODY full-document decorative background disabled.
+
+   The validated 40.3.96 rule advances one layer inward:
+   only direct main.shell > .glass surfaces are simplified.
+   Nested charts/cards/images are not selected. */
+@supports (-moz-appearance:none){
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396{
+    background-color:#06101d !important;
+    background-image:none !important;
+    background-attachment:scroll !important;
+  }
+
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 .ambient,
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 .grid-overlay{
+    display:none !important;
+  }
+
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > .glass{
+    background-color:rgba(6,16,29,.955) !important;
+    background-image:none !important;
+    box-shadow:0 4px 14px rgba(0,0,0,.18) !important;
+  }
+
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > details.atlas-collapse.glass,
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > section.panel.glass,
+  body.atlas-administrator-mirror.atlas-firefox-safe-paint-40396 main.shell > header.hero.glass{
+    isolation:isolate;
+  }
+}
+
+/* OPERATOR UX: old .94/.95 A/B controls leave the normal workflow.
+   Historical runtime functions remain available; stable SAFE profile is default. */
+#btnAtlasPaintIsolationToggle40394,
+#btnAtlasDocumentBackgroundToggle40395{
+  display:none !important;
+}

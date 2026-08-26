@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_legacy_retirement_v1",
-  "build": "40.4.45",
-  "parent_build": "40.4.44",
+  "build": "40.4.46",
+  "parent_build": "40.4.45",
   "purpose": "Retire proven dead owners without deleting protected or still-referenced implementation files.",
   "policy": {
     "loaded_reference_required_before_keep": true,
@@ -46,27 +46,36 @@
     },
     {
       "path": "admin-aether-cumulative-40396.css",
-      "state": "HOLD_AUDIT_REQUIRED",
-      "blob_sha": "21e93c8f4a20015063f558a155bb2252a1d32f14",
-      "loaded_by_index": true,
-      "proof": "still directly referenced by current Administrator index"
+      "state": "RETIRED_TOMBSTONE",
+      "former_build": "40.3.96",
+      "former_blob_sha": "21e93c8f4a20015063f558a155bb2252a1d32f14",
+      "replacement_owner": [
+        "admin-chronos.css",
+        "admin-firefox-safe-paint.css"
+      ],
+      "loaded_by_index": false,
+      "proof": "40.4.46 splits the exact functional rule families at the former late-cascade position; index no longer references the cumulative filename."
     },
     {
       "path": "admin-offscreen-paint-gate.css",
-      "state": "HOLD_AUDIT_REQUIRED",
-      "blob_sha": "8ed6af8cf3951ca7fba46d6763fb1cb4f9484c46",
+      "state": "RETIRED_TOMBSTONE",
+      "former_build": "40.3.35",
+      "former_blob_sha": "8ed6af8cf3951ca7fba46d6763fb1cb4f9484c46",
+      "replacement_owner": "none — runtime intentionally retired in 40.3.40",
       "loaded_by_index": false,
-      "proof": "historical 40.3.35 visibility gate file exists but is not loaded by current index; dynamic-reference proof still required before physical retirement"
+      "proof": "Current index has no reference; canonical lineage records offscreen paint runtime retirement in 40.3.40."
     },
     {
       "path": "js/admin-offscreen-paint-gate.js",
-      "state": "HOLD_AUDIT_REQUIRED",
-      "blob_sha": "d3a33264436e4258c1c730b5c045b8fd89344213",
+      "state": "RETIRED_TOMBSTONE",
+      "former_build": "40.3.35",
+      "former_blob_sha": "d3a33264436e4258c1c730b5c045b8fd89344213",
+      "replacement_owner": "none — runtime intentionally retired in 40.3.40",
       "loaded_by_index": false,
-      "proof": "historical 40.3.35 runtime exists but current index does not load it; keep until repo-wide owner proof is complete"
+      "proof": "Current index has no reference; canonical lineage records offscreen paint runtime retirement in 40.3.40."
     }
   ],
-  "retired_count": 3,
-  "hold_count": 4,
-  "next": "40.4.46 — prove/retire remaining cumulative/offscreen legacy owners, then close Administrator migration debt ledger."
+  "retired_count": 6,
+  "hold_count": 1,
+  "next": "40.4.47 — make Learning canonical CSS autonomous, then close the Administrator migration debt ledger."
 }

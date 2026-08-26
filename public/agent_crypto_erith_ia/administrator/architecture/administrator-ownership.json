@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.45",
-  "parent_build": "40.4.44",
+  "build": "40.4.46",
+  "parent_build": "40.4.45",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -111,25 +111,31 @@
       "notes": "No new optimization while Administrator remains Web-Classic-class responsive."
     },
     {
+      "component": "Firefox safe-paint outer surface policy",
+      "owner": "admin-firefox-safe-paint.css",
+      "state": "CANONICAL",
+      "notes": "Validated 40.3.96 outer-paint rules split from the former cumulative owner; loaded at the same late-cascade position."
+    },
+    {
       "component": "Learning Journey presentation transport",
       "owner": "js/views/learning-presentation.js + views/system.html",
       "state": "TRUE_LAZY_PARSER_COMPLETE_CANONICAL",
       "notes": "40.4.44 prefilters System shellHtml before browser parsing, inserts compact shell, fetches source once on first demand, then calls canonical Learning runtime rebind."
     },
     {
-      "component": "Historical cumulative CSS",
-      "owner": "admin-aether-cumulative-40396.css",
-      "state": "HOLD_AUDIT_REQUIRED",
-      "notes": "Do not merge/delete before selector ownership proof."
+      "component": "Chronos / planetary presentation",
+      "owner": "admin-chronos.css",
+      "state": "CANONICAL",
+      "notes": "40.4.46 splits the validated Chronos/planetary rules out of the former cumulative 40.3.96 file without selector/declaration changes."
     },
     {
       "component": "Offscreen paint gate legacy files",
       "owner": "admin-offscreen-paint-gate.css + js/admin-offscreen-paint-gate.js",
-      "state": "HOLD_AUDIT_REQUIRED",
-      "notes": "Not loaded by current index, but repo-wide dynamic-reference proof is still required before tombstoning/deletion."
+      "state": "RETIRED_TOMBSTONE",
+      "notes": "40.3.40 already retired the offscreen paint runtime from canonical execution; current index does not load either file. 40.4.46 replaces both historical implementations with inert tombstones."
     }
   ],
   "next": {
-    "40.4.46": "Remaining cumulative/offscreen owner proof + retirement wave 2; then Administrator migration debt ledger closure."
+    "40.4.47": "Learning recovery CSS autonomous-copy proof + final Administrator debt-ledger closure. No runtime expansion."
   }
 }
