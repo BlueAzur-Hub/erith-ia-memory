@@ -18389,7 +18389,11 @@ async function atlasRefreshSpotBook(options = {}) {
 
 async function refreshMarketOnly(options = {}) {
   if (state.auto?.livecheckBusy || !state.auto?.enabled || !atlasPulseVisible()) return false;
-  return runLivecheck({ ...options, reason: options.reason || "public-market-pulse" });
+  return runLivecheck({
+    ...options,
+    reason: options.reason || "public-market-pulse",
+    skipChart40476: true
+  });
 }
 
 function classifyAsset(c) {
@@ -46608,6 +46612,12 @@ async function runLivecheck(options = {}) {
   state.auto.lastRunMs = Date.now();
   state.sourceStatusExpectedTotal = 2;
 
+  const previousCanonicalId40476 = String(
+    state.sourceLock?.snapshotId
+    || state.dataBroker?.market?.snapshotId
+    || ""
+  ).trim();
+
   const previousMarket = atlasHasDisplayableMarket()
     ? {
         coins: state.coins,
@@ -46639,6 +46649,37 @@ async function runLivecheck(options = {}) {
     const latencyMs = Math.round(performance.now() - startedAt);
 
     state.sourceStatus = result.sourceStatus.map(item => item.key === "coingecko-public" ? { ...item, ms: latencyMs } : { ...item });
+
+    const incomingCanonicalId40476 = String(result.snapshotId || "").trim();
+    const sameCanonical40476 = !!incomingCanonicalId40476
+      && !!previousCanonicalId40476
+      && incomingCanonicalId40476 === previousCanonicalId40476
+      && state.liveOk
+      && Array.isArray(state.coins)
+      && state.coins.length > 0;
+
+    state.auto.lastPublicProbe40476 = {
+      checkedAt: new Date().toISOString(),
+      snapshotId: incomingCanonicalId40476 || null,
+      changed: !sameCanonical40476,
+      latencyMs
+    };
+
+    // 40.4.76 — the 5-minute browser poll is a source check, not permission
+    // to replay a 15k+ px Administrator DOM when GitHub still serves the exact
+    // same canonical snapshot. Binance LIVE/spot remain independent.
+    if (sameCanonical40476) {
+      state.marketPulse.marketFailures = 0;
+      state.marketPulse.lastMarketSuccessAt = Date.now();
+      succeeded = true;
+      atlasSetStableDirectMarketStatus();
+      renderSourceGrid();
+      updateSourceMetric(2);
+      atlasRenderBrokerStrip();
+      renderTrustLock(atlasAnalysisLiveReady());
+      return true;
+    }
+
     const loaded = atlasApplyCanonicalSnapshot({
       coins: result.coins,
       global: result.global,
@@ -46661,9 +46702,13 @@ async function runLivecheck(options = {}) {
     atlasPatchMarketSnapshotDom();
     renderTrustLock(atlasAnalysisLiveReady());
 
-    atlasStartSelectedChart(160, true);
-    await atlasDelay(260);
-    await atlasWaitForChartIdle(30_000);
+    // Background Auto Reader polls must not synchronously wake the historical
+    // chart and then wait up to 30 s for it. Chart has its own existing owner.
+    if (options.skipChart40476 !== true) {
+      atlasStartSelectedChart(160, true);
+      await atlasDelay(260);
+      await atlasWaitForChartIdle(30_000);
+    }
     return true;
   } catch (error) {
     if (error?.name === "AbortError") return false;
@@ -48659,9 +48704,6 @@ function saveAutoSnapshot() {
       };
       records[existingIndex] = updated;
       writeAutoMemory(normalizeSharedRecords(records, snapshot.collector_id));
-      queueMicrotask(renderMemoryTruth);
-      queueMicrotask(atlasMemoryIntelligenceRender);
-      queueMicrotask(atlasMultiCollectorOperatorRender);
       return updated;
     }
   }
@@ -48700,8 +48742,9 @@ function renderAutoReader(snapshot = null, previous = null) {
 
   if (els.btnAutoToggle) els.btnAutoToggle.textContent = state.auto?.enabled ? "Auto ON" : "Auto OFF";
   if (els.autoLastRead) {
-    els.autoLastRead.textContent = last?.saved_at
-      ? new Date(last.saved_at).toLocaleString("fr-FR")
+    const lastReadAt40476 = last?.last_seen_at || last?.saved_at || null;
+    els.autoLastRead.textContent = lastReadAt40476
+      ? new Date(lastReadAt40476).toLocaleString("fr-FR")
       : "En attente";
   }
   if (els.autoSnapshots) els.autoSnapshots.textContent = `${records.length} distincts · ${rawRecords.length} relevés`;
@@ -48752,9 +48795,12 @@ function renderAutoReader(snapshot = null, previous = null) {
       `Collecteur de ce Firefox : ${getCollectorId()} (${isCollectorConfigured() ? "configuré" : "temporaire"}).`,
       `Snapshots canoniques distincts : ${records.length}.`,
       `Relevés locaux conservés : ${rawRecords.length}.`,
+      (last?.last_seen_at || last?.saved_at)
+        ? `Dernière vérification locale : ${new Date(last.last_seen_at || last.saved_at).toLocaleString("fr-FR")}.`
+        : "Dernière vérification locale : aucune.",
       last?.saved_at
-        ? `Dernier snapshot local : ${new Date(last.saved_at).toLocaleString("fr-FR")}.`
-        : "Dernier snapshot local : aucun.",
+        ? `Snapshot canonique local conservé depuis : ${new Date(last.saved_at).toLocaleString("fr-FR")}.`
+        : "Snapshot canonique local : aucun.",
       "",
       "Lecture marché :",
       ...pulse.lines,
@@ -48796,7 +48842,8 @@ function atlasRenderAutoTruthLive() {
   setText(els.autoGithubWriteTruth, "NON · frontend lecture seule");
 
   const last = lastAutoSnapshot();
-  setText(els.autoLastSnapshotTruth, last?.saved_at ? new Date(last.saved_at).toLocaleString("fr-FR") : "Aucun");
+  const lastReadAt40476 = last?.last_seen_at || last?.saved_at || null;
+  setText(els.autoLastSnapshotTruth, lastReadAt40476 ? new Date(lastReadAt40476).toLocaleString("fr-FR") : "Aucun");
 
   const collectorId = getCollectorId();
   setText(els.autoCollectorTruth, `${collectorId} · ${isCollectorConfigured() ? "configuré" : "temporaire"}`);
@@ -51817,7 +51864,7 @@ try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({b
 /* 40.4.70 — finish the source-lazy lifecycle with interaction-first binding and a bounded paint handoff before non-critical replay. */
 try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40470__=Object.freeze({build:"40.4.70",parent:"40.4.69",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,interaction_first_binding:true,bounded_paint_handoff:true,scope_timing_exposed:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.75";
+const ATLAS_BUILD = "40.4.76";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -62803,7 +62850,7 @@ async function atlasAutoOperatorProbe40475(){
   try{
     // runLivecheck already fetches latest.json/status.json with cache:"no-store"
     // and cache-busting query parameters, then invokes atlasAfterLivecheck().
-    ok=await runLivecheck({reason:"livecheck"});
+    ok=await runLivecheck({reason:"livecheck",skipChart40476:true});
   }catch(_){ok=false;}
 
   if(!ok){
@@ -62882,5 +62929,47 @@ try{
     current_fingerprint_changed:false,
     bridge_protocol_changed:false,
     oracle_changed:false
+  });
+}catch(_){}
+
+
+/* ============================================================
+   40.4.76 — AUTO READER / FIREFOX MAIN-THREAD RELIEF LOCK
+
+   Operator evidence:
+   - 40.4.75 primary Atlas hydration works;
+   - Auto Reader remains active but the Administrator freezes/resumes and its
+     countdown appears frozen;
+   - repeated 5-minute reads can receive the exact same GitHub canonical
+     snapshot, yet the old path replayed the broad market DOM and synchronously
+     woke/waited for historical chart work;
+   - duplicate canonical observations update last_seen_at, while the UI showed
+     saved_at, making successful rechecks look inactive.
+
+   Contract:
+   - same canonical public snapshot => lightweight source-status path;
+   - background public-market poll never waits for chart;
+   - chart keeps its existing independent cadence/owner;
+   - Auto Reader displays last_seen_at as the latest verification;
+   - no recurring timer/observer/WebSocket/network/storage owner is added.
+   ============================================================ */
+try{
+  globalThis.__AGENT_CRYPTO_AUTO_READER_RELIEF_40476__=Object.freeze({
+    build:"40.4.76",
+    parent:"40.4.75",
+    same_canonical_full_market_dom_replay:false,
+    background_market_poll_waits_for_chart:false,
+    duplicate_canonical_last_seen_truth:true,
+    chart_owner_changed:false,
+    market_core_changed:false,
+    current_engine_changed:false,
+    bridge_changed:false,
+    oracle_changed:false,
+    indexeddb_schema_changed:false,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_websocket:false,
+    new_network_owner:false,
+    new_storage_owner:false
   });
 }catch(_){}
