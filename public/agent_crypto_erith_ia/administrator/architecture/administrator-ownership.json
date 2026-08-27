@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.64",
-  "parent_build": "40.4.63",
+  "build": "40.4.65",
+  "parent_build": "40.4.64",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -197,10 +197,11 @@
   "next": {
     "after_40_4_59": "Operator Firefox validation of automatic Source Intelligence V1.3 and address-proof counts. Then extend additional read-only source coverage or documentation; do not reopen CURRENT cadence without reproduced defect.",
     "after_40_4_63": "40.4.64 peripheral runtime extraction from audited demand candidates; Market Core/CURRENT/Oracle analytical ownership stay protected.",
-    "after_40_4_64": "40.4.65 second peripheral/runtime extraction after Firefox validation; keep Market Core/CURRENT/Oracle/Bridge/Private Backend protected."
+    "after_40_4_64": "40.4.65 implemented: secondary Metals runtime leaves default Crypto boot; Celestial closed cadence relieved; ordinary version check moved outside first boot burst.",
+    "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains."
   },
   "migration_summary": {
-    "state": "RUNTIME_PHASE_2_WAVE_1_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
+    "state": "RUNTIME_PHASE_2_WAVE_2_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -219,7 +220,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "40.4.65 second true runtime extraction after operator validation of 40.4.64; no new market/source features until responsiveness recovers.",
+    "next_product_work": "40.4.66 cumulative migration/backend regression checkpoint + stop gate.",
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": false
   },
@@ -388,5 +389,39 @@
     "new_network_owner": false,
     "new_storage_owner": false,
     "next": "40.4.65 second extraction after Firefox validation"
+  },
+  "runtime_phase2_wave2_40465": {
+    "owner": "app.js + index.html",
+    "state": "IMPLEMENTED_REQUIRES_FIREFOX_OPERATOR_VALIDATION",
+    "default_market_domain": "crypto",
+    "metals_secondary_runtime_demand_only": true,
+    "metals_boot_network_when_crypto": false,
+    "metals_demand_owners": [
+      "public market registry",
+      "metals structural registry",
+      "metals quote/history archive",
+      "metals report IndexedDB restore"
+    ],
+    "metals_restored_domain_behavior": "If persisted domain is Metals, demand runtime starts automatically after domain restoration.",
+    "celestial_closed_cadence_ms": 30000,
+    "celestial_open_cadence_ms": 1000,
+    "multi_collector_even_minute_duplicate_guard": true,
+    "ordinary_version_first_check_delay_ms": 12000,
+    "protected": [
+      "Market Core 38.15.11",
+      "Binance LIVE primary",
+      "Atlas CURRENT 4/4 → NØX → Aerith",
+      "CURRENT fingerprint/cadence",
+      "Oracle analytical engine/Evidence",
+      "Bridge R13 / V1.9.11",
+      "Private Backend V1.4.0",
+      "Source Intelligence V1.3",
+      "IndexedDB CURRENT truth"
+    ],
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false,
+    "next": "40.4.66 cumulative migration/backend regression checkpoint and stop gate"
   }
 }

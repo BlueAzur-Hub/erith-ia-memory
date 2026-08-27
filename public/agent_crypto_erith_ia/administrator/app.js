@@ -26674,14 +26674,14 @@ function atlasSnapshotWithSourceIntelligence4058(snapshot) {
       attached: true,
       optional: true,
       transaction_identity_excluded: true,
-      build: "40.4.64"
+      build: "40.4.65"
     }
   };
 }
 
 try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
-    build: "40.4.64",
+    build: "40.4.65",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
     owner: "app.js transport copy + ErithPrivateBackendSources4054",
     atlas_direct_internet_access: false,
@@ -39747,6 +39747,9 @@ function atlasParallelMarketSetDomain(domain, options = {}) {
   }
 
   atlasParallelMarketMetalsWrite();
+  if (next === "metals") {
+    void atlasParallelMarketEnsureMetalsRuntime40465(options.source || "operator-domain-metals");
+  }
   atlasParallelMarketRender();
 
   if (options.save !== false) {
@@ -39830,6 +39833,91 @@ function atlasParallelMarketSetMetalsSection(section) {
   return true;
 }
 
+const atlasParallelMarketDemandRuntime40465 = {
+  state: "idle",
+  promise: null,
+  reason: "",
+  startedAt: 0,
+  loadedAt: 0,
+  lastError: "",
+  results: []
+};
+
+function atlasParallelMarketEnsureMetalsRuntime40465(reason = "operator") {
+  if (atlasParallelMarketDemandRuntime40465.state === "ready") {
+    return Promise.resolve(true);
+  }
+  if (atlasParallelMarketDemandRuntime40465.promise) {
+    return atlasParallelMarketDemandRuntime40465.promise;
+  }
+
+  atlasParallelMarketDemandRuntime40465.state = "loading";
+  atlasParallelMarketDemandRuntime40465.reason = String(reason || "operator");
+  atlasParallelMarketDemandRuntime40465.startedAt = Date.now();
+  atlasParallelMarketDemandRuntime40465.lastError = "";
+
+  const run = async () => {
+    // These owners are exclusive to the secondary Metals workspace. 40.4.65
+    // keeps them completely out of the default Crypto cold boot, but preserves
+    // their exact loaders and fallbacks when Metals is actually requested.
+    atlasMetalsCursorInspectorInit();
+    atlasMarketRegistryRender();
+    atlasMetalsStructuralRenderActive();
+
+    const reportPromise = Promise.resolve(atlasMetalsReportInit());
+    const results = await Promise.allSettled([
+      reportPromise,
+      atlasMarketRegistryLoad(),
+      atlasMetalsStructuralLoad(),
+      atlasMetalsQuoteFoundationLoad()
+    ]);
+
+    atlasParallelMarketDemandRuntime40465.results = results.map((row, index) => ({
+      owner: ["report-memory", "registry", "structural", "quotes-history"][index],
+      status: row.status,
+      reason: row.status === "rejected" ? String(row.reason?.message || row.reason || "") : ""
+    }));
+    atlasParallelMarketDemandRuntime40465.loadedAt = Date.now();
+    atlasParallelMarketDemandRuntime40465.state = "ready";
+    atlasParallelMarketDemandRuntime40465.lastError = "";
+
+    atlasParallelMarketRenderMetals();
+    if (atlasParallelMarketDomain() === "metals") atlasParallelMarketRender();
+    return true;
+  };
+
+  atlasParallelMarketDemandRuntime40465.promise = run()
+    .catch(error => {
+      atlasParallelMarketDemandRuntime40465.state = "error";
+      atlasParallelMarketDemandRuntime40465.lastError = String(error?.message || error || "Metals demand runtime");
+      console.warn("40.4.65 Metals demand runtime :", error);
+      return false;
+    })
+    .finally(() => {
+      atlasParallelMarketDemandRuntime40465.promise = null;
+    });
+
+  return atlasParallelMarketDemandRuntime40465.promise;
+}
+
+globalThis.AtlasParallelMarketDemand40465 = Object.freeze({
+  build: "40.4.65",
+  ensure: atlasParallelMarketEnsureMetalsRuntime40465,
+  snapshot: () => ({
+    state: atlasParallelMarketDemandRuntime40465.state,
+    reason: atlasParallelMarketDemandRuntime40465.reason,
+    started_at: atlasParallelMarketDemandRuntime40465.startedAt,
+    loaded_at: atlasParallelMarketDemandRuntime40465.loadedAt,
+    last_error: atlasParallelMarketDemandRuntime40465.lastError,
+    results: atlasParallelMarketDemandRuntime40465.results.slice(),
+    active_domain: atlasParallelMarketDomain(),
+    default_crypto_boot_fetches: 0,
+    new_timer: false,
+    new_observer: false,
+    storage_owner_added: false
+  })
+});
+
 function atlasParallelMarketInit() {
   const switchButton = document.getElementById(
     "atlasMarketDomainSwitch"
@@ -39848,12 +39936,6 @@ function atlasParallelMarketInit() {
   );
 
   atlasParallelMarketMetalsRead();
-  atlasMetalsCursorInspectorInit();
-  atlasMarketRegistryRender();
-  atlasMetalsStructuralRenderActive();
-  void atlasMarketRegistryLoad();
-  void atlasMetalsStructuralLoad();
-  void atlasMetalsQuoteFoundationLoad();
 
   switchButton?.addEventListener("click", event => {
     event.preventDefault();
@@ -40012,6 +40094,9 @@ function atlasParallelMarketInit() {
 
   state.marketDomain = atlasParallelMarketReadDomain();
   atlasParallelMarketRender();
+  if (state.marketDomain === "metals") {
+    void atlasParallelMarketEnsureMetalsRuntime40465("restored-metals-domain");
+  }
   return true;
 }
 
@@ -45294,7 +45379,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.64",
+    build:"40.4.65",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -51329,8 +51414,10 @@ try {
 
 /* 40.4.63 — runtime phase-2 audit checkpoint; no runtime owner extracted. */ try{globalThis.__AGENT_CRYPTO_RUNTIME_BOOT_AUDIT_40463__=Object.freeze({build:"40.4.63",base:"40.4.62",presentation_migration_complete:true,runtime_performance_migration_complete:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.64 — peripheral runtime extraction wave 1. Diagnostics leave parser-blocking boot; three 1 s presentation loops run only while their own disclosure is open. Data/engine cadences remain unchanged. */
-try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.64";
+try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* 40.4.65 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
+try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.65",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
+const ATLAS_BUILD = "40.4.65";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -52050,7 +52137,7 @@ function atlasVersionAwarenessInit() {
       ? ATLAS_VERSION_CONFIRMATION_MS + 800
       : refreshStatus === "syncing"
         ? 1200
-        : 2800
+        : 12000
   );
 
   return true;
@@ -53446,8 +53533,6 @@ globalThis.ErithViewportOwnership40312 = Object.freeze({
 });
 
 atlasScannerCollectorInit();
-
-atlasMetalsReportInit();
 
 atlasParallelMarketInit();
 
