@@ -51658,7 +51658,7 @@ try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({b
 /* 40.4.70 — finish the source-lazy lifecycle with interaction-first binding and a bounded paint handoff before non-critical replay. */
 try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40470__=Object.freeze({build:"40.4.70",parent:"40.4.69",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,interaction_first_binding:true,bounded_paint_handoff:true,scope_timing_exposed:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.70";
+const ATLAS_BUILD = "40.4.71";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -62478,4 +62478,113 @@ try {
     network_owner_added:false
   });
 } catch (_) {}
+
+/* ============================================================
+   40.4.71 — AETHER MANUAL CURRENT TRANSACTION OWNERSHIP LOCK
+
+   Operator evidence on 40.4.70:
+   - source-lazy Atlas presentation and controls are operational;
+   - AUTO correctly keeps a CLOSED CURRENT at rest on the same canonical
+     CoinGecko market snapshot;
+   - an explicit MANUAL "Analyse complète" can nevertheless finish Atlas 4/4
+     and Aerith, then be rejected as AtlasSupersededError;
+   - the legacy 38.8/38.9 closed-CURRENT restore owners can converge the old
+     persisted transaction while a new manual transaction is still in flight,
+     replacing transactionFingerprint / lastCompletedFingerprint before Aerith
+     is promoted.
+
+   Contract:
+   - an active Atlas/Aerith analytical transaction exclusively owns CURRENT
+     transaction state until it finishes;
+   - LIVE Binance ticks remain observable but cannot restore/demote a previous
+     CURRENT over the in-flight transaction;
+   - persisted closed-CURRENT restore resumes normally once no transaction is
+     active;
+   - a genuinely newer canonical market snapshot is still remembered by the
+     existing Automation 34.1 pending-market path and may run after close;
+   - AtlasSupersededError is preserved for a genuinely newer analytical run;
+   - no timer, observer, network, storage schema, Bridge, Market Core, Oracle,
+     Market Memory or Analytical Memory semantics are added or rewritten.
+   ============================================================ */
+
+function atlasCurrentTransactionOwnsState40471() {
+  try {
+    return !!(
+      atlasLocalReportsState?.running
+      || atlasLocalConclusionState?.running
+      || String(atlasLocalReportsState?.transactionFingerprint || "").trim()
+    );
+  } catch (_) {
+    return false;
+  }
+}
+
+const atlasCurrentOnSnapshot40470Base40471 = atlasCurrentOnSnapshot;
+atlasCurrentOnSnapshot = function atlasCurrentOnSnapshot40471(snapshot) {
+  if (atlasCurrentTransactionOwnsState40471()) {
+    try { atlasCurrentDecorateConclusion(snapshot, atlasLocalDialogueState?.conclusionResponse || null); } catch (_) {}
+    return typeof atlasCurrentStateRead === "function" ? atlasCurrentStateRead() : null;
+  }
+  return atlasCurrentOnSnapshot40470Base40471(snapshot);
+};
+
+const atlasCurrentSyncFromLiveGate40470Base40471 = atlasCurrentSyncFromLiveGate;
+atlasCurrentSyncFromLiveGate = function atlasCurrentSyncFromLiveGate40471(reason = "live-gate") {
+  if (atlasCurrentTransactionOwnsState40471()) {
+    return typeof atlasCurrentStateRead === "function" ? atlasCurrentStateRead() : null;
+  }
+  return atlasCurrentSyncFromLiveGate40470Base40471(reason);
+};
+
+const atlasCanonicalCurrentRestore38840470Base40471 = atlasCanonicalCurrentRestore388;
+atlasCanonicalCurrentRestore388 = function atlasCanonicalCurrentRestore40471(snapshot = null, reason = "same-canonical-current") {
+  if (atlasCurrentTransactionOwnsState40471()) return null;
+  return atlasCanonicalCurrentRestore38840470Base40471(snapshot, reason);
+};
+
+const atlasCanonicalCurrentUiTruth38940470Base40471 = atlasCanonicalCurrentUiTruth389;
+atlasCanonicalCurrentUiTruth389 = function atlasCanonicalCurrentUiTruth40471(reason = "ui-truth-40471") {
+  if (atlasCurrentTransactionOwnsState40471()) return null;
+  return atlasCanonicalCurrentUiTruth38940470Base40471(reason);
+};
+
+try {
+  globalThis.__AGENT_CRYPTO_MANUAL_CURRENT_40471__ = Object.freeze({
+    build: "40.4.71",
+    parent: "40.4.70",
+    scope: "CURRENT transaction ownership interlock only",
+    manual_analysis_complete_preserved: true,
+    live_ticks_may_supersede_active_transaction: false,
+    closed_current_restore_during_active_transaction: false,
+    genuine_new_canonical_pending_preserved: true,
+    atlas_superseded_error_preserved: true,
+    atlas_presentation_changed: false,
+    market_core_changed: false,
+    bridge_changed: false,
+    oracle_changed: false,
+    market_memory_changed: false,
+    analytical_memory_changed: false,
+    new_timer: false,
+    new_observer: false,
+    new_network_owner: false,
+    new_storage_owner: false
+  });
+} catch (_) {}
+
+const atlasRcStaticAudit40470Base40471 = atlasRcStaticAudit;
+atlasRcStaticAudit = function atlasRcStaticAudit40471() {
+  const report = atlasRcStaticAudit40470Base40471();
+  report.checks = {
+    ...(report.checks || {}),
+    manual_current_transaction_ownership_40471:
+      typeof atlasCurrentTransactionOwnsState40471 === "function"
+      && typeof atlasCurrentOnSnapshot === "function"
+      && typeof atlasCurrentSyncFromLiveGate === "function"
+      && typeof atlasCanonicalCurrentRestore388 === "function"
+      && typeof atlasCanonicalCurrentUiTruth389 === "function"
+  };
+  report.failed = Object.entries(report.checks).filter(([, ok]) => !ok).map(([key]) => key);
+  report.pass = report.failed.length === 0;
+  return report;
+};
 
