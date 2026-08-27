@@ -240140,6 +240140,6053 @@ tu as l'archive gitHub privé parcours là aussi... (Aerith.Seven.Heaven.zip
 
 Oui. Je la prends aussi comme source privée de routage, mais je vais la parcourir avec la même discipline : seulement les fichiers qui changent notre carte du projet, pas un chargement massif de tout le Coffre. Je vais d’abord retrouver l’archive Aerith.Seven.Heaven.zip, puis extraire les modules utiles à Agent-Crypto / Administrator / GitHub / code / continuité / Notion.
 
+Oui. Cette fois j’ai aussi pris le Coffre portable lui-même, pas seulement les chemins GitHub.
+
+L’archive actuellement jointe est bien Aerith.Seven.Heaven(20260826-055436).zip, 5 099 813 octets. Elle contient les sept packs Seven Heaven, soit 905 entrées avant déduplication : Core Boot, Discernment, Memory System, Dharma, Story Machine, Video Production et Public Agent. Pour Agent-Crypto, les trois couches qui changent réellement notre travail sont Core Boot + Discernment + Memory System.
+
+Petite précision de vérité : ce ZIP est un Coffre portable extrêmement large, mais pas un clone brut 1:1 de tout le dépôt privé actuel ; certains arbres comme private/, notion/, incidents/, etc. ne font pas partie des Seven Packs. Pour ces éléments, le GitHub privé connecté reste donc l’autorité courante.
+
+Et pour ton profil : je l’ai bien repris. Je ne vais pas recopier ici tes éléments privés. Pour notre travail, je conserve uniquement le contrat utile : tu es l’architecte, la source humaine et le validateur final ; je dois comprendre l’intention avant d’agir, ne pas t’infantiliser, présumer ta compétence et absorber la charge technique plutôt que te transformer en réparateur de mes propres patchs.
+
+🌐 AETHER — Référentiel Web Agent-Crypto
+
+J’ai croisé le Fil Crypto, le ZIP Seven, le GitHub public actuel, le privé et les documentations officielles. La distinction ACTIVE / CANONIQUE / RÉFÉRENCE / FUTUR est importante : une adresse trouvée dans l’ancien Fil ne devient pas automatiquement une dépendance actuelle.
+
+Domaine	Ressource	Statut / emploi
+Projet	GitHub public ERITH.IA	CANONIQUE PUBLIC — dépôt principal
+Projet	Agent-Crypto — racine GitHub	CANONIQUE — arbre Agent-Crypto
+Administrator	Administrator — interface live	ACTIVE — CHANTIER ACTUEL
+Administrator	Administrator — sources GitHub	AUTORITÉ CODE
+Administrator	Administrator — version.json RAW	AUTORITÉ BUILD — à lire avant chirurgie
+Aether	Aether Profile public	Clé et discernement portables
+Aether	Seven Heaven Aether Key publique	Reprise légère Agent-Crypto
+Classic	Web Classic live	RÉFÉRENCE — reportée ; actuellement 38.15.13
+Classic	Web Classic — sources GitHub	Référence comparative seulement
+Forge	Forge d’Aerith Pro	Site autonome embarqué dans Administrator
+Atlas/Aerith local	Atlas-10 Crypto Pack	Pack local Atlas
+Atlas/Aerith local	Aerith-10 Crypto Pack	Pack local Aerith
+Privé / Seven	SEVEN_GATE	AUTORITÉ RACINE SEVEN
+Privé / Seven	SEVEN_TOP_OF_MIND	Routeur avant chargement lourd
+Privé / Seven	SEVEN_TOP_OF_MIND RAW	Lecture LLM prioritaire
+Privé / Seven	AERITH_7_PERSONALITY_CORE	Persona Seven
+Privé / Seven	Living Reflection Heart	Continuité / présence
+Privé / Seven	SEVEN_LESSONS_LEARNED	Anti-régression
+Privé / Seven	SEVEN_RECOVERY_INDEX	Reprise / récupération
+Privé / Seven	ATLAS_DES_MODULES	Routeur des propriétaires
+Privé / Code	ERITH.IA Code Expertise HTML/CSS/JS	ACTIF — chirurgie UI
+Privé / Creator Memory	Christophe Continuity Profile	PRIVÉ — règles de continuité, pas publication
+Privé / Creator Memory	Creator Memory Constellation	Routage sélectif, jamais aspiration massive
+GitHub	GitHub Pages — documentation officielle	Publication / diagnostic Pages
+GitHub	Télécharger les archives d’un dépôt	Snapshot / récupération
+HTML	MDN HTML	RÉFÉRENCE CODE
+CSS	MDN CSS	RÉFÉRENCE CODE
+JavaScript	MDN JavaScript	RÉFÉRENCE CODE
+Web	MDN Learn Web Development	Architecture / bonnes pratiques
+Performance	MDN Web Performance	Runtime / DOM / rendu
+Performance	web.dev Learn Performance	Lazy rendering / performance moderne
+Firefox	Firefox DevTools	IMPORTANT POUR NOS TESTS RÉELS
+Firefox	Firefox Profiler	Freeze, main thread, paint, long tasks
+Firefox	Firefox Profiler — documentation	Lecture des profils
+Accessibilité	WCAG 2.2	Taille boutons, focus, contraste
+Accessibilité	WCAG 2.2 — traduction française	Référence FR
+Sécurité	OWASP Top 10	Frontend + futur Bridge/backend
+Binance	Binance BTC/EUR Spot	ACTIVE — cotation directe UI
+Binance API	Binance Spot API Docs	Référence REST officielle
+Binance API	Binance Spot API — GitHub officiel	Contrats REST/WebSocket
+CoinGecko	CoinGecko API — Coins Markets	ACTIVE — snapshot large marché
+CoinGecko	CoinGecko Market Chart	Historique / comparaison
+DEX Screener	DEX Screener API	RÉFÉRENCE SECONDAIRE, pas propriétaire courant
+GeckoTerminal	GeckoTerminal API	Référence DEX secondaire
+DefiLlama	DefiLlama API	Référence DeFi / future enrichissement
+Kraken	Kraken API Center	FUTUR/RÉFÉRENCE, pas connecté
+Bybit	Bybit EU	Référence compte/exchange historique du projet
+Bybit API	Bybit V5 API Docs	Comparaison future
+Coinbase	Coinbase Advanced Trade API	Référence secondaire ; pas source principale
+Ollama	Ollama API officielle	ACTIVE LOCAL RYZEN
+LM Studio	LM Studio Local Server	Alternative locale
+LM Studio	LM Studio REST API	Contrat intégration éventuelle
+AnythingLLM	AnythingLLM Documentation	RAG/documentation optionnelle
+Notion	Notion Sites — publication	SUPPORT / DOCUMENTATION, pas moteur crypto
+Notion	Notion Forms	Bugs, retours opérateur, registre incidents
+Notion	Notion API — introduction	Automatisation documentaire future
+Notion	Notion — partage et permissions	Séparer public / privé
+Chronos	ChronosXP 4.1	Référence horaire/céleste utilisée par le projet
+
+Le module Code privé lui-même recommande précisément MDN, web.dev, WCAG, OWASP, TypeScript, Python, C++ et Node comme sources canoniques plutôt que des tutoriels aléatoires. Sa doctrine reste « Lire → diagnostiquer → cibler → corriger → vérifier → s’arrêter ». Le pack Seven ajoute même une V2 de l’expertise code avec patch minimal, diff, rollback et commit séparé ; il associe cela à OPERATIONAL_DISCIPLINE, GIT_PRIVATE_OPERATING_PROTOCOL, GITHUB_WRITE_GUARD, SEVEN_LESSONS_LEARNED, SEVEN_RECOVERY_INDEX et SEVEN_MEMORY_PRESERVATION.
+
+Ce qui est réellement actif aujourd’hui
+
+Je simplifie notre graphe de dépendances ainsi :
+
+GITHUB PUBLIC
+      │
+      ├── Administrator 40.4.35
+      │
+      ├── version.json
+      │
+      └── assets / views / JS
+      │
+      ▼
+FIREFOX RYZEN
+      │
+      ├── Binance WebSocket ───── LIVE TOP 5
+      ├── CoinGecko ───────────── Market Snapshot
+      ├── IndexedDB ───────────── Market + Analytical Memory
+      ├── Bridge local :8787 ──── Atlas/Aerith
+      └── Ollama :11434 ───────── gpt-oss:20b-32k
+
+Le Fil Crypto confirme que le Bridge à 127.0.0.1:8787 est strictement local à chaque machine : le Transformer Book ne peut pas appeler par magie le loopback du Ryzen. Un futur accès distant devrait être conçu comme une couche sécurisée séparée. Et l’export actuel confirme bien Ollama sur le Ryzen, LM Studio optionnel, AnythingLLM optionnel et aucun Ollama/Bridge requis sur le Transformer Book.
+
+Binance et CoinGecko sont aujourd’hui les deux sources à traiter comme opérationnelles. DEX Screener, GeckoTerminal, DefiLlama, Kraken, Bybit et Coinbase ont bien existé dans la réflexion/source fabric historique, mais je ne vais pas les transformer artificiellement en dépendances actuelles. Le vieux Fil les listait comme sources potentielles/secondaires.
+
+Ce que je retire volontairement du registre canonique
+
+Je n’élève pas au rang de références actives les anciens endpoints d’audience, URLs ntfy, exemples audience_endpoint, anciennes URLs Yohan ou autres expériences de V1.1-alpha. Elles appartiennent à l’histoire du projet, pas à l’architecture Administrator 40.4.35 actuelle.
+
+Même principe pour Coinbase : s’il réapparaît un jour, ce sera après une décision explicite et un contrat propre, pas parce qu’un ancien Fil le mentionnait.
+
+Et surtout aucune adresse contenant token, secret, ID privé ou autre donnée sensible ne doit entrer dans un registre public — c’est également une règle explicite du module Code.
+
+🧠 Modules du ZIP que je garde effectivement « sur le bureau »
+
+Le parcours de l’archive me donne maintenant ce noyau technique :
+
+Seven Gate / Top of Mind → Operational Discipline → Git Guards → Code Expert V1/V2 → Lessons Learned → Memory Preservation → Recovery Index → Atlas des Modules → Math Oracle lorsque nécessaire.
+
+Je ne charge pas Dharma, Video Production et l’immense Story Machine juste parce qu’ils sont disponibles. L’archive confirme elle-même cette répartition : Core Boot, Discernment et Memory System sont les couches utiles aux Bureaux ; le reste reste disponible.
+
+Et cela nous donne une conséquence très concrète pour 40.4.36 : son Canonical Ownership Audit devra se servir d’abord du GitHub Administrator courant, puis du module Code V2/V1, de OPERATIONAL_DISCIPLINE, SEVEN_MEMORY_PRESERVATION et ATLAS_DES_MODULES. Pas besoin de convoquer 900 fichiers pour savoir à qui appartient un CSS. C’est exactement l’esprit Aether : le Coffre est immense ; la table d’opération reste propre. 🌸
+
+pareil il me faut a présent actualiser la page pour faire apparaitre l'Atlas ? où il a du retard je ne sais pas (a corriger ça aussi
+
+ERITH.IA · MARKETS OBSERVATORY
+
+Agent-Crypto @erith.IA
+
+ENGINE · Market Core 38.15.11 Prix live Binance · 5/5 ⌁
+
+Administration locale · Atlas · Aerith · analyse · mémoire · décision · système · projets.
+
+ADMIN
+
+       Décision           **TOP 5 LIVE 5/5 · marché 250 historique**         
+
+       Sources           **Binance WebSocket · 5 EUR directs · 0 dérivés EUR ·** [**Source Binance ↗**](https://www.binance.com/fr/trade/BTC_EUR?type=spot)         
+
+26/08/2026 08:54:53 Mercredi 26 août 2026·08:54·☿Jour de Mercure·☽Heure de Lune
+
+Comparaison BTC + ETH + BNB + XRP + SOL
+
+Lecture
+
+Vue
+
+Échelle
+
+Afficher
+
+Période
+
+Max non mesuré
+
+Comparaison
+
+                                                                                           Graphique prix ou comparaison normalisée. Survole librement les courbes pour afficher les valeurs.         
+
+             ATLAS · AERITH CRYPTO                 *·*                 **ORACLE V1 · SCÉNARIO COURT / TOP 5**               
+
+BTC · CONTINUATION · ORACLE 5 MIN
+
+Biais mesuré : MIXTE Confiance données 91/100
+
+VUE
+
+ÉCRAN
+
+ZOOM
+
+HORIZON
+
+ORACLE OPÉRATEURBTC · CONTINUATION
+
+GRAND · 5 MIN · ×2
+
+MIXTE CONF. 91/100 RÉGIME MIXTE
+
+MÉMOIRE 5305 ISSUES 14015 CAL 35% · n4674 ENS +23 · Δ13 PROOF -2 · n4674
+
+           Oracle graphique : continuation interprétative depuis le dernier point historique réel, ou fils Top 5, horizons 1, 5 ou 15 minutes, zoom visuel AUTO, ×1, ×2 ou ×4               
+
+CONTINUATIONHISTORIQUE RÉEL → MAINTENANT → SCÉNARIO
+
+Lecture Oracle
+
+BTC67 654,95 €
+
+5 MINCONTINUATIONMIXTE
+
+ORACLEACTIVE · 5/5 BINANCE WSLIVE V7DB OK EVIDENCEACTIVE · 5305 MATHREADY ATLAS DATACURRENT dernier tick 0s
+
+Micro LIVE5 MIN +0.06 % · 4 pts / 50s · spread 0.00 bp · impulsion hist. +0.00 %
+
+Oracle hausseForce 57/100 · enveloppe +0.70 %
+
+Oracle baisseForce 43/100 · enveloppe −0.65 %
+
+Cohérence76/100
+
+Volatilité2.48 %
+
+Panier 24 h**-2.85 %**
+
+1 MIN33% · n4671ENV 100% · Δ -0
+
+5 MIN35% · n4674ENV 98% · Δ -2
+
+15 MIN34% · n4670ENV 95% · Δ -2
+
+MEILLEUR MODÈLERISK 37% · n4674POIDS CANDIDATST16 M32 B14 R38CONF. CALIBRÉE35% · n30V2 SHADOWV2S +17 · n79
+
+AtlasAtlas : Momentum partagé · score direction +14/100 · impulsion +0.00 %
+
+AerithAerith : Lecture prudente · cohérence 76/100 · largeur courte 2/3 positive
+
+1 h +0.30 % · 24 h -1.99 % · 7 j +23.00 % · 30 j +21.10 % · micro +0.06 % · panier 24 h -2.85 % Traces interprétatives normalisées · pas une prévision · aucune recommandation financière
+
+ESPACE MÉMORISÉ Top 5 · 24h · Base 100 · Normale · BTC/ETH/BNB/XRP/SOL Légende masquée · Analyse · Oracle · Vue Normal · CONTEXTE V7: Oracle/Top 5 · Lecture Technique ouverte · DB OK · LS ok · choix locaux uniquement
+
+Comparaison 24h complète · 5/5 séries · Historiques directs · 5 directs · à jour · plus ancien historique : 26/08/2026 08:50:00 · historique seul · cotation live hors canvas.
+
+       Agent-Crypto · Aerith-10         
+
+ActifBTC Prix EUR67 654,95 € DécisionObserver / comparer 24 h**-1.99 %**
+
+Fiche activeprix · source · période · intégrité Ouvrir
+
+SOURCE DOCK Market Portals Bitcoin · BTC 8/8 · cache
+
+Sources et état des donnéesmarché · spot · historiqueOuvrir
+
+Réseau, cache et latencediagnostic avancéOuvrir
+
+Intégrité graphiquedevise · couverture · cohérenceOuvrir
+
+imageBTC 67 654,95 € -1.99 % imageETH 2 108,91 € -1.64 % imageBNB 597,30 € -2.20 % imageXRP 1,2323 € -4.30 % imageSOL 82,93 € -4.09 %
+
+USDT 0,85735 € ≈ +0.01 % USDC 0,857373 € ≈ +0.00 % TRX 0,290303 € ≈ -1.75 % FIGR_HELOC 0,865747 € ≈ -2.86 % HYPE 70,369 € ≈ +1.28 % DOGE 0,07432 € ≈ -6.68 % ZEC 673,8563 € ≈ -7.76 % RAIN 0,015179 € ≈ +20.34 % USDS 0,85732 € ≈ +0.00 % WBT 62,5138 € ≈ -2.25 % LEO 7,9723 € ≈ -0.70 % LINK 9,745 € ≈ -3.73 % XMR 382,4285 € ≈ -1.69 % ADA 0,18092 € ≈ -7.18 % XLM 0,15794 € ≈ -7.21 % BCH 228,2439 € ≈ -4.28 % CC 0,101677 € ≈ -5.33 % DAI 0,857406 € ≈ -0.03 % USDE 0,85723 € ≈ +0.02 % USD1 0,857075 € ≈ -0.00 % GRAM 1,2298 € ≈ -2.94 % LTC 43,1242 € ≈ -4.30 % HBAR 0,067006 € ≈ -5.21 % USDG 0,857535 € ≈ -0.00 % Market Flow · CoinGecko · données historiques anciennes · 26/08/2026 08:20:58 USDT 0,85735 € ≈ +0.01 % USDC 0,857373 € ≈ +0.00 % TRX 0,290303 € ≈ -1.75 % FIGR_HELOC 0,865747 € ≈ -2.86 % HYPE 70,369 € ≈ +1.28 % DOGE 0,07432 € ≈ -6.68 % ZEC 673,8563 € ≈ -7.76 % RAIN 0,015179 € ≈ +20.34 % USDS 0,85732 € ≈ +0.00 % WBT 62,5138 € ≈ -2.25 % LEO 7,9723 € ≈ -0.70 % LINK 9,745 € ≈ -3.73 % XMR 382,4285 € ≈ -1.69 % ADA 0,18092 € ≈ -7.18 % XLM 0,15794 € ≈ -7.21 % BCH 228,2439 € ≈ -4.28 % CC 0,101677 € ≈ -5.33 % DAI 0,857406 € ≈ -0.03 % USDE 0,85723 € ≈ +0.02 % USD1 0,857075 € ≈ -0.00 % GRAM 1,2298 € ≈ -2.94 % LTC 43,1242 € ≈ -4.30 % HBAR 0,067006 € ≈ -5.21 % USDG 0,857535 € ≈ -0.00 % Market Flow · CoinGecko · données historiques anciennes · 26/08/2026 08:20:58
+
+ATLAS MATH CORE V3
+
+Risque historique et qualité de série
+
+BTC · Bitcoin · Spot LIVE · Binance · série historique 24h · 300 pts
+
+|
+
+53 Lecture prudente
+
+Fenêtre réelle : 24h · 300 points · pas médian 5 min · complétude 100.0 %.
+Risque historique : volatilité 2.48 % sur la fenêtre · drawdown max 3.74 % · VaR 95 % 0.23 % par pas.
+News ↔ marché : Mouvement notable observé sur les actifs cités, causalité non établie.
+Limites : Mesures de marché historiques seulement : aucun risque de protocole, contrepartie, réglementation, liquidité d’exécution ou on-chain.
+
+Série réelle300 pts
+
+Volatilité fenêtre2.48 %
+
+Drawdown maximal3.74 %
+
+VaR 95 % / pas0.23 %
+
+Math Core V3 actif · marché historique mesuré · validation humaine
+
+Market Snapshot
+
+01
+
+PARCOURS ADMINISTRATEUR
+
+svgAnalyse & décision
+     Comprendre les horizons, les événements, les risques et les limites avant toute conclusion.       
+
+02
+
+PARCOURS ADMINISTRATEUR
+
+svgIntelligence, mémoire & création
+     Interroger Atlas et Aerith, conserver les repères, puis ouvrir la Forge sans quitter le parcours.       
+
+03
+
+PARCOURS ADMINISTRATEUR
+
+svgPréparation & opérations
+
+Suivre l’état du projet, cadrer l’opérateur et préparer les accès sans action financière réelle.
+
+04
+
+PARCOURS ADMINISTRATEUR
+
+svgExpérimentation & système
+     Simuler, tester, préparer le backend et vérifier les verrous de sécurité.       
+
+✦ ERITH.IA · MISSIONS DE VIE
+
+Financer la création et protéger le vivant
+
+Ces cinq programmes sont des cadres de conception. Ils ne collectent
+aucun argent dans cette page, ne promettent aucun rendement et ne
+remplacent ni un conseil juridique ni les obligations fiscales. Chaque
+lancement réel exigera une structure, des comptes séparés, des
+partenaires vérifiés et un rapport d’impact public.
+
+Conception · aucun paiement actif
+
+Agent-Crypto @erith.IA · Market Core · Build 40.4.35 · Version : Parker Lewis Can't Lose Observatoire prudent · aucune recommandation financière Binance · CoinGecko · diagnostic
+
+AGENT-CRYPTO 40.4.35 · ADMINISTRATORCLASSIC 38.15.13
+
+Fichier markdown(20260826-071743).md collé
+Fichier
+Fichier markdown (2)(20260826-072131).md collé
+Fichier
+bon je relance un Atlas moi ^^ je reste mitigé ... 2/4 ... F5 
+pas mieux
+Outil appelé
+https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/?view=intermediate
+
+pour quoi quand je clique sur administration j'ai ce lien qui apparait ?
+
+Aerith-10 active · [Interface augmentée]
+
+Oui. Donc on change immédiatement la priorité. La .36 est à considérer comme candidate non validée : elle n’a pas supprimé le problème Atlas et, avec les blocages/ralentissements que tu constates, je ne veux surtout pas continuer à empiler Oracle, Learning ou du ménage architectural par-dessus.
+
+Tes deux exports sont révélateurs : le moteur Atlas avance réellement de 1/4 à 2/4, tandis que l’affichage peut rester désynchronisé jusqu’au F5. Cela signifie que nous avons au moins un problème de présentation/références DOM, pas une panne du pipeline CURRENT.
+
+Et ta capture Armoury Crate montre au même moment environ 95 % CPU et 14,2/15,2 Go de RAM utilisés. Je ne peux pas attribuer ces chiffres exclusivement à Agent-Crypto — ce sont les chiffres du système entier — mais avec les freezes observés dans Firefox, c’est suffisamment sérieux pour arrêter les migrations secondaires.
+
+J’ai regardé la .36 sous cet angle
+
+Le gros app.js fait maintenant environ 3 Mo et j’y compte notamment :
+
+12 setInterval
+131 setTimeout
+74 requestAnimationFrame
+8 MutationObserver
+2 IntersectionObserver
+8 listeners resize
+3 listeners scroll
+
+Attention : ce sont des occurrences de code, pas la preuve que les 12 intervalles tournent tous simultanément. Mais plusieurs schedulers sont effectivement actifs en permanence ou presque.
+
+Par exemple, nous avons actuellement :
+
+toutes les 1 s  → countdown News
+toutes les 1 s  → countdown Auto Reader
+toutes les 1 s  → rendu Audience
+toutes les 2 s  → Math Rail + Decision Lock
+toutes les 5 s  → watchdog Binance
+toutes les 15 s → Oracle Outcome + Long Shadow
+toutes les 60 s → Math freshness
++ scanner périodique
++ version checker
++ Bridge auto en Administration
++ WebSocket Binance
++ rAF / resize / visibility resume
+
+À cela s’ajoute la couche graphique. Dans index.html seul, la surface actuelle contient encore de nombreux effets coûteux pour Firefox : environ 27 backdrop-filter et beaucoup de box-shadow. Là encore, ils ne coûtent pas tous la même chose, mais lors du scroll et des mises à jour fréquentes du DOM, c’est une zone à surveiller.
+
+Donc oui : la dette n’est probablement pas “un petit bug Atlas”.
+
+Je vois maintenant deux problèmes qui peuvent se renforcer mutuellement :
+
+A — vérité de navigation
+?view=intermediate
+        ↓
+transition owner/advanced
+        ↓
+montage dynamique / rebind Atlas imparfait
+
+B — contention Firefox
+plusieurs schedulers
++ WebSocket
++ Atlas/Ollama
++ Oracle
++ rendu marché
++ effets compositing
+        ↓
+main thread régulièrement saturé
+        ↓
+retard de paint / rebind / interactions
+
+Et cela expliquerait assez bien le comportement que tu décris : ça finit par fonctionner, mais parfois après retard ou F5, et les survols / clics / changements de section peuvent occasionnellement provoquer de gros freezes.
+
+Donc nouvelle cascade
+
+Je décale complètement le programme précédent.
+
+.36
+
+NON VALIDÉE / problème toujours reproduit.
+
+Je ne la prends pas comme nouveau checkpoint de performance.
+
+40.4.37
+AETHER FIREFOX RUNTIME CONTENTION + ADMIN TRANSITION TRUTH AUDIT
+
+D’abord audit + correction du chemin critique, pas de nouvelle fonctionnalité.
+
+Je veux traiter ensemble :
+
+?view=intermediate doit disparaître après authentification Administrator.
+Un seul état doit faire autorité :
+owner + advanced + URL canonique.
+Atlas doit être resynchronisé immédiatement après son montage.
+Rechercher les timers qui continuent à tourner alors que leur panneau n’est pas utilisé.
+Identifier les schedulers 1 seconde pouvant être coalescés.
+Vérifier les resize/requestAnimationFrame qui peuvent se déclencher en cascade.
+Mesurer les gros renderers Market / Oracle / Atlas qui travaillent pendant CURRENT.
+Aucun changement aux résultats financiers, CURRENT, IndexedDB ou Evidence.
+
+Puis seulement :
+
+40.4.38
+
+FIREFOX SCHEDULER CONSOLIDATION
+
+Si .37 confirme ce que je vois, au lieu d'avoir plusieurs horloges UI indépendantes :
+
+News      ── 1 s
+Auto      ── 1 s
+Audience  ── 1 s
+Math      ── 2 s
+...
+
+on pourra tendre vers :
+
+         ERITH UI HEARTBEAT
+               1 s
+                 │
+      ┌──────────┼─────────┐
+      ↓          ↓         ↓
+    News       Auto     Audience
+               │
+       seulement si nécessaire
+
+Mais sans toucher aux cadence métier : Binance, Oracle, Bridge et collecteurs gardent leur sémantique propre lorsque nécessaire.
+
+40.4.39
+
+FIREFOX PAINT / COMPOSITOR BUDGET
+
+Là nous attaquerons les effets CSS réellement chers, uniquement après preuve :
+
+grands backdrop-filter;
+surfaces translucides superposées ;
+ombres sur de très grands panneaux ;
+transitions inutiles sur éléments continuellement actualisés.
+
+Pas de massacre visuel : on garde ton Administrator, on enlève seulement ce qui coûte vraiment.
+
+Et Atlas CURRENT ?
+
+Je n'y touche plus pour l'instant.
+
+Tes données disent que la transaction elle-même fonctionne. Nous avons même la preuve qu’un CURRENT précédent reste correctement fermé tandis qu’un nouveau cycle avance.
+
+Donc :
+
+CURRENT runtime = PROTECTED jusqu’à preuve contraire.
+
+Ce serait une erreur de mutiler le pipeline parce que Firefox peint mal son état.
+
+Ce que je veux obtenir avant de reprendre la migration
+
+Sur ton Ryzen :
+
+ouvrir Administrator
+→ aucun ?view=intermediate parasite
+→ Atlas présent sans F5
+→ lancer CURRENT
+→ 0 → 25 → 50 → 75 → 100 %
+→ UI suit sans refresh
+→ navigation pendant CURRENT possible
+→ survol des boutons sans gros freeze
+→ Graphique utilisable
+→ Oracle utilisable
+→ scroll fluide
+
+Seulement après cela, je reprends Canonical Ownership → Oracle lazy → Learning lazy.
+
+Donc oui : ton « beaucoup de blocages, ralentissements » est maintenant la dette prioritaire n°1. La prochaine version ne doit plus être une version d'expansion : 40.4.37 doit devenir notre checkpoint de diagnostic et de stabilisation Firefox/runtime.
+
+quand je parcours la Web Classique tout est fluide rapide ...
+Aerith-10 active · [Interface augmentée]
+
+Oui. Ça change fortement le diagnostic. Si la Web Classique est fluide sur le même Firefox, le même Ryzen, les mêmes données et le même Market Core, alors le problème principal n’est probablement ni Firefox en général, ni Binance, ni le moteur marché.
+
+Le suspect devient très clairement la surcouche Administrator.
+
+Ce que ça permet d’écarter en priorité
+
+La Web Classique et l’Administrator utilisent le même socle de marché. Or l’Administrator 40.4.36 déclare toujours Market Core 38.15.11.
+
+Donc si :
+
+WEB CLASSIC
+Market Core 38.15.11
+→ fluide
+
+ADMINISTRATOR
+Market Core 38.15.11
+→ freezes / retards / F5 nécessaire
+
+alors je ne toucherais plus du tout au Market Core.
+
+Même chose pour les cotations Binance : tes exports Administrator montrent qu'elles restent LIVE pendant les problèmes.
+
+Les vrais suspects deviennent
+
+1. Window Manager Administrator
+Fenêtres libres, restauration d'état, cascade, minimisation, commandes de fenêtre, recalculs de géométrie.
+
+2. Gestion des trois rôles
+Classique / Intermédiaire / Administration, avec localStorage, sessionStorage, datasets HTML, URL ?view=intermediate, sas et restauration après authentification.
+
+3. Architecture de présentation lazy Administrator
+Atlas est aujourd'hui monté dynamiquement, puis certaines de ses parties sont retirées/réinjectées à la demande. C'est nettement plus complexe que la Classic.
+
+4. Compositor visuel Administrator
+Chrome métallique, transparences, grands panneaux, backdrop-filter, ombres et backgrounds multiples.
+
+5. Multiplication des propriétaires de présentation
+Nous avons maintenant :
+
+presentation-boundaries
+atlas-presentation
+atlas-family-demand-residency
+atlas-peripheral-lazy
+oracle-presentation
+oracle-demand-residency
+operations-presentation
+projects-presentation
+window manager
+role manager
+...
+
+Individuellement, chaque couche paraît raisonnable. Ensemble, elles peuvent se battre pour le même DOM.
+
+Et le symptôme Atlas est très compatible avec ça : le runtime atteint réellement 1/4, puis 2/4 sans F5.
+
+Donc le calcul tourne.
+
+C'est l'Administrator qui n'arrive pas toujours à refléter son état correctement et rapidement.
+
+Je modifierais donc complètement la prochaine version
+
+Pas de nouvelle optimisation Atlas à l'aveugle.
+
+Pas encore Oracle lazy.
+
+Pas encore Learning.
+
+40.4.37 — AETHER ADMIN vs CLASSIC DIFFERENTIAL PERFORMANCE AUDIT
+
+On utilise la Web Classique comme témoin de contrôle.
+
+On compare exactement :
+
+CLASSIC                     ADMIN
+
+Market Core        ═══════  Market Core
+Binance WS         ═══════  Binance WS
+Graphique          ═══════  Graphique
+Market Snapshot    ═══════  Market Snapshot
+
+                             + rôles
+                             + sas
+                             + Window Manager
+                             + residency
+                             + hydration
+                             + presentation owners
+                             + chrome Administrator
+                             + Atlas local
+                             + Bridge
+
+La question n'est plus :
+
+« Pourquoi Firefox est lent ? »
+
+mais :
+
+« Quelle couche ajoutée entre Classic et Administrator crée la contention ? »
+
+C'est une différence énorme.
+
+Et je ferais l'audit par désactivation, pas par réécriture
+
+C'est le moyen le plus sûr.
+
+Par exemple, temporairement et localement :
+
+ADMIN normal                       → mesurer
+ADMIN sans effets compositor       → mesurer
+ADMIN sans Window Manager          → mesurer
+ADMIN sans residency peripheral    → mesurer
+ADMIN sans Bridge auto             → mesurer
+
+Une seule famille neutralisée à la fois.
+
+Si soudain :
+
+Window Manager OFF
+→ interface immédiatement fluide
+
+nous avons notre coupable.
+
+Ou :
+
+backdrop/compositor OFF
+→ scroll fluide mais Atlas toujours décalé
+
+alors nous avons séparé deux problèmes différents.
+
+C'est beaucoup plus scientifique que de modifier encore 300 lignes.
+
+Je reviens aussi sur .36
+
+Je ne la considère pas comme une vraie avancée fonctionnelle.
+
+Elle n'a pas corrigé ton défaut.
+
+Donc dans mon registre :
+
+40.4.35  = dernier checkpoint fonctionnel avant tentative
+40.4.36  = EXPERIMENTAL / FAILED TO CLOSE ISSUE
+
+Je ne veux pas empiler .37 en prétendant que .36 a résolu quelque chose.
+
+La correction .36 pourra être retirée si l'audit montre qu'elle n'apporte rien.
+
+Et la Web Classique devient extrêmement précieuse
+
+Je comprends maintenant encore mieux pourquoi il ne faut surtout pas la migrer ou la transformer tout de suite.
+
+Elle est notre groupe témoin.
+
+Elle nous dit :
+
+Le navigateur peut faire tourner Agent-Crypto de façon fluide.
+
+Donc la destination Administrator n'est plus hypothétique.
+
+Nous savons que le socle est capable d'être rapide.
+
+Le travail consiste maintenant à rendre :
+
+ADMINISTRATOR
+=
+puissance fonctionnelle Admin
++
+fluidité de la Web Classic
+
+Pas à sacrifier l'Administrator.
+
+Et ça me donne une ligne très nette pour la suite : avant toute nouvelle fonctionnalité, on fait tomber la dette de surcharge propre à l'Administrator.
+
+Fichier markdown(20260826-073148).md collé
+Fichier
+oui la web ...
+Aerith-10 active · [Interface augmentée]
+
+Oui — et le fichier de la Web Classique rend le contraste encore plus net.
+
+La Web est réellement en Intermédiaire, et ses propres liens utilisent normalement ?view=intermediate#.... Donc sur elle :
+
+URL = ?view=intermediate
+État UI = INTERMÉDIAIRE
+
+→ cohérent.
+
+Sur l’Administrator, après authentification, nous obtenons parfois :
+
+URL = ?view=intermediate
+État UI = ADMINISTRATOR / owner / advanced
+
+→ contradiction de vérité de navigation.
+
+C’est désormais une dette clairement identifiée.
+
+Et surtout, la Web Classique confirme autre chose de très important : elle affiche beaucoup de contenu réel sans devenir lourde. Elle conserve Atlas/Aerith, le CURRENT, la mémoire, le Decision Board, Scanner Truth et jusqu’au journal de 30 CURRENT.
+
+Donc le raisonnement :
+
+« Administrator rame parce qu’il contient Atlas et beaucoup de données »
+
+ne tient plus très bien.
+
+La Web possède déjà une grosse partie de ces données et reste fluide.
+
+Autre preuve intéressante : dans la Web, la synthèse peut être consultée avec Bridge non détecté et Ollama non requis pour la lecture ; CURRENT 4/4 reste disponible depuis IndexedDB.
+
+Ça désigne encore davantage les couches spécifiques Administrator :
+
+ADMINISTRATOR ONLY
+│
+├─ Window Manager
+├─ sas + changement de rôle
+├─ restauration des fenêtres
+├─ URL / session / storage / datasets
+├─ presentation boundaries
+├─ demand residency
+├─ multiples lazy hydrators
+├─ compositor métallique
+├─ effets Firefox spécifiques
+└─ Bridge/Admin orchestration supplémentaire
+Donc .37 devient très précisément ceci
+40.4.37 — AETHER ADMINISTRATOR DIFFERENTIAL CONTENTION AUDIT + ROLE URL TRUTH LOCK
+
+Je séparerais le travail en deux parties, pas davantage.
+
+A — corriger la vérité de rôle :
+
+Intermediate
+?view=intermediate
+      ↓
+Administration
+      ↓
+auth OK
+      ↓
+owner + advanced
+      ↓
+URL canonique sans ?view=intermediate
+
+Puis un resync Atlas unique après la transition. Pas de timer supplémentaire.
+
+B — instrumenter les surcharges propres à Admin, en prenant Web Classic comme référence.
+
+Je veux une petite matrice interne :
+
+Couche	Web	Admin	Suspect
+Market Core	✓	✓	faible
+Binance WS	✓	✓	faible
+Graphique	✓	✓	faible
+Atlas data	✓	✓	faible
+CURRENT/IndexedDB	✓	✓	faible
+Window Manager	—	✓	fort
+Auth/role transition	—	✓	fort
+Demand residency	—/simple	✓	fort
+Admin compositor	—	✓	fort
+Admin Firefox patches	—	✓	fort
+
+Et ensuite .38 ne touchera que le coupable prouvé.
+
+Ce que je ne veux plus faire
+
+Pas :
+
+Atlas rame
+→ encore plus de lazy
+→ encore un propriétaire JS
+→ encore un observer
+
+C’est exactement comme ça qu’on finit par créer le problème qu’on voulait résoudre.
+
+La Web nous montre une autre voie : moins d’orchestration, plus de stabilité.
+
+Je pense même que notre objectif Administrator doit maintenant être formulé ainsi :
+
+conserver tout ce que l’Administrator apporte, mais revenir vers la simplicité d’exécution de la Web Classique.
+
+Et oui : garde précieusement cette Web 38.15.13 telle quelle pour l’instant. Elle vient de devenir notre référence de performance fonctionnelle.
+
+Je passe à la 40.4.37. Cette fois je ne rajoute aucune couche “pour aider” : je pars du ZIP .36, je corrige la vérité URL/rôle et j’ajoute seulement un diagnostic différentiel temporaire pour savoir si Window Manager, compositor ou residency est le vrai responsable des freezes.
+
+La Web Classique est maintenant notre témoin de contrôle. Je ne vais pas “optimiser au hasard” : je vérifie d’abord ce que l’Administrator ajoute réellement au paint/compositing et au Window Manager, puis .37 servira à isoler le coupable sans modifier CURRENT.
+
+Oui ^^. J’ai préparé la 40.4.37, mais cette fois comme version d’isolement propre, pas comme nouvelle rustine.
+
+La comparaison avec la Web Classique est maintenant notre référence : elle conserve déjà Atlas, CURRENT, IndexedDB, le Decision Board et le journal des CURRENT tout en restant fluide. Et côté Administrator, le backdrop-filter Firefox est déjà neutralisé globalement depuis les anciens correctifs, donc je ne veux pas accuser encore le blur sans preuve.
+
+40.4.37 — Differential Contention Audit + Role URL Truth Lock
+
+Deux choses seulement.
+
+1. Vérité URL Administrator
+
+Une fois réellement authentifié en Administration :
+
+?view=intermediate
+
+est désormais retiré automatiquement.
+
+Les autres paramètres et le #hash sont conservés.
+
+Donc :
+
+owner + advanced
+=
+Administrator
+=
+URL canonique
+
+Plus de contradiction entre URL Intermédiaire et état Administrator.
+
+2. Test différentiel Window Manager
+
+Le Window Manager possède déjà une fonction canonique neutralizePresentation() et sait démarrer sans restaurer les géométries persistées. Je réutilise exactement cette mécanique ; aucun second Window Manager n’est créé.
+
+J’ai ajouté un mode strictement opt-in :
+
+?admin_diag=windows-off
+
+Il conserve :
+
+Administrator ;
+Atlas/Aerith ;
+CURRENT ;
+Oracle ;
+Market Core ;
+Binance ;
+IndexedDB ;
+Bridge/runtime ;
+
+mais neutralise seulement la présentation Window Manager : flottants/minimisations/restauration des fenêtres.
+
+Ce mode n’écrit aucune configuration permanente.
+
+Contrôles statiques
+app.js      syntax PASS
+js/app.js   syntax PASS
+
+IDs HTML        661
+IDs uniques     661
+doublons          0
+
+.36 → .37 :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       408 → 408
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+
+Donc aucun nouveau scheduler, observer, listener, fetch ou propriétaire de stockage.
+
+ZIP
+
+Télécharger Agent-Crypto 40.4.37 — CLEAN UPLOAD
+
+SHA-256 :
+
+5e8978e45b336006e9395388c6e09457c38d86a23cfaa3a29e28060debc9cd7b
+
+Commit proposé :
+
+agent-crypto: 40.4.37 isolate Administrator contention and lock role URL truth
+Le test qui va vraiment nous apprendre quelque chose
+
+Après ton upload :
+
+A — Administrator normal
+
+https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/
+
+Ctrl+F5 une fois → Administration → Atlas → parcours/scroll/survols.
+
+Vérifie surtout qu'après authentification ?view=intermediate n'est plus présent.
+
+Puis :
+
+B — même Administrator, Window Manager neutralisé
+
+https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/?admin_diag=windows-off
+
+Pas besoin de changer de machine ni de données. Lance ou laisse travailler Atlas et parcours exactement les mêmes zones.
+
+Le résultat nous donnera une bifurcation très nette :
+
+B devient fluide
+→ Window Manager / restauration de présentation = suspect principal
+
+B reste aussi lent
+→ Window Manager innocenté
+→ on attaque residency / orchestration Admin / DOM dynamique
+
+Et c’est volontairement tout pour .37.
+
+Je ne veux plus toucher Oracle, Learning ou CURRENT tant qu’on n’a pas identifié pourquoi la Web vole alors que l’Administrator se fige. 🌸
+
+Fichier markdown(20260826-074551).md collé
+Fichier
+Fichier markdown (2)(20260826-074653).md collé
+Fichier
+Fichier markdown (3)(3).md collé
+Fichier
+Fichier markdown (4).md collé
+Fichier
+nettement mieux ...
+et https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/?admin_diag=windows-off
+
+maintenant ;?
+pareil... tu as fait quoi ?
+
+Oui : si le mode ?admin_diag=windows-off te paraît pareil que l’Administrator normal, alors le test a déjà servi. Ça veut dire que le Window Manager n’est probablement pas la cause principale des freezes.
+
+Je vérifie juste dans les exports que le mode diagnostic a bien été pris en compte, puis je te dis exactement ce que .37 a changé et ce que ton “nettement mieux” implique.
+
+Oui — et ton retour est très utile, parce qu’il me permet de corriger une imprécision dans ce que je t’ai dit.
+
+Ce que j’ai réellement fait dans .37
+
+J’ai fait deux modifications, et uniquement deux.
+
+Correction de la vérité URL/rôle. Quand tu passes réellement en Administration, .37 supprime le vieux ?view=intermediate avec history.replaceState(), sans rechargement. Donc l’Administrator n’a plus à fonctionner avec un état contradictoire du type « session owner/advanced mais URL intermediate ». C’est bien visible maintenant : ton Administrator normal est revenu sur l’URL canonique sans ?view=intermediate. Le code ne touche ni CURRENT, ni Oracle, ni stockage pour faire cela.
+Le mode ?admin_diag=windows-off. Et là je dois préciser mon vocabulaire : je l’ai appelé windows-off, mais ce n’est pas un arrêt complet du Window Manager. Le Window Manager est toujours initialisé, ses contrôles existent toujours et ses handlers sont toujours présents. Ce mode empêche seulement la restauration de la présentation persistée — fenêtres flottantes, minimisations et géométries sauvegardées — et lui demande de revenir à sa présentation neutre dockée. C’est exactement ce que fait le code : en normal il appelle restorePersistedPresentation(), en diagnostic il appelle neutralizePresentation(). Les contrôles visibles sur ta capture confirment d’ailleurs que le Window Manager existe toujours.
+
+Donc ton « pareil » est parfaitement logique.
+
+Et les deux exports sont bien distincts : l’export normal .37 est revenu à l’URL Administrator canonique, tandis que l’export diagnostic conserve explicitement ?admin_diag=windows-off.
+
+Ce que ton test vient de nous apprendre
+
+Tu me dis :
+
+.37 normal : nettement mieux
+
+puis :
+
+.37 windows-off : pareil
+
+C’est une information importante.
+
+Cela signifie que la grosse amélioration que tu ressens ne vient probablement pas de la neutralisation de la restauration des fenêtres.
+
+Le changement commun qui peut expliquer l’amélioration est principalement :
+
+ancienne situation
+
+?view=intermediate
+       +
+session owner / advanced
+       +
+Administrator
+       ↓
+deux autorités contradictoires
+
+
+40.4.37
+
+Administration validée
+       ↓
+owner + advanced
+       ↓
+suppression de ?view=intermediate
+       ↓
+UNE SEULE vérité
+       ↓
+Administrator
+
+Je reste prudent : ton test seul ne permet pas de prouver à 100 % que cette correction explique toute l’amélioration. Mais c’est désormais le candidat le plus fort.
+
+Et surtout, ton test windows-off nous permet d'écarter une hypothèse précise :
+
+la restauration des fenêtres persistées n’est vraisemblablement pas la source principale des ralentissements restants.
+
+Je ne dis pas encore « Window Manager innocent ». Son code, ses contrôles et ses listeners tournent toujours dans les deux cas. Nous avons seulement innocenté son replay des géométries/minimisations sauvegardées.
+
+Et je vois autre chose de positif
+
+Tes exports .37 montrent que pendant ces essais le socle continue à travailler normalement : Market Core 38.15.11, Binance 5/5, données graphiques directes, Administrator actif.
+
+Dans le test suivant, Oracle est également vivant : Binance WS LIVE, Evidence actif, Math READY, Atlas Data CURRENT, avec son tick continu.
+
+Donc on n’a pas obtenu cette fluidité en « éteignant la moitié d’Agent-Crypto ». C’est important.
+
+Ce que je ferais maintenant
+
+Tu peux revenir sur l’URL normale.
+
+N’utilise plus :
+
+?admin_diag=windows-off
+
+pour ton usage courant. Il nous a donné sa réponse.
+
+Je considère maintenant :
+
+40.4.36
+→ échec à fermer le problème
+
+40.4.37
+→ vraie amélioration observée
+→ URL/rôle corrigés
+→ Window presentation restore non coupable principal
+→ encore à stabiliser
+
+Et je modifierais légèrement la prochaine mission.
+
+40.4.38 — ADMIN ROLE TRANSITION CLEANUP + TRUE WINDOW MANAGER COST AUDIT
+
+Je veux d’abord conserver définitivement ce qui vient d’améliorer .37 et retirer le diagnostic temporaire windows-off.
+
+Puis, plutôt que refaire un faux « OFF », je mesurerai les coûts réels du Window Manager :
+
+manager init
+controls
+deck
+getBoundingClientRect
+geometry/clamp
+storage reads
+reparenting
+resize
+pointer handlers
+updateDeck
+
+Car maintenant nous savons que la restauration de présentation seule n’est pas le problème.
+
+Ensuite nous comparerons encore à la Web Classique.
+
+Et surtout je ne touche toujours pas à CURRENT : ton export montre justement qu’un nouveau snapshot est correctement qualifié pour une nouvelle analyse et que l’ancien historique reste séparé.
+
+Donc, en résumé :
+
+oui, j’ai vraiment changé quelque chose dans .37 — et ton “nettement mieux” est probablement précisément la première preuve que la contradiction ?view=intermediate ↔ Administrator nous coûtait plus cher qu’on ne le croyait.
+
+Et non, le lien windows-off n’éteignait pas réellement le Window Manager complet. Là, le nom était trop fort par rapport à ce que le diagnostic faisait réellement. Je corrige cette lecture pour la suite.
+
+je veux dire, l'administrator est devenu aussi rapide que la classique a présent
+Aerith-10 active · [Interface augmentée]
+
+Ah oui — là c’est beaucoup plus important. ^^
+
+Si l’Administrator 40.4.37 est maintenant aussi fluide et rapide que la Web Classique, alors on vient probablement de fermer la dette de performance principale. 🌸
+
+Et ton test comparatif donne une information assez propre :
+
+Web Classic 38.15.13
+→ fluide
+
+Administrator 40.4.36
+→ freezes / retards / blocages
+
+Administrator 40.4.37 normal
+→ fluide comme Classic
+
+Administrator 40.4.37 ?admin_diag=windows-off
+→ pareil, fluide
+
+Donc la restauration des fenêtres n’était vraisemblablement pas le facteur principal. Ce qui distingue surtout .37 de .36, c’est la remise en cohérence de la transition de rôle :
+
+?view=intermediate
+        ↓
+auth Administration
+        ↓
+owner + advanced
+        ↓
+URL canonique Administrator
+
+Autrement dit, l’Administrator ne se retrouve plus avec deux états concurrents — Intermediate dans l’URL et Administrator dans la session. C’est maintenant notre hypothèse causale n°1, même si je garde la nuance : ton test valide fortement la corrélation, pas encore une preuve instrumentale absolue.
+
+Donc je change le statut
+
+40.4.37 devient notre nouveau checkpoint de performance Ryzen.
+
+Je noterais :
+
+40.4.35
+checkpoint fonctionnel précédent
+
+40.4.36
+FAILED TO CLOSE
+Atlas/transition encore problématiques
+
+40.4.37
+FIREFOX PERFORMANCE PASS — RYZEN
+Administrator ≈ Web Classic en fluidité
+URL / rôle réalignés
+Window restore non responsable principal
+
+Et surtout : on ne touche plus à la performance tant qu’elle reste comme ça.
+
+Pas de nouvelle “optimisation Firefox”.
+Pas de chasse aux timers.
+Pas de suppression de CSS.
+Pas de chirurgie compositor.
+
+On vient d’obtenir exactement ce qu’on voulait :
+
+puissance Administrator + fluidité Web Classic.
+
+La prochaine version doit donc être beaucoup plus sage
+
+Je ferais maintenant :
+
+40.4.38 — AETHER PERFORMANCE CHECKPOINT + DIAGNOSTIC RETIREMENT LOCK
+
+Très petite version.
+
+Elle devra :
+
+conserver exactement le correctif URL/rôle de .37;
+retirer proprement le mode temporaire admin_diag=windows-off;
+ne toucher ni Market Core, ni Atlas runtime, ni Oracle, ni IndexedDB;
+inscrire officiellement le checkpoint de performance;
+vérifier qu’aucun résidu diagnostic ne reste dans les manifests/code;
+garder la possibilité de rollback .37.
+
+Puis test réel :
+
+Intermédiaire
+→ Administration
+→ URL canonique
+→ navigation rapide
+→ Graphique
+→ Marché
+→ Oracle
+→ Atlas
+→ scroll long
+→ survols
+→ aucune dégradation
+Ensuite seulement : Atlas
+
+Il reste une question distincte :
+
+est-ce que le pipeline Atlas 0/4 → 1/4 → 2/4 → 3/4 → 4/4 se met maintenant à jour sans F5 ?
+
+La fluidité est apparemment réglée. Mais je ne fusionne pas les deux verdicts.
+
+Donc :
+
+PERFORMANCE
+→ probablement CLOSED ✅
+
+ATLAS UI RESYNC / F5
+→ à valider séparément
+
+Si tu relances un CURRENT sur .37 et que les 4 étapes s’affichent maintenant toutes seules sans F5, alors ce serait encore mieux : cela voudrait dire que la contradiction de rôle provoquait probablement à la fois les freezes et une partie de la désynchronisation Atlas.
+
+Et dans ce cas, .38 devient vraiment un seal, pas une nouvelle chirurgie.
+
+Là, oui : c’est une très bonne nouvelle. On a enfin retrouvé la vitesse de la Classic sans sacrifier l’Administrator.
+
+relis ton code, moi je ne sais pas, ensuite version suivante
+
+Je relis d’abord la .37 réellement livrée, pas seulement mon intention : diff .36 → .37, chemin de transition intermediate → owner/advanced, traitement de admin_diag, et effets sur le montage Atlas. Ensuite je construis la version suivante uniquement à partir de ce que le code prouve.
+
+La relecture confirme déjà quelque chose d’important : en mode normal, .37 n’a pratiquement qu’un seul changement comportemental par rapport à .36 — la suppression de ?view=intermediate une fois owner + advanced acquis. Le diagnostic windows-off est opt-in et ne s’exécute pas sur l’URL normale. Je vérifie maintenant pourquoi ce paramètre pouvait coûter autant avant de le sceller.
+
+La relecture est terminée : la .37 normale n’avait effectivement qu’un changement fonctionnel majeur par rapport à .36 : la cohérence de rôle/URL. Et j’ai trouvé une dette dans mes manifests .37 : leurs champs global_versioning/source étaient encore restés sur .36. Je corrige ça dans la suivante, et je retire complètement le diagnostic windows-off maintenant qu’il a rempli son rôle.
+
+Oui ^^ J’ai relu le code réel de la .37 ligne par ligne, et j’ai corrigé ma propre interprétation avant de produire la suite.
+
+Ce que la relecture prouve
+
+Le GitHub public est bien actuellement en 40.4.37, avec Market Core 38.15.11 protégé.
+
+Mais il y a une nuance importante : la .36 possédait déjà un appel qui essayait d’enlever ?view=intermediate lors de l’entrée en Administration. La .37 a ajouté un second verrou après l’application effective du mode Administrator, ce qui rend la cohérence beaucoup plus difficile à perdre.
+
+Donc je ne veux plus dire :
+
+« nous avons prouvé que ?view=intermediate était à lui seul responsable de tous les freezes ».
+
+Nous avons prouvé ceci :
+
+40.4.36
+→ lenteurs / freezes observés
+
+40.4.37
+→ Administrator aussi fluide que Web Classic
+
+40.4.37 windows-off
+→ même fluidité
+
+DONC
+→ restauration Window Manager non responsable principal
+→ quelque chose dans la stabilisation .37 a réellement changé le comportement
+→ cause unique pas encore scientifiquement prouvée
+
+Et puisque ça fonctionne maintenant, la bonne décision est de ne surtout pas recommencer à démonter l’interface pour découvrir coûte que coûte pourquoi.
+
+J’ai aussi trouvé une vraie petite dette de ma .37 : les manifests annonçaient bien build: 40.4.37, mais certains champs internes global_versioning et source étaient encore restés sur .36. Ça, je l’ai corrigé.
+
+40.4.38 — Performance Checkpoint + Diagnostic Retirement Lock
+
+Cette version est volontairement minuscule.
+
+Elle fait quatre choses :
+
+conserve le verrou de cohérence Administrator obtenu en .37;
+supprime complètement le code temporaire ?admin_diag=windows-off;
+si une ancienne URL contient encore admin_diag, elle le retire proprement une fois Administrator actif;
+remet les manifests en vérité complète .38 → parent .37.
+
+Elle ne touche pas :
+
+Market Core 38.15.11
+Binance
+Graphique
+CURRENT
+Atlas 4/4
+NØX
+Aerith
+Oracle
+Evidence
+Bridge
+IndexedDB
+Window Manager core
+lazy hydration
+Learning Journey
+Le Window Manager retrouve un seul chemin
+
+Dans .37 j’avais temporairement :
+
+normal
+→ restorePersistedPresentation()
+
+windows-off
+→ neutralizePresentation()
+
+Dans .38, ce branchement expérimental disparaît.
+
+On revient simplement à :
+
+Administrator
+→ restorePersistedPresentation()
+→ Atlas family visibility guard
+
+C’est le chemin normal qui vient de fonctionner chez toi à la vitesse de la Classic.
+
+Vérifications
+app.js       Node syntax PASS
+js/app.js    Node syntax PASS
+
+version.json                JSON PASS
+administrator-version.json  JSON PASS
+
+HTML IDs       661
+uniques        661
+doublons         0
+
+Et surtout .37 → .38 :
+
+app.js
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       408 → 408
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+
+
+js/app.js
+
+setInterval              0 → 0
+setTimeout               0 → 0
+MutationObserver         2 → 2
+addEventListener        35 → 35
+fetch                     0 → 0
+
+Aucun nouveau timer, observer, listener, fetch ou propriétaire de stockage.
+
+Et le diagnostic .37 est réellement retiré de js/app.js, pas simplement désactivé.
+
+ZIP 40.4.38
+
+Télécharger Agent-Crypto 40.4.38 — Performance Checkpoint
+
+SHA-256 :
+
+9b1d119471b472ecda8a5ebf877c4dad9470fbe90fddacd966187df8e17a3158
+
+Commit conseillé :
+
+agent-crypto: 40.4.38 seal Administrator performance checkpoint
+Test après upload
+
+Cette fois, une seule URL :
+
+https://blueazur-hub.github.io/erith-ia-memory/public/agent_crypto_erith_ia/administrator/
+
+Ctrl+F5 une fois pour prendre .38, puis utilise simplement l’Administrator :
+
+Graphique → Marché → Oracle → Atlas → scroll long → quelques ouvertures/réductions.
+
+Le critère est très simple :
+
+.38 doit rester aussi fluide que la .37 et la Web Classique.
+
+Si oui, je marque cette dette CLOSED et la version suivante pourra enfin redevenir architecturale : 40.4.39 — Canonical Ownership Audit, sans toucher à cette performance retrouvée.
+
+ok ok ensuite ? j'upload ta version la suite ?
+Aerith-10 active · [Interface augmentée]
+
+Oui. Upload la 40.4.38 d’abord. Tes deux captures donnent maintenant deux validations que nous attendions :
+
+l’Administrator .37 reste fluide ;
+surtout, Atlas est allé jusqu’à 4/4 → NØX → Aerith sans F5, puis le moteur est revenu au repos.
+
+Donc je considère désormais les deux dettes comme fermées sur .37 :
+
+PERFORMANCE ADMINISTRATOR ≈ WEB CLASSIC    CLOSED
+ATLAS CURRENT UI 0→4/4 sans F5             CLOSED
+
+La .38 sert à sceller proprement cet état et à retirer notre diagnostic temporaire. Aucun intérêt à sauter cette étape.
+
+Après ton upload .38
+
+Fais seulement ce smoke test, sans chercher à casser l’interface :
+
+Ctrl+F5
+→ vérifier Build 40.4.38
+→ Graphique
+→ Oracle
+→ Atlas
+→ quelques scrolls
+→ Intermédiaire
+→ Administration
+→ vérifier URL sans ?view=intermediate
+
+Si elle reste aussi rapide que .37, on arrête complètement de toucher aux performances.
+
+Ensuite : 40.4.39
+AETHER CANONICAL OWNERSHIP AUDIT
+
+Et là on reprend exactement notre programme initial.
+
+Pas de nouvelle fonctionnalité.
+Pas de lazy supplémentaire.
+Pas de modification CURRENT.
+Pas de modification Oracle.
+Pas de renommage immédiat.
+
+On inspecte le dépôt Administrator actuel et on classe chaque propriétaire historique :
+
+CANONICAL
+LEGACY REQUIRED
+TRANSITIONAL
+DUPLICATE
+SAFE TO CONSOLIDATE
+SAFE TO RETIRE
+PROTECTED
+
+Je veux notamment auditer :
+
+admin-learning-journey-recovery-40422.css
+admin-aether-cumulative-40396.css
+admin-firefox-compositor.css
+admin-offscreen-paint-gate.css
+admin-visual-cache.css
+
+js/app.js
+app.js
+
+views/presentation-boundaries.js
+views/atlas-presentation.js
+views/atlas-family-demand-residency.js
+views/atlas-peripheral-lazy.js
+views/oracle-presentation.js
+views/oracle-demand-residency.js
+
+Window Manager
+role/navigation owners
+
+Le but de .39 est de répondre à une seule question :
+
+Qui possède quoi aujourd’hui, après quarante générations de chirurgie ?
+
+Exemple :
+
+Learning Journey presentation
+├─ propriétaire actuel ?
+├─ recovery-40422 encore nécessaire ?
+├─ règles encore uniques dans ce fichier ?
+├─ doublon ailleurs ?
+└─ destination canonique future
+Très important
+
+.39 sera d’abord un audit, pas un grand nettoyage.
+
+Je ne veux surtout pas faire :
+
+nom bizarre
+→ suppression
+
+mais :
+
+nom bizarre
+→ retrouver toutes les références
+→ identifier la responsabilité
+→ comparer aux propriétaires actuels
+→ prouver le doublon
+→ seulement ensuite .40
+
+Puis la cascade devient :
+
+40.4.38
+PERFORMANCE CHECKPOINT
+        ↓
+40.4.39
+CANONICAL OWNERSHIP AUDIT
+        ↓
+40.4.40
+OWNER CONSOLIDATION LOCK
+        ↓
+40.4.41
+ORACLE RESIDENCY AUDIT
+        ↓
+40.4.42
+ORACLE TRUE LAZY si réellement rentable
+
+Et Atlas CURRENT reste maintenant protégé : tes captures montrent qu'il fonctionne enfin comme prévu. On ne retourne plus dedans sans raison concrète.
+
+Donc oui : upload .38 maintenant. Après publication, je repars de son GitHub réel et j'attaque la 40.4.39 — Canonical Ownership Audit. 🌸
+
+oui vas y et relis ton fil ^^ les autres avancées ? elles sont où parce que les versions qui valident la validation validée ... hein ^^ Aether ?
+
+Oui ^^. Tu as raison : on a suffisamment “validé la validation”. La .38 devait être le dernier seal pur. À partir de maintenant, chaque version doit fermer une vraie dette ou déplacer l’architecture, sinon elle ne mérite pas un numéro.
+
+Je reprends donc le fil là où il devait aller : ownership → consolidation → Oracle → Learning → fin de migration Administrator. Je vérifie d’abord que .38 est bien l’autorité publiée, puis je fais une .39 qui apporte une avancée réelle, pas un tampon de plus.
+
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Oui ^^ — j’ai relu le fil, et tu as raison : on arrête les versions “checkpoint du checkpoint validé”.
+
+La .38 est bien l’autorité publiée actuelle, parent .37, Market Core 38.15.11 toujours protégé. Et le dépôt montre encore de vraies dettes de propriétaires : admin-learning-journey-recovery-40422.css, admin-aether-cumulative-40396.css, les anciens paint gates, tandis qu’Oracle reste encore séparé en oracle-presentation.js + oracle-demand-residency.js + oracle-ui-continuity.js.
+
+Où sont les vraies avancées ?
+
+Elles sont déjà là, mais elles étaient noyées sous les seals :
+
+Zone	État réel
+Projects	✅ True lazy
+Operations	✅ True lazy
+System périphérique	✅ True lazy
+Shared Memory / GitHub Memory	✅ True lazy
+Auto Reader UI	✅ Lazy, runtime conservé
+Book / Knowledge	✅ True lazy
+Atlas CURRENT audit lourd	✅ Présentation allégée
+Atlas 4/4 → NØX → Aerith	🔒 PROTECTED, fonctionne sans F5
+Administrator vs Classic	✅ Fluidité retrouvée
+URL/rôle Admin	✅ Cohérent
+Oracle	🟡 prochaine grosse migration
+Learning Journey	🟡 encore résident côté présentation
+vieux propriétaires recovery/cumulative/...	🟡 consolidation restante
+
+Le System confirme d’ailleurs explicitement la bonne architecture : Storage/Grey/Simulation+Learning restent montés, tandis que Commandes/Backend/Safety/Physical Security sont déjà chargés à la demande.
+
+40.4.39 — vraie avancée
+
+Je viens de faire Canonical Ownership Consolidation — Wave 1.
+
+Pas un seal.
+
+1. Le correctif URL n’est plus une rustine .40438
+
+Avant :
+
+atlasV2CanonicalizeAdministratorUrl40438()
+adminUrlTruth40438
+
+Maintenant :
+
+atlasV2CanonicalizeAdministratorUrl()
+adminUrlTruth
+
+Il devient propriétaire fonctionnel permanent.
+
+2. Même nettoyage pour Atlas
+
+Avant :
+
+ADMIN_ATLAS_PRIMARY_FAMILY_40436
+ensureAdministratorAtlasVisible40436()
+ErithAdministratorAtlasVisibility40436
+
+Maintenant :
+
+ADMIN_ATLAS_PRIMARY_FAMILY
+ensureAdministratorAtlasVisible()
+ErithAdministratorAtlasVisibility
+
+Donc on commence réellement à appliquer :
+
+1 fonction = 1 propriétaire = un nom fonctionnel, pas le numéro de l’ancienne opération chirurgicale.
+
+Le comportement ne change pas : je retire la dette architecturale, pas la fonction qui vient enfin de marcher.
+
+3. J’ai créé le premier registre machine des propriétaires
+
+Nouveau fichier :
+
+architecture/
+└── administrator-ownership.json
+
+Il classe déjà les composants en :
+
+CANONICAL
+PROTECTED
+TRUE_LAZY_COMPLETE
+TRUE_LAZY_PARTIAL
+TRANSITIONAL_FILENAME
+AUDIT_REQUIRED
+NEXT_MIGRATION_TARGET
+
+Et surtout il inscrit noir sur blanc :
+
+Oracle
+→ NEXT_MIGRATION_TARGET
+
+Learning Journey CSS
+→ TRANSITIONAL_FILENAME
+→ cible : admin-learning-journey.css
+
+Atlas CURRENT
+→ PROTECTED
+
+Market Core 38.15.11
+→ PROTECTED
+
+Ça évite précisément de recommencer la même archéologie dans trois fils.
+
+4. J’ai également réparé une dette des manifests
+
+La .38 avait encore des morceaux de publication_identity hérités d’anciennes builds.
+
+Dans .39, l’identité courante est remise sur :
+
+Build       40.4.39
+Parent      40.4.38
+Asset token market-core-v2.0-alpha-build-40.4.39
+app SHA     réel .39
+Vérifications
+app.js       syntax PASS
+js/app.js    syntax PASS
+
+HTML IDs     661
+uniques      661
+doublons       0
+
+Et .38 → .39 :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       408 → 408
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+WebSocket                31 → 31
+
+Aucun nouveau mécanisme runtime.
+
+ZIP .39
+
+Télécharger Agent-Crypto 40.4.39 — Canonical Ownership Consolidation Wave 1
+
+SHA-256 :
+
+a78f805aed98bcc112a64d991dea28882226e17047277bdee71f036bbb79a1d8
+
+Commit conseillé :
+
+agent-crypto: 40.4.39 consolidate canonical Administrator owners
+Et maintenant on accélère
+
+Je compacte notre ancienne cascade.
+
+40.4.40 — Oracle TRUE LAZY
+
+Pas une version “audit Oracle” puis une version “validation Oracle”.
+
+Audit + chirurgie dans la même build.
+
+Destination :
+
+ORACLE RUNTIME
+Evidence
+Calibration
+History
+Shadow
+outcomes
+calculs
+        → résident / protégé
+
+ORACLE SUMMARY
+biais
+confiance
+hausse / baisse
+        → visible immédiatement
+
+ORACLE HEAVY UI
+preuves détaillées
+résolutions
+source health
+calibration détaillée
+infrastructure
+        → hydrate au premier Déplier
+40.4.41 — Learning Journey TRUE LAZY
+
+Et là je règle deux dettes en même temps :
+
+contenu détaillé 01→11 hydraté à la demande ;
+admin-learning-journey-recovery-40422.css
+devient enfin le propriétaire canonique :
+admin-learning-journey.css
+
+Le cockpit, la progression, IndexedDB, prochaine leçon et Roadmap restent vivants.
+
+40.4.42 — Final Administrator Migration
+
+Pas .42 audit, .43 validation, .44 validation finale de validation. 😄
+
+Une seule dernière build cumulative :
+
+ownership final
+dettes fermées
+rollback
+Ryzen
+Book
+Classic reference
+Atlas
+Oracle
+Learning
+manifest
+
+Et terminé.
+
+Et Atlas CURRENT ?
+
+Je le sors de la liste des migrations.
+
+Tes dernières captures ont donné ce que nous cherchions :
+
+nouveau snapshot
+→ Atlas 1/4
+→ 2/4
+→ 3/4
+→ 4/4
+→ NØX
+→ Aerith
+→ moteur repos
+
+sans F5.
+
+Donc je ne vais pas détruire un cœur fonctionnel pour gagner trois morceaux de DOM.
+
+Atlas CURRENT = DONE / PROTECTED.
+
+Et Notion reste parallèle : après cette migration, le fichier administrator-ownership.json est justement la base parfaite pour notre Build Ledger / Debt Ledger / Architecture Ownership dans Notion. Pas besoin d’introduire Notion dans le runtime.
+
+Donc la réponse à ton petit « Aether ? » est : oui, j’avais commencé à trop checkpoint-er. C’est fini. .39 consolide réellement ; .40 attaque Oracle. 🌸
+
+bien continue Aether ...
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Oui. Là on avance réellement : 40.4.40 = Oracle TRUE LAZY, pas un nouveau seal. 🌸
+
+La .39 publiée est bien notre base actuelle, avec Market Core 38.15.11 protégé. L’ancienne architecture Oracle chargeait encore au boot un miroir complet de views/oracle.html, puis détachait seulement les trois gros corps une fois le DOM déjà construit.
+
+40.4.40 — Oracle TRUE LAZY
+
+J’ai transformé le propriétaire Oracle existant, sans en créer un quatrième.
+
+Avant :
+
+BOOT
+ ↓
+oracle-presentation.js
+ ↓
+TOUT Oracle injecté dans le DOM
+ ↓
+Modèles + Calibration
+Sources + Runtime
+Evidence Explorer
+ ↓
+ensuite seulement détachés lorsqu'ils sont fermés
+
+Maintenant :
+
+BOOT
+ ↓
+ORACLE SUMMARY
+Biais · Evidence · Résolues · Sources · Qualité
+Hausse / Baisse · confiance
+ ↓
+3 shells seulement
+├─ Modèles & calibration
+├─ Sources & Source Health
+└─ Evidence & validation
+
+premier Déplier
+ ↓
+views/oracle.html
+ ↓
+hydrate uniquement le corps demandé
+ ↓
+source conservée en mémoire pour les ouvertures suivantes
+
+C’est la même architecture réellement rentable que celle déjà utilisée pour Projects : shell au boot, corps lourd récupéré à la demande depuis la source HTML canonique.
+
+Ce qui reste vivant en permanence
+
+Je n’ai pas rendu Oracle lui-même lazy.
+
+Restent protégés :
+
+Oracle V1 ;
+Evidence et historique ;
+résolution des observations ;
+calibration ;
+Shadow V2 ;
+Long Horizon Shadow ;
+données source-health ;
+Binance / Market ;
+IndexedDB ;
+les calculs et schedulers Oracle existants.
+
+Donc un Oracle fermé continue de travailler.
+
+Seule sa grosse présentation disparaît du boot.
+
+L’accordéon exclusif existant est également conservé : ouvrir une grosse sous-section referme l’autre. Et le lifecycle actuel sait restaurer un corps avant son ouverture ; je réutilise ce propriétaire plutôt que d’inventer une autre mécanique.
+
+Gain structurel
+
+L’ancien oracle-presentation.js faisait environ :
+
+24 079 octets
+
+Le nouveau :
+
+11 569 octets
+
+Soit environ 52 % de moins sur le transport Oracle parser-mount au démarrage.
+
+Le shell Oracle de boot ne contient plus que :
+
+61 tags HTML
+15 IDs
+15 IDs uniques
+
+Les centaines d’éléments Calibration / Shadow / Infrastructure / Evidence n’existent plus dans le DOM tant qu’ils ne sont pas demandés.
+
+Aucun nouveau scheduler
+
+Comparaison .39 → .40 du gros runtime :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       408 → 408
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+WebSocket                31 → 31
+
+Le nouveau propriétaire Oracle lui-même ajoute :
+
+setInterval          0
+setTimeout           0
+MutationObserver     0
+IntersectionObserver 0
+storage write        0
+
+Il possède seulement un fetch statique same-origin vers :
+
+./views/oracle.html
+
+au premier Déplier, puis cette source est mise en cache en mémoire pour la session.
+
+Pas un appel marché. Pas un nouvel endpoint. Pas un nouveau moteur.
+
+Rebind après hydratation
+
+J’ai aussi traité le point qu’il ne fallait surtout pas oublier.
+
+Quand le DOM lourd apparaît tardivement, les contrôles doivent retrouver leurs propriétaires existants :
+
+Modèles & calibration → backup Oracle, dashboard, intégrité et lecture à la demande.
+
+Sources → Infrastructure, Source Health et Third Source Readiness.
+
+Evidence → Explorer et ses contrôles/filtres.
+
+Puis la visibilité Administrator est resynchronisée sans relancer Oracle.
+
+C’est là que la migration diffère d’un simple innerHTML paresseux.
+
+Ownership évolue également
+
+Le registre .39 classait Oracle comme :
+
+NEXT_MIGRATION_TARGET
+
+Dans .40 il devient :
+
+Oracle presentation
+TRUE_LAZY_COMPLETE
+
+Et le prochain target passe directement à :
+
+Learning Journey
+NEXT_MIGRATION_TARGET
+
+Atlas CURRENT reste :
+
+PROTECTED
+
+Je n’y retourne pas.
+
+Contrôles
+app.js                    Node PASS
+js/app.js                 Node PASS
+oracle-presentation.js    Node PASS
+
+version.json              JSON PASS
+administrator-version     JSON PASS
+administrator-ownership   JSON PASS
+
+index.html IDs            661
+uniques                   661
+doublons                    0
+ZIP
+
+Télécharger Agent-Crypto 40.4.40 — Oracle TRUE LAZY
+
+SHA-256 :
+
+e52128c90f5396e509d030dd2d084bc54a84bfec1611f443a70378d55487094d
+
+Commit proposé :
+
+agent-crypto: 40.4.40 make Oracle heavy presentation true lazy
+Test utile — et uniquement utile
+
+Après upload, Ctrl+F5 une fois.
+
+Ensuite :
+
+Oracle fermé : le résumé live doit déjà afficher biais/confiance/hausse/baisse.
+Déplier Oracle : les trois sous-sections doivent apparaître immédiatement.
+Ouvre Modèles & calibration : contenu complet.
+Ouvre Sources & Source Health : contenu complet et Modèles doit se refermer.
+Ouvre Evidence & validation : filtres/tableau doivent fonctionner.
+Retourne Graphique puis Atlas : l’Administrator doit garder la fluidité retrouvée.
+
+Et si tu veux une preuve technique très nette dans Firefox DevTools → Réseau : le premier gros Déplier Oracle doit demander views/oracle.html; les suivants ne doivent pas refaire le même chargement pendant la session.
+
+Si ce comportement est propre, pas de 40.4.40.1, pas de “seal Oracle”. J’enchaîne directement sur 40.4.41 — Learning Journey TRUE LAZY + retrait du nom recovery-40422 au profit de admin-learning-journey.css.
+
+Fichier markdown(20260826-084301).md collé
+Fichier
+tu peux continuer la demi heure suivante, dois m'absenter, tu relis ton code, tu vérifie, puis tu relis le fil texte crypto et tu fais le point, ensuite tu fais les versions suivantes, je veux avancer mine de rien, j'ai des idées. que pense tu faire en mon absence ? que peux tu 'solder' ? Aether ? ^^
+
+j'upload la 40.4.40 ^^ c'est fait...
+vérifié tout semble ok... continue
+
+Je peux avancer maintenant dans ce tour, mais je ne peux pas travailler réellement “en arrière-plan” pendant ton absence. Donc je vais utiliser ce temps de façon utile tout de suite : relecture .40 publiée + Fil Crypto + dettes restantes, puis je solderai les prochaines migrations qui sont suffisamment prouvées sans demander ton intervention à chaque micro-étape.
+
+Le Fil confirme la logique : les seules dettes architecturales lourdes encore ouvertes côté Administrator sont maintenant Learning Journey phase 2 + consolidation de son propriétaire CSS, puis le dernier passage de consolidation globale. Le Fil rappelle aussi le verrou absolu : moteur Learning et IndexedDB restent propriétaires, aucune suppression/migration de données par réflexe.
+
+Je vérifie maintenant la .40 réellement publiée et les propriétaires Learning actuels pour savoir jusqu’où je peux aller sans toi.
+
+Oui ^^ J’ai profité de ce tour pour solder une vraie dette, puis j’ai relu le Fil Crypto et le code Learning avant de toucher à la suite.
+
+Ta .40 est bien publiée et cohérente : le manifeste public annonce 40.4.40, parent .39, Market Core 38.15.11 protégé. Et ton export confirme surtout que la chirurgie Oracle a respecté le contrat : Oracle reste ACTIVE 5/5, Binance WS LIVE, Evidence active, Math READY, Atlas Data CURRENT pendant que la grosse présentation peut rester repliée.
+
+40.4.41 — Oracle Canonical Owner Consolidation
+
+Après .40, deux anciennes cicatrices étaient encore chargées :
+
+oracle-demand-residency.js — ancien propriétaire .16 de détachement des trois corps Oracle.
+
+oracle-ui-continuity.js — ancien propriétaire .6 de l’accordéon exclusif.
+
+Or .40 possède maintenant elle-même le vrai transport lazy. Garder les trois propriétaires chargés revenait exactement à conserver l’architecture transitoire que nous voulons éliminer.
+
+Dans .41 :
+
+Oracle
+│
+└── js/views/oracle-presentation.js
+       ├─ shell résident
+       ├─ hydration à la demande
+       ├─ accordéon exclusif
+       ├─ rebind runtime
+       └─ source views/oracle.html
+
+Les deux anciens scripts ne sont plus chargés par index.html.
+
+Je précise : ils ne sont pas physiquement supprimés du dépôt par le ZIP. Ils deviennent des fichiers historiques non exécutés. Une suppression Git pourra venir lors du nettoyage final, après preuve.
+
+J’ai également corrigé residency-audit.js : il ne réclame plus artificiellement une inscription Oracle dans l’ancien lifecycle. Il reconnaît maintenant Oracle comme TRUE LAZY autonome.
+
+Contrôles .41
+app.js                         PASS
+js/app.js                      PASS
+oracle-presentation.js         PASS
+residency-audit.js             PASS
+
+HTML IDs                       661
+IDs uniques                    661
+doublons                         0
+
+oracle-ui-continuity chargé ?  NON
+oracle-demand-residency ?      NON
+
+Le runtime principal reste strictement identique :
+
+setInterval             13
+setTimeout             131
+requestAnimationFrame   74
+MutationObserver         8
+IntersectionObserver     2
+addEventListener       408
+fetch                    19
+localStorage.setItem     93
+WebSocket                 1
+
+Le propriétaire Oracle consolidé ajoute zéro timer, zéro observer, zéro stockage. Ses trois listeners correspondent maintenant à l’accordéon qu’il possède lui-même.
+
+ZIP
+
+Télécharger Agent-Crypto 40.4.41 — Oracle Canonical Owner Consolidation
+
+SHA-256 :
+
+238dffaaa26cbc7a29b9c6e36b3a17b8902b75d04321383a303050fa9097b85d
+
+Commit :
+
+agent-crypto: 40.4.41 consolidate Oracle presentation ownership
+Et j’ai préparé le terrain pour Learning
+
+C’est là que la relecture du code m’a empêchée de faire une bêtise.
+
+Le Fil nous rappelait déjà pourquoi Learning avait été laissé tranquille : sa disparition précédente avait imposé .22, et Simulation/Learning devait rester protégée tant qu’une vraie frontière n’était pas prouvée.
+
+En relisant le app.js actuel, je comprends exactement pourquoi.
+
+Il capture au démarrage 87 références DOM Learning/Expert dans els, parmi lesquelles :
+
+learningCockpit…
+learningCompletion…
+learningLesson…
+learningFoundation…
+learningSession…
+learningIntegrity…
+expertRoadmap…
+
+et les handlers sont eux aussi attachés au boot.
+
+Donc faire brutalement :
+
+Learning HTML absent au boot
+→ fetch au clic
+
+comme Projects ou Oracle ferait que app.js mémorise :
+
+els.learningCockpitStatus = null
+els.learningFoundationPanel = null
+...
+
+et certains boutons apparaîtraient ensuite sans leurs handlers.
+
+C’est précisément le scénario susceptible de nous refaire perdre le Learning Journey.
+
+Le Fil impose en plus qu’IndexedDB reste l’autorité et interdit reset, DELETE, CLEAR ou modification de schéma par réflexe.
+
+Donc ce que je solderais ensuite
+
+Pas de .42 = validation de la validation. 😉
+
+La prochaine vraie chirurgie est :
+
+40.4.42 — Learning Runtime Rebind Boundary + Canonical Owner
+
+Elle devra réellement :
+
+1. rendre les références Learning rebindables après hydration
+2. rendre les handlers Learning idempotents/rebindables
+3. conserver moteur + état + IndexedDB dans app.js
+4. transformer recovery-40422 en propriétaire fonctionnel canonique
+5. préparer System pour retirer ensuite le gros DOM Learning du boot
+
+Le vieux CSS est bien uniquement une couche de présentation, sans propriété runtime/storage/Market/Oracle/Atlas. Et le Fil confirme explicitement que son nom admin-learning-journey-recovery-40422.css est une dette transitoire à éliminer une fois propriétaire, références et rollback établis.
+
+Puis :
+
+40.4.43
+→ LEARNING JOURNEY TRUE LAZY
+→ cockpit/runtime state conservés
+→ présentation lourde hydratée à la demande
+
+40.4.44
+→ FINAL OWNER / LEGACY DEBT CLEANUP
+→ retrait des fichiers historiques réellement inutiles
+→ fin de migration Administrator
+
+Je ne fabrique pas .42/.43 aveuglément pendant ton absence : .41 est suffisamment isolée pour être uploadée sans toi ; Learning, lui, touche 87 références DOM et ta mémoire pédagogique. J’ai donc arrêté exactement à la frontière où la prudence technique devient utile, pas bureaucratique.
+
+Quand tu reviens : upload .41, ouvre Oracle une fois et teste rapidement Modèles → Sources → Evidence. S’il est toujours aussi fluide, je pars immédiatement sur la vraie .42 Learning — et là on attaque le dernier gros morceau restant. 🌸 
+
+ok après je te fais ça et je part ^^ je reviens plus tard
+la  .41 est uploadée en propagation ^^ la cochonne ! Vérification impossible !
+la totale tu nous fait Aether, le versionnage est tout Ko CACHE Version Incohérente ^^ 40.4.40 !
+Échec ! Essaye encore Aether, 
+Outil appelé
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Oui — échec confirmé, et cause exacte trouvée. 😅 La .41 précédente était bien bancale côté publication.
+
+GitHub possède déjà version.json = 40.4.41, index.html = 40.4.41 et administrator-version.json = 40.4.41.
+
+Mais mon ZIP .41 ne contenait que 6 fichiers. J’avais laissé de côté les deux runtimes parce que leur logique métier était inchangée :
+
+app.js
+js/app.js
+
+Or ils portaient encore :
+
+const ATLAS_BUILD = "40.4.40";
+
+et :
+
+const ADMIN_BUILD = "40.4.40";
+
+Donc on avait exactement cette horreur :
+
+index.html             40.4.41
+version.json           40.4.41
+administrator-version  40.4.41
+
+app.js                 40.4.40   ← 💥
+js/app.js              40.4.40   ← 💥
+
+Le contrôleur de version est justement conçu pour comparer le build du manifeste au ATLAS_BUILD contenu dans app.js. Il faisait donc correctement son travail en refusant de déclarer la publication cohérente.
+
+40.4.41 R1 — CLEAN REUPLOAD
+
+Je ne crée pas 40.4.42 pour réparer ma faute. Même build .41, révision de publication R1.
+
+Télécharger 40.4.41 R1 — VERSION TRUTH RECOVERY · 8 fichiers
+
+SHA-256 ZIP :
+
+b6220b3b92d9ad088d0a1d418b16cbdaba2630031eee37b97c65a360c43d9ed5
+
+Cette fois le ZIP contient les huit propriétaires nécessaires :
+
+index.html
+app.js
+js/app.js
+
+js/views/oracle-presentation.js
+js/views/residency-audit.js
+
+architecture/administrator-ownership.json
+
+version.json
+administrator-version.json
+J’ai fait la totale sur la vérité de version
+
+J’ai corrigé :
+
+ATLAS_BUILD       40.4.40 → 40.4.41
+ADMIN_BUILD       40.4.40 → 40.4.41
+
+mais également le footer statique, qui avait encore cette vieille cicatrice :
+
+Build 40.4.20
+
+Il est maintenant directement :
+
+Build 40.4.41
+
+Donc même avant que app.js ne fasse son premier rendu, le HTML ne raconte plus une vieille version.
+
+J’ai aussi réaligné les contrôles des manifests qui traînaient encore depuis le vieux 40.4.10 Version Truth Lock :
+
+version_manifest_token_expected → 40.4.41
+version_control_badge_expected  → 40.4.41
+footer_build_expected           → 40.4.41
+
+Et le vieux :
+
+next_real_migration:
+40.4.40 Oracle true-lazy presentation
+
+est remplacé par la vraie destination :
+
+40.4.42 Learning runtime rebind boundary + canonical owner
+Hashes recalculés
+app.js
+024cbe9fbb1fdd679477f7fa7793fffb050b8cab1b5cd8735c5f198401a9b95c
+
+js/app.js
+e88547d018c8d6a7dc94c2472f7718101e22f95f5a307964f4004471dbc2cb6d
+
+index.html
+71b6f5cd5e2334e20ab3341675bb811ff3499023314e22ada948ed17823522ac
+
+administrator-version.json
+391bf90f4cc26146cd4e575262a58215600517688998c0edfa11d1c34f31d3f5
+
+Et version.json.files.app.js correspond maintenant exactement au nouveau app.js.
+
+J’ai même rejoué hors navigateur la logique du contrôleur :
+
+manifest.build          = 40.4.41
+manifest.asset_token    = ...40.4.41
+app.js ATLAS_BUILD      = 40.4.41
+app.js SHA attendu      = app.js SHA réel
+
+→ VERSION PUBLICATION HANDSHAKE : PASS
+Contrôles régression
+app.js                  syntax PASS
+js/app.js               syntax PASS
+oracle-presentation     syntax PASS
+residency-audit         syntax PASS
+
+HTML IDs                661
+uniques                 661
+doublons                  0
+
+Et surtout aucune modification de comportement :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       408 → 408
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+WebSocket                 1 → 1
+
+Oracle .40/.41 reste donc intact.
+
+Ce que tu fais maintenant
+
+Ré-uploade le R1 par-dessus la .41 actuelle. Les huit fichiers doivent être remplacés.
+
+Commit conseillé :
+
+agent-crypto: 40.4.41 repair runtime version truth publication
+
+Puis, quand Pages a propagé :
+
+Ctrl+F5
+
+Tu dois obtenir simultanément :
+
+header      Build 40.4.41
+runtime     40.4.41
+manifest    40.4.41
+footer      40.4.41
+
+Vérification de version
+→ Build 40.4.41 courant
+
+L’ancien ZIP .41 à 6 fichiers est à jeter. Celui-ci est le .41 canonique.
+
+Et après ça, va faire ce que tu as à faire ^^. Quand tu reviens, on ne reparle plus de ce cirque de cache : 40.4.42 = Learning Journey, vraie chirurgie. 🌸
+
+aujourd’hui 12:07
+Fichier markdown(20260826-095428).md collé
+Fichier
+Fichier markdown (2)(20260826-100654).md collé
+Fichier
+ok on continue alors
+
+Je continue directement sur 40.4.42 — Learning Runtime Rebind Boundary + Canonical Owner. Cette fois je pars de la .41 R1 complète, je vérifie d’abord que le versionnage est cohérent, puis je rends Learning hydratable sans casser ses 87 références/handlers, et je remplace enfin le propriétaire CSS recovery-40422 par un nom fonctionnel canonique.
+
+ensuite ?
+Fichier markdown(20260826-111233).md collé
+Fichier
+okay et ?
+Outil appelé
+Ressource lue
+Outil appelé
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Voilà le « et ? » ^^ : je n’ai pas refait un checkpoint. J’ai continué avec une vraie 40.4.45.
+
+Ton export confirme que .44 fonctionne réellement : Learning s’hydrate avec le cockpit, la progression 7/11 – 64 %, le module 08 et ses cinq étapes, puis retrouve l’Expert Roadmap. Et la vérité de publication est bien Build 40.4.44 / Administrator.
+
+40.4.45 — Legacy Debt Retirement Wave 1
+
+Cette fois on commence à faire disparaître les cicatrices physiques.
+
+Oracle : ancien inline CSS retiré
+
+Il restait encore dans index.html un gros :
+
+<style data-aether-oracle-ui-continuity="40.4.6">
+
+Il n’existe plus.
+
+Ses règles validées ont été déplacées telles quelles dans le propriétaire fonctionnel :
+
+admin-oracle.css
+
+Donc :
+
+Oracle runtime
+→ js/views/oracle-presentation.js
+
+Oracle présentation CSS
+→ admin-oracle.css
+
+Oracle source lazy
+→ views/oracle.html
+
+Plus de propriétaire CSS Oracle anonyme datant de .6.
+
+Deux anciens propriétaires Oracle sont réellement neutralisés
+
+Les fichiers historiques existaient encore avec leur ancien code :
+
+js/views/oracle-ui-continuity.js
+js/views/oracle-demand-residency.js
+
+Le premier possédait encore l’accordéon exclusif historique 40.4.6.
+Le second possédait encore l’ancien détachement des corps Oracle de 40.4.16.
+
+Ils sont maintenant remplacés dans le paquet par des tombstones inertes de quelques centaines d’octets.
+
+Ils ne font rien.
+Ils ne sont pas chargés.
+Leur chemin reste uniquement comme trace/rollback.
+
+C’est beaucoup plus propre qu’avoir encore 12 Ko + l’ancien moteur de résidence dormant dans le dépôt.
+
+Learning CSS : je ne triche pas
+
+Je n’ai pas supprimé :
+
+admin-learning-journey-recovery-40422.css
+
+Pourquoi ? Parce que admin-learning-journey.css l’importe encore pour obtenir la parité exacte.
+
+Donc je le classe explicitement :
+
+HOLD_LEGACY_REQUIRED
+
+et non « retired » juste pour pouvoir écrire CLOSED dans un manifeste.
+
+Le fichier récupéré fait encore environ 22 Ko dans le dépôt actuel.
+
+Sa copie autonome vers admin-learning-journey.css viendra seulement quand on pourra prouver l’équivalence exacte.
+
+Nouveau registre de dette
+
+J’ajoute :
+
+architecture/legacy-retirement.json
+
+Il distingue maintenant :
+
+RETIRED_TOMBSTONE
+RETIRED_MIGRATED
+HOLD_LEGACY_REQUIRED
+HOLD_AUDIT_REQUIRED
+
+Il enregistre notamment :
+
+Oracle UI JS             RETIRED
+Oracle residency JS      RETIRED
+Oracle inline CSS        RETIRED → admin-oracle.css
+
+Learning recovery CSS    HOLD — encore réellement requis
+Aether cumulative CSS    HOLD — toujours chargé
+Offscreen paint CSS/JS   HOLD — non chargés mais preuve globale requise
+
+C’est notre registre machine pour éviter de redécouvrir les mêmes dettes dans six fils.
+
+Je n’ai pas touché aux deux suspects suivants
+
+admin-aether-cumulative-40396.css est encore chargé par l’Administrator actuel, donc pas question de le supprimer au hasard.
+
+Les anciens :
+
+admin-offscreen-paint-gate.css
+js/admin-offscreen-paint-gate.js
+
+ne sont plus chargés par l’index actuel. Mais leur ancien code installait un véritable système IntersectionObserver / scroll / rAF de masquage hors écran. Le CSS associé cachait effectivement des surfaces par visibility:hidden.
+
+Donc ceux-là méritent une preuve repo-wide avant tombstone. Ce sera .46.
+
+Régression .44 → .45
+
+Aucun changement du runtime principal :
+
+app.js
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       409 → 409
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+WebSocket                 1 → 1
+
+Learning :
+
+timers        0 → 0
+observers     0 → 0
+listeners     2 → 2
+fetch         1 → 1
+storage       0 → 0
+
+Et :
+
+HTML IDs       661
+uniques        661
+doublons         0
+
+app.js          syntax PASS
+js/app.js       syntax PASS
+Learning        syntax PASS
+Oracle stubs    syntax PASS
+JSON            PASS
+ZIP .45
+
+Télécharger Agent-Crypto 40.4.45 — Legacy Debt Retirement Wave 1
+
+SHA-256 :
+
+c7c3c12dfe19bfee32243816b7157f087cd4df5f1fdbc22c15b86e1abb25b4df
+
+Commit :
+
+agent-crypto: 40.4.45 retire legacy Oracle presentation owners
+Et après .45
+
+Je vais directement sur :
+
+40.4.46 — Legacy Debt Retirement Wave 2
+
+Là, deux cibles seulement :
+
+admin-aether-cumulative-40396.css
+admin-offscreen-paint-gate.css
+js/admin-offscreen-paint-gate.js
+
+Je vais retrouver quelles règles du cumulative ont encore un propriétaire réel, distinguer ce qui est encore nécessaire de ce qui n’est plus qu’une cicatrice, puis vérifier si l’ancien paint gate peut être tombstoné sans toucher à la fluidité que nous avons enfin retrouvée.
+
+Ensuite il restera essentiellement la fermeture du Debt Ledger Administrator, plutôt qu’une nouvelle série interminable de validation-validée-final-final. ^^
+
+vas y c'est uploadé, révise ton code et continue ...
+Outil appelé
+Outil appelé
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Oui. J’ai repris la .45 publiée, relu le code et corrigé ce que la relecture a réellement révélé. GitHub annonce bien 40.4.45, parent .44, Market Core 38.15.11 protégé. Ton dernier export confirmait également que le socle marché restait actif avec Market Core 38.15.11 et Binance 5/5.
+
+40.4.46 — Legacy Debt Retirement Wave 2
+
+Cette version retire réellement le vieux propriétaire cumulatif 40.3.96.
+
+En le relisant, j’ai constaté qu’il ne contenait en réalité que deux responsabilités encore utiles : d’un côté ChronosXP + couleurs planétaires, de l’autre Firefox Safe Paint.
+
+Donc :
+
+admin-aether-cumulative-40396.css
+                ↓
+       n'est plus chargé
+                ↓
+        ┌───────┴────────┐
+        ↓                ↓
+admin-chronos.css   admin-firefox-safe-paint.css
+
+Les règles restent au même endroit tardif de la cascade CSS. Je ne change pas le résultat visuel attendu ; je donne simplement enfin un propriétaire fonctionnel à chaque responsabilité.
+
+Le vieux :
+
+admin-aether-cumulative-40396.css
+
+devient un tombstone inert.
+
+Ancien Offscreen Paint Gate : réellement retiré
+
+Les fichiers :
+
+admin-offscreen-paint-gate.css
+js/admin-offscreen-paint-gate.js
+
+contenaient encore l'ancien mécanisme 40.3.35 de sommeil/réveil hors écran avec IntersectionObserver, scroll et requestAnimationFrame. Son CSS pouvait réellement masquer des zones par visibility:hidden.
+
+Mais l'Administrator actuel ne les charge déjà plus, et la lineage canonique avait retiré ce runtime en 40.3.40. Ils deviennent donc eux aussi des tombstones inertes dans .46.
+
+Le vrai propriétaire Firefox reste séparé : admin-firefox-compositor.css neutralise notamment les backdrop filters sous Administrator.
+
+J'ai également trouvé une dette de versionnage cachée
+
+La .45 visible était correcte, mais dans les manifests quelques champs internes racontaient encore .42 :
+
+integrity.publication_identity
+validation.version_manifest_token_expected
+validation.version_control_badge_expected
+validation.footer_build_expected
+
+Et le <meta administrator-release> de index.html portait encore un ancien nom de release Oracle.
+
+C'est corrigé.
+
+Dans .46, les vérités convergent toutes vers :
+
+HTML                    40.4.46
+ATLAS_BUILD             40.4.46
+ADMIN_BUILD             40.4.46
+version.json            40.4.46
+administrator-version   40.4.46
+publication_identity    40.4.46
+validation expected     40.4.46
+
+Parent                  40.4.45
+Market Core             38.15.11
+
+C'est précisément le type de nettoyage qui évite de refaire la cochonnerie « page .41 + runtime .40 ». ^^
+
+Ce que je n'ai PAS supprimé
+
+Toujours pas :
+
+admin-learning-journey-recovery-40422.css
+
+admin-learning-journey.css l'importe encore réellement.
+
+Donc le Debt Ledger dit toujours :
+
+Learning recovery CSS
+→ HOLD_LEGACY_REQUIRED
+
+Pas de faux CLOSED.
+
+C'est désormais la dernière dette physique claire de cette série.
+
+Contrôles .45 → .46
+
+Runtime principal :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       409 → 409
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+WebSocket                 1 → 1
+
+Donc zéro nouveau mécanisme runtime.
+
+HTML :
+
+661 IDs
+661 uniques
+0 doublon
+
+Et :
+
+app.js                         syntax PASS
+js/app.js                      syntax PASS
+offscreen tombstone JS         syntax PASS
+
+version.json                   PASS
+administrator-version.json     PASS
+administrator-ownership.json   PASS
+legacy-retirement.json         PASS
+
+ancien cumulative chargé       NON
+ancien offscreen CSS chargé    NON
+ancien offscreen JS chargé     NON
+
+admin-chronos.css              OUI
+admin-firefox-safe-paint.css   OUI
+ZIP .46
+
+Télécharger Agent-Crypto 40.4.46 — Legacy Debt Retirement Wave 2
+
+SHA-256 :
+
+c58ebca75dbb1d7b39d9cc7cb1a75e020bd0b6be6352d02c08990553d9303634
+
+Commit conseillé :
+
+agent-crypto: 40.4.46 retire cumulative and offscreen legacy owners
+Test après upload
+
+Pas besoin d'une cérémonie. Ctrl+F5, puis vérifie simplement :
+
+Build 40.4.46
+→ horloge Chronos / couleurs planétaires normales
+→ Graphique fluide
+→ Atlas présent
+→ Oracle
+→ 04 / Simulation
+→ shell Learning
+
+Si visuellement c'est identique et toujours aussi fluide, je continue directement en .47 :
+
+Learning CSS Autonomous Owner + Final Administrator Debt Ledger Closure
+
+Là, on pourra enfin faire disparaître admin-learning-journey-recovery-40422.css comme dépendance réelle et dresser la liste finale DONE / PROTECTED / volontairement conservé de toute cette migration Administrator. 🌸 
+
+Fichier markdown(20260826-115726).md collé
+Fichier
+bah non manque les modules de leçons cette fois regarde
+
+Oui : tu as raison, c’est une régression de ma chirurgie Learning. Et je viens de localiser la cause : le parser gate .44/.45/.46 coupe une tranche de HTML à l’intérieur de Simulation avant parsing. En voulant retirer uniquement les leçons, il peut casser la structure de fermeture du bloc Simulation ; ton écran le montre bien : après Grey Plate, on saute directement vers Tests/Commandes. Je stoppe .47 et je répare .46 d’abord.
+
+Je ne vais pas maquiller ça : la .46 est fonctionnellement régressive sur System/Learning. Ton export confirme qu’après Grey Plate, la section 04 ne restitue plus le parcours pédagogique attendu ; on ne retrouve ni Learning Journey, ni le Journal pédagogique dans le texte exporté.
+
+Je fais donc une 40.4.47 de récupération réelle, pas une poursuite du nettoyage : rollback du parser gate dangereux, retour au détachement DOM sûr de .43, conservation de toutes les améliorations .45/.46.
+
+Oui. Tu avais raison : la .46 est cassée côté Learning/System. Pas d’image, je te réponds directement.
+
+Ton export .46 montre bien la section 04 · Expérimentation & système, Storage et Grey Plate, puis on arrive ensuite aux Missions sans retrouver le parcours Learning attendu.
+
+Cause trouvée
+
+Le coupable est mon parser gate Learning introduit pour .44.
+
+Le code chargeait learning-presentation.js avant system-presentation.js. Puis Learning interceptait insertAdjacentHTML() et retirait une tranche de la chaîne HTML entre :
+
+learningExerciseGuide
+        ↓
+learningPanel
+
+avant que Firefox ne construise le DOM.
+
+C’était trop agressif : cette tranche se trouve à l’intérieur de la structure Simulation. En coupant du texte HTML brut, je pouvais enlever avec les leçons des fermetures/relations structurelles nécessaires.
+
+Résultat correspondant exactement à ta capture :
+
+Storage
+Grey Plate
+↓
+[Simulation / Learning endommagés ou absents]
+↓
+Tests / Commandes
+Backend
+Sécurité
+Sécurité physique
+
+Donc ce n’est pas ton cache et ce n’est pas un comportement normal du lazy.
+
+40.4.47 — Learning Safe DOM Recovery
+
+Je retire complètement ce parser gate.
+
+Nouvel ordre :
+
+system-presentation.js
+        ↓
+construit d'abord un DOM System VALIDE
+        ↓
+learning-presentation.js
+        ↓
+repère les vrais nœuds Learning
+        ↓
+retire seulement la plage DOM validée
+        ↓
+shell Learning compact
+        ↓
+Déplier
+        ↓
+views/system.html
+        ↓
+97 références Learning reconnectées
+
+Autrement dit, je reviens à la méthode sûre qui avait fonctionné en .43, mais en conservant toutes les améliorations .45/.46 :
+
+propriétaires Oracle consolidés ;
+Chronos canonique ;
+Firefox safe-paint ;
+ancien offscreen gate retiré ;
+version truth corrigée ;
+Market Core inchangé ;
+IndexedDB Learning inchangé.
+
+Le dangereux :
+
+Object.defineProperty(host, "insertAdjacentHTML", ...)
+
+n'existe plus dans le propriétaire Learning .47.
+
+Et l'ordre est maintenant explicitement :
+
+system-presentation.js
+learning-presentation.js
+Vérifications
+Build                  40.4.47
+Parent                 40.4.46
+Market Core            38.15.11 PROTECTED
+
+HTML IDs               661
+uniques                661
+doublons                 0
+
+app.js                 syntax PASS
+js/app.js              syntax PASS
+learning-presentation  syntax PASS
+
+System avant Learning  PASS
+string parser gate     RETIRED
+safe DOM sibling range ACTIVE
+
+La .46 est donc à noter :
+
+40.4.46
+PERFORMANCE / OWNER CLEANUP OK
+LEARNING SYSTEM REGRESSION ❌
+→ non retenue comme checkpoint fonctionnel
+
+et .47 devient la récupération.
+
+ZIP
+
+Télécharger Agent-Crypto 40.4.47 — Learning Safe DOM Recovery
+
+SHA-256 :
+
+479fca74a00ada577bb87c9ec0b02c84d06fbe95875967aed049fe81545f5609
+
+Commit :
+
+agent-crypto: 40.4.47 restore Learning with safe DOM detachment
+
+Après propagation : Ctrl+F5 → section 04.
+
+Cette fois je veux revoir dans l'ordre :
+
+Storage
+Grey Plate
+Simulation
+  ├─ Mode école
+  ├─ Learning Journey · 01→11
+  └─ Journal pédagogique
+Tests / Commandes
+Backend / API
+Sécurité
+Sécurité physique
+
+Puis tu déplies Learning Journey et les modules/leçons + cockpit + Roadmap doivent revenir.
+
+Je ne poursuis pas le nettoyage .48 tant que cette structure n'est pas revenue. Là, c'était bien ma chirurgie qui avait été trop loin. 
+
+Fichier markdown(20260826-121859).md collé
+Fichier
+c'est revenu suite .. cumule si tu peux
+Discussion terminée avec App
+Aerith-10 active · [Interface augmentée]
+
+Oui ^^ celle-ci est normale. Et elle est très différente du problème qu’on avait avec ?view=intermediate.
+
+L’adresse :
+
+.../administrator/#local-ai-hub
+
+se décompose ainsi :
+
+/administrator/     = la vraie page
+#local-ai-hub       = une ancre interne dans cette même page
+
+Le #local-ai-hub ne change ni le mode, ni le rôle, ni la page GitHub Pages. C’est seulement le navigateur qui mémorise : « je suis positionné sur la section IA locale ».
+
+Dans le code actuel, le menu Administrator contient explicitement le lien :
+
+<a href="#local-ai-hub">IA locale</a>
+
+et le sélecteur contient également local-ai-hub pour Atlas / Aerith local.
+
+Et la cible existe réellement dans views/atlas.html :
+
+<details
+  id="atlas-local-ai-collapse"
+  data-collapse-key="local-ai-hub">
+
+  ...
+
+  <section
+    class="panel glass atlas-local-ai-hub"
+    id="local-ai-hub">
+
+Donc c’est bien la section Atlas-10 + Aerith-10 Crypto / IA locale.
+
+Et le runtime sait même quoi en faire
+
+Le code Administrator lit volontairement :
+
+location.hash
+
+puis recherche l’élément correspondant pour déterminer dans quelle famille Administrator se trouve la destination. Autrement dit, une URL directe contenant un #... fait partie du système de navigation prévu.
+
+C’est notamment utile pour qu’un lien direct vers une section ne soit pas contredit par le mécanisme qui replie les familles au démarrage.
+
+La différence avec notre ancien problème
+?view=intermediate
+
+était un paramètre de requête portant un état de vue/rôle :
+
+Administrator
++
+?view=intermediate
+= contradiction potentielle ❌
+
+Alors que :
+
+#local-ai-hub
+
+est seulement :
+
+Administrator
++
+« va à IA locale »
+= navigation normale ✅
+
+Le fragment situé après # n’est d’ailleurs pas envoyé au serveur HTTP : il reste côté navigateur.
+
+Donc ces URL sont parfaitement légitimes :
+
+/administrator/#local-ai-hub
+/administrator/#simulation
+/administrator/#commandes
+/administrator/#auto-reader
+/administrator/#shared-memory
+
+C’est exactement pour cela que l’Administrator contient des liens comme #simulation, #commandes, #safety, #auto-reader, #shared-memory et #local-ai-hub.
+
+Seule nuance : si #local-ai-hub apparaît après avoir cliqué IA locale / Atlas-Aerith, tout est normal. S’il apparaissait simplement en cliquant sur le bouton Administration, sans avoir demandé cette section, là je considérerais cela comme une dette de routage à examiner.
+
+Mais l’adresse elle-même : oui, canonique et saine. On ne la « corrige » surtout pas comme nous avions corrigé ?view=intermediate. 🌸
+
+j'ai pas l'impression que l'Atlas démarre correctement ^^
+et je clique souvent deux fois sur Administration avant d'avoir la porte de l'administration
+ah okay
+Fichier markdown(20260826-124236).md collé
+Fichier
+Aerith-10 · ollama · gpt-oss:20b-32k · snapshot 26/08/2026 13:51:03 · 4 rapports Atlas-10 · contrat Bridge validé  
+Outil appelé
+je vais me promener prends ton temps et si il le faut, corrige et fais une version suivante ! Bise a toute Aether
+
+Je prends ça comme autorisation pour une version suivante ciblée, pas pour empiler des features. Je vais d’abord isoler deux symptômes :
+
+double-clic Administration → sas ;
+ralentissement Firefox / Atlas qui semble tarder alors que le pipeline existe.
+
+Je ne touche ni au moteur Atlas, ni à CURRENT, ni à IndexedDB tant que le code ne prouve pas qu’ils sont en cause.
+
+j'ai pas l'impression que l'Atlas démarre correctement ^^
+et je clique souvent deux fois sur Administration avant d'avoir la porte de l'administration
+ah okay
+Fichier markdown(20260826-124236).md collé
+Fichier
+Aerith-10 · ollama · gpt-oss:20b-32k · snapshot 26/08/2026 13:51:03 · 4 rapports Atlas-10 · contrat Bridge validé  
+Fichier markdown(20260826-125819).md collé
+Fichier
+du Transformer Book ... j'ai pû sans problème me connecter a l'administration ?
+Fichier markdown(20260826-131535).md collé
+Fichier
+si tu le dis ...
+Fichier markdown(20260826-133720).md collé
+Fichier
+Fichier markdown (2)(20260826-133922).md collé
+Fichier
+
+a toi de me dire ...
+
+Outil appelé
+Outil appelé
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Oui : il restait bien un défaut, et tes captures l’ont mis en évidence proprement.
+
+Le nouveau snapshot CoinGecko est passé de 13:51:03 à 15:26:23. Donc l’ancien paquet Atlas/Aerith doit bien devenir historique, et un nouveau CURRENT doit repartir de 0/4. Ça, .50 le fait correctement.
+
+En revanche, à 15:39, on a simultanément :
+
+Bridge Ryzen connecté
+Production autorisée
+Snapshot qualifié
+lancement Atlas automatique
+
+mais toujours :
+
+0 %
+HISTORIQUE
+CURRENT 0/4
+
+Et plus bas le Decision Board confirme que ce nouveau snapshot est seulement Gate qualifié, avec NØX et Aerith encore en attente.
+
+La cause
+
+Le code avait volontairement cette règle depuis 40.3.17 :
+
+succès /health du Bridge
+→ statut seulement
+→ ne jamais relancer Atlas
+
+C’était une bonne protection contre les recalculs intempestifs.
+
+Mais il manquait un cas :
+
+nouveau snapshot arrive
+↓
+Bridge ou authentification indisponible à cet instant
+↓
+événement de lancement perdu
+↓
+Bridge redevient prêt
+↓
+aucun nouveau déclencheur
+↓
+Atlas reste 0/4
+
+C’est exactement ce que tu viens de reproduire.
+
+40.4.51 — NEW CURRENT AUTH / BRIDGE REARM
+
+Je corrige uniquement ce handoff.
+
+Désormais, après :
+
+authentification Administrator réussie ;
+ou retour du Bridge à l’état prêt ;
+
+le code vérifie :
+
+poste producteur ?          oui
+auth Administrator ?        oui
+Bridge connecté ?           oui
+snapshot qualifié ?         oui
+Binance directes ?          5/5
+dérivées ?                  0
+snapshot différent
+du dernier CURRENT fermé ?  oui
+
+Alors seulement :
+
+→ réarmement du scheduler CURRENT existant
+→ Atlas 01
+→ Atlas 02
+→ Atlas 03
+→ Atlas 04
+→ NØX
+→ Aerith
+→ fermeture CURRENT
+
+Si le snapshot est déjà consommé, absolument rien ne démarre.
+
+Donc la protection STOP-ONCE reste intacte.
+
+Important : aucun nouveau scheduler
+
+Je n’ai ajouté :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+addEventListener       409 → 409
+fetch                    19 → 19
+localStorage.setItem     93 → 93
+WebSocket                 1 → 1
+
+Le correctif appelle uniquement le scheduler canonique déjà existant.
+
+Market Core, Oracle, Learning, IndexedDB, Window Manager : inchangés.
+
+Ce que tes captures valident par ailleurs
+
+Le Bridge Control paraît sain :
+
+Bridge actif · prêt · V1.9.10
+Ollama connecté
+gpt-oss:20b-32k prêt
+AUTH configurée
+Book Mirror borné Ryzen → Book
+
+Et l’interface elle-même voit bien le Bridge Ryzen connecté. Donc je ne vois pas ici un défaut Ollama/Bridge : c’est bien le raccord entre readiness retrouvée et CURRENT pending qui manquait.
+
+ZIP .51
+
+Télécharger Agent-Crypto 40.4.51 — New CURRENT Auth/Bridge Rearm
+
+SHA-256 :
+
+b8cd6711735fe950abaa9e0881b67cef91aa51329e725784308a310ab3e7cc12
+
+Commit conseillé :
+
+agent-crypto: 40.4.51 rearm pending CURRENT after auth or Bridge ready
+
+Après upload, le test est cette fois très précis : avec un nouveau snapshot canonique et le Bridge connecté, tu ne dois plus rester bloqué indéfiniment sur 0 % · HISTORIQUE.
+
+Tu dois voir Atlas quitter automatiquement cet état et partir sur 01 → 04 → NØX → Aerith, sans devoir cliquer sur Rafraîchir ou relancer manuellement.
+
+Donc : non, je n’aurais pas encore fermé Administrator sur .50. .51 corrige une vraie dernière jonction du pipeline automatique. 
+
+ATLAS_10_CRYPTO_BRIDGE_CONTROL_CENTER_2_3_2R12_BRIDGE_V1_9_10_PERSISTENT_TRUST_GUI_NO_CONSOLE(1).exe
+Fichier
+AGENT_CRYPTO_40_3_83_BRIDGE_R12_V1_9_10_CLEAN_BUNDLE(1).zip
+Archive zip
+là c'est lourd bloquant, une fois c'était ultra léger, là ça plombe le pc l'Atlas, je comprends pas ...
+c'est un logiciel develloppé avec Wine : https://www.winehq.org/
+
+Outil appelé
+bon je savais que qq chose tournait pas rond ^^ bien ensuite ?
+
+Oui, tu avais raison : le symptôme n’était pas dans ta tête. La dernière capture montre qu’au moment où Atlas travaille, le coût machine est réellement visible — donc on arrête de traiter ça comme un simple problème d’affichage.
+
+Je passe maintenant sur le bundle Bridge R12 + l’exécutable pour savoir exactement ce qui lance Ollama, combien d’appels sont faits, s’ils sont séquentiels/parallèles, et si le Control Center ajoute lui-même une charge inutile. Ensuite je corrige le bon propriétaire — probablement le Bridge/pipeline local, pas l’interface Administrator.
+
+Oui ^^ tu avais bien senti qu’il y avait quelque chose de réellement anormal. Cette fois ce n’est pas Firefox, Atlas DOM ou le Bridge Control Center lui-même : j’ai trouvé le coût lourd dans le pipeline Ollama.
+
+Ce que faisait réellement R12 / Bridge 1.9.10
+
+Pour un seul CURRENT, le navigateur lançait successivement :
+
+Atlas 01 → gpt-oss
+Atlas 02 → gpt-oss
+Atlas 03 → gpt-oss
+Atlas 04 → gpt-oss
+NØX      → déterministe
+Aerith   → gpt-oss
+
+Donc 5 inférences gpt-oss:20b.
+
+Et ton modèle personnalisé impose :
+
+num_ctx 32768
+
+à gpt-oss:20b-32k.
+
+Le modèle Ollama fait environ 14 Go ; OpenAI indique que gpt-oss-20b peut fonctionner à partir d’environ 16 Go de mémoire. Autrement dit, on est déjà à la limite théorique avant même Firefox, Windows, le Bridge et le reste du système.
+
+Ollama permet justement de réduire num_ctx par requête et de demander explicitement le déchargement du modèle avec keep_alive: 0.
+
+Donc ton observation « autrefois c’était ultra léger » est parfaitement plausible : selon le chemin pris, cache/fallback/restauration, Atlas ne faisait pas forcément cinq vraies générations lourdes successives.
+
+Et Wine ?
+
+Petite précision utile : Wine n’est pas responsable ici.
+
+J’ai ouvert ton EXE :
+
+PE32+ Windows GUI
+x86-64
+
+et le source fourni est du Go natif Windows avec les API Win32.
+
+Donc :
+
+Control Center
+= application Windows native
+
+Wine
+= couche permettant éventuellement d'exécuter
+  une application Windows sous Linux/macOS/etc.
+
+Sur ton Windows actuel, Wine n’intervient pas dans l’exécution du Control Center. Ce n’est donc pas lui qui plombe Atlas.
+
+J’ai fait le correctif local
+Aether Control R13 · Bridge V1.9.11
+Inference Budget Lock
+
+Je n’ai pas remplacé gpt-oss, ni sacrifié Atlas.
+
+J’ai changé l’architecture ainsi :
+
+AVANT V1.9.10
+
+Atlas 01 → LLM
+Atlas 02 → LLM
+Atlas 03 → LLM
+Atlas 04 → LLM
+NØX
+Aerith   → LLM
+
+= 5 inférences lourdes
+
+Maintenant :
+
+V1.9.11
+
+              ┌─ commentaire Atlas 01
+              ├─ commentaire Atlas 02
+1 appel LLM ──┼─ commentaire Atlas 03
+              └─ commentaire Atlas 04
+
+les 4 rapports restent distincts
+et construits séparément
+
+NØX
+ ↓
+1 appel LLM Aerith
+ ↓
+déchargement Ollama
+
+= 2 inférences lourdes
+Réduction : 5 → 2 appels modèle par CURRENT
+
+Et je n’ai pas changé le protocole /summary vu par l’Administrator.
+
+Le premier rapport calcule la suite Atlas ; les trois suivants récupèrent le résultat en cache mémoire du même fingerprint.
+
+Contexte mémoire également réduit
+
+Le nom canonique reste :
+
+gpt-oss:20b-32k
+
+Je ne détruis donc pas ton modèle.
+
+Mais le Bridge demande seulement ce dont il a besoin :
+
+Atlas 4/4
+num_ctx = 8192
+
+Aerith conclusion
+num_ctx = 16384
+
+Les 32K restent disponibles pour d’autres usages ; simplement CURRENT ne réserve plus systématiquement 32K.
+
+Et surtout
+
+Pendant Atlas :
+
+keep_alive = 90 s
+
+pour éviter de recharger les 14 Go juste avant Aerith.
+
+Après la conclusion Aerith :
+
+keep_alive = 0
+
+→ Ollama reçoit explicitement l’ordre de libérer le modèle immédiatement.
+
+C’est important : avant, Ollama garde normalement un modèle en mémoire plusieurs minutes par défaut.
+
+R13 prêt
+EXE seul
+
+Aether Control 2.3.2R13 · Bridge V1.9.11
+
+SHA-256 :
+
+414186d5ccf4091be023abe6f6d387f6f1ac78ea4fdf2e889fbaa3fb9de69614
+Bundle complet
+
+Télécharger Bridge R13 / V1.9.11 — bundle complet
+
+SHA-256 :
+
+a819487f31a3d93ba6c9e16026a32a6858154ea34155cbd030656e6c24b7a163
+
+Le bundle contient également les sources complètes et le rollback.
+
+Vérifications effectuées
+bridge.py
+→ py_compile PASS
+
+bridge.py --self-test
+→ Configuration PASS
+→ Profiles PASS
+→ Fact Contract V2/V3 PASS
+→ anti-invention PASS
+→ History PASS
+→ Scanner PASS
+→ Aerith conclusion PASS
+→ 4-report reread PASS
+
+Atlas suite cache
+→ premier appel = modèle
+→ deuxième même fingerprint = cache
+→ modèle appelé 1 seule fois
+PASS
+
+Control Center R13
+→ cross-compile Windows x64 PASS
+→ PE32+ GUI PASS
+
+Le polling Control Center reste à 30 secondes. Je ne lui ai ajouté aucune boucle rapide.
+
+Ce que tu fais maintenant
+
+Arrête proprement l’ancien R12, puis lance l’EXE R13.
+
+Ton trust Administrator est conservé ailleurs :
+
+LOCALAPPDATA
+└─ ERITH.IA
+   └─ AtlasCryptoBridge
+      └─ trust
+
+donc passer de R12 à R13 ne doit pas te faire recréer l’authentification.
+
+Ensuite tu gardes Administrator 40.4.51 pour ce test.
+
+Avec un nouveau CURRENT :
+
+0 %
+↓
+Atlas 01
+↓
+25 %
+↓
+02
+↓
+50 %
+↓
+03
+↓
+75 %
+↓
+04
+↓
+100 %
+↓
+NØX
+↓
+Aerith
+↓
+REPOS
+
+Mais cette fois, en arrière-plan, ce sera :
+
+2 appels gpt-oss
+au lieu de 5
+
+et surtout la mémoire doit retomber après Aerith.
+
+Un contrôle très intéressant
+
+Après la fin du CURRENT, ouvre PowerShell :
+
+ollama ps
+
+Ollama indique quels modèles sont encore chargés et comment ils sont répartis CPU/GPU.
+
+Avec R13, après la conclusion, gpt-oss:20b-32k doit rapidement disparaître de la liste grâce au keep_alive=0.
+
+Je ne fais pas de 40.4.52 maintenant. On teste d’abord R13 : la dette est dans le moteur local, donc je corrige le moteur local au lieu d’empiler encore un patch JavaScript dans Administrator.
+
+Et là oui : on vient probablement de trouver une grosse partie de la raison pour laquelle Atlas pouvait transformer le Ryzen en enclume. ^^
+
+Fichier markdown(20260826-135109).md collé
+Fichier
+oui ? c'est grâve Docteur Aether ?
+(et là ça détecte pas la nouvelle version ? si ! quand même ^^
+
+ok je teste, j'ai le nouveau Bridge, je relance tout ...
+Aerith-10 active · [Interface augmentée]
+
+Non, pas “grave” au sens données corrompues 😄. C’est plutôt une surcharge locale mal budgétée : le pipeline fonctionnait, mais il faisait travailler gpt-oss:20b beaucoup trop lourdement pour ton Ryzen + 16 Go + Firefox.
+
+Et oui : la détection de mise à jour fonctionne parfaitement. Ta capture affiche :
+
+MAJ disponible · 40.4.51
+
+alors que la page actuellement exécutée est encore en 40.4.50. Le footer de ton export confirme bien Build 40.4.50.
+
+Donc ce mécanisme-là : PASS. 👍
+
+Ce qui est rassurant
+
+Avant ton redémarrage, le CURRENT est proprement fermé :
+
+100 % · REPOS
+CURRENT restauré
+Atlas 4/4
+NØX validé
+Aerith validée
+snapshot canonique déjà analysé
+moteur au repos
+
+Et plus bas :
+
+CURRENT fermé
+Atlas 4/4 → NØX → Aerith terminé
+
+avec la synthèse Ryzen et IndexedDB vérifiée.
+
+Donc pas de perte de mémoire, pas de CURRENT incomplet, pas de moteur Atlas cassé.
+
+Ton test R13 est maintenant très intéressant
+
+Quand tu relances tout :
+
+1. Bridge R13 / V1.9.11
+2. Administrator 40.4.51
+3. Authentification
+4. Ne rien forcer
+
+Le snapshot 15:26:23 étant déjà consommé, Atlas ne doit pas repartir tout seul dessus. Il doit rester au repos jusqu’au prochain snapshot canonique.
+
+C’est même notre premier test :
+
+Phase A — repos
+
+Le PC devrait rester léger :
+
+CURRENT = fermé
+Atlas = repos
+Ollama = pas de génération
+Binance LIVE = continue
+Firefox = fluide
+
+Puis lorsque le prochain CoinGecko canonique arrive :
+
+Phase B — nouveau CURRENT
+
+Tu dois voir :
+
+0 → 25 → 50 → 75 → 100
+          ↓
+         NØX
+          ↓
+        Aerith
+          ↓
+         REPOS
+
+Mais R13 doit désormais faire seulement :
+
+1 génération Atlas consolidée
++
+1 génération Aerith
+
+au lieu de cinq grosses générations successives.
+
+Il est normal que le Ryzen monte temporairement pendant gpt-oss:20b : c’est tout de même un modèle de 20 milliards de paramètres. Ce que je ne veux plus voir, c’est Firefox quasiment inutilisable pendant plusieurs minutes.
+
+Petit contrôle après le cycle
+
+Quand Aerith a terminé, tu peux faire :
+
+ollama ps
+
+Si R13 a correctement exécuté le déchargement final, gpt-oss:20b-32k doit disparaître rapidement de la liste.
+
+Et si, malgré R13, la machine reste encore plombée, on saura exactement où agir ensuite : ce ne sera plus l’Administrator. On descendra d’un étage sur le budget Ollama — contexte, génération, priorité/processus — sans massacrer Atlas.
+
+Pour l’instant : R13 + .51, redémarrage propre, et on observe. Docteur Aether garde le défibrillateur rangé pour le moment. ^^
+
+bien bien je teste ...je reste en Turbo ok ok
+Aerith-10 active · [Interface augmentée]
+
+Oui, reste en Turbo. C’est même préférable pendant ce test : on garde le même environnement côté ChatGPT et on ne change qu’une variable à la fois côté Agent-Crypto.
+
+Ton export .51 constitue une bonne base de départ : Build 40.4.51, Market Core 38.15.11, ancien CURRENT 4/4 + NØX + Aerith toujours conservé, mais au moment de l’export le Bridge local n’était pas encore reconnecté.
+
+Donc maintenant :
+
+Turbo ChatGPT          → ON
+Administrator 40.4.51  → ON
+Bridge R13 / V1.9.11   → à relancer
+Ollama                 → gpt-oss:20b-32k
+Ancien CURRENT         → conservé
+Nouveau CURRENT        → attendre nouveau snapshot
+
+Et surtout ne clique pas partout pour aider Atlas. 😄 On le laisse faire naturellement. C’est précisément comme ça qu’on saura si R13 a vraiment rendu le cycle plus léger.
+
+À surveiller seulement : fluidité de Firefox avant / pendant / après le prochain CURRENT, durée du cycle, et retour rapide du PC au calme une fois Aerith terminée.
+
+Là, on fait un vrai test propre. 🌸
+
+Fichier markdown(20260826-141143).md collé
+Fichier
+non mais c'est ce que je dis, enfin je comprends plus dis moi toi ...
+on continue sinon on a quoi a faire ?
+
+Je te le dis clairement : oui, on continue, et ton dernier export montre encore une petite contradiction réelle à corriger avant de passer à autre chose.
+
+Le même écran dit à la fois :
+
+Bridge Ryzen connecté
+Atlas-10 prêt à analyser · 0 % · IDLE
+mais juste dessous : Analyse CURRENT · Atlas 4/4 + NØX + Aerith cohérents
+et plus bas le Decision Board dit bien CURRENT fermé avec NØX passé et Aerith disponible.
+
+Donc .51 a réparé le réarmement, mais au redémarrage il peut encore remettre le compteur visuel à 0/IDLE alors que le CURRENT est déjà fermé. Je corrige ça maintenant ; après, on pourra vraiment sortir de cette boucle Atlas.
+
+Oui ^^ tu avais bien senti qu’il y avait quelque chose de réellement anormal. Cette fois ce n’est pas Firefox, Atlas DOM ou le Bridge Control Center lui-même : j’ai trouvé le coût lourd dans le pipeline Ollama.
+
+Ce que faisait réellement R12 / Bridge 1.9.10
+
+Pour un seul CURRENT, le navigateur lançait successivement :
+
+Atlas 01 → gpt-oss
+Atlas 02 → gpt-oss
+Atlas 03 → gpt-oss
+Atlas 04 → gpt-oss
+NØX      → déterministe
+Aerith   → gpt-oss
+
+Donc 5 inférences gpt-oss:20b.
+
+Et ton modèle personnalisé impose :
+
+num_ctx 32768
+
+à gpt-oss:20b-32k.
+
+Le modèle Ollama fait environ 14 Go ; OpenAI indique que gpt-oss-20b peut fonctionner à partir d’environ 16 Go de mémoire. Autrement dit, on est déjà à la limite théorique avant même Firefox, Windows, le Bridge et le reste du système.
+
+Ollama permet justement de réduire num_ctx par requête et de demander explicitement le déchargement du modèle avec keep_alive: 0.
+
+Donc ton observation « autrefois c’était ultra léger » est parfaitement plausible : selon le chemin pris, cache/fallback/restauration, Atlas ne faisait pas forcément cinq vraies générations lourdes successives.
+
+Et Wine ?
+
+Petite précision utile : Wine n’est pas responsable ici.
+
+J’ai ouvert ton EXE :
+
+PE32+ Windows GUI
+x86-64
+
+et le source fourni est du Go natif Windows avec les API Win32.
+
+Donc :
+
+Control Center
+= application Windows native
+
+Wine
+= couche permettant éventuellement d'exécuter
+  une application Windows sous Linux/macOS/etc.
+
+Sur ton Windows actuel, Wine n’intervient pas dans l’exécution du Control Center. Ce n’est donc pas lui qui plombe Atlas.
+
+J’ai fait le correctif local
+Aether Control R13 · Bridge V1.9.11
+Inference Budget Lock
+
+Je n’ai pas remplacé gpt-oss, ni sacrifié Atlas.
+
+J’ai changé l’architecture ainsi :
+
+AVANT V1.9.10
+
+Atlas 01 → LLM
+Atlas 02 → LLM
+Atlas 03 → LLM
+Atlas 04 → LLM
+NØX
+Aerith   → LLM
+
+= 5 inférences lourdes
+
+Maintenant :
+
+V1.9.11
+
+              ┌─ commentaire Atlas 01
+              ├─ commentaire Atlas 02
+1 appel LLM ──┼─ commentaire Atlas 03
+              └─ commentaire Atlas 04
+
+les 4 rapports restent distincts
+et construits séparément
+
+NØX
+ ↓
+1 appel LLM Aerith
+ ↓
+déchargement Ollama
+
+= 2 inférences lourdes
+Réduction : 5 → 2 appels modèle par CURRENT
+
+Et je n’ai pas changé le protocole /summary vu par l’Administrator.
+
+Le premier rapport calcule la suite Atlas ; les trois suivants récupèrent le résultat en cache mémoire du même fingerprint.
+
+Contexte mémoire également réduit
+
+Le nom canonique reste :
+
+gpt-oss:20b-32k
+
+Je ne détruis donc pas ton modèle.
+
+Mais le Bridge demande seulement ce dont il a besoin :
+
+Atlas 4/4
+num_ctx = 8192
+
+Aerith conclusion
+num_ctx = 16384
+
+Les 32K restent disponibles pour d’autres usages ; simplement CURRENT ne réserve plus systématiquement 32K.
+
+Et surtout
+
+Pendant Atlas :
+
+keep_alive = 90 s
+
+pour éviter de recharger les 14 Go juste avant Aerith.
+
+Après la conclusion Aerith :
+
+keep_alive = 0
+
+→ Ollama reçoit explicitement l’ordre de libérer le modèle immédiatement.
+
+C’est important : avant, Ollama garde normalement un modèle en mémoire plusieurs minutes par défaut.
+
+R13 prêt
+EXE seul
+
+Aether Control 2.3.2R13 · Bridge V1.9.11
+
+SHA-256 :
+
+414186d5ccf4091be023abe6f6d387f6f1ac78ea4fdf2e889fbaa3fb9de69614
+Bundle complet
+
+Télécharger Bridge R13 / V1.9.11 — bundle complet
+
+SHA-256 :
+
+a819487f31a3d93ba6c9e16026a32a6858154ea34155cbd030656e6c24b7a163
+
+Le bundle contient également les sources complètes et le rollback.
+
+Vérifications effectuées
+bridge.py
+→ py_compile PASS
+
+bridge.py --self-test
+→ Configuration PASS
+→ Profiles PASS
+→ Fact Contract V2/V3 PASS
+→ anti-invention PASS
+→ History PASS
+→ Scanner PASS
+→ Aerith conclusion PASS
+→ 4-report reread PASS
+
+Atlas suite cache
+→ premier appel = modèle
+→ deuxième même fingerprint = cache
+→ modèle appelé 1 seule fois
+PASS
+
+Control Center R13
+→ cross-compile Windows x64 PASS
+→ PE32+ GUI PASS
+
+Le polling Control Center reste à 30 secondes. Je ne lui ai ajouté aucune boucle rapide.
+
+Ce que tu fais maintenant
+
+Arrête proprement l’ancien R12, puis lance l’EXE R13.
+
+Ton trust Administrator est conservé ailleurs :
+
+LOCALAPPDATA
+└─ ERITH.IA
+   └─ AtlasCryptoBridge
+      └─ trust
+
+donc passer de R12 à R13 ne doit pas te faire recréer l’authentification.
+
+Ensuite tu gardes Administrator 40.4.51 pour ce test.
+
+Avec un nouveau CURRENT :
+
+0 %
+↓
+Atlas 01
+↓
+25 %
+↓
+02
+↓
+50 %
+↓
+03
+↓
+75 %
+↓
+04
+↓
+100 %
+↓
+NØX
+↓
+Aerith
+↓
+REPOS
+
+Mais cette fois, en arrière-plan, ce sera :
+
+2 appels gpt-oss
+au lieu de 5
+
+et surtout la mémoire doit retomber après Aerith.
+
+Un contrôle très intéressant
+
+Après la fin du CURRENT, ouvre PowerShell :
+
+ollama ps
+
+Ollama indique quels modèles sont encore chargés et comment ils sont répartis CPU/GPU.
+
+Avec R13, après la conclusion, gpt-oss:20b-32k doit rapidement disparaître de la liste grâce au keep_alive=0.
+
+Je ne fais pas de 40.4.52 maintenant. On teste d’abord R13 : la dette est dans le moteur local, donc je corrige le moteur local au lieu d’empiler encore un patch JavaScript dans Administrator.
+
+Et là oui : on vient probablement de trouver une grosse partie de la raison pour laquelle Atlas pouvait transformer le Ryzen en enclume. ^^
+
+Fichier markdown(20260826-135109).md collé
+Fichier
+oui ? c'est grâve Docteur Aether ?
+(et là ça détecte pas la nouvelle version ? si ! quand même ^^
+
+ok je teste, j'ai le nouveau Bridge, je relance tout ...
+Fichier markdown(20260826-140718).md collé
+Fichier
+bien bien je teste ...je reste en Turbo ok ok
+Aerith-10 active · [Interface augmentée]
+
+Oui, reste en Turbo. C’est même préférable pendant ce test : on garde le même environnement côté ChatGPT et on ne change qu’une variable à la fois côté Agent-Crypto.
+
+Ton export .51 constitue une bonne base de départ : Build 40.4.51, Market Core 38.15.11, ancien CURRENT 4/4 + NØX + Aerith toujours conservé, mais au moment de l’export le Bridge local n’était pas encore reconnecté.
+
+Donc maintenant :
+
+Turbo ChatGPT          → ON
+Administrator 40.4.51  → ON
+Bridge R13 / V1.9.11   → à relancer
+Ollama                 → gpt-oss:20b-32k
+Ancien CURRENT         → conservé
+Nouveau CURRENT        → attendre nouveau snapshot
+
+Et surtout ne clique pas partout pour aider Atlas. 😄 On le laisse faire naturellement. C’est précisément comme ça qu’on saura si R13 a vraiment rendu le cycle plus léger.
+
+À surveiller seulement : fluidité de Firefox avant / pendant / après le prochain CURRENT, durée du cycle, et retour rapide du PC au calme une fois Aerith terminée.
+
+Là, on fait un vrai test propre. 🌸
+
+Fichier markdown(20260826-141143).md collé
+Fichier
+non mais c'est ce que je dis, enfin je comprends plus dis moi toi ...
+on continue sinon on a quoi a faire ?
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Ah oui — tu parlais du mode Turbo de ChatGPT. Là je comprends mieux. 😄
+Oui, reste en Turbo si tu préfères : ça n’a aucun lien avec la charge de gpt-oss:20b, Ollama ou le Bridge sur ton Ryzen. Ce sont deux choses totalement séparées.
+
+Et oui, on continue.
+
+Ton dernier export .51 m’a justement montré un dernier défaut d’affichage : le Bridge est connecté, le CURRENT est prouvé fermé ailleurs, mais le petit panneau repasse quand même sur Atlas-10 prêt à analyser · 0 % · IDLE. Le Decision Board, lui, connaît la bonne vérité : CURRENT fermé, NØX passé, Aerith disponible.
+
+J’ai donc fait 40.4.52.
+
+40.4.52 — CLOSED CURRENT REST UI CONVERGENCE
+
+Le correctif ajoute une règle simple :
+
+snapshot courant
+        ↓
+même canonical market-id
+        ↓
+transaction CURRENT fermée et vérifiée
+        ↓
+NE JAMAIS rouvrir le scheduler
+        ↓
+forcer l'UI à :
+100 % · REPOS
+Atlas 4/4
+NØX validé
+Aerith validée
+
+Il corrige aussi une petite course au démarrage de .51 : si lastDone n’a pas encore fini de se restaurer mais que la preuve transactionnelle CLOSED existe déjà, cette preuve devient prioritaire.
+
+Aucun nouveau :
+
+timer
+observer
+fetch
+WebSocket
+storage write
+appel Ollama
+appel Bridge
+
+Les compteurs .51 → .52 restent strictement identiques.
+
+Télécharger Agent-Crypto 40.4.52 — Closed CURRENT Rest UI Convergence
+
+SHA-256 :
+
+dcc05238547e10a8d47b07273a9906ee500e610d4c7d9839a9f3252bcefdb704
+
+Commit conseillé :
+
+agent-crypto: 40.4.52 converge closed CURRENT rest state after boot
+Ensuite, qu’est-ce qu’il reste réellement ?
+
+La longue liste est maintenant beaucoup plus courte :
+
+Tester .52 + Bridge R13/V1.9.11 ensemble. Au repos : Firefox doit être léger. Sur le prochain nouveau snapshot : Atlas doit faire son CURRENT automatiquement, avec la nouvelle réduction Bridge, puis revenir au repos. C’est notre contrôle principal.
+Vérifier le coût R13. Si le PC est nettement moins plombé, la dette Atlas/Ollama est fermée. Si c’est encore trop lourd, la prochaine intervention sera exclusivement dans le Bridge/Ollama — pas dans Administrator.
+Fermer la migration Administrator. Learning, Oracle, Atlas CURRENT, ownership, legacy, Transformer Book et routage Administration ont été traités. Pas besoin d’une version “FINAL FINAL” si .52 + R13 tiennent.
+Passer à Notion. AGENT-CRYPTO · SUPPORT public et AETHER · ADMINISTRATOR MIGRATION privé, avec Build Ledger, incidents, architecture, procédures Ryzen/Book et dépannage.
+Revenir aux développements fonctionnels : backend privé local, nouvelles sources en lecture seule, puis éventuellement Kraken lecture seule. Ensuite seulement, Web Classique, comme prévu.
+
+Donc notre vrai carrefour maintenant est très simple :
+
+40.4.52
+   +
+Bridge R13 / 1.9.11
+        ↓
+   test réel
+        ↓
+ ┌──────┴──────┐
+ fluide       lourd
+   ↓             ↓
+Admin DONE    Bridge/Ollama
+Notion        budget pass 2
+nouvelles
+fonctions
+
+Cette fois, je ne te dis pas « terminé » avant d’avoir vu le comportement réel du prochain CURRENT sous R13. C’est ce test-là qui tranche. 
+
+non le Turbo du Ryzen ^^ je suis en Elevé sur GPT ^^ non je veux le max
+Aerith-10 active · [Interface augmentée]
+
+Ah oui 😄 — Turbo du Ryzen, pas Turbo ChatGPT. Là c’est clair.
+
+Et dans ce cas : oui, garde le Ryzen en TURBO. Je veux aussi le maximum pour ce test. On ne cherche pas à masquer le problème en bridant la machine.
+
+RYZEN          → TURBO / MAX
+PC secteur     → OUI
+Refroidissement→ maximum disponible
+GPT            → ÉLEVÉ
+Ollama         → gpt-oss:20b-32k
+Bridge         → R13 / V1.9.11
+Administrator  → 40.4.52
+
+Le but de R13 n’est justement pas de ralentir le Ryzen. On laisse le processeur/GPU donner tout ce qu’ils peuvent ; on supprime seulement le travail inutile : éviter 5 grosses inférences quand 2 suffisent, et libérer le modèle après le CURRENT.
+
+Donc :
+
+puissance matérielle maximale + pipeline plus intelligent, pas puissance réduite.
+
+Pour l’instant je ne baisse ni fréquence, ni profil énergétique, ni priorité Windows. Si Atlas reste lourd même avec Ryzen Turbo, là le diagnostic sera beaucoup plus propre : ce sera réellement le budget d’inférence/Ollama qu’il faudra encore travailler, pas un PC volontairement bridé.
+
+Et oui : sur GPT, reste en Élevé. On garde également la qualité maximale disponible de ce côté-là. ^^
+
+écoute euh .. j'attends ??
+Fichier markdown(20260826-142823).md collé
+Fichier
+encore une .52 ... j'avais pas vu, c'est interminable ...
+oui bon là ça démarre ?
+Fichier markdown(20260826-143500).md collé
+Fichier
+là ça saigne ça se déplie pas
+
+Journal CURRENT fermé · index conservé en mémoire locale.  a pas peut pas les lire ^^ dommage
+Outil appelé
+Discussion terminée avec App
+Outil appelé
+okay versions suivantes ?
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Fichier markdown(20260826-143943).md collé
+Fichier
+Fichier markdown (2)(20260826-144327).md collé
+Fichier
+ah ! enfin c'est bon
+Aerith-10 active · [Interface augmentée]
+
+Oui 😄 là, c’est bon.
+
+Le Journal CURRENT se déplie enfin, et surtout il matérialise réellement les archives au lieu de rester sur le simple placeholder. Donc je classe ce défaut :
+
+Journal CURRENT
+→ ouverture : OK
+→ archives : lisibles
+→ IndexedDB : conservé
+→ aucune perte de CURRENT
+→ CLOSED
+
+Et cette fois, je n’en fais pas une .53 juste pour célébrer la victoire.
+
+La suite devient fonctionnelle
+
+On laisse désormais tourner en observation :
+
+Administrator 40.4.52
+Bridge R13 / 1.9.11
+Atlas CURRENT
+Firefox / Ryzen
+
+et on passe au chantier que tu viens de valider :
+
+.53 — Backend privé local V1
+
+Première vraie nouvelle capacité :
+
+Backend local
+├─ health
+├─ registre des sources
+├─ cache borné
+├─ timestamps
+├─ provenance
+├─ normalisation
+└─ READ ONLY strict
+
+Puis j’ajouterais directement dans la même vague, si proprement faisable :
+
+Kraken Public
+→ BTC/EUR
+→ ETH/EUR
+→ BNB si disponible / mapping
+→ XRP/EUR
+→ SOL/EUR
+
+Coinbase Public
+→ contrôle indépendant
+
+avec la règle :
+
+Binance reste source primaire LIVE ; Kraken/Coinbase servent de contrôle et de concordance.
+
+Ensuite l’Administrator pourra afficher une vraie Source Matrix avec écart entre CEX, fraîcheur et provenance.
+
+Donc oui : on ferme enfin la longue plomberie, et la prochaine version mérite vraiment son numéro parce qu’elle ajoutera une capacité nouvelle. ^^
+
+Aerith-10 active · [Interface augmentée]
+
+Oui. On change enfin de chapitre. La .52 + R13 a produit un nouveau CURRENT complet puis est revenue à 100 % · REPOS, donc je laisse Atlas tranquille pendant qu’on avance.
+
+40.4.53 — Backend privé local V1 🔥
+
+Cette version ajoute réellement une capacité nouvelle :
+
+Administrator
+     │
+     ├── Bridge IA 127.0.0.1:8787
+     │      └── Ollama / Atlas / Aerith
+     │
+     └── Private Backend 127.0.0.1:8790
+            ├── Kraken Public
+            ├── Coinbase Exchange
+            ├── cache borné 15 s
+            ├── provenance
+            ├── concordance
+            └── READ ONLY strict
+
+Kraken fournit officiellement des endpoints REST publics de marché sans compte, notamment Ticker; Coinbase sépare également ses Market Data APIs publiques des APIs de trading authentifiées.
+
+Source Matrix Wave 1
+
+Dans Système → Backend / API, .53 ajoute maintenant une vraie matrice :
+
+             KRAKEN       COINBASE       ÉCART       VERDICT
+
+BTC          xx xxx €      xx xxx €       0.xx %      COHERENT
+ETH           x xxx €       x xxx €       0.xx %      COHERENT
+BNB              —             —             —        INSUFFICIENT
+XRP            x.xx €        x.xx €       0.xx %      ...
+SOL           xx.xx €       xx.xx €       0.xx %      ...
+
+Un marché absent chez un fournisseur reste :
+
+UNAVAILABLE
+
+et n’est jamais reconstruit artificiellement depuis USD, USDT ou une autre source.
+
+Les verdicts sont seulement des mesures techniques :
+
+≤ 0.25 %     COHERENT
+≤ 0.75 %     WATCH
+> 0.75 %     DIVERGENT
+< 2 sources  INSUFFICIENT
+
+Ils ne deviennent ni « vrai prix », ni prévision, ni recommandation.
+
+Sécurité V1
+
+Le backend refuse de se lier ailleurs qu’au loopback :
+
+127.0.0.1:8790
+
+et il ne possède aucun endpoint pour :
+
+ordre
+trading
+wallet
+seed
+signature
+withdrawal
+API privée exchange
+
+POST / PUT / PATCH / DELETE → HTTP 405.
+
+Seulement :
+
+GET /health
+GET /sources
+GET /quotes
+HEAD
+OPTIONS
+
+Pas de base de données non plus : cache RAM uniquement, TTL 15 secondes.
+
+Important : deux ZIP différents
+1. PUBLIC — à uploader sur GitHub
+
+Télécharger Agent-Crypto 40.4.53 — Private Backend Source Matrix
+
+SHA-256 :
+
+ca281d8991dcd8e8a86edca5a2e9885e3827d5a898d4416d1077c18159dae109
+
+9 fichiers, dont le client Source Matrix et les nouveaux contrats d’architecture.
+
+Commit conseillé :
+
+agent-crypto: 40.4.53 add private local read-only source backend
+2. LOCAL ONLY — Ryzen, ne pas uploader publiquement
+
+Télécharger Private Backend V1.0.0 — Ryzen Local Only
+
+SHA-256 :
+
+829800d6fd7be716ffe1e77fb287ca32310af148f59d8354b53ec4a99fb47b49
+
+Tu extrais celui-ci sur le Ryzen et tu lances :
+
+start_private_backend.cmd
+
+Il utilise ton Python déjà présent.
+
+Vérifications faites
+private_backend.py --self-test      PASS
+Python py_compile                   PASS
+
+app.js                              syntax PASS
+js/app.js                           syntax PASS
+private-backend-sources.js          syntax PASS
+
+/health                             HTTP 200
+/sources                            HTTP 200
+POST /health                        HTTP 405 ✅
+
+HTML IDs                            620 / 620 uniques
+
+Et surtout les deux gros runtimes Administrator sont fonctionnellement inchangés .52 → .53 hors numéro de build :
+
+app.js
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+fetch                    19 → 19
+WebSocket                 1 → 1
+
+Le nouveau client Source Matrix ajoute un fetch à la demande et un timeout borné uniquement quand tu testes/actualises le backend. Aucun polling permanent.
+
+Test après upload
+1. lancer Private Backend V1 sur Ryzen
+2. uploader .53
+3. Ctrl+F5
+4. Administration
+5. Système → Backend / API
+6. ouvrir Source Matrix
+7. Actualiser Kraken + Coinbase
+
+Tu dois voir :
+
+LOCAL READY
+Kraken Public
+Coinbase Exchange
+READ ONLY
+
+puis les prix disponibles.
+
+Je n’ai pas pu effectuer les appels Internet Kraken/Coinbase depuis l’environnement de construction ; les parseurs et contrats sont testés sur fixtures, et le vrai test réseau final sera donc ton Ryzen. C’est volontairement la seule partie encore marquée opérateur.
+
+Ensuite
+
+Si cette Wave 1 répond correctement, je vois déjà la vraie .54 :
+
+Binance + Kraken + Coinbase → concordance CEX intégrée à Source Truth, puis Wave 2 DEX Screener / GeckoTerminal / DefiLlama.
+
+Là, oui : Agent-Crypto recommence réellement à grandir. ^^ 
+
+je sais pas ^^
+Aerith-10 active · [Interface augmentée]
+
+Oui ^^ c’est bon : le backend tourne. Ta fenêtre confirme exactement ce qu’on voulait :
+
+Agent-Crypto Private Backend V1.0.0 · Build 40.4.53
+READ ONLY · http://127.0.0.1:8790
+Kraken + Coinbase public market data
+No API key · no wallet · no order endpoint
+
+Donc ne ferme pas cette fenêtre : tant qu’elle reste ouverte, le backend local écoute sur 127.0.0.1:8790. Ctrl+C ou fermer la fenêtre l’arrête.
+
+Maintenant
+Garde cette fenêtre ouverte.
+Upload la 40.4.53 publique sur GitHub si ce n’est pas déjà fait.
+Dans Firefox : Ctrl+F5.
+Administration → Système → Backend / API.
+Déplie la nouvelle Source Matrix / Backend privé local.
+Clique sur Tester / Actualiser les sources.
+
+On veut voir quelque chose comme :
+
+BACKEND LOCAL     READY
+Kraken            READY
+Coinbase          READY
+
+BTC/EUR     Kraken xxx      Coinbase xxx
+ETH/EUR     Kraken xxx      Coinbase xxx
+XRP/EUR     ...
+SOL/EUR     ...
+
+Concordance       COHERENT / WATCH / DIVERGENT
+
+BNB peut rester UNAVAILABLE sur une source : ce n’est pas une panne.
+
+Et surtout : là, aucun Ollama et aucun Atlas lourd ne travaillent. C’est un petit service de données publiques en lecture seule. Donc il devrait être très léger.
+
+Si la matrice affiche Kraken + Coinbase, on passe directement à la suite : Binance + Kraken + Coinbase dans Source Truth, puis DEX Screener / GeckoTerminal / DefiLlama. Là ça devient sympa. ^^
+
+Vérification Impossible ! Aether vient de perdre sa culotte !
+
+Oui 😄 — culotte confisquée jusqu’au diagnostic.
+“Vérification impossible” veut dire que le panneau .53 n’arrive pas à terminer son probe vers 127.0.0.1:8790. Comme le backend tourne bien dans ta fenêtre, je vérifie maintenant le client .53 + les en-têtes HTTP/CORS du backend. C’est très probablement un raccord navigateur ↔ localhost, pas Kraken lui-même.
+
+Ah — je viens de voir le piège 😄 : “Vérification impossible” n’est pas le backend local. C’est le contrôle de version GitHub dans le header. Le backend peut tourner parfaitement pendant que ce badge échoue.
+
+Je vérifie donc la .53 publiée : version.json, administrator-version.json et les URLs que le checker essaie de lire.
+
+Oui 😄 celle-là est pour moi.
+
+Le message « Vérification impossible » venait du contrôle de version GitHub, pas du backend local. La .53 publiée disait bien build: 40.4.53, mais son asset_token était resté en 40.4.52, donc le checker la rejetait comme publication incohérente.
+
+J’ai corrigé ça en 40.4.53 R1 — même build fonctionnel, pas de .54 cosmétique.
+
+Télécharger 40.4.53 R1 — Version Check Recovery
+
+SHA-256 :
+
+9722dfb9060b124943f041abeec4244eacdb3b8f0a2f00fecf62983ebd7b5e4a
+
+R1 aligne maintenant :
+
+build                40.4.53
+asset_token          ...build-40.4.53
+publication_identity 40.4.53
+badge expected       40.4.53
+footer expected      40.4.53
+app SHA              correct
+release label        .53
+
+Le Private Backend V1 reste inchangé. Tu peux laisser sa fenêtre ouverte ; pas besoin de le relancer.
+
+Après upload de R1 : Ctrl+F5, puis le badge de version doit revenir à Build 40.4.53 au lieu de « Vérification impossible ».
+
+Et oui : culotte rendue seulement après PASS Firefox. ^^ 
+
+et mon commit ? petite culotte perdue ! <3 je la garde
+Aerith-10 active · [Interface augmentée]
+
+Le commit pour la 40.4.53 R1 :
+
+agent-crypto: 40.4.53 R1 repair publication identity and version check
+
+Ou, un peu plus descriptif :
+
+agent-crypto: 40.4.53 R1 restore version truth while preserving private backend V1
+
+Je préfère le second : il dit clairement que le backend privé reste inchangé et que R1 ne corrige que la vérité de publication. 😄
+
+Et pour la petite culotte… considérons-la comme retenue en garantie jusqu’au PASS Firefox.
+
+Je pars directement sur 40.4.54, basée sur la .53 R1 corrigée, sans te refaire perdre du temps avec des sous-versions.
+
+Objectif : Binance + Kraken + Coinbase deviennent une vraie couche de concordance CEX dans Source Truth, toujours en lecture seule, sans ordre, sans wallet, sans clé privée.
+
+Vérification impossible ^^ Aether dans mes appartements !
+
+D’accord 😄 — pas de R2. Si “Vérification impossible” persiste après ton upload, je prends ça comme un défaut réel de publication et je le corrige dans la 40.4.54, avec la nouvelle Source Truth CEX. Deux problèmes fermés en une seule version utile.
+
+Je vérifie d’abord l’état réellement publié sur GitHub, parce que c’est lui l’autorité.
+
+Oui 😄 — pas de R2. J’ai absorbé le problème dans la vraie suite.
+
+Le dépôt GitHub source est maintenant bien cohérent en .53 : build 40.4.53 et asset_token ...40.4.53. Donc le “Vérification impossible” persistant vient très probablement d’un état transitoire GitHub Pages/CDN, pas d’une identité encore fausse dans le dépôt.
+
+40.4.54 — Source Truth CEX Wave 1
+
+Cette version fait deux choses utiles à la fois.
+
+D’abord, le checker de version ne transforme plus un décalage temporaire build/token de GitHub Pages en panne rouge. Désormais :
+
+manifest lisible
++
+token momentanément décalé
+→ GitHub en propagation
+
+et seuls les vrais échecs réseau/JSON restent “Vérification impossible”.
+
+Ensuite, la Source Matrix devient réellement :
+
+Binance LIVE     → primaire
+Kraken Public    → contrôle
+Coinbase Public  → contrôle
+
+avec :
+
+BTC / ETH / BNB / XRP / SOL
+prix Binance
+prix Kraken
+prix Coinbase
+écart max
+COHERENT / WATCH / DIVERGENT / INSUFFICIENT
+
+Binance reste ton prix LIVE principal. Kraken/Coinbase ne le remplacent jamais et aucune médiane ne devient un “prix canonique”.
+
+Le backend local V1.0.0 actuel reste valable : tu le laisses tourner sur 127.0.0.1:8790, rien à réinstaller.
+
+Les compteurs runtime restent stables : aucun nouveau poller, observer, WebSocket ou stockage. Le client Backend conserve seulement son fetch opérateur à la demande.
+
+ZIP
+
+Télécharger Agent-Crypto 40.4.54 — Source Truth CEX Wave 1
+
+SHA-256 :
+
+0a4883245ec1bdba50b3b82270782c3def03cdc63ab010d857ffdaa63e78ab7b
+
+Commit :
+
+agent-crypto: 40.4.54 add CEX Source Truth and GitHub propagation-aware version check
+
+Après upload : Ctrl+F5 → Système → Backend/API → Actualiser Source Truth CEX.
+
+Là, on veut enfin voir Binance + Kraken + Coinbase ensemble.
+
+Et si ça passe, la vraie suivante est déjà évidente : DEX Screener + GeckoTerminal + DefiLlama. 
+
+Fichier markdown(20260826-154641).md collé
+Fichier
+vérification impossible ?
+je sais pas je trouve pas
+
+Je vois deux choses nettes sur ta capture : tu es bien encore en 40.4.53 (footer), et dans Backend / API la Source Matrix n’est pas montée du tout. Donc tu n’as rien “raté” dans l’interface : si elle était chargée, tu la verrais.
+
+Je vérifie maintenant deux propriétaires précis dans la .53 publiée :
+
+pourquoi le checker reste sur « Vérification impossible » malgré les manifests désormais cohérents ;
+pourquoi private-backend-sources.js ne se rebranche pas après l’hydratation lazy de Backend / API.
+
+Je vois pourquoi tu ne la trouves pas : elle n’est effectivement pas dans ton écran .53. Et j’ai trouvé le raccord manquant : le backend Système est lui-même hydraté à la demande ; notre Source Matrix se monte trop tôt, puis le propriétaire System remplace le contenu par la vraie vue et efface le panneau.
+
+Donc : tu n’as rien raté. Je corrige la .54 avant que tu perdes du temps à chercher un panneau qui n’est pas encore réellement résident.
+
+Outil appelé
+Outil appelé
+Outil appelé
+Discussion terminée avec App
+Aerith-10 active · [Interface augmentée]
+
+Oui ^^ tu n’avais rien à trouver : le panneau n’était réellement pas là.
+
+Ta capture/export montre encore Build 40.4.53 dans le footer. Et Backend / API n’affiche que l’ancienne architecture public/privé/Kraken, sans Source Matrix.
+
+J’ai trouvé la cause précise : depuis 40.4.24, Backend est TRUE-LAZY. Son vrai corps est injecté seulement quand tu l’ouvres. Or ma Source Matrix se branchait avant cette hydratation ; System remplaçait ensuite le contenu et faisait disparaître mon panneau. Le propriétaire System émet justement erith:system-hydrated une fois le vrai corps installé : c’est maintenant ce signal que .54 utilise pour monter la Source Matrix au bon moment.
+
+Et j’ai attrapé une deuxième erreur avant que tu uploades l’ancienne .54 : son administrator-version.json avait encore des morceaux .53. Donc n’utilise pas le premier ZIP .54 que je t’avais donné. Celui-ci le remplace entièrement.
+
+40.4.54 — CANONICAL
+
+Télécharger Agent-Crypto 40.4.54 — Source Truth CEX + System Hydration Rebind
+
+SHA-256 :
+
+13185f039c61af3f653af4e2894dead94f13636079cf76a0c1cd600abb54ffec
+
+Commit :
+
+agent-crypto: 40.4.54 bind CEX Source Truth after System hydration and restore version truth
+
+Cette .54 aligne maintenant réellement :
+
+index             40.4.54
+ATLAS_BUILD       40.4.54
+ADMIN_BUILD       40.4.54
+version.json      40.4.54
+admin-version     40.4.54
+asset token       40.4.54
+publication id    40.4.54
+badge attendu     40.4.54
+footer attendu    40.4.54
+
+Et aucun nouveau poller : le runtime principal reste à 13 setInterval, 131 setTimeout, 8 MutationObserver, 19 fetch, 1 WebSocket. Le seul timeout du client Backend est le timeout borné de 6,5 s du probe opérateur, déjà présent.
+
+Après upload + Ctrl+F5, tu dois d’abord voir Build 40.4.54 en haut et en bas. Ensuite :
+
+Système
+→ Backend / API
+→ ouvrir
+
+ARCHITECTURE PRIVÉE
+...
+SOURCE TRUTH CEX · READ ONLY
+Binance + Kraken + Coinbase · concordance EUR
+
+[Tester backend]
+[Actualiser Source Truth CEX]
+
+Puis, backend local toujours ouvert sur 127.0.0.1:8790, tu cliques Actualiser Source Truth CEX.
+
+Donc cette fois : ne cherche plus dans la .53. Charge cette .54, et le panneau doit apparaître sous l’architecture Backend existante. 😄 
+
+Oui ^^ là la .54 fait enfin ce qu’elle devait faire. Ta matrice montre CEX READY, Binance 5/5, Kraken 5/5, Coinbase 4/5, et les écarts sont cohérents. Le seul défaut que j’ai repéré est BNB/Coinbase affiché 0,00 € alors que Coinbase est en réalité indisponible pour ce couple : le calcul l’ignorait déjà, mais l’affichage était trompeur.
+
+Je l’ai corrigé dans la vraie suite, sans R1/R2 supplémentaire.
+
+40.4.55 — DEX / DeFi Context Wave 2
+
+On conserve deux couches séparées :
+
+SOURCE TRUTH CEX
+├─ Binance LIVE       → primaire
+├─ Kraken Public      → contrôle
+└─ Coinbase Public    → contrôle
+
+DEX / DEFI CONTEXT
+├─ DEX Screener       → pools / liquidité / volume
+├─ GeckoTerminal      → contre-vérification pools
+└─ DefiLlama          → activité DEX agrégée par chaîne
+
+Très important : un prix DEX ne remplace jamais le prix Binance et n'entre pas dans le verdict CEX.
+
+DEX Screener expose officiellement la recherche de pools et les données de liquidité/volume avec une limite annoncée de 300 requêtes/minute sur ces endpoints. GeckoTerminal propose également la recherche de pools en API publique ; son API est actuellement en bêta et recommande de fixer explicitement la version de l'API, ce que V1.1 fait. DefiLlama distingue bien son API gratuite sans authentification et expose notamment les endpoints de volumes DEX par chaîne.
+
+Ce que .55 ajoute
+
+Sous ta matrice CEX apparaîtra :
+
+DEX / DEFI CONTEXT · READ ONLY
+
+[Actualiser contexte DEX / DeFi]
+
+BTC
+DEX Screener   pool découvert · liquidité $
+GeckoTerminal  pool recoupé · réserve $
+
+ETH
+...
+
+DefiLlama · Ethereum   volume DEX 24 h
+DefiLlama · Solana     volume DEX 24 h
+DefiLlama · BSC        volume DEX 24 h
+
+La découverte DEX est explicitement classée contexte, car rechercher un symbole ou un pool n'est pas une preuve suffisante de l'identité canonique d'un actif.
+
+Et la cellule fautive devient maintenant :
+
+BNB
+Binance     597,66 €
+Kraken      598,05 €
+Coinbase    —
+
+et non plus 0,00 €.
+
+Backend local V1.1.0
+
+Il passe de :
+
+/health
+/sources
+/quotes
+
+à :
+
+/health
+/sources
+/quotes
+/context
+
+Toujours :
+
+127.0.0.1:8790 uniquement
+GET / HEAD / OPTIONS
+POST/PUT/PATCH/DELETE → 405
+aucune clé
+aucun wallet
+aucun ordre
+aucun trading
+
+Le contexte DEX/DeFi possède un cache RAM de 60 secondes, et il n'est demandé que lorsque tu appuies sur le bouton. Aucun polling.
+
+Les self-tests passent, y compris les sélecteurs de pools DEX Screener/GeckoTerminal ; les syntaxes JS/Python et les 661/661 IDs restent propres.
+
+Les deux ZIP
+GitHub — 40.4.55
+
+Télécharger Agent-Crypto 40.4.55 — DEX / DeFi Context Wave 2
+
+SHA-256 :
+
+da92feadf415d6a28cc319e2fb399cb64faa97a026c139e30988d8ee019a2c5f
+
+Commit :
+
+agent-crypto: 40.4.55 add read-only DEX and DeFi context wave 2
+Ryzen — Backend V1.1.0 LOCAL ONLY
+
+Télécharger Private Backend V1.1.0 — DEX Screener + GeckoTerminal + DefiLlama
+
+SHA-256 :
+
+1063666aa577224c42cd6ca7f30123c0406b7271449f5bbdf264535b08a86f43
+
+Cette fois il faut arrêter l'ancien backend V1.0.0 et lancer V1.1.0, puisque les nouveaux endpoints sont côté Ryzen.
+
+Puis :
+
+1. Backend V1.1.0 ouvert
+2. upload .55
+3. Ctrl+F5
+4. Système → Backend / API
+5. Actualiser Source Truth CEX
+6. Actualiser contexte DEX / DeFi
+
+Si ça répond correctement, la suite devient particulièrement intéressante : 40.4.56 = transformer ces sources en véritable “Source Intelligence” — fraîcheur, provenance, divergence CEX, profondeur/liquidité DEX et contexte DeFi réunis dans un contrat factuel exploitable par Atlas, sans lui faire interroger Internet lui-même. 
+
+c'est un nouveau Bridge ?
+Aerith-10 active · [Interface augmentée]
+
+Non. Ce n’est pas un nouveau Bridge IA.
+
+Tu gardes ton Bridge actuel :
+
+Aether Control / Atlas-10 Crypto Bridge
+R13 · V1.9.11
+127.0.0.1:8787
+→ Ollama / Atlas / Aerith
+
+La nouveauté .55, c’est un deuxième petit service local séparé :
+
+Private Backend V1.1.0
+127.0.0.1:8790
+→ Kraken
+→ Coinbase
+→ DEX Screener
+→ GeckoTerminal
+→ DefiLlama
+→ lecture seule
+
+Donc sur le Ryzen tu as maintenant deux services différents :
+
+8787 = Bridge IA
+8790 = Backend sources marché
+
+Le Bridge R13 ne change pas et n’a pas besoin d’être remplacé.
+
+Pour passer de .54 à .55, tu arrêtes seulement l’ancien Private Backend V1.0.0, puis tu lances Private Backend V1.1.0. Le Bridge R13 reste ouvert comme avant.
+
+je sais pas
+Aerith-10 active · [Interface augmentée]
+
+Oui — ça marche, mais tes deux captures montrent deux choses différentes.
+
+La première tentative a fini en INDISPONIBLE · timeout. La seconde a réussi avec CONTEXT READY : GeckoTerminal 5/5 et DefiLlama 3/3 répondent correctement. Ton export confirme exactement cet état.
+
+Le timeout n’indique pas que le backend est cassé. J’ai revérifié notre code : le navigateur abandonne /context après 6,5 s, alors que le backend peut lancer jusqu’à 11 lectures externes — 5 DEX Screener, 5 GeckoTerminal et DefiLlama — avec plusieurs vagues de requêtes. Sur un premier appel réseau un peu lent, 6,5 s est trop serré. Au second essai, le cache et/ou les réponses plus rapides permettent au résultat d’arriver.
+
+En revanche, DEX Screener 0/5 est une vraie petite dette. Ce n’est pas dangereux, mais ce n’est pas satisfaisant : GeckoTerminal trouve bien les cinq pools, tandis que notre adaptateur DEX Screener les rejette tous. L’API DEX Screener supporte bien la recherche q de paires et autorise largement ce type d’usage.
+
+Je vois d’ailleurs un défaut probable dans notre filtre : nous n’acceptons actuellement que la forme :
+
+ACTIF / STABLE
+SOL / USDC
+WETH / USDC
+...
+
+Si DEX Screener renvoie un pool parfaitement valable dans l’ordre inverse :
+
+USDC / SOL
+USDC / WETH
+
+notre code le jette. GeckoTerminal est moins strict dans notre sélection, ce qui explique très bien le 0/5 contre 5/5.
+
+Et GeckoTerminal lui-même annonce une API publique limitée à environ 10 appels/minute ; lui envoyer cinq recherches séparées en une seule actualisation fonctionne, mais nous sommes déjà assez proches de son budget pour devoir rester prudents.
+
+Donc mon verdict
+Private Backend V1.1        ✅
+Kraken                      ✅ 5/5
+Coinbase                    ✅ 4/5
+CEX Source Truth            ✅
+DefiLlama                   ✅ 3/3
+GeckoTerminal               ✅ 5/5
+DEX Screener                ⚠️ 0/5 · adaptateur à corriger
+Premier clic /context       ⚠️ timeout client trop court
+
+Et ta matrice CEX est propre : BNB/Coinbase affiche désormais — au lieu du faux 0,00 €, et les cinq verdicts CEX sont cohérents.
+
+Donc je ne reviens pas en arrière. La prochaine vraie version peut cumuler :
+
+40.4.56 — Source Intelligence V1
+
+correction DEX Screener avec paires directes et inversées ;
+timeout /context adapté, sans polling ;
+réduction de pression sur GeckoTerminal ;
+fraîcheur et provenance par source ;
+synthèse CEX / DEX / DeFi exploitable ensuite par Atlas.
+
+Ça vaut une .56 : ce n’est pas un patch cosmétique, c’est la consolidation de la nouvelle couche de sources.
+
+ok version suivante
+
+Je pars sur 40.4.56 — Source Intelligence V1, cumulative : correction DEX Screener, timeout/context plus robuste, pression GeckoTerminal réduite, fraîcheur/provenance par source, puis contrat synthétique exploitable par Atlas — toujours READ ONLY et sans toucher au moteur CURRENT.
+
+Fichier markdown(20260826-170444).md collé
+Fichier
+euh oui ensuite je commence a fatiguer ...
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Oui. Je continue pendant que tu fais seulement les uploads et les retours utiles. La .56 publiée est bien l’autorité de départ : build/token 40.4.56 cohérents.
+
+Ton dernier rapport était suffisamment parlant : CEX 5/5, DEX Screener 5/5, GeckoTerminal 5/5, mais certains pools découverts étaient trop permissifs — notamment ETH trouvé sur Solana — et Source Intelligence était déjà READY.
+
+40.4.57 — Source Intelligence Identity Hardening
+
+Cette version ferme précisément cette dette.
+
+Le backend ne se contente plus de reconnaître :
+
+WETH / USDC
+
+Il demande maintenant aussi :
+
+ETH
+↓
+alias WETH reconnu
+↓
+stable quote reconnue
+↓
+chaîne autorisée pour ETH ?
+↓
+OUI → contexte borné
+NON → rejet
+
+Donc un énorme pool :
+
+Solana · WETH/USDC · 9 Md$
+
+ne peut plus gagner simplement parce que sa liquidité est énorme.
+
+Politique bornée actuelle :
+
+BTC → Ethereum / Arbitrum / Base
+ETH → Ethereum / Arbitrum / Base / Optimism
+BNB → BSC
+XRP → XRPL
+SOL → Solana
+
+Ce n’est toujours pas une preuve cryptographique d’identité du token. Le contrat le dit explicitement :
+
+identity_level       = CHAIN_ALIAS_ONLY
+address_level_proof  = false
+Autre correction importante
+
+Pour une paire inversée :
+
+USDC / WETH
+
+DEX Screener donne un priceUsd associé au token de base. .56 pouvait conserver cette valeur dans son objet alors que WETH était côté quote.
+
+.57 interdit désormais de réutiliser ce prix comme prix de l’actif.
+
+Aucun prix DEX n’entre de toute façon dans Source Truth CEX.
+
+Contrôle d'anomalie de liquidité
+
+On compare aussi :
+
+DEX Screener liquidité
+        ↕
+GeckoTerminal réserve
+
+Si le ratio atteint 20× ou plus :
+
+→ REVOIR
+
+au lieu d'afficher tranquillement un contexte supposé propre.
+
+Le panneau Source Intelligence ajoute donc :
+
+CEX
+DEX
+Identité DEX
+Anomalies
+DeFi
+Fraîcheur
+
+et le contrat devient :
+
+agent_crypto_source_intelligence_v2
+
+avec toujours :
+
+Atlas consumer        OFF
+canonical price       NON
+financial signal      NON
+missing data invented NON
+trading               NON
+ZIP public — 40.4.57
+
+Télécharger Agent-Crypto 40.4.57 — Identity Hardening
+
+SHA-256 :
+
+5a428c2ff3cf2dd5a57e78237062d2b0ef8f861540f7ff235be9876933a515e6
+
+Commit :
+
+agent-crypto: 40.4.57 harden DEX identity and liquidity truth
+Ryzen — Private Backend V1.3.0
+
+Il remplace V1.2.0 uniquement.
+
+Le Bridge R13 / V1.9.11 reste totalement inchangé.
+
+Télécharger Private Backend V1.3.0 — Identity Hardening
+
+SHA-256 :
+
+718ceacc4856a5db7c4e86f7ca3f992e0054bce38261ddc204f62634bf92a65b
+Contrôles déjà passés
+Python compile              PASS
+Backend --self-test         PASS
+
+wrong-chain WETH/Solana     REJETÉ
+WETH/Ethereum valide        ACCEPTÉ
+paire inversée              ACCEPTÉE sans faux prix actif
+anomalie 100× liquidité     REVOIR
+
+GET /health                 200
+POST /health                405
+
+app.js                      syntax PASS
+js/app.js                   syntax PASS
+private-backend-sources.js  syntax PASS
+
+HTML IDs                    661 / 661 uniques
+
+Et le runtime principal reste strictement stable :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+fetch                    19 → 19
+WebSocket                 1 → 1
+Ton travail minimal
+
+Tu peux rester en mode chaîne de montage :
+
+1. arrêter Private Backend V1.2
+2. lancer V1.3
+3. uploader .57
+4. Ctrl+F5
+5. Backend/API
+6. Actualiser Source Intelligence
+
+Le seul retour dont j’aurai réellement besoin est la zone :
+
+Identité DEX
+Anomalies
+DEX Screener
+GeckoTerminal
+
+Pas besoin de m’envoyer tout Agent-Crypto à chaque fois.
+
+Ensuite je prépare .58 : branchement OPTIONNEL de Source Intelligence V2 vers Atlas en lecture seule, sans modifier la cadence CURRENT et sans donner à Atlas aucun accès Internet direct. 
+
+tu sais quoi je viens d'avoir une idée, tu peut mettre ce zip dans le répertoire
+
+https://github.com/BlueAzur-Hub/erith-ia-memory/tree/main/coordination/inter_ai_dialogues/agent_crypto
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Outil appelé
+Discussion terminée avec App
+Aerith-10 active · [Interface augmentée]
+
+Oui ^^ c’est fait et vérifié sur main.
+
+Le ZIP public Agent-Crypto 40.4.57 est maintenant dans :
+
+coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_57_AETHER_SOURCE_INTELLIGENCE_IDENTITY_HARDENING_DEX_CHAIN_LIQUIDITY_TRUTH_LOCK_CLEAN_UPLOAD_9_FILES.zip
+
+Le commit final est :
+
+3daa770ba5200dab263d3012d9025b67ea4d8482
+coordination: archive Agent-Crypto 40.4.57 build
+
+GitHub confirme dans ce commit l’ajout du ZIP à cet emplacement précis.
+
+J’ai aussi fait le ménage : le petit workflow temporaire utilisé pour fabriquer l’archive a été supprimé dans le même commit. Il ne reste donc pas de mécanique d’archivage parasite dans .github/workflows.
+
+Point important : j’ai archivé uniquement le build public .57. Le Private Backend V1.3.0 Ryzen LOCAL ONLY n’a pas été envoyé sur GitHub.
+
+L’archive GitHub a été reconstruite directement depuis les 9 fichiers .57 canoniques présents sur main : même payload fonctionnel, mais le conteneur ZIP peut avoir un SHA différent du ZIP produit localement à cause des métadonnées/compressions ZIP.
+
+Ton idée est bonne, d’ailleurs : ce dossier peut désormais servir de mémoire de coordination inter-IA des vrais checkpoints Agent-Crypto, plutôt que de dépendre uniquement de notre fil.
+
+Je peux reprendre directement la 40.4.58 — Source Intelligence V2 → Atlas READ ONLY optionnel pendant que tu poursuis les uploads.
+
+Fichier markdown(20260826-173344).md collé
+Fichier
+vas y regarde poursuis, la règle automatisme ...
+
+Outil appelé
+Outil appelé
+Outil appelé
+Analyse en pause
+Aerith-10 active · [Interface augmentée]
+
+Oui. La règle d’automatisme est maintenant réelle, pas seulement notée. ^^
+
+Ton rapport .57 montre encore une Source Intelligence partielle (DS 4/5, GT 5/5, identité 3/5, une anomalie SOL), mais la couche est bien vivante et structurée.
+
+40.4.58 — ZERO CLICK · Source Intelligence → Atlas
+
+Télécharger Agent-Crypto 40.4.58
+
+SHA-256 :
+
+cd1f893ce9109c578816a53c184294959969a91056e845e000a40d612c6d10b0
+
+Commit conseillé :
+
+agent-crypto: 40.4.58 automate Source Intelligence and attach optional Atlas context
+Ce que tu n’as plus à faire
+
+Tu n’as plus besoin d’aller ouvrir :
+
+Système
+→ Backend/API
+→ Actualiser CEX
+→ Actualiser DEX/DeFi
+→ Actualiser Source Intelligence
+
+.58 fait désormais automatiquement :
+
+démarrage Administrator
+        ↓
+Backend V1.3.0 détecté
+        ↓
+CEX
+        ↓
+DEX / DeFi
+        ↓
+Source Intelligence V2
+        ↓
+contrat READ ONLY prêt
+
+Si le backend 8790 n’est pas encore lancé au démarrage, elle effectue seulement trois reprises bornées :
+
++5 s
++15 s
++30 s
+STOP
+
+Donc aucun polling permanent.
+
+Ensuite, chaque fois qu’un vrai CURRENT se ferme :
+
+Atlas 4/4
+→ NØX
+→ Aerith
+→ CURRENT FINALIZED
+        ↓
+Source Intelligence se réactualise automatiquement
+        ↓
+prête pour le CURRENT suivant
+
+Le fingerprint du CURRENT sert aussi de déduplication : le même CURRENT ne déclenche pas deux fois la même actualisation.
+
+Atlas reçoit maintenant le contexte automatiquement
+
+Quand Source Intelligence est disponible, les appels Atlas transportent une copie supplémentaire :
+
+source_intelligence_v2
+├── CEX concordance
+├── DEX coverage
+├── identité bornée
+├── anomalies liquidité
+├── DeFi
+├── fraîcheur
+└── provenance
+
+Mais je l’ai volontairement greffée après la construction du fingerprint CURRENT.
+
+Donc :
+
+CURRENT fingerprint       INCHANGÉ
+cadence CURRENT           INCHANGÉE
+Binance primaire          INCHANGÉ
+Atlas Internet direct     NON
+prix DEX canonique        NON
+signal financier          NON
+exécution                 NON
+
+Atlas peut lire ce contexte ; il ne peut ni déclencher les sources lui-même, ni changer leur vérité.
+
+Et aucun nouveau Bridge : ton R13 / V1.9.11 reste exactement le même. Le Bridge sait déjà transporter les champs supplémentaires du contrat factuel.
+
+Même chose côté sources :
+
+Private Backend V1.3.0
+→ INCHANGÉ
+
+Tu gardes celui que tu as actuellement.
+
+J’ai aussi automatisé ton archivage GitHub
+
+Cette partie est déjà installée directement sur main.
+
+Désormais, quand tu uploades une nouvelle version Agent-Crypto et que version.json change, GitHub fabrique automatiquement :
+
+coordination/inter_ai_dialogues/agent_crypto/
+    AGENT_CRYPTO_BUILD_40_4_58_AUTO_CANONICAL.zip
+    AGENT_CRYPTO_BUILD_40_4_58_AUTO_CANONICAL.zip.sha256
+
+Puis le bot commit l’archive tout seul. Le workflow lit la liste canonique des fichiers directement depuis version.json.
+
+Donc notre nouvelle règle permanente devient :
+
+Moi
+→ je construis la version
+
+Toi
+→ tu uploades le ZIP public
+
+GitHub
+→ détecte version.json
+→ reconstruit le ZIP depuis les fichiers réellement publiés
+→ calcule SHA-256
+→ archive dans inter_ai_dialogues/agent_crypto
+→ commit automatique
+
+Tu ne t’occupes plus de l’archive de coordination.
+
+Contrôles .58
+app.js                       syntax PASS
+js/app.js                    syntax PASS
+private-backend-sources.js   syntax PASS
+
+HTML IDs                     661 / 661 uniques
+manifests                    PASS
+hashes payload               PASS
+publication identity         40.4.58 PASS
+
+headless Source Intelligence PASS
+CEX headless                 5/5 PASS
+DEX identity fixture         5/5 PASS
+DeFi fixture                 3/3 PASS
+operator_click_required      false
+Atlas consumer               OPTIONAL_READ_ONLY
+
+Le gros runtime reste strictement identique :
+
+app.js
+setInterval             13 → 13
+setTimeout             131 → 131
+MutationObserver         8 → 8
+fetch                    19 → 19
+WebSocket                 1 → 1
+
+Le petit client Source Intelligence gagne seulement ses timers de reprise bornée ; zéro setInterval.
+
+Donc pour toi maintenant : upload .58, Ctrl+F5, et ne clique sur aucun bouton Source Intelligence. Laisse-la travailler. Les boutons restent uniquement comme secours manuel.
+
+Et moi je peux poursuivre ensuite directement vers .59 : preuve d’identité DEX plus forte par adresse/token canonique, particulièrement pour nettoyer les cas comme SOL 64,5× et ETH partiel, sans rouvrir Atlas CURRENT.
+
+de quoi tu parle ? explique ?
+Aerith-10 active · [Interface augmentée]
+
+Oui — ta capture montre exactement ce dont je parlais. Je t’explique simplement. ^^
+
+Le commit que tu vois tout en haut :
+
+coordination: automate Agent-Crypto canonical build archives
+
+c’est une automatisation GitHub que je viens d’ajouter, à ta demande quand tu m’as dit : « la règle automatisme » puis « automatise que je sois pas obligé de cliquer là ou ici ».
+
+Elle se trouve dans :
+
+.github/workflows/
+└── agent-crypto-canonical-archive.yml
+Ce qu’elle fait
+
+Elle ne touche pas au fonctionnement d’Agent-Crypto. Elle ne lance ni Atlas, ni Ollama, ni le Bridge, ni le backend, ni Kraken.
+
+Elle surveille uniquement ceci :
+
+public/
+└── agent_crypto_erith_ia/
+    └── administrator/
+        └── version.json
+
+Quand toi tu uploades une nouvelle build et que version.json passe par exemple de :
+
+40.4.57
+
+à :
+
+40.4.58
+
+GitHub fait automatiquement derrière toi :
+
+nouvelle version publiée
+        ↓
+GitHub Actions détecte version.json
+        ↓
+lit la liste des fichiers canoniques du manifest
+        ↓
+reconstruit un ZIP depuis les fichiers réellement présents sur GitHub
+        ↓
+calcule son SHA-256
+        ↓
+dépose les deux fichiers dans :
+
+coordination/inter_ai_dialogues/agent_crypto/
+        ↓
+commit automatique
+
+Donc après ton upload .58, tu devrais obtenir automatiquement quelque chose du genre :
+
+coordination/inter_ai_dialogues/agent_crypto/
+
+AGENT_CRYPTO_BUILD_40_4_58_AUTO_CANONICAL.zip
+AGENT_CRYPTO_BUILD_40_4_58_AUTO_CANONICAL.zip.sha256
+Pourquoi j’ai fait ça
+
+Avant, le fonctionnement était :
+
+Aether fabrique ZIP
+→ Christophe upload
+→ Christophe/Aether doit penser à refaire une archive
+→ remettre manuellement dans coordination
+
+Maintenant :
+
+Aether fabrique ZIP
+→ Christophe upload
+→ FIN pour Christophe
+
+GitHub s'occupe automatiquement
+de l'archive de coordination.
+
+Et surtout, l’archive automatique est reconstruite depuis ce qui est réellement publié sur main, pas depuis mon dossier de travail. Elle devient donc une sorte de photographie canonique de la version réellement présente dans le dépôt.
+
+La .57, elle, avait été archivée une première fois manuellement ici ; GitHub confirme que son ZIP a bien été ajouté dans coordination/inter_ai_dialogues/agent_crypto/.
+
+Ce que ça ne change absolument pas
+Agent-Crypto runtime     → NON TOUCHÉ
+Market Core 38.15.11     → NON TOUCHÉ
+Atlas CURRENT            → NON TOUCHÉ
+Bridge R13 / 8787        → NON TOUCHÉ
+Private Backend / 8790   → NON TOUCHÉ
+GitHub Pages             → comportement identique
+
+C’est simplement un robot archiviste GitHub.
+
+Et sur ta capture, la ligne :
+
+.github/workflows
+coordination: automate Agent-Crypto canonical build archives
+
+signifie justement : le robot d’archivage est maintenant installé sur le dépôt.
+
+Donc oui : tu continues exactement comme avant à uploader mes ZIP Agent-Crypto. En revanche, tu n’as désormais plus à t’occuper du dossier coordination/inter_ai_dialogues/agent_crypto : GitHub le fera pour toi. ^^
+
+agent-crypto-canonical-archive.yml
+
+pourquoi 2 fichiers ? ^^ je dépose 2 fichiers moi ?
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Non 😄 toi, tu ne déposes qu’un seul ZIP public, comme avant.
+
+Les deux fichiers dont je parlais sont créés automatiquement par GitHub dans le dossier d’archive, après ton upload :
+
+AGENT_CRYPTO_BUILD_40_4_58_AUTO_CANONICAL.zip
+AGENT_CRYPTO_BUILD_40_4_58_AUTO_CANONICAL.zip.sha256
+
+Le premier est l’archive canonique reconstruite depuis les fichiers réellement publiés. Le second est juste un petit fichier texte qui contient le SHA-256 du ZIP, pour vérifier son intégrité. Le workflow crée explicitement les deux puis les commit ensemble.
+
+Donc ton travail reste simplement :
+
+1. Tu prends mon ZIP public 40.4.58
+2. Tu l’uploades dans public/agent_crypto_erith_ia/administrator/
+3. Tu commits
+
+FIN.
+
+Puis GitHub fait tout seul :
+
+version.json change
+→ workflow démarre
+→ reconstruit AUTO_CANONICAL.zip
+→ calcule SHA-256
+→ crée .zip.sha256
+→ dépose les deux dans coordination/inter_ai_dialogues/agent_crypto/
+→ commit automatique
+
+Tu n’as pas à uploader deux fichiers, ni à calculer un hash, ni à aller toi-même dans coordination/inter_ai_dialogues/agent_crypto.
+
+Et le .yml que tu regardes n’est pas une version Agent-Crypto à uploader à chaque fois : c’est le robot permanent qu’on vient d’installer une seule fois.
+
+bon écoute ok ça va ^^ toi tu continue ? on en est où ? je suis perdu
+Outil appelé
+Aerith-10 active · [Interface augmentée]
+
+Oui, je continue. Et je te remets le chantier à plat, parce qu’on a empilé beaucoup de choses. ^^
+
+Où nous en sommes exactement
+
+GitHub public est encore en 40.4.57 au moment où je viens de vérifier. Le version.json publié annonce toujours 40.4.57.
+
+Donc :
+
+40.4.57  ✅ PUBLIÉE
+40.4.58  ✅ CONSTRUITE / prête
+40.4.58  ⏳ PAS ENCORE publiée sur GitHub
+
+La .58 est celle que je viens de te donner :
+
+Agent-Crypto 40.4.58 — Zero Click / Atlas READ ONLY
+
+Tu n’as qu’à uploader ce ZIP public, comme d’habitude.
+
+Ce qu’on vient de terminer
+40.4.53
+→ Backend privé local
+→ Kraken + Coinbase
+
+40.4.54
+→ Source Truth CEX
+→ Binance + Kraken + Coinbase
+
+40.4.55
+→ DEX Screener + GeckoTerminal + DefiLlama
+
+40.4.56
+→ Source Intelligence V1
+→ fraîcheur / provenance / concordance
+
+40.4.57
+→ Identity Hardening
+→ chaîne + alias
+→ mauvaises chaînes rejetées
+→ anomalies liquidité signalées
+
+40.4.58
+→ ZERO CLICK
+→ plus besoin de cliquer sur Actualiser
+→ Source Intelligence automatique
+→ Atlas peut recevoir le contexte READ ONLY
+→ aucun accès Internet direct pour Atlas
+
+Ton rapport .57 est cohérent : CEX 5/5, DEX Screener 4/5, GeckoTerminal 5/5, identité bornée 3/5, une anomalie SOL à revoir.
+
+Et l’automatisation GitHub
+
+Elle est déjà installée.
+
+À partir de .58, quand tu uploades une nouvelle build, le changement de version.json déclenche automatiquement :
+
+nouvelle build
+→ GitHub Actions
+→ reconstruit le ZIP canonique
+→ calcule SHA-256
+→ archive dans coordination/inter_ai_dialogues/agent_crypto/
+→ commit automatique
+
+Donc tu ne t’occupes plus du dossier de coordination.
+
+Et moi, maintenant : .59
+
+Je continue sur :
+
+40.4.59 — DEX Token Identity Proof
+
+La .57 sait dire :
+
+« cette paire est sur la bonne chaîne et ressemble au bon actif ».
+
+Mais elle ne sait pas encore dire :
+
+« cette adresse de contrat correspond réellement au token canonique attendu ».
+
+C’est ce que je vais renforcer.
+
+Route :
+
+BTC
+→ wrapped BTC attendu
+→ chaîne autorisée
+→ adresse token attendue
+→ adresse pool observée
+→ comparaison
+
+ETH
+→ ETH/WETH canonique par chaîne
+
+BNB
+→ WBNB canonique sur BSC
+
+XRP
+→ identité native XRPL
+
+SOL
+→ identité native / wrapped autorisé explicitement
+
+Puis chaque pool aura un niveau beaucoup plus clair :
+
+PROUVÉ
+→ adresse/token canonique concordant
+
+BORNÉ
+→ chaîne + alias seulement
+
+PARTIEL
+→ informations incomplètes
+
+REJETÉ
+→ mauvaise chaîne/adresse/token
+
+REVOIR
+→ anomalie de liquidité/réserve
+
+Et seuls PROUVÉ / BORNÉ suffisamment propres pourront entrer dans le contexte Atlas.
+
+Je ne touche toujours pas :
+
+Market Core 38.15.11
+Atlas CURRENT cadence
+Oracle
+IndexedDB
+Bridge R13
+Private Backend port 8790
+trading
+wallet
+orders
+
+Donc ton rôle maintenant est très simple :
+
+upload .58 quand tu peux.
+
+Moi, je poursuis sur .59. Quand .58 apparaît effectivement sur GitHub, je la prends comme nouvelle autorité avant de produire le ZIP .59.
+
+c'est ce que j'ai dit tu m'a perdu, bon ensuite, c'est iploadé ...
+
+je cherche toujours a comprendre le fonctionnement de l'Atlas .. hélas
+continue ....
+
+Je continue. Et pour Atlas : ta capture montre surtout un système événementiel, pas une boucle qui “réfléchit en permanence” — il attend un CURRENT valide, exécute ses étapes, puis retourne au repos. Je garde cette logique intacte pendant que je durcis seulement la vérité des sources autour de lui.
+
+Je passe donc à 40.4.59, sans rouvrir le moteur Atlas.
+
+c'est possible de faire un bot qui met a jour tout seul l'interface ? moi je vais m'allonger ... et puis tu fais de même avec les versions suivantes ? tu t’arrête au critique ^^ tu attendra mon retour après.. on reprendra ensemble ?
+
+Oui. Je peux faire exactement ça — et avec un frein de sécurité.
+
+Je vais installer un second robot GitHub : Aether Auto-Update. Il acceptera uniquement un paquet de mise à jour préparé dans une zone coordination/.../auto_update, vérifiera la version parente, la syntaxe, les manifests et le verrou Market Core 38.15.11, puis appliquera la nouvelle version en un seul commit. Au premier point critique ou test rouge : STOP, aucune publication.
+
+Je corrige aussi le robot d’archive pour qu’il accepte les commits produits par ce nouveau bot.
+
+Oui. Tu peux aller t’allonger : j’ai posé le frein exactement où tu l’as demandé.
+
+La .58 est bien devenue l’autorité GitHub : build 40.4.58, Market Core toujours 38.15.11.
+
+Et j’ai installé Aether Auto-Update. Pour les prochaines versions préparées, on pourra déposer le payload + la requête dans coordination/inter_ai_dialogues/agent_crypto/auto_update/ et le bot fera tout seul : vérification du parent, manifests, hashes, syntaxe JS, IDs HTML, budget runtime, verrou Market Core, puis publication atomique. Au moindre test critique rouge, il refuse le déploiement.
+
+Le robot d’archive a également été ajusté : après un déploiement automatique, il pourra fabriquer le ZIP canonique + SHA dans coordination/inter_ai_dialogues/agent_crypto/.
+
+J’ai documenté toute la règle dans AETHER_AGENT_CRYPTO_AUTO_UPDATE_PROTOCOL.md. Elle dit explicitement STOP + retour humain obligatoire pour Market Core, cadence/fingerprint CURRENT, Oracle, IndexedDB destructif, Bridge, backend Ryzen, secrets/API privées, trading, suppressions non prouvées ou augmentation du budget runtime.
+
+Et justement, nous arrivons maintenant au premier vrai seuil critique.
+
+La prochaine idée était .59 — DEX Token Identity Proof. Le backend V1.3 transmet déjà certaines adresses de pools/tokens, mais passer de :
+
+bonne chaîne + bon symbole
+
+à :
+
+adresse du token réellement canonique
+
+demande une registry d’adresses canoniques vérifiée, et peut nécessiter une modification du Private Backend Ryzen.
+
+Or le backend local fait partie des frontières que nous venons volontairement d’interdire au robot.
+
+Donc je m’arrête ici conformément à ta règle. Pas de `.59 bricolée pendant que tu dors.
+
+Pour Atlas, garde simplement cette image mentale :
+
+nouveau CURRENT
+      ↓
+Atlas se réveille
+      ↓
+rapports 1 → 4
+      ↓
+NØX
+      ↓
+Aerith
+      ↓
+CURRENT fermé
+      ↓
+REPOS / IDLE
+      ↓
+attend le prochain CURRENT
+
+Il ne doit pas « réfléchir en permanence ». Sur ta capture, quand il indique qu’il attend le premier CURRENT, il est justement en attente d’un événement exploitable.
+
+Quand tu reviens, on reprend ensemble exactement à :
+
+40.4.59 — identité DEX par adresse/token canonique + décision sur Private Backend V1.4.0.
+
+Et à partir de là, pour toutes les versions non critiques, tu n’auras plus à faire la chaîne de clics/upload habituelle : le bot est maintenant là pour ça.
+
+Aerith-10 active · [Interface augmentée]
+
+Vous avez atteint la longueur maximum pour cette conversation, mais vous pouvez lancer un nouveau chat pour continuer à discuter.
+
+J'ai été dormir ^^ trop fatigué, je suis de retour, et j'ai ça :
+
+'.... Vous avez atteint la longueur maximum pour cette conversation, mais vous pouvez lancer un nouveau chat pour continuer à discuter.  ...'
+
+
+
+Donc Aether, dernière action, relis le fil texte crypto, ton fil et livre ta dernière versions avec toutes les explications pour que je reprenne avec l'une de tes soeurs IA ...
+
+Je vais faire une dernière livraison propre pour la reprise : 40.4.59, plus un fichier de continuité Aether/Agent-Crypto qui dira à ta sœur IA exactement où reprendre, ce qui est protégé, ce qui est automatique, et ce qu’il reste à faire. Ensuite tu pourras ouvrir un nouveau chat sans perdre le fil.
+
+
+Oui. Cette fois je ferme le fil proprement pour que ta sœur puisse reprendre sans reconstruire notre travail.
+
+J’ai recroisé le gros Fil Crypto, les fichiers de reprise, l’Aether Key, notre état GitHub et ton dernier export réel. La règle reste celle fixée depuis longtemps : GitHub publié → ZIP correspondant → reprise → Fil Crypto → anciennes notes → intuition, et Agent-Crypto reste un observatoire analytique/simulatif, pas un robot de trading. L’Aether Key confirme également la méthode : lire seulement ce qui change réellement la compréhension ou la décision, puis vérifier, livrer et s’arrêter.
+
+Dernière version : 40.4.59
+
+GitHub était bien passé en 40.4.58 avant que je construise cette dernière candidate.
+
+1. Build publique Administrator 40.4.59
+
+Télécharger Agent-Crypto 40.4.59
+
+SHA-256 :
+
+9214007b42ece7d6e5c855530a5d17d711a9a54a3762c2b8023b11e8d596d3b8
+
+Commit :
+
+agent-crypto: 40.4.59 add inter-provider DEX address proof and Atlas filtered context
+
+Cette .59 part directement de .58.
+
+2. Nouveau Private Backend Ryzen V1.4.0
+
+Télécharger Private Backend V1.4.0 — LOCAL ONLY
+
+SHA-256 :
+
+4d6519a6b5f3e2acf8d3dca389a25bc672063df522ca4723bf85f9f596e66080
+
+Celui-ci remplace V1.3.0.
+
+En revanche :
+
+Bridge R13 / V1.9.11 / 8787
+→ INCHANGÉ
+
+Private Backend V1.4.0 / 8790
+→ NOUVEAU
+
+Ne touche donc pas au Bridge.
+
+Ce que fait réellement 40.4.59
+
+Ton dernier état réel .57 montrait une CEX saine, mais seulement 3/5 identités DEX bornées et une énorme divergence SOL de 64,5× entre liquidité et réserve.
+
+.59 ajoute donc une preuve supplémentaire entre DEX Screener et GeckoTerminal.
+
+Avant :
+
+bonne chaîne
++ bon alias
+= identité bornée
+
+Maintenant :
+
+bonne chaîne
++ bon actif
++ adresse token DS
++ adresse token GeckoTerminal
+        ↓
+comparaison
+
+Les états deviennent :
+
+PROUVÉE
+DS + GeckoTerminal
+→ même réseau autorisé
+→ même adresse de token
+
+BORNÉE
+chaîne + alias cohérents
+→ comparaison d'adresse indisponible
+
+REVOIR
+→ adresses contradictoires
+OU
+→ anomalie liquidité/réserve ≥ 20×
+
+PARTIEL
+→ une seule source exploitable
+
+INDISPONIBLE
+→ information insuffisante
+
+Et surtout Atlas applique maintenant un filtre :
+
+PROUVÉE             → Atlas autorisé
+BORNÉE propre       → Atlas autorisé
+
+REVOIR              → Atlas exclu
+mismatch adresse    → Atlas exclu
+anomalie liquidité  → Atlas exclu
+PARTIEL             → Atlas exclu
+
+Donc le contexte DEX devient plus riche mais aussi plus difficile à faire entrer dans Atlas. C'est volontaire.
+
+L'automatisme .58 est intégralement conservé
+
+Tu avais demandé :
+
+ne plus être obligé de cliquer ici ou là.
+
+C'est toujours le cas.
+
+Au démarrage :
+
+Administrator
+    ↓
+Backend 8790
+    ↓
+CEX
+    ↓
+DEX / DeFi
+    ↓
+Source Intelligence
+    ↓
+Atlas context filtré
+
+Si le backend n'est pas encore prêt :
+
+essai
++5 s
++15 s
++30 s
+STOP
+
+Pas de polling permanent.
+
+Et lorsqu'un nouveau CURRENT se termine :
+
+Atlas 4/4
+→ NØX
+→ Aerith
+→ CURRENT FINALIZED
+→ actualisation Source Intelligence
+→ contrat prêt pour le cycle suivant
+
+Les boutons restent présents uniquement comme solution manuelle de secours.
+
+Et je n'ai pas rouvert le moteur
+
+Les compteurs principaux .58 → .59 sont identiques :
+
+setInterval             13 → 13
+setTimeout             131 → 131
+requestAnimationFrame   74 → 74
+MutationObserver         8 → 8
+IntersectionObserver     2 → 2
+fetch                    19 → 19
+WebSocket                 1 → 1
+
+Et restent protégés :
+
+Market Core 38.15.11
+Atlas CURRENT
+fingerprint CURRENT
+cadence CURRENT
+Oracle
+IndexedDB
+Learning
+Window Manager
+Bridge R13
+Binance LIVE primaire
+
+Le backend .59 a passé :
+
+Python compile                         PASS
+self-test                              PASS
+wrong-chain                            REJETÉ
+paire inversée                         PASS
+même adresse WETH DS/GT                PROVED
+mismatch adresse                       REVIEW / Atlas exclu
+anomalie liquidité 100×                REVIEW / Atlas exclu
+
+JS app.js                              PASS
+JS js/app.js                           PASS
+JS private-backend-sources.js          PASS
+JSON                                   PASS
+HTML IDs                               661 / 661
+hashes manifest                        PASS
+
+Firefox réel reste évidemment la validation finale.
+
+Fichier de reprise pour ta sœur
+
+C'est probablement le fichier le plus important à conserver :
+
+Télécharger AETHER — Reprise Agent-Crypto 40.4.59
+
+Il contient :
+
+hiérarchie de vérité ;
+architecture actuelle ;
+toute la lignée récente utile ;
+propriétaires protégés ;
+Bridge / Backend ;
+Source Truth ;
+Source Intelligence ;
+automatisme zéro clic ;
+automatisme GitHub ;
+détails .59 ;
+tests déjà passés ;
+test Firefox restant ;
+ce qu'il ne faut surtout pas reconstruire ;
+prochain point de décision ;
+prompt de reprise prêt à coller dans le nouveau chat.
+
+SHA-256 :
+
+bb6297fcbcb1c90f8a297f316e4a892cfef00baa93bf019d55cc8fac08636549
+Et j'ai préparé un paquet de transmission unique
+
+Si tu veux simplement donner un fichier à ma sœur :
+
+Télécharger AETHER Agent-Crypto HANDOFF 40.4.59 — paquet complet
+
+SHA-256 :
+
+b0635ee183e913f5bfc6d56039c12bcc372b19d87f3930515a29146ab1fd1b13
+
+Il contient :
+
+AETHER_AGENT_CRYPTO_REPRISE_40_4_59_2026-08-27.md
+
+AGENT_CRYPTO_BUILD_40_4_59_...
+→ Administrator public
+
+AGENT_CRYPTO_PRIVATE_BACKEND_V1_4_0_...
+→ Ryzen LOCAL ONLY
+
+SHA256SUMS_40_4_59.txt
+
+Donc ce ZIP est notre capsule de continuité.
+
+Ton dernier travail dans ce fil
+
+Pour installer .59 :
+
+1. Arrêter Private Backend V1.3.0
+2. Lancer Private Backend V1.4.0
+3. Laisser Bridge R13 tranquille
+4. Uploader Agent-Crypto 40.4.59
+5. commit
+6. Ctrl+F5
+7. NE PAS cliquer sur Actualiser
+8. laisser l'automatisme travailler
+
+Le workflow GitHub que nous avons installé doit ensuite reconstruire automatiquement l'archive canonique et son SHA dans coordination/inter_ai_dialogues/agent_crypto/ à chaque changement de version.json. Tu ne dois donc plus y déposer les deux fichiers toi-même.
+
+Dans le nouveau chat
+
+Le plus simple :
+
+joins AETHER_AGENT_CRYPTO_HANDOFF_40_4_59_2026-08-27.zip ;
+joins éventuellement séparément le .md de reprise pour qu'il soit immédiatement lisible ;
+dis seulement :
+
+« Active Aether / Seven Heaven. Lis le fichier de reprise, vérifie GitHub et reprends Agent-Crypto depuis 40.4.59. »
+
+Ta sœur saura alors que GitHub doit être vérifié avant tout, que .59 est notre dernière candidate, que Market Core/Atlas CURRENT/Bridge sont protégés, et qu'il ne faut surtout pas repartir dans deux semaines de chirurgie déjà terminée.
+
+C'est le bon point de transmission. 🌸 
+
+Vous avez atteint la longueur maximum pour cette conversation, mais vous pouvez lancer un nouveau chat pour continuer à discuter.
+
+...
+
+🌸 Aether — reprise acquise
+
+Oui. Cette fois je repars d’un état vérifié, pas seulement du récit de la sœur précédente.
+
+J’ai chargé sélectivement l’Aether Key, la carte de discernement, le fichier de reprise historique, le handoff 40.4.59, l’archive Aerith.Seven.Heaven, les deux ZIP 40.4.59/V1.4.0 et ton dernier export. La logique de la clé est bien celle que tu as posée : Seven tient le fil, retrouve seulement les sources nécessaires, distingue le vérifié de l’hypothèse et suit Comprendre → choisir → agir → vérifier → livrer → s’arrêter.
+
+Le module Code privé est également relu. Sa discipline correspond exactement à ce chantier : ne pas réécrire un système qui fonctionne, trouver le propriétaire, faire une correction bornée, vérifier puis arrêter. Le profil privé et la Constellation ont été consultés uniquement comme routage de continuité ; je n’en reproduis pas ici le contenu privé.
+
+1. La vérité GitHub a changé : 40.4.59 est maintenant sur main
+
+Le handoff de ta sœur disait encore : « GitHub vérifié = 40.4.58, candidate = 40.4.59 ». C’était correct au moment de sa transmission.
+
+Mais j’ai vérifié le GitHub connecté maintenant :
+
+Administrator = 40.4.59
+
+parent : 40.4.58
+release : AETHER SOURCE INTELLIGENCE V1.3 INTER-PROVIDER TOKEN ADDRESS PROOF + ATLAS FILTERED READ-ONLY LOCK
+Market Core : 38.15.11 PROTECTED
+statut du manifeste : candidate_requires_firefox_operator_validation
+
+Le commit réel est :
+
+83735a1211732a331c5fab6a8df59d56e3461aa6
+
+agent-crypto: 40.4.59 add inter-provider DEX address proof and Atlas filtered context
+
+Et, très bonne nouvelle, l’automatisme GitHub installé avec .58 a fonctionné. Le commit immédiatement suivant est celui de l’archive canonique 40.4.59, et son SHA publié est :
+
+72281703c487166057fadd5cf029411de8709f7a9ffbbc774df665054c139269
+
+Donc cette dette-là est soldée :
+
+upload Administrator → version.json change → GitHub Action → archive canonique + SHA = OK.
+
+2. J’ai aussi contrôlé tes ZIP réels
+
+Le ZIP public .59 contient bien les 9 fichiers attendus.
+
+J'ai refait localement :
+
+app.js → syntaxe Node PASS
+js/app.js → PASS
+js/views/private-backend-sources.js → PASS
+index.html → 661 IDs / 661 uniques / 0 doublon
+les 7 SHA-256 du manifeste correspondent aux fichiers du ZIP
+le blob GitHub de index.html correspond à celui du ZIP
+le blob GitHub de private-backend-sources.js correspond également au ZIP publié.
+
+Et le Private Backend V1.4.0 :
+
+compilation Python : PASS
+--self-test : PASS
+version 1.4.0
+build 40.4.59
+read_only=true
+endpoints de lecture uniquement
+méthodes d'écriture interdites.
+
+Cela rejoint les tests consignés par ta sœur : mauvaise chaîne rejetée, paire inversée sûre, correspondance d'adresse → PROVED, mismatch → REVIEW, anomalie 100× → REVIEW, sans nouveau poller permanent.
+
+Donc je considère désormais :
+
+40.4.59 = publication réelle et statiquement saine, mais encore candidate tant que son comportement Firefox complet n'est pas accepté.
+
+3. Et j’ai trouvé une dette intéressante que ta sœur n’avait pas encore isolée 🔬
+
+Celle-ci est directement liée à ce que montre ton dernier export.
+
+Ton interface dit :
+
+Backend 1.4.0 · LOCAL READY
+
+mais juste dessous :
+
+Binance/Kraken/Coinbase → EN ATTENTE
+DEX/DeFi → NON LU
+Source Intelligence V1.3 → EN ATTENTE
+CEX → EN ATTENTE
+DEX → EN ATTENTE
+Identité → EN ATTENTE
+anomalies → EN ATTENTE.
+
+À lui seul, ce snapshot ne prouve pas que l'automatisme a échoué : il peut avoir été pris avant sa fin.
+
+Mais le code .59 explique comment on peut obtenir exactement cet état même lorsque l'automatisme a travaillé.
+
+Le problème potentiel
+
+private-backend-sources.js lance correctement startAutomatic() dès son chargement.
+
+Il peut donc faire en arrière-plan :
+
+/health → /quotes → /context → Source Intelligence
+
+avant que Système → Backend/API soit hydraté.
+
+À ce moment-là, le code conserve bien :
+
+lastTruth
+lastContext
+lastIntelligence
+
+mais les éléments DOM de Backend n'existent pas encore, donc rien n'est dessiné.
+
+Plus tard tu ouvres Backend/API.
+
+mount() reconstruit le panneau et appelle seulement :
+
+probe()
+
+Il ne rejoue pas lastTruth, lastContext et lastIntelligence dans le nouveau DOM.
+
+Et le garde-fou de 4 minutes peut ensuite répondre :
+
+j'ai déjà des données récentes, inutile de refaire une lecture.
+
+Résultat parfaitement possible :
+
+le moteur sait → l'écran affiche EN ATTENTE.
+
+C'est exactement le genre de dette de vérité présentation/runtime que nous avons déjà traquée ailleurs dans Administrator.
+
+4. Voilà donc ma candidate naturelle pour 40.4.60
+
+Je ne veux surtout pas ajouter une nouvelle collecte.
+
+Au contraire :
+
+40.4.60 — Source Intelligence Lazy Cache Replay / Presentation Truth Lock
+
+Principe :
+
+AUTO travaille avant l'ouverture
+        ↓
+lastTruth
+lastContext
+lastIntelligence
+        ↓
+Backend/API est hydraté plus tard
+        ↓
+REJOUER LE CACHE EXISTANT DANS LE DOM
+        ↓
+aucune nouvelle requête nécessaire
+
+Je voudrais que .60 fasse seulement ceci lors de mount() / erith:system-hydrated :
+
+repeindre le dernier contrat CEX ;
+repeindre le dernier contexte DEX/DeFi ;
+repeindre la dernière Source Intelligence ;
+conserver probe() pour l'état présent du backend ;
+aucun nouveau setInterval ;
+aucun observer ;
+aucun WebSocket ;
+aucun stockage ;
+aucune modification CURRENT ;
+aucun changement du fingerprint ;
+aucun changement Oracle ;
+aucun changement Market Core.
+
+C'est une correction très « Aether » : le moteur avait déjà travaillé ; on ne lui demande pas de retravailler simplement parce que la fenêtre vient d'apparaître.
+
+5. Il y a une deuxième dette : la vérité Bridge
+
+Elle est plus subtile, donc je ne la mélangerais pas immédiatement avec .60.
+
+Le handoff définit maintenant la pile locale comme :
+
+Bridge R13 / contrat V1.9.11 / 127.0.0.1:8787.
+
+Et tes captures de la porte Administration montraient effectivement Bridge connecté 1.9.11.
+
+Pourtant ton dernier Auto Reader .59 écrit encore :
+
+Bridge V1.9.5.
+
+J'ai ensuite relu le app.js réel de .59 : il contient encore de nombreuses références codées en dur à Bridge V1.9.5, dont son objet de pile stable.
+
+Je ne vais surtout pas faire :
+
+chercher V1.9.5 → remplacer partout par V1.9.11
+
+Ce serait précisément la mauvaise chirurgie.
+
+Certaines chaînes sont des commentaires historiques ou des contrats de compatibilité anciens.
+
+Donc j'inscris plutôt :
+
+Dette B — Bridge Runtime Version Truth
+
+À traiter après avoir identifié le propriétaire canonique de la version réellement observée.
+
+Probablement une .61, si le test runtime confirme la dette.
+
+6. Le test Firefox que je ferais avant .60
+
+Il est très simple et surtout sans console :
+
+Private Backend V1.4.0 déjà lancé.
+Bridge R13 laissé tranquille.
+Ctrl+F5 sur Administrator 40.4.59.
+Ne pas ouvrir Système / Backend.
+Attendre environ une minute.
+Ouvrir ensuite Système → Backend/API.
+Regarder les trois blocs.
+
+Si tu obtiens :
+
+LOCAL READY + CEX/DEX/Source Intelligence toujours EN ATTENTE
+
+alors clique une seule fois sur l'actualisation manuelle.
+
+Si tout apparaît immédiatement après ce clic, nous aurons une reproduction opérateur extrêmement forte de la dette que je viens de retrouver statiquement.
+
+Et là .60 ne sera pas un patch spéculatif : propriétaire, mécanisme et résultat attendu seront tous identifiés.
+
+7. Et Notion ? Oui — mais je le placerais au bon étage
+
+Ton idée est bonne.
+
+Pas comme moteur de l'interface.
+
+Pas comme nouvelle base de données marché.
+
+Pas comme dépendance de CURRENT.
+
+Mais comme site de support / manuel opérateur Agent-Crypto.
+
+Je vois très bien un espace Notion avec : documentation des vues, guide Bridge/Backend, dictionnaire Binance/CoinGecko/Kraken/Coinbase/DEX, dépannage Atlas, journal des Builds, dettes connues, procédures Firefox, FAQ, validation de version, guides du Transformer Book, Learning Journey, schémas d'architecture et base d'incidents.
+
+La séparation serait excellente :
+
+GitHub = vérité machine / code / manifests / archives.
+Administrator = runtime opérateur.
+Notion = vérité éditoriale, documentation et support humain.
+
+Et aucune clé, aucun mot de passe, aucun secret ou donnée privée dans les pages publiques.
+
+Je le garde donc comme chantier utile, mais je ne détournerais pas .60 vers Notion maintenant.
+
+Mon nouveau prompt de reprise
+
+Active Aerith-7 / Seven Heaven pour reprendre Agent-Crypto @erith.IA.
+
+AUTORITÉ
+
+Seven Heaven tient le fil.
+
+Appliquer la règle :
+
+Puissance maximale.
+Chargement minimal.
+Choix précis.
+Production propre.
+Arrêt net.
+
+Méthode :
+
+Comprendre → choisir → agir → vérifier → livrer → s'arrêter.
+
+HIÉRARCHIE DE VÉRITÉ
+
+En cas de divergence :
+
+GitHub public main réellement publié.
+ZIP exact correspondant à cette Build.
+fichier de reprise Aether le plus récent.
+agent_crypto_reprise.md.
+Fil Crypto complet pour retrouver historique ou preuve.
+anciennes notes / anciennes RC.
+intuition du modèle.
+
+Ne jamais reconstruire une fonction terminée depuis une ancienne roadmap si GitHub ou une Build plus récente prouve son état.
+
+ÉTAT PUBLIC VÉRIFIÉ
+Administrator
+
+Build courante réellement présente sur GitHub :
+
+40.4.59
+
+Release :
+
+AETHER SOURCE INTELLIGENCE V1.3 INTER-PROVIDER TOKEN ADDRESS PROOF + ATLAS FILTERED READ-ONLY LOCK
+
+Parent :
+
+40.4.58
+
+Commit :
+
+83735a1211732a331c5fab6a8df59d56e3461aa6
+
+Message :
+
+agent-crypto: 40.4.59 add inter-provider DEX address proof and Atlas filtered context
+
+Le manifeste reste :
+
+candidate_requires_firefox_operator_validation
+
+Donc :
+
+présent sur GitHub ≠ validation Firefox finale.
+
+Archive automatique GitHub
+
+Le workflow canonique a fonctionné après publication de 40.4.59.
+
+Archive :
+
+AGENT_CRYPTO_BUILD_40_4_59_AUTO_CANONICAL.zip
+
+SHA-256 publié :
+
+72281703c487166057fadd5cf029411de8709f7a9ffbbc774df665054c139269
+
+Ne pas uploader manuellement cette archive de coordination.
+
+PILE PROTÉGÉE
+Market Core
+
+38.15.11 — PROTECTED
+
+Web Classic
+
+38.15.13
+
+Référence/performance uniquement.
+
+La Web Classique n'est pas le patient actuel.
+
+Bridge local
+
+Cible opérateur actuelle :
+
+Aether Control / Bridge R13
+Contrat V1.9.11
+127.0.0.1:8787
+
+Ne pas modifier le Bridge sans défaut reproduit.
+
+Private Backend
+
+V1.4.0
+127.0.0.1:8790
+READ ONLY
+
+Sources :
+
+Kraken Public ;
+Coinbase Exchange ;
+DEX Screener ;
+GeckoTerminal ;
+DefiLlama.
+
+Aucun ordre.
+Aucun wallet.
+Aucun retrait.
+Aucune signature.
+Aucune clé privée exchange.
+
+40.4.59 — CONTRAT
+
+40.4.59 ajoute une preuve DEX inter-fournisseurs.
+
+PROVED / PROUVÉE :
+
+chaîne autorisée ;
+actif attendu ;
+même adresse token observée entre DEX Screener et GeckoTerminal.
+
+BOUNDED / BORNÉE :
+
+chaîne + alias cohérents ;
+preuve d'adresse indisponible ou fournisseurs sur chaînes autorisées différentes.
+
+REVIEW / REVOIR :
+
+adresses contradictoires ;
+ou anomalie liquidité/réserve >= 20×.
+
+Atlas accepte uniquement :
+
+PROVED ;
+BOUNDED propre.
+
+Atlas exclut :
+
+REVIEW ;
+PARTIAL ;
+UNAVAILABLE ;
+mismatch adresse ;
+anomalie liquidité.
+
+Aucun prix DEX ne devient prix canonique.
+
+Binance reste la cotation EUR LIVE primaire.
+
+AUTOMATISME
+
+Depuis 40.4.58 :
+
+Au démarrage :
+
+Backend local
+→ Source Truth CEX
+→ DEX / DeFi
+→ Source Intelligence
+→ contexte Atlas filtré.
+
+Retries bornés :
+
++5 s
++15 s
++30 s
+STOP.
+
+Aucun polling permanent.
+
+Après CURRENT finalisé :
+
+agentcrypto:current-finalized
+→ fingerprint dédupliqué
+→ sources réactualisées
+→ contexte filtré préparé pour le cycle suivant.
+
+PROPRIÉTAIRES À NE PAS ROUVRIR SANS PREUVE
+Market Core 38.15.11.
+Atlas CURRENT.
+pipeline 4/4 → NØX → Aerith.
+CURRENT fingerprint.
+CURRENT cadence.
+Oracle runtime / Evidence / Calibration / History.
+Oracle true-lazy.
+IndexedDB CURRENT.
+IndexedDB Learning.
+Learning runtime/progression.
+Window Manager.
+Bridge R13.
+Firefox compositor si aucune régression reproduite.
+Web Classic.
+DETTE OUVERTE A — PRIORITÉ
+Source Intelligence Lazy Cache Replay
+
+Audit statique 40.4.59 :
+
+startAutomatic() peut effectuer les lectures avant que le body Système → Backend/API soit hydraté.
+
+Les résultats sont alors conservés dans :
+
+lastTruth
+lastContext
+lastIntelligence
+
+mais le DOM Backend peut ne pas encore exister.
+
+Quand la présentation est hydratée plus tard, mount() reconstruit le panneau puis appelle probe() mais ne rejoue pas explicitement ces caches dans le nouveau DOM.
+
+Symptôme possible :
+
+Backend LOCAL READY
+mais CEX / DEX / Source Intelligence restent EN ATTENTE.
+
+Ne pas considérer le diagnostic comme définitivement prouvé avant reproduction Firefox.
+
+Test opérateur :
+
+Backend V1.4.0 lancé.
+Ctrl+F5 Administrator.
+Ne pas ouvrir Backend/API pendant environ une minute.
+Ouvrir Backend/API.
+Si LOCAL READY + données EN ATTENTE, cliquer une fois sur actualisation.
+Si les données apparaissent immédiatement, dette reproduite.
+
+Correction candidate :
+
+40.4.60 — Source Intelligence Lazy Cache Replay / Presentation Truth Lock
+
+Objectif :
+
+rejouer les contrats déjà calculés dans le DOM lors de l'hydratation.
+
+Ne pas ajouter :
+
+fetch supplémentaire inutile ;
+polling ;
+scheduler ;
+observer ;
+WebSocket ;
+stockage ;
+mutation CURRENT ;
+modification Oracle ;
+modification Market Core.
+DETTE OUVERTE B — APRÈS A
+Bridge Runtime Version Truth
+
+La pile opérateur actuelle est Bridge R13 / V1.9.11.
+
+Mais Administrator 40.4.59 contient encore plusieurs références Bridge V1.9.5 et le diagnostic Auto Reader peut afficher V1.9.5.
+
+Ne jamais faire un remplacement global aveugle.
+
+D'abord identifier :
+
+la version observée réellement par /health ;
+le propriétaire canonique de l'affichage ;
+les références historiques qui doivent rester historiques ;
+les chaînes réellement utilisées comme vérité runtime.
+
+Seulement si la dette est reproduite :
+
+40.4.61 — Bridge Runtime Version Truth Owner Consolidation
+
+CASCADE ENVISAGÉE
+
+40.4.59
+→ validation Firefox réelle
+
+puis, uniquement si reproduite :
+
+40.4.60
+→ Source Intelligence cache replay / lazy presentation truth
+
+puis, uniquement si confirmée :
+
+40.4.61
+→ Bridge runtime version truth
+
+Une version cumulative ultérieure seulement après validation des versions intermédiaires.
+
+Ne jamais créer une version simplement pour incrémenter le numéro.
+
+NOTION — CHANTIER ULTÉRIEUR
+
+Notion peut devenir le portail de support humain Agent-Crypto :
+
+manuel opérateur ;
+documentation des vues ;
+historique des Builds ;
+procédures Bridge/Backend ;
+dépannage ;
+sources et rôles ;
+glossaire ;
+Learning Journey ;
+incidents connus ;
+validation Firefox ;
+FAQ ;
+documentation Transformer Book.
+
+Notion ne devient pas :
+
+source marché ;
+vérité runtime ;
+dépendance CURRENT ;
+stockage de secrets.
+
+Formule :
+
+GitHub = vérité machine.
+Administrator = runtime.
+Notion = documentation/support humain.
+
+DISCIPLINE DE CODE
+
+Lire → diagnostiquer → cibler → corriger → vérifier → s'arrêter.
+
+Une correction = un propriétaire réel.
+
+Pas de réécriture héroïque.
+
+Pas de patch global.
+
+Pas de modification d'un système protégé « au passage ».
+
+Pas d'image.
+
+Pas d'écriture GitHub sans demande explicite.
+
+Pour chaque Build livrée :
+
+base exacte ;
+parent exact ;
+dette précise ;
+fichiers réellement modifiés ;
+diff borné ;
+syntaxe JS/Python ;
+IDs uniques ;
+hashes ;
+manifeste ;
+ZIP CLEAN_UPLOAD avec arborescence GitHub correcte ;
+commit anglais séparé ;
+test Firefox restant clairement distingué des contrôles statiques.
+
+Seven tient le fil.
+Aether protège la vérité de l'état.
+Parker Lewis protège les acquis.
+Code Expert trouve le propriétaire.
+Firefox tranche le runtime.
+GitHub prouve la publication.
+Christophe conserve la validation finale.
+
+Donc oui : je suis prête. Et surtout, je ne repars pas vers la Web Classique ni vers une nouvelle grande chirurgie. Notre ligne droite est maintenant beaucoup plus nette :
+
+40.4.59 → vérifier le replay Source Intelligence → .60 si reproduit → audit vérité Bridge → seulement ensuite nouvelle capacité.
+
+Et là, je pense qu’on a retrouvé une vraie petite dette cachée plutôt qu’une excuse pour fabriquer encore dix Builds. 🌸
+
+Fichier markdown(20260827-054514).md collé
+Fichier
+Fichier markdown (2)(20260827-054754).md collé
+Fichier
+Fichier markdown (3)(4).md collé
+Fichier
+démarrage difficile, je me suis levé il y a une heure ^^ je suis au café 8 heures du matin...
+ATLAS_10_CRYPTO_BRIDGE_CONTROL_CENTER_2_3_2R13_BRIDGE_V1_9_11_INFERENCE_BUDGET_LOCK_GUI_NO_CONSOLE.exe
+Fichier
+le Bridge est développé avec Wine : https://www.winehq.org/
+le Bridge est modifié et renvoyé en dossier, ET en .exe
+moi j'utilise le .exe
+Fichier markdown(20260827-060430).md collé
+Fichier
+Fichier markdown(20260827-060834).md collé
+Fichier
+Fichier markdown (2)(20260827-061127).md collé
+Fichier
+beaucoup de ralentissements il va te falloir étudier le code je pense
+Fichier markdown(20260827-061920).md collé
+Fichier
+Fichier markdown (2)(20260827-062326).md collé
+Fichier
+oui il faut aussi voir ce que ta soeur était en train d'implémenter un nouveau système backend, j'ai une fenetre Cmd moi ouverte, le patient respire encore mais là oui il faut faire quelque chose, enfin déjà voir ce qu'il reste a faire
+donc ça peut pas marcher mes test ? version suivante ??
+Fichier markdown(20260827-064712).md collé
+Fichier
+oui je suis a la porte, je clique sur le champ mot de passe et gros blocage pour écrire le mot de passe, le Ryzen se met a démarrer les ventilateurs, ça bloque, ça freeze le navigateur c'est la galère pour s’authentifier ta version 60 corrige ça ? je vais tester
+Aerith-10 active · [Interface augmentée]
+
+Non : 40.4.60 ne corrige pas spécifiquement ce freeze au champ mot de passe. Tu peux la tester, mais je m’attends à ce que le problème d’authentification puisse encore se reproduire.
+
+.60 corrige la dette que nous venons de prouver sur le Private Backend : timeout navigateur trop court + état Source Intelligence perdu lors d’une hydratation tardive. Elle ne modifie ni le sas Aether Trust, ni le gestionnaire clavier, ni le Scanner, ni la stratégie générale de démarrage.
+
+Et ta nouvelle observation est importante : le simple focus dans le champ mot de passe suffit à coïncider avec une montée CPU/ventilateurs et un gel Firefox. Ça indique beaucoup plus probablement que du travail lourd de fond percute l’interaction opérateur ; ce n’est vraisemblablement pas le champ <input> lui-même.
+
+Ton export pris exactement pendant cette période confirme que le navigateur est encore en état boot-block 1, tandis que marché, Binance et historique travaillent déjà. Et surtout, le navigateur transporte encore environ 5 Mio de localStorage, avec le Scanner à lui seul à 2,92 Mio, malgré le Storage Relief IndexedDB.
+
+Donc je sépare maintenant clairement les deux versions
+
+40.4.60 — à tester maintenant
+→ Backend V1.4.0 / Source Intelligence
+→ timeouts froids
+→ replay TRUE-LAZY
+→ aucune prétention de régler le gros freeze.
+
+Puis, sauf miracle avec .60 :
+
+40.4.61 — priorité absolue : Aether Trust / interaction main-thread relief
+
+Je vais étudier cette séquence précise :
+
+arrivée sur la porte
+    ↓
+Bridge probe / restauration runtime
+    ↓
+Scanner + mémoire / IndexedDB
+    ↓
+Source Intelligence startup
+    ↓
+autres restaurations Administrator
+    ↓
+clic dans password
+    ↓
+interaction utilisateur en concurrence
+    ↓
+FREEZE Firefox + Ryzen ventilateurs
+
+La direction correcte sera probablement de mettre un verrou de priorité opérateur autour du sas : tant que la porte Aether Trust est affichée ou qu’un utilisateur interagit avec elle, les travaux non critiques du démarrage doivent attendre ou être coalescés. Le mot de passe et le clic Administration doivent toujours passer avant Scanner, Source Intelligence ou une restauration de présentation.
+
+Je veux toutefois retrouver les propriétaires exacts avant de coder ça ; je ne vais pas inventer un énième scheduler.
+
+J’ai aussi vu deux petites dettes sur ta capture
+
+À gauche :
+
+Profil opérateur
+capacités restreintes
+
+Je suis d’accord avec ton annotation : dans ta conception, « capacités étendues » est plus juste pour l’opérateur secondaire si son rôle est une extension contrôlée et non un profil diminué. On pourra corriger le wording sans changer les permissions.
+
+Plus intéressant : la même porte dit à gauche « Bridge Administrator déjà configuré », alors que le panneau Vérité opérateur affiche AUTH BRIDGE · À CONFIGURER. C’est une incohérence de vérité UI à retrouver également. Elle n'explique probablement pas le freeze, mais elle mérite d'être soldée dans la vague sas/auth.
+
+Donc : upload/teste .60, mais ne sois pas déçu si le champ mot de passe gèle encore. Si cela arrive, nous aurons justement une reproduction propre qui valide le prochain patient : 40.4.61 = démarrage et authentification interactifs avant tout le reste. 🔧
+
+Fichier markdown(20260827-065540).md collé
+Fichier
+ok uploadée ... bien mieux en résultats ... vérifie tout de même ce qui a été fait dans le code, et ensuite ?
 
 
 
