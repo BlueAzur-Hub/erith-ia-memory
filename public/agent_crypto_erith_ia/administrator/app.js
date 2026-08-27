@@ -1955,6 +1955,15 @@ async function atlasAccessSubmit(event) {
     }
 
     atlasAccessSetSession(ATLAS_ACCESS_OWNER_ROLE);
+    // 40.4.66 — a restored Ryzen CURRENT may have been activated before the
+    // Aether Trust / Bridge session existed. Reconcile the already-resident
+    // synthesis immediately after authorization so the public Book mirror
+    // cannot remain stuck on an older GitHub publication indefinitely.
+    if (bridgeAuth40375.ok) {
+      queueMicrotask(() => {
+        try { void atlasBookMirrorBridgeReconcile40466("post-auth"); } catch (_) {}
+      });
+    }
     atlasAccessSetStatus(bridgeAuth40375.ok ? "Accès Christophe + Bridge validés." : "Accès Christophe validé · Bridge hors ligne.", "ok");
     atlasV2SyncShareableUrl("advanced");
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
@@ -26674,14 +26683,14 @@ function atlasSnapshotWithSourceIntelligence4058(snapshot) {
       attached: true,
       optional: true,
       transaction_identity_excluded: true,
-      build: "40.4.65"
+      build: "40.4.66"
     }
   };
 }
 
 try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
-    build: "40.4.65",
+    build: "40.4.66",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
     owner: "app.js transport copy + ErithPrivateBackendSources4054",
     atlas_direct_internet_access: false,
@@ -39857,7 +39866,7 @@ function atlasParallelMarketEnsureMetalsRuntime40465(reason = "operator") {
   atlasParallelMarketDemandRuntime40465.lastError = "";
 
   const run = async () => {
-    // These owners are exclusive to the secondary Metals workspace. 40.4.65
+    // These owners are exclusive to the secondary Metals workspace. 40.4.66
     // keeps them completely out of the default Crypto cold boot, but preserves
     // their exact loaders and fallbacks when Metals is actually requested.
     atlasMetalsCursorInspectorInit();
@@ -39890,7 +39899,7 @@ function atlasParallelMarketEnsureMetalsRuntime40465(reason = "operator") {
     .catch(error => {
       atlasParallelMarketDemandRuntime40465.state = "error";
       atlasParallelMarketDemandRuntime40465.lastError = String(error?.message || error || "Metals demand runtime");
-      console.warn("40.4.65 Metals demand runtime :", error);
+      console.warn("40.4.66 Metals demand runtime :", error);
       return false;
     })
     .finally(() => {
@@ -39901,7 +39910,7 @@ function atlasParallelMarketEnsureMetalsRuntime40465(reason = "operator") {
 }
 
 globalThis.AtlasParallelMarketDemand40465 = Object.freeze({
-  build: "40.4.65",
+  build: "40.4.66",
   ensure: atlasParallelMarketEnsureMetalsRuntime40465,
   snapshot: () => ({
     state: atlasParallelMarketDemandRuntime40465.state,
@@ -45379,7 +45388,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.65",
+    build:"40.4.66",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -51415,9 +51424,9 @@ try {
 /* 40.4.63 — runtime phase-2 audit checkpoint; no runtime owner extracted. */ try{globalThis.__AGENT_CRYPTO_RUNTIME_BOOT_AUDIT_40463__=Object.freeze({build:"40.4.63",base:"40.4.62",presentation_migration_complete:true,runtime_performance_migration_complete:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.64 — peripheral runtime extraction wave 1. Diagnostics leave parser-blocking boot; three 1 s presentation loops run only while their own disclosure is open. Data/engine cadences remain unchanged. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
-/* 40.4.65 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
-try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.65",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.65";
+/* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
+try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
+const ATLAS_BUILD = "40.4.66";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -59770,6 +59779,22 @@ async function atlasBookMirrorBridgeStatus40377(){
   atlasBookMirrorBridgeState40377.lastError=atlasBookMirrorBridgeState40377.credentialReady?"":"Credential GitHub local absent";
   return r.payload;
 }
+async function atlasBookMirrorBridgeReconcile40466(reason="post-auth"){
+  if(!atlasDeviceComputeAllowed()||!atlasAccessIsAuthorized()||!atlasBridgeAuthToken40375())return false;
+  // Refresh status/capabilities after Aether Trust. A synthesis restored before
+  // authentication was intentionally not published by 40.3.77; this bounded
+  // reconciliation closes that ordering gap without adding a timer or poller.
+  try { await atlasBridgeCapabilityRefresh40376(); } catch (_) {}
+  try { await atlasBookMirrorBridgeStatus40377(); } catch (_) {}
+  const payload=atlasBookMirrorPayload36();
+  const fp=String(payload?.fingerprint||"").trim();
+  if(!payload?.package||!fp){
+    atlasBookMirrorBridgeState40377.lastError="Aucune synthèse Ryzen complète à publier";
+    return false;
+  }
+  return atlasBookMirrorBridgePublish40377(reason);
+}
+
 async function atlasBookMirrorBridgePublish40377(reason="current-complete"){
   if(atlasBookMirrorBridgeState40377.busy||!atlasDeviceComputeAllowed()||!atlasAccessIsAuthorized())return false;
   if(!atlasBridgeCapabilityHas40376("book_mirror.publish"))await atlasBridgeCapabilityRefresh40376();
@@ -59812,6 +59837,14 @@ queueMicrotask(()=>{if(atlasDeviceComputeAllowed()&&atlasAccessIsAuthorized())vo
 
 
 /* 40.3.78 — Bridge / Control Center operator truth, no new runtime owner. */
+try{globalThis.AtlasBookMirrorReconcile40466=Object.freeze({
+  build:"40.4.66",
+  run:(reason="manual")=>atlasBookMirrorBridgeReconcile40466(reason),
+  snapshot:()=>Object.freeze({...atlasBookMirrorBridgeState40377}),
+  automatic_trigger:"post-auth + existing CURRENT completion/restore hooks",
+  new_timer:false,new_observer:false,new_scheduler:false
+});}catch(_){}
+
 const ATLAS_BRIDGE_CONTROL_CENTER_40378=Object.freeze({control_center:"2.3.2R12",bridge:"1.9.10",auth:"Administrator",book_mirror_owner:"Bridge restricted capability",wine_compatibility:"required"});
 
 

@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.65",
-  "parent_build": "40.4.64",
+  "build": "40.4.66",
+  "parent_build": "40.4.65",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -197,7 +197,7 @@
   "next": {
     "after_40_4_59": "Operator Firefox validation of automatic Source Intelligence V1.3 and address-proof counts. Then extend additional read-only source coverage or documentation; do not reopen CURRENT cadence without reproduced defect.",
     "after_40_4_63": "40.4.64 peripheral runtime extraction from audited demand candidates; Market Core/CURRENT/Oracle analytical ownership stay protected.",
-    "after_40_4_64": "40.4.65 implemented: secondary Metals runtime leaves default Crypto boot; Celestial closed cadence relieved; ordinary version check moved outside first boot burst.",
+    "after_40_4_64": "40.4.66 implemented: secondary Metals runtime leaves default Crypto boot; Celestial closed cadence relieved; ordinary version check moved outside first boot burst.",
     "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains."
   },
   "migration_summary": {
@@ -388,7 +388,7 @@
     "new_observer": false,
     "new_network_owner": false,
     "new_storage_owner": false,
-    "next": "40.4.65 second extraction after Firefox validation"
+    "next": "40.4.66 second extraction after Firefox validation"
   },
   "runtime_phase2_wave2_40465": {
     "owner": "app.js + index.html",
@@ -423,5 +423,20 @@
     "new_network_owner": false,
     "new_storage_owner": false,
     "next": "40.4.66 cumulative migration/backend regression checkpoint and stop gate"
+  },
+  "book_mirror_post_auth_reconcile_40466": {
+    "owner": "app.js::atlasBookMirrorBridgeReconcile40466",
+    "cause": "latest Ryzen synthesis can restore before Aether Trust / Bridge authorization; 40.3.77 correctly skips publication while unauthorized but had no post-auth reconciliation",
+    "fix": "one bounded post-auth reconciliation publishes the already-resident latest synthesis through the existing restricted Bridge capability",
+    "book_fetch_owner": "app.js::atlasBookMirrorFetch36",
+    "public_mirror": "./book_mirror.json",
+    "new_timer": false,
+    "new_observer": false,
+    "new_scheduler": false,
+    "generic_github_write_added": false,
+    "book_local_generation": false,
+    "market_core_changed": false,
+    "current_changed": false,
+    "bridge_protocol_changed": false
   }
 }
