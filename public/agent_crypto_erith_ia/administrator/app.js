@@ -26643,14 +26643,14 @@ function atlasSnapshotWithSourceIntelligence4058(snapshot) {
       attached: true,
       optional: true,
       transaction_identity_excluded: true,
-      build: "40.4.62"
+      build: "40.4.63"
     }
   };
 }
 
 try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
-    build: "40.4.62",
+    build: "40.4.63",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
     owner: "app.js transport copy + ErithPrivateBackendSources4054",
     atlas_direct_internet_access: false,
@@ -45263,7 +45263,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.62",
+    build:"40.4.63",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -51239,8 +51239,8 @@ try {
   });
 } catch (_) {}
 
-// Single manually edited version value.
-const ATLAS_BUILD = "40.4.62";
+/* 40.4.63 — runtime phase-2 audit checkpoint; no runtime owner extracted. */ try{globalThis.__AGENT_CRYPTO_RUNTIME_BOOT_AUDIT_40463__=Object.freeze({build:"40.4.63",base:"40.4.62",presentation_migration_complete:true,runtime_performance_migration_complete:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
+const ATLAS_BUILD = "40.4.63";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
