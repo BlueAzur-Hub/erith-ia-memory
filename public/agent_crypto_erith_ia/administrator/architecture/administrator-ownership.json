@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.59",
-  "parent_build": "40.4.57",
+  "build": "40.4.60",
+  "parent_build": "40.4.59",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -255,5 +255,25 @@
     "current_fingerprint_unchanged": true,
     "current_cadence_unchanged": true,
     "market_core": "38.15.11 PROTECTED"
+  },
+  "backend_acceptance_40460": {
+    "scope": "presentation/client transport only",
+    "owner": "js/views/private-backend-sources.js",
+    "private_backend": "V1.4.0 preserved",
+    "bridge": "R13 / V1.9.11 protected and untouched",
+    "fixes": [
+      "CEX cold-path browser timeout alignment",
+      "DEX/DeFi cold-path timeout alignment",
+      "TRUE-LAZY state replay",
+      "startup retry false-success guard"
+    ],
+    "protected": [
+      "Market Core 38.15.11",
+      "Atlas CURRENT",
+      "Oracle",
+      "IndexedDB",
+      "Window Manager",
+      "Bridge R13"
+    ]
   }
 }

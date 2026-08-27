@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_private_backend_sources_v5",
-  "build": "40.4.59",
+  "build": "40.4.60",
   "backend_version": "1.4.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
@@ -207,5 +207,17 @@
     "canonical_price_created": false,
     "financial_signal": false,
     "missing_data_fabricated": false
+  },
+  "cold_path_acceptance_40460": {
+    "owner": "js/views/private-backend-sources.js",
+    "backend_version": "1.4.0 unchanged",
+    "cex_timeout_ms": 16000,
+    "context_timeout_ms": 32000,
+    "reason": "browser deadline covers bounded backend cold path instead of aborting before a valid HTTP 200 response",
+    "lazy_state_replay": true,
+    "replay_emits_consumer_events": false,
+    "startup_success_requires_fresh_cex_and_context": true,
+    "polling_added": false,
+    "backend_change_required": false
   }
 }
