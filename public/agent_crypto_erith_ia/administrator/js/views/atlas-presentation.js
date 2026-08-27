@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.77
+/* Agent-Crypto @erith.IA — 40.4.78
    ATLAS MIGRATION CLOSURE — PRIMARY + SECONDARY DELEGATED HYDRATION OWNER
 
    40.4.72 preserves the 40.4.70 interaction-first source-lazy topology and fixes
@@ -27,7 +27,7 @@
 */
 (()=>{
   "use strict";
-  const BUILD="40.4.77";
+  const BUILD="40.4.78";
   const SOURCE="./views/atlas.html";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
@@ -55,7 +55,21 @@
           <div class="atlas-analysis-progress-nodes atlas-collapsed-current-nodes-40295" aria-label="Étapes compactes Atlas CURRENT"><span data-atlas-progress-node="1"><i>01</i><b>Marché</b></span><span data-atlas-progress-node="2"><i>02</i><b>Top 5</b></span><span data-atlas-progress-node="3"><i>03</i><b>Math Core</b></span><span data-atlas-progress-node="4"><i>04</i><b>Contradictions</b></span><span data-atlas-progress-node="nox"><i>NØX</i><b>No-FOMO</b></span><span data-atlas-progress-node="aerith"><i>A</i><b>Aerith</b></span></div>
         </div>
       </summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="local-ai-hub" data-atlas-source-lazy-body-40469="local-ai-hub" data-atlas-hydration-40469="placeholder"><p class="atlas-local-response-empty">Atlas/Aerith · runtime conservé · présentation opérationnelle chargée uniquement à l’ouverture.</p></div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="local-ai-hub" data-atlas-source-lazy-body-40469="local-ai-hub" data-atlas-hydration-40469="placeholder">
+        <section class="glass compact atlas-resident-truth-40478" id="atlasResidentLocalAi40478" aria-label="Vérité runtime Atlas et Aerith résidente">
+          <div class="section-head compact">
+            <div><p class="eyebrow">RUNTIME RÉSIDENT · PRÉSENTATION LAZY</p><h4>Atlas / Aerith restent actifs sans DOM documentaire complet</h4></div>
+            <span class="pill ok" id="atlasResidentLocalState40478">Restauration…</span>
+          </div>
+          <div class="auto-grid memory-truth-grid">
+            <article><b>CURRENT</b><span id="atlasResidentCurrent40478">Restauration runtime…</span></article>
+            <article><b>Snapshot</b><span id="atlasResidentSnapshot40478">—</span></article>
+            <article><b>Bridge / modèle</b><span id="atlasResidentBridge40478">État runtime en lecture…</span></article>
+            <article><b>Conclusion Aerith</b><span id="atlasResidentConclusion40478">Restauration IndexedDB…</span></article>
+          </div>
+          <p class="planning-intro" id="atlasResidentConclusionPreview40478">Les rapports, la conclusion et les mémoires restent dans le runtime / IndexedDB ; l’ouverture matérialise seulement leur présentation détaillée.</p>
+        </section>
+      </div>
     </details>
 
     <details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse atlas-family-member atlas-tone-creation" id="forge-aerith" data-collapse-key="forge-aerith" data-layout-family="creation" data-atlas-source-lazy-shell-40467="forge-aerith" data-atlas-source-lazy-shell-40469="forge-aerith">
@@ -65,17 +79,47 @@
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="auto-reader" data-layout-family="intelligence" data-atlas-source-lazy-shell-40467="auto-reader" data-atlas-source-lazy-shell-40469="auto-reader">
       <summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-title">Atlas Auto Reader</span><span class="atlas-collapse-subtitle">Collecte autonome du marché · présentation à la demande</span></summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="auto-reader" data-atlas-source-lazy-body-40469="auto-reader" data-atlas-hydration-40469="placeholder"></div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="auto-reader" data-atlas-source-lazy-body-40469="auto-reader" data-atlas-hydration-40469="placeholder">
+        <section class="glass compact atlas-resident-truth-40478" aria-label="Résumé résident Atlas Auto Reader">
+          <div class="auto-grid memory-truth-grid">
+            <article><b>Auto Reader</b><span id="atlasResidentAutoState40478">Initialisation…</span></article>
+            <article><b>Prochaine lecture</b><span id="atlasResidentAutoNext40478">—</span></article>
+            <article><b>Mémoire locale</b><span id="atlasResidentAutoCounts40478">—</span></article>
+            <article><b>Dernier relevé</b><span id="atlasResidentAutoLast40478">—</span></article>
+          </div>
+          <p class="planning-intro">Collecte locale 60 s résidente ; le panneau complet est seulement matérialisé à l’ouverture.</p>
+        </section>
+      </div>
     </details>
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="shared-memory" data-layout-family="intelligence" data-atlas-source-lazy-shell-40467="shared-memory" data-atlas-source-lazy-shell-40469="shared-memory">
       <summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-title">Shared Memory</span><span class="atlas-collapse-subtitle">Export / import par machine · présentation à la demande</span></summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="shared-memory" data-atlas-source-lazy-body-40469="shared-memory" data-atlas-hydration-40469="placeholder"></div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="shared-memory" data-atlas-source-lazy-body-40469="shared-memory" data-atlas-hydration-40469="placeholder">
+        <section class="glass compact atlas-resident-truth-40478" aria-label="Résumé résident Shared Memory">
+          <div class="auto-grid memory-truth-grid">
+            <article><b>Collecteur local</b><span id="atlasResidentSharedCollector40478">—</span></article>
+            <article><b>Relevés fusionnés</b><span id="atlasResidentSharedCount40478">—</span></article>
+            <article><b>Machines présentes</b><span id="atlasResidentSharedMachines40478">—</span></article>
+            <article><b>Dernière trace</b><span id="atlasResidentSharedLast40478">—</span></article>
+          </div>
+          <p class="planning-intro">La mémoire locale reste accessible au runtime ; export/import détaillé chargé à la demande.</p>
+        </section>
+      </div>
     </details>
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="github-memory" data-layout-family="intelligence" data-atlas-source-lazy-shell-40467="github-memory" data-atlas-source-lazy-shell-40469="github-memory">
       <summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-title">GitHub Shared Memory</span><span class="atlas-collapse-subtitle">Mémoire commune GitHub · présentation à la demande</span></summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="github-memory" data-atlas-source-lazy-body-40469="github-memory" data-atlas-hydration-40469="placeholder"></div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="github-memory" data-atlas-source-lazy-body-40469="github-memory" data-atlas-hydration-40469="placeholder">
+        <section class="glass compact atlas-resident-truth-40478" aria-label="Résumé résident GitHub Shared Memory">
+          <div class="auto-grid memory-truth-grid">
+            <article><b>GitHub Memory</b><span id="atlasResidentGithubState40478">Initialisation…</span></article>
+            <article><b>Dernier succès</b><span id="atlasResidentGithubSuccess40478">—</span></article>
+            <article><b>Relevés GitHub</b><span id="atlasResidentGithubRecords40478">—</span></article>
+            <article><b>Fusion locale</b><span id="atlasResidentGithubFusion40478">—</span></article>
+          </div>
+          <p class="planning-intro">La lecture GitHub reste un runtime indépendant ; son grand panneau de diagnostic reste lazy.</p>
+        </section>
+      </div>
     </details>`;
 
   const SPECS=Object.freeze({
