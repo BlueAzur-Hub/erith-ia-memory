@@ -652,6 +652,43 @@ function atlasDecisionBoardDetailActive4081() {
   return !details || details.open === true;
 }
 
+/* ============================================================
+   40.4.82 — LEARNING RUNTIME TRUE DEMAND · COLD-BOOT RELIEF
+
+   Fil.Crypto phase-2 contract: Learning/Simulation may wait for explicit
+   demand. 40.4.81 already stopped their CLOSED presentation renders, but
+   the legacy-learning IndexedDB recovery/reconciliation still ran at every
+   cold boot. 40.4.82 moves that initialization behind the existing
+   Simulation disclosure without changing the DOM owner, schema or data.
+   ============================================================ */
+const atlasLearningRuntimeDemandState4082 = {
+  started:false,
+  initializing:false,
+  ready:false,
+  failed:false,
+  reason:null,
+  promise:null,
+  completed_at:null,
+  last_error:null
+};
+
+function atlasLearningRuntimeDemandSnapshot4082() {
+  return Object.freeze({
+    build:"40.4.82",
+    started:atlasLearningRuntimeDemandState4082.started === true,
+    initializing:atlasLearningRuntimeDemandState4082.initializing === true,
+    ready:atlasLearningRuntimeDemandState4082.ready === true,
+    failed:atlasLearningRuntimeDemandState4082.failed === true,
+    reason:atlasLearningRuntimeDemandState4082.reason || null,
+    completed_at:atlasLearningRuntimeDemandState4082.completed_at || null,
+    last_error:atlasLearningRuntimeDemandState4082.last_error || null
+  });
+}
+
+function atlasLearningRuntimeInitializing4082() {
+  return atlasLearningRuntimeDemandState4082.initializing === true;
+}
+
 function atlasLearningMark40442(node, tag) {
   if (node instanceof HTMLElement) node.dataset[tag] = "1";
 }
@@ -30126,6 +30163,84 @@ function runLegacyLearningRecoveryAtStartup() {
   return initializeLearningNotebookStorage();
 }
 
+async function atlasLearningRuntimeDemandEnsure4082(reason = "simulation_open") {
+  if (atlasLearningRuntimeDemandState4082.ready) return atlasLearningRuntimeDemandSnapshot4082();
+  if (atlasLearningRuntimeDemandState4082.promise) return atlasLearningRuntimeDemandState4082.promise;
+
+  atlasLearningRuntimeDemandState4082.started = true;
+  atlasLearningRuntimeDemandState4082.initializing = true;
+  atlasLearningRuntimeDemandState4082.failed = false;
+  atlasLearningRuntimeDemandState4082.reason = String(reason || "simulation_open");
+  atlasLearningRuntimeDemandState4082.last_error = null;
+
+  atlasLearningHoldCockpitRender();
+  atlasLearningRuntimeDemandState4082.promise = (async () => {
+    try {
+      await runLegacyLearningRecoveryAtStartup();
+      atlasLearningRuntimeDemandState4082.ready = true;
+      atlasLearningRuntimeDemandState4082.completed_at = new Date().toISOString();
+      return atlasLearningRuntimeDemandSnapshot4082();
+    } catch (error) {
+      atlasLearningStorageLastResult = {
+        ok:false,
+        backend:"IndexedDB",
+        error_name:String(error?.name || "IndexedDBError"),
+        error_message:String(error?.message || error)
+      };
+      if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
+      atlasLearningNotebookCache.recovery = {
+        status:"error",
+        verified:false,
+        failed_write:atlasLearningStorageLastResult,
+        source_keys_preserved:true,
+        backend:"IndexedDB"
+      };
+      atlasLearningRuntimeDemandState4082.ready = false;
+      atlasLearningRuntimeDemandState4082.failed = true;
+      atlasLearningRuntimeDemandState4082.last_error = atlasLearningStorageLastResult.error_message;
+      throw error;
+    } finally {
+      atlasLearningRuntimeDemandState4082.initializing = false;
+
+      // Presentation is replayed only if the operator still has Simulation open.
+      // Keep the cockpit render hold through this replay so recovery + roadmap do
+      // not create a second repaint burst on the main thread.
+      if (atlasSimulationPresentationActive4081()) {
+        try { hydrateSimCostInputs(); } catch (_) {}
+        try { applyAtlasPedagogyView(); } catch (_) {}
+        try { renderSchoolProfileLabels(); } catch (_) {}
+        try { renderSimulationEducation(); } catch (_) {}
+        try { renderTransactionProofLedger(); } catch (_) {}
+        try { renderSimulation(); } catch (_) {}
+        try { renderExpertRoadmap(); } catch (_) {}
+        try { renderLearningPersistenceNotice(atlasLearningStorageLastResult); } catch (_) {}
+        try { renderLegacyLearningMigration(true); } catch (_) {}
+        try { agentCryptoShowResetSuccessOnBoot(); } catch (_) {}
+      }
+      atlasLearningReleaseCockpitRender();
+      if (atlasLearningRuntimeDemandState4082.failed) atlasLearningRuntimeDemandState4082.promise = null;
+    }
+  })();
+
+  return atlasLearningRuntimeDemandState4082.promise;
+}
+
+try {
+  globalThis.ErithLearningRuntimeDemand40482 = Object.freeze({
+    build:"40.4.82",
+    ensure:atlasLearningRuntimeDemandEnsure4082,
+    snapshot:atlasLearningRuntimeDemandSnapshot4082,
+    cold_boot_when_simulation_closed:false,
+    indexeddb_schema_changed:false,
+    collector_schema_changed:false,
+    stable_dom_preserved:true,
+    new_timer:false,
+    new_observer:false,
+    new_scheduler:false,
+    new_network_owner:false
+  });
+} catch (_) {}
+
 function importLegacyLearningData() {
   return applyLegacyLearningRecovery({ automatic:false });
 }
@@ -30151,6 +30266,8 @@ function restoreLegacyLearningRecovery() {
 }
 
 function renderLegacyLearningMigration(forceOpen = false) {
+  if (!atlasSimulationPresentationActive4081()) return null;
+  if (atlasLearningRuntimeInitializing4082()) return null;
   const panel = document.getElementById("learningLegacyRecoveryPanel");
   const status = document.getElementById("learningLegacyRecoveryStatus");
   const summary = document.getElementById("learningLegacyRecoverySummary");
@@ -34464,6 +34581,7 @@ function saveExpertRoadmap(data) {
 
 function renderExpertRoadmap() {
   if (!atlasSimulationPresentationActive4081()) return null;
+  if (atlasLearningRuntimeInitializing4082()) return null;
   if (!els.expertRoadmapGrid) return;
   const data = loadExpertRoadmap();
   let discovered = 0;
@@ -51474,16 +51592,12 @@ function atlasRuntimeDemandReplayInit4081() {
 
   const simulation = document.querySelector('details[data-collapse-key="simulation"]');
   bindToggle(simulation, "atlasRuntimeDemand4081", () => {
-    // Batch Learning's own re-entrant renders into one final cockpit repaint.
-    atlasLearningHoldCockpitRender();
-    try {
-      renderSimulation();
-      renderExpertRoadmap();
-      try { renderLearningPersistenceNotice(atlasLearningStorageLastResult); } catch (_) {}
-      try { renderLegacyLearningMigration(true); } catch (_) {}
-    } finally {
-      atlasLearningReleaseCockpitRender();
-    }
+    // Immediate lightweight Simulation feedback; Learning/IndexedDB recovery is
+    // then started exactly once because the operator explicitly opened it.
+    try { renderSimulation(); } catch (_) {}
+    void atlasLearningRuntimeDemandEnsure4082("simulation_toggle").catch(error => {
+      console.warn("40.4.82 Learning runtime demand:", error);
+    });
   });
 
   const autoReader = document.querySelector('details[data-collapse-key="auto-reader"]');
@@ -51529,9 +51643,11 @@ window.setTimeout(atlasRuntimeDemandReplayInit4081, 0);
 /* 40.4.64 — peripheral runtime extraction wave 1. Diagnostics leave parser-blocking boot; three 1 s presentation loops run only while their own disclosure is open. Data/engine cadences remain unchanged. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.81 — runtime demand completion wave 3. Stable 40.4.66 DOM ownership is preserved; closed Simulation/Learning, Auto Reader, GitHub Memory and Decision Board long-history presentation no longer consume runtime render work. Binance 5 s watchdog no longer force-bypasses its existing REST refresh gate. */
+/* 40.4.82 — runtime phase-2 wave 4. Learning/Simulation IndexedDB recovery, roadmap reconciliation and learning→collector backfill leave normal Crypto cold boot and start only on explicit Simulation demand; stable DOM, schemas and protected market/current engines stay unchanged. */
+try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.81";
+const ATLAS_BUILD = "40.4.82";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -53715,21 +53831,15 @@ window.addEventListener("resize", () => {
 });
 
 setTimeout(() => {
-  hydrateSimCostInputs();
-  applyAtlasPedagogyView();
-  renderTransactionProofLedger();
-  renderSchoolProfileLabels();
-  renderSimulationEducation();
-  runLegacyLearningRecoveryAtStartup().then(() => {
-    agentCryptoShowResetSuccessOnBoot();
-  }).catch(error => {
-    atlasLearningStorageLastResult = { ok:false, backend:"IndexedDB", error_name:String(error?.name || "IndexedDBError"), error_message:String(error?.message || error) };
-    if (!atlasLearningNotebookCache) atlasLearningNotebookCache = atlasLearningSeedFromLocalStorage();
-    atlasLearningNotebookCache.recovery = { status:"error", verified:false, failed_write:atlasLearningStorageLastResult, source_keys_preserved:true, backend:"IndexedDB" };
-    renderExpertRoadmap();
-    renderLearningJourneyCockpit();
-    renderLegacyLearningMigration(true);
-  });
+  const simulation = document.querySelector('details[data-collapse-key="simulation"]');
+  // Direct/deep-link or explicitly restored open state keeps parity. Normal
+  // Crypto cold boot with Simulation closed performs no Learning IDB recovery,
+  // no Collector reconciliation and no Learning presentation build.
+  if (simulation?.open === true) {
+    void atlasLearningRuntimeDemandEnsure4082("simulation_open_at_boot").catch(error => {
+      console.warn("40.4.82 Learning open-at-boot demand:", error);
+    });
+  }
 }, 0);
 
 /* ============================================================
