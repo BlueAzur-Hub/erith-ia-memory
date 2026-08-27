@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.58",
+  "build": "40.4.59",
   "parent_build": "40.4.57",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
@@ -177,10 +177,10 @@
     }
   ],
   "next": {
-    "after_40_4_58": "Observe automatic startup + CURRENT-finalized refresh. Next product work may add token-address proof for selected DEX assets or extend source intelligence coverage, without reopening CURRENT cadence."
+    "after_40_4_59": "Operator Firefox validation of automatic Source Intelligence V1.3 and address-proof counts. Then extend additional read-only source coverage or documentation; do not reopen CURRENT cadence without reproduced defect."
   },
   "migration_summary": {
-    "state": "FUNCTIONALLY_COMPLETE_SOURCE_INTELLIGENCE_AUTO_ATLAS_OPTIONAL",
+    "state": "FUNCTIONALLY_COMPLETE_SOURCE_INTELLIGENCE_ADDRESS_PROOF_AUTO_ATLAS_FILTERED",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -199,7 +199,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Automatic Source Intelligence is now operator-click-free and optional Atlas read-only context; next meaningful work is address-level DEX identity proof or additional read-only source coverage."
+    "next_product_work": "Validate 40.4.59 address-proof/filter behavior; then additional read-only sources or support/Notion. Market Core/CURRENT remain protected."
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
@@ -221,10 +221,10 @@
   },
   "source_intelligence_v1_40456": {
     "owner": "js/views/private-backend-sources.js + Private Backend V1.3.0",
-    "state": "AUTO_READ_ONLY_FACT_CONTRACT_IDENTITY_HARDENED_ATLAS_OPTIONAL",
-    "contract": "agent_crypto_source_intelligence_v2",
-    "identity_level": "CHAIN_ALIAS_ONLY",
-    "address_level_proof": false,
+    "state": "AUTO_READ_ONLY_FACT_CONTRACT_ADDRESS_PROOF_ATLAS_FILTERED",
+    "contract": "agent_crypto_source_intelligence_v3",
+    "identity_level": "CHAIN_ALIAS_PLUS_INTER_PROVIDER_ADDRESS",
+    "address_level_proof": "INTER_PROVIDER_WHEN_AVAILABLE",
     "atlas_consumer_enabled": true,
     "new_polling": false,
     "storage_owner_added": false,
@@ -246,5 +246,14 @@
     "atlas_context_optional_read_only": true,
     "current_fingerprint_unchanged": true,
     "current_cadence_unchanged": true
+  },
+  "identity_proof_40459": {
+    "backend_version": "1.4.0",
+    "proof": "INTER_PROVIDER_TOKEN_ADDRESS_MATCH",
+    "mismatch_excluded_from_atlas": true,
+    "liquidity_review_excluded_from_atlas": true,
+    "current_fingerprint_unchanged": true,
+    "current_cadence_unchanged": true,
+    "market_core": "38.15.11 PROTECTED"
   }
 }

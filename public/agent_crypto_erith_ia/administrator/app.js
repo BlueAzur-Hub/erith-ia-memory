@@ -26497,7 +26497,7 @@ function atlasLocalConclusionTruthPolish(answer, snapshot) {
 }
 
 /* ============================================================
-   40.4.58 — SOURCE INTELLIGENCE V2 → ATLAS OPTIONAL READ-ONLY TRANSPORT
+   40.4.59 — SOURCE INTELLIGENCE V3 → ATLAS FILTERED OPTIONAL READ-ONLY TRANSPORT
 
    Source Intelligence is auxiliary context only. It is appended to the
    transport copy sent to the local Bridge after the canonical CURRENT
@@ -26510,9 +26510,9 @@ function atlasSourceIntelligenceTransport4058() {
   try {
     const api = globalThis.ErithPrivateBackendSources4054;
     const intel = api?.sourceIntelligence?.();
-    if (!intel || String(intel.schema || "") !== "agent_crypto_source_intelligence_v2") return null;
+    if (!intel || String(intel.schema || "") !== "agent_crypto_source_intelligence_v3") return null;
     return {
-      schema: "agent_crypto_source_intelligence_atlas_context_v1",
+      schema: "agent_crypto_source_intelligence_atlas_context_v2",
       source_schema: intel.schema,
       generated_at_utc: intel.generated_at_utc || null,
       state: intel.state || "partial",
@@ -26530,7 +26530,10 @@ function atlasSourceIntelligenceTransport4058() {
         missing_data_fabricated: false,
         atlas_direct_internet_access: false,
         current_fingerprint_participation: false,
-        current_cadence_unchanged: true
+        current_cadence_unchanged: true,
+        dex_identity_filter: "PROVED_OR_CLEAN_BOUNDED",
+        address_mismatch_excluded: true,
+        liquidity_review_excluded: true
       }
     };
   } catch (_) {
@@ -26547,20 +26550,20 @@ function atlasSnapshotWithSourceIntelligence4058(snapshot) {
     ...snapshot,
     strict_contract: {
       ...contract,
-      source_intelligence_v2: intel
+      source_intelligence_v3: intel
     },
-    source_intelligence_transport_v1: {
+    source_intelligence_transport_v2: {
       attached: true,
       optional: true,
       transaction_identity_excluded: true,
-      build: "40.4.58"
+      build: "40.4.59"
     }
   };
 }
 
 try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
-    build: "40.4.58",
+    build: "40.4.59",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
     owner: "app.js transport copy + ErithPrivateBackendSources4054",
     atlas_direct_internet_access: false,
@@ -45173,7 +45176,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.58",
+    build:"40.4.59",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -51016,7 +51019,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.58";
+const ATLAS_BUILD = "40.4.59";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
