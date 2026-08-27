@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.69",
-  "parent_build": "40.4.68",
+  "build": "40.4.70",
+  "parent_build": "40.4.69",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -516,5 +516,25 @@
     "new_observer": false,
     "new_network_owner": false,
     "new_storage_owner": false
+  },
+  "runtime_phase2_wave5_40470": {
+    "scope": "Atlas late-DOM lifecycle completion only",
+    "parent_build": "40.4.69",
+    "owner": "js/views/atlas-presentation.js + app.js late-hydration owner",
+    "interaction_first_binding": true,
+    "bounded_paint_handoff": "one requestAnimationFrame per hydrated scope, coalesced by scope; no loop",
+    "scope_timing_exposed": true,
+    "semantic_reconcile_after_replay": true,
+    "current_runtime_resident": true,
+    "market_core_changed": false,
+    "oracle_changed": false,
+    "bridge_changed": false,
+    "indexeddb_changed": false,
+    "history_deleted": false,
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false,
+    "operator_validation_required": true
   }
 }

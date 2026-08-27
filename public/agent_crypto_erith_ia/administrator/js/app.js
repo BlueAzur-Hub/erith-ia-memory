@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.69";
+  const ADMIN_BUILD = "40.4.70";
   const ADMIN_RELEASE = "AETHER ATLAS SOURCE-LAZY COMPLETION + SECOND-LEVEL RESIDENCY + LATE-DOM EPOCH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
@@ -2457,9 +2457,10 @@
     });
     globalThis.AgentCryptoAtlasInnerResidencyRebind40468 = atlasInnerResidencyOwner40469;
     globalThis.AgentCryptoAtlasInnerResidencyRebind40469 = atlasInnerResidencyOwner40469;
+    globalThis.AgentCryptoAtlasInnerResidencyRebind40470 = atlasInnerResidencyOwner40469;
   } catch (_) {}
   // If an Atlas disclosure hydrated before this late runtime owner registered,
   // ask the presentation owner to replay only its pending/materialized scopes.
-  queueMicrotask(() => { try { globalThis.ErithAtlasPresentation40469?.replayRebind?.(); } catch (_) {} });
+  queueMicrotask(() => { try { (globalThis.ErithAtlasPresentation40470||globalThis.ErithAtlasPresentation40469)?.replayRebind?.(); } catch (_) {} });
 
 })();

@@ -1,24 +1,25 @@
-/* Agent-Crypto @erith.IA — 40.4.69
-   ATLAS TRUE SOURCE-LAZY COMPLETION / SECOND-LEVEL RESIDENCY + LATE-DOM EPOCH LOCK
+/* Agent-Crypto @erith.IA — 40.4.70
+   ATLAS INTERACTION-FIRST LATE-DOM HANDOFF / PAINT-YIELD + SCOPE TIMING LOCK
 
-   40.4.67 moved Atlas family 02 out of parser boot, but the first opening still built
-   a very large local-AI subtree in one mutation. 40.4.68 restored missing late binders,
-   yet it still mixed the new source-lazy owner with historical boot-time presentation
-   assumptions. 40.4.69 completes that migration instead of rolling it back:
+   40.4.69 completed the two-level source-lazy topology but Firefox operator testing
+   still exposed a first-interaction cliff: DOM insertion, binding, state replay and
+   semantic visibility reconciliation could execute in the same rendering turn.
+   40.4.70 keeps the architecture and finishes its lifecycle contract:
 
-   - parser boot owns only family header + five stable first-level disclosure shells;
+   - parser boot still owns only family header + five stable first-level disclosure shells;
    - canonical views/atlas.html is fetched once, on demand;
-   - local-ai first hydration materializes only the operational core;
-   - read-only audits, memories, Decision Board, Scanner, CURRENT journal,
-     Multi-Collector and Book/Knowledge stay as true second-level shells;
-   - each second-level subtree hydrates only when explicitly opened/requested;
-   - a single late-rebind owner is called per hydrated scope;
-   - no duplicate legacy atlas-peripheral-lazy.js owner;
-   - no recurring timer, observer, storage owner, market owner or CURRENT owner added.
+   - local-ai first hydration still materializes only the operational core;
+   - the 12 secondary readers remain true second-level source-lazy roots;
+   - critical action binding runs immediately after DOM insertion;
+   - state/render replay is deferred to one bounded requestAnimationFrame handoff so
+     Firefox can commit the newly-created DOM before non-critical presentation work;
+   - per-scope critical/replay timings are exposed for operator diagnosis;
+   - no duplicate legacy Atlas owner, recurring timer, observer, storage owner,
+     market owner or CURRENT owner is added.
 */
 (()=>{
   "use strict";
-  const BUILD="40.4.69";
+  const BUILD="40.4.70";
   const SOURCE="./views/atlas.html";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
@@ -99,9 +100,18 @@
   let secondaryHydrationCount=0;
   let lastError="";
   let semanticFrame=0;
+  let sourceFetchDurationMs=0;
   const hydrated=new Set();
   const secondaryHydrated=new Set();
   const pendingRebind=new Set();
+  const replayFrames=new Map();
+  const scopeTimings=new Map();
+  const now=()=>globalThis.performance?.now?.()??Date.now();
+  const rounded=value=>Math.round(Number(value||0)*100)/100;
+  function timingPatch(scope,patch={}){
+    const key=String(scope||"unknown");
+    scopeTimings.set(key,Object.freeze({...scopeTimings.get(key),...patch}));
+  }
 
   host.insertAdjacentHTML("beforebegin",shellHtml);
   host.remove();
@@ -133,10 +143,11 @@
     if(sourceTextCache)return Promise.resolve(sourceTextCache);
     if(sourcePromise)return sourcePromise;
     sourceFetchCount+=1;
+    const fetchStarted=now();
     sourcePromise=fetch(SOURCE,{credentials:"same-origin",cache:"default"})
       .then(response=>{if(!response.ok)throw new Error(`Atlas source HTTP ${response.status}`);return response.text();})
-      .then(text=>{sourceTextCache=String(text||"");lastError="";return sourceTextCache;})
-      .catch(error=>{lastError=String(error?.message||error||"Atlas source unavailable");sourcePromise=null;throw error;});
+      .then(text=>{sourceTextCache=String(text||"");lastError="";sourceFetchDurationMs=rounded(now()-fetchStarted);return sourceTextCache;})
+      .catch(error=>{sourceFetchDurationMs=rounded(now()-fetchStarted);lastError=String(error?.message||error||"Atlas source unavailable");sourcePromise=null;throw error;});
     return sourcePromise;
   }
 
@@ -192,12 +203,12 @@
   }
 
   function invalidatePresentation(scope){
-    try{globalThis.AgentCryptoAtlasPresentationEpoch40469?.invalidate?.(scope);}catch(_){}
+    try{(globalThis.AgentCryptoAtlasPresentationEpoch40470||globalThis.AgentCryptoAtlasPresentationEpoch40469)?.invalidate?.(scope);}catch(_){}
   }
-  function ownerRebind(scope){
-    const owner=globalThis.AgentCryptoAtlasLateHydration40469||globalThis.AgentCryptoAtlasLateHydration40468||globalThis.AgentCryptoAtlasLateHydration40467;
+  function ownerRebind(scope,phase="full"){
+    const owner=globalThis.AgentCryptoAtlasLateHydration40470||globalThis.AgentCryptoAtlasLateHydration40469||globalThis.AgentCryptoAtlasLateHydration40468||globalThis.AgentCryptoAtlasLateHydration40467;
     if(!owner?.rebind){pendingRebind.add(scope);return false;}
-    try{owner.rebind(scope);pendingRebind.delete(scope);return true;}catch(error){pendingRebind.add(scope);console.warn(`Agent-Crypto ${BUILD} · Atlas late rebind`,scope,error);return false;}
+    try{owner.rebind(scope,{phase});pendingRebind.delete(scope);return true;}catch(error){pendingRebind.add(scope);console.warn(`Agent-Crypto ${BUILD} · Atlas late rebind`,scope,phase,error);return false;}
   }
   function scheduleSemanticReconcile(){
     if(semanticFrame)return;
@@ -208,10 +219,25 @@
     });
   }
   function rebind(scope,{semantic=false}={}){
-    invalidatePresentation(scope);
-    ownerRebind(scope);
-    if(semantic)scheduleSemanticReconcile();
-    try{window.dispatchEvent(new CustomEvent("erith:atlas-hydrated",{detail:{build:BUILD,scope}}));}catch(_){}
+    const clean=String(scope||"all");
+    invalidatePresentation(clean);
+    const criticalStarted=now();
+    ownerRebind(clean,"critical");
+    timingPatch(clean,{critical_ms:rounded(now()-criticalStarted),last_phase:"critical",pending_replay:true});
+
+    const previous=replayFrames.get(clean);
+    if(previous)cancelAnimationFrame(previous);
+    const frame=requestAnimationFrame(()=>{
+      replayFrames.delete(clean);
+      const replayStarted=now();
+      ownerRebind(clean,"replay");
+      if(semantic)scheduleSemanticReconcile();
+      const replayMs=rounded(now()-replayStarted);
+      timingPatch(clean,{replay_ms:replayMs,last_phase:"replay",pending_replay:false,last_completed_at:new Date().toISOString()});
+      try{window.dispatchEvent(new CustomEvent("erith:atlas-hydrated",{detail:{build:BUILD,scope:clean,phase:"replay",critical_ms:scopeTimings.get(clean)?.critical_ms||0,replay_ms:replayMs}}));}catch(_){}
+    });
+    replayFrames.set(clean,frame);
+    return true;
   }
 
   function attachSecondary(root=document){
@@ -347,12 +373,12 @@
     return [...scopes].filter(Boolean);
   }
   function snapshot(){return Object.freeze({
-    build:BUILD,source:SOURCE,strategy:"first-level source lazy + second-level Atlas residency + late-DOM epoch invalidation",
+    build:BUILD,source:SOURCE,strategy:"first-level source lazy + second-level Atlas residency + interaction-first paint handoff + scope timing",
     boot_full_atlas_html:false,local_ai_full_subtree_on_first_open:false,legacy_peripheral_lazy_owner_loaded:false,
-    source_fetch_count:sourceFetchCount,source_text_cached:!!sourceTextCache,hydration_count:hydrationCount,secondary_hydration_count:secondaryHydrationCount,
-    hydrated:[...hydrated],secondary_hydrated:[...secondaryHydrated],pending_rebind:[...pendingRebind],last_error:lastError||null,
+    source_fetch_count:sourceFetchCount,source_fetch_ms:sourceFetchDurationMs,source_text_cached:!!sourceTextCache,hydration_count:hydrationCount,secondary_hydration_count:secondaryHydrationCount,
+    hydrated:[...hydrated],secondary_hydrated:[...secondaryHydrated],pending_rebind:[...pendingRebind],pending_replay:[...replayFrames.keys()],scope_timings:Object.fromEntries(scopeTimings),last_error:lastError||null,
     current_runtime_owner:"app.js + IndexedDB",book_mirror_runtime_preserved:true,auto_reader_runtime_preserved:true,github_memory_runtime_preserved:true,
-    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false
+    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false,bounded_paint_handoff:true
   });}
 
   const api=Object.freeze({
@@ -363,6 +389,8 @@
   globalThis.ErithAtlasPresentation40467=api;
   globalThis.ErithAtlasPresentation40468=api;
   globalThis.ErithAtlasPresentation40469=api;
-  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40469",runtime_owner:"app.js"});
+  globalThis.ErithAtlasPresentation40470=api;
+  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40470",runtime_owner:"app.js"});
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40469__=snapshot();
+  globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40470__=snapshot();
 })();

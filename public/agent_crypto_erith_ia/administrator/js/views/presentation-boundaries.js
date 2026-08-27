@@ -1,12 +1,12 @@
-/* Agent-Crypto @erith.IA — 40.4.69
+/* Agent-Crypto @erith.IA — 40.4.70
    MODULAR PRESENTATION BOUNDARY / ATLAS SOURCE-LAZY COMPLETION TRUTH
    Presentation is externalized; shared truth/state/memory/engines remain in the main runtime. */
 (()=>{
   "use strict";
-  const BUILD="40.4.69";
+  const BUILD="40.4.70";
   const REGISTRY=Object.freeze({
     build:BUILD,
-    mode:"atlas-two-level-source-lazy-oracle-true-lazy-operations-projects-lazy-system-partial-lazy",
+    mode:"atlas-two-level-source-lazy-interaction-first-oracle-true-lazy-operations-projects-lazy-system-partial-lazy",
     extraction_active:true,
     runtime_mutation:false,
     network_fetch:true,
@@ -16,7 +16,7 @@
     fragments:Object.freeze({atlas:"./views/atlas.html",oracle:"./views/oracle.html",operations:"./views/operations.html",system:"./views/system.html",projects:"./views/projects.html"}),
     legacy_owner:"./index.html",
     oracle:Object.freeze({status:"external-presentation-shell-mounted-heavy-bodies-lazy",family:"01 · Analyse & décision",suite:"Oracle — Analyse prospective & preuves",canonical_fragment:"./views/oracle.html",transport:"./js/views/oracle-presentation.js",anchors:Object.freeze(["oracle-analysis-suite","oracle-models-calibration","oracle-evidence-explorer"]),rule:"40.4.41 true-lazy heavy bodies; Oracle engine/Evidence/history remain shared and persistent"}),
-    atlas:Object.freeze({status:"external-presentation-two-level-source-lazy",family:"02 · Intelligence, mémoire & création",canonical_fragment:"./views/atlas.html",transport:"./js/views/atlas-presentation.js",anchors:Object.freeze(["atlasLayoutFamily02","atlas-local-ai-collapse"]),rule:"40.4.69 keeps first-level shells at boot, materializes only local-AI operational core on first disclosure, and hydrates heavy audit/memory/Decision/Scanner/Journal/Multi-Collector/Book subtrees only on their own demand; Atlas truth/state/memory/CURRENT remain shared and persistent"}),
+    atlas:Object.freeze({status:"external-presentation-two-level-source-lazy-interaction-first",family:"02 · Intelligence, mémoire & création",canonical_fragment:"./views/atlas.html",transport:"./js/views/atlas-presentation.js",anchors:Object.freeze(["atlasLayoutFamily02","atlas-local-ai-collapse"]),rule:"40.4.70 keeps the 40.4.69 two-level source-lazy topology and adds interaction-first late binding plus one bounded paint handoff before non-critical replay; Atlas truth/state/memory/CURRENT remain shared and persistent"}),
     operations:Object.freeze({status:"external-presentation-shell-mounted-body-lazy",family:"03 · Préparation & opérations",canonical_fragment:"./views/operations.html",transport:"./js/views/operations-presentation.js",anchors:Object.freeze(["atlasLayoutFamily03","situation","questionnaire","briefing","planning"]),rule:"header + four stable shells at boot; bodies hydrate on first disclosure"}),
     system:Object.freeze({status:"external-presentation-partial-lazy",family:"04 · Expérimentation & système",canonical_fragment:"./views/system.html",transport:"./js/views/system-presentation.js",anchors:Object.freeze(["atlasLayoutFamily04","atlasStorageHealth40198","atlasGreyPlateForensic40393","simulation","commandes","backend","safety","physical-security"]),rule:"40.4.24 peripheral bodies lazy; Storage/Grey/Simulation remain under their existing presentation/runtime ownership in 40.4.69"}),
     projects:Object.freeze({status:"external-presentation-shell-mounted-body-lazy",family:"@erith.IA · Missions de vie",canonical_fragment:"./views/projects.html",transport:"./js/views/projects-presentation.js",anchors:Object.freeze(["missions-vie","fonds-erith-ia","association-erith-ia","aerith-enfance","aerith-animaux","aerith-terre-vivante"]),rule:"Missions hero + five shells at boot; project bodies hydrate on disclosure"}),
@@ -30,7 +30,9 @@
       "Atlas CURRENT engine remains resident even when Atlas presentation is absent",
       "Atlas first-level shell IDs exist before downstream runtime scripts execute",
       "Atlas local-AI first hydration does not construct heavy second-level readers",
-      "late Atlas action bindings and presentation truth are replayed idempotently after hydration",
+      "late Atlas action bindings are installed before non-critical presentation replay",
+      "one bounded paint handoff separates late DOM insertion from non-critical replay",
+      "per-scope critical/replay timings are exposed without a recurring observer",
       "late-DOM presentation de-duplication cannot suppress a first real paint",
       "Operations/Projects stable proxy anchors preserve routing",
       "hidden or unmounted presentation is not an engine OFF command",

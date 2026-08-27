@@ -2055,79 +2055,98 @@ function atlasLocalRuntimeRestore40469(reason = "boot") {
   return Object.freeze({build:ATLAS_BUILD,reason,runtime_only:true,presentation_required:false});
 }
 
-function atlasLocalAiPresentationBind40469(reason = "local-ai") {
-  // Late DOM is a new presentation generation. Invalidate presentation-only
-  // de-duplication signatures before replaying the already-owned runtime truth.
-  try { globalThis.AgentCryptoAtlasPresentationEpoch40469?.invalidate?.(`local-ai:${reason}`); } catch (_) {}
+function atlasLocalAiPresentationBind40470(reason = "local-ai", phase = "full") {
+  // 40.4.70 interaction-first contract: bind controls immediately, then replay
+  // non-critical presentation truth after the source-lazy owner yields one paint.
+  const cleanPhase = ["critical","replay","full"].includes(String(phase)) ? String(phase) : "full";
+  try { (globalThis.AgentCryptoAtlasPresentationEpoch40470||globalThis.AgentCryptoAtlasPresentationEpoch40469)?.invalidate?.(`local-ai:${reason}:${cleanPhase}`); } catch (_) {}
 
-  const bind = (id, handler, key = "atlasLocalAiBound40469") => atlasBindOnce40469(document.getElementById(id), "click", key, handler);
-  bind("btnLocalBridgeProbe", atlasLocalBridgeProbe);
-  document.querySelectorAll("[data-atlas-local-profile]").forEach(button => atlasBindOnce40469(button,"click","atlasLocalProfileBound40469",()=>atlasLocalDialogueSelectProfile(button.dataset.atlasLocalProfile)));
-  document.querySelectorAll("[data-atlas-local-summary]").forEach(button => atlasBindOnce40469(button,"click","atlasLocalSummaryBound40469",()=>atlasLocalDialogueRunSummary(button.dataset.atlasLocalSummary)));
-  bind("btnAtlasLocalAsk", atlasLocalDialogueAsk);
-  bind("btnAtlasLocalClear", atlasLocalDialogueClear);
-  bind("btnAtlasLocalCopy", atlasLocalDialogueCopy);
-  bind("btnAtlasLocalExport", atlasLocalDialogueExport);
-  bind("btnAtlasLocalConclusion", () => atlasLocalConclusionRun({ automatic:false, force:true }));
-  document.querySelectorAll("[data-atlas-response-tab]").forEach(button => atlasBindOnce40469(button,"click","atlasResponseTabBound40469",()=>atlasLocalResponseSelectView(button.dataset.atlasResponseTab)));
-  bind("btnAtlasLocalRunAll", () => atlasLocalReportsRunAll({ automatic:false, openFirst:true }));
-  document.querySelectorAll("[data-atlas-report-copy]").forEach(button => atlasBindOnce40469(button,"click","atlasReportCopyBound40469",()=>atlasLocalReportsCopy(button.dataset.atlasReportCopy)));
-  document.querySelectorAll("[data-atlas-report-export]").forEach(button => atlasBindOnce40469(button,"click","atlasReportExportBound40469",()=>atlasLocalReportsExport(button.dataset.atlasReportExport)));
+  if (cleanPhase === "critical" || cleanPhase === "full") {
+    const bind = (id, handler, key = "atlasLocalAiBound40469") => atlasBindOnce40469(document.getElementById(id), "click", key, handler);
+    bind("btnLocalBridgeProbe", atlasLocalBridgeProbe);
+    document.querySelectorAll("[data-atlas-local-profile]").forEach(button => atlasBindOnce40469(button,"click","atlasLocalProfileBound40469",()=>atlasLocalDialogueSelectProfile(button.dataset.atlasLocalProfile)));
+    document.querySelectorAll("[data-atlas-local-summary]").forEach(button => atlasBindOnce40469(button,"click","atlasLocalSummaryBound40469",()=>atlasLocalDialogueRunSummary(button.dataset.atlasLocalSummary)));
+    bind("btnAtlasLocalAsk", atlasLocalDialogueAsk);
+    bind("btnAtlasLocalClear", atlasLocalDialogueClear);
+    bind("btnAtlasLocalCopy", atlasLocalDialogueCopy);
+    bind("btnAtlasLocalExport", atlasLocalDialogueExport);
+    bind("btnAtlasLocalConclusion", () => atlasLocalConclusionRun({ automatic:false, force:true }));
+    document.querySelectorAll("[data-atlas-response-tab]").forEach(button => atlasBindOnce40469(button,"click","atlasResponseTabBound40469",()=>atlasLocalResponseSelectView(button.dataset.atlasResponseTab)));
+    bind("btnAtlasLocalRunAll", () => atlasLocalReportsRunAll({ automatic:false, openFirst:true }));
+    document.querySelectorAll("[data-atlas-report-copy]").forEach(button => atlasBindOnce40469(button,"click","atlasReportCopyBound40469",()=>atlasLocalReportsCopy(button.dataset.atlasReportCopy)));
+    document.querySelectorAll("[data-atlas-report-export]").forEach(button => atlasBindOnce40469(button,"click","atlasReportExportBound40469",()=>atlasLocalReportsExport(button.dataset.atlasReportExport)));
 
-  // Core-only replay. Heavy secondary readers now have their own source-lazy scope
-  // and are intentionally NOT initialized during the first local-ai hydration.
-  try { atlasLocalReportResidencyInit40351(); } catch (_) {}
-  try { atlasSharedConclusionResidencyInit40352(); } catch (_) {}
-  try { atlasSharedSynthesisInit(); } catch (_) {}
-  try { atlasDeviceComputeInit(); } catch (_) {}
-  try { atlasQuestionRouterInit37(); } catch (_) {}
-  try { atlasClassicAnalysisModeInit38155(); } catch (_) {}
+    // Binding/residency only. These make the just-created controls interactive
+    // without forcing all CURRENT/Book/synthesis paints in the same event turn.
+    try { atlasLocalReportResidencyInit40351(); } catch (_) {}
+    try { atlasSharedConclusionResidencyInit40352(); } catch (_) {}
+    try { atlasDeviceComputeInit(); } catch (_) {}
+    try { atlasQuestionRouterInit37(); } catch (_) {}
+    try { atlasClassicAnalysisModeInit38155(); } catch (_) {}
+  }
 
-  const question=document.getElementById("atlasLocalQuestion");
-  if(question&&!String(question.value||"").trim()) question.value="Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
-  try { atlasLocalDialogueSelectProfile(atlasLocalDialogueState.profile || "atlas"); } catch (_) {}
-  try { atlasLocalResponseSelectView(atlasLocalDialogueState.activeResponseView || "conclusion"); } catch (_) {}
-  try { atlasLocalDialogueSetConnection(atlasLocalDialogueState.connected, ""); } catch (_) {}
-  try { atlasQuestionBookUi37(); } catch (_) {}
-  try { atlasCurrentRestUiConverge4052(`atlas-hydration:${reason}`); } catch (_) {}
-  try { atlasBookRoleUiLock3812(`atlas-hydration:${reason}`); } catch (_) {}
-  try { atlasCollapsedCurrentSync40295(); } catch (_) {}
-  return Object.freeze({build:ATLAS_BUILD,reason,scope:"local-ai",local_ai_present:!!document.getElementById("local-ai-hub"),bridge_connected:atlasLocalDialogueState.connected===true,current_runtime_preserved:true});
+  if (cleanPhase === "replay" || cleanPhase === "full") {
+    try { atlasSharedSynthesisInit(); } catch (_) {}
+    const question=document.getElementById("atlasLocalQuestion");
+    if(question&&!String(question.value||"").trim()) question.value="Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
+    try { atlasLocalDialogueSelectProfile(atlasLocalDialogueState.profile || "atlas"); } catch (_) {}
+    try { atlasLocalResponseSelectView(atlasLocalDialogueState.activeResponseView || "conclusion"); } catch (_) {}
+    try { atlasLocalDialogueSetConnection(atlasLocalDialogueState.connected, ""); } catch (_) {}
+    try { atlasQuestionBookUi37(); } catch (_) {}
+    try { atlasCurrentRestUiConverge4052(`atlas-hydration:${reason}`); } catch (_) {}
+    try { atlasBookRoleUiLock3812(`atlas-hydration:${reason}`); } catch (_) {}
+    try { atlasCollapsedCurrentSync40295(); } catch (_) {}
+  }
+
+  return Object.freeze({build:ATLAS_BUILD,reason,phase:cleanPhase,scope:"local-ai",local_ai_present:!!document.getElementById("local-ai-hub"),bridge_connected:atlasLocalDialogueState.connected===true,current_runtime_preserved:true});
 }
+// Current and compatibility names intentionally share the same idempotent binder.
+const atlasLocalAiPresentationBind40469 = (reason="local-ai", phase="full") => atlasLocalAiPresentationBind40470(reason,phase);
 // Compatibility entry point for 40.4.67/68 callers.
 const atlasLocalAiPresentationBind40467 = atlasLocalAiPresentationBind40469;
 
-function atlasLocalAiSecondaryRebind40469(scope = "") {
+function atlasLocalAiSecondaryRebind40470(scope = "", phase = "full") {
   const clean=String(scope||"");
-  try { globalThis.AgentCryptoAtlasPresentationEpoch40469?.invalidate?.(`secondary:${clean}`); } catch (_) {}
+  const cleanPhase=["critical","replay","full"].includes(String(phase))?String(phase):"full";
+  try { (globalThis.AgentCryptoAtlasPresentationEpoch40470||globalThis.AgentCryptoAtlasPresentationEpoch40469)?.invalidate?.(`secondary:${clean}:${cleanPhase}`); } catch (_) {}
 
   if (clean === "memory-residency") {
-    try { return globalThis.AgentCryptoAtlasInnerResidencyRebind40469?.rebind?.(clean)
-      || globalThis.AgentCryptoAtlasInnerResidencyRebind40468?.rebind?.(clean)
-      || Object.freeze({build:ATLAS_BUILD,scope:clean,pending_inner_owner:true}); } catch (_) {}
+    if (cleanPhase === "critical" || cleanPhase === "full") {
+      try { return globalThis.AgentCryptoAtlasInnerResidencyRebind40470?.rebind?.(clean)
+        || globalThis.AgentCryptoAtlasInnerResidencyRebind40469?.rebind?.(clean)
+        || globalThis.AgentCryptoAtlasInnerResidencyRebind40468?.rebind?.(clean)
+        || Object.freeze({build:ATLAS_BUILD,scope:clean,pending_inner_owner:true}); } catch (_) {}
+    }
+    return Object.freeze({build:ATLAS_BUILD,scope:clean,phase:cleanPhase,presentation_only:true});
   }
   if (clean === "decision-board") {
-    try { globalThis.AgentCryptoAtlasInnerResidencyRebind40469?.rebind?.(clean) || globalThis.AgentCryptoAtlasInnerResidencyRebind40468?.rebind?.(clean); } catch (_) {}
-    try { renderDecisionBoard(); } catch (_) {}
-    try { atlasOperatorSummaryRender35(); } catch (_) {}
-    return Object.freeze({build:ATLAS_BUILD,scope:clean,presentation_only:true});
+    if (cleanPhase === "critical" || cleanPhase === "full") {
+      try { globalThis.AgentCryptoAtlasInnerResidencyRebind40470?.rebind?.(clean) || globalThis.AgentCryptoAtlasInnerResidencyRebind40469?.rebind?.(clean) || globalThis.AgentCryptoAtlasInnerResidencyRebind40468?.rebind?.(clean); } catch (_) {}
+    }
+    if (cleanPhase === "replay" || cleanPhase === "full") {
+      try { renderDecisionBoard(); } catch (_) {}
+      try { atlasOperatorSummaryRender35(); } catch (_) {}
+    }
+    return Object.freeze({build:ATLAS_BUILD,scope:clean,phase:cleanPhase,presentation_only:true});
   }
   if (clean === "scanner") {
-    try { atlasScannerTruthDetailInit40358(); } catch (_) {}
-    try { atlasScannerTruthRender37(); } catch (_) {}
-    return Object.freeze({build:ATLAS_BUILD,scope:clean,presentation_only:true});
+    if (cleanPhase === "critical" || cleanPhase === "full") try { atlasScannerTruthDetailInit40358(); } catch (_) {}
+    if (cleanPhase === "replay" || cleanPhase === "full") try { atlasScannerTruthRender37(); } catch (_) {}
+    return Object.freeze({build:ATLAS_BUILD,scope:clean,phase:cleanPhase,presentation_only:true});
   }
   if (clean === "current-journal") {
-    try { atlasCurrentJournalInit35(); } catch (_) {}
-    try { atlasCurrentJournalRender33(); } catch (_) {}
-    return Object.freeze({build:ATLAS_BUILD,scope:clean,presentation_only:true});
+    if (cleanPhase === "critical" || cleanPhase === "full") try { atlasCurrentJournalInit35(); } catch (_) {}
+    if (cleanPhase === "replay" || cleanPhase === "full") try { atlasCurrentJournalRender33(); } catch (_) {}
+    return Object.freeze({build:ATLAS_BUILD,scope:clean,phase:cleanPhase,presentation_only:true});
   }
   if (clean === "multi-collector") {
-    try { atlasMultiCollectorOperatorInit(); } catch (_) {}
-    return Object.freeze({build:ATLAS_BUILD,scope:clean,presentation_only:true});
+    if (cleanPhase === "critical" || cleanPhase === "full") try { atlasMultiCollectorOperatorInit(); } catch (_) {}
+    if (cleanPhase === "replay" || cleanPhase === "full") try { atlasMultiCollectorOperatorRender?.(); } catch (_) {}
+    return Object.freeze({build:ATLAS_BUILD,scope:clean,phase:cleanPhase,presentation_only:true});
   }
   return null;
 }
+const atlasLocalAiSecondaryRebind40469 = (scope="", phase="full") => atlasLocalAiSecondaryRebind40470(scope,phase);
 
 function atlasInitLocalAccess() {
   atlasBindOnce40469(document.getElementById("atlasAccessForm"),"submit","atlasAccessBound40469",atlasAccessSubmit);
@@ -2145,12 +2164,20 @@ function atlasInitLocalAccess() {
 
 try {
   const owner=Object.freeze({
-    build:"40.4.69",
-    rebind(scope="all"){
-      if(scope==="all"||scope==="local-ai")return atlasLocalAiPresentationBind40469(scope);
-      if(["auto-reader","shared-memory","github-memory","current-audit","book-knowledge"].includes(scope))return atlasRebindDeferredMemoryPanels40425(scope);
-      if(["memory-residency","decision-board","scanner","current-journal","multi-collector"].includes(scope))return atlasLocalAiSecondaryRebind40469(scope);
-      return Object.freeze({build:ATLAS_BUILD,scope,presentation_only:true});
+    build:"40.4.70",
+    rebind(scope="all", options={}){
+      const phase=["critical","replay","full"].includes(String(options?.phase||"full"))?String(options.phase||"full"):"full";
+      if(scope==="all"||scope==="local-ai")return atlasLocalAiPresentationBind40470(scope,phase);
+      if(["auto-reader","shared-memory","github-memory"].includes(scope)){
+        if(phase==="critical"||phase==="full")return atlasRebindDeferredMemoryPanels40425(scope);
+        return Object.freeze({build:ATLAS_BUILD,scope,phase,presentation_only:true});
+      }
+      if(["current-audit","book-knowledge"].includes(scope)){
+        if(phase==="replay"||phase==="full")return atlasRebindDeferredMemoryPanels40425(scope);
+        return Object.freeze({build:ATLAS_BUILD,scope,phase,presentation_only:true});
+      }
+      if(["memory-residency","decision-board","scanner","current-journal","multi-collector"].includes(scope))return atlasLocalAiSecondaryRebind40470(scope,phase);
+      return Object.freeze({build:ATLAS_BUILD,scope,phase,presentation_only:true});
     },
     runtime_owner:"app.js",
     local_ai_first_hydration_core_only:true,
@@ -2164,7 +2191,8 @@ try {
   globalThis.AgentCryptoAtlasLateHydration40467=owner;
   globalThis.AgentCryptoAtlasLateHydration40468=owner;
   globalThis.AgentCryptoAtlasLateHydration40469=owner;
-  queueMicrotask(()=>{ try { globalThis.ErithAtlasPresentation40469?.replayRebind?.(); } catch (_) {} });
+  globalThis.AgentCryptoAtlasLateHydration40470=owner;
+  queueMicrotask(()=>{ try { (globalThis.ErithAtlasPresentation40470||globalThis.ErithAtlasPresentation40469)?.replayRebind?.(); } catch (_) {} });
 } catch (_) {}
 
 
@@ -26625,8 +26653,8 @@ atlasLocalReportsSetBusy = function atlasLocalReportsSetBusy403100(busy) {
 };
 
 try {
-  globalThis.AgentCryptoAtlasPresentationEpoch40469 = Object.freeze({
-    build:"40.4.69",
+  const atlasPresentationEpochOwner40470 = Object.freeze({
+    build:"40.4.70",
     invalidate:atlasPresentationInvalidate40469,
     state:()=>({
       epoch:atlasActivityChurnState403100.presentationEpoch40469,
@@ -26641,10 +26669,12 @@ try {
     observer_added:false,
     storage_owner_added:false
   });
+  globalThis.AgentCryptoAtlasPresentationEpoch40469 = atlasPresentationEpochOwner40470;
+  globalThis.AgentCryptoAtlasPresentationEpoch40470 = atlasPresentationEpochOwner40470;
 } catch (_) {}
 
 globalThis.AtlasActivityChurn403100 = Object.freeze({
-  build: "40.4.69-compat-40.3.100",
+  build: "40.4.70-compat-40.3.100",
   state: () => ({ ...atlasActivityChurnState403100 }),
   late_dom_epoch_safe: true,
   analysis_compute_changed: false,
@@ -51625,10 +51655,10 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_40467__=Object.freeze({build:"40.4.67",parent:"40.4.66",atlas_full_markup_at_boot:false,legacy_atlas_peripheral_lazy_loaded:false,late_ui_rebind:true,current_runtime_resident:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}
 /* 40.4.68 — first recovery of the 40.4.67 late-bind regression; retained as lineage evidence. */
 try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({build:"40.4.68",parent:"40.4.67",classic_mode_late_rebind:true,inner_memory_residency_late_rebind:true,memory_health_late_rebind:true,content_visibility_gate:false,current_runtime_resident:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}
-/* 40.4.69 — complete the source-lazy migration instead of rebuilding the full Atlas tree at first disclosure. Secondary presentation stays source-resident until explicitly requested; late-DOM presentation de-duplication is epoch-safe. */
-try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40469__=Object.freeze({build:"40.4.69",parent:"40.4.68",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* 40.4.70 — finish the source-lazy lifecycle with interaction-first binding and a bounded paint handoff before non-critical replay. */
+try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40470__=Object.freeze({build:"40.4.70",parent:"40.4.69",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,interaction_first_binding:true,bounded_paint_handoff:true,scope_timing_exposed:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.69";
+const ATLAS_BUILD = "40.4.70";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
