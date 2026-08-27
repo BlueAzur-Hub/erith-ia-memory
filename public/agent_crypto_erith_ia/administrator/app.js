@@ -51925,7 +51925,7 @@ try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({b
 /* 40.4.70 — finish the source-lazy lifecycle with interaction-first binding and a bounded paint handoff before non-critical replay. */
 try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40470__=Object.freeze({build:"40.4.70",parent:"40.4.69",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,interaction_first_binding:true,bounded_paint_handoff:true,scope_timing_exposed:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.78";
+const ATLAS_BUILD = "40.4.79";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -59212,13 +59212,9 @@ function atlasRuntimeTruth3813() {
   try { scriptToken = appScript ? String(new URL(appScript.src, document.baseURI).searchParams.get("v") || "") : ""; } catch (_) {}
   const appBuild = String(typeof ATLAS_BUILD !== "undefined" ? ATLAS_BUILD : "").trim();
   const appToken = String(typeof ATLAS_ASSET_TOKEN !== "undefined" ? ATLAS_ASSET_TOKEN : "").trim();
-  const adminMetaBuild = String(document.querySelector('meta[name="administrator-build"]')?.content || "").trim();
-  const bodyAdminBuild = String(document.body?.dataset?.administratorBuild || "").trim();
   const checks = {
     authoritative_build: appBuild === ATLAS_RUNTIME_TRUTH_3813.build,
     html_build_matches_app: !!metaBuild && metaBuild === appBuild,
-    administrator_meta_matches_app: !!adminMetaBuild && adminMetaBuild === appBuild,
-    body_administrator_build_matches_app: !!bodyAdminBuild && bodyAdminBuild === appBuild,
     html_token_matches_app: !!metaToken && metaToken === appToken,
     script_token_matches_app: !!scriptToken && scriptToken === appToken,
     runtime_contract_present: runtimeContract === "runtime-truth-v1"
@@ -63077,198 +63073,5 @@ try{
     new_websocket:false,
     new_network_owner:false,
     new_storage_namespace:false
-  });
-}catch(_){}
-/* ============================================================
-   40.4.78 — ATLAS RESIDENT TRUTH + CACHE COHERENCE LOCK
-
-   Contract restored from the historical Atlas migration:
-   - closed first-level sections retain header + runtime status + compact truth;
-   - heavy documentary DOM remains source-lazy;
-   - Auto Reader runtime remains active independently from its detailed panel;
-   - Shared/GitHub memory truth remains readable before detailed hydration;
-   - stored CURRENT / reports / Aerith conclusion are runtime/IndexedDB truth,
-     not DOM truth;
-   - no recurring timer/observer/WebSocket/network/storage owner is added here.
-   ============================================================ */
-
-function atlasResidentSet40478(id, value, fallback="—"){
-  const node=document.getElementById(id);
-  if(!node)return false;
-  const text=String(value ?? "").trim();
-  node.textContent=text || fallback;
-  return true;
-}
-
-function atlasResidentDate40478(value, fallback="—"){
-  const time=Date.parse(value || "");
-  return Number.isFinite(time) ? new Date(time).toLocaleString("fr-FR") : fallback;
-}
-
-function atlasResidentTruthRender40478(reason="runtime"){
-  try{
-    const pkg=atlasSharedSynthesisState?.package || null;
-    const modes=Array.isArray(ATLAS_LOCAL_REPORT_MODES) ? ATLAS_LOCAL_REPORT_MODES : [];
-    const reportCount=modes.filter(mode=>!!String(atlasLocalReportsState?.reports?.[mode]?.answer||"").trim()).length;
-    const conclusion=atlasLocalDialogueState?.conclusionResponse || pkg?.conclusion || null;
-    const conclusionAnswer=String(conclusion?.answer || pkg?.conclusion?.answer || "").replace(/\s+/g," ").trim();
-    const snapshotLabel=String(
-      pkg?.snapshot_label
-      || atlasLocalReportsState?.lastCompletedSnapshot?.label
-      || atlasLocalReportsState?.lastCompletedSnapshot?.snapshotLabel
-      || state?.sourceLock?.timestamp
-      || state?.timestamp
-      || ""
-    ).trim();
-    const closed=atlasLocalReportsState?.automaticCycleClosed===true;
-    const currentState=reportCount===4 && conclusionAnswer
-      ? `4/4 + Aerith · ${closed ? "CURRENT fermé · REPOS" : "CURRENT disponible"}`
-      : `${reportCount}/4 rapports · Aerith ${conclusionAnswer ? "disponible" : "absente"}`;
-    const bridge=atlasLocalDialogueState?.connected===true
-      ? `Connecté · ${atlasLocalDialogueState?.model || ATLAS_STABLE_STACK?.model || "modèle local"}`
-      : `Non connecté · ${atlasLocalDialogueState?.model || ATLAS_STABLE_STACK?.model || "runtime local"}`;
-
-    atlasResidentSet40478("atlasResidentCurrent40478",currentState);
-    atlasResidentSet40478("atlasResidentSnapshot40478",snapshotLabel || "Snapshot runtime non qualifié");
-    atlasResidentSet40478("atlasResidentBridge40478",bridge);
-    atlasResidentSet40478(
-      "atlasResidentConclusion40478",
-      conclusionAnswer ? `Disponible · ${conclusion?.model || pkg?.origin?.model || "Aerith-10"}` : "Absente"
-    );
-    atlasResidentSet40478(
-      "atlasResidentConclusionPreview40478",
-      conclusionAnswer
-        ? `${conclusionAnswer.slice(0,220)}${conclusionAnswer.length>220 ? "…" : ""}`
-        : "Les rapports, la conclusion et les mémoires restent dans le runtime / IndexedDB ; l’ouverture matérialise seulement leur présentation détaillée."
-    );
-    atlasResidentSet40478(
-      "atlasResidentLocalState40478",
-      reportCount===4 && conclusionAnswer ? "RUNTIME PRÊT" : "RUNTIME PARTIEL"
-    );
-
-    let rawRecords=[];
-    try{rawRecords=readAutoMemory();}catch(_){}
-    let decisionRecords=[];
-    try{decisionRecords=atlasDecisionMemoryStats()?.records || [];}catch(_){}
-    const last=rawRecords.length ? rawRecords[rawRecords.length-1] : null;
-    let runtime="En attente";
-    try{runtime=atlasAutoRuntimeLabel();}catch(_){}
-    const nextAt=Date.parse(state?.auto?.nextAt || "");
-    const nextLabel=Number.isFinite(nextAt)
-      ? formatAutoDelay(Math.max(0,nextAt-Date.now()))
-      : (state?.auto?.enabled ? "Planification 60 s" : "Auto OFF");
-
-    atlasResidentSet40478("atlasResidentAutoState40478",`${runtime} · marché 60 s`);
-    atlasResidentSet40478("atlasResidentAutoNext40478",nextLabel);
-    atlasResidentSet40478("atlasResidentAutoCounts40478",`${decisionRecords.length} canoniques · ${rawRecords.length} relevés locaux`);
-    atlasResidentSet40478("atlasResidentAutoLast40478",atlasResidentDate40478(last?.last_seen_at || last?.saved_at,"Aucun relevé"));
-
-    let collector="—", stats=null;
-    try{
-      collector=getCollectorId();
-      stats=collectorStats(rawRecords);
-    }catch(_){}
-    atlasResidentSet40478("atlasResidentSharedCollector40478",collector);
-    atlasResidentSet40478("atlasResidentSharedCount40478",`${rawRecords.length} relevés`);
-    atlasResidentSet40478("atlasResidentSharedMachines40478",stats ? `${stats.collectors.length} collecteur${stats.collectors.length>1?"s":""}` : "—");
-    atlasResidentSet40478("atlasResidentSharedLast40478",atlasResidentDate40478(last?.last_seen_at || last?.saved_at,"Aucune trace"));
-
-    let github=null;
-    try{
-      atlasReadMemoryTruth();
-      github=state?.memoryTruth?.github || null;
-    }catch(_){}
-    const githubState=github?.loading
-      ? "Lecture en cours"
-      : github?.lastSuccessAt
-        ? `OK · ${github?.lastMode==="manual" ? "manuel" : "auto"}`
-        : github?.lastError
-          ? "Indisponible"
-          : "En attente";
-    atlasResidentSet40478("atlasResidentGithubState40478",githubState);
-    atlasResidentSet40478("atlasResidentGithubSuccess40478",atlasResidentDate40478(github?.lastSuccessAt,"Aucun succès"));
-    atlasResidentSet40478("atlasResidentGithubRecords40478",`${Number(github?.records||0)} relevé${Number(github?.records||0)>1?"s":""}`);
-    atlasResidentSet40478("atlasResidentGithubFusion40478",`${rawRecords.length} local · ${Number(github?.added||0)} ajouté${Number(github?.added||0)>1?"s":""}`);
-
-    globalThis.__AGENT_CRYPTO_ATLAS_RESIDENT_TRUTH_40478__=Object.freeze({
-      build:"40.4.78",
-      reason:String(reason||"runtime"),
-      reports:reportCount,
-      conclusion_available:!!conclusionAnswer,
-      snapshot:snapshotLabel||null,
-      bridge_connected:atlasLocalDialogueState?.connected===true,
-      auto_runtime:runtime,
-      local_observations:rawRecords.length,
-      github_records:Number(github?.records||0)
-    });
-    return true;
-  }catch(_){
-    return false;
-  }
-}
-
-// Reuse existing render events; do not create a parallel timer or observer.
-const atlasAnalysisProgressRenderBase40478=atlasAnalysisProgressRender;
-atlasAnalysisProgressRender=function(...args){
-  const result=atlasAnalysisProgressRenderBase40478(...args);
-  atlasResidentTruthRender40478("analysis-progress");
-  return result;
-};
-
-const renderAutoReaderBase40478=renderAutoReader;
-renderAutoReader=function(...args){
-  const result=renderAutoReaderBase40478(...args);
-  atlasResidentTruthRender40478("auto-reader");
-  return result;
-};
-
-const renderSharedMemoryBase40478=renderSharedMemory;
-renderSharedMemory=function(...args){
-  const result=renderSharedMemoryBase40478(...args);
-  atlasResidentTruthRender40478("shared-memory");
-  return result;
-};
-
-const renderMemoryTruthBase40478=renderMemoryTruth;
-renderMemoryTruth=function(...args){
-  const result=renderMemoryTruthBase40478(...args);
-  atlasResidentTruthRender40478("github-memory");
-  return result;
-};
-
-const atlasSharedSynthesisRenderCoreBase40478=atlasSharedSynthesisRenderCore;
-atlasSharedSynthesisRenderCore=function(...args){
-  const result=atlasSharedSynthesisRenderCoreBase40478(...args);
-  atlasResidentTruthRender40478("synthesis");
-  return result;
-};
-
-const scheduleAutoReadBase40478=scheduleAutoRead;
-scheduleAutoRead=function(...args){
-  const result=scheduleAutoReadBase40478(...args);
-  atlasResidentTruthRender40478("auto-schedule");
-  return result;
-};
-
-queueMicrotask(()=>atlasResidentTruthRender40478("boot"));
-
-try{
-  globalThis.__AGENT_CRYPTO_ATLAS_RESIDENT_CACHE_LOCK_40478__=Object.freeze({
-    build:"40.4.78",
-    parent:"40.4.77",
-    closed_sections_keep_compact_runtime_truth:true,
-    heavy_document_dom_remains_lazy:true,
-    aerith_conclusion_runtime_truth_independent_from_dom:true,
-    auto_reader_runtime_independent_from_panel:true,
-    cache_identity_meta_body_script_unified:true,
-    new_recurring_timer:false,
-    new_observer:false,
-    new_websocket:false,
-    new_network_owner:false,
-    new_storage_owner:false,
-    market_core_changed:false,
-    current_engine_changed:false,
-    bridge_changed:false,
-    oracle_changed:false
   });
 }catch(_){}

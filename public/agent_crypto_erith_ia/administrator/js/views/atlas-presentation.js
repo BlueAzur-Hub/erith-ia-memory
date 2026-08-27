@@ -1,34 +1,28 @@
-/* Agent-Crypto @erith.IA — 40.4.78
-   ATLAS MIGRATION CLOSURE — PRIMARY + SECONDARY DELEGATED HYDRATION OWNER
+/* Agent-Crypto @erith.IA — 40.4.79
+   ATLAS INTERNAL RESIDENCY RESTORE — CANONICAL COCKPIT HOT / HEAVY INTERNALS DEFERRED
 
-   40.4.72 preserves the 40.4.70 interaction-first source-lazy topology and fixes
-   only second-level operator ownership:
-   - every deferred <details> shell receives its canonical secondary key;
-   - one stable document-level delegated click owner survives DOM replay/replacement;
-   - section buttons and details summaries hydrate through the same owner;
-   - per-node listeners are no longer required for secondary demand;
-   - no timer, observer, network owner, storage owner or business engine is added.
+   Architectural correction after Firefox/operator review of 40.4.67 → 40.4.78.
 
-   40.4.69 completed the two-level source-lazy topology but Firefox operator testing
-   still exposed a first-interaction cliff: DOM insertion, binding, state replay and
-   semantic visibility reconciliation could execute in the same rendering turn.
-   40.4.70 keeps the architecture and finishes its lifecycle contract:
+   The wrong boundary was introduced when Atlas-10 + Aerith-10 itself became a
+   first-level source-lazy shell and 40.4.69 additionally replaced twelve compact
+   internal owners with generic secondary shells. The historical Atlas contract is:
 
-   - parser boot still owns only family header + five stable first-level disclosure shells;
-   - canonical views/atlas.html is fetched once, on demand;
-   - local-ai first hydration still materializes only the operational core;
-   - the 12 secondary readers remain true second-level source-lazy roots;
-   - critical action binding runs immediately after DOM insertion;
-   - state/render replay is deferred to one bounded requestAnimationFrame handoff so
-     Firefox can commit the newly-created DOM before non-critical presentation work;
-   - per-scope critical/replay timings are exposed for operator diagnosis;
-   - no duplicate legacy Atlas owner, recurring timer, observer, storage owner,
-     market owner or CURRENT owner is added.
+   - opening family 02 must reveal the real Atlas CURRENT cockpit, not a surrogate;
+   - Atlas CURRENT/Bridge/progression/4 compact report cards/short Aerith state are HOT;
+   - 40.3.51+ report Markdown residency remains demand-based;
+   - 40.3.52+ full Aerith conclusion, Journal and Freeze bodies remain demand-based;
+   - 40.3.53+ Market/Analytical Memory heavy bodies remain demand-based;
+   - Decision/Scanner/etc keep their canonical compact summaries and own deferred bodies;
+   - Forge, Auto Reader, Shared Memory and GitHub Memory remain sibling disclosures;
+   - no new timer, observer, scheduler, WebSocket, storage or business owner is added.
+
+   40.4.79 therefore hydrates the canonical local-ai subtree automatically at boot
+   and stops stripping its established internal residency architecture.
 */
 (()=>{
   "use strict";
-  const BUILD="40.4.78";
-  const SOURCE="./views/atlas.html";
+  const BUILD="40.4.79";
+  const SOURCE="./views/atlas.html?v=administrator-build-40.4.79";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
 
@@ -47,7 +41,7 @@
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Atlas-10 + Aerith-10 Crypto</span>
-        <span class="atlas-collapse-subtitle">Profils locaux du Ryzen · contenu opérationnel chargé à l’ouverture</span>
+        <span class="atlas-collapse-subtitle">CURRENT / Bridge / rapports compacts · cockpit canonique résident</span>
         <div class="atlas-collapsed-current-preview-40295" id="atlasCollapsedCurrentPreview40295" data-phase="idle" aria-label="Résumé du pipeline CURRENT Atlas">
           <div class="atlas-collapsed-current-copy-40295"><span>PIPELINE LOCAL · CURRENT</span><b id="atlasCollapsedCurrentTitle40295">État runtime conservé</b></div>
           <div class="atlas-collapsed-current-readout-40295"><strong id="atlasCollapsedCurrentPercent40295">0 %</strong><span id="atlasCollapsedCurrentState40295">IDLE</span></div>
@@ -55,21 +49,7 @@
           <div class="atlas-analysis-progress-nodes atlas-collapsed-current-nodes-40295" aria-label="Étapes compactes Atlas CURRENT"><span data-atlas-progress-node="1"><i>01</i><b>Marché</b></span><span data-atlas-progress-node="2"><i>02</i><b>Top 5</b></span><span data-atlas-progress-node="3"><i>03</i><b>Math Core</b></span><span data-atlas-progress-node="4"><i>04</i><b>Contradictions</b></span><span data-atlas-progress-node="nox"><i>NØX</i><b>No-FOMO</b></span><span data-atlas-progress-node="aerith"><i>A</i><b>Aerith</b></span></div>
         </div>
       </summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="local-ai-hub" data-atlas-source-lazy-body-40469="local-ai-hub" data-atlas-hydration-40469="placeholder">
-        <section class="glass compact atlas-resident-truth-40478" id="atlasResidentLocalAi40478" aria-label="Vérité runtime Atlas et Aerith résidente">
-          <div class="section-head compact">
-            <div><p class="eyebrow">RUNTIME RÉSIDENT · PRÉSENTATION LAZY</p><h4>Atlas / Aerith restent actifs sans DOM documentaire complet</h4></div>
-            <span class="pill ok" id="atlasResidentLocalState40478">Restauration…</span>
-          </div>
-          <div class="auto-grid memory-truth-grid">
-            <article><b>CURRENT</b><span id="atlasResidentCurrent40478">Restauration runtime…</span></article>
-            <article><b>Snapshot</b><span id="atlasResidentSnapshot40478">—</span></article>
-            <article><b>Bridge / modèle</b><span id="atlasResidentBridge40478">État runtime en lecture…</span></article>
-            <article><b>Conclusion Aerith</b><span id="atlasResidentConclusion40478">Restauration IndexedDB…</span></article>
-          </div>
-          <p class="planning-intro" id="atlasResidentConclusionPreview40478">Les rapports, la conclusion et les mémoires restent dans le runtime / IndexedDB ; l’ouverture matérialise seulement leur présentation détaillée.</p>
-        </section>
-      </div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="local-ai-hub" data-atlas-source-lazy-body-40469="local-ai-hub" data-atlas-hydration-40469="placeholder"><p class="atlas-local-response-empty">Préparation du cockpit Atlas CURRENT canonique…</p></div>
     </details>
 
     <details class="atlas-collapse glass forge-aerith-collapse forge-aerith-embedded-collapse atlas-family-member atlas-tone-creation" id="forge-aerith" data-collapse-key="forge-aerith" data-layout-family="creation" data-atlas-source-lazy-shell-40467="forge-aerith" data-atlas-source-lazy-shell-40469="forge-aerith">
@@ -79,47 +59,17 @@
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="auto-reader" data-layout-family="intelligence" data-atlas-source-lazy-shell-40467="auto-reader" data-atlas-source-lazy-shell-40469="auto-reader">
       <summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-title">Atlas Auto Reader</span><span class="atlas-collapse-subtitle">Collecte autonome du marché · présentation à la demande</span></summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="auto-reader" data-atlas-source-lazy-body-40469="auto-reader" data-atlas-hydration-40469="placeholder">
-        <section class="glass compact atlas-resident-truth-40478" aria-label="Résumé résident Atlas Auto Reader">
-          <div class="auto-grid memory-truth-grid">
-            <article><b>Auto Reader</b><span id="atlasResidentAutoState40478">Initialisation…</span></article>
-            <article><b>Prochaine lecture</b><span id="atlasResidentAutoNext40478">—</span></article>
-            <article><b>Mémoire locale</b><span id="atlasResidentAutoCounts40478">—</span></article>
-            <article><b>Dernier relevé</b><span id="atlasResidentAutoLast40478">—</span></article>
-          </div>
-          <p class="planning-intro">Collecte locale 60 s résidente ; le panneau complet est seulement matérialisé à l’ouverture.</p>
-        </section>
-      </div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="auto-reader" data-atlas-source-lazy-body-40469="auto-reader" data-atlas-hydration-40469="placeholder"></div>
     </details>
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="shared-memory" data-layout-family="intelligence" data-atlas-source-lazy-shell-40467="shared-memory" data-atlas-source-lazy-shell-40469="shared-memory">
       <summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-title">Shared Memory</span><span class="atlas-collapse-subtitle">Export / import par machine · présentation à la demande</span></summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="shared-memory" data-atlas-source-lazy-body-40469="shared-memory" data-atlas-hydration-40469="placeholder">
-        <section class="glass compact atlas-resident-truth-40478" aria-label="Résumé résident Shared Memory">
-          <div class="auto-grid memory-truth-grid">
-            <article><b>Collecteur local</b><span id="atlasResidentSharedCollector40478">—</span></article>
-            <article><b>Relevés fusionnés</b><span id="atlasResidentSharedCount40478">—</span></article>
-            <article><b>Machines présentes</b><span id="atlasResidentSharedMachines40478">—</span></article>
-            <article><b>Dernière trace</b><span id="atlasResidentSharedLast40478">—</span></article>
-          </div>
-          <p class="planning-intro">La mémoire locale reste accessible au runtime ; export/import détaillé chargé à la demande.</p>
-        </section>
-      </div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="shared-memory" data-atlas-source-lazy-body-40469="shared-memory" data-atlas-hydration-40469="placeholder"></div>
     </details>
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="github-memory" data-layout-family="intelligence" data-atlas-source-lazy-shell-40467="github-memory" data-atlas-source-lazy-shell-40469="github-memory">
       <summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-title">GitHub Shared Memory</span><span class="atlas-collapse-subtitle">Mémoire commune GitHub · présentation à la demande</span></summary>
-      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="github-memory" data-atlas-source-lazy-body-40469="github-memory" data-atlas-hydration-40469="placeholder">
-        <section class="glass compact atlas-resident-truth-40478" aria-label="Résumé résident GitHub Shared Memory">
-          <div class="auto-grid memory-truth-grid">
-            <article><b>GitHub Memory</b><span id="atlasResidentGithubState40478">Initialisation…</span></article>
-            <article><b>Dernier succès</b><span id="atlasResidentGithubSuccess40478">—</span></article>
-            <article><b>Relevés GitHub</b><span id="atlasResidentGithubRecords40478">—</span></article>
-            <article><b>Fusion locale</b><span id="atlasResidentGithubFusion40478">—</span></article>
-          </div>
-          <p class="planning-intro">La lecture GitHub reste un runtime indépendant ; son grand panneau de diagnostic reste lazy.</p>
-        </section>
-      </div>
+      <div class="atlas-collapse-body" data-atlas-source-lazy-body-40467="github-memory" data-atlas-source-lazy-body-40469="github-memory" data-atlas-hydration-40469="placeholder"></div>
     </details>`;
 
   const SPECS=Object.freeze({
@@ -228,16 +178,11 @@
     return `${secondaryDetailsOpenTag40472(bounds.openTag,key)}${summary}<div class="atlas-collapse-body atlas-source-secondary-body-40469" data-atlas-secondary-body-40469="${key}" data-atlas-hydration-40469="placeholder"><p class="atlas-local-response-empty">${spec.title} · contenu conservé dans la source canonique et chargé à l’ouverture.</p></div></details>`;
   }
   function stripSecondary(source){
-    let next=String(source||"");
-    // Replace deepest/high-cost subtrees one by one before the local-ai HTML is parsed.
-    // The outer root and ID remain connected, so role routing and hash navigation stay stable.
-    for(const [key,spec] of Object.entries(SECONDARY)){
-      const b=spec.tag==="details"?detailBounds(next,`#${spec.id}`):sectionBounds(next,spec.id);
-      if(!b)continue;
-      const shell=spec.tag==="details"?detailsShellHtml(next,key,spec,b):sectionShellHtml(key,spec,b.openTag);
-      next=next.slice(0,b.start)+shell+next.slice(b.end);
-    }
-    return next;
+    // 40.4.79 — retired as an active transformation.
+    // The canonical local-ai fragment already owns its internal progressive residency
+    // (reports .51, conclusion/journal/freeze .52, memories .53-.55, scanner/detail shells).
+    // Replacing those compact owners here amputated the Atlas cockpit.
+    return String(source||"");
   }
   function sourceDetailHtml(source,key){
     const spec=SPECS[key]; if(!spec)return "";
@@ -442,6 +387,12 @@
     const spec=SECONDARY[key]; if(!spec)return false;
     if(secondaryHydrated.has(key))return true;
     const root=document.getElementById(spec.id); if(!root)return false;
+    const isLegacySecondaryShell40479 = root.dataset.atlasSecondaryShell40469===key || root.dataset.atlasHydration40469==="placeholder";
+    if(!isLegacySecondaryShell40479){
+      secondaryHydrated.add(key);
+      root.dataset.atlasInternalResidency40479="canonical";
+      return true;
+    }
     root.dataset.atlasHydration40469="loading";
     try{
       const source=await sourceText();
@@ -499,10 +450,28 @@
   Object.keys(SPECS).forEach(key=>{
     const detail=liveDetail(key); if(!(detail instanceof HTMLDetailsElement))return;
     detail.dataset.atlasPrimaryOwner40475="delegated";
+    if(key==="local-ai-hub")detail.dataset.atlasResidency40479="HOT_CANONICAL_COCKPIT";
     const ensure=()=>{if(detail.open)queueMicrotask(()=>void hydrate(key));};
     detail.addEventListener("toggle",ensure);
     detail.addEventListener("erith:presentation-resident",ensure);
     if(detail.open)ensure();
+  });
+
+  // 40.4.79 — the Atlas cockpit is a HOT owner.
+  // Fetch/materialize once during boot even while its disclosure is closed.
+  // By the time the operator opens Atlas, CURRENT/Bridge/progression/report summaries
+  // are the real canonical DOM. Heavy internal report/conclusion/memory bodies remain
+  // governed by their historical demand-residency owners in app.js.
+  queueMicrotask(()=>{
+    const detail=liveDetail("local-ai-hub");
+    if(!(detail instanceof HTMLDetailsElement))return;
+    void hydrate("local-ai-hub").then(ok=>{
+      detail.dataset.atlasResidency40479=ok?"HOT_READY":"HOT_ERROR";
+      const subtitle=detail.querySelector(":scope > summary .atlas-collapse-subtitle");
+      if(subtitle)subtitle.textContent=ok
+        ? "CURRENT / Bridge / rapports compacts · cockpit canonique prêt"
+        : "Cockpit Atlas indisponible · vérifier views/atlas.html";
+    });
   });
 
   const targetToSecondary=Object.freeze(Object.fromEntries(Object.entries(SECONDARY).map(([key,spec])=>[spec.id,key])));
@@ -548,12 +517,12 @@
     return [...scopes].filter(Boolean);
   }
   function snapshot(){return Object.freeze({
-    build:BUILD,source:SOURCE,strategy:"delegated first-level + delegated second-level Atlas source-lazy residency + interaction-first paint handoff + scope timing",
-    boot_full_atlas_html:false,local_ai_full_subtree_on_first_open:false,legacy_peripheral_lazy_owner_loaded:false,
+    build:BUILD,source:SOURCE,strategy:"canonical local-ai cockpit HOT + historical internal deferred residency + sibling first-level demand presentation",
+    boot_full_atlas_html:false,local_ai_canonical_cockpit_hot:true,local_ai_generic_secondary_stripping:false,historical_internal_residency_preserved:true,legacy_peripheral_lazy_owner_loaded:false,
     source_fetch_count:sourceFetchCount,source_fetch_ms:sourceFetchDurationMs,source_text_cached:!!sourceTextCache,hydration_count:hydrationCount,secondary_hydration_count:secondaryHydrationCount,
     hydrated:[...hydrated],secondary_hydrated:[...secondaryHydrated],pending_rebind:[...pendingRebind],pending_replay:[...replayFrames.keys()],scope_timings:Object.fromEntries(scopeTimings),last_error:lastError||null,
     current_runtime_owner:"app.js + IndexedDB",book_mirror_runtime_preserved:true,auto_reader_runtime_preserved:true,github_memory_runtime_preserved:true,
-    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false,bounded_paint_handoff:true,primary_delegated_owner:true,secondary_delegated_owner:true
+    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false,bounded_paint_handoff:true,primary_delegated_owner:true,secondary_delegated_owner_legacy_compat:true
   });}
 
   const api=Object.freeze({
@@ -567,9 +536,11 @@
   globalThis.ErithAtlasPresentation40470=api;
   globalThis.ErithAtlasPresentation40472=api;
   globalThis.ErithAtlasPresentation40475=api;
-  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40472",runtime_owner:"app.js"});
+  globalThis.ErithAtlasPresentation40479=api;
+  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40479",runtime_owner:"app.js"});
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40469__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40470__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40472__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40475__=snapshot();
+  globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40479__=snapshot();
 })();
