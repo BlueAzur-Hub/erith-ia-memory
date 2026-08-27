@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.82",
+  "build": "40.4.83",
   "parent_build": "40.4.81",
   "purpose": "Continue Administrator runtime phase-2 from 40.4.81 by moving Learning/Simulation cold-boot initialization behind explicit operator demand while preserving the stable DOM and protected market/current engines.",
   "rules": {
@@ -514,5 +514,29 @@
     "new_network_owner": false,
     "new_storage_owner": false,
     "indexeddb_schema_changed": false
+  },
+  "runtime_migration": {
+    "ui_notes_40483": {
+      "scope": "presentation-only operator notes",
+      "clock_centered": true,
+      "header_context_owner": "existing Chronos/Celestial cadence; no new timer",
+      "header_context": [
+        "Graphique",
+        "Atlas CURRENT",
+        "Oracle",
+        "News Sentinel latest qualified event"
+      ],
+      "header_animation": false,
+      "chart_curve_following_bar_color": "atlasCryptoPalette(...).primary",
+      "chart_geometry_changed": false,
+      "market_core_changed": false,
+      "current_changed": false,
+      "bridge_changed": false,
+      "new_timer": false,
+      "new_observer": false,
+      "new_scheduler": false,
+      "new_network_owner": false,
+      "new_storage_owner": false
+    }
   }
 }

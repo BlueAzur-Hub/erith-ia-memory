@@ -7353,9 +7353,10 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
 
     const shadowSeries = [{
       rows: volumeRows,
-      // Canonical 39.2.21 Metal paint restored on unchanged 39.2.11 geometry.
-      color: "#5f7f92",
-      opacity: 0.115,
+      // 40.4.83 operator note: preserve 39.2.11 geometry but paint the
+      // curve-following bars with the selected crypto identity color.
+      color: palette.primary,
+      opacity: 0.145,
       heightRatio: 0.88
     }];
 
@@ -7382,7 +7383,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
             volumeAxisId: null,
             volumeVisible: showVolume,
             volumeRows,
-            volumeColor: "#5f7f92",
+            volumeColor: palette.primary,
             shadowSeries
           },
           legend: { display: false },
@@ -11572,9 +11573,9 @@ function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, per
   chart.$atlasVolume = chart.$atlasVolumeVisible;
   chart.$atlasShadowSeries = normalizedEntries.map((entry, index) => ({
     rows: entry.data.filter(Boolean).map(point => ({ x: point.x, price: point.y, y: 1 })),
-    // Exact 39.2.21 comparison Metal paint; 39.2.11 geometry stays untouched.
-    color: "#587488",
-    opacity: index === 0 ? 0.085 : Math.max(0.038, 0.065 - index * 0.006),
+    // 40.4.83: comparison bars share the exact crypto color of their curve.
+    color: atlasCryptoPalette(entry.coin, index).primary,
+    opacity: index === 0 ? 0.13 : Math.max(0.055, 0.105 - index * 0.01),
     heightRatio: 0.88
   }));
 
@@ -11731,15 +11732,14 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
                       price: point.y,
                       y: 1
                     })),
-                  // Canonical 39.2.21 Metal comparison paint restored exactly.
-                  // Geometry remains the 39.2.11 bottom-to-curve renderer.
-                  color: "#587488",
+                  // 40.4.83: same curve-following geometry, crypto-native color.
+                  color: atlasCryptoPalette(entry.coin, index).primary,
                   opacity:
                     index === 0
-                      ? 0.085
+                      ? 0.13
                       : Math.max(
-                          0.038,
-                          0.065 - index * 0.006
+                          0.055,
+                          0.105 - index * 0.01
                         ),
                   heightRatio: 0.88
                 })
@@ -51647,7 +51647,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.82";
+const ATLAS_BUILD = "40.4.83";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -62462,3 +62462,6 @@ try {
   });
 } catch (_) {}
 
+
+/* 40.4.83 — UI NOTES PASS. Chronos centered; passive Graph/Atlas/Oracle/News context ribbon reuses existing Chronos cadence; chart curve-following volume/shadow bars inherit crypto palette. No runtime/business owner added. */
+try{globalThis.__AGENT_CRYPTO_UI_NOTES_40483__=Object.freeze({build:"40.4.83",parent:"40.4.82",clock_centered:true,header_context_passive:true,header_context_new_timer:false,header_context_animation:false,volume_bars_crypto_palette:true,chart_geometry_changed:false,market_core_changed:false,current_changed:false,oracle_engine_changed:false,bridge_changed:false,new_interval:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
