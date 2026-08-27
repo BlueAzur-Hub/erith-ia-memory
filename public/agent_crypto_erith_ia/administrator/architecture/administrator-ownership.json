@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.60",
-  "parent_build": "40.4.59",
+  "build": "40.4.61",
+  "parent_build": "40.4.60",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -275,5 +275,19 @@
       "Window Manager",
       "Bridge R13"
     ]
+  },
+  "operator_interaction_priority_40461": {
+    "owner": "app.js / ErithOperatorPriority40461",
+    "scope": "Aether Trust local authentication gate + immediate post-auth paint",
+    "scanner_capture_deferred": true,
+    "scanner_flush_deferred": true,
+    "source_intelligence_automatic_deferred": true,
+    "market_core_paused": false,
+    "current_paused": false,
+    "bridge_auth_paused": false,
+    "oracle_modified": false,
+    "new_interval": false,
+    "new_observer": false,
+    "goal": "operator typing/authentication wins main-thread priority over non-critical background work"
   }
 }

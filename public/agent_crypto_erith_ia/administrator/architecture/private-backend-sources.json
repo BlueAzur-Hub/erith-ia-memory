@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_private_backend_sources_v5",
-  "build": "40.4.60",
+  "build": "40.4.61",
   "backend_version": "1.4.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
@@ -219,5 +219,16 @@
     "startup_success_requires_fresh_cex_and_context": true,
     "polling_added": false,
     "backend_change_required": false
+  },
+  "operator_priority_40461": {
+    "cooperative_gate": "ErithOperatorPriority40461",
+    "automatic_startup_deferred_while_auth_gate": true,
+    "automatic_current_finalized_deferred_while_auth_gate": true,
+    "manual_buttons_changed": false,
+    "inflight_network_abort_added": false,
+    "resume": "requestIdleCallback or bounded 900 ms fallback after operator-priority-release",
+    "polling_added": false,
+    "backend_version": "1.4.0",
+    "backend_modified": false
   }
 }

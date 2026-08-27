@@ -1,12 +1,12 @@
-/* Agent-Crypto @erith.IA — 40.4.60
-   PRIVATE BACKEND COLD-PATH TIMEOUT + LAZY STATE REPLAY ACCEPTANCE LOCK
+/* Agent-Crypto @erith.IA — 40.4.61
+   AETHER TRUST OPERATOR INTERACTION PRIORITY + BACKGROUND DEFER LOCK
    SOURCE INTELLIGENCE V1.3 · ADDRESS PROOF GATE · AUTO READ-ONLY · PRIVATE LOCAL BACKEND V1.4
    Binance direct EUR WebSocket stays primary runtime owner.
    Kraken + Coinbase remain loopback read-only controls.
    No timer, observer, storage write, wallet, order or trading endpoint. */
 (()=>{
   "use strict";
-  const BUILD="40.4.60";
+  const BUILD="40.4.61";
   const API="http://127.0.0.1:8790";
   const BACKEND_SELECTOR='details[data-collapse-key="backend"]';
   const ASSETS=Object.freeze(["BTC","ETH","BNB","XRP","SOL"]);
@@ -16,6 +16,7 @@
   // backend path instead of aborting a valid request before its HTTP 200.
   const CEX_TIMEOUT_MS=16000, CONTEXT_TIMEOUT_MS=32000;
   let mounted=false,inflight=null,lastHealth=null,lastQuotesPayload=null,lastTruth=null,lastContext=null,lastIntelligence=null;
+  const operatorPriorityActive40461=()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}};
 
   const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const num=value=>(value===null||value===undefined||value==="")?null:(Number.isFinite(Number(value))?Number(value):null);
@@ -189,7 +190,15 @@
     return intel;
   }
 
-  async function refreshAll(){await refresh();await refreshContext();return renderSourceIntelligence();}
+  async function refreshAll(options={}){
+    if(options?.automatic===true&&operatorPriorityActive40461())return null;
+    const quotes=await refresh();
+    if(options?.automatic===true&&operatorPriorityActive40461())return null;
+    const context=await refreshContext();
+    if(options?.automatic===true&&operatorPriorityActive40461())return null;
+    if(!quotes||!context)return renderSourceIntelligence();
+    return renderSourceIntelligence();
+  }
 
   async function refreshContext(){
     const badge=document.getElementById("privateDexDefiStatus4055");if(badge){badge.className="pill warn";badge.textContent="LECTURE…";}
@@ -205,6 +214,7 @@
   async function autoRefresh(reason="automatic",options={}){
     const fingerprint=String(options?.fingerprint||"").trim();
     if(fingerprint&&fingerprint===autoState.lastFingerprint&&lastIntelligence)return lastIntelligence;
+    if(operatorPriorityActive40461()){autoState.pending={reason,fingerprint};return null;}
     if(autoState.running){autoState.pending={reason,fingerprint};return lastIntelligence;}
     const now=Date.now();
     if(options?.force!==true&&autoState.lastSuccessAt&&(now-autoState.lastSuccessAt)<AUTO_MIN_INTERVAL_MS)return lastIntelligence;
@@ -212,8 +222,9 @@
     try{
       const health=await getJson("/health",3500);
       if(health?.status!=="ready"||health?.read_only!==true)return null;
+      if(operatorPriorityActive40461()){autoState.pending={reason,fingerprint};return null;}
       const truthBefore=lastTruth,contextBefore=lastContext;
-      const intel=await refreshAll();
+      const intel=await refreshAll({automatic:true});
       const truthFresh=!!lastTruth&&lastTruth!==truthBefore;
       const contextFresh=!!lastContext&&lastContext!==contextBefore;
       // 40.4.60: a partial timeout must not count as startup success and suppress
@@ -229,13 +240,14 @@
   }
   function scheduleStartupRetry(index){
     if(index>=AUTO_STARTUP_RETRY_MS.length||autoState.lastSuccessAt)return false;
+    if(operatorPriorityActive40461()){autoState.pending={reason:"startup-retry",fingerprint:""};return true;}
     if(autoState.retryTimer)window.clearTimeout(autoState.retryTimer);
     autoState.retryTimer=window.setTimeout(async()=>{autoState.retryTimer=0;const intel=await autoRefresh("startup-retry",{force:true});if(!intel)scheduleStartupRetry(index+1);},AUTO_STARTUP_RETRY_MS[index]);
     return true;
   }
   function startAutomatic(){
     if(autoState.started)return false;autoState.started=true;
-    const first=async()=>{const intel=await autoRefresh("startup",{force:true});if(!intel)scheduleStartupRetry(0);};
+    const first=async()=>{if(operatorPriorityActive40461()){autoState.pending={reason:"startup",fingerprint:""};return;}const intel=await autoRefresh("startup",{force:true});if(!intel)scheduleStartupRetry(0);};
     if(typeof window.requestIdleCallback==="function")window.requestIdleCallback(()=>void first(),{timeout:2500});
     else window.setTimeout(()=>void first(),900);
     return true;
@@ -264,10 +276,19 @@
   // non-bubbling, so bind directly on the backend <details> when available.
   const detail=backendDetails();
   detail?.addEventListener("erith:presentation-resident",()=>{mounted=false;bind();if(detail.open)mount();});
+  window.addEventListener("erith:operator-priority-release",()=>{
+    const pending=autoState.pending;autoState.pending=null;
+    if(!pending&&!autoState.started)return;
+    const reason=pending?.reason||(!autoState.lastSuccessAt?"operator-release-startup":"");
+    if(!reason)return;
+    const run=async()=>{const intel=await autoRefresh(reason,{fingerprint:pending?.fingerprint||"",force:true});if(!intel&&!autoState.lastSuccessAt)scheduleStartupRetry(0);};
+    if(typeof window.requestIdleCallback==="function")window.requestIdleCallback(()=>void run(),{timeout:2500});
+    else window.setTimeout(()=>void run(),900);
+  });
   document.addEventListener("agentcrypto:current-finalized",event=>{
     const fingerprint=String(event?.detail?.fingerprint||"").trim();
     void autoRefresh("current-finalized",{fingerprint,force:true});
   });
   startAutomatic();
-  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.4.0",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,autoRefresh,automationSnapshot:autoSnapshot,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,automatic_startup:true,automatic_current_finalized:true,operator_click_required:false,polling:false,bounded_startup_retry:true,cold_path_timeout_aligned:true,lazy_state_replay:true,cex_timeout_ms:CEX_TIMEOUT_MS,context_timeout_ms:CONTEXT_TIMEOUT_MS,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY_FILTERED"});
+  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.4.0",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,autoRefresh,automationSnapshot:autoSnapshot,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,automatic_startup:true,automatic_current_finalized:true,operator_click_required:false,polling:false,bounded_startup_retry:true,cold_path_timeout_aligned:true,lazy_state_replay:true,operator_priority_aware:true,operator_priority_build:"40.4.61",cex_timeout_ms:CEX_TIMEOUT_MS,context_timeout_ms:CONTEXT_TIMEOUT_MS,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY_FILTERED"});
 })();

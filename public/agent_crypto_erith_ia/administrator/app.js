@@ -1710,6 +1710,86 @@ const ATLAS_ACCESS_OWNER_ROLE = "owner";
 
 let atlasAccessPendingHash = "";
 
+/* ============================================================
+   40.4.61 — AETHER TRUST OPERATOR INTERACTION PRIORITY LOCK
+
+   The local authentication gate is an explicit operator surface. While it is
+   open, background work that is useful but not required to type/validate the
+   password must yield. This lock does not stop Market Core, Binance LIVE,
+   CURRENT truth, Bridge authentication, Oracle, or IndexedDB owners. It only
+   gives cooperative subsystems a shared read-only signal so they can defer
+   non-critical Scanner persistence / Source Intelligence refresh work until
+   the gate and the immediate post-auth paint are complete.
+   ============================================================ */
+const atlasOperatorPriorityState40461 = {
+  reasons: new Set(),
+  acquiredAt: 0,
+  releases: 0,
+  acquisitions: 0
+};
+function atlasOperatorPriorityActive40461() {
+  return atlasOperatorPriorityState40461.reasons.size > 0;
+}
+function atlasOperatorPrioritySnapshot40461() {
+  return Object.freeze({
+    build: "40.4.61",
+    active: atlasOperatorPriorityActive40461(),
+    reasons: Object.freeze([...atlasOperatorPriorityState40461.reasons]),
+    acquired_at_ms: atlasOperatorPriorityState40461.acquiredAt || null,
+    acquisitions: atlasOperatorPriorityState40461.acquisitions,
+    releases: atlasOperatorPriorityState40461.releases,
+    market_core_paused: false,
+    current_paused: false,
+    bridge_auth_paused: false
+  });
+}
+function atlasOperatorPriorityAcquire40461(reason = "operator") {
+  const key = String(reason || "operator");
+  const wasActive = atlasOperatorPriorityActive40461();
+  atlasOperatorPriorityState40461.reasons.add(key);
+  atlasOperatorPriorityState40461.acquiredAt = atlasOperatorPriorityState40461.acquiredAt || Date.now();
+  atlasOperatorPriorityState40461.acquisitions += 1;
+  try {
+    document.documentElement.dataset.atlasOperatorPriority = "1";
+    document.documentElement.dataset.atlasOperatorPriorityReason = [...atlasOperatorPriorityState40461.reasons].join(",");
+  } catch (_) {}
+  if (!wasActive) {
+    try { window.dispatchEvent(new CustomEvent("erith:operator-priority", { detail: atlasOperatorPrioritySnapshot40461() })); } catch (_) {}
+  }
+  return true;
+}
+function atlasOperatorPriorityRelease40461(reason = "operator") {
+  const key = String(reason || "operator");
+  atlasOperatorPriorityState40461.reasons.delete(key);
+  if (atlasOperatorPriorityActive40461()) {
+    try { document.documentElement.dataset.atlasOperatorPriorityReason = [...atlasOperatorPriorityState40461.reasons].join(","); } catch (_) {}
+    return false;
+  }
+  atlasOperatorPriorityState40461.acquiredAt = 0;
+  atlasOperatorPriorityState40461.releases += 1;
+  try {
+    delete document.documentElement.dataset.atlasOperatorPriority;
+    delete document.documentElement.dataset.atlasOperatorPriorityReason;
+  } catch (_) {}
+  try { window.dispatchEvent(new CustomEvent("erith:operator-priority-release", { detail: atlasOperatorPrioritySnapshot40461() })); } catch (_) {}
+  return true;
+}
+try {
+  globalThis.ErithOperatorPriority40461 = Object.freeze({
+    build: "40.4.61",
+    mode: "COOPERATIVE_OPERATOR_PRIORITY",
+    active: atlasOperatorPriorityActive40461,
+    acquire: atlasOperatorPriorityAcquire40461,
+    release: atlasOperatorPriorityRelease40461,
+    snapshot: atlasOperatorPrioritySnapshot40461,
+    pauses_market_core: false,
+    pauses_current: false,
+    pauses_bridge_auth: false,
+    new_interval: false,
+    new_observer: false
+  });
+} catch (_) {}
+
 let atlasAccessSubmitBusy40429 = false;
 function atlasAccessSetBusy40429(busy) {
   const submit = document.getElementById("atlasAccessSubmit");
@@ -1788,6 +1868,7 @@ function atlasAccessSyncDialog() {
 }
 
 function atlasAccessOpen(pendingHash = "") {
+  atlasOperatorPriorityAcquire40461("aether-trust");
   atlasAccessPendingHash = pendingHash || atlasAccessPendingHash || "";
   const currentMode = atlasV2Mode();
   if (currentMode === "essential" || currentMode === "intermediate") {
@@ -1807,7 +1888,7 @@ function atlasAccessOpen(pendingHash = "") {
   }, 30);
 }
 
-function atlasAccessClose() {
+function atlasAccessClose(options = {}) {
   const dialog = document.getElementById("atlasAccessDialog");
   document.getElementById("atlasAccessSecret")?.setAttribute("value", "");
   const secret = document.getElementById("atlasAccessSecret");
@@ -1816,6 +1897,7 @@ function atlasAccessClose() {
   if (confirm) confirm.value = "";
   if (dialog?.close) dialog.close();
   else dialog?.removeAttribute("open");
+  if (options.releasePriority !== false) atlasOperatorPriorityRelease40461("aether-trust");
 }
 
 async function atlasAccessSubmit(event) {
@@ -1880,7 +1962,7 @@ async function atlasAccessSubmit(event) {
        La fenêtre de forçage empêche la restauration d’un ancien état public/fermé
        de refermer le Command Center quelques millisecondes plus tard. */
     atlasAdminForceWorkspaceOpen();
-    atlasAccessClose();
+    atlasAccessClose({ releasePriority: false });
     // 40.4.29 — authentication semantics are unchanged. Once local + Bridge
     // validation has succeeded, give Firefox one paint to retire the gate before
     // expanding the large Administrator workspace.
@@ -1896,6 +1978,9 @@ async function atlasAccessSubmit(event) {
       // Reuse the canonical resize owners exactly once after the role transition.
       // The tracker performs one coalesced settled follow-up frame for Firefox/F11.
       window.dispatchEvent(new Event("resize"));
+      // 40.4.61: only after the gate is gone and the expanded workspace owns a
+      // paint may deferred non-critical workers resume.
+      atlasOperatorPriorityRelease40461("aether-trust");
     });
     // 40.4.51 — if a genuinely new canonical snapshot arrived while the
     // Administrator gate or Bridge readiness was unavailable, re-arm the
@@ -1942,7 +2027,9 @@ function atlasInitLocalAccess() {
   document.getElementById("atlasAccessForm")?.addEventListener("submit", atlasAccessSubmit);
   document.getElementById("atlasAccessClose")?.addEventListener("click", atlasAccessClose);
   document.getElementById("atlasAccessCancel")?.addEventListener("click", atlasAccessClose);
-  document.getElementById("atlasAccessDialog")?.addEventListener("click", event => { if (event.target === event.currentTarget) atlasAccessClose(); });
+  const accessDialog40461 = document.getElementById("atlasAccessDialog");
+  accessDialog40461?.addEventListener("click", event => { if (event.target === event.currentTarget) atlasAccessClose(); });
+  accessDialog40461?.addEventListener("cancel", event => { event.preventDefault(); atlasAccessClose(); });
   document.getElementById("btnLocalBridgeProbe")?.addEventListener("click", atlasLocalBridgeProbe);
   document.querySelectorAll("[data-atlas-local-profile]").forEach(button => { button.addEventListener("click", () => atlasLocalDialogueSelectProfile(button.dataset.atlasLocalProfile)); });
   document.querySelectorAll("[data-atlas-local-summary]").forEach(button => { button.addEventListener("click", () => atlasLocalDialogueRunSummary(button.dataset.atlasLocalSummary)); });
@@ -26556,14 +26643,14 @@ function atlasSnapshotWithSourceIntelligence4058(snapshot) {
       attached: true,
       optional: true,
       transaction_identity_excluded: true,
-      build: "40.4.60"
+      build: "40.4.61"
     }
   };
 }
 
 try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
-    build: "40.4.60",
+    build: "40.4.61",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
     owner: "app.js transport copy + ErithPrivateBackendSources4054",
     atlas_direct_internet_access: false,
@@ -45176,7 +45263,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.60",
+    build:"40.4.61",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -49775,8 +49862,15 @@ const atlasScannerCollectorRuntime = {
   lastSavedAt: 0,
   bridgeBackoffUntil: 0,
   bridgeFailures: 0,
-  parsedStores40331: Object.create(null)
+  parsedStores40331: Object.create(null),
+  deferredCaptureReason40461: "",
+  deferredFlush40461: false
 };
+
+function atlasScannerOperatorPriorityActive40461() {
+  try { return globalThis.ErithOperatorPriority40461?.active?.() === true; }
+  catch (_) { return false; }
+}
 
 function atlasScannerCollectorRead(key) {
   const cached = atlasScannerCollectorRuntime.parsedStores40331[key];
@@ -50069,6 +50163,10 @@ async function atlasScannerCollectorPost(snapshot) {
 
 async function atlasScannerCollectorFlush() {
   if (!atlasDeviceComputeAllowed()) return false;
+  if (atlasScannerOperatorPriorityActive40461()) {
+    atlasScannerCollectorRuntime.deferredFlush40461 = true;
+    return false;
+  }
   if (atlasScannerCollectorRuntime.busy) return false;
   if (Date.now() < Number(atlasScannerCollectorRuntime.bridgeBackoffUntil || 0)) return false;
   const pending = atlasScannerCollectorRead(ATLAS_SCANNER_COLLECTOR_PENDING_KEY);
@@ -50099,6 +50197,11 @@ async function atlasScannerCollectorFlush() {
 }
 
 function atlasScannerCollectorCapture(reason = "timer", options = {}) {
+  if (atlasScannerOperatorPriorityActive40461()) {
+    atlasScannerCollectorRuntime.deferredCaptureReason40461 = String(reason || "operator-deferred");
+    if (options.forceFlush) atlasScannerCollectorRuntime.deferredFlush40461 = true;
+    return false;
+  }
   const snapshot = atlasScannerCollectorBuildSnapshot(reason);
   if (!snapshot) return false;
   const stored = atlasScannerCollectorStore(snapshot);
@@ -50107,6 +50210,10 @@ function atlasScannerCollectorCapture(reason = "timer", options = {}) {
 }
 
 function atlasScannerCollectorSchedule(reason = "market") {
+  if (atlasScannerOperatorPriorityActive40461()) {
+    atlasScannerCollectorRuntime.deferredCaptureReason40461 = String(reason || "operator-deferred");
+    return true;
+  }
   window.clearTimeout(atlasScannerCollectorRuntime.flushTimer);
   atlasScannerCollectorRuntime.flushTimer = window.setTimeout(() => {
     atlasScannerCollectorRuntime.flushTimer = 0;
@@ -50146,6 +50253,14 @@ function atlasScannerCollectorInit() {
   window.setTimeout(() => {
     if (!state.auto?.livecheckBusy && !state.chartEngineV2?.loading) atlasScannerCollectorCapture("startup");
   }, 5000);
+  window.addEventListener("erith:operator-priority-release", () => {
+    const reason = atlasScannerCollectorRuntime.deferredCaptureReason40461;
+    const flush = atlasScannerCollectorRuntime.deferredFlush40461;
+    atlasScannerCollectorRuntime.deferredCaptureReason40461 = "";
+    atlasScannerCollectorRuntime.deferredFlush40461 = false;
+    if (reason) atlasScannerCollectorSchedule(`operator-release:${reason}`);
+    if (flush) window.setTimeout(() => void atlasScannerCollectorFlush(), 1400);
+  });
 }
 
 const ATLAS_SOURCE_TRUTH_SCHEMA = "agent_crypto_source_truth_v2";
@@ -51019,7 +51134,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.60";
+const ATLAS_BUILD = "40.4.61";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
