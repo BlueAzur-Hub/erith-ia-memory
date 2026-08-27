@@ -1,5 +1,5 @@
-/* Agent-Crypto @erith.IA — 40.4.79
-   ATLAS INTERNAL RESIDENCY RESTORE — CANONICAL COCKPIT HOT / HEAVY INTERNALS DEFERRED
+/* Agent-Crypto @erith.IA — 40.4.80
+   ATLAS HOT CORE + INTERNAL RESIDENCY CLOSURE — FIREFOX RELIEF
 
    Architectural correction after Firefox/operator review of 40.4.67 → 40.4.78.
 
@@ -21,8 +21,8 @@
 */
 (()=>{
   "use strict";
-  const BUILD="40.4.79";
-  const SOURCE="./views/atlas.html?v=administrator-build-40.4.79";
+  const BUILD="40.4.80";
+  const SOURCE="./views/atlas.html?v=administrator-build-40.4.80";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
 
@@ -184,6 +184,70 @@
     // Replacing those compact owners here amputated the Atlas cockpit.
     return String(source||"");
   }
+  // 40.4.80 — compact the LOCAL-AI subtree while it is still detached.
+  // This is the architectural boundary that 40.4.79 was missing: the canonical
+  // cockpit stays HOT, but heavy internal presentation never enters the live DOM
+  // until its own disclosure is opened. No live-DOM reparenting is performed.
+  function atlasDeferredInnerShell40480(title, subtitle, detailsId, mountId, templateId, tone="intelligence"){
+    const details=document.createElement("details");
+    details.className=`atlas-collapse glass atlas-tone-${tone} atlas-internal-deferred-40480`;
+    details.id=detailsId;
+    details.dataset.atlasInternalDeferred40480="1";
+    const summary=document.createElement("summary");
+    summary.className="atlas-collapse-summary";
+    summary.innerHTML=`<span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-copy"><span class="atlas-collapse-title">${title}</span><span class="atlas-collapse-subtitle">${subtitle}</span></span><span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>`;
+    const mount=document.createElement("div");
+    mount.className="atlas-collapse-body";
+    mount.id=mountId;
+    mount.dataset.atlasInternalMounted40480="0";
+    const template=document.createElement("template");
+    template.id=templateId;
+    details.append(summary,mount,template);
+    return {details,mount,template};
+  }
+  function atlasDeferSectionBody40480(sourceBody, rootId, headSelector, config){
+    const root=sourceBody.querySelector(`#${CSS.escape(rootId)}`);
+    if(!(root instanceof HTMLElement)||root.dataset.atlasInternalCompact40480==="1")return false;
+    const head=root.querySelector(`:scope > ${headSelector}`);
+    if(!(head instanceof HTMLElement))return false;
+    const movable=[...root.children].filter(node=>node!==head);
+    if(!movable.length)return false;
+    const shell=atlasDeferredInnerShell40480(config.title,config.subtitle,config.detailsId,config.mountId,config.templateId,config.tone||"intelligence");
+    movable.forEach(node=>shell.template.content.appendChild(node));
+    root.appendChild(shell.details);
+    root.dataset.atlasInternalCompact40480="1";
+    return true;
+  }
+  function atlasDeferWholeOwner40480(sourceBody, rootId, config){
+    const root=sourceBody.querySelector(`#${CSS.escape(rootId)}`);
+    if(!(root instanceof HTMLElement)||root.closest("template"))return false;
+    const parent=root.parentNode; if(!parent)return false;
+    const shell=atlasDeferredInnerShell40480(config.title,config.subtitle,config.detailsId,config.mountId,config.templateId,config.tone||"analysis");
+    parent.replaceChild(shell.details,root);
+    shell.template.content.appendChild(root);
+    return true;
+  }
+  function atlasCompactLocalAiDetached40480(sourceBody){
+    if(!(sourceBody instanceof HTMLElement)||sourceBody.dataset.atlasDetachedCompacted40480==="1")return sourceBody;
+    sourceBody.dataset.atlasDetachedCompacted40480="1";
+    atlasDeferSectionBody40480(sourceBody,"atlasStableStack",".atlas-stable-stack-head",{
+      title:"Pile technique · Interface / Control Center / Bridge / mémoire",
+      subtitle:"Le statut reste HOT ; la grille technique complète est matérialisée uniquement à l’ouverture.",
+      detailsId:"atlasStableStackDetails40480",mountId:"atlasStableStackMount40480",templateId:"atlasStableStackTemplate40480"
+    });
+    atlasDeferWholeOwner40480(sourceBody,"decisionMemoryCompare",{
+      title:"Comparaison historique détaillée",
+      subtitle:"Timeline, tableau des écarts et exports de comparaison uniquement à la demande.",
+      detailsId:"atlasDecisionMemoryCompareDetails40480",mountId:"atlasDecisionMemoryCompareMount40480",templateId:"atlasDecisionMemoryCompareTemplate40480",tone:"analysis"
+    });
+    atlasDeferSectionBody40480(sourceBody,"atlasBookReadOnlyKnowledge",".atlas-book-readonly-head",{
+      title:"Handoff Ryzen → Book · détails",
+      subtitle:"Le rôle et l’état restent connus du runtime ; miroir, grille et actions sont matérialisés à l’ouverture.",
+      detailsId:"atlasBookReadOnlyDetails40480",mountId:"atlasBookReadOnlyMount40480",templateId:"atlasBookReadOnlyTemplate40480"
+    });
+    return sourceBody;
+  }
+
   function sourceDetailHtml(source,key){
     const spec=SPECS[key]; if(!spec)return "";
     const b=spec.id?detailBounds(source,`#${spec.id}`):detailBounds(source,key);
@@ -203,6 +267,7 @@
     const sourceDetail=template.content.querySelector(SPECS[key].selector);
     const sourceBody=sourceDetail?.querySelector(':scope > .atlas-collapse-body');
     if(!(sourceBody instanceof HTMLElement))throw new Error(`Atlas body missing: ${key}`);
+    if(key==="local-ai-hub")atlasCompactLocalAiDetached40480(sourceBody);
     return sourceBody.content?sourceBody.content.cloneNode(true):[...sourceBody.childNodes].map(node=>node.cloneNode(true));
   }
 
@@ -390,7 +455,7 @@
     const isLegacySecondaryShell40479 = root.dataset.atlasSecondaryShell40469===key || root.dataset.atlasHydration40469==="placeholder";
     if(!isLegacySecondaryShell40479){
       secondaryHydrated.add(key);
-      root.dataset.atlasInternalResidency40479="canonical";
+      root.dataset.atlasInternalResidency40480="canonical";
       return true;
     }
     root.dataset.atlasHydration40469="loading";
@@ -446,18 +511,34 @@
     }
   }
 
-  // Initial-node fast path. The durable 40.4.75 owner is document delegation.
+  // 40.4.80 — LOCAL-AI cockpit remains HOT; peripheral siblings are true
+  // demand-resident presentation and RELEASE their hydrated body on close.
+  // Their runtime state remains in app.js/IndexedDB and is rebound on reopen.
+  function releasePeripheral40480(key){
+    if(key==="local-ai-hub")return false;
+    const detail=liveDetail(key),body=liveBody(key);
+    if(!(detail instanceof HTMLDetailsElement)||!(body instanceof HTMLElement)||detail.open)return false;
+    body.replaceChildren();
+    body.dataset.atlasHydration40469="placeholder";
+    body.dataset.atlasHydration40467="placeholder";
+    body.dataset.atlasPeripheralReleased40480="1";
+    hydrated.delete(key);
+    return true;
+  }
   Object.keys(SPECS).forEach(key=>{
     const detail=liveDetail(key); if(!(detail instanceof HTMLDetailsElement))return;
     detail.dataset.atlasPrimaryOwner40475="delegated";
-    if(key==="local-ai-hub")detail.dataset.atlasResidency40479="HOT_CANONICAL_COCKPIT";
-    const ensure=()=>{if(detail.open)queueMicrotask(()=>void hydrate(key));};
-    detail.addEventListener("toggle",ensure);
-    detail.addEventListener("erith:presentation-resident",ensure);
-    if(detail.open)ensure();
+    if(key==="local-ai-hub")detail.dataset.atlasResidency40480="HOT_CANONICAL_COCKPIT";
+    const sync=()=>{
+      if(detail.open)queueMicrotask(()=>void hydrate(key));
+      else releasePeripheral40480(key);
+    };
+    detail.addEventListener("toggle",sync);
+    detail.addEventListener("erith:presentation-resident",sync);
+    if(detail.open)sync();
   });
 
-  // 40.4.79 — the Atlas cockpit is a HOT owner.
+  // 40.4.80 — the Atlas cockpit is a HOT owner.
   // Fetch/materialize once during boot even while its disclosure is closed.
   // By the time the operator opens Atlas, CURRENT/Bridge/progression/report summaries
   // are the real canonical DOM. Heavy internal report/conclusion/memory bodies remain
@@ -466,7 +547,7 @@
     const detail=liveDetail("local-ai-hub");
     if(!(detail instanceof HTMLDetailsElement))return;
     void hydrate("local-ai-hub").then(ok=>{
-      detail.dataset.atlasResidency40479=ok?"HOT_READY":"HOT_ERROR";
+      detail.dataset.atlasResidency40480=ok?"HOT_READY":"HOT_ERROR";
       const subtitle=detail.querySelector(":scope > summary .atlas-collapse-subtitle");
       if(subtitle)subtitle.textContent=ok
         ? "CURRENT / Bridge / rapports compacts · cockpit canonique prêt"
@@ -517,8 +598,8 @@
     return [...scopes].filter(Boolean);
   }
   function snapshot(){return Object.freeze({
-    build:BUILD,source:SOURCE,strategy:"canonical local-ai cockpit HOT + historical internal deferred residency + sibling first-level demand presentation",
-    boot_full_atlas_html:false,local_ai_canonical_cockpit_hot:true,local_ai_generic_secondary_stripping:false,historical_internal_residency_preserved:true,legacy_peripheral_lazy_owner_loaded:false,
+    build:BUILD,source:SOURCE,strategy:"canonical Atlas HOT core + detached internal compaction + peripheral release-on-close + historical deferred residency",
+    boot_full_atlas_html:false,local_ai_canonical_cockpit_hot:true,local_ai_generic_secondary_stripping:false,detached_internal_compaction:true,peripheral_release_on_close:true,historical_internal_residency_preserved:true,legacy_peripheral_lazy_owner_loaded:false,
     source_fetch_count:sourceFetchCount,source_fetch_ms:sourceFetchDurationMs,source_text_cached:!!sourceTextCache,hydration_count:hydrationCount,secondary_hydration_count:secondaryHydrationCount,
     hydrated:[...hydrated],secondary_hydrated:[...secondaryHydrated],pending_rebind:[...pendingRebind],pending_replay:[...replayFrames.keys()],scope_timings:Object.fromEntries(scopeTimings),last_error:lastError||null,
     current_runtime_owner:"app.js + IndexedDB",book_mirror_runtime_preserved:true,auto_reader_runtime_preserved:true,github_memory_runtime_preserved:true,
@@ -537,10 +618,12 @@
   globalThis.ErithAtlasPresentation40472=api;
   globalThis.ErithAtlasPresentation40475=api;
   globalThis.ErithAtlasPresentation40479=api;
-  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40479",runtime_owner:"app.js"});
+  globalThis.ErithAtlasPresentation40480=api;
+  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40480",runtime_owner:"app.js"});
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40469__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40470__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40472__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40475__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40479__=snapshot();
+  globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40480__=snapshot();
 })();

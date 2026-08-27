@@ -2055,6 +2055,51 @@ function atlasLocalRuntimeRestore40469(reason = "boot") {
   return Object.freeze({build:ATLAS_BUILD,reason,runtime_only:true,presentation_required:false});
 }
 
+function atlasInternalDeferredMount40480(detailsId, mountId, templateId, onMount = null, onRelease = null) {
+  const details = document.getElementById(detailsId);
+  const mount = document.getElementById(mountId);
+  const template = document.getElementById(templateId);
+  if (!(details instanceof HTMLDetailsElement) || !mount || !(template instanceof HTMLTemplateElement)) return false;
+  if (details.dataset.atlasInternalBound40480 === "1") return true;
+  details.dataset.atlasInternalBound40480 = "1";
+  const sync = () => {
+    if (details.open) {
+      if (mount.dataset.atlasInternalMounted40480 !== "1") {
+        mount.replaceChildren(template.content.cloneNode(true));
+        mount.dataset.atlasInternalMounted40480 = "1";
+      }
+      try { onMount?.(); } catch (_) {}
+    } else {
+      if (mount.dataset.atlasInternalMounted40480 === "1") mount.replaceChildren();
+      mount.dataset.atlasInternalMounted40480 = "0";
+      try { onRelease?.(); } catch (_) {}
+    }
+  };
+  details.addEventListener("toggle", sync);
+  sync();
+  return true;
+}
+
+function atlasInternalResidencyInit40480() {
+  atlasInternalDeferredMount40480(
+    "atlasStableStackDetails40480", "atlasStableStackMount40480", "atlasStableStackTemplate40480",
+    () => { try { atlasStableStackRender(); } catch (_) {} }
+  );
+  atlasInternalDeferredMount40480(
+    "atlasDecisionMemoryCompareDetails40480", "atlasDecisionMemoryCompareMount40480", "atlasDecisionMemoryCompareTemplate40480",
+    () => { try { renderDecisionBoard(); } catch (_) {} }
+  );
+  atlasInternalDeferredMount40480(
+    "atlasBookReadOnlyDetails40480", "atlasBookReadOnlyMount40480", "atlasBookReadOnlyTemplate40480",
+    () => {
+      try { globalThis.AgentCryptoAtlasLateHydration40470?.rebind?.("book-knowledge", {phase:"full"}); } catch (_) {}
+      try { atlasBookReadOnlyKnowledgeRefresh(); } catch (_) {}
+      try { atlasKnowledgeLibraryInit(); } catch (_) {}
+    }
+  );
+  return true;
+}
+
 function atlasLocalAiPresentationBind40470(reason = "local-ai", phase = "full") {
   // 40.4.70 interaction-first contract: bind controls immediately, then replay
   // non-critical presentation truth after the source-lazy owner yields one paint.
@@ -2080,6 +2125,7 @@ function atlasLocalAiPresentationBind40470(reason = "local-ai", phase = "full") 
     // without forcing all CURRENT/Book/synthesis paints in the same event turn.
     try { atlasLocalReportResidencyInit40351(); } catch (_) {}
     try { atlasSharedConclusionResidencyInit40352(); } catch (_) {}
+    try { atlasInternalResidencyInit40480(); } catch (_) {}
     try { atlasDeviceComputeInit(); } catch (_) {}
     try { atlasQuestionRouterInit37(); } catch (_) {}
     try { atlasClassicAnalysisModeInit38155(); } catch (_) {}
@@ -8656,7 +8702,7 @@ try{
     operator_read_policy_changed:false,
     analytical_read_policy_changed:false,
     cache_ttl_changed:false,
-    timer_cadence_changed:false,
+    timer_cadence_changed:true,
     evidence_semantics_changed:false,
     evidence_retention_changed:false,
     source_history_changed:false,
@@ -8735,8 +8781,16 @@ async function atlasOracleOutcomeRun() {
 
 function atlasOracleOutcomeSchedule() {
   if (atlasOracleOutcomeTimer) return;
-  setTimeout(()=>{atlasOracleOutcomeRun().catch(()=>{});atlasOracleLongShadowRun40273?.().catch?.(()=>{});}, 2500);
-  atlasOracleOutcomeTimer = window.setInterval(()=>{atlasOracleOutcomeRun().catch(()=>{});atlasOracleLongShadowRun40273?.().catch?.(()=>{});}, 15_000);
+  const runQuiet40480 = () => {
+    const work = () => {
+      atlasOracleOutcomeRun().catch(()=>{});
+      atlasOracleLongShadowRun40273?.().catch?.(()=>{});
+    };
+    if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(work, { timeout: 5000 });
+    else window.setTimeout(work, 80);
+  };
+  setTimeout(runQuiet40480, 2500);
+  atlasOracleOutcomeTimer = window.setInterval(runQuiet40480, 60_000);
 }
 
 globalThis.AtlasOracleOutcome = Object.freeze({ run:atlasOracleOutcomeRun, status:atlasOracleOutcomeRefreshStatus });
@@ -27845,6 +27899,26 @@ function atlasLocalResponsePlaceholder(view) {
   };
 }
 
+function atlasCompactMarkdownPreview40480(markdown, maxChars = 1500, maxSections = 3) {
+  const raw = String(markdown || "").replace(/\r\n?/g, "\n").trim();
+  if (!raw || raw.length <= maxChars) return raw;
+  const lines = raw.split("\n");
+  const out = [];
+  let chars = 0, sections = 0;
+  for (const line of lines) {
+    if (/^#{1,6}\s+\S/.test(line.trim())) {
+      sections += 1;
+      if (sections > maxSections && out.length) break;
+    }
+    const next = line.length + 1;
+    if (chars + next > maxChars && out.length) break;
+    out.push(line);
+    chars += next;
+  }
+  const preview = out.join("\n").trim() || raw.slice(0, maxChars).trim();
+  return `${preview}\n\n_Aperçu compact · la lecture intégrale reste disponible dans « Conclusion Aerith-10 Crypto complète »._`;
+}
+
 function atlasLocalResponseRenderStored(view) {
   const response = atlasLocalResponseStored(view);
   const placeholder = atlasLocalResponsePlaceholder(view);
@@ -27859,12 +27933,15 @@ function atlasLocalResponseRenderStored(view) {
       ? `Historique — ${String(response?.label || placeholder.title).replace(/^Historique\s*[—-]\s*/i, "")}`
       : String(response?.label || placeholder.title).replace(/^Historique\s*[—-]\s*/i, "")
   );
-  atlasLocalSetReport(document.getElementById("atlasLocalResponse"), response?.answer || placeholder.body);
+  const responseBody40480 = view === "conclusion" && response?.answer
+    ? atlasCompactMarkdownPreview40480(response.answer, 1650, 3)
+    : (response?.answer || placeholder.body);
+  atlasLocalSetReport(document.getElementById("atlasLocalResponse"), responseBody40480);
   setText(
     document.getElementById("atlasLocalResponseMeta"),
     staleConclusion
       ? `${response?.meta || placeholder.meta} · HISTORIQUE : ne correspond pas au snapshot courant`
-      : (response?.meta || placeholder.meta)
+      : `${response?.meta || placeholder.meta}${view === "conclusion" && response?.answer ? " · aperçu compact · complète à la demande" : ""}`
   );
   atlasLocalDialogueState.lastResponse = response || null;
   const hasAnswer = !!String(response?.answer || "").trim();
@@ -42582,7 +42659,10 @@ function atlasSharedSynthesisRenderCore() {
   setText(document.getElementById("atlasSharedSynthesisReports"), synthesisHistorical ? "4/4 HIST." : "4/4 CURRENT");
   setText(document.getElementById("atlasSharedSynthesisConclusion"), synthesisHistorical ? "Historique" : "Disponible");
   setText(document.getElementById("atlasSharedSynthesisPersistence"), atlasSharedSynthesisPersistenceLabel());
-  atlasSharedSynthesisRenderMarkdown(document.getElementById("atlasSharedSynthesisContent"), pkg.summary_markdown);
+  atlasSharedSynthesisRenderMarkdown(
+    document.getElementById("atlasSharedSynthesisContent"),
+    atlasCompactMarkdownPreview40480(pkg.summary_markdown, 1900, 4)
+  );
   atlasSharedConclusionRenderOnDemand40352();
   setText(
     document.getElementById("atlasSharedSynthesisNote"),
@@ -51925,7 +52005,7 @@ try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({b
 /* 40.4.70 — finish the source-lazy lifecycle with interaction-first binding and a bounded paint handoff before non-critical replay. */
 try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40470__=Object.freeze({build:"40.4.70",parent:"40.4.69",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,interaction_first_binding:true,bounded_paint_handoff:true,scope_timing_exposed:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.79";
+const ATLAS_BUILD = "40.4.80";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -56876,7 +56956,7 @@ window.setTimeout(() => {
    ============================================================ */
 
 const ATLAS_DIRECT_REST_383_CACHE_MS = 30_000;
-const ATLAS_DIRECT_REST_383_REFRESH_MS = 8_000;
+const ATLAS_DIRECT_REST_383_REFRESH_MS = 30_000;
 const ATLAS_DIRECT_REST_383_GLOBAL_FEED_MAX_AGE_MS = 30_000;
 
 function atlasExchangeDirectRestStore383() {
@@ -57003,7 +57083,9 @@ atlasRenderExchangeFeedStatus = function atlasRenderExchangeFeedStatus383() {
 const atlasExchangeWatchdog383Base = atlasExchangeWatchdog;
 atlasExchangeWatchdog = function atlasExchangeWatchdog383() {
   const result = atlasExchangeWatchdog383Base();
-  try { void atlasExchangeRefreshDirectRest383({ force: true }); } catch (_) {}
+  // 40.4.80: 5 s is socket-health only. REST top-up is gated to the existing
+  // 30 s Spot cadence and must never become a forced five-second network/render owner.
+  try { void atlasExchangeRefreshDirectRest383({ force: false }); } catch (_) {}
   return result;
 };
 
@@ -63073,5 +63155,37 @@ try{
     new_websocket:false,
     new_network_owner:false,
     new_storage_namespace:false
+  });
+}catch(_){}
+
+
+/* ============================================================
+   40.4.80 — ATLAS HOT CORE / INTERNAL RESIDENCY / FIREFOX RELIEF LOCK
+   Restores the historical 40.3.51→40.3.59 boundary after the .67→.79 migration:
+   HOT: Atlas/Aerith profile, CURRENT pipeline/state, compact reports, short
+        Aerith truth, snapshot/live coherence, Decision Board operator summary.
+   DEMAND: full Aerith conclusion, technical stack grid, historical comparison,
+           Book handoff detail and all pre-existing heavy memory/audit owners.
+   BACKGROUND: 5 s Binance watchdog is health-only; REST top-up = 30 s gate;
+               Oracle Outcome/Long Shadow recurring pass = 60 s idle slice.
+   No new timer, observer, WebSocket, network owner, storage owner or engine.
+   ============================================================ */
+try{
+  globalThis.__AGENT_CRYPTO_ATLAS_MIGRATION_40480__=Object.freeze({
+    build:"40.4.80",parent:"40.4.79",
+    atlas_cockpit_hot:true,
+    short_aerith_truth_hot:true,
+    full_aerith_conclusion_demand_resident:true,
+    stable_stack_grid_demand_resident:true,
+    decision_history_compare_demand_resident:true,
+    book_handoff_detail_demand_resident:true,
+    peripheral_first_level_release_on_close:true,
+    exchange_5s_watchdog_network_force:false,
+    exchange_rest_min_refresh_ms:30000,
+    oracle_background_interval_ms:60000,
+    oracle_background_idle_sliced:true,
+    new_recurring_timer:false,new_observer:false,new_websocket:false,
+    new_network_owner:false,new_storage_owner:false,
+    market_core_changed:false,current_engine_changed:false,bridge_changed:false,oracle_math_changed:false
   });
 }catch(_){}
