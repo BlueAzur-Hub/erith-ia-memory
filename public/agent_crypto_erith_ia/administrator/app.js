@@ -22091,12 +22091,35 @@ function newsFeedCountdownLabel() {
   return formatAutoDelay(Date.parse(newsFeedState.nextRefreshAt) - Date.now());
 }
 
+function newsFeedCountdownPresentationActive40464() {
+  const details = $("news-sentinel");
+  return document.visibilityState !== "hidden"
+    && !!details?.open
+    && !!$("newsFeedNextCheck")
+    && !!$("newsFeedLastCheck");
+}
+
 function newsFeedUpdateCountdown() {
+  if (!newsFeedCountdownPresentationActive40464()) return;
   setText($("newsFeedNextCheck"), newsFeedCountdownLabel());
   const checked = newsFeedState.lastCheckedAt
     ? new Date(newsFeedState.lastCheckedAt).toLocaleString("fr-FR")
     : "Aucun contrôle";
   setText($("newsFeedLastCheck"), `Dernier contrôle : ${checked}`);
+}
+
+function newsFeedSyncCountdownTimer40464() {
+  const active = newsFeedCountdownPresentationActive40464();
+  if (!active) {
+    if (newsFeedState.countdownTimer) clearInterval(newsFeedState.countdownTimer);
+    newsFeedState.countdownTimer = null;
+    return false;
+  }
+  if (!newsFeedState.countdownTimer) {
+    newsFeedState.countdownTimer = window.setInterval(newsFeedUpdateCountdown, 1000);
+  }
+  newsFeedUpdateCountdown();
+  return true;
 }
 
 function newsFeedStatusText() {
@@ -23461,6 +23484,7 @@ function initNewsSentinelV1() {
   });
 
   document.addEventListener("visibilitychange", () => {
+    newsFeedSyncCountdownTimer40464();
     if (!newsFeedVisible()) {
       newsFeedClearTimer();
       newsFeedState.nextRefreshAt = null;
@@ -23479,6 +23503,12 @@ function initNewsSentinelV1() {
     if (newsFeedVisible()) void loadNewsLiveFeed({ automatic: true });
   });
 
+  const newsDetails40464 = $("news-sentinel");
+  if (newsDetails40464 && newsDetails40464.dataset.newsCountdownGate40464 !== "1") {
+    newsDetails40464.dataset.newsCountdownGate40464 = "1";
+    newsDetails40464.addEventListener("toggle", newsFeedSyncCountdownTimer40464);
+  }
+
   const cachedPayload = newsFeedReadCache();
   if (cachedPayload) {
     newsFeedApplyPayload(
@@ -23492,7 +23522,8 @@ function initNewsSentinelV1() {
   void loadNewsLiveFeed({ automatic: true });
 
   if (newsFeedState.countdownTimer) clearInterval(newsFeedState.countdownTimer);
-  newsFeedState.countdownTimer = window.setInterval(newsFeedUpdateCountdown, 1000);
+  newsFeedState.countdownTimer = null;
+  newsFeedSyncCountdownTimer40464();
 }
 
 /* ============================================================
@@ -26643,14 +26674,14 @@ function atlasSnapshotWithSourceIntelligence4058(snapshot) {
       attached: true,
       optional: true,
       transaction_identity_excluded: true,
-      build: "40.4.63"
+      build: "40.4.64"
     }
   };
 }
 
 try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
-    build: "40.4.63",
+    build: "40.4.64",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
     owner: "app.js transport copy + ErithPrivateBackendSources4054",
     atlas_direct_internet_access: false,
@@ -45263,7 +45294,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.63",
+    build:"40.4.64",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -48293,7 +48324,34 @@ function atlasRenderAutoTruthLive() {
   setText(els.autoCollectorTruth, `${collectorId} · ${isCollectorConfigured() ? "configuré" : "temporaire"}`);
 }
 
+function atlasAutoCountdownPresentationActive40464() {
+  const details = document.querySelector('details[data-collapse-key="auto-reader"]');
+  return document.visibilityState !== "hidden"
+    && !!details?.open
+    && !!els.autoNextRead?.isConnected;
+}
+
+function atlasSyncAutoCountdownTimer40464() {
+  const details = document.querySelector('details[data-collapse-key="auto-reader"]');
+  if (details && details.dataset.atlasAutoCountdownGate40464 !== "1") {
+    details.dataset.atlasAutoCountdownGate40464 = "1";
+    details.addEventListener("toggle", atlasSyncAutoCountdownTimer40464);
+  }
+  const active = atlasAutoCountdownPresentationActive40464();
+  if (!active) {
+    if (state.auto.countdownTimer) clearInterval(state.auto.countdownTimer);
+    state.auto.countdownTimer = null;
+    return false;
+  }
+  if (!state.auto.countdownTimer) {
+    state.auto.countdownTimer = setInterval(updateAutoCountdown, 1000);
+  }
+  updateAutoCountdown();
+  return true;
+}
+
 function updateAutoCountdown() {
+  if (!atlasAutoCountdownPresentationActive40464()) return;
   atlasRenderAutoTruthLive();
   if (!els.autoNextRead) return;
   if (!state.auto?.enabled) {
@@ -48378,7 +48436,8 @@ function startAutoReader() {
   renderAutoReader();
 
   if (state.auto.countdownTimer) clearInterval(state.auto.countdownTimer);
-  state.auto.countdownTimer = setInterval(updateAutoCountdown, 1000);
+  state.auto.countdownTimer = null;
+  atlasSyncAutoCountdownTimer40464();
 
   if (atlasPulseVisible()) {
     setTimeout(() => void atlasRunStartupLivecheck(), 50);
@@ -49028,6 +49087,32 @@ function atlasAudienceSessionStateLabel() {
   return idle >= ATLAS_AUDIENCE_IDLE_MS ? "Inactive" : "Active";
 }
 
+function atlasAudiencePresentationActive40464() {
+  const details = document.getElementById("mesure-audience");
+  return document.visibilityState !== "hidden"
+    && !!details?.open
+    && !!document.getElementById("audienceModuleStatus");
+}
+
+function atlasAudienceSyncRenderTimer40464() {
+  const details = document.getElementById("mesure-audience");
+  if (details && details.dataset.atlasAudienceRenderGate40464 !== "1") {
+    details.dataset.atlasAudienceRenderGate40464 = "1";
+    details.addEventListener("toggle", atlasAudienceSyncRenderTimer40464);
+  }
+  const active = atlasAudiencePresentationActive40464();
+  if (!active) {
+    if (atlasAudienceState.renderTimer) clearInterval(atlasAudienceState.renderTimer);
+    atlasAudienceState.renderTimer = null;
+    return false;
+  }
+  if (!atlasAudienceState.renderTimer) {
+    atlasAudienceState.renderTimer = window.setInterval(atlasRenderAudienceStatus, 1000);
+  }
+  atlasRenderAudienceStatus();
+  return true;
+}
+
 function atlasRenderAudienceStatus(errorText = "") {
   const network = atlasAudienceState.network || {};
   const counters = atlasAudienceState.counters;
@@ -49146,6 +49231,7 @@ async function atlasInitAudienceModule() {
   window.addEventListener("online", () => { atlasAudienceMarkActivity(); void atlasTrackAudience("network_online", {}, { allowDuplicate: true }); });
   window.addEventListener("offline", () => { atlasAudienceMarkActivity(); atlasRenderAudienceStatus(); });
   document.addEventListener("visibilitychange", () => {
+    atlasAudienceSyncRenderTimer40464();
     if (document.visibilityState === "visible") {
       atlasVisibilityResumeQueue40397("audience-resume", () => {
         atlasAudienceMarkActivity();
@@ -49174,7 +49260,9 @@ async function atlasInitAudienceModule() {
   });
   document.getElementById("btnAudienceExport")?.addEventListener("click", atlasAudienceExportDiagnostic);
   atlasAudienceState.heartbeatTimer = window.setInterval(() => void atlasAudienceHeartbeat(), ATLAS_AUDIENCE_HEARTBEAT_MS);
-  atlasAudienceState.renderTimer = window.setInterval(atlasRenderAudienceStatus, 1000);
+  if (atlasAudienceState.renderTimer) clearInterval(atlasAudienceState.renderTimer);
+  atlasAudienceState.renderTimer = null;
+  atlasAudienceSyncRenderTimer40464();
 }
 
 const ATLAS_LOCAL_BRIDGE_AUTO_INTERVAL_MS = 60000;
@@ -51239,8 +51327,10 @@ try {
   });
 } catch (_) {}
 
-/* 40.4.63 — runtime phase-2 audit checkpoint; no runtime owner extracted. */ try{globalThis.__AGENT_CRYPTO_RUNTIME_BOOT_AUDIT_40463__=Object.freeze({build:"40.4.63",base:"40.4.62",presentation_migration_complete:true,runtime_performance_migration_complete:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.63";
+/* 40.4.63 — runtime phase-2 audit checkpoint; no runtime owner extracted. */ try{globalThis.__AGENT_CRYPTO_RUNTIME_BOOT_AUDIT_40463__=Object.freeze({build:"40.4.63",base:"40.4.62",presentation_migration_complete:true,runtime_performance_migration_complete:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* 40.4.64 — peripheral runtime extraction wave 1. Diagnostics leave parser-blocking boot; three 1 s presentation loops run only while their own disclosure is open. Data/engine cadences remain unchanged. */
+try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
+const ATLAS_BUILD = "40.4.64";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -52690,7 +52780,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
     });
     try { renderAutoReader(); } catch (_) {}
     try { atlasRenderAutoTruthLive(); } catch (_) {}
-    try { updateAutoCountdown(); } catch (_) {}
+    try { atlasSyncAutoCountdownTimer40464(); } catch (_) {}
   }
 
   if (shared) {
@@ -53117,6 +53207,7 @@ els.sourceDockPortals?.addEventListener("click", event => {
 });
 
 document.addEventListener("visibilitychange", () => {
+  atlasSyncAutoCountdownTimer40464();
   if (document.hidden) {
     atlasRenderAutoTruthLive();
     atlasSourceDockClearRetryTimer();

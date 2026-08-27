@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.63",
-  "parent_build": "40.4.62",
+  "build": "40.4.64",
+  "parent_build": "40.4.63",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -174,14 +174,33 @@
       "state": "CANONICAL_SYNC_AWARE",
       "introduced": "40.4.55",
       "notes": "Readable manifest with transient build/token edge mismatch is classified as GitHub propagation, not application failure. Actual remote app verification remains mandatory before update."
+    },
+    {
+      "component": "Peripheral diagnostic demand loading",
+      "owner": "js/views/peripheral-diagnostics-loader.js",
+      "state": "CANONICAL_DEMAND_ONLY_DIAGNOSTIC_LOADER",
+      "introduced": "40.4.64",
+      "targets": [
+        "js/views/residency-audit.js",
+        "js/architecture-freeze.js"
+      ],
+      "notes": "Both diagnostic modules are removed from parser-blocking boot and are loaded only by explicit operator API/event request. No recurring timer, observer, network loop, storage owner or engine mutation."
+    },
+    {
+      "component": "Closed/offscreen 1 s presentation cadence gating",
+      "owner": "app.js::newsFeedSyncCountdownTimer40464 + atlasSyncAutoCountdownTimer40464 + atlasAudienceSyncRenderTimer40464",
+      "state": "CANONICAL_PRESENTATION_ONLY_GATE",
+      "introduced": "40.4.64",
+      "notes": "Only the 1 s UI refresh cadence is stopped while its own disclosure is closed/unhydrated or the document is hidden. News data refresh, Auto Reader market pulse and Audience heartbeat remain unchanged."
     }
   ],
   "next": {
     "after_40_4_59": "Operator Firefox validation of automatic Source Intelligence V1.3 and address-proof counts. Then extend additional read-only source coverage or documentation; do not reopen CURRENT cadence without reproduced defect.",
-    "after_40_4_63": "40.4.64 peripheral runtime extraction from audited demand candidates; Market Core/CURRENT/Oracle analytical ownership stay protected."
+    "after_40_4_63": "40.4.64 peripheral runtime extraction from audited demand candidates; Market Core/CURRENT/Oracle analytical ownership stay protected.",
+    "after_40_4_64": "40.4.65 second peripheral/runtime extraction after Firefox validation; keep Market Core/CURRENT/Oracle/Bridge/Private Backend protected."
   },
   "migration_summary": {
-    "state": "PRESENTATION_MIGRATION_COMPLETE_RUNTIME_PHASE_2_REQUIRED",
+    "state": "RUNTIME_PHASE_2_WAVE_1_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -200,7 +219,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "40.4.64 first true peripheral runtime extraction; no new market/source features until Firefox responsiveness recovers.",
+    "next_product_work": "40.4.65 second true runtime extraction after operator validation of 40.4.64; no new market/source features until responsiveness recovers.",
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": false
   },
@@ -332,5 +351,42 @@
       "Binance LIVE primary source"
     ],
     "next": "40.4.64 first true peripheral runtime extraction"
+  },
+  "runtime_phase2_wave1_40464": {
+    "owner": "app.js + js/views/peripheral-diagnostics-loader.js + index.html",
+    "state": "IMPLEMENTED_REQUIRES_FIREFOX_OPERATOR_VALIDATION",
+    "parser_blocking_diagnostics_removed": [
+      "js/views/residency-audit.js",
+      "js/architecture-freeze.js"
+    ],
+    "demand_loader": "js/views/peripheral-diagnostics-loader.js",
+    "parser_blocking_external_scripts_before": 29,
+    "parser_blocking_external_scripts_after": 28,
+    "gated_1s_presentations": [
+      "News countdown",
+      "Atlas Auto Reader countdown",
+      "Audience status renderer"
+    ],
+    "data_cadences_preserved": [
+      "News refresh",
+      "Auto Reader market pulse",
+      "Audience heartbeat"
+    ],
+    "protected": [
+      "Market Core 38.15.11",
+      "Atlas CURRENT 4/4 → NØX → Aerith",
+      "CURRENT fingerprint/cadence",
+      "Oracle analytical engine/Evidence",
+      "Bridge R13 / V1.9.11",
+      "Private Backend V1.4.0",
+      "Source Intelligence V1.3",
+      "IndexedDB CURRENT truth",
+      "Binance LIVE primary source"
+    ],
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false,
+    "next": "40.4.65 second extraction after Firefox validation"
   }
 }
