@@ -1935,7 +1935,10 @@ function atlasAccessSyncDialog() {
   if (secret) secret.autocomplete = configured ? "current-password" : "new-password";
   atlasAccessSetStatus(configured ? "Administration verrouillée." : "Première configuration locale.");
   try { atlasAccessPortalEnsureBackground40380(); } catch (_) {}
-  try { queueMicrotask(() => void atlasAccessPortalRefresh40382()); } catch (_) {}
+  // 40.4.84: the gate's first paint and password interaction own priority.
+  // Bridge /auth/status is intentionally not probed here; the canonical Bridge
+  // login still validates the same secret when the operator explicitly submits.
+  try { atlasAccessPortalPrimeLocal4084(); } catch (_) {}
 }
 
 function atlasAccessOpen(pendingHash = "") {
@@ -2017,6 +2020,14 @@ async function atlasAccessSubmit(event) {
       }
     }
 
+    atlasAccessSetStatus("Mot de passe local validé · vérification Bridge…");
+    try {
+      atlasAccessPortalState40380("atlasAccessBridgeState40380","VÉRIFICATION…","warn");
+      atlasAccessPortalState40380("atlasAccessBridgeAuthState40380","AUTHENTIFICATION…","warn");
+      atlasAccessPortalText40382("atlasAccessTopBridge40380","VÉRIFICATION…");
+    } catch (_) {}
+    // Let Firefox paint the acknowledged local validation before network/auth work.
+    await new Promise(resolve => requestAnimationFrame(resolve));
     const bridgeAuth40375 = await atlasBridgeAuthLogin40375(secret);
     if (bridgeAuth40375.reachable && !bridgeAuth40375.ok) {
       atlasAccessSetStatus(bridgeAuth40375.payload?.error || "Bridge : authentification Administrator refusée.", "error");
@@ -2026,15 +2037,6 @@ async function atlasAccessSubmit(event) {
     }
 
     atlasAccessSetSession(ATLAS_ACCESS_OWNER_ROLE);
-    // 40.4.66 — a restored Ryzen CURRENT may have been activated before the
-    // Aether Trust / Bridge session existed. Reconcile the already-resident
-    // synthesis immediately after authorization so the public Book mirror
-    // cannot remain stuck on an older GitHub publication indefinitely.
-    if (bridgeAuth40375.ok) {
-      queueMicrotask(() => {
-        try { void atlasBookMirrorBridgeReconcile40466("post-auth"); } catch (_) {}
-      });
-    }
     atlasAccessSetStatus(bridgeAuth40375.ok ? "Accès Christophe + Bridge validés." : "Accès Christophe validé · Bridge hors ligne.", "ok");
     atlasV2SyncShareableUrl("advanced");
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
@@ -2056,22 +2058,19 @@ async function atlasAccessSubmit(event) {
       if (pending) atlasV2OpenAdvancedForTarget(pending);
       else atlasAdminCenterSet(false, { persist: false, scrollTarget: false });
       // Reuse the canonical resize owners exactly once after the role transition.
-      // The tracker performs one coalesced settled follow-up frame for Firefox/F11.
       window.dispatchEvent(new Event("resize"));
-      // 40.4.61: only after the gate is gone and the expanded workspace owns a
-      // paint may deferred non-critical workers resume.
+      // Retire the gate before any Book/CURRENT reconciliation is allowed to work.
       atlasOperatorPriorityRelease40461("aether-trust");
-    });
-    // 40.4.51 — if a genuinely new canonical snapshot arrived while the
-    // Administrator gate or Bridge readiness was unavailable, re-arm the
-    // existing single CURRENT scheduler after successful authentication.
-    // Same-snapshot CLOSED CURRENT is rejected by the canonical market-id gate.
-    queueMicrotask(() => {
-      try {
-        if (!atlasCurrentRestUiConverge4052("post-auth")) {
-          atlasCurrentPendingAutoKick4051("post-auth");
+      // 40.4.84 — second paint boundary: the Administrator becomes interactive
+      // first; only then may already-existing CURRENT/Book owners reconcile.
+      window.requestAnimationFrame(() => {
+        try {
+          if (!atlasCurrentRestUiConverge4052("post-auth")) atlasCurrentPendingAutoKick4051("post-auth");
+        } catch (_) {}
+        if (bridgeAuth40375.ok) {
+          try { void atlasBookMirrorBridgeReconcile40466("post-auth"); } catch (_) {}
         }
-      } catch (_) {}
+      });
     });
     atlasAccessSubmitBusy40429 = false;
     atlasAccessSetBusy40429(false);
@@ -7353,7 +7352,7 @@ function drawLineChart(canvas, series, label = "", result = {}, chartKey = "") {
 
     const shadowSeries = [{
       rows: volumeRows,
-      // 40.4.83 operator note: preserve 39.2.11 geometry but paint the
+      // 40.4.84 operator note: preserve 39.2.11 geometry but paint the
       // curve-following bars with the selected crypto identity color.
       color: palette.primary,
       opacity: 0.145,
@@ -11573,7 +11572,7 @@ function atlasAtomicRefreshComparisonChart(chart, canvas, normalizedEntries, per
   chart.$atlasVolume = chart.$atlasVolumeVisible;
   chart.$atlasShadowSeries = normalizedEntries.map((entry, index) => ({
     rows: entry.data.filter(Boolean).map(point => ({ x: point.x, price: point.y, y: 1 })),
-    // 40.4.83: comparison bars share the exact crypto color of their curve.
+    // 40.4.84: comparison bars share the exact crypto color of their curve.
     color: atlasCryptoPalette(entry.coin, index).primary,
     opacity: index === 0 ? 0.13 : Math.max(0.055, 0.105 - index * 0.01),
     heightRatio: 0.88
@@ -11732,7 +11731,7 @@ function drawComparisonChart(canvas, entries, period, chartKey = "") {
                       price: point.y,
                       y: 1
                     })),
-                  // 40.4.83: same curve-following geometry, crypto-native color.
+                  // 40.4.84: same curve-following geometry, crypto-native color.
                   color: atlasCryptoPalette(entry.coin, index).primary,
                   opacity:
                     index === 0
@@ -51647,7 +51646,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.83";
+const ATLAS_BUILD = "40.4.84";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -60130,6 +60129,34 @@ function atlasAccessPortalSetDot40382(id,state=""){
   node.classList.toggle("is-error",state==="error");
 }
 function atlasAccessPortalText40382(id,text){const node=document.getElementById(id);if(node)node.textContent=String(text||"—");}
+function atlasAccessPortalPrimeLocal4084(){
+  try{atlasAccessPortalEnsureBackground40380();}catch(_){}
+  const ryzen=atlasDeviceComputeAllowed();
+  const authorized=atlasAccessIsAuthorized();
+  atlasAccessPortalState40380("atlasAccessInterfaceState40380",authorized?"AUTHENTIFIÉE":"VERROUILLÉE",authorized?"ok":"warn");
+  atlasAccessPortalState40380("atlasAccessDeviceState40380",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
+  atlasAccessPortalText40382("atlasAccessDeviceTop40382",ryzen?"RYZEN PRODUCTEUR":"BOOK · LECTURE SEULE");
+  atlasAccessPortalText40382("atlasAccessSystemState40382",ryzen?"LOCAL":"LECTURE SEULE");
+  atlasAccessPortalSetDot40382("atlasAccessSystemDot40382",ryzen?"ok":"");
+  if(!ryzen){
+    atlasAccessPortalText40382("atlasAccessTopBridge40380","NON REQUIS");
+    atlasAccessPortalState40380("atlasAccessBridgeState40380","AUCUN · BOOK","warn");
+    atlasAccessPortalState40380("atlasAccessBridgeAuthState40380","NON REQUIS","warn");
+    atlasAccessPortalState40380("atlasAccessBookMirrorState40382","LECTURE SEULE","ok");
+    atlasAccessPortalText40382("atlasAccessBridgeMeta40382","AUCUN BRIDGE LOCAL REQUIS");
+    return true;
+  }
+  const token=atlasBridgeAuthToken40375();
+  atlasAccessPortalText40382("atlasAccessTopBridge40380",token?"SESSION LOCALE":"APRÈS VALIDATION");
+  atlasAccessPortalSetDot40382("atlasAccessBridgeDot40382",token?"ok":"");
+  atlasAccessPortalState40380("atlasAccessBridgeState40380",token?"SESSION CONNUE · À REVÉRIFIER":"VÉRIFICATION À LA VALIDATION",token?"ok":"warn");
+  atlasAccessPortalState40380("atlasAccessBridgeAuthState40380",token?"SESSION LOCALE":"APRÈS MOT DE PASSE",token?"ok":"warn");
+  atlasAccessPortalState40380("atlasAccessBookMirrorState40382","APRÈS AUTH","warn");
+  atlasAccessPortalText40382("atlasAccessBridgeMeta40382","AUCUNE REQUÊTE BRIDGE PENDANT LA SAISIE");
+  atlasAccessPortalText40382("atlasAccessBridgePolicy40382","Validation Bridge au clic · capacités bornées · audit local");
+  return true;
+}
+
 async function atlasAccessPortalRefresh40382(){
   try{atlasAccessPortalEnsureBackground40380();}catch(_){}
   const ryzen=atlasDeviceComputeAllowed();
@@ -62463,5 +62490,7 @@ try {
 } catch (_) {}
 
 
-/* 40.4.83 — UI NOTES PASS. Chronos centered; passive Graph/Atlas/Oracle/News context ribbon reuses existing Chronos cadence; chart curve-following volume/shadow bars inherit crypto palette. No runtime/business owner added. */
-try{globalThis.__AGENT_CRYPTO_UI_NOTES_40483__=Object.freeze({build:"40.4.83",parent:"40.4.82",clock_centered:true,header_context_passive:true,header_context_new_timer:false,header_context_animation:false,volume_bars_crypto_palette:true,chart_geometry_changed:false,market_core_changed:false,current_changed:false,oracle_engine_changed:false,bridge_changed:false,new_interval:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* 40.4.83 — inherited graph paint note: curve-following bars use crypto palette. */
+try{globalThis.__AGENT_CRYPTO_UI_NOTES_40483__=Object.freeze({build:"40.4.83",parent:"40.4.82",volume_bars_crypto_palette:true,chart_geometry_changed:false,market_core_changed:false,current_changed:false,oracle_engine_changed:false,bridge_changed:false,new_interval:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* 40.4.84 — exact Aether status band + Aether Trust interaction completion. */
+try{globalThis.__AGENT_CRYPTO_AETHER_TRUST_UI_40484__=Object.freeze({build:"40.4.84",parent:"40.4.83",aether_menu_button:true,aether_lazy_panel:true,aether_status_band:true,aether_news_css_drift:true,clock_centered:true,auth_background_eager:true,gate_open_bridge_probe:false,bridge_validation_on_submit:true,post_auth_current_after_second_paint:true,post_auth_book_after_second_paint:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_algorithm_changed:false,oracle_engine_changed:false,bridge_protocol_changed:false,new_interval:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
