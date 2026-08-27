@@ -2062,6 +2062,9 @@ function atlasLocalAiPresentationBind40467(reason = "boot") {
   try { atlasScannerTruthDetailInit40358(); } catch (_) {}
   try { atlasScannerTruthRender37(); } catch (_) {}
   try { atlasMultiCollectorOperatorInit(); } catch (_) {}
+  // 40.4.68 — the AUTO/MANUEL controls are born only after Atlas source hydration.
+  // Re-run the canonical mode binder here; the binder itself is idempotent below.
+  try { atlasClassicAnalysisModeInit38155(); } catch (_) {}
 
   const question=document.getElementById("atlasLocalQuestion");
   if(question&&!String(question.value||"").trim()) question.value="Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
@@ -2092,7 +2095,7 @@ function atlasInitLocalAccess() {
 
 try {
   globalThis.AgentCryptoAtlasLateHydration40467=Object.freeze({
-    build:"40.4.67",
+    build:"40.4.68",
     rebind(scope="all"){
       if(scope==="all"||scope==="local-ai")return atlasLocalAiPresentationBind40467(scope);
       if(["auto-reader","shared-memory","github-memory","current-audit","book-knowledge"].includes(scope))return atlasRebindDeferredMemoryPanels40425(scope);
@@ -2105,6 +2108,7 @@ try {
     observer_added:false,
     storage_owner_added:false
   });
+  globalThis.AgentCryptoAtlasLateHydration40468=globalThis.AgentCryptoAtlasLateHydration40467;
 } catch (_) {}
 
 
@@ -51471,8 +51475,8 @@ try {
 /* 40.4.64 — peripheral runtime extraction wave 1. Diagnostics leave parser-blocking boot; three 1 s presentation loops run only while their own disclosure is open. Data/engine cadences remain unchanged. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
-try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  /* 40.4.67 — Atlas heavy presentation leaves parser boot; late UI action rebind is idempotent. Runtime/CURRENT/Bridge ownership unchanged. */ try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_40467__=Object.freeze({build:"40.4.67",parent:"40.4.66",atlas_full_markup_at_boot:false,legacy_atlas_peripheral_lazy_loaded:false,late_ui_rebind:true,current_runtime_resident:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.67";
+try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  /* 40.4.67 — Atlas heavy presentation leaves parser boot; late UI action rebind is idempotent. Runtime/CURRENT/Bridge ownership unchanged. */ try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_40467__=Object.freeze({build:"40.4.67",parent:"40.4.66",atlas_full_markup_at_boot:false,legacy_atlas_peripheral_lazy_loaded:false,late_ui_rebind:true,current_runtime_resident:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){} /* 40.4.68 — 40.4.67 regression recovery: late AUTO/MANUEL action owner restored; Atlas inner residency rebound after source hydration; content-visibility paint gate retired. */ try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({build:"40.4.68",parent:"40.4.67",classic_mode_late_rebind:true,inner_memory_residency_late_rebind:true,memory_health_late_rebind:true,content_visibility_gate:false,current_runtime_resident:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
+const ATLAS_BUILD = "40.4.68";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -59687,10 +59691,12 @@ atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic
 };
 
 function atlasClassicAnalysisModeInit38155() {
-  document.getElementById("btnAtlasClassicModeAuto")?.addEventListener("click", () => {
+  // 40.4.68 — late-hydration safe. In 40.4.67 these buttons did not exist when
+  // the boot microtask ran, so AUTO/MANUEL had no click owner after Atlas opened.
+  atlasBindOnce40467(document.getElementById("btnAtlasClassicModeAuto"), "click", "atlasClassicModeBound40468", () => {
     atlasClassicAnalysisModeSet38155("auto", { schedule: true });
   });
-  document.getElementById("btnAtlasClassicModeManual")?.addEventListener("click", () => {
+  atlasBindOnce40467(document.getElementById("btnAtlasClassicModeManual"), "click", "atlasClassicModeBound40468", () => {
     atlasClassicAnalysisModeSet38155("manual");
   });
 

@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.67",
-  "parent_build": "40.4.66",
+  "build": "40.4.68",
+  "parent_build": "40.4.67",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -72,20 +72,26 @@
     },
     {
       "component": "Atlas presentation",
-      "owner": "js/views/atlas-presentation.js",
-      "state": "CANONICAL"
+      "owner": "js/views/atlas-presentation.js + views/atlas.html",
+      "state": "TRUE_SOURCE_LAZY_RECOVERY_VALIDATION",
+      "introduced": "40.4.67",
+      "recovered": "40.4.68",
+      "notes": "40.4.68 keeps the 40.4.67 source-lazy shell but restores late AUTO/MANUEL action binding and replays historical Atlas inner residency reducers after hydration. content-visibility paint gate removed."
     },
     {
       "component": "Atlas peripheral lazy presentation",
-      "owner": "js/views/atlas-peripheral-lazy.js + views/atlas.html",
-      "state": "TRUE_LAZY_PARTIAL",
+      "owner": "js/views/atlas-presentation.js + views/atlas.html",
+      "state": "CONSOLIDATED_IN_CANONICAL_ATLAS_PRESENTATION",
       "covered": [
         "Auto Reader body",
         "Shared Memory body",
         "GitHub Memory body",
         "Book/Knowledge bodies",
         "CURRENT audit heavy bodies"
-      ]
+      ],
+      "retired_owner": "js/views/atlas-peripheral-lazy.js",
+      "retired_from_load_graph": "40.4.67",
+      "notes": "Legacy atlas-peripheral-lazy.js remains repository evidence only; canonical 40.4.68 Atlas presentation owns source-lazy hydration and calls existing runtime rebind APIs."
     },
     {
       "component": "Atlas CURRENT pipeline",

@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.67
+/* Agent-Crypto @erith.IA — 40.4.68
    ATLAS FAMILY TRUE SOURCE-LAZY HYDRATION / LATE RUNTIME REBIND LOCK
    Family header + five stable disclosure shells mount during parsing.
    Canonical Atlas markup stays in views/atlas.html and is fetched once only after
@@ -8,7 +8,7 @@
    No recurring timer, observer, storage owner, model reset or business-data owner added. */
 (()=>{
   "use strict";
-  const BUILD="40.4.67";
+  const BUILD="40.4.68";
   const SOURCE="./views/atlas.html";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
@@ -80,11 +80,6 @@
 
   host.insertAdjacentHTML("beforebegin",shellHtml);
   host.remove();
-
-  const paintStyle=document.createElement("style");
-  paintStyle.id="atlasSourceLazyPaintIsolation40467";
-  paintStyle.textContent='[data-atlas-source-lazy-shell-40467] > .atlas-collapse-body[data-atlas-hydration-40467="ready"]{content-visibility:auto;contain-intrinsic-size:auto 720px;}';
-  document.head.appendChild(paintStyle);
 
   const escRe=value=>String(value).replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
   function elementBounds(source,tag,matcher){
@@ -158,7 +153,9 @@
     });
   }
   function rebind(scope){
-    try{globalThis.AgentCryptoAtlasLateHydration40467?.rebind?.(scope);}catch(error){console.warn(`Agent-Crypto ${BUILD} · Atlas late rebind`,scope,error);}
+    try{globalThis.AgentCryptoAtlasLateHydration40468?.rebind?.(scope)||globalThis.AgentCryptoAtlasLateHydration40467?.rebind?.(scope);}catch(error){console.warn(`Agent-Crypto ${BUILD} · Atlas late rebind`,scope,error);}
+    // 40.4.68 — restore the Atlas inner residency reducers that used to run only at boot.
+    try{if(scope==="local-ai")globalThis.AgentCryptoAtlasInnerResidencyRebind40468?.rebind?.(scope);}catch(error){console.warn(`Agent-Crypto ${BUILD} · Atlas inner residency rebind`,scope,error);}
     try{if(scope!=="local-ai"&&scope!=="forge")globalThis.AgentCryptoAtlasPeripheralRebind?.rebind?.(scope);}catch(_){}
     try{globalThis.atlasV2ClassifySections?.();}catch(_){}
     try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation40312?.(mode);}catch(_){}
@@ -240,17 +237,18 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",hashHydrate,{once:true});else hashHydrate();
 
   function snapshot(){return Object.freeze({
-    build:BUILD,source:SOURCE,strategy:"parser-shell + one-source on-demand Atlas hydration",
+    build:BUILD,source:SOURCE,strategy:"parser-shell + one-source on-demand Atlas hydration + late inner residency replay",
     boot_full_atlas_html:false,legacy_peripheral_lazy_owner_loaded:false,source_fetch_count:sourceFetchCount,
     source_text_cached:!!sourceTextCache,hydration_count:hydrationCount,subsection_hydration_count:subsectionHydrationCount,
     hydrated:[...hydrated],subsections:[...subsectionHydrated],last_error:lastError||null,
     current_runtime_owner:"app.js + IndexedDB",book_mirror_runtime_preserved:true,auto_reader_runtime_preserved:true,
-    github_memory_runtime_preserved:true,new_recurring_timer:false,new_observer:false,storage_owner_added:false,
+    github_memory_runtime_preserved:true,content_visibility_gate:false,inner_residency_rebind:true,new_recurring_timer:false,new_observer:false,storage_owner_added:false,
     business_engine_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false
   });}
   const api=Object.freeze({build:BUILD,source:SOURCE,ensureBody:hydrate,ensureTarget,hydrateSubsection,snapshot,keys:Object.keys(SPECS),new_recurring_timer:false,new_observer:false,storage_owner_added:false});
   globalThis.ErithAtlasPresentation=api;
   globalThis.ErithAtlasPresentation40467=api;
+  globalThis.ErithAtlasPresentation40468=api;
   globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40467",runtime_owner:"app.js"});
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40467__=snapshot();
 })();

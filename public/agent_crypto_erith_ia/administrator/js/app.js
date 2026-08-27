@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.67";
+  const ADMIN_BUILD = "40.4.68";
   const ADMIN_RELEASE = "AETHER ATLAS TRUE SOURCE-LAZY HYDRATION + LATE RUNTIME REBIND LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
@@ -2425,5 +2425,30 @@
     }
   }
   queueMicrotask(bootAtlasMemoryHealthDeferred40355);
+
+  // 40.4.68 — Atlas source-lazy recovery. These two residency reducers historically
+  // ran only during js/app.js boot. In 40.4.67 the Atlas DOM did not exist yet, so
+  // the late-hydrated Memory / Decision Board / Memory Health trees remained fully
+  // resident. Expose one idempotent replay hook; no timer/observer is introduced.
+  function rebindAtlasInnerResidency40468(scope = "local-ai") {
+    if (scope !== "all" && scope !== "local-ai") return false;
+    let memory = false, health = false;
+    try { memory = initAtlasMemoryResidency40353() === true; } catch (_) {}
+    try { health = initAtlasMemoryHealthDeferred40355() === true; } catch (_) {}
+    return Object.freeze({build: ADMIN_BUILD, scope, memory_residency: memory, memory_health_residency: health});
+  }
+  try {
+    globalThis.AgentCryptoAtlasInnerResidencyRebind40468 = Object.freeze({
+      build: ADMIN_BUILD,
+      rebind: rebindAtlasInnerResidency40468,
+      new_timer: false,
+      new_observer: false,
+      storage_owner_added: false,
+      current_engine_changed: false
+    });
+  } catch (_) {}
+  // Covers a persisted/early-open Atlas that may have hydrated before this late
+  // compatibility layer finished loading. If the nodes are absent this is a no-op.
+  queueMicrotask(() => { try { rebindAtlasInnerResidency40468("local-ai"); } catch (_) {} });
 
 })();
