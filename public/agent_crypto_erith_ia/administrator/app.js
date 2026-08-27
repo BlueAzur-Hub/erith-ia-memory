@@ -2032,44 +2032,81 @@ function atlasAccessLock() {
   try { history.replaceState(null, "", `${location.pathname}${location.search}`); } catch {}
 }
 
+function atlasBindOnce40467(node, type, key, handler) {
+  if (!node || node.dataset[key] === "1") return false;
+  node.dataset[key] = "1";
+  node.addEventListener(type, handler);
+  return true;
+}
+
+function atlasLocalAiPresentationBind40467(reason = "boot") {
+  const bind = (id, handler, key = "atlasLocalAiBound40467") => atlasBindOnce40467(document.getElementById(id), "click", key, handler);
+  bind("btnLocalBridgeProbe", atlasLocalBridgeProbe);
+  document.querySelectorAll("[data-atlas-local-profile]").forEach(button => atlasBindOnce40467(button,"click","atlasLocalProfileBound40467",()=>atlasLocalDialogueSelectProfile(button.dataset.atlasLocalProfile)));
+  document.querySelectorAll("[data-atlas-local-summary]").forEach(button => atlasBindOnce40467(button,"click","atlasLocalSummaryBound40467",()=>atlasLocalDialogueRunSummary(button.dataset.atlasLocalSummary)));
+  bind("btnAtlasLocalAsk", atlasLocalDialogueAsk);
+  bind("btnAtlasLocalClear", atlasLocalDialogueClear);
+  bind("btnAtlasLocalCopy", atlasLocalDialogueCopy);
+  bind("btnAtlasLocalExport", atlasLocalDialogueExport);
+  bind("btnAtlasLocalConclusion", () => atlasLocalConclusionRun({ automatic:false, force:true }));
+  document.querySelectorAll("[data-atlas-response-tab]").forEach(button => atlasBindOnce40467(button,"click","atlasResponseTabBound40467",()=>atlasLocalResponseSelectView(button.dataset.atlasResponseTab)));
+  bind("btnAtlasLocalRunAll", () => atlasLocalReportsRunAll({ automatic:false, openFirst:true }));
+  document.querySelectorAll("[data-atlas-report-copy]").forEach(button => atlasBindOnce40467(button,"click","atlasReportCopyBound40467",()=>atlasLocalReportsCopy(button.dataset.atlasReportCopy)));
+  document.querySelectorAll("[data-atlas-report-export]").forEach(button => atlasBindOnce40467(button,"click","atlasReportExportBound40467",()=>atlasLocalReportsExport(button.dataset.atlasReportExport)));
+
+  try { atlasLocalReportResidencyInit40351(); } catch (_) {}
+  try { atlasSharedConclusionResidencyInit40352(); } catch (_) {}
+  try { atlasSharedSynthesisInit(); } catch (_) {}
+  try { atlasDeviceComputeInit(); } catch (_) {}
+  try { atlasQuestionRouterInit37(); } catch (_) {}
+  try { atlasScannerTruthDetailInit40358(); } catch (_) {}
+  try { atlasScannerTruthRender37(); } catch (_) {}
+  try { atlasMultiCollectorOperatorInit(); } catch (_) {}
+
+  const question=document.getElementById("atlasLocalQuestion");
+  if(question&&!String(question.value||"").trim()) question.value="Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
+  try { atlasLocalDialogueSelectProfile(atlasLocalDialogueState.profile || "atlas"); } catch (_) {}
+  try { atlasLocalResponseSelectView(atlasLocalDialogueState.activeResponseView || "conclusion"); } catch (_) {}
+  try { atlasLocalDialogueSetConnection(atlasLocalDialogueState.connected, ""); } catch (_) {}
+  try { atlasQuestionBookUi37(); } catch (_) {}
+  try { atlasCurrentRestUiConverge4052(`atlas-hydration:${reason}`); } catch (_) {}
+  try { atlasBookRoleUiLock3812(`atlas-hydration:${reason}`); } catch (_) {}
+  try { atlasCollapsedCurrentSync40295(); } catch (_) {}
+  try { atlasV2ClassifySections(); } catch (_) {}
+  return Object.freeze({build:ATLAS_BUILD,reason,local_ai_present:!!document.getElementById("local-ai-hub"),bridge_connected:atlasLocalDialogueState.connected===true,current_runtime_preserved:true});
+}
+
 function atlasInitLocalAccess() {
-  document.getElementById("atlasAccessForm")?.addEventListener("submit", atlasAccessSubmit);
-  document.getElementById("atlasAccessClose")?.addEventListener("click", atlasAccessClose);
-  document.getElementById("atlasAccessCancel")?.addEventListener("click", atlasAccessClose);
-  const accessDialog40461 = document.getElementById("atlasAccessDialog");
-  accessDialog40461?.addEventListener("click", event => { if (event.target === event.currentTarget) atlasAccessClose(); });
-  accessDialog40461?.addEventListener("cancel", event => { event.preventDefault(); atlasAccessClose(); });
-  document.getElementById("btnLocalBridgeProbe")?.addEventListener("click", atlasLocalBridgeProbe);
-  document.querySelectorAll("[data-atlas-local-profile]").forEach(button => { button.addEventListener("click", () => atlasLocalDialogueSelectProfile(button.dataset.atlasLocalProfile)); });
-  document.querySelectorAll("[data-atlas-local-summary]").forEach(button => { button.addEventListener("click", () => atlasLocalDialogueRunSummary(button.dataset.atlasLocalSummary)); });
-  document.getElementById("btnAtlasLocalAsk")?.addEventListener("click", atlasLocalDialogueAsk);
-  document.getElementById("btnAtlasLocalClear")?.addEventListener("click", atlasLocalDialogueClear);
-  document.getElementById("btnAtlasLocalCopy")?.addEventListener("click", atlasLocalDialogueCopy);
-  document.getElementById("btnAtlasLocalExport")?.addEventListener("click", atlasLocalDialogueExport);
-  document.getElementById("btnAtlasLocalConclusion")?.addEventListener("click", () => atlasLocalConclusionRun({ automatic: false, force: true }));
-  document.querySelectorAll("[data-atlas-response-tab]").forEach(button => {
-    button.addEventListener("click", () => atlasLocalResponseSelectView(button.dataset.atlasResponseTab));
-  });
-  document.getElementById("btnAtlasLocalRunAll")?.addEventListener("click", () => atlasLocalReportsRunAll({ automatic: false, openFirst: true }));
-  document.querySelectorAll("[data-atlas-report-copy]").forEach(button => {
-    button.addEventListener("click", () => atlasLocalReportsCopy(button.dataset.atlasReportCopy));
-  });
-  document.querySelectorAll("[data-atlas-report-export]").forEach(button => {
-    button.addEventListener("click", () => atlasLocalReportsExport(button.dataset.atlasReportExport));
-  });
-  atlasLocalReportResidencyInit40351();
-  atlasSharedConclusionResidencyInit40352();
-  atlasSharedSynthesisInit();
-  atlasKnowledgeLibraryInit();
-  atlasBookReadOnlyKnowledgeRefresh();
-  const question = document.getElementById("atlasLocalQuestion");
-  if (question && !String(question.value || "").trim()) question.value = "Analyse la situation actuelle du marché à partir du snapshot Agent-Crypto. Distingue les prix Binance, le marché CoinGecko, le graphique, le Math Core, News Sentinel, la Watchlist, les contradictions et les données manquantes. Ne suppose aucun portefeuille. Termine par les limites et le stop point.";
-  atlasLocalDialogueSelectProfile("atlas");
-  atlasLocalResponseSelectView("conclusion");
-  atlasLocalDialogueSetConnection(false, "Bridge local en attente de vérification automatique.");
-  atlasDeviceComputeInit();
+  atlasBindOnce40467(document.getElementById("atlasAccessForm"),"submit","atlasAccessBound40467",atlasAccessSubmit);
+  atlasBindOnce40467(document.getElementById("atlasAccessClose"),"click","atlasAccessBound40467",atlasAccessClose);
+  atlasBindOnce40467(document.getElementById("atlasAccessCancel"),"click","atlasAccessBound40467",atlasAccessClose);
+  const accessDialog40461=document.getElementById("atlasAccessDialog");
+  if(accessDialog40461&&accessDialog40461.dataset.atlasAccessDialogBound40467!=="1"){
+    accessDialog40461.dataset.atlasAccessDialogBound40467="1";
+    accessDialog40461.addEventListener("click",event=>{if(event.target===event.currentTarget)atlasAccessClose();});
+    accessDialog40461.addEventListener("cancel",event=>{event.preventDefault();atlasAccessClose();});
+  }
+  atlasLocalAiPresentationBind40467("boot");
   atlasInitLocalBridgeAutoHealth();
 }
+
+try {
+  globalThis.AgentCryptoAtlasLateHydration40467=Object.freeze({
+    build:"40.4.67",
+    rebind(scope="all"){
+      if(scope==="all"||scope==="local-ai")return atlasLocalAiPresentationBind40467(scope);
+      if(["auto-reader","shared-memory","github-memory","current-audit","book-knowledge"].includes(scope))return atlasRebindDeferredMemoryPanels40425(scope);
+      return Object.freeze({build:ATLAS_BUILD,scope,presentation_only:true});
+    },
+    runtime_owner:"app.js",
+    current_engine_changed:false,
+    bridge_engine_changed:false,
+    timer_added:false,
+    observer_added:false,
+    storage_owner_added:false
+  });
+} catch (_) {}
+
 
 const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contradictions"]);
 
@@ -25205,6 +25242,8 @@ function atlasDeviceComputeSetRole(role) {
 
 function atlasDeviceComputeInit() {
   document.querySelectorAll("[data-atlas-compute-role]").forEach(button => {
+    if (button.dataset.atlasDeviceRoleBound40467 === "1") return;
+    button.dataset.atlasDeviceRoleBound40467 = "1";
     button.addEventListener("click", () => atlasDeviceComputeSetRole(button.dataset.atlasComputeRole));
   });
   atlasDeviceComputeApply({ restart: false });
@@ -42648,7 +42687,14 @@ function atlasSharedSynthesisReadConclusion() {
 }
 
 function atlasSharedSynthesisInit() {
-  if (atlasSharedSynthesisState.initialized) return true;
+  if (!atlasSharedSynthesisState.runtimeRestoreStarted40467) {
+    atlasSharedSynthesisState.runtimeRestoreStarted40467 = true;
+    void atlasSharedSynthesisRestore();
+  }
+  if (atlasSharedSynthesisState.initialized) {
+    try { atlasSharedSynthesisRender(); } catch (_) {}
+    return true;
+  }
   atlasStableStackRender();
   const input = document.getElementById("atlasSharedSynthesisImport");
   if (!input) return false;
@@ -42663,7 +42709,7 @@ function atlasSharedSynthesisInit() {
   document.getElementById("btnAtlasBookExport")?.addEventListener("click", atlasBookExportToBook);
   document.getElementById("btnAtlasBookImport")?.addEventListener("click", atlasBookImportFromRyzen);
   document.getElementById("btnAtlasBookReadSynthesis")?.addEventListener("click", atlasBookReadImportedSynthesis);
-  void atlasSharedSynthesisRestore();
+  try { atlasSharedSynthesisRender(); } catch (_) {}
   return true;
 }
 
@@ -51425,8 +51471,8 @@ try {
 /* 40.4.64 — peripheral runtime extraction wave 1. Diagnostics leave parser-blocking boot; three 1 s presentation loops run only while their own disclosure is open. Data/engine cadences remain unchanged. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
-try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.66";
+try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  /* 40.4.67 — Atlas heavy presentation leaves parser boot; late UI action rebind is idempotent. Runtime/CURRENT/Bridge ownership unchanged. */ try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_40467__=Object.freeze({build:"40.4.67",parent:"40.4.66",atlas_full_markup_at_boot:false,legacy_atlas_peripheral_lazy_loaded:false,late_ui_rebind:true,current_runtime_resident:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
+const ATLAS_BUILD = "40.4.67";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -55976,9 +56022,10 @@ async function atlasQuestionChain37() {
 }
 
 function atlasQuestionRouterInit37() {
-  document.getElementById("btnAtlasQuestionAtlas37")?.addEventListener("click",()=>void atlasQuestionAsk37("atlas"));
-  document.getElementById("btnAtlasQuestionAerith37")?.addEventListener("click",()=>void atlasQuestionAsk37("aerith"));
-  document.getElementById("btnAtlasQuestionChain37")?.addEventListener("click",()=>void atlasQuestionChain37());
+  const bind=(id,handler)=>{const node=document.getElementById(id);if(!node||node.dataset.atlasQuestionRouterBound40467==="1")return false;node.dataset.atlasQuestionRouterBound40467="1";node.addEventListener("click",handler);return true;};
+  bind("btnAtlasQuestionAtlas37",()=>void atlasQuestionAsk37("atlas"));
+  bind("btnAtlasQuestionAerith37",()=>void atlasQuestionAsk37("aerith"));
+  bind("btnAtlasQuestionChain37",()=>void atlasQuestionChain37());
 }
 
 function atlasScannerTruthFormatMetric37(asset,basket) {
