@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.70",
-  "parent_build": "40.4.69",
+  "build": "40.4.66",
+  "parent_build": "40.4.65",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -72,32 +72,20 @@
     },
     {
       "component": "Atlas presentation",
-      "owner": "js/views/atlas-presentation.js + views/atlas.html",
-      "state": "TRUE_SOURCE_LAZY_TWO_LEVEL_COMPLETE_FIREFOX_VALIDATION",
-      "introduced": "40.4.67",
-      "recovered": "40.4.68",
-      "notes": "40.4.69 completes the migration: first-level Atlas shells stay parser-light; first local-AI disclosure materializes only the operational core; CURRENT audits, Market/Analytical Memory, Decision Board, Scanner, CURRENT Journal, Multi-Collector and Book/Knowledge remain second-level source-lazy. Late-DOM presentation de-duplication is epoch-safe and advanced navigation resolves non-resident Atlas targets before scrolling.",
-      "completed": "40.4.69"
+      "owner": "js/views/atlas-presentation.js",
+      "state": "CANONICAL"
     },
     {
       "component": "Atlas peripheral lazy presentation",
-      "owner": "js/views/atlas-presentation.js + views/atlas.html",
-      "state": "CONSOLIDATED_IN_CANONICAL_ATLAS_PRESENTATION",
+      "owner": "js/views/atlas-peripheral-lazy.js + views/atlas.html",
+      "state": "TRUE_LAZY_PARTIAL",
       "covered": [
         "Auto Reader body",
         "Shared Memory body",
         "GitHub Memory body",
         "Book/Knowledge bodies",
-        "CURRENT audit heavy bodies",
-        "Market/Analytical Memory",
-        "Decision Board",
-        "Scanner Truth",
-        "CURRENT Journal",
-        "Multi-Collector"
-      ],
-      "retired_owner": "js/views/atlas-peripheral-lazy.js",
-      "retired_from_load_graph": "40.4.67",
-      "notes": "Legacy atlas-peripheral-lazy.js remains repository evidence only. 40.4.69 canonical Atlas presentation owns both first- and second-level source-lazy hydration and calls existing runtime rebind APIs by materialized scope."
+        "CURRENT audit heavy bodies"
+      ]
     },
     {
       "component": "Atlas CURRENT pipeline",
@@ -204,27 +192,16 @@
       "state": "CANONICAL_PRESENTATION_ONLY_GATE",
       "introduced": "40.4.64",
       "notes": "Only the 1 s UI refresh cadence is stopped while its own disclosure is closed/unhydrated or the document is hidden. News data refresh, Auto Reader market pulse and Audience heartbeat remain unchanged."
-    },
-    {
-      "component": "Atlas first-level closed-body demand residency",
-      "owner": "js/views/atlas-family-demand-residency.js",
-      "state": "RETIRED_FROM_PRODUCTION_LOAD_GRAPH",
-      "introduced": "40.4.15",
-      "retired": "40.4.69",
-      "replacement": "js/views/atlas-presentation.js first-level source-lazy shells",
-      "notes": "Same-node detach was useful while full Atlas bodies were parser-resident. After 40.4.67/69 source-lazy extraction it became a redundant detach/restore owner around placeholder shells and could break programmatic/hash hydration. File remains repository evidence; script tag removed only."
     }
   ],
   "next": {
     "after_40_4_59": "Operator Firefox validation of automatic Source Intelligence V1.3 and address-proof counts. Then extend additional read-only source coverage or documentation; do not reopen CURRENT cadence without reproduced defect.",
     "after_40_4_63": "40.4.64 peripheral runtime extraction from audited demand candidates; Market Core/CURRENT/Oracle analytical ownership stay protected.",
     "after_40_4_64": "40.4.66 implemented: secondary Metals runtime leaves default Crypto boot; Celestial closed cadence relieved; ordinary version check moved outside first boot burst.",
-    "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains.",
-    "after_40_4_67": "40.4.68 reduce System resident Storage/Grey/Simulation presentation; preserve Backend lazy hydration and Learning state machine.",
-    "after_40_4_69": "Firefox operator validation of completed Atlas two-level source-lazy migration. Only after a stable pass consider the next measured System presentation migration; do not reopen Market Core/CURRENT/Bridge/Oracle ownership."
+    "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains."
   },
   "migration_summary": {
-    "state": "RUNTIME_PHASE_2_WAVE_4_ATLAS_TWO_LEVEL_SOURCE_LAZY_COMPLETED_REQUIRES_OPERATOR_VALIDATION",
+    "state": "RUNTIME_PHASE_2_WAVE_2_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -243,13 +220,9 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "After 40.4.69 Firefox acceptance, continue the measured System resident-presentation migration; Oracle heavy subsections remain true-lazy since 40.4.41.",
-    "presentation_migrations_complete": false,
-    "runtime_performance_migration_complete": false,
-    "40.4.69": "Atlas true source-lazy completion: second-level heavy readers remain source-resident until own demand; first real paint cannot be suppressed by pre-DOM churn signatures; redundant Atlas same-node detach owner retired.",
-    "atlas_source_lazy_migration_complete_40469": true,
-    "atlas_legacy_detach_owner_active": false,
-    "atlas_legacy_peripheral_lazy_owner_active": false
+    "next_product_work": "40.4.66 cumulative migration/backend regression checkpoint + stop gate.",
+    "presentation_migrations_complete": true,
+    "runtime_performance_migration_complete": false
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
@@ -465,76 +438,5 @@
     "market_core_changed": false,
     "current_changed": false,
     "bridge_protocol_changed": false
-  },
-  "runtime_phase2_wave3_40467": {
-    "state": "ATLAS_TRUE_SOURCE_LAZY_IMPLEMENTED",
-    "owner": "js/views/atlas-presentation.js",
-    "legacy_atlas_peripheral_lazy_loaded": false,
-    "late_runtime_rebind": "app.js AgentCryptoAtlasLateHydration40467",
-    "current_runtime_resident": true,
-    "market_core_changed": false,
-    "current_changed": false,
-    "oracle_changed": false,
-    "bridge_changed": false,
-    "backend_changed": false,
-    "new_recurring_timer": false,
-    "new_observer": false,
-    "new_storage_owner": false
-  },
-  "runtime_phase2_wave4_40469": {
-    "state": "ATLAS_TWO_LEVEL_SOURCE_LAZY_COMPLETED",
-    "parent": "40.4.68",
-    "owner": "js/views/atlas-presentation.js",
-    "first_level_shell_boot": true,
-    "local_ai_core_only_first_hydration": true,
-    "second_level_source_lazy_targets": [
-      "stable-stack",
-      "analytical-truth",
-      "frame-truth",
-      "current-truth",
-      "memory-market",
-      "memory-analytical",
-      "decision-board",
-      "scanner-truth",
-      "current-journal",
-      "multi-collector",
-      "book-readonly",
-      "knowledge-library"
-    ],
-    "late_dom_epoch_safe": true,
-    "advanced_navigation_source_lazy_aware": true,
-    "legacy_atlas_peripheral_lazy_loaded": false,
-    "legacy_atlas_family_demand_residency_loaded": false,
-    "current_runtime_resident": true,
-    "history_preserved": true,
-    "market_core_changed": false,
-    "current_changed": false,
-    "oracle_changed": false,
-    "bridge_changed": false,
-    "backend_changed": false,
-    "new_recurring_timer": false,
-    "new_observer": false,
-    "new_network_owner": false,
-    "new_storage_owner": false
-  },
-  "runtime_phase2_wave5_40470": {
-    "scope": "Atlas late-DOM lifecycle completion only",
-    "parent_build": "40.4.69",
-    "owner": "js/views/atlas-presentation.js + app.js late-hydration owner",
-    "interaction_first_binding": true,
-    "bounded_paint_handoff": "one requestAnimationFrame per hydrated scope, coalesced by scope; no loop",
-    "scope_timing_exposed": true,
-    "semantic_reconcile_after_replay": true,
-    "current_runtime_resident": true,
-    "market_core_changed": false,
-    "oracle_changed": false,
-    "bridge_changed": false,
-    "indexeddb_changed": false,
-    "history_deleted": false,
-    "new_recurring_timer": false,
-    "new_observer": false,
-    "new_network_owner": false,
-    "new_storage_owner": false,
-    "operator_validation_required": true
   }
 }

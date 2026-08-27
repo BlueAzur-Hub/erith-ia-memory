@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.80";
-  const ADMIN_RELEASE = "AETHER VERSION TRUTH + ATLAS REPORT COMPACT VISIBILITY LOCK";
+  const ADMIN_BUILD = "40.4.66";
+  const ADMIN_RELEASE = "AETHER COLD BOOT SECONDARY DOMAIN DEMAND + CELESTIAL CADENCE RELIEF LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -1962,9 +1962,8 @@
 
   function initAtlasMemoryResidency40353() {
     atlasDecisionBoardWrap40353();
-    const residencyReady40469 = node => !!node && node.dataset.atlasHydration40469 !== "placeholder";
     const market = document.getElementById("atlasMemoryIntelligence");
-    if (residencyReady40469(market) && market.dataset.atlasResidencyBound40353 !== "1") {
+    if (market && market.dataset.atlasResidencyBound40353 !== "1") {
       market.dataset.atlasResidencyBound40353 = "1";
       market.addEventListener("toggle", () => {
         atlasCollapseState40353(market);
@@ -1976,7 +1975,7 @@
     }
 
     const analytical = document.getElementById("atlasAnalyticalMemory394");
-    if (residencyReady40469(analytical) && analytical.dataset.atlasResidencyBound40353 !== "1") {
+    if (analytical && analytical.dataset.atlasResidencyBound40353 !== "1") {
       analytical.dataset.atlasResidencyBound40353 = "1";
       analytical.addEventListener("toggle", () => {
         atlasCollapseState40353(analytical);
@@ -1988,7 +1987,7 @@
     }
 
     const decision = document.getElementById("atlasDecisionBoardDetails");
-    if (residencyReady40469(decision) && decision.dataset.atlasResidencyBound40353 !== "1") {
+    if (decision && decision.dataset.atlasResidencyBound40353 !== "1") {
       decision.dataset.atlasResidencyBound40353 = "1";
       decision.addEventListener("toggle", () => {
         atlasCollapseState40353(decision);
@@ -2426,41 +2425,5 @@
     }
   }
   queueMicrotask(bootAtlasMemoryHealthDeferred40355);
-
-  // 40.4.69 — Atlas second-level source-lazy completion. Historical residency
-  // reducers are replayed only for the subtree that has actually materialized.
-  // This avoids the 40.4.68 pattern of scanning/binding a large local-ai tree as
-  // one unit immediately after first disclosure. No timer/observer is introduced.
-  function rebindAtlasInnerResidency40469(scope = "local-ai") {
-    const clean = String(scope || "local-ai");
-    if (!["all", "local-ai", "memory-residency", "decision-board"].includes(clean)) return false;
-    let memory = false, health = false;
-    if (clean === "all" || clean === "local-ai" || clean === "memory-residency" || clean === "decision-board") {
-      try { memory = initAtlasMemoryResidency40353() === true; } catch (_) {}
-    }
-    // Memory Health lives under the Decision/Memory presentation and must be
-    // transformed only after that source-lazy subtree exists.
-    if (clean === "all" || clean === "local-ai" || clean === "decision-board") {
-      try { health = initAtlasMemoryHealthDeferred40355() === true; } catch (_) {}
-    }
-    return Object.freeze({build: ADMIN_BUILD, scope: clean, memory_residency: memory, memory_health_residency: health});
-  }
-  try {
-    const atlasInnerResidencyOwner40469 = Object.freeze({
-      build: ADMIN_BUILD,
-      rebind: rebindAtlasInnerResidency40469,
-      second_level_scope_aware: true,
-      new_timer: false,
-      new_observer: false,
-      storage_owner_added: false,
-      current_engine_changed: false
-    });
-    globalThis.AgentCryptoAtlasInnerResidencyRebind40468 = atlasInnerResidencyOwner40469;
-    globalThis.AgentCryptoAtlasInnerResidencyRebind40469 = atlasInnerResidencyOwner40469;
-    globalThis.AgentCryptoAtlasInnerResidencyRebind40470 = atlasInnerResidencyOwner40469;
-  } catch (_) {}
-  // If an Atlas disclosure hydrated before this late runtime owner registered,
-  // ask the presentation owner to replay only its pending/materialized scopes.
-  queueMicrotask(() => { try { (globalThis.ErithAtlasPresentation40470||globalThis.ErithAtlasPresentation40469)?.replayRebind?.(); } catch (_) {} });
 
 })();
