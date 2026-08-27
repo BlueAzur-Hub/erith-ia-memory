@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.61
+/* Agent-Crypto @erith.IA — 40.4.62
    AETHER TRUST OPERATOR INTERACTION PRIORITY + BACKGROUND DEFER LOCK
    SOURCE INTELLIGENCE V1.3 · ADDRESS PROOF GATE · AUTO READ-ONLY · PRIVATE LOCAL BACKEND V1.4
    Binance direct EUR WebSocket stays primary runtime owner.
@@ -6,7 +6,7 @@
    No timer, observer, storage write, wallet, order or trading endpoint. */
 (()=>{
   "use strict";
-  const BUILD="40.4.61";
+  const BUILD="40.4.62";
   const API="http://127.0.0.1:8790";
   const BACKEND_SELECTOR='details[data-collapse-key="backend"]';
   const ASSETS=Object.freeze(["BTC","ETH","BNB","XRP","SOL"]);
@@ -290,5 +290,5 @@
     void autoRefresh("current-finalized",{fingerprint,force:true});
   });
   startAutomatic();
-  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.4.0",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,autoRefresh,automationSnapshot:autoSnapshot,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,automatic_startup:true,automatic_current_finalized:true,operator_click_required:false,polling:false,bounded_startup_retry:true,cold_path_timeout_aligned:true,lazy_state_replay:true,operator_priority_aware:true,operator_priority_build:"40.4.61",cex_timeout_ms:CEX_TIMEOUT_MS,context_timeout_ms:CONTEXT_TIMEOUT_MS,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY_FILTERED"});
+  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.4.0",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,autoRefresh,automationSnapshot:autoSnapshot,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,automatic_startup:true,automatic_current_finalized:true,operator_click_required:false,polling:false,bounded_startup_retry:true,cold_path_timeout_aligned:true,lazy_state_replay:true,operator_priority_aware:true,operator_priority_build:"40.4.62",cex_timeout_ms:CEX_TIMEOUT_MS,context_timeout_ms:CONTEXT_TIMEOUT_MS,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY_FILTERED"});
 })();

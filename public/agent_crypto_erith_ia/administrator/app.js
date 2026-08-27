@@ -26643,14 +26643,14 @@ function atlasSnapshotWithSourceIntelligence4058(snapshot) {
       attached: true,
       optional: true,
       transaction_identity_excluded: true,
-      build: "40.4.61"
+      build: "40.4.62"
     }
   };
 }
 
 try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
-    build: "40.4.61",
+    build: "40.4.62",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
     owner: "app.js transport copy + ErithPrivateBackendSources4054",
     atlas_direct_internet_access: false,
@@ -45263,7 +45263,7 @@ function atlasCexPrimaryBinanceQuote4054(symbol, now=Date.now()) {
 }
 try {
   globalThis.ErithCexPrimary4054=Object.freeze({
-    build:"40.4.61",
+    build:"40.4.62",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
     symbols:Object.keys(ATLAS_CEX_PRIMARY_SYMBOL_TO_ID_4054),
@@ -49864,7 +49864,15 @@ const atlasScannerCollectorRuntime = {
   bridgeFailures: 0,
   parsedStores40331: Object.create(null),
   deferredCaptureReason40461: "",
-  deferredFlush40461: false
+  deferredFlush40461: false,
+  persistQueue40462: Object.create(null),
+  persistScheduled40462: new Set(),
+  persistCoalesced40462: 0,
+  persistDeferrals40462: 0,
+  persistRuns40462: 0,
+  persistLastKey40462: "",
+  persistLastBytes40462: 0,
+  persistLastMs40462: 0
 };
 
 function atlasScannerOperatorPriorityActive40461() {
@@ -49886,11 +49894,83 @@ function atlasScannerCollectorRead(key) {
   }
 }
 
+/* 40.4.62 — Scanner persistence no longer serializes the multi-megabyte
+   archive in the capture hot path. Runtime consumers keep using the parsed
+   in-memory array immediately; persistence is coalesced and performed only
+   after Firefox has a quiet/idle slice. The payload and 240/60 retention
+   contracts are unchanged. */
+function atlasScannerCollectorQuietForPersist40462() {
+  if (atlasScannerOperatorPriorityActive40461()) return false;
+  try {
+    const lastActivity = Number(atlasAudienceState?.lastActivityAt || 0);
+    if (document.visibilityState === "visible" && lastActivity && Date.now() - lastActivity < 2200) return false;
+  } catch (_) {}
+  try {
+    if (state.auto?.livecheckBusy || state.chartEngineV2?.loading || atlasLocalReportsState?.running) return false;
+  } catch (_) {}
+  return true;
+}
+
+function atlasScannerCollectorPersistRun40462(key) {
+  const queued = atlasScannerCollectorRuntime.persistQueue40462[key];
+  if (!Array.isArray(queued)) {
+    atlasScannerCollectorRuntime.persistScheduled40462.delete(key);
+    return false;
+  }
+  if (!atlasScannerCollectorQuietForPersist40462()) {
+    atlasScannerCollectorRuntime.persistDeferrals40462 += 1;
+    window.setTimeout(() => atlasScannerCollectorPersistRequest40462(key), key === ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY ? 1400 : 700);
+    return false;
+  }
+  delete atlasScannerCollectorRuntime.persistQueue40462[key];
+  const started = performance.now();
+  let raw = "";
+  try {
+    raw = JSON.stringify(queued);
+    if (globalThis.AtlasStorageRelief40278?.writeSync && (key === ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY || key === ATLAS_SCANNER_COLLECTOR_PENDING_KEY)) {
+      globalThis.AtlasStorageRelief40278.writeSync(key, raw);
+    } else {
+      localStorage.setItem(key, raw);
+    }
+  } catch (_) {}
+  atlasScannerCollectorRuntime.persistRuns40462 += 1;
+  atlasScannerCollectorRuntime.persistLastKey40462 = String(key || "");
+  atlasScannerCollectorRuntime.persistLastBytes40462 = raw.length;
+  atlasScannerCollectorRuntime.persistLastMs40462 = Math.max(0, performance.now() - started);
+  atlasScannerCollectorRuntime.persistScheduled40462.delete(key);
+  if (Array.isArray(atlasScannerCollectorRuntime.persistQueue40462[key])) atlasScannerCollectorPersistSchedule40462(key);
+  return true;
+}
+
+function atlasScannerCollectorPersistRequest40462(key) {
+  if (!atlasScannerCollectorRuntime.persistScheduled40462.has(key)) return false;
+  const run = () => atlasScannerCollectorPersistRun40462(key);
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(run, { timeout: key === ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY ? 6500 : 2800 });
+  } else {
+    window.setTimeout(run, key === ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY ? 96 : 32);
+  }
+  return true;
+}
+
+function atlasScannerCollectorPersistSchedule40462(key) {
+  if (atlasScannerCollectorRuntime.persistScheduled40462.has(key)) {
+    atlasScannerCollectorRuntime.persistCoalesced40462 += 1;
+    return true;
+  }
+  atlasScannerCollectorRuntime.persistScheduled40462.add(key);
+  window.setTimeout(
+    () => atlasScannerCollectorPersistRequest40462(key),
+    key === ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY ? 1800 : 350
+  );
+  return true;
+}
+
 function atlasScannerCollectorWrite(key, rows, limit) {
   const safe = (Array.isArray(rows) ? rows : []).slice(-Math.max(1, Number(limit) || 1));
   atlasScannerCollectorRuntime.parsedStores40331[key] = safe;
-  const raw = JSON.stringify(safe);
-  try { if (globalThis.AtlasStorageRelief40278?.writeSync && (key === ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY || key === ATLAS_SCANNER_COLLECTOR_PENDING_KEY)) globalThis.AtlasStorageRelief40278.writeSync(key, raw); else localStorage.setItem(key, raw); } catch {}
+  atlasScannerCollectorRuntime.persistQueue40462[key] = safe;
+  atlasScannerCollectorPersistSchedule40462(key);
   return safe;
 }
 
@@ -50262,6 +50342,32 @@ function atlasScannerCollectorInit() {
     if (flush) window.setTimeout(() => void atlasScannerCollectorFlush(), 1400);
   });
 }
+
+try {
+  globalThis.AtlasScannerPersistence40462 = Object.freeze({
+    build: "40.4.62",
+    mode: "QUIET_IDLE_COALESCED_SERIALIZATION",
+    snapshot: () => Object.freeze({
+      queued_keys: Object.freeze(Object.keys(atlasScannerCollectorRuntime.persistQueue40462)),
+      scheduled_keys: Object.freeze([...atlasScannerCollectorRuntime.persistScheduled40462]),
+      coalesced: atlasScannerCollectorRuntime.persistCoalesced40462,
+      deferrals: atlasScannerCollectorRuntime.persistDeferrals40462,
+      runs: atlasScannerCollectorRuntime.persistRuns40462,
+      last_key: atlasScannerCollectorRuntime.persistLastKey40462 || null,
+      last_bytes: atlasScannerCollectorRuntime.persistLastBytes40462 || 0,
+      last_ms: Number(atlasScannerCollectorRuntime.persistLastMs40462 || 0),
+      archive_limit: ATLAS_SCANNER_COLLECTOR_LOCAL_LIMIT,
+      pending_limit: ATLAS_SCANNER_COLLECTOR_PENDING_LIMIT
+    }),
+    payload_semantics_changed: false,
+    retention_changed: false,
+    new_interval: false,
+    new_observer: false,
+    market_core_changed: false,
+    current_changed: false,
+    bridge_changed: false
+  });
+} catch (_) {}
 
 const ATLAS_SOURCE_TRUTH_SCHEMA = "agent_crypto_source_truth_v2";
 
@@ -51134,7 +51240,7 @@ try {
 } catch (_) {}
 
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.61";
+const ATLAS_BUILD = "40.4.62";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 

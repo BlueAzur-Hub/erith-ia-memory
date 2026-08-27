@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.61";
+  const ADMIN_BUILD = "40.4.62";
   const ADMIN_RELEASE = "AETHER TRUST OPERATOR INTERACTION PRIORITY + BACKGROUND DEFER LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";

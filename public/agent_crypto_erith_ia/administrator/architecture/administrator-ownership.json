@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.61",
-  "parent_build": "40.4.60",
+  "build": "40.4.62",
+  "parent_build": "40.4.61",
   "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -289,5 +289,24 @@
     "new_interval": false,
     "new_observer": false,
     "goal": "operator typing/authentication wins main-thread priority over non-critical background work"
+  },
+  "scanner_quiet_serialization_40462": {
+    "owner": "app.js · Scanner Collector persistence boundary",
+    "archive_limit": 240,
+    "pending_limit": 60,
+    "parsed_runtime_immediate": true,
+    "json_stringify_in_capture_hot_path": false,
+    "quiet_idle_serialization": true,
+    "coalesced_latest_payload_per_key": true,
+    "operator_priority_respected": true,
+    "recent_operator_activity_guard_ms": 2200,
+    "market_chart_current_busy_guard": true,
+    "storage_relief_idb_primary_preserved": true,
+    "market_core_changed": false,
+    "current_changed": false,
+    "bridge_changed": false,
+    "private_backend_changed": false,
+    "new_interval": false,
+    "new_observer": false
   }
 }

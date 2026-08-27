@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_private_backend_sources_v5",
-  "build": "40.4.61",
+  "build": "40.4.62",
   "backend_version": "1.4.0",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
@@ -230,5 +230,12 @@
     "polling_added": false,
     "backend_version": "1.4.0",
     "backend_modified": false
+  },
+  "scanner_contention_separation_40462": {
+    "private_backend_changed": false,
+    "backend_version": "1.4.0",
+    "source_intelligence_contract_changed": false,
+    "scanner_persistence_owner": "app.js",
+    "purpose": "keep private backend acceptance intact while moving Scanner serialization out of the interactive hot path"
   }
 }
