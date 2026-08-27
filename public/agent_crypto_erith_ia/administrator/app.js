@@ -51817,7 +51817,7 @@ try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({b
 /* 40.4.70 — finish the source-lazy lifecycle with interaction-first binding and a bounded paint handoff before non-critical replay. */
 try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40470__=Object.freeze({build:"40.4.70",parent:"40.4.69",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,interaction_first_binding:true,bounded_paint_handoff:true,scope_timing_exposed:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.74";
+const ATLAS_BUILD = "40.4.75";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -62750,3 +62750,137 @@ atlasRcStaticAudit = function atlasRcStaticAudit40471() {
 
 /* 40.4.73 — AI whole-page runtime contract: secondary Atlas knowledge is read from runtime state, never from presentation residency. */
 try{globalThis.__AGENT_CRYPTO_AI_WHOLE_PAGE_40473__=Object.freeze({build:"40.4.73",dom_residency_required:false,market_core_changed:false,current_engine_changed:false,bridge_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* ============================================================
+   40.4.75 — AETHER ATLAS MIGRATION CLOSURE
+
+   Firefox operator evidence on 40.4.74:
+   - version truth is synchronized;
+   - CURRENT 4/4 + NØX + Aerith restore correctly;
+   - the first-level Atlas disclosure can still remain a placeholder because
+     its original node-level hydration listener may be lost after DOM replay;
+   - switching MANUAL -> AUTO can look inert because it schedules against the
+     already-loaded canonical snapshot without first checking public latest.json.
+
+   Closure contract:
+   - first-level presentation ownership is delegated by atlas-presentation.js;
+   - entering AUTO performs one immediate public snapshot probe (no new timer);
+   - a new canonical snapshot follows the existing Atlas 4/4 -> NØX -> Aerith path;
+   - the same canonical snapshot remains CLOSED and reports a visible waiting state;
+   - stale upstream publication is exposed instead of being confused with Ollama idle;
+   - Market Core, CURRENT fingerprint semantics, Bridge protocol, IndexedDB schema,
+     Oracle, WebSocket and recurring cadences remain unchanged.
+   ============================================================ */
+
+function atlasAutoSourceAgeLabel40475(timestamp){
+  const parsed=Date.parse(timestamp||"");
+  if(!Number.isFinite(parsed))return "horodatage inconnu";
+  const minutes=Math.max(0,Math.round((Date.now()-parsed)/60000));
+  if(minutes<2)return "moins de 2 min";
+  if(minutes<90)return `${minutes} min`;
+  const hours=minutes/60;
+  return hours<48?`${hours.toFixed(1)} h`:`${(hours/24).toFixed(1)} j`;
+}
+
+async function atlasAutoOperatorProbe40475(){
+  if(typeof atlasDeviceComputeAllowed==="function"&&!atlasDeviceComputeAllowed()){
+    try{atlasLocalReportsSetSuiteStatus("AUTO non lancé · ce poste est en lecture seule.","wait");}catch(_){}
+    return false;
+  }
+  if(document.visibilityState==="hidden"){
+    try{atlasLocalReportsSetSuiteStatus("AUTO armé · vérification du snapshot dès le retour de l’onglet.","wait");}catch(_){}
+    return false;
+  }
+  try{
+    atlasLocalReportsSetSuiteStatus(
+      "AUTO armé · vérification immédiate du snapshot public CoinGecko…",
+      "loading"
+    );
+  }catch(_){}
+
+  const before=typeof atlasAutomation341SnapshotId==="function"
+    ?String(atlasAutomation341SnapshotId()||"").trim():"";
+  let ok=false;
+  try{
+    // runLivecheck already fetches latest.json/status.json with cache:"no-store"
+    // and cache-busting query parameters, then invokes atlasAfterLivecheck().
+    ok=await runLivecheck({reason:"livecheck"});
+  }catch(_){ok=false;}
+
+  if(!ok){
+    try{
+      atlasLocalReportsSetSuiteStatus(
+        "AUTO armé · lecture du snapshot public impossible pour l’instant · dernier état conservé.",
+        "wait"
+      );
+    }catch(_){}
+    return false;
+  }
+
+  const after=typeof atlasAutomation341SnapshotId==="function"
+    ?String(atlasAutomation341SnapshotId()||"").trim():"";
+  const lastDone=typeof atlasAutomation341ReadLastCurrentMarketId==="function"
+    ?String(atlasAutomation341ReadLastCurrentMarketId()||"").trim():"";
+
+  // When the public snapshot is new, atlasAfterLivecheck() has already opened
+  // and scheduled the canonical automatic cycle. Do not create another owner.
+  if(after && (!lastDone || after!==lastDone)){
+    try{
+      atlasLocalReportsSetSuiteStatus(
+        "AUTO · nouveau snapshot canonique détecté · chaîne Atlas 4/4 → NØX → Aerith armée.",
+        "loading"
+      );
+    }catch(_){}
+    return true;
+  }
+
+  const timestamp=state?.sourceLock?.timestamp||state?.timestamp||null;
+  const age=atlasAutoSourceAgeLabel40475(timestamp);
+  try{
+    atlasLocalReportsSetSuiteStatus(
+      after
+        ?`AUTO ARMÉ · snapshot ${String(after).slice(0,34)} déjà analysé · source publique ${age} · attente d’un nouveau snapshot canonique.`
+        :`AUTO ARMÉ · aucun nouvel identifiant canonique · source publique ${age} · attente du collecteur.`,
+      "ready"
+    );
+  }catch(_){}
+  return true;
+}
+
+// Final operator owner: AUTO means "check upstream now, then wait for a new
+// canonical snapshot", not a silent no-op against stale in-memory state.
+const atlasClassicAnalysisModeSet38155Base40475=atlasClassicAnalysisModeSet38155;
+atlasClassicAnalysisModeSet38155=function atlasClassicAnalysisModeSet40475(mode,options={}){
+  const next=String(mode||"manual").toLowerCase()==="auto"?"auto":"manual";
+  if(next!=="auto"){
+    return atlasClassicAnalysisModeSet38155Base40475(next,options);
+  }
+
+  // Let the existing function persist/render AUTO, but avoid scheduling first
+  // against the stale in-memory snapshot. The immediate no-store probe becomes
+  // the single entry point and atlasAfterLivecheck owns any new-snapshot launch.
+  const result=atlasClassicAnalysisModeSet38155Base40475("auto",{...options,schedule:false});
+  if(options.schedule!==false)void atlasAutoOperatorProbe40475();
+  return result;
+};
+
+try{
+  globalThis.__AGENT_CRYPTO_ATLAS_MIGRATION_CLOSURE_40475__=Object.freeze({
+    build:"40.4.75",
+    parent:"40.4.74",
+    primary_hydration_owner:"document-delegated",
+    secondary_hydration_owner:"document-delegated",
+    auto_operator_immediate_public_probe:true,
+    auto_same_snapshot_model_restart:false,
+    auto_new_snapshot_existing_scheduler:true,
+    public_snapshot_fetch_cache:"no-store",
+    recurring_timer_added:false,
+    observer_added:false,
+    websocket_added:false,
+    network_owner_added:false,
+    storage_owner_added:false,
+    market_core_changed:false,
+    current_fingerprint_changed:false,
+    bridge_protocol_changed:false,
+    oracle_changed:false
+  });
+}catch(_){}

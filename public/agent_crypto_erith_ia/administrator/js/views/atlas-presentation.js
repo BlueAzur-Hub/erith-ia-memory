@@ -1,5 +1,5 @@
-/* Agent-Crypto @erith.IA — 40.4.72
-   ATLAS SECONDARY HYDRATION DELEGATED OWNER + DETAIL SHELL KEY LOCK
+/* Agent-Crypto @erith.IA — 40.4.75
+   ATLAS MIGRATION CLOSURE — PRIMARY + SECONDARY DELEGATED HYDRATION OWNER
 
    40.4.72 preserves the 40.4.70 interaction-first source-lazy topology and fixes
    only second-level operator ownership:
@@ -27,7 +27,7 @@
 */
 (()=>{
   "use strict";
-  const BUILD="40.4.72";
+  const BUILD="40.4.75";
   const SOURCE="./views/atlas.html";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
@@ -292,6 +292,97 @@
   }
   installSecondaryDelegation40472();
 
+  // 40.4.75 — close the remaining first-level ownership gap.
+  // Secondary demand has had a stable document owner since .72, but the five
+  // first-level Atlas disclosures still depended on listeners attached to the
+  // initial DOM nodes. Window/lifecycle replay may replace those nodes.
+  // Native <details> owns visibility; this delegated layer owns hydration only.
+  function atlasPrimaryKey40475(detail){
+    if(!(detail instanceof HTMLDetailsElement))return "";
+    const key=String(
+      detail.dataset.atlasSourceLazyShell40469
+      || detail.dataset.atlasSourceLazyShell40467
+      || detail.dataset.collapseKey
+      || ""
+    );
+    return SPECS[key]?key:"";
+  }
+
+  function atlasPrimaryStatus40475(key,phase,message=""){
+    const detail=liveDetail(key);
+    if(!(detail instanceof HTMLDetailsElement))return false;
+    detail.dataset.atlasPrimaryHydration40475=String(phase||"idle");
+    const subtitle=detail.querySelector(":scope > summary .atlas-collapse-subtitle");
+    if(subtitle && message)subtitle.textContent=message;
+    return true;
+  }
+
+  function atlasPrimaryDemand40475(detail,reason="operator"){
+    const key=atlasPrimaryKey40475(detail);
+    if(!key)return false;
+    const live=liveDetail(key);
+    if(!(live instanceof HTMLDetailsElement)||!live.open)return false;
+    const body=liveBody(key);
+    if(body?.dataset?.atlasHydration40469==="ready"){
+      atlasPrimaryStatus40475(key,"ready",
+        key==="local-ai-hub"
+          ?"Profils locaux du Ryzen · Atlas/Aerith opérationnels"
+          :`${live.querySelector(":scope > summary .atlas-collapse-title")?.textContent?.trim()||"Section"} · opérationnel`);
+      return true;
+    }
+    atlasPrimaryStatus40475(key,"loading","Chargement de la présentation opérationnelle…");
+    queueMicrotask(()=>void hydrate(key).then(ok=>{
+      atlasPrimaryStatus40475(
+        key,
+        ok?"ready":"error",
+        ok
+          ?(key==="local-ai-hub"
+              ?"Profils locaux du Ryzen · Atlas/Aerith opérationnels"
+              :`${liveDetail(key)?.querySelector(":scope > summary .atlas-collapse-title")?.textContent?.trim()||"Section"} · opérationnel`)
+          :"Présentation indisponible · chargement Atlas à vérifier"
+      );
+    }));
+    return true;
+  }
+
+  function installPrimaryDelegation40475(){
+    const marker=document.documentElement;
+    if(marker.dataset.atlasPrimaryDelegation40475==="1")return;
+    marker.dataset.atlasPrimaryDelegation40475="1";
+
+    // Mouse/touch activation. Resolve the live disclosure after the native
+    // summary toggles it, so replacement/replay cannot strand a visible shell.
+    document.addEventListener("click",event=>{
+      const target=event.target instanceof Element?event.target:null;
+      const summary=target?.closest?.("summary");
+      const detail=summary?.parentElement;
+      const key=atlasPrimaryKey40475(detail);
+      if(!key)return;
+      queueMicrotask(()=>{
+        const live=liveDetail(key);
+        if(live instanceof HTMLDetailsElement && live.open)atlasPrimaryDemand40475(live,"click");
+      });
+    },true);
+
+    // Covers keyboard activation, restored "open" state and programmatic
+    // disclosure changes. toggle does not need to bubble when captured.
+    document.addEventListener("toggle",event=>{
+      const detail=event.target;
+      const key=atlasPrimaryKey40475(detail);
+      if(!key||!detail.open)return;
+      atlasPrimaryDemand40475(detail,"toggle");
+    },true);
+
+    // Presentation lifecycle owners may re-resident/replace a disclosure.
+    document.addEventListener("erith:presentation-resident",event=>{
+      const detail=event.target instanceof HTMLDetailsElement?event.target:null;
+      const key=atlasPrimaryKey40475(detail);
+      if(!key||!detail.open)return;
+      atlasPrimaryDemand40475(detail,"resident");
+    },true);
+  }
+  installPrimaryDelegation40475();
+
   async function hydrateSecondary(key){
     key=String(key||"");
     const spec=SECONDARY[key]; if(!spec)return false;
@@ -360,8 +451,10 @@
     }
   }
 
+  // Initial-node fast path. The durable 40.4.75 owner is document delegation.
   Object.keys(SPECS).forEach(key=>{
     const detail=liveDetail(key); if(!(detail instanceof HTMLDetailsElement))return;
+    detail.dataset.atlasPrimaryOwner40475="delegated";
     const ensure=()=>{if(detail.open)queueMicrotask(()=>void hydrate(key));};
     detail.addEventListener("toggle",ensure);
     detail.addEventListener("erith:presentation-resident",ensure);
@@ -411,12 +504,12 @@
     return [...scopes].filter(Boolean);
   }
   function snapshot(){return Object.freeze({
-    build:BUILD,source:SOURCE,strategy:"first-level source lazy + delegated second-level Atlas residency + interaction-first paint handoff + scope timing",
+    build:BUILD,source:SOURCE,strategy:"delegated first-level + delegated second-level Atlas source-lazy residency + interaction-first paint handoff + scope timing",
     boot_full_atlas_html:false,local_ai_full_subtree_on_first_open:false,legacy_peripheral_lazy_owner_loaded:false,
     source_fetch_count:sourceFetchCount,source_fetch_ms:sourceFetchDurationMs,source_text_cached:!!sourceTextCache,hydration_count:hydrationCount,secondary_hydration_count:secondaryHydrationCount,
     hydrated:[...hydrated],secondary_hydrated:[...secondaryHydrated],pending_rebind:[...pendingRebind],pending_replay:[...replayFrames.keys()],scope_timings:Object.fromEntries(scopeTimings),last_error:lastError||null,
     current_runtime_owner:"app.js + IndexedDB",book_mirror_runtime_preserved:true,auto_reader_runtime_preserved:true,github_memory_runtime_preserved:true,
-    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false,bounded_paint_handoff:true,secondary_delegated_owner:true
+    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false,bounded_paint_handoff:true,primary_delegated_owner:true,secondary_delegated_owner:true
   });}
 
   const api=Object.freeze({
@@ -429,8 +522,10 @@
   globalThis.ErithAtlasPresentation40469=api;
   globalThis.ErithAtlasPresentation40470=api;
   globalThis.ErithAtlasPresentation40472=api;
+  globalThis.ErithAtlasPresentation40475=api;
   globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40472",runtime_owner:"app.js"});
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40469__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40470__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40472__=snapshot();
+  globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40475__=snapshot();
 })();
