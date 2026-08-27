@@ -26452,6 +26452,67 @@ function atlasLocalReportsReadinessLabel(readiness) {
   return "État LIVE de déclenchement qualifié · 5/5 Binance directes stables · 0 secours · sources prêtes · démarrage Atlas autorisé.";
 }
 
+
+/* ============================================================
+   40.4.74 — ATLAS REPORT COMPACT OPERATOR VISIBILITY LOCK
+
+   The four CURRENT report cards remain useful while closed:
+   - title/state/snapshot stay in the native <summary>;
+   - one short deterministic/model reading is exposed in the existing meta line;
+   - the heavy Markdown body remains demand-resident exactly as before.
+
+   No recurring scheduler, observer, network owner, storage owner or CURRENT change.
+   ============================================================ */
+
+function atlasLocalReportCompactPreview40474(mode, report) {
+  const raw = String(report?.answer || "").replace(/\r\n?/g, "\n");
+  if (!raw.trim()) return "";
+  const lines = raw.split("\n")
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  const preferred = [
+    /^[-*]\s+Lecture Atlas-10\s*:\s*/i,
+    /^[-*]\s+Lecture\s*:\s*/i,
+    /^[-*]\s+Signal dominant\s*:\s*/i
+  ];
+
+  let picked = "";
+  for (const pattern of preferred) {
+    const line = lines.find(item => pattern.test(item));
+    if (line) {
+      picked = line.replace(pattern, "").trim();
+      break;
+    }
+  }
+  if (!picked) {
+    const line = lines.find(item =>
+      !/^#{1,6}\s/.test(item)
+      && !/^\|/.test(item)
+      && !/^[-*_]{3,}$/.test(item)
+      && !/^[-*]\s+(?:Prudence|Limites|Stop point)\s*:/i.test(item)
+    );
+    picked = String(line || "")
+      .replace(/^[-*]\s+/, "")
+      .replace(/\*\*/g, "")
+      .trim();
+  }
+
+  const clean = picked.replace(/\s+/g, " ").trim();
+  if (!clean) return "";
+  return clean.length > 118 ? `${clean.slice(0, 115).trimEnd()}…` : clean;
+}
+
+function atlasLocalReportMeta40474(report, fallback = "") {
+  if (!report) return fallback;
+  const parts = [
+    report.snapshotLabel || "",
+    report.model || "",
+    atlasLocalReportCompactPreview40474(report)
+  ].filter(Boolean);
+  return parts.join(" · ") || fallback;
+}
+
 function atlasLocalReportSetCardState(mode, stateLabel = "—", tone = "idle") {
   const ids = ATLAS_LOCAL_REPORT_IDS[mode];
   if (!ids) return;
@@ -26490,7 +26551,7 @@ function atlasLocalReportStoreCore(mode, result, snapshot, options = {}) {
   const ids = ATLAS_LOCAL_REPORT_IDS[mode];
   atlasLocalReportsState.reports[mode] = report;
   atlasLocalReportRenderOnDemand40351(mode);
-  setText(document.getElementById(ids.meta), `${report.snapshotLabel} · ${report.model}`);
+  setText(document.getElementById(ids.meta), atlasLocalReportMeta40474(report, `${report.snapshotLabel} · ${report.model}`));
   atlasLocalReportSetCardState(mode, "Prêt", "ready");
   document.querySelector(`[data-atlas-report-copy="${mode}"]`)?.removeAttribute("disabled");
   document.querySelector(`[data-atlas-report-export="${mode}"]`)?.removeAttribute("disabled");
@@ -42524,7 +42585,12 @@ function atlasSharedSynthesisHydrateReports(pkg, source = "stored") {
       atlasLocalReportRenderOnDemand40351(mode);
       setText(
         document.getElementById(ids.meta),
-        `${report.snapshotLabel || pkg.snapshot_label} · ${restoredHistorical ? "historique" : (source === "import" ? "importé" : "conservé")} · ${report.model || pkg.origin?.model || "modèle"}`
+        [
+          report.snapshotLabel || pkg.snapshot_label,
+          restoredHistorical ? "historique" : (source === "import" ? "importé" : "conservé"),
+          report.model || pkg.origin?.model || "modèle",
+          atlasLocalReportCompactPreview40474(mode, report)
+        ].filter(Boolean).join(" · ")
       );
       atlasLocalReportSetCardState(
         mode,
@@ -51751,7 +51817,7 @@ try{globalThis.__AGENT_CRYPTO_ATLAS_REGRESSION_RECOVERY_40468__=Object.freeze({b
 /* 40.4.70 — finish the source-lazy lifecycle with interaction-first binding and a bounded paint handoff before non-critical replay. */
 try{globalThis.__AGENT_CRYPTO_ATLAS_SOURCE_LAZY_COMPLETION_40470__=Object.freeze({build:"40.4.70",parent:"40.4.69",first_level_shell_boot:true,local_ai_core_only_first_hydration:true,second_level_source_lazy:true,late_dom_epoch_safe:true,interaction_first_binding:true,bounded_paint_handoff:true,scope_timing_exposed:true,legacy_atlas_peripheral_lazy_loaded:false,current_runtime_resident:true,history_preserved:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 // Single manually edited version value.
-const ATLAS_BUILD = "40.4.71";
+const ATLAS_BUILD = "40.4.74";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
