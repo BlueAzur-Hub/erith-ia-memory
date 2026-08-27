@@ -19867,6 +19867,83 @@ function atlasPedagogyV2FullGlossaryMarkdown(snapshot = null) {
   return lines.join("\n");
 }
 
+function atlasPedagogyRuntimeSecondary40473(snapshot = null) {
+  const safe = (fn, fallback = null) => { try { return fn(); } catch (_) { return fallback; } };
+  const current = safe(() => atlasCurrentStateRead(), null);
+  const memory = safe(() => atlasMemoryIntelligenceCompute(), null);
+  const journal = safe(() => atlasCurrentJournalRead33(), []);
+  const decision = safe(() => atlasDecisionBoardV2MemoryState(), null);
+  const multi = safe(() => atlasMultiCollectorCompute(), null);
+  const presentation = safe(() => globalThis.ErithAtlasPresentation?.snapshot?.(), null);
+  const scanner = Object.fromEntries(["gainers","losers","volume"].map(kind => {
+    const row = safe(() => atlasScannerTruthBasket37(kind), null);
+    const assets = Array.isArray(row?.basket?.assets) ? row.basket.assets.slice(0,5).map(asset => ({
+      symbol:String(asset?.symbol||"").toUpperCase()||null,
+      price_eur:atlasLocalFinite(asset?.price_eur),
+      change_24h:atlasLocalFinite(asset?.change_24h ?? asset?.price_change_percentage_24h),
+      volume_eur:atlasLocalFinite(asset?.total_volume_eur ?? asset?.total_volume)
+    })) : [];
+    return [kind,{ready:assets.length>0,collector_id:row?.latest?.collector_id||null,collected_at:row?.latest?.collected_at||null,assets}];
+  }));
+  const recentJournal = Array.isArray(journal) ? journal.slice(-5).map(row => ({
+    fingerprint:String(row?.fingerprint||"")||null,
+    completed_at:row?.completed_at||null,
+    snapshot_at:row?.snapshot_at||null,
+    collector_id:row?.collector_id||null,
+    atlas_reports:Number(row?.atlas_reports||0),
+    nox:row?.nox===true,
+    aerith:row?.aerith===true,
+    indexeddb_verified:row?.indexeddb_verified===true
+  })) : [];
+  const decisionStats = decision?.stats || {};
+  const decisionMemory = decision?.memory || memory;
+  const multiCollectors = Array.isArray(multi?.collectors) ? multi.collectors.map(row => ({
+    id:row?.id||null,count:Number(row?.count||0),collector_type:row?.collector_type||null,
+    latest_at:row?.latest?.saved_at||row?.latest?.source_time||row?.latest?.created_at||null
+  })).slice(0,8) : [];
+  const pkg = atlasSharedSynthesisState?.package || null;
+  return {
+    schema:"atlas_ai_secondary_runtime_truth_v40473",
+    source_of_truth:"runtime_state_not_dom_visibility",
+    dom_residency_required:false,
+    presentation_residency:{
+      hydrated_secondary:Array.isArray(presentation?.secondary_hydrated)?presentation.secondary_hydrated:[],
+      diagnostic_only:true
+    },
+    current: current ? {
+      status:current.status||null,fingerprint:current.fingerprint||null,generated_at:current.generated_at||null,
+      atlas_reports:Number(current.atlas_reports||0),nox:current.nox===true||current.nox_validated===true,
+      aerith:current.aerith===true||current.aerith_conclusion===true,model:current.model||null
+    } : null,
+    market_memory: memory ? {
+      records:Number(memory.records||0),primary_collector:memory.primary_collector||null,
+      primary_records:Number(memory.primary_records||0),collectors_count:Number(memory.collectors_count||0),
+      horizons:memory.horizons||null,persistence:memory.persistence||[],confidence:memory.confidence||null,
+      latest_at:memory.latest_at||null,anomaly:memory.anomaly||null,pumps:memory.pumps||[]
+    } : null,
+    analytical_memory:{journal_count:Array.isArray(journal)?journal.length:0,recent_current:recentJournal},
+    decision_board:{
+      basis:decisionStats?.analyticalBasis||null,records:Number(decisionStats?.records?.length||0),
+      collectors:Array.isArray(decisionStats?.collectors)?decisionStats.collectors:[],
+      action:safe(() => atlasDecisionBoardV2Action(decisionMemory,!!(state.liveOk&&Array.isArray(state.coins)&&state.coins.length)),null),
+      comparison:safe(() => atlasDecisionBoardV2Comparison(decisionStats),null)
+    },
+    scanner_truth:scanner,
+    multi_collector:{
+      collectors:multiCollectors,comparable_count:Number(multi?.comparable?.length||0),
+      consensus:multi?.consensus||null,assets:Array.isArray(multi?.assets)?multi.assets:[]
+    },
+    book_readonly:{
+      device_role:safe(() => atlasDeviceComputeRoleRead(),"unknown"),
+      synthesis_available:!!pkg?.conclusion?.answer,
+      synthesis_origin:pkg?.origin?.machine||null,
+      synthesis_snapshot:pkg?.snapshot_label||pkg?.generated_at||null,
+      dictionary_terms:safe(() => atlasKnowledgeLibraryEntries().length,0)
+    },
+    contract_rule:"Closing or not hydrating an Atlas presentation section must never remove its runtime truth from Atlas/Aerith context."
+  };
+}
+
 function atlasPedagogyV2PageBrief(snapshot) {
   const watch = state.watchlistIntelligence || (typeof atlasProductWatchlistIntelligence === "function"
     ? atlasProductWatchlistIntelligence()
@@ -19907,7 +19984,8 @@ function atlasPedagogyV2PageBrief(snapshot) {
         contract: ATLAS_RC_CONTRACT,
         static_audit: atlasRcStaticAudit(),
         runtime_audit: atlasRcRuntimeAudit(snapshot)
-      }
+      },
+      secondary_runtime: atlasPedagogyRuntimeSecondary40473(snapshot)
     },
     glossary,
     rules: [
@@ -19947,15 +20025,29 @@ function atlasPedagogyV2QuestionContract(question, snapshot) {
 }
 
 function atlasPedagogyPageInventory() {
-  const headings = [...document.querySelectorAll("h1,h2,h3,h4")]
+  const domHeadings = [...document.querySelectorAll("h1,h2,h3,h4")]
     .map(node => String(node.textContent || "").replace(/\s+/g, " ").trim())
-    .filter(Boolean)
-    .slice(0, 120);
+    .filter(Boolean);
+  const canonicalSecondary = [
+    "Interface, Control Center, Bridge et mémoire",
+    "Contexte, sources, preuves et qualité statistique",
+    "Snapshot analysé et marché live",
+    "Pourquoi cette analyse est CURRENT",
+    "Market Memory · continuité 3 / 5 / 10",
+    "Analytical Memory · CURRENT fermés",
+    "Décision froide + continuité mémoire",
+    "Scanner marché et provenance des cotations",
+    "Journal CURRENT · archives analytiques",
+    "Multi-Collector & Operator Console",
+    "Miroir et lecture Book",
+    "Dictionnaire Crypto / Banque / Bourse"
+  ];
+  const headings = [...new Set([...domHeadings, ...canonicalSecondary])].slice(0, 140);
   const statuses = [...document.querySelectorAll(".pill, .badge, [data-status], .status")]
     .map(node => String(node.textContent || "").replace(/\s+/g, " ").trim())
     .filter(Boolean)
     .slice(0, 80);
-  return { headings, visible_statuses: statuses };
+  return { headings, visible_statuses: statuses, runtime_secondary_sections: canonicalSecondary, dom_residency_required:false };
 }
 
 function atlasPedagogyBuildContract(snapshot) {
@@ -19982,6 +20074,7 @@ function atlasPedagogyBuildContract(snapshot) {
     ],
     glossary: ATLAS_PEDAGOGY_GLOSSARY,
     page_inventory: atlasPedagogyPageInventory(),
+    secondary_runtime_truth: atlasPedagogyRuntimeSecondary40473(snapshot),
     snapshot_generated_at: snapshot?.generated_at || null,
     whole_page_brief: atlasPedagogyV2PageBrief(snapshot)
   };
@@ -62588,3 +62681,6 @@ atlasRcStaticAudit = function atlasRcStaticAudit40471() {
   return report;
 };
 
+
+/* 40.4.73 — AI whole-page runtime contract: secondary Atlas knowledge is read from runtime state, never from presentation residency. */
+try{globalThis.__AGENT_CRYPTO_AI_WHOLE_PAGE_40473__=Object.freeze({build:"40.4.73",dom_residency_required:false,market_core_changed:false,current_engine_changed:false,bridge_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}

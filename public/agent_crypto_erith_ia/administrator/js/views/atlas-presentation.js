@@ -1,5 +1,13 @@
-/* Agent-Crypto @erith.IA — 40.4.70
-   ATLAS INTERACTION-FIRST LATE-DOM HANDOFF / PAINT-YIELD + SCOPE TIMING LOCK
+/* Agent-Crypto @erith.IA — 40.4.72
+   ATLAS SECONDARY HYDRATION DELEGATED OWNER + DETAIL SHELL KEY LOCK
+
+   40.4.72 preserves the 40.4.70 interaction-first source-lazy topology and fixes
+   only second-level operator ownership:
+   - every deferred <details> shell receives its canonical secondary key;
+   - one stable document-level delegated click owner survives DOM replay/replacement;
+   - section buttons and details summaries hydrate through the same owner;
+   - per-node listeners are no longer required for secondary demand;
+   - no timer, observer, network owner, storage owner or business engine is added.
 
    40.4.69 completed the two-level source-lazy topology but Firefox operator testing
    still exposed a first-interaction cliff: DOM insertion, binding, state replay and
@@ -19,7 +27,7 @@
 */
 (()=>{
   "use strict";
-  const BUILD="40.4.70";
+  const BUILD="40.4.72";
   const SOURCE="./views/atlas.html";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
@@ -156,6 +164,13 @@
     if(/\bdata-atlas-hydration-40469\s*=/.test(raw))return raw.replace(/data-atlas-hydration-40469\s*=\s*["'][^"']*["']/i,'data-atlas-hydration-40469="placeholder"');
     return raw.replace(/>\s*$/,' data-atlas-hydration-40469="placeholder">');
   }
+  function secondaryDetailsOpenTag40472(openTag,key){
+    let raw=placeholderOpenTag40469(openTag);
+    if(/\bdata-atlas-secondary-shell-40469\s*=/.test(raw)){
+      return raw.replace(/data-atlas-secondary-shell-40469\s*=\s*["'][^"']*["']/i,`data-atlas-secondary-shell-40469="${String(key||"")}"`);
+    }
+    return raw.replace(/>\s*$/,` data-atlas-secondary-shell-40469="${String(key||"")}">`);
+  }
   function sectionShellHtml(key,spec,openTag){
     const marked=placeholderOpenTag40469(openTag);
     return `${marked}<div class="section-head compact atlas-source-secondary-shell-40469" data-atlas-secondary-shell-40469="${key}"><div><p class="eyebrow">${spec.eyebrow||"ATLAS · LECTURE À LA DEMANDE"}</p><h5 id="${spec.titleId||`${spec.id}DeferredTitle40469`}">${spec.title}</h5><p class="planning-intro">Runtime et mémoire conservés · détails matérialisés uniquement à la demande.</p></div><button class="btn" type="button" data-atlas-secondary-open-40469="${key}" aria-controls="${spec.id}">Ouvrir les détails</button></div></section>`;
@@ -166,7 +181,7 @@
     const summary=summaryStart>=0&&summaryClose>=0
       ? source.slice(summaryStart,summaryClose+"</summary>".length)
       : `<summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-title">${spec.title}</span><span class="atlas-collapse-subtitle">Contenu chargé à l’ouverture</span></summary>`;
-    return `${placeholderOpenTag40469(bounds.openTag)}${summary}<div class="atlas-collapse-body atlas-source-secondary-body-40469" data-atlas-secondary-body-40469="${key}" data-atlas-hydration-40469="placeholder"><p class="atlas-local-response-empty">${spec.title} · contenu conservé dans la source canonique et chargé à l’ouverture.</p></div></details>`;
+    return `${secondaryDetailsOpenTag40472(bounds.openTag,key)}${summary}<div class="atlas-collapse-body atlas-source-secondary-body-40469" data-atlas-secondary-body-40469="${key}" data-atlas-hydration-40469="placeholder"><p class="atlas-local-response-empty">${spec.title} · contenu conservé dans la source canonique et chargé à l’ouverture.</p></div></details>`;
   }
   function stripSecondary(source){
     let next=String(source||"");
@@ -241,18 +256,41 @@
   }
 
   function attachSecondary(root=document){
+    // 40.4.72 — secondary demand is owned by one stable delegated listener.
+    // Nodes may be replaced by source hydration/replay; ownership must survive.
     root.querySelectorAll?.('[data-atlas-secondary-open-40469]')?.forEach(button=>{
-      if(button.dataset.atlasSecondaryBound40469==="1")return;
-      button.dataset.atlasSecondaryBound40469="1";
-      button.addEventListener("click",()=>void hydrateSecondary(button.dataset.atlasSecondaryOpen40469));
+      button.dataset.atlasSecondaryOwner40472="delegated";
     });
     root.querySelectorAll?.('details[data-atlas-secondary-shell-40469]')?.forEach(detail=>{
-      if(detail.dataset.atlasSecondaryToggleBound40469==="1")return;
-      detail.dataset.atlasSecondaryToggleBound40469="1";
-      detail.addEventListener("toggle",()=>{if(detail.open)queueMicrotask(()=>void hydrateSecondary(detail.dataset.atlasSecondaryShell40469));});
-      if(detail.open)queueMicrotask(()=>void hydrateSecondary(detail.dataset.atlasSecondaryShell40469));
+      detail.dataset.atlasSecondaryOwner40472="delegated";
     });
   }
+
+  function installSecondaryDelegation40472(){
+    const marker=document.documentElement;
+    if(marker.dataset.atlasSecondaryDelegation40472==="1")return;
+    marker.dataset.atlasSecondaryDelegation40472="1";
+    document.addEventListener("click",event=>{
+      const target=event.target instanceof Element?event.target:null;
+      if(!target)return;
+      const button=target.closest('[data-atlas-secondary-open-40469]');
+      if(button){
+        const key=String(button.dataset.atlasSecondaryOpen40469||"");
+        if(SECONDARY[key]){
+          event.preventDefault();
+          void hydrateSecondary(key);
+        }
+        return;
+      }
+      const summary=target.closest("summary");
+      const detail=summary?.parentElement;
+      if(detail instanceof HTMLDetailsElement && detail.matches('details[data-atlas-secondary-shell-40469]')){
+        const key=String(detail.dataset.atlasSecondaryShell40469||"");
+        if(SECONDARY[key])queueMicrotask(()=>void hydrateSecondary(key));
+      }
+    },true);
+  }
+  installSecondaryDelegation40472();
 
   async function hydrateSecondary(key){
     key=String(key||"");
@@ -373,12 +411,12 @@
     return [...scopes].filter(Boolean);
   }
   function snapshot(){return Object.freeze({
-    build:BUILD,source:SOURCE,strategy:"first-level source lazy + second-level Atlas residency + interaction-first paint handoff + scope timing",
+    build:BUILD,source:SOURCE,strategy:"first-level source lazy + delegated second-level Atlas residency + interaction-first paint handoff + scope timing",
     boot_full_atlas_html:false,local_ai_full_subtree_on_first_open:false,legacy_peripheral_lazy_owner_loaded:false,
     source_fetch_count:sourceFetchCount,source_fetch_ms:sourceFetchDurationMs,source_text_cached:!!sourceTextCache,hydration_count:hydrationCount,secondary_hydration_count:secondaryHydrationCount,
     hydrated:[...hydrated],secondary_hydrated:[...secondaryHydrated],pending_rebind:[...pendingRebind],pending_replay:[...replayFrames.keys()],scope_timings:Object.fromEntries(scopeTimings),last_error:lastError||null,
     current_runtime_owner:"app.js + IndexedDB",book_mirror_runtime_preserved:true,auto_reader_runtime_preserved:true,github_memory_runtime_preserved:true,
-    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false,bounded_paint_handoff:true
+    current_engine_changed:false,bridge_engine_changed:false,market_core_changed:false,oracle_changed:false,new_recurring_timer:false,new_observer:false,storage_owner_added:false,bounded_paint_handoff:true,secondary_delegated_owner:true
   });}
 
   const api=Object.freeze({
@@ -390,7 +428,9 @@
   globalThis.ErithAtlasPresentation40468=api;
   globalThis.ErithAtlasPresentation40469=api;
   globalThis.ErithAtlasPresentation40470=api;
-  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40470",runtime_owner:"app.js"});
+  globalThis.ErithAtlasPresentation40472=api;
+  globalThis.AgentCryptoAtlasPeripheralLazy=Object.freeze({build:BUILD,retired_legacy_owner:true,replaced_by:"ErithAtlasPresentation40472",runtime_owner:"app.js"});
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40469__=snapshot();
   globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40470__=snapshot();
+  globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_40472__=snapshot();
 })();
