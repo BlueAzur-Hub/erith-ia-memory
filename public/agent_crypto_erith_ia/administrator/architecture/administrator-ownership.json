@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.66",
-  "parent_build": "40.4.65",
-  "purpose": "One function = one canonical owner. Historical build-number patches remain evidence, not permanent authority names.",
+  "build": "40.4.81",
+  "parent_build": "40.4.66",
+  "purpose": "Finish runtime phase-2 from the 40.4.66 Golden Stable without reintroducing the rejected Atlas late-DOM architecture.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -201,7 +201,7 @@
     "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains."
   },
   "migration_summary": {
-    "state": "RUNTIME_PHASE_2_WAVE_2_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
+    "state": "RUNTIME_PHASE_2_WAVE_3_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -220,7 +220,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "40.4.66 cumulative migration/backend regression checkpoint + stop gate.",
+    "next_product_work": "Firefox acceptance on Golden DOM continuity; no further migration build until the full operator path is tested.",
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": false
   },
@@ -438,5 +438,45 @@
     "market_core_changed": false,
     "current_changed": false,
     "bridge_protocol_changed": false
+  },
+  "runtime_phase2_wave3_40481": {
+    "owner": "app.js + stable 40.4.66 same-node demand residency",
+    "state": "IMPLEMENTED_REQUIRES_FIREFOX_OPERATOR_VALIDATION",
+    "base": "40.4.66 GOLDEN STABLE",
+    "strategy": "keep critical DOM ownership stable; make closed presentation runtimes dormant",
+    "demand_gated_presentations": [
+      "Simulation + Learning Journey render tree",
+      "Atlas Auto Reader long presentation",
+      "GitHub Shared Memory presentation",
+      "Decision Board long historical comparison"
+    ],
+    "same_node_open_replay": true,
+    "atlas_true_source_lazy_40467_reintroduced": false,
+    "late_dom_rebind_added": false,
+    "binance_watchdog_period_ms": 5000,
+    "binance_watchdog_forces_rest_each_tick": false,
+    "rest_existing_freshness_gate_preserved": true,
+    "protected": [
+      "Market Core 38.15.11",
+      "Binance LIVE primary",
+      "Target Top 5",
+      "Graphique",
+      "Graph Context V7",
+      "Atlas CURRENT 4/4 → NØX → Aerith",
+      "CURRENT fingerprint/cadence",
+      "Oracle analytical engine/Evidence",
+      "Bridge R13 / V1.9.11",
+      "Private Backend V1.4.0",
+      "IndexedDB CURRENT/Learning",
+      "Scanner history/memory",
+      "Window Manager",
+      "40.3.51→40.3.58 internal Atlas residency"
+    ],
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_scheduler": false,
+    "new_network_owner": false,
+    "new_storage_owner": false,
+    "indexeddb_schema_changed": false
   }
 }

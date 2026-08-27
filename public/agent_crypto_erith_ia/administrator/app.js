@@ -618,6 +618,40 @@ function atlasLearningBindOnce40442(node, tag, type, handler, options) {
   return true;
 }
 
+/* ============================================================
+   40.4.81 — RUNTIME DEMAND COMPLETION · GOLDEN DOM CONTINUITY
+
+   The 40.4.67→40.4.80 branch proved that moving critical DOM ownership late
+   breaks a runtime which was built for stable nodes. 40.4.81 therefore keeps
+   the proven 40.4.66 DOM/lifecycle intact and completes phase-2 at the runtime
+   boundary: presentation work belonging to a closed disclosure goes dormant,
+   then replays current state when the SAME DOM nodes are opened again.
+
+   No fetch/hydration/rebind owner is introduced here. No engine is recreated.
+   ============================================================ */
+function atlasDisclosureOpen4081(collapseKey) {
+  const details = document.querySelector(`details[data-collapse-key="${collapseKey}"]`);
+  // If the presentation is genuinely absent, preserve historical behavior.
+  return !details || details.open === true;
+}
+
+function atlasSimulationPresentationActive4081() {
+  return atlasDisclosureOpen4081("simulation");
+}
+
+function atlasAutoReaderPresentationActive4081() {
+  return atlasDisclosureOpen4081("auto-reader");
+}
+
+function atlasGithubMemoryPresentationActive4081() {
+  return atlasDisclosureOpen4081("github-memory");
+}
+
+function atlasDecisionBoardDetailActive4081() {
+  const details = document.getElementById("atlasDecisionBoardDetails");
+  return !details || details.open === true;
+}
+
 function atlasLearningMark40442(node, tag) {
   if (node instanceof HTMLElement) node.dataset[tag] = "1";
 }
@@ -32826,6 +32860,7 @@ function atlasLearningReleaseCockpitRender() {
 }
 
 function renderLearningJourneyCockpit() {
+  if (!atlasSimulationPresentationActive4081()) return null;
   if (atlasLearningCockpitRenderHoldDepth > 0) {
     atlasLearningCockpitRenderPending = true;
     return;
@@ -34428,6 +34463,7 @@ function saveExpertRoadmap(data) {
 }
 
 function renderExpertRoadmap() {
+  if (!atlasSimulationPresentationActive4081()) return null;
   if (!els.expertRoadmapGrid) return;
   const data = loadExpertRoadmap();
   let discovered = 0;
@@ -35045,6 +35081,7 @@ function simLogLine(entry) {
 }
 
 function renderSimulation() {
+  if (!atlasSimulationPresentationActive4081()) return null;
   if (!state.sim) loadSimulation();
   const totals = getSimulationTotals();
   if (els.simProfileTitle) els.simProfileTitle.textContent = `Profil actif : ${SIM_PROFILE.label}`;
@@ -41442,6 +41479,7 @@ function atlasMemoryTruthTime(value, fallback = "Aucun") {
 
 function renderMemoryTruth() {
   atlasReadMemoryTruth();
+  if (!atlasGithubMemoryPresentationActive4081()) return state.memoryTruth;
 
   const localRecords = readAutoMemory();
   const localStats = collectorStats(localRecords);
@@ -48297,6 +48335,7 @@ function formatAutoDelay(ms) { const sec = Math.max(0, Math.round(ms / 1000)); i
 }
 
 function renderAutoReader(snapshot = null, previous = null) {
+  if (!atlasAutoReaderPresentationActive4081()) return null;
   const rawRecords = readAutoMemory();
   const memory = atlasDecisionMemoryStats();
   const records = memory.records;
@@ -51421,12 +51460,78 @@ try {
   });
 } catch (_) {}
 
+/* 40.4.81 — SAME-NODE OPEN REPLAY · event-driven only. */
+function atlasRuntimeDemandReplayInit4081() {
+  const bindToggle = (node, key, handler) => {
+    if (!node || node.dataset[key] === "1") return false;
+    node.dataset[key] = "1";
+    node.addEventListener("toggle", () => {
+      if (!node.open) return;
+      try { handler(); } catch (error) { console.warn(`40.4.81 replay ${key}:`, error); }
+    });
+    return true;
+  };
+
+  const simulation = document.querySelector('details[data-collapse-key="simulation"]');
+  bindToggle(simulation, "atlasRuntimeDemand4081", () => {
+    // Batch Learning's own re-entrant renders into one final cockpit repaint.
+    atlasLearningHoldCockpitRender();
+    try {
+      renderSimulation();
+      renderExpertRoadmap();
+      try { renderLearningPersistenceNotice(atlasLearningStorageLastResult); } catch (_) {}
+      try { renderLegacyLearningMigration(true); } catch (_) {}
+    } finally {
+      atlasLearningReleaseCockpitRender();
+    }
+  });
+
+  const autoReader = document.querySelector('details[data-collapse-key="auto-reader"]');
+  bindToggle(autoReader, "atlasRuntimeDemand4081", () => {
+    renderAutoReader();
+    atlasRenderAutoTruthLive();
+  });
+
+  const githubMemory = document.querySelector('details[data-collapse-key="github-memory"]');
+  bindToggle(githubMemory, "atlasRuntimeDemand4081", () => renderMemoryTruth());
+
+  const decisionDetails = document.getElementById("atlasDecisionBoardDetails");
+  bindToggle(decisionDetails, "atlasRuntimeDemand4081", () => atlasDecisionBoardV2RenderMemoryExtras({ force: true }));
+
+  try {
+    globalThis.__AGENT_CRYPTO_RUNTIME_DEMAND_40481__ = Object.freeze({
+      build: "40.4.81",
+      base: "40.4.66-golden-stable",
+      strategy: "stable DOM + demand-driven presentation runtime",
+      simulation_learning_closed_render: false,
+      auto_reader_closed_render: false,
+      github_memory_closed_render: false,
+      decision_board_long_history_closed_render: false,
+      atlas_critical_dom_moved: false,
+      atlas_late_hydration_added: false,
+      current_engine_changed: false,
+      oracle_engine_changed: false,
+      market_core_changed: false,
+      indexeddb_schema_changed: false,
+      new_recurring_timer: false,
+      new_observer: false,
+      new_scheduler: false,
+      new_network_owner: false,
+      new_storage_owner: false
+    });
+  } catch (_) {}
+  return true;
+}
+
+window.setTimeout(atlasRuntimeDemandReplayInit4081, 0);
+
 /* 40.4.63 — runtime phase-2 audit checkpoint; no runtime owner extracted. */ try{globalThis.__AGENT_CRYPTO_RUNTIME_BOOT_AUDIT_40463__=Object.freeze({build:"40.4.63",base:"40.4.62",presentation_migration_complete:true,runtime_performance_migration_complete:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,new_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.64 — peripheral runtime extraction wave 1. Diagnostics leave parser-blocking boot; three 1 s presentation loops run only while their own disclosure is open. Data/engine cadences remain unchanged. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40.4.64",base:"40.4.63",architecture_freeze_parser_blocking:false,residency_audit_parser_blocking:false,diagnostics_demand_loader:"js/views/peripheral-diagnostics-loader.js",news_countdown_open_only:true,auto_reader_countdown_open_only:true,audience_status_render_open_only:true,news_data_refresh_changed:false,auto_reader_market_pulse_changed:false,audience_heartbeat_changed:false,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* 40.4.81 — runtime demand completion wave 3. Stable 40.4.66 DOM ownership is preserved; closed Simulation/Learning, Auto Reader, GitHub Memory and Decision Board long-history presentation no longer consume runtime render work. Binance 5 s watchdog no longer force-bypasses its existing REST refresh gate. */
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.66";
+const ATLAS_BUILD = "40.4.81";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -53802,7 +53907,8 @@ function atlasDecisionBoardV2Timeline(stats) {
   });
 }
 
-function atlasDecisionBoardV2RenderMemoryExtras() {
+function atlasDecisionBoardV2RenderMemoryExtras(options = {}) {
+  if (options.force !== true && !atlasDecisionBoardDetailActive4081()) return null;
   const { memory, stats } = atlasDecisionBoardV2MemoryState();
   if (!memory) return null;
   const liveReady = !!(state.liveOk && Array.isArray(state.coins) && state.coins.length);
@@ -53857,7 +53963,7 @@ function atlasDecisionBoardV2RenderMemoryExtras() {
 }
 
 function atlasDecisionBoardV2Markdown() {
-  const extra = atlasDecisionBoardV2RenderMemoryExtras();
+  const extra = atlasDecisionBoardV2RenderMemoryExtras({ force: true });
   const memory = extra?.memory;
   if (!memory) return "# Agent-Crypto — Decision Board V2\n\nMemory Intelligence indisponible.";
   const persistent = (memory.persistence || []).filter(row => row?.state === "persistant");
@@ -56503,7 +56609,9 @@ atlasRenderExchangeFeedStatus = function atlasRenderExchangeFeedStatus383() {
 const atlasExchangeWatchdog383Base = atlasExchangeWatchdog;
 atlasExchangeWatchdog = function atlasExchangeWatchdog383() {
   const result = atlasExchangeWatchdog383Base();
-  try { void atlasExchangeRefreshDirectRest383({ force: true }); } catch (_) {}
+  // 40.4.81: health stays 5 s; REST fallback keeps its own existing freshness
+  // gate instead of being force-triggered by every watchdog pulse.
+  try { void atlasExchangeRefreshDirectRest383(); } catch (_) {}
   return result;
 };
 

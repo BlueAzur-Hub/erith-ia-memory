@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.66";
+  const ADMIN_BUILD = "40.4.81";
   const ADMIN_RELEASE = "AETHER COLD BOOT SECONDARY DOMAIN DEMAND + CELESTIAL CADENCE RELIEF LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
