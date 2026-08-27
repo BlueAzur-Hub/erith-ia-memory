@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.76
+/* Agent-Crypto @erith.IA — 40.4.77
    ATLAS MIGRATION CLOSURE — PRIMARY + SECONDARY DELEGATED HYDRATION OWNER
 
    40.4.72 preserves the 40.4.70 interaction-first source-lazy topology and fixes
@@ -27,7 +27,7 @@
 */
 (()=>{
   "use strict";
-  const BUILD="40.4.76";
+  const BUILD="40.4.77";
   const SOURCE="./views/atlas.html";
   const host=document.getElementById("atlas-view-host");
   if(!host)return;
