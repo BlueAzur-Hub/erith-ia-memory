@@ -1,0 +1,13 @@
+--- public/agent_crypto_erith_ia/administrator/version.json@40.4.88
++++ CANDIDATE_A_STAGING/version.json
+@@
+# DEFERRED BY DESIGN — NO RUNTIME BUILD NUMBER IS INVENTED IN PASS 10.
+# At build authorization only:
+# 1. set actual build / parent_build / asset_token / release / prepared_at;
+# 2. recompute SHA-256 for index.html, js/views/system-demand-residency.js,
+#    js/views/residency-audit.js, architecture/administrator-ownership.json,
+#    version.json and administrator-version.json as applicable to the manifest contract;
+# 3. add js/views/residency-audit.js to files if absent;
+# 4. preserve engine.reference_build == "38.15.11";
+# 5. do not claim deletion of Projects/Operations legacy files.
+# Pass 10 staging intentionally leaves production version.json bytes unchanged.
