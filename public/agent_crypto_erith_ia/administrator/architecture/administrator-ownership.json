@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.93",
-  "parent_build": "40.4.91",
-  "purpose": "Continue Administrator runtime-demand migration after improved 40.4.91 Firefox operator evidence: keep Market Core resident while making the heavy Market Snapshot table presentation explicit-demand.",
+  "build": "40.4.94",
+  "parent_build": "40.4.93",
+  "purpose": "Continue Administrator runtime-demand migration without changing operator UX: detach the three already-bound closed secondary News bodies at DOMContentLoaded instead of waiting for window.load.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -231,10 +231,11 @@
     "after_40_4_63": "40.4.64 peripheral runtime extraction from audited demand candidates; Market Core/CURRENT/Oracle analytical ownership stay protected.",
     "after_40_4_64": "40.4.66 implemented: secondary Metals runtime leaves default Crypto boot; Celestial closed cadence relieved; ordinary version check moved outside first boot burst.",
     "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains.",
-    "after_40_4_82": "Firefox operator validation: cold boot → Graph/Top 5 responsiveness → open Simulation once → verify Learning/IndexedDB recovery and persistence. Only after PASS, audit the next phase-2 demand candidate (System diagnostics/secondary presentation), one owner at a time."
+    "after_40_4_82": "Firefox operator validation: cold boot → Graph/Top 5 responsiveness → open Simulation once → verify Learning/IndexedDB recovery and persistence. Only after PASS, audit the next phase-2 demand candidate (System diagnostics/secondary presentation), one owner at a time.",
+    "after_40_4_94": "After Firefox PASS, audit the next largest non-protected closed presentation owner. Do not migrate Graphique, Target Top 5, CURRENT, Oracle engine or Window Manager without reproduced evidence."
   },
   "migration_summary": {
-    "state": "RUNTIME_DEMAND_COMPLETION_40_4_92_MARKET_PRESENTATION_FIREFOX_VALIDATION_REQUIRED",
+    "state": "RUNTIME_DEMAND_40_4_94_SECONDARY_NEWS_EARLY_RESIDENCY_FIREFOX_VALIDATION_REQUIRED",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -253,7 +254,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Firefox operator acceptance of Market table true-demand; continue only with remaining proven runtime/presentation contention.",
+    "next_product_work": "Firefox operator check of 40.4.94: cold boot responsiveness, News summaries visible, first News open restores full body and controls, close/reopen stable. Continue only with another measured non-protected contention owner.",
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": false
   },
@@ -729,6 +730,33 @@
     "visibility_owner": "existing js/core/admin-window-manager.js market window",
     "redundant_show_table_button_removed": true,
     "window_manager_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false
+  },
+  "runtime_migration_40494": {
+    "build": "40.4.94",
+    "parent": "40.4.93",
+    "scope": "SECONDARY_NEWS_EARLY_RESIDENCY_DOMCONTENTLOADED_RELIEF",
+    "owner": "js/views/secondary-domain-demand-residency.js",
+    "details": [
+      "#news-sentinel",
+      "#news-market-explanation",
+      "details[data-collapse-key=\"news-plan\"]"
+    ],
+    "static_body_elements_audited": 390,
+    "old_initial_detach": "window.load via shared presentation lifecycle",
+    "new_initial_detach": "DOMContentLoaded via existing registered toggle owner",
+    "same_node_restore_detach_preserved": true,
+    "news_summary_resident": true,
+    "news_runtime_network_gate_preserved": "news disclosure open + document visible",
+    "market_core": "PROTECTED_38.15.11",
+    "graph": "PROTECTED_RESIDENT",
+    "target_top5": "PROTECTED_RESIDENT",
+    "atlas_current": "PROTECTED",
+    "oracle": "PROTECTED",
+    "window_manager": "UNCHANGED",
     "new_timer": false,
     "new_observer": false,
     "new_network_owner": false,
