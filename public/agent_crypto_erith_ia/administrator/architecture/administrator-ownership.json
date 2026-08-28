@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.85",
-  "parent_build": "40.4.84",
-  "purpose": "Correct the Aether status geometry to a single intermittent lane and continue phase-2 runtime migration by moving Storage Health and Grey Plate Forensic DOM behind explicit operator demand.",
+  "build": "40.4.89",
+  "parent_build": "40.4.88",
+  "purpose": "Consolidate presentation ownership after phase-2: retire redundant Projects/Operations generic residency owners and keep System generic closed-body residency for Simulation only; protected runtime remains unchanged.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -51,13 +51,15 @@
     },
     {
       "component": "Projects presentation",
-      "owner": "js/views/projects-presentation.js + js/views/projects-demand-residency.js + views/projects.html",
-      "state": "TRUE_LAZY_COMPLETE"
+      "owner": "js/views/projects-presentation.js + views/projects.html",
+      "state": "TRUE_LAZY_COMPLETE_CANONICAL_SINGLE_OWNER",
+      "notes": "40.4.89 retires the redundant projects-demand-residency parser owner; canonical shell + demand hydration remain owned by projects-presentation.js."
     },
     {
       "component": "Operations presentation",
-      "owner": "js/views/operations-presentation.js + js/views/operations-demand-residency.js + views/operations.html",
-      "state": "TRUE_LAZY_COMPLETE"
+      "owner": "js/views/operations-presentation.js + views/operations.html",
+      "state": "TRUE_LAZY_COMPLETE_CANONICAL_SINGLE_OWNER",
+      "notes": "40.4.89 retires the redundant operations-demand-residency parser owner; canonical shell + demand hydration remain owned by operations-presentation.js."
     },
     {
       "component": "System peripheral presentation",
@@ -68,7 +70,16 @@
         "Grey Plate Forensic",
         "Simulation runtime"
       ],
-      "notes": "40.4.47 rolls back the unsafe string parser gate. System mounts valid HTML first; Learning is removed afterward as a validated DOM sibling range. Storage/Grey/Simulation remain structurally intact."
+      "notes": "40.4.89 leaves Commandes/Backend/Safety/Physical Security true-lazy under system-presentation.js; Storage/Grey remain resident; Simulation retains the generic same-node closed-body residency owner."
+    },
+    {
+      "component": "System Simulation generic closed-body residency",
+      "owner": "js/views/system-demand-residency.js",
+      "state": "RESIDENT_PROTECTED_GENERIC_SIMULATION_ONLY",
+      "selectors": [
+        "details[data-collapse-key=\"simulation\"]"
+      ],
+      "notes": "40.4.89 consolidation: Commandes/Backend/Safety/Physical Security are excluded from the generic lifecycle because system-presentation.js already owns their true-lazy bodies. Storage Health and Grey Plate Forensic remain parser-mounted resident protected nodes."
     },
     {
       "component": "Atlas presentation",
@@ -202,7 +213,7 @@
     "after_40_4_82": "Firefox operator validation: cold boot → Graph/Top 5 responsiveness → open Simulation once → verify Learning/IndexedDB recovery and persistence. Only after PASS, audit the next phase-2 demand candidate (System diagnostics/secondary presentation), one owner at a time."
   },
   "migration_summary": {
-    "state": "RUNTIME_PHASE_2_WAVE_3_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
+    "state": "OWNER_CONSOLIDATION_40_4_89_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -221,7 +232,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Firefox acceptance on Golden DOM continuity; no further migration build until the full operator path is tested.",
+    "next_product_work": "Firefox acceptance of 40.4.89 owner consolidation on the live Administrator; Atlas cold-lazy canonical-router debt remains a separate candidate and is not part of this build.",
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": false
   },
@@ -596,5 +607,30 @@
     "new_network_owner": false,
     "new_storage_owner": false,
     "clone_used": false
+  },
+  "owner_consolidation_40489": {
+    "parent": "40.4.88",
+    "projects_legacy_generic_residency_loaded": false,
+    "operations_legacy_generic_residency_loaded": false,
+    "system_generic_keys": [
+      "simulation"
+    ],
+    "system_true_lazy_peripherals": [
+      "commandes",
+      "backend",
+      "safety",
+      "physical-security"
+    ],
+    "storage_health_resident": true,
+    "grey_plate_forensic_resident": true,
+    "residency_audit_owner_aware": true,
+    "atlas_router_changed": false,
+    "atlas_generic_residency_changed": false,
+    "market_core": "38.15.11 PROTECTED",
+    "window_manager_changed": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false
   }
 }

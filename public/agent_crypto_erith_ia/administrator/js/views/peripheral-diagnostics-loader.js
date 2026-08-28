@@ -1,15 +1,16 @@
-/* Agent-Crypto @erith.IA — 40.4.64
+/* Agent-Crypto @erith.IA — 40.4.89
    PERIPHERAL DIAGNOSTICS DEMAND LOADER
    Architecture Freeze + Residency Audit are diagnostic-only and no longer
    parser-blocking residents. They load only on explicit operator request.
+   40.4.89 refreshes only the Residency Audit cache identity for the owner-aware audit.
    No timer, observer, fetch loop, storage owner, Market Core, CURRENT, Oracle,
    Bridge or Private Backend behavior is added here. */
 (()=>{
   "use strict";
-  const BUILD="40.4.64";
+  const BUILD="40.4.89";
   const DEFINITIONS=Object.freeze({
     residency:Object.freeze({
-      src:"./js/views/residency-audit.js?v=administrator-build-40.4.62",
+      src:"./js/views/residency-audit.js?v=administrator-build-40.4.89",
       ready:()=>!!globalThis.ErithResidencyAudit,
       value:()=>globalThis.ErithResidencyAudit||null
     }),
@@ -106,7 +107,9 @@
       architecture:"ErithPeripheralDiagnostics40464.renderArchitectureFreeze()"
     })
   });
+  globalThis.ErithPeripheralDiagnostics40489=api;
   globalThis.ErithPeripheralDiagnostics40464=api;
   globalThis.ErithPeripheralDiagnostics=api;
+  globalThis.__AGENT_CRYPTO_PERIPHERAL_DIAGNOSTICS_40489__=snapshot();
   globalThis.__AGENT_CRYPTO_PERIPHERAL_DIAGNOSTICS_40464__=snapshot();
 })();
