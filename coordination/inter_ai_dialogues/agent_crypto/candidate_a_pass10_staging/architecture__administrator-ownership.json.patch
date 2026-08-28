@@ -1,0 +1,24 @@
+--- public/agent_crypto_erith_ia/administrator/architecture/administrator-ownership.json@40.4.88
++++ CANDIDATE_A_STAGING/architecture/administrator-ownership.json
+@@
+-      "owner": "js/views/projects-presentation.js + js/views/projects-demand-residency.js + views/projects.html",
++      "owner": "js/views/projects-presentation.js + views/projects.html",
+@@
+-      "owner": "js/views/operations-presentation.js + js/views/operations-demand-residency.js + views/operations.html",
++      "owner": "js/views/operations-presentation.js + views/operations.html",
+@@
+       "component": "System peripheral presentation",
+       "owner": "js/views/system-presentation.js + views/system.html",
+       "state": "TRUE_LAZY_COMPLETE",
+@@
+       "notes": "40.4.47 rolls back the unsafe string parser gate. System mounts valid HTML first; Learning is removed afterward as a validated DOM sibling range. Storage/Grey/Simulation remain structurally intact."
+     },
++    {
++      "component": "System Simulation generic closed-body residency",
++      "owner": "js/views/system-demand-residency.js",
++      "state": "RESIDENT_PROTECTED_GENERIC_SIMULATION_ONLY",
++      "selectors": [
++        "details[data-collapse-key=\"simulation\"]"
++      ],
++      "notes": "Candidate A consolidation: Commandes/Backend/Safety/Physical Security remain true-lazy under system-presentation.js. Storage Health and Grey Plate Forensic remain parser-mounted resident protected nodes."
++    },
