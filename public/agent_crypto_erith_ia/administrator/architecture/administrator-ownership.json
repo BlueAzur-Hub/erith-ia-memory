@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.89",
-  "parent_build": "40.4.88",
-  "purpose": "Consolidate presentation ownership after phase-2: retire redundant Projects/Operations generic residency owners and keep System generic closed-body residency for Simulation only; protected runtime remains unchanged.",
+  "build": "40.4.90",
+  "parent_build": "40.4.89",
+  "purpose": "Finish Administrator runtime-demand migration after 40.4.89 Firefox operator failure without changing protected business/data ownership.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -213,7 +213,7 @@
     "after_40_4_82": "Firefox operator validation: cold boot → Graph/Top 5 responsiveness → open Simulation once → verify Learning/IndexedDB recovery and persistence. Only after PASS, audit the next phase-2 demand candidate (System diagnostics/secondary presentation), one owner at a time."
   },
   "migration_summary": {
-    "state": "OWNER_CONSOLIDATION_40_4_89_IMPLEMENTED_REQUIRES_FIREFOX_VALIDATION",
+    "state": "RUNTIME_DEMAND_COMPLETION_40_4_90_REQUIRES_FIREFOX_OPERATOR_VALIDATION",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -232,7 +232,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Firefox acceptance of 40.4.89 owner consolidation on the live Administrator; Atlas cold-lazy canonical-router debt remains a separate candidate and is not part of this build.",
+    "next_product_work": "Only Firefox operator acceptance; no unrelated feature work before responsiveness is restored.",
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": false
   },
@@ -630,6 +630,29 @@
     "window_manager_changed": false,
     "new_timer": false,
     "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false
+  },
+  "runtime_migration_40490": {
+    "operator_40489": "FAILED_FIREFOX_MAIN_THREAD_CONTENTION",
+    "graph_interaction_cross_render": "PATCH_SELECTION_ONLY",
+    "top5_series_market_rebuild": "RETIRED",
+    "binance_ui_paint": "500MS_COALESCED_ALL_CHANGED_IDS",
+    "binance_current_gate_sync": "TRANSITION_ONLY",
+    "atlas_missing_prerequisite_wait": "EVENT_DRIVEN_NO_READINESS_POLLING",
+    "current_boot_fallbacks": "REDUCED_AND_FINGERPRINT_DEDUPED",
+    "network_diagnostics": "DEMAND_ONLY",
+    "spot_pulse": "NO_FULL_MULTI_HORIZON_OR_FULL_MATH_RECOMPUTE",
+    "critical_dom_stable": true,
+    "atlas_removed": false,
+    "market_core": "38.15.11 PROTECTED",
+    "current_algorithm_changed": false,
+    "oracle_engine_changed": false,
+    "bridge_protocol_changed": false,
+    "indexeddb_schema_changed": false,
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_websocket": false,
     "new_network_owner": false,
     "new_storage_owner": false
   }

@@ -4868,9 +4868,7 @@ function atlasRenderComparisonControls() {
       atlasGraphContextV7CommitMarket("handler-comparison-primary");
       atlasBrokerSeedSpot(coin);
       renderScore(coin);
-      renderMarketTable();
-      renderDecisionBoard();
-      renderMultiHorizon();
+      atlasPatchMarketSelectionState4090();
       requestAnimationFrame(() => { void renderAnalystPanel({ comparisonPrimary: true }); });
     });
   });
@@ -4900,10 +4898,7 @@ function atlasResetComparison(coin = getSelectedCoin() || state.coins?.[0] || nu
   atlasSetComparisonIds([coin.id], coin.id, { preset: "solo" });
   atlasPrepareChartSelection(coin, Number(state.chartPeriodDays || 1), { preserveComparison: true });
   renderScore(coin);
-  if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
-  renderMarketTable();
-  renderDecisionBoard();
-  renderMultiHorizon();
+  atlasPatchMarketSelectionState4090();
   requestAnimationFrame(() => { void renderAnalystPanel({ solo: true, forceSingle: true }); });
 }
 
@@ -4927,9 +4922,7 @@ function atlasSelectTopComparison(limit = 3) {
   atlasSetComparisonIds(ids, ids[0], { preset: `rank-${count}` });
   atlasBrokerSeedSpot(getSelectedCoin());
   renderScore(getSelectedCoin());
-  renderMarketTable();
-  renderDecisionBoard();
-  renderMultiHorizon();
+  atlasPatchMarketSelectionState4090();
 
   const symbols = coins.map(coin => coin.symbol).join(" · ");
   if (els.chartCaption) {
@@ -4957,9 +4950,7 @@ function atlasResetGraphDefaults() {
   atlasPrepareChartSelection(preferred, 1, { preserveComparison: true, preset: "solo" });
   atlasTrackAudience("chart_comparison_changed", { ids: [preferred.id], period: 1, action: "reset" });
   renderScore(preferred);
-  renderMarketTable();
-  renderDecisionBoard();
-  renderMultiHorizon();
+  atlasPatchMarketSelectionState4090();
   if (els.chartCaption) atlasSetChartCaptionText(`${preferred.symbol} seul · période 24 h · sélection réinitialisée.`);
   requestAnimationFrame(() => { void renderAnalystPanel({ resetGraph: true, forceSingle: true }); });
 }
@@ -4988,9 +4979,7 @@ function atlasRenderEmptyGraphSelection() {
   atlasEnsureSourceDock(null);
   renderScore(null);
   atlasRenderBrokerStrip();
-  renderMarketTable();
-  renderMultiHorizon();
-  if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
+  atlasPatchMarketSelectionState4090();
 }
 
 function atlasClearGraphSelection() {
@@ -5031,9 +5020,7 @@ function atlasToggleComparisonCoin(coin) {
     atlasBrokerSeedSpot(primary);
     renderScore(primary);
   }
-  renderMarketTable();
-  renderDecisionBoard();
-  renderMultiHorizon();
+  atlasPatchMarketSelectionState4090();
   requestAnimationFrame(() => { void renderAnalystPanel({ comparisonToggle: true, forceSingle: atlasComparisonIds().length === 1 }); });
 }
 
@@ -12039,7 +12026,7 @@ async function renderComparisonAnalystPanel(options = {}) {
     );
   }
   atlasRenderComparisonControls();
-  renderMarketTable();
+  atlasPatchMarketSelectionState4090();
 
   const fetched = [];
   for (let index = 0; index < coins.length; index += 1) {
@@ -12098,7 +12085,7 @@ async function renderComparisonAnalystPanel(options = {}) {
       ];
     }
 
-    renderMarketTable();
+    atlasPatchMarketSelectionState4090();
   }
 
   if (renderToken !== state.comparisonRenderToken || controller.signal.aborted || !atlasComparisonActive()) return;
@@ -12251,12 +12238,13 @@ async function renderComparisonAnalystPanel(options = {}) {
   }
 
   atlasRenderComparisonControls();
-  renderMarketTable();
+  atlasPatchMarketSelectionState4090();
   atlasChartSetPeriodButtons(period, false);
   state.chartEngineV2.loading = false;
   atlasRenderBrokerStrip();
   renderMultiHorizon();
   renderAtlasMathCore();
+  atlasRuntimeDemandWakeAtlas4090("graph-ready-comparison");
 }
 
 function atlasNormalizeSparkline(values) {
@@ -15130,10 +15118,10 @@ function atlasScannerCommit(tx, finalEntries, rejected) {
     atlasChartV2SyncControls();
     atlasChartOverlayUpdate();
     atlasRenderBrokerStrip();
-    renderMarketTable();
-    renderDecisionBoard();
+    atlasPatchMarketSelectionState4090();
     renderMultiHorizon();
     if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
+    atlasRuntimeDemandWakeAtlas4090("graph-ready-scanner");
 
     atlasSetCleanLensCollapsed(snapshot.detailCollapsed, false);
 
@@ -17556,10 +17544,9 @@ function atlasPatchSpotDom(changedIds = []) {
   atlasWatchRenderHistory(watchEvaluation);
   atlasWatchRenderMemoryAssets();
   atlasRefreshSelectedDetailOnly();
-  renderMultiHorizon();
   renderSimulation();
   atlasRenderBrokerStrip();
-  if (typeof renderAtlasMathCore === "function") renderAtlasMathCore();
+  atlasRefreshMathLiveSurface();
   atlasEnsureMarketDomIntegrity();
   atlasRestoreUiContinuity(continuity, { restoreDocumentScroll: false });
 }
@@ -17696,7 +17683,7 @@ function atlasRenderBrokerStrip() {
   );
 
   atlasSyncTruthDatasets();
-  atlasRenderDiagnostics();
+  if (atlasDiagnosticsDemanded4090()) atlasRenderDiagnostics();
 }
 
 function atlasRenderMarketAccessNotice() {
@@ -18569,9 +18556,7 @@ function atlasSelectMarketCoin(coin) {
   atlasTrackAudience("asset_selected", { asset: coin.id, symbol: coin.symbol || null, rank: coin.rank ?? null });
   atlasPrepareChartSelection(coin, Number(state.chartPeriodDays || 1), { preset: "solo" });
   renderScore(coin);
-  renderMarketTable();
-  renderDecisionBoard();
-  renderMultiHorizon();
+  atlasPatchMarketSelectionState4090();
   atlasRenderComparisonControls();
   requestAnimationFrame(() => { void renderAnalystPanel({ selection: true, forceSingle: true }); });
 }
@@ -27205,19 +27190,21 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
     // is currently open. This preserves automatic production after page load.
     if (!atlasAccessIsAuthorized()) return;
     if (!atlasLocalDialogueState.connected) {
-      atlasLocalReportsAutoRetry(nextReason, "Atlas armé · Bridge local en attente.");
+      atlasLocalReportsClearAutoTimer();
+      atlasLocalReportsSetSuiteStatus("Atlas armé · Bridge local en attente · runtime lourd au repos jusqu’au prochain événement Bridge.", "wait");
       return;
     }
     if (atlasLocalDialogueState.busy || atlasLocalReportsState.running || atlasLocalConclusionState.running) {
-      atlasLocalReportsAutoRetry(nextReason, "Atlas/Aerith termine l’opération locale en cours · supervision automatique active.", { delayMs: 2500 });
+      atlasLocalReportsQueueDeferredRetry(nextReason, { delayMs: 0 });
+      atlasLocalReportsSetSuiteStatus("Atlas/Aerith termine l’opération locale en cours · prochaine demande conservée sans polling.", "wait");
       return;
     }
 
     const snapshot = atlasBuildCryptoPageSnapshot();
     const readiness = atlasLocalReportsReadiness(snapshot);
     if (!readiness.ready) {
-      atlasCurrentSyncFromLiveGate("scheduler-prerequisite-wait");
-      atlasLocalReportsAutoRetry(nextReason, atlasLocalReportsReadinessLabel(readiness));
+      atlasLocalReportsClearAutoTimer();
+      atlasLocalReportsSetSuiteStatus(`${atlasLocalReportsReadinessLabel(readiness)} · runtime lourd au repos jusqu’au prochain événement de disponibilité.`, "wait");
       return;
     }
 
@@ -45444,6 +45431,9 @@ const atlasExchangeRuntime = {
   watchdogTimer: null,
   lifetimeTimer: null,
   uiTimer: null,
+  uiPendingIds4090: new Set(),
+  uiAllPending4090: false,
+  gateSignature4090: "",
   stopped: false
 };
 
@@ -45786,29 +45776,16 @@ function atlasRenderExchangeFeedStatus() {
     } else {
       feed.directReadyChecks = Number(feed.directReadyChecks || 0) + 1;
     }
-
     const stableForMs = Math.max(0, now - Number(feed.directReadySince || now));
     const stableNow = stableForMs >= ATLAS_DIRECT_5_5_STABLE_MS
       && Number(feed.directReadyChecks || 0) >= ATLAS_DIRECT_5_5_MIN_CHECKS;
-
     if (stableNow && feed.atlasStableReady !== true) {
       atlasExchangeStableGateCancelTimer();
       feed.atlasStableReady = true;
       feed.stableReadyAt = now;
       feed.atlasReportsReady = true;
-      atlasLocalReportsSetSuiteStatus(
-        `Binance 5/5 directes stables depuis ${Math.floor(stableForMs / 1000)}s · Atlas-10 va démarrer automatiquement.`,
-        "ready"
-      );
-      atlasCurrentSyncFromLiveGate("binance-stable-ready");
-      atlasLocalReportsScheduleAutomatic("binance-ready", { delayMs: 250 });
-    } else if (!stableNow && !atlasLocalReportsState.running) {
+    } else if (!stableNow) {
       feed.atlasReportsReady = false;
-      atlasLocalReportsSetSuiteStatus(
-        `Atlas armé · Binance 5/5 directes détectées · stabilité ${Math.min(ATLAS_DIRECT_5_5_STABLE_MS / 1000, Math.floor(stableForMs / 1000))}/${ATLAS_DIRECT_5_5_STABLE_MS / 1000}s.`,
-        "wait"
-      );
-      atlasCurrentSyncFromLiveGate("binance-stability-wait");
     }
   } else {
     atlasExchangeStableGateCancelTimer();
@@ -45817,8 +45794,29 @@ function atlasRenderExchangeFeedStatus() {
     feed.stableReadyAt = 0;
     feed.atlasStableReady = false;
     feed.atlasReportsReady = false;
+  }
 
-    if (!atlasLocalReportsState.running) {
+  const phase = rawFiveDirect ? (feed.atlasStableReady ? "stable" : "warming") : "blocked";
+  const gateSignature = `${String(feed.status || "idle")}|${counts.directCount}|${counts.derivedCount}|${phase}`;
+  const gateChanged = gateSignature !== atlasExchangeRuntime.gateSignature4090;
+  if (gateChanged) atlasExchangeRuntime.gateSignature4090 = gateSignature;
+
+  if (gateChanged && !atlasLocalReportsState.running) {
+    if (phase === "stable") {
+      const stableForMs = Math.max(0, now - Number(feed.directReadySince || now));
+      atlasLocalReportsSetSuiteStatus(
+        `Binance 5/5 directes stables depuis ${Math.floor(stableForMs / 1000)}s · Atlas-10 peut démarrer automatiquement.`,
+        "ready"
+      );
+      atlasCurrentSyncFromLiveGate("binance-stable-ready");
+      atlasLocalReportsScheduleAutomatic("binance-ready", { delayMs: 250 });
+    } else if (phase === "warming") {
+      atlasLocalReportsSetSuiteStatus(
+        `Atlas armé · Binance 5/5 directes détectées · confirmation de stabilité ${ATLAS_DIRECT_5_5_STABLE_MS / 1000}s.`,
+        "wait"
+      );
+      atlasCurrentSyncFromLiveGate("binance-stability-wait");
+    } else {
       atlasLocalReportsSetSuiteStatus(
         `Atlas en attente · Binance ${counts.directCount}/5 directes · ${counts.derivedCount} dérivées · le compteur de stabilité 5/5 est remis à zéro.`,
         "wait"
@@ -45830,14 +45828,12 @@ function atlasRenderExchangeFeedStatus() {
   if (counts.total > 0) {
     const marketTruth = atlasMarketTruth();
     setLiveStatus(counts.total === 5 ? "ok" : "warn", `Prix live Binance · ${counts.total}/5`);
-
     if (els.sourceName) {
       els.sourceName.innerHTML =
         `Binance WebSocket · ${counts.directCount} EUR directs · ${counts.derivedCount} dérivés EUR`
         + ` · <a class="atlas-source-header-link" href="https://www.binance.com/fr/trade/BTC_EUR?type=spot"`
         + ` target="_blank" rel="noopener noreferrer">Source Binance ↗</a>`;
     }
-
     setText(els.sourceTime, atlasExactTimestampLabel(feed.lastMessageAt));
     setTableDecision(
       `TOP 5 LIVE ${counts.total}/5 · marché 250 ${marketTruth.level === "direct" ? "direct" : "historique"}`,
@@ -45845,18 +45841,22 @@ function atlasRenderExchangeFeedStatus() {
     );
     return;
   }
-
-  if (["connecting", "reconnecting"].includes(feed.status)) {
-    setLiveStatus("warn", "Connexion prix live Binance");
-  }
+  if (["connecting", "reconnecting"].includes(feed.status)) setLiveStatus("warn", "Connexion prix live Binance");
 }
 
 function atlasExchangeScheduleUiPatch(changedCoinId = null) {
+  if (changedCoinId) atlasExchangeRuntime.uiPendingIds4090.add(changedCoinId);
+  else atlasExchangeRuntime.uiAllPending4090 = true;
   if (atlasExchangeRuntime.uiTimer) return;
   atlasExchangeRuntime.uiTimer = window.setTimeout(() => {
     atlasExchangeRuntime.uiTimer = null;
     try {
-      const ids = changedCoinId ? [changedCoinId] : Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP);
+      const ids = atlasExchangeRuntime.uiAllPending4090
+        ? Object.keys(ATLAS_EXCHANGE_PRODUCT_MAP)
+        : [...atlasExchangeRuntime.uiPendingIds4090];
+      atlasExchangeRuntime.uiPendingIds4090.clear();
+      atlasExchangeRuntime.uiAllPending4090 = false;
+      if (!ids.length) return;
       atlasPatchTickerSpot(ids);
       atlasOracleCaptureLiveQuotes(ids);
       atlasRefreshChartLivePresentation(ids);
@@ -45868,7 +45868,6 @@ function atlasExchangeScheduleUiPatch(changedCoinId = null) {
       if (selected && ids.includes(selected.id)) {
         atlasBrokerSeedSpot(selected);
         atlasRefreshSelectedDetailOnly();
-        renderMultiHorizon();
         atlasRenderBrokerStrip();
         atlasRefreshMathLiveSurface();
       }
@@ -45876,7 +45875,7 @@ function atlasExchangeScheduleUiPatch(changedCoinId = null) {
     } catch (error) {
       console.warn("Patch prix live Binance :", error);
     }
-  }, 120);
+  }, 500);
 }
 
 function atlasExchangeRecordTicker(payload) {
@@ -51656,7 +51655,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.89";
+const ATLAS_BUILD = "40.4.90";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -57516,15 +57515,10 @@ atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic
 // Boot/reload recovery. IndexedDB restoration is asynchronous and started before
 // this late compatibility layer is installed, so retry locally without polling,
 // Bridge calls or model work.
-const ATLAS_CANONICAL_CURRENT_388_BOOT_DELAYS = Object.freeze([120, 500, 1200, 2500, 5000]);
+const ATLAS_CANONICAL_CURRENT_388_BOOT_DELAYS = Object.freeze([700, 3500]);
 ATLAS_CANONICAL_CURRENT_388_BOOT_DELAYS.forEach(delay => window.setTimeout(() => {
   try {
-    const restored = atlasCanonicalCurrentRestore388(null, `boot-reload-388:${delay}`);
-    if (restored) {
-      try { atlasMemoryIntelligenceRender(); } catch (_) {}
-      try { renderDecisionBoard(); } catch (_) {}
-      try { atlasMemoryLedgerRender34(); } catch (_) {}
-    }
+    atlasCanonicalCurrentRestore388(null, `boot-reload-388:${delay}`);
   } catch (_) {}
 }, delay));
 
@@ -57902,6 +57896,11 @@ function atlasCanonicalCurrentUiTruth389(reason = "ui-truth-389") {
   if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return null;
   const proof = atlasCanonicalCurrentProof389(null);
   if (!proof) return null;
+  const runtimeDemand4090 = atlasRuntimeDemandState4090();
+  const proofKey4090 = String(proof.fingerprint || "");
+  if (proofKey4090 && runtimeDemand4090.currentUiTruthFingerprint === proofKey4090) {
+    return { proof, restored: typeof atlasCurrentStateRead === "function" ? atlasCurrentStateRead() : null, journal: null, skipped_4090: "same-fingerprint" };
+  }
 
   // Clear an earlier display-only historical demotion once the transaction is
   // proven to be the same closed CURRENT.
@@ -57964,6 +57963,7 @@ function atlasCanonicalCurrentUiTruth389(reason = "ui-truth-389") {
   try { atlasMemoryIntelligenceRender(); } catch (_) {}
   try { renderDecisionBoard(); } catch (_) {}
   try { atlasSharedSynthesisRenderCore(); } catch (_) {}
+  if (proofKey4090) runtimeDemand4090.currentUiTruthFingerprint = proofKey4090;
   return { proof, restored, journal };
 }
 
@@ -58029,7 +58029,7 @@ atlasSharedSynthesisReconcileCurrent = function atlasSharedSynthesisReconcileCur
 
 // Boot is asynchronous: IndexedDB activation can finish after the late 38.9 layer.
 // Retry only local restoration/rendering; no Bridge/Ollama call and no interval.
-const ATLAS_RESTORE_UI_TRUTH_389_BOOT_DELAYS = Object.freeze([180, 650, 1400, 3000, 6000]);
+const ATLAS_RESTORE_UI_TRUTH_389_BOOT_DELAYS = Object.freeze([1800, 6000]);
 ATLAS_RESTORE_UI_TRUTH_389_BOOT_DELAYS.forEach(delay => window.setTimeout(() => {
   try { atlasCanonicalCurrentUiTruth389(`boot-ui-truth-389:${delay}`); } catch (_) {}
 }, delay));
@@ -62516,6 +62516,87 @@ try{globalThis.__AGENT_CRYPTO_40487__=Object.freeze({build:"40.4.87",parent:"40.
 /* 40.4.88 — System 04 operator recovery + publication truth lock.
    Revert only the 40.4.85 diagnostic-panel replacement layer; keep the proven same-node closed-body lifecycle. */
 try{globalThis.__AGENT_CRYPTO_40488__=Object.freeze({build:"40.4.88",parent:"40.4.87",system04_contract_restored_from:"40.4.14",system_closed_body_same_node_residency:true,system_storage_health_boot_resident:true,system_grey_plate_boot_resident:true,system_diagnostic_placeholder_owner:false,system_details_click_contract_preserved:true,version_truth_locked:true,news_demand_40486_preserved:true,source_intelligence_demand_40486_preserved:true,analysis_aux_demand_40487_preserved:true,metals_demand_40466_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_algorithm_changed:false,oracle_engine_changed:false,bridge_protocol_changed:false,indexeddb_schema_changed:false,window_manager_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+
+
+
+/* ============================================================
+   40.4.90 — ADMINISTRATOR RUNTIME DEMAND COMPLETION · FIREFOX RELIEF
+   40.4.89 operator evidence: serial main-thread stalls at rest and on click.
+   This layer retires unnecessary presentation work while keeping critical DOM,
+   engines, CURRENT, Atlas, Ryzen/Bridge, Market Core and IndexedDB contracts.
+   ============================================================ */
+function atlasRuntimeDemandState4090() {
+  if (!globalThis.__AGENT_CRYPTO_RUNTIME_DEMAND_STATE_40490__) {
+    globalThis.__AGENT_CRYPTO_RUNTIME_DEMAND_STATE_40490__ = { currentUiTruthFingerprint:"" };
+  }
+  return globalThis.__AGENT_CRYPTO_RUNTIME_DEMAND_STATE_40490__;
+}
+
+function atlasDiagnosticsDemanded4090() {
+  return document.getElementById("detailNetworkWindow")?.open === true;
+}
+
+function atlasPatchMarketSelectionState4090() {
+  if (!els.marketRows) return false;
+  const selection = atlasComparisonIds();
+  const ids = new Set(selection);
+  els.marketRows.querySelectorAll("tr.is-compared,tr.is-selected").forEach(row => {
+    const id = String(row.dataset.id || row.dataset.marketRowId403115 || "");
+    if (id) ids.add(id);
+  });
+  ids.forEach(id => {
+    const coin = state.coins.find(item => item.id === id);
+    if (!coin) return;
+    const escaped = typeof CSS !== "undefined" && CSS.escape ? CSS.escape(id) : id.replace(/[^a-zA-Z0-9_-]/g, "\\$&");
+    const row = els.marketRows.querySelector(`tr[data-id="${escaped}"]`)
+      || els.marketRows.querySelector(`tr[data-market-row-id403115="${escaped}"]`);
+    if (row) atlasPatchMarketRowSnapshot(row, coin, selection);
+  });
+  return true;
+}
+
+function atlasRuntimeDemandWakeAtlas4090(reason="readiness-event") {
+  try {
+    if (typeof atlasClassicAnalysisIsAuto38155 === "function" && !atlasClassicAnalysisIsAuto38155()) return false;
+    if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;
+    return atlasLocalReportsScheduleAutomatic(
+      reason === "graph-ready-scanner" || reason === "graph-ready-comparison" ? "snapshot" : reason,
+      { delayMs: 0 }
+    );
+  } catch (_) { return false; }
+}
+
+function atlasRuntimeDemandInit4090() {
+  const detail = document.getElementById("detailNetworkWindow");
+  if (detail && detail.dataset.runtimeDemand4090 !== "1") {
+    detail.dataset.runtimeDemand4090 = "1";
+    detail.addEventListener("toggle", () => {
+      if (detail.open) { try { atlasRenderDiagnostics(); } catch (_) {} }
+    });
+  }
+}
+queueMicrotask(() => { try { atlasRuntimeDemandInit4090(); } catch (_) {} });
+
+try {
+  globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40490__ = Object.freeze({
+    build:"40.4.90", parent:"40.4.89", operator_failure_40489:true,
+    graph_click_heavy_cross_render_retired:true,
+    top5_market_full_rebuild_per_series_retired:true,
+    exchange_ui_patch_ms:500,
+    exchange_gate_current_sync_transition_only:true,
+    atlas_missing_prerequisite_polling_retired:true,
+    current_boot_restore_fallbacks_reduced_and_deduped:true,
+    diagnostics_demand_only:true,
+    spot_full_math_and_multihorizon_pulse_retired:true,
+    atlas_removed:false, ryzen_contract_changed:false,
+    market_core_changed:false, graph_data_algorithm_changed:false,
+    target_top5_semantics_changed:false, current_algorithm_changed:false,
+    oracle_engine_changed:false, bridge_protocol_changed:false,
+    indexeddb_schema_changed:false, new_recurring_timer:false,
+    new_observer:false, new_websocket:false, new_fetch_owner:false,
+    new_storage_owner:false
+  });
+} catch (_) {}
 
 /* 40.4.89 — Owner consolidation / true-lazy handoff lock.
    Projects + Operations legacy generic residency parser owners retired; System generic residency reduced to Simulation only. */
