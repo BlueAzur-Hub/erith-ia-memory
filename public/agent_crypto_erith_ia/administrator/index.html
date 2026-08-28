@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="40.4.84" />
+  <meta name="atlas-build" content="40.4.85" />
   <meta name="atlas-engine-build" content="38.15.11" />
-  <meta name="administrator-build" content="40.4.84" />
-  <meta name="administrator-release" content="AETHER EXACT STATUS RIBBON · TRUST GATE INTERACTION COMPLETION · AUTH IMAGE RESIDENCY" />
+  <meta name="administrator-build" content="40.4.85" />
+  <meta name="administrator-release" content="AETHER INTERMITTENT SINGLE-LANE STATUS · SYSTEM DIAGNOSTICS TRUE-DEMAND RESIDENCY" />
   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.84" />
+  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.85" />
   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
-  <title>Agent-Crypto @erith.IA — Build 40.4.84 · Administrator</title>
+  <title>Agent-Crypto @erith.IA — Build 40.4.85 · Administrator</title>
   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
 
   <script id="atlasFirstPaintRolePreseed40399">
@@ -2391,9 +2391,11 @@
 
   <link rel="stylesheet" href="./admin-book-comfort.css?v=administrator-build-40.4.62" />
 
-  <style id="atlas-operator-notes-40484">
-    /* 40.4.84 — exact operator-note execution + Aether Trust gate paint relief.
-       No market/oracle/current owner is changed here. */
+  <style id="atlas-operator-notes-40485">
+    /* 40.4.85 — exact operator geometry:
+       STATE A and STATE B occupy the SAME status row. No second line exists.
+       Aether alternation + horizontal drift are CSS/compositor-only; no JS timer,
+       polling loop, observer, network owner or storage owner is added. */
     #sourceTimeCard{
       display:flex!important;flex-direction:column!important;align-items:center!important;
       justify-content:center!important;text-align:center!important;padding-block:5px!important;
@@ -2401,30 +2403,67 @@
     #atlasCelestialClockHeader4055{
       justify-content:center!important;align-items:baseline!important;margin:0 auto!important;text-align:center!important;
     }
+
     html[data-atlas-view="essential"] body.atlas-status-strip-40309 #livecheck.command-bar,
     html[data-atlas-view="intermediate"] body.atlas-status-strip-40309 #livecheck.command-bar,
     html[data-atlas-view="advanced"] body.atlas-status-strip-40309 #livecheck.command-bar{
-      grid-template-rows:auto 24px!important;
-      grid-template-areas:"live refresh decision source time" ". . aether aether aether"!important;
-      row-gap:4px!important;
+      grid-template-rows:auto!important;
+      grid-template-areas:"live refresh decision source time"!important;
+      row-gap:0!important;
+      position:relative!important;
     }
+
+    /* STATE A — native row stays the geometry authority. It is invisible only
+       while STATE B is painted, so the row height/columns never move. */
+    #livecheck.command-bar>#btnLivecheck,
+    #livecheck.command-bar>#btnRefresh,
+    #livecheck.command-bar>#decisionCard,
+    #livecheck.command-bar>#sourceActiveCard,
+    #livecheck.command-bar>#sourceTimeCard{
+      animation:atlasStatusNativePhase4085 36s linear infinite;
+    }
+    @keyframes atlasStatusNativePhase4085{
+      0%,54%{opacity:1;visibility:visible}
+      55%,88%{opacity:0;visibility:hidden}
+      89%,100%{opacity:1;visibility:visible}
+    }
+
+    /* STATE B — same grid row, all five columns. It never reserves a second row. */
     #atlasAetherRibbon4084{
-      grid-area:aether!important;min-width:0;display:flex;align-items:center;gap:8px;
-      height:24px;padding:0 10px;border:1px solid rgba(99,225,239,.16);border-radius:8px;
-      background:linear-gradient(90deg,rgba(5,21,31,.82),rgba(8,17,29,.70));
-      color:#a9c6d3;overflow:hidden;white-space:nowrap;
-      font:850 8.2px/1 system-ui,sans-serif;letter-spacing:.025em;
+      grid-column:1/-1!important;grid-row:1!important;align-self:stretch!important;
+      min-width:0!important;box-sizing:border-box!important;
+      display:flex!important;align-items:center!important;overflow:hidden!important;
+      padding:0 10px!important;border:1px solid rgba(99,225,239,.16)!important;border-radius:8px!important;
+      background:linear-gradient(90deg,rgba(5,21,31,.91),rgba(8,17,29,.84))!important;
+      color:#a9c6d3!important;white-space:nowrap!important;
+      font:850 8.4px/1 system-ui,sans-serif!important;letter-spacing:.025em!important;
+      opacity:0;visibility:hidden;
+      animation:atlasAetherBandPhase4085 36s linear infinite;
+      pointer-events:none;
     }
-    #atlasAetherRibbon4084>span:not(.atlas-aether-news-window-4084){flex:0 0 auto;max-width:19%;overflow:hidden;text-overflow:ellipsis}
+    @keyframes atlasAetherBandPhase4085{
+      0%,54%{opacity:0;visibility:hidden}
+      55%,88%{opacity:1;visibility:visible}
+      89%,100%{opacity:0;visibility:hidden}
+    }
+    .atlas-aether-ribbon-track-4085{
+      display:flex;align-items:center;gap:18px;min-width:max-content;
+      padding-right:42vw;will-change:transform;
+      animation:atlasAetherBandDrift4085 36s linear infinite;
+    }
+    @keyframes atlasAetherBandDrift4085{
+      0%,55%{transform:translateX(0)}
+      88%{transform:translateX(-28vw)}
+      89%,100%{transform:translateX(0)}
+    }
     .atlas-aether-ribbon-brand-4084{flex:0 0 auto;color:#f0a6d8;letter-spacing:.11em}
-    #atlasAetherRibbonAtlas4084{color:#bba8ff} #atlasAetherRibbonOracle4084{color:#f1dc94}
-    #atlasAetherRibbonSources4084{color:#81e6ef} #atlasAetherRibbonBook4084{color:#9fd8b2}
-    .atlas-aether-news-window-4084{position:relative;display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:120px;overflow:hidden;color:#c6d3dc}
-    .atlas-aether-news-window-4084>i{position:relative;z-index:2;flex:0 0 auto;font-style:normal;color:#7f9daa;background:#071521;padding-right:5px}
-    #atlasAetherRibbonNews4084{display:inline-block;min-width:max-content}
-    #atlasAetherRibbonNews4084[data-scroll="1"]{animation:atlasAetherNewsDrift4084 28s linear infinite}
-    @keyframes atlasAetherNewsDrift4084{0%,8%{transform:translateX(0)}92%,100%{transform:translateX(calc(-100% + 150px))}}
-    @media(prefers-reduced-motion:reduce){#atlasAetherRibbonNews4084[data-scroll="1"]{animation:none!important}}
+    #atlasAetherRibbonAtlas4084{color:#bba8ff}
+    #atlasAetherRibbonOracle4084{color:#f1dc94}
+    #atlasAetherRibbonSources4084{color:#81e6ef}
+    #atlasAetherRibbonBook4084{color:#9fd8b2}
+    .atlas-aether-news-window-4084{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;color:#c6d3dc}
+    .atlas-aether-news-window-4084>i{font-style:normal;color:#7f9daa;padding-right:2px;background:transparent}
+    #atlasAetherRibbonNews4084{display:inline-block;min-width:max-content;animation:none!important;transform:none!important}
 
     .atlas-aether-status-toggle-4084{
       display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:31px;padding:0 9px;
@@ -2443,26 +2482,49 @@
     .atlas-aether-panel-grid-4084{display:grid;gap:6px}.atlas-aether-panel-grid-4084 article{display:grid;grid-template-columns:74px 1fr;gap:8px;padding:7px 8px;border:1px solid rgba(100,201,224,.12);border-radius:9px;background:rgba(7,23,34,.62)}
     .atlas-aether-panel-grid-4084 span{color:#7896a7;text-transform:uppercase;font-size:8px;font-weight:900;letter-spacing:.08em}.atlas-aether-panel-grid-4084 b{font-size:10px;color:#dcecf2;font-weight:800}
 
-    /* The approved sanctuary image is a single immutable visual asset. Keep it in a stable compositor surface. */
-    #atlasAccessPortalBg40380{contain:paint;backface-visibility:hidden}
-    html[data-atlas-operator-priority="1"] #atlasAccessDialog .atlas-access-portal-shade-40380{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+    /* Demand placeholders replace only heavy System diagnostics until explicit use. */
+    .atlas-system-demand-placeholder-40485{padding:0!important;overflow:hidden!important}
+    .atlas-system-demand-placeholder-40485>button{
+      width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;
+      padding:11px 13px;border:0;background:linear-gradient(90deg,rgba(22,75,101,.17),rgba(5,19,29,.20));
+      color:#dcecf2;text-align:left;cursor:pointer;
+    }
+    .atlas-system-demand-placeholder-40485>button>span:first-child{color:#6fe5f5;font-weight:950}
+    .atlas-system-demand-placeholder-40485>button>b{font-size:11px;color:#e8f7fb}
+    .atlas-system-demand-placeholder-40485>button>small{font-size:8px;color:#7897a7;text-align:right}
 
+    /* Keep Transformer/phone contract stable: no intermittent replacement below 901px. */
     @media(max-width:1366px) and (min-width:901px){
-      #atlasAetherRibbon4084{gap:5px;padding-inline:7px;font-size:7.4px}
+      #atlasAetherRibbon4084{padding-inline:7px!important;font-size:7.8px!important}
+      .atlas-aether-ribbon-track-4085{gap:12px}
       .atlas-aether-status-toggle-4084{padding-inline:7px;font-size:7.8px}
     }
     @media(max-width:900px){
-      html[data-atlas-view="essential"] body.atlas-status-strip-40309 #livecheck.command-bar,
-      html[data-atlas-view="intermediate"] body.atlas-status-strip-40309 #livecheck.command-bar,
-      html[data-atlas-view="advanced"] body.atlas-status-strip-40309 #livecheck.command-bar{
-        grid-template-rows:auto!important;grid-template-areas:"live refresh" "decision decision" "source source" "time time" "aether aether"!important;
-      }
-      #atlasAetherRibbon4084{height:26px}.atlas-aether-status-toggle-4084{display:none!important}
+      #livecheck.command-bar>#btnLivecheck,
+      #livecheck.command-bar>#btnRefresh,
+      #livecheck.command-bar>#decisionCard,
+      #livecheck.command-bar>#sourceActiveCard,
+      #livecheck.command-bar>#sourceTimeCard{animation:none!important;opacity:1!important;visibility:visible!important}
+      #atlasAetherRibbon4084{display:none!important;animation:none!important}
+      .atlas-aether-status-toggle-4084{display:none!important}
     }
+    @media(prefers-reduced-motion:reduce){
+      #livecheck.command-bar>#btnLivecheck,
+      #livecheck.command-bar>#btnRefresh,
+      #livecheck.command-bar>#decisionCard,
+      #livecheck.command-bar>#sourceActiveCard,
+      #livecheck.command-bar>#sourceTimeCard{animation:none!important;opacity:1!important;visibility:visible!important}
+      #atlasAetherRibbon4084{display:none!important;animation:none!important}
+      .atlas-aether-ribbon-track-4085{animation:none!important;transform:none!important}
+    }
+
+    /* Approved Trust sanctuary paint safeguards inherited unchanged from 40.4.84. */
+    #atlasAccessPortalBg40380{contain:paint;backface-visibility:hidden}
+    html[data-atlas-operator-priority="1"] #atlasAccessDialog .atlas-access-portal-shade-40380{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
   </style>
 
 </head>
-<body class="atlas-main-width-403122 atlas-firefox-safe-paint-40396 atlas-safe-document-background-40395 atlas-paint-isolation-40394 atlas-administrator-mirror atlas-semantic-color-icons-40290 atlas-astro-planet-colors-40291 atlas-section-air-40292 atlas-section-density-40293 atlas-family-boundaries-40298 atlas-book-nav-40299 atlas-family-order-40300 atlas-family-compact-reduce-40301 atlas-family-atomic-40302 atlas-commandline-compact-40302 atlas-family-state-migration-40303 atlas-canonical-admin-sequence-40304 atlas-family04-canonical-hierarchy-40320 atlas-book-command-center-40309 atlas-status-strip-40309 atlas-passive-viewport-authority-40310 atlas-role-isolation-viewport-ownership-40312 atlas-role-transition-performance-40314 atlas-header-single-row-40428 atlas-surface-performance-40315 atlas-bridge-passive-performance-40317 atlas-tech-image-continuity-40321 atlas-command-center-portal-40321 atlas-firefox-compositor-40323" data-administrator-build="40.4.84">
+<body class="atlas-main-width-403122 atlas-firefox-safe-paint-40396 atlas-safe-document-background-40395 atlas-paint-isolation-40394 atlas-administrator-mirror atlas-semantic-color-icons-40290 atlas-astro-planet-colors-40291 atlas-section-air-40292 atlas-section-density-40293 atlas-family-boundaries-40298 atlas-book-nav-40299 atlas-family-order-40300 atlas-family-compact-reduce-40301 atlas-family-atomic-40302 atlas-commandline-compact-40302 atlas-family-state-migration-40303 atlas-canonical-admin-sequence-40304 atlas-family04-canonical-hierarchy-40320 atlas-book-command-center-40309 atlas-status-strip-40309 atlas-passive-viewport-authority-40310 atlas-role-isolation-viewport-ownership-40312 atlas-role-transition-performance-40314 atlas-header-single-row-40428 atlas-surface-performance-40315 atlas-bridge-passive-performance-40317 atlas-tech-image-continuity-40321 atlas-command-center-portal-40321 atlas-firefox-compositor-40323" data-administrator-build="40.4.85">
   <script id="atlasFirstPaintBodyRolePreseed40399">
     (() => {
       try {
@@ -2526,9 +2588,9 @@
             data-state="current"
             aria-live="polite"
             aria-atomic="true"
-            aria-label="Version Agent-Crypto installée : Build 40.4.84, mode Administrator"
+            aria-label="Version Agent-Crypto installée : Build 40.4.85, mode Administrator"
           >
-            <span id="atlasVersionControlText">Build 40.4.84</span>
+            <span id="atlasVersionControlText">Build 40.4.85</span>
           </button>
           <span class="pill admin-engine-badge" id="administratorEngineBadge">ENGINE · Market Core 38.15.11</span>
           <span class="pill warn" id="liveStatus">Livecheck requis</span>
@@ -2544,7 +2606,7 @@
         <div class="atlas-v2-mode-copy atlas-visually-hidden">
           <b id="atlasV2ModeTitle">Essentiel</b>
           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
-          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.4.84 · Administrator</span>
+          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.4.85 · Administrator</span>
         </div>
 
         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
@@ -2720,13 +2782,15 @@
           <span class="atlas-status-time-label-40309">Heure données</span>
           <strong id="sourceTime">—</strong>
         </div>
-        <div class="atlas-aether-ribbon-4084" id="atlasAetherRibbon4084" aria-label="Aether · synthèse passive de l’état Agent-Crypto">
-          <b class="atlas-aether-ribbon-brand-4084">♥ AETHER</b>
-          <span id="atlasAetherRibbonAtlas4084">Atlas · —</span>
-          <span id="atlasAetherRibbonOracle4084">Oracle · —</span>
-          <span id="atlasAetherRibbonSources4084">Sources · —</span>
-          <span id="atlasAetherRibbonBook4084">Book · —</span>
-          <span class="atlas-aether-news-window-4084"><i>Dernière veille</i><span id="atlasAetherRibbonNews4084">Aucun événement qualifié</span></span>
+        <div class="atlas-aether-ribbon-4084" id="atlasAetherRibbon4084" aria-label="Aether · synthèse passive intermittente de l’état Agent-Crypto">
+          <div class="atlas-aether-ribbon-track-4085">
+            <b class="atlas-aether-ribbon-brand-4084">♥ AETHER</b>
+            <span id="atlasAetherRibbonAtlas4084">Atlas · —</span>
+            <span id="atlasAetherRibbonOracle4084">Oracle · —</span>
+            <span id="atlasAetherRibbonSources4084">Sources · —</span>
+            <span id="atlasAetherRibbonBook4084">Book · —</span>
+            <span class="atlas-aether-news-window-4084"><i>Dernière veille</i><span id="atlasAetherRibbonNews4084">Aucun événement qualifié</span></span>
+          </div>
         </div>
       </section>
 
@@ -4620,7 +4684,7 @@
     </details>
 
     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.84 · Version : Parker Lewis Can't Lose</span>
+      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.85 · Version : Parker Lewis Can't Lose</span>
       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
     </footer>
@@ -4630,7 +4694,7 @@
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js?v=market-core-v2.0-alpha-build-40.4.84"></script>
+  <script src="./app.js?v=market-core-v2.0-alpha-build-40.4.85"></script>
   <script src="./js/market-memory.js?v=administrator-build-40.4.62"></script>
   <script src="./js/analytical-memory.js?v=administrator-build-40.4.62"></script>
   <script src="./js/market-memory-collector.js?v=administrator-build-40.4.62"></script>
@@ -4802,7 +4866,7 @@
   function celestialRoleSync40288(){const role=celestialPhysicalRole40288();if(role!==lastCelestialRole40288){lastCelestialRole40288=role;renderCelestialSentinel40268();}return role;}
   function celestialInteractiveOpen40465(){return !!document.getElementById("astrocycle-4055")?.open||!!document.getElementById("celestial-sentinel-4055")?.open;}
   function celestialPulse40465(){const now=new Date(),minute=now.getMinutes(),open=celestialInteractiveOpen40465();const operatorBusy=(()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}})();renderAstro(!operatorBusy&&(open||minute!==lastMinute));renderAether4084();lastMinute=minute;celestialRoleSync40288();if(!operatorBusy&&minute%2===0&&minute!==lastMultiCollectorMinute40465){lastMultiCollectorMinute40465=minute;augmentMultiCollector();}}
-  function celestialSchedule40465({immediate=false}={}){if(tick){window.clearInterval(tick);tick=0;}if(document.hidden)return;const cadence=celestialInteractiveOpen40465()?1000:30000;if(immediate)celestialPulse40465();tick=window.setInterval(celestialPulse40465,cadence);try{globalThis.__AGENT_CRYPTO_CELESTIAL_CADENCE_40465__=Object.freeze({build:"40.4.84",open_cadence_ms:1000,closed_cadence_ms:30000,current_cadence_ms:cadence,multi_collector_duplicate_even_minute_guard:true,market_model_input:false});}catch(_){}}
+  function celestialSchedule40465({immediate=false}={}){if(tick){window.clearInterval(tick);tick=0;}if(document.hidden)return;const cadence=celestialInteractiveOpen40465()?1000:30000;if(immediate)celestialPulse40465();tick=window.setInterval(celestialPulse40465,cadence);try{globalThis.__AGENT_CRYPTO_CELESTIAL_CADENCE_40465__=Object.freeze({build:"40.4.85",open_cadence_ms:1000,closed_cadence_ms:30000,current_cadence_ms:cadence,multi_collector_duplicate_even_minute_guard:true,market_model_input:false});}catch(_){}}
   function start(){ensureHeader();const astro=ensureAstroPanel(),celestial=ensureCelestialSentinel();celestialPortableRestore40272();renderAstro(true);renderAether4084();celestialRoleSync40288();const operatorBusy=()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}};setTimeout(()=>{if(!operatorBusy())augmentMultiCollector();},0);document.getElementById("atlasAetherStatusToggle4084")?.addEventListener("click",()=>{const b=document.getElementById("atlasAetherStatusToggle4084");aetherPanelSet4084(b?.getAttribute("aria-expanded")!=="true");});document.getElementById("atlasMultiCollectorDetails40357")?.addEventListener("toggle",event=>{if(event.currentTarget?.open&&!operatorBusy())augmentMultiCollector();},{passive:true});[astro,celestial].forEach(root=>root?.addEventListener("toggle",()=>celestialSchedule40465({immediate:true}),{passive:true}));celestialSchedule40465({immediate:false});window.addEventListener("atlas:device-role",()=>{celestialRoleSync40288();setTimeout(()=>{if(!operatorBusy())augmentMultiCollector();},0);});window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();},{passive:true});document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderAstro(true);renderAether4084();celestialRoleSync40288();if(!operatorBusy())augmentMultiCollector();celestialSchedule40465({immediate:false});}else if(tick){window.clearInterval(tick);tick=0;}},{passive:true});}
   globalThis.AtlasCelestialClock4055=Object.freeze({build:BUILD,state,solar,planetary,phaseTheme,nextPhaseBoundary,formatLine});
   globalThis.AgentCryptoCelestialPortable40272=Object.freeze({build:BUILD,schema:"atlas.celestial.portable.v1",snapshot:celestialPortableSnapshot40272,importSnapshot:celestialPortableImport40272,restore:celestialPortableRestore40272,isBook:celestialIsBook40272,physicalRole:celestialPhysicalRole40288,read_only_on_book:true,producer_role:"ryzen-producer",transport:"manual_shared_memory_json",github_publication_required:false,causal_claim:false,oracle_model_input:false});
@@ -4815,10 +4879,10 @@
   <script src="./js/core/admin-window-manager.js?v=administrator-build-40.4.62"></script>
   <script src="./js/views/presentation-boundaries.js?v=administrator-build-40.4.62"></script>
   <script src="./js/views/view-lifecycle.js?v=administrator-build-40.4.62"></script>
-  <script src="./js/app.js?v=administrator-build-40.4.84"></script>
+  <script src="./js/app.js?v=administrator-build-40.4.85"></script>
   <script src="./js/views/projects-demand-residency.js?v=administrator-build-40.4.62"></script>
   <script src="./js/views/operations-demand-residency.js?v=administrator-build-40.4.62"></script>
-  <script src="./js/views/system-demand-residency.js?v=administrator-build-40.4.62"></script>
+  <script src="./js/views/system-demand-residency.js?v=administrator-build-40.4.85"></script>
   <script src="./js/views/private-backend-sources.js?v=administrator-build-40.4.62"></script>
   <script src="./js/views/atlas-family-demand-residency.js?v=administrator-build-40.4.62"></script>
   <script src="./js/layout-repair.js?v=administrator-build-40.4.62"></script>
