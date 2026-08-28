@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.87";
-  const ADMIN_RELEASE = "PHASE-2 MIGRATION SEAL · READ-ONLY AUXILIARY READERS TRUE-DEMAND";
+  const ADMIN_BUILD = "40.4.88";
+  const ADMIN_RELEASE = "SYSTEM 04 INTERACTION RECOVERY · VERSION TRUTH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
