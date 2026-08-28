@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.90",
-  "parent_build": "40.4.89",
+  "build": "40.4.91",
+  "parent_build": "40.4.90",
   "purpose": "Finish Administrator runtime-demand migration after 40.4.89 Firefox operator failure without changing protected business/data ownership.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -653,6 +653,26 @@
     "new_recurring_timer": false,
     "new_observer": false,
     "new_websocket": false,
+    "new_network_owner": false,
+    "new_storage_owner": false
+  },
+  "runtime_migration_40491": {
+    "status": "ATLAS_MEMORY_PRESENTATION_TRUE_DEMAND_STORAGE_PARSE_RELIEF",
+    "operator_evidence_40490": "improved",
+    "auto_reader_runtime": "PRESERVED_60S_MARKET_30S_SPOT_5M_HISTORY",
+    "auto_memory_parse_cache": "ONE_PARSE_PER_MEMORY_REVISION",
+    "atlas_peripheral_boot_rebind": "RETIRED_ALL_SCOPE_BOOT_REPLAY",
+    "atlas_peripheral_hydration_owner": "js/views/atlas-peripheral-lazy.js -> AgentCryptoAtlasPeripheralRebind.rebind(scope)",
+    "memory_intelligence_presentation": "DEMAND_ONLY_WHEN_DISCLOSURE_OPEN",
+    "journal_heavy_dom": "DEMAND_ONLY_WHEN_DISCLOSURE_OPEN",
+    "decision_board_compact": "RESIDENT",
+    "current_memory_state": "RESIDENT_AND_RECONCILED",
+    "market_core": "PROTECTED_38.15.11",
+    "atlas_current": "PROTECTED",
+    "bridge": "PROTECTED",
+    "private_backend": "PROTECTED_V1.4.0",
+    "new_recurring_timer": false,
+    "new_observer": false,
     "new_network_owner": false,
     "new_storage_owner": false
   }

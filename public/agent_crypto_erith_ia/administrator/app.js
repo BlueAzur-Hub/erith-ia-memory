@@ -48364,10 +48364,43 @@ function downloadCollectionPlan() {
   if (els.collectionPlanOutput) els.collectionPlanOutput.textContent = text;
 }
 
-function readAutoMemory() { try { const raw = localStorage.getItem(AUTO_MEMORY_KEY); const parsed = raw ? JSON.parse(raw) : []; return Array.isArray(parsed) ? parsed : []; } catch { return []; }
+/* 40.4.91 — AUTO MEMORY PARSE CACHE
+   The Auto Reader contract stays resident (Market 60 s / Spot 30 s / History 5 min),
+   but repeated readers no longer JSON.parse the same multi-megabyte localStorage payload.
+   Same-tab writes invalidate/update the cache immediately; no timer/observer/network owner. */
+const atlasAutoMemoryCache4091 = { loaded:false, records:[], revision:0 };
+function atlasAutoMemoryCacheInvalidate4091() {
+  atlasAutoMemoryCache4091.loaded = false;
+  atlasAutoMemoryCache4091.records = [];
+  atlasAutoMemoryCache4091.revision += 1;
+}
+function readAutoMemory() {
+  if (atlasAutoMemoryCache4091.loaded) return atlasAutoMemoryCache4091.records.slice();
+  try {
+    const raw = localStorage.getItem(AUTO_MEMORY_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    atlasAutoMemoryCache4091.records = Array.isArray(parsed) ? parsed : [];
+    atlasAutoMemoryCache4091.loaded = true;
+    return atlasAutoMemoryCache4091.records.slice();
+  } catch {
+    atlasAutoMemoryCache4091.records = [];
+    atlasAutoMemoryCache4091.loaded = true;
+    return [];
+  }
 }
 
-function writeAutoMemory(records) { let safe = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : []; try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch { safe = safe.slice(Math.floor(safe.length / 2)); try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch {} } return safe;
+function writeAutoMemory(records) {
+  let safe = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : [];
+  try {
+    localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe));
+  } catch {
+    safe = safe.slice(Math.floor(safe.length / 2));
+    try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch {}
+  }
+  atlasAutoMemoryCache4091.records = safe;
+  atlasAutoMemoryCache4091.loaded = true;
+  atlasAutoMemoryCache4091.revision += 1;
+  return safe.slice();
 }
 
 function makeAutoSnapshot() {
@@ -48981,7 +49014,7 @@ async function loadGithubSharedMemory(showMessages = true, loadMode = "manual") 
   }
 }
 
-function clearAutoMemory() { const ok = confirm("Effacer la mémoire Auto Reader locale de ce navigateur ?"); if (!ok) return; localStorage.removeItem(AUTO_MEMORY_KEY); localStorage.removeItem(COLLECTOR_MIGRATION_NOTE_KEY); renderSharedMemory(); renderAutoReader(); setSharedOutputStatus("warn"); if (els.sharedMemoryOutput) { els.sharedMemoryOutput.textContent = "MÉMOIRE LOCALE EFFACÉE\n\nL’ID machine est conservée. Les snapshots devront être recollectés ou réimportés."; }
+function clearAutoMemory() { const ok = confirm("Effacer la mémoire Auto Reader locale de ce navigateur ?"); if (!ok) return; localStorage.removeItem(AUTO_MEMORY_KEY); atlasAutoMemoryCacheInvalidate4091(); localStorage.removeItem(COLLECTOR_MIGRATION_NOTE_KEY); renderSharedMemory(); renderAutoReader(); setSharedOutputStatus("warn"); if (els.sharedMemoryOutput) { els.sharedMemoryOutput.textContent = "MÉMOIRE LOCALE EFFACÉE\n\nL’ID machine est conservée. Les snapshots devront être recollectés ou réimportés."; }
 }
 
 const ATLAS_AUDIENCE_TOPIC = "erith-ia-crypto-286afc86493020aa82142cc25e759f6132709e1ee4578a25";
@@ -51655,7 +51688,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.90";
+const ATLAS_BUILD = "40.4.91";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -53187,7 +53220,7 @@ function atlasRebindDeferredMemoryPanels40425(scope = "all") {
 try { globalThis.AgentCryptoAtlasPeripheralRebind40425 = Object.freeze({build:"40.4.25-compat",rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 try { globalThis.AgentCryptoAtlasPeripheralRebind = Object.freeze({build:ATLAS_BUILD,rebind:atlasRebindDeferredMemoryPanels40425}); } catch (_) {}
 
-atlasRebindDeferredMemoryPanels40425("all");
+atlasRebindDeferredMemoryPanels40425("boot-shells-only-40491");
 
 
 $("btnLivecheck")?.addEventListener("click", runFoundationLivecheck);
@@ -62601,3 +62634,177 @@ try {
 /* 40.4.89 — Owner consolidation / true-lazy handoff lock.
    Projects + Operations legacy generic residency parser owners retired; System generic residency reduced to Simulation only. */
 try{globalThis.__AGENT_CRYPTO_40489__=Object.freeze({build:"40.4.89",parent:"40.4.88",projects_presentation_owner:"js/views/projects-presentation.js",projects_legacy_generic_residency_loaded:false,operations_presentation_owner:"js/views/operations-presentation.js",operations_legacy_generic_residency_loaded:false,system_generic_residency_keys:Object.freeze(["simulation"]),system_true_lazy_peripherals:Object.freeze(["commandes","backend","safety","physical-security"]),system_storage_health_boot_resident:true,system_grey_plate_boot_resident:true,residency_audit_owner_aware:true,atlas_router_changed:false,atlas_generic_residency_changed:false,learning_changed:false,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_algorithm_changed:false,oracle_engine_changed:false,bridge_protocol_changed:false,indexeddb_schema_changed:false,window_manager_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+
+
+/* ============================================================
+   40.4.91 — ATLAS MEMORY PRESENTATION TRUE DEMAND · STORAGE PARSE RELIEF
+
+   40.4.90 operator evidence is materially better. Remaining phase-2 debt:
+   legacy CURRENT/memory reconciliation still fans out into Memory Intelligence,
+   Journal, Decision Board and workspace presentation even when heavy disclosures
+   are closed. Auto Reader itself remains resident and unchanged: Market 60 s,
+   Spot 30 s, History 5 min. This layer only removes repeated parse/render work.
+
+   Protected unchanged: Market Core 38.15.11 · Binance LIVE · Graph · Top 5 ·
+   Atlas cockpit/CURRENT · Bridge · Backend · IndexedDB · Oracle · Auto Reader.
+   ============================================================ */
+function atlasMemoryIntelligencePresentationDemanded4091() {
+  const root = document.getElementById("atlasMemoryIntelligence");
+  return !!root && (!(root instanceof HTMLDetailsElement) || root.open === true);
+}
+
+function atlasCurrentJournalPresentationDemanded4091() {
+  const root = document.getElementById("atlasCurrentJournal33");
+  return !!root && (!(root instanceof HTMLDetailsElement) || root.open === true);
+}
+
+// One memory split per actual AutoMemory revision. All historical readers can share it.
+const atlasMemorySplit35Base4091 = atlasMemorySplit35;
+let atlasMemorySplitCache4091 = { revision:-1, value:null };
+atlasMemorySplit35 = function atlasMemorySplit354091() {
+  const revision = Number(atlasAutoMemoryCache4091?.revision || 0);
+  if (atlasMemorySplitCache4091.value && atlasMemorySplitCache4091.revision === revision) {
+    return atlasMemorySplitCache4091.value;
+  }
+  const value = atlasMemorySplit35Base4091();
+  atlasMemorySplitCache4091 = { revision, value };
+  return value;
+};
+
+// Reuse the expensive intelligence computation within the same memory revision.
+const atlasMemoryIntelligenceComputeBase4091 = atlasMemoryIntelligenceCompute;
+let atlasMemoryIntelligenceComputeCache4091 = { revision:-1, at:0, value:null };
+atlasMemoryIntelligenceCompute = function atlasMemoryIntelligenceCompute4091() {
+  const revision = Number(atlasAutoMemoryCache4091?.revision || 0);
+  const now = Date.now();
+  if (atlasMemoryIntelligenceComputeCache4091.value
+      && atlasMemoryIntelligenceComputeCache4091.revision === revision
+      && now - atlasMemoryIntelligenceComputeCache4091.at < 15000) {
+    return atlasMemoryIntelligenceComputeCache4091.value;
+  }
+  const value = atlasMemoryIntelligenceComputeBase4091();
+  atlasMemoryIntelligenceComputeCache4091 = { revision, at:now, value };
+  return value;
+};
+
+// Memory Intelligence is a heavy body: no compute/render while its disclosure is closed.
+const atlasMemoryIntelligenceRenderBase4091 = atlasMemoryIntelligenceRender;
+atlasMemoryIntelligenceRender = function atlasMemoryIntelligenceRender4091() {
+  if (!atlasMemoryIntelligencePresentationDemanded4091()) return null;
+  return atlasMemoryIntelligenceRenderBase4091();
+};
+
+// The two ledger renderers are presentation readers. If neither Memory Intelligence nor
+// Decision Board detail is demanded, state remains preserved and will replay on opening.
+const atlasMemoryLedgerRender34Base4091 = atlasMemoryLedgerRender34;
+atlasMemoryLedgerRender34 = function atlasMemoryLedgerRender344091() {
+  if (!atlasMemoryIntelligencePresentationDemanded4091() && !atlasDecisionBoardDetailActive4081()) return null;
+  return atlasMemoryLedgerRender34Base4091();
+};
+const atlasMemoryLedgerRender35Base4091 = atlasMemoryLedgerRender35;
+atlasMemoryLedgerRender35 = function atlasMemoryLedgerRender354091() {
+  if (!atlasMemoryIntelligencePresentationDemanded4091() && !atlasDecisionBoardDetailActive4081()) return null;
+  return atlasMemoryLedgerRender35Base4091();
+};
+
+// Closed Journal keeps only its compact badge/state. Its 10-row DOM is rebuilt on demand.
+const atlasCurrentJournalRender33Base4091 = atlasCurrentJournalRender33;
+atlasCurrentJournalRender33 = function atlasCurrentJournalRender334091() {
+  const root = document.getElementById("atlasCurrentJournal33");
+  if (!root) return null;
+  if (atlasCurrentJournalPresentationDemanded4091()) return atlasCurrentJournalRender33Base4091();
+  let records = [];
+  try { records = atlasCurrentJournalMaybeRecord33(); } catch (_) { try { records = atlasCurrentJournalRead33(); } catch (_) {} }
+  const badge = document.getElementById("atlasCurrentJournal33Badge");
+  if (badge) {
+    badge.textContent = `${records.length} CURRENT${records.length > 1 ? "S" : ""}`;
+    badge.className = `pill ${records.length ? "ok" : "warn"}`;
+  }
+  root.dataset.state = records.length ? "ready" : "waiting";
+  return records;
+};
+
+// 38.13 called the repair renderer twice (inside repair, then again in the event wrapper).
+// Keep one state reconciliation; presentation replay is already owned by the repair path.
+atlasCurrentMemoryEventReconcile3813 = function atlasCurrentMemoryEventReconcile38134091(reason = "event") {
+  if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) {
+    return { queued:false, skipped:"book-readonly", reason };
+  }
+  if (atlasCurrentMemoryEventReconcileQueued3813) return { queued:false, skipped:"already-queued", reason };
+  atlasCurrentMemoryEventReconcileQueued3813 = true;
+  queueMicrotask(() => {
+    atlasCurrentMemoryEventReconcileQueued3813 = false;
+    try { if (typeof atlasCurrentMemoryRepair3811 === "function") atlasCurrentMemoryRepair3811(`3813:${reason}`); } catch (_) {}
+  });
+  return { queued:true, reason };
+};
+
+// Coalesce the finite boot repair witnesses for the same CURRENT + same memory revision.
+const atlasCurrentMemoryRepair3811Base4091 = atlasCurrentMemoryRepair3811;
+let atlasCurrentMemoryRepairState4091 = { signature:"", at:0 };
+atlasCurrentMemoryRepair3811 = function atlasCurrentMemoryRepair38114091(reason = "memory-state-bind-3811") {
+  let fp = "";
+  try { fp = String(atlasCurrentStateRead()?.fingerprint || "").trim(); } catch (_) {}
+  const signatureBefore = `${fp}|${Number(atlasAutoMemoryCache4091?.revision || 0)}`;
+  const now = Date.now();
+  if (signatureBefore && atlasCurrentMemoryRepairState4091.signature === signatureBefore && now - atlasCurrentMemoryRepairState4091.at < 5000) {
+    return { record:null, changed:false, skipped:"coalesced-40491", reason };
+  }
+  const result = atlasCurrentMemoryRepair3811Base4091(reason);
+  const signatureAfter = `${fp}|${Number(atlasAutoMemoryCache4091?.revision || 0)}`;
+  atlasCurrentMemoryRepairState4091 = { signature:signatureAfter, at:Date.now() };
+  return result;
+};
+
+// Final CURRENT memory paint: compact operator/Decision state remains live; heavy Memory
+// Intelligence/Journal/workspace bodies replay only when their disclosures are open.
+atlasClassicRenderMemory38152 = function atlasClassicRenderMemory381524091() {
+  if (atlasClassicStabilityState38152.memoryRenderQueued) return false;
+  atlasClassicStabilityState38152.memoryRenderQueued = true;
+  return atlasClassicRunWhenIdle38152(() => {
+    atlasClassicStabilityState38152.memoryRenderQueued = false;
+    try { renderDecisionBoard(); } catch (_) {}
+    try { atlasOperatorSummaryRender35(); } catch (_) {}
+    if (atlasMemoryIntelligencePresentationDemanded4091()) {
+      try { atlasMemoryLedgerRender34(); } catch (_) {}
+      try { atlasMemoryLedgerRender35(); } catch (_) {}
+      try { atlasMemoryIntelligenceRender(); } catch (_) {}
+    }
+    if (atlasCurrentJournalPresentationDemanded4091() || atlasDecisionBoardDetailActive4081()) {
+      try { atlasDecisionWorkspaceRender33(); } catch (_) {}
+    }
+  }, 3200);
+};
+
+try {
+  globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40491__ = Object.freeze({
+    build:"40.4.91", parent:"40.4.90",
+    firefox_40490_operator_direction:"improved",
+    auto_reader_runtime_preserved:true,
+    auto_reader_market_ms:60000,
+    auto_reader_spot_ms:30000,
+    auto_reader_history_ms:300000,
+    auto_memory_parse_cache:true,
+    auto_memory_cache_revision_on_write:true,
+    atlas_boot_all_peripheral_rebind_retired:true,
+    memory_intelligence_closed_compute:false,
+    memory_ledgers_closed_render:false,
+    journal_heavy_dom_closed_render:false,
+    current_memory_event_duplicate_repaint_retired:true,
+    finite_boot_memory_repair_coalesced:true,
+    final_current_heavy_memory_replay_demand_only:true,
+    market_core_changed:false,
+    graph_data_algorithm_changed:false,
+    target_top5_semantics_changed:false,
+    current_algorithm_changed:false,
+    oracle_engine_changed:false,
+    bridge_protocol_changed:false,
+    private_backend_changed:false,
+    indexeddb_schema_changed:false,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_websocket:false,
+    new_fetch_owner:false,
+    new_storage_owner:false
+  });
+} catch (_) {}

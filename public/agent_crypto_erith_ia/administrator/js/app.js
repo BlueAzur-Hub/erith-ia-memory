@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.90";
+  const ADMIN_BUILD = "40.4.91";
   const ADMIN_RELEASE = "OWNER CONSOLIDATION · TRUE-LAZY HANDOFF LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
