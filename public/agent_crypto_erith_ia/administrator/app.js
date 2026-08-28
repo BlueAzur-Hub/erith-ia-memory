@@ -3358,9 +3358,6 @@ function atlasInitV2Shell() {
   document.querySelectorAll(".atlas-v2-nav-essential [data-atlas-essential-target]").forEach(button => {
     button.addEventListener("click", event => {
       event.preventDefault();
-      if (button.dataset.atlasEssentialTarget === "market-workspace" && typeof atlasMarketTableDemandSet40492 === "function") {
-        atlasMarketTableDemandSet40492(true,"navigation Marché");
-      }
       essentialNavigate40309(button);
     });
   });
@@ -17506,7 +17503,7 @@ function atlasPatchMarketRowSnapshot(row, coin, selection) {
 
 function atlasPatchMarketTableSnapshot() {
   if (!els.marketRows || !atlasHasDisplayableMarket()) return;
-  if (!atlasMarketTablePresentationDemanded40492()) { atlasMarketTableDemandSummary40492("snapshot actualisé"); return; }
+  if (!atlasMarketTablePresentationDemanded40493()) { atlasMarketTableWindowSummary40493("snapshot actualisé"); return; }
   const desired = atlasMarketRowsForCurrentView();
   const existing = [...els.marketRows.querySelectorAll("tr[data-market-row-id403115]")];
   const sameOrder = existing.length === desired.length
@@ -17536,7 +17533,7 @@ function atlasPatchSpotDom(changedIds = []) {
   const continuity = atlasCaptureUiContinuity();
   atlasPatchTickerSpot(changedIds);
   const changed = new Set(changedIds);
-  if (atlasMarketTablePresentationDemanded40492()) {
+  if (atlasMarketTablePresentationDemanded40493()) {
     state.coins.forEach(coin => {
       if (!changed.size || changed.has(coin.id)) atlasPatchMarketRowSpot(coin);
     });
@@ -18009,13 +18006,13 @@ function atlasEnsureMarketDomIntegrity() {
   // 40.3.116: every real Market row counts, including Extended rows.
   // In .115 a page made only of ranks >250 looked "empty" here and triggered
   // a complete tbody rebuild on every Binance spot patch.
-  const marketTableDemanded40492=atlasMarketTablePresentationDemanded40492();
-  const rowCount = marketTableDemanded40492
+  const marketTableDemanded40493=atlasMarketTablePresentationDemanded40493();
+  const rowCount = marketTableDemanded40493
     ? (els.marketRows?.querySelectorAll?.(
         "tr[data-id], tr[data-market-extended-id403115], tr[data-market-external403100]"
       )?.length || 0)
     : 0;
-  if (marketTableDemanded40492 && !rowCount) renderMarketTable();
+  if (marketTableDemanded40493 && !rowCount) renderMarketTable();
 
   const topFiveCount = els.top5Track?.querySelectorAll?.("[data-top5-id]")?.length || 0;
   if (!topFiveCount) atlasRenderTopFiveRibbon();
@@ -18049,7 +18046,7 @@ atlasEnsureMarketDomIntegrity=function(){
   atlasMarketRenderHealth403116.last_row_count=count;
   atlasMarketRenderHealth403116.last_limit=atlasMarketUniverseLimit403115();
 
-  if(atlasMarketTablePresentationDemanded40492()&&!count&&atlasHasDisplayableMarket()){
+  if(atlasMarketTablePresentationDemanded40493()&&!count&&atlasHasDisplayableMarket()){
     atlasMarketRenderHealth403116.integrity_repairs+=1;
   }
 
@@ -19129,65 +19126,78 @@ try{
 }catch(_){}
 
 /* ============================================================
-   40.4.92 — MARKET SNAPSHOT PRESENTATION TRUE DEMAND
+   40.4.93 — MARKET SNAPSHOT NATIVE WINDOW DEMAND · UX RECOVERY
 
-   Hybrid contract preserved:
-   - Market Core/state stays resident and authoritative.
-   - Binance/Graph/Top 5/selected market state stay resident.
-   - The 50/100/250-row Market Snapshot table is presentation only.
-   - Closed/resting table owns zero generated market rows.
-   - Explicit operator demand rematerializes rows from current runtime state.
-   No timer, observer, network owner, storage owner or Market Core change.
+   Contract recovery over 40.4.92:
+   - Market Snapshot is visible normally; no second "Afficher tableau" control.
+   - Existing Window Manager remains the sole presentation owner.
+   - Reduce/Hide releases generated table rows.
+   - Restore rematerializes rows from resident Market Core state.
+   - Search/filter/sort/universe controls never create a second visibility owner.
+   No timer, observer, network owner, storage owner or Window Manager rewrite.
    ============================================================ */
-function atlasMarketTableDemandBody40492(){
-  return document.getElementById("marketTableDemandBody40492");
+function atlasMarketTableWindowBody40493(){
+  return document.getElementById("marketTableWindowBody40493");
 }
-function atlasMarketTablePresentationDemanded40492(){
-  const body=atlasMarketTableDemandBody40492();
-  return !!body && body.hidden!==true;
-}
-function atlasMarketTableDemandSummary40492(reason="rest"){
-  const count=Number(state.coins?.length||0);
-  const limit=typeof atlasMarketUniverseLimit403115==="function"?atlasMarketUniverseLimit403115():Number(state.marketVisibleLimit||50);
-  const selected=typeof atlasComparisonIds==="function"?atlasComparisonIds().length:0;
-  const status=document.getElementById("marketTableDemandStatus40492");
-  if(status){
-    status.textContent=`Tableau au repos · ${count}/250 actifs · vue ${limit}`;
-    status.className=`pill ${count?"ok":"warn"}`;
-  }
-  setText(els.tableNote,`Tableau Market au repos · Market Core 38.15.11 actif · ${count}/250 actifs en mémoire · sélection ${selected}/${ATLAS_COMPARISON_MAX_SERIES} · ${String(reason||"rest")}.`);
+function atlasMarketTableWindowState40493(){
   const panel=document.getElementById("marketSnapshotPanel");
-  if(panel)panel.dataset.marketTableDemand40492="rest";
+  let win=null;
+  try{win=globalThis.ErithAdministratorWindows?.getWindow?.("market")||null;}catch(_){}
+  return {
+    minimized:win?.minimized===true||panel?.classList?.contains("admin-native-window-suppressed")===true,
+    hidden:win?.hidden===true||panel?.hidden===true,
+    floating:win?.floating===true
+  };
 }
-function atlasMarketTableDemandSet40492(open,reason="operator"){
-  const body=atlasMarketTableDemandBody40492();
-  const button=document.getElementById("btnMarketTableDemand40492");
+function atlasMarketTablePresentationDemanded40493(){
+  const body=atlasMarketTableWindowBody40493();
+  if(!body||body.hidden===true)return false;
+  const win=atlasMarketTableWindowState40493();
+  return !win.minimized&&!win.hidden;
+}
+function atlasMarketTableWindowSummary40493(reason="window-reduced"){
+  const count=Number(state.coins?.length||0);
+  const selected=typeof atlasComparisonIds==="function"?atlasComparisonIds().length:0;
+  const panel=document.getElementById("marketSnapshotPanel");
+  if(panel)panel.dataset.marketTableWindow40493="reduced";
+  setText(els.tableNote,`Market Snapshot réduit · Market Core 38.15.11 actif · ${count}/250 actifs en mémoire · sélection ${selected}/${ATLAS_COMPARISON_MAX_SERIES} · ${String(reason||"window-reduced")}.`);
+}
+function atlasMarketTableWindowSync40493(reason="window-manager"){
+  const body=atlasMarketTableWindowBody40493();
   const panel=document.getElementById("marketSnapshotPanel");
   if(!body)return false;
-  const next=open===true;
-  body.hidden=!next;
-  if(button){
-    button.setAttribute("aria-expanded",next?"true":"false");
-    button.textContent=next?"Réduire tableau":"Afficher tableau";
+  const win=atlasMarketTableWindowState40493();
+  const active=!win.minimized&&!win.hidden;
+  if(!active){
+    body.hidden=true;
+    if(els.marketRows)els.marketRows.replaceChildren();
+    if(panel)panel.dataset.marketTableWindow40493="reduced";
+    atlasMarketTableWindowSummary40493(reason);
+    return false;
   }
-  if(panel)panel.dataset.marketTableDemand40492=next?"active":"rest";
-  if(next){
-    const status=document.getElementById("marketTableDemandStatus40492");
-    if(status){status.textContent="Tableau actif · rendu à la demande";status.className="pill ok";}
-    renderMarketTable();
-  }else{
-    if(els.marketRows){
-      els.marketRows.innerHTML='<tr><td colspan="11" class="empty">Tableau au repos · données conservées dans Market Core.</td></tr>';
-    }
-    atlasMarketTableDemandSummary40492(reason);
-  }
+  const wasHidden=body.hidden===true;
+  body.hidden=false;
+  if(panel)panel.dataset.marketTableWindow40493="active";
+  const hasRows=!!els.marketRows?.querySelector?.("tr.asset-row, tr[data-market-row-id403115]");
+  if(wasHidden||!hasRows)renderMarketTable();
   return true;
 }
+try{
+  globalThis.AgentCryptoMarketTablePresentation40493=Object.freeze({
+    build:"40.4.93",
+    owner:"existing Window Manager market window",
+    normal_presentation:"visible",
+    reduced_presentation:"generated rows released",
+    extra_visibility_button:false,
+    syncFromWindow:atlasMarketTableWindowSync40493,
+    active:atlasMarketTablePresentationDemanded40493
+  });
+}catch(_){}
 
 function renderMarketTable() {
   if (!els.marketRows) return;
-  if (!atlasMarketTablePresentationDemanded40492()) {
-    atlasMarketTableDemandSummary40492("runtime vivant · présentation différée");
+  if (!atlasMarketTablePresentationDemanded40493()) {
+    atlasMarketTableWindowSummary40493("runtime vivant · présentation différée");
     return;
   }
   atlasChartV2SyncControls();
@@ -45929,7 +45939,7 @@ function atlasExchangeScheduleUiPatch(changedCoinId = null) {
       atlasPatchTickerSpot(ids);
       atlasOracleCaptureLiveQuotes(ids);
       atlasRefreshChartLivePresentation(ids);
-      if (atlasMarketTablePresentationDemanded40492()) {
+      if (atlasMarketTablePresentationDemanded40493()) {
         ids.forEach(id => {
           const coin = state.coins.find(item => item.id === id);
           if (coin) atlasPatchMarketRowSpot(coin);
@@ -51759,7 +51769,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.92";
+const ATLAS_BUILD = "40.4.93";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -53393,7 +53403,6 @@ $("btnAnalyzeNews")?.addEventListener("click", analyzeNews);
 $("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
 
 els.searchInput?.addEventListener("input", () => {
-  atlasMarketTableDemandSet40492(true,"filtre Market");
   if(globalThis.AtlasMarketUniverse1000_403115){
     atlasMarketUniverseState403115.page=0;
   }
@@ -53416,10 +53425,10 @@ els.searchInput?.addEventListener("keydown", event => {
   void atlasMarketExtendedLookup403100(q);
 });
 
-document.querySelectorAll(".filter-btn[data-filter]").forEach(btn => { btn.addEventListener("click", () => { atlasMarketTableDemandSet40492(true,"filtre Market"); state.assetFilter = btn.dataset.filter || "all"; document.querySelectorAll(".filter-btn[data-filter]").forEach(b => b.classList.toggle("active", b === btn)); renderMarketTable(); });
+document.querySelectorAll(".filter-btn[data-filter]").forEach(btn => { btn.addEventListener("click", () => { state.assetFilter = btn.dataset.filter || "all"; document.querySelectorAll(".filter-btn[data-filter]").forEach(b => b.classList.toggle("active", b === btn)); renderMarketTable(); });
 });
 
-els.sortSelect?.addEventListener("change", () => { atlasMarketTableDemandSet40492(true,"tri Market"); state.sortKey = els.sortSelect.value || "rank-asc"; renderMarketTable();
+els.sortSelect?.addEventListener("change", () => { state.sortKey = els.sortSelect.value || "rank-asc"; renderMarketTable();
 });
 
 if (advancedButton && advancedPanel) { advancedButton.type = "button"; advancedButton.addEventListener("click", () => { advancedPanel.classList.toggle("is-collapsed"); const open = !advancedPanel.classList.contains("is-collapsed"); advancedButton.textContent = open ? "Masquer avancé" : "Afficher avancé"; });
@@ -53811,7 +53820,6 @@ state.marketVisibleLimit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(state.market
 
 document.querySelectorAll("[data-market-limit]").forEach(button => {
   button.addEventListener("click", () => {
-    atlasMarketTableDemandSet40492(true,"univers Market");
     const limit=Number(button.dataset.marketLimit);
     if(!ATLAS_MARKET_VIEW_LIMITS.includes(limit))return;
 
@@ -53843,12 +53851,6 @@ document.addEventListener("click", event => {
   if (control) atlasScannerCancel("commande interface");
 }, true);
 
-document.getElementById("btnMarketTableDemand40492")?.addEventListener("click",()=>{
-  atlasMarketTableDemandSet40492(!atlasMarketTablePresentationDemanded40492(),"bouton Market");
-});
-
-// Boot contract: table rows stay absent until explicit Market intent.
-atlasMarketTableDemandSet40492(false,"boot");
 
 window.setTimeout(atlasSyncMarketUniverseControls, 0);
 
@@ -62915,6 +62917,39 @@ try {
     private_backend_changed:false,
     indexeddb_schema_changed:false,
     window_manager_changed:false,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_websocket:false,
+    new_fetch_owner:false,
+    new_storage_owner:false
+  });
+} catch (_) {}
+
+/* ============================================================
+   40.4.93 — MARKET SNAPSHOT NATIVE WINDOW DEMAND · UX RECOVERY LOCK
+   ============================================================ */
+try {
+  globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40493__ = Object.freeze({
+    build:"40.4.93", parent:"40.4.92",
+    firefox_40492_operator_result:"UX_FAIL_EXTRA_CONTROL_OCCLUDED_BY_NATIVE_WINDOW_MENU",
+    market_core_runtime_resident:true,
+    market_snapshot_normal_rows_visible:true,
+    market_snapshot_reduce_releases_generated_rows:true,
+    market_snapshot_restore_rematerializes_current_rows:true,
+    market_visibility_owner:"existing Window Manager market window",
+    redundant_market_visibility_button_removed:true,
+    market_search_filter_sort_universe_visibility_owner:false,
+    window_manager_rewritten:false,
+    graph_resident:true,
+    target_top5_resident:true,
+    selected_market_state_resident:true,
+    auto_reader_contract_preserved:true,
+    atlas_current_changed:false,
+    current_algorithm_changed:false,
+    oracle_engine_changed:false,
+    bridge_protocol_changed:false,
+    private_backend_changed:false,
+    indexeddb_schema_changed:false,
     new_recurring_timer:false,
     new_observer:false,
     new_websocket:false,

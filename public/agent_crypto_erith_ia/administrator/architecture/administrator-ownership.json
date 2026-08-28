@@ -1,6 +1,6 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.92",
+  "build": "40.4.93",
   "parent_build": "40.4.91",
   "purpose": "Continue Administrator runtime-demand migration after improved 40.4.91 Firefox operator evidence: keep Market Core resident while making the heavy Market Snapshot table presentation explicit-demand.",
   "rules": {
@@ -19,7 +19,7 @@
     },
     {
       "component": "Market Snapshot heavy table presentation",
-      "owner": "app.js::atlasMarketTableDemandSet40492 + renderMarketTable",
+      "owner": "app.js::atlasMarketTableWindowSync40493 + renderMarketTable + existing Window Manager market state",
       "state": "TRUE_DEMAND_PRESENTATION_RUNTIME_RESIDENT",
       "resident_truth": [
         "Market Core 38.15.11",
@@ -36,7 +36,7 @@
         "search/filter/sort/universe operator intent"
       ],
       "release_on_close": true,
-      "notes": "40.4.92 removes generated Market table rows while the table is at rest. Closing presentation does not clear market data or selection state."
+      "notes": "40.4.93 recovers native Market UX: normal/restored Market shows its table; existing Window Manager Reduce/Hide releases generated rows; Restore rematerializes current rows. No second Market visibility control."
     },
     {
       "component": "Administrator role + canonical URL truth",
@@ -714,6 +714,22 @@
     "bridge": "PROTECTED",
     "private_backend": "PROTECTED_V1.4.0",
     "new_recurring_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false
+  },
+  "runtime_migration_40493": {
+    "build": "40.4.93",
+    "parent": "40.4.92",
+    "operator_40492": "UX_FAIL",
+    "market_core_resident": true,
+    "normal_market_table_visible": true,
+    "reduce_releases_generated_rows": true,
+    "restore_rematerializes_rows": true,
+    "visibility_owner": "existing js/core/admin-window-manager.js market window",
+    "redundant_show_table_button_removed": true,
+    "window_manager_modified": false,
+    "new_timer": false,
     "new_observer": false,
     "new_network_owner": false,
     "new_storage_owner": false

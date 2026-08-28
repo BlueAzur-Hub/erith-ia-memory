@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.92";
-  const ADMIN_RELEASE = "MARKET SNAPSHOT PRESENTATION TRUE DEMAND · FIREFOX DOM RELIEF LOCK";
+  const ADMIN_BUILD = "40.4.93";
+  const ADMIN_RELEASE = "MARKET SNAPSHOT NATIVE WINDOW DEMAND · UX RECOVERY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -2181,6 +2181,29 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
+
+    // 40.4.93 — Market presentation follows the existing Window Manager.
+    // No extra Market visibility control: normal/restored = rows present;
+    // reduced/hidden = generated rows released. The manager remains unchanged.
+    const syncMarketWindow40493 = reason => {
+      try { globalThis.AgentCryptoMarketTablePresentation40493?.syncFromWindow?.(reason); } catch (error) {
+        console.warn("[40.4.93] Market window presentation sync", error);
+      }
+    };
+    syncMarketWindow40493("window-manager-init");
+    const syncMarketAfterWindowControl40493 = event => {
+      const control=event.target?.closest?.(".admin-native-minimize,.admin-native-hide,.admin-native-minibar-restore,.admin-window-deck-action");
+      if(!control)return;
+      queueMicrotask(()=>syncMarketWindow40493("native-window-control"));
+    };
+    document.addEventListener("click", syncMarketAfterWindowControl40493, true);
+    document.addEventListener("pointerdown", event => {
+      if(!event.target?.closest?.(".admin-native-minibar-restore"))return;
+      queueMicrotask(()=>syncMarketWindow40493("native-window-restore"));
+    }, true);
+    document.addEventListener("erith:admin-window-reset", ()=>queueMicrotask(()=>syncMarketWindow40493("window-reset")));
+    document.addEventListener("erith:admin-window-profile-applied", ()=>queueMicrotask(()=>syncMarketWindow40493("window-profile")));
+    document.addEventListener("erith:admin-window-persisted-presentation-restored", ()=>queueMicrotask(()=>syncMarketWindow40493("window-restore")));
     window.addEventListener("atlas:v2mode", event => {
       const role = ["public", "operator", "administrator"].includes(event?.detail?.role)
         ? event.detail.role
