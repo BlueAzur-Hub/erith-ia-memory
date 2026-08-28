@@ -22131,7 +22131,8 @@ function newsFeedFingerprint(payload) {
 }
 
 function newsFeedVisible() {
-  return document.visibilityState !== "hidden";
+  const details = $("news-sentinel");
+  return document.visibilityState !== "hidden" && details?.open === true;
 }
 
 function newsFeedClearTimer() {
@@ -23585,7 +23586,16 @@ function initNewsSentinelV1() {
   const newsDetails40464 = $("news-sentinel");
   if (newsDetails40464 && newsDetails40464.dataset.newsCountdownGate40464 !== "1") {
     newsDetails40464.dataset.newsCountdownGate40464 = "1";
-    newsDetails40464.addEventListener("toggle", newsFeedSyncCountdownTimer40464);
+    newsDetails40464.addEventListener("toggle", () => {
+      newsFeedSyncCountdownTimer40464();
+      if (newsDetails40464.open) {
+        void loadNewsLiveFeed({ automatic: true });
+      } else {
+        newsFeedClearTimer();
+        newsFeedState.nextRefreshAt = null;
+        renderNewsFeedOverview();
+      }
+    });
   }
 
   const cachedPayload = newsFeedReadCache();
@@ -23598,7 +23608,7 @@ function initNewsSentinelV1() {
 
   renderNewsFeedOverview();
   renderNewsSentinel();
-  void loadNewsLiveFeed({ automatic: true });
+  if (newsDetails40464?.open) void loadNewsLiveFeed({ automatic: true });
 
   if (newsFeedState.countdownTimer) clearInterval(newsFeedState.countdownTimer);
   newsFeedState.countdownTimer = null;
@@ -51646,7 +51656,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.85";
+const ATLAS_BUILD = "40.4.87";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -62499,3 +62509,7 @@ try{globalThis.__AGENT_CRYPTO_AETHER_TRUST_UI_40484__=Object.freeze({build:"40.4
    UI alternation is CSS-only. Storage Health and Grey Plate DOM are moved off-document after
    canonical listeners bind and restored only on explicit operator demand. */
 try{globalThis.__AGENT_CRYPTO_40485__=Object.freeze({build:"40.4.85",parent:"40.4.84",aether_same_status_lane:true,aether_second_row:false,aether_css_intermit:true,aether_horizontal_drift:true,system_storage_health_boot_resident:false,system_grey_plate_boot_resident:false,system_diagnostics_operator_restore:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_algorithm_changed:false,oracle_engine_changed:false,bridge_protocol_changed:false,indexeddb_schema_changed:false,new_interval:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+/* 40.4.86 — secondary runtime true-demand: News network/cadence only while News disclosure is open; Source Intelligence script is loaded by explicit Sources/Backend demand. */
+try{globalThis.__AGENT_CRYPTO_40486__=Object.freeze({build:"40.4.86",parent:"40.4.85",news_network_boot:false,news_timer_closed:false,news_first_fetch_on_open:true,news_heavy_body_closed_residency:true,source_intelligence_parser_boot:false,source_intelligence_explicit_demand_loader:true,metals_40466_demand_runtime_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_algorithm_changed:false,oracle_engine_changed:false,bridge_protocol_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}
+/* 40.4.87 — phase-2 migration seal: read-only retrospective + Memory Health auxiliary readers leave parser boot and load only after their owning operator surface is demanded. */
+try{globalThis.__AGENT_CRYPTO_40487__=Object.freeze({build:"40.4.87",parent:"40.4.86",memory_health_parser_boot:false,memory_health_atlas_demand:true,retrospective_parser_boot:false,retrospective_decision_demand:true,news_demand_40486_preserved:true,source_intelligence_demand_40486_preserved:true,system_diagnostics_demand_40485_preserved:true,metals_demand_40466_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_algorithm_changed:false,oracle_engine_changed:false,bridge_protocol_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_network_owner:false,new_storage_owner:false});}catch(_){}

@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.85";
-  const ADMIN_RELEASE = "AETHER INTERMITTENT SINGLE-LANE STATUS · SYSTEM DIAGNOSTICS TRUE-DEMAND RESIDENCY";
+  const ADMIN_BUILD = "40.4.87";
+  const ADMIN_RELEASE = "PHASE-2 MIGRATION SEAL · READ-ONLY AUXILIARY READERS TRUE-DEMAND";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -2424,6 +2424,9 @@
       document.addEventListener("DOMContentLoaded", initAtlasMemoryHealthDeferred40355, { once: true });
     }
   }
+  // 40.4.87: Memory Health script itself is now demand-loaded after Atlas opens.
+  // Re-run the existing presentation wrapper when that unchanged read-only owner arrives.
+  window.addEventListener("erith:memory-health-runtime-loaded", initAtlasMemoryHealthDeferred40355, { once: true });
   queueMicrotask(bootAtlasMemoryHealthDeferred40355);
 
 })();
