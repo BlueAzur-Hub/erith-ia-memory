@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.91",
-  "parent_build": "40.4.90",
-  "purpose": "Finish Administrator runtime-demand migration after 40.4.89 Firefox operator failure without changing protected business/data ownership.",
+  "build": "40.4.92",
+  "parent_build": "40.4.91",
+  "purpose": "Continue Administrator runtime-demand migration after improved 40.4.91 Firefox operator evidence: keep Market Core resident while making the heavy Market Snapshot table presentation explicit-demand.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -16,6 +16,27 @@
       "owner": "app.js",
       "state": "PROTECTED",
       "notes": "38.15.11 behavior unchanged."
+    },
+    {
+      "component": "Market Snapshot heavy table presentation",
+      "owner": "app.js::atlasMarketTableDemandSet40492 + renderMarketTable",
+      "state": "TRUE_DEMAND_PRESENTATION_RUNTIME_RESIDENT",
+      "resident_truth": [
+        "Market Core 38.15.11",
+        "state.coins",
+        "Binance LIVE",
+        "Graph",
+        "Target Top 5",
+        "selected market/comparison state"
+      ],
+      "boot_generated_rows": 0,
+      "materialize_on": [
+        "Marché navigation",
+        "Afficher tableau",
+        "search/filter/sort/universe operator intent"
+      ],
+      "release_on_close": true,
+      "notes": "40.4.92 removes generated Market table rows while the table is at rest. Closing presentation does not clear market data or selection state."
     },
     {
       "component": "Administrator role + canonical URL truth",
@@ -213,7 +234,7 @@
     "after_40_4_82": "Firefox operator validation: cold boot → Graph/Top 5 responsiveness → open Simulation once → verify Learning/IndexedDB recovery and persistence. Only after PASS, audit the next phase-2 demand candidate (System diagnostics/secondary presentation), one owner at a time."
   },
   "migration_summary": {
-    "state": "RUNTIME_DEMAND_COMPLETION_40_4_90_REQUIRES_FIREFOX_OPERATOR_VALIDATION",
+    "state": "RUNTIME_DEMAND_COMPLETION_40_4_92_MARKET_PRESENTATION_FIREFOX_VALIDATION_REQUIRED",
     "functional_migrations_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
@@ -232,7 +253,7 @@
       "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Only Firefox operator acceptance; no unrelated feature work before responsiveness is restored.",
+    "next_product_work": "Firefox operator acceptance of Market table true-demand; continue only with remaining proven runtime/presentation contention.",
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": false
   },
@@ -669,6 +690,27 @@
     "current_memory_state": "RESIDENT_AND_RECONCILED",
     "market_core": "PROTECTED_38.15.11",
     "atlas_current": "PROTECTED",
+    "bridge": "PROTECTED",
+    "private_backend": "PROTECTED_V1.4.0",
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false
+  },
+  "runtime_migration_40492": {
+    "status": "MARKET_SNAPSHOT_PRESENTATION_TRUE_DEMAND_FIREFOX_DOM_RELIEF",
+    "operator_evidence_40491": "improved",
+    "market_core": "PROTECTED_38.15.11_RESIDENT",
+    "market_snapshot_table": "ZERO_GENERATED_ROWS_AT_BOOT_EXPLICIT_DEMAND",
+    "market_table_close": "RELEASE_GENERATED_ROWS_KEEP_RUNTIME_STATE",
+    "binance_closed_table_dom_patch": "RETIRED",
+    "market_closed_integrity_repair": "RETIRED",
+    "graph": "PROTECTED_RESIDENT",
+    "target_top5": "PROTECTED_RESIDENT",
+    "selected_market_state": "PROTECTED_RESIDENT",
+    "auto_reader": "PRESERVED",
+    "atlas_current": "PROTECTED",
+    "oracle": "PROTECTED",
     "bridge": "PROTECTED",
     "private_backend": "PROTECTED_V1.4.0",
     "new_recurring_timer": false,

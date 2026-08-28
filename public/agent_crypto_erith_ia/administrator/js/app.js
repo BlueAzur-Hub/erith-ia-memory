@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.91";
-  const ADMIN_RELEASE = "OWNER CONSOLIDATION · TRUE-LAZY HANDOFF LOCK";
+  const ADMIN_BUILD = "40.4.92";
+  const ADMIN_RELEASE = "MARKET SNAPSHOT PRESENTATION TRUE DEMAND · FIREFOX DOM RELIEF LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
