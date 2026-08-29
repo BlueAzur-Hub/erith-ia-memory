@@ -1,64 +1,88 @@
 {
-  "schema": "agent_crypto_version_manifest_v3",
-  "release": "Market Core V2.0-Alpha · Build 38.15.13 · CLASSIC LEARNING JOURNEY 01→11 PRESENTATION RECOVERY LOCK",
-  "build": "38.15.13",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.13",
-  "status": "classic_candidate_requires_operator_validation",
-  "parent_build": "38.15.12",
-  "prepared_at": "2026-08-26T04:53:00+02:00",
+  "schema": "agent_crypto_version_manifest_v4",
+  "release": "Market Core V2.0-Alpha · Build 38.15.14 · CLASSIC MODULAR PRESENTATION BOUNDARY SCAFFOLD LOCK",
+  "build": "38.15.14",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.14",
+  "status": "classic_candidate_requires_firefox_operator_validation",
+  "parent_build": "38.15.13",
+  "prepared_at": "2026-08-29T03:53:00+02:00",
   "published_at": null,
+  "engine": {
+    "name": "Market Core V2.0-Alpha",
+    "reference_build": "38.15.11",
+    "status": "protected"
+  },
   "files": {
     "app.js": {
-      "sha256": "8058560e7b302784a653e504bd2b9cbd0eafd45d4ac2d23eca368d49a97787ba"
+      "sha256": "684bbc20fbd760b1764d93c0e5935e6279d071dcd177b613956382ff47196bdc"
     },
     "index.html": {
-      "sha256": "d22ea956de84158ff5b7824132b7fde5377620cf3454a7585c2bea8a01916a6d"
+      "sha256": "82656ae71452268d3cccd0b4439c696415712b145001217bc81c57c1e7db7c7d"
     },
     "style.css": {
-      "sha256": "bea94ca99f5adae12e9e1f745982e0a1f22209069d96977a6f801884ab2e95ba"
+      "sha256": "bea94ca99f5adae12e9e1f745982e0a1f22209069d96977a6f801884ab2e95ba",
+      "upload_required": false,
+      "byte_identical_to_parent": true
+    },
+    "classic-presentation-boundaries.json": {
+      "sha256": "e6169f8722d8aa8546cac30cd3a7c83900e07ccdb2b3384b335f2fcb4dddfd48"
     }
   },
   "contracts": {
     "base_authority": {
-      "build": "38.15.12",
-      "commit": "4409f7185eadd167f54f00054797a67c767ed393",
-      "app_sha256": "01dbca56e9b8e4b23da7925e23f295d9b13dedfb230ba9ad5ee2a3c679f86aea",
-      "index_sha256": "9ff8a4c833aacf88d34e9725c51213f49e34736d9717f0e08c09696888dbffde",
-      "style_sha256": "0c76e3db53c583b5bdfeedd280e00672b968ae97c16091aa8603c3b8ec7f7aa0"
+      "build": "38.15.13",
+      "app_sha256": "8058560e7b302784a653e504bd2b9cbd0eafd45d4ac2d23eca368d49a97787ba",
+      "index_sha256": "d22ea956de84158ff5b7824132b7fde5377620cf3454a7585c2bea8a01916a6d",
+      "style_sha256": "bea94ca99f5adae12e9e1f745982e0a1f22209069d96977a6f801884ab2e95ba",
+      "version_sha256": "c3a138f2767b21056125029e20199356ccac23c3684e5eacf67788631339c40b"
     },
-    "historical_canvas": {
-      "preserved_from_38_15_12": true,
-      "synthetic_live_terminal_point": false,
-      "binance_websocket_canvas_mutation": false,
-      "collector_canvas_mutation": false,
-      "atomic_cache_to_direct": true,
-      "preserve_visible_same_selection_until_complete": true,
-      "reuse_existing_comparison_chart": true
-    },
-    "learning_journey": {
-      "presentation_source": "Administrator 40.4.22 · commit 081a50c24fdce23d2f708dc00674c5116cf95626",
-      "historical_presentation_source": "web/index.html @ f9257c10cffa5fbe7d3a538fe58db7680b0ade30 · Build 28.3.44",
-      "module_count": 11,
-      "presentation_only": true,
-      "shared_learning_runtime_preserved": true,
-      "indexeddb_schema_changed": false,
-      "storage_delete_or_clear_added": false,
-      "market_core_changed": false,
-      "graph_engine_changed": false,
-      "atlas_changed": false,
-      "oracle_changed": false,
-      "bridge_changed": false,
+    "migration_scaffold": {
+      "manifest": "classic-presentation-boundaries.json",
+      "declared_only": true,
+      "runtime_fetch": false,
+      "dom_extraction": false,
+      "view_files_created": false,
+      "lazy_hydration_added": false,
       "new_timer": false,
       "new_observer": false,
-      "new_network_owner": false
+      "new_event_listener": false,
+      "new_network_owner": false,
+      "new_storage_owner": false
+    },
+    "protected_runtime": {
+      "market_core": "38.15.11",
+      "historical_canvas_preserved": true,
+      "binance_live_preserved": true,
+      "atlas_current_preserved": true,
+      "atlas_scheduler_preserved": true,
+      "nox_preserved": true,
+      "aerith_preserved": true,
+      "oracle_preserved": true,
+      "learning_journey_01_11_preserved": true,
+      "indexeddb_schema_changed": false,
+      "bridge_changed": false,
+      "ollama_contract_changed": false
+    },
+    "next_extraction": {
+      "candidate": "38.15.15",
+      "target": "Atlas presentation only",
+      "requires_firefox_operator_pass_381514": true,
+      "forbidden_before_pass": [
+        "Oracle extraction",
+        "System extraction",
+        "Operations extraction",
+        "Projects extraction",
+        "true lazy hydration"
+      ]
     }
   },
   "notes": [
-    "Built directly from byte-verified Classic Build 38.15.12. The reconstructed base app.js matches the authoritative 38.15.12 SHA-256 exactly.",
-    "Restores only the missing Learning Journey 01→11 cockpit, integrated lesson, five guided steps, notebook/integrity controls and Expert Roadmap presentation inside the existing Simulation section.",
-    "The existing 38.15.12 learning engine remains the runtime owner; no learning state machine or IndexedDB schema is rewritten.",
-    "The 40.4.22 recovery CSS is merged into Classic style.css so the CLEAN_UPLOAD remains four files; one byte-identical duplicate rule block is removed and the checkbox rule is scoped to the cockpit.",
-    "Market Core, historical graph stability, Binance LIVE, Atlas, NØX, Aerith, CURRENT, Journal, Memory, Bridge and Ollama semantics remain outside the surgery.",
-    "Firefox operator validation is still required before declaring the build final."
+    "Built directly from the exact archived 38.15.13 CLEAN_UPLOAD package; no GitHub reconstruction.",
+    "38.15.14 declares future Classic presentation boundaries only. The boundary manifest is inert and is not fetched or executed by the page.",
+    "app.js changes are limited to release/build identity strings required by the existing runtime truth contract; executable ownership/topology is unchanged.",
+    "index.html changes are limited to release/build identity and visible release wording; DOM topology is unchanged.",
+    "style.css is byte-identical to 38.15.13 and does not need to be uploaded.",
+    "No Atlas, CURRENT, NØX, Aerith, Oracle, Learning, IndexedDB, Bridge/Ollama, Market Core, Binance or graph behavior is intentionally changed.",
+    "Firefox operator validation is required before any Atlas presentation extraction in 38.15.15."
   ]
 }

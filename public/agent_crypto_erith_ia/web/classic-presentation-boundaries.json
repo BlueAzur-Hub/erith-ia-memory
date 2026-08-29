@@ -1,0 +1,76 @@
+{
+  "schema": "agent_crypto_classic_presentation_boundaries_v1",
+  "build": "38.15.14",
+  "parent_build": "38.15.13",
+  "mode": "Web Classic",
+  "release": "CLASSIC MODULAR PRESENTATION BOUNDARY SCAFFOLD LOCK",
+  "state": "DECLARED_ONLY_NO_EXTRACTION",
+  "runtime_integration": "NONE",
+  "purpose": "Declare the future presentation extraction boundaries before any Classic DOM extraction or lazy hydration.",
+  "protected_runtime": {
+    "market_core": "38.15.11",
+    "binance_live": "UNCHANGED",
+    "historical_graph": "UNCHANGED",
+    "atlas_current": "UNCHANGED",
+    "nox": "UNCHANGED",
+    "aerith": "UNCHANGED",
+    "oracle": "UNCHANGED",
+    "learning_01_11": "UNCHANGED",
+    "indexeddb_schema": "UNCHANGED",
+    "bridge_ollama": "UNCHANGED",
+    "classic_operator_state": "UNCHANGED"
+  },
+  "boundaries": [
+    {
+      "id": "atlas",
+      "planned_view": "views/atlas.html",
+      "state": "DECLARED_ONLY",
+      "next_candidate": "38.15.15"
+    },
+    {
+      "id": "oracle",
+      "planned_view": "views/oracle.html",
+      "state": "DECLARED_ONLY",
+      "next_candidate": "after_atlas_operator_pass"
+    },
+    {
+      "id": "operations",
+      "planned_view": "views/operations.html",
+      "state": "DECLARED_ONLY",
+      "next_candidate": "later"
+    },
+    {
+      "id": "system",
+      "planned_view": "views/system.html",
+      "state": "DECLARED_ONLY",
+      "next_candidate": "later"
+    },
+    {
+      "id": "projects",
+      "planned_view": "views/projects.html",
+      "state": "DECLARED_ONLY",
+      "next_candidate": "later"
+    }
+  ],
+  "runtime_delta": {
+    "dom_extraction": false,
+    "view_fetch": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_event_listener": false,
+    "new_websocket": false,
+    "new_network_owner": false,
+    "new_storage_owner": false,
+    "indexeddb_change": false,
+    "atlas_scheduler_change": false,
+    "current_fingerprint_change_by_scaffold": false
+  },
+  "acceptance_gate": [
+    "Classic visible/function behavior matches 38.15.13.",
+    "Market Core 38.15.11 and Binance 5/5 remain intact.",
+    "Atlas CURRENT behavior is not modified by this scaffold.",
+    "Learning Journey 01→11 remains present.",
+    "No declared boundary is loaded before a later explicit extraction build.",
+    "Firefox operator evidence is required before 38.15.15 Atlas presentation extraction."
+  ]
+}
