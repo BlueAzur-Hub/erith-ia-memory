@@ -1,11 +1,57 @@
-/* Agent-Crypto @erith.IA — 40.4.11
-   PRESENTATION VIEW LIFECYCLE REGISTRY / MEASUREMENT-ONLY BASE
-   40.4.11 activates no residency registration by itself.
-   Later builds may register specific closed <details> bodies one family at a time.
-   Same-node detach only: no clone, fetch, timer, observer, storage write or engine OFF. */
+/* Agent-Crypto @erith.IA — 40.4.99 R1
+   PRESENTATION VIEW LIFECYCLE REGISTRY / RESIDENT WAKEUP REFINEMENT
+   40.4.99 R1 keeps the canonical market pulse as the single recurring owner.
+   The pulse sleeps only while the document is actually hidden; loss of window
+   focus alone must not destroy the already-armed canonical market wakeup.
+   No new fetch, recurring timer, observer, storage write or engine OFF. */
 (()=>{
   "use strict";
-  const BUILD="40.4.21";
+  const BUILD="40.4.99 R1";
+  const MACHINE_BUILD="40.4.99.1";
+
+  /* 40.4.99 R1 — CURRENT resident lost-wakeup repair.
+     app.js remains owner of scheduleAutoRead(), refreshMarketOnly(), runLivecheck()
+     and the canonical public snapshot reader. This lifecycle layer changes only
+     the existing pulse eligibility predicate after app.js has defined it:
+       - document.hidden === true  -> sleep (unchanged intent)
+       - visible but unfocused      -> stay eligible
+     No second timer, fetch loop or CURRENT controller is introduced. */
+  const MARKET_PULSE_WAKEUP_R1=Object.freeze({
+    build:BUILD,
+    machine_build:MACHINE_BUILD,
+    owner:"app.js canonical market pulse",
+    eligibility:"document-visibility-only",
+    focus_required:false,
+    hidden_document_sleeps:true,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false,
+    new_storage_write:false,
+    second_current_controller:false
+  });
+  function installMarketPulseWakeupR1(){
+    const current=globalThis.atlasPulseVisible;
+    if(typeof current!=="function")return false;
+    if(current.__erithMarketPulseWakeup40499R1===true)return true;
+    const refined=function atlasPulseVisible40499R1(){
+      if(typeof document==="undefined")return true;
+      return document.hidden!==true;
+    };
+    try{Object.defineProperty(refined,"__erithMarketPulseWakeup40499R1",{value:true});}catch(_){}
+    globalThis.atlasPulseVisible=refined;
+    const installed=globalThis.atlasPulseVisible===refined;
+    if(installed&&document?.documentElement){
+      document.documentElement.dataset.marketPulseWakeup40499R1="visibility-only";
+      document.documentElement.dataset.marketPulseMachineBuild40499R1=MACHINE_BUILD;
+    }
+    return installed;
+  }
+  const marketPulseWakeupInstalled=installMarketPulseWakeupR1();
+  globalThis.ErithMarketPulseWakeup40499R1=Object.freeze({
+    ...MARKET_PULSE_WAKEUP_R1,
+    installed:marketPulseWakeupInstalled
+  });
+
   const DEFINITIONS=Object.freeze([
     Object.freeze({id:"projects",label:"Projet @erith.IA · Missions de vie",source:"./views/projects.html",roots:Object.freeze(["#missions-vie",'[data-collapse-key="fonds-erith"]','[data-collapse-key="association-erith"]','[data-collapse-key="aerith-enfance"]','[data-collapse-key="aerith-animaux"]','[data-collapse-key="aerith-terre-vivante"]']),risk:"low"}),
     Object.freeze({id:"operations",label:"03 · Préparation & opérations",source:"./views/operations.html",roots:Object.freeze([".atlas-layout-family-operations",'[data-collapse-key="situation"]','[data-collapse-key="questionnaire"]','[data-collapse-key="briefing"]','[data-collapse-key="planning"]']),risk:"low"}),
@@ -66,6 +112,6 @@
       })))
     })));
   }
-  const api=Object.freeze({build:BUILD,mode:"measurement-only-until-registered",definitions:DEFINITIONS,measurementSnapshot,residencySnapshot,registerClosedBodyFamily,restoreForHash,activeRegistrations:()=>registrations.length,clone_used:false,fetch_added:false,timer_added:false,observer_added:false,storage_write_added:false,engine_state_changed:false,technical_reading_protected:true,protected_cockpit_selectors:PROTECTED_COCKPIT_SELECTORS});
+  const api=Object.freeze({build:BUILD,machine_build:MACHINE_BUILD,mode:"measurement-plus-resident-wakeup-refinement",definitions:DEFINITIONS,measurementSnapshot,residencySnapshot,registerClosedBodyFamily,restoreForHash,activeRegistrations:()=>registrations.length,clone_used:false,fetch_added:false,timer_added:false,observer_added:false,storage_write_added:false,engine_state_changed:false,technical_reading_protected:true,protected_cockpit_selectors:PROTECTED_COCKPIT_SELECTORS,market_pulse_wakeup:MARKET_PULSE_WAKEUP_R1,market_pulse_wakeup_installed:marketPulseWakeupInstalled});
   globalThis.ErithPresentationLifecycle=api;globalThis.ErithPresentationLifecycle40411=api;
 })();
