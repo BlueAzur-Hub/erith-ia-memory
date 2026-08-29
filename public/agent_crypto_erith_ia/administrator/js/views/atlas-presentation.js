@@ -1,5 +1,5 @@
-/* Agent-Crypto @erith.IA — 40.4.99
-   ATLAS COLD ROUTER · PRECOMPILED HOT SHELL
+/* Agent-Crypto @erith.IA — 40.4.99 R2 CANDIDATE
+   ATLAS COLD ROUTER · PRECOMPILED HOT SHELL · CANONICAL TARGET IDS · SINGLE-ID HANDOFF
    Build-time equivalent of the 40.4.98 parser result: the canonical HOT Atlas cockpit
    is mounted before the shared runtime; cold bodies stay absent until explicit demand.
    No fetch, timer, observer, engine duplication or state mutation. */
@@ -652,7 +652,7 @@
   </div>
 </details>
 
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="auto-reader" data-layout-family="intelligence">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" id="auto-reader" data-collapse-key="auto-reader" data-layout-family="intelligence">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Atlas Auto Reader</span>
@@ -661,7 +661,7 @@
       <div class="atlas-collapse-body atlas-peripheral-lazy-body-40425" data-atlas-peripheral-lazy="auto-reader" data-atlas-hydrated-40425="0"><p class="atlas-local-response-empty">Atlas Auto Reader · contenu chargé uniquement à l’ouverture.</p></div>
     </details>
 
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="shared-memory" data-layout-family="intelligence">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" id="shared-memory" data-collapse-key="shared-memory" data-layout-family="intelligence">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">Shared Memory</span>
@@ -673,7 +673,7 @@
 
 
 
-    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="github-memory" data-layout-family="intelligence">
+    <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" id="github-memory" data-collapse-key="github-memory" data-layout-family="intelligence">
       <summary class="atlas-collapse-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-title">GitHub Memory</span>

@@ -1,5 +1,5 @@
-/* Agent-Crypto @erith.IA — 40.4.99
-   ATLAS COLD ROUTER · DEMAND HYDRATION OWNER
+/* Agent-Crypto @erith.IA — 40.4.99 R2 CANDIDATE
+   ATLAS COLD ROUTER · DEMAND HYDRATION OWNER · TERMINAL + RETRY
    40.4.98 runtime contract preserved: Atlas cockpit / Bridge / CURRENT compact truth stay HOT.
    Auto Reader, Shared/GitHub Memory, CURRENT audit details and Book/Knowledge cold bodies
    hydrate from views/atlas.html only on explicit disclosure. The old boot-time
@@ -56,9 +56,23 @@
       sourcePromise=fetch(SOURCE,{cache:"force-cache",credentials:"same-origin"}).then(response=>{
         if(!response.ok)throw new Error(`Atlas source HTTP ${response.status}`);
         return response.text();
+      }).catch(error=>{
+        // 40.4.99 R2 candidate — a transport failure must not poison every later disclosure.
+        sourcePromise=null;
+        throw error;
       });
     }
     return sourcePromise;
+  }
+  function emitResidencyFailure(node,key,error){
+    if(!node)return false;
+    try{
+      node.dispatchEvent(new CustomEvent("erith:presentation-residency-error",{
+        bubbles:true,
+        detail:{family:"atlas",key,build:BUILD,error:String(error?.message||error||"unknown")}
+      }));
+      return true;
+    }catch(_){return false;}
   }
   function bodyHtml(source,key){
     const b=detailsBounds(source,key); if(!b)throw new Error(`Atlas lazy source missing: ${key}`);
@@ -80,6 +94,9 @@
       const source=await sourceText(); if(!details.open)return false;
       const body=details.querySelector(":scope > .atlas-collapse-body"); if(!body)return false;
       const template=document.createElement("template"); template.innerHTML=bodyHtml(source,key);
+      // R2: the HOT shell owns the canonical id only until the real cold body is ready.
+      // Release it immediately before insertion so the document never contains duplicate ids.
+      if(details.id===key)details.removeAttribute("id");
       body.replaceChildren(template.content.cloneNode(true));
       body.dataset.atlasHydrated40425="1"; details.dataset.atlasHydration40425="ready"; hydrated.add(key);
       try{(globalThis.AgentCryptoAtlasPeripheralRebind||globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.(key);}catch(error){console.warn("[40.4.99] Atlas peripheral rebind",error);}
@@ -89,6 +106,7 @@
       details.dataset.atlasHydration40425="error";
       const body=details.querySelector(":scope > .atlas-collapse-body");
       if(body)body.innerHTML=`<p class="atlas-local-response-empty">Chargement différé indisponible · ${String(error?.message||error)}</p>`;
+      emitResidencyFailure(details,key,error);
       return false;
     }
   }
@@ -105,6 +123,7 @@
     }catch(error){
       root.dataset.atlasAuditHydration40431="error";
       const note=root.querySelector("[data-atlas-current-audit-shell-40431] .planning-intro"); if(note)note.textContent=`Chargement différé indisponible · ${String(error?.message||error)}`;
+      emitResidencyFailure(root,`current-audit:${key}`,error);
       return false;
     }
   }
@@ -123,7 +142,13 @@
       try{globalThis.AgentCryptoAtlasPeripheralRebind?.rebind?.("book-knowledge");}catch(error){console.warn("[40.4.99] Atlas Book/Knowledge rebind",error);}
       roots.forEach(([key,,root])=>{try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`book-knowledge:${key}`,build:BUILD}}));}catch(_){}});
       return true;
-    }catch(error){roots.forEach(([, ,root])=>root.dataset.atlasBookKnowledgeHydration40434="error"); return false;}
+    }catch(error){
+      roots.forEach(([key, ,root])=>{
+        root.dataset.atlasBookKnowledgeHydration40434="error";
+        emitResidencyFailure(root,`book-knowledge:${key}`,error);
+      });
+      return false;
+    }
   }
   function attachPeripheral(){
     for(const key of Object.keys(TARGETS)){
@@ -153,6 +178,7 @@
     boot_shell_precompiled:true,runtime_markup_preprocess:false,element_prototype_interception:false,boot_bodies_absent:true,current_audit_roots_resident:true,current_audit_bodies_absent_at_boot:true,
     fetch_count:()=>fetchCount,hydrated:()=>[...hydrated],current_audit_hydrated:()=>[...auditHydrated],book_knowledge_hydrated:()=>bookKnowledgeHydrated,
     runtime_owner:"app.js",auto_reader_runtime_preserved:true,auto_reader_collection_boot_preserved:true,github_auto_load_preserved:true,current_pipeline_runtime_preserved:true,current_audit_read_only_presentation:true,
+    terminal_success_event:"erith:presentation-resident",terminal_failure_event:"erith:presentation-residency-error",source_retry_after_transport_failure:true,
     new_timer:false,new_observer:false,new_scheduler:false,storage_owner_added:false,attach
   });
   globalThis.AgentCryptoAtlasColdRouter40499=contract;
