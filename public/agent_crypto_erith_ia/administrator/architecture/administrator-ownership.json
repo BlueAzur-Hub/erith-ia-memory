@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.94",
-  "parent_build": "40.4.93",
-  "purpose": "Continue Administrator runtime-demand migration without changing operator UX: detach the three already-bound closed secondary News bodies at DOMContentLoaded instead of waiting for window.load.",
+  "build": "40.4.95",
+  "parent_build": "40.4.94",
+  "purpose": "Complete Learning Journey presentation migration without touching the stable System 04 owner: remove the canonical Learning 01→11 range before DOM parsing, hydrate it only on demand, and preserve the 40.4.47 post-parse recovery fallback plus all Learning/IndexedDB runtime truth.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -140,8 +140,8 @@
     {
       "component": "Learning Journey runtime / progress / IndexedDB",
       "owner": "app.js learning engine + atlasRebindLearningRuntime (97 complete DOM refs)",
-      "state": "PROTECTED_RUNTIME_TRUE_LAZY_SAFE_DOM_PRESENTATION",
-      "notes": "97/97 Learning/Expert refs rebind after demand hydration. 40.4.47 safe DOM detachment retained; no parser-string interception, reset, schema or storage migration."
+      "state": "PROTECTED_RUNTIME_TRUE_LAZY_PREPARSE_PRESENTATION",
+      "notes": "97/97 Learning/Expert refs rebind after first demand hydration. 40.4.95 removes only the canonical Learning presentation range before DOM parsing through an instance-scoped System host gate; 40.4.47 post-parse safe detach remains fallback. No progress reset, IndexedDB schema or storage migration."
     },
     {
       "component": "Firefox compositor policy",
@@ -157,9 +157,9 @@
     },
     {
       "component": "Learning Journey presentation transport",
-      "owner": "js/views/system-presentation.js → js/views/learning-presentation.js + views/system.html",
-      "state": "TRUE_LAZY_DOM_RESIDENCY_SAFE_POST_PARSE_CANONICAL",
-      "notes": "40.4.47 safe System-first DOM detachment preserved unchanged in 40.4.48. First demand hydrates from views/system.html and rebinds runtime."
+      "owner": "js/views/learning-parser-gate.js → js/views/system-presentation.js → js/views/learning-presentation.js + views/system.html",
+      "state": "TRUE_LAZY_PREPARSE_DEMAND_WITH_SAFE_POST_PARSE_FALLBACK",
+      "notes": "40.4.95 keeps System 40.4.24 byte-untouched. The gate replaces only Learning 01→11 with the recovered lightweight shell before insertAdjacentHTML DOM parsing; first disclosure hydrates from views/system.html, then rebinds the protected 40.4.42 runtime. Marker mismatch falls back to 40.4.47 post-parse recovery."
     },
     {
       "component": "Chronos / planetary presentation",
@@ -232,7 +232,8 @@
     "after_40_4_64": "40.4.66 implemented: secondary Metals runtime leaves default Crypto boot; Celestial closed cadence relieved; ordinary version check moved outside first boot burst.",
     "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains.",
     "after_40_4_82": "Firefox operator validation: cold boot → Graph/Top 5 responsiveness → open Simulation once → verify Learning/IndexedDB recovery and persistence. Only after PASS, audit the next phase-2 demand candidate (System diagnostics/secondary presentation), one owner at a time.",
-    "after_40_4_94": "After Firefox PASS, audit the next largest non-protected closed presentation owner. Do not migrate Graphique, Target Top 5, CURRENT, Oracle engine or Window Manager without reproduced evidence."
+    "after_40_4_94": "After Firefox PASS, audit the next largest non-protected closed presentation owner. Do not migrate Graphique, Target Top 5, CURRENT, Oracle engine or Window Manager without reproduced evidence.",
+    "after_40_4_95": "Firefox operator validation: cold boot/scroll/copy → System/Simulation → open Learning once → verify module 08/progression/IndexedDB → close/reopen → Graph/Top 5/Atlas/CURRENT non-regression. Only after PASS, audit remaining idle scheduler/truth UI debt."
   },
   "migration_summary": {
     "state": "RUNTIME_DEMAND_40_4_94_SECONDARY_NEWS_EARLY_RESIDENCY_FIREFOX_VALIDATION_REQUIRED",
@@ -760,6 +761,40 @@
     "new_timer": false,
     "new_observer": false,
     "new_network_owner": false,
+    "new_storage_owner": false
+  },
+  "runtime_migration_40495": {
+    "build": "40.4.95",
+    "parent": "40.4.94",
+    "scope": "LEARNING_PREPARSE_TRUE_DEMAND_SAFE_RECOVERY_FALLBACK",
+    "preparse_gate": "js/views/learning-parser-gate.js",
+    "system_presentation_owner": "js/views/system-presentation.js@40.4.24",
+    "system_presentation_owner_changed": false,
+    "canonical_range": [
+      "#learningExerciseGuide",
+      "#expertLearningRoadmap"
+    ],
+    "boot_learning_full_range_expected": false,
+    "boot_learning_shell_expected": true,
+    "first_open_source": "views/system.html",
+    "first_open_static_fetch_max": 1,
+    "runtime_owner": "app.js",
+    "runtime_rebind": "atlasRebindLearningRuntime40442",
+    "runtime_refs_expected": 97,
+    "post_parse_40447_fallback_preserved": true,
+    "learning_progress_reset": false,
+    "indexeddb_schema_changed": false,
+    "simulation_truth_changed": false,
+    "market_core": "PROTECTED_38.15.11",
+    "graph": "PROTECTED_RESIDENT",
+    "target_top5": "PROTECTED_RESIDENT",
+    "atlas_current": "PROTECTED",
+    "oracle": "PROTECTED",
+    "bridge": "PROTECTED",
+    "window_manager": "UNCHANGED",
+    "new_timer": false,
+    "new_observer": false,
+    "new_business_network_owner": false,
     "new_storage_owner": false
   }
 }
