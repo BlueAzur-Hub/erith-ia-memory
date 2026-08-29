@@ -1,0 +1,60 @@
+name: Atlas Public Crypto Market Clock
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/atlas-public-crypto-market-clock.yml"
+
+permissions:
+  actions: write
+  contents: read
+
+# Emergency deterministic wake-up owner for the canonical Top-250 collector.
+# GitHub native schedule on atlas-public-crypto-market.yml has repeatedly failed
+# to create reliable periodic runs. This clock therefore uses workflow_dispatch
+# only; it does not collect market data itself and does not touch Administrator.
+concurrency:
+  group: atlas-public-crypto-market-clock
+  cancel-in-progress: false
+
+jobs:
+  clock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+
+    steps:
+      - name: Queue one successor clock run
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          clock_workflow="atlas-public-crypto-market-clock.yml"
+          queued="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${clock_workflow}/runs?status=queued&per_page=1" --jq '.total_count')"
+          if [ "${queued:-0}" -eq 0 ]; then
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/${clock_workflow}/dispatches" \
+              -f ref=main
+            echo "Successor clock run queued."
+          else
+            echo "A successor clock run is already queued; no duplicate created."
+          fi
+
+      - name: Dispatch canonical Top-250 collector every 30 minutes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          collector_workflow="atlas-public-crypto-market.yml"
+          for slot in $(seq 1 11); do
+            echo "Clock slot ${slot}/11 · dispatch canonical Top-250 collector"
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/${collector_workflow}/dispatches" \
+              -f ref=main
+            echo "Collector dispatched; next slot in 30 minutes."
+            sleep 1800
+          done
