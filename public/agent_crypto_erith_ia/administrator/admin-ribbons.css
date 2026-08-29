@@ -438,3 +438,112 @@
   pointer-events: auto !important;
 }
 
+/* ============================================================================
+   40.4.99 R3 — AETHER RIBBON READABILITY LOCK
+   Presentation-only override. The canonical row still alternates Menu/Chronos
+   and Aether; Chronos stays exclusively in the native technical row.
+   No runtime/data/Market Flow ownership changes.
+   ============================================================================ */
+@keyframes atlasStatusNativePhaseR3 {
+  0%,49% { opacity:1; visibility:visible; }
+  50%,90% { opacity:0; visibility:hidden; }
+  91%,100% { opacity:1; visibility:visible; }
+}
+@keyframes atlasAetherBandPhaseR3 {
+  0%,49% { opacity:0; visibility:hidden; }
+  50%,90% { opacity:1; visibility:visible; }
+  91%,100% { opacity:0; visibility:hidden; }
+}
+@keyframes atlasAetherNewsReadR3 {
+  0%,60% { transform:translateX(0); }
+  88% { transform:translateX(-24vw); }
+  91%,100% { transform:translateX(0); }
+}
+
+@media (min-width:901px) and (prefers-reduced-motion:no-preference) {
+  body #livecheck.command-bar>#btnLivecheck,
+  body #livecheck.command-bar>#btnRefresh,
+  body #livecheck.command-bar>#decisionCard,
+  body #livecheck.command-bar>#sourceActiveCard,
+  body #livecheck.command-bar>#sourceTimeCard {
+    animation:atlasStatusNativePhaseR3 36s linear infinite !important;
+  }
+
+  body #atlasAetherRibbon4084 {
+    padding:0 12px!important;
+    border-color:rgba(99,225,239,.18)!important;
+    background:linear-gradient(90deg,rgba(5,21,31,.93),rgba(8,17,29,.88))!important;
+    color:#b4ced9!important;
+    font:850 9.6px/1.15 system-ui,sans-serif!important;
+    letter-spacing:.018em!important;
+    animation:atlasAetherBandPhaseR3 36s linear infinite!important;
+  }
+
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
+    display:flex!important;
+    align-items:center!important;
+    gap:0!important;
+    min-width:0!important;
+    width:100%!important;
+    padding-right:0!important;
+    transform:none!important;
+    animation:none!important;
+    will-change:auto!important;
+  }
+
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>span,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>b {
+    display:inline-flex!important;
+    align-items:center!important;
+    min-width:0!important;
+    flex:0 0 auto!important;
+    padding:0 12px!important;
+    border-left:1px solid rgba(130,211,230,.14)!important;
+  }
+
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084 {
+    padding-left:2px!important;
+    border-left:0!important;
+  }
+  body #atlasAetherRibbonAtlas4084 { color:#c5b5ff!important; }
+  body #atlasAetherRibbonOracle4084 { color:#f4dfa0!important; }
+  body #atlasAetherRibbonSources4084 { color:#91edf4!important; }
+  body #atlasAetherRibbonBook4084 { color:#a9dfbb!important; }
+
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
+    display:inline-flex!important;
+    align-items:center!important;
+    gap:8px!important;
+    flex:1 1 360px!important;
+    min-width:260px!important;
+    overflow:hidden!important;
+    color:#d1dce2!important;
+  }
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084>i {
+    position:relative!important;
+    z-index:2!important;
+    flex:0 0 auto!important;
+    font-style:normal!important;
+    font-weight:900!important;
+    color:#86a4b2!important;
+    padding-right:4px!important;
+    background:rgba(8,17,29,.94)!important;
+    letter-spacing:.035em!important;
+  }
+  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084 {
+    display:inline-block!important;
+    min-width:max-content!important;
+    transform:translateX(0)!important;
+    animation:none!important;
+  }
+  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084[data-scroll="1"] {
+    animation:atlasAetherNewsReadR3 36s ease-in-out infinite!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference) {
+  body #atlasAetherRibbon4084 { padding-inline:7px!important; font-size:8.7px!important; }
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>span,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>b { padding-inline:8px!important; }
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 { min-width:210px!important; }
+}
