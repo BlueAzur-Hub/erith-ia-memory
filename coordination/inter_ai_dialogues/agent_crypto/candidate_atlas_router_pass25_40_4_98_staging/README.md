@@ -1,62 +1,58 @@
 # Agent-Crypto @erith.IA — Candidate Atlas Router · Pass 25 · 40.4.98
 
-Nature: COORDINATION ONLY / NON-LIVE STAGING / NO BUILD / NOT DEPLOYABLE YET
+Nature: COORDINATION ONLY / NON-LIVE STAGING / NO BUILD
 
-Runtime authority used for this staging:
-- Administrator: `40.4.98`
-- runtime commit: `d2cb4bb778df51a5a03fcdcce01027a7cd6530b6`
-- Market Core: `38.15.11` PROTECTED
+## PASS26 STATUS
 
-## Exact classification
+`STATICALLY REJECTED / FROZEN / DO NOT INTEGRATE`
 
-`atlasV2OpenAdvancedForTarget()` in the sealed 40.4.98 `administrator/app.js` still executes:
+Runtime authority remains:
+- Administrator `40.4.98`
+- runtime commit `d2cb4bb778df51a5a03fcdcce01027a7cd6530b6`
+- Market Core `38.15.11` PROTECTED
 
-```js
-const entry = atlasV2ManifestEntry(id);
-const target = document.getElementById(id);
-if (!target) return false;
-```
+No runtime/load-graph/manifest file is modified by this staging.
 
-Therefore the Pass20 Atlas cold-router debt is **OPEN**, not PARTIAL and not CLOSED.
+## What remains proven
 
-The three affected canonical ids remain exactly:
+The sealed 40.4.98 `atlasV2OpenAdvancedForTarget()` still resolves the canonical DOM node before its mode/auth transaction and returns `false` when the node is absent. The cold-router debt therefore remains OPEN for exactly:
 - `auto-reader`
 - `shared-memory`
 - `github-memory`
 
-Their bodies are removed at boot by the existing `atlas-peripheral-lazy.js` owner and their connected `<details data-collapse-key>` shells remain the hydration trigger.
+`atlas-peripheral-lazy.js` 40.4.35 remains the only source-fetch/body-hydration owner. Opening the connected `details[data-collapse-key]` triggers its private hydration. Success emits `erith:presentation-resident {family:"atlas", key, build:"40.4.35"}`. Failure sets `data-atlas-hydration40425="error"` and emits no terminal failure event.
 
-## Ownership lock
+## Pass26 static rejection reason A — auth/mode ordering
 
-This staging MUST preserve:
-- root `administrator/app.js` as the single Command Center / module picker / advanced anchor / hashchange routing owner;
-- `atlas-peripheral-lazy.js` 40.4.35 as the single source fetch + body hydration owner;
-- the existing synchronous boolean path for every target already present;
-- existing auth/mode/manifest/details/persistence/hash/scroll semantics after target materialization.
+Pass20 proved the canonical order:
+1. manifest entry;
+2. `document.getElementById(id)`;
+3. missing target => `false`;
+4. only then mode/intermediate/auth/pending-hash logic;
+5. visibility/details/persistence/hash/scroll.
 
-It MUST NOT:
-- fetch `views/atlas.html`;
-- expose or duplicate private `hydrate(key)`;
-- add a second click/hashchange/picker router;
-- retire Atlas generic residency in this candidate;
-- touch `Element.prototype.insertAdjacentHTML` interception;
-- touch `#atlas-local-ai-collapse`;
-- touch no-local-producer/Ryzen, Learning, Market Core, CURRENT, Oracle, Backend, or shared-monolith work.
+The Pass25 proposal inserted cold scheduling at step 3 and set `owner.open = true`. For a cold advanced target this can therefore start owner hydration before the canonical authorization/mode gate that would normally run after target resolution.
 
-## New Pass25 constraint: terminal owner failure
+That is a semantic change and violates the staging requirement to preserve existing auth/mode behavior. Firefox cannot turn a known static ownership/order violation into an acceptable first candidate. The proposal is frozen before executable integration.
 
-The owner emits `erith:presentation-resident` only on successful hydration. On source/body failure it sets `details.dataset.atlasHydration40425 = "error"` and returns `false`, with no failure event.
+## Pass26 static rejection reason B — timeout is not owner truth
 
-A router that listens only for `erith:presentation-resident` can therefore leak a pending route after terminal failure.
+The fixed 15 s cleanup timeout was introduced because the owner has no failure event. Static audit shows there is no exact existing push signal that can replace it without changing scope:
+- success event exists;
+- close/toggle exists;
+- failure only mutates owner dataset/error UI;
+- no failure CustomEvent/public Promise is exposed.
 
-The prototype contract consequently allows a **bounded one-shot cleanup timeout only**. This is not a polling interval and must never retry/fetch/hydrate. Its sole job is to remove the listener/pending record and leave the existing owner error state authoritative. Firefox must validate timeout/success races before any Build.
+Removing the timeout can leave stale pending state after terminal source failure. Keeping a fixed timeout can abandon a legitimate slow hydration that succeeds after the cutoff. Reading the dataset continuously would require polling or an observer, both excluded by the first-candidate budget.
 
-## Staging files
+Therefore 15 s is not a valid runtime semantic boundary and this proposal cannot be promoted under the current constraints.
 
-- `ATLAS_ROUTER_PATCH_PROPOSAL.js` — isolated helper/patch logic, not wired into runtime.
-- `STATIC_ASSERTIONS.md` — proof obligations.
-- `FIREFOX_OPERATOR_MATRIX.md` — required behavioral gate.
+## What is NOT being done
 
-## Status
+No second router, hashchange owner, Command Center handler or picker handler. No fetch/hydrate duplication. No MutationObserver/polling/retry. No Atlas generic residency retirement. No `insertAdjacentHTML` work. No `#atlas-local-ai-collapse`, no-local-producer/Ryzen, Learning, shared monolith, Market Core/CURRENT, Oracle or Backend changes.
 
-`OPEN / ISOLATED PROTOTYPE READY FOR STATIC REVIEW / FIREFOX PASS REQUIRED / NO BUILD AUTHORIZATION`
+## Next admissible design work
+
+Before another Atlas-router staging proposal, prove an authorization-preserving insertion/refactor on the exact 40.4.98 canonical function and define a terminal owner handoff that is event-driven or otherwise semantically bounded. Do not duplicate auth logic speculatively and do not modify the lazy owner in the same first candidate without a separately justified scope decision.
+
+Until then: runtime `40.4.98` remains authority and this folder is an audit artifact only.
