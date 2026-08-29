@@ -1,59 +1,72 @@
 # Pass25 Atlas Router — Firefox Operator Matrix
 
-No Build authorization until every mandatory row is observed against an isolated staging integration rebased on sealed Administrator 40.4.98.
+## PASS26 STATUS
 
-## Baseline first
+`SUSPENDED — CURRENT PASS25 PROPOSAL IS STATICALLY REJECTED BEFORE FIREFOX`
 
-Capture sealed 40.4.98 before applying staging:
+Do not run this matrix as acceptance evidence for the frozen Pass25 code shape. It becomes the behavioral gate for a successor staging only after that successor passes static authorization/terminal-handoff review against sealed Administrator 40.4.98 or the then-current Administrator authority.
+
+## Blocking static prerequisites before Firefox
+
+A successor proposal must first prove:
+- cold `auto-reader`, `shared-memory`, `github-memory` cannot begin hydration before canonical mode/auth authorization;
+- no duplicate/speculative auth owner is introduced;
+- existing synchronous boolean route semantics remain intact for present targets;
+- terminal hydration failure cannot leave stale pending state;
+- terminal cleanup does not use an arbitrary timeout as correctness truth;
+- no polling, MutationObserver, retry, direct fetch/hydrate, second hashchange/router owner is added unless a separately approved scope explicitly changes that budget.
+
+## Baseline to retain for successor candidate
+
+Capture sealed/current Administrator before staging:
 - cold boot responsiveness;
 - Graphique, Top 5, Binance 5/5, CURRENT, Oracle, Aether smoke;
-- current behavior of `#auto-reader`, `#shared-memory`, `#github-memory` from direct hash, Command Center and picker;
+- current cold behavior of `#auto-reader`, `#shared-memory`, `#github-memory` from direct hash, Command Center and picker;
 - console/reference errors;
 - duplicate ids.
 
-The baseline Atlas cold-route defect must be recorded as baseline truth, not silently attributed to the candidate.
+The existing Atlas cold-route defect remains baseline truth.
 
-## Mandatory staging rows
+## Behavioral rows once static prerequisites pass
 
 | Case | Expected |
 |---|---|
-| cold direct `#auto-reader` | owner shell opens, one owner hydration, canonical id appears, existing router completes |
+| cold direct `#auto-reader` | auth/mode preserved first; owner shell opens only when admissible; one owner hydration; canonical route completes |
 | cold direct `#shared-memory` | same |
 | cold direct `#github-memory` | same |
-| Command Center → each cold target | same canonical router, no second navigation owner |
+| Command Center → each cold target | single canonical router; auth semantics preserved; no second navigation owner |
 | picker Open → each cold target | same canonical router |
+| Essential unauthorized → cold target | auth/pending-hash path occurs before advanced hydration/content materialization |
+| authenticated Administrator → cold target | route completes once |
+| Intermediate → cold target | existing manifest/mode semantics preserved |
 | already hydrated repeat | historical synchronous existing-target path |
-| repeated same-key while loading | one pending key, one hydration trigger, newest intent retained |
-| A loading → B lazy target | A continuation becomes stale; B alone may scroll/focus |
-| A loading → ordinary non-lazy target | A continuation becomes stale; ordinary route unchanged |
-| close disclosure during load | pending listener/timer cleaned; no stale focus |
-| reopen after close | owner may complete from its existing sourcePromise; router can accept a fresh intent |
-| owner source failure | owner error UI remains authoritative; no retry/fetch from router; pending cleanup bounded |
-| retry by later explicit operator intent after failure | no invented network retry policy; behavior must be documented, not hidden |
-| Essential unauthorized → cold lazy target | existing access/pending-hash semantics preserved; no visible content/capability leak |
-| authenticated Administrator → cold lazy target | route completes once |
-| Intermediate → cold lazy target | existing manifest/mode semantics preserved |
+| repeated same-key while loading | one pending key; no duplicate hydration trigger |
+| A loading → B lazy | stale A cannot scroll/focus after B intent |
+| A loading → ordinary non-lazy | ordinary route unchanged; stale A cannot resume visibly |
+| close during load | pending state cleans without retry/stale focus |
+| reopen after close | fresh explicit intent can complete via owner semantics |
+| owner source failure while open | owner error UI authoritative; pending reaches a semantically grounded terminal state; no retry |
+| legitimate slow hydration | no arbitrary cutoff causes a false route failure |
 | `updateHash:false` | no new hash write |
 | `scroll:false` | no route-induced scroll |
-| `instant:true` | existing instant behavior preserved after materialization |
-| unknown missing id | returns historical `false` behavior |
-| reload after hydrated route | normal cold boot again, no persisted router-only state |
+| `instant:true` | existing instant behavior preserved |
+| unknown missing id | historical `false` behavior |
+| reload | no persisted router-only state |
 
-## Structural checks during Firefox run
+## Structural checks
 
-- `AgentCryptoAtlasPeripheralLazy.fetch_count()` increases according to existing owner only.
-- `hydrated()` contains each successfully hydrated key once semantically.
-- duplicate IDs = 0.
-- no extra `hashchange` owner observable.
-- no duplicate Command Center/picker action.
-- no stale scroll/focus after supersession.
-- no console/reference errors.
-- Window Manager remains functional.
-- Graphique / Top5 / CURRENT / Oracle / Aether remain responsive.
-- hover/click/scroll responsiveness no worse than sealed 40.4.98 baseline.
+- owner alone accounts for Atlas source fetch/hydration;
+- successful keys represented correctly in `hydrated()`;
+- duplicate IDs = 0;
+- no extra hashchange/Command Center/picker owner;
+- no stale scroll/focus;
+- no console/reference errors;
+- Window Manager intact;
+- Graphique / Top5 / CURRENT / Oracle / Aether responsive;
+- hover/click/scroll no worse than baseline.
 
 ## Gate
 
-PASS requires operator evidence, not only static inspection.
+Firefox/operator evidence is necessary but not sufficient: static prerequisites must pass first.
 
-If any row fails: classify candidate REJECTED or PARTIAL, keep runtime 40.4.98 authority, and do not version a Build.
+Current Pass25 code shape: `REJECTED / FROZEN / NO BUILD AUTHORIZATION`.
