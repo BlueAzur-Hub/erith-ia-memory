@@ -1284,7 +1284,7 @@ const ATLAS_LOCAL_REPORT_MODES = Object.freeze(["market", "top5", "math", "contr
 const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
   engine_reference: "38.15.11",
-  web_classic_build: "38.15.15",
+  web_classic_build: "38.15.16",
   control_center: "V2.3.2R5",
   bridge: "V1.9.11",
   model: "gpt-oss:20b-32k",
@@ -12175,7 +12175,7 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 }
 
 const ATLAS_STABLE_STACK = Object.freeze({
-  interface: "Build 38.15.15",
+  interface: "Build 38.15.16",
   controlCenter: "V2.3.2R5",
   bridge: "V1.9.11",
   bridgeNumeric: "1.9.11",
@@ -40376,7 +40376,7 @@ function atlasSourceTruthBuild(contract) {
    ============================================================ */
 
 // Single manually edited version value.
-const ATLAS_BUILD = "38.15.15";
+const ATLAS_BUILD = "38.15.16";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -47050,8 +47050,8 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
   schema: "agent_crypto_runtime_truth_v3813",
-  build: "38.15.15",
-  asset_token: "market-core-v2.0-alpha-build-38.15.15"
+  build: "38.15.16",
+  asset_token: "market-core-v2.0-alpha-build-38.15.16"
 });
 
 function atlasRuntimeTruth3813() {
