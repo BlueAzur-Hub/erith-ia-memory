@@ -547,3 +547,106 @@
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>b { padding-inline:8px!important; }
   body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 { min-width:210px!important; }
 }
+
+/* ============================================================================
+   40.4.99 R3 — AETHER TWO-PAGE READABILITY CORRECTION
+   Option 2: keep the same Menu/Chronos -> Aether -> Menu cycle, but split the
+   Aether exposure into two stable readable pages. CSS-only; no timer/fetch/
+   observer/runtime owner. Page A = Aether + Atlas + Oracle. Page B = Sources +
+   Book + Derniere veille. Long news may move only inside its own page-B window.
+   ============================================================================ */
+@keyframes atlasAetherPageA4084 {
+  0%,49% { opacity:0; visibility:hidden; }
+  50%,68% { opacity:1; visibility:visible; }
+  70%,100% { opacity:0; visibility:hidden; }
+}
+@keyframes atlasAetherPageB4084 {
+  0%,69% { opacity:0; visibility:hidden; }
+  71%,89% { opacity:1; visibility:visible; }
+  91%,100% { opacity:0; visibility:hidden; }
+}
+@keyframes atlasAetherNewsReadPageB4084 {
+  0%,72% { transform:translateX(0); }
+  88% { transform:translateX(-22vw); }
+  90%,100% { transform:translateX(0); }
+}
+
+@media (min-width:901px) and (prefers-reduced-motion:no-preference) {
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
+    display:grid!important;
+    grid-template-columns:minmax(105px,.42fr) minmax(220px,.92fr) minmax(250px,1.10fr) minmax(0,1.56fr)!important;
+    grid-template-rows:1fr!important;
+    align-items:center!important;
+    gap:0!important;
+    position:relative!important;
+    width:100%!important;
+    min-width:0!important;
+    height:100%!important;
+    overflow:hidden!important;
+  }
+
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084,
+  body #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084,
+  body #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084,
+  body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084,
+  body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084,
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
+    grid-row:1!important;
+    align-self:stretch!important;
+    box-sizing:border-box!important;
+    opacity:0;
+  }
+
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084 {
+    grid-column:1!important;
+    animation:atlasAetherPageA4084 36s linear infinite!important;
+  }
+  body #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084 {
+    grid-column:2!important;
+    animation:atlasAetherPageA4084 36s linear infinite!important;
+  }
+  body #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084 {
+    grid-column:3 / 5!important;
+    animation:atlasAetherPageA4084 36s linear infinite!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+
+  body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084 {
+    grid-column:1 / 3!important;
+    padding-left:2px!important;
+    border-left:0!important;
+    animation:atlasAetherPageB4084 36s linear infinite!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+  body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084 {
+    grid-column:3!important;
+    animation:atlasAetherPageB4084 36s linear infinite!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
+    grid-column:4!important;
+    min-width:0!important;
+    width:100%!important;
+    animation:atlasAetherPageB4084 36s linear infinite!important;
+  }
+  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084[data-scroll="1"] {
+    animation:atlasAetherNewsReadPageB4084 36s ease-in-out infinite!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference) {
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
+    grid-template-columns:minmax(88px,.34fr) minmax(190px,.78fr) minmax(210px,.90fr) minmax(0,1.98fr)!important;
+  }
+  body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084,
+  body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084,
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
+    padding-inline:8px!important;
+  }
+}
