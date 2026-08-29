@@ -1,10 +1,11 @@
-/* Agent-Crypto @erith.IA — 40.4.1
-   ATLAS PRESENTATION EXTRACTION / PARSER-BLOCKING TRANSITION MOUNT
-   Generated transport mirror of views/atlas.html for boot-parity.
+/* Agent-Crypto @erith.IA — 40.4.99
+   ATLAS COLD ROUTER · PRECOMPILED HOT SHELL
+   Build-time equivalent of the 40.4.98 parser result: the canonical HOT Atlas cockpit
+   is mounted before the shared runtime; cold bodies stay absent until explicit demand.
    No fetch, timer, observer, engine duplication or state mutation. */
 (()=>{
   "use strict";
-  const BUILD="40.4.1";
+  const BUILD="40.4.99";
   const host=document.getElementById("atlas-view-host");
   if(!host) return;
   const html=`    <section class="atlas-layout-family atlas-layout-family-intelligence" aria-labelledby="atlasLayoutFamily02">
@@ -282,104 +283,49 @@
               </div>
 
               <section class="atlas-stable-stack" id="atlasStableStack" data-runtime="waiting" aria-labelledby="atlasStableStackTitle">
-                <div class="atlas-stable-stack-head">
-                  <div>
-                    <p class="eyebrow">PILE STABLE CONSOLIDÉE · PRODUCTION / LECTURE</p>
-                    <h5 id="atlasStableStackTitle">Interface, Control Center, Bridge et mémoire réunis dans un état unique</h5>
-                  </div>
-                  <span class="pill warn" id="atlasStableStackBadge">En attente</span>
-                </div>
-                <div class="atlas-stable-stack-grid" aria-label="État de la pile Agent-Crypto">
-                  <article><span>Interface</span><b>Build 39.7.0</b><small>Administrator global · Engine Market Core 38.15.11 · stabilité + AUTO/MANUEL conservés</small></article>
-                  <article><span>Control Center</span><b>V2.3.2R5</b><small>Daily Pilotage Lock · base stable restaurée</small></article>
-                  <article><span>Bridge Atlas</span><b id="atlasStableStackBridge">V1.9.5 · non détecté</b><small id="atlasStableStackBridgeDetail">Lecture conservée sans moteur local.</small></article>
-                  <article><span>Ollama</span><b id="atlasStableStackOllama">gpt-oss:20b-32k · non détecté</b><small id="atlasStableStackOllamaDetail">Requis uniquement pour produire de nouveaux rapports.</small></article>
-                  <article><span>Poste actuel</span><b id="atlasStableStackStation">Poste de lecture</b><small id="atlasStableStackStationDetail">La synthèse reste consultable sans Bridge.</small></article>
-                  <article><span>Rapports Atlas</span><b id="atlasStableStackReports">0/4</b><small>Chaîne séquentielle protégée.</small></article>
-                  <article><span>Conclusion Aerith</span><b id="atlasStableStackConclusion">Absente</b><small>Disponible automatiquement après 4/4 CURRENT.</small></article>
-                  <article><span>Mémoire locale</span><b id="atlasStableStackMemory">IndexedDB · en attente</b><small>Persistance navigateur, sans publication GitHub.</small></article>
-                </div>
-                <p class="atlas-stable-stack-status" id="atlasStableStackStatus" role="status" aria-live="polite">Pile canonique reconnue · aucune publication GitHub · aucune action financière.</p>
-              </section>
+        <div class="section-head compact atlas-current-audit-shell-40431" data-atlas-current-audit-shell-40431="stable-stack">
+          <div>
+            <p class="eyebrow">PILE STABLE CONSOLIDÉE · PRODUCTION / LECTURE</p>
+            <h5 id="atlasStableStackTitle">Interface, Control Center, Bridge et mémoire</h5>
+            <p class="planning-intro">État déjà calculé · matérialiser les détails à la demande</p>
+          </div>
+          <button class="btn" type="button" data-atlas-current-audit-open-40431="stable-stack" aria-controls="atlasStableStack">Ouvrir les détails</button>
+        </div>
+      </section>
 
               <section class="atlas-analytical-truth" id="atlasAnalyticalTruth" data-state="waiting" aria-labelledby="atlasAnalyticalTruthTitle">
-                <div class="atlas-analytical-truth-head">
-                  <div>
-                    <p class="eyebrow">VÉRITÉ ANALYTIQUE · EMPREINTE V2</p>
-                    <h5 id="atlasAnalyticalTruthTitle">Contexte, sources, preuves et qualité statistique vérifiables</h5>
-                  </div>
-                  <span class="pill warn" id="atlasAnalyticalTruthBadge">En attente</span>
-                </div>
-                <div class="atlas-analytical-truth-grid" aria-label="État de la vérité analytique">
-                  <article><span>Contexte</span><b id="atlasTruthContext">En attente</b><small id="atlasTruthContextDetail">Aucun snapshot analytique V2 calculé.</small></article>
-                  <article><span>Empreinte</span><b id="atlasTruthFingerprint">—</b><small id="atlasTruthFingerprintDetail">SHA-256 canonique.</small></article>
-                  <article><span>Sources</span><b id="atlasTruthSources">—</b><small id="atlasTruthSourcesDetail">Direct, conservé, cache, archive ou indisponible.</small></article>
-                  <article><span>Preuves News</span><b id="atlasTruthNews">—</b><small id="atlasTruthNewsDetail">Impact séparé de la confiance.</small></article>
-                  <article><span>Math Core</span><b id="atlasTruthMath">—</b><small id="atlasTruthMathDetail">Mesures publiées, dégradées ou bloquées.</small></article>
-                  <article><span>Contradictions</span><b id="atlasTruthContradictions">—</b><small id="atlasTruthContradictionsDetail">Limites et stop gates structurés.</small></article>
-                  <article><span>Analyse</span><b id="atlasTruthAnalysis">Non produite</b><small id="atlasTruthAnalysisDetail">Les quatre rapports et la conclusion restent transactionnels.</small></article>
-                </div>
-                <details class="atlas-analytical-truth-details" id="atlasAnalyticalTruthDetails" data-atlas-proof-deferred-40358="1">
-                  <summary>Voir la preuve analytique</summary>
-                  <div id="atlasAnalyticalTruthProofMount40358" data-atlas-proof-mounted-40358="0"></div>
-                  <template id="atlasAnalyticalTruthProofTemplate40358">
-                    <div class="atlas-analytical-truth-detail-grid">
-                      <article><h6>Contexte lié</h6><ul id="atlasTruthContextList"><li>Aucun contexte calculé.</li></ul></article>
-                      <article><h6>Source Truth V2</h6><ul id="atlasTruthSourceList"><li>Aucune source normalisée.</li></ul></article>
-                      <article><h6>Evidence Layer</h6><ul id="atlasTruthEvidenceList"><li>Aucun événement directeur.</li></ul></article>
-                      <article><h6>Quality Gates</h6><ul id="atlasTruthMathList"><li>Aucune mesure évaluée.</li></ul></article>
-                      <article><h6>Contradictions</h6><ul id="atlasTruthContradictionList"><li>Aucune contradiction structurée.</li></ul></article>
-                    </div>
-                  </template>
-                </details>
-                <p class="atlas-analytical-truth-status" id="atlasAnalyticalTruthStatus" role="status" aria-live="polite">Empreinte V2 en attente · aucune action financière.</p>
-              </section>
+        <div class="section-head compact atlas-current-audit-shell-40431" data-atlas-current-audit-shell-40431="analytical-truth">
+          <div>
+            <p class="eyebrow">VÉRITÉ ANALYTIQUE · EMPREINTE V2</p>
+            <h5 id="atlasAnalyticalTruthTitle">Contexte, sources, preuves et qualité statistique</h5>
+            <p class="planning-intro">Lecture seule · aucun recalcul déclenché par l’ouverture</p>
+          </div>
+          <button class="btn" type="button" data-atlas-current-audit-open-40431="analytical-truth" aria-controls="atlasAnalyticalTruth">Ouvrir les détails</button>
+        </div>
+      </section>
 
               <section class="atlas-frame-truth" id="atlasFrameTruth" data-state="waiting" aria-labelledby="atlasFrameTruthTitle">
-                <div class="atlas-frame-truth-head">
-                  <div>
-                    <p class="eyebrow">COHÉRENCE TEMPORELLE · SNAPSHOT / LIVE</p>
-                    <h5 id="atlasFrameTruthTitle">Distinguer ce qui a été analysé de ce qui bouge maintenant</h5>
-                  </div>
-                  <span class="pill warn" id="atlasFrameTruthBadge">En attente</span>
-                </div>
-                <div class="atlas-frame-truth-grid">
-                  <article>
-                    <span>Snapshot analysé</span>
-                    <b id="atlasFrameTruthSnapshot">Aucun CURRENT</b>
-                    <small id="atlasFrameTruthSnapshotDetail">Le CURRENT reste figé ; un nouveau cycle part uniquement lorsqu’un nouveau snapshot canonique qualifié est disponible.</small>
-                  </article>
-                  <article>
-                    <span>Marché live actuel</span>
-                    <b id="atlasFrameTruthLive">En attente</b>
-                    <small id="atlasFrameTruthLiveDetail">Les prix peuvent continuer à évoluer sans relancer Atlas.</small>
-                  </article>
-                </div>
-                <p id="atlasFrameTruthStatus">Un écart entre CURRENT et LIVE est normal : il ne transforme pas automatiquement l’analyse terminée en historique.</p>
-              </section>
+        <div class="section-head compact atlas-current-audit-shell-40431" data-atlas-current-audit-shell-40431="frame-truth">
+          <div>
+            <p class="eyebrow">COHÉRENCE TEMPORELLE · SNAPSHOT / LIVE</p>
+            <h5 id="atlasFrameTruthTitle">Snapshot analysé et marché live</h5>
+            <p class="planning-intro">Présentation différée · état runtime conservé</p>
+          </div>
+          <button class="btn" type="button" data-atlas-current-audit-open-40431="frame-truth" aria-controls="atlasFrameTruth">Ouvrir les détails</button>
+        </div>
+      </section>
 
 
               <section class="atlas-current-truth-33" id="atlasCurrentTruth33" data-state="waiting" aria-labelledby="atlasCurrentTruth33Title">
-                <div class="atlas-current-truth-33-head">
-                  <div>
-                    <p class="eyebrow">CURRENT TRUTH · ÉTAT TRANSACTIONNEL</p>
-                    <h5 id="atlasCurrentTruth33Title">Pourquoi cette analyse est CURRENT — et ce qui appartient seulement au LIVE</h5>
-                    <p>Ce panneau ne déclenche aucun calcul. Il relit uniquement l’état déjà produit par le pipeline et sépare le snapshot analytique du marché qui continue à bouger.</p>
-                  </div>
-                  <span class="pill warn" id="atlasCurrentTruth33Badge">En attente</span>
-                </div>
-                <div class="atlas-current-truth-33-grid" aria-label="Vérité du CURRENT">
-                  <article><span>Fingerprint</span><b id="atlasCurrentTruthFingerprint33">—</b><small id="atlasCurrentTruthFingerprint33Detail">Aucun CURRENT validé.</small></article>
-                  <article><span>Snapshot Binance</span><b id="atlasCurrentTruthBinance33">—</b><small id="atlasCurrentTruthBinance33Detail">Les cinq cotations directes doivent appartenir au même snapshot.</small></article>
-                  <article><span>Atlas</span><b id="atlasCurrentTruthAtlas33">0/4</b><small id="atlasCurrentTruthAtlas33Detail">Même fingerprint requis.</small></article>
-                  <article><span>NØX</span><b id="atlasCurrentTruthNox33">En attente</b><small>Contrôle No-FOMO du même cycle.</small></article>
-                  <article><span>Aerith</span><b id="atlasCurrentTruthAerith33">En attente</b><small id="atlasCurrentTruthAerith33Detail">Conclusion du même fingerprint.</small></article>
-                  <article><span>IndexedDB</span><b id="atlasCurrentTruthDb33">En attente</b><small id="atlasCurrentTruthDb33Detail">Persistance de la synthèse locale.</small></article>
-                  <article><span>Moteur local</span><b id="atlasCurrentTruthEngine33">En attente</b><small id="atlasCurrentTruthEngine33Detail">STOP-ONCE après CURRENT.</small></article>
-                  <article><span>LIVE maintenant</span><b id="atlasCurrentTruthLive33">—</b><small id="atlasCurrentTruthLive33Detail">Indépendant du CURRENT une fois le cycle fermé.</small></article>
-                </div>
-                <p class="atlas-current-truth-33-status" id="atlasCurrentTruth33Status">Aucun CURRENT à certifier pour l’instant.</p>
-              </section>
+        <div class="section-head compact atlas-current-audit-shell-40431" data-atlas-current-audit-shell-40431="current-truth">
+          <div>
+            <p class="eyebrow">CURRENT TRUTH · ÉTAT TRANSACTIONNEL</p>
+            <h5 id="atlasCurrentTruth33Title">Pourquoi cette analyse est CURRENT</h5>
+            <p class="planning-intro">Relit seulement l’état produit par le pipeline</p>
+          </div>
+          <button class="btn" type="button" data-atlas-current-audit-open-40431="current-truth" aria-controls="atlasCurrentTruth33">Ouvrir les détails</button>
+        </div>
+      </section>
 
               <details class="atlas-memory-intelligence atlas-memory-deferred-40353 atlas-collapse glass atlas-tone-intelligence" id="atlasMemoryIntelligence" data-state="waiting" data-atlas-memory-deferred-40353="1" aria-labelledby="atlasMemoryIntelligenceTitle">
                 <summary class="atlas-memory-intelligence-head atlas-collapse-summary">
@@ -604,85 +550,26 @@
     </details>
 
               <section class="atlas-book-readonly" id="atlasBookReadOnlyKnowledge" data-state="waiting" aria-labelledby="atlasBookReadOnlyTitle">
-                <div class="atlas-book-readonly-head">
-                  <div>
-                    <p class="eyebrow">SHARED READ-ONLY KNOWLEDGE · RYZEN → BOOK</p>
-                    <h5 id="atlasBookReadOnlyTitle">Miroir automatique Ryzen → Transformer Book</h5>
-                    <p>Le Book reste sans Ollama ni Bridge. Il peut maintenant surveiller automatiquement un miroir public <code>book_mirror.json</code> en lecture seule ; si aucun miroir n’est publié, l’import JSON manuel reste le secours explicite.</p>
-                  </div>
-                  <span class="pill warn" id="atlasBookReadOnlyBadge">En attente</span>
-                </div>
-                <div class="atlas-book-transfer-guide-342" id="atlasBookTransferGuide342" aria-label="Lecture Ryzen vers Transformer Book">
-                  <article data-step="1">
-                    <span>MODE NORMAL · AUTOMATIQUE</span>
-                    <b>Ryzen construit · Book consulte</b>
-                    <small>Si <code>book_mirror.json</code> est publié par un canal de confiance, le Book le vérifie automatiquement et importe tout nouveau fingerprint. Aucun Ollama, aucun Bridge et aucun clic de lecture ne sont requis sur le Book.</small>
-                  </article>
-                  <div class="atlas-book-transfer-arrow-342" aria-hidden="true">→</div>
-                  <article data-step="2">
-                    <span>MODE SECOURS · MANUEL</span>
-                    <b>JSON uniquement si le miroir manque</b>
-                    <small>Depuis le Ryzen : « Secours · Exporter JSON ». Sur le Book : « Secours · Charger JSON Ryzen ». L’import force la lecture seule et affiche la synthèse sans moteur local.</small>
-                  </article>
-                </div>
-                <p class="atlas-book-transfer-role-342" id="atlasBookTransferRoleGuide342">Détection du rôle de ce poste…</p>
-                <section class="atlas-book-mirror-36" id="atlasBookMirror36" data-state="waiting" aria-labelledby="atlasBookMirrorTitle36">
-                  <div class="atlas-book-mirror-36-head">
-                    <div>
-                      <span class="eyebrow">BOOK MIRROR · LECTURE AUTOMATIQUE</span>
-                      <b id="atlasBookMirrorTitle36">Le Book surveille un miroir public sans moteur local</b>
-                      <small>Chemin attendu : <code>./book_mirror.json</code>. En 40.3.80, le Ryzen peut le publier via la capacité restreinte du Bridge local :8787 ; aucun token GitHub n’est placé dans la page publique.</small>
-                    </div>
-                    <span class="pill warn" id="atlasBookMirrorBadge36">Non vérifié</span>
-                  </div>
-                  <div class="atlas-book-mirror-36-grid">
-                    <article><span>État miroir</span><b id="atlasBookMirrorState36">En attente</b><small id="atlasBookMirrorStateDetail36">Le Book vérifie automatiquement si un fichier miroir public existe.</small></article>
-                    <article><span>Dernière vérification</span><b id="atlasBookMirrorCheck36">—</b><small id="atlasBookMirrorCheckDetail36">Lecture réseau uniquement.</small></article>
-                    <article><span>Dernier fingerprint importé</span><b id="atlasBookMirrorFingerprint36">—</b><small>Aucun CURRENT local n’est créé par le Book.</small></article>
-                  </div>
-                  <div class="atlas-book-mirror-36-actions">
-                    <button type="button" id="btnAtlasBookMirrorCheck36">Diagnostic · vérifier maintenant</button>
-                    <button type="button" id="btnAtlasBookMirrorExport36">Secours · préparer book_mirror.json</button>
-                  </div>
-                  <p id="atlasBookMirrorStatus36">Lecture automatique inactive tant que ce poste n’est pas en rôle Book/STOP.</p>
-                </section>
-                <div class="atlas-book-readonly-grid">
-                  <article><span>Rôle de ce poste</span><b id="atlasBookReadOnlyRole">—</b><small id="atlasBookReadOnlyRoleDetail">Production ou STOP/lecture seule.</small></article>
-                  <article><span>Dictionnaire permanent</span><b id="atlasBookReadOnlyDictionary">Disponible</b><small>Ne dépend ni d’Aerith ni d’une conclusion locale.</small></article>
-                  <article><span>Dernière synthèse partagée</span><b id="atlasBookReadOnlySynthesis">Aucune</b><small id="atlasBookReadOnlySynthesisDetail">Charge un export Ryzen si ce poste est le Book.</small></article>
-                  <article><span>Memory Intelligence</span><b id="atlasBookReadOnlyMemory">—</b><small id="atlasBookReadOnlyMemoryDetail">Lecture de la mémoire déjà disponible dans ce navigateur.</small></article>
-                  <article><span>Calcul local</span><b id="atlasBookReadOnlyCompute">—</b><small id="atlasBookReadOnlyComputeDetail">Le mode STOP ne contacte jamais le Bridge.</small></article>
-                </div>
-                <div class="atlas-book-readonly-actions">
-                  <button type="button" id="btnAtlasBookOpenDictionary">Ouvrir le dictionnaire</button>
-                  <button type="button" id="btnAtlasBookExport">Secours · Exporter JSON</button>
-                  <button type="button" id="btnAtlasBookImport">Secours · Charger JSON Ryzen</button>
-                  <button type="button" id="btnAtlasBookReadSynthesis" disabled>Relire la synthèse Aerith</button>
-                </div>
-                <p id="atlasBookReadOnlyStatus">Lecture seule prête · le Book ne calcule rien. Miroir public automatique si disponible ; JSON manuel uniquement en secours.</p>
-              </section>
+        <div class="section-head compact atlas-current-audit-shell-40431" data-atlas-current-audit-shell-40431="book-readonly">
+          <div>
+            <p class="eyebrow">SHARED READ-ONLY KNOWLEDGE · RYZEN → BOOK</p>
+            <h5 id="atlasBookReadOnlyTitle">Miroir et lecture Book</h5>
+            <p class="planning-intro">Runtime et mémoire conservés · présentation chargée à la demande</p>
+          </div>
+          <button class="btn" type="button" data-atlas-current-audit-open-40431="book-readonly" aria-controls="atlasBookReadOnlyKnowledge">Ouvrir les détails</button>
+        </div>
+      </section>
 
               <section class="atlas-knowledge-library" id="atlasKnowledgeLibrary" data-state="ready" aria-labelledby="atlasKnowledgeLibraryTitle">
-                <div class="atlas-knowledge-library-head">
-                  <div>
-                    <p class="eyebrow">BIBLIOTHÈQUE PÉDAGOGIQUE PERMANENTE · SANS BRIDGE</p>
-                    <h5 id="atlasKnowledgeLibraryTitle">Dictionnaire Crypto / Banque / Bourse disponible sur tous les postes</h5>
-                    <p>Cette bibliothèque appartient à l’interface elle-même : elle reste disponible sur le Ryzen comme sur le Transformer Book en mode STOP, sans Atlas, Aerith ni Ollama.</p>
-                  </div>
-                  <span class="pill ok" id="atlasKnowledgeLibraryBadge">Disponible hors ligne locale</span>
-                </div>
-                <div class="atlas-knowledge-library-controls">
-                  <label for="atlasKnowledgeSearch">Rechercher un terme</label>
-                  <input id="atlasKnowledgeSearch" type="search" autocomplete="off" placeholder="Ex. volatilité, VaR, spread, blockchain…" />
-                  <button type="button" id="btnAtlasKnowledgeClear">Tout afficher</button>
-                  <span id="atlasKnowledgeCount" aria-live="polite">—</span>
-                </div>
-                <details class="atlas-knowledge-library-details" id="atlasKnowledgeLibraryDetails">
-                  <summary>Ouvrir le dictionnaire permanent</summary>
-                  <div class="atlas-knowledge-library-grid" id="atlasKnowledgeLibraryGrid" aria-live="polite"></div>
-                </details>
-                <p class="atlas-knowledge-library-status" id="atlasKnowledgeLibraryStatus">Chargement du dictionnaire statique…</p>
-              </section>
+        <div class="section-head compact atlas-current-audit-shell-40431" data-atlas-current-audit-shell-40431="knowledge-library">
+          <div>
+            <p class="eyebrow">BIBLIOTHÈQUE PÉDAGOGIQUE PERMANENTE · SANS BRIDGE</p>
+            <h5 id="atlasKnowledgeLibraryTitle">Dictionnaire Crypto / Banque / Bourse</h5>
+            <p class="planning-intro">56 définitions conservées · cartes et contrôles chargés à la demande</p>
+          </div>
+          <button class="btn" type="button" data-atlas-current-audit-open-40431="knowledge-library" aria-controls="atlasKnowledgeLibrary">Ouvrir les détails</button>
+        </div>
+      </section>
 
 
 
@@ -771,45 +658,7 @@
         <span class="atlas-collapse-title">Atlas Auto Reader</span>
         <span class="atlas-collapse-subtitle">Collecte autonome du marché</span>
       </summary>
-      <div class="atlas-collapse-body">
-
-<section class="panel glass auto-reader-panel memory-truth-panel" id="auto-reader">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">ATLAS AUTO READER</p>
-          <h2>Collecte locale vérifiable</h2>
-          <p class="planning-intro">Le navigateur collecte uniquement lorsque l’Auto Reader est actif et que cet onglet reste visible. Fermer la page arrête cette collecte locale.</p>
-        </div>
-        <span class="pill ok" id="autoModeStatus">Auto actif</span>
-      </div>
-
-      <div class="auto-actions">
-        <button class="btn small primary" id="btnAutoToggle" type="button">Auto ON</button>
-        <button class="btn small" id="btnAutoNow" type="button">Lecture maintenant</button>
-        <div class="auto-cadence-lock" aria-label="Cadences verrouillées">
-          <span><b>Marché</b><em>60 s</em></span>
-          <span><b>Spot</b><em>30 s</em></span>
-          <span><b>Historique</b><em>5 min</em></span>
-        </div>
-      </div>
-
-      <div class="auto-grid memory-truth-grid">
-        <article><b>Auto Reader</b><span id="autoReaderTruth">ACTIF</span></article>
-        <article><b>Onglet / collecte</b><span id="autoVisibilityTruth">Visible</span></article>
-        <article><b>Dernière lecture</b><span id="autoLastRead">En attente</span></article>
-        <article><b>Prochaine lecture</b><span id="autoNextRead">Préparation</span></article>
-        <article><b>Cadence marché</b><span id="autoActiveCadence">60 secondes</span></article>
-        <article><b>Snapshots locaux</b><span id="autoSnapshots">0</span></article>
-        <article><b>Dernier snapshot local</b><span id="autoLastSnapshotTruth">Aucun</span></article>
-        <article><b>Collecteur de ce Firefox</b><span id="autoCollectorTruth">En attente</span></article>
-        <article><b>État marché</b><span id="autoMarketPulse">En attente</span></article>
-        <article><b>Watchlist</b><span id="autoWatchStatus">BTC · ETH · SOL</span></article>
-        <article><b>Écriture GitHub</b><span id="autoGithubWriteTruth">NON · lecture seule</span></article>
-      </div>
-
-      <pre class="auto-reader-output" id="autoReaderOutput">Atlas Auto Reader prêt. La première lecture locale se lance automatiquement si l’onglet reste visible.</pre>
-    </section>
-      </div>
+      <div class="atlas-collapse-body atlas-peripheral-lazy-body-40425" data-atlas-peripheral-lazy="auto-reader" data-atlas-hydrated-40425="0"><p class="atlas-local-response-empty">Atlas Auto Reader · contenu chargé uniquement à l’ouverture.</p></div>
     </details>
 
     <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence" data-collapse-key="shared-memory" data-layout-family="intelligence">
@@ -818,75 +667,7 @@
         <span class="atlas-collapse-title">Shared Memory</span>
         <span class="atlas-collapse-subtitle">Export / import par machine</span>
       </summary>
-      <div class="atlas-collapse-body">
-
-
-    <section class="panel glass shared-memory-panel" id="shared-memory">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">ATLAS SHARED MARKET MEMORY</p>
-          <h2>Machine collectrice + export / import</h2>
-          <p class="planning-intro">Configuration à faire une seule fois par machine. Les imports fusionnent les snapshots sans prouver que les autres machines collectent encore actuellement.</p>
-        </div>
-        <span class="pill" id="collectorIdentityBadge">Collecteur local</span>
-      </div>
-
-      <div class="collector-id-row">
-        <label class="sort-box collector-id-box">
-          <span>ID collecteur</span>
-          <input id="collectorIdInput" type="text" placeholder="transformer-book-christophe" />
-        </label>
-        <button class="btn small primary" id="btnSaveCollectorId" type="button">Sauver ID une fois</button>
-        <button class="btn small" id="btnExportAutoMemory" type="button">Exporter mémoire JSON</button>
-        <label class="btn small file-like" for="autoMemoryImport">Importer mémoire de marché</label>
-        <input id="autoMemoryImport" type="file" accept=".json,application/json" hidden />
-        <button class="btn small danger" id="btnClearAutoMemory" type="button">Effacer mémoire locale</button>
-      </div>
-
-      <div class="shared-grid">
-        <article><b>Machine configurée</b><span id="sharedCollectorId">Non défini</span></article>
-        <article><b>Total disponible</b><span id="sharedLocalCount">0 snapshots fusionnés</span></article>
-        <article><b>Collecteurs présents</b><span id="sharedCollectorsCount">0</span></article>
-        <article><b>Dernière opération</b><span id="sharedLastImport">Aucun import</span></article>
-      </div>
-
-      <section class="memory-coverage-panel" id="memoryCoveragePanel" aria-labelledby="memoryCoverageTitle">
-        <div class="memory-coverage-head">
-          <div>
-            <p class="eyebrow">MEMORY HISTORY COVERAGE</p>
-            <h3 id="memoryCoverageTitle">Couverture temporelle et qualité des données</h3>
-            <small>Snapshots de marché et séries graphiques CoinGecko sont mesurés séparément.</small>
-          </div>
-          <button class="btn small" id="btnRecalculateCoverage" type="button">Recalculer</button>
-        </div>
-
-        <div class="memory-coverage-kpis">
-          <article><span>Première trace</span><b id="memoryCoverageFirst">Aucune</b></article>
-          <article><span>Dernière trace</span><b id="memoryCoverageLast">Aucune</b></article>
-          <article><span>Durée réelle</span><b id="memoryCoverageSpan">0 s</b></article>
-          <article><span>Snapshots valides</span><b id="memoryCoverageValid">0/0</b></article>
-          <article><span>Cadence médiane</span><b id="memoryCoverageCadence">—</b></article>
-          <article><span>Plus grand trou</span><b id="memoryCoverageLargestGap">—</b></article>
-        </div>
-
-        <div class="memory-horizon-grid" id="memoryHorizonGrid" aria-label="Couverture par horizon">
-          <article data-horizon="1"><span>24 h</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
-          <article data-horizon="7"><span>7 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
-          <article data-horizon="30"><span>30 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
-          <article data-horizon="60"><span>60 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
-          <article data-horizon="90"><span>90 jours</span><b>Mémoire insuffisante</b><small>Graphique : à charger</small></article>
-        </div>
-
-        <div class="memory-collector-quality" id="memoryCollectorQuality">
-          <span class="collector-truth-empty">Aucun collecteur exploitable.</span>
-        </div>
-
-        <pre class="memory-coverage-output" id="memoryCoverageOutput">Analyse de couverture en attente.</pre>
-      </section>
-
-      <pre class="shared-memory-output" id="sharedMemoryOutput">Statut import/export affiché ici. Un import réussi indique les snapshots ajoutés, le total et les collecteurs fusionnés.</pre>
-    </section>
-      </div>
+      <div class="atlas-collapse-body atlas-peripheral-lazy-body-40425" data-atlas-peripheral-lazy="shared-memory" data-atlas-hydrated-40425="0"><p class="atlas-local-response-empty">Shared Memory · contenu chargé uniquement à l’ouverture.</p></div>
     </details>
 
 
@@ -898,55 +679,25 @@
         <span class="atlas-collapse-title">GitHub Memory</span>
         <span class="atlas-collapse-subtitle">Mémoire commune GitHub</span>
       </summary>
-      <div class="atlas-collapse-body">
-
-
-    <section class="panel glass github-memory-panel memory-truth-panel" id="github-memory">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">ATLAS GITHUB SHARED MEMORY</p>
-          <h2>Mémoire commune GitHub — vérité de chargement</h2>
-          <p class="planning-intro">Lecture automatique une fois au démarrage depuis <code>data/latest.json</code>. Le bouton ci-dessous force seulement une nouvelle lecture. Le frontend public ne peut pas écrire dans GitHub.</p>
-        </div>
-        <span class="pill" id="githubMemoryStatus">Auto en attente</span>
-      </div>
-
-      <div class="github-actions">
-        <button class="btn small primary" id="btnLoadGithubMemory" type="button">Forcer une nouvelle lecture GitHub</button>
-      </div>
-
-      <div class="github-grid memory-truth-grid">
-        <article><b>Auto-chargement au démarrage</b><span id="githubMemoryAuto">En attente</span></article>
-        <article><b>Dernière tentative</b><span id="githubMemoryAutoAttempt">Aucune</span></article>
-        <article><b>Dernier succès</b><span id="githubMemorySuccess">Aucun</span></article>
-        <article><b>Dernier relevé GitHub</b><span id="githubMemoryLatest">Non chargé</span></article>
-        <article><b>Snapshots GitHub lus</b><span id="githubMemoryRecords">0</span></article>
-        <article><b>Snapshots locaux disponibles</b><span id="githubMemoryLocal">0</span></article>
-        <article><b>Nouveaux lors de la dernière fusion</b><span id="githubMemoryAdded">0</span></article>
-        <article><b>Collecteurs présents dans GitHub</b><span id="githubMemoryCollectors">Aucun</span></article>
-        <article><b>Fusion locale</b><span id="githubMemoryFusion">En attente</span></article>
-        <article><b>Écriture GitHub depuis cette page</b><span id="githubMemoryWrite">NON · lecture seule</span></article>
-      </div>
-
-      <div class="collector-truth-list" id="collectorTruthList" aria-label="Présence réelle des collecteurs en mémoire">
-        <span class="collector-truth-empty">Aucun collecteur présent dans la mémoire locale.</span>
-      </div>
-
-      <pre class="github-memory-output" id="githubMemoryOutput">Lecture GitHub automatique en attente. La mémoire locale reste disponible même si GitHub ne répond pas.</pre>
-    </section>
-      </div>
+      <div class="atlas-collapse-body atlas-peripheral-lazy-body-40425" data-atlas-peripheral-lazy="github-memory" data-atlas-hydrated-40425="0"><p class="atlas-local-response-empty">GitHub Memory · contenu chargé uniquement à l’ouverture.</p></div>
     </details>
 
 `;
   host.insertAdjacentHTML("beforebegin",html);
   host.remove();
   try{
-    globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_MOUNT_40401__=Object.freeze({
+    globalThis.AgentCryptoAtlasColdRouter40499?.attach?.();
+    globalThis.AgentCryptoAtlasPeripheralLazy?.attach?.();
+  }catch(error){console.warn("[40.4.99] Atlas cold-router attach",error);}
+  try{
+    globalThis.__AGENT_CRYPTO_ATLAS_PRESENTATION_MOUNT_40499__=Object.freeze({
       build:BUILD,
       source:"./views/atlas.html",
-      transport:"parser-blocking generated mirror",
+      transport:"precompiled HOT shell",
       extracted_family:"02 · Intelligence, mémoire & création",
       inserted_before_downstream_runtime:true,
+      cold_bodies_prestripped_at_build:true,
+      runtime_markup_preprocess:false,
       network_fetch:false,
       new_timer:false,
       new_observer:false,

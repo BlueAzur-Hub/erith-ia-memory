@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.98",
-  "parent_build": "40.4.96",
+  "build": "40.4.99",
+  "parent_build": "40.4.98",
   "purpose": "Final seal of the completed Administrator runtime-demand migration using cumulative real Firefox operator evidence through 40.4.96. The unpublished 40.4.97 truth-convergence candidate is absorbed into this seal; no new extraction or business/runtime behavior change.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -238,11 +238,19 @@
       "owner": "40.4.98 manifest + operator evidence ledger",
       "state": "SEALED",
       "notes": "No new runtime owner. Cumulative Firefox evidence through 40.4.96 plus runtime-neutral 40.4.97 truth convergence closes the migration. Reopen only on reproduced regression."
+    },
+    {
+      "component": "Atlas HOT-shell / cold-body presentation router",
+      "owner": "js/views/atlas-presentation.js + js/views/atlas-peripheral-lazy.js + views/atlas.html",
+      "state": "CANDIDATE_PRECOMPILED_HOT_SHELL_COLD_ROUTER",
+      "introduced": "40.4.99",
+      "notes": "Replaces the 40.4.1 full parser-blocking Atlas transport + 40.4.35 runtime preprocess interception with the exact already-stripped HOT DOM compiled at build time. Atlas cockpit/Bridge/CURRENT compact truth remains resident. Existing cold bodies hydrate from canonical views/atlas.html on explicit demand. No engine/scheduler/storage owner added."
     }
   ],
   "next": {
     "after_40_4_96": "40.4.98 is the direct final seal over published 40.4.96 and absorbs the unpublished 40.4.97 truth-only prep candidate.",
-    "after_40_4_98": "Migration closed. Protect Market Core/Graph/Top5/Atlas CURRENT/Oracle/Learning/Bridge/Backend/Window Manager. Reopen only on a concrete reproduced regression."
+    "after_40_4_98": "Migration closed. Protect Market Core/Graph/Top5/Atlas CURRENT/Oracle/Learning/Bridge/Backend/Window Manager. Reopen only on a concrete reproduced regression.",
+    "after_40_4_99": "If Firefox confirms parity, protect this cold-router. Do not return to whole-Atlas source-lazy hydration; the 40.4.67 branch proved that architecture unsafe. Reopen Atlas only on reproduced regression or measured owner-specific debt."
   },
   "migration_summary": {
     "state": "FINAL_ADMINISTRATOR_RUNTIME_MIGRATION_SEALED_40_4_98",
@@ -850,5 +858,24 @@
     "canonical_learning_contract": "40.4.95 pre-parse demand + safe 40.4.47 fallback + protected 97-ref runtime rebind",
     "canonical_oracle_outcome_contract": "40.4.96 explicit-demand/new-Evidence one-shot; no permanent 15 s interval",
     "final_firefox_seal_required": true
+  },
+  "post_migration_product_work_40499": {
+    "migration_reopened": false,
+    "base_seal": "40.4.98",
+    "scope": "parser/presentation transport debt",
+    "hot_at_boot": [
+      "Atlas cockpit",
+      "Bridge status",
+      "CURRENT pipeline compact truth",
+      "report compact summaries"
+    ],
+    "cold_on_demand": [
+      "Auto Reader detail",
+      "Shared/GitHub memory detail",
+      "CURRENT audit detail",
+      "Book/Knowledge detail"
+    ],
+    "current_pipeline": "PROTECTED",
+    "fingerprint_build_churn_guard": true
   }
 }
