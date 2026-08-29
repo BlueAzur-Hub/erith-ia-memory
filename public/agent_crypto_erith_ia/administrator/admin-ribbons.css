@@ -439,214 +439,314 @@
 }
 
 /* ============================================================================
-   40.4.99 R3 — AETHER RIBBON READABILITY LOCK
-   Presentation-only override. The canonical row still alternates Menu/Chronos
-   and Aether; Chronos stays exclusively in the native technical row.
-   No runtime/data/Market Flow ownership changes.
+   40.4.99 R4 — SINGLE-LINE AETHER CSS SEAL
+
+   One visual owner for the existing technical/Aether row.
+   NORMAL -> AETHER/ATLAS/ORACLE -> SOURCES/BOOK/VEILLE -> SYSTEM -> NORMAL.
+   No additional row, no header height change, no runtime/data ownership here.
+   Hidden phases are absolutely positioned so they never reserve giant gaps.
+   This block intentionally outranks the older inline 4085 rules and the R4
+   presentation style injected by view-lifecycle.js.
    ============================================================================ */
-@keyframes atlasStatusNativePhaseR3 {
-  0%,49% { opacity:1; visibility:visible; }
-  50%,90% { opacity:0; visibility:hidden; }
-  91%,100% { opacity:1; visibility:visible; }
+@keyframes atlasAetherNativeFinalR4 {
+  0%,43.9% { opacity:1; visibility:visible; }
+  44%,89.9% { opacity:0; visibility:hidden; }
+  90%,100% { opacity:1; visibility:visible; }
 }
-@keyframes atlasAetherBandPhaseR3 {
-  0%,49% { opacity:0; visibility:hidden; }
-  50%,90% { opacity:1; visibility:visible; }
-  91%,100% { opacity:0; visibility:hidden; }
+@keyframes atlasAetherBandFinalR4 {
+  0%,43.9% { opacity:0; visibility:hidden; }
+  44%,89.9% { opacity:1; visibility:visible; }
+  90%,100% { opacity:0; visibility:hidden; }
 }
-@keyframes atlasAetherNewsReadR3 {
-  0%,60% { transform:translateX(0); }
-  88% { transform:translateX(-24vw); }
-  91%,100% { transform:translateX(0); }
+@keyframes atlasAetherPageAFinalR4 {
+  0%,43.9% { opacity:0; visibility:hidden; }
+  44%,60% { opacity:1; visibility:visible; }
+  60.1%,100% { opacity:0; visibility:hidden; }
+}
+@keyframes atlasAetherPageBFinalR4 {
+  0%,59.9% { opacity:0; visibility:hidden; }
+  60%,76% { opacity:1; visibility:visible; }
+  76.1%,100% { opacity:0; visibility:hidden; }
+}
+@keyframes atlasAetherPageBNoSystemFinalR4 {
+  0%,59.9% { opacity:0; visibility:hidden; }
+  60%,89.9% { opacity:1; visibility:visible; }
+  90%,100% { opacity:0; visibility:hidden; }
+}
+@keyframes atlasAetherSystemFinalR4 {
+  0%,75.9% { opacity:0; visibility:hidden; }
+  76%,89.9% { opacity:1; visibility:visible; }
+  90%,100% { opacity:0; visibility:hidden; }
+}
+@keyframes atlasAetherNewsFinalR4 {
+  0%,63% { transform:translateX(0); }
+  73% { transform:translateX(-18vw); }
+  76%,100% { transform:translateX(0); }
 }
 
 @media (min-width:901px) and (prefers-reduced-motion:no-preference) {
-  body #livecheck.command-bar>#btnLivecheck,
-  body #livecheck.command-bar>#btnRefresh,
-  body #livecheck.command-bar>#decisionCard,
-  body #livecheck.command-bar>#sourceActiveCard,
-  body #livecheck.command-bar>#sourceTimeCard {
-    animation:atlasStatusNativePhaseR3 36s linear infinite !important;
+  html body #livecheck.command-bar > #btnLivecheck,
+  html body #livecheck.command-bar > #btnRefresh,
+  html body #livecheck.command-bar > #decisionCard,
+  html body #livecheck.command-bar > #sourceActiveCard,
+  html body #livecheck.command-bar > #sourceTimeCard {
+    animation:atlasAetherNativeFinalR4 36s linear infinite!important;
   }
 
-  body #atlasAetherRibbon4084 {
-    padding:0 12px!important;
+  html body #livecheck.command-bar > #atlasAetherRibbon4084 {
+    animation:atlasAetherBandFinalR4 36s linear infinite!important;
+    padding:0 8px!important;
     border-color:rgba(99,225,239,.18)!important;
     background:linear-gradient(90deg,rgba(5,21,31,.93),rgba(8,17,29,.88))!important;
-    color:#b4ced9!important;
-    font:850 9.6px/1.15 system-ui,sans-serif!important;
-    letter-spacing:.018em!important;
-    animation:atlasAetherBandPhaseR3 36s linear infinite!important;
+    color:#c6d8df!important;
+    font:850 10.8px/1.12 system-ui,sans-serif!important;
+    letter-spacing:.012em!important;
+    overflow:hidden!important;
   }
 
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
-    display:flex!important;
-    align-items:center!important;
-    gap:0!important;
-    min-width:0!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
+    display:block!important;
+    position:relative!important;
     width:100%!important;
-    padding-right:0!important;
+    min-width:0!important;
+    height:100%!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
     transform:none!important;
     animation:none!important;
     will-change:auto!important;
   }
 
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>span,
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>b {
-    display:inline-flex!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonSources4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonBook4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-news-window-4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 {
+    position:absolute!important;
+    top:0!important;
+    bottom:0!important;
+    box-sizing:border-box!important;
+    display:flex!important;
     align-items:center!important;
     min-width:0!important;
-    flex:0 0 auto!important;
-    padding:0 12px!important;
-    border-left:1px solid rgba(130,211,230,.14)!important;
-  }
-
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084 {
-    padding-left:2px!important;
-    border-left:0!important;
-  }
-  body #atlasAetherRibbonAtlas4084 { color:#c5b5ff!important; }
-  body #atlasAetherRibbonOracle4084 { color:#f4dfa0!important; }
-  body #atlasAetherRibbonSources4084 { color:#91edf4!important; }
-  body #atlasAetherRibbonBook4084 { color:#a9dfbb!important; }
-
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
-    display:inline-flex!important;
-    align-items:center!important;
-    gap:8px!important;
-    flex:1 1 360px!important;
-    min-width:260px!important;
+    height:100%!important;
+    margin:0!important;
+    white-space:nowrap!important;
     overflow:hidden!important;
-    color:#d1dce2!important;
   }
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084>i {
-    position:relative!important;
-    z-index:2!important;
-    flex:0 0 auto!important;
-    font-style:normal!important;
+
+  /* Page A: compact left-to-right chain, no giant grid columns. */
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084 {
+    left:0!important;
+    width:112px!important;
+    padding:0 8px 0 2px!important;
+    border:0!important;
+    color:#ff9bd9!important;
+    font-size:11.3px!important;
+    font-weight:950!important;
+    letter-spacing:.045em!important;
+    animation:atlasAetherPageAFinalR4 36s linear infinite!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084 {
+    left:112px!important;
+    width:184px!important;
+    padding:0 8px!important;
+    border-left:1px solid rgba(130,211,230,.15)!important;
+    color:#d3c8ff!important;
+    font-size:10.8px!important;
     font-weight:900!important;
-    color:#86a4b2!important;
-    padding-right:4px!important;
-    background:rgba(8,17,29,.94)!important;
-    letter-spacing:.035em!important;
+    animation:atlasAetherPageAFinalR4 36s linear infinite!important;
   }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084 {
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084 {
+    left:296px!important;
+    right:0!important;
+    width:auto!important;
+    padding:0 8px!important;
+    border-left:1px solid rgba(130,211,230,.15)!important;
+    color:#ffe6a7!important;
+    font-size:10.8px!important;
+    font-weight:900!important;
+    text-overflow:ellipsis!important;
+    animation:atlasAetherPageAFinalR4 36s linear infinite!important;
+  }
+
+  /* Icons: intentionally readable; never microscopic. */
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonSources4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonBook4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-news-window-4084 > i::before {
+    display:inline-block!important;
+    margin-right:5px!important;
+    font-size:13px!important;
+    line-height:1!important;
+    font-weight:950!important;
+    vertical-align:-1px!important;
+  }
+
+  /* Page B: Sources / Book / Veille share the same physical line. */
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonSources4084 {
+    left:0!important;
+    width:40%!important;
+    padding:0 8px 0 2px!important;
+    border:0!important;
+    color:#9cf5fb!important;
+    font-size:10.7px!important;
+    font-weight:900!important;
+    text-overflow:ellipsis!important;
+    animation:atlasAetherPageBFinalR4 36s linear infinite!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonBook4084 {
+    left:40%!important;
+    width:18%!important;
+    padding:0 8px!important;
+    border-left:1px solid rgba(130,211,230,.15)!important;
+    color:#b8e8c7!important;
+    font-size:10.7px!important;
+    font-weight:900!important;
+    text-overflow:ellipsis!important;
+    animation:atlasAetherPageBFinalR4 36s linear infinite!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
+    left:58%!important;
+    right:0!important;
+    width:auto!important;
+    padding:0 8px!important;
+    gap:6px!important;
+    border-left:1px solid rgba(130,211,230,.15)!important;
+    color:#d8e5ea!important;
+    font-size:10.6px!important;
+    animation:atlasAetherPageBFinalR4 36s linear infinite!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-news-window-4084 > i {
+    flex:0 0 auto!important;
+    padding:0!important;
+    background:transparent!important;
+    color:#91aeb9!important;
+    font-style:normal!important;
+    font-size:10.2px!important;
+    font-weight:950!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonNews4084 {
     display:inline-block!important;
     min-width:max-content!important;
+    font-size:10.6px!important;
     transform:translateX(0)!important;
     animation:none!important;
   }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084[data-scroll="1"] {
-    animation:atlasAetherNewsReadR3 36s ease-in-out infinite!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonNews4084[data-scroll="1"] {
+    animation:atlasAetherNewsFinalR4 36s ease-in-out infinite!important;
   }
-}
 
-@media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference) {
-  body #atlasAetherRibbon4084 { padding-inline:7px!important; font-size:8.7px!important; }
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>span,
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>b { padding-inline:8px!important; }
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 { min-width:210px!important; }
-}
-
-/* ============================================================================
-   40.4.99 R3 — AETHER TWO-PAGE READABILITY CORRECTION
-   Option 2: keep the same Menu/Chronos -> Aether -> Menu cycle, but split the
-   Aether exposure into two stable readable pages. CSS-only; no timer/fetch/
-   observer/runtime owner. Page A = Aether + Atlas + Oracle. Page B = Sources +
-   Book + Derniere veille. Long news may move only inside its own page-B window.
-   ============================================================================ */
-@keyframes atlasAetherPageA4084 {
-  0%,49% { opacity:0; visibility:hidden; }
-  50%,68% { opacity:1; visibility:visible; }
-  70%,100% { opacity:0; visibility:hidden; }
-}
-@keyframes atlasAetherPageB4084 {
-  0%,69% { opacity:0; visibility:hidden; }
-  71%,89% { opacity:1; visibility:visible; }
-  91%,100% { opacity:0; visibility:hidden; }
-}
-@keyframes atlasAetherNewsReadPageB4084 {
-  0%,72% { transform:translateX(0); }
-  88% { transform:translateX(-22vw); }
-  90%,100% { transform:translateX(0); }
-}
-
-@media (min-width:901px) and (prefers-reduced-motion:no-preference) {
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
-    display:grid!important;
-    grid-template-columns:minmax(105px,.42fr) minmax(220px,.92fr) minmax(250px,1.10fr) minmax(0,1.56fr)!important;
-    grid-template-rows:1fr!important;
-    align-items:center!important;
-    gap:0!important;
-    position:relative!important;
+  /* System phase reuses the same Aether row; never creates/reserves a new line. */
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 > #atlasOperatorSystemRibbonR4 {
+    inset:0!important;
     width:100%!important;
+    padding:0 2px!important;
+    border:0!important;
+    border-radius:0!important;
+    background:transparent!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    align-items:stretch!important;
+    gap:0!important;
+    color:#c9dce4!important;
+    font:900 10.6px/1.12 system-ui,sans-serif!important;
+    letter-spacing:.01em!important;
+    animation:atlasAetherSystemFinalR4 36s linear infinite!important;
+    z-index:7!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-item {
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:5px!important;
     min-width:0!important;
     height:100%!important;
+    padding:0 7px!important;
+    border:0!important;
+    border-left:1px solid rgba(121,190,210,.14)!important;
+    border-radius:0!important;
+    background:transparent!important;
     overflow:hidden!important;
-  }
-
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084,
-  body #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084,
-  body #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084,
-  body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084,
-  body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084,
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
-    grid-row:1!important;
-    align-self:stretch!important;
-    box-sizing:border-box!important;
-    opacity:0;
-  }
-
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084 {
-    grid-column:1!important;
-    animation:atlasAetherPageA4084 36s linear infinite!important;
-  }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084 {
-    grid-column:2!important;
-    animation:atlasAetherPageA4084 36s linear infinite!important;
-  }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084 {
-    grid-column:3 / 5!important;
-    animation:atlasAetherPageA4084 36s linear infinite!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
     white-space:nowrap!important;
   }
-
-  body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084 {
-    grid-column:1 / 3!important;
-    padding-left:2px!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-item:first-child {
     border-left:0!important;
-    animation:atlasAetherPageB4084 36s linear infinite!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-    white-space:nowrap!important;
   }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084 {
-    grid-column:3!important;
-    animation:atlasAetherPageB4084 36s linear infinite!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-    white-space:nowrap!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-icon {
+    flex:0 0 auto!important;
+    font-size:13px!important;
+    line-height:1!important;
+    color:#9cebf5!important;
   }
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
-    grid-column:4!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-label {
+    flex:0 0 auto!important;
+    color:#8eabb7!important;
+    font-size:10.2px!important;
+    font-weight:950!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-value {
     min-width:0!important;
-    width:100%!important;
-    animation:atlasAetherPageB4084 36s linear infinite!important;
+    color:#d2e2e8!important;
+    font-size:10.5px!important;
+    font-weight:950!important;
+    font-variant-numeric:tabular-nums!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
   }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084[data-scroll="1"] {
-    animation:atlasAetherNewsReadPageB4084 36s ease-in-out infinite!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-btc.is-positive .r4-system-value { color:#7bf2aa!important; }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-btc.is-negative .r4-system-value { color:#ff7895!important; }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-btc.is-flat .r4-system-value { color:#d6dce0!important; }
+
+  /* If the system payload has not been inserted yet, keep Page B visible instead
+     of exposing an empty Aether band during the final phase. */
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085:not(:has(#atlasOperatorSystemRibbonR4)) #atlasAetherRibbonSources4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085:not(:has(#atlasOperatorSystemRibbonR4)) #atlasAetherRibbonBook4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085:not(:has(#atlasOperatorSystemRibbonR4)) .atlas-aether-news-window-4084 {
+    animation:atlasAetherPageBNoSystemFinalR4 36s linear infinite!important;
   }
 }
 
 @media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference) {
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
-    grid-template-columns:minmax(88px,.34fr) minmax(190px,.78fr) minmax(210px,.90fr) minmax(0,1.98fr)!important;
+  html body #livecheck.command-bar > #atlasAetherRibbon4084 {
+    padding-inline:7px!important;
+    font-size:10.2px!important;
   }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084,
-  body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084,
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
-    padding-inline:8px!important;
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084 {
+    width:104px!important;
+    font-size:10.8px!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084 {
+    left:104px!important;
+    width:168px!important;
+    font-size:10.2px!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084 {
+    left:272px!important;
+    font-size:10.2px!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonSources4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonBook4084,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
+    font-size:10.1px!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonSources4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasAetherRibbonBook4084::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 .atlas-aether-news-window-4084 > i::before,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-icon {
+    font-size:12px!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4,
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-value {
+    font-size:10px!important;
+  }
+  html body #livecheck.command-bar #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-label {
+    font-size:9.8px!important;
   }
 }
