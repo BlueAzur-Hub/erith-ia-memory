@@ -140,10 +140,10 @@
     if(document.getElementById("atlasOperatorSystemRibbonR4Style"))return;
     const style=document.createElement("style");style.id="atlasOperatorSystemRibbonR4Style";
     style.textContent=`
-      @keyframes atlasAetherPageAR4{0%,49%{opacity:0;visibility:hidden}50%,61%{opacity:1;visibility:visible}63%,100%{opacity:0;visibility:hidden}}
-      @keyframes atlasAetherPageBR4{0%,62%{opacity:0;visibility:hidden}64%,75%{opacity:1;visibility:visible}77%,100%{opacity:0;visibility:hidden}}
-      @keyframes atlasAetherSystemPageR4{0%,76%{opacity:0;visibility:hidden}78%,89%{opacity:1;visibility:visible}91%,100%{opacity:0;visibility:hidden}}
-      @keyframes atlasAetherNewsReadPageBR4{0%,64%{transform:translateX(0)}75%{transform:translateX(-22vw)}77%,100%{transform:translateX(0)}}
+      @keyframes atlasAetherPageAR4{0%,49%{opacity:0;visibility:hidden}50%,64%{opacity:1;visibility:visible}65%,100%{opacity:0;visibility:hidden}}
+      @keyframes atlasAetherPageBR4{0%,63%{opacity:0;visibility:hidden}64%,78%{opacity:1;visibility:visible}79%,100%{opacity:0;visibility:hidden}}
+      @keyframes atlasAetherSystemPageR4{0%,77%{opacity:0;visibility:hidden}78%,90%{opacity:1;visibility:visible}91%,100%{opacity:0;visibility:hidden}}
+      @keyframes atlasAetherNewsReadPageBR4{0%,64%{transform:translateX(0)}77%{transform:translateX(-22vw)}79%,100%{transform:translateX(0)}}
       #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084::before{content:"▱ ";color:#b9a8ff}
       #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084::before{content:"▦ ";color:#f0cf75}
       #atlasAetherRibbon4084 #atlasAetherRibbonSources4084::before{content:"▱ ";color:#76e3ed}
