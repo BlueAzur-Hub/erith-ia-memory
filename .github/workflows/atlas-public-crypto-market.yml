@@ -14,6 +14,9 @@ on:
 permissions:
   contents: write
 
+# Core Top-250 publication owns only latest.json + status.json.
+# A distinct group from unrelated Agent-Crypto builds lets this job retry cleanly,
+# while the exact-file commit below prevents it from reverting extended.json.
 concurrency:
   group: atlas-public-crypto-market-${{ github.ref }}
   cancel-in-progress: false
@@ -145,9 +148,11 @@ jobs:
           status = json.loads((root / "status.json").read_text(encoding="utf-8"))
           latest_path = root / "latest.json"
           latest = json.loads(latest_path.read_text(encoding="utf-8")) if latest_path.is_file() else {}
-          print("## Atlas Public Crypto Market · Build 28.3.38")
+          print("## Atlas Public Crypto Market · Canonical Snapshot Publication Recovery R1")
           print(f"- Collector state: **{status.get('status')}**")
           print(f"- Assets published: **{latest.get('assets_count', 0)}/250**")
+          print(f"- Canonical snapshot: **{latest.get('snapshot_id', '—')}**")
+          print(f"- Schedule: **17 and 47 UTC each hour**")
           print(f"- Market source: **CoinGecko USD**")
           print(f"- Conversion: **ECB USD/EUR · {latest.get('fx', {}).get('source_date', '—')}**")
           print(f"- Role: **broad market snapshot/cache — never execution quote**")
@@ -156,7 +161,7 @@ jobs:
               print(f"- Collector warning: `{status['last_error'][:1000]}`")
           PY
 
-      - name: Commit public crypto data
+      - name: Commit canonical Top-250 crypto data only
         if: always()
         shell: bash
         run: |
@@ -164,36 +169,48 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          snapshot_dir="public/agent_crypto_erith_ia/data/crypto"
-          snapshot_tmp="$(mktemp -d)"
-          trap 'rm -rf "$snapshot_tmp"' EXIT
-          cp -a "$snapshot_dir" "$snapshot_tmp/crypto"
+          data_dir="public/agent_crypto_erith_ia/data/crypto"
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
 
-          for attempt in 1 2 3; do
-            echo "Publication snapshot · tentative $attempt/3"
+          # CRITICAL: this collector owns only these two files.  The previous
+          # workflow copied and staged the whole data/crypto directory, which
+          # could revert the independent Extended snapshot during a publication.
+          for name in latest.json status.json; do
+            if [ -f "$data_dir/$name" ]; then
+              cp "$data_dir/$name" "$temp_dir/$name"
+            fi
+          done
+
+          test -f "$temp_dir/latest.json"
+          test -f "$temp_dir/status.json"
+
+          for attempt in 1 2 3 4 5 6 7 8; do
+            echo "Publication canonical Top-250 · tentative $attempt/8"
             git fetch origin main
             git reset --hard origin/main
-            rm -rf "$snapshot_dir"
-            mkdir -p "$(dirname "$snapshot_dir")"
-            cp -a "$snapshot_tmp/crypto" "$snapshot_dir"
-            git add "$snapshot_dir"
+
+            mkdir -p "$data_dir"
+            cp "$temp_dir/latest.json" "$data_dir/latest.json"
+            cp "$temp_dir/status.json" "$data_dir/status.json"
+            git add "$data_dir/latest.json" "$data_dir/status.json"
 
             if git diff --cached --quiet; then
-              echo "No crypto data change to commit."
+              echo "Canonical Top-250 already published."
               exit 0
             fi
 
             git commit -m "archive public crypto market snapshot"
             if git push origin HEAD:main; then
-              echo "Public crypto snapshot published."
+              echo "Public canonical Top-250 snapshot published."
               exit 0
             fi
 
-            echo "Remote main changed during publication; resynchronizing without force push."
+            echo "Remote main changed during publication; retrying without force push."
             sleep $((attempt * 2))
           done
 
-          echo "Unable to publish public crypto snapshot after 3 non-destructive attempts."
+          echo "Unable to publish canonical Top-250 snapshot after 8 non-destructive attempts."
           exit 1
 
       - name: Require a usable public snapshot
@@ -217,5 +234,5 @@ jobs:
               raise SystemExit(
                   "Collector did not publish a fresh snapshot; the last valid public snapshot was preserved"
               )
-          print(f"Public crypto snapshot ready: {count}/250")
+          print(f"Public crypto snapshot ready: {count}/250 · {payload.get('snapshot_id')}")
           PY
