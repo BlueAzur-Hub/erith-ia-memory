@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.95",
-  "parent_build": "40.4.94",
+  "build": "40.4.96",
+  "parent_build": "40.4.95",
   "purpose": "Complete Learning Journey presentation migration without touching the stable System 04 owner: remove the canonical Learning 01→11 range before DOM parsing, hydrate it only on demand, and preserve the 40.4.47 post-parse recovery fallback plus all Learning/IndexedDB runtime truth.",
   "rules": {
     "market_core_protected": "38.15.11",
@@ -795,6 +795,24 @@
     "new_timer": false,
     "new_observer": false,
     "new_business_network_owner": false,
+    "new_storage_owner": false
+  },
+  "runtime_migration_40496": {
+    "oracle_owner": "app.js::atlasOracleOutcomeSchedule",
+    "previous_idle_owner": "permanent 15 s setInterval after explicit Oracle init",
+    "new_idle_owner": "coalesced 2.5 s one-shot after explicit Oracle init or new Evidence capture",
+    "oracle_initialization_demand_only": true,
+    "outcome_semantics_changed": false,
+    "evidence_capture_semantics_changed": false,
+    "long_shadow_semantics_changed": false,
+    "market_core_changed": false,
+    "current_changed": false,
+    "bridge_changed": false,
+    "learning_40495_preserved": true,
+    "new_recurring_timer": false,
+    "recurring_timer_retired": true,
+    "new_observer": false,
+    "new_network_owner": false,
     "new_storage_owner": false
   }
 }
