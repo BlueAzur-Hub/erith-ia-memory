@@ -16,6 +16,7 @@ permissions:
 # GitHub native schedule on atlas-public-crypto-market.yml has repeatedly failed
 # to create reliable periodic runs. This clock therefore uses workflow_dispatch
 # only; it does not collect market data itself and does not touch Administrator.
+# Bootstrap revision: 1 — this push seeds the clock after creation.
 concurrency:
   group: atlas-public-crypto-market-clock
   cancel-in-progress: false
