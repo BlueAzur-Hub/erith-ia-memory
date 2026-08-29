@@ -51777,7 +51777,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.97";
+const ATLAS_BUILD = "40.4.98";
 const ATLAS_DIRECT_5_5_STABLE_MS = 10000;
 const ATLAS_DIRECT_5_5_MIN_CHECKS = 3;
 
@@ -63112,3 +63112,40 @@ try {
   });
 } catch (_) {}
 
+
+/* ============================================================
+   40.4.98 — FINAL ADMINISTRATOR RUNTIME MIGRATION SEAL
+   Operator-evidence seal over the 40.4.96 runtime, with 40.4.97
+   truth-only convergence carried forward. No business behavior change.
+   ============================================================ */
+try {
+  globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40498__ = Object.freeze({
+    build:"40.4.98", parent:"40.4.96", absorbed_unpublished_candidate:"40.4.97",
+    seal:"FINAL_ADMINISTRATOR_RUNTIME_MIGRATION",
+    operator_runtime_evidence:"40.4.93 -> 40.4.96",
+    runtime_equivalence_40497_to_40496:true,
+    firefox_slow_page_banner_in_final_evidence:false,
+    market_core:"38.15.11_PROTECTED",
+    market_native_window_contract_sealed:true,
+    atlas_current_4_4_nox_aerith_at_rest_observed:true,
+    learning_preparse_first_open_progress_indexeddb_observed:true,
+    oracle_permanent_15s_interval_retired:true,
+    bridge_backend_contract_preserved:true,
+    functional_migration_complete:true,
+    presentation_migration_complete:true,
+    runtime_performance_migration_complete:true,
+    final_operator_seal_complete:true,
+    business_runtime_changed:false,
+    current_algorithm_changed:false,
+    oracle_math_changed:false,
+    indexeddb_schema_changed:false,
+    bridge_protocol_changed:false,
+    window_manager_changed:false,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_websocket:false,
+    new_business_network_owner:false,
+    new_storage_owner:false,
+    reopen_migration_only_on_reproduced_regression:true
+  });
+} catch (_) {}

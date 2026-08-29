@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.97",
+  "build": "40.4.98",
   "parent_build": "40.4.96",
-  "purpose": "Converge the ownership/migration ledger with the operator-observed 40.4.96 runtime before the final Firefox seal. No engine, data, presentation-owner or scheduler behavior is changed in 40.4.97.",
+  "purpose": "Final seal of the completed Administrator runtime-demand migration using cumulative real Firefox operator evidence through 40.4.96. The unpublished 40.4.97 truth-convergence candidate is absorbed into this seal; no new extraction or business/runtime behavior change.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -232,18 +232,24 @@
       "state": "CANONICAL_PRESENTATION_ONLY_GATE",
       "introduced": "40.4.64",
       "notes": "Only the 1 s UI refresh cadence is stopped while its own disclosure is closed/unhydrated or the document is hidden. News data refresh, Auto Reader market pulse and Audience heartbeat remain unchanged."
+    },
+    {
+      "component": "Administrator runtime migration final seal",
+      "owner": "40.4.98 manifest + operator evidence ledger",
+      "state": "SEALED",
+      "notes": "No new runtime owner. Cumulative Firefox evidence through 40.4.96 plus runtime-neutral 40.4.97 truth convergence closes the migration. Reopen only on reproduced regression."
     }
   ],
   "next": {
-    "after_40_4_96": "40.4.97 converges ownership/version truth only. Do not reopen Market/Learning/Oracle/CURRENT surgery without a reproduced operator defect.",
-    "after_40_4_97": "Run the final sustained Firefox operator seal over cold boot, scroll/copy, Graph/Top5, Market native Reduce/Restore, Atlas/CURRENT, Oracle, Learning open/close/reopen, Metals, System, Projects/Operations. If responsive and functionally intact, close the migration; move future work back to product debt, not performance extraction."
+    "after_40_4_96": "40.4.98 is the direct final seal over published 40.4.96 and absorbs the unpublished 40.4.97 truth-only prep candidate.",
+    "after_40_4_98": "Migration closed. Protect Market Core/Graph/Top5/Atlas CURRENT/Oracle/Learning/Bridge/Backend/Window Manager. Reopen only on a concrete reproduced regression."
   },
   "migration_summary": {
-    "state": "RUNTIME_PERFORMANCE_MIGRATION_40_4_97_TRUTH_CONVERGED_FINAL_FIREFOX_SEAL_REQUIRED",
+    "state": "FINAL_ADMINISTRATOR_RUNTIME_MIGRATION_SEALED_40_4_98",
     "functional_migrations_complete": true,
     "presentation_migrations_complete": true,
     "runtime_performance_migration_complete": true,
-    "final_operator_seal_complete": false,
+    "final_operator_seal_complete": true,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
     "protected": [
@@ -266,7 +272,14 @@
       "40.4.95": "Learning first-open/progression/IndexedDB observed intact",
       "40.4.96": "Graph/Top5 7d operator report visible after Oracle interval retirement; CURRENT/Atlas truth remains coherent in exported report"
     },
-    "next_product_work": "Final Firefox seal only. No further extraction candidate is authorized by this ledger unless the operator reproduces a concrete regression."
+    "next_product_work": "Migration closed. Resume ordinary product debt only; reopen performance migration solely on a reproduced operator regression.",
+    "final_operator_evidence": {
+      "runtime_build": "40.4.96",
+      "truth_only_build": "40.4.97 (unpublished candidate absorbed)",
+      "evidence": "real Firefox operator captures/exports across Graph/Top5, Market, Atlas/CURRENT, Oracle, Learning and cross-domain navigation",
+      "slow_page_banner_reproduced_after_recovery_line": false,
+      "seal_basis": "40.4.97 was runtime-neutral truth convergence over the operator-observed 40.4.96 runtime and is absorbed into 40.4.98 without requiring a separate public hop."
+    }
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
