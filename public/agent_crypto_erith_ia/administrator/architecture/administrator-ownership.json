@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_administrator_ownership_v1",
-  "build": "40.4.96",
-  "parent_build": "40.4.95",
-  "purpose": "Complete Learning Journey presentation migration without touching the stable System 04 owner: remove the canonical Learning 01→11 range before DOM parsing, hydrate it only on demand, and preserve the 40.4.47 post-parse recovery fallback plus all Learning/IndexedDB runtime truth.",
+  "build": "40.4.97",
+  "parent_build": "40.4.96",
+  "purpose": "Converge the ownership/migration ledger with the operator-observed 40.4.96 runtime before the final Firefox seal. No engine, data, presentation-owner or scheduler behavior is changed in 40.4.97.",
   "rules": {
     "market_core_protected": "38.15.11",
     "runtime_truth_precedes_presentation": true,
@@ -29,14 +29,22 @@
         "Target Top 5",
         "selected market/comparison state"
       ],
-      "boot_generated_rows": 0,
-      "materialize_on": [
-        "Marché navigation",
-        "Afficher tableau",
-        "search/filter/sort/universe operator intent"
+      "notes": "40.4.93 native Market UX is canonical: the existing Window Manager is the sole visibility owner. Normal/restored shows the table; Reduce/Hide releases generated rows; Restore rematerializes current rows. Search/filter/sort/universe controls never own visibility. The rejected 40.4.92 extra Show-table control does not exist.",
+      "visibility_owner": "existing Administrator Window Manager market state",
+      "materialize_when_native_state": [
+        "normal",
+        "restored"
       ],
-      "release_on_close": true,
-      "notes": "40.4.93 recovers native Market UX: normal/restored Market shows its table; existing Window Manager Reduce/Hide releases generated rows; Restore rematerializes current rows. No second Market visibility control."
+      "release_when_native_state": [
+        "reduced",
+        "hidden"
+      ],
+      "operator_controls_do_not_own_visibility": [
+        "search",
+        "filters",
+        "sort",
+        "50/100/250/500/1000 universe controls"
+      ]
     },
     {
       "component": "Administrator role + canonical URL truth",
@@ -129,7 +137,7 @@
       "component": "Oracle presentation",
       "owner": "js/views/oracle-presentation.js + admin-oracle.css + views/oracle.html",
       "state": "TRUE_LAZY_COMPLETE_CANONICAL",
-      "notes": "40.4.45 migrates the remaining historical 40.4.6 inline Oracle UI CSS into admin-oracle.css. Former oracle-ui-continuity.js and oracle-demand-residency.js are inert tombstones and remain unloaded."
+      "notes": "Canonical true-lazy Oracle presentation. Since 40.4.96, Outcome/Long-Shadow follow explicit Oracle demand or new Evidence via one coalesced one-shot; the permanent 15 s outcome interval is retired. Oracle math/Evidence semantics remain protected."
     },
     {
       "component": "Learning Journey 01→11 presentation CSS",
@@ -227,37 +235,38 @@
     }
   ],
   "next": {
-    "after_40_4_59": "Operator Firefox validation of automatic Source Intelligence V1.3 and address-proof counts. Then extend additional read-only source coverage or documentation; do not reopen CURRENT cadence without reproduced defect.",
-    "after_40_4_63": "40.4.64 peripheral runtime extraction from audited demand candidates; Market Core/CURRENT/Oracle analytical ownership stay protected.",
-    "after_40_4_64": "40.4.66 implemented: secondary Metals runtime leaves default Crypto boot; Celestial closed cadence relieved; ordinary version check moved outside first boot burst.",
-    "after_40_4_65": "40.4.66 cumulative Firefox/runtime migration + backend/source regression checkpoint; no further extraction unless measured evidence remains.",
-    "after_40_4_82": "Firefox operator validation: cold boot → Graph/Top 5 responsiveness → open Simulation once → verify Learning/IndexedDB recovery and persistence. Only after PASS, audit the next phase-2 demand candidate (System diagnostics/secondary presentation), one owner at a time.",
-    "after_40_4_94": "After Firefox PASS, audit the next largest non-protected closed presentation owner. Do not migrate Graphique, Target Top 5, CURRENT, Oracle engine or Window Manager without reproduced evidence.",
-    "after_40_4_95": "Firefox operator validation: cold boot/scroll/copy → System/Simulation → open Learning once → verify module 08/progression/IndexedDB → close/reopen → Graph/Top 5/Atlas/CURRENT non-regression. Only after PASS, audit remaining idle scheduler/truth UI debt."
+    "after_40_4_96": "40.4.97 converges ownership/version truth only. Do not reopen Market/Learning/Oracle/CURRENT surgery without a reproduced operator defect.",
+    "after_40_4_97": "Run the final sustained Firefox operator seal over cold boot, scroll/copy, Graph/Top5, Market native Reduce/Restore, Atlas/CURRENT, Oracle, Learning open/close/reopen, Metals, System, Projects/Operations. If responsive and functionally intact, close the migration; move future work back to product debt, not performance extraction."
   },
   "migration_summary": {
-    "state": "RUNTIME_DEMAND_40_4_94_SECONDARY_NEWS_EARLY_RESIDENCY_FIREFOX_VALIDATION_REQUIRED",
+    "state": "RUNTIME_PERFORMANCE_MIGRATION_40_4_97_TRUTH_CONVERGED_FINAL_FIREFOX_SEAL_REQUIRED",
     "functional_migrations_complete": true,
+    "presentation_migrations_complete": true,
+    "runtime_performance_migration_complete": true,
+    "final_operator_seal_complete": false,
     "legacy_runtime_owners_active": 0,
     "legacy_css_dependencies_active": 0,
     "protected": [
       "Market Core 38.15.11",
+      "Graphique + Target Top 5",
       "Atlas CURRENT pipeline",
       "Learning runtime + IndexedDB",
       "Oracle engine/Evidence",
-      "Window Manager behavior",
-      "Firefox performance checkpoint"
+      "Bridge + Private Backend",
+      "Window Manager behavior"
     ],
     "monitor_only": [
-      "Firefox compositor/paint",
+      "Firefox sustained operator responsiveness",
       "Transformer Book operator parity",
       "GitHub Pages propagation/cache truth",
-      "Administrator first-click entry latency",
       "new-canonical-snapshot auth/Bridge handoff"
     ],
-    "next_product_work": "Firefox operator check of 40.4.94: cold boot responsiveness, News summaries visible, first News open restores full body and controls, close/reopen stable. Continue only with another measured non-protected contention owner.",
-    "presentation_migrations_complete": true,
-    "runtime_performance_migration_complete": false
+    "operator_checkpoints": {
+      "40.4.93": "functional checkpoint recovered after 40.4.89 contention failure and 40.4.92 Market UX rejection",
+      "40.4.95": "Learning first-open/progression/IndexedDB observed intact",
+      "40.4.96": "Graph/Top5 7d operator report visible after Oracle interval retirement; CURRENT/Atlas truth remains coherent in exported report"
+    },
+    "next_product_work": "Final Firefox seal only. No further extraction candidate is authorized by this ledger unless the operator reproduces a concrete regression."
   },
   "current_truth": {
     "rest_ui_convergence": "40.4.52 exact canonical market-id + verified CLOSED transaction proof; no compute/reopen"
@@ -814,5 +823,19 @@
     "new_observer": false,
     "new_network_owner": false,
     "new_storage_owner": false
+  },
+  "truth_convergence_40497": {
+    "build": "40.4.97",
+    "parent_build": "40.4.96",
+    "runtime_behavior_changed": false,
+    "removed_stale_claims": [
+      "40.4.92 extra Market Show-table control",
+      "40.4.94 migration-summary current-state pointer",
+      "40.4.95 publication identity expectation"
+    ],
+    "canonical_market_contract": "native Window Manager only",
+    "canonical_learning_contract": "40.4.95 pre-parse demand + safe 40.4.47 fallback + protected 97-ref runtime rebind",
+    "canonical_oracle_outcome_contract": "40.4.96 explicit-demand/new-Evidence one-shot; no permanent 15 s interval",
+    "final_firefox_seal_required": true
   }
 }

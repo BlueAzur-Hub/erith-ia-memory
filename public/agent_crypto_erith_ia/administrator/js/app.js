@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.96";
-  const ADMIN_RELEASE = "ORACLE OUTCOME TRUE-DEMAND · IDLE INTERVAL RETIREMENT LOCK";
+  const ADMIN_BUILD = "40.4.97";
+  const ADMIN_RELEASE = "MIGRATION TRUTH · OWNER CONVERGENCE · FINAL SEAL PREP";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
