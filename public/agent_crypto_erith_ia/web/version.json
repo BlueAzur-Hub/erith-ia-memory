@@ -1,11 +1,11 @@
 {
   "schema": "agent_crypto_version_manifest_v4",
-  "release": "Market Core V2.0-Alpha · Build 38.15.14 · CLASSIC MODULAR PRESENTATION BOUNDARY SCAFFOLD LOCK",
-  "build": "38.15.14",
-  "asset_token": "market-core-v2.0-alpha-build-38.15.14",
+  "release": "Market Core V2.0-Alpha · Build 38.15.15 · CLASSIC ATLAS PRESENTATION EXTRACTION + DIAGNOSTIC TRUTH LOCK",
+  "build": "38.15.15",
+  "asset_token": "market-core-v2.0-alpha-build-38.15.15",
   "status": "classic_candidate_requires_firefox_operator_validation",
-  "parent_build": "38.15.13",
-  "prepared_at": "2026-08-29T03:53:00+02:00",
+  "parent_build": "38.15.14",
+  "prepared_at": "2026-08-29T04:14:00+02:00",
   "published_at": null,
   "engine": {
     "name": "Market Core V2.0-Alpha",
@@ -14,40 +14,58 @@
   },
   "files": {
     "app.js": {
-      "sha256": "684bbc20fbd760b1764d93c0e5935e6279d071dcd177b613956382ff47196bdc"
+      "sha256": "69626164b09ed19392f4b6739398691a275948fbbc3da6dc2e670bf9a755399d"
     },
     "index.html": {
-      "sha256": "82656ae71452268d3cccd0b4439c696415712b145001217bc81c57c1e7db7c7d"
+      "sha256": "f76046eb33b2427a78cc0f546a1ce8017138484c9c5fcf479e86ab33e1107718"
+    },
+    "classic-presentation-boundaries.json": {
+      "sha256": "bd08381c1ed8969e3e5583c071b419eb4cbde9101ba2227b2f5b77673760a52b"
+    },
+    "views/atlas.html": {
+      "sha256": "df12f8862211cb59cdd609480947881b4c5b2cf2f9290588e71d7821c0574d93"
+    },
+    "js/views/atlas-presentation.js": {
+      "sha256": "2aec2d30edc3c9efd70001fc3b83c824f02b3df046e887c456537378f085b2fb"
     },
     "style.css": {
       "sha256": "bea94ca99f5adae12e9e1f745982e0a1f22209069d96977a6f801884ab2e95ba",
       "upload_required": false,
       "byte_identical_to_parent": true
-    },
-    "classic-presentation-boundaries.json": {
-      "sha256": "e6169f8722d8aa8546cac30cd3a7c83900e07ccdb2b3384b335f2fcb4dddfd48"
     }
   },
   "contracts": {
     "base_authority": {
-      "build": "38.15.13",
-      "app_sha256": "8058560e7b302784a653e504bd2b9cbd0eafd45d4ac2d23eca368d49a97787ba",
-      "index_sha256": "d22ea956de84158ff5b7824132b7fde5377620cf3454a7585c2bea8a01916a6d",
+      "build": "38.15.14",
+      "app_sha256": "684bbc20fbd760b1764d93c0e5935e6279d071dcd177b613956382ff47196bdc",
+      "index_sha256": "82656ae71452268d3cccd0b4439c696415712b145001217bc81c57c1e7db7c7d",
       "style_sha256": "bea94ca99f5adae12e9e1f745982e0a1f22209069d96977a6f801884ab2e95ba",
-      "version_sha256": "c3a138f2767b21056125029e20199356ccac23c3684e5eacf67788631339c40b"
+      "boundary_sha256": "e6169f8722d8aa8546cac30cd3a7c83900e07ccdb2b3384b335f2fcb4dddfd48"
     },
-    "migration_scaffold": {
-      "manifest": "classic-presentation-boundaries.json",
-      "declared_only": true,
+    "atlas_presentation_extraction": {
+      "canonical_view": "views/atlas.html",
+      "transport": "js/views/atlas-presentation.js",
+      "strategy": "parser-blocking transport mirror",
+      "extracted_ids": 303,
       "runtime_fetch": false,
-      "dom_extraction": false,
-      "view_files_created": false,
-      "lazy_hydration_added": false,
+      "atlas_runtime_owner_changed": false,
       "new_timer": false,
       "new_observer": false,
       "new_event_listener": false,
       "new_network_owner": false,
       "new_storage_owner": false
+    },
+    "diagnostic_truth": {
+      "historical_false_negative_checks_rebound_to_canonical_owners": [
+        "restore_ui_truth_389",
+        "book_role_ui_lock_3812",
+        "journal_memory_exact_bind_3812",
+        "journal_append_only_3814"
+      ],
+      "engine_reference": "38.15.11",
+      "web_classic_build": "38.15.15",
+      "bridge_expected": "V1.9.11",
+      "bridge_protocol_changed": false
     },
     "protected_runtime": {
       "market_core": "38.15.11",
@@ -60,29 +78,21 @@
       "oracle_preserved": true,
       "learning_journey_01_11_preserved": true,
       "indexeddb_schema_changed": false,
-      "bridge_changed": false,
+      "bridge_protocol_changed": false,
       "ollama_contract_changed": false
     },
     "next_extraction": {
-      "candidate": "38.15.15",
-      "target": "Atlas presentation only",
-      "requires_firefox_operator_pass_381514": true,
-      "forbidden_before_pass": [
-        "Oracle extraction",
-        "System extraction",
-        "Operations extraction",
-        "Projects extraction",
-        "true lazy hydration"
-      ]
+      "candidate": "38.15.16",
+      "target": "Oracle presentation only after 38.15.15 Firefox operator PASS"
     }
   },
   "notes": [
-    "Built directly from the exact archived 38.15.13 CLEAN_UPLOAD package; no GitHub reconstruction.",
-    "38.15.14 declares future Classic presentation boundaries only. The boundary manifest is inert and is not fetched or executed by the page.",
-    "app.js changes are limited to release/build identity strings required by the existing runtime truth contract; executable ownership/topology is unchanged.",
-    "index.html changes are limited to release/build identity and visible release wording; DOM topology is unchanged.",
-    "style.css is byte-identical to 38.15.13 and does not need to be uploaded.",
-    "No Atlas, CURRENT, NØX, Aerith, Oracle, Learning, IndexedDB, Bridge/Ollama, Market Core, Binance or graph behavior is intentionally changed.",
-    "Firefox operator validation is required before any Atlas presentation extraction in 38.15.15."
+    "Built cumulatively from the exact 38.15.14 CLEAN_UPLOAD that received Firefox operator evidence.",
+    "The Atlas/Aerith presentation body is removed from index.html and mounted synchronously at the same parser position from a generated transport mirror before app.js executes.",
+    "views/atlas.html is the readable canonical presentation source; the runtime transport does not fetch it and introduces no asynchronous boot dependency.",
+    "The four known historical RC audit false negatives are rebound to the canonical runtime owners, matching the proven Administrator repair.",
+    "Bridge expected identity is updated from V1.9.5 to V1.9.11; Bridge protocol/endpoints are not changed.",
+    "No Market Core, CURRENT, NØX, Aerith, Oracle engine, Learning state, IndexedDB schema, Binance or historical graph behavior is intentionally changed.",
+    "Firefox operator validation is required before the next extraction."
   ]
 }

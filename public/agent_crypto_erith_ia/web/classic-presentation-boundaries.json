@@ -1,12 +1,12 @@
 {
   "schema": "agent_crypto_classic_presentation_boundaries_v1",
-  "build": "38.15.14",
-  "parent_build": "38.15.13",
+  "build": "38.15.15",
+  "parent_build": "38.15.14",
   "mode": "Web Classic",
-  "release": "CLASSIC MODULAR PRESENTATION BOUNDARY SCAFFOLD LOCK",
-  "state": "DECLARED_ONLY_NO_EXTRACTION",
-  "runtime_integration": "NONE",
-  "purpose": "Declare the future presentation extraction boundaries before any Classic DOM extraction or lazy hydration.",
+  "release": "CLASSIC ATLAS PRESENTATION EXTRACTION + DIAGNOSTIC TRUTH LOCK",
+  "state": "ATLAS_EXTRACTED_PARSER_BLOCKING_BOOT_PARITY",
+  "runtime_integration": "PARSER_BLOCKING_TRANSPORT_MIRROR_NO_FETCH",
+  "purpose": "Extract the Classic Atlas/Aerith presentation from index.html while preserving the exact boot-time DOM before app.js initializes; also converge inherited RC audit and Bridge version truth.",
   "protected_runtime": {
     "market_core": "38.15.11",
     "binance_live": "UNCHANGED",
@@ -17,21 +17,22 @@
     "oracle": "UNCHANGED",
     "learning_01_11": "UNCHANGED",
     "indexeddb_schema": "UNCHANGED",
-    "bridge_ollama": "UNCHANGED",
+    "bridge_ollama": "PROTOCOL_UNCHANGED_EXPECTED_BRIDGE_IDENTITY_V1.9.11",
     "classic_operator_state": "UNCHANGED"
   },
   "boundaries": [
     {
       "id": "atlas",
       "planned_view": "views/atlas.html",
-      "state": "DECLARED_ONLY",
-      "next_candidate": "38.15.15"
+      "state": "EXTRACTED_PARSER_BLOCKING_BOOT_PARITY",
+      "next_candidate": "operator_validation_then_oracle",
+      "transport": "js/views/atlas-presentation.js"
     },
     {
       "id": "oracle",
       "planned_view": "views/oracle.html",
       "state": "DECLARED_ONLY",
-      "next_candidate": "after_atlas_operator_pass"
+      "next_candidate": "38.15.16_after_381515_operator_pass"
     },
     {
       "id": "operations",
@@ -53,7 +54,7 @@
     }
   ],
   "runtime_delta": {
-    "dom_extraction": false,
+    "dom_extraction": true,
     "view_fetch": false,
     "new_timer": false,
     "new_observer": false,
@@ -63,14 +64,31 @@
     "new_storage_owner": false,
     "indexeddb_change": false,
     "atlas_scheduler_change": false,
-    "current_fingerprint_change_by_scaffold": false
+    "current_fingerprint_change_by_scaffold": false,
+    "parser_blocking_transport_mount": true,
+    "atlas_runtime_owner_change": false
   },
   "acceptance_gate": [
-    "Classic visible/function behavior matches 38.15.13.",
-    "Market Core 38.15.11 and Binance 5/5 remain intact.",
-    "Atlas CURRENT behavior is not modified by this scaffold.",
-    "Learning Journey 01→11 remains present.",
-    "No declared boundary is loaded before a later explicit extraction build.",
-    "Firefox operator evidence is required before 38.15.15 Atlas presentation extraction."
-  ]
+    "Build 38.15.15 identity is visible and cache-consistent.",
+    "Classic visual/function behavior matches validated 38.15.14.",
+    "Market Core 38.15.11, Binance 5/5 and historical graph remain intact.",
+    "Atlas presentation is mounted parser-blocking before app.js boot; 303 extracted IDs are restored at the original location.",
+    "Atlas CURRENT / NØX / Aerith / IndexedDB behavior remains unchanged.",
+    "RC static audit no longer reports the four known historical false negatives.",
+    "Bridge V1.9.11 is recognized as the expected local Bridge identity.",
+    "No fetch/timer/observer/listener/storage/network owner is introduced by the presentation transport.",
+    "Firefox operator evidence is required before Oracle presentation extraction."
+  ],
+  "diagnostic_truth": {
+    "historical_false_negative_checks_rebound_to_canonical_owners": [
+      "restore_ui_truth_389",
+      "book_role_ui_lock_3812",
+      "journal_memory_exact_bind_3812",
+      "journal_append_only_3814"
+    ],
+    "engine_reference": "38.15.11",
+    "web_classic_build": "38.15.15",
+    "bridge_expected": "V1.9.11",
+    "bridge_protocol_changed": false
+  }
 }
