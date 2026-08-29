@@ -2,55 +2,59 @@
 
 Base: sealed Administrator `40.4.98` / runtime commit `d2cb4bb778df51a5a03fcdcce01027a7cd6530b6`.
 
-## Proven on current runtime
+## PASS26 verdict
 
-- `atlasV2OpenAdvancedForTarget()` remains the canonical route owner.
-- Exact current hard-fail remains: canonical `document.getElementById(id)` followed by `if (!target) return false`.
+`STATIC FAIL / PROPOSAL FROZEN / NOT FIREFOX-READY / NO BUILD`
+
+## Proven current-runtime facts
+
+- `atlasV2OpenAdvancedForTarget()` is the canonical route owner.
+- Its order remains: manifest entry -> DOM target lookup -> missing target false -> mode/intermediate/auth -> visibility/details/persistence/hash/scroll.
 - Exactly three affected cold ids: `auto-reader`, `shared-memory`, `github-memory`.
-- Existing `atlas-peripheral-lazy.js` remains build `40.4.35` and private hydration owner.
-- Owner success emits bubbling `erith:presentation-resident {family:"atlas", key, build:"40.4.35"}`.
-- Owner failure sets `data-atlas-hydration40425="error"` and emits no failure event.
-- Owner public contract exposes diagnostics/state only, including `hydrated()`, not an imperative hydrate API.
+- `atlas-peripheral-lazy.js` 40.4.35 remains private source/hydration owner.
+- Owner success emits `erith:presentation-resident {family:"atlas", key, build:"40.4.35"}`.
+- Owner terminal failure sets `data-atlas-hydration40425="error"`, renders owner error UI, returns false, and emits no failure event.
 
-## Prototype budget
+## Static failure A — authorization ordering
 
-The staging proposal adds only:
-- one in-memory Set of exactly 3 ids;
-- one in-memory pending Map;
-- one monotonically increasing in-memory generation;
-- one bounded `erith:presentation-resident` listener per pending key;
-- one bounded owner `toggle` listener per pending key;
-- one bounded cleanup timeout per pending key.
+The Pass25 proposal handles a missing known lazy target by scheduling hydration and setting the owner disclosure open at the current hard-fail boundary. Because canonical mode/auth checks occur only after the DOM target has been resolved, this causes hydration to begin before those canonical checks for cold advanced targets.
 
-It adds no:
-- business/network fetch;
-- WebSocket;
-- storage schema or writer;
-- interval/polling loop;
-- MutationObserver;
-- IntersectionObserver;
-- retry policy;
-- second hashchange owner;
-- second Command Center click owner;
-- second module-picker owner;
-- DOM source parser;
-- direct call to private owner hydrate.
+Required invariant violated:
 
-## Functional invariants required before executable integration
+`existing auth/mode semantics preserved before advanced content hydration`
 
-1. Existing-target path must remain synchronous and functionally byte-equivalent after target resolution.
-2. Unknown missing target must still return `false`.
-3. Known cold lazy target may synchronously return `true` only as accepted/scheduled; this requires Firefox caller validation.
-4. A later route intent must invalidate stale lazy continuation.
-5. Repeated same-key intent must join/update one pending operation, not cause a second hydration trigger.
-6. `details.open=true` remains the only hydration trigger invoked by the router.
-7. Success must re-resolve canonical id and re-enter the existing router exactly once.
-8. Close-during-load must clean pending state without retry.
-9. Terminal source error must eventually clean pending state without retry; the proposal uses bounded timeout only because owner emits no error event.
-10. Generic Atlas residency remains untouched until this router is proven in Firefox.
+This is a static architectural failure. Do not send this exact proposal to Firefox as a viable candidate.
 
-## Static status
+## Static failure B — fixed timeout ambiguity
 
-`PASS FOR DESIGN ISOLATION / NOT A RUNTIME PASS / FIREFOX REQUIRED`
+The owner exposes no terminal failure event or imperative/public hydration Promise. Existing signals are insufficient to distinguish all outcomes without an added mechanism:
+- success: resident event;
+- close: toggle event;
+- failure while still open: dataset/error UI only.
 
-The proposal file is intentionally not referenced by `administrator/index.html` or any runtime manifest and therefore cannot alter the live Administrator.
+Consequences:
+- no timeout => pending listener/map can remain stale after terminal error;
+- fixed timeout => a legitimate slow success after the cutoff loses its router continuation;
+- polling/MutationObserver => violates the zero-polling/zero-observer budget;
+- invented retry => prohibited;
+- direct hydrate/fetch => prohibited.
+
+Therefore `15000 ms` is cleanup policy, not owner truth, and cannot be promoted as a correctness boundary.
+
+## Race/supersession review
+
+The proposal's per-key Map and generation token are directionally correct for same-key deduplication and stale resident events. The close listener also bounds close-during-load. These properties do not cure the two blocking failures above.
+
+The canonical synchronous path requirement remains binding: do not convert the whole router to Promise/async and do not fork steps after target resolution.
+
+## Budget remains protected
+
+No runtime integration has occurred. No business fetch, WebSocket, storage writer/schema, recurring interval, observer, polling, retry, second hashchange/router, source parser, direct hydrate or generic-residency retirement was introduced.
+
+## Gate
+
+A successor design must first prove BOTH:
+1. authorization/mode gate is preserved before any cold advanced hydration starts, without speculative duplicate auth ownership;
+2. terminal pending cleanup has an owner-grounded semantic handoff, or a separately approved scope change explicitly supplies one.
+
+Until both are proven: `NO EXECUTABLE CANDIDATE / NO BUILD`.
