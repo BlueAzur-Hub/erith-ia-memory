@@ -746,3 +746,51 @@
   html body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 > #atlasOperatorSystemRibbonR4 { left:102px!important; font-size:10px!important; }
   html body #atlasAetherRibbon4084 #atlasOperatorSystemRibbonR4 .r4-system-icon { font-size:12px!important; }
 }
+
+/* ============================================================================
+   40.4.99 R4 — FINAL TWO-PAGE CSS CYCLE LOCK
+
+   Finish the CSS-only Aether presentation with two deterministic pages only:
+   A = Atlas + Oracle; B = Sources + Book + Dernière veille.
+   System/telemetry remains a separate backend chantier and cannot create an
+   empty brand-only phase. The native technical row stays underneath as fallback.
+   ============================================================================ */
+@keyframes atlasAetherPageAR4Done {
+  0%,44.4% {opacity:0;visibility:hidden}
+  44.5%,67% {opacity:1;visibility:visible}
+  67.1%,100% {opacity:0;visibility:hidden}
+}
+@keyframes atlasAetherPageBR4Done {
+  0%,66.5% {opacity:0;visibility:hidden}
+  66.6%,89.5% {opacity:1;visibility:visible}
+  89.6%,100% {opacity:0;visibility:hidden}
+}
+@media (min-width:901px) and (prefers-reduced-motion:no-preference) {
+  html body #livecheck.command-bar > #atlasAetherRibbon4084 {
+    background:#06131d!important;
+  }
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084,
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084 {
+    animation:atlasAetherPageAR4Done 36s linear infinite!important;
+  }
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084,
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084,
+  html body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
+    animation:atlasAetherPageBR4Done 36s linear infinite!important;
+  }
+  html body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 > #atlasOperatorSystemRibbonR4 {
+    display:none!important;
+    animation:none!important;
+    opacity:0!important;
+    visibility:hidden!important;
+  }
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonAtlas4084::before,
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonOracle4084::before,
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonSources4084::before,
+  html body #atlasAetherRibbon4084 #atlasAetherRibbonBook4084::before,
+  html body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 > i::before {
+    margin-right:3px!important;
+    font-size:9px!important;
+    vertical-align:0!important;
+  }
+}
