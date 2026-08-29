@@ -1,6 +1,19 @@
 /* Agent-Crypto @erith.IA — Pass25 Atlas Router proposal
+   PASS26 STATIC STATUS: REJECTED / FROZEN / DO NOT INTEGRATE
    COORDINATION ONLY / NOT LOADED BY RUNTIME / NO BUILD
    Intended insertion target: sealed Administrator 40.4.98 root app.js.
+
+   Pass26 proved this proposal schedules owner.open=true before the canonical
+   mode/auth transaction, because sealed atlasV2OpenAdvancedForTarget() resolves
+   the DOM target before those gates. That changes access semantics for cold
+   advanced targets. The proposal is retained only as an audit artifact.
+
+   Pass26 also proved the current owner emits success only. Terminal hydration
+   error is represented by data-atlas-hydration40425="error" with no failure
+   event. The fixed 15 s timer below is therefore not a semantic owner signal:
+   it can clean a true failure, but can also abandon a legitimate slow success.
+   Under the zero-observer/zero-polling/no-owner-change constraint there is no
+   exact replacement signal. Do not ship this shape.
 */
 
 const ATLAS_V2_LAZY_PERIPHERAL_KEYS_PASS25 = Object.freeze(new Set([
@@ -90,14 +103,17 @@ function atlasV2ScheduleLazyPeripheralRoutePass25(id, hash, options, generation)
   document.addEventListener("erith:presentation-resident", pending.listener);
   owner.addEventListener("toggle", pending.closeListener);
 
-  // Bounded cleanup only: no retry, no fetch, no hydration call, no polling.
+  // Pass26: retained for forensic review only; this is NOT a safe runtime truth.
   pending.cleanupTimer = window.setTimeout(() => cleanup(), ATLAS_V2_LAZY_ROUTE_CLEANUP_MS_PASS25);
   owner.open = true;
   return true;
 }
 
 /*
-Minimal integration boundary inside the EXISTING atlasV2OpenAdvancedForTarget():
+PASS26: THIS INTEGRATION SHAPE IS STATICALLY REJECTED.
+
+Minimal integration boundary originally proposed inside the EXISTING
+atlasV2OpenAdvancedForTarget():
 
 function atlasV2OpenAdvancedForTarget(hash, options = {}) {
   const id = decodeURIComponent(String(hash || "").replace(/^#/, ""));
@@ -112,13 +128,13 @@ function atlasV2OpenAdvancedForTarget(hash, options = {}) {
   const target = document.getElementById(id);
   if (!target) {
     if (ATLAS_V2_LAZY_PERIPHERAL_KEYS_PASS25.has(id)) {
+      // REJECTED: this schedules owner.open=true before canonical mode/auth gates.
       return atlasV2ScheduleLazyPeripheralRoutePass25(id, hash, options, routeGeneration);
     }
     return false;
   }
 
-  // FROM HERE: retain the sealed 40.4.98 body unchanged.
-  // Unknown internal option keys are ignored by existing semantics.
+  // FROM HERE: sealed 40.4.98 performs mode/auth/visibility/details/persistence/hash/scroll.
   ...
 }
 */
