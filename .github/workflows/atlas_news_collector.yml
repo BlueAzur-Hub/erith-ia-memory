@@ -1,5 +1,5 @@
 name: Atlas News Sentinel World-to-Market Live Feed
-# 40.4.108 — canonical collector → strict offline French headline enrichment → validated archive publication.
+# 40.4.110 — canonical collector → raw offline EN→FR → deterministic editorial French display → validated archive publication.
 
 on:
   workflow_dispatch:
@@ -68,11 +68,11 @@ jobs:
           p=Path("public/agent_crypto_erith_ia/data/news/latest.json")
           data=json.loads(p.read_text(encoding="utf-8"))
           events=[e for e in data.get("events",[]) if isinstance(e,dict) and str(e.get("headline") or "").strip()]
-          missing=[str(e.get("event_id") or e.get("id") or "?") for e in events if not str(e.get("headline_fr") or "").strip()]
+          missing=[str(e.get("event_id") or e.get("id") or "?") for e in events if not str(e.get("headline_fr") or "").strip() or not str(e.get("headline_fr_display") or "").strip()]
           summary=data.get("translation_fr") if isinstance(data.get("translation_fr"),dict) else {}
-          if str(summary.get("build")) != "40.4.108": raise SystemExit("French translation build marker missing")
+          if str(summary.get("build")) != "40.4.110": raise SystemExit("French translation build marker missing")
           if missing: raise SystemExit(f"headline_fr missing for {len(missing)} events: {missing[:5]}")
-          print(f"FRENCH NEWS PUBLICATION PASS · {len(events)}/{len(events)} headline_fr")
+          print(f"FRENCH NEWS PUBLICATION PASS · {len(events)}/{len(events)} headline_fr + headline_fr_display")
           PY
 
       - name: Commit News Sentinel archive
