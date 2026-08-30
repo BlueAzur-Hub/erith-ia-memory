@@ -266,7 +266,7 @@
   }
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{
     position:relative!important;display:grid!important;
-    grid-template-columns:auto minmax(245px,1.35fr) minmax(205px,1.05fr) minmax(275px,1.45fr) minmax(190px,1fr) minmax(92px,.5fr)!important;
+    grid-template-columns:auto minmax(300px,1fr) fit-content(190px) fit-content(340px) fit-content(280px) fit-content(130px)!important;
     align-items:center!important;width:100%!important;min-width:0!important;height:100%!important;padding:0!important;gap:0!important;
     transform:none!important;animation:none!important;
   }
@@ -315,7 +315,7 @@
   }
   body #atlasAetherVeille4087 .atlas-aether-veille-marquee-4087{
     display:flex!important;align-items:center!important;width:max-content!important;min-width:100%!important;
-    transform:translateX(0)!important;animation:none!important;will-change:auto!important;
+    transform:none;animation:none!important;will-change:auto!important;
   }
   body #atlasAetherVeille4087 .atlas-aether-veille-copy-4087{
     display:inline-block!important;flex:0 0 auto!important;padding-right:120px!important;white-space:nowrap!important;font-weight:900!important;
@@ -350,7 +350,7 @@
 
 @media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference){
   body #atlasAetherRibbon4084{padding-inline:8px!important;font-size:11.8px!important}
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{grid-template-columns:auto minmax(185px,1.2fr) minmax(155px,.95fr) minmax(205px,1.25fr) minmax(145px,.85fr) minmax(80px,.45fr)!important}
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{grid-template-columns:auto minmax(220px,1fr) fit-content(150px) fit-content(270px) fit-content(220px) fit-content(105px)!important}
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084,
   body #atlasAetherRibbonMarket4088,
   body #atlasAetherRibbonAtlas4084,
