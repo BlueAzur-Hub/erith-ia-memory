@@ -2,15 +2,15 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.111
-  Revision: 40.4.111 information-first recovery; French editorial preferred, original headline preserved as last-resort information, context caveats consolidated into the LIMITES facet; 90 s cadence unchanged.
+  Build: 40.4.112
+  Revision: 40.4.112 fresh News owner wake + in-window information pulse; cached News is never treated as freshness proof; VEILLE/CONTEXTE advances inside the existing 36 s feed window without a new JavaScript timer; 90 s outer cadence unchanged.
 */
 (() => {
   "use strict";
   function aetherText4084(id,fallback="—"){const n=document.getElementById(id);const v=String(n?.textContent||"").replace(/\s+/g," ").trim();return v||fallback;}
   function aetherCurrent4084(){try{return typeof atlasCurrentStateRead==="function"?(atlasCurrentStateRead()||null):null;}catch(_){return null;}}
   const AETHER_VEILLE_TOP_4087=5;
-  const aetherVeilleState4087={index:0,kind:"alert",contextFacet:0,fingerprint:"",viewportWidth:0,last:null};
+  const aetherVeilleState4087={index:0,kind:"alert",contextFacet:0,fingerprint:"",viewportWidth:0,last:null,feedWasVisible:false};
   function aetherNewsCanonicalFrenchEvent40110(event){
     if(!event)return event;
     const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
@@ -209,21 +209,13 @@
     host.setAttribute("aria-label",current.kind==="context"?"Aether Contexte · synthèse explicative News Sentinel":"Aether Veille · synthèse prioritaire News Sentinel");
     const fingerprint=`${current.kind}|${current.meta}|${current.detail}`;
     const fingerprintChanged=aetherVeilleState4087.fingerprint!==fingerprint;
-    const viewportWidth=Math.max(0,Math.round(viewport.clientWidth));
-    const geometryChanged=Math.abs(viewportWidth-aetherVeilleState4087.viewportWidth)>1;
     if(fingerprintChanged){
       if(copy&&copy.textContent!==current.detail)copy.textContent=current.detail;
+      if(copy)copy.title=current.detail;
       aetherVeilleState4087.fingerprint=fingerprint;
     }
-    if(fingerprintChanged||geometryChanged){
-      aetherVeilleState4087.viewportWidth=viewportWidth;
-      requestAnimationFrame(()=>{
-        if(!copy||!viewport)return;
-        const overflow=Math.max(0,Math.ceil(copy.scrollWidth-viewport.clientWidth+12));
-        host.dataset.scroll=overflow>12?"1":"0";
-        host.style.setProperty("--aether-veille-shift-4087",`${-overflow}px`);
-      });
-    }
+    host.dataset.scroll="0";
+    host.style.removeProperty("--aether-veille-shift-4087");
     aetherVeilleState4087.last=current;
     return current;
   }
@@ -305,9 +297,17 @@
     try{
       const events=(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))?newsFeedState.events:[];
       const status=typeof newsFeedState!=="undefined"?String(newsFeedState?.status||"idle"):"unavailable";
-      if(events.length||status==="loading"||aetherNewsWake4088.attempted||typeof loadNewsLiveFeed!=="function")return Promise.resolve(false);
+      const runtimeFresh=typeof newsFeedState!=="undefined"
+        && newsFeedState?.startupSucceeded===true
+        && status==="ok";
+      const frenchPresentationReady=events.length>0
+        && events.every(event=>String(event?.headline_fr_display||event?.headline_fr||"").trim());
+      if(status==="loading"||aetherNewsWake4088.attempted||typeof loadNewsLiveFeed!=="function")return Promise.resolve(false);
+      // 40.4.112: cached events are a continuity fallback, never proof that the current archive was fetched.
+      // Wake the existing News owner once on page start, even when a previous localStorage cache populated the ribbon.
+      if(runtimeFresh&&frenchPresentationReady)return Promise.resolve(false);
       aetherNewsWake4088.attempted=true;
-      aetherNewsWake4088.inflight=Promise.resolve(loadNewsLiveFeed({force:false,automatic:false}))
+      aetherNewsWake4088.inflight=Promise.resolve(loadNewsLiveFeed({force:true,automatic:false}))
         .catch(()=>false)
         .finally(()=>{
           aetherNewsWake4088.inflight=null;
@@ -467,10 +467,26 @@
       button.addEventListener("click",()=>aetherPanelSet4084(button.getAttribute("aria-expanded")!=="true"));
     }
     window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();renderAetherSystem4086();renderAetherVeille4087();},{passive:true});
-    const ribbon=document.getElementById("atlasAetherRibbon4084");
-    if(ribbon&&ribbon.dataset.aetherVeilleCycleBound!=="1"){
-      ribbon.dataset.aetherVeilleCycleBound="1";
-      ribbon.addEventListener("animationiteration",event=>{if(event.target===ribbon&&event.animationName==="atlasAetherBandPhase")aetherVeilleAdvance4087();},{passive:true});
+    const feed=document.getElementById("atlasAetherVeille4087");
+    if(feed&&feed.dataset.aetherFeedPulseBound40112!=="1"){
+      feed.dataset.aetherFeedPulseBound40112="1";
+      feed.addEventListener("animationiteration",event=>{
+        if(event.target!==feed||event.animationName!=="atlasAetherFeedPulse40112"||document.hidden)return;
+        const style=getComputedStyle(feed);
+        const visible=style.visibility==="visible"&&Number.parseFloat(style.opacity||"0")>.5;
+        if(visible){
+          aetherVeilleState4087.feedWasVisible=true;
+          aetherVeilleAdvance4087();
+        }else if(aetherVeilleState4087.feedWasVisible){
+          // Prepare a fresh priority alert after the 36 s feed phase so the next cycle never restarts on the same line/context.
+          aetherVeilleState4087.feedWasVisible=false;
+          const ranked=aetherVeilleEvents4087();
+          if(ranked.length)aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
+          aetherVeilleState4087.kind="alert";
+          aetherVeilleState4087.fingerprint="";
+          renderAetherVeille4087();
+        }
+      },{passive:true});
     }
     aetherBindMarketCompletion4086();
     aetherBindOracleCompletion4088();
@@ -478,7 +494,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.111",
+    build:"40.4.112",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -502,6 +518,8 @@
     veille_new_timer:false,
     veille_new_fetch:false,
     veille_existing_owner_wake:true,
+    veille_cached_state_is_freshness_proof:false,
+    veille_startup_fresh_owner_wake:true,
     info_operator_synthesis:true,
     oracle_render_refresh:true,
     cadence_seconds:90,
@@ -509,7 +527,12 @@
     info_seconds:15,
     veille_seconds:36,
     system_seconds:9,
-    veille_marquee_phase_synced:true,
+    veille_marquee_phase_synced:false,
+    veille_discrete_pulse:true,
+    veille_pulse_seconds:9,
+    veille_pulse_delay_seconds:4.5,
+    veille_information_changes_per_feed_window:4,
+    veille_visible_information_slots_per_feed_window:5,
     explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence40235 (read-only compute)",
     explanatory_context_alternation:true,
     explanatory_context_new_fetch:false,
