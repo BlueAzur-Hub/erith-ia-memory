@@ -2,15 +2,15 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.115
-  Revision: 40.4.115 Aether information-density runtime: the autonomous LIMITES/caution slot is retired from the top ribbon. VEILLE remains sourced News; CONTEXTE now rotates only useful IMPACT / MARCHÉ / SIGNAL facts. News French quality pipeline 40.4.114 is preserved.
+  Build: 40.4.116
+  Revision: 40.4.116 Aether event-bound intelligence runtime: each VEILLE item owns its complete CONTEXTE story. The same sourced News event now flows VEILLE → IMPACT → RÉACTION MARCHÉ → LECTURE before the next ranked event. Global lead-event drift and empty internal diagnostic wording are retired from the top ribbon. News French quality pipeline 40.4.114 is preserved.
 */
 (() => {
   "use strict";
   function aetherText4084(id,fallback="—"){const n=document.getElementById(id);const v=String(n?.textContent||"").replace(/\s+/g," ").trim();return v||fallback;}
   function aetherCurrent4084(){try{return typeof atlasCurrentStateRead==="function"?(atlasCurrentStateRead()||null):null;}catch(_){return null;}}
   const AETHER_VEILLE_TOP_4087=5;
-  const aetherVeilleState4087={index:0,kind:"alert",contextFacet:0,fingerprint:"",viewportWidth:0,last:null,feedWasVisible:false};
+  const aetherVeilleState4087={index:0,kind:"alert",contextFacet:0,fingerprint:"",viewportWidth:0,last:null,feedWasVisible:false,storyEvent:null,storyKey:""};
   function aetherNewsCanonicalFrenchEvent40110(event){
     if(!event)return event;
     const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
@@ -62,6 +62,9 @@
     try{if(typeof newsFeedEventTimestamp==="function")return Number(newsFeedEventTimestamp(event)||0);}catch(_){}
     const parsed=Date.parse(event?.event_time||event?.published_at||event?.updated_at||event?.last_seen_at||"");
     return Number.isFinite(parsed)?parsed:0;
+  }
+  function aetherVeilleEventKey40116(event){
+    return String(event?.event_id||event?.id||event?.fingerprint||event?.source_url||event?.url||event?.headline||event?.headline_fr_display||event?.headline_fr||"").trim();
   }
   function aetherVeilleFreshnessWeight4087(event){
     const ts=aetherVeilleTimestamp4087(event);if(!ts)return 0;
@@ -129,21 +132,23 @@
     const label=stats.priority24>0?`${stats.priority24} PRIORITAIRE${stats.priority24>1?"S":""} 24H`:"VEILLE QUALIFIÉE";
     return{label,text:decision||"Surveillance",tone:globalTone,events:ranked,stats,status,decision};
   }
-  function aetherNewsMarketContext4089(){
+  function aetherNewsMarketContext4089(currentEvent=null){
     try{
       const owner=globalThis.AtlasNewsToMarketOperatorIntelligence40235;
       if(!owner||typeof owner.compute!=="function")return null;
-      const n=owner.compute();
+      // 40.4.116: bind operator intelligence to the exact VEILLE event currently on screen.
+      // owner.compute(currentEvent) is already the canonical read-only API; no new analysis engine is introduced here.
+      const n=owner.compute(currentEvent||null);
       if(!n||n.status!=="observed")return null;
-      const lead=n.lead_event||n.event||null;
+      const lead=n.lead_event||currentEvent||n.event||null;
       if(!lead)return null;
-      const proof=n?.base?.amplifier?.evidence||n?.flow?.evidence||lead?.evidence||n?.event?.evidence||null;
+      const proof=lead?.evidence||currentEvent?.evidence||n?.base?.amplifier?.evidence||n?.flow?.evidence||n?.event?.evidence||null;
       const proofScore=aetherVeilleNumber4087(proof?.score);
-      const assets=(Array.isArray(lead?.assets)?lead.assets:Array.isArray(n?.event?.assets)?n.event.assets:[])
+      const assets=(Array.isArray(lead?.assets)?lead.assets:Array.isArray(currentEvent?.assets)?currentEvent.assets:Array.isArray(n?.event?.assets)?n.event.assets:[])
         .map(value=>String(value||"").trim().toUpperCase()).filter(Boolean).slice(0,3);
-      const scope=assets.length?assets.join("/"):"MARCHÉ";
-      const headline=aetherNewsHeadlineFr40104(lead||n?.event,"Contexte News Sentinel");
-      const source=String(lead?.source_name||lead?.source_host||n?.event?.source_name||n?.event?.source_host||"").replace(/^www\./,"").trim();
+      const scope=assets.length?assets.join("/"):aetherVeilleScope4087(lead||currentEvent)||"MARCHÉ";
+      const headline=aetherNewsHeadlineFr40104(lead||currentEvent||n?.event,"Contexte News Sentinel");
+      const source=String(lead?.source_name||lead?.source_host||currentEvent?.source_name||currentEvent?.source_host||n?.event?.source_name||n?.event?.source_host||"").replace(/^www\./,"").trim();
       const mechanismTitle=aetherFrenchMechanismLabel40110(n?.mechanism?.title||"");
       const mechanismDirection=String(n?.mechanism?.direction||"").trim();
       const explains=String(n?.mechanism?.explains||"").replace(/\s+/g," ").trim();
@@ -154,57 +159,82 @@
       const breadth=String(n?.market_confirmation?.breadth||"").replace(/\s+/g," ").trim();
       const focus=String(n?.market_confirmation?.focus||"").replace(/\s+/g," ").trim();
       const marketTone=String(n?.market_confirmation?.tone||"").replace(/\s+/g," ").trim();
-      const facts=(Array.isArray(n?.facts?.facts)?n.facts.facts:[]).map(value=>String(value||"").replace(/\s+/g," ").trim()).filter(Boolean).slice(0,3);
-      const amounts=(Array.isArray(n?.facts?.amounts)?n.facts.amounts:[]).map(value=>String(value||"").trim()).filter(Boolean).slice(0,3);
+      const marketRows=(Array.isArray(n?.market_confirmation?.rows)?n.market_confirmation.rows:[])
+        .map(row=>({symbol:String(row?.symbol||"").trim().toUpperCase(),change:Number(row?.change)}))
+        .filter(row=>row.symbol&&Number.isFinite(row.change));
+      const analysisEventKey=aetherVeilleEventKey40116(n?.event);
+      const factsBelongToCurrent=!analysisEventKey||analysisEventKey===aetherVeilleEventKey40116(currentEvent||lead);
+      const facts=(factsBelongToCurrent&&Array.isArray(n?.facts?.facts)?n.facts.facts:[]).map(value=>String(value||"").replace(/\s+/g," ").trim()).filter(Boolean).slice(0,3);
+      const amounts=(factsBelongToCurrent&&Array.isArray(n?.facts?.amounts)?n.facts.amounts:[]).map(value=>String(value||"").trim()).filter(Boolean).slice(0,3);
       const role=String(n?.verdict?.role||"").replace(/\s+/g," ").trim();
       const technicalLabel=String(n?.technical_trigger?.label||"").replace(/\s+/g," ").trim();
       const technicalDirection=String(n?.technical_trigger?.direction||"").replace(/\s+/g," ").trim();
       const supporting=(Array.isArray(n?.supporting_amplifiers)?n.supporting_amplifiers:[]).map(row=>String(row?.label||"").replace(/\s+/g," ").trim()).filter(Boolean).slice(0,2);
-      return {n,lead,proofScore,scope,headline,source,mechanismTitle,mechanismDirection,explains,flowLabel,flowDirection,flowTruth,marketTruth,breadth,focus,marketTone,facts,amounts,role,technicalLabel,technicalDirection,supporting};
+      return {n,lead,currentEvent:currentEvent||lead,eventKey:aetherVeilleEventKey40116(currentEvent||lead),proofScore,scope,assets,headline,source,mechanismTitle,mechanismDirection,explains,flowLabel,flowDirection,flowTruth,marketTruth,breadth,focus,marketTone,marketRows,facts,amounts,role,technicalLabel,technicalDirection,supporting};
     }catch(_){return null;}
   }
   function aetherContextCurrent4089(model=null){
-    const c=model||aetherNewsMarketContext4089();if(!c)return null;
+    const c=model;if(!c)return null;
     const facet=((aetherVeilleState4087.contextFacet%3)+3)%3;
     const proof=c.proofScore>0?`PREUVE ${Math.round(c.proofScore)}/100`:"PREUVE N/D";
-    const qualified=value=>{const text=String(value||"").trim();return text&&!/NON QUALIFI|NON IDENTIFI|INDÉTERMIN|INCONNU|INDISPON/i.test(text)?text:"";};
+    const qualified=value=>{const valueText=String(value||"").trim();return valueText&&!/NON QUALIFI|NON IDENTIFI|INDÉTERMIN|INCONNU|INDISPON|NON COMPARABLE/i.test(valueText)?valueText:"";};
+    const changeLabel=row=>`${row.symbol} ${row.change>=0?"+":""}${row.change.toFixed(2)} %`;
     let meta="",parts=[];
     if(facet===0){
       meta=`IMPACT · ${proof} · ${c.scope}`;
-      parts=[...(c.facts||[]),...(c.amounts||[]),qualified(c.role),c.source].filter(Boolean);
+      parts=[c.headline,...(c.facts||[]),...(c.amounts||[]),qualified(c.role),c.source].filter(Boolean);
       if(!parts.length)parts=[c.headline,c.source].filter(Boolean);
     }else if(facet===1){
-      meta=`MARCHÉ · ${c.scope}`;
-      parts=[c.breadth,c.focus,c.marketTone,qualified(c.marketTruth)].filter(Boolean);
-      if(!parts.length)parts=[c.headline,proof,c.source].filter(Boolean);
+      meta=`RÉACTION MARCHÉ · ${c.scope}`;
+      const focusRows=(c.marketRows||[]).filter(row=>(c.assets||[]).includes(row.symbol));
+      const ordered=(c.marketRows||[]).slice().sort((a,b)=>b.change-a.change);
+      const leader=ordered[0]||null,laggard=ordered.length>1?ordered[ordered.length-1]:null;
+      const marketFacts=focusRows.length
+        ? focusRows.slice(0,3).map(changeLabel)
+        : [leader?`${changeLabel(leader)} leader`:null,laggard&&laggard.symbol!==leader?.symbol?`${changeLabel(laggard)} retard`:null].filter(Boolean);
+      parts=[c.breadth,...marketFacts,qualified(c.marketTone)].filter(Boolean);
+      if(!parts.length)parts=[c.headline,c.source].filter(Boolean);
     }else{
-      meta=`SIGNAL · ${proof} · ${c.scope}`;
+      meta=`LECTURE · ${proof} · ${c.scope}`;
       const mechanism=qualified(c.mechanismTitle);
       const direction=qualified(c.mechanismDirection);
       const technical=qualified(c.technicalLabel);
       const technicalDirection=qualified(c.technicalDirection);
       const flow=qualified(c.flowLabel);
       const flowDirection=qualified(c.flowDirection);
+      let oracle="";
+      try{
+        const brief=aetherOracleBrief4088();
+        const upper=String(brief||"").toUpperCase();
+        if((c.assets||[]).some(symbol=>symbol&&upper.includes(symbol)))oracle=`Oracle · ${brief}`;
+      }catch(_){}
       parts=[
         mechanism?`${mechanism}${direction?` · ${direction}`:""}`:null,
         c.explains&&mechanism?c.explains:null,
         flow?`${flow}${flowDirection?` · ${flowDirection}`:""}`:null,
         technical?`${technical}${technicalDirection?` · ${technicalDirection}`:""}`:null,
         ...(c.supporting||[]),
+        oracle,
         qualified(c.role)
       ].filter(Boolean);
-      if(!parts.length)parts=[c.breadth,c.focus,c.marketTone,c.headline,c.source].filter(Boolean);
+      if(!parts.length){
+        const focusRows=(c.marketRows||[]).filter(row=>(c.assets||[]).includes(row.symbol));
+        parts=[c.headline,...focusRows.slice(0,2).map(changeLabel),c.source].filter(Boolean);
+      }
     }
-    return {kind:"context",facet,brand:"♥ CONTEXTE",tone:"context",index:facet,total:3,event:c.lead,meta,detail:parts.filter(Boolean).join(" · "),context:c.n};
+    return {kind:"context",facet,brand:"♥ CONTEXTE",tone:"context",index:facet,total:3,event:c.currentEvent||c.lead,meta,detail:parts.filter(Boolean).join(" · "),context:c.n,eventKey:c.eventKey};
   }
   function aetherVeilleCurrent4087(){
     const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
-    const context=aetherNewsMarketContext4089();
-    if(aetherVeilleState4087.kind==="context"&&context){
-      const current=aetherContextCurrent4089(context);if(current)return current;
-    }
     if(!events.length)return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:0,total:0,event:null,meta:snapshot.label,detail:snapshot.text};
     aetherVeilleState4087.index=((aetherVeilleState4087.index%events.length)+events.length)%events.length;
+    if(aetherVeilleState4087.kind==="context"){
+      const story=aetherVeilleState4087.storyEvent||events[aetherVeilleState4087.index]||null;
+      const context=aetherNewsMarketContext4089(story);
+      if(context){const current=aetherContextCurrent4089(context);if(current)return current;}
+      // If the analytical owner cannot bind this event, fall back to the sourced alert itself; never invent filler.
+      aetherVeilleState4087.kind="alert";aetherVeilleState4087.contextFacet=0;aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyKey="";
+    }
     const event=events[aetherVeilleState4087.index],impactLevel=String(event?.impact?.level||"Impact").toUpperCase(),impact=Math.round(aetherVeilleNumber4087(event?.impact?.score));
     const scope=aetherVeilleScope4087(event),evidence=Math.round(aetherVeilleNumber4087(event?.evidence?.score));
     const source=String(event?.source_name||event?.source_host||event?.source_class||"").replace(/^www\./,"").trim();
@@ -212,7 +242,7 @@
     const headline=aetherNewsHeadlineFr40104(event,"Événement à qualifier");
     const meta=`${aetherVeilleState4087.index+1}/${events.length} · ${impactLevel} ${impact}/100 · ${scope}`;
     const detail=[headline,evidence?`preuve ${evidence}/100`:null,freshness,source].filter(Boolean).join(" · ");
-    return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail};
+    return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail,eventKey:aetherVeilleEventKey40116(event)};
   }
   function renderAetherVeille4087(){
     const host=document.getElementById("atlasAetherVeille4087"),meta=document.getElementById("atlasAetherVeilleMeta4087"),viewport=document.getElementById("atlasAetherVeilleViewport4087");
@@ -223,8 +253,8 @@
     host.dataset.tone=current.tone||"neutral";
     host.dataset.kind=current.kind||"alert";
     host.dataset.contextFacet=current.kind==="context"?String(current.facet??0):"";
-    host.setAttribute("aria-label",current.kind==="context"?"Aether Contexte · synthèse explicative News Sentinel":"Aether Veille · synthèse prioritaire News Sentinel");
-    const fingerprint=`${current.kind}|${current.meta}|${current.detail}`;
+    host.setAttribute("aria-label",current.kind==="context"?"Aether Contexte · même événement News Sentinel · impact, réaction marché, lecture":"Aether Veille · synthèse prioritaire News Sentinel");
+    const fingerprint=`${current.kind}|${current.eventKey||""}|${current.meta}|${current.detail}`;
     const fingerprintChanged=aetherVeilleState4087.fingerprint!==fingerprint;
     if(fingerprintChanged){
       if(copy&&copy.textContent!==current.detail)copy.textContent=current.detail;
@@ -237,15 +267,30 @@
     return current;
   }
   function aetherVeilleAdvance4087(){
-    const ranked=aetherVeilleEvents4087(),context=aetherNewsMarketContext4089();
-    if(!ranked.length){aetherVeilleState4087.index=0;aetherVeilleState4087.kind=context?"context":"alert";aetherVeilleState4087.fingerprint="";return renderAetherVeille4087();}
-    if(aetherVeilleState4087.kind==="alert"&&context){
-      aetherVeilleState4087.kind="context";
-      aetherVeilleState4087.contextFacet=aetherVeilleState4087.index%3;
+    const ranked=aetherVeilleEvents4087();
+    if(!ranked.length){
+      aetherVeilleState4087.index=0;aetherVeilleState4087.kind="alert";aetherVeilleState4087.contextFacet=0;aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyKey="";aetherVeilleState4087.fingerprint="";
+      return renderAetherVeille4087();
+    }
+    aetherVeilleState4087.index=((aetherVeilleState4087.index%ranked.length)+ranked.length)%ranked.length;
+    if(aetherVeilleState4087.kind==="alert"){
+      const event=ranked[aetherVeilleState4087.index];
+      const owner=globalThis.AtlasNewsToMarketOperatorIntelligence40235;
+      if(owner&&typeof owner.compute==="function"){
+        aetherVeilleState4087.storyEvent=event;
+        aetherVeilleState4087.storyKey=aetherVeilleEventKey40116(event);
+        aetherVeilleState4087.contextFacet=0;
+        aetherVeilleState4087.kind="context";
+      }else{
+        // No analytical owner: use airtime for another sourced alert instead of an empty diagnostic line.
+        aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
+      }
+    }else if(aetherVeilleState4087.contextFacet<2){
+      // SAME EVENT story: IMPACT → RÉACTION MARCHÉ → LECTURE.
+      aetherVeilleState4087.contextFacet+=1;
     }else{
-      if(aetherVeilleState4087.kind==="context")aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
-      else aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
-      aetherVeilleState4087.kind="alert";
+      // Hold the final LECTURE until the FEED window closes; avoid a redundant recompute/write on the fourth pulse.
+      return aetherVeilleState4087.last||renderAetherVeille4087();
     }
     aetherVeilleState4087.fingerprint="";return renderAetherVeille4087();
   }
@@ -498,8 +543,16 @@
           // Prepare a fresh priority alert after the 36 s feed phase so the next cycle never restarts on the same line/context.
           aetherVeilleState4087.feedWasVisible=false;
           const ranked=aetherVeilleEvents4087();
-          if(ranked.length)aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
+          if(ranked.length){
+            const key=aetherVeilleState4087.storyKey||aetherVeilleEventKey40116(ranked[aetherVeilleState4087.index]);
+            const pinnedIndex=key?ranked.findIndex(event=>aetherVeilleEventKey40116(event)===key):-1;
+            const baseIndex=pinnedIndex>=0?pinnedIndex:aetherVeilleState4087.index;
+            aetherVeilleState4087.index=(baseIndex+1)%ranked.length;
+          }
           aetherVeilleState4087.kind="alert";
+          aetherVeilleState4087.contextFacet=0;
+          aetherVeilleState4087.storyEvent=null;
+          aetherVeilleState4087.storyKey="";
           aetherVeilleState4087.fingerprint="";
           renderAetherVeille4087();
         }
@@ -511,7 +564,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.115",
+    build:"40.4.116",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -548,11 +601,15 @@
     veille_discrete_pulse:true,
     veille_pulse_seconds:9,
     veille_pulse_delay_seconds:4.5,
-    veille_information_changes_per_feed_window:4,
-    veille_visible_information_slots_per_feed_window:5,
+    veille_information_changes_per_feed_window:3,
+    veille_visible_information_slots_per_feed_window:4,
     explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence40235 (read-only compute)",
     explanatory_context_alternation:true,
-    explanatory_context_facets:["IMPACT","MARCHÉ","SIGNAL"],
+    explanatory_context_facets:["IMPACT","RÉACTION MARCHÉ","LECTURE"],
+    explanatory_context_event_bound:true,
+    explanatory_context_same_event_story:true,
+    explanatory_context_compute_call:"owner.compute(currentEvent)",
+    explanatory_context_story_sequence:["VEILLE","IMPACT","RÉACTION MARCHÉ","LECTURE"],
     explanatory_context_limit_slot:false,
     unsolicited_caution_slot:false,
     explanatory_context_new_fetch:false,
