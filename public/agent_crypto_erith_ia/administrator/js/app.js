@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.108";
-  const ADMIN_RELEASE = "NEWS FR PRODUCTION · AETHER RIBBON CLEAN READABILITY LOCK";
+  const ADMIN_BUILD = "40.4.109";
+  const ADMIN_RELEASE = "GRAPH SOURCE TRUTH · FINAL ADMINISTRATOR SEAL";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
