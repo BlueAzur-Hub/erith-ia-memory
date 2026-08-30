@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.100";
+  const ADMIN_BUILD = "40.4.101";
   const ADMIN_RELEASE = "AETHER RESPONSIBILITY SEPARATION · CANONICAL FILE OWNERSHIP LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
