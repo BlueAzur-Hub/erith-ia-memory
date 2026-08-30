@@ -123,7 +123,12 @@ jobs:
               live['terminal_value_board']='Binance LIVE price + 24h variation outside Chart.js datasets; historical canvas remains last verified candle only'
               live['canvas_dataset_mutation']=False; live['canvas_rescale_from_websocket']=False
               live['historical_canvas_semantics_unchanged']=True
-              for rel,h in changed.items(): d.setdefault('files',{})[rel]=h
+              files=d.setdefault('files',{})
+              for rel in list(files):
+                  target=(root/rel).resolve()
+                  if not target.is_file():
+                      raise SystemExit(f'STOP: fichier manifest absent pendant resynchronisation {rel}')
+                  files[rel]=sha(target)
               notes=d.setdefault('release_notes',[])
               if not notes or notes[0] != note: notes.insert(0,note)
               v=d.setdefault('validation',{})
