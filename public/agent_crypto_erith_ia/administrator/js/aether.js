@@ -3,6 +3,7 @@
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
   Build: 40.4.100
+  Revision: Aether telemetry truth hotfix — null is never rendered as numeric zero.
 */
 (() => {
   "use strict";
@@ -44,7 +45,14 @@
   const AETHER_SYSTEM_BACKEND_4086="http://127.0.0.1:8790/system";
   const AETHER_WEATHER_4086=Object.freeze({latitude:48.5876,longitude:1.5784,timezone:"Europe/Paris",ttl:15*60*1000,label:"Maintenon"});
   const aetherSystemState4086={system:null,systemAt:0,systemInflight:null,weather:null,weatherAt:0,weatherInflight:null};
-  const aetherSystemNumber4086=value=>{const n=Number(value);return Number.isFinite(n)?n:null;};
+  const aetherSystemNumber4086=value=>{
+    if(value===null||value===undefined)return null;
+    if(typeof value==="string"&&!value.trim())return null;
+    const n=Number(value);
+    return Number.isFinite(n)?n:null;
+  };
+  const aetherSystemPercent4086=value=>{const n=aetherSystemNumber4086(value);return n!==null&&n>=0&&n<=100?n:null;};
+  const aetherSystemTemperature4086=value=>{const n=aetherSystemNumber4086(value);return n!==null&&n>0&&n<150?n:null;};
   function aetherSystemSet4086(key,value,{icon=null,tone=null,title=null}={}){
     const item=document.querySelector(`#atlasAetherSystem4086 [data-aether-system-4086="${key}"]`);if(!item)return;
     const out=item.querySelector(".atlas-aether-system-value-4086");if(out&&out.textContent!==String(value))out.textContent=String(value);
@@ -52,12 +60,12 @@
     if(title)item.title=title;
     if(key==="btc")item.dataset.tone=tone||"flat";
   }
-  function aetherWeatherIcon4086(code){const c=Number(code);if(c===0)return"☀";if([1,2,3].includes(c))return"☁";if([45,48].includes(c))return"≋";if((c>=51&&c<=67)||(c>=80&&c<=82))return"☂";if((c>=71&&c<=77)||(c>=85&&c<=86))return"❄";if(c>=95)return"⚡";return"☁";}
+  function aetherWeatherIcon4086(code){const c=aetherSystemNumber4086(code);if(c===null)return"·";if(c===0)return"☀";if([1,2,3].includes(c))return"☁";if([45,48].includes(c))return"≋";if((c>=51&&c<=67)||(c>=80&&c<=82))return"☂";if((c>=71&&c<=77)||(c>=85&&c<=86))return"❄";if(c>=95)return"⚡";return"☁";}
   function aetherBtc4086(){
     try{
       const coin=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins.find(row=>String(row?.symbol||"").toUpperCase()==="BTC"||row?.id==="bitcoin"):null;
       const price=aetherSystemNumber4086(coin?.price),change=aetherSystemNumber4086(coin?.change24h);
-      if(price===null)return{value:"—",tone:"flat",title:"BTC live indisponible"};
+      if(price===null||price<=0)return{value:"—",tone:"flat",title:"BTC live indisponible"};
       const priceText=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:price>=1000?0:2}).format(price);
       const changeText=change===null?"":` · ${change>=0?"+":""}${change.toFixed(2)} %`;
       return{value:`${priceText}${changeText}`,tone:change>0?"positive":change<0?"negative":"flat",title:"Bitcoin · prix live Agent-Crypto"};
@@ -65,14 +73,18 @@
   }
   function renderAetherSystem4086(){
     const sys=aetherSystemState4086.system||{};
-    const cpu=aetherSystemNumber4086(sys?.cpu?.usage_pct),cpuTemp=aetherSystemNumber4086(sys?.cpu?.temperature_c);
-    const gpu=aetherSystemNumber4086(sys?.gpu?.usage_pct),gpuTemp=aetherSystemNumber4086(sys?.gpu?.temperature_c);
-    const ram=aetherSystemNumber4086(sys?.memory?.usage_pct),used=aetherSystemNumber4086(sys?.memory?.used_gb),total=aetherSystemNumber4086(sys?.memory?.total_gb);
+    const cpu=aetherSystemPercent4086(sys?.cpu?.usage_pct),cpuTemp=aetherSystemTemperature4086(sys?.cpu?.temperature_c);
+    const gpuStatus=String(sys?.gpu?.status||"").trim().toLowerCase();
+    const gpu=gpuStatus&&gpuStatus!=="ok"?null:aetherSystemPercent4086(sys?.gpu?.usage_pct);
+    const gpuTemp=gpuStatus&&gpuStatus!=="ok"?null:aetherSystemTemperature4086(sys?.gpu?.temperature_c);
+    const ram=aetherSystemPercent4086(sys?.memory?.usage_pct),used=aetherSystemNumber4086(sys?.memory?.used_gb),total=aetherSystemNumber4086(sys?.memory?.total_gb);
     aetherSystemSet4086("cpu",cpu===null?"N/D":`${Math.round(cpu)} %${cpuTemp===null?"":` · ${Math.round(cpuTemp)}°`}`,{title:sys?.cpu?.name||"CPU Windows · backend local 8790"});
     aetherSystemSet4086("gpu",gpu===null?"N/D":`${Math.round(gpu)} %${gpuTemp===null?"":` · ${Math.round(gpuTemp)}°`}`,{title:sys?.gpu?.name||"GPU · backend local 8790"});
-    aetherSystemSet4086("ram",ram===null?"N/D":`${Math.round(ram)} %${used!==null&&total!==null?` · ${used.toFixed(1)}/${total.toFixed(1)} Go`:""}`,{title:"RAM Windows · backend local 8790"});
+    const ramDetail=used!==null&&total!==null&&total>0&&used>=0&&used<=total?` · ${used.toFixed(1)}/${total.toFixed(1)} Go`:"";
+    aetherSystemSet4086("ram",ram===null?"N/D":`${Math.round(ram)} %${ramDetail}`,{title:"RAM Windows · backend local 8790"});
     const weather=aetherSystemState4086.weather;
-    aetherSystemSet4086("weather",weather?`${Math.round(weather.temperature_c)} °C`:"N/D",{icon:aetherWeatherIcon4086(weather?.weather_code),title:"Maintenon · Eure-et-Loir · Open-Meteo"});
+    const weatherTemp=aetherSystemNumber4086(weather?.temperature_c);
+    aetherSystemSet4086("weather",weatherTemp!==null&&weatherTemp>=-80&&weatherTemp<=60?`${Math.round(weatherTemp)} °C`:"N/D",{icon:aetherWeatherIcon4086(weather?.weather_code),title:"Maintenon · Eure-et-Loir · Open-Meteo"});
     const btc=aetherBtc4086();aetherSystemSet4086("btc",btc.value,{tone:btc.tone,title:btc.title});
   }
   function aetherSystemBackend4086(force=false){
@@ -103,6 +115,21 @@
     return Promise.allSettled([aetherSystemBackend4086(force),aetherSystemWeather4086(force)]);
   }
 
+  function aetherBindMarketCompletion4086(){
+    if(globalThis.__AGENT_CRYPTO_AETHER_MARKET_COMPLETION_HOOK_4086__===true)return true;
+    try{
+      if(typeof atlasAfterLivecheck!=="function")return false;
+      const base=atlasAfterLivecheck;
+      atlasAfterLivecheck=function atlasAfterLivecheckAether4086(options={}){
+        const result=base.apply(this,arguments);
+        queueMicrotask(()=>{try{renderAether4084();renderAetherSystem4086();}catch(_){}});
+        return result;
+      };
+      globalThis.__AGENT_CRYPTO_AETHER_MARKET_COMPLETION_HOOK_4086__=true;
+      return true;
+    }catch(_){return false;}
+  }
+
 
   function refreshAether({force=false}={}){
     renderAether4084();
@@ -115,7 +142,8 @@
       button.dataset.aetherBound="1";
       button.addEventListener("click",()=>aetherPanelSet4084(button.getAttribute("aria-expanded")!=="true"));
     }
-    window.addEventListener("erith:operator-priority-release",()=>renderAether4084(),{passive:true});
+    window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();renderAetherSystem4086();},{passive:true});
+    aetherBindMarketCompletion4086();
     refreshAether({force:true});
   }
 
@@ -135,7 +163,9 @@
     single_lane:true,
     presentation_owner:"admin-ribbons.css",
     new_recurring_timer:false,
-    bridge_telemetry_owner:false
+    bridge_telemetry_owner:false,
+    telemetry_null_is_zero:false,
+    market_completion_refresh:true
   });
   globalThis.AgentCryptoAether=api;
   /* Compatibility read-only alias for diagnostics that knew the R6/R7 object. */
