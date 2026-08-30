@@ -59072,7 +59072,9 @@ function atlasRuntimeTruth3813() {
     authoritative_build: appBuild === ATLAS_RUNTIME_TRUTH_3813.build,
     html_build_matches_app: !!metaBuild && metaBuild === appBuild,
     html_token_matches_app: !!metaToken && metaToken === appToken,
-    script_token_matches_app: !!scriptToken && scriptToken === appToken,
+    // 40.4.101 — canonical filenames + Ctrl+F5 contract: local asset URLs intentionally carry no ?v token.
+    // If a legacy token is present it must still match; if absent, HTML meta + app identity remain authoritative.
+    script_token_matches_app: !!appScript && (!scriptToken || scriptToken === appToken),
     runtime_contract_present: runtimeContract === "runtime-truth-v1"
   };
   let role = "unknown";

@@ -3,7 +3,7 @@
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
   Build: 40.4.101
-  Revision: Aether operator-feed recovery — useful INFO, one-shot News Sentinel owner wake, priority VEILLE, telemetry truth.
+  Revision: final corrections — 40.4.98 header preserved, concise INFO, truthful VEILLE counter, immediate CSS marquee, SYSTEM unchanged.
 */
 (() => {
   "use strict";
@@ -60,13 +60,30 @@
   function aetherVeilleStatus4087(){
     let status="idle",payload=null,events=[];try{if(typeof newsFeedState!=="undefined"){status=String(newsFeedState.status||"idle");payload=newsFeedState.payload||null;events=Array.isArray(newsFeedState.events)?newsFeedState.events:[];}}catch(_){}
     let stats={events24:0,priority24:0,critical24:0};try{if(typeof newsFeedUniqueStats==="function")stats=newsFeedUniqueStats()||stats;}catch(_){}
+    const derivedPriority=events.filter(event=>{
+      const action=String(event?.decision?.action||"").toLowerCase();
+      const explicit=event?.priority===true||event?.is_priority===true;
+      return explicit||/prioritaire|surveillance renforc|vérifier|verifier/.test(action);
+    }).length;
+    const derivedCritical=events.filter(event=>{
+      const level=String(event?.impact?.level||"").toLowerCase();
+      const score=aetherVeilleNumber4087(event?.impact?.score);
+      return /critique|critical/.test(level)||score>=90;
+    }).length;
+    stats={
+      ...stats,
+      events24:Math.max(aetherVeilleNumber4087(stats?.events24),events.length),
+      priority24:Math.max(aetherVeilleNumber4087(stats?.priority24),derivedPriority),
+      critical24:Math.max(aetherVeilleNumber4087(stats?.critical24),derivedCritical)
+    };
     const decision=String(payload?.summary?.decision||"").trim();
     if((status==="idle"||status==="loading")&&!events.length)return{label:"EN ATTENTE",text:"Veille non chargée · News Sentinel en attente",tone:"neutral",events:[],stats,status,decision};
     if(status==="error"&&!events.length)return{label:"INDISPONIBLE",text:"Archive News Sentinel indisponible · aucune actualité inventée",tone:"danger",events:[],stats,status,decision};
     if(!events.length)return{label:"0 PRIORITAIRE",text:status==="ok"?"Archive chargée · aucun événement prioritaire":"Archive partielle · aucun événement exploitable",tone:status==="partial"?"warn":"ok",events:[],stats,status,decision};
     const ranked=aetherVeilleEvents4087();
     const globalTone=stats.critical24>0?"danger":stats.priority24>0||status==="partial"?"warn":"ok";
-    return{label:`${stats.priority24||0} PRIORITAIRE${stats.priority24>1?"S":""}`,text:decision||"Surveillance",tone:globalTone,events:ranked,stats,status,decision};
+    const label=stats.priority24>0?`${stats.priority24} PRIORITAIRE${stats.priority24>1?"S":""}`:`${events.length} SIGNAL${events.length>1?"AUX":""} QUALIFIÉ${events.length>1?"S":""}`;
+    return{label,text:decision||"Surveillance",tone:globalTone,events:ranked,stats,status,decision};
   }
   function aetherVeilleCurrent4087(){
     const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
@@ -92,11 +109,12 @@
     if(aetherVeilleState4087.fingerprint!==fingerprint){
       copies.forEach(node=>{if(node.textContent!==current.detail)node.textContent=current.detail;});
       aetherVeilleState4087.fingerprint=fingerprint;
-      host.dataset.scroll="0";
+      const longText=current.detail.length>92;
+      host.dataset.scroll=longText?"1":"0";
       requestAnimationFrame(()=>{
         const first=host.querySelector("[data-aether-veille-copy-4087]:not([aria-hidden])");
-        const shouldScroll=Boolean(first&&viewport&&first.scrollWidth>viewport.clientWidth+8);
-        host.dataset.scroll=shouldScroll?"1":"0";
+        const measuredOverflow=Boolean(first&&viewport&&first.scrollWidth>viewport.clientWidth+8);
+        if(measuredOverflow)host.dataset.scroll="1";
       });
     }
     aetherVeilleState4087.last=current;
@@ -141,10 +159,15 @@
     return [readyIdentity,readyBias,readyConfidence].filter(Boolean).join(" · ")||"en attente";
   }
   function aetherAtlasBrief4088(){
-    const operator=aetherText4084("atlasOracleAtlas","").replace(/^Atlas\s*:\s*/i,"").trim();
-    if(operator&&!/en attente/i.test(operator))return aetherCompact4088(operator,78);
     const current=aetherCurrent4084();
     const status=String(current?.status||"").trim().toUpperCase();
+    const operator=aetherText4084("atlasOracleAtlas","").replace(/^Atlas\s*:\s*/i,"").trim();
+    if(operator&&!/en attente/i.test(operator)){
+      const first=operator.split("·").map(v=>v.trim()).filter(Boolean)[0]||"";
+      const score=(operator.match(/(?:score\s+direction|direction)\s*([+−-]?\s*\d+\s*\/\s*100)/i)||[])[1]||"";
+      const scoreClean=score.replace(/\s+/g,"").replace("−","-");
+      return [status&&status!=="IDLE"?status:null,aetherCompact4088(first,42),scoreClean?`direction ${scoreClean}`:null].filter(Boolean).join(" · ");
+    }
     const reports=Array.isArray(current?.reports)?current.reports.length:0;
     return `${status||"VEILLE"}${reports?` · ${reports}/4`:""}`;
   }
