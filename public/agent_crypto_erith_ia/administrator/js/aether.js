@@ -3,7 +3,7 @@
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
   Build: 40.4.101
-  Revision: Aether priority Veille + telemetry truth — reads News Sentinel state only; no news fetch/timer.
+  Revision: Aether operator-feed recovery — useful INFO, one-shot News Sentinel owner wake, priority VEILLE, telemetry truth.
 */
 (() => {
   "use strict";
@@ -106,23 +106,86 @@
     const ranked=aetherVeilleEvents4087();if(!ranked.length){aetherVeilleState4087.index=0;return renderAetherVeille4087();}
     aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;aetherVeilleState4087.fingerprint="";return renderAetherVeille4087();
   }
+  function aetherCompact4088(value, max=88){
+    const text=String(value||"").replace(/\s+/g," ").trim();
+    return text.length>max?`${text.slice(0,Math.max(8,max-1)).trimEnd()}…`:text;
+  }
+  function aetherMarketBrief4088(){
+    try{
+      const coins=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins:[];
+      const top5=new Set(["BTC","ETH","BNB","XRP","SOL"]);
+      const rows=coins.filter(row=>top5.has(String(row?.symbol||"").toUpperCase()));
+      const btc=rows.find(row=>String(row?.symbol||"").toUpperCase()==="BTC")||coins.find(row=>row?.id==="bitcoin");
+      const price=aetherSystemNumber4086(btc?.price),change=aetherSystemNumber4086(btc?.change24h);
+      const leader=rows.filter(row=>aetherSystemNumber4086(row?.change24h)!==null).sort((x,y)=>Number(y.change24h)-Number(x.change24h))[0]||null;
+      const parts=[];
+      if(price!==null&&price>0){
+        parts.push(`BTC ${new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:0}).format(price)}`);
+        if(change!==null)parts.push(`${change>=0?"+":""}${change.toFixed(2)} %`);
+      }
+      const leaderChange=aetherSystemNumber4086(leader?.change24h);
+      if(leader&&leaderChange!==null)parts.push(`leader ${String(leader.symbol||"").toUpperCase()} ${leaderChange>=0?"+":""}${leaderChange.toFixed(2)} %`);
+      return parts.join(" · ")||"marché en attente";
+    }catch(_){return"marché en attente";}
+  }
+  function aetherOracleBrief4088(){
+    const identity=aetherText4084("atlasOracleOperatorIdentity","");
+    const bias=aetherText4084("atlasOracleOperatorBias","").replace(/^BIAIS\s*/i,"").trim();
+    const confidence=aetherText4084("atlasOracleOperatorConfidence","").replace(/^CONF\.\s*/i,"").trim();
+    const legacyAsset=aetherText4084("atlasOracleAsset","");
+    const legacyBias=aetherText4084("atlasOracleBias","").replace(/^Biais mesuré\s*:\s*/i,"").trim();
+    const legacyConfidence=aetherText4084("atlasOracleConfidence","").replace(/^Confiance données\s*/i,"").trim();
+    const readyIdentity=identity&&!/EN ATTENTE|LIVE CHECK|LIVECHECK/i.test(identity)?identity:legacyAsset&&!/EN ATTENTE/i.test(legacyAsset)?legacyAsset:"";
+    const readyBias=bias&&!/[—-]$|ATTENTE|REQUIS/i.test(bias)?bias:legacyBias&&!/ATTENTE|REQUIS/i.test(legacyBias)?legacyBias:"";
+    const readyConfidence=confidence&&!/[—-]$|ATTENTE/i.test(confidence)?confidence:legacyConfidence&&!/[—-]$/.test(legacyConfidence)?legacyConfidence:"";
+    return [readyIdentity,readyBias,readyConfidence].filter(Boolean).join(" · ")||"en attente";
+  }
+  function aetherAtlasBrief4088(){
+    const operator=aetherText4084("atlasOracleAtlas","").replace(/^Atlas\s*:\s*/i,"").trim();
+    if(operator&&!/en attente/i.test(operator))return aetherCompact4088(operator,78);
+    const current=aetherCurrent4084();
+    const status=String(current?.status||"").trim().toUpperCase();
+    const reports=Array.isArray(current?.reports)?current.reports.length:0;
+    return `${status||"VEILLE"}${reports?` · ${reports}/4`:""}`;
+  }
+  function aetherSourcesBrief4088(){
+    const live=aetherText4084("liveStatus","");
+    if(live&&!/requis|attente/i.test(live))return aetherCompact4088(live,62);
+    return aetherCompact4088(aetherText4084("sourceName","Aucune source"),62);
+  }
+  const aetherNewsWake4088={attempted:false,inflight:null};
+  function aetherWakeNewsSentinel4088(){
+    if(aetherNewsWake4088.inflight)return aetherNewsWake4088.inflight;
+    try{
+      const events=(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))?newsFeedState.events:[];
+      const status=typeof newsFeedState!=="undefined"?String(newsFeedState?.status||"idle"):"unavailable";
+      if(events.length||status==="loading"||aetherNewsWake4088.attempted||typeof loadNewsLiveFeed!=="function")return Promise.resolve(false);
+      aetherNewsWake4088.attempted=true;
+      aetherNewsWake4088.inflight=Promise.resolve(loadNewsLiveFeed({force:false,automatic:false}))
+        .catch(()=>false)
+        .finally(()=>{
+          aetherNewsWake4088.inflight=null;
+          try{aetherVeilleState4087.fingerprint="";renderAether4084();renderAetherVeille4087();}catch(_){}
+        });
+      return aetherNewsWake4088.inflight;
+    }catch(_){return Promise.resolve(false);}
+  }
+
   function aetherSnapshot4084(){
     const current=aetherCurrent4084();
     const reports=Array.isArray(current?.reports)?current.reports.length:0;
     const currentStatus=String(current?.status||"").trim().toUpperCase();
-    const atlas=`${currentStatus||"VEILLE"}${reports?` · ${reports}/4`:""}${current?.aerith||current?.conclusion?" · Aerith disponible":""}`;
-    const oracleAsset=aetherText4084("atlasOracleAsset","—");
-    const oracleBias=aetherText4084("atlasOracleBias","ATTENTE");
-    const oracleConfidence=aetherText4084("atlasOracleConfidence","");
-    const oracle=[oracleAsset&&!/attente/i.test(oracleAsset)?oracleAsset:null,oracleBias&&!/livecheck requis/i.test(oracleBias)?oracleBias:null,oracleConfidence&&!/—$/.test(oracleConfidence)?oracleConfidence:null].filter(Boolean).join(" · ")||"ATTENTE";
-    const sources=aetherText4084("sourceName","Aucune source");
+    const atlas=aetherAtlasBrief4088();
+    const oracle=aetherOracleBrief4088();
+    const sources=aetherSourcesBrief4088();
+    const market=aetherMarketBrief4088();
     let book="APRÈS AUTH";try{if(typeof atlasBookMirrorBridgeState40377!=="undefined"){book=atlasBookMirrorBridgeState40377.credentialReady===true?"PRÊT":atlasBookMirrorBridgeState40377.credentialReady===false?"CREDENTIAL REQUIS":"EN VEILLE";}}catch(_){}
     const veille=aetherVeilleCurrent4087();
     const news=veille.detail||veille.text||"Veille non chargée";
     const graphTop5=document.getElementById("btnChartTop5")?.classList?.contains("active")===true;
     const graphTitle=aetherText4084("selectedAssetTitle","Aucune sélection");
     const graph=graphTop5?"TOP 5":graphTitle;
-    return {current,reports,currentStatus,atlas,oracle,sources,book,news,graph};
+    return {current,reports,currentStatus,atlas,oracle,sources,market,book,news,graph};
   }
   function aetherPanelEnsure4084(){
     let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel)return panel;
@@ -134,7 +197,7 @@
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
-    put("atlasAetherRibbonAtlas4084",`Atlas · ${s.atlas}`);put("atlasAetherRibbonOracle4084",`Oracle · ${s.oracle}`);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
+    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",`Atlas · ${s.atlas}`);put("atlasAetherRibbonOracle4084",`Oracle · ${s.oracle}`);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{if(aetherVeilleCurrent4087().tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
     const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("news",s.news);}
@@ -232,6 +295,7 @@
   function refreshAether({force=false}={}){
     renderAether4084();
     renderAetherVeille4087();
+    void aetherWakeNewsSentinel4088();
     return aetherSystemRefresh4086({force});
   }
 
@@ -271,10 +335,12 @@
     bridge_telemetry_owner:false,
     telemetry_null_is_zero:false,
     market_completion_refresh:true,
-    veille_owner:"News Sentinel state (read-only)",
+    veille_owner:"News Sentinel state (read-only) via existing loadNewsLiveFeed owner",
     veille_top:AETHER_VEILLE_TOP_4087,
     veille_new_timer:false,
-    veille_new_fetch:false
+    veille_new_fetch:false,
+    veille_existing_owner_wake:true,
+    info_operator_synthesis:true
   });
   globalThis.AgentCryptoAether=api;
   /* Compatibility read-only alias for diagnostics that knew the R6/R7 object. */
