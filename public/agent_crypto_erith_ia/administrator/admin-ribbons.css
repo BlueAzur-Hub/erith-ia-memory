@@ -154,396 +154,213 @@
   opacity: .72 !important;
 }
 
-#market-workspace #marketFlowCycle.market-flow-label > span {
-  display: none !important;
-}
-
+#market-workspace #marketFlowCycle.market-flow-label > span { display: none !important; }
 #market-workspace #marketFlowCycle.market-flow-label .market-flow-cycle-icon {
-  display: inline-grid !important;
-  place-items: center !important;
-  width: auto !important;
-  height: auto !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  color: currentColor !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  pointer-events: none !important;
+  display:inline-grid!important;place-items:center!important;width:auto!important;height:auto!important;
+  border:0!important;border-radius:0!important;color:currentColor!important;background:transparent!important;
+  box-shadow:none!important;pointer-events:none!important;
 }
-
 #market-workspace #marketFlowCycle.market-flow-label:hover,
 #market-workspace #marketFlowCycle.market-flow-label:focus-visible {
-  opacity: 1 !important;
-  border-color: rgba(97,240,176,.72) !important;
-  color: #8dffd0 !important;
-  background: rgba(4,30,29,.94) !important;
+  opacity:1!important;border-color:rgba(97,240,176,.72)!important;color:#8dffd0!important;background:rgba(4,30,29,.94)!important;
+}
+#market-workspace #marketFlowCycle.market-flow-label[data-flow-mode="negative"] {color:#ff718d!important;border-color:rgba(255,113,141,.42)!important;background:rgba(31,10,20,.88)!important;}
+#market-workspace #marketFlowCycle:focus-visible {outline:2px solid rgba(98,236,255,.88)!important;outline-offset:2px!important;}
+
+@media (max-width:1180px){
+  #market-workspace .top5-ribbon{grid-template-columns:minmax(176px,198px) minmax(0,1fr)!important}
+  #market-workspace .top5-track{display:flex!important;overflow-x:auto!important;overscroll-behavior-x:contain!important;scrollbar-width:thin!important}
+  #market-workspace .top5-item{flex:0 0 190px!important}
+}
+@media (max-width:680px){
+  #market-workspace .top5-ribbon:not(.admin-native-direct-floating){grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto!important;padding-top:30px!important}
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating){display:block!important;grid-template-columns:none!important;padding-top:30px!important}
+  #market-workspace #targetTop5Cycle{grid-column:1!important;grid-row:1!important}
+  #market-workspace .top5-track{grid-column:1!important;grid-row:2!important}
+  #market-workspace .top5-ribbon:not(.admin-native-direct-floating)>.admin-native-controls,
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating)>.admin-native-controls{top:4px!important;right:5px!important}
 }
 
-#market-workspace #marketFlowCycle.market-flow-label[data-flow-mode="negative"] {
-  color: #ff718d !important;
-  border-color: rgba(255,113,141,.42) !important;
-  background: rgba(31,10,20,.88) !important;
-}
-
-#market-workspace #marketFlowCycle:focus-visible {
-  outline: 2px solid rgba(98,236,255,.88) !important;
-  outline-offset: 2px !important;
-}
-
-/* On narrower desktops the ribbons stay one component and pan instead of
-   squeezing cards into unreadable fragments. */
-@media (max-width: 1180px) {
-  #market-workspace .top5-ribbon {
-    grid-template-columns: minmax(176px, 198px) minmax(0, 1fr) !important;
-  }
-  #market-workspace .top5-track {
-    display: flex !important;
-    overflow-x: auto !important;
-    overscroll-behavior-x: contain !important;
-    scrollbar-width: thin !important;
-  }
-  #market-workspace .top5-item {
-    flex: 0 0 190px !important;
-  }
-}
-
-@media (max-width: 680px) {
-  #market-workspace .top5-ribbon:not(.admin-native-direct-floating) {
-    grid-template-columns: minmax(0,1fr) !important;
-    grid-template-rows: auto auto !important;
-    padding-top:30px!important;
-  }
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) {
-    display:block!important;
-    grid-template-columns:none!important;
-    padding-top:30px!important;
-  }
-  #market-workspace #targetTop5Cycle { grid-column:1!important; grid-row:1!important; }
-  #market-workspace .top5-track { grid-column:1!important; grid-row:2!important; }
-  #market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls,
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls {
-    top:4px!important;
-    right:5px!important;
-  }
-}
-
-/* R2 HEADER COMPACT LOCK — the brand already exists at left. */
-#atlasVersionControlText::after { content: none !important; display: none !important; }
-#atlasVersionControl { white-space: nowrap !important; }
-
-/* Floating ribbons keep the same full Administrator menu and never inherit
-   the old R1 translation handle. */
+#atlasVersionControlText::after{content:none!important;display:none!important}
+#atlasVersionControl{white-space:nowrap!important}
 #market-workspace .top5-ribbon .market-ribbon-drag-handle,
-#market-workspace .market-flow-ribbon .market-ribbon-drag-handle { display:none !important; }
-
-/* Direct floating mode: the window manager owns fixed geometry. Keep the
-   ribbon contents readable and the menu on the right edge. */
+#market-workspace .market-flow-ribbon .market-ribbon-drag-handle{display:none!important}
 #market-workspace .top5-ribbon.admin-native-direct-floating,
-#market-workspace .market-flow-ribbon.admin-native-direct-floating {
-  z-index: 2147481800 !important;
-  max-width: calc(100vw - 24px) !important;
-  max-height: calc(100vh - 24px) !important;
+#market-workspace .market-flow-ribbon.admin-native-direct-floating{z-index:2147481800!important;max-width:calc(100vw - 24px)!important;max-height:calc(100vh - 24px)!important}
+#market-workspace .top5-ribbon:not(.admin-native-direct-floating)>.admin-native-controls .admin-native-control,
+#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating)>.admin-native-controls .admin-native-control{width:22px!important;height:22px!important;min-width:22px!important;min-height:22px!important;padding:0!important}
+
+@media(min-width:681px){
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating){display:block!important;grid-template-columns:none!important;grid-template-rows:none!important;position:relative!important;padding:0!important;margin:0!important;overflow:hidden!important}
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating)>.market-flow-viewport{display:block!important;position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:100%!important;max-width:none!important;min-width:0!important;height:100%!important;margin:0!important;padding-left:0!important;padding-right:0!important;grid-column:auto!important;grid-row:auto!important;z-index:1!important}
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating)>#marketFlowCycle.market-flow-label{-webkit-appearance:none!important;appearance:none!important;position:absolute!important;left:8px!important;right:auto!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;display:grid!important;place-items:center!important;grid-template-columns:none!important;grid-template-rows:none!important;align-self:auto!important;justify-self:auto!important;box-sizing:border-box!important;min-width:30px!important;width:30px!important;max-width:30px!important;min-height:30px!important;height:30px!important;max-height:30px!important;padding:0!important;margin:0!important;border:1px solid rgba(97,240,176,.42)!important;border-radius:8px!important;color:#61f0b0!important;background:rgba(3,22,24,.72)!important;box-shadow:inset 0 0 0 1px rgba(97,240,176,.06)!important;overflow:hidden!important;isolation:auto!important;z-index:30!important;opacity:.52!important}
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating)>#marketFlowCycle.market-flow-label>span{display:none!important}
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating):hover>#marketFlowCycle.market-flow-label{opacity:.78!important}
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating)>#marketFlowCycle.market-flow-label:hover,
+  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating)>#marketFlowCycle.market-flow-label:focus-visible{opacity:1!important}
 }
 
-/* Compact ribbon hit targets; surface/color remain owned by window chrome. */
-#market-workspace .top5-ribbon:not(.admin-native-direct-floating) > .admin-native-controls .admin-native-control,
-#market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .admin-native-controls .admin-native-control {
-  width:22px!important;
-  height:22px!important;
-  min-width:22px!important;
-  min-height:22px!important;
-  padding:0!important;
-}
+#market-workspace .market-flow-ribbon.admin-native-direct-floating:not(.admin-native-maximized){display:block!important;min-height:54px!important;height:54px!important;max-height:54px!important;padding:0!important;overflow:hidden!important;resize:horizontal!important;isolation:isolate!important}
+#market-workspace .market-flow-ribbon.admin-native-direct-floating>.market-flow-viewport{display:block!important;position:relative!important;inset:auto!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;height:54px!important;min-height:54px!important;max-height:54px!important;margin:0!important;padding:0!important;overflow:hidden!important;contain:paint!important;isolation:isolate!important;z-index:1!important}
+#market-workspace .market-flow-ribbon.admin-native-direct-floating>.market-flow-viewport .ticker-track{position:relative!important;z-index:1!important;min-width:max-content!important;max-width:none!important;margin:0!important;will-change:transform!important}
+#market-workspace .market-flow-ribbon.admin-native-direct-floating>#marketFlowCycle.market-flow-label{position:absolute!important;left:8px!important;right:auto!important;top:50%!important;bottom:auto!important;transform:translateY(-50%)!important;box-sizing:border-box!important;width:30px!important;min-width:30px!important;max-width:30px!important;height:30px!important;min-height:30px!important;max-height:30px!important;margin:0!important;padding:0!important;overflow:hidden!important;z-index:30!important}
+#market-workspace .market-flow-ribbon.admin-native-direct-floating>.admin-native-controls{position:absolute!important;top:6px!important;right:7px!important;bottom:auto!important;left:auto!important;width:max-content!important;max-width:calc(100% - 14px)!important;margin:0!important;transform:none!important;z-index:70!important;pointer-events:auto!important}
 
 /* ============================================================================
-   40.1.17 — MARKET FLOW ZERO-HOST VISUAL RECOVERY LOCK
+   40.4.100 — AETHER SINGLE-LANE CANONICAL CSS OWNER
 
-   Visible regression corrected:
-   - no structural/opaque label host may reserve space at the left of Market Flow;
-   - the existing #marketFlowCycle is a small overlaid ghost control only;
-   - the viewport owns the complete ribbon width;
-   - ticker motion/click behavior remains owned by Classic style.css / app.js.
-   ============================================================================ */
-@media (min-width:681px){
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating){
-    display:block!important;
-    grid-template-columns:none!important;
-    grid-template-rows:none!important;
-    position:relative!important;
-    padding:0!important;
-    margin:0!important;
-    overflow:hidden!important;
-  }
-
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > .market-flow-viewport{
-    display:block!important;
-    position:relative!important;
-    left:auto!important;
-    right:auto!important;
-    top:auto!important;
-    bottom:auto!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    height:100%!important;
-    margin:0!important;
-    padding-left:0!important;
-    padding-right:0!important;
-    grid-column:auto!important;
-    grid-row:auto!important;
-    z-index:1!important;
-  }
-
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label{
-    -webkit-appearance:none!important;
-    appearance:none!important;
-    position:absolute!important;
-    left:8px!important;
-    right:auto!important;
-    top:50%!important;
-    bottom:auto!important;
-    transform:translateY(-50%)!important;
-    display:grid!important;
-    place-items:center!important;
-    grid-template-columns:none!important;
-    grid-template-rows:none!important;
-    align-self:auto!important;
-    justify-self:auto!important;
-    box-sizing:border-box!important;
-    min-width:30px!important;
-    width:30px!important;
-    max-width:30px!important;
-    min-height:30px!important;
-    height:30px!important;
-    max-height:30px!important;
-    padding:0!important;
-    margin:0!important;
-    border:1px solid rgba(97,240,176,.42)!important;
-    border-radius:8px!important;
-    color:#61f0b0!important;
-    background:rgba(3,22,24,.72)!important;
-    box-shadow:inset 0 0 0 1px rgba(97,240,176,.06)!important;
-    overflow:hidden!important;
-    isolation:auto!important;
-    z-index:30!important;
-    opacity:.52!important;
-  }
-
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label > span{
-    display:none!important;
-  }
-
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating):hover > #marketFlowCycle.market-flow-label{
-    opacity:.78!important;
-  }
-
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label:hover,
-  #market-workspace .market-flow-ribbon:not(.admin-native-direct-floating) > #marketFlowCycle.market-flow-label:focus-visible{
-    opacity:1!important;
-  }
-}
-
-/* ============================================================================
-   40.1.25 — MARKET FLOW / TARGET TOP FLOAT PARITY LOCK
-
-   Direct floating position is owned exclusively by admin-windows.css through
-   .admin-native-direct-floating, exactly like Target Top. Do not set an
-   unconditional position:relative on Market Flow: it would override the fixed
-   floating owner and turn Window Manager left/top into destructive relative offsets.
+   ONE physical status lane only:
+   NORMAL -> AETHER INFO -> AETHER SYSTEM -> NORMAL.
+   admin-ribbons.css is the sole visual/animation owner of that lane.
+   index.html owns structure only; js/aether.js owns values. No CSS injected by JavaScript.
    ============================================================================ */
 
-/* ============================================================================
-   40.1.26 — MARKET FLOW FLOATING VIEWPORT ADAPTATION LOCK
-
-   External detach/move remains the same directFixed Window Manager path used by
-   Target Top. Market Flow is structurally different: it contains an animated
-   max-content ticker inside a clipped viewport. In floating mode, keep the
-   native 54px strip height and explicitly confine the ticker to the detached
-   ribbon instead of inheriting large-window geometry.
-   ============================================================================ */
-#market-workspace .market-flow-ribbon.admin-native-direct-floating:not(.admin-native-maximized) {
-  display: block !important;
-  min-height: 54px !important;
-  height: 54px !important;
-  max-height: 54px !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  resize: horizontal !important;
-  isolation: isolate !important;
+#sourceTimeCard{
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  justify-content:center!important;text-align:center!important;padding-block:5px!important;
+}
+#atlasCelestialClockHeader4055{
+  justify-content:center!important;align-items:baseline!important;margin:0 auto!important;text-align:center!important;
+}
+html[data-atlas-view="essential"] body.atlas-status-strip-40309 #livecheck.command-bar,
+html[data-atlas-view="intermediate"] body.atlas-status-strip-40309 #livecheck.command-bar,
+html[data-atlas-view="advanced"] body.atlas-status-strip-40309 #livecheck.command-bar{
+  grid-template-rows:auto!important;grid-template-areas:"live refresh decision source time"!important;
+  row-gap:0!important;position:relative!important;
 }
 
-#market-workspace .market-flow-ribbon.admin-native-direct-floating > .market-flow-viewport {
-  display: block !important;
-  position: relative !important;
-  inset: auto !important;
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-  height: 54px !important;
-  min-height: 54px !important;
-  max-height: 54px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  contain: paint !important;
-  isolation: isolate !important;
-  z-index: 1 !important;
+@keyframes atlasStatusNativePhase{
+  0%,49.999%{opacity:1;visibility:visible}
+  50%,89.999%{opacity:0;visibility:hidden}
+  90%,100%{opacity:1;visibility:visible}
+}
+@keyframes atlasAetherBandPhase{
+  0%,49.999%{opacity:0;visibility:hidden}
+  50%,89.999%{opacity:1;visibility:visible}
+  90%,100%{opacity:0;visibility:hidden}
+}
+@keyframes atlasAetherInfoPhase{
+  0%,49.999%{opacity:0;visibility:hidden}
+  50%,69.999%{opacity:1;visibility:visible}
+  70%,100%{opacity:0;visibility:hidden}
+}
+@keyframes atlasAetherSystemPhase{
+  0%,69.999%{opacity:0;visibility:hidden}
+  70%,89.999%{opacity:1;visibility:visible}
+  90%,100%{opacity:0;visibility:hidden}
 }
 
-#market-workspace .market-flow-ribbon.admin-native-direct-floating > .market-flow-viewport .ticker-track {
-  position: relative !important;
-  z-index: 1 !important;
-  min-width: max-content !important;
-  max-width: none !important;
-  margin: 0 !important;
-  will-change: transform !important;
-}
-
-/* Keep the existing compact cycle trigger as an overlay; never turn it into a
-   full-width label when the ribbon leaves the dock. */
-#market-workspace .market-flow-ribbon.admin-native-direct-floating > #marketFlowCycle.market-flow-label {
-  position: absolute !important;
-  left: 8px !important;
-  right: auto !important;
-  top: 50% !important;
-  bottom: auto !important;
-  transform: translateY(-50%) !important;
-  box-sizing: border-box !important;
-  width: 30px !important;
-  min-width: 30px !important;
-  max-width: 30px !important;
-  height: 30px !important;
-  min-height: 30px !important;
-  max-height: 30px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  z-index: 30 !important;
-}
-
-/* Same five-button chrome location as the docked ribbon, overlaid inside the
-   detached strip rather than consuming ticker width. */
-#market-workspace .market-flow-ribbon.admin-native-direct-floating > .admin-native-controls {
-  position: absolute !important;
-  top: 6px !important;
-  right: 7px !important;
-  bottom: auto !important;
-  left: auto !important;
-  width: max-content !important;
-  max-width: calc(100% - 14px) !important;
-  margin: 0 !important;
-  transform: none !important;
-  z-index: 70 !important;
-  pointer-events: auto !important;
-}
-
-/* ============================================================================
-   40.4.99 R3 — AETHER RIBBON READABILITY LOCK
-   Presentation-only override. The canonical row still alternates Menu/Chronos
-   and Aether; Chronos stays exclusively in the native technical row.
-   No runtime/data/Market Flow ownership changes.
-   ============================================================================ */
-@keyframes atlasStatusNativePhaseR3 {
-  0%,49% { opacity:1; visibility:visible; }
-  50%,90% { opacity:0; visibility:hidden; }
-  91%,100% { opacity:1; visibility:visible; }
-}
-@keyframes atlasAetherBandPhaseR3 {
-  0%,49% { opacity:0; visibility:hidden; }
-  50%,90% { opacity:1; visibility:visible; }
-  91%,100% { opacity:0; visibility:hidden; }
-}
-@keyframes atlasAetherNewsReadR3 {
-  0%,60% { transform:translateX(0); }
-  88% { transform:translateX(-24vw); }
-  91%,100% { transform:translateX(0); }
-}
-
-@media (min-width:901px) and (prefers-reduced-motion:no-preference) {
+@media (min-width:901px) and (prefers-reduced-motion:no-preference){
   body #livecheck.command-bar>#btnLivecheck,
   body #livecheck.command-bar>#btnRefresh,
   body #livecheck.command-bar>#decisionCard,
   body #livecheck.command-bar>#sourceActiveCard,
-  body #livecheck.command-bar>#sourceTimeCard {
-    animation:atlasStatusNativePhaseR3 36s linear infinite !important;
+  body #livecheck.command-bar>#sourceTimeCard{
+    animation:atlasStatusNativePhase 36s steps(1,end) infinite!important;
   }
+  body #atlasAetherRibbon4084{
+    grid-column:1/-1!important;grid-row:1!important;align-self:stretch!important;
+    min-width:0!important;min-height:36px!important;height:36px!important;box-sizing:border-box!important;
+    display:flex!important;align-items:center!important;overflow:hidden!important;position:relative!important;
+    padding:0 9px!important;border:1px solid rgba(99,225,239,.17)!important;border-radius:8px!important;
+    background:linear-gradient(90deg,rgba(5,21,31,.94),rgba(8,17,29,.90))!important;
+    color:#b3cad5!important;white-space:nowrap!important;font:850 9.1px/1.05 system-ui,sans-serif!important;
+    letter-spacing:.012em!important;pointer-events:none!important;
+    animation:atlasAetherBandPhase 36s steps(1,end) infinite!important;
+  }
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{
+    position:relative!important;display:flex!important;align-items:center!important;gap:0!important;
+    width:100%!important;min-width:0!important;height:100%!important;padding:0!important;
+    transform:none!important;animation:none!important;will-change:auto!important;
+  }
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-ribbon-brand-4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonAtlas4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonOracle4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonSources4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-news-window-4084{
+    box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;
+    flex:0 0 auto!important;min-width:0!important;height:100%!important;padding:0 8px!important;
+    border-left:1px solid rgba(130,211,230,.11)!important;white-space:nowrap!important;
+    animation:atlasAetherInfoPhase 36s steps(1,end) infinite!important;
+  }
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084{padding-left:2px!important;border-left:0!important;color:#f0a6d8!important;letter-spacing:.11em!important;font-weight:950!important}
+  body #atlasAetherRibbonAtlas4084{color:#c4b5ff!important}
+  body #atlasAetherRibbonOracle4084{color:#f1dc94!important}
+  body #atlasAetherRibbonSources4084{color:#81e6ef!important}
+  body #atlasAetherRibbonBook4084{color:#9fd8b2!important}
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084{flex:1 1 260px!important;overflow:hidden!important;color:#c6d3dc!important}
+  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084>i{flex:0 0 auto!important;font-style:normal!important;color:#7f9daa!important;padding-right:5px!important;background:transparent!important}
+  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084{display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;animation:none!important;transform:none!important}
 
-  body #atlasAetherRibbon4084 {
-    padding:0 12px!important;
-    border-color:rgba(99,225,239,.18)!important;
-    background:linear-gradient(90deg,rgba(5,21,31,.93),rgba(8,17,29,.88))!important;
-    color:#b4ced9!important;
-    font:850 9.6px/1.15 system-ui,sans-serif!important;
-    letter-spacing:.018em!important;
-    animation:atlasAetherBandPhaseR3 36s linear infinite!important;
+  body #atlasAetherSystem4086{
+    position:absolute!important;inset:0!important;z-index:8!important;box-sizing:border-box!important;
+    display:grid!important;grid-template-columns:auto repeat(5,minmax(0,1fr))!important;align-items:center!important;
+    width:100%!important;min-width:0!important;height:100%!important;margin:0!important;padding:0!important;
+    overflow:hidden!important;border:0!important;background:transparent!important;
+    animation:atlasAetherSystemPhase 36s steps(1,end) infinite!important;
   }
-
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085 {
-    display:flex!important;
-    align-items:center!important;
-    gap:0!important;
-    min-width:0!important;
-    width:100%!important;
-    padding-right:0!important;
-    transform:none!important;
-    animation:none!important;
-    will-change:auto!important;
+  body #atlasAetherSystem4086>.atlas-aether-system-brand-4086,
+  body #atlasAetherSystem4086>.atlas-aether-system-item-4086{
+    display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;
+    height:100%!important;padding:0 7px!important;overflow:hidden!important;
+    border-left:1px solid rgba(121,190,210,.12)!important;white-space:nowrap!important;
   }
-
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>span,
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>b {
-    display:inline-flex!important;
-    align-items:center!important;
-    min-width:0!important;
-    flex:0 0 auto!important;
-    padding:0 12px!important;
-    border-left:1px solid rgba(130,211,230,.14)!important;
+  body #atlasAetherSystem4086>.atlas-aether-system-brand-4086{
+    justify-content:flex-start!important;padding-left:2px!important;padding-right:9px!important;border-left:0!important;
+    color:#f0a6d8!important;letter-spacing:.11em!important;font-weight:950!important;
   }
-
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084 {
-    padding-left:2px!important;
-    border-left:0!important;
-  }
-  body #atlasAetherRibbonAtlas4084 { color:#c5b5ff!important; }
-  body #atlasAetherRibbonOracle4084 { color:#f4dfa0!important; }
-  body #atlasAetherRibbonSources4084 { color:#91edf4!important; }
-  body #atlasAetherRibbonBook4084 { color:#a9dfbb!important; }
-
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 {
-    display:inline-flex!important;
-    align-items:center!important;
-    gap:8px!important;
-    flex:1 1 360px!important;
-    min-width:260px!important;
-    overflow:hidden!important;
-    color:#d1dce2!important;
-  }
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084>i {
-    position:relative!important;
-    z-index:2!important;
-    flex:0 0 auto!important;
-    font-style:normal!important;
-    font-weight:900!important;
-    color:#86a4b2!important;
-    padding-right:4px!important;
-    background:rgba(8,17,29,.94)!important;
-    letter-spacing:.035em!important;
-  }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084 {
-    display:inline-block!important;
-    min-width:max-content!important;
-    transform:translateX(0)!important;
-    animation:none!important;
-  }
-  body #atlasAetherRibbon4084 #atlasAetherRibbonNews4084[data-scroll="1"] {
-    animation:atlasAetherNewsReadR3 36s ease-in-out infinite!important;
-  }
+  body .atlas-aether-system-icon-4086{flex:0 0 auto!important;margin-right:3px!important;color:#79deeb!important;font-size:7px!important}
+  body .atlas-aether-system-label-4086{flex:0 0 auto!important;margin-right:4px!important;color:#7798a7!important;font-weight:900!important}
+  body .atlas-aether-system-value-4086{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#d2e1e7!important;font-weight:900!important;font-variant-numeric:tabular-nums!important}
+  body [data-aether-system-4086="weather"] .atlas-aether-system-icon-4086{color:#f2d47c!important}
+  body [data-aether-system-4086="btc"][data-tone="positive"] .atlas-aether-system-value-4086{color:#78f0a7!important}
+  body [data-aether-system-4086="btc"][data-tone="negative"] .atlas-aether-system-value-4086{color:#ff7895!important}
+  body [data-aether-system-4086="btc"][data-tone="flat"] .atlas-aether-system-value-4086{color:#d6dce0!important}
 }
 
-@media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference) {
-  body #atlasAetherRibbon4084 { padding-inline:7px!important; font-size:8.7px!important; }
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>span,
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>b { padding-inline:8px!important; }
-  body #atlasAetherRibbon4084 .atlas-aether-news-window-4084 { min-width:210px!important; }
+@media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference){
+  body #atlasAetherRibbon4084{padding-inline:6px!important;font-size:8.3px!important}
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-ribbon-brand-4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonAtlas4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonOracle4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonSources4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084,
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-news-window-4084{padding-inline:5px!important}
+  body #atlasAetherSystem4086>.atlas-aether-system-brand-4086,
+  body #atlasAetherSystem4086>.atlas-aether-system-item-4086{padding-inline:4px!important}
+  body .atlas-aether-system-icon-4086{margin-right:2px!important;font-size:6.5px!important}
+  body .atlas-aether-system-label-4086{margin-right:3px!important}
 }
+
+@media (max-width:900px), (prefers-reduced-motion:reduce){
+  body #livecheck.command-bar>#btnLivecheck,
+  body #livecheck.command-bar>#btnRefresh,
+  body #livecheck.command-bar>#decisionCard,
+  body #livecheck.command-bar>#sourceActiveCard,
+  body #livecheck.command-bar>#sourceTimeCard{animation:none!important;opacity:1!important;visibility:visible!important}
+  body #atlasAetherRibbon4084{display:none!important;animation:none!important}
+  body .atlas-aether-status-toggle-4084{display:none!important}
+}
+
+
+/* ============================================================================
+   AETHER STATUS CONTROL + SYNTHESIS PANEL
+   Same presentation owner as the Aether ribbon. No Aether CSS belongs in HTML.
+   ============================================================================ */
+.atlas-aether-status-toggle-4084{
+      display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:31px;padding:0 9px;
+      border:1px solid rgba(236,123,197,.30);border-radius:9px;background:rgba(25,8,28,.60);
+      color:#f2b6dc;font:900 8.5px/1 system-ui,sans-serif;white-space:nowrap;cursor:pointer;
+    }
+    .atlas-aether-status-toggle-4084:hover,.atlas-aether-status-toggle-4084[aria-expanded="true"]{border-color:rgba(236,123,197,.58);background:rgba(47,13,46,.78)}
+    #atlasAetherStatusPanel4084{
+      position:fixed;z-index:2147482000;top:132px;right:18px;width:min(430px,calc(100vw - 36px));
+      border:1px solid rgba(223,132,205,.34);border-radius:13px;background:rgba(3,13,23,.96);
+      box-shadow:0 18px 48px rgba(0,0,0,.48);padding:12px;color:#d9e8ef;
+    }
+    #atlasAetherStatusPanel4084[hidden]{display:none!important}
+    .atlas-aether-panel-head-4084{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+    .atlas-aether-panel-head-4084 b{color:#f0b0da;letter-spacing:.10em}.atlas-aether-panel-head-4084 button{border:0;background:transparent;color:#9db6c3;cursor:pointer}
+    .atlas-aether-panel-grid-4084{display:grid;gap:6px}.atlas-aether-panel-grid-4084 article{display:grid;grid-template-columns:74px 1fr;gap:8px;padding:7px 8px;border:1px solid rgba(100,201,224,.12);border-radius:9px;background:rgba(7,23,34,.62)}
+    .atlas-aether-panel-grid-4084 span{color:#7896a7;text-transform:uppercase;font-size:8px;font-weight:900;letter-spacing:.08em}.atlas-aether-panel-grid-4084 b{font-size:10px;color:#dcecf2;font-weight:800}
