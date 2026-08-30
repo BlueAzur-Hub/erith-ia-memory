@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.113
-  Revision: 40.4.113 publication identity alignment + cache-busted runtime loading; 40.4.112 fresh News wake/in-window pulse logic is preserved unchanged.
+  Build: 40.4.114
+  Revision: 40.4.114 News French quality pipeline; Aether 40.4.112 wake/in-window pulse runtime and 40.4.113 cache-busted publication loading are preserved unchanged.
 */
 (() => {
   "use strict";
@@ -494,7 +494,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.112",
+    build:"40.4.114",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
