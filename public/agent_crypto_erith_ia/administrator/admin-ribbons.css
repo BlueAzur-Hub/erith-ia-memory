@@ -266,7 +266,7 @@
   }
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{
     position:relative!important;display:grid!important;
-    grid-template-columns:auto minmax(300px,1fr) fit-content(190px) fit-content(340px) fit-content(280px) fit-content(130px)!important;
+    grid-template-columns:max-content minmax(0,1.28fr) minmax(0,.78fr) minmax(0,1.16fr) minmax(0,.82fr) max-content!important;
     align-items:center!important;width:100%!important;min-width:0!important;height:100%!important;padding:0!important;gap:0!important;
     transform:none!important;animation:none!important;
   }
@@ -276,8 +276,8 @@
   body #atlasAetherRibbonOracle4084,
   body #atlasAetherRibbonSources4084,
   body #atlasAetherRibbonBook4084{
-    box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;
-    min-width:0!important;width:100%!important;height:100%!important;padding:0 12px!important;
+    box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;
+    min-width:0!important;width:100%!important;height:100%!important;padding:0 10px!important;
     overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
     border-left:1px solid rgba(130,211,230,.13)!important;
     animation:atlasAetherInfoPhase 48s steps(1,end) infinite!important;
@@ -287,7 +287,7 @@
   body #atlasAetherRibbonAtlas4084{color:#cbbdff!important}
   body #atlasAetherRibbonOracle4084{color:#f5df91!important}
   body #atlasAetherRibbonSources4084{color:#8cebf3!important}
-  body #atlasAetherRibbonBook4084{color:#a8ddb9!important}
+  body #atlasAetherRibbonBook4084{justify-content:center!important;color:#a8ddb9!important}
 
   body #atlasAetherVeille4087{
     position:absolute!important;inset:0!important;z-index:12!important;box-sizing:border-box!important;
@@ -350,7 +350,7 @@
 
 @media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference){
   body #atlasAetherRibbon4084{padding-inline:8px!important;font-size:11.8px!important}
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{grid-template-columns:auto minmax(220px,1fr) fit-content(150px) fit-content(270px) fit-content(220px) fit-content(105px)!important}
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{grid-template-columns:max-content minmax(0,1.24fr) minmax(0,.78fr) minmax(0,1.15fr) minmax(0,.80fr) max-content!important}
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084,
   body #atlasAetherRibbonMarket4088,
   body #atlasAetherRibbonAtlas4084,

@@ -164,15 +164,22 @@
       const first=operator.split("·").map(v=>v.trim()).filter(Boolean)[0]||"";
       const score=(operator.match(/(?:score\s+direction|direction)\s*([+−-]?\s*\d+\s*\/\s*100)/i)||[])[1]||"";
       const scoreClean=score.replace(/\s+/g,"").replace("−","-");
-      return [status&&status!=="IDLE"?status:null,aetherCompact4088(first,42),scoreClean?`direction ${scoreClean}`:null].filter(Boolean).join(" · ");
+      let signal=first.replace(/^momentum\s*/i,"").trim();
+      if(/partag/i.test(first))signal="PARTAGÉ";
+      else if(/hauss|bull/i.test(first))signal="HAUSSIER";
+      else if(/baiss|bear/i.test(first))signal="BAISSIER";
+      else signal=aetherCompact4088(signal||first,20).toUpperCase();
+      return [status&&status!=="IDLE"?status:null,signal||null,scoreClean||null].filter(Boolean).join(" · ");
     }
     const reports=Array.isArray(current?.reports)?current.reports.length:0;
     return `${status||"VEILLE"}${reports?` · ${reports}/4`:""}`;
   }
   function aetherSourcesBrief4088(){
     const live=aetherText4084("liveStatus","");
-    if(live&&!/requis|attente/i.test(live))return aetherCompact4088(live,62);
-    return aetherCompact4088(aetherText4084("sourceName","Aucune source"),62);
+    const raw=live&&!/requis|attente/i.test(live)?live:aetherText4084("sourceName","Aucune source");
+    const ratio=(raw.match(/\b\d+\s*\/\s*\d+\b/)||[])[0]?.replace(/\s+/g,"")||"";
+    if(/binance/i.test(raw))return `Binance${ratio?` · ${ratio}`:""}`;
+    return aetherCompact4088(raw.replace(/^Prix live\s*/i,""),34);
   }
   const aetherNewsWake4088={attempted:false,inflight:null};
   function aetherWakeNewsSentinel4088(){
