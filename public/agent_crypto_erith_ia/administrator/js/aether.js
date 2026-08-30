@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.117
-  Revision: 40.4.117 Aether operator-intelligence runtime: same-event VEILLE story preserved; INFO lane now prioritizes market facts, latest analysis, usable signal and ranked News instead of interface shortcomings such as CURRENT/en attente/CREDENTIAL REQUIS. Version-truth false-positive fix lives in administrator/app.js.
+  Build: 40.4.118
+  Revision: 40.4.118 Aether per-message marquee restore: preserve 90 s outer cadence, 9 s FEED pulse, 40.4.116 same-event story and 40.4.117 operator-information lane; restore overflow-only motion as a one-shot animation restarted from zero for each new visible message.
 */
 (() => {
   "use strict";
@@ -244,10 +244,35 @@
     const detail=[headline,evidence?`preuve ${evidence}/100`:null,freshness,source].filter(Boolean).join(" · ");
     return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail,eventKey:aetherVeilleEventKey40116(event)};
   }
+  function aetherVeilleMarqueeSync40118(host,viewport,marquee,copy,fingerprint,fingerprintChanged){
+    if(!host||!viewport||!marquee||!copy)return;
+    const viewportWidth=Math.max(0,Math.round(viewport.clientWidth));
+    const geometryChanged=Math.abs(viewportWidth-aetherVeilleState4087.viewportWidth)>1;
+    if(!fingerprintChanged&&!geometryChanged)return;
+    aetherVeilleState4087.viewportWidth=viewportWidth;
+    // Every message owns its own motion. Reset first so a new 9 s FEED item can
+    // never inherit the transform/progress of the previous item (40.4.112 regression).
+    host.dataset.scroll="0";
+    host.style.removeProperty("--aether-veille-shift-4087");
+    void marquee.offsetWidth;
+    requestAnimationFrame(()=>{
+      if(aetherVeilleState4087.fingerprint!==fingerprint||!copy.isConnected||!viewport.isConnected)return;
+      const overflow=Math.max(0,Math.ceil(copy.scrollWidth-viewport.clientWidth+12));
+      host.style.setProperty("--aether-veille-shift-4087",`${-overflow}px`);
+      if(overflow>12){
+        // data-scroll 0 -> layout flush -> 1 restarts a one-shot animation from x=0.
+        host.dataset.scroll="0";
+        void marquee.offsetWidth;
+        host.dataset.scroll="1";
+      }else{
+        host.dataset.scroll="0";
+      }
+    });
+  }
   function renderAetherVeille4087(){
     const host=document.getElementById("atlasAetherVeille4087"),meta=document.getElementById("atlasAetherVeilleMeta4087"),viewport=document.getElementById("atlasAetherVeilleViewport4087");
     if(!host||!meta||!viewport)return null;
-    const current=aetherVeilleCurrent4087(),copy=host.querySelector("[data-aether-veille-copy-4087]"),brand=host.querySelector(".atlas-aether-veille-brand-4087");
+    const current=aetherVeilleCurrent4087(),copy=host.querySelector("[data-aether-veille-copy-4087]"),brand=host.querySelector(".atlas-aether-veille-brand-4087"),marquee=host.querySelector(".atlas-aether-veille-marquee-4087");
     if(meta.textContent!==current.meta)meta.textContent=current.meta;
     if(brand&&brand.textContent!==current.brand)brand.textContent=current.brand;
     host.dataset.tone=current.tone||"neutral";
@@ -257,12 +282,14 @@
     const fingerprint=`${current.kind}|${current.eventKey||""}|${current.meta}|${current.detail}`;
     const fingerprintChanged=aetherVeilleState4087.fingerprint!==fingerprint;
     if(fingerprintChanged){
+      // Stop the previous message before mutating its text; motion restarts only after re-measure.
+      host.dataset.scroll="0";
+      host.style.removeProperty("--aether-veille-shift-4087");
       if(copy&&copy.textContent!==current.detail)copy.textContent=current.detail;
       if(copy)copy.title=current.detail;
       aetherVeilleState4087.fingerprint=fingerprint;
     }
-    host.dataset.scroll="0";
-    host.style.removeProperty("--aether-veille-shift-4087");
+    aetherVeilleMarqueeSync40118(host,viewport,marquee,copy,fingerprint,fingerprintChanged);
     aetherVeilleState4087.last=current;
     return current;
   }
@@ -612,7 +639,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.117",
+    build:"40.4.118",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
