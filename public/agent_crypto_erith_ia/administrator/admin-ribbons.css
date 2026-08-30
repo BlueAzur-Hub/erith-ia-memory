@@ -207,7 +207,7 @@
 #market-workspace .market-flow-ribbon.admin-native-direct-floating>.admin-native-controls{position:absolute!important;top:6px!important;right:7px!important;bottom:auto!important;left:auto!important;width:max-content!important;max-width:calc(100% - 14px)!important;margin:0!important;transform:none!important;z-index:70!important;pointer-events:auto!important}
 
 /* ============================================================================
-   40.4.106 — AETHER NEWS SENTINEL CONTEXT FEED · 90S READABILITY LOCK
+   40.4.108 — AETHER NEWS FR · SINGLE-MESSAGE RIBBON · 90S READABILITY LOCK
 
    NORMAL -> INFO -> VEILLE/CONTEXTE -> SYSTEM -> NORMAL in ONE physical lane.
    Cadence: 30 s NORMAL · 15 s INFO · 36 s FEED · 9 s SYSTEM = 90 s.
@@ -241,7 +241,7 @@
 }
 @keyframes atlasAetherVeilleTicker4087{
   0%,54.444%{transform:translateX(0)}
-  83.333%,99.999%{transform:translateX(-50%)}
+  83.333%,99.999%{transform:translateX(var(--aether-veille-shift-4087,0px))}
   100%{transform:translateX(0)}
 }
 
@@ -318,17 +318,15 @@
     mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 18px),transparent 100%)!important;
   }
   body #atlasAetherVeille4087 .atlas-aether-veille-marquee-4087{
-    display:flex!important;align-items:center!important;width:max-content!important;min-width:100%!important;
-    transform:none;animation:none!important;will-change:auto!important;
+    display:flex!important;align-items:center!important;width:max-content!important;min-width:0!important;
+    transform:translateX(0);animation:atlasAetherVeilleTicker4087 90s linear infinite!important;will-change:auto!important;
   }
   body #atlasAetherVeille4087 .atlas-aether-veille-copy-4087{
-    display:inline-block!important;flex:0 0 auto!important;padding-right:120px!important;white-space:nowrap!important;font-weight:900!important;
+    display:inline-block!important;flex:0 0 auto!important;padding-right:0!important;white-space:nowrap!important;font-weight:900!important;
   }
-  body #atlasAetherVeille4087[data-scroll="0"] .atlas-aether-veille-copy-4087[aria-hidden="true"]{display:none!important}
-  body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-marquee-4087{
-    min-width:max-content!important;animation:atlasAetherVeilleTicker4087 90s linear infinite!important;will-change:transform!important;
-  }
-  body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-viewport-4087:hover .atlas-aether-veille-marquee-4087{animation-play-state:paused!important}
+  body #atlasAetherVeille4087 .atlas-aether-veille-copy-4087[aria-hidden="true"]{display:none!important}
+  body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-marquee-4087{will-change:transform!important}
+  body #atlasAetherVeille4087 .atlas-aether-veille-viewport-4087:hover .atlas-aether-veille-marquee-4087{animation-play-state:paused!important}
 
   body #atlasAetherSystem4086{
     position:absolute!important;inset:0!important;z-index:11!important;box-sizing:border-box!important;

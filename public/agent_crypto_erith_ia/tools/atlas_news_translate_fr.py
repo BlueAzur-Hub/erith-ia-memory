@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Atlas News Sentinel — French headline translation post-processor.
 
-Build 40.4.105 presentation-data owner.
+Build 40.4.108 presentation-data owner.
 
 Contract:
 - runs AFTER the canonical News Sentinel collector;
@@ -29,7 +29,7 @@ ROOT = Path("public/agent_crypto_erith_ia/data/news")
 DEFAULT_LATEST = ROOT / "latest.json"
 DEFAULT_STATUS = ROOT / "status.json"
 SCHEMA = "atlas_news_translation_fr_v1"
-BUILD = "40.4.105"
+BUILD = "40.4.108"
 ENGINE = "argos-translate"
 ENGINE_PIN = "1.11.0"
 
@@ -256,6 +256,7 @@ def main() -> int:
     parser.add_argument("--self-test", action="store_true")
     parser.add_argument("--latest", type=Path, default=DEFAULT_LATEST)
     parser.add_argument("--status", type=Path, default=DEFAULT_STATUS)
+    parser.add_argument("--require-french", action="store_true", help="Fail if any headline lacks headline_fr; intended for publication workflow.")
     args = parser.parse_args()
     if args.self_test:
         return self_test()
@@ -290,6 +291,14 @@ def main() -> int:
             pass
 
     print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
+    if args.require_french:
+        events = translated.get("events", []) if isinstance(translated.get("events"), list) else []
+        eligible = [event for event in events if isinstance(event, dict) and clean(event.get("headline"))]
+        missing = [clean(event.get("event_id") or event.get("id") or event.get("headline")) for event in eligible if not clean(event.get("headline_fr"))]
+        unavailable = clean(summary.get("status")).lower() == "unavailable"
+        if unavailable or missing:
+            print(json.dumps({"status":"FAIL","reason":"french_headline_coverage","eligible":len(eligible),"missing":len(missing),"examples":missing[:5]}, ensure_ascii=False))
+            return 2
     return 0
 
 
