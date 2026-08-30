@@ -51842,7 +51842,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.118";
+const ATLAS_BUILD = "40.4.119";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -59158,16 +59158,32 @@ function atlasRuntimeTruth3813() {
   };
 }
 
+function atlasRuntimeTruthPublicationSkew40119(truth) {
+  const failed = Object.entries(truth?.checks || {})
+    .filter(([, ok]) => ok !== true)
+    .map(([name]) => name);
+  const publicationOwned = new Set([
+    "html_build_matches_app",
+    "html_token_matches_app",
+    "script_token_matches_app"
+  ]);
+  return failed.length > 0
+    && truth?.checks?.authoritative_build === true
+    && truth?.checks?.runtime_contract_present === true
+    && failed.every(name => publicationOwned.has(name));
+}
+
 function atlasRuntimeTruthApply3813(reason = "runtime") {
   const truth = atlasRuntimeTruth3813();
+  const publicationSkew = !truth.pass && atlasRuntimeTruthPublicationSkew40119(truth);
   try {
     const root = document.documentElement;
     if (root) {
       root.dataset.atlasRuntimeBuild = truth.app_build || "unknown";
-      root.dataset.atlasRuntimeTruth = truth.pass ? "coherent" : "mismatch";
+      root.dataset.atlasRuntimeTruth = truth.pass ? "coherent" : (publicationSkew ? "publication-skew" : "mismatch");
       root.dataset.atlasRuntimeReason = String(reason || "runtime");
     }
-    globalThis.__AGENT_CRYPTO_RUNTIME_TRUTH__ = truth;
+    globalThis.__AGENT_CRYPTO_RUNTIME_TRUTH__ = { ...truth, publication_skew: publicationSkew };
   } catch (_) {}
   if (!truth.pass) {
     const control = document.getElementById("atlasVersionControl");
@@ -59176,15 +59192,42 @@ function atlasRuntimeTruthApply3813(reason = "runtime") {
       .filter(([, ok]) => ok !== true)
       .map(([name]) => name);
     const failedLabel = failedChecks.length ? failedChecks.join(" · ") : "identité runtime";
+    if (publicationSkew) {
+      // 40.4.119 — a stale HTML shell may briefly load a newer immutable asset URL
+      // while GitHub Pages/CDN converges. This is publication skew, not proof of a
+      // broken runtime. Keep the cockpit usable and keep the shell's visible build;
+      // the remote version owner will reconcile on the next explicit/normal check.
+      if (control) {
+        control.classList.remove("fail");
+        control.classList.add("warn");
+        control.dataset.state = "syncing";
+        control.dataset.publicationSkew = "1";
+        control.title = `Publication en transition · page ${truth.html_build || "?"} · runtime ${truth.app_build || "?"} · ${failedLabel}.`;
+      }
+      // Deliberately do not replace the visible Build label with a red failure string.
+      return { ...truth, publication_skew: true };
+    }
     if (control) {
       control.classList.remove("ok", "warn");
       control.classList.add("fail");
       control.dataset.state = "failed";
+      delete control.dataset.publicationSkew;
       control.title = `Version interne réellement incohérente · ${failedLabel} · app ${truth.app_build || "?"} · page ${truth.html_build || "?"}.`;
     }
     if (text) text.textContent = `VERSION INTERNE INCOHÉRENTE · ${failedLabel}`;
+  } else {
+    const control = document.getElementById("atlasVersionControl");
+    if (control?.dataset?.publicationSkew === "1") {
+      delete control.dataset.publicationSkew;
+      control.classList.remove("warn", "fail");
+      control.classList.add("ok");
+      control.dataset.state = "current";
+      control.title = `Version installée : Build ${truth.app_build}. Cliquer pour vérifier GitHub.`;
+      const text = document.getElementById("atlasVersionControlText");
+      if (text) text.textContent = `Build ${truth.app_build}`;
+    }
   }
-  return truth;
+  return { ...truth, publication_skew: false };
 }
 
 let atlasCurrentMemoryEventReconcileQueued3813 = false;

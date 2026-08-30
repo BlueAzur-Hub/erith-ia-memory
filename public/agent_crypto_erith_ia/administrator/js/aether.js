@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.118
-  Revision: 40.4.118 Aether per-message marquee restore: preserve 90 s outer cadence, 9 s FEED pulse, 40.4.116 same-event story and 40.4.117 operator-information lane; restore overflow-only motion as a one-shot animation restarted from zero for each new visible message.
+  Build: 40.4.119
+  Revision: 40.4.119 version-skew tolerance; 40.4.118 per-message marquee preserved: preserve 90 s outer cadence, 9 s FEED pulse, 40.4.116 same-event story and 40.4.117 operator-information lane; restore overflow-only motion as a one-shot animation restarted from zero for each new visible message.
 */
 (() => {
   "use strict";
@@ -639,7 +639,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.118",
+    build:"40.4.119",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
