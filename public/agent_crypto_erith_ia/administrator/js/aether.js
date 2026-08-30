@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.103
-  Revision: News Sentinel explanatory context — alternating VEILLE / CONTEXTE operator feed, softer INFO presentation, SYSTEM unchanged.
+  Build: 40.4.104
+  Revision: French News presentation — VEILLE / CONTEXTE prefer headline_fr with canonical English fallback; SYSTEM unchanged.
 */
 (() => {
   "use strict";
@@ -11,6 +11,15 @@
   function aetherCurrent4084(){try{return typeof atlasCurrentStateRead==="function"?(atlasCurrentStateRead()||null):null;}catch(_){return null;}}
   const AETHER_VEILLE_TOP_4087=5;
   const aetherVeilleState4087={index:0,kind:"alert",contextFacet:0,fingerprint:"",last:null};
+  function aetherNewsHeadlineFr40104(event,fallback="Événement à qualifier"){
+    try{
+      const owner=globalThis.AgentCryptoNewsFrenchPresentation40104;
+      if(owner&&typeof owner.headline==="function")return owner.headline(event,fallback);
+    }catch(_){}
+    const french=String(event?.headline_fr||"").replace(/\s+/g," ").trim();
+    const original=String(event?.headline||event?.event_label||"").replace(/\s+/g," ").trim();
+    return french||original||fallback;
+  }
   const aetherVeilleNumber4087=value=>{const n=Number(value);return Number.isFinite(n)?n:0;};
   function aetherVeilleTimestamp4087(event){
     try{if(typeof newsFeedEventTimestamp==="function")return Number(newsFeedEventTimestamp(event)||0);}catch(_){}
@@ -96,7 +105,7 @@
       const assets=(Array.isArray(lead?.assets)?lead.assets:Array.isArray(n?.event?.assets)?n.event.assets:[])
         .map(value=>String(value||"").trim().toUpperCase()).filter(Boolean).slice(0,3);
       const scope=assets.length?assets.join("/"):"MARCHÉ";
-      const headline=String(lead?.headline||lead?.event_label||n?.event?.headline||"Contexte News Sentinel").replace(/\s+/g," ").trim();
+      const headline=aetherNewsHeadlineFr40104(lead||n?.event,"Contexte News Sentinel");
       const source=String(lead?.source_name||lead?.source_host||n?.event?.source_name||n?.event?.source_host||"").replace(/^www\./,"").trim();
       const mechanismTitle=String(n?.mechanism?.title||"MÉCANISME NON QUALIFIÉ").trim();
       const mechanismDirection=String(n?.mechanism?.direction||"INDÉTERMINÉ").trim();
@@ -146,7 +155,7 @@
     const action=String(event?.decision?.action||snapshot.decision||"Surveillance").trim();
     const source=String(event?.source_host||event?.source_name||event?.source_class||"").replace(/^www\./,"").trim();
     const freshness=String(event?.freshness?.label||"").trim();
-    const headline=String(event?.headline||event?.event_label||"Événement à qualifier").replace(/\s+/g," ").trim();
+    const headline=aetherNewsHeadlineFr40104(event,"Événement à qualifier");
     const meta=`${aetherVeilleState4087.index+1}/${events.length} · ${impactLevel} ${impact}/100 · ${scope}`;
     const detail=[snapshot.label,snapshot.decision,headline,evidence?`preuve ${evidence}/100`:null,action,freshness,source].filter(Boolean).join(" · ");
     return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail};
@@ -430,7 +439,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.103",
+    build:"40.4.104",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -466,7 +475,11 @@
     explanatory_context_alternation:true,
     explanatory_context_new_fetch:false,
     explanatory_context_new_timer:false,
-    explanatory_context_causal_claim:false
+    explanatory_context_causal_claim:false,
+    news_translation_preferred:"headline_fr",
+    news_translation_fallback:"headline",
+    news_translation_browser_runtime:false,
+    news_translation_canonical_original_preserved:true
   });
   globalThis.AgentCryptoAether=api;
   /* Compatibility read-only alias for diagnostics that knew the R6/R7 object. */

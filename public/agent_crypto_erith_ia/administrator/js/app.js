@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.103";
+  const ADMIN_BUILD = "40.4.104";
   const ADMIN_RELEASE = "AETHER READABILITY CADENCE · EXTENDED VEILLE · INFO BALANCE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";

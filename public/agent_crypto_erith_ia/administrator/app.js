@@ -21470,6 +21470,20 @@ const NEWS_SENTINEL_VISIT_KEY = "agent_crypto_erith_ia_news_visit_v2";
 
 const NEWS_SENTINEL_FEED_RETRY_MS = Object.freeze([60 * 1000, 180 * 1000, 5 * 60 * 1000]);
 
+function newsFeedDisplayHeadlineFr40104(event, fallback="Événement sans titre") {
+  const french = String(event?.headline_fr || "").replace(/\s+/g, " ").trim();
+  const original = String(event?.headline || event?.event_label || "").replace(/\s+/g, " ").trim();
+  return french || original || fallback;
+}
+
+globalThis.AgentCryptoNewsFrenchPresentation40104 = Object.freeze({
+  headline: newsFeedDisplayHeadlineFr40104,
+  preferred_field: "headline_fr",
+  fallback_field: "headline",
+  canonical_original_preserved: true,
+  browser_translation: false
+});
+
 const newsFeedState = {
   status: "idle",
   payload: null,
@@ -22338,7 +22352,7 @@ function renderNewsFeedList() {
             <span class="news-live-type">${escapeHtml(event.event_label || "Information à qualifier")}</span>
             <span class="news-live-freshness">${escapeHtml(event?.freshness?.label || newsFeedAgeLabel(event.event_time))}</span>
           </span>
-          <h4>${escapeHtml(event.headline || "Événement sans titre")}</h4>
+          <h4>${escapeHtml(newsFeedDisplayHeadlineFr40104(event))}</h4>
           <span class="news-live-meta">${meta.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</span>
         </button>
         <div class="news-live-source-row">
@@ -22906,7 +22920,7 @@ function newsMarketExtractFacts40235(event) {
   if (amounts.length && /short|bearish bet/.test(lower)) {
     facts.push(`${amounts[0]} de positions baissières / short sont mentionnées comme liquidées ou forcées au rachat.`);
   }
-  if (!facts.length && event?.headline) facts.push(String(event.headline));
+  if (!facts.length && event?.headline) facts.push(newsFeedDisplayHeadlineFr40104(event, String(event.headline)));
   return { facts, amounts, raw };
 }
 
@@ -23221,7 +23235,7 @@ function renderNewsMarketOperatorIntelligence40235(current=null){
     const steps=document.getElementById("newsMarketMechanismSteps40235");if(steps)steps.replaceChildren(); root.dataset.state="no-event"; return n;
   }
   const proof=n.base?.amplifier?.evidence||newsMarketEvidence40234(n.event);
-  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||n.event?.headline||"Événement qualifié");
+  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||newsFeedDisplayHeadlineFr40104(n.event,"Événement qualifié"));
   set("newsMarketEventProof40235",`${n.event?.source_name||n.event?.source_host||"Source"} · preuve ${String(proof?.level||"inconnue").toLowerCase()}${proof?.score!=null?` · ${proof.score}/100`:""} · ${newsMarketSupportingAmountLine40235(n)}`);
   set("newsMarketMechanismTitle40235",`${n.mechanism.title} · ${n.mechanism.direction}`);
   const steps=document.getElementById("newsMarketMechanismSteps40235"); if(steps){steps.replaceChildren();(n.mechanism.steps||[]).forEach((label,index)=>{const li=document.createElement("li");li.dataset.step=String(index+1);const span=document.createElement("span");span.textContent=label;li.appendChild(span);steps.appendChild(li);});}
@@ -51780,7 +51794,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.103";
+const ATLAS_BUILD = "40.4.104";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
