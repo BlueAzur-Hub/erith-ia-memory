@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.121
-  Revision: 40.4.121 constant-read-speed marquee + operator-information recovery. Alert/context rotation from 40.4.120 is preserved; INFO restores market/analysis/signal/source/veille facts instead of CURRENT/en attente/CREDENTIAL REQUIS filler.
+  Build: 40.4.122
+  Revision: 40.4.122 information-only Aether. 40.4.121 constant-read-speed marquee is preserved; generic caution/disclaimer/non-conclusion prose is filtered from the operator ribbon and duplicate CONTEXTE labelling is retired.
 */
 (() => {
   "use strict";
@@ -157,12 +157,20 @@
       return {n,lead,proofScore,scope,headline,source,mechanismTitle,mechanismDirection,explains,flowLabel,flowDirection,breadth,marketTone,assets};
     }catch(_){return null;}
   }
+  const AETHER_NON_INFORMATION_RE_40122=/(?:pas une pr[eé]vision|aucune recommandation|recommandation financi[eè]re|conseil d[’']achat|signal d[’']achat|causalit[eé]|non d[eé]montr[eé]|ne prouve|sans preuve causale|preuve causale|r[oô]le plausible|ne suffit pas|ne peut pas conclure|insuffisant[^·.]*conclure|aucune conclusion|aucune cause|narration causale|prudence|prudent|non qualifi[eé]|non identifi[eé]|ind[eé]termin[eé]|inconnu|indisponible|non comparable|information insuffisante)/i;
+  function aetherInformationFact40122(value){
+    const text=String(value||"").replace(/\s+/g," " ).trim();
+    if(!text||AETHER_NON_INFORMATION_RE_40122.test(text))return "";
+    return text;
+  }
+  function aetherInformationLine40122(value){
+    return String(value||"").split("·").map(part=>aetherInformationFact40122(part)).filter(Boolean).join(" · " );
+  }
   function aetherContextCurrent4089(model=null){
     const c=model;if(!c)return null;
     const proof=c.proofScore>0?`PREUVE ${Math.round(c.proofScore)}/100`:"PREUVE N/D";
     const qualified=value=>{
-      const t=String(value||"").replace(/\s+/g," ").trim();
-      return t&&!/NON QUALIFI|NON IDENTIFI|INDÉTERMIN|INCONNU|INDISPON|NON COMPARABLE|CAUSALITÉ/i.test(t)?t:"";
+      return aetherInformationFact40122(value);
     };
     const marketRows=(()=>{
       try{
@@ -184,7 +192,7 @@
     const flowDirection=qualified(c.flowDirection);
     const facts=[
       mechanism?`${mechanism}${direction?` · ${direction}`:""}`:null,
-      c.explains&&mechanism?qualified(c.explains):null,
+      c.explains&&mechanism?aetherInformationLine40122(c.explains):null,
       flow?`${flow}${flowDirection?` · ${flowDirection}`:""}`:null,
       focusSummary||null,
       marketSummary||null,
@@ -193,7 +201,7 @@
       c.source||null
     ].filter(Boolean);
     if(!facts.length)facts.push(c.headline,c.source);
-    return {kind:"context",brand:"♥ CONTEXTE",tone:"context",index:0,total:1,event:c.lead,meta:`CONTEXTE · ${proof} · ${c.scope}`,detail:facts.join(" · "),context:c.n};
+    return {kind:"context",brand:"♥ CONTEXTE",tone:"context",index:0,total:1,event:c.lead,meta:`${proof} · ${c.scope}`,detail:facts.join(" · "),context:c.n};
   }
   function aetherVeilleCurrent4087(){
     const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
@@ -370,15 +378,15 @@
   function aetherAnalysisBrief40121(){
     // Keep the prime ribbon factual: the long Aerith conclusion can contain caveats
     // that belong in the analysis panel, not in the scarce one-line operator lane.
-    const moves=aetherText4084("atlasOperatorMoves35","");
+    const moves=aetherInformationLine40122(aetherText4084("atlasOperatorMoves35",""));
     if(moves&&!/attente/i.test(moves))return `Top 5 · ${aetherCompact4088(moves,78)}`;
     return `Largeur · ${aetherCompact4088(aetherBreadthBrief40121(),78)}`;
   }
   function aetherSignalBrief40121(){
-    const oracle=aetherOracleBrief4088();
+    const oracle=aetherInformationLine40122(aetherOracleBrief4088());
     if(oracle&&!/en attente/i.test(oracle))return `Oracle · ${aetherCompact4088(oracle,72)}`;
-    const risk=aetherText4084("atlasOperatorRisk35","");
-    const riskDetail=aetherText4084("atlasOperatorRiskDetail35","");
+    const risk=aetherInformationLine40122(aetherText4084("atlasOperatorRisk35",""));
+    const riskDetail=aetherInformationLine40122(aetherText4084("atlasOperatorRiskDetail35",""));
     // A positive anomaly is information; “pas d’anomalie / aucune donnée” is filler.
     if(risk&&!/attente|aucune|pas d|non /i.test(risk))return `Signal · ${aetherCompact4088([risk,riskDetail].filter(Boolean).join(" · "),72)}`;
     return `Largeur · ${aetherCompact4088(aetherBreadthBrief40121(),72)}`;
@@ -446,7 +454,7 @@
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
-    // 40.4.121 — prime Aether cells carry operator information, not cockpit shortcomings.
+    // 40.4.122 — prime Aether cells are information-only: no generic disclaimer, caution or non-conclusion prose.
     put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",s.veilleBrief);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
@@ -597,7 +605,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.121",
+    build:"40.4.122",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -639,6 +647,9 @@
     explanatory_context_new_fetch:false,
     explanatory_context_new_timer:false,
     explanatory_context_causal_claim:false,
+    operator_disclaimer_segments:false,
+    operator_non_conclusion_segments:false,
+    context_label_deduplicated:true,
     news_translation_preferred:"headline_fr_display → headline_fr",
     news_translation_fallback:"headline",
     news_translation_browser_runtime:false,
