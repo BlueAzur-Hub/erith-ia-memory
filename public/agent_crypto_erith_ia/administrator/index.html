@@ -2413,57 +2413,109 @@
       position:relative!important;
     }
 
-    /* STATE A — native row stays the geometry authority. It is invisible only
-       while STATE B is painted, so the row height/columns never move. */
+    /* 40.4.99 R6 — ONE PHYSICAL STATUS LANE / THREE READABLE STATES.
+       NORMAL  -> AETHER INFO -> AETHER SYSTEM -> NORMAL.
+       No second row, no horizontal drift, no blank phase, no JS animation timer.
+       CPU/GPU/RAM are honest local-backend facts only; N/D is preserved when unavailable. */
     #livecheck.command-bar>#btnLivecheck,
     #livecheck.command-bar>#btnRefresh,
     #livecheck.command-bar>#decisionCard,
     #livecheck.command-bar>#sourceActiveCard,
     #livecheck.command-bar>#sourceTimeCard{
-      animation:atlasStatusNativePhase4085 36s linear infinite;
+      animation:atlasStatusNativePhase4086 36s steps(1,end) infinite;
     }
-    @keyframes atlasStatusNativePhase4085{
-      0%,54%{opacity:1;visibility:visible}
-      55%,88%{opacity:0;visibility:hidden}
-      89%,100%{opacity:1;visibility:visible}
+    @keyframes atlasStatusNativePhase4086{
+      0%,49.999%{opacity:1;visibility:visible}
+      50%,89.999%{opacity:0;visibility:hidden}
+      90%,100%{opacity:1;visibility:visible}
     }
 
-    /* STATE B — same grid row, all five columns. It never reserves a second row. */
+    /* The Aether host occupies the SAME five-column row only during its two pages. */
     #atlasAetherRibbon4084{
       grid-column:1/-1!important;grid-row:1!important;align-self:stretch!important;
-      min-width:0!important;box-sizing:border-box!important;
-      display:flex!important;align-items:center!important;overflow:hidden!important;
-      padding:0 10px!important;border:1px solid rgba(99,225,239,.16)!important;border-radius:8px!important;
-      background:linear-gradient(90deg,rgba(5,21,31,.91),rgba(8,17,29,.84))!important;
-      color:#a9c6d3!important;white-space:nowrap!important;
-      font:850 8.4px/1 system-ui,sans-serif!important;letter-spacing:.025em!important;
-      opacity:0;visibility:hidden;
-      animation:atlasAetherBandPhase4085 36s linear infinite;
-      pointer-events:none;
+      min-width:0!important;min-height:36px!important;height:36px!important;box-sizing:border-box!important;
+      display:flex!important;align-items:center!important;overflow:hidden!important;position:relative!important;
+      padding:0 9px!important;border:1px solid rgba(99,225,239,.17)!important;border-radius:8px!important;
+      background:linear-gradient(90deg,rgba(5,21,31,.94),rgba(8,17,29,.90))!important;
+      color:#b3cad5!important;white-space:nowrap!important;
+      font:850 9.1px/1.05 system-ui,sans-serif!important;letter-spacing:.012em!important;
+      opacity:0;visibility:hidden;pointer-events:none;
+      animation:atlasAetherBandPhase4086 36s steps(1,end) infinite;
     }
-    @keyframes atlasAetherBandPhase4085{
-      0%,54%{opacity:0;visibility:hidden}
-      55%,88%{opacity:1;visibility:visible}
-      89%,100%{opacity:0;visibility:hidden}
+    @keyframes atlasAetherBandPhase4086{
+      0%,49.999%{opacity:0;visibility:hidden}
+      50%,89.999%{opacity:1;visibility:visible}
+      90%,100%{opacity:0;visibility:hidden}
     }
     .atlas-aether-ribbon-track-4085{
-      display:flex;align-items:center;gap:18px;min-width:max-content;
-      padding-right:42vw;will-change:transform;
-      animation:atlasAetherBandDrift4085 36s linear infinite;
+      position:relative!important;display:flex!important;align-items:center!important;gap:0!important;
+      width:100%!important;min-width:0!important;height:100%!important;padding:0!important;
+      transform:none!important;animation:none!important;will-change:auto!important;
     }
-    @keyframes atlasAetherBandDrift4085{
-      0%,55%{transform:translateX(0)}
-      88%{transform:translateX(-28vw)}
-      89%,100%{transform:translateX(0)}
+
+    /* PAGE A — Aether / Atlas / Oracle / Sources / Book / Dernière veille. */
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-ribbon-brand-4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonAtlas4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonOracle4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonSources4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-news-window-4084{
+      animation:atlasAetherInfoPhase4086 36s steps(1,end) infinite;
     }
-    .atlas-aether-ribbon-brand-4084{flex:0 0 auto;color:#f0a6d8;letter-spacing:.11em}
-    #atlasAetherRibbonAtlas4084{color:#bba8ff}
-    #atlasAetherRibbonOracle4084{color:#f1dc94}
-    #atlasAetherRibbonSources4084{color:#81e6ef}
-    #atlasAetherRibbonBook4084{color:#9fd8b2}
-    .atlas-aether-news-window-4084{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;color:#c6d3dc}
-    .atlas-aether-news-window-4084>i{font-style:normal;color:#7f9daa;padding-right:2px;background:transparent}
-    #atlasAetherRibbonNews4084{display:inline-block;min-width:max-content;animation:none!important;transform:none!important}
+    @keyframes atlasAetherInfoPhase4086{
+      0%,49.999%{opacity:0;visibility:hidden}
+      50%,69.999%{opacity:1;visibility:visible}
+      70%,100%{opacity:0;visibility:hidden}
+    }
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-ribbon-brand-4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonAtlas4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonOracle4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonSources4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084,
+    #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-news-window-4084{
+      box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;
+      flex:0 0 auto!important;min-width:0!important;height:100%!important;padding:0 8px!important;
+      border-left:1px solid rgba(130,211,230,.11)!important;white-space:nowrap!important;
+    }
+    .atlas-aether-ribbon-brand-4084{padding-left:2px!important;border-left:0!important;color:#f0a6d8!important;letter-spacing:.11em;font-weight:950!important}
+    #atlasAetherRibbonAtlas4084{color:#c4b5ff!important}
+    #atlasAetherRibbonOracle4084{color:#f1dc94!important}
+    #atlasAetherRibbonSources4084{color:#81e6ef!important}
+    #atlasAetherRibbonBook4084{color:#9fd8b2!important}
+    .atlas-aether-news-window-4084{flex:1 1 260px!important;overflow:hidden!important;color:#c6d3dc!important}
+    .atlas-aether-news-window-4084>i{flex:0 0 auto!important;font-style:normal!important;color:#7f9daa!important;padding-right:5px!important;background:transparent!important}
+    #atlasAetherRibbonNews4084{display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;animation:none!important;transform:none!important}
+
+    /* PAGE B — same lane, system facts only. */
+    #atlasAetherSystem4086{
+      position:absolute!important;inset:0!important;z-index:8!important;box-sizing:border-box!important;
+      display:grid!important;grid-template-columns:auto repeat(5,minmax(0,1fr))!important;align-items:center!important;
+      width:100%!important;min-width:0!important;height:100%!important;margin:0!important;padding:0!important;
+      overflow:hidden!important;border:0!important;background:transparent!important;
+      animation:atlasAetherSystemPhase4086 36s steps(1,end) infinite;
+    }
+    @keyframes atlasAetherSystemPhase4086{
+      0%,69.999%{opacity:0;visibility:hidden}
+      70%,89.999%{opacity:1;visibility:visible}
+      90%,100%{opacity:0;visibility:hidden}
+    }
+    #atlasAetherSystem4086>.atlas-aether-system-brand-4086,
+    #atlasAetherSystem4086>.atlas-aether-system-item-4086{
+      display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;
+      height:100%!important;padding:0 7px!important;overflow:hidden!important;
+      border-left:1px solid rgba(121,190,210,.12)!important;white-space:nowrap!important;
+    }
+    #atlasAetherSystem4086>.atlas-aether-system-brand-4086{
+      justify-content:flex-start!important;padding-left:2px!important;padding-right:9px!important;border-left:0!important;
+      color:#f0a6d8!important;letter-spacing:.11em!important;font-weight:950!important;
+    }
+    .atlas-aether-system-icon-4086{flex:0 0 auto!important;margin-right:3px!important;color:#79deeb!important;font-size:7px!important}
+    .atlas-aether-system-label-4086{flex:0 0 auto!important;margin-right:4px!important;color:#7798a7!important;font-weight:900!important}
+    .atlas-aether-system-value-4086{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#d2e1e7!important;font-weight:900!important;font-variant-numeric:tabular-nums!important}
+    [data-aether-system-4086="weather"] .atlas-aether-system-icon-4086{color:#f2d47c!important}
+    [data-aether-system-4086="btc"][data-tone="positive"] .atlas-aether-system-value-4086{color:#78f0a7!important}
+    [data-aether-system-4086="btc"][data-tone="negative"] .atlas-aether-system-value-4086{color:#ff7895!important}
+    [data-aether-system-4086="btc"][data-tone="flat"] .atlas-aether-system-value-4086{color:#d6dce0!important}
 
     .atlas-aether-status-toggle-4084{
       display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:31px;padding:0 9px;
@@ -2495,9 +2547,17 @@
 
     /* Keep Transformer/phone contract stable: no intermittent replacement below 901px. */
     @media(max-width:1366px) and (min-width:901px){
-      #atlasAetherRibbon4084{padding-inline:7px!important;font-size:7.8px!important}
-      .atlas-aether-ribbon-track-4085{gap:12px}
-      .atlas-aether-status-toggle-4084{padding-inline:7px;font-size:7.8px}
+      #atlasAetherRibbon4084{padding-inline:6px!important;font-size:8.3px!important}
+      #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-ribbon-brand-4084,
+      #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonAtlas4084,
+      #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonOracle4084,
+      #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonSources4084,
+      #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084,
+      #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-news-window-4084{padding-inline:5px!important}
+      #atlasAetherSystem4086>.atlas-aether-system-brand-4086,
+      #atlasAetherSystem4086>.atlas-aether-system-item-4086{padding-inline:4px!important}
+      .atlas-aether-system-icon-4086{margin-right:2px!important;font-size:6.5px!important}
+      .atlas-aether-system-label-4086{margin-right:3px!important}
     }
     @media(max-width:900px){
       #livecheck.command-bar>#btnLivecheck,
@@ -2515,7 +2575,6 @@
       #livecheck.command-bar>#sourceActiveCard,
       #livecheck.command-bar>#sourceTimeCard{animation:none!important;opacity:1!important;visibility:visible!important}
       #atlasAetherRibbon4084{display:none!important;animation:none!important}
-      .atlas-aether-ribbon-track-4085{animation:none!important;transform:none!important}
     }
 
     /* Approved Trust sanctuary paint safeguards inherited unchanged from 40.4.84. */
@@ -2790,6 +2849,14 @@
             <span id="atlasAetherRibbonSources4084">Sources · —</span>
             <span id="atlasAetherRibbonBook4084">Book · —</span>
             <span class="atlas-aether-news-window-4084"><i>Dernière veille</i><span id="atlasAetherRibbonNews4084">Aucun événement qualifié</span></span>
+            <span id="atlasAetherSystem4086" aria-label="Aether système · CPU GPU RAM météo Maintenon et Bitcoin">
+              <b class="atlas-aether-system-brand-4086">♥ AETHER</b>
+              <span class="atlas-aether-system-item-4086" data-aether-system-4086="cpu"><i class="atlas-aether-system-icon-4086">▦</i><span class="atlas-aether-system-label-4086">CPU</span><b class="atlas-aether-system-value-4086">N/D</b></span>
+              <span class="atlas-aether-system-item-4086" data-aether-system-4086="gpu"><i class="atlas-aether-system-icon-4086">▦</i><span class="atlas-aether-system-label-4086">GPU</span><b class="atlas-aether-system-value-4086">N/D</b></span>
+              <span class="atlas-aether-system-item-4086" data-aether-system-4086="ram"><i class="atlas-aether-system-icon-4086">▦</i><span class="atlas-aether-system-label-4086">RAM</span><b class="atlas-aether-system-value-4086">N/D</b></span>
+              <span class="atlas-aether-system-item-4086" data-aether-system-4086="weather"><i class="atlas-aether-system-icon-4086">☁</i><span class="atlas-aether-system-label-4086">Maintenon</span><b class="atlas-aether-system-value-4086">météo…</b></span>
+              <span class="atlas-aether-system-item-4086" data-aether-system-4086="btc" data-tone="flat"><i class="atlas-aether-system-icon-4086">₿</i><span class="atlas-aether-system-label-4086">BTC</span><b class="atlas-aether-system-value-4086">—</b></span>
+            </span>
           </div>
         </div>
       </section>
@@ -4808,6 +4875,69 @@
     const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("news",s.news);}
   }
 
+  const AETHER_SYSTEM_BACKEND_4086="http://127.0.0.1:8790/system";
+  const AETHER_WEATHER_4086=Object.freeze({latitude:48.5876,longitude:1.5784,timezone:"Europe/Paris",ttl:15*60*1000,label:"Maintenon"});
+  const aetherSystemState4086={system:null,systemAt:0,systemInflight:null,weather:null,weatherAt:0,weatherInflight:null};
+  const aetherSystemNumber4086=value=>{const n=Number(value);return Number.isFinite(n)?n:null;};
+  function aetherSystemSet4086(key,value,{icon=null,tone=null,title=null}={}){
+    const item=document.querySelector(`#atlasAetherSystem4086 [data-aether-system-4086="${key}"]`);if(!item)return;
+    const out=item.querySelector(".atlas-aether-system-value-4086");if(out&&out.textContent!==String(value))out.textContent=String(value);
+    if(icon){const node=item.querySelector(".atlas-aether-system-icon-4086");if(node&&node.textContent!==icon)node.textContent=icon;}
+    if(title)item.title=title;
+    if(key==="btc")item.dataset.tone=tone||"flat";
+  }
+  function aetherWeatherIcon4086(code){const c=Number(code);if(c===0)return"☀";if([1,2,3].includes(c))return"☁";if([45,48].includes(c))return"≋";if((c>=51&&c<=67)||(c>=80&&c<=82))return"☂";if((c>=71&&c<=77)||(c>=85&&c<=86))return"❄";if(c>=95)return"⚡";return"☁";}
+  function aetherBtc4086(){
+    try{
+      const coin=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins.find(row=>String(row?.symbol||"").toUpperCase()==="BTC"||row?.id==="bitcoin"):null;
+      const price=aetherSystemNumber4086(coin?.price),change=aetherSystemNumber4086(coin?.change24h);
+      if(price===null)return{value:"—",tone:"flat",title:"BTC live indisponible"};
+      const priceText=new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:price>=1000?0:2}).format(price);
+      const changeText=change===null?"":` · ${change>=0?"+":""}${change.toFixed(2)} %`;
+      return{value:`${priceText}${changeText}`,tone:change>0?"positive":change<0?"negative":"flat",title:"Bitcoin · prix live Agent-Crypto"};
+    }catch(_){return{value:"—",tone:"flat",title:"BTC live indisponible"};}
+  }
+  function renderAetherSystem4086(){
+    const sys=aetherSystemState4086.system||{};
+    const cpu=aetherSystemNumber4086(sys?.cpu?.usage_pct),cpuTemp=aetherSystemNumber4086(sys?.cpu?.temperature_c);
+    const gpu=aetherSystemNumber4086(sys?.gpu?.usage_pct),gpuTemp=aetherSystemNumber4086(sys?.gpu?.temperature_c);
+    const ram=aetherSystemNumber4086(sys?.memory?.usage_pct),used=aetherSystemNumber4086(sys?.memory?.used_gb),total=aetherSystemNumber4086(sys?.memory?.total_gb);
+    aetherSystemSet4086("cpu",cpu===null?"N/D":`${Math.round(cpu)} %${cpuTemp===null?"":` · ${Math.round(cpuTemp)}°`}`,{title:sys?.cpu?.name||"CPU Windows · backend local 8790"});
+    aetherSystemSet4086("gpu",gpu===null?"N/D":`${Math.round(gpu)} %${gpuTemp===null?"":` · ${Math.round(gpuTemp)}°`}`,{title:sys?.gpu?.name||"GPU · backend local 8790"});
+    aetherSystemSet4086("ram",ram===null?"N/D":`${Math.round(ram)} %${used!==null&&total!==null?` · ${used.toFixed(1)}/${total.toFixed(1)} Go`:""}`,{title:"RAM Windows · backend local 8790"});
+    const weather=aetherSystemState4086.weather;
+    aetherSystemSet4086("weather",weather?`${Math.round(weather.temperature_c)} °C`:"N/D",{icon:aetherWeatherIcon4086(weather?.weather_code),title:"Maintenon · Eure-et-Loir · Open-Meteo"});
+    const btc=aetherBtc4086();aetherSystemSet4086("btc",btc.value,{tone:btc.tone,title:btc.title});
+  }
+  function aetherSystemBackend4086(force=false){
+    const now=Date.now();if(aetherSystemState4086.systemInflight)return aetherSystemState4086.systemInflight;
+    if(!force&&now-aetherSystemState4086.systemAt<15000){renderAetherSystem4086();return Promise.resolve(aetherSystemState4086.system);}
+    const controller=new AbortController(),timeout=window.setTimeout(()=>controller.abort(),1800);
+    aetherSystemState4086.systemInflight=fetch(AETHER_SYSTEM_BACKEND_4086,{cache:"no-store",headers:{Accept:"application/json"},signal:controller.signal})
+      .then(response=>{if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json();})
+      .then(payload=>{aetherSystemState4086.system=payload&&payload.read_only===true?payload:null;aetherSystemState4086.systemAt=Date.now();return aetherSystemState4086.system;})
+      .catch(()=>{aetherSystemState4086.system=null;aetherSystemState4086.systemAt=Date.now();return null;})
+      .finally(()=>{window.clearTimeout(timeout);aetherSystemState4086.systemInflight=null;renderAetherSystem4086();});
+    return aetherSystemState4086.systemInflight;
+  }
+  function aetherSystemWeather4086(force=false){
+    const now=Date.now();if(aetherSystemState4086.weatherInflight)return aetherSystemState4086.weatherInflight;
+    if(!force&&now-aetherSystemState4086.weatherAt<AETHER_WEATHER_4086.ttl){renderAetherSystem4086();return Promise.resolve(aetherSystemState4086.weather);}
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${AETHER_WEATHER_4086.latitude}&longitude=${AETHER_WEATHER_4086.longitude}&current=temperature_2m,weather_code&timezone=${encodeURIComponent(AETHER_WEATHER_4086.timezone)}`;
+    aetherSystemState4086.weatherInflight=fetch(url,{cache:"no-store",headers:{Accept:"application/json"}})
+      .then(response=>{if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json();})
+      .then(payload=>{const t=aetherSystemNumber4086(payload?.current?.temperature_2m),code=aetherSystemNumber4086(payload?.current?.weather_code);aetherSystemState4086.weather=t===null?null:{temperature_c:t,weather_code:code};aetherSystemState4086.weatherAt=Date.now();return aetherSystemState4086.weather;})
+      .catch(()=>{aetherSystemState4086.weather=null;aetherSystemState4086.weatherAt=Date.now();return null;})
+      .finally(()=>{aetherSystemState4086.weatherInflight=null;renderAetherSystem4086();});
+    return aetherSystemState4086.weatherInflight;
+  }
+  function aetherSystemRefresh4086({force=false}={}){
+    renderAetherSystem4086();
+    if(document.hidden)return Promise.resolve(false);
+    return Promise.allSettled([aetherSystemBackend4086(force),aetherSystemWeather4086(force)]);
+  }
+  globalThis.AgentCryptoAetherSystem4086=Object.freeze({build:"40.4.99 R6",backend:AETHER_SYSTEM_BACKEND_4086,weather:"Maintenon · Eure-et-Loir",refresh:aetherSystemRefresh4086,snapshot:()=>Object.freeze({system:aetherSystemState4086.system,weather:aetherSystemState4086.weather,system_at:aetherSystemState4086.systemAt,weather_at:aetherSystemState4086.weatherAt}),single_lane:true,css_timer_only:true,new_recurring_timer:false,bridge_telemetry_owner:false});
+
   function renderHeaderLine40341(node,st){if(!node||!st)return;const q=key=>node.querySelector(`[data-chrono40341="${key}"]`);const date=q("date"),time=q("time"),day=q("day"),hour=q("hour");if(date)date.textContent=cap(dtfDate.format(st.now));if(time)time.textContent=dtfTime.format(st.now);if(day){day.dataset.planet40291=astroPlanetTone40291(st.p.ruler);day.replaceChildren();const g=document.createElement("span");g.className="atlas-chrono-glyph-40341";g.textContent=GLYPH[st.p.ruler]||"";day.append(g,document.createTextNode(`Jour de ${st.p.ruler}`));}if(hour){hour.dataset.planet40291=astroPlanetTone40291(st.hour.planet);hour.replaceChildren();const g=document.createElement("span");g.className="atlas-chrono-glyph-40341";g.textContent=GLYPH[st.hour.planet]||"";hour.append(g,document.createTextNode(`Heure de ${st.hour.planet}`));}node.setAttribute("aria-label",formatLine(st));}
   function ensureAstroPanel(){if(document.getElementById("astrocycle-4055"))return document.getElementById("astrocycle-4055");const anchor=document.getElementById("news-sentinel")||document.getElementById("multi-horizon");if(!anchor)return null;const d=document.createElement("details");d.id="astrocycle-4055";d.className="atlas-collapse glass atlas-family-member atlas-tone-analysis atlas-astrocycle-4055";d.dataset.collapseKey="astrocycle-4055";d.dataset.layoutFamily="analysis";d.innerHTML=`<summary class="atlas-collapse-summary"><span class="atlas-collapse-icon" aria-hidden="true">▶</span><span class="atlas-collapse-copy"><span class="atlas-collapse-title">AstroCycle — horloge céleste & planétaire</span><span class="atlas-collapse-subtitle">Europe/Paris · ChronosXP 4.1 · réf. 48°27′ N / 1°30′ E · lever/coucher · jour & heure planétaires</span></span><span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span></summary><div class="atlas-collapse-body"><section class="panel glass"><div class="atlas-astro-head-4055"><div><p class="eyebrow">ASTROCYCLE · 40.2.46→40.2.50</p><div class="atlas-astro-now-4055" id="atlasAstroNow4055">Calcul…</div><div class="atlas-astro-meta-4055" id="atlasAstroMeta4055">Calcul local · coordonnées ChronosXP opérateur · aucune API requise.</div></div><span class="pill ok" id="atlasAstroBadge4055">CHRONOSXP · COMPAT. 4.1 · CONFIRMÉ</span></div><div class="atlas-astro-kpis-4055"><article><span>Lever</span><b id="atlasAstroSunrise4055">—</b><small id="atlasAstroDawn4055">Crépuscule —</small></article><article><span>Coucher</span><b id="atlasAstroSunset4055">—</b><small id="atlasAstroDusk4055">Crépuscule —</small></article><article><span>Heure actuelle</span><b id="atlasAstroHour4055">—</b><small id="atlasAstroHourRange4055">—</small></article><article><span>Suivante</span><b id="atlasAstroNext4055">—</b><small id="atlasAstroRemaining4055">—</small></article></div><div class="atlas-astro-timeline-4055" id="atlasAstroTimeline4055"></div><div class="atlas-astro-separator-4055"><b>Cieux & Cultures · routeur documentaire</b><div class="atlas-astro-router-4055"><a href="../modules/atlas/cieux_cultures/2026-07-23_erith_ia_astronomie_master_fr_v2_grande_soeur.md" target="_blank" rel="noopener">Astronomie V2</a><a href="../modules/atlas/cieux_cultures/2026-07-23_erith_ia_astrologie_symbolique_histoire_critique_fr_v2_grande_soeur.md" target="_blank" rel="noopener">Astrologie · histoire & critique V2</a><a href="../modules/atlas/cieux_cultures/2026-07-23_erith_ia_archeoastronomie_calendriers_cultes_astraux_fr_v2_grande_soeur.md" target="_blank" rel="noopener">Archéoastronomie V2</a></div><div class="atlas-research-rule-4055">Astronomie objective → calculs. Tradition planétaire → couche symbolique documentée. ChronosXP 4.1 reste la référence opérateur pour les heures planétaires ; sa compatibilité logicielle est reproduite séparément des crépuscules calculés aux coordonnées exactes. Marché → aucune causalité présumée.</div></div></section></div>`;anchor.insertAdjacentElement("beforebegin",d);return d;}
   function ensureCelestialSentinel(){
@@ -4865,9 +4995,9 @@
   let tick=0,lastMinute=-1,lastCelestialRole40288="",lastMultiCollectorMinute40465=-1;
   function celestialRoleSync40288(){const role=celestialPhysicalRole40288();if(role!==lastCelestialRole40288){lastCelestialRole40288=role;renderCelestialSentinel40268();}return role;}
   function celestialInteractiveOpen40465(){return !!document.getElementById("astrocycle-4055")?.open||!!document.getElementById("celestial-sentinel-4055")?.open;}
-  function celestialPulse40465(){const now=new Date(),minute=now.getMinutes(),open=celestialInteractiveOpen40465();const operatorBusy=(()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}})();renderAstro(!operatorBusy&&(open||minute!==lastMinute));renderAether4084();lastMinute=minute;celestialRoleSync40288();if(!operatorBusy&&minute%2===0&&minute!==lastMultiCollectorMinute40465){lastMultiCollectorMinute40465=minute;augmentMultiCollector();}}
+  function celestialPulse40465(){const now=new Date(),minute=now.getMinutes(),open=celestialInteractiveOpen40465();const operatorBusy=(()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}})();renderAstro(!operatorBusy&&(open||minute!==lastMinute));renderAether4084();void aetherSystemRefresh4086();lastMinute=minute;celestialRoleSync40288();if(!operatorBusy&&minute%2===0&&minute!==lastMultiCollectorMinute40465){lastMultiCollectorMinute40465=minute;augmentMultiCollector();}}
   function celestialSchedule40465({immediate=false}={}){if(tick){window.clearInterval(tick);tick=0;}if(document.hidden)return;const cadence=celestialInteractiveOpen40465()?1000:30000;if(immediate)celestialPulse40465();tick=window.setInterval(celestialPulse40465,cadence);try{globalThis.__AGENT_CRYPTO_CELESTIAL_CADENCE_40465__=Object.freeze({build:"40.4.94",open_cadence_ms:1000,closed_cadence_ms:30000,current_cadence_ms:cadence,multi_collector_duplicate_even_minute_guard:true,market_model_input:false});}catch(_){}}
-  function start(){ensureHeader();const astro=ensureAstroPanel(),celestial=ensureCelestialSentinel();celestialPortableRestore40272();renderAstro(true);renderAether4084();celestialRoleSync40288();const operatorBusy=()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}};setTimeout(()=>{if(!operatorBusy())augmentMultiCollector();},0);document.getElementById("atlasAetherStatusToggle4084")?.addEventListener("click",()=>{const b=document.getElementById("atlasAetherStatusToggle4084");aetherPanelSet4084(b?.getAttribute("aria-expanded")!=="true");});document.getElementById("atlasMultiCollectorDetails40357")?.addEventListener("toggle",event=>{if(event.currentTarget?.open&&!operatorBusy())augmentMultiCollector();},{passive:true});[astro,celestial].forEach(root=>root?.addEventListener("toggle",()=>celestialSchedule40465({immediate:true}),{passive:true}));celestialSchedule40465({immediate:false});window.addEventListener("atlas:device-role",()=>{celestialRoleSync40288();setTimeout(()=>{if(!operatorBusy())augmentMultiCollector();},0);});window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();},{passive:true});document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderAstro(true);renderAether4084();celestialRoleSync40288();if(!operatorBusy())augmentMultiCollector();celestialSchedule40465({immediate:false});}else if(tick){window.clearInterval(tick);tick=0;}},{passive:true});}
+  function start(){ensureHeader();const astro=ensureAstroPanel(),celestial=ensureCelestialSentinel();celestialPortableRestore40272();renderAstro(true);renderAether4084();void aetherSystemRefresh4086({force:true});celestialRoleSync40288();const operatorBusy=()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}};setTimeout(()=>{if(!operatorBusy())augmentMultiCollector();},0);document.getElementById("atlasAetherStatusToggle4084")?.addEventListener("click",()=>{const b=document.getElementById("atlasAetherStatusToggle4084");aetherPanelSet4084(b?.getAttribute("aria-expanded")!=="true");});document.getElementById("atlasMultiCollectorDetails40357")?.addEventListener("toggle",event=>{if(event.currentTarget?.open&&!operatorBusy())augmentMultiCollector();},{passive:true});[astro,celestial].forEach(root=>root?.addEventListener("toggle",()=>celestialSchedule40465({immediate:true}),{passive:true}));celestialSchedule40465({immediate:false});window.addEventListener("atlas:device-role",()=>{celestialRoleSync40288();setTimeout(()=>{if(!operatorBusy())augmentMultiCollector();},0);});window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();},{passive:true});document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderAstro(true);renderAether4084();void aetherSystemRefresh4086({force:true});celestialRoleSync40288();if(!operatorBusy())augmentMultiCollector();celestialSchedule40465({immediate:false});}else if(tick){window.clearInterval(tick);tick=0;}},{passive:true});}
   globalThis.AtlasCelestialClock4055=Object.freeze({build:BUILD,state,solar,planetary,phaseTheme,nextPhaseBoundary,formatLine});
   globalThis.AgentCryptoCelestialPortable40272=Object.freeze({build:BUILD,schema:"atlas.celestial.portable.v1",snapshot:celestialPortableSnapshot40272,importSnapshot:celestialPortableImport40272,restore:celestialPortableRestore40272,isBook:celestialIsBook40272,physicalRole:celestialPhysicalRole40288,read_only_on_book:true,producer_role:"ryzen-producer",transport:"manual_shared_memory_json",github_publication_required:false,causal_claim:false,oracle_model_input:false});
   globalThis.AgentCryptoCelestialPortable40288=globalThis.AgentCryptoCelestialPortable40272;
