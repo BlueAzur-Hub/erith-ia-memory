@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.110
-  Revision: 40.4.110 French editorial display owner; headline_fr_display → headline_fr recovery; 90 s cadence unchanged.
+  Build: 40.4.111
+  Revision: 40.4.111 information-first recovery; French editorial preferred, original headline preserved as last-resort information, context caveats consolidated into the LIMITES facet; 90 s cadence unchanged.
 */
 (() => {
   "use strict";
@@ -14,13 +14,23 @@
   function aetherNewsCanonicalFrenchEvent40110(event){
     if(!event)return event;
     const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
-    if(!id)return event;
+    const headline=String(event?.headline||"").replace(/\s+/g," " ).trim();
+    const sourceUrl=String(event?.source_url||"").trim();
+    const mergedIds=new Set((Array.isArray(event?.merged_event_ids)?event.merged_event_ids:[]).map(v=>String(v||"").trim()).filter(Boolean));
     try{
       const pools=[];
       if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);
       if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);
       for(const pool of pools){
-        const match=pool.find(row=>String(row?.event_id||row?.id||row?.fingerprint||"").trim()===id&&(String(row?.headline_fr_display||row?.headline_fr||"").trim()));
+        const match=pool.find(row=>{
+          if(!String(row?.headline_fr_display||row?.headline_fr||"").trim())return false;
+          const rowId=String(row?.event_id||row?.id||row?.fingerprint||"").trim();
+          const rowMerged=Array.isArray(row?.merged_event_ids)?row.merged_event_ids.map(v=>String(v||"").trim()):[];
+          const sameId=Boolean(id&&(rowId===id||rowMerged.includes(id)||mergedIds.has(rowId)));
+          const sameUrl=Boolean(sourceUrl&&String(row?.source_url||"").trim()===sourceUrl);
+          const sameHeadline=Boolean(headline&&String(row?.headline||"").replace(/\s+/g," " ).trim()===headline);
+          return sameId||sameUrl||sameHeadline;
+        });
         if(match)return match;
       }
     }catch(_){}
@@ -38,7 +48,8 @@
       }
     }catch(_){}
     if(explicitFrench)return explicitFrench;
-    return original?"Actualité source en anglais · traduction française en attente":fallback;
+    // Information first: never erase a sourced headline merely because its French sibling is unavailable.
+    return original||fallback;
   }
   function aetherFrenchMechanismLabel40110(value){
     const label=String(value||"").replace(/\s+/g," ").trim();
@@ -154,17 +165,18 @@
     const proof=c.proofScore>0?`PREUVE ${Math.round(c.proofScore)}/100`:"PREUVE N/D";
     let meta="",parts=[];
     if(facet===0){
-      meta=`MARCHÉ · ${proof} · ${c.scope}`;
-      parts=[c.headline,`${c.mechanismTitle} · ${c.mechanismDirection}`,c.explains,`causalité ${c.causality.toLowerCase()}`,c.source];
-    }else if(facet===1&&c.flowLabel){
-      meta=`FLUX · ${c.flowTruth} · ${c.scope}`;
-      parts=[`${c.flowLabel} · ${c.flowDirection}`,c.headline,c.proofScore>0?`preuve ${Math.round(c.proofScore)}/100`:null,"facteur de contexte possible · pas cause démontrée",c.source];
-    }else if(facet===2&&(c.breadth||c.focus)){
-      meta=`CONFIRMATION · ${c.marketTruth||"LECTURE"} · ${c.scope}`;
-      parts=[c.headline,c.breadth,c.focus,c.marketTone,"réaction observée · proximité temporelle ≠ causalité",c.source];
+      meta=`ÉVÉNEMENT · ${proof} · ${c.scope}`;
+      parts=[c.headline,c.source];
+    }else if(facet===1){
+      meta=`MÉCANISME · ${c.mechanismDirection||"LECTURE"} · ${c.scope}`;
+      parts=[c.mechanismTitle,c.explains,c.flowLabel?`${c.flowLabel}${c.flowDirection?` · ${c.flowDirection}`:""}`:null];
+    }else if(facet===2){
+      meta=`MARCHÉ · ${c.marketTruth||c.flowTruth||"LECTURE"} · ${c.scope}`;
+      parts=[c.breadth,c.focus,c.marketTone,c.flowTruth&&!c.marketTruth?c.flowTruth:null].filter(Boolean);
+      if(!parts.length)parts=[c.headline,`${proof}`,c.source];
     }else{
       meta=`LIMITES · CAUSALITÉ ${c.causality} · ${c.scope}`;
-      parts=[c.headline,c.limit||"Cause initiale non démontrée.",`mécanisme ${c.mechanismTitle.toLowerCase()}`,c.source];
+      parts=[c.limit||"Cause initiale non démontrée.",`mécanisme ${c.mechanismTitle.toLowerCase()}`,c.source];
     }
     return {kind:"context",facet,brand:"♥ CONTEXTE",tone:"context",index:facet,total:4,event:c.lead,meta,detail:parts.filter(Boolean).join(" · "),context:c.n};
   }
@@ -466,7 +478,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.108",
+    build:"40.4.111",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -503,7 +515,7 @@
     explanatory_context_new_fetch:false,
     explanatory_context_new_timer:false,
     explanatory_context_causal_claim:false,
-    news_translation_preferred:"headline_fr",
+    news_translation_preferred:"headline_fr_display → headline_fr",
     news_translation_fallback:"headline",
     news_translation_browser_runtime:false,
     news_translation_canonical_original_preserved:true
