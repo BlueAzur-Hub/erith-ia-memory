@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.114
-  Revision: 40.4.114 News French quality pipeline; Aether 40.4.112 wake/in-window pulse runtime and 40.4.113 cache-busted publication loading are preserved unchanged.
+  Build: 40.4.115
+  Revision: 40.4.115 Aether information-density runtime: the autonomous LIMITES/caution slot is retired from the top ribbon. VEILLE remains sourced News; CONTEXTE now rotates only useful IMPACT / MARCHÉ / SIGNAL facts. News French quality pipeline 40.4.114 is preserved.
 */
 (() => {
   "use strict";
@@ -144,41 +144,58 @@
       const scope=assets.length?assets.join("/"):"MARCHÉ";
       const headline=aetherNewsHeadlineFr40104(lead||n?.event,"Contexte News Sentinel");
       const source=String(lead?.source_name||lead?.source_host||n?.event?.source_name||n?.event?.source_host||"").replace(/^www\./,"").trim();
-      const mechanismTitle=aetherFrenchMechanismLabel40110(n?.mechanism?.title||"MÉCANISME NON QUALIFIÉ");
-      const mechanismDirection=String(n?.mechanism?.direction||"INDÉTERMINÉ").trim();
+      const mechanismTitle=aetherFrenchMechanismLabel40110(n?.mechanism?.title||"");
+      const mechanismDirection=String(n?.mechanism?.direction||"").trim();
       const explains=String(n?.mechanism?.explains||"").replace(/\s+/g," ").trim();
-      const limit=String(n?.mechanism?.does_not_explain||"").replace(/\s+/g," ").trim();
       const flowLabel=String(n?.flow?.label||"").trim();
       const flowDirection=String(n?.flow?.direction||"").trim();
-      const flowTruth=String(n?.verdict?.context||n?.driver_truth_40_3_72?.institutional_flows?.status||"NON QUALIFIÉ").trim();
+      const flowTruth=String(n?.verdict?.context||n?.driver_truth_40_3_72?.institutional_flows?.status||"").trim();
       const marketTruth=String(n?.verdict?.market_reaction||"").trim();
       const breadth=String(n?.market_confirmation?.breadth||"").replace(/\s+/g," ").trim();
       const focus=String(n?.market_confirmation?.focus||"").replace(/\s+/g," ").trim();
       const marketTone=String(n?.market_confirmation?.tone||"").replace(/\s+/g," ").trim();
-      const causality=String(n?.verdict?.causality||"NON ÉTABLIE").trim().toUpperCase();
-      return {n,lead,proofScore,scope,headline,source,mechanismTitle,mechanismDirection,explains,limit,flowLabel,flowDirection,flowTruth,marketTruth,breadth,focus,marketTone,causality};
+      const facts=(Array.isArray(n?.facts?.facts)?n.facts.facts:[]).map(value=>String(value||"").replace(/\s+/g," ").trim()).filter(Boolean).slice(0,3);
+      const amounts=(Array.isArray(n?.facts?.amounts)?n.facts.amounts:[]).map(value=>String(value||"").trim()).filter(Boolean).slice(0,3);
+      const role=String(n?.verdict?.role||"").replace(/\s+/g," ").trim();
+      const technicalLabel=String(n?.technical_trigger?.label||"").replace(/\s+/g," ").trim();
+      const technicalDirection=String(n?.technical_trigger?.direction||"").replace(/\s+/g," ").trim();
+      const supporting=(Array.isArray(n?.supporting_amplifiers)?n.supporting_amplifiers:[]).map(row=>String(row?.label||"").replace(/\s+/g," ").trim()).filter(Boolean).slice(0,2);
+      return {n,lead,proofScore,scope,headline,source,mechanismTitle,mechanismDirection,explains,flowLabel,flowDirection,flowTruth,marketTruth,breadth,focus,marketTone,facts,amounts,role,technicalLabel,technicalDirection,supporting};
     }catch(_){return null;}
   }
   function aetherContextCurrent4089(model=null){
     const c=model||aetherNewsMarketContext4089();if(!c)return null;
-    const facet=((aetherVeilleState4087.contextFacet%4)+4)%4;
+    const facet=((aetherVeilleState4087.contextFacet%3)+3)%3;
     const proof=c.proofScore>0?`PREUVE ${Math.round(c.proofScore)}/100`:"PREUVE N/D";
+    const qualified=value=>{const text=String(value||"").trim();return text&&!/NON QUALIFI|NON IDENTIFI|INDÉTERMIN|INCONNU|INDISPON/i.test(text)?text:"";};
     let meta="",parts=[];
     if(facet===0){
-      meta=`ÉVÉNEMENT · ${proof} · ${c.scope}`;
-      parts=[c.headline,c.source];
+      meta=`IMPACT · ${proof} · ${c.scope}`;
+      parts=[...(c.facts||[]),...(c.amounts||[]),qualified(c.role),c.source].filter(Boolean);
+      if(!parts.length)parts=[c.headline,c.source].filter(Boolean);
     }else if(facet===1){
-      meta=`MÉCANISME · ${c.mechanismDirection||"LECTURE"} · ${c.scope}`;
-      parts=[c.mechanismTitle,c.explains,c.flowLabel?`${c.flowLabel}${c.flowDirection?` · ${c.flowDirection}`:""}`:null];
-    }else if(facet===2){
-      meta=`MARCHÉ · ${c.marketTruth||c.flowTruth||"LECTURE"} · ${c.scope}`;
-      parts=[c.breadth,c.focus,c.marketTone,c.flowTruth&&!c.marketTruth?c.flowTruth:null].filter(Boolean);
-      if(!parts.length)parts=[c.headline,`${proof}`,c.source];
+      meta=`MARCHÉ · ${c.scope}`;
+      parts=[c.breadth,c.focus,c.marketTone,qualified(c.marketTruth)].filter(Boolean);
+      if(!parts.length)parts=[c.headline,proof,c.source].filter(Boolean);
     }else{
-      meta=`LIMITES · CAUSALITÉ ${c.causality} · ${c.scope}`;
-      parts=[c.limit||"Cause initiale non démontrée.",`mécanisme ${c.mechanismTitle.toLowerCase()}`,c.source];
+      meta=`SIGNAL · ${proof} · ${c.scope}`;
+      const mechanism=qualified(c.mechanismTitle);
+      const direction=qualified(c.mechanismDirection);
+      const technical=qualified(c.technicalLabel);
+      const technicalDirection=qualified(c.technicalDirection);
+      const flow=qualified(c.flowLabel);
+      const flowDirection=qualified(c.flowDirection);
+      parts=[
+        mechanism?`${mechanism}${direction?` · ${direction}`:""}`:null,
+        c.explains&&mechanism?c.explains:null,
+        flow?`${flow}${flowDirection?` · ${flowDirection}`:""}`:null,
+        technical?`${technical}${technicalDirection?` · ${technicalDirection}`:""}`:null,
+        ...(c.supporting||[]),
+        qualified(c.role)
+      ].filter(Boolean);
+      if(!parts.length)parts=[c.breadth,c.focus,c.marketTone,c.headline,c.source].filter(Boolean);
     }
-    return {kind:"context",facet,brand:"♥ CONTEXTE",tone:"context",index:facet,total:4,event:c.lead,meta,detail:parts.filter(Boolean).join(" · "),context:c.n};
+    return {kind:"context",facet,brand:"♥ CONTEXTE",tone:"context",index:facet,total:3,event:c.lead,meta,detail:parts.filter(Boolean).join(" · "),context:c.n};
   }
   function aetherVeilleCurrent4087(){
     const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
@@ -224,7 +241,7 @@
     if(!ranked.length){aetherVeilleState4087.index=0;aetherVeilleState4087.kind=context?"context":"alert";aetherVeilleState4087.fingerprint="";return renderAetherVeille4087();}
     if(aetherVeilleState4087.kind==="alert"&&context){
       aetherVeilleState4087.kind="context";
-      aetherVeilleState4087.contextFacet=aetherVeilleState4087.index%4;
+      aetherVeilleState4087.contextFacet=aetherVeilleState4087.index%3;
     }else{
       if(aetherVeilleState4087.kind==="context")aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
       else aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
@@ -494,7 +511,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.114",
+    build:"40.4.115",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -535,6 +552,9 @@
     veille_visible_information_slots_per_feed_window:5,
     explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence40235 (read-only compute)",
     explanatory_context_alternation:true,
+    explanatory_context_facets:["IMPACT","MARCHÉ","SIGNAL"],
+    explanatory_context_limit_slot:false,
+    unsolicited_caution_slot:false,
     explanatory_context_new_fetch:false,
     explanatory_context_new_timer:false,
     explanatory_context_causal_claim:false,
