@@ -1,10 +1,10 @@
 {
   "schema": "atlas_news_sentinel_status_v1",
   "version": "V1.1-alpha.26.47.5",
-  "updated_at": "2026-08-30T12:58:09.723140+00:00",
+  "updated_at": "2026-08-30T16:28:59.050282+00:00",
   "status": "ok",
   "events_count": 120,
-  "events_24h": 6,
+  "events_24h": 7,
   "sources_ok": 15,
   "sources_total": 15,
   "sources_failed": 0,
@@ -13,15 +13,15 @@
   "driver_coverage_build": "40.3.89",
   "driver_coverage": {
     "macro_liquidity": {
-      "events_72h": 10,
-      "distinct_sources": 6
+      "events_72h": 9,
+      "distinct_sources": 5
     },
     "institutional_flows": {
       "events_72h": 22,
       "distinct_sources": 3
     },
     "regulation": {
-      "events_72h": 6,
+      "events_72h": 5,
       "distinct_sources": 4
     },
     "leverage": {
@@ -30,5 +30,25 @@
     }
   },
   "causal_claim": false,
-  "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique."
+  "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
+  "translation_fr": {
+    "schema": "atlas_news_translation_fr_v1",
+    "build": "40.4.108",
+    "target_language": "fr",
+    "source_field": "headline",
+    "display_field": "headline_fr",
+    "engine": "argos-translate",
+    "engine_version": "1.11.0",
+    "canonical_original_preserved": true,
+    "browser_translation": false,
+    "external_llm": false,
+    "events": 120,
+    "translated": 120,
+    "reused": 0,
+    "source_fr": 0,
+    "fallback_en": 0,
+    "missing": 0,
+    "coverage": 120,
+    "coverage_ratio": 1.0
+  }
 }
