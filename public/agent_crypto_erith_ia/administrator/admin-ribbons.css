@@ -207,42 +207,42 @@
 #market-workspace .market-flow-ribbon.admin-native-direct-floating>.admin-native-controls{position:absolute!important;top:6px!important;right:7px!important;bottom:auto!important;left:auto!important;width:max-content!important;max-width:calc(100% - 14px)!important;margin:0!important;transform:none!important;z-index:70!important;pointer-events:auto!important}
 
 /* ============================================================================
-   40.4.101 — AETHER FINAL CORRECTIONS · HEADER-PRESERVING OWNER LOCK
+   40.4.102 — AETHER READABILITY CADENCE · EXTENDED VEILLE · INFO BALANCE LOCK
 
    NORMAL -> INFO -> VEILLE -> SYSTEM -> NORMAL in ONE physical lane.
+   Cadence: 18 s NORMAL · 9 s INFO · 27 s VEILLE · 6 s SYSTEM = 60 s.
    Native Decision / Sources / Chronos geometry is never restyled here.
    News loading remains owned by News Sentinel; Aether owns presentation only.
    ============================================================================ */
 #livecheck.command-bar{position:relative!important}
 
 @keyframes atlasStatusNativePhase{
-  0%,39.999%{opacity:1;visibility:visible}
-  40%,95.999%{opacity:0;visibility:hidden}
-  96%,100%{opacity:1;visibility:visible}
+  0%,29.999%{opacity:1;visibility:visible}
+  30%,100%{opacity:0;visibility:hidden}
 }
 @keyframes atlasAetherBandPhase{
-  0%,39.999%{opacity:0;visibility:hidden}
-  40%,95.999%{opacity:1;visibility:visible}
-  96%,100%{opacity:0;visibility:hidden}
+  0%,29.999%{opacity:0;visibility:hidden}
+  30%,100%{opacity:1;visibility:visible}
 }
 @keyframes atlasAetherInfoPhase{
-  0%,39.999%{opacity:0;visibility:hidden}
-  40%,57.999%{opacity:1;visibility:visible}
-  58%,100%{opacity:0;visibility:hidden}
+  0%,29.999%{opacity:0;visibility:hidden}
+  30%,44.999%{opacity:1;visibility:visible}
+  45%,100%{opacity:0;visibility:hidden}
 }
 @keyframes atlasAetherVeillePhase{
-  0%,57.999%{opacity:0;visibility:hidden}
-  58%,82.999%{opacity:1;visibility:visible}
-  83%,100%{opacity:0;visibility:hidden}
+  0%,44.999%{opacity:0;visibility:hidden}
+  45%,89.999%{opacity:1;visibility:visible}
+  90%,100%{opacity:0;visibility:hidden}
 }
 @keyframes atlasAetherSystemPhase{
-  0%,82.999%{opacity:0;visibility:hidden}
-  83%,95.999%{opacity:1;visibility:visible}
-  96%,100%{opacity:0;visibility:hidden}
+  0%,89.999%{opacity:0;visibility:hidden}
+  90%,100%{opacity:1;visibility:visible}
 }
 @keyframes atlasAetherVeilleTicker4087{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
+  0%,49.999%{transform:translateX(0)}
+  50%{transform:translateX(0)}
+  83.333%,99.999%{transform:translateX(-50%)}
+  100%{transform:translateX(0)}
 }
 
 @media (min-width:901px) and (prefers-reduced-motion:no-preference){
@@ -251,7 +251,7 @@
   body #livecheck.command-bar>#decisionCard,
   body #livecheck.command-bar>#sourceActiveCard,
   body #livecheck.command-bar>#sourceTimeCard{
-    animation:atlasStatusNativePhase 48s steps(1,end) infinite!important;
+    animation:atlasStatusNativePhase 60s steps(1,end) infinite!important;
   }
 
   body #atlasAetherRibbon4084{
@@ -262,11 +262,11 @@
     background:linear-gradient(90deg,rgba(5,21,31,.985),rgba(8,17,29,.97))!important;
     color:#d4e4ea!important;white-space:nowrap!important;font:900 13.2px/1.08 system-ui,sans-serif!important;
     letter-spacing:.004em!important;pointer-events:none!important;
-    animation:atlasAetherBandPhase 48s steps(1,end) infinite!important;
+    animation:atlasAetherBandPhase 60s steps(1,end) infinite!important;
   }
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{
     position:relative!important;display:grid!important;
-    grid-template-columns:max-content minmax(0,1.28fr) minmax(0,.78fr) minmax(0,1.16fr) minmax(0,.82fr) max-content!important;
+    grid-template-columns:max-content minmax(350px,1.08fr) minmax(190px,.62fr) minmax(310px,1fr) minmax(220px,.76fr) max-content!important;
     align-items:center!important;width:100%!important;min-width:0!important;height:100%!important;padding:0!important;gap:0!important;
     transform:none!important;animation:none!important;
   }
@@ -277,24 +277,24 @@
   body #atlasAetherRibbonSources4084,
   body #atlasAetherRibbonBook4084{
     box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;
-    min-width:0!important;width:100%!important;height:100%!important;padding:0 10px!important;
+    min-width:0!important;width:100%!important;height:100%!important;padding:0 8px!important;
     overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
     border-left:1px solid rgba(130,211,230,.13)!important;
-    animation:atlasAetherInfoPhase 48s steps(1,end) infinite!important;
+    animation:atlasAetherInfoPhase 60s steps(1,end) infinite!important;
   }
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084{justify-content:flex-start!important;width:auto!important;padding-left:2px!important;border-left:0!important;color:#f5acd9!important;letter-spacing:.11em!important;font-weight:1000!important}
   body #atlasAetherRibbonMarket4088{color:#8ff0c2!important}
   body #atlasAetherRibbonAtlas4084{color:#cbbdff!important}
   body #atlasAetherRibbonOracle4084{color:#f5df91!important}
   body #atlasAetherRibbonSources4084{color:#8cebf3!important}
-  body #atlasAetherRibbonBook4084{justify-content:center!important;color:#a8ddb9!important}
+  body #atlasAetherRibbonBook4084{justify-content:center!important;padding-inline:9px!important;color:#a8ddb9!important}
 
   body #atlasAetherVeille4087{
     position:absolute!important;inset:0!important;z-index:12!important;box-sizing:border-box!important;
     display:grid!important;grid-template-columns:auto auto minmax(0,1fr)!important;align-items:center!important;
     width:100%!important;min-width:0!important;height:100%!important;margin:0!important;padding:0 12px!important;
     overflow:hidden!important;background:linear-gradient(90deg,rgba(24,10,30,.98),rgba(7,18,29,.98))!important;
-    animation:atlasAetherVeillePhase 48s steps(1,end) infinite!important;
+    animation:atlasAetherVeillePhase 60s steps(1,end) infinite!important;
   }
   body #atlasAetherVeille4087>.atlas-aether-veille-brand-4087{
     height:100%!important;display:flex!important;align-items:center!important;padding:0 14px 0 2px!important;
@@ -322,7 +322,7 @@
   }
   body #atlasAetherVeille4087[data-scroll="0"] .atlas-aether-veille-copy-4087[aria-hidden="true"]{display:none!important}
   body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-marquee-4087{
-    min-width:max-content!important;animation:atlasAetherVeilleTicker4087 20s linear infinite!important;will-change:transform!important;
+    min-width:max-content!important;animation:atlasAetherVeilleTicker4087 60s linear infinite!important;will-change:transform!important;
   }
   body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-viewport-4087:hover .atlas-aether-veille-marquee-4087{animation-play-state:paused!important}
 
@@ -331,7 +331,7 @@
     display:grid!important;grid-template-columns:auto repeat(5,minmax(0,1fr))!important;align-items:center!important;
     width:100%!important;min-width:0!important;height:100%!important;margin:0!important;padding:0!important;
     overflow:hidden!important;border:0!important;background:linear-gradient(90deg,rgba(5,21,31,.985),rgba(8,17,29,.97))!important;
-    animation:atlasAetherSystemPhase 48s steps(1,end) infinite!important;
+    animation:atlasAetherSystemPhase 60s steps(1,end) infinite!important;
   }
   body #atlasAetherSystem4086>.atlas-aether-system-brand-4086,
   body #atlasAetherSystem4086>.atlas-aether-system-item-4086{
@@ -350,7 +350,7 @@
 
 @media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference){
   body #atlasAetherRibbon4084{padding-inline:8px!important;font-size:11.8px!important}
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{grid-template-columns:max-content minmax(0,1.24fr) minmax(0,.78fr) minmax(0,1.15fr) minmax(0,.80fr) max-content!important}
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{grid-template-columns:max-content minmax(290px,1.05fr) minmax(165px,.60fr) minmax(255px,.96fr) minmax(185px,.72fr) max-content!important}
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084,
   body #atlasAetherRibbonMarket4088,
   body #atlasAetherRibbonAtlas4084,

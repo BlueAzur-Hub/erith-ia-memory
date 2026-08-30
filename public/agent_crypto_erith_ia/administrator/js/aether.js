@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.101
-  Revision: final corrections — 40.4.98 header preserved, concise INFO, truthful VEILLE counter, immediate CSS marquee, SYSTEM unchanged.
+  Build: 40.4.102
+  Revision: readability cadence — balanced INFO, 27 s VEILLE window, phase-synchronised marquee, SYSTEM unchanged.
 */
 (() => {
   "use strict";
@@ -108,11 +108,14 @@
       copies.forEach(node=>{if(node.textContent!==current.detail)node.textContent=current.detail;});
       aetherVeilleState4087.fingerprint=fingerprint;
       const longText=current.detail.length>92;
-      host.dataset.scroll=longText?"1":"0";
+      /* 40.4.102: restart the CSS marquee at the start of each Aether cycle.
+         The 60 s CSS timeline holds the new headline until VEILLE appears,
+         scrolls it slowly during VEILLE, and needs no JS timer. */
+      host.dataset.scroll="0";
       requestAnimationFrame(()=>{
         const first=host.querySelector("[data-aether-veille-copy-4087]:not([aria-hidden])");
         const measuredOverflow=Boolean(first&&viewport&&first.scrollWidth>viewport.clientWidth+8);
-        if(measuredOverflow)host.dataset.scroll="1";
+        host.dataset.scroll=(longText||measuredOverflow)?"1":"0";
       });
     }
     aetherVeilleState4087.last=current;
@@ -360,7 +363,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.101",
+    build:"40.4.102",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -385,7 +388,13 @@
     veille_new_fetch:false,
     veille_existing_owner_wake:true,
     info_operator_synthesis:true,
-    oracle_render_refresh:true
+    oracle_render_refresh:true,
+    cadence_seconds:60,
+    normal_seconds:18,
+    info_seconds:9,
+    veille_seconds:27,
+    system_seconds:6,
+    veille_marquee_phase_synced:true
   });
   globalThis.AgentCryptoAether=api;
   /* Compatibility read-only alias for diagnostics that knew the R6/R7 object. */
