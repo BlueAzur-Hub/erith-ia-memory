@@ -32,14 +32,16 @@
 }
 
 /* CHRONOSXP HEADER — same DOM in Classic / Intermediate / Administrator.
-   40.4.105 — canonical single-owner alignment.
+   40.4.106 — stable public ID + grid-item centering owner.
    The status-strip grid owns only the card position; this file owns Chronos presentation.
    The header is a shrink-wrapped block flex box centered by auto inline margins. */
 #sourceTimeCard{
   overflow:hidden;
 }
-#atlasCelestialClockHeader4055{
+#atlasCelestialClockHeader{
   display:flex !important;
+  grid-column:1 / -1 !important;
+  justify-self:center !important;
   align-items:center !important;
   justify-content:center !important;
   flex-wrap:nowrap !important;
@@ -58,38 +60,38 @@
   letter-spacing:0 !important;
   text-transform:none !important;
 }
-#atlasCelestialClockHeader4055 > span{
+#atlasCelestialClockHeader > span{
   flex:0 0 auto !important;
   min-width:0;
   text-transform:none !important;
 }
-#atlasCelestialClockHeader4055 .atlas-chrono-date-40341{
+#atlasCelestialClockHeader .atlas-chrono-date-40341{
   color:#f7f9fc !important;
   font-size:clamp(10.2px,.66vw,11.9px) !important;
   font-weight:900 !important;
   overflow:visible !important;
   text-overflow:clip !important;
 }
-#atlasCelestialClockHeader4055 .atlas-chrono-time-40341{
+#atlasCelestialClockHeader .atlas-chrono-time-40341{
   color:#fff !important;
   font-size:clamp(12.8px,.82vw,15px) !important;
   font-weight:1000 !important;
   letter-spacing:.025em !important;
   text-shadow:0 0 7px rgba(255,255,255,.13) !important;
 }
-#atlasCelestialClockHeader4055 .atlas-chrono-separator-40341{
+#atlasCelestialClockHeader .atlas-chrono-separator-40341{
   color:#71899a !important;
   font-size:8.6px !important;
   font-weight:700 !important;
   opacity:.72 !important;
 }
-#atlasCelestialClockHeader4055 .atlas-chrono-planet-40341{
+#atlasCelestialClockHeader .atlas-chrono-planet-40341{
   color:var(--astro-planet,#d7e2ea) !important;
   font-size:clamp(9.5px,.60vw,10.9px) !important;
   font-weight:950 !important;
   text-shadow:0 0 7px rgba(var(--astro-planet-rgb,215,226,234),.20) !important;
 }
-#atlasCelestialClockHeader4055 .atlas-chrono-glyph-40341{
+#atlasCelestialClockHeader .atlas-chrono-glyph-40341{
   display:inline-block !important;
   margin-right:3px !important;
   color:var(--astro-planet,#d7e2ea) !important;
@@ -131,9 +133,9 @@
 }
 
 @media (max-width:1366px) and (min-width:901px){
-  #atlasCelestialClockHeader4055{gap:3px !important;font-size:9.15px !important}
-  #atlasCelestialClockHeader4055 .atlas-chrono-date-40341{font-size:9.6px !important}
-  #atlasCelestialClockHeader4055 .atlas-chrono-time-40341{font-size:12.4px !important}
-  #atlasCelestialClockHeader4055 .atlas-chrono-separator-40341{font-size:8px !important}
-  #atlasCelestialClockHeader4055 .atlas-chrono-planet-40341{font-size:8.9px !important}
+  #atlasCelestialClockHeader{gap:3px !important;font-size:9.15px !important}
+  #atlasCelestialClockHeader .atlas-chrono-date-40341{font-size:9.6px !important}
+  #atlasCelestialClockHeader .atlas-chrono-time-40341{font-size:12.4px !important}
+  #atlasCelestialClockHeader .atlas-chrono-separator-40341{font-size:8px !important}
+  #atlasCelestialClockHeader .atlas-chrono-planet-40341{font-size:8.9px !important}
 }

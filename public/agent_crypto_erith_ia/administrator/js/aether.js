@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.104
-  Revision: French News presentation — VEILLE / CONTEXTE prefer headline_fr with canonical English fallback; SYSTEM unchanged.
+  Build: 40.4.106
+  Revision: stable 90 s operator cadence; VEILLE / CONTEXTE keep French-first News presentation and only the informative payload scrolls.
 */
 (() => {
   "use strict";
@@ -157,7 +157,7 @@
     const freshness=String(event?.freshness?.label||"").trim();
     const headline=aetherNewsHeadlineFr40104(event,"Événement à qualifier");
     const meta=`${aetherVeilleState4087.index+1}/${events.length} · ${impactLevel} ${impact}/100 · ${scope}`;
-    const detail=[snapshot.label,snapshot.decision,headline,evidence?`preuve ${evidence}/100`:null,action,freshness,source].filter(Boolean).join(" · ");
+    const detail=[headline,evidence?`preuve ${evidence}/100`:null,action,freshness,source].filter(Boolean).join(" · ");
     return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail};
   }
   function renderAetherVeille4087(){
@@ -176,7 +176,7 @@
       aetherVeilleState4087.fingerprint=fingerprint;
       const longText=current.detail.length>92;
       /* 40.4.102: restart the CSS marquee at the start of each Aether cycle.
-         The 60 s CSS timeline holds the new headline until VEILLE appears,
+         The 90 s CSS timeline holds the new headline until VEILLE appears,
          scrolls it slowly during VEILLE, and needs no JS timer. */
       host.dataset.scroll="0";
       requestAnimationFrame(()=>{
@@ -439,7 +439,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.104",
+    build:"40.4.106",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -465,11 +465,11 @@
     veille_existing_owner_wake:true,
     info_operator_synthesis:true,
     oracle_render_refresh:true,
-    cadence_seconds:60,
-    normal_seconds:18,
-    info_seconds:9,
-    veille_seconds:27,
-    system_seconds:6,
+    cadence_seconds:90,
+    normal_seconds:30,
+    info_seconds:15,
+    veille_seconds:36,
+    system_seconds:9,
     veille_marquee_phase_synced:true,
     explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence40235 (read-only compute)",
     explanatory_context_alternation:true,
