@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.108
-  Revision: 40.4.108 single-message ribbon; French-first headline + proof/freshness/source only, 90 s cadence unchanged.
+  Build: 40.4.110
+  Revision: 40.4.110 French editorial display owner; headline_fr_display → headline_fr recovery; 90 s cadence unchanged.
 */
 (() => {
   "use strict";
@@ -11,14 +11,40 @@
   function aetherCurrent4084(){try{return typeof atlasCurrentStateRead==="function"?(atlasCurrentStateRead()||null):null;}catch(_){return null;}}
   const AETHER_VEILLE_TOP_4087=5;
   const aetherVeilleState4087={index:0,kind:"alert",contextFacet:0,fingerprint:"",viewportWidth:0,last:null};
+  function aetherNewsCanonicalFrenchEvent40110(event){
+    if(!event)return event;
+    const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
+    if(!id)return event;
+    try{
+      const pools=[];
+      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);
+      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);
+      for(const pool of pools){
+        const match=pool.find(row=>String(row?.event_id||row?.id||row?.fingerprint||"").trim()===id&&(String(row?.headline_fr_display||row?.headline_fr||"").trim()));
+        if(match)return match;
+      }
+    }catch(_){}
+    return event;
+  }
   function aetherNewsHeadlineFr40104(event,fallback="Événement à qualifier"){
+    const canonical=aetherNewsCanonicalFrenchEvent40110(event);
+    const original=String(canonical?.headline||canonical?.event_label||event?.headline||event?.event_label||"").replace(/\s+/g," ").trim();
+    const explicitFrench=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\s+/g," ").trim();
     try{
       const owner=globalThis.AgentCryptoNewsFrenchPresentation40104;
-      if(owner&&typeof owner.headline==="function")return owner.headline(event,fallback);
+      if(owner&&typeof owner.headline==="function"){
+        const value=String(owner.headline(canonical,fallback)||"").replace(/\s+/g," ").trim();
+        if(explicitFrench||value!==original)return value||fallback;
+      }
     }catch(_){}
-    const french=String(event?.headline_fr||"").replace(/\s+/g," ").trim();
-    const original=String(event?.headline||event?.event_label||"").replace(/\s+/g," ").trim();
-    return french||original||fallback;
+    if(explicitFrench)return explicitFrench;
+    return original?"Actualité source en anglais · traduction française en attente":fallback;
+  }
+  function aetherFrenchMechanismLabel40110(value){
+    const label=String(value||"").replace(/\s+/g," ").trim();
+    if(/^SHORT SQUEEZE \/ LIQUIDATIONS$/i.test(label))return "LIQUIDATIONS DE POSITIONS VENDEUSES";
+    if(/^LONG SQUEEZE \/ LIQUIDATIONS$/i.test(label))return "LIQUIDATIONS DE POSITIONS ACHETEUSES";
+    return label;
   }
   const aetherVeilleNumber4087=value=>{const n=Number(value);return Number.isFinite(n)?n:0;};
   function aetherVeilleTimestamp4087(event){
@@ -107,7 +133,7 @@
       const scope=assets.length?assets.join("/"):"MARCHÉ";
       const headline=aetherNewsHeadlineFr40104(lead||n?.event,"Contexte News Sentinel");
       const source=String(lead?.source_name||lead?.source_host||n?.event?.source_name||n?.event?.source_host||"").replace(/^www\./,"").trim();
-      const mechanismTitle=String(n?.mechanism?.title||"MÉCANISME NON QUALIFIÉ").trim();
+      const mechanismTitle=aetherFrenchMechanismLabel40110(n?.mechanism?.title||"MÉCANISME NON QUALIFIÉ");
       const mechanismDirection=String(n?.mechanism?.direction||"INDÉTERMINÉ").trim();
       const explains=String(n?.mechanism?.explains||"").replace(/\s+/g," ").trim();
       const limit=String(n?.mechanism?.does_not_explain||"").replace(/\s+/g," ").trim();

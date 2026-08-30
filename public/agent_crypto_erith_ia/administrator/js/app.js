@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.109";
+  const ADMIN_BUILD = "40.4.110";
   const ADMIN_RELEASE = "GRAPH SOURCE TRUTH · FINAL ADMINISTRATOR SEAL";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";

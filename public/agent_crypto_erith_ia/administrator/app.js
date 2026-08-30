@@ -21486,16 +21486,48 @@ const NEWS_SENTINEL_VISIT_KEY = "agent_crypto_erith_ia_news_visit_v2";
 
 const NEWS_SENTINEL_FEED_RETRY_MS = Object.freeze([60 * 1000, 180 * 1000, 5 * 60 * 1000]);
 
+function newsFeedEditorialHeadlineFr40110(originalValue, frenchValue) {
+  const original = String(originalValue || "").replace(/\s+/g, " ").trim();
+  let french = String(frenchValue || "").replace(/\s+/g, " ").trim();
+  if (!french) return "";
+
+  // Editorial presentation only. The canonical original headline and raw headline_fr remain untouched.
+  if (/^Ethereum lending app Term Finance loses \$8\.5 million after attacker buys voting power$/i.test(original)) {
+    return "L’application de prêt sur Ethereum Term Finance perd 8,5 M$ après l’acquisition de droits de vote par un attaquant";
+  }
+  if (/^The Sandbox promises 1:1 reimbursement after \$700K bridge exploit$/i.test(original)) {
+    return "The Sandbox promet un remboursement intégral après une attaque de 700 k$ contre un pont inter-chaînes";
+  }
+
+  french = french
+    .replace(/\bEthereum prêt app\b/gi, "L’application de prêt sur Ethereum")
+    .replace(/\bprêt app\b/gi, "application de prêt")
+    .replace(/\bpouvoir de vote\b/gi, "droits de vote")
+    .replace(/après que l[’']attaquant achète les? droits de vote/gi, "après l’acquisition de droits de vote par un attaquant")
+    .replace(/après que l[’']attaquant achète le pouvoir de vote/gi, "après l’acquisition de droits de vote par un attaquant")
+    .replace(/(\d+(?:[.,]\d+)?)\s+millions? de dollars/gi, "$1 M$")
+    .replace(/(\d+(?:[.,]\d+)?)\s+milliards? de dollars/gi, "$1 Md$")
+    .replace(/(\d+(?:[.,]\d+)?)\s*[Kk]\s*\$/g, "$1 k$")
+    .replace(/\s+([,.;:!?])/g, "$1")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  return french;
+}
+
 function newsFeedDisplayHeadlineFr40104(event, fallback="Événement sans titre") {
-  const french = String(event?.headline_fr || "").replace(/\s+/g, " ").trim();
   const original = String(event?.headline || event?.event_label || "").replace(/\s+/g, " ").trim();
+  const editorial = String(event?.headline_fr_display || "").replace(/\s+/g, " ").trim();
+  const rawFrench = String(event?.headline_fr || "").replace(/\s+/g, " ").trim();
+  const french = newsFeedEditorialHeadlineFr40110(original, editorial || rawFrench);
   return french || original || fallback;
 }
 
 globalThis.AgentCryptoNewsFrenchPresentation40104 = Object.freeze({
   headline: newsFeedDisplayHeadlineFr40104,
-  preferred_field: "headline_fr",
+  preferred_field: "headline_fr_display",
+  raw_translation_field: "headline_fr",
   fallback_field: "headline",
+  editorial_build: "40.4.110",
   canonical_original_preserved: true,
   browser_translation: false
 });
@@ -51810,7 +51842,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.109";
+const ATLAS_BUILD = "40.4.110";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
