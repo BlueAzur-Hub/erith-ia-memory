@@ -1,1 +1,142 @@
-/* ==========================================================================\n   Agent-Crypto @erith.IA — canonical Chronos / planetary presentation owner\n   Consolidated from the validated 40.3.96 cumulative layer in Build 40.4.46.\n   Presentation only · no runtime, storage, market, Oracle or Atlas ownership.\n   ========================================================================== */\n\n/* CANONICAL PLANETARY COLOR AUTHORITY\n   color = planet identity; intensity = temporal state. */\n[data-planet40291="saturn"]{\n  --astro-planet:#ff6f7d; --astro-planet-rgb:255,111,125;\n}\n[data-planet40291="mars"]{\n  --astro-planet:#ff9d63; --astro-planet-rgb:255,157,99;\n}\n[data-planet40291="sun"]{\n  --astro-planet:#ffe46f; --astro-planet-rgb:255,228,111;\n}\n[data-planet40291="venus"]{\n  --astro-planet:#78e6a2; --astro-planet-rgb:120,230,162;\n}\n[data-planet40291="mercury"]{\n  --astro-planet:#72bcff; --astro-planet-rgb:114,188,255;\n}\n[data-planet40291="moon"]{\n  --astro-planet:#f3f6ff; --astro-planet-rgb:243,246,255;\n}\n[data-planet40291="jupiter"]{\n  --astro-planet:#ffd17a; --astro-planet-rgb:255,209,122;\n}\n[data-planet40291="neutral"]{\n  --astro-planet:#d7e2ea; --astro-planet-rgb:215,226,234;\n}\n\n/* CHRONOSXP HEADER — same DOM in Classic / Intermediate / Administrator.\n   40.4.106 — stable public ID + grid-item centering owner.\n   The status-strip grid owns only the card position; this file owns Chronos presentation.\n   The header is a shrink-wrapped block flex box centered by auto inline margins. */\n#sourceTimeCard{\n  overflow:hidden;\n}\n#atlasCelestialClockHeader{\n  display:flex !important;\n  grid-column:1 / -1 !important;\n  justify-self:center !important;\n  align-items:center !important;\n  justify-content:center !important;\n  flex-wrap:nowrap !important;\n  gap:5px !important;\n  width:max-content !important;\n  max-width:100% !important;\n  min-width:0 !important;\n  margin:2px auto 0 !important;\n  white-space:nowrap !important;\n  overflow:hidden !important;\n  text-overflow:clip !important;\n  font-family:system-ui,sans-serif !important;\n  font-size:clamp(9.8px,.62vw,11.4px) !important;\n  font-weight:850 !important;\n  line-height:1.05 !important;\n  letter-spacing:0 !important;\n  text-transform:none !important;\n}\n#atlasCelestialClockHeader > span{\n  flex:0 0 auto !important;\n  min-width:0;\n  text-transform:none !important;\n}\n#atlasCelestialClockHeader .atlas-chrono-date-40341{\n  color:#f7f9fc !important;\n  font-size:clamp(10.2px,.66vw,11.9px) !important;\n  font-weight:900 !important;\n  overflow:visible !important;\n  text-overflow:clip !important;\n}\n#atlasCelestialClockHeader .atlas-chrono-time-40341{\n  color:#fff !important;\n  font-size:clamp(12.8px,.82vw,15px) !important;\n  font-weight:1000 !important;\n  letter-spacing:.025em !important;\n  text-shadow:0 0 7px rgba(255,255,255,.13) !important;\n}\n#atlasCelestialClockHeader .atlas-chrono-separator-40341{\n  color:#71899a !important;\n  font-size:8.6px !important;\n  font-weight:700 !important;\n  opacity:.72 !important;\n}\n#atlasCelestialClockHeader .atlas-chrono-planet-40341{\n  color:var(--astro-planet,#d7e2ea) !important;\n  font-size:clamp(9.5px,.60vw,10.9px) !important;\n  font-weight:950 !important;\n  text-shadow:0 0 7px rgba(var(--astro-planet-rgb,215,226,234),.20) !important;\n}\n#atlasCelestialClockHeader .atlas-chrono-glyph-40341{\n  display:inline-block !important;\n  margin-right:3px !important;\n  color:var(--astro-planet,#d7e2ea) !important;\n  font-size:1.40em !important;\n  line-height:.82 !important;\n  vertical-align:-.08em !important;\n}\n\n/* AstroCycle detailed timeline/current-next uses the same planet identity. */\n.atlas-astro-hour-4055[data-planet40291]{\n  border-color:rgba(var(--astro-planet-rgb,215,226,234),.28) !important;\n  background:linear-gradient(180deg,\n    rgba(var(--astro-planet-rgb,215,226,234),.055),\n    rgba(4,12,21,.62)) !important;\n}\n.atlas-astro-hour-4055[data-planet40291] b{\n  color:var(--astro-planet,#d7e2ea) !important;\n}\n.atlas-astro-hour-4055[data-state="active"][data-planet40291]{\n  border-color:rgba(var(--astro-planet-rgb,215,226,234),.76) !important;\n  box-shadow:\n    inset 0 0 0 1px rgba(var(--astro-planet-rgb,215,226,234),.10),\n    0 0 16px rgba(var(--astro-planet-rgb,215,226,234),.15) !important;\n  background:linear-gradient(180deg,\n    rgba(var(--astro-planet-rgb,215,226,234),.16),\n    rgba(4,12,21,.68)) !important;\n}\n.atlas-astro-hour-4055[data-state="next"][data-planet40291]{\n  border-color:rgba(var(--astro-planet-rgb,215,226,234),.52) !important;\n  background:linear-gradient(180deg,\n    rgba(var(--astro-planet-rgb,215,226,234),.095),\n    rgba(4,12,21,.64)) !important;\n}\n.atlas-astro-kpis-4055 article[data-planet40291]{\n  border-color:rgba(var(--astro-planet-rgb,215,226,234),.34) !important;\n  box-shadow:inset 0 2px 0 rgba(var(--astro-planet-rgb,215,226,234),.35) !important;\n}\n.atlas-astro-kpis-4055 article[data-planet40291] b{\n  color:var(--astro-planet,#d7e2ea) !important;\n}\n\n@media (max-width:1366px) and (min-width:901px){\n  #atlasCelestialClockHeader{gap:3px !important;font-size:9.15px !important}\n  #atlasCelestialClockHeader .atlas-chrono-date-40341{font-size:9.6px !important}\n  #atlasCelestialClockHeader .atlas-chrono-time-40341{font-size:12.4px !important}\n  #atlasCelestialClockHeader .atlas-chrono-separator-40341{font-size:8px !important}\n  #atlasCelestialClockHeader .atlas-chrono-planet-40341{font-size:8.9px !important}\n}\n
+/* ========================================================================== 
+   Agent-Crypto @erith.IA — canonical Chronos / planetary presentation owner
+   Consolidated from the validated 40.3.96 cumulative layer in Build 40.4.46.
+   Presentation only · no runtime, storage, market, Oracle or Atlas ownership.
+   ========================================================================== */
+
+/* CANONICAL PLANETARY COLOR AUTHORITY
+   color = planet identity; intensity = temporal state. */
+[data-planet40291="saturn"]{
+  --astro-planet:#ff6f7d; --astro-planet-rgb:255,111,125;
+}
+[data-planet40291="mars"]{
+  --astro-planet:#ff9d63; --astro-planet-rgb:255,157,99;
+}
+[data-planet40291="sun"]{
+  --astro-planet:#ffe46f; --astro-planet-rgb:255,228,111;
+}
+[data-planet40291="venus"]{
+  --astro-planet:#78e6a2; --astro-planet-rgb:120,230,162;
+}
+[data-planet40291="mercury"]{
+  --astro-planet:#72bcff; --astro-planet-rgb:114,188,255;
+}
+[data-planet40291="moon"]{
+  --astro-planet:#f3f6ff; --astro-planet-rgb:243,246,255;
+}
+[data-planet40291="jupiter"]{
+  --astro-planet:#ffd17a; --astro-planet-rgb:255,209,122;
+}
+[data-planet40291="neutral"]{
+  --astro-planet:#d7e2ea; --astro-planet-rgb:215,226,234;
+}
+
+/* CHRONOSXP HEADER — same DOM in Classic / Intermediate / Administrator.
+   40.4.106 — stable public ID + grid-item centering owner.
+   The status-strip grid owns only the card position; this file owns Chronos presentation.
+   The header is a shrink-wrapped block flex box centered by auto inline margins. */
+#sourceTimeCard{
+  overflow:hidden;
+}
+#atlasCelestialClockHeader{
+  display:flex !important;
+  grid-column:1 / -1 !important;
+  justify-self:center !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex-wrap:nowrap !important;
+  gap:5px !important;
+  width:max-content !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  margin:2px auto 0 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  font-family:system-ui,sans-serif !important;
+  font-size:clamp(9.8px,.62vw,11.4px) !important;
+  font-weight:850 !important;
+  line-height:1.05 !important;
+  letter-spacing:0 !important;
+  text-transform:none !important;
+}
+#atlasCelestialClockHeader > span{
+  flex:0 0 auto !important;
+  min-width:0;
+  text-transform:none !important;
+}
+#atlasCelestialClockHeader .atlas-chrono-date-40341{
+  color:#f7f9fc !important;
+  font-size:clamp(10.2px,.66vw,11.9px) !important;
+  font-weight:900 !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+#atlasCelestialClockHeader .atlas-chrono-time-40341{
+  color:#fff !important;
+  font-size:clamp(12.8px,.82vw,15px) !important;
+  font-weight:1000 !important;
+  letter-spacing:.025em !important;
+  text-shadow:0 0 7px rgba(255,255,255,.13) !important;
+}
+#atlasCelestialClockHeader .atlas-chrono-separator-40341{
+  color:#71899a !important;
+  font-size:8.6px !important;
+  font-weight:700 !important;
+  opacity:.72 !important;
+}
+#atlasCelestialClockHeader .atlas-chrono-planet-40341{
+  color:var(--astro-planet,#d7e2ea) !important;
+  font-size:clamp(9.5px,.60vw,10.9px) !important;
+  font-weight:950 !important;
+  text-shadow:0 0 7px rgba(var(--astro-planet-rgb,215,226,234),.20) !important;
+}
+#atlasCelestialClockHeader .atlas-chrono-glyph-40341{
+  display:inline-block !important;
+  margin-right:3px !important;
+  color:var(--astro-planet,#d7e2ea) !important;
+  font-size:1.40em !important;
+  line-height:.82 !important;
+  vertical-align:-.08em !important;
+}
+
+/* AstroCycle detailed timeline/current-next uses the same planet identity. */
+.atlas-astro-hour-4055[data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.28) !important;
+  background:linear-gradient(180deg,
+    rgba(var(--astro-planet-rgb,215,226,234),.055),
+    rgba(4,12,21,.62)) !important;
+}
+.atlas-astro-hour-4055[data-planet40291] b{
+  color:var(--astro-planet,#d7e2ea) !important;
+}
+.atlas-astro-hour-4055[data-state="active"][data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.76) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--astro-planet-rgb,215,226,234),.10),
+    0 0 16px rgba(var(--astro-planet-rgb,215,226,234),.15) !important;
+  background:linear-gradient(180deg,
+    rgba(var(--astro-planet-rgb,215,226,234),.16),
+    rgba(4,12,21,.68)) !important;
+}
+.atlas-astro-hour-4055[data-state="next"][data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.52) !important;
+  background:linear-gradient(180deg,
+    rgba(var(--astro-planet-rgb,215,226,234),.095),
+    rgba(4,12,21,.64)) !important;
+}
+.atlas-astro-kpis-4055 article[data-planet40291]{
+  border-color:rgba(var(--astro-planet-rgb,215,226,234),.34) !important;
+  box-shadow:inset 0 2px 0 rgba(var(--astro-planet-rgb,215,226,234),.35) !important;
+}
+.atlas-astro-kpis-4055 article[data-planet40291] b{
+  color:var(--astro-planet,#d7e2ea) !important;
+}
+
+@media (max-width:1366px) and (min-width:901px){
+  #atlasCelestialClockHeader{gap:3px !important;font-size:9.15px !important}
+  #atlasCelestialClockHeader .atlas-chrono-date-40341{font-size:9.6px !important}
+  #atlasCelestialClockHeader .atlas-chrono-time-40341{font-size:12.4px !important}
+  #atlasCelestialClockHeader .atlas-chrono-separator-40341{font-size:8px !important}
+  #atlasCelestialClockHeader .atlas-chrono-planet-40341{font-size:8.9px !important}
+}
