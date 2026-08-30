@@ -1,0 +1,126 @@
+name: Agent-Crypto 40.4.106 Release Surgery
+
+on:
+  push:
+    branches:
+      - aether-release-40-4-106-20260830
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-106-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout release bootstrap
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          path: bootstrap
+
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          path: repo
+
+      - name: Apply audited 40.4.106 surgery
+        run: python bootstrap/.github/release/agent_crypto_40_4_106.py --root repo
+
+      - name: Validate code and release truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check repo/public/agent_crypto_erith_ia/administrator/app.js
+          node --check repo/public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check repo/public/agent_crypto_erith_ia/administrator/js/aether.js
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re
+          root=Path('repo')
+          adm=root/'public/agent_crypto_erith_ia/administrator'
+          sha=lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html':'081f85a01deec03583f8cca70fba89cd7fd3e4b4afe2be59d975372378999067',
+            'public/agent_crypto_erith_ia/administrator/app.js':'dec96556b6bbe90efa0c0287d3f070ea34cf7e7889683f89f8908e4918ee6389',
+            'public/agent_crypto_erith_ia/administrator/js/app.js':'a60a8c1321a552d89cacee1bcfe4524d12566e2654d1b2c1ebd4b440947ee5a1',
+            'public/agent_crypto_erith_ia/administrator/js/aether.js':'3149905c7a82787da4445fae714915dc14564d174285dcc230e093c7a8f07000',
+            'public/agent_crypto_erith_ia/administrator/admin-chronos.css':'060626000a18d8cacdf225e3e1994cf1b0fa259c00aa5f6ea54ba74194729fee',
+            'public/agent_crypto_erith_ia/administrator/admin-ribbons.css':'98eb51dd9d8fc43c0e3c6a6cd444797c064143ab21be230f5a2a93f62a4b6cbe',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json':'de2418deac5fc8a35bdb631ad2168622cd6bda61fc7d28ebd737886cfb8be48d',
+            'public/agent_crypto_erith_ia/administrator/version.json':'5a7fbecf576f30fb81198a25fdcd23f46f36e9924e55abf1f25bc2dfa2517557',
+          }
+          for rel,want in expected.items():
+              got=sha(root/rel)
+              assert got==want,(rel,want,got)
+          admin=json.loads((adm/'administrator-version.json').read_text(encoding='utf-8'))
+          ver=json.loads((adm/'version.json').read_text(encoding='utf-8'))
+          assert admin['build']==ver['build']=='40.4.106'
+          assert admin['parent_build']==ver['parent_build']=='40.4.105'
+          assert ver['integrity']['publication_identity']['administrator_version_sha256']==sha(adm/'administrator-version.json')
+          idx=(adm/'index.html').read_text(encoding='utf-8')
+          assert 'atlasCelestialClockHeader4055' not in idx
+          assert idx.count('atlasCelestialClockHeader')==2
+          ids=re.findall(r'\bid="([^"]+)"',idx)
+          assert len(ids)==len(set(ids)), (len(ids),len(set(ids)))
+          chrono=(adm/'admin-chronos.css').read_text(encoding='utf-8')
+          assert '#atlasCelestialClockHeader{' in chrono
+          assert 'grid-column:1 / -1 !important;' in chrono
+          assert 'justify-self:center !important;' in chrono
+          assert 'atlasCelestialClockHeader4055' not in chrono
+          ribbons=(adm/'admin-ribbons.css').read_text(encoding='utf-8')
+          for token in ('atlasStatusNativePhase 90s','atlasAetherBandPhase 90s','atlasAetherInfoPhase 90s','atlasAetherVeillePhase 90s','atlasAetherSystemPhase 90s','atlasAetherVeilleTicker4087 90s'):
+              assert token in ribbons,token
+          aether=(adm/'js/aether.js').read_text(encoding='utf-8')
+          for token in ('cadence_seconds:90','normal_seconds:30','info_seconds:15','veille_seconds:36','system_seconds:9'):
+              assert token in aether,token
+          assert '[snapshot.label,snapshot.decision,headline' not in aether
+          assert '[headline,evidence?' in aether
+          assert aether.count('fetch(')==2
+          assert aether.count('setInterval(')==0
+          assert aether.count('setTimeout(')==1
+          assert aether.count('animationiteration')==1
+          print('40.4.106 VALIDATION PASS')
+          PY
+          cd repo
+          git diff --check
+          actual="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' \
+            public/agent_crypto_erith_ia/administrator/admin-chronos.css \
+            public/agent_crypto_erith_ia/administrator/admin-ribbons.css \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/js/aether.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/version.json | sort)"
+          test "$actual" = "$expected"
+
+      - name: Commit and publish 40.4.106
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B aether-40-4-106-main HEAD
+          git add public/agent_crypto_erith_ia/administrator/admin-chronos.css \
+                  public/agent_crypto_erith_ia/administrator/admin-ribbons.css \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/js/aether.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/version.json
+          git commit -m "feat Agent-Crypto 40.4.106 stabilize Chronos id and slow Aether feed"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "RELEASE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
