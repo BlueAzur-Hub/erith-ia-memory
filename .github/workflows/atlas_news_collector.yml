@@ -1,8 +1,14 @@
 name: Atlas News Sentinel World-to-Market Live Feed
-# 40.4.105 — canonical collector → offline French headline enrichment → archive publication.
+# 40.4.108 — canonical collector → strict offline French headline enrichment → validated archive publication.
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/atlas_news_collector.yml"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_collector.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py"
   schedule:
     - cron: "17 * * * *"
 
@@ -48,17 +54,28 @@ jobs:
 
       - name: Collect qualified world, macro, flow and crypto news
         id: collect_news
-        continue-on-error: true
         run: python public/agent_crypto_erith_ia/tools/atlas_news_collector.py
 
       - name: Add French presentation headlines
         id: translate_news_fr
-        if: always()
-        continue-on-error: true
-        run: python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py --require-french
+
+      - name: Validate French publication payload
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/data/news/latest.json")
+          data=json.loads(p.read_text(encoding="utf-8"))
+          events=[e for e in data.get("events",[]) if isinstance(e,dict) and str(e.get("headline") or "").strip()]
+          missing=[str(e.get("event_id") or e.get("id") or "?") for e in events if not str(e.get("headline_fr") or "").strip()]
+          summary=data.get("translation_fr") if isinstance(data.get("translation_fr"),dict) else {}
+          if str(summary.get("build")) != "40.4.108": raise SystemExit("French translation build marker missing")
+          if missing: raise SystemExit(f"headline_fr missing for {len(missing)} events: {missing[:5]}")
+          print(f"FRENCH NEWS PUBLICATION PASS · {len(events)}/{len(events)} headline_fr")
+          PY
 
       - name: Commit News Sentinel archive
-        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -73,8 +90,3 @@ jobs:
           git pull --rebase origin main
           git push origin HEAD:main
 
-      - name: Propagate collector failure
-        if: steps.collect_news.outcome == 'failure'
-        run: |
-          echo "News Sentinel collector failed; any generated error status was preserved."
-          exit 1
