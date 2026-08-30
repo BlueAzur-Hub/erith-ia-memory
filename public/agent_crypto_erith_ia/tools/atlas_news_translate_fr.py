@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Atlas News Sentinel — French headline translation post-processor.
 
-Build 40.4.104 presentation-data owner.
+Build 40.4.105 presentation-data owner.
 
 Contract:
 - runs AFTER the canonical News Sentinel collector;
@@ -29,7 +29,7 @@ ROOT = Path("public/agent_crypto_erith_ia/data/news")
 DEFAULT_LATEST = ROOT / "latest.json"
 DEFAULT_STATUS = ROOT / "status.json"
 SCHEMA = "atlas_news_translation_fr_v1"
-BUILD = "40.4.104"
+BUILD = "40.4.105"
 ENGINE = "argos-translate"
 ENGINE_PIN = "1.11.0"
 
