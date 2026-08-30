@@ -1,0 +1,213 @@
+name: Agent-Crypto 40.4.107 guarded patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/patches/40.4.107.diff
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-107-guarded-patch
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Guard parent and apply bounded patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          PATCH="coordination/inter_ai_dialogues/agent_crypto/patches/40.4.107.diff"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          current=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          if current.get('build') != '40.4.106':
+              raise SystemExit(f"STOP: parent build attendu 40.4.106, trouvé {current.get('build')}")
+          expected={
+            'app.js':'dec96556b6bbe90efa0c0287d3f070ea34cf7e7889683f89f8908e4918ee6389',
+            'index.html':'081f85a01deec03583f8cca70fba89cd7fd3e4b4afe2be59d975372378999067',
+            'js/app.js':'a60a8c1321a552d89cacee1bcfe4524d12566e2654d1b2c1ebd4b440947ee5a1',
+            'admin-chronos.css':'69aa86c801213d9c42c6468d8faf049c6bba30717550e90f024c5633e5a13be3'
+          }
+          for rel,want in expected.items():
+              got=hashlib.sha256((root/rel).read_bytes()).hexdigest()
+              if got != want:
+                  raise SystemExit(f'STOP: base inattendue {rel}: {got}')
+          PY
+          cp "$ROOT/app.js" /tmp/app.before.js
+          cp "$ROOT/js/app.js" /tmp/js-app.before.js
+          git apply --check "$PATCH"
+          git apply "$PATCH"
+
+      - name: Synchronize 40.4.107 manifests from actual repository bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          build='40.4.107'; parent='40.4.106'
+          release='CHRONOS RESPONSIVE CENTER · GRAPH BASE100 TRUTH · VERSION INTEGRITY LOCK'
+          status='candidate_chronos_responsive_center_graph_base100_truth_operator_validation_required'
+          prepared='2026-08-30T15:18:27Z'
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          changed={rel:sha(root/rel) for rel in ('index.html','app.js','js/app.js','admin-chronos.css')}
+          feature={
+            'build':build,
+            'chronos_public_id':'atlasCelestialClockHeader',
+            'chronos_grid_column':'1 / -1',
+            'chronos_grid_item_width':'100%',
+            'chronos_justify_self':'stretch',
+            'chronos_justify_content':'center',
+            'chronos_resize_centering_model':'full-grid-span-flex',
+            'planetary_glyph_scale_em':1.40,
+            'graph_curve_metric':'drawn_base100_endpoint_change',
+            'graph_legend_metric':'drawn_base100_endpoint_change',
+            'graph_overlay_metric':'drawn_base100_endpoint_change',
+            'graph_detail_ranking_metric':'drawn_base100_endpoint_change',
+            'live_binance_panel_metric':'live_price_plus_live_24h_unchanged',
+            'live_24h_used_as_historical_curve_endpoint':False,
+            'graph_dataset_modified':False,
+            'graph_scale_modified':False,
+            'synthetic_live_endpoint':False,
+            'top5_selection_logic_modified':False,
+            'aether_cadence_changed':False,
+            'news_pipeline_changed':False,
+            'market_core_changed':False,
+            'current_changed':False,
+            'atlas_changed':False,
+            'oracle_changed':False,
+            'learning_changed':False,
+            'bridge_changed':False,
+            'window_manager_changed':False,
+            'new_timer':False,
+            'new_observer':False,
+            'new_network_owner':False
+          }
+          note=('40.4.107 — CHRONOS RESPONSIVE CENTER · GRAPH BASE100 TRUTH · VERSION INTEGRITY LOCK: '
+                'Chronos spans the complete sourceTimeCard grid and centers its full flex group across responsive widths; '
+                'the graph legend/HUD/detail now report the actual drawn Base 100 historical endpoint while the dedicated Binance LIVE panel keeps live price + live 24 h unchanged; '
+                'no dataset, scale, synthetic endpoint, Top 5 selection, Market Core 38.15.11, CURRENT, Atlas, Oracle, Learning, Bridge or Window Manager behavior is changed.')
+          def update(path, admin_hash=None):
+              d=json.loads(path.read_text(encoding='utf-8'))
+              d['build']=build; d['release']=release; d['status']=status
+              d['prepared_at']=prepared; d['published_at']=None
+              d['global_versioning']=build; d['asset_token']=f'market-core-v2.0-alpha-build-{build}'
+              d['parent_build']=parent
+              suffix='40.4.107 Chronos responsive full-grid centering + graph Base100 presentation truth + version integrity lock'
+              if isinstance(d.get('lineage'),str) and suffix not in d['lineage']:
+                  d['lineage'] += ' → ' + suffix
+              pi=d.setdefault('integrity',{}).setdefault('publication_identity',{})
+              pi['build']=build; pi['asset_token']=f'market-core-v2.0-alpha-build-{build}'
+              pi['status']=status; pi['app_sha256']=changed['app.js']
+              if admin_hash is not None: pi['administrator_version_sha256']=admin_hash
+              d['integrity']['chronos_responsive_center_graph_base100_truth_404107']=feature.copy()
+              d.setdefault('features',{})['chronos_responsive_center_graph_base100_truth_404107']=feature.copy()
+              live=d.setdefault('contracts',{}).setdefault('live_presentation',{})
+              live['top5_hud_24h_source']='drawn historical Base 100 endpoint inside graph; Binance LIVE 24h remains in dedicated live board'
+              live['legend_24h_source']='drawn historical curve endpoint; no live 24h substitution inside graph legend'
+              live['terminal_value_board']='Binance LIVE price + 24h variation outside Chart.js datasets; historical canvas remains last verified candle only'
+              live['canvas_dataset_mutation']=False; live['canvas_rescale_from_websocket']=False
+              live['historical_canvas_semantics_unchanged']=True
+              for rel,h in changed.items(): d.setdefault('files',{})[rel]=h
+              notes=d.setdefault('release_notes',[])
+              if not notes or notes[0] != note: notes.insert(0,note)
+              v=d.setdefault('validation',{})
+              v.update({
+                'chronos_responsive_center_404107_required':True,
+                'chronos_full_grid_span_404107_expected':True,
+                'chronos_center_after_resize_404107_expected':True,
+                'graph_base100_labels_match_drawn_endpoint_404107_expected':True,
+                'graph_live_24h_panel_remains_separate_404107_expected':True,
+                'graph_dataset_change_404107_expected':False,
+                'graph_scale_change_404107_expected':False,
+                'synthetic_live_endpoint_404107_expected':False,
+                'market_core_38_15_11_non_regression_404107_required':True
+              })
+              path.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          admin=root/'administrator-version.json'
+          update(admin)
+          update(root/'version.json',sha(admin))
+          PY
+
+      - name: Professional validation gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          before={'app.js':Path('/tmp/app.before.js').read_text(encoding='utf-8',errors='replace'),'js/app.js':Path('/tmp/js-app.before.js').read_text(encoding='utf-8',errors='replace')}
+          after={rel:(root/rel).read_text(encoding='utf-8',errors='replace') for rel in before}
+          markers=('setInterval(','MutationObserver','IntersectionObserver','new WebSocket','localStorage.setItem')
+          for rel in before:
+              for marker in markers:
+                  if after[rel].count(marker) > before[rel].count(marker):
+                      raise SystemExit(f'STOP: budget runtime augmenté {rel} {marker}')
+          app=after['app.js']
+          if 'function atlasComparisonCurveChange(entry)' not in app: raise SystemExit('STOP: helper Base100 absent')
+          legend=app[app.index('function atlasChartV2RenderLegend'):app.index('function atlasRenderChartValueOverlay')]
+          overlay=app[app.index('function atlasChartOverlayComparison'):app.index('function atlasChartOverlayUpdate')]
+          if 'atlasChartPresentationMetric' in legend or 'atlasChartPresentationMetric' in overlay:
+              raise SystemExit('STOP: substitution LIVE encore présente dans le graphe')
+          css=(root/'admin-chronos.css').read_text(encoding='utf-8')
+          required=('grid-column:1 / -1 !important','justify-self:stretch !important','justify-content:center !important','width:100% !important','font-size:1.40em !important')
+          if not all(token in css for token in required): raise SystemExit('STOP: contrat Chronos 40.4.107 incomplet')
+          idx=(root/'index.html').read_text(encoding='utf-8')
+          ids=re.findall(r'\bid=["\']([^"\']+)["\']',idx)
+          if len(ids) != len(set(ids)): raise SystemExit('STOP: IDs HTML dupliqués')
+          for fn in ('administrator-version.json','version.json'):
+              d=json.loads((root/fn).read_text(encoding='utf-8'))
+              if d.get('build') != '40.4.107': raise SystemExit(f'STOP: build faux {fn}')
+              if d.get('asset_token') != 'market-core-v2.0-alpha-build-40.4.107': raise SystemExit(f'STOP: asset token faux {fn}')
+              if (d.get('protected_base') or {}).get('market_core_modified') is not False: raise SystemExit('STOP: Market Core touché')
+              for rel,expected in (d.get('files') or {}).items():
+                  p=(root/rel).resolve()
+                  if not p.is_file(): raise SystemExit(f'STOP: fichier manifest absent {rel}')
+                  actual=hashlib.sha256(p.read_bytes()).hexdigest()
+                  if actual != expected: raise SystemExit(f'STOP: hash faux {rel}: {actual} != {expected}')
+          vd=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          admin_sha=hashlib.sha256((root/'administrator-version.json').read_bytes()).hexdigest()
+          if vd['integrity']['publication_identity'].get('administrator_version_sha256') != admin_sha:
+              raise SystemExit('STOP: chaîne administrator-version SHA incorrecte')
+          if 'const ATLAS_BUILD = "40.4.107";' not in app: raise SystemExit('STOP: ATLAS_BUILD faux')
+          if '38.15.11' not in (root/'js/app.js').read_text(encoding='utf-8'): raise SystemExit('STOP: engine truth absente')
+          print('PASS 40.4.107 · runtime budget stable, Base100 truth, Chronos responsive owner, manifest integrity')
+          PY
+          git diff --check
+
+      - name: Commit validated 40.4.107
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/admin-chronos.css \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            public/agent_crypto_erith_ia/administrator/version.json
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.107.diff
+          git commit -m "feat Agent-Crypto 40.4.107 responsive Chronos and graph Base100 truth lock"
+          git pull --rebase origin main
+          git push origin HEAD:main
