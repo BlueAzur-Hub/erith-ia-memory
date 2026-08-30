@@ -2,14 +2,17 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.111
-  Revision: 40.4.111 information-first recovery; French editorial preferred, original headline preserved as last-resort information, context caveats consolidated into the LIMITES facet; 90 s cadence unchanged.
+  Build: 40.4.121
+  Revision: 40.4.121 constant-read-speed marquee + operator-information recovery. Alert/context rotation from 40.4.120 is preserved; INFO restores market/analysis/signal/source/veille facts instead of CURRENT/en attente/CREDENTIAL REQUIS filler.
 */
 (() => {
   "use strict";
   function aetherText4084(id,fallback="—"){const n=document.getElementById(id);const v=String(n?.textContent||"").replace(/\s+/g," ").trim();return v||fallback;}
   function aetherCurrent4084(){try{return typeof atlasCurrentStateRead==="function"?(atlasCurrentStateRead()||null):null;}catch(_){return null;}}
   const AETHER_VEILLE_TOP_4087=5;
+  const AETHER_MARQUEE_SPEED_PX_S_40121=72;
+  const AETHER_MARQUEE_MIN_OVERFLOW_PX_40121=48;
+  const AETHER_MARQUEE_DELAY_S_40121=0.55;
   const aetherVeilleState4087={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
   function aetherNewsCanonicalFrenchEvent40110(event){
     if(!event)return event;
@@ -213,27 +216,33 @@
     const detail=[headline,evidence?`preuve ${evidence}/100`:null,freshness,source].filter(Boolean).join(" · ");
     return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail};
   }
-  function aetherVeilleMarqueeSync40118(host,viewport,marquee,copy,fingerprint,fingerprintChanged){
+  function aetherVeilleMarqueeSync40121(host,viewport,marquee,copy,fingerprint,fingerprintChanged){
     if(!host||!viewport||!marquee||!copy)return;
     const viewportWidth=Math.max(0,Math.round(viewport.clientWidth));
     const geometryChanged=Math.abs(viewportWidth-aetherVeilleState4087.viewportWidth)>1;
     if(!fingerprintChanged&&!geometryChanged)return;
     aetherVeilleState4087.viewportWidth=viewportWidth;
-    // Every message owns its own motion. Reset first so a new 9 s FEED item can
-    // never inherit the transform/progress of the previous item (40.4.112 regression).
+    // 40.4.121: speed is a velocity, not a fixed duration.
+    // Fixed 8.6 s made short overflows crawl and long overflows race.
     host.dataset.scroll="0";
     host.style.removeProperty("--aether-veille-shift-4087");
+    host.style.removeProperty("--aether-veille-duration-40121");
+    host.style.removeProperty("--aether-veille-delay-40121");
     void marquee.offsetWidth;
     requestAnimationFrame(()=>{
       if(aetherVeilleState4087.fingerprint!==fingerprint||!copy.isConnected||!viewport.isConnected)return;
       const overflow=Math.max(0,Math.ceil(copy.scrollWidth-viewport.clientWidth+12));
       host.style.setProperty("--aether-veille-shift-4087",`${-overflow}px`);
-      if(overflow>12){
-        // data-scroll 0 -> layout flush -> 1 restarts a one-shot animation from x=0.
+      if(overflow>AETHER_MARQUEE_MIN_OVERFLOW_PX_40121){
+        const duration=Math.max(0.01,overflow/AETHER_MARQUEE_SPEED_PX_S_40121);
+        host.style.setProperty("--aether-veille-duration-40121",`${duration.toFixed(3)}s`);
+        host.style.setProperty("--aether-veille-delay-40121",`${AETHER_MARQUEE_DELAY_S_40121}s`);
+        host.dataset.scrollSpeed=String(AETHER_MARQUEE_SPEED_PX_S_40121);
         host.dataset.scroll="0";
         void marquee.offsetWidth;
         host.dataset.scroll="1";
       }else{
+        host.dataset.scrollSpeed="0";
         host.dataset.scroll="0";
       }
     });
@@ -247,18 +256,20 @@
     host.dataset.tone=current.tone||"neutral";
     host.dataset.kind=current.kind||"alert";
     host.dataset.contextFacet=current.kind==="context"?String(current.facet??0):"";
-    host.setAttribute("aria-label",current.kind==="context"?"Aether Contexte · même événement News Sentinel · impact, réaction marché, lecture":"Aether Veille · synthèse prioritaire News Sentinel");
+    host.setAttribute("aria-label",current.kind==="context"?"Aether Contexte · même événement News Sentinel · mécanisme, flux et réaction marché":"Aether Veille · synthèse prioritaire News Sentinel");
     const fingerprint=`${current.kind}|${current.eventKey||""}|${current.meta}|${current.detail}`;
     const fingerprintChanged=aetherVeilleState4087.fingerprint!==fingerprint;
     if(fingerprintChanged){
       // Stop the previous message before mutating its text; motion restarts only after re-measure.
       host.dataset.scroll="0";
       host.style.removeProperty("--aether-veille-shift-4087");
+      host.style.removeProperty("--aether-veille-duration-40121");
+      host.style.removeProperty("--aether-veille-delay-40121");
       if(copy&&copy.textContent!==current.detail)copy.textContent=current.detail;
       if(copy)copy.title=current.detail;
       aetherVeilleState4087.fingerprint=fingerprint;
     }
-    aetherVeilleMarqueeSync40118(host,viewport,marquee,copy,fingerprint,fingerprintChanged);
+    aetherVeilleMarqueeSync40121(host,viewport,marquee,copy,fingerprint,fingerprintChanged);
     aetherVeilleState4087.last=current;
     return current;
   }
@@ -341,6 +352,46 @@
     if(/binance/i.test(raw))return `Binance${ratio?` · ${ratio}`:""}`;
     return aetherCompact4088(raw.replace(/^Prix live\s*/i,""),34);
   }
+  function aetherBreadthBrief40121(){
+    try{
+      const coins=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins:[];
+      const top5=new Set(["BTC","ETH","BNB","XRP","SOL"]);
+      const rows=coins.filter(row=>top5.has(String(row?.symbol||"").toUpperCase()))
+        .map(row=>({symbol:String(row?.symbol||"").toUpperCase(),change:aetherSystemNumber4086(row?.change24h)}))
+        .filter(row=>row.symbol&&row.change!==null);
+      if(!rows.length)return "Top 5 en attente";
+      const pos=rows.filter(row=>row.change>0).length,neg=rows.filter(row=>row.change<0).length,flat=rows.length-pos-neg;
+      const ordered=rows.slice().sort((a,b)=>b.change-a.change),leader=ordered[0],laggard=ordered.at(-1);
+      const breadth=`Top 5 ${pos}/${rows.length} positifs${neg?` · ${neg} négatif${neg>1?"s":""}`:""}${flat?` · ${flat} neutre${flat>1?"s":""}`:""}`;
+      const edge=leader&&laggard&&leader.symbol!==laggard.symbol?` · ${leader.symbol} ${leader.change>=0?"+":""}${leader.change.toFixed(2)} % / ${laggard.symbol} ${laggard.change>=0?"+":""}${laggard.change.toFixed(2)} %`:"";
+      return `${breadth}${edge}`;
+    }catch(_){return "Top 5 en attente";}
+  }
+  function aetherAnalysisBrief40121(){
+    // Keep the prime ribbon factual: the long Aerith conclusion can contain caveats
+    // that belong in the analysis panel, not in the scarce one-line operator lane.
+    const moves=aetherText4084("atlasOperatorMoves35","");
+    if(moves&&!/attente/i.test(moves))return `Top 5 · ${aetherCompact4088(moves,78)}`;
+    return `Largeur · ${aetherCompact4088(aetherBreadthBrief40121(),78)}`;
+  }
+  function aetherSignalBrief40121(){
+    const oracle=aetherOracleBrief4088();
+    if(oracle&&!/en attente/i.test(oracle))return `Oracle · ${aetherCompact4088(oracle,72)}`;
+    const risk=aetherText4084("atlasOperatorRisk35","");
+    const riskDetail=aetherText4084("atlasOperatorRiskDetail35","");
+    // A positive anomaly is information; “pas d’anomalie / aucune donnée” is filler.
+    if(risk&&!/attente|aucune|pas d|non /i.test(risk))return `Signal · ${aetherCompact4088([risk,riskDetail].filter(Boolean).join(" · "),72)}`;
+    return `Largeur · ${aetherCompact4088(aetherBreadthBrief40121(),72)}`;
+  }
+  function aetherVeilleBrief40121(){
+    try{
+      const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
+      if(!events.length)return `Veille · ${snapshot.label||"aucun événement prioritaire"}`;
+      const event=events[0],scope=aetherVeilleScope4087(event),impact=Math.round(aetherVeilleNumber4087(event?.impact?.score));
+      const headline=aetherNewsHeadlineFr40104(event,"");
+      return `Veille · ${scope}${impact?` ${impact}/100`:""} · ${aetherCompact4088(headline,62)}`;
+    }catch(_){return "Veille · News Sentinel";}
+  }
   const aetherNewsWake4088={attempted:false,inflight:null};
   function aetherWakeNewsSentinel4088(){
     if(aetherNewsWake4088.inflight)return aetherNewsWake4088.inflight;
@@ -375,13 +426,15 @@
     const oracle=aetherOracleBrief4088();
     const sources=aetherSourcesBrief4088();
     const market=aetherMarketBrief4088();
-    let book="APRÈS AUTH";try{if(typeof atlasBookMirrorBridgeState40377!=="undefined"){book=atlasBookMirrorBridgeState40377.credentialReady===true?"PRÊT":atlasBookMirrorBridgeState40377.credentialReady===false?"CREDENTIAL REQUIS":"EN VEILLE";}}catch(_){}
+    const analysis=aetherAnalysisBrief40121();
+    const signal=aetherSignalBrief40121();
+    const veilleBrief=aetherVeilleBrief40121();
     const veille=aetherVeilleCurrent4087();
     const news=veille.detail||veille.text||"Veille non chargée";
     const graphTop5=document.getElementById("btnChartTop5")?.classList?.contains("active")===true;
     const graphTitle=aetherText4084("selectedAssetTitle","Aucune sélection");
     const graph=graphTop5?"TOP 5":graphTitle;
-    return {current,reports,currentStatus,atlas,oracle,sources,market,book,news,graph};
+    return {current,reports,currentStatus,atlas,oracle,sources,market,analysis,signal,veilleBrief,news,graph};
   }
   function aetherPanelEnsure4084(){
     let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel)return panel;
@@ -393,10 +446,11 @@
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
-    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",`Atlas · ${s.atlas}`);put("atlasAetherRibbonOracle4084",`Oracle · ${s.oracle}`);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
+    // 40.4.121 — prime Aether cells carry operator information, not cockpit shortcomings.
+    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",s.veilleBrief);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
-    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("news",s.news);}
+    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.analysis} · Graphe ${s.graph}`);row("oracle",s.signal);row("sources",s.sources);row("news",s.news);}
   }
 
   const AETHER_SYSTEM_BACKEND_4086="http://127.0.0.1:8790/system";
@@ -543,7 +597,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.120",
+    build:"40.4.121",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -578,6 +632,8 @@
     veille_seconds:36,
     system_seconds:9,
     veille_marquee_phase_synced:true,
+    veille_marquee_constant_speed_px_s:AETHER_MARQUEE_SPEED_PX_S_40121,
+    info_operator_fact_cells:true,
     explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence40235 (read-only compute)",
     explanatory_context_alternation:true,
     explanatory_context_new_fetch:false,

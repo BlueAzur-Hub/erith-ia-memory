@@ -1,4 +1,4 @@
-/* 40.4.120 — stable Aether recovery presentation: 40.4.118 per-message marquee + 40.4.112 feed pulse; no geometry redesign. */
+/* 40.4.121 — Aether constant-read-speed marquee + operator-information recovery; 40.4.120 alert/context rotation and geometry preserved. */
 /* ==========================================================================
    Agent-Crypto Administrator
    TARGET TOP + MARKET FLOW CANONICAL RIBBON LAYOUT + NATIVE MOTION RESTORE LOCK
@@ -245,12 +245,12 @@
   0%{--aether-feed-pulse-40112:0}
   100%{--aether-feed-pulse-40112:1}
 }
-/* 40.4.118 — per-message overflow marquee.
-   The FEED item changes every 9 s, so motion belongs to the current message,
-   not to the 90 s outer ribbon phase. */
-@keyframes atlasAetherMessageTicker40118{
-  0%,10%{transform:translateX(0)}
-  88%,100%{transform:translateX(var(--aether-veille-shift-4087,0px))}
+/* 40.4.121 — constant-velocity per-message marquee.
+   JS measures only the overflow distance and derives duration from 72 px/s.
+   The FEED pulse stays at 9 s; short overflows stay still. */
+@keyframes atlasAetherMessageTicker40121{
+  from{transform:translateX(0)}
+  to{transform:translateX(var(--aether-veille-shift-4087,0px))}
 }
 
 @media (min-width:901px) and (prefers-reduced-motion:no-preference){
@@ -337,7 +337,12 @@
   }
   body #atlasAetherVeille4087 .atlas-aether-veille-copy-4087[aria-hidden="true"]{display:none!important}
   body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-marquee-4087{
-    animation:atlasAetherMessageTicker40118 8.6s linear 1 both!important;
+    animation-name:atlasAetherMessageTicker40121!important;
+    animation-duration:var(--aether-veille-duration-40121,4s)!important;
+    animation-timing-function:linear!important;
+    animation-delay:var(--aether-veille-delay-40121,.55s)!important;
+    animation-iteration-count:1!important;
+    animation-fill-mode:both!important;
     will-change:transform!important;
   }
   body #atlasAetherVeille4087[data-scroll="0"] .atlas-aether-veille-marquee-4087{
