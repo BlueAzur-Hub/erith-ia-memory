@@ -207,27 +207,20 @@
 #market-workspace .market-flow-ribbon.admin-native-direct-floating>.admin-native-controls{position:absolute!important;top:6px!important;right:7px!important;bottom:auto!important;left:auto!important;width:max-content!important;max-width:calc(100% - 14px)!important;margin:0!important;transform:none!important;z-index:70!important;pointer-events:auto!important}
 
 /* ============================================================================
-   40.4.101 — AETHER SINGLE-LANE + PRIORITY VEILLE CANONICAL CSS OWNER
+   40.4.101 — AETHER SAME-LANE · CHRONOS PRESERVATION · READABILITY REPAIR
 
    ONE physical status lane only:
    NORMAL -> AETHER INFO -> VEILLE -> AETHER SYSTEM -> NORMAL.
-   admin-ribbons.css owns presentation/animation only.
+   admin-ribbons.css owns Aether presentation/animation only.
+   admin-chronos.css remains the sole Chronos/date/time presentation owner.
    index.html owns structure only; js/aether.js owns values/ranking only.
    No CSS injected by JavaScript. No extra physical row. No JS animation timer.
    ============================================================================ */
 
-#sourceTimeCard{
-  display:flex!important;flex-direction:column!important;align-items:center!important;
-  justify-content:center!important;text-align:center!important;padding-block:5px!important;
-}
-#atlasCelestialClockHeader4055{
-  justify-content:center!important;align-items:baseline!important;margin:0 auto!important;text-align:center!important;
-}
-html[data-atlas-view="essential"] body.atlas-status-strip-40309 #livecheck.command-bar,
-html[data-atlas-view="intermediate"] body.atlas-status-strip-40309 #livecheck.command-bar,
-html[data-atlas-view="advanced"] body.atlas-status-strip-40309 #livecheck.command-bar{
-  grid-template-rows:auto!important;grid-template-areas:"live refresh decision source time"!important;
-  row-gap:0!important;position:relative!important;
+/* Aether may position itself over the operator row, but must not alter the
+   native geometry, typography or centering of Decision / Sources / Chronos. */
+#livecheck.command-bar{
+  position:relative!important;
 }
 
 @keyframes atlasStatusNativePhase{
@@ -263,6 +256,8 @@ html[data-atlas-view="advanced"] body.atlas-status-strip-40309 #livecheck.comman
 }
 
 @media (min-width:901px) and (prefers-reduced-motion:no-preference){
+  /* The five native operator controls remain the layout owners. Aether only
+     toggles their visibility; no width, padding, alignment or Chronos rule. */
   body #livecheck.command-bar>#btnLivecheck,
   body #livecheck.command-bar>#btnRefresh,
   body #livecheck.command-bar>#decisionCard,
@@ -270,115 +265,245 @@ html[data-atlas-view="advanced"] body.atlas-status-strip-40309 #livecheck.comman
   body #livecheck.command-bar>#sourceTimeCard{
     animation:atlasStatusNativePhase 48s steps(1,end) infinite!important;
   }
-  body #atlasAetherRibbon4084{
-    grid-column:1/-1!important;grid-row:1!important;align-self:stretch!important;
-    min-width:0!important;min-height:36px!important;height:36px!important;box-sizing:border-box!important;
-    display:flex!important;align-items:center!important;overflow:hidden!important;position:relative!important;
-    padding:0 9px!important;border:1px solid rgba(99,225,239,.17)!important;border-radius:8px!important;
-    background:linear-gradient(90deg,rgba(5,21,31,.94),rgba(8,17,29,.90))!important;
-    color:#b3cad5!important;white-space:nowrap!important;font:850 10.4px/1.05 system-ui,sans-serif!important;
-    letter-spacing:.012em!important;pointer-events:none!important;
+
+  /* Absolute overlay = zero additional row and zero header growth. */
+  body #livecheck.command-bar>#atlasAetherRibbon4084{
+    position:absolute!important;
+    inset:0!important;
+    z-index:30!important;
+    box-sizing:border-box!important;
+    display:flex!important;
+    align-items:center!important;
+    width:auto!important;
+    min-width:0!important;
+    height:auto!important;
+    min-height:36px!important;
+    margin:0!important;
+    padding:0 12px!important;
+    overflow:hidden!important;
+    border:1px solid rgba(99,225,239,.20)!important;
+    border-radius:8px!important;
+    background:linear-gradient(90deg,rgba(5,21,31,.97),rgba(8,17,29,.95))!important;
+    color:#c7dce5!important;
+    white-space:nowrap!important;
+    font:900 12.2px/1.08 system-ui,sans-serif!important;
+    letter-spacing:.008em!important;
+    pointer-events:none!important;
     animation:atlasAetherBandPhase 48s steps(1,end) infinite!important;
   }
+
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{
-    position:relative!important;display:flex!important;align-items:center!important;gap:0!important;
-    width:100%!important;min-width:0!important;height:100%!important;padding:0!important;
-    transform:none!important;animation:none!important;will-change:auto!important;
+    position:relative!important;
+    display:flex!important;
+    align-items:center!important;
+    gap:0!important;
+    width:100%!important;
+    min-width:0!important;
+    height:100%!important;
+    padding:0!important;
+    transform:none!important;
+    animation:none!important;
+    will-change:auto!important;
   }
+
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-ribbon-brand-4084,
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonAtlas4084,
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonOracle4084,
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonSources4084,
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084{
-    box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;
-    flex:0 0 auto!important;min-width:0!important;height:100%!important;padding:0 10px!important;
-    border-left:1px solid rgba(130,211,230,.11)!important;white-space:nowrap!important;
+    box-sizing:border-box!important;
+    display:inline-flex!important;
+    align-items:center!important;
+    flex:0 0 auto!important;
+    min-width:0!important;
+    height:100%!important;
+    padding:0 12px!important;
+    border-left:1px solid rgba(130,211,230,.13)!important;
+    white-space:nowrap!important;
+    font-size:inherit!important;
     animation:atlasAetherInfoPhase 48s steps(1,end) infinite!important;
   }
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084{padding-left:2px!important;border-left:0!important;color:#f0a6d8!important;letter-spacing:.11em!important;font-weight:950!important}
-  body #atlasAetherRibbonAtlas4084{color:#c4b5ff!important}
-  body #atlasAetherRibbonOracle4084{color:#f1dc94!important}
-  body #atlasAetherRibbonSources4084{color:#81e6ef!important;flex:1 1 auto!important;overflow:hidden!important;text-overflow:ellipsis!important}
-  body #atlasAetherRibbonBook4084{color:#9fd8b2!important}
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-brand-4084{
+    padding-left:2px!important;
+    border-left:0!important;
+    color:#f4abd9!important;
+    letter-spacing:.105em!important;
+    font-weight:1000!important;
+  }
+  body #atlasAetherRibbonAtlas4084{color:#c9bcff!important;font-weight:950!important}
+  body #atlasAetherRibbonOracle4084{color:#f4df98!important;font-weight:950!important}
+  body #atlasAetherRibbonSources4084{
+    color:#8cecf4!important;
+    flex:1 1 auto!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    font-weight:950!important;
+  }
+  body #atlasAetherRibbonBook4084{color:#a7e1ba!important;font-weight:950!important}
 
   body #atlasAetherVeille4087{
-    position:absolute!important;inset:0!important;z-index:9!important;box-sizing:border-box!important;
-    display:grid!important;grid-template-columns:auto auto minmax(0,1fr)!important;align-items:center!important;
-    width:100%!important;min-width:0!important;height:100%!important;margin:0!important;padding:0 9px!important;
-    overflow:hidden!important;background:linear-gradient(90deg,rgba(18,10,27,.92),rgba(7,18,29,.94))!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:9!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:auto auto minmax(0,1fr)!important;
+    align-items:center!important;
+    width:100%!important;
+    min-width:0!important;
+    height:100%!important;
+    margin:0!important;
+    padding:0 12px!important;
+    overflow:hidden!important;
+    background:linear-gradient(90deg,rgba(18,10,27,.96),rgba(7,18,29,.97))!important;
+    font-size:inherit!important;
     animation:atlasAetherVeillePhase 48s steps(1,end) infinite!important;
   }
   body #atlasAetherVeille4087>.atlas-aether-veille-brand-4087{
-    height:100%!important;display:flex!important;align-items:center!important;padding:0 10px 0 2px!important;
-    color:#f0a6d8!important;letter-spacing:.11em!important;font-weight:950!important;border-right:1px solid rgba(240,166,216,.18)!important;
+    height:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    padding:0 12px 0 2px!important;
+    color:#f4abd9!important;
+    letter-spacing:.105em!important;
+    font-weight:1000!important;
+    border-right:1px solid rgba(240,166,216,.20)!important;
   }
   body #atlasAetherVeille4087>.atlas-aether-veille-meta-4087{
-    height:100%!important;display:flex!important;align-items:center!important;padding:0 10px!important;
-    color:#f1dc94!important;font-weight:950!important;font-variant-numeric:tabular-nums!important;border-right:1px solid rgba(241,220,148,.16)!important;
+    height:100%!important;
+    display:flex!important;
+    align-items:center!important;
+    padding:0 12px!important;
+    color:#f4df98!important;
+    font-weight:1000!important;
+    font-variant-numeric:tabular-nums!important;
+    border-right:1px solid rgba(241,220,148,.18)!important;
   }
-  body #atlasAetherVeille4087[data-tone="danger"]>.atlas-aether-veille-meta-4087{color:#ff849d!important}
-  body #atlasAetherVeille4087[data-tone="warn"]>.atlas-aether-veille-meta-4087{color:#ffd27b!important}
-  body #atlasAetherVeille4087[data-tone="ok"]>.atlas-aether-veille-meta-4087{color:#78f0a7!important}
+  body #atlasAetherVeille4087[data-tone="danger"]>.atlas-aether-veille-meta-4087{color:#ff8aa1!important}
+  body #atlasAetherVeille4087[data-tone="warn"]>.atlas-aether-veille-meta-4087{color:#ffd681!important}
+  body #atlasAetherVeille4087[data-tone="ok"]>.atlas-aether-veille-meta-4087{color:#7df4ad!important}
   body #atlasAetherVeille4087>.atlas-aether-veille-viewport-4087{
-    display:block!important;min-width:0!important;width:100%!important;overflow:hidden!important;padding-left:10px!important;
-    color:#d8e7ee!important;pointer-events:auto!important;
+    display:block!important;
+    min-width:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+    padding-left:12px!important;
+    color:#e1eef3!important;
+    pointer-events:auto!important;
     -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%)!important;
     mask-image:linear-gradient(90deg,transparent 0,#000 12px,#000 calc(100% - 16px),transparent 100%)!important;
   }
   body #atlasAetherVeille4087 .atlas-aether-veille-marquee-4087{
-    display:flex!important;align-items:center!important;width:max-content!important;min-width:100%!important;
-    transform:translateX(0)!important;animation:none!important;will-change:auto!important;
+    display:flex!important;
+    align-items:center!important;
+    width:max-content!important;
+    min-width:100%!important;
+    transform:translateX(0)!important;
+    animation:none!important;
+    will-change:auto!important;
   }
   body #atlasAetherVeille4087 .atlas-aether-veille-copy-4087{
-    display:inline-block!important;flex:0 0 auto!important;padding-right:96px!important;white-space:nowrap!important;font-weight:900!important;
+    display:inline-block!important;
+    flex:0 0 auto!important;
+    padding-right:112px!important;
+    white-space:nowrap!important;
+    font-weight:950!important;
   }
   body #atlasAetherVeille4087[data-scroll="0"] .atlas-aether-veille-copy-4087[aria-hidden="true"]{display:none!important}
   body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-marquee-4087{
-    min-width:max-content!important;animation:atlasAetherVeilleTicker4087 48s linear infinite!important;will-change:transform!important;
+    min-width:max-content!important;
+    animation:atlasAetherVeilleTicker4087 48s linear infinite!important;
+    will-change:transform!important;
   }
-  body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-viewport-4087:hover .atlas-aether-veille-marquee-4087{animation-play-state:paused!important}
+  body #atlasAetherVeille4087[data-scroll="1"] .atlas-aether-veille-viewport-4087:hover .atlas-aether-veille-marquee-4087{
+    animation-play-state:paused!important;
+  }
 
   body #atlasAetherSystem4086{
-    position:absolute!important;inset:0!important;z-index:8!important;box-sizing:border-box!important;
-    display:grid!important;grid-template-columns:auto repeat(5,minmax(0,1fr))!important;align-items:center!important;
-    width:100%!important;min-width:0!important;height:100%!important;margin:0!important;padding:0!important;
-    overflow:hidden!important;border:0!important;background:transparent!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:8!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:auto repeat(5,minmax(0,1fr))!important;
+    align-items:center!important;
+    width:100%!important;
+    min-width:0!important;
+    height:100%!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    border:0!important;
+    background:transparent!important;
+    font-size:inherit!important;
     animation:atlasAetherSystemPhase 48s steps(1,end) infinite!important;
   }
   body #atlasAetherSystem4086>.atlas-aether-system-brand-4086,
   body #atlasAetherSystem4086>.atlas-aether-system-item-4086{
-    display:flex!important;align-items:center!important;justify-content:center!important;min-width:0!important;
-    height:100%!important;padding:0 9px!important;overflow:hidden!important;
-    border-left:1px solid rgba(121,190,210,.12)!important;white-space:nowrap!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    min-width:0!important;
+    height:100%!important;
+    padding:0 11px!important;
+    overflow:hidden!important;
+    border-left:1px solid rgba(121,190,210,.14)!important;
+    white-space:nowrap!important;
+    font-size:inherit!important;
   }
   body #atlasAetherSystem4086>.atlas-aether-system-brand-4086{
-    justify-content:flex-start!important;padding-left:2px!important;padding-right:10px!important;border-left:0!important;
-    color:#f0a6d8!important;letter-spacing:.11em!important;font-weight:950!important;
+    justify-content:flex-start!important;
+    padding-left:2px!important;
+    padding-right:12px!important;
+    border-left:0!important;
+    color:#f4abd9!important;
+    letter-spacing:.105em!important;
+    font-weight:1000!important;
   }
-  body .atlas-aether-system-icon-4086{flex:0 0 auto!important;margin-right:4px!important;color:#79deeb!important;font-size:8px!important}
-  body .atlas-aether-system-label-4086{flex:0 0 auto!important;margin-right:4px!important;color:#7798a7!important;font-weight:900!important}
-  body .atlas-aether-system-value-4086{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#d2e1e7!important;font-weight:950!important;font-variant-numeric:tabular-nums!important}
+  body .atlas-aether-system-icon-4086{
+    flex:0 0 auto!important;
+    margin-right:5px!important;
+    color:#81e7f1!important;
+    font-size:10.5px!important;
+  }
+  body .atlas-aether-system-label-4086{
+    flex:0 0 auto!important;
+    margin-right:5px!important;
+    color:#8aa8b6!important;
+    font-weight:950!important;
+  }
+  body .atlas-aether-system-value-4086{
+    min-width:0!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    color:#e0edf2!important;
+    font-weight:1000!important;
+    font-variant-numeric:tabular-nums!important;
+  }
   body [data-aether-system-4086="weather"] .atlas-aether-system-icon-4086{color:#f2d47c!important}
-  body [data-aether-system-4086="btc"][data-tone="positive"] .atlas-aether-system-value-4086{color:#78f0a7!important}
-  body [data-aether-system-4086="btc"][data-tone="negative"] .atlas-aether-system-value-4086{color:#ff7895!important}
-  body [data-aether-system-4086="btc"][data-tone="flat"] .atlas-aether-system-value-4086{color:#d6dce0!important}
+  body [data-aether-system-4086="btc"][data-tone="positive"] .atlas-aether-system-value-4086{color:#7df4ad!important}
+  body [data-aether-system-4086="btc"][data-tone="negative"] .atlas-aether-system-value-4086{color:#ff8199!important}
+  body [data-aether-system-4086="btc"][data-tone="flat"] .atlas-aether-system-value-4086{color:#dce4e8!important}
 }
 
 @media (min-width:901px) and (max-width:1366px) and (prefers-reduced-motion:no-preference){
-  body #atlasAetherRibbon4084{padding-inline:6px!important;font-size:9.4px!important}
+  body #livecheck.command-bar>#atlasAetherRibbon4084{
+    padding-inline:8px!important;
+    font-size:10.8px!important;
+  }
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>.atlas-aether-ribbon-brand-4084,
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonAtlas4084,
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonOracle4084,
   body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonSources4084,
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084{padding-inline:6px!important}
-  body #atlasAetherVeille4087{padding-inline:6px!important}
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085>#atlasAetherRibbonBook4084{padding-inline:8px!important}
+  body #atlasAetherVeille4087{padding-inline:8px!important}
   body #atlasAetherVeille4087>.atlas-aether-veille-brand-4087,
-  body #atlasAetherVeille4087>.atlas-aether-veille-meta-4087{padding-inline:6px!important}
-  body #atlasAetherVeille4087>.atlas-aether-veille-viewport-4087{padding-left:6px!important}
+  body #atlasAetherVeille4087>.atlas-aether-veille-meta-4087{padding-inline:8px!important}
+  body #atlasAetherVeille4087>.atlas-aether-veille-viewport-4087{padding-left:8px!important}
   body #atlasAetherSystem4086>.atlas-aether-system-brand-4086,
-  body #atlasAetherSystem4086>.atlas-aether-system-item-4086{padding-inline:5px!important}
-  body .atlas-aether-system-icon-4086{margin-right:2px!important;font-size:7px!important}
-  body .atlas-aether-system-label-4086{margin-right:3px!important}
+  body #atlasAetherSystem4086>.atlas-aether-system-item-4086{padding-inline:7px!important}
+  body .atlas-aether-system-icon-4086{margin-right:3px!important;font-size:9.5px!important}
+  body .atlas-aether-system-label-4086{margin-right:4px!important}
 }
 
 @media (max-width:900px), (prefers-reduced-motion:reduce){
@@ -386,8 +511,15 @@ html[data-atlas-view="advanced"] body.atlas-status-strip-40309 #livecheck.comman
   body #livecheck.command-bar>#btnRefresh,
   body #livecheck.command-bar>#decisionCard,
   body #livecheck.command-bar>#sourceActiveCard,
-  body #livecheck.command-bar>#sourceTimeCard{animation:none!important;opacity:1!important;visibility:visible!important}
-  body #atlasAetherRibbon4084{display:none!important;animation:none!important}
+  body #livecheck.command-bar>#sourceTimeCard{
+    animation:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+  body #livecheck.command-bar>#atlasAetherRibbon4084{
+    display:none!important;
+    animation:none!important;
+  }
   body .atlas-aether-status-toggle-4084{display:none!important}
 }
 
