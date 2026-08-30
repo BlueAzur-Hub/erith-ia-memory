@@ -32,24 +32,24 @@
 }
 
 /* CHRONOSXP HEADER — same DOM in Classic / Intermediate / Administrator.
-   40.4.106 — stable public ID + grid-item centering owner.
+   40.4.107 — stable public ID + responsive full-grid centering owner.
    The status-strip grid owns only the card position; this file owns Chronos presentation.
-   The header is a shrink-wrapped block flex box centered by auto inline margins. */
+   The header spans the complete source card grid and centers its content as one flex group. */
 #sourceTimeCard{
   overflow:hidden;
 }
 #atlasCelestialClockHeader{
   display:flex !important;
   grid-column:1 / -1 !important;
-  justify-self:center !important;
+  justify-self:stretch !important;
   align-items:center !important;
   justify-content:center !important;
   flex-wrap:nowrap !important;
   gap:5px !important;
-  width:max-content !important;
+  width:100% !important;
   max-width:100% !important;
   min-width:0 !important;
-  margin:2px auto 0 !important;
+  margin:2px 0 0 !important;
   white-space:nowrap !important;
   overflow:hidden !important;
   text-overflow:clip !important;
