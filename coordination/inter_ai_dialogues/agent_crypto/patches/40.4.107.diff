@@ -1,0 +1,206 @@
+diff --git a/public/agent_crypto_erith_ia/administrator/admin-chronos.css b/public/agent_crypto_erith_ia/administrator/admin-chronos.css
+index edab4ae..e47472d 100644
+--- a/public/agent_crypto_erith_ia/administrator/admin-chronos.css
++++ b/public/agent_crypto_erith_ia/administrator/admin-chronos.css
+@@ -32,24 +32,24 @@
+ }
+ 
+ /* CHRONOSXP HEADER — same DOM in Classic / Intermediate / Administrator.
+-   40.4.106 — stable public ID + grid-item centering owner.
++   40.4.107 — stable public ID + responsive full-grid centering owner.
+    The status-strip grid owns only the card position; this file owns Chronos presentation.
+-   The header is a shrink-wrapped block flex box centered by auto inline margins. */
++   The header spans the complete source card grid and centers its content as one flex group. */
+ #sourceTimeCard{
+   overflow:hidden;
+ }
+ #atlasCelestialClockHeader{
+   display:flex !important;
+   grid-column:1 / -1 !important;
+-  justify-self:center !important;
++  justify-self:stretch !important;
+   align-items:center !important;
+   justify-content:center !important;
+   flex-wrap:nowrap !important;
+   gap:5px !important;
+-  width:max-content !important;
++  width:100% !important;
+   max-width:100% !important;
+   min-width:0 !important;
+-  margin:2px auto 0 !important;
++  margin:2px 0 0 !important;
+   white-space:nowrap !important;
+   overflow:hidden !important;
+   text-overflow:clip !important;
+diff --git a/public/agent_crypto_erith_ia/administrator/app.js b/public/agent_crypto_erith_ia/administrator/app.js
+index ffc1efa..fd7880a 100644
+--- a/public/agent_crypto_erith_ia/administrator/app.js
++++ b/public/agent_crypto_erith_ia/administrator/app.js
+@@ -6360,15 +6360,14 @@ function atlasChartV2RenderLegend(entries = [], options = {}) {
+     const result = entry.result || options.result || null;
+     const preset = String(state.dataBroker?.comparison?.preset || "manual");
+     const period = Number(state.dataBroker?.chart?.period || state.chartPeriodDays || 1);
+-    const historicalMetric = Number.isFinite(Number(entry?.atlasMarketMetric))
+-      ? Number(entry.atlasMarketMetric)
++    const historicalMetric = comparison
++      ? atlasComparisonCurveChange(entry)
+       : Number(result?.integrity?.metrics?.changePct);
+-    const presentation = preset === "volume"
+-      ? null
+-      : atlasChartPresentationMetric(coin, historicalMetric, period);
+     const metric = preset === "volume"
+-      ? Number(coin?.volume24h)
+-      : Number(presentation?.value);
++      ? (Number.isFinite(Number(entry?.atlasMarketMetric))
++          ? Number(entry.atlasMarketMetric)
++          : Number(coin?.volume24h))
++      : Number(historicalMetric);
+     const metricText = preset === "volume"
+       ? (Number.isFinite(metric) ? fmtCompactEUR.format(metric) : "—")
+       : (Number.isFinite(metric) ? fmtPct(metric) : "—");
+@@ -11378,10 +11377,18 @@ function atlasComparisonResultFingerprint(entries, period) {
+   return `${Number(period || 1)}|${entries.map(entry => `${entry.coin.id}:${atlasChartResultFingerprint(entry.result)}`).join("|")}`;
+ }
+ 
++function atlasComparisonCurveChange(entry) {
++  const data = Array.isArray(entry?.data) ? entry.data : [];
++  const last = data.length ? Number(data[data.length - 1]?.y) : NaN;
++  if (Number.isFinite(last)) return last - 100;
++  const fallback = Number(entry?.result?.integrity?.metrics?.changePct);
++  return Number.isFinite(fallback) ? fallback : NaN;
++}
++
+ function atlasComparisonSummary(entries) {
+   return entries.map(entry => {
+-    const metrics = entry.result?.integrity?.metrics || {};
+-    return `${entry.coin.symbol} ${Number.isFinite(metrics.changePct) ? fmtPct(metrics.changePct) : "—"}`;
++    const change = atlasComparisonCurveChange(entry);
++    return `${entry.coin.symbol} ${Number.isFinite(change) ? fmtPct(change) : "—"}`;
+   }).join(" · ");
+ }
+ 
+@@ -11900,11 +11907,11 @@ function atlasRenderComparisonDetail(entries, period) {
+   const ranked = entries
+     .map(entry => ({
+       coin: entry.coin,
+-      metric: Number.isFinite(Number(entry?.atlasMarketMetric))
+-        ? Number(entry.atlasMarketMetric)
+-        : volumeMode
+-          ? Number(entry.coin?.volume24h)
+-          : Number(entry.result?.integrity?.metrics?.changePct)
++      metric: volumeMode
++        ? (Number.isFinite(Number(entry?.atlasMarketMetric))
++            ? Number(entry.atlasMarketMetric)
++            : Number(entry.coin?.volume24h))
++        : atlasComparisonCurveChange(entry)
+     }))
+     .filter(row => Number.isFinite(row.metric))
+     .sort((a, b) => b.metric - a.metric);
+@@ -13281,17 +13288,12 @@ function atlasChartOverlayComparison(chart, period, options = {}) {
+     const coin = entry?.coin || {};
+     const marketCoin = state.coins.find(item => item.id === coin.id) || coin;
+     const metrics = entry?.result?.integrity?.metrics || {};
+-    const historicalChange = Number.isFinite(Number(entry?.atlasMarketMetric))
+-      ? Number(entry.atlasMarketMetric)
+-      : Number(metrics.changePct);
+-    const presentation = preset === "volume"
+-      ? { value: historicalChange, live: false, quote: null }
+-      : atlasChartPresentationMetric(marketCoin, historicalChange, period);
++    const historicalChange = atlasComparisonCurveChange(entry);
+     return {
+       coin,
+       symbol: String(coin.symbol || coin.name || "ACTIF").toUpperCase(),
+-      change: Number(presentation.value),
+-      live: presentation.live === true,
++      change: Number(historicalChange),
++      live: false,
+       volume: Number.isFinite(Number(entry?.atlasMarketMetric)) && preset === "volume"
+         ? Number(entry.atlasMarketMetric)
+         : Number(marketCoin?.volume24h),
+@@ -51794,7 +51796,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
+ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
+ /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
+ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
+-const ATLAS_BUILD = "40.4.106";
++const ATLAS_BUILD = "40.4.107";
+ // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
+ // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
+ const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
+diff --git a/public/agent_crypto_erith_ia/administrator/index.html b/public/agent_crypto_erith_ia/administrator/index.html
+index 94ae64a..68ef682 100644
+--- a/public/agent_crypto_erith_ia/administrator/index.html
++++ b/public/agent_crypto_erith_ia/administrator/index.html
+@@ -3,14 +3,14 @@
+ <head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+-  <meta name="atlas-build" content="40.4.106" />
++  <meta name="atlas-build" content="40.4.107" />
+   <meta name="atlas-engine-build" content="38.15.11" />
+-  <meta name="administrator-build" content="40.4.106" />
+-  <meta name="administrator-release" content="CHRONOS STABLE ID · AETHER 90S READABILITY · NEWS FEED CLEAN LOCK" />
++  <meta name="administrator-build" content="40.4.107" />
++  <meta name="administrator-release" content="CHRONOS RESPONSIVE CENTER · GRAPH BASE100 TRUTH · VERSION INTEGRITY LOCK" />
+   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
+-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.106" />
++  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.107" />
+   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
+-  <title>Agent-Crypto @erith.IA — Build 40.4.106 · Administrator</title>
++  <title>Agent-Crypto @erith.IA — Build 40.4.107 · Administrator</title>
+   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
+ 
+   <script id="atlasFirstPaintRolePreseed40399">
+@@ -2326,7 +2326,7 @@
+   </style>
+ 
+ </head>
+-<body class="atlas-main-width-403122 atlas-firefox-safe-paint-40396 atlas-safe-document-background-40395 atlas-paint-isolation-40394 atlas-administrator-mirror atlas-semantic-color-icons-40290 atlas-astro-planet-colors-40291 atlas-section-air-40292 atlas-section-density-40293 atlas-family-boundaries-40298 atlas-book-nav-40299 atlas-family-order-40300 atlas-family-compact-reduce-40301 atlas-family-atomic-40302 atlas-commandline-compact-40302 atlas-family-state-migration-40303 atlas-canonical-admin-sequence-40304 atlas-family04-canonical-hierarchy-40320 atlas-book-command-center-40309 atlas-status-strip-40309 atlas-passive-viewport-authority-40310 atlas-role-isolation-viewport-ownership-40312 atlas-role-transition-performance-40314 atlas-header-single-row-40428 atlas-surface-performance-40315 atlas-bridge-passive-performance-40317 atlas-tech-image-continuity-40321 atlas-command-center-portal-40321 atlas-firefox-compositor-40323" data-administrator-build="40.4.106">
++<body class="atlas-main-width-403122 atlas-firefox-safe-paint-40396 atlas-safe-document-background-40395 atlas-paint-isolation-40394 atlas-administrator-mirror atlas-semantic-color-icons-40290 atlas-astro-planet-colors-40291 atlas-section-air-40292 atlas-section-density-40293 atlas-family-boundaries-40298 atlas-book-nav-40299 atlas-family-order-40300 atlas-family-compact-reduce-40301 atlas-family-atomic-40302 atlas-commandline-compact-40302 atlas-family-state-migration-40303 atlas-canonical-admin-sequence-40304 atlas-family04-canonical-hierarchy-40320 atlas-book-command-center-40309 atlas-status-strip-40309 atlas-passive-viewport-authority-40310 atlas-role-isolation-viewport-ownership-40312 atlas-role-transition-performance-40314 atlas-header-single-row-40428 atlas-surface-performance-40315 atlas-bridge-passive-performance-40317 atlas-tech-image-continuity-40321 atlas-command-center-portal-40321 atlas-firefox-compositor-40323" data-administrator-build="40.4.107">
+   <script id="atlasFirstPaintBodyRolePreseed40399">
+     (() => {
+       try {
+@@ -2390,9 +2390,9 @@
+             data-state="current"
+             aria-live="polite"
+             aria-atomic="true"
+-            aria-label="Version Agent-Crypto installée : Build 40.4.106, mode Administrator"
++            aria-label="Version Agent-Crypto installée : Build 40.4.107, mode Administrator"
+           >
+-            <span id="atlasVersionControlText">Build 40.4.106</span>
++            <span id="atlasVersionControlText">Build 40.4.107</span>
+           </button>
+           <span class="pill admin-engine-badge" id="administratorEngineBadge">ENGINE · Market Core 38.15.11</span>
+           <span class="pill warn" id="liveStatus">Livecheck requis</span>
+@@ -2408,7 +2408,7 @@
+         <div class="atlas-v2-mode-copy atlas-visually-hidden">
+           <b id="atlasV2ModeTitle">Essentiel</b>
+           <small id="atlasV2ModeDescription">Graphique · marché · sources.</small>
+-          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.4.106 · Administrator</span>
++          <span id="atlasV2ReleaseBadge">Agent-Crypto @erith.IA · Build 40.4.107 · Administrator</span>
+         </div>
+ 
+         <nav class="nav atlas-v2-nav" aria-label="Raccourcis pratiques et administration">
+@@ -4506,7 +4506,7 @@
+     </details>
+ 
+     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
+-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.106 · Version : Parker Lewis Can't Lose</span>
++      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.107 · Version : Parker Lewis Can't Lose</span>
+       <span id="footerTruthRule">Observatoire prudent · aucune recommandation financière</span>
+       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
+     </footer>
+diff --git a/public/agent_crypto_erith_ia/administrator/js/app.js b/public/agent_crypto_erith_ia/administrator/js/app.js
+index f2ffa60..6bef1eb 100644
+--- a/public/agent_crypto_erith_ia/administrator/js/app.js
++++ b/public/agent_crypto_erith_ia/administrator/js/app.js
+@@ -1,8 +1,8 @@
+ (() => {
+   "use strict";
+ 
+-  const ADMIN_BUILD = "40.4.106";
+-  const ADMIN_RELEASE = "CHRONOS STABLE ID · AETHER 90S READABILITY · NEWS FEED CLEAN LOCK";
++  const ADMIN_BUILD = "40.4.107";
++  const ADMIN_RELEASE = "CHRONOS RESPONSIVE CENTER · GRAPH BASE100 TRUTH · VERSION INTEGRITY LOCK";
+   const ENGINE_BUILD = "38.15.11";
+   const CLASSIC_WEB_BUILD = "38.15.13";
+   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
