@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.116
-  Revision: 40.4.116 Aether event-bound intelligence runtime: each VEILLE item owns its complete CONTEXTE story. The same sourced News event now flows VEILLE → IMPACT → RÉACTION MARCHÉ → LECTURE before the next ranked event. Global lead-event drift and empty internal diagnostic wording are retired from the top ribbon. News French quality pipeline 40.4.114 is preserved.
+  Build: 40.4.117
+  Revision: 40.4.117 Aether operator-intelligence runtime: same-event VEILLE story preserved; INFO lane now prioritizes market facts, latest analysis, usable signal and ranked News instead of interface shortcomings such as CURRENT/en attente/CREDENTIAL REQUIS. Version-truth false-positive fix lives in administrator/app.js.
 */
 (() => {
   "use strict";
@@ -136,7 +136,7 @@
     try{
       const owner=globalThis.AtlasNewsToMarketOperatorIntelligence40235;
       if(!owner||typeof owner.compute!=="function")return null;
-      // 40.4.116: bind operator intelligence to the exact VEILLE event currently on screen.
+      // 40.4.117: bind operator intelligence to the exact VEILLE event currently on screen.
       // owner.compute(currentEvent) is already the canonical read-only API; no new analysis engine is introduced here.
       const n=owner.compute(currentEvent||null);
       if(!n||n.status!=="observed")return null;
@@ -353,6 +353,45 @@
     if(/binance/i.test(raw))return `Binance${ratio?` · ${ratio}`:""}`;
     return aetherCompact4088(raw.replace(/^Prix live\s*/i,""),34);
   }
+  function aetherBreadthBrief40117(){
+    try{
+      const coins=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins:[];
+      const top5=new Set(["BTC","ETH","BNB","XRP","SOL"]);
+      const rows=coins.filter(row=>top5.has(String(row?.symbol||"").toUpperCase()))
+        .map(row=>({symbol:String(row?.symbol||"").toUpperCase(),change:aetherSystemNumber4086(row?.change24h)}))
+        .filter(row=>row.symbol&&row.change!==null);
+      if(!rows.length)return "Top 5 en attente";
+      const pos=rows.filter(row=>row.change>0).length,neg=rows.filter(row=>row.change<0).length,flat=rows.length-pos-neg;
+      const ordered=rows.slice().sort((a,b)=>b.change-a.change),leader=ordered[0],laggard=ordered.at(-1);
+      const breadth=`Top 5 ${pos}/${rows.length} positifs${neg?` · ${neg} négatif${neg>1?"s":""}`:""}${flat?` · ${flat} neutre${flat>1?"s":""}`:""}`;
+      const edge=leader&&laggard&&leader.symbol!==laggard.symbol?` · ${leader.symbol} ${leader.change>=0?"+":""}${leader.change.toFixed(2)} % / ${laggard.symbol} ${laggard.change>=0?"+":""}${laggard.change.toFixed(2)} %`:"";
+      return `${breadth}${edge}`;
+    }catch(_){return "Top 5 en attente";}
+  }
+  function aetherAnalysisBrief40117(){
+    const conclusion=aetherText4084("atlasOperatorAerithDetail35","");
+    if(conclusion&&!/apparaîtra|en attente|absente|aucune conclusion/i.test(conclusion))return `Analyse · ${aetherCompact4088(conclusion,82)}`;
+    const moves=aetherText4084("atlasOperatorMoves35","");
+    if(moves&&!/attente/i.test(moves))return `Mouvements · ${aetherCompact4088(moves,78)}`;
+    return `Largeur · ${aetherCompact4088(aetherBreadthBrief40117(),78)}`;
+  }
+  function aetherSignalBrief40117(){
+    const oracle=aetherOracleBrief4088();
+    if(oracle&&!/en attente/i.test(oracle))return `Oracle · ${aetherCompact4088(oracle,72)}`;
+    const risk=aetherText4084("atlasOperatorRisk35","");
+    const riskDetail=aetherText4084("atlasOperatorRiskDetail35","");
+    if(risk&&!/attente|aucune/i.test(risk))return `Signal · ${aetherCompact4088([risk,riskDetail].filter(Boolean).join(" · "),72)}`;
+    return `Marché · ${aetherCompact4088(aetherBreadthBrief40117(),72)}`;
+  }
+  function aetherVeilleBrief40117(){
+    try{
+      const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
+      if(!events.length)return `Veille · ${snapshot.label||"aucun événement prioritaire"}`;
+      const event=events[0],scope=aetherVeilleScope4087(event),impact=Math.round(aetherVeilleNumber4087(event?.impact?.score));
+      const headline=aetherNewsHeadlineFr40104(event,"");
+      return `Veille · ${scope}${impact?` ${impact}/100`:""} · ${aetherCompact4088(headline,62)}`;
+    }catch(_){return "Veille · News Sentinel";}
+  }
   const aetherNewsWake4088={attempted:false,inflight:null};
   function aetherWakeNewsSentinel4088(){
     if(aetherNewsWake4088.inflight)return aetherNewsWake4088.inflight;
@@ -387,13 +426,15 @@
     const oracle=aetherOracleBrief4088();
     const sources=aetherSourcesBrief4088();
     const market=aetherMarketBrief4088();
-    let book="APRÈS AUTH";try{if(typeof atlasBookMirrorBridgeState40377!=="undefined"){book=atlasBookMirrorBridgeState40377.credentialReady===true?"PRÊT":atlasBookMirrorBridgeState40377.credentialReady===false?"CREDENTIAL REQUIS":"EN VEILLE";}}catch(_){}
+    const analysis=aetherAnalysisBrief40117();
+    const signal=aetherSignalBrief40117();
+    const veilleBrief=aetherVeilleBrief40117();
     const veille=aetherVeilleCurrent4087();
     const news=veille.detail||veille.text||"Veille non chargée";
     const graphTop5=document.getElementById("btnChartTop5")?.classList?.contains("active")===true;
     const graphTitle=aetherText4084("selectedAssetTitle","Aucune sélection");
     const graph=graphTop5?"TOP 5":graphTitle;
-    return {current,reports,currentStatus,atlas,oracle,sources,market,book,news,graph};
+    return {current,reports,currentStatus,atlas,oracle,sources,market,analysis,signal,veilleBrief,news,graph};
   }
   function aetherPanelEnsure4084(){
     let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel)return panel;
@@ -405,10 +446,17 @@
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
-    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",`Atlas · ${s.atlas}`);put("atlasAetherRibbonOracle4084",`Oracle · ${s.oracle}`);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
+    // 40.4.117 — INFO is operator information, not an interface-imperfection/status report.
+    // CURRENT / en attente / CREDENTIAL REQUIS remain available in their owning detailed panels,
+    // but they no longer consume the five prime Aether cells.
+    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);
+    put("atlasAetherRibbonAtlas4084",s.analysis);
+    put("atlasAetherRibbonOracle4084",s.signal);
+    put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);
+    put("atlasAetherRibbonBook4084",s.veilleBrief);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
-    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("news",s.news);}
+    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.analysis} · Graphe ${s.graph}`);row("oracle",s.signal);row("sources",s.sources);row("news",s.news);}
   }
 
   const AETHER_SYSTEM_BACKEND_4086="http://127.0.0.1:8790/system";
@@ -564,7 +612,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.116",
+    build:"40.4.117",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,

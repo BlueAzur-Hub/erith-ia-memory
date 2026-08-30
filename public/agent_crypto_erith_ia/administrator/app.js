@@ -51842,7 +51842,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.116";
+const ATLAS_BUILD = "40.4.117";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -59136,7 +59136,7 @@ function atlasRuntimeTruth3813() {
     html_token_matches_app: !!metaToken && metaToken === appToken,
     // 40.4.101 — canonical filenames + Ctrl+F5 contract: local asset URLs intentionally carry no ?v token.
     // If a legacy token is present it must still match; if absent, HTML meta + app identity remain authoritative.
-    script_token_matches_app: !!appScript && (!scriptToken || scriptToken === appToken),
+    script_token_matches_app: !!appScript && (!scriptToken || scriptToken === appToken || scriptToken === appBuild || scriptToken === `administrator-build-${appBuild}`),
     runtime_contract_present: runtimeContract === "runtime-truth-v1"
   };
   let role = "unknown";
@@ -59172,13 +59172,17 @@ function atlasRuntimeTruthApply3813(reason = "runtime") {
   if (!truth.pass) {
     const control = document.getElementById("atlasVersionControl");
     const text = document.getElementById("atlasVersionControlText");
+    const failedChecks = Object.entries(truth.checks || {})
+      .filter(([, ok]) => ok !== true)
+      .map(([name]) => name);
+    const failedLabel = failedChecks.length ? failedChecks.join(" · ") : "identité runtime";
     if (control) {
       control.classList.remove("ok", "warn");
       control.classList.add("fail");
       control.dataset.state = "failed";
-      control.title = `Incohérence de cache/version · app ${truth.app_build || "?"} · page ${truth.html_build || "?"} · rechargement forcé requis.`;
+      control.title = `Version interne réellement incohérente · ${failedLabel} · app ${truth.app_build || "?"} · page ${truth.html_build || "?"}.`;
     }
-    if (text) text.textContent = `CACHE/VERSION INCOHÉRENTS · app ${truth.app_build || "?"} / page ${truth.html_build || "?"}`;
+    if (text) text.textContent = `VERSION INTERNE INCOHÉRENTE · ${failedLabel}`;
   }
   return truth;
 }
