@@ -13,8 +13,6 @@ EXPECTED={
   "index.html":"44efd971489eaea8fc64d889da218f7b077fafc6c3816b9e84d5d5dfae10a46b",
   "js/app.js":"802d59b2f3f4ac437c957a9cfa04b0f2ba187177cb105ea82a6d18e80f121bc4",
   "js/aether.js":"1fc3dc034563dd2b70c1093677f1a472046d050837caaa47a081227921dde5cc",
-  "version.json":"f7a5b021be254e507cd8382a3aa09bd50d4240e6f3de0955a65a1ef08e18fcc2",
-  "administrator-version.json":"7af3dd5be86efc2cedd2717123ea1178859e3efd05340c7e77de4e55e55b432a",
   "js/views/atlas-family-demand-residency.js":"25a9897d71c875d701f7cf1ba2bc306c1c64abc0176cfb7c1d026dc7a5a11773"
 }
 
@@ -30,8 +28,13 @@ for rel,want in EXPECTED.items():
     got=sha(ROOT/rel)
     if got!=want: raise SystemExit(f"STOP parent drift {rel}: {got} != {want}")
 parent=json.loads(read("version.json"))
-if parent.get("build")!=PUBLIC_PARENT or str((parent.get("engine") or {}).get("reference_build"))!="38.15.11":
+admin_parent=json.loads(read("administrator-version.json"))
+if parent.get("build")!=PUBLIC_PARENT or admin_parent.get("build")!=PUBLIC_PARENT or str((parent.get("engine") or {}).get("reference_build"))!="38.15.11":
     raise SystemExit("STOP public parent / Market Core mismatch")
+for manifest in (parent,admin_parent):
+    pub=(manifest.get("integrity") or {}).get("publication_identity") or {}
+    if pub.get("build")!=PUBLIC_PARENT:
+        raise SystemExit("STOP publication identity drift")
 
 # Root runtime: restore resident AUTO pending wake + default collapsed/HOT-core boundary.
 app=read("app.js")
