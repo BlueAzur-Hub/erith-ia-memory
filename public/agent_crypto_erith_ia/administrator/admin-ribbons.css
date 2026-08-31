@@ -435,3 +435,10 @@
   body #atlasAetherRibbonMarket4088,body #atlasAetherRibbonAtlas4084,body #atlasAetherRibbonOracle4084,body #atlasAetherRibbonSources4084{flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important;overflow:visible!important;text-overflow:clip!important}
   body #atlasAetherRibbonBook4084{flex:1 1 320px!important;width:auto!important;min-width:180px!important;max-width:none!important;justify-content:flex-start!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
 }
+
+/* 40.4.127 — AETHER INFO RIGHT-EDGE CLEANUP · NEWS LIVES IN FEED */
+/* Dedicated VEILLE owns News; remove the clipped redundant INFO tail. */
+@media (min-width:901px){
+  body #atlasAetherRibbonBook4084{display:none!important}
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{padding-right:2px!important}
+}

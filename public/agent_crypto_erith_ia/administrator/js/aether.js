@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.126
-  Revision: 40.4.126 Aether News flow recovery. The scarce FEED phase is NEWS-only: five ranked French News Sentinel stories rotate consecutively with no CONTEXTE interleave. Full-story readability is prioritized by scrolling headline + source only; 40.4.121 constant-read-speed marquee is preserved.
+  Build: 40.4.127
+  Revision: 40.4.127 unique News queue recovery. Aether builds its five-story queue from both loaded News Sentinel event pools, ranks first, then canonical-deduplicates by event identity, merged identity, source URL and displayed French headline before taking the first five unique stories. The INFO phase no longer carries a redundant compact News tail.
 */
 (() => {
   "use strict";
@@ -143,10 +143,25 @@
       +aetherVeilleFreshnessWeight4087(event)
       +aetherVeilleContextWeight4087(event);
   }
+  function aetherVeilleStoryTokens40127(event){
+    const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+    const tokens=[];
+    const push=(prefix,value)=>{const v=String(value||"").replace(/\s+/g," ").trim().toLowerCase();if(v)tokens.push(`${prefix}:${v}`);};
+    push("id",canonical?.event_id||canonical?.id||canonical?.fingerprint);
+    for(const id of (Array.isArray(canonical?.merged_event_ids)?canonical.merged_event_ids:[]))push("id",id);
+    push("url",canonical?.source_url);
+    push("fr",aetherNewsHeadlineFr40104(canonical,""));
+    push("raw",canonical?.headline||canonical?.event_label);
+    return [...new Set(tokens)];
+  }
   function aetherVeilleEvents4087(){
-    let events=[];try{if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))events=newsFeedState.events.slice();}catch(_){}
-    return events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)}))
-      .sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order).slice(0,AETHER_VEILLE_TOP_4087).map(row=>row.event);
+    const events=[];
+    const addPool=pool=>{if(!Array.isArray(pool))return;for(const event of pool)if(event)events.push(event);};
+    try{if(typeof newsFeedState!=="undefined"){addPool(newsFeedState?.events);addPool(newsFeedState?.payload?.events);}}catch(_){}
+    const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
+    const unique=[];const seen=new Set();
+    for(const row of ranked){const tokens=aetherVeilleStoryTokens40127(row.event);if(tokens.length&&tokens.some(token=>seen.has(token)))continue;tokens.forEach(token=>seen.add(token));unique.push(row.event);if(unique.length>=AETHER_VEILLE_TOP_4087)break;}
+    return unique;
   }
   function aetherVeilleScope4087(event){
     const assets=(Array.isArray(event?.assets)?event.assets:[]).map(v=>String(v||"").trim()).filter(Boolean);
@@ -521,7 +536,7 @@
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
     // 40.4.123 — information-only remains; prime cells are now ordered for immediate operator value: Market / breadth / Oracle / source / priority News.
-    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",s.veilleBrief);
+    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084","");
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
     const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.analysis} · Graphe ${s.graph}`);row("oracle",s.signal);row("sources",s.sources);row("news",s.news);}
@@ -673,7 +688,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.126",
+    build:"40.4.127",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -696,7 +711,7 @@
     veille_top:AETHER_VEILLE_TOP_4087,
     veille_new_timer:false,
     veille_feed_pulse_seconds:9,
-    veille_alert_context_pairing:true,
+    veille_alert_context_pairing:false,
     veille_same_event_context:true,
     veille_new_fetch:false,
     veille_existing_owner_wake:true,
@@ -723,6 +738,10 @@
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
     news_feed_ranked_story_count:5,
+    news_feed_pool_union:"newsFeedState.events + newsFeedState.payload.events",
+    news_feed_unique_before_limit:true,
+    news_feed_unique_tokens:"canonical id + merged ids + source URL + French headline + raw headline",
+    news_feed_truthful_total:true,
     news_feed_story_detail:"headline + source",
     news_translation_context_keeps_headline:true,
     news_translation_compact_headline_first:true,
