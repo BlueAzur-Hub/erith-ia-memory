@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.123
-  Revision: 40.4.123 information-density and priority polish. 40.4.122 information-only filtering and 40.4.121 constant-read-speed marquee are preserved; Aether now prioritizes event scope, impact, market breadth, Oracle bias/confidence and compact context facts without adding timers.
+  Build: 40.4.124
+  Revision: 40.4.124 French factual News fallback. 40.4.123 information-density, 40.4.122 information-only filtering and 40.4.121 constant-read-speed marquee are preserved; when a sourced headline has no French field, Aether renders a deterministic French factual summary instead of exposing raw English in the scarce operator ribbon.
 */
 (() => {
   "use strict";
@@ -39,6 +39,53 @@
     }catch(_){}
     return event;
   }
+  function aetherNewsLooksEnglish40124(value){
+    const text=String(value||"").toLowerCase();
+    if(!text)return false;
+    const hits=(text.match(/\b(?:the|after|as|and|with|from|loses?|lost|drops?|drains?|trader|traders|bets?|below|above|tops?|buys?|voting|power|million|billion|seconds?|why|speech|made|shorting|crypto)\b/g)||[]).length;
+    return hits>=2;
+  }
+  function aetherNewsMoneyFacts40124(value){
+    const text=String(value||"");
+    const out=[];
+    const push=v=>{if(v&&!out.includes(v))out.push(v);};
+    for(const m of text.matchAll(/\$\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*(billion|million|bn|m)?/gi)){
+      const raw=String(m[1]||"").replace(/,/g,"");
+      const n=Number(raw);if(!Number.isFinite(n))continue;
+      const unit=String(m[2]||"").toLowerCase();
+      const shown=n.toLocaleString("fr-FR",{maximumFractionDigits:2});
+      push(unit==="billion"||unit==="bn"?`${shown} Md$`:unit==="million"||unit==="m"?`${shown} M$`:`${shown} $`);
+    }
+    for(const m of text.matchAll(/([0-9]+(?:[.,][0-9]+)?)\s*%/g))push(`${String(m[1]).replace(".",",")} %`);
+    for(const m of text.matchAll(/([0-9]+)\s*(seconds?|minutes?|hours?)/gi)){
+      const n=Number(m[1]);const unit=String(m[2]||"").toLowerCase();
+      push(`${n} ${unit.startsWith("second")?"s":unit.startsWith("minute")?"min":"h"}`);
+    }
+    return out.slice(0,4);
+  }
+  function aetherNewsFrenchPattern40124(original){
+    let m=null;
+    if((m=original.match(/^Maya Protocol exploit drains bitcoin and other assets as pool value drops by \$([0-9.,]+) million$/i)))return `Maya Protocol : un exploit draine du bitcoin et d’autres actifs · valeur du pool -${String(m[1]).replace(".",",")} M$`;
+    if((m=original.match(/^Bearish crypto bets lose record \$([0-9.,]+) billion as bitcoin tops \$([0-9,]+)$/i)))return `Paris baissiers crypto : perte record ${String(m[1]).replace(".",",")} Md$ · Bitcoin dépasse ${String(m[2]).replace(/,/g," ")} $`;
+    if((m=original.match(/^Trader who made \$([0-9.,]+) million shorting crypto lost \$([0-9.,]+) million on ether in ([0-9]+) seconds$/i)))return `Un trader ayant gagné ${String(m[1]).replace(".",",")} M$ en vendant les cryptos à découvert perd ${String(m[2]).replace(".",",")} M$ sur ETH en ${m[3]} s`;
+    if((m=original.match(/^Bitcoin below \$([0-9,]+), XRP leads losses as traders start betting on (?:a )?Fed hike$/i)))return `Bitcoin sous ${String(m[1]).replace(/,/g," ")} $ · XRP mène les pertes · paris croissants sur une hausse des taux de la Fed`;
+    if(/^Why .*Jackson Hole.*big event for bitcoin and gold/i.test(original))return "Pourquoi le discours de Jackson Hole est un événement majeur pour Bitcoin et l’or";
+    return "";
+  }
+  function aetherNewsFrenchFactualFallback40124(event,original,fallback){
+    const pattern=aetherNewsFrenchPattern40124(original);if(pattern)return pattern;
+    if(!aetherNewsLooksEnglish40124(original))return original||fallback;
+    const label=String(event?.event_label||"").replace(/\s+/g," ").trim();
+    const assets=(Array.isArray(event?.assets)?event.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean).slice(0,3);
+    const sectors=(Array.isArray(event?.sectors)?event.sectors:[]).map(v=>String(v||"").replace(/\s+/g," ").trim()).filter(Boolean).slice(0,1);
+    const facts=aetherNewsMoneyFacts40124(original);
+    const parts=[];
+    const push=value=>{const v=String(value||"").trim();if(v&&!parts.includes(v))parts.push(v);};
+    push(label&&!/information de march[eé] [aà] qualifier/i.test(label)?label:"Actualité de marché");
+    if(assets.length)push(assets.join("/"));else if(sectors.length)push(sectors[0]);
+    facts.forEach(push);
+    return parts.join(" · ")||fallback;
+  }
   function aetherNewsHeadlineFr40104(event,fallback="Événement à qualifier"){
     const canonical=aetherNewsCanonicalFrenchEvent40110(event);
     const original=String(canonical?.headline||canonical?.event_label||event?.headline||event?.event_label||"").replace(/\s+/g," ").trim();
@@ -51,8 +98,9 @@
       }
     }catch(_){}
     if(explicitFrench)return explicitFrench;
-    // Information first: never erase a sourced headline merely because its French sibling is unavailable.
-    return original||fallback;
+    // 40.4.124 — no “traduction en attente” and no raw English leakage in the scarce Aether ribbon.
+    // News Sentinel keeps the canonical original; this is presentation-only, deterministic and factual.
+    return aetherNewsFrenchFactualFallback40124(canonical,original,fallback);
   }
   function aetherFrenchMechanismLabel40110(value){
     const label=String(value||"").replace(/\s+/g," ").trim();
@@ -622,7 +670,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.123",
+    build:"40.4.124",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -668,8 +716,10 @@
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
     news_translation_preferred:"headline_fr_display → headline_fr",
-    news_translation_fallback:"headline",
+    news_translation_fallback:"deterministic French factual summary → original only when already non-English",
     news_translation_browser_runtime:false,
+    news_translation_raw_english_in_aether:false,
+    news_translation_canonical_original_untouched:true,
     news_translation_canonical_original_preserved:true
   });
   globalThis.AgentCryptoAether=api;
