@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.129
-  Revision: 40.4.129 final cumulative ribbon recovery. One physical Aether lane is restored: AETHER stays fixed, INFO becomes one continuous natural-width rail containing Market / Atlas / Oracle / Sources / Book, and VEILLE remains the dedicated full-width French News lane. News rotation now spans a 12-story representative queue across successive FEED windows instead of restarting on the same first stories.
+  Build: 40.4.130
+  Revision: 40.4.130 Aether semantic-lane recovery. The rejected 40.4.129 global INFO marquee is retired. INFO returns to fixed semantic owners Atlas / Oracle / Sources / Book in the same physical lane; VEILLE alone owns long scrolling News text. 40.4.121 constant-read-speed VEILLE, 40.4.125 canonical French News, 40.4.127 canonical deduplication, 40.4.128 representative family selection and 40.4.129 continuous 12-story cursor are preserved.
 */
 (() => {
   "use strict";
@@ -336,7 +336,7 @@
     const headline=aetherNewsHeadlineFr40104(event,"Événement à qualifier");
     // 40.4.123 — priority first: asset/scope and impact are readable before the queue position.
     const meta=`${scope} · ${impactLevel} ${impact}/100 · ${aetherVeilleState4087.index+1}/${events.length}`;
-    // 40.4.126 — the moving lane carries the complete French story first; telemetry stays in its fixed meta chip / News panel.
+    // 40.4.130 — VEILLE alone owns the long translated story; fixed telemetry remains in brand/meta.
     const detail=[headline,source||null].filter(Boolean).join(" · ");
     return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail};
   }
@@ -403,9 +403,8 @@
       aetherVeilleState4087.index=0;aetherVeilleState4087.kind="alert";aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyContext=null;aetherVeilleState4087.fingerprint="";
       return renderAetherVeille4087();
     }
-    // 40.4.126 — scarce Aether FEED time belongs to actual News stories.
-    // One 36 s FEED phase = initial story + four 9 s pulse advances = five ranked stories.
-    // CONTEXTE remains available elsewhere in the interface but is never interleaved into this lane.
+    // 40.4.126+ / 40.4.130 — scarce FEED time belongs to News stories only.
+    // 40.4.129 continuity is preserved: the cursor is not reset when a FEED window closes.
     aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
     aetherVeilleState4087.kind="alert";
     aetherVeilleState4087.storyEvent=null;
@@ -565,12 +564,18 @@
     const analysis=aetherAnalysisBrief40121();
     const signal=aetherSignalBrief40121();
     const veilleBrief=aetherVeilleBrief40121();
+    let book="APRÈS AUTH";
+    try{
+      if(typeof atlasBookMirrorBridgeState40377!=="undefined"){
+        book=atlasBookMirrorBridgeState40377.credentialReady===true?"PRÊT":atlasBookMirrorBridgeState40377.credentialReady===false?"CREDENTIAL REQUIS":"EN VEILLE";
+      }
+    }catch(_){}
     const veille=aetherVeilleCurrent4087();
     const news=veille.detail||veille.text||"Veille non chargée";
     const graphTop5=document.getElementById("btnChartTop5")?.classList?.contains("active")===true;
     const graphTitle=aetherText4084("selectedAssetTitle","Aucune sélection");
     const graph=graphTop5?"TOP 5":graphTitle;
-    return {current,reports,currentStatus,atlas,oracle,sources,market,analysis,signal,veilleBrief,news,graph};
+    return {current,reports,currentStatus,atlas,oracle,sources,book,market,analysis,signal,veilleBrief,news,graph};
   }
   function aetherPanelEnsure4084(){
     let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel)return panel;
@@ -579,46 +584,19 @@
     document.body.appendChild(panel);panel.querySelector("[data-aether-close-4084]")?.addEventListener("click",()=>aetherPanelSet4084(false));return panel;
   }
   function aetherPanelSet4084(open){const button=document.getElementById("atlasAetherStatusToggle4084");const panel=open?aetherPanelEnsure4084():document.getElementById("atlasAetherStatusPanel4084");if(panel)panel.hidden=!open;if(button)button.setAttribute("aria-expanded",open?"true":"false");if(open)renderAether4084();}
-  function aetherInfoRail40129(snapshot){
-    const host=document.getElementById("atlasAetherRibbonMarket4088");
-    if(!host||!snapshot)return;
-    const text=[
-      `Marché · ${snapshot.market}`,
-      `Atlas · ${snapshot.analysis}`,
-      `Oracle · ${snapshot.signal}`,
-      `Sources · ${snapshot.sources}`,
-      `Book · ${snapshot.veilleBrief}`
-    ].filter(Boolean).join("   ·   ");
-    let copy=host.querySelector(".atlas-aether-info-copy-40129");
-    if(!copy){
-      host.textContent="";
-      copy=document.createElement("span");
-      copy.className="atlas-aether-info-copy-40129";
-      host.appendChild(copy);
-    }
-    if(copy.textContent!==text){copy.textContent=text;host.dataset.aetherInfoFingerprint="";}
-    requestAnimationFrame(()=>{
-      const width=Math.max(0,Math.round(host.clientWidth));
-      const overflow=Math.max(0,Math.ceil(copy.scrollWidth-width));
-      const fingerprint=`${text}|${width}|${overflow}`;
-      if(host.dataset.aetherInfoFingerprint===fingerprint)return;
-      host.dataset.aetherInfoFingerprint=fingerprint;
-      try{copy.getAnimations().forEach(anim=>anim.cancel());}catch(_){}
-      copy.style.transform="translateX(0)";
-      if(overflow<=AETHER_MARQUEE_MIN_OVERFLOW_PX_40121||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-      const duration=Math.round((overflow/AETHER_MARQUEE_SPEED_PX_S_40121)*1000);
-      copy.animate([{transform:"translateX(0)"},{transform:`translateX(-${overflow}px)`}],{duration:Math.max(1200,duration),delay:Math.round(AETHER_MARQUEE_DELAY_S_40121*1000),easing:"linear",fill:"forwards"});
-    });
-  }
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
-    // 40.4.129 — one continuous INFO rail. Book remains inside the same physical line; no competing micro-cells.
-    aetherInfoRail40129(s);
-    put("atlasAetherRibbonAtlas4084","");put("atlasAetherRibbonOracle4084","");put("atlasAetherRibbonSources4084","");put("atlasAetherRibbonBook4084","");
+    // 40.4.130 — restore the healthy semantic INFO contract. No global INFO marquee.
+    // Long News text belongs only to the dedicated VEILLE phase.
+    put("atlasAetherRibbonMarket4088","");
+    put("atlasAetherRibbonAtlas4084",`Atlas · ${s.atlas}`);
+    put("atlasAetherRibbonOracle4084",`Oracle · ${s.oracle}`);
+    put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);
+    put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
-    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.analysis} · Graphe ${s.graph}`);row("oracle",s.signal);row("sources",s.sources);row("news",s.news);}
+    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("news",s.news);}
   }
 
   const AETHER_SYSTEM_BACKEND_4086="http://127.0.0.1:8790/system";
@@ -751,8 +729,6 @@
           aetherVeilleAdvance4087();
         }else if(aetherVeilleState4087.feedWasVisible){
           aetherVeilleState4087.feedWasVisible=false;
-          // 40.4.129 — preserve the queue cursor between FEED windows.
-          // The next FEED window continues with the next representative story instead of replaying the first page.
           aetherVeilleState4087.kind="alert";
           aetherVeilleState4087.storyEvent=null;
           aetherVeilleState4087.storyContext=null;
@@ -767,7 +743,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.129",
+    build:"40.4.130",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -805,7 +781,7 @@
     veille_marquee_constant_speed_px_s:AETHER_MARQUEE_SPEED_PX_S_40121,
     info_operator_fact_cells:true,
     explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence40235 (read-only compute)",
-    explanatory_context_alternation:true,
+    explanatory_context_alternation:false,
     explanatory_context_new_fetch:false,
     explanatory_context_new_timer:false,
     explanatory_context_causal_claim:false,
@@ -813,10 +789,10 @@
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
     news_translation_preferred:"headline_fr_display → headline_fr",
-    news_translation_story_owner:"News Sentinel French headline owns VEILLE + compact INFO",
+    news_translation_story_owner:"News Sentinel French headline owns VEILLE; INFO uses Atlas/Oracle/Sources/Book owners",
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
-    news_feed_ranked_story_count:5,
+    news_feed_ranked_story_count:12,
     news_feed_selection:"representative digest: priority anchor + distinct recent families",
     news_feed_family_order:"macro + institutional + regulation + leverage + security + market",
     news_feed_source_diversity_tiebreak:true,
@@ -826,6 +802,10 @@
     news_feed_unique_tokens:"canonical id + merged ids + source URL + French headline + raw headline",
     news_feed_truthful_total:true,
     news_feed_story_detail:"headline + source",
+    news_feed_cursor_persists_between_windows:true,
+    info_semantic_owners:"Atlas + Oracle + Sources + Book",
+    info_global_marquee:false,
+    info_news_preview:false,
     news_translation_context_keeps_headline:true,
     news_translation_compact_headline_first:true,
     news_translation_fallback:"deterministic French factual summary → original only when already non-English",
