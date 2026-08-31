@@ -465,3 +465,13 @@
   body #atlasAetherRibbonSources4084{flex:.75 1 160px!important}
   body #atlasAetherRibbonBook4084{flex:0 1 170px!important}
 }
+
+/* 40.4.133 — AETHER ATTENTION OPERATOR WATCH */
+#atlasAetherStatusPanel4084{width:min(590px,calc(100vw - 36px))!important;max-height:min(76vh,740px)!important;overflow:auto!important;scrollbar-gutter:stable!important}
+#atlasAetherStatusPanel4084 .atlas-aether-panel-grid-4084{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:start!important}
+#atlasAetherStatusPanel4084 .atlas-aether-panel-grid-4084 article{min-width:0!important;align-content:start!important}
+#atlasAetherStatusPanel4084 .atlas-aether-panel-grid-4084 article[data-aether-wide-4084]{grid-column:1/-1!important}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="attention"]{color:#ffd47f!important}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="weather_risk"]{color:#bfe9ff!important}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="atlas_auto"]{color:#8dffd0!important}
+@media(max-width:700px){#atlasAetherStatusPanel4084{top:96px!important;left:10px!important;right:10px!important;width:auto!important;max-height:calc(100vh - 116px)!important}#atlasAetherStatusPanel4084 .atlas-aether-panel-grid-4084{grid-template-columns:minmax(0,1fr)!important}#atlasAetherStatusPanel4084 .atlas-aether-panel-grid-4084 article[data-aether-wide-4084]{grid-column:1!important}}

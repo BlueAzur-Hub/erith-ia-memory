@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.132
-  Revision: 40.4.132 canonical News story recovery. Canonical collector payload events own VEILLE reading whenever available; explicit headline_fr_display/headline_fr is the first presentation authority. Derived/UI rows are fallback-only and can no longer replace a translated source headline with taxonomy. 40.4.131 timing and 12-story continuity are preserved unchanged.
+  Build: 40.4.133
+  Revision: 40.4.133 operator watch. Source-original News stays readable at 12 × 18 s; Aether Attention adds market breadth, Atlas AUTO resident state, system telemetry and five-day weather/storm risk from existing owners.
 */
 (() => {
   "use strict";
@@ -104,6 +104,11 @@
     // News Sentinel keeps the canonical original; this is presentation-only, deterministic and factual.
     return aetherNewsFrenchFactualFallback40124(canonical,original,fallback);
   }
+  function aetherNewsHeadlineSource40133(event,fallback="Event to qualify"){
+  const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+  const original=String(canonical?.headline||event?.headline||"").replace(/\s+/g," ").trim();
+  return original||aetherNewsHeadlineFr40104(canonical,fallback);
+}
   function aetherFrenchMechanismLabel40110(value){
     const label=String(value||"").replace(/\s+/g," ").trim();
     if(/^SHORT SQUEEZE \/ LIQUIDATIONS$/i.test(label))return "LIQUIDATIONS DE POSITIONS VENDEUSES";
@@ -344,7 +349,7 @@
     const scope=aetherVeilleScope4087(event),evidence=Math.round(aetherVeilleNumber4087(event?.evidence?.score));
     const source=String(event?.source_name||event?.source_host||event?.source_class||"").replace(/^www\./,"").trim();
     const freshness=String(event?.freshness?.label||"").trim();
-    const headline=aetherNewsHeadlineFr40104(event,"Événement à qualifier");
+    const headline=aetherNewsHeadlineSource40133(event,"Event to qualify");
     // 40.4.123 — priority first: asset/scope and impact are readable before the queue position.
     const meta=`${scope} · ${impactLevel} ${impact}/100 · ${aetherVeilleState4087.index+1}/${events.length}`;
     // 40.4.130 — VEILLE alone owns the long translated story; fixed telemetry remains in brand/meta.
@@ -533,7 +538,7 @@
       const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
       if(!events.length)return `Veille · ${snapshot.label||"aucun événement prioritaire"}`;
       const event=events[0],scope=aetherVeilleScope4087(event),impact=Math.round(aetherVeilleNumber4087(event?.impact?.score));
-      const headline=aetherNewsHeadlineFr40104(event,"");
+      const headline=aetherNewsHeadlineSource40133(event,"");
       // 40.4.125 — information first: the French headline owns the visible prefix; scope/impact follow.
       return `Veille · ${aetherCompact4088(headline,88)}${scope?` · ${scope}`:""}${impact?` ${impact}/100`:""}`;
     }catch(_){return "Veille · News Sentinel";}
@@ -588,10 +593,24 @@
     const graph=graphTop5?"TOP 5":graphTitle;
     return {current,reports,currentStatus,atlas,oracle,sources,book,market,analysis,signal,veilleBrief,news,graph};
   }
+  function aetherMarketBreadth40133(){
+  try{const coins=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins:[];const rows=coins.map(r=>aetherSystemNumber4086(r?.change24h)).filter(v=>v!==null);if(!rows.length)return "Marché non chargé";const up=rows.filter(v=>v>.05).length,down=rows.filter(v=>v<-.05).length,flat=rows.length-up-down;const bias=down>up*1.35?"largeur négative":up>down*1.35?"largeur positive":"largeur mixte";return `${up} hausses · ${down} baisses · ${flat} stables · ${bias}`;}catch(_){return "Marché non chargé";}
+}
+function aetherAtlasAuto40133(){
+  try{const o=globalThis.ErithAtlasResidentWake40133,s=o&&typeof o.snapshot==="function"?o.snapshot():null;if(!s)return "Résident · owner en attente";if(s.last_action==="current-kick")return `ARMÉ · CURRENT relancé · ${s.last_market_id||"snapshot canonique"}`;if(s.last_action==="bridge-sync")return "ARMÉ · nouveau snapshot détecté · Bridge en reprise";if(s.last_action==="already-current")return "ARMÉ · snapshot déjà CURRENT";return s.installed?"ARMÉ · surveille le prochain snapshot canonique":"NON ARMÉ";}catch(_){return "Résident · état indisponible";}
+}
+function aetherSystemBrief40133(){
+  const sys=aetherSystemState4086.system||{},cpu=aetherSystemPercent4086(sys?.cpu?.usage_pct),ct=aetherSystemTemperature4086(sys?.cpu?.temperature_c),gs=String(sys?.gpu?.status||"").trim().toLowerCase(),gpu=gs&&gs!=="ok"?null:aetherSystemPercent4086(sys?.gpu?.usage_pct),gt=gs&&gs!=="ok"?null:aetherSystemTemperature4086(sys?.gpu?.temperature_c),ram=aetherSystemPercent4086(sys?.memory?.usage_pct);const part=(l,v,t=null)=>`${l} ${v===null?"N/D":`${Math.round(v)}%${t===null?"":` ${Math.round(t)}°`}`}`;return `${part("CPU",cpu,ct)} · ${part("GPU",gpu,gt)} · ${part("RAM",ram)}`;
+}
+function aetherWeatherOutlook40133(){return String(aetherSystemState4086.weather?.daily_summary||"Prévisions 5 jours en attente").trim();}
+function aetherWeatherRisk40133(){return String(aetherSystemState4086.weather?.electrical_risk||"Risque orage/rafales en attente").trim();}
+function aetherAttention40133(){
+  const w=aetherSystemState4086.weather||{};if(w.risk_level==="danger"||w.risk_level==="warn")return `Météo · ${aetherWeatherRisk40133()}`;const sys=aetherSystemState4086.system||{},cpu=aetherSystemPercent4086(sys?.cpu?.usage_pct),gpu=aetherSystemPercent4086(sys?.gpu?.usage_pct),ram=aetherSystemPercent4086(sys?.memory?.usage_pct),ct=aetherSystemTemperature4086(sys?.cpu?.temperature_c),gt=aetherSystemTemperature4086(sys?.gpu?.temperature_c);if((cpu!==null&&cpu>=88)||(gpu!==null&&gpu>=92)||(ram!==null&&ram>=90)||(ct!==null&&ct>=90)||(gt!==null&&gt>=84))return `Système · ${aetherSystemBrief40133()}`;const a=aetherAtlasAuto40133();if(/NON ARMÉ|indisponible/i.test(a))return `Atlas AUTO · ${a}`;return `Marché · ${aetherMarketBreadth40133()}`;
+}
   function aetherPanelEnsure4084(){
     let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel)return panel;
     panel=document.createElement("section");panel.id="atlasAetherStatusPanel4084";panel.hidden=true;panel.setAttribute("aria-label","Synthèse Aether");
-    panel.innerHTML=`<div class="atlas-aether-panel-head-4084"><b>♥ AETHER · SYNTHÈSE PASSIVE</b><button type="button" data-aether-close-4084 aria-label="Fermer">×</button></div><div class="atlas-aether-panel-grid-4084"><article><span>Atlas</span><b data-aether-row-4084="atlas">—</b></article><article><span>Oracle</span><b data-aether-row-4084="oracle">—</b></article><article><span>Sources</span><b data-aether-row-4084="sources">—</b></article><article><span>Dernière veille</span><b data-aether-row-4084="news">—</b></article></div>`;
+    panel.innerHTML=`<div class="atlas-aether-panel-head-4084"><b>♥ AETHER · ATTENTION · OPERATOR WATCH</b><button type="button" data-aether-close-4084 aria-label="Fermer">×</button></div><div class="atlas-aether-panel-grid-4084"><article data-aether-wide-4084><span>Attention</span><b data-aether-row-4084="attention">—</b></article><article><span>Marché</span><b data-aether-row-4084="market">—</b></article><article><span>Atlas AUTO</span><b data-aether-row-4084="atlas_auto">—</b></article><article><span>Atlas</span><b data-aether-row-4084="atlas">—</b></article><article><span>Oracle</span><b data-aether-row-4084="oracle">—</b></article><article><span>Sources</span><b data-aether-row-4084="sources">—</b></article><article><span>Système</span><b data-aether-row-4084="system">—</b></article><article data-aether-wide-4084><span>Météo 5 j</span><b data-aether-row-4084="weather">—</b></article><article data-aether-wide-4084><span>Risque météo</span><b data-aether-row-4084="weather_risk">—</b></article><article data-aether-wide-4084><span>Dernière veille</span><b data-aether-row-4084="news">—</b></article></div>`;
     document.body.appendChild(panel);panel.querySelector("[data-aether-close-4084]")?.addEventListener("click",()=>aetherPanelSet4084(false));return panel;
   }
   function aetherPanelSet4084(open){const button=document.getElementById("atlasAetherStatusToggle4084");const panel=open?aetherPanelEnsure4084():document.getElementById("atlasAetherStatusPanel4084");if(panel)panel.hidden=!open;if(button)button.setAttribute("aria-expanded",open?"true":"false");if(open)renderAether4084();}
@@ -607,11 +626,11 @@
     put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
-    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("news",s.news);}
+    const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("attention",aetherAttention40133());row("market",aetherMarketBreadth40133());row("atlas_auto",aetherAtlasAuto40133());row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("system",aetherSystemBrief40133());row("weather",aetherWeatherOutlook40133());row("weather_risk",aetherWeatherRisk40133());row("news",s.news);}
   }
 
   const AETHER_SYSTEM_BACKEND_4086="http://127.0.0.1:8790/system";
-  const AETHER_WEATHER_4086=Object.freeze({latitude:48.5876,longitude:1.5784,timezone:"Europe/Paris",ttl:15*60*1000,label:"Maintenon"});
+  const AETHER_WEATHER_4086=Object.freeze({latitude:48.5876,longitude:1.5784,timezone:"Europe/Paris",ttl:15*60*1000,label:"Maintenon",days:5});
   const aetherSystemState4086={system:null,systemAt:0,systemInflight:null,weather:null,weatherAt:0,weatherInflight:null,weatherStale:false};
   const aetherSystemNumber4086=value=>{
     if(value===null||value===undefined)return null;
@@ -666,15 +685,21 @@
       .finally(()=>{window.clearTimeout(timeout);aetherSystemState4086.systemInflight=null;renderAetherSystem4086();});
     return aetherSystemState4086.systemInflight;
   }
+  function aetherWeatherForecast40133(payload){
+  const t=aetherSystemNumber4086(payload?.current?.temperature_2m),c=aetherSystemNumber4086(payload?.current?.weather_code),d=payload?.daily||{},times=Array.isArray(d.time)?d.time:[],codes=Array.isArray(d.weather_code)?d.weather_code:[],maxs=Array.isArray(d.temperature_2m_max)?d.temperature_2m_max:[],mins=Array.isArray(d.temperature_2m_min)?d.temperature_2m_min:[],probs=Array.isArray(d.precipitation_probability_max)?d.precipitation_probability_max:[],gusts=Array.isArray(d.wind_gusts_10m_max)?d.wind_gusts_10m_max:[],fmt=new Intl.DateTimeFormat("fr-FR",{weekday:"short",day:"2-digit"});
+  const daily=times.slice(0,5).map((time,i)=>{let label=time;try{label=fmt.format(new Date(`${time}T12:00:00`));}catch(_){}const hi=aetherSystemNumber4086(maxs[i]),lo=aetherSystemNumber4086(mins[i]),pr=aetherSystemNumber4086(probs[i]),gu=aetherSystemNumber4086(gusts[i]),co=aetherSystemNumber4086(codes[i]);return {time,code:co,gust:gu,text:`${label} ${aetherWeatherIcon4086(co)} ${hi===null||lo===null?"N/D":`${Math.round(hi)}/${Math.round(lo)}°`}${pr===null?"":` · pluie ${Math.round(pr)}%`}${gu===null?"":` · raf. ${Math.round(gu)} km/h`}`};});
+  const h=payload?.hourly||{},ht=Array.isArray(h.time)?h.time:[],hc=Array.isArray(h.weather_code)?h.weather_code:[],hp=Array.isArray(h.precipitation_probability)?h.precipitation_probability:[],hg=Array.isArray(h.wind_gusts_10m)?h.wind_gusts_10m:[];let thunder=null,maxG=null,maxAt="",maxP=null;for(let i=0;i<ht.length;i++){const co=aetherSystemNumber4086(hc[i]),gu=aetherSystemNumber4086(hg[i]),pr=aetherSystemNumber4086(hp[i]);if(co!==null&&co>=95&&!thunder)thunder={time:ht[i],gust:gu,prob:pr};if(gu!==null&&(maxG===null||gu>maxG)){maxG=gu;maxAt=ht[i];}if(pr!==null&&(maxP===null||pr>maxP))maxP=pr;}
+  const when=x=>{try{return new Intl.DateTimeFormat("fr-FR",{weekday:"short",day:"2-digit",hour:"2-digit",minute:"2-digit"}).format(new Date(x));}catch(_){return x||"";}};let level="ok",risk="";if(thunder){level="danger";risk=`⚡ Orage prévu ${when(thunder.time)}${thunder.prob===null?"":` · pluie ${Math.round(thunder.prob)}%`}${thunder.gust===null?"":` · raf. ${Math.round(thunder.gust)} km/h`}`;}else if(maxG!==null&&maxG>=70){level="warn";risk=`Rafales fortes prévues ${when(maxAt)} · max ${Math.round(maxG)} km/h · surveiller alimentation/réseau`;}else if(maxG!==null&&maxG>=55){level="watch";risk=`Vent soutenu sur 5 j · rafales max ${Math.round(maxG)} km/h · aucun orage WMO signalé`;}else risk=`Aucun orage WMO signalé sur 5 j${maxG===null?"":` · rafales max ${Math.round(maxG)} km/h`}${maxP===null?"":` · pluie max ${Math.round(maxP)}%`}`;return {temperature_c:t,weather_code:c,daily,daily_summary:daily.map(x=>x.text).join(" | "),risk_level:level,electrical_risk:risk,max_gust_kmh:maxG,first_thunder:thunder};
+}
   function aetherSystemWeather4086(force=false){
     const now=Date.now();if(aetherSystemState4086.weatherInflight)return aetherSystemState4086.weatherInflight;
     if(!force&&now-aetherSystemState4086.weatherAt<AETHER_WEATHER_4086.ttl){renderAetherSystem4086();return Promise.resolve(aetherSystemState4086.weather);}
-    const url=`https://api.open-meteo.com/v1/forecast?latitude=${AETHER_WEATHER_4086.latitude}&longitude=${AETHER_WEATHER_4086.longitude}&current=temperature_2m,weather_code&timezone=${encodeURIComponent(AETHER_WEATHER_4086.timezone)}`;
+    const url=`https://api.open-meteo.com/v1/forecast?latitude=${AETHER_WEATHER_4086.latitude}&longitude=${AETHER_WEATHER_4086.longitude}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_gusts_10m_max&hourly=weather_code,precipitation_probability,wind_gusts_10m&forecast_days=${AETHER_WEATHER_4086.days}&timezone=${encodeURIComponent(AETHER_WEATHER_4086.timezone)}`;
     aetherSystemState4086.weatherInflight=fetch(url,{cache:"no-store",headers:{Accept:"application/json"}})
       .then(response=>{if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json();})
-      .then(payload=>{const t=aetherSystemNumber4086(payload?.current?.temperature_2m),code=aetherSystemNumber4086(payload?.current?.weather_code);aetherSystemState4086.weather=t===null?null:{temperature_c:t,weather_code:code};aetherSystemState4086.weatherStale=false;aetherSystemState4086.weatherAt=Date.now();return aetherSystemState4086.weather;})
+      .then(payload=>{const forecast=aetherWeatherForecast40133(payload);aetherSystemState4086.weather=forecast;aetherSystemState4086.weatherStale=false;aetherSystemState4086.weatherAt=Date.now();return forecast;})
       .catch(()=>{aetherSystemState4086.weatherStale=Boolean(aetherSystemState4086.weather);aetherSystemState4086.weatherAt=Date.now();return aetherSystemState4086.weather;})
-      .finally(()=>{aetherSystemState4086.weatherInflight=null;renderAetherSystem4086();});
+      .finally(()=>{aetherSystemState4086.weatherInflight=null;renderAetherSystem4086();renderAether4084();});
     return aetherSystemState4086.weatherInflight;
   }
   function aetherSystemRefresh4086({force=false}={}){
@@ -758,7 +783,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.132",
+    build:"40.4.133",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -805,8 +830,10 @@
     operator_disclaimer_segments:false,
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
-    news_translation_preferred:"headline_fr_display → headline_fr",
-    news_translation_story_owner:"News Sentinel French headline owns VEILLE; INFO uses Atlas/Oracle/Sources/Book owners",
+    news_display_language:"source-original",
+    news_source_original_headline_first:true,
+    news_translation_preferred:"headline_fr_display → headline_fr (secondary data retained)",
+    news_translation_story_owner:"News Sentinel source-original headline owns VEILLE; translated fields remain preserved",
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
     news_feed_ranked_story_count:12,
@@ -831,7 +858,13 @@
     news_translation_compact_headline_first:true,
     news_translation_fallback:"deterministic French factual summary → original only when already non-English",
     news_translation_browser_runtime:false,
-    news_translation_raw_english_in_aether:false,
+    news_translation_raw_english_in_aether:true,
+    weather_forecast_days:5,
+    weather_storm_warning:true,
+    weather_high_gust_warning_kmh:70,
+    aether_attention_operator_watch:true,
+    aether_attention_new_timer:false,
+    aether_attention_new_network_owner:false,
     news_translation_canonical_original_untouched:true,
     news_translation_canonical_original_preserved:true
   });
