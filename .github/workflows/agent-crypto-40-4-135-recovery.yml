@@ -1,0 +1,220 @@
+name: Agent-Crypto 40.4.135 recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/patches/40.4.135.request.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-135-recovery
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded 40.4.135 recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import hashlib, json, re, zipfile
+
+          ROOT=Path('public/agent_crypto_erith_ia/administrator')
+          DATA=Path('public/agent_crypto_erith_ia/data/crypto/latest.json')
+          BUILD='40.4.135'; PARENT='40.4.134'
+          RELEASE='ADMINISTRATION CANONICAL ENTRY RECOVERY · ATLAS CURRENT RECOVERY FREEZE'
+          STATUS='candidate_admin_entry_recovery_atlas_operator_validation_required'
+          REQ=Path('coordination/inter_ai_dialogues/agent_crypto/patches/40.4.135.request.json')
+
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          def rep(path,old,new,label,count=1):
+              text=path.read_text(encoding='utf-8'); n=text.count(old)
+              if n!=count: raise SystemExit(f'STOP {label}: expected {count}, found {n}')
+              path.write_text(text.replace(old,new,count),encoding='utf-8')
+          def sub1(path,pat,repl,label,flags=0):
+              text=path.read_text(encoding='utf-8'); out,n=re.subn(pat,repl,text,count=1,flags=flags)
+              if n!=1: raise SystemExit(f'STOP {label}: expected 1, found {n}')
+              path.write_text(out,encoding='utf-8')
+
+          req=json.loads(REQ.read_text(encoding='utf-8'))
+          ver=json.loads((ROOT/'version.json').read_text(encoding='utf-8'))
+          if req.get('build')!=BUILD or req.get('parent_build')!=PARENT or ver.get('build')!=PARENT:
+              raise SystemExit('STOP request/parent mismatch')
+          if str((ver.get('engine') or {}).get('reference_build'))!='38.15.11':
+              raise SystemExit('STOP Market Core reference mismatch')
+
+          # Atlas recovery evidence: the canonical producer has already resumed.
+          latest=json.loads(DATA.read_text(encoding='utf-8'))
+          generated=str(latest.get('generated_at') or '')
+          if generated <= '2026-08-31T08:05:13.000Z' or int(latest.get('assets_count') or 0) < 249:
+              raise SystemExit(f'STOP Atlas canonical has not recovered: {generated} / {latest.get("assets_count")}')
+
+          # Administration: remove the 40.4.134 capture-phase dead-click patch.
+          index=ROOT/'index.html'
+          text=index.read_text(encoding='utf-8')
+          lock_pat=r'\n  <script data-atlas-admin-active-role-lock-404134="true">.*?</script>\n'
+          text,n=re.subn(lock_pat,'\n',text,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'STOP 40.4.134 active-role lock not found: {n}')
+          index.write_text(text,encoding='utf-8')
+
+          # Fix the canonical owner instead: Administration is an entry selector, never a logout toggle.
+          app=ROOT/'app.js'
+          rep(app,
+              'if (atlasAccessIsAuthorized() && atlasV2Mode() === "advanced") {\n    atlasAccessLock();\n  } else if (atlasAccessIsAuthorized()) {',
+              'if (atlasAccessIsAuthorized()) {',
+              'canonical Administration no-logout recovery')
+          rep(app,'const ATLAS_BUILD = "40.4.134";','const ATLAS_BUILD = "40.4.135";','ATLAS_BUILD')
+
+          # Runtime build identity only; no Atlas/Oracle/Market business logic mutation.
+          adminjs=ROOT/'js/app.js'
+          rep(adminjs,'  const ADMIN_BUILD = "40.4.134";','  const ADMIN_BUILD = "40.4.135";','ADMIN_BUILD')
+          aether=ROOT/'js/aether.js'
+          rep(aether,'  Build: 40.4.134','  Build: 40.4.135','Aether header build')
+          text=aether.read_text(encoding='utf-8')
+          text,n=re.subn(r'(^\s*build:")40\.4\.134(",)',rf'\g<1>{BUILD}\2',text,count=1,flags=re.M)
+          if n!=1: raise SystemExit(f'STOP Aether API build: {n}')
+          aether.write_text(text,encoding='utf-8')
+
+          # Index identity/cache tokens. Preserve historical text except active release identifiers.
+          text=index.read_text(encoding='utf-8')
+          replacements={
+              '<meta name="atlas-build" content="40.4.134" />':f'<meta name="atlas-build" content="{BUILD}" />',
+              '<meta name="administrator-build" content="40.4.134" />':f'<meta name="administrator-build" content="{BUILD}" />',
+              '<meta name="administrator-release" content="AETHER DETAIL DISCOVERABILITY · ADMIN ACTIVE-ROLE NO-LOGOUT LOCK" />':f'<meta name="administrator-release" content="{RELEASE}" />',
+              '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.134" />':f'<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-{BUILD}" />',
+              '<title>Agent-Crypto @erith.IA — Build 40.4.134 · Administrator</title>':f'<title>Agent-Crypto @erith.IA — Build {BUILD} · Administrator</title>'
+          }
+          for old,new in replacements.items():
+              if text.count(old)!=1: raise SystemExit(f'STOP index identity missing: {old[:55]}')
+              text=text.replace(old,new,1)
+          text=text.replace('administrator-build-40.4.134','administrator-build-40.4.135')
+          text=text.replace('data-administrator-build="40.4.134"','data-administrator-build="40.4.135"')
+          text=text.replace('Version Agent-Crypto installée : Build 40.4.134','Version Agent-Crypto installée : Build 40.4.135')
+          text=text.replace('>Build 40.4.134</span>','>Build 40.4.135</span>')
+          text=text.replace('Agent-Crypto @erith.IA · Build 40.4.134 · Administrator','Agent-Crypto @erith.IA · Build 40.4.135 · Administrator')
+          index.write_text(text,encoding='utf-8')
+
+          # Manifest update + integrity synchronization.
+          feature={
+              'build':BUILD,
+              'admin_canonical_entry_recovered':True,
+              'admin_button_logout_owner':False,
+              'admin_unauthorized_action':'open Aether Trust',
+              'admin_authorized_action':'enter/stay advanced Administrator',
+              'removed_capture_dead_click_404134':True,
+              'atlas_canonical_recovery_observed':True,
+              'atlas_canonical_generated_at_at_build':generated,
+              'atlas_engine_changed':False,
+              'atlas_resident_logic_changed':False,
+              'market_core_changed':False,
+              'graph_changed':False,
+              'oracle_engine_changed':False,
+              'aether_operator_watch_changed':False
+          }
+          note=(f'{BUILD} — Administration recovery: removes the 40.4.134 capture-phase dead-click and fixes the canonical '
+                'Administration owner so the button never logs out an authorized operator; unauthorized opens Aether Trust, '
+                'authorized enters/stays Administrator. Atlas is deliberately frozen because the canonical producer has resumed '
+                f'({generated}) and the Ryzen operator proved a complete CURRENT cycle. Market Core 38.15.11 preserved.')
+
+          def update_manifest(path,admin_sha=None):
+              d=json.loads(path.read_text(encoding='utf-8'))
+              d['build']=BUILD; d['release']=RELEASE; d['status']=STATUS; d['parent_build']=PARENT
+              d['prepared_at']=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+              d['published_at']=None; d['asset_token']=f'market-core-v2.0-alpha-build-{BUILD}'
+              if 'global_versioning' in d: d['global_versioning']=BUILD
+              lineage=d.get('lineage')
+              if isinstance(lineage,str) and '40.4.135 Administration canonical entry recovery' not in lineage:
+                  d['lineage']=lineage+' → 40.4.135 Administration canonical entry recovery + Atlas recovered-current freeze'
+              d.setdefault('features',{})['admin_entry_recovery_atlas_freeze_404135']=feature.copy()
+              d.setdefault('integrity',{})['admin_entry_recovery_atlas_freeze_404135']=feature.copy()
+              pub=d.setdefault('integrity',{}).setdefault('publication_identity',{})
+              pub.update({'build':BUILD,'asset_token':f'market-core-v2.0-alpha-build-{BUILD}','status':STATUS,'app_sha256':sha(ROOT/'app.js')})
+              if admin_sha is not None: pub['administrator_version_sha256']=admin_sha
+              notes=d.setdefault('release_notes',[])
+              if not notes or notes[0]!=note: notes.insert(0,note)
+              d.setdefault('validation',{}).update({
+                  'admin_single_click_unauthorized_opens_aether_trust_404135_required':True,
+                  'admin_authorized_never_logs_out_404135_required':True,
+                  'admin_capture_dead_click_404134_absent_required':True,
+                  'atlas_current_recovery_operator_evidence_preserved':True,
+                  'atlas_no_new_runtime_owner_404135_required':True,
+                  'market_core_38_15_11_non_regression_404135_required':True
+              })
+              files=d.get('files') or {}
+              if isinstance(files,dict):
+                  for rel in list(files):
+                      target=ROOT/rel
+                      if not target.is_file(): raise SystemExit(f'STOP manifest file absent {rel}')
+                      files[rel]=sha(target)
+              path.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          update_manifest(ROOT/'administrator-version.json')
+          update_manifest(ROOT/'version.json',sha(ROOT/'administrator-version.json'))
+
+          # Acceptance guards.
+          idx=index.read_text(encoding='utf-8'); js=app.read_text(encoding='utf-8')
+          if 'data-atlas-admin-active-role-lock-404134' in idx or 'adminActiveRoleLock404134' in idx:
+              raise SystemExit('STOP dead-click 40.4.134 still present')
+          canonical='function atlasAdminAccountToggleAction40449() {\n  if (atlasAccessIsAuthorized()) {'
+          if canonical not in js: raise SystemExit('STOP canonical Administration owner not recovered')
+          fn=js[js.index('function atlasAdminAccountToggleAction40449()'):js.index('function atlasInitV2Shell()',js.index('function atlasAdminAccountToggleAction40449()'))]
+          if 'atlasAccessLock()' in fn: raise SystemExit('STOP Administration still owns logout')
+          if 'atlasAccessOpen();' not in fn or 'atlasV2ApplyMode("advanced"' not in fn:
+              raise SystemExit('STOP canonical auth/advanced routing incomplete')
+          if 'ErithAtlasResidentWake40133' not in (ROOT/'js/views/view-lifecycle.js').read_text(encoding='utf-8'):
+              raise SystemExit('STOP resident Atlas continuity unexpectedly missing')
+          d=json.loads((ROOT/'version.json').read_text(encoding='utf-8'))
+          if d.get('build')!=BUILD or str((d.get('engine') or {}).get('reference_build'))!='38.15.11':
+              raise SystemExit('STOP final identity/Market Core mismatch')
+          if (d.get('protected_base') or {}).get('market_core_modified') is not False:
+              raise SystemExit('STOP Market Core marked modified')
+          for name in ('administrator-version.json','version.json'):
+              m=json.loads((ROOT/name).read_text(encoding='utf-8'))
+              for rel,h in (m.get('files') or {}).items():
+                  if sha(ROOT/rel)!=h: raise SystemExit(f'STOP hash mismatch {name} {rel}')
+
+          # Canonical archive.
+          files=list((d.get('files') or {}).keys())
+          for rel in ('version.json','administrator-version.json'):
+              if rel not in files: files.append(rel)
+          out=Path('coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_135_ADMIN_RECOVERY_ATLAS_FREEZE.zip')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for rel in files: z.write(ROOT/rel,arcname=(ROOT/rel).as_posix())
+          digest=sha(out)
+          Path(str(out)+'.sha256').write_text(f'{digest}  {out.name}\n',encoding='utf-8')
+          print(f'PASS {BUILD} · Atlas canonical {generated} · ZIP {digest}')
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          node --check public/agent_crypto_erith_ia/administrator/js/views/view-lifecycle.js
+          git diff --check
+
+      - name: Commit validated 40.4.135 atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_135_ADMIN_RECOVERY_ATLAS_FREEZE.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_135_ADMIN_RECOVERY_ATLAS_FREEZE.zip.sha256
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.135.request.json
+          git rm .github/workflows/agent-crypto-40-4-135-recovery.yml
+          git commit -m "fix Agent-Crypto 40.4.135 recover Administration entry and freeze recovered Atlas"
+          git pull --rebase origin main
+          git push origin HEAD:main
