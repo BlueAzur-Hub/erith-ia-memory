@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.130
-  Revision: 40.4.130 Aether semantic-lane recovery. The rejected 40.4.129 global INFO marquee is retired. INFO returns to fixed semantic owners Atlas / Oracle / Sources / Book in the same physical lane; VEILLE alone owns long scrolling News text. 40.4.121 constant-read-speed VEILLE, 40.4.125 canonical French News, 40.4.127 canonical deduplication, 40.4.128 representative family selection and 40.4.129 continuous 12-story cursor are preserved.
+  Build: 40.4.131
+  Revision: 40.4.131 Aether 12-story reading-flow lock. NORMAL 30 s -> INFO 15 s -> VEILLE 12 × 18 s -> SYSTEM 9 s. The entry pulse only arms VEILLE visibility; the next eleven pulses advance through the remaining eleven stories, so CPU/GPU/RAM cannot interrupt the batch. 40.4.130 semantic INFO owners and the constant-speed News marquee are preserved.
 */
 (() => {
   "use strict";
@@ -725,7 +725,11 @@
         const style=getComputedStyle(feed);
         const visible=style.visibility==="visible"&&Number.parseFloat(style.opacity||"0")>.5;
         if(visible){
-          aetherVeilleState4087.feedWasVisible=true;
+          // 40.4.131 — first visible pulse arms the batch; story 1 keeps its full reading slot.
+          if(!aetherVeilleState4087.feedWasVisible){
+            aetherVeilleState4087.feedWasVisible=true;
+            return;
+          }
           aetherVeilleAdvance4087();
         }else if(aetherVeilleState4087.feedWasVisible){
           aetherVeilleState4087.feedWasVisible=false;
@@ -743,7 +747,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.130",
+    build:"40.4.131",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -765,18 +769,20 @@
     veille_owner:"News Sentinel state (read-only) via existing loadNewsLiveFeed owner",
     veille_top:AETHER_VEILLE_TOP_4087,
     veille_new_timer:false,
-    veille_feed_pulse_seconds:9,
+    veille_feed_pulse_seconds:18,
     veille_alert_context_pairing:false,
     veille_same_event_context:true,
     veille_new_fetch:false,
     veille_existing_owner_wake:true,
     info_operator_synthesis:true,
     oracle_render_refresh:true,
-    cadence_seconds:90,
+    cadence_seconds:270,
     normal_seconds:30,
     info_seconds:15,
-    veille_seconds:36,
+    veille_seconds:216,
     system_seconds:9,
+    veille_full_batch_before_system:true,
+    veille_first_visible_pulse_advances:false,
     veille_marquee_phase_synced:true,
     veille_marquee_constant_speed_px_s:AETHER_MARQUEE_SPEED_PX_S_40121,
     info_operator_fact_cells:true,
