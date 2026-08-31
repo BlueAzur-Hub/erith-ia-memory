@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.122
-  Revision: 40.4.122 information-only Aether. 40.4.121 constant-read-speed marquee is preserved; generic caution/disclaimer/non-conclusion prose is filtered from the operator ribbon and duplicate CONTEXTE labelling is retired.
+  Build: 40.4.123
+  Revision: 40.4.123 information-density and priority polish. 40.4.122 information-only filtering and 40.4.121 constant-read-speed marquee are preserved; Aether now prioritizes event scope, impact, market breadth, Oracle bias/confidence and compact context facts without adding timers.
 */
 (() => {
   "use strict";
@@ -190,18 +190,19 @@
     const direction=qualified(c.mechanismDirection);
     const flow=qualified(c.flowLabel);
     const flowDirection=qualified(c.flowDirection);
-    const facts=[
-      mechanism?`${mechanism}${direction?` · ${direction}`:""}`:null,
-      c.explains&&mechanism?aetherInformationLine40122(c.explains):null,
-      flow?`${flow}${flowDirection?` · ${flowDirection}`:""}`:null,
-      focusSummary||null,
-      marketSummary||null,
-      qualified(c.breadth),
-      qualified(c.marketTone),
-      c.source||null
-    ].filter(Boolean);
-    if(!facts.length)facts.push(c.headline,c.source);
-    return {kind:"context",brand:"♥ CONTEXTE",tone:"context",index:0,total:1,event:c.lead,meta:`${proof} · ${c.scope}`,detail:facts.join(" · "),context:c.n};
+    // 40.4.123 — context is a compact fact stack, not a prose explanation.
+    // The previous generic “le mécanisme peut expliquer…” sentence is deliberately not repeated in the scarce ribbon lane.
+    const facts=[];
+    const pushFact=value=>{const fact=qualified(value);if(fact&&!facts.includes(fact))facts.push(fact);};
+    pushFact(mechanism?`${mechanism}${direction?` · ${direction}`:""}`:"");
+    pushFact(flow?`${flow}${flowDirection?` · ${flowDirection}`:""}`:"");
+    pushFact(focusSummary);
+    pushFact(marketSummary);
+    if(!marketSummary)pushFact(c.breadth);
+    pushFact(c.marketTone);
+    pushFact(c.source);
+    if(!facts.length){pushFact(c.headline);pushFact(c.source);}
+    return {kind:"context",brand:"♥ CONTEXTE",tone:"context",index:0,total:1,event:c.lead,meta:`${c.scope} · ${proof}`,detail:facts.join(" · "),context:c.n};
   }
   function aetherVeilleCurrent4087(){
     const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
@@ -220,8 +221,9 @@
     const source=String(event?.source_name||event?.source_host||event?.source_class||"").replace(/^www\./,"").trim();
     const freshness=String(event?.freshness?.label||"").trim();
     const headline=aetherNewsHeadlineFr40104(event,"Événement à qualifier");
-    const meta=`${aetherVeilleState4087.index+1}/${events.length} · ${impactLevel} ${impact}/100 · ${scope}`;
-    const detail=[headline,evidence?`preuve ${evidence}/100`:null,freshness,source].filter(Boolean).join(" · ");
+    // 40.4.123 — priority first: asset/scope and impact are readable before the queue position.
+    const meta=`${scope} · ${impactLevel} ${impact}/100 · ${aetherVeilleState4087.index+1}/${events.length}`;
+    const detail=[headline,evidence?`preuve ${evidence}/100`:null,source||null,freshness||null].filter(Boolean).join(" · ");
     return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail};
   }
   function aetherVeilleMarqueeSync40121(host,viewport,marquee,copy,fingerprint,fingerprintChanged){
@@ -367,29 +369,44 @@
       const rows=coins.filter(row=>top5.has(String(row?.symbol||"").toUpperCase()))
         .map(row=>({symbol:String(row?.symbol||"").toUpperCase(),change:aetherSystemNumber4086(row?.change24h)}))
         .filter(row=>row.symbol&&row.change!==null);
-      if(!rows.length)return "Top 5 en attente";
+      if(!rows.length)return "en attente";
       const pos=rows.filter(row=>row.change>0).length,neg=rows.filter(row=>row.change<0).length,flat=rows.length-pos-neg;
       const ordered=rows.slice().sort((a,b)=>b.change-a.change),leader=ordered[0],laggard=ordered.at(-1);
-      const breadth=`Top 5 ${pos}/${rows.length} positifs${neg?` · ${neg} négatif${neg>1?"s":""}`:""}${flat?` · ${flat} neutre${flat>1?"s":""}`:""}`;
-      const edge=leader&&laggard&&leader.symbol!==laggard.symbol?` · ${leader.symbol} ${leader.change>=0?"+":""}${leader.change.toFixed(2)} % / ${laggard.symbol} ${laggard.change>=0?"+":""}${laggard.change.toFixed(2)} %`:"";
-      return `${breadth}${edge}`;
-    }catch(_){return "Top 5 en attente";}
+      const breadth=`${pos}/${rows.length} positifs${neg?` · ${neg} négatif${neg>1?"s":""}`:""}${flat?` · ${flat} neutre${flat>1?"s":""}`:""}`;
+      const edges=[];
+      if(leader)edges.push(`${leader.symbol} ${leader.change>=0?"+":""}${leader.change.toFixed(2)} %`);
+      if(laggard&&laggard.symbol!==leader?.symbol)edges.push(`${laggard.symbol} ${laggard.change>=0?"+":""}${laggard.change.toFixed(2)} %`);
+      return [breadth,...edges].filter(Boolean).join(" · ");
+    }catch(_){return "en attente";}
   }
   function aetherAnalysisBrief40121(){
-    // Keep the prime ribbon factual: the long Aerith conclusion can contain caveats
-    // that belong in the analysis panel, not in the scarce one-line operator lane.
-    const moves=aetherInformationLine40122(aetherText4084("atlasOperatorMoves35",""));
-    if(moves&&!/attente/i.test(moves))return `Top 5 · ${aetherCompact4088(moves,78)}`;
-    return `Largeur · ${aetherCompact4088(aetherBreadthBrief40121(),78)}`;
+    // 40.4.123 — the prime INFO lane always exposes breadth + both edges.
+    // This is denser and more stable than mirroring an arbitrary moves sentence.
+    const breadth=aetherBreadthBrief40121();
+    return `Top 5 · ${aetherCompact4088(breadth,86)}`;
+  }
+  function aetherOraclePriorityBrief40123(){
+    const identity=aetherText4084("atlasOracleOperatorIdentity","");
+    const legacyAsset=aetherText4084("atlasOracleAsset","");
+    const parts=identity.split("·").map(v=>v.trim()).filter(Boolean);
+    const asset=(parts[0]&&!/ATTENTE|LIVE CHECK|LIVECHECK/i.test(parts[0]))?parts[0]:(legacyAsset&&!/ATTENTE/i.test(legacyAsset)?legacyAsset:"");
+    const mode=parts.slice(1).join(" · ");
+    const bias=aetherText4084("atlasOracleOperatorBias","").replace(/^BIAIS\s*/i,"").trim()
+      ||aetherText4084("atlasOracleBias","").replace(/^Biais mesuré\s*:\s*/i,"").trim();
+    const confidence=aetherText4084("atlasOracleOperatorConfidence","").replace(/^CONF\.\s*/i,"").trim()
+      ||aetherText4084("atlasOracleConfidence","").replace(/^Confiance données\s*/i,"").trim();
+    const clean=value=>String(value||"").trim();
+    const ready=[asset,(!/ATTENTE|REQUIS|^[—-]$/i.test(clean(bias))?clean(bias):""),(!/ATTENTE|^[—-]$/i.test(clean(confidence))?clean(confidence):""),mode].filter(Boolean);
+    return ready.join(" · ");
   }
   function aetherSignalBrief40121(){
-    const oracle=aetherInformationLine40122(aetherOracleBrief4088());
-    if(oracle&&!/en attente/i.test(oracle))return `Oracle · ${aetherCompact4088(oracle,72)}`;
+    const oracle=aetherInformationLine40122(aetherOraclePriorityBrief40123());
+    if(oracle&&!/en attente/i.test(oracle))return `Oracle · ${aetherCompact4088(oracle,78)}`;
     const risk=aetherInformationLine40122(aetherText4084("atlasOperatorRisk35",""));
     const riskDetail=aetherInformationLine40122(aetherText4084("atlasOperatorRiskDetail35",""));
     // A positive anomaly is information; “pas d’anomalie / aucune donnée” is filler.
-    if(risk&&!/attente|aucune|pas d|non /i.test(risk))return `Signal · ${aetherCompact4088([risk,riskDetail].filter(Boolean).join(" · "),72)}`;
-    return `Largeur · ${aetherCompact4088(aetherBreadthBrief40121(),72)}`;
+    if(risk&&!/attente|aucune|pas d|non /i.test(risk))return `Signal · ${aetherCompact4088([risk,riskDetail].filter(Boolean).join(" · "),78)}`;
+    return `Top 5 · ${aetherCompact4088(aetherBreadthBrief40121(),78)}`;
   }
   function aetherVeilleBrief40121(){
     try{
@@ -397,7 +414,7 @@
       if(!events.length)return `Veille · ${snapshot.label||"aucun événement prioritaire"}`;
       const event=events[0],scope=aetherVeilleScope4087(event),impact=Math.round(aetherVeilleNumber4087(event?.impact?.score));
       const headline=aetherNewsHeadlineFr40104(event,"");
-      return `Veille · ${scope}${impact?` ${impact}/100`:""} · ${aetherCompact4088(headline,62)}`;
+      return `Veille · ${scope}${impact?` ${impact}/100`:""} · ${aetherCompact4088(headline,70)}`;
     }catch(_){return "Veille · News Sentinel";}
   }
   const aetherNewsWake4088={attempted:false,inflight:null};
@@ -454,7 +471,7 @@
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
-    // 40.4.122 — prime Aether cells are information-only: no generic disclaimer, caution or non-conclusion prose.
+    // 40.4.123 — information-only remains; prime cells are now ordered for immediate operator value: Market / breadth / Oracle / source / priority News.
     put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",s.veilleBrief);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
@@ -605,7 +622,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.122",
+    build:"40.4.123",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
