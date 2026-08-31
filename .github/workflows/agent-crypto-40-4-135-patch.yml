@@ -60,10 +60,9 @@ jobs:
           ix=index.read_text(encoding='utf-8'); rt=root_app.read_text(encoding='utf-8'); lc=lifecycle.read_text(encoding='utf-8')
           if rt.count('const ATLAS_BUILD = "40.4.134";')!=1: raise SystemExit('STOP root build guard')
           if ix.count('data-atlas-admin-active-role-lock-404134="true"')!=1: raise SystemExit('STOP .134 active-role guard missing/duplicated')
-          old_branch='''function atlasAdminAccountToggleAction40449() {\n  if (atlasAccessIsAuthorized() && atlasV2Mode() === "advanced") {\n    atlasAccessLock();\n  } else if (atlasAccessIsAuthorized()) {'''
-          if rt.count(old_branch)!=1: raise SystemExit('STOP canonical Administration branch guard')
-          visibility_owner='''function atlasPulseVisible() {\n  return document.visibilityState !== "hidden";\n}'''
-          if rt.count(visibility_owner)!=1: raise SystemExit('STOP canonical market visibility owner drift')
+          if ix.count('data-atlas-admin-first-click-intent-gate-40449="true"')!=1: raise SystemExit('STOP canonical 40.4.49 first-click gate drift')
+          if ix.count('<script src="./app.js?v=administrator-build-40.4.134"></script>')!=1: raise SystemExit('STOP root app script marker drift')
+          if 'function atlasPulseVisible()' not in rt or 'return document.visibilityState !== "hidden";' not in rt: raise SystemExit('STOP canonical market visibility owner drift')
           if 'focus_required:false' not in lc or 'document.hidden!==true' not in lc: raise SystemExit('STOP resident market wake visibility contract drift')
 
           latest=json.loads((DATA/'latest.json').read_text(encoding='utf-8'))
@@ -76,22 +75,48 @@ jobs:
           except Exception: raise SystemExit('STOP Top-250 generated_at invalid')
           if age<0 or age>8*3600: raise SystemExit(f'STOP Top-250 public snapshot stale: {age:.0f}s')
 
-          sub(index,
-              r'\n  <script data-atlas-admin-active-role-lock-404134="true">.*?</script>\n',
-              '\n',
-              '.134 active-role capture guard retirement',
-              flags=re.S)
+          # Remove the 40.4.134 capture blocker. Preserve the 40.4.49 first-click queue.
+          sub(index,r'\n\s*<script data-atlas-admin-active-role-lock-404134="true">.*?</script>\s*','\n','.134 active-role capture guard retirement',flags=re.S)
 
-          new_branch='''function atlasAdminAccountToggleAction40449() {\n  if (atlasAccessIsAuthorized() && atlasV2Mode() === "advanced") {\n    atlasV2SyncShareableUrl("advanced");\n    atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");\n    atlasV2ApplyMode("advanced", { persist: false, syncUrl: true });\n    return;\n  } else if (atlasAccessIsAuthorized()) {'''
-          rep(root_app,old_branch,new_branch,'canonical Administration idempotent owner')
+          # Install a post-app proxy around the existing canonical handler. Normal entry/auth
+          # still routes through app.js. Only the already-authorized+advanced re-click becomes
+          # idempotent, so there is no logout and no capture-phase dead click.
+          marker='<script src="./app.js?v=administrator-build-40.4.134"></script>'
+          recovery='''<script data-atlas-admin-click-recovery-404135="true">
+  /* 40.4.135 — canonical Administration click recovery. No timer/network/storage owner. */
+  (() => {
+    const button=document.getElementById("btnAdminAccountToggle");
+    const canonical=typeof atlasAdminAccountToggleAction40449==="function" ? atlasAdminAccountToggleAction40449 : null;
+    if(!button||!canonical){document.documentElement.dataset.adminClickRecovery404135="owner-missing";return;}
+    try{button.removeEventListener("click",canonical);}catch(_){}
+    const recovered=function(event){
+      try{
+        const authorized=typeof atlasAccessIsAuthorized==="function"&&atlasAccessIsAuthorized();
+        const mode=typeof atlasV2Mode==="function"?atlasV2Mode():"";
+        if(authorized&&mode==="advanced"){
+          event?.preventDefault?.();
+          if(typeof atlasV2ApplyMode==="function")atlasV2ApplyMode("advanced",{persist:true,syncUrl:true});
+          document.documentElement.dataset.adminClickRecovery404135="idempotent-active";
+          return;
+        }
+      }catch(_){}
+      return canonical.call(this,event);
+    };
+    button.addEventListener("click",recovered);
+    document.documentElement.dataset.adminClickRecovery404135="canonical-proxy";
+    globalThis.ErithAdminClickRecovery404135=Object.freeze({build:"40.4.135",canonical_normal_path:true,active_admin_reclick:"idempotent",capture_blocker:false,new_timer:false,new_network:false,new_storage_owner:false});
+  })();
+</script>'''
+          rep(index,marker,marker+'\n'+recovery,'Administration post-app recovery')
 
+          # Build/cache identity only. Protected market/graph/oracle/current engines are untouched.
           rep(root_app,'const ATLAS_BUILD = "40.4.134";','const ATLAS_BUILD = "40.4.135";','root build')
           rep(admin_app,'  const ADMIN_BUILD = "40.4.134";','  const ADMIN_BUILD = "40.4.135";','admin build')
           rep(aether,'  Build: 40.4.134','  Build: 40.4.135','Aether build')
-          sub(aether,r'  Revision: 40\.4\.134[^\n]*',
-              '  Revision: 40.4.135 recovery seal. Aether Attention, French news, Maintenon five-day weather, Atlas AUTO and the 40.4.134 detail opener are preserved unchanged.',
-              'Aether revision')
-          rep(aether,'    build:"40.4.134",','    build:"40.4.135",','Aether API build')
+          sub(aether,r'  Revision: 40\.4\.134[^\n]*','  Revision: 40.4.135 recovery seal. Aether Attention, French news, Maintenon five-day weather, Atlas AUTO and the 40.4.134 detail opener are preserved unchanged.','Aether revision')
+          at=aether.read_text(encoding='utf-8')
+          if at.count('    build:"40.4.134",')!=1: raise SystemExit('STOP Aether API build guard')
+          aether.write_text(at.replace('    build:"40.4.134",','    build:"40.4.135",',1),encoding='utf-8')
 
           t=index.read_text(encoding='utf-8')
           for pattern,repl,label in [
@@ -116,8 +141,8 @@ jobs:
               if n!=1: raise SystemExit(f'STOP {label}: {n}')
           index.write_text(t,encoding='utf-8')
 
-          note='40.4.135 — Administration canonical-click recovery + market snapshot wake seal: the 40.4.134 capture-phase active-role guard is retired; repeated Administration clicks are idempotent in the canonical app.js owner and an authorized Classic/visual mismatch is forced back to Advanced without logout. The canonical market pulse remains visibility-only and consumes the fresh public Top-250 archive; no Market Core, Graphique, Oracle, Bridge, CURRENT, weather or News owner is replaced.'
-          feat={'build':B,'administrator_capture_guard_404134_retired':True,'administrator_canonical_click_owner_restored':True,'administrator_authorized_visual_mismatch_forces_advanced':True,'administrator_active_reclick_logout':False,'market_public_top250_freshness_verified':True,'market_pulse_visibility_only_preserved':True,'aether_attention_preserved':True,'aether_french_news_preserved':True,'aether_maintenon_5_day_weather_preserved':True,'aether_detail_opener_404134_preserved':True,'new_market_timer':False,'new_market_fetch_owner':False,'new_observer':False,'market_core_changed':False,'graph_changed':False,'oracle_engine_changed':False,'bridge_engine_changed':False,'atlas_current_engine_changed':False}
+          note='40.4.135 — Administration canonical-click recovery + market snapshot wake seal: the 40.4.134 capture-phase blocker is retired; the existing app.js Administration handler remains the normal auth/entry path while active Administrator re-clicks are idempotent through a post-app proxy. The canonical market pulse remains visibility-only and a fresh public Top-250 archive is verified; no Market Core, Graphique, Oracle, Bridge, CURRENT, weather or News owner is replaced.'
+          feat={'build':B,'administrator_capture_guard_404134_retired':True,'administrator_first_click_gate_40449_preserved':True,'administrator_canonical_normal_path_preserved':True,'administrator_active_reclick_logout':False,'administrator_post_app_proxy':True,'market_public_top250_freshness_verified':True,'market_pulse_visibility_only_preserved':True,'aether_attention_preserved':True,'aether_french_news_preserved':True,'aether_maintenon_5_day_weather_preserved':True,'aether_detail_opener_404134_preserved':True,'new_market_timer':False,'new_market_fetch_owner':False,'new_observer':False,'market_core_changed':False,'graph_changed':False,'oracle_engine_changed':False,'bridge_engine_changed':False,'atlas_current_engine_changed':False}
 
           def manifest(path,admin_sha=None):
               d=json.loads(path.read_text(encoding='utf-8'))
@@ -149,9 +174,10 @@ jobs:
           manifest(version_manifest,sha(admin_manifest))
 
           rt=root_app.read_text(encoding='utf-8'); ix=index.read_text(encoding='utf-8'); at=aether.read_text(encoding='utf-8')
-          if 'data-atlas-admin-active-role-lock-404134' in ix: raise SystemExit('STOP .134 active-role guard survived')
-          if old_branch in rt or new_branch not in rt: raise SystemExit('STOP canonical Administration recovery missing')
-          if visibility_owner not in rt: raise SystemExit('STOP market visibility-only owner changed')
+          if 'data-atlas-admin-active-role-lock-404134' in ix: raise SystemExit('STOP .134 capture blocker survived')
+          if 'data-atlas-admin-first-click-intent-gate-40449="true"' not in ix: raise SystemExit('STOP canonical first-click gate lost')
+          if 'data-atlas-admin-click-recovery-404135="true"' not in ix or 'ErithAdminClickRecovery404135' not in ix: raise SystemExit('STOP post-app Administration recovery missing')
+          if 'function atlasPulseVisible()' not in rt or 'return document.visibilityState !== "hidden";' not in rt: raise SystemExit('STOP market visibility-only owner changed')
           if 'aetherDetailBound404134' not in at or 'aetherPanelSet4084(true)' not in at: raise SystemExit('STOP Aether .134 detail opener lost')
           if 'function aetherWeatherForecast40133(payload)' not in at: raise SystemExit('STOP Maintenon weather owner lost')
           if json.loads(version_manifest.read_text(encoding='utf-8')).get('build')!=B: raise SystemExit('STOP version build')
