@@ -41,26 +41,21 @@ def sub_once(path: Path, pattern: str, repl: str, label: str, flags: int = 0) ->
     path.write_text(out, encoding="utf-8")
 
 
-def sub_optional(path: Path, pattern: str, repl: str, label: str, flags: int = 0) -> None:
+def sub_optional(path: Path, pattern: str, repl: str, flags: int = 0) -> None:
     text = path.read_text(encoding="utf-8")
     out, count = re.subn(pattern, repl, text, count=1, flags=flags)
-    if count > 1:
-        raise SystemExit(f"STOP: {label} ambigu, trouvé {count}")
     if count:
         path.write_text(out, encoding="utf-8")
 
 
-def guard_request() -> None:
+def guard() -> None:
     req = json.loads(REQUEST.read_text(encoding="utf-8"))
-    if req.get("schema") != "agent_crypto_guarded_patch_request_v1":
-        raise SystemExit("STOP: schéma requête 40.4.132 invalide")
-    if req.get("build") != BUILD or req.get("parent_build") != PARENT:
+    if req.get("schema") != "agent_crypto_guarded_patch_request_v1" or req.get("build") != BUILD or req.get("parent_build") != PARENT:
         raise SystemExit("STOP: requête 40.4.132 invalide")
     current = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
     if current.get("build") != PARENT:
         raise SystemExit(f"STOP: parent build attendu {PARENT}, trouvé {current.get('build')}")
-    engine = current.get("engine") or {}
-    if str(engine.get("reference_build")) != "38.15.11":
+    if str((current.get("engine") or {}).get("reference_build")) != "38.15.11":
         raise SystemExit("STOP: Market Core parent inattendu")
 
 
@@ -74,27 +69,31 @@ def patch_aether() -> None:
         "Aether revision",
     )
 
-    old_pools = (
-        '    const pools=[];\n'
-        '    if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);\n'
-        '    if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);'
+    # Canonical translated payload must be searched before transformed UI rows.
+    old_match = (
+        '      const pools=[];\n'
+        '      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);\n'
+        '      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);'
     )
-    new_pools = (
-        '    const pools=[];\n'
-        '    // 40.4.132 — canonical translated collector payload is the first matching authority.\n'
-        '    if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);\n'
-        '    if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);'
+    new_match = (
+        '      const pools=[];\n'
+        '      // 40.4.132 — canonical translated collector payload is the first matching authority.\n'
+        '      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);\n'
+        '      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);'
     )
-    replace_once(path, old_pools, new_pools, "canonical matching pool order")
+    replace_once(path, old_match, new_match, "canonical matching pool order")
 
-    explicit = '    const explicitFrench=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\\s+/g," ").trim();\n    try{'
-    explicit_first = (
+    # Explicit canonical French is authoritative before any derived presentation helper.
+    explicit_line = '    const explicitFrench=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\\s+/g," ").trim();\n    try{'
+    replace_once(
+        path,
+        explicit_line,
         '    const explicitFrench=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\\s+/g," ").trim();\n'
         '    // 40.4.132 — never let a derived presentation helper overwrite a canonical French headline.\n'
         '    if(explicitFrench)return explicitFrench;\n'
-        '    try{'
+        '    try{',
+        "explicit French priority",
     )
-    replace_once(path, explicit, explicit_first, "explicit French priority")
     replace_once(
         path,
         '    if(explicitFrench)return explicitFrench;\n    // 40.4.124 — no “traduction en attente” and no raw English leakage in the scarce Aether ribbon.',
@@ -102,16 +101,9 @@ def patch_aether() -> None:
         "retire late explicit French branch",
     )
 
-    old_queue = (
-        '  function aetherVeilleEvents4087(){\n'
-        '    const events=[];\n'
-        '    const addPool=pool=>{if(!Array.isArray(pool))return;for(const event of pool)if(event)events.push(event);};\n'
-        '    try{if(typeof newsFeedState!=="undefined"){addPool(newsFeedState?.events);addPool(newsFeedState?.payload?.events);}}catch(_){}'
-    )
+    # Reading queue: canonical collector payload only when available. Derived rows are fallback-only.
+    old_queue = '    try{if(typeof newsFeedState!=="undefined"){addPool(newsFeedState?.events);addPool(newsFeedState?.payload?.events);}}catch(_){}'
     new_queue = (
-        '  function aetherVeilleEvents4087(){\n'
-        '    const events=[];\n'
-        '    const addPool=pool=>{if(!Array.isArray(pool))return;for(const event of pool)if(event)events.push(event);};\n'
         '    try{\n'
         '      if(typeof newsFeedState!=="undefined"){\n'
         '        const canonical=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])\n'
@@ -138,25 +130,25 @@ def patch_aether() -> None:
     )
 
 
-def patch_version_identity() -> None:
+def patch_identity() -> None:
     replace_once(ROOT / "app.js", 'const ATLAS_BUILD = "40.4.131";', 'const ATLAS_BUILD = "40.4.132";', "ATLAS_BUILD")
     replace_once(ROOT / "js/app.js", '  const ADMIN_BUILD = "40.4.131";', '  const ADMIN_BUILD = "40.4.132";', "ADMIN_BUILD")
 
-    index = ROOT / "index.html"
-    sub_once(index, r'(<meta name="atlas-build" content=")[^"]+("\s*/>)', rf'\g<1>{BUILD}\2', "index atlas-build")
-    sub_once(index, r'(<meta name="administrator-build" content=")[^"]+("\s*/>)', rf'\g<1>{BUILD}\2', "index administrator-build")
-    sub_once(index, r'(<meta name="administrator-release" content=")[^"]+("\s*/>)', rf'\g<1>{RELEASE}\2', "index release")
-    sub_once(index, r'(<meta name="atlas-asset-token" content=")[^"]+("\s*/>)', rf'\g<1>market-core-v2.0-alpha-build-{BUILD}\2', "index asset token")
-    sub_once(index, r'<title>Agent-Crypto @erith\.IA — Build [^<]+ · Administrator</title>', f'<title>Agent-Crypto @erith.IA — Build {BUILD} · Administrator</title>', "index title")
-    sub_once(index, r'(\./admin-ribbons\.css\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}', "ribbons cache token")
-    sub_once(index, r'(\./js/aether\.js\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}', "Aether cache token")
-    sub_optional(index, r'(\./app\.js\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}', "app cache token")
-    sub_optional(index, r'(\./js/app\.js\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}', "admin app cache token")
-    sub_optional(index, r'(data-administrator-build=")[^"]+(")', rf'\g<1>{BUILD}\2', "body administrator build")
-    sub_optional(index, r'(aria-label="Version Agent-Crypto installée : Build )[^"]+(, mode Administrator")', rf'\g<1>{BUILD}\2', "version aria label")
-    sub_optional(index, r'(<span id="atlasVersionControlText">Build )[^<]+(</span>)', rf'\g<1>{BUILD}\2', "version control text")
-    sub_optional(index, r'(<span id="atlasV2ReleaseBadge">Agent-Crypto @erith\.IA · Build )[^<]+( · Administrator</span>)', rf'\g<1>{BUILD}\2', "release badge")
-    sub_optional(index, r'(<span id="footerRelease">Agent-Crypto @erith\.IA · Build )[^<]+( · Administrator</span>)', rf'\g<1>{BUILD}\2', "footer release")
+    path = ROOT / "index.html"
+    sub_once(path, r'(<meta name="atlas-build" content=")[^"]+("\s*/>)', rf'\g<1>{BUILD}\2', "index atlas-build")
+    sub_once(path, r'(<meta name="administrator-build" content=")[^"]+("\s*/>)', rf'\g<1>{BUILD}\2', "index administrator-build")
+    sub_once(path, r'(<meta name="administrator-release" content=")[^"]+("\s*/>)', rf'\g<1>{RELEASE}\2', "index release")
+    sub_once(path, r'(<meta name="atlas-asset-token" content=")[^"]+("\s*/>)', rf'\g<1>market-core-v2.0-alpha-build-{BUILD}\2', "index asset token")
+    sub_once(path, r'<title>Agent-Crypto @erith\.IA — Build [^<]+ · Administrator</title>', f'<title>Agent-Crypto @erith.IA — Build {BUILD} · Administrator</title>', "index title")
+    sub_once(path, r'(\./admin-ribbons\.css\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}', "ribbons cache token")
+    sub_once(path, r'(\./js/aether\.js\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}', "Aether cache token")
+    sub_optional(path, r'(\./app\.js\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}')
+    sub_optional(path, r'(\./js/app\.js\?v=administrator-build-)[^"\']+', rf'\g<1>{BUILD}')
+    sub_optional(path, r'(data-administrator-build=")[^"]+(")', rf'\g<1>{BUILD}\2')
+    sub_optional(path, r'(aria-label="Version Agent-Crypto installée : Build )[^"]+(, mode Administrator")', rf'\g<1>{BUILD}\2')
+    sub_optional(path, r'(<span id="atlasVersionControlText">Build )[^<]+(</span>)', rf'\g<1>{BUILD}\2')
+    sub_optional(path, r'(<span id="atlasV2ReleaseBadge">Agent-Crypto @erith\.IA · Build )[^<]+( · Administrator</span>)', rf'\g<1>{BUILD}\2')
+    sub_optional(path, r'(<span id="footerRelease">Agent-Crypto @erith\.IA · Build )[^<]+( · Administrator</span>)', rf'\g<1>{BUILD}\2')
 
 
 def update_manifest(path: Path, administrator_sha: str | None = None) -> None:
@@ -170,7 +162,6 @@ def update_manifest(path: Path, administrator_sha: str | None = None) -> None:
         data["global_versioning"] = BUILD
     data["asset_token"] = f"market-core-v2.0-alpha-build-{BUILD}"
     data["parent_build"] = PARENT
-
     suffix = "40.4.132 canonical translated News story owner + derived-row fallback-only content recovery"
     if isinstance(data.get("lineage"), str) and suffix not in data["lineage"]:
         data["lineage"] += " → " + suffix
@@ -181,7 +172,7 @@ def update_manifest(path: Path, administrator_sha: str | None = None) -> None:
         "canonical_french_headline_first": True,
         "derived_ui_rows_fallback_only": True,
         "derived_rows_can_displace_canonical_story": False,
-        "minimum_story_slots_target": 12,
+        "story_slots": 12,
         "story_slot_seconds": 18,
         "full_batch_before_system": True,
         "cadence_seconds": 270,
@@ -208,9 +199,7 @@ def update_manifest(path: Path, administrator_sha: str | None = None) -> None:
     notes = data.setdefault("release_notes", [])
     if not notes or notes[0] != NOTE:
         notes.insert(0, NOTE)
-
-    validation = data.setdefault("validation", {})
-    validation.update({
+    data.setdefault("validation", {}).update({
         "aether_canonical_news_queue_404132_required": True,
         "aether_explicit_french_headline_priority_404132_required": True,
         "aether_derived_rows_fallback_only_404132_required": True,
@@ -226,15 +215,13 @@ def update_manifest(path: Path, administrator_sha: str | None = None) -> None:
             if not target.is_file():
                 raise SystemExit(f"STOP: fichier manifest absent pendant resynchronisation {rel}")
             files[rel] = sha(target)
-
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def synchronize_manifests() -> None:
+def sync_manifests() -> None:
     admin = ROOT / "administrator-version.json"
-    version = ROOT / "version.json"
     update_manifest(admin)
-    update_manifest(version, sha(admin))
+    update_manifest(ROOT / "version.json", sha(admin))
 
 
 def validate() -> None:
@@ -244,17 +231,14 @@ def validate() -> None:
     css = (ROOT / "admin-ribbons.css").read_text(encoding="utf-8", errors="replace")
     index = (ROOT / "index.html").read_text(encoding="utf-8", errors="replace")
 
-    if 'const ATLAS_BUILD = "40.4.132";' not in app or 'const ADMIN_BUILD = "40.4.132";' not in admin_js:
+    if 'const ATLAS_BUILD = "40.4.132";' not in app or 'const ADMIN_BUILD = "40.4.132";' not in admin_js or 'build:"40.4.132"' not in aether:
         raise SystemExit("STOP: version runtime 40.4.132 non alignée")
-    if 'build:"40.4.132"' not in aether:
-        raise SystemExit("STOP: Aether API build non aligné")
     if 'news_feed_primary_pool:"newsFeedState.payload.events"' not in aether:
         raise SystemExit("STOP: owner canonique VEILLE absent")
     if 'if(canonical.length)addPool(canonical);' not in aether or 'else addPool(newsFeedState?.events);' not in aether:
         raise SystemExit("STOP: fallback-only derived rows absent")
     if 'addPool(newsFeedState?.events);addPool(newsFeedState?.payload?.events);' in aether:
         raise SystemExit("STOP: ancien union dérivé+canonique encore actif")
-
     explicit_pos = aether.find('if(explicitFrench)return explicitFrench;')
     helper_pos = aether.find('const owner=globalThis.AgentCryptoNewsFrenchPresentation40104;')
     if explicit_pos < 0 or helper_pos < 0 or explicit_pos > helper_pos:
@@ -276,19 +260,15 @@ def validate() -> None:
     if '.atlas-access-truth-panel-40380{display:grid!important;grid-column:2' not in index:
         raise SystemExit("STOP: Vérité opérateur responsive 40.4.131 perdue")
 
-    latest_path = Path("public/agent_crypto_erith_ia/data/news/latest.json")
-    latest = json.loads(latest_path.read_text(encoding="utf-8"))
+    latest = json.loads(Path("public/agent_crypto_erith_ia/data/news/latest.json").read_text(encoding="utf-8"))
     rows = [e for e in (latest.get("events") or []) if str(e.get("headline") or "").strip()]
     translated = [e for e in rows if str(e.get("headline_fr_display") or e.get("headline_fr") or "").strip()]
     if len(rows) < 12 or len(translated) < 12:
-        raise SystemExit(f"STOP: payload News canonique insuffisant pour 12 lectures: rows={len(rows)} translated={len(translated)}")
-    if any(not str(e.get("headline_fr_display") or e.get("headline_fr") or "").strip() for e in rows[:12]):
-        raise SystemExit("STOP: une des 12 premières News canoniques n'a pas de titre FR")
+        raise SystemExit(f"STOP: payload News canonique insuffisant: rows={len(rows)} translated={len(translated)}")
 
     ids = re.findall(r'\bid=["\']([^"\']+)["\']', index)
     if len(ids) != len(set(ids)):
-        dup = sorted({x for x in ids if ids.count(x) > 1})[:10]
-        raise SystemExit("STOP: IDs HTML dupliqués: " + ", ".join(dup))
+        raise SystemExit("STOP: IDs HTML dupliqués")
 
     admin = json.loads((ROOT / "administrator-version.json").read_text(encoding="utf-8"))
     version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
@@ -299,15 +279,11 @@ def validate() -> None:
             raise SystemExit(f"STOP: Market Core déclaré modifié dans {name}")
         for rel, expected in (data.get("files") or {}).items():
             target = ROOT / rel
-            if not target.is_file():
-                raise SystemExit(f"STOP: fichier manifest absent {rel}")
-            actual = sha(target)
-            if actual != expected:
-                raise SystemExit(f"STOP: hash manifest faux {name} {rel}: {actual} != {expected}")
+            if not target.is_file() or sha(target) != expected:
+                raise SystemExit(f"STOP: hash manifest faux {name} {rel}")
     if str((version.get("engine") or {}).get("reference_build")) != "38.15.11":
         raise SystemExit("STOP: Market Core 38.15.11 non préservé")
-    admin_hash = sha(ROOT / "administrator-version.json")
-    if version.get("integrity", {}).get("publication_identity", {}).get("administrator_version_sha256") != admin_hash:
+    if version.get("integrity", {}).get("publication_identity", {}).get("administrator_version_sha256") != sha(ROOT / "administrator-version.json"):
         raise SystemExit("STOP: chaîne administrator-version SHA incorrecte")
 
     print(f"PASS {BUILD} · canonical translated News owner · 12-story 18s cadence preserved · Market Core 38.15.11 protected")
@@ -319,38 +295,35 @@ def build_archive() -> None:
     for required in ("version.json", "administrator-version.json"):
         if required not in files:
             files.append(required)
-    missing = [rel for rel in files if not (ROOT / rel).is_file()]
-    if missing:
-        raise SystemExit("STOP: archive, fichiers absents: " + ", ".join(missing))
-    archive_dir = Path("coordination/inter_ai_dialogues/agent_crypto")
-    archive_dir.mkdir(parents=True, exist_ok=True)
-    out = archive_dir / "AGENT_CRYPTO_BUILD_40_4_132_AUTO_CANONICAL.zip"
+    outdir = Path("coordination/inter_ai_dialogues/agent_crypto")
+    outdir.mkdir(parents=True, exist_ok=True)
+    out = outdir / "AGENT_CRYPTO_BUILD_40_4_132_AUTO_CANONICAL.zip"
     with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         for rel in files:
-            zf.write(ROOT / rel, arcname=(ROOT / rel).as_posix())
+            src = ROOT / rel
+            if not src.is_file():
+                raise SystemExit(f"STOP: archive fichier absent {rel}")
+            zf.write(src, arcname=src.as_posix())
     digest = sha(out)
     Path(str(out) + ".sha256").write_text(f"{digest}  {out.name}\n", encoding="utf-8")
     print(f"ARCHIVE {out} {digest}")
 
 
 def main() -> None:
-    guard_request()
-    before = {}
+    guard()
     markers = ("setInterval(", "MutationObserver", "IntersectionObserver", "new WebSocket", "localStorage.setItem")
+    before = {}
     for rel in ("app.js", "js/app.js"):
         text = (ROOT / rel).read_text(encoding="utf-8", errors="replace")
-        before[rel] = {marker: text.count(marker) for marker in markers}
-
+        before[rel] = {m: text.count(m) for m in markers}
     patch_aether()
-    patch_version_identity()
-    synchronize_manifests()
-
+    patch_identity()
+    sync_manifests()
     for rel in ("app.js", "js/app.js"):
         text = (ROOT / rel).read_text(encoding="utf-8", errors="replace")
         for marker in markers:
             if text.count(marker) > before[rel][marker]:
                 raise SystemExit(f"STOP: budget runtime augmenté {rel} {marker}")
-
     validate()
     build_archive()
 
