@@ -426,3 +426,12 @@
     .atlas-aether-panel-head-4084 b{color:#f0b0da;letter-spacing:.10em}.atlas-aether-panel-head-4084 button{border:0;background:transparent;color:#9db6c3;cursor:pointer}
     .atlas-aether-panel-grid-4084{display:grid;gap:6px}.atlas-aether-panel-grid-4084 article{display:grid;grid-template-columns:74px 1fr;gap:8px;padding:7px 8px;border:1px solid rgba(100,201,224,.12);border-radius:9px;background:rgba(7,23,34,.62)}
     .atlas-aether-panel-grid-4084 span{color:#7896a7;text-transform:uppercase;font-size:8px;font-weight:900;letter-spacing:.08em}.atlas-aether-panel-grid-4084 b{font-size:10px;color:#dcecf2;font-weight:800}
+
+
+/* 40.4.126 — AETHER INFO GEOMETRY RECOVERY · NEWS CELL YIELDS, FACT CELLS NEVER COLLIDE */
+/* Long compact News text now yields width; Market / Top 5 / Oracle / Sources keep readable desktop widths. */
+@media (min-width:1181px){
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{gap:12px!important;overflow:hidden!important}
+  body #atlasAetherRibbonMarket4088,body #atlasAetherRibbonAtlas4084,body #atlasAetherRibbonOracle4084,body #atlasAetherRibbonSources4084{flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important;overflow:visible!important;text-overflow:clip!important}
+  body #atlasAetherRibbonBook4084{flex:1 1 320px!important;width:auto!important;min-width:180px!important;max-width:none!important;justify-content:flex-start!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+}

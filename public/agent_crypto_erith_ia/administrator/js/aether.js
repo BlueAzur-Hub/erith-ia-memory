@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.125
-  Revision: 40.4.125 canonical French News handoff. News Sentinel headline_fr_display/headline_fr now owns the scarce Aether story text end-to-end: VEILLE, CONTEXTE and the compact INFO cell. 40.4.124 French fallback, 40.4.123 information-density and 40.4.121 constant-read-speed marquee are preserved.
+  Build: 40.4.126
+  Revision: 40.4.126 Aether News flow recovery. The scarce FEED phase is NEWS-only: five ranked French News Sentinel stories rotate consecutively with no CONTEXTE interleave. Full-story readability is prioritized by scrolling headline + source only; 40.4.121 constant-read-speed marquee is preserved.
 */
 (() => {
   "use strict";
@@ -274,7 +274,8 @@
     const headline=aetherNewsHeadlineFr40104(event,"Événement à qualifier");
     // 40.4.123 — priority first: asset/scope and impact are readable before the queue position.
     const meta=`${scope} · ${impactLevel} ${impact}/100 · ${aetherVeilleState4087.index+1}/${events.length}`;
-    const detail=[headline,evidence?`preuve ${evidence}/100`:null,source||null,freshness||null].filter(Boolean).join(" · ");
+    // 40.4.126 — the moving lane carries the complete French story first; telemetry stays in its fixed meta chip / News panel.
+    const detail=[headline,source||null].filter(Boolean).join(" · ");
     return{...snapshot,kind:"alert",brand:"♥ VEILLE",index:aetherVeilleState4087.index,total:events.length,event,meta,detail};
   }
   function aetherVeilleMarqueeSync40121(host,viewport,marquee,copy,fingerprint,fingerprintChanged){
@@ -337,20 +338,16 @@
   function aetherVeilleAdvance4087(){
     const ranked=aetherVeilleEvents4087();
     if(!ranked.length){
-      aetherVeilleState4087.index=0;aetherVeilleState4087.kind="alert";aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.fingerprint="";
+      aetherVeilleState4087.index=0;aetherVeilleState4087.kind="alert";aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyContext=null;aetherVeilleState4087.fingerprint="";
       return renderAetherVeille4087();
     }
-    if(aetherVeilleState4087.kind==="alert"){
-      const current=ranked[((aetherVeilleState4087.index%ranked.length)+ranked.length)%ranked.length]||null;
-      const context=current?aetherNewsMarketContext4089(current):null;
-      if(current&&context){
-        aetherVeilleState4087.storyEvent=current;aetherVeilleState4087.storyContext=context;aetherVeilleState4087.kind="context";
-      }else{
-        aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyContext=null;aetherVeilleState4087.kind="alert";
-      }
-    }else{
-      aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyContext=null;aetherVeilleState4087.kind="alert";
-    }
+    // 40.4.126 — scarce Aether FEED time belongs to actual News stories.
+    // One 36 s FEED phase = initial story + four 9 s pulse advances = five ranked stories.
+    // CONTEXTE remains available elsewhere in the interface but is never interleaved into this lane.
+    aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
+    aetherVeilleState4087.kind="alert";
+    aetherVeilleState4087.storyEvent=null;
+    aetherVeilleState4087.storyContext=null;
     aetherVeilleState4087.fingerprint="";
     return renderAetherVeille4087();
   }
@@ -660,6 +657,8 @@
           aetherVeilleAdvance4087();
         }else if(aetherVeilleState4087.feedWasVisible){
           aetherVeilleState4087.feedWasVisible=false;
+          // 40.4.126 — every new FEED window restarts at ranked story 1/5.
+          aetherVeilleState4087.index=0;
           aetherVeilleState4087.kind="alert";
           aetherVeilleState4087.storyEvent=null;
           aetherVeilleState4087.storyContext=null;
@@ -674,7 +673,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.125",
+    build:"40.4.126",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -720,7 +719,11 @@
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
     news_translation_preferred:"headline_fr_display → headline_fr",
-    news_translation_story_owner:"News Sentinel French headline owns VEILLE + CONTEXTE + compact INFO",
+    news_translation_story_owner:"News Sentinel French headline owns VEILLE + compact INFO",
+    news_feed_news_only_rotation:true,
+    news_feed_context_interleave:false,
+    news_feed_ranked_story_count:5,
+    news_feed_story_detail:"headline + source",
     news_translation_context_keeps_headline:true,
     news_translation_compact_headline_first:true,
     news_translation_fallback:"deterministic French factual summary → original only when already non-English",
