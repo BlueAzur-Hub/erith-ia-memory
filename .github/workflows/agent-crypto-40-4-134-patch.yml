@@ -1,0 +1,202 @@
+name: Agent-Crypto 40.4.134 guarded patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/patches/40.4.134.request.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-134-guarded-patch
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded 40.4.134 surgery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import hashlib, json, re, zipfile
+
+          R=Path('public/agent_crypto_erith_ia/administrator')
+          Q=Path('coordination/inter_ai_dialogues/agent_crypto/patches/40.4.134.request.json')
+          B='40.4.134'; P='40.4.133'
+          REL='AETHER DETAIL DISCOVERABILITY · ADMIN ACTIVE-ROLE NO-LOGOUT LOCK'
+          STATUS='candidate_aether_detail_admin_role_operator_validation_required'
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          def rep(p,a,b,label):
+              t=p.read_text(encoding='utf-8'); n=t.count(a)
+              if n!=1: raise SystemExit(f'STOP {label}: {n}')
+              p.write_text(t.replace(a,b,1),encoding='utf-8')
+          def sub(p,a,b,label):
+              t=p.read_text(encoding='utf-8'); o,n=re.subn(a,b,t,count=1)
+              if n!=1: raise SystemExit(f'STOP {label}: {n}')
+              p.write_text(o,encoding='utf-8')
+
+          q=json.loads(Q.read_text(encoding='utf-8'))
+          v=json.loads((R/'version.json').read_text(encoding='utf-8'))
+          if q.get('build')!=B or q.get('parent_build')!=P or v.get('build')!=P:
+              raise SystemExit('STOP parent/request mismatch')
+          if str((v.get('engine') or {}).get('reference_build'))!='38.15.11':
+              raise SystemExit('STOP protected Market Core identity mismatch')
+
+          aether=R/'js/aether.js'; index=R/'index.html'; root_app=R/'app.js'; admin_app=R/'js/app.js'
+          timers_before=aether.read_text(encoding='utf-8').count('setInterval(')
+          if root_app.read_text(encoding='utf-8').count('const ATLAS_BUILD = "40.4.133";')!=1:
+              raise SystemExit('STOP root build guard')
+          if 'id="atlasAetherStatusToggle4084"' not in index.read_text(encoding='utf-8'):
+              raise SystemExit('STOP Aether toggle missing')
+          if 'function aetherWeatherForecast40133(payload)' not in aether.read_text(encoding='utf-8'):
+              raise SystemExit('STOP 5-day weather owner missing')
+
+          rep(aether,'  Build: 40.4.133','  Build: 40.4.134','aether header')
+          sub(aether,r'  Revision: 40\.4\.133[^\n]*',
+              '  Revision: 40.4.134 operator discoverability lock. Existing Aether Attention, Maintenon 5-day forecast and Atlas AUTO owners are preserved; the visible Aether system band now opens the detailed panel directly.',
+              'aether revision')
+          marker='    window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();renderAetherSystem4086();renderAetherVeille4087();},{passive:true});'
+          bind=(
+              '    const quickPanel=document.getElementById("atlasAetherSystem4086");\n'
+              '    if(quickPanel&&quickPanel.dataset.aetherDetailBound404134!=="1"){\n'
+              '      quickPanel.dataset.aetherDetailBound404134="1";\n'
+              '      quickPanel.setAttribute("role","button");\n'
+              '      quickPanel.setAttribute("tabindex","0");\n'
+              '      quickPanel.setAttribute("aria-label","Ouvrir Aether : météo Maintenon 5 jours, risque météo, système et Atlas AUTO");\n'
+              '      quickPanel.setAttribute("title","Ouvrir Aether · météo 5 j · risque · système · Atlas AUTO");\n'
+              '      quickPanel.style.cursor="pointer";\n'
+              '      const openDetail404134=()=>aetherPanelSet4084(true);\n'
+              '      quickPanel.addEventListener("click",openDetail404134);\n'
+              '      quickPanel.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openDetail404134();}});\n'
+              '    }\n'
+          )
+          rep(aether,marker,bind+marker,'Aether compact detail opener')
+          rep(aether,'    build:"40.4.133",','    build:"40.4.134",','Aether API build')
+
+          marker='  <link rel="stylesheet" href="./style.css" />'
+          guard=(
+              '  <script data-atlas-admin-active-role-lock-404134="true">\n'
+              '    /* 40.4.134 — active Administration click is idempotent, never logout. */\n'
+              '    (() => {\n'
+              '      const keepActive = event => {\n'
+              '        if (event?.isTrusted !== true) return;\n'
+              '        const target = event.target instanceof Element ? event.target.closest("#btnAdminAccountToggle") : null;\n'
+              '        if (!target) return;\n'
+              '        const root = document.documentElement;\n'
+              '        if (root.dataset.atlasRole !== "administrator" || root.dataset.atlasView !== "advanced") return;\n'
+              '        event.preventDefault(); event.stopImmediatePropagation();\n'
+              '        root.dataset.adminActiveRoleLock404134 = "stay-advanced";\n'
+              '        target.setAttribute("aria-pressed","true");\n'
+              '      };\n'
+              '      document.addEventListener("click", keepActive, true);\n'
+              '    })();\n'
+              '  </script>\n'
+          )
+          rep(index,marker,guard+marker,'Administrator active-role click lock')
+
+          rep(root_app,'const ATLAS_BUILD = "40.4.133";','const ATLAS_BUILD = "40.4.134";','root build')
+          rep(admin_app,'  const ADMIN_BUILD = "40.4.133";','  const ADMIN_BUILD = "40.4.134";','admin build')
+
+          t=index.read_text(encoding='utf-8')
+          for pattern,repl,label in [
+              (r'(<meta name="atlas-build" content=")[^"]+("\s*/>)',rf'\g<1>{B}\2','meta atlas'),
+              (r'(<meta name="administrator-build" content=")[^"]+("\s*/>)',rf'\g<1>{B}\2','meta admin'),
+              (r'(<meta name="administrator-release" content=")[^"]+("\s*/>)',rf'\g<1>{REL}\2','meta release'),
+              (r'(<meta name="atlas-asset-token" content="market-core-v2\.0-alpha-build-)[^"]+("\s*/>)',rf'\g<1>{B}\2','meta token'),
+              (r'(<title>Agent-Crypto @erith\.IA — Build )[^<]+( · Administrator</title>)',rf'\g<1>{B}\2','title build')
+          ]:
+              t,n=re.subn(pattern,repl,t,count=1)
+              if n!=1: raise SystemExit(f'STOP {label}: {n}')
+          t=t.replace('market-core-v2.0-alpha-build-40.4.133',f'market-core-v2.0-alpha-build-{B}')
+          t=t.replace('administrator-build-40.4.133',f'administrator-build-{B}')
+          for pattern,repl,label in [
+              (r'(data-administrator-build=")[^"]+(")',rf'\g<1>{B}\2','data admin build'),
+              (r'(aria-label="Version Agent-Crypto installée : Build )[^"]+(, mode Administrator")',rf'\g<1>{B}\2','aria build'),
+              (r'(<span id="atlasVersionControlText">Build )[^<]+(</span>)',rf'\g<1>{B}\2','badge build'),
+              (r'(<span id="atlasV2ReleaseBadge">Agent-Crypto @erith\.IA · Build )[^<]+( · Administrator</span>)',rf'\g<1>{B}\2','release badge'),
+              (r'(<span id="footerRelease">Agent-Crypto @erith\.IA · Build )[^<]+( · Administrator</span>)',rf'\g<1>{B}\2','footer build')
+          ]:
+              t,n=re.subn(pattern,repl,t,count=1)
+              if n!=1: raise SystemExit(f'STOP {label}: {n}')
+          index.write_text(t,encoding='utf-8')
+
+          note='40.4.134 — Aether detail discoverability + Administration active-role idempotence: clicking the visible Aether CPU/GPU/RAM/Maintenon/BTC band opens the existing 5-day operator panel; clicking Administration while already Administrator no longer logs out to Vue Classique. Market Core, Oracle, Atlas CURRENT, Bridge and existing weather owners are unchanged.'
+          feat={'build':B,'aether_compact_band_opens_detail':True,'aether_existing_5_day_weather_owner_preserved':True,'administrator_active_role_reclick_idempotent':True,'administrator_first_entry_door_preserved':True,'auth_owner_changed':False,'storage_write_added':False,'timer_added':False,'market_core_changed':False,'oracle_engine_changed':False,'atlas_current_changed':False,'bridge_engine_changed':False}
+          def manifest(path,admin_sha=None):
+              d=json.loads(path.read_text(encoding='utf-8'))
+              d['build']=B; d['release']=REL; d['status']=STATUS
+              d['prepared_at']=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+              d['published_at']=None; d['parent_build']=P; d['asset_token']=f'market-core-v2.0-alpha-build-{B}'
+              if 'global_versioning' in d: d['global_versioning']=B
+              if 'source' in d and isinstance(d['source'],str) and d['source']==P: d['source']=B
+              lineage=str(d.get('lineage') or '')
+              entry=f'{B} Aether detail discoverability + Administrator active-role no-logout lock'
+              if entry not in lineage: d['lineage']=(lineage+' → '+entry).strip(' →')
+              d.setdefault('features',{})['aether_detail_admin_role_404134']=feat.copy()
+              integ=d.setdefault('integrity',{}); integ['aether_detail_admin_role_404134']=feat.copy()
+              pub=integ.setdefault('publication_identity',{})
+              pub.update({'build':B,'asset_token':f'market-core-v2.0-alpha-build-{B}','status':STATUS,'app_sha256':sha(root_app)})
+              if admin_sha: pub['administrator_version_sha256']=admin_sha
+              notes=d.setdefault('release_notes',[])
+              if isinstance(notes,list):
+                  if not notes or notes[0]!=note: notes.insert(0,note)
+              else: d['release_notes']=[note,str(notes)]
+              for rel in list((d.get('files') or {})):
+                  target=R/rel
+                  if not target.is_file(): raise SystemExit(f'STOP manifest file missing {rel}')
+                  d['files'][rel]=sha(target)
+              path.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          admin_manifest=R/'administrator-version.json'; version_manifest=R/'version.json'
+          manifest(admin_manifest)
+          manifest(version_manifest,sha(admin_manifest))
+
+          at=aether.read_text(encoding='utf-8'); ix=index.read_text(encoding='utf-8')
+          if at.count('setInterval(')!=timers_before: raise SystemExit('STOP recurring timer count changed')
+          if 'aetherDetailBound404134' not in at or 'aetherPanelSet4084(true)' not in at: raise SystemExit('STOP Aether opener')
+          if 'data-atlas-admin-active-role-lock-404134="true"' not in ix or 'stopImmediatePropagation' not in ix: raise SystemExit('STOP Admin guard')
+          if 'function aetherWeatherForecast40133(payload)' not in at or 'forecast_days=${AETHER_WEATHER_4086.days}' not in at: raise SystemExit('STOP 5-day weather path')
+          if json.loads(version_manifest.read_text(encoding='utf-8')).get('build')!=B: raise SystemExit('STOP version build')
+
+          files=list((json.loads(version_manifest.read_text(encoding='utf-8')).get('files') or {}).keys())
+          for required in ('version.json','administrator-version.json'):
+              if required not in files: files.append(required)
+          missing=[rel for rel in files if not (R/rel).is_file()]
+          if missing: raise SystemExit('STOP archive files missing: '+', '.join(missing))
+          outdir=Path('coordination/inter_ai_dialogues/agent_crypto'); outdir.mkdir(parents=True,exist_ok=True)
+          out=outdir/f'AGENT_CRYPTO_BUILD_{B.replace(".","_")}_AUTO_CANONICAL.zip'
+          with zipfile.ZipFile(out,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
+              for rel in files: zf.write(R/rel,arcname=(Path('public/agent_crypto_erith_ia/administrator')/rel).as_posix())
+          digest=sha(out); Path(str(out)+'.sha256').write_text(f'{digest}  {out.name}\n',encoding='utf-8')
+          print('BUILD',B); print('ARCHIVE',out); print('SHA256',digest)
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+
+      - name: Commit validated 40.4.134 atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/workflows/agent-crypto-40-4-134-patch.yml coordination/inter_ai_dialogues/agent_crypto/patches/40.4.134.request.json
+          git add public/agent_crypto_erith_ia/administrator \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_134_AUTO_CANONICAL.zip \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_134_AUTO_CANONICAL.zip.sha256
+          git diff --cached --check
+          git commit -m "fix Agent-Crypto 40.4.134 Aether detail and Administration active-role lock"
+          git push origin HEAD:main
