@@ -27,7 +27,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json, hashlib
+          import json, hashlib, re
 
           root = Path("public/agent_crypto_erith_ia/administrator")
           old = "40.4.126"
@@ -54,45 +54,46 @@ jobs:
               "aether header"
           )
 
-          old_queue = '''  function aetherVeilleEvents4087(){
-    let events=[];try{if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))events=newsFeedState.events.slice();}catch(_){}
-    return events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)}))
-      .sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order).slice(0,AETHER_VEILLE_TOP_4087).map(row=>row.event);
-  }'''
-          new_queue = '''  function aetherVeilleStoryTokens40127(event){
-    const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
-    const tokens=[];
-    const push=(prefix,value)=>{const v=String(value||"").replace(/\\s+/g," ").trim().toLowerCase();if(v)tokens.push(`${prefix}:${v}`);};
-    push("id",canonical?.event_id||canonical?.id||canonical?.fingerprint);
-    for(const id of (Array.isArray(canonical?.merged_event_ids)?canonical.merged_event_ids:[]))push("id",id);
-    push("url",canonical?.source_url);
-    push("fr",aetherNewsHeadlineFr40104(canonical,""));
-    push("raw",canonical?.headline||canonical?.event_label);
-    return [...new Set(tokens)];
-  }
-  function aetherVeilleEvents4087(){
-    const events=[];
-    const addPool=pool=>{if(!Array.isArray(pool))return;for(const event of pool)if(event)events.push(event);};
-    try{
-      if(typeof newsFeedState!=="undefined"){
-        addPool(newsFeedState?.events);
-        addPool(newsFeedState?.payload?.events);
-      }
-    }catch(_){}
-    const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)}))
-      .sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
-    const unique=[];
-    const seen=new Set();
-    for(const row of ranked){
-      const tokens=aetherVeilleStoryTokens40127(row.event);
-      if(tokens.length&&tokens.some(token=>seen.has(token)))continue;
-      tokens.forEach(token=>seen.add(token));
-      unique.push(row.event);
-      if(unique.length>=AETHER_VEILLE_TOP_4087)break;
-    }
-    return unique;
-  }'''
-          aether = replace_once(aether, old_queue, new_queue, "unique News queue")
+          queue_re = re.compile(r'  function aetherVeilleEvents4087\(\)\{.*?\n  \}\n  function aetherVeilleScope4087', re.S)
+          queue_lines = [
+              '  function aetherVeilleStoryTokens40127(event){',
+              '    const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};',
+              '    const tokens=[];',
+              '    const push=(prefix,value)=>{const v=String(value||"").replace(/\\s+/g," ").trim().toLowerCase();if(v)tokens.push(`${prefix}:${v}`);};',
+              '    push("id",canonical?.event_id||canonical?.id||canonical?.fingerprint);',
+              '    for(const id of (Array.isArray(canonical?.merged_event_ids)?canonical.merged_event_ids:[]))push("id",id);',
+              '    push("url",canonical?.source_url);',
+              '    push("fr",aetherNewsHeadlineFr40104(canonical,""));',
+              '    push("raw",canonical?.headline||canonical?.event_label);',
+              '    return [...new Set(tokens)];',
+              '  }',
+              '  function aetherVeilleEvents4087(){',
+              '    const events=[];',
+              '    const addPool=pool=>{if(!Array.isArray(pool))return;for(const event of pool)if(event)events.push(event);};',
+              '    try{',
+              '      if(typeof newsFeedState!=="undefined"){',
+              '        addPool(newsFeedState?.events);',
+              '        addPool(newsFeedState?.payload?.events);',
+              '      }',
+              '    }catch(_){}',
+              '    const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)}))',
+              '      .sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);',
+              '    const unique=[];',
+              '    const seen=new Set();',
+              '    for(const row of ranked){',
+              '      const tokens=aetherVeilleStoryTokens40127(row.event);',
+              '      if(tokens.length&&tokens.some(token=>seen.has(token)))continue;',
+              '      tokens.forEach(token=>seen.add(token));',
+              '      unique.push(row.event);',
+              '      if(unique.length>=AETHER_VEILLE_TOP_4087)break;',
+              '    }',
+              '    return unique;',
+              '  }',
+              '  function aetherVeilleScope4087'
+          ]
+          aether, n = queue_re.subn("\n".join(queue_lines), aether, count=1)
+          if n != 1:
+              raise SystemExit(f"unique News queue: expected one match, got {n}")
 
           aether = replace_once(
               aether,
@@ -100,7 +101,6 @@ jobs:
               'put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084","");',
               "INFO redundant News tail"
           )
-
           aether = replace_once(aether, '    build:"40.4.126",', '    build:"40.4.127",', "Aether API build")
           aether = replace_once(
               aether,
@@ -116,14 +116,17 @@ jobs:
           marker = "/* 40.4.127 — AETHER INFO RIGHT-EDGE CLEANUP · NEWS LIVES IN FEED */"
           if marker in ribbons:
               raise SystemExit("40.4.127 CSS marker already present")
-          ribbons += '''\n\n/* 40.4.127 — AETHER INFO RIGHT-EDGE CLEANUP · NEWS LIVES IN FEED */
-/* The compact News tail was redundant with the dedicated VEILLE phase and could be clipped at the right edge. */
-@media (min-width:901px){
-  body #atlasAetherRibbonBook4084{display:none!important}
-  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{padding-right:2px!important}
-}
-'''
-          write("admin-ribbons.css", ribbons)
+          css_patch = "\n".join([
+              "",
+              marker,
+              "/* The compact News tail was redundant with the dedicated VEILLE phase and could be clipped at the right edge. */",
+              "@media (min-width:901px){",
+              "  body #atlasAetherRibbonBook4084{display:none!important}",
+              "  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{padding-right:2px!important}",
+              "}",
+              ""
+          ])
+          write("admin-ribbons.css", ribbons + css_patch)
 
           index = read("index.html")
           if index.count(old) != 13:
