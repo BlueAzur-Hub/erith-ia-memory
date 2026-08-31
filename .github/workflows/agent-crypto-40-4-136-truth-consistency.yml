@@ -1,0 +1,61 @@
+name: Agent-Crypto 40.4.136 truth consistency
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/patches/40.4.136.request.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-136-truth-consistency
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded 40.4.136 surgery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python coordination/inter_ai_dialogues/agent_crypto/patches/40.4.136.apply.py
+
+      - name: JavaScript and diff gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          find "$ROOT" -type f -name '*.js' -print0 | while IFS= read -r -d '' f; do node --check "$f" >/dev/null; done
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_136_VALIDATION_REPORT.md')
+          text=p.read_text(encoding='utf-8').replace('Pending workflow `node --check` step.','PASS — all Administrator JavaScript files passed `node --check`.')
+          p.write_text(text,encoding='utf-8')
+          PY
+          git diff --check
+
+      - name: Commit validated 40.4.136 atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_136_LOCAL_AI_TRUTH_CONSISTENCY.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_136_LOCAL_AI_TRUTH_CONSISTENCY.zip.sha256
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_136_VALIDATION_REPORT.md
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.136.request.json
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.136.apply.py
+          git rm .github/workflows/agent-crypto-40-4-136-truth-consistency.yml
+          git commit -m "fix Agent-Crypto 40.4.136 align Bridge R13 truth and guard deterministic Top5"
+          git pull --rebase origin main
+          git push origin HEAD:main
