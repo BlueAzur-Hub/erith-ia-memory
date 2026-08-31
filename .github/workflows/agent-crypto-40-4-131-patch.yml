@@ -27,6 +27,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('coordination/inter_ai_dialogues/agent_crypto/patches/40.4.131.py')
+          s=p.read_text(encoding='utf-8')
+          old='        if str((d.get("engine") or {}).get("reference_build")) != "38.15.11":\n            raise SystemExit("STOP: Market Core modifié")'
+          new='        engine = d.get("engine") or {}\n        if engine and str(engine.get("reference_build")) != "38.15.11":\n            raise SystemExit("STOP: Market Core modifié")\n        if fn == "administrator-version.json" and (d.get("protected_base") or {}).get("market_core_modified") is not False:\n            raise SystemExit("STOP: protection Market Core absente du miroir Administrator")'
+          if s.count(old) != 1:
+              raise SystemExit(f'STOP: engine guard attendu 1 occurrence, trouvé {s.count(old)}')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
           python coordination/inter_ai_dialogues/agent_crypto/patches/40.4.131.py
 
       - name: Commit validated 40.4.131 atomically
