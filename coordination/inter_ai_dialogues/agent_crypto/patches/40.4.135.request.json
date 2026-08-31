@@ -3,21 +3,28 @@
   "build": "40.4.135",
   "parent_build": "40.4.134",
   "scope": [
-    "remove 40.4.134 Administration capture dead-click",
-    "preserve canonical 40.4.49 Administration first-click intent gate",
-    "restore resident canonical market refresh through existing refreshMarketOnly owner",
-    "preserve 40.4.133 Atlas CURRENT handoff",
-    "preserve Aether Attention, source-original News and five-day weather"
+    "restore canonical Administration single-click entry semantics",
+    "remove 40.4.134 capture-phase dead-click",
+    "freeze recovered Atlas runtime and canonical producer"
   ],
+  "operator_evidence": {
+    "canonical_snapshot": "31/08/2026 15:37:25",
+    "current_closed": "31/08/2026 15:58:45",
+    "atlas_reports": "4/4",
+    "nox": "validated",
+    "aerith": "validated",
+    "engine_state": "REPOS"
+  },
   "protected": [
     "Market Core 38.15.11",
-    "Graph datasets and scale",
+    "Atlas resident/current pipeline",
+    "Atlas public crypto producer",
+    "Graph",
     "Oracle engine",
-    "Bridge engine",
-    "News collector",
-    "Aether 12-story 18-second reading cadence"
+    "Aether operator watch and weather",
+    "News Sentinel"
   ],
   "operator_validation_required": true,
-  "execution": "canonical-owner-no-secondary-watchdog",
-  "attempt": 4
+  "execution": "canonical-admin-owner-only-no-atlas-mutation",
+  "attempt": 5
 }
