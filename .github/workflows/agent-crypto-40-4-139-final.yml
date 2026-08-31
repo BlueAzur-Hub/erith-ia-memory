@@ -1,0 +1,53 @@
+name: Agent-Crypto 40.4.139 final Atlas recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/patches/40.4.139.request.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-139-final-recovery
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply bounded 40.4.139 surgery
+        run: python coordination/inter_ai_dialogues/agent_crypto/patches/40.4.139.apply.py
+      - name: JavaScript and diff gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/aether.js"
+          node --check "$ROOT/js/views/atlas-family-demand-residency.js"
+          git diff --check
+      - name: Commit validated 40.4.139 atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git add .github/workflows/atlas-public-crypto-market-clock.yml
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_139_ATLAS_FAMILY_COLLAPSE_CANONICAL_PRODUCER_REARM.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_139_ATLAS_FAMILY_COLLAPSE_CANONICAL_PRODUCER_REARM.zip.sha256
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_139_VALIDATION_REPORT.md
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.139.request.json
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.139.apply.py
+          git rm .github/workflows/agent-crypto-40-4-139-final.yml
+          git commit -m "fix Agent-Crypto 40.4.139 restore family collapse and rearm canonical Atlas producer"
+          git pull --rebase origin main
+          git push origin HEAD:main
