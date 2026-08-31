@@ -464,3 +464,25 @@
   body #atlasAetherRibbonSources4084{min-width:125px!important}
   body #atlasAetherRibbonBook4084{min-width:70px!important}
 }
+
+
+/* 40.4.129 — FINAL AETHER SINGLE-LANE CONTRACT RESTORE
+   Contract recovered from the Crypto thread:
+   - exactly one physical command-line height;
+   - AETHER brand fixed;
+   - INFO is one continuous payload rail, not five competing flex cells;
+   - Book remains in that rail;
+   - VEILLE owns its own full-width translated News payload;
+   - no ellipsis/truncation owner is allowed on the INFO payload. */
+#atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{
+  display:flex!important;align-items:center!important;min-width:0!important;width:100%!important;overflow:hidden!important;gap:0!important;
+}
+#atlasAetherRibbonMarket4088{
+  display:block!important;position:relative!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;max-width:none!important;overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important;
+}
+#atlasAetherRibbonMarket4088>.atlas-aether-info-copy-40129{
+  display:inline-block!important;width:max-content!important;max-width:none!important;white-space:nowrap!important;transform:translateX(0);will-change:transform;
+}
+#atlasAetherRibbonAtlas4084,#atlasAetherRibbonOracle4084,#atlasAetherRibbonSources4084,#atlasAetherRibbonBook4084{display:none!important}
+#atlasAetherVeille4087{min-width:0!important;overflow:hidden!important}
+#atlasAetherVeille4087 .atlas-aether-veille-copy-4087{max-width:none!important;text-overflow:clip!important}

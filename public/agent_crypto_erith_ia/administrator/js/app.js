@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.128";
+  const ADMIN_BUILD = "40.4.129";
   const ADMIN_RELEASE = "AETHER REPRESENTATIVE NEWS DIGEST · SOURCE NO-CLIP · BOOK RESTORE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
