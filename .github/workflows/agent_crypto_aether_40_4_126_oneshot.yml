@@ -1,0 +1,261 @@
+name: Agent-Crypto Aether 40.4.126 one-shot publication
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent_crypto_aether_40_4_126_oneshot.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-aether-40-4-126-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply 40.4.126 Aether News flow recovery
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib
+
+          root = Path("public/agent_crypto_erith_ia/administrator")
+          old = "40.4.125"
+          new = "40.4.126"
+
+          def read(rel):
+              return (root / rel).read_text(encoding="utf-8")
+
+          def write(rel, text):
+              (root / rel).write_text(text, encoding="utf-8")
+
+          def replace_once(text, before, after, label):
+              count = text.count(before)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected one match, got {count}")
+              return text.replace(before, after, 1)
+
+          def sha(rel):
+              return hashlib.sha256((root / rel).read_bytes()).hexdigest()
+
+          app = read("app.js")
+          if f'const ATLAS_BUILD = "{old}";' not in app:
+              raise SystemExit("40.4.126 guard refused: current app.js is not 40.4.125")
+
+          aether = read("js/aether.js")
+          aether = replace_once(
+              aether,
+              "  Build: 40.4.125\n  Revision: 40.4.125 canonical French News handoff. News Sentinel headline_fr_display/headline_fr now owns the scarce Aether story text end-to-end: VEILLE, CONTEXTE and the compact INFO cell. 40.4.124 French fallback, 40.4.123 information-density and 40.4.121 constant-read-speed marquee are preserved.",
+              "  Build: 40.4.126\n  Revision: 40.4.126 Aether News flow recovery. The scarce FEED phase is NEWS-only: five ranked French News Sentinel stories rotate consecutively with no CONTEXTE interleave. Full-story readability is prioritized by scrolling headline + source only; 40.4.121 constant-read-speed marquee is preserved.",
+              "aether header"
+          )
+
+          old_advance = '''  function aetherVeilleAdvance4087(){
+    const ranked=aetherVeilleEvents4087();
+    if(!ranked.length){
+      aetherVeilleState4087.index=0;aetherVeilleState4087.kind="alert";aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.fingerprint="";
+      return renderAetherVeille4087();
+    }
+    if(aetherVeilleState4087.kind==="alert"){
+      const current=ranked[((aetherVeilleState4087.index%ranked.length)+ranked.length)%ranked.length]||null;
+      const context=current?aetherNewsMarketContext4089(current):null;
+      if(current&&context){
+        aetherVeilleState4087.storyEvent=current;aetherVeilleState4087.storyContext=context;aetherVeilleState4087.kind="context";
+      }else{
+        aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyContext=null;aetherVeilleState4087.kind="alert";
+      }
+    }else{
+      aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyContext=null;aetherVeilleState4087.kind="alert";
+    }
+    aetherVeilleState4087.fingerprint="";
+    return renderAetherVeille4087();
+  }'''
+          new_advance = '''  function aetherVeilleAdvance4087(){
+    const ranked=aetherVeilleEvents4087();
+    if(!ranked.length){
+      aetherVeilleState4087.index=0;aetherVeilleState4087.kind="alert";aetherVeilleState4087.storyEvent=null;aetherVeilleState4087.storyContext=null;aetherVeilleState4087.fingerprint="";
+      return renderAetherVeille4087();
+    }
+    // 40.4.126 — scarce Aether FEED time belongs to actual News stories.
+    // One 36 s FEED phase = initial story + four 9 s pulse advances = five ranked stories.
+    // CONTEXTE remains available elsewhere in the interface but is never interleaved into this lane.
+    aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;
+    aetherVeilleState4087.kind="alert";
+    aetherVeilleState4087.storyEvent=null;
+    aetherVeilleState4087.storyContext=null;
+    aetherVeilleState4087.fingerprint="";
+    return renderAetherVeille4087();
+  }'''
+          aether = replace_once(aether, old_advance, new_advance, "NEWS-only advance")
+
+          aether = replace_once(
+              aether,
+              '    const detail=[headline,evidence?`preuve ${evidence}/100`:null,source||null,freshness||null].filter(Boolean).join(" · ");',
+              '    // 40.4.126 — the moving lane carries the complete French story first; telemetry stays in its fixed meta chip / News panel.\n    const detail=[headline,source||null].filter(Boolean).join(" · ");',
+              "headline readability"
+          )
+
+          aether = replace_once(
+              aether,
+              '          aetherVeilleState4087.feedWasVisible=false;\n          aetherVeilleState4087.kind="alert";\n          aetherVeilleState4087.storyEvent=null;',
+              '          aetherVeilleState4087.feedWasVisible=false;\n          // 40.4.126 — every new FEED window restarts at ranked story 1/5.\n          aetherVeilleState4087.index=0;\n          aetherVeilleState4087.kind="alert";\n          aetherVeilleState4087.storyEvent=null;',
+              "feed restart at story one"
+          )
+
+          aether = replace_once(aether, '    build:"40.4.125",', '    build:"40.4.126",', "Aether API build")
+          aether = replace_once(
+              aether,
+              '    news_translation_story_owner:"News Sentinel French headline owns VEILLE + CONTEXTE + compact INFO",\n    news_translation_context_keeps_headline:true,\n    news_translation_compact_headline_first:true,',
+              '    news_translation_story_owner:"News Sentinel French headline owns VEILLE + compact INFO",\n    news_feed_news_only_rotation:true,\n    news_feed_context_interleave:false,\n    news_feed_ranked_story_count:5,\n    news_feed_story_detail:"headline + source",\n    news_translation_context_keeps_headline:true,\n    news_translation_compact_headline_first:true,',
+              "Aether News flow flags"
+          )
+          write("js/aether.js", aether)
+
+          ribbons = read("admin-ribbons.css")
+          marker = "/* 40.4.126 — AETHER INFO GEOMETRY RECOVERY · NEWS CELL YIELDS, FACT CELLS NEVER COLLIDE */"
+          if marker in ribbons:
+              raise SystemExit("40.4.126 CSS marker already present")
+          ribbons += '''\n\n/* 40.4.126 — AETHER INFO GEOMETRY RECOVERY · NEWS CELL YIELDS, FACT CELLS NEVER COLLIDE
+   The previous flex contract let the long compact News cell keep max-content width and squeeze
+   Market / Top 5 / Oracle / Sources into clipped fragments. On desktop, those factual cells now
+   keep their intrinsic readable width; the News preview alone consumes the residual lane and may
+   ellipsize. The full French headline remains available in the NEWS-only VEILLE marquee above. */
+@media (min-width:1181px){
+  body #atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{gap:12px!important;overflow:hidden!important}
+  body #atlasAetherRibbonMarket4088,
+  body #atlasAetherRibbonAtlas4084,
+  body #atlasAetherRibbonOracle4084,
+  body #atlasAetherRibbonSources4084{
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+  }
+  body #atlasAetherRibbonBook4084{
+    flex:1 1 320px!important;
+    width:auto!important;
+    min-width:180px!important;
+    max-width:none!important;
+    justify-content:flex-start!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+}
+'''
+          write("admin-ribbons.css", ribbons)
+
+          index = read("index.html")
+          count = index.count(old)
+          if count != 13:
+              raise SystemExit(f"index build-token guard refused: expected 13, got {count}")
+          write("index.html", index.replace(old, new))
+          write("app.js", replace_once(app, f'const ATLAS_BUILD = "{old}";', f'const ATLAS_BUILD = "{new}";', "ATLAS_BUILD"))
+          jsapp = read("js/app.js")
+          write("js/app.js", replace_once(jsapp, f'const ADMIN_BUILD = "{old}";', f'const ADMIN_BUILD = "{new}";', "ADMIN_BUILD"))
+
+          changed_hashes = {rel: sha(rel) for rel in ["index.html", "app.js", "admin-ribbons.css", "js/app.js", "js/aether.js"]}
+          release = "AETHER NEWS FLOW RECOVERY · FIVE FRENCH STORIES · INFO GEOMETRY LOCK"
+          status = "candidate_aether_news_flow_recovery_operator_validation_required"
+          lineage_add = " → 40.4.126 Aether News flow recovery: FEED becomes five consecutive ranked French News stories, CONTEXTE interleave removed, headline readability shortened to headline+source, desktop INFO cells de-collided."
+          note = "40.4.126 — Aether FEED now spends its complete 36 s window on five consecutive News Sentinel stories (initial + four 9 s advances). CONTEXTE no longer consumes alternate slots. The moving line carries headline + source only, and the desktop INFO row gives the long News preview the flexible residual width so Market/Top 5/Oracle/Sources no longer crush each other."
+          release_note = "40.4.126: presentation-only Aether recovery. Five ranked French News stories per FEED window; no CONTEXTE interleave; fixed 40.4.121 marquee speed/cadence retained; no Graph, Oracle engine, Math Core, Market Core, News fetch, translator, Bridge or Window Manager mutation."
+          reason = "Aether presentation correction over 40.4.125: recover five actual News passages from the existing 36 s/9 s pulse geometry, prioritize complete translated headline readability, and stop the compact News preview from squeezing neighboring factual INFO cells."
+
+          def update_manifest(rel):
+              p = root / rel
+              d = json.loads(p.read_text(encoding="utf-8"))
+              if d.get("build") != old:
+                  raise SystemExit(f"{rel}: expected build {old}, got {d.get('build')}")
+              d["build"] = new
+              d["release"] = release
+              d["status"] = status
+              d["prepared_at"] = "2026-08-31T07:30:00Z"
+              d["published_at"] = None
+              d["global_versioning"] = new
+              d["asset_token"] = f"market-core-v2.0-alpha-build-{new}"
+              d["parent_build"] = old
+              if isinstance(d.get("lineage"), str) and "40.4.126 Aether News flow recovery" not in d["lineage"]:
+                  d["lineage"] += lineage_add
+              pub = d.setdefault("integrity", {}).setdefault("publication_identity", {})
+              pub["build"] = new
+              pub["asset_token"] = f"market-core-v2.0-alpha-build-{new}"
+              if "app_sha256" in pub:
+                  pub["app_sha256"] = changed_hashes["app.js"]
+              notes = d.setdefault("notes", [])
+              if note not in notes:
+                  notes.append(note)
+              notes2 = d.setdefault("release_notes", [])
+              if release_note not in notes2:
+                  notes2.append(release_note)
+              d["publication_revision"] = new
+              d["publication_revision_reason"] = reason
+              d.setdefault("files", {}).update(changed_hashes)
+              p.write_text(json.dumps(d, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          update_manifest("version.json")
+          update_manifest("administrator-version.json")
+
+          admin_sha = sha("administrator-version.json")
+          vp = root / "version.json"
+          vd = json.loads(vp.read_text(encoding="utf-8"))
+          vpub = vd.setdefault("integrity", {}).setdefault("publication_identity", {})
+          if "administrator_version_sha256" in vpub:
+              vpub["administrator_version_sha256"] = admin_sha
+          vp.write_text(json.dumps(vd, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+          for rel in ["version.json", "administrator-version.json"]:
+              d = json.loads((root / rel).read_text(encoding="utf-8"))
+              assert d["build"] == new
+              assert d["parent_build"] == old
+              assert d["publication_revision"] == new
+              for payload in ["index.html", "app.js", "js/app.js", "js/aether.js", "admin-ribbons.css"]:
+                  expected = d["files"][payload]
+                  actual = sha(payload)
+                  if expected != actual:
+                      raise SystemExit(f"{rel}: hash mismatch {payload}: {expected} != {actual}")
+
+          final_aether = read("js/aether.js")
+          final_ribbons = read("admin-ribbons.css")
+          assert "news_feed_news_only_rotation:true" in final_aether
+          assert "news_feed_context_interleave:false" in final_aether
+          assert "news_feed_ranked_story_count:5" in final_aether
+          assert 'const detail=[headline,source||null]' in final_aether
+          assert "aetherVeilleState4087.index=(aetherVeilleState4087.index+1)%ranked.length;" in final_aether
+          assert marker in final_ribbons
+          print("40.4.126 PATCH PASS")
+          PY
+
+      - name: Static JavaScript validation
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+
+      - name: Commit publication and remove one-shot workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/agent_crypto_aether_40_4_126_oneshot.yml
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/admin-ribbons.css \
+                  public/agent_crypto_erith_ia/administrator/js/aether.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m "feat Agent-Crypto 40.4.126 recover five French Aether News stories"
+          git pull --rebase origin main
+          git push origin HEAD:main
