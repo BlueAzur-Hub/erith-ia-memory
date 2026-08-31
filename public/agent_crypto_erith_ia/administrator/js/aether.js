@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.124
-  Revision: 40.4.124 French factual News fallback. 40.4.123 information-density, 40.4.122 information-only filtering and 40.4.121 constant-read-speed marquee are preserved; when a sourced headline has no French field, Aether renders a deterministic French factual summary instead of exposing raw English in the scarce operator ribbon.
+  Build: 40.4.125
+  Revision: 40.4.125 canonical French News handoff. News Sentinel headline_fr_display/headline_fr now owns the scarce Aether story text end-to-end: VEILLE, CONTEXTE and the compact INFO cell. 40.4.124 French fallback, 40.4.123 information-density and 40.4.121 constant-read-speed marquee are preserved.
 */
 (() => {
   "use strict";
@@ -242,6 +242,9 @@
     // The previous generic “le mécanisme peut expliquer…” sentence is deliberately not repeated in the scarce ribbon lane.
     const facts=[];
     const pushFact=value=>{const fact=qualified(value);if(fact&&!facts.includes(fact))facts.push(fact);};
+    // 40.4.125 — keep the translated News Sentinel fact visible through the paired CONTEXTE phase.
+    // Context enriches the story; it no longer replaces the story with mechanism-only telemetry.
+    pushFact(c.headline);
     pushFact(mechanism?`${mechanism}${direction?` · ${direction}`:""}`:"");
     pushFact(flow?`${flow}${flowDirection?` · ${flowDirection}`:""}`:"");
     pushFact(focusSummary);
@@ -462,7 +465,8 @@
       if(!events.length)return `Veille · ${snapshot.label||"aucun événement prioritaire"}`;
       const event=events[0],scope=aetherVeilleScope4087(event),impact=Math.round(aetherVeilleNumber4087(event?.impact?.score));
       const headline=aetherNewsHeadlineFr40104(event,"");
-      return `Veille · ${scope}${impact?` ${impact}/100`:""} · ${aetherCompact4088(headline,70)}`;
+      // 40.4.125 — information first: the French headline owns the visible prefix; scope/impact follow.
+      return `Veille · ${aetherCompact4088(headline,88)}${scope?` · ${scope}`:""}${impact?` ${impact}/100`:""}`;
     }catch(_){return "Veille · News Sentinel";}
   }
   const aetherNewsWake4088={attempted:false,inflight:null};
@@ -670,7 +674,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.124",
+    build:"40.4.125",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -716,6 +720,9 @@
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
     news_translation_preferred:"headline_fr_display → headline_fr",
+    news_translation_story_owner:"News Sentinel French headline owns VEILLE + CONTEXTE + compact INFO",
+    news_translation_context_keeps_headline:true,
+    news_translation_compact_headline_first:true,
     news_translation_fallback:"deterministic French factual summary → original only when already non-English",
     news_translation_browser_runtime:false,
     news_translation_raw_english_in_aether:false,
