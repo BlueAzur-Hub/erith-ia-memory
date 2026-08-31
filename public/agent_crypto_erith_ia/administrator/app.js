@@ -2161,8 +2161,8 @@ const ATLAS_RC_CONTRACT = Object.freeze({
   schema: "agent_crypto_public_stable_rc_v1",
   engine_reference: "38.15.11",
   web_classic_build: "38.15.13",
-  control_center: "V2.3.2R5",
-  bridge: "V1.9.5",
+  control_center: "V2.3.2R13",
+  bridge: "V1.9.11",
   model: "gpt-oss:20b-32k",
   invariants: Object.freeze([
     "5/5 Binance directes stables avant Atlas",
@@ -2177,7 +2177,7 @@ const ATLAS_RC_CONTRACT = Object.freeze({
     "Ryzen construit avec Ollama/Bridge ; Transformer Book consulte sans moteur local",
     "Question libre isolée : aucun redémarrage CURRENT et aucune réécriture Memory Intelligence",
     "Book Mirror en lecture seule : aucune clé ni écriture GitHub depuis la page publique",
-    "Bridge health stable : timeout client supérieur au pire cas /health V1.9.5 + anti-flap sur contrôles silencieux",
+    "Bridge health stable : timeout client supérieur au pire cas /health V1.9.11 + anti-flap sur contrôles silencieux",
     "runtime version truth : ATLAS_BUILD, meta atlas-build et asset token doivent être cohérents",
     "identités séparées : snapshot canonique, fingerprint transactionnel CURRENT et fingerprint analytique ne sont jamais confondus",
     "un snapshot canonique déclenche au maximum un cycle automatique ; les ticks Binance LIVE ne rouvrent pas le même CURRENT",
@@ -2190,8 +2190,8 @@ function atlasRcStaticAudit() {
     interface_build_truth: ATLAS_BUILD === String(document.querySelector('meta[name="atlas-build"]')?.content || ATLAS_BUILD),
     engine_reference_truth: ATLAS_RC_CONTRACT.engine_reference === "38.15.11",
     stable_stack:
-      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R5"
-      && ATLAS_STABLE_STACK?.bridge === "V1.9.5"
+      ATLAS_STABLE_STACK?.controlCenter === "V2.3.2R13"
+      && ATLAS_STABLE_STACK?.bridge === "V1.9.11"
       && ATLAS_STABLE_STACK?.model === "gpt-oss:20b-32k",
     direct_gate_constants:
       ATLAS_DIRECT_5_5_STABLE_MS >= 10000
@@ -19447,9 +19447,9 @@ function priceDeltaPct(nowAsset, prevAsset) { const a = Number(nowAsset?.price_e
 
 const ATLAS_STABLE_STACK = Object.freeze({
   interface: "Build 40.1.66",
-  controlCenter: "V2.3.2R5",
-  bridge: "V1.9.5",
-  bridgeNumeric: "1.9.5",
+  controlCenter: "V2.3.2R13",
+  bridge: "V1.9.11",
+  bridgeNumeric: "1.9.11",
   model: "gpt-oss:20b-32k"
 });
 
@@ -25436,7 +25436,7 @@ let atlasLocalBridgeLastAutoProbeAt = 0;
 let atlasLocalBridgeLastHealthSignature = "";
 
 // 38.6 — Bridge Health Stability Lock.
-// Bridge V1.9.5 /health can legitimately take ~4 s because it probes Ollama
+// Bridge V1.9.11 /health can legitimately take ~4 s because it probes Ollama
 // twice (provider inventory, then provider selection). A 3.5 s browser abort
 // therefore created false disconnects. Keep a wider client deadline and ignore
 // at most two transient silent-probe failures after a recent proven success.
@@ -26751,6 +26751,37 @@ function atlasLocalFrenchCommentFallback(mode, snapshot) {
   return `#### ${mode === "market" ? "8" : mode === "top5" ? "4" : mode === "math" ? "3" : "4"}. Commentaire local borné\n\n${lines.join("\n")}`;
 }
 
+function atlasLocalBoundedCommentTruthGuard(mode, body, snapshot) {
+  const source = String(body || "").replace(/\r\n?/g, "\n");
+  if (mode !== "top5") return { conflict: false, reason: "", body: source };
+
+  const top5 = snapshot?.strict_contract?.canonical_top5 || {};
+  const assets = Array.isArray(top5.assets) ? top5.assets : [];
+  const available = assets.filter(row => row?.available === true).length;
+  const complete = top5.complete === true || (assets.length >= 5 && available >= 5);
+  if (!complete) return { conflict: false, reason: "", body: source };
+
+  const normalized = source.toLocaleLowerCase("fr-FR").replace(/[’']/g, "'");
+  const contradictions = [
+    /aucune information[^\n]{0,140}(?:top\s*5|cinq actifs|cinq principaux|cinq meilleurs)/,
+    /aucune donn(?:ée|e)[^\n]{0,140}(?:top\s*5|cinq actifs|cinq principaux|cinq meilleurs)/,
+    /(?:absence|indisponibilit(?:é|e))[^\n]{0,100}(?:top\s*5|cinq actifs|cinq principaux)/,
+    /(?:top\s*5|cinq actifs|cinq principaux|cinq meilleurs)[^\n]{0,140}(?:non disponible|indisponible|absent|manquant)/,
+    /(?:impossible|pas possible)[^\n]{0,120}(?:identifier|d(?:é|e)terminer)[^\n]{0,120}(?:top\s*5|cinq actifs|cinq principaux|cinq meilleurs)/,
+    /no (?:top\s*5|top five|five assets|information|data)[^\n]{0,120}(?:available|provided)/,
+    /(?:top\s*5|top five|five assets)[^\n]{0,120}(?:unavailable|not available|missing)/,
+    /cannot[^\n]{0,120}(?:identify|determine)[^\n]{0,120}(?:top\s*5|top five|five assets)/
+  ];
+  const conflict = contradictions.some(pattern => pattern.test(normalized));
+  return {
+    conflict,
+    reason: conflict ? "deterministic_top5_5_5_conflict" : "",
+    body: source,
+    available,
+    expected: assets.length || 5
+  };
+}
+
 function atlasLocalNormalizeAtlasSuiteClaims(text) {
   const replacement = "- Suite Atlas : ce rapport est une lecture individuelle du même snapshot CURRENT ; le croisement des quatre rapports est effectué après 4/4 par la conclusion Aerith-10.";
   return String(text || "").replace(
@@ -26764,12 +26795,20 @@ function atlasLocalReportTruthPolish(mode, result, snapshot) {
   let answer = atlasNormalizeAnalyticalSafetyLanguage(String(result.answer || "").replace(/\r\n?/g, "\n"));
   const heading = /^####\s+\d+\.\s+Commentaire local borné\s*$/mi;
   const match = heading.exec(answer);
+  let deterministicCommentRejected = false;
+  let deterministicCommentRejectReason = "";
   if (match) {
     const tail = answer.slice(match.index + match[0].length);
     const next = /\n####\s+\d+\./m.exec(tail);
     const body = next ? tail.slice(0, next.index) : tail;
     if (atlasTextEnglishMarkerScore(body) >= 1) {
       answer = atlasMarkdownReplaceNamedSection(answer, "Commentaire local borné", atlasLocalFrenchCommentFallback(mode, snapshot));
+    }
+    const guarded = atlasLocalBoundedCommentTruthGuard(mode, body, snapshot);
+    if (guarded.conflict) {
+      answer = atlasMarkdownReplaceNamedSection(answer, "Commentaire local borné", atlasLocalFrenchCommentFallback(mode, snapshot));
+      deterministicCommentRejected = true;
+      deterministicCommentRejectReason = guarded.reason;
     }
   }
 
@@ -26791,7 +26830,16 @@ function atlasLocalReportTruthPolish(mode, result, snapshot) {
 
   answer = atlasLocalNormalizeAtlasSuiteClaims(answer);
   answer = atlasNormalizeAnalyticalSafetyLanguage(answer);
-  return { ...result, answer, language_normalized: true, evidence_normalized: !!evidence, atlas_suite_context_normalized: true };
+  return {
+    ...result,
+    answer,
+    language_normalized: true,
+    evidence_normalized: !!evidence,
+    atlas_suite_context_normalized: true,
+    deterministic_comment_rejected: deterministicCommentRejected,
+    deterministic_comment_reject_reason: deterministicCommentRejectReason,
+    model_comment_used: deterministicCommentRejected ? false : result?.model_comment_used === true
+  };
 }
 
 function atlasLocalConclusionEvidenceSection(snapshot) {
@@ -27834,7 +27882,7 @@ async function atlasLocalConclusionRun(options = {}) {
     }
 
     // Lexical validation is now informative, not a blocker:
-    // Bridge V1.9.5 returns a deterministic conclusion contract and confirms actual rereading of the 4 Atlas CURRENT reports.
+    // Bridge V1.9.11 returns a deterministic conclusion contract and confirms actual rereading of the 4 Atlas CURRENT reports.
     const bridgeAnswer = atlasLocalConclusionTruthPolish(atlasNormalizeAnalyticalSafetyLanguage(result.answer || "").trim(), snapshot);
     const pedagogyAppendix = atlasPedagogyV2FullGlossaryMarkdown(snapshot);
     const answer = pedagogyAppendix
@@ -51840,7 +51888,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.135";
+const ATLAS_BUILD = "40.4.136";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -54342,7 +54390,7 @@ setTimeout(() => {
 /* ============================================================
    33.0 FINAL — DECISION WORKSPACE + MULTI-COLLECTOR + CURRENT JOURNAL
    Additive/reordering layer only.
-   Protected: Bridge V1.9.5 · Control Center V2.3.2R5 · GPT-OSS 20B-32K
+   Protected: Bridge V1.9.11 · Control Center V2.3.2R13 · GPT-OSS 20B-32K
    Protected: 5/5 gate · Atlas 4/4 · NØX · Aerith · STOP-ONCE
    ============================================================ */
 
@@ -54627,7 +54675,7 @@ setTimeout(() => {
    - CURRENT identity is the closed analytical fingerprint, not only market_snapshot_id
    - latest CURRENT can self-heal into Memory Intelligence on reload
    - Ryzen → Book export carries a bounded read-only memory handoff
-   Protected: Bridge V1.9.5 · Control Center V2.3.2R5 · GPT-OSS 20B-32K
+   Protected: Bridge V1.9.11 · Control Center V2.3.2R13 · GPT-OSS 20B-32K
    Protected: 5/5 gate · Atlas 4/4 · NØX · Aerith · STOP-ONCE
    ============================================================ */
 
@@ -55043,7 +55091,7 @@ window.setTimeout(() => {
    - CURRENT memory reconciliation is silent and immediate after persistence
    - Transformer Book can become persistent STOP/read-only once, then stay quiet
    - manual buttons remain diagnostics/explicit overrides, never prerequisites
-   Protected stack: Control Center V2.3.2R5 · Bridge V1.9.5 · gpt-oss:20b-32k
+   Protected stack: Control Center V2.3.2R13 · Bridge V1.9.11 · gpt-oss:20b-32k
    ============================================================ */
 
 const ATLAS_AUTOMATION_341_LAST_CURRENT_MARKET_KEY = "agent_crypto_automation_341_last_current_market_snapshot";
@@ -55449,7 +55497,7 @@ window.setTimeout(() => {
    35.0 UI/MEMORY LAYER — 38.2 RECOVERY: SECOND WATCHDOG DISABLED
    Cumulative layer over 34.3.
    Ryzen builds automatically. Transformer Book remains consultation only.
-   Protected: Bridge V1.9.5 · Control Center V2.3.2R5 · gpt-oss:20b-32k.
+   Protected: Bridge V1.9.11 · Control Center V2.3.2R13 · gpt-oss:20b-32k.
    Protected: 5/5 direct gate · Atlas 4/4 · NØX · Aerith · CURRENT.
    ============================================================ */
 
@@ -57505,7 +57553,7 @@ window.setTimeout(() => {
    - a genuinely new canonical market id still opens the next automatic cycle,
    - Transformer Book remains read-only and can never create local CURRENT truth.
    Protected: Direct REST 38.5 · Bridge Health 38.6 · Memory Journal 38.7 ·
-              Atlas/NØX/Aerith · Control Center V2.3.2R5 · Bridge V1.9.5.
+              Atlas/NØX/Aerith · Control Center V2.3.2R13 · Bridge V1.9.11.
    ============================================================ */
 
 function atlasCanonicalCurrentMarketIdFromPackage388(pkg) {
@@ -57759,7 +57807,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit388() {
      to open the next CURRENT.
 
    Protected unchanged: Binance gate / Direct REST 38.5 · Bridge Health 38.6 ·
-   Atlas/NØX/Aerith · Automation 34.1 · Control Center V2.3.2R5 · Bridge V1.9.5 ·
+   Atlas/NØX/Aerith · Automation 34.1 · Control Center V2.3.2R13 · Bridge V1.9.11 ·
    Transformer Book read-only contract.
    ============================================================ */
 
@@ -58776,7 +58824,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit3811() {
 
    Protégé inchangé : polling marché page 5 min · Binance LIVE · Gate 5/5 ·
    Direct REST 38.5 · Bridge Health 38.6 · Atlas 4/4 · NØX · Aerith · CURRENT ·
-   STOP-ONCE · REPOS · Bridge V1.9.5. Aucun nouveau setInterval.
+   STOP-ONCE · REPOS · Bridge V1.9.11. Aucun nouveau setInterval.
    La cadence de PUBLICATION CoinGecko 1 h appartient au workflow GitHub séparé.
    ============================================================ */
 
@@ -58859,7 +58907,7 @@ function atlasBookRoleUiLock3812(reason = "book-ui-lock") {
   const stackBadge = set("atlasStableStackBadge", "Book · lecture seule");
   if (stackBadge) stackBadge.className = "pill ok";
   set("atlasStableStackBridge", "Aucun Bridge local");
-  set("atlasStableStackBridgeDetail", "Le Bridge V1.9.5 appartient au Ryzen producteur ; il n’est pas requis sur le Book.");
+  set("atlasStableStackBridgeDetail", "Le Bridge V1.9.11 appartient au Ryzen producteur ; il n’est pas requis sur le Book.");
   set("atlasStableStackOllama", "Aucun Ollama local");
   set("atlasStableStackOllamaDetail", "gpt-oss:20b-32k est une provenance Ryzen, pas un moteur à installer sur le Book.");
   set("atlasStableStackStation", "Transformer Book · consultation");
@@ -59110,7 +59158,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit3812() {
 
    Protégé inchangé : Binance LIVE · Gate direct 5/5 · Direct REST 38.5 ·
    Bridge Health 38.6 · Atlas 4/4 · NØX · Aerith · CURRENT · STOP-ONCE ·
-   REPOS · Question libre isolée · polling marché 5 min · Bridge V1.9.5.
+   REPOS · Question libre isolée · polling marché 5 min · Bridge V1.9.11.
    ============================================================ */
 
 const ATLAS_RUNTIME_TRUTH_3813 = Object.freeze({
@@ -59303,7 +59351,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit3813() {
    Protégé inchangé : Binance LIVE · Gate direct 5/5 · Direct REST 38.5 ·
    Bridge Health 38.6 · Atlas 4/4 · NØX · Aerith · CURRENT · STOP-ONCE ·
    REPOS · Question libre isolée · Book Role 38.12 · polling marché 5 min ·
-   Bridge V1.9.5 · gpt-oss:20b-32k. style.css inchangé.
+   Bridge V1.9.11 · gpt-oss:20b-32k. style.css inchangé.
    ============================================================ */
 
 function atlasCurrentMemoryNormalizeFp3814(value) {
@@ -59553,7 +59601,7 @@ atlasRcStaticAudit = function atlasRcStaticAudit3814() {
    - l'audit statique expose désormais le nom exact de tout invariant en échec.
 
    Protégé inchangé : Gate 5/5 · Binance LIVE · Atlas 4/4 · NØX · Aerith ·
-   STOP-ONCE · REPOS · Question libre · Auto Reader · Book Role · Bridge V1.9.5 ·
+   STOP-ONCE · REPOS · Question libre · Auto Reader · Book Role · Bridge V1.9.11 ·
    gpt-oss:20b-32k · polling marché existant · style.css.
    ============================================================ */
 
