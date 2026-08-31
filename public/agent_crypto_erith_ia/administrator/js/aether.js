@@ -2,7 +2,7 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.136
+  Build: 40.4.138
   Revision: 40.4.134 discoverability lock. Existing Aether Attention, Maintenon five-day weather and Atlas AUTO owners preserved; the visible system band opens the existing detailed panel.
 */
 (() => {
@@ -795,7 +795,7 @@ function aetherAttention40133(){
   }
 
   const api=Object.freeze({
-    build:"40.4.136",
+    build:"40.4.138",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,

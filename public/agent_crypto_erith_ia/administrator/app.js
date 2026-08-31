@@ -3385,7 +3385,21 @@ function atlasInitV2Shell() {
   queueMicrotask(() => {
     atlasV2ApplyMode(initialV2Mode, { persist: false, silentAuth: true });
     atlasV2DecisionLockRefresh();
-    if (location.hash) requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));
+    if (location.hash) {
+      /* 40.4.138 — DEFAULT COLLAPSED DISCLOSURE LOCK.
+         A stale/reloaded #hash must not reopen an Administrator <details> during
+         boot. Explicit operator clicks and later hashchange events keep the
+         canonical router. This restores the historical "sections repliées par
+         défaut" contract without changing runtime ownership. */
+      const bootId404138 = decodeURIComponent(String(location.hash || "").replace(/^#/, ""));
+      const bootTarget404138 = bootId404138 ? document.getElementById(bootId404138) : null;
+      const bootDisclosure404138 = bootTarget404138 instanceof HTMLDetailsElement
+        ? bootTarget404138
+        : bootTarget404138?.closest?.("details.atlas-collapse") || null;
+      if (!bootDisclosure404138) {
+        requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));
+      }
+    }
   });
 
   window.setInterval(() => { atlasV2SyncMathRail(); atlasV2DecisionLockRefresh(); }, 2000);
@@ -51888,7 +51902,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.136";
+const ATLAS_BUILD = "40.4.138";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -63310,5 +63324,244 @@ try {
     new_business_network_owner:false,
     new_storage_owner:false,
     reopen_migration_only_on_reproduced_regression:true
+  });
+} catch (_) {}
+
+/* ============================================================
+   40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY
+   PENDING CANONICAL OWNER LOCK · NO NEW POLLING
+
+   P0 recovered from the Fil Crypto post-40.4.90 lost-wakeup diagnosis.
+   Contract:
+   - a genuinely new canonical market snapshot stays pending until consumed;
+   - closing/reducing Atlas UI must never cancel that intent;
+   - existing readiness owners (Market refresh, Graph ready, Binance stable,
+     Bridge/post-auth) may retry the SAME pending CURRENT transaction;
+   - no recurring timer, observer, network owner or storage schema is added;
+   - same canonical snapshot remains strict NO-OP after CLOSED CURRENT.
+   ============================================================ */
+
+function atlasCurrentPendingMarket137(reason = "readiness-event") {
+  try {
+    if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;
+
+    const currentId = typeof atlasAutomation341SnapshotId === "function"
+      ? String(atlasAutomation341SnapshotId() || "").trim()
+      : "";
+    const lastDone = typeof atlasAutomation341ReadLastCurrentMarketId === "function"
+      ? String(atlasAutomation341ReadLastCurrentMarketId() || "").trim()
+      : "";
+    let pendingId = typeof atlasAutomation341ReadPendingMarket === "function"
+      ? String(atlasAutomation341ReadPendingMarket() || "").trim()
+      : "";
+
+    if (pendingId && lastDone && pendingId === lastDone) {
+      try { localStorage.removeItem(ATLAS_AUTOMATION_341_PENDING_MARKET_KEY); } catch (_) {}
+      pendingId = "";
+    }
+
+    if (currentId && (!lastDone || currentId !== lastDone)) {
+      pendingId = currentId;
+      try { atlasAutomation341RememberPendingMarket(currentId); } catch (_) {}
+    }
+
+    if (!pendingId || (lastDone && pendingId === lastDone)) return false;
+    if (typeof atlasAccessIsAuthorized === "function" && !atlasAccessIsAuthorized()) return false;
+
+    if (typeof atlasAutomation341IsBusy === "function" && atlasAutomation341IsBusy()) {
+      try { atlasAutomation341RememberPendingMarket(pendingId); } catch (_) {}
+      return false;
+    }
+
+    // An already armed timer owns the pending transaction. Avoid rebuilding the
+    // full snapshot on every Binance paint while that one finite wake is queued.
+    if (atlasLocalReportsState?.autoTimer) return true;
+
+    const snapshot = typeof atlasBuildCryptoPageSnapshot === "function"
+      ? atlasBuildCryptoPageSnapshot()
+      : null;
+    if (!snapshot) return false;
+
+    const snapshotId = typeof atlasAutomation341SnapshotId === "function"
+      ? String(atlasAutomation341SnapshotId(snapshot) || "").trim()
+      : "";
+    if (snapshotId && snapshotId !== pendingId) {
+      pendingId = snapshotId;
+      try { atlasAutomation341RememberPendingMarket(snapshotId); } catch (_) {}
+    }
+
+    const readiness = typeof atlasLocalReportsReadiness === "function"
+      ? atlasLocalReportsReadiness(snapshot)
+      : null;
+    if (!readiness?.ready) {
+      try { atlasAutomation341RememberPendingMarket(pendingId); } catch (_) {}
+      try {
+        atlasLocalReportsSetSuiteStatus(
+          `${atlasLocalReportsReadinessLabel(readiness)} · nouveau snapshot conservé en attente ; Atlas repartira dès que les prérequis existants seront prêts.`,
+          "wait"
+        );
+      } catch (_) {}
+      return false;
+    }
+
+    let closedProof = null;
+    try {
+      closedProof = typeof atlasCanonicalCurrentProof389 === "function"
+        ? atlasCanonicalCurrentProof389(null)
+        : null;
+    } catch (_) {}
+    const proofMarketId = String(closedProof?.marketId || "").trim();
+    if (proofMarketId && proofMarketId === pendingId) {
+      try { localStorage.removeItem(ATLAS_AUTOMATION_341_PENDING_MARKET_KEY); } catch (_) {}
+      try { atlasAutomation341SetRestStatus(pendingId); } catch (_) {}
+      return false;
+    }
+
+    if (atlasLocalReportsState?.automaticCycleClosed) {
+      atlasLocalReportsOpenAutomaticCycle(`pending-canonical-${String(reason || "readiness-event")}`);
+    }
+
+    try {
+      atlasLocalReportsSetSuiteStatus(
+        "Nouveau snapshot canonique conservé · prérequis prêts · réveil résident Atlas-10.",
+        "loading"
+      );
+    } catch (_) {}
+
+    // Keep the existing pending key until CURRENT closes successfully. The
+    // canonical 34.1 close owner removes it only after a consumed CURRENT.
+    return atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 250 }) !== false;
+  } catch (_) {
+    return false;
+  }
+}
+
+// Remember every genuinely new canonical before delegating to the historical
+// scheduler. A readiness miss can no longer erase the wake intent.
+const atlasLocalReportsScheduleAutomatic404137Base = atlasLocalReportsScheduleAutomatic;
+atlasLocalReportsScheduleAutomatic = function atlasLocalReportsScheduleAutomatic404137(reason = "snapshot", options = {}) {
+  const nextReason = String(reason || "snapshot");
+  try {
+    const manual = typeof atlasAutomation341ManualReason === "function"
+      && atlasAutomation341ManualReason(nextReason);
+    if (!manual) {
+      const marketId = typeof atlasAutomation341SnapshotId === "function"
+        ? String(atlasAutomation341SnapshotId() || "").trim()
+        : "";
+      const lastDone = typeof atlasAutomation341ReadLastCurrentMarketId === "function"
+        ? String(atlasAutomation341ReadLastCurrentMarketId() || "").trim()
+        : "";
+      if (marketId && (!lastDone || marketId !== lastDone)) {
+        try { atlasAutomation341RememberPendingMarket(marketId); } catch (_) {}
+      }
+    }
+  } catch (_) {}
+  return atlasLocalReportsScheduleAutomatic404137Base(nextReason, options);
+};
+
+// Market refresh is an existing cadence owner. Reuse it as a finite pending
+// reconciliation point, including visibility-resume-stale-market.
+const atlasAfterLivecheck404137Base = atlasAfterLivecheck;
+atlasAfterLivecheck = function atlasAfterLivecheck404137(options = {}) {
+  const result = atlasAfterLivecheck404137Base(options);
+  try { queueMicrotask(() => atlasCurrentPendingMarket137(`market-${String(options?.reason || "livecheck")}`)); } catch (_) {}
+  return result;
+};
+
+// Graph-ready already exists as an event-driven readiness owner after 40.4.90.
+const atlasRuntimeDemandWakeAtlas4090Base404137 = atlasRuntimeDemandWakeAtlas4090;
+atlasRuntimeDemandWakeAtlas4090 = function atlasRuntimeDemandWakeAtlas4090404137(reason = "readiness-event") {
+  const result = atlasRuntimeDemandWakeAtlas4090Base404137(reason);
+  try { queueMicrotask(() => atlasCurrentPendingMarket137(String(reason || "graph-ready"))); } catch (_) {}
+  return result;
+};
+
+// Bridge/post-auth rearm already exists. Pending canonical now survives until
+// those events can actually prove the full readiness set.
+const atlasCurrentPendingAutoKick4051Base404137 = atlasCurrentPendingAutoKick4051;
+atlasCurrentPendingAutoKick4051 = function atlasCurrentPendingAutoKick4051404137(reason = "bridge-ready") {
+  const result = atlasCurrentPendingAutoKick4051Base404137(reason);
+  try { queueMicrotask(() => atlasCurrentPendingMarket137(String(reason || "bridge-ready"))); } catch (_) {}
+  return result;
+};
+
+// Binance rendering can be frequent, so reconcile only when a pending canonical
+// actually exists and the existing stable 5/5 gate is already true.
+const atlasRenderExchangeFeedStatus404137Base = atlasRenderExchangeFeedStatus;
+atlasRenderExchangeFeedStatus = function atlasRenderExchangeFeedStatus404137() {
+  const result = atlasRenderExchangeFeedStatus404137Base();
+  try {
+    const pending = typeof atlasAutomation341ReadPendingMarket === "function"
+      ? String(atlasAutomation341ReadPendingMarket() || "").trim()
+      : "";
+    if (pending && state?.dataBroker?.exchangeFeed?.atlasStableReady === true) {
+      queueMicrotask(() => atlasCurrentPendingMarket137("binance-stable"));
+    }
+  } catch (_) {}
+  return result;
+};
+
+try {
+  globalThis.__AGENT_CRYPTO_ATLAS_AUTO_WAKE_404137__ = Object.freeze({
+    build:"40.4.137",
+    parent:"40.4.136",
+    p0:"lost-wakeup-current-auto",
+    canonical_pending_persists_until_consumed:true,
+    ui_disclosure_dependency:false,
+    readiness_reconcile_points:Object.freeze(["market-refresh","graph-ready","binance-stable","bridge-ready","post-auth"]),
+    visibility_resume_supported:true,
+    same_snapshot_noop:true,
+    existing_scheduler_reused:true,
+    existing_pending_storage_reused:true,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_network_owner:false,
+    new_storage_owner:false,
+    market_core_changed:false,
+    graph_algorithm_changed:false,
+    oracle_changed:false,
+    current_prompts_changed:false,
+    bridge_protocol_changed:false,
+    indexeddb_schema_changed:false,
+    window_manager_changed:false
+  });
+} catch (_) {}
+
+
+/* ============================================================
+   40.4.138 — ATLAS COLLAPSED-UI / HOT-CORE BOUNDARY LOCK
+
+   Historical contract restored:
+   - Atlas top-level disclosure is CLOSED by default;
+   - Auto Reader / Shared Memory / GitHub Memory are CLOSED by default;
+   - closing Atlas is presentation only and must not cancel 40.4.137 pending wake;
+   - the Atlas HOT cockpit/runtime DOM is kept resident by
+     atlas-family-demand-residency.js 40.4.138;
+   - explicit operator navigation may still open a requested disclosure later.
+   ============================================================ */
+try {
+  globalThis.__AGENT_CRYPTO_ATLAS_COLLAPSED_HOT_CORE_404138__ = Object.freeze({
+    build:"40.4.138",
+    parent:"40.4.137",
+    atlas_default_open:false,
+    atlas_subsections_default_open:false,
+    atlas_hot_core_detachable_when_closed:false,
+    auto_reader_ui_default_open:false,
+    shared_memory_ui_default_open:false,
+    github_memory_ui_default_open:false,
+    stale_boot_hash_may_open_disclosure:false,
+    explicit_operator_navigation_preserved:true,
+    pending_wake_404137_preserved:true,
+    new_recurring_timer:false,
+    new_observer:false,
+    new_network_owner:false,
+    new_storage_owner:false,
+    market_core_changed:false,
+    graph_changed:false,
+    oracle_changed:false,
+    bridge_protocol_changed:false,
+    current_prompts_changed:false,
+    indexeddb_schema_changed:false,
+    window_manager_changed:false
   });
 } catch (_) {}
