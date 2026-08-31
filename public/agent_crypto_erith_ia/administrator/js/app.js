@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.138";
+  const ADMIN_BUILD = "40.4.139";
   const ADMIN_RELEASE = "ATLAS AUTO RESIDENT WAKE RECOVERY · PENDING CANONICAL OWNER LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
@@ -1686,8 +1686,8 @@
 
   function ensureAdministratorAtlasVisible(manager, reason = "role-transition") {
     if (!manager || presentationRole40312() !== "administrator") return false;
-    try { manager.minimize?.(ADMIN_ATLAS_PRIMARY_FAMILY, false); } catch (_) {}
-
+    // 40.4.139 — visible does not mean forced expanded. Family 02 keeps the
+    // canonical compact/minimized boot state while remaining unhidden.
     const family = q(".atlas-layout-family-intelligence");
     const atlas = byId("atlas-local-ai-collapse");
     for (const node of [family, atlas]) {
@@ -2057,7 +2057,6 @@
 
   function stageAdministratorDefaultFamilyCollapse40361() {
     const directFamily = administratorHashFamily40361();
-    const bootRoleForAtlasPrimaryFamily = presentationRole40312();
     const staged = [];
     const skipped = [];
     const failed = [];
@@ -2068,12 +2067,10 @@
       try { saved = JSON.parse(localStorage.getItem(key) || "{}") || {}; } catch { saved = {}; }
 
       const directTarget = directFamily === id;
-      const atlasPrimaryAtAdminBoot =
-        id === ADMIN_ATLAS_PRIMARY_FAMILY && bootRoleForAtlasPrimaryFamily === "administrator";
       const next = {
         ...saved,
         floating: false,
-        minimized: !(directTarget || atlasPrimaryAtAdminBoot),
+        minimized: !directTarget,
         hidden: false,
         maximized: false
       };
@@ -2229,6 +2226,8 @@
       inherited_role_isolation_40312: true
     });
     globalThis.ErithAdministratorAtlasVisibility = Object.freeze({
+      build: "40.4.139",
+      compact_boot_preserved: true,
       owner: "administrator-atlas-primary-family-visibility",
       introduced: "40.4.36",
       canonicalized: "40.4.39",

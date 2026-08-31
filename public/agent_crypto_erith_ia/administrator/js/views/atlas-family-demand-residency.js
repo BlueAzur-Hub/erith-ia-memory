@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.138 · Atlas collapsed UI / HOT core residency boundary.
+/* Agent-Crypto @erith.IA — 40.4.139 · Atlas collapsed UI / HOT core residency boundary.
    Restores the boundary established by the Atlas Internal Residency recovery:
    the main Atlas-10 + Aerith-10 cockpit stays resident even while its <details>
    is visually closed. Only peripheral presentation bodies remain demand-resident.
@@ -50,7 +50,7 @@
   else window.addEventListener("load",enforceCollapsedDefaults,{once:true});
 
   globalThis.ErithAtlasFamilyDemandResidency40415=Object.freeze({
-    build:"40.4.138",
+    build:"40.4.139",
     parent_owner:"40.4.15",
     strategy:"hot-core-resident + peripheral-closed-body-demand-residency",
     hot_root:HOT_ROOT,
@@ -62,6 +62,7 @@
     forge_iframe_excluded:true,
     existing_internal_residency_preserved:true,
     pending_wake_404137_preserved:true,
+    family_02_compact_boot_404139:true,
     atlas_truth_state_engine_changed:false,
     clone_used:false,
     fetch_added:false,
