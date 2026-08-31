@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.133
-  Revision: 40.4.133 operator watch. Source-original News stays readable at 12 × 18 s; Aether Attention adds market breadth, Atlas AUTO resident state, system telemetry and five-day weather/storm risk from existing owners.
+  Build: 40.4.134
+  Revision: 40.4.134 discoverability lock. Existing Aether Attention, Maintenon five-day weather and Atlas AUTO owners preserved; the visible system band opens the existing detailed panel.
 */
 (() => {
   "use strict";
@@ -752,6 +752,18 @@ function aetherAttention40133(){
       button.dataset.aetherBound="1";
       button.addEventListener("click",()=>aetherPanelSet4084(button.getAttribute("aria-expanded")!=="true"));
     }
+    const quickPanel=document.getElementById("atlasAetherSystem4086");
+    if(quickPanel&&quickPanel.dataset.aetherDetailBound404134!=="1"){
+      quickPanel.dataset.aetherDetailBound404134="1";
+      quickPanel.setAttribute("role","button");
+      quickPanel.setAttribute("tabindex","0");
+      quickPanel.setAttribute("aria-label","Ouvrir Aether : météo Maintenon 5 jours, risque météo, système et Atlas AUTO");
+      quickPanel.setAttribute("title","Ouvrir Aether · météo 5 j · risque · système · Atlas AUTO");
+      quickPanel.style.cursor="pointer";
+      const openDetail404134=()=>aetherPanelSet4084(true);
+      quickPanel.addEventListener("click",openDetail404134);
+      quickPanel.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openDetail404134();}});
+    }
     window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();renderAetherSystem4086();renderAetherVeille4087();},{passive:true});
     const feed=document.getElementById("atlasAetherVeille4087");
     if(feed&&feed.dataset.aetherFeedPulseBound40120!=="1"){
@@ -783,7 +795,7 @@ function aetherAttention40133(){
   }
 
   const api=Object.freeze({
-    build:"40.4.133",
+    build:"40.4.134",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
