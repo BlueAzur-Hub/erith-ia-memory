@@ -1,0 +1,7 @@
+{
+  "schema": "agent_crypto_guarded_patch_retry_v1",
+  "build": "40.4.133",
+  "parent_build": "40.4.132",
+  "reason": "third guarded attempt corrects only the resident lifecycle insertion splice after node --check caught a duplicated DEFINITIONS token; no candidate was committed by prior failed runs",
+  "operator_validation_required": true
+}
