@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.127
-  Revision: 40.4.127 unique News queue recovery. Aether builds its five-story queue from both loaded News Sentinel event pools, ranks first, then canonical-deduplicates by event identity, merged identity, source URL and displayed French headline before taking the first five unique stories. The INFO phase no longer carries a redundant compact News tail.
+  Build: 40.4.128
+  Revision: 40.4.128 representative News digest. Aether keeps canonical deduplication but no longer mistakes the five highest critical scores for the richness of News Sentinel: one priority anchor is followed by distinct recent information families (macro/liquidity, ETF/institutional, regulation, leverage/market, security/other) when available. The INFO Book cell is restored and the whole INFO row uses shrink-safe geometry so Sources stays readable.
 */
 (() => {
   "use strict";
@@ -154,14 +154,61 @@
     push("raw",canonical?.headline||canonical?.event_label);
     return [...new Set(tokens)];
   }
+  function aetherVeilleFamily40128(event){
+    const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+    const type=String(canonical?.event_type||"").toLowerCase();
+    const label=String(canonical?.event_label||"").toLowerCase();
+    const headline=String(canonical?.headline||canonical?.headline_fr_display||canonical?.headline_fr||"").toLowerCase();
+    const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").toLowerCase());
+    const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").toLowerCase());
+    const sectors=(Array.isArray(canonical?.sectors)?canonical.sectors:[]).map(v=>String(v||"").toLowerCase());
+    const text=[type,label,headline,...domains,...topics,...sectors].join(" " );
+    if(type==="security"||/hack|exploit|cybers[ée]curit|attaque|pirat/.test(`${label} ${headline}`))return "security";
+    if(domains.includes("institutional_flows")||/\betf\b|institution|inflows?|outflows?|fonds cot/.test(text))return "institutional";
+    if(domains.includes("regulation")||/r[ée]glement|\bsec\b|\bcftc\b|\bmica\b|custody rule|congress|white house/.test(text))return "regulation";
+    if(domains.includes("leverage")||/liquidat|leverage|funding rate|futures?|open interest|short squeeze|long squeeze|positions? vendeuses?|positions? acheteuses?/.test(text))return "leverage";
+    if(domains.includes("macro_liquidity")||/federal reserve|\bfed\b|\bbce\b|\becb\b|treasury|taux|rates?|inflation|emploi|jobs|liquidit|jackson hole/.test(text))return "macro";
+    if(type)return type;
+    return "market";
+  }
   function aetherVeilleEvents4087(){
     const events=[];
     const addPool=pool=>{if(!Array.isArray(pool))return;for(const event of pool)if(event)events.push(event);};
     try{if(typeof newsFeedState!=="undefined"){addPool(newsFeedState?.events);addPool(newsFeedState?.payload?.events);}}catch(_){}
     const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
-    const unique=[];const seen=new Set();
-    for(const row of ranked){const tokens=aetherVeilleStoryTokens40127(row.event);if(tokens.length&&tokens.some(token=>seen.has(token)))continue;tokens.forEach(token=>seen.add(token));unique.push(row.event);if(unique.length>=AETHER_VEILLE_TOP_4087)break;}
-    return unique;
+    const canonicalRows=[];const seenTokens=new Set();
+    for(const row of ranked){
+      const tokens=aetherVeilleStoryTokens40127(row.event);
+      if(tokens.length&&tokens.some(token=>seenTokens.has(token)))continue;
+      tokens.forEach(token=>seenTokens.add(token));
+      canonicalRows.push({...row,family:aetherVeilleFamily40128(row.event)});
+    }
+    if(!canonicalRows.length)return [];
+    const sevenDays=Date.now()-7*24*60*60*1000;
+    const recent=canonicalRows.filter(row=>!row.time||row.time>=sevenDays);
+    const pool=recent.length>=AETHER_VEILLE_TOP_4087?recent:canonicalRows;
+    const chosen=[];const usedEvents=new Set();const usedFamilies=new Set();const usedSources=new Set();
+    const key=row=>String(row?.event?.event_id||row?.event?.id||row?.event?.fingerprint||row?.order);
+    const source=row=>String(row?.event?.source_host||row?.event?.source_name||"").toLowerCase();
+    const take=row=>{if(!row||usedEvents.has(key(row)))return false;chosen.push(row);usedEvents.add(key(row));if(row.family)usedFamilies.add(row.family);if(source(row))usedSources.add(source(row));return true;};
+    const anchor24=pool.find(row=>row.time&&row.time>=Date.now()-24*60*60*1000)||pool[0];
+    take(anchor24);
+    const preferred=["macro","institutional","regulation","leverage","security","market"];
+    for(const family of preferred){
+      if(chosen.length>=AETHER_VEILLE_TOP_4087)break;
+      if(usedFamilies.has(family))continue;
+      const candidates=pool.filter(row=>row.family===family&&!usedEvents.has(key(row)));
+      const diverse=candidates.find(row=>!source(row)||!usedSources.has(source(row)))||candidates[0];
+      take(diverse);
+    }
+    for(const row of pool){
+      if(chosen.length>=AETHER_VEILLE_TOP_4087)break;
+      if(usedEvents.has(key(row)))continue;
+      if(usedFamilies.has(row.family)&&source(row)&&usedSources.has(source(row)))continue;
+      take(row);
+    }
+    for(const row of pool){if(chosen.length>=AETHER_VEILLE_TOP_4087)break;take(row);}
+    return chosen.slice(0,AETHER_VEILLE_TOP_4087).map(row=>row.event);
   }
   function aetherVeilleScope4087(event){
     const assets=(Array.isArray(event?.assets)?event.assets:[]).map(v=>String(v||"").trim()).filter(Boolean);
@@ -536,7 +583,7 @@
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
     // 40.4.123 — information-only remains; prime cells are now ordered for immediate operator value: Market / breadth / Oracle / source / priority News.
-    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084","");
+    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",s.veilleBrief);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
     const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("atlas",`${s.analysis} · Graphe ${s.graph}`);row("oracle",s.signal);row("sources",s.sources);row("news",s.news);}
@@ -688,7 +735,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.127",
+    build:"40.4.128",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -738,6 +785,10 @@
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
     news_feed_ranked_story_count:5,
+    news_feed_selection:"representative digest: priority anchor + distinct recent families",
+    news_feed_family_order:"macro + institutional + regulation + leverage + security + market",
+    news_feed_source_diversity_tiebreak:true,
+    news_feed_recent_family_window_days:7,
     news_feed_pool_union:"newsFeedState.events + newsFeedState.payload.events",
     news_feed_unique_before_limit:true,
     news_feed_unique_tokens:"canonical id + merged ids + source URL + French headline + raw headline",
