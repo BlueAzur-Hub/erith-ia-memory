@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.131
-  Revision: 40.4.131 Aether 12-story reading-flow lock. NORMAL 30 s -> INFO 15 s -> VEILLE 12 × 18 s -> SYSTEM 9 s. The entry pulse only arms VEILLE visibility; the next eleven pulses advance through the remaining eleven stories, so CPU/GPU/RAM cannot interrupt the batch. 40.4.130 semantic INFO owners and the constant-speed News marquee are preserved.
+  Build: 40.4.132
+  Revision: 40.4.132 canonical News story recovery. Canonical collector payload events own VEILLE reading whenever available; explicit headline_fr_display/headline_fr is the first presentation authority. Derived/UI rows are fallback-only and can no longer replace a translated source headline with taxonomy. 40.4.131 timing and 12-story continuity are preserved unchanged.
 */
 (() => {
   "use strict";
@@ -22,8 +22,9 @@
     const mergedIds=new Set((Array.isArray(event?.merged_event_ids)?event.merged_event_ids:[]).map(v=>String(v||"").trim()).filter(Boolean));
     try{
       const pools=[];
-      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);
+      // 40.4.132 — canonical translated collector payload is the first matching authority.
       if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);
+      if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);
       for(const pool of pools){
         const match=pool.find(row=>{
           if(!String(row?.headline_fr_display||row?.headline_fr||"").trim())return false;
@@ -90,6 +91,8 @@
     const canonical=aetherNewsCanonicalFrenchEvent40110(event);
     const original=String(canonical?.headline||canonical?.event_label||event?.headline||event?.event_label||"").replace(/\s+/g," ").trim();
     const explicitFrench=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\s+/g," ").trim();
+    // 40.4.132 — never let a derived presentation helper overwrite a canonical French headline.
+    if(explicitFrench)return explicitFrench;
     try{
       const owner=globalThis.AgentCryptoNewsFrenchPresentation40104;
       if(owner&&typeof owner.headline==="function"){
@@ -97,7 +100,6 @@
         if(explicitFrench||value!==original)return value||fallback;
       }
     }catch(_){}
-    if(explicitFrench)return explicitFrench;
     // 40.4.124 — no “traduction en attente” and no raw English leakage in the scarce Aether ribbon.
     // News Sentinel keeps the canonical original; this is presentation-only, deterministic and factual.
     return aetherNewsFrenchFactualFallback40124(canonical,original,fallback);
@@ -174,7 +176,16 @@
   function aetherVeilleEvents4087(){
     const events=[];
     const addPool=pool=>{if(!Array.isArray(pool))return;for(const event of pool)if(event)events.push(event);};
-    try{if(typeof newsFeedState!=="undefined"){addPool(newsFeedState?.events);addPool(newsFeedState?.payload?.events);}}catch(_){}
+    try{
+      if(typeof newsFeedState!=="undefined"){
+        const canonical=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
+          .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," ").trim());
+        // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
+        // Derived/UI rows remain usable only when the canonical payload is genuinely absent.
+        if(canonical.length)addPool(canonical);
+        else addPool(newsFeedState?.events);
+      }
+    }catch(_){}
     const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
     const canonicalRows=[];const seenTokens=new Set();
     for(const row of ranked){
@@ -747,7 +758,7 @@
   }
 
   const api=Object.freeze({
-    build:"40.4.131",
+    build:"40.4.132",
     backend:AETHER_SYSTEM_BACKEND_4086,
     weather:"Maintenon · Eure-et-Loir",
     refresh:refreshAether,
@@ -803,7 +814,11 @@
     news_feed_family_order:"macro + institutional + regulation + leverage + security + market",
     news_feed_source_diversity_tiebreak:true,
     news_feed_recent_family_window_days:7,
-    news_feed_pool_union:"newsFeedState.events + newsFeedState.payload.events",
+    news_feed_pool_union:"canonical newsFeedState.payload.events; derived newsFeedState.events only if canonical payload absent",
+    news_feed_primary_pool:"newsFeedState.payload.events",
+    news_feed_canonical_headline_required:true,
+    news_feed_derived_rows_reading_fallback_only:true,
+    news_feed_derived_rows_can_displace_canonical_story:false,
     news_feed_unique_before_limit:true,
     news_feed_unique_tokens:"canonical id + merged ids + source URL + French headline + raw headline",
     news_feed_truthful_total:true,
