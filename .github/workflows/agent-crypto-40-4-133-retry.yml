@@ -1,0 +1,69 @@
+name: Agent-Crypto 40.4.133 guarded retry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/patches/40.4.133.retry.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-133-guarded-patch
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reuse bounded surgery with corrected lifecycle anchor
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          wf=Path('.github/workflows/agent-crypto-40-4-133-patch.yml').read_text(encoding='utf-8')
+          start="          python - <<'PY'\n"
+          end="\n          PY\n"
+          if start not in wf or end not in wf: raise SystemExit('STOP: source workflow heredoc unavailable')
+          body=wf.split(start,1)[1].split(end,1)[0]
+          body='\n'.join(line[10:] if line.startswith('          ') else line for line in body.splitlines())+'\n'
+          old="rep(p,marker,block,'resident Atlas wake')"
+          new='''t=p.read_text(encoding="utf-8")
+          needle="  const DEFINITIONS=Object.freeze(["
+          n=t.count(needle)
+          if n!=1: raise SystemExit(f"STOP resident Atlas wake anchor: {n}")
+          p.write_text(t.replace(needle,block+needle,1),encoding="utf-8")'''
+          if body.count(old)!=1: raise SystemExit(f'STOP retry surgery anchor: {body.count(old)}')
+          body=body.replace(old,new,1)
+          exec(compile(body,'40.4.133.extracted.py','exec'),{'__name__':'__main__'})
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          node --check public/agent_crypto_erith_ia/administrator/js/views/view-lifecycle.js
+          git diff --check
+
+      - name: Commit validated 40.4.133 atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_133_AUTO_CANONICAL.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_133_AUTO_CANONICAL.zip.sha256
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.133.request.json
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.133.retry.json
+          git rm .github/workflows/agent-crypto-40-4-133-patch.yml
+          git rm .github/workflows/agent-crypto-40-4-133-retry.yml
+          git commit -m "feat Agent-Crypto 40.4.133 Aether operator watch weather and resident Atlas wake"
+          git pull --rebase origin main
+          git push origin HEAD:main
