@@ -1,0 +1,132 @@
+name: Agent-Crypto Aether 40.4.129 final one-shot
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent_crypto_aether_40_4_129_final_oneshot.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply final cumulative Aether 40.4.129
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          old='40.4.128'; new='40.4.129'
+
+          def rd(rel): return (root/rel).read_text(encoding='utf-8')
+          def wr(rel,s): (root/rel).write_text(s,encoding='utf-8')
+          def rep1(s,a,b,label):
+              n=s.count(a)
+              if n!=1: raise SystemExit(f'{label}: expected 1, got {n}')
+              return s.replace(a,b,1)
+          def sha(rel): return hashlib.sha256((root/rel).read_bytes()).hexdigest()
+
+          a=rd('js/aether.js')
+          if 'Build: 40.4.128' not in a: raise SystemExit('base is not 40.4.128')
+          a=a.replace('Build: 40.4.128','Build: 40.4.129',1)
+          oldrev='Revision: 40.4.128 representative News digest. Aether keeps canonical deduplication but no longer mistakes the five highest critical scores for the richness of News Sentinel: one priority anchor is followed by distinct recent information families (macro/liquidity, ETF/institutional, regulation, leverage/market, security/other) when available. The INFO Book cell is restored and the whole INFO row uses shrink-safe geometry so Sources stays readable.'
+          newrev='Revision: 40.4.129 final cumulative ribbon recovery. One physical Aether lane is restored: AETHER stays fixed, INFO becomes one continuous natural-width rail containing Market / Atlas / Oracle / Sources / Book, and VEILLE remains the dedicated full-width French News lane. News rotation now spans a 12-story representative queue across successive FEED windows instead of restarting on the same first stories.'
+          a=rep1(a,oldrev,newrev,'revision')
+          a=rep1(a,'const AETHER_VEILLE_TOP_4087=5;','const AETHER_VEILLE_TOP_4087=12;','news queue size')
+
+          old_reset='''          // 40.4.126 — every new FEED window restarts at ranked story 1/5.\n          aetherVeilleState4087.index=0;\n          aetherVeilleState4087.kind="alert";\n          aetherVeilleState4087.storyEvent=null;\n          aetherVeilleState4087.storyContext=null;\n          aetherVeilleState4087.fingerprint="";'''
+          new_reset='''          // 40.4.129 — preserve the queue cursor between FEED windows.\n          // The next FEED window continues with the next representative story instead of replaying the first page.\n          aetherVeilleState4087.kind="alert";\n          aetherVeilleState4087.storyEvent=null;\n          aetherVeilleState4087.storyContext=null;\n          aetherVeilleState4087.fingerprint="";'''
+          a=rep1(a,old_reset,new_reset,'feed continuity')
+
+          helper='''  function aetherInfoRail40129(snapshot){\n    const host=document.getElementById("atlasAetherRibbonMarket4088");\n    if(!host||!snapshot)return;\n    const text=[\n      `Marché · ${snapshot.market}`,\n      `Atlas · ${snapshot.analysis}`,\n      `Oracle · ${snapshot.signal}`,\n      `Sources · ${snapshot.sources}`,\n      `Book · ${snapshot.veilleBrief}`\n    ].filter(Boolean).join("   ·   ");\n    let copy=host.querySelector(".atlas-aether-info-copy-40129");\n    if(!copy){\n      host.textContent="";\n      copy=document.createElement("span");\n      copy.className="atlas-aether-info-copy-40129";\n      host.appendChild(copy);\n    }\n    if(copy.textContent!==text){copy.textContent=text;host.dataset.aetherInfoFingerprint="";}\n    requestAnimationFrame(()=>{\n      const width=Math.max(0,Math.round(host.clientWidth));\n      const overflow=Math.max(0,Math.ceil(copy.scrollWidth-width));\n      const fingerprint=`${text}|${width}|${overflow}`;\n      if(host.dataset.aetherInfoFingerprint===fingerprint)return;\n      host.dataset.aetherInfoFingerprint=fingerprint;\n      try{copy.getAnimations().forEach(anim=>anim.cancel());}catch(_){}\n      copy.style.transform="translateX(0)";\n      if(overflow<=AETHER_MARQUEE_MIN_OVERFLOW_PX_40121||matchMedia("(prefers-reduced-motion: reduce)").matches)return;\n      const duration=Math.round((overflow/AETHER_MARQUEE_SPEED_PX_S_40121)*1000);\n      copy.animate([{transform:"translateX(0)"},{transform:`translateX(-${overflow}px)`}],{duration:Math.max(1200,duration),delay:Math.round(AETHER_MARQUEE_DELAY_S_40121*1000),easing:"linear",fill:"forwards"});\n    });\n  }\n'''
+          a=rep1(a,'  function renderAether4084(){',helper+'  function renderAether4084(){','insert info rail')
+
+          old_put='''    // 40.4.123 — information-only remains; prime cells are now ordered for immediate operator value: Market / breadth / Oracle / source / priority News.\n    put("atlasAetherRibbonMarket4088",`Marché · ${s.market}`);put("atlasAetherRibbonAtlas4084",s.analysis);put("atlasAetherRibbonOracle4084",s.signal);put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);put("atlasAetherRibbonBook4084",s.veilleBrief);'''
+          new_put='''    // 40.4.129 — one continuous INFO rail. Book remains inside the same physical line; no competing micro-cells.\n    aetherInfoRail40129(s);\n    put("atlasAetherRibbonAtlas4084","");put("atlasAetherRibbonOracle4084","");put("atlasAetherRibbonSources4084","");put("atlasAetherRibbonBook4084","");'''
+          a=rep1(a,old_put,new_put,'render rail')
+          a=a.replace('build:"40.4.128"','build:"40.4.129"',1)
+          wr('js/aether.js',a)
+
+          css=rd('admin-ribbons.css')
+          marker='/* 40.4.129 — FINAL AETHER SINGLE-LANE CONTRACT RESTORE */'
+          if marker in css: raise SystemExit('40.4.129 css already present')
+          css+='''\n\n/* 40.4.129 — FINAL AETHER SINGLE-LANE CONTRACT RESTORE\n   Contract recovered from the Crypto thread:\n   - exactly one physical command-line height;\n   - AETHER brand fixed;\n   - INFO is one continuous payload rail, not five competing flex cells;\n   - Book remains in that rail;\n   - VEILLE owns its own full-width translated News payload;\n   - no ellipsis/truncation owner is allowed on the INFO payload. */\n#atlasAetherRibbon4084 .atlas-aether-ribbon-track-4085{\n  display:flex!important;align-items:center!important;min-width:0!important;width:100%!important;overflow:hidden!important;gap:0!important;\n}\n#atlasAetherRibbonMarket4088{\n  display:block!important;position:relative!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;max-width:none!important;overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important;\n}\n#atlasAetherRibbonMarket4088>.atlas-aether-info-copy-40129{\n  display:inline-block!important;width:max-content!important;max-width:none!important;white-space:nowrap!important;transform:translateX(0);will-change:transform;\n}\n#atlasAetherRibbonAtlas4084,#atlasAetherRibbonOracle4084,#atlasAetherRibbonSources4084,#atlasAetherRibbonBook4084{display:none!important}\n#atlasAetherVeille4087{min-width:0!important;overflow:hidden!important}\n#atlasAetherVeille4087 .atlas-aether-veille-copy-4087{max-width:none!important;text-overflow:clip!important}\n'''
+          wr('admin-ribbons.css',css)
+
+          # Version identities, no functional Graph/Atlas/Bridge mutation.
+          idx=rd('index.html')
+          if old not in idx: raise SystemExit('index lacks old build')
+          wr('index.html',idx.replace(old,new))
+          app=rd('app.js'); wr('app.js',rep1(app,f'const ATLAS_BUILD = "{old}";',f'const ATLAS_BUILD = "{new}";','ATLAS_BUILD'))
+          japp=rd('js/app.js'); wr('js/app.js',rep1(japp,f'const ADMIN_BUILD = "{old}";',f'const ADMIN_BUILD = "{new}";','ADMIN_BUILD'))
+
+          payloads=['index.html','app.js','admin-ribbons.css','js/app.js','js/aether.js']
+          hashes={p:sha(p) for p in payloads}
+          release='AETHER FINAL SINGLE-LANE CONTRACT · 12-STORY CONTINUOUS NEWS · BOOK RESTORE · VERSION SEAL'
+          note='40.4.129 final Aether move: restore one continuous INFO rail (Market/Atlas/Oracle/Sources/Book), keep VEILLE as the dedicated translated News lane, preserve the 72 px/s constant-read-speed behavior, expand representative News queue to 12 and keep its cursor across FEED windows so later stories are actually surfaced.'
+          reason='Final cumulative Aether handoff over 40.4.128. Fixes the architectural regression instead of another width patch: no competing INFO micro-cells, no Book removal, no Sources amputation, no first-page News replay. Graph, Oracle engine, Math Core, Market Core 38.15.11, Bridge and Atlas CURRENT pipeline are intentionally unchanged and handed off separately.'
+
+          for rel in ['version.json','administrator-version.json']:
+            p=root/rel; d=json.loads(p.read_text(encoding='utf-8'))
+            if d.get('build')!=old: raise SystemExit(f'{rel} build {d.get("build")} != {old}')
+            d['build']=new; d['parent_build']=old; d['publication_revision']=new
+            d['global_versioning']=new; d['asset_token']=f'market-core-v2.0-alpha-build-{new}'
+            d['release']=release; d['status']='candidate_final_aether_handoff_operator_validation_required'
+            d['publication_revision_reason']=reason
+            d.setdefault('notes',[]).append(note)
+            d.setdefault('release_notes',[]).append('40.4.129: final Aether single-lane contract restore + continuous 12-story News rotation; no Graph/Atlas/Bridge engine mutation.')
+            d.setdefault('files',{}).update(hashes)
+            pub=d.setdefault('integrity',{}).setdefault('publication_identity',{})
+            pub['build']=new; pub['asset_token']=f'market-core-v2.0-alpha-build-{new}'
+            if 'app_sha256' in pub: pub['app_sha256']=hashes['app.js']
+            p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          admin_sha=sha('administrator-version.json')
+          vp=root/'version.json'; vd=json.loads(vp.read_text(encoding='utf-8'))
+          pub=vd.setdefault('integrity',{}).setdefault('publication_identity',{})
+          if 'administrator_version_sha256' in pub: pub['administrator_version_sha256']=admin_sha
+          vp.write_text(json.dumps(vd,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          # Validate core invariants.
+          final=rd('js/aether.js')
+          assert 'AETHER_VEILLE_TOP_4087=12' in final
+          assert 'aetherInfoRail40129' in final
+          assert 'preserve the queue cursor between FEED windows' in final
+          assert 'aetherVeilleState4087.index=0;' not in final.split('preserve the queue cursor between FEED windows',1)[1].split('aetherVeilleState4087.fingerprint',1)[0]
+          assert 'Book · ${snapshot.veilleBrief}' in final
+          assert 'const AETHER_MARQUEE_SPEED_PX_S_40121=72;' in final
+          print('40.4.129 patch PASS')
+          PY
+
+      - name: Static validation
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/aether.js
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+
+      - name: Commit final move and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/agent_crypto_aether_40_4_129_final_oneshot.yml
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/admin-ribbons.css \
+                  public/agent_crypto_erith_ia/administrator/js/aether.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m "feat Agent-Crypto 40.4.129 restore final Aether single-lane contract"
+          git pull --rebase origin main
+          git push origin HEAD:main
