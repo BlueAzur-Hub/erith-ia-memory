@@ -1,0 +1,41 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib, json
+
+ROOT=Path("public/agent_crypto_erith_ia/administrator")
+BUILD="40.4.138"
+PUBLIC_PARENT="40.4.136"
+RELEASE="ATLAS COLLAPSED UI · HOT CORE RESIDENCY · AUTO WAKE RECOVERY LOCK"
+STATUS="candidate_atlas_collapsed_hot_core_auto_wake_operator_validation_required"
+TOKEN="market-core-v2.0-alpha-build-40.4.138"
+EXPECTED={
+  "app.js":"492334038c2aed375c38443ad96892db3afc26545ccdf1f0071f41654010a703",
+  "index.html":"44efd971489eaea8fc64d889da218f7b077fafc6c3816b9e84d5d5dfae10a46b",
+  "js/app.js":"802d59b2f3f4ac437c957a9cfa04b0f2ba187177cb105ea82a6d18e80f121bc4",
+  "js/aether.js":"1fc3dc034563dd2b70c1093677f1a472046d050837caaa47a081227921dde5cc",
+  "version.json":"f7a5b021be254e507cd8382a3aa09bd50d4240e6f3de0955a65a1ef08e18fcc2",
+  "administrator-version.json":"7af3dd5be86efc2cedd2717123ea1178859e3efd05340c7e77de4e55e55b432a",
+  "js/views/atlas-family-demand-residency.js":"25a9897d71c875d701f7cf1ba2bc306c1c64abc0176cfb7c1d026dc7a5a11773"
+}
+
+def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def read(rel): return (ROOT/rel).read_text(encoding="utf-8")
+def write(rel,text): (ROOT/rel).write_text(text,encoding="utf-8")
+def replace_once(text,old,new,label):
+    n=text.count(old)
+    if n!=1: raise SystemExit(f"STOP {label}: expected 1, found {n}")
+    return text.replace(old,new,1)
+
+for rel,want in EXPECTED.items():
+    got=sha(ROOT/rel)
+    if got!=want: raise SystemExit(f"STOP parent drift {rel}: {got} != {want}")
+parent=json.loads(read("version.json"))
+if parent.get("build")!=PUBLIC_PARENT or str((parent.get("engine") or {}).get("reference_build"))!="38.15.11":
+    raise SystemExit("STOP public parent / Market Core mismatch")
+
+# Root runtime: restore resident AUTO pending wake + default collapsed/HOT-core boundary.
+app=read("app.js")
+app=replace_once(app,'    if (location.hash) requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));','    if (location.hash) {\n      /* 40.4.138 — DEFAULT COLLAPSED DISCLOSURE LOCK.\n         A stale/reloaded #hash must not reopen an Administrator <details> during\n         boot. Explicit operator clicks and later hashchange events keep the\n         canonical router. This restores the historical "sections repliées par\n         défaut" contract without changing runtime ownership. */\n      const bootId404138 = decodeURIComponent(String(location.hash || "").replace(/^#/, ""));\n      const bootTarget404138 = bootId404138 ? document.getElementById(bootId404138) : null;\n      const bootDisclosure404138 = bootTarget404138 instanceof HTMLDetailsElement\n        ? bootTarget404138\n        : bootTarget404138?.closest?.("details.atlas-collapse") || null;\n      if (!bootDisclosure404138) {\n        requestAnimationFrame(() => atlasV2HandleHashTarget({ scroll: false, instant: true }));\n      }\n    }',"boot hash guard")
+app=replace_once(app,'const ATLAS_BUILD = "40.4.136";','const ATLAS_BUILD = "40.4.138";',"root build")
+if "40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY" in app: raise SystemExit("STOP wake block already present")
+app=app.rstrip()+"\n\n"+'/* ============================================================\n   40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY\n   PENDING CANONICAL OWNER LOCK · NO NEW POLLING\n\n   P0 recovered from the Fil Crypto post-40.4.90 lost-wakeup diagnosis.\n   Contract:\n   - a genuinely new canonical market snapshot stays pending until consumed;\n   - closing/reducing Atlas UI must never cancel that intent;\n   - existing readiness owners (Market refresh, Graph ready, Binance stable,\n     Bridge/post-auth) may retry the SAME pending CURRENT transaction;\n   - no recurring timer, observer, network owner or storage schema is added;\n   - same canonical snapshot remains strict NO-OP after CLOSED CURRENT.\n   ============================================================ */\n\nfunction atlasCurrentPendingMarket137(reason = "readiness-event") {\n  try {\n    if (typeof atlasDeviceComputeAllowed === "function" && !atlasDeviceComputeAllowed()) return false;\n\n    const currentId = typeof atlasAutomation341SnapshotId === "function"\n      ? String(atlasAutomation341SnapshotId() || "").trim()\n      : "";\n    const lastDone = typeof atlasAutomation341ReadLastCurrentMarketId === "function"\n      ? String(atlasAutomation341ReadLastCurrentMarketId() || "").trim()\n      : "";\n    let pendingId = typeof atlasAutomation341ReadPendingMarket === "function"\n      ? String(atlasAutomation341ReadPendingMarket() || "").trim()\n      : "";\n\n    if (pendingId && lastDone && pendingId === lastDone) {\n      try { localStorage.removeItem(ATLAS_AUTOMATION_341_PENDING_MARKET_KEY); } catch (_) {}\n      pendingId = "";\n    }\n\n    if (currentId && (!lastDone || currentId !== lastDone)) {\n      pendingId = currentId;\n      try { atlasAutomation341RememberPendingMarket(currentId); } catch (_) {}\n    }\n\n    if (!pendingId || (lastDone && pendingId === lastDone)) return false;\n    if (typeof atlasAccessIsAuthorized === "function" && !atlasAccessIsAuthorized()) return false;\n\n    if (typeof atlasAutomation341IsBusy === "function" && atlasAutomation341IsBusy()) {\n      try { atlasAutomation341RememberPendingMarket(pendingId); } catch (_) {}\n      return false;\n    }\n\n    // An already armed timer owns the pending transaction. Avoid rebuilding the\n    // full snapshot on every Binance paint while that one finite wake is queued.\n  

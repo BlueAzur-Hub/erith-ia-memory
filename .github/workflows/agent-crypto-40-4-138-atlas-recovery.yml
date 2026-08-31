@@ -1,0 +1,135 @@
+name: Agent-Crypto 40.4.138 Atlas recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.request.json
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-138-atlas-recovery
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded 40.4.138 Atlas surgery
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part0 \
+              coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part1 \
+              coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part2 \
+              coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part3 > /tmp/agent_crypto_404138_apply.py
+          python /tmp/agent_crypto_404138_apply.py
+
+      - name: JavaScript, manifest and Atlas recovery gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/aether.js"
+          node --check "$ROOT/js/views/atlas-family-demand-residency.js"
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          app=(root/'app.js').read_text(encoding='utf-8')
+          family=(root/'js/views/atlas-family-demand-residency.js').read_text(encoding='utf-8')
+          html=(root/'index.html').read_text(encoding='utf-8')
+          app_hash=hashlib.sha256((root/'app.js').read_bytes()).hexdigest()
+          for name in ('version.json','administrator-version.json'):
+            d=json.loads((root/name).read_text(encoding='utf-8'))
+            assert d['build']=='40.4.138'
+            assert d['parent_build']=='40.4.136'
+            assert d['global_versioning']=='40.4.138'
+            assert d['asset_token']=='market-core-v2.0-alpha-build-40.4.138'
+            assert d['integrity']['publication_identity']['build']=='40.4.138'
+            assert d['integrity']['publication_identity']['app_sha256']==app_hash
+          ids=re.findall(r'\bid=["\']([^"\']+)["\']',html)
+          assert len(ids)==len(set(ids)), 'duplicate index IDs'
+          sel=re.search(r'const selectors=Object\.freeze\(\[(.*?)\]\);',family,re.S)
+          assert sel and '#atlas-local-ai-collapse' not in sel.group(1)
+          for key in ('auto-reader','shared-memory','github-memory'):
+            assert key in sel.group(1)
+          assert 'hot_root_registered_for_detach:false' in family
+          assert 'closeDefaultDisclosure(document.querySelector(HOT_ROOT))' in family
+          for marker in (
+            '40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY',
+            'function atlasCurrentPendingMarket137',
+            'atlasAutomation341RememberPendingMarket(pendingId)',
+            'ui_disclosure_dependency:false'
+          ):
+            assert marker in app, marker
+          seg=app[app.index('function atlasCurrentPendingMarket137'):app.index('// Remember every genuinely new canonical')]
+          assert 'if (!readiness?.ready)' in seg
+          assert 'atlasAutomation341RememberPendingMarket(pendingId)' in seg
+          print('40.4.138 STATIC GATES: PASS')
+          PY
+          git diff --check
+
+      - name: Build clean upload artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          repo=Path('.')
+          rels=[
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/aether.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/atlas-family-demand-residency.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json'
+          ]
+          outdir=repo/'coordination/inter_ai_dialogues/agent_crypto'
+          zpath=outdir/'AGENT_CRYPTO_BUILD_40_4_138_ATLAS_COLLAPSED_HOT_CORE_AUTO_WAKE_RECOVERY.zip'
+          with zipfile.ZipFile(zpath,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+            for rel in rels: z.write(repo/rel,arcname=rel)
+          digest=hashlib.sha256(zpath.read_bytes()).hexdigest()
+          (outdir/(zpath.name+'.sha256')).write_text(f'{digest}  {zpath.name}\n',encoding='utf-8')
+          report=f'''# Agent-Crypto 40.4.138 — Validation Report\n\n- Public parent: `40.4.136`\n- Includes cumulative candidate logic: `40.4.137 Atlas AUTO resident wake recovery`\n- Release: `ATLAS COLLAPSED UI · HOT CORE RESIDENCY · AUTO WAKE RECOVERY LOCK`\n- Market Core: `38.15.11` protected\n- Status: `candidate_atlas_collapsed_hot_core_auto_wake_operator_validation_required`\n- ZIP SHA-256: `{digest}`\n\n## P0\n\nAtlas top-level UI is collapsed by default while the HOT cockpit/runtime DOM stays resident. Auto Reader, Shared Memory and GitHub Memory remain collapsed/demand-resident. The cumulative 40.4.137 pending-canonical owner preserves a genuinely new canonical through readiness misses and retries only from existing Market/Graph/Binance/Bridge/post-auth readiness owners.\n\n## Gates\n\n- public parent byte hashes: PASS\n- JavaScript syntax: PASS\n- JSON manifests + publication identity 40.4.138: PASS\n- index IDs unique: PASS\n- HOT Atlas root excluded from detach selectors: PASS\n- peripheral Atlas disclosures remain demand-resident: PASS\n- pending canonical survives readiness miss: PASS\n- no new recurring polling/observer/WebSocket/network owner: PASS by bounded diff\n\n## Firefox acceptance\n\nLeave Atlas + Auto Reader + Shared Memory + GitHub Memory collapsed. A genuinely new canonical must produce exactly one `Atlas 0/4 → 4/4 → NØX → Aerith → CURRENT → REPOS` without opening a disclosure, F5, browser restart or Bridge restart. If a disclosure must be opened, FAIL.\n'''
+          (outdir/'AGENT_CRYPTO_40_4_138_VALIDATION_REPORT.md').write_text(report,encoding='utf-8')
+          print('ZIP SHA-256',digest)
+          PY
+
+      - name: Commit validated 40.4.138 atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/app.js
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git add public/agent_crypto_erith_ia/administrator/js/app.js
+          git add public/agent_crypto_erith_ia/administrator/js/aether.js
+          git add public/agent_crypto_erith_ia/administrator/js/views/atlas-family-demand-residency.js
+          git add public/agent_crypto_erith_ia/administrator/version.json
+          git add public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_138_ATLAS_COLLAPSED_HOT_CORE_AUTO_WAKE_RECOVERY.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_138_ATLAS_COLLAPSED_HOT_CORE_AUTO_WAKE_RECOVERY.zip.sha256
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_138_VALIDATION_REPORT.md
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.request.json
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part0
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part1
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part2
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.138.apply.part3
+          git rm .github/workflows/agent-crypto-40-4-138-atlas-recovery.yml
+          git commit -m "fix Agent-Crypto 40.4.138 restore collapsed Atlas HOT core and resident AUTO wake"
+          git pull --rebase origin main
+          git push origin HEAD:main
