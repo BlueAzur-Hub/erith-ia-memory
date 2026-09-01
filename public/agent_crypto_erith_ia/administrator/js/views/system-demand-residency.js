@@ -49,120 +49,124 @@
   globalThis.__AGENT_CRYPTO_SYSTEM04_RECOVERY_40488__=api;
   globalThis.__AGENT_CRYPTO_SYSTEM04_OWNER_CONSOLIDATION_40489__=api;
 
-  /* 40.4.153 R1 — SYSTEM / SIMULATION ADMIN ROLE-RESTORE VISIBILITY GUARD
-     Operator evidence: on a cold application launch, Simulation can be absent while
-     the sibling System disclosures are already visible; an ordinary reload restores it.
-     The System presentation owner itself is byte-identical to the validated 40.4.146
-     checkpoint, so this guard repairs only an asymmetric Window Manager presentation
-     state after Administrator role restoration. It never forces Simulation open and
-     never recreates a missing DOM shell. No timer, observer, fetch, storage write,
-     engine state, Atlas pipeline or business logic owner is added. */
-  const VISIBILITY_PATCH="40.4.153-R1";
-  const SYSTEM_FAMILY_ID="experimentation-systeme";
-  const SIMULATION_SELECTOR='details[data-collapse-key="simulation"]';
-  const PEER_SELECTORS=Object.freeze([
-    'details[data-collapse-key="commandes"]',
-    'details[data-collapse-key="backend"]',
-    'details[data-collapse-key="safety"]',
-    'details[data-collapse-key="physical-security"]'
-  ]);
-  const visibilityState={
-    checked:0,
-    repaired:0,
-    last_reason:"",
-    last_result:"idle",
-    simulation_present:false,
-    simulation_suppressed:false,
-    visible_peer:false
+  /* 40.4.153 R2 — DETACHED SIMULATION MANIFEST TARGET RECOVERY
+     Root cause proved by the current architecture:
+       1. V2 visibility owns Simulation through manifest id "simulation" and
+          target "closest-collapse".
+       2. closed-body residency legitimately detaches the Simulation body while
+          its <details> shell stays mounted.
+       3. once detached, #simulation is no longer reachable through
+          document.getElementById(), so a later Intermediate/Administrator mode
+          replay cannot resolve the shell and can leave an earlier hidden state
+          behind.
+       4. Commandes / Backend / Safety / Physical Security do not suffer the same
+          failure because their ids are permanent anchors in their <summary>.
+
+     This bounded compatibility shim changes only target resolution for the one
+     detached Simulation manifest entry. It delegates every normal lookup to the
+     canonical atlasV2ManifestTarget() owner and falls back to the already-mounted
+     details[data-collapse-key="simulation"] shell only when that canonical lookup
+     returns null. It does not force the disclosure open, change residency, add a
+     timer/observer/fetch/storage write, or touch Kraken, Atlas, Market Core or the
+     Window Manager. */
+  const TARGET_PATCH="40.4.153-R2";
+  const originalManifestTarget=typeof globalThis.atlasV2ManifestTarget==="function"
+    ? globalThis.atlasV2ManifestTarget
+    : null;
+
+  const targetState={
+    installed:false,
+    fallback_hits:0,
+    last_mode:"",
+    last_result:"idle"
   };
 
-  function administratorRole404153R1(){
-    const role=String(document.body?.dataset?.atlasRole||document.documentElement?.dataset?.atlasRole||"").trim();
-    return role==="administrator";
+  function simulationShell404153R2(){
+    return document.querySelector('details.atlas-collapse[data-collapse-key="simulation"]');
   }
 
-  function managerSuppressed404153R1(node){
-    if(!(node instanceof HTMLElement))return false;
-    return node.classList.contains("admin-native-window-suppressed")
-      || (node.style.getPropertyValue("display")==="none" && node.style.getPropertyPriority("display")==="important")
-      || node.hidden===true
-      || node.getAttribute("aria-hidden")==="true";
+  function currentMode404153R2(){
+    try{
+      if(typeof globalThis.atlasV2Mode==="function")return String(globalThis.atlasV2Mode()||"");
+    }catch(_){}
+    return String(document.body?.dataset?.atlasView||document.documentElement?.dataset?.atlasView||"");
   }
 
-  function reconcileSimulationVisibility404153R1(reason="role-restore"){
-    visibilityState.checked+=1;
-    visibilityState.last_reason=String(reason||"role-restore");
-
-    const simulation=document.querySelector(SIMULATION_SELECTOR);
-    visibilityState.simulation_present=simulation instanceof HTMLDetailsElement;
-    if(!(simulation instanceof HTMLDetailsElement)){
-      visibilityState.last_result="simulation-shell-missing";
-      document.documentElement.dataset.systemSimulationVisibility404153R1="missing";
+  function installDetachedSimulationTarget404153R2(){
+    if(typeof originalManifestTarget!=="function"){
+      targetState.last_result="canonical-owner-missing";
+      document.documentElement.dataset.systemSimulationManifestTarget404153R2="owner-missing";
       return false;
     }
-    if(!administratorRole404153R1()){
-      visibilityState.last_result="non-administrator";
-      document.documentElement.dataset.systemSimulationVisibility404153R1="role-skip";
-      return false;
+    if(globalThis.atlasV2ManifestTarget?.__erithDetachedSimulationTarget404153R2===true){
+      targetState.installed=true;
+      targetState.last_result="already-installed";
+      return true;
     }
 
-    const peers=PEER_SELECTORS.map(selector=>document.querySelector(selector)).filter(node=>node instanceof HTMLDetailsElement);
-    const visiblePeer=peers.some(node=>!managerSuppressed404153R1(node));
-    const suppressed=managerSuppressed404153R1(simulation);
-    visibilityState.visible_peer=visiblePeer;
-    visibilityState.simulation_suppressed=suppressed;
-
-    // A compact/hidden whole System family is a legitimate operator state.
-    // Repair only the inconsistent case proved by the screenshots: sibling
-    // System disclosures visible while Simulation alone remains suppressed.
-    if(!visiblePeer||!suppressed){
-      visibilityState.last_result=!visiblePeer?"family-compact-or-hidden":"already-visible";
-      document.documentElement.dataset.systemSimulationVisibility404153R1=visibilityState.last_result;
-      return false;
-    }
-
-    const manager=globalThis.ErithAdministratorWindows;
-    try{manager?.minimize?.(SYSTEM_FAMILY_ID,false);}catch(_){}
-
-    simulation.classList.remove("admin-native-window-suppressed");
-    if(simulation.style.getPropertyValue("display")==="none" && simulation.style.getPropertyPriority("display")==="important"){
-      simulation.style.removeProperty("display");
-    }
-    if(simulation.hidden)simulation.hidden=false;
-    if(simulation.getAttribute("aria-hidden")==="true")simulation.setAttribute("aria-hidden","false");
-
-    visibilityState.repaired+=1;
-    visibilityState.simulation_suppressed=managerSuppressed404153R1(simulation);
-    visibilityState.last_result=visibilityState.simulation_suppressed?"repair-incomplete":"restored";
-    document.documentElement.dataset.systemSimulationVisibility404153R1=visibilityState.last_result;
-    document.documentElement.dataset.systemSimulationVisibilityReason404153R1=visibilityState.last_reason;
-    return !visibilityState.simulation_suppressed;
+    const wrapped=function atlasV2ManifestTarget404153R2(entry){
+      const resolved=originalManifestTarget(entry);
+      if(resolved)return resolved;
+      if(String(entry?.id||"")!=="simulation"||String(entry?.target||"")!=="closest-collapse")return resolved;
+      const shell=simulationShell404153R2();
+      if(shell){
+        targetState.fallback_hits+=1;
+        targetState.last_result="simulation-shell-fallback";
+        document.documentElement.dataset.systemSimulationManifestTarget404153R2="fallback";
+      }
+      return shell||resolved;
+    };
+    try{Object.defineProperty(wrapped,"__erithDetachedSimulationTarget404153R2",{value:true});}catch(_){}
+    globalThis.atlasV2ManifestTarget=wrapped;
+    targetState.installed=globalThis.atlasV2ManifestTarget===wrapped;
+    targetState.last_result=targetState.installed?"installed":"install-failed";
+    document.documentElement.dataset.systemSimulationManifestTarget404153R2=targetState.last_result;
+    return targetState.installed;
   }
 
-  const scheduleReconcile404153R1=reason=>queueMicrotask(()=>reconcileSimulationVisibility404153R1(reason));
-  document.addEventListener("erith:admin-window-persisted-presentation-restored",()=>scheduleReconcile404153R1("persisted-presentation-restored"));
-  window.addEventListener("atlas:v2mode",event=>{
-    if(event?.detail?.role==="administrator"||administratorRole404153R1())scheduleReconcile404153R1("atlas-v2mode-administrator");
-  });
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>scheduleReconcile404153R1("dom-ready"),{once:true});
-  else scheduleReconcile404153R1("script-load");
+  function replayCurrentVisibility404153R2(reason="install"){
+    targetState.last_mode=currentMode404153R2();
+    if(!targetState.installed){
+      targetState.last_result="not-installed";
+      return false;
+    }
+    if(typeof globalThis.atlasV2ApplySectionVisibility!=="function"){
+      targetState.last_result="visibility-owner-missing";
+      return false;
+    }
+    try{
+      globalThis.atlasV2ApplySectionVisibility(targetState.last_mode||"essential");
+      targetState.last_result=`replayed-${String(reason||"install")}`;
+      document.documentElement.dataset.systemSimulationVisibilityReplay404153R2=targetState.last_mode||"unknown";
+      return true;
+    }catch(_){
+      targetState.last_result="visibility-replay-failed";
+      return false;
+    }
+  }
 
-  globalThis.ErithSystemSimulationVisibility404153R1=Object.freeze({
-    build:VISIBILITY_PATCH,
-    owner:"system-demand-residency.js",
-    family:SYSTEM_FAMILY_ID,
-    simulation_selector:SIMULATION_SELECTOR,
-    asymmetric_repair_only:true,
+  const installed404153R2=installDetachedSimulationTarget404153R2();
+  if(installed404153R2)queueMicrotask(()=>replayCurrentVisibility404153R2("script-load"));
+
+  globalThis.ErithSystemSimulationTarget404153R2=Object.freeze({
+    build:TARGET_PATCH,
+    owner:"system-demand-residency.js compatibility shim",
+    canonical_target_owner:"atlasV2ManifestTarget",
+    manifest_id:"simulation",
+    manifest_target:"closest-collapse",
+    fallback_selector:'details.atlas-collapse[data-collapse-key="simulation"]',
+    detached_body_supported:true,
     force_open:false,
-    recreate_missing_shell:false,
-    window_manager_owner_changed:false,
+    residency_changed:false,
+    window_manager_changed:false,
     timer_added:false,
     observer_added:false,
     fetch_added:false,
     storage_write_added:false,
     atlas_pipeline_changed:false,
-    business_logic_changed:false,
-    reconcile:reconcileSimulationVisibility404153R1,
-    snapshot:()=>Object.freeze({...visibilityState})
+    kraken_changed:false,
+    market_core_changed:false,
+    replay:reason=>replayCurrentVisibility404153R2(reason||"manual-diagnostic"),
+    snapshot:()=>Object.freeze({...targetState})
   });
 })();
