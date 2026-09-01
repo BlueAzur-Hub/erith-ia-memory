@@ -136,3 +136,121 @@
   queueMicrotask(() => { try { repair(); } catch (_) {} });
   window.addEventListener("load", () => { try { repair(); } catch (_) {} }, { once: true });
 })();
+
+/* ==========================================================================
+   40.4.156R1 — ORACLE DIRECT-FLOAT BODY PORTAL REPAIR
+   ========================================================================== */
+(() => {
+  "use strict";
+
+  /*
+     PURPOSE
+     - Keep the Oracle V1 floating graph in viewport coordinates.
+     - Remove the first-drag cursor/window offset caused by a nested fixed
+       containing/stacking context.
+     - Let the existing Window Manager z-index become global so Oracle stays
+       above sibling floating windows while it is moved/focused.
+
+     CONTRACT
+     - Oracle presentation/DOM placement only.
+     - Existing Window Manager remains the drag, resize, persistence and z-order owner.
+     - NO Oracle math, canvas, market data, Atlas pipeline or fetch change.
+     - NO timer and no broad document observer.
+  */
+
+  const BUILD = "40.4.156R1";
+  const ORACLE_ID = "atlasOracleV0";
+  const FLOAT_CLASS = "admin-native-direct-floating";
+  let homeMarker = null;
+  let classObserver = null;
+
+  function fixedPx(value) {
+    const number = Number(value);
+    return `${Number.isFinite(number) ? Math.round(number * 100) / 100 : 0}px`;
+  }
+
+  function rememberHome(node) {
+    if (!(node instanceof HTMLElement) || node.parentNode === document.body) return false;
+    if (homeMarker?.parentNode) return true;
+    homeMarker = document.createComment("atlas-oracle-v1-home-40.4.156R1");
+    node.parentNode?.insertBefore(homeMarker, node);
+    return !!homeMarker.parentNode;
+  }
+
+  function portalFloatingOracle(node) {
+    if (!(node instanceof HTMLElement) || !node.classList.contains(FLOAT_CLASS)) return false;
+    if (node.parentNode === document.body) {
+      node.dataset.oracleDirectBodyPortal = BUILD;
+      return true;
+    }
+
+    const rect = node.getBoundingClientRect();
+    if (!rememberHome(node)) return false;
+
+    // Preserve the exact visual rectangle while changing containing block.
+    // Once the node is a direct body child, the Window Manager's fixed
+    // left/top coordinates and z-index are in the same viewport/global layer.
+    document.body.appendChild(node);
+    node.style.setProperty("position", "fixed", "important");
+    node.style.setProperty("left", fixedPx(rect.left), "important");
+    node.style.setProperty("top", fixedPx(rect.top), "important");
+    node.style.setProperty("right", "auto", "important");
+    node.style.setProperty("bottom", "auto", "important");
+    node.style.setProperty("width", fixedPx(rect.width), "important");
+    node.style.setProperty("height", fixedPx(rect.height), "important");
+    node.style.setProperty("transform", "none", "important");
+    node.dataset.oracleDirectBodyPortal = BUILD;
+    document.documentElement.dataset.oracleDirectBodyPortal404156R1 = "active";
+    return true;
+  }
+
+  function restoreDockedOracle(node) {
+    if (!(node instanceof HTMLElement) || node.classList.contains(FLOAT_CLASS)) return false;
+    if (!(homeMarker?.parentNode)) return false;
+
+    const parent = homeMarker.parentNode;
+    parent.insertBefore(node, homeMarker);
+    homeMarker.remove();
+    homeMarker = null;
+    delete node.dataset.oracleDirectBodyPortal;
+    document.documentElement.dataset.oracleDirectBodyPortal404156R1 = "docked";
+    return true;
+  }
+
+  function reconcile(node = document.getElementById(ORACLE_ID)) {
+    if (!(node instanceof HTMLElement)) return false;
+    if (node.classList.contains(FLOAT_CLASS)) return portalFloatingOracle(node);
+    return restoreDockedOracle(node);
+  }
+
+  function install() {
+    const node = document.getElementById(ORACLE_ID);
+    if (!(node instanceof HTMLElement)) return false;
+
+    reconcile(node);
+    if (!classObserver && typeof MutationObserver === "function") {
+      classObserver = new MutationObserver(() => { try { reconcile(node); } catch (_) {} });
+      classObserver.observe(node, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    globalThis.ErithOracleDirectFloatRepair404156R1 = Object.freeze({
+      build: BUILD,
+      oracle_id: ORACLE_ID,
+      body_portal_only_while_floating: true,
+      window_manager_remains_drag_owner: true,
+      window_manager_remains_z_owner: true,
+      observer_scope: "oracle-class-only",
+      repair: () => reconcile(node),
+      status: () => Object.freeze({
+        floating: node.classList.contains(FLOAT_CLASS),
+        body_child: node.parentNode === document.body,
+        marker_present: !!homeMarker?.parentNode
+      })
+    });
+    return true;
+  }
+
+  try { install(); } catch (_) {}
+  queueMicrotask(() => { try { install(); } catch (_) {} });
+  window.addEventListener("load", () => { try { install(); } catch (_) {} }, { once: true });
+})();
