@@ -1,0 +1,106 @@
+name: Agent-Crypto 40.4.167R3 to 40.4.168 Skeleton Mirror EXEC
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-168-skeleton-mirror-exec.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+      - name: 40.4.167R3 Fixed Market Anchor
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          src=Path('.github/workflows/agent-crypto-40-4-168-skeleton-mirror.yml').read_text(encoding='utf-8')
+          def extract(name):
+              m=re.search(rf"{name} = r'''(.*?)'''",src,re.S)
+              if not m: raise SystemExit(f'{name} payload not found')
+              return m.group(1)
+          (root/'js/market-stack.js').write_text(extract('js_r3'),encoding='utf-8')
+          (root/'market-cascade.css').write_text(extract('css_r3'),encoding='utf-8')
+          index=root/'index.html'; html=index.read_text(encoding='utf-8')
+          html=re.sub(r'(<meta name="administrator-revision" content=")[^"]*(" />)',r'\1R3\2',html,count=1)
+          html=re.sub(r'(<meta name="administrator-release" content=")[^"]*(" />)',r'\1FIXED MARKET ANCHOR · DOMAIN PRESENTATION TRUTH\2',html,count=1)
+          html=re.sub(r'market-cascade\.css(?:\?[^"\']*)?','market-cascade.css?v=404167r3',html)
+          html=re.sub(r'js/market-stack\.js(?:\?[^"\']*)?','js/market-stack.js?v=404167r3',html)
+          index.write_text(html,encoding='utf-8')
+          for manifest in [m for m in [root/'version.json',root/'data/version.json'] if m.exists()]:
+              data=json.loads(manifest.read_text(encoding='utf-8'))
+              data['build']='40.4.167'; data['release']='FIXED MARKET ANCHOR · DOMAIN PRESENTATION TRUTH'; data['status']='fixed_market_anchor_domain_presentation_truth'; data['parent_build']='40.4.167R2'; data['revision']='R3'; data['fixed_market_anchor']={'contract':'fixed_market_anchor_404167r3','position':'single_common_anchor','cycle':['crypto','metals','indices','energy','cross-market'],'new_data_owner':False}
+              manifest.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          git add public/agent_crypto_erith_ia/administrator/js/market-stack.js public/agent_crypto_erith_ia/administrator/market-cascade.css public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/version.json
+          test ! -f public/agent_crypto_erith_ia/administrator/data/version.json || git add public/agent_crypto_erith_ia/administrator/data/version.json
+          git commit -m "fix Agent-Crypto 40.4.167R3 fixed market anchor"
+          git push origin HEAD:main
+      - name: Rebase after R3
+        run: git pull --rebase origin main
+      - name: 40.4.168 Crypto Skeleton Mirror
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          src=Path('.github/workflows/agent-crypto-40-4-168-skeleton-mirror.yml').read_text(encoding='utf-8')
+          def extract(name):
+              m=re.search(rf"{name} = r'''(.*?)'''",src,re.S)
+              if not m: raise SystemExit(f'{name} payload not found')
+              return m.group(1)
+          (root/'js/market-stack.js').write_text(extract('js_168'),encoding='utf-8')
+          (root/'market-cascade.css').write_text(extract('css_168'),encoding='utf-8')
+          index=root/'index.html'; html=index.read_text(encoding='utf-8')
+          for pat,repl in [
+            (r'(<meta name="atlas-build" content=")[^"]*(" />)',r'\140.4.168\2'),
+            (r'(<meta name="administrator-build" content=")[^"]*(" />)',r'\140.4.168\2'),
+            (r'(<meta name="administrator-revision" content=")[^"]*(" />)',r'\1V1\2'),
+            (r'(<meta name="administrator-release" content=")[^"]*(" />)',r'\1CRYPTO SKELETON MIRROR · FIXED MARKET GEOMETRY\2'),
+            (r'(<meta name="atlas-asset-token" content=")[^"]*(" />)',r'\1market-core-v2.0-alpha-build-40.4.168\2')]: html=re.sub(pat,repl,html,count=1)
+          html=re.sub(r'<title>Agent-Crypto @erith\.IA — Build [^<]+</title>','<title>Agent-Crypto @erith.IA — Build 40.4.168 · Administrator</title>',html,count=1)
+          html=re.sub(r'market-cascade\.css(?:\?[^"\']*)?','market-cascade.css?v=404168',html)
+          html=re.sub(r'js/market-stack\.js(?:\?[^"\']*)?','js/market-stack.js?v=404168',html)
+          index.write_text(html,encoding='utf-8')
+          for manifest in [m for m in [root/'version.json',root/'data/version.json'] if m.exists()]:
+              data=json.loads(manifest.read_text(encoding='utf-8'))
+              data['build']='40.4.168'; data['release']='CRYPTO SKELETON MIRROR · FIXED MARKET GEOMETRY'; data['status']='crypto_skeleton_mirror_fixed_market_geometry'; data['asset_token']='market-core-v2.0-alpha-build-40.4.168'; data['parent_build']='40.4.167R3'; data['revision']='V1'; data['crypto_skeleton_mirror']={'contract':'crypto_skeleton_mirror_404168','master':'crypto','mirrors':['metals','indices','energy','cross-market'],'geometry_source':'measured_crypto_cockpit','fixed_market_anchor':True,'active_domains':['crypto','metals'],'inert_domains':['indices','energy','cross-market'],'new_data_owner':False,'new_chart_engine':False}
+              manifest.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          updated=0
+          for app in [root/'app.js',root/'js/app.js']:
+              if not app.exists(): continue
+              text=app.read_text(encoding='utf-8')
+              new,n=re.subn(r'(const\s+ADMIN_BUILD\s*=\s*["\'])40\.4\.167(["\'])',r'\g<1>40.4.168\2',text,count=1)
+              if n:
+                  new=re.sub(r'(const\s+ADMIN_RELEASE\s*=\s*["\'])[^"\']*(["\'])',r'\1CRYPTO SKELETON MIRROR · FIXED MARKET GEOMETRY\2',new,count=1)
+                  app.write_text(new,encoding='utf-8'); updated+=1
+          if updated==0: raise SystemExit('ADMIN_BUILD 40.4.167 owner not found')
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          test ! -f public/agent_crypto_erith_ia/administrator/js/app.js || node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          git add public/agent_crypto_erith_ia/administrator/js/market-stack.js public/agent_crypto_erith_ia/administrator/market-cascade.css public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/version.json public/agent_crypto_erith_ia/administrator/app.js
+          test ! -f public/agent_crypto_erith_ia/administrator/data/version.json || git add public/agent_crypto_erith_ia/administrator/data/version.json
+          test ! -f public/agent_crypto_erith_ia/administrator/js/app.js || git add public/agent_crypto_erith_ia/administrator/js/app.js
+          git commit -m "release Agent-Crypto 40.4.168 Crypto Skeleton Mirror"
+          for n in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
