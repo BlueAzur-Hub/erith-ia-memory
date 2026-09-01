@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.168";
-  const ADMIN_RELEASE = "CRYPTO SKELETON MIRROR · RUNTIME IDENTITY TRUTH";
+  const ADMIN_BUILD = "40.4.169";
+  const ADMIN_RELEASE = "MULTI-MARKET MIRROR CONTRACT · CRYPTO MASTER SKELETON";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

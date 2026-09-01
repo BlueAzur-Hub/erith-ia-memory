@@ -1,9 +1,9 @@
 (() => {
             "use strict";
 
-            const BUILD = "40.4.168";
-            const REVISION = "R1";
-            const CONTRACT = "CRYPTO_SKELETON_MIRROR_404168R1";
+            const BUILD = "40.4.169";
+            const REVISION = "V1";
+            const CONTRACT = "MULTI_MARKET_MIRROR_CONTRACT_404169";
             const ORDER = Object.freeze([
               Object.freeze({ id:"crypto", label:"CRYPTO", title:"Crypto", inert:false, native:"crypto" }),
               Object.freeze({ id:"metals", label:"MÉTAUX", title:"Métaux précieux et industriels", inert:false, native:"metals" }),
@@ -20,6 +20,7 @@
 
             function nativeDomain(){ const b=byId("atlasMarketDomainSwitch"); return String(b?.dataset?.domain||"crypto")==="metals"?"metals":"crypto"; }
             function forceHidden(node, hidden){ if(!node)return; node.classList.toggle("atlas-market-force-hidden-404168",hidden); if(hidden)node.setAttribute("aria-hidden","true"); else node.removeAttribute("aria-hidden"); }
+            function emitDomain404169(domain){ try{ document.dispatchEvent(new CustomEvent("erith:market-domain-change",{detail:{domain,build:BUILD,contract:CONTRACT}})); }catch(_){} }
 
             function captureCryptoGeometry(){
               if(current!=="crypto") return;
@@ -86,6 +87,7 @@
               const s=specFor(domain); current=s.id; const html=document.documentElement; html.dataset.cyclicMarketDomain=s.id; html.dataset.cyclicMarketMode=s.inert?"inert":"active"; html.dataset.cyclicMarketRevision=REVISION; html.dataset.marketSkeleton="crypto-master-mirror";
               if(!s.inert&&!options.nativeAlreadyHandled)ensureNativeDomain(s.native);
               requestAnimationFrame(()=>{ syncPanels(s.id); updateButton(s.id); if(s.id==="crypto")captureCryptoGeometry(); });
+              emitDomain404169(s.id);
             }
 
             function onMarketSwitchClick(event){
@@ -93,7 +95,7 @@
               if(current==="crypto")captureCryptoGeometry();
               if(current==="crypto"&&next.id==="metals"){
                 current="metals"; document.documentElement.dataset.cyclicMarketDomain="metals"; document.documentElement.dataset.cyclicMarketMode="active"; document.documentElement.dataset.marketSkeleton="crypto-master-mirror";
-                requestAnimationFrame(()=>{syncPanels("metals");updateButton("metals");}); return;
+                requestAnimationFrame(()=>{syncPanels("metals");updateButton("metals");}); emitDomain404169("metals"); return;
               }
               event.preventDefault(); event.stopImmediatePropagation(); applyDomain(next.id);
             }
@@ -106,5 +108,6 @@
               globalThis.ErithCryptoSkeletonMirror404168=Object.freeze({build:BUILD,revision:REVISION,contract:CONTRACT,order:ORDER.map(x=>x.id),current:()=>current,next:()=>applyDomain(nextOf(current).id),go:d=>applyDomain(specFor(d).id),master:"crypto",mirrors:["metals","indices","energy","cross-market"],fixed_anchor:true,geometry_from_crypto:true,native_crypto_metals_reused:true,single_cockpit_surface:true,new_chart_engine:false,new_fetch_owner:false,new_timer:false,new_observer:false,new_storage_owner:false});
             }
             if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+            globalThis.ErithMultiMarketMirrorContract404169=Object.freeze({build:BUILD,contract:CONTRACT,master:"crypto",mirrors:["metals","indices","energy","cross-market"],fixed_anchor:true,domain_change_event:"erith:market-domain-change",single_cockpit_surface:true,source_truth_required:true});
           })();
           
