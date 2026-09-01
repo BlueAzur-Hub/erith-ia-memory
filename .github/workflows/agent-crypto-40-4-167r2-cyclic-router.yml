@@ -1,0 +1,46 @@
+name: Agent-Crypto 40.4.167R2 Cyclic Multi-Market Router
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-167r2-cyclic-router.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build and validate 40.4.167R2 cyclic router
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_40_4_167r2_cyclic_router.py
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+          grep -q 'administrator-revision" content="R2' public/agent_crypto_erith_ia/administrator/index.html
+          grep -q 'CYCLIC_MULTI_MARKET_ROUTER_404167R2' public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          grep -q 'cross-market' public/agent_crypto_erith_ia/administrator/js/market-stack.js
+
+      - name: Commit release and retire one-shot
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/agent-crypto-40-4-167r2-cyclic-router.yml
+          git rm .github/scripts/agent_crypto_40_4_167r2_cyclic_router.py
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/market-cascade.css \
+                  public/agent_crypto_erith_ia/administrator/js/market-stack.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git diff --cached --check
+          git commit -m 'release Agent-Crypto 40.4.167R2 cyclic multi-market router'
+          git push origin HEAD:main
