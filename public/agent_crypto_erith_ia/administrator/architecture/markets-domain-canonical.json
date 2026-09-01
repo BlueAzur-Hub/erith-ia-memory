@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_parallel_markets_canonical_v1",
-  "build": "40.4.165",
-  "parent_build": "40.4.164",
-  "release": "MULTI-HORIZON METALS · HOMOGENEOUS FUTURES TRUTH LOCK",
+  "build": "40.4.166",
+  "parent_build": "40.4.165",
+  "release": "PARALLEL MARKETS ROUTER · CRYPTO + METALS DOMAIN SEPARATION LOCK",
   "protected_market_core": "38.15.11",
   "classic_web_modified": false,
   "canonical_runtime_owner": "administrator/app.js",
@@ -39,6 +39,20 @@
       "owner": "atlasMetalsQuoteFoundationHorizonReading",
       "series": "Yahoo Finance Futures daily",
       "spot_futures_mix_forbidden": true
+    },
+    "parallel_router": {
+      "canonical_from": "40.4.166",
+      "owner": "atlasParallelMarketInit",
+      "active_domains": [
+        "crypto",
+        "metals"
+      ],
+      "future_domains_inert": [
+        "indices",
+        "energy",
+        "commodities"
+      ],
+      "second_engine_created": false
     }
   },
   "no_new_network_owner": true,
