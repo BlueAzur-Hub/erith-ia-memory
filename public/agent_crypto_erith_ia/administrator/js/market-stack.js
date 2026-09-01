@@ -2,8 +2,8 @@
             "use strict";
 
             const BUILD = "40.4.168";
-            const REVISION = "V1";
-            const CONTRACT = "CRYPTO_SKELETON_MIRROR_404168";
+            const REVISION = "R1";
+            const CONTRACT = "CRYPTO_SKELETON_MIRROR_404168R1";
             const ORDER = Object.freeze([
               Object.freeze({ id:"crypto", label:"CRYPTO", title:"Crypto", inert:false, native:"crypto" }),
               Object.freeze({ id:"metals", label:"MÉTAUX", title:"Métaux précieux et industriels", inert:false, native:"metals" }),
