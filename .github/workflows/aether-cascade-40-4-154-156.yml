@@ -1,0 +1,356 @@
+name: Aether Cascade 40.4.154-156
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/aether-cascade-40-4-154-156.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: aether-agent-crypto-release-cascade
+  cancel-in-progress: false
+
+jobs:
+  cascade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare surgical cascade driver
+        shell: bash
+        run: |
+          cat > /tmp/aether_cascade_patch.py <<'PY'
+          from pathlib import Path
+          import os, re, json, hashlib
+          from datetime import datetime, timezone
+
+          admin = Path('public/agent_crypto_erith_ia/administrator')
+          step = os.environ['STEP']
+          BUILD = os.environ['BUILD']
+          PARENT = os.environ['PARENT']
+          RELEASE = os.environ['RELEASE']
+          STATUS = os.environ['STATUS']
+          LINEAGE_NOTE = os.environ.get('LINEAGE_NOTE', '').strip()
+
+          index_p = admin / 'index.html'
+          root_p = admin / 'app.js'
+          js_p = admin / 'js/app.js'
+          system_p = admin / 'js/views/system-demand-residency.js'
+          manifest_ps = [admin / 'version.json', admin / 'administrator-version.json']
+
+          def replace_once(text, pattern, repl, label, flags=0):
+              out, n = re.subn(pattern, repl, text, count=1, flags=flags)
+              if n != 1:
+                  raise SystemExit(f'{step}: {label} replacement count={n}, expected 1')
+              return out
+
+          def sha(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          def patch_publication_identity(obj):
+              if isinstance(obj, dict):
+                  for key, value in obj.items():
+                      if key == 'publication_identity' and isinstance(value, dict):
+                          value['build'] = BUILD
+                          value['asset_token'] = f'market-core-v2.0-alpha-build-{BUILD}'
+                          value['status'] = STATUS
+                          if 'app_sha256' in value:
+                              value['app_sha256'] = sha(root_p)
+                      else:
+                          patch_publication_identity(value)
+              elif isinstance(obj, list):
+                  for value in obj:
+                      patch_publication_identity(value)
+
+          def bump_manifests(verification):
+              now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+              for path in manifest_ps:
+                  data = json.loads(path.read_text(encoding='utf-8'))
+                  data['build'] = BUILD
+                  data['release'] = RELEASE
+                  data['asset_token'] = f'market-core-v2.0-alpha-build-{BUILD}'
+                  data['status'] = STATUS
+                  data['parent_build'] = PARENT
+                  data['prepared_at'] = now
+                  data['published_at'] = now
+                  if 'global_versioning' in data:
+                      data['global_versioning'] = BUILD
+
+                  lineage = str(data.get('lineage') or '')
+                  if LINEAGE_NOTE and LINEAGE_NOTE not in lineage:
+                      data['lineage'] = (lineage + ' → ' + LINEAGE_NOTE).strip(' →')
+
+                  files = data.setdefault('files', {})
+                  for rel in list(files):
+                      candidate = (admin / rel).resolve()
+                      if candidate.is_file() and candidate != path.resolve():
+                          files[rel] = sha(candidate)
+
+                  data.setdefault('verification', {})[verification['key']] = verification['value']
+                  patch_publication_identity(data)
+                  path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+          def bump_identity():
+              html = index_p.read_text(encoding='utf-8')
+              html = replace_once(html, r'(<meta name="atlas-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\2', 'atlas meta')
+              html = replace_once(html, r'(<meta name="administrator-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\2', 'administrator meta')
+              html = replace_once(html, r'(<meta name="administrator-release" content=")[^"]+(" />)', rf'\g<1>{RELEASE}\2', 'release meta')
+              html = replace_once(html, r'(<meta name="atlas-asset-token" content=")[^"]+(" />)', rf'\g<1>market-core-v2.0-alpha-build-{BUILD}\2', 'asset token meta')
+              html = replace_once(html, r'(<title>Agent-Crypto @erith\.IA — Build )40\.4\.\d+( · Administrator</title>)', rf'\g<1>{BUILD}\2', 'title')
+              html = re.sub(r'(\?v=administrator-build-)40\.4\.\d+', rf'\g<1>{BUILD}', html)
+              index_p.write_text(html, encoding='utf-8', newline='\n')
+
+              root = root_p.read_text(encoding='utf-8')
+              root = replace_once(root, r'const ATLAS_BUILD = "40\.4\.\d+";', f'const ATLAS_BUILD = "{BUILD}";', 'root ATLAS_BUILD')
+              root_p.write_text(root, encoding='utf-8', newline='\n')
+
+              js = js_p.read_text(encoding='utf-8')
+              js = replace_once(js, r'const ADMIN_BUILD = "40\.4\.\d+";', f'const ADMIN_BUILD = "{BUILD}";', 'modular ADMIN_BUILD')
+              js = replace_once(js, r'const ADMIN_RELEASE = "[^"]*";', f'const ADMIN_RELEASE = "{RELEASE}";', 'modular ADMIN_RELEASE')
+              js_p.write_text(js, encoding='utf-8', newline='\n')
+
+          if step == '154':
+              root = root_p.read_text(encoding='utf-8')
+              old = '''function atlasV2ManifestTarget(entry) {\n  if (!entry) return null;\n  const element = document.getElementById(entry.id);\n  if (!element) return null;\n  if (entry.target === "closest-collapse") {\n    return element.matches("details.atlas-collapse")\n      ? element\n      : element.closest("details.atlas-collapse") || element;\n  }\n  return element;\n}'''
+              new = '''function atlasV2ManifestTarget(entry) {\n  if (!entry) return null;\n  const element = document.getElementById(entry.id);\n  if (!element && entry.id === "simulation" && entry.target === "closest-collapse") {\n    return document.querySelector('details.atlas-collapse[data-collapse-key="simulation"]');\n  }\n  if (!element) return null;\n  if (entry.target === "closest-collapse") {\n    return element.matches("details.atlas-collapse")\n      ? element\n      : element.closest("details.atlas-collapse") || element;\n  }\n  return element;\n}'''
+              if old not in root:
+                  raise SystemExit('154: canonical atlasV2ManifestTarget source not found')
+              root_p.write_text(root.replace(old, new, 1), encoding='utf-8', newline='\n')
+
+              system = system_p.read_text(encoding='utf-8')
+              if '40.4.153 R2 — DETACHED SIMULATION MANIFEST TARGET RECOVERY' not in system:
+                  raise SystemExit('154: proven R2 compatibility shim missing')
+              system, n = re.subn(
+                  r'\n  /\* 40\.4\.153 R2 — DETACHED SIMULATION MANIFEST TARGET RECOVERY[\s\S]*?\n\}\)\(\);\s*$',
+                  '\n})();\n', system, count=1
+              )
+              if n != 1:
+                  raise SystemExit(f'154: R2 retirement count={n}')
+              system_p.write_text(system, encoding='utf-8', newline='\n')
+
+              bump_identity()
+              bump_manifests({
+                  'key': 'simulation_manifest_target_canonical_404154',
+                  'value': {
+                      'build': BUILD, 'parent_build': PARENT,
+                      'runtime_owner': 'app.js atlasV2ManifestTarget',
+                      'simulation_shell_fallback': True,
+                      'r2_compatibility_retired': True,
+                      'intermediate_operator_evidence': 'PASS 2026-09-01',
+                      'force_open': False, 'timer_added': False, 'observer_added': False,
+                      'fetch_added': False, 'storage_write_added': False,
+                      'market_core_changed': False, 'atlas_pipeline_changed': False, 'kraken_changed': False
+                  }
+              })
+
+          elif step == '155':
+              root = root_p.read_text(encoding='utf-8')
+              old = '''function atlasV2ManifestTarget(entry) {\n  if (!entry) return null;\n  const element = document.getElementById(entry.id);\n  if (!element && entry.id === "simulation" && entry.target === "closest-collapse") {\n    return document.querySelector('details.atlas-collapse[data-collapse-key="simulation"]');\n  }\n  if (!element) return null;\n  if (entry.target === "closest-collapse") {\n    return element.matches("details.atlas-collapse")\n      ? element\n      : element.closest("details.atlas-collapse") || element;\n  }\n  return element;\n}'''
+              new = '''function atlasV2ManifestTarget(entry) {\n  if (!entry) return null;\n  const element = document.getElementById(entry.id);\n  if (!element && entry.target === "closest-collapse") {\n    const key = String(entry.id || "");\n    const shell = [...document.querySelectorAll('details.atlas-collapse[data-collapse-key]')]\n      .find(detail => String(detail.dataset.collapseKey || "") === key);\n    if (shell) return shell;\n  }\n  if (!element) return null;\n  if (entry.target === "closest-collapse") {\n    return element.matches("details.atlas-collapse")\n      ? element\n      : element.closest("details.atlas-collapse") || element;\n  }\n  return element;\n}\n\nfunction atlasV2ThreeViewCoherenceSnapshot404155() {\n  const modes = ["essential", "intermediate", "advanced"];\n  return Object.freeze(modes.map(mode => {\n    const expected = ATLAS_V2_SECTION_MANIFEST.filter(entry => atlasV2EntryVisibleInMode(entry, mode));\n    const missing = expected.filter(entry => !atlasV2ManifestTarget(entry)).map(entry => entry.id);\n    return Object.freeze({ mode, expected: expected.length, missing: Object.freeze(missing), pass: missing.length === 0 });\n  }));\n}\n\nglobalThis.ErithThreeViewCoherence404155 = Object.freeze({\n  build: "40.4.155",\n  contract: "Classique → Intermédiaire → Administration",\n  generic_detached_collapse_resolution: true,\n  business_logic_changed: false,\n  timer_added: false,\n  observer_added: false,\n  fetch_added: false,\n  storage_write_added: false,\n  snapshot: atlasV2ThreeViewCoherenceSnapshot404155\n});'''
+              if old not in root:
+                  raise SystemExit('155: 40.4.154 manifest target owner not found')
+              root = root.replace(old, new, 1)
+
+              old_open = '''  const entry = atlasV2ManifestEntry(id);\n  const target = document.getElementById(id);\n  if (!target) return false;'''
+              new_open = '''  const entry = atlasV2ManifestEntry(id);\n  const target = entry ? atlasV2ManifestTarget(entry) : document.getElementById(id);\n  if (!target) return false;'''
+              if old_open not in root:
+                  raise SystemExit('155: hash navigation target source not found')
+              root = root.replace(old_open, new_open, 1)
+              root_p.write_text(root, encoding='utf-8', newline='\n')
+
+              bump_identity()
+              bump_manifests({
+                  'key': 'three_view_coherence_404155',
+                  'value': {
+                      'build': BUILD, 'parent_build': PARENT,
+                      'views': ['essential', 'intermediate', 'advanced'],
+                      'generic_closest_collapse_fallback': True,
+                      'hash_navigation_uses_manifest_target': True,
+                      'runtime_audit': 'ErithThreeViewCoherence404155.snapshot()',
+                      'timer_added': False, 'observer_added': False, 'fetch_added': False,
+                      'storage_write_added': False, 'market_core_changed': False,
+                      'oracle_model_changed': False, 'atlas_pipeline_changed': False
+                  }
+              })
+
+          elif step == '156':
+              js = js_p.read_text(encoding='utf-8')
+              anchor = '''      {\n        id: "graphique",\n        title: "Graphique + Lecture technique · Crypto",\n        tone: "cyan",\n        directFixed: true,\n        resolveEntries: () => [entry(byId("analyste"))].filter(Boolean),\n        resolveAnchor: nodes => nodes[0]\n      },'''
+              replacement = '''      {\n        id: "graphique",\n        title: "Graphique + Lecture technique · Crypto",\n        tone: "cyan",\n        directFixed: true,\n        resolveEntries: () => [entry(byId("analyste"))].filter(Boolean),\n        resolveAnchor: nodes => nodes[0]\n      },\n      {\n        id: "oracle-graph",\n        title: "Oracle V1 · Scénario court",\n        tone: "violet",\n        directFixed: true,\n        geometryPolicy: { minWidth: 520, minHeight: 360, keepFullyVisible: true },\n        preferredFloatGeometry: () => {\n          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);\n          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);\n          const rect = byId("atlasOracleV0")?.getBoundingClientRect?.();\n          const width = Math.min(980, Math.max(620, Math.round(vw * 0.62)));\n          const height = Math.min(680, Math.max(420, Math.round(rect?.height || vh * 0.68)));\n          return { x: Math.max(12, Math.round((vw - width) / 2)), y: Math.max(72, Math.round((vh - height) / 2)), width, height };\n        },\n        resolveEntries: () => [entry(byId("atlasOracleV0"))].filter(Boolean),\n        resolveAnchor: nodes => nodes[0],\n        resolveControlHosts: () => [byId("atlasOracleV0")].filter(Boolean)\n      },'''
+              if anchor not in js:
+                  raise SystemExit('156: Graphique Window Manager definition anchor not found')
+              js = js.replace(anchor, replacement, 1)
+
+              install_anchor = '  function installGlobalVersionIdentity() {'
+              chrome = '''  function installOracleGraphWindowChrome404156() {\n    if (document.getElementById("atlasOracleGraphWindowChrome404156")) return true;\n    const style = document.createElement("style");\n    style.id = "atlasOracleGraphWindowChrome404156";\n    style.textContent = `\n      #atlasOracleV0.admin-native-anchor{--native-accent:#b890ff}\n      #atlasOracleV0.admin-native-anchor>.admin-native-controls{top:6px!important;right:8px!important;z-index:80!important;opacity:.84}\n      #atlasOracleV0.admin-native-anchor>.atlas-oracle-head{padding-right:176px}\n      #atlasOracleV0.admin-native-direct-floating>.admin-native-controls{opacity:1!important}\n      @media(max-width:900px){\n        #atlasOracleV0.admin-native-anchor>.atlas-oracle-head{padding-right:142px}\n        #atlasOracleV0.admin-native-anchor>.admin-native-controls .admin-native-control{width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important}\n      }\n    `;\n    document.head.appendChild(style);\n    return true;\n  }\n\n  globalThis.ErithOracleGraphWindow404156 = Object.freeze({\n    build: "40.4.156",\n    window_id: "oracle-graph",\n    owner: "existing Administrator Window Manager",\n    direct_fixed: true,\n    movable: true,\n    resizable: true,\n    persisted_by_existing_window_manager: true,\n    oracle_engine_changed: false,\n    forecast_math_changed: false,\n    canvas_data_changed: false,\n    timer_added: false,\n    observer_added: false,\n    fetch_added: false\n  });\n\n'''
+              if install_anchor not in js:
+                  raise SystemExit('156: installGlobalVersionIdentity anchor not found')
+              js = js.replace(install_anchor, chrome + install_anchor, 1)
+
+              boot_anchor = '    if (bootRole40312 === "administrator") ensureAdministratorAtlasVisible(manager, "administrator-boot");\n    installMathCoreInlineWindowControls40148();'
+              boot_replacement = '    if (bootRole40312 === "administrator") ensureAdministratorAtlasVisible(manager, "administrator-boot");\n    installOracleGraphWindowChrome404156();\n    installMathCoreInlineWindowControls40148();'
+              if boot_anchor not in js:
+                  raise SystemExit('156: boot Window Manager anchor not found')
+              js = js.replace(boot_anchor, boot_replacement, 1)
+              js_p.write_text(js, encoding='utf-8', newline='\n')
+
+              bump_identity()
+              bump_manifests({
+                  'key': 'oracle_graph_window_404156',
+                  'value': {
+                      'build': BUILD, 'parent_build': PARENT,
+                      'window_id': 'oracle-graph',
+                      'window_manager_owner': 'js/app.js nativeDefinitions',
+                      'direct_fixed': True, 'movable': True, 'resizable': True,
+                      'position_persistent': True, 'dock_restore': True,
+                      'oracle_engine_changed': False, 'canvas_data_changed': False,
+                      'forecast_math_changed': False, 'timer_added': False,
+                      'observer_added': False, 'fetch_added': False,
+                      'market_core_changed': False
+                  }
+              })
+          else:
+              raise SystemExit(f'Unknown cascade step: {step}')
+
+          print(f'{BUILD} PATCH PASS')
+          PY
+
+      - name: Publish 40.4.154 — canonical Simulation target
+        shell: bash
+        env:
+          STEP: '154'
+          BUILD: '40.4.154'
+          PARENT: '40.4.153'
+          RELEASE: 'SIMULATION MANIFEST TARGET · CANONICAL VIEW RESOLUTION LOCK'
+          STATUS: 'simulation_manifest_target_canonical_view_resolution_lock'
+          LINEAGE_NOTE: '40.4.154 Simulation detached-shell canonical target recovery'
+        run: |
+          set -euo pipefail
+          python /tmp/aether_cascade_patch.py
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/views/system-demand-residency.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+          git diff --check
+          git config user.name 'Aether Release'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/views/system-demand-residency.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m 'fix Agent-Crypto 40.4.154 promote Simulation target recovery to canonical owner'
+          git push origin HEAD:main
+
+      - name: Wait for 40.4.154 canonical archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_154_AUTO_CANONICAL.zip'
+          for attempt in $(seq 1 36); do
+            git fetch origin main
+            if git ls-tree -r --name-only origin/main | grep -Fxq "$target"; then
+              git rebase origin/main
+              echo '40.4.154 canonical archive confirmed.'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo '40.4.154 canonical archive timeout.'
+          exit 1
+
+      - name: Publish 40.4.155 — three-view coherence
+        shell: bash
+        env:
+          STEP: '155'
+          BUILD: '40.4.155'
+          PARENT: '40.4.154'
+          RELEASE: 'THREE-VIEW COHERENCE · DETACHED COLLAPSE TARGET LOCK'
+          STATUS: 'three_view_coherence_detached_collapse_target_lock'
+          LINEAGE_NOTE: '40.4.155 three-view coherence + generic detached-collapse target resolution'
+        run: |
+          set -euo pipefail
+          python /tmp/aether_cascade_patch.py
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+          git diff --check
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m 'fix Agent-Crypto 40.4.155 harden three-view manifest coherence'
+          git push origin HEAD:main
+
+      - name: Wait for 40.4.155 canonical archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_155_AUTO_CANONICAL.zip'
+          for attempt in $(seq 1 36); do
+            git fetch origin main
+            if git ls-tree -r --name-only origin/main | grep -Fxq "$target"; then
+              git rebase origin/main
+              echo '40.4.155 canonical archive confirmed.'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo '40.4.155 canonical archive timeout.'
+          exit 1
+
+      - name: Publish 40.4.156 — movable Oracle graph
+        shell: bash
+        env:
+          STEP: '156'
+          BUILD: '40.4.156'
+          PARENT: '40.4.155'
+          RELEASE: 'ORACLE GRAPH WINDOW · DIRECT-FLOAT WORKSPACE LOCK'
+          STATUS: 'oracle_graph_window_direct_float_workspace_lock'
+          LINEAGE_NOTE: '40.4.156 Oracle V1 graph movable direct-float workspace window'
+        run: |
+          set -euo pipefail
+          python /tmp/aether_cascade_patch.py
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+          git diff --check
+          rm -f .github/workflows/aether-cascade-40-4-154-156.yml
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  .github/workflows/aether-cascade-40-4-154-156.yml
+          git commit -m 'feat Agent-Crypto 40.4.156 add movable Oracle graph workspace window'
+          git push origin HEAD:main
+
+      - name: Confirm final 40.4.156 archive and remote truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_156_AUTO_CANONICAL.zip'
+          for attempt in $(seq 1 36); do
+            git fetch origin main
+            if git ls-tree -r --name-only origin/main | grep -Fxq "$target"; then
+              build="$(git show origin/main:public/agent_crypto_erith_ia/administrator/version.json | python -c 'import json,sys; print(json.load(sys.stdin)["build"])')"
+              test "$build" = '40.4.156'
+              echo '40.4.156 remote version truth PASS.'
+              echo '40.4.156 canonical archive PASS.'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo '40.4.156 final archive timeout.'
+          exit 1
