@@ -16,6 +16,15 @@ Date: 2026-09-01T15:11:19Z
 Chaîne attendue: `nouveau snapshot canonique -> Atlas 1/4 -> 4/4 -> NØX -> Aerith -> CURRENT -> REPOS`.
 Le LIVE Binance continue sans rouvrir le CURRENT fermé. Le rôle de calcul local reste PRODUCTION sur le Ryzen et lecture seule sur le Book.
 
+## Observation finale du réveil GitHub
+
+- Au dernier contrôle de fin de fil, `data/crypto/status.json` restait sur le snapshot Top-250 `2026-09-01T14:19:43.348Z` malgré les créneaux natifs attendus.
+- Dans le même dépôt, `Atlas Market Archive Top 50 Stable` a publié ensuite un commit `archive atlas top 50 market snapshot`; au moins un autre scheduler GitHub continue donc à battre, mais avec retard observable.
+- Ne pas confondre cela avec une panne Atlas/Ollama locale : le pipeline local a été vu 0/4 -> 4/4 -> NØX -> Aerith et le Graphique 40.4.158 est validé.
+- GitHub documente que `schedule` peut être retardé sous charge et que certains jobs en file peuvent être supprimés.
+- Piste de reprise prioritaire si le Top-250 récidive : ajouter un **stimulateur croisé** indépendant du `schedule` du Top-250 (par exemple `workflow_run` déclenché par la fin d'un collecteur frère réellement actif, puis contrôle de fraîcheur + `workflow_dispatch` du Top-250), ou une horloge externe autorisée. Ne jamais créer un runner dormant de plusieurs heures.
+- La tâche ChatGPT **Pouls Atlas** est déjà programmée en surveillance conditionnelle horaire ; elle doit signaler un snapshot anormalement ancien ou un pipeline bloqué, pas fabriquer silencieusement des données.
+
 ## Dettes / chantiers laissés volontairement ouverts
 
 1. **RND Aether**: `technical-random-10.png` n'est pas publié; ancien driver 40.4.159 RND retiré avant la cascade finale. Réutiliser le bouton RND existant, aucun nouveau moteur/menu.
@@ -25,7 +34,7 @@ Le LIVE Binance continue sans rouvrir le CURRENT fermé. Le rôle de calcul loca
 5. **Marchés**: extensions bourse/indices/énergie/agriculture/denrées à concevoir après stabilisation; conserver provenance/source/horodatage et séparation observation/exécution.
 6. **Vue Opérateur**: future vue pour tiers, fonctionnelle mais sans @erith.IA privé, clés, wallet ni privilèges d'exécution réelle.
 7. **Backend réel Kraken**: futur, backend-only, permissions/auth/logs/kill-switch/validation humaine; la page publique reste sans secrets ni ordre réel.
-8. **GitHub schedule**: GitHub documente que les événements `schedule` peuvent être retardés ou parfois abandonnés sous forte charge. Le watchdog réduit le risque mais reste lui-même un schedule; la surveillance Aether/ChatGPT reste utile.
+8. **GitHub schedule**: le watchdog réduit le risque mais reste lui-même un schedule; ne le déclarer guéri qu'après plusieurs battements automatiques observés.
 
 ## Ne pas réouvrir sans preuve
 
