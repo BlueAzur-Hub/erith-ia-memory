@@ -2,7 +2,7 @@
   "schema": "agent_crypto_parallel_markets_canonical_v1",
   "build": "40.4.166",
   "parent_build": "40.4.165",
-  "release": "PARALLEL MARKETS ROUTER · CRYPTO + METALS DOMAIN SEPARATION LOCK",
+  "release": "PARALLEL MARKETS TRUTH SEAL · DEMAND OWNER + 24H INTRADAY PROVENANCE LOCK",
   "protected_market_core": "38.15.11",
   "classic_web_modified": false,
   "canonical_runtime_owner": "administrator/app.js",
@@ -26,11 +26,16 @@
         "RMIS",
         "World Bank"
       ],
-      "separate_from_crypto": true
+      "separate_from_crypto": true,
+      "canonical_revision": "40.4.166R1",
+      "routing_owner": "atlasParallelMarketSetDomain + atlasParallelMarketInit",
+      "demand_owner": "AtlasParallelMarketDemand40465.ensure",
+      "default_crypto_boot_metals_dormant": true
     },
     "multi_horizon": {
       "canonical_from": "40.4.165",
       "horizons": [
+        "24h",
         "7d",
         "30d",
         "90d",
@@ -38,7 +43,10 @@
       ],
       "owner": "atlasMetalsQuoteFoundationHorizonReading",
       "series": "Yahoo Finance Futures daily",
-      "spot_futures_mix_forbidden": true
+      "spot_futures_mix_forbidden": true,
+      "canonical_revision": "40.4.166R1",
+      "intraday_24h_series": "Yahoo Finance Futures intraday 5m",
+      "intraday_24h_currently_available": true
     },
     "parallel_router": {
       "canonical_from": "40.4.166",
@@ -52,11 +60,22 @@
         "energy",
         "commodities"
       ],
-      "second_engine_created": false
+      "second_engine_created": false,
+      "canonical_revision": "40.4.166R1",
+      "routing_owner": "atlasParallelMarketSetDomain + atlasParallelMarketInit",
+      "metals_demand_owner": "AtlasParallelMarketDemand40465.ensure",
+      "direct_reinitialize_forbidden": true
     }
   },
   "no_new_network_owner": true,
   "no_new_timer": true,
   "no_new_observer": true,
-  "no_new_storage_owner": true
+  "no_new_storage_owner": true,
+  "revision": "R1",
+  "collector_provenance": {
+    "collector_manifest_version": "2.3.0",
+    "legacy_build_target": "28.2.67",
+    "meaning": "collector lineage metadata only; never Administrator build identity",
+    "administrator_identity_owner": "administrator/version.json + administrator-version.json"
+  }
 }
