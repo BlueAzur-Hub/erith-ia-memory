@@ -1,0 +1,480 @@
+name: Agent-Crypto 40.4.166R1-167 Market Cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-40-4-166r1-167-market-cascade.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-market-cascade-40-4-166r1-167
+  cancel-in-progress: false
+
+jobs:
+  cascade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify 40.4.166 base and historical Metals demand owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          grep -F 'const ATLAS_BUILD = "40.4.166";' "$ROOT/app.js" >/dev/null
+          grep -F 'const ADMIN_BUILD = "40.4.166";' "$ROOT/js/app.js" >/dev/null
+          grep -F 'AtlasParallelMarketDemand40465' "$ROOT/app.js" >/dev/null
+          grep -F 'function atlasParallelMarketInit' "$ROOT/app.js" >/dev/null
+          grep -F 'initializeExistingRouter()' "$ROOT/js/markets-domain-contract.js" >/dev/null
+          test -f public/agent_crypto_erith_ia/data/metals/status.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          for p in (root/'version.json',root/'administrator-version.json'):
+              d=json.loads(p.read_text(encoding='utf-8'))
+              assert d['build']=='40.4.166', (p,d.get('build'))
+          s=json.loads(Path('public/agent_crypto_erith_ia/data/metals/status.json').read_text(encoding='utf-8'))
+          assert s['status']=='ready'
+          assert s['assets_received']==5
+          assert s['intraday_24h']['available'] is True
+          assert s['intraday_24h']['source_id']=='yahoo_finance'
+          PY
+
+      - name: Build 40.4.166R1 Parallel Markets Truth Seal
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          module=root/'js/markets-domain-contract.js'
+          architecture=root/'architecture/markets-domain-canonical.json'
+
+          module.write_text(r'''(() => {
+            "use strict";
+            const BUILD = "40.4.166";
+            const REVISION = "R1";
+
+            const METALS_FOUNDATION = Object.freeze({
+              build: "40.4.164",
+              canonical_revision: "40.4.166R1",
+              state: "CANONICAL_EXISTING_RUNTIME",
+              routing_owner: "app.js::atlasParallelMarketSetDomain + atlasParallelMarketInit",
+              demand_owner: "globalThis.AtlasParallelMarketDemand40465.ensure",
+              archive_root: "../data/metals/",
+              symbols: Object.freeze(["XAU","XAG","XPT","XPD","HG"]),
+              asset_ids: Object.freeze(["gold","silver","platinum","palladium","copper"]),
+              current_quote_source: "Gold API public archive",
+              history_source: "Yahoo Finance Futures public archive",
+              eur_conversion: "ECB indicative only",
+              structural_sources: Object.freeze(["USGS","IEA","RMIS","World Bank"]),
+              current_quote_and_futures_history_separate: true,
+              structural_data_never_replaces_market_quote: true,
+              crypto_cache_reuse_forbidden: true,
+              fabricated_values_forbidden: true,
+              observation_only: true,
+              default_crypto_boot_metals_dormant: true,
+              market_core_changed: false,
+              new_network_owner: false,
+              new_timer: false,
+              new_observer: false,
+              new_storage_owner: false
+            });
+            globalThis.ErithMetalsFoundation404164 = METALS_FOUNDATION;
+
+            const METALS_MULTI_HORIZON = Object.freeze({
+              build: "40.4.165",
+              canonical_revision: "40.4.166R1",
+              state: "CANONICAL_EXISTING_ENGINE",
+              owner: "app.js::atlasMetalsQuoteFoundationHorizonReading + atlasMetalsQuoteFoundationRenderAnalysisHorizons",
+              horizons: Object.freeze([
+                Object.freeze({id:"24h",hours:24,series:"Yahoo Finance Futures intraday",interval:"5m",measured:true}),
+                Object.freeze({id:"7d",days:7,series:"Yahoo Finance Futures daily",measured:true}),
+                Object.freeze({id:"30d",days:30,series:"Yahoo Finance Futures daily",measured:true}),
+                Object.freeze({id:"90d",days:90,series:"Yahoo Finance Futures daily",measured:true}),
+                Object.freeze({id:"1y",days:365,series:"Yahoo Finance Futures daily",measured:true})
+              ]),
+              current_quote_excluded_from_historical_return_path: true,
+              spot_futures_mix_forbidden: true,
+              sample_count_must_be_visible: true,
+              source_period_and_units_preserved: true,
+              no_new_calculation_engine: true,
+              no_new_fetch: true,
+              no_new_timer: true,
+              market_core_changed: false,
+              audit() {
+                const demand = globalThis.AtlasParallelMarketDemand40465;
+                return Object.freeze({
+                  build: BUILD,
+                  revision: REVISION,
+                  demand_owner_available: typeof demand?.ensure === "function",
+                  dom_horizons: Object.freeze([...document.querySelectorAll("[data-metals-analysis-horizon]")].map(node => Number(node.dataset.metalsAnalysisHorizon)).filter(Number.isFinite))
+                });
+              }
+            });
+            globalThis.ErithMetalsMultiHorizon404165 = METALS_MULTI_HORIZON;
+
+            const PARALLEL_MARKETS_ROUTER = Object.freeze({
+              build: BUILD,
+              revision: REVISION,
+              state: "CANONICAL_FACADE_OVER_EXISTING_PARALLEL_MARKET_RUNTIME",
+              routing_owner: "app.js::atlasParallelMarketSetDomain + atlasParallelMarketInit",
+              metals_demand_owner: "globalThis.AtlasParallelMarketDemand40465.ensure",
+              active_domains: Object.freeze({
+                crypto: Object.freeze({id:"crypto",state:"ACTIVE",engine:"Market Core 38.15.11",data_scope:"crypto only"}),
+                metals: Object.freeze({id:"metals",state:"ACTIVE_DEMAND",engine:"existing Parallel Markets / Metals runtime",data_scope:"metals only"})
+              }),
+              future_domains: Object.freeze({
+                indices: Object.freeze({id:"indices",state:"PLANNED_INERT"}),
+                energy: Object.freeze({id:"energy",state:"PLANNED_INERT"}),
+                commodities: Object.freeze({id:"commodities",state:"PLANNED_INERT"}),
+                cross_market: Object.freeze({id:"cross_market",state:"PLANNED_INERT"})
+              }),
+              separation: Object.freeze({
+                crypto_state_is_authority_for_crypto: true,
+                metals_state_is_authority_for_metals: true,
+                cross_domain_cache_reuse_forbidden: true,
+                source_truth_kept_per_domain: true,
+                no_cross_domain_average: true,
+                no_automatic_financial_action: true
+              }),
+              readiness() {
+                return Object.freeze({
+                  crypto: true,
+                  metals_router: typeof globalThis.atlasParallelMarketInit === "function",
+                  metals_demand_owner: typeof globalThis.AtlasParallelMarketDemand40465?.ensure === "function",
+                  indices: false,
+                  energy: false,
+                  commodities: false,
+                  cross_market: false
+                });
+              },
+              direct_reinitialize_forbidden: true,
+              second_engine_created: false,
+              new_network_owner: false,
+              new_timer: false,
+              new_observer: false,
+              new_storage_owner: false
+            });
+            globalThis.ErithParallelMarketsRouter404166 = PARALLEL_MARKETS_ROUTER;
+
+            document.documentElement.dataset.marketsDomainContractBuild = BUILD;
+            document.documentElement.dataset.marketsDomainContractRevision = REVISION;
+          })();
+          ''', encoding='utf-8')
+
+          arch=json.loads(architecture.read_text(encoding='utf-8'))
+          arch['revision']='R1'
+          arch['release']='PARALLEL MARKETS TRUTH SEAL · DEMAND OWNER + 24H INTRADAY PROVENANCE LOCK'
+          arch['contracts']['metals_foundation'].update({
+              'canonical_revision':'40.4.166R1',
+              'routing_owner':'atlasParallelMarketSetDomain + atlasParallelMarketInit',
+              'demand_owner':'AtlasParallelMarketDemand40465.ensure',
+              'default_crypto_boot_metals_dormant':True
+          })
+          arch['contracts']['multi_horizon'].update({
+              'canonical_revision':'40.4.166R1',
+              'horizons':['24h','7d','30d','90d','1y'],
+              'intraday_24h_series':'Yahoo Finance Futures intraday 5m',
+              'intraday_24h_currently_available':True
+          })
+          arch['contracts']['parallel_router'].update({
+              'canonical_revision':'40.4.166R1',
+              'routing_owner':'atlasParallelMarketSetDomain + atlasParallelMarketInit',
+              'metals_demand_owner':'AtlasParallelMarketDemand40465.ensure',
+              'direct_reinitialize_forbidden':True
+          })
+          arch['collector_provenance']={
+              'collector_manifest_version':'2.3.0',
+              'legacy_build_target':'28.2.67',
+              'meaning':'collector lineage metadata only; never Administrator build identity',
+              'administrator_identity_owner':'administrator/version.json + administrator-version.json'
+          }
+          architecture.write_text(json.dumps(arch,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          for p in (root/'version.json', root/'administrator-version.json'):
+              d=json.loads(p.read_text(encoding='utf-8'))
+              d['revision']='R1'
+              d['release']='PARALLEL MARKETS TRUTH SEAL · DEMAND OWNER + 24H INTRADAY PROVENANCE LOCK'
+              d['status']='parallel_markets_truth_seal_404166r1'
+              d['contracts']=d.get('contracts',{})
+              d['contracts']['parallel_markets_truth_404166r1']={
+                  'routing_owner':'app.js::atlasParallelMarketSetDomain + atlasParallelMarketInit',
+                  'metals_demand_owner':'globalThis.AtlasParallelMarketDemand40465.ensure',
+                  'direct_reinitialize_forbidden':True,
+                  'default_crypto_boot_metals_dormant':True,
+                  'metals_intraday_24h':'Yahoo Finance Futures 5m · available',
+                  'collector_legacy_build_target_28_2_67_is_not_admin_identity':True,
+                  'market_core_changed':False,
+                  'new_fetch':False,
+                  'new_timer':False,
+                  'new_observer':False,
+                  'new_storage_owner':False
+              }
+              if '40.4.166R1' not in d.get('lineage',''):
+                  d['lineage']=d.get('lineage','')+' → 40.4.166R1 Parallel Markets truth seal: historical Metals demand-owner restored as canonical load path; 24h Futures intraday truth recorded; direct router reinitialization forbidden.'
+              p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/js/markets-domain-contract.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          for p in (root/'version.json',root/'administrator-version.json',root/'architecture/markets-domain-canonical.json'):
+              json.loads(p.read_text(encoding='utf-8'))
+          t=(root/'js/markets-domain-contract.js').read_text(encoding='utf-8')
+          assert 'initializeExistingRouter' not in t
+          assert 'AtlasParallelMarketDemand40465.ensure' in t
+          assert 'id:"24h"' in t
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/js/markets-domain-contract.js \
+                  public/agent_crypto_erith_ia/administrator/architecture/markets-domain-canonical.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m "fix Agent-Crypto 40.4.166R1 seal Parallel Markets truth"
+
+      - name: Build 40.4.167 Market Cascade Shell
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          app=root/'app.js'; jsapp=root/'js/app.js'; index=root/'index.html'
+          module=root/'js/markets-domain-contract.js'; architecture=root/'architecture/markets-domain-canonical.json'
+          css=root/'market-cascade.css'
+
+          def one(text,old,new,label):
+              n=text.count(old)
+              if n != 1: raise SystemExit(f'{label}: expected one exact occurrence, got {n}')
+              return text.replace(old,new,1)
+
+          # Identity only in existing runtimes.
+          t=app.read_text(encoding='utf-8')
+          t=one(t,'const ATLAS_BUILD = "40.4.166";','const ATLAS_BUILD = "40.4.167";','ATLAS_BUILD')
+          app.write_text(t,encoding='utf-8')
+
+          t=jsapp.read_text(encoding='utf-8')
+          t=one(t,'const ADMIN_BUILD = "40.4.166";','const ADMIN_BUILD = "40.4.167";','ADMIN_BUILD')
+          t=re.sub(r'const ADMIN_RELEASE = "[^"]*";','const ADMIN_RELEASE = "MARKET CASCADE SHELL · VERTICAL MULTI-DOMAIN OBSERVATORY FOUNDATION";',t,count=1)
+          jsapp.write_text(t,encoding='utf-8')
+
+          # Static cascade presentation. No listener, observer, timer or network owner.
+          css.write_text(r'''/* 40.4.167 — Market Cascade Shell
+   Presentation-only vertical roadmap for validated and future market domains.
+   No chart engine, fetch, timer, observer, listener or storage owner is created here. */
+.atlas-market-cascade-404167{margin:18px 0 22px;padding:14px;border:1px solid rgba(78,211,220,.28);border-radius:22px;background:linear-gradient(180deg,rgba(7,20,34,.94),rgba(5,14,25,.9));box-shadow:0 18px 48px rgba(0,0,0,.18)}
+.atlas-market-cascade-head-404167{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:4px 6px 14px}.atlas-market-cascade-head-404167 span{display:block;font-size:11px;letter-spacing:.22em;font-weight:900;color:#77dce4}.atlas-market-cascade-head-404167 h2{margin:5px 0 0;font-size:24px;color:#f6f3e9}.atlas-market-cascade-head-404167 p{margin:0;max-width:680px;text-align:right;color:#9fb3c7;font-size:12px;line-height:1.45}
+.atlas-market-cascade-grid-404167{display:grid;gap:10px}.atlas-market-floor-404167{position:relative;display:grid;grid-template-columns:62px minmax(190px,.7fr) minmax(260px,1.5fr) auto;align-items:center;gap:14px;min-height:88px;padding:12px 14px;border:1px solid rgba(118,151,178,.2);border-radius:17px;background:linear-gradient(100deg,rgba(14,27,43,.94),rgba(10,20,34,.8));overflow:hidden}.atlas-market-floor-404167::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--market-floor-accent,#6edce7)}.atlas-market-floor-index-404167{display:grid;place-items:center;width:48px;height:48px;border:1px solid color-mix(in srgb,var(--market-floor-accent,#6edce7) 55%,transparent);border-radius:15px;color:var(--market-floor-accent,#6edce7);font-size:16px;font-weight:950}.atlas-market-floor-copy-404167 small{display:block;color:#809bb1;font-size:10px;letter-spacing:.16em;font-weight:850;text-transform:uppercase}.atlas-market-floor-copy-404167 b{display:block;margin-top:4px;color:#f1f5f7;font-size:17px}.atlas-market-floor-contract-404167{color:#a9bbca;font-size:12px;line-height:1.45}.atlas-market-floor-state-404167{justify-self:end;white-space:nowrap;padding:7px 10px;border:1px solid rgba(126,158,185,.25);border-radius:999px;color:#b6c6d3;font-size:10px;font-weight:900;letter-spacing:.06em}.atlas-market-floor-404167[data-state="active"] .atlas-market-floor-state-404167{border-color:color-mix(in srgb,var(--market-floor-accent) 45%,transparent);color:var(--market-floor-accent)}.atlas-market-floor-404167[data-state="inert"]{opacity:.72}.atlas-market-floor-404167[data-domain="crypto"]{--market-floor-accent:#64dde8}.atlas-market-floor-404167[data-domain="metals"]{--market-floor-accent:#e8c766}.atlas-market-floor-404167[data-domain="indices"]{--market-floor-accent:#aa91ee}.atlas-market-floor-404167[data-domain="commodities"]{--market-floor-accent:#e79b57}.atlas-market-floor-404167[data-domain="cross-market"]{--market-floor-accent:#e7edf4}
+.atlas-market-cascade-rule-404167{margin:11px 5px 1px;color:#7894aa;font-size:10px;letter-spacing:.04em}.atlas-market-cascade-rule-404167 b{color:#82d7de}
+@media(max-width:900px){.atlas-market-cascade-head-404167{align-items:flex-start;flex-direction:column}.atlas-market-cascade-head-404167 p{text-align:left}.atlas-market-floor-404167{grid-template-columns:50px 1fr auto}.atlas-market-floor-contract-404167{grid-column:2/-1}.atlas-market-floor-index-404167{width:42px;height:42px}.atlas-market-floor-state-404167{align-self:start}}
+@media(max-width:620px){.atlas-market-floor-404167{grid-template-columns:44px 1fr}.atlas-market-floor-state-404167{grid-column:2;justify-self:start}.atlas-market-floor-contract-404167{grid-column:1/-1}.atlas-market-cascade-head-404167 h2{font-size:20px}}
+''',encoding='utf-8')
+
+          html=index.read_text(encoding='utf-8')
+          html=html.replace('40.4.166','40.4.167')
+          html=re.sub(r'<meta name="administrator-release" content="[^"]*" />','<meta name="administrator-release" content="MARKET CASCADE SHELL · VERTICAL MULTI-DOMAIN OBSERVATORY FOUNDATION" />',html,count=1)
+          if './market-cascade.css?v=administrator-build-40.4.167' not in html:
+              anchor='<link rel="stylesheet" href="./admin-ribbons.css?v=administrator-build-40.4.167" />'
+              if anchor not in html: raise SystemExit('CSS anchor missing')
+              html=html.replace(anchor,anchor+'\n  <link rel="stylesheet" href="./market-cascade.css?v=administrator-build-40.4.167" />',1)
+
+          shell=r'''
+
+    <section class="atlas-market-cascade-404167"
+             id="atlasMarketCascade404167"
+             aria-labelledby="atlasMarketCascadeTitle404167"
+             data-market-cascade-build="40.4.167">
+      <header class="atlas-market-cascade-head-404167">
+        <div>
+          <span>ERITH.IA · MARKETS OBSERVATORY · CASCADE</span>
+          <h2 id="atlasMarketCascadeTitle404167">Marchés parallèles · architecture verticale</h2>
+        </div>
+        <p>Les domaines validés conservent leurs moteurs actuels. Les futurs étages restent inertes jusqu’à validation de leurs sources, unités, historiques et replis.</p>
+      </header>
+      <div class="atlas-market-cascade-grid-404167">
+        <article class="atlas-market-floor-404167" data-domain="crypto" data-state="active">
+          <span class="atlas-market-floor-index-404167">01</span>
+          <div class="atlas-market-floor-copy-404167"><small>Domaine canonique</small><b>Crypto</b></div>
+          <div class="atlas-market-floor-contract-404167">Market Core 38.15.11 · graphique, Market, Oracle et historiques existants · aucune duplication.</div>
+          <span class="atlas-market-floor-state-404167">ACTIF · RÉSIDENT</span>
+        </article>
+        <article class="atlas-market-floor-404167" data-domain="metals" data-state="active">
+          <span class="atlas-market-floor-index-404167">02</span>
+          <div class="atlas-market-floor-copy-404167"><small>Domaine canonique à la demande</small><b>Métaux</b></div>
+          <div class="atlas-market-floor-contract-404167">XAU · XAG · XPT · XPD · HG · Gold API + Yahoo Futures + BCE · runtime lourd uniquement sur demande.</div>
+          <span class="atlas-market-floor-state-404167">ACTIF · DEMAND</span>
+        </article>
+        <article class="atlas-market-floor-404167" data-domain="indices" data-state="inert">
+          <span class="atlas-market-floor-index-404167">03</span>
+          <div class="atlas-market-floor-copy-404167"><small>Prochain domaine</small><b>Indices / Bourse</b></div>
+          <div class="atlas-market-floor-contract-404167">Emplacement réservé. Aucun symbole, fournisseur, historique ou graphique n’est activé avant audit Source Truth.</div>
+          <span class="atlas-market-floor-state-404167">PLANNED · INERT</span>
+        </article>
+        <article class="atlas-market-floor-404167" data-domain="commodities" data-state="inert">
+          <span class="atlas-market-floor-index-404167">04</span>
+          <div class="atlas-market-floor-copy-404167"><small>Domaine futur</small><b>Énergie & matières premières</b></div>
+          <div class="atlas-market-floor-contract-404167">Pétrole, gaz et denrées uniquement après qualification des unités, marchés, licences, historique et fraîcheur.</div>
+          <span class="atlas-market-floor-state-404167">PLANNED · INERT</span>
+        </article>
+        <article class="atlas-market-floor-404167" data-domain="cross-market" data-state="inert">
+          <span class="atlas-market-floor-index-404167">05</span>
+          <div class="atlas-market-floor-copy-404167"><small>Couche transversale finale</small><b>Cross-Market Observatory</b></div>
+          <div class="atlas-market-floor-contract-404167">Base 100 et mesures comparables au-dessus de domaines déjà validés · aucune moyenne inter-source ni donnée synthétique.</div>
+          <span class="atlas-market-floor-state-404167">WAITING · DOMAINS</span>
+        </article>
+      </div>
+      <p class="atlas-market-cascade-rule-404167"><b>Règle 40.4.167 :</b> shell visible ≠ moteur actif · aucun nouveau Chart.js · aucun nouveau fetch · aucune collecte de domaine futur.</p>
+    </section>
+'''
+          if 'id="atlasMarketCascade404167"' not in html:
+              anchor='    <section class="market-ribbon-stack" id="market-workspace" aria-label="Bandeaux marché V2">'
+              if anchor not in html: raise SystemExit('cascade insertion anchor missing')
+              html=html.replace(anchor,shell+'\n'+anchor,1)
+          index.write_text(html,encoding='utf-8')
+
+          # Extend the read-only contract; do not activate any future domain.
+          t=module.read_text(encoding='utf-8')
+          t=t.replace('const BUILD = "40.4.166";','const BUILD = "40.4.167";',1)
+          t=t.replace('const REVISION = "R1";','const REVISION = "MARKET_CASCADE_SHELL";',1)
+          insertion=r'''
+
+            const MARKET_CASCADE = Object.freeze({
+              build: "40.4.167",
+              state: "PRESENTATION_SHELL_ONLY",
+              order: Object.freeze(["crypto","metals","indices","commodities","cross-market"]),
+              floors: Object.freeze({
+                crypto: Object.freeze({state:"ACTIVE",runtime:"existing Market Core 38.15.11"}),
+                metals: Object.freeze({state:"ACTIVE_DEMAND",runtime:"AtlasParallelMarketDemand40465.ensure"}),
+                indices: Object.freeze({state:"PLANNED_INERT"}),
+                commodities: Object.freeze({state:"PLANNED_INERT"}),
+                cross_market: Object.freeze({state:"WAITING_VALIDATED_DOMAINS"})
+              }),
+              shell_visible_does_not_mean_runtime_active: true,
+              existing_crypto_engine_reused: true,
+              existing_metals_engine_reused: true,
+              second_chart_engine_created: false,
+              future_domain_fetches: 0,
+              new_network_owner: false,
+              new_timer: false,
+              new_observer: false,
+              new_listener: false,
+              new_storage_owner: false,
+              snapshot() {
+                return Object.freeze({
+                  build: "40.4.167",
+                  shell_count: document.querySelectorAll("#atlasMarketCascade404167 [data-domain]").length,
+                  shell_present: Boolean(document.getElementById("atlasMarketCascade404167")),
+                  contract_build: document.documentElement.dataset.marketsDomainContractBuild || ""
+                });
+              }
+            });
+            globalThis.ErithMarketCascade404167 = MARKET_CASCADE;
+'''
+          marker='            globalThis.ErithParallelMarketsRouter404166 = PARALLEL_MARKETS_ROUTER;'
+          if marker not in t: raise SystemExit('contract marker missing')
+          t=t.replace(marker,marker+insertion,1)
+          module.write_text(t,encoding='utf-8')
+
+          arch=json.loads(architecture.read_text(encoding='utf-8'))
+          arch['build']='40.4.167'; arch['parent_build']='40.4.166R1'; arch['revision']=None
+          arch['release']='MARKET CASCADE SHELL · VERTICAL MULTI-DOMAIN OBSERVATORY FOUNDATION'
+          arch['market_cascade']={
+              'canonical_from':'40.4.167',
+              'order':['crypto','metals','indices','commodities','cross-market'],
+              'crypto':'ACTIVE_EXISTING_ENGINE',
+              'metals':'ACTIVE_EXISTING_DEMAND_ENGINE',
+              'indices':'PLANNED_INERT',
+              'commodities':'PLANNED_INERT',
+              'cross_market':'WAITING_VALIDATED_DOMAINS',
+              'shell_visible_does_not_mean_runtime_active':True,
+              'second_chart_engine_created':False,
+              'future_domain_fetches':0
+          }
+          architecture.write_text(json.dumps(arch,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          for p in (root/'version.json',root/'administrator-version.json'):
+              d=json.loads(p.read_text(encoding='utf-8'))
+              d['build']='40.4.167'; d.pop('revision',None)
+              d['parent_build']='40.4.166R1'
+              d['release']='MARKET CASCADE SHELL · VERTICAL MULTI-DOMAIN OBSERVATORY FOUNDATION'
+              d['status']='market_cascade_shell_vertical_multi_domain_foundation'
+              d['asset_token']='market-core-v2.0-alpha-build-40.4.167'
+              d['global_versioning']='40.4.167'
+              d['contracts']=d.get('contracts',{})
+              d['contracts']['market_cascade_shell_404167']={
+                  'order':['crypto','metals','indices','commodities','cross-market'],
+                  'crypto_engine_reused':True,
+                  'metals_engine_reused':True,
+                  'future_domains_inert':True,
+                  'second_chart_engine_created':False,
+                  'new_fetch':False,
+                  'new_timer':False,
+                  'new_observer':False,
+                  'new_listener':False,
+                  'new_storage_owner':False,
+                  'market_core_changed':False
+              }
+              if '40.4.167 Market Cascade Shell' not in d.get('lineage',''):
+                  d['lineage']=d.get('lineage','')+' → 40.4.167 Market Cascade Shell: vertical five-floor Markets Observatory presentation; Crypto + Metals owners preserved; Indices/Commodities/Cross-Market remain inert until validated.'
+              p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/markets-domain-contract.js
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          for p in (root/'version.json',root/'administrator-version.json',root/'architecture/markets-domain-canonical.json'):
+              d=json.loads(p.read_text(encoding='utf-8'))
+              assert d['build']=='40.4.167'
+          html=(root/'index.html').read_text(encoding='utf-8')
+          assert html.count('id="atlasMarketCascade404167"')==1
+          ids=re.findall(r'\bid="([^"]+)"',html)
+          assert len(ids)==len(set(ids)), 'duplicate HTML IDs introduced'
+          contract=(root/'js/markets-domain-contract.js').read_text(encoding='utf-8')
+          assert 'initializeExistingRouter' not in contract
+          assert 'second_chart_engine_created: false' in contract
+          assert 'future_domain_fetches: 0' in contract
+          css=(root/'market-cascade.css').read_text(encoding='utf-8')
+          forbidden=('fetch(','setInterval(','setTimeout(','MutationObserver','addEventListener(','new Chart(')
+          for token in forbidden:
+              assert token not in css
+          PY
+
+          rm .github/workflows/agent-crypto-40-4-166r1-167-market-cascade.yml
+          git add public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/market-cascade.css \
+                  public/agent_crypto_erith_ia/administrator/js/markets-domain-contract.js \
+                  public/agent_crypto_erith_ia/administrator/architecture/markets-domain-canonical.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  .github/workflows/agent-crypto-40-4-166r1-167-market-cascade.yml
+          git commit -m "release Agent-Crypto 40.4.167 Market Cascade Shell"
+
+      - name: Push cumulative cascade
+        shell: bash
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
+          git push origin HEAD:main
