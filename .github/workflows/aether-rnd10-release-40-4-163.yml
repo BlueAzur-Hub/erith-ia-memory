@@ -38,7 +38,7 @@ jobs:
               raise SystemExit('technical-random-10.png missing')
           raw = png.read_bytes()
           sha = hashlib.sha256(raw).hexdigest()
-          expected = '39e463a03d4b5b368f0889199b585de0e195bf47d916330637196fc03cf1f6b8'
+          expected = 'b9b41caa6956631ccd1888706e0cb3814ce012d7690c46e62edb30d42bc75064'
           if sha != expected:
               raise SystemExit(f'RND10 SHA mismatch: {sha}')
           if raw[:8] != b'\x89PNG\r\n\x1a\n' or raw[12:16] != b'IHDR':
