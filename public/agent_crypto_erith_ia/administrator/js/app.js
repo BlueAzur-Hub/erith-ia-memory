@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.157";
-  const ADMIN_RELEASE = "AETHER NEWS SENTINEL FRENCH LIVE FEED LOCK";
+  const ADMIN_BUILD = "40.4.158";
+  const ADMIN_RELEASE = "GRAPH DIRECT-FLOAT BODY PORTAL · GLOBAL STACKING LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

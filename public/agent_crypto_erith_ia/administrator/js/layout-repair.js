@@ -254,3 +254,130 @@
   queueMicrotask(() => { try { install(); } catch (_) {} });
   window.addEventListener("load", () => { try { install(); } catch (_) {} }, { once: true });
 })();
+
+/* ==========================================================================
+   40.4.158 — GRAPH DIRECT-FLOAT BODY PORTAL REPAIR
+   ========================================================================== */
+(() => {
+  "use strict";
+
+  /*
+     PURPOSE
+     - Keep Graphique + Lecture technique in viewport/global stacking coordinates.
+     - Prevent Administrator sections (Analyse & décision / multi-horizon / Market)
+       from crossing above the graph while the graph is moved.
+     - Mirror the proven 40.4.156R1 Oracle body-portal strategy without changing
+       the existing Window Manager drag, resize, persistence or z-order owner.
+
+     CONTRACT
+     - #analyste presentation/DOM placement only.
+     - Body portal only while .admin-native-direct-floating is active.
+     - Existing Window Manager remains drag, resize, persistence and z-order owner.
+     - NO chart engine, Oracle, Market Core, Atlas, News, Simulation or fetch change.
+     - One attribute-only observer scoped to #analyste class changes; no document observer.
+  */
+
+  const BUILD = "40.4.158";
+  const GRAPH_ID = "analyste";
+  const FLOAT_CLASS = "admin-native-direct-floating";
+  let homeMarker = null;
+  let classObserver = null;
+
+  function fixedPx(value) {
+    const number = Number(value);
+    return `${Number.isFinite(number) ? Math.round(number * 100) / 100 : 0}px`;
+  }
+
+  function rememberHome(node) {
+    if (!(node instanceof HTMLElement) || node.parentNode === document.body) return false;
+    if (homeMarker?.parentNode) return true;
+    homeMarker = document.createComment("agent-crypto-graph-home-40.4.158");
+    node.parentNode?.insertBefore(homeMarker, node);
+    return !!homeMarker.parentNode;
+  }
+
+  function portalFloatingGraph(node) {
+    if (!(node instanceof HTMLElement) || !node.classList.contains(FLOAT_CLASS)) return false;
+    if (node.parentNode === document.body) {
+      node.dataset.graphDirectBodyPortal = BUILD;
+      return true;
+    }
+
+    const rect = node.getBoundingClientRect();
+    if (!rememberHome(node)) return false;
+
+    // Preserve the exact visual rectangle while changing containing/stacking block.
+    // Window Manager already assigned the floating z-index; as a direct body child
+    // that z-index finally competes in the global workspace rather than a nested one.
+    document.body.appendChild(node);
+    node.style.setProperty("position", "fixed", "important");
+    node.style.setProperty("left", fixedPx(rect.left), "important");
+    node.style.setProperty("top", fixedPx(rect.top), "important");
+    node.style.setProperty("right", "auto", "important");
+    node.style.setProperty("bottom", "auto", "important");
+    node.style.setProperty("width", fixedPx(rect.width), "important");
+    node.style.setProperty("height", fixedPx(rect.height), "important");
+    node.style.setProperty("transform", "none", "important");
+    node.style.setProperty("isolation", "isolate", "important");
+    node.dataset.graphDirectBodyPortal = BUILD;
+    document.documentElement.dataset.graphDirectBodyPortal404158 = "active";
+    return true;
+  }
+
+  function restoreDockedGraph(node) {
+    if (!(node instanceof HTMLElement) || node.classList.contains(FLOAT_CLASS)) return false;
+    if (!(homeMarker?.parentNode)) return false;
+
+    const parent = homeMarker.parentNode;
+    parent.insertBefore(node, homeMarker);
+    homeMarker.remove();
+    homeMarker = null;
+    node.style.removeProperty("isolation");
+    delete node.dataset.graphDirectBodyPortal;
+    document.documentElement.dataset.graphDirectBodyPortal404158 = "docked";
+    return true;
+  }
+
+  function reconcile(node = document.getElementById(GRAPH_ID)) {
+    if (!(node instanceof HTMLElement)) return false;
+    if (node.classList.contains(FLOAT_CLASS)) return portalFloatingGraph(node);
+    return restoreDockedGraph(node);
+  }
+
+  function install() {
+    const node = document.getElementById(GRAPH_ID);
+    if (!(node instanceof HTMLElement)) return false;
+
+    reconcile(node);
+    if (!classObserver && typeof MutationObserver === "function") {
+      classObserver = new MutationObserver(() => { try { reconcile(node); } catch (_) {} });
+      classObserver.observe(node, { attributes: true, attributeFilter: ["class"] });
+    }
+
+    globalThis.ErithGraphDirectFloatRepair404158 = Object.freeze({
+      build: BUILD,
+      graph_id: GRAPH_ID,
+      body_portal_only_while_floating: true,
+      window_manager_remains_drag_owner: true,
+      window_manager_remains_resize_owner: true,
+      window_manager_remains_z_owner: true,
+      observer_scope: "analyste-class-only",
+      chart_engine_changed: false,
+      oracle_changed: false,
+      market_core_changed: false,
+      atlas_changed: false,
+      repair: () => reconcile(node),
+      status: () => Object.freeze({
+        floating: node.classList.contains(FLOAT_CLASS),
+        body_child: node.parentNode === document.body,
+        marker_present: !!homeMarker?.parentNode
+      })
+    });
+    return true;
+  }
+
+  try { install(); } catch (_) {}
+  queueMicrotask(() => { try { install(); } catch (_) {} });
+  window.addEventListener("load", () => { try { install(); } catch (_) {} }, { once: true });
+})();
+
