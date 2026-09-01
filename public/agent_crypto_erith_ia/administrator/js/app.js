@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.149";
+  const ADMIN_BUILD = "40.4.148";
   const ADMIN_RELEASE = "KRAKEN PAPER WORKSPACE INVENTORY INGEST OWNER FIX · READ-ONLY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
