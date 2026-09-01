@@ -1,0 +1,117 @@
+name: Aether Release 40.4.158 Graph Float
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/aether-release-40-4-158.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-aether-release-40-4-158
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Guard current parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/administrator/version.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          if data.get('build') != '40.4.157':
+              raise SystemExit(f"Expected 40.4.157 parent, found {data.get('build')}")
+          print('Parent 40.4.157 PASS')
+          PY
+
+      - name: Build 40.4.158
+        run: python .github/scripts/aether_release_404158_404159.py 158
+
+      - name: Validate JavaScript and contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/layout-repair.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          version=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          admin=json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
+          layout=(root/'js/layout-repair.js').read_text(encoding='utf-8')
+          index=(root/'index.html').read_text(encoding='utf-8')
+          assert version['build']=='40.4.158'
+          assert admin['build']=='40.4.158'
+          assert '40.4.158 — GRAPH DIRECT-FLOAT BODY PORTAL REPAIR' in layout
+          assert '40.4.156R1 — ORACLE DIRECT-FLOAT BODY PORTAL REPAIR' in layout
+          assert 'ErithGraphDirectFloatRepair404158' in layout
+          assert 'technical-random-10.png' not in index
+          assert index.count('data-tech-random="1"') == 1
+          print('40.4.158 validation PASS')
+          PY
+
+      - name: Commit 40.4.158 and canonical archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Release"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/js/layout-repair.js \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_158_AUTO_CANONICAL.zip \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_158_AUTO_CANONICAL.zip.sha256
+          git commit -m "fix Agent-Crypto 40.4.158 portal Graphique floating layer to body"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "40.4.158 published"
+              break
+            fi
+            if [ "$attempt" -eq 5 ]; then exit 1; fi
+            sleep $((attempt * 2))
+          done
+
+      - name: Cleanup temporary release driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git rebase origin/main
+          git rm .github/scripts/aether_release_404158_404159.py .github/workflows/aether-release-40-4-158.yml
+          git commit -m "chore Agent-Crypto clean 40.4.158 release driver"
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "temporary release driver cleaned"
+              exit 0
+            fi
+            if [ "$attempt" -eq 5 ]; then exit 1; fi
+            sleep $((attempt * 2))
+          done
