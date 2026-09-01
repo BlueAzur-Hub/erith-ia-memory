@@ -35378,6 +35378,52 @@ function paperWorkspaceIntegrationPayload404151(){
   };
 }
 
+/* 40.4.152 — SIMULATION OPERATOR READINESS · EXPERIMENT SNAPSHOT LOCK
+   One responsibility: consolidate local CONTROL/A/B performance and existing Kraken
+   Paper mapping in one operator-readable, non-mutating session snapshot. The refresh
+   button reuses the already-existing WORKSPACES GET owner; it creates no new network path. */
+function simulationReadinessPayload404152(){
+  const local=paperWorkspaceComparisonPayload404143();
+  const mapping=krakenPaperWorkspaceMappingPayload404147();
+  const mappedCount=mapping.rows.filter(row=>row.connected).length;
+  const active=paperWorkspaceIntegrationTruth404151();
+  return {
+    schema:"agent_crypto_simulation_readiness_v1",
+    build:"40.4.152",
+    active_workspace:active,
+    local_comparison:local,
+    kraken_paper_mapping:mapping,
+    local_workspace_count:local.rows.length,
+    mapped_workspace_count:mappedCount,
+    mapping_coverage:`${mappedCount}/${mapping.rows.length}`,
+    mapping_runtime_state:!mapping.inventory_loaded ? "UNTESTED" : (mappedCount===mapping.rows.length ? "PASS" : "PARTIAL"),
+    simulation_only:true,
+    real_orders:false,
+    credentials:false,
+    workspace_mutation:false
+  };
+}
+function renderSimulationReadiness404152(){
+  const anchor=document.getElementById("krakenCliLab404144")||document.getElementById("simPaperWorkspaceCompare404143");
+  if(!anchor) return;
+  let panel=document.getElementById("simulationReadiness404152");
+  if(!panel){
+    panel=document.createElement("section");
+    panel.id="simulationReadiness404152";
+    panel.setAttribute("data-simulation-readiness-build","40.4.152");
+    panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(126,244,188,.28);border-radius:12px;padding:10px 12px;background:rgba(5,28,31,.48)";
+    panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><strong style="letter-spacing:.08em">SIMULATION · ÉTAT D’EXPÉRIENCE</strong><span id="simulationReadinessStatus404152" style="font-size:10px;color:var(--muted,#9fb0c5)">Lecture…</span><span style="flex:1"></span><button type="button" class="btn small" id="simulationReadinessRefresh404152">ACTUALISER KRAKEN</button><button type="button" class="btn small" id="simulationReadinessProof404152">PREUVE SESSION</button></div><div id="simulationReadinessDetail404152" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:6px"></div>`;
+    anchor.insertAdjacentElement("afterend",panel);
+    panel.querySelector("#simulationReadinessRefresh404152")?.addEventListener("click",()=>void krakenCliWorkspaceList404144());
+    panel.querySelector("#simulationReadinessProof404152")?.addEventListener("click",()=>krakenCliOutput404144(simulationReadinessPayload404152()));
+  }
+  const payload=simulationReadinessPayload404152();
+  const status=document.getElementById("simulationReadinessStatus404152");
+  const detail=document.getElementById("simulationReadinessDetail404152");
+  if(status) status.textContent=`LOCAL ${payload.local_workspace_count}/3 · KRAKEN PAPER ${payload.mapping_coverage} · ${payload.mapping_runtime_state}`;
+  if(detail) detail.textContent=`Actif : ${payload.active_workspace.local_label} → ${payload.active_workspace.expected_kraken_workspace} · simulation locale canonique · lecture seule Kraken · aucun ordre réel.`;
+}
+
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
    The companion localhost adapter exposes an allowlisted read-only surface over port 8791.
@@ -35443,6 +35489,7 @@ async function krakenCliWorkspaceList404144(){
     krakenCliOutput404144(payload);
     ingestKrakenPaperWorkspaceInventory404147(payload);
     renderPaperWorkspaceControls404142();
+    renderSimulationReadiness404152();
     return payload;
   }catch(error){ krakenCliOutput404144({ ok:false, command:"workspace list", error:String(error?.message||error), mutation:false, real_order:false }); return null; }
 }
@@ -35857,6 +35904,7 @@ function renderSimulation() {
   renderPaperWorkspaceControls404142();
   renderPaperWorkspaceComparison404143();
   renderKrakenCliLab404144();
+  renderSimulationReadiness404152();
   if (els.simProfileTitle) els.simProfileTitle.textContent = `Profil actif : ${SIM_PROFILE.label} · ${paperWorkspaceMeta404142().label}`;
   if (els.simProfileBadge) els.simProfileBadge.textContent = `Profil ${fmtEUR.format(SIM_PROFILE.startCash)}`;
   if (els.simProfileCapital) els.simProfileCapital.textContent = `${fmtEUR.format(SIM_PROFILE.startCash)} virtuels`;
@@ -52349,7 +52397,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.151";
+const ATLAS_BUILD = "40.4.152";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -64221,6 +64269,15 @@ try{globalThis.ERITH_BUILD_40_4_149_VERSION_TRUTH=Object.freeze({
 try{globalThis.ERITH_BUILD_40_4_151_SIMULATION_WORKSPACE_TRUTH=Object.freeze({
   build:"40.4.151",parent:"40.4.150",local_simulation_canonical:true,kraken_mapping_read_only:true,
   workspace_inventory_owner:"existing /workspace/list explicit operator action",new_fetch_owner:false,new_storage_owner:false,
+  real_orders:false,workspace_mutation:false,api_keys:false,withdrawals:false,market_core_changed:false,
+  atlas_pipeline_changed:false,window_manager_changed:false,bridge_changed:false,private_backend_changed:false
+});}catch(_){}
+
+
+/* 40.4.152 — publication/runtime contract */
+try{globalThis.ERITH_BUILD_40_4_152_SIMULATION_READINESS=Object.freeze({
+  build:"40.4.152",parent:"40.4.151",operator_readiness_panel:true,session_snapshot_read_only:true,
+  refresh_reuses_existing_workspace_get:true,new_fetch_owner:false,new_storage_owner:false,new_timer:false,new_observer:false,
   real_orders:false,workspace_mutation:false,api_keys:false,withdrawals:false,market_core_changed:false,
   atlas_pipeline_changed:false,window_manager_changed:false,bridge_changed:false,private_backend_changed:false
 });}catch(_){}
