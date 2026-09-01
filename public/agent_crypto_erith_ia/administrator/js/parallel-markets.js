@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.170";
+  const BUILD = "40.4.171";
   const ACTIVE = new Set(["indices"]);
-  const ENABLE_MATH = false;
+  const ENABLE_MATH = true;
   const PERIODS = Object.freeze(["24h", "7j", "30j", "90j", "1a"]);
   const CONFIG = Object.freeze({
     indices: Object.freeze({ label: "INDICES", title: "Indices / Bourse", path: "../data/indices/market.json", expected: 5, accent: "#aa91ee", source: "Yahoo Finance", defaultPeriod: "1a" }),

@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.170";
-  const ADMIN_RELEASE = "INDICES & BOURSE FOUNDATION · PUBLIC FIVE-INDEX BASKET";
+  const ADMIN_BUILD = "40.4.171";
+  const ADMIN_RELEASE = "INDICES MULTI-HORIZON · MEASURED MATH CORE";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
