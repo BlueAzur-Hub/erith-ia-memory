@@ -52298,7 +52298,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.148";
+const ATLAS_BUILD = "40.4.149";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -52402,7 +52402,14 @@ function atlasVersionControlTooltip(mode, build, checkedAt = 0) {
     return `Nouvelle version disponible · Build ${build} · ${freshness}`;
   }
   if (mode === "syncing") {
-    return `Build ${ATLAS_BUILD} actif · publication GitHub en propagation · Cliquer pour revérifier · ${freshness}`;
+    const comparison = atlasCompareBuildNumbers(build, ATLAS_BUILD);
+    if (comparison > 0) {
+      return `Build local ${ATLAS_BUILD} · cible GitHub ${build} en propagation · Cliquer pour revérifier · ${freshness}`;
+    }
+    if (comparison < 0) {
+      return `Build local ${ATLAS_BUILD} · manifeste GitHub ${build} en retard · Cliquer pour revérifier · ${freshness}`;
+    }
+    return `Build ${ATLAS_BUILD} chargé · publication GitHub en propagation · Cliquer pour revérifier · ${freshness}`;
   }
   if (mode === "applying") {
     return `Chargement du Build ${build} en cours · ${freshness}`;
@@ -52466,14 +52473,29 @@ function atlasVersionControlState(mode, options = {}) {
       `Nouvelle version disponible, Build ${build}. Cliquer pour charger.`
     );
   } else if (stateMode === "syncing") {
-    // 40.1.52 — GitHub Pages propagation is a publication state, not an application fault.
-    // Keep the badge in the normal/green family while still exposing the exact state text.
+    // 40.4.149 — VERSION TRUTH. Never label the remote target as active
+    // while GitHub Pages is still serving a mixed publication generation.
     control.classList.add("ok");
-    text.textContent = `Build ${ATLAS_BUILD} actif · GitHub en propagation`;
-    control.setAttribute(
-      "aria-label",
-      `Build ${ATLAS_BUILD} actif. GitHub Pages propage encore les fichiers ; cliquer pour revérifier.`
-    );
+    const comparison = atlasCompareBuildNumbers(build, ATLAS_BUILD);
+    if (comparison > 0) {
+      text.textContent = `Build ${ATLAS_BUILD} chargé · → ${build} propagation`;
+      control.setAttribute(
+        "aria-label",
+        `Build local ${ATLAS_BUILD} chargé. Build GitHub cible ${build} encore en propagation ; cliquer pour revérifier.`
+      );
+    } else if (comparison < 0) {
+      text.textContent = `Build ${ATLAS_BUILD} chargé · GitHub ${build} en retard`;
+      control.setAttribute(
+        "aria-label",
+        `Build local ${ATLAS_BUILD} chargé. Le manifeste GitHub servi indique encore ${build} ; cliquer pour revérifier.`
+      );
+    } else {
+      text.textContent = `Build ${ATLAS_BUILD} chargé · publication en propagation`;
+      control.setAttribute(
+        "aria-label",
+        `Build ${ATLAS_BUILD} chargé. GitHub Pages propage encore les fichiers de cette même génération ; cliquer pour revérifier.`
+      );
+    }
   } else if (stateMode === "applying") {
     control.classList.add("warn");
     control.setAttribute("aria-busy", "true");
@@ -64126,3 +64148,19 @@ try{globalThis.ERITH_BUILD_40_4_147_KRAKEN_PAPER_MAPPING=Object.freeze({
     system_shell_changed:false,system_cache_coherence_404146_preserved:true
   })
 });}catch(_){}
+
+/* 40.4.149 — VERSION TRUTH · MANIFEST PAYLOAD HASH SYNC · PROPAGATION LABEL LOCK
+   Publication identity only. Corrects stale 40.4.148 payload hashes and makes
+   the version badge distinguish the loaded local build from the remote target. */
+try{globalThis.ERITH_BUILD_40_4_149_VERSION_TRUTH=Object.freeze({
+  build:"40.4.149",parent:"40.4.148",
+  manifest_payload_hashes_synchronized:true,
+  syncing_badge_local_remote_distinction:true,
+  publication_verifier_changed:false,
+  version_fetch_owner_changed:false,
+  new_fetch:false,new_timer:false,new_observer:false,new_scheduler:false,new_storage_owner:false,
+  kraken_mapping_changed:false,simulation_changed:false,atlas_pipeline_changed:false,
+  market_core_changed:false,bridge_changed:false,private_backend_changed:false,
+  system_cache_coherence_404146_preserved:true,kraken_404147_404148_preserved:true
+});}catch(_){}
+
