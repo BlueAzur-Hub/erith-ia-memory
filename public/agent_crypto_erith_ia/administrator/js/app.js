@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.171";
-  const ADMIN_RELEASE = "INDICES MULTI-HORIZON · MEASURED MATH CORE";
+  const ADMIN_BUILD = "40.4.172";
+  const ADMIN_RELEASE = "ENERGY & COMMODITIES FOUNDATION · WTI BRENT NATURAL GAS";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
