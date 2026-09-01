@@ -381,3 +381,230 @@
   window.addEventListener("load", () => { try { install(); } catch (_) {} }, { once: true });
 })();
 
+/* ==========================================================================
+   40.4.162 — OPERATOR FLOW & FAMILY PERSISTENCE LOCK
+   ========================================================================== */
+(() => {
+  "use strict";
+
+  /*
+     PURPOSE
+     - Preserve explicit operator presentation choices for the four canonical
+       Administrator families across reloads and view round-trips.
+     - Keep the proven 40.3.61 compact family boot as the first-run/default state.
+     - Replay only a separately captured operator snapshot after Window Manager
+       has completed its canonical restore/neutralize transaction.
+
+     WHY
+     - 40.3.61 intentionally stages 01/02/03/04 as docked compact on every boot.
+     - That historical safety default is still useful for first-run clarity, but
+       it can overwrite a later explicit operator open/minimize/float choice.
+     - The Window Manager remains the only owner of presentation mechanics.
+
+     CONTRACT
+     - Presentation state only: floating/minimized/hidden/maximized/geometry.
+     - Four families only: 01 Analyse, 02 Intelligence, 03 Operations, 04 System.
+     - No market domain, Graph Context V7, Oracle, selected asset or business data.
+     - No timer, no network, no WebSocket, no broad MutationObserver.
+     - Event-driven localStorage write only after operator interaction changes state.
+     - Direct hash navigation wins: no replay while location.hash is present.
+  */
+
+  const BUILD = "40.4.162";
+  const STORAGE_KEY = "erith_admin_portal_39_2_9:operator-family-persistence-404162";
+  const SCHEMA = "erith.admin.operator-family-state.v1";
+  const FAMILY_IDS = Object.freeze([
+    "analyse-decision",
+    "intelligence-memoire-creation",
+    "preparation-operations",
+    "experimentation-systeme"
+  ]);
+
+  let manager = null;
+  let installed = false;
+  let restoring = false;
+  let lastSignature = "";
+  let lastRole = "";
+
+  const safeParse = (value, fallback = null) => {
+    try { return JSON.parse(value); } catch (_) { return fallback; }
+  };
+
+  function role() {
+    return String(document.documentElement.dataset.adminWindowPresentationRole40314 || "").trim().toLowerCase();
+  }
+
+  function normalizeGeometry(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    const x = Number(raw.x);
+    const y = Number(raw.y);
+    const width = Number(raw.width);
+    const height = Number(raw.height);
+    if (![x, y, width, height].every(Number.isFinite)) return null;
+    return { x, y, width, height };
+  }
+
+  function familySnapshot(raw) {
+    const source = raw?.windows && typeof raw.windows === "object" ? raw.windows : {};
+    const windows = {};
+    FAMILY_IDS.forEach(id => {
+      const row = source[id];
+      if (!row || typeof row !== "object") return;
+      windows[id] = {
+        floating: row.floating === true,
+        minimized: row.minimized === true,
+        hidden: row.hidden === true,
+        maximized: row.maximized === true,
+        geometry: normalizeGeometry(row.geometry)
+      };
+    });
+    return { schema: "erith.admin.workspace.window-state.v1", windows };
+  }
+
+  function signature(snapshot) {
+    try { return JSON.stringify(snapshot?.windows || {}); } catch (_) { return ""; }
+  }
+
+  function currentFamilySnapshot() {
+    if (!manager?.snapshot) return familySnapshot(null);
+    try { return familySnapshot(manager.snapshot()); }
+    catch (_) { return familySnapshot(null); }
+  }
+
+  function readSaved() {
+    try {
+      const raw = safeParse(localStorage.getItem(STORAGE_KEY) || "", null);
+      if (!raw || raw.schema !== SCHEMA || !raw.snapshot) return null;
+      const snapshot = familySnapshot(raw.snapshot);
+      return Object.keys(snapshot.windows).length ? { ...raw, snapshot } : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function writeSaved(reason = "operator") {
+    if (restoring || role() !== "administrator" || !manager?.snapshot) return false;
+    const snapshot = currentFamilySnapshot();
+    const nextSignature = signature(snapshot);
+    if (!nextSignature || nextSignature === lastSignature) return false;
+
+    const payload = {
+      schema: SCHEMA,
+      build: BUILD,
+      saved_at: new Date().toISOString(),
+      reason: String(reason || "operator"),
+      snapshot
+    };
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      lastSignature = nextSignature;
+      document.documentElement.dataset.operatorFamilyPersistence404162 = "saved";
+      document.documentElement.dataset.operatorFamilyPersistenceSaved404162 = payload.saved_at;
+      return true;
+    } catch (_) {
+      document.documentElement.dataset.operatorFamilyPersistence404162 = "storage-unavailable";
+      return false;
+    }
+  }
+
+  function restoreSaved(reason = "boot") {
+    if (role() !== "administrator" || !manager?.applySnapshot || location.hash) return false;
+    const saved = readSaved();
+    if (!saved) {
+      lastSignature = signature(currentFamilySnapshot());
+      document.documentElement.dataset.operatorFamilyPersistence404162 = "default-compact";
+      return false;
+    }
+
+    restoring = true;
+    try {
+      manager.applySnapshot(saved.snapshot, { persist: false, captureResult: false });
+      lastSignature = signature(currentFamilySnapshot());
+      document.documentElement.dataset.operatorFamilyPersistence404162 = "restored";
+      document.documentElement.dataset.operatorFamilyPersistenceRestoreReason404162 = String(reason || "boot");
+      return true;
+    } catch (_) {
+      document.documentElement.dataset.operatorFamilyPersistence404162 = "restore-failed";
+      return false;
+    } finally {
+      restoring = false;
+    }
+  }
+
+  function reconcileRole(reason = "interaction") {
+    const nextRole = role();
+    if (!nextRole || nextRole === lastRole) return false;
+    lastRole = nextRole;
+    if (nextRole === "administrator") return restoreSaved(reason);
+    return false;
+  }
+
+  function postInteraction(reason) {
+    queueMicrotask(() => {
+      try {
+        reconcileRole(`${reason}-role`);
+        if (role() !== "administrator") return;
+        requestAnimationFrame(() => {
+          try { writeSaved(reason); } catch (_) {}
+        });
+      } catch (_) {}
+    });
+  }
+
+  function install() {
+    if (installed) return true;
+    manager = globalThis.ErithAdministratorWindows || null;
+    if (!manager?.snapshot || !manager?.applySnapshot) return false;
+
+    installed = true;
+    lastRole = role();
+    if (lastRole === "administrator") restoreSaved("boot");
+    else lastSignature = signature(currentFamilySnapshot());
+
+    // Capture the state before a possible role switch, then capture again after
+    // the click transaction. Signature dedup prevents redundant localStorage writes.
+    document.addEventListener("click", () => {
+      try { if (role() === "administrator") writeSaved("pre-click"); } catch (_) {}
+      postInteraction("click");
+    }, true);
+
+    // Drag, first-detach and native CSS resize finish on pointerup. Persist only
+    // if the resulting four-family snapshot actually changed.
+    window.addEventListener("pointerup", () => postInteraction("pointerup"), true);
+    window.addEventListener("popstate", () => postInteraction("popstate"), true);
+    window.addEventListener("hashchange", () => postInteraction("hashchange"), true);
+
+    document.documentElement.dataset.operatorFamilyPersistenceBuild = BUILD;
+    globalThis.ErithOperatorFamilyPersistence404162 = Object.freeze({
+      build: BUILD,
+      schema: SCHEMA,
+      storage_key: STORAGE_KEY,
+      families: FAMILY_IDS,
+      first_run_default_compact_preserved: true,
+      direct_hash_wins: true,
+      manager_remains_presentation_owner: true,
+      business_state_changed: false,
+      graph_context_changed: false,
+      oracle_changed: false,
+      market_core_changed: false,
+      timer_added: false,
+      network_added: false,
+      websocket_added: false,
+      broad_observer_added: false,
+      status: () => Object.freeze({
+        role: role(),
+        saved: !!readSaved(),
+        state: document.documentElement.dataset.operatorFamilyPersistence404162 || "idle",
+        signature: lastSignature
+      }),
+      capture: reason => writeSaved(reason || "manual"),
+      restore: reason => restoreSaved(reason || "manual")
+    });
+    return true;
+  }
+
+  try { install(); } catch (_) {}
+  queueMicrotask(() => { try { install(); } catch (_) {} });
+  window.addEventListener("load", () => { try { install(); } catch (_) {} }, { once: true });
+})();
