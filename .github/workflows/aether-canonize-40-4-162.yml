@@ -1,0 +1,116 @@
+name: Aether Canonize 40.4.162
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/aether-canonize-40-4-162.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aether-canonize-40-4-162
+  cancel-in-progress: false
+
+jobs:
+  canonize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Canonize validated Administrator 40.4.162
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          files = [root/'version.json', root/'administrator-version.json']
+          now = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+          release = 'ADMINISTRATOR STATE TRUTH · OPERATOR FLOW & FAMILY PERSISTENCE'
+          status = 'administrator_state_truth_operator_flow_family_persistence'
+          lineage_tail = (
+              ' → 40.4.161 Administrator State Truth: four canonical family headers expose '
+              'État · Portée · Effet without business-runtime changes.'
+              ' → 40.4.162 Operator Flow & Family Persistence: explicit operator presentation '
+              'for families 01–04 survives role transitions and reload through the existing Window Manager snapshot/applySnapshot API.'
+          )
+          for path in files:
+              data = json.loads(path.read_text(encoding='utf-8'))
+              data['build'] = '40.4.162'
+              data['release'] = release
+              data['status'] = status
+              data['prepared_at'] = now
+              data['published_at'] = now
+              if 'global_versioning' in data:
+                  data['global_versioning'] = '40.4.162'
+              if isinstance(data.get('asset_token'), str):
+                  import re
+                  data['asset_token'] = re.sub(r'build-40\.4\.\d+', 'build-40.4.162', data['asset_token'])
+              data['parent_build'] = '40.4.160'
+              lineage = str(data.get('lineage') or '')
+              if '40.4.162 Operator Flow & Family Persistence' not in lineage:
+                  data['lineage'] = lineage + lineage_tail
+              data['canonical_404162'] = {
+                  'state_truth_404161': True,
+                  'operator_flow_persistence_404162': True,
+                  'firefox_operator_validation': 'PASS',
+                  'validation_observed': [
+                      'Administrator↔Intermediate role transitions preserve explicit family presentation',
+                      'reload preserves explicit family presentation',
+                      'operator clicks remain immediate',
+                      'observed startup approximately 10–15 seconds',
+                  ],
+                  'market_core': '38.15.11 PROTECTED',
+                  'window_manager_source_modified': False,
+                  'business_runtime_modified': False,
+                  'network_owner_added': False,
+                  'timer_added': False,
+                  'observer_added': False,
+              }
+              contracts = data.setdefault('contracts', {})
+              contracts['administrator_state_truth_404161'] = {
+                  'owner': 'admin-metal.css',
+                  'scope': 'family headers 01–04',
+                  'grammar': 'État · Portée · Effet',
+                  'presentation_only': True,
+              }
+              contracts['operator_flow_persistence_404162'] = {
+                  'owner': 'layout-repair.js',
+                  'window_manager_api': 'ErithAdministratorWindows.snapshot/applySnapshot',
+                  'scope': ['analyse-decision','intelligence-memoire-creation','preparation-operations','experimentation-systeme'],
+                  'first_boot_compact_preserved': True,
+                  'explicit_operator_state_wins_after_interaction': True,
+                  'direct_hash_target_priority_preserved': True,
+              }
+              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          for path in files:
+              json.loads(path.read_text(encoding='utf-8'))
+          print('40.4.162 manifests valid')
+          PY
+
+      - name: Commit canonization and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/aether-canonize-40-4-162.yml
+          git add public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m "canonize Agent-Crypto 40.4.162 state truth and operator persistence"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+            sleep $((attempt * 2))
+          done
+          exit 1
