@@ -2,29 +2,32 @@ name: Atlas Public Crypto Market Watchdog
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Atlas Market Archive Top 50 Stable"
+    types:
+      - completed
   schedule:
     # Offset from the canonical collector (11/41) and from the top of the hour.
     # UTC is sufficient because cadence, not local wall time, owns this watchdog.
     - cron: "17,47 * * * *"
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/atlas-public-crypto-market-clock.yml"
 
 permissions:
   actions: write
   contents: read
 
-# Durable recovery owner for the canonical Top-250 producer.
+# Durable recovery owner for the public crypto producers.
 #
 # 40.4.139 used one 5h30 long-running clock which queued exactly one successor.
 # If that successor did not materialize, the producer stopped after slot 11.
 #
-# This watchdog has no successor chain, no sleep loop and no long-lived runner.
-# GitHub schedules it independently every 30 minutes, offset six minutes after
-# the canonical collector schedule. It dispatches the collector only when the
-# published canonical snapshot is stale and no collector run is already active.
+# 40.4.160R1 keeps this file as the single recovery owner and adds one independent
+# wake source: completion of the already-existing Top-50 stable collector.
+# This avoids relying exclusively on this watchdog's own GitHub schedule.
+#
+# The watchdog has no successor chain, no sleep loop and no long-lived runner.
+# It checks both public crypto snapshots and dispatches only the producer whose
+# published data is stale and whose workflow has no active run.
 #
 # Administrator, Atlas runtime, Market Core and data contracts are untouched.
 concurrency:
@@ -37,50 +40,91 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Check canonical snapshot freshness and recover only if stale
+      - name: Check public crypto freshness and recover only stale producers
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
-          collector_workflow="atlas-public-crypto-market.yml"
-          snapshot_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/latest.json"
-          stale_after_seconds=1200
+          canonical_workflow="atlas-public-crypto-market.yml"
+          extended_workflow="atlas-public-crypto-extended.yml"
+          canonical_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/latest.json"
+          extended_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/extended.json"
+
+          # Canonical runs at 11/41. Twenty minutes means one expected beat was missed.
+          canonical_stale_after_seconds=1200
+          # Extended runs at 22/52. Forty-five minutes tolerates normal schedule delay
+          # without dispatching on every 17/47 watchdog pass.
+          extended_stale_after_seconds=2700
 
           now_epoch="$(date -u +%s)"
-          generated_at=""
-          age_seconds=""
 
-          if snapshot_json="$(curl -fsSL --retry 2 --retry-delay 2 "${snapshot_url}")"; then
-            generated_at="$(printf '%s' "${snapshot_json}" | jq -r '.generated_at // empty')"
-          fi
+          snapshot_age_seconds() {
+            local url="$1"
+            local snapshot_json=""
+            local generated_at=""
+            local generated_epoch=""
 
-          if [ -n "${generated_at}" ]; then
-            generated_epoch="$(date -u -d "${generated_at}" +%s 2>/dev/null || true)"
-            if [ -n "${generated_epoch}" ]; then
-              age_seconds="$(( now_epoch - generated_epoch ))"
+            if snapshot_json="$(curl -fsSL --retry 2 --retry-delay 2 "${url}")"; then
+              generated_at="$(printf '%s' "${snapshot_json}" | jq -r '.generated_at // empty')"
             fi
-          fi
 
-          active="$(
-            gh api               "repos/${GITHUB_REPOSITORY}/actions/workflows/${collector_workflow}/runs?branch=main&per_page=20"               --jq '[.workflow_runs[] | select(.status != "completed")] | length'
-          )"
+            if [ -n "${generated_at}" ]; then
+              generated_epoch="$(date -u -d "${generated_at}" +%s 2>/dev/null || true)"
+            fi
 
-          echo "Canonical snapshot generated_at=${generated_at:-N/D}"
-          echo "Canonical snapshot age_seconds=${age_seconds:-N/D}"
-          echo "Active canonical collector runs=${active:-0}"
+            if [ -n "${generated_epoch}" ]; then
+              echo "$(( now_epoch - generated_epoch ))"
+            fi
+          }
 
-          if [ "${active:-0}" -gt 0 ]; then
-            echo "Collector already active; watchdog does not duplicate it."
-            exit 0
-          fi
+          active_runs() {
+            local workflow="$1"
+            gh api \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow}/runs?branch=main&per_page=20" \
+              --jq '[.workflow_runs[] | select(.status != "completed")] | length'
+          }
 
-          if [ -n "${age_seconds}" ] && [ "${age_seconds}" -ge 0 ] && [ "${age_seconds}" -le "${stale_after_seconds}" ]; then
-            echo "Canonical snapshot is fresh (<= ${stale_after_seconds}s); no recovery dispatch."
-            exit 0
-          fi
+          recover_if_stale() {
+            local label="$1"
+            local workflow="$2"
+            local url="$3"
+            local stale_after="$4"
+            local age_seconds=""
+            local active=""
 
-          echo "Canonical snapshot is stale/unreadable and no collector is active; dispatch recovery."
-          gh api --method POST             "repos/${GITHUB_REPOSITORY}/actions/workflows/${collector_workflow}/dispatches"             -f ref=main
-          echo "Recovery dispatch accepted."
+            age_seconds="$(snapshot_age_seconds "${url}")"
+            active="$(active_runs "${workflow}")"
+
+            echo "${label} snapshot age_seconds=${age_seconds:-N/D}"
+            echo "${label} active runs=${active:-0}"
+
+            if [ "${active:-0}" -gt 0 ]; then
+              echo "${label}: producer already active; watchdog does not duplicate it."
+              return 0
+            fi
+
+            if [ -n "${age_seconds}" ] && [ "${age_seconds}" -ge 0 ] && [ "${age_seconds}" -le "${stale_after}" ]; then
+              echo "${label}: snapshot is fresh (<= ${stale_after}s); no recovery dispatch."
+              return 0
+            fi
+
+            echo "${label}: snapshot stale/unreadable and no producer active; dispatch recovery."
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow}/dispatches" \
+              -f ref=main
+            echo "${label}: recovery dispatch accepted."
+          }
+
+          recover_if_stale \
+            "Top-250 canonical" \
+            "${canonical_workflow}" \
+            "${canonical_url}" \
+            "${canonical_stale_after_seconds}"
+
+          recover_if_stale \
+            "Extended 251-1000" \
+            "${extended_workflow}" \
+            "${extended_url}" \
+            "${extended_stale_after_seconds}"
