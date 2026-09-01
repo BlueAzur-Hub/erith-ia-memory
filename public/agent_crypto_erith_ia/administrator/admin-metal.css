@@ -281,3 +281,71 @@ details.admin-minimized > summary{min-height:38px;}
   .admin-window-controls{opacity:.72;}
   .admin-floating{max-width:calc(100vw - 16px)!important;}
 }
+
+/* ============================================================================
+   Agent-Crypto @erith.IA — 40.4.161
+   ADMINISTRATOR STATE TRUTH & SECTION MAP · FAMILY HEADER CONTRACT
+
+   Visual/readability layer only:
+   - reuse the four canonical Administrator families already owned by Window Manager;
+   - expose stable scope/effect semantics without opening the family;
+   - do NOT infer Bridge, Atlas, source or runtime health from CSS;
+   - do NOT add timers, observers, storage, network, business state or new topology.
+   Runtime truth remains owned by the existing panels (Auto Reader, Source Truth,
+   Situation du projet, Simulation, Security and Backend/API).
+   ============================================================================ */
+body.atlas-administrator-mirror .atlas-layout-family > .atlas-layout-family-copy::after{
+  display:inline-flex;
+  align-items:center;
+  width:max-content;
+  max-width:100%;
+  margin-top:8px;
+  padding:5px 9px;
+  border:1px solid rgba(205,225,235,.18);
+  border-radius:999px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(0,0,0,.16));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+  color:#cbd8df;
+  font:900 9px/1.2 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  white-space:normal;
+}
+body.atlas-administrator-mirror .atlas-layout-family-analysis > .atlas-layout-family-copy::after{
+  content:"ACTIF · PUBLIC + LOCAL · OBSERVATION / ANALYSE";
+  color:#bfefff;
+  border-color:rgba(98,236,255,.34);
+  background:linear-gradient(180deg,rgba(98,236,255,.10),rgba(5,28,39,.18));
+}
+body.atlas-administrator-mirror .atlas-layout-family-intelligence > .atlas-layout-family-copy::after{
+  content:"LOCAL · IA + MÉMOIRE + CRÉATION · RUNTIME DANS LA SECTION";
+  color:#e2ceff;
+  border-color:rgba(190,145,255,.34);
+  background:linear-gradient(180deg,rgba(174,119,255,.10),rgba(27,16,45,.18));
+}
+body.atlas-administrator-mirror .atlas-layout-family-operations > .atlas-layout-family-copy::after{
+  content:"PRÉPARATION · OPÉRATEUR · AUCUNE ACTION FINANCIÈRE RÉELLE";
+  color:#ffe1a3;
+  border-color:rgba(255,215,130,.34);
+  background:linear-gradient(180deg,rgba(255,215,130,.09),rgba(47,31,10,.18));
+}
+body.atlas-administrator-mirror .atlas-layout-family-system > .atlas-layout-family-copy::after{
+  content:"SIMULATION · SYSTÈME · LOCAL / READ-ONLY / VERROUS";
+  color:#bff7df;
+  border-color:rgba(91,224,155,.32);
+  background:linear-gradient(180deg,rgba(91,224,155,.09),rgba(8,43,29,.18));
+}
+body.atlas-administrator-mirror .atlas-layout-family-analysis > .atlas-layout-family-copy > p::after{
+  content:" · ÉTAT · PORTÉE · EFFET";
+  color:rgba(191,239,255,.78);
+  font-weight:900;
+  letter-spacing:.10em;
+}
+@media (max-width:900px){
+  body.atlas-administrator-mirror .atlas-layout-family > .atlas-layout-family-copy::after{
+    width:auto;
+    font-size:8px;
+    line-height:1.35;
+    border-radius:9px;
+  }
+}
