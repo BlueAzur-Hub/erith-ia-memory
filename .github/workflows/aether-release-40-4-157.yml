@@ -2,9 +2,10 @@ name: Aether Release 40.4.157
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
-      - '.github/workflows/aether-release-40-4-157.yml'
+      - .github/workflows/aether-release-40-4-157.yml
 
 permissions:
   contents: write
@@ -22,233 +23,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build and publish 40.4.157
+      - name: Validate release driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile .github/scripts/aether_release_404157.py
+
+      - name: Apply surgical 40.4.157 release
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "Aether Release"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib, json, re, subprocess, zipfile
-          from datetime import datetime, timezone
-
-          BUILD = "40.4.157"
-          PARENT = "40.4.156"
-          RELEASE = "AETHER NEWS SENTINEL FRENCH LIVE FEED LOCK"
-          STATUS = "aether_news_sentinel_french_live_feed_lock"
-          LINEAGE_NOTE = "40.4.157 Aether News Sentinel French live feed lock"
-
-          admin = Path("public/agent_crypto_erith_ia/administrator")
-          index_p = admin / "index.html"
-          root_p = admin / "app.js"
-          js_p = admin / "js/app.js"
-          aether_p = admin / "js/aether.js"
-          layout_p = admin / "js/layout-repair.js"
-          manifest_ps = [admin / "version.json", admin / "administrator-version.json"]
-          archive_dir = Path("coordination/inter_ai_dialogues/agent_crypto")
-
-          def sha(path):
-              return hashlib.sha256(path.read_bytes()).hexdigest()
-
-          def replace_once(text, pattern, repl, label, flags=0):
-              out, n = re.subn(pattern, repl, text, count=1, flags=flags)
-              if n != 1:
-                  raise SystemExit(f"{label}: replacement count={n}, expected 1")
-              return out
-
-          def patch_publication_identity(obj):
-              if isinstance(obj, dict):
-                  for key, value in obj.items():
-                      if key == "publication_identity" and isinstance(value, dict):
-                          value["build"] = BUILD
-                          value["asset_token"] = f"market-core-v2.0-alpha-build-{BUILD}"
-                          value["status"] = STATUS
-                          if "app_sha256" in value:
-                              value["app_sha256"] = sha(root_p)
-                      else:
-                          patch_publication_identity(value)
-              elif isinstance(obj, list):
-                  for value in obj:
-                      patch_publication_identity(value)
-
-          # Functional surgery: News Sentinel's editorial French headline owns Aether display.
-          aether = aether_p.read_text(encoding="utf-8")
-          old_helper = '''function aetherNewsHeadlineSource40133(event){
-  const canonical=aetherNewsCanonicalFrenchEvent40110(event);
-  if(!canonical)return "";
-  const sourceHeadline=String(canonical?.headline||"").replace(/\\s+/g," ").trim();
-  if(sourceHeadline)return sourceHeadline;
-  const preservedTranslation=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\\s+/g," ").trim();
-  return preservedTranslation;
-}'''
-          new_helper = '''function aetherNewsHeadlineSource40133(event){
-  const canonical=aetherNewsCanonicalFrenchEvent40110(event);
-  if(!canonical)return "";
-  // 40.4.157 — News Sentinel French presentation owns Aether; source-original remains the final proof/fallback.
-  const frenchHeadline=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\\s+/g," ").trim();
-  if(frenchHeadline)return frenchHeadline;
-  return String(canonical?.headline||"").replace(/\\s+/g," ").trim();
-}'''
-          if aether.count(old_helper) != 1:
-              raise SystemExit(f"aether French owner helper: expected 1 exact source, got {aether.count(old_helper)}")
-
-          before_invariants = {
-              "setInterval": aether.count("setInterval("),
-              "fetch": aether.count("fetch("),
-              "MutationObserver": aether.count("new MutationObserver"),
-              "IntersectionObserver": aether.count("new IntersectionObserver"),
-              "veille_top_12": aether.count("const AETHER_VEILLE_TOP_4087=12;"),
-          }
-          if before_invariants["veille_top_12"] != 1:
-              raise SystemExit("Aether 12-story owner missing before patch")
-
-          aether = aether.replace(old_helper, new_helper, 1)
-          aether = replace_once(aether, r'news_display_language:\"source-original\"', 'news_display_language:"fr-FR-preferred"', "Aether display language")
-          aether = replace_once(aether, r'news_source_original_headline_first:true', 'news_source_original_headline_first:false', "Aether source-first diagnostic")
-          aether = replace_once(
-              aether,
-              r'news_translation_preferred:\"headline_fr_display → headline_fr \(secondary data retained\)\"',
-              'news_translation_preferred:"headline_fr_display → headline_fr → source-original fallback"',
-              "Aether French priority diagnostic"
-          )
-          aether = replace_once(
-              aether,
-              r'news_translation_story_owner:\"News Sentinel source-original headline owns VEILLE; translated fields remain preserved\"',
-              'news_translation_story_owner:"News Sentinel French presentation owns VEILLE; source-original headline remains preserved"',
-              "Aether story owner diagnostic"
-          )
-          aether = replace_once(
-              aether,
-              r'news_translation_raw_english_in_aether:true,',
-              'news_translation_raw_english_in_aether:true,\n    news_source_original_fallback_only:true,\n    news_display_contract_build:"40.4.157",',
-              "Aether fallback diagnostic"
-          )
-
-          after_invariants = {
-              "setInterval": aether.count("setInterval("),
-              "fetch": aether.count("fetch("),
-              "MutationObserver": aether.count("new MutationObserver"),
-              "IntersectionObserver": aether.count("new IntersectionObserver"),
-              "veille_top_12": aether.count("const AETHER_VEILLE_TOP_4087=12;"),
-          }
-          if before_invariants != after_invariants:
-              raise SystemExit(f"Aether runtime-owner invariant changed: {before_invariants} -> {after_invariants}")
-          if aether.count("aetherNewsHeadlineSource40133(") < 3:
-              raise SystemExit("Aether French display helper consumers unexpectedly missing")
-          aether_p.write_text(aether, encoding="utf-8", newline="\n")
-
-          # Canonical global build identity. Same owners as the proven 40.4.154-156 release driver.
-          html = index_p.read_text(encoding="utf-8")
-          html = replace_once(html, r'(<meta name="atlas-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\2', "atlas meta")
-          html = replace_once(html, r'(<meta name="administrator-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\2', "administrator meta")
-          html = replace_once(html, r'(<meta name="administrator-release" content=")[^"]+(" />)', rf'\g<1>{RELEASE}\2', "release meta")
-          html = replace_once(html, r'(<meta name="atlas-asset-token" content=")[^"]+(" />)', rf'\g<1>market-core-v2.0-alpha-build-{BUILD}\2', "asset token meta")
-          html = replace_once(html, r'(<title>Agent-Crypto @erith\.IA — Build )40\.4\.\d+( · Administrator</title>)', rf'\g<1>{BUILD}\2', "title")
-          html = re.sub(r'(\?v=administrator-build-)40\.4\.\d+', rf'\g<1>{BUILD}', html)
-          html = re.sub(r'(Agent-Crypto @erith\.IA · Market Core · Build )40\.4\.\d+( · Version : Parker Lewis Can\'t Lose)', rf'\g<1>{BUILD}\2', html)
-          index_p.write_text(html, encoding="utf-8", newline="\n")
-
-          root = root_p.read_text(encoding="utf-8")
-          root = replace_once(root, r'const ATLAS_BUILD = "40\.4\.\d+";', f'const ATLAS_BUILD = "{BUILD}";', "root ATLAS_BUILD")
-          root_p.write_text(root, encoding="utf-8", newline="\n")
-
-          js = js_p.read_text(encoding="utf-8")
-          js = replace_once(js, r'const ADMIN_BUILD = "40\.4\.\d+";', f'const ADMIN_BUILD = "{BUILD}";', "modular ADMIN_BUILD")
-          js = replace_once(js, r'const ADMIN_RELEASE = "[^"]*";', f'const ADMIN_RELEASE = "{RELEASE}";', "modular ADMIN_RELEASE")
-          js_p.write_text(js, encoding="utf-8", newline="\n")
-
-          if not layout_p.is_file():
-              raise SystemExit("40.4.156R1 Oracle layout hotfix missing; refusing 40.4.157")
-          layout_text = layout_p.read_text(encoding="utf-8")
-          if "40.4.156R1" not in layout_text:
-              raise SystemExit("40.4.156R1 Oracle hotfix marker missing; refusing canonical 40.4.157")
-
-          now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-          verification = {
-              "build": BUILD,
-              "parent_build": PARENT,
-              "display_owner": "js/aether.js::aetherNewsHeadlineSource40133",
-              "headline_priority": ["headline_fr_display", "headline_fr", "headline"],
-              "canonical_original_preserved": True,
-              "source_original_fallback_only": True,
-              "story_slots": 12,
-              "story_slot_seconds": 18,
-              "news_collector_changed": False,
-              "news_translator_changed": False,
-              "marquee_changed": False,
-              "new_timer": False,
-              "new_observer": False,
-              "new_fetch_owner": False,
-              "market_core_changed": False,
-              "oracle_changed": False,
-              "oracle_404156r1_preserved": True,
-              "atlas_changed": False,
-              "simulation_changed": False,
-              "window_manager_changed": False
-          }
-
-          for path in manifest_ps:
-              data = json.loads(path.read_text(encoding="utf-8"))
-              data["build"] = BUILD
-              data["release"] = RELEASE
-              data["asset_token"] = f"market-core-v2.0-alpha-build-{BUILD}"
-              data["status"] = STATUS
-              data["parent_build"] = PARENT
-              data["prepared_at"] = now
-              data["published_at"] = now
-              if "global_versioning" in data:
-                  data["global_versioning"] = BUILD
-              lineage = str(data.get("lineage") or "")
-              if LINEAGE_NOTE not in lineage:
-                  data["lineage"] = (lineage + " → " + LINEAGE_NOTE).strip(" →")
-
-              files = data.setdefault("files", {})
-              files["js/layout-repair.js"] = sha(layout_p)
-              for rel in list(files):
-                  candidate = admin / rel
-                  if candidate.is_file() and candidate.resolve() != path.resolve():
-                      files[rel] = sha(candidate)
-
-              data.setdefault("verification", {})["aether_news_sentinel_french_live_feed_404157"] = verification
-              patch_publication_identity(data)
-              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
-
-          # Canonical ZIP, produced in the same release transaction so no recursive Actions dependency exists.
-          manifest = json.loads((admin / "version.json").read_text(encoding="utf-8"))
-          files = list((manifest.get("files") or {}).keys())
-          for required in ("version.json", "administrator-version.json"):
-              if required not in files:
-                  files.append(required)
-          missing = [rel for rel in files if not (admin / rel).is_file()]
-          if missing:
-              raise SystemExit("canonical archive missing files: " + ", ".join(missing))
-
-          archive_dir.mkdir(parents=True, exist_ok=True)
-          safe_build = BUILD.replace(".", "_")
-          out = archive_dir / f"AGENT_CRYPTO_BUILD_{safe_build}_AUTO_CANONICAL.zip"
-          with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
-              for rel in files:
-                  src = admin / rel
-                  arc = Path("public/agent_crypto_erith_ia/administrator") / rel
-                  zf.write(src, arcname=arc.as_posix())
-          digest = hashlib.sha256(out.read_bytes()).hexdigest()
-          sha_path = Path(str(out) + ".sha256")
-          sha_path.write_text(f"{digest}  {out.name}\n", encoding="utf-8")
-
-          # Emit paths for the shell commit step.
-          Path("/tmp/aether_404157_env").write_text(
-              f"ARCHIVE={out.as_posix()}\nSHA_FILE={sha_path.as_posix()}\nDIGEST={digest}\n",
-              encoding="utf-8"
-          )
-          print("40.4.157 PATCH PASS")
-          print("Aether News Sentinel French priority PASS")
-          print("Oracle 40.4.156R1 preservation PASS")
-          print("Canonical archive:", out)
-          print("SHA-256:", digest)
-          PY
-
+          python .github/scripts/aether_release_404157.py
           node --check public/agent_crypto_erith_ia/administrator/js/aether.js
           node --check public/agent_crypto_erith_ia/administrator/js/app.js
           node --check public/agent_crypto_erith_ia/administrator/app.js
@@ -257,10 +45,9 @@ jobs:
           python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
           git diff --check
 
-          cat /tmp/aether_404157_env >> "$GITHUB_ENV"
           source /tmp/aether_404157_env
-
           rm -f .github/workflows/aether-release-40-4-157.yml
+          rm -f .github/scripts/aether_release_404157.py
 
           git add \
             public/agent_crypto_erith_ia/administrator/index.html \
@@ -269,32 +56,13 @@ jobs:
             public/agent_crypto_erith_ia/administrator/js/aether.js \
             public/agent_crypto_erith_ia/administrator/version.json \
             public/agent_crypto_erith_ia/administrator/administrator-version.json \
-            "$ARCHIVE" "$SHA_FILE" \
-            .github/workflows/aether-release-40-4-157.yml
+            "$ARCHIVE" \
+            "$SHA_FILE" \
+            .github/workflows/aether-release-40-4-157.yml \
+            .github/scripts/aether_release_404157.py
 
-          python - <<'PY'
-          import subprocess
-          expected = {
-              '.github/workflows/aether-release-40-4-157.yml',
-              'public/agent_crypto_erith_ia/administrator/index.html',
-              'public/agent_crypto_erith_ia/administrator/app.js',
-              'public/agent_crypto_erith_ia/administrator/js/app.js',
-              'public/agent_crypto_erith_ia/administrator/js/aether.js',
-              'public/agent_crypto_erith_ia/administrator/version.json',
-              'public/agent_crypto_erith_ia/administrator/administrator-version.json',
-              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_157_AUTO_CANONICAL.zip',
-              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_157_AUTO_CANONICAL.zip.sha256',
-          }
-          raw = subprocess.check_output(['git','status','--porcelain'], text=True)
-          changed = {line[3:] for line in raw.splitlines() if line.strip()}
-          unexpected = changed - expected
-          missing = expected - changed
-          if unexpected or missing:
-              raise SystemExit(f'working-tree contract failed; unexpected={sorted(unexpected)} missing={sorted(missing)}')
-          print('Working-tree contract PASS')
-          PY
-
-          git commit -m 'feat Agent-Crypto 40.4.157 route French News Sentinel headlines through Aether'
+          git diff --cached --check
+          git commit -m "feat Agent-Crypto 40.4.157 route French News Sentinel headlines through Aether"
           git push origin HEAD:main
 
       - name: Verify remote truth
@@ -302,15 +70,26 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin main
-          test "$(git show origin/main:public/agent_crypto_erith_ia/administrator/version.json | python -c 'import json,sys; print(json.load(sys.stdin)["build"])')" = '40.4.157'
-          test "$(git show origin/main:public/agent_crypto_erith_ia/administrator/version.json | python -c 'import json,sys; print(json.load(sys.stdin)["status"])')" = 'aether_news_sentinel_french_live_feed_lock'
+
+          build="$(git show origin/main:public/agent_crypto_erith_ia/administrator/version.json | python -c 'import json,sys; print(json.load(sys.stdin)["build"])')"
+          status="$(git show origin/main:public/agent_crypto_erith_ia/administrator/version.json | python -c 'import json,sys; print(json.load(sys.stdin)["status"])')"
+          test "$build" = "40.4.157"
+          test "$status" = "aether_news_sentinel_french_live_feed_lock"
+
           git show origin/main:public/agent_crypto_erith_ia/administrator/js/aether.js | grep -Fq 'headline_fr_display||canonical?.headline_fr'
           git show origin/main:public/agent_crypto_erith_ia/administrator/js/aether.js | grep -Fq 'news_display_contract_build:"40.4.157"'
           git show origin/main:public/agent_crypto_erith_ia/administrator/js/layout-repair.js | grep -Fq '40.4.156R1'
+
           git cat-file -e origin/main:coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_157_AUTO_CANONICAL.zip
           git cat-file -e origin/main:coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_157_AUTO_CANONICAL.zip.sha256
+
           if git cat-file -e origin/main:.github/workflows/aether-release-40-4-157.yml 2>/dev/null; then
-            echo 'temporary workflow still present'
+            echo "temporary workflow still present"
             exit 1
           fi
-          echo '40.4.157 REMOTE TRUTH PASS'
+          if git cat-file -e origin/main:.github/scripts/aether_release_404157.py 2>/dev/null; then
+            echo "temporary release driver still present"
+            exit 1
+          fi
+
+          echo "40.4.157 REMOTE TRUTH PASS"
