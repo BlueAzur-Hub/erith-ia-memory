@@ -35246,11 +35246,94 @@ function renderPaperWorkspaceComparison404143(){
     const pnl=atlasZeroCurrency(row.pnl_eur);
     return `<div style="border:1px solid ${row.active?'rgba(98,236,255,.55)':'rgba(159,176,197,.20)'};border-radius:10px;padding:8px 10px;background:${row.active?'rgba(9,54,72,.30)':'rgba(7,18,30,.32)'}">
       <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>${escapeHtml(row.label)}</strong><span class="${pnl>=0?'pnl-pos':'pnl-neg'}">${escapeHtml(atlasSignedEUR(pnl))}</span></div>
-      <div style="font-size:11px;color:var(--muted,#9fb0c5);margin-top:4px">TOTAL ${escapeHtml(fmtEUR.format(atlasZeroCurrency(row.total_eur)))} · CASH ${escapeHtml(fmtEUR.format(atlasZeroCurrency(row.cash_eur)))} · POS ${row.positions} · PREUVES ${row.proofs}</div>
+      <div style="font-size:11px;color:var(--muted,#9fb0c5);margin-top:4px">LOCAL · TOTAL ${escapeHtml(fmtEUR.format(atlasZeroCurrency(row.total_eur)))} · CASH ${escapeHtml(fmtEUR.format(atlasZeroCurrency(row.cash_eur)))} · POS ${row.positions} · PREUVES ${row.proofs}</div>
+      ${(()=>{const kraken=krakenPaperWorkspaceLabel404147(row.key);const color=kraken.state==="connected"?"#7ef4bc":kraken.state==="missing"?"#ffb878":"var(--muted,#9fb0c5)";return `<div data-kraken-paper-map-404147="${escapeHtml(row.key)}" style="font-size:10px;color:${color};margin-top:5px">${escapeHtml(kraken.text)}</div>`;})()}
     </div>`;
   }).join("");
 }
 
+
+/* 40.4.147 — KRAKEN PAPER WORKSPACE READ-ONLY MAPPING · LOCAL STATE PRESERVED LOCK
+   One responsibility: map the three existing browser-local paper workspaces to the
+   three already-created Kraken Paper workspaces returned by the existing WORKSPACES
+   GET. No boot fetch, no new endpoint, no storage write, no execution mutation.
+   Local CONTROL/A/B remain independent and canonical for their historical state. */
+const KRAKEN_PAPER_WORKSPACE_MAP_404147 = Object.freeze({
+  control:"erith-control",
+  strategy_a:"erith-strategy-a",
+  strategy_b:"erith-strategy-b"
+});
+let KRAKEN_PAPER_INVENTORY_404147 = Object.freeze({
+  loaded:false,
+  byName:Object.freeze({}),
+  refreshed_at:null,
+  source:"existing /workspace/list response"
+});
+function krakenPaperWorkspaceInventoryRows404147(payload){
+  const rows=Array.isArray(payload?.data?.workspaces) ? payload.data.workspaces : [];
+  return rows.filter(row=>row && typeof row === "object" && typeof row.name === "string").map(row=>({
+    name:String(row.name),
+    mode:String(row.mode||""),
+    currency:String(row.currency||""),
+    capital:row.capital==null?null:String(row.capital),
+    created_at:row.created_at==null?null:String(row.created_at)
+  }));
+}
+function ingestKrakenPaperWorkspaceInventory404147(payload){
+  const rows=krakenPaperWorkspaceInventoryRows404147(payload);
+  const byName={};
+  rows.forEach(row=>{ byName[row.name]=Object.freeze({...row}); });
+  KRAKEN_PAPER_INVENTORY_404147=Object.freeze({
+    loaded:true,
+    byName:Object.freeze(byName),
+    refreshed_at:new Date().toISOString(),
+    source:"existing /workspace/list response"
+  });
+  renderPaperWorkspaceComparison404143();
+  return krakenPaperWorkspaceMappingPayload404147();
+}
+function krakenPaperWorkspaceMappingRow404147(workspaceKey){
+  const meta=paperWorkspaceMeta404142(workspaceKey);
+  const expected=KRAKEN_PAPER_WORKSPACE_MAP_404147[meta.key]||"";
+  const remote=KRAKEN_PAPER_INVENTORY_404147.byName[expected]||null;
+  const connected=!!(KRAKEN_PAPER_INVENTORY_404147.loaded && remote && remote.mode === "paper");
+  return {
+    local_key:meta.key,
+    local_label:meta.label,
+    expected_kraken_workspace:expected,
+    inventory_loaded:KRAKEN_PAPER_INVENTORY_404147.loaded,
+    connected,
+    kraken_workspace:remote,
+    read_only:true,
+    local_state_mutated:false,
+    real_order:false
+  };
+}
+function krakenPaperWorkspaceMappingPayload404147(){
+  return {
+    schema:"agent_crypto_kraken_paper_workspace_mapping_v1",
+    build:"40.4.147",
+    rows:Object.keys(PAPER_WORKSPACES_404142).map(key=>krakenPaperWorkspaceMappingRow404147(key)),
+    inventory_loaded:KRAKEN_PAPER_INVENTORY_404147.loaded,
+    source:KRAKEN_PAPER_INVENTORY_404147.source,
+    refreshed_at:KRAKEN_PAPER_INVENTORY_404147.refreshed_at,
+    boot_fetch:false,
+    new_endpoint:false,
+    storage_written:false,
+    execution_changed:false,
+    real_orders:false,
+    workspace_mutation:false
+  };
+}
+function krakenPaperWorkspaceLabel404147(workspaceKey){
+  const row=krakenPaperWorkspaceMappingRow404147(workspaceKey);
+  if(!row.inventory_loaded) return { text:`KRAKEN PAPER · ${row.expected_kraken_workspace} · INVENTAIRE NON CHARGÉ`, state:"idle" };
+  if(!row.connected) return { text:`KRAKEN PAPER · ${row.expected_kraken_workspace} · ABSENT`, state:"missing" };
+  const remote=row.kraken_workspace||{};
+  const currency=remote.currency||"N/D";
+  const capital=remote.capital==null?"N/D":remote.capital;
+  return { text:`KRAKEN PAPER · ${remote.name} · ${currency} · ${capital} · MAPPÉ LECTURE SEULE`, state:"connected" };
+}
 
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
@@ -35307,6 +35390,7 @@ async function krakenCliTicker404144(pair='BTCUSD'){
     const payload=await krakenCliAdapterFetch404144(`/ticker?pair=${encodeURIComponent(safe)}`);
     krakenCliSetStatus404144({ adapter:true, cli:true, transport:String(payload?.transport||KRAKEN_CLI_LAST_404144.transport||"N/D") });
     krakenCliOutput404144(payload);
+    ingestKrakenPaperWorkspaceInventory404147(payload);
     return payload;
   }catch(error){ krakenCliOutput404144({ ok:false, command:`ticker ${safe}`, error:String(error?.message||error), real_order:false }); return null; }
 }
@@ -52214,7 +52298,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.146";
+const ATLAS_BUILD = "40.4.147";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -64009,3 +64093,21 @@ try{
     new_storage_owner:false
   });
 }catch(_){}
+
+
+/* 40.4.147 — KRAKEN PAPER WORKSPACE READ-ONLY MAPPING · LOCAL STATE PRESERVED LOCK */
+try{globalThis.ERITH_BUILD_40_4_147_KRAKEN_PAPER_MAPPING=Object.freeze({
+  build:"40.4.147",parent:"40.4.146",
+  mapping:Object.freeze({...KRAKEN_PAPER_WORKSPACE_MAP_404147}),
+  inventory:()=>KRAKEN_PAPER_INVENTORY_404147,
+  payload:krakenPaperWorkspaceMappingPayload404147,
+  ingest:ingestKrakenPaperWorkspaceInventory404147,
+  contract:Object.freeze({
+    existing_workspace_list_get_reused:true,
+    boot_fetch:false,new_endpoint:false,new_timer:false,new_observer:false,new_scheduler:false,
+    storage_write:false,local_paper_state_mutation:false,simulation_execution_changed:false,
+    api_keys:false,real_orders:false,withdrawals:false,workspace_mutation:false,mcp_started:false,
+    atlas_pipeline_changed:false,market_core_changed:false,bridge_changed:false,private_backend_changed:false,
+    system_shell_changed:false,system_cache_coherence_404146_preserved:true
+  })
+});}catch(_){}
