@@ -1,0 +1,171 @@
+name: Aether Final Cascade Recovery2 40.4.159-160
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/aether-final-cascade-recovery2-40-4-159-160.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-aether-final-cascade-recovery2-40-4-159-160
+  cancel-in-progress: false
+
+jobs:
+  recover2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Make release script workflow-read-only for phase 159 only
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          path=Path('.github/scripts/aether_final_cascade_404159_404160.py')
+          text=path.read_text(encoding='utf-8')
+          pattern=r'\n    workflow = COLLECTOR_WORKFLOW\.read_text\(encoding="utf-8"\).*?COLLECTOR_WORKFLOW\.write_text\(workflow, encoding="utf-8", newline="\\n"\)\n'
+          replacement='\n    # Workflow definition is verified read-only by the release job.\n'
+          text,count=re.subn(pattern,replacement,text,count=1,flags=re.S)
+          if count != 1:
+              raise SystemExit(f'workflow mutation block count={count}')
+          text=text.replace('"workflow_validation_added": True,','"workflow_validation_added": False,\n        "workflow_schedule_static_checked": True,',1)
+          path.write_text(text,encoding='utf-8',newline='\n')
+          print('phase159 script is workflow-read-only')
+          PY
+
+      - name: Build 40.4.159 Atlas public pulse truth
+        run: python .github/scripts/aether_final_cascade_404159_404160.py 159
+
+      - name: Validate 40.4.159
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/layout-repair.js
+          python -m py_compile public/agent_crypto_erith_ia/tools/collect_public_crypto.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          version=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          admin=json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
+          status=json.loads(Path('public/agent_crypto_erith_ia/data/crypto/status.json').read_text(encoding='utf-8'))
+          collector=Path('public/agent_crypto_erith_ia/tools/collect_public_crypto.py').read_text(encoding='utf-8')
+          workflow=Path('.github/workflows/atlas-public-crypto-market.yml').read_text(encoding='utf-8')
+          watchdog=Path('.github/workflows/atlas-public-crypto-market-clock.yml').read_text(encoding='utf-8')
+          layout=(root/'js/layout-repair.js').read_text(encoding='utf-8')
+          assert version['build']=='40.4.159' and admin['build']=='40.4.159'
+          assert status['source']['schedule']=='twice_hourly_11_41_europe_paris'
+          assert 'twice_hourly_11_41_europe_paris' in collector
+          assert '11,41 * * * *' in workflow and 'Europe/Paris' in workflow
+          assert '17,47 * * * *' in watchdog and 'stale_after_seconds=1200' in watchdog
+          assert 'workflow_schedule_static_checked' in json.dumps(version)
+          assert '40.4.158 — GRAPH DIRECT-FLOAT BODY PORTAL REPAIR' in layout
+          assert '40.4.156R1 — ORACLE DIRECT-FLOAT BODY PORTAL REPAIR' in layout
+          print('40.4.159 VALIDATION PASS')
+          PY
+
+      - name: Restore runner-only script edit before Git publication
+        run: git checkout HEAD -- .github/scripts/aether_final_cascade_404159_404160.py
+
+      - name: Commit and publish 40.4.159
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Aether Final Cascade"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/agent_crypto_erith_ia/tools/collect_public_crypto.py \
+            public/agent_crypto_erith_ia/data/crypto/status.json \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_159_AUTO_CANONICAL.zip \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_159_AUTO_CANONICAL.zip.sha256
+          git commit -m "fix Agent-Crypto 40.4.159 lock Atlas public pulse truth"
+          for attempt in 1 2 3 4 5 6; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "40.4.159 published"
+              break
+            fi
+            git rebase --abort 2>/dev/null || true
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+            sleep $((attempt * 2))
+          done
+
+      - name: Build 40.4.160 CURRENT and Auto Reader truth checkpoint
+        run: python .github/scripts/aether_final_cascade_404159_404160.py 160
+
+      - name: Validate 40.4.160
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/layout-repair.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          version=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          admin=json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
+          app=(root/'app.js').read_text(encoding='utf-8')
+          view=(root/'views/atlas.html').read_text(encoding='utf-8')
+          layout=(root/'js/layout-repair.js').read_text(encoding='utf-8')
+          assert version['build']=='40.4.160' and admin['build']=='40.4.160'
+          assert '__AGENT_CRYPTO_ATLAS_TRUTH_404160__' in app
+          assert 'atlas_reports || 0) >= 4' in app
+          assert 'aerith_conclusion === true' in app
+          assert 'vérification snapshot public' in app
+          assert 'Vérification snapshot public' in view
+          assert '40.4.158 — GRAPH DIRECT-FLOAT BODY PORTAL REPAIR' in layout
+          assert '40.4.156R1 — ORACLE DIRECT-FLOAT BODY PORTAL REPAIR' in layout
+          assert Path('coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md').is_file()
+          assert Path('coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AERITH_7_AGENT_CRYPTO.md').is_file()
+          print('40.4.160 VALIDATION PASS')
+          PY
+
+      - name: Commit and publish 40.4.160
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/views/atlas.html \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md \
+            coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AERITH_7_AGENT_CRYPTO.md \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_160_AUTO_CANONICAL.zip \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_4_160_AUTO_CANONICAL.zip.sha256
+          git commit -m "feat Agent-Crypto 40.4.160 seal Atlas truth and end-of-thread handoff"
+          for attempt in 1 2 3 4 5 6; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "40.4.160 published"
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            if [ "$attempt" -eq 6 ]; then exit 1; fi
+            sleep $((attempt * 2))
+          done
