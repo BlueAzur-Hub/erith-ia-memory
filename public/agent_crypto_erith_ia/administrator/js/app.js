@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.158";
-  const ADMIN_RELEASE = "GRAPH DIRECT-FLOAT BODY PORTAL · GLOBAL STACKING LOCK";
+  const ADMIN_BUILD = "40.4.159";
+  const ADMIN_RELEASE = "ATLAS PUBLIC PULSE TRUTH · SCHEDULER METADATA LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

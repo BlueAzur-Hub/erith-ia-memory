@@ -15,7 +15,9 @@
     "market": "CoinGecko Top 250 USD",
     "conversion": "BCE USD/EUR",
     "publication": "GitHub Actions static JSON",
-    "schedule": "every_2_hours"
+    "schedule": "twice_hourly_11_41_europe_paris",
+    "schedule_label": "11 et 41 min de chaque heure · Europe/Paris",
+    "recovery_watchdog": "17 et 47 min · stale >=20 min · aucun collecteur actif"
   },
   "security": {
     "api_key_required": false,
