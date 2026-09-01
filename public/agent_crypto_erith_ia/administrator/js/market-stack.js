@@ -2,144 +2,200 @@
   "use strict";
 
   const BUILD = "40.4.167";
-  const REVISION = "R1";
-  const CONTRACT = "TRUE_MARKET_STACK_404167R1";
+  const REVISION = "R2";
+  const CONTRACT = "CYCLIC_MULTI_MARKET_ROUTER_404167R2";
+  const ORDER = Object.freeze([
+    Object.freeze({ id: "crypto", label: "CRYPTO", title: "Crypto", inert: false, native: "crypto" }),
+    Object.freeze({ id: "metals", label: "MÉTAUX", title: "Métaux précieux et industriels", inert: false, native: "metals" }),
+    Object.freeze({ id: "indices", label: "INDICES", title: "Indices / Bourse", inert: true, description: "Domaine préparé uniquement. Aucun symbole, fournisseur, historique ou graphique n’est activé avant audit Source Truth." }),
+    Object.freeze({ id: "energy", label: "ÉNERGIE", title: "Énergie & matières premières", inert: true, description: "Pétrole, gaz et matières premières restent inertes jusqu’à qualification des unités, marchés, licences, historiques et fraîcheur." }),
+    Object.freeze({ id: "cross-market", label: "CROSS", title: "Cross-Market Observatory", inert: true, description: "Couche transversale finale. Base 100 et mesures comparables seulement au-dessus de domaines déjà validés, sans moyenne inter-source ni donnée synthétique." })
+  ]);
 
-  function wakeMetalsOnce(stack) {
-    if (!stack || stack.dataset.metalsWakeRequested === "1") return;
-    stack.dataset.metalsWakeRequested = "1";
-    const demand = globalThis.AtlasParallelMarketDemand40465;
-    if (typeof demand?.ensure === "function") {
-      Promise.resolve(demand.ensure()).catch(() => {});
-    }
+  let current = "crypto";
+  let nativeBypass = false;
+
+  const byId = id => document.getElementById(id);
+  const specFor = id => ORDER.find(item => item.id === id) || ORDER[0];
+  const indexOf = id => Math.max(0, ORDER.findIndex(item => item.id === id));
+  const nextOf = id => ORDER[(indexOf(id) + 1) % ORDER.length];
+
+  function nativeDomain() {
+    const button = byId("atlasMarketDomainSwitch");
+    return String(button?.dataset?.domain || "crypto") === "metals" ? "metals" : "crypto";
   }
 
-  function installMetalsDemandGate(stack) {
-    if (!stack) return;
-    if (!("IntersectionObserver" in globalThis)) {
-      wakeMetalsOnce(stack);
-      return;
-    }
-    const observer = new IntersectionObserver(entries => {
-      if (!entries.some(entry => entry.isIntersecting)) return;
-      observer.disconnect();
-      wakeMetalsOnce(stack);
-    }, { rootMargin: "900px 0px" });
-    observer.observe(stack);
-  }
+  function ensureHosts() {
+    const chartShell = document.querySelector("#analyste .chart-shell");
+    const head = document.querySelector("#analyste .chart-v2-recovery-line");
+    const metalsDetail = byId("atlasMetalsDetailPanel");
+    if (!chartShell || !head || !metalsDetail) return false;
 
-  function keepCryptoAsPrimaryDomain(stack) {
-    const marketSwitch = document.getElementById("atlasMarketDomainSwitch");
-    if (!marketSwitch) return;
-
-    try {
-      if (String(marketSwitch.dataset.domain || "crypto") !== "crypto") marketSwitch.click();
-    } catch (_) {}
-
-    marketSwitch.dataset.trueMarketStack404167R1 = "crypto-primary";
-    marketSwitch.setAttribute("aria-label", "Marché Crypto principal. Cliquer pour descendre au cockpit Métaux.");
-    marketSwitch.title = "Voir le cockpit Métaux plus bas";
-
-    marketSwitch.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      stack?.scrollIntoView?.({ behavior: "smooth", block: "start" });
-      wakeMetalsOnce(stack);
-    }, true);
-  }
-
-  function buildStack() {
-    if (document.getElementById("atlasTrueMarketStackMetals404167R1")) return;
-
-    const cryptoDeck = document.getElementById("analyste");
-    const cryptoRibbons = document.getElementById("market-workspace");
-    const foundation = document.getElementById("atlasParallelMarketFoundation");
-    const metalsDetail = document.getElementById("atlasMetalsDetailPanel");
-    const metalsToolbar = document.getElementById("atlasMetalsUnifiedToolbar");
-    const metalsStatus = document.getElementById("atlasMetalsDomainStatus");
-
-    if (!cryptoDeck || !cryptoRibbons || !foundation || !metalsDetail || !metalsToolbar) {
-      document.documentElement.dataset.trueMarketStack404167R1 = "missing-owner";
-      return;
-    }
-
-    document.getElementById("atlasMarketCascade404167")?.remove();
-
-    const stack = document.createElement("section");
-    stack.className = "atlas-true-market-stack-metals-404167r1";
-    stack.id = "atlasTrueMarketStackMetals404167R1";
-    stack.dataset.marketDomain = "metals";
-    stack.dataset.marketStackBuild = BUILD;
-    stack.dataset.marketStackRevision = REVISION;
-    stack.setAttribute("aria-label", "Cockpit Métaux précieux et industriels");
-    stack.innerHTML = `
-      <header class="atlas-true-market-stack-head-404167r1">
-        <div class="atlas-true-market-stack-title-404167r1">
-          <span class="atlas-true-market-stack-domain-404167r1">MARCHÉ <b>MÉTAUX</b></span>
-          <div>
-            <small>ERITH.IA · MARKETS OBSERVATORY · 02</small>
-            <strong>Métaux précieux et industriels</strong>
+    if (!byId("atlasCyclicMarketInertStage404167R2")) {
+      const stage = document.createElement("section");
+      stage.id = "atlasCyclicMarketInertStage404167R2";
+      stage.className = "atlas-cyclic-market-inert-stage-404167r2";
+      stage.hidden = true;
+      stage.innerHTML = `
+        <div class="atlas-cyclic-market-inert-grid-404167r2" aria-live="polite">
+          <div class="atlas-cyclic-market-inert-hero-404167r2">
+            <small>ERITH.IA · MARKETS OBSERVATORY</small>
+            <h3 data-cyclic-market-title>DOMAINE FUTUR</h3>
+            <p data-cyclic-market-description>Aucune donnée active.</p>
+            <div class="atlas-cyclic-market-inert-line-404167r2" aria-hidden="true"></div>
           </div>
-        </div>
-        <div class="atlas-true-market-stack-toolbar-404167r1" id="atlasTrueMarketStackToolbar404167R1"></div>
-      </header>
-      <div class="atlas-true-market-stack-grid-404167r1">
-        <div class="atlas-true-market-stack-chart-404167r1" id="atlasTrueMarketStackChart404167R1"></div>
-        <div class="atlas-true-market-stack-detail-404167r1" id="atlasTrueMarketStackDetail404167R1"></div>
-      </div>
-      <footer class="atlas-true-market-stack-foot-404167r1">
-        <span>02 · MÉTAUX · XAU / XAG / XPT / XPD / HG</span>
-        <small>Gold API · Yahoo Finance Futures · BCE · USGS / IEA / RMIS · observation uniquement</small>
-      </footer>`;
+          <div class="atlas-cyclic-market-inert-gates-404167r2">
+            <span><small>SOURCE TRUTH</small><b>NON QUALIFIÉE</b></span>
+            <span><small>HISTORIQUE</small><b>NON CONNECTÉ</b></span>
+            <span><small>UNITÉS</small><b>À VALIDER</b></span>
+            <span><small>MOTEUR</small><b>INERT</b></span>
+          </div>
+          <footer><b>AUCUN PRIX INVENTÉ</b><span>Le cockpit existe comme emplacement de routage uniquement.</span></footer>
+        </div>`;
+      chartShell.appendChild(stage);
+    }
 
-    cryptoRibbons.insertAdjacentElement("afterend", stack);
+    if (!byId("atlasCyclicMarketInertToolbar404167R2")) {
+      const toolbar = document.createElement("div");
+      toolbar.id = "atlasCyclicMarketInertToolbar404167R2";
+      toolbar.className = "chart-head-actions atlas-cyclic-market-inert-toolbar-404167r2";
+      toolbar.hidden = true;
+      toolbar.innerHTML = '<span>DOMAINE FUTUR</span><b data-cyclic-market-toolbar-state>INERT · SOURCE TRUTH REQUISE</b>';
+      head.appendChild(toolbar);
+    }
 
-    const toolbarHost = stack.querySelector("#atlasTrueMarketStackToolbar404167R1");
-    const chartHost = stack.querySelector("#atlasTrueMarketStackChart404167R1");
-    const detailHost = stack.querySelector("#atlasTrueMarketStackDetail404167R1");
+    if (!byId("atlasCyclicMarketInertDetail404167R2")) {
+      const detail = document.createElement("article");
+      detail.id = "atlasCyclicMarketInertDetail404167R2";
+      detail.className = "panel glass atlas-cyclic-market-inert-detail-404167r2";
+      detail.hidden = true;
+      detail.innerHTML = `
+        <header><span class="eyebrow">DÉTAIL ACTIF</span><strong data-cyclic-market-detail-title>Marché futur</strong><small>Observation seulement · aucune donnée inventée</small></header>
+        <div class="atlas-cyclic-market-inert-detail-state-404167r2"><span><small>État</small><b>PLANNED · INERT</b></span><span><small>Collecte</small><b>AUCUNE</b></span></div>
+        <section><b>Conditions d’activation</b><p>Source, unité, historique, fraîcheur, fallback et Source Truth doivent être validés avant activation du domaine.</p></section>
+        <section><b>Routeur</b><p data-cyclic-market-detail-next>Cliquer sur MARCHÉ pour continuer la boucle.</p></section>`;
+      metalsDetail.insertAdjacentElement("afterend", detail);
+    }
+    return true;
+  }
 
-    toolbarHost.appendChild(metalsToolbar);
-    chartHost.appendChild(foundation);
-    if (metalsStatus) chartHost.appendChild(metalsStatus);
-    detailHost.appendChild(metalsDetail);
+  function setInertContent(domain) {
+    const spec = specFor(domain);
+    const stage = byId("atlasCyclicMarketInertStage404167R2");
+    const toolbar = byId("atlasCyclicMarketInertToolbar404167R2");
+    const detail = byId("atlasCyclicMarketInertDetail404167R2");
+    if (!stage || !toolbar || !detail) return;
 
-    metalsToolbar.hidden = false;
-    foundation.hidden = false;
-    metalsDetail.hidden = false;
-    if (metalsStatus) metalsStatus.hidden = false;
+    stage.querySelector("[data-cyclic-market-title]").textContent = spec.title;
+    stage.querySelector("[data-cyclic-market-description]").textContent = spec.description || "Domaine non activé.";
+    toolbar.querySelector("[data-cyclic-market-toolbar-state]").textContent = `${spec.label} · INERT · SOURCE TRUTH REQUISE`;
+    detail.querySelector("[data-cyclic-market-detail-title]").textContent = spec.title;
+    detail.querySelector("[data-cyclic-market-detail-next]").textContent = `Suivant : ${nextOf(domain).title}. Cliquer sur MARCHÉ pour continuer.`;
+  }
 
-    document.documentElement.dataset.trueMarketStack404167R1 = "ready";
-    document.documentElement.dataset.marketStackPrimary = "crypto";
-    document.documentElement.dataset.marketStackSecondary = "metals";
+  function setInertVisible(visible) {
+    const stage = byId("atlasCyclicMarketInertStage404167R2");
+    const toolbar = byId("atlasCyclicMarketInertToolbar404167R2");
+    const detail = byId("atlasCyclicMarketInertDetail404167R2");
+    if (stage) stage.hidden = !visible;
+    if (toolbar) toolbar.hidden = !visible;
+    if (detail) detail.hidden = !visible;
+  }
 
-    keepCryptoAsPrimaryDomain(stack);
-    installMetalsDemandGate(stack);
+  function updateButton(domain) {
+    const button = byId("atlasMarketDomainSwitch");
+    const value = byId("atlasMarketDomainSwitchValue");
+    if (!button || !value) return;
+    const spec = specFor(domain);
+    const next = nextOf(domain);
+    value.textContent = spec.label;
+    button.dataset.cyclicMarketDomain = spec.id;
+    button.dataset.cyclicMarketNext = next.id;
+    button.setAttribute("aria-label", `Marché ${spec.title}. Cliquer pour afficher ${next.title}.`);
+    button.title = `Suivant : ${next.title}`;
+  }
 
-    requestAnimationFrame(() => {
-      foundation.hidden = false;
-      metalsDetail.hidden = false;
-      metalsToolbar.hidden = false;
-      if (metalsStatus) metalsStatus.hidden = false;
-    });
+  function ensureNativeDomain(target) {
+    const button = byId("atlasMarketDomainSwitch");
+    if (!button || (target !== "crypto" && target !== "metals")) return;
+    if (nativeDomain() === target) return;
+    nativeBypass = true;
+    try { button.click(); } catch (_) {}
+    nativeBypass = false;
+  }
 
-    globalThis.ErithTrueMarketStack404167R1 = Object.freeze({
+  function applyDomain(domain, options = {}) {
+    const spec = specFor(domain);
+    current = spec.id;
+    document.documentElement.dataset.cyclicMarketDomain = spec.id;
+    document.documentElement.dataset.cyclicMarketMode = spec.inert ? "inert" : "active";
+    document.documentElement.dataset.cyclicMarketRevision = REVISION;
+
+    if (!spec.inert) {
+      if (!options.nativeAlreadyHandled) ensureNativeDomain(spec.native);
+      setInertVisible(false);
+    } else {
+      setInertContent(spec.id);
+      setInertVisible(true);
+    }
+    updateButton(spec.id);
+  }
+
+  function onMarketSwitchClick(event) {
+    if (nativeBypass) return;
+    const next = nextOf(current);
+
+    if (current === "crypto" && next.id === "metals") {
+      current = "metals";
+      document.documentElement.dataset.cyclicMarketDomain = "metals";
+      document.documentElement.dataset.cyclicMarketMode = "active";
+      setInertVisible(false);
+      requestAnimationFrame(() => updateButton("metals"));
+      return;
+    }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    applyDomain(next.id);
+  }
+
+  function init() {
+    document.getElementById("atlasTrueMarketStackMetals404167R1")?.remove();
+    document.getElementById("atlasMarketCascade404167")?.remove();
+    if (!ensureHosts()) {
+      document.documentElement.dataset.cyclicMarketRouter404167R2 = "missing-owner";
+      return;
+    }
+
+    current = nativeDomain();
+    const button = byId("atlasMarketDomainSwitch");
+    if (!button) return;
+    button.dataset.cyclicMarketRouter404167R2 = "bound";
+    button.addEventListener("click", onMarketSwitchClick, true);
+    applyDomain(current, { nativeAlreadyHandled: true });
+    document.documentElement.dataset.cyclicMarketRouter404167R2 = "ready";
+
+    globalThis.ErithCyclicMultiMarketRouter404167R2 = Object.freeze({
       build: BUILD,
       revision: REVISION,
       contract: CONTRACT,
-      crypto_owner_reused: "#analyste",
-      metals_chart_owner_reused: "#atlasParallelMarketFoundation / #atlasMetalsChartCanvas",
-      metals_detail_owner_reused: "#atlasMetalsDetailPanel",
-      metals_demand_owner_reused: "AtlasParallelMarketDemand40465.ensure",
-      second_chart_engine_created: false,
-      new_market_fetch_owner: false,
-      recurring_observer: false,
-      stack: () => document.getElementById("atlasTrueMarketStackMetals404167R1")
+      order: ORDER.map(item => item.id),
+      active_domains: ["crypto", "metals"],
+      inert_domains: ["indices", "energy", "cross-market"],
+      current: () => current,
+      next: () => applyDomain(nextOf(current).id),
+      go: domain => applyDomain(specFor(domain).id),
+      native_crypto_metals_reused: true,
+      single_cockpit_surface: true,
+      wraparound: true,
+      new_chart_engine: false,
+      new_fetch_owner: false,
+      new_timer: false,
+      new_observer: false,
+      new_storage_owner: false
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", buildStack, { once: true });
-  } else {
-    buildStack();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true });
+  else init();
 })();
