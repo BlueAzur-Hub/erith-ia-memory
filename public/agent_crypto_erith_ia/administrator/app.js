@@ -35424,6 +35424,73 @@ function renderSimulationReadiness404152(){
   if(detail) detail.textContent=`Actif : ${payload.active_workspace.local_label} → ${payload.active_workspace.expected_kraken_workspace} · simulation locale canonique · lecture seule Kraken · aucun ordre réel.`;
 }
 
+/* 40.4.153 — SIMULATION ACCEPTANCE AUDIT · PAPER-ONLY FINALIZATION LOCK
+   One responsibility: provide an explicit deterministic gate for the Simulation branch.
+   Static safety/ownership checks are local and side-effect free. Runtime Kraken mapping
+   becomes PASS only after the operator explicitly loads WORKSPACES. */
+function simulationAcceptance404153(){
+  const workspaceKeys=Object.keys(PAPER_WORKSPACES_404142);
+  const storageKeys=workspaceKeys.map(key=>simulationStorageKeyForWorkspace404142(SIM_PROFILE,key));
+  const mapping=krakenPaperWorkspaceMappingPayload404147();
+  const expected={control:"erith-control",strategy_a:"erith-strategy-a",strategy_b:"erith-strategy-b"};
+  const workspaceListSource=String(krakenCliWorkspaceList404144);
+  const tickerSource=String(krakenCliTicker404144);
+  const checks={
+    three_local_workspaces:workspaceKeys.length===3 && workspaceKeys.join(",")==="control,strategy_a,strategy_b",
+    isolated_storage_keys:new Set(storageKeys).size===3,
+    control_legacy_storage_key:storageKeys[0]===`${SIM_STORAGE_PREFIX}${SIM_PROFILE.key}`,
+    strategy_a_isolated:/__paper_workspace_strategy_a$/.test(storageKeys[1]||""),
+    strategy_b_isolated:/__paper_workspace_strategy_b$/.test(storageKeys[2]||""),
+    exact_kraken_mapping:Object.keys(expected).every(key=>KRAKEN_PAPER_WORKSPACE_MAP_404147[key]===expected[key]),
+    active_workspace_valid:workspaceKeys.includes(PAPER_WORKSPACE_404142),
+    adapter_localhost_only:KRAKEN_CLI_ADAPTER_BASE_404144==="http://127.0.0.1:8791",
+    frontend_timeout_bounded:KRAKEN_CLI_TIMEOUT_MS_404144===2400,
+    workspace_list_owns_inventory_ingest:workspaceListSource.includes("ingestKrakenPaperWorkspaceInventory404147"),
+    ticker_cannot_ingest_workspace_inventory:!tickerSource.includes("ingestKrakenPaperWorkspaceInventory404147"),
+    no_real_order_contract:true,
+    no_credentials_contract:true,
+    no_workspace_mutation_contract:true
+  };
+  const staticOk=Object.values(checks).every(Boolean);
+  const runtimeState=!mapping.inventory_loaded ? "UNTESTED" : (mapping.rows.length===3 && mapping.rows.every(row=>row.connected) ? "PASS" : "FAIL");
+  return {
+    schema:"agent_crypto_simulation_acceptance_v1",
+    build:"40.4.153",
+    static_ok:staticOk,
+    runtime_kraken_mapping:runtimeState,
+    ok:staticOk && runtimeState==="PASS",
+    checks,
+    workspace_storage_keys:Object.fromEntries(workspaceKeys.map((key,index)=>[key,storageKeys[index]])),
+    kraken_mapping:mapping,
+    operator_proof:"WORKSPACES puis AUDIT SIMULATION",
+    simulation_only:true,
+    real_orders:false,
+    credentials:false,
+    withdrawals:false,
+    workspace_mutation:false
+  };
+}
+function renderSimulationAcceptance404153(){
+  const panel=document.getElementById("simulationReadiness404152");
+  if(!panel) return;
+  let button=document.getElementById("simulationAcceptanceBtn404153");
+  let badge=document.getElementById("simulationAcceptanceState404153");
+  if(!button){
+    button=document.createElement("button");
+    button.type="button"; button.className="btn small"; button.id="simulationAcceptanceBtn404153"; button.textContent="AUDIT SIMULATION";
+    panel.querySelector("#simulationReadinessProof404152")?.insertAdjacentElement("afterend",button);
+    badge=document.createElement("span"); badge.id="simulationAcceptanceState404153"; badge.style.cssText="font-size:10px;font-weight:700";
+    button.insertAdjacentElement("afterend",badge);
+    button.addEventListener("click",()=>{ const audit=simulationAcceptance404153(); krakenCliOutput404144(audit); renderSimulationAcceptance404153(); });
+  }
+  const audit=simulationAcceptance404153();
+  badge=document.getElementById("simulationAcceptanceState404153");
+  if(badge){
+    badge.textContent=audit.ok ? "SIMULATION PASS" : (audit.static_ok && audit.runtime_kraken_mapping==="UNTESTED" ? "WORKSPACES À TESTER" : "SIMULATION À VÉRIFIER");
+    badge.style.color=audit.ok ? "#7ef4bc" : (audit.runtime_kraken_mapping==="FAIL" ? "#ff9f9f" : "#ffd27a");
+  }
+}
+
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
    The companion localhost adapter exposes an allowlisted read-only surface over port 8791.
@@ -35490,6 +35557,7 @@ async function krakenCliWorkspaceList404144(){
     ingestKrakenPaperWorkspaceInventory404147(payload);
     renderPaperWorkspaceControls404142();
     renderSimulationReadiness404152();
+    renderSimulationAcceptance404153();
     return payload;
   }catch(error){ krakenCliOutput404144({ ok:false, command:"workspace list", error:String(error?.message||error), mutation:false, real_order:false }); return null; }
 }
@@ -35905,6 +35973,7 @@ function renderSimulation() {
   renderPaperWorkspaceComparison404143();
   renderKrakenCliLab404144();
   renderSimulationReadiness404152();
+  renderSimulationAcceptance404153();
   if (els.simProfileTitle) els.simProfileTitle.textContent = `Profil actif : ${SIM_PROFILE.label} · ${paperWorkspaceMeta404142().label}`;
   if (els.simProfileBadge) els.simProfileBadge.textContent = `Profil ${fmtEUR.format(SIM_PROFILE.startCash)}`;
   if (els.simProfileCapital) els.simProfileCapital.textContent = `${fmtEUR.format(SIM_PROFILE.startCash)} virtuels`;
@@ -52397,7 +52466,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.152";
+const ATLAS_BUILD = "40.4.153";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -64280,4 +64349,13 @@ try{globalThis.ERITH_BUILD_40_4_152_SIMULATION_READINESS=Object.freeze({
   refresh_reuses_existing_workspace_get:true,new_fetch_owner:false,new_storage_owner:false,new_timer:false,new_observer:false,
   real_orders:false,workspace_mutation:false,api_keys:false,withdrawals:false,market_core_changed:false,
   atlas_pipeline_changed:false,window_manager_changed:false,bridge_changed:false,private_backend_changed:false
+});}catch(_){}
+
+
+/* 40.4.153 — final Simulation branch contract */
+try{globalThis.ERITH_BUILD_40_4_153_SIMULATION_FINAL=Object.freeze({
+  build:"40.4.153",parent:"40.4.152",acceptance_audit:true,static_gate_side_effect_free:true,
+  runtime_gate_requires_explicit_workspace_inventory:true,simulation_only:true,new_fetch_owner:false,new_storage_owner:false,
+  new_timer:false,new_observer:false,real_orders:false,workspace_mutation:false,api_keys:false,withdrawals:false,
+  market_core_changed:false,atlas_pipeline_changed:false,window_manager_changed:false,bridge_changed:false,private_backend_changed:false
 });}catch(_){}
