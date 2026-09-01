@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate exact RND 10 asset and patch existing library
+      - name: Validate exact RND 10 asset and patch canonical owner
         shell: bash
         run: |
           set -euo pipefail
@@ -48,37 +48,58 @@ jobs:
           if (width, height) != (1080, 1920):
               raise SystemExit(f'RND10 dimensions mismatch: {width}x{height}')
 
-          item = '{id:"aether-random-10",src:"assets/visual/technical-reading/technical-random-10.png",label:"Aether au bureau"},'
-          path = root/'js/app.js'
-          text = path.read_text(encoding='utf-8')
-          if 'technical-random-10.png' not in text:
-              m = re.search(r'(const\s+atlasTechnicalRandomItems40279\s*=\s*\[)(.*?)(\];)', text, re.S)
-              if not m:
-                  raise SystemExit('RND owner not found in js/app.js')
-              body = m.group(2)
-              count = len(re.findall(r'technical-random-\d{2}\.png', body))
+          # Canonical RND owner: inline atlasTechnicalStaticThemeController40269 in index.html.
+          index = root/'index.html'
+          html = index.read_text(encoding='utf-8')
+          m = re.search(r'(const\s+RANDOM_LIBRARY\s*=\s*Object\.freeze\(\[)(.*?)(\]\);)', html, re.S)
+          if not m:
+              raise SystemExit('canonical RANDOM_LIBRARY owner not found in index.html')
+          body = m.group(2)
+          count = len(re.findall(r'technical-random-\d{2}\.png', body))
+          if 'technical-random-10.png' not in body:
               if count != 9:
-                  raise SystemExit(f'js/app.js: expected RND 9, found {count}')
-              new_body = body.rstrip() + '\n  ' + item + '\n'
-              text = text[:m.start(2)] + new_body + text[m.end(2):]
-              post = re.search(r'const\s+atlasTechnicalRandomItems40279\s*=\s*\[(.*?)\];', text, re.S)
-              if not post or len(re.findall(r'technical-random-\d{2}\.png', post.group(1))) != 10:
-                  raise SystemExit('js/app.js: RND 10 post-check failed')
-              path.write_text(text, encoding='utf-8')
+                  raise SystemExit(f'index.html: expected RND 9 before patch, found {count}')
+              body = body.rstrip()
+              if not body.rstrip().endswith(')'):
+                  raise SystemExit('index.html: unexpected RANDOM_LIBRARY tail')
+              body = body + ',\n    Object.freeze({file:"technical-random-10.png",label:"Aether au bureau",x:50,y:44})\n  '
+              html = html[:m.start(2)] + body + html[m.end(2):]
+
+          post = re.search(r'const\s+RANDOM_LIBRARY\s*=\s*Object\.freeze\(\[(.*?)\]\);', html, re.S)
+          post_count = len(re.findall(r'technical-random-\d{2}\.png', post.group(1))) if post else 0
+          if post_count != 10 or 'technical-random-10.png' not in post.group(1):
+              raise SystemExit(f'index.html: RND 10 post-check failed ({post_count})')
+
+          # Canonical 40.4.162 identity surfaces in index.html are release/cache identity only.
+          if '40.4.162' in html:
+              html = html.replace('40.4.162', '40.4.163')
+          html = html.replace('ADMINISTRATOR STATE TRUTH · OPERATOR FLOW & FAMILY PERSISTENCE', 'AETHER RND 10 · EXISTING RANDOM LIBRARY EXTENSION')
+          html = html.replace('Version : State Truth + Persistence', 'Version : Aether RND 10')
+          index.write_text(html, encoding='utf-8')
+
+          # Shared Administrator runtime identity only; business/runtime logic untouched.
+          app = root/'js/app.js'
+          app_text = app.read_text(encoding='utf-8')
+          app_text, n_build = re.subn(r'const ADMIN_BUILD = "40\.4\.160";', 'const ADMIN_BUILD = "40.4.163";', app_text, count=1)
+          if n_build != 1 and 'const ADMIN_BUILD = "40.4.163";' not in app_text:
+              raise SystemExit('js/app.js ADMIN_BUILD identity not found')
+          app_text = re.sub(r'const ADMIN_RELEASE = "[^"]*";', 'const ADMIN_RELEASE = "AETHER RND 10 · EXISTING RANDOM LIBRARY EXTENSION";', app_text, count=1)
+          app.write_text(app_text, encoding='utf-8')
 
           now = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
           for rel in ['version.json','administrator-version.json']:
               path = root/rel
               data = json.loads(path.read_text(encoding='utf-8'))
-              if str(data.get('build')) != '40.4.162':
-                  raise SystemExit(f'{rel}: parent build must be 40.4.162, got {data.get("build")}')
+              current = str(data.get('build'))
+              if current not in ('40.4.162','40.4.163'):
+                  raise SystemExit(f'{rel}: expected parent/current 40.4.162/163, got {current}')
               data['parent_build'] = '40.4.162'
               data['build'] = '40.4.163'
               data['release'] = 'AETHER RND 10 · EXISTING RANDOM LIBRARY EXTENSION'
               data['status'] = 'aether_rnd10_existing_library_extension'
               data['prepared_at'] = now
               data['published_at'] = now
-              if 'global_versioning' in data:
+              if isinstance(data.get('global_versioning'), str):
                   data['global_versioning'] = '40.4.163'
               if isinstance(data.get('asset_token'), str):
                   data['asset_token'] = re.sub(r'build-40\.4\.\d+', 'build-40.4.163', data['asset_token'])
@@ -86,7 +107,7 @@ jobs:
               tr = contracts.setdefault('technical_reading', {})
               tr['random_library_count'] = 10
               contracts['random_library_404163'] = {
-                  'owner': 'atlasTechnicalRandomItems40279',
+                  'owner': 'index.html#atlasTechnicalStaticThemeController40269',
                   'mode': 'existing RND button / existing engine',
                   'asset': 'assets/visual/technical-reading/technical-random-10.png',
                   'label': 'Aether au bureau',
@@ -95,21 +116,28 @@ jobs:
                   'no_new_button': True,
                   'no_new_mode': True,
                   'no_new_engine': True,
+                  'business_runtime_changed': False,
               }
               lineage = str(data.get('lineage') or '')
-              tail = ' → 40.4.163 Aether RND 10: existing 9-image technical-reading random library extended to 10 with the historically selected Aether office portrait; no new button, mode or engine.'
+              tail = ' → 40.4.163 Aether RND 10: canonical Technical Reading RANDOM_LIBRARY extended from 9 to 10 with the historically selected Aether office portrait; existing RND button and engine preserved.'
               if '40.4.163 Aether RND 10' not in lineage:
                   data['lineage'] = lineage + tail
               path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-          print({'asset_sha256': sha, 'dimensions': [width,height], 'rnd_count': 10})
+          # Extract inline RND controller for syntax validation in next step.
+          m_script = re.search(r'<script id="atlasTechnicalStaticThemeController40269">(.*?)</script>', html, re.S)
+          if not m_script:
+              raise SystemExit('RND controller script not found for syntax validation')
+          Path('/tmp/aether-rnd-controller.js').write_text(m_script.group(1), encoding='utf-8')
+          print({'asset_sha256': sha, 'dimensions': [width,height], 'rnd_count': post_count, 'owner': 'index.html#atlasTechnicalStaticThemeController40269'})
           PY
 
-      - name: Validate JavaScript and manifests
+      - name: Validate JavaScript, inline RND controller and manifests
         shell: bash
         run: |
           set -euo pipefail
           node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check /tmp/aether-rnd-controller.js
           python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
           python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
 
@@ -120,7 +148,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git rm .github/workflows/aether-rnd10-release-40-4-163.yml
-          git add public/agent_crypto_erith_ia/administrator/js/app.js \
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
                   public/agent_crypto_erith_ia/administrator/version.json \
                   public/agent_crypto_erith_ia/administrator/administrator-version.json \
                   public/agent_crypto_erith_ia/administrator/assets/visual/technical-reading/technical-random-10.png
