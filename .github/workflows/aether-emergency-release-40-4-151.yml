@@ -1,0 +1,197 @@
+name: Aether Emergency Release 40.4.151
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/aether-emergency-release-40-4-151.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Repair Atlas recurring owner and version truth
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re, hashlib
+          from datetime import datetime, timezone
+
+          admin = Path('public/agent_crypto_erith_ia/administrator')
+          index_p = admin / 'index.html'
+          root_p = admin / 'app.js'
+          js_p = admin / 'js/app.js'
+          manifests = [admin / 'version.json', admin / 'administrator-version.json']
+          canonical_p = Path('.github/workflows/atlas-public-crypto-market.yml')
+          watchdog_p = Path('.github/workflows/atlas-public-crypto-market-clock.yml')
+
+          BUILD = '40.4.151'
+          PARENT = '40.4.150'
+          RELEASE = 'ATLAS CANONICAL PRODUCER SINGLE OWNER · DIRECT SCHEDULE WAKE LOCK'
+          TOKEN = f'market-core-v2.0-alpha-build-{BUILD}'
+          now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+
+          # 1) ONE RECURRING OWNER ONLY. THE CANONICAL PRODUCER KEEPS 11/41.
+          canonical = canonical_p.read_text(encoding='utf-8')
+          if 'cron: "11,41 * * * *"' not in canonical:
+              raise SystemExit('ATLAS PRODUCER GATE FAILED: canonical 11/41 schedule missing')
+
+          watchdog = watchdog_p.read_text(encoding='utf-8')
+          watchdog = watchdog.replace('name: Atlas Public Crypto Market — :17/:47 Watchdog', 'name: Atlas Public Crypto Market — Manual Watchdog')
+          watchdog2, n = re.subn(
+              r'(?m)^  schedule:\n    - cron: "17,47 \* \* \* \*"\n',
+              '',
+              watchdog,
+              count=1,
+          )
+          if n != 1:
+              raise SystemExit(f'ATLAS WATCHDOG GATE FAILED: recurring schedule removal count={n}')
+          watchdog2 = watchdog2.replace(
+              '# :17/:47 UTC watchdog: dispatches the canonical collector only when the\n# published snapshot is stale. It never owns collection semantics itself.',
+              '# Manual watchdog only: diagnostic/recovery dispatch of the canonical collector.\n# It owns no recurring cadence and no collection semantics.',
+          )
+          watchdog_p.write_text(watchdog2, encoding='utf-8', newline='\n')
+
+          # HARD SINGLE-OWNER GATE.
+          if 'schedule:' in watchdog2 or 'cron:' in watchdog2:
+              raise SystemExit('ATLAS WATCHDOG GATE FAILED: recurring cadence still present')
+          if 'workflow_dispatch:' not in watchdog2:
+              raise SystemExit('ATLAS WATCHDOG GATE FAILED: manual diagnostic entry missing')
+
+          # 2) VERSION TRUTH — SAME FIVE AUTHORITIES AS 40.4.150.
+          html = index_p.read_text(encoding='utf-8')
+          html = re.sub(r'(<meta name="atlas-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\2', html, count=1)
+          html = re.sub(r'(<meta name="administrator-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\2', html, count=1)
+          html = re.sub(r'(<meta name="administrator-release" content=")[^"]+(" />)', rf'\g<1>{RELEASE}\2', html, count=1)
+          html = re.sub(r'(<meta name="atlas-asset-token" content=")[^"]+(" />)', rf'\g<1>{TOKEN}\2', html, count=1)
+          html = re.sub(r'(<title>Agent-Crypto @erith\.IA — Build )40\.4\.\d+( · Administrator</title>)', rf'\g<1>{BUILD}\2', html, count=1)
+          html = re.sub(r'(\?v=administrator-build-)40\.4\.\d+', rf'\g<1>{BUILD}', html)
+          index_p.write_text(html, encoding='utf-8', newline='\n')
+
+          root = root_p.read_text(encoding='utf-8')
+          root, n = re.subn(r'const ATLAS_BUILD = "40\.4\.\d+";', f'const ATLAS_BUILD = "{BUILD}";', root, count=1)
+          if n != 1:
+              raise SystemExit(f'ATLAS_BUILD owner replacement count={n}, expected 1')
+          root_p.write_text(root, encoding='utf-8', newline='\n')
+
+          js = js_p.read_text(encoding='utf-8')
+          js, n1 = re.subn(r'const ADMIN_BUILD = "40\.4\.\d+";', f'const ADMIN_BUILD = "{BUILD}";', js, count=1)
+          js, n2 = re.subn(r'const ADMIN_RELEASE = "[^"]*";', f'const ADMIN_RELEASE = "{RELEASE}";', js, count=1)
+          if n1 != 1 or n2 != 1:
+              raise SystemExit(f'ADMIN owner replacement counts build={n1} release={n2}')
+          js_p.write_text(js, encoding='utf-8', newline='\n')
+
+          def sha(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          payload_hashes = {
+              'index_sha256': sha(index_p),
+              'root_app_sha256': sha(root_p),
+              'js_app_sha256': sha(js_p),
+              'canonical_workflow_sha256': sha(canonical_p),
+              'manual_watchdog_sha256': sha(watchdog_p),
+          }
+
+          for p in manifests:
+              data = json.loads(p.read_text(encoding='utf-8'))
+              data['build'] = BUILD
+              data['release'] = RELEASE
+              data['asset_token'] = TOKEN
+              data['status'] = 'atlas_canonical_producer_single_owner_direct_schedule_wake_lock'
+              data['parent_build'] = PARENT
+              data['prepared_at'] = now
+              data['published_at'] = now
+              v = data.setdefault('verification', {})
+              v['atlas_single_producer_owner_404151'] = {
+                  'build': BUILD,
+                  'parent_build': PARENT,
+                  'canonical_recurring_owner': '.github/workflows/atlas-public-crypto-market.yml',
+                  'canonical_schedule_utc': '11,41 * * * *',
+                  'watchdog_role': 'manual_only',
+                  'watchdog_recurring_schedule': False,
+                  'collector_semantics_changed': False,
+                  'market_core_changed': False,
+                  'atlas_runtime_changed': False,
+                  'simulation_changed': False,
+                  'kraken_changed': False,
+                  'bridge_changed': False,
+                  **payload_hashes,
+              }
+              p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+          # FINAL SOURCE GATES.
+          text = index_p.read_text(encoding='utf-8')
+          checks = {
+              'index_atlas_meta': f'<meta name="atlas-build" content="{BUILD}" />' in text,
+              'index_admin_meta': f'<meta name="administrator-build" content="{BUILD}" />' in text,
+              'index_title': f'Build {BUILD} · Administrator' in text,
+              'root_runtime': f'const ATLAS_BUILD = "{BUILD}";' in root_p.read_text(encoding='utf-8'),
+              'modular_runtime': f'const ADMIN_BUILD = "{BUILD}";' in js_p.read_text(encoding='utf-8'),
+              'canonical_cron': 'cron: "11,41 * * * *"' in canonical_p.read_text(encoding='utf-8'),
+              'watchdog_no_schedule': 'schedule:' not in watchdog_p.read_text(encoding='utf-8'),
+              'watchdog_no_cron': 'cron:' not in watchdog_p.read_text(encoding='utf-8'),
+              'watchdog_manual': 'workflow_dispatch:' in watchdog_p.read_text(encoding='utf-8'),
+          }
+          for p in manifests:
+              checks[p.name] = json.loads(p.read_text(encoding='utf-8')).get('build') == BUILD
+          bad = [k for k,v in checks.items() if not v]
+          if bad:
+              raise SystemExit('40.4.151 SOURCE GATE FAILED: ' + ', '.join(bad))
+          print('40.4.151 SOURCE GATE PASS')
+          for k,v in payload_hashes.items(): print(k, v)
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+
+      - name: Commit 40.4.151 atomically and retire one-shot workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/aether-emergency-release-40-4-151.yml
+          git config user.name 'Aether Release'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/atlas-public-crypto-market-clock.yml \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  .github/workflows/aether-emergency-release-40-4-151.yml
+          git diff --cached --check
+          git commit -m 'fix Agent-Crypto 40.4.151 restore Atlas producer single recurring owner'
+          git push origin HEAD:main
+
+      - name: Force one canonical market collection proof
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check requests
+          python tools/atlas_public_crypto_market.py
+          git add public/agent_crypto_erith_ia/data/status.json \
+                  public/agent_crypto_erith_ia/data/latest.json \
+                  public/agent_crypto_erith_ia/data/history
+          if git diff --cached --quiet; then
+            echo 'COLLECTOR PROOF: NO DATA DIFF PRODUCED'
+            exit 1
+          fi
+          git commit -m 'agent-crypto: refresh canonical market after 40.4.151 producer repair'
+          for attempt in 1 2 3 4; do
+            if git push origin HEAD:main; then
+              echo 'COLLECTOR PROOF PUSH PASS'
+              exit 0
+            fi
+            git pull --rebase origin main
+            sleep $((attempt * 3))
+          done
+          echo 'COLLECTOR PROOF PUSH FAILED'
+          exit 1
