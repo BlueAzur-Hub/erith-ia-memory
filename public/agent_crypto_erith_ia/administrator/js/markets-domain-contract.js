@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.164";
+  const BUILD = "40.4.165";
 
   const METALS_FOUNDATION = Object.freeze({
     build: "40.4.164",
@@ -29,6 +29,36 @@
     new_storage_owner: false
   });
   globalThis.ErithMetalsFoundation404164 = METALS_FOUNDATION;
+
+
+  const METALS_MULTI_HORIZON = Object.freeze({
+    build: "40.4.165",
+    state: "CANONICAL_EXISTING_ENGINE",
+    owner: "app.js::atlasMetalsQuoteFoundationHorizonReading + atlasMetalsQuoteFoundationRenderAnalysisHorizons",
+    horizons: Object.freeze([
+      Object.freeze({id:"7d",days:7,series:"Yahoo Finance Futures daily"}),
+      Object.freeze({id:"30d",days:30,series:"Yahoo Finance Futures daily"}),
+      Object.freeze({id:"90d",days:90,series:"Yahoo Finance Futures daily"}),
+      Object.freeze({id:"1y",days:365,series:"Yahoo Finance Futures daily"})
+    ]),
+    intraday_24h_owner: "Yahoo Finance Futures intraday when available; never synthesized from daily data",
+    current_quote_excluded_from_historical_return_path: true,
+    sample_count_must_be_visible: true,
+    source_period_and_units_preserved: true,
+    no_new_calculation_engine: true,
+    no_new_fetch: true,
+    no_new_timer: true,
+    market_core_changed: false,
+    audit() {
+      const names = ["atlasMetalsQuoteFoundationHorizonReading","atlasMetalsQuoteFoundationRenderAnalysisHorizons","atlasMetalsQuoteFoundationPeriodRows"];
+      return Object.freeze({
+        build: "40.4.165",
+        owners: Object.freeze(Object.fromEntries(names.map(name => [name, typeof globalThis[name] === "function"]))),
+        dom_horizons: Object.freeze([...document.querySelectorAll("[data-metals-analysis-horizon]")].map(node => Number(node.dataset.metalsAnalysisHorizon)).filter(Number.isFinite))
+      });
+    }
+  });
+  globalThis.ErithMetalsMultiHorizon404165 = METALS_MULTI_HORIZON;
 
   document.documentElement.dataset.marketsDomainContractBuild = BUILD;
 })();

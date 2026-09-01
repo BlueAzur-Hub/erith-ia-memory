@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_parallel_markets_canonical_v1",
-  "build": "40.4.164",
-  "parent_build": "40.4.163",
-  "release": "METALS FOUNDATION CANONICAL · SOURCE TRUTH & OWNERSHIP LOCK",
+  "build": "40.4.165",
+  "parent_build": "40.4.164",
+  "release": "MULTI-HORIZON METALS · HOMOGENEOUS FUTURES TRUTH LOCK",
   "protected_market_core": "38.15.11",
   "classic_web_modified": false,
   "canonical_runtime_owner": "administrator/app.js",
@@ -27,6 +27,18 @@
         "World Bank"
       ],
       "separate_from_crypto": true
+    },
+    "multi_horizon": {
+      "canonical_from": "40.4.165",
+      "horizons": [
+        "7d",
+        "30d",
+        "90d",
+        "1y"
+      ],
+      "owner": "atlasMetalsQuoteFoundationHorizonReading",
+      "series": "Yahoo Finance Futures daily",
+      "spot_futures_mix_forbidden": true
     }
   },
   "no_new_network_owner": true,
