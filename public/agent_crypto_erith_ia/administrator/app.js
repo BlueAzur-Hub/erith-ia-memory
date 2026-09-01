@@ -14400,8 +14400,11 @@ function atlasTop5DirectionCounts(rows, threshold = 0) {
 function atlasV2ManifestTarget(entry) {
   if (!entry) return null;
   const element = document.getElementById(entry.id);
-  if (!element && entry.id === "simulation" && entry.target === "closest-collapse") {
-    return document.querySelector('details.atlas-collapse[data-collapse-key="simulation"]');
+  if (!element && entry.target === "closest-collapse") {
+    const key = String(entry.id || "");
+    const shell = [...document.querySelectorAll('details.atlas-collapse[data-collapse-key]')]
+      .find(detail => String(detail.dataset.collapseKey || "") === key);
+    if (shell) return shell;
   }
   if (!element) return null;
   if (entry.target === "closest-collapse") {
@@ -14412,11 +14415,33 @@ function atlasV2ManifestTarget(entry) {
   return element;
 }
 
+function atlasV2ThreeViewCoherenceSnapshot404155() {
+  const modes = ["essential", "intermediate", "advanced"];
+  return Object.freeze(modes.map(mode => {
+    const expected = ATLAS_V2_SECTION_MANIFEST.filter(entry => atlasV2EntryVisibleInMode(entry, mode));
+    const missing = expected.filter(entry => !atlasV2ManifestTarget(entry)).map(entry => entry.id);
+    return Object.freeze({ mode, expected: expected.length, missing: Object.freeze(missing), pass: missing.length === 0 });
+  }));
+}
+
+globalThis.ErithThreeViewCoherence404155 = Object.freeze({
+  build: "40.4.155",
+  contract: "Classique → Intermédiaire → Administration",
+  generic_detached_collapse_resolution: true,
+  hash_navigation_uses_manifest_target: true,
+  business_logic_changed: false,
+  timer_added: false,
+  observer_added: false,
+  fetch_added: false,
+  storage_write_added: false,
+  snapshot: atlasV2ThreeViewCoherenceSnapshot404155
+});
+
 function atlasV2OpenAdvancedForTarget(hash, options = {}) {
   const id = decodeURIComponent(String(hash || "").replace(/^#/, ""));
   if (!id) return false;
   const entry = atlasV2ManifestEntry(id);
-  const target = document.getElementById(id);
+  const target = entry ? atlasV2ManifestTarget(entry) : document.getElementById(id);
   if (!target) return false;
 
   const currentMode = atlasV2Mode();
@@ -52469,7 +52494,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.154";
+const ATLAS_BUILD = "40.4.155";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
