@@ -1,0 +1,36 @@
+{
+  "schema": "agent_crypto_parallel_markets_canonical_v1",
+  "build": "40.4.164",
+  "parent_build": "40.4.163",
+  "release": "METALS FOUNDATION CANONICAL · SOURCE TRUTH & OWNERSHIP LOCK",
+  "protected_market_core": "38.15.11",
+  "classic_web_modified": false,
+  "canonical_runtime_owner": "administrator/app.js",
+  "canonical_presentation_owner": "existing Administrator Parallel Markets surfaces",
+  "contracts": {
+    "metals_foundation": {
+      "canonical_from": "40.4.164",
+      "symbols": [
+        "XAU",
+        "XAG",
+        "XPT",
+        "XPD",
+        "HG"
+      ],
+      "quote_source": "Gold API",
+      "history_source": "Yahoo Finance Futures",
+      "eur_conversion": "ECB indicative",
+      "structural_sources": [
+        "USGS",
+        "IEA",
+        "RMIS",
+        "World Bank"
+      ],
+      "separate_from_crypto": true
+    }
+  },
+  "no_new_network_owner": true,
+  "no_new_timer": true,
+  "no_new_observer": true,
+  "no_new_storage_owner": true
+}
