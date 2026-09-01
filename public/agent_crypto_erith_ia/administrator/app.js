@@ -1069,10 +1069,12 @@ function atlasStrictTimestamp(value) {
   return Number.isFinite(date.getTime()) ? date.toISOString() : null;
 }
 
-// 40.3.11/40.3.12 — canonical role visibility.
-// Intermediate keeps the structural Missions marker but the five detailed
-// programmes remain Administrator-only.
+// 40.4.140 — canonical Operator role visibility.
+// Operator reuses the existing Intermediate capability plane and the same cockpit,
+// while the complete @erith.IA project family remains owner-only.
 const ATLAS_V2_INTERMEDIATE_HIDDEN_IDS = new Set([
+  "missions-vie",
+  "forge-aerith",
   "fonds-erith-ia",
   "association-erith-ia",
   "aerith-enfance",
@@ -1778,6 +1780,7 @@ const ATLAS_ACCESS_CONFIG_KEY = "agent_crypto_local_access_v1";
 const ATLAS_ACCESS_SESSION_KEY = "agent_crypto_local_access_session_v1";
 
 const ATLAS_ACCESS_OWNER_ROLE = "owner";
+const ATLAS_ACCESS_OPERATOR_ROLE = "operator"; // 40.4.140 — existing Intermediate role, now reachable from Aether Trust.
 
 let atlasAccessPendingHash = "";
 
@@ -2006,7 +2009,7 @@ async function atlasAccessSubmit(event) {
         created_at: new Date().toISOString(),
         profiles: {
           owner: { id: "christophe", role: "owner", salt, hash },
-          secondary_operator: { id: "operator", role: "operator", enabled: false }
+          secondary_operator: { id: "operator", role: "operator", enabled: true }
         }
       };
       if (!atlasAccessWriteConfig(next)) throw new Error("Impossible d’enregistrer la configuration locale.");
@@ -2102,10 +2105,47 @@ function atlasAccessLock() {
   try { history.replaceState(null, "", `${location.pathname}${location.search}`); } catch {}
 }
 
+function atlasAccessEnterOperator404140(event) {
+  try { event?.preventDefault?.(); } catch (_) {}
+  try { event?.stopPropagation?.(); } catch (_) {}
+
+  atlasOperatorPriorityAcquire40461("aether-trust-operator");
+  // This is the already-existing local Operator/Intermediate role, not a second cockpit.
+  // Keep owner authentication semantics untouched: atlasAccessIsAuthorized() remains owner-only.
+  atlasAccessSetSession(ATLAS_ACCESS_OPERATOR_ROLE);
+  try {
+    const config = atlasAccessReadConfig();
+    if (config?.profiles?.secondary_operator && config.profiles.secondary_operator.enabled !== true) {
+      atlasAccessWriteConfig({
+        ...config,
+        profiles: {
+          ...config.profiles,
+          secondary_operator: { ...config.profiles.secondary_operator, id: "operator", role: "operator", enabled: true }
+        }
+      });
+    }
+  } catch (_) {}
+
+  atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "intermediate");
+  atlasAccessSetStatus("Poste Opérateur sélectionné · ouverture du cockpit partagé.", "ok");
+  atlasAccessClose({ releasePriority: false });
+  requestAnimationFrame(() => {
+    atlasV2ApplyMode("intermediate", { persist: false, syncUrl: true });
+    try { atlasAdminCenterSet(false, { persist: false, scrollTarget: false }); } catch (_) {}
+    atlasOperatorPriorityRelease40461("aether-trust-operator");
+  });
+  return true;
+}
+
 function atlasInitLocalAccess() {
   document.getElementById("atlasAccessForm")?.addEventListener("submit", atlasAccessSubmit);
   document.getElementById("atlasAccessClose")?.addEventListener("click", atlasAccessClose);
   document.getElementById("atlasAccessCancel")?.addEventListener("click", atlasAccessClose);
+  const operatorProfile404140 = document.getElementById("atlasAccessOperatorProfile404140");
+  operatorProfile404140?.addEventListener("click", atlasAccessEnterOperator404140);
+  operatorProfile404140?.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") atlasAccessEnterOperator404140(event);
+  });
   const accessDialog40461 = document.getElementById("atlasAccessDialog");
   accessDialog40461?.addEventListener("click", event => { if (event.target === event.currentTarget) atlasAccessClose(); });
   accessDialog40461?.addEventListener("cancel", event => { event.preventDefault(); atlasAccessClose(); });
@@ -3124,7 +3164,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   atlasSetDataset40399(document.documentElement, "atlasRole", role);
   atlasSetDataset40399(document.body, "atlasRole", role);
 
-  if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Vue intermédiaire" : "Marché public";
+  if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Opérateur Agent-Crypto" : "Marché public";
   if (description) description.textContent = administrator
     ? "Administration locale · Atlas · Aerith · analyse · mémoire · décision · système · projets."
     : operator
@@ -3142,12 +3182,12 @@ function atlasV2ApplyMode(mode, options = {}) {
         ? "Revenir à l’administration Christophe"
         : "Ouvrir l’accès privé local");
   }
-  if (accountText) accountText.textContent = "Administration";
+  if (accountText) accountText.textContent = operator ? "Opérateur" : "Administration";
 
   const basicToggle = document.getElementById("btnBasicViewToggle");
   const intermediateToggle = document.getElementById("btnIntermediateViewToggle");
   if (basicToggle) basicToggle.setAttribute("aria-label", "Ouvrir la vue classique");
-  if (intermediateToggle) intermediateToggle.setAttribute("aria-label", "Ouvrir la vue intermédiaire");
+  if (intermediateToggle) intermediateToggle.setAttribute("aria-label", "Ouvrir le poste opérateur");
 
   atlasV2ApplySectionVisibility(next);
   atlasV2ApplySemanticRoleIsolation40312(next);
@@ -3156,13 +3196,12 @@ function atlasV2ApplyMode(mode, options = {}) {
   const liveSourcesCollapse = document.getElementById("liveSourcesCollapse");
   atlasSetHiddenAria40399(liveSourcesCollapse, false);
 
-  // 40.3.121 AETHER — progressive capability reveal on one physical header.
-  // Basic: Livecheck · Marché · Graphique · Sources.
-  // Intermediate: Basic + Atlas · Oracle only.
-  // Administrator: Intermediate + full operator dock. No business engine is stopped.
+  // 40.4.140 — SHARED COCKPIT ROLE REARM.
+  // Classic keeps the compact public navigation. Operator and Administrator share
+  // the same work dock; role authority, not a copied UI, decides owner-only content.
   document.querySelectorAll(".atlas-v2-nav-advanced").forEach(element => {
-    const hide403121 = next !== "advanced";
-    atlasSetHiddenAria40399(element, hide403121);
+    const hide404140 = next === "essential";
+    atlasSetHiddenAria40399(element, hide404140);
   });
   const basicHiddenTargets40368 = new Set([
     "atlas-local-ai-collapse",
@@ -3176,8 +3215,12 @@ function atlasV2ApplyMode(mode, options = {}) {
 
   const commandKicker = document.getElementById("atlasCommandKicker");
   const commandTitle = document.getElementById("atlasCommandTitle");
-  if (commandKicker) commandKicker.textContent = operator ? "INTERMÉDIAIRE" : "ADMIN";
-  if (commandTitle) commandTitle.textContent = operator ? "Vue intermédiaire Agent-Crypto" : "Administration Agent-Crypto";
+  if (commandKicker) commandKicker.textContent = operator ? "OPÉRATEUR" : "ADMIN";
+  if (commandTitle) commandTitle.textContent = operator ? "Poste Opérateur Agent-Crypto" : "Administration Agent-Crypto";
+
+  const projectsCluster404140 = document.getElementById("atlasProjectsCluster");
+  atlasSetHiddenAria40399(projectsCluster404140, operator);
+  document.querySelectorAll('[data-admin-cluster-target="projects"]').forEach(node => atlasSetHiddenAria40399(node, operator));
 
   const missionsQuickLink = document.getElementById("atlasMissionsQuickLink");
   if (missionsQuickLink && missionsQuickLink.hidden !== operator) missionsQuickLink.hidden = operator;
@@ -51902,7 +51945,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.139";
+const ATLAS_BUILD = "40.4.140";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -63563,5 +63606,28 @@ try {
     current_prompts_changed:false,
     indexeddb_schema_changed:false,
     window_manager_changed:false
+  });
+} catch (_) {}
+
+
+/* 40.4.140 — AETHER TRUST OPERATOR ROLE REARM · SHARED COCKPIT LOCK */
+try {
+  globalThis.ErithOperatorRoleRearm404140 = Object.freeze({
+    build: "40.4.140",
+    parent: "40.4.139",
+    role: "operator",
+    existing_mode: "intermediate",
+    same_cockpit: true,
+    second_application_added: false,
+    owner_auth_changed: false,
+    owner_only_projects_hidden: true,
+    market_core_changed: false,
+    atlas_pipeline_changed: false,
+    bridge_changed: false,
+    private_backend_changed: false,
+    timer_added: false,
+    observer_added: false,
+    scheduler_added: false,
+    fetch_owner_added: false
   });
 } catch (_) {}
