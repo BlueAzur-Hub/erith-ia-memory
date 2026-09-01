@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.155";
-  const ADMIN_RELEASE = "THREE-VIEW COHERENCE · DETACHED COLLAPSE TARGET LOCK";
+  const ADMIN_BUILD = "40.4.156";
+  const ADMIN_RELEASE = "ORACLE GRAPH WINDOW · DIRECT-FLOAT WORKSPACE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -521,6 +521,24 @@
         resolveAnchor: nodes => nodes[0]
       },
       {
+        id: "oracle-graph",
+        title: "Oracle V1 · Scénario court",
+        tone: "violet",
+        directFixed: true,
+        geometryPolicy: { minWidth: 520, minHeight: 360, keepFullyVisible: true },
+        preferredFloatGeometry: () => {
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          const rect = byId("atlasOracleV0")?.getBoundingClientRect?.();
+          const width = Math.min(980, Math.max(620, Math.round(vw * 0.62)));
+          const height = Math.min(680, Math.max(420, Math.round(rect?.height || vh * 0.68)));
+          return { x: Math.max(12, Math.round((vw - width) / 2)), y: Math.max(72, Math.round((vh - height) / 2)), width, height };
+        },
+        resolveEntries: () => [entry(byId("atlasOracleV0"))].filter(Boolean),
+        resolveAnchor: nodes => nodes[0],
+        resolveControlHosts: () => [byId("atlasOracleV0")].filter(Boolean)
+      },
+      {
         id: "target-top",
         title: "Target Top 5",
         tone: "gold",
@@ -643,6 +661,40 @@
       }
     ];
   }
+
+  function installOracleGraphWindowChrome404156() {
+    if (document.getElementById("atlasOracleGraphWindowChrome404156")) return true;
+    const style = document.createElement("style");
+    style.id = "atlasOracleGraphWindowChrome404156";
+    style.textContent = `
+      #atlasOracleV0.admin-native-anchor{--native-accent:#b890ff}
+      #atlasOracleV0.admin-native-anchor>.admin-native-controls{top:6px!important;right:8px!important;z-index:80!important;opacity:.84}
+      #atlasOracleV0.admin-native-anchor>.atlas-oracle-head{padding-right:176px}
+      #atlasOracleV0.admin-native-direct-floating>.admin-native-controls{opacity:1!important}
+      @media(max-width:900px){
+        #atlasOracleV0.admin-native-anchor>.atlas-oracle-head{padding-right:142px}
+        #atlasOracleV0.admin-native-anchor>.admin-native-controls .admin-native-control{width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important}
+      }
+    `;
+    document.head.appendChild(style);
+    return true;
+  }
+
+  globalThis.ErithOracleGraphWindow404156 = Object.freeze({
+    build: "40.4.156",
+    window_id: "oracle-graph",
+    owner: "existing Administrator Window Manager",
+    direct_fixed: true,
+    movable: true,
+    resizable: true,
+    persisted_by_existing_window_manager: true,
+    oracle_engine_changed: false,
+    forecast_math_changed: false,
+    canvas_data_changed: false,
+    timer_added: false,
+    observer_added: false,
+    fetch_added: false
+  });
 
   function installGlobalVersionIdentity() {
     document.documentElement.dataset.administratorBuild = ADMIN_BUILD;
@@ -2162,6 +2214,7 @@
     activeWindowPresentationRole40314 = bootRole40312;
     document.documentElement.dataset.adminWindowPresentationRole40314 = bootRole40312;
     if (bootRole40312 === "administrator") ensureAdministratorAtlasVisible(manager, "administrator-boot");
+    installOracleGraphWindowChrome404156();
     installMathCoreInlineWindowControls40148();
 
     // 40.1.48 — restore guard for compact bars.  Some stacked Administrator
