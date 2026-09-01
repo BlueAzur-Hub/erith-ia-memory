@@ -3164,7 +3164,7 @@ function atlasV2ApplyMode(mode, options = {}) {
   atlasSetDataset40399(document.documentElement, "atlasRole", role);
   atlasSetDataset40399(document.body, "atlasRole", role);
 
-  if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Opérateur Agent-Crypto" : "Marché public";
+  if (title) title.textContent = administrator ? "Privé Christophe" : operator ? "Vue intermédiaire" : "Marché public";
   if (description) description.textContent = administrator
     ? "Administration locale · Atlas · Aerith · analyse · mémoire · décision · système · projets."
     : operator
@@ -3182,12 +3182,12 @@ function atlasV2ApplyMode(mode, options = {}) {
         ? "Revenir à l’administration Christophe"
         : "Ouvrir l’accès privé local");
   }
-  if (accountText) accountText.textContent = operator ? "Opérateur" : "Administration";
+  if (accountText) accountText.textContent = "Administration";
 
   const basicToggle = document.getElementById("btnBasicViewToggle");
   const intermediateToggle = document.getElementById("btnIntermediateViewToggle");
   if (basicToggle) basicToggle.setAttribute("aria-label", "Ouvrir la vue classique");
-  if (intermediateToggle) intermediateToggle.setAttribute("aria-label", "Ouvrir le poste opérateur");
+  if (intermediateToggle) intermediateToggle.setAttribute("aria-label", "Ouvrir la vue intermédiaire");
 
   atlasV2ApplySectionVisibility(next);
   atlasV2ApplySemanticRoleIsolation40312(next);
@@ -3215,8 +3215,8 @@ function atlasV2ApplyMode(mode, options = {}) {
 
   const commandKicker = document.getElementById("atlasCommandKicker");
   const commandTitle = document.getElementById("atlasCommandTitle");
-  if (commandKicker) commandKicker.textContent = operator ? "OPÉRATEUR" : "ADMIN";
-  if (commandTitle) commandTitle.textContent = operator ? "Poste Opérateur Agent-Crypto" : "Administration Agent-Crypto";
+  if (commandKicker) commandKicker.textContent = operator ? "INTERMÉDIAIRE" : "ADMIN";
+  if (commandTitle) commandTitle.textContent = operator ? "Vue intermédiaire Agent-Crypto" : "Administration Agent-Crypto";
 
   const projectsCluster404140 = document.getElementById("atlasProjectsCluster");
   atlasSetHiddenAria40399(projectsCluster404140, operator);
@@ -51945,7 +51945,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.140";
+const ATLAS_BUILD = "40.4.141";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -63621,6 +63621,28 @@ try {
     second_application_added: false,
     owner_auth_changed: false,
     owner_only_projects_hidden: true,
+    market_core_changed: false,
+    atlas_pipeline_changed: false,
+    bridge_changed: false,
+    private_backend_changed: false,
+    timer_added: false,
+    observer_added: false,
+    scheduler_added: false,
+    fetch_owner_added: false
+  });
+} catch (_) {}
+
+
+/* 40.4.141 — INTERMEDIATE VIEW LABEL RESTORE · OPERATOR ROLE SEPARATION LOCK */
+try {
+  globalThis.ErithIntermediateRoleSeparation404141 = Object.freeze({
+    build: "40.4.141",
+    parent: "40.4.140",
+    view_label: "Intermédiaire",
+    operator_role_preserved: true,
+    operator_auth_semantics_changed: false,
+    shared_cockpit_preserved: true,
+    owner_only_projects_preserved: true,
     market_core_changed: false,
     atlas_pipeline_changed: false,
     bridge_changed: false,
