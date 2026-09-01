@@ -1,7 +1,11 @@
-name: Atlas Public Crypto Market Clock
+name: Atlas Public Crypto Market Watchdog
 
 on:
   workflow_dispatch:
+  schedule:
+    # Offset from the canonical collector (11/41) and from the top of the hour.
+    # UTC is sufficient because cadence, not local wall time, owns this watchdog.
+    - cron: "17,47 * * * *"
   push:
     branches:
       - main
@@ -12,50 +16,71 @@ permissions:
   actions: write
   contents: read
 
-# Emergency deterministic wake-up owner for the canonical Top-250 collector.
-# GitHub native schedule on atlas-public-crypto-market.yml has repeatedly failed
-# to create reliable periodic runs. This clock therefore uses workflow_dispatch
-# only; it does not collect market data itself and does not touch Administrator.
-# Bootstrap revision: 2 — 40.4.139 rearm after observed canonical stall at 2026-08-31 21:38 Europe/Paris.
+# Durable recovery owner for the canonical Top-250 producer.
+#
+# 40.4.139 used one 5h30 long-running clock which queued exactly one successor.
+# If that successor did not materialize, the producer stopped after slot 11.
+#
+# This watchdog has no successor chain, no sleep loop and no long-lived runner.
+# GitHub schedules it independently every 30 minutes, offset six minutes after
+# the canonical collector schedule. It dispatches the collector only when the
+# published canonical snapshot is stale and no collector run is already active.
+#
+# Administrator, Atlas runtime, Market Core and data contracts are untouched.
 concurrency:
-  group: atlas-public-crypto-market-clock
-  cancel-in-progress: false
+  group: atlas-public-crypto-market-watchdog
+  cancel-in-progress: true
 
 jobs:
-  clock:
+  watchdog:
     runs-on: ubuntu-latest
-    timeout-minutes: 355
+    timeout-minutes: 5
 
     steps:
-      - name: Queue one successor clock run
+      - name: Check canonical snapshot freshness and recover only if stale
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          clock_workflow="atlas-public-crypto-market-clock.yml"
-          queued="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${clock_workflow}/runs?status=queued&per_page=1" --jq '.total_count')"
-          if [ "${queued:-0}" -eq 0 ]; then
-            gh api --method POST \
-              "repos/${GITHUB_REPOSITORY}/actions/workflows/${clock_workflow}/dispatches" \
-              -f ref=main
-            echo "Successor clock run queued."
-          else
-            echo "A successor clock run is already queued; no duplicate created."
+
+          collector_workflow="atlas-public-crypto-market.yml"
+          snapshot_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/latest.json"
+          stale_after_seconds=1200
+
+          now_epoch="$(date -u +%s)"
+          generated_at=""
+          age_seconds=""
+
+          if snapshot_json="$(curl -fsSL --retry 2 --retry-delay 2 "${snapshot_url}")"; then
+            generated_at="$(printf '%s' "${snapshot_json}" | jq -r '.generated_at // empty')"
           fi
 
-      - name: Dispatch canonical Top-250 collector every 30 minutes
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          collector_workflow="atlas-public-crypto-market.yml"
-          for slot in $(seq 1 11); do
-            echo "Clock slot ${slot}/11 · dispatch canonical Top-250 collector"
-            gh api --method POST \
-              "repos/${GITHUB_REPOSITORY}/actions/workflows/${collector_workflow}/dispatches" \
-              -f ref=main
-            echo "Collector dispatched; next slot in 30 minutes."
-            sleep 1800
-          done
+          if [ -n "${generated_at}" ]; then
+            generated_epoch="$(date -u -d "${generated_at}" +%s 2>/dev/null || true)"
+            if [ -n "${generated_epoch}" ]; then
+              age_seconds="$(( now_epoch - generated_epoch ))"
+            fi
+          fi
+
+          active="$(
+            gh api               "repos/${GITHUB_REPOSITORY}/actions/workflows/${collector_workflow}/runs?branch=main&per_page=20"               --jq '[.workflow_runs[] | select(.status != "completed")] | length'
+          )"
+
+          echo "Canonical snapshot generated_at=${generated_at:-N/D}"
+          echo "Canonical snapshot age_seconds=${age_seconds:-N/D}"
+          echo "Active canonical collector runs=${active:-0}"
+
+          if [ "${active:-0}" -gt 0 ]; then
+            echo "Collector already active; watchdog does not duplicate it."
+            exit 0
+          fi
+
+          if [ -n "${age_seconds}" ] && [ "${age_seconds}" -ge 0 ] && [ "${age_seconds}" -le "${stale_after_seconds}" ]; then
+            echo "Canonical snapshot is fresh (<= ${stale_after_seconds}s); no recovery dispatch."
+            exit 0
+          fi
+
+          echo "Canonical snapshot is stale/unreadable and no collector is active; dispatch recovery."
+          gh api --method POST             "repos/${GITHUB_REPOSITORY}/actions/workflows/${collector_workflow}/dispatches"             -f ref=main
+          echo "Recovery dispatch accepted."
