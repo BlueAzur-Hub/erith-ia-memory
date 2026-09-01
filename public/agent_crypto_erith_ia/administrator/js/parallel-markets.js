@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.169";
-  const ACTIVE = new Set([]);
+  const BUILD = "40.4.170";
+  const ACTIVE = new Set(["indices"]);
   const ENABLE_MATH = false;
   const PERIODS = Object.freeze(["24h", "7j", "30j", "90j", "1a"]);
   const CONFIG = Object.freeze({
