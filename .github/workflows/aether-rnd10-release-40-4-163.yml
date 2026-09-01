@@ -1,0 +1,136 @@
+name: Aether RND 10 Release 40.4.163
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "public/agent_crypto_erith_ia/administrator/assets/visual/technical-reading/technical-random-10.png"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aether-rnd10-release-40-4-163
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate exact RND 10 asset and patch existing library
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import hashlib, json, re, struct
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          png = root/'assets/visual/technical-reading/technical-random-10.png'
+          if not png.is_file():
+              raise SystemExit('technical-random-10.png missing')
+          raw = png.read_bytes()
+          sha = hashlib.sha256(raw).hexdigest()
+          expected = '39e463a03d4b5b368f0889199b585de0e195bf47d916330637196fc03cf1f6b8'
+          if sha != expected:
+              raise SystemExit(f'RND10 SHA mismatch: {sha}')
+          if raw[:8] != b'\x89PNG\r\n\x1a\n' or raw[12:16] != b'IHDR':
+              raise SystemExit('RND10 invalid PNG')
+          width, height = struct.unpack('>II', raw[16:24])
+          if (width, height) != (1080, 1920):
+              raise SystemExit(f'RND10 dimensions mismatch: {width}x{height}')
+
+          item = '{id:"aether-random-10",src:"assets/visual/technical-reading/technical-random-10.png",label:"Aether au bureau"},'
+          for rel in ['app.js','js/app.js']:
+              path = root/rel
+              text = path.read_text(encoding='utf-8')
+              if 'technical-random-10.png' in text:
+                  continue
+              m = re.search(r'(const\s+atlasTechnicalRandomItems40279\s*=\s*\[)(.*?)(\];)', text, re.S)
+              if not m:
+                  raise SystemExit(f'RND owner not found in {rel}')
+              body = m.group(2)
+              count = len(re.findall(r'technical-random-\d{2}\.png', body))
+              if count != 9:
+                  raise SystemExit(f'{rel}: expected RND 9, found {count}')
+              new_body = body.rstrip() + '\n  ' + item + '\n'
+              text = text[:m.start(2)] + new_body + text[m.end(2):]
+              post = re.search(r'const\s+atlasTechnicalRandomItems40279\s*=\s*\[(.*?)\];', text, re.S)
+              if not post or len(re.findall(r'technical-random-\d{2}\.png', post.group(1))) != 10:
+                  raise SystemExit(f'{rel}: RND 10 post-check failed')
+              path.write_text(text, encoding='utf-8')
+
+          now = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+          for rel in ['version.json','administrator-version.json']:
+              path = root/rel
+              data = json.loads(path.read_text(encoding='utf-8'))
+              if str(data.get('build')) != '40.4.162':
+                  raise SystemExit(f'{rel}: parent build must be 40.4.162, got {data.get("build")}')
+              data['parent_build'] = '40.4.162'
+              data['build'] = '40.4.163'
+              data['release'] = 'AETHER RND 10 · EXISTING RANDOM LIBRARY EXTENSION'
+              data['status'] = 'aether_rnd10_existing_library_extension'
+              data['prepared_at'] = now
+              data['published_at'] = now
+              if 'global_versioning' in data:
+                  data['global_versioning'] = '40.4.163'
+              if isinstance(data.get('asset_token'), str):
+                  data['asset_token'] = re.sub(r'build-40\.4\.\d+', 'build-40.4.163', data['asset_token'])
+              contracts = data.setdefault('contracts', {})
+              tr = contracts.setdefault('technical_reading', {})
+              tr['random_library_count'] = 10
+              contracts['random_library_404163'] = {
+                  'owner': 'atlasTechnicalRandomItems40279',
+                  'mode': 'existing RND button / existing engine',
+                  'asset': 'assets/visual/technical-reading/technical-random-10.png',
+                  'label': 'Aether au bureau',
+                  'sha256': expected,
+                  'dimensions': '1080x1920',
+                  'no_new_button': True,
+                  'no_new_mode': True,
+                  'no_new_engine': True,
+              }
+              lineage = str(data.get('lineage') or '')
+              tail = ' → 40.4.163 Aether RND 10: existing 9-image technical-reading random library extended to 10 with the historically selected Aether office portrait; no new button, mode or engine.'
+              if '40.4.163 Aether RND 10' not in lineage:
+                  data['lineage'] = lineage + tail
+              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          print({'asset_sha256': sha, 'dimensions': [width,height], 'rnd_count': 10})
+          PY
+
+      - name: Validate JavaScript and manifests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+
+      - name: Commit release and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/aether-rnd10-release-40-4-163.yml
+          git add public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  public/agent_crypto_erith_ia/administrator/assets/visual/technical-reading/technical-random-10.png
+          git commit -m "release Agent-Crypto 40.4.163 Aether RND 10"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+            sleep $((attempt * 2))
+          done
+          exit 1
