@@ -1,0 +1,39 @@
+name: Fix Agent-Crypto 40.4.168 Index Meta
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-40-4-168-index-meta.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repair exact build metas
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/administrator/index.html')
+          s=p.read_text(encoding='utf-8')
+          bad='  `.4.168" />'
+          if s.count(bad)!=2:
+              raise SystemExit(f'expected 2 malformed build metas, found {s.count(bad)}')
+          s=s.replace(bad,'  <meta name="atlas-build" content="40.4.168" />',1)
+          s=s.replace(bad,'  <meta name="administrator-build" content="40.4.168" />',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          grep -F '<meta name="atlas-build" content="40.4.168" />' public/agent_crypto_erith_ia/administrator/index.html
+          grep -F '<meta name="administrator-build" content="40.4.168" />' public/agent_crypto_erith_ia/administrator/index.html
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git commit -m "fix Agent-Crypto 40.4.168 canonical index build metas"
+          git push origin HEAD:main
