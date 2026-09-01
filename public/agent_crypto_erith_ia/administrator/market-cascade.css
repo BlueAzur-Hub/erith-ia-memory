@@ -1,0 +1,31 @@
+/* 40.4.167 — Market Cascade Shell + Firefox 100% Viewport Fit Lock.
+   Presentation only. The 100% fix deliberately uses the layout viewport rather
+   than 100vw so Firefox's vertical scrollbar gutter cannot clip the right edge. */
+body.atlas-administrator-mirror .shell{
+  width:min(1660px,calc(100% - 18px))!important;
+  max-width:calc(100% - 18px)!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body.atlas-administrator-mirror .shell>*{
+  min-width:0!important;
+  max-width:100%!important;
+}
+body.atlas-administrator-mirror .atlas-market-zone,
+body.atlas-administrator-mirror #analyste,
+body.atlas-administrator-mirror #marketWorkspaceGrid,
+body.atlas-administrator-mirror .market-workspace-grid,
+body.atlas-administrator-mirror #market-workspace,
+body.atlas-administrator-mirror #atlasMetalsMathHost,
+body.atlas-administrator-mirror #atlasMetalsMarketArea,
+body.atlas-administrator-mirror #atlasMetalsAnalysisFoundation{
+  min-width:0!important;
+  max-width:100%!important;
+}
+.atlas-market-cascade-404167{min-width:0;max-width:100%;margin:18px 0 22px;padding:14px;border:1px solid rgba(78,211,220,.28);border-radius:22px;background:linear-gradient(180deg,rgba(7,20,34,.94),rgba(5,14,25,.9));box-shadow:0 18px 48px rgba(0,0,0,.18);overflow:hidden}
+.atlas-market-cascade-head-404167{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:4px 6px 14px;min-width:0}.atlas-market-cascade-head-404167>div{min-width:0}.atlas-market-cascade-head-404167 span{display:block;font-size:11px;letter-spacing:.22em;font-weight:900;color:#77dce4}.atlas-market-cascade-head-404167 h2{margin:5px 0 0;font-size:24px;color:#f6f3e9}.atlas-market-cascade-head-404167 p{margin:0;max-width:680px;text-align:right;color:#9fb3c7;font-size:12px;line-height:1.45}
+.atlas-market-cascade-grid-404167{display:grid;gap:10px;min-width:0}.atlas-market-floor-404167{position:relative;display:grid;grid-template-columns:62px minmax(0,.7fr) minmax(0,1.5fr) auto;align-items:center;gap:14px;min-width:0;min-height:88px;padding:12px 14px;border:1px solid rgba(118,151,178,.2);border-radius:17px;background:linear-gradient(100deg,rgba(14,27,43,.94),rgba(10,20,34,.8));overflow:hidden}.atlas-market-floor-404167::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--market-floor-accent,#6edce7)}.atlas-market-floor-index-404167{display:grid;place-items:center;width:48px;height:48px;border:1px solid color-mix(in srgb,var(--market-floor-accent,#6edce7) 55%,transparent);border-radius:15px;color:var(--market-floor-accent,#6edce7);font-size:16px;font-weight:950}.atlas-market-floor-copy-404167,.atlas-market-floor-contract-404167{min-width:0}.atlas-market-floor-copy-404167 small{display:block;color:#809bb1;font-size:10px;letter-spacing:.16em;font-weight:850;text-transform:uppercase}.atlas-market-floor-copy-404167 b{display:block;margin-top:4px;color:#f1f5f7;font-size:17px}.atlas-market-floor-contract-404167{color:#a9bbca;font-size:12px;line-height:1.45}.atlas-market-floor-state-404167{justify-self:end;white-space:nowrap;padding:7px 10px;border:1px solid rgba(126,158,185,.25);border-radius:999px;color:#b6c6d3;font-size:10px;font-weight:900;letter-spacing:.06em}.atlas-market-floor-404167[data-state="active"] .atlas-market-floor-state-404167{border-color:color-mix(in srgb,var(--market-floor-accent) 45%,transparent);color:var(--market-floor-accent)}.atlas-market-floor-404167[data-state="inert"]{opacity:.72}.atlas-market-floor-404167[data-domain="crypto"]{--market-floor-accent:#64dde8}.atlas-market-floor-404167[data-domain="metals"]{--market-floor-accent:#e8c766}.atlas-market-floor-404167[data-domain="indices"]{--market-floor-accent:#aa91ee}.atlas-market-floor-404167[data-domain="commodities"]{--market-floor-accent:#e79b57}.atlas-market-floor-404167[data-domain="cross-market"]{--market-floor-accent:#e7edf4}
+.atlas-market-cascade-rule-404167{margin:11px 5px 1px;color:#7894aa;font-size:10px;letter-spacing:.04em}.atlas-market-cascade-rule-404167 b{color:#82d7de}
+@media(max-width:900px){.atlas-market-cascade-head-404167{align-items:flex-start;flex-direction:column}.atlas-market-cascade-head-404167 p{text-align:left}.atlas-market-floor-404167{grid-template-columns:50px minmax(0,1fr) auto}.atlas-market-floor-contract-404167{grid-column:2/-1}.atlas-market-floor-index-404167{width:42px;height:42px}.atlas-market-floor-state-404167{align-self:start}}
+@media(max-width:620px){body.atlas-administrator-mirror .shell{width:calc(100% - 12px)!important;max-width:calc(100% - 12px)!important}.atlas-market-floor-404167{grid-template-columns:44px minmax(0,1fr)}.atlas-market-floor-state-404167{grid-column:2;justify-self:start}.atlas-market-floor-contract-404167{grid-column:1/-1}.atlas-market-cascade-head-404167 h2{font-size:20px}}

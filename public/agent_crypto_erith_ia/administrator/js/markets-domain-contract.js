@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.166";
-  const REVISION = "R1";
+  const BUILD = "40.4.167";
+  const REVISION = "MARKET_CASCADE_SHELL";
 
   const METALS_FOUNDATION = Object.freeze({
     build: "40.4.164",
@@ -105,6 +105,39 @@
     new_storage_owner: false
   });
   globalThis.ErithParallelMarketsRouter404166 = PARALLEL_MARKETS_ROUTER;
+
+  const MARKET_CASCADE = Object.freeze({
+    build: "40.4.167",
+    state: "PRESENTATION_SHELL_ONLY",
+    order: Object.freeze(["crypto","metals","indices","commodities","cross-market"]),
+    floors: Object.freeze({
+      crypto: Object.freeze({state:"ACTIVE",runtime:"existing Market Core 38.15.11"}),
+      metals: Object.freeze({state:"ACTIVE_DEMAND",runtime:"AtlasParallelMarketDemand40465.ensure"}),
+      indices: Object.freeze({state:"PLANNED_INERT"}),
+      commodities: Object.freeze({state:"PLANNED_INERT"}),
+      cross_market: Object.freeze({state:"WAITING_VALIDATED_DOMAINS"})
+    }),
+    shell_visible_does_not_mean_runtime_active: true,
+    existing_crypto_engine_reused: true,
+    existing_metals_engine_reused: true,
+    second_chart_engine_created: false,
+    future_domain_fetches: 0,
+    new_network_owner: false,
+    new_timer: false,
+    new_observer: false,
+    new_listener: false,
+    new_storage_owner: false,
+    snapshot() {
+      return Object.freeze({
+        build: "40.4.167",
+        shell_count: document.querySelectorAll("#atlasMarketCascade404167 [data-domain]").length,
+        shell_present: Boolean(document.getElementById("atlasMarketCascade404167")),
+        contract_build: document.documentElement.dataset.marketsDomainContractBuild || ""
+      });
+    }
+  });
+  globalThis.ErithMarketCascade404167 = MARKET_CASCADE;
+
 
   document.documentElement.dataset.marketsDomainContractBuild = BUILD;
   document.documentElement.dataset.marketsDomainContractRevision = REVISION;
