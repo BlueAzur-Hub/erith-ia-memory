@@ -76,7 +76,8 @@ jobs:
           test "$build" = "40.4.157"
           test "$status" = "aether_news_sentinel_french_live_feed_lock"
 
-          git show origin/main:public/agent_crypto_erith_ia/administrator/js/aether.js | grep -Fq 'headline_fr_display||canonical?.headline_fr'
+          git show origin/main:public/agent_crypto_erith_ia/administrator/js/aether.js | grep -Fq 'return aetherNewsHeadlineFr40104(canonical,fallback);'
+          git show origin/main:public/agent_crypto_erith_ia/administrator/js/aether.js | grep -Fq 'news_translation_raw_english_in_aether:false'
           git show origin/main:public/agent_crypto_erith_ia/administrator/js/aether.js | grep -Fq 'news_display_contract_build:"40.4.157"'
           git show origin/main:public/agent_crypto_erith_ia/administrator/js/layout-repair.js | grep -Fq '40.4.156R1'
 
