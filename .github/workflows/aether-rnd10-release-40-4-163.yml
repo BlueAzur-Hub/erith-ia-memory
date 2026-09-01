@@ -48,23 +48,21 @@ jobs:
               raise SystemExit(f'RND10 dimensions mismatch: {width}x{height}')
 
           item = '{id:"aether-random-10",src:"assets/visual/technical-reading/technical-random-10.png",label:"Aether au bureau"},'
-          for rel in ['app.js','js/app.js']:
-              path = root/rel
-              text = path.read_text(encoding='utf-8')
-              if 'technical-random-10.png' in text:
-                  continue
+          path = root/'js/app.js'
+          text = path.read_text(encoding='utf-8')
+          if 'technical-random-10.png' not in text:
               m = re.search(r'(const\s+atlasTechnicalRandomItems40279\s*=\s*\[)(.*?)(\];)', text, re.S)
               if not m:
-                  raise SystemExit(f'RND owner not found in {rel}')
+                  raise SystemExit('RND owner not found in js/app.js')
               body = m.group(2)
               count = len(re.findall(r'technical-random-\d{2}\.png', body))
               if count != 9:
-                  raise SystemExit(f'{rel}: expected RND 9, found {count}')
+                  raise SystemExit(f'js/app.js: expected RND 9, found {count}')
               new_body = body.rstrip() + '\n  ' + item + '\n'
               text = text[:m.start(2)] + new_body + text[m.end(2):]
               post = re.search(r'const\s+atlasTechnicalRandomItems40279\s*=\s*\[(.*?)\];', text, re.S)
               if not post or len(re.findall(r'technical-random-\d{2}\.png', post.group(1))) != 10:
-                  raise SystemExit(f'{rel}: RND 10 post-check failed')
+                  raise SystemExit('js/app.js: RND 10 post-check failed')
               path.write_text(text, encoding='utf-8')
 
           now = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
@@ -110,7 +108,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/app.js
           python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
           python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
@@ -122,8 +119,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git rm .github/workflows/aether-rnd10-release-40-4-163.yml
-          git add public/agent_crypto_erith_ia/administrator/app.js \
-                  public/agent_crypto_erith_ia/administrator/js/app.js \
+          git add public/agent_crypto_erith_ia/administrator/js/app.js \
                   public/agent_crypto_erith_ia/administrator/version.json \
                   public/agent_crypto_erith_ia/administrator/administrator-version.json \
                   public/agent_crypto_erith_ia/administrator/assets/visual/technical-reading/technical-random-10.png
