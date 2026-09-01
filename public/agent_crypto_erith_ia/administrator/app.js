@@ -35251,6 +35251,101 @@ function renderPaperWorkspaceComparison404143(){
   }).join("");
 }
 
+
+/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
+   On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
+   The companion localhost adapter exposes an allowlisted read-only surface over port 8791.
+   Kraken CLI itself remains the canonical external owner for its own local paper workspaces. */
+const KRAKEN_CLI_ADAPTER_BASE_404144 = "http://127.0.0.1:8791";
+const KRAKEN_CLI_TIMEOUT_MS_404144 = 2400;
+let KRAKEN_CLI_LAST_404144 = Object.freeze({ tested:false, adapter:false, cli:false, transport:"NON TESTÉ", mcp:false, message:"Non testé." });
+
+async function krakenCliAdapterFetch404144(path){
+  const ctl = new AbortController();
+  const timer = setTimeout(()=>ctl.abort(), KRAKEN_CLI_TIMEOUT_MS_404144);
+  try{
+    const response = await fetch(`${KRAKEN_CLI_ADAPTER_BASE_404144}${path}`, { method:"GET", mode:"cors", cache:"no-store", signal:ctl.signal });
+    const text = await response.text();
+    let payload=null;
+    try{ payload=text ? JSON.parse(text) : {}; }catch(_){ payload={ raw:text }; }
+    if(!response.ok) throw Object.assign(new Error(payload?.error || `HTTP ${response.status}`), { payload, status:response.status });
+    return payload;
+  } finally { clearTimeout(timer); }
+}
+function krakenCliSafePair404144(pair){
+  const value=String(pair||"BTCUSD").trim().toUpperCase();
+  return /^[A-Z0-9]{5,16}$/.test(value) ? value : "BTCUSD";
+}
+function krakenCliOutput404144(payload){
+  const out=document.getElementById("krakenCliLabOutput404144");
+  if(!out) return;
+  out.textContent=typeof payload === "string" ? payload : JSON.stringify(payload,null,2);
+}
+function krakenCliSetStatus404144(next){
+  KRAKEN_CLI_LAST_404144=Object.freeze({ ...KRAKEN_CLI_LAST_404144, ...next, tested:true });
+  const status=document.getElementById("krakenCliLabStatus404144");
+  if(status){
+    const x=KRAKEN_CLI_LAST_404144;
+    status.textContent=`ADAPTER ${x.adapter?"PRÊT":"N/D"} · CLI ${x.cli?"DÉTECTÉ":"N/D"} · TRANSPORT ${x.transport||"N/D"} · MCP NON DÉMARRÉ · CLÉS NON REQUISES`;
+  }
+}
+async function krakenCliProbe404144(){
+  try{
+    const payload=await krakenCliAdapterFetch404144('/probe');
+    krakenCliSetStatus404144({ adapter:true, cli:!!payload?.cli_detected, transport:String(payload?.transport||"N/D"), message:payload?.message||"Probe terminé." });
+    krakenCliOutput404144(payload);
+    return payload;
+  }catch(error){
+    krakenCliSetStatus404144({ adapter:false, cli:false, transport:"N/D", message:error?.name==='AbortError'?"Timeout adapter 8791.":String(error?.message||error) });
+    krakenCliOutput404144({ ok:false, adapter:"http://127.0.0.1:8791", error:error?.name==='AbortError'?"timeout":"adapter_unavailable", message:KRAKEN_CLI_LAST_404144.message, real_order:false });
+    return null;
+  }
+}
+async function krakenCliTicker404144(pair='BTCUSD'){
+  const safe=krakenCliSafePair404144(pair);
+  try{
+    const payload=await krakenCliAdapterFetch404144(`/ticker?pair=${encodeURIComponent(safe)}`);
+    krakenCliSetStatus404144({ adapter:true, cli:true, transport:String(payload?.transport||KRAKEN_CLI_LAST_404144.transport||"N/D") });
+    krakenCliOutput404144(payload);
+    return payload;
+  }catch(error){ krakenCliOutput404144({ ok:false, command:`ticker ${safe}`, error:String(error?.message||error), real_order:false }); return null; }
+}
+async function krakenCliWorkspaceList404144(){
+  try{
+    const payload=await krakenCliAdapterFetch404144('/workspace/list');
+    krakenCliSetStatus404144({ adapter:true, cli:true, transport:String(payload?.transport||KRAKEN_CLI_LAST_404144.transport||"N/D") });
+    krakenCliOutput404144(payload);
+    return payload;
+  }catch(error){ krakenCliOutput404144({ ok:false, command:"workspace list", error:String(error?.message||error), mutation:false, real_order:false }); return null; }
+}
+function renderKrakenCliLab404144(){
+  const compare=document.getElementById("simPaperWorkspaceCompare404143");
+  const switcher=document.getElementById("simPaperWorkspace404142");
+  const anchor=compare||switcher;
+  if(!anchor) return;
+  let panel=document.getElementById("krakenCliLab404144");
+  if(!panel){
+    panel=document.createElement("section");
+    panel.id="krakenCliLab404144";
+    panel.setAttribute("data-kraken-cli-build","40.4.144");
+    panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(108,197,255,.28);border-radius:12px;padding:10px 12px;background:rgba(5,20,34,.50)";
+    panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+      <strong style="letter-spacing:.08em">KRAKEN CLI LAB · LECTURE SEULE</strong>
+      <span id="krakenCliLabStatus404144" style="font-size:10px;color:var(--muted,#9fb0c5)">ADAPTER NON TESTÉ · CLI NON TESTÉ · MCP NON DÉMARRÉ · CLÉS NON REQUISES</span>
+      <span style="flex:1"></span>
+      <button type="button" class="btn small" id="krakenCliProbeBtn404144">TESTER CLI</button>
+      <button type="button" class="btn small" id="krakenCliTickerBtn404144">BTCUSD</button>
+      <button type="button" class="btn small" id="krakenCliWorkspaceBtn404144">WORKSPACES</button>
+    </div>
+    <div style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:6px">Port 8791 · localhost uniquement · GET allowlist · aucune clé · aucun ordre · aucune création/reset/promotion de workspace.</div>
+    <pre id="krakenCliLabOutput404144" style="white-space:pre-wrap;max-height:170px;overflow:auto;margin:8px 0 0;padding:8px;border-radius:8px;background:rgba(0,0,0,.22);font-size:10px">Adapter non testé. Le moteur paper local 40.4.142/143 reste indépendant.</pre>`;
+    anchor.insertAdjacentElement("afterend",panel);
+    panel.querySelector('#krakenCliProbeBtn404144')?.addEventListener('click',()=>void krakenCliProbe404144());
+    panel.querySelector('#krakenCliTickerBtn404144')?.addEventListener('click',()=>void krakenCliTicker404144('BTCUSD'));
+    panel.querySelector('#krakenCliWorkspaceBtn404144')?.addEventListener('click',()=>void krakenCliWorkspaceList404144());
+  }
+}
+
 function paperWorkspacesPayload404142(){
   return {
     mode:"local_paper_multi_sandbox",
@@ -35626,6 +35721,7 @@ function renderSimulation() {
   const totals = getSimulationTotals();
   renderPaperWorkspaceControls404142();
   renderPaperWorkspaceComparison404143();
+  renderKrakenCliLab404144();
   if (els.simProfileTitle) els.simProfileTitle.textContent = `Profil actif : ${SIM_PROFILE.label} · ${paperWorkspaceMeta404142().label}`;
   if (els.simProfileBadge) els.simProfileBadge.textContent = `Profil ${fmtEUR.format(SIM_PROFILE.startCash)}`;
   if (els.simProfileCapital) els.simProfileCapital.textContent = `${fmtEUR.format(SIM_PROFILE.startCash)} virtuels`;
@@ -52118,7 +52214,7 @@ try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40464__=Object.freeze({build:"40
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40482__=Object.freeze({build:"40.4.82",parent:"40.4.81",learning_runtime_cold_boot_when_simulation_closed:false,learning_runtime_demand_owner:"atlasLearningRuntimeDemandEnsure4082",learning_indexeddb_recovery_on_demand:true,learning_collector_backfill_on_demand:true,simulation_lightweight_open_feedback:true,stable_dom_preserved:true,market_core_changed:false,graph_changed:false,target_top5_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,indexeddb_schema_changed:false,new_recurring_timer:false,new_observer:false,new_scheduler:false,new_network_owner:false,new_storage_owner:false});}catch(_){}
 /* 40.4.66 — cold-boot secondary-domain demand lock. Metals public registries/history/report restore leave the default Crypto boot and start only when Metals is restored/selected. Ordinary version awareness is moved outside the first boot burst. */
 try{globalThis.__AGENT_CRYPTO_RUNTIME_MIGRATION_40465__=Object.freeze({build:"40.4.66",base:"40.4.64",metals_secondary_runtime_demand_only:true,metals_boot_fetches_when_crypto:0,metals_report_restore_when_crypto:false,ordinary_version_first_check_delay_ms:12000,celestial_closed_cadence_ms:30000,celestial_open_cadence_ms:1000,multi_collector_even_minute_duplicate_guard:true,market_core_changed:false,current_changed:false,oracle_changed:false,bridge_changed:false,private_backend_changed:false,source_intelligence_changed:false,indexeddb_truth_changed:false,new_recurring_timer:false,new_observer:false,new_storage_owner:false});}catch(_){}  // Single manually edited version value.
-const ATLAS_BUILD = "40.4.143";
+const ATLAS_BUILD = "40.4.144";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -63866,3 +63962,11 @@ try{globalThis.ErithPaperWorkspaceCompare404143=Object.freeze({
   atlas_pipeline_changed:false,market_core_changed:false,bridge_changed:false,private_backend_changed:false,
   timer_added:false,observer_added:false,scheduler_added:false,fetch_owner_added:false,indexeddb_schema_changed:false
 });}catch(_){}
+
+
+/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK */
+window.ERITH_BUILD_40_4_144_KRAKEN_CLI_READ_ONLY = Object.freeze({
+  build:"40.4.144", parent:"40.4.143", adapter:"http://127.0.0.1:8791",
+  probe:krakenCliProbe404144, ticker:krakenCliTicker404144, workspaces:krakenCliWorkspaceList404144,
+  contract:Object.freeze({ on_demand:true, boot_fetch:false, timers_added:0, api_keys:false, real_orders:false, workspace_mutation:false, mcp_started:false, allowed_adapter_methods:["GET"] })
+});

@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.143";
+  const ADMIN_BUILD = "40.4.144";
   const ADMIN_RELEASE = "INTERMEDIATE VIEW LABEL RESTORE · OPERATOR ROLE SEPARATION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
