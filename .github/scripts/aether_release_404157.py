@@ -61,21 +61,16 @@ def patch_aether() -> None:
     if invariant_before["top12"] != 1:
         raise SystemExit("Aether: 12-story live-feed owner missing")
 
-    old = '''function aetherNewsHeadlineSource40133(event){
-  const canonical=aetherNewsCanonicalFrenchEvent40110(event);
-  if(!canonical)return "";
-  const sourceHeadline=String(canonical?.headline||"").replace(/\\s+/g," ").trim();
-  if(sourceHeadline)return sourceHeadline;
-  const preservedTranslation=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\\s+/g," ").trim();
-  return preservedTranslation;
+    old = '''function aetherNewsHeadlineSource40133(event,fallback="Event to qualify"){
+  const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+  const original=String(canonical?.headline||event?.headline||"").replace(/\\s+/g," ").trim();
+  return original||aetherNewsHeadlineFr40104(canonical,fallback);
 }'''
-    new = '''function aetherNewsHeadlineSource40133(event){
-  const canonical=aetherNewsCanonicalFrenchEvent40110(event);
-  if(!canonical)return "";
-  // 40.4.157 — News Sentinel French presentation owns Aether; source-original remains final proof/fallback.
-  const frenchHeadline=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\\s+/g," ").trim();
-  if(frenchHeadline)return frenchHeadline;
-  return String(canonical?.headline||"").replace(/\\s+/g," ").trim();
+    new = '''function aetherNewsHeadlineSource40133(event,fallback="Événement à qualifier"){
+  const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+  // 40.4.157 — the canonical French presentation helper owns Aether display.
+  // Source-original remains preserved in News Sentinel as evidence, not as the first visible headline.
+  return aetherNewsHeadlineFr40104(canonical,fallback);
 }'''
     if text.count(old) != 1:
         raise SystemExit(f"Aether French headline owner: exact source count={text.count(old)}, expected 1")
@@ -84,7 +79,7 @@ def patch_aether() -> None:
     text = replace_once(
         text,
         r'news_display_language:"source-original"',
-        'news_display_language:"fr-FR-preferred"',
+        'news_display_language:"fr-FR"',
         "Aether display language diagnostic",
     )
     text = replace_once(
@@ -96,20 +91,20 @@ def patch_aether() -> None:
     text = replace_once(
         text,
         r'news_translation_preferred:"headline_fr_display → headline_fr \(secondary data retained\)"',
-        'news_translation_preferred:"headline_fr_display → headline_fr → source-original fallback"',
+        'news_translation_preferred:"headline_fr_display → headline_fr → deterministic French factual fallback"',
         "Aether French priority diagnostic",
     )
     text = replace_once(
         text,
         r'news_translation_story_owner:"News Sentinel source-original headline owns VEILLE; translated fields remain preserved"',
-        'news_translation_story_owner:"News Sentinel French presentation owns VEILLE; source-original headline remains preserved"',
+        'news_translation_story_owner:"News Sentinel French presentation owns VEILLE; source-original headline remains preserved as evidence"',
         "Aether story owner diagnostic",
     )
     text = replace_once(
         text,
         r'news_translation_raw_english_in_aether:true,',
-        'news_translation_raw_english_in_aether:true,\n    news_source_original_fallback_only:true,\n    news_display_contract_build:"40.4.157",',
-        "Aether fallback diagnostic",
+        'news_translation_raw_english_in_aether:false,\n    news_source_original_preserved_not_display_owner:true,\n    news_display_contract_build:"40.4.157",',
+        "Aether raw-English diagnostic",
     )
 
     invariant_after = {
@@ -123,6 +118,8 @@ def patch_aether() -> None:
         raise SystemExit(f"Aether runtime ownership changed: {invariant_before} -> {invariant_after}")
     if text.count("aetherNewsHeadlineSource40133(") < 3:
         raise SystemExit("Aether French headline helper consumers unexpectedly missing")
+    if "return aetherNewsHeadlineFr40104(canonical,fallback);" not in text:
+        raise SystemExit("Aether canonical French helper is not the visible owner")
 
     AETHER.write_text(text, encoding="utf-8", newline="\n")
 
@@ -172,10 +169,10 @@ def update_manifests() -> None:
     verification = {
         "build": BUILD,
         "parent_build": PARENT,
-        "display_owner": "js/aether.js::aetherNewsHeadlineSource40133",
-        "headline_priority": ["headline_fr_display", "headline_fr", "headline"],
+        "display_owner": "js/aether.js::aetherNewsHeadlineSource40133 -> aetherNewsHeadlineFr40104",
+        "headline_priority": ["headline_fr_display", "headline_fr", "deterministic French factual fallback"],
         "canonical_original_preserved": True,
-        "source_original_fallback_only": True,
+        "source_original_display_owner": False,
         "story_slots": 12,
         "story_slot_seconds": 18,
         "news_collector_changed": False,
@@ -257,7 +254,7 @@ def main() -> None:
         encoding="utf-8",
     )
     print("40.4.157 PATCH PASS")
-    print("Aether French headline priority PASS")
+    print("Aether canonical French headline owner PASS")
     print("Aether 12-story live-feed ownership PRESERVED")
     print("Oracle 40.4.156R1 PRESERVED")
     print(f"Canonical archive: {archive}")
