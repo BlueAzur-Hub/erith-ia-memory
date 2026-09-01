@@ -104,10 +104,11 @@
     // News Sentinel keeps the canonical original; this is presentation-only, deterministic and factual.
     return aetherNewsFrenchFactualFallback40124(canonical,original,fallback);
   }
-  function aetherNewsHeadlineSource40133(event,fallback="Event to qualify"){
+  function aetherNewsHeadlineSource40133(event,fallback="Événement à qualifier"){
   const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
-  const original=String(canonical?.headline||event?.headline||"").replace(/\s+/g," ").trim();
-  return original||aetherNewsHeadlineFr40104(canonical,fallback);
+  // 40.4.157 — the canonical French presentation helper owns Aether display.
+  // Source-original remains preserved in News Sentinel as evidence, not as the first visible headline.
+  return aetherNewsHeadlineFr40104(canonical,fallback);
 }
   function aetherFrenchMechanismLabel40110(value){
     const label=String(value||"").replace(/\s+/g," ").trim();
@@ -842,10 +843,10 @@ function aetherAttention40133(){
     operator_disclaimer_segments:false,
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
-    news_display_language:"source-original",
-    news_source_original_headline_first:true,
-    news_translation_preferred:"headline_fr_display → headline_fr (secondary data retained)",
-    news_translation_story_owner:"News Sentinel source-original headline owns VEILLE; translated fields remain preserved",
+    news_display_language:"fr-FR",
+    news_source_original_headline_first:false,
+    news_translation_preferred:"headline_fr_display → headline_fr → deterministic French factual fallback",
+    news_translation_story_owner:"News Sentinel French presentation owns VEILLE; source-original headline remains preserved as evidence",
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
     news_feed_ranked_story_count:12,
@@ -870,7 +871,9 @@ function aetherAttention40133(){
     news_translation_compact_headline_first:true,
     news_translation_fallback:"deterministic French factual summary → original only when already non-English",
     news_translation_browser_runtime:false,
-    news_translation_raw_english_in_aether:true,
+    news_translation_raw_english_in_aether:false,
+    news_source_original_preserved_not_display_owner:true,
+    news_display_contract_build:"40.4.157",
     weather_forecast_days:5,
     weather_storm_warning:true,
     weather_high_gust_warning_kmh:70,
