@@ -17,7 +17,7 @@ permissions:
 
 # Core Top-250 publication owns only latest.json + status.json.
 # A distinct group from unrelated Agent-Crypto builds lets this job retry cleanly,
-# while the exact-file commit below prevents it from reverting extended.json.
+# while the exact-file publisher prevents it from reverting extended.json.
 concurrency:
   group: atlas-public-crypto-market-${{ github.ref }}
   cancel-in-progress: false
@@ -162,57 +162,19 @@ jobs:
               print(f"- Collector warning: `{status['last_error'][:1000]}`")
           PY
 
-      - name: Commit canonical Top-250 crypto data only
+      - name: Publish canonical Top-250 crypto data · dual qualification
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          data_dir="public/agent_crypto_erith_ia/data/crypto"
-          temp_dir="$(mktemp -d)"
-          trap 'rm -rf "$temp_dir"' EXIT
-
-          # CRITICAL: this collector owns only these two files.  The previous
-          # workflow copied and staged the whole data/crypto directory, which
-          # could revert the independent Extended snapshot during a publication.
-          for name in latest.json status.json; do
-            if [ -f "$data_dir/$name" ]; then
-              cp "$data_dir/$name" "$temp_dir/$name"
-            fi
-          done
-
-          test -f "$temp_dir/latest.json"
-          test -f "$temp_dir/status.json"
-
-          for attempt in 1 2 3 4 5 6 7 8; do
-            echo "Publication canonical Top-250 · tentative $attempt/8"
-            git fetch origin main
-            git reset --hard origin/main
-
-            mkdir -p "$data_dir"
-            cp "$temp_dir/latest.json" "$data_dir/latest.json"
-            cp "$temp_dir/status.json" "$data_dir/status.json"
-            git add "$data_dir/latest.json" "$data_dir/status.json"
-
-            if git diff --cached --quiet; then
-              echo "Canonical Top-250 already published."
-              exit 0
-            fi
-
-            git commit -m "archive public crypto market snapshot"
-            if git push origin HEAD:main; then
-              echo "Public canonical Top-250 snapshot published."
-              exit 0
-            fi
-
-            echo "Remote main changed during publication; retrying without force push."
-            sleep $((attempt * 2))
-          done
-
-          echo "Unable to publish canonical Top-250 snapshot after 8 non-destructive attempts."
-          exit 1
+          .github/scripts/agent_crypto_publish_live_data.sh \
+            dual \
+            public/agent_crypto_erith_ia/data/crypto \
+            "archive public crypto market snapshot" \
+            "publish live crypto Top-250 snapshot" \
+            latest.json status.json
 
       - name: Require a usable public snapshot
         if: always()
