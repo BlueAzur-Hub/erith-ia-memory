@@ -1,11 +1,11 @@
 {
   "schema": "agent_crypto_administrator_mirror_manifest_v36",
-  "build": "40.4.174",
-  "release": "DOMAIN SKELETON MIRROR · CRYPTO MASTER",
-  "status": "domain_skeleton_mirror_crypto_master",
-  "prepared_at": "2026-09-01T20:57:59Z",
-  "published_at": "2026-09-01T20:57:59Z",
-  "global_versioning": "40.4.174",
+  "build": "40.4.175",
+  "release": "VERSION TRUTH LOCK · DOMAIN SKELETON MIRROR",
+  "status": "version_truth_lock_domain_skeleton_mirror",
+  "prepared_at": "2026-09-02T00:44:19Z",
+  "published_at": "2026-09-02T00:44:19Z",
+  "global_versioning": "40.4.175",
   "source": "40.4.56",
   "protected_base": {
     "classic_web_modified": false,
@@ -2519,6 +2519,17 @@
         "cross-market"
       ],
       "cross_domain_visual_leak_forbidden": true,
+      "market_core_modified": false
+    },
+    "version_truth_404175": {
+      "schema": "erith.admin.version-truth-lock.v1",
+      "authorities": [
+        "index.html",
+        "version.json",
+        "administrator-version.json"
+      ],
+      "all_authorities_must_match": true,
+      "release_number_exists_only_after_verified_commit": true,
       "market_core_modified": false
     }
   },
