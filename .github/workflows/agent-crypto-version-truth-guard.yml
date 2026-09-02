@@ -9,6 +9,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/js/app.js'
       - 'public/agent_crypto_erith_ia/administrator/version.json'
       - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
+      - '.github/scripts/agent_crypto_version_truth_guard.py'
       - '.github/workflows/agent-crypto-version-truth-guard.yml'
   pull_request:
     paths:
@@ -17,6 +18,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/js/app.js'
       - 'public/agent_crypto_erith_ia/administrator/version.json'
       - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
+      - '.github/scripts/agent_crypto_version_truth_guard.py'
       - '.github/workflows/agent-crypto-version-truth-guard.yml'
 
 permissions:
@@ -34,77 +36,5 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/app.js
 
-      - name: Validate dynamic release authority
-        shell: bash
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib, json, re
-
-          base = Path('public/agent_crypto_erith_ia/administrator')
-          index = (base/'index.html').read_text(encoding='utf-8')
-          root = (base/'app.js').read_text(encoding='utf-8')
-          adminjs = (base/'js/app.js').read_text(encoding='utf-8')
-          version = json.loads((base/'version.json').read_text(encoding='utf-8'))
-          mirror = json.loads((base/'administrator-version.json').read_text(encoding='utf-8'))
-
-          def one(pattern, text, label):
-              matches = re.findall(pattern, text, re.S)
-              if len(matches) != 1:
-                  raise SystemExit(f'{label}: expected 1 match, got {len(matches)}')
-              return matches[0]
-
-          build = str(version.get('build') or '').strip()
-          if not re.fullmatch(r'\d+\.\d+\.\d+', build):
-              raise SystemExit(f'invalid canonical build: {build!r}')
-          expected_token = f'market-core-v2.0-alpha-build-{build}'
-          release = str(version.get('release') or '').strip()
-
-          actual = {
-              'meta_atlas_build': one(r'<meta\s+name="atlas-build"\s+content="([^"]+)"\s*/?>', index, 'meta atlas-build'),
-              'meta_admin_build': one(r'<meta\s+name="administrator-build"\s+content="([^"]+)"\s*/?>', index, 'meta administrator-build'),
-              'meta_engine_build': one(r'<meta\s+name="atlas-engine-build"\s+content="([^"]+)"\s*/?>', index, 'meta atlas-engine-build'),
-              'meta_asset_token': one(r'<meta\s+name="atlas-asset-token"\s+content="([^"]+)"\s*/?>', index, 'meta atlas-asset-token'),
-              'meta_release': one(r'<meta\s+name="administrator-release"\s+content="([^"]+)"\s*/?>', index, 'meta administrator-release'),
-              'title_build': one(r'<title>Agent-Crypto @erith\.IA — Build ([^ ]+) · Administrator</title>', index, 'title build'),
-              'root_runtime_build': one(r"const\s+ATLAS_BUILD\s*=\s*[\"']([^\"']+)[\"']\s*;", root, 'ATLAS_BUILD'),
-              'admin_runtime_build': one(r"const\s+ADMIN_BUILD\s*=\s*[\"']([^\"']+)[\"']\s*;", adminjs, 'ADMIN_BUILD'),
-              'admin_release': one(r"const\s+ADMIN_RELEASE\s*=\s*[\"']([^\"']+)[\"']\s*;", adminjs, 'ADMIN_RELEASE'),
-              'admin_engine_build': one(r"const\s+ENGINE_BUILD\s*=\s*[\"']([^\"']+)[\"']\s*;", adminjs, 'ENGINE_BUILD'),
-              'root_cache_build': one(r'<script\s+src="\./app\.js\?v=administrator-build-([^"]+)"></script>', index, 'root app cache build'),
-              'admin_cache_build': one(r'<script\s+src="\./js/app\.js\?v=administrator-build-([^"]+)"></script>', index, 'admin app cache build'),
-              'footer_build': one(r"id=\"footerRelease\"[^>]*>[^<]*Market Core · Build ([^ ]+) · Version : Parker Lewis Can't Lose</span>", index, 'footer build'),
-          }
-
-          for key in ('meta_atlas_build','meta_admin_build','title_build','root_runtime_build','admin_runtime_build','root_cache_build','admin_cache_build','footer_build'):
-              if actual[key] != build:
-                  raise SystemExit(f'{key} drift: {actual[key]!r} != {build!r}')
-
-          if actual['meta_asset_token'] != expected_token or version.get('asset_token') != expected_token:
-              raise SystemExit('asset token drift')
-          if actual['meta_release'] != release or actual['admin_release'] != release:
-              raise SystemExit('release identity drift')
-          if mirror.get('build') != build or mirror.get('global_versioning') != build:
-              raise SystemExit('administrator mirror build drift')
-          if mirror.get('release') != release:
-              raise SystemExit('administrator mirror release drift')
-
-          engine = '38.15.11'
-          if version.get('engine', {}).get('reference_build') != engine:
-              raise SystemExit('Market Core manifest changed')
-          if actual['meta_engine_build'] != engine or actual['admin_engine_build'] != engine:
-              raise SystemExit('Market Core runtime identity changed')
-
-          files = version.get('files')
-          if not isinstance(files, dict) or not files:
-              raise SystemExit('version.json files hash map missing')
-          for rel, expected in files.items():
-              p = base/rel
-              if not p.is_file():
-                  raise SystemExit(f'manifest hash target missing: {rel}')
-              got = hashlib.sha256(p.read_bytes()).hexdigest()
-              if got != expected:
-                  raise SystemExit(f'payload hash drift: {rel}: {expected} != {got}')
-
-          print(f'PASS Agent-Crypto version truth {build} · {release}')
-          PY
+      - name: Canonical version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard.py
