@@ -227,3 +227,33 @@ html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168 hea
     gap:3px!important;
   }
 }
+
+/* =========================================================
+   40.4.182 — METALS AETHER FEED MASK
+   Metals graph focus only. The Aether/Veille/System rotating
+   ribbon is not rendered while the Metals domain is active.
+   The native status lane remains continuously visible so the
+   header keeps one stable physical row and no blank phase.
+   Crypto and every other market domain keep their existing feed.
+   Presentation only: no data, Atlas, Oracle, Market Core,
+   collector, timer, storage, Bridge or financial behavior change.
+   ========================================================= */
+html[data-cyclic-market-domain="metals"] body #atlasAetherRibbon4084{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  animation:none!important;
+  pointer-events:none!important;
+}
+
+@media (min-width:901px) and (prefers-reduced-motion:no-preference){
+  html[data-cyclic-market-domain="metals"] body #livecheck.command-bar>#btnLivecheck,
+  html[data-cyclic-market-domain="metals"] body #livecheck.command-bar>#btnRefresh,
+  html[data-cyclic-market-domain="metals"] body #livecheck.command-bar>#decisionCard,
+  html[data-cyclic-market-domain="metals"] body #livecheck.command-bar>#sourceActiveCard,
+  html[data-cyclic-market-domain="metals"] body #livecheck.command-bar>#sourceTimeCard{
+    opacity:1!important;
+    visibility:visible!important;
+    animation:none!important;
+  }
+}
