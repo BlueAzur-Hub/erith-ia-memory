@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.186";
-  const REVISION = "V4";
-  const CONTRACT = "STATIC_GRAPH_SHELL_NO_TRANSITION_404186";
+  const BUILD = "40.4.187";
+  const REVISION = "V5";
+  const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_404187";
   const ORDER = Object.freeze([
     Object.freeze({ id:"crypto", label:"CRYPTO", title:"Crypto", mode:"native", native:"crypto" }),
     Object.freeze({ id:"metals", label:"MÉTAUX", title:"Métaux précieux et industriels", mode:"native", native:"metals" }),
@@ -27,8 +27,15 @@
   function forceHidden(node, hidden){
     if(!node) return;
     node.classList.toggle("atlas-market-force-hidden-404168", hidden);
-    if(hidden) node.setAttribute("aria-hidden", "true");
-    else node.removeAttribute("aria-hidden");
+    if(hidden){
+      node.hidden = true;
+      node.setAttribute("aria-hidden", "true");
+      node.style.setProperty("display", "none", "important");
+    }else{
+      node.hidden = false;
+      node.removeAttribute("aria-hidden");
+      node.style.removeProperty("display");
+    }
   }
 
   function emitDomain(domain){
@@ -49,7 +56,7 @@
       node.style.removeProperty("opacity");
     });
     delete document.documentElement.dataset.unifiedGraphShell404185;
-    document.documentElement.dataset.staticGraphShell404186 = "ready";
+    document.documentElement.dataset.staticGraphShell404187 = "ready";
   }
 
   function captureCryptoGeometry(){
@@ -67,7 +74,7 @@
     if(rr?.width > 220) deck.style.setProperty("--atlas-market-master-rail-w", `${Math.round(rr.width)}px`);
     if(tr?.height > 28) deck.style.setProperty("--atlas-market-master-toolbar-h", `${Math.round(tr.height)}px`);
     document.documentElement.dataset.cryptoSkeletonGeometry404174 = "captured";
-    document.documentElement.dataset.cryptoStaticGeometry404186 = "captured";
+    document.documentElement.dataset.cryptoStaticGeometry404187 = "captured";
   }
 
   function installFixedAnchor(){
@@ -112,7 +119,7 @@
       t.id = "atlasCyclicMarketMirrorToolbar404168";
       t.className = "atlas-cyclic-market-mirror-toolbar-404168";
       t.hidden = true;
-      t.innerHTML = `<span class="mirror-group"><small>VUE</small><b class="active">Base 100</b></span><span class="mirror-group"><small>PÉRIODE</small><b>24h</b><b>7j</b><b>30j</b><b>90j</b><b>1a</b></span><span class="mirror-group"><small>SECTION</small><b data-cyclic-market-toolbar-state>Source Truth publique</b></span>`;
+      t.innerHTML = `<span class="mirror-group"><small>VUE</small><b class="active">Base 100</b></span><span class="mirror-group atlas-parallel-periods"><small>PÉRIODE</small><button type="button" data-parallel-period="24h">24h</button><button type="button" data-parallel-period="7j">7j</button><button type="button" data-parallel-period="30j">30j</button><button type="button" data-parallel-period="90j">90j</button><button type="button" data-parallel-period="1a">1a</button></span><span class="mirror-group"><small>SECTION</small><b data-cyclic-market-toolbar-state>Source Truth publique</b></span>`;
       recovery.appendChild(t);
     }
 
@@ -151,17 +158,35 @@
     const metalsToolbar = byId("atlasMetalsUnifiedToolbar");
     const mirrorToolbar = byId("atlasCyclicMarketMirrorToolbar404168");
     const stage = byId("atlasCyclicMarketInertStage404168");
+    const liveStatus = byId("liveStatus");
+    const metalsStatus = byId("atlasMetalsLiveStatus");
 
     forceHidden(cryptoDetail, domain !== "crypto");
     forceHidden(metalsDetail, domain !== "metals");
+    forceHidden(parallelDetail, !parallel);
+
     forceHidden(cryptoToolbar, domain !== "crypto");
     forceHidden(metalsToolbar, domain !== "metals");
+    forceHidden(mirrorToolbar, !parallel);
+    forceHidden(stage, !parallel);
 
-    if(stage) stage.hidden = !parallel;
-    if(mirrorToolbar) mirrorToolbar.hidden = !parallel;
-    if(parallelDetail) parallelDetail.hidden = !parallel;
-    if(parallel) setParallelPlaceholder(domain);
+    /* Parallel domains previously borrowed the Metals status strip. That extra
+       row changed the Y origin of the graph. In Graphique the domain badge and
+       the fixed market selector already identify the active market, so both
+       auxiliary status strips stay out of the parallel cockpit. */
+    if(parallel){
+      forceHidden(liveStatus, true);
+      forceHidden(metalsStatus, true);
+      document.documentElement.dataset.parallelStatusRow404187 = "removed-from-graph-slot";
+      setParallelPlaceholder(domain);
+    }else{
+      forceHidden(liveStatus, false);
+      forceHidden(metalsStatus, true);
+      delete document.documentElement.dataset.parallelStatusRow404187;
+    }
+
     clearRetired185Geometry();
+    document.documentElement.dataset.parallelSlotParity404187 = parallel ? "crypto-master" : "native";
   }
 
   function updateButton(domain){
@@ -255,7 +280,7 @@
     requestAnimationFrame(captureCryptoGeometry);
     publishBuildTruth();
     document.documentElement.dataset.domainSkeletonMirror404174 = "ready";
-    document.documentElement.dataset.staticGraphShell404186 = "ready";
+    document.documentElement.dataset.staticGraphShell404187 = "ready";
     globalThis.ErithDomainSkeletonMirror404174 = Object.freeze({
       build:BUILD, revision:REVISION, contract:CONTRACT,
       order:ORDER.map(x => x.id), current:() => current,
@@ -266,6 +291,7 @@
       fixed_chart_slot:true, fixed_right_rail_slot:true,
       geometry_from_crypto:true, single_cockpit_surface:true,
       static_geometry:true, unified_geometry_runtime:false, soft_transition:false,
+      parallel_status_row_removed:true, parallel_toolbar_single_slot:true, parallel_rail_single_owner:true,
       retired_404185_transform_compensation:true,
       new_chart_engine:false, new_timer:false, new_observer:false, new_storage_owner:false
     });
