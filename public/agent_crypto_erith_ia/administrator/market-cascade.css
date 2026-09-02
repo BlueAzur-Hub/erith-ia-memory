@@ -23,4 +23,41 @@
           html[data-cyclic-market-mode="inert"] #analyste .chart-shell>*:not(#atlasCyclicMarketInertStage404168){display:none!important}html[data-cyclic-market-mode="inert"] #atlasCyclicMarketInertStage404168{display:block!important}html[data-cyclic-market-mode="inert"] #atlasCyclicMarketMirrorToolbar404168{display:flex!important}html[data-cyclic-market-mode="inert"] #atlasCyclicMarketInertDetail404168{display:block!important}html[data-cyclic-market-mode="inert"] #market-workspace,html[data-cyclic-market-mode="inert"] #atlasMetalsMathHost,html[data-cyclic-market-mode="inert"] #atlasMetalsMarketArea,html[data-cyclic-market-mode="inert"] #atlasMetalsAnalysisFoundation,html[data-cyclic-market-mode="inert"] .atlas-metals-public-report,html[data-cyclic-market-mode="inert"] .atlas-metals-report{display:none!important}
           @media(max-width:900px){#atlasFixedMarketAnchorSlot404168{left:16px!important}.atlas-cyclic-market-inert-gates-404168{grid-template-columns:1fr 1fr}html[data-cyclic-market-domain="metals"] #atlasMetalsDetailPanel,.atlas-cyclic-market-inert-detail-404168{height:auto!important;min-height:0!important;max-height:none!important}}
           @media(max-width:620px){body.atlas-administrator-mirror .shell{width:calc(100% - 12px)!important;max-width:calc(100% - 12px)!important}#atlasFixedMarketAnchorSlot404168{left:10px!important;width:132px!important}#atlasMarketDomainSwitch.atlas-fixed-market-anchor-button-404168{width:132px!important;min-width:132px!important;max-width:132px!important}#analyste .chart-v2-recovery-line,#atlasMetalsUnifiedToolbar,#atlasCyclicMarketMirrorToolbar404168{padding-left:150px!important}.atlas-cyclic-market-inert-gates-404168{grid-template-columns:1fr}}
-          
+/* 40.4.173R1 — FIXED MARKET ANCHOR NORMALIZATION
+   Crypto capsule is the geometry master. Domain accent may change; geometry never does. */
+#atlasFixedMarketAnchorSlot404168{
+  left:22px!important;top:16px!important;width:146px!important;height:38px!important;
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+}
+#atlasMarketDomainSwitch.atlas-fixed-market-anchor-button-404168{
+  --atlas-market-anchor-accent:#62ecff;
+  width:146px!important;min-width:146px!important;max-width:146px!important;
+  height:38px!important;min-height:38px!important;max-height:38px!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+  margin:0!important;padding:0 13px!important;box-sizing:border-box!important;
+  border:1px solid color-mix(in srgb,var(--atlas-market-anchor-accent) 62%,rgba(255,255,255,.12))!important;
+  border-radius:999px!important;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--atlas-market-anchor-accent) 15%,rgba(4,17,29,.94)),rgba(6,17,29,.94))!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 0 16px color-mix(in srgb,var(--atlas-market-anchor-accent) 10%,transparent)!important;
+  color:#dcebf2!important;white-space:nowrap!important;line-height:1!important;
+}
+#atlasMarketDomainSwitch.atlas-fixed-market-anchor-button-404168>span{
+  color:#b7c8d4!important;font-size:8px!important;font-weight:950!important;letter-spacing:.09em!important;
+}
+#atlasMarketDomainSwitch.atlas-fixed-market-anchor-button-404168>b{
+  color:var(--atlas-market-anchor-accent)!important;font-size:10px!important;font-weight:950!important;letter-spacing:.035em!important;
+}
+html[data-cyclic-market-domain="crypto"] #atlasMarketDomainSwitch{--atlas-market-anchor-accent:#62ecff}
+html[data-cyclic-market-domain="metals"] #atlasMarketDomainSwitch{--atlas-market-anchor-accent:#ffd978}
+html[data-cyclic-market-domain="indices"] #atlasMarketDomainSwitch{--atlas-market-anchor-accent:#aa91ee}
+html[data-cyclic-market-domain="energy"] #atlasMarketDomainSwitch{--atlas-market-anchor-accent:#e79b57}
+html[data-cyclic-market-domain="cross-market"] #atlasMarketDomainSwitch{--atlas-market-anchor-accent:#dce5ec}
+#analyste .atlas-market-domain-title-block{display:none!important}
+#analyste .chart-v2-recovery-line{padding-left:178px!important;box-sizing:border-box!important}
+#atlasMetalsUnifiedToolbar,#atlasCyclicMarketMirrorToolbar404168{padding-left:0!important}
+@media(max-width:620px){
+  #atlasFixedMarketAnchorSlot404168{left:10px!important;width:132px!important}
+  #atlasMarketDomainSwitch.atlas-fixed-market-anchor-button-404168{width:132px!important;min-width:132px!important;max-width:132px!important;padding:0 9px!important}
+  #analyste .chart-v2-recovery-line{padding-left:150px!important}
+  #atlasMetalsUnifiedToolbar,#atlasCyclicMarketMirrorToolbar404168{padding-left:0!important}
+}
