@@ -1,0 +1,267 @@
+name: Agent-Crypto 40.4.180 Live Data Branch Foundation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-180-live-data-branch-foundation.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-release-control
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebase latest main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+
+      - name: Install live-data publisher and dual-publish qualification
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > .github/scripts/agent_crypto_publish_live_data.sh <<'SH'
+          #!/usr/bin/env bash
+          # Canonical bounded publisher for Agent-Crypto live JSON snapshots.
+          # Owns publication transport only; collectors and market semantics stay unchanged.
+          set -euo pipefail
+
+          mode="${1:-}"
+          data_dir="${2:-}"
+          main_message="${3:-}"
+          data_message="${4:-}"
+          shift 4 || true
+          files=("$@")
+          data_branch="${AGENT_CRYPTO_DATA_BRANCH:-data/agent-crypto-live}"
+
+          case "$mode" in
+            dual|data-only) ;;
+            *) echo "Unsupported publication mode: $mode" >&2; exit 2 ;;
+          esac
+          [ -n "$data_dir" ] || { echo "Missing data_dir" >&2; exit 2; }
+          [ "${#files[@]}" -gt 0 ] || { echo "No owned files supplied" >&2; exit 2; }
+
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
+
+          for name in "${files[@]}"; do
+            [ -f "$data_dir/$name" ] || { echo "Missing owned payload: $data_dir/$name" >&2; exit 3; }
+            cp "$data_dir/$name" "$temp_dir/$name"
+          done
+
+          restore_owned_files() {
+            mkdir -p "$data_dir"
+            local name
+            for name in "${files[@]}"; do
+              cp "$temp_dir/$name" "$data_dir/$name"
+            done
+          }
+
+          publish_ref() {
+            local remote_branch="$1"
+            local target_ref="$2"
+            local message="$3"
+            local label="$4"
+            local attempt
+
+            for attempt in 1 2 3 4 5 6 7 8; do
+              echo "$label · tentative $attempt/8"
+              git fetch origin "$remote_branch"
+              git reset --hard "origin/$remote_branch"
+              restore_owned_files
+
+              local staged=()
+              local name
+              for name in "${files[@]}"; do
+                staged+=("$data_dir/$name")
+              done
+              git add "${staged[@]}"
+
+              if git diff --cached --quiet; then
+                echo "$label already current."
+                return 0
+              fi
+
+              git commit -m "$message"
+              if git push origin "HEAD:$target_ref"; then
+                echo "$label published."
+                return 0
+              fi
+
+              echo "$label changed remotely; retrying non-destructively."
+              sleep $((attempt * 2))
+            done
+
+            echo "$label failed after 8 non-destructive attempts." >&2
+            return 1
+          }
+
+          if [ "$mode" = "dual" ]; then
+            publish_ref "main" "refs/heads/main" "$main_message" "Main compatibility publication"
+          fi
+
+          publish_ref "$data_branch" "refs/heads/$data_branch" "$data_message" "Live-data branch publication"
+          SH
+          chmod +x .github/scripts/agent_crypto_publish_live_data.sh
+
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path('.github/workflows')
+
+          def replace_step(path: Path, start_name: str, next_name: str, new_step: str) -> None:
+              text = path.read_text(encoding='utf-8')
+              start = f'      - name: {start_name}\n'
+              end = f'      - name: {next_name}\n'
+              if text.count(start) != 1 or text.count(end) != 1:
+                  raise SystemExit(f'{path}: step anchors not unique')
+              before, tail = text.split(start, 1)
+              _, after = tail.split(end, 1)
+              path.write_text(before + new_step + end + after, encoding='utf-8')
+
+          replace_step(
+              root / 'atlas-public-crypto-market.yml',
+              'Commit canonical Top-250 crypto data only',
+              'Require a usable public snapshot',
+              '''      - name: Publish canonical Top-250 crypto data · dual qualification\n        if: always()\n        shell: bash\n        run: |\n          set -euo pipefail\n          git config user.name "github-actions[bot]"\n          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"\n          .github/scripts/agent_crypto_publish_live_data.sh \\\n            dual \\\n            public/agent_crypto_erith_ia/data/crypto \\\n            "archive public crypto market snapshot" \\\n            "publish live crypto Top-250 snapshot" \\\n            latest.json status.json\n\n'''
+          )
+
+          replace_step(
+              root / 'atlas-public-crypto-extended.yml',
+              'Commit extended public crypto data',
+              'Require usable extended snapshot',
+              '''      - name: Publish extended crypto data · dual qualification\n        if: always()\n        shell: bash\n        run: |\n          set -euo pipefail\n          git config user.name "github-actions[bot]"\n          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"\n          .github/scripts/agent_crypto_publish_live_data.sh \\\n            dual \\\n            public/agent_crypto_erith_ia/data/crypto \\\n            "archive public extended crypto market snapshot" \\\n            "publish live crypto extended snapshot" \\\n            extended.json extended_status.json\n\n'''
+          )
+
+          clock = root / 'atlas-public-crypto-market-clock.yml'
+          text = clock.read_text(encoding='utf-8')
+          old = 'https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/'
+          new = 'https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/'
+          if text.count(old) != 2:
+              raise SystemExit(f'watchdog URL authority count mismatch: {text.count(old)}')
+          clock.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+
+      - name: Qualify dedicated live-data branch before release
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n .github/scripts/agent_crypto_publish_live_data.sh
+          grep -Fq '.github/scripts/agent_crypto_publish_live_data.sh' .github/workflows/atlas-public-crypto-market.yml
+          grep -Fq '.github/scripts/agent_crypto_publish_live_data.sh' .github/workflows/atlas-public-crypto-extended.yml
+          test "$(grep -c 'data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/' .github/workflows/atlas-public-crypto-market-clock.yml)" -eq 2
+          git fetch origin data/agent-crypto-live
+          for file in latest.json status.json extended.json extended_status.json; do
+            git show "origin/data/agent-crypto-live:public/agent_crypto_erith_ia/data/crypto/$file" > "/tmp/$file"
+            python -m json.tool "/tmp/$file" >/dev/null
+          done
+          echo 'LIVE_DATA_BRANCH_QUALIFICATION_PASS'
+
+      - name: Release 40.4.180 through canonical driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/contract-404180.json <<'JSON'
+          {
+            "schema": "erith.admin.live-data-branch-foundation.v1",
+            "build": "40.4.180",
+            "parent_build": "40.4.179",
+            "live_data_branch": "data/agent-crypto-live",
+            "top250_publication": "dual_main_plus_live_data_branch",
+            "extended_publication": "dual_main_plus_live_data_branch",
+            "watchdog_read_authority": "data/agent-crypto-live",
+            "frontend_cutover": false,
+            "main_publication_retired": false,
+            "non_destructive_retry": true,
+            "exact_owned_file_staging": true,
+            "force_push": false,
+            "market_core_modified": false,
+            "collector_semantics_changed": false,
+            "financial_execution_added": false
+          }
+          JSON
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.180 \
+            --parent 40.4.179 \
+            --release 'LIVE DATA BRANCH FOUNDATION · DUAL-PUBLISH QUALIFICATION' \
+            --status live_data_branch_foundation_dual_publish_qualification \
+            --contract-key live_data_branch_foundation_404180 \
+            --contract-json /tmp/contract-404180.json \
+            --lineage-note '40.4.180 Live Data Branch Foundation: dedicated data/agent-crypto-live authority qualified; Top-250 and Extended dual-publish non-destructively; watchdog reads the dedicated branch; frontend cutover intentionally deferred.'
+
+      - name: Read back and validate 40.4.180
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          bash -n .github/scripts/agent_crypto_publish_live_data.sh
+          python -m py_compile .github/scripts/agent_crypto_release_driver.py .github/scripts/agent_crypto_version_truth_guard.py
+          python .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build 40.4.180 \
+            --expected-release 'LIVE DATA BRANCH FOUNDATION · DUAL-PUBLISH QUALIFICATION'
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          m=json.loads((base/'administrator-version.json').read_text(encoding='utf-8'))
+          c=v['contracts']['live_data_branch_foundation_404180']
+          assert v['build'] == m['build'] == m['global_versioning'] == '40.4.180'
+          assert v['asset_token'] == m['asset_token'] == 'market-core-v2.0-alpha-build-40.4.180'
+          assert c['live_data_branch'] == 'data/agent-crypto-live'
+          assert c['watchdog_read_authority'] == 'data/agent-crypto-live'
+          assert c['frontend_cutover'] is False
+          assert c['main_publication_retired'] is False
+          print('READBACK_404180_PASS')
+          PY
+
+      - name: Commit release and retire one-shot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/agent-crypto-40-4-180-live-data-branch-foundation.yml
+          git add .github/scripts/agent_crypto_publish_live_data.sh \
+                  .github/workflows/atlas-public-crypto-market.yml \
+                  .github/workflows/atlas-public-crypto-extended.yml \
+                  .github/workflows/atlas-public-crypto-market-clock.yml \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m 'release Agent-Crypto 40.4.180 live data branch foundation'
+          git pull --rebase origin main
+          RELEASE_SHA="$(git rev-parse HEAD)"
+          echo "RELEASE_SHA=$RELEASE_SHA" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Terminal release proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main data/agent-crypto-live
+          git merge-base --is-ancestor "$RELEASE_SHA" origin/main
+          git checkout --detach "$RELEASE_SHA"
+          python .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build 40.4.180 \
+            --expected-release 'LIVE DATA BRANCH FOUNDATION · DUAL-PUBLISH QUALIFICATION'
+          bash -n .github/scripts/agent_crypto_publish_live_data.sh
+          test ! -e .github/workflows/agent-crypto-40-4-180-live-data-branch-foundation.yml
+          test "$(grep -c 'data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/' .github/workflows/atlas-public-crypto-market-clock.yml)" -eq 2
+          echo "TERMINAL_404180_PASS $RELEASE_SHA"
