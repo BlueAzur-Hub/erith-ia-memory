@@ -45,3 +45,241 @@
 #btnAtlasDocumentBackgroundToggle40395{
   display:none !important;
 }
+
+/* ==========================================================================
+   40.4.186 — STATIC GRAPH SHELL PARITY
+   Crypto is the physical geometry master. No fade, no translate, no animated
+   width/height compensation. Parallel markets replace content inside fixed
+   slots; they never move the cockpit.
+   ========================================================================== */
+
+/* Retire 40.4.185 transition / transform compensation with higher specificity. */
+html body.atlas-administrator-mirror #analyste .chart-shell,
+html body.atlas-administrator-mirror #analyste .atlas-unified-domain-shell-404185,
+html body.atlas-administrator-mirror #analyste #detailPanel,
+html body.atlas-administrator-mirror #analyste .atlas-unified-domain-rail-404185,
+html body.atlas-administrator-mirror #analyste.atlas-market-soft-transition-404185 .chart-shell,
+html body.atlas-administrator-mirror #analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-shell-404185,
+html body.atlas-administrator-mirror #analyste.atlas-market-soft-transition-404185 #detailPanel,
+html body.atlas-administrator-mirror #analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-rail-404185{
+  transition:none !important;
+  transform:none !important;
+  will-change:auto !important;
+  opacity:1 !important;
+}
+
+/* One fixed two-column deck for every graph domain. */
+@media (min-width:901px){
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #analyste,
+  html[data-cyclic-market-mode="parallel"] body.atlas-administrator-mirror #analyste{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) var(--atlas-market-master-rail-w,350px) !important;
+    grid-template-rows:auto !important;
+    column-gap:10px !important;
+    align-items:start !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #analyste > .chart-panel,
+  html[data-cyclic-market-mode="parallel"] body.atlas-administrator-mirror #analyste > .chart-panel{
+    grid-column:1 !important;
+    grid-row:1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    transform:none !important;
+  }
+
+  /* The extra domain status row is useful elsewhere, but not inside Graphique.
+     It was the main vertical offset visible in the operator screenshots. */
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsCommandBar.atlas-metals-command-bar{
+    display:none !important;
+  }
+
+  /* Fixed graph header: market selector and toolbar share the Crypto Y origin. */
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #analyste .section-head.compact.chart-v2-recovery-line{
+    position:relative !important;
+    display:block !important;
+    min-height:var(--atlas-market-master-toolbar-h,52px) !important;
+    height:var(--atlas-market-master-toolbar-h,52px) !important;
+    margin:0 !important;
+    padding:0 8px 0 178px !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasFixedMarketAnchorSlot404168{
+    left:22px !important;
+    top:7px !important;
+    width:146px !important;
+    height:38px !important;
+    transform:none !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsUnifiedToolbar{
+    position:absolute !important;
+    inset:0 8px 0 178px !important;
+    width:auto !important;
+    height:var(--atlas-market-master-toolbar-h,52px) !important;
+    min-height:var(--atlas-market-master-toolbar-h,52px) !important;
+    margin:0 !important;
+    padding:0 !important;
+    display:grid !important;
+    grid-template-columns:170px 360px minmax(390px,1fr) !important;
+    grid-template-areas:"view section period" !important;
+    align-items:center !important;
+    gap:10px !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+    transform:none !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsUnifiedToolbar > div{
+    min-width:0 !important;
+    min-height:32px !important;
+    margin:0 !important;
+    display:flex !important;
+    align-items:center !important;
+    gap:5px !important;
+    white-space:nowrap !important;
+  }
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsUnifiedToolbar > div:nth-of-type(1){grid-area:view !important;}
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsUnifiedToolbar > div:nth-of-type(2){grid-area:period !important;justify-content:flex-start !important;}
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsUnifiedToolbar > div:nth-of-type(3){grid-area:section !important;justify-content:flex-start !important;}
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsUnifiedToolbar span{
+    flex:0 0 auto !important;
+    color:#9eb0bd !important;
+    font-size:8px !important;
+    font-weight:950 !important;
+    letter-spacing:.1em !important;
+    text-transform:uppercase !important;
+  }
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsUnifiedToolbar button{
+    min-height:28px !important;
+    height:28px !important;
+    margin:0 !important;
+    padding:4px 9px !important;
+    border-radius:8px !important;
+    white-space:nowrap !important;
+  }
+
+  /* The graph itself begins at the exact Crypto slot. */
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #analyste .chart-shell{
+    position:relative !important;
+    width:100% !important;
+    height:var(--atlas-market-master-shell-h,560px) !important;
+    min-height:var(--atlas-market-master-shell-h,560px) !important;
+    max-height:var(--atlas-market-master-shell-h,560px) !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    transform:none !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation{
+    position:absolute !important;
+    inset:0 !important;
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    min-height:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    box-shadow:none !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+  }
+
+  /* Remove the second internal page header; the common cockpit header already
+     owns domain identity and controls. */
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation > .atlas-parallel-market-head,
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation > .atlas-parallel-market-foot,
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation #atlasMetalsBasket,
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation #atlasMetalsResultHeadline,
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation .atlas-metals-graph-market-note,
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation .atlas-metals-graph-legacy-table{
+    display:none !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation .atlas-parallel-market-view,
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation #atlasMetalsEmptyChart{
+    display:block !important;
+    width:100% !important;
+    height:100% !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    box-sizing:border-box !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation #atlasMetalsEmptyChart{
+    padding:10px !important;
+    border-radius:14px !important;
+    overflow:hidden !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasParallelMarketFoundation .atlas-metals-empty-chart-stage{
+    width:100% !important;
+    height:calc(100% - 42px) !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsChartCanvas{
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    transform:none !important;
+  }
+
+  /* Metal detail replaces Crypto detail in the same rail, not beside it. */
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #atlasMetalsDetailPanel{
+    display:block !important;
+    grid-column:2 !important;
+    grid-row:1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:var(--atlas-market-master-rail-h,640px) !important;
+    min-height:var(--atlas-market-master-rail-h,640px) !important;
+    max-height:var(--atlas-market-master-rail-h,640px) !important;
+    margin:0 !important;
+    align-self:start !important;
+    overflow:auto !important;
+    transform:none !important;
+    box-sizing:border-box !important;
+  }
+
+  html[data-cyclic-market-domain="metals"] body.atlas-administrator-mirror #detailPanel{
+    display:none !important;
+  }
+
+  /* Parallel domains use the same fixed outer slots too. */
+  html[data-cyclic-market-mode="parallel"] body.atlas-administrator-mirror #atlasCyclicMarketInertStage404168{
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    min-height:0 !important;
+    transform:none !important;
+  }
+  html[data-cyclic-market-mode="parallel"] body.atlas-administrator-mirror #atlasCyclicMarketInertDetail404168{
+    grid-column:2 !important;
+    grid-row:1 !important;
+    width:100% !important;
+    min-width:0 !important;
+    margin:0 !important;
+    transform:none !important;
+  }
+}
+
+@media (max-width:900px){
+  html body.atlas-administrator-mirror #analyste .atlas-unified-domain-shell-404185,
+  html body.atlas-administrator-mirror #analyste .atlas-unified-domain-rail-404185{
+    transform:none !important;
+    transition:none !important;
+  }
+}
