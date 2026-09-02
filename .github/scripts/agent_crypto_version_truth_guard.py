@@ -132,6 +132,8 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
         fail("administrator mirror global_versioning drift")
     if str(mirror.get("release") or "").strip() != release:
         fail("administrator mirror release drift")
+    if str(mirror.get("asset_token") or "").strip() != expected_token:
+        fail("administrator mirror asset_token drift")
     if str(mirror.get("parent_build") or "").strip() != parent:
         fail("administrator mirror parent_build drift")
     if revision and str(mirror.get("revision") or "").strip() != revision:
