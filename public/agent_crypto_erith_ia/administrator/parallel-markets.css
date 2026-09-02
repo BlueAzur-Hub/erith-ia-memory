@@ -71,3 +71,159 @@ html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168 hea
   .atlas-parallel-live-shell{position:relative;grid-template-rows:auto minmax(360px,1fr) auto auto}
   .atlas-parallel-live-summary,.atlas-parallel-live-legend{position:static;width:auto;max-width:none;pointer-events:auto}
 }
+
+/* =========================================================
+   40.4.181R1 — CRYPTO OPERATOR GEOMETRY MIRROR
+   The Crypto toolbar is the positional master. Metals, Indices,
+   Energy and Cross preserve the same operator slots without
+   changing data, chart engines or market capabilities.
+   ========================================================= */
+@media (min-width:901px){
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168{
+    --atlas-master-label-slot:55px;
+    --atlas-master-view-slot:140px;
+    --atlas-master-scale-slot:150px;
+    --atlas-master-display-slot:335px;
+    display:grid!important;
+    grid-template-columns:
+      var(--atlas-master-label-slot)
+      var(--atlas-master-view-slot)
+      var(--atlas-master-scale-slot)
+      var(--atlas-master-display-slot)
+      minmax(330px,1fr)!important;
+    align-items:center!important;
+    column-gap:0!important;
+    row-gap:0!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:var(--atlas-market-master-toolbar-h,52px)!important;
+    margin:0!important;
+    padding:0 8px 0 0!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+  }
+
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar::before,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168::before{
+    content:"LECTURE";
+    grid-column:1;
+    align-self:center;
+    justify-self:start;
+    color:#9eb0bd;
+    font:950 8px/1 system-ui,sans-serif;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group{
+    margin:0!important;
+    min-width:0!important;
+    min-height:32px!important;
+    box-sizing:border-box!important;
+  }
+
+  /* VUE occupies exactly the Crypto VUE slot. */
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(1),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(1){
+    grid-column:2;
+    display:grid!important;
+    grid-template-columns:42px repeat(2,minmax(42px,1fr));
+    align-items:center!important;
+    gap:4px!important;
+  }
+
+  /* SECTION uses Crypto's AFFICHER slot. The ÉCHELLE slot remains reserved. */
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(3),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(3){
+    grid-column:4;
+    display:flex!important;
+    align-items:center!important;
+    gap:5px!important;
+    overflow:hidden;
+  }
+
+  /* PÉRIODE starts at the exact Crypto period position. */
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2){
+    grid-column:5;
+    display:grid!important;
+    grid-template-columns:52px repeat(7,minmax(34px,1fr));
+    align-items:center!important;
+    gap:4px!important;
+  }
+
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2)>span,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>small{
+    grid-column:1;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2)>button:nth-of-type(1),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(1){grid-column:2}
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2)>button:nth-of-type(2),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(2){grid-column:3}
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2)>button:nth-of-type(3),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(3){grid-column:4}
+  /* grid column 5 deliberately reserves Crypto's 60 j button. */
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2)>button:nth-of-type(4),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(4){grid-column:6}
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2)>button:nth-of-type(5),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(5){grid-column:7}
+
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar button,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 button,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 b{
+    min-width:0!important;
+    max-width:100%!important;
+    white-space:nowrap!important;
+  }
+
+  /* Remove the non-Crypto title row from layout flow: domain identity already
+     lives in the fixed market capsule and the right rail. */
+  html[data-cyclic-market-domain="metals"] #atlasParallelMarketFoundation .atlas-parallel-market-head,
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-heading{
+    display:none!important;
+  }
+
+  /* Give the chart back the vertical space previously consumed by that title. */
+  html[data-cyclic-market-domain="metals"] #atlasParallelMarketFoundation .atlas-metals-empty-chart-stage{
+    min-height:calc(var(--atlas-market-master-shell-h,560px) - 28px)!important;
+    height:auto!important;
+    max-height:none!important;
+  }
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-shell{
+    grid-template-rows:minmax(0,1fr)!important;
+    gap:0!important;
+  }
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-stage{
+    grid-row:1!important;
+  }
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary{
+    top:18px!important;
+  }
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-legend{
+    top:62px!important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1300px){
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168{
+    --atlas-master-label-slot:48px;
+    --atlas-master-view-slot:126px;
+    --atlas-master-scale-slot:110px;
+    --atlas-master-display-slot:235px;
+    grid-template-columns:
+      var(--atlas-master-label-slot)
+      var(--atlas-master-view-slot)
+      var(--atlas-master-scale-slot)
+      var(--atlas-master-display-slot)
+      minmax(286px,1fr)!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>div:nth-of-type(2),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2){
+    grid-template-columns:46px repeat(7,minmax(30px,1fr));
+    gap:3px!important;
+  }
+}
