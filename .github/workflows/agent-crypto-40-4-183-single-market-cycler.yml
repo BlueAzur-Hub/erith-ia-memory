@@ -1,0 +1,195 @@
+name: Agent-Crypto 40.4.183 Single Market Cycler
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40-4-183-single-market-cycler.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-183-single-market-cycler
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch single fixed market cycler
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from datetime import datetime, timezone
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          build = '40.4.183'
+          parent = '40.4.182'
+          release = 'SINGLE MARKET CYCLER · CRYPTO GEOMETRY LOCK'
+          stamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z')
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{label}: expected exactly 1 match, got {count}')
+              return text.replace(old, new, 1)
+
+          # 1) Existing owner only: harden the already-canonical single physical selector.
+          p = root / 'js/market-stack.js'
+          s = p.read_text(encoding='utf-8')
+          s = replace_once(s, 'const BUILD = "40.4.182";', 'const BUILD = "40.4.183";', 'market-stack BUILD')
+          s = replace_once(s, 'const REVISION = "V1";', 'const REVISION = "V2";', 'market-stack REVISION')
+          s = replace_once(s, 'const CONTRACT = "DOMAIN_SKELETON_MIRROR_404174";', 'const CONTRACT = "SINGLE_MARKET_CYCLER_CRYPTO_GEOMETRY_LOCK_404183";', 'market-stack CONTRACT')
+          s = replace_once(
+              s,
+              '    button.dataset.fixedMarketAnchor404168 = "locked";\n    return true;',
+              '    button.dataset.fixedMarketAnchor404168 = "locked";\n    button.dataset.marketGeometryOwner = "crypto-master";\n    button.dataset.marketCycle = ORDER.map(item => item.id).join(">");\n    button.dataset.marketGeometryLock = BUILD;\n    slot.dataset.marketGeometryOwner = "crypto-master";\n    slot.dataset.marketGeometryLock = BUILD;\n    return true;',
+              'fixed anchor metadata'
+          )
+          s = replace_once(
+              s,
+              '  function updateButton(domain){\n    const b = byId("atlasMarketDomainSwitch"), v = byId("atlasMarketDomainSwitchValue");',
+              '  function updateButton(domain){\n    installFixedAnchor();\n    const b = byId("atlasMarketDomainSwitch"), v = byId("atlasMarketDomainSwitchValue");',
+              'updateButton re-anchor'
+          )
+          s = replace_once(
+              s,
+              '    b.dataset.cyclicMarketNext = n.id;\n    b.setAttribute("aria-label", `Marché ${s.title}. Cliquer pour afficher ${n.title}.`);',
+              '    b.dataset.cyclicMarketNext = n.id;\n    b.dataset.singlePhysicalSelector = "true";\n    b.setAttribute("aria-current", "true");\n    b.setAttribute("aria-label", `Marché ${s.title}. Cliquer au même endroit pour afficher ${n.title}.`);',
+              'button single selector semantics'
+          )
+          s = replace_once(
+              s,
+              '    if(s.mode === "native" && !options.nativeAlreadyHandled) ensureNativeDomain(s.native);\n    requestAnimationFrame(() => {\n      syncPanels(s.id);',
+              '    if(s.mode === "native" && !options.nativeAlreadyHandled) ensureNativeDomain(s.native);\n    installFixedAnchor();\n    requestAnimationFrame(() => {\n      installFixedAnchor();\n      syncPanels(s.id);',
+              'applyDomain re-anchor'
+          )
+          s = replace_once(
+              s,
+              '      requestAnimationFrame(() => { syncPanels("metals"); updateButton("metals"); emitDomain("metals"); });',
+              '      requestAnimationFrame(() => { installFixedAnchor(); syncPanels("metals"); updateButton("metals"); emitDomain("metals"); });',
+              'crypto to metals re-anchor'
+          )
+          s = replace_once(
+              s,
+              '      fixed_anchor:true, fixed_chart_slot:true, fixed_right_rail_slot:true, geometry_from_crypto:true,',
+              '      fixed_anchor:true, single_physical_selector:true, cycle_contract:"crypto>metals>indices>energy>cross-market>crypto", fixed_chart_slot:true, fixed_right_rail_slot:true, geometry_from_crypto:true,',
+              'public market-stack contract'
+          )
+          p.write_text(s, encoding='utf-8')
+
+          # 2) Geometry lock: same physical X/Y/width/height for all five domains.
+          p = root / 'market-cascade.css'
+          s = p.read_text(encoding='utf-8')
+          marker = '/* 40.4.183 — SINGLE MARKET CYCLER · CRYPTO GEOMETRY LOCK */'
+          if marker in s:
+              raise SystemExit('40.4.183 CSS marker already present')
+          s += '''\n\n/* 40.4.183 — SINGLE MARKET CYCLER · CRYPTO GEOMETRY LOCK\n   One physical selector. Same Crypto reference coordinates. Only the domain label/content changes. */\nhtml[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168{\n  position:absolute!important;left:22px!important;top:16px!important;right:auto!important;bottom:auto!important;\n  width:146px!important;min-width:146px!important;max-width:146px!important;\n  height:38px!important;min-height:38px!important;max-height:38px!important;\n  margin:0!important;padding:0!important;transform:none!important;z-index:120!important;\n  display:flex!important;align-items:center!important;justify-content:flex-start!important;pointer-events:none!important;\n}\nhtml[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168>#atlasMarketDomainSwitch{\n  position:relative!important;inset:auto!important;left:auto!important;top:auto!important;right:auto!important;bottom:auto!important;\n  width:146px!important;min-width:146px!important;max-width:146px!important;\n  height:38px!important;min-height:38px!important;max-height:38px!important;\n  margin:0!important;padding:0 13px!important;transform:none!important;box-sizing:border-box!important;\n  display:inline-flex!important;align-items:center!important;justify-content:center!important;pointer-events:auto!important;\n}\nhtml[data-cyclic-market-domain] #atlasMarketDomainSwitchValue{\n  display:inline-block!important;min-width:58px!important;text-align:center!important;white-space:nowrap!important;\n}\n@media(max-width:900px){\n  html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168{left:16px!important;}\n}\n@media(max-width:620px){\n  html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168{left:10px!important;width:132px!important;min-width:132px!important;max-width:132px!important;}\n  html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168>#atlasMarketDomainSwitch{width:132px!important;min-width:132px!important;max-width:132px!important;padding:0 9px!important;}\n}\n'''
+          p.write_text(s, encoding='utf-8')
+
+          # 3) Runtime/public version constants.
+          p = root / 'js/app.js'
+          s = p.read_text(encoding='utf-8')
+          s = replace_once(s, 'const AGENT_CRYPTO_ADMIN_BUILD = "40.4.182";', 'const AGENT_CRYPTO_ADMIN_BUILD = "40.4.183";', 'app build')
+          s = replace_once(s, 'const GLOBAL_VERSIONING = "40.4.182";', 'const GLOBAL_VERSIONING = "40.4.183";', 'app global version')
+          s = replace_once(s, 'const AGENT_CRYPTO_ADMIN_RELEASE = "METALS GRAPH AETHER FEED MASK · CRYPTO GEOMETRY CONTINUITY";', f'const AGENT_CRYPTO_ADMIN_RELEASE = "{release}";', 'app release')
+          s = replace_once(s, 'const AGENT_CRYPTO_ADMIN_PARENT_BUILD = "40.4.181";', 'const AGENT_CRYPTO_ADMIN_PARENT_BUILD = "40.4.182";', 'app parent')
+          p.write_text(s, encoding='utf-8')
+
+          # 4) HTML identity/cache authority. Keep historical text untouched; update only active meta/current token references.
+          p = root / 'index.html'
+          s = p.read_text(encoding='utf-8')
+          s = replace_once(s, '<meta name="agent-crypto-build" content="40.4.182" />', '<meta name="agent-crypto-build" content="40.4.183" />', 'index build meta')
+          s = replace_once(s, '<meta name="agent-crypto-build-release" content="METALS GRAPH AETHER FEED MASK · CRYPTO GEOMETRY CONTINUITY" />', f'<meta name="agent-crypto-build-release" content="{release}" />', 'index release meta')
+          s = replace_once(s, '<meta name="agent-crypto-build-parent" content="40.4.181" />', '<meta name="agent-crypto-build-parent" content="40.4.182" />', 'index parent meta')
+          s = s.replace('administrator-build-40.4.182', 'administrator-build-40.4.183')
+          p.write_text(s, encoding='utf-8')
+
+          # 5) Canonical manifests. Preserve engine / Market Core untouched.
+          p = root / 'version.json'
+          data = json.loads(p.read_text(encoding='utf-8'))
+          data['release'] = release
+          data['build'] = build
+          data['asset_token'] = 'market-core-v2.0-alpha-build-40.4.183'
+          data['status'] = 'single_market_cycler_crypto_geometry_lock'
+          data['prepared_at'] = stamp
+          data['published_at'] = stamp
+          data['parent_build'] = parent
+          lineage_tail = ' → 40.4.183 single physical market selector: Crypto reference coordinates locked while cycling CRYPTO → MÉTAUX → INDICES → ÉNERGIE → CROSS → CRYPTO.'
+          if lineage_tail.strip(' →') not in data.get('lineage',''):
+              data['lineage'] = data.get('lineage','') + lineage_tail
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          p = root / 'administrator-version.json'
+          data = json.loads(p.read_text(encoding='utf-8'))
+          data['administrator_build'] = build
+          data['global_versioning'] = build
+          data['build_label'] = 'Build 40.4.183'
+          data['release'] = release
+          data['release_status'] = 'One physical market selector remains at the Crypto reference coordinates while cycling through all five market domains.'
+          data['timestamp'] = stamp
+          data['prepared_at'] = stamp
+          if 'published_at' in data:
+              data['published_at'] = stamp
+          if 'parent_build' in data:
+              data['parent_build'] = parent
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # 6) Static gates: exact cycle/order and protected engine.
+          ms = (root / 'js/market-stack.js').read_text(encoding='utf-8')
+          css = (root / 'market-cascade.css').read_text(encoding='utf-8')
+          app = (root / 'js/app.js').read_text(encoding='utf-8')
+          index = (root / 'index.html').read_text(encoding='utf-8')
+          v = json.loads((root / 'version.json').read_text(encoding='utf-8'))
+          av = json.loads((root / 'administrator-version.json').read_text(encoding='utf-8'))
+          assert 'id:"crypto"' in ms and 'id:"metals"' in ms and 'id:"indices"' in ms and 'id:"energy"' in ms and 'id:"cross-market"' in ms
+          assert 'single_physical_selector:true' in ms
+          assert 'cycle_contract:"crypto>metals>indices>energy>cross-market>crypto"' in ms
+          assert marker in css
+          assert 'const AGENT_CRYPTO_MARKET_CORE = "38.15.11";' in app
+          assert '<meta name="agent-crypto-engine" content="Market Core 38.15.11" />' in index
+          assert v['build'] == build and v['parent_build'] == parent and v['engine']['reference_build'] == '38.15.11'
+          assert av['administrator_build'] == build and av['global_versioning'] == build and av['market_core'] == '38.15.11'
+          print('40.4.183 static gates PASS')
+          PY
+
+      - name: JavaScript syntax gate
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+
+      - name: Version truth gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F '40.4.183' public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          grep -F '40.4.183' public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+          grep -F '40.4.183' public/agent_crypto_erith_ia/administrator/js/market-stack.js >/dev/null
+          grep -F '40.4.183' public/agent_crypto_erith_ia/administrator/js/app.js >/dev/null
+          grep -F 'agent-crypto-build" content="40.4.183' public/agent_crypto_erith_ia/administrator/index.html >/dev/null
+          grep -F '38.15.11' public/agent_crypto_erith_ia/administrator/js/app.js >/dev/null
+
+      - name: Commit canonical release and retire one-shot
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/agent-crypto-40-4-183-single-market-cycler.yml
+          git add public/agent_crypto_erith_ia/administrator/js/market-stack.js \
+                  public/agent_crypto_erith_ia/administrator/market-cascade.css \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m 'release Agent-Crypto 40.4.183 single market cycler geometry lock'
+          git push origin HEAD:main
