@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.174";
+  const BUILD = "40.4.180";
   const REVISION = "V1";
   const CONTRACT = "DOMAIN_SKELETON_MIRROR_404174";
   const ORDER = Object.freeze([
