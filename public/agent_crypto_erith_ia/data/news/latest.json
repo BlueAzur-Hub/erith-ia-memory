@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.5",
-  "generated_at": "2026-09-02T19:53:16.483230+00:00",
+  "generated_at": "2026-09-02T22:44:06.264353+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -29,7 +29,7 @@
         "distinct_sources": 4
       },
       "regulation": {
-        "events_72h": 16,
+        "events_72h": 15,
         "distinct_sources": 8
       },
       "leverage": {
@@ -47,9 +47,9 @@
       "group": "finance",
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
-      "fetched_count": 41,
-      "qualified_count": 3,
-      "latency_ms": 273,
+      "fetched_count": 42,
+      "qualified_count": 4,
+      "latency_ms": 335,
       "error": null
     },
     {
@@ -58,9 +58,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 31,
-      "qualified_count": 2,
-      "latency_ms": 227,
+      "fetched_count": 26,
+      "qualified_count": 1,
+      "latency_ms": 299,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 186,
+      "latency_ms": 91,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 344,
+      "latency_ms": 221,
       "error": null
     },
     {
@@ -93,7 +93,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 23,
-      "latency_ms": 485,
+      "latency_ms": 172,
       "error": null
     },
     {
@@ -104,7 +104,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 27,
-      "latency_ms": 355,
+      "latency_ms": 219,
       "error": null
     },
     {
@@ -114,8 +114,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 37,
-      "qualified_count": 27,
-      "latency_ms": 174,
+      "qualified_count": 28,
+      "latency_ms": 100,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 9,
-      "latency_ms": 806,
+      "latency_ms": 941,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 165,
+      "latency_ms": 130,
       "error": null
     },
     {
@@ -147,8 +147,8 @@
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 1,
-      "latency_ms": 315,
+      "qualified_count": 3,
+      "latency_ms": 427,
       "error": null
     },
     {
@@ -157,9 +157,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+crypto+Clarity+Act+market+structure+Congress+SEC+stablecoin+when%3A7d&hl=en-US&gl=US&ceid=US:en",
       "status": "ok",
-      "fetched_count": 13,
-      "qualified_count": 12,
-      "latency_ms": 389,
+      "fetched_count": 12,
+      "qualified_count": 11,
+      "latency_ms": 277,
       "error": null
     },
     {
@@ -168,9 +168,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+ethereum+ETF+inflows+outflows+institutional+when%3A7d&hl=en-US&gl=US&ceid=US:en",
       "status": "ok",
-      "fetched_count": 50,
-      "qualified_count": 48,
-      "latency_ms": 527,
+      "fetched_count": 30,
+      "qualified_count": 30,
+      "latency_ms": 318,
       "error": null
     },
     {
@@ -179,9 +179,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+crypto+Treasury+yields+buybacks+liquidity+Federal+Reserve+when%3A7d&hl=en-US&gl=US&ceid=US:en",
       "status": "ok",
-      "fetched_count": 45,
-      "qualified_count": 37,
-      "latency_ms": 552,
+      "fetched_count": 42,
+      "qualified_count": 35,
+      "latency_ms": 385,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 167,
+      "latency_ms": 177,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 8298,
+      "latency_ms": 10563,
       "error": null
     }
   ],
@@ -232,11 +232,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-09-02T17:41:52+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.599706+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.599706+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.907522+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.907522+00:00",
       "freshness": {
         "iso": "2026-09-02T17:41:52+00:00",
-        "hours": 2.19,
+        "hours": 5.03,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -281,7 +281,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "XRP, Ethereum et Solana Hit de 369 M$ Crypto Liquidation Wave - Altcoin Buzz",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "XRP, Ethereum et Solana Hit de 369 M$ Crypto Liquidation Wave - Altcoin Buzz",
       "headline_fr_display_status": "raw_v2",
@@ -949,11 +949,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-02T05:28:51+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.157865+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.157865+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.425505+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.425505+00:00",
       "freshness": {
         "iso": "2026-09-02T05:28:51+00:00",
-        "hours": 14.4,
+        "hours": 17.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1026,11 +1026,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-01T20:01:05+00:00",
-      "first_seen_at": "2026-09-02T19:53:07.849961+00:00",
-      "last_seen_at": "2026-09-02T19:53:07.849961+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.357097+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.357097+00:00",
       "freshness": {
         "iso": "2026-09-01T20:01:05+00:00",
-        "hours": 23.87,
+        "hours": 26.71,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1102,11 +1102,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-01T16:26:10+00:00",
-      "first_seen_at": "2026-09-02T19:53:07.857200+00:00",
-      "last_seen_at": "2026-09-02T19:53:07.857200+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.364073+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.364073+00:00",
       "freshness": {
         "iso": "2026-09-01T16:26:10+00:00",
-        "hours": 27.45,
+        "hours": 30.3,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1342,11 +1342,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-01T12:16:52+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.574634+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.574634+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.889657+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.889657+00:00",
       "freshness": {
         "iso": "2026-09-01T12:16:52+00:00",
-        "hours": 31.6,
+        "hours": 34.45,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1426,11 +1426,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-08-31T16:55:46+00:00",
-      "first_seen_at": "2026-09-02T19:53:07.882700+00:00",
-      "last_seen_at": "2026-09-02T19:53:07.882700+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.391788+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.391788+00:00",
       "freshness": {
         "iso": "2026-08-31T16:55:46+00:00",
-        "hours": 50.96,
+        "hours": 53.8,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1680,11 +1680,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T13:14:47+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.139421+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.139421+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.407102+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.407102+00:00",
       "freshness": {
         "iso": "2026-09-02T13:14:47+00:00",
-        "hours": 6.64,
+        "hours": 9.49,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1930,7 +1930,7 @@
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T07:30:45+00:00",
       "first_seen_at": "2026-09-02T19:53:08.627492+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.627492+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.914375+00:00",
       "freshness": {
         "iso": "2026-08-31T07:30:45+00:00",
         "hours": 60.37,
@@ -1979,7 +1979,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETFs voir 924 millions de dollars entrées nettes, ETH ETFs attirer 824 millions de dollars en semaine de bannière - Crypto Briefing",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETFs voir 924 M$ entrées nettes, ETH ETFs attirer 824 M$ en semaine de bannière - Crypto Briefing",
       "headline_fr_display_status": "editorial_v2",
@@ -2095,11 +2095,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T00:14:13+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.616474+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.616474+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.912164+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.912164+00:00",
       "freshness": {
         "iso": "2026-08-31T00:14:13+00:00",
-        "hours": 67.65,
+        "hours": 70.5,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2154,13 +2154,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_e6f16f4237cd5460",
-      "event_id": "feed_e6f16f4237cd5460",
-      "fingerprint": "e6f16f4237cd5460",
+      "id": "feed_6db6bfb480df42e9",
+      "event_id": "feed_6db6bfb480df42e9",
+      "fingerprint": "6db6bfb480df42e9",
       "version": "V1.1-alpha.26.47.5",
       "origin": "github_news_collector",
-      "headline": "Bitcoin and Ethereum ETFs Surge as Liquidity Boost Fuels Institutional Demand - kucoin.com",
-      "body": "Bitcoin and Ethereum ETFs Surge as Liquidity Boost Fuels Institutional Demand kucoin.com",
+      "headline": "Bitcoin and Ethereum ETFs Surge as Liquidity Boost Fuels Institutional Demand - KuCoin",
+      "body": "Bitcoin and Ethereum ETFs Surge as Liquidity Boost Fuels Institutional Demand KuCoin",
       "source_name": "Google News · ETF flows discovery",
       "source_url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxOWHJhblJldFN2VGFDdFE0cTZ2LWpiRTNLRkRlUDdkcWYxNTJjUGYwMUF2SklrOVFVUENRbE9mOVlmVnJWSVc0X0Y2R0hVNDBLbXhFUzdWOWNqSlV1MXFmbzVzU1RTSEdrOWU4OG9hbXJ3N1RqaXloT2M4NlhyeW9pQlliUVdMNjQ?oc=5",
       "source_host": "news.google.com",
@@ -2177,11 +2177,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-30T03:28:04+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.573541+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.573541+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.888508+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.888508+00:00",
       "freshness": {
         "iso": "2026-08-30T03:28:04+00:00",
-        "hours": 88.42,
+        "hours": 91.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2229,10 +2229,10 @@
       "driver_coverage_build": "40.3.89",
       "causal_claim": false,
       "observation_only": true,
-      "headline_fr": "Bitcoin et Ethereum ETFs Augmenter comme la liquidité stimule les combustibles Demande institutionnelle - kucoin.com",
+      "headline_fr": "Bitcoin et Ethereum ETFs Surge comme la liquidité stimule la demande institutionnelle - KuCoin",
       "headline_fr_status": "translated_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Bitcoin et Ethereum ETFs Augmenter comme la liquidité stimule les combustibles Demande institutionnelle - kucoin.com",
+      "headline_fr_display": "Bitcoin et Ethereum ETFs Surge comme la liquidité stimule la demande institutionnelle - KuCoin",
       "headline_fr_display_status": "raw_v2",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
@@ -2510,12 +2510,12 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T07:59:43+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.069705+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.069705+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.473883+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.473883+00:00",
       "freshness": {
         "iso": "2026-09-02T07:59:43+00:00",
-        "hours": 11.89,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.74,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -2675,11 +2675,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T11:03:46+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.149327+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.149327+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.416277+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.416277+00:00",
       "freshness": {
         "iso": "2026-09-02T11:03:46+00:00",
-        "hours": 8.82,
+        "hours": 11.67,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2754,11 +2754,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T07:20:03+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.154632+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.154632+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.421854+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.421854+00:00",
       "freshness": {
         "iso": "2026-09-02T07:20:03+00:00",
-        "hours": 12.55,
+        "hours": 15.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3163,11 +3163,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T19:31:04+00:00",
-      "first_seen_at": "2026-09-02T19:53:07.876082+00:00",
-      "last_seen_at": "2026-09-02T19:53:07.876082+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.384755+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.384755+00:00",
       "freshness": {
         "iso": "2026-08-31T19:31:04+00:00",
-        "hours": 48.37,
+        "hours": 51.21,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3383,6 +3383,87 @@
       "headline_fr_quality_reasons": []
     },
     {
+      "id": "feed_7a37c98626c4adda",
+      "event_id": "feed_7a37c98626c4adda",
+      "fingerprint": "7a37c98626c4adda",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin ETFs See $241M Outflow Amid Mixed Market Sentiment - Coinfomania",
+      "body": "Bitcoin ETFs See $241M Outflow Amid Mixed Market Sentiment Coinfomania",
+      "source_name": "Google News · ETF flows discovery",
+      "source_url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxQVVlEclJQZTIwZFYzODdUdHhpakVhbFR4emtPOWl0d3NlUlpRcHVwLWxqZ2llX3FmWHB1ZjJOdHhyeGRBak1tbWplaTNPTEcyUEM3ZTliREpGOXpXWUxZR2NiS1BfQXdyeW5ZVWdRVDJiWUotT3I3TTRJMnkySWdXZjV1cThGMUJKSFE?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "Google News · ETF flows discovery"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMiigFBVV95cUxQVVlEclJQZTIwZFYzODdUdHhpakVhbFR4emtPOWl0d3NlUlpRcHVwLWxqZ2llX3FmWHB1ZjJOdHhyeGRBak1tbWplaTNPTEcyUEM3ZTliREpGOXpXWUxZR2NiS1BfQXdyeW5ZVWdRVDJiWUotT3I3TTRJMnkySWdXZjV1cThGMUJKSFE?oc=5"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-02T14:08:58+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.917842+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.917842+00:00",
+      "freshness": {
+        "iso": "2026-09-02T14:08:58+00:00",
+        "hours": 8.58,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 58,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 91,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "money_flow",
+        "crypto"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "Bitcoin ETFs Voir 241M$ Sortie dans un climat de marché mixte - Coinfomania",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "Bitcoin ETFs Voir 241M$ Sortie dans un climat de marché mixte - Coinfomania",
+      "headline_fr_display_status": "raw_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
       "id": "feed_21a4849ee1fcfce2",
       "event_id": "feed_21a4849ee1fcfce2",
       "fingerprint": "21a4849ee1fcfce2",
@@ -3406,11 +3487,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T11:33:20+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.607701+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.607701+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.909908+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.909908+00:00",
       "freshness": {
         "iso": "2026-09-02T11:33:20+00:00",
-        "hours": 8.33,
+        "hours": 11.18,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3488,11 +3569,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T06:50:25+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.567823+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.588617+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.884448+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.904821+00:00",
       "freshness": {
         "iso": "2026-09-02T06:50:25+00:00",
-        "hours": 13.05,
+        "hours": 15.89,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3731,11 +3812,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-01T13:15:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.604102+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.604102+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.908694+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.908694+00:00",
       "freshness": {
         "iso": "2026-09-01T13:15:00+00:00",
-        "hours": 30.64,
+        "hours": 33.48,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3863,7 +3944,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "BlackRock mène à 216,7 millions de dollars d'entrée dans le spot américain Bitcoin ETFs comme altcoin fonds bond - Bitget",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "BlackRock mène à 216,7 M$ d'entrée dans le spot américain Bitcoin ETFs comme altcoin fonds bond - Bitget",
       "headline_fr_display_status": "editorial_v2",
@@ -4027,7 +4108,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Spot Bitcoin ETFs Rebound avec 216,7M$ Entrées sous le contrôle de BlackRocks IBIT - Bitget",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Spot Bitcoin ETFs Rebound avec 216,7M$ Entrées sous le contrôle de BlackRocks IBIT - Bitget",
       "headline_fr_display_status": "raw_v2",
@@ -4108,7 +4189,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Spot Ethereum ETFs Voir 87,6 M$ Flux entrants, marquage 11 jours Streak - Bitget",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Spot Les ETF Ethereum enregistrent 87,6 M$ Flux entrants, marquage 11 jours Streak - Bitget",
       "headline_fr_display_status": "editorial_v2",
@@ -4142,12 +4223,12 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T20:20:56+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.628609+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.628609+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.916681+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.916681+00:00",
       "freshness": {
         "iso": "2026-08-31T20:20:56+00:00",
-        "hours": 47.54,
-        "label": "Récente · moins de 48 h",
+        "hours": 50.38,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -4274,7 +4355,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETF Sorties Hit 201M$ Comme les ruptures d'écoulement - Bitget",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETF Sorties Hit 201M$ Comme les ruptures d'écoulement - Bitget",
       "headline_fr_display_status": "raw_v2",
@@ -4356,7 +4437,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETF Inflow Streak s'achève avec 202 millions de dollars de retrait en tant que Sénat Vote Looms - finance.biggo.com",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETF Inflow Streak s'achève avec 202 M$ de retrait en tant que Sénat Vote Looms - finance.biggo.com",
       "headline_fr_display_status": "editorial_v2",
@@ -4394,7 +4475,7 @@
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T15:26:11+00:00",
       "first_seen_at": "2026-09-01T19:59:27.358304+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.598223+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.896182+00:00",
       "freshness": {
         "iso": "2026-08-31T15:26:11+00:00",
         "hours": 28.55,
@@ -4475,11 +4556,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T13:24:32+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.592949+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.592949+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.906004+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.906004+00:00",
       "freshness": {
         "iso": "2026-08-31T13:24:32+00:00",
-        "hours": 54.48,
+        "hours": 57.32,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4560,11 +4641,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T12:32:27+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.613491+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.613491+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.910965+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.910965+00:00",
       "freshness": {
         "iso": "2026-08-31T12:32:27+00:00",
-        "hours": 55.34,
+        "hours": 58.19,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4808,11 +4889,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-31T09:12:15+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.731053+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.731053+00:00",
+      "first_seen_at": "2026-09-02T22:43:56.030367+00:00",
+      "last_seen_at": "2026-09-02T22:43:56.030367+00:00",
       "freshness": {
         "iso": "2026-08-31T09:12:15+00:00",
-        "hours": 58.68,
+        "hours": 61.53,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4938,7 +5019,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Crypto US Spot ETFs Voir les entrées générales la semaine dernière; Bitcoin gagne 924,48 millions de dollars, Ether 824,42 $ Millions de fleurs",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Crypto US Spot ETFs Voir les entrées générales la semaine dernière; Bitcoin gagne 924,48 M$, Ether 824,42 $ Millions de fleurs",
       "headline_fr_display_status": "editorial_v2",
@@ -4970,11 +5051,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T02:50:49+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.570533+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.570533+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.887240+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.887240+00:00",
       "freshness": {
         "iso": "2026-08-31T02:50:49+00:00",
-        "hours": 65.04,
+        "hours": 67.89,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5051,11 +5132,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T00:32:21+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.563757+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.563757+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.880165+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.880165+00:00",
       "freshness": {
         "iso": "2026-08-31T00:32:21+00:00",
-        "hours": 67.35,
+        "hours": 70.19,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5101,7 +5182,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETFs Voir la fin du flux net de neuf jours Streak; la confiance des institutions reste intacte - Moomoo",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETFs Voir la fin du flux net de neuf jours Streak; la confiance des institutions reste intacte - Moomoo",
       "headline_fr_display_status": "raw_v2",
@@ -5137,7 +5218,7 @@
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-30T22:45:10+00:00",
       "first_seen_at": "2026-08-31T23:56:02.836702+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.575726+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.890829+00:00",
       "freshness": {
         "iso": "2026-08-30T22:45:10+00:00",
         "hours": 25.18,
@@ -5272,7 +5353,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Ethereum Surges 3,5% au milieu de ETF Flux d'entrées et d'approvisionnement - CoinMarketCap",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Ethereum Surges 3,5% au milieu de ETF Flux d'entrées et d'approvisionnement - CoinMarketCap",
       "headline_fr_display_status": "raw_v2",
@@ -5385,11 +5466,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-30T07:51:54+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.721917+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.721917+00:00",
+      "first_seen_at": "2026-09-02T22:43:56.021592+00:00",
+      "last_seen_at": "2026-09-02T22:43:56.021592+00:00",
       "freshness": {
         "iso": "2026-08-30T07:51:54+00:00",
-        "hours": 84.02,
+        "hours": 86.87,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5470,11 +5551,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-30T00:06:54+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.618344+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.618344+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.913216+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.913216+00:00",
       "freshness": {
         "iso": "2026-08-30T00:06:54+00:00",
-        "hours": 91.77,
+        "hours": 94.62,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5639,11 +5720,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T16:43:02+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.578023+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.578023+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.893197+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.893197+00:00",
       "freshness": {
         "iso": "2026-08-29T16:43:02+00:00",
-        "hours": 99.17,
+        "hours": 102.01,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5698,13 +5779,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_a9dccacd94907223",
-      "event_id": "feed_a9dccacd94907223",
-      "fingerprint": "a9dccacd94907223",
+      "id": "feed_c5b8a53bf9e493a1",
+      "event_id": "feed_c5b8a53bf9e493a1",
+      "fingerprint": "c5b8a53bf9e493a1",
       "version": "V1.1-alpha.26.47.5",
       "origin": "github_news_collector",
-      "headline": "BlackRock Records $1 Billion Ethereum Inflow - tradingview.com",
-      "body": "BlackRock Records $1 Billion Ethereum Inflow tradingview.com",
+      "headline": "BlackRock Records $1 Billion Ethereum Inflow - TradingView",
+      "body": "BlackRock Records $1 Billion Ethereum Inflow TradingView",
       "source_name": "Google News · ETF flows discovery",
       "source_url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPSGJkb052TXZBc3ljTDR2SEVCTHVuZXNGZ05XOWZPZ2hiYzNiZnFfUVozVE0xRVZ3QlNHc3dyVXdTSEs3SXF2SF94UnpSWkJUMTFnT19RdlV3bFJoUzhnRUp0Z096UTRtYmNEeFVkR0lHTk1OR0UtTDZSZlltM0YxVGFmSHVkQlpCajhjTWpjMHQ2OFc0dDR1V2RLSXNzc1UzR3Aw?oc=5",
       "source_host": "news.google.com",
@@ -5721,11 +5802,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T12:16:59+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.566672+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.566672+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.883250+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.883250+00:00",
       "freshness": {
         "iso": "2026-08-29T12:16:59+00:00",
-        "hours": 103.6,
+        "hours": 106.45,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5770,17 +5851,14 @@
       "driver_coverage_build": "40.3.89",
       "causal_claim": false,
       "observation_only": true,
-      "headline_fr": "BlackRock Records $1 Million Ethereum Inflow - tradingview.com",
+      "headline_fr": "BlackRock Records 1 milliard de dollars Ethereum Entrée - TradingView",
       "headline_fr_status": "translated_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "BlackRock Records $1 Million Ethereum Inflow - tradingview.com",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 83,
+      "headline_fr_display": "BlackRock enregistre 1 Md$ d’entrées sur Ethereum — TradingView",
+      "headline_fr_display_status": "editorial_v2",
+      "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": [
-        "inflows?",
-        "english_residue"
-      ]
+      "headline_fr_quality_reasons": []
     },
     {
       "id": "feed_0990bc434e52bd67",
@@ -5807,11 +5885,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T10:13:05+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.581934+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.581934+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.897360+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.897360+00:00",
       "freshness": {
         "iso": "2026-08-29T10:13:05+00:00",
-        "hours": 105.67,
+        "hours": 108.51,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5971,7 +6049,7 @@
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T07:13:23+00:00",
       "first_seen_at": "2026-09-02T05:55:49.615204+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.626354+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.915565+00:00",
       "freshness": {
         "iso": "2026-08-29T07:13:23+00:00",
         "hours": 94.71,
@@ -6051,11 +6129,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T05:25:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.586206+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.586206+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.900467+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.900467+00:00",
       "freshness": {
         "iso": "2026-08-29T05:25:00+00:00",
-        "hours": 110.47,
+        "hours": 113.32,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6459,11 +6537,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-28T10:27:52+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.684032+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.684032+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.984256+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.984256+00:00",
       "freshness": {
         "iso": "2026-08-28T10:27:52+00:00",
-        "hours": 129.42,
+        "hours": 132.27,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6544,11 +6622,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-28T09:01:29+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.712109+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.738299+00:00",
+      "first_seen_at": "2026-09-02T22:43:56.010092+00:00",
+      "last_seen_at": "2026-09-02T22:43:56.038124+00:00",
       "freshness": {
         "iso": "2026-08-28T09:01:29+00:00",
-        "hours": 130.86,
+        "hours": 133.71,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6596,7 +6674,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETF Les flux d'entrées surgissent au fur et à mesure des rachats de trésorerie.Push Yields Lower: Est-ce le début d'un nouveau Rallye Crypto? - CryptoRank",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETF Les flux d'entrées surgissent au fur et à mesure des rachats de trésorerie.Push Yields Lower: Est-ce le début d'un nouveau Rallye Crypto? - CryptoRank",
       "headline_fr_display_status": "raw_v2",
@@ -6630,7 +6708,7 @@
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-28T04:20:11+00:00",
       "first_seen_at": "2026-08-31T14:02:49.830213+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.587469+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.903568+00:00",
       "freshness": {
         "iso": "2026-08-28T04:20:11+00:00",
         "hours": 81.71,
@@ -6957,11 +7035,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-27T05:49:13+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.576884+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.576884+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.892031+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.892031+00:00",
       "freshness": {
         "iso": "2026-08-27T05:49:13+00:00",
-        "hours": 158.07,
+        "hours": 160.91,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7038,12 +7116,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T19:11:15+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.046499+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.046499+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.449219+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.449219+00:00",
       "freshness": {
         "iso": "2026-09-02T19:11:15+00:00",
-        "hours": 0.7,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.54,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -7201,11 +7279,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-01T19:17:39+00:00",
-      "first_seen_at": "2026-09-02T19:53:07.999383+00:00",
-      "last_seen_at": "2026-09-02T19:53:07.999383+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.504094+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.504094+00:00",
       "freshness": {
         "iso": "2026-09-01T19:17:39+00:00",
-        "hours": 24.59,
+        "hours": 27.44,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7280,11 +7358,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-01T17:52:32+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.001406+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.001406+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.505843+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.505843+00:00",
       "freshness": {
         "iso": "2026-09-01T17:52:32+00:00",
-        "hours": 26.01,
+        "hours": 28.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7361,11 +7439,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-01T14:57:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.003346+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.003346+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.507632+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.507632+00:00",
       "freshness": {
         "iso": "2026-09-01T14:57:00+00:00",
-        "hours": 28.94,
+        "hours": 31.78,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7440,11 +7518,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-31T18:24:32+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.005021+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.005021+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.509500+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.509500+00:00",
       "freshness": {
         "iso": "2026-08-31T18:24:32+00:00",
-        "hours": 49.48,
+        "hours": 52.32,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7519,11 +7597,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-28T17:33:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.006719+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.006719+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.511285+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.511285+00:00",
       "freshness": {
         "iso": "2026-08-28T17:33:00+00:00",
-        "hours": 122.34,
+        "hours": 125.18,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7598,11 +7676,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-27T21:30:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.008521+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.008521+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.513312+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.513312+00:00",
       "freshness": {
         "iso": "2026-08-27T21:30:00+00:00",
-        "hours": 142.39,
+        "hours": 145.23,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7677,11 +7755,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-27T15:00:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.100171+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.100171+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.584959+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.584959+00:00",
       "freshness": {
         "iso": "2026-08-27T15:00:00+00:00",
-        "hours": 148.89,
+        "hours": 151.73,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7754,11 +7832,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T16:04:52+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.179122+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.179122+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.664834+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.664834+00:00",
       "freshness": {
         "iso": "2026-09-02T16:04:52+00:00",
-        "hours": 3.8,
+        "hours": 6.65,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -7802,7 +7880,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Le CFTC émet la règle finale pour modifier l'exigence de compensation pour les swaps de taux d'intérêt libellés en dollars canadiens et en peso mexicains",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Le CFTC émet la règle finale pour modifier l'exigence de compensation pour les swaps de taux d'intérêt libellés en dollars canadiens et en peso mexicains",
       "headline_fr_display_status": "raw_v2",
@@ -7834,11 +7912,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-02T10:50:38+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.150669+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.150669+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.417973+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.417973+00:00",
       "freshness": {
         "iso": "2026-09-02T10:50:38+00:00",
-        "hours": 9.04,
+        "hours": 11.89,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -7918,12 +7996,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-02T08:31:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.153354+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.153354+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.420544+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.420544+00:00",
       "freshness": {
         "iso": "2026-09-02T08:31:00+00:00",
-        "hours": 11.37,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.22,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -8000,11 +8078,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-02T04:40:36+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.160965+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.160965+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.428787+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.428787+00:00",
       "freshness": {
         "iso": "2026-09-02T04:40:36+00:00",
-        "hours": 15.21,
+        "hours": 18.06,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8084,11 +8162,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-01T23:55:46+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.162593+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.162593+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.430384+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.430384+00:00",
       "freshness": {
         "iso": "2026-09-01T23:55:46+00:00",
-        "hours": 19.96,
+        "hours": 22.8,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8206,7 +8284,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "L'agence du crime du Royaume-Uni gèle Premier League 13,5 millions de dollars compte dans crypto sonde de crime",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "L'agence du crime du Royaume-Uni gèle Premier League 13,5 M$ compte dans crypto sonde de crime",
       "headline_fr_display_status": "editorial_v2",
@@ -8639,11 +8717,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T17:41:04+00:00",
-      "first_seen_at": "2026-09-02T19:53:07.823491+00:00",
-      "last_seen_at": "2026-09-02T19:53:07.823491+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.335458+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.335458+00:00",
       "freshness": {
         "iso": "2026-09-02T17:41:04+00:00",
-        "hours": 2.2,
+        "hours": 5.05,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -8686,7 +8764,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Groupes Crypto pousser SEC pour des règles sur mesure sur le nouveau ETFs",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Groupes Crypto pousser SEC pour des règles sur mesure sur le nouveau ETFs",
       "headline_fr_display_status": "raw_v2",
@@ -8919,7 +8997,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "SEC, CFTC Speed Crypto Rulemaking Malgré le Congrès Recess - bloomingbit",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "SEC, CFTC Speed Crypto Rulemaking Malgré le Congrès Recess - bloomingbit",
       "headline_fr_display_status": "raw_v2",
@@ -9073,7 +9151,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Les entrées nettes hebdomadaires ont atteint un sommet annuel de 3,2 milliards de CNY à mesure que les investisseurs institutionnels reviennent aux actifs numériques. - Moomoo",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Les entrées nettes hebdomadaires ont atteint un sommet annuel de 3,2 milliards de CNY à mesure que les investisseurs institutionnels reviennent aux actifs numériques. - Moomoo",
       "headline_fr_display_status": "raw_v2",
@@ -9261,11 +9339,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-08-30T01:59:59+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.739478+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.739478+00:00",
+      "first_seen_at": "2026-09-02T22:43:56.039364+00:00",
+      "last_seen_at": "2026-09-02T22:43:56.039364+00:00",
       "freshness": {
         "iso": "2026-08-30T01:59:59+00:00",
-        "hours": 89.89,
+        "hours": 92.73,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9342,11 +9420,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-29T07:00:00+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.543116+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.543116+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.935022+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.935022+00:00",
       "freshness": {
         "iso": "2026-08-29T07:00:00+00:00",
-        "hours": 108.89,
+        "hours": 111.73,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9419,11 +9497,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-08-28T10:09:40+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.706746+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.706746+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.998632+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.998632+00:00",
       "freshness": {
         "iso": "2026-08-28T10:09:40+00:00",
-        "hours": 129.72,
+        "hours": 132.57,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9581,11 +9659,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-08-27T10:25:50+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.690078+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.690078+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.988605+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.988605+00:00",
       "freshness": {
         "iso": "2026-08-27T10:25:50+00:00",
-        "hours": 153.46,
+        "hours": 156.3,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9662,11 +9740,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-08-27T07:18:06+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.687185+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.687185+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.985550+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.985550+00:00",
       "freshness": {
         "iso": "2026-08-27T07:18:06+00:00",
-        "hours": 156.58,
+        "hours": 159.43,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9822,12 +9900,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T09:48:49+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.068430+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.068430+00:00",
+      "first_seen_at": "2026-09-02T22:43:55.472528+00:00",
+      "last_seen_at": "2026-09-02T22:43:55.472528+00:00",
       "freshness": {
         "iso": "2026-09-02T09:48:49+00:00",
-        "hours": 10.07,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.92,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -9877,83 +9955,6 @@
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
       "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_07012a972eabddaf",
-      "event_id": "feed_07012a972eabddaf",
-      "fingerprint": "07012a972eabddaf",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "SEC proposes broad update to decades-old transfer agent rules with blockchain nod",
-      "body": "The proposal would modernize rules largely unchanged since the 1980s, addressing blockchain-based recordkeeping, tokenized securities and increasingly automated market infrastructure.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/sec-proposes-transfer-agent-overhaul-as-securities-move-onchain",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/sec-proposes-transfer-agent-overhaul-as-securities-move-onchain"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-01T17:52:51+00:00",
-      "first_seen_at": "2026-09-02T19:53:08.080508+00:00",
-      "last_seen_at": "2026-09-02T19:53:08.080508+00:00",
-      "freshness": {
-        "iso": "2026-09-01T17:52:51+00:00",
-        "hours": 26.0,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "SEC propose une mise à jour générale aux règles de l'agent de transfert vieux de plusieurs décennies avec clin d'oeil blockchain",
-      "headline_fr_status": "reused_previous_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "SEC propose une mise à jour générale aux règles de l'agent de transfert vieux de plusieurs décennies avec clin d'oeil blockchain",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
     }
   ],
   "translation_fr": {
@@ -9977,16 +9978,16 @@
     "browser_translation": false,
     "external_llm": false,
     "events": 120,
-    "translated": 10,
+    "translated": 3,
     "retranslated_v2": 0,
-    "reused_v2": 110,
+    "reused_v2": 117,
     "source_fr": 0,
     "fallback_en": 0,
     "missing": 0,
     "normalized_before_mt": 0,
     "quality_pass": 118,
     "quality_warn": 2,
-    "editorialized": 47,
+    "editorialized": 48,
     "coverage": 120,
     "coverage_ratio": 1.0
   }
