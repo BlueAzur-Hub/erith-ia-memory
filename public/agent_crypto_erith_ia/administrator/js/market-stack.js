@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.183";
+  const BUILD = "40.4.184";
   const REVISION = "V2";
   const CONTRACT = "SINGLE_MARKET_CYCLER_CRYPTO_GEOMETRY_LOCK_404183";
   const ORDER = Object.freeze([
