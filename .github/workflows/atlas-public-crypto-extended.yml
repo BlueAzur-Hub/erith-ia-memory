@@ -114,7 +114,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          .github/scripts/agent_crypto_publish_live_data.sh \
+          bash .github/scripts/agent_crypto_publish_live_data.sh \
             dual \
             public/agent_crypto_erith_ia/data/crypto \
             "archive public extended crypto market snapshot" \
