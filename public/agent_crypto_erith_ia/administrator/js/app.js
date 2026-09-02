@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.177";
-  const ADMIN_RELEASE = "VERSION TRUTH CI GUARD · RELEASE ATOMICITY LOCK";
+  const ADMIN_BUILD = "40.4.178";
+  const ADMIN_RELEASE = "CANONICAL VERSION VALIDATOR · TERMINAL RELEASE PROOF";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
