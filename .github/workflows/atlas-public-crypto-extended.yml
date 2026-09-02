@@ -107,54 +107,19 @@ jobs:
           })
           PY
 
-      - name: Commit extended public crypto data
+      - name: Publish extended crypto data · dual qualification
         if: always()
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          data_dir="public/agent_crypto_erith_ia/data/crypto"
-          temp_dir="$(mktemp -d)"
-          trap 'rm -rf "$temp_dir"' EXIT
-
-          for name in extended.json extended_status.json; do
-            if [ -f "$data_dir/$name" ]; then
-              cp "$data_dir/$name" "$temp_dir/$name"
-            fi
-          done
-
-          for attempt in 1 2 3; do
-            echo "Publication extended snapshot · tentative $attempt/3"
-            git fetch origin main
-            git reset --hard origin/main
-
-            mkdir -p "$data_dir"
-            for name in extended.json extended_status.json; do
-              if [ -f "$temp_dir/$name" ]; then
-                cp "$temp_dir/$name" "$data_dir/$name"
-              fi
-            done
-
-            git add "$data_dir/extended.json" "$data_dir/extended_status.json" 2>/dev/null || true
-            if git diff --cached --quiet; then
-              echo "No extended crypto data change to commit."
-              exit 0
-            fi
-
-            git commit -m "archive public extended crypto market snapshot"
-            if git push origin HEAD:main; then
-              echo "Extended crypto snapshot published."
-              exit 0
-            fi
-
-            echo "Remote main changed; retrying non-destructively."
-            sleep $((attempt * 2))
-          done
-
-          echo "Unable to publish extended crypto snapshot after 3 attempts."
-          exit 1
+          .github/scripts/agent_crypto_publish_live_data.sh \
+            dual \
+            public/agent_crypto_erith_ia/data/crypto \
+            "archive public extended crypto market snapshot" \
+            "publish live crypto extended snapshot" \
+            extended.json extended_status.json
 
       - name: Require usable extended snapshot
         if: always()
