@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.185";
-  const REVISION = "V3";
-  const CONTRACT = "UNIFIED_GRAPH_SHELL_SOFT_TRANSITION_404185";
+  const BUILD = "40.4.186";
+  const REVISION = "V4";
+  const CONTRACT = "STATIC_GRAPH_SHELL_NO_TRANSITION_404186";
   const ORDER = Object.freeze([
     Object.freeze({ id:"crypto", label:"CRYPTO", title:"Crypto", mode:"native", native:"crypto" }),
     Object.freeze({ id:"metals", label:"MÉTAUX", title:"Métaux précieux et industriels", mode:"native", native:"metals" }),
@@ -37,57 +37,19 @@
     }catch(_){}
   }
 
-  function visibleLargeAncestor(node){
+  function clearRetired185Geometry(){
     const deck = byId("analyste");
-    let cur = node?.parentElement || null, best = null;
-    while(cur && cur !== deck && cur !== document.body){
-      const r = cur.getBoundingClientRect();
-      const cs = getComputedStyle(cur);
-      if(r.width > 700 && r.height > 300 && cs.display !== "none" && cs.visibility !== "hidden") best = cur;
-      cur = cur.parentElement;
-    }
-    return best;
-  }
-
-  function clearUnifiedGeometry(){
+    deck?.classList.remove("atlas-market-soft-transition-404185");
     document.querySelectorAll(".atlas-unified-domain-shell-404185,.atlas-unified-domain-rail-404185").forEach(node => {
       node.classList.remove("atlas-unified-domain-shell-404185","atlas-unified-domain-rail-404185");
       ["--atlas-unified-dx","--atlas-unified-dy","--atlas-unified-w","--atlas-unified-h"].forEach(k => node.style.removeProperty(k));
+      node.style.removeProperty("transform");
+      node.style.removeProperty("transition");
+      node.style.removeProperty("will-change");
+      node.style.removeProperty("opacity");
     });
-  }
-
-  function alignActiveGeometry(domain){
-    const deck = byId("analyste");
-    if(!deck || domain === "crypto") { clearUnifiedGeometry(); return; }
-    const masterShell = document.querySelector("#analyste .chart-shell");
-    const masterRail = byId("detailPanel");
-    const activeToolbar = domain === "metals" ? byId("atlasMetalsUnifiedToolbar") : byId("atlasCyclicMarketMirrorToolbar404168");
-    const activeRail = domain === "metals" ? byId("atlasMetalsDetailPanel") : byId("atlasCyclicMarketInertDetail404168");
-    const activeShell = visibleLargeAncestor(activeToolbar);
-    if(!masterShell || !activeShell) return;
-    clearUnifiedGeometry();
-    const mr = masterShell.getBoundingClientRect(), ar = activeShell.getBoundingClientRect();
-    activeShell.classList.add("atlas-unified-domain-shell-404185");
-    activeShell.style.setProperty("--atlas-unified-dx", `${Math.round(mr.left-ar.left)}px`);
-    activeShell.style.setProperty("--atlas-unified-dy", `${Math.round(mr.top-ar.top)}px`);
-    activeShell.style.setProperty("--atlas-unified-w", `${Math.round(mr.width)}px`);
-    activeShell.style.setProperty("--atlas-unified-h", `${Math.round(mr.height)}px`);
-    if(masterRail && activeRail){
-      const rr=masterRail.getBoundingClientRect(), xr=activeRail.getBoundingClientRect();
-      activeRail.classList.add("atlas-unified-domain-rail-404185");
-      activeRail.style.setProperty("--atlas-unified-dx", `${Math.round(rr.left-xr.left)}px`);
-      activeRail.style.setProperty("--atlas-unified-dy", `${Math.round(rr.top-xr.top)}px`);
-      activeRail.style.setProperty("--atlas-unified-w", `${Math.round(rr.width)}px`);
-      activeRail.style.setProperty("--atlas-unified-h", `${Math.round(rr.height)}px`);
-    }
-    document.documentElement.dataset.unifiedGraphShell404185 = domain;
-  }
-
-  function beginSoftMarketTransition(){
-    const deck=byId("analyste");
-    if(!deck) return;
-    deck.classList.add("atlas-market-soft-transition-404185");
-    requestAnimationFrame(() => requestAnimationFrame(() => deck.classList.remove("atlas-market-soft-transition-404185")));
+    delete document.documentElement.dataset.unifiedGraphShell404185;
+    document.documentElement.dataset.staticGraphShell404186 = "ready";
   }
 
   function captureCryptoGeometry(){
@@ -105,6 +67,7 @@
     if(rr?.width > 220) deck.style.setProperty("--atlas-market-master-rail-w", `${Math.round(rr.width)}px`);
     if(tr?.height > 28) deck.style.setProperty("--atlas-market-master-toolbar-h", `${Math.round(tr.height)}px`);
     document.documentElement.dataset.cryptoSkeletonGeometry404174 = "captured";
+    document.documentElement.dataset.cryptoStaticGeometry404186 = "captured";
   }
 
   function installFixedAnchor(){
@@ -140,7 +103,7 @@
       stage.id = "atlasCyclicMarketInertStage404168";
       stage.className = "atlas-cyclic-market-inert-stage-404168";
       stage.hidden = true;
-      stage.innerHTML = `<div class="atlas-cyclic-market-inert-grid-404168" aria-live="polite"><div class="atlas-cyclic-market-inert-hero-404168"><small>ERITH.IA · MARKETS OBSERVATORY</small><h3 data-cyclic-market-title>Marché parallèle</h3><p data-cyclic-market-description>Chargement de la Source Truth publique.</p><div class="atlas-cyclic-market-inert-line-404168"></div></div><div class="atlas-cyclic-market-inert-gates-404168"><span><small>SOURCE TRUTH</small><b>CHARGEMENT</b></span><span><small>HISTORIQUE</small><b>VÉRIFICATION</b></span><span><small>UNITÉS</small><b>EXPLICITES</b></span><span><small>MOTEUR</small><b>OBSERVATION</b></span></div><footer><b>AUCUN PRIX INVENTÉ</b><span>Squelette Crypto miroir · contenu métier séparé.</span></footer></div>`;
+      stage.innerHTML = `<div class="atlas-cyclic-market-inert-grid-404168" aria-live="polite"><div class="atlas-cyclic-market-inert-hero-404168"><small>ERITH.IA · MARKETS OBSERVATORY</small><h3 data-cyclic-market-title>Marché parallèle</h3><p data-cyclic-market-description>Chargement de la Source Truth publique.</p><div class="atlas-cyclic-market-inert-line-404168"></div></div><div class="atlas-cyclic-market-inert-gates-404168"><span><small>SOURCE TRUTH</small><b>CHARGEMENT</b></span><span><small>HISTORIQUE</small><b>VÉRIFICATION</b></span><span><small>UNITÉS</small><b>EXPLICITES</b></span><span><small>MOTEUR</small><b>OBSERVATION</b></span></div><footer><b>AUCUN PRIX INVENTÉ</b><span>Squelette Crypto statique · contenu métier séparé.</span></footer></div>`;
       chartShell.appendChild(stage);
     }
 
@@ -174,7 +137,7 @@
     const state = toolbar?.querySelector("[data-cyclic-market-toolbar-state]");
     const detailTitle = detail?.querySelector("[data-cyclic-market-detail-title]");
     if(title) title.textContent = s.title;
-    if(desc) desc.textContent = "Chargement du domaine public dans le squelette Crypto miroir.";
+    if(desc) desc.textContent = "Chargement du domaine public dans le squelette Crypto statique.";
     if(state) state.textContent = `${s.label} · PUBLIC`;
     if(detailTitle) detailTitle.textContent = `Lecture ${s.title}`;
   }
@@ -198,6 +161,7 @@
     if(mirrorToolbar) mirrorToolbar.hidden = !parallel;
     if(parallelDetail) parallelDetail.hidden = !parallel;
     if(parallel) setParallelPlaceholder(domain);
+    clearRetired185Geometry();
   }
 
   function updateButton(domain){
@@ -223,15 +187,21 @@
     nativeBypass = false;
   }
 
+  function publishBuildTruth(){
+    const text = byId("atlasVersionControlText");
+    if(text) text.textContent = `Build ${BUILD}`;
+    document.documentElement.dataset.agentCryptoBuild = BUILD;
+    document.documentElement.dataset.marketShellContract = CONTRACT;
+  }
+
   function applyDomain(domain, options={}){
     const s = specFor(domain);
-    beginSoftMarketTransition();
     current = s.id;
     const html = document.documentElement;
     html.dataset.cyclicMarketDomain = s.id;
     html.dataset.cyclicMarketMode = s.mode;
     html.dataset.cyclicMarketRevision = REVISION;
-    html.dataset.marketSkeleton = "crypto-master-mirror";
+    html.dataset.marketSkeleton = "crypto-master-static";
     if(s.mode === "native" && !options.nativeAlreadyHandled) ensureNativeDomain(s.native);
     installFixedAnchor();
     requestAnimationFrame(() => {
@@ -239,7 +209,7 @@
       syncPanels(s.id);
       updateButton(s.id);
       if(s.id === "crypto") captureCryptoGeometry();
-      requestAnimationFrame(() => alignActiveGeometry(s.id));
+      publishBuildTruth();
       emitDomain(s.id);
     });
   }
@@ -253,9 +223,15 @@
       const html = document.documentElement;
       html.dataset.cyclicMarketDomain = "metals";
       html.dataset.cyclicMarketMode = "native";
-      html.dataset.marketSkeleton = "crypto-master-mirror";
-      beginSoftMarketTransition();
-      requestAnimationFrame(() => { installFixedAnchor(); syncPanels("metals"); updateButton("metals"); requestAnimationFrame(() => alignActiveGeometry("metals")); emitDomain("metals"); });
+      html.dataset.cyclicMarketRevision = REVISION;
+      html.dataset.marketSkeleton = "crypto-master-static";
+      requestAnimationFrame(() => {
+        installFixedAnchor();
+        syncPanels("metals");
+        updateButton("metals");
+        publishBuildTruth();
+        emitDomain("metals");
+      });
       return;
     }
     event.preventDefault();
@@ -266,6 +242,7 @@
   function init(){
     document.getElementById("atlasTrueMarketStackMetals404167R1")?.remove();
     document.getElementById("atlasMarketCascade404167")?.remove();
+    clearRetired185Geometry();
     if(!ensureHosts()){
       document.documentElement.dataset.domainSkeletonMirror404174 = "missing-owner";
       return;
@@ -276,14 +253,21 @@
     b.addEventListener("click", onMarketSwitchClick, true);
     applyDomain(current, { nativeAlreadyHandled:true });
     requestAnimationFrame(captureCryptoGeometry);
+    publishBuildTruth();
     document.documentElement.dataset.domainSkeletonMirror404174 = "ready";
+    document.documentElement.dataset.staticGraphShell404186 = "ready";
     globalThis.ErithDomainSkeletonMirror404174 = Object.freeze({
       build:BUILD, revision:REVISION, contract:CONTRACT,
       order:ORDER.map(x => x.id), current:() => current,
       next:() => applyDomain(nextOf(current).id), go:d => applyDomain(specFor(d).id),
       master:"crypto", native_domains:["crypto","metals"], parallel_domains:["indices","energy","cross-market"],
-      fixed_anchor:true, single_physical_selector:true, cycle_contract:"crypto>metals>indices>energy>cross-market>crypto", fixed_chart_slot:true, fixed_right_rail_slot:true, geometry_from_crypto:true,
-      single_cockpit_surface:true, unified_geometry_runtime:true, soft_transition:true, new_chart_engine:false, new_timer:false, new_observer:false, new_storage_owner:false
+      fixed_anchor:true, single_physical_selector:true,
+      cycle_contract:"crypto>metals>indices>energy>cross-market>crypto",
+      fixed_chart_slot:true, fixed_right_rail_slot:true,
+      geometry_from_crypto:true, single_cockpit_surface:true,
+      static_geometry:true, unified_geometry_runtime:false, soft_transition:false,
+      retired_404185_transform_compensation:true,
+      new_chart_engine:false, new_timer:false, new_observer:false, new_storage_owner:false
     });
   }
 
