@@ -5,11 +5,17 @@ on:
   workflow_run:
     workflows:
       - "Atlas Market Archive Top 50 Stable"
+      - "Atlas Public Crypto Market"
+      - "Atlas Public Crypto Extended"
+      - "Atlas Public Metals Archive"
+      - "Atlas Public Indices Archive"
+      - "Atlas Public Energy Archive"
+      - "Atlas Public Cross Market Archive"
     types:
       - completed
   schedule:
-    # Offset from the canonical collector (11/41) and from the top of the hour.
-    # UTC is sufficient because cadence, not local wall time, owns this watchdog.
+    # Native heartbeat remains useful, but is no longer the only wake path.
+    # UTC is sufficient because freshness, not local wall time, owns recovery.
     - cron: "17,47 * * * *"
 
 permissions:
@@ -21,17 +27,23 @@ permissions:
 # 40.4.139 used one 5h30 long-running clock which queued exactly one successor.
 # If that successor did not materialize, the producer stopped after slot 11.
 #
-# 40.4.160R1 keeps this file as the single recovery owner and adds one independent
+# 40.4.160R1 kept this file as the single recovery owner and added one independent
 # wake source: completion of the already-existing Top-50 stable collector.
-# This avoids relying exclusively on this watchdog's own GitHub schedule.
+#
+# 40.4.180 strengthens the same owner into an internal Aether pacemaker:
+# - native 17/47 schedule remains;
+# - Top-50 completion remains an independent hourly wake source;
+# - completion of the canonical/extended Crypto producers cross-checks the sibling;
+# - completion of the parallel public market archives adds low-frequency fallback
+#   wake sources without adding a second recovery engine.
+#
+# This is intentionally NOT a long-running runner and NOT a second collector.
+# Every wake is idempotent: stale data + no active producer is required before
+# a workflow_dispatch recovery is accepted.
 #
 # 40.4.180 reads freshness from data/agent-crypto-live so high-frequency market
 # publication can be isolated from the GitHub Pages source without changing the
 # collector or recovery semantics.
-#
-# The watchdog has no successor chain, no sleep loop and no long-lived runner.
-# It checks both public crypto snapshots and dispatches only the producer whose
-# published data is stale and whose workflow has no active run.
 #
 # Administrator, Atlas runtime, Market Core and data contracts are untouched.
 concurrency:
@@ -59,7 +71,7 @@ jobs:
           # Canonical runs at 11/41. Twenty minutes means one expected beat was missed.
           canonical_stale_after_seconds=1200
           # Extended runs at 22/52. Forty-five minutes tolerates normal schedule delay
-          # without dispatching on every 17/47 watchdog pass.
+          # without dispatching on every pacemaker wake.
           extended_stale_after_seconds=2700
 
           now_epoch="$(date -u +%s)"
@@ -85,9 +97,11 @@ jobs:
 
           active_runs() {
             local workflow="$1"
-            gh api \
+            local active=""
+            active="$(gh api \
               "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow}/runs?branch=main&per_page=20" \
-              --jq '[.workflow_runs[] | select(.status != "completed")] | length'
+              --jq '[.workflow_runs[] | select(.status != "completed")] | length')"
+            printf '%s' "${active:-0}"
           }
 
           recover_if_stale() {
@@ -105,7 +119,7 @@ jobs:
             echo "${label} active runs=${active:-0}"
 
             if [ "${active:-0}" -gt 0 ]; then
-              echo "${label}: producer already active; watchdog does not duplicate it."
+              echo "${label}: producer already active; pacemaker does not duplicate it."
               return 0
             fi
 
