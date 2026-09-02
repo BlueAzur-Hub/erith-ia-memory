@@ -61,3 +61,55 @@ html[data-cyclic-market-domain="cross-market"] #atlasMarketDomainSwitch{--atlas-
   #analyste .chart-v2-recovery-line{padding-left:150px!important}
   #atlasMetalsUnifiedToolbar,#atlasCyclicMarketMirrorToolbar404168{padding-left:0!important}
 }
+/* 40.4.174 — DOMAIN SKELETON MIRROR PASS
+   Parallel domains occupy the exact chart + right-rail slots of the Crypto master. */
+html[data-cyclic-market-mode="parallel"] #analyste{
+  grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr)!important;
+  grid-template-rows:auto!important;
+  align-items:start!important;
+}
+html[data-cyclic-market-mode="parallel"] #analyste>.chart-panel{
+  grid-column:1!important;grid-row:1!important;min-width:0!important;width:100%!important;
+}
+html[data-cyclic-market-mode="parallel"] #detailPanel,
+html[data-cyclic-market-mode="parallel"] #atlasMetalsDetailPanel{
+  display:none!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168{
+  display:block!important;grid-column:2!important;grid-row:1!important;
+  width:100%!important;min-width:0!important;height:var(--atlas-market-master-rail-h)!important;
+  min-height:var(--atlas-market-master-rail-h)!important;max-height:var(--atlas-market-master-rail-h)!important;
+  margin:0!important;align-self:start!important;overflow:auto!important;box-sizing:border-box!important;
+}
+html[data-cyclic-market-mode="parallel"] #analyste .chart-v2-toolbar,
+html[data-cyclic-market-mode="parallel"] #atlasMetalsUnifiedToolbar{
+  display:none!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168{
+  display:flex!important;flex:1 1 auto!important;width:100%!important;min-width:0!important;
+  min-height:var(--atlas-market-master-toolbar-h)!important;margin:0!important;padding-left:0!important;
+}
+html[data-cyclic-market-mode="parallel"] #analyste .chart-shell>*:not(#atlasCyclicMarketInertStage404168){display:none!important}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertStage404168{
+  display:block!important;position:absolute!important;inset:0!important;z-index:29!important;
+  width:auto!important;height:auto!important;min-height:0!important;margin:0!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasMetalsDomainStatus,
+html[data-cyclic-market-mode="parallel"] #chartCaption{display:none!important}
+html[data-cyclic-market-mode="parallel"] #market-workspace,
+html[data-cyclic-market-mode="parallel"] #atlasMetalsMathHost,
+html[data-cyclic-market-mode="parallel"] #atlasMetalsMarketArea,
+html[data-cyclic-market-mode="parallel"] #atlasMetalsAnalysisFoundation,
+html[data-cyclic-market-mode="parallel"] .atlas-metals-public-report,
+html[data-cyclic-market-mode="parallel"] .atlas-metals-report{display:none!important}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .mirror-group{
+  min-height:30px!important;align-items:center!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .mirror-group:first-child{margin-left:0!important}
+@media(max-width:1100px){
+  html[data-cyclic-market-mode="parallel"] #analyste{grid-template-columns:1fr!important;grid-template-rows:auto auto!important}
+  html[data-cyclic-market-mode="parallel"] #analyste>.chart-panel{grid-column:1!important;grid-row:1!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168{
+    grid-column:1!important;grid-row:2!important;height:auto!important;min-height:0!important;max-height:none!important;
+  }
+}

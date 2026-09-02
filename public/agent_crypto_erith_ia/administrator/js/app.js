@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const ADMIN_BUILD = "40.4.173";
-  const ADMIN_RELEASE = "CROSS-MARKET OBSERVATORY · BTC XAU S&P500 BRENT COPPER";
+  const ADMIN_BUILD = "40.4.174";
+  const ADMIN_RELEASE = "DOMAIN SKELETON MIRROR · CRYPTO MASTER";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
