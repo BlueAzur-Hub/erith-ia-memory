@@ -2,6 +2,11 @@ name: Atlas Public Crypto Market Watchdog
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/atlas-public-crypto-market-clock.yml"
   workflow_run:
     workflows:
       - "Atlas Market Archive Top 50 Stable"
@@ -14,9 +19,11 @@ on:
     types:
       - completed
   schedule:
-    # Native heartbeat remains useful, but is no longer the only wake path.
-    # UTC is sufficient because freshness, not local wall time, owns recovery.
-    - cron: "17,47 * * * *"
+    # Recovery heartbeat is deliberately offset from the canonical 11/41 beats.
+    # A 10-minute local cadence makes a missed producer beat recover quickly,
+    # while stale thresholds + active-run checks keep dispatch idempotent.
+    - cron: "7,17,27,37,47,57 * * * *"
+      timezone: "Europe/Paris"
 
 permissions:
   actions: write
@@ -30,12 +37,18 @@ permissions:
 # 40.4.160R1 kept this file as the single recovery owner and added one independent
 # wake source: completion of the already-existing Top-50 stable collector.
 #
-# 40.4.180 strengthens the same owner into an internal Aether pacemaker:
-# - native 17/47 schedule remains;
-# - Top-50 completion remains an independent hourly wake source;
-# - completion of the canonical/extended Crypto producers cross-checks the sibling;
-# - completion of the parallel public market archives adds low-frequency fallback
+# 40.4.180 strengthened the same owner into an internal Aether pacemaker:
+# - native schedule remained;
+# - Top-50 completion remained an independent hourly wake source;
+# - completion of the canonical/extended Crypto producers cross-checked the sibling;
+# - completion of the parallel public market archives added low-frequency fallback
 #   wake sources without adding a second recovery engine.
+#
+# 40.4.182 removes the remaining sleeping-princess gap:
+# - the watchdog now wakes every 10 minutes in Europe/Paris;
+# - editing this watchdog self-triggers one immediate health check;
+# - canonical data stale >=20 min is recovered only when no producer is active;
+# - extended data stale >=45 min keeps the same conservative contract.
 #
 # This is intentionally NOT a long-running runner and NOT a second collector.
 # Every wake is idempotent: stale data + no active producer is required before
