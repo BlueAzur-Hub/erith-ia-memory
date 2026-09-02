@@ -25,6 +25,10 @@ permissions:
 # wake source: completion of the already-existing Top-50 stable collector.
 # This avoids relying exclusively on this watchdog's own GitHub schedule.
 #
+# 40.4.180 reads freshness from data/agent-crypto-live so high-frequency market
+# publication can be isolated from the GitHub Pages source without changing the
+# collector or recovery semantics.
+#
 # The watchdog has no successor chain, no sleep loop and no long-lived runner.
 # It checks both public crypto snapshots and dispatches only the producer whose
 # published data is stale and whose workflow has no active run.
@@ -49,8 +53,8 @@ jobs:
 
           canonical_workflow="atlas-public-crypto-market.yml"
           extended_workflow="atlas-public-crypto-extended.yml"
-          canonical_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/latest.json"
-          extended_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/extended.json"
+          canonical_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/latest.json"
+          extended_url="https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/extended.json"
 
           # Canonical runs at 11/41. Twenty minutes means one expected beat was missed.
           canonical_stale_after_seconds=1200
