@@ -113,3 +113,12 @@ html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .
     grid-column:1!important;grid-row:2!important;height:auto!important;min-height:0!important;max-height:none!important;
   }
 }
+
+
+/* 40.4.183 — SINGLE MARKET CYCLER · CRYPTO GEOMETRY LOCK
+   One physical selector at the Crypto coordinates; only its domain content changes. */
+html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168{position:absolute!important;left:22px!important;top:16px!important;right:auto!important;bottom:auto!important;width:146px!important;min-width:146px!important;max-width:146px!important;height:38px!important;min-height:38px!important;max-height:38px!important;margin:0!important;padding:0!important;transform:none!important;z-index:120!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;pointer-events:none!important}
+html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168>#atlasMarketDomainSwitch{position:relative!important;inset:auto!important;left:auto!important;top:auto!important;right:auto!important;bottom:auto!important;width:146px!important;min-width:146px!important;max-width:146px!important;height:38px!important;min-height:38px!important;max-height:38px!important;margin:0!important;padding:0 13px!important;transform:none!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;pointer-events:auto!important}
+html[data-cyclic-market-domain] #atlasMarketDomainSwitchValue{display:inline-block!important;min-width:58px!important;text-align:center!important;white-space:nowrap!important}
+@media(max-width:900px){html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168{left:16px!important}}
+@media(max-width:620px){html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168{left:10px!important;width:132px!important;min-width:132px!important;max-width:132px!important}html[data-cyclic-market-domain] #atlasFixedMarketAnchorSlot404168>#atlasMarketDomainSwitch{width:132px!important;min-width:132px!important;max-width:132px!important;padding:0 9px!important}}
