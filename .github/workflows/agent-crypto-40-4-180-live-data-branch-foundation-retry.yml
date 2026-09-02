@@ -1,4 +1,4 @@
-name: Agent-Crypto 40.4.180 Live Data Branch Foundation Retry
+name: Agent-Crypto 40.4.180 Final Release Gate
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - name: Checkout
+      - name: Checkout current main
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -31,79 +31,65 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main
 
-      - name: Rebuild already-qualified 40.4.180 payload
+      - name: Prove qualified live-data foundation
         shell: bash
         run: |
           set -euo pipefail
-          cat > .github/scripts/agent_crypto_publish_live_data.sh <<'SH'
-          #!/usr/bin/env bash
-          set -euo pipefail
-          mode="${1:-}"
-          data_dir="${2:-}"
-          main_message="${3:-}"
-          data_message="${4:-}"
-          shift 4 || true
-          files=("$@")
-          data_branch="${AGENT_CRYPTO_DATA_BRANCH:-data/agent-crypto-live}"
-          case "$mode" in dual|data-only) ;; *) echo "Unsupported publication mode: $mode" >&2; exit 2 ;; esac
-          [ -n "$data_dir" ] || { echo "Missing data_dir" >&2; exit 2; }
-          [ "${#files[@]}" -gt 0 ] || { echo "No owned files supplied" >&2; exit 2; }
-          temp_dir="$(mktemp -d)"
-          trap 'rm -rf "$temp_dir"' EXIT
-          for name in "${files[@]}"; do
-            [ -f "$data_dir/$name" ] || { echo "Missing owned payload: $data_dir/$name" >&2; exit 3; }
-            cp "$data_dir/$name" "$temp_dir/$name"
+          bash -n .github/scripts/agent_crypto_publish_live_data.sh
+          grep -Fq 'bash .github/scripts/agent_crypto_publish_live_data.sh' .github/workflows/atlas-public-crypto-market.yml
+          grep -Fq 'bash .github/scripts/agent_crypto_publish_live_data.sh' .github/workflows/atlas-public-crypto-extended.yml
+          test "$(grep -c 'data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/' .github/workflows/atlas-public-crypto-market-clock.yml)" -eq 2
+          grep -Fq 'Atlas Public Crypto Market' .github/workflows/atlas-public-crypto-market-clock.yml
+          grep -Fq 'Atlas Public Crypto Extended' .github/workflows/atlas-public-crypto-market-clock.yml
+          grep -Fq 'Atlas Public Metals Archive' .github/workflows/atlas-public-crypto-market-clock.yml
+          grep -Fq 'Atlas Public Indices Archive' .github/workflows/atlas-public-crypto-market-clock.yml
+          grep -Fq 'Atlas Public Energy Archive' .github/workflows/atlas-public-crypto-market-clock.yml
+          grep -Fq 'Atlas Public Cross Market Archive' .github/workflows/atlas-public-crypto-market-clock.yml
+          git fetch origin data/agent-crypto-live
+          for file in latest.json status.json extended.json extended_status.json; do
+            git show "origin/data/agent-crypto-live:public/agent_crypto_erith_ia/data/crypto/$file" > "/tmp/$file"
+            python -m json.tool "/tmp/$file" >/dev/null
           done
-          restore_owned_files() {
-            mkdir -p "$data_dir"
-            local name
-            for name in "${files[@]}"; do cp "$temp_dir/$name" "$data_dir/$name"; done
-          }
-          publish_ref() {
-            local remote_branch="$1" target_ref="$2" message="$3" label="$4" attempt name
-            for attempt in 1 2 3 4 5 6 7 8; do
-              echo "$label · tentative $attempt/8"
-              git fetch origin "$remote_branch"
-              git reset --hard "origin/$remote_branch"
-              restore_owned_files
-              local staged=()
-              for name in "${files[@]}"; do staged+=("$data_dir/$name"); done
-              git add "${staged[@]}"
-              if git diff --cached --quiet; then echo "$label already current."; return 0; fi
-              git commit -m "$message"
-              if git push origin "HEAD:$target_ref"; then echo "$label published."; return 0; fi
-              echo "$label changed remotely; retrying non-destructively."
-              sleep $((attempt * 2))
-            done
-            echo "$label failed after 8 non-destructive attempts." >&2
-            return 1
-          }
-          if [ "$mode" = "dual" ]; then
-            publish_ref main refs/heads/main "$main_message" "Main compatibility publication"
-          fi
-          publish_ref "$data_branch" "refs/heads/$data_branch" "$data_message" "Live-data branch publication"
-          SH
-          chmod +x .github/scripts/agent_crypto_publish_live_data.sh
-
           python - <<'PY'
+          import json
           from pathlib import Path
-          root=Path('.github/workflows')
-          def replace_step(path,start_name,next_name,new_step):
-              text=path.read_text(encoding='utf-8')
-              start=f'      - name: {start_name}\n'; end=f'      - name: {next_name}\n'
-              if text.count(start)!=1 or text.count(end)!=1: raise SystemExit(f'{path}: step anchors not unique')
-              before,tail=text.split(start,1); _,after=tail.split(end,1)
-              path.write_text(before+new_step+end+after,encoding='utf-8')
-          replace_step(root/'atlas-public-crypto-market.yml','Commit canonical Top-250 crypto data only','Require a usable public snapshot','''      - name: Publish canonical Top-250 crypto data · dual qualification\n        if: always()\n        shell: bash\n        run: |\n          set -euo pipefail\n          git config user.name "github-actions[bot]"\n          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"\n          .github/scripts/agent_crypto_publish_live_data.sh \\\n            dual \\\n            public/agent_crypto_erith_ia/data/crypto \\\n            "archive public crypto market snapshot" \\\n            "publish live crypto Top-250 snapshot" \\\n            latest.json status.json\n\n''')
-          replace_step(root/'atlas-public-crypto-extended.yml','Commit extended public crypto data','Require usable extended snapshot','''      - name: Publish extended crypto data · dual qualification\n        if: always()\n        shell: bash\n        run: |\n          set -euo pipefail\n          git config user.name "github-actions[bot]"\n          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"\n          .github/scripts/agent_crypto_publish_live_data.sh \\\n            dual \\\n            public/agent_crypto_erith_ia/data/crypto \\\n            "archive public extended crypto market snapshot" \\\n            "publish live crypto extended snapshot" \\\n            extended.json extended_status.json\n\n''')
-          clock=root/'atlas-public-crypto-market-clock.yml'
-          text=clock.read_text(encoding='utf-8')
-          old='https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/public/agent_crypto_erith_ia/data/crypto/'
-          new='https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/'
-          if text.count(old)!=2: raise SystemExit(f'watchdog URL authority count mismatch: {text.count(old)}')
-          clock.write_text(text.replace(old,new),encoding='utf-8')
+          for name in ('status.json','extended_status.json'):
+              data=json.loads(Path('/tmp',name).read_text(encoding='utf-8'))
+              if data.get('status') != 'ready':
+                  raise SystemExit(f'{name}: not ready')
+              if data.get('last_error') not in (None, ''):
+                  raise SystemExit(f'{name}: last_error={data.get("last_error")}')
+          print('LIVE_DATA_404180_QUALIFIED')
           PY
 
+      - name: Align secondary market version truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          for rel in ('js/market-stack.js','js/parallel-markets.js'):
+              path=base/rel
+              text=path.read_text(encoding='utf-8')
+              old='const BUILD = "40.4.174";'
+              if text.count(old) != 1:
+                  raise SystemExit(f'{rel}: expected one legacy BUILD, got {text.count(old)}')
+              path.write_text(text.replace(old,'const BUILD = "40.4.180";',1),encoding='utf-8')
+          index=base/'index.html'
+          text=index.read_text(encoding='utf-8')
+          old='administrator-build-40.4.175'
+          if text.count(old) != 4:
+              raise SystemExit(f'index secondary asset token count mismatch: {text.count(old)}')
+          index.write_text(text.replace(old,'administrator-build-40.4.180'),encoding='utf-8')
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+
+      - name: Write canonical 40.4.180 identity
+        shell: bash
+        run: |
+          set -euo pipefail
           cat > /tmp/contract-404180.json <<'JSON'
           {
             "schema": "erith.admin.live-data-branch-foundation.v1",
@@ -113,6 +99,16 @@ jobs:
             "top250_publication": "dual_main_plus_live_data_branch",
             "extended_publication": "dual_main_plus_live_data_branch",
             "watchdog_read_authority": "data/agent-crypto-live",
+            "aether_pacemaker": {
+              "owner": "atlas-public-crypto-market-clock.yml",
+              "native_schedule": "17,47 * * * *",
+              "stale_top250_seconds": 1200,
+              "stale_extended_seconds": 2700,
+              "requires_no_active_producer": true,
+              "workflow_run_cross_checks": true,
+              "parallel_market_fallback_wakes": true,
+              "external_scheduler_independent": false
+            },
             "frontend_cutover": false,
             "main_publication_retired": false,
             "non_destructive_retry": true,
@@ -129,29 +125,25 @@ jobs:
             --status live_data_branch_foundation_dual_publish_qualification \
             --contract-key live_data_branch_foundation_404180 \
             --contract-json /tmp/contract-404180.json \
-            --lineage-note '40.4.180 Live Data Branch Foundation: dedicated data/agent-crypto-live authority qualified; Top-250 and Extended dual-publish non-destructively; watchdog reads the dedicated branch; frontend cutover intentionally deferred.'
+            --lineage-note '40.4.180 Live Data Branch Foundation: dedicated data/agent-crypto-live authority qualified; Top-250 and Extended dual-publish non-destructively; Aether watchdog strengthened as an internal idempotent pacemaker; frontend cutover intentionally deferred.'
 
-      - name: Re-read full 40.4.180 payload
+      - name: Validate complete release payload
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin data/agent-crypto-live
-          bash -n .github/scripts/agent_crypto_publish_live_data.sh
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
           python -m py_compile .github/scripts/agent_crypto_release_driver.py .github/scripts/agent_crypto_version_truth_guard.py
           python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.180 --expected-release 'LIVE DATA BRANCH FOUNDATION · DUAL-PUBLISH QUALIFICATION'
-          grep -Fq '.github/scripts/agent_crypto_publish_live_data.sh' .github/workflows/atlas-public-crypto-market.yml
-          grep -Fq '.github/scripts/agent_crypto_publish_live_data.sh' .github/workflows/atlas-public-crypto-extended.yml
-          test "$(grep -c 'data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/' .github/workflows/atlas-public-crypto-market-clock.yml)" -eq 2
-          for file in latest.json status.json extended.json extended_status.json; do
-            git show "origin/data/agent-crypto-live:public/agent_crypto_erith_ia/data/crypto/$file" > "/tmp/$file"
-            python -m json.tool "/tmp/$file" >/dev/null
-          done
+          grep -Fq 'const BUILD = "40.4.180";' public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          grep -Fq 'const BUILD = "40.4.180";' public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          test "$(grep -c 'administrator-build-40.4.180' public/agent_crypto_erith_ia/administrator/index.html)" -ge 6
           rm -rf .github/scripts/__pycache__
           echo 'REREAD_404180_PASS'
 
-      - name: Stage and commit release
+      - name: Commit final release and retire failed one-shots
         shell: bash
         run: |
           set -euo pipefail
@@ -163,27 +155,26 @@ jobs:
                   .github/workflows/atlas-public-crypto-market-clock.yml \
                   public/agent_crypto_erith_ia/administrator/app.js \
                   public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/market-stack.js \
+                  public/agent_crypto_erith_ia/administrator/js/parallel-markets.js \
                   public/agent_crypto_erith_ia/administrator/index.html \
                   public/agent_crypto_erith_ia/administrator/version.json \
                   public/agent_crypto_erith_ia/administrator/administrator-version.json
           git diff --cached --check
-          git status --short
           git commit -m 'release Agent-Crypto 40.4.180 live data branch foundation'
-          RELEASE_SHA="$(git rev-parse HEAD)"
-          echo "RELEASE_SHA=$RELEASE_SHA" >> "$GITHUB_ENV"
 
       - name: Push release with bounded race recovery
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in 1 2 3 4; do
+          for attempt in 1 2 3 4 5 6; do
             if git push origin HEAD:main; then
               RELEASE_SHA="$(git rev-parse HEAD)"
               echo "RELEASE_SHA=$RELEASE_SHA" >> "$GITHUB_ENV"
               echo "PUSH_404180_PASS $RELEASE_SHA"
               exit 0
             fi
-            echo "main moved during release push; rebase attempt $attempt/4"
+            echo "main moved during release push; rebase attempt $attempt/6"
             git pull --rebase origin main
           done
           echo '40.4.180 release push failed after bounded recovery' >&2
@@ -200,5 +191,6 @@ jobs:
           bash -n .github/scripts/agent_crypto_publish_live_data.sh
           test ! -e .github/workflows/agent-crypto-40-4-180-live-data-branch-foundation.yml
           test ! -e .github/workflows/agent-crypto-40-4-180-live-data-branch-foundation-retry.yml
-          test "$(grep -c 'data/agent-crypto-live/public/agent_crypto_erith_ia/data/crypto/' .github/workflows/atlas-public-crypto-market-clock.yml)" -eq 2
+          grep -Fq 'const BUILD = "40.4.180";' public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          grep -Fq 'const BUILD = "40.4.180";' public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
           echo "TERMINAL_404180_PASS $RELEASE_SHA"
