@@ -1,0 +1,16 @@
+# AGENT-CRYPTO — RELEASE MANIFEST
+
+Release courante : **40.4.209**  
+Market Core : **38.15.11**
+
+## Surface canonique
+
+- `public/agent_crypto_erith_ia/administrator/`
+- `public/agent_crypto_erith_ia/data/indices/`
+- `public/agent_crypto_erith_ia/data/energy/`
+- `public/agent_crypto_erith_ia/data/cross_market/`
+- `public/agent_crypto_erith_ia/data/metals/`
+- `coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md`
+- `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md`
+
+Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.209 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.

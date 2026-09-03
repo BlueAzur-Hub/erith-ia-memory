@@ -1,40 +1,38 @@
-# PROMPT DE REPRISE — AETHER / AGENT-CRYPTO
+# AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.204**  
-Autorité de départ : GitHub public `BlueAzur-Hub/erith-ia-memory` → `public/agent_crypto_erith_ia/administrator/`.
+Version de reprise : **40.4.209**  
+Market Core : **38.15.11 — PROTÉGÉ**  
+Mode : **Administrator**
 
-Tu reprends Agent-Crypto après le checkpoint final **40.4.204**.
+## Démarrage minimal
 
-## À charger en priorité
+Lire d'abord :
+1. `public/agent_crypto_erith_ia/administrator/version.json` ;
+2. `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md` ;
+3. `public/agent_crypto_erith_ia/administrator/js/market-stack.js` ;
+4. `public/agent_crypto_erith_ia/administrator/js/parallel-markets.js` ;
+5. `public/agent_crypto_erith_ia/administrator/js/market-reading-depth.js`.
 
-1. `public/agent_crypto_erith_ia/administrator/version.json`
-2. `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md`
-3. `public/agent_crypto_erith_ia/administrator/js/market-stack.js`
-4. `public/agent_crypto_erith_ia/administrator/js/parallel-markets.js`
-5. `public/agent_crypto_erith_ia/administrator/js/market-reading-depth.js`
-6. le Fil Crypto uniquement pour l'intention/historique lorsque nécessaire.
+Ne charger une mémoire privée que si elle change réellement la décision. Pour le code, conserver la méthode chirurgicale : lire → diagnostiquer → cibler → corriger → vérifier → s'arrêter.
 
-## Contrats non négociables sans preuve
+## État canonique
 
-- **Market Core 38.15.11 protégé.**
-- Géométrie 40.4.189/40.4.195 verrouillée : même sélecteur Marché, mêmes dimensions, même rail, même origine, aucune transition de coque.
-- Cycle exact : Crypto → Métaux → Indices → Énergie → Cross → Crypto.
-- Historical Depth long = lazy à l'appel ; pas au boot.
-- Deep Reading = mesures déterministes, explicables, observation uniquement.
-- Futures continus Métaux/Énergie séparés du spot.
-- Cross : dates communes ; corrélation ≠ causalité.
-- Aucun prix inventé, aucune prévision présentée comme mesure, aucun ordre financier.
+Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross → Crypto**. Crypto reste le maître de géométrie. La géométrie validée 40.4.189/40.4.195, le rail droit, le Window Manager, Atlas, Oracle, Bridge et Backend ne doivent pas être rouverts sans preuve de régression.
 
-## État au départ
+40.4.209 consolide la parité visuelle : identité couleur stable par actif, axe temporel réel, inspection historique, tableau permanent superposé sur Indices/Énergie/Cross, propagation couleur au rail, aux tableaux de lecture profonde et aux rôles leader/retard du Math Core.
 
-- Crypto : cockpit natif riche + Math Core V3.
-- Métaux : cockpit natif + 5a/10a/MAX + lecture profonde.
-- Indices : 5/5 + 5a/10a/MAX + lecture profonde.
-- Énergie : 3/3 + 5a/10a/MAX + lecture profonde.
-- Cross : 5/5 + mémoire longue + corrélations + lecture profonde.
-- 40.4.204 empêche le DOM Métaux natif de contaminer sémantiquement les domaines parallèles tout en conservant son empreinte physique.
-- Version Truth est gardée par `.github/scripts/agent_crypto_version_truth_guard.py`.
+## Vérités protégées
 
-## Première action du prochain fil
+- Market Core **38.15.11** inchangé.
+- Aucun nouveau moteur de graphique.
+- Aucun nouveau fetch, timer, MutationObserver, WebSocket ou requestAnimationFrame dans les propriétaires parallèles/lecture profonde.
+- Historique 5a/10a/MAX toujours lazy et chargé uniquement à l'appel.
+- Futures continus ≠ spot.
+- Base 100 = comparaison relative.
+- Corrélation ≠ causalité.
+- Aucune valeur inventée, aucune prévision, aucun ordre.
+- La couleur est redondante avec symbole/nom/valeur : elle ne porte jamais seule l'information.
 
-Avant toute chirurgie, vérifier le build réellement publié et demander/observer le retour Firefox si la demande touche l'interface. Si 40.4.204 est saine, considérer ce checkpoint comme base canonique. Ne pas créer une 40.4.205 uniquement pour “nettoyer” sans dette observable : la prochaine version doit répondre à une demande fonctionnelle explicite de Christophe.
+## Règle de travail
+
+Une dette → un propriétaire → une chirurgie → une preuve → un commit → stop. Ne jamais revenir à un ancien commit pour reconstruire une version : partir du `main` courant et préserver les mises à jour de données automatiques.
