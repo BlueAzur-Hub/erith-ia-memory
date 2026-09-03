@@ -1,0 +1,270 @@
+from pathlib import Path
+import hashlib, json, re
+from datetime import datetime, timezone
+
+root = Path("public/agent_crypto_erith_ia/administrator")
+build = "40.4.189"
+parent = "40.4.188"
+release = "PARALLEL DOMAIN CONTENT OWNERSHIP · SHARED RIGHT RAIL · PERIOD PARITY"
+status = "parallel_domain_content_ownership_404189"
+stamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00","Z")
+
+def sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def replace_once(text, old, new, label):
+    n = text.count(old)
+    if n != 1:
+        raise SystemExit(f"{label}: expected one source block, got {n}")
+    return text.replace(old, new, 1)
+
+p = root / "js/market-stack.js"
+s = p.read_text(encoding="utf-8")
+s, n = re.subn(r'^  const BUILD = "40\.4\.\d+";', f'  const BUILD = "{build}";', s, count=1, flags=re.M)
+if n != 1: raise SystemExit("market-stack BUILD")
+s, n = re.subn(r'^  const REVISION = "[^"]+";', '  const REVISION = "V6";', s, count=1, flags=re.M)
+if n != 1: raise SystemExit("market-stack REVISION")
+s, n = re.subn(r'^  const CONTRACT = "[^"]+";', '  const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_DOMAIN_CONTENT_404189";', s, count=1, flags=re.M)
+if n != 1: raise SystemExit("market-stack CONTRACT")
+
+needle = '''    return true;
+  }
+
+  function setParallelPlaceholder(domain){'''
+insert = '''    /* 40.4.189 — one physical right rail. Metals keeps ownership of the
+       proven geometry; parallel domains receive an overlay host inside it.
+       No original Metals child is removed or rebuilt. */
+    if(!byId("atlasParallelDomainRailHost404189")){
+      const h = document.createElement("div");
+      h.id = "atlasParallelDomainRailHost404189";
+      h.className = "atlas-parallel-domain-rail-host-404189";
+      h.hidden = true;
+      h.setAttribute("aria-live", "polite");
+      metalsDetail.appendChild(h);
+    }
+    return true;
+  }
+
+  function setParallelPlaceholder(domain){'''
+s = replace_once(s, needle, insert, "shared physical rail host")
+
+s = replace_once(
+    s,
+    '''    const parallelDetail = byId("atlasCyclicMarketInertDetail404168");
+    const cryptoToolbar = document.querySelector("#analyste .chart-v2-toolbar");''',
+    '''    const parallelDetail = byId("atlasCyclicMarketInertDetail404168");
+    const parallelRailHost = byId("atlasParallelDomainRailHost404189");
+    const cryptoToolbar = document.querySelector("#analyste .chart-v2-toolbar");''',
+    "syncPanels rail variable",
+)
+
+s = replace_once(
+    s,
+    '''    forceHidden(cryptoDetail, domain !== "crypto");
+    forceHidden(metalsDetail, domain !== "metals");
+    forceHidden(parallelDetail, !parallel);
+
+    forceHidden(cryptoToolbar, domain !== "crypto");''',
+    '''    forceHidden(cryptoDetail, domain !== "crypto");
+    /* 40.4.189: Metals is the proven physical rail owner for every non-Crypto
+       domain. Parallel content is layered inside; original Metals DOM survives. */
+    forceHidden(metalsDetail, !(domain === "metals" || parallel));
+    forceHidden(parallelDetail, true);
+    if(parallelRailHost){
+      parallelRailHost.hidden = !parallel;
+      parallelRailHost.setAttribute("aria-hidden", parallel ? "false" : "true");
+    }
+    metalsDetail?.classList.toggle("atlas-parallel-domain-rail-owner-404189", parallel);
+    if(metalsDetail){
+      metalsDetail.setAttribute("aria-label", parallel ? `Lecture ${specFor(domain).title}` : "Lecture Métaux");
+    }
+
+    forceHidden(cryptoToolbar, domain !== "crypto");''',
+    "syncPanels physical rail ownership",
+)
+p.write_text(s, encoding="utf-8")
+
+p = root / "js/parallel-markets.js"
+s = p.read_text(encoding="utf-8")
+s, n = re.subn(r'^  const BUILD = "40\.4\.\d+";', f'  const BUILD = "{build}";', s, count=1, flags=re.M)
+if n != 1: raise SystemExit("parallel BUILD")
+s = replace_once(
+    s,
+    '  const PERIODS = Object.freeze(["24h", "7j", "30j", "90j", "1a"]);',
+    '  const PERIODS = Object.freeze(["24h", "7j", "30j", "60j", "90j", "1a"]);',
+    "parallel periods",
+)
+s = replace_once(
+    s,
+    '  function detail(){ return byId("atlasCyclicMarketInertDetail404168"); }',
+    '  function detail(){ return byId("atlasParallelDomainRailHost404189") || byId("atlasCyclicMarketInertDetail404168"); }',
+    "parallel rail owner",
+)
+s = replace_once(
+    s,
+    '    return period === "7j" ? 7 : period === "30j" ? 30 : period === "90j" ? 90 : period === "1a" ? 370 : 1;',
+    '    return period === "7j" ? 7 : period === "30j" ? 30 : period === "60j" ? 60 : period === "90j" ? 90 : period === "1a" ? 370 : 1;',
+    "60d support",
+)
+
+marker = '''    const math = ENABLE_MATH && ranked.length ? `
+      <section class="atlas-parallel-math"><b>Math Core · historique mesuré</b>'''
+basket_block = '''    const basket = rowsByAsset.map(({asset,rows}) => {
+      const last = rows[rows.length - 1]?.close;
+      const found = metricByAsset.find(x => x.asset === asset)?.metric;
+      const symbol = safeText(asset.symbol || asset.name || "ACTIF");
+      const name = safeText(asset.name || asset.label || symbol);
+      const unit = safeText(asset.currency || asset.unit || "");
+      const value = last === null || last === undefined ? "—" : Number(last).toLocaleString("fr-FR", {maximumFractionDigits:4});
+      const change = found?.change === null || found?.change === undefined ? "—" : `${found.change >= 0 ? "+" : ""}${found.change.toFixed(2)} %`;
+      return `<li><span><b>${symbol}</b><small>${name}</small></span><strong>${value}${unit ? ` ${unit}` : ""}</strong><em>${change}</em></li>`;
+    }).join("");
+    const math = ENABLE_MATH && ranked.length ? `
+      <section class="atlas-parallel-math"><b>Math Core · historique mesuré</b>'''
+s = replace_once(s, marker, basket_block, "basket generator")
+
+old = '''      <section><b>Lecture synthétique</b><p>${leader ? `Leader ${safeText(leader.asset.name)} ; retard ${safeText(laggard.asset.name)}. Les séries restent indépendantes et sont comparées en Base 100.` : "Données insuffisantes."}</p></section>
+      ${math}
+      <section><b>Intégrité</b><p>Aucune valeur inventée · aucune moyenne inter-source · aucune exécution · décision humaine uniquement.</p></section>`;'''
+new = '''      <section><b>Lecture synthétique</b><p>${leader ? `Leader ${safeText(leader.asset.name)} ; retard ${safeText(laggard.asset.name)}. Les séries restent indépendantes et sont comparées en Base 100.` : "Données insuffisantes."}</p></section>
+      <section class="atlas-parallel-basket-404189"><b>Panier actif · ${safeText(state.period.get(domain) || cfg.defaultPeriod)}</b><ul>${basket || "<li>Données insuffisantes.</li>"}</ul></section>
+      ${math}
+      <section><b>Intégrité</b><p>Aucune valeur inventée · aucune moyenne inter-source · aucune exécution · décision humaine uniquement.</p></section>`;'''
+s = replace_once(s, old, new, "rail basket UI")
+p.write_text(s, encoding="utf-8")
+
+p = root / "parallel-markets.css"
+s = p.read_text(encoding="utf-8")
+css = r'''
+/* =========================================================
+   40.4.189 — PARALLEL DOMAIN CONTENT OWNERSHIP
+   Geometry stays exactly on the 40.4.187 Crypto/Metals lock.
+   One physical right rail; parallel domains only replace content.
+   No transition, transform, chart-engine or market-data mutation.
+   ========================================================= */
+#atlasParallelDomainRailHost404189[hidden]{display:none!important}
+html[data-cyclic-market-mode="parallel"] #atlasMetalsDetailPanel{position:relative!important;overflow:hidden!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189{
+  display:block!important;position:absolute!important;inset:0!important;z-index:4!important;
+  box-sizing:border-box!important;overflow:auto!important;padding:14px!important;
+  background:linear-gradient(180deg,rgba(4,13,23,.998),rgba(5,16,27,.997))!important;color:#dce8ee!important
+}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header{
+  display:grid!important;gap:4px!important;padding:0 132px 12px 0!important;border-bottom:1px solid rgba(255,255,255,.08)!important
+}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header .eyebrow{color:#89a3b4!important;font-size:8px!important;font-weight:950!important;letter-spacing:.15em!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header strong{color:color-mix(in srgb,var(--cyclic-market-accent,#dce5ec) 52%,#fff1d0)!important;font-size:20px!important;line-height:1.08!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header small{color:#849bab!important;font-size:9px!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>section{margin-top:10px!important;padding:10px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:12px!important;background:rgba(255,255,255,.018)!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>section>b{color:#fff0c9!important;font-size:10px!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>section>p{margin:6px 0 0!important;color:#a7bac5!important;font-size:9px!important;line-height:1.45!important}
+.atlas-parallel-basket-404189 ul{list-style:none!important;margin:8px 0 0!important;padding:0!important;display:grid!important;gap:5px!important}
+.atlas-parallel-basket-404189 li{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto!important;gap:8px!important;align-items:center!important;padding:7px 8px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:9px!important;background:rgba(255,255,255,.02)!important}
+.atlas-parallel-basket-404189 li span{min-width:0!important}
+.atlas-parallel-basket-404189 li span b{display:block!important;color:#eef8fc!important;font-size:10px!important}
+.atlas-parallel-basket-404189 li span small{display:block!important;color:#758e9e!important;font-size:7px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.atlas-parallel-basket-404189 li strong{color:#d9e7ee!important;font-size:9px!important;white-space:nowrap!important}
+.atlas-parallel-basket-404189 li em{font-style:normal!important;color:color-mix(in srgb,var(--cyclic-market-accent,#dce5ec) 72%,white)!important;font-size:8px!important;font-weight:900!important;white-space:nowrap!important}
+@media (min-width:901px){
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(1),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(3){grid-row:1!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(1){grid-column:2!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(3){grid-column:4!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2){grid-column:5!important;grid-template-columns:52px repeat(6,minmax(34px,1fr))!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(1){grid-column:2!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(2){grid-column:3!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(3){grid-column:4!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(4){grid-column:5!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(5){grid-column:6!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(6){grid-column:7!important}
+}
+'''
+if "40.4.189 — PARALLEL DOMAIN CONTENT OWNERSHIP" not in s:
+    s += "\n" + css.strip() + "\n"
+p.write_text(s, encoding="utf-8")
+
+p = root / "app.js"
+s = p.read_text(encoding="utf-8")
+s, n = re.subn(r'^const ATLAS_BUILD = "40\.4\.\d+";', f'const ATLAS_BUILD = "{build}";', s, count=1, flags=re.M)
+if n != 1: raise SystemExit("ATLAS_BUILD")
+s, _ = re.subn(r'^const ATLAS_ASSET_TOKEN = "market-core-v2\.0-alpha-build-40\.4\.\d+";', f'const ATLAS_ASSET_TOKEN = "market-core-v2.0-alpha-build-{build}";', s, count=1, flags=re.M)
+p.write_text(s, encoding="utf-8")
+
+p = root / "js/app.js"
+s = p.read_text(encoding="utf-8")
+s, n = re.subn(r'^  const ADMIN_BUILD = "40\.4\.\d+";', f'  const ADMIN_BUILD = "{build}";', s, count=1, flags=re.M)
+if n != 1: raise SystemExit("ADMIN_BUILD")
+s, n = re.subn(r'^  const ADMIN_RELEASE = ".*?";', f'  const ADMIN_RELEASE = "{release}";', s, count=1, flags=re.M)
+if n != 1: raise SystemExit("ADMIN_RELEASE")
+p.write_text(s, encoding="utf-8")
+
+p = root / "index.html"
+s = p.read_text(encoding="utf-8")
+subs = [
+    (r'<meta name="atlas-build" content="40\.4\.\d+" />', f'<meta name="atlas-build" content="{build}" />', "atlas meta"),
+    (r'<meta name="administrator-build" content="40\.4\.\d+" />', f'<meta name="administrator-build" content="{build}" />', "admin meta"),
+    (r'<meta name="administrator-revision" content="[^"]+" />', '<meta name="administrator-revision" content="V6" />', "revision"),
+    (r'<meta name="administrator-release" content="[^"]+" />', f'<meta name="administrator-release" content="{release}" />', "release"),
+    (r'<meta name="atlas-asset-token" content="market-core-v2\.0-alpha-build-40\.4\.\d+" />', f'<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-{build}" />', "asset token"),
+    (r'<title>Agent-Crypto @erith\.IA — Build 40\.4\.\d+ · Administrator</title>', f'<title>Agent-Crypto @erith.IA — Build {build} · Administrator</title>', "title"),
+]
+for pat, repl, label in subs:
+    s, n = re.subn(pat, repl, s, count=1)
+    if n != 1: raise SystemExit(label)
+for asset in ("./market-cascade.css","./parallel-markets.css","./app.js","./js/app.js","./js/market-stack.js","./js/parallel-markets.js"):
+    pat = rf'({re.escape(asset)}\?v=administrator-build-)40\.4\.\d+'
+    s, n = re.subn(pat, rf'\g<1>{build}', s, count=1)
+    if n != 1: raise SystemExit(f"cache token {asset}")
+s, n = re.subn(r'(id="footerRelease">Agent-Crypto @erith\.IA · Market Core · Build )40\.4\.\d+', rf'\g<1>{build}', s, count=1)
+if n != 1: raise SystemExit("footer")
+p.write_text(s, encoding="utf-8")
+
+vp = root / "version.json"
+v = json.loads(vp.read_text(encoding="utf-8"))
+v["release"] = release
+v["build"] = build
+v["asset_token"] = f"market-core-v2.0-alpha-build-{build}"
+v["status"] = status
+v["prepared_at"] = stamp
+v["published_at"] = stamp
+v["parent_build"] = parent
+note = "40.4.189 parallel-domain content ownership: 40.4.187 static graph geometry preserved; Metals physical right rail reused non-destructively for Indices/Energy/Cross; six-position period parity adds measured 60j."
+if note not in v.get("lineage",""):
+    v["lineage"] = v.get("lineage","") + " → " + note
+files = v.setdefault("files", {})
+for rel in list(files):
+    fp = root / rel
+    if fp.is_file():
+        files[rel] = sha256(fp)
+vp.write_text(json.dumps(v, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+ap = root / "administrator-version.json"
+av = json.loads(ap.read_text(encoding="utf-8"))
+av["build"] = build
+av["global_versioning"] = build
+if "administrator_build" in av: av["administrator_build"] = build
+if "primary_build" in av: av["primary_build"] = build
+av["release"] = release
+av["status"] = status
+av["prepared_at"] = stamp
+av["published_at"] = stamp
+av["timestamp"] = stamp
+if "parent_build" in av: av["parent_build"] = parent
+if "asset_token" in av: av["asset_token"] = f"market-core-v2.0-alpha-build-{build}"
+av["release_status"] = "Static five-domain geometry preserved; parallel domains now own visible content in the proven shared right rail."
+ap.write_text(json.dumps(av, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+idx = (root/"index.html").read_text(encoding="utf-8")
+stack = (root/"js/market-stack.js").read_text(encoding="utf-8")
+par = (root/"js/parallel-markets.js").read_text(encoding="utf-8")
+css_now = (root/"parallel-markets.css").read_text(encoding="utf-8")
+assert f'Build {build}' in idx
+assert f'const BUILD = "{build}";' in stack
+assert f'const BUILD = "{build}";' in par
+assert '<meta name="atlas-engine-build" content="38.15.11" />' in idx
+assert "atlasParallelDomainRailHost404189" in stack and "atlasParallelDomainRailHost404189" in par and "atlasParallelDomainRailHost404189" in css_now
+assert '["24h", "7j", "30j", "60j", "90j", "1a"]' in par
+tail = css_now[css_now.index("40.4.189 — PARALLEL DOMAIN CONTENT OWNERSHIP"):]
+assert "transition:" not in tail
+print("40.4.189 DOMAIN CONTENT OWNERSHIP PASS")
