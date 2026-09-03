@@ -1,4 +1,4 @@
-name: Agent-Crypto 40.4.218 Version Writer Audit
+name: Agent-Crypto 40.4.218 Version Observer Retirement Release
 
 on:
   push:
@@ -7,10 +7,14 @@ on:
       - '.github/workflows/agent-crypto-40-4-218-version-writer-audit.yml'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-218-version-observer-retirement
+  cancel-in-progress: false
 
 jobs:
-  audit:
+  release:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -18,5 +22,5 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Audit global version writers
-        run: python .github/scripts/_tmp_agent_crypto_404218_audit.py
+      - name: Execute bounded 40.4.218 release
+        run: python .github/scripts/_tmp_agent_crypto_404218_release.py
