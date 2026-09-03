@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.211**  
+Version de reprise : **40.4.214**
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -24,6 +24,12 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 40.4.210 est un verrou de **Cache Truth** : les quatre payloads marché effectivement modifiés par 40.4.205→40.4.209 (`parallel-markets.css`, `market-reading-depth.css`, `js/parallel-markets.js`, `js/market-reading-depth.js`) sont désormais appelés par des URL versionnées 40.4.210. Leur contenu fonctionnel reste inchangé ; `market-stack.js` et `version-truth.js` ne sont pas artificiellement republiés.
 
 40.4.211 verrouille l’**autorité unique d’affichage de version** : `market-stack.js` ne peut plus écrire `#atlasVersionControlText`; le badge first-paint est synchronisé par le release driver, `version-truth.js` reste l’autorité runtime globale, et les versions de module sont explicitement séparées de la release Agent-Crypto.
+
+40.4.212 réarme **Atlas CURRENT** une seule fois après boot complet via le propriétaire canonique existant, sans nouveau timer/observer/fetch/scheduler.
+
+40.4.213 converge la **vérité d’architecture Markets** : cycle Crypto → Métaux → Indices → Énergie → Cross, `market-stack.js` routeur, `parallel-markets.js` propriétaire des domaines parallèles, contrats 40.4.166/167 historiques.
+
+40.4.214 restaure l’**ingestion de l’univers Extended** lorsque la vue mémorisée 500/1000 est appliquée après hydratation du Market ; le loader 40.3.115 existant est réutilisé. `build.json` est désormais écrit et validé par l’infrastructure canonique de release.
 
 ## Vérités protégées
 

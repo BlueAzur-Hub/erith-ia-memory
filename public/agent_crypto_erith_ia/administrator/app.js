@@ -45854,6 +45854,14 @@ function atlasWorkspaceRestoreAfterMarket() {
   state.marketVisibleLimit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(saved.marketVisibleLimit)) ? Number(saved.marketVisibleLimit) : 50;
   atlasSyncMarketUniverseControls();
 
+  /* 40.4.214 — EXTENDED UNIVERSE RESTORE REARM.
+     A persisted 500/1000 view can be restored after the historical 900 ms
+     warm-up already observed the default 50. Reuse the existing 40.3.115
+     loader at the one-shot workspace restoration boundary. */
+  if (atlasMarketUniverseExtendedRequested403115(state.marketVisibleLimit)) {
+    void atlasMarketUniverseEnsure403115(state.marketVisibleLimit);
+  }
+
   const validIds = new Set(state.coins.map(coin => coin.id));
   const period = ATLAS_WORKSPACE_PERIODS.includes(Number(graphSaved.period)) ? Number(graphSaved.period) : 1;
   const rawIds = Array.isArray(graphSaved.comparisonIds) ? graphSaved.comparisonIds : [];
@@ -52642,7 +52650,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.213";
+const ATLAS_BUILD = "40.4.214";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -54754,8 +54762,13 @@ window.setTimeout(atlasSyncMarketUniverseControls, 0);
 
 window.setTimeout(()=>{
   atlasSyncMarketUniverseControls();
-  if(atlasMarketUniverseLimit403115()>250){
-    void atlasMarketUniverseEnsure403115(atlasMarketUniverseLimit403115());
+  const limit404214=atlasMarketUniverseLimit403115();
+  if(
+    limit404214>250
+    && atlasMarketUniverseState403115.status!=="loading"
+    && !atlasExtendedMarketCache403103.payload
+  ){
+    void atlasMarketUniverseEnsure403115(limit404214);
   }
 },900);
 

@@ -1,9 +1,9 @@
 # AGENT-CRYPTO — FIN DE FIL AETHER
 
-Version canonique de clôture : **40.4.211**  
+Version canonique de clôture : **40.4.214**
 Market Core : **38.15.11 — PROTÉGÉ**
 
-## 1. Cascade finale 40.4.205 → 40.4.211
+## 1. Cascade finale 40.4.205 → 40.4.214
 
 - **40.4.205** — identité couleur stable par actif, axe temporel réel, inspection historique au pointeur, convergence Version Truth.
 - **40.4.206** — tableau permanent de valeurs observées superposé dans Indices/Énergie/Cross + propagation couleur au rail et à la fiche active.
@@ -12,6 +12,9 @@ Market Core : **38.15.11 — PROTÉGÉ**
 - **40.4.209** — consolidation finale, Version Truth, cache-busting, contrat et reprise canonique.
 - **40.4.210** — Cache Truth lock : convergence explicite des URL versionnées des quatre payloads marché modifiés par la cascade 40.4.205→40.4.209 ; aucun changement de moteur, de données, de géométrie ou de contenu fonctionnel de ces payloads.
 - **40.4.211** — Version Display Single Authority lock : suppression de l’écriture globale de version par `market-stack.js`, first-paint synchronisé, `version-truth.js` autorité runtime, cache tokens des propriétaires modifiés convergents, et libellé `Module` pour la version locale des marchés parallèles.
+- **40.4.212** — Atlas Heartbeat Rearm : réarmement one-shot du propriétaire CURRENT canonique après boot complet ; HOT core et gates préservés.
+- **40.4.213** — Market Architecture Truth Convergence : vérité canonique du cycle Crypto/Métaux/Indices/Énergie/Cross et propriétaires runtime actifs ; 40.4.166/167 historiques.
+- **40.4.214** — Extended Market Universe Ingestion Recovery : correction de la course warm-up 900 ms / restauration tardive de la vue 500/1000 ; loader Extended réarmé depuis le lifecycle one-shot de l’espace mémorisé ; `build.json` rejoint writer + guard canoniques.
 
 ## 2. Dette utilisateur soldée
 

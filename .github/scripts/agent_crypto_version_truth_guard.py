@@ -65,6 +65,7 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
     market_stack = read(base / "js/market-stack.js")
     manifest = load_json(base / "version.json")
     mirror = load_json(base / "administrator-version.json")
+    build_truth = load_json(base / "build.json")
 
     build = str(manifest.get("build") or "").strip()
     release = str(manifest.get("release") or "").strip()
@@ -135,6 +136,17 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
     if actual["meta_release"] != release or actual["admin_release"] != release:
         fail("release identity drift between manifest / HTML / administrator runtime")
 
+    if str(build_truth.get("build") or "").strip() != build:
+        fail("build.json build drift")
+    if str(build_truth.get("engine") or "").strip() != PROTECTED_ENGINE:
+        fail("build.json protected Market Core drift")
+    if str(build_truth.get("release") or "").strip() != release:
+        fail("build.json release drift")
+    if str(build_truth.get("status") or "").strip() != str(manifest.get("status") or "").strip():
+        fail("build.json status drift")
+    if build_truth.get("published") is not True:
+        fail("build.json published truth missing")
+
     if str(mirror.get("build") or "").strip() != build:
         fail("administrator mirror build drift")
     if str(mirror.get("global_versioning") or "").strip() != build:
@@ -169,6 +181,18 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
     for domain in ("crypto", "metals", "indices", "energy", "cross-market"):
         if not str((domains.get(domain) or {}).get("state") or "").startswith("ACTIVE"):
             fail(f"market architecture active-domain drift: {domain}")
+
+    if current_num >= (40, 4, 214):
+        required = (
+            "40.4.214 — EXTENDED UNIVERSE RESTORE REARM",
+            "atlasMarketUniverseExtendedRequested403115(state.marketVisibleLimit)",
+            "void atlasMarketUniverseEnsure403115(state.marketVisibleLimit);",
+            "atlasMarketUniverseState403115.status!==\"loading\"",
+            "!atlasExtendedMarketCache403103.payload",
+        )
+        for marker in required:
+            if marker not in root:
+                fail(f"40.4.214 Extended ingestion regression: missing {marker}")
 
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:

@@ -64,8 +64,10 @@ def main() -> int:
 
     manifest_path = BASE / "version.json"
     mirror_path = BASE / "administrator-version.json"
+    build_truth_path = BASE / "build.json"
     manifest = load_json(manifest_path)
     mirror = load_json(mirror_path)
+    build_truth = load_json(build_truth_path)
 
     if str(manifest.get("build") or "") != parent:
         die(f"version.json parent mismatch: {manifest.get('build')} != {parent}")
@@ -73,6 +75,8 @@ def main() -> int:
         die(f"administrator-version.json parent mismatch: {mirror.get('build')} != {parent}")
     if str((manifest.get("engine") or {}).get("reference_build") or "") != PROTECTED_ENGINE:
         die("protected Market Core manifest identity changed before release")
+    if str(build_truth.get("engine") or "") != PROTECTED_ENGINE:
+        die("protected Market Core build.json identity changed before release")
 
     root_path = BASE / "app.js"
     root = read(root_path)
@@ -99,6 +103,13 @@ def main() -> int:
     index = sub_one(index, r'<script\s+src="\./js/app\.js\?v=administrator-build-[^"]+"></script>', f'<script src="./js/app.js?v=administrator-build-{build}"></script>', "admin runtime cache token")
     index = sub_one(index, r'(<span\s+id="footerRelease"[^>]*>[^<]*Market Core · Build )[^ ]+( · Version : Parker Lewis Can\'t Lose</span>)', rf'\g<1>{build}\g<2>', "footer build")
     write(index_path, index)
+
+    build_truth["build"] = build
+    build_truth["engine"] = PROTECTED_ENGINE
+    build_truth["release"] = release
+    build_truth["published"] = True
+    build_truth["status"] = status
+    write(build_truth_path, json.dumps(build_truth, ensure_ascii=False, indent=2) + "\n")
 
     manifest["release"] = release
     manifest["build"] = build
@@ -139,6 +150,7 @@ def main() -> int:
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         die("version.json files hash map missing")
+    files["build.json"] = sha256(build_truth_path)
     for rel in list(files):
         payload = BASE / str(rel)
         if not payload.is_file():
