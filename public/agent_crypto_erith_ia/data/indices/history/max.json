@@ -4,8 +4,8 @@
   "domain": "indices",
   "status": "ready",
   "horizon": "max",
-  "resolution": "1wk",
-  "generated_at": "2026-09-03T02:26:44.315Z",
+  "resolution": "mixed:1mo,3mo",
+  "generated_at": "2026-09-03T02:33:01.139Z",
   "source": "Yahoo Finance chart endpoint",
   "assets_expected": 5,
   "assets_count": 5,
@@ -24,7 +24,9 @@
         "name": "Yahoo Finance",
         "provider_symbol": "^FCHI"
       },
-      "source_interval": "1wk",
+      "requested_interval": "1mo",
+      "requested_range": "max",
+      "source_interval": "1mo",
       "history_points": [
         {
           "time": "1990-02-28T23:00:00Z",
@@ -3989,7 +3991,8 @@
       ],
       "points_count": 440,
       "history_start": "1990-02-28T23:00:00Z",
-      "history_end": "2026-09-02T16:05:02Z"
+      "history_end": "2026-09-02T16:05:02Z",
+      "span_years": 36.509
     },
     {
       "asset_id": "sp500",
@@ -4005,7 +4008,9 @@
         "name": "Yahoo Finance",
         "provider_symbol": "^GSPC"
       },
-      "source_interval": "1wk",
+      "requested_interval": "1mo",
+      "requested_range": "max",
+      "source_interval": "3mo",
       "history_points": [
         {
           "time": "1984-12-01T05:00:00Z",
@@ -5531,7 +5536,8 @@
       ],
       "points_count": 169,
       "history_start": "1984-12-01T05:00:00Z",
-      "history_end": "2026-09-02T20:42:34Z"
+      "history_end": "2026-09-02T20:42:34Z",
+      "span_years": 41.755
     },
     {
       "asset_id": "nasdaq100",
@@ -5547,7 +5553,9 @@
         "name": "Yahoo Finance",
         "provider_symbol": "^NDX"
       },
-      "source_interval": "1wk",
+      "requested_interval": "1mo",
+      "requested_range": "max",
+      "source_interval": "3mo",
       "history_points": [
         {
           "time": "1985-10-01T04:00:00Z",
@@ -7037,7 +7045,8 @@
       ],
       "points_count": 165,
       "history_start": "1985-10-01T04:00:00Z",
-      "history_end": "2026-09-02T21:15:59Z"
+      "history_end": "2026-09-02T21:15:59Z",
+      "span_years": 40.923
     },
     {
       "asset_id": "dax",
@@ -7053,7 +7062,9 @@
         "name": "Yahoo Finance",
         "provider_symbol": "^GDAXI"
       },
-      "source_interval": "1wk",
+      "requested_interval": "1mo",
+      "requested_range": "max",
+      "source_interval": "3mo",
       "history_points": [
         {
           "time": "1987-11-30T23:00:00Z",
@@ -8471,7 +8482,8 @@
       ],
       "points_count": 157,
       "history_start": "1987-11-30T23:00:00Z",
-      "history_end": "2026-09-02T16:00:00Z"
+      "history_end": "2026-09-02T16:00:00Z",
+      "span_years": 38.757
     },
     {
       "asset_id": "nikkei225",
@@ -8487,7 +8499,9 @@
         "name": "Yahoo Finance",
         "provider_symbol": "^N225"
       },
-      "source_interval": "1wk",
+      "requested_interval": "1mo",
+      "requested_range": "max",
+      "source_interval": "3mo",
       "history_points": [
         {
           "time": "1984-12-31T15:00:00Z",
@@ -9993,24 +10007,33 @@
           "volume": 7173800000.0
         },
         {
-          "time": "2026-09-03T02:11:40Z",
+          "time": "2026-09-03T02:17:55Z",
           "date": "2026-09-03",
           "open": 64724.80859375,
           "high": 64724.80859375,
           "low": 64140.0390625,
-          "close": 64463.7109375,
+          "close": 64430.69140625,
           "volume": 0.0
         }
       ],
       "points_count": 168,
       "history_start": "1984-12-31T15:00:00Z",
-      "history_end": "2026-09-03T02:11:40Z"
+      "history_end": "2026-09-03T02:17:55Z",
+      "span_years": 41.672
     }
   ],
+  "coverage": {
+    "min_span_years": 36.509,
+    "max_span_years": 41.755,
+    "min_points": 157,
+    "max_points": 440
+  },
   "integrity": {
     "no_invented_values": true,
     "provider_series_preserved": true,
+    "provider_granularity_recorded": true,
     "horizon_subsets_are_deterministic": true,
+    "coverage_duration_validated": true,
     "lazy_browser_load_required": true,
     "boot_payload_forbidden": true,
     "orders_allowed": false

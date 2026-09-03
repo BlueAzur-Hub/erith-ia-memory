@@ -3,28 +3,34 @@
   "build": "40.4.197",
   "domain": "indices",
   "status": "ready",
-  "generated_at": "2026-09-03T02:26:44.315Z",
+  "generated_at": "2026-09-03T02:33:01.139Z",
   "horizons": {
     "5a": {
       "ready": true,
       "resolution": "1wk",
       "assets": 5,
-      "min_points": 21,
-      "max_points": 62,
+      "min_span_years": 5.01,
+      "max_span_years": 5.012,
+      "min_points": 263,
+      "max_points": 263,
       "path": "data/indices/history/5a.json"
     },
     "10a": {
       "ready": true,
       "resolution": "1wk",
       "assets": 5,
-      "min_points": 41,
-      "max_points": 122,
+      "min_span_years": 9.995,
+      "max_span_years": 10.012,
+      "min_points": 522,
+      "max_points": 524,
       "path": "data/indices/history/10a.json"
     },
     "max": {
       "ready": true,
-      "resolution": "1wk",
+      "resolution": "mixed:1mo,3mo",
       "assets": 5,
+      "min_span_years": 36.509,
+      "max_span_years": 41.755,
       "min_points": 157,
       "max_points": 440,
       "path": "data/indices/history/max.json"
@@ -33,7 +39,9 @@
   "integrity": {
     "no_invented_values": true,
     "provider_series_preserved": true,
+    "provider_granularity_recorded": true,
     "horizon_subsets_are_deterministic": true,
+    "coverage_duration_validated": true,
     "lazy_browser_load_required": true,
     "boot_payload_forbidden": true,
     "orders_allowed": false
