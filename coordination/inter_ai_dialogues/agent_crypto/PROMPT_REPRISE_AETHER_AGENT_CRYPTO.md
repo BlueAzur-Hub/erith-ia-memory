@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.218**
+Version de reprise : **40.4.219**
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -38,6 +38,8 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 40.4.217 verrouille la **délégation événementielle du Market Snapshot Core** : les clics/clavier de lignes et les actions Solo/Suivi/Alerte/Sources sont possédés par un listener stable du conteneur, au lieu de recréer un listener par ligne/bouton à chaque rendu. L’Extended garde son propriétaire délégué 40.3.116.
 
 40.4.218 retire le **MutationObserver de compatibilité du badge global** devenu sans propriétaire adversaire après 40.4.211. `version-truth.js` conserve la réconciliation publiée, le runtime racine conserve les états de cohérence/publication skew et l’Administrator conserve le first-runtime identity. `market-stack.js` reste interdit d’écriture sur `#atlasVersionControlText`.
+
+40.4.219 étend la **Version Truth aux assets réellement chargés** : chaque JavaScript/CSS local référencé par `index.html` doit désormais être présent dans la table SHA-256 de `version.json`. Cette couverture inclut les anciens propriétaires chargés mais jusque-là hors manifest ; aucune URL de cache ni logique métier n’est modifiée.
 
 ## Vérités protégées
 

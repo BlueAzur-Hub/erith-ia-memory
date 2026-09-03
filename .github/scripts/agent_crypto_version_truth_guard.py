@@ -264,6 +264,26 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")
+
+    if current_num >= (40, 4, 219):
+        loaded_local_js_css = set()
+        for asset_url in re.findall(r'<(?:script|link)\b[^>]*(?:src|href)=["\']([^"\']+)["\'][^>]*>', index, re.I):
+            value = str(asset_url or "").strip()
+            if value.startswith(("http://", "https://", "//", "#", "data:")):
+                continue
+            raw = value.split("?", 1)[0].split("#", 1)[0]
+            if raw.startswith("./"):
+                raw = raw[2:]
+            elif raw.startswith("/"):
+                raw = raw[1:]
+            if not raw.lower().endswith((".js", ".css")):
+                continue
+            if not (base / raw).is_file():
+                fail(f"40.4.219 loaded local asset missing: {raw}")
+            loaded_local_js_css.add(raw)
+        missing_loaded_hashes = sorted(loaded_local_js_css - set(map(str, files.keys())))
+        if missing_loaded_hashes:
+            fail(f"40.4.219 loaded JS/CSS outside manifest hash authority: {missing_loaded_hashes}")
     for rel, expected_hash in files.items():
         payload = base / str(rel)
         if not payload.is_file():
