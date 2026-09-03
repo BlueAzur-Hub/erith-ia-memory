@@ -1,0 +1,87 @@
+name: Agent-Crypto 40.4.190-193 Depth Cascade
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40-4-190-193-depth-cascade.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-190-193-depth-cascade
+  cancel-in-progress: false
+
+jobs:
+  cascade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Build and publish 40.4.190 to 40.4.193
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          commit_stage() {
+            stage="$1"
+            case "$stage" in
+              190) message='release Agent-Crypto 40.4.190 indices depth v1' ;;
+              191) message='release Agent-Crypto 40.4.191 energy depth v1' ;;
+              192) message='release Agent-Crypto 40.4.192 cross-market depth v1' ;;
+              193) message='release Agent-Crypto 40.4.193 multi-market depth harmonization lock' ;;
+              *) echo "Unknown stage $stage" >&2; exit 2 ;;
+            esac
+
+            git pull --rebase origin main
+            python .github/scripts/agent_crypto_depth_cascade_404190_193.py --stage "$stage"
+
+            node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+            node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+            node --check public/agent_crypto_erith_ia/administrator/js/app.js
+            node --check public/agent_crypto_erith_ia/administrator/app.js
+            python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+            python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+            git diff --check
+
+            git add \
+              public/agent_crypto_erith_ia/administrator/index.html \
+              public/agent_crypto_erith_ia/administrator/app.js \
+              public/agent_crypto_erith_ia/administrator/js/app.js \
+              public/agent_crypto_erith_ia/administrator/js/market-stack.js \
+              public/agent_crypto_erith_ia/administrator/js/parallel-markets.js \
+              public/agent_crypto_erith_ia/administrator/parallel-markets.css \
+              public/agent_crypto_erith_ia/administrator/version.json \
+              public/agent_crypto_erith_ia/administrator/administrator-version.json
+
+            if [ "$stage" = "193" ]; then
+              git rm -f .github/scripts/agent_crypto_depth_cascade_404190_193.py
+              git rm -f .github/workflows/agent-crypto-40-4-190-193-depth-cascade.yml
+            fi
+
+            git commit -m "$message"
+
+            for attempt in 1 2 3 4 5 6; do
+              if git push origin HEAD:main; then
+                return 0
+              fi
+              sleep $((attempt * 3))
+              git pull --rebase origin main
+            done
+            echo "Push failed for stage $stage" >&2
+            exit 1
+          }
+
+          commit_stage 190
+          commit_stage 191
+          commit_stage 192
+          commit_stage 193
