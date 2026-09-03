@@ -311,3 +311,73 @@ html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>sect
   html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(5){grid-column:6!important}
   html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(6){grid-column:7!important}
 }
+
+
+/* =========================================================
+   40.4.190+ — PARALLEL MARKET DEPTH
+   Shared geometry remains locked from 40.4.189.
+   Depth is domain-owned, Source Truth only, no execution.
+   ========================================================= */
+#atlasParallelDomainRailHost404189 .atlas-parallel-basket-404189 li>button{
+  display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;
+  width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit
+}
+#atlasParallelDomainRailHost404189 .atlas-parallel-basket-404189 li.is-selected{
+  border-color:color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 54%,rgba(255,255,255,.10));
+  background:color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 10%,rgba(255,255,255,.025));
+  box-shadow:inset 3px 0 0 color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 72%,white)
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-section,
+#atlasParallelDomainRailHost404189 .parallel-depth-sheet{
+  display:block;margin-top:10px;padding:10px;border:1px solid color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 25%,rgba(255,255,255,.07));
+  border-radius:12px;background:rgba(255,255,255,.018)
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-section>b,
+#atlasParallelDomainRailHost404189 .parallel-depth-sheet>b{
+  display:block;margin-bottom:8px;color:color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 48%,#fff0cb);
+  font-size:10px;letter-spacing:.01em
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-grid>span{
+  display:grid;gap:3px;min-width:0;padding:8px;border:1px solid rgba(255,255,255,.07);
+  border-radius:9px;background:rgba(0,0,0,.12)
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-grid small{
+  color:#7790a2;font-size:7px;letter-spacing:.08em;text-transform:uppercase
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-grid strong{
+  min-width:0;color:#e8f0f5;font-size:9px;overflow-wrap:anywhere
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-horizons{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-horizon{
+  display:grid;grid-template-columns:auto 1fr;gap:3px 8px;align-items:center;
+  padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(0,0,0,.12)
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-horizon>b{
+  color:color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 64%,white);font-size:9px
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-horizon>span{color:#e7eef3;font-size:9px;font-weight:800}
+#atlasParallelDomainRailHost404189 .parallel-depth-horizon>small{
+  grid-column:1/-1;color:#7f96a7;font-size:7px;line-height:1.35
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-list{
+  display:grid;gap:5px;margin:0;padding:0;list-style:none
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-list li{
+  display:grid;grid-template-columns:auto 1fr;gap:2px 8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05)
+}
+#atlasParallelDomainRailHost404189 .parallel-depth-list li:last-child{border-bottom:0}
+#atlasParallelDomainRailHost404189 .parallel-depth-list li>b{color:#dbe7ed;font-size:8px}
+#atlasParallelDomainRailHost404189 .parallel-depth-list li>span{justify-self:end;color:#f2f5f7;font-size:8px;font-weight:800}
+#atlasParallelDomainRailHost404189 .parallel-depth-list li>small{grid-column:1/-1;color:#71899b;font-size:7px}
+#atlasParallelDomainRailHost404189 .parallel-depth-note{
+  margin:7px 0 0;color:#7890a0;font-size:7px;line-height:1.45
+}
+@media(max-width:1100px){
+  #atlasParallelDomainRailHost404189 .parallel-depth-grid,
+  #atlasParallelDomainRailHost404189 .parallel-depth-horizons{grid-template-columns:1fr}
+}
