@@ -46,21 +46,28 @@ jobs:
           root=Path("public/agent_crypto_erith_ia/data/indices/history")
           status=json.loads((root/"status.json").read_text(encoding="utf-8"))
           assert status.get("status")=="ready", status
+          min_span={"5a":4.5,"10a":8.8,"max":8.8}
+          min_points={"5a":48,"10a":96,"max":96}
           for horizon in ("5a","10a","max"):
               payload=json.loads((root/f"{horizon}.json").read_text(encoding="utf-8"))
               assert payload.get("schema")=="agent_crypto_historical_depth_v1", horizon
               assert payload.get("status")=="ready", horizon
               assert int(payload.get("assets_count") or 0)==5, horizon
-              assert payload.get("resolution")=="1wk", horizon
+              coverage=payload.get("coverage") or {}
+              assert float(coverage.get("min_span_years") or 0)>=min_span[horizon], (horizon,coverage)
+              assert int(coverage.get("min_points") or 0)>=min_points[horizon], (horizon,coverage)
               integrity=payload.get("integrity") or {}
               assert integrity.get("no_invented_values") is True, horizon
+              assert integrity.get("provider_granularity_recorded") is True, horizon
+              assert integrity.get("coverage_duration_validated") is True, horizon
               assert integrity.get("lazy_browser_load_required") is True, horizon
               assert integrity.get("boot_payload_forbidden") is True, horizon
               for asset in payload.get("assets") or []:
                   points=asset.get("history_points") or []
-                  assert len(points)>=12, (horizon,asset.get("symbol"))
+                  assert float(asset.get("span_years") or 0)>=min_span[horizon], (horizon,asset.get("symbol"),asset.get("span_years"))
+                  assert len(points)>=min_points[horizon], (horizon,asset.get("symbol"),len(points))
                   assert all(isinstance(p.get("close"),(int,float)) and p.get("time") for p in points)
-          print({"status":"ready","horizons":["5a","10a","max"],"lazy":True})
+          print({"status":"ready","horizons":["5a","10a","max"],"lazy":True,"coverage_validated":True})
           PY
       - name: Commit historical archive
         shell: bash
