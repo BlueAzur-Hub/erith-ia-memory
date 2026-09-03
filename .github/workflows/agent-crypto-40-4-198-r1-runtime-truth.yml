@@ -64,32 +64,39 @@ jobs:
           root_path.write_text(root, encoding='utf-8')
           admin_path.write_text(admin, encoding='utf-8')
 
-          # The canonical manifest hashes the payload. Refresh only the files
-          # changed by this repair; do not alter data or business semantics.
           def digest(path):
               return hashlib.sha256(path.read_bytes()).hexdigest()
 
           manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
           files = manifest.get('files')
-          if not isinstance(files, dict):
+          if not isinstance(files, dict) or not files:
               raise SystemExit('version.json files hash map missing')
-          for rel in ('index.html', 'app.js', 'js/app.js'):
-              if rel not in files:
-                  raise SystemExit(f'manifest hash entry missing: {rel}')
-              files[rel] = digest(base / rel)
+
+          # Recompute the complete declared payload from the actual tree.
+          for rel in list(files):
+              payload = base / rel
+              if not payload.is_file():
+                  raise SystemExit(f'manifest hash target missing: {rel}')
+              files[rel] = digest(payload)
           manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-          # Keep any optional mirror payload hashes coherent when present.
+          # Mirror identity derives from the canonical manifest, never from a
+          # separately hard-coded release string.
           mirror = json.loads(mirror_path.read_text(encoding='utf-8'))
+          mirror['build'] = manifest['build']
+          mirror['global_versioning'] = manifest['build']
+          mirror['release'] = manifest['release']
+          mirror['asset_token'] = manifest['asset_token']
+          mirror['parent_build'] = manifest.get('parent_build', '')
+          if manifest.get('revision'):
+              mirror['revision'] = manifest['revision']
           mirror_files = mirror.get('files')
-          mirror_changed = False
           if isinstance(mirror_files, dict):
-              for rel in ('index.html', 'app.js', 'js/app.js'):
-                  if rel in mirror_files:
-                      mirror_files[rel] = digest(base / rel)
-                      mirror_changed = True
-          if mirror_changed:
-              mirror_path.write_text(json.dumps(mirror, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              for rel in list(mirror_files):
+                  payload = base / rel
+                  if payload.is_file():
+                      mirror_files[rel] = digest(payload)
+          mirror_path.write_text(json.dumps(mirror, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 
       - name: Runtime syntax and canonical truth gates
