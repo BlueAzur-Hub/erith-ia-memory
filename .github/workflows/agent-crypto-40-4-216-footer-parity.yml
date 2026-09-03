@@ -1,0 +1,49 @@
+name: Agent-Crypto 40.4.216 Footer Parity Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-216-footer-parity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove 40.4.215 and locate residual footer wording
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.215
+          python - <<'PY'
+          from pathlib import Path
+          for rel in (
+              'public/agent_crypto_erith_ia/administrator/app.js',
+              'public/agent_crypto_erith_ia/administrator/js/app.js',
+          ):
+              path=Path(rel)
+              text=path.read_text(encoding='utf-8')
+              needle='univers cumulé'
+              hits=[]
+              start=0
+              while True:
+                  idx=text.find(needle,start)
+                  if idx<0: break
+                  hits.append(idx)
+                  start=idx+1
+              print(f'FOOTER_HITS {rel}: {len(hits)}')
+              for idx in hits:
+                  lo=max(0,idx-700); hi=min(len(text),idx+900)
+                  print(f'--- {rel} @ {idx} ---')
+                  print(text[lo:hi])
+                  print('--- END ---')
+          PY
