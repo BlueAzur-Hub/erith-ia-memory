@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.190";
-  const ADMIN_RELEASE = "INDICES DEPTH V1 · ASSET SHEET · MULTI-HORIZON · BREADTH · RISK";
+  const ADMIN_BUILD = "40.4.191";
+  const ADMIN_RELEASE = "ENERGY DEPTH V1 · OIL SPREAD · MULTI-HORIZON · RISK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
