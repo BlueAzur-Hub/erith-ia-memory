@@ -1,15 +1,16 @@
 # AGENT-CRYPTO — FIN DE FIL AETHER
 
-Version canonique de clôture : **40.4.209**  
+Version canonique de clôture : **40.4.210**  
 Market Core : **38.15.11 — PROTÉGÉ**
 
-## 1. Cascade finale 40.4.205 → 40.4.209
+## 1. Cascade finale 40.4.205 → 40.4.210
 
 - **40.4.205** — identité couleur stable par actif, axe temporel réel, inspection historique au pointeur, convergence Version Truth.
 - **40.4.206** — tableau permanent de valeurs observées superposé dans Indices/Énergie/Cross + propagation couleur au rail et à la fiche active.
 - **40.4.207** — identité couleur propagée aux tableaux de Lecture profonde et cartes structurelles.
 - **40.4.208** — leader/retard du Historical Math Core colorés selon l'actif sans modifier les formules ; information textuelle conservée.
 - **40.4.209** — consolidation finale, Version Truth, cache-busting, contrat et reprise canonique.
+- **40.4.210** — Cache Truth lock : convergence explicite des URL versionnées des quatre payloads marché modifiés par la cascade 40.4.205→40.4.209 ; aucun changement de moteur, de données, de géométrie ou de contenu fonctionnel de ces payloads.
 
 ## 2. Dette utilisateur soldée
 
@@ -25,6 +26,7 @@ Les couleurs restent stables par position canonique du panier : jaune/or, cyan, 
 - Comptes `fetch`, `setInterval`, `MutationObserver`, `WebSocket` et `requestAnimationFrame` inchangés dans `parallel-markets.js` + `market-reading-depth.js`.
 - `node --check` passé sur les deux propriétaires JavaScript à chaque release.
 - `agent_crypto_version_truth_guard.py` passé sur chaque build canonique.
+- 40.4.210 conserve à l’identique les hashes des payloads `parallel-markets.js/css`, `market-reading-depth.js/css` et `market-stack.js` ; seul leur adressage de cache utile converge, avec identité de release et manifestes synchronisés.
 
 ## 4. Architecture conservée
 

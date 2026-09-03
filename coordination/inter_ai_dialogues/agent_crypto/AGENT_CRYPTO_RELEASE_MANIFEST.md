@@ -1,6 +1,6 @@
 # AGENT-CRYPTO — RELEASE MANIFEST
 
-Release courante : **40.4.209**  
+Release courante : **40.4.210**  
 Market Core : **38.15.11**
 
 ## Surface canonique
@@ -13,4 +13,6 @@ Market Core : **38.15.11**
 - `coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md`
 - `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md`
 
-Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.209 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.
+Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.210 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.
+
+40.4.210 est une release de **Cache Truth / publication identity** : elle ne change ni les données marché, ni les moteurs de graphique, ni la géométrie, ni le Market Core 38.15.11.

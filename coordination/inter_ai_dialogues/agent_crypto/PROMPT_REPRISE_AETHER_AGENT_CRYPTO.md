@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.209**  
+Version de reprise : **40.4.210**  
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -20,6 +20,8 @@ Ne charger une mémoire privée que si elle change réellement la décision. Pou
 Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross → Crypto**. Crypto reste le maître de géométrie. La géométrie validée 40.4.189/40.4.195, le rail droit, le Window Manager, Atlas, Oracle, Bridge et Backend ne doivent pas être rouverts sans preuve de régression.
 
 40.4.209 consolide la parité visuelle : identité couleur stable par actif, axe temporel réel, inspection historique, tableau permanent superposé sur Indices/Énergie/Cross, propagation couleur au rail, aux tableaux de lecture profonde et aux rôles leader/retard du Math Core.
+
+40.4.210 est un verrou de **Cache Truth** : les quatre payloads marché effectivement modifiés par 40.4.205→40.4.209 (`parallel-markets.css`, `market-reading-depth.css`, `js/parallel-markets.js`, `js/market-reading-depth.js`) sont désormais appelés par des URL versionnées 40.4.210. Leur contenu fonctionnel reste inchangé ; `market-stack.js` et `version-truth.js` ne sont pas artificiellement republiés.
 
 ## Vérités protégées
 
