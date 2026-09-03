@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.209";
+  const BUILD = "40.4.211";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -612,7 +612,7 @@
       </section>` : "";
     rail.innerHTML = `
       <header><span class="eyebrow">DÉTAIL ACTIF</span><strong>Lecture ${esc(cfg.title)}</strong><small>Observation seulement · Source Truth publique</small></header>
-      <div class="atlas-parallel-detail-state"><span><small>Domaine</small><b>${esc(cfg.label)}</b></span><span><small>Couverture</small><b>${payload.assets_count}/${cfg.expected}</b></span><span><small>Source</small><b>${esc(payload.source || cfg.source)}</b></span><span><small>Build</small><b>${BUILD}</b></span></div>
+      <div class="atlas-parallel-detail-state"><span><small>Domaine</small><b>${esc(cfg.label)}</b></span><span><small>Couverture</small><b>${payload.assets_count}/${cfg.expected}</b></span><span><small>Source</small><b>${esc(payload.source || cfg.source)}</b></span><span><small>Module</small><b>${BUILD}</b></span></div>
       <section><b>Lecture synthétique</b><p>${leader ? `Leader ${esc(leader.asset.name)} ; retard ${esc(laggard.asset.name)}. Les séries restent indépendantes et sont comparées en Base 100.` : "Données insuffisantes."}</p></section>
       <section class="atlas-parallel-basket-404189"><b>Panier actif · ${esc(state.period.get(domain) || cfg.defaultPeriod)}</b><ul>${basket || "<li>Données insuffisantes.</li>"}</ul></section>
       ${math}

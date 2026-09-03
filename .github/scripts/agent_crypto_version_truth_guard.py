@@ -62,6 +62,7 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
     index = read(base / "index.html")
     root = read(base / "app.js")
     admin_js = read(base / "js/app.js")
+    market_stack = read(base / "js/market-stack.js")
     manifest = load_json(base / "version.json")
     mirror = load_json(base / "administrator-version.json")
 
@@ -106,6 +107,9 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
         "root_cache_build": one(r'<script\s+src="\./app\.js\?v=administrator-build-([^"]+)"></script>', index, "root app cache build"),
         "admin_cache_build": one(r'<script\s+src="\./js/app\.js\?v=administrator-build-([^"]+)"></script>', index, "admin app cache build"),
         "footer_build": one(r"id=\"footerRelease\"[^>]*>[^<]*Market Core · Build ([^ ]+) · Version : Parker Lewis Can't Lose</span>", index, "footer build"),
+        "first_paint_badge_build": one(r'<span\s+id="atlasVersionControlText">Build ([^<]+)</span>', index, "first-paint badge build"),
+        "first_paint_aria_build": one(r'id="atlasVersionControl"[\s\S]*?aria-label="Version Agent-Crypto installée : Build ([^,"]+), mode Administrator"', index, "first-paint aria build"),
+        "version_truth_cache_build": one(r'<script\s+src="\./js/version-truth\.js\?v=([^"]+)"></script>', index, "version truth cache build"),
     }
 
     for key in (
@@ -117,12 +121,17 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
         "root_cache_build",
         "admin_cache_build",
         "footer_build",
+        "first_paint_badge_build",
+        "first_paint_aria_build",
+        "version_truth_cache_build",
     ):
         if actual[key] != build:
             fail(f"{key} drift: {actual[key]!r} != {build!r}")
 
     if actual["meta_asset_token"] != expected_token:
         fail("HTML asset token drift")
+    if "atlasVersionControlText" in market_stack:
+        fail("market-stack illegally owns the global version badge")
     if actual["meta_release"] != release or actual["admin_release"] != release:
         fail("release identity drift between manifest / HTML / administrator runtime")
 

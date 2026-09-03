@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.210**  
+Version de reprise : **40.4.211**  
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -22,6 +22,8 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 40.4.209 consolide la parité visuelle : identité couleur stable par actif, axe temporel réel, inspection historique, tableau permanent superposé sur Indices/Énergie/Cross, propagation couleur au rail, aux tableaux de lecture profonde et aux rôles leader/retard du Math Core.
 
 40.4.210 est un verrou de **Cache Truth** : les quatre payloads marché effectivement modifiés par 40.4.205→40.4.209 (`parallel-markets.css`, `market-reading-depth.css`, `js/parallel-markets.js`, `js/market-reading-depth.js`) sont désormais appelés par des URL versionnées 40.4.210. Leur contenu fonctionnel reste inchangé ; `market-stack.js` et `version-truth.js` ne sont pas artificiellement republiés.
+
+40.4.211 verrouille l’**autorité unique d’affichage de version** : `market-stack.js` ne peut plus écrire `#atlasVersionControlText`; le badge first-paint est synchronisé par le release driver, `version-truth.js` reste l’autorité runtime globale, et les versions de module sont explicitement séparées de la release Agent-Crypto.
 
 ## Vérités protégées
 

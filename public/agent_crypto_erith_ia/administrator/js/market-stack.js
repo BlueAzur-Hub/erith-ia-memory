@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.204";
+  const BUILD = "40.4.211";
   const REVISION = "V6";
   const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_DOMAIN_CONTENT_404189";
   const ORDER = Object.freeze([
@@ -274,9 +274,12 @@
   }
 
   function publishBuildTruth(){
-    const text = byId("atlasVersionControlText");
-    if(text) text.textContent = `Build ${BUILD}`;
-    document.documentElement.dataset.agentCryptoBuild = BUILD;
+    /* 40.4.211 — market-stack is a module owner, never the global release badge owner. */
+    const releaseBuild = document.querySelector('meta[name="administrator-build"]')?.content
+      || document.querySelector('meta[name="atlas-build"]')?.content
+      || "";
+    if(releaseBuild) document.documentElement.dataset.agentCryptoBuild = releaseBuild;
+    document.documentElement.dataset.marketStackBuild = BUILD;
     document.documentElement.dataset.marketShellContract = CONTRACT;
   }
 
