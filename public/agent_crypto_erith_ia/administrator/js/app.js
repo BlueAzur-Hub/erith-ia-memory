@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.217";
-  const ADMIN_RELEASE = "MARKET TABLE EVENT DELEGATION · CORE LISTENER FANOUT RETIREMENT";
+  const ADMIN_BUILD = "40.4.218";
+  const ADMIN_RELEASE = "VERSION OBSERVER RETIREMENT · SINGLE AUTHORITY CLEANUP LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
@@ -1609,17 +1609,6 @@
     } catch {}
   }
 
-  function keepGlobalVersionVisible() {
-    const versionText = byId("atlasVersionControlText");
-    const observer = versionText ? new MutationObserver(() => {
-      const text = String(versionText.textContent || "");
-      if (/Market Core V2\.0-Alpha\s*·\s*Build 38\.15\.11/i.test(text)) {
-        versionText.textContent = `Build ${ADMIN_BUILD} · Administrator`;
-      }
-    }) : null;
-    if (versionText) observer.observe(versionText, { childList: true, characterData: true, subtree: true });
-  }
-
   function installMathCoreInlineWindowControls40148() {
     const math = byId("math");
     const head = math?.querySelector?.(".atlas-math-dock-head");
@@ -2176,7 +2165,6 @@
 
   function boot() {
     installGlobalVersionIdentity();
-    keepGlobalVersionVisible();
     initAtlasMemoryResidency40353();
 
     migrateRibbonWindowStateR2();

@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.217**
+Version de reprise : **40.4.218**
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -36,6 +36,8 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 40.4.216 verrouille la **parité textuelle de cette couverture** : le footer secondaire du Market Snapshot réutilise `atlasMarketUniverseCoverageTruth404215()` et retire les anciens libellés de cardinalité `univers cumulé x/limit`, `Core x/250` et `Extended x/(limit-250)`. Aucun changement de données, de rang ou de comportement marché.
 
 40.4.217 verrouille la **délégation événementielle du Market Snapshot Core** : les clics/clavier de lignes et les actions Solo/Suivi/Alerte/Sources sont possédés par un listener stable du conteneur, au lieu de recréer un listener par ligne/bouton à chaque rendu. L’Extended garde son propriétaire délégué 40.3.116.
+
+40.4.218 retire le **MutationObserver de compatibilité du badge global** devenu sans propriétaire adversaire après 40.4.211. `version-truth.js` conserve la réconciliation publiée, le runtime racine conserve les états de cohérence/publication skew et l’Administrator conserve le first-runtime identity. `market-stack.js` reste interdit d’écriture sur `#atlasVersionControlText`.
 
 ## Vérités protégées
 

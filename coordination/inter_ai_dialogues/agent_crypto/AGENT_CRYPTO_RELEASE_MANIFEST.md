@@ -1,6 +1,6 @@
 # AGENT-CRYPTO — RELEASE MANIFEST
 
-Release courante : **40.4.217**
+Release courante : **40.4.218**
 Market Core : **38.15.11**
 
 ## Surface canonique
@@ -13,7 +13,7 @@ Market Core : **38.15.11**
 - `coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md`
 - `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md`
 
-Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.217 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.
+Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.218 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.
 
 40.4.210 est une release de **Cache Truth / publication identity** : elle ne change ni les données marché, ni les moteurs de graphique, ni la géométrie, ni le Market Core 38.15.11.
 
@@ -30,3 +30,5 @@ Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.217 : il conti
 40.4.216 est une release de **Market Coverage Footer Parity** : le footer secondaire du Market Snapshot réutilise la vérité de couverture 40.4.215 et ne présente plus un plafond de rang fournisseur comme une cardinalité exacte (`991/1000`, `249/250`, `742/750`). Aucun rang ni actif n’est modifié.
 
 40.4.217 est une release de **Market Table Event Delegation** : le Market Snapshot Core remplace le fan-out de listeners recréés à chaque rendu (lignes + boutons) par une délégation stable sur `marketRows`, en conservant les mêmes actions clavier/souris. Aucun fetch, timer, observer, WebSocket, donnée, rang, graphique, Atlas ou Market Core n’est modifié.
+
+40.4.218 est une release de **Version Observer Retirement** : l’ancien `MutationObserver` de compatibilité qui surveillait en permanence le badge global pour corriger un ancien libellé Market Core est retiré. Depuis 40.4.211, `market-stack.js` ne possède plus ce badge ; `version-truth.js`, le runtime racine et l’identité Administrator restent les autorités explicites. Aucun changement de Market Core, Atlas, données ou géométrie.

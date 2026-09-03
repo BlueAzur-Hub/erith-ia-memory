@@ -249,6 +249,18 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
             if marker in root:
                 fail(f"40.4.217 legacy Market listener fanout restored: {marker}")
 
+    if current_num >= (40, 4, 218):
+        if "keepGlobalVersionVisible" in admin_js:
+            fail("40.4.218 retired global-version compatibility observer restored")
+        market_stack = read(base / "js/market-stack.js")
+        if "atlasVersionControlText" in market_stack:
+            fail("40.4.218 market-stack global badge writer restored")
+        version_truth = read(base / "js/version-truth.js")
+        if "function patchVersionControl(remote)" not in version_truth or "atlasVersionControlText" not in version_truth:
+            fail("40.4.218 version-truth global authority missing")
+        if "function installGlobalVersionIdentity()" not in admin_js or "atlasVersionControlText" not in admin_js:
+            fail("40.4.218 Administrator first-runtime version authority missing")
+
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")
