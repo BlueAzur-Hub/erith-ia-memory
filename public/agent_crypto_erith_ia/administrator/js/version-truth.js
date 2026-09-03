@@ -39,8 +39,31 @@
         text
       );
     }
+  }
+
+  function patchVersionControl(remote) {
+    const versionNode = document.getElementById("atlasVersionControlText");
+    const control = document.getElementById("atlasVersionControl");
+    const newer = !!(remote?.build && remote?.engine === engine && compare(remote.build, loaded) > 0);
+    if (versionNode) {
+      versionNode.textContent = newer
+        ? `Build ${loaded} · ${remote.build} disponible`
+        : `Build ${loaded} · Administrator`;
+    }
+    if (control) {
+      control.dataset.loadedBuild = loaded;
+      control.dataset.publishedBuild = remote?.build || loaded;
+      control.dataset.versionTruthState = newer ? "update-available" : "loaded";
+      control.setAttribute("aria-label", newer
+        ? `Version chargée ${loaded}. Version publiée ${remote.build} disponible.`
+        : `Version Agent-Crypto chargée : Build ${loaded}.`);
+      control.title = newer
+        ? `Build ${loaded} chargé · Build ${remote.build} publié · Market Core ${engine} inchangé`
+        : `Build ${loaded} chargé · Market Core ${engine}`;
+    }
     document.documentElement.dataset.versionTruthBuild = loaded;
-    document.documentElement.dataset.versionTruthState = text.includes(" disponible") ? "update-available" : "loaded";
+    document.documentElement.dataset.versionTruthPublished = remote?.build || loaded;
+    document.documentElement.dataset.versionTruthState = newer ? "update-available" : "loaded";
   }
 
   async function run() {
@@ -53,6 +76,7 @@
       if (response.ok) remote = await response.json();
     } catch (_) {}
     patchLeafText(versionText(remote));
+    patchVersionControl(remote);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run, { once: true });
@@ -62,6 +86,7 @@
     loaded,
     engine,
     manifest: "./build.json",
+    distinguishes_loaded_from_published: true,
     recurring_timer: false,
     observer: false,
     network_calls_per_page: 1
