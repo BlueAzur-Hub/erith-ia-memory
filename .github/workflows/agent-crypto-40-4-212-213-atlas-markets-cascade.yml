@@ -1,0 +1,463 @@
+name: Agent-Crypto 40.4.212-213 Atlas + Markets Truth Cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-212-213-atlas-markets-cascade.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: agent-crypto-40-4-212-213-atlas-markets-cascade
+  cancel-in-progress: false
+
+jobs:
+  cascade:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Baseline 40.4.211 truth + Atlas lineage proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.211
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          grep -q '40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY' "$ROOT/app.js"
+          grep -q 'function atlasCurrentPendingMarket137' "$ROOT/app.js"
+          grep -q 'atlasCurrentPendingAutoKick4051' "$ROOT/app.js"
+          grep -q 'hot_root_registered_for_detach:false' "$ROOT/js/views/atlas-family-demand-residency.js"
+          grep -q 'pending_wake_404137_preserved:true' "$ROOT/js/views/atlas-family-demand-residency.js"
+          echo 'BASELINE 40.4.211 + ATLAS WAKE LINEAGE: PASS'
+
+      - name: Apply 40.4.212 Atlas heartbeat one-shot rearm
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          cat > "$ROOT/js/atlas-heartbeat-rearm.js" <<'JS'
+          /* Agent-Crypto @erith.IA — 40.4.212
+             ATLAS HEARTBEAT · BOOT-COMPLETE ONE-SHOT REARM
+             Reuses the canonical 40.4.137 pending-CURRENT owner after the full page
+             reaches load. No timer, observer, fetch, WebSocket, storage owner or
+             duplicate scheduler is introduced. Existing authorization, device-role,
+             readiness, same-snapshot and CLOSED-CURRENT gates remain authoritative. */
+          (() => {
+            "use strict";
+            const BUILD = "40.4.212";
+            let autoAttempted = false;
+            let last = Object.freeze({state:"NOT_RUN", reason:"", result:false});
+
+            const callBool = (name) => {
+              try { return typeof globalThis[name] === "function" ? Boolean(globalThis[name]()) : null; }
+              catch (_) { return null; }
+            };
+            const callText = (name) => {
+              try { return typeof globalThis[name] === "function" ? String(globalThis[name]() || "").trim() : ""; }
+              catch (_) { return ""; }
+            };
+            function inspect() {
+              return Object.freeze({
+                build: BUILD,
+                compute_allowed: callBool("atlasDeviceComputeAllowed"),
+                authorized: callBool("atlasAccessIsAuthorized"),
+                busy: callBool("atlasAutomation341IsBusy"),
+                current_id: callText("atlasAutomation341SnapshotId"),
+                pending_id: callText("atlasAutomation341ReadPendingMarket"),
+                last_done_id: callText("atlasAutomation341ReadLastCurrentMarketId"),
+                pending_owner_available: typeof globalThis.atlasCurrentPendingMarket137 === "function",
+                bridge_rearm_owner_available: typeof globalThis.atlasCurrentPendingAutoKick4051 === "function"
+              });
+            }
+            function classify(before, result, error) {
+              if (error) return "ERROR";
+              if (before.compute_allowed === false) return "BLOCKED_DEVICE_ROLE";
+              if (before.authorized === false) return "BLOCKED_AUTH";
+              if (!before.pending_owner_available && !before.bridge_rearm_owner_available) return "OWNER_MISSING";
+              if (before.busy === true) return "BUSY";
+              if (before.current_id && before.current_id === before.last_done_id) return "REST_SAME_CURRENT";
+              if (!before.current_id && !before.pending_id) return "WAITING_CANONICAL";
+              if (result) return "REARMED";
+              return "WAITING_READINESS";
+            }
+            function publish(state) {
+              try {
+                document.documentElement.dataset.atlasHeartbeat404212 = state.state.toLowerCase();
+                document.documentElement.dataset.atlasHeartbeatBuild = BUILD;
+              } catch (_) {}
+            }
+            function rearm(reason = "manual") {
+              const before = inspect();
+              let result = false, error = "";
+              try {
+                if (typeof globalThis.atlasCurrentPendingMarket137 === "function") {
+                  result = Boolean(globalThis.atlasCurrentPendingMarket137(`heartbeat-${String(reason || "manual")}`));
+                } else if (typeof globalThis.atlasCurrentPendingAutoKick4051 === "function") {
+                  result = Boolean(globalThis.atlasCurrentPendingAutoKick4051(`heartbeat-${String(reason || "manual")}`));
+                }
+              } catch (exc) { error = String(exc?.message || exc || "unknown"); }
+              last = Object.freeze({build:BUILD,state:classify(before,result,error),reason:String(reason||"manual"),result,error,before,after:inspect()});
+              publish(last);
+              try { document.dispatchEvent(new CustomEvent("erith:atlas-heartbeat", {detail:last})); } catch (_) {}
+              return result;
+            }
+            function autoRearm() {
+              if (autoAttempted) return;
+              autoAttempted = true;
+              queueMicrotask(() => rearm("boot-complete"));
+            }
+            if (document.readyState === "complete") autoRearm();
+            else window.addEventListener("load", autoRearm, {once:true});
+
+            globalThis.ErithAtlasHeartbeat404212 = Object.freeze({
+              build:BUILD,
+              strategy:"boot-complete-one-shot-canonical-rearm",
+              canonical_pending_owner:"atlasCurrentPendingMarket137",
+              fallback_existing_owner:"atlasCurrentPendingAutoKick4051",
+              ui_disclosure_dependency:false,
+              new_timer:false,
+              new_observer:false,
+              new_fetch:false,
+              new_websocket:false,
+              new_storage_owner:false,
+              new_scheduler:false,
+              inspect,
+              rearm,
+              last:()=>last
+            });
+          })();
+          JS
+
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          index=root/'index.html'
+          text=index.read_text(encoding='utf-8')
+          anchor='<script src="./js/app.js?v=administrator-build-40.4.211"></script>'
+          if text.count(anchor)!=1:
+              raise SystemExit(f'STOP heartbeat index anchor count={text.count(anchor)}')
+          text=text.replace(anchor, anchor+'\n  <script src="./js/atlas-heartbeat-rearm.js?v=40.4.212"></script>',1)
+          index.write_text(text,encoding='utf-8')
+          manifest=root/'version.json'
+          data=json.loads(manifest.read_text(encoding='utf-8'))
+          data.setdefault('files',{})['js/atlas-heartbeat-rearm.js']='PENDING_RELEASE_DRIVER_HASH'
+          manifest.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+          cat > /tmp/atlas_404212_contract.json <<'JSON'
+          {
+            "schema": "erith.admin.atlas-heartbeat-rearm.v1",
+            "build": "40.4.212",
+            "parent_build": "40.4.211",
+            "purpose": "One boot-complete finite rearm through the existing Atlas pending-CURRENT owner.",
+            "canonical_pending_owner": "app.js::atlasCurrentPendingMarket137",
+            "fallback_existing_owner": "app.js::atlasCurrentPendingAutoKick4051",
+            "hot_core_owner": "js/views/atlas-presentation.js + app.js CURRENT runtime",
+            "ui_disclosure_dependency": false,
+            "same_snapshot_noop_preserved": true,
+            "closed_current_noop_preserved": true,
+            "device_compute_role_preserved": true,
+            "authorization_gate_preserved": true,
+            "new_timer": false,
+            "new_observer": false,
+            "new_fetch": false,
+            "new_websocket": false,
+            "new_storage_owner": false,
+            "new_scheduler": false,
+            "market_core_modified": false,
+            "firefox_local_bridge_validation_required": true
+          }
+          JSON
+
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.212 \
+            --parent 40.4.211 \
+            --release 'ATLAS HEARTBEAT REARM · BOOT-COMPLETE CANONICAL CURRENT DEFIBRILLATOR' \
+            --status 'atlas_heartbeat_rearm_404212_operator_validation_required' \
+            --contract-key atlas_heartbeat_rearm_404212 \
+            --contract-json /tmp/atlas_404212_contract.json \
+            --lineage-note '40.4.212 Atlas boot-complete one-shot rearm reuses the protected 40.4.137 pending-CURRENT owner without a new scheduler.'
+
+      - name: Verify and commit 40.4.212 locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/atlas-heartbeat-rearm.js"
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.212
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          hb=(root/'js/atlas-heartbeat-rearm.js').read_text(encoding='utf-8')
+          app=(root/'app.js').read_text(encoding='utf-8')
+          for forbidden in ('setInterval(', 'setTimeout(', 'MutationObserver', 'IntersectionObserver', 'fetch(', 'new WebSocket', 'localStorage.setItem'):
+              assert forbidden not in hb, forbidden
+          assert 'function atlasCurrentPendingMarket137' in app
+          assert '40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY' in app
+          assert 'atlasCurrentPendingMarket137(`heartbeat-' in hb
+          assert 'addEventListener("load", autoRearm, {once:true})' in hb
+          print('40.4.212 ATLAS HEARTBEAT STATIC GATES: PASS')
+          PY
+          git diff --check
+          git config user.name 'Aether Release'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m 'fix(agent-crypto): 40.4.212 rearm Atlas heartbeat through canonical CURRENT owner'
+
+      - name: Apply 40.4.213 market architecture truth convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          cat > "$ROOT/architecture/markets-domain-canonical.json" <<'JSON'
+          {
+            "schema": "agent_crypto_markets_domain_canonical_v2",
+            "build": "40.4.213",
+            "parent_build": "40.4.212",
+            "release": "MARKET ARCHITECTURE TRUTH CONVERGENCE",
+            "protected_market_core": "38.15.11",
+            "order": ["crypto", "metals", "indices", "energy", "cross-market"],
+            "owners": {
+              "router": "js/market-stack.js",
+              "crypto_runtime": "app.js · Market Core 38.15.11",
+              "metals_runtime": "existing app.js Metals runtime + AtlasParallelMarketDemand40465.ensure",
+              "parallel_runtime": "js/parallel-markets.js",
+              "deep_reading": "js/market-reading-depth.js",
+              "version_display": "js/version-truth.js + release metadata"
+            },
+            "domains": {
+              "crypto": {"state": "ACTIVE_NATIVE", "mode": "native", "engine": "Market Core 38.15.11"},
+              "metals": {"state": "ACTIVE_NATIVE_DEMAND", "mode": "native", "engine": "existing Metals runtime"},
+              "indices": {"state": "ACTIVE_PARALLEL", "mode": "parallel", "source": "Yahoo Finance"},
+              "energy": {"state": "ACTIVE_PARALLEL", "mode": "parallel", "source": "Yahoo Finance", "scope": "Energy & commodities"},
+              "cross-market": {"state": "ACTIVE_PARALLEL", "mode": "parallel", "source": "canonical archives"}
+            },
+            "parallel_periods": ["24h", "7j", "30j", "60j", "90j", "1a", "5a", "10a", "max"],
+            "legacy": {
+              "40.4.166_parallel_router": "HISTORICAL_SUPERSEDED",
+              "40.4.167_market_cascade_shell": "HISTORICAL_SUPERSEDED",
+              "commodities_separate_domain": "SUPERSEDED_BY_ENERGY_SCOPE"
+            },
+            "invariants": {
+              "crypto_geometry_master": true,
+              "single_physical_market_surface": true,
+              "source_truth_per_domain": true,
+              "cross_domain_cache_reuse_forbidden": true,
+              "no_invented_values": true,
+              "no_new_market_engine": true,
+              "no_automatic_financial_action": true,
+              "new_timer": false,
+              "new_observer": false,
+              "new_fetch_owner": false,
+              "new_storage_owner": false
+            }
+          }
+          JSON
+
+          cat > "$ROOT/js/markets-domain-contract.js" <<'JS'
+          /* Agent-Crypto @erith.IA — 40.4.213
+             MARKET ARCHITECTURE TRUTH CONVERGENCE
+             Passive compatibility facade. The active router is market-stack.js;
+             parallel domain runtime is parallel-markets.js. No shell, fetch,
+             timer, observer, storage or engine ownership is created here. */
+          (() => {
+            "use strict";
+            const BUILD="40.4.213";
+            const ORDER=Object.freeze(["crypto","metals","indices","energy","cross-market"]);
+            const ACTIVE_PARALLEL=Object.freeze(["indices","energy","cross-market"]);
+            const CONTRACT=Object.freeze({
+              schema:"agent_crypto_markets_domain_contract_v2",
+              build:BUILD,
+              state:"CANONICAL_PASSIVE_TRUTH_FACADE",
+              order:ORDER,
+              owners:Object.freeze({
+                router:"js/market-stack.js::ErithDomainSkeletonMirror404174",
+                crypto:"app.js · Market Core 38.15.11",
+                metals:"existing app.js Metals runtime + AtlasParallelMarketDemand40465.ensure",
+                parallel:"js/parallel-markets.js::ErithParallelMarketsRuntime",
+                deep_reading:"js/market-reading-depth.js"
+              }),
+              native_domains:Object.freeze(["crypto","metals"]),
+              parallel_domains:ACTIVE_PARALLEL,
+              legacy:Object.freeze({
+                parallel_router_404166:"HISTORICAL_SUPERSEDED",
+                market_cascade_404167:"HISTORICAL_SUPERSEDED",
+                commodities_separate_domain:"SUPERSEDED_BY_ENERGY_SCOPE"
+              }),
+              crypto_geometry_master:true,
+              source_truth_per_domain:true,
+              second_engine_created:false,
+              new_network_owner:false,
+              new_timer:false,
+              new_observer:false,
+              new_storage_owner:false,
+              readiness(){
+                const stack=globalThis.ErithDomainSkeletonMirror404174;
+                const parallel=globalThis.ErithParallelMarketsRuntime;
+                return Object.freeze({
+                  router:Boolean(stack && Array.isArray(stack.order) && stack.order.join("|")===ORDER.join("|")),
+                  crypto:true,
+                  metals:true,
+                  indices:Boolean(parallel?.active?.includes?.("indices")),
+                  energy:Boolean(parallel?.active?.includes?.("energy")),
+                  cross_market:Boolean(parallel?.active?.includes?.("cross-market"))
+                });
+              }
+            });
+            globalThis.ErithMarketsDomainContract404213=CONTRACT;
+            // Historical public names remain as compatibility aliases, but they no
+            // longer claim the obsolete 40.4.166/167 architecture as current truth.
+            globalThis.ErithParallelMarketsRouter404166=Object.freeze({
+              build:"40.4.166", state:"HISTORICAL_NAME_CURRENT_FACADE", superseded_by:BUILD,
+              active_domains:Object.freeze({crypto:{state:"ACTIVE_NATIVE"},metals:{state:"ACTIVE_NATIVE_DEMAND"},indices:{state:"ACTIVE_PARALLEL"},energy:{state:"ACTIVE_PARALLEL"},"cross-market":{state:"ACTIVE_PARALLEL"}}),
+              future_domains:Object.freeze({}), readiness:CONTRACT.readiness,
+              direct_reinitialize_forbidden:true, second_engine_created:false
+            });
+            globalThis.ErithMarketCascade404167=Object.freeze({
+              build:"40.4.167", state:"HISTORICAL_SUPERSEDED", superseded_by:BUILD,
+              order:ORDER, shell_visible_does_not_mean_runtime_active:true,
+              snapshot:()=>Object.freeze({build:BUILD,state:"SUPERSEDED_BY_CYCLIC_SINGLE_SURFACE",order:ORDER})
+            });
+            document.documentElement.dataset.marketsDomainContractBuild=BUILD;
+            document.documentElement.dataset.marketsDomainContractRevision="ARCHITECTURE_TRUTH_V2";
+          })();
+          JS
+
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          index=root/'index.html'
+          text=index.read_text(encoding='utf-8')
+          pattern=r'<script src="\./js/markets-domain-contract\.js\?v=[^"]+"></script>'
+          text,n=re.subn(pattern,'<script src="./js/markets-domain-contract.js?v=40.4.213"></script>',text,count=1)
+          if n!=1: raise SystemExit(f'STOP market contract token replacement count={n}')
+          index.write_text(text,encoding='utf-8')
+
+          old_keys={'parallel_markets_router_canonical_404166','parallel_markets_truth_404166r1','market_cascade_404167'}
+          def mark(node):
+              if isinstance(node,dict):
+                  for key,value in list(node.items()):
+                      if key in old_keys and isinstance(value,dict):
+                          value['state']='HISTORICAL_SUPERSEDED'
+                          value['superseded_by']='market_architecture_truth_404213'
+                      mark(value)
+              elif isinstance(node,list):
+                  for value in node: mark(value)
+          for name in ('version.json','administrator-version.json'):
+              p=root/name; data=json.loads(p.read_text(encoding='utf-8')); mark(data)
+              if name=='version.json':
+                  data.setdefault('files',{})['architecture/markets-domain-canonical.json']='PENDING_RELEASE_DRIVER_HASH'
+                  data.setdefault('files',{})['js/markets-domain-contract.js']='PENDING_RELEASE_DRIVER_HASH'
+              p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+          # Permanent anti-regression guard: the loaded market contract may keep
+          # historical aliases, but it must never again claim INERT active domains
+          # or the retired MARKET_CASCADE_SHELL as current architecture.
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('.github/scripts/agent_crypto_version_truth_guard.py')
+          text=p.read_text(encoding='utf-8')
+          anchor='''    files = manifest.get("files")\n'''
+          block='''    # 40.4.213 — Market architecture truth convergence guard.\n    market_contract = read(base / "js/markets-domain-contract.js")\n    architecture = load_json(base / "architecture/markets-domain-canonical.json")\n    if "MARKET_CASCADE_SHELL" in market_contract or "PLANNED_INERT" in market_contract:\n        fail("loaded markets-domain-contract still advertises retired inert/cascade architecture")\n    expected_market_order = ["crypto", "metals", "indices", "energy", "cross-market"]\n    if architecture.get("order") != expected_market_order:\n        fail(f"market architecture order drift: {architecture.get('order')!r}")\n    owners = architecture.get("owners") or {}\n    if owners.get("router") != "js/market-stack.js" or owners.get("parallel_runtime") != "js/parallel-markets.js":\n        fail("market architecture owner drift")\n    domains = architecture.get("domains") or {}\n    for domain in ("crypto", "metals", "indices", "energy", "cross-market"):\n        if not str((domains.get(domain) or {}).get("state") or "").startswith("ACTIVE"):\n            fail(f"market architecture active-domain drift: {domain}")\n\n'''
+          if text.count(anchor)!=1: raise SystemExit(f'STOP guard anchor count={text.count(anchor)}')
+          if '40.4.213 — Market architecture truth convergence guard.' not in text:
+              text=text.replace(anchor,block+anchor,1)
+          p.write_text(text,encoding='utf-8')
+          PY
+
+          cat > /tmp/market_404213_contract.json <<'JSON'
+          {
+            "schema": "erith.admin.market-architecture-truth.v2",
+            "build": "40.4.213",
+            "parent_build": "40.4.212",
+            "order": ["crypto", "metals", "indices", "energy", "cross-market"],
+            "router_owner": "js/market-stack.js",
+            "parallel_owner": "js/parallel-markets.js",
+            "deep_reading_owner": "js/market-reading-depth.js",
+            "crypto_market_core": "38.15.11",
+            "active_parallel_domains": ["indices", "energy", "cross-market"],
+            "legacy_404166_404167": "HISTORICAL_SUPERSEDED",
+            "runtime_behavior_changed": false,
+            "chart_geometry_changed": false,
+            "data_changed": false,
+            "new_timer": false,
+            "new_observer": false,
+            "new_fetch_owner": false,
+            "new_storage_owner": false
+          }
+          JSON
+
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.213 \
+            --parent 40.4.212 \
+            --release 'MARKET ARCHITECTURE TRUTH CONVERGENCE · ACTIVE DOMAIN OWNER LOCK' \
+            --status 'market_architecture_truth_convergence_404213' \
+            --contract-key market_architecture_truth_404213 \
+            --contract-json /tmp/market_404213_contract.json \
+            --lineage-note '40.4.213 converges the loaded market-domain contract and canonical architecture on the live Crypto → Metals → Indices → Energy → Cross single-surface router.'
+
+      - name: Verify 40.4.213 and commit cumulative cascade
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/atlas-heartbeat-rearm.js"
+          node --check "$ROOT/js/markets-domain-contract.js"
+          python -m py_compile .github/scripts/agent_crypto_version_truth_guard.py
+          python -m json.tool "$ROOT/architecture/markets-domain-canonical.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.213
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          contract=(root/'js/markets-domain-contract.js').read_text(encoding='utf-8')
+          stack=(root/'js/market-stack.js').read_text(encoding='utf-8')
+          parallel=(root/'js/parallel-markets.js').read_text(encoding='utf-8')
+          arch=json.loads((root/'architecture/markets-domain-canonical.json').read_text(encoding='utf-8'))
+          assert 'MARKET_CASCADE_SHELL' not in contract
+          assert 'PLANNED_INERT' not in contract
+          assert 'const BUILD="40.4.213"' in contract
+          for domain in ('crypto','metals','indices','energy','cross-market'):
+              assert domain in arch['domains'] and str(arch['domains'][domain]['state']).startswith('ACTIVE')
+          assert 'Object.freeze({ id:"indices"' in stack
+          assert 'Object.freeze({ id:"energy"' in stack
+          assert 'Object.freeze({ id:"cross-market"' in stack
+          assert 'const ACTIVE = new Set(["indices", "energy", "cross-market"]);' in parallel
+          for forbidden in ('setInterval(', 'setTimeout(', 'MutationObserver', 'IntersectionObserver', 'fetch(', 'new WebSocket', 'localStorage.setItem'):
+              assert forbidden not in contract, forbidden
+          print('40.4.213 MARKET ARCHITECTURE STATIC GATES: PASS')
+          PY
+          git diff --check
+          git add public/agent_crypto_erith_ia/administrator .github/scripts/agent_crypto_version_truth_guard.py
+          git commit -m 'chore(agent-crypto): 40.4.213 converge market architecture truth'
+
+      - name: Rebase safely, revalidate final tree and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git pull --rebase origin main
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.213
+          node --check public/agent_crypto_erith_ia/administrator/js/atlas-heartbeat-rearm.js
+          node --check public/agent_crypto_erith_ia/administrator/js/markets-domain-contract.js
+          git log -2 --oneline
+          git push origin HEAD:main
+          echo 'CASCADE 40.4.212 -> 40.4.213 PUSH PASS'
