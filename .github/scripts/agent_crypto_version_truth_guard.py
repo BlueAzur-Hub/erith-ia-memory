@@ -154,6 +154,22 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
     if actual["meta_engine_build"] != PROTECTED_ENGINE or actual["admin_engine_build"] != PROTECTED_ENGINE:
         fail("protected Market Core first-paint/runtime identity changed")
 
+    # 40.4.213 — Market architecture truth convergence guard.
+    market_contract = read(base / "js/markets-domain-contract.js")
+    architecture = load_json(base / "architecture/markets-domain-canonical.json")
+    if "MARKET_CASCADE_SHELL" in market_contract or "PLANNED_INERT" in market_contract:
+        fail("loaded markets-domain-contract still advertises retired inert/cascade architecture")
+    expected_market_order = ["crypto", "metals", "indices", "energy", "cross-market"]
+    if architecture.get("order") != expected_market_order:
+        fail(f"market architecture order drift: {architecture.get('order')!r}")
+    owners = architecture.get("owners") or {}
+    if owners.get("router") != "js/market-stack.js" or owners.get("parallel_runtime") != "js/parallel-markets.js":
+        fail("market architecture owner drift")
+    domains = architecture.get("domains") or {}
+    for domain in ("crypto", "metals", "indices", "energy", "cross-market"):
+        if not str((domains.get(domain) or {}).get("state") or "").startswith("ACTIVE"):
+            fail(f"market architecture active-domain drift: {domain}")
+
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")

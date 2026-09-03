@@ -1,99 +1,42 @@
 {
-  "schema": "agent_crypto_parallel_markets_canonical_v1",
-  "build": "40.4.167",
-  "parent_build": "40.4.166R1",
-  "release": "MARKET CASCADE SHELL · VERTICAL MULTI-DOMAIN OBSERVATORY FOUNDATION",
+  "schema": "agent_crypto_markets_domain_canonical_v2",
+  "build": "40.4.213",
+  "parent_build": "40.4.212",
+  "release": "MARKET ARCHITECTURE TRUTH CONVERGENCE",
   "protected_market_core": "38.15.11",
-  "classic_web_modified": false,
-  "canonical_runtime_owner": "administrator/app.js",
-  "canonical_presentation_owner": "existing Administrator Parallel Markets surfaces",
-  "contracts": {
-    "metals_foundation": {
-      "canonical_from": "40.4.164",
-      "symbols": [
-        "XAU",
-        "XAG",
-        "XPT",
-        "XPD",
-        "HG"
-      ],
-      "quote_source": "Gold API",
-      "history_source": "Yahoo Finance Futures",
-      "eur_conversion": "ECB indicative",
-      "structural_sources": [
-        "USGS",
-        "IEA",
-        "RMIS",
-        "World Bank"
-      ],
-      "separate_from_crypto": true,
-      "canonical_revision": "40.4.166R1",
-      "routing_owner": "atlasParallelMarketSetDomain + atlasParallelMarketInit",
-      "demand_owner": "AtlasParallelMarketDemand40465.ensure",
-      "default_crypto_boot_metals_dormant": true
-    },
-    "multi_horizon": {
-      "canonical_from": "40.4.165",
-      "horizons": [
-        "24h",
-        "7d",
-        "30d",
-        "90d",
-        "1y"
-      ],
-      "owner": "atlasMetalsQuoteFoundationHorizonReading",
-      "series": "Yahoo Finance Futures daily",
-      "spot_futures_mix_forbidden": true,
-      "canonical_revision": "40.4.166R1",
-      "intraday_24h_series": "Yahoo Finance Futures intraday 5m",
-      "intraday_24h_currently_available": true
-    },
-    "parallel_router": {
-      "canonical_from": "40.4.166",
-      "owner": "atlasParallelMarketInit",
-      "active_domains": [
-        "crypto",
-        "metals"
-      ],
-      "future_domains_inert": [
-        "indices",
-        "energy",
-        "commodities"
-      ],
-      "second_engine_created": false,
-      "canonical_revision": "40.4.166R1",
-      "routing_owner": "atlasParallelMarketSetDomain + atlasParallelMarketInit",
-      "metals_demand_owner": "AtlasParallelMarketDemand40465.ensure",
-      "direct_reinitialize_forbidden": true
-    }
+  "order": ["crypto", "metals", "indices", "energy", "cross-market"],
+  "owners": {
+    "router": "js/market-stack.js",
+    "crypto_runtime": "app.js · Market Core 38.15.11",
+    "metals_runtime": "existing app.js Metals runtime + AtlasParallelMarketDemand40465.ensure",
+    "parallel_runtime": "js/parallel-markets.js",
+    "deep_reading": "js/market-reading-depth.js",
+    "version_display": "js/version-truth.js + release metadata"
   },
-  "no_new_network_owner": true,
-  "no_new_timer": true,
-  "no_new_observer": true,
-  "no_new_storage_owner": true,
-  "collector_provenance": {
-    "collector_manifest_version": "2.3.0",
-    "legacy_build_target": "28.2.67",
-    "meaning": "collector lineage metadata only; never Administrator build identity",
-    "administrator_identity_owner": "administrator/version.json + administrator-version.json"
+  "domains": {
+    "crypto": {"state": "ACTIVE_NATIVE", "mode": "native", "engine": "Market Core 38.15.11"},
+    "metals": {"state": "ACTIVE_NATIVE_DEMAND", "mode": "native", "engine": "existing Metals runtime"},
+    "indices": {"state": "ACTIVE_PARALLEL", "mode": "parallel", "source": "Yahoo Finance"},
+    "energy": {"state": "ACTIVE_PARALLEL", "mode": "parallel", "source": "Yahoo Finance", "scope": "Energy & commodities"},
+    "cross-market": {"state": "ACTIVE_PARALLEL", "mode": "parallel", "source": "canonical archives"}
   },
-  "market_cascade": {
-    "canonical_from": "40.4.167",
-    "order": [
-      "crypto",
-      "metals",
-      "indices",
-      "commodities",
-      "cross-market"
-    ],
-    "crypto": "ACTIVE_EXISTING_ENGINE",
-    "metals": "ACTIVE_EXISTING_DEMAND_ENGINE",
-    "indices": "PLANNED_INERT",
-    "commodities": "PLANNED_INERT",
-    "cross_market": "WAITING_VALIDATED_DOMAINS",
-    "shell_visible_does_not_mean_runtime_active": true,
-    "second_chart_engine_created": false,
-    "future_domain_fetches": 0,
-    "firefox_100_percent_viewport_fit": "layout viewport 100% replaces vulnerable 100vw shell ownership"
+  "parallel_periods": ["24h", "7j", "30j", "60j", "90j", "1a", "5a", "10a", "max"],
+  "legacy": {
+    "40.4.166_parallel_router": "HISTORICAL_SUPERSEDED",
+    "40.4.167_market_cascade_shell": "HISTORICAL_SUPERSEDED",
+    "commodities_separate_domain": "SUPERSEDED_BY_ENERGY_SCOPE"
+  },
+  "invariants": {
+    "crypto_geometry_master": true,
+    "single_physical_market_surface": true,
+    "source_truth_per_domain": true,
+    "cross_domain_cache_reuse_forbidden": true,
+    "no_invented_values": true,
+    "no_new_market_engine": true,
+    "no_automatic_financial_action": true,
+    "new_timer": false,
+    "new_observer": false,
+    "new_fetch_owner": false,
+    "new_storage_owner": false
   }
 }
