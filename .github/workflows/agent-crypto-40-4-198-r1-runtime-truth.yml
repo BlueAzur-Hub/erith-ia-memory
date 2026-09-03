@@ -1,0 +1,86 @@
+name: Agent-Crypto 40.4.198 R1 Runtime Truth
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-198-r1-runtime-truth.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Repair stale 40.4.197 runtime identity and cache keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          index_path = base / 'index.html'
+          admin_path = base / 'js/app.js'
+
+          index = index_path.read_text(encoding='utf-8')
+          admin = admin_path.read_text(encoding='utf-8')
+
+          repl_index = {
+              './app.js?v=administrator-build-40.4.197': './app.js?v=administrator-build-40.4.198R1',
+              './js/app.js?v=administrator-build-40.4.197': './js/app.js?v=administrator-build-40.4.198R1',
+          }
+          for old, new in repl_index.items():
+              if old not in index:
+                  raise SystemExit(f'missing expected index token: {old}')
+              index = index.replace(old, new, 1)
+
+          old_build = 'const ADMIN_BUILD = "40.4.197";'
+          new_build = 'const ADMIN_BUILD = "40.4.198";'
+          old_release = 'const ADMIN_RELEASE = "HISTORICAL DEPTH FOUNDATION · LAZY LONG HISTORY · INDICES 5Y 10Y MAX";'
+          new_release = 'const ADMIN_RELEASE = "COMMODITY HISTORICAL DEPTH · LAZY ENERGY METALS · VERSION TRUTH";'
+
+          if old_build not in admin:
+              raise SystemExit('missing stale ADMIN_BUILD 40.4.197')
+          if old_release not in admin:
+              raise SystemExit('missing stale ADMIN_RELEASE 40.4.197 release text')
+
+          admin = admin.replace(old_build, new_build, 1)
+          admin = admin.replace(old_release, new_release, 1)
+
+          index_path.write_text(index, encoding='utf-8')
+          admin_path.write_text(admin, encoding='utf-8')
+          PY
+
+      - name: Runtime syntax and truth gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.198 --expected-release 'COMMODITY HISTORICAL DEPTH · LAZY ENERGY METALS · VERSION TRUTH'
+          python - <<'PY'
+          from pathlib import Path
+          i=Path('public/agent_crypto_erith_ia/administrator/index.html').read_text(encoding='utf-8')
+          a=Path('public/agent_crypto_erith_ia/administrator/js/app.js').read_text(encoding='utf-8')
+          assert './app.js?v=administrator-build-40.4.198R1' in i
+          assert './js/app.js?v=administrator-build-40.4.198R1' in i
+          assert 'const ADMIN_BUILD = "40.4.198";' in a
+          assert 'const ADMIN_BUILD = "40.4.197";' not in a
+          PY
+
+      - name: Remove one-shot workflow and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/agent-crypto-40-4-198-r1-runtime-truth.yml
+          git add public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/js/app.js
+          git commit -m 'fix Agent-Crypto 40.4.198 R1 runtime version truth and cache lock'
+          git push
