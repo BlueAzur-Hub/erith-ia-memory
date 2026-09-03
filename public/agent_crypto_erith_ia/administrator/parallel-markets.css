@@ -429,3 +429,21 @@ html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar [role="group
   .atlas-toolbar-history-404197>button:disabled{opacity:.28!important;filter:saturate(.30)!important;cursor:default!important;pointer-events:none!important}
   .atlas-toolbar-history-404197>button[data-history-loading="1"]{opacity:.68!important;cursor:progress!important}
 }
+
+
+/* =========================================================
+   40.4.204 — DOMAIN SEMANTIC TRUTH
+   Parallel domains reuse the proven physical Metals footprint, but native
+   Metals content must not leak into accessibility/text exports. Visibility
+   preserves layout geometry; the parallel overlay remains the sole semantic
+   owner. No chart/data/Market Core/Atlas/Oracle behavior change.
+   ========================================================= */
+html[data-cyclic-market-mode="parallel"] #atlasParallelMarketFoundation{
+  visibility:hidden!important;pointer-events:none!important
+}
+html[data-cyclic-market-mode="parallel"] #atlasMetalsDetailPanel>:not(#atlasParallelDomainRailHost404189){
+  visibility:hidden!important;pointer-events:none!important
+}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189{
+  visibility:visible!important;pointer-events:auto!important
+}

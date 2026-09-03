@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.203";
+  const BUILD = "40.4.204";
   const REVISION = "V6";
   const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_DOMAIN_CONTENT_404189";
   const ORDER = Object.freeze([
@@ -172,6 +172,32 @@
     if(detailTitle) detailTitle.textContent = `Lecture ${s.title}`;
   }
 
+  function syncMetalsSemanticTruth404204(parallel, metalsDetail, parallelRailHost){
+    /* 40.4.204 — semantic truth without geometry mutation.
+       Metals remains the physical rail/shell owner, but its native content must
+       leave the accessibility/export tree while a parallel domain owns the view.
+       visibility:hidden preserves the exact measured footprint. */
+    const metalsFoundation = byId("atlasParallelMarketFoundation");
+    if(metalsFoundation){
+      metalsFoundation.inert = !!parallel;
+      if(parallel) metalsFoundation.setAttribute("aria-hidden","true");
+      else metalsFoundation.removeAttribute("aria-hidden");
+    }
+    if(metalsDetail){
+      Array.from(metalsDetail.children).forEach(node => {
+        if(node === parallelRailHost) return;
+        node.inert = !!parallel;
+        if(parallel) node.setAttribute("aria-hidden","true");
+        else node.removeAttribute("aria-hidden");
+      });
+    }
+    if(parallelRailHost){
+      parallelRailHost.inert = !parallel;
+      parallelRailHost.setAttribute("aria-hidden", parallel ? "false" : "true");
+    }
+    document.documentElement.dataset.domainSemanticTruth404204 = parallel ? "parallel-owned" : "native-owned";
+  }
+
   function syncPanels(domain){
     const parallel = isParallel(domain);
     const cryptoDetail = byId("detailPanel");
@@ -198,6 +224,7 @@
     if(metalsDetail){
       metalsDetail.setAttribute("aria-label", parallel ? `Lecture ${specFor(domain).title}` : "Lecture Métaux");
     }
+    syncMetalsSemanticTruth404204(parallel, metalsDetail, parallelRailHost);
 
     forceHidden(cryptoToolbar, domain !== "crypto");
     forceHidden(metalsToolbar, domain !== "metals");
@@ -326,6 +353,7 @@
       geometry_from_crypto:true, single_cockpit_surface:true,
       static_geometry:true, unified_geometry_runtime:false, soft_transition:false,
       parallel_status_row_removed:true, parallel_toolbar_single_slot:true, parallel_rail_single_owner:true,
+      domain_semantic_truth_404204:true, native_metals_semantic_cold_when_parallel:true, geometry_mutation_404204:false,
       retired_404185_transform_compensation:true,
       new_chart_engine:false, new_timer:false, new_observer:false, new_storage_owner:false
     });

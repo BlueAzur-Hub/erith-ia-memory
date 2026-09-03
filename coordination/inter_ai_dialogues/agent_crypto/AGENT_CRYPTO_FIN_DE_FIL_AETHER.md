@@ -1,49 +1,54 @@
-# AGENT-CRYPTO — FIN DE FIL AETHER — 40.4.160
+# AGENT-CRYPTO — FIN DE FIL AETHER
 
-Date: 2026-09-01T15:11:19Z
+Version canonique de clôture : **40.4.204**  
+Date : 2026-09-03T05:09:48Z  
+Market Core : **38.15.11 — PROTÉGÉ**
 
-## État canonique
+## 1. Checkpoint final
 
-- Build Administrator: **40.4.160**
-- Market Core: **38.15.11 protégé**
-- 40.4.157: Aether VEILLE consomme prioritairement la vérité française de News Sentinel.
-- 40.4.158: Graphique direct-float porté au `document.body`; stacking Firefox validé par opérateur.
-- 40.4.159: vérité de cadence du producteur public Atlas alignée sur `11/41 Europe/Paris`; watchdog `17/47`, stale 20 min, sans duplication si collecteur actif.
-- 40.4.160: Auto Reader ne déclare plus faussement `4/4=non / Aerith=non` quand le CURRENT persistant certifie 4/4 + Aerith; le champ 5 min est nommé vérification du snapshot public.
+La branche Administrator est clôturée sur **40.4.204 — FINAL MARKET OBSERVATORY CONSOLIDATION · DOMAIN SEMANTIC TRUTH · LAZY/MATH LOCK**.
 
-## Atlas / CURRENT
+Le checkpoint conserve sans déplacement la géométrie opérateur validée : Crypto reste le maître physique ; le cycle est **Crypto → Métaux → Indices → Énergie → Cross → Crypto**. Le slot Marché, la hauteur/largeur des graphes, le rail droit, les origines X/Y et la fluidité Firefox acquise en 40.4.189/40.4.195 ne doivent pas être réouverts sans preuve de régression.
 
-Chaîne attendue: `nouveau snapshot canonique -> Atlas 1/4 -> 4/4 -> NØX -> Aerith -> CURRENT -> REPOS`.
-Le LIVE Binance continue sans rouvrir le CURRENT fermé. Le rôle de calcul local reste PRODUCTION sur le Ryzen et lecture seule sur le Book.
+## 2. Cascade soldée dans ce fil
 
-## Observation finale du réveil GitHub
+- **40.4.197** — fondation Historical Depth lazy pour Indices.
+- **40.4.198** — historiques longs Métaux/Énergie + Version Truth ; futures continus explicitement séparés du spot.
+- **40.4.199** — Market Reading Depth Foundation sous le graphique ; Métaux enrichi.
+- **40.4.200** — Indices Deep Reading.
+- **40.4.201** — Energy Deep Reading ; WTI/Brent et Natural Gas séparés.
+- **40.4.202** — Cross-Market Long Memory ; dates communes et corrélations observées.
+- **40.4.203** — Historical Math Core : rendement, volatilité, drawdown, récupération/CAGR lorsque mesurables.
+- **40.4.204** — consolidation finale : vérité sémantique des domaines + nettoyage publication + checkpoint lock.
 
-- Au dernier contrôle de fin de fil, `data/crypto/status.json` restait sur le snapshot Top-250 `2026-09-01T14:19:43.348Z` malgré les créneaux natifs attendus.
-- Dans le même dépôt, `Atlas Market Archive Top 50 Stable` a publié ensuite un commit `archive atlas top 50 market snapshot`; au moins un autre scheduler GitHub continue donc à battre, mais avec retard observable.
-- Ne pas confondre cela avec une panne Atlas/Ollama locale : le pipeline local a été vu 0/4 -> 4/4 -> NØX -> Aerith et le Graphique 40.4.158 est validé.
-- GitHub documente que `schedule` peut être retardé sous charge et que certains jobs en file peuvent être supprimés.
-- Piste de reprise prioritaire si le Top-250 récidive : ajouter un **stimulateur croisé** indépendant du `schedule` du Top-250 (par exemple `workflow_run` déclenché par la fin d'un collecteur frère réellement actif, puis contrôle de fraîcheur + `workflow_dispatch` du Top-250), ou une horloge externe autorisée. Ne jamais créer un runner dormant de plusieurs heures.
-- La tâche ChatGPT **Pouls Atlas** est déjà programmée en surveillance conditionnelle horaire ; elle doit signaler un snapshot anormalement ancien ou un pipeline bloqué, pas fabriquer silencieusement des données.
+## 3. Architecture de lecture profonde
 
-## Dettes / chantiers laissés volontairement ouverts
+La lecture profonde est déterministe et construite à partir de données mesurées. Elle n'utilise pas un LLM runtime pour inventer une interprétation financière. Les longues fenêtres **5a / 10a / MAX** restent chargées à la demande et mises en cache pour la session. Aucun historique long n'est requis au boot.
 
-1. **RND Aether**: `technical-random-10.png` n'est pas publié; ancien driver 40.4.159 RND retiré avant la cascade finale. Réutiliser le bouton RND existant, aucun nouveau moteur/menu.
-2. **Télémétrie physique Bridge**: CPU/GPU/RAM/températures réels à reprendre côté Bridge local si souhaité; ne pas simuler depuis GitHub Pages.
-3. **Météo / contexte opérateur**: chantier du Ruban de veille Aether non soldé dans cette cascade.
-4. **Notes opérateur**: besoin historique à reprendre sans créer un second propriétaire CSS/animation du Ruban Aether.
-5. **Marchés**: extensions bourse/indices/énergie/agriculture/denrées à concevoir après stabilisation; conserver provenance/source/horodatage et séparation observation/exécution.
-6. **Vue Opérateur**: future vue pour tiers, fonctionnelle mais sans @erith.IA privé, clés, wallet ni privilèges d'exécution réelle.
-7. **Backend réel Kraken**: futur, backend-only, permissions/auth/logs/kill-switch/validation humaine; la page publique reste sans secrets ni ordre réel.
-8. **GitHub schedule**: le watchdog réduit le risque mais reste lui-même un schedule; ne le déclarer guéri qu'après plusieurs battements automatiques observés.
+Les règles restent : **Base 100 = comparaison relative**, devises non neutralisées implicitement, **futures continus ≠ spot**, **corrélation ≠ causalité**, aucune moyenne inter-source artificielle, aucune prévision, aucune exécution.
 
-## Ne pas réouvrir sans preuve
+## 4. Dette finale soldée en 40.4.204
 
-- Chronos centré: déjà soldé 40.4.104R2/40.4.107.
-- Barres/ombres de graphique aux couleurs crypto: déjà soldé 40.4.83/40.4.84.
-- Oracle flottant: 40.4.156 + R1, validé.
-- Cohérence des trois vues / Simulation: correctif canonique 40.4.154/.155, test opérateur Intermédiaire gagné.
-- Graphique global au-dessus: 40.4.158, test opérateur validé.
+Le rail et le squelette Métaux restent les propriétaires physiques éprouvés des domaines parallèles. Avant 40.4.204, leur DOM natif pouvait encore apparaître dans certains exports texte/accessibilité sous Indices, Énergie ou Cross. 40.4.204 le rend sémantiquement froid (`visibility:hidden`, `inert`, `aria-hidden`) uniquement pendant la propriété parallèle, sans `display:none`, sans reconstruction et sans mutation de géométrie. Le retour Métaux restaure son contenu natif.
 
-## Règle de reprise
+La release retire aussi le workflow de cascade temporaire vide et le bytecode Python 40.4.198 accidentel, et remet le `status` des manifestes sur l'identité réelle 40.4.204.
 
-Toujours lire le GitHub public `main` avant chirurgie. Utiliser le Fil Crypto pour l'intention et l'historique, mais ne pas traiter une dette historique comme ouverte si un build postérieur l'a déjà soldée. Une version = une responsabilité; vérifier JS/JSON + preuves statiques + Firefox opérateur lorsqu'il s'agit de géométrie/interaction.
+## 5. Vérités protégées
+
+- Market Core : **38.15.11**, inchangé.
+- Aucun nouveau chart engine.
+- Aucun nouveau timer/MutationObserver/storage owner pour Market Reading Depth.
+- Aucun ordre financier.
+- Bridge / Backend / Atlas / Oracle non chirurgiés par 40.4.204.
+- Aether reste sur la ligne canonique des cinq marchés.
+
+## 6. Limites connues — pas des régressions
+
+- L'univers CoinGecko peut rester partiel (ex. 249/250) : afficher la vérité, ne pas compléter artificiellement.
+- Les historiques Métaux/Énergie longs sont des futures continus fournisseur ; le spot courant reste séparé.
+- Cross mélange volontairement des familles et origines différentes ; alignement sur dates communes et provenance explicite obligatoires.
+- Web Classic conserve sa propre identité historique distincte de l'ENGINE Administrator.
+
+## 7. Règle de reprise
+
+Au prochain fil, lire d'abord `main`, `version.json`, ce document et le prompt de reprise. Ne pas traiter une dette historique comme ouverte si un build postérieur l'a soldée. Pour toute nouvelle évolution : **une dette → un propriétaire → une chirurgie → une preuve**. Toute nouvelle profondeur doit continuer sous le graphique ou par chargement à l'appel ; ne pas recharger le rail droit ni rouvrir la géométrie sans nécessité démontrée.
