@@ -229,6 +229,26 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
             if marker in root:
                 fail(f"40.4.216 legacy cardinality footer restored: {marker}")
 
+    if current_num >= (40, 4, 217):
+        required_market_delegation = (
+            "40.4.217 — MARKET TABLE CORE EVENT DELEGATION",
+            "function atlasMarketCoreEnsureDelegation404217()",
+            'els.marketRows.dataset.coreDelegation404217==="1"',
+            'els.marketRows.addEventListener("click",activate)',
+            'els.marketRows.addEventListener("keydown",activate)',
+        )
+        for marker in required_market_delegation:
+            if marker not in root:
+                fail(f"40.4.217 Market table delegation regression: missing {marker}")
+        retired_market_fanout = (
+            'row.addEventListener("click",act);',
+            'row.addEventListener("keydown",act);',
+            'els.marketRows.querySelectorAll("[data-market-action]").forEach',
+        )
+        for marker in retired_market_fanout:
+            if marker in root:
+                fail(f"40.4.217 legacy Market listener fanout restored: {marker}")
+
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")

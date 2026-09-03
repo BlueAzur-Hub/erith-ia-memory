@@ -19498,31 +19498,53 @@ function renderMarketTable() {
     :`${rows.length} affichés${pageText} · ${universeText} · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · colonnes ${state.chartViewV2.marketColumns==='complete'?'complètes':'essentielles'} · filtre ${state.assetFilter} · tri ${state.sortKey} · ${updated}${searchTruthCombined403100?` · ${searchTruthCombined403100}`:""}`;
   setText(els.tableNote,note);
 
-  [...els.marketRows.querySelectorAll("tr[data-id]")].forEach(row=>{
-    const act=e=>{
-      const key=e.type==="keydown";
-      if(key&&!["Enter"," "].includes(e.key))return;
-      if(e.target!==row&&e.target.closest("button,a,input,select"))return;
-      if(key)e.preventDefault();
-      const c=state.coins.find(x=>x.id===row.dataset.id);
-      if(c){
-        atlasToggleComparisonCoin(c);
-        atlasGraphContextV7CommitMarket("handler-market-row-toggle");
-      }
-    };
-    row.addEventListener("click",act);
-    row.addEventListener("keydown",act);
-  });
-
-  els.marketRows.querySelectorAll("[data-market-action]").forEach(b=>b.addEventListener("click",e=>{
-    e.stopPropagation();
-    const action=String(b.dataset.marketAction||"");
-    atlasMarketHandleAction(action,state.coins.find(c=>c.id===b.dataset.coinId),e);
-    if(["open","compare"].includes(action))atlasGraphContextV7CommitMarket(`handler-market-${action}`);
-  }));
+  atlasMarketCoreEnsureDelegation404217();
 
   atlasMarketExtendedEnsureDelegation403116();
 }
+/* ============================================================
+   40.4.217 — MARKET TABLE CORE EVENT DELEGATION
+   The Core page can render up to 100 rows. Historically every full render
+   allocated click/keydown listeners per row plus one click listener per
+   action button. Keep the exact operator semantics but bind one stable
+   container owner for Core rows/actions, matching the already delegated
+   Extended path. No data, ranking, chart, Atlas or Market Core change.
+   ============================================================ */
+function atlasMarketCoreEnsureDelegation404217(){
+  if(!els.marketRows||els.marketRows.dataset.coreDelegation404217==="1")return;
+
+  const activate=event=>{
+    const actionButton=event.target?.closest?.("[data-market-action]");
+    if(actionButton&&els.marketRows.contains(actionButton)){
+      if(event.type!=="click")return;
+      const row=actionButton.closest("tr[data-id]");
+      if(!row)return;
+      event.stopPropagation();
+      const action=String(actionButton.dataset.marketAction||"");
+      const coin=state.coins.find(c=>c.id===actionButton.dataset.coinId);
+      atlasMarketHandleAction(action,coin,event);
+      if(["open","compare"].includes(action))atlasGraphContextV7CommitMarket(`handler-market-${action}`);
+      return;
+    }
+
+    const row=event.target?.closest?.("tr[data-id]");
+    if(!row||!els.marketRows.contains(row))return;
+    if(event.target!==row&&event.target.closest?.("button,a,input,select"))return;
+    if(event.type==="keydown"){
+      if(!["Enter"," "].includes(event.key))return;
+      event.preventDefault();
+    }
+    const coin=state.coins.find(c=>c.id===row.dataset.id);
+    if(!coin)return;
+    atlasToggleComparisonCoin(coin);
+    atlasGraphContextV7CommitMarket("handler-market-row-toggle");
+  };
+
+  els.marketRows.addEventListener("click",activate);
+  els.marketRows.addEventListener("keydown",activate);
+  els.marketRows.dataset.coreDelegation404217="1";
+}
+
 function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="11" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
 }
 
@@ -52728,7 +52750,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.216";
+const ATLAS_BUILD = "40.4.217";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
