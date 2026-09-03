@@ -37556,6 +37556,105 @@ const atlasMetalsQuoteFoundationState = {
   error: null
 };
 
+
+// 40.4.198 — METALS HISTORICAL DEPTH · LAZY CONTINUOUS FUTURES
+// Long archives are absent from boot. They are fetched only after an operator
+// clicks 5a / 10a / MAX, cached in memory for this page session, and never
+// persisted as the native Metals period.
+const ATLAS_METALS_LONG_HISTORY_404198 = Object.freeze({
+  build: "40.4.198",
+  schema: "agent_crypto_commodity_historical_depth_v1",
+  base: "../data/metals/history_long",
+  days: Object.freeze({ "5a": 1825, "10a": 3650, "max": 99999 })
+});
+const atlasMetalsLongHistoryState404198 = {
+  active: null,
+  cache: new Map(),
+  load: new Map()
+};
+
+function atlasMetalsLongHistoryKeyFromDays404198(days) {
+  const value = Number(days);
+  return Object.entries(ATLAS_METALS_LONG_HISTORY_404198.days)
+    .find(([, count]) => count === value)?.[0] || null;
+}
+
+function atlasMetalsLongHistoryEffectiveDays404198(fallback) {
+  const key = atlasMetalsLongHistoryState404198.active;
+  return key ? ATLAS_METALS_LONG_HISTORY_404198.days[key] : Number(fallback || 365);
+}
+
+function atlasMetalsLongHistoryPeriodLabel404198(fallback) {
+  const key = atlasMetalsLongHistoryState404198.active;
+  if (key === "5a") return "5 ans";
+  if (key === "10a") return "10 ans";
+  if (key === "max") return "MAX";
+  return atlasChartPeriodLabel(Number(fallback || 365));
+}
+
+function atlasMetalsLongHistoryRows404198(key) {
+  const payload = atlasMetalsLongHistoryState404198.cache.get(key);
+  if (!payload?.assets?.length) return [];
+  const unique = new Map();
+  payload.assets.forEach(asset => {
+    (Array.isArray(asset?.history_points) ? asset.history_points : []).forEach(point => {
+      const time = Date.parse(String(point?.time || point?.date || ""));
+      if (Number.isFinite(time)) unique.set(String(time), { time });
+    });
+  });
+  return [...unique.values()].sort((left, right) => left.time - right.time);
+}
+
+function atlasMetalsLongHistoryAssetPoints404198(assetId, key) {
+  const payload = atlasMetalsLongHistoryState404198.cache.get(key);
+  const asset = (Array.isArray(payload?.assets) ? payload.assets : [])
+    .find(item => String(item?.asset_id || "") === String(assetId || "")
+      && String(item?.instrument_type || "") === "future_continuous");
+  if (!asset) return [];
+  return (Array.isArray(asset.history_points) ? asset.history_points : [])
+    .map(point => ({
+      x: Date.parse(String(point?.time || point?.date || "")),
+      y: Number(point?.close),
+      currency: String(asset?.currency || "USD").toUpperCase(),
+      unit: String(asset?.unit || ""),
+      source: "yahoo_finance_future_continuous_long"
+    }))
+    .filter(point => Number.isFinite(point.x) && Number.isFinite(point.y) && point.y > 0)
+    .sort((left, right) => left.x - right.x);
+}
+
+function atlasMetalsLongHistoryLoad404198(key) {
+  if (!Object.hasOwn(ATLAS_METALS_LONG_HISTORY_404198.days, key)) return Promise.reject(new Error("horizon long inconnu"));
+  if (atlasMetalsLongHistoryState404198.cache.has(key)) return Promise.resolve(atlasMetalsLongHistoryState404198.cache.get(key));
+  if (atlasMetalsLongHistoryState404198.load.has(key)) return atlasMetalsLongHistoryState404198.load.get(key);
+  const promise = fetch(`${ATLAS_METALS_LONG_HISTORY_404198.base}/${key}.json?v=${ATLAS_METALS_LONG_HISTORY_404198.build}`, {
+    cache: "no-store",
+    credentials: "same-origin"
+  }).then(response => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return response.json();
+  }).then(payload => {
+    if (!payload || payload.status !== "ready" || payload.schema !== ATLAS_METALS_LONG_HISTORY_404198.schema || payload.domain !== "metals" || payload.horizon !== key || !Array.isArray(payload.assets)) throw new Error("archive Métaux longue non READY");
+    if (payload.integrity?.lazy_browser_load_required !== true || payload.integrity?.boot_payload_forbidden !== true || payload.integrity?.future_continuous_only !== true || payload.integrity?.spot_semantics_forbidden !== true) throw new Error("contrat Source Truth Métaux long invalide");
+    atlasMetalsLongHistoryState404198.cache.set(key, payload);
+    return payload;
+  }).finally(() => atlasMetalsLongHistoryState404198.load.delete(key));
+  atlasMetalsLongHistoryState404198.load.set(key, promise);
+  return promise;
+}
+
+async function atlasMetalsLongHistoryActivate404198(key) {
+  await atlasMetalsLongHistoryLoad404198(key);
+  atlasMetalsLongHistoryState404198.active = key;
+  atlasParallelMarketRenderMetals();
+  atlasWorkspaceRenderStrip?.();
+  return true;
+}
+
+function atlasMetalsLongHistoryClear404198() {
+  atlasMetalsLongHistoryState404198.active = null;
+}
+
 const atlasMarketRegistryState = {
   status: "fallback",
   origin: "fallback_intégré",
@@ -37613,7 +37712,7 @@ function atlasMetalsMathDrawdown(points) {
 function atlasMetalsMathCoreMetrics() {
   const metals = atlasParallelMarketMetalsState();
   const asset = atlasParallelMarketActiveMetal();
-  const periodDays = Number(metals.period || 7);
+  const periodDays = atlasMetalsLongHistoryEffectiveDays404198(metals.period);
   const periodLabel = atlasChartPeriodLabel(periodDays);
   const rows = atlasMetalsQuoteFoundationPeriodRows(periodDays);
   const points = atlasMetalsQuoteFoundationAssetPoints(asset.id, periodDays);
@@ -39145,6 +39244,8 @@ function atlasMetalsQuoteFoundationIntradayPoints(assetId) {
 
 function atlasMetalsQuoteFoundationPeriodRows(periodDays) {
   const days = Number(periodDays || 365);
+  const longKey = atlasMetalsLongHistoryKeyFromDays404198(days);
+  if (longKey) return atlasMetalsLongHistoryRows404198(longKey);
   if (days === 1) {
     return atlasMetalsQuoteFoundationIntradayPoints(atlasParallelMarketActiveMetal().id)
       .map(point => ({ time: point.x, point }));
@@ -39162,6 +39263,8 @@ function atlasMetalsQuoteFoundationPeriodRows(periodDays) {
 }
 
 function atlasMetalsQuoteFoundationAssetPoints(assetId, periodDays = null) {
+  const longKey = atlasMetalsLongHistoryKeyFromDays404198(periodDays);
+  if (longKey) return atlasMetalsLongHistoryAssetPoints404198(assetId, longKey);
   if (Number(periodDays) === 1) {
     return atlasMetalsQuoteFoundationIntradayPoints(assetId);
   }
@@ -39188,7 +39291,7 @@ function atlasMetalsQuoteFoundationChartSeries() {
   const metals = atlasParallelMarketMetalsState();
   const selected = new Set(metals.selectionIds);
   const activeId = atlasParallelMarketActiveMetal().id;
-  const periodDays = Number(metals.period || 365);
+  const periodDays = atlasMetalsLongHistoryEffectiveDays404198(metals.period);
   const series = [];
 
   for (const asset of ATLAS_METALS_ASSETS) {
@@ -39216,8 +39319,9 @@ function atlasMetalsQuoteFoundationChartSeries() {
 function atlasMetalsQuoteFoundationHorizonReading(assetId, periodDays) {
   const days = Number(periodDays);
   const intraday = days === 1;
+  const longKey = atlasMetalsLongHistoryKeyFromDays404198(days);
   const points = atlasMetalsQuoteFoundationAssetPoints(assetId, days);
-  const unitLabel = intraday ? "points Futures intraday" : "séances Futures";
+  const unitLabel = longKey ? "points Futures historiques" : intraday ? "points Futures intraday" : "séances Futures";
   const spanHours = points.length >= 2
     ? Math.max(0, (points[points.length - 1].x - points[0].x) / 3600000)
     : 0;
@@ -39271,7 +39375,7 @@ function atlasMetalsQuoteFoundationHorizonReading(assetId, periodDays) {
     first,
     last,
     spanHours,
-    source: intraday ? "yahoo_finance_futures_intraday" : "yahoo_finance_futures_daily"
+    source: longKey ? "yahoo_finance_future_continuous_long" : intraday ? "yahoo_finance_futures_intraday" : "yahoo_finance_futures_daily"
   });
 }
 
@@ -39347,6 +39451,9 @@ function atlasMetalsHumanReadingPeriodLabel(periodDays) {
   const days = Number(periodDays || 7);
   if (days === 1) return "24 heures";
   if (days === 365) return "1 an";
+  if (days === 1825) return "5 ans";
+  if (days === 3650) return "10 ans";
+  if (days === 99999) return "MAX";
   return `${days} jours`;
 }
 
@@ -39411,7 +39518,7 @@ function atlasMetalsQuoteFoundationRenderHumanReading(assetId = null, periodDays
   const asset = atlasMarketRegistryAssetMeta(
     String(assetId || atlasParallelMarketActiveMetal()?.id || "gold")
   );
-  const days = Number(periodDays ?? atlasParallelMarketMetalsState().period ?? 7);
+  const days = Number(periodDays ?? atlasMetalsLongHistoryEffectiveDays404198(atlasParallelMarketMetalsState().period));
   const periodLabel = atlasMetalsHumanReadingPeriodLabel(days);
   const spot = days === 1;
   const allMode = atlasParallelMarketMetalsAllActive();
@@ -39458,9 +39565,12 @@ function atlasMetalsQuoteFoundationRenderHumanReading(assetId = null, periodDays
 
   title.textContent = `${asset.name} · lecture sur ${periodLabel}`;
   period.textContent = `${asset.symbol} · ${periodLabel}`;
-  source.textContent = spot
-    ? "Historique Yahoo Finance Futures intraday · cotation Gold API distincte · observation uniquement, aucune prévision."
-    : "Historique Yahoo Finance Futures · cotation Gold API distincte · observation uniquement, aucune prévision.";
+  const longKey = atlasMetalsLongHistoryKeyFromDays404198(days);
+  source.textContent = longKey
+    ? "FUTURE CONTINU · HISTORIQUE FOURNISSEUR · Yahoo Finance · cotation Gold API spot distincte · observation uniquement."
+    : spot
+      ? "Historique Yahoo Finance Futures intraday · cotation Gold API distincte · observation uniquement, aucune prévision."
+      : "Historique Yahoo Finance Futures · cotation Gold API distincte · observation uniquement, aucune prévision.";
 
   if (!activeReading) {
     card.dataset.state = "loading";
@@ -40415,7 +40525,7 @@ function atlasParallelMarketRenderMetals() {
 
   document.querySelectorAll("[data-metals-period]").forEach(button => {
     const value = Number(button.dataset.metalsPeriod);
-    const active = value === Number(metals.period);
+    const active = atlasMetalsLongHistoryState404198.active === null && value === Number(metals.period);
     button.classList.toggle("is-active", active);
     const spotReading = value === 1
       ? atlasMetalsQuoteFoundationHorizonReading(atlasParallelMarketActiveMetal().id, 1)
@@ -40434,6 +40544,17 @@ function atlasParallelMarketRenderMetals() {
           : "Historique Futures intraday 24 heures en attente"
       );
     }
+  });
+
+  document.querySelectorAll("[data-metals-long-period]").forEach(button => {
+    const key = String(button.dataset.metalsLongPeriod || "");
+    const active = key === atlasMetalsLongHistoryState404198.active;
+    button.classList.toggle("is-active", active);
+    button.classList.toggle("is-building", button.getAttribute("aria-busy") === "true");
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    button.title = active
+      ? "FUTURE CONTINU · HISTORIQUE FOURNISSEUR · chargé à la demande"
+      : "Historique long Yahoo Finance Futures chargé uniquement à l’appel";
   });
 
   document.querySelectorAll("[data-metals-view]").forEach(button => {
@@ -40472,7 +40593,7 @@ function atlasParallelMarketRenderMetals() {
     truth.textContent = metals.section === "critical"
       ? "USGS préparé · import structurel non connecté"
       : `${metals.view === "base100" ? "Base 100" : "Prix"} · `
-        + `${atlasChartPeriodLabel(metals.period)} · `
+        + `${atlasMetalsLongHistoryPeriodLabel404198(metals.period)} · `
         + quoteSummary.truth;
   }
 
@@ -40768,6 +40889,7 @@ function atlasParallelMarketToggleMetal(metalId) {
 function atlasParallelMarketSetMetalsPeriod(period) {
   const value = Number(period);
   if (![1, 7, 30, 90, 365].includes(value)) return false;
+  atlasMetalsLongHistoryClear404198();
   atlasParallelMarketMetalsState().period = value;
   atlasParallelMarketMetalsWrite();
   atlasParallelMarketRenderMetals();
@@ -40971,6 +41093,18 @@ function atlasParallelMarketInit() {
   });
 
   metalsToolbar?.addEventListener("click", event => {
+    const longPeriod = event.target.closest("[data-metals-long-period]");
+    if (longPeriod) {
+      event.preventDefault();
+      const key = String(longPeriod.dataset.metalsLongPeriod || "");
+      longPeriod.setAttribute("aria-busy", "true");
+      void atlasMetalsLongHistoryActivate404198(key)
+        .catch(error => {
+          longPeriod.title = `Historique long indisponible · ${String(error?.message || error)}`;
+        })
+        .finally(() => longPeriod.removeAttribute("aria-busy"));
+      return;
+    }
     const period = event.target.closest("[data-metals-period]");
     if (period) {
       event.preventDefault();

@@ -1,15 +1,15 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.197";
-  const DEPTH_LEVEL = 197;
+  const BUILD = "40.4.198";
+  const DEPTH_LEVEL = 198;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
   const PERIODS = Object.freeze(["24h", "7j", "30j", "60j", "90j", "1a"]);
   const LONG_PERIODS = Object.freeze(["5a", "10a", "max"]);
   const CONFIG = Object.freeze({
     indices: Object.freeze({ label: "INDICES", title: "Indices / Bourse", path: "../data/indices/market.json", historyBase: "../data/indices/history", expected: 5, accent: "#aa91ee", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 190 }),
-    energy: Object.freeze({ label: "ÉNERGIE", title: "Énergie & matières premières", path: "../data/energy/market.json", expected: 3, accent: "#e79b57", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 191 }),
+    energy: Object.freeze({ label: "ÉNERGIE", title: "Énergie & matières premières", path: "../data/energy/market.json", historyBase: "../data/energy/history", expected: 3, accent: "#e79b57", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 191 }),
     "cross-market": Object.freeze({ label: "CROSS", title: "Cross-Market Observatory", path: "../data/cross_market/market.json", expected: 5, accent: "#dce5ec", source: "Archives canoniques", defaultPeriod: "90j", base100Only: true, depthAt: 192 }),
   });
   const COLORS = ["#ffd35b", "#72d8ff", "#89f4d1", "#cf93f4", "#ff8b5c", "#e5edf4"];
@@ -70,7 +70,7 @@
         if (!button || !CONFIG[state.current] || !ACTIVE.has(state.current)) return;
         const domain = state.current;
         const period = button.getAttribute("data-parallel-long-period");
-        if (!LONG_PERIODS.includes(period) || domain !== "indices") return;
+        if (!LONG_PERIODS.includes(period) || !["indices", "energy"].includes(domain)) return;
         button.dataset.historyLoading = "1";
         button.setAttribute("aria-busy", "true");
         try {
@@ -142,15 +142,19 @@
 
   function loadHistorical(domain, period) {
     const cfg = CONFIG[domain];
-    if (!cfg?.historyBase || domain !== "indices" || !isLongPeriod(period)) return Promise.reject(new Error("historique long non activé pour ce domaine"));
+    if (!cfg?.historyBase || !["indices", "energy"].includes(domain) || !isLongPeriod(period)) return Promise.reject(new Error("historique long non activé pour ce domaine"));
     const key = historyKey(domain, period);
     if (state.history.has(key)) return Promise.resolve(state.history.get(key));
     if (state.historyLoad.has(key)) return state.historyLoad.get(key);
+    const expectedSchema = domain === "energy"
+      ? "agent_crypto_commodity_historical_depth_v1"
+      : "agent_crypto_historical_depth_v1";
     const promise = fetch(`${cfg.historyBase}/${period}.json?v=${encodeURIComponent(BUILD)}`, { cache:"no-store", credentials:"same-origin" })
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(payload => {
-        if (!payload || payload.status !== "ready" || payload.schema !== "agent_crypto_historical_depth_v1" || !Array.isArray(payload.assets)) throw new Error("archive historique non READY");
+        if (!payload || payload.status !== "ready" || payload.schema !== expectedSchema || !Array.isArray(payload.assets)) throw new Error("archive historique non READY");
         if (payload.domain !== domain || payload.horizon !== period || payload.integrity?.lazy_browser_load_required !== true || payload.integrity?.boot_payload_forbidden !== true) throw new Error("contrat lazy historique invalide");
+        if (domain === "energy" && (payload.integrity?.future_continuous_only !== true || payload.integrity?.spot_semantics_forbidden !== true)) throw new Error("contrat Futures historique invalide");
         state.history.set(key, payload);
         return payload;
       })
@@ -334,6 +338,23 @@
   }
 
   function energyDepth(payload, rowsByAsset, metricByAsset) {
+    const activePeriod = state.period.get("energy") || "1a";
+    if (isLongPeriod(activePeriod) && payload?.schema === "agent_crypto_commodity_historical_depth_v1") {
+      const selected = selectedAsset("energy", rowsByAsset);
+      const counts = rowsByAsset.map(x => x.rows.length).filter(Number.isFinite);
+      const starts = rowsByAsset.map(x => x.rows[0]?.time).filter(Boolean).sort();
+      const ends = rowsByAsset.map(x => x.rows[x.rows.length-1]?.time).filter(Boolean).sort();
+      return `${selectedSheet("energy", selected, metricByAsset)}
+        <section class="parallel-depth-section"><b>Historical Depth · ${esc(activePeriod.toUpperCase())}</b><div class="parallel-depth-grid">
+          <span><small>Instrument</small><strong>FUTURE CONTINU</strong></span>
+          <span><small>Résolution</small><strong>${esc(payload.resolution || "historique")}</strong></span>
+          <span><small>Points / actif</small><strong>${counts.length ? `${Math.min(...counts)}–${Math.max(...counts)}` : "—"}</strong></span>
+          <span><small>Début commun approx.</small><strong>${esc(starts[starts.length-1] ? dateText(starts[starts.length-1]) : "—")}</strong></span>
+          <span><small>Dernier point</small><strong>${esc(ends[0] ? dateText(ends[0]) : "—")}</strong></span>
+        </div><p class="parallel-depth-note"><b>FUTURE CONTINU · HISTORIQUE FOURNISSEUR.</b> Archive Yahoo Finance chargée uniquement après appel opérateur. Ce n’est pas une série spot homogène ; aucune interpolation et aucune valeur inventée.</p></section>
+        <section class="parallel-depth-section"><b>Risque historique long</b><p>Volatilité maximale observée ${pct(Math.max(...metricByAsset.map(x=>x.metric.volatility||0)))} · drawdown le plus profond ${pct(Math.min(...metricByAsset.map(x=>x.metric.drawdown||0)))}. Lecture historique uniquement, aucune prévision.</p></section>
+        <section class="parallel-depth-section"><b>Provenance & lazy contract</b><p>${esc(payload.source || "Yahoo Finance chart endpoint")} · snapshot ${esc(dateText(payload.generated_at))} · ${payload.assets_count}/${payload.assets_expected || payload.assets_count}. Le fichier long reste absent de la mémoire navigateur tant que 5a / 10a / MAX n’est pas demandé.</p></section>`;
+    }
     const selected = selectedAsset("energy", rowsByAsset);
     const map = new Map(rowsByAsset.map(x => [safeText(x.asset.symbol), x]));
     const wti = map.get("CL=F"), brent = map.get("BZ=F"), gas = map.get("NG=F");
@@ -462,7 +483,7 @@
     const longButtons = toolbar()?.querySelectorAll("[data-parallel-long-period]") || [];
     longButtons.forEach(b => {
       const p=b.getAttribute("data-parallel-long-period");
-      const available = domain === "indices";
+      const available = domain === "indices" || domain === "energy";
       b.classList.toggle("is-active", available && p === period);
       b.disabled = !available;
       b.setAttribute("aria-disabled", available ? "false" : "true");
@@ -527,7 +548,7 @@
     historical_depth_lazy:true,
     historical_boot_fetch:false,
     historical_resident_at_boot:false,
-    historical_domains:Object.freeze({indices:true,energy:false,"cross-market":false}),
+    historical_domains:Object.freeze({indices:true,energy:true,"cross-market":false}),
     historical_long_periods:LONG_PERIODS,
     new_timer:false,
     new_observer:false,
