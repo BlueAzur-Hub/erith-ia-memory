@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.5",
-  "generated_at": "2026-09-03T05:55:19.086096+00:00",
+  "generated_at": "2026-09-03T11:24:32.075635+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -25,12 +25,12 @@
         "distinct_sources": 4
       },
       "institutional_flows": {
-        "events_72h": 32,
-        "distinct_sources": 4
+        "events_72h": 36,
+        "distinct_sources": 5
       },
       "regulation": {
-        "events_72h": 14,
-        "distinct_sources": 8
+        "events_72h": 15,
+        "distinct_sources": 7
       },
       "leverage": {
         "events_72h": 0,
@@ -47,9 +47,9 @@
       "group": "finance",
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
-      "fetched_count": 37,
-      "qualified_count": 2,
-      "latency_ms": 258,
+      "fetched_count": 38,
+      "qualified_count": 1,
+      "latency_ms": 412,
       "error": null
     },
     {
@@ -58,9 +58,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 22,
+      "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 198,
+      "latency_ms": 356,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 118,
+      "latency_ms": 105,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 287,
+      "latency_ms": 253,
       "error": null
     },
     {
@@ -92,8 +92,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 23,
-      "latency_ms": 597,
+      "qualified_count": 22,
+      "latency_ms": 308,
       "error": null
     },
     {
@@ -104,7 +104,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 27,
-      "latency_ms": 270,
+      "latency_ms": 109,
       "error": null
     },
     {
@@ -113,9 +113,9 @@
       "group": "crypto",
       "url": "https://decrypt.co/feed",
       "status": "ok",
-      "fetched_count": 50,
-      "qualified_count": 38,
-      "latency_ms": 150,
+      "fetched_count": 38,
+      "qualified_count": 26,
+      "latency_ms": 289,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 9,
-      "latency_ms": 677,
+      "latency_ms": 727,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 179,
+      "latency_ms": 85,
       "error": null
     },
     {
@@ -146,9 +146,9 @@
       "group": "world",
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
-      "fetched_count": 24,
+      "fetched_count": 23,
       "qualified_count": 3,
-      "latency_ms": 299,
+      "latency_ms": 141,
       "error": null
     },
     {
@@ -157,9 +157,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+crypto+Clarity+Act+market+structure+Congress+SEC+stablecoin+when%3A7d&hl=en-US&gl=US&ceid=US:en",
       "status": "ok",
-      "fetched_count": 10,
-      "qualified_count": 10,
-      "latency_ms": 325,
+      "fetched_count": 12,
+      "qualified_count": 11,
+      "latency_ms": 380,
       "error": null
     },
     {
@@ -170,7 +170,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 48,
-      "latency_ms": 437,
+      "latency_ms": 432,
       "error": null
     },
     {
@@ -179,9 +179,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+crypto+Treasury+yields+buybacks+liquidity+Federal+Reserve+when%3A7d&hl=en-US&gl=US&ceid=US:en",
       "status": "ok",
-      "fetched_count": 40,
+      "fetched_count": 39,
       "qualified_count": 34,
-      "latency_ms": 552,
+      "latency_ms": 505,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 81,
+      "latency_ms": 88,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 10298,
+      "latency_ms": 9155,
       "error": null
     }
   ],
@@ -281,7 +281,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "XRP, Ethereum et Solana Hit de 369 M$ Crypto Liquidation Wave - Altcoin Buzz",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "XRP, Ethereum et Solana Hit de 369 M$ Crypto Liquidation Wave - Altcoin Buzz",
       "headline_fr_display_status": "raw_v2",
@@ -313,11 +313,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-09-02T13:44:15+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.132673+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.132673+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.226571+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.226571+00:00",
       "freshness": {
         "iso": "2026-09-02T13:44:15+00:00",
-        "hours": 16.18,
+        "hours": 21.67,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -368,6 +368,86 @@
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "XRP rejoint Ether, Solana en 369 M$ vague de liquidation Amid SEC Blockchain Overhaul: Principales nouvelles de Crypto Ce matin - TradingView",
       "headline_fr_display_status": "editorial_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
+      "id": "feed_4c0f2d8dea6d07b3",
+      "event_id": "feed_4c0f2d8dea6d07b3",
+      "fingerprint": "4c0f2d8dea6d07b3",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "Coldcard hacker swaps stolen Bitcoin for ETH via THORChain",
+      "body": "The third-wave Coldcard exploiter moved about 10% of stolen funds through THORChain as researchers traced the assets to a new Ethereum address.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/coldcard-hacker-swaps-stolen-bitcoin-eth-thorchain",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/coldcard-hacker-swaps-stolen-bitcoin-eth-thorchain"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-03T09:31:07+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.534355+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.534355+00:00",
+      "freshness": {
+        "iso": "2026-09-03T09:31:07+00:00",
+        "hours": 1.89,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 100,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "BTC",
+        "ETH"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 14,
+      "matched_topics": [
+        "crypto",
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "Coldcard échange de pirates volés Bitcoin contre ETH via THORChain",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "Coldcard échange de pirates volés Bitcoin contre ETH via THORChain",
+      "headline_fr_display_status": "raw_v2",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
       "headline_fr_quality_reasons": []
@@ -694,6 +774,86 @@
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "OneKey reproduit une attaque par remplacement de transaction sur une ancienne version de l’application Ethereum de Ledger",
       "headline_fr_display_status": "editorial_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
+      "id": "feed_f609fe8b0e1f2002",
+      "event_id": "feed_f609fe8b0e1f2002",
+      "fingerprint": "f609fe8b0e1f2002",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "Australia is cracking down on crypto businesses as its strict new regulatory deadline nears",
+      "body": "Firms that miss the deadline could breach financial services law from Oct. 1 and face civil or criminal penalties.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/business/2026/09/03/australia-is-cracking-down-on-crypto-businesses-as-its-strict-new-regulatory-deadline-nears",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/business/2026/09/03/australia-is-cracking-down-on-crypto-businesses-as-its-strict-new-regulatory-deadline-nears"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-03T10:09:31+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.786054+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.786054+00:00",
+      "freshness": {
+        "iso": "2026-09-03T10:09:31+00:00",
+        "hours": 1.25,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 98,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 19,
+      "matched_topics": [
+        "crypto",
+        "regulation",
+        "security"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "L'Australie punit les entreprises cryptographiques alors que son nouveau délai réglementaire est proche",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "L'Australie punit les entreprises cryptographiques alors que son nouveau délai réglementaire est proche",
+      "headline_fr_display_status": "raw_v2",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
       "headline_fr_quality_reasons": []
@@ -1077,7 +1237,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "OpenAI dit que sa nouvelle AI \"Astra\" peut construire des attaques sans aide humaine",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "OpenAI dit que sa nouvelle IA \"Astra\" peut construire des attaques sans aide humaine",
       "headline_fr_display_status": "editorial_v2",
@@ -1109,11 +1269,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-01T20:01:05+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.461851+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.461851+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.752907+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.752907+00:00",
       "freshness": {
         "iso": "2026-09-01T20:01:05+00:00",
-        "hours": 33.9,
+        "hours": 39.39,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1185,11 +1345,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-01T16:26:10+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.470657+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.470657+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.760131+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.760131+00:00",
       "freshness": {
         "iso": "2026-09-01T16:26:10+00:00",
-        "hours": 37.48,
+        "hours": 42.97,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1238,52 +1398,57 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_2f9310d980cdcc3f",
-      "event_id": "feed_2f9310d980cdcc3f",
-      "fingerprint": "2f9310d980cdcc3f",
+      "id": "feed_85f0033e7080239f",
+      "event_id": "feed_85f0033e7080239f",
+      "fingerprint": "85f0033e7080239f",
       "version": "V1.1-alpha.26.47.5",
       "origin": "github_news_collector",
-      "headline": "Rogue OpenAI Agents Sacrificed Their Own Runs to Hack Hugging Face, Report Finds",
-      "body": "Coordinators pressed agents with little budget left into experiments they called \"permadeath,\" METR's investigation found.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/376680/rogue-openai-agents-sacrificed-their-own-runs-to-hack-hugging-face-report-finds",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
+      "headline": "Bitcoin spot ETFs attract $101M inflows as ETH, SOL, and XRP ETFs see outflows - Pluang",
+      "body": "Bitcoin spot ETFs attract $101M inflows as ETH, SOL, and XRP ETFs see outflows Pluang",
+      "source_name": "Google News · ETF flows discovery",
+      "source_url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxPU2JzY3A4NFRJYW9OOWNEZ3k0UjlkMlpMVXlRYVRWYTgtMk9yVjM5ajBnT1pkUTV1TUdyTG1qUVRmSS03Z2ZYY1RheWhudjc4M2hPcGRjYUFFTURmVmc2S0FRdFNScG1qWlY2Ujl2a19UOVNXTnNxaTRuOWVqaHhUUzFnOEdMeFN1U0E?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
       "source_count": 1,
       "source_names": [
-        "Decrypt"
+        "Google News · ETF flows discovery"
       ],
       "source_urls": [
-        "https://decrypt.co/376680/rogue-openai-agents-sacrificed-their-own-runs-to-hack-hugging-face-report-finds"
+        "https://news.google.com/rss/articles/CBMiigFBVV95cUxPU2JzY3A4NFRJYW9OOWNEZ3k0UjlkMlpMVXlRYVRWYTgtMk9yVjM5ajBnT1pkUTV1TUdyTG1qUVRmSS03Z2ZYY1RheWhudjc4M2hPcGRjYUFFTURmVmc2S0FRdFNScG1qWlY2Ujl2a19UOVNXTnNxaTRuOWVqaHhUUzFnOEdMeFN1U0E?oc=5"
       ],
       "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-08-27T09:46:19+00:00",
-      "first_seen_at": "2026-08-30T21:14:03.138256+00:00",
-      "last_seen_at": "2026-08-30T21:14:03.138256+00:00",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-03T07:25:37+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.216646+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.216646+00:00",
       "freshness": {
-        "iso": "2026-08-27T09:46:19+00:00",
-        "hours": 83.46,
-        "label": "Cette semaine",
+        "iso": "2026-09-03T07:25:37+00:00",
+        "hours": 3.98,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
-        "score": 60,
+        "score": 58,
         "level": "Moyen"
       },
       "impact": {
         "score": 94,
         "level": "Critique"
       },
-      "direction": "pression négative potentielle",
-      "assets": [],
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "XRP"
+      ],
       "sectors": [
-        "Cybersécurité"
+        "Layer 1"
       ],
       "manipulation": {
-        "score": 30,
+        "score": 16,
         "level": "Faible"
       },
       "priced": {
@@ -1296,18 +1461,21 @@
         "tone": "warn"
       },
       "confirmations": 1,
-      "relevance_score": 8,
+      "relevance_score": 13,
       "matched_topics": [
-        "security"
+        "money_flow",
+        "crypto"
       ],
-      "driver_domains": [],
+      "driver_domains": [
+        "institutional_flows"
+      ],
       "driver_coverage_build": "40.3.89",
       "causal_claim": false,
       "observation_only": true,
-      "headline_fr": "Les agents OpenAI non autorisés ont abandonné leurs propres tâches pour pirater Hugging Face, selon un rapport",
-      "headline_fr_status": "reused_current_v2",
+      "headline_fr": "Bitcoin spot ETFs attirer des entrées de 101 millions de dollars comme ETH, SOL et XRP ETFs voir sorties - Pluang",
+      "headline_fr_status": "translated_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Des agents OpenAI non autorisés auraient abandonné leurs propres tâches pour pirater Hugging Face, selon un rapport",
+      "headline_fr_display": "Bitcoin spot ETFs attirer des entrées de 101 M$ comme ETH, SOL et XRP ETFs voir sorties - Pluang",
       "headline_fr_display_status": "editorial_v2",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
@@ -1337,11 +1505,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T11:33:21+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.110832+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.110832+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.207178+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.207178+00:00",
       "freshness": {
         "iso": "2026-09-02T11:33:21+00:00",
-        "hours": 18.36,
+        "hours": 23.85,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1390,7 +1558,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Septembre 1 ETF flux Afficher Bitcoin flux sortants comme ETH, SOL et XRP gain - Bitget",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Septembre 1 ETF flux Afficher Bitcoin flux sortants comme ETH, SOL et XRP gain - Bitget",
       "headline_fr_display_status": "raw_v2",
@@ -1423,11 +1591,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T17:52:24+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.113326+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.113326+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.208591+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.208591+00:00",
       "freshness": {
         "iso": "2026-08-29T17:52:24+00:00",
-        "hours": 108.05,
+        "hours": 113.53,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1476,7 +1644,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Les entrées de Bitcoin ETF s'enclenchent après 3 milliards de dollars comme ETH, XRP et Solana continuent d'acheter - CryptoRank",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Les entrées de Bitcoin ETF s'enclenchent après 3 Md$ comme ETH, XRP et Solana continuent d'acheter - CryptoRank",
       "headline_fr_display_status": "editorial_v2",
@@ -1648,7 +1816,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "BlackRock Drives 217 M$ Bitcoin ETF Rebondir à mesure que les fonds Altcoin prolongent les écoulements - Altcoin Buzz",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "BlackRock Drives 217 M$ Bitcoin ETF Rebondir à mesure que les fonds Altcoin prolongent les écoulements - Altcoin Buzz",
       "headline_fr_display_status": "raw_v2",
@@ -1741,15 +1909,15 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_25100286c6f71c6a",
-      "event_id": "feed_25100286c6f71c6a",
-      "fingerprint": "25100286c6f71c6a",
+      "id": "feed_eec6ccc343fa470d",
+      "event_id": "feed_eec6ccc343fa470d",
+      "fingerprint": "eec6ccc343fa470d",
       "version": "V1.1-alpha.26.47.5",
       "origin": "github_news_collector",
-      "headline": "Crypto Today: Bitcoin, Ethereum, XRP struggle to extend gains despite ETF inflows - FXStreet",
-      "body": "Crypto Today: Bitcoin, Ethereum, XRP struggle to extend gains despite ETF inflows FXStreet",
+      "headline": "Crypto Today: Bitcoin, Ethereum, XRP Struggle to Extend Gains Despite ETF Inflows - CryptoRank",
+      "body": "Crypto Today: Bitcoin, Ethereum, XRP Struggle to Extend Gains Despite ETF Inflows CryptoRank",
       "source_name": "Google News · ETF flows discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOMDNuN2MtVVNFYkxxVVRCSXF1QzRMSXk0SktXRjR2UDJjNnlNYk91Zll6OEVJVHVXMWpsYkVEdE9HbEUwcnJBd3l0STVCME96cVFjdXExRjNLVWlXazE2SmxnUXlVRHRuVUVGaG90d0RtLTZHRHpHaDF3UkEyUnJKM3FYU3lpTlNCV3dCeVlETDF3WkNpRUdPZDN2T3NZX1ZiVXdXVDNQcVl1UEtLZTJLZWhDem1majdVX3p0UXhrbW40TmswNmtSN29HcVpqb3NXSHNmTg?oc=5",
+      "source_url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPSjRkQUpqUE1HMUs5U1EweWlvYTViaVZ4TGZfemVrNWlCalgtUWs5YVhxc1dVaDFpai1Vd19ZQUZGSFM2RzhBbWRBTUYtTGVVNjYtUEh0QUt6cG1SdjB3TzR0WUp0OTJUNWZjUElfUnBpQXhQSEp3QThSS1djTUhKY2FiTWxHS3NmV3ZZSkhURzdZbnpxTFhSUGVhNlNmSGloMVE?oc=5",
       "source_host": "news.google.com",
       "source_group": "finance",
       "source_class": "Presse économique reconnue",
@@ -1758,18 +1926,19 @@
         "Google News · ETF flows discovery"
       ],
       "source_urls": [
+        "https://news.google.com/rss/articles/CBMiogFBVV95cUxPSjRkQUpqUE1HMUs5U1EweWlvYTViaVZ4TGZfemVrNWlCalgtUWs5YVhxc1dVaDFpai1Vd19ZQUZGSFM2RzhBbWRBTUYtTGVVNjYtUEh0QUt6cG1SdjB3TzR0WUp0OTJUNWZjUElfUnBpQXhQSEp3QThSS1djTUhKY2FiTWxHS3NmV3ZZSkhURzdZbnpxTFhSUGVhNlNmSGloMVE?oc=5",
         "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOMDNuN2MtVVNFYkxxVVRCSXF1QzRMSXk0SktXRjR2UDJjNnlNYk91Zll6OEVJVHVXMWpsYkVEdE9HbEUwcnJBd3l0STVCME96cVFjdXExRjNLVWlXazE2SmxnUXlVRHRuVUVGaG90d0RtLTZHRHpHaDF3UkEyUnJKM3FYU3lpTlNCV3dCeVlETDF3WkNpRUdPZDN2T3NZX1ZiVXdXVDNQcVl1UEtLZTJLZWhDem1majdVX3p0UXhrbW40TmswNmtSN29HcVpqb3NXSHNmTg?oc=5",
         "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNVUN1Nk5hdG9HeTNaWFpGQ3c2X0NPMnVTN1BxQkNValJxXzFuYkp0UkpiSnh4c3VCVHFfd2tTOFNoWkg2WVJUcVZYWW13bFUzUjRqSTh4ZHBzODJqRnhhOUJPYWVHamI0eDBVamVyWVBlOUVKbmk1c2poUzNNb0lCSFZjTl9ZUmdrbi12aG15bGVTWC0xRWk0eTl6OXRtTF9kb3ZhTTJCSVB1emJjMXNacWt3bE44THN4RjJmN09lNUNkWGs?oc=5"
       ],
       "declared_status": "reported",
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-09-01T10:20:50+00:00",
-      "first_seen_at": "2026-09-02T16:41:57.656291+00:00",
-      "last_seen_at": "2026-09-02T16:41:57.656291+00:00",
+      "event_time": "2026-09-01T11:31:03+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.215403+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.215403+00:00",
       "freshness": {
-        "iso": "2026-09-01T10:20:50+00:00",
-        "hours": 30.35,
+        "iso": "2026-09-01T11:31:03+00:00",
+        "hours": 47.89,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1816,10 +1985,10 @@
       "driver_coverage_build": "40.3.89",
       "causal_claim": false,
       "observation_only": true,
-      "headline_fr": "Crypto aujourd'hui: Bitcoin, Ethereum, XRP lutte pour étendre les gains malgré les entrées de ETF - FXStreet",
-      "headline_fr_status": "reused_current_v2",
+      "headline_fr": "Crypto aujourd'hui: Bitcoin, Ethereum, XRP Lutte pour étendre les gains malgré ETF Flux - CryptoRank",
+      "headline_fr_status": "translated_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Crypto aujourd'hui: Bitcoin, Ethereum, XRP lutte pour étendre les gains malgré les entrées de ETF - FXStreet",
+      "headline_fr_display": "Crypto aujourd'hui: Bitcoin, Ethereum, XRP Lutte pour étendre les gains malgré ETF Flux - CryptoRank",
       "headline_fr_display_status": "raw_v2",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
@@ -1934,11 +2103,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T13:14:47+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.883763+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.883763+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.807054+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.807054+00:00",
       "freshness": {
         "iso": "2026-09-02T13:14:47+00:00",
-        "hours": 16.67,
+        "hours": 22.16,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2077,6 +2246,86 @@
       ]
     },
     {
+      "id": "feed_865f0353d6ec5602",
+      "event_id": "feed_865f0353d6ec5602",
+      "fingerprint": "865f0353d6ec5602",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "Best Crypto to Buy Now as ETH and XRP ETFs Record Nine Straight Inflow Days and Remittix Nears Its $32M Milestone - StreetInsider",
+      "body": "Best Crypto to Buy Now as ETH and XRP ETFs Record Nine Straight Inflow Days and Remittix Nears Its $32M Milestone StreetInsider",
+      "source_name": "Google News · ETF flows discovery",
+      "source_url": "https://news.google.com/rss/articles/CBMihgJBVV95cUxNQk1SNVVkRzhudko2NEFnMFdrem9uMzBQN0plMnJNYVNoLWRlWFdoSmpIVFd3eHpJaWpZTThXbTNWQ19iems5N3VVV3JrY21kN3FEc2N0NHdPZnd0T1V5MWNHWG4wTUlpcVB6U3JwdF9aTUtVM3V4MmZqbWgxaWU0OFdwVVR2QWpXMWpYZFptVG5SdzFvbUpVQWlKd1V6bjNITkxtbzhkRm9xb2RtYjNRZTc4VzhRam1mdjNaTGpiX09sN0xTQndyWjRldzhjSWJMWlp4UlBGQVVhTE1DZERYTi1VbVcxUU8xcUVoVFBNZWg4X1VMc2xzQUNtSHF1Vlo1TW0yLURn?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "Google News · ETF flows discovery"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMihgJBVV95cUxNQk1SNVVkRzhudko2NEFnMFdrem9uMzBQN0plMnJNYVNoLWRlWFdoSmpIVFd3eHpJaWpZTThXbTNWQ19iems5N3VVV3JrY21kN3FEc2N0NHdPZnd0T1V5MWNHWG4wTUlpcVB6U3JwdF9aTUtVM3V4MmZqbWgxaWU0OFdwVVR2QWpXMWpYZFptVG5SdzFvbUpVQWlKd1V6bjNITkxtbzhkRm9xb2RtYjNRZTc4VzhRam1mdjNaTGpiX09sN0xTQndyWjRldzhjSWJMWlp4UlBGQVVhTE1DZERYTi1VbVcxUU8xcUVoVFBNZWg4X1VMc2xzQUNtSHF1Vlo1TW0yLURn?oc=5"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-02T14:35:55+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.202541+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.202541+00:00",
+      "freshness": {
+        "iso": "2026-09-02T14:35:55+00:00",
+        "hours": 20.81,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 58,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 92,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "ETH",
+        "XRP"
+      ],
+      "sectors": [],
+      "manipulation": {
+        "score": 40,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "money_flow",
+        "crypto"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "Meilleur Crypto à acheter maintenant comme ETH et XRP ETFs enregistrer neuf jours d'entrée directe et le transfert approche de son 32 M$ Milestone - StreetInsider",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "Meilleur Crypto à acheter maintenant comme ETH et XRP ETFs enregistrer neuf jours d'entrée directe et le transfert approche de son 32 M$ Milestone - StreetInsider",
+      "headline_fr_display_status": "raw_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
       "id": "feed_b4b030c4ea1ddeb7",
       "event_id": "feed_b4b030c4ea1ddeb7",
       "fingerprint": "b4b030c4ea1ddeb7",
@@ -2100,11 +2349,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T14:15:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.156083+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.156083+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.254501+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.254501+00:00",
       "freshness": {
         "iso": "2026-09-02T14:15:00+00:00",
-        "hours": 15.67,
+        "hours": 21.16,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2151,7 +2400,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Nouvelles de Crypto aujourd'hui: Bitcoin Sorties, Ethena Lancé Ethena Pay, TEther Sued Over USDT Freeze - Analyse Insight",
-      "headline_fr_status": "translated_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Nouvelles de Crypto aujourd'hui: Bitcoin Sorties, Ethena Lancé Ethena Pay, TEther Sued Over USDT Freeze - Analyse Insight",
       "headline_fr_display_status": "raw_v2",
@@ -2234,7 +2483,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "La demande de Crypto ETF se généralise en Solana BSOL Tops $1 Million, Bitcoin et Ether Dessiner les flux frais - finance.biggo.com",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "La demande de Crypto ETF se généralise en Solana BSOL Tops $1 Million, Bitcoin et Ether Dessiner les flux frais - finance.biggo.com",
       "headline_fr_display_status": "raw_v2",
@@ -2432,11 +2681,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T00:14:13+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.151066+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.151066+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.249236+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.249236+00:00",
       "freshness": {
         "iso": "2026-08-31T00:14:13+00:00",
-        "hours": 77.68,
+        "hours": 83.17,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2567,7 +2816,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin et Ethereum ETFs Surge comme la liquidité stimule la demande institutionnelle - KuCoin",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin et Ethereum ETFs Surge comme la liquidité stimule la demande institutionnelle - KuCoin",
       "headline_fr_display_status": "raw_v2",
@@ -2824,6 +3073,89 @@
       "headline_fr_quality_reasons": []
     },
     {
+      "id": "feed_99e15e0aaa2b25c6",
+      "event_id": "feed_99e15e0aaa2b25c6",
+      "fingerprint": "99e15e0aaa2b25c6",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "Ether, XRP ETF inflow streaks end as Bitcoin funds rebound",
+      "body": "Ether ETFs posted $48 million in outflows after attracting $1.62 billion over 12 trading days, while XRP funds ended an 11-session inflow run.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/markets/eth-xrp-etf-inflow-streaks-end-bitcoin-funds-rebound",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/markets/eth-xrp-etf-inflow-streaks-end-bitcoin-funds-rebound"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-03T07:22:00+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.539182+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.539182+00:00",
+      "freshness": {
+        "iso": "2026-09-03T07:22:00+00:00",
+        "hours": 4.04,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 92,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "BTC",
+        "XRP"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 19,
+      "matched_topics": [
+        "money_flow",
+        "crypto",
+        "institutional"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "Ether, XRP ETF flux d'entrée se termine comme Bitcoin fonds rebond",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "Ether, XRP ETF flux d'entrée se termine comme Bitcoin fonds rebond",
+      "headline_fr_display_status": "raw_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
       "id": "feed_bd54a0884ca1b798",
       "event_id": "feed_bd54a0884ca1b798",
       "fingerprint": "bd54a0884ca1b798",
@@ -2847,11 +3179,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T07:59:43+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.682512+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.682512+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.574443+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.574443+00:00",
       "freshness": {
         "iso": "2026-09-02T07:59:43+00:00",
-        "hours": 21.92,
+        "hours": 27.41,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2906,89 +3238,6 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_eb2cf6b66be43b2b",
-      "event_id": "feed_eb2cf6b66be43b2b",
-      "fingerprint": "eb2cf6b66be43b2b",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin ETF inflows slow to $232M as BTC holds under $80K",
-      "body": "US spot Bitcoin ETF inflows slowed to $232.1 million as an eight-day streak reached $2.8 billion, while XRP funds posted their biggest inflow since Jan. 5.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/markets/bitcoin-etf-inflows-slow-232-million-btc-under-80k",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/markets/bitcoin-etf-inflows-slow-232-million-btc-under-80k"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-08-27T07:01:19+00:00",
-      "first_seen_at": "2026-08-28T05:27:52.825714+00:00",
-      "last_seen_at": "2026-08-28T05:27:52.825714+00:00",
-      "freshness": {
-        "iso": "2026-08-27T07:01:19+00:00",
-        "hours": 22.44,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 92,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC",
-        "XRP"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 19,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "Bitcoin ETF entrées lentes à 232 M$ comme BTC détient moins de 80K$",
-      "headline_fr_status": "reused_current_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Bitcoin ETF entrées lentes à 232 M$ comme BTC détient moins de 80 k$",
-      "headline_fr_display_status": "editorial_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
-    },
-    {
       "id": "feed_fc0391d8f89f2a9d",
       "event_id": "feed_fc0391d8f89f2a9d",
       "fingerprint": "fc0391d8f89f2a9d",
@@ -3012,11 +3261,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T11:03:46+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.893050+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.893050+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.816279+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.816279+00:00",
       "freshness": {
         "iso": "2026-09-02T11:03:46+00:00",
-        "hours": 18.86,
+        "hours": 24.34,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3091,11 +3340,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T07:20:03+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.898394+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.898394+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.821581+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.821581+00:00",
       "freshness": {
         "iso": "2026-09-02T07:20:03+00:00",
-        "hours": 22.58,
+        "hours": 28.07,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3315,168 +3564,6 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_fd8bd9fe6acedff8",
-      "event_id": "feed_fd8bd9fe6acedff8",
-      "fingerprint": "fd8bd9fe6acedff8",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin steadies above $79,000 as ETF inflows hit longest streak since April",
-      "body": "BTC held its ground Thursday as spot bitcoin ETFs logged an eighth straight day of net inflows, while altcoins drifted lower across the board.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/08/27/bitcoin-steadies-above-usd79-000-as-etf-inflows-hit-longest-streak-since-april",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/08/27/bitcoin-steadies-above-usd79-000-as-etf-inflows-hit-longest-streak-since-april"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-08-27T10:31:21+00:00",
-      "first_seen_at": "2026-08-28T05:27:52.886313+00:00",
-      "last_seen_at": "2026-08-28T05:27:52.886313+00:00",
-      "freshness": {
-        "iso": "2026-08-27T10:31:21+00:00",
-        "hours": 18.94,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 19,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "Bitcoin maintient plus de 79 000 $ que les entrées de ETF atteint la plus longue série depuis avril",
-      "headline_fr_status": "reused_current_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Bitcoin maintient plus de 79 000 $ que les entrées de ETF atteint la plus longue série depuis avril",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_784de563c99e5718",
-      "event_id": "feed_784de563c99e5718",
-      "fingerprint": "784de563c99e5718",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Live updates: Bitcoin trades near $80,000 as stocks close with gains",
-      "body": "U.S. spot bitcoin funds have taken in $2.8 billion since the run began, and ether ETFs are matching it day for day. Three sessions are left to make August their best month since October 2025.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/08/27/live-updates-bitcoin-etf-inflows-hit-eight-straight-days-as-august-tops-usd3-billion",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/08/27/live-updates-bitcoin-etf-inflows-hit-eight-straight-days-as-august-tops-usd3-billion"
-      ],
-      "declared_status": "reported",
-      "event_type": "general",
-      "event_label": "Information de marché à qualifier",
-      "event_time": "2026-08-27T08:51:37+00:00",
-      "first_seen_at": "2026-08-28T05:27:52.893883+00:00",
-      "last_seen_at": "2026-08-28T05:27:52.893883+00:00",
-      "freshness": {
-        "iso": "2026-08-27T08:51:37+00:00",
-        "hours": 20.6,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "orientation indéterminée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "crypto"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "Mises à jour en direct: Bitcoin trade près de 80 000 $ à mesure que les stocks se rapprochent des gains",
-      "headline_fr_status": "reused_current_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Mises à jour en direct: Bitcoin trade près de 80 000 $ à mesure que les stocks se rapprochent des gains",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
-    },
-    {
       "id": "feed_442a038127e6e722",
       "event_id": "feed_442a038127e6e722",
       "fingerprint": "442a038127e6e722",
@@ -3500,11 +3587,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T19:31:04+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.486918+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.486918+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.778611+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.778611+00:00",
       "freshness": {
         "iso": "2026-08-31T19:31:04+00:00",
-        "hours": 58.4,
+        "hours": 63.89,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3639,39 +3726,39 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_d639cfcff71854a2",
-      "event_id": "feed_d639cfcff71854a2",
-      "fingerprint": "d639cfcff71854a2",
+      "id": "feed_9e1a1d3251034888",
+      "event_id": "feed_9e1a1d3251034888",
+      "fingerprint": "9e1a1d3251034888",
       "version": "V1.1-alpha.26.47.5",
       "origin": "github_news_collector",
-      "headline": "Bitcoin ETFs Draw $2.8B in Eight-Day Streak as BTC Tests $80K",
-      "body": "August is heading for its strongest month of inflows since October 2025 if the pace holds, one analyst noted.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/376683/bitcoin-etfs-draw-2-8b-in-eight-day-streak-as-btc-tests-80k",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
+      "headline": "US-Iran Conflict Shakes Crypto Market as Bitcoin ETFs See $236M Outflows - Tekedia",
+      "body": "US-Iran Conflict Shakes Crypto Market as Bitcoin ETFs See $236M Outflows Tekedia",
+      "source_name": "Google News · ETF flows discovery",
+      "source_url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNUnhoQlU0bnR0NjlocXFIczBLRmh0dVEtRzVpTFdQLTc2REdGODEzODhvdGRJcU5DVnM5MTV3SHhQV1gyN09LRkl5bGY2Mzhpb3BiYVJSSGJMV2RZZ2w5T3ItWEMxTkYxMHJvTlZkUzRkbEZnRnR0M1lSWHpDSzZJck5WRUxUYTl5R3hoQUlraERUS0VZd2lHcnRBd1M?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
       "source_count": 1,
       "source_names": [
-        "Decrypt"
+        "Google News · ETF flows discovery"
       ],
       "source_urls": [
-        "https://decrypt.co/376683/bitcoin-etfs-draw-2-8b-in-eight-day-streak-as-btc-tests-80k"
+        "https://news.google.com/rss/articles/CBMinAFBVV95cUxNUnhoQlU0bnR0NjlocXFIczBLRmh0dVEtRzVpTFdQLTc2REdGODEzODhvdGRJcU5DVnM5MTV3SHhQV1gyN09LRkl5bGY2Mzhpb3BiYVJSSGJMV2RZZ2w5T3ItWEMxTkYxMHJvTlZkUzRkbEZnRnR0M1lSWHpDSzZJck5WRUxUYTl5R3hoQUlraERUS0VZd2lHcnRBd1M?oc=5"
       ],
       "declared_status": "reported",
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-08-27T10:39:10+00:00",
-      "first_seen_at": "2026-08-31T05:46:01.111362+00:00",
-      "last_seen_at": "2026-08-31T05:46:01.111362+00:00",
+      "event_time": "2026-09-02T22:23:25+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.253264+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.253264+00:00",
       "freshness": {
-        "iso": "2026-08-27T10:39:10+00:00",
-        "hours": 91.11,
-        "label": "Cette semaine",
+        "iso": "2026-09-02T22:23:25+00:00",
+        "hours": 13.02,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
-        "score": 60,
+        "score": 58,
         "level": "Moyen"
       },
       "impact": {
@@ -3683,10 +3770,11 @@
         "BTC"
       ],
       "sectors": [
-        "Layer 1"
+        "Layer 1",
+        "Marché global"
       ],
       "manipulation": {
-        "score": 30,
+        "score": 16,
         "level": "Faible"
       },
       "priced": {
@@ -3699,10 +3787,11 @@
         "tone": "warn"
       },
       "confirmations": 1,
-      "relevance_score": 15,
+      "relevance_score": 17,
       "matched_topics": [
         "money_flow",
-        "crypto"
+        "crypto",
+        "geopolitics"
       ],
       "driver_domains": [
         "institutional_flows"
@@ -3710,11 +3799,11 @@
       "driver_coverage_build": "40.3.89",
       "causal_claim": false,
       "observation_only": true,
-      "headline_fr": "Bitcoin ETFs Dessiner 2,8 milliards de dollars dans huit jours de streak comme BTC tests 80K $",
-      "headline_fr_status": "reused_current_v2",
+      "headline_fr": "Le conflit entre les États-Unis et l'Iran secoue le marché de la cryptographie sous le nom de Bitcoin ETFs Voir 236M$ Flux sortants - Tekedia",
+      "headline_fr_status": "translated_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Les ETF Bitcoin attirent 2,8 Md$ sur huit séances consécutives d’entrées, tandis que BTC teste les 80 k$",
-      "headline_fr_display_status": "editorial_v2",
+      "headline_fr_display": "Le conflit entre les États-Unis et l'Iran secoue le marché de la cryptographie sous le nom de Bitcoin ETFs Voir 236M$ Flux sortants - Tekedia",
+      "headline_fr_display_status": "raw_v2",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
       "headline_fr_quality_reasons": []
@@ -3743,12 +3832,12 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T18:42:00+00:00",
-      "first_seen_at": "2026-09-03T01:11:53.932840+00:00",
-      "last_seen_at": "2026-09-03T01:11:53.932840+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.219042+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.219042+00:00",
       "freshness": {
         "iso": "2026-09-02T18:42:00+00:00",
-        "hours": 6.5,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 16.71,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -3793,7 +3882,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin glisse en dessous de 77 000 $ à mesure que ETF sorties atteint 236 millions de dollars, mais les fonds Altcoin dessinent des capitaux frais - finance.biggo.com",
-      "headline_fr_status": "reused_current_v2",
+      "headline_fr_status": "reused_previous_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin glisse en dessous de 77 000 $ à mesure que ETF sorties atteint 236 M$, mais les fonds Altcoin dessinent des capitaux frais - finance.biggo.com",
       "headline_fr_display_status": "editorial_v2",
@@ -3906,11 +3995,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T11:33:20+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.139847+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.139847+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.234717+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.234717+00:00",
       "freshness": {
         "iso": "2026-09-02T11:33:20+00:00",
-        "hours": 18.36,
+        "hours": 23.85,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3964,6 +4053,86 @@
       "headline_fr_quality_reasons": []
     },
     {
+      "id": "feed_5af7f5c129de911d",
+      "event_id": "feed_5af7f5c129de911d",
+      "fingerprint": "5af7f5c129de911d",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "XRP ETFs Extend Inflow Streak to 11 Days, Adding $170M as Institutional Interest Grows - CryptoRank",
+      "body": "XRP ETFs Extend Inflow Streak to 11 Days, Adding $170M as Institutional Interest Grows CryptoRank",
+      "source_name": "Google News · ETF flows discovery",
+      "source_url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE9ETkxNZ1hsRVJfOTZTZGlyQTVaT0xwUHZZUmdpNk1CY1I1bTFuRVdiRTh4R1plVFFaUWg1MmFieU1NVnRfUVJuTlRXUUVYQmdjdkZfaFV3QnJqZWZNY0ZBQ0ZJNTh1ZFhLMWluN2xrN2UyYTNuVTdjUldvc1Z1UQ?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "Google News · ETF flows discovery"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMifkFVX3lxTE9ETkxNZ1hsRVJfOTZTZGlyQTVaT0xwUHZZUmdpNk1CY1I1bTFuRVdiRTh4R1plVFFaUWg1MmFieU1NVnRfUVJuTlRXUUVYQmdjdkZfaFV3QnJqZWZNY0ZBQ0ZJNTh1ZFhLMWluN2xrN2UyYTNuVTdjUldvc1Z1UQ?oc=5"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-02T11:03:55+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.222558+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.222558+00:00",
+      "freshness": {
+        "iso": "2026-09-02T11:03:55+00:00",
+        "hours": 24.34,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 58,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 91,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "XRP"
+      ],
+      "sectors": [],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 17,
+      "matched_topics": [
+        "money_flow",
+        "crypto",
+        "institutional"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "XRP ETFs Étendre l'entrée à 11 jours, ajoutant 170 M$ d'intérêt institutionnel - CryptoRank",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "XRP ETFs Étendre l'entrée à 11 jours, ajoutant 170 M$ d'intérêt institutionnel - CryptoRank",
+      "headline_fr_display_status": "raw_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
       "id": "feed_f8aa3ee0fd40865f",
       "event_id": "feed_f8aa3ee0fd40865f",
       "fingerprint": "f8aa3ee0fd40865f",
@@ -3987,11 +4156,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T10:53:08+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.129219+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.129219+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.223766+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.223766+00:00",
       "freshness": {
         "iso": "2026-09-02T10:53:08+00:00",
-        "hours": 19.03,
+        "hours": 24.52,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4071,11 +4240,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-02T06:50:25+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.093512+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.117178+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.191145+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.212937+00:00",
       "freshness": {
         "iso": "2026-09-02T06:50:25+00:00",
-        "hours": 23.08,
+        "hours": 28.57,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4124,6 +4293,88 @@
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "U.S. Les ETF spot Ethereum Post 12ème jour droit d'entrées nettes, bien que la Pace ralentit - CryptoRank",
       "headline_fr_display_status": "editorial_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
+      "id": "feed_9552a435f6e5d71b",
+      "event_id": "feed_9552a435f6e5d71b",
+      "fingerprint": "9552a435f6e5d71b",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin Climbs Back Above $79,000 as ETF Inflows and Strategy Purchase Fuel Recovery - finance.biggo.com",
+      "body": "Bitcoin Climbs Back Above $79,000 as ETF Inflows and Strategy Purchase Fuel Recovery finance.biggo.com",
+      "source_name": "Google News · ETF flows discovery",
+      "source_url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE81X1NPMWoxYnpXcGJjeE95OUdraEw5SHFMSjk2dnRlTUJWU1lqbHlHc0Ntd2NzUVI4NnFDRVZ4TElQaHZRamtxdmticDJFQjBWRDhreGxCSng5NzRtRzdpYjEtV1kxVWJFQkN2el9nNUU2Tm5QUnc?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "Google News · ETF flows discovery"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMidkFVX3lxTE81X1NPMWoxYnpXcGJjeE95OUdraEw5SHFMSjk2dnRlTUJWU1lqbHlHc0Ntd2NzUVI4NnFDRVZ4TElQaHZRamtxdmticDJFQjBWRDhreGxCSng5NzRtRzdpYjEtV1kxVWJFQkN2el9nNUU2Tm5QUnc?oc=5"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-01T18:58:29+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.225025+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.225025+00:00",
+      "freshness": {
+        "iso": "2026-09-01T18:58:29+00:00",
+        "hours": 40.43,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 58,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 91,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 17,
+      "matched_topics": [
+        "money_flow",
+        "crypto",
+        "institutional"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "Bitcoin grimpe au-dessus de 79 000 $ comme ETF Entrées et stratégie d'achat de carburant Récupération - finance.biggo.com",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "Bitcoin grimpe au-dessus de 79 000 $ comme ETF Entrées et stratégie d'achat de carburant Récupération - finance.biggo.com",
+      "headline_fr_display_status": "raw_v2",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
       "headline_fr_quality_reasons": []
@@ -4314,11 +4565,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-01T13:15:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.137339+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.137339+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.229262+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.229262+00:00",
       "freshness": {
         "iso": "2026-09-01T13:15:00+00:00",
-        "hours": 40.67,
+        "hours": 46.16,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4455,6 +4706,88 @@
       "headline_fr_quality_reasons": []
     },
     {
+      "id": "feed_97fce51900b2535b",
+      "event_id": "feed_97fce51900b2535b",
+      "fingerprint": "97fce51900b2535b",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin Rally Driven by Spot Demand and ETF Inflows - KuCoin",
+      "body": "Bitcoin Rally Driven by Spot Demand and ETF Inflows KuCoin",
+      "source_name": "Google News · macro liquidity discovery",
+      "source_url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxNcGpUSm5CbnNIcnc3cndjaURyemtMLWpFTzRFVVBjVEs2Z1otUFlVam83TFItWlNFcUMyaXFxVk5kMnpocXdwOUZuRTFCMjdZRmxRMnNQR1RpSEQyRnBKbUsyRjVQRXBkRHNrZUx6QTIyVlJLYU9KS0M1a3lpSE5LU3F1VE80S25WSWZNdExB?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "Google News · macro liquidity discovery"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMijgFBVV95cUxNcGpUSm5CbnNIcnc3cndjaURyemtMLWpFTzRFVVBjVEs2Z1otUFlVam83TFItWlNFcUMyaXFxVk5kMnpocXdwOUZuRTFCMjdZRmxRMnNQR1RpSEQyRnBKbUsyRjVQRXBkRHNrZUx6QTIyVlJLYU9KS0M1a3lpSE5LU3F1VE80S25WSWZNdExB?oc=5"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-01T10:19:07+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.319986+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.319986+00:00",
+      "freshness": {
+        "iso": "2026-09-01T10:19:07+00:00",
+        "hours": 49.09,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 58,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 91,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 17,
+      "matched_topics": [
+        "money_flow",
+        "crypto",
+        "institutional"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "Rallye Bitcoin mené par Spot Demand et ETF Flux - KuCoin",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "Rallye Bitcoin mené par Spot Demand et ETF Flux - KuCoin",
+      "headline_fr_display_status": "raw_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
       "id": "feed_821a7a16160665e2",
       "event_id": "feed_821a7a16160665e2",
       "fingerprint": "821a7a16160665e2",
@@ -4560,11 +4893,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-01T05:23:57+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.138603+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.138603+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.233494+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.233494+00:00",
       "freshness": {
         "iso": "2026-09-01T05:23:57+00:00",
-        "hours": 48.52,
+        "hours": 54.01,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4807,11 +5140,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T19:36:37+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.124430+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.124430+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.217775+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.217775+00:00",
       "freshness": {
         "iso": "2026-08-31T19:36:37+00:00",
-        "hours": 58.31,
+        "hours": 63.8,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4939,7 +5272,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETF Inflow Streak s'achève avec 202 millions de dollars de retrait en tant que Sénat Vote Looms - finance.biggo.com",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETF Inflow Streak s'achève avec 202 M$ de retrait en tant que Sénat Vote Looms - finance.biggo.com",
       "headline_fr_display_status": "editorial_v2",
@@ -4977,7 +5310,7 @@
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T15:26:11+00:00",
       "first_seen_at": "2026-09-01T19:59:27.358304+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.127677+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.221259+00:00",
       "freshness": {
         "iso": "2026-08-31T15:26:11+00:00",
         "hours": 28.55,
@@ -5110,7 +5443,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETF entrées en fin de série avec 201,8 millions de dollars de sortie, métiers d'essai réglementaires - Bitget",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETF entrées en fin de série avec 201,8 M$ de sortie, métiers d'essai réglementaires - Bitget",
       "headline_fr_display_status": "editorial_v2",
@@ -5195,7 +5528,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin détient 78 000 $, alors que ETFs enregistre une sortie de 202 millions de dollars, des crues pétrolières sur le conflit entre les États-Unis et l'Iran - Bitget",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin détient 78 000 $, alors que ETFs enregistre une sortie de 202 M$, des crues pétrolières sur le conflit entre les États-Unis et l'Iran - Bitget",
       "headline_fr_display_status": "editorial_v2",
@@ -5391,11 +5724,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-31T09:12:15+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.250534+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.250534+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.328476+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.328476+00:00",
       "freshness": {
         "iso": "2026-08-31T09:12:15+00:00",
-        "hours": 68.72,
+        "hours": 74.2,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5472,11 +5805,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T07:42:18+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.123273+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.123273+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.211683+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.211683+00:00",
       "freshness": {
         "iso": "2026-08-31T07:42:18+00:00",
-        "hours": 70.21,
+        "hours": 75.7,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5553,11 +5886,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T02:50:49+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.098134+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.098134+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.195700+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.195700+00:00",
       "freshness": {
         "iso": "2026-08-31T02:50:49+00:00",
-        "hours": 75.07,
+        "hours": 80.56,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5634,11 +5967,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T00:32:21+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.088493+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.088493+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.188050+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.188050+00:00",
       "freshness": {
         "iso": "2026-08-31T00:32:21+00:00",
-        "hours": 77.38,
+        "hours": 82.87,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5805,11 +6138,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-30T17:05:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.107078+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.107078+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.201280+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.201280+00:00",
       "freshness": {
         "iso": "2026-08-30T17:05:00+00:00",
-        "hours": 84.84,
+        "hours": 90.32,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5968,11 +6301,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-30T11:39:56+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.142844+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.142844+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.239366+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.239366+00:00",
       "freshness": {
         "iso": "2026-08-30T11:39:56+00:00",
-        "hours": 90.25,
+        "hours": 95.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6032,8 +6365,8 @@
       "fingerprint": "4eca255450d34cec",
       "version": "V1.1-alpha.26.47.5",
       "origin": "github_news_collector",
-      "headline": "Bitcoin Rally Builds on $2.8 Billion ETF Inflows - crypto.news",
-      "body": "Bitcoin Rally Builds on $2.8 Billion ETF Inflows crypto.news",
+      "headline": "Bitcoin Rally Builds on $2.8 Billion ETF Inflows - Crypto News",
+      "body": "Bitcoin Rally Builds on $2.8 Billion ETF Inflows Crypto News",
       "source_name": "Google News · macro liquidity discovery",
       "source_url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE5VeUZWbGFPdEstNGF4RDBlVDVxTkIxOTIzWURtWkt6VW9uNjFOTWduVTRjQVo2bHRNTVRiV2Jub1BWZXN1TkVORGx5eWM4aDlyNkVoVldyTHp3UERjcy14RDBOTURkVENGR3pDakU4bktBcS1aWjhZ?oc=5",
       "source_host": "news.google.com",
@@ -6050,11 +6383,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-30T07:51:54+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.239998+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.239998+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.316985+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.316985+00:00",
       "freshness": {
         "iso": "2026-08-30T07:51:54+00:00",
-        "hours": 94.05,
+        "hours": 99.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6099,10 +6432,10 @@
       "driver_coverage_build": "40.3.89",
       "causal_claim": false,
       "observation_only": true,
-      "headline_fr": "Bitcoin Rally construit sur 2,8 milliards de dollars ETF Flux - crypto.news",
+      "headline_fr": "Bitcoin Rally construit sur 2,8 milliards de dollars ETF Flux - Crypto News",
       "headline_fr_status": "translated_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Bitcoin Rally construit sur 2,8 Md$ ETF Flux - crypto.news",
+      "headline_fr_display": "Bitcoin Rally construit sur 2,8 Md$ ETF Flux - Crypto News",
       "headline_fr_display_status": "editorial_v2",
       "headline_fr_quality_score": 83,
       "headline_fr_quality_status": "pass",
@@ -6304,11 +6637,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T16:43:02+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.102719+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.102719+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.198942+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.198942+00:00",
       "freshness": {
         "iso": "2026-08-29T16:43:02+00:00",
-        "hours": 109.2,
+        "hours": 114.69,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6713,11 +7046,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-29T05:25:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.103949+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.103949+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.200152+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.200152+00:00",
       "freshness": {
         "iso": "2026-08-29T05:25:00+00:00",
-        "hours": 120.5,
+        "hours": 125.99,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7173,7 +7506,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETF Les flux d'entrées s'explosent comme des rachats de trésorerie Hit Yields — Est-ce un breakout de 80K $ Allumant le prochain Crypto Rally? - Fondation Bitcoin",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Les entrées dans les ETF Bitcoin bondissent alors que les rachats du Trésor pèsent sur les rendements : une cassure des 80 k$ peut-elle relancer le marché crypto ? — Bitcoin Foundation",
       "headline_fr_display_status": "editorial_v2",
@@ -7200,14 +7533,15 @@
       ],
       "source_urls": [
         "https://news.google.com/rss/articles/CBMi2gFBVV95cUxQQ0tTRS1IYmFfRDZUUjJvdERPbkpSVkFSWFExWHFZb2FpcGFuRHFRbjMyWHFROFlWaFpGMWhBQmhteFA2aE5vdlN1YWxHV2JuVjl0aFdPMnp0NzhKdjFlQmgwdl9VQW0yZVNfVmxPT0N5S1UtSmFaSnN0M0Qzekx2bXpvY3NiaExmWWRtak5SNlRWaDlMM1VGeGxHNU91SDIwUVIwRnlXcGFUNWRlQVNkcV9lSWgtVDN4OVpKMG5kc09JWU51VkdlNXNuVDMzeTNFZUM1WDhOR3h5Zw?oc=5",
-        "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNWWtzYWlUc1V5SkVvaGttTDlNTFZxVFQzTlF3aVlRam1ha055Y3NXc1NINVVUZDllQmoyU0JGZDF3VTVaWm9UTnFUY1M1cnZURnNidkY0UVNuYmtUTTdXNWFlZ0ZUNGREbGUyVGNQdW9MYnZ3bjRiNGtQVGdaMWlSTVdCNmRRLWZydE9SOHY4R25jTlZ6SDdkSnYzcTlmejRXNlFqZk1zVm84S2NnQ3g0NUl0cEtiM0VQNFhneE9YNlplcHZDQ0FGMw?oc=5"
+        "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNWWtzYWlUc1V5SkVvaGttTDlNTFZxVFQzTlF3aVlRam1ha055Y3NXc1NINVVUZDllQmoyU0JGZDF3VTVaWm9UTnFUY1M1cnZURnNidkY0UVNuYmtUTTdXNWFlZ0ZUNGREbGUyVGNQdW9MYnZ3bjRiNGtQVGdaMWlSTVdCNmRRLWZydE9SOHY4R25jTlZ6SDdkSnYzcTlmejRXNlFqZk1zVm84S2NnQ3g0NUl0cEtiM0VQNFhneE9YNlplcHZDQ0FGMw?oc=5",
+        "https://news.google.com/rss/articles/CBMiWEFVX3lxTE13MXQ0UGd5YjRpdk5RN1VUdDFWVjhDT3RuZ2w5ZzNPbTNqZ0JzUW5fVHczZ25LZU1vVlRmZ3d5bGcwc1NTTHZpWXA3aEhycFZUY21JX1F2LU4?oc=5"
       ],
       "declared_status": "reported",
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-28T09:01:29+00:00",
       "first_seen_at": "2026-09-03T05:55:09.231156+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.260430+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.303062+00:00",
       "freshness": {
         "iso": "2026-08-28T09:01:29+00:00",
         "hours": 140.89,
@@ -7258,7 +7592,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin ETF Les flux d'entrées surgissent au fur et à mesure des rachats de trésorerie.Push Yields Lower: Est-ce le début d'un nouveau Rallye Crypto? - CryptoRank",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin ETF Les flux d'entrées surgissent au fur et à mesure des rachats de trésorerie.Push Yields Lower: Est-ce le début d'un nouveau Rallye Crypto? - CryptoRank",
       "headline_fr_display_status": "raw_v2",
@@ -7596,88 +7930,6 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_54d6c1c27159b72d",
-      "event_id": "feed_54d6c1c27159b72d",
-      "fingerprint": "54d6c1c27159b72d",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Ethereum Rises 3% on Market Strength, Institutional Demand - CoinMarketCap",
-      "body": "Ethereum Rises 3% on Market Strength, Institutional Demand CoinMarketCap",
-      "source_name": "Google News · ETF flows discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMicEFVX3lxTE5nQ2l2eFNGOFEwUmJSSXhTSXlUREt1QTMtZG91cGdjc0RudlZidGV5anNFSEd5TFhGeGlubkl5bktnaXVXcUMzYWlvbUJRTG1fa2xxMUh6WjdOQ1NzOXZGN3ZPdFA3dERUWkc1MVpJWU8?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News · ETF flows discovery"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMicEFVX3lxTE5nQ2l2eFNGOFEwUmJSSXhTSXlUREt1QTMtZG91cGdjc0RudlZidGV5anNFSEd5TFhGeGlubkl5bktnaXVXcUMzYWlvbUJRTG1fa2xxMUh6WjdOQ1NzOXZGN3ZPdFA3dERUWkc1MVpJWU8?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-08-27T10:04:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.114607+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.114607+00:00",
-      "freshness": {
-        "iso": "2026-08-27T10:04:00+00:00",
-        "hours": 163.85,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [
-        "ETH"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 17,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "Ethereum augmente de 3 % sur la force du marché, la demande institutionnelle - CoinMarketCap",
-      "headline_fr_status": "reused_previous_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Ethereum augmente de 3 % sur la force du marché, la demande institutionnelle - CoinMarketCap",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
-    },
-    {
       "id": "feed_77b5f27098698dd2",
       "event_id": "feed_77b5f27098698dd2",
       "fingerprint": "77b5f27098698dd2",
@@ -7700,12 +7952,12 @@
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-09-02T19:11:15+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.656914+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.656914+00:00",
+      "event_time": "2026-09-03T06:10:27+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.540975+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.540975+00:00",
       "freshness": {
-        "iso": "2026-09-02T19:11:15+00:00",
-        "hours": 10.73,
+        "iso": "2026-09-03T06:10:27+00:00",
+        "hours": 5.23,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -7864,11 +8116,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-01T19:17:39+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.559760+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.559760+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.621569+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.621569+00:00",
       "freshness": {
         "iso": "2026-09-01T19:17:39+00:00",
-        "hours": 34.62,
+        "hours": 40.11,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7943,11 +8195,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-01T17:52:32+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.561797+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.561797+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.623347+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.623347+00:00",
       "freshness": {
         "iso": "2026-09-01T17:52:32+00:00",
-        "hours": 36.04,
+        "hours": 41.53,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8024,11 +8276,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-01T14:57:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.563595+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.563595+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.625055+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.625055+00:00",
       "freshness": {
         "iso": "2026-09-01T14:57:00+00:00",
-        "hours": 38.97,
+        "hours": 44.46,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8103,11 +8355,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-31T18:24:32+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.565966+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.565966+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.627099+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.627099+00:00",
       "freshness": {
         "iso": "2026-08-31T18:24:32+00:00",
-        "hours": 59.51,
+        "hours": 65.0,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8182,11 +8434,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-28T17:33:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.567807+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.567807+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.628846+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.628846+00:00",
       "freshness": {
         "iso": "2026-08-28T17:33:00+00:00",
-        "hours": 132.37,
+        "hours": 137.86,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8261,11 +8513,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-27T21:30:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.570069+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.570069+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.630593+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.630593+00:00",
       "freshness": {
         "iso": "2026-08-27T21:30:00+00:00",
-        "hours": 152.42,
+        "hours": 157.91,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8340,11 +8592,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-08-27T15:00:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.754946+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.754946+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.673939+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.673939+00:00",
       "freshness": {
         "iso": "2026-08-27T15:00:00+00:00",
-        "hours": 158.92,
+        "hours": 164.41,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8417,11 +8669,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T16:04:52+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.788948+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.788948+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.826576+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.826576+00:00",
       "freshness": {
         "iso": "2026-09-02T16:04:52+00:00",
-        "hours": 13.84,
+        "hours": 19.33,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8474,6 +8726,83 @@
       "headline_fr_quality_reasons": []
     },
     {
+      "id": "feed_94c85f318ba8b565",
+      "event_id": "feed_94c85f318ba8b565",
+      "fingerprint": "94c85f318ba8b565",
+      "version": "V1.1-alpha.26.47.5",
+      "origin": "github_news_collector",
+      "headline": "CFTC asks judge to dismiss CME lawsuit over crypto perpetual futures",
+      "body": "The regulator claims the dispute is \"much ado about nothing,\" noting that the order allows any designated contract market, including CME, to list these products.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/policy/2026/09/03/cftc-asks-judge-to-dismiss-cme-lawsuit-over-crypto-perpetual-futures",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/policy/2026/09/03/cftc-asks-judge-to-dismiss-cme-lawsuit-over-crypto-perpetual-futures"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-03T09:13:40+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.787673+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.787673+00:00",
+      "freshness": {
+        "iso": "2026-09-03T09:13:40+00:00",
+        "hours": 2.18,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.3.89",
+      "causal_claim": false,
+      "observation_only": true,
+      "headline_fr": "CFTC demande au juge de rejeter les poursuites intentées par le CME au sujet de contrats à terme perpétuels crypto",
+      "headline_fr_status": "translated_v2",
+      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
+      "headline_fr_display": "CFTC demande au juge de rejeter les poursuites intentées par le CME au sujet de contrats à terme perpétuels crypto",
+      "headline_fr_display_status": "raw_v2",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "pass",
+      "headline_fr_quality_reasons": []
+    },
+    {
       "id": "feed_b11e9b4604335a93",
       "event_id": "feed_b11e9b4604335a93",
       "fingerprint": "b11e9b4604335a93",
@@ -8497,11 +8826,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-02T10:50:38+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.894462+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.894462+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.817628+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.817628+00:00",
       "freshness": {
         "iso": "2026-09-02T10:50:38+00:00",
-        "hours": 19.08,
+        "hours": 24.56,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8581,11 +8910,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-02T08:31:00+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.897043+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.897043+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.820250+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.820250+00:00",
       "freshness": {
         "iso": "2026-09-02T08:31:00+00:00",
-        "hours": 21.4,
+        "hours": 26.89,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8715,7 +9044,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "Bitcoin résiste à l'huile de 90 $ et augmente les rendements pendant que l'or glisse. Un dollar ferme est la prise",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "Bitcoin résiste à l'huile de 90 $ et augmente les rendements pendant que l'or glisse. Un dollar ferme est la prise",
       "headline_fr_display_status": "raw_v2",
@@ -8794,7 +9123,7 @@
       "causal_claim": false,
       "observation_only": true,
       "headline_fr": "SEC propose la règle de l'agent de transfert, définit l'événement pour calculer le trading 24 heures sur 24.",
-      "headline_fr_status": "reused_previous_v2",
+      "headline_fr_status": "reused_current_v2",
       "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
       "headline_fr_display": "SEC propose la règle de l'agent de transfert, définit l'événement pour calculer le trading 24 heures sur 24.",
       "headline_fr_display_status": "raw_v2",
@@ -9140,11 +9469,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T17:41:04+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.436133+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.436133+00:00",
+      "first_seen_at": "2026-09-03T11:24:22.731328+00:00",
+      "last_seen_at": "2026-09-03T11:24:22.731328+00:00",
       "freshness": {
         "iso": "2026-09-02T17:41:04+00:00",
-        "hours": 12.23,
+        "hours": 17.72,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9529,11 +9858,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T06:54:18+00:00",
-      "first_seen_at": "2026-09-03T05:55:09.108494+00:00",
-      "last_seen_at": "2026-09-03T05:55:09.108494+00:00",
+      "first_seen_at": "2026-09-03T11:24:23.205989+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.205989+00:00",
       "freshness": {
         "iso": "2026-08-31T06:54:18+00:00",
-        "hours": 71.01,
+        "hours": 76.5,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9609,7 +9938,7 @@
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-08-31T05:41:56+00:00",
       "first_seen_at": "2026-09-02T01:05:33.307232+00:00",
-      "last_seen_at": "2026-09-02T05:55:49.604358+00:00",
+      "last_seen_at": "2026-09-03T11:24:23.240682+00:00",
       "freshness": {
         "iso": "2026-08-31T05:41:56+00:00",
         "hours": 43.39,
@@ -9660,322 +9989,6 @@
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "pass",
       "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_479609da253efb7e",
-      "event_id": "feed_479609da253efb7e",
-      "fingerprint": "479609da253efb7e",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Bank of America reports $3.2B inflow into crypto funds, largest since October 2025 - Crypto Briefing",
-      "body": "Bank of America reports $3.2B inflow into crypto funds, largest since October 2025 Crypto Briefing",
-      "source_name": "Google News · ETF flows discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMidEFVX3lxTE1ZVHR1Z1RDUVRPZnAxaUp6d2FPajctdk1NN1M5ajFFY3RpU1oxMnF6ZmtLaUV0eEJIenhqN0FYd0ZXSFZtZ3JBZGNrYjZNY3cwc2ZYMnpBWllXamZLeTFQTGRoUlJqanZUaWhyQW04OHgySm9s?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News · ETF flows discovery"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMidEFVX3lxTE1ZVHR1Z1RDUVRPZnAxaUp6d2FPajctdk1NN1M5ajFFY3RpU1oxMnF6ZmtLaUV0eEJIenhqN0FYd0ZXSFZtZ3JBZGNrYjZNY3cwc2ZYMnpBWllXamZLeTFQTGRoUlJqanZUaWhyQW04OHgySm9s?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-08-31T03:46:03+00:00",
-      "first_seen_at": "2026-09-02T16:41:57.711633+00:00",
-      "last_seen_at": "2026-09-02T16:41:57.711633+00:00",
-      "freshness": {
-        "iso": "2026-08-31T03:46:03+00:00",
-        "hours": 60.93,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "money_flow",
-        "crypto"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "La Banque d'Amérique signale un afflux de 3,2 milliards de dollars dans des fonds cryptographiques, le plus important depuis octobre 2025 - Crypto Briefing",
-      "headline_fr_status": "reused_current_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "La Banque d'Amérique signale un afflux de 3,2 Md$ dans des fonds cryptographiques, le plus important depuis octobre 2025 - Crypto Briefing",
-      "headline_fr_display_status": "editorial_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_dcf2354e892af7ba",
-      "event_id": "feed_dcf2354e892af7ba",
-      "fingerprint": "dcf2354e892af7ba",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "US Treasury Buybacks Could Boost Bitcoin Demand - Coinfomania",
-      "body": "US Treasury Buybacks Could Boost Bitcoin Demand Coinfomania",
-      "source_name": "Google News · macro liquidity discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMifEFVX3lxTFBTLTAyWmNGNFpXM3lDUm5JUzlTU1NIWXhfb3dzZTJiU1pzV20wdGZXOS1pT2pRNU44bG9fWXRKWkhhV2Y4dkFDS085a3kxM3M4QlpSTFpvZEJBWG45aUhHX0NBMmFfQ2x1ZDcyQVpwLWIwMnhoT2NJc3UtY0Q?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News · macro liquidity discovery"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMifEFVX3lxTFBTLTAyWmNGNFpXM3lDUm5JUzlTU1NIWXhfb3dzZTJiU1pzV20wdGZXOS1pT2pRNU44bG9fWXRKWkhhV2Y4dkFDS085a3kxM3M4QlpSTFpvZEJBWG45aUhHX0NBMmFfQ2x1ZDcyQVpwLWIwMnhoT2NJc3UtY0Q?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "treasury_liquidity",
-      "event_label": "Trésor US / liquidité obligataire",
-      "event_time": "2026-08-30T01:59:59+00:00",
-      "first_seen_at": "2026-09-03T01:11:53.894516+00:00",
-      "last_seen_at": "2026-09-03T01:11:53.894516+00:00",
-      "freshness": {
-        "iso": "2026-08-30T01:59:59+00:00",
-        "hours": 95.2,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "contexte de liquidité macro à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "treasury_liquidity",
-        "crypto"
-      ],
-      "driver_domains": [
-        "macro_liquidity"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "Les rachats du Trésor américain pourraient stimuler la demande de Bitcoin - Coinfomania",
-      "headline_fr_status": "reused_current_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Les rachats du Trésor américain pourraient stimuler la demande de Bitcoin - Coinfomania",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_aa336286670b7cdc",
-      "event_id": "feed_aa336286670b7cdc",
-      "fingerprint": "aa336286670b7cdc",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Cryptocurrency Regulation: A Guide to U.S. & Global Policies - Britannica",
-      "body": "Cryptocurrency Regulation: A Guide to U.S. & Global Policies Britannica",
-      "source_name": "Google News · crypto regulation discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMiakFVX3lxTFBaYUYwenI5SXdsdkhCX1Y2Nm9VZC11TEFnUVV4YV9abktxeUlYQ2NDeXhDNUh4YmFWQ1dmV21KaTFYSEVYRGt1b0taTFdZYm5TNlVFb2w2bWxHeUhjMzZpd2pCQjBGY2NNa2c?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News · crypto regulation discovery"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMiakFVX3lxTFBaYUYwenI5SXdsdkhCX1Y2Nm9VZC11TEFnUVV4YV9abktxeUlYQ2NDeXhDNUh4YmFWQ1dmV21KaTFYSEVYRGt1b0taTFdZYm5TNlVFb2w2bWxHeUhjMzZpd2pCQjBGY2NNa2c?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-08-29T07:00:00+00:00",
-      "first_seen_at": "2026-09-02T22:43:55.935022+00:00",
-      "last_seen_at": "2026-09-02T22:43:55.935022+00:00",
-      "freshness": {
-        "iso": "2026-08-29T07:00:00+00:00",
-        "hours": 111.73,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 11,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "Cryptocurrency Regulation: Guide des politiques américaines et mondiales - Britannica",
-      "headline_fr_status": "reused_current_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Cryptocurrency Regulation: Guide des politiques américaines et mondiales - Britannica",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_c4d92177a5464f1e",
-      "event_id": "feed_c4d92177a5464f1e",
-      "fingerprint": "c4d92177a5464f1e",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin Surges as Treasury Buybacks Ease Yields and Boost Risk Appetite - InteractiveCrypto",
-      "body": "Bitcoin Surges as Treasury Buybacks Ease Yields and Boost Risk Appetite InteractiveCrypto",
-      "source_name": "Google News · macro liquidity discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNTktyd2d1N2NJQlBpel9PRmtqM1U2ZW5HdGdXbktvRHctZ1ZCOEd2SzNoang2WUtJa0N6RmpMUnpyNk1FdlgxNFFRQ0xqMHZfcEhYbFJZZm80X3Zmc29SYkpBYjlXTXhUTjNNM21xaHJUUkdwanducDdBQ0hiM3dKZzZfUnU4Tng5SnA4M3N0WEQyYVlQbG5ROFRUR1p5WExsSmxkT0JLWS1zRDhXZjJaXzEtMFU?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News · macro liquidity discovery"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMitAFBVV95cUxNTktyd2d1N2NJQlBpel9PRmtqM1U2ZW5HdGdXbktvRHctZ1ZCOEd2SzNoang2WUtJa0N6RmpMUnpyNk1FdlgxNFFRQ0xqMHZfcEhYbFJZZm80X3Zmc29SYkpBYjlXTXhUTjNNM21xaHJUUkdwanducDdBQ0hiM3dKZzZfUnU4Tng5SnA4M3N0WEQyYVlQbG5ROFRUR1p5WExsSmxkT0JLWS1zRDhXZjJaXzEtMFU?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "treasury_liquidity",
-      "event_label": "Trésor US / liquidité obligataire",
-      "event_time": "2026-08-28T10:09:40+00:00",
-      "first_seen_at": "2026-09-03T01:11:53.863505+00:00",
-      "last_seen_at": "2026-09-03T01:11:53.863505+00:00",
-      "freshness": {
-        "iso": "2026-08-28T10:09:40+00:00",
-        "hours": 135.04,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "contexte de liquidité macro à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "treasury_liquidity",
-        "crypto"
-      ],
-      "driver_domains": [
-        "macro_liquidity"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_fr": "Bitcoin surgissent comme des rachats de trésorerie Des rendements plus faciles et booster l'appétit de risque - InteractiveCrypto",
-      "headline_fr_status": "reused_current_v2",
-      "headline_fr_engine": "argos-translate+atlas-domain-normalizer-v2",
-      "headline_fr_display": "Bitcoin surgissent comme des rachats de trésorerie Des rendements plus faciles et booster l'appétit de risque - InteractiveCrypto",
-      "headline_fr_display_status": "raw_v2",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "pass",
-      "headline_fr_quality_reasons": []
     }
   ],
   "translation_fr": {
@@ -9999,16 +10012,16 @@
     "browser_translation": false,
     "external_llm": false,
     "events": 120,
-    "translated": 4,
+    "translated": 12,
     "retranslated_v2": 0,
-    "reused_v2": 116,
+    "reused_v2": 108,
     "source_fr": 0,
     "fallback_en": 0,
     "missing": 0,
     "normalized_before_mt": 0,
     "quality_pass": 118,
     "quality_warn": 2,
-    "editorialized": 50,
+    "editorialized": 47,
     "coverage": 120,
     "coverage_ratio": 1.0
   }
