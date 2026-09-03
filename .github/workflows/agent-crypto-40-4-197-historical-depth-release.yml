@@ -1,0 +1,69 @@
+name: Agent-Crypto 40.4.197 Historical Depth Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/agent-crypto-40-4-197-historical-depth-release.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-197-historical-depth-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require validated historical archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("public/agent_crypto_erith_ia/data/indices/history/status.json")
+          d=json.loads(p.read_text(encoding="utf-8"))
+          assert d.get("status")=="ready", d
+          h=d.get("horizons") or {}
+          assert float(h["5a"]["min_span_years"])>=4.5, h["5a"]
+          assert float(h["10a"]["min_span_years"])>=8.8, h["10a"]
+          assert float(h["max"]["min_span_years"])>=8.8, h["max"]
+          assert (d.get("integrity") or {}).get("lazy_browser_load_required") is True
+          assert (d.get("integrity") or {}).get("boot_payload_forbidden") is True
+          print({"historical_archive":"ready","5a":h["5a"],"10a":h["10a"],"max":h["max"]})
+          PY
+      - name: Apply 40.4.197 lazy historical runtime
+        run: python .github/scripts/agent_crypto_40_4_197_historical_depth.py
+      - name: Validate JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+      - name: Validate version truth
+        shell: bash
+        run: >-
+          python .github/scripts/agent_crypto_version_truth_guard.py
+          --expected-build 40.4.197
+          --expected-release "HISTORICAL DEPTH FOUNDATION · LAZY LONG HISTORY · INDICES 5Y 10Y MAX"
+      - name: Commit release and retire one-shot
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/agent-crypto-40-4-197-historical-depth-release.yml
+          rm -f .github/scripts/agent_crypto_40_4_197_historical_depth.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "release Agent-Crypto 40.4.197 lazy historical depth indices"
+          git pull --rebase origin main
+          git push origin HEAD:main
