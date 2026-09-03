@@ -194,6 +194,22 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
             if marker not in root:
                 fail(f"40.4.214 Extended ingestion regression: missing {marker}")
 
+    if current_num >= (40, 4, 215):
+        required_coverage = (
+            "40.4.215 — MARKET COVERAGE TRUTH",
+            "atlasMarketUniverseCoverageTruth404215",
+            "rank_cap_is_not_exact_cardinality:true",
+            "provider_rank_ties_preserved:true",
+            "Univers rang ≤ ${limit}",
+            "rangs distincts",
+            "rangs ex æquo",
+        )
+        for marker in required_coverage:
+            if marker not in root:
+                fail(f"40.4.215 Market coverage truth regression: missing {marker}")
+        if "Univers cumulé ${limit} : ${logical.length}/${limit} actifs" in root:
+            fail("40.4.215 ambiguous rank-cap/cardinality wording restored")
+
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")

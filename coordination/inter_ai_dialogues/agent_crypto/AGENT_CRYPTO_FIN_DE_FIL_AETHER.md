@@ -1,9 +1,9 @@
 # AGENT-CRYPTO — FIN DE FIL AETHER
 
-Version canonique de clôture : **40.4.214**
+Version canonique de clôture : **40.4.215**
 Market Core : **38.15.11 — PROTÉGÉ**
 
-## 1. Cascade finale 40.4.205 → 40.4.214
+## 1. Cascade finale 40.4.205 → 40.4.215
 
 - **40.4.205** — identité couleur stable par actif, axe temporel réel, inspection historique au pointeur, convergence Version Truth.
 - **40.4.206** — tableau permanent de valeurs observées superposé dans Indices/Énergie/Cross + propagation couleur au rail et à la fiche active.
@@ -15,6 +15,7 @@ Market Core : **38.15.11 — PROTÉGÉ**
 - **40.4.212** — Atlas Heartbeat Rearm : réarmement one-shot du propriétaire CURRENT canonique après boot complet ; HOT core et gates préservés.
 - **40.4.213** — Market Architecture Truth Convergence : vérité canonique du cycle Crypto/Métaux/Indices/Énergie/Cross et propriétaires runtime actifs ; 40.4.166/167 historiques.
 - **40.4.214** — Extended Market Universe Ingestion Recovery : correction de la course warm-up 900 ms / restauration tardive de la vue 500/1000 ; loader Extended réarmé depuis le lifecycle one-shot de l’espace mémorisé ; `build.json` rejoint writer + guard canoniques.
+- **40.4.215** — Market Coverage Truth : séparation explicite entre plafond de rang fournisseur et cardinalité de lignes ; actifs uniques par ID, rangs ex æquo préservés, rangs distincts/max observé exposés, aucun backfill synthétique.
 
 ## 2. Dette utilisateur soldée
 

@@ -18818,8 +18818,9 @@ function atlasMarketCompactName(coin) {
    PERFORMANCE
    -----------
    500/1000 do NOT create 500/1000 permanent DOM rows.
-   The logical universe is complete; the visual table is paged at 100 rows.
-   Search/filter/sort operate on the full selected logical universe first.
+   The logical universe is complete for unique loaded IDs under the selected provider-rank cap.
+   Provider rank labels may be tied and are not a dense row index; no synthetic rank is created.
+   The visual table is paged at 100 rows; search/filter/sort operate on the full selected logical universe first.
 
    HARD LOCKS
    ----------
@@ -18913,6 +18914,69 @@ function atlasMarketUniverseCoins403115(limit=atlasMarketUniverseLimit403115()){
 
   return merged;
 }
+
+/* 40.4.215 — MARKET COVERAGE TRUTH.
+   The Market buttons are provider-rank caps, not promises of exact row cardinality.
+   CoinGecko can expose equal market_cap_rank labels; unique asset IDs remain the row truth.
+   No rank is fabricated, renumbered or backfilled. */
+function atlasMarketRankRanges404215(values){
+  const ordered=[...new Set((Array.isArray(values)?values:[]).map(Number).filter(Number.isFinite))].sort((a,b)=>a-b);
+  if(!ordered.length)return "—";
+  const ranges=[];
+  let start=ordered[0],prev=ordered[0];
+  for(let i=1;i<ordered.length;i+=1){
+    const value=ordered[i];
+    if(value===prev+1){prev=value;continue;}
+    ranges.push(start===prev?String(start):`${start}–${prev}`);
+    start=prev=value;
+  }
+  ranges.push(start===prev?String(start):`${start}–${prev}`);
+  return ranges.join(", ");
+}
+
+function atlasMarketUniverseCoverageTruth404215(limit=atlasMarketUniverseLimit403115()){
+  const cap=Math.max(1,Number(limit)||50);
+  const logical=atlasMarketUniverseCoins403115(cap);
+  const rankMap=new Map();
+  for(const coin of logical){
+    const rank=Number(coin?.rank);
+    if(!Number.isFinite(rank)||rank<1||rank>cap)continue;
+    if(!rankMap.has(rank))rankMap.set(rank,[]);
+    rankMap.get(rank).push(String(coin?.id||""));
+  }
+  const ranks=[...rankMap.keys()].sort((a,b)=>a-b);
+  const missing=[];
+  for(let rank=1;rank<=cap;rank+=1){if(!rankMap.has(rank))missing.push(rank);}
+  const duplicateRanks=ranks.filter(rank=>(rankMap.get(rank)?.length||0)>1);
+  return Object.freeze({
+    rankCap:cap,
+    assetCount:logical.length,
+    uniqueRankCount:ranks.length,
+    duplicateRankPositions:duplicateRanks.length,
+    duplicateRanks:Object.freeze(duplicateRanks),
+    missingRankCount:missing.length,
+    missingRanks:Object.freeze(missing),
+    missingRankRanges:atlasMarketRankRanges404215(missing),
+    minRank:ranks.length?ranks[0]:null,
+    maxRank:ranks.length?ranks[ranks.length-1]:null,
+    rank_cap_is_not_exact_cardinality:true,
+    provider_rank_ties_preserved:true,
+    synthetic_rank_backfill:false
+  });
+}
+
+globalThis.ErithMarketUniverseCoverageTruth404215=Object.freeze({
+  build:"40.4.215",
+  derive:(limit)=>atlasMarketUniverseCoverageTruth404215(limit),
+  rank_cap_is_not_exact_cardinality:true,
+  provider_rank_ties_preserved:true,
+  unique_asset_id_is_row_authority:true,
+  synthetic_rank_backfill:false,
+  data_mutation:false,
+  fetch_added:false,
+  timer_added:false,
+  observer_added:false
+});
 
 function atlasMarketUniverseFind403115(coinId){
   const id=String(coinId||"").trim();
@@ -20447,18 +20511,25 @@ function atlasSyncMarketUniverseControls() {
     const frame=atlasCurrentMarketFrame();
 
     if(limit<=250){
-      status.textContent=`Core 250 : ${coreCount}/${frame?.requestedAssets||250} actifs validés · ${atlasMarketFrameShortId(frame)}`;
+      const coverage=atlasMarketUniverseCoverageTruth404215(limit);
+      const tie=coverage.duplicateRankPositions?` · ${coverage.duplicateRankPositions} rangs ex æquo`:"";
+      status.textContent=`Core rang ≤ ${limit} : ${coverage.assetCount} actifs uniques · ${coverage.uniqueRankCount} rangs distincts${tie} · max observé ${coverage.maxRank??"—"} · ${atlasMarketFrameShortId(frame)}`;
+      status.title=coverage.missingRankCount?`Rangs non représentés dans ce snapshot : ${coverage.missingRankRanges}. Le rang fournisseur n’est pas un index dense de lignes.`:"Couverture de rang sans trou dans ce snapshot.";
     }else if(atlasMarketUniverseState403115.status==="loading"){
-      status.textContent=`Extended ${limit} : chargement GitHub Actions… · Core ${coreCount}/250`;
+      status.textContent=`Extended rang ≤ ${limit} : chargement GitHub Actions… · Core ${coreCount}`;
+      status.title="Le bouton sélectionne un plafond de rang fournisseur, pas un nombre exact de lignes.";
     }else if(atlasMarketUniverseState403115.status==="error"){
-      status.textContent=`Extended ${limit} indisponible · Core ${coreCount}/250 · ${atlasMarketUniverseState403115.error}`;
+      status.textContent=`Extended rang ≤ ${limit} indisponible · Core ${coreCount} · ${atlasMarketUniverseState403115.error}`;
+      status.title="Le Core reste disponible ; aucune ligne Extended n’est inventée.";
     }else{
       const extended=atlasMarketUniverseExtendedRows403115(limit);
-      const logical=atlasMarketUniverseCoins403115(limit);
+      const coverage=atlasMarketUniverseCoverageTruth404215(limit);
       const stamp=atlasMarketUniverseState403115.generatedAt
         ?new Date(atlasMarketUniverseState403115.generatedAt).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})
         :"—";
-      status.textContent=`Univers cumulé ${limit} : ${logical.length}/${limit} actifs · Core ${coreCount} + Extended ${extended.length} · ${stamp}`;
+      const tie=coverage.duplicateRankPositions?` · ${coverage.duplicateRankPositions} rangs ex æquo`:"";
+      status.textContent=`Univers rang ≤ ${limit} : ${coverage.assetCount} actifs uniques · ${coverage.uniqueRankCount} rangs distincts${tie} · max observé ${coverage.maxRank??"—"} · Core ${coreCount} + Extended ${extended.length} · ${stamp}`;
+      status.title=coverage.missingRankCount?`Rangs non représentés dans ce snapshot : ${coverage.missingRankRanges}. Les ex æquo CoinGecko sont conservés ; aucun rang synthétique n’est créé.`:"Couverture de rang sans trou dans ce snapshot.";
     }
   }
 }
@@ -52650,7 +52721,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.214";
+const ATLAS_BUILD = "40.4.215";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";

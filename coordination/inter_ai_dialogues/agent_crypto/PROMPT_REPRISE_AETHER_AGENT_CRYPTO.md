@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.214**
+Version de reprise : **40.4.215**
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -30,6 +30,8 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 40.4.213 converge la **vérité d’architecture Markets** : cycle Crypto → Métaux → Indices → Énergie → Cross, `market-stack.js` routeur, `parallel-markets.js` propriétaire des domaines parallèles, contrats 40.4.166/167 historiques.
 
 40.4.214 restaure l’**ingestion de l’univers Extended** lorsque la vue mémorisée 500/1000 est appliquée après hydratation du Market ; le loader 40.3.115 existant est réutilisé. `build.json` est désormais écrit et validé par l’infrastructure canonique de release.
+
+40.4.215 verrouille la **vérité de couverture Market** : 50/100/250/500/1000 sont des plafonds de rang CoinGecko, pas des nombres de lignes garantis. Les rangs ex æquo sont préservés, les actifs sont uniques par ID, la couverture réelle expose rangs distincts/max observé et aucun rang manquant n’est fabriqué.
 
 ## Vérités protégées
 
