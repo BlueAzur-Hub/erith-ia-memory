@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.204";
+  const BUILD = "40.4.205";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -12,8 +12,8 @@
     energy: Object.freeze({ label: "ÉNERGIE", title: "Énergie & matières premières", path: "../data/energy/market.json", historyBase: "../data/energy/history", expected: 3, accent: "#e79b57", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 191 }),
     "cross-market": Object.freeze({ label: "CROSS", title: "Cross-Market Observatory", path: "../data/cross_market/market.json", historyBase: "../data/cross_market/history", expected: 5, accent: "#dce5ec", source: "Archives canoniques", defaultPeriod: "90j", base100Only: true, depthAt: 192 }),
   });
-  const COLORS = ["#ffd35b", "#72d8ff", "#89f4d1", "#cf93f4", "#ff8b5c", "#e5edf4"];
-  const state = { current: "crypto", data: new Map(), period: new Map(), load: new Map(), history: new Map(), historyLoad: new Map(), selected: new Map(), canvasHostReady: false };
+  const COLORS = Object.freeze(["#ffd35b", "#72d8ff", "#89f4d1", "#cf93f4", "#ff8b5c", "#e5edf4"]);
+  const state = { current: "crypto", data: new Map(), period: new Map(), load: new Map(), history: new Map(), historyLoad: new Map(), selected: new Map(), color: new Map(), canvasHostReady: false };
 
   const byId = id => document.getElementById(id);
   const safeText = v => String(v ?? "");
@@ -26,6 +26,30 @@
     const d = new Date(value);
     return Number.isFinite(d.getTime()) ? d.toLocaleString("fr-FR", {year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}) : safeText(value);
   };
+
+  function assetIdentity(asset) {
+    return safeText(asset?.asset_id || asset?.symbol || asset?.provider_symbol || asset?.name).trim().toLowerCase();
+  }
+
+  function assetColorKey(domain, asset) {
+    return `${safeText(domain).trim().toLowerCase()}:${assetIdentity(asset)}`;
+  }
+
+  function registerAssetColors(domain, payload) {
+    if (!Array.isArray(payload?.assets)) return;
+    payload.assets.forEach((asset, index) => {
+      const key = assetColorKey(domain, asset);
+      if (!key.endsWith(":")) state.color.set(key, COLORS[index % COLORS.length]);
+    });
+  }
+
+  function colorForAsset(domain, asset, fallbackIndex=0) {
+    const key = assetColorKey(domain, asset);
+    if (state.color.has(key)) return state.color.get(key);
+    const color = COLORS[Math.max(0, Number(fallbackIndex) || 0) % COLORS.length];
+    if (!key.endsWith(":")) state.color.set(key, color);
+    return color;
+  }
 
   function stage(){ return byId("atlasCyclicMarketInertStage404168"); }
   function toolbar(){ return byId("atlasCyclicMarketMirrorToolbar404168"); }
@@ -129,6 +153,7 @@
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(payload => {
         if (!payload || payload.status !== "ready" || !Array.isArray(payload.assets)) throw new Error("archive non READY");
+        registerAssetColors(domain, payload);
         state.data.set(domain, payload);
         return payload;
       })
@@ -237,14 +262,15 @@
     for (let i=0;i<=5;i++){ const v=max-(max-min)*(i/5); ctx.fillText(v.toFixed(1),8,pad.t+(h/5)*i+4); }
     series.forEach((s, idx) => {
       if (s.points.length < 2) return;
-      ctx.strokeStyle = COLORS[idx % COLORS.length]; ctx.lineWidth = idx===0 ? 2.6 : 2.1; ctx.beginPath();
+      const color = s.color || COLORS[idx % COLORS.length];
+      ctx.strokeStyle = color; ctx.lineWidth = idx===0 ? 2.6 : 2.1; ctx.beginPath();
       s.points.forEach((p,i) => {
         const x = pad.l + (i / Math.max(1,s.points.length-1))*w;
         const y = pad.t + (1 - ((p.value-min)/(max-min)))*h;
         if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
       }); ctx.stroke();
       const last=s.points[s.points.length-1], x=width-pad.r, y=pad.t+(1-((last.value-min)/(max-min)))*h;
-      ctx.fillStyle=COLORS[idx%COLORS.length];ctx.beginPath();ctx.arc(x,y,3.7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,3.7,0,Math.PI*2);ctx.fill();
     });
     ctx.fillStyle = accent || "#dce5ec"; ctx.font = "800 10px system-ui"; ctx.fillText(`BASE 100 · ${period.toUpperCase()}`, pad.l, height-10);
   }
@@ -497,7 +523,8 @@
       const rows = pickSeries(asset, period, domain==="cross-market");
       if (rows.length < 2) return;
       const norm = normalize(rows); if (norm.length < 2) return;
-      rowsByAsset.push({asset,rows}); metricByAsset.push({asset,metric:metrics(rows)}); series.push({asset,points:norm,color:COLORS[idx%COLORS.length]});
+      const color = colorForAsset(domain, asset, idx);
+      rowsByAsset.push({asset,rows,color}); metricByAsset.push({asset,metric:metrics(rows),color}); series.push({asset,points:norm,color});
     });
     drawCanvas(series, period, cfg.accent);
     const ranked = [...metricByAsset].filter(x=>x.metric.change!==null).sort((a,b)=>b.metric.change-a.metric.change);
@@ -505,7 +532,7 @@
     const summary = shell.querySelector("[data-parallel-summary]");
     if (summary) summary.innerHTML = ranked.length ? `<b>${series.length}/${cfg.expected} SÉRIES</b><span>Leader ${esc(leader.asset.symbol||leader.asset.name)} ${pct(leader.metric.change)} · retard ${esc(lag.asset.symbol||lag.asset.name)} ${pct(lag.metric.change)}</span>` : "Données insuffisantes";
     const legend = shell.querySelector("[data-parallel-legend]");
-    if (legend) legend.innerHTML = metricByAsset.map((x,i)=>`<span style="--series:${COLORS[i%COLORS.length]}"><i></i><b>${esc(x.asset.symbol||x.asset.name)}</b><small>${pct(x.metric.change)}</small></span>`).join("");
+    if (legend) legend.innerHTML = metricByAsset.map(x=>`<span style="--series:${x.color}"><i></i><b>${esc(x.asset.symbol||x.asset.name)}</b><small>${pct(x.metric.change)}</small></span>`).join("");
     renderRail(domain,cfg,payload,rowsByAsset,metricByAsset);
     setStatus(domain,cfg,payload);
   }
@@ -580,6 +607,8 @@
     historical_resident_at_boot:false,
     historical_domains:Object.freeze({indices:true,energy:true,"cross-market":DEPTH_LEVEL>=202}),
     historical_long_periods:LONG_PERIODS,
+    asset_color_identity:true,
+    asset_color_palette:COLORS,
     new_timer:false,
     new_observer:false,
     storage_owner:false,
