@@ -13,7 +13,7 @@
     "cross-market": Object.freeze({ label: "CROSS", title: "Cross-Market Observatory", path: "../data/cross_market/market.json", historyBase: "../data/cross_market/history", expected: 5, accent: "#dce5ec", source: "Archives canoniques", defaultPeriod: "90j", base100Only: true, depthAt: 192 }),
   });
   const COLORS = Object.freeze(["#ffd35b", "#72d8ff", "#89f4d1", "#cf93f4", "#ff8b5c", "#e5edf4"]);
-  const state = { current: "crypto", data: new Map(), period: new Map(), load: new Map(), history: new Map(), historyLoad: new Map(), selected: new Map(), color: new Map(), canvasHostReady: false };
+  const state = { current: "crypto", data: new Map(), period: new Map(), load: new Map(), history: new Map(), historyLoad: new Map(), selected: new Map(), color: new Map(), hover: {series:[], geometry:null, period:"", domain:""}, canvasHostReady: false };
 
   const byId = id => document.getElementById(id);
   const safeText = v => String(v ?? "");
@@ -51,6 +51,89 @@
     return color;
   }
 
+  function pointTimeMs(point) {
+    const ms = new Date(point?.time).getTime();
+    return Number.isFinite(ms) ? ms : null;
+  }
+
+  function nearestObservedPoint(points, targetTime) {
+    let best = null, delta = Infinity;
+    for (const point of points || []) {
+      const ms = pointTimeMs(point);
+      if (ms === null) continue;
+      const d = Math.abs(ms - targetTime);
+      if (d < delta) { best = point; delta = d; }
+    }
+    return best;
+  }
+
+  function clearCanvasHover() {
+    const overlay = stage()?.querySelector?.("[data-parallel-overlay]");
+    if (!overlay) return;
+    overlay.replaceChildren();
+    overlay.removeAttribute("style");
+  }
+
+  function renderCanvasHover(event) {
+    const canvas = byId("atlasParallelLiveCanvas404170");
+    const overlay = stage()?.querySelector?.("[data-parallel-overlay]");
+    const model = state.hover;
+    const g = model?.geometry;
+    if (!canvas || !overlay || !g || !model.series?.length || !ACTIVE.has(model.domain)) return clearCanvasHover();
+    const rect = canvas.getBoundingClientRect();
+    const px = event.clientX - rect.left;
+    const py = event.clientY - rect.top;
+    if (px < g.pad.l || px > g.width-g.pad.r || py < g.pad.t || py > g.height-g.pad.b) return clearCanvasHover();
+    const ratio = Math.max(0, Math.min(1, (px-g.pad.l)/Math.max(1,g.w)));
+    const targetTime = g.timeMin + ratio*Math.max(1,g.timeMax-g.timeMin);
+    const rows = model.series.map((series,index) => {
+      const point = nearestObservedPoint(series.points,targetTime);
+      if (!point) return null;
+      const ms = pointTimeMs(point);
+      const x = ms !== null && g.timeMax > g.timeMin
+        ? g.pad.l + ((ms-g.timeMin)/(g.timeMax-g.timeMin))*g.w
+        : g.pad.l + ratio*g.w;
+      const y = g.pad.t + (1-((point.value-g.min)/(g.max-g.min)))*g.h;
+      const unit = safeText(series.asset?.currency || series.asset?.unit || "");
+      return {series,index,point,ms,x,y,unit,change:point.value-100};
+    }).filter(Boolean);
+    if (!rows.length) return clearCanvasHover();
+
+    const cardWidth = Math.min(360, Math.max(300, g.width*.32));
+    const cardLeft = px > g.width*.62
+      ? Math.max(12, px-cardWidth-18)
+      : Math.min(g.width-cardWidth-12, px+18);
+    const cardTop = Math.max(12, Math.min(g.height-250, py-84));
+    const markers = rows.map(row => `<span style="position:absolute;left:${Math.round(row.x-4)}px;top:${Math.round(row.y-4)}px;width:8px;height:8px;border:2px solid ${row.series.color};border-radius:50%;background:#07111c;box-shadow:0 0 8px ${row.series.color};box-sizing:border-box"></span>`).join("");
+    const items = rows.map(row => {
+      const symbol = safeText(row.series.asset?.symbol || row.series.asset?.name || "ACTIF");
+      const name = safeText(row.series.asset?.name || row.series.asset?.label || symbol);
+      const observed = row.ms === null ? "—" : new Date(row.ms).toLocaleString("fr-FR", model.period === "24h" ? {day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"} : {day:"2-digit",month:"2-digit",year:"numeric"});
+      return `<div style="display:grid;grid-template-columns:12px minmax(72px,1fr) minmax(86px,auto) minmax(62px,auto);gap:7px;align-items:center;padding:5px 0;border-top:1px solid rgba(255,255,255,.065)">
+        <i style="width:8px;height:8px;border-radius:50%;background:${row.series.color};box-shadow:0 0 7px ${row.series.color}"></i>
+        <span style="display:grid;min-width:0"><b style="color:#eef6fa;font-size:10px">${esc(symbol)}</b><small style="color:#7993a5;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(name)} · ${esc(observed)}</small></span>
+        <strong style="color:#e8f0f5;font-size:10px;text-align:right">${num(row.point.raw,4)}${row.unit?` ${esc(row.unit)}`:""}</strong>
+        <em style="font-style:normal;color:${row.change>=0?"#9df0c9":"#ff9eaa"};font-size:9px;font-weight:900;text-align:right">${pct(row.change)}</em>
+      </div>`;
+    }).join("");
+
+    overlay.style.cssText = "position:absolute;inset:0;z-index:6;pointer-events:none;color:#dbe8ef;font-family:system-ui,sans-serif";
+    overlay.innerHTML = `<span style="position:absolute;left:${Math.round(px)}px;top:${g.pad.t}px;bottom:${g.pad.b}px;width:1px;background:rgba(210,232,242,.34);box-shadow:0 0 8px rgba(210,232,242,.15)"></span>${markers}
+      <section style="position:absolute;left:${Math.round(cardLeft)}px;top:${Math.round(cardTop)}px;width:${Math.round(cardWidth)}px;padding:10px 11px 8px;border:1px solid rgba(104,218,236,.34);border-radius:12px;background:linear-gradient(150deg,rgba(4,14,24,.97),rgba(5,22,31,.95));box-shadow:0 14px 34px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.025);box-sizing:border-box">
+        <header style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px"><span style="display:grid"><b style="font-size:11px;color:#fff0cc;letter-spacing:.04em">INSPECTION HISTORIQUE</b><small style="font-size:7px;color:#7994a6">${esc(CONFIG[model.domain]?.title || model.domain)} · Base 100</small></span><strong style="font-size:8px;color:#9dddea;white-space:nowrap">${esc(dateText(targetTime))}</strong></header>
+        ${items}
+        <footer style="display:flex;justify-content:space-between;gap:8px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(104,218,236,.15);font-size:7px;color:#7895a7"><b style="color:#74e5ef">${esc(model.period.toUpperCase())}</b><span>point réel le plus proche par série · aucune interpolation</span></footer>
+      </section>`;
+  }
+
+  function bindCanvasHover() {
+    const canvas = byId("atlasParallelLiveCanvas404170");
+    if (!canvas || canvas.dataset.parallelHoverBound === "1") return;
+    canvas.dataset.parallelHoverBound = "1";
+    canvas.addEventListener("pointermove", renderCanvasHover, {passive:true});
+    canvas.addEventListener("pointerleave", clearCanvasHover, {passive:true});
+  }
+
   function stage(){ return byId("atlasCyclicMarketInertStage404168"); }
   function toolbar(){ return byId("atlasCyclicMarketMirrorToolbar404168"); }
   function detail(){ return byId("atlasParallelDomainRailHost404189") || byId("atlasCyclicMarketInertDetail404168"); }
@@ -73,6 +156,7 @@
           <div class="atlas-parallel-live-legend" data-parallel-legend></div>
         </div>`;
     }
+    bindCanvasHover();
     if (bar.dataset.parallelToolbarBound !== "1") {
       bar.dataset.parallelToolbarBound = "1";
       bar.innerHTML = `
@@ -242,6 +326,7 @@
   function drawCanvas(series, period, accent) {
     const canvas = byId("atlasParallelLiveCanvas404170");
     if (!canvas) return;
+    clearCanvasHover();
     const rect = canvas.getBoundingClientRect();
     const width = Math.max(640, Math.round(rect.width || canvas.parentElement?.clientWidth || 980));
     const height = Math.max(340, Math.round(rect.height || canvas.parentElement?.clientHeight || 470));
@@ -250,7 +335,7 @@
     canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
     const ctx = canvas.getContext("2d"); if (!ctx) return;
     ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,width,height);
-    const pad = {l:54,r:24,t:24,b:34}, w = width-pad.l-pad.r, h=height-pad.t-pad.b;
+    const pad = {l:54,r:24,t:24,b:42}, w = width-pad.l-pad.r, h=height-pad.t-pad.b;
     ctx.fillStyle = "rgba(3,10,18,.72)"; ctx.fillRect(0,0,width,height);
     ctx.strokeStyle = "rgba(140,175,200,.13)"; ctx.lineWidth = 1;
     for (let i=0;i<=5;i++){ const y=pad.t+(h/5)*i; ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(width-pad.r,y);ctx.stroke(); }
@@ -258,6 +343,14 @@
     const all = series.flatMap(s => s.points.map(p => p.value));
     let min = Math.min(...all), max = Math.max(...all); if (!Number.isFinite(min)||!Number.isFinite(max)) return;
     const span = Math.max(.1,max-min); min -= span*.08; max += span*.08;
+    const times = series.flatMap(s => s.points.map(pointTimeMs).filter(Number.isFinite));
+    const timeMin = times.length ? Math.min(...times) : 0;
+    const timeMax = times.length ? Math.max(...times) : 1;
+    const timeSpan = Math.max(1,timeMax-timeMin);
+    const xFor = (point,index,count) => {
+      const ms = pointTimeMs(point);
+      return ms !== null ? pad.l + ((ms-timeMin)/timeSpan)*w : pad.l + (index/Math.max(1,count-1))*w;
+    };
     ctx.font = "11px system-ui"; ctx.fillStyle = "rgba(197,215,226,.72)";
     for (let i=0;i<=5;i++){ const v=max-(max-min)*(i/5); ctx.fillText(v.toFixed(1),8,pad.t+(h/5)*i+4); }
     series.forEach((s, idx) => {
@@ -265,14 +358,23 @@
       const color = s.color || COLORS[idx % COLORS.length];
       ctx.strokeStyle = color; ctx.lineWidth = idx===0 ? 2.6 : 2.1; ctx.beginPath();
       s.points.forEach((p,i) => {
-        const x = pad.l + (i / Math.max(1,s.points.length-1))*w;
+        const x = xFor(p,i,s.points.length);
         const y = pad.t + (1 - ((p.value-min)/(max-min)))*h;
         if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
       }); ctx.stroke();
-      const last=s.points[s.points.length-1], x=width-pad.r, y=pad.t+(1-((last.value-min)/(max-min)))*h;
+      const last=s.points[s.points.length-1], x=xFor(last,s.points.length-1,s.points.length), y=pad.t+(1-((last.value-min)/(max-min)))*h;
       ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,3.7,0,Math.PI*2);ctx.fill();
     });
-    ctx.fillStyle = accent || "#dce5ec"; ctx.font = "800 10px system-ui"; ctx.fillText(`BASE 100 · ${period.toUpperCase()}`, pad.l, height-10);
+    ctx.font = "9px system-ui"; ctx.fillStyle = "rgba(168,192,207,.60)";
+    [0,.5,1].forEach((ratio,index) => {
+      const stamp = timeMin + timeSpan*ratio;
+      const d = new Date(stamp);
+      const label = period === "24h" ? d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}) : d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year: period==="7j"||period==="30j" ? undefined : "2-digit"});
+      ctx.textAlign = index===0 ? "left" : index===2 ? "right" : "center";
+      ctx.fillText(label,pad.l+w*ratio,height-20);
+    });
+    ctx.textAlign = "left"; ctx.fillStyle = accent || "#dce5ec"; ctx.font = "800 10px system-ui"; ctx.fillText(`BASE 100 · ${period.toUpperCase()}`, pad.l, height-7);
+    state.hover = {series,period,domain:state.current,geometry:{pad,w,h,width,height,min,max,timeMin,timeMax}};
   }
 
   function latestValue(asset, rows) {
@@ -547,6 +649,7 @@
 
   async function sync(domain) {
     state.current = domain;
+    clearCanvasHover();
     if (!CONFIG[domain]) { setStatus(domain, {}, null); return; }
     if (!ACTIVE.has(domain)) { showPending(domain); return; }
     if (!ensureShell()) return;
@@ -609,6 +712,10 @@
     historical_long_periods:LONG_PERIODS,
     asset_color_identity:true,
     asset_color_palette:COLORS,
+    real_time_axis:true,
+    historical_hover:true,
+    hover_nearest_observed_only:true,
+    hover_interpolation:false,
     new_timer:false,
     new_observer:false,
     storage_owner:false,
