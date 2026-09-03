@@ -1,9 +1,9 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.188";
-  const REVISION = "V5";
-  const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_404187";
+  const BUILD = "40.4.189";
+  const REVISION = "V6";
+  const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_DOMAIN_CONTENT_404189";
   const ORDER = Object.freeze([
     Object.freeze({ id:"crypto", label:"CRYPTO", title:"Crypto", mode:"native", native:"crypto" }),
     Object.freeze({ id:"metals", label:"MÉTAUX", title:"Métaux précieux et industriels", mode:"native", native:"metals" }),
@@ -131,6 +131,17 @@
       d.innerHTML = `<header><span class="eyebrow">DÉTAIL ACTIF</span><strong data-cyclic-market-detail-title>Marché parallèle</strong><small>Observation seulement · Source Truth publique</small></header><div class="atlas-cyclic-market-inert-detail-state-404168"><span><small>État</small><b>CHARGEMENT</b></span><span><small>Collecte</small><b>LECTURE PUBLIQUE</b></span></div><section><b>Intégrité</b><p>Aucune valeur inventée. Les unités, sources et historiques restent séparés.</p></section>`;
       metalsDetail.insertAdjacentElement("afterend", d);
     }
+    /* 40.4.189 — one physical right rail. Metals keeps ownership of the
+       proven geometry; parallel domains receive an overlay host inside it.
+       No original Metals child is removed or rebuilt. */
+    if(!byId("atlasParallelDomainRailHost404189")){
+      const h = document.createElement("div");
+      h.id = "atlasParallelDomainRailHost404189";
+      h.className = "atlas-parallel-domain-rail-host-404189";
+      h.hidden = true;
+      h.setAttribute("aria-live", "polite");
+      metalsDetail.appendChild(h);
+    }
     return true;
   }
 
@@ -154,6 +165,7 @@
     const cryptoDetail = byId("detailPanel");
     const metalsDetail = byId("atlasMetalsDetailPanel");
     const parallelDetail = byId("atlasCyclicMarketInertDetail404168");
+    const parallelRailHost = byId("atlasParallelDomainRailHost404189");
     const cryptoToolbar = document.querySelector("#analyste .chart-v2-toolbar");
     const metalsToolbar = byId("atlasMetalsUnifiedToolbar");
     const mirrorToolbar = byId("atlasCyclicMarketMirrorToolbar404168");
@@ -162,8 +174,18 @@
     const metalsStatus = byId("atlasMetalsLiveStatus");
 
     forceHidden(cryptoDetail, domain !== "crypto");
-    forceHidden(metalsDetail, domain !== "metals");
-    forceHidden(parallelDetail, !parallel);
+    /* 40.4.189: Metals is the proven physical rail owner for every non-Crypto
+       domain. Parallel content is layered inside; original Metals DOM survives. */
+    forceHidden(metalsDetail, !(domain === "metals" || parallel));
+    forceHidden(parallelDetail, true);
+    if(parallelRailHost){
+      parallelRailHost.hidden = !parallel;
+      parallelRailHost.setAttribute("aria-hidden", parallel ? "false" : "true");
+    }
+    metalsDetail?.classList.toggle("atlas-parallel-domain-rail-owner-404189", parallel);
+    if(metalsDetail){
+      metalsDetail.setAttribute("aria-label", parallel ? `Lecture ${specFor(domain).title}` : "Lecture Métaux");
+    }
 
     forceHidden(cryptoToolbar, domain !== "crypto");
     forceHidden(metalsToolbar, domain !== "metals");

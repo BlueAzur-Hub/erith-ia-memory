@@ -267,3 +267,47 @@ html[data-cyclic-market-domain="metals"] body #atlasAetherRibbon4084{
 #analyste.atlas-market-soft-transition-404185 .chart-shell,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-shell-404185,#analyste.atlas-market-soft-transition-404185 #detailPanel,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-rail-404185{opacity:.72!important}
 html[data-cyclic-market-domain="metals"] #atlasAetherRibbon4084,html[data-cyclic-market-domain="indices"] #atlasAetherRibbon4084,html[data-cyclic-market-domain="energy"] #atlasAetherRibbon4084,html[data-cyclic-market-domain="cross-market"] #atlasAetherRibbon4084{display:none!important}
 @media(max-width:900px){.atlas-unified-domain-shell-404185,.atlas-unified-domain-rail-404185{transform:none!important;width:auto!important;min-height:0!important}}
+
+/* =========================================================
+   40.4.189 — PARALLEL DOMAIN CONTENT OWNERSHIP
+   Geometry stays exactly on the 40.4.187 Crypto/Metals lock.
+   One physical right rail; parallel domains only replace content.
+   No transition, transform, chart-engine or market-data mutation.
+   ========================================================= */
+#atlasParallelDomainRailHost404189[hidden]{display:none!important}
+html[data-cyclic-market-mode="parallel"] #atlasMetalsDetailPanel{position:relative!important;overflow:hidden!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189{
+  display:block!important;position:absolute!important;inset:0!important;z-index:4!important;
+  box-sizing:border-box!important;overflow:auto!important;padding:14px!important;
+  background:linear-gradient(180deg,rgba(4,13,23,.998),rgba(5,16,27,.997))!important;color:#dce8ee!important
+}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header{
+  display:grid!important;gap:4px!important;padding:0 132px 12px 0!important;border-bottom:1px solid rgba(255,255,255,.08)!important
+}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header .eyebrow{color:#89a3b4!important;font-size:8px!important;font-weight:950!important;letter-spacing:.15em!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header strong{color:color-mix(in srgb,var(--cyclic-market-accent,#dce5ec) 52%,#fff1d0)!important;font-size:20px!important;line-height:1.08!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>header small{color:#849bab!important;font-size:9px!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>section{margin-top:10px!important;padding:10px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:12px!important;background:rgba(255,255,255,.018)!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>section>b{color:#fff0c9!important;font-size:10px!important}
+html[data-cyclic-market-mode="parallel"] #atlasParallelDomainRailHost404189>section>p{margin:6px 0 0!important;color:#a7bac5!important;font-size:9px!important;line-height:1.45!important}
+.atlas-parallel-basket-404189 ul{list-style:none!important;margin:8px 0 0!important;padding:0!important;display:grid!important;gap:5px!important}
+.atlas-parallel-basket-404189 li{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto!important;gap:8px!important;align-items:center!important;padding:7px 8px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:9px!important;background:rgba(255,255,255,.02)!important}
+.atlas-parallel-basket-404189 li span{min-width:0!important}
+.atlas-parallel-basket-404189 li span b{display:block!important;color:#eef8fc!important;font-size:10px!important}
+.atlas-parallel-basket-404189 li span small{display:block!important;color:#758e9e!important;font-size:7px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.atlas-parallel-basket-404189 li strong{color:#d9e7ee!important;font-size:9px!important;white-space:nowrap!important}
+.atlas-parallel-basket-404189 li em{font-style:normal!important;color:color-mix(in srgb,var(--cyclic-market-accent,#dce5ec) 72%,white)!important;font-size:8px!important;font-weight:900!important;white-space:nowrap!important}
+@media (min-width:901px){
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(1),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2),
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(3){grid-row:1!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(1){grid-column:2!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(3){grid-column:4!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2){grid-column:5!important;grid-template-columns:52px repeat(6,minmax(34px,1fr))!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(1){grid-column:2!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(2){grid-column:3!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(3){grid-column:4!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(4){grid-column:5!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(5){grid-column:6!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.mirror-group:nth-of-type(2)>button:nth-of-type(6){grid-column:7!important}
+}

@@ -1,10 +1,10 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.188";
+  const BUILD = "40.4.189";
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
-  const PERIODS = Object.freeze(["24h", "7j", "30j", "90j", "1a"]);
+  const PERIODS = Object.freeze(["24h", "7j", "30j", "60j", "90j", "1a"]);
   const CONFIG = Object.freeze({
     indices: Object.freeze({ label: "INDICES", title: "Indices / Bourse", path: "../data/indices/market.json", expected: 5, accent: "#aa91ee", source: "Yahoo Finance", defaultPeriod: "1a" }),
     energy: Object.freeze({ label: "ÉNERGIE", title: "Énergie & matières premières", path: "../data/energy/market.json", expected: 3, accent: "#e79b57", source: "Yahoo Finance", defaultPeriod: "1a" }),
@@ -19,7 +19,7 @@
 
   function stage(){ return byId("atlasCyclicMarketInertStage404168"); }
   function toolbar(){ return byId("atlasCyclicMarketMirrorToolbar404168"); }
-  function detail(){ return byId("atlasCyclicMarketInertDetail404168"); }
+  function detail(){ return byId("atlasParallelDomainRailHost404189") || byId("atlasCyclicMarketInertDetail404168"); }
 
   function ensureShell() {
     const host = stage(), bar = toolbar(), rail = detail();
@@ -94,7 +94,7 @@
   }
 
   function periodDays(period) {
-    return period === "7j" ? 7 : period === "30j" ? 30 : period === "90j" ? 90 : period === "1a" ? 370 : 1;
+    return period === "7j" ? 7 : period === "30j" ? 30 : period === "60j" ? 60 : period === "90j" ? 90 : period === "1a" ? 370 : 1;
   }
 
   function pickSeries(asset, period, cross) {
@@ -171,6 +171,16 @@
     const rail = detail(); if (!rail) return;
     const ranked = [...metricByAsset].filter(x => x.metric.change !== null).sort((a,b)=>b.metric.change-a.metric.change);
     const leader = ranked[0], laggard = ranked[ranked.length-1];
+    const basket = rowsByAsset.map(({asset,rows}) => {
+      const last = rows[rows.length - 1]?.close;
+      const found = metricByAsset.find(x => x.asset === asset)?.metric;
+      const symbol = safeText(asset.symbol || asset.name || "ACTIF");
+      const name = safeText(asset.name || asset.label || symbol);
+      const unit = safeText(asset.currency || asset.unit || "");
+      const value = last === null || last === undefined ? "—" : Number(last).toLocaleString("fr-FR", {maximumFractionDigits:4});
+      const change = found?.change === null || found?.change === undefined ? "—" : `${found.change >= 0 ? "+" : ""}${found.change.toFixed(2)} %`;
+      return `<li><span><b>${symbol}</b><small>${name}</small></span><strong>${value}${unit ? ` ${unit}` : ""}</strong><em>${change}</em></li>`;
+    }).join("");
     const math = ENABLE_MATH && ranked.length ? `
       <section class="atlas-parallel-math"><b>Math Core · historique mesuré</b>
         <div class="atlas-parallel-math-grid">
@@ -184,6 +194,7 @@
       <header><span class="eyebrow">DÉTAIL ACTIF</span><strong>Lecture ${cfg.title}</strong><small>Observation seulement · Source Truth publique</small></header>
       <div class="atlas-parallel-detail-state"><span><small>Domaine</small><b>${cfg.label}</b></span><span><small>Couverture</small><b>${payload.assets_count}/${cfg.expected}</b></span><span><small>Source</small><b>${safeText(payload.source || cfg.source)}</b></span><span><small>Build</small><b>${BUILD}</b></span></div>
       <section><b>Lecture synthétique</b><p>${leader ? `Leader ${safeText(leader.asset.name)} ; retard ${safeText(laggard.asset.name)}. Les séries restent indépendantes et sont comparées en Base 100.` : "Données insuffisantes."}</p></section>
+      <section class="atlas-parallel-basket-404189"><b>Panier actif · ${safeText(state.period.get(domain) || cfg.defaultPeriod)}</b><ul>${basket || "<li>Données insuffisantes.</li>"}</ul></section>
       ${math}
       <section><b>Intégrité</b><p>Aucune valeur inventée · aucune moyenne inter-source · aucune exécution · décision humaine uniquement.</p></section>`;
   }
