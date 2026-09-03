@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - '.github/scripts/agent_crypto_40_4_198_release.py'
-      - '.github/scripts/agent_crypto_40_4_198_release_fix.py'
       - '.github/workflows/agent-crypto-40-4-198-release.yml'
   workflow_dispatch:
 
@@ -19,8 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Repair reviewed patch anchor
-        run: python .github/scripts/agent_crypto_40_4_198_release_fix.py
+      - name: Python release syntax gate
+        run: python -m py_compile .github/scripts/agent_crypto_40_4_198_release.py
 
       - name: Apply 40.4.198
         run: python .github/scripts/agent_crypto_40_4_198_release.py
