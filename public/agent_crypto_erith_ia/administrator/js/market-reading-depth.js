@@ -11,7 +11,7 @@
     energy: Object.freeze({title:"Énergie & matières premières", min:201, accent:"orange", source:"Yahoo Finance Futures"}),
     "cross-market": Object.freeze({title:"Cross-Market Observatory", min:202, accent:"silver", source:"Archives canoniques + historique long aligné"})
   });
-  const state = {domain:"crypto", open:false, metals:new Map(), pending:new Map(), requestedPeriod:null};
+  const state = {domain:"crypto", open:false, metals:new Map(), json:new Map(), pending:new Map(), requestedPeriod:null};
   const byId = id => document.getElementById(id);
   const safe = v => String(v ?? "");
   const esc = v => safe(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
@@ -149,8 +149,9 @@
 
   async function fetchJson(url){
     const key=`fetch:${url}`;
+    if(state.json.has(key)) return Promise.resolve(state.json.get(key));
     if(state.pending.has(key)) return state.pending.get(key);
-    const promise=fetch(`${url}${url.includes("?")?"&":"?"}v=${encodeURIComponent(BUILD)}`,{cache:"default",credentials:"same-origin"}).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json();}).finally(()=>state.pending.delete(key));
+    const promise=fetch(`${url}${url.includes("?")?"&":"?"}v=${encodeURIComponent(BUILD)}`,{cache:"default",credentials:"same-origin"}).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json();}).then(payload=>{state.json.set(key,payload);return payload;}).finally(()=>state.pending.delete(key));
     state.pending.set(key,promise); return promise;
   }
 

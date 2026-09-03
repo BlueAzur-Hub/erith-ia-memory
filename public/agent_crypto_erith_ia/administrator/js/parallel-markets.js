@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.198";
-  const DEPTH_LEVEL = 198;
+  const BUILD = "40.4.199";
+  const DEPTH_LEVEL = 199;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
   const PERIODS = Object.freeze(["24h", "7j", "30j", "60j", "90j", "1a"]);
@@ -10,7 +10,7 @@
   const CONFIG = Object.freeze({
     indices: Object.freeze({ label: "INDICES", title: "Indices / Bourse", path: "../data/indices/market.json", historyBase: "../data/indices/history", expected: 5, accent: "#aa91ee", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 190 }),
     energy: Object.freeze({ label: "ÉNERGIE", title: "Énergie & matières premières", path: "../data/energy/market.json", historyBase: "../data/energy/history", expected: 3, accent: "#e79b57", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 191 }),
-    "cross-market": Object.freeze({ label: "CROSS", title: "Cross-Market Observatory", path: "../data/cross_market/market.json", expected: 5, accent: "#dce5ec", source: "Archives canoniques", defaultPeriod: "90j", base100Only: true, depthAt: 192 }),
+    "cross-market": Object.freeze({ label: "CROSS", title: "Cross-Market Observatory", path: "../data/cross_market/market.json", historyBase: "../data/cross_market/history", expected: 5, accent: "#dce5ec", source: "Archives canoniques", defaultPeriod: "90j", base100Only: true, depthAt: 192 }),
   });
   const COLORS = ["#ffd35b", "#72d8ff", "#89f4d1", "#cf93f4", "#ff8b5c", "#e5edf4"];
   const state = { current: "crypto", data: new Map(), period: new Map(), load: new Map(), history: new Map(), historyLoad: new Map(), selected: new Map(), canvasHostReady: false };
@@ -70,7 +70,7 @@
         if (!button || !CONFIG[state.current] || !ACTIVE.has(state.current)) return;
         const domain = state.current;
         const period = button.getAttribute("data-parallel-long-period");
-        if (!LONG_PERIODS.includes(period) || !["indices", "energy"].includes(domain)) return;
+        if (!LONG_PERIODS.includes(period) || !longDomainEnabled(domain)) return;
         button.dataset.historyLoading = "1";
         button.setAttribute("aria-busy", "true");
         try {
@@ -139,16 +139,19 @@
 
   function historyKey(domain, period) { return `${domain}:${period}`; }
   function isLongPeriod(period) { return LONG_PERIODS.includes(period); }
+  function longDomainEnabled(domain) { return domain === "indices" || domain === "energy" || (DEPTH_LEVEL >= 202 && domain === "cross-market"); }
 
   function loadHistorical(domain, period) {
     const cfg = CONFIG[domain];
-    if (!cfg?.historyBase || !["indices", "energy"].includes(domain) || !isLongPeriod(period)) return Promise.reject(new Error("historique long non activé pour ce domaine"));
+    if (!cfg?.historyBase || !longDomainEnabled(domain) || !isLongPeriod(period)) return Promise.reject(new Error("historique long non activé pour ce domaine"));
     const key = historyKey(domain, period);
     if (state.history.has(key)) return Promise.resolve(state.history.get(key));
     if (state.historyLoad.has(key)) return state.historyLoad.get(key);
-    const expectedSchema = domain === "energy"
-      ? "agent_crypto_commodity_historical_depth_v1"
-      : "agent_crypto_historical_depth_v1";
+    const expectedSchema = domain === "cross-market"
+      ? "agent_crypto_cross_historical_depth_v1"
+      : domain === "energy"
+        ? "agent_crypto_commodity_historical_depth_v1"
+        : "agent_crypto_historical_depth_v1";
     const promise = fetch(`${cfg.historyBase}/${period}.json?v=${encodeURIComponent(BUILD)}`, { cache:"no-store", credentials:"same-origin" })
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(payload => {
@@ -483,7 +486,7 @@
     const longButtons = toolbar()?.querySelectorAll("[data-parallel-long-period]") || [];
     longButtons.forEach(b => {
       const p=b.getAttribute("data-parallel-long-period");
-      const available = domain === "indices" || domain === "energy";
+      const available = longDomainEnabled(domain);
       b.classList.toggle("is-active", available && p === period);
       b.disabled = !available;
       b.setAttribute("aria-disabled", available ? "false" : "true");
@@ -535,6 +538,33 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => sync(document.documentElement.dataset.cyclicMarketDomain || "crypto"), {once:true});
   else sync(document.documentElement.dataset.cyclicMarketDomain || "crypto");
 
+  function measuredSnapshot404199(domain, requestedPeriod=null) {
+    const cfg = CONFIG[domain];
+    if (!cfg || !ACTIVE.has(domain)) return { loaded:false, domain, period:requestedPeriod || null, reason:"domain_inactive" };
+    const period = requestedPeriod || state.period.get(domain) || cfg.defaultPeriod;
+    const payload = payloadForPeriod(domain, period);
+    if (!payload) return { loaded:false, domain, period, long:isLongPeriod(period), reason:isLongPeriod(period)?"not_loaded":"payload_unavailable" };
+    const assets=[];
+    for (const asset of payload.assets || []) {
+      const rows=pickSeries(asset,period,domain==="cross-market");
+      if(rows.length<2) continue;
+      const metric=metrics(rows);
+      assets.push({
+        asset_id:safeText(asset.asset_id||asset.symbol), name:safeText(asset.name||asset.label||asset.symbol), symbol:safeText(asset.symbol||asset.name),
+        provider_symbol:safeText(asset.provider_symbol||asset.symbol), currency:safeText(asset.currency||asset.unit||""), instrument_type:safeText(asset.instrument_type||""),
+        metric:{change:metric.change,volatility:metric.volatility,drawdown:metric.drawdown,amplitude:metric.amplitude},
+        series:rows.map(row=>({time:row.time,close:row.close})), points:rows.length
+      });
+    }
+    return {loaded:true,domain,period,long:isLongPeriod(period),source:safeText(payload.source||cfg.source),resolution:safeText(payload.resolution||""),generated_at:payload.generated_at||null,assets_count:assets.length,expected:cfg.expected,assets};
+  }
+
+  async function ensureHistorical404199(domain, period) {
+    if (!longDomainEnabled(domain) || !isLongPeriod(period)) return measuredSnapshot404199(domain,period);
+    await loadHistorical(domain,period);
+    return measuredSnapshot404199(domain,period);
+  }
+
   globalThis.ErithParallelMarketsRuntime = Object.freeze({
     build:BUILD,
     active:[...ACTIVE],
@@ -548,12 +578,14 @@
     historical_depth_lazy:true,
     historical_boot_fetch:false,
     historical_resident_at_boot:false,
-    historical_domains:Object.freeze({indices:true,energy:true,"cross-market":false}),
+    historical_domains:Object.freeze({indices:true,energy:true,"cross-market":DEPTH_LEVEL>=202}),
     historical_long_periods:LONG_PERIODS,
     new_timer:false,
     new_observer:false,
     storage_owner:false,
     orders_allowed:false,
+    snapshot:measuredSnapshot404199,
+    ensureHistorical:ensureHistorical404199,
     refresh:domain=>{state.data.delete(domain);for(const key of [...state.history.keys()]) if(key.startsWith(`${domain}:`)) state.history.delete(key);return sync(domain);}
   });
 })();
