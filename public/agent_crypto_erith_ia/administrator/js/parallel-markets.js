@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.207";
+  const BUILD = "40.4.208";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -604,8 +604,8 @@
     const math = ENABLE_MATH && ranked.length ? `
       <section class="atlas-parallel-math"><b>Math Core · historique mesuré</b>
         <div class="atlas-parallel-math-grid">
-          <span><small>Leader</small><strong>${esc(leader.asset.symbol || leader.asset.name)} ${pct(leader.metric.change)}</strong></span>
-          <span><small>Retard</small><strong>${esc(laggard.asset.symbol || laggard.asset.name)} ${pct(laggard.metric.change)}</strong></span>
+          <span class="atlas-parallel-math-asset-404208" style="--asset-color:${colorForAsset(domain,leader.asset,0)}"><small>Leader</small><strong>${esc(leader.asset.symbol || leader.asset.name)} ${pct(leader.metric.change)}</strong></span>
+          <span class="atlas-parallel-math-asset-404208" style="--asset-color:${colorForAsset(domain,laggard.asset,0)}"><small>Retard</small><strong>${esc(laggard.asset.symbol || laggard.asset.name)} ${pct(laggard.metric.change)}</strong></span>
           <span><small>Dispersion</small><strong>${num(leader.metric.change-laggard.metric.change)} pt</strong></span>
           <span><small>Prévision</small><strong>AUCUNE</strong></span>
         </div>
@@ -742,6 +742,8 @@
     asset_color_identity:true,
     chart_table_parity:true,
     rail_asset_color_identity:true,
+    math_semantic_color:true,
+    color_redundant_with_text:true,
     asset_color_palette:COLORS,
     real_time_axis:true,
     historical_hover:true,
