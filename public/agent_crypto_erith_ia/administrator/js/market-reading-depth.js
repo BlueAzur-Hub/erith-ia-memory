@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.205";
+  const BUILD = "40.4.207";
   const DEPTH_LEVEL = 203;
   const SHORT_PERIODS = Object.freeze(["7j","30j","90j","1a"]);
   const LONG_PERIODS = Object.freeze(["5a","10a","max"]);
