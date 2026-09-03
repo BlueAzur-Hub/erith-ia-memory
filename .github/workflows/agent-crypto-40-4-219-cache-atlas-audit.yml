@@ -1,17 +1,20 @@
-name: Agent-Crypto 40.4.219 Cache and Atlas Audit
+name: Agent-Crypto 40.4.219 Loaded Asset Integrity Release
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-40-4-219-cache-atlas-audit.yml'
-      - '.github/scripts/_tmp_agent_crypto_404219_audit.py'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-219-loaded-asset-integrity
+  cancel-in-progress: false
 
 jobs:
-  audit:
+  release:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -19,5 +22,5 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Audit loaded cache tokens and Atlas heartbeat owner
-        run: python .github/scripts/_tmp_agent_crypto_404219_audit.py
+      - name: Execute bounded 40.4.219 release
+        run: python .github/scripts/_tmp_agent_crypto_404219_release.py
