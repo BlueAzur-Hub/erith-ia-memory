@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/scripts/agent_crypto_40_4_198_release.py'
+      - '.github/scripts/agent_crypto_40_4_198_release_fix.py'
       - '.github/workflows/agent-crypto-40-4-198-release.yml'
   workflow_dispatch:
 
@@ -17,6 +18,9 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+
+      - name: Repair reviewed patch anchor
+        run: python .github/scripts/agent_crypto_40_4_198_release_fix.py
 
       - name: Apply 40.4.198
         run: python .github/scripts/agent_crypto_40_4_198_release.py
@@ -60,6 +64,7 @@ jobs:
           rm -f .github/workflows/agent-crypto-40-4-198-metals-owner-extract.yml
           rm -f .github/workflows/agent-crypto-metals-owner-diagnostic.yml
           rm -f .github/scripts/agent_crypto_40_4_198_release.py
+          rm -f .github/scripts/agent_crypto_40_4_198_release_fix.py
           rm -f .github/workflows/agent-crypto-40-4-198-release.yml
 
       - name: Commit release
