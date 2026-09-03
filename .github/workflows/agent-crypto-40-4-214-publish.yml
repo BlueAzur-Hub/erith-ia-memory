@@ -1,0 +1,82 @@
+name: Agent-Crypto 40.4.214 Bounded Publisher
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-214-publish.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-214-publish
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded 40.4.214 script
+        run: python coordination/inter_ai_dialogues/agent_crypto/patches/40.4.214.apply.py
+
+      - name: Prove 40.4.214
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          python -m py_compile .github/scripts/agent_crypto_release_driver.py .github/scripts/agent_crypto_version_truth_guard.py
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.214
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          app=(root/'app.js').read_text(encoding='utf-8')
+          for marker in ('40.4.214 — EXTENDED UNIVERSE RESTORE REARM','void atlasMarketUniverseEnsure403115(state.marketVisibleLimit);','atlasMarketUniverseState403115.status!=="loading"','!atlasExtendedMarketCache403103.payload'):
+              assert marker in app, marker
+          truth=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          version=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          mirror=json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
+          assert truth['build']==version['build']==mirror['build']=='40.4.214'
+          assert truth['engine']=='38.15.11' and truth['published'] is True
+          ext=json.loads(Path('public/agent_crypto_erith_ia/data/crypto/extended.json').read_text(encoding='utf-8'))
+          core=json.loads(Path('public/agent_crypto_erith_ia/data/crypto/latest.json').read_text(encoding='utf-8'))
+          print({'core':len(core.get('coins') or []),'extended':len(ext.get('coins') or []),'combined_available':len(core.get('coins') or [])+len(ext.get('coins') or [])})
+          PY
+          if git diff --name-only | grep '^public/agent_crypto_erith_ia/data/'; then
+            echo 'STOP data files changed' >&2
+            exit 1
+          fi
+          git diff --check
+
+      - name: Publish non-workflow release payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Aether Release'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm coordination/inter_ai_dialogues/agent_crypto/patches/40.4.214.apply.py
+          git add .github/scripts/agent_crypto_release_driver.py
+          git add .github/scripts/agent_crypto_version_truth_guard.py
+          git add public/agent_crypto_erith_ia/administrator/app.js
+          git add public/agent_crypto_erith_ia/administrator/js/app.js
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git add public/agent_crypto_erith_ia/administrator/version.json
+          git add public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git add public/agent_crypto_erith_ia/administrator/build.json
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_RELEASE_MANIFEST.md
+          git add coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md
+          git commit -m 'fix(agent-crypto): 40.4.214 restore Extended universe ingestion after workspace hydration'
+          git pull --rebase origin main
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.214
+          git push origin HEAD:main
