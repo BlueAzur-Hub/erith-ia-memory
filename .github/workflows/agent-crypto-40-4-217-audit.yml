@@ -1,0 +1,22 @@
+name: Agent-Crypto 40.4.217 Architecture Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-217-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run 40.4.216 deep static audit
+        run: python .github/scripts/_tmp_agent_crypto_404217_audit.py
