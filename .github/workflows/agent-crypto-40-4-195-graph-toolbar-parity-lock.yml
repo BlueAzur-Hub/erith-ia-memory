@@ -1,0 +1,341 @@
+name: Agent-Crypto 40.4.195 Graph Toolbar Parity Lock
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/agent-crypto-40-4-195-graph-toolbar-parity-lock.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-195-graph-toolbar-parity-lock-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build 40.4.195 toolbar parity release
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import re
+
+          root = Path("public/agent_crypto_erith_ia/administrator")
+          css_path = root / "parallel-markets.css"
+          stack_path = root / "js" / "market-stack.js"
+          parallel_path = root / "js" / "parallel-markets.js"
+
+          release = "GRAPH TOOLBAR PARITY LOCK · AETHER NORMAL ALL MARKETS · STATIC SHELL"
+          status = "graph_toolbar_parity_lock_404195"
+          now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+          # ---------------------------------------------------------
+          # 1) Restore normal Aether/command shared lane on ALL markets.
+          #    40.4.182's Metals-only mask is retired now that the graph
+          #    geometry is stable end-to-end.
+          # ---------------------------------------------------------
+          css = css_path.read_text(encoding="utf-8")
+          start_marker = "/* =========================================================\n   40.4.182 — METALS AETHER FEED MASK"
+          end_marker = "\n\n\n/* 40.4.185 — UNIFIED GRAPH SHELL */"
+          if start_marker not in css or end_marker not in css:
+              raise SystemExit("expected 40.4.182 Metals Aether mask block not found")
+          start = css.index(start_marker)
+          end = css.index(end_marker, start)
+          css = css[:start] + """/* =========================================================
+   40.4.195 — AETHER NORMAL LANE RESTORE
+   The graph geometry is now stable across Crypto, Metals, Indices,
+   Energy and Cross. The temporary Metals-only Aether mask and its
+   forced command-lane visibility are retired. Every market returns
+   to the canonical shared Aether / command cycle.
+   Presentation only: no data, Atlas, Oracle, Market Core, collector,
+   timer, storage, Bridge or financial behavior change.
+   ========================================================= */""" + css[end:]
+
+          # Retire the rejected soft transition residue from 40.4.185.
+          css = css.replace(
+              '#analyste .chart-shell,.atlas-unified-domain-shell-404185,#detailPanel,.atlas-unified-domain-rail-404185{transition:transform 160ms cubic-bezier(.2,.72,.2,1),opacity 140ms ease,width 160ms ease,height 160ms ease!important;will-change:transform}',
+              '#analyste .chart-shell,.atlas-unified-domain-shell-404185,#detailPanel,.atlas-unified-domain-rail-404185{transition:none!important;will-change:auto!important}'
+          )
+          css = css.replace(
+              '#analyste.atlas-market-soft-transition-404185 .chart-shell,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-shell-404185,#analyste.atlas-market-soft-transition-404185 #detailPanel,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-rail-404185{opacity:.72!important}',
+              '#analyste.atlas-market-soft-transition-404185 .chart-shell,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-shell-404185,#analyste.atlas-market-soft-transition-404185 #detailPanel,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-rail-404185{opacity:1!important}'
+          )
+
+          toolbar_css = r'''
+
+/* =========================================================
+   40.4.195 — GRAPH TOOLBAR PARITY LOCK
+   Crypto remains the visual/positional master. Non-Crypto markets
+   preserve the same operator slots: LECTURE / VUE / ÉCHELLE /
+   SECTION / PÉRIODE. Unsupported controls stay visibly disabled
+   instead of collapsing their physical slot. No fake capability.
+   ========================================================= */
+@media (min-width:901px){
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168{
+    --atlas-404195-label:54px;
+    --atlas-404195-view:148px;
+    --atlas-404195-scale:148px;
+    --atlas-404195-section:320px;
+    display:grid!important;
+    grid-template-columns:
+      var(--atlas-404195-label)
+      var(--atlas-404195-view)
+      var(--atlas-404195-scale)
+      var(--atlas-404195-section)
+      minmax(320px,1fr)!important;
+    align-items:center!important;
+    gap:0!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:var(--atlas-market-master-toolbar-h,52px)!important;
+    margin:0!important;
+    padding:0 8px 0 0!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar::before,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168::before{
+    content:"LECTURE"!important;
+    grid-column:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    color:#9eb0bd!important;
+    font:950 8px/1 system-ui,sans-serif!important;
+    letter-spacing:.12em!important;
+    text-transform:uppercase!important;
+    white-space:nowrap!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>.atlas-toolbar-view-404195,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.atlas-toolbar-view-404195{
+    grid-column:2!important;grid-row:1!important;
+    display:grid!important;grid-template-columns:42px repeat(2,minmax(42px,1fr))!important;
+    align-items:center!important;gap:4px!important;min-width:0!important;margin:0!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>.atlas-toolbar-scale-404195,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.atlas-toolbar-scale-404195{
+    grid-column:3!important;grid-row:1!important;
+    display:grid!important;grid-template-columns:52px repeat(2,minmax(38px,1fr))!important;
+    align-items:center!important;gap:4px!important;min-width:0!important;margin:0!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>.atlas-toolbar-section-404195,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.atlas-toolbar-section-404195{
+    grid-column:4!important;grid-row:1!important;
+    display:flex!important;align-items:center!important;gap:5px!important;
+    min-width:0!important;margin:0!important;overflow:hidden!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>.atlas-toolbar-period-404195,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.atlas-toolbar-period-404195{
+    grid-column:5!important;grid-row:1!important;
+    display:grid!important;grid-template-columns:52px repeat(6,minmax(34px,1fr))!important;
+    align-items:center!important;gap:4px!important;min-width:0!important;margin:0!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>.atlas-toolbar-period-404195>span,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.atlas-toolbar-period-404195>small{
+    grid-column:1!important;white-space:nowrap!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar .atlas-toolbar-disabled-slot-404195 button,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .atlas-toolbar-disabled-slot-404195 button,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .atlas-toolbar-view-404195 button:disabled{
+    opacity:.30!important;filter:saturate(.35)!important;cursor:default!important;pointer-events:none!important;
+  }
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .atlas-toolbar-view-404195>b,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .atlas-toolbar-section-404195>b{
+    min-height:28px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    box-sizing:border-box!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+  }
+}
+@media (min-width:901px) and (max-width:1300px){
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168{
+    --atlas-404195-label:48px;
+    --atlas-404195-view:126px;
+    --atlas-404195-scale:118px;
+    --atlas-404195-section:235px;
+    grid-template-columns:
+      var(--atlas-404195-label)
+      var(--atlas-404195-view)
+      var(--atlas-404195-scale)
+      var(--atlas-404195-section)
+      minmax(286px,1fr)!important;
+  }
+  html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar>.atlas-toolbar-period-404195,
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.atlas-toolbar-period-404195{
+    grid-template-columns:46px repeat(6,minmax(30px,1fr))!important;gap:3px!important;
+  }
+}
+'''
+          if "40.4.195 — GRAPH TOOLBAR PARITY LOCK" not in css:
+              css += toolbar_css
+          css_path.write_text(css, encoding="utf-8")
+
+          # ---------------------------------------------------------
+          # 2) Market-stack: install the missing physical ÉCHELLE slot
+          #    for Metals, and give parallel domains explicit stable slots.
+          # ---------------------------------------------------------
+          stack = stack_path.read_text(encoding="utf-8")
+          old_mirror = 't.innerHTML = `<span class="mirror-group"><small>VUE</small><b class="active">Base 100</b></span><span class="mirror-group atlas-parallel-periods"><small>PÉRIODE</small><button type="button" data-parallel-period="24h">24h</button><button type="button" data-parallel-period="7j">7j</button><button type="button" data-parallel-period="30j">30j</button><button type="button" data-parallel-period="90j">90j</button><button type="button" data-parallel-period="1a">1a</button></span><span class="mirror-group"><small>SECTION</small><b data-cyclic-market-toolbar-state>Source Truth publique</b></span>`;'
+          new_mirror = 't.innerHTML = `<span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true">Prix</button><b class="active">Base 100</b></span><span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true">Normale</button><button type="button" disabled aria-disabled="true">Log</button></span><span class="mirror-group atlas-toolbar-section-404195"><small>SECTION</small><b data-cyclic-market-toolbar-state>Source Truth publique</b></span><span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small><button type="button" data-parallel-period="24h">24h</button><button type="button" data-parallel-period="7j">7j</button><button type="button" data-parallel-period="30j">30j</button><button type="button" data-parallel-period="60j">60j</button><button type="button" data-parallel-period="90j">90j</button><button type="button" data-parallel-period="1a">1a</button></span>`;'
+          if old_mirror not in stack:
+              raise SystemExit("market-stack 40.4.194 mirror toolbar anchor not found")
+          stack = stack.replace(old_mirror, new_mirror, 1)
+
+          helper_anchor = "\n  function setParallelPlaceholder(domain){"
+          if helper_anchor not in stack:
+              raise SystemExit("market-stack helper insertion anchor missing")
+          helper = r'''
+
+  function ensureGraphToolbarParity404195(){
+    const metals = byId("atlasMetalsUnifiedToolbar");
+    if(metals){
+      let groups = Array.from(metals.children).filter(node => node instanceof Element && node.matches('div[role="group"]'));
+      const view = groups[0] || null;
+      let period = groups.find(node => node.querySelector('[data-metals-period]')) || groups[1] || null;
+      let section = groups.find(node => node.querySelector('[data-metals-section]')) || groups[2] || null;
+      view?.classList.add("atlas-toolbar-view-404195");
+      period?.classList.add("atlas-toolbar-period-404195");
+      section?.classList.add("atlas-toolbar-section-404195");
+      if(!metals.querySelector(".atlas-toolbar-scale-404195")){
+        const scale = document.createElement("div");
+        scale.className = "atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195";
+        scale.setAttribute("role", "group");
+        scale.setAttribute("aria-label", "Échelle Métaux · non applicable");
+        scale.innerHTML = '<span>ÉCHELLE</span><button type="button" disabled aria-disabled="true">Normale</button><button type="button" disabled aria-disabled="true">Log</button>';
+        metals.insertBefore(scale, period || section || null);
+      }
+      metals.dataset.graphToolbarParity404195 = "crypto-slot-lock";
+    }
+    const mirror = byId("atlasCyclicMarketMirrorToolbar404168");
+    if(mirror) mirror.dataset.graphToolbarParity404195 = "crypto-slot-lock";
+    document.documentElement.dataset.graphToolbarParity404195 = "ready";
+  }
+'''
+          stack = stack.replace(helper_anchor, helper + helper_anchor, 1)
+
+          ensure_return = "    return true;\n  }\n\n  function setParallelPlaceholder(domain){"
+          if ensure_return not in stack:
+              raise SystemExit("market-stack ensureHosts return anchor missing")
+          stack = stack.replace(
+              ensure_return,
+              "    ensureGraphToolbarParity404195();\n    return true;\n  }\n\n  function setParallelPlaceholder(domain){",
+              1
+          )
+
+          # ---------------------------------------------------------
+          # 3) Parallel renderer keeps the exact same slot grammar.
+          # ---------------------------------------------------------
+          parallel = parallel_path.read_text(encoding="utf-8")
+          old_parallel_markup = '''      bar.innerHTML = `
+        <span class="mirror-group"><small>VUE</small><b class="active">Base 100</b></span>
+        <span class="mirror-group atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>
+        <span class="mirror-group"><small>SECTION</small><b data-parallel-state>Source Truth</b></span>`;'''
+          new_parallel_markup = '''      bar.innerHTML = `
+        <span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true">Prix</button><b class="active">Base 100</b></span>
+        <span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true">Normale</button><button type="button" disabled aria-disabled="true">Log</button></span>
+        <span class="mirror-group atlas-toolbar-section-404195"><small>SECTION</small><b data-parallel-state>Source Truth</b></span>
+        <span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>`;'''
+          if old_parallel_markup not in parallel:
+              raise SystemExit("parallel-markets 40.4.194 toolbar markup anchor not found")
+          parallel = parallel.replace(old_parallel_markup, new_parallel_markup, 1)
+          parallel = parallel.replace("const DEPTH_LEVEL = 193;", "const DEPTH_LEVEL = 195;", 1)
+
+          # ---------------------------------------------------------
+          # 4) Version truth. Keep the already-proven data/runtime owners.
+          # ---------------------------------------------------------
+          stack = stack.replace('const BUILD = "40.4.194";', 'const BUILD = "40.4.195";', 1)
+          parallel = parallel.replace('const BUILD = "40.4.194";', 'const BUILD = "40.4.195";', 1)
+          stack_path.write_text(stack, encoding="utf-8")
+          parallel_path.write_text(parallel, encoding="utf-8")
+
+          bump_files = [
+              root / "index.html",
+              root / "app.js",
+              root / "js" / "app.js",
+          ]
+          for path in bump_files:
+              text = path.read_text(encoding="utf-8")
+              if "40.4.194" not in text:
+                  raise SystemExit(f"expected 40.4.194 marker missing in {path}")
+              text = text.replace("40.4.194", "40.4.195")
+              if path.name == "index.html":
+                  text = text.replace(
+                      "AETHER COMMAND LANE RESTORE · METALS-ONLY FEED MASK · MULTI-MARKET DEPTH LOCK",
+                      release
+                  )
+              path.write_text(text, encoding="utf-8")
+
+          for path in [root / "version.json", root / "administrator-version.json"]:
+              text = path.read_text(encoding="utf-8")
+              if '"build": "40.4.194"' not in text:
+                  raise SystemExit(f"manifest build marker missing in {path}")
+              text = text.replace('"build": "40.4.194"', '"build": "40.4.195"', 1)
+              text = text.replace('market-core-v2.0-alpha-build-40.4.194', 'market-core-v2.0-alpha-build-40.4.195')
+              text = text.replace('"global_versioning": "40.4.194"', '"global_versioning": "40.4.195"')
+              text = text.replace(
+                  '"release": "MULTI-MARKET DEPTH HARMONIZATION LOCK · SHARED SHELL · DOMAIN OWNERSHIP"',
+                  f'"release": "{release}"',
+                  1
+              )
+              text = text.replace('"status": "multi_market_depth_harmonization_lock_404193"', f'"status": "{status}"', 1)
+              text = re.sub(r'"prepared_at": "[^"]+"', f'"prepared_at": "{now}"', text, count=1)
+              text = re.sub(r'"published_at": "[^"]+"', f'"published_at": "{now}"', text, count=1)
+              text = re.sub(r'"parent_build": "40\.4\.192"', '"parent_build": "40.4.194"', text, count=1)
+              path.write_text(text, encoding="utf-8")
+
+          # Static safety/contract validation.
+          css = css_path.read_text(encoding="utf-8")
+          stack = stack_path.read_text(encoding="utf-8")
+          parallel = parallel_path.read_text(encoding="utf-8")
+          assert 'html[data-cyclic-market-domain="metals"] body #atlasAetherRibbon4084' not in css
+          assert '40.4.195 — AETHER NORMAL LANE RESTORE' in css
+          assert '40.4.195 — GRAPH TOOLBAR PARITY LOCK' in css
+          assert 'transition:none!important;will-change:auto!important' in css
+          assert 'atlas-toolbar-scale-404195' in stack
+          assert 'atlas-toolbar-period-404195' in stack
+          assert 'data-parallel-period="60j"' in stack
+          assert 'atlas-toolbar-scale-404195' in parallel
+          assert 'const DEPTH_LEVEL = 195;' in parallel
+          assert '40.4.195' in (root / "index.html").read_text(encoding="utf-8")
+          assert release in (root / "index.html").read_text(encoding="utf-8")
+          print("40.4.195 graph toolbar parity contract validated")
+          PY
+
+      - name: JavaScript syntax check
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/js/market-stack.js
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+
+      - name: Commit 40.4.195 and retire release workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/js/market-stack.js \
+            public/agent_crypto_erith_ia/administrator/js/parallel-markets.js \
+            public/agent_crypto_erith_ia/administrator/parallel-markets.css \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git rm -f .github/workflows/agent-crypto-40-4-195-graph-toolbar-parity-lock.yml
+          git commit -m "release Agent-Crypto 40.4.195 graph toolbar parity lock"
+          git pull --rebase origin main
+          git push origin HEAD:main
