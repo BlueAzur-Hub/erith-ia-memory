@@ -1,0 +1,42 @@
+{
+  "schema": "agent_crypto_historical_depth_status_v1",
+  "build": "40.4.197",
+  "domain": "indices",
+  "status": "ready",
+  "generated_at": "2026-09-03T02:26:44.315Z",
+  "horizons": {
+    "5a": {
+      "ready": true,
+      "resolution": "1wk",
+      "assets": 5,
+      "min_points": 21,
+      "max_points": 62,
+      "path": "data/indices/history/5a.json"
+    },
+    "10a": {
+      "ready": true,
+      "resolution": "1wk",
+      "assets": 5,
+      "min_points": 41,
+      "max_points": 122,
+      "path": "data/indices/history/10a.json"
+    },
+    "max": {
+      "ready": true,
+      "resolution": "1wk",
+      "assets": 5,
+      "min_points": 157,
+      "max_points": 440,
+      "path": "data/indices/history/max.json"
+    }
+  },
+  "integrity": {
+    "no_invented_values": true,
+    "provider_series_preserved": true,
+    "horizon_subsets_are_deterministic": true,
+    "lazy_browser_load_required": true,
+    "boot_payload_forbidden": true,
+    "orders_allowed": false
+  },
+  "errors": []
+}
