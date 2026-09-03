@@ -22,7 +22,7 @@ jobs:
       - name: Commit diagnostic snapshot
         shell: bash
         run: |
-          if git diff --quiet -- .github/diagnostics/agent_crypto_40_4_198_metals_owner.txt; then
+          if [ -z "$(git status --porcelain -- .github/diagnostics/agent_crypto_40_4_198_metals_owner.txt)" ]; then
             echo 'diagnostic unchanged'
             exit 0
           fi
