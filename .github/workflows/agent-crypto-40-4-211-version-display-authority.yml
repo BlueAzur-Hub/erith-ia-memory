@@ -113,7 +113,7 @@ jobs:
             'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md',
             'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_RELEASE_MANIFEST.md',
           }
-          changed=set(filter(None,subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()))
+          changed=set(filter(None,subprocess.check_output(['git','diff','HEAD','--name-only'],text=True).splitlines()))
           extra=sorted(changed-allowed)
           required={
             '.github/scripts/agent_crypto_40_4_211_version_display_single_authority.py',
