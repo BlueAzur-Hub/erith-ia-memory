@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.195";
+  const BUILD = "40.4.196";
   const REVISION = "V6";
   const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_DOMAIN_CONTENT_404189";
   const ORDER = Object.freeze([
@@ -118,7 +118,7 @@
       t.id = "atlasCyclicMarketMirrorToolbar404168";
       t.className = "atlas-cyclic-market-mirror-toolbar-404168";
       t.hidden = true;
-      t.innerHTML = `<span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true">Prix</button><b class="active">Base 100</b></span><span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true">Normale</button><button type="button" disabled aria-disabled="true">Log</button></span><span class="mirror-group atlas-toolbar-section-404195"><small>SECTION</small><b data-cyclic-market-toolbar-state>Source Truth publique</b></span><span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small><button type="button" data-parallel-period="24h">24h</button><button type="button" data-parallel-period="7j">7j</button><button type="button" data-parallel-period="30j">30j</button><button type="button" data-parallel-period="60j">60j</button><button type="button" data-parallel-period="90j">90j</button><button type="button" data-parallel-period="1a">1a</button></span>`;
+      t.innerHTML = `<span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true" title="Vue Prix non disponible pour ce domaine">Prix</button><b class="active">Base 100</b></span><span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true" title="Échelle native non disponible pour ce domaine">Normale</button><button type="button" disabled aria-disabled="true" title="Échelle logarithmique non disponible pour ce domaine">Log</button></span><span class="mirror-group atlas-toolbar-section-404195"><small>AFFICHER</small><b class="atlas-toolbar-info-404196" data-cyclic-market-toolbar-state>Source Truth publique</b></span><span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small><button type="button" data-parallel-period="24h">24h</button><button type="button" data-parallel-period="7j">7j</button><button type="button" data-parallel-period="30j">30j</button><button type="button" data-parallel-period="60j">60j</button><button type="button" data-parallel-period="90j">90j</button><button type="button" data-parallel-period="1a">1a</button></span>`;
       recovery.appendChild(t);
     }
 
