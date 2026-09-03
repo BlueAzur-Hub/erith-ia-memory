@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.200";
-  const ADMIN_RELEASE = "INDICES DEEP READING · MULTI-HORIZON EXPLAINABLE TEXT · LAZY";
+  const ADMIN_BUILD = "40.4.201";
+  const ADMIN_RELEASE = "ENERGY DEEP READING · OIL GAS SEPARATION · LAZY";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

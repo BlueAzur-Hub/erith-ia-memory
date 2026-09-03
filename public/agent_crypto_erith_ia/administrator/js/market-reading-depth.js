@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.200";
-  const DEPTH_LEVEL = 200;
+  const BUILD = "40.4.201";
+  const DEPTH_LEVEL = 201;
   const SHORT_PERIODS = Object.freeze(["7j","30j","90j","1a"]);
   const LONG_PERIODS = Object.freeze(["5a","10a","max"]);
   const ALL_PERIODS = Object.freeze([...SHORT_PERIODS, ...LONG_PERIODS]);
