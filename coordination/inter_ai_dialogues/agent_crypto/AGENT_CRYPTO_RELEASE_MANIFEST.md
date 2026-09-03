@@ -1,6 +1,6 @@
 # AGENT-CRYPTO — RELEASE MANIFEST
 
-Release courante : **40.4.215**
+Release courante : **40.4.216**
 Market Core : **38.15.11**
 
 ## Surface canonique
@@ -13,7 +13,7 @@ Market Core : **38.15.11**
 - `coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md`
 - `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md`
 
-Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.215 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.
+Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.216 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.
 
 40.4.210 est une release de **Cache Truth / publication identity** : elle ne change ni les données marché, ni les moteurs de graphique, ni la géométrie, ni le Market Core 38.15.11.
 
@@ -26,3 +26,5 @@ Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.215 : il conti
 40.4.214 est une release de **Extended Market Universe Ingestion Recovery** : une vue 500/1000 restaurée depuis l’espace mémorisé réarme le loader Extended existant après hydratation du Market. `build.json` rejoint le release driver et le Version Truth Guard.
 
 40.4.215 est une release de **Market Coverage Truth** : les boutons 50/100/250/500/1000 sont des plafonds de rang fournisseur, pas des promesses de cardinalité exacte. Les ex æquo CoinGecko sont conservés, les IDs uniques restent l’autorité de ligne, aucun rang synthétique n’est inventé.
+
+40.4.216 est une release de **Market Coverage Footer Parity** : le footer secondaire du Market Snapshot réutilise la vérité de couverture 40.4.215 et ne présente plus un plafond de rang fournisseur comme une cardinalité exacte (`991/1000`, `249/250`, `742/750`). Aucun rang ni actif n’est modifié.

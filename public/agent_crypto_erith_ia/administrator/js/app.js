@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.215";
-  const ADMIN_RELEASE = "MARKET COVERAGE TRUTH · PROVIDER RANK SEMANTICS LOCK";
+  const ADMIN_BUILD = "40.4.216";
+  const ADMIN_RELEASE = "MARKET COVERAGE FOOTER PARITY · RANK-CAP COPY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

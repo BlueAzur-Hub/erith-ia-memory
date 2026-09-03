@@ -19482,9 +19482,16 @@ function renderMarketTable() {
     ?` · page ${pageInfo.page+1}/${pageInfo.pages} · ${pageInfo.start+1}-${pageInfo.end}/${filtered.length}`
     :"";
 
+  /* 40.4.216 — MARKET COVERAGE FOOTER PARITY.
+     Reuse the 40.4.215 provider-rank truth in the secondary Market footer.
+     No exact-cardinality promise, synthetic rank or data mutation. */
+  const coverageFooter404216=atlasMarketUniverseCoverageTruth404215(limit);
+  const coverageFooterTie404216=coverageFooter404216.duplicateRankPositions
+    ?` · ${coverageFooter404216.duplicateRankPositions} rangs ex æquo`
+    :"";
   const universeText=limit>250
-    ?`univers cumulé ${logicalCount}/${limit} · Core ${coreCount}/250 + Extended ${extendedCount}/${Math.max(0,limit-250)}`
-    :`Core ${coreCount}/250 · vue ${limit}`;
+    ?`rang ≤ ${limit} : ${coverageFooter404216.assetCount} actifs uniques · ${coverageFooter404216.uniqueRankCount} rangs distincts${coverageFooterTie404216} · max observé ${coverageFooter404216.maxRank??"—"} · Core ${coreCount} + Extended ${extendedCount}`
+    :`Core rang ≤ ${limit} : ${coverageFooter404216.assetCount} actifs uniques · ${coverageFooter404216.uniqueRankCount} rangs distincts${coverageFooterTie404216} · max observé ${coverageFooter404216.maxRank??"—"}`;
 
   const note=essential
     ?`${rows.length} affichés${pageText} · ${universeText} · ${primaryLabel} · sélection ${selection.length}/${ATLAS_COMPARISON_MAX_SERIES} · ${atlasMarketFrameShortId()} · ${state.mainSource} · ${updated}${searchTruthCombined403100?` · ${searchTruthCombined403100}`:""}`
@@ -52721,7 +52728,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.215";
+const ATLAS_BUILD = "40.4.216";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";

@@ -210,6 +210,25 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
         if "Univers cumulé ${limit} : ${logical.length}/${limit} actifs" in root:
             fail("40.4.215 ambiguous rank-cap/cardinality wording restored")
 
+    if current_num >= (40, 4, 216):
+        required_footer = (
+            "40.4.216 — MARKET COVERAGE FOOTER PARITY",
+            "coverageFooter404216=atlasMarketUniverseCoverageTruth404215(limit)",
+            "rang ≤ ${limit} : ${coverageFooter404216.assetCount} actifs uniques",
+            "Core rang ≤ ${limit} : ${coverageFooter404216.assetCount} actifs uniques",
+            "max observé ${coverageFooter404216.maxRank",
+        )
+        for marker in required_footer:
+            if marker not in root:
+                fail(f"40.4.216 Market coverage footer parity regression: missing {marker}")
+        legacy_footer = (
+            "univers cumulé ${logicalCount}/${limit}",
+            "Core ${coreCount}/250 · vue ${limit}",
+        )
+        for marker in legacy_footer:
+            if marker in root:
+                fail(f"40.4.216 legacy cardinality footer restored: {marker}")
+
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")
