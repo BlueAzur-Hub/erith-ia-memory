@@ -82,10 +82,10 @@ def yahoo_crumb(s, timeout: float):
     return None
 
 
-def yahoo_payload(s, symbol: str, timeout: float, crumb=None):
+def yahoo_payload(s, symbol: str, timeout: float, interval: str, range_value: str, crumb=None):
     params = {
-        "interval":"1wk",
-        "range":"max",
+        "interval":interval,
+        "range":range_value,
         "events":"history",
         "includeAdjustedClose":"true",
         "includePrePost":"false",
@@ -108,10 +108,10 @@ def yahoo_payload(s, symbol: str, timeout: float, crumb=None):
             return payload
         except Exception as exc:
             errors.append(str(exc))
-    raise RuntimeError(f"Yahoo {symbol}: " + " ; ".join(errors))
+    raise RuntimeError(f"Yahoo {symbol} {range_value}/{interval}: " + " ; ".join(errors))
 
 
-def parse_weekly(payload, spec):
+def parse_series(payload, spec, requested_interval: str, requested_range: str):
     result = payload["chart"]["result"][0]
     meta = result.get("meta") or {}
     ts = result.get("timestamp") or []
@@ -136,8 +136,8 @@ def parse_weekly(payload, spec):
             "close": close,
             "volume": finite(volumes[i] if i < len(volumes) else None),
         })
-    if len(points) < 52:
-        raise RuntimeError(f"{spec['symbol']}: historique MAX insuffisant ({len(points)} points)")
+    if len(points) < 12:
+        raise RuntimeError(f"{spec['symbol']}: série insuffisante ({len(points)} points)")
     return {
         "asset_id": spec["id"],
         "name": spec["name"],
@@ -148,53 +148,87 @@ def parse_weekly(payload, spec):
         "market": meta.get("exchangeName") or spec["market"],
         "timezone": meta.get("exchangeTimezoneName"),
         "source": {"id":"yahoo_finance","name":"Yahoo Finance","provider_symbol":spec["symbol"]},
-        "source_interval": "1wk",
+        "requested_interval": requested_interval,
+        "requested_range": requested_range,
+        "source_interval": meta.get("dataGranularity") or requested_interval,
         "history_points": points,
     }
+
+
+def span_years(points) -> float:
+    if len(points) < 2:
+        return 0.0
+    first = datetime.fromisoformat(points[0]["time"].replace("Z", "+00:00"))
+    last = datetime.fromisoformat(points[-1]["time"].replace("Z", "+00:00"))
+    return max(0.0, (last - first).total_seconds() / (365.2425 * 86400.0))
 
 
 def slice_years(points, years: int):
     if not points:
         return []
     last = datetime.fromisoformat(points[-1]["time"].replace("Z", "+00:00"))
-    cutoff = last - timedelta(days=years * 365 + 7)
+    cutoff = last - timedelta(days=years * 365.2425 + 8)
     return [p for p in points if datetime.fromisoformat(p["time"].replace("Z", "+00:00")) >= cutoff]
 
 
-def build_payload(assets, horizon: str, generated_at: str):
-    if horizon == "5a":
-        transform = lambda pts: slice_years(pts, 5)
-    elif horizon == "10a":
-        transform = lambda pts: slice_years(pts, 10)
-    else:
-        transform = lambda pts: list(pts)
-    out_assets = []
+def clone_asset(asset, points):
+    clone = {k:v for k,v in asset.items() if k != "history_points"}
+    clone["history_points"] = points
+    clone["points_count"] = len(points)
+    clone["history_start"] = points[0]["time"]
+    clone["history_end"] = points[-1]["time"]
+    clone["span_years"] = round(span_years(points), 3)
+    return clone
+
+
+def common_resolution(assets):
+    values = sorted({str(a.get("source_interval") or "unknown") for a in assets})
+    return values[0] if len(values) == 1 else "mixed:" + ",".join(values)
+
+
+def validate_horizon(assets, horizon: str):
+    minimum_span = {"5a":4.5, "10a":8.8, "max":8.8}[horizon]
+    minimum_points = {"5a":48, "10a":96, "max":96}[horizon]
+    failures = []
     for asset in assets:
-        points = transform(asset["history_points"])
-        if len(points) < 12:
-            raise RuntimeError(f"{asset['symbol']}: fenêtre {horizon} insuffisante")
-        clone = {k:v for k,v in asset.items() if k != "history_points"}
-        clone["history_points"] = points
-        clone["points_count"] = len(points)
-        clone["history_start"] = points[0]["time"]
-        clone["history_end"] = points[-1]["time"]
-        out_assets.append(clone)
+        if asset["span_years"] < minimum_span or asset["points_count"] < minimum_points:
+            failures.append({
+                "symbol":asset["symbol"],
+                "span_years":asset["span_years"],
+                "points":asset["points_count"],
+                "required_span":minimum_span,
+                "required_points":minimum_points,
+            })
+    if failures:
+        raise RuntimeError(f"historical horizon {horizon} coverage insufficient: {failures}")
+
+
+def build_payload(assets, horizon: str, generated_at: str):
+    validate_horizon(assets, horizon)
     return {
         "schema":"agent_crypto_historical_depth_v1",
         "build":BUILD,
         "domain":"indices",
         "status":"ready",
         "horizon":horizon,
-        "resolution":"1wk",
+        "resolution":common_resolution(assets),
         "generated_at":generated_at,
         "source":"Yahoo Finance chart endpoint",
         "assets_expected":len(INDICES),
-        "assets_count":len(out_assets),
-        "assets":out_assets,
+        "assets_count":len(assets),
+        "assets":assets,
+        "coverage":{
+            "min_span_years":min(a["span_years"] for a in assets),
+            "max_span_years":max(a["span_years"] for a in assets),
+            "min_points":min(a["points_count"] for a in assets),
+            "max_points":max(a["points_count"] for a in assets),
+        },
         "integrity":{
             "no_invented_values":True,
             "provider_series_preserved":True,
+            "provider_granularity_recorded":True,
             "horizon_subsets_are_deterministic":True,
+            "coverage_duration_validated":True,
             "lazy_browser_load_required":True,
             "boot_payload_forbidden":True,
             "orders_allowed":False,
@@ -205,19 +239,39 @@ def build_payload(assets, horizon: str, generated_at: str):
 def collect(root: Path, timeout: float, pacing: float):
     s = session_yahoo()
     crumb = yahoo_crumb(s, timeout)
-    assets = []
+    ten_year = []
+    max_history = []
     errors = []
     for spec in INDICES:
         try:
-            assets.append(parse_weekly(yahoo_payload(s, spec["symbol"], timeout, crumb), spec))
+            p10 = yahoo_payload(s, spec["symbol"], timeout, "1wk", "10y", crumb)
+            ten_year.append(parse_series(p10, spec, "1wk", "10y"))
+            time.sleep(pacing)
+            pmax = yahoo_payload(s, spec["symbol"], timeout, "1mo", "max", crumb)
+            max_history.append(parse_series(pmax, spec, "1mo", "max"))
         except Exception as exc:
-            errors.append({"symbol":spec["symbol"],"error":str(exc)[:800]})
+            errors.append({"symbol":spec["symbol"],"error":str(exc)[:1000]})
         time.sleep(pacing)
-    if len(assets) != len(INDICES):
-        raise RuntimeError(f"indices historical basket incomplete: {len(assets)}/{len(INDICES)} · {errors}")
+    if len(ten_year) != len(INDICES) or len(max_history) != len(INDICES):
+        raise RuntimeError(f"indices historical basket incomplete: 10y={len(ten_year)}/5 max={len(max_history)}/5 · {errors}")
+
     generated_at = iso_now()
+    five_assets = []
+    ten_assets = []
+    max_assets = []
+    by_id_max = {a["asset_id"]:a for a in max_history}
+    for asset in ten_year:
+        five_assets.append(clone_asset(asset, slice_years(asset["history_points"], 5)))
+        ten_assets.append(clone_asset(asset, list(asset["history_points"])))
+        max_asset = by_id_max[asset["asset_id"]]
+        max_assets.append(clone_asset(max_asset, list(max_asset["history_points"])))
+
+    payloads = {
+        "5a": build_payload(five_assets, "5a", generated_at),
+        "10a": build_payload(ten_assets, "10a", generated_at),
+        "max": build_payload(max_assets, "max", generated_at),
+    }
     out = root / "data" / "indices" / "history"
-    payloads = {h:build_payload(assets,h,generated_at) for h in ("5a","10a","max")}
     for horizon, payload in payloads.items():
         atomic_json(out / f"{horizon}.json", payload)
     atomic_json(out / "status.json", {
@@ -231,15 +285,14 @@ def collect(root: Path, timeout: float, pacing: float):
                 "ready":True,
                 "resolution":payloads[h]["resolution"],
                 "assets":payloads[h]["assets_count"],
-                "min_points":min(a["points_count"] for a in payloads[h]["assets"]),
-                "max_points":max(a["points_count"] for a in payloads[h]["assets"]),
+                **payloads[h]["coverage"],
                 "path":f"data/indices/history/{h}.json",
             } for h in ("5a","10a","max")
         },
         "integrity":payloads["max"]["integrity"],
         "errors":errors,
     })
-    print(json.dumps({"status":"ready","domain":"indices","horizons":["5a","10a","max"],"assets":len(assets)}, ensure_ascii=False))
+    print(json.dumps({"status":"ready","domain":"indices","horizons":payloads.keys(),"coverage":{h:payloads[h]["coverage"] for h in payloads}}, ensure_ascii=False))
 
 
 def main():
