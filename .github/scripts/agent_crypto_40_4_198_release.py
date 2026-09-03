@@ -341,12 +341,15 @@ a = replace_once(
     'const active = atlasMetalsLongHistoryState404198.active === null && value === Number(metals.period);',
     'Metals regular button active state'
 )
-old_loop_end = '''    }
-  });
-
-  const section = metals.section;'''
-new_loop_end = '''    }
-  });
+marker = '  document.querySelectorAll("[data-metals-period]").forEach(button => {'
+start = a.find(marker)
+if start < 0:
+    raise RuntimeError('Metals period render loop marker missing')
+end = a.find('\n  });', start)
+if end < 0:
+    raise RuntimeError('Metals period render loop end missing')
+end += len('\n  });')
+insert_long_buttons = r'''
 
   document.querySelectorAll("[data-metals-long-period]").forEach(button => {
     const key = String(button.dataset.metalsLongPeriod || "");
@@ -357,10 +360,8 @@ new_loop_end = '''    }
     button.title = active
       ? "FUTURE CONTINU · HISTORIQUE FOURNISSEUR · chargé à la demande"
       : "Historique long Yahoo Finance Futures chargé uniquement à l’appel";
-  });
-
-  const section = metals.section;'''
-a = replace_once(a, old_loop_end, new_loop_end, 'Metals long button render state')
+  });'''
+a = a[:end] + insert_long_buttons + a[end:]
 
 a = replace_once(
     a,
@@ -448,6 +449,8 @@ assert 'data-metals-long-period="5a"' in index_final
 assert 'ATLAS_METALS_LONG_HISTORY_404198' in app_final
 assert 'spot_semantics_forbidden' in app_final
 assert 'version-truth.js?v=40.4.198' in index_final
-assert 'propagation' not in version_truth.lower()
+assert '40.4.196 propagation' not in version_truth
+assert '40.4.197 propagation' not in version_truth
+assert 'disponible' in version_truth and 'Build ${loaded} chargé' in version_truth
 assert 'orders_allowed:false' in parallel_final
 print('40.4.198 patch complete · geometry contract preserved · engine', ENGINE)
