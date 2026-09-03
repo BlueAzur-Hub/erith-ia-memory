@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.194";
-  const DEPTH_LEVEL = 193;
+  const BUILD = "40.4.195";
+  const DEPTH_LEVEL = 195;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
   const PERIODS = Object.freeze(["24h", "7j", "30j", "60j", "90j", "1a"]);
@@ -51,9 +51,10 @@
     if (bar.dataset.parallelToolbarBound !== "1") {
       bar.dataset.parallelToolbarBound = "1";
       bar.innerHTML = `
-        <span class="mirror-group"><small>VUE</small><b class="active">Base 100</b></span>
-        <span class="mirror-group atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>
-        <span class="mirror-group"><small>SECTION</small><b data-parallel-state>Source Truth</b></span>`;
+        <span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true">Prix</button><b class="active">Base 100</b></span>
+        <span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true">Normale</button><button type="button" disabled aria-disabled="true">Log</button></span>
+        <span class="mirror-group atlas-toolbar-section-404195"><small>SECTION</small><b data-parallel-state>Source Truth</b></span>
+        <span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>`;
       bar.addEventListener("click", event => {
         const button = event.target instanceof Element ? event.target.closest("[data-parallel-period]") : null;
         if (!button || !CONFIG[state.current] || !ACTIVE.has(state.current)) return;

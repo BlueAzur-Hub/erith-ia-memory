@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const BUILD = "40.4.194";
+  const BUILD = "40.4.195";
   const REVISION = "V6";
   const CONTRACT = "ALL_MARKETS_STATIC_CRYPTO_SLOT_PARITY_DOMAIN_CONTENT_404189";
   const ORDER = Object.freeze([
@@ -118,7 +118,7 @@
       t.id = "atlasCyclicMarketMirrorToolbar404168";
       t.className = "atlas-cyclic-market-mirror-toolbar-404168";
       t.hidden = true;
-      t.innerHTML = `<span class="mirror-group"><small>VUE</small><b class="active">Base 100</b></span><span class="mirror-group atlas-parallel-periods"><small>PÉRIODE</small><button type="button" data-parallel-period="24h">24h</button><button type="button" data-parallel-period="7j">7j</button><button type="button" data-parallel-period="30j">30j</button><button type="button" data-parallel-period="90j">90j</button><button type="button" data-parallel-period="1a">1a</button></span><span class="mirror-group"><small>SECTION</small><b data-cyclic-market-toolbar-state>Source Truth publique</b></span>`;
+      t.innerHTML = `<span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true">Prix</button><b class="active">Base 100</b></span><span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true">Normale</button><button type="button" disabled aria-disabled="true">Log</button></span><span class="mirror-group atlas-toolbar-section-404195"><small>SECTION</small><b data-cyclic-market-toolbar-state>Source Truth publique</b></span><span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small><button type="button" data-parallel-period="24h">24h</button><button type="button" data-parallel-period="7j">7j</button><button type="button" data-parallel-period="30j">30j</button><button type="button" data-parallel-period="60j">60j</button><button type="button" data-parallel-period="90j">90j</button><button type="button" data-parallel-period="1a">1a</button></span>`;
       recovery.appendChild(t);
     }
 
@@ -141,9 +141,22 @@
       h.setAttribute("aria-live", "polite");
       metalsDetail.appendChild(h);
     }
+    ensureGraphToolbarParity404195();
     return true;
   }
 
+  function ensureGraphToolbarParity404195(){
+    const metals=byId("atlasMetalsUnifiedToolbar");
+    if(metals){
+      const groups=Array.from(metals.children).filter(n=>n instanceof Element&&n.matches('div[role="group"]'));
+      const view=groups[0]||null;const period=groups.find(n=>n.querySelector('[data-metals-period]'))||groups[1]||null;const section=groups.find(n=>n.querySelector('[data-metals-section]'))||groups[2]||null;
+      view?.classList.add("atlas-toolbar-view-404195");period?.classList.add("atlas-toolbar-period-404195");section?.classList.add("atlas-toolbar-section-404195");
+      if(!metals.querySelector(".atlas-toolbar-scale-404195")){const scale=document.createElement("div");scale.className="atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195";scale.setAttribute("role","group");scale.setAttribute("aria-label","Échelle Métaux · non applicable");scale.innerHTML='<span>ÉCHELLE</span><button type="button" disabled aria-disabled="true">Normale</button><button type="button" disabled aria-disabled="true">Log</button>';metals.insertBefore(scale,period||section||null);}
+      metals.dataset.graphToolbarParity404195="crypto-slot-lock";
+    }
+    const mirror=byId("atlasCyclicMarketMirrorToolbar404168");if(mirror)mirror.dataset.graphToolbarParity404195="crypto-slot-lock";
+    document.documentElement.dataset.graphToolbarParity404195="ready";
+  }
   function setParallelPlaceholder(domain){
     const s = specFor(domain);
     const stage = byId("atlasCyclicMarketInertStage404168");
