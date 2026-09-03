@@ -292,7 +292,7 @@ def collect(root: Path, timeout: float, pacing: float):
         "integrity":payloads["max"]["integrity"],
         "errors":errors,
     })
-    print(json.dumps({"status":"ready","domain":"indices","horizons":payloads.keys(),"coverage":{h:payloads[h]["coverage"] for h in payloads}}, ensure_ascii=False))
+    print(json.dumps({"status":"ready","domain":"indices","horizons":list(payloads.keys()),"coverage":{h:payloads[h]["coverage"] for h in payloads}}, ensure_ascii=False))
 
 
 def main():
