@@ -1,0 +1,26 @@
+name: Agent-Crypto 40.4.220 Atlas Heartbeat Owner Guard Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-220-atlas-heartbeat-guard.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-220-atlas-heartbeat-owner-guard
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Execute bounded 40.4.220 release
+        run: python .github/scripts/_tmp_agent_crypto_404220_release.py
