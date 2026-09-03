@@ -265,7 +265,10 @@ html[data-cyclic-market-domain="metals"] body #atlasAetherRibbon4084{
 .atlas-unified-domain-shell-404185{transform:translate(var(--atlas-unified-dx,0px),var(--atlas-unified-dy,0px))!important;width:var(--atlas-unified-w,auto)!important;min-height:var(--atlas-unified-h,0px)!important;box-sizing:border-box!important;transform-origin:top left!important}
 .atlas-unified-domain-rail-404185{transform:translate(var(--atlas-unified-dx,0px),var(--atlas-unified-dy,0px))!important;width:var(--atlas-unified-w,auto)!important;min-height:var(--atlas-unified-h,0px)!important;box-sizing:border-box!important;transform-origin:top left!important}
 #analyste.atlas-market-soft-transition-404185 .chart-shell,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-shell-404185,#analyste.atlas-market-soft-transition-404185 #detailPanel,#analyste.atlas-market-soft-transition-404185 .atlas-unified-domain-rail-404185{opacity:.72!important}
-html[data-cyclic-market-domain="metals"] #atlasAetherRibbon4084,html[data-cyclic-market-domain="indices"] #atlasAetherRibbon4084,html[data-cyclic-market-domain="energy"] #atlasAetherRibbon4084,html[data-cyclic-market-domain="cross-market"] #atlasAetherRibbon4084{display:none!important}
+/* 40.4.194 — AETHER / COMMAND LANE REPAIR.
+   The 40.4.182 contract remains authoritative: Aether is masked only on Metals,
+   where native command controls are forced visible. Indices, Energy and Cross
+   keep the normal 270 s command/Aether shared-lane cycle, preventing a blank row. */
 @media(max-width:900px){.atlas-unified-domain-shell-404185,.atlas-unified-domain-rail-404185{transform:none!important;width:auto!important;min-height:0!important}}
 
 /* =========================================================

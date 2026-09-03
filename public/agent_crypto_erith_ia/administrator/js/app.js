@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.193";
+  const ADMIN_BUILD = "40.4.194";
   const ADMIN_RELEASE = "MULTI-MARKET DEPTH HARMONIZATION LOCK · SHARED SHELL · DOMAIN OWNERSHIP";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";

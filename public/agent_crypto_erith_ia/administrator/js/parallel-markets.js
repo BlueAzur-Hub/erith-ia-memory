@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.193";
+  const BUILD = "40.4.194";
   const DEPTH_LEVEL = 193;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
