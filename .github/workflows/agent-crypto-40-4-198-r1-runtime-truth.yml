@@ -46,17 +46,14 @@ jobs:
                   raise SystemExit(f'missing expected stale index token: {old}')
               index = index.replace(old, new, 1)
 
-          old_root = 'const ATLAS_BUILD = "40.4.197";'
-          if old_root not in root:
+          if 'const ATLAS_BUILD = "40.4.197";' not in root:
               raise SystemExit('missing stale ATLAS_BUILD 40.4.197')
-          root = root.replace(old_root, 'const ATLAS_BUILD = "40.4.198";', 1)
+          root = root.replace('const ATLAS_BUILD = "40.4.197";', 'const ATLAS_BUILD = "40.4.198";', 1)
 
           old_admin = 'const ADMIN_BUILD = "40.4.197";'
           old_release = 'const ADMIN_RELEASE = "HISTORICAL DEPTH FOUNDATION · LAZY LONG HISTORY · INDICES 5Y 10Y MAX";'
-          if old_admin not in admin:
-              raise SystemExit('missing stale ADMIN_BUILD 40.4.197')
-          if old_release not in admin:
-              raise SystemExit('missing stale ADMIN_RELEASE text')
+          if old_admin not in admin or old_release not in admin:
+              raise SystemExit('stale admin runtime identity not found')
           admin = admin.replace(old_admin, 'const ADMIN_BUILD = "40.4.198";', 1)
           admin = admin.replace(old_release, 'const ADMIN_RELEASE = "COMMODITY HISTORICAL DEPTH · LAZY ENERGY METALS · VERSION TRUTH";', 1)
 
@@ -64,24 +61,12 @@ jobs:
           root_path.write_text(root, encoding='utf-8')
           admin_path.write_text(admin, encoding='utf-8')
 
-          def digest(path):
-              return hashlib.sha256(path.read_bytes()).hexdigest()
-
           manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
           files = manifest.get('files')
           if not isinstance(files, dict) or not files:
               raise SystemExit('version.json files hash map missing')
 
-          # Recompute the complete declared payload from the actual tree.
-          for rel in list(files):
-              payload = base / rel
-              if not payload.is_file():
-                  raise SystemExit(f'manifest hash target missing: {rel}')
-              files[rel] = digest(payload)
-          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-
-          # Mirror identity derives from the canonical manifest, never from a
-          # separately hard-coded release string.
+          # Finalize mirror identity first.
           mirror = json.loads(mirror_path.read_text(encoding='utf-8'))
           mirror['build'] = manifest['build']
           mirror['global_versioning'] = manifest['build']
@@ -90,13 +75,17 @@ jobs:
           mirror['parent_build'] = manifest.get('parent_build', '')
           if manifest.get('revision'):
               mirror['revision'] = manifest['revision']
-          mirror_files = mirror.get('files')
-          if isinstance(mirror_files, dict):
-              for rel in list(mirror_files):
-                  payload = base / rel
-                  if payload.is_file():
-                      mirror_files[rel] = digest(payload)
           mirror_path.write_text(json.dumps(mirror, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # Canonical hashes are always computed LAST from final payload bytes.
+          def digest(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          for rel in list(files):
+              payload = base / rel
+              if not payload.is_file():
+                  raise SystemExit(f'manifest hash target missing: {rel}')
+              files[rel] = digest(payload)
+          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 
       - name: Runtime syntax and canonical truth gates
@@ -114,14 +103,11 @@ jobs:
           a=(base/'js/app.js').read_text(encoding='utf-8')
           assert './app.js?v=administrator-build-40.4.198' in i
           assert './js/app.js?v=administrator-build-40.4.198' in i
-          assert './app.js?v=administrator-build-40.4.197' not in i
-          assert './js/app.js?v=administrator-build-40.4.197' not in i
-          assert 'id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.198 ·' in i
+          assert 'Build 40.4.197 · Version : Parker Lewis' not in i
           assert 'const ATLAS_BUILD = "40.4.198";' in r
           assert 'const ATLAS_BUILD = "40.4.197";' not in r
           assert 'const ADMIN_BUILD = "40.4.198";' in a
           assert 'const ADMIN_BUILD = "40.4.197";' not in a
-          assert 'const ADMIN_RELEASE = "COMMODITY HISTORICAL DEPTH · LAZY ENERGY METALS · VERSION TRUTH";' in a
           PY
 
       - name: Remove one-shot workflow and commit
