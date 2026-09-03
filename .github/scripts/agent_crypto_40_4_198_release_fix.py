@@ -29,8 +29,8 @@ insert_long_buttons = r'''
   });'''
 a = a[:end] + insert_long_buttons + a[end:]
 """
-new_text, count = pattern.subn(replacement, text, count=1)
+new_text, count = pattern.subn(lambda _match: replacement, text, count=1)
 if count != 1:
     raise RuntimeError(f'failed to fix release anchor: {count}')
 p.write_text(new_text, encoding='utf-8')
-print('release patch anchor fixed')
+print('release patch anchor fixed with literal escapes')
