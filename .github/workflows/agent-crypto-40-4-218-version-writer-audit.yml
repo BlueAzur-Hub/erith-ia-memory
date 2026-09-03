@@ -1,0 +1,22 @@
+name: Agent-Crypto 40.4.218 Version Writer Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-218-version-writer-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Audit global version writers
+        run: python .github/scripts/_tmp_agent_crypto_404218_audit.py
