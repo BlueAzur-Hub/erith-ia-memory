@@ -1,8 +1,8 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.191";
-  const DEPTH_LEVEL = 191;
+  const BUILD = "40.4.192";
+  const DEPTH_LEVEL = 192;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
   const PERIODS = Object.freeze(["24h", "7j", "30j", "60j", "90j", "1a"]);
