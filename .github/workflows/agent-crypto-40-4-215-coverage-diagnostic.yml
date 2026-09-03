@@ -1,0 +1,103 @@
+name: Agent-Crypto 40.4.215 Coverage Diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-215-coverage-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove 40.4.214 and audit rank coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.214
+          python - <<'PY'
+          from pathlib import Path
+          from collections import Counter, defaultdict
+          import json
+
+          data=Path('public/agent_crypto_erith_ia/data/crypto')
+          core=json.loads((data/'latest.json').read_text(encoding='utf-8'))
+          ext=json.loads((data/'extended.json').read_text(encoding='utf-8'))
+          rows=[('core',c) for c in (core.get('coins') or [])]+[('extended',c) for c in (ext.get('coins') or [])]
+          ids=[str(c.get('id') or '') for _,c in rows]
+          ranks=[]
+          by_rank=defaultdict(list)
+          null_rank=[]
+          out=[]
+          for source,c in rows:
+              r=c.get('rank')
+              try:r=int(r)
+              except Exception:
+                  null_rank.append((source,c.get('id'),r)); continue
+              ranks.append(r)
+              by_rank[r].append((source,c.get('id'),c.get('symbol'),c.get('name')))
+              if r<1 or r>1000: out.append((source,c.get('id'),r))
+          missing=[r for r in range(1,1001) if r not in by_rank]
+          dup={r:v for r,v in by_rank.items() if len(v)>1}
+          iddup={k:v for k,v in Counter(ids).items() if k and v>1}
+          core_ranks=[int(c['rank']) for c in core.get('coins') or [] if str(c.get('rank','')).isdigit()]
+          ext_ranks=[int(c['rank']) for c in ext.get('coins') or [] if str(c.get('rank','')).isdigit()]
+          buckets={
+              '1_250': sum(1 for r in ranks if 1<=r<=250),
+              '251_500': sum(1 for r in ranks if 251<=r<=500),
+              '501_750': sum(1 for r in ranks if 501<=r<=750),
+              '751_1000': sum(1 for r in ranks if 751<=r<=1000),
+          }
+          report={
+              'core_assets_count':len(core.get('coins') or []),
+              'core_declared':core.get('assets_count'),
+              'core_requested':core.get('requested_assets'),
+              'extended_assets_count':len(ext.get('coins') or []),
+              'extended_declared':ext.get('assets_count'),
+              'combined_rows':len(rows),
+              'unique_ids':len(set(ids)),
+              'unique_ranks_1_1000':sum(1 for r in by_rank if 1<=r<=1000),
+              'missing_rank_count':len(missing),
+              'missing_ranks':missing,
+              'duplicate_rank_count':len(dup),
+              'duplicate_ranks':dup,
+              'duplicate_id_count':len(iddup),
+              'duplicate_ids':iddup,
+              'null_rank_rows':null_rank,
+              'out_of_range_rows':out,
+              'rank_buckets_rows':buckets,
+              'core_rank_minmax':[min(core_ranks) if core_ranks else None,max(core_ranks) if core_ranks else None],
+              'extended_rank_minmax':[min(ext_ranks) if ext_ranks else None,max(ext_ranks) if ext_ranks else None],
+              'core_snapshot':core.get('snapshot_id'),
+              'extended_snapshot':ext.get('snapshot_id'),
+          }
+          print('COVERAGE_AUDIT='+json.dumps(report,ensure_ascii=False,sort_keys=True))
+          PY
+
+      - name: Locate current Market coverage renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/administrator/app.js')
+          s=p.read_text(encoding='utf-8')
+          needles=['Univers cumulé','marketVisibleLimit','atlasMarketUniverseEnsure403115','atlasMarketUniverseState403115','Extended 0','marketUniverseStatus']
+          for needle in needles:
+              pos=s.find(needle)
+              print(f'NEEDLE {needle!r} POS {pos}')
+              if pos>=0:
+                  lo=max(0,pos-1200); hi=min(len(s),pos+2200)
+                  print('---CONTEXT---')
+                  print(s[lo:hi])
+                  print('---END---')
+          PY
