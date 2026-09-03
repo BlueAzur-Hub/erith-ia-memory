@@ -24,22 +24,22 @@ jobs:
           p=Path('public/agent_crypto_erith_ia/administrator/app.js')
           text=p.read_text(encoding='utf-8')
           names=[
-            'atlasMetalsQuoteFoundationHorizonReading',
-            'atlasMetalsQuoteFoundationRenderAnalysisHorizons',
-            'atlasMetalsQuoteFoundationPeriodRows',
+            'data-metals-period',
+            'atlasMetalsUnifiedToolbar',
+            'atlasParallelMarketMetalsState',
+            'atlasParallelMarketRenderMetals()',
+            'atlasMetalsQuoteFoundationRenderChart()',
           ]
           for name in names:
               print('\n' + '='*30 + ' ' + name + ' ' + '='*30)
-              positions=[]
-              start=0
+              positions=[]; start=0
               while True:
                   i=text.find(name,start)
                   if i<0: break
-                  positions.append(i)
-                  start=i+len(name)
-              print('occurrences=',len(positions),positions[:20])
-              for n,i in enumerate(positions[:6],1):
-                  lo=max(0,i-1800); hi=min(len(text),i+3600)
+                  positions.append(i); start=i+len(name)
+              print('occurrences=',len(positions),positions[:30])
+              for n,i in enumerate(positions[:10],1):
+                  lo=max(0,i-2200); hi=min(len(text),i+4200)
                   print(f'--- occurrence {n} @ {i} ---')
                   print(text[lo:hi])
           PY
