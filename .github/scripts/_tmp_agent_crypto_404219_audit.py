@@ -29,9 +29,11 @@ for u,rel,p in raw:
     for part in query.split('&'):
         if part.startswith('v='): token=part[2:]
     builds=re.findall(r'40\.4\.\d+',token)
-    # last commit touching file; release subject when available
     log=subprocess.run(['git','log','-1','--format=%H%x09%s','--',str(p)],capture_output=True,text=True,check=True).stdout.strip()
-    last_sha,last_subject=(log.split('\t',1)+[''])[:2] if '\t' in log else (log,'')
+    if '\t' in log:
+        last_sha,last_subject=log.split('\t',1)
+    else:
+        last_sha,last_subject=log,''
     last_builds=re.findall(r'40\.4\.\d+',last_subject)
     in_hash=rel in hashed
     short=hashlib.sha256(p.read_bytes()).hexdigest()[:12]
@@ -80,12 +82,26 @@ print('===== ATLAS CURRENT / HEARTBEAT OWNER AUDIT =====')
 hb=ADMIN/'js/atlas-heartbeat-rearm.js'
 if not hb.is_file(): raise SystemExit('STOP atlas-heartbeat-rearm.js missing')
 h=hb.read_text(encoding='utf-8')
-print({k:h.count(k) for k in ('fetch(','setInterval(','setTimeout(','MutationObserver','IntersectionObserver','WebSocket','requestAnimationFrame(','addEventListener(')})
+# Count executable-looking primitives, not descriptive comments/contract keys.
+primitive_counts={
+    'fetch(':h.count('fetch('),
+    'setInterval(':h.count('setInterval('),
+    'setTimeout(':h.count('setTimeout('),
+    'new MutationObserver(':h.count('new MutationObserver('),
+    'new IntersectionObserver(':h.count('new IntersectionObserver('),
+    'new WebSocket(':h.count('new WebSocket('),
+    'requestAnimationFrame(':h.count('requestAnimationFrame('),
+    'addEventListener(':h.count('addEventListener('),
+}
+print(primitive_counts)
 for needle in ('CURRENT','heartbeat','atlas','dispatchEvent','DOMContentLoaded','load'):
     if needle.lower() in h.lower():
         print('MARKER',needle,'present')
 print(h[:12000])
-if h.count('setInterval(') or h.count('fetch(') or h.count('MutationObserver') or h.count('WebSocket'):
-    raise SystemExit('STOP Atlas heartbeat rearm owns forbidden recurring/network primitive')
+for forbidden in ('fetch(','setInterval(','setTimeout(','new MutationObserver(','new IntersectionObserver(','new WebSocket(','requestAnimationFrame('):
+    if primitive_counts[forbidden]:
+        raise SystemExit(f'STOP Atlas heartbeat rearm owns forbidden executable primitive: {forbidden}')
+if primitive_counts['addEventListener('] != 1 or 'window.addEventListener("load", autoRearm, {once:true})' not in h:
+    raise SystemExit('STOP Atlas heartbeat one-shot load owner shape drift')
 
 print('AUDIT_404219_OK')
