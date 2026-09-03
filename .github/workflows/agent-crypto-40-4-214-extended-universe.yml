@@ -1,0 +1,255 @@
+name: Agent-Crypto 40.4.214 Extended Universe Ingestion Recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-214-extended-universe.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-214-extended-universe
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove 40.4.213 baseline and Extended producer truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.213
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia')
+          admin=root/'administrator'
+          status=json.loads((root/'data/crypto/extended_status.json').read_text(encoding='utf-8'))
+          payload=json.loads((root/'data/crypto/extended.json').read_text(encoding='utf-8'))
+          assert status.get('schema')=='agent_crypto_public_extended_market_collector_status_v1'
+          assert status.get('status')=='ready'
+          assert payload.get('schema')=='agent_crypto_public_extended_market_snapshot_v1'
+          coins=payload.get('coins') or []
+          assert len(coins)>=700, len(coins)
+          assert int(payload.get('assets_count') or 0)==len(coins)
+          app=(admin/'app.js').read_text(encoding='utf-8')
+          assert 'function atlasWorkspaceRestoreAfterMarket()' in app
+          assert 'async function atlasMarketUniverseEnsure403115' in app
+          assert 'window.setTimeout(()=>{\n  atlasSyncMarketUniverseControls();\n  if(atlasMarketUniverseLimit403115()>250)' in app
+          build_truth=json.loads((admin/'build.json').read_text(encoding='utf-8'))
+          assert build_truth.get('build')=='40.4.211', 'Expected reproduced stale build.json debt from 40.4.212/213'
+          print({'extended_rows':len(coins),'extended_snapshot':payload.get('snapshot_id'),'reproduced_build_json':build_truth.get('build')})
+          PY
+
+      - name: Apply bounded 40.4.214 surgery and harden release truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          repo=Path('.')
+          root=repo/'public/agent_crypto_erith_ia/administrator'
+
+          def replace_once(text, old, new, label):
+              n=text.count(old)
+              if n!=1:
+                  raise SystemExit(f'STOP {label}: expected 1, found {n}')
+              return text.replace(old,new,1)
+
+          # Functional debt: persisted 500/1000 selection is restored only after
+          # the old fixed 900 ms Extended warm-up check has already seen default 50.
+          # Reuse the existing one-shot workspace-restoration lifecycle instead.
+          app_path=root/'app.js'
+          app=app_path.read_text(encoding='utf-8')
+          before_budget={m:app.count(m) for m in ('setInterval(','setTimeout(','MutationObserver','IntersectionObserver','fetch(','new WebSocket','localStorage.setItem')}
+          old='''  state.marketVisibleLimit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(saved.marketVisibleLimit)) ? Number(saved.marketVisibleLimit) : 50;\n  atlasSyncMarketUniverseControls();'''
+          new='''  state.marketVisibleLimit = ATLAS_MARKET_VIEW_LIMITS.includes(Number(saved.marketVisibleLimit)) ? Number(saved.marketVisibleLimit) : 50;\n  atlasSyncMarketUniverseControls();\n\n  /* 40.4.214 — EXTENDED UNIVERSE RESTORE REARM.\n     The historical 900 ms warm-up can run before the saved workspace restores\n     a 500/1000 Market view. The UI then truthfully shows the persisted limit,\n     but the Extended payload remains cold. Workspace restoration is one-shot,\n     so reuse the existing 40.3.115 loader here; no new network owner exists. */\n  if (atlasMarketUniverseExtendedRequested403115(state.marketVisibleLimit)) {\n    void atlasMarketUniverseEnsure403115(state.marketVisibleLimit);\n  }'''
+          app=replace_once(app,old,new,'workspace Extended rearm')
+
+          old_boot='''window.setTimeout(()=>{\n  atlasSyncMarketUniverseControls();\n  if(atlasMarketUniverseLimit403115()>250){\n    void atlasMarketUniverseEnsure403115(atlasMarketUniverseLimit403115());\n  }\n},900);'''
+          new_boot='''window.setTimeout(()=>{\n  atlasSyncMarketUniverseControls();\n  const limit404214=atlasMarketUniverseLimit403115();\n  if(\n    limit404214>250\n    && atlasMarketUniverseState403115.status!=="loading"\n    && !atlasExtendedMarketCache403103.payload\n  ){\n    void atlasMarketUniverseEnsure403115(limit404214);\n  }\n},900);'''
+          app=replace_once(app,old_boot,new_boot,'900ms fallback dedupe')
+          after_budget={m:app.count(m) for m in before_budget}
+          if after_budget!=before_budget:
+              raise SystemExit(f'STOP runtime owner budget changed: {before_budget} -> {after_budget}')
+          app_path.write_text(app,encoding='utf-8')
+
+          # Release driver debt discovered while preparing 40.4.214: build.json
+          # was not part of the canonical writer, so 40.4.212/213 left it at .211.
+          driver_path=repo/'.github/scripts/agent_crypto_release_driver.py'
+          d=driver_path.read_text(encoding='utf-8')
+          d=replace_once(d,
+            '''    manifest_path = BASE / "version.json"\n    mirror_path = BASE / "administrator-version.json"\n    manifest = load_json(manifest_path)\n    mirror = load_json(mirror_path)''',
+            '''    manifest_path = BASE / "version.json"\n    mirror_path = BASE / "administrator-version.json"\n    build_truth_path = BASE / "build.json"\n    manifest = load_json(manifest_path)\n    mirror = load_json(mirror_path)\n    build_truth = load_json(build_truth_path)''',
+            'release driver build truth load')
+          d=replace_once(d,
+            '''    if str((manifest.get("engine") or {}).get("reference_build") or "") != PROTECTED_ENGINE:\n        die("protected Market Core manifest identity changed before release")''',
+            '''    if str((manifest.get("engine") or {}).get("reference_build") or "") != PROTECTED_ENGINE:\n        die("protected Market Core manifest identity changed before release")\n    if str(build_truth.get("engine") or "") != PROTECTED_ENGINE:\n        die("protected Market Core build.json identity changed before release")''',
+            'release driver build truth engine')
+          d=replace_once(d,
+            '''    write(index_path, index)\n\n    manifest["release"] = release''',
+            '''    write(index_path, index)\n\n    build_truth["build"] = build\n    build_truth["engine"] = PROTECTED_ENGINE\n    build_truth["release"] = release\n    build_truth["published"] = True\n    build_truth["status"] = status\n    write(build_truth_path, json.dumps(build_truth, ensure_ascii=False, indent=2) + "\\n")\n\n    manifest["release"] = release''',
+            'release driver build truth write')
+          d=replace_once(d,
+            '''    files = manifest.get("files")\n    if not isinstance(files, dict) or not files:\n        die("version.json files hash map missing")\n    for rel in list(files):''',
+            '''    files = manifest.get("files")\n    if not isinstance(files, dict) or not files:\n        die("version.json files hash map missing")\n    files["build.json"] = sha256(build_truth_path)\n    for rel in list(files):''',
+            'release driver build truth hash')
+          driver_path.write_text(d,encoding='utf-8')
+
+          # Version Truth guard now proves build.json and the restored Extended
+          # ingestion lifecycle for .214 and all descendants.
+          guard_path=repo/'.github/scripts/agent_crypto_version_truth_guard.py'
+          g=guard_path.read_text(encoding='utf-8')
+          g=replace_once(g,
+            '''    manifest = load_json(base / "version.json")\n    mirror = load_json(base / "administrator-version.json")''',
+            '''    manifest = load_json(base / "version.json")\n    mirror = load_json(base / "administrator-version.json")\n    build_truth = load_json(base / "build.json")''',
+            'guard build truth load')
+          g=replace_once(g,
+            '''    if actual["meta_release"] != release or actual["admin_release"] != release:\n        fail("release identity drift between manifest / HTML / administrator runtime")\n\n    if str(mirror.get("build") or "").strip() != build:''',
+            '''    if actual["meta_release"] != release or actual["admin_release"] != release:\n        fail("release identity drift between manifest / HTML / administrator runtime")\n\n    if str(build_truth.get("build") or "").strip() != build:\n        fail("build.json build drift")\n    if str(build_truth.get("engine") or "").strip() != PROTECTED_ENGINE:\n        fail("build.json protected Market Core drift")\n    if str(build_truth.get("release") or "").strip() != release:\n        fail("build.json release drift")\n    if str(build_truth.get("status") or "").strip() != str(manifest.get("status") or "").strip():\n        fail("build.json status drift")\n    if build_truth.get("published") is not True:\n        fail("build.json published truth missing")\n\n    if str(mirror.get("build") or "").strip() != build:''',
+            'guard build truth validation')
+          anchor='''    for domain in ("crypto", "metals", "indices", "energy", "cross-market"):\n        if not str((domains.get(domain) or {}).get("state") or "").startswith("ACTIVE"):\n            fail(f"market architecture active-domain drift: {domain}")\n\n    files = manifest.get("files")'''
+          replacement='''    for domain in ("crypto", "metals", "indices", "energy", "cross-market"):\n        if not str((domains.get(domain) or {}).get("state") or "").startswith("ACTIVE"):\n            fail(f"market architecture active-domain drift: {domain}")\n\n    # 40.4.214 — persisted 500/1000 workspace must rearm the existing Extended\n    # loader after Market hydration; the fixed 900 ms fallback may not race it.\n    if current_num >= (40, 4, 214):\n        required = (\n            "40.4.214 — EXTENDED UNIVERSE RESTORE REARM",\n            "atlasMarketUniverseExtendedRequested403115(state.marketVisibleLimit)",\n            "void atlasMarketUniverseEnsure403115(state.marketVisibleLimit);",\n            "atlasMarketUniverseState403115.status!==\\\"loading\\\"",\n            "!atlasExtendedMarketCache403103.payload",\n        )\n        for marker in required:\n            if marker not in root:\n                fail(f"40.4.214 Extended ingestion regression: missing {marker}")\n\n    files = manifest.get("files")'''
+          g=replace_once(g,anchor,replacement,'guard Extended ingestion')
+          guard_path.write_text(g,encoding='utf-8')
+
+          # Ensure the permanent guard workflow runs when build.json changes.
+          wf=repo/'.github/workflows/agent-crypto-version-truth-guard.yml'
+          w=wf.read_text(encoding='utf-8')
+          needle="      - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'"
+          if w.count(needle)!=2:
+              raise SystemExit(f'STOP version guard path anchors={w.count(needle)}')
+          w=w.replace(needle,needle+"\n      - 'public/agent_crypto_erith_ia/administrator/build.json'",2)
+          wf.write_text(w,encoding='utf-8')
+
+          # Catch the handoff documents up from the .211 textual checkpoint.
+          manifest_doc=repo/'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_RELEASE_MANIFEST.md'
+          m=manifest_doc.read_text(encoding='utf-8')
+          m=replace_once(m,'Release courante : **40.4.211**','Release courante : **40.4.214**','release manifest version')
+          m=replace_once(m,"commit final 40.4.211","commit final 40.4.214",'release manifest archive')
+          if '40.4.212 est une release' not in m:
+              m += '''\n40.4.212 est une release de **Atlas Heartbeat Rearm** : réarmement one-shot du propriétaire CURRENT canonique après boot complet, sans nouveau scheduler.\n\n40.4.213 est une release de **Market Architecture Truth Convergence** : Crypto/Métaux/Indices/Énergie/Cross et leurs propriétaires actifs deviennent la vérité canonique ; les contrats 40.4.166/167 sont historiques.\n\n40.4.214 est une release de **Extended Market Universe Ingestion Recovery** : une vue 500/1000 restaurée depuis l’espace mémorisé réarme le loader Extended existant après hydratation du Market. `build.json` rejoint aussi le release driver et le Version Truth Guard afin que la vérité publiée ne puisse plus rester en retard.\n'''
+          manifest_doc.write_text(m,encoding='utf-8')
+
+          prompt=repo/'coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md'
+          p=prompt.read_text(encoding='utf-8')
+          p=replace_once(p,'Version de reprise : **40.4.211**','Version de reprise : **40.4.214**','prompt version')
+          if '40.4.212 réarme' not in p:
+              marker='40.4.211 verrouille l’**autorité unique d’affichage de version** : `market-stack.js` ne peut plus écrire `#atlasVersionControlText`; le badge first-paint est synchronisé par le release driver, `version-truth.js` reste l’autorité runtime globale, et les versions de module sont explicitement séparées de la release Agent-Crypto.\n'
+              addition='''\n40.4.212 réarme **Atlas CURRENT** une seule fois après boot complet via le propriétaire canonique existant, sans nouveau timer/observer/fetch/scheduler.\n\n40.4.213 converge la **vérité d’architecture Markets** : cycle Crypto → Métaux → Indices → Énergie → Cross, `market-stack.js` routeur, `parallel-markets.js` propriétaire des domaines parallèles, contrats 40.4.166/167 historiques.\n\n40.4.214 restaure l’**ingestion de l’univers Extended** lorsque la vue mémorisée 500/1000 est appliquée après hydratation du Market ; le loader 40.3.115 existant est réutilisé, sans nouveau propriétaire réseau. `build.json` est désormais écrit et validé par l’infrastructure canonique de release.\n'''
+              p=replace_once(p,marker,marker+addition,'prompt 212-214 append')
+          prompt.write_text(p,encoding='utf-8')
+
+          ledger=repo/'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md'
+          l=ledger.read_text(encoding='utf-8')
+          l=replace_once(l,'Version canonique de clôture : **40.4.211**','Version canonique de clôture : **40.4.214**','ledger version')
+          l=replace_once(l,'## 1. Cascade finale 40.4.205 → 40.4.211','## 1. Cascade finale 40.4.205 → 40.4.214','ledger cascade heading')
+          if '- **40.4.212**' not in l:
+              marker='- **40.4.211** — Version Display Single Authority lock : suppression de l’écriture globale de version par `market-stack.js`, first-paint synchronisé, `version-truth.js` autorité runtime, cache tokens des propriétaires modifiés convergents, et libellé `Module` pour la version locale des marchés parallèles.\n'
+              addition='''- **40.4.212** — Atlas Heartbeat Rearm : réarmement one-shot du propriétaire CURRENT canonique après boot complet ; HOT core, gates et absence de nouveau scheduler préservés.\n- **40.4.213** — Market Architecture Truth Convergence : vérité canonique du cycle Crypto/Métaux/Indices/Énergie/Cross et propriétaires runtime actifs ; contrats 40.4.166/167 classés historiques.\n- **40.4.214** — Extended Market Universe Ingestion Recovery : correction de la course entre warm-up 900 ms et restauration tardive de la vue 500/1000 ; le loader Extended existant est réarmé depuis le lifecycle one-shot de l’espace mémorisé. `build.json` rejoint le writer et le guard canoniques.\n'''
+              l=replace_once(l,marker,marker+addition,'ledger 212-214 append')
+          ledger.write_text(l,encoding='utf-8')
+          PY
+
+          cat > /tmp/agent_crypto_404214_contract.json <<'JSON'
+          {
+            "schema": "erith.admin.extended-market-universe-ingestion-recovery.v1",
+            "build": "40.4.214",
+            "parent_build": "40.4.213",
+            "cause": "The historical 900 ms Extended warm-up could execute while marketVisibleLimit was still the default 50; workspace restoration later restored 500/1000 without re-invoking the existing Extended loader.",
+            "owner": "app.js::atlasWorkspaceRestoreAfterMarket + atlasMarketUniverseEnsure403115",
+            "extended_source": "../data/crypto/extended.json",
+            "extended_schema": "agent_crypto_public_extended_market_snapshot_v1",
+            "restored_500_1000_rearm": true,
+            "existing_900ms_fallback_deduped": true,
+            "state_coins_core_mutated": false,
+            "comparison_extended_injection": false,
+            "oracle_extended_injection": false,
+            "new_network_owner": false,
+            "new_timer": false,
+            "new_observer": false,
+            "new_storage_owner": false,
+            "market_core_modified": false,
+            "build_json_release_truth_added": true,
+            "firefox_operator_validation_required": true
+          }
+          JSON
+
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.214 \
+            --parent 40.4.213 \
+            --release 'EXTENDED MARKET UNIVERSE INGESTION RECOVERY · RESTORED 500/1000 REARM LOCK' \
+            --status 'extended_market_universe_ingestion_recovery_404214_operator_validation_required' \
+            --contract-key extended_market_universe_ingestion_recovery_404214 \
+            --contract-json /tmp/agent_crypto_404214_contract.json \
+            --lineage-note '40.4.214 restores Extended 500/1000 ingestion after one-shot workspace hydration and adds build.json to canonical release truth.'
+
+      - name: Prove 40.4.214 invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          python -m py_compile .github/scripts/agent_crypto_release_driver.py
+          python -m py_compile .github/scripts/agent_crypto_version_truth_guard.py
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.214
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          app=(root/'app.js').read_text(encoding='utf-8')
+          assert '40.4.214 — EXTENDED UNIVERSE RESTORE REARM' in app
+          assert 'void atlasMarketUniverseEnsure403115(state.marketVisibleLimit);' in app
+          assert 'atlasMarketUniverseState403115.status!=="loading"' in app
+          assert '!atlasExtendedMarketCache403103.payload' in app
+          build=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          version=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          mirror=json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
+          for item in (build,version,mirror): assert item.get('build')=='40.4.214'
+          assert build.get('engine')=='38.15.11' and build.get('published') is True
+          assert version.get('files',{}).get('build.json')
+          ext=json.loads(Path('public/agent_crypto_erith_ia/data/crypto/extended.json').read_text(encoding='utf-8'))
+          core=json.loads(Path('public/agent_crypto_erith_ia/data/crypto/latest.json').read_text(encoding='utf-8'))
+          print({'core':len(core.get('coins') or []),'extended':len(ext.get('coins') or []),'combined_available':len(core.get('coins') or [])+len(ext.get('coins') or [])})
+          PY
+          if git diff --name-only | grep '^public/agent_crypto_erith_ia/data/'; then
+            echo 'STOP data files changed during 40.4.214' >&2
+            exit 1
+          fi
+          git diff --check
+
+      - name: Commit release and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Aether Release'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/agent-crypto-40-4-214-extended-universe.yml
+          git add .github/scripts/agent_crypto_release_driver.py
+          git add .github/scripts/agent_crypto_version_truth_guard.py
+          git add .github/workflows/agent-crypto-version-truth-guard.yml
+          git add public/agent_crypto_erith_ia/administrator/app.js
+          git add public/agent_crypto_erith_ia/administrator/js/app.js
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git add public/agent_crypto_erith_ia/administrator/version.json
+          git add public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git add public/agent_crypto_erith_ia/administrator/build.json
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_RELEASE_MANIFEST.md
+          git add coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md
+          git commit -m 'fix(agent-crypto): 40.4.214 restore Extended universe ingestion after workspace hydration'
+          git pull --rebase origin main
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.214
+          git push origin HEAD:main
