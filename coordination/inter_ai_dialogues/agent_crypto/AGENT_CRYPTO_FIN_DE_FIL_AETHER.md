@@ -1,9 +1,9 @@
 # AGENT-CRYPTO — FIN DE FIL AETHER
 
-Version canonique de clôture : **40.4.219**
+Version canonique de clôture : **40.4.220**
 Market Core : **38.15.11 — PROTÉGÉ**
 
-## 1. Cascade finale 40.4.205 → 40.4.219
+## 1. Cascade finale 40.4.205 → 40.4.220
 
 - **40.4.205** — identité couleur stable par actif, axe temporel réel, inspection historique au pointeur, convergence Version Truth.
 - **40.4.206** — tableau permanent de valeurs observées superposé dans Indices/Énergie/Cross + propagation couleur au rail et à la fiche active.
@@ -20,6 +20,7 @@ Market Core : **38.15.11 — PROTÉGÉ**
 - **40.4.217** — Market Table Event Delegation : retrait du fan-out de listeners Core recréés après chaque `innerHTML`; un propriétaire stable du conteneur conserve les mêmes actions ligne/boutons et réduit le travail de rendu/interactivité.
 - **40.4.218** — Version Observer Retirement : suppression du `MutationObserver` de compatibilité du badge global devenu redondant depuis la Single Authority 40.4.211 ; autorités runtime/publication conservées et `market-stack.js` toujours exclu du badge global.
 - **40.4.219** — Loaded Asset Manifest Coverage : tous les JavaScript/CSS locaux chargés par le shell Administrator sont désormais sous hash SHA-256 canonique ; le guard refuse tout futur asset chargé hors autorité du manifest.
+- **40.4.220** — Atlas Heartbeat Owner Guard : le contrat one-shot CURRENT 40.4.212 devient invariant de CI ; propriétaire canonique, fallback existant et absence de primitives récurrentes/réseau sont vérifiés à chaque release.
 
 ## 2. Dette utilisateur soldée
 

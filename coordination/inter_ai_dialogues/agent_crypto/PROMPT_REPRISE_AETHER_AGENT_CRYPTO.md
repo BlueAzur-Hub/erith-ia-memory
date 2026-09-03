@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.219**
+Version de reprise : **40.4.220**
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -40,6 +40,8 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 40.4.218 retire le **MutationObserver de compatibilité du badge global** devenu sans propriétaire adversaire après 40.4.211. `version-truth.js` conserve la réconciliation publiée, le runtime racine conserve les états de cohérence/publication skew et l’Administrator conserve le first-runtime identity. `market-stack.js` reste interdit d’écriture sur `#atlasVersionControlText`.
 
 40.4.219 étend la **Version Truth aux assets réellement chargés** : chaque JavaScript/CSS local référencé par `index.html` doit désormais être présent dans la table SHA-256 de `version.json`. Cette couverture inclut les anciens propriétaires chargés mais jusque-là hors manifest ; aucune URL de cache ni logique métier n’est modifiée.
+
+40.4.220 verrouille le **propriétaire Atlas Heartbeat CURRENT** : `atlas-heartbeat-rearm.js` doit rester un réarmement boot-complete one-shot qui réutilise `atlasCurrentPendingMarket137` (fallback existant `atlasCurrentPendingAutoKick4051`) et ne peut acquérir fetch, timer, observer, WebSocket, rAF ou scheduler. Le guard surveille désormais cette forme à chaque release.
 
 ## Vérités protégées
 

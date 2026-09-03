@@ -261,6 +261,39 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
         if "function installGlobalVersionIdentity()" not in admin_js or "atlasVersionControlText" not in admin_js:
             fail("40.4.218 Administrator first-runtime version authority missing")
 
+    if current_num >= (40, 4, 220):
+        atlas_heartbeat = read(base / "js/atlas-heartbeat-rearm.js")
+        required_atlas_heartbeat = (
+            "ATLAS HEARTBEAT · BOOT-COMPLETE ONE-SHOT REARM",
+            'queueMicrotask(() => rearm("boot-complete"))',
+            'window.addEventListener("load", autoRearm, {once:true})',
+            'canonical_pending_owner:"atlasCurrentPendingMarket137"',
+            'fallback_existing_owner:"atlasCurrentPendingAutoKick4051"',
+            'strategy:"boot-complete-one-shot-canonical-rearm"',
+            "new_timer:false",
+            "new_observer:false",
+            "new_fetch:false",
+            "new_websocket:false",
+            "new_scheduler:false",
+        )
+        for marker in required_atlas_heartbeat:
+            if marker not in atlas_heartbeat:
+                fail(f"40.4.220 Atlas heartbeat one-shot contract regression: missing {marker}")
+        forbidden_atlas_heartbeat = (
+            "fetch(",
+            "setInterval(",
+            "setTimeout(",
+            "new MutationObserver(",
+            "new IntersectionObserver(",
+            "new WebSocket(",
+            "requestAnimationFrame(",
+        )
+        for marker in forbidden_atlas_heartbeat:
+            if marker in atlas_heartbeat:
+                fail(f"40.4.220 Atlas heartbeat gained forbidden runtime primitive: {marker}")
+        if atlas_heartbeat.count("addEventListener(") != 1:
+            fail(f"40.4.220 Atlas heartbeat listener owner drift: {atlas_heartbeat.count('addEventListener(')}")
+
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")

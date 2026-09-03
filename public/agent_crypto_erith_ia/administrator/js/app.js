@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.219";
-  const ADMIN_RELEASE = "LOADED ASSET MANIFEST COVERAGE · STATIC INTEGRITY LOCK";
+  const ADMIN_BUILD = "40.4.220";
+  const ADMIN_RELEASE = "ATLAS HEARTBEAT OWNER GUARD · ONE-SHOT CURRENT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
