@@ -1,0 +1,35 @@
+name: Agent-Crypto 40.4.205-209 Cumulative Cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-205-209-cascade.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-205-209-cascade
+  cancel-in-progress: false
+
+jobs:
+  cascade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify starting head
+        run: |
+          git status --short
+          python --version
+          node --version
+          grep -n '"build"' public/agent_crypto_erith_ia/administrator/build.json | head -1
+          grep -n 'const BUILD = "40.4.205"' public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+
+      - name: Run cumulative Aether cascade
+        run: python .github/scripts/agent_crypto_40_4_205_209_cascade.py
