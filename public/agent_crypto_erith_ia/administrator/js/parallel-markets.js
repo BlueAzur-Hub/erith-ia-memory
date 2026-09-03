@@ -1,18 +1,19 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.196";
-  const DEPTH_LEVEL = 196;
+  const BUILD = "40.4.197";
+  const DEPTH_LEVEL = 197;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
   const PERIODS = Object.freeze(["24h", "7j", "30j", "60j", "90j", "1a"]);
+  const LONG_PERIODS = Object.freeze(["5a", "10a", "max"]);
   const CONFIG = Object.freeze({
-    indices: Object.freeze({ label: "INDICES", title: "Indices / Bourse", path: "../data/indices/market.json", expected: 5, accent: "#aa91ee", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 190 }),
+    indices: Object.freeze({ label: "INDICES", title: "Indices / Bourse", path: "../data/indices/market.json", historyBase: "../data/indices/history", expected: 5, accent: "#aa91ee", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 190 }),
     energy: Object.freeze({ label: "ÉNERGIE", title: "Énergie & matières premières", path: "../data/energy/market.json", expected: 3, accent: "#e79b57", source: "Yahoo Finance", defaultPeriod: "1a", depthAt: 191 }),
     "cross-market": Object.freeze({ label: "CROSS", title: "Cross-Market Observatory", path: "../data/cross_market/market.json", expected: 5, accent: "#dce5ec", source: "Archives canoniques", defaultPeriod: "90j", base100Only: true, depthAt: 192 }),
   });
   const COLORS = ["#ffd35b", "#72d8ff", "#89f4d1", "#cf93f4", "#ff8b5c", "#e5edf4"];
-  const state = { current: "crypto", data: new Map(), period: new Map(), load: new Map(), selected: new Map(), canvasHostReady: false };
+  const state = { current: "crypto", data: new Map(), period: new Map(), load: new Map(), history: new Map(), historyLoad: new Map(), selected: new Map(), canvasHostReady: false };
 
   const byId = id => document.getElementById(id);
   const safeText = v => String(v ?? "");
@@ -53,7 +54,7 @@
       bar.innerHTML = `
         <span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true" title="Vue Prix non disponible pour ce domaine">Prix</button><b class="active">Base 100</b></span>
         <span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true" title="Échelle native non disponible pour ce domaine">Normale</button><button type="button" disabled aria-disabled="true" title="Échelle logarithmique non disponible pour ce domaine">Log</button></span>
-        <span class="mirror-group atlas-toolbar-section-404195"><small>AFFICHER</small><b class="atlas-toolbar-info-404196" data-parallel-state>Source Truth</b></span>
+        <span class="mirror-group atlas-toolbar-section-404195 atlas-toolbar-history-404197"><small>AFFICHER</small><button type="button" data-parallel-long-period="5a" title="Historique long chargé uniquement à la demande">5a</button><button type="button" data-parallel-long-period="10a" title="Historique long chargé uniquement à la demande">10a</button><button type="button" data-parallel-long-period="max" title="Historique MAX hebdomadaire chargé uniquement à la demande">MAX</button></span>
         <span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>`;
       bar.addEventListener("click", event => {
         const button = event.target instanceof Element ? event.target.closest("[data-parallel-period]") : null;
@@ -63,6 +64,28 @@
         if (state.current === "cross-market" && period === "24h") return;
         state.period.set(state.current, period);
         render(state.current);
+      });
+      bar.addEventListener("click", async event => {
+        const button = event.target instanceof Element ? event.target.closest("[data-parallel-long-period]") : null;
+        if (!button || !CONFIG[state.current] || !ACTIVE.has(state.current)) return;
+        const domain = state.current;
+        const period = button.getAttribute("data-parallel-long-period");
+        if (!LONG_PERIODS.includes(period) || domain !== "indices") return;
+        button.dataset.historyLoading = "1";
+        button.setAttribute("aria-busy", "true");
+        try {
+          await loadHistorical(domain, period);
+          if (state.current !== domain) return;
+          state.period.set(domain, period);
+          render(domain);
+        } catch (error) {
+          button.title = `Historique indisponible : ${safeText(error?.message || error)}`;
+          state.period.set(domain, CONFIG[domain].defaultPeriod);
+          render(domain);
+        } finally {
+          delete button.dataset.historyLoading;
+          button.removeAttribute("aria-busy");
+        }
       });
     }
     if (rail.dataset.parallelRailBound !== "1") {
@@ -114,11 +137,39 @@
     return promise;
   }
 
+  function historyKey(domain, period) { return `${domain}:${period}`; }
+  function isLongPeriod(period) { return LONG_PERIODS.includes(period); }
+
+  function loadHistorical(domain, period) {
+    const cfg = CONFIG[domain];
+    if (!cfg?.historyBase || domain !== "indices" || !isLongPeriod(period)) return Promise.reject(new Error("historique long non activé pour ce domaine"));
+    const key = historyKey(domain, period);
+    if (state.history.has(key)) return Promise.resolve(state.history.get(key));
+    if (state.historyLoad.has(key)) return state.historyLoad.get(key);
+    const promise = fetch(`${cfg.historyBase}/${period}.json?v=${encodeURIComponent(BUILD)}`, { cache:"no-store", credentials:"same-origin" })
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(payload => {
+        if (!payload || payload.status !== "ready" || payload.schema !== "agent_crypto_historical_depth_v1" || !Array.isArray(payload.assets)) throw new Error("archive historique non READY");
+        if (payload.domain !== domain || payload.horizon !== period || payload.integrity?.lazy_browser_load_required !== true || payload.integrity?.boot_payload_forbidden !== true) throw new Error("contrat lazy historique invalide");
+        state.history.set(key, payload);
+        return payload;
+      })
+      .finally(() => state.historyLoad.delete(key));
+    state.historyLoad.set(key, promise);
+    return promise;
+  }
+
+  function payloadForPeriod(domain, period) {
+    if (isLongPeriod(period)) return state.history.get(historyKey(domain, period)) || null;
+    return state.data.get(domain) || null;
+  }
+
   function periodDays(period) {
     return period === "7j" ? 7 : period === "30j" ? 30 : period === "60j" ? 60 : period === "90j" ? 90 : period === "1a" ? 370 : 1;
   }
 
   function pickSeries(asset, period, cross) {
+    if (isLongPeriod(period)) return (asset.history_points || []).map(p => ({ time:p.time || p.date, close:finite(p.close), volume:finite(p.volume), high:finite(p.high), low:finite(p.low), open:finite(p.open) })).filter(p => p.close !== null && p.time);
     if (period === "24h" && !cross) return (asset.intraday_24h || []).map(p => ({ time:p.time, close:finite(p.close), volume:finite(p.volume) })).filter(p => p.close !== null);
     const rows = (asset.daily || []).map(p => ({ time:p.time || p.date, close:finite(p.close), volume:finite(p.volume), high:finite(p.high), low:finite(p.low), open:finite(p.open) })).filter(p => p.close !== null && p.time);
     if (!rows.length) return [];
@@ -252,7 +303,23 @@
   }
 
   function indicesDepth(payload, rowsByAsset, metricByAsset) {
-    const snap = horizonSnapshot(payload, "indices", state.period.get("indices") || "1a");
+    const activePeriod = state.period.get("indices") || "1a";
+    if (isLongPeriod(activePeriod) && payload?.schema === "agent_crypto_historical_depth_v1") {
+      const selected = selectedAsset("indices", rowsByAsset);
+      const counts = rowsByAsset.map(x => x.rows.length).filter(Number.isFinite);
+      const starts = rowsByAsset.map(x => x.rows[0]?.time).filter(Boolean).sort();
+      const ends = rowsByAsset.map(x => x.rows[x.rows.length-1]?.time).filter(Boolean).sort();
+      return `${selectedSheet("indices", selected, metricByAsset)}
+        <section class="parallel-depth-section"><b>Historical Depth · ${esc(activePeriod.toUpperCase())}</b><div class="parallel-depth-grid">
+          <span><small>Résolution</small><strong>${esc(payload.resolution || "1wk")}</strong></span>
+          <span><small>Points / actif</small><strong>${counts.length ? `${Math.min(...counts)}–${Math.max(...counts)}` : "—"}</strong></span>
+          <span><small>Début commun approx.</small><strong>${esc(starts[starts.length-1] ? dateText(starts[starts.length-1]) : "—")}</strong></span>
+          <span><small>Dernier point</small><strong>${esc(ends[0] ? dateText(ends[0]) : "—")}</strong></span>
+        </div><p class="parallel-depth-note">Archive hebdomadaire Yahoo Finance chargée uniquement après appel opérateur. Les fenêtres 5a et 10a sont des sous-ensembles déterministes de MAX ; aucune interpolation et aucune valeur inventée.</p></section>
+        <section class="parallel-depth-section"><b>Risque historique long</b><p>Volatilité maximale observée ${pct(Math.max(...metricByAsset.map(x=>x.metric.volatility||0)))} · drawdown le plus profond ${pct(Math.min(...metricByAsset.map(x=>x.metric.drawdown||0)))}. Lecture historique uniquement, aucune prévision.</p></section>
+        <section class="parallel-depth-section"><b>Provenance & lazy contract</b><p>${esc(payload.source || "Yahoo Finance")} · snapshot ${esc(dateText(payload.generated_at))} · ${payload.assets_count}/${payload.assets_expected || payload.assets_count}. Ce fichier n'appartient pas au payload de boot et reste absent de la mémoire navigateur tant que l'horizon long n'est pas demandé.</p></section>`;
+    }
+    const snap = horizonSnapshot(payload, "indices", activePeriod);
     const selected = selectedAsset("indices", rowsByAsset);
     const volumes = rowsByAsset.map(({asset,rows}) => {
       const vals = rows.map(r => finite(r.volume)).filter(v => v !== null);
@@ -376,19 +443,31 @@
   function render(domain) {
     if (!ensureShell()) return;
     const cfg = CONFIG[domain]; if (!cfg) return;
-    const payload = state.data.get(domain); if (!payload) return;
     const period = state.period.get(domain) || cfg.defaultPeriod;
+    const payload = payloadForPeriod(domain, period);
+    if (!payload) return;
     state.period.set(domain, period);
     document.documentElement.dataset.parallelMarketRuntime = domain;
     document.documentElement.dataset.parallelMarketBuild = BUILD;
     document.documentElement.dataset.parallelDepthLevel = String(DEPTH_LEVEL);
     const shell = stage()?.querySelector("[data-parallel-live-shell]"); if (!shell) return;
     shell.querySelector("[data-parallel-title]").textContent = cfg.title;
-    shell.querySelector("[data-parallel-subtitle]").textContent = domain === "cross-market" ? (payload.source_note || "Comparaison transversale Base 100.") : "Cotations publiques et historique conservés séparément · Base 100 pour la comparaison.";
+    shell.querySelector("[data-parallel-subtitle]").textContent = isLongPeriod(period)
+      ? `Historical Depth ${period.toUpperCase()} · archive chargée à la demande · ${payload.resolution || "1wk"}`
+      : domain === "cross-market" ? (payload.source_note || "Comparaison transversale Base 100.") : "Cotations publiques et historique conservés séparément · Base 100 pour la comparaison.";
     shell.querySelector("[data-parallel-source]").textContent = safeText(payload.source || cfg.source);
     shell.querySelector("[data-parallel-count]").textContent = `${payload.assets_count}/${cfg.expected}`;
     const buttons = toolbar()?.querySelectorAll("[data-parallel-period]") || [];
     buttons.forEach(b => { const p=b.getAttribute("data-parallel-period"); b.classList.toggle("is-active", p===period); b.disabled = domain==="cross-market" && p==="24h"; });
+    const longButtons = toolbar()?.querySelectorAll("[data-parallel-long-period]") || [];
+    longButtons.forEach(b => {
+      const p=b.getAttribute("data-parallel-long-period");
+      const available = domain === "indices";
+      b.classList.toggle("is-active", available && p === period);
+      b.disabled = !available;
+      b.setAttribute("aria-disabled", available ? "false" : "true");
+      b.title = available ? "Historique long chargé uniquement à la demande" : "Historique long activé dans une version dédiée ultérieure";
+    });
     const rowsByAsset = [], metricByAsset = [], series = [];
     payload.assets.forEach((asset, idx) => {
       const rows = pickSeries(asset, period, domain==="cross-market");
@@ -445,10 +524,15 @@
     depth_level:DEPTH_LEVEL,
     depth_domains:Object.freeze({indices:DEPTH_LEVEL>=190,energy:DEPTH_LEVEL>=191,"cross-market":DEPTH_LEVEL>=192}),
     depth_contract:DEPTH_LEVEL>=193 ? "shared_shell/domain_owned_depth/source_truth/no_execution" : "progressive",
+    historical_depth_lazy:true,
+    historical_boot_fetch:false,
+    historical_resident_at_boot:false,
+    historical_domains:Object.freeze({indices:true,energy:false,"cross-market":false}),
+    historical_long_periods:LONG_PERIODS,
     new_timer:false,
     new_observer:false,
     storage_owner:false,
     orders_allowed:false,
-    refresh:domain=>{state.data.delete(domain);return sync(domain);}
+    refresh:domain=>{state.data.delete(domain);for(const key of [...state.history.keys()]) if(key.startsWith(`${domain}:`)) state.history.delete(key);return sync(domain);}
   });
 })();

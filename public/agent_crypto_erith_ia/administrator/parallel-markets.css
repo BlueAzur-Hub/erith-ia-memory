@@ -403,3 +403,29 @@ html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .
 html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar [role="group"]>span:first-child{
   color:#879ba8!important;font-size:8px!important;font-weight:950!important;letter-spacing:.10em!important;text-transform:uppercase!important
 }
+
+
+/* =========================================================
+   40.4.197 — HISTORICAL DEPTH LAZY CONTROLS
+   Long histories occupy the already-reserved AFFICHER slot.
+   No shell geometry change. 5a / 10a / MAX load only on click.
+   ========================================================= */
+@media (min-width:901px){
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168>.atlas-toolbar-history-404197{
+    display:grid!important;
+    grid-template-columns:58px repeat(3,minmax(44px,1fr))!important;
+    align-items:center!important;
+    gap:4px!important;
+    overflow:hidden!important;
+  }
+  .atlas-toolbar-history-404197>small{white-space:nowrap!important}
+  .atlas-toolbar-history-404197>button{
+    min-height:28px!important;padding:5px 8px!important;border:1px solid rgba(150,170,190,.18)!important;border-radius:999px!important;
+    background:rgba(8,16,28,.65)!important;color:#91a3b1!important;font-size:9px!important;font-weight:900!important;cursor:pointer!important;
+  }
+  .atlas-toolbar-history-404197>button.is-active{
+    color:#fff!important;border-color:rgba(105,235,244,.58)!important;background:linear-gradient(180deg,rgba(31,168,184,.34),rgba(8,43,58,.86))!important;box-shadow:0 0 12px rgba(66,225,239,.14)!important;
+  }
+  .atlas-toolbar-history-404197>button:disabled{opacity:.28!important;filter:saturate(.30)!important;cursor:default!important;pointer-events:none!important}
+  .atlas-toolbar-history-404197>button[data-history-loading="1"]{opacity:.68!important;cursor:progress!important}
+}
