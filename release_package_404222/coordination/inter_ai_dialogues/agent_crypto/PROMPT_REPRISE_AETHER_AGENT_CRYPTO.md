@@ -1,0 +1,69 @@
+# AETHER — PROMPT DE REPRISE AGENT-CRYPTO
+
+Version de reprise : **40.4.222**
+Market Core : **38.15.11 — PROTÉGÉ**  
+Mode : **Administrator**
+
+## Démarrage minimal
+
+Lire d'abord :
+1. `public/agent_crypto_erith_ia/administrator/version.json` ;
+2. `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md` ;
+3. `public/agent_crypto_erith_ia/administrator/js/market-stack.js` ;
+4. `public/agent_crypto_erith_ia/administrator/js/parallel-markets.js` ;
+5. `public/agent_crypto_erith_ia/administrator/js/market-reading-depth.js`.
+
+Ne charger une mémoire privée que si elle change réellement la décision. Pour le code, conserver la méthode chirurgicale : lire → diagnostiquer → cibler → corriger → vérifier → s'arrêter.
+
+## État canonique
+
+Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross → Crypto**. Crypto reste le maître de géométrie. La géométrie validée 40.4.189/40.4.195, le rail droit, le Window Manager, Atlas, Oracle, Bridge et Backend ne doivent pas être rouverts sans preuve de régression.
+
+40.4.209 consolide la parité visuelle : identité couleur stable par actif, axe temporel réel, inspection historique, tableau permanent superposé sur Indices/Énergie/Cross, propagation couleur au rail, aux tableaux de lecture profonde et aux rôles leader/retard du Math Core.
+
+40.4.210 est un verrou de **Cache Truth** : les quatre payloads marché effectivement modifiés par 40.4.205→40.4.209 (`parallel-markets.css`, `market-reading-depth.css`, `js/parallel-markets.js`, `js/market-reading-depth.js`) sont désormais appelés par des URL versionnées 40.4.210. Leur contenu fonctionnel reste inchangé ; `market-stack.js` et `version-truth.js` ne sont pas artificiellement republiés.
+
+40.4.211 verrouille l’**autorité unique d’affichage de version** : `market-stack.js` ne peut plus écrire `#atlasVersionControlText`; le badge first-paint est synchronisé par le release driver, `version-truth.js` reste l’autorité runtime globale, et les versions de module sont explicitement séparées de la release Agent-Crypto.
+
+40.4.212 réarme **Atlas CURRENT** une seule fois après boot complet via le propriétaire canonique existant, sans nouveau timer/observer/fetch/scheduler.
+
+40.4.213 converge la **vérité d’architecture Markets** : cycle Crypto → Métaux → Indices → Énergie → Cross, `market-stack.js` routeur, `parallel-markets.js` propriétaire des domaines parallèles, contrats 40.4.166/167 historiques.
+
+40.4.214 restaure l’**ingestion de l’univers Extended** lorsque la vue mémorisée 500/1000 est appliquée après hydratation du Market ; le loader 40.3.115 existant est réutilisé. `build.json` est désormais écrit et validé par l’infrastructure canonique de release.
+
+40.4.215 verrouille la **vérité de couverture Market** : 50/100/250/500/1000 sont des plafonds de rang CoinGecko, pas des nombres de lignes garantis. Les rangs ex æquo sont préservés, les actifs sont uniques par ID, la couverture réelle expose rangs distincts/max observé et aucun rang manquant n’est fabriqué.
+
+40.4.216 verrouille la **parité textuelle de cette couverture** : le footer secondaire du Market Snapshot réutilise `atlasMarketUniverseCoverageTruth404215()` et retire les anciens libellés de cardinalité `univers cumulé x/limit`, `Core x/250` et `Extended x/(limit-250)`. Aucun changement de données, de rang ou de comportement marché.
+
+40.4.217 verrouille la **délégation événementielle du Market Snapshot Core** : les clics/clavier de lignes et les actions Solo/Suivi/Alerte/Sources sont possédés par un listener stable du conteneur, au lieu de recréer un listener par ligne/bouton à chaque rendu. L’Extended garde son propriétaire délégué 40.3.116.
+
+40.4.218 retire le **MutationObserver de compatibilité du badge global** devenu sans propriétaire adversaire après 40.4.211. `version-truth.js` conserve la réconciliation publiée, le runtime racine conserve les états de cohérence/publication skew et l’Administrator conserve le first-runtime identity. `market-stack.js` reste interdit d’écriture sur `#atlasVersionControlText`.
+
+40.4.219 étend la **Version Truth aux assets réellement chargés** : chaque JavaScript/CSS local référencé par `index.html` doit désormais être présent dans la table SHA-256 de `version.json`. Cette couverture inclut les anciens propriétaires chargés mais jusque-là hors manifest ; aucune URL de cache ni logique métier n’est modifiée.
+
+40.4.220 verrouille le **propriétaire Atlas Heartbeat CURRENT** : `atlas-heartbeat-rearm.js` doit rester un réarmement boot-complete one-shot qui réutilise `atlasCurrentPendingMarket137` (fallback existant `atlasCurrentPendingAutoKick4051`) et ne peut acquérir fetch, timer, observer, WebSocket, rAF ou scheduler. Le guard surveille désormais cette forme à chaque release.
+
+## Vérités protégées
+
+- Market Core **38.15.11** inchangé.
+- Aucun nouveau moteur de graphique.
+- Aucun nouveau fetch, timer, MutationObserver, WebSocket ou requestAnimationFrame dans les propriétaires parallèles/lecture profonde.
+- Historique 5a/10a/MAX toujours lazy et chargé uniquement à l'appel.
+- Futures continus ≠ spot.
+- Base 100 = comparaison relative.
+- Corrélation ≠ causalité.
+- Aucune valeur inventée, aucune prévision, aucun ordre.
+- La couleur est redondante avec symbole/nom/valeur : elle ne porte jamais seule l'information.
+
+## Règle de travail
+
+Une dette → un propriétaire → une chirurgie → une preuve → un commit → stop. Ne jamais revenir à un ancien commit pour reconstruire une version : partir du `main` courant et préserver les mises à jour de données automatiques.
+
+40.4.221 reconnecte la **façade Simulation dual-profile** au runtime historique : `solo_beginner_100_v1_1_alpha_13` et `solo_progression_1000_v1` restent deux états locaux isolés. La source `views/system.html` et le shell parser `js/views/system-presentation.js` portent de nouveau les hooks dynamiques du profil et du Mode École ; aucune reconstruction du moteur, des 11 leçons, du journal, d’IndexedDB ou de Kraken Paper.
+
+40.4.222 verrouille la **vérité de présentation System/Simulation** : les cartes statiques ne parlent plus de future mémoire locale, d’agents seulement en preview, d’un troisième snapshot obligatoire ou d’un ancien plan V1.2. La mémoire IndexedDB et la reprise dynamique déjà actives restent les propriétaires de vérité. Le placeholder de synthèse d’un module neuf à 0/5 est conservé : il est correct tant que les preuves ne sont pas validées.
+
+### Livraison différentielle et images RND
+- Une version de travail se livre en ZIP minimal contenant uniquement ses fichiers modifiés + `FILES_CHANGED` + commit ; pas de ZIP géant du dépôt.
+- Les images RND sont préparées en séries et uploadées manuellement par Christophe dans `administrator/assets/visual/technical-reading/`. Ne référencer de nouveaux fichiers RND dans le runtime qu’après preuve qu’ils existent sur `main`.
+- Les thèmes temporels Aerith restent dominants pour la chronologie. Le futur thème **Glass** (extérieur transparent, sections/sous-sections sombres) est un chantier séparé : ne pas l’ouvrir sans demande explicite.
