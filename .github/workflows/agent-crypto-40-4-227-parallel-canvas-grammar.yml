@@ -1,0 +1,329 @@
+name: Agent-Crypto 40.4.227 Parallel Markets Crypto Canvas Visual Grammar
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40-4-227-parallel-canvas
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebase and parent guard
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('public/agent_crypto_erith_ia/administrator/version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.226', m['build']
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          print('PARENT_PASS 40.4.226 / Market Core 38.15.11 PROTECTED')
+          PY
+
+      - name: Apply bounded parallel canvas visual grammar
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          js_p=base/'js/parallel-markets.js'
+          css_p=base/'parallel-markets.css'
+          idx_p=base/'index.html'
+          sys_p=base/'js/views/system-presentation.js'
+          for p in (js_p,css_p,idx_p,sys_p):
+              if not p.is_file(): raise SystemExit(f'missing {p}')
+
+          js=js_p.read_text(encoding='utf-8')
+          css=css_p.read_text(encoding='utf-8')
+          idx=idx_p.read_text(encoding='utf-8')
+          system=sys_p.read_text(encoding='utf-8')
+
+          primitives=('fetch(','setInterval(','setTimeout(','MutationObserver(','WebSocket(','requestAnimationFrame(')
+          before={t:js.count(t) for t in primitives}
+          if 'const BUILD = "40.4.211";' not in js:
+              raise SystemExit('parallel-markets BUILD parent drift')
+          js=js.replace('const BUILD = "40.4.211";','const BUILD = "40.4.227";',1)
+
+          new_draw=r'''  function drawCanvas(series, period, accent) {
+    const canvas = byId("atlasParallelLiveCanvas404170");
+    if (!canvas) return;
+    clearCanvasHover();
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(640, Math.round(rect.width || canvas.parentElement?.clientWidth || 980));
+    const height = Math.max(340, Math.round(rect.height || canvas.parentElement?.clientHeight || 430));
+    const dpr = Math.max(1, Math.min(2, Number(window.devicePixelRatio) || 1));
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,width,height);
+
+    const validSeries = (series || []).map((s,index) => ({...s, color:s.color || COLORS[index % COLORS.length], points:(s.points || []).filter(p => Number.isFinite(Number(p?.value))) })).filter(s => s.points.length);
+    if (!validSeries.length) {
+      state.hover = {series:[],period,domain:state.current,geometry:null};
+      return;
+    }
+
+    const all = validSeries.flatMap(s => s.points);
+    const values = all.map(p => Number(p.value)).filter(Number.isFinite);
+    let min = Math.min(100,...values), max = Math.max(100,...values);
+    const rawSpan = Math.max(.4, max-min);
+    const visualPad = Math.max(.18, rawSpan*.10);
+    min -= visualPad; max += visualPad;
+    const timeValues = all.map(pointTimeMs).filter(Number.isFinite);
+    const timeMin = Math.min(...timeValues), timeMax = Math.max(...timeValues);
+    const timeSpan = Math.max(1,timeMax-timeMin);
+
+    const pad = {l:62,r:18,t:20,b:42};
+    const w = Math.max(1,width-pad.l-pad.r), h = Math.max(1,height-pad.t-pad.b);
+    const yFor = value => pad.t + (1-((value-min)/(max-min)))*h;
+    const xFor = (point,index,count) => {
+      const ms = pointTimeMs(point);
+      return ms !== null ? pad.l + ((ms-timeMin)/timeSpan)*w : pad.l + (index/Math.max(1,count-1))*w;
+    };
+
+    /* 40.4.227 — Crypto visual grammar only: same real points, same Base 100 math. */
+    ctx.save();
+    ctx.lineWidth = 1;
+    for (let i=0;i<=5;i++) {
+      const y = pad.t + (h/5)*i;
+      ctx.strokeStyle = i===5 ? 'rgba(159,194,210,.16)' : 'rgba(159,194,210,.105)';
+      ctx.beginPath(); ctx.moveTo(pad.l,y); ctx.lineTo(width-pad.r,y); ctx.stroke();
+    }
+    for (let i=0;i<=6;i++) {
+      const x = pad.l + (w/6)*i;
+      ctx.strokeStyle = 'rgba(159,194,210,.075)';
+      ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,height-pad.b); ctx.stroke();
+    }
+
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 10px system-ui';
+    for (let i=0;i<=5;i++) {
+      const v=max-(max-min)*(i/5), y=pad.t+(h/5)*i;
+      ctx.fillStyle='rgba(190,211,222,.66)';
+      ctx.fillText(v.toFixed(1),pad.l-9,y);
+    }
+
+    if (100>=min && 100<=max) {
+      const y100=yFor(100);
+      ctx.save();
+      ctx.setLineDash([6,5]);
+      ctx.strokeStyle='rgba(238,214,142,.42)';
+      ctx.lineWidth=1.15;
+      ctx.beginPath(); ctx.moveTo(pad.l,y100); ctx.lineTo(width-pad.r,y100); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.textAlign='left'; ctx.font='900 9px system-ui'; ctx.fillStyle='rgba(255,232,164,.82)';
+      ctx.fillText('BASE 100',pad.l+7,Math.max(pad.t+10,y100-9));
+      ctx.restore();
+    }
+
+    validSeries.forEach((s,idx) => {
+      if (s.points.length<2) return;
+      ctx.strokeStyle=s.color;
+      ctx.lineWidth=idx===0 ? 2.8 : 2.2;
+      ctx.lineJoin='round'; ctx.lineCap='round';
+      ctx.beginPath();
+      s.points.forEach((p,i) => {
+        const x=xFor(p,i,s.points.length), y=yFor(Number(p.value));
+        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      const last=s.points[s.points.length-1];
+      const lx=xFor(last,s.points.length-1,s.points.length), ly=yFor(Number(last.value));
+      ctx.fillStyle='#07111c'; ctx.strokeStyle=s.color; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.arc(lx,ly,3.4,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    });
+
+    ctx.textBaseline='alphabetic';
+    ctx.fillStyle='rgba(188,208,220,.72)';
+    ctx.font='700 10px system-ui';
+    for (let i=0;i<=5;i++) {
+      const ratio=i/5, stamp=timeMin+timeSpan*ratio, d=new Date(stamp);
+      const label=period==='24h'
+        ? d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})
+        : d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year: period==='7j'||period==='30j' ? undefined : '2-digit'});
+      ctx.textAlign=i===0?'left':i===5?'right':'center';
+      ctx.fillText(label,pad.l+w*ratio,height-20);
+    }
+    ctx.textAlign='left'; ctx.font='900 9px system-ui'; ctx.fillStyle=accent || '#dce5ec';
+    ctx.fillText(`BASE 100 · ${period.toUpperCase()} · HISTORIQUE RÉEL`,pad.l,height-7);
+    ctx.textAlign='right'; ctx.fillStyle='rgba(132,159,175,.76)'; ctx.font='800 8px system-ui';
+    ctx.fillText('SURVOL = POINT RÉEL LE PLUS PROCHE',width-pad.r,height-7);
+    ctx.restore();
+
+    state.hover = {series:validSeries,period,domain:state.current,geometry:{pad,w,h,width,height,min,max,timeMin,timeMax}};
+  }'''
+          pattern=r'  function drawCanvas\(series, period, accent\) \{.*?\n  \}\n\n  function latestValue'
+          js,count=re.subn(pattern,lambda m:new_draw+'\n\n  function latestValue',js,count=1,flags=re.S)
+          if count!=1: raise SystemExit(f'drawCanvas owner drift: {count}')
+
+          after={t:js.count(t) for t in primitives}
+          if before!=after: raise SystemExit(f'primitive drift {before}->{after}')
+          if js.count('40.4.227 — Crypto visual grammar only')!=1:
+              raise SystemExit('40.4.227 draw marker missing')
+          js_p.write_text(js,encoding='utf-8')
+
+          marker='40.4.227 — PARALLEL MARKETS / CRYPTO CANVAS VISUAL GRAMMAR LOCK'
+          if marker in css: raise SystemExit('40.4.227 CSS already present')
+          css += r'''
+
+/* =========================================================
+   40.4.227 — PARALLEL MARKETS / CRYPTO CANVAS VISUAL GRAMMAR LOCK
+   Presentation only. Crypto remains the geometry master. Real histories,
+   Base 100 normalization, sources, periods and hover point truth unchanged.
+   ========================================================= */
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-stage{
+  border-radius:12px;
+  border-color:color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 27%,rgba(116,190,218,.18));
+  background:
+    radial-gradient(circle at 74% 16%,color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 8%,transparent),transparent 35%),
+    linear-gradient(180deg,rgba(2,10,18,.72),rgba(2,15,23,.58));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.018),inset 0 0 30px rgba(53,162,205,.035);
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  box-shadow:inset 0 1px rgba(255,255,255,.025),inset 0 -1px rgba(87,188,218,.035);
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary{
+  border-radius:11px;
+  background:linear-gradient(100deg,rgba(4,17,28,.93),rgba(7,22,31,.87));
+  border-color:color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 35%,rgba(255,255,255,.08));
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-legend span{
+  border-radius:999px;background:rgba(3,12,21,.84);
+}
+html[data-cyclic-market-mode="parallel"] #atlasParallelLiveCanvas404170{
+  image-rendering:auto;
+}
+'''
+          css_p.write_text(css,encoding='utf-8')
+
+          old_css='./parallel-markets.css?v=40.4.210'
+          old_js='./js/parallel-markets.js?v=40.4.211'
+          old_sys='system-presentation.js?v=administrator-build-40.4.226'
+          for old in (old_css,old_js,old_sys):
+              if old not in idx: raise SystemExit(f'index cache parent drift: {old}')
+          idx=idx.replace(old_css,'./parallel-markets.css?v=40.4.227',1)
+          idx=idx.replace(old_js,'./js/parallel-markets.js?v=40.4.227',1)
+          idx=idx.replace(old_sys,'system-presentation.js?v=administrator-build-40.4.227',1)
+          idx_p.write_text(idx,encoding='utf-8')
+
+          old_source='const SOURCE="./views/system.html?v=administrator-build-40.4.226";'
+          if old_source not in system: raise SystemExit('System SOURCE token parent drift')
+          sys_p.write_text(system.replace(old_source,'const SOURCE="./views/system.html?v=administrator-build-40.4.227";',1),encoding='utf-8')
+          print('PARALLEL_CANVAS_VISUAL_GRAMMAR_PASS')
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          git diff --check
+
+      - name: Canonical release driver
+        shell: bash
+        run: |
+          cat >/tmp/contract.json <<'JSON'
+          {"state":"active","scope":"parallel_market_canvas_presentation_only","crypto_geometry_master":true,"domains":["indices","energy","cross-market"],"metals_native_unchanged":true,"base100_math_changed":false,"history_data_changed":false,"sources_changed":false,"periods_changed":false,"hover_point_truth_changed":false,"market_core_modified":false,"new_chart_engine":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py --build 40.4.227 --parent 40.4.226 --release "PARALLEL MARKETS · CRYPTO CANVAS VISUAL GRAMMAR LOCK" --status parallel_market_crypto_canvas_visual_grammar_404227 --contract-key parallel_market_crypto_canvas_visual_grammar_404227 --contract-json /tmp/contract.json --lineage-note "40.4.227 Parallel Markets canvas presentation: Indices, Energy and Cross adopt Crypto-like grid, Base 100 reference and denser real-time axis grammar; real histories, sources, periods, hover truth, Metals native renderer and Market Core unchanged"
+
+      - name: Version Truth and scope proof
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python3 .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.227 --expected-release "PARALLEL MARKETS · CRYPTO CANVAS VISUAL GRAMMAR LOCK"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          js=(base/'js/parallel-markets.js').read_text(encoding='utf-8')
+          css=(base/'parallel-markets.css').read_text(encoding='utf-8')
+          idx=(base/'index.html').read_text(encoding='utf-8')
+          m=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.227' and m['parent_build']=='40.4.226'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          assert 'const BUILD = "40.4.227";' in js
+          assert js.count('40.4.227 — Crypto visual grammar only')==1
+          assert 'BASE 100 · ${period.toUpperCase()} · HISTORIQUE RÉEL' in js
+          assert 'SURVOL = POINT RÉEL LE PLUS PROCHE' in js
+          assert '40.4.227 — PARALLEL MARKETS / CRYPTO CANVAS VISUAL GRAMMAR LOCK' in css
+          assert './parallel-markets.css?v=40.4.227' in idx
+          assert './js/parallel-markets.js?v=40.4.227' in idx
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/js/parallel-markets.js',
+            'public/agent_crypto_erith_ia/administrator/parallel-markets.css',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/build.json'
+          }
+          lines=subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines(); paths={line[3:] for line in lines}
+          required={
+            'public/agent_crypto_erith_ia/administrator/js/parallel-markets.js',
+            'public/agent_crypto_erith_ia/administrator/parallel-markets.css',
+            'public/agent_crypto_erith_ia/administrator/version.json'
+          }
+          if not required<=paths: raise SystemExit(f'required diff missing: {sorted(paths)}')
+          if paths-allowed: raise SystemExit(f'out of scope: {sorted(paths-allowed)}')
+          print('SCOPE_PASS',sorted(paths))
+          PY
+          git diff --check
+
+      - name: Commit canonical 40.4.227
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/js/parallel-markets.js public/agent_crypto_erith_ia/administrator/parallel-markets.css public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/js/app.js public/agent_crypto_erith_ia/administrator/version.json public/agent_crypto_erith_ia/administrator/administrator-version.json public/agent_crypto_erith_ia/administrator/build.json
+          git commit -m "agent-crypto: build 40.4.227 harmonize parallel market canvas grammar"
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Package changed files only
+        shell: bash
+        run: |
+          PKG=/tmp/agent-crypto-40.4.227; mkdir -p "$PKG"
+          git diff --name-only "$BASE_SHA" "$RELEASE_SHA" > /tmp/changed.txt
+          while IFS= read -r p; do mkdir -p "$PKG/$(dirname "$p")"; cp "$p" "$PKG/$p"; done < /tmp/changed.txt
+          {
+            echo "# Agent-Crypto 40.4.227 — fichiers modifiés"; echo
+            echo "Release: PARALLEL MARKETS · CRYPTO CANVAS VISUAL GRAMMAR LOCK"
+            echo "Parent: 40.4.226"; echo "Market Core: 38.15.11 PROTECTED"; echo "Canonical commit: $RELEASE_SHA"; echo
+            echo "## Fichiers"; sed 's/^/- `/' /tmp/changed.txt | sed 's/$/`/'; echo
+            echo "## Verrous"; echo "- Crypto remains geometry master."; echo "- Indices / Energy / Cross: presentation-only canvas grammar harmonization."; echo "- Real histories, Base 100 math, sources, periods and hover point truth unchanged."; echo "- Metals native renderer unchanged."; echo "- No new chart engine / timer / observer / fetch / WebSocket / scheduler."; echo "- Market Core unchanged."
+          } > "$PKG/FILES_CHANGED_40.4.227.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_227_PARALLEL_MARKETS_CRYPTO_CANVAS_VISUAL_GRAMMAR_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_227_PARALLEL_MARKETS_CRYPTO_CANVAS_VISUAL_GRAMMAR_CHANGED_FILES.zip
+          unzip -l AGENT_CRYPTO_BUILD_40_4_227_PARALLEL_MARKETS_CRYPTO_CANVAS_VISUAL_GRAMMAR_CHANGED_FILES.zip
+
+      - name: Upload differential ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_227_PARALLEL_MARKETS_CRYPTO_CANVAS_VISUAL_GRAMMAR_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_227_PARALLEL_MARKETS_CRYPTO_CANVAS_VISUAL_GRAMMAR_CHANGED_FILES.zip
+          include-hidden-files: true
