@@ -1,0 +1,31 @@
+name: Agent-Crypto 40.4.221 Export Artifact
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tmp-agent-crypto-40-4-221-export.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build exact 40.4.221 full-tree ZIP
+        run: |
+          git archive --format=zip --output="$RUNNER_TEMP/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_FULL_GITHUB_TREE.zip" 34591fbfd2ca141f0eb57ceae813a0abfe355f0a
+          sha256sum "$RUNNER_TEMP/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_FULL_GITHUB_TREE.zip"
+      - name: Upload exact release ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_221_FULL_GITHUB_TREE
+          path: ${{ runner.temp }}/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_FULL_GITHUB_TREE.zip
+          if-no-files-found: error
+          retention-days: 7
