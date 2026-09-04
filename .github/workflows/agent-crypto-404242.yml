@@ -1,0 +1,322 @@
+name: Agent-Crypto 40.4.242 Technical Reading dock placement recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-404242.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore Technical Reading canonical dock placement owner
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re, textwrap
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          version = json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert version['build'] == '40.4.241', version['build']
+          assert version['engine']['reference_build'] == '38.15.11'
+          assert version['engine']['status'] == 'protected'
+
+          index_path = base/'index.html'
+          text = index_path.read_text(encoding='utf-8')
+          assert text.count('atlasTechnicalReadingFrameGeometry404241') == 1
+          assert 'atlasTechnicalReadingDockPlacement404242' not in text
+
+          owner = textwrap.dedent(r'''
+            <style id="atlasTechnicalReadingDockPlacement404242">
+              /* 40.4.242 — TECHNICAL READING DOCK PLACEMENT RECOVERY
+                 40.4.241 incorrectly took position ownership of #detailPanel and
+                 let the canonical right-dock panel fall back into normal document flow.
+                 This owner returns placement authority to the historical dock while
+                 retaining the 40.4.241 full-panel portrait wrapper and foreground HUD.
+                 RND, local picker, focal x/y and all market runtimes are untouched. */
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 {
+                overflow: hidden !important;
+              }
+
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::before,
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::after {
+                content: none !important;
+                display: none !important;
+                background: none !important;
+                opacity: 0 !important;
+              }
+
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+              .detail-project-visual.admin-tech-r3 {
+                position: absolute !important;
+                inset: 0 !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                display: block !important;
+                width: 100% !important;
+                height: 100% !important;
+                min-width: 0 !important;
+                min-height: 0 !important;
+                max-width: none !important;
+                max-height: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                flex: none !important;
+                aspect-ratio: auto !important;
+                overflow: hidden !important;
+                background: transparent !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                z-index: 0 !important;
+              }
+
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+              .detail-project-visual.admin-tech-r3 > .admin-tech-portrait-r3 {
+                position: absolute !important;
+                inset: 0 !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                min-width: 100% !important;
+                min-height: 100% !important;
+                max-width: none !important;
+                max-height: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                object-fit: cover !important;
+                object-position: var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;
+                opacity: 1 !important;
+                filter: none !important;
+                transform: none !important;
+                z-index: 0 !important;
+                pointer-events: none !important;
+              }
+
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-toggle,
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .atlas-tech-static-toolbar,
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-body {
+                position: relative !important;
+                z-index: 3 !important;
+              }
+
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-body {
+                min-height: 0 !important;
+                background: transparent !important;
+              }
+            </style>
+          ''')
+
+          old_owner = re.compile(
+              r'\n?<style id="atlasTechnicalReadingFrameGeometry404241">.*?</style>\n?',
+              re.S,
+          )
+          text, count = old_owner.subn('\n\n' + owner + '\n', text, count=1)
+          assert count == 1, count
+          assert 'atlasTechnicalReadingFrameGeometry404241' not in text
+          assert text.count('atlasTechnicalReadingDockPlacement404242') == 1
+
+          old_script = '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.241"></script>'
+          new_script = '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.242"></script>'
+          assert old_script in text
+          assert new_script not in text
+          text = text.replace(old_script, new_script, 1)
+          index_path.write_text(text, encoding='utf-8')
+
+          system_path = base/'js/views/system-presentation.js'
+          system = system_path.read_text(encoding='utf-8')
+          old_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.241";'
+          new_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.242";'
+          assert old_source in system
+          assert new_source not in system
+          system_path.write_text(system.replace(old_source, new_source, 1), encoding='utf-8')
+
+          contract = {
+            'build': '40.4.242',
+            'parent': '40.4.241',
+            'visual_only': True,
+            'technical_reading_only': True,
+            'user_screenshot_contract': 'technical_reading_remains_docked_right_of_crypto_graph_with_full_panel_portrait',
+            'detail_panel_position_owner_restored_to_canonical_css': True,
+            'detail_panel_position_override_removed': True,
+            'wrapper_position': 'absolute',
+            'wrapper_inset': '0',
+            'wrapper_width': '100%',
+            'wrapper_height': '100%',
+            'portrait_fit': 'cover',
+            'object_position_variables_preserved': True,
+            'foreground_hud_z_order_preserved': True,
+            'rnd_library_changed': False,
+            'rnd_assets_changed': False,
+            'local_upload_changed': False,
+            'private_image_storage_changed': False,
+            'graph_changed': False,
+            'parallel_markets_changed': False,
+            'atlas_changed': False,
+            'math_core_changed': False,
+            'window_manager_changed': False,
+            'market_core_changed': False,
+            'protected_market_core': '38.15.11',
+            'new_timer': False,
+            'new_observer': False,
+            'new_fetch': False,
+            'new_websocket': False,
+            'new_scheduler': False
+          }
+          Path('/tmp/contract-404242.json').write_text(
+              json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8'
+          )
+          PY
+
+      - name: Release identity 40.4.242
+        run: |
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.242 \
+            --parent 40.4.241 \
+            --release "TECHNICAL READING · CANONICAL RIGHT-DOCK PLACEMENT RECOVERY" \
+            --status "technical_reading_canonical_right_dock_recovery_404242" \
+            --contract-key "technical_reading_canonical_right_dock_recovery_404242" \
+            --contract-json /tmp/contract-404242.json \
+            --lineage-note "40.4.242 removes the erroneous 40.4.241 #detailPanel position override, restoring canonical right-dock placement while retaining the full-panel portrait wrapper"
+
+      - name: Technical Reading dock proof assertions
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          index=(base/'index.html').read_text(encoding='utf-8')
+          app=(base/'js/app.js').read_text(encoding='utf-8')
+          system=(base/'js/views/system-presentation.js').read_text(encoding='utf-8')
+          version=json.loads((base/'version.json').read_text(encoding='utf-8'))
+
+          assert version['build']=='40.4.242'
+          assert version['parent_build']=='40.4.241'
+          assert version['engine']['reference_build']=='38.15.11'
+          assert version['engine']['status']=='protected'
+          assert 'atlasTechnicalReadingFrameGeometry404241' not in index
+          assert index.count('atlasTechnicalReadingDockPlacement404242') == 1
+
+          start=index.index('<style id="atlasTechnicalReadingDockPlacement404242">')
+          end=index.index('</style>', start)
+          owner=index[start:end]
+          detail_selector = '#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 {'
+          assert detail_selector in owner
+          detail_block = owner[owner.index(detail_selector):owner.index('}', owner.index(detail_selector))]
+          assert 'position:' not in detail_block, detail_block
+          for proof in (
+              '.detail-project-visual.admin-tech-r3 {',
+              'position: absolute !important;',
+              'inset: 0 !important;',
+              'width: 100% !important;',
+              'height: 100% !important;',
+              'object-fit: cover !important;',
+              'object-position: var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;',
+              'z-index: 3 !important;',
+          ):
+              assert proof in owner, proof
+
+          assert '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.242"></script>' in index
+          assert 'const ADMIN_BUILD = "40.4.242";' in app
+          assert 'const ENGINE_BUILD = "38.15.11";' in app
+          assert 'const SOURCE="./views/system.html?v=administrator-build-40.4.242";' in system
+          PY
+
+          python .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build 40.4.242 \
+            --expected-release "TECHNICAL READING · CANONICAL RIGHT-DOCK PLACEMENT RECOVERY"
+
+      - name: Scope guard
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+          }
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          extra=changed-allowed
+          missing=allowed-changed
+          assert not extra, f'out-of-scope: {sorted(extra)}'
+          assert not missing, f'missing expected identity files: {sorted(missing)}'
+          print('scope ok:', *sorted(changed), sep='\n- ')
+          PY
+
+      - name: Commit release
+        shell: bash
+        run: |
+          git config user.name "Aether Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.242 restore Technical Reading canonical right dock"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Build differential package
+        shell: bash
+        run: |
+          mkdir -p /tmp/pkg
+          git diff --name-only HEAD^ HEAD | while read f; do
+            mkdir -p "/tmp/pkg/$(dirname "$f")"
+            cp "$f" "/tmp/pkg/$f"
+          done
+          cat > /tmp/pkg/FILES_CHANGED_40.4.242.md <<'EOF'
+          # Agent-Crypto 40.4.242 — changed files
+
+          Technical Reading only: canonical right-dock placement recovery.
+
+          - Removes the erroneous 40.4.241 `position: relative !important` takeover on `#detailPanel`.
+          - Returns panel placement authority to the pre-existing canonical dock CSS.
+          - Keeps the portrait wrapper absolute full-panel and portrait `object-fit: cover`.
+          - Keeps HUD/title/temporal/RND controls/detail body above the portrait.
+          - RND library/assets, local upload/storage, Graph, Parallel Markets, Atlas, Math Core, Window Manager and Market Core are unchanged.
+          EOF
+          cd /tmp/pkg
+          zip -qr /tmp/AGENT_CRYPTO_BUILD_40_4_242_TECHNICAL_READING_CANONICAL_RIGHT_DOCK_CHANGED_FILES.zip .
+          sha256sum /tmp/AGENT_CRYPTO_BUILD_40_4_242_TECHNICAL_READING_CANONICAL_RIGHT_DOCK_CHANGED_FILES.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_242_TECHNICAL_READING_CANONICAL_RIGHT_DOCK_CHANGED_FILES
+          path: /tmp/AGENT_CRYPTO_BUILD_40_4_242_TECHNICAL_READING_CANONICAL_RIGHT_DOCK_CHANGED_FILES.zip
+          if-no-files-found: error
