@@ -1,0 +1,149 @@
+/* Agent-Crypto — Market Visual Master Parity
+   Final presentation owner for Metals + Indices + Energy + Cross.
+   Crypto remains the visual master. No data/renderer/source/math ownership. */
+
+:root{
+  --market-master-glass:rgba(3,12,22,.84);
+  --market-master-glass-soft:rgba(3,12,22,.66);
+  --market-master-line:rgba(98,236,255,.20);
+  --market-master-gold:rgba(255,216,135,.90);
+  --market-master-cyan:rgba(98,236,255,.92);
+}
+
+/* One visual instrument: shell, stage, summary and rail share the Crypto grammar. */
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-shell,
+html[data-cyclic-market-domain="metals"] #analyste.champagne-clean-lens .chart-panel{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  border:1px solid color-mix(in srgb,var(--cyclic-market-accent,#d8c07a) 28%,rgba(98,236,255,.16))!important;
+  border-radius:16px!important;
+  background:
+    linear-gradient(180deg,rgba(2,8,17,.20),rgba(2,8,17,.38)),
+    url("./assets/visual/admin-chart-office.png") center/cover no-repeat!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025),0 16px 40px rgba(0,0,0,.20)!important;
+}
+
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-stage{
+  border-radius:13px!important;
+  border:1px solid color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 26%,rgba(98,236,255,.14))!important;
+  background:
+    linear-gradient(180deg,rgba(1,7,14,.34),rgba(1,8,15,.18)),
+    radial-gradient(circle at 74% 18%,color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 9%,transparent),transparent 36%)!important;
+  box-shadow:inset 0 0 36px rgba(30,150,205,.045)!important;
+}
+
+html[data-cyclic-market-mode="parallel"] #atlasParallelLiveCanvas404170{
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.38))!important;
+}
+
+/* Operator bar: same dense metallic/glass cadence as Crypto. */
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168,
+html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar{
+  min-height:46px!important;
+  padding:5px 8px!important;
+  border:1px solid rgba(98,236,255,.12)!important;
+  border-radius:12px!important;
+  background:linear-gradient(180deg,rgba(4,13,24,.80),rgba(2,8,17,.64))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 7px 18px rgba(0,0,0,.16)!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 button,
+html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar button{
+  min-height:30px!important;
+  border-radius:9px!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(0,0,0,.16))!important;
+  color:#c8d6df!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 button.is-active,
+html[data-cyclic-market-domain="metals"] #atlasMetalsUnifiedToolbar button.is-active{
+  color:#f6fbff!important;
+  border-color:color-mix(in srgb,var(--cyclic-market-accent,#d8c07a) 68%,rgba(255,255,255,.18))!important;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--cyclic-market-accent,#d8c07a) 25%,rgba(7,20,32,.88)),rgba(3,10,18,.90))!important;
+  box-shadow:0 0 14px color-mix(in srgb,var(--cyclic-market-accent,#d8c07a) 18%,transparent),inset 0 1px 0 rgba(255,255,255,.06)!important;
+}
+
+/* Crypto-like summary glass in the chart, not a detached generic strip. */
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary{
+  padding:10px 13px!important;
+  min-height:54px!important;
+  max-width:min(720px,calc(100% - 52px))!important;
+  border-left:4px solid color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 82%,white)!important;
+  border-radius:12px!important;
+  background:linear-gradient(110deg,rgba(3,13,23,.93),rgba(5,19,29,.84))!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.24),inset 0 0 0 1px rgba(255,255,255,.025)!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary b{
+  font-size:15px!important;
+  color:#fff0c9!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary span{
+  color:#a9bdc9!important;
+  font-weight:800!important;
+}
+
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-legend{
+  gap:6px!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-legend span{
+  min-height:25px!important;
+  padding:5px 8px!important;
+  background:rgba(2,9,18,.79)!important;
+  border:1px solid color-mix(in srgb,var(--series,#fff) 24%,rgba(255,255,255,.08))!important;
+  box-shadow:0 5px 14px rgba(0,0,0,.17)!important;
+}
+
+/* Right rail: same information hierarchy and card rhythm as Crypto. */
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168{
+  padding:13px!important;
+  border-radius:15px!important;
+  background:linear-gradient(180deg,rgba(3,12,22,.94),rgba(3,10,19,.90))!important;
+  border:1px solid color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 28%,rgba(98,236,255,.13))!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.018),0 18px 36px rgba(0,0,0,.22)!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168 header{
+  padding-bottom:10px!important;
+  margin-bottom:10px!important;
+  border-bottom:1px solid rgba(255,255,255,.09)!important;
+}
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168 header strong{
+  font-size:19px!important;
+  line-height:1.05!important;
+  color:color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 42%,#fff0c9)!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-detail-state span,
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-math-grid span,
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168 section,
+html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168 article{
+  border-radius:11px!important;
+  background:rgba(5,16,27,.72)!important;
+  border-color:rgba(255,255,255,.085)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.022)!important;
+}
+
+/* Memory + source-truth bars finish the graph like Crypto. */
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-memory,
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-source-truth{
+  min-height:36px!important;
+  border-radius:10px!important;
+  border:1px solid rgba(98,236,255,.14)!important;
+  background:linear-gradient(90deg,rgba(3,14,24,.88),rgba(3,10,18,.70))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02)!important;
+}
+
+/* Metals receives the same glass quality without touching its native renderer. */
+html[data-cyclic-market-domain="metals"] #analyste.champagne-clean-lens .chart-toolbar,
+html[data-cyclic-market-domain="metals"] #analyste.champagne-clean-lens .chart-memory-bar,
+html[data-cyclic-market-domain="metals"] #analyste.champagne-clean-lens .chart-legend,
+html[data-cyclic-market-domain="metals"] #analyste.champagne-clean-lens .chart-analysis-card{
+  border-radius:11px!important;
+  background:rgba(3,12,22,.76)!important;
+  border-color:rgba(255,216,135,.16)!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+
+@media(max-width:900px){
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary{max-width:none!important;min-height:0!important}
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketInertDetail404168{padding:10px!important}
+}

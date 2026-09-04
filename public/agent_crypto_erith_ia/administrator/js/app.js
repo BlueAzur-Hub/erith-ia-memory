@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.229";
-  const ADMIN_RELEASE = "MARKET READING DEPTH · VIEWPORT GEOMETRY LOCK";
+  const ADMIN_BUILD = "40.4.230";
+  const ADMIN_RELEASE = "MARKET GRAPH · CRYPTO VISUAL MASTER PARITY";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
