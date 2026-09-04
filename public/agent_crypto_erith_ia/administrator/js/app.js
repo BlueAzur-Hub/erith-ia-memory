@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.227";
-  const ADMIN_RELEASE = "PARALLEL MARKETS · CRYPTO CANVAS VISUAL GRAMMAR LOCK";
+  const ADMIN_BUILD = "40.4.228";
+  const ADMIN_RELEASE = "PARALLEL MARKETS · FULL COCKPIT PARITY WITH CRYPTO + METALS";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

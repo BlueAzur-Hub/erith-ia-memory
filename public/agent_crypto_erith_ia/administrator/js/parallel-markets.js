@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.227";
+  const BUILD = "40.4.228";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -171,10 +171,17 @@
     if (!host || !bar || !rail) return false;
     if (!byId("atlasParallelLiveCanvas404170")) {
       host.innerHTML = `
-        <div class="atlas-parallel-live-shell" data-parallel-live-shell>
+        <div class="atlas-parallel-live-shell atlas-parallel-cockpit-404228" data-parallel-live-shell>
           <div class="atlas-parallel-live-heading">
             <div><small>ERITH.IA · MARKETS OBSERVATORY</small><h3 data-parallel-title>Marché</h3><p data-parallel-subtitle>Source Truth publique · observation uniquement.</p></div>
             <div class="atlas-parallel-live-badges"><span data-parallel-source>Source</span><span data-parallel-count>0/0</span></div>
+          </div>
+          <div class="atlas-parallel-cockpit-status-404228" aria-label="Contexte du graphique parallèle">
+            <span><small>LECTURE</small><b>BASE 100</b></span>
+            <span><small>FENÊTRE ACTIVE</small><b data-parallel-window>—</b></span>
+            <span><small>SOURCE</small><b data-parallel-status-source>—</b></span>
+            <span><small>COUVERTURE</small><b data-parallel-status-count>0/0</b></span>
+            <span><small>VÉRITÉ</small><b>HISTORIQUE RÉEL</b></span>
           </div>
           <div class="atlas-parallel-live-stage">
             <canvas id="atlasParallelLiveCanvas404170" aria-label="Graphique marché parallèle"></canvas>
@@ -182,16 +189,18 @@
           </div>
           <div class="atlas-parallel-live-summary" data-parallel-summary>En attente du domaine.</div>
           <div class="atlas-parallel-live-legend" data-parallel-legend></div>
+          <div class="atlas-parallel-memory-strip-404228"><span>ESPACE MÉMORISÉ</span><b data-parallel-memory>—</b><small>Source · période · couverture · choix locaux uniquement</small></div>
+          <div class="atlas-parallel-truth-strip-404228"><b data-parallel-truth-title>MARCHÉ</b><span data-parallel-truth>Observation historique · aucune prévision</span></div>
         </div>`;
     }
     bindCanvasHover();
     if (bar.dataset.parallelToolbarBound !== "1") {
       bar.dataset.parallelToolbarBound = "1";
       bar.innerHTML = `
-        <span class="mirror-group atlas-toolbar-view-404195"><small>VUE</small><button type="button" disabled aria-disabled="true" title="Vue Prix non disponible pour ce domaine">Prix</button><b class="active">Base 100</b></span>
-        <span class="mirror-group atlas-toolbar-scale-404195 atlas-toolbar-disabled-slot-404195"><small>ÉCHELLE</small><button type="button" disabled aria-disabled="true" title="Échelle native non disponible pour ce domaine">Normale</button><button type="button" disabled aria-disabled="true" title="Échelle logarithmique non disponible pour ce domaine">Log</button></span>
-        <span class="mirror-group atlas-toolbar-section-404195 atlas-toolbar-history-404197"><small>AFFICHER</small><button type="button" data-parallel-long-period="5a" title="Historique long chargé uniquement à la demande">5a</button><button type="button" data-parallel-long-period="10a" title="Historique long chargé uniquement à la demande">10a</button><button type="button" data-parallel-long-period="max" title="Historique MAX hebdomadaire chargé uniquement à la demande">MAX</button></span>
-        <span class="mirror-group atlas-toolbar-period-404195 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>`;
+        <span class="mirror-group atlas-toolbar-view-404228"><small>VUE</small><b class="active">Base 100</b></span>
+        <span class="mirror-group atlas-toolbar-period-404228 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>
+        <span class="mirror-group atlas-toolbar-history-404228"><small>HISTORIQUE</small><button type="button" data-parallel-long-period="5a" title="Historique long chargé uniquement à la demande">5a</button><button type="button" data-parallel-long-period="10a" title="Historique long chargé uniquement à la demande">10a</button><button type="button" data-parallel-long-period="max" title="Historique MAX chargé uniquement à la demande">MAX</button></span>
+        <span class="mirror-group atlas-toolbar-inspection-404228"><small>INSPECTION</small><b class="active">Survol</b><span>Valeurs réelles</span></span>`;
       bar.addEventListener("click", event => {
         const button = event.target instanceof Element ? event.target.closest("[data-parallel-period]") : null;
         if (!button || !CONFIG[state.current] || !ACTIVE.has(state.current)) return;
@@ -613,8 +622,10 @@
       </section>` : "";
     rail.innerHTML = `
       <header><span class="eyebrow">DÉTAIL ACTIF</span><strong>Lecture ${esc(cfg.title)}</strong><small>Observation seulement · Source Truth publique</small></header>
-      <div class="atlas-parallel-detail-state"><span><small>Domaine</small><b>${esc(cfg.label)}</b></span><span><small>Couverture</small><b>${payload.assets_count}/${cfg.expected}</b></span><span><small>Source</small><b>${esc(payload.source || cfg.source)}</b></span><span><small>Module</small><b>${BUILD}</b></span></div>
-      <section><b>Lecture synthétique</b><p>${leader ? `Leader ${esc(leader.asset.name)} ; retard ${esc(laggard.asset.name)}. Les séries restent indépendantes et sont comparées en Base 100.` : "Données insuffisantes."}</p></section>
+      <div class="atlas-parallel-detail-state atlas-parallel-detail-state-404228"><span><small>Domaine</small><b>${esc(cfg.label)}</b></span><span><small>Fenêtre active</small><b>${esc((state.period.get(domain) || cfg.defaultPeriod).toUpperCase())}</b></span><span><small>Couverture</small><b>${payload.assets_count}/${cfg.expected}</b></span><span><small>Source</small><b>${esc(payload.source || cfg.source)}</b></span></div>
+      <section class="atlas-parallel-rail-context-404228"><b>État des données</b><p>Snapshot ${esc(dateText(payload.generated_at || payload.updated_at || payload.as_of || payload.timestamp))} · historique réel · comparaison Base 100 · aucune interpolation inventée.</p></section>
+      <section class="atlas-parallel-rail-decision-404228"><span><small>DÉCISION</small><b>Observer / comparer</b></span><span><small>PRÉVISION</small><b>AUCUNE</b></span></section>
+      <section><b>Lecture synthétique</b><p>${leader ? `Leader ${esc(leader.asset.name)} ${pct(leader.metric.change)} ; retard ${esc(laggard.asset.name)} ${pct(laggard.metric.change)}. Les séries restent indépendantes et sont comparées en Base 100.` : "Données insuffisantes."}</p></section>
       <section class="atlas-parallel-basket-404189"><b>Panier actif · ${esc(state.period.get(domain) || cfg.defaultPeriod)}</b><ul>${basket || "<li>Données insuffisantes.</li>"}</ul></section>
       ${math}
       ${depthContent(domain,payload,rowsByAsset,metricByAsset)}
@@ -636,8 +647,18 @@
     shell.querySelector("[data-parallel-subtitle]").textContent = isLongPeriod(period)
       ? `Historical Depth ${period.toUpperCase()} · archive chargée à la demande · ${payload.resolution || "1wk"}`
       : domain === "cross-market" ? (payload.source_note || "Comparaison transversale Base 100.") : "Cotations publiques et historique conservés séparément · Base 100 pour la comparaison.";
-    shell.querySelector("[data-parallel-source]").textContent = safeText(payload.source || cfg.source);
-    shell.querySelector("[data-parallel-count]").textContent = `${payload.assets_count}/${cfg.expected}`;
+    const sourceText = safeText(payload.source || cfg.source);
+    const coverageText = `${payload.assets_count}/${cfg.expected}`;
+    const windowText = period.toUpperCase();
+    const snapshotText = dateText(payload.generated_at || payload.updated_at || payload.as_of || payload.timestamp);
+    shell.querySelector("[data-parallel-source]").textContent = sourceText;
+    shell.querySelector("[data-parallel-count]").textContent = coverageText;
+    const windowNode = shell.querySelector("[data-parallel-window]"); if (windowNode) windowNode.textContent = windowText;
+    const statusSource = shell.querySelector("[data-parallel-status-source]"); if (statusSource) statusSource.textContent = sourceText;
+    const statusCount = shell.querySelector("[data-parallel-status-count]"); if (statusCount) statusCount.textContent = coverageText;
+    const memory = shell.querySelector("[data-parallel-memory]"); if (memory) memory.textContent = `${cfg.label} · ${windowText} · Base 100 · ${coverageText} séries`;
+    const truthTitle = shell.querySelector("[data-parallel-truth-title]"); if (truthTitle) truthTitle.textContent = `MARCHÉ ${cfg.label}`;
+    const truth = shell.querySelector("[data-parallel-truth]"); if (truth) truth.textContent = `${sourceText} · snapshot ${snapshotText} · comparaison Base 100 · aucune prévision`;
     const buttons = toolbar()?.querySelectorAll("[data-parallel-period]") || [];
     buttons.forEach(b => { const p=b.getAttribute("data-parallel-period"); b.classList.toggle("is-active", p===period); b.disabled = domain==="cross-market" && p==="24h"; });
     const longButtons = toolbar()?.querySelectorAll("[data-parallel-long-period]") || [];
