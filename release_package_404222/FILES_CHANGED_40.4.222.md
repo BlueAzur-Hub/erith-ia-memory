@@ -3,7 +3,7 @@
 Commit canonique : `e6898cd1fbbd18099d0e33722b67fcc764b44d17`
 Market Core : `38.15.11` — protégé
 
-Paquet différentiel : uniquement les fichiers présents et modifiés par le commit canonique 40.4.222. Les workflows temporaires supprimés sont exclus.
+Paquet différentiel exact : 12 fichiers modifiés présents au commit canonique 40.4.222. Les workflows temporaires supprimés sont exclus.
 
 ## Fichiers
 - `.github/scripts/agent_crypto_version_truth_guard.py`
