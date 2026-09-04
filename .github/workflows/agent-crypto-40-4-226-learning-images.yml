@@ -1,0 +1,171 @@
+name: Agent-Crypto 40.4.226 Learning Images Administrator Migration
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebase and parent guard
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('public/agent_crypto_erith_ia/administrator/version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.225', m['build']
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          print('PARENT_PASS 40.4.225 / Market Core 38.15.11 PROTECTED')
+          PY
+
+      - name: Apply bounded Learning image migration
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, shutil
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          app_p=base/'app.js'
+          idx_p=base/'index.html'
+          sys_p=base/'js/views/system-presentation.js'
+          src=Path('public/agent_crypto_erith_ia/web/assets/learning/module_02_spot_visual_recap.png')
+          dst=base/'assets/learning/module_02_spot_visual_recap.png'
+          for p in (app_p,idx_p,sys_p,src):
+              if not p.is_file(): raise SystemExit(f'missing {p}')
+          app=app_p.read_text(encoding='utf-8')
+          tokens=('fetch(','setInterval(','setTimeout(','MutationObserver(','WebSocket(','requestAnimationFrame(')
+          before={t:app.count(t) for t in tokens}
+          # Module 02 is already wired in the Administrator runtime; only the local Administrator asset is missing.
+          required=(
+              'function foundationSpotVisualRecapMarkup(summary)',
+              'src="assets/learning/module_02_spot_visual_recap.png"',
+              '${summary.ready ? foundationSpotVisualRecapMarkup(summary) : ""}'
+          )
+          for marker in required:
+              if marker not in app: raise SystemExit(f'Module 02 owner drift: {marker}')
+          # 40.4.225 accidentally left the Module 01 explained view call twice in succession. Keep one owner instance.
+          line='${cockpit.steps.verify && summary.ready ? `<div class="foundation-lab-wide">${foundationMarketVisualRecapMarkup(summary)}</div>` : ""}'
+          pair='      '+line+'\n      '+line
+          if pair not in app: raise SystemExit('Module 01 duplicate pair not found; refusing blind edit')
+          app=app.replace(pair,'      '+line,1)
+          # Verify the market lab now has one call only.
+          s=app.find('function foundationMarketLab(cockpit)')
+          e=app.find('\nfunction ',s+20)
+          if s<0 or e<0: raise SystemExit('foundationMarketLab owner missing')
+          lab=app[s:e]
+          if lab.count('foundationMarketVisualRecapMarkup(summary)')!=1:
+              raise SystemExit('Module 01 explained view is not single-instance after repair')
+          after={t:app.count(t) for t in tokens}
+          if before!=after: raise SystemExit(f'primitive drift {before}->{after}')
+          app_p.write_text(app,encoding='utf-8')
+          dst.parent.mkdir(parents=True,exist_ok=True)
+          shutil.copy2(src,dst)
+          src_sha=hashlib.sha256(src.read_bytes()).hexdigest(); dst_sha=hashlib.sha256(dst.read_bytes()).hexdigest()
+          if src_sha!=dst_sha: raise SystemExit('Module 02 asset SHA mismatch')
+          # Advance only the System presentation cache bridge required by Version Truth.
+          idx=idx_p.read_text(encoding='utf-8')
+          old='system-presentation.js?v=administrator-build-40.4.225'
+          if old not in idx: raise SystemExit('index System token parent drift')
+          idx_p.write_text(idx.replace(old,'system-presentation.js?v=administrator-build-40.4.226',1),encoding='utf-8')
+          system=sys_p.read_text(encoding='utf-8')
+          old='const SOURCE="./views/system.html?v=administrator-build-40.4.225";'
+          if old not in system: raise SystemExit('System SOURCE token parent drift')
+          sys_p.write_text(system.replace(old,'const SOURCE="./views/system.html?v=administrator-build-40.4.226";',1),encoding='utf-8')
+          print('LEARNING_IMAGE_MIGRATION_PASS',dst_sha)
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          git diff --check
+
+      - name: Canonical release driver
+        shell: bash
+        run: |
+          cat >/tmp/contract.json <<'JSON'
+          {"state":"active","scope":"learning_presentation_only","module_02_visual_asset":"assets/learning/module_02_spot_visual_recap.png","module_02_runtime_owner_already_present":true,"module_01_visual_single_instance":true,"indexeddb_schema_changed":false,"learning_state_reset":false,"simulation_changed":false,"profiles_100_1000_changed":false,"market_core_modified":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py --build 40.4.226 --parent 40.4.225 --release "MODULE 02 SPOT VISUAL RECAP · ADMINISTRATOR ASSET MIGRATION + MODULE 01 SINGLE-INSTANCE LOCK" --status learning_visual_assets_admin_migration_404226 --contract-key learning_visual_assets_admin_migration_404226 --contract-json /tmp/contract.json --lineage-note "40.4.226 Learning images Administrator migration: Module 02 historical visual recap copied to Administrator; existing Module 02 runtime owner preserved; duplicate Module 01 recap invocation reduced to one; Learning storage, simulation profiles and Market Core unchanged"
+
+      - name: Version Truth and scope proof
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python3 .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.226 --expected-release "MODULE 02 SPOT VISUAL RECAP · ADMINISTRATOR ASSET MIGRATION + MODULE 01 SINGLE-INSTANCE LOCK"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess, hashlib
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          app=(base/'app.js').read_text(encoding='utf-8')
+          m=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.226' and m['parent_build']=='40.4.225'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          asset=base/'assets/learning/module_02_spot_visual_recap.png'
+          source=Path('public/agent_crypto_erith_ia/web/assets/learning/module_02_spot_visual_recap.png')
+          assert asset.is_file() and hashlib.sha256(asset.read_bytes()).digest()==hashlib.sha256(source.read_bytes()).digest()
+          assert 'src="assets/learning/module_02_spot_visual_recap.png"' in app
+          s=app.find('function foundationMarketLab(cockpit)'); e=app.find('\nfunction ',s+20)
+          assert app[s:e].count('foundationMarketVisualRecapMarkup(summary)')==1
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/assets/learning/module_02_spot_visual_recap.png',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/build.json'
+          }
+          lines=subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines(); paths={line[3:] for line in lines}
+          required={'public/agent_crypto_erith_ia/administrator/app.js','public/agent_crypto_erith_ia/administrator/assets/learning/module_02_spot_visual_recap.png','public/agent_crypto_erith_ia/administrator/version.json'}
+          if not required<=paths: raise SystemExit(f'required diff missing: {sorted(paths)}')
+          if paths-allowed: raise SystemExit(f'out of scope: {sorted(paths-allowed)}')
+          print('SCOPE_PASS',sorted(paths))
+          PY
+          git diff --check
+
+      - name: Commit canonical 40.4.226
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/assets/learning/module_02_spot_visual_recap.png public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js public/agent_crypto_erith_ia/administrator/js/app.js public/agent_crypto_erith_ia/administrator/version.json public/agent_crypto_erith_ia/administrator/administrator-version.json public/agent_crypto_erith_ia/administrator/build.json
+          git commit -m "agent-crypto: build 40.4.226 migrate Module 02 learning visual to Administrator"
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Package changed files only
+        shell: bash
+        run: |
+          PKG=/tmp/agent-crypto-40.4.226; mkdir -p "$PKG"
+          git diff --name-only "$BASE_SHA" "$RELEASE_SHA" > /tmp/changed.txt
+          while IFS= read -r p; do mkdir -p "$PKG/$(dirname "$p")"; cp "$p" "$PKG/$p"; done < /tmp/changed.txt
+          {
+            echo "# Agent-Crypto 40.4.226 — fichiers modifiés"; echo
+            echo "Release: MODULE 02 SPOT VISUAL RECAP · ADMINISTRATOR ASSET MIGRATION + MODULE 01 SINGLE-INSTANCE LOCK"
+            echo "Parent: 40.4.225"; echo "Market Core: 38.15.11 PROTECTED"; echo "Canonical commit: $RELEASE_SHA"; echo
+            echo "## Fichiers"; sed 's/^/- `/' /tmp/changed.txt | sed 's/$/`/'; echo
+            echo "## Verrous"; echo "- Module 02 visual recap migrated from legacy web assets to Administrator assets."; echo "- Existing Module 02 runtime owner preserved."; echo "- Module 01 explained recap rendered once, not twice."; echo "- IndexedDB / Learning state / Simulation €100 and €1000 unchanged."; echo "- No new timer / observer / fetch / WebSocket / scheduler."; echo "- Market Core unchanged."
+          } > "$PKG/FILES_CHANGED_40.4.226.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_226_LEARNING_IMAGES_ADMIN_MIGRATION_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_226_LEARNING_IMAGES_ADMIN_MIGRATION_CHANGED_FILES.zip
+          unzip -l AGENT_CRYPTO_BUILD_40_4_226_LEARNING_IMAGES_ADMIN_MIGRATION_CHANGED_FILES.zip
+
+      - name: Upload differential ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_226_LEARNING_IMAGES_ADMIN_MIGRATION_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_226_LEARNING_IMAGES_ADMIN_MIGRATION_CHANGED_FILES.zip
+          include-hidden-files: true
