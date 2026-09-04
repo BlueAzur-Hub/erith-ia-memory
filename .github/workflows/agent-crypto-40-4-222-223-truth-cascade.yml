@@ -30,35 +30,34 @@ jobs:
           assert b.get('engine')=='38.15.11'
           print('BASE_OK', v['build'], b['engine'])
           PY
-      - name: Inspect learning summary owner
+      - name: Inspect archive and notebook state owners
         run: |
           python - <<'PY'
           from pathlib import Path
           p=Path('public/agent_crypto_erith_ia/administrator/app.js')
-          text=p.read_text(encoding='utf-8')
+          lines=p.read_text(encoding='utf-8').splitlines()
           needles=[
-            'learningAutoSummaryText',
-            'La synthèse automatique apparaîtra ici lorsque les cinq preuves du module seront validées.',
-            'conclusion',
-            'archivedAt',
-            'archive',
+            'function restoreReopenedArchivedLearningSession',
+            'function archiveLearning',
+            'function completeLearning',
+            'function finishLearning',
+            'learningCompletionAction',
+            'completed_at',
+            'loadLearningHistory',
+            'saveLearningHistory',
+            'takeaway',
           ]
-          lines=text.splitlines()
-          seen=[]
-          for needle in needles[:2]:
+          printed=set()
+          for needle in needles:
             hits=[i for i,l in enumerate(lines) if needle in l]
             print(f'NEEDLE {needle!r} HITS {len(hits)}')
-            for i in hits[:20]:
-              lo=max(0,i-24); hi=min(len(lines),i+35)
+            for i in hits[:12]:
+              # Wider only for named function declarations, narrower for common fields.
+              radius=80 if needle.startswith('function ') else 24
+              lo=max(0,i-radius); hi=min(len(lines),i+radius+1)
+              key=(lo,hi)
+              if key in printed: continue
+              printed.add(key)
               print(f'--- CONTEXT {lo+1}:{hi} ---')
               print('\n'.join(f'{j+1}: {lines[j]}' for j in range(lo,hi)))
-          # Print functions that mention summary element, bounded.
-          for i,l in enumerate(lines):
-            if 'learningAutoSummary' in l or ('summary' in l.lower() and 'learning' in l.lower()):
-              if i not in seen:
-                seen.append(i)
-                lo=max(0,i-15); hi=min(len(lines),i+25)
-                print(f'--- SUMMARY_CONTEXT {lo+1}:{hi} ---')
-                print('\n'.join(f'{j+1}: {lines[j]}' for j in range(lo,hi)))
-                if len(seen)>=25: break
           PY
