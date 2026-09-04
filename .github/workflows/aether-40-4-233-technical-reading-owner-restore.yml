@@ -1,0 +1,38 @@
+name: Aether 40.4.233 Technical Reading owner restore
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/aether_40_4_233_technical_reading_owner_restore.py'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build 40.4.233 canonical Technical Reading owner restore
+        run: python .github/scripts/aether_40_4_233_technical_reading_owner_restore.py
+      - name: Validate canonical version truth
+        run: >-
+          python .github/scripts/agent_crypto_version_truth_guard.py
+          --base public/agent_crypto_erith_ia/administrator
+          --expected-build 40.4.233
+          --expected-release "TECHNICAL READING · CANONICAL 40.3.38 OWNER RESTORE LOCK"
+      - name: Validate JavaScript syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
+      - name: Commit and push release
+        run: |
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+          git add -A
+          git commit -m "agent-crypto: build 40.4.233 restore canonical Technical Reading owner"
+          git push origin HEAD:main
