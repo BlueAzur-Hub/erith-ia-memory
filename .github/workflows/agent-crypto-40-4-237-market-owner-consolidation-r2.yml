@@ -1,0 +1,97 @@
+name: Agent-Crypto 40.4.237 Market Owner Consolidation R2
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-40-4-237-market-owner-consolidation-r2.yml']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Guard current main
+        shell: bash
+        run: |
+          git fetch origin main && git checkout main && git pull --ff-only origin main
+          echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('public/agent_crypto_erith_ia/administrator/version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.236'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          print('PARENT_PASS')
+          PY
+      - name: Apply bounded consolidation
+        shell: bash
+        run: |
+          python3 .github/scripts/aether_40_4_237_market_owner_consolidation_prepatch_r2.py
+          python3 .github/scripts/aether_40_4_237_market_owner_consolidation_patch.py
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          git diff --check
+      - name: Release identity
+        shell: bash
+        run: |
+          cat >/tmp/contract.json <<'JSON'
+          {"state":"active","scope":"parallel_market_owner_consolidation_and_technical_portrait_framing","parallel_owner":"parallel-markets.css","separate_market_visual_owner_retired":true,"permanent_values_hud_retired":true,"historical_inspection_pointer_only":true,"toolbar_groups":3,"short_and_long_periods_share_period_slot":true,"technical_reading_framing":"contain","technical_reading_cover_conflict_retired":true,"rnd_library_changed":false,"rnd_assets_changed":false,"market_geometry_changed":false,"canvas_dimensions_changed":false,"market_data_changed":false,"history_semantics_changed":false,"source_semantics_changed":false,"base100_changed":false,"math_changed":false,"atlas_changed":false,"oracle_changed":false,"window_manager_changed":false,"market_core_modified":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py --build 40.4.237 --parent 40.4.236 --release "MARKET OWNERS · CANONICAL CONSOLIDATION + RND FRAMING LOCK" --status market_owner_consolidation_rnd_framing_404237 --contract-key market_owner_consolidation_rnd_framing_404237 --contract-json /tmp/contract.json --lineage-note "40.4.237 canonical owner consolidation: parallel markets return to one presentation owner; permanent values table retired in favor of pointer-only historical inspection; toolbar topology matches protected Crypto/Metals operator slots; Technical Reading phone portraits use one CONTAIN framing truth; data, histories, Base 100, Atlas, Math, Window Manager and Market Core unchanged"
+      - name: Prove Version Truth and scope
+        shell: bash
+        run: |
+          python3 .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.237 --expected-release "MARKET OWNERS · CANONICAL CONSOLIDATION + RND FRAMING LOCK"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          b=Path('public/agent_crypto_erith_ia/administrator')
+          m=json.loads((b/'version.json').read_text(encoding='utf-8'))
+          js=(b/'js/parallel-markets.js').read_text(encoding='utf-8')
+          css=(b/'parallel-markets.css').read_text(encoding='utf-8')
+          idx=(b/'index.html').read_text(encoding='utf-8')
+          assert m['build']=='40.4.237' and m['parent_build']=='40.4.236'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          assert 'renderPinnedCanvasTable' not in js
+          assert 'atlas-toolbar-history-404228' not in js
+          assert '40.4.237 — PARALLEL CANONICAL OWNER CONSOLIDATION' in css
+          assert 'market-visual-master-parity.css' not in idx and not (b/'market-visual-master-parity.css').exists()
+          assert idx.count('object-fit:cover!important;')==0
+          assert idx.count('object-fit:contain!important;')>=2
+          assert './parallel-markets.css?v=40.4.237' in idx
+          assert './js/parallel-markets.js?v=administrator-build-40.4.237' in idx
+          assert './js/views/system-presentation.js?v=administrator-build-40.4.237' in idx
+          assert 'market-visual-master-parity.css' not in (m.get('files') or {})
+          allowed={'public/agent_crypto_erith_ia/administrator/parallel-markets.css','public/agent_crypto_erith_ia/administrator/js/parallel-markets.js','public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css','public/agent_crypto_erith_ia/administrator/index.html','public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js','public/agent_crypto_erith_ia/administrator/app.js','public/agent_crypto_erith_ia/administrator/js/app.js','public/agent_crypto_erith_ia/administrator/version.json','public/agent_crypto_erith_ia/administrator/administrator-version.json','public/agent_crypto_erith_ia/administrator/build.json'}
+          paths={x[3:] for x in subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines()}
+          assert not paths-allowed, sorted(paths-allowed)
+          required={'public/agent_crypto_erith_ia/administrator/parallel-markets.css','public/agent_crypto_erith_ia/administrator/js/parallel-markets.js','public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css','public/agent_crypto_erith_ia/administrator/index.html','public/agent_crypto_erith_ia/administrator/version.json'}
+          assert required<=paths, sorted(required-paths)
+          print('SCOPE_PASS',sorted(paths))
+          PY
+          git diff --check
+      - name: Commit canonical release
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.237 consolidate market owners and RND framing"
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+      - name: Package differential
+        shell: bash
+        run: |
+          PKG=/tmp/pkg237; mkdir -p "$PKG"
+          git diff --name-only "$BASE_SHA" "$RELEASE_SHA" >/tmp/changed237.txt
+          while IFS= read -r p; do if [ -f "$p" ]; then mkdir -p "$PKG/$(dirname "$p")"; cp "$p" "$PKG/$p"; fi; done </tmp/changed237.txt
+          { echo '# Agent-Crypto 40.4.237 — fichiers modifiés'; echo; echo 'Release: MARKET OWNERS · CANONICAL CONSOLIDATION + RND FRAMING LOCK'; echo 'Parent: 40.4.236'; echo 'Market Core: 38.15.11 PROTECTED'; echo "Canonical commit: $RELEASE_SHA"; echo; echo '## Fichier à supprimer'; echo '- `public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css`'; echo; echo '## Fichiers présents'; while IFS= read -r p; do [ -f "$p" ] && echo "- \`$p\`"; done </tmp/changed237.txt; } >"$PKG/FILES_CHANGED_40.4.237.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_237_MARKET_OWNER_CONSOLIDATION_RND_FRAMING_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_237_MARKET_OWNER_CONSOLIDATION_RND_FRAMING_CHANGED_FILES.zip
+          unzip -l AGENT_CRYPTO_BUILD_40_4_237_MARKET_OWNER_CONSOLIDATION_RND_FRAMING_CHANGED_FILES.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_237_MARKET_OWNER_CONSOLIDATION_RND_FRAMING_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_237_MARKET_OWNER_CONSOLIDATION_RND_FRAMING_CHANGED_FILES.zip
+          include-hidden-files: true
