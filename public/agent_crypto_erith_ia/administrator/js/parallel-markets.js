@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.234";
+  const BUILD = "40.4.235";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -91,7 +91,7 @@
     overlay.style.cssText = "position:absolute;inset:0;z-index:5;pointer-events:none;color:#dbe8ef;font-family:system-ui,sans-serif";
     overlay.innerHTML = `<section class="atlas-parallel-chart-table-404206" aria-hidden="true">
       <header><span><b>VALEURS OBSERVÉES</b><small>${esc(CONFIG[model.domain]?.title || model.domain)} · Base 100</small></span><strong>${esc(dateText(latestTime))}</strong></header>
-      <div class="atlas-parallel-chart-table-body-404206">${rows.map(row => `<div class="atlas-parallel-chart-table-row-404206" style="--asset-color:${row.series.color}">
+      <div class="atlas-parallel-chart-table-body-404206">${rows.map(row => `<div class="atlas-parallel-chart-table-row-404206 ${row.change>.005?"is-up":row.change<-.005?"is-down":"is-flat"}" style="--asset-color:${row.series.color}">
         <i></i><span><b>${esc(row.symbol)}</b><small>${esc(row.name)}</small></span><strong>${num(row.point.raw,4)}${row.unit?` ${esc(row.unit)}`:""}</strong><em>${pct(row.change)}</em>
       </div>`).join("")}</div>
       <footer><b>${esc(model.period.toUpperCase())}</b><span>derniers points réels · survol = inspection historique</span></footer>
@@ -805,6 +805,7 @@
     asset_color_identity:true,
     chart_table_parity:true,
     canvas_crypto_plot_language:true,
+    values_hud_crypto_panel_parity:true,
     rail_asset_color_identity:true,
     math_semantic_color:true,
     color_redundant_with_text:true,
