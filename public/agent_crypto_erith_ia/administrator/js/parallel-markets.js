@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.228";
+  const BUILD = "40.4.234";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -372,11 +372,31 @@
     canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
     const ctx = canvas.getContext("2d"); if (!ctx) return;
     ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,width,height);
+
+    /* 40.4.234 — Crypto plot language only. Geometry and data semantics stay unchanged. */
     const pad = {l:62,r:24,t:24,b:42}, w = width-pad.l-pad.r, h=height-pad.t-pad.b;
-    ctx.fillStyle = "rgba(3,10,18,.72)"; ctx.fillRect(0,0,width,height);
-    ctx.strokeStyle = "rgba(140,175,200,.13)"; ctx.lineWidth = 1;
-    for (let i=0;i<=5;i++){ const y=pad.t+(h/5)*i; ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(width-pad.r,y);ctx.stroke(); }
-    for (let i=0;i<=6;i++){ const x=pad.l+(w/6)*i; ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,height-pad.b);ctx.stroke(); }
+    const bg = ctx.createLinearGradient(0,0,0,height);
+    bg.addColorStop(0,"rgba(1,7,14,.54)");
+    bg.addColorStop(1,"rgba(1,10,17,.38)");
+    ctx.fillStyle = bg; ctx.fillRect(0,0,width,height);
+    ctx.strokeStyle = "rgba(153,190,211,.14)"; ctx.lineWidth = 1;
+    for (let i=0;i<=5;i++){
+      const y=pad.t+(h/5)*i;
+      ctx.save();
+      ctx.strokeStyle = i===0 || i===5 ? "rgba(153,190,211,.17)" : "rgba(153,190,211,.11)";
+      ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(width-pad.r,y);ctx.stroke();ctx.restore();
+    }
+    for (let i=0;i<=6;i++){
+      const x=pad.l+(w/6)*i;
+      ctx.save();
+      ctx.strokeStyle = i===0 || i===6 ? "rgba(153,190,211,.17)" : "rgba(153,190,211,.09)";
+      ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,height-pad.b);ctx.stroke();ctx.restore();
+    }
+    ctx.save();
+    ctx.strokeStyle="rgba(208,229,239,.13)";
+    ctx.strokeRect(pad.l+.5,pad.t+.5,Math.max(0,w-1),Math.max(0,h-1));
+    ctx.restore();
+
     const all = series.flatMap(s => s.points.map(p => p.value));
     let min = Math.min(100,...all), max = Math.max(100,...all); if (!Number.isFinite(min)||!Number.isFinite(max)) return;
     const span = Math.max(.4,max-min); const visualPad = Math.max(.18,span*.10); min -= visualPad; max += visualPad;
@@ -388,22 +408,42 @@
       const ms = pointTimeMs(point);
       return ms !== null ? pad.l + ((ms-timeMin)/timeSpan)*w : pad.l + (index/Math.max(1,count-1))*w;
     };
-    ctx.font = "700 10px system-ui"; ctx.fillStyle = "rgba(197,215,226,.72)"; ctx.textAlign = "right";
+
+    ctx.font = "700 10px system-ui"; ctx.fillStyle = "rgba(205,222,232,.76)"; ctx.textAlign = "right";
     for (let i=0;i<=5;i++){ const v=max-(max-min)*(i/5); ctx.fillText(v.toFixed(1),pad.l-9,pad.t+(h/5)*i+4); }
-    if (100>=min && 100<=max) { const y100=pad.t+(1-((100-min)/(max-min)))*h; ctx.save(); ctx.setLineDash([6,5]); ctx.strokeStyle="rgba(238,214,142,.42)"; ctx.lineWidth=1.15; ctx.beginPath(); ctx.moveTo(pad.l,y100); ctx.lineTo(width-pad.r,y100); ctx.stroke(); ctx.setLineDash([]); ctx.textAlign="left"; ctx.fillStyle="rgba(255,232,164,.82)"; ctx.font="900 9px system-ui"; ctx.fillText("BASE 100",pad.l+7,Math.max(pad.t+10,y100-9)); ctx.restore(); }
+
+    if (100>=min && 100<=max) {
+      const y100=pad.t+(1-((100-min)/(max-min)))*h;
+      ctx.save();
+      const band=ctx.createLinearGradient(0,y100-8,0,y100+8);
+      band.addColorStop(0,"rgba(238,214,142,0)");band.addColorStop(.5,"rgba(238,214,142,.055)");band.addColorStop(1,"rgba(238,214,142,0)");
+      ctx.fillStyle=band;ctx.fillRect(pad.l,y100-8,w,16);
+      ctx.setLineDash([6,5]); ctx.strokeStyle="rgba(244,218,145,.48)"; ctx.lineWidth=1.15;
+      ctx.beginPath(); ctx.moveTo(pad.l,y100); ctx.lineTo(width-pad.r,y100); ctx.stroke(); ctx.setLineDash([]);
+      ctx.textAlign="left"; ctx.fillStyle="rgba(255,234,170,.90)"; ctx.font="900 9px system-ui";
+      ctx.fillText("BASE 100",pad.l+7,Math.max(pad.t+10,y100-9)); ctx.restore();
+    }
+
     series.forEach((s, idx) => {
       if (s.points.length < 2) return;
       const color = s.color || COLORS[idx % COLORS.length];
-      ctx.strokeStyle = color; ctx.lineWidth = idx===0 ? 2.6 : 2.1; ctx.beginPath();
-      s.points.forEach((p,i) => {
-        const x = xFor(p,i,s.points.length);
-        const y = pad.t + (1 - ((p.value-min)/(max-min)))*h;
-        if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }); ctx.stroke();
+      const trace = () => {
+        ctx.beginPath();
+        s.points.forEach((p,i) => {
+          const x = xFor(p,i,s.points.length);
+          const y = pad.t + (1 - ((p.value-min)/(max-min)))*h;
+          if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+        });
+      };
+      ctx.save();
+      ctx.globalAlpha=.16;ctx.strokeStyle=color;ctx.lineWidth=5.2;ctx.shadowColor=color;ctx.shadowBlur=8;trace();ctx.stroke();ctx.restore();
+      ctx.save();
+      ctx.strokeStyle=color;ctx.lineWidth=idx===0?2.7:2.25;ctx.lineJoin="round";ctx.lineCap="round";ctx.shadowColor=color;ctx.shadowBlur=2.8;trace();ctx.stroke();ctx.restore();
       const last=s.points[s.points.length-1], x=xFor(last,s.points.length-1,s.points.length), y=pad.t+(1-((last.value-min)/(max-min)))*h;
-      ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,3.7,0,Math.PI*2);ctx.fill();
+      ctx.save();ctx.strokeStyle=color;ctx.globalAlpha=.55;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,5.2,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(x,y,3.2,0,Math.PI*2);ctx.fill();ctx.restore();
     });
-    ctx.font = "9px system-ui"; ctx.fillStyle = "rgba(168,192,207,.60)";
+
+    ctx.font = "9px system-ui"; ctx.fillStyle = "rgba(176,199,213,.67)";
     [0,.2,.4,.6,.8,1].forEach((ratio,index) => {
       const stamp = timeMin + timeSpan*ratio;
       const d = new Date(stamp);
@@ -411,7 +451,8 @@
       ctx.textAlign = index===0 ? "left" : index===5 ? "right" : "center";
       ctx.fillText(label,pad.l+w*ratio,height-20);
     });
-    ctx.textAlign = "left"; ctx.fillStyle = accent || "#dce5ec"; ctx.font = "900 9px system-ui"; ctx.fillText(`BASE 100 · ${period.toUpperCase()} · HISTORIQUE RÉEL`, pad.l, height-7); ctx.textAlign = "right"; ctx.fillStyle = "rgba(132,159,175,.76)"; ctx.font = "800 8px system-ui"; ctx.fillText("SURVOL = POINT RÉEL LE PLUS PROCHE", width-pad.r, height-7);
+    ctx.textAlign = "left"; ctx.fillStyle = accent || "#dce5ec"; ctx.font = "900 9px system-ui"; ctx.fillText(`BASE 100 · ${period.toUpperCase()} · HISTORIQUE RÉEL`, pad.l, height-7);
+    ctx.textAlign = "right"; ctx.fillStyle = "rgba(143,170,186,.82)"; ctx.font = "800 8px system-ui"; ctx.fillText("SURVOL = POINT RÉEL LE PLUS PROCHE", width-pad.r, height-7);
     state.hover = {series,period,domain:state.current,geometry:{pad,w,h,width,height,min,max,timeMin,timeMax}};
   }
 
@@ -763,6 +804,7 @@
     historical_long_periods:LONG_PERIODS,
     asset_color_identity:true,
     chart_table_parity:true,
+    canvas_crypto_plot_language:true,
     rail_asset_color_identity:true,
     math_semantic_color:true,
     color_redundant_with_text:true,

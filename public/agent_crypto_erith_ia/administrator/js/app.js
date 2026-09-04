@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.233";
-  const ADMIN_RELEASE = "TECHNICAL READING · CANONICAL 40.3.38 OWNER RESTORE LOCK";
+  const ADMIN_BUILD = "40.4.234";
+  const ADMIN_RELEASE = "PARALLEL GRAPH CANVAS · CRYPTO PLOT LANGUAGE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
