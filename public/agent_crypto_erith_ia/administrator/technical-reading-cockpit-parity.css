@@ -1,0 +1,150 @@
+/* Agent-Crypto — Technical Reading Cockpit Parity
+   Final CSS owner for the right Technical Reading rail.
+   Image source/RND/local upload/interactions untouched. Firefox-safe alpha only. */
+
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel{
+  --tr231-bg:rgba(3,11,20,.76);
+  --tr231-card:rgba(2,9,18,.70);
+  --tr231-card-strong:rgba(2,9,18,.80);
+  --tr231-line:rgba(98,236,255,.18);
+  --tr231-gold:rgba(255,216,135,.22);
+  border-radius:15px!important;
+  border:1px solid rgba(98,236,255,.22)!important;
+  background:linear-gradient(180deg,rgba(3,11,20,.34),rgba(2,8,16,.50))!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.018),0 18px 38px rgba(0,0,0,.22)!important;
+  overflow:hidden!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+
+/* Header becomes a compact cockpit title bar. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel > .detail-panel-toggle{
+  min-height:54px!important;
+  padding:9px 12px!important;
+  background:linear-gradient(180deg,rgba(3,13,23,.92),rgba(2,9,17,.82))!important;
+  border-bottom:1px solid rgba(255,216,135,.12)!important;
+  box-shadow:inset 0 -1px 0 rgba(98,236,255,.06)!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel > .detail-panel-toggle h2,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel > .detail-panel-toggle strong{
+  color:#fff0cf!important;
+  letter-spacing:.01em!important;
+}
+
+/* The portrait remains the hero. Never change source, crop logic or RND state. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-project-visual.admin-tech-r3{
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:hidden!important;
+  border-radius:0!important;
+  border:0!important;
+  box-shadow:inset 0 -1px 0 rgba(255,216,135,.10)!important;
+  background:transparent!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-project-visual.admin-tech-r3 > .admin-tech-portrait-r3{
+  opacity:1!important;
+  filter:saturate(.98) contrast(1.02)!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-project-visual.admin-tech-r3::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,rgba(2,8,16,.08) 0 26%,rgba(2,8,16,.18) 50%,rgba(2,8,16,.44) 100%)!important;
+}
+
+/* Top daypart / RND controls read like the Crypto toolbar. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel button,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-portal,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .source-dock-refresh{
+  min-height:28px!important;
+  border-radius:9px!important;
+  background:linear-gradient(180deg,rgba(5,17,28,.78),rgba(2,9,18,.68))!important;
+  border:1px solid rgba(98,236,255,.17)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03)!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel button[aria-pressed="true"],
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel button.is-active{
+  color:#fff0c9!important;
+  border-color:rgba(255,216,135,.42)!important;
+  background:linear-gradient(180deg,rgba(84,66,28,.58),rgba(12,24,31,.78))!important;
+  box-shadow:0 0 12px rgba(255,216,135,.10),inset 0 1px 0 rgba(255,255,255,.04)!important;
+}
+
+/* Four headline facts = one compact operator strip, equal visual weight. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-compact-strip{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:6px!important;
+  padding:7px!important;
+  background:linear-gradient(180deg,rgba(2,9,18,.28),rgba(2,9,18,.12))!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-compact-strip > span{
+  min-height:48px!important;
+  padding:8px!important;
+  border-radius:10px!important;
+  background:var(--tr231-card-strong)!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+}
+
+/* Disclosure rows become clean stacked modules over the image. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .atlas-detail-subwindow,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .atlas-source-dock{
+  margin:6px 7px!important;
+  border-radius:11px!important;
+  overflow:hidden!important;
+  background:rgba(2,9,18,.48)!important;
+  border:1px solid rgba(98,236,255,.14)!important;
+  box-shadow:0 7px 16px rgba(0,0,0,.13),inset 0 1px 0 rgba(255,255,255,.018)!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .atlas-detail-subwindow > summary,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .atlas-source-dock > summary,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel details > summary{
+  min-height:43px!important;
+  padding:8px 10px!important;
+  background:rgba(3,13,23,.72)!important;
+  border:0!important;
+  border-bottom:1px solid rgba(255,255,255,.055)!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel details[open] > .atlas-detail-subwindow-body,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel details[open] > .source-dock-body{
+  padding:8px!important;
+  background:rgba(2,9,18,.60)!important;
+}
+
+/* Inner detail cards use the same rhythm as Crypto live price rows. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .clean-lens-detail-grid,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-grid,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .broker-strip,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .diagnostic-strip{
+  gap:6px!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .clean-lens-detail-grid > div,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-grid > div,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .broker-strip > div,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .diagnostic-strip > div{
+  padding:8px!important;
+  border-radius:9px!important;
+  background:var(--tr231-card)!important;
+  border:1px solid rgba(255,255,255,.09)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.018)!important;
+}
+
+/* Readability on very light or very dark RND portraits. */
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel :is(h2,h3,h4,h5,b,strong,span,small,p,em,i,summary,a){
+  opacity:1!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.96),0 0 4px rgba(0,0,0,.72)!important;
+}
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel small,
+body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel p{
+  color:#a8bbc7!important;
+}
+
+@media(min-width:1300px){
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-compact-strip{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+  body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel .detail-compact-strip{grid-template-columns:1fr 1fr!important}
+}
