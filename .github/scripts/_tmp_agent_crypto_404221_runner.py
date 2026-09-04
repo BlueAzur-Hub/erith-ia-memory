@@ -14,5 +14,10 @@ addition="TMP_FILES=[\n REPO/'.github/scripts/_tmp_agent_crypto_404221_runner.py
 if text.count(needle)!=1:
     raise SystemExit(f'STOP runner TMP_FILES anchor count={text.count(needle)}')
 text=text.replace(needle,addition,1)
+old_rm="    if p.exists(): run('git','rm',str(p))"
+new_rm="    if p.exists(): run('git','rm','-f',str(p))"
+if text.count(old_rm)!=1:
+    raise SystemExit(f'STOP runner cleanup anchor count={text.count(old_rm)}')
+text=text.replace(old_rm,new_rm,1)
 script.write_text(text,encoding='utf-8')
 subprocess.run(['python',str(script)],check=True)
