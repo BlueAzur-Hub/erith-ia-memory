@@ -1,0 +1,79 @@
+name: Agent-Crypto 40.4.229 Reading Depth Geometry Lock R3
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/agent-crypto-40-4-229-market-reading-depth-geometry-lock-r3.yml']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Guard and patch
+        shell: bash
+        run: |
+          git fetch origin main && git checkout main && git pull --ff-only origin main
+          echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('public/agent_crypto_erith_ia/administrator/version.json').read_text())
+          assert m['build']=='40.4.228'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          PY
+          python3 .github/scripts/aether_40_4_229_market_reading_depth_geometry_patch.py
+          node --check public/agent_crypto_erith_ia/administrator/js/market-reading-depth.js
+          git diff --check
+      - name: Release and prove
+        shell: bash
+        run: |
+          cat >/tmp/contract.json <<'JSON'
+          {"state":"active","scope":"market_reading_depth_viewport_geometry","reproduced_from_user_screenshots":true,"grid_stretch_removed":true,"viewport_body_cap":true,"build_token_aligned":true,"window_manager_changed":false,"renderer_changed":false,"data_changed":false,"history_changed":false,"sources_changed":false,"math_changed":false,"parallel_markets_changed":false,"metals_runtime_changed":false,"crypto_runtime_changed":false,"market_core_modified":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py --build 40.4.229 --parent 40.4.228 --release "MARKET READING DEPTH · VIEWPORT GEOMETRY LOCK" --status market_reading_depth_viewport_geometry_404229 --contract-key market_reading_depth_viewport_geometry_404229 --contract-json /tmp/contract.json --lineage-note "40.4.229 Market Reading Depth viewport geometry lock: oversized deep-reading subsections are content-height, no longer grid-stretched, and the expanded body is viewport-bounded; build/cache identity aligned; Window Manager, data, histories, sources, Math, Crypto, Metals, Parallel Markets and Market Core unchanged"
+          python3 .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.229 --expected-release "MARKET READING DEPTH · VIEWPORT GEOMETRY LOCK"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,subprocess
+          b=Path('public/agent_crypto_erith_ia/administrator')
+          m=json.loads((b/'version.json').read_text())
+          assert m['build']=='40.4.229' and m['parent_build']=='40.4.228'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          css=(b/'market-reading-depth.css').read_text(); js=(b/'js/market-reading-depth.js').read_text(); idx=(b/'index.html').read_text(); sys=(b/'js/views/system-presentation.js').read_text()
+          assert '40.4.229 — MARKET READING DEPTH VIEWPORT GEOMETRY LOCK' in css
+          assert 'align-items:start!important' in css and 'max-height:min(620px,62vh)!important' in css
+          assert 'const BUILD = "40.4.229";' in js
+          assert 'market-reading-depth.css?v=40.4.229' in idx and 'market-reading-depth.js?v=administrator-build-40.4.229' in idx
+          assert 'system-presentation.js?v=administrator-build-40.4.229' in idx
+          assert 'views/system.html?v=administrator-build-40.4.229' in sys
+          allowed={'public/agent_crypto_erith_ia/administrator/market-reading-depth.css','public/agent_crypto_erith_ia/administrator/js/market-reading-depth.js','public/agent_crypto_erith_ia/administrator/index.html','public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js','public/agent_crypto_erith_ia/administrator/app.js','public/agent_crypto_erith_ia/administrator/js/app.js','public/agent_crypto_erith_ia/administrator/version.json','public/agent_crypto_erith_ia/administrator/administrator-version.json','public/agent_crypto_erith_ia/administrator/build.json'}
+          paths={x[3:] for x in subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines()}
+          assert not paths-allowed, sorted(paths-allowed)
+          print('SCOPE_PASS',sorted(paths))
+          PY
+          git diff --check
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/{market-reading-depth.css,index.html,version.json,administrator-version.json,build.json,app.js} public/agent_crypto_erith_ia/administrator/js/{market-reading-depth.js,app.js} public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
+          git commit -m "agent-crypto: build 40.4.229 lock Reading Depth viewport geometry"
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+      - name: Package
+        shell: bash
+        run: |
+          PKG=/tmp/pkg229; mkdir -p "$PKG"
+          git diff --name-only "$BASE_SHA" "$RELEASE_SHA" >/tmp/changed229.txt
+          while IFS= read -r p; do mkdir -p "$PKG/$(dirname "$p")"; cp "$p" "$PKG/$p"; done </tmp/changed229.txt
+          { echo '# Agent-Crypto 40.4.229 — fichiers modifiés'; echo; echo 'Release: MARKET READING DEPTH · VIEWPORT GEOMETRY LOCK'; echo 'Parent: 40.4.228'; echo 'Market Core: 38.15.11 PROTECTED'; echo "Canonical commit: $RELEASE_SHA"; echo; echo '## Fichiers'; sed 's/^/- `/' /tmp/changed229.txt | sed 's/$/`/'; } >"$PKG/FILES_CHANGED_40.4.229.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_229_MARKET_READING_DEPTH_VIEWPORT_GEOMETRY_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_229_MARKET_READING_DEPTH_VIEWPORT_GEOMETRY_CHANGED_FILES.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_229_MARKET_READING_DEPTH_VIEWPORT_GEOMETRY_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_229_MARKET_READING_DEPTH_VIEWPORT_GEOMETRY_CHANGED_FILES.zip
+          include-hidden-files: true
