@@ -53,6 +53,13 @@ jobs:
               block = block.replace('object-fit:contain!important;', 'object-fit:cover!important;', 1)
               text = text[:start] + block + text[end:]
 
+          # Version Truth: script cache token in index must advance with every build.
+          old_script = '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.238"></script>'
+          new_script = '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.239"></script>'
+          assert old_script in text
+          assert new_script not in text
+          text = text.replace(old_script, new_script, 1)
+
           assert 'atlasTechnicalReadingBackdropRestore404238' not in text
           assert 'backdropPanel.style.setProperty("--atlas-tech-backdrop-image"' not in text
           index_path.write_text(text, encoding='utf-8')
@@ -79,6 +86,7 @@ jobs:
             'resolved_backdrop_runtime_retired': True,
             'single_portrait_visual_owner': True,
             'system_source_cache_token_synced': True,
+            'system_presentation_script_cache_token_synced': True,
             'rnd_library_changed': False,
             'rnd_assets_changed': False,
             'local_upload_changed': False,
@@ -131,6 +139,7 @@ jobs:
           assert 'atlasTechnicalReadingBackdropRestore404238' not in index
           assert 'backdropPanel.style.setProperty("--atlas-tech-backdrop-image"' not in index
           assert 'object-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%)!important;' in index
+          assert '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.239"></script>' in index
           assert 'const ADMIN_BUILD = "40.4.239";' in app
           assert 'const ENGINE_BUILD = "38.15.11";' in app
           assert 'const SOURCE="./views/system.html?v=administrator-build-40.4.239";' in system
@@ -185,7 +194,7 @@ jobs:
           - Foreground portrait returns to `object-fit: cover` in the two canonical owners changed by 40.4.237.
           - 40.4.238 same-asset letterbox workaround is retired.
           - Existing `--admin-tech-x/y` focal variables remain authoritative.
-          - System presentation cache token is synchronized to 40.4.239 for Version Truth only.
+          - Both System presentation cache tokens are synchronized to 40.4.239 for Version Truth only.
           - RND library, local upload/storage, Graph, Atlas, Math Core, Window Manager and Market Core are unchanged.
           EOF
           cd /tmp/pkg
