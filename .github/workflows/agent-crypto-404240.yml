@@ -1,0 +1,334 @@
+name: Agent-Crypto 40.4.240 Technical Reading single portrait owner
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-404240.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Consolidate Technical Reading portrait authority
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          version = json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert version['build'] == '40.4.239', version['build']
+          assert version['engine']['reference_build'] == '38.15.11'
+          assert version['engine']['status'] == 'protected'
+
+          index_path = base/'index.html'
+          text = index_path.read_text(encoding='utf-8')
+          assert 'atlasTechnicalReadingSinglePortraitOwner404240' not in text
+
+          # Normalize only CSS rules whose selector explicitly owns the Technical Reading portrait.
+          # This retires the remaining 40.2.x contain / 48px geometry conflicts without touching
+          # Graph, Market, Window Manager or any unrelated image.
+          portrait_rule = re.compile(
+              r'(?P<selector>[^{}]*\.admin-tech-portrait-r3[^{}]*)\{(?P<body>[^{}]*)\}',
+              re.S,
+          )
+          stats = {'rules': 0, 'contain': 0, 'inset48': 0, 'height48': 0}
+
+          def normalize_portrait_rule(match):
+              selector = match.group('selector')
+              body = match.group('body')
+              stats['rules'] += 1
+              stats['contain'] += body.count('object-fit:contain!important;')
+              stats['inset48'] += body.count('inset:48px 0 0 0!important;')
+              stats['height48'] += body.count('height:calc(100% - 48px)!important;')
+              body = body.replace('object-fit:contain!important;', 'object-fit:cover!important;')
+              body = body.replace('inset:48px 0 0 0!important;', 'inset:0!important;')
+              body = body.replace('height:calc(100% - 48px)!important;', 'height:100%!important;')
+              return selector + '{' + body + '}'
+
+          text = portrait_rule.sub(normalize_portrait_rule, text)
+          assert stats['rules'] >= 3, stats
+          assert stats['contain'] >= 1, stats
+          assert stats['inset48'] >= 1, stats
+          assert stats['height48'] >= 1, stats
+
+          # Final physical owner. The portrait itself covers the complete Technical Reading panel.
+          # Historical ::before/::after backdrop masks are explicitly retired here; HUD/header/body
+          # remain foreground layers. No source, RND, picker or storage owner changes.
+          owner = r'''
+  <style id="atlasTechnicalReadingSinglePortraitOwner404240">
+    /* 40.4.240 — TECHNICAL READING SINGLE PORTRAIT FULL-PANEL OWNER
+       One physical image layer, full panel, cover fit. Legacy 48px / contain
+       portrait geometry and historical pseudo backdrop masks are non-authoritative.
+       RND, local upload, source selection, storage and focal x/y remain untouched. */
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 {
+      overflow: hidden !important;
+    }
+
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::before,
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::after {
+      content: none !important;
+      display: none !important;
+      background: none !important;
+      opacity: 0 !important;
+    }
+
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+    .detail-project-visual.admin-tech-r3 {
+      position: static !important;
+      overflow: visible !important;
+      background: transparent !important;
+    }
+
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+    .detail-project-visual.admin-tech-r3 > .admin-tech-portrait-r3 {
+      position: absolute !important;
+      inset: 0 !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      min-width: 100% !important;
+      min-height: 100% !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      object-fit: cover !important;
+      object-position: var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;
+      opacity: 1 !important;
+      filter: none !important;
+      transform: none !important;
+      z-index: 0 !important;
+      pointer-events: none !important;
+    }
+
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-toggle,
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .atlas-tech-static-toolbar,
+    body.atlas-administrator-mirror
+    #analyste.champagne-clean-lens:not(.detail-collapsed)
+    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-body {
+      position: relative !important;
+      z-index: 3 !important;
+    }
+  </style>
+'''
+          assert '</head>' in text
+          text = text.replace('</head>', owner + '\n</head>', 1)
+
+          # Version Truth: both System presentation cache tokens advance with the build.
+          old_script = '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.239"></script>'
+          new_script = '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.240"></script>'
+          assert old_script in text
+          assert new_script not in text
+          text = text.replace(old_script, new_script, 1)
+
+          index_path.write_text(text, encoding='utf-8')
+
+          system_path = base/'js/views/system-presentation.js'
+          system = system_path.read_text(encoding='utf-8')
+          old_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.239";'
+          new_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.240";'
+          assert old_source in system
+          assert new_source not in system
+          system_path.write_text(system.replace(old_source, new_source, 1), encoding='utf-8')
+
+          contract = {
+            'build': '40.4.240',
+            'parent': '40.4.239',
+            'visual_only': True,
+            'technical_reading_only': True,
+            'user_screenshot_contract': 'portrait_fills_complete_technical_reading_panel_without_bottom_black_band',
+            'single_physical_portrait_owner': True,
+            'full_panel_inset': '0',
+            'portrait_width': '100%',
+            'portrait_height': '100%',
+            'portrait_fit': 'cover',
+            'object_position_variables_preserved': True,
+            'legacy_contain_portrait_rules_normalized': True,
+            'legacy_48px_portrait_geometry_normalized': True,
+            'legacy_detail_pseudo_backdrops_retired': True,
+            'foreground_hud_z_order_preserved': True,
+            'system_source_cache_token_synced': True,
+            'system_presentation_script_cache_token_synced': True,
+            'rnd_library_changed': False,
+            'rnd_assets_changed': False,
+            'local_upload_changed': False,
+            'private_image_storage_changed': False,
+            'graph_changed': False,
+            'parallel_markets_changed': False,
+            'atlas_changed': False,
+            'math_core_changed': False,
+            'window_manager_changed': False,
+            'market_core_changed': False,
+            'protected_market_core': '38.15.11',
+            'new_timer': False,
+            'new_observer': False,
+            'new_fetch': False,
+            'new_websocket': False,
+            'new_scheduler': False
+          }
+          Path('/tmp/contract-404240.json').write_text(
+              json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8'
+          )
+          print('normalized portrait rules:', stats)
+          PY
+
+      - name: Release identity 40.4.240
+        run: |
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.240 \
+            --parent 40.4.239 \
+            --release "TECHNICAL READING · SINGLE PORTRAIT FULL-PANEL OWNER LOCK" \
+            --status "technical_reading_single_portrait_full_panel_owner_404240" \
+            --contract-key "technical_reading_single_portrait_full_panel_owner_404240" \
+            --contract-json /tmp/contract-404240.json \
+            --lineage-note "40.4.240 Technical Reading single portrait full-panel owner; legacy contain/48px portrait geometry normalized and obsolete detail pseudo backdrop masks retired"
+
+      - name: Technical Reading proof assertions
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          index=(base/'index.html').read_text(encoding='utf-8')
+          app=(base/'js/app.js').read_text(encoding='utf-8')
+          system=(base/'js/views/system-presentation.js').read_text(encoding='utf-8')
+          version=json.loads((base/'version.json').read_text(encoding='utf-8'))
+
+          assert version['build']=='40.4.240'
+          assert version['parent_build']=='40.4.239'
+          assert version['engine']['reference_build']=='38.15.11'
+          assert version['engine']['status']=='protected'
+          assert index.count('atlasTechnicalReadingSinglePortraitOwner404240') == 1
+
+          start=index.index('<style id="atlasTechnicalReadingSinglePortraitOwner404240">')
+          end=index.index('</style>', start)
+          owner=index[start:end]
+          for proof in (
+              'content: none !important;',
+              'display: none !important;',
+              'position: absolute !important;',
+              'inset: 0 !important;',
+              'width: 100% !important;',
+              'height: 100% !important;',
+              'object-fit: cover !important;',
+              'object-position: var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;',
+              'z-index: 3 !important;',
+          ):
+              assert proof in owner, proof
+
+          # No Technical Reading portrait selector may retain the old contain or 48px geometry.
+          rule_re=re.compile(r'(?P<selector>[^{}]*\.admin-tech-portrait-r3[^{}]*)\{(?P<body>[^{}]*)\}', re.S)
+          portrait_rules=[m.group('body') for m in rule_re.finditer(index)]
+          assert portrait_rules
+          assert all('object-fit:contain!important;' not in body for body in portrait_rules)
+          assert all('inset:48px 0 0 0!important;' not in body for body in portrait_rules)
+          assert all('height:calc(100% - 48px)!important;' not in body for body in portrait_rules)
+
+          assert '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.240"></script>' in index
+          assert 'const ADMIN_BUILD = "40.4.240";' in app
+          assert 'const ENGINE_BUILD = "38.15.11";' in app
+          assert 'const SOURCE="./views/system.html?v=administrator-build-40.4.240";' in system
+
+          # RND source paths stay registered; no asset mutation belongs to this build.
+          for name in ('technical-random-11.png','technical-random-12.png','technical-random-16.png'):
+              assert name in index, name
+          PY
+
+          python .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build 40.4.240 \
+            --expected-release "TECHNICAL READING · SINGLE PORTRAIT FULL-PANEL OWNER LOCK"
+
+      - name: Scope guard
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+          }
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          extra=changed-allowed
+          missing=allowed-changed
+          assert not extra, f'out-of-scope: {sorted(extra)}'
+          assert not missing, f'missing expected identity files: {sorted(missing)}'
+          print('scope ok:', *sorted(changed), sep='\n- ')
+          PY
+
+      - name: Commit release
+        shell: bash
+        run: |
+          git config user.name "Aether Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.240 consolidate Technical Reading portrait owner"
+
+          # Live archive jobs can advance main while this bounded release is proving itself.
+          # Rebase only onto those newer commits; a real conflict remains a hard failure.
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Build differential package
+        shell: bash
+        run: |
+          mkdir -p /tmp/pkg
+          git diff --name-only HEAD^ HEAD | while read f; do
+            mkdir -p "/tmp/pkg/$(dirname "$f")"
+            cp "$f" "/tmp/pkg/$f"
+          done
+          cat > /tmp/pkg/FILES_CHANGED_40.4.240.md <<'EOF'
+          # Agent-Crypto 40.4.240 — changed files
+
+          Technical Reading only: consolidate the selected portrait into one full-panel physical owner.
+
+          - Portrait is absolute `inset: 0`, `100% × 100%`, `object-fit: cover`.
+          - Remaining Technical Reading `contain` and 48px portrait geometry rules are normalized.
+          - Historical detail-panel `::before` / `::after` backdrop masks are retired for this panel.
+          - Existing `--admin-tech-x/y` focal variables remain authoritative.
+          - HUD, title, temporal/RND controls and detail body remain foreground layers.
+          - Both System presentation cache tokens are synchronized to 40.4.240 for Version Truth only.
+          - RND library/assets, local upload/storage, Graph, Parallel Markets, Atlas, Math Core, Window Manager and Market Core are unchanged.
+          EOF
+          cd /tmp/pkg
+          zip -qr /tmp/AGENT_CRYPTO_BUILD_40_4_240_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER_CHANGED_FILES.zip .
+          sha256sum /tmp/AGENT_CRYPTO_BUILD_40_4_240_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER_CHANGED_FILES.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_240_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER_CHANGED_FILES
+          path: /tmp/AGENT_CRYPTO_BUILD_40_4_240_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER_CHANGED_FILES.zip
+          if-no-files-found: error
