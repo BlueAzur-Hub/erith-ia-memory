@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.235";
+  const BUILD = "40.4.236";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -175,13 +175,6 @@
           <div class="atlas-parallel-live-heading">
             <div><small>ERITH.IA · MARKETS OBSERVATORY</small><h3 data-parallel-title>Marché</h3><p data-parallel-subtitle>Source Truth publique · observation uniquement.</p></div>
             <div class="atlas-parallel-live-badges"><span data-parallel-source>Source</span><span data-parallel-count>0/0</span></div>
-          </div>
-          <div class="atlas-parallel-cockpit-status-404228" aria-label="Contexte du graphique parallèle">
-            <span><small>LECTURE</small><b>BASE 100</b></span>
-            <span><small>FENÊTRE ACTIVE</small><b data-parallel-window>—</b></span>
-            <span><small>SOURCE</small><b data-parallel-status-source>—</b></span>
-            <span><small>COUVERTURE</small><b data-parallel-status-count>0/0</b></span>
-            <span><small>VÉRITÉ</small><b>HISTORIQUE RÉEL</b></span>
           </div>
           <div class="atlas-parallel-live-stage">
             <canvas id="atlasParallelLiveCanvas404170" aria-label="Graphique marché parallèle"></canvas>
@@ -650,7 +643,7 @@
       const value = last === null || last === undefined ? "—" : Number(last).toLocaleString("fr-FR", {maximumFractionDigits:4});
       const change = found?.change === null || found?.change === undefined ? "—" : `${found.change >= 0 ? "+" : ""}${found.change.toFixed(2)} %`;
       const assetId = safeText(asset.asset_id || asset.symbol);
-      return `<li${selectedId===assetId?' class="is-selected"':""}>${depthActive?`<button type="button" data-parallel-asset="${esc(assetId)}" title="Ouvrir la fiche ${esc(name)}">`:"<span>"}<span><b>${esc(symbol)}</b><small>${esc(name)}</small></span><strong>${esc(value)}${unit ? ` ${esc(unit)}` : ""}</strong><em>${esc(change)}</em>${depthActive?"</button>":"</span>"}</li>`;
+      return `<li${selectedId===assetId?' class="is-selected"':""}>${depthActive?`<button type="button" data-parallel-asset="${esc(assetId)}" title="Sélectionner ${esc(name)}">`:"<span>"}<span><b>${esc(symbol)}</b><small>${esc(name)}</small></span>${depthActive?"</button>":"</span>"}</li>`;
     }).join("");
     const math = ENABLE_MATH && ranked.length ? `
       <section class="atlas-parallel-math"><b>Math Core · historique mesuré</b>
@@ -667,7 +660,7 @@
       <section class="atlas-parallel-rail-context-404228"><b>État des données</b><p>Snapshot ${esc(dateText(payload.generated_at || payload.updated_at || payload.as_of || payload.timestamp))} · historique réel · comparaison Base 100 · aucune interpolation inventée.</p></section>
       <section class="atlas-parallel-rail-decision-404228"><span><small>DÉCISION</small><b>Observer / comparer</b></span><span><small>PRÉVISION</small><b>AUCUNE</b></span></section>
       <section><b>Lecture synthétique</b><p>${leader ? `Leader ${esc(leader.asset.name)} ${pct(leader.metric.change)} ; retard ${esc(laggard.asset.name)} ${pct(laggard.metric.change)}. Les séries restent indépendantes et sont comparées en Base 100.` : "Données insuffisantes."}</p></section>
-      <section class="atlas-parallel-basket-404189"><b>Panier actif · ${esc(state.period.get(domain) || cfg.defaultPeriod)}</b><ul>${basket || "<li>Données insuffisantes.</li>"}</ul></section>
+      <section class="atlas-parallel-basket-404189 atlas-parallel-asset-selector-404236"><b>Sélection actif · ${esc(state.period.get(domain) || cfg.defaultPeriod)}</b><ul>${basket || "<li>Données insuffisantes.</li>"}</ul></section>
       ${math}
       ${depthContent(domain,payload,rowsByAsset,metricByAsset)}
       <section><b>Intégrité</b><p>Aucune valeur inventée · aucune moyenne inter-source · aucune exécution · décision humaine uniquement.</p></section>`;
@@ -724,9 +717,12 @@
     const ranked = [...metricByAsset].filter(x=>x.metric.change!==null).sort((a,b)=>b.metric.change-a.metric.change);
     const leader=ranked[0], lag=ranked[ranked.length-1];
     const summary = shell.querySelector("[data-parallel-summary]");
-    if (summary) summary.innerHTML = ranked.length ? `<b>${series.length}/${cfg.expected} SÉRIES</b><span>Leader ${esc(leader.asset.symbol||leader.asset.name)} ${pct(leader.metric.change)} · retard ${esc(lag.asset.symbol||lag.asset.name)} ${pct(lag.metric.change)}</span>` : "Données insuffisantes";
+    if (summary) {
+      const identities = metricByAsset.map(x=>`<span style="--series:${x.color}"><i></i><b>${esc(x.asset.symbol||x.asset.name)}</b></span>`).join("");
+      summary.innerHTML = ranked.length ? `<b>${series.length}/${cfg.expected}</b><span>Leader ${esc(leader.asset.symbol||leader.asset.name)} ${pct(leader.metric.change)} · retard ${esc(lag.asset.symbol||lag.asset.name)} ${pct(lag.metric.change)}</span><span class="atlas-parallel-summary-assets-404236">${identities}</span>` : "Données insuffisantes";
+    }
     const legend = shell.querySelector("[data-parallel-legend]");
-    if (legend) legend.innerHTML = metricByAsset.map(x=>`<span style="--series:${x.color}"><i></i><b>${esc(x.asset.symbol||x.asset.name)}</b><small>${pct(x.metric.change)}</small></span>`).join("");
+    if (legend) { legend.replaceChildren(); legend.hidden = true; }
     renderRail(domain,cfg,payload,rowsByAsset,metricByAsset);
     setStatus(domain,cfg,payload);
   }
@@ -806,6 +802,9 @@
     chart_table_parity:true,
     canvas_crypto_plot_language:true,
     values_hud_crypto_panel_parity:true,
+    information_hierarchy_single_table:true,
+    redundant_status_row_removed:true,
+    rail_selector_values_removed:true,
     rail_asset_color_identity:true,
     math_semantic_color:true,
     color_redundant_with_text:true,

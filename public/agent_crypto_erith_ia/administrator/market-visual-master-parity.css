@@ -187,3 +187,115 @@ html[data-cyclic-market-mode="parallel"] .atlas-parallel-chart-table-row-404206.
 html[data-cyclic-market-mode="parallel"] .atlas-parallel-chart-table-row-404206.is-flat>em{color:#b7c5cd!important}
 html[data-cyclic-market-mode="parallel"] .atlas-parallel-chart-table-404206>footer{padding-top:8px!important;color:#849cac!important}
 html[data-cyclic-market-mode="parallel"] .atlas-parallel-chart-table-404206>footer b{color:color-mix(in srgb,var(--cyclic-market-accent,#74e5ef) 72%,#fff0c9)!important}
+
+
+/* =========================================================
+   40.4.236 — PARALLEL INFORMATION HIERARCHY LOCK
+   One numeric table inside the graph: VALEURS OBSERVÉES.
+   Left = light synthesis + series identity. Right rail = context + selector.
+   Existing geometry, renderer, data, Base 100, histories and Market Core stay owned elsewhere.
+   ========================================================= */
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-cockpit-status-404228{
+  display:none!important;
+}
+
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary{
+  min-height:34px!important;
+  padding:6px 9px!important;
+  gap:9px!important;
+  border-left-width:2px!important;
+  max-width:min(760px,calc(100% - 52px))!important;
+  background:linear-gradient(100deg,rgba(3,13,23,.88),rgba(5,19,29,.74))!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.18),inset 0 0 0 1px rgba(255,255,255,.018)!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary>b{
+  font-size:12px!important;
+  color:#fff0c9!important;
+  white-space:nowrap;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary>span:not(.atlas-parallel-summary-assets-404236){
+  color:#9eb2bf!important;
+  font-size:8px!important;
+  font-weight:800!important;
+  white-space:nowrap;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-summary-assets-404236{
+  display:flex!important;
+  align-items:center!important;
+  gap:7px!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  overflow:hidden!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-summary-assets-404236>span{
+  display:flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  min-width:0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  white-space:nowrap!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-summary-assets-404236 i{
+  width:6px!important;
+  height:6px!important;
+  border-radius:50%!important;
+  background:var(--series,#fff)!important;
+  box-shadow:0 0 7px color-mix(in srgb,var(--series,#fff) 52%,transparent)!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-summary-assets-404236 b{
+  color:#cbd8df!important;
+  font-size:7px!important;
+  font-weight:900!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-legend{
+  display:none!important;
+}
+
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-asset-selector-404236 ul{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:5px!important;
+  margin-top:7px!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-asset-selector-404236 li{
+  flex:1 1 92px!important;
+  min-width:0!important;
+  padding:5px 7px!important;
+  border-radius:9px!important;
+  background:rgba(1,9,16,.42)!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-asset-selector-404236 li>button{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-asset-selector-404236 li>button>span,
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-asset-selector-404236 li>span>span{
+  display:grid!important;
+  gap:1px!important;
+  min-width:0!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-asset-selector-404236 li b{
+  color:#e9f1f5!important;
+  font-size:8px!important;
+}
+html[data-cyclic-market-mode="parallel"] .atlas-parallel-asset-selector-404236 li small{
+  color:#7e95a4!important;
+  font-size:7px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+@media(max-width:1100px){
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary{
+    flex-wrap:wrap!important;
+  }
+  html[data-cyclic-market-mode="parallel"] .atlas-parallel-summary-assets-404236{
+    width:100%!important;
+    margin-left:0!important;
+  }
+}
