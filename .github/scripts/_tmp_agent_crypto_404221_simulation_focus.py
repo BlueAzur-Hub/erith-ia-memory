@@ -1,82 +1,72 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re, subprocess, json
+import re, subprocess
 
 ROOT=Path('public/agent_crypto_erith_ia/administrator')
-APP=ROOT/'app.js'; INDEX=ROOT/'index.html'
 subprocess.run(['python','.github/scripts/agent_crypto_version_truth_guard.py','--expected-build','40.4.220'],check=True)
-app=APP.read_text(encoding='utf-8',errors='replace')
-index=INDEX.read_text(encoding='utf-8',errors='replace')
-app_lines=app.splitlines(); idx_lines=index.splitlines()
 
-def ctx(lines,ln,b=4,a=7):
+TOKENS=[
+ 'simProfileTitle','simProfileBadge','simProfileCapital','simProfileTicket','simProfileMaxOperation',
+ 'simProfileMaxExposure','simProfileMinReserve','simProfileAllowedAssets','simCash','simPositionsValue',
+ 'simTotalValue','simPnL','simProfileStatus','learningCockpitProfile','learningCockpitPortfolio',
+ 'data-sim-profile','Solo Débutant 100 €','Solo Progression 1 000 €','Profil actif : Solo Débutant 100 €',
+ 'Capital virtuel','Ticket conseillé','Maximum opération','Exposition maximale','Réserve minimale'
+]
+
+def textfiles():
+    for p in ROOT.rglob('*'):
+        if p.is_file() and p.suffix.lower() in ('.js','.html','.htm','.css','.json','.md','.txt'):
+            yield p
+
+def ctx(lines,ln,b=4,a=8):
     lo=max(1,ln-b); hi=min(len(lines),ln+a)
     for j in range(lo,hi+1): print(f'{j:06d}: {lines[j-1]}')
 
-def hits(text,token):
-    return [i for i,l in enumerate(text.splitlines(),1) if token in l]
+print('===== RECURSIVE SIMULATION SURFACE OWNER SCAN =====')
+for p in textfiles():
+    text=p.read_text(encoding='utf-8',errors='replace')
+    matched=[t for t in TOKENS if t in text]
+    if not matched: continue
+    print(f'\n### FILE {p.relative_to(ROOT)} tokens={matched}')
+    lines=text.splitlines()
+    shown=set()
+    for token in matched:
+        for i,l in enumerate(lines,1):
+            if token not in l: continue
+            key=(i,token)
+            if key in shown: continue
+            shown.add(key)
+            print(f'\n--- token {token!r} @ {i} ---')
+            ctx(lines,i)
 
-print('===== PROFILE SURFACE HTML ID CARDINALITY =====')
-ids=['simProfileTitle','simProfileBadge','simProfileCapital','simProfileTicket','simProfileMaxOperation','simProfileMaxExposure','simProfileMinReserve','simProfileAllowedAssets','simCash','simPositionsValue','simTotalValue','simPnL','simProfileStatus','learningCockpitProfile','learningCockpitPortfolio']
-for idv in ids:
-    exact=re.findall(rf'\bid=["\']{re.escape(idv)}["\']',index,re.I)
-    print(idv,'count',len(exact))
-    for ln in hits(index,idv): ctx(idx_lines,ln,2,3)
+print('\n===== PROFILE/WORKSPACE SWITCH FUNCTIONS =====')
+app=(ROOT/'app.js').read_text(encoding='utf-8',errors='replace')
+lines=app.splitlines()
+for pat in (
+ r'function\s+switchSimulationProfile',
+ r'function\s+.*Workspace.*404142',
+ r'PAPER_WORKSPACE_404142\s*=',
+ r'PAPER_WORKSPACE_ACTIVE_KEY_404142',
+ r'function\s+renderSimulation\s*\(',
+ r'function\s+loadSimulation\s*\(',
+ r'function\s+renderLearningJourneyCockpit\s*\(',
+):
+    print('\nPATTERN',pat)
+    for m in re.finditer(pat,app,re.I):
+        ln=app.count('\n',0,m.start())+1
+        ctx(lines,ln,7,28)
 
-print('\n===== PROFILE SURFACE APP WRITERS =====')
-for idv in ids:
-    hs=hits(app,idv)
-    print('\n',idv,'hits',hs)
-    for ln in hs: ctx(app_lines,ln,3,5)
-
-print('\n===== ALL SIM_PROFILE ASSIGNMENTS =====')
-for i,l in enumerate(app_lines,1):
-    if re.search(r'\bSIM_PROFILE\s*=',l): ctx(app_lines,i,5,8)
-
-print('\n===== ALL STATE.SIM ASSIGNMENTS =====')
-for i,l in enumerate(app_lines,1):
-    if re.search(r'\bstate\.sim\s*=',l): ctx(app_lines,i,3,5)
-
-print('\n===== PROFILE SWITCH LISTENERS / BUTTONS =====')
-for token in ('data-sim-profile','switchSimulationProfile','SIM_ACTIVE_PROFILE_STORAGE_KEY'):
-    print('\nTOKEN',token)
-    for ln in hits(app,token): ctx(app_lines,ln,4,7)
-    for ln in hits(index,token): ctx(idx_lines,ln,3,5)
-
-print('\n===== FULL RESET STORAGE TARGETS =====')
-for token in ('function agentCryptoResetLocalStorageTargets','SIM_ACTIVE_PROFILE_STORAGE_KEY','SIM_STORAGE_PREFIX'):
-    hs=hits(app,token)
-    print(token,hs)
-    for ln in hs[:12]: ctx(app_lines,ln,6,12)
-
-print('\n===== PROFILE STATUS / COCKPIT OWNERS =====')
-for token in ('function getSimulationProfileStatus','function renderLearningJourneyCockpit','learningCockpitProfile','learningCockpitPortfolio','function renderSimulation()'):
-    hs=hits(app,token); print(token,hs)
-    for ln in hs[:8]: ctx(app_lines,ln,8,28)
-
-print('\n===== STATIC PROFILE COPY CANDIDATES =====')
-for literal in ('100 €','1 000 €','Solo Débutant','Solo Progression','ticket 50','ticket 5','max 100','max 10','réserve min 700','réserve min 70'):
-    ah=hits(app,literal); ih=hits(index,literal)
-    print(literal,'app',ah,'index',ih)
-    for ln in ah[:8]: ctx(app_lines,ln,2,3)
-    for ln in ih[:8]: ctx(idx_lines,ln,2,3)
-
-print('\n===== PROFILE STORAGE INTEGRITY FACTS =====')
-facts={
- 'dual_profiles': all(x in app for x in ('solo_progression_1000_v1','solo_beginner_100_v1_1_alpha_13')),
- 'stored_profile_boot': 'SIM_PROFILES[getStoredSimulationProfileKey()]' in app,
- 'switch_saves_old': 'if (state.sim) saveSimulation();' in app,
- 'switch_persists_profile': 'localStorage.setItem(SIM_ACTIVE_PROFILE_STORAGE_KEY, SIM_PROFILE.key)' in app,
- 'switch_nulls_state': 'state.sim = null;' in app,
- 'profile_workspace_storage': 'simulationStorageKeyForWorkspace404142(profile = SIM_PROFILE' in app,
- 'render_profile_dynamic': 'els.simProfileCapital.textContent = `${fmtEUR.format(SIM_PROFILE.startCash)} virtuels`' in app,
- 'render_wallet_from_state': 'setText(els.simCash, fmtEUR.format(atlasZeroCurrency(state.sim.cash)))' in app,
- 'school_dynamic': 'const unit = SIM_PROFILE.maxExposure / 3' in app,
-}
-print(json.dumps(facts,ensure_ascii=False,indent=2))
+print('\n===== SIMULATION STATIC DOM ORIGIN SUMMARY =====')
+for idv in ('simProfileTitle','simProfileCapital','simCash','learningCockpitProfile'):
+    owners=[]
+    for p in textfiles():
+        text=p.read_text(encoding='utf-8',errors='replace')
+        if idv in text:
+            owners.append(str(p.relative_to(ROOT)))
+    print(idv,owners)
 
 for p in sorted(ROOT.rglob('*.js')):
     r=subprocess.run(['node','--check',str(p)],capture_output=True,text=True)
     if r.returncode: print(r.stderr); raise SystemExit(2)
 print('NODE_OK')
-print('FOCUS2_404221_OK')
+print('FOCUS3_404221_OK')
