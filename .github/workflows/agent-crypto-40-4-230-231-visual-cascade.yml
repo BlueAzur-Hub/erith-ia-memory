@@ -39,6 +39,7 @@ jobs:
         shell: bash
         run: |
           python3 .github/scripts/aether_40_4_230_231_visual_cascade_patch.py 230
+          python3 .github/scripts/aether_40_4_230_231_manifest_hash_arm.py 230
           test -f public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css
           grep -q 'data-market-visual-master-parity="true"' public/agent_crypto_erith_ia/administrator/index.html
           grep -q 'system-presentation.js?v=administrator-build-40.4.230' public/agent_crypto_erith_ia/administrator/index.html
@@ -65,6 +66,7 @@ jobs:
           assert 'Market Visual Master Parity' in css
           assert 'atlas-parallel-live-shell' in css and 'atlasMetalsUnifiedToolbar' in css
           assert 'data-market-visual-master-parity="true"' in idx
+          assert 'market-visual-master-parity.css' in m['files']
           allowed={
             'public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css',
             'public/agent_crypto_erith_ia/administrator/index.html',
@@ -125,6 +127,7 @@ jobs:
           assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
           PY
           python3 .github/scripts/aether_40_4_230_231_visual_cascade_patch.py 231
+          python3 .github/scripts/aether_40_4_230_231_manifest_hash_arm.py 231
           test -f public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css
           grep -q 'data-technical-reading-cockpit-parity="true"' public/agent_crypto_erith_ia/administrator/index.html
           grep -q 'system-presentation.js?v=administrator-build-40.4.231' public/agent_crypto_erith_ia/administrator/index.html
@@ -153,6 +156,7 @@ jobs:
           assert 'admin-tech-portrait-r3' in css
           assert 'backdrop-filter:none!important' in css
           assert 'data-technical-reading-cockpit-parity="true"' in idx
+          assert 'technical-reading-cockpit-parity.css' in m['files']
           allowed={
             'public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css',
             'public/agent_crypto_erith_ia/administrator/index.html',
@@ -212,3 +216,5 @@ jobs:
           name: AGENT_CRYPTO_BUILD_40_4_231_TECHNICAL_READING_CRYPTO_COCKPIT_VISUAL_PARITY_CHANGED_FILES
           path: AGENT_CRYPTO_BUILD_40_4_231_TECHNICAL_READING_CRYPTO_COCKPIT_VISUAL_PARITY_CHANGED_FILES.zip
           include-hidden-files: true
+
+# R2 — register new final CSS owners in 40.4.219 hash authority before Version Truth.
