@@ -30975,7 +30975,7 @@ function foundationMarketVisualRecapMarkup(summary) {
   return `
       <div id="marketFoundationVisualRecap" class="foundation-visual-recap" aria-live="polite">
         <div class="foundation-visual-recap-media">
-          <img src="assets/learning/module_01_market_visual_recap.png" alt="Vue pédagogique annotée du Market Snapshot montrant les cinq repères du Module 01 : prix Bitcoin, variation 24 heures, variation 7 jours, source et heure des données." loading="lazy" decoding="async">
+          <img src="assets/learning/module_01_market_visual_recap.png" alt="Vue pédagogique annotée du Market Snapshot montrant les cinq repères du Module 01 : prix Bitcoin, variation 24 heures, variation 7 jours, source et heure ou fraîcheur des données." loading="lazy" decoding="async">
           <small>L’image est un repère visuel construit à partir d’une capture d’exemple. Les chiffres de ta session peuvent évoluer : utilise toujours les preuves figées affichées par le cockpit.</small>
         </div>
         <div class="foundation-visual-recap-copy">
@@ -30986,11 +30986,9 @@ function foundationMarketVisualRecapMarkup(summary) {
             <li><b>24 h :</b> ${escapeHtml(summary.change24)}.</li>
             <li><b>7 j :</b> ${escapeHtml(summary.change7)}.</li>
             <li><b>Source :</b> ${escapeHtml(summary.source)}.</li>
-            <li><b>Heure :</b> ${escapeHtml(summary.time)}.</li>
+            <li><b>Heure / fraîcheur :</b> ${escapeHtml(summary.time)}.</li>
           </ul>
-          <div class="foundation-visual-callout">
-            <b>Avant la question finale :</b> relis seulement ces cinq preuves. Le but de cette vue est de t’aider à retrouver où elles se lisent dans le Market Snapshot, pas de répondre à ta place.
-          </div>
+          <div class="foundation-visual-callout"><b>Observation ≠ prédiction.</b> Ces cinq preuves décrivent ce qui est affiché et quand cela a été relevé. Elles ne disent pas ce que le prix fera ensuite.</div>
         </div>
       </div>`;
 }
@@ -31103,6 +31101,7 @@ function foundationMarketLab(cockpit) {
         <small>${summary.provenanceFrozen ? "Source et heure figées lors de la validation de l’étape 4." : "Une valeur sans origine ni heure n’est pas suffisante pour une lecture fiable."}</small>
         ${foundationButton(cockpit.steps.verify ? "Source et heure validées" : "Valider la source et l’heure", "market_verify_source_time", !step4Ready || cockpit.steps.verify)}
       </article>
+      ${cockpit.steps.verify && summary.ready ? `<div class="foundation-lab-wide">${foundationMarketVisualRecapMarkup(summary)}</div>` : ""}
       ${cockpit.steps.verify && summary.ready ? `<div class="foundation-lab-wide">${foundationMarketVisualRecapMarkup(summary)}</div>` : ""}
       <article data-foundation-stage="5" class="foundation-lab-wide foundation-guided-conclusion foundation-active-recall ${cockpit.steps.note ? "is-done" : ""}">
         <span class="foundation-stage-kicker">ÉTAPE 5 · RAPPEL ACTIF</span>
@@ -52750,7 +52749,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.224";
+const ATLAS_BUILD = "40.4.225";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
