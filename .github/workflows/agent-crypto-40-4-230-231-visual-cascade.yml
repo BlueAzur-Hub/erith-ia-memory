@@ -1,0 +1,214 @@
+name: Agent-Crypto 40.4.230 + 40.4.231 Visual Parity Cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-230-231-visual-cascade.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cascade:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parent 40.4.229 guard
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          echo "BASE229_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('public/agent_crypto_erith_ia/administrator/version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.229', m['build']
+          assert m['engine']['reference_build']=='38.15.11'
+          assert m['engine']['status']=='protected'
+          print('PARENT229_PASS')
+          PY
+
+      - name: Apply 40.4.230 market visual master parity
+        shell: bash
+        run: |
+          python3 .github/scripts/aether_40_4_230_231_visual_cascade_patch.py 230
+          test -f public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css
+          grep -q 'data-market-visual-master-parity="true"' public/agent_crypto_erith_ia/administrator/index.html
+          grep -q 'system-presentation.js?v=administrator-build-40.4.230' public/agent_crypto_erith_ia/administrator/index.html
+          grep -q 'views/system.html?v=administrator-build-40.4.230' public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
+          git diff --check
+
+      - name: Release 40.4.230
+        shell: bash
+        run: |
+          cat >/tmp/contract230.json <<'JSON'
+          {"state":"active","scope":"market_graph_crypto_visual_master_parity","crypto_visual_master":true,"metals_included":true,"indices_included":true,"energy_included":true,"cross_included":true,"final_css_owner":true,"renderer_changed":false,"data_changed":false,"history_changed":false,"sources_changed":false,"base100_math_changed":false,"math_changed":false,"atlas_changed":false,"window_manager_changed":false,"market_core_modified":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py --build 40.4.230 --parent 40.4.229 --release "MARKET GRAPH · CRYPTO VISUAL MASTER PARITY" --status market_graph_crypto_visual_master_parity_404230 --contract-key market_graph_crypto_visual_master_parity_404230 --contract-json /tmp/contract230.json --lineage-note "40.4.230 market graph visual parity: Crypto remains visual master; Metals, Indices, Energy and Cross receive final cockpit composition parity through a last CSS owner; renderers, data, histories, sources, Base 100 math, Atlas, Window Manager and Market Core unchanged"
+          python3 .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.230 --expected-release "MARKET GRAPH · CRYPTO VISUAL MASTER PARITY"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,subprocess
+          b=Path('public/agent_crypto_erith_ia/administrator')
+          m=json.loads((b/'version.json').read_text())
+          assert m['build']=='40.4.230' and m['parent_build']=='40.4.229'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          css=(b/'market-visual-master-parity.css').read_text()
+          idx=(b/'index.html').read_text()
+          assert 'Market Visual Master Parity' in css
+          assert 'atlas-parallel-live-shell' in css and 'atlasMetalsUnifiedToolbar' in css
+          assert 'data-market-visual-master-parity="true"' in idx
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/build.json'
+          }
+          paths={x[3:] for x in subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines()}
+          if paths-allowed: raise SystemExit(f'230 out of scope: {sorted(paths-allowed)}')
+          required={'public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css','public/agent_crypto_erith_ia/administrator/version.json'}
+          if not required<=paths: raise SystemExit(f'230 required missing: {sorted(paths)}')
+          print('SCOPE230_PASS',sorted(paths))
+          PY
+          git diff --check
+
+      - name: Commit and push 40.4.230
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/js/app.js public/agent_crypto_erith_ia/administrator/version.json public/agent_crypto_erith_ia/administrator/administrator-version.json public/agent_crypto_erith_ia/administrator/build.json
+          git commit -m "agent-crypto: build 40.4.230 align market graphs to Crypto visual master"
+          echo "SHA230=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Package 40.4.230
+        shell: bash
+        run: |
+          PKG=/tmp/pkg230; mkdir -p "$PKG"
+          git diff --name-only "$BASE229_SHA" "$SHA230" >/tmp/changed230.txt
+          while IFS= read -r p; do mkdir -p "$PKG/$(dirname "$p")"; cp "$p" "$PKG/$p"; done </tmp/changed230.txt
+          {
+            echo '# Agent-Crypto 40.4.230 — fichiers modifiés'
+            echo
+            echo 'Release: MARKET GRAPH · CRYPTO VISUAL MASTER PARITY'
+            echo 'Parent: 40.4.229'
+            echo 'Market Core: 38.15.11 PROTECTED'
+            echo "Canonical commit: $SHA230"
+            echo
+            echo '## Fichiers'
+            sed 's/^/- `/' /tmp/changed230.txt | sed 's/$/`/'
+          } >"$PKG/FILES_CHANGED_40.4.230.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_230_MARKET_GRAPH_CRYPTO_VISUAL_MASTER_PARITY_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_230_MARKET_GRAPH_CRYPTO_VISUAL_MASTER_PARITY_CHANGED_FILES.zip | tee /tmp/sha230.txt
+
+      - name: Apply 40.4.231 Technical Reading cockpit parity
+        shell: bash
+        run: |
+          echo "BASE230_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('public/agent_crypto_erith_ia/administrator/version.json').read_text())
+          assert m['build']=='40.4.230'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          PY
+          python3 .github/scripts/aether_40_4_230_231_visual_cascade_patch.py 231
+          test -f public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css
+          grep -q 'data-technical-reading-cockpit-parity="true"' public/agent_crypto_erith_ia/administrator/index.html
+          grep -q 'system-presentation.js?v=administrator-build-40.4.231' public/agent_crypto_erith_ia/administrator/index.html
+          grep -q 'views/system.html?v=administrator-build-40.4.231' public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
+          git diff --check
+
+      - name: Release 40.4.231
+        shell: bash
+        run: |
+          cat >/tmp/contract231.json <<'JSON'
+          {"state":"active","scope":"technical_reading_cockpit_visual_parity","final_css_owner":true,"portrait_source_changed":false,"portrait_crop_logic_changed":false,"rnd_changed":false,"local_upload_changed":false,"technical_interactions_changed":false,"firefox_safe_alpha_only":true,"backdrop_filter_added":false,"market_graph_changed":false,"renderer_changed":false,"data_changed":false,"atlas_changed":false,"window_manager_changed":false,"market_core_modified":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py --build 40.4.231 --parent 40.4.230 --release "TECHNICAL READING · CRYPTO COCKPIT VISUAL PARITY" --status technical_reading_crypto_cockpit_visual_parity_404231 --contract-key technical_reading_crypto_cockpit_visual_parity_404231 --contract-json /tmp/contract231.json --lineage-note "40.4.231 Technical Reading visual parity: final CSS owner aligns the right rail with Crypto cockpit hierarchy while preserving portrait source, RND, local upload, crop logic and interactions; Firefox-safe alpha surfaces only; graph renderers, data, Atlas, Window Manager and Market Core unchanged"
+          python3 .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.231 --expected-release "TECHNICAL READING · CRYPTO COCKPIT VISUAL PARITY"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,subprocess
+          b=Path('public/agent_crypto_erith_ia/administrator')
+          m=json.loads((b/'version.json').read_text())
+          assert m['build']=='40.4.231' and m['parent_build']=='40.4.230'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          css=(b/'technical-reading-cockpit-parity.css').read_text()
+          idx=(b/'index.html').read_text()
+          assert 'Technical Reading Cockpit Parity' in css
+          assert 'detailPanel.clean-lens-detail-panel' in css
+          assert 'admin-tech-portrait-r3' in css
+          assert 'backdrop-filter:none!important' in css
+          assert 'data-technical-reading-cockpit-parity="true"' in idx
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/build.json'
+          }
+          paths={x[3:] for x in subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines()}
+          if paths-allowed: raise SystemExit(f'231 out of scope: {sorted(paths-allowed)}')
+          required={'public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css','public/agent_crypto_erith_ia/administrator/version.json'}
+          if not required<=paths: raise SystemExit(f'231 required missing: {sorted(paths)}')
+          print('SCOPE231_PASS',sorted(paths))
+          PY
+          git diff --check
+
+      - name: Commit and push 40.4.231
+        shell: bash
+        run: |
+          git add public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/js/app.js public/agent_crypto_erith_ia/administrator/version.json public/agent_crypto_erith_ia/administrator/administrator-version.json public/agent_crypto_erith_ia/administrator/build.json
+          git commit -m "agent-crypto: build 40.4.231 align Technical Reading with Crypto cockpit"
+          echo "SHA231=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Package 40.4.231
+        shell: bash
+        run: |
+          PKG=/tmp/pkg231; mkdir -p "$PKG"
+          git diff --name-only "$BASE230_SHA" "$SHA231" >/tmp/changed231.txt
+          while IFS= read -r p; do mkdir -p "$PKG/$(dirname "$p")"; cp "$p" "$PKG/$p"; done </tmp/changed231.txt
+          {
+            echo '# Agent-Crypto 40.4.231 — fichiers modifiés'
+            echo
+            echo 'Release: TECHNICAL READING · CRYPTO COCKPIT VISUAL PARITY'
+            echo 'Parent: 40.4.230'
+            echo 'Market Core: 38.15.11 PROTECTED'
+            echo "Canonical commit: $SHA231"
+            echo
+            echo '## Fichiers'
+            sed 's/^/- `/' /tmp/changed231.txt | sed 's/$/`/'
+          } >"$PKG/FILES_CHANGED_40.4.231.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_231_TECHNICAL_READING_CRYPTO_COCKPIT_VISUAL_PARITY_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_231_TECHNICAL_READING_CRYPTO_COCKPIT_VISUAL_PARITY_CHANGED_FILES.zip | tee /tmp/sha231.txt
+
+      - name: Upload 40.4.230 differential ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_230_MARKET_GRAPH_CRYPTO_VISUAL_MASTER_PARITY_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_230_MARKET_GRAPH_CRYPTO_VISUAL_MASTER_PARITY_CHANGED_FILES.zip
+          include-hidden-files: true
+
+      - name: Upload 40.4.231 differential ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_231_TECHNICAL_READING_CRYPTO_COCKPIT_VISUAL_PARITY_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_231_TECHNICAL_READING_CRYPTO_COCKPIT_VISUAL_PARITY_CHANGED_FILES.zip
+          include-hidden-files: true
