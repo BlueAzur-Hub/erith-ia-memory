@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.211";
+  const BUILD = "40.4.227";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -363,14 +363,14 @@
     canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
     const ctx = canvas.getContext("2d"); if (!ctx) return;
     ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,width,height);
-    const pad = {l:54,r:24,t:24,b:42}, w = width-pad.l-pad.r, h=height-pad.t-pad.b;
+    const pad = {l:62,r:24,t:24,b:42}, w = width-pad.l-pad.r, h=height-pad.t-pad.b;
     ctx.fillStyle = "rgba(3,10,18,.72)"; ctx.fillRect(0,0,width,height);
     ctx.strokeStyle = "rgba(140,175,200,.13)"; ctx.lineWidth = 1;
     for (let i=0;i<=5;i++){ const y=pad.t+(h/5)*i; ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(width-pad.r,y);ctx.stroke(); }
     for (let i=0;i<=6;i++){ const x=pad.l+(w/6)*i; ctx.beginPath();ctx.moveTo(x,pad.t);ctx.lineTo(x,height-pad.b);ctx.stroke(); }
     const all = series.flatMap(s => s.points.map(p => p.value));
-    let min = Math.min(...all), max = Math.max(...all); if (!Number.isFinite(min)||!Number.isFinite(max)) return;
-    const span = Math.max(.1,max-min); min -= span*.08; max += span*.08;
+    let min = Math.min(100,...all), max = Math.max(100,...all); if (!Number.isFinite(min)||!Number.isFinite(max)) return;
+    const span = Math.max(.4,max-min); const visualPad = Math.max(.18,span*.10); min -= visualPad; max += visualPad;
     const times = series.flatMap(s => s.points.map(pointTimeMs).filter(Number.isFinite));
     const timeMin = times.length ? Math.min(...times) : 0;
     const timeMax = times.length ? Math.max(...times) : 1;
@@ -379,8 +379,9 @@
       const ms = pointTimeMs(point);
       return ms !== null ? pad.l + ((ms-timeMin)/timeSpan)*w : pad.l + (index/Math.max(1,count-1))*w;
     };
-    ctx.font = "11px system-ui"; ctx.fillStyle = "rgba(197,215,226,.72)";
-    for (let i=0;i<=5;i++){ const v=max-(max-min)*(i/5); ctx.fillText(v.toFixed(1),8,pad.t+(h/5)*i+4); }
+    ctx.font = "700 10px system-ui"; ctx.fillStyle = "rgba(197,215,226,.72)"; ctx.textAlign = "right";
+    for (let i=0;i<=5;i++){ const v=max-(max-min)*(i/5); ctx.fillText(v.toFixed(1),pad.l-9,pad.t+(h/5)*i+4); }
+    if (100>=min && 100<=max) { const y100=pad.t+(1-((100-min)/(max-min)))*h; ctx.save(); ctx.setLineDash([6,5]); ctx.strokeStyle="rgba(238,214,142,.42)"; ctx.lineWidth=1.15; ctx.beginPath(); ctx.moveTo(pad.l,y100); ctx.lineTo(width-pad.r,y100); ctx.stroke(); ctx.setLineDash([]); ctx.textAlign="left"; ctx.fillStyle="rgba(255,232,164,.82)"; ctx.font="900 9px system-ui"; ctx.fillText("BASE 100",pad.l+7,Math.max(pad.t+10,y100-9)); ctx.restore(); }
     series.forEach((s, idx) => {
       if (s.points.length < 2) return;
       const color = s.color || COLORS[idx % COLORS.length];
@@ -394,14 +395,14 @@
       ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,3.7,0,Math.PI*2);ctx.fill();
     });
     ctx.font = "9px system-ui"; ctx.fillStyle = "rgba(168,192,207,.60)";
-    [0,.5,1].forEach((ratio,index) => {
+    [0,.2,.4,.6,.8,1].forEach((ratio,index) => {
       const stamp = timeMin + timeSpan*ratio;
       const d = new Date(stamp);
       const label = period === "24h" ? d.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}) : d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year: period==="7j"||period==="30j" ? undefined : "2-digit"});
-      ctx.textAlign = index===0 ? "left" : index===2 ? "right" : "center";
+      ctx.textAlign = index===0 ? "left" : index===5 ? "right" : "center";
       ctx.fillText(label,pad.l+w*ratio,height-20);
     });
-    ctx.textAlign = "left"; ctx.fillStyle = accent || "#dce5ec"; ctx.font = "800 10px system-ui"; ctx.fillText(`BASE 100 · ${period.toUpperCase()}`, pad.l, height-7);
+    ctx.textAlign = "left"; ctx.fillStyle = accent || "#dce5ec"; ctx.font = "900 9px system-ui"; ctx.fillText(`BASE 100 · ${period.toUpperCase()} · HISTORIQUE RÉEL`, pad.l, height-7); ctx.textAlign = "right"; ctx.fillStyle = "rgba(132,159,175,.76)"; ctx.font = "800 8px system-ui"; ctx.fillText("SURVOL = POINT RÉEL LE PLUS PROCHE", width-pad.r, height-7);
     state.hover = {series,period,domain:state.current,geometry:{pad,w,h,width,height,min,max,timeMin,timeMax}};
   }
 
