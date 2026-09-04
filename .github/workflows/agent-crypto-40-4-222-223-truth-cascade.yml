@@ -1,0 +1,64 @@
+name: Agent-Crypto 40.4.222-223 Truth Cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-222-223-truth-cascade.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify canonical base
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          v=json.loads((base/'version.json').read_text())
+          b=json.loads((base/'build.json').read_text())
+          assert v['build']=='40.4.221', v['build']
+          assert (v.get('engine') or {}).get('reference_build')=='38.15.11'
+          assert b.get('engine')=='38.15.11'
+          print('BASE_OK', v['build'], b['engine'])
+          PY
+      - name: Inspect learning summary owner
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('public/agent_crypto_erith_ia/administrator/app.js')
+          text=p.read_text(encoding='utf-8')
+          needles=[
+            'learningAutoSummaryText',
+            'La synthèse automatique apparaîtra ici lorsque les cinq preuves du module seront validées.',
+            'conclusion',
+            'archivedAt',
+            'archive',
+          ]
+          lines=text.splitlines()
+          seen=[]
+          for needle in needles[:2]:
+            hits=[i for i,l in enumerate(lines) if needle in l]
+            print(f'NEEDLE {needle!r} HITS {len(hits)}')
+            for i in hits[:20]:
+              lo=max(0,i-24); hi=min(len(lines),i+35)
+              print(f'--- CONTEXT {lo+1}:{hi} ---')
+              print('\n'.join(f'{j+1}: {lines[j]}' for j in range(lo,hi)))
+          # Print functions that mention summary element, bounded.
+          for i,l in enumerate(lines):
+            if 'learningAutoSummary' in l or ('summary' in l.lower() and 'learning' in l.lower()):
+              if i not in seen:
+                seen.append(i)
+                lo=max(0,i-15); hi=min(len(lines),i+25)
+                print(f'--- SUMMARY_CONTEXT {lo+1}:{hi} ---')
+                print('\n'.join(f'{j+1}: {lines[j]}' for j in range(lo,hi)))
+                if len(seen)>=25: break
+          PY
