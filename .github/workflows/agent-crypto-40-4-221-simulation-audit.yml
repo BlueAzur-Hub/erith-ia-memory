@@ -5,10 +5,9 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/agent-crypto-40-4-221-simulation-audit.yml'
-      - '.github/scripts/_tmp_agent_crypto_404221_simulation_audit.py'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   audit:
@@ -20,4 +19,12 @@ jobs:
         with:
           fetch-depth: 0
       - name: Audit Simulation dual profile owners
-        run: python .github/scripts/_tmp_agent_crypto_404221_simulation_audit.py
+        run: python .github/scripts/_tmp_agent_crypto_404221_simulation_audit.py > .github/_tmp_agent_crypto_404221_simulation_audit.txt
+      - name: Publish temporary audit report
+        run: |
+          git config user.name "Aether Audit"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/_tmp_agent_crypto_404221_simulation_audit.txt
+          git commit -m "chore(agent-crypto): publish temporary 40.4.221 simulation audit report"
+          git pull --rebase origin main
+          git push origin HEAD:main
