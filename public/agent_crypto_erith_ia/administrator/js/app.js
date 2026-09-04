@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.222";
-  const ADMIN_RELEASE = "SYSTEM PRESENTATION TRUTH · MEMORY / AGENTS / REPRISE STATUS LOCK";
+  const ADMIN_BUILD = "40.4.223";
+  const ADMIN_RELEASE = "TECHNICAL READING RND COSMIC EXPANSION · WAVE 1";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
