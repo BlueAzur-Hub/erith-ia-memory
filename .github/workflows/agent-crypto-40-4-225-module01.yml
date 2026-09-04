@@ -1,0 +1,313 @@
+name: Agent-Crypto 40.4.225 Module 01 Explained View
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-225-module01.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rebase on current main
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Port canonical Module 01 explained view
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re, shutil
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          app_path = base / 'app.js'
+          css_path = base / 'admin-learning-journey.css'
+          index_path = base / 'index.html'
+          system_presentation_path = base / 'js/views/system-presentation.js'
+          source_asset = Path('public/agent_crypto_erith_ia/web/assets/learning/module_01_market_visual_recap.png')
+          target_asset = base / 'assets/learning/module_01_market_visual_recap.png'
+
+          for p in (app_path, css_path, index_path, system_presentation_path, source_asset):
+              if not p.is_file():
+                  raise SystemExit(f'40.4.225 FAIL missing required source: {p}')
+
+          app = app_path.read_text(encoding='utf-8')
+          before_counts = {token: app.count(token) for token in ('fetch(', 'setInterval(', 'setTimeout(', 'MutationObserver(', 'WebSocket(', 'requestAnimationFrame(')}
+
+          required = (
+              'function foundationMarketGuidedSummary',
+              'function foundationMarketLab(cockpit)',
+              'function marketModule01AutoBlockText',
+              'return { ready, btc, source, time, price, change24, change7',
+          )
+          for marker in required:
+              if marker not in app:
+                  raise SystemExit(f'40.4.225 FAIL protected Module 01 runtime marker missing: {marker}')
+
+          # Port the already validated 28.3.49 visual recap intent into the modern Administrator runtime.
+          if 'function foundationMarketVisualRecapMarkup' not in app:
+              anchor = 'function marketModule01AutoBlockText'
+              visual_fn = r'''function foundationMarketVisualRecapMarkup(summary) {
+            if (!summary?.ready) return "";
+            return `
+                <div id="marketFoundationVisualRecap" class="foundation-visual-recap" aria-live="polite">
+                  <div class="foundation-visual-recap-media">
+                    <img src="assets/learning/module_01_market_visual_recap.png" alt="Vue pédagogique annotée du Market Snapshot montrant les cinq repères du Module 01 : prix Bitcoin, variation 24 heures, variation 7 jours, source et heure ou fraîcheur des données." loading="lazy" decoding="async">
+                    <small>L’image est un repère visuel issu du Market Snapshot. Les chiffres visibles dans l’image sont un exemple : les preuves dynamiques de ta session, affichées à droite, restent l’autorité.</small>
+                  </div>
+                  <div class="foundation-visual-recap-copy">
+                    <span class="foundation-stage-kicker">VUE EXPLIQUÉE · MARKET SNAPSHOT</span>
+                    <h5>Les cinq preuves que tu viens de relever</h5>
+                    <ul class="foundation-visual-points">
+                      <li><b>Prix :</b> ${escapeHtml(summary.price)}.</li>
+                      <li><b>24 h :</b> ${escapeHtml(summary.change24)}.</li>
+                      <li><b>7 j :</b> ${escapeHtml(summary.change7)}.</li>
+                      <li><b>Source :</b> ${escapeHtml(summary.source)}.</li>
+                      <li><b>Heure / fraîcheur :</b> ${escapeHtml(summary.time)}.</li>
+                    </ul>
+                    <div class="foundation-visual-callout"><b>Observation ≠ prédiction.</b> Ces cinq preuves décrivent ce qui est affiché et quand cela a été relevé. Elles ne disent pas ce que le prix fera ensuite.</div>
+                  </div>
+                </div>`;
+          }
+
+          '''
+              app = app.replace(anchor, visual_fn + anchor, 1)
+
+          lab_start = app.find('function foundationMarketLab(cockpit)')
+          if lab_start < 0:
+              raise SystemExit('40.4.225 FAIL foundationMarketLab not found after port')
+          next_fn = app.find('\nfunction ', lab_start + 20)
+          if next_fn < 0:
+              raise SystemExit('40.4.225 FAIL cannot bound foundationMarketLab')
+          lab = app[lab_start:next_fn]
+          if 'marketFoundationVisualRecap' not in lab:
+              stage5 = '<article data-foundation-stage="5"'
+              if lab.count(stage5) != 1:
+                  raise SystemExit(f'40.4.225 FAIL stage 5 anchor count in market lab = {lab.count(stage5)}')
+              insertion = '${cockpit.steps.verify && summary.ready ? `<div class="foundation-lab-wide">${foundationMarketVisualRecapMarkup(summary)}</div>` : ""}\n      '
+              lab = lab.replace(stage5, insertion + stage5, 1)
+              app = app[:lab_start] + lab + app[next_fn:]
+
+          after_counts = {token: app.count(token) for token in before_counts}
+          if after_counts != before_counts:
+              raise SystemExit(f'40.4.225 FAIL recurring/network primitive count drift: {before_counts} -> {after_counts}')
+          app_path.write_text(app, encoding='utf-8')
+
+          css = css_path.read_text(encoding='utf-8')
+          if '.foundation-visual-recap {' not in css:
+              css += r'''
+
+          /* 40.4.225 — MODULE 01 MARKET SNAPSHOT EXPLAINED VIEW
+             Shared visual grammar inherited from the validated Module 02 recap.
+             Presentation only: no runtime, storage, market or scheduler ownership. */
+          .foundation-visual-recap {display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.95fr);gap:16px;margin-top:14px;padding:14px;border:1px solid rgba(111,235,173,.24);border-radius:14px;background:linear-gradient(180deg,rgba(10,33,28,.74),rgba(3,16,27,.72));}
+          .foundation-visual-recap-media {display:grid;gap:8px;align-content:start;}
+          .foundation-visual-recap-media img {display:block;width:100%;height:auto;border-radius:12px;border:1px solid rgba(111,235,173,.24);box-shadow:0 14px 32px rgba(0,0,0,.24);background:rgba(0,0,0,.12);}
+          .foundation-visual-recap-media small {color:rgba(177,211,220,.78);font-size:11.5px;line-height:1.5;}
+          .foundation-visual-recap-copy {display:grid;gap:10px;align-content:start;}
+          .foundation-visual-recap-copy h5 {margin:0;color:#f5feff;font-size:15px;}
+          .foundation-visual-points {margin:0;padding-left:1.15rem;color:rgba(227,244,247,.9);display:grid;gap:7px;font-size:12.6px;line-height:1.55;}
+          .foundation-visual-points li::marker {color:#76e0c0;}
+          .foundation-visual-callout {padding:12px 13px;border-left:3px solid rgba(111,235,173,.7);border-radius:10px;background:rgba(27,88,72,.22);color:rgba(238,251,252,.92);font-size:12.6px;line-height:1.55;}
+          @media (max-width:960px) {.foundation-visual-recap {grid-template-columns:1fr;}}
+          '''
+              css_path.write_text(css, encoding='utf-8')
+
+          target_asset.parent.mkdir(parents=True, exist_ok=True)
+          shutil.copy2(source_asset, target_asset)
+          if hashlib.sha256(source_asset.read_bytes()).digest() != hashlib.sha256(target_asset.read_bytes()).digest():
+              raise SystemExit('40.4.225 FAIL Module 01 visual asset copy mismatch')
+
+          index = index_path.read_text(encoding='utf-8')
+          index, n = re.subn(r'href="\./admin-learning-journey\.css(?:\?v=[^"]+)?"', 'href="./admin-learning-journey.css?v=administrator-build-40.4.225"', index, count=1)
+          if n != 1:
+              raise SystemExit(f'40.4.225 FAIL learning CSS cache token anchor count={n}')
+          old_system_token = 'system-presentation.js?v=administrator-build-40.4.224'
+          if old_system_token not in index:
+              raise SystemExit('40.4.225 FAIL current System presentation index token is not 40.4.224')
+          index = index.replace(old_system_token, 'system-presentation.js?v=administrator-build-40.4.225', 1)
+          index_path.write_text(index, encoding='utf-8')
+
+          sp = system_presentation_path.read_text(encoding='utf-8')
+          old_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.224";'
+          if old_source not in sp:
+              raise SystemExit('40.4.225 FAIL current System source token is not 40.4.224')
+          sp = sp.replace(old_source, 'const SOURCE="./views/system.html?v=administrator-build-40.4.225";', 1)
+          system_presentation_path.write_text(sp, encoding='utf-8')
+
+          print(json.dumps({
+              'module_01_visual_ported': True,
+              'dynamic_labels': ['Prix','24 h','7 j','Source','Heure / fraîcheur'],
+              'observation_not_prediction': True,
+              'primitive_counts_unchanged': True,
+              'asset_sha256': hashlib.sha256(target_asset.read_bytes()).hexdigest(),
+          }, ensure_ascii=False))
+          PY
+
+      - name: Static syntax before release identity
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          git diff --check
+
+      - name: Canonical 40.4.225 release identity
+        shell: bash
+        run: |
+          cat > /tmp/module01-contract.json <<'JSON'
+          {
+            "state": "active",
+            "scope": "learning_presentation_only",
+            "owner_runtime": "app.js",
+            "owner_style": "admin-learning-journey.css",
+            "visual_asset": "assets/learning/module_01_market_visual_recap.png",
+            "dynamic_proofs": ["Prix", "24 h", "7 j", "Source", "Heure / fraîcheur"],
+            "observation_not_prediction": true,
+            "indexeddb_schema_changed": false,
+            "learning_state_reset": false,
+            "simulation_changed": false,
+            "market_core_modified": false,
+            "new_timer": false,
+            "new_observer": false,
+            "new_fetch": false,
+            "new_websocket": false,
+            "new_scheduler": false
+          }
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.225 \
+            --parent 40.4.224 \
+            --release "MODULE 01 MARKET SNAPSHOT EXPLAINED VIEW · VISUAL RECAP TRUTH LOCK" \
+            --status "module_01_market_snapshot_explained_view_404225" \
+            --contract-key "module_01_market_snapshot_explained_404225" \
+            --contract-json /tmp/module01-contract.json \
+            --lineage-note "40.4.225 Module 01 Market Snapshot explained view: Price / 24 h / 7 j / Source / freshness visual recap; observation != prediction; Learning storage and Market Core unchanged"
+
+      - name: Canonical proofs
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python3 .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build 40.4.225 \
+            --expected-release "MODULE 01 MARKET SNAPSHOT EXPLAINED VIEW · VISUAL RECAP TRUTH LOCK"
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          manifest=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          mirror=json.loads((base/'administrator-version.json').read_text(encoding='utf-8'))
+          build=json.loads((base/'build.json').read_text(encoding='utf-8'))
+          app=(base/'app.js').read_text(encoding='utf-8')
+          css=(base/'admin-learning-journey.css').read_text(encoding='utf-8')
+          asset=base/'assets/learning/module_01_market_visual_recap.png'
+          assert manifest['build']=='40.4.225' and manifest['parent_build']=='40.4.224'
+          assert manifest['engine']['reference_build']=='38.15.11' and manifest['engine']['status']=='protected'
+          assert mirror['build']=='40.4.225' and build['engine']=='38.15.11'
+          assert 'function foundationMarketVisualRecapMarkup' in app
+          assert 'id="marketFoundationVisualRecap"' in app
+          for label in ('Prix :','24 h :','7 j :','Source :','Heure / fraîcheur :','Observation ≠ prédiction'):
+              assert label in app, label
+          assert '.foundation-visual-recap {' in css
+          assert asset.is_file() and asset.stat().st_size > 0
+          print('MODULE_01_404225_PASS', hashlib.sha256(asset.read_bytes()).hexdigest())
+          PY
+          git diff --check
+
+      - name: Enforce bounded changed-file scope
+        shell: bash
+        run: |
+          git status --short
+          python3 - <<'PY'
+          import subprocess
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/admin-learning-journey.css',
+            'public/agent_crypto_erith_ia/administrator/assets/learning/module_01_market_visual_recap.png',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+          }
+          names=set(subprocess.check_output(['git','status','--porcelain'],text=True).splitlines())
+          paths={line[3:] for line in names}
+          extra=paths-allowed
+          missing={'public/agent_crypto_erith_ia/administrator/app.js','public/agent_crypto_erith_ia/administrator/assets/learning/module_01_market_visual_recap.png','public/agent_crypto_erith_ia/administrator/version.json'}-paths
+          if extra: raise SystemExit(f'40.4.225 FAIL out-of-scope files: {sorted(extra)}')
+          if missing: raise SystemExit(f'40.4.225 FAIL required changes missing: {sorted(missing)}')
+          print('BOUNDED_SCOPE_PASS', sorted(paths))
+          PY
+
+      - name: Commit canonical release
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/admin-learning-journey.css \
+            public/agent_crypto_erith_ia/administrator/assets/learning/module_01_market_visual_recap.png \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            public/agent_crypto_erith_ia/administrator/build.json
+          git commit -m "agent-crypto: build 40.4.225 module 01 Market Snapshot explained view truth lock"
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Package changed files only
+        shell: bash
+        run: |
+          mkdir -p /tmp/agent-crypto-40.4.225
+          git diff --name-only "$BASE_SHA" "$RELEASE_SHA" > /tmp/changed.txt
+          while IFS= read -r path; do
+            mkdir -p "/tmp/agent-crypto-40.4.225/$(dirname "$path")"
+            cp "$path" "/tmp/agent-crypto-40.4.225/$path"
+          done < /tmp/changed.txt
+          {
+            echo "# Agent-Crypto 40.4.225 — fichiers modifiés"
+            echo
+            echo "Release: MODULE 01 MARKET SNAPSHOT EXPLAINED VIEW · VISUAL RECAP TRUTH LOCK"
+            echo "Parent build: 40.4.224"
+            echo "Market Core: 38.15.11 PROTECTED"
+            echo "Canonical commit: $RELEASE_SHA"
+            echo
+            echo "## Fichiers"
+            sed 's/^/- `/' /tmp/changed.txt | sed 's/$/`/'
+            echo
+            echo "## Verrous"
+            echo "- Valeurs pédagogiques dynamiques: Prix / 24 h / 7 j / Source / Heure-fraîcheur."
+            echo "- Observation ≠ prédiction."
+            echo "- Aucun reset Learning / IndexedDB."
+            echo "- Aucun nouveau timer / observer / fetch / WebSocket / scheduler."
+            echo "- Market Core 38.15.11 inchangé."
+          } > /tmp/agent-crypto-40.4.225/FILES_CHANGED_40.4.225.md
+          cd /tmp/agent-crypto-40.4.225
+          zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_225_MODULE_01_MARKET_SNAPSHOT_EXPLAINED_VIEW_CHANGED_FILES.zip" .
+          cd "$GITHUB_WORKSPACE"
+          sha256sum AGENT_CRYPTO_BUILD_40_4_225_MODULE_01_MARKET_SNAPSHOT_EXPLAINED_VIEW_CHANGED_FILES.zip
+          unzip -l AGENT_CRYPTO_BUILD_40_4_225_MODULE_01_MARKET_SNAPSHOT_EXPLAINED_VIEW_CHANGED_FILES.zip
+
+      - name: Upload differential ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_225_MODULE_01_MARKET_SNAPSHOT_EXPLAINED_VIEW_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_225_MODULE_01_MARKET_SNAPSHOT_EXPLAINED_VIEW_CHANGED_FILES.zip
+          include-hidden-files: true
+          if-no-files-found: error
