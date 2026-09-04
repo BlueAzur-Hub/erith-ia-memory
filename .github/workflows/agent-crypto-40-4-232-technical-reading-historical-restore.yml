@@ -1,0 +1,184 @@
+name: Agent-Crypto 40.4.232 Technical Reading Historical Restore
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-232-technical-reading-historical-restore.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parent guard
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          b=Path('public/agent_crypto_erith_ia/administrator')
+          m=json.loads((b/'version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.231', m['build']
+          assert m['engine']['reference_build']=='38.15.11'
+          assert m['engine']['status']=='protected'
+          print('PARENT_PASS 40.4.231 / Market Core 38.15.11 PROTECTED')
+          PY
+
+      - name: Restore historical Technical Reading contract
+        shell: bash
+        run: |
+          python3 .github/scripts/aether_40_4_232_technical_reading_historical_restore.py
+          git diff --check
+
+      - name: Canonical release identity
+        shell: bash
+        run: |
+          cat >/tmp/contract.json <<'JSON'
+          {"state":"active","scope":"technical_reading_historical_fullframe_near_zero_glass_restore","reproduced_from_user_screenshot":true,"historical_contract_reused":true,"rejected_404231_dark_cockpit_surface":true,"fullframe_portrait_restored":true,"portrait_host_136px_in_flow":true,"portrait_absolute_panel_background":true,"portrait_focus_variables_preserved":true,"near_zero_glass_secondary_alpha":0.008,"near_zero_glass_primary_max_alpha":0.018,"legacy_overlays_suppressed":true,"classic_functions_preserved":true,"rnd_changed":false,"local_upload_changed":false,"portrait_source_changed":false,"image_assets_changed":false,"market_graph_changed":false,"parallel_markets_changed":false,"renderer_changed":false,"data_changed":false,"math_changed":false,"atlas_changed":false,"window_manager_changed":false,"bridge_changed":false,"storage_changed":false,"market_core_modified":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.232 \
+            --parent 40.4.231 \
+            --release "TECHNICAL READING · HISTORICAL FULL-FRAME NEAR-ZERO GLASS RESTORE LOCK" \
+            --status technical_reading_historical_fullframe_near_zero_glass_restore_404232 \
+            --contract-key technical_reading_historical_fullframe_near_zero_glass_restore_404232 \
+            --contract-json /tmp/contract.json \
+            --lineage-note "40.4.232 Technical Reading historical restore: 40.4.231 dark cockpit treatment rejected after Firefox screenshot; validated R7 full-frame portrait geometry and 39.8.0R1/40.1.20 near-zero glass restored; RND/local image functions, Graph, markets, Atlas, Math, Window Manager, Bridge and Market Core unchanged"
+
+      - name: Version Truth and bounded-scope proof
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
+          python3 .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build 40.4.232 \
+            --expected-release "TECHNICAL READING · HISTORICAL FULL-FRAME NEAR-ZERO GLASS RESTORE LOCK"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          b=Path('public/agent_crypto_erith_ia/administrator')
+          css=(b/'technical-reading-cockpit-parity.css').read_text(encoding='utf-8')
+          idx=(b/'index.html').read_text(encoding='utf-8')
+          sys=(b/'js/views/system-presentation.js').read_text(encoding='utf-8')
+          m=json.loads((b/'version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.232' and m['parent_build']=='40.4.231'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          required=(
+            'TECHNICAL READING · HISTORICAL FULL-FRAME NEAR-ZERO GLASS RESTORE LOCK',
+            'position:static!important;',
+            'height:136px!important;',
+            'overflow:visible!important;',
+            'inset:48px 0 0 0!important;',
+            'object-position:var(--admin-tech-x,50%) var(--admin-tech-y,12%)!important;',
+            'background:rgba(2,8,17,.008)!important;',
+            'background:rgba(2,8,17,.018)!important;',
+            'pointer-events:none!important;',
+          )
+          for marker in required:
+            assert marker in css, marker
+          forbidden=(
+            '--tr231-card',
+            'rgba(2,9,18,.70)',
+            'rgba(2,9,18,.80)',
+            'linear-gradient(180deg,rgba(3,13,23,.92)',
+            'backdrop-filter:blur(',
+          )
+          for marker in forbidden:
+            assert marker not in css, marker
+          assert 'technical-reading-cockpit-parity.css?v=40.4.232' in idx
+          assert 'system-presentation.js?v=administrator-build-40.4.232' in idx
+          assert 'views/system.html?v=administrator-build-40.4.232' in sys
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+          }
+          paths={line[3:] for line in subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines()}
+          required_paths={
+            'public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+          }
+          assert required_paths <= paths, sorted(paths)
+          assert not paths-allowed, sorted(paths-allowed)
+          print('SCOPE_PASS', sorted(paths))
+          PY
+          git diff --check
+
+      - name: Commit canonical 40.4.232
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/technical-reading-cockpit-parity.css \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            public/agent_crypto_erith_ia/administrator/build.json
+          git commit -m "agent-crypto: build 40.4.232 restore historical full-frame Technical Reading"
+          git pull --rebase origin main
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "RELEASE_PARENT_SHA=$(git rev-parse HEAD^)" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Package changed files only
+        shell: bash
+        run: |
+          PKG=/tmp/agent-crypto-40.4.232
+          mkdir -p "$PKG"
+          git diff --name-only "$RELEASE_PARENT_SHA" "$RELEASE_SHA" > /tmp/changed232.txt
+          while IFS= read -r p; do
+            mkdir -p "$PKG/$(dirname "$p")"
+            cp "$p" "$PKG/$p"
+          done < /tmp/changed232.txt
+          {
+            echo '# Agent-Crypto 40.4.232 — fichiers modifiés'
+            echo
+            echo 'Release: TECHNICAL READING · HISTORICAL FULL-FRAME NEAR-ZERO GLASS RESTORE LOCK'
+            echo 'Parent build: 40.4.231'
+            echo 'Market Core: 38.15.11 PROTECTED'
+            echo "Canonical commit: $RELEASE_SHA"
+            echo
+            echo '## Fichiers'
+            sed 's/^/- `/' /tmp/changed232.txt | sed 's/$/`/'
+            echo
+            echo '## Contrat restauré'
+            echo '- Image Technical Reading plein cadre sur toute la hauteur utile du panneau.'
+            echo '- Host historique 136 px en flux ; portrait absolu de 48 px au bas du panneau.'
+            echo '- Position de focus conservée via --admin-tech-x / --admin-tech-y.'
+            echo '- Glass secondaire 0,8 % ; principal 1,8 % max.'
+            echo '- Fiche active / Source Dock / Sources / Réseau / Intégrité conservés.'
+            echo '- RND, image locale et assets image inchangés.'
+            echo '- Graph, marchés, Atlas, Math, Window Manager, Bridge et Market Core inchangés.'
+          } > "$PKG/FILES_CHANGED_40.4.232.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_232_TECHNICAL_READING_HISTORICAL_FULLFRAME_LOWGLASS_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_232_TECHNICAL_READING_HISTORICAL_FULLFRAME_LOWGLASS_CHANGED_FILES.zip | tee /tmp/sha232.txt
+          unzip -l AGENT_CRYPTO_BUILD_40_4_232_TECHNICAL_READING_HISTORICAL_FULLFRAME_LOWGLASS_CHANGED_FILES.zip
+
+      - name: Upload differential ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_232_TECHNICAL_READING_HISTORICAL_FULLFRAME_LOWGLASS_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_232_TECHNICAL_READING_HISTORICAL_FULLFRAME_LOWGLASS_CHANGED_FILES.zip
+          include-hidden-files: true
