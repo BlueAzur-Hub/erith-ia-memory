@@ -1,0 +1,156 @@
+name: Aether 40.4.236 Parallel Information Hierarchy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/aether-40-4-236-parallel-information-hierarchy.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Parent guard
+        shell: bash
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull --ff-only origin main
+          echo "BASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m=json.loads(Path('public/agent_crypto_erith_ia/administrator/version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.235', m['build']
+          assert m['engine']['reference_build']=='38.15.11'
+          assert m['engine']['status']=='protected'
+          print('PARENT_PASS 40.4.235 / Market Core 38.15.11 PROTECTED')
+          PY
+
+      - name: Apply bounded hierarchy patch
+        shell: bash
+        run: |
+          python3 .github/scripts/aether_40_4_236_parallel_information_hierarchy_patch.py
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          git diff --check
+
+      - name: Canonical release driver
+        shell: bash
+        run: |
+          cat >/tmp/contract.json <<'JSON'
+          {"state":"active","scope":"parallel_graph_information_hierarchy","existing_parallel_owner_reused":true,"new_css_owner_added":false,"values_hud_single_numeric_table":true,"redundant_status_row_removed":true,"legend_merged_into_summary_identity":true,"rail_basket_selector_only":true,"outer_geometry_changed":false,"canvas_geometry_changed":false,"toolbar_geometry_changed":false,"rail_geometry_changed":false,"renderer_changed":false,"data_changed":false,"source_changed":false,"history_changed":false,"base100_math_changed":false,"hover_semantics_changed":false,"technical_reading_changed":false,"atlas_changed":false,"math_core_changed":false,"window_manager_changed":false,"market_core_modified":false,"new_timer":false,"new_observer":false,"new_fetch":false,"new_websocket":false,"new_scheduler":false}
+          JSON
+          python3 .github/scripts/agent_crypto_release_driver.py --build 40.4.236 --parent 40.4.235 --release "PARALLEL GRAPH · INFORMATION HIERARCHY LOCK" --status parallel_graph_information_hierarchy_404236 --contract-key parallel_graph_information_hierarchy_404236 --contract-json /tmp/contract.json --lineage-note "40.4.236 parallel graph information hierarchy: VALEURS OBSERVÉES remains the sole numeric table inside the graph; redundant 40.4.228 status row is retired; left readout is compact synthesis + series identity; rail basket becomes selector-only; geometry, renderer, data, sources, histories, Base 100, hover, Technical Reading, Atlas, Math, Window Manager and Market Core unchanged"
+
+      - name: Version Truth and scope proof
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python3 .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.236 --expected-release "PARALLEL GRAPH · INFORMATION HIERARCHY LOCK"
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, subprocess
+          b=Path('public/agent_crypto_erith_ia/administrator')
+          m=json.loads((b/'version.json').read_text(encoding='utf-8'))
+          assert m['build']=='40.4.236' and m['parent_build']=='40.4.235'
+          assert m['engine']['reference_build']=='38.15.11' and m['engine']['status']=='protected'
+          js=(b/'js/parallel-markets.js').read_text(encoding='utf-8')
+          css=(b/'market-visual-master-parity.css').read_text(encoding='utf-8')
+          idx=(b/'index.html').read_text(encoding='utf-8')
+          assert 'const BUILD = "40.4.236";' in js
+          assert 'atlas-parallel-cockpit-status-404228" aria-label="Contexte du graphique parallèle"' not in js
+          assert 'atlas-parallel-summary-assets-404236' in js
+          assert 'Sélection actif ·' in js
+          assert 'information_hierarchy_single_table:true' in js
+          assert '40.4.236 — PARALLEL INFORMATION HIERARCHY LOCK' in css
+          assert 'atlas-parallel-live-legend{\n  display:none!important' in css
+          assert 'parallel-markets.css?v=40.4.236' in idx
+          assert 'market-visual-master-parity.css?v=40.4.236' in idx
+          assert 'parallel-markets.js?v=administrator-build-40.4.236' in idx
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/parallel-markets.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css',
+            'public/agent_crypto_erith_ia/administrator/version.json'
+          }
+          lines=subprocess.check_output(['git','status','--porcelain','-uall'],text=True).splitlines()
+          paths={line[3:] for line in lines}
+          required={
+            'public/agent_crypto_erith_ia/administrator/js/parallel-markets.js',
+            'public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css',
+            'public/agent_crypto_erith_ia/administrator/version.json'
+          }
+          assert required <= paths, sorted(paths)
+          assert not paths-allowed, sorted(paths-allowed)
+          print('SCOPE_PASS', sorted(paths))
+          PY
+          git diff --check
+
+      - name: Commit canonical 40.4.236
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/build.json \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/parallel-markets.js \
+                  public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js \
+                  public/agent_crypto_erith_ia/administrator/market-visual-master-parity.css \
+                  public/agent_crypto_erith_ia/administrator/version.json
+          git commit -m "agent-crypto: build 40.4.236 lock parallel information hierarchy"
+          echo "RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          git push origin main
+
+      - name: Package changed files only
+        shell: bash
+        run: |
+          PKG=/tmp/agent-crypto-40.4.236
+          mkdir -p "$PKG"
+          git diff --name-only "$BASE_SHA" "$RELEASE_SHA" > /tmp/changed236.txt
+          while IFS= read -r p; do mkdir -p "$PKG/$(dirname "$p")"; cp "$p" "$PKG/$p"; done < /tmp/changed236.txt
+          {
+            echo "# Agent-Crypto 40.4.236 — fichiers modifiés"
+            echo
+            echo "Release: PARALLEL GRAPH · INFORMATION HIERARCHY LOCK"
+            echo "Parent: 40.4.235"
+            echo "Market Core: 38.15.11 PROTECTED"
+            echo "Canonical commit: $RELEASE_SHA"
+            echo
+            echo "## Fichiers"
+            sed 's/^/- `/' /tmp/changed236.txt | sed 's/$/`/'
+            echo
+            echo "## Verrous"
+            echo "- VALEURS OBSERVÉES is the sole numeric table inside the parallel graph."
+            echo "- Left readout is synthesis + series identity only."
+            echo "- Rail basket is selector-only; no duplicate values or changes."
+            echo "- Redundant 40.4.228 five-cell status row retired."
+            echo "- Geometry, renderer, data, histories, Base 100, hover, Technical Reading, Atlas, Math, Window Manager and Market Core unchanged."
+          } > "$PKG/FILES_CHANGED_40.4.236.md"
+          (cd "$PKG" && zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_BUILD_40_4_236_PARALLEL_GRAPH_INFORMATION_HIERARCHY_CHANGED_FILES.zip" .)
+          sha256sum AGENT_CRYPTO_BUILD_40_4_236_PARALLEL_GRAPH_INFORMATION_HIERARCHY_CHANGED_FILES.zip
+          unzip -l AGENT_CRYPTO_BUILD_40_4_236_PARALLEL_GRAPH_INFORMATION_HIERARCHY_CHANGED_FILES.zip
+
+      - name: Upload differential ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_236_PARALLEL_GRAPH_INFORMATION_HIERARCHY_CHANGED_FILES
+          path: AGENT_CRYPTO_BUILD_40_4_236_PARALLEL_GRAPH_INFORMATION_HIERARCHY_CHANGED_FILES.zip
+          include-hidden-files: true
