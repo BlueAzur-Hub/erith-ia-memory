@@ -18,14 +18,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Build exact 40.4.221 full-tree ZIP
+      - name: Build exact 40.4.221 compact code ZIP
         run: |
-          git archive --format=zip --output="$RUNNER_TEMP/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_FULL_GITHUB_TREE.zip" 34591fbfd2ca141f0eb57ceae813a0abfe355f0a
-          sha256sum "$RUNNER_TEMP/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_FULL_GITHUB_TREE.zip"
+          git archive --format=zip \
+            --output="$RUNNER_TEMP/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_CODE_BUNDLE.zip" \
+            34591fbfd2ca141f0eb57ceae813a0abfe355f0a \
+            public/agent_crypto_erith_ia/administrator \
+            public/agent_crypto_erith_ia/README.md \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_RELEASE_MANIFEST.md \
+            coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md \
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md
+          sha256sum "$RUNNER_TEMP/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_CODE_BUNDLE.zip"
       - name: Upload exact release ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_CRYPTO_BUILD_40_4_221_FULL_GITHUB_TREE
-          path: ${{ runner.temp }}/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_FULL_GITHUB_TREE.zip
+          name: AGENT_CRYPTO_BUILD_40_4_221_CODE_BUNDLE
+          path: ${{ runner.temp }}/AGENT_CRYPTO_BUILD_40_4_221_SIMULATION_DUAL_PROFILE_SURFACE_TRUTH_CODE_BUNDLE.zip
           if-no-files-found: error
           retention-days: 7
