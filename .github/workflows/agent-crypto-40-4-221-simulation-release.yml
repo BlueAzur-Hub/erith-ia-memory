@@ -23,4 +23,4 @@ jobs:
         with:
           fetch-depth: 0
       - name: Execute corrected bounded 40.4.221 release
-        run: python .github/scripts/_tmp_agent_crypto_404221_release_v2.py
+        run: python .github/scripts/_tmp_agent_crypto_404221_runner.py
