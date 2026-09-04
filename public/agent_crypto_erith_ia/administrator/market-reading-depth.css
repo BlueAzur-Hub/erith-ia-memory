@@ -68,3 +68,59 @@
 .atlas-reading-limits-404199 b{color:#dbeaf0}
 @media(max-width:1100px){.atlas-market-reading-body-404199{grid-template-columns:1fr}.atlas-reading-hero-404199{grid-column:auto}}
 @media(max-width:760px){.atlas-market-reading-head-404199{align-items:flex-start;flex-direction:column}.atlas-market-reading-actions-404199{justify-content:flex-start!important}.atlas-reading-structure-404199{grid-template-columns:1fr}.atlas-market-reading-preview-404199{align-items:flex-start}}
+
+
+/* =========================================================
+   40.4.229 — MARKET READING DEPTH VIEWPORT GEOMETRY LOCK
+   Reproduced regression: paired detail cards were stretched by CSS Grid to the
+   height of their tallest neighbour and the expanded Reading Depth body could
+   exceed the useful viewport. Geometry only: no renderer/data/history/window
+   manager/Market Core ownership change.
+   ========================================================= */
+#atlasMarketReadingDepth404199{
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+}
+
+#atlasMarketReadingDepth404199 .atlas-market-reading-body-404199{
+  align-items:start!important;
+  align-content:start!important;
+  grid-auto-rows:max-content!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:min(620px,62vh)!important;
+  overflow:auto!important;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+}
+
+#atlasMarketReadingDepth404199 .atlas-market-reading-body-404199 > *{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+#atlasMarketReadingDepth404199 .atlas-reading-detail-404199,
+#atlasMarketReadingDepth404199 .atlas-reading-hero-404199{
+  align-self:start!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+}
+
+#atlasMarketReadingDepth404199 .atlas-reading-table-wrap-404199{
+  min-height:0!important;
+  max-width:100%!important;
+}
+
+@media (min-width:1101px) and (max-height:900px){
+  #atlasMarketReadingDepth404199 .atlas-market-reading-body-404199{
+    max-height:54vh!important;
+  }
+}
+
+@media (max-width:1100px){
+  #atlasMarketReadingDepth404199 .atlas-market-reading-body-404199{
+    max-height:min(560px,60vh)!important;
+  }
+}

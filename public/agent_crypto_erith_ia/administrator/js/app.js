@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.228";
-  const ADMIN_RELEASE = "PARALLEL MARKETS · FULL COCKPIT PARITY WITH CRYPTO + METALS";
+  const ADMIN_BUILD = "40.4.229";
+  const ADMIN_RELEASE = "MARKET READING DEPTH · VIEWPORT GEOMETRY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
