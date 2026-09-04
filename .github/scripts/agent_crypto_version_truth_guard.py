@@ -320,10 +320,12 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
         for marker in required_simulation_runtime:
             if marker not in root:
                 fail(f"40.4.221 protected Simulation runtime contract missing: {marker}")
-        if 'const SOURCE="./views/system.html?v=administrator-build-40.4.221";' not in system_presentation:
-            fail("40.4.221 System source cache token regression")
-        if "system-presentation.js?v=administrator-build-40.4.221" not in index:
-            fail("40.4.221 System presentation cache token regression")
+        expected_system_source = f'const SOURCE="./views/system.html?v=administrator-build-{build}";'
+        if expected_system_source not in system_presentation:
+            fail(f"40.4.221+ System source cache token regression: expected {expected_system_source}")
+        expected_system_presentation_token = f"system-presentation.js?v=administrator-build-{build}"
+        if expected_system_presentation_token not in index:
+            fail(f"40.4.221+ System presentation cache token regression: expected {expected_system_presentation_token}")
         if "views/system.html" not in (manifest.get("files") or {}):
             fail("40.4.221 System source escaped version manifest hash authority")
 

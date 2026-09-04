@@ -1,6 +1,6 @@
 # AGENT-CRYPTO — RELEASE MANIFEST
 
-Release courante : **40.4.221**
+Release courante : **40.4.222**
 Market Core : **38.15.11**
 
 ## Surface canonique
@@ -13,7 +13,7 @@ Market Core : **38.15.11**
 - `coordination/inter_ai_dialogues/agent_crypto/PROMPT_REPRISE_AETHER_AGENT_CRYPTO.md`
 - `coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FIN_DE_FIL_AETHER.md`
 
-Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.221 : il contient le dépôt complet et évite un paquet différentiel incomplet. La release ne modifie pas les archives de données automatiques pendant sa construction.
+Les livraisons opérateur redeviennent des ZIP différentiels « à l’ancienne » : uniquement les fichiers réellement modifiés par la version, accompagnés d’une liste et du commit canonique. Aucun dump complet du dépôt n’est requis pour une release de travail. La release ne modifie pas les archives de données automatiques pendant sa construction.
 
 40.4.210 est une release de **Cache Truth / publication identity** : elle ne change ni les données marché, ni les moteurs de graphique, ni la géométrie, ni le Market Core 38.15.11.
 
@@ -38,3 +38,5 @@ Le ZIP cumulatif fiable est l'archive GitHub du commit final 40.4.221 : il conti
 40.4.220 est une release de **Atlas Heartbeat Owner Guard** : le Version Truth Guard protège désormais explicitement le contrat Atlas CURRENT 40.4.212 — réarmement unique après `load`, via les propriétaires canoniques existants, sans fetch, timer, observer, WebSocket, rAF ni scheduler ajouté. Le payload Atlas reste inchangé.
 
 40.4.221 est une release de **Simulation Dual Profile Surface Truth** : la sous-vue `views/system.html` ET son shell parser canonique `js/views/system-presentation.js` sont reconnectés au moteur dual-profile déjà présent. Les sélecteurs École 100 € / Progression 1 000 €, les valeurs de profil et les libellés du Mode École redeviennent dynamiques. Les deux portefeuilles, journaux, sauvegardes, IndexedDB, workspaces Kraken Paper, onze leçons et calculs de simulation restent inchangés.
+
+40.4.222 est une release de **System Presentation Truth** : les textes statiques de System/Simulation rejoignent la réalité déjà active — mémoire IndexedDB, agents locaux et reprise dynamique. Aucun schéma de mémoire, moteur de simulation, donnée marché, géométrie ou Market Core n’est modifié.

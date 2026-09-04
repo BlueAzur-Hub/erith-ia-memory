@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.221**
+Version de reprise : **40.4.222**
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -60,3 +60,10 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 Une dette → un propriétaire → une chirurgie → une preuve → un commit → stop. Ne jamais revenir à un ancien commit pour reconstruire une version : partir du `main` courant et préserver les mises à jour de données automatiques.
 
 40.4.221 reconnecte la **façade Simulation dual-profile** au runtime historique : `solo_beginner_100_v1_1_alpha_13` et `solo_progression_1000_v1` restent deux états locaux isolés. La source `views/system.html` et le shell parser `js/views/system-presentation.js` portent de nouveau les hooks dynamiques du profil et du Mode École ; aucune reconstruction du moteur, des 11 leçons, du journal, d’IndexedDB ou de Kraken Paper.
+
+40.4.222 verrouille la **vérité de présentation System/Simulation** : les cartes statiques ne parlent plus de future mémoire locale, d’agents seulement en preview, d’un troisième snapshot obligatoire ou d’un ancien plan V1.2. La mémoire IndexedDB et la reprise dynamique déjà actives restent les propriétaires de vérité. Le placeholder de synthèse d’un module neuf à 0/5 est conservé : il est correct tant que les preuves ne sont pas validées.
+
+### Livraison différentielle et images RND
+- Une version de travail se livre en ZIP minimal contenant uniquement ses fichiers modifiés + `FILES_CHANGED` + commit ; pas de ZIP géant du dépôt.
+- Les images RND sont préparées en séries et uploadées manuellement par Christophe dans `administrator/assets/visual/technical-reading/`. Ne référencer de nouveaux fichiers RND dans le runtime qu’après preuve qu’ils existent sur `main`.
+- Les thèmes temporels Aerith restent dominants pour la chronologie. Le futur thème **Glass** (extérieur transparent, sections/sous-sections sombres) est un chantier séparé : ne pas l’ouvrir sans demande explicite.
