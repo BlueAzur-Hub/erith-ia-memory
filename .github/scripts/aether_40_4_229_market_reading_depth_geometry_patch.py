@@ -4,10 +4,12 @@ base = Path('public/agent_crypto_erith_ia/administrator')
 css_p = base / 'market-reading-depth.css'
 js_p = base / 'js/market-reading-depth.js'
 idx_p = base / 'index.html'
+sys_p = base / 'js/views/system-presentation.js'
 
 css = css_p.read_text(encoding='utf-8')
 js = js_p.read_text(encoding='utf-8')
 idx = idx_p.read_text(encoding='utf-8')
+system = sys_p.read_text(encoding='utf-8')
 
 def one(text, old, new, label):
     count = text.count(old)
@@ -19,6 +21,7 @@ def one(text, old, new, label):
 js = one(js, 'const BUILD = "40.4.209";', 'const BUILD = "40.4.229";', 'reading depth BUILD')
 idx = one(idx, '<link rel="stylesheet" href="./market-reading-depth.css?v=40.4.210" />', '<link rel="stylesheet" href="./market-reading-depth.css?v=40.4.229" />', 'reading depth css token')
 idx = one(idx, '<script src="./js/market-reading-depth.js?v=administrator-build-40.4.210"></script>', '<script src="./js/market-reading-depth.js?v=administrator-build-40.4.229"></script>', 'reading depth js token')
+system = one(system, 'const SOURCE="./views/system.html?v=administrator-build-40.4.228";', 'const SOURCE="./views/system.html?v=administrator-build-40.4.229";', 'system presentation source token')
 
 marker = '40.4.229 — MARKET READING DEPTH VIEWPORT GEOMETRY LOCK'
 if marker in css:
@@ -85,4 +88,5 @@ css += r'''
 css_p.write_text(css, encoding='utf-8')
 js_p.write_text(js, encoding='utf-8')
 idx_p.write_text(idx, encoding='utf-8')
+sys_p.write_text(system, encoding='utf-8')
 print('MARKET_READING_DEPTH_GEOMETRY_PATCH_PASS')
