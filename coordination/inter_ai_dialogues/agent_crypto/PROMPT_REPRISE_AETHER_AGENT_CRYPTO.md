@@ -1,6 +1,6 @@
 # AETHER — PROMPT DE REPRISE AGENT-CRYPTO
 
-Version de reprise : **40.4.220**
+Version de reprise : **40.4.221**
 Market Core : **38.15.11 — PROTÉGÉ**  
 Mode : **Administrator**
 
@@ -58,3 +58,5 @@ Le cycle marché est : **Crypto → Métaux → Indices → Énergie → Cross �
 ## Règle de travail
 
 Une dette → un propriétaire → une chirurgie → une preuve → un commit → stop. Ne jamais revenir à un ancien commit pour reconstruire une version : partir du `main` courant et préserver les mises à jour de données automatiques.
+
+40.4.221 reconnecte la **façade Simulation dual-profile** au runtime historique : `solo_beginner_100_v1_1_alpha_13` et `solo_progression_1000_v1` restent deux états locaux isolés. La source `views/system.html` et le shell parser `js/views/system-presentation.js` portent de nouveau les hooks dynamiques du profil et du Mode École ; aucune reconstruction du moteur, des 11 leçons, du journal, d’IndexedDB ou de Kraken Paper.

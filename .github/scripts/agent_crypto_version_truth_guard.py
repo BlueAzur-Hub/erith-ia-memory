@@ -294,6 +294,39 @@ def validate(base: Path, expected_build: str | None = None, expected_release: st
         if atlas_heartbeat.count("addEventListener(") != 1:
             fail(f"40.4.220 Atlas heartbeat listener owner drift: {atlas_heartbeat.count('addEventListener(')}")
 
+    if current_num >= (40, 4, 221):
+        system_view = read(base / "views/system.html")
+        system_presentation = read(base / "js/views/system-presentation.js")
+        required_simulation_surface = (
+            'id="simProfileBadge"','id="simProfileTitle"','id="simProfileCapital"','id="simProfileTicket"',
+            'id="simProfileMaxOperation"','id="simProfileMaxExposure"','id="simProfileMinReserve"','id="simProfileAllowedAssets"',
+            'data-sim-profile="solo_beginner_100_v1_1_alpha_13"','data-sim-profile="solo_progression_1000_v1"',
+            'id="schoolSafeLabel"','id="schoolTooBigLabel"','id="schoolForbiddenLabel"','id="schoolFillLabel"',
+            'id="schoolExceedLabel"','id="schoolResetTitle"','id="schoolResetLabel"',
+        )
+        for marker in required_simulation_surface:
+            if system_view.count(marker) != 1:
+                fail(f"40.4.221 System source Simulation hook regression: {marker} count={system_view.count(marker)}")
+            encoded = marker.replace('\\','\\\\').replace('"','\\"')
+            if system_presentation.count(encoded) != 1:
+                fail(f"40.4.221 parser shell Simulation hook regression: {marker}")
+        required_simulation_runtime = (
+            "solo_beginner_100_v1_1_alpha_13","solo_progression_1000_v1",
+            "function switchSimulationProfile(profileKey)",
+            "localStorage.setItem(SIM_ACTIVE_PROFILE_STORAGE_KEY, SIM_PROFILE.key)",
+            'document.querySelectorAll("[data-sim-profile]")',
+            "function renderSchoolProfileLabels()","const unit = SIM_PROFILE.maxExposure / 3",
+        )
+        for marker in required_simulation_runtime:
+            if marker not in root:
+                fail(f"40.4.221 protected Simulation runtime contract missing: {marker}")
+        if 'const SOURCE="./views/system.html?v=administrator-build-40.4.221";' not in system_presentation:
+            fail("40.4.221 System source cache token regression")
+        if "system-presentation.js?v=administrator-build-40.4.221" not in index:
+            fail("40.4.221 System presentation cache token regression")
+        if "views/system.html" not in (manifest.get("files") or {}):
+            fail("40.4.221 System source escaped version manifest hash authority")
+
     files = manifest.get("files")
     if not isinstance(files, dict) or not files:
         fail("version.json files hash map missing")

@@ -64,10 +64,10 @@
           <p class="eyebrow">△ PAPER TRADING SANDBOX</p>
           <h2>Simulation micro-transactions</h2>
           <p class="sim-intro">
-            Portefeuille virtuel local avec profil débutant 100 €. Aucun ordre réel, aucune clé API, aucun wallet connecté. Sert à apprendre avant toute future connexion Kraken.
+            Simulation Agent-Crypto à deux profils locaux isolés : École 100 € et Progression 1 000 €. Aucun ordre réel, aucune clé API, aucun wallet connecté. Les états, journaux et preuves restent séparés par profil ; Kraken Paper reste une couche de contrôle en lecture seule.
           </p>
         </div>
-        <span class="pill warn">Profil 100 €</span>
+        <span class="pill warn" id="simProfileBadge">Profil 100 €</span>
       </div>
 
       <div class="visual-identity-strip" aria-label="Identité visuelle Atlas et NØX">
@@ -83,16 +83,20 @@
 
       <div class="sim-profile-panel" id="simProfilePanel">
         <div class="sim-profile-head">
-          <b>Profil actif : Solo Débutant 100 €</b>
+          <b id="simProfileTitle">Profil actif : Solo Débutant 100 €</b>
           <span id="simProfileStatus">BTC / ETH / SOL · ticket 5 € · maximum 10 € · exposition 30 €</span>
         </div>
+        <div class="atlas-storage-health-actions" role="group" aria-label="Choisir le profil de simulation">
+          <button type="button" data-sim-profile="solo_beginner_100_v1_1_alpha_13" aria-pressed="true">École 100 €</button>
+          <button type="button" data-sim-profile="solo_progression_1000_v1" aria-pressed="false">Progression 1 000 €</button>
+        </div>
         <div class="sim-profile-grid">
-          <div><b>Capital</b><span>100 € virtuels</span></div>
-          <div><b>Ticket conseillé</b><span>5 €</span></div>
-          <div><b>Maximum opération</b><span>10 €</span></div>
-          <div><b>Exposition maximale</b><span>30 €</span></div>
-          <div><b>Réserve minimale</b><span>70 €</span></div>
-          <div><b>Cryptos autorisées</b><span>BTC · ETH · SOL</span></div>
+          <div><b>Capital</b><span id="simProfileCapital">100 € virtuels</span></div>
+          <div><b>Ticket conseillé</b><span id="simProfileTicket">5 €</span></div>
+          <div><b>Maximum opération</b><span id="simProfileMaxOperation">10 €</span></div>
+          <div><b>Exposition maximale</b><span id="simProfileMaxExposure">30 €</span></div>
+          <div><b>Réserve minimale</b><span id="simProfileMinReserve">70 €</span></div>
+          <div><b>Cryptos autorisées</b><span id="simProfileAllowedAssets">BTC · ETH · SOL</span></div>
         </div>
       </div>
 
@@ -133,27 +137,27 @@
         <div class="school-tests" aria-label="Tests guidés du simulateur">
           <button class="school-test primary" data-school-test="safe_btc_5">
             <b>1 · Tester une opération prudente</b>
-            <span>BTC 5 € · doit être accepté</span>
+            <span id="schoolSafeLabel">BTC 5 € · doit être accepté</span>
           </button>
           <button class="school-test" data-school-test="too_big_btc_50">
             <b>2 · Tester une opération trop grosse</b>
-            <span>BTC 50 € · doit être refusé</span>
+            <span id="schoolTooBigLabel">BTC 50 € · doit être refusé</span>
           </button>
           <button class="school-test" data-school-test="forbidden_doge_5">
             <b>3 · Tester une crypto interdite</b>
-            <span>DOGE 5 € · doit être refusé</span>
+            <span id="schoolForbiddenLabel">DOGE 5 € · doit être refusé</span>
           </button>
           <button class="school-test" data-school-test="fill_ceiling">
             <b>4 · Remplir le plafond de sécurité</b>
-            <span>BTC 10 € + ETH 10 € + SOL 10 €</span>
+            <span id="schoolFillLabel">BTC 10 € + ETH 10 € + SOL 10 €</span>
           </button>
           <button class="school-test" data-school-test="exceed_ceiling">
             <b>5 · Dépasser le plafond</b>
-            <span>Après 30 € exposés, BTC 5 € doit être refusé</span>
+            <span id="schoolExceedLabel">Après 30 € exposés, BTC 5 € doit être refusé</span>
           </button>
           <button class="school-test reset" data-school-test="reset_100">
-            <b>Remettre le simulateur à 100 €</b>
-            <span>Repartir proprement</span>
+            <b id="schoolResetTitle">Remettre le simulateur à 100 €</b>
+            <span id="schoolResetLabel">Réinitialiser uniquement Solo Débutant 100 €</span>
           </button>
         </div>
 

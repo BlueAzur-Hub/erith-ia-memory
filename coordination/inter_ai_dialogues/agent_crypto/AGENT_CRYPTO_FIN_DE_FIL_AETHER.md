@@ -1,9 +1,9 @@
 # AGENT-CRYPTO — FIN DE FIL AETHER
 
-Version canonique de clôture : **40.4.220**
+Version canonique de clôture : **40.4.221**
 Market Core : **38.15.11 — PROTÉGÉ**
 
-## 1. Cascade finale 40.4.205 → 40.4.220
+## 1. Cascade finale 40.4.205 → 40.4.221
 
 - **40.4.205** — identité couleur stable par actif, axe temporel réel, inspection historique au pointeur, convergence Version Truth.
 - **40.4.206** — tableau permanent de valeurs observées superposé dans Indices/Énergie/Cross + propagation couleur au rail et à la fiche active.
@@ -21,6 +21,7 @@ Market Core : **38.15.11 — PROTÉGÉ**
 - **40.4.218** — Version Observer Retirement : suppression du `MutationObserver` de compatibilité du badge global devenu redondant depuis la Single Authority 40.4.211 ; autorités runtime/publication conservées et `market-stack.js` toujours exclu du badge global.
 - **40.4.219** — Loaded Asset Manifest Coverage : tous les JavaScript/CSS locaux chargés par le shell Administrator sont désormais sous hash SHA-256 canonique ; le guard refuse tout futur asset chargé hors autorité du manifest.
 - **40.4.220** — Atlas Heartbeat Owner Guard : le contrat one-shot CURRENT 40.4.212 devient invariant de CI ; propriétaire canonique, fallback existant et absence de primitives récurrentes/réseau sont vérifiés à chaque release.
+- **40.4.221** — Simulation Dual Profile Surface Truth : reconnexion de la source System et de son shell parser aux deux profils déjà existants (École 100 € / Progression 1 000 €), aux valeurs dynamiques et aux libellés du Mode École ; moteur, journaux, IndexedDB, Kraken Paper et 11 modules protégés.
 
 ## 2. Dette utilisateur soldée
 
