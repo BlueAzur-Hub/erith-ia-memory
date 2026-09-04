@@ -22,7 +22,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json, re
+          import json
 
           base = Path('public/agent_crypto_erith_ia/administrator')
           version = json.loads((base/'version.json').read_text(encoding='utf-8'))
@@ -42,8 +42,6 @@ jobs:
 
           old_pos = 'background-position:50% 50% !important;'
           new_pos = 'background-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;'
-          # Only the 40.2.30 letterbox backdrop rule owns this exact declaration.
-          assert text.count(old_pos) >= 1
           anchor = '<style id="atlasVisualContinuity40230">'
           start = text.index(anchor)
           end = text.index('</style>', start)
@@ -52,11 +50,25 @@ jobs:
           block = block.replace(old_pos, new_pos, 1)
           text = text[:start] + block + text[end:]
 
-          # Explicit proof markers for the release guard / future audits.
           proof = '''\n  <style id="atlasTechnicalReadingBackdropRestore404238">\n    /* 40.4.238 — Technical Reading only.\n       Foreground keeps contain/full image. Letterbox areas reuse the SAME\n       already-resolved image URL through the 40.2.30 backdrop owner.\n       No second image request, no new crop owner, no graph/layout ownership. */\n    body.atlas-administrator-mirror #detailPanel.atlas-tech-letterbox-fill-40230 {\n      background-color:#06101d !important;\n    }\n  </style>\n'''
           insert_at = text.index('<style id="atlasVisualContinuity40230">')
           text = text[:insert_at] + proof + text[insert_at:]
+
+          # Version-truth guard requires the canonical System lazy-loader cache
+          # tokens to advance with every Administrator build. This is publication
+          # identity only; System runtime/content is untouched.
+          old_loader='system-presentation.js?v=administrator-build-40.4.237'
+          new_loader='system-presentation.js?v=administrator-build-40.4.238'
+          assert text.count(old_loader) == 1, text.count(old_loader)
+          text = text.replace(old_loader,new_loader,1)
           index_path.write_text(text, encoding='utf-8')
+
+          system_path=base/'js/views/system-presentation.js'
+          system=system_path.read_text(encoding='utf-8')
+          old_source='const SOURCE="./views/system.html?v=administrator-build-40.4.237";'
+          new_source='const SOURCE="./views/system.html?v=administrator-build-40.4.238";'
+          assert system.count(old_source) == 1, system.count(old_source)
+          system_path.write_text(system.replace(old_source,new_source,1),encoding='utf-8')
 
           contract = {
             'build': '40.4.238',
@@ -71,6 +83,7 @@ jobs:
             'new_css_owner_added': False,
             'rnd_library_changed': False,
             'private_image_storage_changed': False,
+            'system_cache_token_only': True,
             'graph_changed': False,
             'parallel_markets_changed': False,
             'atlas_changed': False,
@@ -102,6 +115,7 @@ jobs:
           base=Path('public/agent_crypto_erith_ia/administrator')
           index=(base/'index.html').read_text(encoding='utf-8')
           app=(base/'js/app.js').read_text(encoding='utf-8')
+          system=(base/'js/views/system-presentation.js').read_text(encoding='utf-8')
           version=json.loads((base/'version.json').read_text(encoding='utf-8'))
           assert version['build']=='40.4.238'
           assert version['parent_build']=='40.4.237'
@@ -111,6 +125,8 @@ jobs:
           assert 'backdropPanel.style.setProperty("--atlas-tech-backdrop-image"' in index
           assert 'background-size:cover !important' in index
           assert 'background-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important' in index
+          assert 'system-presentation.js?v=administrator-build-40.4.238' in index
+          assert 'const SOURCE="./views/system.html?v=administrator-build-40.4.238";' in system
           assert 'const ADMIN_BUILD = "40.4.238";' in app
           assert 'const ENGINE_BUILD = "38.15.11";' in app
           PY
@@ -129,6 +145,7 @@ jobs:
             'public/agent_crypto_erith_ia/administrator/build.json',
             'public/agent_crypto_erith_ia/administrator/index.html',
             'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
             'public/agent_crypto_erith_ia/administrator/version.json',
           }
           changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
@@ -163,6 +180,7 @@ jobs:
           - Foreground portrait remains `object-fit: contain` so the complete non-explicit image is preserved.
           - Letterbox areas reuse the already resolved image URL as a `cover` backdrop.
           - No second image request.
+          - System loader token advances for canonical version truth only.
           - No RND library, graph, Atlas, Math Core, Window Manager or Market Core change.
           EOF
           cd /tmp/pkg
