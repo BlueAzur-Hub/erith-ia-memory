@@ -21,6 +21,7 @@ def one(text, old, new, label):
 js = one(js, 'const BUILD = "40.4.209";', 'const BUILD = "40.4.229";', 'reading depth BUILD')
 idx = one(idx, '<link rel="stylesheet" href="./market-reading-depth.css?v=40.4.210" />', '<link rel="stylesheet" href="./market-reading-depth.css?v=40.4.229" />', 'reading depth css token')
 idx = one(idx, '<script src="./js/market-reading-depth.js?v=administrator-build-40.4.210"></script>', '<script src="./js/market-reading-depth.js?v=administrator-build-40.4.229"></script>', 'reading depth js token')
+idx = one(idx, '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.228"></script>', '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.229"></script>', 'system presentation loader token')
 system = one(system, 'const SOURCE="./views/system.html?v=administrator-build-40.4.228";', 'const SOURCE="./views/system.html?v=administrator-build-40.4.229";', 'system presentation source token')
 
 marker = '40.4.229 — MARKET READING DEPTH VIEWPORT GEOMETRY LOCK'
