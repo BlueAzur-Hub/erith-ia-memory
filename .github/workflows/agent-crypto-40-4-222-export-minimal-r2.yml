@@ -1,0 +1,78 @@
+name: Agent-Crypto 40.4.222 Minimal Changed-Files Export R2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40-4-222-export-minimal-r2.yml'
+
+permissions:
+  contents: write
+
+env:
+  RELEASE_SHA: 'e6898cd1fbbd18099d0e33722b67fcc764b44d17'
+  WORKFLOW: '.github/workflows/agent-crypto-40-4-222-export-minimal-r2.yml'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build exact minimal package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$RELEASE_SHA^{commit}"
+          PKG='release_package_404222'
+          rm -rf "$PKG"
+          mkdir -p "$PKG"
+          git diff-tree --no-commit-id --name-only -r "$RELEASE_SHA" \
+            | grep -v '^\.github/workflows/' \
+            > /tmp/changed-404222.txt
+          EXPECTED="$(wc -l < /tmp/changed-404222.txt | tr -d ' ')"
+          test "$EXPECTED" = '12'
+          while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            git cat-file -e "$RELEASE_SHA:$f"
+            mkdir -p "$PKG/$(dirname "$f")"
+            git show "$RELEASE_SHA:$f" > "$PKG/$f"
+          done < /tmp/changed-404222.txt
+          ACTUAL="$(find "$PKG" -type f | wc -l | tr -d ' ')"
+          test "$ACTUAL" = '12'
+          {
+            echo '# Agent-Crypto 40.4.222 — fichiers modifiés'
+            echo
+            echo "Commit canonique : \`$RELEASE_SHA\`"
+            echo 'Market Core : `38.15.11` — protégé'
+            echo
+            echo 'Paquet différentiel exact : 12 fichiers modifiés présents au commit canonique 40.4.222. Les workflows temporaires supprimés sont exclus.'
+            echo
+            echo '## Fichiers'
+            while IFS= read -r f; do [ -n "$f" ] && printf -- '- `%s`\n' "$f"; done < /tmp/changed-404222.txt
+          } > "$PKG/FILES_CHANGED_40.4.222.md"
+          test "$(find "$PKG" -type f | wc -l | tr -d ' ')" = '13'
+
+      - name: Upload exact 40.4.222 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_222_SYSTEM_PRESENTATION_TRUTH_CHANGED_FILES_COMPLETE
+          path: release_package_404222/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Retire export workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Aether Release Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          rm -f "$WORKFLOW"
+          git add -A
+          git commit -m 'chore(agent-crypto): retire 40.4.222 complete export workflow'
+          git pull --rebase origin main
+          git push origin HEAD:main
