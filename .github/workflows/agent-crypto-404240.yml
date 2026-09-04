@@ -22,7 +22,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json, re
+          import json, re, textwrap
 
           base = Path('public/agent_crypto_erith_ia/administrator')
           version = json.loads((base/'version.json').read_text(encoding='utf-8'))
@@ -35,8 +35,6 @@ jobs:
           assert 'atlasTechnicalReadingSinglePortraitOwner404240' not in text
 
           # Normalize only CSS rules whose selector explicitly owns the Technical Reading portrait.
-          # This retires the remaining 40.2.x contain / 48px geometry conflicts without touching
-          # Graph, Market, Window Manager or any unrelated image.
           portrait_rule = re.compile(
               r'(?P<selector>[^{}]*\.admin-tech-portrait-r3[^{}]*)\{(?P<body>[^{}]*)\}',
               re.S,
@@ -61,83 +59,82 @@ jobs:
           assert stats['inset48'] >= 1, stats
           assert stats['height48'] >= 1, stats
 
-          # Final physical owner. The portrait itself covers the complete Technical Reading panel.
-          # Historical ::before/::after backdrop masks are explicitly retired here; HUD/header/body
-          # remain foreground layers. No source, RND, picker or storage owner changes.
-          owner = r'''
-  <style id="atlasTechnicalReadingSinglePortraitOwner404240">
-    /* 40.4.240 — TECHNICAL READING SINGLE PORTRAIT FULL-PANEL OWNER
-       One physical image layer, full panel, cover fit. Legacy 48px / contain
-       portrait geometry and historical pseudo backdrop masks are non-authoritative.
-       RND, local upload, source selection, storage and focal x/y remain untouched. */
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 {
-      overflow: hidden !important;
-    }
+          # Final physical owner: one image fills the complete Technical Reading panel.
+          # Historical panel pseudo-backdrops are retired; HUD and controls remain foreground.
+          owner = textwrap.dedent(r'''
+            <style id="atlasTechnicalReadingSinglePortraitOwner404240">
+              /* 40.4.240 — TECHNICAL READING SINGLE PORTRAIT FULL-PANEL OWNER
+                 One physical image layer, full panel, cover fit. Legacy 48px / contain
+                 portrait geometry and historical pseudo backdrop masks are non-authoritative.
+                 RND, local upload, source selection, storage and focal x/y remain untouched. */
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 {
+                overflow: hidden !important;
+              }
 
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::before,
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::after {
-      content: none !important;
-      display: none !important;
-      background: none !important;
-      opacity: 0 !important;
-    }
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::before,
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::after {
+                content: none !important;
+                display: none !important;
+                background: none !important;
+                opacity: 0 !important;
+              }
 
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
-    .detail-project-visual.admin-tech-r3 {
-      position: static !important;
-      overflow: visible !important;
-      background: transparent !important;
-    }
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+              .detail-project-visual.admin-tech-r3 {
+                position: static !important;
+                overflow: visible !important;
+                background: transparent !important;
+              }
 
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
-    .detail-project-visual.admin-tech-r3 > .admin-tech-portrait-r3 {
-      position: absolute !important;
-      inset: 0 !important;
-      top: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      min-width: 100% !important;
-      min-height: 100% !important;
-      max-width: none !important;
-      max-height: none !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      object-fit: cover !important;
-      object-position: var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;
-      opacity: 1 !important;
-      filter: none !important;
-      transform: none !important;
-      z-index: 0 !important;
-      pointer-events: none !important;
-    }
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+              .detail-project-visual.admin-tech-r3 > .admin-tech-portrait-r3 {
+                position: absolute !important;
+                inset: 0 !important;
+                top: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                min-width: 100% !important;
+                min-height: 100% !important;
+                max-width: none !important;
+                max-height: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                object-fit: cover !important;
+                object-position: var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;
+                opacity: 1 !important;
+                filter: none !important;
+                transform: none !important;
+                z-index: 0 !important;
+                pointer-events: none !important;
+              }
 
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-toggle,
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .atlas-tech-static-toolbar,
-    body.atlas-administrator-mirror
-    #analyste.champagne-clean-lens:not(.detail-collapsed)
-    #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-body {
-      position: relative !important;
-      z-index: 3 !important;
-    }
-  </style>
-'''
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-toggle,
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .atlas-tech-static-toolbar,
+              body.atlas-administrator-mirror
+              #analyste.champagne-clean-lens:not(.detail-collapsed)
+              #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-body {
+                position: relative !important;
+                z-index: 3 !important;
+              }
+            </style>
+          ''')
           assert '</head>' in text
           text = text.replace('</head>', owner + '\n</head>', 1)
 
@@ -147,7 +144,6 @@ jobs:
           assert old_script in text
           assert new_script not in text
           text = text.replace(old_script, new_script, 1)
-
           index_path.write_text(text, encoding='utf-8')
 
           system_path = base/'js/views/system-presentation.js'
@@ -245,7 +241,6 @@ jobs:
           ):
               assert proof in owner, proof
 
-          # No Technical Reading portrait selector may retain the old contain or 48px geometry.
           rule_re=re.compile(r'(?P<selector>[^{}]*\.admin-tech-portrait-r3[^{}]*)\{(?P<body>[^{}]*)\}', re.S)
           portrait_rules=[m.group('body') for m in rule_re.finditer(index)]
           assert portrait_rules
@@ -257,8 +252,6 @@ jobs:
           assert 'const ADMIN_BUILD = "40.4.240";' in app
           assert 'const ENGINE_BUILD = "38.15.11";' in app
           assert 'const SOURCE="./views/system.html?v=administrator-build-40.4.240";' in system
-
-          # RND source paths stay registered; no asset mutation belongs to this build.
           for name in ('technical-random-11.png','technical-random-12.png','technical-random-16.png'):
               assert name in index, name
           PY
@@ -296,9 +289,6 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add public/agent_crypto_erith_ia/administrator
           git commit -m "agent-crypto: build 40.4.240 consolidate Technical Reading portrait owner"
-
-          # Live archive jobs can advance main while this bounded release is proving itself.
-          # Rebase only onto those newer commits; a real conflict remains a hard failure.
           git pull --rebase origin main
           git push origin HEAD:main
 
