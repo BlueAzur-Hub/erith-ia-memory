@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.236";
-  const ADMIN_RELEASE = "PARALLEL GRAPH · INFORMATION HIERARCHY LOCK";
+  const ADMIN_BUILD = "40.4.237";
+  const ADMIN_RELEASE = "MARKET OWNERS · CANONICAL CONSOLIDATION + RND FRAMING LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

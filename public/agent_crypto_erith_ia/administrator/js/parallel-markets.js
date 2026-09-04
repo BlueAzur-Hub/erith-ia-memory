@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.236";
+  const BUILD = "40.4.237";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -74,32 +74,11 @@
     overlay.removeAttribute("style");
   }
 
-  function renderPinnedCanvasTable() {
-    const overlay = stage()?.querySelector?.("[data-parallel-overlay]");
-    const model = state.hover;
-    if (!overlay || !model?.series?.length || !ACTIVE.has(model.domain)) return emptyCanvasOverlay();
-    const rows = model.series.map(series => {
-      const point = series.points?.[series.points.length - 1];
-      if (!point) return null;
-      const unit = safeText(series.asset?.currency || series.asset?.unit || "");
-      const symbol = safeText(series.asset?.symbol || series.asset?.name || "ACTIF");
-      const name = safeText(series.asset?.name || series.asset?.label || symbol);
-      return {series, point, unit, symbol, name, change:point.value-100, time:pointTimeMs(point)};
-    }).filter(Boolean);
-    if (!rows.length) return emptyCanvasOverlay();
-    const latestTime = Math.max(...rows.map(row => row.time || 0));
-    overlay.style.cssText = "position:absolute;inset:0;z-index:5;pointer-events:none;color:#dbe8ef;font-family:system-ui,sans-serif";
-    overlay.innerHTML = `<section class="atlas-parallel-chart-table-404206" aria-hidden="true">
-      <header><span><b>VALEURS OBSERVÉES</b><small>${esc(CONFIG[model.domain]?.title || model.domain)} · Base 100</small></span><strong>${esc(dateText(latestTime))}</strong></header>
-      <div class="atlas-parallel-chart-table-body-404206">${rows.map(row => `<div class="atlas-parallel-chart-table-row-404206 ${row.change>.005?"is-up":row.change<-.005?"is-down":"is-flat"}" style="--asset-color:${row.series.color}">
-        <i></i><span><b>${esc(row.symbol)}</b><small>${esc(row.name)}</small></span><strong>${num(row.point.raw,4)}${row.unit?` ${esc(row.unit)}`:""}</strong><em>${pct(row.change)}</em>
-      </div>`).join("")}</div>
-      <footer><b>${esc(model.period.toUpperCase())}</b><span>derniers points réels · survol = inspection historique</span></footer>
-    </section>`;
-  }
-
+  /* 40.4.237 — permanent pinned values table retired.
+     The graph owns curves + pointer inspection only; numeric context remains
+     in the right rail. Leaving the canvas clears the inspection overlay. */
   function clearCanvasHover() {
-    renderPinnedCanvasTable();
+    emptyCanvasOverlay();
   }
 
   function renderCanvasHover(event) {
@@ -191,8 +170,7 @@
       bar.dataset.parallelToolbarBound = "1";
       bar.innerHTML = `
         <span class="mirror-group atlas-toolbar-view-404228"><small>VUE</small><b class="active">Base 100</b></span>
-        <span class="mirror-group atlas-toolbar-period-404228 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>
-        <span class="mirror-group atlas-toolbar-history-404228"><small>HISTORIQUE</small><button type="button" data-parallel-long-period="5a" title="Historique long chargé uniquement à la demande">5a</button><button type="button" data-parallel-long-period="10a" title="Historique long chargé uniquement à la demande">10a</button><button type="button" data-parallel-long-period="max" title="Historique MAX chargé uniquement à la demande">MAX</button></span>
+        <span class="mirror-group atlas-toolbar-period-404228 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}${LONG_PERIODS.map(p => `<button type="button" data-parallel-long-period="${p}" title="Historique long chargé uniquement à la demande">${p === "max" ? "MAX" : p}</button>`).join("")}</span>
         <span class="mirror-group atlas-toolbar-inspection-404228"><small>INSPECTION</small><b class="active">Survol</b><span>Valeurs réelles</span></span>`;
       bar.addEventListener("click", event => {
         const button = event.target instanceof Element ? event.target.closest("[data-parallel-period]") : null;
@@ -713,7 +691,7 @@
       rowsByAsset.push({asset,rows,color}); metricByAsset.push({asset,metric:metrics(rows),color}); series.push({asset,points:norm,color});
     });
     drawCanvas(series, period, cfg.accent);
-    renderPinnedCanvasTable();
+    emptyCanvasOverlay();
     const ranked = [...metricByAsset].filter(x=>x.metric.change!==null).sort((a,b)=>b.metric.change-a.metric.change);
     const leader=ranked[0], lag=ranked[ranked.length-1];
     const summary = shell.querySelector("[data-parallel-summary]");
