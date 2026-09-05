@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: agent-crypto-404261-404264-cascade
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   cascade:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Prepare corrected cascade runner copy
         shell: bash
