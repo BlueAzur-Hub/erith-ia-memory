@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.261";
-  const ADMIN_RELEASE = "STRATEGY A · TRADE PROPOSAL ENVELOPE FOUNDATION LOCK";
+  const ADMIN_BUILD = "40.4.262";
+  const ADMIN_RELEASE = "RISK GOVERNOR V1 · STRATEGY A PAPER AUTHORIZATION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

@@ -35698,6 +35698,33 @@ function renderStrategySandboxExtensions404261(){
 }
 try{globalThis.AgentCryptoStrategyAProposal404261=Object.freeze({build:"40.4.261",generate:strategyATradeProposal404261,last:()=>STRATEGY_A_LAST_PROPOSAL_404261,paper_proposal_only:true,real_orders:false,kraken_orders:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false});}catch(_){}
 
+/* 40.4.262 — RISK GOVERNOR V1 · STRATEGY A PAPER AUTHORIZATION LOCK */
+let STRATEGY_A_LAST_RISK_404262=null;
+function strategyARiskGovernor404262(proposal=STRATEGY_A_LAST_PROPOSAL_404261){
+  const local=strategyALocalContext404261();const reasons=[];
+  const cash=Number(local.cash_eur),exposure=Math.max(0,Number(local.exposure_before_eur)||0),equity=Math.max(0,(Number.isFinite(cash)?cash:0)+exposure);
+  const policy={max_single_trade_pct:5,max_single_trade_eur:50,max_total_exposure_pct:30,min_cash_reserve_pct:70,paper_adverse_move_pct:1};
+  let decision="REJECT",requested=0,authorized=0;
+  if(!proposal||proposal.status!=="PROPOSED")reasons.push("Aucune proposition Strategy A admissible à gouverner.");
+  else if(!(Number.isFinite(cash)&&cash>0&&equity>0))reasons.push("Capital Strategy A indisponible ou invalide.");
+  else{
+    requested=Math.min(policy.max_single_trade_eur,equity*policy.max_single_trade_pct/100);
+    const maxExposure=equity*policy.max_total_exposure_pct/100,minReserve=equity*policy.min_cash_reserve_pct/100;
+    const capacity=Math.max(0,Math.min(requested,maxExposure-exposure,cash-minReserve));authorized=Math.max(0,capacity);
+    if(authorized<=0){decision="REJECT";reasons.push("Aucune capacité restante après réserve et plafond d’exposition.");}
+    else if(authorized+1e-9<requested){decision="REDUCE";reasons.push("Montant réduit par réserve minimale ou plafond d’exposition.");}
+    else{decision="ACCEPT";reasons.push("Proposition compatible avec la politique paper V1.");}
+  }
+  const exposureAfter=Number.isFinite(exposure)?exposure+authorized:null;
+  return {schema:"agent_crypto_risk_decision_v1",build:"40.4.262",risk_id:`RISK-A-${strategyAHash404261([proposal?.proposal_id||"none",decision,authorized.toFixed(8)].join("|"))}`,generated_at:new Date().toISOString(),proposal_id:proposal?.proposal_id||null,workspace:"strategy_a",mode:"paper_authorization_only",decision,requested_notional_eur:requested||null,authorized_notional_eur:authorized||0,cash_before_eur:Number.isFinite(cash)?cash:null,exposure_before_eur:Number.isFinite(exposure)?exposure:null,exposure_after_eur:exposureAfter,estimated_adverse_1pct_eur:authorized*policy.paper_adverse_move_pct/100,policy,reason:reasons.join(" "),safety:{paper_only:true,real_order:false,kraken_order:false,credentials:false,wallet:false,withdrawal:false,storage_write:false,final_live_authorization:false}};
+}
+function renderStrategyARiskGovernor404262(){
+  const anchor=document.getElementById("strategyATradeProposal404261");if(!anchor)return;let panel=document.getElementById("strategyARiskGovernor404262");
+  if(!panel){panel=document.createElement("section");panel.id="strategyARiskGovernor404262";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(178,255,112,.26);border-radius:12px;padding:10px 12px;background:rgba(10,30,24,.46)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>RISK GOVERNOR V1 · STRATÉGIE A</strong><span style="font-size:10px;color:#b8ff90">PAPER AUTHORIZATION ONLY</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyARiskEvaluate404262">ÉVALUER RISQUE</button></div><div id="strategyARiskSummary404262" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">En attente d’une proposition A.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyARiskEvaluate404262")?.addEventListener("click",()=>{STRATEGY_A_LAST_RISK_404262=strategyARiskGovernor404262();renderStrategySandboxExtensions404261();});}
+  const out=document.getElementById("strategyARiskSummary404262");if(!out)return;const r=STRATEGY_A_LAST_RISK_404262;if(!r){out.textContent="En attente d’une proposition A.";return;}out.textContent=`${r.decision} · autorisé ${Number(r.authorized_notional_eur||0).toFixed(2)} € / demandé ${Number(r.requested_notional_eur||0).toFixed(2)} € · ${r.reason}`;out.style.color=r.decision==="ACCEPT"?"#9cff9c":(r.decision==="REDUCE"?"#ffd27a":"#ff9f9f");
+}
+try{globalThis.AgentCryptoRiskGovernor404262=Object.freeze({build:"40.4.262",evaluate:strategyARiskGovernor404262,last:()=>STRATEGY_A_LAST_RISK_404262,paper_only:true,real_orders:false,storage_write:false});}catch(_){}
+
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
    The companion localhost adapter exposes an allowlisted read-only surface over port 8791.
@@ -52869,7 +52896,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.261";
+const ATLAS_BUILD = "40.4.262";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
