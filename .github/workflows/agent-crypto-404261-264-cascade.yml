@@ -44,6 +44,18 @@ jobs:
           if old2 not in s:
               raise SystemExit('cascade System-token patch target not found')
           s=s.replace(old2,new2,1)
+
+          old3='''        a=text.index(start_tag);b=text.find(end_tag,a+1);section=text[a:b if b>0 else len(text)]'''
+          new3='''        a=text.index(start_tag);b=text.find(end_tag,a+1)\n        if b < 0:\n            b=text.find("/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE",a+1)\n        section=text[a:b if b>0 else len(text)]'''
+          if old3 not in s:
+              raise SystemExit('cascade safety-bound patch target not found')
+          s=s.replace(old3,new3,1)
+
+          old4='''    owner_sections = [\n        ("40.4.261 — STRATEGY A TRADE PROPOSAL", "40.4.262 — RISK GOVERNOR V1"),\n        ("40.4.262 — RISK GOVERNOR V1", "40.4.263 — STRATEGY A"),\n        ("40.4.263 — STRATEGY A · PAPER EXECUTION", "40.4.264 — STRATEGY A"),\n    ]'''
+          new4='''    owner_sections = [\n        ("40.4.261 — STRATEGY A TRADE PROPOSAL", "40.4.262 — RISK GOVERNOR V1"),\n        ("40.4.262 — RISK GOVERNOR V1", "40.4.263 — STRATEGY A"),\n        ("40.4.263 — STRATEGY A · PAPER EXECUTION", "40.4.264 — STRATEGY A"),\n        ("40.4.264 — STRATEGY A · PAPER RECONCILIATION", "/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE"),\n    ]'''
+          if old4 not in s:
+              raise SystemExit('cascade owner-section patch target not found')
+          s=s.replace(old4,new4,1)
           p.write_text(s,encoding='utf-8')
           PY
 
