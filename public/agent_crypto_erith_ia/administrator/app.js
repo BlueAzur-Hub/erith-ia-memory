@@ -32484,7 +32484,7 @@ function handleFoundationAction(action) {
       // Build 28.3.60 : le guard est posé AVANT le rerender. Si l’étape 3
       // est déjà lisible dans le viewport, aucun déplacement n’est ajouté.
       const viewportGuard = atlasLearningBeginNavigationGuard();
-      els.btnSimCostSchoolPreset?.click();
+      applySimCostSchoolPreset();
       const current = loadLearningCockpitState();
       if (current.steps.open === true) {
         void atlasRiskFoundationFinishStageViewport(3, viewportGuard, { flash:false });
@@ -52787,7 +52787,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.257";
+const ATLAS_BUILD = "40.4.258";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -53771,15 +53771,42 @@ document.querySelectorAll("[data-sim-profile]").forEach(button => button.addEven
 
 els.simCostsConfirmed?.addEventListener("change", () => saveSimCostAssumptions("manual"));
 
-els.btnSimCostSchoolPreset?.addEventListener("click", () => {
+function refreshSimCostDomRefs404258() {
+  const ids = [
+    "simBuyFeePct", "simSellFeePct", "simEntryImpactPct", "simExitImpactPct", "simCostsConfirmed",
+    "simCostStatus", "simRoundTripCost", "simBreakEvenPrice", "simNetPnL", "simCostTruth", "simScenarioOutput",
+    "simSecurityGateStatus", "simSecurityGateList", "simSecurityGateReading"
+  ];
+  ids.forEach(id => { els[id] = document.getElementById(id); });
+}
+
+function applySimCostSchoolPreset() {
+  refreshSimCostDomRefs404258();
+  const school = {
+    buyFeePct: 0.25,
+    sellFeePct: 0.25,
+    entryImpactPct: 0.05,
+    exitImpactPct: 0.05,
+    confirmed: false,
+    source: "school_example",
+    updatedAt: new Date().toISOString()
+  };
   if (els.simBuyFeePct) els.simBuyFeePct.value = "0.25";
   if (els.simSellFeePct) els.simSellFeePct.value = "0.25";
   if (els.simEntryImpactPct) els.simEntryImpactPct.value = "0.05";
   if (els.simExitImpactPct) els.simExitImpactPct.value = "0.05";
   if (els.simCostsConfirmed) els.simCostsConfirmed.checked = false;
-  saveSimCostAssumptions("school_example");
+  try { localStorage.setItem(SIM_COST_STORAGE_KEY, JSON.stringify(school)); } catch {}
+  renderSimulationEducation();
   recordLearningPracticeEvidence("cost_example", true);
   setActionFeedback("info", "Exemple école chargé", "0,25 % achat · 0,25 % vente · 0,05 % entrée · 0,05 % sortie. À ne pas confondre avec un tarif réel.");
+  return school;
+}
+
+document.addEventListener("click", event => {
+  const button = event.target.closest?.("#btnSimCostSchoolPreset");
+  if (!button) return;
+  applySimCostSchoolPreset();
 });
 
 els.btnSimCostReset?.addEventListener("click", () => {

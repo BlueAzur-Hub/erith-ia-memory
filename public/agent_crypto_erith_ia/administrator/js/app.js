@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.257";
-  const ADMIN_RELEASE = "GRAPH DEFAULT TOP 5 BOOT STATE LOCK";
+  const ADMIN_BUILD = "40.4.258";
+  const ADMIN_RELEASE = "LEARNING MODULE 03 SCHOOL PRESET ACTION OWNER LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
