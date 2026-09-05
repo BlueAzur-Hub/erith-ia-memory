@@ -65,12 +65,12 @@ jobs:
         if: success()
         shell: bash
         run: |
-          git rm .github/workflows/agent-crypto-404265-auto-paper-runner.yml
-          git rm .github/scripts/agent_crypto_404265_auto_paper_runner.py
-          git rm .github/scripts/agent_crypto_404265_sync_system_tokens.py
+          git rm -f .github/workflows/agent-crypto-404265-auto-paper-runner.yml
+          git rm -f .github/scripts/agent_crypto_404265_auto_paper_runner.py
+          git rm -f .github/scripts/agent_crypto_404265_sync_system_tokens.py
           git rm -f --ignore-unmatch coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt
           git add public/agent_crypto_erith_ia/administrator
-          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_STRATEGY_A_AUTO_PAPER_RUNNER_V1.zip
+          git add -f coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_STRATEGY_A_AUTO_PAPER_RUNNER_V1.zip
           git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_STRATEGY_A_AUTO_PAPER_RUNNER_V1_SHA256.txt
           git commit -m 'agent-crypto: build 40.4.265 strategy a auto paper runner v1 session-local lock'
           git pull --rebase origin main
