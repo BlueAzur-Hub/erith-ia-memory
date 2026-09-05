@@ -82,17 +82,17 @@ body.atlas-administrator-mirror #detailPanel{
   background:linear-gradient(180deg,rgba(5,15,26,.88),rgba(3,10,18,.92))!important;
 }
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3{
-  position:static!important;
-  display:block!important;
-  width:100%!important;
-  height:136px!important;
-  min-height:136px!important;
-  max-height:136px!important;
-  flex:0 0 136px!important;
-  aspect-ratio:auto!important;
-  margin:0 0 7px!important;
-  padding:0!important;
-  overflow:visible!important;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   cursor:pointer!important;
   background:transparent!important;
   border:0!important;
@@ -100,25 +100,25 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r
   box-shadow:none!important;
 }
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>.admin-tech-portrait-r3{
-  position:absolute!important;
-  inset:0!important;
-  width:100%!important;
-  height:100%!important;
-  object-fit:contain!important;
-  object-position:center center!important;
+  
+  
+  
+  
+  
+  
   opacity:1!important;
-  filter:none!important;
-  transform:none!important;
+  
+  
   pointer-events:none!important;
   user-select:none!important;
 }
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>span{
-  position:absolute!important;
-  left:12px!important;
-  bottom:12px!important;
-  z-index:4!important;
-  max-width:calc(100% - 24px)!important;
-  padding:5px 8px!important;
+  
+  
+  
+  
+  
+  
   border:1px solid rgba(255,215,130,.28)!important;
   border-radius:999px!important;
   background:rgba(2,8,17,.62)!important;
@@ -128,12 +128,12 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r
 }
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after{
   content:"Changer l’image"!important;
-  position:absolute!important;
-  right:12px!important;
-  top:12px!important;
-  bottom:auto!important;
-  z-index:5!important;
-  padding:6px 9px!important;
+  
+  
+  
+  
+  
+  
   border:1px solid rgba(98,236,255,.40)!important;
   border-radius:999px!important;
   color:#dcfbff!important;
@@ -359,12 +359,6 @@ body.atlas-administrator-mirror .atlas-collapse-summary:hover{
 }
 
 @media (max-width:1100px){
-  body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3{
-    min-height:136px!important;
-    height:136px!important;
-    max-height:136px!important;
-    flex:0 0 136px!important;
-  }
   .atlas-layout-family.admin-family-emblem-host-r3{
     min-height:126px!important;
     padding-right:150px!important;
@@ -378,12 +372,6 @@ body.atlas-administrator-mirror .atlas-collapse-summary:hover{
 }
 
 @media (max-width:760px){
-  body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3{
-    min-height:136px!important;
-    height:136px!important;
-    max-height:136px!important;
-    flex:0 0 136px!important;
-  }
   .atlas-layout-family.admin-family-emblem-host-r3{
     min-height:116px!important;
     padding:20px 110px 20px 20px!important;
@@ -407,40 +395,9 @@ body.atlas-administrator-mirror .atlas-collapse-summary:hover{
 
 /* Image remains clickable for the private local picker, but the function is invisible. */
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after{
-  content:none!important;display:none!important;opacity:0!important;
+  content:none!important;opacity:0!important;
 }
 body.atlas-administrator-mirror #detailPanel .admin-tech-reset-r3{display:none!important;}
-
-/* Restore Classic proportions: image as a compact visual header, functions below. */
-body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
-#detailPanel .detail-project-visual.admin-tech-r3{
-  position:static!important;
-  display:block!important;
-  flex:0 0 136px!important;
-  width:100%!important;
-  height:136px!important;
-  min-height:136px!important;
-  max-height:136px!important;
-  aspect-ratio:auto!important;
-  margin:0 0 7px!important;
-  overflow:visible!important;
-}
-body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>.admin-tech-portrait-r3{
-  inset:0!important;width:100%!important;height:100%!important;
-  object-fit:cover!important;
-  object-position:var(--admin-tech-x,50%) var(--admin-tech-y,12%)!important;
-}
-
-/* Original Classic functional body remains original DOM: compact strip, Fiche active,
-   Source Dock, Sources/data state, Network/cache/latency and Chart integrity. */
-body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) #detailPanel.clean-lens-detail-panel{
-  display:flex!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important;
-}
-body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed) #detailPanel .detail-panel-body{
-  display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
-  min-height:0!important;width:100%!important;overflow-y:auto!important;overflow-x:hidden!important;
-  overscroll-behavior:contain!important;scrollbar-gutter:auto!important;gap:5px!important;padding:0!important;margin:0!important;
-}
 body.atlas-administrator-mirror #detailPanel .atlas-detail-subwindow,
 body.atlas-administrator-mirror #detailPanel .detail-compact-strip{
   width:100%!important;min-width:0!important;flex:0 0 auto!important;
@@ -457,7 +414,7 @@ body.atlas-administrator-mirror #detailPanel .detail-compact-strip{
 body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel.clean-lens-detail-panel{
   isolation:isolate!important;
-  overflow:hidden!important;
+  
   background:rgba(2,8,16,.02)!important;
   border-color:rgba(98,236,255,.24)!important;
 }
@@ -465,40 +422,40 @@ body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-colla
 /* Classic internal frame: 136px in-flow hero spacer; Aerith remains a full-panel background layer. */
 body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel .detail-project-visual.admin-tech-r3{
-  position:static!important;
-  inset:auto!important;
-  z-index:auto!important;
-  display:block!important;
-  width:100%!important;
-  height:136px!important;
-  min-height:136px!important;
-  max-height:136px!important;
-  flex:0 0 136px!important;
-  aspect-ratio:auto!important;
-  margin:0 0 7px!important;
-  padding:0!important;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   border:0!important;
   border-radius:0!important;
-  overflow:visible!important;
+  
   background:transparent!important;
   box-shadow:none!important;
   cursor:pointer!important;
 }
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>.admin-tech-portrait-r3{
-  position:absolute!important;
-  z-index:0!important;
-  top:48px!important;
-  right:0!important;
-  bottom:0!important;
-  left:0!important;
-  inset:48px 0 0 0!important;
-  width:100%!important;
-  height:auto!important;
-  object-fit:cover!important;
-  object-position:var(--admin-tech-x,50%) var(--admin-tech-y,12%)!important;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   opacity:1!important;
-  filter:none!important;
-  transform:none!important;
+  
+  
   pointer-events:none!important;
 }
 
@@ -506,18 +463,18 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after,
 body.atlas-administrator-mirror #detailPanel .admin-tech-reset-r3{
   content:none!important;
-  display:none!important;
+  
   opacity:0!important;
 }
 
 /* Keep the tiny identity tag, but never cover the portrait with an opaque plate. */
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>span{
-  left:10px!important;
-  right:auto!important;
-  top:156px!important;
-  bottom:auto!important;
-  z-index:4!important;
-  padding:4px 7px!important;
+  
+  
+  
+  
+  
+  
   border:1px solid rgba(255,215,130,.22)!important;
   background:rgba(2,8,17,.10)!important;
   backdrop-filter:none!important;
@@ -527,8 +484,8 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r
 
 /* Title and all functional information float ABOVE the image. */
 body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle{
-  position:relative!important;
-  z-index:4!important;
+  
+  
   background:rgba(2,8,17,.08)!important;
   border-color:rgba(98,236,255,.16)!important;
   box-shadow:none!important;
@@ -536,19 +493,19 @@ body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle{
   -webkit-backdrop-filter:none!important;
 }
 body.atlas-administrator-mirror #detailPanel>.detail-panel-body{
-  position:relative!important;
-  z-index:3!important;
-  flex:1 1 auto!important;
-  min-height:0!important;
-  width:100%!important;
-  margin:0!important;
-  padding:0!important;
-  gap:5px!important;
-  overflow-y:auto!important;
-  overflow-x:hidden!important;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   background:transparent!important;
   pointer-events:none!important;
-  scrollbar-gutter:auto!important;
+  
 }
 body.atlas-administrator-mirror #detailPanel>.detail-panel-body>*{
   pointer-events:auto!important;
@@ -615,30 +572,8 @@ body.atlas-administrator-mirror #detailPanel p{
 
 /* R4 no longer removes Classic in-flow spacing; mobile keeps the same 136px frame contract. */
 @media (max-width:1100px){
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
-  #detailPanel .detail-project-visual.admin-tech-r3{
-    position:static!important;
-    inset:auto!important;
-    width:100%!important;
-    height:136px!important;
-    min-height:136px!important;
-    max-height:136px!important;
-    flex:0 0 136px!important;
-    overflow:visible!important;
-  }
 }
 @media (max-width:760px){
-  body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
-  #detailPanel .detail-project-visual.admin-tech-r3{
-    position:static!important;
-    inset:auto!important;
-    width:100%!important;
-    height:136px!important;
-    min-height:136px!important;
-    max-height:136px!important;
-    flex:0 0 136px!important;
-    overflow:visible!important;
-  }
 }
 
 /* ==========================================================================\n   39.4.6R5 — TECHNICAL READING SIDE DOCK + DECORATIVE EMBLEM SCALE LOCK\n\n   Operator contract:\n   - desktop restores the canonical Graphique | Lecture technique side-by-side layout;\n   - the selected/default Aerith image still fills the whole Technical Reading frame;\n   - existing Classic functional DOM remains over the image on <=10% alpha surfaces;\n   - decorative emblems are background accents only: small, <=10% opacity, no layout reservation;\n   - no Market/Memory/Atlas/Math/data-source behavior is changed.\n   ========================================================================== */
@@ -647,18 +582,6 @@ body.atlas-administrator-mirror #detailPanel p{
 body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel.clean-lens-detail-panel{
   background:rgba(2,8,16,.02)!important;
-}
-body.atlas-administrator-mirror #analyste.champagne-clean-lens:not(.detail-collapsed)
-#detailPanel .detail-project-visual.admin-tech-r3{
-  position:static!important;
-  inset:auto!important;
-  width:100%!important;
-  height:136px!important;
-  min-height:136px!important;
-  max-height:136px!important;
-  flex:0 0 136px!important;
-  margin:0 0 7px!important;
-  overflow:visible!important;
 }
 
 /* --------------------------------------------------------------------------
@@ -768,7 +691,7 @@ body.atlas-administrator-mirror #detailPanel>.detail-panel-toggle{
   border-color:rgba(98,236,255,.12)!important;
 }
 body.atlas-administrator-mirror #detailPanel>.detail-panel-body{
-  gap:3px!important;
+  
   background:transparent!important;
 }
 
@@ -871,7 +794,7 @@ body.atlas-administrator-mirror
 #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel.clean-lens-detail-panel::after{
   content:none!important;
-  display:none!important;
+  
   visibility:hidden!important;
   opacity:0!important;
   background:none!important;
@@ -948,7 +871,7 @@ body.atlas-administrator-mirror
 #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel.clean-lens-detail-panel::after{
   content:none!important;
-  display:none!important;
+  
   opacity:0!important;
   background:none!important;
 }
@@ -1187,7 +1110,7 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual::after,
 body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel::before,
 body.atlas-administrator-mirror #analyste.champagne-clean-lens #detailPanel.clean-lens-detail-panel::after{
   content:none!important;
-  display:none!important;
+  
   opacity:0!important;
   background:transparent!important;
   background-color:transparent!important;
@@ -1296,3 +1219,172 @@ body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small
    does not redefine #analyste / direct chart / direct #detailPanel geometry.
    Metal, private portrait, glass and window chrome remain Administrator-owned.
    ============================================================================ */
+
+
+/* ==========================================================================
+   TECHNICAL_READING_CANONICAL_OWNER_404244
+   Agent-Crypto 40.4.244 — one Administrator geometry/image owner.
+
+   Proven contract preserved:
+   - 28.2.5 / 28.2.9: graph owns workspace height; detail is an absolute
+     right dock; long detail content scrolls internally and never grows graph.
+   - 40.2.65: immersive selected/private portrait remains cover-rendered.
+   - 40.4.243: current 360px right-dock/full-panel portrait appearance retained.
+
+   This block owns geometry + portrait framing only. Opacity/contrast remains
+   owned by admin-visual-cache.css and the surviving visual-only historical rules.
+   No data, graph canvas, RND library, picker persistence or runtime owner here.
+   ========================================================================== */
+
+@media (min-width:901px){
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed){
+    display:block!important;
+    position:relative!important;
+    padding-right:calc(var(--atlas-open-detail-width,360px) + 7px)!important;
+    grid-template-columns:none!important;
+    grid-template-rows:none!important;
+  }
+
+  body.atlas-administrator-mirror
+  #analyste.champagne-clean-lens:not(.detail-collapsed) > #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261{
+    position:absolute!important;
+    top:0!important;
+    right:0!important;
+    bottom:0!important;
+    left:auto!important;
+    width:var(--atlas-open-detail-width,360px)!important;
+    min-width:0!important;
+    max-width:var(--atlas-open-detail-width,360px)!important;
+    height:100%!important;
+    min-height:0!important;
+    max-height:100%!important;
+    margin:0!important;
+    overflow:hidden!important;
+    display:flex!important;
+    flex-direction:column!important;
+    box-sizing:border-box!important;
+    z-index:30!important;
+  }
+}
+
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::before,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261::after{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  background:none!important;
+  background-image:none!important;
+  filter:none!important;
+}
+
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+.detail-project-visual.admin-tech-r3{
+  position:absolute!important;
+  inset:0!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  left:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  flex:none!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  z-index:0!important;
+  isolation:isolate!important;
+  cursor:pointer!important;
+}
+
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
+.detail-project-visual.admin-tech-r3 > .admin-tech-portrait-r3{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:100%!important;
+  min-height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  object-fit:cover!important;
+  object-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%)!important;
+  opacity:1!important;
+  filter:none!important;
+  transform:none!important;
+  z-index:0!important;
+  pointer-events:none!important;
+  user-select:none!important;
+}
+
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3 > span{
+  position:absolute!important;
+  left:10px!important;
+  right:auto!important;
+  top:156px!important;
+  bottom:auto!important;
+  z-index:4!important;
+  max-width:calc(100% - 20px)!important;
+  padding:4px 7px!important;
+  border-radius:999px!important;
+}
+
+body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after,
+body.atlas-administrator-mirror #detailPanel .admin-tech-reset-r3{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+}
+
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-toggle,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .atlas-tech-static-toolbar,
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-body{
+  position:relative!important;
+  z-index:3!important;
+}
+
+body.atlas-administrator-mirror
+#analyste.champagne-clean-lens:not(.detail-collapsed)
+#detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261 > .detail-panel-body{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  min-height:0!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  gap:5px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:auto!important;
+  background:transparent!important;
+}
