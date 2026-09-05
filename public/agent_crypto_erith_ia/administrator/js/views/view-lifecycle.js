@@ -57,18 +57,20 @@
   installed:marketPulseWakeupInstalled
 });
 
-const atlasResidentWakeState40133={installed:false,last_checked_at:0,last_reason:"",last_action:"idle",last_market_id:"",last_done_id:"",wake_count:0};
-const atlasResidentSafeCall40133=(name,args=[])=>{try{const fn=globalThis[name];return typeof fn==="function"?fn(...args):undefined;}catch(_){return undefined;}};
-function atlasResidentPending40133(){
-  try{const authorized=typeof globalThis.atlasAccessIsAuthorized!=="function"||globalThis.atlasAccessIsAuthorized(),production=typeof globalThis.atlasDeviceComputeAllowed!=="function"||globalThis.atlasDeviceComputeAllowed();if(!authorized||!production)return null;const snapshot=typeof globalThis.atlasBuildCryptoPageSnapshot==="function"?globalThis.atlasBuildCryptoPageSnapshot():null;if(!snapshot)return null;const q=typeof globalThis.atlasCurrentQualification==="function"?globalThis.atlasCurrentQualification(snapshot):null;if(q&&q.qualified!==true)return null;const id=typeof globalThis.atlasAutomation341SnapshotId==="function"?String(globalThis.atlasAutomation341SnapshotId(snapshot)||"").trim():"";if(!id)return null;const done=typeof globalThis.atlasAutomation341ReadLastCurrentMarketId==="function"?String(globalThis.atlasAutomation341ReadLastCurrentMarketId()||"").trim():"";let proof="";try{proof=String(globalThis.atlasCanonicalCurrentProof389?.(null)?.marketId||"").trim();}catch(_){}atlasResidentWakeState40133.last_market_id=id;atlasResidentWakeState40133.last_done_id=done||proof;if((done&&id===done)||(proof&&id===proof)){atlasResidentWakeState40133.last_action="already-current";return null;}return {snapshot,id};}catch(_){return null;}
-}
-function atlasResidentWake40133(reason="resident-40133"){
-  atlasResidentWakeState40133.last_checked_at=Date.now();atlasResidentWakeState40133.last_reason=String(reason||"");const pending=atlasResidentPending40133();if(!pending)return false;try{const connected=typeof atlasLocalDialogueState!=="undefined"&&atlasLocalDialogueState?.connected===true;if(!connected){atlasResidentWakeState40133.last_action="bridge-sync";atlasResidentWakeState40133.wake_count++;atlasResidentSafeCall40133("atlasLocalBridgeAutoSync",[`40133-${reason}`]);return true;}if(typeof globalThis.atlasCurrentPendingAutoKick4051==="function"){atlasResidentWakeState40133.last_action="current-kick";atlasResidentWakeState40133.wake_count++;return globalThis.atlasCurrentPendingAutoKick4051(`40133-${reason}`)!==false;}if(typeof globalThis.atlasLocalReportsScheduleAutomatic==="function"){try{if(typeof atlasLocalReportsState!=="undefined"&&atlasLocalReportsState?.automaticCycleClosed===true)atlasResidentSafeCall40133("atlasLocalReportsOpenAutomaticCycle",["40133-new-canonical-snapshot"]);}catch(_){}atlasResidentWakeState40133.last_action="current-kick";atlasResidentWakeState40133.wake_count++;return globalThis.atlasLocalReportsScheduleAutomatic("snapshot",{delayMs:250})!==false;}}catch(_){}atlasResidentWakeState40133.last_action="owner-unavailable";return false;
-}
-function atlasResidentWrap40133(name,after){const current=globalThis[name];if(typeof current!=="function"||current.__erithResidentWake40133===true)return false;const wrapped=function(...args){const result=current.apply(this,args);Promise.resolve(result).then(v=>{try{after(v,args);}catch(_){}},()=>{});return result;};try{Object.defineProperty(wrapped,"__erithResidentWake40133",{value:true});}catch(_){}globalThis[name]=wrapped;return globalThis[name]===wrapped;}
-function atlasResidentInstall40133(){installMarketPulseWakeupR1();const market=atlasResidentWrap40133("atlasAfterLivecheck",()=>atlasResidentWake40133("market-refresh"));atlasResidentWrap40133("atlasLocalBridgeProbe",()=>atlasResidentWake40133("bridge-health"));atlasResidentWakeState40133.installed=market||globalThis.atlasAfterLivecheck?.__erithResidentWake40133===true;atlasResidentWake40133("load");return atlasResidentWakeState40133.installed;}
-globalThis.ErithAtlasResidentWake40133=Object.freeze({build:"40.4.133",owner:"existing app.js market pulse + existing CURRENT scheduler",new_timer:false,new_fetch:false,new_observer:false,second_current_controller:false,wake:atlasResidentWake40133,snapshot:()=>Object.freeze({...atlasResidentWakeState40133})});
-atlasResidentInstall40133();
+globalThis.ErithAtlasResidentWake40133Retired404256=Object.freeze({
+  build:"40.4.256",
+  retired_owner:"40.4.133 view-lifecycle Atlas resident wake wrapper",
+  canonical_owner:"app.js atlasCurrentPendingMarket137",
+  reason:"duplicate active monkey-patch layer retired; proven 40.4.137 pending owner remains authoritative",
+  market_pulse_40499r1_preserved:true,
+  heartbeat_404212_preserved:true,
+  duplicate_wrapper:false,
+  new_timer:false,
+  new_fetch:false,
+  new_observer:false,
+  new_storage_write:false,
+  ui_disclosure_dependency:false
+});
 
 const DEFINITIONS=Object.freeze([
     Object.freeze({id:"projects",label:"Projet @erith.IA · Missions de vie",source:"./views/projects.html",roots:Object.freeze(["#missions-vie",'[data-collapse-key="fonds-erith"]','[data-collapse-key="association-erith"]','[data-collapse-key="aerith-enfance"]','[data-collapse-key="aerith-animaux"]','[data-collapse-key="aerith-terre-vivante"]']),risk:"low"}),
