@@ -37,15 +37,38 @@ jobs:
       - name: Build and validate 40.4.265
         shell: bash
         run: |
-          python .github/scripts/agent_crypto_404265_auto_paper_runner.py
+          set +e
+          python .github/scripts/agent_crypto_404265_auto_paper_runner.py > /tmp/agent_crypto_404265.log 2>&1
+          code=$?
+          cat /tmp/agent_crypto_404265.log
+          if [ "$code" -ne 0 ]; then
+            mkdir -p coordination/inter_ai_dialogues/agent_crypto
+            cp /tmp/agent_crypto_404265.log coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt
+            exit "$code"
+          fi
           unzip -t coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_STRATEGY_A_AUTO_PAPER_RUNNER_V1.zip
 
+      - name: Publish diagnostic only if build failed
+        if: failure()
+        shell: bash
+        run: |
+          if [ ! -f coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt ]; then exit 0; fi
+          cp coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt /tmp/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt
+          git reset --hard HEAD
+          cp /tmp/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt
+          git commit -m 'diagnostic: capture Agent-Crypto 40.4.265 release failure'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
       - name: Commit release and retire temporary tooling
+        if: success()
         shell: bash
         run: |
           git rm .github/workflows/agent-crypto-404265-auto-paper-runner.yml
           git rm .github/scripts/agent_crypto_404265_auto_paper_runner.py
           git rm .github/scripts/agent_crypto_404265_sync_system_tokens.py
+          git rm -f --ignore-unmatch coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_FAILURE_DIAGNOSTIC.txt
           git add public/agent_crypto_erith_ia/administrator
           git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_STRATEGY_A_AUTO_PAPER_RUNNER_V1.zip
           git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_265_STRATEGY_A_AUTO_PAPER_RUNNER_V1_SHA256.txt
@@ -56,6 +79,7 @@ jobs:
           git push origin HEAD:main
 
       - name: Upload differential release artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: AGENT_CRYPTO_40_4_265_STRATEGY_A_AUTO_PAPER_RUNNER_V1
