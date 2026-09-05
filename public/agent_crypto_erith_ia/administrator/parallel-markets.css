@@ -598,6 +598,10 @@ html[data-cyclic-market-mode="parallel"] .atlas-parallel-basket-404189 li{border
     color:#f7fbff!important;border-color:color-mix(in srgb,var(--cyclic-market-accent,#d8c07a) 66%,rgba(255,255,255,.16))!important;background:linear-gradient(180deg,color-mix(in srgb,var(--cyclic-market-accent,#d8c07a) 22%,rgba(7,20,32,.86)),rgba(3,10,18,.88))!important;box-shadow:0 0 12px color-mix(in srgb,var(--cyclic-market-accent,#d8c07a) 16%,transparent),inset 0 1px 0 rgba(255,255,255,.05)!important;
   }
 
+  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 button:focus-visible{
+    outline:2px solid color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 72%,white)!important;outline-offset:2px!important;
+  }
+
   /* One light synthesis, no second table. */
   html[data-cyclic-market-mode="parallel"] .atlas-parallel-live-summary{
     position:absolute!important;z-index:4!important;top:66px!important;left:24px!important;right:auto!important;

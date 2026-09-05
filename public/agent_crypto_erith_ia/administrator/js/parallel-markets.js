@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.246";
+  const BUILD = "40.4.247";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -672,15 +672,26 @@
     const memory = shell.querySelector("[data-parallel-memory]"); if (memory) memory.textContent = `${cfg.label} · ${windowText} · Base 100 · ${coverageText} séries`;
     const truthTitle = shell.querySelector("[data-parallel-truth-title]"); if (truthTitle) truthTitle.textContent = `MARCHÉ ${cfg.label}`;
     const truth = shell.querySelector("[data-parallel-truth]"); if (truth) truth.textContent = `${sourceText} · snapshot ${snapshotText} · comparaison Base 100 · aucune prévision`;
-    const buttons = toolbar()?.querySelectorAll("[data-parallel-period]") || [];
-    buttons.forEach(b => { const p=b.getAttribute("data-parallel-period"); b.classList.toggle("is-active", p===period); b.disabled = domain==="cross-market" && p==="24h"; });
-    const longButtons = toolbar()?.querySelectorAll("[data-parallel-long-period]") || [];
+    const activeToolbar = toolbar();
+    if (activeToolbar) {
+      activeToolbar.dataset.activePeriod = period;
+      activeToolbar.dataset.activePeriodKind = isLongPeriod(period) ? "history" : "standard";
+      activeToolbar.setAttribute("aria-label", `${cfg.title} · période active ${period.toUpperCase()}`);
+    }
+    const buttons = activeToolbar?.querySelectorAll("[data-parallel-period]") || [];
+    buttons.forEach(b => {
+      const p=b.getAttribute("data-parallel-period"); const active=p===period;
+      b.classList.toggle("is-active", active); b.disabled = domain==="cross-market" && p==="24h";
+      b.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    const longButtons = activeToolbar?.querySelectorAll("[data-parallel-long-period]") || [];
     longButtons.forEach(b => {
       const p=b.getAttribute("data-parallel-long-period");
       const available = longDomainEnabled(domain);
-      b.classList.toggle("is-active", available && p === period);
-      b.disabled = !available;
+      const active = available && p === period;
+      b.classList.toggle("is-active", active); b.disabled = !available;
       b.setAttribute("aria-disabled", available ? "false" : "true");
+      b.setAttribute("aria-pressed", active ? "true" : "false");
       b.title = available ? "Historique long chargé uniquement à la demande" : "Historique long activé dans une version dédiée ultérieure";
     });
     const rowsByAsset = [], metricByAsset = [], series = [];
