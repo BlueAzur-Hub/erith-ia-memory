@@ -1,0 +1,399 @@
+name: Agent-Crypto 40.4.246-248 Market control cascade
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-404246-248.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cascade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Preflight 40.4.245 and protected owners
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.245', v['build']
+          assert v['engine']['reference_build']=='38.15.11'
+          assert v['engine']['status']=='protected'
+          css=(base/'parallel-markets.css').read_text(encoding='utf-8')
+          js=(base/'js/parallel-markets.js').read_text(encoding='utf-8')
+          visual=(base/'admin-visual-assets.css').read_text(encoding='utf-8')
+          assert '40.4.237 — PARALLEL CANONICAL OWNER CONSOLIDATION' in css
+          assert 'const BUILD = "40.4.237";' in js
+          assert 'TECHNICAL_READING_CANONICAL_OWNER_404245' in visual
+          assert 'height:136px!important;' in visual
+          assert 'flex:0 0 136px!important;' in visual
+          assert 'object-fit:cover!important;' in visual
+          print('preflight ok: 40.4.245 + Market Core 38.15.11 + Technical Reading 40.4.245 locked')
+          PY
+
+      - name: Build 40.4.246 — split standard periods from long history
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          js_path=base/'js/parallel-markets.js'
+          css_path=base/'parallel-markets.css'
+          index_path=base/'index.html'
+          js=js_path.read_text(encoding='utf-8')
+          css=css_path.read_text(encoding='utf-8')
+          index=index_path.read_text(encoding='utf-8')
+
+          assert 'const BUILD = "40.4.237";' in js
+          js=js.replace('const BUILD = "40.4.237";','const BUILD = "40.4.246";',1)
+
+          old='''        <span class="mirror-group atlas-toolbar-view-404228"><small>VUE</small><b class="active">Base 100</b></span>\n        <span class="mirror-group atlas-toolbar-period-404228 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}${LONG_PERIODS.map(p => `<button type="button" data-parallel-long-period="${p}" title="Historique long chargé uniquement à la demande">${p === "max" ? "MAX" : p}</button>`).join("")}</span>\n        <span class="mirror-group atlas-toolbar-inspection-404228"><small>INSPECTION</small><b class="active">Survol</b><span>Valeurs réelles</span></span>`;'''
+          new='''        <span class="mirror-group atlas-toolbar-view-404228" role="group" aria-label="Vue"><small>VUE</small><b class="active">Base 100</b></span>\n        <span class="mirror-group atlas-toolbar-history-404246 atlas-parallel-history" role="group" aria-label="Historique long"><small>HISTORIQUE</small>${LONG_PERIODS.map(p => `<button type="button" data-parallel-long-period="${p}" title="Historique long chargé uniquement à la demande">${p === "max" ? "MAX" : p}</button>`).join("")}</span>\n        <span class="mirror-group atlas-toolbar-inspection-404228" role="group" aria-label="Inspection"><small>INSPECTION</small><b class="active">Survol</b><span>Valeurs réelles</span></span>\n        <span class="mirror-group atlas-toolbar-period-404228 atlas-parallel-periods" role="group" aria-label="Période standard"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>`;'''
+          assert old in js, 'toolbar markup contract changed'
+          js=js.replace(old,new,1)
+
+          marker='40.4.237 — PARALLEL CANONICAL OWNER CONSOLIDATION'
+          pos=css.index(marker)
+          head,owner=css[:pos],css[pos:]
+          assert '.atlas-toolbar-history-404246' not in owner
+          view_rule='''  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .atlas-toolbar-view-404228{\n    grid-column:2!important;display:grid!important;grid-template-columns:42px minmax(72px,1fr)!important;align-items:center!important;gap:4px!important;\n  }\n'''
+          history_rule='''  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .atlas-toolbar-history-404246{\n    grid-column:3!important;display:grid!important;grid-template-columns:58px repeat(3,minmax(38px,1fr))!important;align-items:center!important;gap:4px!important;min-width:0!important;\n  }\n'''
+          assert view_rule in owner
+          owner=owner.replace(view_rule,view_rule+history_rule,1)
+          old_period='grid-column:5!important;display:grid!important;grid-template-columns:52px repeat(9,minmax(31px,1fr))!important;align-items:center!important;gap:4px!important;min-width:0!important;'
+          new_period='grid-column:5!important;display:grid!important;grid-template-columns:52px repeat(6,minmax(34px,1fr))!important;align-items:center!important;gap:4px!important;min-width:0!important;'
+          assert old_period in owner
+          owner=owner.replace(old_period,new_period,1)
+          css=head+owner
+
+          index,n1=re.subn(r'parallel-markets\.css\?v=[^"\']+','parallel-markets.css?v=40.4.246',index,count=1)
+          index,n2=re.subn(r'js/parallel-markets\.js\?v=[^"\']+','js/parallel-markets.js?v=40.4.246',index,count=1)
+          assert n1==1 and n2==1,(n1,n2)
+
+          js_path.write_text(js,encoding='utf-8')
+          css_path.write_text(css,encoding='utf-8')
+          index_path.write_text(index,encoding='utf-8')
+
+          contract={
+            'build':'40.4.246','parent':'40.4.245','scope':'parallel_market_control_grammar',
+            'canonical_parallel_owner':'parallel-markets.css#40.4.237','canonical_owner_edited_in_place':True,
+            'new_final_stylesheet':False,'standard_periods':['24h','7j','30j','60j','90j','1a'],
+            'long_history_controls':['5a','10a','max'],'long_history_dedicated_slot':True,
+            'active_period_must_remain_visible':True,'graph_geometry_changed':False,'rail_geometry_changed':False,
+            'technical_reading_locked':'40.4.245','technical_reading_changed':False,'rnd_changed':False,
+            'atlas_changed':False,'oracle_changed':False,'math_core_changed':False,'window_manager_changed':False,
+            'market_core_changed':False,'protected_market_core':'38.15.11','new_timer':False,'new_observer':False,
+            'new_fetch':False,'new_websocket':False,'new_scheduler':False
+          }
+          Path('/tmp/contract-404246.json').write_text(json.dumps(contract,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.246 \
+            --parent 40.4.245 \
+            --release "MARKETS · PARALLEL CONTROL GRAMMAR CONVERGENCE" \
+            --status "parallel_market_control_grammar_404246" \
+            --contract-key "parallel_market_control_grammar_404246" \
+            --contract-json /tmp/contract-404246.json \
+            --lineage-note "40.4.246 keeps the 40.4.237 canonical parallel owner and separates standard horizons from lazy long-history controls so the active market period remains visible without changing graph or rail geometry"
+
+      - name: Validate and publish 40.4.246
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.246 --expected-release "MARKETS · PARALLEL CONTROL GRAMMAR CONVERGENCE"
+          python - <<'PY'
+          from pathlib import Path
+          import json,subprocess
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          css=(base/'parallel-markets.css').read_text(encoding='utf-8')
+          js=(base/'js/parallel-markets.js').read_text(encoding='utf-8')
+          idx=(base/'index.html').read_text(encoding='utf-8')
+          visual=(base/'admin-visual-assets.css').read_text(encoding='utf-8')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.246' and v['parent_build']=='40.4.245'
+          assert v['engine']['reference_build']=='38.15.11' and v['engine']['status']=='protected'
+          assert css.count('40.4.237 — PARALLEL CANONICAL OWNER CONSOLIDATION')==1
+          assert '.atlas-toolbar-history-404246' in css
+          assert 'repeat(6,minmax(34px,1fr))' in css[css.index('40.4.237 — PARALLEL CANONICAL OWNER CONSOLIDATION'):]
+          assert 'atlas-toolbar-history-404246 atlas-parallel-history' in js
+          assert 'data-parallel-long-period' in js and 'data-parallel-period' in js
+          assert 'parallel-markets.css?v=40.4.246' in idx and 'js/parallel-markets.js?v=40.4.246' in idx
+          assert 'TECHNICAL_READING_CANONICAL_OWNER_404245' in visual and 'height:136px!important;' in visual and 'flex:0 0 136px!important;' in visual
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/parallel-markets.js',
+            'public/agent_crypto_erith_ia/administrator/parallel-markets.css',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+          }
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          assert not changed-allowed,sorted(changed-allowed)
+          assert {'public/agent_crypto_erith_ia/administrator/js/parallel-markets.js','public/agent_crypto_erith_ia/administrator/parallel-markets.css'} <= changed
+          PY
+          git config user.name "Aether Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.246 converge parallel market control grammar"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "SHA_246=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Package 40.4.246
+        shell: bash
+        run: |
+          rm -rf /tmp/pkg246 && mkdir -p /tmp/pkg246
+          git diff --name-only HEAD^ HEAD | while read f; do mkdir -p "/tmp/pkg246/$(dirname "$f")"; cp "$f" "/tmp/pkg246/$f"; done
+          cat > /tmp/pkg246/FILES_CHANGED_40.4.246.md <<'EOF'
+          # Agent-Crypto 40.4.246
+          Parallel market control grammar only. Standard periods remain together; 5a/10a/MAX use the dedicated historical slot. Graph/rail geometry, Technical Reading 40.4.245, RND, Atlas, Oracle, Math Core, Window Manager and Market Core 38.15.11 are unchanged.
+          EOF
+          (cd /tmp/pkg246 && zip -qr /tmp/AGENT_CRYPTO_BUILD_40_4_246_PARALLEL_CONTROL_GRAMMAR_CHANGED_FILES.zip .)
+          sha256sum /tmp/AGENT_CRYPTO_BUILD_40_4_246_PARALLEL_CONTROL_GRAMMAR_CHANGED_FILES.zip | tee /tmp/SHA256_246.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_246_PARALLEL_CONTROL_GRAMMAR_CHANGED_FILES
+          path: |
+            /tmp/AGENT_CRYPTO_BUILD_40_4_246_PARALLEL_CONTROL_GRAMMAR_CHANGED_FILES.zip
+            /tmp/SHA256_246.txt
+          if-no-files-found: error
+
+      - name: Build 40.4.247 — active horizon truth and keyboard semantics
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.246'
+          js_path=base/'js/parallel-markets.js'; css_path=base/'parallel-markets.css'; index_path=base/'index.html'
+          js=js_path.read_text(encoding='utf-8'); css=css_path.read_text(encoding='utf-8'); index=index_path.read_text(encoding='utf-8')
+          assert 'const BUILD = "40.4.246";' in js
+          js=js.replace('const BUILD = "40.4.246";','const BUILD = "40.4.247";',1)
+
+          old='''    const buttons = toolbar()?.querySelectorAll("[data-parallel-period]") || [];\n    buttons.forEach(b => { const p=b.getAttribute("data-parallel-period"); b.classList.toggle("is-active", p===period); b.disabled = domain==="cross-market" && p==="24h"; });\n    const longButtons = toolbar()?.querySelectorAll("[data-parallel-long-period]") || [];'''
+          new='''    const activeToolbar = toolbar();\n    if (activeToolbar) {\n      activeToolbar.dataset.activePeriod = period;\n      activeToolbar.dataset.activePeriodKind = isLongPeriod(period) ? "history" : "standard";\n      activeToolbar.setAttribute("aria-label", `${cfg.title} · période active ${period.toUpperCase()}`);\n    }\n    const buttons = activeToolbar?.querySelectorAll("[data-parallel-period]") || [];\n    buttons.forEach(b => {\n      const p=b.getAttribute("data-parallel-period");\n      const active=p===period;\n      b.classList.toggle("is-active", active);\n      b.disabled = domain==="cross-market" && p==="24h";\n      b.setAttribute("aria-pressed", active ? "true" : "false");\n    });\n    const longButtons = activeToolbar?.querySelectorAll("[data-parallel-long-period]") || [];'''
+          assert old in js
+          js=js.replace(old,new,1)
+          old_long='''      b.classList.toggle("is-active", available && p === period);\n      b.disabled = !available;\n      b.setAttribute("aria-disabled", available ? "false" : "true");'''
+          new_long='''      const active = available && p === period;\n      b.classList.toggle("is-active", active);\n      b.disabled = !available;\n      b.setAttribute("aria-disabled", available ? "false" : "true");\n      b.setAttribute("aria-pressed", active ? "true" : "false");'''
+          assert old_long in js
+          js=js.replace(old_long,new_long,1)
+
+          marker='40.4.237 — PARALLEL CANONICAL OWNER CONSOLIDATION'
+          pos=css.index(marker); head,owner=css[:pos],css[pos:]
+          focus='''  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 button:focus-visible{\n    outline:2px solid color-mix(in srgb,var(--cyclic-market-accent,#a9b9c7) 72%,white)!important;outline-offset:2px!important;\n  }\n'''
+          assert 'button:focus-visible' not in owner
+          anchor='''  html[data-cyclic-market-mode="parallel"] #atlasCyclicMarketMirrorToolbar404168 .atlas-toolbar-inspection-404228>span{'''
+          assert anchor in owner
+          owner=owner.replace(anchor,focus+anchor,1)
+          css=head+owner
+
+          index,n1=re.subn(r'parallel-markets\.css\?v=[^"\']+','parallel-markets.css?v=40.4.247',index,count=1)
+          index,n2=re.subn(r'js/parallel-markets\.js\?v=[^"\']+','js/parallel-markets.js?v=40.4.247',index,count=1)
+          assert n1==1 and n2==1
+          js_path.write_text(js,encoding='utf-8'); css_path.write_text(css,encoding='utf-8'); index_path.write_text(index,encoding='utf-8')
+
+          contract={
+            'build':'40.4.247','parent':'40.4.246','scope':'parallel_active_horizon_truth',
+            'active_period_dataset':True,'active_period_kind_dataset':True,'aria_pressed_periods':True,
+            'keyboard_focus_visible':True,'standard_and_long_history_groups_separate':True,
+            'graph_geometry_changed':False,'rail_geometry_changed':False,'technical_reading_locked':'40.4.245',
+            'technical_reading_changed':False,'rnd_changed':False,'atlas_changed':False,'oracle_changed':False,
+            'math_core_changed':False,'window_manager_changed':False,'market_core_changed':False,
+            'protected_market_core':'38.15.11','new_timer':False,'new_observer':False,'new_fetch':False,
+            'new_websocket':False,'new_scheduler':False
+          }
+          Path('/tmp/contract-404247.json').write_text(json.dumps(contract,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.247 \
+            --parent 40.4.246 \
+            --release "MARKETS · ACTIVE HORIZON TRUTH + KEYBOARD SEMANTICS" \
+            --status "parallel_active_horizon_truth_404247" \
+            --contract-key "parallel_active_horizon_truth_404247" \
+            --contract-json /tmp/contract-404247.json \
+            --lineage-note "40.4.247 makes the active parallel-market horizon explicit in DOM and ARIA, preserves the 40.4.246 control slots and adds keyboard focus visibility without changing market data or graph geometry"
+
+      - name: Validate and publish 40.4.247
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.247 --expected-release "MARKETS · ACTIVE HORIZON TRUTH + KEYBOARD SEMANTICS"
+          python - <<'PY'
+          from pathlib import Path
+          import json,subprocess
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          js=(base/'js/parallel-markets.js').read_text(encoding='utf-8')
+          css=(base/'parallel-markets.css').read_text(encoding='utf-8')
+          visual=(base/'admin-visual-assets.css').read_text(encoding='utf-8')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.247' and v['parent_build']=='40.4.246'
+          assert 'dataset.activePeriod = period' in js and 'aria-pressed' in js
+          assert 'button:focus-visible' in css[css.index('40.4.237 — PARALLEL CANONICAL OWNER CONSOLIDATION'):]
+          assert 'TECHNICAL_READING_CANONICAL_OWNER_404245' in visual and 'height:136px!important;' in visual
+          assert v['engine']['reference_build']=='38.15.11' and v['engine']['status']=='protected'
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json','public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json','public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js','public/agent_crypto_erith_ia/administrator/js/parallel-markets.js',
+            'public/agent_crypto_erith_ia/administrator/parallel-markets.css','public/agent_crypto_erith_ia/administrator/version.json'}
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          assert not changed-allowed,sorted(changed-allowed)
+          PY
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.247 lock active parallel market horizon truth"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "SHA_247=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Package 40.4.247
+        shell: bash
+        run: |
+          rm -rf /tmp/pkg247 && mkdir -p /tmp/pkg247
+          git diff --name-only HEAD^ HEAD | while read f; do mkdir -p "/tmp/pkg247/$(dirname "$f")"; cp "$f" "/tmp/pkg247/$f"; done
+          cat > /tmp/pkg247/FILES_CHANGED_40.4.247.md <<'EOF'
+          # Agent-Crypto 40.4.247
+          Active horizon truth + keyboard semantics. No data formulas, graph geometry, Technical Reading 40.4.245, RND, Atlas, Oracle, Math Core, Window Manager or Market Core changes.
+          EOF
+          (cd /tmp/pkg247 && zip -qr /tmp/AGENT_CRYPTO_BUILD_40_4_247_ACTIVE_HORIZON_TRUTH_CHANGED_FILES.zip .)
+          sha256sum /tmp/AGENT_CRYPTO_BUILD_40_4_247_ACTIVE_HORIZON_TRUTH_CHANGED_FILES.zip | tee /tmp/SHA256_247.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_247_ACTIVE_HORIZON_TRUTH_CHANGED_FILES
+          path: |
+            /tmp/AGENT_CRYPTO_BUILD_40_4_247_ACTIVE_HORIZON_TRUTH_CHANGED_FILES.zip
+            /tmp/SHA256_247.txt
+          if-no-files-found: error
+
+      - name: Build 40.4.248 — static five-market freeze candidate
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.247'
+          index_path=base/'index.html'; index=index_path.read_text(encoding='utf-8')
+          index,n1=re.subn(r'parallel-markets\.css\?v=[^"\']+','parallel-markets.css?v=40.4.248',index,count=1)
+          index,n2=re.subn(r'js/parallel-markets\.js\?v=[^"\']+','js/parallel-markets.js?v=40.4.248',index,count=1)
+          assert n1==1 and n2==1
+          index_path.write_text(index,encoding='utf-8')
+          contract={
+            'build':'40.4.248','parent':'40.4.247','scope':'five_market_static_freeze_candidate',
+            'functional_delta':False,'cascade_from':'40.4.245','parallel_control_grammar':'40.4.246',
+            'active_horizon_truth':'40.4.247','technical_reading_reference':'40.4.245_LOCKED',
+            'firefox_operator_validation_required':True,'firefox_operator_validation_claimed':False,
+            'required_operator_cycle':['crypto','metals','indices','energy','cross-market','crypto'],
+            'market_core_changed':False,'protected_market_core':'38.15.11','atlas_changed':False,'oracle_changed':False,
+            'math_core_changed':False,'window_manager_changed':False,'technical_reading_changed':False,'rnd_changed':False,
+            'new_timer':False,'new_observer':False,'new_fetch':False,'new_websocket':False,'new_scheduler':False
+          }
+          Path('/tmp/contract-404248.json').write_text(json.dumps(contract,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.248 \
+            --parent 40.4.247 \
+            --release "MARKETS · FIVE-MARKET STATIC FREEZE CANDIDATE" \
+            --status "five_market_static_freeze_candidate_404248" \
+            --contract-key "five_market_static_freeze_candidate_404248" \
+            --contract-json /tmp/contract-404248.json \
+            --lineage-note "40.4.248 is the no-functional-delta static checkpoint after 40.4.246/247; Firefox operator validation remains explicitly required before field acceptance"
+
+      - name: Validate and publish 40.4.248
+        shell: bash
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.248 --expected-release "MARKETS · FIVE-MARKET STATIC FREEZE CANDIDATE"
+          python - <<'PY'
+          from pathlib import Path
+          import json,subprocess
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          visual=(base/'admin-visual-assets.css').read_text(encoding='utf-8')
+          js=(base/'js/parallel-markets.js').read_text(encoding='utf-8')
+          css=(base/'parallel-markets.css').read_text(encoding='utf-8')
+          assert v['build']=='40.4.248' and v['parent_build']=='40.4.247'
+          assert v['engine']['reference_build']=='38.15.11' and v['engine']['status']=='protected'
+          assert 'atlas-toolbar-history-404246' in js and 'dataset.activePeriod = period' in js
+          assert '.atlas-toolbar-history-404246' in css and 'button:focus-visible' in css
+          assert 'TECHNICAL_READING_CANONICAL_OWNER_404245' in visual and 'height:136px!important;' in visual and 'flex:0 0 136px!important;' in visual and 'object-fit:cover!important;' in visual
+          contract=v['contracts']['five_market_static_freeze_candidate_404248']
+          assert contract['firefox_operator_validation_required'] is True and contract['firefox_operator_validation_claimed'] is False
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json','public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json','public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js','public/agent_crypto_erith_ia/administrator/version.json'}
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          assert not changed-allowed,sorted(changed-allowed)
+          PY
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.248 freeze five-market static candidate"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "SHA_248=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Package 40.4.248 and cumulative cascade
+        shell: bash
+        run: |
+          rm -rf /tmp/pkg248 /tmp/pkgcum && mkdir -p /tmp/pkg248 /tmp/pkgcum
+          git diff --name-only HEAD^ HEAD | while read f; do mkdir -p "/tmp/pkg248/$(dirname "$f")"; cp "$f" "/tmp/pkg248/$f"; done
+          cat > /tmp/pkg248/FILES_CHANGED_40.4.248.md <<'EOF'
+          # Agent-Crypto 40.4.248
+          Static five-market freeze candidate. No functional delta. Firefox operator cycle remains required before field acceptance.
+          EOF
+          (cd /tmp/pkg248 && zip -qr /tmp/AGENT_CRYPTO_BUILD_40_4_248_FIVE_MARKET_STATIC_FREEZE_CANDIDATE_CHANGED_FILES.zip .)
+          sha256sum /tmp/AGENT_CRYPTO_BUILD_40_4_248_FIVE_MARKET_STATIC_FREEZE_CANDIDATE_CHANGED_FILES.zip | tee /tmp/SHA256_248.txt
+
+          files=(
+            public/agent_crypto_erith_ia/administrator/administrator-version.json
+            public/agent_crypto_erith_ia/administrator/app.js
+            public/agent_crypto_erith_ia/administrator/build.json
+            public/agent_crypto_erith_ia/administrator/index.html
+            public/agent_crypto_erith_ia/administrator/js/app.js
+            public/agent_crypto_erith_ia/administrator/js/parallel-markets.js
+            public/agent_crypto_erith_ia/administrator/parallel-markets.css
+            public/agent_crypto_erith_ia/administrator/version.json
+          )
+          for f in "${files[@]}"; do mkdir -p "/tmp/pkgcum/$(dirname "$f")"; cp "$f" "/tmp/pkgcum/$f"; done
+          cat > /tmp/pkgcum/FILES_CHANGED_40.4.245_TO_40.4.248.md <<'EOF'
+          # Agent-Crypto cumulative cascade 40.4.245 → 40.4.248
+          Union payload for the market-control cascade only. Technical Reading remains the validated 40.4.245 configuration and is intentionally not modified by the market cascade.
+          EOF
+          (cd /tmp/pkgcum && zip -qr /tmp/AGENT_CRYPTO_BUILD_40_4_248_MARKET_CONTROL_CASCADE_CUMULATIVE_CHANGED_FILES.zip .)
+          sha256sum /tmp/AGENT_CRYPTO_BUILD_40_4_248_MARKET_CONTROL_CASCADE_CUMULATIVE_CHANGED_FILES.zip | tee /tmp/SHA256_CUMULATIVE.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_248_FIVE_MARKET_STATIC_FREEZE_CANDIDATE_CHANGED_FILES
+          path: |
+            /tmp/AGENT_CRYPTO_BUILD_40_4_248_FIVE_MARKET_STATIC_FREEZE_CANDIDATE_CHANGED_FILES.zip
+            /tmp/SHA256_248.txt
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_248_MARKET_CONTROL_CASCADE_CUMULATIVE_CHANGED_FILES
+          path: |
+            /tmp/AGENT_CRYPTO_BUILD_40_4_248_MARKET_CONTROL_CASCADE_CUMULATIVE_CHANGED_FILES.zip
+            /tmp/SHA256_CUMULATIVE.txt
+          if-no-files-found: error
