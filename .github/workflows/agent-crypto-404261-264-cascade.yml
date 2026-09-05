@@ -1,0 +1,37 @@
+name: Agent-Crypto 40.4.261-40.4.264 Strategy Cascade
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/agent-crypto-404261-264-cascade.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-404261-404264-cascade
+  cancel-in-progress: false
+
+jobs:
+  cascade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Run cumulative Strategy A cascade
+        run: python .github/scripts/agent_crypto_404261_264_cascade.py
+
+      - name: Upload cascade artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_40_4_261_264_CASCADE
+          path: /tmp/agent_crypto_cascade_404261_404264/*
+          if-no-files-found: warn
+          retention-days: 30
