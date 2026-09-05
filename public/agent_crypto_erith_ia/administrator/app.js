@@ -35748,6 +35748,101 @@ function renderStrategyAAutoPaperRunner404265(){
   out.textContent=`${s.phase} · cycles ${s.cycles} · NO_TRADE ${s.no_trade} · risk reject ${s.risk_rejects} · ouverts ${s.opened} · clôturés ${s.closed} · prochain ${next} · ${s.last_action}`;
   out.style.color=s.phase.includes("ERROR")||s.phase.includes("STOP")||s.phase.includes("BLOCKED")?"#ff9f9f":(s.enabled?"#8be8ff":"#ffd27a");
 }
+/* 40.4.267 — SIMULATION HUMAN READABILITY · AUTO RUNNER OPERATOR VIEW LOCK */
+/* Presentation only. The Firefox-validated Strategy A / Risk / Paper / Reconciliation
+   engines and the 40.4.265 scheduler remain untouched. This layer groups the existing
+   panels into readable horizontal cards and translates the Auto Runner telemetry into
+   an operator-facing dashboard. No fetch, WebSocket, observer, timer, storage write,
+   Kraken network call or financial execution is added. */
+function strategyAEnsureHumanReadabilityStyle404267(){
+  let style=document.getElementById("strategyAHumanReadabilityStyle404267");
+  if(style)return style;
+  style=document.createElement("style");
+  style.id="strategyAHumanReadabilityStyle404267";
+  style.textContent=`
+    #strategyAHumanCockpit404267{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;display:grid!important;gap:12px!important;margin:8px 0 12px!important;padding:0!important}
+    #strategyAHumanCockpit404267 .strategy-a-human-title-404267{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 6px;padding:0 2px;color:#dcecf4;font-size:11px;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+    #strategyAHumanContext404267,#strategyAHumanPipeline404267{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;gap:10px!important;align-items:stretch!important;width:100%!important;min-width:0!important}
+    #strategyAHumanPipeline404267{grid-template-columns:repeat(2,minmax(280px,1fr))!important}
+    #strategyAHumanContext404267>* ,#strategyAHumanPipeline404267>* ,#strategyAHumanAuto404267>*{min-width:0!important;max-width:none!important;width:auto!important;margin:0!important;box-sizing:border-box!important;writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important}
+    #strategyAHumanContext404267 * ,#strategyAHumanPipeline404267 * ,#strategyAHumanAuto404267 *{writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important}
+    #strategyAHumanAuto404267{width:100%!important;min-width:0!important}
+    #strategyAAutoPaperRunner404265{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important}
+    #strategyAAutoSummary404265.strategy-a-auto-readable-404267{display:grid!important;grid-template-columns:repeat(4,minmax(130px,1fr))!important;gap:8px!important;margin-top:10px!important;color:#dcecf4!important}
+    #strategyAAutoSummary404265 .strategy-a-auto-kpi-404267{display:grid;gap:3px;padding:8px 10px;border:1px solid rgba(139,232,255,.16);border-radius:9px;background:rgba(6,20,28,.42);min-width:0}
+    #strategyAAutoSummary404265 .strategy-a-auto-kpi-404267 span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#8098a7;font-weight:900}
+    #strategyAAutoSummary404265 .strategy-a-auto-kpi-404267 b{font-size:11px;line-height:1.25;color:#eef8fb;white-space:normal}
+    #strategyAAutoSummary404265 .strategy-a-auto-reason-404267{grid-column:1/-1;display:grid;gap:3px;padding:9px 11px;border:1px solid rgba(255,210,122,.15);border-radius:9px;background:rgba(24,20,10,.34)}
+    #strategyAAutoSummary404265 .strategy-a-auto-reason-404267 span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#9f9274;font-weight:900}
+    #strategyAAutoSummary404265 .strategy-a-auto-reason-404267 b{font-size:11px;line-height:1.35;color:#f2dfb4;font-weight:800;white-space:normal}
+    @media(max-width:1180px){#strategyAHumanPipeline404267{grid-template-columns:1fr!important}#strategyAAutoSummary404265.strategy-a-auto-readable-404267{grid-template-columns:repeat(2,minmax(130px,1fr))!important}}
+    @media(max-width:720px){#strategyAHumanContext404267,#strategyAHumanPipeline404267{grid-template-columns:1fr!important}#strategyAAutoSummary404265.strategy-a-auto-readable-404267{grid-template-columns:1fr!important}}
+  `;
+  document.head.appendChild(style);
+  return style;
+}
+function strategyAHumanPhaseLabel404267(phase){
+  const key=String(phase||"OFF");
+  const labels={OFF:"Arrêté",ARMED:"Démarrage",NO_TRADE:"Attente marché",SAFETY_REJECT:"Refus sécurité",RISK_REJECT:"Refus risque",PAPER_OPEN:"Position Paper ouverte",MONITORING_OPEN:"Position Paper surveillée",CLOSED_COOLDOWN:"Trade clôturé · pause",COOLDOWN:"Pause après trade",DUPLICATE_WAIT:"Attente nouvel état",STOP_WORKSPACE:"Arrêt sécurité",ERROR_STOP:"Erreur · arrêt"};
+  return labels[key]||key.replaceAll("_"," ");
+}
+function strategyATopChild404267(node,parent){
+  let current=node;
+  while(current&&current.parentElement&&current.parentElement!==parent)current=current.parentElement;
+  return current&&current.parentElement===parent?current:null;
+}
+function strategyAApplyHumanReadability404267(){
+  strategyAEnsureHumanReadabilityStyle404267();
+  const readiness=document.getElementById("simulationReadiness404152");
+  const proposal=document.getElementById("strategyATradeProposal404261");
+  const risk=document.getElementById("strategyARiskGovernor404262");
+  const paper=document.getElementById("strategyAPaperExecution404263");
+  const reconciliation=document.getElementById("strategyAReconciliation404264");
+  const auto=document.getElementById("strategyAAutoPaperRunner404265");
+  if(!proposal||!risk||!paper||!reconciliation||!auto)return false;
+
+  let cockpit=document.getElementById("strategyAHumanCockpit404267");
+  if(!cockpit){
+    const parent=proposal.parentElement;if(!parent)return false;
+    const direct=Array.from(parent.children);
+    const proposalTop=strategyATopChild404267(proposal,parent)||proposal;
+    const proposalIndex=direct.indexOf(proposalTop);
+    if(proposalIndex<0)return false;
+    cockpit=document.createElement("section");cockpit.id="strategyAHumanCockpit404267";cockpit.setAttribute("data-human-readability-build","40.4.267");
+    cockpit.innerHTML=`<div><div class="strategy-a-human-title-404267">CONTEXTE PAPER · WORKSPACE · KRAKEN LECTURE SEULE · ÉTAT</div><div id="strategyAHumanContext404267"></div></div><div><div class="strategy-a-human-title-404267">CHAÎNE STRATÉGIE A · PROPOSITION → RISQUE → PAPER → MESURE</div><div id="strategyAHumanPipeline404267"></div></div><div><div class="strategy-a-human-title-404267">PILOTE AUTOMATIQUE PAPER</div><div id="strategyAHumanAuto404267"></div></div>`;
+    proposalTop.insertAdjacentElement("beforebegin",cockpit);
+
+    const context=document.getElementById("strategyAHumanContext404267");
+    const pipeline=document.getElementById("strategyAHumanPipeline404267");
+    const autoHost=document.getElementById("strategyAHumanAuto404267");
+    const liveChildren=Array.from(parent.children);
+    const readinessTop=strategyATopChild404267(readiness,parent);
+    const readinessIndex=readinessTop?liveChildren.indexOf(readinessTop):-1;
+    let contextStart=-1;
+    if(readinessIndex>=0){
+      contextStart=liveChildren.findIndex((node,index)=>index<=readinessIndex&&/PAPER\s+WORKSPACE/i.test(String(node.textContent||""))&&!node.contains(proposal));
+      if(contextStart<0)contextStart=readinessIndex;
+      liveChildren.slice(contextStart,readinessIndex+1).forEach(node=>{if(node!==cockpit&&context)context.appendChild(node);});
+    }
+    [proposal,risk,paper,reconciliation].forEach(node=>{if(node&&pipeline)pipeline.appendChild(node);});
+    if(auto&&autoHost)autoHost.appendChild(auto);
+  }
+
+  const out=document.getElementById("strategyAAutoSummary404265");
+  if(out&&typeof STRATEGY_A_AUTO_STATE_404265!=="undefined"){
+    const s=STRATEGY_A_AUTO_STATE_404265;
+    const next=s.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";
+    const p=typeof STRATEGY_A_LAST_PROPOSAL_404261!=="undefined"?STRATEGY_A_LAST_PROPOSAL_404261:null;
+    const regime=String(p?.oracle?.regime||"—");
+    const confidence=Number.isFinite(Number(p?.oracle?.confidence))?`${Number(p.oracle.confidence)}/100`:"—";
+    const decision=String(p?.status||s.phase||"OFF").replaceAll("_"," ");
+    out.classList.add("strategy-a-auto-readable-404267");
+    out.innerHTML=`<div class="strategy-a-auto-kpi-404267"><span>État</span><b>${strategyAHumanPhaseLabel404267(s.phase)}</b></div><div class="strategy-a-auto-kpi-404267"><span>Décision</span><b>${decision}</b></div><div class="strategy-a-auto-kpi-404267"><span>Oracle</span><b>${regime} · ${confidence}</b></div><div class="strategy-a-auto-kpi-404267"><span>Prochain contrôle</span><b>${next}</b></div><div class="strategy-a-auto-kpi-404267"><span>Cycles</span><b>${Number(s.cycles||0)}</b></div><div class="strategy-a-auto-kpi-404267"><span>NO TRADE</span><b>${Number(s.no_trade||0)}</b></div><div class="strategy-a-auto-kpi-404267"><span>Ouverts</span><b>${Number(s.opened||0)}</b></div><div class="strategy-a-auto-kpi-404267"><span>Clôturés</span><b>${Number(s.closed||0)}</b></div><div class="strategy-a-auto-reason-404267"><span>Pourquoi ?</span><b>${String(s.last_action||"Aucune action enregistrée.")}</b></div>`;
+  }
+  return true;
+}
+try{globalThis.AgentCryptoStrategyAHumanReadability404267=Object.freeze({build:"40.4.267",apply:strategyAApplyHumanReadability404267,presentation_only:true,engines_changed:false,auto_runner_logic_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+
 try{globalThis.AgentCryptoAutoPaperRunner404265=Object.freeze({build:"40.4.265",start:strategyAAutoStart404265,stop:strategyAAutoStop404265,tick:()=>strategyAAutoCycle404265("operator_api"),state:strategyAAutoSnapshot404265,paper_only:true,session_local:true,default_off:true,cadence_ms:300000,min_hold_ms:300000,max_open_positions:1,real_orders:false,kraken_network:false,storage_write:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:true});}catch(_){}
 
 /* 40.4.261 — STRATEGY A TRADE PROPOSAL ENVELOPE FOUNDATION LOCK */
@@ -35845,6 +35940,7 @@ function renderStrategySandboxExtensions404261(){
   if(typeof renderStrategyAPaperExecution404263==="function")renderStrategyAPaperExecution404263();
   if(typeof renderStrategyAReconciliation404264==="function")renderStrategyAReconciliation404264();
   if(typeof renderStrategyAAutoPaperRunner404265==="function")renderStrategyAAutoPaperRunner404265();
+  if(typeof strategyAApplyHumanReadability404267==="function")strategyAApplyHumanReadability404267();
 }
 try{globalThis.AgentCryptoStrategyAProposal404261=Object.freeze({build:"40.4.261",generate:strategyATradeProposal404261,last:()=>STRATEGY_A_LAST_PROPOSAL_404261,paper_proposal_only:true,real_orders:false,kraken_orders:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false});}catch(_){}
 
@@ -53094,7 +53190,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.266";
+const ATLAS_BUILD = "40.4.267";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
