@@ -35746,6 +35746,33 @@ function renderStrategyAPaperExecution404263(){
 }
 try{globalThis.AgentCryptoPaperExecution404263=Object.freeze({build:"40.4.263",execute:strategyAPaperExecute404263,ledger:()=>STRATEGY_A_PAPER_LEDGER_404263.map(row=>({...row})),kraken_network:false,real_orders:false,workspace_mutation:false,storage_write:false});}catch(_){}
 
+/* 40.4.264 — STRATEGY A · PAPER RECONCILIATION AND METRICS FOUNDATION LOCK */
+const STRATEGY_A_CLOSED_TRADES_404264=[];
+function strategyAPaperExitCosts404264(){
+  const sellFee=strategyAReadNumber404261(els?.simSellFeePct?.value,0.25),exitImpact=strategyAReadNumber404261(els?.simExitImpactPct?.value,0.05);
+  return {sell_fee_pct:Number.isFinite(sellFee)?Math.max(0,sellFee):0.25,exit_impact_pct:Number.isFinite(exitImpact)?Math.max(0,exitImpact):0.05,source:"existing Simulation fields or pedagogical fallback"};
+}
+function strategyAMetrics404264(){
+  const rows=STRATEGY_A_CLOSED_TRADES_404264;let cumulative=0,peak=0,maxDrawdown=0,totalFees=0,totalImpact=0,wins=0,losses=0;
+  for(const row of rows){cumulative+=Number(row.net_pnl_eur)||0;peak=Math.max(peak,cumulative);maxDrawdown=Math.max(maxDrawdown,peak-cumulative);totalFees+=Number(row.total_fees_eur)||0;totalImpact+=Number(row.estimated_total_impact_eur)||0;if(row.net_pnl_eur>0)wins++;else if(row.net_pnl_eur<0)losses++;}
+  const n=rows.length,avg=n?cumulative/n:0,avgReturn=n?rows.reduce((a,r)=>a+(Number(r.net_return_pct)||0),0)/n:0;
+  return {schema:"agent_crypto_paper_metrics_v1",build:"40.4.264",sample_size:n,status:n>=30?"SAMPLE_READY_FOR_REVIEW":"INSUFFICIENT_SAMPLE",wins,losses,win_rate_pct:n?wins/n*100:0,cumulative_net_pnl_eur:cumulative,expectancy_eur:avg,avg_net_return_pct:avgReturn,total_fees_eur:totalFees,estimated_total_impact_eur:totalImpact,max_drawdown_eur:maxDrawdown,profitability_claim:false};
+}
+function strategyAReconcile404264(){
+  const open=STRATEGY_A_PAPER_LEDGER_404263.find(row=>row.status==="PAPER_OPEN");if(!open)return {status:"NOTHING_TO_RECONCILE",metrics:strategyAMetrics404264()};
+  const btc=strategyABtcContext404261();if(!btc.available)return {status:"RECONCILIATION_BLOCKED",reason:"Prix BTC actuel indisponible.",metrics:strategyAMetrics404264()};
+  const c=strategyAPaperExitCosts404264(),reference=Number(btc.price_eur),exitFill=reference*(1-c.exit_impact_pct/100),gross=Number(open.quantity_btc)*exitFill,exitFee=gross*c.sell_fee_pct/100,netExit=gross-exitFee,entryCash=Number(open.authorized_notional_eur),netPnl=netExit-entryCash,netReturn=entryCash>0?netPnl/entryCash*100:0;
+  const entryImpactEur=Math.max(0,(Number(open.fill_price_eur)-Number(open.reference_price_eur))*Number(open.quantity_btc));const exitImpactEur=Math.max(0,(reference-exitFill)*Number(open.quantity_btc));
+  const row={schema:"agent_crypto_paper_reconciliation_v1",build:"40.4.264",reconciliation_id:`REC-A-${strategyAHash404261([open.execution_id,reference,STRATEGY_A_CLOSED_TRADES_404264.length].join("|"))}`,execution_id:open.execution_id,closed_at:new Date().toISOString(),workspace:"strategy_a",status:"LOCAL_PAPER_EMULATION_MATCHED",symbol:"BTC",entry_reference_eur:open.reference_price_eur,entry_fill_eur:open.fill_price_eur,exit_reference_eur:reference,exit_fill_eur:exitFill,quantity_btc:open.quantity_btc,entry_cash_eur:entryCash,net_exit_eur:netExit,entry_fee_eur:open.entry_fee_eur,exit_fee_eur:exitFee,total_fees_eur:Number(open.entry_fee_eur)+exitFee,estimated_total_impact_eur:entryImpactEur+exitImpactEur,net_pnl_eur:netPnl,net_return_pct:netReturn,safety:{simulation_only:true,real_order:false,kraken_network:false,workspace_mutation:false,storage_write:false,profitability_claim:false}};
+  open.status="PAPER_CLOSED";open.closed_by=row.reconciliation_id;STRATEGY_A_CLOSED_TRADES_404264.push(row);return {status:"RECONCILED",trade:row,metrics:strategyAMetrics404264()};
+}
+function renderStrategyAReconciliation404264(){
+  const anchor=document.getElementById("strategyAPaperExecution404263");if(!anchor)return;let panel=document.getElementById("strategyAReconciliation404264");
+  if(!panel){panel=document.createElement("section");panel.id="strategyAReconciliation404264";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(190,158,255,.25);border-radius:12px;padding:10px 12px;background:rgba(24,14,40,.42)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>RECONCILIATION + METRICS · STRATÉGIE A</strong><span style="font-size:10px;color:#d7b9ff">PAPER LOCAL · PAS DE PREUVE DE RENTABILITÉ</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAReconcile404264">RÉCONCILIER / CLÔTURER PAPER</button></div><div id="strategyAMetricsSummary404264" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">0 trade clôturé · échantillon insuffisant.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAReconcile404264")?.addEventListener("click",()=>{strategyAReconcile404264();renderStrategySandboxExtensions404261();});}
+  const out=document.getElementById("strategyAMetricsSummary404264");if(!out)return;const m=strategyAMetrics404264();out.textContent=`${m.sample_size} trade(s) · ${m.status} · expectancy ${m.expectancy_eur.toFixed(2)} € · P/L cumulé ${m.cumulative_net_pnl_eur.toFixed(2)} € · frais ${m.total_fees_eur.toFixed(2)} € · max drawdown ${m.max_drawdown_eur.toFixed(2)} € · aucune conclusion de rentabilité.`;out.style.color=m.sample_size>=30?"#d7b9ff":"#ffd27a";
+}
+try{globalThis.AgentCryptoPaperMetrics404264=Object.freeze({build:"40.4.264",reconcile:strategyAReconcile404264,metrics:strategyAMetrics404264,closed:()=>STRATEGY_A_CLOSED_TRADES_404264.map(row=>({...row})),real_orders:false,kraken_network:false,storage_write:false,profitability_claim:false});}catch(_){}
+
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
    The companion localhost adapter exposes an allowlisted read-only surface over port 8791.
@@ -52917,7 +52944,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.263";
+const ATLAS_BUILD = "40.4.264";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
