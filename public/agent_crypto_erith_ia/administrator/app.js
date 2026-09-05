@@ -35669,6 +35669,31 @@ function strategyAAutoStart404265(){
   try{renderStrategySandboxExtensions404261();}catch(_){}
   return strategyAAutoSnapshot404265();
 }
+/* 40.4.271 — STRATEGY A · RE-ENTRY COOLDOWN + FRESH-SIGNAL LOCK */
+/* Session-local anti-overtrading guard for the existing Auto Paper Runner.
+   A closed paper trade now starts a 15-minute re-entry cooldown. After cooldown,
+   a MIXTE signal must be materially fresher than the signal that opened the prior
+   trade: Oracle direction improves by >= +3 points OR BTC 24h improves by >= +0.05
+   percentage point. A canonical HAUSSIER regime may re-enter after cooldown.
+   No Market Core, Oracle model, Risk Governor, Paper pricing, Kraken/network,
+   persistence, wallet or real-order owner is added. */
+const STRATEGY_A_REENTRY_POLICY_404271=Object.freeze({cooldown_ms:900000,min_direction_improvement:3,min_btc24_improvement_pct:0.05,bullish_regime_can_reenter_after_cooldown:true});
+function strategyAReentrySignal404271(proposal){
+  const direction=Number(proposal?.oracle?.direction_score),btc24=Number(proposal?.market?.change_24h_pct),confidence=Number(proposal?.oracle?.confidence);
+  return {proposal_id:String(proposal?.proposal_id||""),captured_at:new Date().toISOString(),regime:String(proposal?.oracle?.regime||"UNKNOWN"),direction_score:Number.isFinite(direction)?direction:null,btc_24h_pct:Number.isFinite(btc24)?btc24:null,oracle_confidence:Number.isFinite(confidence)?confidence:null};
+}
+function strategyAReentryFresh404271(proposal){
+  const s=STRATEGY_A_AUTO_STATE_404265,last=s.last_closed_signal_404271||null,current=strategyAReentrySignal404271(proposal);
+  if(!last)return {eligible:true,reason:"FIRST_ENTRY",current,last:null,direction_improvement:null,btc24_improvement:null};
+  const regime=String(current.regime||"").toUpperCase(),bullish=/HAUSSI/.test(regime)&&!/BAISS/.test(regime);
+  const dirDelta=Number.isFinite(Number(current.direction_score))&&Number.isFinite(Number(last.direction_score))?Number(current.direction_score)-Number(last.direction_score):null;
+  const btcDelta=Number.isFinite(Number(current.btc_24h_pct))&&Number.isFinite(Number(last.btc_24h_pct))?Number(current.btc_24h_pct)-Number(last.btc_24h_pct):null;
+  const directionFresh=Number.isFinite(dirDelta)&&dirDelta>=STRATEGY_A_REENTRY_POLICY_404271.min_direction_improvement;
+  const btcFresh=Number.isFinite(btcDelta)&&btcDelta>=STRATEGY_A_REENTRY_POLICY_404271.min_btc24_improvement_pct;
+  return {eligible:bullish||directionFresh||btcFresh,reason:bullish?"BULLISH_REGIME":directionFresh?"DIRECTION_IMPROVED":btcFresh?"BTC24_IMPROVED":"STALE_MIXED_SIGNAL",current,last,direction_improvement:dirDelta,btc24_improvement:btcDelta,direction_fresh:directionFresh,btc24_fresh:btcFresh,bullish};
+}
+try{globalThis.AgentCryptoStrategyAReentryGuard404271=Object.freeze({build:"40.4.271",policy:STRATEGY_A_REENTRY_POLICY_404271,evaluate:strategyAReentryFresh404271,state:()=>({last_entry_signal:STRATEGY_A_AUTO_STATE_404265.last_entry_signal_404271||null,last_closed_signal:STRATEGY_A_AUTO_STATE_404265.last_closed_signal_404271||null,reentry_waits:Number(STRATEGY_A_AUTO_STATE_404265.reentry_waits_404271||0),cooldown_until:STRATEGY_A_AUTO_STATE_404265.cooldown_until||0}),paper_only:true,session_local:true,auto_runner_logic_changed:true,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+
 function strategyAAutoCycle404265(trigger="timer"){
   const s=STRATEGY_A_AUTO_STATE_404265;if(!s.enabled)return strategyAAutoSnapshot404265();
   s.cycles+=1;s.last_cycle_at=new Date().toISOString();s.next_cycle_at=null;
@@ -35691,7 +35716,7 @@ function strategyAAutoCycle404265(trigger="timer"){
       if(invalidated||ageMs>=s.min_hold_ms){
         const rec=strategyAReconcile404264();
         if(rec?.status==="RECONCILED"){
-          s.closed+=1;s.cooldown_until=Date.now()+s.cadence_ms;s.phase="CLOSED_COOLDOWN";
+          s.closed+=1;s.last_closed_signal_404271=s.last_entry_signal_404271||null;s.last_entry_signal_404271=null;s.cooldown_until=Date.now()+STRATEGY_A_REENTRY_POLICY_404271.cooldown_ms;s.phase="CLOSED_REENTRY_COOLDOWN";
           s.last_action=`Paper clôturé · ${invalidated?"invalidation Strategy A":"horizon 5 min atteint"} · P/L net ${Number(rec?.trade?.net_pnl_eur||0).toFixed(2)} € · échantillon ${Number(rec?.metrics?.sample_size||0)}.`;
         }else{
           s.phase=String(rec?.status||"RECONCILIATION_BLOCKED");s.last_action=String(rec?.reason||"Réconciliation non disponible.");
@@ -35700,9 +35725,13 @@ function strategyAAutoCycle404265(trigger="timer"){
         s.phase="MONITORING_OPEN";s.last_action=`Paper ouvert ${open.execution_id} · surveillance · ${(ageMs/60000).toFixed(1)} / 5.0 min.`;
       }
     }else if(Date.now()<s.cooldown_until){
-      const left=Math.max(0,s.cooldown_until-Date.now());s.phase="COOLDOWN";s.last_action=`Cooldown après clôture · ${(left/60000).toFixed(1)} min restantes.`;
+      const left=Math.max(0,s.cooldown_until-Date.now());s.phase="REENTRY_COOLDOWN";s.last_action=`Pause anti-surtrading après clôture · ${(left/60000).toFixed(1)} min restantes sur 15 min.`;
     }else if(proposal?.status!=="PROPOSED"){
       s.no_trade+=1;s.phase=proposal?.status==="REJECTED"?"SAFETY_REJECT":"NO_TRADE";s.last_action=`${proposal?.status||"NO_TRADE"} · ${proposal?.reason||"aucune raison disponible"}`;
+    }else if(!strategyAReentryFresh404271(proposal).eligible){
+      const fresh=strategyAReentryFresh404271(proposal);s.reentry_waits_404271=Number(s.reentry_waits_404271||0)+1;s.phase="STALE_SIGNAL_WAIT";
+      const d=Number.isFinite(fresh.direction_improvement)?`${fresh.direction_improvement>=0?"+":""}${fresh.direction_improvement.toFixed(1)}`:"—",b=Number.isFinite(fresh.btc24_improvement)?`${fresh.btc24_improvement>=0?"+":""}${fresh.btc24_improvement.toFixed(2)}`:"—";
+      s.last_action=`Réentrée bloquée : signal MIXTE pas assez neuf · Δ direction ${d} pt (seuil +${STRATEGY_A_REENTRY_POLICY_404271.min_direction_improvement}) · Δ BTC24 ${b} pt (seuil +${STRATEGY_A_REENTRY_POLICY_404271.min_btc24_improvement_pct.toFixed(2)}).`;
     }else if(proposal?.proposal_id&&proposal.proposal_id===s.last_executed_proposal_id){
       s.phase="DUPLICATE_WAIT";s.last_action=`Proposition ${proposal.proposal_id} déjà exécutée dans cette session · attente du prochain état.`;
     }else{
@@ -35713,7 +35742,7 @@ function strategyAAutoCycle404265(trigger="timer"){
       }else{
         const fill=strategyAPaperExecute404263(risk);
         if(fill?.status==="PAPER_OPEN"){
-          s.opened+=1;s.last_executed_proposal_id=proposal.proposal_id;s.phase="PAPER_OPEN";
+          s.opened+=1;s.last_executed_proposal_id=proposal.proposal_id;s.last_entry_signal_404271=strategyAReentrySignal404271(proposal);s.phase="PAPER_OPEN";
           s.last_action=`${risk.decision} ${Number(risk.authorized_notional_eur||0).toFixed(2)} € · ${fill.execution_id} ouvert · zéro réseau Kraken · surveillance 5 min.`;
         }else{
           s.phase="EXECUTION_REJECT";s.last_action=String(fill?.reason||"Paper Execution Envelope refusé.");
@@ -36002,7 +36031,8 @@ function strategyAVisualPhase404269(s,p,open){
   const phase=String(s?.phase||"");
   if(phase==="NO_TRADE")return {label:"ATTENTE MARCHÉ",reason:String(p?.reason||s.last_action||"Aucune condition d'entrée valide pour le moment.")};
   if(phase==="SAFETY_REJECT"||phase==="RISK_REJECT")return {label:"REFUS SÉCURITÉ",reason:String(s.last_action||"Le gouverneur de risque a refusé la proposition.")};
-  if(phase.includes("COOLDOWN"))return {label:"PAUSE",reason:String(s.last_action||"Pause de sécurité après trade Paper.")};
+  if(phase.includes("COOLDOWN"))return {label:"PAUSE RÉENTRÉE",reason:String(s.last_action||"Pause anti-surtrading après trade Paper.")};
+  if(phase==="STALE_SIGNAL_WAIT")return {label:"ATTENTE NOUVEAU SIGNAL",reason:String(s.last_action||"Le signal doit évoluer avant une nouvelle entrée Paper.")};
   if(phase.includes("ERROR")||phase.includes("STOP"))return {label:"ARRÊT SÉCURITÉ",reason:String(s.last_action||"Le pilote s'est arrêté par sécurité.")};
   return {label:"AUTO A ACTIF",reason:String(s.last_action||"Cycle automatique actif.")};
 }
@@ -53430,7 +53460,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.270";
+const ATLAS_BUILD = "40.4.271";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
