@@ -4044,6 +4044,27 @@
       "classic_web_changed": false,
       "market_core_changed": false,
       "protected_market_core": "38.15.11"
+    },
+    "version_truth_same_build_repair_404258": {
+      "build": "40.4.258",
+      "same_build_repair": true,
+      "version_bump": false,
+      "scope": "publication/version truth only",
+      "root_cause": "40.4.258 was published with stale 40.4.257 payload hashes and stale publication cache tokens, so a loaded 40.4.257 runtime could see remote 40.4.258 yet reject its payload and remain in propagation",
+      "manifest_payload_hashes_synchronized": true,
+      "version_truth_cache_token_synchronized": true,
+      "system_transport_cache_token_synchronized": true,
+      "system_source_cache_token_synchronized": true,
+      "business_logic_changed": false,
+      "learning_logic_changed": false,
+      "simulation_logic_changed": false,
+      "atlas_changed": false,
+      "oracle_changed": false,
+      "graph_changed": false,
+      "technical_reading_changed": false,
+      "market_core_changed": false,
+      "protected_market_core": "38.15.11",
+      "repaired_at": "2026-09-05T17:43:21Z"
     }
   },
   "active_runtime_files": [
@@ -4102,10 +4123,10 @@
     "files": 7,
     "self_hash_policy": "manifest self hash omitted; version.json records administrator-version.json candidate hash",
     "publication_identity": {
-      "build": "40.4.160",
-      "asset_token": "market-core-v2.0-alpha-build-40.4.160",
-      "status": "atlas_current_truth_auto_reader_presentation_end_thread_checkpoint",
-      "app_sha256": "6db94100f902be3e9140cee1b27f63c7f85c830e2392db8c9bf0498b761c611e",
+      "build": "40.4.258",
+      "asset_token": "market-core-v2.0-alpha-build-40.4.258",
+      "status": "learning_module03_school_preset_action_owner_lock_404258",
+      "app_sha256": "d20e21a3cf39815de2f95fc3ecc1112af9ff55821f3ddf7ce4537d807f0495a3",
       "administrator_version_hash_policy": "self hash intentionally omitted; payload hashes are canonical verification authority"
     },
     "command_center_portal_40321": {
