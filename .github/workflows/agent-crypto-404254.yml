@@ -22,7 +22,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json
+          import json, re
 
           base = Path('public/agent_crypto_erith_ia/administrator')
           version = json.loads((base/'version.json').read_text(encoding='utf-8'))
@@ -54,11 +54,10 @@ jobs:
 
           system_path = base/'js/views/system-presentation.js'
           system = system_path.read_text(encoding='utf-8')
-          old_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.253";'
           new_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.254";'
-          assert old_source in system
-          assert new_source not in system
-          system_path.write_text(system.replace(old_source, new_source, 1), encoding='utf-8')
+          system, count = re.subn(r'const SOURCE="\./views/system\.html\?v=administrator-build-[^"]+";', new_source, system, count=1)
+          assert count == 1, count
+          system_path.write_text(system, encoding='utf-8')
 
           contract = {
             'build': '40.4.254',
