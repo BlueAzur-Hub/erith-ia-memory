@@ -1352,6 +1352,8 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r
   max-width:calc(100% - 20px)!important;
   padding:4px 7px!important;
   border-radius:999px!important;
+  /* 40.4.253R1: neutralize the obsolete 40.2.84 vertical drift after restoring the Classic 136px host. */
+  transform:none!important;
 }
 
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after,
