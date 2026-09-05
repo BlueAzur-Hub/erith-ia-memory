@@ -1352,8 +1352,11 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r
   max-width:calc(100% - 20px)!important;
   padding:4px 7px!important;
   border-radius:999px!important;
-  /* 40.4.253R1: neutralize the obsolete 40.2.84 vertical drift after restoring the Classic 136px host. */
-  transform:none!important;
+  /* 40.4.253R2 — historical 40.2.83 contract: the Agent-Crypto · Aerith-10 cartouche
+     must sit in the breathing zone immediately above ACTIF / PRIX / DECISION / 24H.
+     The current 136px Classic host already absorbs the later geometry shift, so restore
+     only the historical minimum descent (52px), without moving the four cards. */
+  transform:translateY(52px)!important;
 }
 
 body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after,
