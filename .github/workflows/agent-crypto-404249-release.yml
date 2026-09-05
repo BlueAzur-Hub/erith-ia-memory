@@ -1,0 +1,212 @@
+name: Agent-Crypto 40.4.249 Release
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-404249-release.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-404249-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Patch 40.4.249
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib, datetime
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          old = '40.4.248'
+          new = '40.4.249'
+          release = 'PARALLEL MARKETS · BACKGROUND PASS-THROUGH'
+          status = 'parallel_background_pass_through_404249'
+          now = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+
+          css_path = root / 'parallel-markets.css'
+          css = css_path.read_text(encoding='utf-8')
+          old_bg = 'background:linear-gradient(180deg,rgba(2,8,17,.20),rgba(2,8,17,.34)),url("./assets/visual/admin-chart-office.png") center/cover no-repeat!important;'
+          new_bg = '/* 40.4.249 — parallel background pass-through: no second office image over the shared market backdrop. */\n    background:linear-gradient(180deg,rgba(2,8,17,.18),rgba(2,8,17,.28))!important;'
+          if old_bg not in css:
+              raise SystemExit('STOP: expected 40.4.237 parallel office background owner not found')
+          css = css.replace(old_bg, new_bg, 1)
+          css_path.write_text(css, encoding='utf-8')
+
+          for rel in ['index.html','app.js','js/app.js','js/views/system-presentation.js']:
+              p = root / rel
+              text = p.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'STOP: {rel} has no {old} runtime identity')
+              p.write_text(text.replace(old, new), encoding='utf-8')
+
+          p = root / 'build.json'
+          d = json.loads(p.read_text(encoding='utf-8'))
+          if d.get('build') != old:
+              raise SystemExit(f'STOP: build.json parent is {d.get("build")}, expected {old}')
+          d.update({'build':new,'release':release,'published':True,'status':status})
+          p.write_text(json.dumps(d, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+
+          key = 'parallel_background_pass_through_404249'
+          contract = {
+              'build': new,
+              'parent': old,
+              'scope': 'parallel_background_pass_through',
+              'visual_redesign': False,
+              'parallel_only_secondary_image_removed': True,
+              'parallel_only_secondary_image_path': './assets/visual/admin-chart-office.png',
+              'parallel_shell_pass_through_restored': True,
+              'applies_to_domains': ['indices','energy','cross'],
+              'metals_runtime_changed': False,
+              'crypto_runtime_changed': False,
+              'technical_reading_changed': False,
+              'market_graph_geometry_changed': False,
+              'data_changed': False,
+              'sources_changed': False,
+              'histories_changed': False,
+              'math_core_changed': False,
+              'atlas_changed': False,
+              'window_manager_changed': False,
+              'bridge_changed': False,
+              'market_core_changed': False,
+              'protected_market_core': '38.15.11',
+              'firefox_operator_validation_required': True
+          }
+          lineage = ' → 40.4.249 retires the parallel-only admin-chart-office background image so Indices, Énergie and Cross reuse the shared market backdrop without adding a second cockpit image; graph geometry, data, Technical Reading and Market Core remain unchanged'
+          note = '40.4.249 — Parallel background pass-through: remove the extra parallel-only office background image from Indices / Énergie / Cross so switching from Métaux no longer adds a second cockpit backdrop; preserve graph geometry, data, sources, histories, Technical Reading and Market Core 38.15.11.'
+
+          for name in ['version.json','administrator-version.json']:
+              p = root / name
+              d = json.loads(p.read_text(encoding='utf-8'))
+              if d.get('build') != old:
+                  raise SystemExit(f'STOP: {name} parent is {d.get("build")}, expected {old}')
+              d['build'] = new
+              d['release'] = release
+              d['status'] = status
+              d['prepared_at'] = now
+              d['published_at'] = now
+              d['asset_token'] = f'market-core-v2.0-alpha-build-{new}'
+              d['parent_build'] = old
+              if name == 'administrator-version.json':
+                  d['global_versioning'] = new
+              d.setdefault('contracts', {})[key] = contract
+              if isinstance(d.get('lineage'), str) and new not in d['lineage']:
+                  d['lineage'] += lineage
+              if isinstance(d.get('release_notes'), list):
+                  d['release_notes'].insert(0, note)
+              if isinstance(d.get('validation'), dict):
+                  d['validation']['status'] = 'candidate_parallel_background_pass_through_firefox_validation_required'
+                  d['validation']['runtime_user_test_required'] = True
+              p.write_text(json.dumps(d, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+
+          vp = root / 'version.json'
+          v = json.loads(vp.read_text(encoding='utf-8'))
+          for rel in ['parallel-markets.css','index.html','app.js','js/app.js','js/views/system-presentation.js','build.json','administrator-version.json']:
+              if rel in v.get('files', {}):
+                  v['files'][rel] = hashlib.sha256((root/rel).read_bytes()).hexdigest()
+          vp.write_text(json.dumps(v, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          PY
+
+      - name: Static checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          ! grep -q 'admin-chart-office.png' "$ROOT/parallel-markets.css"
+          grep -q '40.4.249' "$ROOT/index.html"
+          grep -q 'const ATLAS_BUILD = "40.4.249"' "$ROOT/app.js"
+          grep -q 'const ADMIN_BUILD = "40.4.249"' "$ROOT/js/app.js"
+          node --check "$ROOT/app.js"
+          node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/views/system-presentation.js"
+          python - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          for f in ['build.json','version.json','administrator-version.json']:
+              json.loads((root/f).read_text(encoding='utf-8'))
+          v=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.249'
+          assert v['parent_build']=='40.4.248'
+          assert v['engine']['reference_build']=='38.15.11'
+          assert v['engine']['status']=='protected'
+          assert v['contracts']['parallel_background_pass_through_404249']['technical_reading_changed'] is False
+          for rel in ['parallel-markets.css','index.html','app.js','js/app.js','js/views/system-presentation.js','build.json','administrator-version.json']:
+              if rel in v.get('files',{}):
+                  assert v['files'][rel] == hashlib.sha256((root/rel).read_bytes()).hexdigest(), rel
+          print('40.4.249 STATIC CHECKS PASS')
+          PY
+
+      - name: Commit release
+        shell: bash
+        run: |
+          git config user.name 'Aether Release Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add \
+            public/agent_crypto_erith_ia/administrator/parallel-markets.css \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/administrator/version.json \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git commit -m 'agent-crypto: build 40.4.249 remove parallel secondary background'
+          git push origin main
+          git rev-parse HEAD > /tmp/release_sha.txt
+
+      - name: Build changed-files ZIP
+        shell: bash
+        run: |
+          mkdir -p /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/js/views
+          mkdir -p /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/js
+          cp public/agent_crypto_erith_ia/administrator/parallel-markets.css /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/index.html /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/app.js /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/build.json /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/version.json /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/administrator-version.json /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/
+          cp public/agent_crypto_erith_ia/administrator/js/app.js /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/js/
+          cp public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js /tmp/agent-crypto-404249/public/agent_crypto_erith_ia/administrator/js/views/
+          cat > /tmp/agent-crypto-404249/FILES_CHANGED_40.4.249.md <<'EOF'
+          # Agent-Crypto 40.4.249 — Parallel background pass-through
+          - Removes the parallel-only `admin-chart-office.png` background layer from Indices / Energy / Cross.
+          - Keeps shared market backdrop, graph geometry, controls, data, histories and rail semantics.
+          - Technical Reading 40.4.245 remains untouched.
+          - Market Core 38.15.11 remains protected.
+          EOF
+          cd /tmp/agent-crypto-404249
+          zip -9 -r /tmp/AGENT_CRYPTO_BUILD_40_4_249_PARALLEL_BACKGROUND_PASS_THROUGH_CHANGED_FILES.zip . >/dev/null
+          sha256sum /tmp/AGENT_CRYPTO_BUILD_40_4_249_PARALLEL_BACKGROUND_PASS_THROUGH_CHANGED_FILES.zip
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_249_PARALLEL_BACKGROUND_PASS_THROUGH_CHANGED_FILES
+          path: /tmp/AGENT_CRYPTO_BUILD_40_4_249_PARALLEL_BACKGROUND_PASS_THROUGH_CHANGED_FILES.zip
+          compression-level: 0
+          retention-days: 90
+
+      - name: Cleanup temporary release workflow
+        if: always()
+        shell: bash
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+          git config user.name 'Aether Release Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git rm .github/workflows/agent-crypto-404249-release.yml
+          git commit -m 'agent-crypto: cleanup 40.4.249 temporary release tool'
+          git push origin main
