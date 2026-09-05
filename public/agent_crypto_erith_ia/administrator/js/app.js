@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.260";
-  const ADMIN_RELEASE = "ORACLE MULTI-OPEN HEAVY SUBSECTIONS LOCK";
+  const ADMIN_BUILD = "40.4.261";
+  const ADMIN_RELEASE = "STRATEGY A · TRADE PROPOSAL ENVELOPE FOUNDATION LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

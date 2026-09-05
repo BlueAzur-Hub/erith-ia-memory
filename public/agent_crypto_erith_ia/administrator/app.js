@@ -35626,6 +35626,78 @@ function renderSimulationAcceptance404153(){
   }
 }
 
+/* 40.4.261 — STRATEGY A TRADE PROPOSAL ENVELOPE FOUNDATION LOCK */
+/* One responsibility: expose a deterministic BTC candidate for the isolated Strategy A
+   sandbox. Proposal only: no sizing authority, order, storage write or network owner. */
+let STRATEGY_A_LAST_PROPOSAL_404261=null;
+function strategyAReadNumber404261(...values){
+  for(const value of values){const n=Number(value);if(Number.isFinite(n))return n;}
+  return null;
+}
+function strategyAHash404261(value){
+  let h=2166136261;const s=String(value??"");
+  for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);
+  return (h>>>0).toString(16).padStart(8,"0");
+}
+function strategyABtcContext404261(){
+  let coin=null,quote=null;
+  try{coin=findCoinByQuery?.("BTC")||state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()==="BTC")||null;}catch(_){}
+  try{if(coin)quote=atlasCurrentQuoteForCoin?.(coin)||null;}catch(_){}
+  const price=strategyAReadNumber404261(quote?.price,coin?.price,coin?.current_price);
+  const change24h=strategyAReadNumber404261(coin?.price_change_percentage_24h,coin?.change_24h,coin?.change24h,coin?.change24hPct,coin?.changePct24h);
+  return {asset_id:String(coin?.id||"bitcoin"),symbol:"BTC",price_eur:price>0?price:null,change_24h_pct:change24h,quote_source:String(quote?.source||coin?.source||"UNKNOWN").trim()||"UNKNOWN",available:!!coin&&price>0};
+}
+function strategyAOracleContext404261(){
+  const root=document.getElementById("atlasOracleV0");
+  const text=String(root?.textContent||"").replace(/\s+/g," ").trim();
+  const upper=text.toUpperCase();
+  const regimeMatch=upper.match(/RÉGIME\s+(TENDANCE HAUSSIÈRE|TENDANCE BAISSIÈRE|CONTRADICTOIRE|HAUSSIER|BAISSIER|MIXTE)/);
+  const confMatch=upper.match(/(?:CONF\.?|CONFIANCE(?: DONNÉES)?)\s*(\d{1,3})\/100/);
+  const active=/ORACLE\s*ACTIVE\s*·?\s*5\/5/.test(upper)||/ACTIVE\s*·?\s*5\/5/.test(upper);
+  return {available:!!root,active,regime:regimeMatch?.[1]||"UNKNOWN",confidence:confMatch?Number(confMatch[1]):null,informational_only:true};
+}
+function strategyALocalContext404261(){
+  let comparison=null,integration=null,acceptance=null;
+  try{comparison=paperWorkspaceComparisonPayload404143();}catch(_){}
+  try{integration=paperWorkspaceIntegrationTruth404151("strategy_a");}catch(_){}
+  try{acceptance=simulationAcceptance404153();}catch(_){}
+  const rows=Array.isArray(comparison?.rows)?comparison.rows:[];
+  const row=rows.find(item=>[item?.workspace_key,item?.key,item?.workspace].some(v=>String(v||"")==="strategy_a"))||rows.find(item=>/STRAT[ÉE]GIE A/i.test(String(item?.label||item?.name||"")))||null;
+  const cash=strategyAReadNumber404261(row?.cash_eur,row?.cash,row?.portfolio?.cash,integration?.local?.cash);
+  const exposure=strategyAReadNumber404261(row?.exposure_eur,row?.invested_eur,row?.positions_value_eur,row?.position_value_eur,row?.portfolio?.positionsValue,integration?.local?.position_value_eur);
+  return {workspace:"strategy_a",kraken_workspace:"erith-strategy-a",active_workspace:String(typeof PAPER_WORKSPACE_404142!=="undefined"?PAPER_WORKSPACE_404142:""),cash_eur:cash,exposure_before_eur:exposure,static_safety_ok:acceptance?.ok===true||acceptance?.static_ok===true,kraken_mapping_state:String(acceptance?.runtime_kraken_mapping||"UNTESTED"),integration_available:!!integration};
+}
+function strategyATradeProposal404261(){
+  const btc=strategyABtcContext404261(),oracle=strategyAOracleContext404261(),local=strategyALocalContext404261();
+  const bullishRegime=/HAUSSI/.test(oracle.regime)&&!/BAISS/.test(oracle.regime);const reasons=[];let status="PROPOSED";
+  if(local.active_workspace!=="strategy_a"){status="NO_TRADE";reasons.push("Activer STRATÉGIE A avant de générer une proposition.");}
+  if(!local.static_safety_ok){status="REJECTED";reasons.push("Audit Simulation paper-only non validé.");}
+  if(!btc.available){status="NO_TRADE";reasons.push("Prix BTC critique indisponible.");}
+  if(!oracle.available||!oracle.active){status="NO_TRADE";reasons.push("Oracle indisponible ou inactif.");}
+  if(!bullishRegime){status="NO_TRADE";reasons.push(`Régime Oracle non haussier (${oracle.regime}).`);}
+  if(!(Number.isFinite(oracle.confidence)&&oracle.confidence>=55)){status="NO_TRADE";reasons.push("Confiance Oracle absente ou inférieure à 55/100.");}
+  if(!(Number.isFinite(btc.change_24h_pct)&&btc.change_24h_pct>0)){status="NO_TRADE";reasons.push("Variation BTC 24 h absente ou non positive.");}
+  if(status==="PROPOSED")reasons.push("Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.");
+  const fingerprint=[btc.price_eur??"na",btc.change_24h_pct??"na",oracle.regime,oracle.confidence??"na",local.cash_eur??"na",local.exposure_before_eur??"na",status].join("|");
+  return {schema:"agent_crypto_trade_proposal_v1",build:"40.4.261",proposal_id:`STRAT-A-BTC-${strategyAHash404261(fingerprint)}`,decision_fingerprint:fingerprint,generated_at:new Date().toISOString(),strategy:"STRATEGY_A_V1",strategy_label:"BTC CONTINUATION BASELINE",workspace:"strategy_a",kraken_workspace:"erith-strategy-a",mode:"paper_proposal_only",asset_id:btc.asset_id,symbol:"BTC",status,direction:status==="PROPOSED"?"LONG":"NO_TRADE",horizon:"5m",market:btc,oracle,atlas:{context:"READ_ONLY_EXISTING_STATE",pipeline_mutation:false},data_quality:{critical_price_available:btc.available,simulation_static_safety_ok:local.static_safety_ok,kraken_mapping_state:local.kraken_mapping_state},entry_condition:"BTC 24h > 0 + Oracle actif + régime haussier + confiance ≥ 55/100",invalidation_condition:"Donnée critique absente/dégradée, régime non haussier, Oracle inactif ou confiance < 55/100",requested_notional_eur:null,authorized_notional_eur:null,exposure_before_eur:local.exposure_before_eur,exposure_after_eur:null,theoretical_stop:null,stop_state:"REQUIRES_RISK_GOVERNOR",position_sizing_owner:"RISK_GOVERNOR_NOT_IMPLEMENTED",cost_model:{state:"UNKNOWN",source:"not_bound_in_40.4.261",execution_allowed:false},reason:reasons.join(" "),safety:{simulation_only:true,proposal_only:true,real_order:false,kraken_order:false,credentials:false,wallet:false,withdrawal:false,storage_write:false,final_authorization:false}};
+}
+function renderStrategyATradeProposal404261(){
+  const anchor=document.getElementById("simulationReadiness404152");if(!anchor)return;
+  let panel=document.getElementById("strategyATradeProposal404261");
+  if(!panel){panel=document.createElement("section");panel.id="strategyATradeProposal404261";panel.setAttribute("data-strategy-a-proposal-build","40.4.261");panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(98,236,255,.30);border-radius:12px;padding:10px 12px;background:rgba(4,22,32,.52)";panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><strong style="letter-spacing:.08em">STRATÉGIE A · TRADE PROPOSAL V1</strong><span style="font-size:10px;color:#7ef4bc">PAPER PROPOSAL ONLY · ZÉRO ORDRE</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAGenerate404261">GÉNÉRER PROPOSITION A</button></div><div id="strategyASummary404261" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">Aucune proposition générée · BTC uniquement · Risk Governor non implémenté.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAGenerate404261")?.addEventListener("click",()=>{STRATEGY_A_LAST_PROPOSAL_404261=strategyATradeProposal404261();renderStrategySandboxExtensions404261();});}
+  const summary=document.getElementById("strategyASummary404261");if(!summary)return;const p=STRATEGY_A_LAST_PROPOSAL_404261;
+  if(!p){summary.textContent="Aucune proposition générée · BTC uniquement · Risk Governor non implémenté.";return;}
+  const price=Number.isFinite(p.market?.price_eur)?fmtEUR.format(p.market.price_eur):"prix inconnu",conf=Number.isFinite(p.oracle?.confidence)?`${p.oracle.confidence}/100`:"—";
+  summary.textContent=`${p.status} · ${p.proposal_id} · BTC ${price} · Oracle ${p.oracle?.regime||"UNKNOWN"} · conf. ${conf} · ${p.reason}`;summary.style.color=p.status==="PROPOSED"?"#7ef4bc":(p.status==="REJECTED"?"#ff9f9f":"#ffd27a");
+}
+function renderStrategySandboxExtensions404261(){
+  renderStrategyATradeProposal404261();
+  if(typeof renderStrategyARiskGovernor404262==="function")renderStrategyARiskGovernor404262();
+  if(typeof renderStrategyAPaperExecution404263==="function")renderStrategyAPaperExecution404263();
+  if(typeof renderStrategyAReconciliation404264==="function")renderStrategyAReconciliation404264();
+}
+try{globalThis.AgentCryptoStrategyAProposal404261=Object.freeze({build:"40.4.261",generate:strategyATradeProposal404261,last:()=>STRATEGY_A_LAST_PROPOSAL_404261,paper_proposal_only:true,real_orders:false,kraken_orders:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false});}catch(_){}
+
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
    The companion localhost adapter exposes an allowlisted read-only surface over port 8791.
@@ -36109,6 +36181,7 @@ function renderSimulation() {
   renderKrakenCliLab404144();
   renderSimulationReadiness404152();
   renderSimulationAcceptance404153();
+  renderStrategySandboxExtensions404261();
   if (els.simProfileTitle) els.simProfileTitle.textContent = `Profil actif : ${SIM_PROFILE.label} · ${paperWorkspaceMeta404142().label}`;
   if (els.simProfileBadge) els.simProfileBadge.textContent = `Profil ${fmtEUR.format(SIM_PROFILE.startCash)}`;
   if (els.simProfileCapital) els.simProfileCapital.textContent = `${fmtEUR.format(SIM_PROFILE.startCash)} virtuels`;
@@ -52796,7 +52869,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.260";
+const ATLAS_BUILD = "40.4.261";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
