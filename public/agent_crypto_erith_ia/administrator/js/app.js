@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.265";
-  const ADMIN_RELEASE = "STRATEGY A · AUTO PAPER RUNNER V1 SESSION-LOCAL LOCK";
+  const ADMIN_BUILD = "40.4.266";
+  const ADMIN_RELEASE = "STRATEGY A · SIGNAL INPUT CONVERGENCE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

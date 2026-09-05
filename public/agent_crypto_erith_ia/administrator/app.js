@@ -35723,11 +35723,11 @@ function strategyAAutoCycle404265(trigger="timer"){
   }catch(error){
     s.enabled=false;s.phase="ERROR_STOP";s.last_action=`STOP erreur Auto Paper : ${String(error?.message||error)}`;
   }finally{
-    try{renderStrategySandboxExtensions404261();}catch(_){}
     if(s.enabled){
       const cooldownDelay=s.cooldown_until>Date.now()?Math.min(s.cadence_ms,Math.max(1000,s.cooldown_until-Date.now())):s.cadence_ms;
       strategyAAutoSchedule404265(cooldownDelay);
     }else{s.next_cycle_at=null;}
+    try{renderStrategySandboxExtensions404261();}catch(_){}
   }
   return strategyAAutoSnapshot404265();
 }
@@ -35763,23 +35763,48 @@ function strategyAHash404261(value){
   for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);
   return (h>>>0).toString(16).padStart(8,"0");
 }
+/* 40.4.266 — STRATEGY A · SIGNAL INPUT CONVERGENCE LOCK */
+/* Strategy A now reads the same canonical owners already used by the live UI:
+   BTC 24h from atlasCurrentQuoteForCoin().change24h first, then stored coin fallbacks;
+   Oracle from atlasOracleBuildModel(BTC), with the resident collapsed preview only as
+   a presentation fallback. No Oracle model, Market Core, fetch, WebSocket or order owner changes. */
 function strategyABtcContext404261(){
   let coin=null,quote=null;
   try{coin=findCoinByQuery?.("BTC")||state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()==="BTC")||null;}catch(_){}
   try{if(coin)quote=atlasCurrentQuoteForCoin?.(coin)||null;}catch(_){}
   const price=strategyAReadNumber404261(quote?.price,coin?.price,coin?.current_price);
-  const change24h=strategyAReadNumber404261(coin?.price_change_percentage_24h,coin?.change_24h,coin?.change24h,coin?.change24hPct,coin?.changePct24h);
-  return {asset_id:String(coin?.id||"bitcoin"),symbol:"BTC",price_eur:price>0?price:null,change_24h_pct:change24h,quote_source:String(quote?.source||coin?.source||"UNKNOWN").trim()||"UNKNOWN",available:!!coin&&price>0};
+  const change24h=strategyAReadNumber404261(
+    quote?.change24h,quote?.change_24h,quote?.change24hPct,quote?.changePct24h,
+    coin?.change24h,coin?.price_change_percentage_24h,coin?.change_24h,coin?.change24hPct,coin?.changePct24h
+  );
+  const live24=Number.isFinite(Number(quote?.change24h));
+  return {asset_id:String(coin?.id||"bitcoin"),symbol:"BTC",price_eur:price>0?price:null,change_24h_pct:change24h,quote_source:String(quote?.source||coin?.source||"UNKNOWN").trim()||"UNKNOWN",change_24h_owner:live24?"atlasCurrentQuoteForCoin.change24h":"coin_state_fallback",available:!!coin&&price>0};
 }
 function strategyAOracleContext404261(){
-  const root=document.getElementById("atlasOracleV0");
-  const text=String(root?.textContent||"").replace(/\s+/g," ").trim();
-  const upper=text.toUpperCase();
-  const regimeMatch=upper.match(/RÉGIME\s+(TENDANCE HAUSSIÈRE|TENDANCE BAISSIÈRE|CONTRADICTOIRE|HAUSSIER|BAISSIER|MIXTE)/);
-  const confMatch=upper.match(/(?:CONF\.?|CONFIANCE(?: DONNÉES)?)\s*(\d{1,3})\/100/);
-  const active=/ORACLE\s*ACTIVE\s*·?\s*5\/5/.test(upper)||/ACTIVE\s*·?\s*5\/5/.test(upper);
-  return {available:!!root,active,regime:regimeMatch?.[1]||"UNKNOWN",confidence:confMatch?Number(confMatch[1]):null,informational_only:true};
+  let coin=null,model=null;
+  try{coin=findCoinByQuery?.("BTC")||state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()==="BTC")||null;}catch(_){}
+  try{if(coin&&typeof atlasOracleBuildModel==="function")model=atlasOracleBuildModel(coin)||null;}catch(_){}
+  const rawBias=String(model?.bias||"").trim().toUpperCase();
+  const modelRegime=/HAUSSI/.test(rawBias)?"TENDANCE HAUSSIÈRE":/BAISS/.test(rawBias)?"TENDANCE BAISSIÈRE":/MIXTE|CONTRADICT/.test(rawBias)?"MIXTE":"UNKNOWN";
+  const modelConfidence=strategyAReadNumber404261(model?.dataConfidence);
+  const modelReady=!!coin&&!!model&&String(model?.status||"ready").toLowerCase()!=="waiting"&&modelRegime!=="UNKNOWN"&&Number.isFinite(modelConfidence);
+  if(modelReady){
+    return {available:true,active:true,regime:modelRegime,confidence:modelConfidence,informational_only:true,source:"atlasOracleBuildModel",asset_id:String(coin?.id||"bitcoin"),h24:strategyAReadNumber404261(model?.h24),direction_score:strategyAReadNumber404261(model?.directionScore)};
+  }
+
+  const preview=document.getElementById("atlasOracleCollapsedPreview40296");
+  const biasText=String(document.getElementById("atlasOracleCollapsedBias40296")?.textContent||preview?.dataset?.bias||"").replace(/\s+/g," ").trim().toUpperCase();
+  const previewBias=String(preview?.dataset?.bias||biasText).toUpperCase();
+  const regime=/HAUSSI/.test(previewBias)?"TENDANCE HAUSSIÈRE":/BAISS/.test(previewBias)?"TENDANCE BAISSIÈRE":/MIXTE|CONTRADICT/.test(previewBias)?"MIXTE":"UNKNOWN";
+  const confText=String(document.getElementById("atlasOracleCollapsedConfidence40296")?.textContent||"").replace(/\s+/g," ");
+  const confMatch=confText.match(/(\d{1,3})\s*\/\s*100/);
+  const confidence=confMatch?Number(confMatch[1]):null;
+  const available=!!preview;
+  const active=available&&regime!=="UNKNOWN"&&Number.isFinite(confidence);
+  return {available,active,regime,confidence,informational_only:true,source:"oracle_collapsed_preview_40296",asset_id:String(coin?.id||"bitcoin"),h24:null,direction_score:null};
 }
+try{globalThis.AgentCryptoStrategyASignalInput404266=Object.freeze({build:"40.4.266",btc:strategyABtcContext404261,oracle:strategyAOracleContext404261,market_owner:"atlasCurrentQuoteForCoin.change24h",oracle_owner:"atlasOracleBuildModel",oracle_presentation_fallback:"atlasOracleCollapsedPreview40296",market_core_changed:false,oracle_engine_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+
 function strategyALocalContext404261(){
   let comparison=null,integration=null,acceptance=null;
   try{comparison=paperWorkspaceComparisonPayload404143();}catch(_){}
@@ -53069,7 +53094,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.265";
+const ATLAS_BUILD = "40.4.266";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
