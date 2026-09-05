@@ -19,8 +19,40 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Prepare 40.4.257 release driver fixup
+        run: |
+          cp .github/scripts/agent_crypto_404257_release.py /tmp/agent_crypto_404257_release.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/agent_crypto_404257_release.py')
+          s=p.read_text(encoding='utf-8')
+          needle="    index_path.write_text(index, encoding='utf-8')\n\n    contract = {"
+          inject="""    index_path.write_text(index, encoding='utf-8')
+
+    system_path = BASE/'js/views/system-presentation.js'
+    system = system_path.read_text(encoding='utf-8')
+    system = replace_once(
+        system,
+        'const SOURCE=\"./views/system.html?v=administrator-build-40.4.256\";',
+        'const SOURCE=\"./views/system.html?v=administrator-build-40.4.257\";',
+        'System source cache identity'
+    )
+    system_path.write_text(system, encoding='utf-8')
+
+    contract = {"""
+          if needle not in s:
+              raise SystemExit('release fixup injection point missing')
+          s=s.replace(needle,inject,1)
+          scope_old="        'public/agent_crypto_erith_ia/administrator/version.json',\n    }"
+          scope_new="        'public/agent_crypto_erith_ia/administrator/version.json',\n        'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',\n    }"
+          if scope_old not in s:
+              raise SystemExit('release scope injection point missing')
+          s=s.replace(scope_old,scope_new,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+
       - name: Patch and validate 40.4.257
-        run: python .github/scripts/agent_crypto_404257_release.py
+        run: python /tmp/agent_crypto_404257_release.py
 
       - name: Commit release
         run: |
@@ -32,6 +64,7 @@ jobs:
             public/agent_crypto_erith_ia/administrator/build.json \
             public/agent_crypto_erith_ia/administrator/index.html \
             public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js \
             public/agent_crypto_erith_ia/administrator/version.json
           git diff --cached --quiet && { echo "No release changes produced"; exit 1; }
           git commit -m "agent-crypto: build 40.4.257 default Graph to Top 5"
