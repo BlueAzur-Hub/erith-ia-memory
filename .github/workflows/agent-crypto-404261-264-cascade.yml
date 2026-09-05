@@ -24,6 +24,20 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: Repair duplicate historical Kraken marker selector
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('.github/scripts/agent_crypto_404261_264_cascade.py')
+          s=p.read_text(encoding='utf-8')
+          old='''    marker = "/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE"\n    text = replace_once(text, marker, block.rstrip() + "\\n\\n" + marker, owner_marker)\n    APP.write_text(text, encoding="utf-8")'''
+          new='''    marker = "/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE"\n    anchor = text.find("function simulationAcceptance404153")\n    if anchor < 0:\n        raise SystemExit("CASCADE_FAIL: simulationAcceptance404153 owner not found")\n    pos = text.find(marker, anchor)\n    if pos < 0:\n        raise SystemExit("CASCADE_FAIL: canonical Kraken marker not found after Simulation acceptance owner")\n    text = text[:pos] + block.rstrip() + "\\n\\n" + text[pos:]\n    APP.write_text(text, encoding="utf-8")'''
+          if old not in s:
+              raise SystemExit('cascade selector patch target not found')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
+
       - name: Run cumulative Strategy A cascade
         run: python .github/scripts/agent_crypto_404261_264_cascade.py
 
