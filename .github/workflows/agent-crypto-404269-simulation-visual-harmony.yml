@@ -1,0 +1,59 @@
+name: Agent-Crypto 40.4.269 Simulation Visual Harmony
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/scripts/agent_crypto_404269_simulation_visual_harmony.py'
+      - '.github/workflows/agent-crypto-404269-simulation-visual-harmony.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-404269-simulation-visual-harmony
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configure release identity
+        run: |
+          git config user.name 'Seven Heaven Release'
+          git config user.email 'actions@users.noreply.github.com'
+
+      - name: Rebase on current main
+        run: git pull --rebase origin main
+
+      - name: Build validate and package 40.4.269
+        run: python .github/scripts/agent_crypto_404269_simulation_visual_harmony.py
+
+      - name: Commit release and retire temporary tooling
+        run: |
+          git rm --ignore-unmatch .github/scripts/agent_crypto_404269_simulation_visual_harmony.py
+          git rm --ignore-unmatch .github/workflows/agent-crypto-404269-simulation-visual-harmony.yml
+          git add -A
+          git commit -m 'agent-crypto: build 40.4.269 simulation visual harmony native operator console lock'
+          git pull --rebase origin main
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.269 --expected-release 'SIMULATION VISUAL HARMONY · NATIVE OPERATOR CONSOLE LOCK'
+          git push origin HEAD:main
+
+      - name: Upload differential release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_40_4_269_SIMULATION_VISUAL_HARMONY_NATIVE_OPERATOR_CONSOLE
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_269_SIMULATION_VISUAL_HARMONY_NATIVE_OPERATOR_CONSOLE.zip
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_269_SIMULATION_VISUAL_HARMONY_NATIVE_OPERATOR_CONSOLE_SHA256.txt
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_269_SIMULATION_VISUAL_HARMONY_NATIVE_OPERATOR_CONSOLE_REPORT.md
+          if-no-files-found: error
+          retention-days: 30
