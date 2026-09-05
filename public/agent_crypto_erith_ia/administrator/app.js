@@ -44602,11 +44602,11 @@ function atlasGraphContextV7NeutralMarket() {
   const deck = document.getElementById("analyste");
   return {
     period: 1,
-    selectedCoinId: null,
-    comparisonIds: [],
-    comparisonPreset: "empty",
-    selectionCleared: true,
-    selectionIntent: "explicit-empty",
+    selectedCoinId: ATLAS_CURATED_TOP5_IDS[0],
+    comparisonIds: [...ATLAS_CURATED_TOP5_IDS],
+    comparisonPreset: "rank-5",
+    selectionCleared: false,
+    selectionIntent: "selected",
     graphMode: "normal",
     detailCollapsed: deck?.classList.contains("detail-collapsed") === true,
     detailWindows: atlasGraphContextV7DomDetailWindows(),
@@ -44652,6 +44652,19 @@ function atlasGraphContextV7NormalizeMarket(raw = {}) {
       marketColumns: view.marketColumns === "complete" ? "complete" : "essential"
     }
   };
+}
+
+function atlasGraphContextV7IsLegacyEmptySeed404257(context) {
+  if (!context || typeof context !== "object") return false;
+  const market = context.market && typeof context.market === "object" ? context.market : {};
+  const ids = Array.isArray(market.comparisonIds) ? market.comparisonIds.filter(Boolean) : [];
+  const lastAction = String(context.lastAction || "");
+  return Number(context.sequence || 0) === 0
+    && ["", "v7-neutral", "v7-first-db-seed", "v7-first-boot-neutral"].includes(lastAction)
+    && ids.length === 0
+    && market.comparisonPreset === "empty"
+    && market.selectionCleared === true
+    && market.selectionIntent === "explicit-empty";
 }
 
 function atlasGraphContextV7NormalizeOracle(raw = {}) {
@@ -44976,8 +44989,8 @@ function atlasGraphContextV7Bootstrap() {
     document.documentElement.dataset.atlasGraphContext = "v7";
     document.documentElement.dataset.atlasGraphBootPhase = atlasGraphContextV7BootPhase;
   } catch {}
-  // 40.1.97: DO NOT seed/apply Vide before IndexedDB has been read.
-  // The neutral state is created only after a confirmed missing-row result.
+  // 40.4.257: DO NOT seed/apply the default Top 5 before IndexedDB has been read.
+  // Persisted operator intent stays authoritative; the default exists only after a confirmed missing-row result.
   atlasGraphContextV7RefreshStatusUi();
   return true;
 }
@@ -44987,6 +45000,7 @@ async function atlasGraphContextV7Initialize() {
   atlasGraphContextV7InitPromise = (async () => {
     let persisted = null;
     let readFailed = false;
+    let migratedLegacyEmptySeed404257 = false;
     atlasGraphContextV7BootPhase = "reading";
     try {
       persisted = await atlasGraphContextV7DbRead();
@@ -45000,14 +45014,31 @@ async function atlasGraphContextV7Initialize() {
     try { document.documentElement.dataset.atlasGraphBootPhase = atlasGraphContextV7BootPhase; } catch {}
 
     if (persisted) {
-      // Persisted IndexedDB is the sole restart authority. No boot/runtime state may outrank it.
-      atlasGraphContextV7Memory = atlasGraphContextV7Normalize(persisted);
+      // Persisted IndexedDB remains the restart authority. 40.4.257 migrates only
+      // the legacy sequence-0 system seed that represented “Vide”; an operator
+      // Clear has sequence/action evidence and is therefore preserved exactly.
+      migratedLegacyEmptySeed404257 = atlasGraphContextV7IsLegacyEmptySeed404257(persisted);
+      if (migratedLegacyEmptySeed404257) {
+        const migratedAt404257 = Date.now();
+        atlasGraphContextV7Memory = atlasGraphContextV7Normalize({
+          ...persisted,
+          activeSurface:"market",
+          market:atlasGraphContextV7NeutralMarket(),
+          savedAt:new Date(migratedAt404257).toISOString(),
+          savedAtMs:migratedAt404257,
+          sequence:1,
+          lastAction:"system-default-top5-404257"
+        });
+      } else {
+        atlasGraphContextV7Memory = atlasGraphContextV7Normalize(persisted);
+      }
     } else if (!readFailed) {
-      // Confirmed first use only: create a neutral context after the database returned no row.
+      // Confirmed first use only: Top 5 is the canonical non-empty graph default.
       atlasGraphContextV7Memory = atlasGraphContextV7Normalize({
         activeSurface:"market",
         market:atlasGraphContextV7NeutralMarket(),
-        oracle:{}
+        oracle:{},
+        lastAction:"system-default-top5-404257"
       });
     }
 
@@ -45015,13 +45046,18 @@ async function atlasGraphContextV7Initialize() {
     atlasGraphContextV7Ready = !readFailed;
 
     if (!readFailed && persisted) {
-      atlasGraphContextV7Persistence.state = "ok";
-      atlasGraphContextV7Persistence.verifiedSequence = Number(persisted.sequence || 0);
-      atlasGraphContextV7Persistence.lastWriteAt = persisted.savedAt || "";
+      if (migratedLegacyEmptySeed404257) {
+        // One-time system migration of the old accidental empty seed.
+        await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),"system-default-top5-404257");
+      } else {
+        atlasGraphContextV7Persistence.state = "ok";
+        atlasGraphContextV7Persistence.verifiedSequence = Number(persisted.sequence || 0);
+        atlasGraphContextV7Persistence.lastWriteAt = persisted.savedAt || "";
+      }
     } else if (!readFailed && atlasGraphContextV7Memory) {
       atlasGraphContextV7Persistence.state = "pending";
       // First-ever row creation is a system seed, never an operator event.
-      await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),"v7-first-db-seed");
+      await atlasGraphContextV7QueuePersist(atlasGraphContextV7Read(),"system-default-top5-404257");
     }
 
     // If market data arrived while IndexedDB was being read, restore it now while
@@ -52751,7 +52787,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.256";
+const ATLAS_BUILD = "40.4.257";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
