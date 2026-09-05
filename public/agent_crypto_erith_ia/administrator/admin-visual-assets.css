@@ -74,99 +74,15 @@ body.atlas-administrator-mirror #analyste.champagne-clean-lens .chart-memory-bar
 }
 
 /* ------------------------------------------------------------
-   TECHNICAL READING — Classic principle:
-   image is the hero of the panel, not a decorative strip.
-   Full portrait is favored; private image is never deliberately hidden.
+   40.4.255 — TECHNICAL READING LEGACY 39.4.5R4 OWNER RETIRED
+
+   Obsolete 39.4.5R4 Technical Reading panel/host/portrait/cartouche/reset
+   declarations are retired rather than overridden again. The validated split is:
+   - canonical 40.4.253 owner below: geometry + portrait frame;
+   - admin-visual-cache.css 40.3.38: opacity + contrast;
+   - existing 40.2.69 / 40.2.88 runtime: source, RND, private picker + framing.
+   No Graph, Market, Atlas, Oracle, Math, RND asset or storage behavior changes.
    ------------------------------------------------------------ */
-body.atlas-administrator-mirror #detailPanel{
-  background:linear-gradient(180deg,rgba(5,15,26,.88),rgba(3,10,18,.92))!important;
-}
-body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3{
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  cursor:pointer!important;
-  background:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
-}
-body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>.admin-tech-portrait-r3{
-  
-  
-  
-  
-  
-  
-  opacity:1!important;
-  
-  
-  pointer-events:none!important;
-  user-select:none!important;
-}
-body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3>span{
-  
-  
-  
-  
-  
-  
-  border:1px solid rgba(255,215,130,.28)!important;
-  border-radius:999px!important;
-  background:rgba(2,8,17,.62)!important;
-  color:#ffe2a0!important;
-  font-size:9px!important;
-  backdrop-filter:blur(7px)!important;
-}
-body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3::after{
-  content:"Changer l’image"!important;
-  
-  
-  
-  
-  
-  
-  border:1px solid rgba(98,236,255,.40)!important;
-  border-radius:999px!important;
-  color:#dcfbff!important;
-  background:rgba(3,12,22,.70)!important;
-  font:800 9px/1 system-ui,sans-serif!important;
-  opacity:0!important;
-  transition:opacity .14s ease!important;
-  pointer-events:none!important;
-  backdrop-filter:blur(7px)!important;
-}
-body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3:hover::after,
-body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3:focus-visible::after{
-  opacity:.96!important;
-}
-.admin-tech-reset-r3{
-  position:absolute!important;
-  right:12px!important;
-  bottom:12px!important;
-  top:auto!important;
-  z-index:6!important;
-  appearance:none!important;
-  border:1px solid rgba(255,215,130,.32)!important;
-  border-radius:999px!important;
-  padding:6px 9px!important;
-  color:#ffe2a0!important;
-  background:rgba(2,8,17,.68)!important;
-  font:800 9px/1 system-ui,sans-serif!important;
-  opacity:0!important;
-  cursor:pointer!important;
-  transition:opacity .14s ease!important;
-}
-.admin-tech-r3:hover .admin-tech-reset-r3,
-.admin-tech-r3:focus-within .admin-tech-reset-r3{opacity:.95!important}
 
 /* Remove every R1/R2 decorative strip/tool. */
 .admin-private-visual-tools,
@@ -1236,7 +1152,7 @@ body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small
      the compact ACTIF / PRIX / DÉCISION / 24H row keeps its validated vertical position.
 
    This block owns geometry + portrait framing only. Opacity/contrast remains
-   owned by admin-visual-cache.css and the surviving visual-only historical rules.
+   owned by admin-visual-cache.css 40.3.38; no legacy Technical Reading geometry owner survives here.
    No data, graph canvas, RND library, picker persistence or runtime owner here.
    ========================================================================== */
 
@@ -1351,7 +1267,10 @@ body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r
   z-index:4!important;
   max-width:calc(100% - 20px)!important;
   padding:4px 7px!important;
+  border:1px solid rgba(255,215,130,.28)!important;
   border-radius:999px!important;
+  color:#ffe2a0!important;
+  font-size:9px!important;
   /* 40.4.253R2 — historical 40.2.83 contract: the Agent-Crypto · Aerith-10 cartouche
      must sit in the breathing zone immediately above ACTIF / PRIX / DECISION / 24H.
      The current 136px Classic host already absorbs the later geometry shift, so restore

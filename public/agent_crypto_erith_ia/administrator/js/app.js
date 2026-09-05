@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.254";
-  const ADMIN_RELEASE = "TECHNICAL READING · VISUAL CACHE REVISION LOCK";
+  const ADMIN_BUILD = "40.4.255";
+  const ADMIN_RELEASE = "TECHNICAL READING · LEGACY CSS OWNER RETIREMENT LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
