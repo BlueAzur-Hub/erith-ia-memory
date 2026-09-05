@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.244";
+  const ADMIN_BUILD = "40.4.245";
   const ADMIN_RELEASE = "TECHNICAL READING · CANONICAL GEOMETRY OWNER CONSOLIDATION";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";

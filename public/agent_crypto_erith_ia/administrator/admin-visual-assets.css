@@ -1222,14 +1222,16 @@ body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small
 
 
 /* ==========================================================================
-   TECHNICAL_READING_CANONICAL_OWNER_404244
-   Agent-Crypto 40.4.244 — one Administrator geometry/image owner.
+   TECHNICAL_READING_CANONICAL_OWNER_404245
+   Agent-Crypto 40.4.245 — canonical geometry/image owner + validated 136px internal frame.
 
    Proven contract preserved:
    - 28.2.5 / 28.2.9: graph owns workspace height; detail is an absolute
      right dock; long detail content scrolls internally and never grows graph.
    - 40.2.65: immersive selected/private portrait remains cover-rendered.
    - 40.4.243: current 360px right-dock/full-panel portrait appearance retained.
+   - 40.1.18 / Classic contract: 136px visual host remains in normal flow so
+     the compact ACTIF / PRIX / DÉCISION / 24H row keeps its validated vertical position.
 
    This block owns geometry + portrait framing only. Opacity/contrast remains
    owned by admin-visual-cache.css and the surviving visual-only historical rules.
@@ -1287,24 +1289,23 @@ body.atlas-administrator-mirror
 #analyste.champagne-clean-lens:not(.detail-collapsed)
 #detailPanel.atlas-tech-static-cycle.atlas-classic-web-tech-40261
 .detail-project-visual.admin-tech-r3{
-  position:absolute!important;
-  inset:0!important;
-  top:0!important;
-  right:0!important;
-  bottom:0!important;
-  left:0!important;
+  /* 40.4.245 — restore the validated Classic internal frame:
+     the host reserves 136px in normal flow so ACTIF / PRIX / DÉCISION / 24H
+     starts lower again. The portrait itself remains the absolute full-panel
+     background through the existing .admin-tech-portrait-r3 rule below. */
+  position:static!important;
   display:block!important;
   width:100%!important;
-  height:100%!important;
+  height:136px!important;
   min-width:0!important;
-  min-height:0!important;
+  min-height:136px!important;
   max-width:none!important;
-  max-height:none!important;
-  margin:0!important;
+  max-height:136px!important;
+  margin:0 0 7px!important;
   padding:0!important;
-  flex:none!important;
+  flex:0 0 136px!important;
   aspect-ratio:auto!important;
-  overflow:hidden!important;
+  overflow:visible!important;
   background:transparent!important;
   border:0!important;
   border-radius:0!important;
