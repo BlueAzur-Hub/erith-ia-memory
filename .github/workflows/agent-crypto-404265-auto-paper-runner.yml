@@ -30,7 +30,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main
 
-      - name: Synchronize System presentation tokens
+      - name: Synchronize System presentation tokens and runtime anchor
         shell: bash
         run: python .github/scripts/agent_crypto_404265_sync_system_tokens.py
 
