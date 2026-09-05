@@ -1,0 +1,173 @@
+name: Agent-Crypto 40.4.255 Technical Reading owner retirement R2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-404255-r2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Consolidate Technical Reading CSS ownership
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re, hashlib
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.254'
+          assert v['engine']['reference_build']=='38.15.11' and v['engine']['status']=='protected'
+
+          cssp=base/'admin-visual-assets.css'; cachep=base/'admin-visual-cache.css'
+          css=cssp.read_text(encoding='utf-8'); cache_hash=hashlib.sha256(cachep.read_bytes()).hexdigest()
+          start='/* ------------------------------------------------------------\n   TECHNICAL READING — Classic principle:\n'
+          end='/* Remove every R1/R2 decorative strip/tool. */'
+          assert css.count(start)==1 and css.count(end)==1
+          a=css.index(start); b=css.index(end); assert a<b
+          note='''/* ------------------------------------------------------------\n   40.4.255 — TECHNICAL READING LEGACY 39.4.5R4 OWNER RETIRED\n\n   Obsolete 39.4.5R4 Technical Reading panel/host/portrait/cartouche/reset\n   declarations are retired rather than overridden again. The validated split is:\n   - canonical 40.4.253 owner below: geometry + portrait frame;\n   - admin-visual-cache.css 40.3.38: opacity + contrast;\n   - existing 40.2.69 / 40.2.88 runtime: source, RND, private picker + framing.\n   No Graph, Market, Atlas, Oracle, Math, RND asset or storage behavior changes.\n   ------------------------------------------------------------ */\n\n'''
+          css=css[:a]+note+css[b:]
+
+          needle='''  padding:4px 7px!important;\n  border-radius:999px!important;\n  /* 40.4.253R2'''
+          repl='''  padding:4px 7px!important;\n  border:1px solid rgba(255,215,130,.28)!important;\n  border-radius:999px!important;\n  color:#ffe2a0!important;\n  font-size:9px!important;\n  /* 40.4.253R2'''
+          assert css.count(needle)==1
+          css=css.replace(needle,repl,1)
+          css=css.replace('owned by admin-visual-cache.css and the surviving visual-only historical rules.','owned by admin-visual-cache.css 40.3.38; no legacy Technical Reading geometry owner survives here.',1)
+          cssp.write_text(css,encoding='utf-8')
+          assert hashlib.sha256(cachep.read_bytes()).hexdigest()==cache_hash
+
+          ip=base/'index.html'; index=ip.read_text(encoding='utf-8')
+          index,n=re.subn(r'admin-visual-assets\.css\?v=administrator-build-[^"\']+','admin-visual-assets.css?v=administrator-build-40.4.255',index,count=1); assert n==1
+          index,n=re.subn(r'<script src="\./js/views/system-presentation\.js\?v=administrator-build-[^"]+"></script>','<script src="./js/views/system-presentation.js?v=administrator-build-40.4.255"></script>',index,count=1); assert n==1
+          ip.write_text(index,encoding='utf-8')
+
+          sp=base/'js/views/system-presentation.js'; system=sp.read_text(encoding='utf-8')
+          system,n=re.subn(r'const SOURCE="\./views/system\.html\?v=administrator-build-[^"]+";','const SOURCE="./views/system.html?v=administrator-build-40.4.255";',system,count=1); assert n==1
+          sp.write_text(system,encoding='utf-8')
+
+          contract={
+            'build':'40.4.255','parent':'40.4.254',
+            'technical_reading_legacy_css_owner_retired':True,
+            'canonical_geometry_owner':'40.4.253 external CSS owner',
+            'canonical_opacity_owner':'admin-visual-cache.css 40.3.38',
+            'runtime_source_owner_preserved':'40.2.69 / 40.2.88 inline runtime',
+            'validated_host_px':136,'portrait_fit':'cover',
+            'identity_cartouche_position_preserved':True,
+            'technical_reading_runtime_changed':False,
+            'technical_reading_cache_generation_changed':False,
+            'rnd_library_changed':False,'rnd_assets_changed':False,'private_visual_storage_changed':False,
+            'graph_changed':False,'parallel_markets_changed':False,'atlas_changed':False,'oracle_changed':False,'math_core_changed':False,'window_manager_changed':False,'market_core_changed':False,
+            'protected_market_core':'38.15.11'
+          }
+          Path('/tmp/contract-404255.json').write_text(json.dumps(contract,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+
+      - name: Advance release truth
+        shell: bash
+        run: |
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.255 \
+            --parent 40.4.254 \
+            --release "TECHNICAL READING · LEGACY CSS OWNER RETIREMENT LOCK" \
+            --status "technical_reading_legacy_css_owner_retirement_404255" \
+            --contract-key "technical_reading_legacy_css_owner_retirement_404255" \
+            --contract-json /tmp/contract-404255.json \
+            --lineage-note "40.4.255 retires the obsolete 39.4.5R4 Technical Reading visual owner instead of stacking another patch; the validated 136px host, full-panel cover portrait, R2 cartouche position, 40.3.38 opacity owner, RND/private runtime and 40.4.254 visual cache generation are preserved"
+
+      - name: Prove preserved contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          css=(base/'admin-visual-assets.css').read_text(encoding='utf-8')
+          cache=(base/'admin-visual-cache.css').read_text(encoding='utf-8')
+          index=(base/'index.html').read_text(encoding='utf-8')
+          v=json.loads((base/'version.json').read_text(encoding='utf-8'))
+          b=json.loads((base/'build.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.255' and v['parent_build']=='40.4.254'
+          assert v['engine']['reference_build']=='38.15.11' and v['engine']['status']=='protected'
+          assert b['build']=='40.4.255' and b['engine']=='38.15.11'
+          assert 'TECHNICAL READING — Classic principle:' not in css
+          assert '40.4.255 — TECHNICAL READING LEGACY 39.4.5R4 OWNER RETIRED' in css
+          assert css.count('TECHNICAL_READING_CANONICAL_OWNER_404253')==1
+          for token in ('position:static!important;','height:136px!important;','min-height:136px!important;','max-height:136px!important;','flex:0 0 136px!important;','overflow:visible!important;','object-fit:cover!important;','object-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%)!important;','top:156px!important;','transform:translateY(52px)!important;','overflow-y:auto!important;'):
+            assert token in css, token
+          for token in ('border:1px solid rgba(255,215,130,.28)!important;','color:#ffe2a0!important;','font-size:9px!important;'):
+            assert token in css, token
+          assert '40.3.38 TECHNICAL READING — METALLIC DEPTH OPACITY' in cache
+          assert '--atlas-tr-depth-kpi: rgba(2,9,18,.78);' in cache
+          assert 'const RANDOM_LIBRARY=Object.freeze([' in index and index.count('technical-random-')>=20
+          assert 'AgentCryptoPrivateVisuals40269' in index
+          assert 'atlas-tech-letterbox-fill-40230' in index and 'atlas-tech-frame-lock-40259' in index
+          assert 'admin-visual-assets.css?v=administrator-build-40.4.255' in index
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python .github/scripts/agent_crypto_version_truth_guard.py --expected-build 40.4.255 --expected-release "TECHNICAL READING · LEGACY CSS OWNER RETIREMENT LOCK"
+
+      - name: Scope guard
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          allowed={
+            'public/agent_crypto_erith_ia/administrator/admin-visual-assets.css',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/version.json'}
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          assert not (changed-allowed), sorted(changed-allowed)
+          assert allowed<=changed, sorted(allowed-changed)
+          print('\n'.join(sorted(changed)))
+          PY
+
+      - name: Commit release
+        shell: bash
+        run: |
+          git config user.name "Aether Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.255 retire legacy Technical Reading CSS owner"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Package changed files
+        shell: bash
+        run: |
+          rm -rf /tmp/pkg /tmp/out && mkdir -p /tmp/pkg /tmp/out
+          git diff --name-only HEAD^ HEAD -- public/agent_crypto_erith_ia/administrator | while read f; do mkdir -p "/tmp/pkg/$(dirname "$f")"; cp "$f" "/tmp/pkg/$f"; done
+          cat > /tmp/pkg/FILES_CHANGED_40.4.255.md <<'EOF'
+          # Agent-Crypto 40.4.255 — Technical Reading legacy CSS owner retirement
+
+          Architectural consolidation only; visual target is intentionally identical to accepted 40.4.254.
+
+          - Removes obsolete 39.4.5R4 Technical Reading visual declarations instead of overriding them again.
+          - Migrates the three still-effective identity-cartouche primitives into the canonical owner before removal.
+          - Preserves 136 px host, full-panel absolute cover portrait, R2 title position and internal body scroll.
+          - Preserves admin-visual-cache.css 40.3.38 opacity/contrast owner.
+          - Preserves RND/private picker/IndexedDB/runtime source-framing and 40.4.254 visual-cache generation.
+          - Graph, parallel markets, Atlas, Oracle, Math Core, Window Manager and Market Core are untouched.
+          EOF
+          (cd /tmp/pkg && zip -qr /tmp/out/AGENT_CRYPTO_BUILD_40_4_255_TECHNICAL_READING_LEGACY_CSS_OWNER_RETIREMENT_LOCK_CHANGED_FILES.zip .)
+          sha256sum /tmp/out/*.zip | tee /tmp/out/AGENT_CRYPTO_BUILD_40_4_255_SHA256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_255_TECHNICAL_READING_LEGACY_CSS_OWNER_RETIREMENT_LOCK
+          path: /tmp/out/*
+          if-no-files-found: error
