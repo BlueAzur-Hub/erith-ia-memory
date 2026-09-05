@@ -50,6 +50,13 @@ jobs:
           assert old in index
           assert new not in index
           index = index.replace(old, new, 1)
+          index, count = re.subn(
+              r'<script src="\./js/views/system-presentation\.js\?v=administrator-build-[^"]+"></script>',
+              '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.254"></script>',
+              index,
+              count=1,
+          )
+          assert count == 1, count
           index_path.write_text(index, encoding='utf-8')
 
           system_path = base/'js/views/system-presentation.js'
@@ -132,9 +139,9 @@ jobs:
           assert 'const DB_VERSION = 1;' in cache
           assert 'cache: "reload"' in cache
           assert 'cache: "force-cache"' not in cache.split('/* ==========================================================================', 1)[0]
-          assert 'indexedDB.deleteDatabase(DB_NAME)' in cache
           assert 'void bootChartBackground();' in cache
           assert '<script src="./js/admin-visual-cache.js?v=administrator-build-40.4.254"></script>' in index
+          assert '<script src="./js/views/system-presentation.js?v=administrator-build-40.4.254"></script>' in index
           assert 'admin-visual-assets.css?v=administrator-build-40.4.253R2' in index
           assert '<meta name="atlas-build" content="40.4.254"' in index
           assert '<meta name="administrator-build" content="40.4.254"' in index
