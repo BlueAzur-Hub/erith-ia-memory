@@ -1,0 +1,308 @@
+name: Agent-Crypto 40.4.256 Atlas AUTO resident wake owner consolidation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-404256.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Consolidate Atlas resident wake ownership
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          manifest = json.loads((base/'version.json').read_text(encoding='utf-8'))
+          assert manifest['build'] == '40.4.255', manifest['build']
+          assert manifest['engine']['reference_build'] == '38.15.11'
+          assert manifest['engine']['status'] == 'protected'
+
+          # Root runtime 40.4.137 is already the proven canonical pending-CURRENT owner.
+          root = (base/'app.js').read_text(encoding='utf-8')
+          required_137 = (
+              '40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY',
+              'function atlasCurrentPendingMarket137(',
+              'atlasAutomation341RememberPendingMarket',
+              'atlasAutomation341ReadPendingMarket',
+              'atlasAutomation341ReadLastCurrentMarketId',
+              'atlasLocalReportsReadiness',
+              'atlasLocalReportsScheduleAutomatic',
+              '__AGENT_CRYPTO_ATLAS_AUTO_WAKE_404137__',
+          )
+          for marker in required_137:
+              assert marker in root, marker
+
+          # Retire ONLY the obsolete 40.4.133 monkey-patch layer from view-lifecycle.
+          life_path = base/'js/views/view-lifecycle.js'
+          life = life_path.read_text(encoding='utf-8')
+          start_marker = 'const atlasResidentWakeState40133='
+          end_marker = 'atlasResidentInstall40133();'
+          assert start_marker in life
+          assert end_marker in life
+          start = life.index(start_marker)
+          end = life.index(end_marker, start) + len(end_marker)
+          retired = '''globalThis.ErithAtlasResidentWake40133Retired404256=Object.freeze({
+  build:"40.4.256",
+  retired_owner:"40.4.133 view-lifecycle Atlas resident wake wrapper",
+  canonical_owner:"app.js atlasCurrentPendingMarket137",
+  reason:"duplicate monkey-patch layer retired; proven 40.4.137 pending owner remains authoritative",
+  market_pulse_40499r1_preserved:true,
+  duplicate_wrapper:false,
+  new_timer:false,
+  new_fetch:false,
+  new_observer:false,
+  new_storage_write:false,
+  ui_disclosure_dependency:false
+});'''
+          life = life[:start] + retired + life[end:]
+          # Keep the 40.4.99 R1 visibility-only market pulse refinement untouched.
+          assert 'MARKET_PULSE_WAKEUP_R1' in life
+          assert 'return document.hidden!==true;' in life
+          assert 'atlasResidentWrap40133' not in life
+          assert 'atlasResidentInstall40133' not in life
+          assert 'atlasResidentWake40133' not in life
+          life_path.write_text(life, encoding='utf-8')
+
+          # Keep the load-complete one-shot, but make it call ONLY the canonical .137 owner.
+          hb_path = base/'js/atlas-heartbeat-rearm.js'
+          hb = hb_path.read_text(encoding='utf-8')
+          assert 'const BUILD = "40.4.212";' in hb
+          assert 'atlasCurrentPendingMarket137' in hb
+          assert 'atlasCurrentPendingAutoKick4051' in hb
+          hb = hb.replace('const BUILD = "40.4.212";', 'const BUILD = "40.4.256";', 1)
+          hb = hb.replace(
+              '      bridge_rearm_owner_available: typeof globalThis.atlasCurrentPendingAutoKick4051 === "function"',
+              '      legacy_bridge_rearm_owner_available: typeof globalThis.atlasCurrentPendingAutoKick4051 === "function"',
+              1,
+          )
+          hb = hb.replace(
+              '    if (!before.pending_owner_available && !before.bridge_rearm_owner_available) return "OWNER_MISSING";',
+              '    if (!before.pending_owner_available) return "OWNER_MISSING";',
+              1,
+          )
+          old_rearm = '''      if (typeof globalThis.atlasCurrentPendingMarket137 === "function") {
+        result = Boolean(globalThis.atlasCurrentPendingMarket137(`heartbeat-${String(reason || "manual")}`));
+      } else if (typeof globalThis.atlasCurrentPendingAutoKick4051 === "function") {
+        result = Boolean(globalThis.atlasCurrentPendingAutoKick4051(`heartbeat-${String(reason || "manual")}`));
+      }'''
+          new_rearm = '''      if (typeof globalThis.atlasCurrentPendingMarket137 === "function") {
+        result = Boolean(globalThis.atlasCurrentPendingMarket137(`heartbeat-${String(reason || "manual")}`));
+      }'''
+          assert old_rearm in hb
+          hb = hb.replace(old_rearm, new_rearm, 1)
+          hb = hb.replace(
+              '    strategy:"boot-complete-one-shot-canonical-rearm",',
+              '    strategy:"boot-complete-one-shot-canonical-137-rearm",',
+              1,
+          )
+          hb = hb.replace(
+              '    fallback_existing_owner:"atlasCurrentPendingAutoKick4051",',
+              '    fallback_existing_owner:null,',
+              1,
+          )
+          hb_path.write_text(hb, encoding='utf-8')
+
+          # Force Firefox to load the two corrected owner layers; no CSS token moves.
+          index_path = base/'index.html'
+          index = index_path.read_text(encoding='utf-8')
+          index, n1 = re.subn(
+              r'<script src="\./js/views/view-lifecycle\.js\?v=[^"]+"></script>',
+              '<script src="./js/views/view-lifecycle.js?v=administrator-build-40.4.256"></script>',
+              index,
+              count=1,
+          )
+          index, n2 = re.subn(
+              r'<script src="\./js/atlas-heartbeat-rearm\.js\?v=[^"]+"></script>',
+              '<script src="./js/atlas-heartbeat-rearm.js?v=40.4.256"></script>',
+              index,
+              count=1,
+          )
+          assert n1 == 1, n1
+          assert n2 == 1, n2
+          index_path.write_text(index, encoding='utf-8')
+
+          contract = {
+            'build': '40.4.256',
+            'parent': '40.4.255',
+            'canonical_pending_owner': 'atlasCurrentPendingMarket137',
+            'canonical_pending_owner_source': 'app.js / 40.4.137',
+            'legacy_view_lifecycle_40133_retired': True,
+            'heartbeat_boot_one_shot_preserved': True,
+            'heartbeat_fallback_to_4051': False,
+            'market_pulse_40499r1_preserved': True,
+            'pending_survives_readiness_miss': True,
+            'same_snapshot_noop_preserved': True,
+            'ui_disclosure_dependency': False,
+            'new_timer': False,
+            'new_recurring_scheduler': False,
+            'new_observer': False,
+            'new_fetch_owner': False,
+            'new_websocket': False,
+            'new_storage_owner': False,
+            'technical_reading_changed': False,
+            'technical_reading_reference_build': '40.4.255',
+            'market_graph_changed': False,
+            'atlas_reports_semantics_changed': False,
+            'nox_changed': False,
+            'aerith_changed': False,
+            'market_core_changed': False,
+            'protected_market_core': '38.15.11'
+          }
+          Path('/tmp/contract-404256.json').write_text(json.dumps(contract, ensure_ascii=False, indent=2), encoding='utf-8')
+          PY
+
+      - name: Advance release truth
+        shell: bash
+        run: |
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build 40.4.256 \
+            --parent 40.4.255 \
+            --release "ATLAS AUTO · RESIDENT WAKE OWNER CONSOLIDATION LOCK" \
+            --status "atlas_auto_resident_wake_owner_consolidation_404256" \
+            --contract-key "atlas_auto_resident_wake_owner_consolidation_404256" \
+            --contract-json /tmp/contract-404256.json \
+            --lineage-note "40.4.256 retires the obsolete 40.4.133 view-lifecycle Atlas wake monkey-patch and makes the proven 40.4.137 pending-CURRENT owner the sole resident wake authority; the 40.4.99 R1 visible-tab market pulse and 40.4.212 load-complete one-shot intent are preserved without adding a scheduler"
+
+      - name: Prove N+1 wake ownership invariants
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          root = (base/'app.js').read_text(encoding='utf-8')
+          life = (base/'js/views/view-lifecycle.js').read_text(encoding='utf-8')
+          hb = (base/'js/atlas-heartbeat-rearm.js').read_text(encoding='utf-8')
+          index = (base/'index.html').read_text(encoding='utf-8')
+          version = json.loads((base/'version.json').read_text(encoding='utf-8'))
+
+          assert version['build'] == '40.4.256'
+          assert version['parent_build'] == '40.4.255'
+          assert version['engine']['reference_build'] == '38.15.11'
+          assert version['engine']['status'] == 'protected'
+
+          # Canonical .137 pipeline remains byte-present in the root runtime.
+          required = (
+              '40.4.137 — ATLAS AUTO RESIDENT WAKE RECOVERY',
+              'function atlasCurrentPendingMarket137(',
+              'atlasAutomation341RememberPendingMarket',
+              'atlasAutomation341ReadPendingMarket',
+              'atlasAutomation341ReadLastCurrentMarketId',
+              'atlasLocalReportsReadiness',
+              'atlasCurrentPendingWrap137("atlasAfterLivecheck"',
+              'atlasCurrentPendingWrap137("atlasRenderExchangeFeedStatus"',
+              '__AGENT_CRYPTO_ATLAS_AUTO_WAKE_404137__',
+              'ui_disclosure_dependency:false',
+              'new_recurring_timer:false',
+          )
+          for marker in required:
+              assert marker in root, marker
+
+          # Obsolete .133 wrapper is actually gone; market pulse refinement remains.
+          assert 'ErithAtlasResidentWake40133Retired404256' in life
+          for retired in ('atlasResidentWakeState40133','atlasResidentPending40133','atlasResidentWake40133','atlasResidentWrap40133','atlasResidentInstall40133'):
+              assert retired not in life, retired
+          assert 'MARKET_PULSE_WAKEUP_R1' in life
+          assert 'return document.hidden!==true;' in life
+          assert 'new_timer:false' in life
+
+          # Heartbeat can observe the legacy owner but can invoke only .137.
+          assert 'const BUILD = "40.4.256";' in hb
+          assert 'strategy:"boot-complete-one-shot-canonical-137-rearm"' in hb
+          assert 'fallback_existing_owner:null' in hb
+          assert hb.count('atlasCurrentPendingMarket137(`heartbeat-') == 1
+          assert 'atlasCurrentPendingAutoKick4051(`heartbeat-' not in hb
+          assert 'new_timer:false' in hb and 'new_observer:false' in hb and 'new_fetch:false' in hb and 'new_websocket:false' in hb
+
+          # Cache tokens updated only for owner JS; Technical Reading stays frozen at .255.
+          assert '<script src="./js/views/view-lifecycle.js?v=administrator-build-40.4.256"></script>' in index
+          assert '<script src="./js/atlas-heartbeat-rearm.js?v=40.4.256"></script>' in index
+          assert 'admin-visual-assets.css?v=administrator-build-40.4.255' in index
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/views/view-lifecycle.js
+          node --check public/agent_crypto_erith_ia/administrator/js/atlas-heartbeat-rearm.js
+          python .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build 40.4.256 \
+            --expected-release "ATLAS AUTO · RESIDENT WAKE OWNER CONSOLIDATION LOCK"
+
+      - name: Scope guard
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          allowed = {
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/atlas-heartbeat-rearm.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/view-lifecycle.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+          }
+          changed = set(subprocess.check_output(['git','diff','--name-only'], text=True).splitlines())
+          extra = changed - allowed
+          missing = allowed - changed
+          assert not extra, f'out-of-scope: {sorted(extra)}'
+          assert not missing, f'missing expected release files: {sorted(missing)}'
+          print('scope ok:', *sorted(changed), sep='\n- ')
+          PY
+
+      - name: Commit release
+        shell: bash
+        run: |
+          git config user.name "Aether Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          git commit -m "agent-crypto: build 40.4.256 consolidate Atlas resident wake owner"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Package changed files
+        shell: bash
+        run: |
+          rm -rf /tmp/pkg /tmp/out
+          mkdir -p /tmp/pkg /tmp/out
+          git diff --name-only HEAD^ HEAD -- public/agent_crypto_erith_ia/administrator | while read f; do
+            mkdir -p "/tmp/pkg/$(dirname "$f")"
+            cp "$f" "/tmp/pkg/$f"
+          done
+          cat > /tmp/pkg/FILES_CHANGED_40.4.256.md <<'EOF'
+          # Agent-Crypto 40.4.256 — changed files
+
+          ATLAS AUTO · RESIDENT WAKE OWNER CONSOLIDATION LOCK
+
+          - Retires the obsolete 40.4.133 Atlas resident-wake monkey-patch from view-lifecycle.
+          - Keeps the proven app.js 40.4.137 pending-CURRENT owner as the single resident wake authority.
+          - Preserves the 40.4.99 R1 visible-tab market pulse refinement.
+          - Keeps the load-complete heartbeat one-shot but removes its direct fallback invocation of atlasCurrentPendingAutoKick4051.
+          - Adds no recurring timer, scheduler, observer, fetch owner, WebSocket or storage owner.
+          - Technical Reading 40.4.255 is frozen and unchanged.
+          - Graph / Markets / Oracle / NØX / Aerith semantics are unchanged.
+          - Market Core 38.15.11 remains protected.
+          EOF
+          (cd /tmp/pkg && zip -qr /tmp/out/AGENT_CRYPTO_BUILD_40_4_256_ATLAS_AUTO_RESIDENT_WAKE_OWNER_CONSOLIDATION_LOCK_CHANGED_FILES.zip .)
+          sha256sum /tmp/out/*.zip | tee /tmp/out/AGENT_CRYPTO_BUILD_40_4_256_SHA256.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_256_ATLAS_AUTO_RESIDENT_WAKE_OWNER_CONSOLIDATION_LOCK
+          path: /tmp/out/*
+          if-no-files-found: error
