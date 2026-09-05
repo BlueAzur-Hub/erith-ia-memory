@@ -36,6 +36,12 @@
    The status-strip grid owns only the card position; this file owns Chronos presentation.
    The header spans the complete source card grid and centers its content as one flex group. */
 #sourceTimeCard{
+  /* 40.4.251 — CHRONOS CENTER TRUTH LOCK.
+     The clock is one semantic flex group; the parent card owns centering. */
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+  align-items:center !important;
+  justify-items:stretch !important;
   overflow:hidden;
 }
 #atlasCelestialClockHeader{
@@ -49,7 +55,8 @@
   width:100% !important;
   max-width:100% !important;
   min-width:0 !important;
-  margin:2px 0 0 !important;
+  margin:0 !important;
+  text-align:center !important;
   white-space:nowrap !important;
   overflow:hidden !important;
   text-overflow:clip !important;

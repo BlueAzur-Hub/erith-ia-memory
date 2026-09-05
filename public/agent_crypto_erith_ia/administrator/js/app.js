@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.250";
-  const ADMIN_RELEASE = "MARKETS · FIVE-MARKET STATIC FREEZE CANDIDATE";
+  const ADMIN_BUILD = "40.4.251";
+  const ADMIN_RELEASE = "TECHNICAL READING FRAMING · CHRONOS CENTER TRUTH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
