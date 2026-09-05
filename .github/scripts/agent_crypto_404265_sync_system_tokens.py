@@ -21,4 +21,14 @@ if text.count(old)!=1:
     raise SystemExit(f'404265_SYNC_FAIL: System SOURCE token count={text.count(old)}')
 system.write_text(text.replace(old,new,1),encoding='utf-8')
 
-print('40.4.265 SYSTEM TOKEN SYNC PASS')
+# The current root app contains two historical 40.4.144 comment markers.
+# Anchor the one-shot .265 owner on the unique .261 Strategy owner instead.
+driver=Path('.github/scripts/agent_crypto_404265_auto_paper_runner.py')
+text=driver.read_text(encoding='utf-8')
+old='KRAKEN_MARKER = "/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE"'
+new='KRAKEN_MARKER = "/* 40.4.261 — STRATEGY A TRADE PROPOSAL ENVELOPE FOUNDATION LOCK */"'
+if text.count(old)!=1:
+    raise SystemExit(f'404265_SYNC_FAIL: driver anchor count={text.count(old)}')
+driver.write_text(text.replace(old,new,1),encoding='utf-8')
+
+print('40.4.265 SYSTEM TOKEN + DRIVER ANCHOR SYNC PASS')
