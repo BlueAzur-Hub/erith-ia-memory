@@ -36131,19 +36131,37 @@ function strategyALocalContext404261(){
   const exposure=strategyAReadNumber404261(row?.exposure_eur,row?.invested_eur,row?.positions_value_eur,row?.position_value_eur,row?.portfolio?.positionsValue,integration?.local?.position_value_eur);
   return {workspace:"strategy_a",kraken_workspace:"erith-strategy-a",active_workspace:String(typeof PAPER_WORKSPACE_404142!=="undefined"?PAPER_WORKSPACE_404142:""),cash_eur:cash,exposure_before_eur:exposure,static_safety_ok:acceptance?.ok===true||acceptance?.static_ok===true,kraken_mapping_state:String(acceptance?.runtime_kraken_mapping||"UNTESTED"),integration_available:!!integration};
 }
+/* 40.4.270 — STRATEGY A · MEASURED MIXED-BIAS ENTRY GATE LOCK */
+/* Paper-only admission refinement. The original HAUSSIER regime still passes exactly
+   as before. A MIXTE regime may now reach the existing Risk Governor only when the
+   canonical Oracle model carries a measurable positive directional bias AND stronger
+   confidence, while BTC 24h is materially positive. No Market Core, Oracle model,
+   Risk Governor, Paper executor, Kraken/network, persistence or real-order owner changes. */
+const STRATEGY_A_MIXED_BIAS_GATE_404270=Object.freeze({min_direction_score:12,min_oracle_confidence:70,min_btc_24h_pct:0.10});
+function strategyAMeasuredMixedBias404270(oracle,btc){
+  const regime=String(oracle?.regime||"").toUpperCase();
+  const mixed=/MIXTE|CONTRADICT/.test(regime)&&!/HAUSSI|BAISS/.test(regime);
+  const direction=Number(oracle?.direction_score),confidence=Number(oracle?.confidence),btc24=Number(btc?.change_24h_pct);
+  const directionOk=Number.isFinite(direction)&&direction>=STRATEGY_A_MIXED_BIAS_GATE_404270.min_direction_score;
+  const confidenceOk=Number.isFinite(confidence)&&confidence>=STRATEGY_A_MIXED_BIAS_GATE_404270.min_oracle_confidence;
+  const btcOk=Number.isFinite(btc24)&&btc24>=STRATEGY_A_MIXED_BIAS_GATE_404270.min_btc_24h_pct;
+  return {eligible:mixed&&directionOk&&confidenceOk&&btcOk,mixed,direction_score:Number.isFinite(direction)?direction:null,confidence:Number.isFinite(confidence)?confidence:null,btc_24h_pct:Number.isFinite(btc24)?btc24:null,direction_ok:directionOk,confidence_ok:confidenceOk,btc_ok:btcOk,thresholds:STRATEGY_A_MIXED_BIAS_GATE_404270};
+}
+try{globalThis.AgentCryptoStrategyAMeasuredMixedBias404270=Object.freeze({build:"40.4.270",evaluate:strategyAMeasuredMixedBias404270,thresholds:STRATEGY_A_MIXED_BIAS_GATE_404270,paper_only:true,risk_governor_required:true,market_core_changed:false,oracle_engine_changed:false,risk_governor_changed:false,paper_execution_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+
 function strategyATradeProposal404261(){
   const btc=strategyABtcContext404261(),oracle=strategyAOracleContext404261(),local=strategyALocalContext404261();
-  const bullishRegime=/HAUSSI/.test(oracle.regime)&&!/BAISS/.test(oracle.regime);const reasons=[];let status="PROPOSED";
+  const bullishRegime=/HAUSSI/.test(oracle.regime)&&!/BAISS/.test(oracle.regime),mixedGate=strategyAMeasuredMixedBias404270(oracle,btc),entryRegimeOk=bullishRegime||mixedGate.eligible;const reasons=[];let status="PROPOSED";
   if(local.active_workspace!=="strategy_a"){status="NO_TRADE";reasons.push("Activer STRATÉGIE A avant de générer une proposition.");}
   if(!local.static_safety_ok){status="REJECTED";reasons.push("Audit Simulation paper-only non validé.");}
   if(!btc.available){status="NO_TRADE";reasons.push("Prix BTC critique indisponible.");}
   if(!oracle.available||!oracle.active){status="NO_TRADE";reasons.push("Oracle indisponible ou inactif.");}
-  if(!bullishRegime){status="NO_TRADE";reasons.push(`Régime Oracle non haussier (${oracle.regime}).`);}
+  if(!entryRegimeOk){status="NO_TRADE";reasons.push(mixedGate.mixed?`Régime Oracle MIXTE sans biais mesuré suffisant (direction ${mixedGate.direction_score??"—"}/100, seuil +${STRATEGY_A_MIXED_BIAS_GATE_404270.min_direction_score}; confiance ${mixedGate.confidence??"—"}/100, seuil ${STRATEGY_A_MIXED_BIAS_GATE_404270.min_oracle_confidence}; BTC 24 h ${mixedGate.btc_24h_pct??"—"} %, seuil +${STRATEGY_A_MIXED_BIAS_GATE_404270.min_btc_24h_pct.toFixed(2)} %).`:`Régime Oracle non haussier (${oracle.regime}).`);}
   if(!(Number.isFinite(oracle.confidence)&&oracle.confidence>=55)){status="NO_TRADE";reasons.push("Confiance Oracle absente ou inférieure à 55/100.");}
   if(!(Number.isFinite(btc.change_24h_pct)&&btc.change_24h_pct>0)){status="NO_TRADE";reasons.push("Variation BTC 24 h absente ou non positive.");}
-  if(status==="PROPOSED")reasons.push("Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.");
-  const fingerprint=[btc.price_eur??"na",btc.change_24h_pct??"na",oracle.regime,oracle.confidence??"na",local.cash_eur??"na",local.exposure_before_eur??"na",status].join("|");
-  return {schema:"agent_crypto_trade_proposal_v1",build:"40.4.261",proposal_id:`STRAT-A-BTC-${strategyAHash404261(fingerprint)}`,decision_fingerprint:fingerprint,generated_at:new Date().toISOString(),strategy:"STRATEGY_A_V1",strategy_label:"BTC CONTINUATION BASELINE",workspace:"strategy_a",kraken_workspace:"erith-strategy-a",mode:"paper_proposal_only",asset_id:btc.asset_id,symbol:"BTC",status,direction:status==="PROPOSED"?"LONG":"NO_TRADE",horizon:"5m",market:btc,oracle,atlas:{context:"READ_ONLY_EXISTING_STATE",pipeline_mutation:false},data_quality:{critical_price_available:btc.available,simulation_static_safety_ok:local.static_safety_ok,kraken_mapping_state:local.kraken_mapping_state},entry_condition:"BTC 24h > 0 + Oracle actif + régime haussier + confiance ≥ 55/100",invalidation_condition:"Donnée critique absente/dégradée, régime non haussier, Oracle inactif ou confiance < 55/100",requested_notional_eur:null,authorized_notional_eur:null,exposure_before_eur:local.exposure_before_eur,exposure_after_eur:null,theoretical_stop:null,stop_state:"REQUIRES_RISK_GOVERNOR",position_sizing_owner:"RISK_GOVERNOR_NOT_IMPLEMENTED",cost_model:{state:"UNKNOWN",source:"not_bound_in_40.4.261",execution_allowed:false},reason:reasons.join(" "),safety:{simulation_only:true,proposal_only:true,real_order:false,kraken_order:false,credentials:false,wallet:false,withdrawal:false,storage_write:false,final_authorization:false}};
+  if(status==="PROPOSED")reasons.push(bullishRegime?"Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.":`Gate 40.4.270 admissible : Oracle MIXTE avec biais haussier mesuré ${mixedGate.direction_score}/100 + confiance ${mixedGate.confidence}/100 + BTC 24 h ${Number(mixedGate.btc_24h_pct).toFixed(2)} % ; validation Risk Governor requise.`);
+  const fingerprint=[btc.price_eur??"na",btc.change_24h_pct??"na",oracle.regime,oracle.confidence??"na",oracle.direction_score??"na",bullishRegime?"BULLISH":"MIXED_GATE",mixedGate.eligible?"PASS":"FAIL",local.cash_eur??"na",local.exposure_before_eur??"na",status].join("|");
+  return {schema:"agent_crypto_trade_proposal_v1",build:"40.4.261",proposal_id:`STRAT-A-BTC-${strategyAHash404261(fingerprint)}`,decision_fingerprint:fingerprint,generated_at:new Date().toISOString(),strategy:"STRATEGY_A_V1",strategy_label:"BTC CONTINUATION BASELINE",workspace:"strategy_a",kraken_workspace:"erith-strategy-a",mode:"paper_proposal_only",asset_id:btc.asset_id,symbol:"BTC",status,direction:status==="PROPOSED"?"LONG":"NO_TRADE",horizon:"5m",market:btc,oracle,atlas:{context:"READ_ONLY_EXISTING_STATE",pipeline_mutation:false},data_quality:{critical_price_available:btc.available,simulation_static_safety_ok:local.static_safety_ok,kraken_mapping_state:local.kraken_mapping_state},entry_condition:"BTC 24h > 0 + Oracle actif + [régime haussier + confiance ≥ 55/100 OU MIXTE + direction ≥ +12/100 + confiance ≥ 70/100 + BTC 24h ≥ +0.10%]",invalidation_condition:"Donnée critique absente/dégradée, Oracle inactif, confiance insuffisante, régime baissier/contradictoire ou MIXTE sans biais mesuré suffisant",entry_gate:{build:"40.4.270",mode:bullishRegime?"BULLISH_BASELINE":"MEASURED_MIXED_BIAS",mixed_bias:mixedGate},requested_notional_eur:null,authorized_notional_eur:null,exposure_before_eur:local.exposure_before_eur,exposure_after_eur:null,theoretical_stop:null,stop_state:"REQUIRES_RISK_GOVERNOR",position_sizing_owner:"RISK_GOVERNOR_NOT_IMPLEMENTED",cost_model:{state:"UNKNOWN",source:"not_bound_in_40.4.261",execution_allowed:false},reason:reasons.join(" "),safety:{simulation_only:true,proposal_only:true,real_order:false,kraken_order:false,credentials:false,wallet:false,withdrawal:false,storage_write:false,final_authorization:false}};
 }
 function renderStrategyATradeProposal404261(){
   const anchor=document.getElementById("simulationReadiness404152");if(!anchor)return;
@@ -53412,7 +53430,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.269";
+const ATLAS_BUILD = "40.4.270";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";

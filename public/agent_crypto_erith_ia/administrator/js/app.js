@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.269";
-  const ADMIN_RELEASE = "SIMULATION VISUAL HARMONY · NATIVE OPERATOR CONSOLE LOCK";
+  const ADMIN_BUILD = "40.4.270";
+  const ADMIN_RELEASE = "STRATEGY A · MEASURED MIXED-BIAS ENTRY GATE LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
