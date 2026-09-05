@@ -1,0 +1,38 @@
+name: Agent-Crypto 40.4.257 Graph default Top 5 boot state lock
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/agent-crypto-404257.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch and validate 40.4.257
+        run: python .github/scripts/agent_crypto_404257_release.py
+
+      - name: Commit release
+        run: |
+          git config user.name "Aether Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/version.json
+          git diff --cached --quiet && { echo "No release changes produced"; exit 1; }
+          git commit -m "agent-crypto: build 40.4.257 default Graph to Top 5"
+          git push origin HEAD:main
