@@ -33299,7 +33299,16 @@ function foundationNotebookMarkers(moduleKey) {
 function foundationNotebookParts(cockpit) {
   const source = String(cockpit?.notes_free || "");
   const markers = foundationNotebookMarkers(cockpit?.module_key);
-  if (!markers) return { auto_summary:"", personal_notes:source };
+  if (!markers) {
+    const moduleKey = String(cockpit?.module_key || "");
+    const evidence = cockpit?.practice_evidence || {};
+    const guidedConclusionKey = `${moduleKey}_guided_conclusion`;
+    const guidedSummaryKey = `${moduleKey}_guided_summary`;
+    const guidedSummary = evidence[guidedConclusionKey] === true
+      ? String(evidence[guidedSummaryKey] || cockpit?.takeaway || "").trim()
+      : "";
+    return { auto_summary:guidedSummary, personal_notes:source };
+  }
   const [start, end] = markers;
   const startIndex = source.indexOf(start);
   const endIndex = source.indexOf(end);
@@ -52787,7 +52796,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.258";
+const ATLAS_BUILD = "40.4.259";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
