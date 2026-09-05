@@ -32,11 +32,19 @@ jobs:
           from pathlib import Path
           p=Path('/tmp/agent_crypto_404261_264_cascade.py')
           s=p.read_text(encoding='utf-8')
+
           old='''    marker = "/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE"\n    text = replace_once(text, marker, block.rstrip() + "\\n\\n" + marker, owner_marker)\n    APP.write_text(text, encoding="utf-8")'''
           new='''    marker = "/* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE"\n    anchor = text.find("function simulationAcceptance404153")\n    if anchor < 0:\n        raise SystemExit("CASCADE_FAIL: simulationAcceptance404153 owner not found")\n    pos = text.find(marker, anchor)\n    if pos < 0:\n        raise SystemExit("CASCADE_FAIL: canonical Kraken marker not found after Simulation acceptance owner")\n    text = text[:pos] + block.rstrip() + "\\n\\n" + text[pos:]\n    APP.write_text(text, encoding="utf-8")'''
           if old not in s:
               raise SystemExit('cascade selector patch target not found')
-          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          s=s.replace(old,new,1)
+
+          old2='''    PATCHERS[build]()\n    contract_path = OUT / f"contract_{build.replace('.','_')}.json"'''
+          new2='''    PATCHERS[build]()\n    system_presentation = BASE / "js/views/system-presentation.js"\n    system_text = system_presentation.read_text(encoding="utf-8")\n    old_token = f'const SOURCE="./views/system.html?v=administrator-build-{parent}";'\n    new_token = f'const SOURCE="./views/system.html?v=administrator-build-{build}";'\n    if old_token not in system_text:\n        raise SystemExit(f"CASCADE_FAIL: System source token {parent} not found for {build}")\n    system_presentation.write_text(system_text.replace(old_token,new_token,1),encoding="utf-8")\n    contract_path = OUT / f"contract_{build.replace('.','_')}.json"'''
+          if old2 not in s:
+              raise SystemExit('cascade System-token patch target not found')
+          s=s.replace(old2,new2,1)
+          p.write_text(s,encoding='utf-8')
           PY
 
       - name: Run cumulative Strategy A cascade
