@@ -35725,6 +35725,27 @@ function renderStrategyARiskGovernor404262(){
 }
 try{globalThis.AgentCryptoRiskGovernor404262=Object.freeze({build:"40.4.262",evaluate:strategyARiskGovernor404262,last:()=>STRATEGY_A_LAST_RISK_404262,paper_only:true,real_orders:false,storage_write:false});}catch(_){}
 
+/* 40.4.263 — STRATEGY A · PAPER EXECUTION ENVELOPE EMULATION LOCK */
+const STRATEGY_A_PAPER_LEDGER_404263=[];
+function strategyAPaperCostAssumptions404263(){
+  const buyFee=strategyAReadNumber404261(els?.simBuyFeePct?.value,0.25),entryImpact=strategyAReadNumber404261(els?.simEntryImpactPct?.value,0.05);
+  return {buy_fee_pct:Number.isFinite(buyFee)?Math.max(0,buyFee):0.25,entry_impact_pct:Number.isFinite(entryImpact)?Math.max(0,entryImpact):0.05,source:"existing Simulation fields or pedagogical fallback"};
+}
+function strategyAPaperExecute404263(risk=STRATEGY_A_LAST_RISK_404262){
+  const existing=STRATEGY_A_PAPER_LEDGER_404263.find(row=>row.status==="PAPER_OPEN");if(existing)return {...existing,reused_open_fill:true};
+  if(!risk||!["ACCEPT","REDUCE"].includes(risk.decision)||!(Number(risk.authorized_notional_eur)>0))return {schema:"agent_crypto_paper_execution_envelope_v1",build:"40.4.263",status:"PAPER_REJECTED",reason:"Risk Governor n’a autorisé aucun montant.",safety:{real_order:false,kraken_network:false,workspace_mutation:false,storage_write:false}};
+  const btc=strategyABtcContext404261();if(!btc.available)return {schema:"agent_crypto_paper_execution_envelope_v1",build:"40.4.263",status:"PAPER_REJECTED",reason:"Prix BTC indisponible.",safety:{real_order:false,kraken_network:false,workspace_mutation:false,storage_write:false}};
+  const cost=strategyAPaperCostAssumptions404263(),notional=Number(risk.authorized_notional_eur),reference=Number(btc.price_eur),fill=reference*(1+cost.entry_impact_pct/100),fee=notional*cost.buy_fee_pct/100,assetCash=Math.max(0,notional-fee),qty=assetCash/fill;
+  const row={schema:"agent_crypto_paper_execution_envelope_v1",build:"40.4.263",execution_id:`PAPER-A-${strategyAHash404261([risk.risk_id,reference,notional].join("|"))}`,risk_id:risk.risk_id,proposal_id:risk.proposal_id,generated_at:new Date().toISOString(),workspace:"strategy_a",kraken_mapping_reference:"erith-strategy-a",execution_venue:"LOCAL_PAPER_EMULATOR",status:"PAPER_OPEN",symbol:"BTC",side:"BUY_PAPER",authorized_notional_eur:notional,reference_price_eur:reference,fill_price_eur:fill,quantity_btc:qty,entry_fee_eur:fee,entry_impact_pct:cost.entry_impact_pct,buy_fee_pct:cost.buy_fee_pct,safety:{simulation_only:true,real_order:false,kraken_network:false,kraken_order:false,credentials:false,wallet:false,withdrawal:false,workspace_mutation:false,storage_write:false}};
+  STRATEGY_A_PAPER_LEDGER_404263.push(row);return row;
+}
+function renderStrategyAPaperExecution404263(){
+  const anchor=document.getElementById("strategyARiskGovernor404262");if(!anchor)return;let panel=document.getElementById("strategyAPaperExecution404263");
+  if(!panel){panel=document.createElement("section");panel.id="strategyAPaperExecution404263";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(255,201,91,.25);border-radius:12px;padding:10px 12px;background:rgba(35,25,8,.42)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>PAPER EXECUTION ENVELOPE · STRATÉGIE A</strong><span style="font-size:10px;color:#ffd77a">LOCAL EMULATION · AUCUN APPEL KRAKEN</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAPaperFill404263">SIMULER FILL PAPER</button></div><div id="strategyAPaperSummary404263" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">Aucun fill paper.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAPaperFill404263")?.addEventListener("click",()=>{strategyAPaperExecute404263();renderStrategySandboxExtensions404261();});}
+  const out=document.getElementById("strategyAPaperSummary404263");if(!out)return;const p=STRATEGY_A_PAPER_LEDGER_404263.at(-1);if(!p){out.textContent="Aucun fill paper.";return;}out.textContent=`${p.status} · ${p.execution_id} · ${Number(p.authorized_notional_eur||0).toFixed(2)} € · fill ${Number(p.fill_price_eur||0).toFixed(2)} € · frais ${Number(p.entry_fee_eur||0).toFixed(2)} € · zéro réseau Kraken.`;out.style.color=p.status==="PAPER_OPEN"?"#ffd77a":"#ff9f9f";
+}
+try{globalThis.AgentCryptoPaperExecution404263=Object.freeze({build:"40.4.263",execute:strategyAPaperExecute404263,ledger:()=>STRATEGY_A_PAPER_LEDGER_404263.map(row=>({...row})),kraken_network:false,real_orders:false,workspace_mutation:false,storage_write:false});}catch(_){}
+
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
    The companion localhost adapter exposes an allowlisted read-only surface over port 8791.
@@ -52896,7 +52917,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.262";
+const ATLAS_BUILD = "40.4.263";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
