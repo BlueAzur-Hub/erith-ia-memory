@@ -300,6 +300,7 @@ body.atlas-administrator-mirror #missions-vie .life-missions-atmosphere{
   visibility:visible!important;
   position:absolute!important;
   inset:0!important;
+  display:block!important;
   width:100%!important;
   height:100%!important;
   object-fit:cover!important;
@@ -1222,14 +1223,15 @@ body.atlas-administrator-mirror #detailPanel :is(h2,h3,h4,h5,b,strong,span,small
 
 
 /* ==========================================================================
-   TECHNICAL_READING_CANONICAL_OWNER_404245
-   Agent-Crypto 40.4.245 — canonical geometry/image owner + validated 136px internal frame.
+   TECHNICAL_READING_CANONICAL_OWNER_404253
+   Agent-Crypto 40.4.253 — single canonical geometry/image owner + validated 136px internal frame.
 
    Proven contract preserved:
    - 28.2.5 / 28.2.9: graph owns workspace height; detail is an absolute
      right dock; long detail content scrolls internally and never grows graph.
    - 40.2.65: immersive selected/private portrait remains cover-rendered.
    - 40.4.243: current 360px right-dock/full-panel portrait appearance retained.
+   - 40.4.253: intrinsic image aspect ratio must never own rendered height; the canonical image is a block-level 100% × 100% cover surface.
    - 40.1.18 / Classic contract: 136px visual host remains in normal flow so
      the compact ACTIF / PRIX / DÉCISION / 24H row keeps its validated vertical position.
 
@@ -1329,6 +1331,7 @@ body.atlas-administrator-mirror
   max-height:none!important;
   margin:0!important;
   padding:0!important;
+  box-sizing:border-box!important;
   object-fit:cover!important;
   object-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%)!important;
   opacity:1!important;
