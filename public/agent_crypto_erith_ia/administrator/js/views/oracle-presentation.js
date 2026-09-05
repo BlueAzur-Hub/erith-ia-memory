@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.4.41
+/* Agent-Crypto @erith.IA — 40.4.260
    ORACLE TRUE LAZY PRESENTATION / CANONICAL OWNER CONSOLIDATION LOCK
    Outer live summary + three heavy subsection shells stay parser-mounted.
    Heavy bodies are read from views/oracle.html only when their own disclosure opens.
@@ -9,7 +9,7 @@
    oracle-demand-residency from the production load graph: one presentation owner remains. */
 (()=>{
   "use strict";
-  const BUILD="40.4.41";
+  const BUILD="40.4.260";
   const SOURCE="./views/oracle.html";
   const host=document.getElementById("oracle-view-host");
   if(!host)return;
@@ -133,29 +133,16 @@
     detail.addEventListener("erith:presentation-resident",ensure);
   }
   KEYS.forEach(bind);
-
-  // 40.4.41 — canonical exclusive accordion owner. This responsibility used to
-  // live in oracle-ui-continuity.js. Keeping it here prevents a second Oracle
-  // presentation owner while preserving the exact one-heavy-subsection-open contract.
-  function bindExclusiveAccordion(){
-    const members=KEYS.map(detailFor).filter(node=>node instanceof HTMLDetailsElement);
-    members.forEach(node=>{
-      if(node.dataset.oracleExclusiveBound==="1")return;
-      node.dataset.oracleExclusiveBound="1";
-      node.addEventListener("toggle",()=>{
-        if(!node.open)return;
-        members.forEach(other=>{if(other!==node&&other.open)other.open=false;});
-      });
-    });
-    return members.length;
-  }
-  const exclusiveAccordionMembers=bindExclusiveAccordion();
+  // 40.4.260 — operator multi-open policy. The three heavy Oracle bodies remain
+  // true-lazy and hydrate only on first disclosure, but opening one no longer
+  // closes another. This is presentation-only; engines and data owners are unchanged.
+  const exclusiveAccordionMembers=0;
 
   function snapshot(){
     const rows=KEYS.map(key=>{const detail=detailFor(key),body=bodyFor(key);return Object.freeze({key,open:detail?.open===true,body_state:body?.dataset?.oracleHydration||"detached-or-missing",connected:detail?.isConnected===true});});
-    return Object.freeze({build:BUILD,source:SOURCE,strategy:"parser-shell + on-demand body hydration",outer_live_summary_resident:true,heavy_subsection_shells_resident:true,source_fetch_count:sourceFetchCount,hydration_count:hydrationCount,last_error:lastError||null,rows:Object.freeze(rows),oracle_engine_changed:false,evidence_history_changed:false,market_core_changed:false,new_timer:false,new_observer:false,storage_write_added:false,business_network_owner_added:false,static_presentation_fetch_on_first_disclosure:true,exclusive_accordion_owner:"oracle-presentation.js",exclusive_accordion_members:exclusiveAccordionMembers,legacy_ui_continuity_loaded:false,legacy_demand_residency_loaded:false});
+    return Object.freeze({build:BUILD,source:SOURCE,strategy:"parser-shell + on-demand body hydration",outer_live_summary_resident:true,heavy_subsection_shells_resident:true,source_fetch_count:sourceFetchCount,hydration_count:hydrationCount,last_error:lastError||null,rows:Object.freeze(rows),oracle_engine_changed:false,evidence_history_changed:false,market_core_changed:false,new_timer:false,new_observer:false,storage_write_added:false,business_network_owner_added:false,static_presentation_fetch_on_first_disclosure:true,exclusive_accordion_owner:null,exclusive_accordion_members:exclusiveAccordionMembers,multi_open:true,legacy_ui_continuity_loaded:false,legacy_demand_residency_loaded:false});
   }
-  const api=Object.freeze({build:BUILD,source:SOURCE,ensureBody:hydrate,snapshot,keys:KEYS,network_fetch:"one same-origin static presentation source on first heavy disclosure only",oracle_engine_changed:false,evidence_history_changed:false,market_core_changed:false,new_timer:false,new_observer:false,storage_write_added:false,business_network_owner_added:false,exclusive_accordion_owner:true,legacy_ui_continuity_retired:true,legacy_demand_residency_retired:true});
+  const api=Object.freeze({build:BUILD,source:SOURCE,ensureBody:hydrate,snapshot,keys:KEYS,network_fetch:"one same-origin static presentation source on first heavy disclosure only",oracle_engine_changed:false,evidence_history_changed:false,market_core_changed:false,new_timer:false,new_observer:false,storage_write_added:false,business_network_owner_added:false,exclusive_accordion_owner:false,multi_open:true,legacy_ui_continuity_retired:true,legacy_demand_residency_retired:true});
   globalThis.ErithOraclePresentation=api;
   globalThis.ErithOraclePresentation40441=api;
   globalThis.__AGENT_CRYPTO_ORACLE_PRESENTATION_MOUNT_40441__=snapshot();

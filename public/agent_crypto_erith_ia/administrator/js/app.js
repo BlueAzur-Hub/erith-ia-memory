@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.259";
-  const ADMIN_RELEASE = "LEARNING GUIDED AUTO-SUMMARY DISPLAY TRUTH LOCK";
+  const ADMIN_BUILD = "40.4.260";
+  const ADMIN_RELEASE = "ORACLE MULTI-OPEN HEAVY SUBSECTIONS LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
