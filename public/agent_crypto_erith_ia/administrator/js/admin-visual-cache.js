@@ -1,11 +1,11 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.3.86";
+  const BUILD = "40.4.254";
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
-  const GENERATION = "administrator-visuals-2026-08-23-v1";
+  const GENERATION = "administrator-visuals-2026-09-05-404254-v2";
   const CHART_OFFICE = "./assets/visual/admin-chart-office.png";
   const objectUrls = new Map();
   const stats = { memory: 0, indexeddb: 0, network: 0, miss: 0, error: 0 };
@@ -96,7 +96,7 @@
     }
 
     try {
-      const response = await fetch(id, { cache: "force-cache", credentials: "same-origin" });
+      const response = await fetch(id, { cache: "reload", credentials: "same-origin" });
       if (!response.ok) throw new Error(`visual fetch ${response.status}`);
       const blob = await response.blob();
       if (!blob || !blob.size || (blob.type && !blob.type.startsWith("image/"))) throw new Error("invalid visual blob");
