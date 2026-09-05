@@ -1,0 +1,122 @@
+name: Aether Agent-Crypto 40.4.253R1 Technical Reading Label Hotfix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/aether-agent-crypto-404253r1.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aether-agent-crypto-404253r1
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name "Aether Release Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Patch Technical Reading project label owner
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          css_path = Path('public/agent_crypto_erith_ia/administrator/admin-visual-assets.css')
+          css = css_path.read_text(encoding='utf-8')
+          marker = '''body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3 > span{
+  position:absolute!important;
+  left:10px!important;
+  right:auto!important;
+  top:156px!important;
+  bottom:auto!important;
+  z-index:4!important;
+  max-width:calc(100% - 20px)!important;
+  padding:4px 7px!important;
+  border-radius:999px!important;
+}'''
+          replacement = '''body.atlas-administrator-mirror #detailPanel .detail-project-visual.admin-tech-r3 > span{
+  position:absolute!important;
+  left:10px!important;
+  right:auto!important;
+  top:156px!important;
+  bottom:auto!important;
+  z-index:4!important;
+  max-width:calc(100% - 20px)!important;
+  padding:4px 7px!important;
+  border-radius:999px!important;
+  /* 40.4.253R1 — 40.2.84 still applies a late translateY() to this identity
+     chip. With the restored 136px Classic host that translation lands on top
+     of ACTIF / PRIX / DECISION / 24H. Canonical owner neutralizes it here. */
+  transform:none!important;
+}'''
+          if marker not in css:
+              raise SystemExit('FAIL: canonical Technical Reading label block not found exactly once')
+          if css.count(marker) != 1:
+              raise SystemExit(f'FAIL: expected one canonical label block, got {css.count(marker)}')
+          css_path.write_text(css.replace(marker, replacement, 1), encoding='utf-8')
+
+          index_path = Path('public/agent_crypto_erith_ia/administrator/index.html')
+          index = index_path.read_text(encoding='utf-8')
+          old = './admin-visual-assets.css?v=administrator-build-40.4.253'
+          new = './admin-visual-assets.css?v=administrator-build-40.4.253R1'
+          if old not in index:
+              raise SystemExit('FAIL: current Technical Reading CSS cache token not found')
+          index_path.write_text(index.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Static gates
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          css = Path('public/agent_crypto_erith_ia/administrator/admin-visual-assets.css').read_text(encoding='utf-8')
+          index = Path('public/agent_crypto_erith_ia/administrator/index.html').read_text(encoding='utf-8')
+          build = Path('public/agent_crypto_erith_ia/administrator/build.json').read_text(encoding='utf-8')
+          assert 'height:136px!important;' in css
+          assert 'flex:0 0 136px!important;' in css
+          assert 'overflow:visible!important;' in css
+          assert 'object-fit:cover!important;' in css
+          assert 'object-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%)!important;' in css
+          assert 'top:156px!important;' in css
+          assert 'transform:none!important;' in css
+          assert './admin-visual-assets.css?v=administrator-build-40.4.253R1' in index
+          assert '"build": "40.4.253"' in build
+          assert '"engine": "38.15.11"' in build
+          print('PASS: Technical Reading only; 136px host, cover portrait, label drift neutralized, cache token forced.')
+          PY
+
+      - name: Commit release
+        shell: bash
+        run: |
+          git add public/agent_crypto_erith_ia/administrator/admin-visual-assets.css \
+                  public/agent_crypto_erith_ia/administrator/index.html
+          git commit -m "agent-crypto: hotfix 40.4.253R1 restore Technical Reading label breathing zone"
+          for try in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && break
+            test "$try" = 3 && exit 1
+            sleep 2
+          done
+
+      - name: Remove one-shot driver
+        shell: bash
+        run: |
+          rm .github/workflows/aether-agent-crypto-404253r1.yml
+          git add .github/workflows/aether-agent-crypto-404253r1.yml
+          git commit -m "chore: disarm Aether Technical Reading label hotfix 40.4.253R1"
+          for try in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && break
+            test "$try" = 3 && exit 1
+            sleep 2
+          done
