@@ -1,0 +1,280 @@
+name: Aether Agent-Crypto 40.4.253 Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/aether-agent-crypto-404253.yml
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch 40.4.252 to 40.4.253
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib, datetime
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          OLD='40.4.252'
+          NEW='40.4.253'
+          RELEASE='TECHNICAL READING · SINGLE PORTRAIT OWNER · FIREFOX ASSET-FIT LOCK'
+          STATUS='technical_reading_single_portrait_owner_firefox_asset_fit_404253'
+          now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+
+          current=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          if current.get('build') != OLD:
+              raise SystemExit(f'Expected {OLD}, found {current.get("build")}')
+
+          p=root/'admin-visual-assets.css'
+          s=p.read_text(encoding='utf-8')
+          old='''  visibility:visible!important;\n  position:absolute!important;\n  inset:0!important;\n  width:100%!important;\n  height:100%!important;\n  object-fit:cover!important;'''
+          new='''  visibility:visible!important;\n  position:absolute!important;\n  inset:0!important;\n  display:block!important;\n  width:100%!important;\n  height:100%!important;\n  object-fit:cover!important;'''
+          if old not in s:
+              raise SystemExit('Early portrait owner anchor missing')
+          s=s.replace(old,new,1)
+          s=s.replace('TECHNICAL_READING_CANONICAL_OWNER_404245','TECHNICAL_READING_CANONICAL_OWNER_404253',1)
+          s=s.replace('Agent-Crypto 40.4.245 — canonical geometry/image owner + validated 136px internal frame.','Agent-Crypto 40.4.253 — single canonical geometry/image owner + validated 136px internal frame.',1)
+          anchor='''   - 40.4.243: current 360px right-dock/full-panel portrait appearance retained.\n   - 40.1.18 / Classic contract: 136px visual host remains in normal flow so'''
+          repl='''   - 40.4.243: current 360px right-dock/full-panel portrait appearance retained.\n   - 40.4.253: intrinsic image aspect ratio must never own rendered height; the canonical image is a block-level 100% × 100% cover surface.\n   - 40.1.18 / Classic contract: 136px visual host remains in normal flow so'''
+          if anchor not in s:
+              raise SystemExit('Canonical owner comment anchor missing')
+          s=s.replace(anchor,repl,1)
+          portrait='''  max-height:none!important;\n  margin:0!important;\n  padding:0!important;\n  object-fit:cover!important;'''
+          portrait2='''  max-height:none!important;\n  margin:0!important;\n  padding:0!important;\n  box-sizing:border-box!important;\n  object-fit:cover!important;'''
+          idx=s.rfind(portrait)
+          if idx < 0:
+              raise SystemExit('Canonical portrait geometry anchor missing')
+          s=s[:idx]+s[idx:].replace(portrait,portrait2,1)
+          p.write_text(s,encoding='utf-8')
+
+          p=root/'index.html'
+          s=p.read_text(encoding='utf-8')
+          replacements=[
+            ('meta name="atlas-build" content="40.4.252"','meta name="atlas-build" content="40.4.253"'),
+            ('meta name="administrator-build" content="40.4.252"','meta name="administrator-build" content="40.4.253"'),
+            ('meta name="administrator-release" content="TECHNICAL READING 40.4.250 RUNTIME RESTORE · CHRONOS 40.4.251 HOLD"',f'meta name="administrator-release" content="{RELEASE}"'),
+            ('meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.252"','meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.253"'),
+            ('<title>Agent-Crypto @erith.IA — Build 40.4.252 · Administrator</title>','<title>Agent-Crypto @erith.IA — Build 40.4.253 · Administrator</title>'),
+            ('./admin-visual-assets.css?v=administrator-build-40.4.245','./admin-visual-assets.css?v=administrator-build-40.4.253'),
+            ('aria-label="Version Agent-Crypto installée : Build 40.4.252, mode Administrator"','aria-label="Version Agent-Crypto installée : Build 40.4.253, mode Administrator"'),
+            ('<span id="atlasVersionControlText">Build 40.4.252</span>','<span id="atlasVersionControlText">Build 40.4.253</span>'),
+            ("Agent-Crypto @erith.IA · Market Core · Build 40.4.252 · Version : Parker Lewis Can't Lose","Agent-Crypto @erith.IA · Market Core · Build 40.4.253 · Version : Parker Lewis Can't Lose"),
+            ('./app.js?v=administrator-build-40.4.252','./app.js?v=administrator-build-40.4.253'),
+            ('./js/app.js?v=administrator-build-40.4.250','./js/app.js?v=administrator-build-40.4.253')
+          ]
+          for a,b in replacements:
+              if a not in s:
+                  raise SystemExit(f'Index anchor missing: {a}')
+              s=s.replace(a,b,1)
+          oldblock='''<style id="atlasVisualContinuity40230">\n    /* 40.2.30 — visual-only continuity. Same temporal asset fills the letterbox behind the complete portrait. */\n    body.atlas-administrator-mirror #detailPanel.atlas-tech-static-cycle.atlas-tech-letterbox-fill-40230 {\n      background-image:\n        linear-gradient(180deg,rgba(3,10,18,.54),rgba(3,10,18,.74)),\n        var(--atlas-tech-backdrop-image,none) !important;\n      background-size:cover !important;\n      background-position:var(--admin-tech-x,50%) var(--admin-tech-y,50%) !important;\n      background-repeat:no-repeat !important;\n    }'''
+          newblock='''<style id="atlasVisualContinuity40230">\n    /* 40.4.253 — Technical Reading no longer has a second same-asset backdrop owner.\n       The legacy class remains a compatibility marker because 40.4.252 proved that\n       removing runtime classes can blank the panel. The canonical <img> owner below\n       remains the only portrait surface; Intelligence family continuity is preserved. */'''
+          if oldblock not in s:
+              raise SystemExit('Legacy letterbox visual owner anchor missing')
+          s=s.replace(oldblock,newblock,1)
+          p.write_text(s,encoding='utf-8')
+
+          p=root/'app.js'
+          s=p.read_text(encoding='utf-8')
+          old='const ATLAS_BUILD = "40.4.252";'
+          if old not in s:
+              raise SystemExit('ATLAS_BUILD anchor missing')
+          p.write_text(s.replace(old,'const ATLAS_BUILD = "40.4.253";',1),encoding='utf-8')
+
+          p=root/'js/app.js'
+          s=p.read_text(encoding='utf-8')
+          a='const ADMIN_BUILD = "40.4.252";'
+          b='const ADMIN_RELEASE = "TECHNICAL READING 40.4.250 RUNTIME RESTORE · CHRONOS 40.4.251 HOLD";'
+          if a not in s or b not in s:
+              raise SystemExit('Administrator runtime identity anchor missing')
+          s=s.replace(a,'const ADMIN_BUILD = "40.4.253";',1)
+          s=s.replace(b,f'const ADMIN_RELEASE = "{RELEASE}";',1)
+          p.write_text(s,encoding='utf-8')
+
+          p=root/'build.json'
+          d=json.loads(p.read_text(encoding='utf-8'))
+          d.update(build=NEW,release=RELEASE,status=STATUS)
+          p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          contract={
+            'build':NEW,'parent':OLD,'scope':'technical_reading_single_portrait_owner_firefox_asset_fit',
+            'single_portrait_surface':'.admin-tech-portrait-r3','portrait_display':'block',
+            'portrait_position':'absolute','portrait_inset':'0','portrait_width':'100%','portrait_height':'100%',
+            'portrait_fit':'cover','portrait_focal_variables_preserved':True,
+            'intrinsic_asset_ratio_may_own_height':False,
+            'legacy_letterbox_runtime_classes_preserved_as_compatibility_markers':True,
+            'legacy_letterbox_visual_background_retired':True,'admin_visual_assets_cache_token':NEW,
+            'host_136px_internal_frame_preserved':True,'detail_internal_scroll_preserved':True,
+            'rnd_library_changed':False,'private_image_indexeddb_changed':False,
+            'chronos_404251_preserved':True,'parallel_markets_changed':False,'market_graph_changed':False,
+            'atlas_changed':False,'math_core_changed':False,'window_manager_changed':False,
+            'market_core_changed':False,'protected_market_core':'38.15.11','firefox_operator_validation_required':True
+          }
+          note='40.4.253 — Technical Reading only: one canonical full-panel portrait surface; legacy letterbox visual background retired, compatibility runtime classes retained, 136px frame/RND/private IndexedDB/Chronos/Graph/markets/Market Core preserved; Firefox field validation required.'
+          lineage=' → 40.4.253 Technical Reading single portrait owner: second letterbox backdrop retired; compatibility runtime classes retained; canonical cover surface + 136px frame preserved'
+          for name in ['version.json','administrator-version.json']:
+              p=root/name
+              d=json.loads(p.read_text(encoding='utf-8'))
+              d['build']=NEW
+              d['release']=RELEASE
+              d['status']=STATUS
+              d['prepared_at']=now
+              d['published_at']=now
+              d['asset_token']=f'market-core-v2.0-alpha-build-{NEW}'
+              d['parent_build']=OLD
+              if name=='administrator-version.json':
+                  d['global_versioning']=NEW
+              d.setdefault('contracts',{})['technical_reading_single_portrait_owner_404253']=contract
+              if isinstance(d.get('lineage'),str) and '40.4.253 Technical Reading single portrait owner' not in d['lineage']:
+                  d['lineage'] += lineage
+              if isinstance(d.get('release_notes'),list) and not any(str(x).startswith('40.4.253') for x in d['release_notes']):
+                  d['release_notes'].insert(0,note)
+              p.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          vp=root/'version.json'
+          v=json.loads(vp.read_text(encoding='utf-8'))
+          for rel in ['admin-visual-assets.css','administrator-version.json','app.js','build.json','index.html','js/app.js']:
+              if rel in v.get('files',{}):
+                  v['files'][rel]=hashlib.sha256((root/rel).read_bytes()).hexdigest()
+          vp.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Static gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/build.json >/dev/null
+          python - <<'PY'
+          from pathlib import Path
+          import json, hashlib
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          idx=(root/'index.html').read_text(encoding='utf-8')
+          css=(root/'admin-visual-assets.css').read_text(encoding='utf-8')
+          assert 'var(--atlas-tech-backdrop-image' not in idx
+          assert 'atlas-tech-letterbox-fill-40230' in idx
+          assert 'atlas-tech-frame-lock-40259' in idx
+          assert 'TECHNICAL_READING_CANONICAL_OWNER_404253' in css
+          assert 'display:block!important;' in css
+          assert 'height:100%!important;' in css
+          assert 'object-fit:cover!important;' in css
+          assert 'height:136px!important;' in css
+          assert json.loads((root/'build.json').read_text(encoding='utf-8'))['engine']=='38.15.11'
+          v=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          assert v['build']=='40.4.253' and v['parent_build']=='40.4.252'
+          assert v['engine']['reference_build']=='38.15.11'
+          for rel in ['admin-visual-assets.css','administrator-version.json','app.js','build.json','index.html','js/app.js']:
+              if rel in v.get('files',{}):
+                  assert v['files'][rel]==hashlib.sha256((root/rel).read_bytes()).hexdigest(), rel
+          av=json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
+          assert av['asset_token']=='market-core-v2.0-alpha-build-40.4.253'
+          assert av['parent_build']=='40.4.252'
+          PY
+          printf '%s\n' \
+            public/agent_crypto_erith_ia/administrator/admin-visual-assets.css \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/version.json | sort > /tmp/expected.txt
+          git diff --name-only | sort > /tmp/actual.txt
+          diff -u /tmp/expected.txt /tmp/actual.txt
+
+      - name: Prepare release evidence and ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/aether253/package
+          git diff > /tmp/aether253/DIFF_40.4.252_TO_40.4.253.txt
+          cat > /tmp/aether253/FILES_CHANGED_40.4.253.md <<'EOF'
+          # Agent-Crypto 40.4.253 — Technical Reading Single Portrait Owner
+
+          - Parent: 40.4.252
+          - Scope: Technical Reading portrait rendering only
+          - Retires the second legacy letterbox image/background visual owner
+          - Keeps legacy runtime marker classes after the 40.4.251 blank-panel regression
+          - Preserves the validated 136 px in-flow frame, right dock, internal scroll, RND library, private IndexedDB images and Chronos
+          - Graph, multi-markets, Atlas, Math Core, Window Manager, Bridge and Market Core 38.15.11 unchanged
+          - Firefox operator validation required
+          EOF
+          cat > /tmp/aether253/AGENT_CRYPTO_40_4_253_STATIC_CHECKS.txt <<'EOF'
+          AGENT-CRYPTO 40.4.253 — STATIC CHECKS
+          PASS · app.js syntax
+          PASS · js/app.js syntax
+          PASS · JSON manifests
+          PASS · expected 7-file scope only
+          PASS · legacy runtime marker classes preserved
+          PASS · legacy letterbox visual background retired
+          PASS · canonical portrait cover + 136px host preserved
+          PASS · version hash truth for changed runtime files
+          PASS · Market Core 38.15.11 protected
+          Firefox operator validation: REQUIRED
+          EOF
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile, shutil
+          root=Path('.')
+          out=Path('/tmp/aether253/package')
+          files=[
+            'public/agent_crypto_erith_ia/administrator/admin-visual-assets.css',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/app.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+          ]
+          zpath=Path('/tmp/aether253/AGENT_CRYPTO_BUILD_40_4_253_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER_CHANGED_FILES.zip')
+          with zipfile.ZipFile(zpath,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for rel in files:
+                  z.write(root/rel,rel)
+              z.write('/tmp/aether253/FILES_CHANGED_40.4.253.md','FILES_CHANGED_40.4.253.md')
+              z.write('/tmp/aether253/AGENT_CRYPTO_40_4_253_STATIC_CHECKS.txt','AGENT_CRYPTO_40_4_253_STATIC_CHECKS.txt')
+              z.write('/tmp/aether253/DIFF_40.4.252_TO_40.4.253.txt','DIFF_40.4.252_TO_40.4.253.txt')
+          PY
+          sha256sum /tmp/aether253/AGENT_CRYPTO_BUILD_40_4_253_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER_CHANGED_FILES.zip | tee /tmp/aether253/AGENT_CRYPTO_BUILD_40_4_253_SHA256.txt
+
+      - name: Commit release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/admin-visual-assets.css \
+            public/agent_crypto_erith_ia/administrator/administrator-version.json \
+            public/agent_crypto_erith_ia/administrator/app.js \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/js/app.js \
+            public/agent_crypto_erith_ia/administrator/version.json
+          git commit -m "agent-crypto: build 40.4.253 consolidate Technical Reading single portrait owner"
+          git push origin HEAD:main
+          git rev-parse HEAD | tee /tmp/aether253/RELEASE_COMMIT_SHA.txt
+
+      - name: Upload 40.4.253 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_4_253_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER
+          path: |
+            /tmp/aether253/AGENT_CRYPTO_BUILD_40_4_253_TECHNICAL_READING_SINGLE_PORTRAIT_OWNER_CHANGED_FILES.zip
+            /tmp/aether253/AGENT_CRYPTO_BUILD_40_4_253_SHA256.txt
+            /tmp/aether253/AGENT_CRYPTO_40_4_253_STATIC_CHECKS.txt
+            /tmp/aether253/FILES_CHANGED_40.4.253.md
+            /tmp/aether253/DIFF_40.4.252_TO_40.4.253.txt
+            /tmp/aether253/RELEASE_COMMIT_SHA.txt
+          retention-days: 30
