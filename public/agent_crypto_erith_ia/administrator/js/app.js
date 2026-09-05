@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.247";
-  const ADMIN_RELEASE = "MARKETS · ACTIVE HORIZON TRUTH + KEYBOARD SEMANTICS";
+  const ADMIN_BUILD = "40.4.248";
+  const ADMIN_RELEASE = "MARKETS · FIVE-MARKET STATIC FREEZE CANDIDATE";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
