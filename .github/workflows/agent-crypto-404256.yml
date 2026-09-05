@@ -1,4 +1,4 @@
-# rerun-after-proof-alignment
+# narrowed-owner-retirement-run
 name: Agent-Crypto 40.4.256 Atlas resident wake owner consolidation
 
 on:
@@ -45,10 +45,10 @@ jobs:
 
           ATLAS AUTO · RESIDENT WAKE OWNER CONSOLIDATION LOCK
 
-          - Retires the obsolete 40.4.133 Atlas resident-wake monkey-patch from view-lifecycle.
-          - Keeps app.js 40.4.137 as the single pending-CURRENT resident wake authority.
+          - Retires the obsolete active 40.4.133 Atlas resident-wake monkey-patch from view-lifecycle.
+          - Keeps app.js 40.4.137 as the authoritative pending-CURRENT resident wake owner.
           - Preserves the 40.4.99 R1 visible-tab market pulse refinement.
-          - Keeps the load-complete heartbeat one-shot but removes its direct 40.4.51 fallback invocation.
+          - Preserves the canonical boot-complete heartbeat safety contract unchanged.
           - Adds no recurring timer, scheduler, observer, fetch owner, WebSocket or storage owner.
           - Technical Reading 40.4.255 is frozen and unchanged.
           - Market Core 38.15.11 remains protected.
