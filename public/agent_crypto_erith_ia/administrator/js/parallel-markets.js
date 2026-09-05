@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.237";
+  const BUILD = "40.4.246";
   const DEPTH_LEVEL = 203;
   const ACTIVE = new Set(["indices", "energy", "cross-market"]);
   const ENABLE_MATH = true;
@@ -169,9 +169,10 @@
     if (bar.dataset.parallelToolbarBound !== "1") {
       bar.dataset.parallelToolbarBound = "1";
       bar.innerHTML = `
-        <span class="mirror-group atlas-toolbar-view-404228"><small>VUE</small><b class="active">Base 100</b></span>
-        <span class="mirror-group atlas-toolbar-period-404228 atlas-parallel-periods"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}${LONG_PERIODS.map(p => `<button type="button" data-parallel-long-period="${p}" title="Historique long chargé uniquement à la demande">${p === "max" ? "MAX" : p}</button>`).join("")}</span>
-        <span class="mirror-group atlas-toolbar-inspection-404228"><small>INSPECTION</small><b class="active">Survol</b><span>Valeurs réelles</span></span>`;
+        <span class="mirror-group atlas-toolbar-view-404228" role="group" aria-label="Vue"><small>VUE</small><b class="active">Base 100</b></span>
+        <span class="mirror-group atlas-toolbar-history-404246 atlas-parallel-history" role="group" aria-label="Historique long"><small>HISTORIQUE</small>${LONG_PERIODS.map(p => `<button type="button" data-parallel-long-period="${p}" title="Historique long chargé uniquement à la demande">${p === "max" ? "MAX" : p}</button>`).join("")}</span>
+        <span class="mirror-group atlas-toolbar-inspection-404228" role="group" aria-label="Inspection"><small>INSPECTION</small><b class="active">Survol</b><span>Valeurs réelles</span></span>
+        <span class="mirror-group atlas-toolbar-period-404228 atlas-parallel-periods" role="group" aria-label="Période standard"><small>PÉRIODE</small>${PERIODS.map(p => `<button type="button" data-parallel-period="${p}">${p}</button>`).join("")}</span>`;
       bar.addEventListener("click", event => {
         const button = event.target instanceof Element ? event.target.closest("[data-parallel-period]") : null;
         if (!button || !CONFIG[state.current] || !ACTIVE.has(state.current)) return;
