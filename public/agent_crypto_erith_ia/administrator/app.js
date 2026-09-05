@@ -40703,6 +40703,7 @@ function atlasParallelMarketRenderMetals() {
 
 function atlasParallelMarketRender() {
   const domain = atlasParallelMarketDomain();
+  const cryptoActive = domain === "crypto";
   const metalsActive = domain === "metals";
   const analyst = document.getElementById("analyste");
   const switchButton = document.getElementById("atlasMarketDomainSwitch");
@@ -40773,7 +40774,9 @@ function atlasParallelMarketRender() {
     switchValue.textContent = metalsActive ? "MÉTAUX" : "CRYPTO";
   }
   if (foundation) foundation.hidden = !metalsActive;
-  if (canvas) canvas.hidden = metalsActive;
+  /* 40.4.250 — one painted market graph surface at a time.
+     The Crypto canvas must leave layout/paint for every non-Crypto domain. */
+  if (canvas) canvas.hidden = !cryptoActive;
 
   atlasParallelMarketHiddenState(overlay, metalsActive, "overlay");
   atlasParallelMarketHiddenState(
@@ -52748,7 +52751,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.249";
+const ATLAS_BUILD = "40.4.250";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
