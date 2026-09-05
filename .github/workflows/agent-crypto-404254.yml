@@ -52,6 +52,14 @@ jobs:
           index = index.replace(old, new, 1)
           index_path.write_text(index, encoding='utf-8')
 
+          system_path = base/'js/views/system-presentation.js'
+          system = system_path.read_text(encoding='utf-8')
+          old_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.253";'
+          new_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.254";'
+          assert old_source in system
+          assert new_source not in system
+          system_path.write_text(system.replace(old_source, new_source, 1), encoding='utf-8')
+
           contract = {
             'build': '40.4.254',
             'parent': '40.4.253',
@@ -103,11 +111,12 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json, re
+          import json
 
           base = Path('public/agent_crypto_erith_ia/administrator')
           cache = (base/'js/admin-visual-cache.js').read_text(encoding='utf-8')
           index = (base/'index.html').read_text(encoding='utf-8')
+          system = (base/'js/views/system-presentation.js').read_text(encoding='utf-8')
           version = json.loads((base/'version.json').read_text(encoding='utf-8'))
           build = json.loads((base/'build.json').read_text(encoding='utf-8'))
 
@@ -130,6 +139,7 @@ jobs:
           assert 'admin-visual-assets.css?v=administrator-build-40.4.253R2' in index
           assert '<meta name="atlas-build" content="40.4.254"' in index
           assert '<meta name="administrator-build" content="40.4.254"' in index
+          assert 'const SOURCE="./views/system.html?v=administrator-build-40.4.254";' in system
           PY
 
           node --check public/agent_crypto_erith_ia/administrator/js/admin-visual-cache.js
@@ -151,6 +161,7 @@ jobs:
             'public/agent_crypto_erith_ia/administrator/index.html',
             'public/agent_crypto_erith_ia/administrator/js/admin-visual-cache.js',
             'public/agent_crypto_erith_ia/administrator/js/app.js',
+            'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js',
             'public/agent_crypto_erith_ia/administrator/version.json',
           }
           changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
