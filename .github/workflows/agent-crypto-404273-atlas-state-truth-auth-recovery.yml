@@ -1,0 +1,50 @@
+name: Agent-Crypto 40.4.273 Atlas State Truth Bridge Auth Recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-404273-atlas-state-truth-auth-recovery.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch Atlas state truth, validate and package
+        run: python .github/scripts/agent_crypto_release_404273_atlas_state_truth_auth_recovery.py
+
+      - name: Commit canonical 40.4.273 release
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/agent-crypto-404273-atlas-state-truth-auth-recovery.yml
+          git rm .github/scripts/agent_crypto_release_404273_atlas_state_truth_auth_recovery.py
+          git add public/agent_crypto_erith_ia/administrator/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/build.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY.zip \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY_SHA256.txt \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY_REPORT.md
+          git commit -m "agent-crypto: build 40.4.273 lock Atlas state truth and Bridge auth recovery"
+          git push origin HEAD:main
+
+      - name: Upload 40.4.273 artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY
+          path: |
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY.zip
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY_SHA256.txt
+            coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY_REPORT.md
+          if-no-files-found: error
