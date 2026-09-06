@@ -30,7 +30,7 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          import hashlib, json, re, shutil
+          import hashlib, json, re, shutil, subprocess
 
           repo = Path('.')
           root = repo / 'public/agent_crypto_erith_ia/administrator'
@@ -39,12 +39,17 @@ jobs:
           payload = stage / 'payload'
 
           req = json.loads(request_path.read_text(encoding='utf-8'))
-          if req.get('schema') != 'agent_crypto_auto_update_request_v1':
+          schema = str(req.get('schema') or '')
+          allowed_schemas = {
+              'agent_crypto_auto_update_request_v1',
+              'agent_crypto_auto_update_patch_request_v2',
+          }
+          if schema not in allowed_schemas:
               raise SystemExit('STOP CRITIQUE: schema auto-update invalide')
           if req.get('critical') is not False:
               raise SystemExit('STOP CRITIQUE: requête marquée critique')
           if req.get('delete'):
-              raise SystemExit('STOP CRITIQUE: suppression automatique interdite')
+              raise SystemExit('STOP CRITIQUE: suppression de production interdite')
 
           build = str(req.get('build') or '').strip()
           parent = str(req.get('parent_build') or '').strip()
@@ -57,11 +62,9 @@ jobs:
               p = Path(rel)
               if p.is_absolute() or '..' in p.parts:
                   raise SystemExit(f'STOP CRITIQUE: chemin interdit {rel}')
-              if not (payload / p).is_file():
-                  raise SystemExit(f'STOP CRITIQUE: payload absent {rel}')
           for required in ('version.json', 'administrator-version.json'):
               if required not in files:
-                  raise SystemExit(f'STOP CRITIQUE: {required} absent du payload')
+                  raise SystemExit(f'STOP CRITIQUE: {required} absent du périmètre')
 
           current = json.loads((root / 'version.json').read_text(encoding='utf-8'))
           current_build = str(current.get('build') or '')
@@ -88,23 +91,79 @@ jobs:
               text = (root / rel).read_text(encoding='utf-8', errors='replace')
               before_budget[rel] = {m: text.count(m) for m in budget_markers}
 
-          for rel in files:
-              src = payload / rel
-              dst = root / rel
-              dst.parent.mkdir(parents=True, exist_ok=True)
-              shutil.copy2(src, dst)
+          if schema == 'agent_crypto_auto_update_request_v1':
+              for rel in files:
+                  if not (payload / rel).is_file():
+                      raise SystemExit(f'STOP CRITIQUE: payload absent {rel}')
+              for rel in files:
+                  src = payload / rel
+                  dst = root / rel
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(src, dst)
+          else:
+              patch_rel = str(req.get('patch_file') or 'update.patch').strip()
+              patch_path = stage / patch_rel
+              if Path(patch_rel).is_absolute() or '..' in Path(patch_rel).parts:
+                  raise SystemExit('STOP CRITIQUE: patch_file interdit')
+              if not patch_path.is_file():
+                  raise SystemExit('STOP CRITIQUE: patch absent')
+              expected_patch_sha = str(req.get('patch_sha256') or '').strip().lower()
+              actual_patch_sha = hashlib.sha256(patch_path.read_bytes()).hexdigest()
+              if not expected_patch_sha or actual_patch_sha != expected_patch_sha:
+                  raise SystemExit('STOP CRITIQUE: SHA-256 du patch invalide')
+
+              numstat = subprocess.check_output(
+                  ['git', 'apply', '--numstat', str(patch_path)],
+                  text=True,
+              )
+              patched_paths = []
+              for line in numstat.splitlines():
+                  parts = line.split('\t')
+                  if len(parts) < 3:
+                      continue
+                  patched_paths.append(parts[-1])
+              prefix = 'public/agent_crypto_erith_ia/administrator/'
+              if not patched_paths or any(not p.startswith(prefix) for p in patched_paths):
+                  raise SystemExit('STOP CRITIQUE: patch hors Administrator')
+              patched_rel = [p[len(prefix):] for p in patched_paths]
+              if set(patched_rel) != set(files):
+                  raise SystemExit(
+                      'STOP CRITIQUE: périmètre patch != request: '
+                      + json.dumps({'patch': sorted(patched_rel), 'request': sorted(files)}, ensure_ascii=False)
+                  )
+              subprocess.run(['git', 'apply', '--check', str(patch_path)], check=True)
+              subprocess.run(['git', 'apply', str(patch_path)], check=True)
 
           manifest = json.loads((root / 'version.json').read_text(encoding='utf-8'))
           admin_manifest = json.loads((root / 'administrator-version.json').read_text(encoding='utf-8'))
+          build_manifest = json.loads((root / 'build.json').read_text(encoding='utf-8'))
           if str(manifest.get('build')) != build or str(admin_manifest.get('build')) != build:
               raise SystemExit('STOP CRITIQUE: manifests non alignés sur la build')
+          if str(build_manifest.get('build')) != build:
+              raise SystemExit('STOP CRITIQUE: build.json non aligné')
+          if str(manifest.get('parent_build')) != parent or str(admin_manifest.get('parent_build')) != parent:
+              raise SystemExit('STOP CRITIQUE: parent_build non aligné')
           if manifest.get('asset_token') != f'market-core-v2.0-alpha-build-{build}':
               raise SystemExit('STOP CRITIQUE: asset_token incohérent')
+          if admin_manifest.get('asset_token') != f'market-core-v2.0-alpha-build-{build}':
+              raise SystemExit('STOP CRITIQUE: administrator asset_token incohérent')
           engine = manifest.get('engine') or {}
           if str(engine.get('reference_build')) != '38.15.11':
               raise SystemExit('STOP CRITIQUE: Market Core 38.15.11 modifié')
           if str(manifest.get('mode')) != 'Administrator':
               raise SystemExit('STOP CRITIQUE: mode publication différent de Administrator')
+
+          app_text = (root / 'app.js').read_text(encoding='utf-8', errors='replace')
+          app_markers = re.findall(r'const\s+ATLAS_BUILD\s*=\s*["\']([^"\']+)["\']\s*;', app_text)
+          if app_markers != [build]:
+              raise SystemExit(f'STOP CRITIQUE: ATLAS_BUILD invalide {app_markers}')
+          js_app_text = (root / 'js/app.js').read_text(encoding='utf-8', errors='replace')
+          admin_markers = re.findall(r'const\s+ADMIN_BUILD\s*=\s*["\']([^"\']+)["\']\s*;', js_app_text)
+          if admin_markers != [build]:
+              raise SystemExit(f'STOP CRITIQUE: ADMIN_BUILD invalide {admin_markers}')
+          index = (root / 'index.html').read_text(encoding='utf-8', errors='replace')
+          if f'name="administrator-build" content="{build}"' not in index:
+              raise SystemExit('STOP CRITIQUE: index Administrator build absent')
 
           forbidden_true = re.compile(r'\b(trade_endpoint|canonical_price_created|financial_signal|write_capability)\s*[":=]+\s*true\b', re.I)
           for rel in files:
@@ -137,7 +196,6 @@ jobs:
               if rel not in ('version.json', 'administrator-version.json') and rel not in hashes:
                   raise SystemExit(f'STOP CRITIQUE: fichier modifié non déclaré dans version.json: {rel}')
 
-          index = (root / 'index.html').read_text(encoding='utf-8', errors='replace')
           ids = re.findall(r'\bid=["\']([^"\']+)["\']', index)
           if len(ids) != len(set(ids)):
               dup = sorted({x for x in ids if ids.count(x) > 1})[:10]
@@ -146,12 +204,14 @@ jobs:
           receipt_dir = repo / 'coordination/inter_ai_dialogues/agent_crypto/auto_update_receipts'
           receipt_dir.mkdir(parents=True, exist_ok=True)
           receipt = {
-              'schema': 'agent_crypto_auto_update_receipt_v1',
+              'schema': 'agent_crypto_auto_update_receipt_v2',
+              'request_schema': schema,
               'build': build,
               'parent_build': parent,
               'status': 'VALIDATED_PENDING_JS_SYNTAX',
               'market_core': '38.15.11',
               'files': files,
+              'patch_sha256': req.get('patch_sha256') if schema.endswith('_v2') else None,
               'critical_stop': False
           }
           (receipt_dir / f'{build}.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
@@ -166,8 +226,21 @@ jobs:
           ROOT="public/agent_crypto_erith_ia/administrator"
           node --check "$ROOT/app.js"
           node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/views/system-presentation.js"
           if [ -f "$ROOT/js/views/private-backend-sources.js" ]; then
             node --check "$ROOT/js/views/private-backend-sources.js"
+          fi
+
+      - name: 40.4.276 pending-wake contract gate when present
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="public/agent_crypto_erith_ia/administrator"
+          if grep -q 'atlasLocalReportsMarketId404276' "$ROOT/app.js"; then
+            grep -q 'atlasLocalReportsAutomaticStop(pendingId)' "$ROOT/app.js"
+            grep -q 'atlasLocalReportsScheduleAutomatic341Base(' "$ROOT/app.js"
+            grep -q 'marketId: pendingId' "$ROOT/app.js"
+            grep -q 'runtime marché pas encore aligné' "$ROOT/app.js"
           fi
 
       - name: Finalize receipt
