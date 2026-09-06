@@ -1,5 +1,5 @@
 from pathlib import Path
-import hashlib, json, re, subprocess, zipfile
+import hashlib, json, subprocess, zipfile
 
 REPO=Path.cwd()
 BASE=REPO/'public/agent_crypto_erith_ia/administrator'
@@ -18,6 +18,12 @@ OWNER='/* 40.4.274 — ATLAS RESIDENT CURRENT SNAPSHOT · SOURCE-STATE VISIBILIT
 def run(*args):
     return subprocess.run(list(args),cwd=REPO,check=True,text=True)
 
+def replace_once(text, old, new, label):
+    count=text.count(old)
+    if count!=1:
+        raise SystemExit(f'404274_FAIL: {label} expected exactly once, found {count}')
+    return text.replace(old,new,1)
+
 truth=json.loads((BASE/'build.json').read_text(encoding='utf-8'))
 if str(truth.get('build'))!=PARENT: raise SystemExit(f'404274_FAIL: expected parent {PARENT}, found {truth.get("build")}')
 if str(truth.get('engine'))!=ENGINE: raise SystemExit('404274_FAIL: protected Market Core identity changed')
@@ -25,69 +31,164 @@ if str(truth.get('engine'))!=ENGINE: raise SystemExit('404274_FAIL: protected Ma
 text=APP.read_text(encoding='utf-8')
 if OWNER in text: raise SystemExit('404274_FAIL: owner already present')
 
-# Locate the existing canonical public-market loader across its real multiline signature.
-sig=re.search(r'(?ms)^async function atlasLoadPublicCryptoMarket\s*\(.*?\)\s*\{',text)
-if not sig: raise SystemExit('404274_FAIL: atlasLoadPublicCryptoMarket signature not found')
-# Bound the surgery to this top-level function only.
-candidates=[p for p in (text.find('\nasync function ',sig.end()),text.find('\nfunction ',sig.end())) if p!=-1]
-end=min(candidates) if candidates else min(len(text),sig.end()+12000)
-body=text[sig.start():end]
+# 40.4.274 real owner audit:
+# - canonical public source fetch is SourceAdapter.publicCryptoMarket() inside runLivecheck();
+# - atlasPulseVisible() is browser document visibility, not Atlas disclosure visibility;
+# - the existing 40.4.137 pending owner is atlasCurrentPendingMarket137;
+# - therefore keep the existing market cadence alive as resident source work while hidden,
+#   but continue pausing spot/chart visual work and do not create another scheduler/fetch owner.
 
-entry_re=re.compile(r'\n([ \t]*)if\s*\(\s*!atlasPulseVisible\(\)\s*\)\s*return\s+null\s*;')
-post_re=re.compile(r'if\s*\(\s*controller\.signal\.aborted\s*\|\|\s*!atlasPulseVisible\(\)\s*\)\s*return\s+false\s*;')
-entry_matches=list(entry_re.finditer(body)); post_matches=list(post_re.finditer(body))
-print(json.dumps({'404274_diag':{'signature':sig.group(0),'entry_visibility_guards':len(entry_matches),'post_visibility_guards':len(post_matches),'body_chars':len(body)}},ensure_ascii=False))
-if len(entry_matches) not in (0,1): raise SystemExit(f'404274_FAIL: loader entry visibility guard count={len(entry_matches)}')
-if len(post_matches)!=1: raise SystemExit(f'404274_FAIL: loader post-fetch visibility guard count={len(post_matches)}')
+old_pause='''function atlasPauseMarketPulse() {
+  state.marketPulse.paused = true;
+  if (state.auto.timer) clearTimeout(state.auto.timer);
+  state.auto.timer = null;
+  state.auto.nextAt = null;
+  atlasClearPulseTimer("spot");
+  atlasClearPulseTimer("chart");
+  atlasAbortPulseController(state.marketPulse.marketController);
+  atlasAbortPulseController(state.marketPulse.spotController);
+  atlasAbortPulseController(state.chartEngineV2?.controller);
+  updateAutoCountdown();
+}'''
+new_pause='''function atlasPauseMarketPulse() {
+  state.marketPulse.paused = true;
+  /* 40.4.274: the canonical public-market cadence is resident state work.
+     Keep its existing timer/controller alive while the document is hidden;
+     only spot/chart presentation work is paused. */
+  atlasClearPulseTimer("spot");
+  atlasClearPulseTimer("chart");
+  atlasAbortPulseController(state.marketPulse.spotController);
+  atlasAbortPulseController(state.chartEngineV2?.controller);
+  updateAutoCountdown();
+}'''
+text=replace_once(text,old_pause,new_pause,'atlasPauseMarketPulse owner')
 
-if entry_matches:
-    body=entry_re.sub(lambda m:'\n'+m.group(1)+'/* 40.4.274: canonical source ingestion remains resident while Atlas UI is hidden. */',body,count=1)
-body=post_re.sub('if (controller.signal.aborted) return false;',body,count=1)
+old_schedule_hidden='''  if (!atlasPulseVisible()) {
+    state.auto.nextAt = null;
+    updateAutoCountdown();
+    return;
+  }
 
-wake_re=re.compile(r'(atlasPublicCryptoMarketLastFetchAt\s*=\s*Date\.now\(\)\s*;)(\s*\n\s*)return\s+true\s*;')
-if len(list(wake_re.finditer(body)))!=1: raise SystemExit(f'404274_FAIL: canonical cache completion count={len(list(wake_re.finditer(body)))}')
-body=wake_re.sub(r'\1\2/* 40.4.274: wake the existing 40.4.137 CURRENT owner from fresh canonical source state. */\2try { atlasCurrentPendingRefresh137("public-market-source-404274"); } catch (_) {}\2return true;',body,count=1)
+'''
+text=replace_once(text,old_schedule_hidden,'','scheduleAutoRead hidden cancellation')
 
-contract_js=f'''{OWNER}\n/* Canonical source ingestion is resident state, not a panel-render concern. */\ntry{{globalThis.ErithAtlasResidentCurrent404274=Object.freeze({{\n  build:"40.4.274",parent:"40.4.273",canonical_pending_owner:"atlasCurrentPendingMarket137",\n  public_market_source_visibility_independent:true,ui_render_visibility_contract_unchanged:true,\n  new_timer:false,new_observer:false,new_fetch_owner:false,new_websocket:false,new_storage_owner:false,\n  market_core_changed:false,oracle_changed:false,strategy_a_changed:false\n}});}}catch(_){{}}\n'''
-body=contract_js+body
-text=text[:sig.start()]+body+text[end:]
+old_schedule_callback='''  state.auto.timer = setTimeout(() => {
+    state.auto.timer = null;
+    if (state.auto?.enabled && atlasPulseVisible()) {
+      void refreshMarketOnly({ reason: "market-pulse" });
+    }
+  }, delay);'''
+new_schedule_callback='''  state.auto.timer = setTimeout(() => {
+    state.auto.timer = null;
+    if (state.auto?.enabled) {
+      void refreshMarketOnly({
+        reason: "market-pulse",
+        residentOnly: !atlasPulseVisible()
+      });
+    }
+  }, delay);'''
+text=replace_once(text,old_schedule_callback,new_schedule_callback,'scheduleAutoRead resident callback')
+
+old_refresh='''async function refreshMarketOnly(options = {}) {
+  if (state.auto?.livecheckBusy || !state.auto?.enabled || !atlasPulseVisible()) return false;
+  return runLivecheck({ ...options, reason: options.reason || "public-market-pulse" });
+}'''
+new_refresh='''async function refreshMarketOnly(options = {}) {
+  if (state.auto?.livecheckBusy || !state.auto?.enabled) return false;
+  return runLivecheck({
+    ...options,
+    reason: options.reason || "public-market-pulse",
+    residentOnly: options.residentOnly === true || !atlasPulseVisible()
+  });
+}'''
+text=replace_once(text,old_refresh,new_refresh,'refreshMarketOnly visibility gate')
+
+old_livecheck_entry='''async function runLivecheck(options = {}) {
+  if (state.auto?.livecheckBusy || !atlasPulseVisible()) return false;
+
+  state.auto.livecheckBusy = true;'''
+new_livecheck_entry='''async function runLivecheck(options = {}) {
+  if (state.auto?.livecheckBusy) return false;
+  const residentOnly = options.residentOnly === true || !atlasPulseVisible();
+
+  state.auto.livecheckBusy = true;'''
+text=replace_once(text,old_livecheck_entry,new_livecheck_entry,'runLivecheck entry visibility gate')
+
+old_post='''    const result = await SourceAdapter.publicCryptoMarket({ signal: controller.signal });
+    if (controller.signal.aborted || !atlasPulseVisible()) return false;
+    const latencyMs = Math.round(performance.now() - startedAt);'''
+new_post='''    const result = await SourceAdapter.publicCryptoMarket({ signal: controller.signal });
+    if (controller.signal.aborted) return false;
+    const latencyMs = Math.round(performance.now() - startedAt);'''
+text=replace_once(text,old_post,new_post,'runLivecheck post-fetch visibility gate')
+
+old_chart='''    atlasStartSelectedChart(160, true);
+    await atlasDelay(260);
+    await atlasWaitForChartIdle(30_000);
+    return true;'''
+new_chart='''    if (!residentOnly) {
+      atlasStartSelectedChart(160, true);
+      await atlasDelay(260);
+      await atlasWaitForChartIdle(30_000);
+    }
+    return true;'''
+text=replace_once(text,old_chart,new_chart,'runLivecheck hidden chart suppression')
+
+old_retry='''    } else if (state.auto?.enabled && atlasPulseVisible()) {
+      const retryDelay = atlasMarketRetryDelay(state.marketPulse.marketFailures || 1);
+      atlasAnnounceDirectRetry(retryDelay, "Snapshot public Crypto indisponible");
+      scheduleAutoRead(retryDelay);
+    }'''
+new_retry='''    } else if (state.auto?.enabled) {
+      const retryDelay = atlasMarketRetryDelay(state.marketPulse.marketFailures || 1);
+      if (!residentOnly) atlasAnnounceDirectRetry(retryDelay, "Snapshot public Crypto indisponible");
+      scheduleAutoRead(retryDelay);
+    }'''
+text=replace_once(text,old_retry,new_retry,'runLivecheck hidden retry cadence')
+
+contract_js=f'''\n\n{OWNER}\ntry {{\n  globalThis.ErithAtlasResidentCurrent404274 = Object.freeze({{\n    build:"40.4.274",\n    parent:"40.4.273",\n    canonical_source_owner:"runLivecheck -> SourceAdapter.publicCryptoMarket",\n    canonical_pending_owner:"atlasCurrentPendingMarket137",\n    document_hidden_source_cadence_preserved:true,\n    atlas_disclosure_visibility_dependency:false,\n    hidden_spot_chart_work_preserved_paused:true,\n    existing_market_timer_reused:true,\n    new_timer:false,\n    new_observer:false,\n    new_fetch_owner:false,\n    new_websocket:false,\n    new_storage_owner:false,\n    market_core_changed:false,\n    oracle_changed:false,\n    strategy_a_changed:false,\n    real_orders:false\n  }});\n}} catch (_) {{}}\n'''
+text += contract_js
 APP.write_text(text,encoding='utf-8')
 
 contract={
-  'schema':'agent_crypto_atlas_resident_current_snapshot_404274_v1',
+  'schema':'agent_crypto_atlas_resident_current_snapshot_404274_v2',
   'build':BUILD,'parent':PARENT,'engine':ENGINE,
+  'canonical_source_owner':'runLivecheck -> SourceAdapter.publicCryptoMarket',
   'canonical_pending_owner':'atlasCurrentPendingMarket137',
-  'public_market_source_visibility_independent':True,
-  'hidden_or_closed_atlas_must_not_block_canonical_source_ingestion':True,
-  'fresh_source_wakes_existing_pending_owner':True,
-  'ui_render_visibility_contract_unchanged':True,
+  'document_hidden_source_cadence_preserved':True,
+  'atlas_disclosure_visibility_dependency':False,
+  'hidden_spot_chart_work_preserved_paused':True,
+  'existing_market_timer_reused':True,
   'new_timer':False,'new_observer':False,'new_fetch_owner':False,'new_websocket':False,'new_storage_owner':False,
   'market_core_changed':False,'oracle_changed':False,'strategy_a_changed':False,
-  'readiness_guard_changed':False,'livecheck_guard_changed':False,'backoff_guard_changed':False,
+  'readiness_guard_changed':False,'bridge_auth_recovery_changed':False,'report_sequence_changed':False,
   'real_orders':False
 }
 contract_path=Path('/tmp/agent_crypto_404274_contract.json')
 contract_path.write_text(json.dumps(contract,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 run('python',str(DRIVER),'--build',BUILD,'--parent',PARENT,'--release',RELEASE,'--status',STATUS,
     '--contract-key','atlas_resident_current_snapshot_visibility_decoupling_404274','--contract-json',str(contract_path),
-    '--lineage-note','40.4.274 Atlas resident CURRENT canonical-source visibility decoupling')
+    '--lineage-note','40.4.274 resident canonical market cadence decoupled from document visibility; existing 40.4.137 pending owner reused')
 run('node','--check',str(APP))
 run('node','--check',str(BASE/'js/app.js'))
 run('python',str(GUARD),'--expected-build',BUILD,'--expected-release',RELEASE)
 
 final=APP.read_text(encoding='utf-8')
-required=[OWNER,'public_market_source_visibility_independent:true','canonical_pending_owner:"atlasCurrentPendingMarket137"','if (controller.signal.aborted) return false;','atlasCurrentPendingRefresh137("public-market-source-404274")','const ATLAS_BUILD = "40.4.274";']
+required=[
+  OWNER,
+  'canonical_pending_owner:"atlasCurrentPendingMarket137"',
+  'canonical_source_owner:"runLivecheck -> SourceAdapter.publicCryptoMarket"',
+  'residentOnly: !atlasPulseVisible()',
+  'residentOnly: options.residentOnly === true || !atlasPulseVisible()',
+  'if (controller.signal.aborted) return false;',
+  'if (!residentOnly) {\n      atlasStartSelectedChart(160, true);',
+  'const ATLAS_BUILD = "40.4.274";'
+]
 for item in required:
     if item not in final: raise SystemExit(f'404274_FAIL: missing runtime marker {item}')
 if final.count(OWNER)!=1: raise SystemExit('404274_FAIL: duplicate owner')
-# Prove the old visibility coupling is gone from the canonical loader body.
-verify_sig=re.search(r'(?ms)^async function atlasLoadPublicCryptoMarket\s*\(.*?\)\s*\{',final)
-if not verify_sig: raise SystemExit('404274_FAIL: patched atlasLoadPublicCryptoMarket signature not found')
-verify_candidates=[p for p in (final.find('\nasync function ',verify_sig.end()),final.find('\nfunction ',verify_sig.end())) if p!=-1]
-verify_end=min(verify_candidates) if verify_candidates else min(len(final),verify_sig.end()+12000)
-verify_body=final[verify_sig.start():verify_end]
-if re.search(r'if\s*\(\s*!atlasPulseVisible\(\)\s*\)\s*return\s+null\s*;',verify_body): raise SystemExit('404274_FAIL: entry visibility gate survived')
-if 'controller.signal.aborted || !atlasPulseVisible()' in verify_body: raise SystemExit('404274_FAIL: post-fetch visibility gate survived')
+if 'async function atlasLoadPublicCryptoMarket' in final: raise SystemExit('404274_FAIL: non-canonical invented loader appeared')
+if final.count('function atlasCurrentPendingMarket137(')!=1: raise SystemExit('404274_FAIL: canonical pending owner count changed')
 
 COORD.mkdir(parents=True,exist_ok=True)
 report=COORD/REPORT_NAME
@@ -97,27 +198,35 @@ report.write_text(f'''# Agent-Crypto {BUILD} — Atlas Resident CURRENT Snapshot
 - Protected Market Core: {ENGINE}
 - Release: {RELEASE}
 
-## Fault isolated
-The canonical public crypto source loader's post-fetch/cache-commit path rejected resident state when `atlasPulseVisible()` was false. This allowed UI visibility to suppress commitment of an otherwise fetched and normalized fresh canonical snapshot, contradicting the existing 40.4.137 canonical pending CURRENT contract.
+## Corrected owner audit
+The abandoned release attempt targeted a non-existent `atlasLoadPublicCryptoMarket()` function. The canonical {PARENT} runtime instead owns the public snapshot through `SourceAdapter.publicCryptoMarket()` called by `runLivecheck()`.
+
+`atlasPulseVisible()` means browser document visibility (`document.visibilityState != hidden`); it is not the Atlas disclosure/open-state predicate. The existing Atlas CURRENT scheduler already states that analysis authorization is independent from which UI view is open, and 40.4.137 remains the single pending CURRENT owner.
+
+## Actual upstream loss point
+When Firefox moved the Administrator document to hidden state, `atlasPauseMarketPulse()` cancelled/aborted the public-market cadence, `scheduleAutoRead()` refused to keep a market timer, `refreshMarketOnly()` refused hidden work, and `runLivecheck()` rejected both at entry and after fetch. A newer canonical JSON therefore could remain unknown to resident CURRENT until a visibility-return event rearmed market ingestion.
 
 ## Surgery
-- Canonical public market state commitment no longer depends on Atlas panel visibility.
-- Abort semantics remain intact.
-- A successful canonical-source cache update wakes the existing `atlasCurrentPendingRefresh137` owner.
-- UI rendering visibility rules are not broadened.
-- No new timer, observer, fetch owner, WebSocket or storage owner.
-- Readiness, livecheck, backoff, Bridge auth recovery and report sequencing are unchanged.
+- Keep the existing 5-minute public-market timer/controller alive as resident source-state work while the document is hidden.
+- Reuse the existing `runLivecheck -> SourceAdapter.publicCryptoMarket` fetch owner; no second fetch owner is created.
+- Remove document-visibility rejection from canonical market fetch/commit.
+- Suppress the selected-chart refresh while running resident-only hidden market work.
+- Continue pausing spot/chart presentation pulses while hidden.
+- Reuse `atlasAfterLivecheck` and therefore the existing 40.4.137 `atlasCurrentPendingMarket137` reconciliation path.
+- No new timer, observer, WebSocket or storage owner.
+- Atlas readiness, Bridge auth recovery and report sequencing are unchanged.
 - Market Core remains {ENGINE}; Oracle and Strategy A are untouched.
 
 ## Firefox acceptance target
-1. Open Administrator and let Atlas/Aerith initialize.
-2. Hide/close the Atlas panel while leaving the Administrator page alive.
-3. Let a newer canonical `data/crypto/latest.json` snapshot arrive.
-4. Verify resident state detects the new market snapshot and the 40.4.137 pending CURRENT owner is refreshed without reopening Atlas.
-5. Once the existing true-report readiness gates are satisfied, verify CURRENT analysis proceeds through the normal Atlas owner.
-6. Reopen Atlas and confirm the visible CURRENT corresponds to the newest snapshot rather than a stale Historical conclusion.
+1. Open Administrator and let the normal market/Atlas state initialize.
+2. Leave AUTO market cadence enabled.
+3. Put the Administrator browser tab/window in a genuinely hidden state (switch tab or minimize); merely collapsing the Atlas disclosure is not this test.
+4. Allow a newer canonical `data/crypto/latest.json` snapshot to be published while hidden.
+5. Return to Administrator and verify that resident market state/pending CURRENT has advanced without requiring Ctrl+F5 or opening Atlas first.
+6. Verify the existing chain continues through readiness -> Atlas 1/4..4/4 -> NØX -> Aerith -> CURRENT -> REPOS.
+7. Confirm visible graph/spot presentation resumes normally after visibility return.
 
-This build intentionally does not create a second scheduler or a second pending owner.
+This build does not add a second scheduler or a second pending CURRENT owner.
 ''',encoding='utf-8')
 
 zip_path=COORD/ZIP_NAME
