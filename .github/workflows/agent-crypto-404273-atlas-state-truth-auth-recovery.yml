@@ -81,7 +81,17 @@ jobs:
                   coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY_SHA256.txt \
                   coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY_REPORT.md
           git commit -m "agent-crypto: build 40.4.273 lock Atlas state truth and Bridge auth recovery"
-          git push origin HEAD:main
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Concurrent live-data push detected; retrying release push (${attempt}/5)."
+            sleep 2
+          done
+          echo "40.4.273 release push could not converge after retries."
+          exit 1
 
       - name: Upload 40.4.273 artifact
         uses: actions/upload-artifact@v4
