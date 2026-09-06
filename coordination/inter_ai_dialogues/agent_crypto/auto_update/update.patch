@@ -1,0 +1,256 @@
+diff --git a/public/agent_crypto_erith_ia/administrator/administrator-version.json b/public/agent_crypto_erith_ia/administrator/administrator-version.json
+index 96f3ed3..5938901 100644
+--- a/public/agent_crypto_erith_ia/administrator/administrator-version.json
++++ b/public/agent_crypto_erith_ia/administrator/administrator-version.json
+@@ -3,6 +3,6 @@
+-  "build": "40.4.275",
+-  "release": "ATLAS DECISION TRUTH · FAILURE STICKINESS · RETRY BUDGET LOCK",
+-  "status": "atlas_decision_truth_failure_stickiness_retry_budget_lock_404275",
+-  "prepared_at": "2026-09-06T14:50:56Z",
+-  "published_at": "2026-09-06T14:50:56Z",
+-  "global_versioning": "40.4.275",
++  "build": "40.4.276",
++  "release": "ATLAS PENDING CANONICAL WAKE · SINGLE OWNER LOCK",
++  "status": "atlas_pending_canonical_wake_single_owner_lock_404276",
++  "prepared_at": "2026-09-06T16:45:09Z",
++  "published_at": "2026-09-06T16:45:09Z",
++  "global_versioning": "40.4.276",
+@@ -4513,0 +4514,23 @@
++    },
++    "atlas_pending_canonical_wake_single_owner_404276": {
++      "schema": "agent_crypto_atlas_pending_canonical_wake_404276_v1",
++      "build": "40.4.276",
++      "parent": "40.4.275",
++      "engine": "38.15.11",
++      "canonical_pending_owner": "atlasCurrentPendingMarket137",
++      "pending_market_id_authoritative": true,
++      "automatic_stop_scoped_to_pending_market_id": true,
++      "automatic_cycle_scoped_to_pending_market_id": true,
++      "historical_global_id_guards_bypassed_after_pending_qualification": true,
++      "finite_scheduler_owner": "atlasLocalReportsScheduleAutomatic341Base",
++      "runtime_mismatch_preserves_pending": true,
++      "new_timer": false,
++      "new_observer": false,
++      "new_fetch_owner": false,
++      "new_websocket": false,
++      "new_storage_owner": false,
++      "market_core_changed": false,
++      "oracle_changed": false,
++      "strategy_a_changed": false,
++      "bridge_changed": false,
++      "real_orders": false
+@@ -6241,2 +6264,2 @@
+-  "asset_token": "market-core-v2.0-alpha-build-40.4.275",
+-  "parent_build": "40.4.274",
++  "asset_token": "market-core-v2.0-alpha-build-40.4.276",
++  "parent_build": "40.4.275",
+@@ -6525,3 +6548,3 @@
+-    "index.html": "b3058d43a94c208b5a200ef9aa689a686af5b9cfde3e8108a453a524d1be9153",
+-    "app.js": "81ffcb1bb8dc94b19f8871427be07e748c80b90566a27a85a9313ba7ee0f2190",
+-    "js/app.js": "02ef2517c7cd7941929db66638cfc653e56260d522d33cb900da63ac5b2a0d2e",
++    "index.html": "1873bf4619bc5a7166ccb1af363e906240d21ffe1b2a258a928827599fffd556",
++    "app.js": "2d11b13f91187d0cdcfc6a6d4594b79c308296587e32741d498c802b5b8351c4",
++    "js/app.js": "ca1c227e58e2da2f0a47987a7cce5df1d37ff8ea94c1717d49679b5f068d4c48",
+diff --git a/public/agent_crypto_erith_ia/administrator/app.js b/public/agent_crypto_erith_ia/administrator/app.js
+index ff376c2..d6ea278 100644
+--- a/public/agent_crypto_erith_ia/administrator/app.js
++++ b/public/agent_crypto_erith_ia/administrator/app.js
+@@ -27601,2 +27601,9 @@ function atlasLocalReportsManualCycleReason(reason = "") {
+-function atlasLocalReportsAutomaticStop(snapshot = null) {
+-  const marketId = atlasAutomation341SnapshotId(snapshot);
++function atlasLocalReportsMarketId404276(snapshotOrMarketId = null) {
++  if (typeof snapshotOrMarketId === "string") {
++    return atlasAutomation341CleanId(snapshotOrMarketId);
++  }
++  return atlasAutomation341SnapshotId(snapshotOrMarketId);
++}
++
++function atlasLocalReportsAutomaticStop(snapshotOrMarketId = null) {
++  const marketId = atlasLocalReportsMarketId404276(snapshotOrMarketId);
+@@ -27607 +27614 @@ function atlasLocalReportsAutomaticStop(snapshot = null) {
+-function atlasLocalReportsOpenAutomaticCycle(reason = "") {
++function atlasLocalReportsOpenAutomaticCycle(reason = "", snapshotOrMarketId = null) {
+@@ -27610,2 +27617,2 @@ function atlasLocalReportsOpenAutomaticCycle(reason = "") {
+-  const marketId = atlasAutomation341SnapshotId();
+-  if (!explicit && atlasLocalReportsAutomaticStop()) return false;
++  const marketId = atlasLocalReportsMarketId404276(snapshotOrMarketId);
++  if (!explicit && atlasLocalReportsAutomaticStop(marketId)) return false;
+@@ -27613 +27620 @@ function atlasLocalReportsOpenAutomaticCycle(reason = "") {
+-  if (explicit) {
++  if (explicit || (marketId && marketId !== atlasLocalReportsState.automaticStopMarketId)) {
+@@ -27689,0 +27697 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
++  const targetMarketId = atlasLocalReportsMarketId404276(options.marketId || null);
+@@ -27691 +27699 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
+-  if (!atlasLocalReportsManualCycleReason(nextReason) && atlasLocalReportsAutomaticStop()) {
++  if (!atlasLocalReportsManualCycleReason(nextReason) && atlasLocalReportsAutomaticStop(targetMarketId || null)) {
+@@ -27751,0 +27760,9 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
++    const runtimeMarketId = atlasAutomation341SnapshotId(snapshot);
++    if (targetMarketId && runtimeMarketId && runtimeMarketId !== targetMarketId) {
++      try { atlasAutomation341RememberPendingMarket(targetMarketId); } catch (_) {}
++      atlasLocalReportsSetSuiteStatus(
++        "Nouveau snapshot canonique conservé · runtime marché pas encore aligné · réveil Atlas différé sans perte du pending.",
++        "wait"
++      );
++      return;
++    }
+@@ -53690 +53707 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
+-const ATLAS_BUILD = "40.4.275";
++const ATLAS_BUILD = "40.4.276";
+@@ -65216 +65233 @@ function atlasCurrentPendingMarket137(reason = "readiness-event") {
+-    if (atlasLocalReportsAutomaticStop()) {
++    if (atlasLocalReportsAutomaticStop(pendingId)) {
+@@ -65271,6 +65288,16 @@ function atlasCurrentPendingMarket137(reason = "readiness-event") {
+-      atlasLocalReportsOpenAutomaticCycle(`pending-canonical-${String(reason || "readiness-event")}`);
+-    }
+-
+-    // Publish a scheduled wake only when the existing timer was really armed.
+-    // The canonical pending key remains until CURRENT closes successfully.
+-    const scheduled = atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 250 }) !== false;
++      const opened = atlasLocalReportsOpenAutomaticCycle(
++        `pending-canonical-${String(reason || "readiness-event")}`,
++        pendingId
++      );
++      if (opened === false) return false;
++    }
++
++    // 40.4.276 recovery: once the pending owner has proved a genuinely new
++    // canonical id and full readiness, do not re-run the historical 34.1/38.8
++    // global-id guards. They may still observe the previously closed CURRENT
++    // during the handoff and cancel N+1 before the finite timer is armed.
++    // The original finite scheduler is reused; no second timer/poller exists.
++    const scheduled = atlasLocalReportsScheduleAutomatic341Base(
++      "snapshot",
++      { delayMs: 250, marketId: pendingId }
++    ) !== false;
+diff --git a/public/agent_crypto_erith_ia/administrator/build.json b/public/agent_crypto_erith_ia/administrator/build.json
+index 1c7223b..463f2f6 100644
+--- a/public/agent_crypto_erith_ia/administrator/build.json
++++ b/public/agent_crypto_erith_ia/administrator/build.json
+@@ -3 +3 @@
+-  "build": "40.4.275",
++  "build": "40.4.276",
+@@ -5 +5 @@
+-  "release": "ATLAS DECISION TRUTH · FAILURE STICKINESS · RETRY BUDGET LOCK",
++  "release": "ATLAS PENDING CANONICAL WAKE · SINGLE OWNER LOCK",
+@@ -7 +7 @@
+-  "status": "atlas_decision_truth_failure_stickiness_retry_budget_lock_404275"
++  "status": "atlas_pending_canonical_wake_single_owner_lock_404276"
+diff --git a/public/agent_crypto_erith_ia/administrator/index.html b/public/agent_crypto_erith_ia/administrator/index.html
+index 6d023ea..ed0e168 100644
+--- a/public/agent_crypto_erith_ia/administrator/index.html
++++ b/public/agent_crypto_erith_ia/administrator/index.html
+@@ -6 +6 @@
+-  <meta name="atlas-build" content="40.4.275" />
++  <meta name="atlas-build" content="40.4.276" />
+@@ -8 +8 @@
+-  <meta name="administrator-build" content="40.4.275" />
++  <meta name="administrator-build" content="40.4.276" />
+@@ -10 +10 @@
+-  <meta name="administrator-release" content="ATLAS DECISION TRUTH · FAILURE STICKINESS · RETRY BUDGET LOCK" />
++  <meta name="administrator-release" content="ATLAS PENDING CANONICAL WAKE · SINGLE OWNER LOCK" />
+@@ -12 +12 @@
+-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.275" />
++  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.276" />
+@@ -14 +14 @@
+-  <title>Agent-Crypto @erith.IA — Build 40.4.275 · Administrator</title>
++  <title>Agent-Crypto @erith.IA — Build 40.4.276 · Administrator</title>
+@@ -2381 +2381 @@
+-            aria-label="Version Agent-Crypto installée : Build 40.4.275, mode Administrator"
++            aria-label="Version Agent-Crypto installée : Build 40.4.276, mode Administrator"
+@@ -2383 +2383 @@
+-            <span id="atlasVersionControlText">Build 40.4.275</span>
++            <span id="atlasVersionControlText">Build 40.4.276</span>
+@@ -4425 +4425 @@
+-    <script src="./js/views/system-presentation.js?v=administrator-build-40.4.275"></script>
++    <script src="./js/views/system-presentation.js?v=administrator-build-40.4.276"></script>
+@@ -4500 +4500 @@
+-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.275 · Version : Parker Lewis Can't Lose</span>
++      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.276 · Version : Parker Lewis Can't Lose</span>
+@@ -4510 +4510 @@
+-  <script src="./app.js?v=administrator-build-40.4.275"></script>
++  <script src="./app.js?v=administrator-build-40.4.276"></script>
+@@ -4661 +4661 @@
+-  <script src="./js/app.js?v=administrator-build-40.4.275"></script>
++  <script src="./js/app.js?v=administrator-build-40.4.276"></script>
+@@ -4836 +4836 @@
+-  <script src="./js/version-truth.js?v=40.4.275"></script>
++  <script src="./js/version-truth.js?v=40.4.276"></script>
+diff --git a/public/agent_crypto_erith_ia/administrator/js/app.js b/public/agent_crypto_erith_ia/administrator/js/app.js
+index fce84af..ae635c1 100644
+--- a/public/agent_crypto_erith_ia/administrator/js/app.js
++++ b/public/agent_crypto_erith_ia/administrator/js/app.js
+@@ -3,2 +3,2 @@
+-  const ADMIN_BUILD = "40.4.275";
+-  const ADMIN_RELEASE = "ATLAS DECISION TRUTH · FAILURE STICKINESS · RETRY BUDGET LOCK";
++  const ADMIN_BUILD = "40.4.276";
++  const ADMIN_RELEASE = "ATLAS PENDING CANONICAL WAKE · SINGLE OWNER LOCK";
+diff --git a/public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js b/public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
+index 0ff2239..410d62d 100644
+--- a/public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
++++ b/public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
+@@ -14 +14 @@
+-  const SOURCE="./views/system.html?v=administrator-build-40.4.275";
++  const SOURCE="./views/system.html?v=administrator-build-40.4.276";
+diff --git a/public/agent_crypto_erith_ia/administrator/version.json b/public/agent_crypto_erith_ia/administrator/version.json
+index f93ede9..a1a5255 100644
+--- a/public/agent_crypto_erith_ia/administrator/version.json
++++ b/public/agent_crypto_erith_ia/administrator/version.json
+@@ -3,6 +3,6 @@
+-  "release": "ATLAS DECISION TRUTH · FAILURE STICKINESS · RETRY BUDGET LOCK",
+-  "build": "40.4.275",
+-  "asset_token": "market-core-v2.0-alpha-build-40.4.275",
+-  "status": "atlas_decision_truth_failure_stickiness_retry_budget_lock_404275",
+-  "prepared_at": "2026-09-06T14:50:56Z",
+-  "published_at": "2026-09-06T14:50:56Z",
++  "release": "ATLAS PENDING CANONICAL WAKE · SINGLE OWNER LOCK",
++  "build": "40.4.276",
++  "asset_token": "market-core-v2.0-alpha-build-40.4.276",
++  "status": "atlas_pending_canonical_wake_single_owner_lock_404276",
++  "prepared_at": "2026-09-06T16:45:09Z",
++  "published_at": "2026-09-06T16:45:09Z",
+@@ -15 +15 @@
+-  "parent_build": "40.4.274",
++  "parent_build": "40.4.275",
+@@ -18,3 +18,3 @@
+-    "index.html": "49dfbd87f0cf31aaa0cde68a12aa6b6e19ffe3bb327b70cd91d985aa883878ca",
+-    "app.js": "9922cd593b49c5dea9d2755d1158cd2b141e650bf51a56acad94910a9de2fbda",
+-    "js/app.js": "a1dd9032c19deff46023917aec3c31310ff604f82eba61f680088ac22cf12e6e",
++    "index.html": "1873bf4619bc5a7166ccb1af363e906240d21ffe1b2a258a928827599fffd556",
++    "app.js": "2d11b13f91187d0cdcfc6a6d4594b79c308296587e32741d498c802b5b8351c4",
++    "js/app.js": "ca1c227e58e2da2f0a47987a7cce5df1d37ff8ea94c1717d49679b5f068d4c48",
+@@ -51 +51 @@
+-    "administrator-version.json": "091f93c2fb304eacbe04d6e849635595c878cb38230031100d44f5382f0c3d6f",
++    "administrator-version.json": "e266dff0032d1dc4c6063ccb1b37dfa6b02dc99f2548e1936fe974fc5b0e6a5f",
+@@ -54 +54 @@
+-    "build.json": "0809af458493733cc3809a04e624368ac5dc8136354ca83fc200efdadfbf318e",
++    "build.json": "cf3ba617d2327179bffdce1234b7dbea68a3c42261295b1a74400ed972d12950",
+@@ -76 +76 @@
+-    "js/views/system-presentation.js": "9388a95eeaed069f5f0230869cc0891169c2c4270e2459ab3d9ab68ef957ca62",
++    "js/views/system-presentation.js": "b4ec33698b18e2a8316a2ef2d10f921f3b0974680165015846c9d735e3d6e443",
+@@ -6224,0 +6225,23 @@
++    },
++    "atlas_pending_canonical_wake_single_owner_404276": {
++      "schema": "agent_crypto_atlas_pending_canonical_wake_404276_v1",
++      "build": "40.4.276",
++      "parent": "40.4.275",
++      "engine": "38.15.11",
++      "canonical_pending_owner": "atlasCurrentPendingMarket137",
++      "pending_market_id_authoritative": true,
++      "automatic_stop_scoped_to_pending_market_id": true,
++      "automatic_cycle_scoped_to_pending_market_id": true,
++      "historical_global_id_guards_bypassed_after_pending_qualification": true,
++      "finite_scheduler_owner": "atlasLocalReportsScheduleAutomatic341Base",
++      "runtime_mismatch_preserves_pending": true,
++      "new_timer": false,
++      "new_observer": false,
++      "new_fetch_owner": false,
++      "new_websocket": false,
++      "new_storage_owner": false,
++      "market_core_changed": false,
++      "oracle_changed": false,
++      "strategy_a_changed": false,
++      "bridge_changed": false,
++      "real_orders": false
+@@ -6438 +6461 @@
+-  "global_versioning": "40.4.196",
++  "global_versioning": "40.4.276",
