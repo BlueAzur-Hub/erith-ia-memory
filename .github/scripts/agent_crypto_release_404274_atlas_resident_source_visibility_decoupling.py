@@ -37,10 +37,11 @@ entry_re=re.compile(r'\n([ \t]*)if\s*\(\s*!atlasPulseVisible\(\)\s*\)\s*return\s
 post_re=re.compile(r'if\s*\(\s*controller\.signal\.aborted\s*\|\|\s*!atlasPulseVisible\(\)\s*\)\s*return\s+false\s*;')
 entry_matches=list(entry_re.finditer(body)); post_matches=list(post_re.finditer(body))
 print(json.dumps({'404274_diag':{'signature':sig.group(0),'entry_visibility_guards':len(entry_matches),'post_visibility_guards':len(post_matches),'body_chars':len(body)}},ensure_ascii=False))
-if len(entry_matches)!=1: raise SystemExit(f'404274_FAIL: loader entry visibility guard count={len(entry_matches)}')
+if len(entry_matches) not in (0,1): raise SystemExit(f'404274_FAIL: loader entry visibility guard count={len(entry_matches)}')
 if len(post_matches)!=1: raise SystemExit(f'404274_FAIL: loader post-fetch visibility guard count={len(post_matches)}')
 
-body=entry_re.sub(lambda m:'\n'+m.group(1)+'/* 40.4.274: canonical source ingestion remains resident while Atlas UI is hidden. */',body,count=1)
+if entry_matches:
+    body=entry_re.sub(lambda m:'\n'+m.group(1)+'/* 40.4.274: canonical source ingestion remains resident while Atlas UI is hidden. */',body,count=1)
 body=post_re.sub('if (controller.signal.aborted) return false;',body,count=1)
 
 wake_re=re.compile(r'(atlasPublicCryptoMarketLastFetchAt\s*=\s*Date\.now\(\)\s*;)(\s*\n\s*)return\s+true\s*;')
@@ -96,10 +97,10 @@ report.write_text(f'''# Agent-Crypto {BUILD} — Atlas Resident CURRENT Snapshot
 - Release: {RELEASE}
 
 ## Fault isolated
-The canonical public crypto source loader rejected resident source work when `atlasPulseVisible()` was false, before fetch and again after normalization. That UI-visibility coupling contradicted the existing 40.4.137 canonical pending CURRENT contract: hiding/closing Atlas could prevent a fresh canonical market snapshot from reaching resident state.
+The canonical public crypto source loader's post-fetch/cache-commit path rejected resident state when `atlasPulseVisible()` was false. This allowed UI visibility to suppress commitment of an otherwise fetched and normalized fresh canonical snapshot, contradicting the existing 40.4.137 canonical pending CURRENT contract.
 
 ## Surgery
-- Canonical public market ingestion no longer depends on Atlas panel visibility.
+- Canonical public market state commitment no longer depends on Atlas panel visibility.
 - Abort semantics remain intact.
 - A successful canonical-source cache update wakes the existing `atlasCurrentPendingRefresh137` owner.
 - UI rendering visibility rules are not broadened.
