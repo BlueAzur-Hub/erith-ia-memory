@@ -27598,19 +27598,26 @@ function atlasLocalReportsManualCycleReason(reason = "") {
   ]).has(String(reason || ""));
 }
 
-function atlasLocalReportsAutomaticStop(snapshot = null) {
-  const marketId = atlasAutomation341SnapshotId(snapshot);
+function atlasLocalReportsMarketId404276(snapshotOrMarketId = null) {
+  if (typeof snapshotOrMarketId === "string") {
+    return atlasAutomation341CleanId(snapshotOrMarketId);
+  }
+  return atlasAutomation341SnapshotId(snapshotOrMarketId);
+}
+
+function atlasLocalReportsAutomaticStop(snapshotOrMarketId = null) {
+  const marketId = atlasLocalReportsMarketId404276(snapshotOrMarketId);
   return marketId && marketId === atlasLocalReportsState.automaticStopMarketId
     ? String(atlasLocalReportsState.automaticStopReason || "") : "";
 }
 
-function atlasLocalReportsOpenAutomaticCycle(reason = "") {
+function atlasLocalReportsOpenAutomaticCycle(reason = "", snapshotOrMarketId = null) {
   const explicit = atlasLocalReportsManualCycleReason(reason)
     || reason === "operator-auto-mode" || reason === "device-production-enabled";
-  const marketId = atlasAutomation341SnapshotId();
-  if (!explicit && atlasLocalReportsAutomaticStop()) return false;
+  const marketId = atlasLocalReportsMarketId404276(snapshotOrMarketId);
+  if (!explicit && atlasLocalReportsAutomaticStop(marketId)) return false;
   const resetAttempts = explicit || marketId !== atlasLocalReportsState.automaticCycleMarketId;
-  if (explicit) {
+  if (explicit || (marketId && marketId !== atlasLocalReportsState.automaticStopMarketId)) {
     atlasLocalReportsState.automaticStopMarketId = "";
     atlasLocalReportsState.automaticStopReason = "";
   }
@@ -27687,8 +27694,9 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
     return false;
   }
   const nextReason = String(reason || "snapshot");
+  const targetMarketId = atlasLocalReportsMarketId404276(options.marketId || null);
   if (!atlasLocalReportsAutoReasonAllowed(nextReason)) return false;
-  if (!atlasLocalReportsManualCycleReason(nextReason) && atlasLocalReportsAutomaticStop()) {
+  if (!atlasLocalReportsManualCycleReason(nextReason) && atlasLocalReportsAutomaticStop(targetMarketId || null)) {
     atlasLocalReportsClearAutoTimer();
     atlasLocalReportsSetSuiteStatus("Atlas arrêté pour ce snapshot après échec · relance volontaire ou nouveau snapshot requis.", "wait");
     return false;
@@ -27749,6 +27757,15 @@ function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
     }
 
     const snapshot = atlasBuildCryptoPageSnapshot();
+    const runtimeMarketId = atlasAutomation341SnapshotId(snapshot);
+    if (targetMarketId && runtimeMarketId && runtimeMarketId !== targetMarketId) {
+      try { atlasAutomation341RememberPendingMarket(targetMarketId); } catch (_) {}
+      atlasLocalReportsSetSuiteStatus(
+        "Nouveau snapshot canonique conservé · runtime marché pas encore aligné · réveil Atlas différé sans perte du pending.",
+        "wait"
+      );
+      return;
+    }
     const readiness = atlasLocalReportsReadiness(snapshot);
     if (!readiness.ready) {
       atlasLocalReportsClearAutoTimer();
@@ -53687,7 +53704,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.275";
+const ATLAS_BUILD = "40.4.276";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -65213,7 +65230,7 @@ function atlasCurrentPendingMarket137(reason = "readiness-event") {
       atlasLocalReportsSetSuiteStatus("AUTH BRIDGE REQUIRE · nouveau snapshot conservé · réauthentification Aether Trust nécessaire.", "wait");
       return false;
     }
-    if (atlasLocalReportsAutomaticStop()) {
+    if (atlasLocalReportsAutomaticStop(pendingId)) {
       atlasLocalReportsSetSuiteStatus("Atlas arrêté pour ce snapshot après échec · relance volontaire ou nouveau snapshot requis.", "wait");
       return false;
     }
@@ -65268,12 +65285,22 @@ function atlasCurrentPendingMarket137(reason = "readiness-event") {
     }
 
     if (atlasLocalReportsState?.automaticCycleClosed) {
-      atlasLocalReportsOpenAutomaticCycle(`pending-canonical-${String(reason || "readiness-event")}`);
+      const opened = atlasLocalReportsOpenAutomaticCycle(
+        `pending-canonical-${String(reason || "readiness-event")}`,
+        pendingId
+      );
+      if (opened === false) return false;
     }
 
-    // Publish a scheduled wake only when the existing timer was really armed.
-    // The canonical pending key remains until CURRENT closes successfully.
-    const scheduled = atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 250 }) !== false;
+    // 40.4.276 recovery: once the pending owner has proved a genuinely new
+    // canonical id and full readiness, do not re-run the historical 34.1/38.8
+    // global-id guards. They may still observe the previously closed CURRENT
+    // during the handoff and cancel N+1 before the finite timer is armed.
+    // The original finite scheduler is reused; no second timer/poller exists.
+    const scheduled = atlasLocalReportsScheduleAutomatic341Base(
+      "snapshot",
+      { delayMs: 250, marketId: pendingId }
+    ) !== false;
     if (scheduled && atlasLocalReportsState.autoTimer) {
       atlasLocalReportsSetSuiteStatus(
         "Nouveau snapshot canonique conservé · prérequis prêts · réveil résident Atlas-10 programmé.",

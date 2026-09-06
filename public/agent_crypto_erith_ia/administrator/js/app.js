@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.275";
-  const ADMIN_RELEASE = "ATLAS DECISION TRUTH · FAILURE STICKINESS · RETRY BUDGET LOCK";
+  const ADMIN_BUILD = "40.4.276";
+  const ADMIN_RELEASE = "ATLAS PENDING CANONICAL WAKE · SINGLE OWNER LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
