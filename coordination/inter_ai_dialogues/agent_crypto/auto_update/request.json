@@ -1,0 +1,23 @@
+{
+  "schema": "agent_crypto_auto_update_patch_request_v2",
+  "critical": false,
+  "build": "40.4.282",
+  "parent_build": "40.4.281",
+  "files": [
+    "app.js",
+    "build.json",
+    "js/app.js",
+    "index.html",
+    "js/shared-memory-collector-40.4.282.js",
+    "version.json",
+    "administrator-version.json"
+  ],
+  "patch_parts": [
+    "patch-01.patch",
+    "patch-02.patch",
+    "patch-03.patch"
+  ],
+  "patch_sha256": "2425883eb6a8820d51ff3cd11826dd01f148551fac26498192bc419b27f65260",
+  "manifest_hashes_autofill": true,
+  "delete": []
+}
