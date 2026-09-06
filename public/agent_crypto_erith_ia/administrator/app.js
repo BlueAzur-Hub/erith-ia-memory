@@ -35897,13 +35897,17 @@ function strategyARoundTripCosts404272(){
   const total=buyFee+entryImpact+sellFee+exitImpact;
   return {buy_fee_pct:buyFee,entry_impact_pct:entryImpact,sell_fee_pct:sellFee,exit_impact_pct:exitImpact,total_pct:total,required_move_pct:Math.max(STRATEGY_A_V2_POLICY_404272.absolute_min_expected_move_pct,total+STRATEGY_A_V2_POLICY_404272.safety_margin_over_cost_pct)};
 }
+/* 40.4.277 — STRATEGY A V2 · ORACLE ENGINE COST GATE SOURCE LOCK */
+/* The cost gate now reads the same canonical Oracle engine already used by Strategy A
+   since 40.4.266. Presentation residency/visibility is no longer an input. */
 function strategyAOracleUpsideEnvelope404272(){
-  try{
-    const body=String(document?.body?.innerText||"").replace(/\u00a0/g," ");
-    const match=body.match(/Oracle hausse[\s\S]{0,180}?enveloppe\s*\+?([0-9]+(?:[.,][0-9]+)?)\s*%/i);
-    if(match){const value=Number(String(match[1]).replace(",","."));if(Number.isFinite(value))return {available:true,value_pct:value,source:"existing Oracle hausse envelope UI"};}
-  }catch(_){}
-  return {available:false,value_pct:null,source:"Oracle upside envelope unavailable"};
+  let coin=null,model=null;
+  try{coin=findCoinByQuery?.("BTC")||state?.coins?.find?.(row=>String(row?.symbol||"").toUpperCase()==="BTC")||null;}catch(_){}
+  try{if(coin&&typeof atlasOracleBuildModel==="function")model=atlasOracleBuildModel(coin)||null;}catch(_){}
+  const value=strategyAReadNumber404261(model?.bullAmplitude);
+  const ready=!!coin&&!!model&&String(model?.status||"ready").toLowerCase()!=="waiting"&&Number.isFinite(value);
+  if(ready)return {available:true,value_pct:value,source:"atlasOracleBuildModel(BTC).bullAmplitude"};
+  return {available:false,value_pct:null,source:"Oracle engine upside envelope unavailable"};
 }
 function strategyACostGate404272(proposal){
   const costs=strategyARoundTripCosts404272(),up=strategyAOracleUpsideEnvelope404272();
@@ -53704,7 +53708,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.276";
+const ATLAS_BUILD = "40.4.277";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
