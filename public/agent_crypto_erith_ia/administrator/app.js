@@ -2040,6 +2040,7 @@ async function atlasAccessSubmit(event) {
     }
 
     atlasAccessSetSession(ATLAS_ACCESS_OWNER_ROLE);
+    if (bridgeAuth40375.ok) atlasBridgeAuthRecoveryResolved404273();
     atlasAccessSetStatus(bridgeAuth40375.ok ? "Accès Christophe + Bridge validés." : "Accès Christophe validé · Bridge hors ligne.", "ok");
     atlasV2SyncShareableUrl("advanced");
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
@@ -3297,6 +3298,10 @@ function atlasV2SyncAdvancedSelectorFromViewport() {
 }
 
 function atlasAdminAccountToggleAction40449() {
+  if (atlasAccessIsAuthorized() && atlasBridgeAuthNeedsTrust404273()) {
+    atlasAccessOpen("#local-ai-hub");
+    return;
+  }
   if (atlasAccessIsAuthorized()) {
     atlasV2SyncShareableUrl("advanced");
     atlasV2WriteSetting(ATLAS_V2_MODE_KEY, "advanced");
@@ -26192,16 +26197,93 @@ function atlasLocalDialogueSetBusy(busy, message = "") {
 }
 
 
+/* 40.4.273 — ATLAS STATE TRUTH + BRIDGE AUTH RECOVERY LOCK */
+/*
+   Atlas must distinguish loopback reachability from privileged Bridge auth.
+   No new timer, observer, network owner or storage schema is introduced.
+   The existing pending CURRENT owner survives auth loss and post-auth rearm.
+*/
+function atlasBridgeAuthExpiryMs404273(){
+  let raw="";try{raw=String(sessionStorage.getItem(ATLAS_BRIDGE_AUTH_40375_EXPIRES_KEY)||"").trim();}catch(_){}
+  if(!raw)return null;
+  const numeric=Number(raw);
+  if(Number.isFinite(numeric)&&numeric>0){
+    if(numeric>1e12)return numeric;
+    if(numeric>1e9)return numeric*1000;
+  }
+  const parsed=Date.parse(raw);return Number.isFinite(parsed)?parsed:null;
+}
+function atlasBridgeAuthLocalState404273(){
+  const token=atlasBridgeAuthToken40375();
+  const expiresMs=atlasBridgeAuthExpiryMs404273();
+  const expired=Number.isFinite(expiresMs)&&expiresMs<=Date.now()+1000;
+  return {token_present:!!token,expires_at_ms:expiresMs,expired,valid:!!token&&!expired};
+}
+function atlasBridgeAuthNeedsTrust404273(){
+  if(!atlasAccessIsAuthorized())return false;
+  return !atlasBridgeAuthLocalState404273().valid;
+}
+function atlasAtlasStateTruth404273(snapshot,completed=0,auth="OK",detail=""){
+  const snap=snapshot?"SNAPSHOT OK":"SNAPSHOT ?";
+  const current=snapshot?"CURRENT OK":"CURRENT ?";
+  const bridge=atlasLocalDialogueState?.connected?"BRIDGE OK":"BRIDGE ?";
+  const model=String(atlasLocalDialogueState?.model||"").trim()?"OLLAMA OK":"OLLAMA À CONFIRMER";
+  const suffix=detail?` · ${detail}`:"";
+  const line=`${snap} · ${current} · ${bridge} · AUTH ${auth} · ${model} · ATLAS ${Number(completed||0)}/4${suffix}`;
+  setText(document.getElementById("atlasLocalReportsMeta"),line);
+  try{document.documentElement.dataset.atlasStateTruth404273=auth==="OK"?"ready":"auth-required";}catch(_){}
+  return line;
+}
+function atlasBridgeAuthRequireTrust404273(reason="bridge-auth-required",pendingHash="#local-ai-hub",error=null){
+  atlasBridgeAuthClear40375();
+  atlasLocalReportsState.authBlocked404273=true;
+  atlasLocalReportsState.authBlockedReason404273=String(reason||"bridge-auth-required");
+  atlasLocalReportsState.authBlockedAt404273=Date.now();
+  atlasLocalReportsState.authBlockedFingerprint404273=String(atlasLocalReportsState.transactionFingerprint||atlasLocalReportsState.lastAutoAttemptFingerprint||"");
+  atlasLocalReportsClearAutoTimer();
+  atlasLocalReportsState.deferredRetryReason="";
+  atlasLocalReportsState.deferredRetryDelayMs=0;
+  atlasLocalReportsState.deferredRetryRequestedAt=0;
+  atlasLocalReportsSetSuiteStatus("AUTH BRIDGE REQUISE · Atlas en pause · Aether Trust doit rétablir la session Administrator.","wait");
+  atlasAnalysisProgressRender(0,"error","Bridge joignable mais session Administrator invalide · Atlas suspendu sans avancer vers le rapport suivant.");
+  try{atlasAtlasStateTruth404273(atlasBuildCryptoPageSnapshot(),0,"REQUISE","AETHER TRUST");}catch(_){}
+  try{atlasLocalDialogueSetConnection(true,"Bridge Ryzen joignable · authentification Administrator requise pour Atlas/Aerith.");}catch(_){}
+  try{atlasAccessOpen(pendingHash||"#local-ai-hub");}catch(_){}
+  return {ok:false,reason:String(reason||"bridge-auth-required"),message:String(error?.message||"")};
+}
+function atlasBridgeAuthRecoveryResolved404273(){
+  atlasLocalReportsState.authBlocked404273=false;
+  atlasLocalReportsState.authBlockedReason404273="";
+  atlasLocalReportsState.authBlockedAt404273=0;
+  atlasLocalReportsState.authBlockedFingerprint404273="";
+  try{delete document.documentElement.dataset.atlasStateTruth404273;}catch(_){}
+  return true;
+}
+try{globalThis.ErithAtlasStateTruth404273=Object.freeze({
+  build:"40.4.273",parent:"40.4.272",auth_state:atlasBridgeAuthLocalState404273,
+  auth_required:atlasBridgeAuthNeedsTrust404273,state_truth:atlasAtlasStateTruth404273,
+  pending_current_preserved:true,post_auth_rearm_reuses_existing_owner:true,
+  report_01_failure_stops_sequence:true,new_timer:false,new_observer:false,new_fetch_owner:false,
+  new_storage_owner:false,market_core_changed:false,oracle_changed:false,strategy_a_changed:false,
+  nox_changed:false,aerith_business_changed:false
+});}catch(_){}
+
 function atlasLocalBridgeRequestFailureKind(error) {
   if (error?.name === "AbortError" || error?.name === "AtlasBridgeTimeoutError") return "timeout";
+  if (error?.name === "AtlasBridgeAuthError" || [401,403].includes(Number(error?.status))) return "auth";
   if (error?.name === "TypeError") return "offline";
   const message = String(error?.message || "").toLowerCase();
   if (message.includes("networkerror") || message.includes("failed to fetch") || message.includes("network")) return "offline";
+  if (message.includes("authentification") || message.includes("authentication") || message.includes("unauthorized") || message.includes("forbidden")) return "auth";
   return "bridge-error";
 }
 
 function atlasLocalBridgeRequestFailure(error, path = "") {
   const kind = atlasLocalBridgeRequestFailureKind(error);
+  if (kind === "auth") {
+    atlasBridgeAuthRequireTrust404273(`protected-route:${String(path||"unknown")}`,"#local-ai-hub",error);
+    return kind;
+  }
   if (!["timeout", "offline"].includes(kind)) return kind;
 
   atlasLocalDialogueState.connected = false;
@@ -26222,6 +26304,13 @@ async function atlasLocalBridgeRequest(path, payload, timeoutMs = ATLAS_LOCAL_BR
   if (!atlasDeviceComputeAllowed()) {
     const error = new Error(atlasDeviceComputeBlockedMessage());
     error.name = "AtlasDeviceObserverError";
+    throw error;
+  }
+  if (atlasAccessIsAuthorized() && !atlasBridgeAuthLocalState404273().valid) {
+    const error = new Error("Authentification Administrator Bridge requise.");
+    error.name = "AtlasBridgeAuthError";
+    error.status = 401;
+    atlasLocalBridgeRequestFailure(error,path);
     throw error;
   }
   const controller = new AbortController();
@@ -26246,7 +26335,11 @@ async function atlasLocalBridgeRequest(path, payload, timeoutMs = ATLAS_LOCAL_BR
 
     const result = await response.json().catch(() => ({}));
     if (!response.ok || result?.ok === false) {
-      throw new Error(result?.error || `Bridge HTTP ${response.status}`);
+      const raised = new Error(result?.error || `Bridge HTTP ${response.status}`);
+      raised.status = response.status;
+      raised.bridgePayload = result;
+      if ([401,403].includes(Number(response.status)) || /authentification|authentication|unauthorized|forbidden/i.test(String(raised.message||""))) raised.name = "AtlasBridgeAuthError";
+      throw raised;
     }
 
     // A successful model request is stronger evidence than a periodic probe.
@@ -27172,9 +27265,9 @@ async function atlasLocalReportRequestReliable(mode, snapshot, token) {
     } catch (error) {
       lastError = error;
       const failureKind = atlasLocalBridgeRequestFailureKind(error);
-      if (["timeout", "offline"].includes(failureKind)) {
-        // Fast fail: do not hammer the same endpoint a second time while
-        // the Bridge recovery watchdog is already taking ownership.
+      if (["timeout", "offline", "auth"].includes(failureKind)) {
+        // Fast fail: do not hammer the same protected endpoint. Auth recovery
+        // belongs to Aether Trust; network recovery belongs to the Bridge watcher.
         throw error;
       }
     }
@@ -27190,6 +27283,10 @@ async function atlasLocalReportsRunAll(options = {}) {
   }
   if (!atlasAccessIsAuthorized()) {
     atlasAccessOpen("#local-ai-hub");
+    return false;
+  }
+  if (!atlasBridgeAuthLocalState404273().valid) {
+    atlasBridgeAuthRequireTrust404273("atlas-preflight","#local-ai-hub");
     return false;
   }
   if (
@@ -27237,10 +27334,7 @@ async function atlasLocalReportsRunAll(options = {}) {
     "Dialogue local prêt avec gpt-oss:20b-32k · Atlas-10 démarre automatiquement · progression 0 %."
   );
   atlasLocalResponseSelectView("conclusion");
-  setText(
-    document.getElementById("atlasLocalReportsMeta"),
-    `Snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · quatre tâches séquentielles · lecture seule`
-  );
+  atlasAtlasStateTruth404273(snapshot,0,"OK",`snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · quatre tâches séquentielles`);
 
   let completed = 0;
   try {
@@ -27294,6 +27388,7 @@ async function atlasLocalReportsRunAll(options = {}) {
             document.getElementById("atlasLocalDialogueStatus"),
             `Dialogue local prêt avec gpt-oss:20b-32k · Atlas-10 ${atlasLocalReportsProgressPercent(completed, 4)} % · ${completed}/4 rapports prêts.`
           );
+          atlasAtlasStateTruth404273(snapshot,completed,"OK",`${label} terminé`);
           if (atlasLocalDialogueState.activeResponseView === "conclusion") {
             atlasLocalResponseRenderStored("conclusion");
           }
@@ -27322,6 +27417,15 @@ async function atlasLocalReportsRunAll(options = {}) {
           document.querySelector(`[data-atlas-report-export="${mode}"]`)?.setAttribute("disabled", "");
         }
         const bridgeFailure = atlasLocalBridgeRequestFailureKind(error);
+        if (bridgeFailure === "auth") {
+          if (options.automatic === true && Number(atlasLocalReportsState.automaticModelRunAttempts||0)>0) atlasLocalReportsState.automaticModelRunAttempts -= 1;
+          atlasLocalReportsState.authBlocked404273 = true;
+          atlasLocalReportsState.authBlockedFingerprint404273 = fingerprint;
+          atlasLocalReportsSetSuiteStatus(`AUTH BRIDGE REQUISE · Atlas bloqué ${completed}/4 · ${label} non produit · reprise du même CURRENT après Aether Trust.`,"wait");
+          atlasAnalysisProgressRender(completed,"error",`${label} interrompu : authentification Administrator Bridge requise · aucun passage au rapport suivant.`);
+          atlasAtlasStateTruth404273(snapshot,completed,"REQUISE",`${label} BLOQUÉ`);
+          break;
+        }
         if (["timeout", "offline"].includes(bridgeFailure)) {
           atlasLocalReportsSetSuiteStatus(
             `${completed}/4 rapports prêts · pause locale · Bridge en récupération automatique · reprise sans perdre les rapports valides.`,
@@ -27362,6 +27466,10 @@ async function atlasLocalReportsRunAll(options = {}) {
         atlasLocalReportsScheduleAutomatic(options.reason || "snapshot", { delayMs: 7000 });
       }
       return conclusionOk;
+    }
+
+    if (atlasLocalReportsState.authBlocked404273) {
+      return completed > 0;
     }
 
     atlasLocalReportsSetSuiteStatus(
@@ -27413,6 +27521,7 @@ function atlasLocalReportsQueueDeferredRetry(reason = "snapshot", options = {}) 
 }
 
 function atlasLocalReportsFlushDeferredRetry() {
+  if (atlasLocalReportsState.authBlocked404273) return false;
   if (atlasLocalReportsState.automaticCycleClosed) {
     atlasLocalReportsState.deferredRetryReason = "";
     atlasLocalReportsState.deferredRetryDelayMs = 0;
@@ -27519,6 +27628,7 @@ function atlasLocalReportsAutoRetry(reason, message = "", options = {}) {
 }
 
 function atlasLocalReportsScheduleAutomatic(reason = "snapshot", options = {}) {
+  if (atlasLocalReportsState.authBlocked404273) return false;
   if (!atlasDeviceComputeAllowed()) {
     atlasLocalReportsClearAutoTimer();
     return false;
@@ -53519,7 +53629,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.272";
+const ATLAS_BUILD = "40.4.273";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -61938,9 +62048,8 @@ function atlasBridgeAuthCapabilities40375(){
   try{const rows=JSON.parse(sessionStorage.getItem(ATLAS_BRIDGE_AUTH_40375_CAPS_KEY)||"[]");return Array.isArray(rows)?rows:[];}catch(_){return [];}
 }
 function atlasBridgeAuthStatusText40375(){
-  const token=atlasBridgeAuthToken40375();
   if(!atlasDeviceComputeAllowed())return "Book · aucun Bridge local";
-  return token?"Bridge · session Administrator authentifiée":"Bridge · session Administrator non authentifiée";
+  return atlasBridgeAuthLocalState404273().valid?"Bridge · session Administrator authentifiée":"Bridge · session Administrator non authentifiée";
 }
 
 
