@@ -1,0 +1,174 @@
+--- a/public/agent_crypto_erith_ia/administrator/app.js
++++ b/public/agent_crypto_erith_ia/administrator/app.js
+@@ -26684,7 +26684,9 @@
+     directPairs,
+     derivedPairs,
+     stableReady,
+-    stableAgeMs
++    stableAgeMs,
++    binanceFresh,
++    binanceFeedStatus: String(binance.feed_status || "")
+   };
+ }
+ 
+@@ -26692,8 +26694,12 @@
+   if (!readiness.bridgeReady) return "État LIVE de déclenchement · Atlas en attente · Bridge local non prêt.";
+   if (!readiness.marketReady) return "État LIVE de déclenchement · Atlas en attente · snapshot CoinGecko exploitable requis.";
+   if (readiness.directPairs < 5) return `État LIVE actuel, distinct du snapshot CURRENT conservé · Atlas en attente · prix disponibles ${Math.min(5, Number(readiness.directPairs || 0) + Number(readiness.derivedPairs || 0))}/5 · Binance ${readiness.directPairs}/5 directes · ${Number(readiness.derivedPairs || 0)} secours · aucun départ avant 5/5 directes stables.`;
++  if (readiness.derivedPairs !== 0) return "Atlas en attente · prix de secours présents · cinq paires Binance directes sans secours sont requises.";
++  if (!readiness.binanceFresh) return "Atlas en attente · dernier prix Binance périmé ou horodatage absent · actualisation du flux requise.";
++  if (readiness.binanceFeedStatus !== "ready") return "Atlas en attente · flux Binance non prêt.";
+   if (!readiness.stableReady) return `État LIVE de déclenchement · Atlas armé · Binance 5/5 directes détectées mais encore instables · confirmation continue ${Math.min(ATLAS_DIRECT_5_5_STABLE_MS / 1000, Math.floor(Number(readiness.stableAgeMs || 0) / 1000))}/${ATLAS_DIRECT_5_5_STABLE_MS / 1000}s.`;
+   if (!readiness.graphReady) return "État LIVE de déclenchement · Atlas en attente · graphique exploitable requis.";
++  if (!readiness.ready) return "Atlas en attente · prérequis incomplets.";
+   return "État LIVE de déclenchement qualifié · 5/5 Binance directes stables · 0 secours · sources prêtes · démarrage Atlas autorisé.";
+ }
+ 
+@@ -27310,6 +27316,15 @@
+   }
+ 
+   const fingerprint = options.fingerprint || atlasLocalReportSnapshotFingerprint(snapshot);
++  const cycleMarketId = atlasAutomation341SnapshotId(snapshot);
++  if (options.automatic === true && atlasLocalReportsAutomaticStop(snapshot)) return false;
++  if (options.automatic !== true || cycleMarketId !== atlasLocalReportsState.automaticCycleMarketId) {
++    atlasLocalReportsState.automaticModelRunAttempts = 0;
++    atlasLocalConclusionState.automaticValidationRetryCount = 0;
++    atlasLocalReportsState.automaticStopMarketId = "";
++    atlasLocalReportsState.automaticStopReason = "";
++  }
++  atlasLocalReportsState.automaticCycleMarketId = cycleMarketId;
+   if (options.automatic === true) {
+     atlasLocalReportsState.automaticModelRunAttempts = Number(atlasLocalReportsState.automaticModelRunAttempts || 0) + 1;
+     if (atlasLocalReportsState.automaticModelRunAttempts > Number(atlasLocalReportsState.automaticModelRunMax || 2)) {
+@@ -27340,6 +27355,7 @@
+   atlasAtlasStateTruth404273(snapshot,0,"OK",`snapshot ${atlasLocalReportSnapshotLabel(snapshot)} · quatre tâches séquentielles`);
+ 
+   let completed = 0;
++  let reportFailure = "";
+   try {
+     for (let index = 0; index < ATLAS_LOCAL_REPORT_MODES.length; index += 1) {
+       if (token !== atlasLocalReportsState.runToken) return false;
+@@ -27437,6 +27453,12 @@
+           // atlasLocalBridgeRequestFailure() already owns Bridge recovery.
+           break;
+         }
++        const httpStatus = Number(error?.status);
++        reportFailure = Number.isInteger(httpStatus) && httpStatus >= 400 && httpStatus <= 599
++          ? `${label} interrompu · erreur Bridge HTTP ${httpStatus}`
++          : `${label} interrompu · réponse Bridge invalide ou rapport inexploitable`;
++        atlasAnalysisProgressRender(completed, "error", reportFailure);
++        break;
+       }
+ 
+       atlasLocalReportsSetSuiteStatus(`${completed}/4 rapports prêts.`, completed ? "partial" : "loading");
+@@ -27476,7 +27498,9 @@
+     }
+ 
+     atlasLocalReportsSetSuiteStatus(
+-      completed
++      reportFailure
++        ? `${reportFailure} · ${completed}/4 rapports prêts · ${options.automatic === true ? "reprise automatique bornée" : "relance manuelle disponible"}.`
++        : completed
+         ? `${completed}/4 rapports prêts · reprise automatique des rapports manquants.`
+         : "0/4 rapport prêt · nouvelle tentative automatique programmée.",
+       completed ? "partial" : "wait"
+@@ -27574,16 +27598,42 @@
+   ]).has(String(reason || ""));
+ }
+ 
++function atlasLocalReportsAutomaticStop(snapshot = null) {
++  const marketId = atlasAutomation341SnapshotId(snapshot);
++  return marketId && marketId === atlasLocalReportsState.automaticStopMarketId
++    ? String(atlasLocalReportsState.automaticStopReason || "") : "";
++}
++
+ function atlasLocalReportsOpenAutomaticCycle(reason = "") {
++  const explicit = atlasLocalReportsManualCycleReason(reason)
++    || reason === "operator-auto-mode" || reason === "device-production-enabled";
++  const marketId = atlasAutomation341SnapshotId();
++  if (!explicit && atlasLocalReportsAutomaticStop()) return false;
++  const resetAttempts = explicit || marketId !== atlasLocalReportsState.automaticCycleMarketId;
++  if (explicit) {
++    atlasLocalReportsState.automaticStopMarketId = "";
++    atlasLocalReportsState.automaticStopReason = "";
++  }
+   atlasLocalReportsState.automaticCycleClosed = false;
+   atlasLocalReportsState.automaticCycleClosedAt = 0;
+   atlasLocalReportsState.automaticCycleFingerprint = "";
+   atlasLocalReportsState.automaticCycleCloseReason = String(reason || "manual");
+-  atlasLocalReportsState.automaticModelRunAttempts = 0;
+-  atlasLocalConclusionState.automaticValidationRetryCount = 0;
++  if (resetAttempts) {
++    atlasLocalReportsState.automaticModelRunAttempts = 0;
++    atlasLocalConclusionState.automaticValidationRetryCount = 0;
++  }
++  return true;
+ }
+ 
+ function atlasLocalReportsCloseAutomaticCycle(fingerprint = "", reason = "current-complete") {
++  if (["atlas-run-attempt-limit", "aerith-validation-stop"].includes(reason)) {
++    atlasLocalReportsState.automaticStopMarketId = atlasLocalReportsState.automaticCycleMarketId
++      || atlasAutomation341SnapshotId(atlasLocalReportsState.lastCompletedSnapshot || null);
++    atlasLocalReportsState.automaticStopReason = reason;
++  } else if (reason === "current-complete") {
++    atlasLocalReportsState.automaticStopMarketId = "";
++    atlasLocalReportsState.automaticStopReason = "";
++  }
+   atlasLocalReportsState.automaticCycleClosed = true;
+   atlasLocalReportsState.automaticCycleClosedAt = Date.now();
+   atlasLocalReportsState.automaticCycleFingerprint = String(fingerprint || "");
+@@ -27638,6 +27688,11 @@
+   }
+   const nextReason = String(reason || "snapshot");
+   if (!atlasLocalReportsAutoReasonAllowed(nextReason)) return false;
++  if (!atlasLocalReportsManualCycleReason(nextReason) && atlasLocalReportsAutomaticStop()) {
++    atlasLocalReportsClearAutoTimer();
++    atlasLocalReportsSetSuiteStatus("Atlas arrêté pour ce snapshot après échec · relance volontaire ou nouveau snapshot requis.", "wait");
++    return false;
++  }
+ 
+   if (atlasLocalReportsManualCycleReason(nextReason)) {
+     atlasLocalReportsOpenAutomaticCycle(nextReason);
+@@ -65150,6 +65205,18 @@
+ 
+     if (!pendingId || (lastDone && pendingId === lastDone)) return false;
+     if (typeof atlasAccessIsAuthorized === "function" && !atlasAccessIsAuthorized()) return false;
++    if (!atlasClassicAnalysisIsAuto38155()) {
++      atlasLocalReportsSetSuiteStatus("Mode MANUEL · nouveau snapshot conservé · analyse automatique désactivée.", "wait");
++      return false;
++    }
++    if (atlasLocalReportsState.authBlocked404273 || !atlasBridgeAuthLocalState404273().valid) {
++      atlasLocalReportsSetSuiteStatus("AUTH BRIDGE REQUIRE · nouveau snapshot conservé · réauthentification Aether Trust nécessaire.", "wait");
++      return false;
++    }
++    if (atlasLocalReportsAutomaticStop()) {
++      atlasLocalReportsSetSuiteStatus("Atlas arrêté pour ce snapshot après échec · relance volontaire ou nouveau snapshot requis.", "wait");
++      return false;
++    }
+ 
+     if (typeof atlasAutomation341IsBusy === "function" && atlasAutomation341IsBusy()) {
+       try { atlasAutomation341RememberPendingMarket(pendingId); } catch (_) {}
+@@ -65204,16 +65271,16 @@
+       atlasLocalReportsOpenAutomaticCycle(`pending-canonical-${String(reason || "readiness-event")}`);
+     }
+ 
+-    try {
++    // Publish a scheduled wake only when the existing timer was really armed.
++    // The canonical pending key remains until CURRENT closes successfully.
++    const scheduled = atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 250 }) !== false;
++    if (scheduled && atlasLocalReportsState.autoTimer) {
+       atlasLocalReportsSetSuiteStatus(
+-        "Nouveau snapshot canonique conservé · prérequis prêts · réveil résident Atlas-10.",
++        "Nouveau snapshot canonique conservé · prérequis prêts · réveil résident Atlas-10 programmé.",
+         "loading"
+       );
+-    } catch (_) {}
+-
+-    // Keep the existing pending key until CURRENT closes successfully. The
+-    // canonical 34.1 close owner removes it only after a consumed CURRENT.
+-    return atlasLocalReportsScheduleAutomatic("snapshot", { delayMs: 250 }) !== false;
++    }
++    return scheduled;
+   } catch (_) {
+     return false;
+   }

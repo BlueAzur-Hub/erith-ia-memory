@@ -1,0 +1,187 @@
+name: Agent-Crypto 40.4.275 Atlas Decision Truth Retry Budget Lock
+
+on:
+  push:
+    paths:
+      - ".github/workflows/agent-crypto-404275-atlas-decision-truth.yml"
+
+permissions:
+  contents: write
+
+env:
+  BUILD: "40.4.275"
+  PARENT: "40.4.274"
+  ENGINE: "38.15.11"
+  RELEASE: "ATLAS DECISION TRUTH · FAILURE STICKINESS · RETRY BUDGET LOCK"
+  STATUS: "atlas_decision_truth_failure_stickiness_retry_budget_lock_404275"
+  WORKFLOW_FILE: ".github/workflows/agent-crypto-404275-atlas-decision-truth.yml"
+  TMP_DIR: ".github/tmp/agent_crypto_404275"
+  APP: "public/agent_crypto_erith_ia/administrator/app.js"
+  BASE: "public/agent_crypto_erith_ia/administrator"
+  COORD: "coordination/inter_ai_dialogues/agent_crypto"
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify parent, Market Core and exact .274 app
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          base=Path("public/agent_crypto_erith_ia/administrator")
+          truth=json.loads((base/"build.json").read_text(encoding="utf-8"))
+          if str(truth.get("build")) != "40.4.274":
+              raise SystemExit(f"404275_FAIL: expected 40.4.274, found {truth.get('build')}")
+          if str(truth.get("engine")) != "38.15.11":
+              raise SystemExit(f"404275_FAIL: protected Market Core changed: {truth.get('engine')}")
+          got=hashlib.sha256((base/"app.js").read_bytes()).hexdigest()
+          expected="7da6cde46933d95522ba82288a65804dc774f075d1efbfba1c40c0e788f3b4df"
+          if got != expected:
+              raise SystemExit(f"404275_FAIL: .274 app.js drift: {got} != {expected}")
+          print("PARENT_AND_BASE_SHA_PASS", got)
+          PY
+
+      - name: Reproduce four defects on published .274
+        shell: bash
+        run: |
+          set -euo pipefail
+          node "$TMP_DIR/probe-atlas.cjs" "$APP" | tee /tmp/atlas-before.json
+
+      - name: Apply sister patch and prove 15 scenarios
+        shell: bash
+        run: |
+          set -euo pipefail
+          git apply --check "$TMP_DIR/ATLAS_CORRECTION_CANDIDATE.patch"
+          git apply "$TMP_DIR/ATLAS_CORRECTION_CANDIDATE.patch"
+          node --check "$APP"
+          node "$TMP_DIR/probe-atlas.cjs" "$APP" --assert-fixed | tee /tmp/atlas-after.json
+
+      - name: Advance only required System cache tokens
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          base=Path("public/agent_crypto_erith_ia/administrator")
+          sp=base/"js/views/system-presentation.js"
+          idx=base/"index.html"
+          s=sp.read_text(encoding="utf-8")
+          old='const SOURCE="./views/system.html?v=administrator-build-40.4.274";'
+          new='const SOURCE="./views/system.html?v=administrator-build-40.4.275";'
+          if s.count(old)!=1: raise SystemExit(f"404275_FAIL: System source token count={s.count(old)}")
+          sp.write_text(s.replace(old,new,1),encoding="utf-8")
+          t=idx.read_text(encoding="utf-8")
+          old2='system-presentation.js?v=administrator-build-40.4.274'
+          new2='system-presentation.js?v=administrator-build-40.4.275'
+          if t.count(old2)!=1: raise SystemExit(f"404275_FAIL: System index token count={t.count(old2)}")
+          idx.write_text(t.replace(old2,new2,1),encoding="utf-8")
+          PY
+
+      - name: Write canonical release identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_release_driver.py \
+            --build "$BUILD" \
+            --parent "$PARENT" \
+            --release "$RELEASE" \
+            --status "$STATUS" \
+            --contract-key atlas_decision_truth_failure_stickiness_retry_budget_404275 \
+            --contract-json "$TMP_DIR/contract.json" \
+            --lineage-note "40.4.275 Atlas decision truth: truthful readiness/wake messages, first-report failure stop, same-snapshot failure stickiness and bounded retry budget"
+
+      - name: Canonical validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check "$APP"
+          node --check "$BASE/js/app.js"
+          node --check "$BASE/js/views/system-presentation.js"
+          node "$TMP_DIR/probe-atlas.cjs" "$APP" --assert-fixed >/tmp/atlas-after-release.json
+          python .github/scripts/agent_crypto_version_truth_guard.py \
+            --expected-build "$BUILD" \
+            --expected-release "$RELEASE"
+
+      - name: Write report, ZIP and SHA256
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$COORD"
+          cp "$TMP_DIR/report.md" "$COORD/AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK_REPORT.md"
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile, hashlib
+          base=Path("public/agent_crypto_erith_ia/administrator")
+          coord=Path("coordination/inter_ai_dialogues/agent_crypto")
+          report=coord/"AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK_REPORT.md"
+          zip_path=coord/"AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK.zip"
+          files=[
+            base/"index.html", base/"app.js", base/"js/app.js", base/"build.json",
+            base/"version.json", base/"administrator-version.json", base/"js/views/system-presentation.js", report,
+          ]
+          with zipfile.ZipFile(zip_path,"w",zipfile.ZIP_DEFLATED) as z:
+              for p in files: z.write(p,p.as_posix())
+          digest=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          sha_path=coord/"AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK_SHA256.txt"
+          sha_path.write_text(f"{digest}  {zip_path.name}\n",encoding="utf-8")
+          print("PROJECT_ZIP_SHA256", digest)
+          PY
+
+      - name: Remove temporary release tooling and assert bounded scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$TMP_DIR" "$WORKFLOW_FILE"
+          python - <<'PY'
+          import subprocess
+          allowed={
+            ".github/workflows/agent-crypto-404275-atlas-decision-truth.yml",
+            ".github/tmp/agent_crypto_404275/ATLAS_CORRECTION_CANDIDATE.patch",
+            ".github/tmp/agent_crypto_404275/probe-atlas.cjs",
+            ".github/tmp/agent_crypto_404275/contract.json",
+            ".github/tmp/agent_crypto_404275/report.md",
+            "public/agent_crypto_erith_ia/administrator/app.js",
+            "public/agent_crypto_erith_ia/administrator/index.html",
+            "public/agent_crypto_erith_ia/administrator/js/app.js",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "public/agent_crypto_erith_ia/administrator/version.json",
+            "public/agent_crypto_erith_ia/administrator/administrator-version.json",
+            "public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js",
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK_REPORT.md",
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK.zip",
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK_SHA256.txt",
+          }
+          lines=subprocess.check_output(["git","status","--short"],text=True).splitlines()
+          paths={line[3:] for line in lines if len(line)>=4}
+          extra=paths-allowed
+          if extra: raise SystemExit(f"404275_FAIL: unexpected changed paths {sorted(extra)}")
+          required={
+            "public/agent_crypto_erith_ia/administrator/app.js",
+            "public/agent_crypto_erith_ia/administrator/version.json",
+            "public/agent_crypto_erith_ia/administrator/build.json",
+            "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_40_4_275_ATLAS_DECISION_TRUTH_FAILURE_STICKINESS_RETRY_BUDGET_LOCK.zip",
+          }
+          missing=required-paths
+          if missing: raise SystemExit(f"404275_FAIL: expected changes missing {sorted(missing)}")
+          print("BOUNDED_CHANGESET_PASS", sorted(paths))
+          PY
+
+      - name: Commit and publish canonical 40.4.275
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "agent-crypto: build 40.4.275 harden Atlas decision truth and retry budget"
+          git push origin HEAD:main
