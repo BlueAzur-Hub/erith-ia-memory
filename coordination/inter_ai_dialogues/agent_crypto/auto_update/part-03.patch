@@ -1,0 +1,71 @@
++  if(summary)summary.textContent=`PHASE ${trace.phase.replaceAll("_"," ")} · PROPOSAL ${trace.proposal_status} · ${trace.first_blocker_label?`1er verrou : ${trace.first_blocker_label}`:"aucun verrou mesuré"}`;
++  const grid=document.getElementById("strategyADecisionTraceGrid404278");if(!grid)return true;
++  for(const gate of trace.gates){
++    let card=grid.querySelector(`[data-trace-gate="${gate.key}"]`);
++    if(!card){
++      card=document.createElement("div");card.className="sadt-gate-404278";card.setAttribute("data-trace-gate",gate.key);
++      card.innerHTML=`<div class="sadt-gate-label-404278"><span class="sadt-label-404278"></span><span class="sadt-gate-state-404278"></span></div><b class="sadt-gate-value-404278"></b><small class="sadt-gate-threshold-404278"></small><small class="sadt-gate-path-404278"></small>`;
++      grid.appendChild(card);
++    }
++    card.setAttribute("data-state",gate.state);
++    const stateLabel=gate.state==="pass"?"PASS":gate.state==="wait"?"WAIT":gate.state==="stop"?"STOP":"NON ATTEINT";
++    const label=card.querySelector(".sadt-label-404278"),state=card.querySelector(".sadt-gate-state-404278"),value=card.querySelector(".sadt-gate-value-404278"),threshold=card.querySelector(".sadt-gate-threshold-404278"),path=card.querySelector(".sadt-gate-path-404278");
++    if(label)label.textContent=gate.label;if(state)state.textContent=stateLabel;if(value)value.textContent=gate.value;if(threshold)threshold.textContent=gate.threshold;if(path)path.textContent=gate.path;
++  }
++  return true;
++}
++try{globalThis.AgentCryptoStrategyAGateTrace404278=Object.freeze({build:"40.4.278",read:strategyADecisionTrace404278,render:strategyARenderDecisionTrace404278,presentation_only:true,decision_logic_changed:false,policy_changed:false,risk_governor_called:false,paper_execution_called:false,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
++
+@@ -36331,0 +36458 @@ function strategyAApplyVisualHarmony404269(){
++  try{strategyARenderDecisionTrace404278();}catch(_){}
+@@ -53711 +53838 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
+-const ATLAS_BUILD = "40.4.277";
++const ATLAS_BUILD = "40.4.278";
+diff --git a/public/agent_crypto_erith_ia/administrator/build.json b/public/agent_crypto_erith_ia/administrator/build.json
+index ab4f4ec..a1df025 100644
+--- a/public/agent_crypto_erith_ia/administrator/build.json
++++ b/public/agent_crypto_erith_ia/administrator/build.json
+@@ -3 +3 @@
+-  "build": "40.4.277",
++  "build": "40.4.278",
+@@ -5 +5 @@
+-  "release": "STRATEGY A V2 · ORACLE ENGINE COST GATE SOURCE LOCK",
++  "release": "STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK",
+@@ -7 +7 @@
+-  "status": "strategy_a_v2_oracle_engine_cost_gate_source_lock_404277"
++  "status": "strategy_a_v2_gate_trace_decision_truth_404278"
+diff --git a/public/agent_crypto_erith_ia/administrator/index.html b/public/agent_crypto_erith_ia/administrator/index.html
+index 7c63e3d..0b9a41f 100644
+--- a/public/agent_crypto_erith_ia/administrator/index.html
++++ b/public/agent_crypto_erith_ia/administrator/index.html
+@@ -6 +6 @@
+-  <meta name="atlas-build" content="40.4.277" />
++  <meta name="atlas-build" content="40.4.278" />
+@@ -8 +8 @@
+-  <meta name="administrator-build" content="40.4.277" />
++  <meta name="administrator-build" content="40.4.278" />
+@@ -10 +10 @@
+-  <meta name="administrator-release" content="STRATEGY A V2 · ORACLE ENGINE COST GATE SOURCE LOCK" />
++  <meta name="administrator-release" content="STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK" />
+@@ -12 +12 @@
+-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.277" />
++  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.278" />
+@@ -14 +14 @@
+-  <title>Agent-Crypto @erith.IA — Build 40.4.277 · Administrator</title>
++  <title>Agent-Crypto @erith.IA — Build 40.4.278 · Administrator</title>
+@@ -2381 +2381 @@
+-            aria-label="Version Agent-Crypto installée : Build 40.4.277, mode Administrator"
++            aria-label="Version Agent-Crypto installée : Build 40.4.278, mode Administrator"
+@@ -2383 +2383 @@
+-            <span id="atlasVersionControlText">Build 40.4.277</span>
++            <span id="atlasVersionControlText">Build 40.4.278</span>
+@@ -4425 +4425 @@
+-    <script src="./js/views/system-presentation.js?v=administrator-build-40.4.277"></script>
++    <script src="./js/views/system-presentation.js?v=administrator-build-40.4.278"></script>
+@@ -4500 +4500 @@
+-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.277 · Version : Parker Lewis Can't Lose</span>
++      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.278 · Version : Parker Lewis Can't Lose</span>
+@@ -4510 +4510 @@
+-  <script src="./app.js?v=administrator-build-40.4.277"></script>
++  <script src="./app.js?v=administrator-build-40.4.278"></script>
+@@ -4661 +4661 @@
