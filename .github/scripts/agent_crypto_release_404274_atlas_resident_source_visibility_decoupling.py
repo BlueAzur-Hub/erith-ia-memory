@@ -25,8 +25,8 @@ if str(truth.get('engine'))!=ENGINE: raise SystemExit('404274_FAIL: protected Ma
 text=APP.read_text(encoding='utf-8')
 if OWNER in text: raise SystemExit('404274_FAIL: owner already present')
 
-# Locate the existing canonical public-market loader without assuming its argument signature.
-sig=re.search(r'(?m)^async function atlasLoadPublicCryptoMarket\([^\n]*\)\s*\{',text)
+# Locate the existing canonical public-market loader across its real multiline signature.
+sig=re.search(r'(?ms)^async function atlasLoadPublicCryptoMarket\s*\(.*?\)\s*\{',text)
 if not sig: raise SystemExit('404274_FAIL: atlasLoadPublicCryptoMarket signature not found')
 # Bound the surgery to this top-level function only.
 candidates=[p for p in (text.find('\nasync function ',sig.end()),text.find('\nfunction ',sig.end())) if p!=-1]
@@ -81,7 +81,8 @@ for item in required:
     if item not in final: raise SystemExit(f'404274_FAIL: missing runtime marker {item}')
 if final.count(OWNER)!=1: raise SystemExit('404274_FAIL: duplicate owner')
 # Prove the old visibility coupling is gone from the canonical loader body.
-verify_sig=re.search(r'(?m)^async function atlasLoadPublicCryptoMarket\([^\n]*\)\s*\{',final)
+verify_sig=re.search(r'(?ms)^async function atlasLoadPublicCryptoMarket\s*\(.*?\)\s*\{',final)
+if not verify_sig: raise SystemExit('404274_FAIL: patched atlasLoadPublicCryptoMarket signature not found')
 verify_candidates=[p for p in (final.find('\nasync function ',verify_sig.end()),final.find('\nfunction ',verify_sig.end())) if p!=-1]
 verify_end=min(verify_candidates) if verify_candidates else min(len(final),verify_sig.end()+12000)
 verify_body=final[verify_sig.start():verify_end]
