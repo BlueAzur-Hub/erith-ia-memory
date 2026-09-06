@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.277";
-  const ADMIN_RELEASE = "STRATEGY A V2 · ORACLE ENGINE COST GATE SOURCE LOCK";
+  const ADMIN_BUILD = "40.4.278";
+  const ADMIN_RELEASE = "STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";

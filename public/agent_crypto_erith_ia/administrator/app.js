@@ -35933,6 +35933,132 @@ function strategyAExportTrades404272(){
 }
 try{globalThis.AgentCryptoStrategyAV2404272=Object.freeze({build:"40.4.272",policy:STRATEGY_A_V2_POLICY_404272,costs:strategyARoundTripCosts404272,cost_gate:strategyACostGate404272,patient_exit:strategyAPatientExit404272,export_trades:strategyAExportTrades404272,paper_only:true,real_orders:false,kraken_network:false,market_core_changed:false,risk_governor_changed:false,reconciliation_math_changed:false});}catch(_){}
 
+/* 40.4.278 — STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK */
+/* Read-only operator truth layer. It evaluates every existing Strategy A gate for
+   observability even when the real execution path stopped earlier. It never promotes
+   a gate, never calls the Risk Governor on behalf of Auto A, never opens Paper, and
+   never changes the 40.4.270/271/272 policies. */
+function strategyADecisionTrace404278(){
+  const s=typeof STRATEGY_A_AUTO_STATE_404265!=="undefined"?STRATEGY_A_AUTO_STATE_404265:null;
+  const p=typeof STRATEGY_A_LAST_PROPOSAL_404261!=="undefined"?STRATEGY_A_LAST_PROPOSAL_404261:null;
+  let local=null,btc=null,oracle=null,mixed=null,reentry=null,cost=null;
+  try{local=strategyALocalContext404261();}catch(_){}
+  try{btc=p?.market||strategyABtcContext404261();}catch(_){}
+  try{oracle=p?.oracle||strategyAOracleContext404261();}catch(_){}
+  try{mixed=strategyAMeasuredMixedBias404270(oracle,btc);}catch(_){}
+  try{reentry=strategyAReentryFresh404271(p);}catch(_){}
+  try{cost=strategyACostGate404272(p);}catch(_){}
+
+  const regime=String(oracle?.regime||"UNKNOWN").toUpperCase();
+  const bullish=/HAUSSI/.test(regime)&&!/BAISS/.test(regime);
+  const mixedRegime=!!mixed?.mixed;
+  const direction=Number(oracle?.direction_score),confidence=Number(oracle?.confidence),btc24=Number(btc?.change_24h_pct);
+  const directionThreshold=Number(STRATEGY_A_MIXED_BIAS_GATE_404270?.min_direction_score??12);
+  const confidenceThreshold=mixedRegime?Number(STRATEGY_A_MIXED_BIAS_GATE_404270?.min_oracle_confidence??70):55;
+  const btcThreshold=mixedRegime?Number(STRATEGY_A_MIXED_BIAS_GATE_404270?.min_btc_24h_pct??0.10):0;
+  const workspaceOk=String(local?.active_workspace||"")==="strategy_a";
+  const safetyOk=local?.static_safety_ok===true;
+  const dataOk=workspaceOk&&safetyOk&&btc?.available===true&&oracle?.available===true&&oracle?.active===true;
+  const regimeOk=bullish||mixedRegime;
+  const directionOk=bullish||(mixedRegime&&Number.isFinite(direction)&&direction>=directionThreshold);
+  const confidenceOk=Number.isFinite(confidence)&&confidence>=confidenceThreshold;
+  const btcOk=Number.isFinite(btc24)&&(mixedRegime?btc24>=btcThreshold:btc24>0);
+  const proposalPass=String(p?.status||"")==="PROPOSED";
+  const reentryReached=proposalPass;
+  const reentryPass=reentryReached&&reentry?.eligible===true;
+  const costMeasured=!!cost&&cost?.costs&&Number.isFinite(Number(cost?.costs?.required_move_pct));
+  const costTracePass=costMeasured&&Number.isFinite(Number(cost?.expected_move_pct))&&Number(cost.expected_move_pct)>=Number(cost.costs.required_move_pct);
+  const risk=typeof STRATEGY_A_LAST_RISK_404262!=="undefined"?STRATEGY_A_LAST_RISK_404262:null;
+  const riskReached=proposalPass&&reentryPass&&costTracePass&&risk?.proposal_id===p?.proposal_id;
+  const ledger=typeof STRATEGY_A_PAPER_LEDGER_404263!=="undefined"?STRATEGY_A_PAPER_LEDGER_404263:[];
+  const open=Array.isArray(ledger)?ledger.find(row=>row?.status==="PAPER_OPEN")||null:null;
+  const paperReached=!!open&&(!p?.proposal_id||open?.proposal_id===p.proposal_id);
+
+  const pct=(v,d=2)=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(d)} %`:"—";
+  const points=v=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(0)}/100`:"—";
+  const gates=[
+    {key:"data",label:"DATA",value:`${btc?.available===true?"BTC OK":"BTC ?"} · ${oracle?.active===true?"ORACLE OK":"ORACLE ?"} · ${workspaceOk?"WORKSPACE OK":"WORKSPACE ?"} · ${safetyOk?"SAFETY OK":"SAFETY ?"}`,threshold:"données critiques + workspace + audit",state:dataOk?"pass":"wait",path:"évalué"},
+    {key:"regime",label:"RÉGIME",value:regime,threshold:"HAUSSIER ou MIXTE mesurable",state:regimeOk?"pass":"wait",path:"évalué"},
+    {key:"direction",label:"DIRECTION",value:points(direction),threshold:bullish?"baseline haussier":`seuil +${directionThreshold}/100`,state:directionOk?"pass":"wait",path:"évalué"},
+    {key:"confidence",label:"CONFIANCE",value:Number.isFinite(confidence)?`${confidence.toFixed(0)}/100`:"—",threshold:`seuil ${confidenceThreshold}/100`,state:confidenceOk?"pass":"wait",path:"évalué"},
+    {key:"btc24",label:"BTC 24 H",value:pct(btc24,3),threshold:mixedRegime?`seuil +${btcThreshold.toFixed(2)} %`:"strictement positif",state:btcOk?"pass":"wait",path:"évalué"},
+    {key:"reentry",label:"RÉENTRÉE",value:reentryReached?String(reentry?.reason||"UNKNOWN"):"NON ATTEINT",threshold:"cooldown + signal neuf 40.4.271",state:reentryReached?(reentryPass?"pass":"wait"):"idle",path:reentryReached?"chemin réel":"bloqué avant ce gate"},
+    {key:"cost",label:"COST GATE",value:costMeasured?`Oracle ${pct(cost?.expected_move_pct)} · seuil ${Number(cost.costs.required_move_pct).toFixed(2)} %`:"Oracle / coûts indisponibles",threshold:costMeasured?`coûts ${Number(cost.costs.total_pct).toFixed(2)} % + marge ${Number(STRATEGY_A_V2_POLICY_404272.safety_margin_over_cost_pct).toFixed(2)} %`:"40.4.272",state:costMeasured?(costTracePass?"pass":"wait"):"idle",path:proposalPass&&reentryPass?"chemin réel":`trace lecture seule · source ${String(cost?.expected_source||"—")}`},
+    {key:"risk",label:"RISK GOVERNOR",value:riskReached?`${String(risk?.decision||"UNKNOWN")} · ${Number(risk?.authorized_notional_eur||0).toFixed(2)} €`:"NON ATTEINT",threshold:"ACCEPT/REDUCE + montant > 0",state:riskReached?(["ACCEPT","REDUCE"].includes(String(risk?.decision||""))&&Number(risk?.authorized_notional_eur)>0?"pass":"stop"):"idle",path:riskReached?"chemin réel":"aucune décision Risk pour la proposition courante"},
+    {key:"paper",label:"PAPER",value:paperReached?`OUVERT · ${Number(open?.authorized_notional_eur||0).toFixed(2)} €`:"AUCUNE POSITION",threshold:"fill fictif après Risk",state:paperReached?"pass":"idle",path:paperReached?"chemin réel":"aucun ordre réel"}
+  ];
+  const firstBlocker=gates.find(g=>g.state==="stop"||g.state==="wait")||null;
+  return {
+    schema:"agent_crypto_strategy_a_gate_trace_404278_v1",
+    build:"40.4.278",
+    generated_at:new Date().toISOString(),
+    phase:String(s?.phase||"OFF"),
+    proposal_id:p?.proposal_id||null,
+    proposal_status:String(p?.status||"NONE"),
+    first_blocker:firstBlocker?.key||null,
+    first_blocker_label:firstBlocker?.label||null,
+    reason:String(p?.reason||s?.last_action||"Aucune proposition courante."),
+    gates,
+    policy:{mixed_bias:STRATEGY_A_MIXED_BIAS_GATE_404270,reentry:STRATEGY_A_REENTRY_POLICY_404271,cost:STRATEGY_A_V2_POLICY_404272},
+    safety:{read_only:true,presentation_only:true,decision_logic_changed:false,risk_governor_called:false,paper_execution_called:false,real_orders:false,kraken_network:false,storage_write:false}
+  };
+}
+function strategyAEnsureDecisionTraceStyle404278(){
+  let style=document.getElementById("strategyADecisionTraceStyle404278");
+  if(style)return style;
+  style=document.createElement("style");style.id="strategyADecisionTraceStyle404278";
+  style.textContent=`
+    #strategyADecisionTrace404278{margin-top:10px!important;padding:10px!important;border:1px solid rgba(120,207,255,.13)!important;border-radius:10px!important;background:rgba(2,13,22,.62)!important}
+    #strategyADecisionTrace404278 .sadt-head-404278{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:8px!important}
+    #strategyADecisionTrace404278 .sadt-title-404278{font-size:9px!important;font-weight:950!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#b9ddeb!important}
+    #strategyADecisionTrace404278 .sadt-summary-404278{font-size:9px!important;line-height:1.35!important;color:#8aa6b4!important;text-align:right!important}
+    #strategyADecisionTrace404278 .sadt-grid-404278{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+    #strategyADecisionTrace404278 .sadt-gate-404278{min-width:0!important;padding:7px 8px!important;border:1px solid rgba(255,255,255,.065)!important;border-radius:8px!important;background:rgba(255,255,255,.018)!important}
+    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="pass"]{border-color:rgba(91,219,171,.23)!important;background:rgba(34,153,114,.055)!important}
+    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="wait"]{border-color:rgba(234,192,93,.24)!important;background:rgba(179,126,25,.055)!important}
+    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="stop"]{border-color:rgba(255,112,112,.25)!important;background:rgba(160,44,44,.055)!important}
+    #strategyADecisionTrace404278 .sadt-gate-label-404278{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;font-size:7px!important;font-weight:950!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#7895a3!important}
+    #strategyADecisionTrace404278 .sadt-gate-state-404278{font-size:7px!important;font-weight:950!important;color:#9fb5bf!important}
+    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="pass"] .sadt-gate-state-404278{color:#83edc8!important}
+    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="wait"] .sadt-gate-state-404278{color:#f0d27d!important}
+    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="stop"] .sadt-gate-state-404278{color:#ff9f9f!important}
+    #strategyADecisionTrace404278 .sadt-gate-value-404278{display:block!important;margin-top:4px!important;font-size:10px!important;font-weight:900!important;line-height:1.25!important;color:#ecf7fb!important;overflow-wrap:anywhere!important}
+    #strategyADecisionTrace404278 .sadt-gate-threshold-404278,#strategyADecisionTrace404278 .sadt-gate-path-404278{display:block!important;margin-top:3px!important;font-size:7px!important;line-height:1.3!important;color:#6f8997!important;overflow-wrap:anywhere!important}
+    #strategyADecisionTrace404278 .sadt-gate-path-404278{color:#809aa7!important}
+    @media(max-width:1080px){#strategyADecisionTrace404278 .sadt-grid-404278{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+    @media(max-width:700px){#strategyADecisionTrace404278 .sadt-grid-404278{grid-template-columns:1fr!important}#strategyADecisionTrace404278 .sadt-summary-404278{text-align:left!important}}
+  `;
+  document.head.appendChild(style);return style;
+}
+function strategyARenderDecisionTrace404278(){
+  const body=document.querySelector("#strategyAVisualConsole404269 .avc-body-404269");if(!body)return false;
+  strategyAEnsureDecisionTraceStyle404278();
+  let panel=document.getElementById("strategyADecisionTrace404278");
+  if(!panel){
+    panel=document.createElement("section");panel.id="strategyADecisionTrace404278";panel.setAttribute("data-decision-trace-build","40.4.278");
+    panel.innerHTML=`<div class="sadt-head-404278"><div class="sadt-title-404278">TRACE DÉCISION V2 · LECTURE SEULE</div><div class="sadt-summary-404278" id="strategyADecisionTraceSummary404278">Lecture des gates…</div></div><div class="sadt-grid-404278" id="strategyADecisionTraceGrid404278"></div>`;
+    const foot=body.querySelector(".avc-foot-404269");if(foot)body.insertBefore(panel,foot);else body.appendChild(panel);
+  }
+  const trace=strategyADecisionTrace404278();
+  const summary=document.getElementById("strategyADecisionTraceSummary404278");
+  if(summary)summary.textContent=`PHASE ${trace.phase.replaceAll("_"," ")} · PROPOSAL ${trace.proposal_status} · ${trace.first_blocker_label?`1er verrou : ${trace.first_blocker_label}`:"aucun verrou mesuré"}`;
+  const grid=document.getElementById("strategyADecisionTraceGrid404278");if(!grid)return true;
+  for(const gate of trace.gates){
+    let card=grid.querySelector(`[data-trace-gate="${gate.key}"]`);
+    if(!card){
+      card=document.createElement("div");card.className="sadt-gate-404278";card.setAttribute("data-trace-gate",gate.key);
+      card.innerHTML=`<div class="sadt-gate-label-404278"><span class="sadt-label-404278"></span><span class="sadt-gate-state-404278"></span></div><b class="sadt-gate-value-404278"></b><small class="sadt-gate-threshold-404278"></small><small class="sadt-gate-path-404278"></small>`;
+      grid.appendChild(card);
+    }
+    card.setAttribute("data-state",gate.state);
+    const stateLabel=gate.state==="pass"?"PASS":gate.state==="wait"?"WAIT":gate.state==="stop"?"STOP":"NON ATTEINT";
+    const label=card.querySelector(".sadt-label-404278"),state=card.querySelector(".sadt-gate-state-404278"),value=card.querySelector(".sadt-gate-value-404278"),threshold=card.querySelector(".sadt-gate-threshold-404278"),path=card.querySelector(".sadt-gate-path-404278");
+    if(label)label.textContent=gate.label;if(state)state.textContent=stateLabel;if(value)value.textContent=gate.value;if(threshold)threshold.textContent=gate.threshold;if(path)path.textContent=gate.path;
+  }
+  return true;
+}
+try{globalThis.AgentCryptoStrategyAGateTrace404278=Object.freeze({build:"40.4.278",read:strategyADecisionTrace404278,render:strategyARenderDecisionTrace404278,presentation_only:true,decision_logic_changed:false,policy_changed:false,risk_governor_called:false,paper_execution_called:false,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+
 function strategyAAutoCycle404265(trigger="timer"){
   const s=STRATEGY_A_AUTO_STATE_404265;if(!s.enabled)return strategyAAutoSnapshot404265();
   s.cycles+=1;s.last_cycle_at=new Date().toISOString();s.next_cycle_at=null;
@@ -36329,6 +36455,7 @@ function strategyAApplyVisualHarmony404269(){
   const euro=v=>Number(v||0).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
   set("strategyAVisualMetrics404269",`TRADES ${sample} · GAGNANTS ${wins} · PERDANTS ${losses} · BRUT ${gross>=0?"+":""}${euro(gross)} € · FRAIS -${euro(fees)} € · IMPACT -${euro(impact)} € · NET ${pnl>=0?"+":""}${euro(pnl)} €`);
   const metricsEl=document.getElementById("strategyAVisualMetrics404269");if(metricsEl){metricsEl.style.fontSize="12px";metricsEl.style.fontWeight="900";metricsEl.style.lineHeight="1.45";metricsEl.style.color="#eaf5fa";metricsEl.style.whiteSpace="normal";}
+  try{strategyARenderDecisionTrace404278();}catch(_){}
   let exportBtn=document.getElementById("strategyAExportTrades404272");if(!exportBtn){exportBtn=document.createElement("button");exportBtn.type="button";exportBtn.className="btn small";exportBtn.id="strategyAExportTrades404272";exportBtn.textContent="TÉLÉCHARGER JOURNAL TRADES";exportBtn.addEventListener("click",()=>strategyAExportTrades404272());const actions=document.querySelector("#strategyAVisualConsole404269 .avc-actions-404269");const stop=document.getElementById("strategyAVisualStop404269");if(actions)actions.insertBefore(exportBtn,stop||null);}
   const start=document.getElementById("strategyAVisualStart404269"),stop=document.getElementById("strategyAVisualStop404269");
   if(start){start.disabled=!!s?.enabled;start.textContent=s?.enabled?"AUTO A ACTIF":"ACTIVER AUTO A";}
@@ -53708,7 +53835,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.277";
+const ATLAS_BUILD = "40.4.278";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
