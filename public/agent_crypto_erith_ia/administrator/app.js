@@ -15661,12 +15661,11 @@ function atlasScheduleChartPulse(delayMs = ATLAS_CHART_BACKGROUND_REFRESH_MS) {
 
 function atlasPauseMarketPulse() {
   state.marketPulse.paused = true;
-  if (state.auto.timer) clearTimeout(state.auto.timer);
-  state.auto.timer = null;
-  state.auto.nextAt = null;
+  /* 40.4.274: the canonical public-market cadence is resident state work.
+     Keep its existing timer/controller alive while the document is hidden;
+     only spot/chart presentation work is paused. */
   atlasClearPulseTimer("spot");
   atlasClearPulseTimer("chart");
-  atlasAbortPulseController(state.marketPulse.marketController);
   atlasAbortPulseController(state.marketPulse.spotController);
   atlasAbortPulseController(state.chartEngineV2?.controller);
   updateAutoCountdown();
@@ -18410,8 +18409,12 @@ async function atlasRefreshSpotBook(options = {}) {
 }
 
 async function refreshMarketOnly(options = {}) {
-  if (state.auto?.livecheckBusy || !state.auto?.enabled || !atlasPulseVisible()) return false;
-  return runLivecheck({ ...options, reason: options.reason || "public-market-pulse" });
+  if (state.auto?.livecheckBusy || !state.auto?.enabled) return false;
+  return runLivecheck({
+    ...options,
+    reason: options.reason || "public-market-pulse",
+    residentOnly: options.residentOnly === true || !atlasPulseVisible()
+  });
 }
 
 function classifyAsset(c) {
@@ -48307,7 +48310,8 @@ async function atlasRunStartupLivecheck() {
 }
 
 async function runLivecheck(options = {}) {
-  if (state.auto?.livecheckBusy || !atlasPulseVisible()) return false;
+  if (state.auto?.livecheckBusy) return false;
+  const residentOnly = options.residentOnly === true || !atlasPulseVisible();
 
   state.auto.livecheckBusy = true;
   atlasSetLivecheckButtonBusy(true, "Lecture du marché public…");
@@ -48342,7 +48346,7 @@ async function runLivecheck(options = {}) {
 
     const startedAt = performance.now();
     const result = await SourceAdapter.publicCryptoMarket({ signal: controller.signal });
-    if (controller.signal.aborted || !atlasPulseVisible()) return false;
+    if (controller.signal.aborted) return false;
     const latencyMs = Math.round(performance.now() - startedAt);
 
     state.sourceStatus = result.sourceStatus.map(item => item.key === "coingecko-public" ? { ...item, ms: latencyMs } : { ...item });
@@ -48368,9 +48372,11 @@ async function runLivecheck(options = {}) {
     atlasPatchMarketSnapshotDom();
     renderTrustLock(atlasAnalysisLiveReady());
 
-    atlasStartSelectedChart(160, true);
-    await atlasDelay(260);
-    await atlasWaitForChartIdle(30_000);
+    if (!residentOnly) {
+      atlasStartSelectedChart(160, true);
+      await atlasDelay(260);
+      await atlasWaitForChartIdle(30_000);
+    }
     return true;
   } catch (error) {
     if (error?.name === "AbortError") return false;
@@ -48419,9 +48425,9 @@ async function runLivecheck(options = {}) {
 
     if (succeeded) {
       atlasAfterLivecheck({ marketDelayMs: ATLAS_MARKET_REFRESH_MS, spotDelayMs: 900, reason: options.reason || "livecheck" });
-    } else if (state.auto?.enabled && atlasPulseVisible()) {
+    } else if (state.auto?.enabled) {
       const retryDelay = atlasMarketRetryDelay(state.marketPulse.marketFailures || 1);
-      atlasAnnounceDirectRetry(retryDelay, "Snapshot public Crypto indisponible");
+      if (!residentOnly) atlasAnnounceDirectRetry(retryDelay, "Snapshot public Crypto indisponible");
       scheduleAutoRead(retryDelay);
     }
   }
@@ -50598,20 +50604,17 @@ function scheduleAutoRead(ms = null) {
   if (state.auto.timer) clearTimeout(state.auto.timer);
   state.auto.timer = null;
 
-  if (!atlasPulseVisible()) {
-    state.auto.nextAt = null;
-    updateAutoCountdown();
-    return;
-  }
-
   const delay = ms ?? state.auto.intervalMs ?? ATLAS_MARKET_REFRESH_MS;
   state.auto.nextAt = new Date(Date.now() + delay).toISOString();
   updateAutoCountdown();
 
   state.auto.timer = setTimeout(() => {
     state.auto.timer = null;
-    if (state.auto?.enabled && atlasPulseVisible()) {
-      void refreshMarketOnly({ reason: "market-pulse" });
+    if (state.auto?.enabled) {
+      void refreshMarketOnly({
+        reason: "market-pulse",
+        residentOnly: !atlasPulseVisible()
+      });
     }
   }, delay);
 }
@@ -53629,7 +53632,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.273";
+const ATLAS_BUILD = "40.4.274";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -65553,3 +65556,27 @@ try{globalThis.ERITH_BUILD_40_4_153_SIMULATION_FINAL=Object.freeze({
   new_timer:false,new_observer:false,real_orders:false,workspace_mutation:false,api_keys:false,withdrawals:false,
   market_core_changed:false,atlas_pipeline_changed:false,window_manager_changed:false,bridge_changed:false,private_backend_changed:false
 });}catch(_){}
+
+
+/* 40.4.274 — ATLAS RESIDENT CURRENT SNAPSHOT · SOURCE-STATE VISIBILITY DECOUPLING LOCK */
+try {
+  globalThis.ErithAtlasResidentCurrent404274 = Object.freeze({
+    build:"40.4.274",
+    parent:"40.4.273",
+    canonical_source_owner:"runLivecheck -> SourceAdapter.publicCryptoMarket",
+    canonical_pending_owner:"atlasCurrentPendingMarket137",
+    document_hidden_source_cadence_preserved:true,
+    atlas_disclosure_visibility_dependency:false,
+    hidden_spot_chart_work_preserved_paused:true,
+    existing_market_timer_reused:true,
+    new_timer:false,
+    new_observer:false,
+    new_fetch_owner:false,
+    new_websocket:false,
+    new_storage_owner:false,
+    market_core_changed:false,
+    oracle_changed:false,
+    strategy_a_changed:false,
+    real_orders:false
+  });
+} catch (_) {}
