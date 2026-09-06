@@ -15,6 +15,24 @@
   const AETHER_MARQUEE_DELAY_S_40121=0.55;
   const aetherVeilleState4087={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
   function aetherNewsCanonicalFrenchEvent40110(event){
+  function aetherVeilleOperatorEligible404279(event){
+    const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+    const assets=(Array.isArray(canonical?.assets)?canonical.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean);
+    const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
+    const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
+    const label=String(canonical?.event_label||"").toLowerCase();
+    const headline=String(canonical?.headline_fr_display||canonical?.headline_fr||canonical?.headline||"").toLowerCase();
+    const text=[label,headline,...domains,...topics].join(" " );
+    const nonCryptoAssets=new Set(["GLOBAL","MARKET","MARCHÉ","MARCHE","WORLD"]);
+    const assetAnchor=assets.some(symbol=>symbol&&!nonCryptoAssets.has(symbol));
+    const cryptoAnchor=assetAnchor||/(?:\bbitcoin\b|\bbtc\b|\bethereum\b|\bether\b|\beth\b|\bsolana\b|\bsol\b|\bxrp\b|\bbnb\b|\bcrypto\b|\bblockchain\b|\bdefi\b|\bstablecoin\b|\bweb3\b|\bwallet\b|\btoken\b|\baltcoin\b|\bmemecoin\b|\bon[- ]?chain\b|\bstaking\b|\bmining\b|\bminage\b|\bprotocol\b|\bperpetuals?\b)/i.test(text);
+    const macroDomain=domains.includes("macro_liquidity");
+    const macroAnchor=macroDomain&&/(?:federal reserve|\bfed\b|\bbce\b|\becb\b|treasury|banque centrale|central bank|taux|rates?|inflation|emploi|jobs|liquidit|jackson hole)/i.test(text);
+    // 40.4.279 — Aether owns a scarce operator lane, not the full News Sentinel archive.
+    // A generic "marché global" sector, a crypto-media source, or a high impact score alone
+    // never makes an unrelated world story eligible. The canonical archive remains untouched.
+    return cryptoAnchor||macroAnchor;
+  }
     if(!event)return event;
     const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
     const headline=String(event?.headline||"").replace(/\s+/g," " ).trim();
@@ -192,7 +210,8 @@
         else addPool(newsFeedState?.events);
       }
     }catch(_){}
-    const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
+    const eligible=events.filter(aetherVeilleOperatorEligible404279);
+    const ranked=eligible.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
     const canonicalRows=[];const seenTokens=new Set();
     for(const row of ranked){
       const tokens=aetherVeilleStoryTokens40127(row.event);
