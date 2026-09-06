@@ -1,0 +1,45 @@
++  const btcThreshold=mixedRegime?Number(STRATEGY_A_MIXED_BIAS_GATE_404270?.min_btc_24h_pct??0.10):0;
++  const workspaceOk=String(local?.active_workspace||"")==="strategy_a";
++  const safetyOk=local?.static_safety_ok===true;
++  const dataOk=workspaceOk&&safetyOk&&btc?.available===true&&oracle?.available===true&&oracle?.active===true;
++  const regimeOk=bullish||mixedRegime;
++  const directionOk=bullish||(mixedRegime&&Number.isFinite(direction)&&direction>=directionThreshold);
++  const confidenceOk=Number.isFinite(confidence)&&confidence>=confidenceThreshold;
++  const btcOk=Number.isFinite(btc24)&&(mixedRegime?btc24>=btcThreshold:btc24>0);
++  const proposalPass=String(p?.status||"")==="PROPOSED";
++  const reentryReached=proposalPass;
++  const reentryPass=reentryReached&&reentry?.eligible===true;
++  const costMeasured=!!cost&&cost?.costs&&Number.isFinite(Number(cost?.costs?.required_move_pct));
++  const costTracePass=costMeasured&&Number.isFinite(Number(cost?.expected_move_pct))&&Number(cost.expected_move_pct)>=Number(cost.costs.required_move_pct);
++  const risk=typeof STRATEGY_A_LAST_RISK_404262!=="undefined"?STRATEGY_A_LAST_RISK_404262:null;
++  const riskReached=proposalPass&&reentryPass&&costTracePass&&risk?.proposal_id===p?.proposal_id;
++  const ledger=typeof STRATEGY_A_PAPER_LEDGER_404263!=="undefined"?STRATEGY_A_PAPER_LEDGER_404263:[];
++  const open=Array.isArray(ledger)?ledger.find(row=>row?.status==="PAPER_OPEN")||null:null;
++  const paperReached=!!open&&(!p?.proposal_id||open?.proposal_id===p.proposal_id);
++
++  const pct=(v,d=2)=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(d)} %`:"—";
++  const points=v=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(0)}/100`:"—";
++  const gates=[
++    {key:"data",label:"DATA",value:`${btc?.available===true?"BTC OK":"BTC ?"} · ${oracle?.active===true?"ORACLE OK":"ORACLE ?"} · ${workspaceOk?"WORKSPACE OK":"WORKSPACE ?"} · ${safetyOk?"SAFETY OK":"SAFETY ?"}`,threshold:"données critiques + workspace + audit",state:dataOk?"pass":"wait",path:"évalué"},
++    {key:"regime",label:"RÉGIME",value:regime,threshold:"HAUSSIER ou MIXTE mesurable",state:regimeOk?"pass":"wait",path:"évalué"},
++    {key:"direction",label:"DIRECTION",value:points(direction),threshold:bullish?"baseline haussier":`seuil +${directionThreshold}/100`,state:directionOk?"pass":"wait",path:"évalué"},
++    {key:"confidence",label:"CONFIANCE",value:Number.isFinite(confidence)?`${confidence.toFixed(0)}/100`:"—",threshold:`seuil ${confidenceThreshold}/100`,state:confidenceOk?"pass":"wait",path:"évalué"},
++    {key:"btc24",label:"BTC 24 H",value:pct(btc24,3),threshold:mixedRegime?`seuil +${btcThreshold.toFixed(2)} %`:"strictement positif",state:btcOk?"pass":"wait",path:"évalué"},
++    {key:"reentry",label:"RÉENTRÉE",value:reentryReached?String(reentry?.reason||"UNKNOWN"):"NON ATTEINT",threshold:"cooldown + signal neuf 40.4.271",state:reentryReached?(reentryPass?"pass":"wait"):"idle",path:reentryReached?"chemin réel":"bloqué avant ce gate"},
++    {key:"cost",label:"COST GATE",value:costMeasured?`Oracle ${pct(cost?.expected_move_pct)} · seuil ${Number(cost.costs.required_move_pct).toFixed(2)} %`:"Oracle / coûts indisponibles",threshold:costMeasured?`coûts ${Number(cost.costs.total_pct).toFixed(2)} % + marge ${Number(STRATEGY_A_V2_POLICY_404272.safety_margin_over_cost_pct).toFixed(2)} %`:"40.4.272",state:costMeasured?(costTracePass?"pass":"wait"):"idle",path:proposalPass&&reentryPass?"chemin réel":`trace lecture seule · source ${String(cost?.expected_source||"—")}`},
++    {key:"risk",label:"RISK GOVERNOR",value:riskReached?`${String(risk?.decision||"UNKNOWN")} · ${Number(risk?.authorized_notional_eur||0).toFixed(2)} €`:"NON ATTEINT",threshold:"ACCEPT/REDUCE + montant > 0",state:riskReached?(["ACCEPT","REDUCE"].includes(String(risk?.decision||""))&&Number(risk?.authorized_notional_eur)>0?"pass":"stop"):"idle",path:riskReached?"chemin réel":"aucune décision Risk pour la proposition courante"},
++    {key:"paper",label:"PAPER",value:paperReached?`OUVERT · ${Number(open?.authorized_notional_eur||0).toFixed(2)} €`:"AUCUNE POSITION",threshold:"fill fictif après Risk",state:paperReached?"pass":"idle",path:paperReached?"chemin réel":"aucun ordre réel"}
++  ];
++  const firstBlocker=gates.find(g=>g.state==="stop"||g.state==="wait")||null;
++  return {
++    schema:"agent_crypto_strategy_a_gate_trace_404278_v1",
++    build:"40.4.278",
++    generated_at:new Date().toISOString(),
++    phase:String(s?.phase||"OFF"),
++    proposal_id:p?.proposal_id||null,
++    proposal_status:String(p?.status||"NONE"),
++    first_blocker:firstBlocker?.key||null,
++    first_blocker_label:firstBlocker?.label||null,
++    reason:String(p?.reason||s?.last_action||"Aucune proposition courante."),
++    gates,
++    policy:{mixed_bias:STRATEGY_A_MIXED_BIAS_GATE_404270,reentry:STRATEGY_A_REENTRY_POLICY_404271,cost:STRATEGY_A_V2_POLICY_404272},
