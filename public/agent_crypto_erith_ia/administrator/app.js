@@ -50917,10 +50917,81 @@ function isCollectorConfigured() { const stored = cleanCollectorId(localStorage.
 function getCollectorId() { let id = cleanCollectorId(localStorage.getItem(COLLECTOR_ID_KEY)); if (!id) { id = defaultCollectorId(); localStorage.setItem(COLLECTOR_ID_KEY, id); localStorage.setItem(COLLECTOR_CONFIGURED_KEY, "0"); } return id;
 }
 
-function migrateLocalCollectorRecords(targetId, silent = false) { const id = cleanCollectorId(targetId || getCollectorId()); if (!id || isGeneratedCollectorId(id)) return { changed: 0, total: 0, collectors_before: [] }; const records = readAutoMemory(); const beforeCollectors = collectorStats(records).collectors; let changed = 0; const migrated = records.map(record => { if (!record || typeof record !== "object") return record; const current = record.collector_id || "local-legacy"; if (!isLegacyCollectorId(current)) return record; changed += 1; const saved = record.saved_at || new Date().toISOString(); const key = `${id}_${String(saved).replace(/[:.]/g, "-")}`; return { ...record, id: key, snapshot_id: key, collector_id: id, collector_type: record.collector_type || "local_browser", migrated_from_collector_id: current, migrated_at: new Date().toISOString() }; }); if (changed) { writeAutoMemory(normalizeSharedRecords(migrated, id)); } const note = changed ? `${new Date().toLocaleString("fr-FR")} · ${changed} anciens snapshots rattachés à ${id}` : `${new Date().toLocaleString("fr-FR")} · aucun ancien snapshot à migrer`; localStorage.setItem(COLLECTOR_MIGRATION_NOTE_KEY, note); if (!silent && els.sharedMemoryOutput) { els.sharedMemoryOutput.textContent = [ "ID COLLECTEUR SAUVÉ", "", `Machine configurée : ${id}`, `Anciens snapshots rattachés : ${changed}`, "", "Cette configuration est conservée dans Firefox.", "Tu n’as pas à refaire cette étape à chaque ouverture." ].join("\n"); } return { changed, total: records.length, collectors_before: beforeCollectors };
+/* 40.4.280 — SHARED MEMORY · MULTI-MACHINE PROVENANCE · NIGHT RELAY LOCK
+   Imported machine provenance is immutable. Local collector migration may still attach
+   true legacy/local records to this browser, but must never re-home a record received
+   from another machine. */
+function migrateLocalCollectorRecords(targetId, silent = false) { const id = cleanCollectorId(targetId || getCollectorId()); if (!id || isGeneratedCollectorId(id)) return { changed: 0, total: 0, collectors_before: [] }; const records = readAutoMemory(); const beforeCollectors = collectorStats(records).collectors; let changed = 0; const migrated = records.map(record => { if (!record || typeof record !== "object") return record; if (record?.shared_memory_provenance?.locked === true || record?.imported_from_collector_id) return record; const current = record.collector_id || "local-legacy"; if (!isLegacyCollectorId(current)) return record; changed += 1; const saved = record.saved_at || new Date().toISOString(); const key = `${id}_${String(saved).replace(/[:.]/g, "-")}`; return { ...record, id: key, snapshot_id: key, collector_id: id, collector_type: record.collector_type || "local_browser", migrated_from_collector_id: current, migrated_at: new Date().toISOString() }; }); if (changed) { writeAutoMemory(normalizeSharedRecords(migrated, id)); } const note = changed ? `${new Date().toLocaleString("fr-FR")} · ${changed} anciens snapshots rattachés à ${id}` : `${new Date().toLocaleString("fr-FR")} · aucun ancien snapshot à migrer`; localStorage.setItem(COLLECTOR_MIGRATION_NOTE_KEY, note); if (!silent && els.sharedMemoryOutput) { els.sharedMemoryOutput.textContent = [ "ID COLLECTEUR SAUVÉ", "", `Machine configurée : ${id}`, `Anciens snapshots rattachés : ${changed}`, "", "Cette configuration est conservée dans Firefox.", "Tu n’as pas à refaire cette étape à chaque ouverture." ].join("\n"); } return { changed, total: records.length, collectors_before: beforeCollectors };
 }
 
 function setCollectorId(value) { const id = cleanCollectorId(value); if (!id) return getCollectorId(); localStorage.setItem(COLLECTOR_ID_KEY, id); localStorage.setItem(COLLECTOR_CONFIGURED_KEY, "1"); migrateLocalCollectorRecords(id, false); return id;
+}
+
+function atlasSharedMemoryImportedCollector404280(record, payload = null) {
+  const candidates = [
+    record?.collector_id,
+    record?.exporter_collector_id,
+    payload?.exporter_collector_id,
+    payload?.collector_id
+  ];
+  for (const candidate of candidates) {
+    const clean = cleanCollectorId(candidate);
+    if (clean) return clean;
+  }
+  return "imported-legacy";
+}
+
+function atlasSharedMemoryImportedRecord404280(record, payload, importedAt) {
+  const collector = atlasSharedMemoryImportedCollector404280(record, payload);
+  const sourceTime = record?.market_generated_at || record?.source_time || record?.saved_at || payload?.exported_at || importedAt;
+  const savedAt = record?.saved_at || sourceTime || importedAt;
+  const originalKey = String(record?.snapshot_id || record?.id || "").trim();
+  const canonicalId = atlasMemoryCanonicalSnapshotId(record);
+  const keySeed = canonicalId || sourceTime || savedAt || importedAt;
+  const normalizedSeed = String(keySeed || "snapshot").replace(/[^a-zA-Z0-9_-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 180) || "snapshot";
+  const originalHasCollector = originalKey && String(originalKey).toLowerCase().startsWith(`${collector.toLowerCase()}_`);
+  const recordKey = originalHasCollector ? originalKey : `${collector}_${normalizedSeed}`;
+  return {
+    ...record,
+    id: recordKey,
+    snapshot_id: recordKey,
+    collector_id: collector,
+    collector_type: record?.collector_type || "imported_local_browser",
+    saved_at: savedAt,
+    last_seen_at: record?.last_seen_at || savedAt,
+    imported_at: importedAt,
+    imported_from_collector_id: collector,
+    imported_source_record_id: originalKey || null,
+    shared_memory_provenance: {
+      locked: true,
+      original_collector_id: collector,
+      exporter_collector_id: cleanCollectorId(payload?.exporter_collector_id) || null,
+      source_schema: String(payload?.schema || "legacy_shared_memory"),
+      exported_at: payload?.exported_at || null,
+      imported_at: importedAt
+    }
+  };
+}
+
+function atlasSharedMemoryPrepareIncoming404280(payload, incoming) {
+  const importedAt = new Date().toISOString();
+  return (incoming || [])
+    .filter(record => record && typeof record === "object")
+    .map(record => atlasSharedMemoryImportedRecord404280(record, payload, importedAt));
+}
+
+function atlasSharedMemoryVerifyPersisted404280(prepared, saved) {
+  const byKey = new Map((saved || []).map(record => [String(record?.snapshot_id || record?.id || ""), record]));
+  const failures = [];
+  for (const expected of prepared || []) {
+    const key = String(expected?.snapshot_id || expected?.id || "");
+    const actual = byKey.get(key);
+    if (!actual) { failures.push(`${key || "snapshot"}:absent`); continue; }
+    if (String(actual.collector_id || "") !== String(expected.collector_id || "")) failures.push(`${key}:collector`);
+    if (String(actual.saved_at || "") !== String(expected.saved_at || "")) failures.push(`${key}:time`);
+    if (actual?.shared_memory_provenance?.locked !== true) failures.push(`${key}:lock`);
+  }
+  return { ok: failures.length === 0, failures };
 }
 
 function normalizeSharedRecords(records, fallbackCollectorId = null) {
@@ -50997,7 +51068,78 @@ function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConf
 function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const celestialApi = globalThis.AgentCryptoCelestialPortable40288 || globalThis.AgentCryptoCelestialPortable40272; const celestialCandidate = celestialApi?.snapshot?.() || null; const celestial = celestialCandidate?.fetched_at ? celestialCandidate : null; const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, celestial_handoff: celestial ? "ryzen_to_book_readonly" : null, celestial, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
 }
 
-async function importAutoMemoryFile(file) { if (!file) return; try { const text = await file.text(); const payload = JSON.parse(text); const incoming = Array.isArray(payload) ? payload : Array.isArray(payload.records) ? payload.records : []; const celestial = !Array.isArray(payload) && payload?.celestial?.schema === "atlas.celestial.portable.v1" ? payload.celestial : null; if (!incoming.length && !celestial) { setSharedOutputStatus("fail"); if (els.sharedMemoryOutput) els.sharedMemoryOutput.textContent = "IMPORT REFUSÉ\n\nAucun snapshot marché ni snapshot Celestial trouvé dans ce fichier JSON."; return; } const before = readAutoMemory(); const beforeStats = collectorStats(before); const merged = normalizeSharedRecords([...before, ...incoming]); writeAutoMemory(merged); const celestialApi = globalThis.AgentCryptoCelestialPortable40288 || globalThis.AgentCryptoCelestialPortable40272; const celestialImported = celestial ? (celestialApi?.importSnapshot?.(celestial) === true) : false; const celestialProducer = celestial ? String(celestial.producer_collector_id || "provenance inconnue") : "absent"; const afterStats = collectorStats(merged); const imported = Math.max(0, merged.length - before.length); const newCollectors = afterStats.collectors.filter(id => !beforeStats.collectors.includes(id)); const line = `${new Date().toLocaleString("fr-FR")} · import OK · ${incoming.length} lus · ${imported} nouveaux${celestialImported ? ` · Celestial ${celestialProducer}` : ""}`; localStorage.setItem(AUTO_LAST_IMPORT_KEY, line); renderSharedMemory(); renderAutoReader(); setSharedOutputStatus("ok"); if (els.sharedMemoryOutput) { els.sharedMemoryOutput.textContent = [ "✅ IMPORT RÉUSSI", "", `Fichier lu : ${file.name || "mémoire JSON"}`, `Snapshots lus dans le fichier : ${incoming.length}`, `Nouveaux snapshots ajoutés : ${imported}`, `Total mémoire fusionnée : ${merged.length}`, `Celestial portable : ${celestialImported ? `IMPORTÉ · producteur ${celestialProducer} · lecture seule` : celestial ? "présent mais refusé/non appliqué" : "absent"}`, "", "COLLECTEURS APRÈS IMPORT", formatCollectorCounts(afterStats), newCollectors.length ? `Nouveau(x) collecteur(s) détecté(s) : ${newCollectors.join(" / ")}` : "Aucun nouveau collecteur, données déjà connues ou mises à jour.", "", "RÉSULTAT", "Les données importées sont maintenant disponibles localement sur ce poste.", "Celestial 40.2.88 : Ryzen producteur → JSON mémoire partagée → Transformer Book lecture seule. Aucune publication GitHub n’est requise." ].join("\n"); } } catch (error) { setSharedOutputStatus("fail"); if (els.sharedMemoryOutput) { els.sharedMemoryOutput.textContent = [ "❌ IMPORT REFUSÉ", "", "Le fichier choisi n’a pas pu être lu comme mémoire Atlas JSON.", String(error?.message || error) ].join("\n"); } }
+async function importAutoMemoryFile(file) {
+  if (!file) return;
+  let before = null;
+  try {
+    const raw = await file.text();
+    const payload = JSON.parse(raw);
+    const incoming = Array.isArray(payload) ? payload : Array.isArray(payload.records) ? payload.records : [];
+    const celestial = !Array.isArray(payload) && payload?.celestial?.schema === "atlas.celestial.portable.v1" ? payload.celestial : null;
+    if (!incoming.length && !celestial) {
+      setSharedOutputStatus("fail");
+      if (els.sharedMemoryOutput) els.sharedMemoryOutput.textContent = "IMPORT REFUSÉ\n\nAucun snapshot marché ni snapshot Celestial trouvé dans ce fichier JSON.";
+      return;
+    }
+
+    before = readAutoMemory();
+    const beforeStats = collectorStats(before);
+    const prepared = atlasSharedMemoryPrepareIncoming404280(payload, incoming);
+    const merged = normalizeSharedRecords([...before, ...prepared]);
+    const saved = writeAutoMemory(merged);
+    const proof = atlasSharedMemoryVerifyPersisted404280(prepared, saved);
+    if (!proof.ok) {
+      writeAutoMemory(before);
+      throw new Error(`provenance multi-machine non conservée (${proof.failures.join(", ")})`);
+    }
+
+    const celestialApi = globalThis.AgentCryptoCelestialPortable40288 || globalThis.AgentCryptoCelestialPortable40272;
+    const celestialImported = celestial ? (celestialApi?.importSnapshot?.(celestial) === true) : false;
+    const celestialProducer = celestial ? String(celestial.producer_collector_id || "provenance inconnue") : "absent";
+    const afterStats = collectorStats(saved);
+    const imported = Math.max(0, saved.length - before.length);
+    const newCollectors = afterStats.collectors.filter(id => !beforeStats.collectors.includes(id));
+    const importedCollectors = [...new Set(prepared.map(record => record.collector_id).filter(Boolean))];
+    const line = `${new Date().toLocaleString("fr-FR")} · import OK · ${incoming.length} lus · ${imported} nouveaux · provenance ${importedCollectors.join(" / ") || "legacy"}${celestialImported ? ` · Celestial ${celestialProducer}` : ""}`;
+    localStorage.setItem(AUTO_LAST_IMPORT_KEY, line);
+    renderSharedMemory();
+    renderAutoReader();
+    setSharedOutputStatus("ok");
+    if (els.sharedMemoryOutput) {
+      els.sharedMemoryOutput.textContent = [
+        "✅ IMPORT RÉUSSI · PROVENANCE VÉRIFIÉE",
+        "",
+        `Fichier lu : ${file.name || "mémoire JSON"}`,
+        `Snapshots lus dans le fichier : ${incoming.length}`,
+        `Nouveaux snapshots ajoutés : ${imported}`,
+        `Total mémoire fusionnée : ${saved.length}`,
+        `Producteur(s) importé(s) : ${importedCollectors.join(" / ") || "legacy non qualifié"}`,
+        `Celestial portable : ${celestialImported ? `IMPORTÉ · producteur ${celestialProducer} · lecture seule` : celestial ? "présent mais refusé/non appliqué" : "absent"}`,
+        "",
+        "COLLECTEURS APRÈS IMPORT",
+        formatCollectorCounts(afterStats),
+        newCollectors.length ? `Nouveau(x) collecteur(s) détecté(s) : ${newCollectors.join(" / ")}` : "Aucun nouveau collecteur, données déjà connues ou réimportées.",
+        "",
+        "RÉSULTAT",
+        "L’identité machine et l’horodatage source de chaque snapshot importé sont verrouillés.",
+        "Un import Transformer Book ne peut plus être rattaché silencieusement au collecteur Ryzen.",
+        "Aucun calcul Atlas n’est demandé au Book ; la mémoire reste observationnelle et transportable."
+      ].join("\n");
+    }
+  } catch (error) {
+    if (before) { try { writeAutoMemory(before); } catch (_) {} }
+    setSharedOutputStatus("fail");
+    if (els.sharedMemoryOutput) {
+      els.sharedMemoryOutput.textContent = [
+        "❌ IMPORT REFUSÉ",
+        "",
+        "Le fichier choisi n’a pas pu être importé avec une provenance vérifiable.",
+        String(error?.message || error),
+        "",
+        "La mémoire locale précédente a été conservée."
+      ].join("\n");
+    }
+  }
 }
 
 function setGithubMemoryStatus(kind = "", text = "") { if (els.githubMemoryStatus) { els.githubMemoryStatus.classList.remove("ok", "warn", "fail"); if (kind) els.githubMemoryStatus.classList.add(kind); if (text) els.githubMemoryStatus.textContent = text; } if (els.githubMemoryOutput) { els.githubMemoryOutput.classList.remove("ok", "warn", "fail"); if (kind) els.githubMemoryOutput.classList.add(kind); }
@@ -53835,7 +53977,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.279";
+const ATLAS_BUILD = "40.4.280";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
