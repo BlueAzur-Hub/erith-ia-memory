@@ -18,8 +18,51 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Align required System cache tokens
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          base=Path('public/agent_crypto_erith_ia/administrator')
+          index=base/'index.html'
+          system=base/'js/views/system-presentation.js'
+          idx=index.read_text(encoding='utf-8')
+          old='./js/views/system-presentation.js?v=administrator-build-40.4.272'
+          new='./js/views/system-presentation.js?v=administrator-build-40.4.273'
+          if idx.count(old)!=1:
+              raise SystemExit(f'404273_FAIL: system presentation cache token count={idx.count(old)}')
+          index.write_text(idx.replace(old,new,1),encoding='utf-8')
+          txt=system.read_text(encoding='utf-8')
+          old='const SOURCE="./views/system.html?v=administrator-build-40.4.272";'
+          new='const SOURCE="./views/system.html?v=administrator-build-40.4.273";'
+          if txt.count(old)!=1:
+              raise SystemExit(f'404273_FAIL: system source cache token count={txt.count(old)}')
+          system.write_text(txt.replace(old,new,1),encoding='utf-8')
+          PY
+
       - name: Patch Atlas state truth, validate and package
         run: python .github/scripts/agent_crypto_release_404273_atlas_state_truth_auth_recovery.py
+
+      - name: Add System presentation to release bundle and refresh SHA
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          repo=Path.cwd()
+          coord=repo/'coordination/inter_ai_dialogues/agent_crypto'
+          zip_path=coord/'AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY.zip'
+          system=repo/'public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js'
+          arc=str(system.relative_to(repo))
+          with zipfile.ZipFile(zip_path,'a',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
+              if arc not in zf.namelist():
+                  zf.write(system,arc)
+          digest=hashlib.sha256(zip_path.read_bytes()).hexdigest()
+          (coord/'AGENT_CRYPTO_40_4_273_ATLAS_STATE_TRUTH_BRIDGE_AUTH_RECOVERY_SHA256.txt').write_text(
+              f'{digest}  {zip_path.name}\n',encoding='utf-8')
+          with zipfile.ZipFile(zip_path,'r') as zf:
+              bad=zf.testzip()
+              if bad: raise SystemExit(f'404273_FAIL: bad ZIP member {bad}')
+          print(digest)
+          PY
 
       - name: Commit canonical 40.4.273 release
         run: |
@@ -29,6 +72,7 @@ jobs:
           git rm .github/scripts/agent_crypto_release_404273_atlas_state_truth_auth_recovery.py
           git add public/agent_crypto_erith_ia/administrator/app.js \
                   public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js \
                   public/agent_crypto_erith_ia/administrator/index.html \
                   public/agent_crypto_erith_ia/administrator/build.json \
                   public/agent_crypto_erith_ia/administrator/version.json \
