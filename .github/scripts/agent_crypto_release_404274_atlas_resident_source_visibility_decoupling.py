@@ -3,6 +3,7 @@ import hashlib, json, subprocess, zipfile
 
 REPO=Path.cwd()
 BASE=REPO/'public/agent_crypto_erith_ia/administrator'
+INDEX=BASE/'index.html'
 APP=BASE/'app.js'
 SYSTEM_PRESENTATION=BASE/'js/views/system-presentation.js'
 COORD=REPO/'coordination/inter_ai_dialogues/agent_crypto'
@@ -152,8 +153,7 @@ text += contract_js
 APP.write_text(text,encoding='utf-8')
 
 # Version-truth invariant introduced in 40.4.221: the parser-shell System source
-# cache token must advance with the Administrator build. This file is therefore
-# part of the clean 40.4.274 payload even though its behavior is unchanged.
+# cache token and its loaded script token must advance with the Administrator build.
 system_presentation=SYSTEM_PRESENTATION.read_text(encoding='utf-8')
 system_presentation=replace_once(
     system_presentation,
@@ -162,6 +162,15 @@ system_presentation=replace_once(
     'System source cache token'
 )
 SYSTEM_PRESENTATION.write_text(system_presentation,encoding='utf-8')
+
+index_text=INDEX.read_text(encoding='utf-8')
+index_text=replace_once(
+    index_text,
+    f'system-presentation.js?v=administrator-build-{PARENT}',
+    f'system-presentation.js?v=administrator-build-{BUILD}',
+    'System presentation index cache token'
+)
+INDEX.write_text(index_text,encoding='utf-8')
 
 contract={
   'schema':'agent_crypto_atlas_resident_current_snapshot_404274_v2',
@@ -205,6 +214,8 @@ if 'async function atlasLoadPublicCryptoMarket' in final: raise SystemExit('4042
 if final.count('function atlasCurrentPendingMarket137(')!=1: raise SystemExit('404274_FAIL: canonical pending owner count changed')
 if f'const SOURCE="./views/system.html?v=administrator-build-{BUILD}";' not in SYSTEM_PRESENTATION.read_text(encoding='utf-8'):
     raise SystemExit('404274_FAIL: System presentation source token did not advance')
+if f'system-presentation.js?v=administrator-build-{BUILD}' not in INDEX.read_text(encoding='utf-8'):
+    raise SystemExit('404274_FAIL: System presentation index token did not advance')
 
 COORD.mkdir(parents=True,exist_ok=True)
 report=COORD/REPORT_NAME
@@ -229,7 +240,7 @@ When Firefox moved the Administrator document to hidden state, `atlasPauseMarket
 - Suppress the selected-chart refresh while running resident-only hidden market work.
 - Continue pausing spot/chart presentation pulses while hidden.
 - Reuse `atlasAfterLivecheck` and therefore the existing 40.4.137 `atlasCurrentPendingMarket137` reconciliation path.
-- Advance the existing System parser-shell cache token to the same Administrator build; no System behavior changes.
+- Advance the existing System parser-shell cache tokens to the same Administrator build; no System behavior changes.
 - No new timer, observer, WebSocket or storage owner.
 - Atlas readiness, Bridge auth recovery and report sequencing are unchanged.
 - Market Core remains {ENGINE}; Oracle and Strategy A are untouched.
@@ -247,7 +258,7 @@ This build does not add a second scheduler or a second pending CURRENT owner.
 ''',encoding='utf-8')
 
 zip_path=COORD/ZIP_NAME
-files=[BASE/'index.html',BASE/'app.js',BASE/'js/app.js',SYSTEM_PRESENTATION,BASE/'build.json',BASE/'version.json',BASE/'administrator-version.json',report]
+files=[INDEX,APP,BASE/'js/app.js',SYSTEM_PRESENTATION,BASE/'build.json',BASE/'version.json',BASE/'administrator-version.json',report]
 with zipfile.ZipFile(zip_path,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
     for path in files: zf.write(path,path.relative_to(REPO))
 digest=hashlib.sha256(zip_path.read_bytes()).hexdigest()
