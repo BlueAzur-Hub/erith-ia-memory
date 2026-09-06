@@ -1,5 +1,5 @@
 from pathlib import Path
-import hashlib, json, subprocess, zipfile
+import hashlib, json, re, subprocess, zipfile
 
 REPO=Path.cwd()
 BASE=REPO/'public/agent_crypto_erith_ia/administrator'
@@ -25,22 +25,31 @@ if str(truth.get('engine'))!=ENGINE: raise SystemExit('404274_FAIL: protected Ma
 text=APP.read_text(encoding='utf-8')
 if OWNER in text: raise SystemExit('404274_FAIL: owner already present')
 
-# The canonical public market source was incorrectly coupled to Atlas panel visibility.
-# This prevented the resident CURRENT owner from observing a fresh canonical snapshot
-# while Atlas was hidden/closed. Source ingestion must be UI-independent; rendering is not.
-start='''async function atlasLoadPublicCryptoMarket() {\n  if (!atlasPulseVisible()) return null;'''
-replacement=f'''{OWNER}\n/* Canonical source ingestion is resident state, not a panel-render concern. */\ntry{{globalThis.ErithAtlasResidentCurrent404274=Object.freeze({{\n  build:"40.4.274",parent:"40.4.273",canonical_pending_owner:"atlasCurrentPendingMarket137",\n  public_market_source_visibility_independent:true,ui_render_visibility_contract_unchanged:true,\n  new_timer:false,new_observer:false,new_fetch_owner:false,new_websocket:false,new_storage_owner:false,\n  market_core_changed:false,oracle_changed:false,strategy_a_changed:false\n}});}}catch(_){{}}\nasync function atlasLoadPublicCryptoMarket() {{'''
-if text.count(start)!=1: raise SystemExit(f'404274_FAIL: public-market entry visibility guard count={text.count(start)}')
-text=text.replace(start,replacement,1)
+# Locate the existing canonical public-market loader without assuming its argument signature.
+sig=re.search(r'(?m)^async function atlasLoadPublicCryptoMarket\([^\n]*\)\s*\{',text)
+if not sig: raise SystemExit('404274_FAIL: atlasLoadPublicCryptoMarket signature not found')
+# Bound the surgery to this top-level function only.
+candidates=[p for p in (text.find('\nasync function ',sig.end()),text.find('\nfunction ',sig.end())) if p!=-1]
+end=min(candidates) if candidates else min(len(text),sig.end()+12000)
+body=text[sig.start():end]
 
-post='if (controller.signal.aborted || !atlasPulseVisible()) return false;'
-if text.count(post)!=1: raise SystemExit(f'404274_FAIL: post-fetch visibility guard count={text.count(post)}')
-text=text.replace(post,'if (controller.signal.aborted) return false;',1)
+entry_re=re.compile(r'\n([ \t]*)if\s*\(\s*!atlasPulseVisible\(\)\s*\)\s*return\s+null\s*;')
+post_re=re.compile(r'if\s*\(\s*controller\.signal\.aborted\s*\|\|\s*!atlasPulseVisible\(\)\s*\)\s*return\s+false\s*;')
+entry_matches=list(entry_re.finditer(body)); post_matches=list(post_re.finditer(body))
+print(json.dumps({'404274_diag':{'signature':sig.group(0),'entry_visibility_guards':len(entry_matches),'post_visibility_guards':len(post_matches),'body_chars':len(body)}},ensure_ascii=False))
+if len(entry_matches)!=1: raise SystemExit(f'404274_FAIL: loader entry visibility guard count={len(entry_matches)}')
+if len(post_matches)!=1: raise SystemExit(f'404274_FAIL: loader post-fetch visibility guard count={len(post_matches)}')
 
-wake='''        atlasPublicCryptoMarketLastFetchAt = Date.now();\n        return true;'''
-wake_new='''        atlasPublicCryptoMarketLastFetchAt = Date.now();\n        /* 40.4.274: a fresh canonical source must wake the existing 40.4.137 CURRENT owner even when Atlas UI is hidden. */\n        try { atlasCurrentPendingRefresh137("public-market-source-404274"); } catch (_) {}\n        return true;'''
-if text.count(wake)!=1: raise SystemExit(f'404274_FAIL: canonical source cache completion count={text.count(wake)}')
-text=text.replace(wake,wake_new,1)
+body=entry_re.sub(lambda m:'\n'+m.group(1)+'/* 40.4.274: canonical source ingestion remains resident while Atlas UI is hidden. */',body,count=1)
+body=post_re.sub('if (controller.signal.aborted) return false;',body,count=1)
+
+wake_re=re.compile(r'(atlasPublicCryptoMarketLastFetchAt\s*=\s*Date\.now\(\)\s*;)(\s*\n\s*)return\s+true\s*;')
+if len(list(wake_re.finditer(body)))!=1: raise SystemExit(f'404274_FAIL: canonical cache completion count={len(list(wake_re.finditer(body)))}')
+body=wake_re.sub(r'\1\2/* 40.4.274: wake the existing 40.4.137 CURRENT owner from fresh canonical source state. */\2try { atlasCurrentPendingRefresh137("public-market-source-404274"); } catch (_) {}\2return true;',body,count=1)
+
+contract_js=f'''{OWNER}\n/* Canonical source ingestion is resident state, not a panel-render concern. */\ntry{{globalThis.ErithAtlasResidentCurrent404274=Object.freeze({{\n  build:"40.4.274",parent:"40.4.273",canonical_pending_owner:"atlasCurrentPendingMarket137",\n  public_market_source_visibility_independent:true,ui_render_visibility_contract_unchanged:true,\n  new_timer:false,new_observer:false,new_fetch_owner:false,new_websocket:false,new_storage_owner:false,\n  market_core_changed:false,oracle_changed:false,strategy_a_changed:false\n}});}}catch(_){{}}\n'''
+body=contract_js+body
+text=text[:sig.start()]+body+text[end:]
 APP.write_text(text,encoding='utf-8')
 
 contract={
@@ -66,21 +75,17 @@ run('node','--check',str(BASE/'js/app.js'))
 run('python',str(GUARD),'--expected-build',BUILD,'--expected-release',RELEASE)
 
 final=APP.read_text(encoding='utf-8')
-required=[
-  OWNER,
-  'public_market_source_visibility_independent:true',
-  'canonical_pending_owner:"atlasCurrentPendingMarket137"',
-  'if (controller.signal.aborted) return false;',
-  'atlasCurrentPendingRefresh137("public-market-source-404274")',
-  'const ATLAS_BUILD = "40.4.274";'
-]
+required=[OWNER,'public_market_source_visibility_independent:true','canonical_pending_owner:"atlasCurrentPendingMarket137"','if (controller.signal.aborted) return false;','atlasCurrentPendingRefresh137("public-market-source-404274")','const ATLAS_BUILD = "40.4.274";']
 for item in required:
     if item not in final: raise SystemExit(f'404274_FAIL: missing runtime marker {item}')
 if final.count(OWNER)!=1: raise SystemExit('404274_FAIL: duplicate owner')
-if 'async function atlasLoadPublicCryptoMarket() {\n  if (!atlasPulseVisible()) return null;' in final:
-    raise SystemExit('404274_FAIL: entry visibility gate survived')
-if 'controller.signal.aborted || !atlasPulseVisible()' in final:
-    raise SystemExit('404274_FAIL: post-fetch visibility gate survived')
+# Prove the old visibility coupling is gone from the canonical loader body.
+verify_sig=re.search(r'(?m)^async function atlasLoadPublicCryptoMarket\([^\n]*\)\s*\{',final)
+verify_candidates=[p for p in (final.find('\nasync function ',verify_sig.end()),final.find('\nfunction ',verify_sig.end())) if p!=-1]
+verify_end=min(verify_candidates) if verify_candidates else min(len(final),verify_sig.end()+12000)
+verify_body=final[verify_sig.start():verify_end]
+if re.search(r'if\s*\(\s*!atlasPulseVisible\(\)\s*\)\s*return\s+null\s*;',verify_body): raise SystemExit('404274_FAIL: entry visibility gate survived')
+if 'controller.signal.aborted || !atlasPulseVisible()' in verify_body: raise SystemExit('404274_FAIL: post-fetch visibility gate survived')
 
 COORD.mkdir(parents=True,exist_ok=True)
 report=COORD/REPORT_NAME
@@ -91,7 +96,7 @@ report.write_text(f'''# Agent-Crypto {BUILD} — Atlas Resident CURRENT Snapshot
 - Release: {RELEASE}
 
 ## Fault isolated
-The canonical public crypto source loader rejected work when `atlasPulseVisible()` was false, both before the fetch and again after normalization. That UI-visibility coupling contradicted the existing 40.4.137 canonical pending CURRENT contract: hiding/closing Atlas could prevent a fresh canonical market snapshot from reaching resident state.
+The canonical public crypto source loader rejected resident source work when `atlasPulseVisible()` was false, before fetch and again after normalization. That UI-visibility coupling contradicted the existing 40.4.137 canonical pending CURRENT contract: hiding/closing Atlas could prevent a fresh canonical market snapshot from reaching resident state.
 
 ## Surgery
 - Canonical public market ingestion no longer depends on Atlas panel visibility.
@@ -106,7 +111,7 @@ The canonical public crypto source loader rejected work when `atlasPulseVisible(
 1. Open Administrator and let Atlas/Aerith initialize.
 2. Hide/close the Atlas panel while leaving the Administrator page alive.
 3. Let a newer canonical `data/crypto/latest.json` snapshot arrive.
-4. Verify the resident state detects the new market snapshot and the 40.4.137 pending CURRENT owner is refreshed without reopening Atlas.
+4. Verify resident state detects the new market snapshot and the 40.4.137 pending CURRENT owner is refreshed without reopening Atlas.
 5. Once the existing true-report readiness gates are satisfied, verify CURRENT analysis proceeds through the normal Atlas owner.
 6. Reopen Atlas and confirm the visible CURRENT corresponds to the newest snapshot rather than a stale Historical conclusion.
 
