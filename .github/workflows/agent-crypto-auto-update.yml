@@ -186,6 +186,7 @@ jobs:
               admin_path = root / 'administrator-version.json'
               admin_path.write_text(json.dumps(admin_manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
               admin_sha = hashlib.sha256(admin_path.read_bytes()).hexdigest()
+              manifest.setdefault('files', {})['administrator-version.json'] = admin_sha
               vpub = manifest.setdefault('integrity', {}).setdefault('publication_identity', {})
               if 'administrator_version_sha256' in vpub:
                   vpub['administrator_version_sha256'] = admin_sha
