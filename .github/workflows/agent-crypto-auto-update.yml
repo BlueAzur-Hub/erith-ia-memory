@@ -129,7 +129,7 @@ jobs:
                   raise SystemExit('STOP CRITIQUE: SHA-256 du patch invalide')
 
               numstat = subprocess.check_output(
-                  ['git', 'apply', '--numstat', str(patch_path)],
+                  ['git', 'apply', '--unidiff-zero', '--numstat', str(patch_path)],
                   text=True,
               )
               patched_paths = []
@@ -147,8 +147,8 @@ jobs:
                       'STOP CRITIQUE: périmètre patch != request: '
                       + json.dumps({'patch': sorted(patched_rel), 'request': sorted(files)}, ensure_ascii=False)
                   )
-              subprocess.run(['git', 'apply', '--check', str(patch_path)], check=True)
-              subprocess.run(['git', 'apply', str(patch_path)], check=True)
+              subprocess.run(['git', 'apply', '--unidiff-zero', '--check', str(patch_path)], check=True)
+              subprocess.run(['git', 'apply', '--unidiff-zero', str(patch_path)], check=True)
 
           manifest = json.loads((root / 'version.json').read_text(encoding='utf-8'))
           admin_manifest = json.loads((root / 'administrator-version.json').read_text(encoding='utf-8'))
