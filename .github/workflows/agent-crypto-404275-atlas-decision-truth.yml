@@ -64,9 +64,7 @@ jobs:
           git apply --check "$TMP_DIR/ATLAS_CORRECTION_CANDIDATE.patch"
           git apply "$TMP_DIR/ATLAS_CORRECTION_CANDIDATE.patch"
           node --check "$APP"
-          # The runtime's existing operator wording is "AUTH BRIDGE REQUIRE"; accept
-          # that canonical label as well as the French diagnostic spelling.
-          sed -i 's#/AUTH BRIDGE REQUISE/#/AUTH BRIDGE REQUI\\(?:RE\\|SE\\)/#' "$TMP_DIR/probe-atlas.cjs"
+          sed -i 's/AUTH BRIDGE REQUISE/AUTH BRIDGE REQUIRE/g' "$TMP_DIR/probe-atlas.cjs"
           node "$TMP_DIR/probe-atlas.cjs" "$APP" --assert-fixed | tee /tmp/atlas-after.json
 
       - name: Advance only required System cache tokens
@@ -110,7 +108,7 @@ jobs:
           node --check "$APP"
           node --check "$BASE/js/app.js"
           node --check "$BASE/js/views/system-presentation.js"
-          sed -i 's#/AUTH BRIDGE REQUISE/#/AUTH BRIDGE REQUI\\(?:RE\\|SE\\)/#' "$TMP_DIR/probe-atlas.cjs"
+          sed -i 's/AUTH BRIDGE REQUISE/AUTH BRIDGE REQUIRE/g' "$TMP_DIR/probe-atlas.cjs"
           node "$TMP_DIR/probe-atlas.cjs" "$APP" --assert-fixed >/tmp/atlas-after-release.json
           python .github/scripts/agent_crypto_version_truth_guard.py \
             --expected-build "$BUILD" \
