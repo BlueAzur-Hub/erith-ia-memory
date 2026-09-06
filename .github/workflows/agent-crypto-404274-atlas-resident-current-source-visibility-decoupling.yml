@@ -29,6 +29,7 @@ jobs:
           git rm .github/scripts/agent_crypto_release_404274_atlas_resident_source_visibility_decoupling.py
           git add public/agent_crypto_erith_ia/administrator/app.js \
                   public/agent_crypto_erith_ia/administrator/js/app.js \
+                  public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js \
                   public/agent_crypto_erith_ia/administrator/index.html \
                   public/agent_crypto_erith_ia/administrator/build.json \
                   public/agent_crypto_erith_ia/administrator/version.json \
@@ -63,3 +64,4 @@ jobs:
 # retrigger 40.4.274 after actual loader guard alignment
 # retrigger 40.4.274 after multiline loader matcher fix
 # retrigger 40.4.274 after canonical runLivecheck owner audit
+# retrigger 40.4.274 after version-truth cache alignment
