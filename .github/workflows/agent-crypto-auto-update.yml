@@ -101,12 +101,28 @@ jobs:
                   dst.parent.mkdir(parents=True, exist_ok=True)
                   shutil.copy2(src, dst)
           else:
-              patch_rel = str(req.get('patch_file') or 'update.patch').strip()
-              patch_path = stage / patch_rel
-              if Path(patch_rel).is_absolute() or '..' in Path(patch_rel).parts:
-                  raise SystemExit('STOP CRITIQUE: patch_file interdit')
-              if not patch_path.is_file():
-                  raise SystemExit('STOP CRITIQUE: patch absent')
+              patch_parts = req.get('patch_parts') or []
+              if patch_parts:
+                  if not isinstance(patch_parts, list) or len(patch_parts) > 64:
+                      raise SystemExit('STOP CRITIQUE: patch_parts invalide')
+                  patch_path = Path('/tmp/agent_crypto_auto_update.patch')
+                  with patch_path.open('wb') as out:
+                      for rel in patch_parts:
+                          rel = str(rel or '').strip()
+                          rp = Path(rel)
+                          if not rel or rp.is_absolute() or '..' in rp.parts:
+                              raise SystemExit('STOP CRITIQUE: patch part interdite')
+                          part = stage / rp
+                          if not part.is_file():
+                              raise SystemExit(f'STOP CRITIQUE: patch part absente {rel}')
+                          out.write(part.read_bytes())
+              else:
+                  patch_rel = str(req.get('patch_file') or 'update.patch').strip()
+                  patch_path = stage / patch_rel
+                  if Path(patch_rel).is_absolute() or '..' in Path(patch_rel).parts:
+                      raise SystemExit('STOP CRITIQUE: patch_file interdit')
+                  if not patch_path.is_file():
+                      raise SystemExit('STOP CRITIQUE: patch absent')
               expected_patch_sha = str(req.get('patch_sha256') or '').strip().lower()
               actual_patch_sha = hashlib.sha256(patch_path.read_bytes()).hexdigest()
               if not expected_patch_sha or actual_patch_sha != expected_patch_sha:
