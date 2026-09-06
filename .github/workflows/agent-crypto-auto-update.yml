@@ -169,6 +169,30 @@ jobs:
           if str(manifest.get('mode')) != 'Administrator':
               raise SystemExit('STOP CRITIQUE: mode publication différent de Administrator')
 
+          # Reusable guarded publication support: when explicitly requested, refresh only
+          # the hashes of files already inside the bounded patch. This avoids hand-written
+          # digest drift while preserving the exact request/patch perimeter.
+          if req.get('manifest_hashes_autofill') is True:
+              def sha256(rel):
+                  return hashlib.sha256((root / rel).read_bytes()).hexdigest()
+              modified_payloads = [rel for rel in files if rel not in ('version.json', 'administrator-version.json')]
+              for doc in (manifest, admin_manifest):
+                  fmap = doc.setdefault('files', {})
+                  for rel in modified_payloads:
+                      fmap[rel] = sha256(rel)
+                  pub = doc.setdefault('integrity', {}).setdefault('publication_identity', {})
+                  if 'app.js' in modified_payloads and 'app_sha256' in pub:
+                      pub['app_sha256'] = sha256('app.js')
+              admin_path = root / 'administrator-version.json'
+              admin_path.write_text(json.dumps(admin_manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              admin_sha = hashlib.sha256(admin_path.read_bytes()).hexdigest()
+              vpub = manifest.setdefault('integrity', {}).setdefault('publication_identity', {})
+              if 'administrator_version_sha256' in vpub:
+                  vpub['administrator_version_sha256'] = admin_sha
+              (root / 'version.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              manifest = json.loads((root / 'version.json').read_text(encoding='utf-8'))
+              admin_manifest = json.loads((root / 'administrator-version.json').read_text(encoding='utf-8'))
+
           app_text = (root / 'app.js').read_text(encoding='utf-8', errors='replace')
           app_markers = re.findall(r'const\s+ATLAS_BUILD\s*=\s*["\']([^"\']+)["\']\s*;', app_text)
           if app_markers != [build]:
