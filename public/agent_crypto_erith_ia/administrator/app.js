@@ -51084,10 +51084,12 @@ async function importAutoMemoryFile(file) {
 
     before = readAutoMemory();
     const beforeStats = collectorStats(before);
-    const prepared = atlasSharedMemoryPrepareIncoming404280(payload, incoming);
+    const prepared = incoming;
     const merged = normalizeSharedRecords([...before, ...prepared]);
     const saved = writeAutoMemory(merged);
-    const proof = atlasSharedMemoryVerifyPersisted404280(prepared, saved);
+    const expectedCollectors=[...new Set(incoming.map(record=>cleanCollectorId(record?.collector_id||record?.exporter_collector_id||payload?.exporter_collector_id||payload?.collector_id)).filter(Boolean))];
+    const savedCollectors=collectorStats(saved).collectors;
+    const proof={ok:expectedCollectors.every(id=>savedCollectors.includes(id)),failures:expectedCollectors.filter(id=>!savedCollectors.includes(id))};
     if (!proof.ok) {
       writeAutoMemory(before);
       throw new Error(`provenance multi-machine non conservée (${proof.failures.join(", ")})`);
@@ -51099,7 +51101,7 @@ async function importAutoMemoryFile(file) {
     const afterStats = collectorStats(saved);
     const imported = Math.max(0, saved.length - before.length);
     const newCollectors = afterStats.collectors.filter(id => !beforeStats.collectors.includes(id));
-    const importedCollectors = [...new Set(prepared.map(record => record.collector_id).filter(Boolean))];
+    const importedCollectors = expectedCollectors;
     const line = `${new Date().toLocaleString("fr-FR")} · import OK · ${incoming.length} lus · ${imported} nouveaux · provenance ${importedCollectors.join(" / ") || "legacy"}${celestialImported ? ` · Celestial ${celestialProducer}` : ""}`;
     localStorage.setItem(AUTO_LAST_IMPORT_KEY, line);
     renderSharedMemory();
@@ -51121,7 +51123,7 @@ async function importAutoMemoryFile(file) {
         newCollectors.length ? `Nouveau(x) collecteur(s) détecté(s) : ${newCollectors.join(" / ")}` : "Aucun nouveau collecteur, données déjà connues ou réimportées.",
         "",
         "RÉSULTAT",
-        "L’identité machine et l’horodatage source de chaque snapshot importé sont verrouillés.",
+        "L’identité collecteur importée est vérifiée après normalisation canonique ; les horodatages source restent ceux portés par les relevés.",
         "Un import Transformer Book ne peut plus être rattaché silencieusement au collecteur Ryzen.",
         "Aucun calcul Atlas n’est demandé au Book ; la mémoire reste observationnelle et transportable."
       ].join("\n");
@@ -53977,7 +53979,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.280";
+const ATLAS_BUILD = "40.4.281";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";

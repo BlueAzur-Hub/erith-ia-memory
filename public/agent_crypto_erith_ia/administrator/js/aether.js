@@ -210,8 +210,7 @@
         else addPool(newsFeedState?.events);
       }
     }catch(_){}
-    const eligible=events.filter(aetherVeilleOperatorEligible404279);
-    const ranked=eligible.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
+    const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
     const canonicalRows=[];const seenTokens=new Set();
     for(const row of ranked){
       const tokens=aetherVeilleStoryTokens40127(row.event);
