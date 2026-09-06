@@ -35694,6 +35694,56 @@ function strategyAReentryFresh404271(proposal){
 }
 try{globalThis.AgentCryptoStrategyAReentryGuard404271=Object.freeze({build:"40.4.271",policy:STRATEGY_A_REENTRY_POLICY_404271,evaluate:strategyAReentryFresh404271,state:()=>({last_entry_signal:STRATEGY_A_AUTO_STATE_404265.last_entry_signal_404271||null,last_closed_signal:STRATEGY_A_AUTO_STATE_404265.last_closed_signal_404271||null,reentry_waits:Number(STRATEGY_A_AUTO_STATE_404265.reentry_waits_404271||0),cooldown_until:STRATEGY_A_AUTO_STATE_404265.cooldown_until||0}),paper_only:true,session_local:true,auto_runner_logic_changed:true,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
+/* 40.4.272 — STRATEGY A V2 · COST-AWARE ENTRY + PATIENT EXIT + OPERATOR RESULTS LOCK */
+/* Paper-only V2 learned from the first 10 closed 40.4.271 trades.
+   Existing Market Core, Oracle model, Risk Governor, Paper fill, reconciliation,
+   Kraken isolation and real-order locks remain unchanged. */
+const STRATEGY_A_V2_POLICY_404272=Object.freeze({
+  absolute_min_expected_move_pct:0.80,
+  safety_margin_over_cost_pct:0.20,
+  max_hold_ms:3600000,
+  first_review_ms:300000
+});
+function strategyARoundTripCosts404272(){
+  let entry={buy_fee_pct:0.25,entry_impact_pct:0.05},exit={sell_fee_pct:0.25,exit_impact_pct:0.05};
+  try{entry=strategyAPaperCostAssumptions404263()||entry;}catch(_){}
+  try{exit=strategyAPaperExitCosts404264()||exit;}catch(_){}
+  const buyFee=Number(entry?.buy_fee_pct)||0,entryImpact=Number(entry?.entry_impact_pct)||0,sellFee=Number(exit?.sell_fee_pct)||0,exitImpact=Number(exit?.exit_impact_pct)||0;
+  const total=buyFee+entryImpact+sellFee+exitImpact;
+  return {buy_fee_pct:buyFee,entry_impact_pct:entryImpact,sell_fee_pct:sellFee,exit_impact_pct:exitImpact,total_pct:total,required_move_pct:Math.max(STRATEGY_A_V2_POLICY_404272.absolute_min_expected_move_pct,total+STRATEGY_A_V2_POLICY_404272.safety_margin_over_cost_pct)};
+}
+function strategyAOracleUpsideEnvelope404272(){
+  try{
+    const body=String(document?.body?.innerText||"").replace(/\u00a0/g," ");
+    const match=body.match(/Oracle hausse[\s\S]{0,180}?enveloppe\s*\+?([0-9]+(?:[.,][0-9]+)?)\s*%/i);
+    if(match){const value=Number(String(match[1]).replace(",","."));if(Number.isFinite(value))return {available:true,value_pct:value,source:"existing Oracle hausse envelope UI"};}
+  }catch(_){}
+  return {available:false,value_pct:null,source:"Oracle upside envelope unavailable"};
+}
+function strategyACostGate404272(proposal){
+  const costs=strategyARoundTripCosts404272(),up=strategyAOracleUpsideEnvelope404272();
+  const eligible=proposal?.status==="PROPOSED"&&up.available&&Number(up.value_pct)>=Number(costs.required_move_pct);
+  return {eligible,proposal_status:String(proposal?.status||"UNKNOWN"),expected_move_pct:up.value_pct,expected_source:up.source,costs,reason:!up.available?"ORACLE_ENVELOPE_UNAVAILABLE":eligible?"EXPECTED_MOVE_COVERS_COSTS":"EXPECTED_MOVE_BELOW_COST_FLOOR"};
+}
+function strategyAPatientExit404272(open,proposal,ageMs){
+  const invalidated=proposal?.status!=="PROPOSED";
+  const costs=strategyARoundTripCosts404272();
+  if(invalidated)return {should_close:true,reason:"invalidation Strategy A",gross_move_pct:null,required_move_pct:costs.required_move_pct};
+  const btc=strategyABtcContext404261(),current=Number(btc?.price_eur),entry=Number(open?.reference_price_eur);
+  const grossMove=Number.isFinite(current)&&current>0&&Number.isFinite(entry)&&entry>0?(current-entry)/entry*100:null;
+  if(ageMs<STRATEGY_A_V2_POLICY_404272.first_review_ms)return {should_close:false,reason:"premier contrôle à 5 min",gross_move_pct:grossMove,required_move_pct:costs.required_move_pct};
+  if(Number.isFinite(grossMove)&&grossMove>=costs.required_move_pct)return {should_close:true,reason:`objectif brut ${grossMove.toFixed(2)} % >= seuil coûts+marge ${costs.required_move_pct.toFixed(2)} %`,gross_move_pct:grossMove,required_move_pct:costs.required_move_pct};
+  if(ageMs>=STRATEGY_A_V2_POLICY_404272.max_hold_ms)return {should_close:true,reason:"plafond Paper 60 min atteint",gross_move_pct:grossMove,required_move_pct:costs.required_move_pct};
+  return {should_close:false,reason:`patient exit · brut ${Number.isFinite(grossMove)?grossMove.toFixed(2):"—"} % / objectif ${costs.required_move_pct.toFixed(2)} %`,gross_move_pct:grossMove,required_move_pct:costs.required_move_pct};
+}
+function strategyAExportTrades404272(){
+  let rows=[];try{rows=AgentCryptoPaperMetrics404264.closed()||[];}catch(_){}
+  const payload={schema:"agent_crypto_strategy_a_trade_export_v2",build:"40.4.272",exported_at:new Date().toISOString(),paper_only:true,trades:rows};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=`STRATEGY_A_TRADES_40_4_272_${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);return rows.length;
+}
+try{globalThis.AgentCryptoStrategyAV2404272=Object.freeze({build:"40.4.272",policy:STRATEGY_A_V2_POLICY_404272,costs:strategyARoundTripCosts404272,cost_gate:strategyACostGate404272,patient_exit:strategyAPatientExit404272,export_trades:strategyAExportTrades404272,paper_only:true,real_orders:false,kraken_network:false,market_core_changed:false,risk_governor_changed:false,reconciliation_math_changed:false});}catch(_){}
+
 function strategyAAutoCycle404265(trigger="timer"){
   const s=STRATEGY_A_AUTO_STATE_404265;if(!s.enabled)return strategyAAutoSnapshot404265();
   s.cycles+=1;s.last_cycle_at=new Date().toISOString();s.next_cycle_at=null;
@@ -35713,16 +35763,17 @@ function strategyAAutoCycle404265(trigger="timer"){
       const openedAt=Date.parse(open?.generated_at||"");
       const ageMs=Number.isFinite(openedAt)?Math.max(0,Date.now()-openedAt):0;
       const invalidated=proposal?.status!=="PROPOSED";
-      if(invalidated||ageMs>=s.min_hold_ms){
+      const exitV2=strategyAPatientExit404272(open,proposal,ageMs);
+      if(exitV2.should_close){
         const rec=strategyAReconcile404264();
         if(rec?.status==="RECONCILED"){
           s.closed+=1;s.last_closed_signal_404271=s.last_entry_signal_404271||null;s.last_entry_signal_404271=null;s.cooldown_until=Date.now()+STRATEGY_A_REENTRY_POLICY_404271.cooldown_ms;s.phase="CLOSED_REENTRY_COOLDOWN";
-          s.last_action=`Paper clôturé · ${invalidated?"invalidation Strategy A":"horizon 5 min atteint"} · P/L net ${Number(rec?.trade?.net_pnl_eur||0).toFixed(2)} € · échantillon ${Number(rec?.metrics?.sample_size||0)}.`;
+          s.last_action=`Paper clôturé · ${exitV2.reason} · P/L net ${Number(rec?.trade?.net_pnl_eur||0).toFixed(2)} € · échantillon ${Number(rec?.metrics?.sample_size||0)}.`;
         }else{
           s.phase=String(rec?.status||"RECONCILIATION_BLOCKED");s.last_action=String(rec?.reason||"Réconciliation non disponible.");
         }
       }else{
-        s.phase="MONITORING_OPEN";s.last_action=`Paper ouvert ${open.execution_id} · surveillance · ${(ageMs/60000).toFixed(1)} / 5.0 min.`;
+        s.phase="MONITORING_OPEN";s.last_action=`Paper ouvert ${open.execution_id} · ${(ageMs/60000).toFixed(1)} min · ${exitV2.reason}.`;
       }
     }else if(Date.now()<s.cooldown_until){
       const left=Math.max(0,s.cooldown_until-Date.now());s.phase="REENTRY_COOLDOWN";s.last_action=`Pause anti-surtrading après clôture · ${(left/60000).toFixed(1)} min restantes sur 15 min.`;
@@ -35732,6 +35783,10 @@ function strategyAAutoCycle404265(trigger="timer"){
       const fresh=strategyAReentryFresh404271(proposal);s.reentry_waits_404271=Number(s.reentry_waits_404271||0)+1;s.phase="STALE_SIGNAL_WAIT";
       const d=Number.isFinite(fresh.direction_improvement)?`${fresh.direction_improvement>=0?"+":""}${fresh.direction_improvement.toFixed(1)}`:"—",b=Number.isFinite(fresh.btc24_improvement)?`${fresh.btc24_improvement>=0?"+":""}${fresh.btc24_improvement.toFixed(2)}`:"—";
       s.last_action=`Réentrée bloquée : signal MIXTE pas assez neuf · Δ direction ${d} pt (seuil +${STRATEGY_A_REENTRY_POLICY_404271.min_direction_improvement}) · Δ BTC24 ${b} pt (seuil +${STRATEGY_A_REENTRY_POLICY_404271.min_btc24_improvement_pct.toFixed(2)}).`;
+    }else if(!strategyACostGate404272(proposal).eligible){
+      const cg=strategyACostGate404272(proposal);s.no_trade+=1;s.phase="COST_GATE_WAIT";
+      const exp=Number.isFinite(Number(cg.expected_move_pct))?`+${Number(cg.expected_move_pct).toFixed(2)} %`:"indisponible";
+      s.last_action=`Coût d'abord : potentiel Oracle ${exp} · seuil ${Number(cg.costs.required_move_pct).toFixed(2)} % (coûts ${Number(cg.costs.total_pct).toFixed(2)} % + marge). Aucun trade Paper.`;
     }else if(proposal?.proposal_id&&proposal.proposal_id===s.last_executed_proposal_id){
       s.phase="DUPLICATE_WAIT";s.last_action=`Proposition ${proposal.proposal_id} déjà exécutée dans cette session · attente du prochain état.`;
     }else{
@@ -36033,6 +36088,7 @@ function strategyAVisualPhase404269(s,p,open){
   if(phase==="SAFETY_REJECT"||phase==="RISK_REJECT")return {label:"REFUS SÉCURITÉ",reason:String(s.last_action||"Le gouverneur de risque a refusé la proposition.")};
   if(phase.includes("COOLDOWN"))return {label:"PAUSE RÉENTRÉE",reason:String(s.last_action||"Pause anti-surtrading après trade Paper.")};
   if(phase==="STALE_SIGNAL_WAIT")return {label:"ATTENTE NOUVEAU SIGNAL",reason:String(s.last_action||"Le signal doit évoluer avant une nouvelle entrée Paper.")};
+  if(phase==="COST_GATE_WAIT")return {label:"ATTENTE MOUVEMENT RENTABLE",reason:String(s.last_action||"Le potentiel estimé doit couvrir les coûts Paper et une marge de sécurité.")};
   if(phase.includes("ERROR")||phase.includes("STOP"))return {label:"ARRÊT SÉCURITÉ",reason:String(s.last_action||"Le pilote s'est arrêté par sécurité.")};
   return {label:"AUTO A ACTIF",reason:String(s.last_action||"Cycle automatique actif.")};
 }
@@ -36063,7 +36119,7 @@ function strategyAApplyVisualHarmony404269(){
   }
   const host=document.getElementById("strategyATechHost404269");
   if(host&&oldCockpit.parentElement!==host)host.appendChild(oldCockpit);
-  tech.open=false;
+  /* 40.4.272 · preserve operator-open technical disclosure across rerenders. */
 
   oldBoard.style.display="none";
   const s=typeof STRATEGY_A_AUTO_STATE_404265!=="undefined"?STRATEGY_A_AUTO_STATE_404265:null;
@@ -36080,8 +36136,11 @@ function strategyAApplyVisualHarmony404269(){
   const conf=Number(p?.oracle?.confidence);set("strategyAVisualOracle404269",p?.oracle?.regime?`${p.oracle.regime}${Number.isFinite(conf)?` · ${conf}/100`:""}`:"—");
   set("strategyAVisualPaper404269",open?`OUVERT · ${Number(open.authorized_notional_eur||0).toFixed(2)} €`:"AUCUNE POSITION");
   const next=s?.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";set("strategyAVisualNext404269",next);
-  const sample=Number(metrics?.sample_size||0),pnl=Number(metrics?.cumulative_net_pnl_eur||0),fees=Number(metrics?.total_fees_eur||0);
-  set("strategyAVisualMetrics404269",`${sample} trade${sample===1?"":"s"} · P/L ${pnl.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} € · frais ${fees.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €`);
+  const sample=Number(metrics?.sample_size||0),pnl=Number(metrics?.cumulative_net_pnl_eur||0),fees=Number(metrics?.total_fees_eur||0),impact=Number(metrics?.estimated_total_impact_eur||0),wins=Number(metrics?.wins||0),losses=Number(metrics?.losses||0),gross=pnl+fees+impact;
+  const euro=v=>Number(v||0).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  set("strategyAVisualMetrics404269",`TRADES ${sample} · GAGNANTS ${wins} · PERDANTS ${losses} · BRUT ${gross>=0?"+":""}${euro(gross)} € · FRAIS -${euro(fees)} € · IMPACT -${euro(impact)} € · NET ${pnl>=0?"+":""}${euro(pnl)} €`);
+  const metricsEl=document.getElementById("strategyAVisualMetrics404269");if(metricsEl){metricsEl.style.fontSize="12px";metricsEl.style.fontWeight="900";metricsEl.style.lineHeight="1.45";metricsEl.style.color="#eaf5fa";metricsEl.style.whiteSpace="normal";}
+  let exportBtn=document.getElementById("strategyAExportTrades404272");if(!exportBtn){exportBtn=document.createElement("button");exportBtn.type="button";exportBtn.className="btn small";exportBtn.id="strategyAExportTrades404272";exportBtn.textContent="TÉLÉCHARGER JOURNAL TRADES";exportBtn.addEventListener("click",()=>strategyAExportTrades404272());const actions=document.querySelector("#strategyAVisualConsole404269 .avc-actions-404269");const stop=document.getElementById("strategyAVisualStop404269");if(actions)actions.insertBefore(exportBtn,stop||null);}
   const start=document.getElementById("strategyAVisualStart404269"),stop=document.getElementById("strategyAVisualStop404269");
   if(start){start.disabled=!!s?.enabled;start.textContent=s?.enabled?"AUTO A ACTIF":"ACTIVER AUTO A";}
   if(stop)stop.disabled=!s?.enabled;
@@ -53460,7 +53519,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.271";
+const ATLAS_BUILD = "40.4.272";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";

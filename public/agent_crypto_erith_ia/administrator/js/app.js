@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.271";
-  const ADMIN_RELEASE = "STRATEGY A · RE-ENTRY COOLDOWN + FRESH-SIGNAL LOCK";
+  const ADMIN_BUILD = "40.4.272";
+  const ADMIN_RELEASE = "STRATEGY A V2 · COST-AWARE ENTRY + PATIENT EXIT + OPERATOR RESULTS LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
