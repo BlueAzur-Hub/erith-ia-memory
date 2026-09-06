@@ -1,0 +1,97 @@
+diff --git a/public/agent_crypto_erith_ia/administrator/administrator-version.json b/public/agent_crypto_erith_ia/administrator/administrator-version.json
+index 4ada604..8f29c82 100644
+--- a/public/agent_crypto_erith_ia/administrator/administrator-version.json
++++ b/public/agent_crypto_erith_ia/administrator/administrator-version.json
+@@ -3,6 +3,6 @@
+-  "build": "40.4.277",
+-  "release": "STRATEGY A V2 · ORACLE ENGINE COST GATE SOURCE LOCK",
+-  "status": "strategy_a_v2_oracle_engine_cost_gate_source_lock_404277",
+-  "prepared_at": "2026-09-06T18:27:16Z",
+-  "published_at": "2026-09-06T18:27:16Z",
+-  "global_versioning": "40.4.277",
++  "build": "40.4.278",
++  "release": "STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK",
++  "status": "strategy_a_v2_gate_trace_decision_truth_404278",
++  "prepared_at": "2026-09-06T18:50:13Z",
++  "published_at": "2026-09-06T18:50:13Z",
++  "global_versioning": "40.4.278",
+@@ -4567,0 +4568,40 @@
++    },
++    "strategy_a_v2_gate_trace_decision_truth_404278": {
++      "schema": "agent_crypto_strategy_a_gate_trace_404278_v1",
++      "build": "40.4.278",
++      "parent": "40.4.277",
++      "engine": "38.15.11",
++      "scope": "Strategy A V2 operator observability only",
++      "trace_owner": "strategyADecisionTrace404278",
++      "render_owner": "strategyARenderDecisionTrace404278",
++      "visible_gates": [
++        "DATA",
++        "RÉGIME",
++        "DIRECTION",
++        "CONFIANCE",
++        "BTC 24 H",
++        "RÉENTRÉE",
++        "COST GATE",
++        "RISK GOVERNOR",
++        "PAPER"
++      ],
++      "cost_gate_source": "atlasOracleBuildModel(BTC).bullAmplitude",
++      "cost_policy_404272_unchanged": true,
++      "mixed_bias_policy_404270_unchanged": true,
++      "reentry_policy_404271_unchanged": true,
++      "risk_governor_changed": false,
++      "paper_execution_changed": false,
++      "reconciliation_changed": false,
++      "auto_runner_decision_logic_changed": false,
++      "atlas_changed": false,
++      "oracle_engine_changed": false,
++      "market_core_changed": false,
++      "kraken_network": false,
++      "real_orders": false,
++      "read_only": true,
++      "presentation_only": true,
++      "new_timer": false,
++      "new_observer": false,
++      "new_fetch_owner": false,
++      "new_websocket": false,
++      "new_storage_owner": false
+@@ -6295,2 +6335,2 @@
+-  "asset_token": "market-core-v2.0-alpha-build-40.4.277",
+-  "parent_build": "40.4.276",
++  "asset_token": "market-core-v2.0-alpha-build-40.4.278",
++  "parent_build": "40.4.277",
+@@ -6579,3 +6619,3 @@
+-    "index.html": "59c17f64c5666629526340fa8fba769fda92b51b9e84eb07becc93cd792097c5",
+-    "app.js": "7caf6745ab3efb3ba51375ba2e309593984f2c7a4fd07b4d0536d30052a222ee",
+-    "js/app.js": "f8e14bf2cd3fa17989b2a472610cce3053c8e9ded7550876bbd366226aa8a9e4",
++    "index.html": "c61245fc2f73bada98b7cf6fc7b2c0d099453b5971293104b1782b945499471d",
++    "app.js": "5ab011e0cfe74ca573046dd77a87ae131eb55701bb275aaec989efb58a58a832",
++    "js/app.js": "1fbc36603d3a17aa97a75fb4967cd3f30189cbb334e95a8b4e91260963cb2a7a",
+diff --git a/public/agent_crypto_erith_ia/administrator/app.js b/public/agent_crypto_erith_ia/administrator/app.js
+index 381681e..bf21a3b 100644
+--- a/public/agent_crypto_erith_ia/administrator/app.js
++++ b/public/agent_crypto_erith_ia/administrator/app.js
+@@ -35935,0 +35936,126 @@ try{globalThis.AgentCryptoStrategyAV2404272=Object.freeze({build:"40.4.272",poli
++/* 40.4.278 — STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK */
++/* Read-only operator truth layer. It evaluates every existing Strategy A gate for
++   observability even when the real execution path stopped earlier. It never promotes
++   a gate, never calls the Risk Governor on behalf of Auto A, never opens Paper, and
++   never changes the 40.4.270/271/272 policies. */
++function strategyADecisionTrace404278(){
++  const s=typeof STRATEGY_A_AUTO_STATE_404265!=="undefined"?STRATEGY_A_AUTO_STATE_404265:null;
++  const p=typeof STRATEGY_A_LAST_PROPOSAL_404261!=="undefined"?STRATEGY_A_LAST_PROPOSAL_404261:null;
++  let local=null,btc=null,oracle=null,mixed=null,reentry=null,cost=null;
++  try{local=strategyALocalContext404261();}catch(_){}
++  try{btc=p?.market||strategyABtcContext404261();}catch(_){}
++  try{oracle=p?.oracle||strategyAOracleContext404261();}catch(_){}
++  try{mixed=strategyAMeasuredMixedBias404270(oracle,btc);}catch(_){}
++  try{reentry=strategyAReentryFresh404271(p);}catch(_){}
++  try{cost=strategyACostGate404272(p);}catch(_){}
++
++  const regime=String(oracle?.regime||"UNKNOWN").toUpperCase();
++  const bullish=/HAUSSI/.test(regime)&&!/BAISS/.test(regime);
++  const mixedRegime=!!mixed?.mixed;
++  const direction=Number(oracle?.direction_score),confidence=Number(oracle?.confidence),btc24=Number(btc?.change_24h_pct);
++  const directionThreshold=Number(STRATEGY_A_MIXED_BIAS_GATE_404270?.min_direction_score??12);
++  const confidenceThreshold=mixedRegime?Number(STRATEGY_A_MIXED_BIAS_GATE_404270?.min_oracle_confidence??70):55;
