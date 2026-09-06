@@ -1,0 +1,41 @@
++    safety:{read_only:true,presentation_only:true,decision_logic_changed:false,risk_governor_called:false,paper_execution_called:false,real_orders:false,kraken_network:false,storage_write:false}
++  };
++}
++function strategyAEnsureDecisionTraceStyle404278(){
++  let style=document.getElementById("strategyADecisionTraceStyle404278");
++  if(style)return style;
++  style=document.createElement("style");style.id="strategyADecisionTraceStyle404278";
++  style.textContent=`
++    #strategyADecisionTrace404278{margin-top:10px!important;padding:10px!important;border:1px solid rgba(120,207,255,.13)!important;border-radius:10px!important;background:rgba(2,13,22,.62)!important}
++    #strategyADecisionTrace404278 .sadt-head-404278{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:8px!important}
++    #strategyADecisionTrace404278 .sadt-title-404278{font-size:9px!important;font-weight:950!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#b9ddeb!important}
++    #strategyADecisionTrace404278 .sadt-summary-404278{font-size:9px!important;line-height:1.35!important;color:#8aa6b4!important;text-align:right!important}
++    #strategyADecisionTrace404278 .sadt-grid-404278{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
++    #strategyADecisionTrace404278 .sadt-gate-404278{min-width:0!important;padding:7px 8px!important;border:1px solid rgba(255,255,255,.065)!important;border-radius:8px!important;background:rgba(255,255,255,.018)!important}
++    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="pass"]{border-color:rgba(91,219,171,.23)!important;background:rgba(34,153,114,.055)!important}
++    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="wait"]{border-color:rgba(234,192,93,.24)!important;background:rgba(179,126,25,.055)!important}
++    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="stop"]{border-color:rgba(255,112,112,.25)!important;background:rgba(160,44,44,.055)!important}
++    #strategyADecisionTrace404278 .sadt-gate-label-404278{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;font-size:7px!important;font-weight:950!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#7895a3!important}
++    #strategyADecisionTrace404278 .sadt-gate-state-404278{font-size:7px!important;font-weight:950!important;color:#9fb5bf!important}
++    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="pass"] .sadt-gate-state-404278{color:#83edc8!important}
++    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="wait"] .sadt-gate-state-404278{color:#f0d27d!important}
++    #strategyADecisionTrace404278 .sadt-gate-404278[data-state="stop"] .sadt-gate-state-404278{color:#ff9f9f!important}
++    #strategyADecisionTrace404278 .sadt-gate-value-404278{display:block!important;margin-top:4px!important;font-size:10px!important;font-weight:900!important;line-height:1.25!important;color:#ecf7fb!important;overflow-wrap:anywhere!important}
++    #strategyADecisionTrace404278 .sadt-gate-threshold-404278,#strategyADecisionTrace404278 .sadt-gate-path-404278{display:block!important;margin-top:3px!important;font-size:7px!important;line-height:1.3!important;color:#6f8997!important;overflow-wrap:anywhere!important}
++    #strategyADecisionTrace404278 .sadt-gate-path-404278{color:#809aa7!important}
++    @media(max-width:1080px){#strategyADecisionTrace404278 .sadt-grid-404278{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
++    @media(max-width:700px){#strategyADecisionTrace404278 .sadt-grid-404278{grid-template-columns:1fr!important}#strategyADecisionTrace404278 .sadt-summary-404278{text-align:left!important}}
++  `;
++  document.head.appendChild(style);return style;
++}
++function strategyARenderDecisionTrace404278(){
++  const body=document.querySelector("#strategyAVisualConsole404269 .avc-body-404269");if(!body)return false;
++  strategyAEnsureDecisionTraceStyle404278();
++  let panel=document.getElementById("strategyADecisionTrace404278");
++  if(!panel){
++    panel=document.createElement("section");panel.id="strategyADecisionTrace404278";panel.setAttribute("data-decision-trace-build","40.4.278");
++    panel.innerHTML=`<div class="sadt-head-404278"><div class="sadt-title-404278">TRACE DÉCISION V2 · LECTURE SEULE</div><div class="sadt-summary-404278" id="strategyADecisionTraceSummary404278">Lecture des gates…</div></div><div class="sadt-grid-404278" id="strategyADecisionTraceGrid404278"></div>`;
++    const foot=body.querySelector(".avc-foot-404269");if(foot)body.insertBefore(panel,foot);else body.appendChild(panel);
++  }
++  const trace=strategyADecisionTrace404278();
++  const summary=document.getElementById("strategyADecisionTraceSummary404278");
