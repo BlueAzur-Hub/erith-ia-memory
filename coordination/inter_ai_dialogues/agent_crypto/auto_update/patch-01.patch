@@ -1,0 +1,90 @@
+diff --git a/public/agent_crypto_erith_ia/administrator/app.js b/public/agent_crypto_erith_ia/administrator/app.js
+--- a/public/agent_crypto_erith_ia/administrator/app.js
++++ b/public/agent_crypto_erith_ia/administrator/app.js
+@@ -53979,7 +53979,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
+   oracle_changed:false, bridge_changed:false
+ }); } catch (_) {}
+
+-const ATLAS_BUILD = "40.4.281";
++const ATLAS_BUILD = "40.4.282";
+ // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
+ // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
+ const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
+
+diff --git a/public/agent_crypto_erith_ia/administrator/build.json b/public/agent_crypto_erith_ia/administrator/build.json
+--- a/public/agent_crypto_erith_ia/administrator/build.json
++++ b/public/agent_crypto_erith_ia/administrator/build.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "agent_crypto_runtime_build_truth_v1",
+-  "build": "40.4.281",
++  "build": "40.4.282",
+   "engine": "38.15.11",
+-  "release": "REGRESSION RECOVERY · AETHER VEILLE + SHARED MEMORY LOCK",
++  "release": "SHARED MEMORY · COLLECTOR INDEXEDDB OWNER REALIGNMENT LOCK",
+   "published": true,
+-  "status": "regression_recovery_aether_veille_shared_memory_404281"
++  "status": "shared_memory_collector_indexeddb_owner_realignment_404282"
+ }
+
+diff --git a/public/agent_crypto_erith_ia/administrator/js/app.js b/public/agent_crypto_erith_ia/administrator/js/app.js
+--- a/public/agent_crypto_erith_ia/administrator/js/app.js
++++ b/public/agent_crypto_erith_ia/administrator/js/app.js
+@@ -1,7 +1,7 @@
+ (() => {
+   "use strict";
+-  const ADMIN_BUILD = "40.4.281";
+-  const ADMIN_RELEASE = "REGRESSION RECOVERY · AETHER VEILLE + SHARED MEMORY LOCK";
++  const ADMIN_BUILD = "40.4.282";
++  const ADMIN_RELEASE = "SHARED MEMORY · COLLECTOR INDEXEDDB OWNER REALIGNMENT LOCK";
+   const ENGINE_BUILD = "38.15.11";
+   const CLASSIC_WEB_BUILD = "38.15.13";
+   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
+
+diff --git a/public/agent_crypto_erith_ia/administrator/index.html b/public/agent_crypto_erith_ia/administrator/index.html
+--- a/public/agent_crypto_erith_ia/administrator/index.html
++++ b/public/agent_crypto_erith_ia/administrator/index.html
+@@ -3,14 +3,14 @@
+ <head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+-  <meta name="atlas-build" content="40.4.281" />
++  <meta name="atlas-build" content="40.4.282" />
+   <meta name="atlas-engine-build" content="38.15.11" />
+-  <meta name="administrator-build" content="40.4.281" />
++  <meta name="administrator-build" content="40.4.282" />
+   <meta name="administrator-revision" content="V6" />
+-  <meta name="administrator-release" content="STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK" />
++  <meta name="administrator-release" content="SHARED MEMORY · COLLECTOR INDEXEDDB OWNER REALIGNMENT LOCK" />
+   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
+-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.281" />
++  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.282" />
+   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
+-  <title>Agent-Crypto @erith.IA — Build 40.4.281 · Administrator</title>
++  <title>Agent-Crypto @erith.IA — Build 40.4.282 · Administrator</title>
+   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
+
+@@ -4498,17 +4498,18 @@
+     </details>
+
+     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
+-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.281 · Version : Parker Lewis Can't Lose</span>
++      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.282 · Version : Parker Lewis Can't Lose</span>
+       <span id="footerTruthRule">Sources · historique · mesures · contexte · intégrité</span>
+       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
+     </footer>
+   </main>
+
+   <aside class="atlas-help-layer" id="atlasHelpLayer" role="tooltip" aria-hidden="true" hidden></aside>
+   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
+
+   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+-  <script src="./app.js?v=administrator-build-40.4.281"></script>
++  <script src="./app.js?v=administrator-build-40.4.282"></script>
+   <script src="./js/market-memory.js"></script>
+   <script src="./js/analytical-memory.js"></script>
+   <script src="./js/market-memory-collector.js"></script>
++  <script src="./js/shared-memory-collector-40.4.282.js?v=administrator-build-40.4.282"></script>
+   <script src="./js/decision-board.js"></script>
+   <script src="./js/multi-collector-concordance.js"></script>
+   <script src="./js/aether.js?v=administrator-build-40.4.281"></script>
