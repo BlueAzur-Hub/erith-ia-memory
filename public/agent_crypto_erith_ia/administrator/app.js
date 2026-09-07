@@ -22453,9 +22453,17 @@ function newsFeedFingerprint(payload) {
   return newsHash(`${generated}|${ids}`);
 }
 
+/* 40.4.289 — NEWS SENTINEL · RUNTIME/PRESENTATION OWNERSHIP SEPARATION LOCK
+   News Sentinel is a data source for Aether/VEILLE, Oracle and Decision even when the
+   News details panel is closed. Source refresh therefore follows page visibility only;
+   the details open state controls presentation/countdown only. No new network owner. */
+function newsFeedRuntimeActive404289() {
+  return document.visibilityState !== "hidden";
+}
+
 function newsFeedVisible() {
   const details = $("news-sentinel");
-  return document.visibilityState !== "hidden" && details?.open === true;
+  return newsFeedRuntimeActive404289() && details?.open === true;
 }
 
 function newsFeedClearTimer() {
@@ -22465,7 +22473,7 @@ function newsFeedClearTimer() {
 
 function newsFeedSchedule(delayMs = NEWS_SENTINEL_FEED_REFRESH_MS) {
   newsFeedClearTimer();
-  if (!newsFeedVisible()) {
+  if (!newsFeedRuntimeActive404289()) {
     newsFeedState.nextRefreshAt = null;
     renderNewsFeedOverview();
     return;
@@ -22488,7 +22496,8 @@ function newsFeedRetryDelay() {
 }
 
 function newsFeedCountdownLabel() {
-  if (!newsFeedVisible()) return "Suspendu · onglet masqué";
+  if (!newsFeedRuntimeActive404289()) return "Suspendu · onglet masqué";
+  if (!newsFeedVisible()) return "Source active · panneau fermé";
   if (newsFeedState.status === "loading") return "Lecture en cours";
   if (!newsFeedState.nextRefreshAt) return "Préparation";
   return formatAutoDelay(Date.parse(newsFeedState.nextRefreshAt) - Date.now());
@@ -23577,7 +23586,7 @@ async function loadNewsLiveFeed(options = {}) {
   const automatic = options.automatic === true;
   if (automatic && !newsFeedState.startupAttempted) newsFeedState.startupAttempted = true;
   if (newsFeedState.status === "loading") return false;
-  if (automatic && !newsFeedVisible()) {
+  if (automatic && !newsFeedRuntimeActive404289()) {
     newsFeedSchedule(NEWS_SENTINEL_FEED_REFRESH_MS);
     return false;
   }
@@ -23893,7 +23902,7 @@ function initNewsSentinelV1() {
 
   document.addEventListener("visibilitychange", () => {
     newsFeedSyncCountdownTimer40464();
-    if (!newsFeedVisible()) {
+    if (!newsFeedRuntimeActive404289()) {
       newsFeedClearTimer();
       newsFeedState.nextRefreshAt = null;
       renderNewsFeedOverview();
@@ -23908,7 +23917,7 @@ function initNewsSentinelV1() {
   });
 
   window.addEventListener("online", () => {
-    if (newsFeedVisible()) void loadNewsLiveFeed({ automatic: true });
+    if (newsFeedRuntimeActive404289()) void loadNewsLiveFeed({ automatic: true });
   });
 
   const newsDetails40464 = $("news-sentinel");
@@ -23918,11 +23927,9 @@ function initNewsSentinelV1() {
       newsFeedSyncCountdownTimer40464();
       if (newsDetails40464.open) {
         void loadNewsLiveFeed({ automatic: true });
-      } else {
-        newsFeedClearTimer();
-        newsFeedState.nextRefreshAt = null;
-        renderNewsFeedOverview();
       }
+      // Closing the presentation must not stop the source owner: Aether/VEILLE still consumes it.
+      renderNewsFeedOverview();
     });
   }
 
@@ -23936,7 +23943,8 @@ function initNewsSentinelV1() {
 
   renderNewsFeedOverview();
   renderNewsSentinel();
-  if (newsDetails40464?.open) void loadNewsLiveFeed({ automatic: true });
+  // 40.4.289 — startup source truth is required by the always-visible Aether lane.
+  if (newsFeedRuntimeActive404289()) void loadNewsLiveFeed({ automatic: true });
 
   if (newsFeedState.countdownTimer) clearInterval(newsFeedState.countdownTimer);
   newsFeedState.countdownTimer = null;
@@ -36063,6 +36071,87 @@ function strategyARenderDecisionTrace404278(){
 }
 try{globalThis.AgentCryptoStrategyAGateTrace404278=Object.freeze({build:"40.4.278",read:strategyADecisionTrace404278,render:strategyARenderDecisionTrace404278,presentation_only:true,decision_logic_changed:false,policy_changed:false,risk_governor_called:false,paper_execution_called:false,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
+/* 40.4.289 — STRATEGY A · PAPER V2 EXPERIMENT LEDGER LOCK
+   One bounded browser-local audit ledger records the REAL Auto A decision path.
+   It does not change any gate, threshold, Oracle owner, Risk Governor decision,
+   Paper fill math, reconciliation math or real-order safety lock. */
+const STRATEGY_A_EXPERIMENT_LEDGER_KEY_404289="agent_crypto_erith_ia_strategy_a_experiment_ledger_40_4_289";
+const STRATEGY_A_EXPERIMENT_LEDGER_MAX_404289=240;
+function strategyAExperimentClone404289(value){try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}}
+function strategyAExperimentRead404289(){
+  try{
+    const rows=JSON.parse(localStorage.getItem(STRATEGY_A_EXPERIMENT_LEDGER_KEY_404289)||"[]");
+    return Array.isArray(rows)?rows.filter(Boolean).slice(-STRATEGY_A_EXPERIMENT_LEDGER_MAX_404289):[];
+  }catch(_){return [];}
+}
+let STRATEGY_A_EXPERIMENT_LEDGER_404289=strategyAExperimentRead404289();
+function strategyAExperimentPersist404289(){
+  STRATEGY_A_EXPERIMENT_LEDGER_404289=STRATEGY_A_EXPERIMENT_LEDGER_404289.slice(-STRATEGY_A_EXPERIMENT_LEDGER_MAX_404289);
+  try{localStorage.setItem(STRATEGY_A_EXPERIMENT_LEDGER_KEY_404289,JSON.stringify(STRATEGY_A_EXPERIMENT_LEDGER_404289));return true;}catch(_){return false;}
+}
+function strategyAExperimentRecord404289(trigger="timer"){
+  const s=STRATEGY_A_AUTO_STATE_404265;
+  const p=typeof STRATEGY_A_LAST_PROPOSAL_404261!=="undefined"?STRATEGY_A_LAST_PROPOSAL_404261:null;
+  const risk=typeof STRATEGY_A_LAST_RISK_404262!=="undefined"?STRATEGY_A_LAST_RISK_404262:null;
+  let trace=null,cost=null,metrics=null,open=null;
+  try{trace=strategyADecisionTrace404278();}catch(_){}
+  try{cost=strategyACostGate404272(p);}catch(_){}
+  try{metrics=strategyAMetrics404264();}catch(_){}
+  try{open=strategyAAutoOpen404265();}catch(_){}
+  const at=new Date().toISOString();
+  const cycleId=`A-CYCLE-${String(s.cycles||0).padStart(5,"0")}-${strategyAHash404261([at,p?.proposal_id||"none",s.phase,trigger].join("|"))}`;
+  const riskForProposal=!!risk&&!!p?.proposal_id&&String(risk?.proposal_id||"")===String(p.proposal_id);
+  const row={
+    schema:"agent_crypto_strategy_a_experiment_ledger_v1",build:"40.4.289",cycle_id:cycleId,cycle_number:Number(s.cycles||0),captured_at:at,trigger:String(trigger||"timer"),
+    phase:String(s.phase||"UNKNOWN"),auto_enabled_after_cycle:!!s.enabled,last_action:String(s.last_action||""),
+    decision_id:String(p?.proposal_id||cycleId),proposal_status:String(p?.status||"NONE"),proposal_reason:String(p?.reason||""),
+    first_blocker:String(trace?.first_blocker||""),first_blocker_label:String(trace?.first_blocker_label||""),
+    gates:Array.isArray(trace?.gates)?strategyAExperimentClone404289(trace.gates):[],
+    market:{symbol:"BTC",price_eur:Number.isFinite(Number(p?.market?.price_eur))?Number(p.market.price_eur):null,change_24h_pct:Number.isFinite(Number(p?.market?.change_24h_pct))?Number(p.market.change_24h_pct):null,source:String(p?.market?.quote_source||"")},
+    oracle:{regime:String(p?.oracle?.regime||"UNKNOWN"),confidence:Number.isFinite(Number(p?.oracle?.confidence))?Number(p.oracle.confidence):null,direction_score:Number.isFinite(Number(p?.oracle?.direction_score))?Number(p.oracle.direction_score):null,source:String(p?.oracle?.source||"")},
+    cost:{eligible:cost?.eligible===true,expected_move_pct:Number.isFinite(Number(cost?.expected_move_pct))?Number(cost.expected_move_pct):null,required_move_pct:Number.isFinite(Number(cost?.costs?.required_move_pct))?Number(cost.costs.required_move_pct):null,total_cost_pct:Number.isFinite(Number(cost?.costs?.total_pct))?Number(cost.costs.total_pct):null,source:String(cost?.expected_source||"")},
+    risk:riskForProposal?{decision:String(risk?.decision||""),authorized_notional_eur:Number.isFinite(Number(risk?.authorized_notional_eur))?Number(risk.authorized_notional_eur):null,reason:String(risk?.reason||""),risk_id:String(risk?.risk_id||"")}:{decision:"NOT_REACHED",authorized_notional_eur:null,reason:"Risk Governor non atteint pour la proposition courante.",risk_id:""},
+    paper:open?{status:String(open.status||""),execution_id:String(open.execution_id||""),proposal_id:String(open.proposal_id||""),authorized_notional_eur:Number(open.authorized_notional_eur||0),reference_price_eur:Number(open.reference_price_eur||0),fill_price_eur:Number(open.fill_price_eur||0)}:{status:"NO_OPEN_POSITION",execution_id:"",proposal_id:"",authorized_notional_eur:0,reference_price_eur:null,fill_price_eur:null},
+    metrics:metrics?{sample_size:Number(metrics.sample_size||0),status:String(metrics.status||""),wins:Number(metrics.wins||0),losses:Number(metrics.losses||0),cumulative_net_pnl_eur:Number(metrics.cumulative_net_pnl_eur||0),expectancy_eur:Number(metrics.expectancy_eur||0),total_fees_eur:Number(metrics.total_fees_eur||0),estimated_total_impact_eur:Number(metrics.estimated_total_impact_eur||0),max_drawdown_eur:Number(metrics.max_drawdown_eur||0)}:null,
+    safety:{paper_only:true,real_orders:false,kraken_network:false,wallet:false,credentials:false,withdrawals:false,market_core_changed:false,oracle_engine_changed:false,risk_policy_changed:false,cost_threshold_changed:false}
+  };
+  STRATEGY_A_EXPERIMENT_LEDGER_404289.push(row);strategyAExperimentPersist404289();return strategyAExperimentClone404289(row);
+}
+function strategyAExperimentSummary404289(){
+  const rows=STRATEGY_A_EXPERIMENT_LEDGER_404289,latest=rows.at(-1)||null;
+  const counts={cycles:rows.length,paper_open:0,cost_wait:0,no_trade:0,risk_reject:0,error_stop:0};
+  for(const row of rows){const phase=String(row?.phase||"");if(phase==="PAPER_OPEN"||phase==="MONITORING_OPEN")counts.paper_open++;if(phase==="COST_GATE_WAIT")counts.cost_wait++;if(phase==="NO_TRADE"||phase==="SAFETY_REJECT"||phase==="STALE_SIGNAL_WAIT"||phase==="REENTRY_COOLDOWN")counts.no_trade++;if(phase==="RISK_REJECT")counts.risk_reject++;if(/ERROR|STOP/.test(phase))counts.error_stop++;}
+  return {schema:"agent_crypto_strategy_a_experiment_summary_v1",build:"40.4.289",...counts,latest:strategyAExperimentClone404289(latest),persisted:true,max_rows:STRATEGY_A_EXPERIMENT_LEDGER_MAX_404289};
+}
+function strategyAExperimentExport404289(){
+  const payload={schema:"agent_crypto_strategy_a_experiment_export_v1",build:"40.4.289",exported_at:new Date().toISOString(),paper_only:true,policy_unchanged:true,summary:strategyAExperimentSummary404289(),cycles:strategyAExperimentClone404289(STRATEGY_A_EXPERIMENT_LEDGER_404289)||[]};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="STRATEGY_A_EXPERIMENT_LEDGER.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);return payload.cycles.length;
+}
+function strategyAEnsureExperimentLedgerStyle404289(){
+  let style=document.getElementById("strategyAExperimentLedgerStyle404289");if(style)return style;
+  style=document.createElement("style");style.id="strategyAExperimentLedgerStyle404289";style.textContent=`
+    #strategyAExperimentLedger404289{margin-top:10px!important;padding:10px!important;border:1px solid rgba(103,233,200,.16)!important;border-radius:10px!important;background:rgba(4,24,23,.48)!important}
+    #strategyAExperimentLedger404289 .sael-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:8px!important}
+    #strategyAExperimentLedger404289 .sael-title{font-size:9px!important;font-weight:950!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#9cebd6!important}
+    #strategyAExperimentLedger404289 .sael-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}
+    #strategyAExperimentLedger404289 .sael-kpi{padding:7px 8px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:8px!important;background:rgba(0,0,0,.12)!important}
+    #strategyAExperimentLedger404289 .sael-kpi span{display:block!important;font-size:7px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#78958e!important;font-weight:900!important}
+    #strategyAExperimentLedger404289 .sael-kpi b{display:block!important;margin-top:3px!important;font-size:10px!important;color:#eef9f6!important;overflow-wrap:anywhere!important}
+    #strategyAExperimentLedger404289 .sael-last{margin-top:7px!important;font-size:8px!important;line-height:1.35!important;color:#8da9a2!important;overflow-wrap:anywhere!important}
+    @media(max-width:900px){#strategyAExperimentLedger404289 .sael-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+  `;document.head.appendChild(style);return style;
+}
+function strategyARenderExperimentLedger404289(){
+  const body=document.querySelector("#strategyAVisualConsole404269 .avc-body-404269");if(!body)return false;strategyAEnsureExperimentLedgerStyle404289();
+  let panel=document.getElementById("strategyAExperimentLedger404289");
+  if(!panel){panel=document.createElement("section");panel.id="strategyAExperimentLedger404289";panel.setAttribute("data-experiment-ledger-build","40.4.289");panel.innerHTML=`<div class="sael-head"><div class="sael-title">EXPERIMENT LEDGER · PAPER V2 · CYCLES RÉELS</div><button type="button" class="btn small" id="strategyAExperimentExport404289">EXPORTER LE LEDGER</button></div><div class="sael-grid"><div class="sael-kpi"><span>Cycles tracés</span><b id="strategyAExperimentCycles404289">0</b></div><div class="sael-kpi"><span>Cost waits</span><b id="strategyAExperimentCost404289">0</b></div><div class="sael-kpi"><span>Paper</span><b id="strategyAExperimentPaper404289">0</b></div><div class="sael-kpi"><span>Risk rejects</span><b id="strategyAExperimentRisk404289">0</b></div><div class="sael-kpi"><span>Dernier verrou</span><b id="strategyAExperimentBlocker404289">—</b></div></div><div class="sael-last" id="strategyAExperimentLast404289">Aucun cycle Auto A enregistré.</div>`;const foot=body.querySelector(".avc-foot-404269");if(foot)body.insertBefore(panel,foot);else body.appendChild(panel);panel.querySelector("#strategyAExperimentExport404289")?.addEventListener("click",()=>strategyAExperimentExport404289());}
+  const s=strategyAExperimentSummary404289(),last=s.latest||null,set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};
+  set("strategyAExperimentCycles404289",s.cycles);set("strategyAExperimentCost404289",s.cost_wait);set("strategyAExperimentPaper404289",s.paper_open);set("strategyAExperimentRisk404289",s.risk_reject);set("strategyAExperimentBlocker404289",last?.first_blocker_label||"—");
+  set("strategyAExperimentLast404289",last?`${last.cycle_id} · ${last.phase} · ${last.proposal_status} · ${last.last_action}`:"Aucun cycle Auto A enregistré.");return true;
+}
+try{globalThis.AgentCryptoStrategyAExperimentLedger404289=Object.freeze({build:"40.4.289",read:()=>strategyAExperimentClone404289(STRATEGY_A_EXPERIMENT_LEDGER_404289)||[],summary:strategyAExperimentSummary404289,export_json:strategyAExperimentExport404289,render:strategyARenderExperimentLedger404289,storage_key:STRATEGY_A_EXPERIMENT_LEDGER_KEY_404289,max_rows:STRATEGY_A_EXPERIMENT_LEDGER_MAX_404289,paper_only:true,policy_changed:false,cost_threshold_changed:false,oracle_engine_changed:false,risk_governor_changed:false,paper_math_changed:false,real_orders:false,kraken_network:false});}catch(_){}
+
 function strategyAAutoCycle404265(trigger="timer"){
   const s=STRATEGY_A_AUTO_STATE_404265;if(!s.enabled)return strategyAAutoSnapshot404265();
   s.cycles+=1;s.last_cycle_at=new Date().toISOString();s.next_cycle_at=null;
@@ -36126,6 +36215,7 @@ function strategyAAutoCycle404265(trigger="timer"){
   }catch(error){
     s.enabled=false;s.phase="ERROR_STOP";s.last_action=`STOP erreur Auto Paper : ${String(error?.message||error)}`;
   }finally{
+    try{strategyAExperimentRecord404289(trigger);}catch(_){}
     if(s.enabled){
       const cooldownDelay=s.cooldown_until>Date.now()?Math.min(s.cadence_ms,Math.max(1000,s.cooldown_until-Date.now())):s.cadence_ms;
       strategyAAutoSchedule404265(cooldownDelay);
@@ -36460,6 +36550,7 @@ function strategyAApplyVisualHarmony404269(){
   set("strategyAVisualMetrics404269",`TRADES ${sample} · GAGNANTS ${wins} · PERDANTS ${losses} · BRUT ${gross>=0?"+":""}${euro(gross)} € · FRAIS -${euro(fees)} € · IMPACT -${euro(impact)} € · NET ${pnl>=0?"+":""}${euro(pnl)} €`);
   const metricsEl=document.getElementById("strategyAVisualMetrics404269");if(metricsEl){metricsEl.style.fontSize="12px";metricsEl.style.fontWeight="900";metricsEl.style.lineHeight="1.45";metricsEl.style.color="#eaf5fa";metricsEl.style.whiteSpace="normal";}
   try{strategyARenderDecisionTrace404278();}catch(_){}
+  try{strategyARenderExperimentLedger404289();}catch(_){}
   let exportBtn=document.getElementById("strategyAExportTrades404272");if(!exportBtn){exportBtn=document.createElement("button");exportBtn.type="button";exportBtn.className="btn small";exportBtn.id="strategyAExportTrades404272";exportBtn.textContent="TÉLÉCHARGER JOURNAL TRADES";exportBtn.addEventListener("click",()=>strategyAExportTrades404272());const actions=document.querySelector("#strategyAVisualConsole404269 .avc-actions-404269");const stop=document.getElementById("strategyAVisualStop404269");if(actions)actions.insertBefore(exportBtn,stop||null);}
   const start=document.getElementById("strategyAVisualStart404269"),stop=document.getElementById("strategyAVisualStop404269");
   if(start){start.disabled=!!s?.enabled;start.textContent=s?.enabled?"AUTO A ACTIF":"ACTIVER AUTO A";}
@@ -53983,7 +54074,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.288";
+const ATLAS_BUILD = "40.4.289";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
