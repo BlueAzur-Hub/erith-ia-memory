@@ -1,0 +1,69 @@
+diff --git a/public/agent_crypto_erith_ia/administrator/js/aether.js b/public/agent_crypto_erith_ia/administrator/js/aether.js
+--- a/public/agent_crypto_erith_ia/administrator/js/aether.js
++++ b/public/agent_crypto_erith_ia/administrator/js/aether.js
+@@ -1,8 +1,8 @@
+ /*
+   Agent-Crypto Administrator — Aether runtime
+   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
+   Presentation/animation belongs to admin-ribbons.css.
+-  Build: 40.4.139
+-  Revision: 40.4.134 discoverability lock. Existing Aether Attention, Maintenon five-day weather and Atlas AUTO owners preserved; the visible system band opens the existing detailed panel.
++  Build: 40.4.285
++  Revision: 40.4.285 operator relevance scope lock. The scarce Aether VEILLE lane is crypto/operator qualified; News Sentinel canonical archive remains untouched.
+ */
+ (() => {
+@@ -14,25 +14,29 @@
+   const AETHER_MARQUEE_MIN_OVERFLOW_PX_40121=48;
+   const AETHER_MARQUEE_DELAY_S_40121=0.55;
+   const aetherVeilleState4087={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
+-  function aetherNewsCanonicalFrenchEvent40110(event){
+-  function aetherVeilleOperatorEligible404279(event){
++  function aetherVeilleOperatorEligible404285(event){
+     const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+     const assets=(Array.isArray(canonical?.assets)?canonical.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean);
+     const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
+     const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
+     const label=String(canonical?.event_label||"").toLowerCase();
+     const headline=String(canonical?.headline_fr_display||canonical?.headline_fr||canonical?.headline||"").toLowerCase();
+-    const text=[label,headline,...domains,...topics].join(" " );
+-    const nonCryptoAssets=new Set(["GLOBAL","MARKET","MARCHÉ","MARCHE","WORLD"]);
+-    const assetAnchor=assets.some(symbol=>symbol&&!nonCryptoAssets.has(symbol));
+-    const cryptoAnchor=assetAnchor||/(?:\bbitcoin\b|\bbtc\b|\bethereum\b|\bether\b|\beth\b|\bsolana\b|\bsol\b|\bxrp\b|\bbnb\b|\bcrypto\b|\bblockchain\b|\bdefi\b|\bstablecoin\b|\bweb3\b|\bwallet\b|\btoken\b|\baltcoin\b|\bmemecoin\b|\bon[- ]?chain\b|\bstaking\b|\bmining\b|\bminage\b|\bprotocol\b|\bperpetuals?\b)/i.test(text);
++    const text=[label,headline,...domains,...topics].join(" ");
++    const cryptoSymbols=new Set([
++      "BTC","ETH","BNB","XRP","SOL","USDT","USDC","DOGE","ADA","TRX","LINK","XLM","BCH","LTC",
++      "AVAX","DOT","SUI","APT","ARB","OP","MATIC","UNI","AAVE","ONDO","MKR","PENDLE","NEAR","TAO",
++      "RNDR","ICP","SHIB","PEPE","XMR","ZEC"
++    ]);
++    const assetAnchor=assets.some(symbol=>cryptoSymbols.has(symbol));
++    const cryptoAnchor=assetAnchor||/(?:\bbitcoin\b|\bbtc\b|\bethereum\b|\bether\b|\beth\b|\bsolana\b|\bsol\b|\bxrp\b|\bbnb\b|\bcrypto(?:monnaie|currency)?s?\b|\bblockchain\b|\bdefi\b|\bstablecoin\b|\bweb3\b|\bwallet\b|\btoken\b|\baltcoin\b|\bmemecoin\b|\bon[- ]?chain\b|\bstaking\b|\bmining\b|\bminage\b|\bperpetuals?\b)/i.test(text);
+     const macroDomain=domains.includes("macro_liquidity");
+     const macroAnchor=macroDomain&&/(?:federal reserve|\bfed\b|\bbce\b|\becb\b|treasury|banque centrale|central bank|taux|rates?|inflation|emploi|jobs|liquidit|jackson hole)/i.test(text);
+-    // 40.4.279 — Aether owns a scarce operator lane, not the full News Sentinel archive.
++    // 40.4.285 — Aether owns a scarce operator lane, not the full News Sentinel archive.
+     // A generic "marché global" sector, a crypto-media source, or a high impact score alone
+     // never makes an unrelated world story eligible. The canonical archive remains untouched.
+     return cryptoAnchor||macroAnchor;
+   }
++  function aetherNewsCanonicalFrenchEvent40110(event){
+     if(!event)return event;
+     const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
+     const headline=String(event?.headline||"").replace(/\s+/g," " ).trim();
+@@ -202,11 +207,14 @@
+     try{
+       if(typeof newsFeedState!=="undefined"){
+-        const canonical=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
++        const canonicalAll=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
+           .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
++        const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404285);
+         // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
+-        // Derived/UI rows remain usable only when the canonical payload is genuinely absent.
++        // 40.4.285 — the scarce operator lane is filtered before rank/diversity selection.
++        // Derived/UI rows remain usable only when the canonical payload is genuinely absent,
++        // and they are subject to the exact same relevance gate.
+         if(canonical.length)addPool(canonical);
+-        else addPool(newsFeedState?.events);
++        else if(!canonicalAll.length)addPool((Array.isArray(newsFeedState?.events)?newsFeedState.events:[]).filter(aetherVeilleOperatorEligible404285));
+       }
+     }catch(_){}
+     const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
