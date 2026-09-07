@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_status_v1",
-  "version": "V1.1-alpha.26.47.5",
-  "updated_at": "2026-09-07T05:35:46.035638+00:00",
+  "version": "V1.1-alpha.26.47.6",
+  "updated_at": "2026-09-07T08:01:02.345022+00:00",
   "status": "ok",
   "events_count": 120,
   "events_24h": 9,
@@ -9,81 +9,26 @@
   "sources_total": 15,
   "sources_failed": 0,
   "sources_configured": 15,
-  "collector_build": "40.3.89",
-  "driver_coverage_build": "40.3.89",
+  "collector_build": "40.4.291",
+  "driver_coverage_build": "40.4.291",
   "driver_coverage": {
     "macro_liquidity": {
-      "events_72h": 3,
-      "distinct_sources": 3
+      "events_72h": 4,
+      "distinct_sources": 4
     },
     "institutional_flows": {
       "events_72h": 16,
       "distinct_sources": 3
     },
     "regulation": {
-      "events_72h": 2,
-      "distinct_sources": 2
+      "events_72h": 3,
+      "distinct_sources": 3
     },
     "leverage": {
-      "events_72h": 0,
-      "distinct_sources": 0
+      "events_72h": 1,
+      "distinct_sources": 1
     }
   },
   "causal_claim": false,
-  "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
-  "translation_fr": {
-    "schema": "atlas_news_translation_fr_v4",
-    "build": "40.4.288",
-    "source_field": "headline",
-    "original_alias_field": "headline_original",
-    "translation_field": "headline_fr",
-    "display_field": "display_headline",
-    "status_field": "translation_status",
-    "quality_score_field": "translation_quality_score",
-    "quality_flags_field": "translation_quality_flags",
-    "target_language": "fr",
-    "engine": "argos-translate",
-    "engine_version": "1.11.0",
-    "engine_tag": "argos-translate+atlas-news-fr-contract-v4",
-    "quality_minimum": 82,
-    "statuses": [
-      "FALLBACK_ORIGINAL",
-      "ORIGINAL_FR",
-      "TRANSLATED_OK",
-      "TRANSLATION_REJECTED"
-    ],
-    "counts": {
-      "TRANSLATION_REJECTED": 38,
-      "TRANSLATED_OK": 80,
-      "FALLBACK_ORIGINAL": 0,
-      "ORIGINAL_FR": 2
-    },
-    "events": 120,
-    "display_coverage": 120,
-    "display_coverage_ratio": 1.0,
-    "accepted_french": 82,
-    "accepted_french_ratio": 0.6833,
-    "quality_gate": {
-      "minimum": 82,
-      "accepted": 82,
-      "rejected": 38,
-      "fallback_original": 0
-    },
-    "canonical_original_preserved": true,
-    "browser_translation": false,
-    "browser_editorial_repair": false,
-    "translation_quality_separate_from_crypto_relevance": true,
-    "fallback_original_is_explicitly_labelled": true,
-    "display_contract": {
-      "field": "display_headline",
-      "accepted_languages": [
-        "fr",
-        "en"
-      ],
-      "english_fallback_prefix": "[EN] ",
-      "consumer_must_not_translate": true,
-      "consumer_must_not_fallback_silently_to_headline": true
-    },
-    "engine_status": "ok"
-  }
+  "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique."
 }
