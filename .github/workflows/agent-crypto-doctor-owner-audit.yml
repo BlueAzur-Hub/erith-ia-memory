@@ -1,0 +1,62 @@
+name: Agent-Crypto Doctor Owner Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-doctor-owner-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Print bounded owner contexts
+        shell: python
+        run: |
+          from pathlib import Path
+          targets = {
+            'public/agent_crypto_erith_ia/administrator/js/app.js': [
+              'strategyAPaperExecute404263',
+              'strategyAPaperAllowed404265',
+              'SIMULER FILL PAPER',
+              'strategyAPaperClose404264',
+              'strategyAAuto',
+            ],
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-lifecycle-bridge-404297.js': [
+              'function onOpen', 'function onClose', 'BRIDGED.has'
+            ],
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics-404298.js': [
+              'function', 'accounting_identity_ok', 'cost_model_complete'
+            ],
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier-404295.js': [
+              'monte_carlo_ready', 'dataset', 'complete'
+            ],
+            'public/agent_crypto_erith_ia/administrator/js/historical-analog-engine-405015.js': [
+              'reaction', 'Number.isFinite', 'sort'
+            ],
+            'public/agent_crypto_erith_ia/administrator/js/cross-market-owner-map-405022.js': [
+              'planned', 'owner_available', 'cross'
+            ],
+          }
+          for name, needles in targets.items():
+            p = Path(name)
+            text = p.read_text(encoding='utf-8')
+            lines = text.splitlines()
+            print('\n' + '='*100)
+            print(name, 'lines=', len(lines), 'bytes=', len(text.encode()))
+            for needle in needles:
+              hits = [i for i,l in enumerate(lines) if needle.lower() in l.lower()]
+              print(f'\n--- NEEDLE {needle!r} HITS {hits[:12]} ---')
+              for i in hits[:4]:
+                lo=max(0,i-18); hi=min(len(lines),i+28)
+                print(f'@@ lines {lo+1}-{hi}')
+                for j in range(lo,hi):
+                  print(f'{j+1:06d}: {lines[j]}')
