@@ -1,0 +1,237 @@
+name: Agent-Crypto 40.6.8 Historical Functional Restore
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40608-historical-restore.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40608-historical-restore
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Restore historical contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+
+          # Chronos: exact rollback to the last pre-readability checkpoint (40.6.5).
+          git show c0333b4d2ce1e7080b6ae27c7d1de21f68c49f53:${ROOT}/admin-chronos.css > ${ROOT}/admin-chronos.css
+
+          # Version button: restore the historical selective-update contract under
+          # the post-40.5.19 single visible owner. No unconditional reload.
+          cat > ${ROOT}/js/version-truth.js <<'JSCODE'
+          /* Agent-Crypto @erith.IA — Build 40.6.8 · historical version-button contract restore */
+          (() => {
+            "use strict";
+            const OWNER="version-truth-40608", MANIFEST="./build.json", INDEX="./index.html", PARAM="ac-refresh";
+            const meta=n=>String(document.querySelector(`meta[name="${n}"]`)?.content||"").trim();
+            const loaded=meta("administrator-build")||meta("atlas-build")||"UNKNOWN";
+            const engine=meta("atlas-engine-build")||"UNKNOWN";
+            const control=document.getElementById("atlasVersionTruthControl");
+            const text=document.getElementById("atlasVersionTruthText");
+            const legacyControl=document.getElementById("atlasVersionControl");
+            const legacyText=document.getElementById("atlasVersionControlText");
+            const parts=v=>String(v||"").split(".").map(x=>Number.parseInt(x,10)||0);
+            function compare(a,b){const A=parts(a),B=parts(b),n=Math.max(A.length,B.length);for(let i=0;i<n;i++){const d=(A[i]||0)-(B[i]||0);if(d)return d;}return 0;}
+            function valid(r){return !!r&&typeof r==="object"&&String(r.build||"").trim()&&String(r.engine||"").trim()===engine;}
+            let remote=null,state="current",busy=false;
+            function patchVersionControl(r=remote,error=null,mode=null){
+              remote=valid(r)?r:null;
+              const published=remote?String(remote.build).trim():loaded;
+              const newer=!!remote&&compare(published,loaded)>0;
+              state=mode||((error&&!newer)?"failed":newer?"update-available":"current");
+              const label=state==="checking"?`Build ${loaded} · vérification…`:state==="applying"?`Build ${published} · chargement…`:state==="update-available"?`Build ${loaded} · ${published} disponible`:state==="failed"?`Build ${loaded} · vérification indisponible`:`Build ${loaded} · Administrator`;
+              if(text) text.textContent=label;
+              if(control){
+                control.dataset.versionTruthOwner=OWNER; control.dataset.loadedBuild=loaded; control.dataset.publishedBuild=published; control.dataset.versionTruthState=state; control.dataset.falsePropagation="false";
+                control.disabled=state==="checking"||state==="applying"; control.toggleAttribute("aria-busy",control.disabled);
+                control.classList.toggle("warn",state==="update-available"); control.classList.toggle("ok",state!=="update-available");
+                control.setAttribute("aria-label",state==="update-available"?`Version chargée ${loaded}. Version ${published} disponible. Cliquer pour charger.`:state==="failed"?`Build ${loaded} chargé. Vérification indisponible. Cliquer pour réessayer.`:`Version Agent-Crypto chargée : Build ${loaded}, mode Administrator. Cliquer pour vérifier GitHub.`);
+                control.title=state==="update-available"?`Build ${published} disponible · cliquer pour mettre à jour`:`Build ${loaded} chargé · aucune mise à jour détectée`;
+              }
+              if(legacyControl){legacyControl.dataset.versionTruthLegacySink="true";legacyControl.dataset.canonicalVisibleOwner=OWNER;}
+              if(legacyText) legacyText.dataset.versionTruthLegacySink="true";
+              document.documentElement.dataset.versionTruthBuild=loaded; document.documentElement.dataset.versionTruthPublished=published; document.documentElement.dataset.versionTruthState=state;
+              return Object.freeze({owner:OWNER,loaded,published,engine,state,update_available:newer});
+            }
+            async function fetchManifest(){
+              const res=await fetch(`${MANIFEST}?v=${encodeURIComponent(loaded)}&t=${Date.now()}`,{cache:"no-store",credentials:"same-origin"});
+              if(!res.ok) throw new Error(`HTTP ${res.status}`); const r=await res.json(); if(!valid(r)) throw new Error("manifest-invalide"); return r;
+            }
+            async function check(show=false){
+              if(busy)return false; busy=true; if(show)patchVersionControl(remote,null,"checking");
+              try{patchVersionControl(await fetchManifest());return state==="update-available";}catch(e){patchVersionControl(null,e);return false;}finally{busy=false;}
+            }
+            async function publishedIndexMatches(build){
+              const res=await fetch(`${INDEX}?_version_check=${Date.now()}`,{cache:"no-store",credentials:"same-origin"}); if(!res.ok)return false;
+              const html=await res.text(),m=html.match(/<meta\s+name="administrator-build"\s+content="([^"]+)"/i)||html.match(/<meta\s+name="atlas-build"\s+content="([^"]+)"/i);
+              return String(m?.[1]||"").trim()===build;
+            }
+            async function apply(){
+              if(busy||state!=="update-available")return false; busy=true; patchVersionControl(remote,null,"applying");
+              try{const r=await fetchManifest(),b=String(r.build||"").trim(); if(compare(b,loaded)<=0){patchVersionControl(r);return false;} if(!(await publishedIndexMatches(b))){patchVersionControl(r);return false;} const url=new URL(location.href);url.searchParams.set(PARAM,`${b}-${Date.now()}`);location.replace(url.toString());return true;}catch(e){patchVersionControl(remote,e);return false;}finally{busy=false;}
+            }
+            async function onClick(e){e?.preventDefault?.();e?.stopPropagation?.();if(busy)return false;if(state==="update-available")return apply();return check(true);}
+            patchVersionControl(); if(control)control.addEventListener("click",onClick,{capture:true}); void check(false);
+            globalThis.ErithVersionTruth=Object.freeze({owner:OWNER,build:loaded,engine,manifest:MANIFEST,snapshot:()=>Object.freeze({loaded,published:String(remote?.build||loaded),state}),refresh:check,applyAvailableUpdate:apply,single_visible_owner:true,false_propagation_lock:true,historical_click_contract_restored:true,current_click_reloads:false,update_available_click_reloads:true,recurring_timer:false,observer:false});
+          })();
+          JSCODE
+
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, re, subprocess
+          from datetime import datetime, timezone
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          build='40.6.8'; parent='40.6.7'; engine='38.15.11'
+          release='HISTORICAL FUNCTIONAL CONTRACT RESTORE · VERSION + CHRONOS'
+          status='historical_functional_contract_restore_version_chronos_406008'
+          token=f'market-core-v2.0-alpha-build-{build}'
+          source='c0333b4d2ce1e7080b6ae27c7d1de21f68c49f53'
+          now=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+
+          def load(name):
+              d=json.loads((root/name).read_text(encoding='utf-8'))
+              if not isinstance(d,dict): raise SystemExit(f'STOP: invalid {name}')
+              return d
+
+          if str(load('version.json').get('build') or '') != parent:
+              raise SystemExit('STOP 40.6.8: parent build is not 40.6.7')
+
+          # Prove Chronos is an exact restore, not another CSS layer.
+          hist=subprocess.check_output(['git','show',f'{source}:public/agent_crypto_erith_ia/administrator/admin-chronos.css'])
+          if (root/'admin-chronos.css').read_bytes()!=hist:
+              raise SystemExit('STOP 40.6.8: Chronos restore is not byte-for-byte 40.6.5')
+
+          p=root/'index.html'; s=p.read_text(encoding='utf-8')
+          repl={
+            '<meta name="atlas-build" content="40.6.7" />':'<meta name="atlas-build" content="40.6.8" />',
+            '<meta name="administrator-build" content="40.6.7" />':'<meta name="administrator-build" content="40.6.8" />',
+            '<meta name="administrator-release" content="CHRONOS CANONICAL OWNER · DATE READABILITY RESTORE" />':f'<meta name="administrator-release" content="{release}" />',
+            '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.7" />':f'<meta name="atlas-asset-token" content="{token}" />',
+            '<title>Agent-Crypto @erith.IA — Build 40.6.7 · Administrator</title>':'<title>Agent-Crypto @erith.IA — Build 40.6.8 · Administrator</title>',
+            './admin-chronos.css?v=administrator-build-40.6.7':'./admin-chronos.css?v=administrator-build-40.6.8',
+            './js/version-truth.js?v=40.6.7':'./js/version-truth.js?v=40.6.8'
+          }
+          for old,new in repl.items():
+              if old not in s: raise SystemExit(f'STOP 40.6.8: missing index token {old}')
+              s=s.replace(old,new,1)
+          s,n1=re.subn(r'(id="atlasVersionTruthControl"[\s\S]{0,700}?aria-label="Version Agent-Crypto installée : Build )[^,\"]+(, mode Administrator\")',r'\g<1>40.6.8\g<2>',s,count=1)
+          s,n2=re.subn(r'(<span id="atlasVersionTruthText">Build )[^<]+(</span>)',r'\g<1>40.6.8\g<2>',s,count=1)
+          if n1!=1 or n2!=1: raise SystemExit(f'STOP 40.6.8: first-paint badge mismatch {n1}/{n2}')
+          p.write_text(s,encoding='utf-8')
+
+          note=root/'RELEASE_40_6_8.md'
+          note.write_text('''# Agent-Crypto @erith.IA — Build 40.6.8
+
+## HISTORICAL FUNCTIONAL CONTRACT RESTORE · VERSION + CHRONOS
+
+Parent: **40.6.7**  
+Market Core: **38.15.11 protected**
+
+Cette version restaure au lieu de compenser.
+
+- `admin-chronos.css` : restauration **octet pour octet** depuis 40.6.5 (`c0333b4d...`). Les interventions typographiques 40.6.6/40.6.7 sont retirées.
+- Bouton Build : contrat historique restauré sous le propriétaire unique `js/version-truth.js`.
+  - build courante + clic = vérification seulement ; **aucun rechargement** si rien de nouveau ;
+  - build plus récente = état `disponible` ;
+  - clic sur `disponible` = revalidation puis **une seule** navigation.
+- Aucun timer récurrent, aucun MutationObserver, aucun nouveau propriétaire de stockage.
+- Market Core 38.15.11, Graphique, Lecture Technique, Atlas, Oracle, Aether/News, Strategy A/Paper et Window Manager inchangés.
+
+### Firefox
+1. Charger 40.6.8 une fois.
+2. Chronos doit être revenu exactement à la présentation 40.6.5.
+3. Cliquer Build lorsque 40.6.8 est courant : la page ne doit pas repartir.
+4. La prochaine build publiée doit apparaître `disponible`, puis un clic doit la charger une fois.
+''',encoding='utf-8')
+
+          docs={n:load(n) for n in ('build.json','administrator-version.json','version.json')}
+          for n,d in docs.items():
+              d['build']=build; d['release']=release; d['status']=status; d['parent_build']=parent; d['asset_token']=token
+              if 'administrator_build' in d: d['administrator_build']=build
+              if 'build_label' in d: d['build_label']=f'Build {build}'
+              if 'release_status' in d: d['release_status']=release
+              for k in ('timestamp','prepared_at','published_at'):
+                  if k in d: d[k]=now
+              cvt=d.get('current_version_truth')
+              if not isinstance(cvt,dict): cvt={}; d['current_version_truth']=cvt
+              for k in ('manual_click_safe_reload','manual_click_network_calls','manual_click_awaits_manifest'): cvt.pop(k,None)
+              cvt.update({'visible_owner':'js/version-truth.js','loaded_build':build,'published_manifest':'build.json','false_propagation_lock':True,'legacy_ids_hidden_sink':True,'historical_click_contract_restored':True,'manual_click_current_reloads':False,'manual_click_update_available_reloads':True,'manual_current_click_network_calls':1,'manual_update_click_rechecks_manifest':True,'manual_update_click_requires_published_index_match':True,'recurring_timer':False,'observer':False})
+              d['cascade_40_6_8']={'parent_build':parent,'release':release,'restoration_only':True,'chronos_source_build':'40.6.5','chronos_source_commit':source,'chronos_byte_for_byte_restored':True,'version_break_identified_at':'40.5.19','single_visible_owner_preserved':True,'historical_selective_update_contract_restored':True,'reload_when_current':False,'reload_only_when_newer_build_available':True,'market_core_modified':False,'graph_modified':False,'technical_reading_modified':False,'atlas_modified':False,'oracle_modified':False,'new_recurring_timer':False,'new_observer':False,'new_storage_owner':False}
+
+          for n in ('build.json','administrator-version.json'):
+              (root/n).write_text(json.dumps(docs[n],ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          v=docs['version.json']; files=v.get('files')
+          if not isinstance(files,dict): files={}; v['files']=files
+          sha=lambda rel:hashlib.sha256((root/rel).read_bytes()).hexdigest()
+          for rel in ('index.html','admin-chronos.css','js/version-truth.js','build.json','administrator-version.json','RELEASE_40_6_8.md'): files[rel]=sha(rel)
+          if isinstance(v.get('integrity'),dict) and isinstance(v['integrity'].get('files'),int): v['integrity']['files']=len(files)
+          (root/'version.json').write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          vt=(root/'js/version-truth.js').read_text(encoding='utf-8')
+          assert 'safeReload' not in vt and vt.count('location.replace(')==1
+          assert 'current_click_reloads:false' in vt and 'update_available_click_reloads:true' in vt
+          assert 'setInterval(' not in vt and 'MutationObserver' not in vt
+          assert 'function patchVersionControl(' in vt
+          for n in ('build.json','administrator-version.json','version.json'): assert load(n)['build']==build
+          print(json.dumps({'ok':True,'build':build,'chronos':'40.6.5 byte-for-byte','version_button':'historical selective update','engine':engine},ensure_ascii=False))
+          PY
+
+          node --check ${ROOT}/js/version-truth.js
+          python -m json.tool ${ROOT}/version.json >/dev/null
+          python -m json.tool ${ROOT}/administrator-version.json >/dev/null
+          python -m json.tool ${ROOT}/build.json >/dev/null
+          git diff --check
+
+      - name: Commit 40.6.8
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/{index.html,admin-chronos.css,build.json,administrator-version.json,version.json,RELEASE_40_6_8.md} public/agent_crypto_erith_ia/administrator/js/version-truth.js
+          git diff --cached --quiet && { echo 'STOP 40.6.8: no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): restore historical functional contracts 40.6.8"
+          git push origin HEAD:main || { git fetch origin main; git rebase origin/main; git push origin HEAD:main; }
+
+      - name: Build clean upload
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, os, zipfile
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          rels=['index.html','admin-chronos.css','build.json','administrator-version.json','version.json','RELEASE_40_6_8.md','js/version-truth.js']
+          out=Path(os.environ['RUNNER_TEMP'])/'AGENT_CRYPTO_40_6_8_HISTORICAL_FUNCTIONAL_RESTORE_CLEAN_UPLOAD_7_FILES.zip'
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              for rel in rels: z.write(root/rel,(Path('public/agent_crypto_erith_ia/administrator')/rel).as_posix())
+          digest=hashlib.sha256(out.read_bytes()).hexdigest()
+          (Path(os.environ['RUNNER_TEMP'])/'AGENT_CRYPTO_40_6_8_SHA256.txt').write_text(f'{digest}  {out.name}\n',encoding='utf-8')
+          print(digest)
+          PY
+
+      - name: Upload clean 40.6.8
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_40_6_8_HISTORICAL_FUNCTIONAL_RESTORE
+          path: |
+            ${{ runner.temp }}/AGENT_CRYPTO_40_6_8_HISTORICAL_FUNCTIONAL_RESTORE_CLEAN_UPLOAD_7_FILES.zip
+            ${{ runner.temp }}/AGENT_CRYPTO_40_6_8_SHA256.txt
+          if-no-files-found: error
+          retention-days: 30
