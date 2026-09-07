@@ -143,8 +143,6 @@ html[data-admin-theme="glass"] #atlasAetherVeille4087 .atlas-aether-veille-viewp
   background:rgba(2,9,15,.10)!important;
 }
 
-
-
 /* 40.5.4 — FIREFOX GLASS COMPOSITOR LIGHTNESS LOCK
    Firefox keeps the transparent Glass palette while limiting large backdrop-filter work.
    No panel geometry, opacity contract, canvas/image or Window Manager owner changes. */
@@ -158,4 +156,52 @@ html[data-admin-theme="glass"][data-glass-compositor="firefox-safe"] body.atlas-
 }
 html[data-admin-theme="glass"][data-glass-compositor="firefox-safe"] body.atlas-administrator-mirror .admin-mirror-bar{
   backdrop-filter:blur(3px) saturate(106%)!important;
+}
+
+/* 40.5.9 R1 — TRANSFORMER BOOK COMPACT THEME TOGGLE
+   Presentation-only hotfix. Keep the existing theme handler/id/storage owner.
+   The wide THÈME pill becomes the rightmost round control; the decorative sigil is hidden.
+   Visible state: M = Metal, G = Glass. No header reflow owner change. */
+body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300{
+  flex:0 0 42px!important;
+  width:42px!important;
+  min-width:42px!important;
+  max-width:42px!important;
+  height:42px!important;
+  min-height:42px!important;
+  padding:0!important;
+  margin:0!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  font-size:0!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  text-indent:0!important;
+}
+body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300::before{
+  content:"M";
+  display:block;
+  font:950 12px/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  letter-spacing:.04em;
+  color:#e8edf1;
+}
+body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300[aria-pressed="true"]::before{
+  content:"G";
+  color:#eaffff;
+}
+body.atlas-administrator-mirror .hero-top .status-stack > .sigil{
+  display:none!important;
+}
+@media (max-width:1200px){
+  body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300{
+    flex-basis:38px!important;
+    width:38px!important;
+    min-width:38px!important;
+    max-width:38px!important;
+    height:38px!important;
+    min-height:38px!important;
+  }
 }
