@@ -1,0 +1,102 @@
+name: Agent-Crypto 40.6.13 Oracle Restore Restrained FX
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40613-oracle-restore-restrained-fx.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40613-oracle-restore-restrained-fx
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded Oracle restore + restrained FX
+        run: python .github/scripts/agent_crypto_40613_oracle_restore_restrained_fx.py
+
+      - name: Syntax and anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          node --check "$ROOT/js/oracle-fx-406013.js"
+          node --check "$ROOT/js/version-truth.js"
+          node --check "$ROOT/js/app.js"
+          git diff --check
+
+          # Frozen owners: absolutely zero diff.
+          git diff --exit-code -- \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/style.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/admin-visual-cache.css"
+
+          # Oracle structure must be restored; .12 source-flow wrapper retired.
+          ! grep -q 'atlas-oracle-hero-head-406012' "$ROOT/index.html"
+          ! grep -q 'oracle-fx-406012.js' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.css' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.js' "$ROOT/index.html"
+          grep -q 'grid-template-columns:minmax(128px,.66fr) minmax(124px,.66fr) minmax(170px,.94fr) minmax(255px,1.35fr) minmax(410px,2.05fr)!important;' "$ROOT/index.html"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/oracle-presentation-405010.css',
+            'public/agent_crypto_erith_ia/administrator/oracle-fx-406013.css',
+            'public/agent_crypto_erith_ia/administrator/js/oracle-fx-406013.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_13.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_13_ORACLE_STRUCTURE_RESTORE_RESTRAINED_FX_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_13_ORACLE_STRUCTURE_RESTORE_RESTRAINED_FX_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            p=line[3:]
+            if ' -> ' in p:p=p.split(' -> ',1)[1]
+            changed.add(p)
+          extra=changed-expected;missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.13 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.13 missing files: {sorted(missing)}')
+          print('40.6.13 bounded diff OK')
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/oracle-presentation-405010.css" "$ROOT/oracle-fx-406013.css" "$ROOT/js/oracle-fx-406013.js"
+          git add "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_13.md"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_13_ORACLE_STRUCTURE_RESTORE_RESTRAINED_FX_CLEAN_UPLOAD_8_FILES.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_13_ORACLE_STRUCTURE_RESTORE_RESTRAINED_FX_CLEAN_UPLOAD_8_FILES.zip.sha256
+          git diff --cached --quiet && { echo 'STOP 40.6.13 no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): restore Oracle structure and restrain FX 40.6.13"
+          git pull --rebase origin main
+          git push origin HEAD:main
