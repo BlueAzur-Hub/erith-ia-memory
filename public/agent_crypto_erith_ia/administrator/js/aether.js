@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.290
-  Revision: 40.4.290 French operator lane lock. Aether displays only canonical French headlines; rejected EN fallbacks remain archive evidence.
+  Build: 40.4.291
+  Revision: 40.4.291 native-French-first operator lane. Aether displays only native French source headlines; English evidence remains archive-only.
 */
 (() => {
   "use strict";
@@ -62,8 +62,8 @@ function aetherNewsCanonicalEvent404288(event){
     return event;
   }
   function aetherNewsContractReady404288(event){
-    return String(event?.translation_contract_build||"")==="40.4.288"
-      && String(event?.translation_contract_schema||"")==="atlas_news_translation_fr_v4"
+    return String(event?.translation_contract_build||"")==="40.4.291"
+      && String(event?.translation_contract_schema||"")==="atlas_news_native_fr_v1"
       && Boolean(String(event?.display_headline||"").trim());
   }
   function aetherNewsFrenchOperatorReady404290(event){
@@ -72,13 +72,13 @@ function aetherNewsCanonicalEvent404288(event){
     const status=String(event?.translation_status||"").trim().toUpperCase();
     const display=String(event?.display_headline||"").replace(/\s+/g," ").trim();
     return language==="fr"
-      && (status==="TRANSLATED_OK"||status==="ORIGINAL_FR")
+      && status==="ORIGINAL_FR"
       && !!display
       && !/^\[EN\]\s/i.test(display);
   }
   function aetherNewsDisplayHeadline404288(event,fallback="Événement à qualifier"){
     const canonical=aetherNewsCanonicalEvent404288(event)||event||{};
-    // 40.4.288 — Aether never translates and never silently falls back to raw English.
+    // 40.4.291 — Aether never translates. Native French is operator-visible; English remains explicit archive evidence.
     if(aetherNewsContractReady404288(canonical)){
       const value=String(canonical.display_headline||"").replace(/\s+/g," ").trim();
       const status=String(canonical?.translation_status||"");
@@ -166,7 +166,7 @@ function aetherNewsCanonicalEvent404288(event){
           .filter(aetherNewsContractReady404288)
           .filter(aetherNewsFrenchOperatorReady404290);
         const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404286);
-        // 40.4.290 — the operator VEILLE lane is French-only by contract.
+        // 40.4.291 — the operator VEILLE lane is native-French-only by contract.
         // Rejected/labelled English fallbacks remain available in the News Sentinel archive,
         // but never alternate with French headlines in this scarce operator ribbon.
         if(canonical.length)addPool(canonical);
@@ -235,9 +235,17 @@ function aetherNewsCanonicalEvent404288(event){
     if(status==="error"&&!events.length)return{label:"INDISPONIBLE",text:"Archive News Sentinel indisponible · aucune actualité inventée",tone:"danger",events:[],stats,status,decision};
     if(!events.length)return{label:"0 PRIORITAIRE",text:status==="ok"?"Archive chargée · aucun événement prioritaire":"Archive partielle · aucun événement exploitable",tone:status==="partial"?"warn":"ok",events:[],stats,status,decision};
     const ranked=aetherVeilleEvents4087();
-    const globalTone=stats.critical24>0?"danger":stats.priority24>0||status==="partial"?"warn":"ok";
-    const label=stats.priority24>0?`${stats.priority24} PRIORITAIRE${stats.priority24>1?"S":""} 24H`:"VEILLE QUALIFIÉE";
-    return{label,text:decision||"Surveillance",tone:globalTone,events:ranked,stats,status,decision};
+    if(!ranked.length)return{label:"FR EN ATTENTE",text:"Archive chargée · aucune actualité francophone native qualifiée · sources anglaises conservées en archive",tone:status==="partial"?"warn":"neutral",events:[],stats,status,decision};
+    // 40.4.291 — ribbon counts describe the French operator lane, not the larger EN+FR archive.
+    const operatorRecent=ranked.filter(event=>{const ts=aetherVeilleTimestamp4087(event);return ts>0&&ts>=cutoff24h;});
+    const operatorStats={
+      events24:operatorRecent.length,
+      priority24:operatorRecent.filter(event=>aetherVeilleNumber4087(event?.impact?.score)>=68).length,
+      critical24:operatorRecent.filter(event=>aetherVeilleNumber4087(event?.impact?.score)>=85).length
+    };
+    const globalTone=operatorStats.critical24>0?"danger":operatorStats.priority24>0||status==="partial"?"warn":"ok";
+    const label=operatorStats.priority24>0?`${operatorStats.priority24} PRIORITAIRE${operatorStats.priority24>1?"S":""} 24H`:"VEILLE QUALIFIÉE";
+    return{label,text:decision||"Surveillance",tone:globalTone,events:ranked,stats:operatorStats,archiveStats:stats,status,decision};
   }
   function aetherNewsMarketContext4089(currentEvent=null){
     try{
@@ -825,14 +833,16 @@ function aetherAttention40133(){
     context_label_deduplicated:true,
     news_display_language:"French-only operator lane; labelled EN fallback remains archive-only",
     news_source_original_headline_first:false,
-    news_translation_contract_schema:"atlas_news_translation_fr_v4",
-    news_translation_contract_build:"40.4.288",
-    news_french_operator_lane_build:"40.4.290",
+    news_translation_contract_schema:"atlas_news_native_fr_v1",
+    news_translation_contract_build:"40.4.291",
+    news_french_operator_lane_build:"40.4.291",
     news_rejected_english_archive_preserved:true,
     news_rejected_english_operator_rotation:false,
     news_browser_editorial_repair:false,
-    news_translation_preferred:"display_headline only when contract 40.4.288/v4 is current AND display_language=fr; explicit [EN] source remains archive-only",
-    news_translation_story_owner:"News Sentinel canonical News FR producer owns display_headline; Aether performs no translation and filters its operator lane to accepted French only",
+    news_machine_translation:false,
+    news_source_policy:"native French first; English archive evidence only; zero paid provider; zero external secret",
+    news_translation_preferred:"display_headline only when native-French contract 40.4.291/v1 is current AND display_language=fr; explicit [EN] source remains archive-only",
+    news_translation_story_owner:"News Sentinel native-French producer owns display_headline; Aether performs no translation and filters its operator lane to native French only",
     consumer_must_not_fallback_silently_to_headline:true,
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,

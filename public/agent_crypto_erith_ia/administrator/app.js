@@ -21670,7 +21670,7 @@ const NEWS_SENTINEL_MAX_EVENTS = 120;
 
 const NEWS_SENTINEL_FEED_URL = "../data/news/latest.json";
 
-const NEWS_SENTINEL_FEED_CACHE_KEY = "agent_crypto_erith_ia_news_feed_cache_v4_404288";
+const NEWS_SENTINEL_FEED_CACHE_KEY = "agent_crypto_erith_ia_news_feed_cache_v5_404291";
 
 const NEWS_SENTINEL_FEED_REFRESH_MS = 5 * 60 * 1000;
 
@@ -21679,19 +21679,19 @@ const NEWS_SENTINEL_VISIT_KEY = "agent_crypto_erith_ia_news_visit_v2";
 const NEWS_SENTINEL_FEED_RETRY_MS = Object.freeze([60 * 1000, 180 * 1000, 5 * 60 * 1000]);
 
 function newsFeedTranslationContractCurrent404288(event) {
-  return String(event?.translation_contract_build || "") === "40.4.288"
-    && String(event?.translation_contract_schema || "") === "atlas_news_translation_fr_v4";
+  return String(event?.translation_contract_build || "") === "40.4.291"
+    && String(event?.translation_contract_schema || "") === "atlas_news_native_fr_v1";
 }
 
 function newsFeedCanonicalDisplayHeadline404288(event, fallback="Événement sans titre") {
-  // 40.4.288 — one producer-owned display truth. The browser never silently falls back
+  // 40.4.291 — native-French-first producer-owned display truth. The browser never translates and never silently falls back
   // from a missing/obsolete canonical contract to an unlabelled English source headline.
   const canonical = String(event?.display_headline || "").replace(/\s+/g, " ").trim();
   const original = String(event?.headline_original || event?.headline || event?.event_label || "").replace(/\s+/g, " ").trim();
   const status = String(event?.translation_status || "");
   const language = String(event?.display_language || "");
   if (newsFeedTranslationContractCurrent404288(event) && canonical) {
-    if ((status === "ORIGINAL_FR" || status === "TRANSLATED_OK") && language === "fr") return canonical;
+    if (status === "ORIGINAL_FR" && language === "fr") return canonical;
     if (status === "FALLBACK_ORIGINAL" || status === "TRANSLATION_REJECTED") {
       return canonical.startsWith("[EN] ") ? canonical : `[EN] ${canonical}`;
     }
@@ -21707,11 +21707,14 @@ globalThis.AgentCryptoNewsDisplayContract404288 = Object.freeze({
   headline: newsFeedCanonicalDisplayHeadline404288,
   preferred_field: "display_headline",
   fallback_policy: "explicit [EN] only — never silent raw headline fallback",
-  translation_contract_schema: "atlas_news_translation_fr_v4",
-  translation_contract_build: "40.4.288",
+  translation_contract_schema: "atlas_news_native_fr_v1",
+  translation_contract_build: "40.4.291",
+  source_policy: "native French first; English archive evidence only",
+  machine_translation: false,
   browser_translation: false,
   browser_editorial_repair: false
 });
+globalThis.AgentCryptoNewsDisplayContract404291 = globalThis.AgentCryptoNewsDisplayContract404288;
 
 const newsFeedState = {
   status: "idle",
@@ -22308,8 +22311,8 @@ function newsDeduplicateFeedEvents(events) {
 
 function newsFeedPayloadContractCurrent404288(payload) {
   const summary = payload?.translation_fr;
-  return String(summary?.build || "") === "40.4.288"
-    && String(summary?.schema || "") === "atlas_news_translation_fr_v4";
+  return String(summary?.build || "") === "40.4.291"
+    && String(summary?.schema || "") === "atlas_news_native_fr_v1";
 }
 
 function newsFeedReadCache() {
@@ -54075,7 +54078,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.290";
+const ATLAS_BUILD = "40.4.291";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
