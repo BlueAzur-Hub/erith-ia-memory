@@ -1,14 +1,15 @@
 /*
-  Agent-Crypto Administrator — Strategy A Paper V2 lifecycle integrity corrective lock
-  Build: 40.4.295
+  Agent-Crypto Administrator — Strategy A Paper V2 lifecycle + common safety gate
+  Build: 40.6.14
   Responsibility: deterministic Paper-only execution/reconciliation lifecycle.
-  Corrects partial-fill average price, contradictory reconciliation and self-test state mutation.
+  Adds a fail-closed common Safety Governor gate for NEW Paper entries only.
+  Existing submitted Paper positions remain monitorable/reconcilable/closable.
   No network, no Kraken order, no wallet, no credentials, no live Paper ledger mutation.
 */
 (() => {
   "use strict";
 
-  const BUILD = "40.4.295";
+  const BUILD = "40.6.14";
   const SCHEMA = "agent_crypto_strategy_a_paper_lifecycle_v2";
   const MAX_AUDIT_ROWS = 160;
   const TERMINAL = new Set(["CLOSED", "REJECTED", "CANCELED", "STOP_UNPROTECTED", "RECONCILED_NO_ORDER"]);
@@ -19,6 +20,54 @@
   const finite = value => Number.isFinite(Number(value));
   const num = (value, fallback = 0) => finite(value) ? Number(value) : fallback;
   const iso = () => new Date().toISOString();
+
+  // 40.6.14 — one common gate for every NEW Strategy A Paper entry path.
+  // Safety is resolved at call time because the governor script is loaded after
+  // this lifecycle owner. Fail closed for creation/submission, but never strand
+  // an already-submitted Paper position that still needs reconciliation/closure.
+  function safetyGovernor() {
+    return globalThis.AgentCryptoStrategyASafetyCertification404299
+      || globalThis.AgentCryptoStrategyASafetyCertification404295
+      || globalThis.AgentCryptoStrategyASafetyCertification404293
+      || null;
+  }
+
+  function safetyGateSnapshot() {
+    const governor = safetyGovernor();
+    if (!governor || typeof governor.snapshot !== "function") {
+      return { allowed: false, level: "UNAVAILABLE", reason: "SAFETY_GOVERNOR_UNAVAILABLE", new_trades_allowed: false };
+    }
+    try {
+      const snap = governor.snapshot() || {};
+      const level = String(snap.level || "UNKNOWN").toUpperCase();
+      const allowed = level === "NORMAL" && snap.new_trades_allowed === true;
+      return {
+        allowed,
+        level,
+        reason: String(snap.reason || (allowed ? "NORMAL" : "SAFETY_GOVERNOR_BLOCK")),
+        new_trades_allowed: snap.new_trades_allowed === true,
+        existing_paper_monitoring_allowed: snap.existing_paper_monitoring_allowed !== false,
+        governor_build: snap.build || governor.build || null
+      };
+    } catch (error) {
+      return { allowed: false, level: "ERROR", reason: "SAFETY_GOVERNOR_SNAPSHOT_ERROR", new_trades_allowed: false, error: String(error?.message || error) };
+    }
+  }
+
+  function safetyReject(envelope, stage, gate) {
+    envelope.state = "REJECTED";
+    envelope.reason = `SAFETY_GOVERNOR_BLOCK_${stage}`;
+    envelope.retry_allowed = false;
+    envelope.updated_at = iso();
+    envelope.safety_gate = clone(gate) || gate;
+    LIVE_IDS.delete(envelope.trade_id);
+    audit(envelope, envelope.reason, {
+      stage, level: gate?.level || "UNKNOWN", governor_reason: gate?.reason || null,
+      new_trades_allowed: gate?.new_trades_allowed === true
+    });
+    return envelope;
+  }
+
   const hash = text => {
     let h = 2166136261;
     for (const c of String(text || "")) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
@@ -95,8 +144,13 @@
         real_order: false
       }
     };
-    if (envelope.state !== "REJECTED") LIVE_IDS.add(tradeId);
-    audit(envelope, "CREATE", { authorized_notional_eur: authorized });
+    if (envelope.state !== "REJECTED") {
+      const gate = safetyGateSnapshot();
+      envelope.safety_gate = clone(gate) || gate;
+      if (!gate.allowed) return safetyReject(envelope, "CREATE", gate);
+      LIVE_IDS.add(tradeId);
+    }
+    audit(envelope, "CREATE", { authorized_notional_eur: authorized, safety_gate: envelope.safety_gate || null });
     return envelope;
   }
 
@@ -129,6 +183,9 @@
 
   function submit(envelope) {
     if (!guard(envelope, ["RISK_APPROVED"], "SUBMIT")) return envelope;
+    const gate = safetyGateSnapshot();
+    envelope.safety_gate = clone(gate) || gate;
+    if (!gate.allowed) return safetyReject(envelope, "SUBMIT", gate);
     envelope.state = "SUBMITTED";
     envelope.submitted_notional_eur = envelope.authorized_notional_eur;
     envelope.updated_at = iso();
@@ -443,7 +500,7 @@
     const panel = document.createElement("section");
     panel.id = "strategyAPaperLifecycle404291";
     panel.setAttribute("data-strategy-a-paper-lifecycle-build", BUILD);
-    panel.innerHTML = `<div class="spl-head"><div><div class="spl-title">PAPER V2 · EXECUTION / RECONCILIATION LIFECYCLE</div><div class="spl-sub">Trade Envelope unique · ACK · partial fill · reconciliation contradictoire refusée · protection · clôture. Correctif intégrité 40.4.295.</div></div></div><div class="spl-actions" id="strategyAPaperLifecycleActions404291"></div><div class="spl-state" id="strategyAPaperLifecycleState404291">Aucun scénario lifecycle exécuté.</div><div class="spl-grid"><div class="spl-kpi"><span>Fill</span><b id="strategyAPaperLifecycleFilled404291">—</b></div><div class="spl-kpi"><span>Reste</span><b id="strategyAPaperLifecycleRemaining404291">—</b></div><div class="spl-kpi"><span>Retry autorisé</span><b id="strategyAPaperLifecycleRetry404291">—</b></div><div class="spl-kpi"><span>Protection</span><b id="strategyAPaperLifecycleProtection404291">—</b></div></div><div class="spl-safety">PAPER ONLY · aucun réseau · aucun Kraken · aucune clé · aucune écriture Auto A · lecture/test sans effacement des identifiants actifs.</div>`;
+    panel.innerHTML = `<div class="spl-head"><div><div class="spl-title">PAPER V2 · EXECUTION / RECONCILIATION LIFECYCLE</div><div class="spl-sub">Trade Envelope unique · Safety Governor commun sur nouvelles entrées · ACK · partial fill · reconciliation · protection · clôture. Gate 40.6.14.</div></div></div><div class="spl-actions" id="strategyAPaperLifecycleActions404291"></div><div class="spl-state" id="strategyAPaperLifecycleState404291">Aucun scénario lifecycle exécuté.</div><div class="spl-grid"><div class="spl-kpi"><span>Fill</span><b id="strategyAPaperLifecycleFilled404291">—</b></div><div class="spl-kpi"><span>Reste</span><b id="strategyAPaperLifecycleRemaining404291">—</b></div><div class="spl-kpi"><span>Retry autorisé</span><b id="strategyAPaperLifecycleRetry404291">—</b></div><div class="spl-kpi"><span>Protection</span><b id="strategyAPaperLifecycleProtection404291">—</b></div></div><div class="spl-safety">PAPER ONLY · Safety Governor obligatoire pour CREATE/SUBMIT · une position déjà soumise reste réconciliable/closable · aucun réseau · aucun Kraken · aucune clé.</div>`;
     anchor.insertAdjacentElement("afterend", panel);
     const actions = panel.querySelector("#strategyAPaperLifecycleActions404291");
     const labels = {
@@ -483,6 +540,7 @@
     self_test: selfTest,
     audit: () => clone(AUDIT) || [],
     diagnostic_snapshot: diagnosticSnapshot,
+    safety_gate_snapshot: safetyGateSnapshot,
     render,
     terminal_states: [...TERMINAL],
     paper_only: true,
@@ -494,7 +552,10 @@
     network: false,
     real_orders: false,
     kraken_network: false,
-    corrective_lock_404295: true
+    corrective_lock_404295: true,
+    common_safety_gate_406014: true,
+    new_entry_fail_closed: true,
+    existing_submitted_monitoring_preserved: true
   });
 
   globalThis.AgentCryptoStrategyAPaperLifecycle404295 = api;
