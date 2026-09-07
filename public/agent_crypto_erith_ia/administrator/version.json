@@ -52,10 +52,10 @@
     "js/market-stack.js": "2f455b31fa763d36b1f0dff60424404cb5795dc8d51f224d4e06c75797a7d802",
     "js/parallel-markets.js": "b7eff63183eeeaf2f72107b38ea712dbb928b8ae5b3deae7d5fbe400968946b1",
     "parallel-markets.css": "f95256474daeb0274d5b17eb769ad8e163e0f7c24822f44807438e8209258c68",
-    "administrator-version.json": "48eff571563a11c1c6e512b6d2cce4913af00bee97caf0f3658811cc15a2d569",
+    "administrator-version.json": "99fb8809a8c1c334dd263060fc8c6eba6c726ec1f8937dfac78a1671ab099036",
     "js/market-reading-depth.js": "d36dbb9ae9b45726cd9950861304903ff48e3fb2e1dab792470e880a1611e51f",
     "market-reading-depth.css": "e381d8977ad89a828b1721ab2b6ef2113da41a22cf76060e88aa7c9e1c65f29e",
-    "build.json": "3793346872ed4fbe0f38910ec3cca75fc53335abea916f55f3e541ee83608514",
+    "build.json": "809739533bd94fc402adcc04233a7049a2bca9c251ad98d0df7b32abdb3506e6",
     "js/atlas-heartbeat-rearm.js": "76e52b39de473765cca95def8aed7a4eb5f0669a27da3df7eb0b5d84468ae7f1",
     "admin-firefox-compositor.css": "9dc34996ec241d5af30d14dd4b3a2519b429684ae1b5ab921286178ab11c07ca",
     "admin-firefox-safe-paint.css": "56a489f79a4c536d7bfa1d1b4204d3b70aed7f24f0dce303b05119880c58d845",
@@ -175,7 +175,7 @@
     "RELEASE_40_6_5.md": "26489c090ac381bd3b7b827fbdd55be18791165431605aa98f276f6736f9c634"
   },
   "integrity": {
-    "files": 73,
+    "files": 93,
     "publication_identity": {
       "build": "40.4.294",
       "asset_token": "market-core-v2.0-alpha-build-40.4.294",
@@ -12455,11 +12455,13 @@
   },
   "current_version_truth": {
     "visible_owner": "js/version-truth.js",
-    "loaded_build": "40.6.4",
+    "loaded_build": "40.6.5",
     "published_manifest": "build.json",
     "false_propagation_lock": true,
     "legacy_ids_hidden_sink": true,
-    "manual_click_safe_reload": true
+    "manual_click_safe_reload": true,
+    "manual_click_network_calls": 0,
+    "manual_click_awaits_manifest": false
   },
   "cascade_40_5_21": {
     "parent_build": "40.5.20",
