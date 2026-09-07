@@ -39,77 +39,100 @@ jobs:
           token = 'market-core-v2.0-alpha-build-40.6.6'
           now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
 
-          # 1) Chronos sole presentation owner — append one bounded cumulative override.
           css_path = root / 'admin-chronos.css'
           css = css_path.read_text(encoding='utf-8')
           marker = '/* 40.6.6 — CHRONOS READABILITY / CENTER PRESERVATION LOCK'
           if marker not in css:
-              css += r'''
-
-/* 40.6.6 — CHRONOS READABILITY / CENTER PRESERVATION LOCK
-   Field note: the 40.6.3 true-center geometry is correct, but the desktop
-   Chronos line is visually too small on a wide status card.
-   Presentation only: preserve the exact intrinsic-width centered group and
-   increase typography only when the card has enough inline space.
-   Existing <=620px / <=520px fit rules remain authoritative on narrow cards.
-   No Chronos calculation, runtime, timer, market, Atlas, Oracle, News, Aether,
-   Strategy A, Window Manager, storage, WebSocket or Market Core ownership changes. */
-@container (min-width:621px){
-  #atlasCelestialClockHeader{
-    gap:7px !important;
-    font-size:clamp(12.2px,.74vw,14px) !important;
-    line-height:1.08 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-date-40341{
-    font-size:clamp(13px,.78vw,14.6px) !important;
-    letter-spacing:.008em !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-time-40341{
-    font-size:clamp(16.2px,.96vw,18.4px) !important;
-    letter-spacing:.018em !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-separator-40341{
-    font-size:10px !important;
-    opacity:.82 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341{
-    font-size:clamp(12.1px,.72vw,13.4px) !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-glyph-40341{
-    font-size:1.28em !important;
-    margin-right:3px !important;
-  }
-}
-'''
+              css_block = '\n'.join([
+                  '',
+                  marker,
+                  '   Field note: the 40.6.3 true-center geometry is correct, but the desktop',
+                  '   Chronos line is visually too small on a wide status card.',
+                  '   Presentation only: preserve the exact intrinsic-width centered group and',
+                  '   increase typography only when the card has enough inline space.',
+                  '   Existing <=620px / <=520px fit rules remain authoritative on narrow cards.',
+                  '   No Chronos calculation, runtime, timer, market, Atlas, Oracle, News, Aether,',
+                  '   Strategy A, Window Manager, storage, WebSocket or Market Core ownership changes. */',
+                  '@container (min-width:621px){',
+                  '  #atlasCelestialClockHeader{',
+                  '    gap:7px !important;',
+                  '    font-size:clamp(12.2px,.74vw,14px) !important;',
+                  '    line-height:1.08 !important;',
+                  '  }',
+                  '  #atlasCelestialClockHeader .atlas-chrono-date-40341{',
+                  '    font-size:clamp(13px,.78vw,14.6px) !important;',
+                  '    letter-spacing:.008em !important;',
+                  '  }',
+                  '  #atlasCelestialClockHeader .atlas-chrono-time-40341{',
+                  '    font-size:clamp(16.2px,.96vw,18.4px) !important;',
+                  '    letter-spacing:.018em !important;',
+                  '  }',
+                  '  #atlasCelestialClockHeader .atlas-chrono-separator-40341{',
+                  '    font-size:10px !important;',
+                  '    opacity:.82 !important;',
+                  '  }',
+                  '  #atlasCelestialClockHeader .atlas-chrono-planet-40341{',
+                  '    font-size:clamp(12.1px,.72vw,13.4px) !important;',
+                  '  }',
+                  '  #atlasCelestialClockHeader .atlas-chrono-glyph-40341{',
+                  '    font-size:1.28em !important;',
+                  '    margin-right:3px !important;',
+                  '  }',
+                  '}',
+                  ''
+              ])
+              css += css_block
           css_path.write_text(css, encoding='utf-8')
 
-          # 2) Index publication identity and cache-busting tokens.
           index_path = root / 'index.html'
           index = index_path.read_text(encoding='utf-8')
-          replacements = {
-              '<meta name="atlas-build" content="40.6.5" />': '<meta name="atlas-build" content="40.6.6" />',
-              '<meta name="administrator-build" content="40.6.5" />': '<meta name="administrator-build" content="40.6.6" />',
-              '<meta name="administrator-release" content="VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK" />': '<meta name="administrator-release" content="CHRONOS READABILITY · CENTER PRESERVATION LOCK" />',
-              '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.5" />': '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.6" />',
-              '<title>Agent-Crypto @erith.IA — Build 40.6.5 · Administrator</title>': '<title>Agent-Crypto @erith.IA — Build 40.6.6 · Administrator</title>',
-              './admin-chronos.css?v=administrator-build-40.6.4': './admin-chronos.css?v=administrator-build-40.6.6',
-              './js/version-truth.js?v=40.6.5': './js/version-truth.js?v=40.6.6',
-          }
-          for old, new in replacements.items():
+          replacements = [
+              ('<meta name="atlas-build" content="40.6.5" />', '<meta name="atlas-build" content="40.6.6" />'),
+              ('<meta name="administrator-build" content="40.6.5" />', '<meta name="administrator-build" content="40.6.6" />'),
+              ('<meta name="administrator-release" content="VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK" />', '<meta name="administrator-release" content="CHRONOS READABILITY · CENTER PRESERVATION LOCK" />'),
+              ('<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.5" />', '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.6" />'),
+              ('<title>Agent-Crypto @erith.IA — Build 40.6.5 · Administrator</title>', '<title>Agent-Crypto @erith.IA — Build 40.6.6 · Administrator</title>'),
+              ('./admin-chronos.css?v=administrator-build-40.6.4', './admin-chronos.css?v=administrator-build-40.6.6'),
+              ('./js/version-truth.js?v=40.6.5', './js/version-truth.js?v=40.6.6')
+          ]
+          for old, new in replacements:
               if old not in index:
                   raise SystemExit(f'Expected index token not found: {old}')
               index = index.replace(old, new, 1)
           index_path.write_text(index, encoding='utf-8')
 
-          # 3) Version Truth code stays behavior-identical; only identity follows the cumulative build.
           vt_path = root / 'js' / 'version-truth.js'
           vt = vt_path.read_text(encoding='utf-8')
-          vt = vt.replace('Build 40.6.5 · VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK',
-                          'Build 40.6.6 · CHRONOS READABILITY · CENTER PRESERVATION LOCK', 1)
-          vt = vt.replace('const OWNER = "version-truth-40605";', 'const OWNER = "version-truth-40606";', 1)
+          old_banner = 'Build 40.6.5 · VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK'
+          old_owner = 'const OWNER = "version-truth-40605";'
+          if old_banner not in vt or old_owner not in vt:
+              raise SystemExit('Version Truth 40.6.5 identity tokens not found')
+          vt = vt.replace(old_banner, 'Build 40.6.6 · CHRONOS READABILITY · CENTER PRESERVATION LOCK', 1)
+          vt = vt.replace(old_owner, 'const OWNER = "version-truth-40606";', 1)
           vt_path.write_text(vt, encoding='utf-8')
 
-          # 4) Manifests — preserve full lineage, only advance current truth and add this cumulative layer.
+          layer = {
+              'parent_build': parent,
+              'release': release,
+              'status': status,
+              'owner': 'admin-chronos.css',
+              'scope': 'presentation_only',
+              'true_center_406003_preserved': True,
+              'single_line_preserved': True,
+              'desktop_readability_increased': True,
+              'narrow_fit_rules_preserved': True,
+              'chronos_math_modified': False,
+              'chronos_runtime_modified': False,
+              'market_core_modified': False,
+              'strategy_a_modified': False,
+              'oracle_modified': False,
+              'new_recurring_timer': False,
+              'new_observer': False,
+              'new_network_owner': False,
+              'new_storage_owner': False,
+              'version_button_direct_reload_406005_preserved': True
+          }
+
           for name in ('build.json', 'version.json', 'administrator-version.json'):
               p = root / name
               data = json.loads(p.read_text(encoding='utf-8'))
@@ -135,65 +158,44 @@ jobs:
                   cvt['manual_click_safe_reload'] = True
                   cvt['manual_click_network_calls'] = 0
                   cvt['manual_click_awaits_manifest'] = False
-              layer = {
-                  'parent_build': parent,
-                  'release': release,
-                  'status': status,
-                  'owner': 'admin-chronos.css',
-                  'scope': 'presentation_only',
-                  'true_center_406003_preserved': True,
-                  'single_line_preserved': True,
-                  'desktop_readability_increased': True,
-                  'narrow_fit_rules_preserved': True,
-                  'chronos_math_modified': False,
-                  'chronos_runtime_modified': False,
-                  'market_core_modified': False,
-                  'strategy_a_modified': False,
-                  'oracle_modified': False,
-                  'new_recurring_timer': False,
-                  'new_observer': False,
-                  'new_network_owner': False,
-                  'new_storage_owner': False,
-                  'version_button_direct_reload_406005_preserved': True
-              }
-              data['cascade_40_6_6'] = layer
+              data['cascade_40_6_6'] = dict(layer)
               p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-          # 5) Release note / acceptance contract.
-          release_path = root / 'RELEASE_40_6_6.md'
-          release_path.write_text(f'''# Agent-Crypto @erith.IA — Build 40.6.6
+          release_lines = [
+              '# Agent-Crypto @erith.IA — Build 40.6.6',
+              '',
+              '## CHRONOS READABILITY · CENTER PRESERVATION LOCK',
+              '',
+              'Parent: **40.6.5**',
+              '',
+              '### Destination',
+              'Increase Chronos readability on wide desktop status cards without changing the true-center geometry validated in 40.6.3/40.6.4 and without touching Chronos calculations.',
+              '',
+              '### Surgical owner',
+              '- `admin-chronos.css`',
+              '',
+              '### Cumulative locks preserved',
+              '- Version Button Direct Reload 40.6.5 preserved.',
+              '- `Market Core 38.15.11` protected and untouched.',
+              '- Chronos stays a single intrinsic-width centered semantic group.',
+              '- Narrow-card shrink rules remain active at `<=620px` and `<=520px`.',
+              '- No Oracle semantic-bias coloring in this build; that remains the next separate version.',
+              '- No new timer, observer, network owner or storage owner.',
+              '',
+              '### Firefox acceptance',
+              '1. Load **Build 40.6.6 · Administrator**.',
+              '2. On a wide desktop card, Chronos must be clearly larger and immediately readable.',
+              '3. The complete semantic line remains centered: date · time · planetary day · planetary hour.',
+              '4. No clipping or second row on the current desktop layout.',
+              '5. Click the Build badge: direct reload must still work without a preliminary manifest fetch.',
+              '',
+              'Status before operator proof: **published candidate — Firefox acceptance required**.',
+              ''
+          ]
+          (root / 'RELEASE_40_6_6.md').write_text('\n'.join(release_lines), encoding='utf-8')
 
-## CHRONOS READABILITY · CENTER PRESERVATION LOCK
-
-Parent: **40.6.5**
-
-### Destination
-Increase Chronos readability on wide desktop status cards without changing the true-center geometry validated in 40.6.3/40.6.4 and without touching Chronos calculations.
-
-### Surgical owner
-- `admin-chronos.css`
-
-### Cumulative locks preserved
-- Version Button Direct Reload 40.6.5 preserved.
-- `Market Core 38.15.11` protected and untouched.
-- Chronos stays a single intrinsic-width centered semantic group.
-- Narrow-card shrink rules remain active at `<=620px` and `<=520px`.
-- No Oracle semantic-bias coloring in this build; that remains the next separate version.
-- No new timer, observer, network owner or storage owner.
-
-### Firefox acceptance
-1. Load **Build 40.6.6 · Administrator**.
-2. On a wide desktop card, Chronos must be clearly larger and immediately readable.
-3. The complete semantic line remains centered: date · time · planetary day · planetary hour.
-4. No clipping or second row on the current desktop layout.
-5. Click the Build badge: direct reload must still work without a preliminary manifest fetch.
-
-Status before operator proof: **published candidate — Firefox acceptance required**.
-''', encoding='utf-8')
-
-          # Minimal static assertions.
-          assert '40.6.6' in index_path.read_text(encoding='utf-8')
           assert marker in css_path.read_text(encoding='utf-8')
+          assert 'administrator-build" content="40.6.6"' in index_path.read_text(encoding='utf-8')
           assert 'version-truth-40606' in vt_path.read_text(encoding='utf-8')
           for name in ('build.json','version.json','administrator-version.json'):
               d = json.loads((root/name).read_text(encoding='utf-8'))
