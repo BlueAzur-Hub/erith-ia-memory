@@ -1,4 +1,4 @@
-name: Agent-Crypto 40.6.5 Version Button Direct Reload
+name: Agent-Crypto 40.6.5 Version Truth Metadata Seal
 
 on:
   push:
@@ -10,11 +10,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: agent-crypto-40605-version-direct-reload
+  group: agent-crypto-40605-version-truth-metadata-seal
   cancel-in-progress: false
 
 jobs:
-  release:
+  seal:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout canonical main
@@ -22,291 +22,121 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build bounded 40.6.5 release
+      - name: Seal 40.6.5 publication truth metadata
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
-          from datetime import datetime, timezone
-          import hashlib, json, re
+          import hashlib, json
 
           ROOT = Path('public/agent_crypto_erith_ia/administrator')
           BUILD = '40.6.5'
-          PARENT = '40.6.4'
           ENGINE = '38.15.11'
-          RELEASE = 'VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK'
-          STATUS = 'version_button_direct_reload_network_independent_click_lock_406005'
-          TOKEN = f'market-core-v2.0-alpha-build-{BUILD}'
-          NOW = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
 
-          def read(rel):
-              return (ROOT / rel).read_text(encoding='utf-8')
-
-          def write(rel, text):
-              (ROOT / rel).write_text(text, encoding='utf-8')
-
-          def replace_once(text, old, new, label):
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f'STOP 40.6.5: {label}: expected exactly one match, got {count}')
-              return text.replace(old, new, 1)
-
-          def sub_once(text, pattern, replacement, label, flags=0):
-              out, count = re.subn(pattern, replacement, text, count=1, flags=flags)
-              if count != 1:
-                  raise SystemExit(f'STOP 40.6.5: {label}: expected exactly one match, got {count}')
-              return out
-
-          def load_json(rel):
-              data = json.loads(read(rel))
+          def read_json(rel):
+              data = json.loads((ROOT / rel).read_text(encoding='utf-8'))
               if not isinstance(data, dict):
-                  raise SystemExit(f'STOP 40.6.5: JSON root invalid: {rel}')
+                  raise SystemExit(f'STOP 40.6.5 seal: invalid JSON root {rel}')
               return data
 
-          def dump_json(rel, data):
-              write(rel, json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+          def write_json(rel, data):
+              (ROOT / rel).write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
           def sha256(rel):
               return hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()
 
-          manifest = load_json('version.json')
-          mirror = load_json('administrator-version.json')
-          build_truth = load_json('build.json')
-          if str(manifest.get('build') or '') != PARENT:
-              raise SystemExit(f'STOP 40.6.5: version.json parent drift {manifest.get("build")} != {PARENT}')
-          if str(mirror.get('build') or '') != PARENT:
-              raise SystemExit(f'STOP 40.6.5: administrator-version parent drift {mirror.get("build")} != {PARENT}')
-          if str(build_truth.get('build') or '') != PARENT:
-              raise SystemExit(f'STOP 40.6.5: build.json parent drift {build_truth.get("build")} != {PARENT}')
-          if str((manifest.get('engine') or {}).get('reference_build') or '') != ENGINE:
-              raise SystemExit('STOP 40.6.5: Market Core manifest identity changed')
-          if str(build_truth.get('engine') or '') != ENGINE:
-              raise SystemExit('STOP 40.6.5: Market Core build truth changed')
+          version = read_json('version.json')
+          mirror = read_json('administrator-version.json')
+          build = read_json('build.json')
 
-          # -----------------------------------------------------------------
-          # 1) Single behavior owner: js/version-truth.js only.
-          #    Manual click no longer awaits build.json. Version awareness still
-          #    refreshes once at startup, independently of the click gesture.
-          # -----------------------------------------------------------------
-          vt = read('js/version-truth.js')
-          vt = replace_once(
-              vt,
-              '/* Agent-Crypto @erith.IA — Version Truth Single Owner\n   Build 40.6.4 · CHRONOS TRUE CENTER · VERSION SAFE REFRESH LOCK */',
-              '/* Agent-Crypto @erith.IA — Version Truth Single Owner\n   Build 40.6.5 · VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK */',
-              'version-truth header'
-          )
-          vt = replace_once(vt, 'const OWNER = "version-truth-40604";', 'const OWNER = "version-truth-40605";', 'version-truth owner')
-          old_click = '''  async function onControlClick(){\n    const state=await refresh("manual-click");\n    safeReload(state);\n  }\n  if(control) control.addEventListener("click",()=>{void onControlClick();});\n  void refresh("startup");'''
-          new_click = '''  function onControlClick(event){\n    event?.preventDefault?.();\n    event?.stopPropagation?.();\n    safeReload(lastState);\n  }\n  if(control) control.addEventListener("click",onControlClick,{capture:true});\n  void refresh("startup");'''
-          vt = replace_once(vt, old_click, new_click, 'direct manual-click contract')
-          vt = replace_once(
-              vt,
-              'manual_click_safe_reload:true,refresh_param:REFRESH_PARAM,',
-              'manual_click_safe_reload:true,manual_click_network_calls:0,manual_click_awaits_manifest:false,manual_click_capture_phase:true,refresh_param:REFRESH_PARAM,',
-              'version-truth audit flags'
-          )
-          write('js/version-truth.js', vt)
-
-          # -----------------------------------------------------------------
-          # 2) First-paint/public identity. Hidden legacy sink stays hidden.
-          #    Do not touch Market Core, shared app runtime, Window Manager, etc.
-          # -----------------------------------------------------------------
-          index = read('index.html')
-          index = sub_once(index, r'(<meta name="atlas-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\g<2>', 'index atlas-build')
-          index = sub_once(index, r'(<meta name="administrator-build" content=")[^"]+(" />)', rf'\g<1>{BUILD}\g<2>', 'index administrator-build')
-          index = sub_once(index, r'(<meta name="administrator-release" content=")[^"]+(" />)', rf'\g<1>{RELEASE}\g<2>', 'index release')
-          index = sub_once(index, r'(<meta name="atlas-asset-token" content=")[^"]+(" />)', rf'\g<1>{TOKEN}\g<2>', 'index asset token')
-          index = sub_once(index, r'<title>Agent-Crypto @erith\.IA — Build [^ ]+ · Administrator</title>', f'<title>Agent-Crypto @erith.IA — Build {BUILD} · Administrator</title>', 'index title')
-          index = sub_once(index, r'(id="atlasVersionTruthControl"[\s\S]{0,280}?aria-label="Version Agent-Crypto installée : Build )[^,\"]+(, mode Administrator")', rf'\g<1>{BUILD}\g<2>', 'visible version aria')
-          index = sub_once(index, r'(<span id="atlasVersionTruthText">Build )[^<]+(</span>)', rf'\g<1>{BUILD}\g<2>', 'visible version text')
-          index = sub_once(index, r'<script src="\./js/version-truth\.js\?v=[^"]+"></script>', f'<script src="./js/version-truth.js?v={BUILD}"></script>', 'version-truth cache token')
-          write('index.html', index)
-
-          # -----------------------------------------------------------------
-          # 3) Runtime/publication truth.
-          # -----------------------------------------------------------------
-          build_truth.update({
-              'build': BUILD,
-              'engine': ENGINE,
-              'release': RELEASE,
-              'published': True,
-              'status': STATUS,
-              'parent_build': PARENT,
-              'asset_token': TOKEN,
-              'administrator_build': BUILD,
-              'build_label': f'Build {BUILD}',
-              'release_status': RELEASE,
-              'timestamp': NOW,
-          })
-          build_truth['version_button_direct_reload_406005'] = {
-              'owner': 'js/version-truth.js',
-              'visible_control_id': 'atlasVersionTruthControl',
-              'manual_click_network_calls': 0,
-              'manual_click_awaits_manifest': False,
-              'manual_click_navigation': 'location.replace(current URL + ac-refresh timestamp)',
-              'startup_version_awareness_preserved': True,
-              'clears_local_storage': False,
-              'clears_indexed_db': False,
-              'clears_cookies': False,
-              'market_core_modified': False,
-              'new_timer': False,
-              'new_observer': False,
-          }
-          dump_json('build.json', build_truth)
-
-          manifest.update({
-              'release': RELEASE,
-              'build': BUILD,
-              'asset_token': TOKEN,
-              'status': STATUS,
-              'prepared_at': NOW,
-              'published_at': NOW,
-              'parent_build': PARENT,
-          })
-          manifest.setdefault('contracts', {})['version_button_direct_reload_406005'] = {
-              'schema': 'agent_crypto_version_button_direct_reload_406005_v1',
-              'owner': 'js/version-truth.js',
-              'visible_control_id': 'atlasVersionTruthControl',
-              'visible_text_id': 'atlasVersionTruthText',
-              'legacy_sink_control_id': 'atlasVersionControl',
-              'legacy_sink_text_id': 'atlasVersionControlText',
-              'single_visible_owner': True,
-              'manual_click_network_calls': 0,
-              'manual_click_awaits_manifest': False,
-              'startup_manifest_check_preserved': True,
-              'navigation': 'location.replace + ac-refresh',
-              'existing_url_parameters_preserved': True,
-              'market_core': ENGINE,
-              'market_core_modified': False,
-              'graph_changed': False,
-              'atlas_changed': False,
-              'oracle_changed': False,
-              'news_aether_changed': False,
-              'strategy_a_paper_changed': False,
-              'window_manager_changed': False,
-              'storage_cleared': False,
-              'new_timer': False,
-              'new_observer': False,
-              'real_order': False,
-          }
-          note = '40.6.5 — Version Button Direct Reload: manual version-badge click navigates immediately through the existing Version Truth owner without awaiting build.json; startup Version Awareness remains read-only and independent.'
-          lineage_notes = manifest.get('lineage_notes')
-          if isinstance(lineage_notes, list):
-              if note not in lineage_notes:
-                  lineage_notes.append(note)
-          else:
-              lineage = str(manifest.get('lineage') or '')
-              if note not in lineage:
-                  manifest['lineage'] = lineage + (' → ' if lineage else '') + note
-
-          mirror.update({
-              'build': BUILD,
-              'release': RELEASE,
-              'status': STATUS,
-              'prepared_at': NOW,
-              'published_at': NOW,
-              'parent_build': PARENT,
-              'asset_token': TOKEN,
-          })
-          mirror.setdefault('contracts', {})['version_button_direct_reload_406005'] = dict(manifest['contracts']['version_button_direct_reload_406005'])
-          dump_json('administrator-version.json', mirror)
-
-          release_note = f'''# Agent-Crypto @erith.IA — {BUILD}\n\n## VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK\n\nParent canonique : **{PARENT}**  \nMarket Core : **{ENGINE} — protected**\n\n### Dette ciblée\n\nLe badge de version visible conserve son propriétaire unique `js/version-truth.js`, mais le clic manuel ne dépend plus d'un `fetch(build.json)` avant de naviguer.\n\nAu clic :\n\n`clic → état actualisation immédiat → ac-refresh=<build>-<timestamp> → location.replace()`\n\nLe contrôle de version publié (`build.json`, `cache: no-store`) reste actif une fois au démarrage pour **Version Awareness**, mais il n'est plus une précondition au geste opérateur.\n\n### Protections\n\n- aucun changement Market Core {ENGINE} ;\n- aucun changement Graphique / Atlas / Oracle / News / Aether ;\n- aucun changement Strategy A / Paper ;\n- aucun ordre réel ;\n- aucun nouveau timer récurrent ;\n- aucun MutationObserver ;\n- aucun effacement cookies / localStorage / IndexedDB ;\n- aucun reset Window Manager ;\n- ancien `atlasVersionControl` conservé uniquement comme sink caché.\n\n### Preuve attendue Firefox\n\n1. charger **Build {BUILD} · Administrator** ;\n2. cliquer le badge de version ;\n3. l'URL reçoit/change seulement `ac-refresh=...` en conservant les autres paramètres ;\n4. la page se recharge immédiatement, sans attendre le réseau de Version Awareness ;\n5. un second clic après recharge reproduit le même comportement ;\n6. préférences, fenêtres et données locales sont conservées.\n'''
-          write('RELEASE_40_6_5.md', release_note)
-
-          # Update only hashes of files actually changed by this release.
-          files = manifest.get('files')
-          if isinstance(files, dict):
-              for rel in ('index.html','build.json','administrator-version.json','js/version-truth.js','RELEASE_40_6_5.md'):
-                  files[rel] = sha256(rel)
-          dump_json('version.json', manifest)
-
-          # -----------------------------------------------------------------
-          # 4) Static acceptance gates for the exact debt.
-          # -----------------------------------------------------------------
-          vt = read('js/version-truth.js')
-          index = read('index.html')
-          manifest = load_json('version.json')
-          mirror = load_json('administrator-version.json')
-          build_truth = load_json('build.json')
-
-          if 'await refresh("manual-click")' in vt:
-              raise SystemExit('STOP 40.6.5: network precondition still present in manual click')
-          required_vt = (
-              'function onControlClick(event)',
-              'safeReload(lastState);',
-              'addEventListener("click",onControlClick,{capture:true})',
-              'manual_click_network_calls:0',
-              'manual_click_awaits_manifest:false',
-              'void refresh("startup");',
-              'location.replace(url.toString());',
-          )
-          for marker in required_vt:
-              if marker not in vt:
-                  raise SystemExit(f'STOP 40.6.5: missing version-truth marker {marker}')
-          forbidden_vt = ('setInterval(', 'new MutationObserver(', 'new IntersectionObserver(', 'new WebSocket(', 'localStorage.clear(', 'indexedDB.deleteDatabase(')
-          for marker in forbidden_vt:
-              if marker in vt:
-                  raise SystemExit(f'STOP 40.6.5: forbidden runtime/storage marker {marker}')
-
-          if index.count('id="atlasVersionTruthControl"') != 1 or index.count('id="atlasVersionTruthText"') != 1:
-              raise SystemExit('STOP 40.6.5: visible Version Truth owner cardinality invalid')
-          if index.count('id="atlasVersionControl"') != 1 or index.count('id="atlasVersionControlText"') != 1:
-              raise SystemExit('STOP 40.6.5: legacy sink cardinality invalid')
-          legacy_match = re.search(r'<span id="atlasVersionControl"[\s\S]{0,180}?</span></span>', index)
-          if not legacy_match or 'hidden' not in legacy_match.group(0) or 'aria-hidden="true"' not in legacy_match.group(0):
-              raise SystemExit('STOP 40.6.5: legacy sink is not hidden')
-          if f'<span id="atlasVersionTruthText">Build {BUILD}</span>' not in index:
-              raise SystemExit('STOP 40.6.5: visible first-paint build mismatch')
-          if f'./js/version-truth.js?v={BUILD}' not in index:
-              raise SystemExit('STOP 40.6.5: version-truth cache token mismatch')
-
-          for name, doc in (('version.json', manifest), ('administrator-version.json', mirror), ('build.json', build_truth)):
+          for name, doc in (('version.json', version), ('administrator-version.json', mirror), ('build.json', build)):
               if str(doc.get('build') or '') != BUILD:
-                  raise SystemExit(f'STOP 40.6.5: {name} build mismatch')
-          if str((manifest.get('engine') or {}).get('reference_build') or '') != ENGINE or str(build_truth.get('engine') or '') != ENGINE:
-              raise SystemExit('STOP 40.6.5: protected Market Core identity mismatch')
-          if manifest.get('parent_build') != PARENT or mirror.get('parent_build') != PARENT or build_truth.get('parent_build') != PARENT:
-              raise SystemExit('STOP 40.6.5: parent_build mismatch')
-          if manifest.get('asset_token') != TOKEN or mirror.get('asset_token') != TOKEN or build_truth.get('asset_token') != TOKEN:
-              raise SystemExit('STOP 40.6.5: asset_token mismatch')
+                  raise SystemExit(f'STOP 40.6.5 seal: {name} build={doc.get("build")} expected {BUILD}')
 
-          files = manifest.get('files')
+          if str((version.get('engine') or {}).get('reference_build') or '') != ENGINE:
+              raise SystemExit('STOP 40.6.5 seal: version.json Market Core drift')
+          if str(build.get('engine') or '') != ENGINE:
+              raise SystemExit('STOP 40.6.5 seal: build.json Market Core drift')
+
+          def seal_current_truth(doc, name):
+              truth = doc.get('current_version_truth')
+              if not isinstance(truth, dict):
+                  raise SystemExit(f'STOP 40.6.5 seal: missing current_version_truth in {name}')
+              truth['visible_owner'] = 'js/version-truth.js'
+              truth['loaded_build'] = BUILD
+              truth['published_manifest'] = 'build.json'
+              truth['false_propagation_lock'] = True
+              truth['legacy_ids_hidden_sink'] = True
+              truth['manual_click_safe_reload'] = True
+              truth['manual_click_network_calls'] = 0
+              truth['manual_click_awaits_manifest'] = False
+
+          seal_current_truth(version, 'version.json')
+          seal_current_truth(mirror, 'administrator-version.json')
+          seal_current_truth(build, 'build.json')
+
+          # Write subordinate truth first so version.json can hash the final bytes.
+          write_json('administrator-version.json', mirror)
+          write_json('build.json', build)
+
+          files = version.get('files')
           if isinstance(files, dict):
-              for rel in ('index.html','build.json','administrator-version.json','js/version-truth.js','RELEASE_40_6_5.md'):
-                  if files.get(rel) != sha256(rel):
-                      raise SystemExit(f'STOP 40.6.5: manifest hash mismatch {rel}')
+              for rel in ('index.html', 'js/version-truth.js', 'administrator-version.json', 'build.json', 'RELEASE_40_6_5.md'):
+                  if (ROOT / rel).is_file():
+                      files[rel] = sha256(rel)
+              integrity = version.get('integrity')
+              if isinstance(integrity, dict) and isinstance(integrity.get('files'), int):
+                  integrity['files'] = len(files)
+
+          write_json('version.json', version)
+
+          # Final bounded proof.
+          version = read_json('version.json')
+          mirror = read_json('administrator-version.json')
+          build = read_json('build.json')
+          for name, doc in (('version.json', version), ('administrator-version.json', mirror), ('build.json', build)):
+              truth = doc.get('current_version_truth') or {}
+              if truth.get('loaded_build') != BUILD:
+                  raise SystemExit(f'STOP 40.6.5 seal: stale loaded_build in {name}')
+              if truth.get('manual_click_network_calls') != 0 or truth.get('manual_click_awaits_manifest') is not False:
+                  raise SystemExit(f'STOP 40.6.5 seal: click contract mismatch in {name}')
+
+          files = version.get('files')
+          if isinstance(files, dict):
+              for rel in ('index.html', 'js/version-truth.js', 'administrator-version.json', 'build.json', 'RELEASE_40_6_5.md'):
+                  if rel in files and files[rel] != sha256(rel):
+                      raise SystemExit(f'STOP 40.6.5 seal: manifest hash mismatch {rel}')
+              integrity = version.get('integrity')
+              if isinstance(integrity, dict) and isinstance(integrity.get('files'), int) and integrity['files'] != len(files):
+                  raise SystemExit('STOP 40.6.5 seal: manifest file-count mismatch')
 
           print(json.dumps({
               'ok': True,
               'build': BUILD,
-              'parent': PARENT,
-              'owner': 'js/version-truth.js',
+              'engine': ENGINE,
+              'current_version_truth_loaded_build': BUILD,
               'manual_click_network_calls': 0,
-              'market_core': ENGINE,
-              'touched_business_runtime': False,
+              'manual_click_awaits_manifest': False,
+              'manifest_file_count': len(files) if isinstance(files, dict) else None,
+              'integrity_file_count': (version.get('integrity') or {}).get('files') if isinstance(version.get('integrity'), dict) else None,
           }, ensure_ascii=False))
           PY
 
-          node --check public/agent_crypto_erith_ia/administrator/js/version-truth.js
-          python -m json.tool public/agent_crypto_erith_ia/administrator/build.json >/dev/null
           python -m json.tool public/agent_crypto_erith_ia/administrator/version.json >/dev/null
           python -m json.tool public/agent_crypto_erith_ia/administrator/administrator-version.json >/dev/null
+          python -m json.tool public/agent_crypto_erith_ia/administrator/build.json >/dev/null
 
-      - name: Commit bounded release
+      - name: Commit metadata seal
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "Seven Release Bot"
           git config user.email "actions@users.noreply.github.com"
           git add \
-            public/agent_crypto_erith_ia/administrator/js/version-truth.js \
-            public/agent_crypto_erith_ia/administrator/index.html \
-            public/agent_crypto_erith_ia/administrator/build.json \
             public/agent_crypto_erith_ia/administrator/version.json \
             public/agent_crypto_erith_ia/administrator/administrator-version.json \
-            public/agent_crypto_erith_ia/administrator/RELEASE_40_6_5.md
-          git diff --cached --quiet && { echo 'No 40.6.5 release changes produced'; exit 1; }
-          git commit -m "fix(version): direct reload 40.6.5"
+            public/agent_crypto_erith_ia/administrator/build.json
+          git diff --cached --quiet && { echo 'No metadata seal changes produced'; exit 1; }
+          git commit -m "fix(version): seal 40.6.5 current truth metadata"
           git push origin HEAD:main
