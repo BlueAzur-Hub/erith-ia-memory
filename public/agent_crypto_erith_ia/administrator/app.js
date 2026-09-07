@@ -36551,6 +36551,7 @@ function strategyAApplyVisualHarmony404269(){
   const metricsEl=document.getElementById("strategyAVisualMetrics404269");if(metricsEl){metricsEl.style.fontSize="12px";metricsEl.style.fontWeight="900";metricsEl.style.lineHeight="1.45";metricsEl.style.color="#eaf5fa";metricsEl.style.whiteSpace="normal";}
   try{strategyARenderDecisionTrace404278();}catch(_){}
   try{strategyARenderExperimentLedger404289();}catch(_){}
+  try{globalThis.AgentCryptoStrategyAReplay404290?.render?.();}catch(_){}
   let exportBtn=document.getElementById("strategyAExportTrades404272");if(!exportBtn){exportBtn=document.createElement("button");exportBtn.type="button";exportBtn.className="btn small";exportBtn.id="strategyAExportTrades404272";exportBtn.textContent="TÉLÉCHARGER JOURNAL TRADES";exportBtn.addEventListener("click",()=>strategyAExportTrades404272());const actions=document.querySelector("#strategyAVisualConsole404269 .avc-actions-404269");const stop=document.getElementById("strategyAVisualStop404269");if(actions)actions.insertBefore(exportBtn,stop||null);}
   const start=document.getElementById("strategyAVisualStart404269"),stop=document.getElementById("strategyAVisualStop404269");
   if(start){start.disabled=!!s?.enabled;start.textContent=s?.enabled?"AUTO A ACTIF":"ACTIVER AUTO A";}
@@ -54074,7 +54075,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.289";
+const ATLAS_BUILD = "40.4.290";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";

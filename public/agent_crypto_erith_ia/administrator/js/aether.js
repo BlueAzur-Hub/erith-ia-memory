@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.288
-  Revision: 40.4.288 end-to-end News FR display truth lock. Aether consumes only the current canonical display contract.
+  Build: 40.4.290
+  Revision: 40.4.290 French operator lane lock. Aether displays only canonical French headlines; rejected EN fallbacks remain archive evidence.
 */
 (() => {
   "use strict";
@@ -65,6 +65,16 @@ function aetherNewsCanonicalEvent404288(event){
     return String(event?.translation_contract_build||"")==="40.4.288"
       && String(event?.translation_contract_schema||"")==="atlas_news_translation_fr_v4"
       && Boolean(String(event?.display_headline||"").trim());
+  }
+  function aetherNewsFrenchOperatorReady404290(event){
+    if(!aetherNewsContractReady404288(event))return false;
+    const language=String(event?.display_language||"").trim().toLowerCase();
+    const status=String(event?.translation_status||"").trim().toUpperCase();
+    const display=String(event?.display_headline||"").replace(/\s+/g," ").trim();
+    return language==="fr"
+      && (status==="TRANSLATED_OK"||status==="ORIGINAL_FR")
+      && !!display
+      && !/^\[EN\]\s/i.test(display);
   }
   function aetherNewsDisplayHeadline404288(event,fallback="Événement à qualifier"){
     const canonical=aetherNewsCanonicalEvent404288(event)||event||{};
@@ -153,10 +163,12 @@ function aetherNewsCanonicalEvent404288(event){
     try{
       if(typeof newsFeedState!=="undefined"){
         const canonicalAll=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
-          .filter(aetherNewsContractReady404288);
+          .filter(aetherNewsContractReady404288)
+          .filter(aetherNewsFrenchOperatorReady404290);
         const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404286);
-        // 40.4.288 — VEILLE accepts only the current producer-owned display contract.
-        // No legacy payload, cached derived row or raw headline may silently become display truth.
+        // 40.4.290 — the operator VEILLE lane is French-only by contract.
+        // Rejected/labelled English fallbacks remain available in the News Sentinel archive,
+        // but never alternate with French headlines in this scarce operator ribbon.
         if(canonical.length)addPool(canonical);
       }
     }catch(_){}
@@ -811,13 +823,16 @@ function aetherAttention40133(){
     operator_disclaimer_segments:false,
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
-    news_display_language:"canonical display_language (fr or labelled EN fallback)",
+    news_display_language:"French-only operator lane; labelled EN fallback remains archive-only",
     news_source_original_headline_first:false,
     news_translation_contract_schema:"atlas_news_translation_fr_v4",
     news_translation_contract_build:"40.4.288",
+    news_french_operator_lane_build:"40.4.290",
+    news_rejected_english_archive_preserved:true,
+    news_rejected_english_operator_rotation:false,
     news_browser_editorial_repair:false,
-    news_translation_preferred:"display_headline only when contract 40.4.288/v4 is current; otherwise explicit [EN] source",
-    news_translation_story_owner:"News Sentinel canonical News FR producer owns display_headline; Aether performs no translation, editorial repair, or silent raw fallback",
+    news_translation_preferred:"display_headline only when contract 40.4.288/v4 is current AND display_language=fr; explicit [EN] source remains archive-only",
+    news_translation_story_owner:"News Sentinel canonical News FR producer owns display_headline; Aether performs no translation and filters its operator lane to accepted French only",
     consumer_must_not_fallback_silently_to_headline:true,
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
