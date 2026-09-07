@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.291
-  Revision: 40.4.291 native-French-first operator lane. Aether displays only native French source headlines; English evidence remains archive-only.
+  Build: 40.4.292
+  Revision: 40.4.292 bilingual operator lane. Native French stays preferred; qualified English source headlines remain explicit [EN] and operator-visible.
 */
 (() => {
   "use strict";
@@ -66,15 +66,19 @@ function aetherNewsCanonicalEvent404288(event){
       && String(event?.translation_contract_schema||"")==="atlas_news_native_fr_v1"
       && Boolean(String(event?.display_headline||"").trim());
   }
-  function aetherNewsFrenchOperatorReady404290(event){
+  function aetherNewsOperatorReady404292(event){
     if(!aetherNewsContractReady404288(event))return false;
     const language=String(event?.display_language||"").trim().toLowerCase();
     const status=String(event?.translation_status||"").trim().toUpperCase();
     const display=String(event?.display_headline||"").replace(/\s+/g," ").trim();
-    return language==="fr"
-      && status==="ORIGINAL_FR"
-      && !!display
-      && !/^\[EN\]\s/i.test(display);
+    if(!display)return false;
+    if(language==="fr"&&status==="ORIGINAL_FR"&&!/^\[EN\]\s/i.test(display))return true;
+    if(language==="en"&&status==="FALLBACK_ORIGINAL"&&/^\[EN\]\s/i.test(display))return true;
+    return false;
+  }
+  function aetherVeilleLanguageWeight404292(event){
+    const language=String(event?.display_language||"").trim().toLowerCase();
+    return language==="fr"?120:0; // French-first preference, never an exclusion of qualified English evidence.
   }
   function aetherNewsDisplayHeadline404288(event,fallback="Événement à qualifier"){
     const canonical=aetherNewsCanonicalEvent404288(event)||event||{};
@@ -127,7 +131,8 @@ function aetherNewsCanonicalEvent404288(event){
       +aetherVeilleNumber4087(event?.evidence?.score)*2
       +Math.min(30,Math.max(0,aetherVeilleNumber4087(event?.source_count))*5)
       +aetherVeilleFreshnessWeight4087(event)
-      +aetherVeilleContextWeight4087(event);
+      +aetherVeilleContextWeight4087(event)
+      +aetherVeilleLanguageWeight404292(event);
   }
   function aetherVeilleStoryTokens40127(event){
     const canonical=aetherNewsCanonicalEvent404288(event)||event||{};
@@ -164,11 +169,11 @@ function aetherNewsCanonicalEvent404288(event){
       if(typeof newsFeedState!=="undefined"){
         const canonicalAll=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
           .filter(aetherNewsContractReady404288)
-          .filter(aetherNewsFrenchOperatorReady404290);
+          .filter(aetherNewsOperatorReady404292);
         const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404286);
-        // 40.4.291 — the operator VEILLE lane is native-French-only by contract.
-        // Rejected/labelled English fallbacks remain available in the News Sentinel archive,
-        // but never alternate with French headlines in this scarce operator ribbon.
+        // 40.4.292 — bilingual operator lane: native French is preferred by rank,
+        // qualified English evidence remains explicit [EN] and fills the lane instead of disappearing.
+        // Aether never translates either language and never mutates the canonical News archive.
         if(canonical.length)addPool(canonical);
       }
     }catch(_){}
@@ -235,8 +240,8 @@ function aetherNewsCanonicalEvent404288(event){
     if(status==="error"&&!events.length)return{label:"INDISPONIBLE",text:"Archive News Sentinel indisponible · aucune actualité inventée",tone:"danger",events:[],stats,status,decision};
     if(!events.length)return{label:"0 PRIORITAIRE",text:status==="ok"?"Archive chargée · aucun événement prioritaire":"Archive partielle · aucun événement exploitable",tone:status==="partial"?"warn":"ok",events:[],stats,status,decision};
     const ranked=aetherVeilleEvents4087();
-    if(!ranked.length)return{label:"FR EN ATTENTE",text:"Archive chargée · aucune actualité francophone native qualifiée · sources anglaises conservées en archive",tone:status==="partial"?"warn":"neutral",events:[],stats,status,decision};
-    // 40.4.291 — ribbon counts describe the French operator lane, not the larger EN+FR archive.
+    if(!ranked.length)return{label:"VEILLE EN ATTENTE",text:"Archive chargée · aucun événement FR/EN qualifié pour la voie opérateur",tone:status==="partial"?"warn":"neutral",events:[],stats,status,decision};
+    // 40.4.292 — ribbon counts describe the bilingual operator lane; native FR remains preferred, EN stays explicit.
     const operatorRecent=ranked.filter(event=>{const ts=aetherVeilleTimestamp4087(event);return ts>0&&ts>=cutoff24h;});
     const operatorStats={
       events24:operatorRecent.length,
@@ -755,6 +760,24 @@ function aetherAttention40133(){
     }
     window.addEventListener("erith:operator-priority-release",()=>{renderAether4084();renderAetherSystem4086();renderAetherVeille4087();},{passive:true});
     const feed=document.getElementById("atlasAetherVeille4087");
+    if(feed&&feed.dataset.aetherNewsNavBound404292!=="1"){
+      feed.dataset.aetherNewsNavBound404292="1";
+      feed.setAttribute("role","button");
+      feed.setAttribute("tabindex","0");
+      feed.setAttribute("aria-label","Ouvrir News Sentinel · actualités françaises et anglaises qualifiées");
+      feed.setAttribute("title","Ouvrir News Sentinel · FR + EN");
+      feed.style.cursor="pointer";
+      const openNews=()=>{
+        const details=document.getElementById("news-sentinel");
+        if(!details)return false;
+        try{details.open=true;}catch(_){}
+        try{details.scrollIntoView({behavior:"smooth",block:"start"});}catch(_){try{details.scrollIntoView();}catch(__){}}
+        try{details.dispatchEvent(new CustomEvent("erith:aether-news-open",{bubbles:true,detail:{build:"40.4.292",source:"aether-veille"}}));}catch(_){}
+        return true;
+      };
+      feed.addEventListener("click",openNews);
+      feed.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openNews();}});
+    }
     if(feed&&feed.dataset.aetherFeedPulseBound40120!=="1"){
       feed.dataset.aetherFeedPulseBound40120="1";
       feed.addEventListener("animationiteration",event=>{
@@ -831,22 +854,24 @@ function aetherAttention40133(){
     operator_disclaimer_segments:false,
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
-    news_display_language:"French-only operator lane; labelled EN fallback remains archive-only",
+    news_display_language:"Bilingual operator lane; native FR preferred; qualified EN explicit [EN]",
     news_source_original_headline_first:false,
     news_translation_contract_schema:"atlas_news_native_fr_v1",
     news_translation_contract_build:"40.4.291",
     news_french_operator_lane_build:"40.4.291",
+    news_bilingual_operator_lane_build:"40.4.292",
     news_rejected_english_archive_preserved:true,
-    news_rejected_english_operator_rotation:false,
+    news_rejected_english_operator_rotation:true,
     news_browser_editorial_repair:false,
     news_machine_translation:false,
     news_source_policy:"native French first; English archive evidence only; zero paid provider; zero external secret",
     news_translation_preferred:"display_headline only when native-French contract 40.4.291/v1 is current AND display_language=fr; explicit [EN] source remains archive-only",
-    news_translation_story_owner:"News Sentinel native-French producer owns display_headline; Aether performs no translation and filters its operator lane to native French only",
+    news_translation_story_owner:"News Sentinel owns display_headline; Aether performs no translation; native FR is preferred and qualified EN remains explicit [EN] in the operator lane",
     consumer_must_not_fallback_silently_to_headline:true,
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
     news_feed_ranked_story_count:12,
+    news_feed_click_opens_news_sentinel:true,
     news_feed_selection:"representative digest: priority anchor + distinct recent families",
     news_feed_family_order:"macro + institutional + regulation + leverage + security + market",
     news_feed_source_diversity_tiebreak:true,
@@ -868,7 +893,7 @@ function aetherAttention40133(){
     news_translation_compact_headline_first:true,
     news_translation_fallback:"producer quality rejection → labelled [EN] canonical original",
     news_translation_browser_runtime:false,
-    news_translation_raw_english_in_aether:"only explicit [EN] producer fallback",
+    news_translation_raw_english_in_aether:"explicit [EN] producer fallback is operator-visible when qualified",
     news_source_original_preserved_not_display_owner:true,
     news_display_contract_build:"40.4.288",
     weather_forecast_days:5,
