@@ -124,3 +124,91 @@ body.atlas-administrator-mirror .hero-top .status-stack > .sigil{display:none!im
     font-size:11px!important;
   }
 }
+
+
+/* ==========================================================================
+   BUILD 40.6.11 — ORACLE SEMANTIC BIAS SURFACE
+   Presentation only. The state is mirrored from the existing rendered
+   Oracle bullStrength readout: >50 bull, =50 neutral, <50 bear.
+   Scope: Lecture Oracle column only. Canvas/model/runtime remain untouched.
+   ========================================================================== */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] {
+  --oracle-bias-accent:#f4d386;
+  --oracle-bias-soft:rgba(244,211,134,.08);
+  --oracle-bias-line:rgba(244,211,134,.34);
+  transition:box-shadow .18s ease,border-color .18s ease,background-color .18s ease;
+}
+
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bull"],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bull"] {
+  --oracle-bias-accent:#69e89f;
+  --oracle-bias-soft:rgba(83,226,145,.085);
+  --oracle-bias-line:rgba(105,232,159,.42);
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="neutral"],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="neutral"] {
+  --oracle-bias-accent:#f4d386;
+  --oracle-bias-soft:rgba(244,211,134,.08);
+  --oracle-bias-line:rgba(244,211,134,.38);
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bear"],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bear"] {
+  --oracle-bias-accent:#ff7589;
+  --oracle-bias-soft:rgba(255,92,117,.085);
+  --oracle-bias-line:rgba(255,117,137,.42);
+}
+
+/* State accent: no geometry change, no canvas spill. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] {
+  border-color:var(--oracle-bias-line)!important;
+  box-shadow:
+    inset 3px 0 0 var(--oracle-bias-accent),
+    inset 0 0 24px var(--oracle-bias-soft),
+    0 12px 30px rgba(0,0,0,.24)!important;
+}
+
+/* Existing hero/runtime/micro cards inherit only a subtle semantic edge.
+   Native Oracle hausse/baisse cards remain independently green/red. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-hero,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-hero {
+  border-left-color:var(--oracle-bias-accent)!important;
+  border-color:color-mix(in srgb,var(--oracle-bias-accent) 42%,rgba(98,236,255,.16))!important;
+  background:linear-gradient(115deg,var(--oracle-bias-soft),rgba(255,255,255,.018))!important;
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-runtime-40232d,
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-stethoscope-40232d,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-runtime-40232d,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-stethoscope-40232d,
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-micro,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-micro {
+  border-color:color-mix(in srgb,var(--oracle-bias-accent) 31%,rgba(98,236,255,.12))!important;
+}
+
+/* Secondary reading cells become easier to scan without becoming signals. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-metric,
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell,
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-lab-mini,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-metric,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-lab-mini {
+  border-color:color-mix(in srgb,var(--oracle-bias-accent) 18%,rgba(255,255,255,.08))!important;
+}
+
+/* Active horizon gets the same accent, but numerical content is untouched. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell[data-active="true"],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell[data-active="true"] {
+  border-color:var(--oracle-bias-line)!important;
+  box-shadow:inset 0 0 0 1px var(--oracle-bias-soft)!important;
+}
+
+/* Do not let the dominant-bias accent erase the two native force cards. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bull,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bull {
+  border-color:rgba(168,255,98,.38)!important;
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bear,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bear {
+  border-color:rgba(255,105,121,.34)!important;
+}
