@@ -1,7 +1,7 @@
 {
   "schema": "agent_crypto_auto_update_patch_request_v2",
   "critical": false,
-  "build": "40.4.285",
+  "build": "40.4.286",
   "parent_build": "40.4.284",
   "files": [
     "js/aether.js",
@@ -12,17 +12,9 @@
     "version.json",
     "administrator-version.json"
   ],
-  "patch_parts": [
-    "v285-01-aether.patch",
-    "v285-02-app.patch",
-    "v285-03-jsapp.patch",
-    "v285-04-index.patch",
-    "v285-05-build.patch",
-    "v285-06-version.patch",
-    "v285-07-admin-version.patch"
-  ],
-  "patch_sha256": "2c24df692bbfe3193c35068a2657879e0663d0b7cbb3aa11af7535a920e3f062",
+  "patch_file": "v286.patch",
+  "patch_sha256": "9befa39428e0932349c85a971ed851cae2cb76ee6d0a752af284619aca7f1160",
   "manifest_hashes_autofill": true,
   "delete": [],
-  "intent": "Restore the previously designed Aether operator relevance gate at the correct scope; preserve NEWS-only rotation and the canonical News Sentinel archive; align cache/version truth only."
+  "intent": "Rebuild Aether VEILLE operator relevance from the stable 40.4.284 runtime: correct function scope, qualify crypto/operator news before rank/diversity, preserve canonical News Sentinel, Market Core 38.15.11, Atlas, Oracle, Strategy A, Shared Memory, Technical Reading and Web Classic."
 }
