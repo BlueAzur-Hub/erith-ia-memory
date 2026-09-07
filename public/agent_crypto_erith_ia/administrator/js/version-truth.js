@@ -1,8 +1,8 @@
 /* Agent-Crypto @erith.IA — Version Truth Single Owner
-   Build 40.6.5 · VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK */
+   Build 40.6.6 · CHRONOS READABILITY · CENTER PRESERVATION LOCK */
 (() => {
   "use strict";
-  const OWNER = "version-truth-40605";
+  const OWNER = "version-truth-40606";
   const MANIFEST = "./build.json";
   const REFRESH_PARAM = "ac-refresh";
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();

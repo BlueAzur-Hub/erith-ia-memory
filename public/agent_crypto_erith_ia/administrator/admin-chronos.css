@@ -206,3 +206,38 @@
     flex:0 0 auto !important;
   }
 }
+
+/* 40.6.6 — CHRONOS READABILITY / CENTER PRESERVATION LOCK
+   Field note: the 40.6.3 true-center geometry is correct, but the desktop
+   Chronos line is visually too small on a wide status card.
+   Presentation only: preserve the exact intrinsic-width centered group and
+   increase typography only when the card has enough inline space.
+   Existing <=620px / <=520px fit rules remain authoritative on narrow cards.
+   No Chronos calculation, runtime, timer, market, Atlas, Oracle, News, Aether,
+   Strategy A, Window Manager, storage, WebSocket or Market Core ownership changes. */
+@container (min-width:621px){
+  #atlasCelestialClockHeader{
+    gap:7px !important;
+    font-size:clamp(12.2px,.74vw,14px) !important;
+    line-height:1.08 !important;
+  }
+  #atlasCelestialClockHeader .atlas-chrono-date-40341{
+    font-size:clamp(13px,.78vw,14.6px) !important;
+    letter-spacing:.008em !important;
+  }
+  #atlasCelestialClockHeader .atlas-chrono-time-40341{
+    font-size:clamp(16.2px,.96vw,18.4px) !important;
+    letter-spacing:.018em !important;
+  }
+  #atlasCelestialClockHeader .atlas-chrono-separator-40341{
+    font-size:10px !important;
+    opacity:.82 !important;
+  }
+  #atlasCelestialClockHeader .atlas-chrono-planet-40341{
+    font-size:clamp(12.1px,.72vw,13.4px) !important;
+  }
+  #atlasCelestialClockHeader .atlas-chrono-glyph-40341{
+    font-size:1.28em !important;
+    margin-right:3px !important;
+  }
+}
