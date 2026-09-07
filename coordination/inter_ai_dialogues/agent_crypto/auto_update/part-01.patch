@@ -1,0 +1,119 @@
+diff --git a/public/agent_crypto_erith_ia/administrator/js/aether.js b/public/agent_crypto_erith_ia/administrator/js/aether.js
+--- a/public/agent_crypto_erith_ia/administrator/js/aether.js
++++ b/public/agent_crypto_erith_ia/administrator/js/aether.js
+@@ -1,8 +1,8 @@
+ /*
+   Agent-Crypto Administrator — Aether runtime
+   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
+   Presentation/animation belongs to admin-ribbons.css.
+-  Build: 40.4.139
+-  Revision: 40.4.134 discoverability lock. Existing Aether Attention, Maintenon five-day weather and Atlas AUTO owners preserved; the visible system band opens the existing detailed panel.
++  Build: 40.4.285
++  Revision: 40.4.285 operator relevance scope lock. The scarce Aether VEILLE lane is crypto/operator qualified; News Sentinel canonical archive remains untouched.
+ */
+ (() => {
+@@ -14,25 +14,29 @@
+   const AETHER_MARQUEE_MIN_OVERFLOW_PX_40121=48;
+   const AETHER_MARQUEE_DELAY_S_40121=0.55;
+   const aetherVeilleState4087={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
+-  function aetherNewsCanonicalFrenchEvent40110(event){
+-  function aetherVeilleOperatorEligible404279(event){
++  function aetherVeilleOperatorEligible404285(event){
+     const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+     const assets=(Array.isArray(canonical?.assets)?canonical.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean);
+     const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
+     const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
+     const label=String(canonical?.event_label||"").toLowerCase();
+     const headline=String(canonical?.headline_fr_display||canonical?.headline_fr||canonical?.headline||"").toLowerCase();
+-    const text=[label,headline,...domains,...topics].join(" " );
+-    const nonCryptoAssets=new Set(["GLOBAL","MARKET","MARCHÉ","MARCHE","WORLD"]);
+-    const assetAnchor=assets.some(symbol=>symbol&&!nonCryptoAssets.has(symbol));
+-    const cryptoAnchor=assetAnchor||/(?:\bbitcoin\b|\bbtc\b|\bethereum\b|\bether\b|\beth\b|\bsolana\b|\bsol\b|\bxrp\b|\bbnb\b|\bcrypto\b|\bblockchain\b|\bdefi\b|\bstablecoin\b|\bweb3\b|\bwallet\b|\btoken\b|\baltcoin\b|\bmemecoin\b|\bon[- ]?chain\b|\bstaking\b|\bmining\b|\bminage\b|\bprotocol\b|\bperpetuals?\b)/i.test(text);
++    const text=[label,headline,...domains,...topics].join(" ");
++    const cryptoSymbols=new Set([
++      "BTC","ETH","BNB","XRP","SOL","USDT","USDC","DOGE","ADA","TRX","LINK","XLM","BCH","LTC",
++      "AVAX","DOT","SUI","APT","ARB","OP","MATIC","UNI","AAVE","ONDO","MKR","PENDLE","NEAR","TAO",
++      "RNDR","ICP","SHIB","PEPE","XMR","ZEC"
++    ]);
++    const assetAnchor=assets.some(symbol=>cryptoSymbols.has(symbol));
++    const cryptoAnchor=assetAnchor||/(?:\bbitcoin\b|\bbtc\b|\bethereum\b|\bether\b|\beth\b|\bsolana\b|\bsol\b|\bxrp\b|\bbnb\b|\bcrypto(?:monnaie|currency)?s?\b|\bblockchain\b|\bdefi\b|\bstablecoin\b|\bweb3\b|\bwallet\b|\btoken\b|\baltcoin\b|\bmemecoin\b|\bon[- ]?chain\b|\bstaking\b|\bmining\b|\bminage\b|\bperpetuals?\b)/i.test(text);
+     const macroDomain=domains.includes("macro_liquidity");
+     const macroAnchor=macroDomain&&/(?:federal reserve|\bfed\b|\bbce\b|\becb\b|treasury|banque centrale|central bank|taux|rates?|inflation|emploi|jobs|liquidit|jackson hole)/i.test(text);
+-    // 40.4.279 — Aether owns a scarce operator lane, not the full News Sentinel archive.
++    // 40.4.285 — Aether owns a scarce operator lane, not the full News Sentinel archive.
+     // A generic "marché global" sector, a crypto-media source, or a high impact score alone
+     // never makes an unrelated world story eligible. The canonical archive remains untouched.
+     return cryptoAnchor||macroAnchor;
+   }
++  function aetherNewsCanonicalFrenchEvent40110(event){
+     if(!event)return event;
+     const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
+     const headline=String(event?.headline||"").replace(/\s+/g," " ).trim();
+@@ -202,11 +207,14 @@
+     try{
+       if(typeof newsFeedState!=="undefined"){
+-        const canonical=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
++        const canonicalAll=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
+           .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
++        const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404285);
+         // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
+-        // Derived/UI rows remain usable only when the canonical payload is genuinely absent.
++        // 40.4.285 — the scarce operator lane is filtered before rank/diversity selection.
++        // Derived/UI rows remain usable only when the canonical payload is genuinely absent,
++        // and they are subject to the exact same relevance gate.
+         if(canonical.length)addPool(canonical);
+-        else addPool(newsFeedState?.events);
++        else if(!canonicalAll.length)addPool((Array.isArray(newsFeedState?.events)?newsFeedState.events:[]).filter(aetherVeilleOperatorEligible404285));
+       }
+     }catch(_){}
+     const ranked=events.map((event,order)=>({event,order,rank:aetherVeilleRank4087(event),time:aetherVeilleTimestamp4087(event)})).sort((a,b)=>b.rank-a.rank||b.time-a.time||a.order-b.order);
+diff --git a/public/agent_crypto_erith_ia/administrator/app.js b/public/agent_crypto_erith_ia/administrator/app.js
+--- a/public/agent_crypto_erith_ia/administrator/app.js
++++ b/public/agent_crypto_erith_ia/administrator/app.js
+@@ -52298,4 +52298,4 @@
+-const ATLAS_BUILD = "40.4.284";
++const ATLAS_BUILD = "40.4.285";
+ // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
+ // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
+ const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
+diff --git a/public/agent_crypto_erith_ia/administrator/js/app.js b/public/agent_crypto_erith_ia/administrator/js/app.js
+--- a/public/agent_crypto_erith_ia/administrator/js/app.js
++++ b/public/agent_crypto_erith_ia/administrator/js/app.js
+@@ -1,7 +1,7 @@
+ (() => {
+   "use strict";
+-  const ADMIN_BUILD = "40.4.284";
+-  const ADMIN_RELEASE = "MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK";
++  const ADMIN_BUILD = "40.4.285";
++  const ADMIN_RELEASE = "AETHER VEILLE · CRYPTO OPERATOR RELEVANCE SCOPE LOCK";
+   const ENGINE_BUILD = "38.15.11";
+   const CLASSIC_WEB_BUILD = "38.15.13";
+   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
+diff --git a/public/agent_crypto_erith_ia/administrator/index.html b/public/agent_crypto_erith_ia/administrator/index.html
+--- a/public/agent_crypto_erith_ia/administrator/index.html
++++ b/public/agent_crypto_erith_ia/administrator/index.html
+@@ -4,12 +4,12 @@
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+-  <meta name="atlas-build" content="40.4.284" />
++  <meta name="atlas-build" content="40.4.285" />
+   <meta name="atlas-engine-build" content="38.15.11" />
+-  <meta name="administrator-build" content="40.4.284" />
++  <meta name="administrator-build" content="40.4.285" />
+   <meta name="administrator-revision" content="V6" />
+-  <meta name="administrator-release" content="MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK" />
++  <meta name="administrator-release" content="AETHER VEILLE · CRYPTO OPERATOR RELEVANCE SCOPE LOCK" />
+   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
+-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.284" />
++  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.285" />
+   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
+-  <title>Agent-Crypto @erith.IA — Build 40.4.284 · Administrator</title>
++  <title>Agent-Crypto @erith.IA — Build 40.4.285 · Administrator</title>
+   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
+@@ -4487,3 +4487,3 @@
+-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.284 · Version : Parker Lewis Can't Lose</span>
++      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.285 · Version : Parker Lewis Can't Lose</span>
+       <span id="footerTruthRule">Sources · historique · mesures · contexte · intégrité</span>
+       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
+@@ -4511,13 +4511,13 @@
+   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
