@@ -143,3 +143,19 @@ html[data-admin-theme="glass"] #atlasAetherVeille4087 .atlas-aether-veille-viewp
   background:rgba(2,9,15,.10)!important;
 }
 
+
+
+/* 40.5.4 — FIREFOX GLASS COMPOSITOR LIGHTNESS LOCK
+   Firefox keeps the transparent Glass palette while limiting large backdrop-filter work.
+   No panel geometry, opacity contract, canvas/image or Window Manager owner changes. */
+html[data-admin-theme="glass"][data-glass-compositor="firefox-safe"] body.atlas-administrator-mirror .hero.glass,
+html[data-admin-theme="glass"][data-glass-compositor="firefox-safe"] body.atlas-administrator-mirror .admin-floating{
+  backdrop-filter:blur(4px) saturate(108%)!important;
+}
+html[data-admin-theme="glass"][data-glass-compositor="firefox-safe"] body.atlas-administrator-mirror .glass:not(.hero),
+html[data-admin-theme="glass"][data-glass-compositor="firefox-safe"] body.atlas-administrator-mirror .panel.glass{
+  backdrop-filter:none!important;
+}
+html[data-admin-theme="glass"][data-glass-compositor="firefox-safe"] body.atlas-administrator-mirror .admin-mirror-bar{
+  backdrop-filter:blur(3px) saturate(106%)!important;
+}

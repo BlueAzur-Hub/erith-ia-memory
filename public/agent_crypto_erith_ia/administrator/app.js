@@ -7190,12 +7190,14 @@ const atlasVolumeOverlayPlugin = {
       chart.ctx.globalCompositeOperation = "screen";
       atlasDrawCurveFollowingShadowBars({
         ...args,
-        color: series.length === 1 ? "#b8d7e7" : "#a2c4d3",
+        /* 40.5.3 — illumination keeps the same crypto identity as the base pass.
+           Paint only: geometry, volume, scale and datasets stay unchanged. */
+        color: entry.color || "#62ecff",
         opacity: series.length === 1
-          ? 0.075
+          ? 0.060
           : index === 0
-            ? 0.050
-            : Math.max(0.020, 0.038 - index * 0.004)
+            ? 0.042
+            : Math.max(0.018, 0.032 - index * 0.003)
       });
       chart.ctx.restore();
     });
@@ -54252,7 +54254,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.5.1";
+const ATLAS_BUILD = "40.5.5";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -66262,3 +66264,49 @@ try {
     real_orders:false
   });
 } catch (_) {}
+
+
+/* ============================================================
+   40.5.5 — EVENT REACTION MEMORY SOURCE BRIDGE
+   Read-only projection over the existing canonical Collector market snapshots.
+   No new IndexedDB store, LocalStorage key, timer, observer, fetch or write owner.
+   ============================================================ */
+(() => {
+  "use strict";
+  const BUILD="40.5.5";
+  const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
+  function sanitizeAsset(asset){
+    const symbol=String(asset?.symbol||asset?.ticker||"").trim().toUpperCase();
+    const price=Number(asset?.price_eur);
+    if(!symbol||!Number.isFinite(price)||price<=0)return null;
+    return {symbol,price_eur:price,change_24h:Number.isFinite(Number(asset?.change_24h))?Number(asset.change_24h):null};
+  }
+  function sanitizeRecord(record){
+    const market=record?.snapshot?.market_snapshot||{};
+    const assets=(Array.isArray(market.assets)?market.assets:[]).map(sanitizeAsset).filter(Boolean);
+    const timestamp=String(record?.market_generated_at||record?.source_time||market?.source_time||record?.saved_at||"").trim();
+    if(!timestamp||!assets.length)return null;
+    return {
+      collector_id:String(record?.collector_id||"local-legacy"),
+      snapshot_id:String(record?.market_snapshot_id||record?.source_snapshot_id||market?.snapshot_id||record?.snapshot_id||record?.id||timestamp),
+      timestamp,
+      saved_at:String(record?.saved_at||timestamp),
+      source:String(record?.source||market?.source||""),
+      assets
+    };
+  }
+  function snapshot(){
+    let records=[];
+    try{
+      const raw=typeof readCollectorMemory==="function"?readCollectorMemory():[];
+      const market=typeof atlasCollectorMarketObservationRecords==="function"?atlasCollectorMarketObservationRecords(raw):raw;
+      records=(Array.isArray(market)?market:[]).map(sanitizeRecord).filter(Boolean);
+    }catch(_){records=[];}
+    return clone({schema:"atlas_event_reaction_source_v1",build:BUILD,captured_at:new Date().toISOString(),records});
+  }
+  globalThis.AgentCryptoEventReactionSource405005=Object.freeze({
+    build:BUILD,snapshot,read_only:true,canonical_owner:"IndexedDB Collector / readCollectorMemory",
+    new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,
+    causal_claim:false,financial_signal:false,automatic_order:false
+  });
+})();

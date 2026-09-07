@@ -147,3 +147,25 @@
   #atlasCelestialClockHeader .atlas-chrono-separator-40341{font-size:8px !important}
   #atlasCelestialClockHeader .atlas-chrono-planet-40341{font-size:8.9px !important}
 }
+
+
+/* 40.5.2 — CHRONOS FULL-LINE RESPONSIVE FIT LOCK
+   CSS-only, container-width aware. Keeps one line + centered semantic group.
+   No timer, observer, resize handler, market/Atlas/Oracle ownership. */
+#sourceTimeCard{container-type:inline-size;}
+@container (max-width:620px){
+  #atlasCelestialClockHeader{gap:2px !important;font-size:8.5px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-date-40341{font-size:8.8px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-time-40341{font-size:10.8px !important;letter-spacing:0 !important;}
+  #atlasCelestialClockHeader .atlas-chrono-separator-40341{font-size:7.4px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-planet-40341{font-size:8.15px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-glyph-40341{font-size:1.24em !important;margin-right:2px !important;}
+}
+@container (max-width:520px){
+  #atlasCelestialClockHeader{gap:1.5px !important;font-size:7.8px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-date-40341{font-size:8.0px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-time-40341{font-size:9.8px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-separator-40341{font-size:7px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-planet-40341{font-size:7.45px !important;}
+  #atlasCelestialClockHeader .atlas-chrono-glyph-40341{font-size:1.18em !important;margin-right:1px !important;}
+}
