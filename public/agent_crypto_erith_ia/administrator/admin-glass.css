@@ -1,5 +1,5 @@
 /* Agent-Crypto @erith.IA — Glass Transparent Theme Foundation
-   Build 40.4.300. Visual skin only. No layout, market, Atlas, Oracle, memory,
+   Build 40.4.304. Visual skin only. No layout, market, Atlas, Oracle, memory,
    Strategy A, Window Manager or execution ownership changes. */
 
 html[data-admin-theme="glass"]{
@@ -18,6 +18,10 @@ html[data-admin-theme="glass"]{
   --glass-surface-3:rgba(11,25,39,.54);
   --glass-edge:rgba(185,231,248,.20);
   --glass-highlight:rgba(231,249,255,.075);
+  --glass-news-card:rgba(5,15,24,.34);
+  --glass-news-card-active:rgba(8,20,31,.46);
+  --glass-news-edge-alpha:.24;
+  --glass-aether-news:rgba(5,14,23,.30);
 }
 
 html[data-admin-theme="glass"] body.atlas-administrator-mirror{
@@ -109,3 +113,33 @@ html[data-admin-theme="glass"] body.atlas-administrator-mirror [data-sad]{opacit
   html[data-admin-theme="glass"] body.atlas-administrator-mirror .glass,
   html[data-admin-theme="glass"] body.atlas-administrator-mirror .admin-floating{backdrop-filter:none!important;background:rgba(7,17,27,.90)!important;}
 }
+
+/* 40.4.304 — News/Aether glass coherence.
+   No per-card backdrop-filter: semantic color stays cheap to paint in Firefox. */
+html[data-admin-theme="glass"] #news-sentinel .news-live-item{
+  --news-card-bg:var(--glass-news-card);
+  background:
+    linear-gradient(100deg,rgba(var(--news-family-rgb),.075),transparent 25%),
+    linear-gradient(145deg,var(--glass-news-card),rgba(3,10,17,.22))!important;
+  border-top-color:rgba(205,237,248,.09)!important;
+  border-right-color:rgba(205,237,248,.09)!important;
+  border-bottom-color:rgba(205,237,248,.09)!important;
+  backdrop-filter:none!important;
+}
+html[data-admin-theme="glass"] #news-sentinel .news-live-item.active{
+  background:
+    linear-gradient(100deg,rgba(var(--news-family-rgb),.10),transparent 30%),
+    linear-gradient(145deg,var(--glass-news-card-active),rgba(4,12,20,.30))!important;
+}
+html[data-admin-theme="glass"] #news-sentinel .news-live-item .news-live-meta span{
+  background:rgba(var(--news-family-rgb),.055)!important;
+}
+html[data-admin-theme="glass"] #atlasAetherVeille4087{
+  background:linear-gradient(90deg,rgba(var(--aether-news-rgb),.055),var(--glass-aether-news),transparent 92%)!important;
+  border-color:rgba(var(--aether-news-rgb),.22)!important;
+  backdrop-filter:none!important;
+}
+html[data-admin-theme="glass"] #atlasAetherVeille4087 .atlas-aether-veille-viewport-4087{
+  background:rgba(2,9,15,.10)!important;
+}
+

@@ -22397,6 +22397,25 @@ function newsFeedLeadEvent() {
   return newsFeedState.events.find(item => item.id === leadId) || newsFeedState.events[0] || null;
 }
 
+function newsEventIntelligenceSource405000() {
+  return {
+    generated_at: newsFeedState.payload?.generated_at || null,
+    status: newsFeedState.status || "idle",
+    selected_id: newsFeedState.selectedId || null,
+    events: newsFeedState.events.slice(),
+    current: newsFeedLeadEvent()
+  };
+}
+
+globalThis.AgentCryptoNewsEventSource405000 = Object.freeze({
+  build: "40.5.0",
+  snapshot: newsEventIntelligenceSource405000,
+  read_only: true,
+  new_fetch: false,
+  new_timer: false,
+  storage_write: false
+});
+
 function newsFeedFilteredEvents() {
   const filter = newsFeedState.filter || "all";
   return newsFeedState.events.filter(event => {
@@ -22554,6 +22573,38 @@ function newsFeedTone() {
   return "neutral";
 }
 
+function newsFeedSemanticFamily404302(event) {
+  const type = String(event?.event_type || "").toLowerCase();
+  const label = String(event?.event_label || "").toLowerCase();
+  const headline = String(event?.headline_original || event?.headline || event?.display_headline || "").toLowerCase();
+  const domains = (Array.isArray(event?.driver_domains) ? event.driver_domains : []).map(value => String(value || "").toLowerCase());
+  const topics = (Array.isArray(event?.matched_topics) ? event.matched_topics : []).map(value => String(value || "").toLowerCase());
+  const text = [type, label, headline, ...domains, ...topics].join(" ");
+  if (type === "security" || /hack|exploit|cybers[ée]curit|attaque|pirat|breach/.test(text)) return "security";
+  if (/faillite|bankrupt|bankruptcy|insolv|retraits?|withdrawals?|liquidit[ée] bancaire|bank run/.test(text)) return "liquidity";
+  if (domains.includes("institutional_flows") || /\betf\b|institution|inflows?|outflows?|fonds cot|treasury buy|accumulat/.test(text)) return "institutional";
+  if (domains.includes("regulation") || /r[ée]glement|\bsec\b|\bcftc\b|\bmica\b|enforcement|congress|white house|r[èe]gle/.test(text)) return "regulation";
+  if (domains.includes("leverage") || /liquidat|leverage|funding rate|futures?|open interest|short squeeze|long squeeze/.test(text)) return "leverage";
+  if (domains.includes("macro_liquidity") || /federal reserve|\bfed\b|\bbce\b|\becb\b|treasury|taux|rates?|inflation|emploi|jobs|liquidit|jackson hole/.test(text)) return "macro";
+  return "market";
+}
+
+function newsFeedSeverity404302(event) {
+  const score = Number(event?.impact?.score || 0);
+  if (score >= 85) return "critical";
+  if (score >= 68) return "high";
+  if (score >= 45) return "medium";
+  return "low";
+}
+
+function newsFeedEvidenceBand404302(event) {
+  const score = Number(event?.evidence?.score || 0);
+  if (score >= 82) return "strong";
+  if (score >= 65) return "good";
+  if (score >= 45) return "medium";
+  return "weak";
+}
+
 function renderNewsFeedList() {
   const list = $("newsLiveList");
   if (!list) return;
@@ -22578,6 +22629,9 @@ function renderNewsFeedList() {
     ).filter(link => link && (link.url || link.host));
     const url = newsSafeUrl(event.source_url);
     const tone = newsToneClass(event?.decision?.tone);
+    const semanticFamily404302 = newsFeedSemanticFamily404302(event);
+    const severity404302 = newsFeedSeverity404302(event);
+    const evidenceBand404302 = newsFeedEvidenceBand404302(event);
     const sourceCount = Math.max(
       Number(event.source_count || 1),
       sourceLinks.length
@@ -22595,7 +22649,7 @@ function renderNewsFeedList() {
       event.assets?.length ? event.assets.join(" / ") : "marché global"
     ];
     return `
-      <article class="news-live-item ${newsFeedState.selectedId === event.id ? "active" : ""}" data-tone="${tone}">
+      <article class="news-live-item ${newsFeedState.selectedId === event.id ? "active" : ""}" data-tone="${tone}" data-news-family="${semanticFamily404302}" data-news-severity="${severity404302}" data-news-evidence="${evidenceBand404302}">
         <button class="news-live-select" type="button" data-live-news-id="${escapeHtml(event.id)}">
           <span class="news-live-topline">
             <span class="news-live-type">${escapeHtml(event.event_label || "Information à qualifier")}</span>
@@ -54198,7 +54252,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.300";
+const ATLAS_BUILD = "40.5.0";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
