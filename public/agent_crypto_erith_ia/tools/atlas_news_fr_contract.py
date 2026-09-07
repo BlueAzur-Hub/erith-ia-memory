@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Atlas News Sentinel — canonical French headline contract.
 
-Build 40.4.287 — News FR Canonical Translation Quality Gate.
+Build 40.4.288 — News FR End-to-End Display Truth Lock.
 
 This module is deliberately pure: no network, no filesystem writes, no browser repair.
 The collector owns source evidence; this contract owns translation state and display truth.
@@ -12,11 +12,11 @@ import copy
 import re
 from typing import Any, Callable
 
-BUILD = "40.4.287"
-SCHEMA = "atlas_news_translation_fr_v3"
+BUILD = "40.4.288"
+SCHEMA = "atlas_news_translation_fr_v4"
 QUALITY_MIN = 82
-ENGINE_TAG = "argos-translate+atlas-news-fr-contract-v3"
-STRUCTURAL_ENGINE = "atlas-news-fr-structural-v3"
+ENGINE_TAG = "argos-translate+atlas-news-fr-contract-v4"
+STRUCTURAL_ENGINE = "atlas-news-fr-structural-v4"
 
 ORIGINAL_FR = "ORIGINAL_FR"
 TRANSLATED_OK = "TRANSLATED_OK"
@@ -43,11 +43,18 @@ PROTECTED_IDENTITIES = (
 )
 
 ENGLISH_RESIDUE = {
+    # High-confidence English residue. Proper nouns/tickers/crypto terms are intentionally absent.
     "after", "before", "with", "without", "from", "into", "amid", "while", "only", "worth",
     "week", "month", "morning", "report", "finds", "says", "said", "loses", "lost", "gains",
     "grew", "added", "sessions", "straight", "days", "inflow", "inflows", "outflow", "outflows",
     "focus", "hit", "hits", "wave", "joins", "main", "news", "hacked", "hack", "attackers",
     "buys", "voting", "power", "stalls", "pledges", "vulnerable", "reimbursement", "bridge",
+    "teams", "launch", "fixed", "income", "fund", "lending", "app", "attacker", "proposes",
+    "new", "assets", "live", "updates", "climb", "climbs", "rise", "rises", "stocks", "slip",
+    "halts", "entire", "agents", "tactics", "breach", "customers", "exposed", "widens",
+    "users", "getting", "flooded", "password", "reset", "emails", "nobody", "requested",
+    "network", "used", "exchanges", "claim", "good", "guys", "swaps", "stolen", "drained",
+    "reserve", "wiped", "shorts", "another", "tokenized", "governance", "overhaul",
 }
 
 ABSURD_PATTERNS = (
@@ -275,13 +282,13 @@ def quality_gate(event: dict[str, Any], original_value: Any, candidate_value: An
 
     residue = [token.lower() for token in re.findall(r"[A-Za-z]+", candidate) if token.lower() in ENGLISH_RESIDUE]
     residue_unique = sorted(set(residue))
-    if len(residue_unique) >= 2:
-        flags.append("english_residue_strong")
-        score -= min(45, 8 * len(residue_unique))
+    if residue_unique:
+        # 40.4.288 — a headline presented as canonical French may not retain ordinary
+        # English news vocabulary. One clear residue is enough to refuse publication as FR;
+        # proper nouns, tickers and accepted crypto terms are excluded from ENGLISH_RESIDUE.
+        flags.append("english_residue:" + ",".join(residue_unique[:6]))
+        score -= min(60, 12 * len(residue_unique))
         hard = True
-    elif residue_unique:
-        flags.append("english_residue")
-        score -= 8
 
     if not text_looks_french(candidate):
         flags.append("not_confidently_french")
@@ -492,6 +499,13 @@ def canonicalize_payload(payload_value: dict[str, Any], translate_en_fr: Callabl
         "browser_editorial_repair": False,
         "translation_quality_separate_from_crypto_relevance": True,
         "fallback_original_is_explicitly_labelled": True,
+        "display_contract": {
+            "field": "display_headline",
+            "accepted_languages": ["fr", "en"],
+            "english_fallback_prefix": "[EN] ",
+            "consumer_must_not_translate": True,
+            "consumer_must_not_fallback_silently_to_headline": True,
+        },
     }
     out["translation_fr"] = summary
     return out, summary
@@ -538,10 +552,18 @@ def self_test() -> int:
     assert events["reject"]["translation_status"] == TRANSLATION_REJECTED
     assert events["reject"]["display_headline"].startswith("[EN] ")
     assert events["reject"]["translation_quality_score"] < QUALITY_MIN
+    # Regression proof from 40.4.287: mixed French/English output must never be certified FR.
+    mixed_event = {"headline": "Crypto.com Cronos Halts Entire Blockchain After $75M Exploit", "assets": []}
+    mixed_candidate = "Cronos Halts Entire Blockchain de Crypto.com après 75 M$ d'exploitation"
+    _, mixed_flags, mixed_ok = quality_gate(mixed_event, mixed_event["headline"], mixed_candidate)
+    assert mixed_ok is False and any(flag.startswith("english_residue:") for flag in mixed_flags)
+    unchanged_event = {"headline": "Neuberger teams with Securitize on tokenized fixed-income fund launch", "assets": []}
+    _, _, unchanged_ok = quality_gate(unchanged_event, unchanged_event["headline"], unchanged_event["headline"])
+    assert unchanged_ok is False
     assert summary["canonical_original_preserved"] is True
     assert summary["browser_editorial_repair"] is False
     assert summary["translation_quality_separate_from_crypto_relevance"] is True
-    print("ATLAS NEWS FR CONTRACT 40.4.287 SELF-TEST PASS")
+    print("ATLAS NEWS FR CONTRACT 40.4.288 SELF-TEST PASS")
     return 0
 
 

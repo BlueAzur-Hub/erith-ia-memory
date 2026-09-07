@@ -21630,7 +21630,8 @@ function atlasLocalCompactNews() {
     counts_24h: counts || null,
     event_reaction: typeof atlasProductNewsReaction === "function" ? atlasProductNewsReaction(lead) : null,
     lead: lead ? {
-      headline: lead.headline || null,
+      headline: newsFeedCanonicalDisplayHeadline404288(lead, "Événement qualifié"),
+      headline_original: lead.headline || null,
       event_label: lead.event_label || null,
       event_time: lead.event_time || null,
       source_name: lead.source_name || lead.source_host || null,
@@ -21669,7 +21670,7 @@ const NEWS_SENTINEL_MAX_EVENTS = 120;
 
 const NEWS_SENTINEL_FEED_URL = "../data/news/latest.json";
 
-const NEWS_SENTINEL_FEED_CACHE_KEY = "agent_crypto_erith_ia_news_feed_cache_v1";
+const NEWS_SENTINEL_FEED_CACHE_KEY = "agent_crypto_erith_ia_news_feed_cache_v4_404288";
 
 const NEWS_SENTINEL_FEED_REFRESH_MS = 5 * 60 * 1000;
 
@@ -21677,22 +21678,37 @@ const NEWS_SENTINEL_VISIT_KEY = "agent_crypto_erith_ia_news_visit_v2";
 
 const NEWS_SENTINEL_FEED_RETRY_MS = Object.freeze([60 * 1000, 180 * 1000, 5 * 60 * 1000]);
 
-function newsFeedCanonicalDisplayHeadline404287(event, fallback="Événement sans titre") {
-  // 40.4.287 — browser is a consumer only. Translation and quality decisions belong to
-  // the canonical News FR producer; legacy fields are read-only compatibility fallbacks.
-  const canonical = String(event?.display_headline || "").replace(/\s+/g, " ").trim();
-  if (canonical) return canonical;
-  const original = String(event?.headline_original || event?.headline || event?.event_label || "").replace(/\s+/g, " ").trim();
-  const legacy = String(event?.headline_fr_display || event?.headline_fr || "").replace(/\s+/g, " ").trim();
-  return original || legacy || fallback;
+function newsFeedTranslationContractCurrent404288(event) {
+  return String(event?.translation_contract_build || "") === "40.4.288"
+    && String(event?.translation_contract_schema || "") === "atlas_news_translation_fr_v4";
 }
 
-globalThis.AgentCryptoNewsDisplayContract404287 = Object.freeze({
-  headline: newsFeedCanonicalDisplayHeadline404287,
+function newsFeedCanonicalDisplayHeadline404288(event, fallback="Événement sans titre") {
+  // 40.4.288 — one producer-owned display truth. The browser never silently falls back
+  // from a missing/obsolete canonical contract to an unlabelled English source headline.
+  const canonical = String(event?.display_headline || "").replace(/\s+/g, " ").trim();
+  const original = String(event?.headline_original || event?.headline || event?.event_label || "").replace(/\s+/g, " ").trim();
+  const status = String(event?.translation_status || "");
+  const language = String(event?.display_language || "");
+  if (newsFeedTranslationContractCurrent404288(event) && canonical) {
+    if ((status === "ORIGINAL_FR" || status === "TRANSLATED_OK") && language === "fr") return canonical;
+    if (status === "FALLBACK_ORIGINAL" || status === "TRANSLATION_REJECTED") {
+      return canonical.startsWith("[EN] ") ? canonical : `[EN] ${canonical}`;
+    }
+  }
+  // Manual/local News entries are not part of the GitHub canonical FR archive.
+  if (String(event?.origin || "") !== "github_news_collector" && !event?.translation_contract_build) {
+    return original || fallback;
+  }
+  return original ? `[EN] ${original}` : fallback;
+}
+
+globalThis.AgentCryptoNewsDisplayContract404288 = Object.freeze({
+  headline: newsFeedCanonicalDisplayHeadline404288,
   preferred_field: "display_headline",
-  fallback_fields: ["headline_original", "headline", "headline_fr_display", "headline_fr"],
-  translation_contract_schema: "atlas_news_translation_fr_v3",
-  translation_contract_build: "40.4.287",
+  fallback_policy: "explicit [EN] only — never silent raw headline fallback",
+  translation_contract_schema: "atlas_news_translation_fr_v4",
+  translation_contract_build: "40.4.288",
   browser_translation: false,
   browser_editorial_repair: false
 });
@@ -22290,20 +22306,27 @@ function newsDeduplicateFeedEvents(events) {
   });
 }
 
+function newsFeedPayloadContractCurrent404288(payload) {
+  const summary = payload?.translation_fr;
+  return String(summary?.build || "") === "40.4.288"
+    && String(summary?.schema || "") === "atlas_news_translation_fr_v4";
+}
+
 function newsFeedReadCache() {
   try {
-    const cached = JSON.parse(
+    const cached = newsFeedValidate(JSON.parse(
       localStorage.getItem(
         NEWS_SENTINEL_FEED_CACHE_KEY
       ) || "null"
-    );
-    return newsFeedValidate(cached);
+    ));
+    return newsFeedPayloadContractCurrent404288(cached) ? cached : null;
   } catch {
     return null;
   }
 }
 
 function newsFeedWriteCache(payload) {
+  if (!newsFeedPayloadContractCurrent404288(payload)) return;
   try {
     localStorage.setItem(
       NEWS_SENTINEL_FEED_CACHE_KEY,
@@ -22328,7 +22351,8 @@ function newsFeedApplyPayload(payload, options = {}) {
 
   newsFeedState.payload = applied;
   newsFeedState.events = events;
-  newsFeedState.status = options.cached
+  const contractCurrent = newsFeedPayloadContractCurrent404288(applied);
+  newsFeedState.status = options.cached || !contractCurrent
     ? "partial"
     : applied.status === "partial"
       ? "partial"
@@ -22565,7 +22589,7 @@ function renderNewsFeedList() {
             <span class="news-live-type">${escapeHtml(event.event_label || "Information à qualifier")}</span>
             <span class="news-live-freshness">${escapeHtml(event?.freshness?.label || newsFeedAgeLabel(event.event_time))}</span>
           </span>
-          <h4>${escapeHtml(newsFeedCanonicalDisplayHeadline404287(event))}</h4>
+          <h4>${escapeHtml(newsFeedCanonicalDisplayHeadline404288(event))}</h4>
           <span class="news-live-meta">${meta.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</span>
         </button>
         <div class="news-live-source-row">
@@ -22803,7 +22827,8 @@ function newsMarketRoleMatch40234(event, rule) {
     label: rule.label,
     direction: rule.direction,
     event_id: event?.event_id || event?.id || null,
-    headline: event?.headline || null,
+    headline: newsFeedCanonicalDisplayHeadline404288(event, "Événement qualifié"),
+    headline_original: event?.headline || null,
     source_name: event?.source_name || event?.source_host || null,
     source_count: Math.max(1, Number(event?.source_count || 1)),
     event_time: event?.event_time || null,
@@ -22908,7 +22933,8 @@ function newsMarketCausalRole40234(current = null, context = {}) {
     label: "ÉVÉNEMENT LIÉ · RÔLE NON DÉMONTRÉ",
     direction: "INDÉTERMINÉ",
     event_id: concomitantEvent?.event_id || concomitantEvent?.id || null,
-    headline: concomitantEvent?.headline || null,
+    headline: newsFeedCanonicalDisplayHeadline404288(concomitantEvent, "Événement qualifié"),
+    headline_original: concomitantEvent?.headline || null,
     source_name: concomitantEvent?.source_name || concomitantEvent?.source_host || null,
     source_count: Math.max(1, Number(concomitantEvent?.source_count || 1)),
     event_time: concomitantEvent?.event_time || null,
@@ -22943,7 +22969,8 @@ function newsMarketCausalRole40234(current = null, context = {}) {
     build: "40.2.34",
     status: "observed",
     event_id: selected?.event_id || selected?.id || null,
-    headline: selected?.headline || null,
+    headline: newsFeedCanonicalDisplayHeadline404288(selected, "Événement qualifié"),
+    headline_original: selected?.headline || null,
     assets: Array.isArray(selected?.assets) ? [...selected.assets] : [],
     related_events_examined: related.length,
     amplifier,
@@ -23133,7 +23160,7 @@ function newsMarketExtractFacts40235(event) {
   if (amounts.length && /short|bearish bet/.test(lower)) {
     facts.push(`${amounts[0]} de positions baissières / short sont mentionnées comme liquidées ou forcées au rachat.`);
   }
-  if (!facts.length && event?.headline) facts.push(newsFeedCanonicalDisplayHeadline404287(event, String(event.headline)));
+  if (!facts.length && event?.headline) facts.push(newsFeedCanonicalDisplayHeadline404288(event, String(event.headline)));
   return { facts, amounts, raw };
 }
 
@@ -23235,7 +23262,8 @@ function newsMarketDriverTruth40372(selected, contextEvents = null) {
       event,
       evidence,
       source_name: event?.source_name || event?.source_host || null,
-      headline: event?.headline || null,
+      headline: newsFeedCanonicalDisplayHeadline404288(event, "Événement qualifié"),
+      headline_original: event?.headline || null,
       causal_claim: false
     };
   }
@@ -23267,7 +23295,7 @@ function renderNewsMacroFlowCoverage40367() {
     if(note){
       const event=row.best;
       const source=event?(event.source_name||event.source_host||"Source qualifiée"):"Aucune source qualifiée";
-      const headline=event?String(event.headline||"Événement qualifié"):"Archive sans événement correspondant.";
+      const headline=event?newsFeedCanonicalDisplayHeadline404288(event,"Événement qualifié"):"Archive sans événement correspondant.";
       note.textContent=event?`${source} · preuve ${row.evidence}/100 · ${headline}`:headline;
       note.title=note.textContent;
     }
@@ -23448,7 +23476,7 @@ function renderNewsMarketOperatorIntelligence40235(current=null){
     const steps=document.getElementById("newsMarketMechanismSteps40235");if(steps)steps.replaceChildren(); root.dataset.state="no-event"; return n;
   }
   const proof=n.base?.amplifier?.evidence||newsMarketEvidence40234(n.event);
-  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||newsFeedCanonicalDisplayHeadline404287(n.event,"Événement qualifié"));
+  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||newsFeedCanonicalDisplayHeadline404288(n.event,"Événement qualifié"));
   set("newsMarketEventProof40235",`${n.event?.source_name||n.event?.source_host||"Source"} · preuve ${String(proof?.level||"inconnue").toLowerCase()}${proof?.score!=null?` · ${proof.score}/100`:""} · ${newsMarketSupportingAmountLine40235(n)}`);
   set("newsMarketMechanismTitle40235",`${n.mechanism.title} · ${n.mechanism.direction}`);
   const steps=document.getElementById("newsMarketMechanismSteps40235"); if(steps){steps.replaceChildren();(n.mechanism.steps||[]).forEach((label,index)=>{const li=document.createElement("li");li.dataset.step=String(index+1);const span=document.createElement("span");span.textContent=label;li.appendChild(span);steps.appendChild(li);});}
@@ -23685,7 +23713,7 @@ function renderNewsSentinel(event = null) {
     return;
   }
 
-  setText($("newsSentinelLast"), current.headline);
+  setText($("newsSentinelLast"), newsFeedCanonicalDisplayHeadline404288(current));
   setText($("newsSentinelFreshness"), current?.freshness?.label || newsFeedAgeLabel(current.event_time));
   setText($("newsSentinelEvidence"), `${current.evidence.level} · score secondaire ${current.evidence.score}/100`);
   setText($("newsSentinelSourceClass"), `${current.source_class} · ${current.source_host}`);
@@ -23727,7 +23755,8 @@ function newsOutputText(event, duplicate = false) {
     "NEWS SENTINEL — ANALYSE DÉTERMINISTE",
     "",
     `Événement : ${event.event_label}`,
-    `Titre : ${event.headline}`,
+    `Titre affiché : ${newsFeedCanonicalDisplayHeadline404288(event)}`,
+    `Titre source : ${event.headline || "—"}`,
     `Source : ${event.source_name || event.source_host}`,
     `Classe source : ${event.source_class}`,
     `Ancienneté : ${event.freshness.label}`,
@@ -25246,7 +25275,8 @@ function atlasProductNewsReaction(event = null) {
     schema: "atlas_news_event_reaction_v1",
     status: observed.length ? "observed" : "insufficient-data",
     event_id: current.event_id || current.id || null,
-    headline: current.headline || null,
+    headline: newsFeedCanonicalDisplayHeadline404288(current, "Événement qualifié"),
+    headline_original: current.headline || null,
     evidence: current.evidence || null,
     impact: current.impact || null,
     direction: current.direction || null,
@@ -53953,7 +53983,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.287";
+const ATLAS_BUILD = "40.4.288";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";

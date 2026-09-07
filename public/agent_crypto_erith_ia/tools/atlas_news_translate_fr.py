@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Atlas News Sentinel — canonical French translation orchestrator.
 
-Build 40.4.287. Source evidence is immutable; translation quality and display selection
+Build 40.4.288. Source evidence is immutable; translation quality and display selection
 are delegated to atlas_news_fr_contract.py. No browser repair layer exists here.
 """
 from __future__ import annotations
@@ -66,19 +66,21 @@ def validate_canonical(payload: dict) -> tuple[bool, dict]:
     invalid_status = [clean(event.get("event_id") or event.get("id") or "?") for event in events if event.get("translation_status") not in STATUSES]
     low_accepted = [clean(event.get("event_id") or event.get("id") or "?") for event in events if event.get("translation_status") == TRANSLATED_OK and int(event.get("translation_quality_score") or 0) < QUALITY_MIN]
     unlabeled_fallback = [clean(event.get("event_id") or event.get("id") or "?") for event in events if event.get("translation_status") in {FALLBACK_ORIGINAL, TRANSLATION_REJECTED} and not clean(event.get("display_headline")).startswith("[EN] ")]
+    wrong_display_language = [clean(event.get("event_id") or event.get("id") or "?") for event in events if (event.get("translation_status") in {ORIGINAL_FR, TRANSLATED_OK} and event.get("display_language") != "fr") or (event.get("translation_status") in {FALLBACK_ORIGINAL, TRANSLATION_REJECTED} and event.get("display_language") != "en")]
     original_mutation = [clean(event.get("event_id") or event.get("id") or "?") for event in events if clean(event.get("headline_original")) != clean(event.get("headline"))]
     bad_literal = [clean(event.get("event_id") or event.get("id") or "?") for event in events if "appuyez sur" in clean(event.get("display_headline")).lower()]
-    ok = not any((missing_display, invalid_status, low_accepted, unlabeled_fallback, original_mutation, bad_literal))
+    ok = not any((missing_display, invalid_status, low_accepted, unlabeled_fallback, wrong_display_language, original_mutation, bad_literal))
     return ok, {
         "events": len(events), "missing_display": missing_display[:8], "invalid_status": invalid_status[:8],
         "low_accepted": low_accepted[:8], "unlabeled_fallback": unlabeled_fallback[:8],
+        "wrong_display_language": wrong_display_language[:8],
         "original_mutation": original_mutation[:8], "bad_literal": bad_literal[:8],
     }
 
 
 def self_test() -> int:
     contract_self_test()
-    print("ATLAS_NEWS_TRANSLATE_FR 40.4.287 SELF-TEST PASS")
+    print("ATLAS_NEWS_TRANSLATE_FR 40.4.288 SELF-TEST PASS")
     return 0
 
 

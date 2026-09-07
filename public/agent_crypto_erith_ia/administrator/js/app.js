@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.287";
+  const ADMIN_BUILD = "40.4.288";
   const ADMIN_RELEASE = "NEWS FR · CANONICAL TRANSLATION QUALITY GATE";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
