@@ -1,8 +1,8 @@
 /* Agent-Crypto @erith.IA — Version Truth Single Owner
-   Build 40.6.4 · CHRONOS TRUE CENTER · VERSION SAFE REFRESH LOCK */
+   Build 40.6.5 · VERSION BUTTON DIRECT RELOAD · NETWORK-INDEPENDENT CLICK LOCK */
 (() => {
   "use strict";
-  const OWNER = "version-truth-40604";
+  const OWNER = "version-truth-40605";
   const MANIFEST = "./build.json";
   const REFRESH_PARAM = "ac-refresh";
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
@@ -106,11 +106,12 @@
     }
   }
 
-  async function onControlClick(){
-    const state=await refresh("manual-click");
-    safeReload(state);
+  function onControlClick(event){
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
+    safeReload(lastState);
   }
-  if(control) control.addEventListener("click",()=>{void onControlClick();});
+  if(control) control.addEventListener("click",onControlClick,{capture:true});
   void refresh("startup");
 
   globalThis.ErithVersionTruth=Object.freeze({
@@ -119,7 +120,7 @@
     visible_control_id:"atlasVersionTruthControl",visible_text_id:"atlasVersionTruthText",
     legacy_sink_control_id:"atlasVersionControl",legacy_sink_text_id:"atlasVersionControlText",
     single_visible_owner:true,false_propagation_lock:true,distinguishes_loaded_from_published:true,
-    manual_click_safe_reload:true,refresh_param:REFRESH_PARAM,
+    manual_click_safe_reload:true,manual_click_network_calls:0,manual_click_awaits_manifest:false,manual_click_capture_phase:true,refresh_param:REFRESH_PARAM,
     clears_local_storage:false,clears_indexed_db:false,clears_cookies:false,
     recurring_timer:false,observer:false,startup_network_calls:1
   });
