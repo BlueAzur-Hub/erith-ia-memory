@@ -18,45 +18,58 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
-      - name: Print bounded owner contexts
+      - name: Locate current Paper and market owners
+        shell: python
+        run: |
+          from pathlib import Path
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          needles = [
+            'strategyAPaperExecute404263','strategyAPaperAllowed404265','SIMULER FILL PAPER',
+            'strategyAPaperClose404264','strategy-a-paper-request','PAPER_OPEN','PAPER_CLOSED',
+            'risk_id','execution_id','authorized_notional_eur','latestRisk','paper fill',
+            'ErithParallelMarketsRuntime','cross-market','indices','energy'
+          ]
+          files = [p for p in root.rglob('*') if p.is_file() and p.suffix.lower() in {'.js','.html','.css','.json','.md'}]
+          for needle in needles:
+            print('\n' + '='*110)
+            print('NEEDLE', repr(needle))
+            matches=[]
+            for p in files:
+              try: text=p.read_text(encoding='utf-8')
+              except Exception: continue
+              low=text.lower(); nl=needle.lower()
+              if nl not in low: continue
+              lines=text.splitlines()
+              for i,line in enumerate(lines):
+                if nl in line.lower():
+                  matches.append((p,i,lines))
+            print('MATCHES', len(matches))
+            for p,i,lines in matches[:24]:
+              print(f'\n--- {p} : {i+1} ---')
+              lo=max(0,i-10); hi=min(len(lines),i+17)
+              for j in range(lo,hi): print(f'{j+1:06d}: {lines[j]}')
+      - name: Print bounded known-owner contexts
         shell: python
         run: |
           from pathlib import Path
           targets = {
-            'public/agent_crypto_erith_ia/administrator/js/app.js': [
-              'strategyAPaperExecute404263',
-              'strategyAPaperAllowed404265',
-              'SIMULER FILL PAPER',
-              'strategyAPaperClose404264',
-              'strategyAAuto',
-            ],
-            'public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-lifecycle-bridge-404297.js': [
-              'function onOpen', 'function onClose', 'BRIDGED.has'
-            ],
-            'public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics-404298.js': [
-              'function', 'accounting_identity_ok', 'cost_model_complete'
-            ],
-            'public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier-404295.js': [
-              'monte_carlo_ready', 'dataset', 'complete'
-            ],
-            'public/agent_crypto_erith_ia/administrator/js/historical-analog-engine-405015.js': [
-              'reaction', 'Number.isFinite', 'sort'
-            ],
-            'public/agent_crypto_erith_ia/administrator/js/cross-market-owner-map-405022.js': [
-              'planned', 'owner_available', 'cross'
-            ],
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-lifecycle-bridge-404297.js': ['function onOpen','function onClose','BRIDGED.has'],
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics-404298.js': ['function fromReconciliation','function summary','accounting_identity_ok'],
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier-404295.js': ['function datasetReadiness','monte_carlo_ready'],
+            'public/agent_crypto_erith_ia/administrator/js/historical-analog-engine-405015.js': ['function reaction','out.sort'],
+            'public/agent_crypto_erith_ia/administrator/js/cross-market-owner-map-405022.js': ['function planned','const domains='],
+            'public/agent_crypto_erith_ia/administrator/parallel-markets.js': ['ErithParallelMarketsRuntime','indices','energy','cross-market'],
           }
           for name, needles in targets.items():
-            p = Path(name)
-            text = p.read_text(encoding='utf-8')
-            lines = text.splitlines()
-            print('\n' + '='*100)
-            print(name, 'lines=', len(lines), 'bytes=', len(text.encode()))
+            p=Path(name)
+            if not p.exists():
+              print('\nMISSING',name); continue
+            text=p.read_text(encoding='utf-8'); lines=text.splitlines()
+            print('\n'+'='*100); print(name,'lines=',len(lines),'bytes=',len(text.encode()))
             for needle in needles:
-              hits = [i for i,l in enumerate(lines) if needle.lower() in l.lower()]
+              hits=[i for i,l in enumerate(lines) if needle.lower() in l.lower()]
               print(f'\n--- NEEDLE {needle!r} HITS {hits[:12]} ---')
               for i in hits[:4]:
-                lo=max(0,i-18); hi=min(len(lines),i+28)
+                lo=max(0,i-16); hi=min(len(lines),i+26)
                 print(f'@@ lines {lo+1}-{hi}')
-                for j in range(lo,hi):
-                  print(f'{j+1:06d}: {lines[j]}')
+                for j in range(lo,hi): print(f'{j+1:06d}: {lines[j]}')
