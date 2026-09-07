@@ -1,0 +1,35 @@
+name: Agent-Crypto 40.6.11 Clean ZIP Delivery
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/agent-crypto-deliver-40611-zip.yml
+
+permissions:
+  contents: read
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+      - name: Verify canonical ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_11_ORACLE_SEMANTIC_BIAS_SURFACE_CLEAN_UPLOAD_7_FILES.zip
+          SHA="$ZIP.sha256"
+          test -f "$ZIP"
+          test -f "$SHA"
+          cd "$(dirname "$ZIP")"
+          sha256sum -c "$(basename "$SHA")"
+      - name: Upload clean ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_11_ORACLE_SEMANTIC_BIAS_SURFACE_CLEAN_UPLOAD_7_FILES
+          path: coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_11_ORACLE_SEMANTIC_BIAS_SURFACE_CLEAN_UPLOAD_7_FILES.zip
+          if-no-files-found: error
+          compression-level: 0
