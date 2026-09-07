@@ -12,7 +12,10 @@
     "version.json",
     "administrator-version.json"
   ],
-  "patch_file": "update.patch",
+  "patch_parts": [
+    "part-01.patch",
+    "part-02.patch"
+  ],
   "patch_sha256": "215b87aa4060698e756243644e557cf389685bea6f19055801f03a151fc61880",
   "manifest_hashes_autofill": true,
   "delete": [],
