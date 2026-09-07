@@ -1,0 +1,288 @@
+name: Agent-Crypto 40.6.7 Chronos Owner Consolidation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-40607-chronos-owner-consolidation.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40607-chronos-owner-consolidation
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Consolidate canonical Chronos owner for 40.6.7
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from datetime import datetime, timezone
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          build = '40.6.7'
+          parent = '40.6.6'
+          release = 'CHRONOS CANONICAL OWNER · DATE READABILITY RESTORE'
+          status = 'chronos_canonical_owner_date_readability_restore_406007'
+          token = 'market-core-v2.0-alpha-build-40.6.7'
+          now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+
+          css = r'''/* ==========================================================================
+             Agent-Crypto @erith.IA — canonical Chronos / planetary presentation owner
+             Build 40.6.7 · CHRONOS CANONICAL OWNER · DATE READABILITY RESTORE
+             Presentation only · no runtime, storage, market, Oracle or Atlas ownership.
+             ========================================================================== */
+
+          /* CANONICAL PLANETARY COLOR AUTHORITY
+             color = planet identity; intensity = temporal state. */
+          [data-planet40291="saturn"]{--astro-planet:#ff6f7d;--astro-planet-rgb:255,111,125;}
+          [data-planet40291="mars"]{--astro-planet:#ff9d63;--astro-planet-rgb:255,157,99;}
+          [data-planet40291="sun"]{--astro-planet:#ffe46f;--astro-planet-rgb:255,228,111;}
+          [data-planet40291="venus"]{--astro-planet:#78e6a2;--astro-planet-rgb:120,230,162;}
+          [data-planet40291="mercury"]{--astro-planet:#72bcff;--astro-planet-rgb:114,188,255;}
+          [data-planet40291="moon"]{--astro-planet:#f3f6ff;--astro-planet-rgb:243,246,255;}
+          [data-planet40291="jupiter"]{--astro-planet:#ffd17a;--astro-planet-rgb:255,209,122;}
+          [data-planet40291="neutral"]{--astro-planet:#d7e2ea;--astro-planet-rgb:215,226,234;}
+
+          /* CHRONOSXP HEADER — SINGLE CANONICAL PRESENTATION OWNER.
+             40.6.7 consolidates the accumulated fit/center/readability layers.
+             The real operator requirement is direct: keep the semantic line centered
+             and make the DATE visibly readable in the actual Firefox status card.
+             There is deliberately NO 620/520px rule that collapses the date to 8px. */
+          #sourceTimeCard{
+            display:grid !important;
+            grid-template-columns:minmax(0,1fr) !important;
+            align-items:center !important;
+            justify-items:center !important;
+            container-type:inline-size;
+            overflow:hidden;
+          }
+
+          #atlasCelestialClockHeader{
+            display:inline-flex !important;
+            grid-column:1 / -1 !important;
+            justify-self:center !important;
+            align-items:center !important;
+            justify-content:center !important;
+            flex-wrap:nowrap !important;
+            gap:6px !important;
+            width:max-content !important;
+            inline-size:max-content !important;
+            max-width:100% !important;
+            max-inline-size:100% !important;
+            min-width:0 !important;
+            margin:0 auto !important;
+            box-sizing:border-box !important;
+            text-align:center !important;
+            white-space:nowrap !important;
+            overflow:visible !important;
+            text-overflow:clip !important;
+            font-family:system-ui,sans-serif !important;
+            font-size:11.5px !important;
+            font-weight:850 !important;
+            line-height:1.08 !important;
+            letter-spacing:0 !important;
+            text-transform:none !important;
+          }
+
+          #atlasCelestialClockHeader > span{
+            flex:0 0 auto !important;
+            min-width:0 !important;
+            text-transform:none !important;
+          }
+
+          /* DATE is intentionally the first visual authority.
+             This is the requested correction: larger, immediate, readable. */
+          #atlasCelestialClockHeader .atlas-chrono-date-40341{
+            color:#f7f9fc !important;
+            font-size:15px !important;
+            font-weight:950 !important;
+            line-height:1 !important;
+            letter-spacing:.006em !important;
+            overflow:visible !important;
+            text-overflow:clip !important;
+          }
+
+          #atlasCelestialClockHeader .atlas-chrono-time-40341{
+            color:#fff !important;
+            font-size:14px !important;
+            font-weight:1000 !important;
+            line-height:1 !important;
+            letter-spacing:.018em !important;
+            text-shadow:0 0 7px rgba(255,255,255,.13) !important;
+          }
+
+          #atlasCelestialClockHeader .atlas-chrono-separator-40341{
+            color:#71899a !important;
+            font-size:9px !important;
+            font-weight:750 !important;
+            opacity:.82 !important;
+          }
+
+          #atlasCelestialClockHeader .atlas-chrono-planet-40341{
+            color:var(--astro-planet,#d7e2ea) !important;
+            font-size:11px !important;
+            font-weight:950 !important;
+            line-height:1 !important;
+            text-shadow:0 0 7px rgba(var(--astro-planet-rgb,215,226,234),.20) !important;
+          }
+
+          #atlasCelestialClockHeader .atlas-chrono-glyph-40341{
+            display:inline-block !important;
+            margin-right:3px !important;
+            color:var(--astro-planet,#d7e2ea) !important;
+            font-size:1.28em !important;
+            line-height:.9 !important;
+            vertical-align:-.05em !important;
+          }
+
+          /* Genuine narrow-card fallback only. The normal desktop/operator card is
+             no longer treated as "compact" merely because it is around 520–620px. */
+          @container (max-width:440px){
+            #atlasCelestialClockHeader{gap:3px !important;font-size:10px !important;}
+            #atlasCelestialClockHeader .atlas-chrono-date-40341{font-size:12.5px !important;}
+            #atlasCelestialClockHeader .atlas-chrono-time-40341{font-size:12.5px !important;letter-spacing:0 !important;}
+            #atlasCelestialClockHeader .atlas-chrono-separator-40341{font-size:8px !important;}
+            #atlasCelestialClockHeader .atlas-chrono-planet-40341{font-size:9.4px !important;}
+            #atlasCelestialClockHeader .atlas-chrono-glyph-40341{font-size:1.18em !important;margin-right:2px !important;}
+          }
+
+          /* AstroCycle detailed timeline/current-next uses the same planet identity. */
+          .atlas-astro-hour-4055[data-planet40291]{
+            border-color:rgba(var(--astro-planet-rgb,215,226,234),.28) !important;
+            background:linear-gradient(180deg,rgba(var(--astro-planet-rgb,215,226,234),.055),rgba(4,12,21,.62)) !important;
+          }
+          .atlas-astro-hour-4055[data-planet40291] b{color:var(--astro-planet,#d7e2ea) !important;}
+          .atlas-astro-hour-4055[data-state="active"][data-planet40291]{
+            border-color:rgba(var(--astro-planet-rgb,215,226,234),.76) !important;
+            box-shadow:inset 0 0 0 1px rgba(var(--astro-planet-rgb,215,226,234),.10),0 0 16px rgba(var(--astro-planet-rgb,215,226,234),.15) !important;
+            background:linear-gradient(180deg,rgba(var(--astro-planet-rgb,215,226,234),.16),rgba(4,12,21,.68)) !important;
+          }
+          .atlas-astro-hour-4055[data-state="next"][data-planet40291]{
+            border-color:rgba(var(--astro-planet-rgb,215,226,234),.52) !important;
+            background:linear-gradient(180deg,rgba(var(--astro-planet-rgb,215,226,234),.095),rgba(4,12,21,.64)) !important;
+          }
+          .atlas-astro-kpis-4055 article[data-planet40291]{
+            border-color:rgba(var(--astro-planet-rgb,215,226,234),.34) !important;
+            box-shadow:inset 0 2px 0 rgba(var(--astro-planet-rgb,215,226,234),.35) !important;
+          }
+          .atlas-astro-kpis-4055 article[data-planet40291] b{color:var(--astro-planet,#d7e2ea) !important;}
+          '''
+          # Remove workflow indentation from the intentionally embedded CSS.
+          css = '\n'.join(line[10:] if line.startswith('          ') else line for line in css.splitlines()) + '\n'
+          (root / 'admin-chronos.css').write_text(css, encoding='utf-8')
+
+          index_path = root / 'index.html'
+          index = index_path.read_text(encoding='utf-8')
+          replacements = {
+              '<meta name="atlas-build" content="40.6.6" />': '<meta name="atlas-build" content="40.6.7" />',
+              '<meta name="administrator-build" content="40.6.6" />': '<meta name="administrator-build" content="40.6.7" />',
+              '<meta name="administrator-release" content="CHRONOS READABILITY · CENTER PRESERVATION LOCK" />': '<meta name="administrator-release" content="CHRONOS CANONICAL OWNER · DATE READABILITY RESTORE" />',
+              '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.6" />': '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.7" />',
+              '<title>Agent-Crypto @erith.IA — Build 40.6.6 · Administrator</title>': '<title>Agent-Crypto @erith.IA — Build 40.6.7 · Administrator</title>',
+              './admin-chronos.css?v=administrator-build-40.6.6': './admin-chronos.css?v=administrator-build-40.6.7',
+              './js/version-truth.js?v=40.6.6': './js/version-truth.js?v=40.6.7',
+          }
+          for old,new in replacements.items():
+              if old not in index:
+                  raise SystemExit(f'Expected index token not found: {old}')
+              index = index.replace(old,new,1)
+          index_path.write_text(index,encoding='utf-8')
+
+          vt_path = root / 'js' / 'version-truth.js'
+          vt = vt_path.read_text(encoding='utf-8')
+          vt = vt.replace('Build 40.6.6 · CHRONOS READABILITY · CENTER PRESERVATION LOCK',
+                          'Build 40.6.7 · CHRONOS CANONICAL OWNER · DATE READABILITY RESTORE',1)
+          vt = vt.replace('const OWNER = "version-truth-40606";','const OWNER = "version-truth-40607";',1)
+          vt_path.write_text(vt,encoding='utf-8')
+
+          for name in ('build.json','version.json','administrator-version.json'):
+              p = root / name
+              data = json.loads(p.read_text(encoding='utf-8'))
+              data['build'] = build
+              data['release'] = release
+              data['status'] = status
+              data['parent_build'] = parent
+              data['asset_token'] = token
+              if 'administrator_build' in data: data['administrator_build'] = build
+              if 'build_label' in data: data['build_label'] = f'Build {build}'
+              if 'release_status' in data: data['release_status'] = release
+              for key in ('timestamp','prepared_at','published_at'):
+                  if key in data: data[key] = now
+              cvt = data.get('current_version_truth')
+              if isinstance(cvt,dict):
+                  cvt['visible_owner'] = 'js/version-truth.js'
+                  cvt['loaded_build'] = build
+                  cvt['published_manifest'] = 'build.json'
+              data['cascade_40_6_7'] = {
+                  'parent_build': parent,
+                  'release': release,
+                  'status': status,
+                  'owner': 'admin-chronos.css',
+                  'scope': 'presentation_only',
+                  'owner_consolidated': True,
+                  'legacy_405002_fit_layer_removed': True,
+                  'legacy_406003_center_patch_removed': True,
+                  'legacy_406006_readability_patch_removed': True,
+                  'date_font_px_normal_card': 15,
+                  'normal_card_compact_threshold_removed_620_520': True,
+                  'genuine_narrow_fallback_max_px': 440,
+                  'single_line_centered': True,
+                  'chronos_math_modified': False,
+                  'chronos_runtime_modified': False,
+                  'market_core_modified': False,
+                  'oracle_modified': False,
+                  'version_button_behavior_modified': False,
+                  'new_timer': False,
+                  'new_observer': False,
+                  'new_network_owner': False,
+                  'new_storage_owner': False
+              }
+              p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          release_path = root / 'RELEASE_40_6_7.md'
+          release_path.write_text('''# Agent-Crypto @erith.IA — Build 40.6.7\n\n## CHRONOS CANONICAL OWNER · DATE READABILITY RESTORE\n\nParent: **40.6.6**\n\n### Correction réelle\nLe Fil Crypto demandait une dette unique : **Chronos / la date**. 40.6.6 avait augmenté la typographie uniquement au-dessus de 620 px, alors que la carte Firefox opérateur tombe couramment sous ce seuil ; les anciennes règles 620/520 px réduisaient alors la date jusqu’à 8 px.\n\n40.6.7 ne rajoute pas une quatrième surcouche. `admin-chronos.css` est reconsolidé comme propriétaire unique :\n\n- date normale : **15 px** ;\n- heure : 14 px ;\n- libellés planétaires : 11 px ;\n- groupe intrinsèque réellement centré ;\n- ancien tassement automatique 620/520 supprimé ;\n- fallback compact seulement sous **440 px** ;\n- calcul ChronosXP inchangé.\n\n### Protections\nMarket Core 38.15.11, Atlas, Oracle, Aether/News, Strategy A/Paper, Window Manager, stockage et bouton de version : **inchangés**.\n\n### Preuve Firefox\n1. Charger Build 40.6.7.\n2. Vérifier immédiatement que `Lundi 07 septembre 2026` est nettement plus grand que sur 40.6.6.\n3. Vérifier une ligne complète centrée, sans texte amputé.\n4. Aucun jugement PASS avant capture opérateur.\n''',encoding='utf-8')
+
+          # Static anti-patch assertions: one consolidated owner, no former shrinking layers.
+          final_css = (root/'admin-chronos.css').read_text(encoding='utf-8')
+          assert 'font-size:15px !important' in final_css
+          assert '@container (max-width:620px)' not in final_css
+          assert '@container (max-width:520px)' not in final_css
+          assert '40.5.2' not in final_css
+          assert '40.6.3' not in final_css
+          assert '40.6.6' not in final_css
+          assert final_css.count('#atlasCelestialClockHeader .atlas-chrono-date-40341{') == 2  # canonical + genuine narrow fallback
+          assert 'version-truth-40607' in vt_path.read_text(encoding='utf-8')
+          assert '<meta name="administrator-build" content="40.6.7" />' in index_path.read_text(encoding='utf-8')
+          for name in ('build.json','version.json','administrator-version.json'):
+              d=json.loads((root/name).read_text(encoding='utf-8'))
+              assert d['build']==build
+              assert d.get('current_version_truth',{}).get('loaded_build')==build
+          PY
+
+      - name: Commit cumulative 40.6.7
+        shell: bash
+        run: |
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/admin-chronos.css \
+                  public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/js/version-truth.js \
+                  public/agent_crypto_erith_ia/administrator/build.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  public/agent_crypto_erith_ia/administrator/RELEASE_40_6_7.md
+          git commit -m "fix(chronos): restore readable date with canonical owner 40.6.7"
+          git push origin main
