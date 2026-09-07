@@ -49,7 +49,7 @@ diff --git a/public/agent_crypto_erith_ia/administrator/js/aether.js b/public/ag
      if(!event)return event;
      const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
      const headline=String(event?.headline||"").replace(/\s+/g," " ).trim();
-@@ -202,11 +207,14 @@
+@@ -203,11 +207,14 @@
      try{
        if(typeof newsFeedState!=="undefined"){
 -        const canonical=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
