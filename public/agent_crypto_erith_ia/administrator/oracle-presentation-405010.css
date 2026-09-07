@@ -125,90 +125,66 @@ body.atlas-administrator-mirror .hero-top .status-stack > .sigil{display:none!im
   }
 }
 
-
 /* ==========================================================================
-   BUILD 40.6.11 — ORACLE SEMANTIC BIAS SURFACE
-   Presentation only. The state is mirrored from the existing rendered
-   Oracle bullStrength readout: >50 bull, =50 neutral, <50 bear.
-   Scope: Lecture Oracle column only. Canvas/model/runtime remain untouched.
+   BUILD 40.6.12 — ORACLE FX LIGHT SURFACE
+   Presentation only. One local FX switch controls the semantic accent and
+   real-price tick flash. Oracle math/canvas/model remain untouched.
    ========================================================================== */
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state],
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] {
-  --oracle-bias-accent:#f4d386;
-  --oracle-bias-soft:rgba(244,211,134,.08);
-  --oracle-bias-line:rgba(244,211,134,.34);
-  transition:box-shadow .18s ease,border-color .18s ease,background-color .18s ease;
+#atlasOracleV0 .atlas-oracle-hero-head-406012{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;
+}
+#atlasOracleV0 .atlas-oracle-hero-head-406012>small{
+  display:block;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#7fa0b2;font-weight:950;margin:0;
+}
+#atlasOracleV0 .atlas-oracle-fx-toggle-406012{
+  display:inline-flex;align-items:center;gap:4px;min-width:0;padding:2px 6px;border-radius:999px;
+  border:1px solid rgba(140,190,220,.20);background:rgba(7,18,28,.38);color:#a9bdc9;
+  font:950 7.5px/1 system-ui,sans-serif;letter-spacing:.08em;cursor:pointer;
+  box-shadow:none;transition:border-color .16s ease,background .16s ease,color .16s ease,opacity .16s ease;
+}
+#atlasOracleV0 .atlas-oracle-fx-toggle-406012:hover{border-color:rgba(117,222,255,.34);background:rgba(12,29,43,.55)}
+#atlasOracleV0 .atlas-oracle-fx-dot-406012{font-size:8px;line-height:1;color:#72dfff;text-shadow:0 0 7px rgba(114,223,255,.28)}
+#atlasOracleV0 .atlas-oracle-fx-toggle-406012[aria-pressed="false"]{opacity:.62;background:rgba(255,255,255,.025);border-color:rgba(255,255,255,.11)}
+#atlasOracleV0 .atlas-oracle-fx-toggle-406012[aria-pressed="false"] .atlas-oracle-fx-dot-406012{color:#71818a;text-shadow:none}
+
+/* FX ON: semantic signal is deliberately light — thin edge + small inner glow. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"]{
+  --oracle-fx-accent:#f2d18a;--oracle-fx-line:rgba(242,209,138,.34);--oracle-fx-soft:rgba(242,209,138,.025);
+  border-color:var(--oracle-fx-line)!important;
+  box-shadow:inset 2px 0 0 var(--oracle-fx-accent),inset 0 0 14px var(--oracle-fx-soft),0 10px 24px rgba(0,0,0,.20)!important;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bull"],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bull"]{
+  --oracle-fx-accent:#69e89f;--oracle-fx-line:rgba(105,232,159,.35);--oracle-fx-soft:rgba(83,226,145,.022);
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bear"],
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bear"]{
+  --oracle-fx-accent:#ff8294;--oracle-fx-line:rgba(255,130,148,.35);--oracle-fx-soft:rgba(255,92,117,.022);
 }
 
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bull"],
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bull"] {
-  --oracle-bias-accent:#69e89f;
-  --oracle-bias-soft:rgba(83,226,145,.085);
-  --oracle-bias-line:rgba(105,232,159,.42);
-}
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="neutral"],
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="neutral"] {
-  --oracle-bias-accent:#f4d386;
-  --oracle-bias-soft:rgba(244,211,134,.08);
-  --oracle-bias-line:rgba(244,211,134,.38);
-}
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bear"],
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state="bear"] {
-  --oracle-bias-accent:#ff7589;
-  --oracle-bias-soft:rgba(255,92,117,.085);
-  --oracle-bias-line:rgba(255,117,137,.42);
+/* Only the hero receives a subtle semantic edge. Secondary cards stay native. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"] .atlas-oracle-hero,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"] .atlas-oracle-hero{
+  border-color:color-mix(in srgb,var(--oracle-fx-accent) 34%,rgba(98,236,255,.16))!important;
+  border-left-color:var(--oracle-fx-accent)!important;
+  background:linear-gradient(115deg,var(--oracle-fx-soft),rgba(255,255,255,.018))!important;
 }
 
-/* State accent: no geometry change, no canvas spill. */
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state],
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] {
-  border-color:var(--oracle-bias-line)!important;
-  box-shadow:
-    inset 3px 0 0 var(--oracle-bias-accent),
-    inset 0 0 24px var(--oracle-bias-soft),
-    0 12px 30px rgba(0,0,0,.24)!important;
+/* Price base accent follows Oracle bias; tick flash itself follows real price movement. */
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bull"] #atlasOraclePrice,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bull"] #atlasOraclePrice{
+  color:#a9f7c8!important;text-shadow:0 0 8px rgba(105,232,159,.16)!important;
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bear"] #atlasOraclePrice,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="bear"] #atlasOraclePrice{
+  color:#ffb0bd!important;text-shadow:0 0 8px rgba(255,130,148,.16)!important;
+}
+body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="neutral"] #atlasOraclePrice,
+body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="on"][data-oracle-bias-state="neutral"] #atlasOraclePrice{
+  color:#f4fbff!important;text-shadow:none!important;
 }
 
-/* Existing hero/runtime/micro cards inherit only a subtle semantic edge.
-   Native Oracle hausse/baisse cards remain independently green/red. */
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-hero,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-hero {
-  border-left-color:var(--oracle-bias-accent)!important;
-  border-color:color-mix(in srgb,var(--oracle-bias-accent) 42%,rgba(98,236,255,.16))!important;
-  background:linear-gradient(115deg,var(--oracle-bias-soft),rgba(255,255,255,.018))!important;
-}
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-runtime-40232d,
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-stethoscope-40232d,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-runtime-40232d,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-stethoscope-40232d,
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-micro,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-micro {
-  border-color:color-mix(in srgb,var(--oracle-bias-accent) 31%,rgba(98,236,255,.12))!important;
-}
-
-/* Secondary reading cells become easier to scan without becoming signals. */
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-metric,
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell,
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-lab-mini,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-metric,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-lab-mini {
-  border-color:color-mix(in srgb,var(--oracle-bias-accent) 18%,rgba(255,255,255,.08))!important;
-}
-
-/* Active horizon gets the same accent, but numerical content is untouched. */
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell[data-active="true"],
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout[data-oracle-bias-state] .atlas-oracle-horizon-cell[data-active="true"] {
-  border-color:var(--oracle-bias-line)!important;
-  box-shadow:inset 0 0 0 1px var(--oracle-bias-soft)!important;
-}
-
-/* Do not let the dominant-bias accent erase the two native force cards. */
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bull,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bull {
-  border-color:rgba(168,255,98,.38)!important;
-}
-body.atlas-administrator-mirror #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bear,
-body.atlas-admin-v3 #atlasOracleV0 .atlas-oracle-readout .atlas-oracle-card.is-bear {
-  border-color:rgba(255,105,121,.34)!important;
-}
+/* FX OFF: original Oracle presentation wins naturally; no semantic override. */
+#atlasOracleV0 .atlas-oracle-readout[data-oracle-fx="off"]{box-shadow:none}
