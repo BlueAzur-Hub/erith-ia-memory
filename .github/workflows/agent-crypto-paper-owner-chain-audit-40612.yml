@@ -1,0 +1,83 @@
+name: Agent-Crypto Paper Owner Chain Audit 40.6.12
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-paper-owner-chain-audit-40612.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Trace exact Paper owner chain
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          patterns = [
+            r'AgentCryptoStrategyASafetyCertification404299',
+            r'atlas:strategy-a-paper-request',
+            r'atlas:strategy-a-paper',
+            r'strategyAPaperFill404265',
+            r'strategyAPaperAllowed404265',
+            r'STRATEGY_A_AUTO_AUTHORIZATION_KEY',
+            r'authorization_token', r'authorization_hash', r'authorization_used',
+            r'paperConfirmed', r'paperStatus',
+            r'Paper.*close', r'close.*Paper', r'paper.*close', r'close.*paper',
+            r'ledger', r'LEDGER', r'After.?Cost', r'after.?cost',
+            r'paper-request', r'paper-fill', r'paper-close',
+            r'safety_gate', r'safety.*preflight', r'preflight.*safety'
+          ]
+          rx = re.compile('|'.join(f'(?:{p})' for p in patterns), re.I)
+          candidates = []
+          for path in root.rglob('*'):
+            if not path.is_file() or path.suffix.lower() not in {'.js','.html','.mjs','.json'}:
+              continue
+            try:
+              text = path.read_text(encoding='utf-8')
+            except Exception:
+              continue
+            lines = text.splitlines()
+            hit_idx = [i for i,line in enumerate(lines) if rx.search(line)]
+            if not hit_idx:
+              continue
+            windows=[]
+            for i in hit_idx:
+              a=max(0,i-18); b=min(len(lines),i+28)
+              if not windows or a>windows[-1][1]+1:
+                windows.append([a,b])
+              else:
+                windows[-1][1]=max(windows[-1][1],b)
+            candidates.append((path,lines,windows))
+
+          out=[]
+          out.append('AGENT-CRYPTO PAPER OWNER CHAIN AUDIT 40.6.12\n')
+          out.append(f'FILES_WITH_HITS={len(candidates)}\n')
+          for path,lines,windows in candidates:
+            out.append(f'\n\n######## FILE {path.as_posix()} TOTAL_LINES={len(lines)} ########\n')
+            for a,b in windows:
+              out.append(f'\n===== LINES {a+1}-{b} =====\n')
+              for n in range(a,b):
+                out.append(f'{n+1:06d}: {lines[n]}\n')
+
+          # Also print exact filenames that define suspected global owners.
+          Path('/tmp/paper-owner-chain-40612.txt').write_text(''.join(out),encoding='utf-8')
+          print(f'files_with_hits={len(candidates)}')
+          for path,_,_ in candidates:
+            print(path.as_posix())
+      - name: Upload owner chain audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-paper-owner-chain-audit-40612
+          path: /tmp/paper-owner-chain-40612.txt
+          retention-days: 7
