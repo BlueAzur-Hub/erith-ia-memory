@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.303
-  Revision: 40.4.303 operator context bridge. Category, criticality, language and exact-event News Sentinel navigation are exposed without changing source truth.
+  Build: 40.5.1
+  Revision: 40.5.1 Aether News content truth corrective lock. The ribbon shows the actual event content; metadata never replaces the news itself.
 */
 (() => {
   "use strict";
@@ -110,20 +110,18 @@ function aetherNewsCanonicalEvent404288(event){
     const language=String(canonical?.display_language||"").trim().toLowerCase();
     const status=String(canonical?.translation_status||"").trim().toUpperCase();
     const display=String(canonical?.display_headline||"").replace(/\s+/g," ").trim();
-    // Native French remains verbatim producer truth. English evidence is preserved in News Sentinel,
-    // while Aether shows a deterministic French operator synopsis built only from structured metadata.
+    // 40.5.1 — CONTENT TRUTH. Aether must show the event itself, never a sentence saying
+    // that the event can be read somewhere else. Native French remains verbatim producer truth.
     if(language==="fr"&&status==="ORIGINAL_FR"&&display&&!/^\[EN\]\s/i.test(display))return display;
+    // When no qualified French headline exists, preserve the exact English evidence in the ribbon.
+    // The French metadata lane (family/scope/criticality/source language) already orients the reading.
+    const original=String(canonical?.headline_original||canonical?.headline||display||"").replace(/\s+/g," ").trim();
+    if(original){
+      const clean=original.replace(/^\[EN\]\s*/i,"").trim();
+      return clean?`[EN] ${clean}`:fallback;
+    }
     const eventLabel=String(canonical?.event_label||"").replace(/\s+/g," ").trim();
-    const family=aetherNewsFamilyLabelFr404301(canonical);
-    const scope=aetherVeilleScope4087(canonical);
-    const source=String(canonical?.source_name||canonical?.source_host||canonical?.source_class||"").replace(/^www\./,"" ).replace(/\s+/g," ").trim();
-    const parts=[];
-    const push=value=>{const v=String(value||"").replace(/\s+/g," ").trim();if(v&&!parts.includes(v))parts.push(v);};
-    push(eventLabel||family);
-    if(scope&&scope!=="GLOBAL"&&scope!=="MARCHÉ")push(scope);
-    if(source)push(`source ${source}`);
-    push("titre original anglais disponible dans News Sentinel");
-    return parts.join(" · ")||fallback;
+    return eventLabel||aetherNewsFamilyLabelFr404301(canonical)||fallback;
   }
   function aetherNewsOperatorDisplay404301(event,fallback="Actualité qualifiée"){
     return aetherNewsOperatorSummaryFr404301(event,fallback);
