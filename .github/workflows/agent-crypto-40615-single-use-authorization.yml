@@ -1,0 +1,160 @@
+name: Agent-Crypto 40.6.15 Single-Use Authorization
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40615-single-use-authorization.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40615-single-use-authorization
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded single-use authorization surgery
+        run: python .github/scripts/agent_crypto_40615_single_use_authorization.py
+
+      - name: Syntax + authorization proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          PAPER="$ROOT/js/strategy-a-paper-lifecycle-404295.js"
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          node --check "$PAPER"
+          git diff --check
+
+          node <<'NODE'
+          const fs=require('fs'), vm=require('vm');
+          const path='public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-lifecycle-404295.js';
+          let level='NORMAL';
+          globalThis.AgentCryptoStrategyASafetyCertification404299={
+            build:'40.4.299',
+            snapshot(){return {build:'40.4.299',level,reason:level==='NORMAL'?'TEST_NORMAL':'TEST_PAUSE',new_trades_allowed:level==='NORMAL',existing_paper_monitoring_allowed:true};}
+          };
+          vm.runInThisContext(fs.readFileSync(path,'utf8'),{filename:path});
+          const api=globalThis.AgentCryptoStrategyAPaperLifecycle404295;
+          if(!api || api.build!=='40.6.15' || api.single_use_authorization_406015!==true) throw new Error('40.6.15 API missing');
+
+          // Foundation self-test must remain repeatable and leave internal registries unchanged.
+          level='NORMAL';
+          const before=api.authorization_snapshot();
+          const st1=api.self_test(), st2=api.self_test();
+          const after=api.authorization_snapshot();
+          if(!st1.pass || !st2.pass) throw new Error('foundation self_test regression');
+          if(before.consumed_count!==after.consumed_count) throw new Error('self_test leaked authorization state');
+
+          // Explicit risk authorization is one-shot even after the first lifecycle terminates.
+          let a=api.create({decision_id:'AUTH-DEC-A',trade_id:'AUTH-TRADE-A',risk_id:'RISK-ONE',authorized_notional_eur:50});
+          a=api.risk_approve(a,'ACCEPT'); a=api.submit(a);
+          if(a.state!=='SUBMITTED' || !a.authorization?.consumed || a.authorization?.source!=='RISK') throw new Error('first risk authorization not consumed');
+          a=api.acknowledge(a); a=api.fill(a,50,68000); a=api.reconcile(a,{state:'FILLED',filled_notional_eur:50}); a=api.protect(a,true); a=api.close(a,'AUTH_TEST_CLOSE');
+          if(a.state!=='CLOSED') throw new Error('first authorized lifecycle did not close');
+
+          let b=api.create({decision_id:'AUTH-DEC-B',trade_id:'AUTH-TRADE-B',risk_id:'RISK-ONE',authorized_notional_eur:50});
+          b=api.risk_approve(b,'ACCEPT'); b=api.submit(b);
+          if(b.state!=='REJECTED' || b.reason!=='AUTHORIZATION_ALREADY_CONSUMED') throw new Error('risk authorization reuse was not blocked');
+
+          // When risk_id is absent, decision_id is the deterministic one-shot fallback.
+          let c=api.create({decision_id:'DECISION-FALLBACK-ONE',trade_id:'AUTH-TRADE-C',authorized_notional_eur:50});
+          c=api.risk_approve(c,'ACCEPT'); c=api.submit(c);
+          if(c.state!=='SUBMITTED' || c.authorization?.source!=='DECISION') throw new Error('decision fallback authorization failed');
+          let d=api.create({decision_id:'DECISION-FALLBACK-ONE',trade_id:'AUTH-TRADE-D',authorized_notional_eur:50});
+          d=api.risk_approve(d,'ACCEPT'); d=api.submit(d);
+          if(d.state!=='REJECTED' || d.reason!=='AUTHORIZATION_ALREADY_CONSUMED') throw new Error('decision fallback reuse was not blocked');
+
+          // 40.6.14 Safety gate remains mandatory before authorization consumption.
+          level='PAUSE';
+          let paused=api.create({decision_id:'PAUSED-AUTH',trade_id:'AUTH-PAUSE',risk_id:'RISK-PAUSE',authorized_notional_eur:50});
+          if(paused.state!=='REJECTED' || paused.reason!=='SAFETY_GOVERNOR_BLOCK_CREATE') throw new Error('safety gate regression');
+
+          const snap=api.authorization_snapshot();
+          if(snap.consumed_count < 2) throw new Error('authorization registry did not record successful submits');
+          console.log(JSON.stringify({ok:true,self_test_repeatable:true,risk_single_use:true,decision_fallback_single_use:true,safety_gate_preserved:true,consumed_count:snap.consumed_count}));
+          NODE
+
+      - name: Anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          git diff --exit-code -- \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/style.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/oracle-presentation-405010.css" \
+            "$ROOT/oracle-fx-406013.css" \
+            "$ROOT/js/oracle-fx-406013.js" \
+            "$ROOT/js/strategy-a-safety-certification-404299.js" \
+            "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js" \
+            "$ROOT/js/strategy-a-after-cost-metrics-404298.js" \
+            "$ROOT/js/strategy-a-evidence-dossier-404295.js"
+
+          grep -q '<meta name="administrator-build" content="40.6.15" />' "$ROOT/index.html"
+          grep -q 'oracle-presentation-405010.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.js?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'strategy-a-paper-lifecycle-404295.js?v=administrator-build-40.6.15' "$ROOT/index.html"
+          grep -q 'grid-template-columns:minmax(128px,.66fr) minmax(124px,.66fr) minmax(170px,.94fr) minmax(255px,1.35fr) minmax(410px,2.05fr)!important;' "$ROOT/index.html"
+          grep -q 'single_use_authorization_406015: true' "$ROOT/js/strategy-a-paper-lifecycle-404295.js"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-lifecycle-404295.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_15.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_15_SINGLE_USE_AUTHORIZATION_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_15_SINGLE_USE_AUTHORIZATION_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            p=line[3:]
+            if ' -> ' in p:p=p.split(' -> ',1)[1]
+            changed.add(p)
+          extra=changed-expected; missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.15 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.15 missing files: {sorted(missing)}')
+          print('40.6.15 bounded diff OK')
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_15_SINGLE_USE_AUTHORIZATION_CLEAN_UPLOAD_8_FILES.zip
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/js/strategy-a-paper-lifecycle-404295.js"
+          git add "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_15.md"
+          git add "$ZIP" "$ZIP.sha256"
+          git diff --cached --quiet && { echo 'STOP 40.6.15 no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): single-use paper authorization 40.6.15"
+          git pull --rebase origin main
+          git push origin HEAD:main
