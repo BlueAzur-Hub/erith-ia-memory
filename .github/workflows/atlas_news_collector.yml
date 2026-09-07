@@ -1,5 +1,6 @@
 name: Atlas News Sentinel World-to-Market Live Feed
-# 40.4.288 — raw collector → canonical News FR v4 → quality gate → end-to-end display truth publication.
+# 40.4.291 — French-first source routing + native-French operator display contract.
+# English evidence remains archived. No Argos, no paid translation provider, no external API secret.
 
 on:
   workflow_dispatch:
@@ -8,21 +9,13 @@ on:
     paths:
       - ".github/workflows/atlas_news_collector.yml"
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector.py"
-      - "public/agent_crypto_erith_ia/tools/atlas_news_fr_contract.py"
-      - "public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py"
   schedule:
     - cron: "17 * * * *"
 
 permissions:
   contents: write
-
-env:
-  ATLAS_NEWS_VERSION: V1.1-alpha.26.47.5
-  XDG_DATA_HOME: ${{ github.workspace }}/.argos-cache/data
-  XDG_CACHE_HOME: ${{ github.workspace }}/.argos-cache/cache
-  XDG_CONFIG_HOME: ${{ github.workspace }}/.argos-cache/config
-  ARGOS_PACKAGES_DIR: ${{ github.workspace }}/.argos-cache/packages
-  ARGOS_DEVICE_TYPE: cpu
 
 concurrency:
   group: atlas-news-sentinel-world-to-market
@@ -38,32 +31,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Cache French translation model
-        uses: actions/cache@v4
-        with:
-          path: .argos-cache
-          key: atlas-news-argos-en-fr-v4
-
-      - name: Install French translation runtime
-        run: python -m pip install --disable-pip-version-check --quiet argostranslate==1.11.0
-
-      - name: Validate raw collector
+      - name: Validate canonical raw collector
         run: python public/agent_crypto_erith_ia/tools/atlas_news_collector.py --self-test
 
-      - name: Validate canonical News FR contract
-        run: |
-          python public/agent_crypto_erith_ia/tools/atlas_news_fr_contract.py
-          python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py --self-test
+      - name: Validate French-first source router
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py --self-test
 
-      - name: Collect immutable source evidence
+      - name: Validate native-French display contract
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py --self-test
+
+      - name: Collect immutable source evidence · French discovery first
         id: collect_news
-        run: python public/agent_crypto_erith_ia/tools/atlas_news_collector.py
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_collector_fr_404291.py
 
-      - name: Build canonical French display contract
-        id: translate_news_fr
-        run: python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py --require-canonical
+      - name: Build native-French operator display contract
+        id: native_news_fr
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_native_fr_404291.py --require-native-fr
 
-      - name: Validate canonical publication payload
+      - name: Validate native-French publication payload
         run: |
           python - <<'PY'
           import json
@@ -72,32 +57,33 @@ jobs:
           data=json.loads(p.read_text(encoding="utf-8"))
           events=[e for e in data.get("events",[]) if isinstance(e,dict) and str(e.get("headline") or "").strip()]
           summary=data.get("translation_fr") if isinstance(data.get("translation_fr"),dict) else {}
-          if str(summary.get("build")) != "40.4.288": raise SystemExit("News FR contract build marker missing")
-          if str(summary.get("schema")) != "atlas_news_translation_fr_v4": raise SystemExit("News FR contract schema v3 missing")
-          allowed={"ORIGINAL_FR","TRANSLATED_OK","FALLBACK_ORIGINAL","TRANSLATION_REJECTED"}
+          if str(summary.get("build")) != "40.4.291": raise SystemExit("Native FR contract build marker missing")
+          if str(summary.get("schema")) != "atlas_news_native_fr_v1": raise SystemExit("Native FR contract schema missing")
+          if summary.get("machine_translation") is not False: raise SystemExit("Machine translation must be disabled")
+          if summary.get("secret_required") is not False: raise SystemExit("External translation secret must not be required")
+          allowed={"ORIGINAL_FR","FALLBACK_ORIGINAL"}
           missing=[e.get("event_id") for e in events if not str(e.get("display_headline") or "").strip()]
           invalid=[e.get("event_id") for e in events if e.get("translation_status") not in allowed]
           mutation=[e.get("event_id") for e in events if str(e.get("headline_original") or "").strip()!=str(e.get("headline") or "").strip()]
-          bad=[e.get("event_id") for e in events if "appuyez sur" in str(e.get("display_headline") or "").lower()]
-          low=[e.get("event_id") for e in events if e.get("translation_status")=="TRANSLATED_OK" and int(e.get("translation_quality_score") or 0)<82]
-          fallback=[e.get("event_id") for e in events if e.get("translation_status") in {"FALLBACK_ORIGINAL","TRANSLATION_REJECTED"} and not str(e.get("display_headline") or "").startswith("[EN] ")]
-          wrong_lang=[e.get("event_id") for e in events if (e.get("translation_status") in {"ORIGINAL_FR","TRANSLATED_OK"} and e.get("display_language")!="fr") or (e.get("translation_status") in {"FALLBACK_ORIGINAL","TRANSLATION_REJECTED"} and e.get("display_language")!="en")]
-          if any((missing,invalid,mutation,bad,low,fallback,wrong_lang)):
-              raise SystemExit(f"News FR canonical validation failed: missing={missing[:3]} invalid={invalid[:3]} mutation={mutation[:3]} bad={bad[:3]} low={low[:3]} fallback={fallback[:3]} wrong_lang={wrong_lang[:3]}")
-          print(f"NEWS FR CANONICAL V4 PASS · events={len(events)} · FR accepted={summary.get('accepted_french')} · display={summary.get('display_coverage')}")
+          bad_fr=[e.get("event_id") for e in events if e.get("translation_status")=="ORIGINAL_FR" and e.get("display_language")!="fr"]
+          bad_en=[e.get("event_id") for e in events if e.get("translation_status")=="FALLBACK_ORIGINAL" and (e.get("display_language")!="en" or not str(e.get("display_headline") or "").startswith("[EN] "))]
+          mt=[e.get("event_id") for e in events if "argos" in str(e.get("translation_engine") or "").lower() or e.get("machine_translation") is True]
+          if any((missing,invalid,mutation,bad_fr,bad_en,mt)):
+              raise SystemExit(f"Native FR validation failed: missing={missing[:3]} invalid={invalid[:3]} mutation={mutation[:3]} bad_fr={bad_fr[:3]} bad_en={bad_en[:3]} mt={mt[:3]}")
+          print(f"NEWS NATIVE FR 40.4.291 PASS · events={len(events)} · native_fr={summary.get('accepted_french')} · en_archive={summary.get('archive_english')}")
           PY
 
-      - name: Validate Administrator end-to-end display consumer lock
+      - name: Validate Administrator native-French consumer lock
         run: |
           python - <<'PY'
           from pathlib import Path
           app=Path("public/agent_crypto_erith_ia/administrator/app.js").read_text(encoding="utf-8")
           aether=Path("public/agent_crypto_erith_ia/administrator/js/aether.js").read_text(encoding="utf-8")
-          required_app=["AgentCryptoNewsDisplayContract404288", "atlas_news_translation_fr_v4", "news_feed_cache_v4_404288"]
-          required_aether=["aetherNewsDisplayHeadline404288", "atlas_news_translation_fr_v4", "consumer_must_not_fallback_silently_to_headline"]
+          required_app=["atlas_news_native_fr_v1", "40.4.291", "news_feed_cache_v5_404291", "machine_translation: false"]
+          required_aether=["atlas_news_native_fr_v1", "40.4.291", "native French only", "news_machine_translation:false"]
           missing=[x for x in required_app if x not in app]+[x for x in required_aether if x not in aether]
-          if missing: raise SystemExit(f"Administrator display contract missing: {missing}")
-          print("ADMINISTRATOR NEWS DISPLAY TRUTH 40.4.288 PASS")
+          if missing: raise SystemExit(f"Administrator native-French display contract missing: {missing}")
+          print("ADMINISTRATOR NEWS NATIVE-FR CONSUMER 40.4.291 PASS")
           PY
 
       - name: Commit News Sentinel archive
@@ -111,6 +97,6 @@ jobs:
             echo "No News Sentinel archive change"
             exit 0
           fi
-          git commit -m "archive news sentinel canonical display feed"
+          git commit -m "archive news sentinel native French first feed"
           git pull --rebase origin main
           git push origin HEAD:main
