@@ -1,0 +1,25 @@
+{
+  "schema": "agent_crypto_auto_update_patch_request_v2",
+  "critical": false,
+  "delete": false,
+  "build": "40.4.284",
+  "parent_build": "40.4.283",
+  "files": [
+    "app.js",
+    "build.json",
+    "js/app.js",
+    "index.html",
+    "js/shared-memory-gap-aware-color-40.4.284.js",
+    "memory-color-identity-40.4.284.css",
+    "version.json",
+    "administrator-version.json"
+  ],
+  "patch_parts": [
+    "patch-01.patch",
+    "patch-02.patch",
+    "patch-03.patch",
+    "patch-04.patch"
+  ],
+  "patch_sha256": "befa2d20994d0b083ad4f725a0f03ee760ebc6b1e42c6fb1bf8190bc227aca60",
+  "manifest_hashes_autofill": true
+}
