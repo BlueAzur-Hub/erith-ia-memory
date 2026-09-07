@@ -1,0 +1,97 @@
+diff --git a/public/agent_crypto_erith_ia/administrator/app.js b/public/agent_crypto_erith_ia/administrator/app.js
+--- a/public/agent_crypto_erith_ia/administrator/app.js
++++ b/public/agent_crypto_erith_ia/administrator/app.js
+@@ -53979,7 +53979,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
+   oracle_changed:false, bridge_changed:false
+ }); } catch (_) {}
+ 
+-const ATLAS_BUILD = "40.4.283";
++const ATLAS_BUILD = "40.4.284";
+ // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
+ // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
+ const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
+diff --git a/public/agent_crypto_erith_ia/administrator/build.json b/public/agent_crypto_erith_ia/administrator/build.json
+--- a/public/agent_crypto_erith_ia/administrator/build.json
++++ b/public/agent_crypto_erith_ia/administrator/build.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "agent_crypto_runtime_build_truth_v1",
+-  "build": "40.4.283",
++  "build": "40.4.284",
+   "engine": "38.15.11",
+-  "release": "SHARED MEMORY · READER CONSISTENCY LOCK",
++  "release": "MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK",
+   "published": true,
+-  "status": "shared_memory_reader_consistency_404283"
++  "status": "memory_coverage_gap_aware_truth_color_identity_404284"
+ }
+diff --git a/public/agent_crypto_erith_ia/administrator/js/app.js b/public/agent_crypto_erith_ia/administrator/js/app.js
+--- a/public/agent_crypto_erith_ia/administrator/js/app.js
++++ b/public/agent_crypto_erith_ia/administrator/js/app.js
+@@ -1,7 +1,7 @@
+ (() => {
+   "use strict";
+-  const ADMIN_BUILD = "40.4.283";
+-  const ADMIN_RELEASE = "SHARED MEMORY · READER CONSISTENCY LOCK";
++  const ADMIN_BUILD = "40.4.284";
++  const ADMIN_RELEASE = "MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK";
+   const ENGINE_BUILD = "38.15.11";
+   const CLASSIC_WEB_BUILD = "38.15.13";
+   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
+diff --git a/public/agent_crypto_erith_ia/administrator/index.html b/public/agent_crypto_erith_ia/administrator/index.html
+--- a/public/agent_crypto_erith_ia/administrator/index.html
++++ b/public/agent_crypto_erith_ia/administrator/index.html
+@@ -3,14 +3,14 @@
+ <head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+-  <meta name="atlas-build" content="40.4.283" />
++  <meta name="atlas-build" content="40.4.284" />
+   <meta name="atlas-engine-build" content="38.15.11" />
+-  <meta name="administrator-build" content="40.4.283" />
++  <meta name="administrator-build" content="40.4.284" />
+   <meta name="administrator-revision" content="V6" />
+-  <meta name="administrator-release" content="SHARED MEMORY · READER CONSISTENCY LOCK" />
++  <meta name="administrator-release" content="MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK" />
+   <meta name="atlas-runtime-contract" content="runtime-truth-v1" />
+-  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.283" />
++  <meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.4.284" />
+   <meta name="atlas-workspace-profile" content="decision-workspace-multicollector-current-journal" />
+-  <title>Agent-Crypto @erith.IA — Build 40.4.283 · Administrator</title>
++  <title>Agent-Crypto @erith.IA — Build 40.4.284 · Administrator</title>
+   <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />
+ 
+@@ -100,6 +100,7 @@
+   <link rel="stylesheet" href="./admin-visual-cache.css" />
+   <link rel="stylesheet" href="./market-cascade.css?v=administrator-build-40.4.196" />
+   <link rel="stylesheet" href="./parallel-markets.css?v=40.4.252" />
+   <link rel="stylesheet" href="./market-reading-depth.css?v=40.4.229" />
++  <link rel="stylesheet" href="./memory-color-identity-40.4.284.css?v=administrator-build-40.4.284" />
+ <script src="./js/admin-visual-cache.js?v=administrator-build-40.4.254"></script>
+   <style data-atlas-command-center-portal-40321="true">
+@@ -4499,21 +4500,22 @@
+     </details>
+ 
+     <footer class="footer atlas-release-footer" aria-label="Informations Agent-Crypto">
+-      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.283 · Version : Parker Lewis Can't Lose</span>
++      <span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build 40.4.284 · Version : Parker Lewis Can't Lose</span>
+       <span id="footerTruthRule">Sources · historique · mesures · contexte · intégrité</span>
+       <a class="privacy-footer-line" href="#mesure-audience" data-v2-complete-control>Binance · CoinGecko · diagnostic</a>
+     </footer>
+   </main>
+ 
+   <aside class="atlas-help-layer" id="atlasHelpLayer" role="tooltip" aria-hidden="true" hidden></aside>
+   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
+ 
+   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+-  <script src="./app.js?v=administrator-build-40.4.283"></script>
++  <script src="./app.js?v=administrator-build-40.4.284"></script>
+   <script src="./js/market-memory.js"></script>
+   <script src="./js/analytical-memory.js"></script>
+   <script src="./js/market-memory-collector.js"></script>
+   <script src="./js/shared-memory-collector-40.4.282.js?v=administrator-build-40.4.282"></script>
+   <script src="./js/shared-memory-reader-consistency-40.4.283.js?v=administrator-build-40.4.283"></script>
++  <script src="./js/shared-memory-gap-aware-color-40.4.284.js?v=administrator-build-40.4.284"></script>
+   <script src="./js/decision-board.js"></script>
+   <script src="./js/multi-collector-concordance.js"></script>
+   <script src="./js/aether.js?v=administrator-build-40.4.281"></script>
