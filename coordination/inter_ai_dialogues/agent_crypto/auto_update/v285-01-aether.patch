@@ -1,6 +1,25 @@
 diff --git a/public/agent_crypto_erith_ia/administrator/js/aether.js b/public/agent_crypto_erith_ia/administrator/js/aether.js
 --- a/public/agent_crypto_erith_ia/administrator/js/aether.js
 +++ b/public/agent_crypto_erith_ia/administrator/js/aether.js
+@@ -205,6 +205,9 @@
+-        const canonical=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
+-          .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
+-        // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
+-        // Derived/UI rows remain usable only when the canonical payload is genuinely absent.
+-        if(canonical.length)addPool(canonical);
+-        else addPool(newsFeedState?.events);
++        const canonicalAll=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
++          .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
++        const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404285);
++        // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
++        // 40.4.285 — the scarce operator lane is filtered before rank/diversity selection.
++        // Derived/UI rows remain usable only when the canonical payload is genuinely absent,
++        // and they are subject to the exact same relevance gate.
++        if(canonical.length)addPool(canonical);
++        else if(!canonicalAll.length)addPool((Array.isArray(newsFeedState?.events)?newsFeedState.events:[]).filter(aetherVeilleOperatorEligible404285));
+diff --git a/public/agent_crypto_erith_ia/administrator/js/aether.js b/public/agent_crypto_erith_ia/administrator/js/aether.js
+--- a/public/agent_crypto_erith_ia/administrator/js/aether.js
++++ b/public/agent_crypto_erith_ia/administrator/js/aether.js
 @@ -1,8 +1,8 @@
  /*
    Agent-Crypto Administrator — Aether runtime
@@ -49,19 +68,3 @@ diff --git a/public/agent_crypto_erith_ia/administrator/js/aether.js b/public/ag
      if(!event)return event;
      const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
      const headline=String(event?.headline||"").replace(/\s+/g," " ).trim();
-@@ -205,6 +209,9 @@
--        const canonical=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
--          .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
--        // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
--        // Derived/UI rows remain usable only when the canonical payload is genuinely absent.
--        if(canonical.length)addPool(canonical);
--        else addPool(newsFeedState?.events);
-+        const canonicalAll=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
-+          .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
-+        const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404285);
-+        // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
-+        // 40.4.285 — the scarce operator lane is filtered before rank/diversity selection.
-+        // Derived/UI rows remain usable only when the canonical payload is genuinely absent,
-+        // and they are subject to the exact same relevance gate.
-+        if(canonical.length)addPool(canonical);
-+        else if(!canonicalAll.length)addPool((Array.isArray(newsFeedState?.events)?newsFeedState.events:[]).filter(aetherVeilleOperatorEligible404285));
