@@ -170,85 +170,9 @@
   #atlasCelestialClockHeader .atlas-chrono-glyph-40341{font-size:1.18em !important;margin-right:1px !important;}
 }
 
-/* 40.6.0 — CHRONOS RESPONSIVE CENTER / FULL TEXT LOCK
-   The one-line desktop presentation remains canonical while there is room.
-   When the real card width becomes constrained, the SAME semantic spans form
-   a centered two-row composition instead of being clipped. No JS, no timer,
-   no observer, no resize owner and no market/runtime ownership is added. */
-@container (max-width:560px){
-  #atlasCelestialClockHeader{
-    display:grid !important;
-    grid-template-columns:max-content max-content max-content !important;
-    grid-template-rows:auto auto !important;
-    justify-content:center !important;
-    justify-items:center !important;
-    align-items:center !important;
-    align-content:center !important;
-    column-gap:4px !important;
-    row-gap:1px !important;
-    width:100% !important;
-    max-width:100% !important;
-    white-space:normal !important;
-    overflow:visible !important;
-    line-height:1.05 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-date-40341{
-    font-size:9.6px !important;
-    grid-column:1 !important;
-    grid-row:1 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-separator-40341:nth-child(2){
-    grid-column:2 !important;
-    grid-row:1 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-time-40341{
-    font-size:11.5px !important;
-    letter-spacing:0 !important;
-    grid-column:3 !important;
-    grid-row:1 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-separator-40341:nth-child(4){
-    display:none !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341{
-    font-size:9px !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-separator-40341{
-    font-size:7.8px !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-glyph-40341{
-    font-size:1.24em !important;
-    margin-right:2px !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341:nth-child(5){
-    grid-column:1 !important;
-    grid-row:2 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-separator-40341:nth-child(6){
-    grid-column:2 !important;
-    grid-row:2 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341:nth-child(7){
-    grid-column:3 !important;
-    grid-row:2 !important;
-  }
-}
-
-@container (max-width:360px){
-  #atlasCelestialClockHeader{
-    grid-template-columns:minmax(0,1fr) !important;
-    grid-template-rows:repeat(4,auto) !important;
-    row-gap:1px !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-date-40341,
-  #atlasCelestialClockHeader .atlas-chrono-time-40341,
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341:nth-child(5),
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341:nth-child(7){
-    grid-column:1 !important;
-  }
-  #atlasCelestialClockHeader .atlas-chrono-date-40341{grid-row:1 !important;}
-  #atlasCelestialClockHeader .atlas-chrono-time-40341{grid-row:2 !important;}
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341:nth-child(5){grid-row:3 !important;}
-  #atlasCelestialClockHeader .atlas-chrono-planet-40341:nth-child(7){grid-row:4 !important;}
-  #atlasCelestialClockHeader .atlas-chrono-separator-40341{display:none !important;}
-}
+/* 40.6.1 — CHRONOS ORIGINAL SINGLE-LINE RECOVERY
+   Firefox field proof showed the 40.6.0 <=560px grid fallback changed the
+   canonical desktop composition into two rows. Retire that fallback.
+   The proven 40.5.2 container-fit rules above remain authoritative:
+   one centered semantic line, progressively smaller type at <=620/520px.
+   ChronosXP calculation, planetary day/hour semantics and runtime are untouched. */
