@@ -80,7 +80,7 @@ jobs:
           app=Path("public/agent_crypto_erith_ia/administrator/app.js").read_text(encoding="utf-8")
           aether=Path("public/agent_crypto_erith_ia/administrator/js/aether.js").read_text(encoding="utf-8")
           required_app=["atlas_news_native_fr_v1", "40.4.291", "news_feed_cache_v5_404291", "machine_translation: false"]
-          required_aether=["aetherNewsOperatorReady404292", "news_bilingual_operator_lane_build:"40.4.292"", "news_feed_click_opens_news_sentinel:true", "news_machine_translation:false"]
+          required_aether=["aetherNewsOperatorReady404292", 'news_bilingual_operator_lane_build:"40.4.292"', "news_feed_click_opens_news_sentinel:true", "news_machine_translation:false"]
           forbidden_aether=[".filter(aetherNewsFrenchOperatorReady404290)"]
           missing=[x for x in required_app if x not in app]+[x for x in required_aether if x not in aether]
           forbidden=[x for x in forbidden_aether if x in aether]
