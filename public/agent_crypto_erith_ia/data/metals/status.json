@@ -1,20 +1,20 @@
 {
   "schema": "agent_crypto_metals_collector_status_v1",
   "version": "2.3.0",
-  "status": "ready",
+  "status": "partial",
   "provider_id": "public_metals_multi_source",
   "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
   "public_page_mode": "github_actions_archive_reader",
-  "last_attempt_at": "2026-09-07T19:56:47.335Z",
-  "last_success_at": "2026-09-07T19:56:47.335Z",
-  "last_error": null,
+  "last_attempt_at": "2026-09-07T22:49:21.101Z",
+  "last_success_at": "2026-09-07T22:49:21.101Z",
+  "last_error": "Gold API XAU: HTTPSConnectionPool(host='api.gold-api.com', port=443): Max retries exceeded with url: /price/XAU (Caused by NameResolutionError(\"HTTPSConnection(host='api.gold-api.com', port=443): Failed to resolve 'api.gold-api.com' ([Errno -2] Name or service not known)\"))",
   "assets_expected": 5,
-  "assets_received": 5,
+  "assets_received": 4,
   "current": {
     "available": true,
     "preserved": false,
-    "assets": 5,
+    "assets": 4,
     "source_id": "gold_api"
   },
   "quota": {
@@ -29,7 +29,7 @@
       "id": "gold_api",
       "role": "current_indicative_prices",
       "authentication": "none",
-      "state": "ready"
+      "state": "unavailable"
     },
     {
       "id": "yahoo_finance",
@@ -51,7 +51,7 @@
     "file": "history/public_1y.json",
     "snapshots": 261,
     "oldest_at": "2025-08-25T04:00:00.000Z",
-    "newest_at": "2026-09-07T18:29:59.000Z",
+    "newest_at": "2026-09-07T22:39:47.000Z",
     "series_points": {
       "gold": 261,
       "silver": 261,
@@ -83,10 +83,10 @@
     "available": true,
     "complete_24h": true,
     "file": "history/spot_48h.json",
-    "snapshots": 8,
-    "oldest_at": "2026-09-05T22:03:27.184Z",
+    "snapshots": 7,
+    "oldest_at": "2026-09-06T04:34:48.580Z",
     "newest_at": "2026-09-07T19:56:47.335Z",
-    "span_hours": 45.888931,
+    "span_hours": 39.366321,
     "retention_hours": 48,
     "minimum_complete_hours": 20,
     "source_id": "gold_api"
@@ -116,6 +116,6 @@
     "history_never_fabricated": true,
     "intraday_futures_and_current_spot_separated": true
   },
-  "updated_at": "2026-09-07T19:56:47.335Z",
+  "updated_at": "2026-09-07T22:49:21.101Z",
   "collector": "tools/collect_public_metals.py"
 }
