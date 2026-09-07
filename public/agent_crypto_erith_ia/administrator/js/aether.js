@@ -2,8 +2,8 @@
   Agent-Crypto Administrator — Aether runtime
   Responsibility: Aether status synthesis + read-only system/weather/BTC values.
   Presentation/animation belongs to admin-ribbons.css.
-  Build: 40.4.286
-  Revision: 40.4.286 operator relevance scope lock. The scarce Aether VEILLE lane is crypto/operator qualified; News Sentinel canonical archive remains untouched.
+  Build: 40.4.287
+  Revision: 40.4.287 canonical News FR display contract. Aether is a read-only consumer; translation and quality ownership stay upstream.
 */
 (() => {
   "use strict";
@@ -15,12 +15,12 @@
   const AETHER_MARQUEE_DELAY_S_40121=0.55;
   const aetherVeilleState4087={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
   function aetherVeilleOperatorEligible404286(event){
-  const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+  const canonical=aetherNewsCanonicalEvent404287(event)||event||{};
   const assets=(Array.isArray(canonical?.assets)?canonical.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean);
   const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
   const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
   const label=String(canonical?.event_label||"").toLowerCase();
-  const headline=String(canonical?.headline_fr_display||canonical?.headline_fr||canonical?.headline||"").toLowerCase();
+  const headline=String(canonical?.display_headline||canonical?.headline_fr_display||canonical?.headline_fr||canonical?.headline||"").toLowerCase();
   const semanticText=[label,headline,...topics].join(" ");
   const cryptoSymbols=new Set([
     "BTC","ETH","BNB","XRP","SOL","USDT","USDC","DOGE","ADA","TRX","LINK","XLM","BCH","LTC",
@@ -36,25 +36,24 @@
   // never makes an unrelated world story eligible. The canonical archive remains untouched.
   return cryptoAnchor||macroAnchor;
 }
-function aetherNewsCanonicalFrenchEvent40110(event){
+function aetherNewsCanonicalEvent404287(event){
     if(!event)return event;
     const id=String(event?.event_id||event?.id||event?.fingerprint||"").trim();
-    const headline=String(event?.headline||"").replace(/\s+/g," " ).trim();
-    const sourceUrl=String(event?.source_url||"").trim();
+    const headline=String(event?.headline_original||event?.headline||"").replace(/\s+/g," ").trim();
+    const sourceUrl=String(event?.source_url||event?.url||"").trim();
     const mergedIds=new Set((Array.isArray(event?.merged_event_ids)?event.merged_event_ids:[]).map(v=>String(v||"").trim()).filter(Boolean));
     try{
       const pools=[];
-      // 40.4.132 — canonical translated collector payload is the first matching authority.
       if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.payload?.events))pools.push(newsFeedState.payload.events);
       if(typeof newsFeedState!=="undefined"&&Array.isArray(newsFeedState?.events))pools.push(newsFeedState.events);
       for(const pool of pools){
         const match=pool.find(row=>{
-          if(!String(row?.headline_fr_display||row?.headline_fr||"").trim())return false;
+          if(!String(row?.display_headline||row?.headline_fr_display||row?.headline_fr||row?.headline||"").trim())return false;
           const rowId=String(row?.event_id||row?.id||row?.fingerprint||"").trim();
           const rowMerged=Array.isArray(row?.merged_event_ids)?row.merged_event_ids.map(v=>String(v||"").trim()):[];
           const sameId=Boolean(id&&(rowId===id||rowMerged.includes(id)||mergedIds.has(rowId)));
-          const sameUrl=Boolean(sourceUrl&&String(row?.source_url||"").trim()===sourceUrl);
-          const sameHeadline=Boolean(headline&&String(row?.headline||"").replace(/\s+/g," " ).trim()===headline);
+          const sameUrl=Boolean(sourceUrl&&String(row?.source_url||row?.url||"").trim()===sourceUrl);
+          const sameHeadline=Boolean(headline&&String(row?.headline_original||row?.headline||"").replace(/\s+/g," ").trim()===headline);
           return sameId||sameUrl||sameHeadline;
         });
         if(match)return match;
@@ -62,76 +61,21 @@ function aetherNewsCanonicalFrenchEvent40110(event){
     }catch(_){}
     return event;
   }
-  function aetherNewsLooksEnglish40124(value){
-    const text=String(value||"").toLowerCase();
-    if(!text)return false;
-    const hits=(text.match(/\b(?:the|after|as|and|with|from|loses?|lost|drops?|drains?|trader|traders|bets?|below|above|tops?|buys?|voting|power|million|billion|seconds?|why|speech|made|shorting|crypto)\b/g)||[]).length;
-    return hits>=2;
+  function aetherNewsDisplayHeadline404287(event,fallback="Événement à qualifier"){
+    const canonical=aetherNewsCanonicalEvent404287(event)||event||{};
+    // 40.4.287 — no translation, regex repair or synthetic French in Aether.
+    // Canonical display_headline is producer-owned; old fields only keep cached archives readable.
+    const value=String(
+      canonical?.display_headline
+      ||canonical?.headline_original
+      ||canonical?.headline
+      ||canonical?.headline_fr_display
+      ||canonical?.headline_fr
+      ||canonical?.event_label
+      ||""
+    ).replace(/\s+/g," ").trim();
+    return value||fallback;
   }
-  function aetherNewsMoneyFacts40124(value){
-    const text=String(value||"");
-    const out=[];
-    const push=v=>{if(v&&!out.includes(v))out.push(v);};
-    for(const m of text.matchAll(/\$\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*(billion|million|bn|m)?/gi)){
-      const raw=String(m[1]||"").replace(/,/g,"");
-      const n=Number(raw);if(!Number.isFinite(n))continue;
-      const unit=String(m[2]||"").toLowerCase();
-      const shown=n.toLocaleString("fr-FR",{maximumFractionDigits:2});
-      push(unit==="billion"||unit==="bn"?`${shown} Md$`:unit==="million"||unit==="m"?`${shown} M$`:`${shown} $`);
-    }
-    for(const m of text.matchAll(/([0-9]+(?:[.,][0-9]+)?)\s*%/g))push(`${String(m[1]).replace(".",",")} %`);
-    for(const m of text.matchAll(/([0-9]+)\s*(seconds?|minutes?|hours?)/gi)){
-      const n=Number(m[1]);const unit=String(m[2]||"").toLowerCase();
-      push(`${n} ${unit.startsWith("second")?"s":unit.startsWith("minute")?"min":"h"}`);
-    }
-    return out.slice(0,4);
-  }
-  function aetherNewsFrenchPattern40124(original){
-    let m=null;
-    if((m=original.match(/^Maya Protocol exploit drains bitcoin and other assets as pool value drops by \$([0-9.,]+) million$/i)))return `Maya Protocol : un exploit draine du bitcoin et d’autres actifs · valeur du pool -${String(m[1]).replace(".",",")} M$`;
-    if((m=original.match(/^Bearish crypto bets lose record \$([0-9.,]+) billion as bitcoin tops \$([0-9,]+)$/i)))return `Paris baissiers crypto : perte record ${String(m[1]).replace(".",",")} Md$ · Bitcoin dépasse ${String(m[2]).replace(/,/g," ")} $`;
-    if((m=original.match(/^Trader who made \$([0-9.,]+) million shorting crypto lost \$([0-9.,]+) million on ether in ([0-9]+) seconds$/i)))return `Un trader ayant gagné ${String(m[1]).replace(".",",")} M$ en vendant les cryptos à découvert perd ${String(m[2]).replace(".",",")} M$ sur ETH en ${m[3]} s`;
-    if((m=original.match(/^Bitcoin below \$([0-9,]+), XRP leads losses as traders start betting on (?:a )?Fed hike$/i)))return `Bitcoin sous ${String(m[1]).replace(/,/g," ")} $ · XRP mène les pertes · paris croissants sur une hausse des taux de la Fed`;
-    if(/^Why .*Jackson Hole.*big event for bitcoin and gold/i.test(original))return "Pourquoi le discours de Jackson Hole est un événement majeur pour Bitcoin et l’or";
-    return "";
-  }
-  function aetherNewsFrenchFactualFallback40124(event,original,fallback){
-    const pattern=aetherNewsFrenchPattern40124(original);if(pattern)return pattern;
-    if(!aetherNewsLooksEnglish40124(original))return original||fallback;
-    const label=String(event?.event_label||"").replace(/\s+/g," ").trim();
-    const assets=(Array.isArray(event?.assets)?event.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean).slice(0,3);
-    const sectors=(Array.isArray(event?.sectors)?event.sectors:[]).map(v=>String(v||"").replace(/\s+/g," ").trim()).filter(Boolean).slice(0,1);
-    const facts=aetherNewsMoneyFacts40124(original);
-    const parts=[];
-    const push=value=>{const v=String(value||"").trim();if(v&&!parts.includes(v))parts.push(v);};
-    push(label&&!/information de march[eé] [aà] qualifier/i.test(label)?label:"Actualité de marché");
-    if(assets.length)push(assets.join("/"));else if(sectors.length)push(sectors[0]);
-    facts.forEach(push);
-    return parts.join(" · ")||fallback;
-  }
-  function aetherNewsHeadlineFr40104(event,fallback="Événement à qualifier"){
-    const canonical=aetherNewsCanonicalFrenchEvent40110(event);
-    const original=String(canonical?.headline||canonical?.event_label||event?.headline||event?.event_label||"").replace(/\s+/g," ").trim();
-    const explicitFrench=String(canonical?.headline_fr_display||canonical?.headline_fr||"").replace(/\s+/g," ").trim();
-    // 40.4.132 — never let a derived presentation helper overwrite a canonical French headline.
-    if(explicitFrench)return explicitFrench;
-    try{
-      const owner=globalThis.AgentCryptoNewsFrenchPresentation40104;
-      if(owner&&typeof owner.headline==="function"){
-        const value=String(owner.headline(canonical,fallback)||"").replace(/\s+/g," ").trim();
-        if(explicitFrench||value!==original)return value||fallback;
-      }
-    }catch(_){}
-    // 40.4.124 — no “traduction en attente” and no raw English leakage in the scarce Aether ribbon.
-    // News Sentinel keeps the canonical original; this is presentation-only, deterministic and factual.
-    return aetherNewsFrenchFactualFallback40124(canonical,original,fallback);
-  }
-  function aetherNewsHeadlineSource40133(event,fallback="Événement à qualifier"){
-  const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
-  // 40.4.157 — the canonical French presentation helper owns Aether display.
-  // Source-original remains preserved in News Sentinel as evidence, not as the first visible headline.
-  return aetherNewsHeadlineFr40104(canonical,fallback);
-}
   function aetherFrenchMechanismLabel40110(value){
     const label=String(value||"").replace(/\s+/g," ").trim();
     if(/^SHORT SQUEEZE \/ LIQUIDATIONS$/i.test(label))return "LIQUIDATIONS DE POSITIONS VENDEUSES";
@@ -174,21 +118,21 @@ function aetherNewsCanonicalFrenchEvent40110(event){
       +aetherVeilleContextWeight4087(event);
   }
   function aetherVeilleStoryTokens40127(event){
-    const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+    const canonical=aetherNewsCanonicalEvent404287(event)||event||{};
     const tokens=[];
     const push=(prefix,value)=>{const v=String(value||"").replace(/\s+/g," ").trim().toLowerCase();if(v)tokens.push(`${prefix}:${v}`);};
     push("id",canonical?.event_id||canonical?.id||canonical?.fingerprint);
     for(const id of (Array.isArray(canonical?.merged_event_ids)?canonical.merged_event_ids:[]))push("id",id);
     push("url",canonical?.source_url);
-    push("fr",aetherNewsHeadlineFr40104(canonical,""));
+    push("fr",aetherNewsDisplayHeadline404287(canonical,""));
     push("raw",canonical?.headline||canonical?.event_label);
     return [...new Set(tokens)];
   }
   function aetherVeilleFamily40128(event){
-    const canonical=aetherNewsCanonicalFrenchEvent40110(event)||event||{};
+    const canonical=aetherNewsCanonicalEvent404287(event)||event||{};
     const type=String(canonical?.event_type||"").toLowerCase();
     const label=String(canonical?.event_label||"").toLowerCase();
-    const headline=String(canonical?.headline||canonical?.headline_fr_display||canonical?.headline_fr||"").toLowerCase();
+    const headline=String(canonical?.headline_original||canonical?.headline||canonical?.display_headline||canonical?.headline_fr_display||canonical?.headline_fr||"").toLowerCase();
     const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").toLowerCase());
     const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").toLowerCase());
     const sectors=(Array.isArray(canonical?.sectors)?canonical.sectors:[]).map(v=>String(v||"").toLowerCase());
@@ -207,7 +151,7 @@ function aetherNewsCanonicalFrenchEvent40110(event){
     try{
       if(typeof newsFeedState!=="undefined"){
         const canonicalAll=(Array.isArray(newsFeedState?.payload?.events)?newsFeedState.payload.events:[])
-          .filter(event=>String(event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
+          .filter(event=>String(event?.display_headline||event?.headline_fr_display||event?.headline_fr||event?.headline||"").replace(/\s+/g," " ).trim());
         const canonical=canonicalAll.filter(aetherVeilleOperatorEligible404286);
         // 40.4.132 — VEILLE is a story reader: canonical content-bearing events own the queue.
         // 40.4.286 — the scarce operator lane is filtered before rank/diversity selection.
@@ -297,7 +241,7 @@ function aetherNewsCanonicalFrenchEvent40110(event){
       const assets=(Array.isArray(lead?.assets)?lead.assets:Array.isArray(n?.event?.assets)?n.event.assets:[])
         .map(value=>String(value||"").trim().toUpperCase()).filter(Boolean).slice(0,3);
       const scope=assets.length?assets.join("/"):"MARCHÉ";
-      const headline=aetherNewsHeadlineFr40104(lead||n?.event,"Contexte News Sentinel");
+      const headline=aetherNewsDisplayHeadline404287(lead||n?.event,"Contexte News Sentinel");
       const source=String(lead?.source_name||lead?.source_host||n?.event?.source_name||n?.event?.source_host||"").replace(/^www\./,"").trim();
       const mechanismTitle=aetherFrenchMechanismLabel40110(n?.mechanism?.title||"");
       const mechanismDirection=String(n?.mechanism?.direction||"").trim();
@@ -375,7 +319,7 @@ function aetherNewsCanonicalFrenchEvent40110(event){
     const scope=aetherVeilleScope4087(event),evidence=Math.round(aetherVeilleNumber4087(event?.evidence?.score));
     const source=String(event?.source_name||event?.source_host||event?.source_class||"").replace(/^www\./,"").trim();
     const freshness=String(event?.freshness?.label||"").trim();
-    const headline=aetherNewsHeadlineSource40133(event,"Event to qualify");
+    const headline=aetherNewsDisplayHeadline404287(event,"Event to qualify");
     // 40.4.123 — priority first: asset/scope and impact are readable before the queue position.
     const meta=`${scope} · ${impactLevel} ${impact}/100 · ${aetherVeilleState4087.index+1}/${events.length}`;
     // 40.4.130 — VEILLE alone owns the long translated story; fixed telemetry remains in brand/meta.
@@ -564,8 +508,8 @@ function aetherNewsCanonicalFrenchEvent40110(event){
       const snapshot=aetherVeilleStatus4087(),events=snapshot.events||[];
       if(!events.length)return `Veille · ${snapshot.label||"aucun événement prioritaire"}`;
       const event=events[0],scope=aetherVeilleScope4087(event),impact=Math.round(aetherVeilleNumber4087(event?.impact?.score));
-      const headline=aetherNewsHeadlineSource40133(event,"");
-      // 40.4.125 — information first: the French headline owns the visible prefix; scope/impact follow.
+      const headline=aetherNewsDisplayHeadline404287(event,"");
+      // 40.4.287 — information first: producer-owned canonical display headline leads; scope/impact follow.
       return `Veille · ${aetherCompact4088(headline,88)}${scope?` · ${scope}`:""}${impact?` ${impact}/100`:""}`;
     }catch(_){return "Veille · News Sentinel";}
   }
@@ -578,12 +522,12 @@ function aetherNewsCanonicalFrenchEvent40110(event){
       const runtimeFresh=typeof newsFeedState!=="undefined"
         && newsFeedState?.startupSucceeded===true
         && status==="ok";
-      const frenchPresentationReady=events.length>0
-        && events.every(event=>String(event?.headline_fr_display||event?.headline_fr||"").trim());
+      const canonicalDisplayReady=events.length>0
+        && events.every(event=>String(event?.display_headline||"").trim());
       if(status==="loading"||aetherNewsWake4088.attempted||typeof loadNewsLiveFeed!=="function")return Promise.resolve(false);
       // 40.4.112: cached events are a continuity fallback, never proof that the current archive was fetched.
       // Wake the existing News owner once on page start, even when a previous localStorage cache populated the ribbon.
-      if(runtimeFresh&&frenchPresentationReady)return Promise.resolve(false);
+      if(runtimeFresh&&canonicalDisplayReady)return Promise.resolve(false);
       aetherNewsWake4088.attempted=true;
       aetherNewsWake4088.inflight=Promise.resolve(loadNewsLiveFeed({force:true,automatic:false}))
         .catch(()=>false)
@@ -868,10 +812,13 @@ function aetherAttention40133(){
     operator_disclaimer_segments:false,
     operator_non_conclusion_segments:false,
     context_label_deduplicated:true,
-    news_display_language:"fr-FR",
+    news_display_language:"canonical display_language (fr or labelled EN fallback)",
     news_source_original_headline_first:false,
-    news_translation_preferred:"headline_fr_display → headline_fr → deterministic French factual fallback",
-    news_translation_story_owner:"News Sentinel French presentation owns VEILLE; source-original headline remains preserved as evidence",
+    news_translation_contract_schema:"atlas_news_translation_fr_v3",
+    news_translation_contract_build:"40.4.287",
+    news_browser_editorial_repair:false,
+    news_translation_preferred:"display_headline → source original → legacy compatibility fields",
+    news_translation_story_owner:"News Sentinel canonical News FR producer owns display_headline; Aether performs no translation or editorial repair",
     news_feed_news_only_rotation:true,
     news_feed_context_interleave:false,
     news_feed_ranked_story_count:12,
@@ -885,7 +832,7 @@ function aetherAttention40133(){
     news_feed_derived_rows_reading_fallback_only:true,
     news_feed_derived_rows_can_displace_canonical_story:false,
     news_feed_unique_before_limit:true,
-    news_feed_unique_tokens:"canonical id + merged ids + source URL + French headline + raw headline",
+    news_feed_unique_tokens:"canonical id + merged ids + source URL + display_headline + raw headline",
     news_feed_truthful_total:true,
     news_feed_story_detail:"headline + source",
     news_feed_cursor_persists_between_windows:true,
@@ -894,11 +841,11 @@ function aetherAttention40133(){
     info_news_preview:false,
     news_translation_context_keeps_headline:true,
     news_translation_compact_headline_first:true,
-    news_translation_fallback:"deterministic French factual summary → original only when already non-English",
+    news_translation_fallback:"producer quality rejection → labelled [EN] canonical original",
     news_translation_browser_runtime:false,
-    news_translation_raw_english_in_aether:false,
+    news_translation_raw_english_in_aether:"only explicit [EN] producer fallback",
     news_source_original_preserved_not_display_owner:true,
-    news_display_contract_build:"40.4.157",
+    news_display_contract_build:"40.4.287",
     weather_forecast_days:5,
     weather_storm_warning:true,
     weather_high_gust_warning_kmh:70,

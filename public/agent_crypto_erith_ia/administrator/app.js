@@ -21677,50 +21677,24 @@ const NEWS_SENTINEL_VISIT_KEY = "agent_crypto_erith_ia_news_visit_v2";
 
 const NEWS_SENTINEL_FEED_RETRY_MS = Object.freeze([60 * 1000, 180 * 1000, 5 * 60 * 1000]);
 
-function newsFeedEditorialHeadlineFr40110(originalValue, frenchValue) {
-  const original = String(originalValue || "").replace(/\s+/g, " ").trim();
-  let french = String(frenchValue || "").replace(/\s+/g, " ").trim();
-  if (!french) return "";
-
-  // Editorial presentation only. The canonical original headline and raw headline_fr remain untouched.
-  if (/^Ethereum lending app Term Finance loses \$8\.5 million after attacker buys voting power$/i.test(original)) {
-    return "L’application de prêt sur Ethereum Term Finance perd 8,5 M$ après l’acquisition de droits de vote par un attaquant";
-  }
-  if (/^The Sandbox promises 1:1 reimbursement after \$700K bridge exploit$/i.test(original)) {
-    return "The Sandbox promet un remboursement intégral après une attaque de 700 k$ contre un pont inter-chaînes";
-  }
-
-  french = french
-    .replace(/\bEthereum prêt app\b/gi, "L’application de prêt sur Ethereum")
-    .replace(/\bprêt app\b/gi, "application de prêt")
-    .replace(/\bpouvoir de vote\b/gi, "droits de vote")
-    .replace(/après que l[’']attaquant achète les? droits de vote/gi, "après l’acquisition de droits de vote par un attaquant")
-    .replace(/après que l[’']attaquant achète le pouvoir de vote/gi, "après l’acquisition de droits de vote par un attaquant")
-    .replace(/(\d+(?:[.,]\d+)?)\s+millions? de dollars/gi, "$1 M$")
-    .replace(/(\d+(?:[.,]\d+)?)\s+milliards? de dollars/gi, "$1 Md$")
-    .replace(/(\d+(?:[.,]\d+)?)\s*[Kk]\s*\$/g, "$1 k$")
-    .replace(/\s+([,.;:!?])/g, "$1")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-  return french;
+function newsFeedCanonicalDisplayHeadline404287(event, fallback="Événement sans titre") {
+  // 40.4.287 — browser is a consumer only. Translation and quality decisions belong to
+  // the canonical News FR producer; legacy fields are read-only compatibility fallbacks.
+  const canonical = String(event?.display_headline || "").replace(/\s+/g, " ").trim();
+  if (canonical) return canonical;
+  const original = String(event?.headline_original || event?.headline || event?.event_label || "").replace(/\s+/g, " ").trim();
+  const legacy = String(event?.headline_fr_display || event?.headline_fr || "").replace(/\s+/g, " ").trim();
+  return original || legacy || fallback;
 }
 
-function newsFeedDisplayHeadlineFr40104(event, fallback="Événement sans titre") {
-  const original = String(event?.headline || event?.event_label || "").replace(/\s+/g, " ").trim();
-  const editorial = String(event?.headline_fr_display || "").replace(/\s+/g, " ").trim();
-  const rawFrench = String(event?.headline_fr || "").replace(/\s+/g, " ").trim();
-  const french = newsFeedEditorialHeadlineFr40110(original, editorial || rawFrench);
-  return french || original || fallback;
-}
-
-globalThis.AgentCryptoNewsFrenchPresentation40104 = Object.freeze({
-  headline: newsFeedDisplayHeadlineFr40104,
-  preferred_field: "headline_fr_display",
-  raw_translation_field: "headline_fr",
-  fallback_field: "headline",
-  editorial_build: "40.4.110",
-  canonical_original_preserved: true,
-  browser_translation: false
+globalThis.AgentCryptoNewsDisplayContract404287 = Object.freeze({
+  headline: newsFeedCanonicalDisplayHeadline404287,
+  preferred_field: "display_headline",
+  fallback_fields: ["headline_original", "headline", "headline_fr_display", "headline_fr"],
+  translation_contract_schema: "atlas_news_translation_fr_v3",
+  translation_contract_build: "40.4.287",
+  browser_translation: false,
+  browser_editorial_repair: false
 });
 
 const newsFeedState = {
@@ -22591,7 +22565,7 @@ function renderNewsFeedList() {
             <span class="news-live-type">${escapeHtml(event.event_label || "Information à qualifier")}</span>
             <span class="news-live-freshness">${escapeHtml(event?.freshness?.label || newsFeedAgeLabel(event.event_time))}</span>
           </span>
-          <h4>${escapeHtml(newsFeedDisplayHeadlineFr40104(event))}</h4>
+          <h4>${escapeHtml(newsFeedCanonicalDisplayHeadline404287(event))}</h4>
           <span class="news-live-meta">${meta.map(value => `<span>${escapeHtml(value)}</span>`).join("")}</span>
         </button>
         <div class="news-live-source-row">
@@ -23159,7 +23133,7 @@ function newsMarketExtractFacts40235(event) {
   if (amounts.length && /short|bearish bet/.test(lower)) {
     facts.push(`${amounts[0]} de positions baissières / short sont mentionnées comme liquidées ou forcées au rachat.`);
   }
-  if (!facts.length && event?.headline) facts.push(newsFeedDisplayHeadlineFr40104(event, String(event.headline)));
+  if (!facts.length && event?.headline) facts.push(newsFeedCanonicalDisplayHeadline404287(event, String(event.headline)));
   return { facts, amounts, raw };
 }
 
@@ -23474,7 +23448,7 @@ function renderNewsMarketOperatorIntelligence40235(current=null){
     const steps=document.getElementById("newsMarketMechanismSteps40235");if(steps)steps.replaceChildren(); root.dataset.state="no-event"; return n;
   }
   const proof=n.base?.amplifier?.evidence||newsMarketEvidence40234(n.event);
-  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||newsFeedDisplayHeadlineFr40104(n.event,"Événement qualifié"));
+  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||newsFeedCanonicalDisplayHeadline404287(n.event,"Événement qualifié"));
   set("newsMarketEventProof40235",`${n.event?.source_name||n.event?.source_host||"Source"} · preuve ${String(proof?.level||"inconnue").toLowerCase()}${proof?.score!=null?` · ${proof.score}/100`:""} · ${newsMarketSupportingAmountLine40235(n)}`);
   set("newsMarketMechanismTitle40235",`${n.mechanism.title} · ${n.mechanism.direction}`);
   const steps=document.getElementById("newsMarketMechanismSteps40235"); if(steps){steps.replaceChildren();(n.mechanism.steps||[]).forEach((label,index)=>{const li=document.createElement("li");li.dataset.step=String(index+1);const span=document.createElement("span");span.textContent=label;li.appendChild(span);steps.appendChild(li);});}
@@ -53979,7 +53953,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.286";
+const ATLAS_BUILD = "40.4.287";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
