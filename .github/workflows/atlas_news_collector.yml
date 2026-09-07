@@ -1,6 +1,6 @@
 name: Atlas News Sentinel World-to-Market Live Feed
-# 40.4.291 — French-first source routing + native-French operator display contract.
-# English evidence remains archived. No Argos, no paid translation provider, no external API secret.
+# 40.4.292 — French-first source routing preserved + bilingual FR/EN Aether operator lane.
+# Native FR remains preferred; qualified English evidence stays explicit [EN]. No Argos, paid provider or external secret.
 
 on:
   workflow_dispatch:
@@ -73,17 +73,19 @@ jobs:
           print(f"NEWS NATIVE FR 40.4.291 PASS · events={len(events)} · native_fr={summary.get('accepted_french')} · en_archive={summary.get('archive_english')}")
           PY
 
-      - name: Validate Administrator native-French consumer lock
+      - name: Validate Administrator bilingual operator consumer lock
         run: |
           python - <<'PY'
           from pathlib import Path
           app=Path("public/agent_crypto_erith_ia/administrator/app.js").read_text(encoding="utf-8")
           aether=Path("public/agent_crypto_erith_ia/administrator/js/aether.js").read_text(encoding="utf-8")
           required_app=["atlas_news_native_fr_v1", "40.4.291", "news_feed_cache_v5_404291", "machine_translation: false"]
-          required_aether=["atlas_news_native_fr_v1", "40.4.291", "native French only", "news_machine_translation:false"]
+          required_aether=["aetherNewsOperatorReady404292", "news_bilingual_operator_lane_build:"40.4.292"", "news_feed_click_opens_news_sentinel:true", "news_machine_translation:false"]
+          forbidden_aether=[".filter(aetherNewsFrenchOperatorReady404290)"]
           missing=[x for x in required_app if x not in app]+[x for x in required_aether if x not in aether]
-          if missing: raise SystemExit(f"Administrator native-French display contract missing: {missing}")
-          print("ADMINISTRATOR NEWS NATIVE-FR CONSUMER 40.4.291 PASS")
+          forbidden=[x for x in forbidden_aether if x in aether]
+          if missing or forbidden: raise SystemExit(f"Administrator bilingual News consumer failed: missing={missing} forbidden={forbidden}")
+          print("ADMINISTRATOR NEWS FR+EN OPERATOR CONSUMER 40.4.292 PASS")
           PY
 
       - name: Commit News Sentinel archive
