@@ -1,8 +1,8 @@
 /* Agent-Crypto @erith.IA — Version Truth Single Owner
-   Build 40.5.19 · VERSION TRUTH SINGLE OWNER · FALSE PROPAGATION LOCK */
+   Build 40.5.23 · 40.5 CANONICAL FREEZE · FINAL ACCEPTANCE */
 (() => {
   "use strict";
-  const OWNER = "version-truth-405019";
+  const OWNER = "version-truth-40523";
   const MANIFEST = "./build.json";
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
   const loaded = meta("administrator-build") || meta("atlas-build") || "UNKNOWN";
