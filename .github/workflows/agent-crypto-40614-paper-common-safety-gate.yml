@@ -1,0 +1,159 @@
+name: Agent-Crypto 40.6.14 Paper Common Safety Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40614-paper-common-safety-gate.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40614-paper-common-safety-gate
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded Paper owner surgery
+        run: python .github/scripts/agent_crypto_40614_paper_common_safety_gate.py
+
+      - name: Syntax + lifecycle safety proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          PAPER="$ROOT/js/strategy-a-paper-lifecycle-404295.js"
+
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          node --check "$PAPER"
+          git diff --check
+
+          node <<'NODE'
+          const fs=require('fs'), vm=require('vm');
+          const path='public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-lifecycle-404295.js';
+          let level='NORMAL';
+          globalThis.AgentCryptoStrategyASafetyCertification404299={
+            build:'40.4.299',
+            snapshot(){return {
+              build:'40.4.299', level, reason:level==='NORMAL'?'TEST_NORMAL':'TEST_PAUSE',
+              new_trades_allowed:level==='NORMAL', existing_paper_monitoring_allowed:true,
+              automatic_auto_a_resume:false, micro_live_locked:true
+            };}
+          };
+          vm.runInThisContext(fs.readFileSync(path,'utf8'),{filename:path});
+          const api=globalThis.AgentCryptoStrategyAPaperLifecycle404295;
+          if(!api || api.build!=='40.6.14' || api.common_safety_gate_406014!==true) throw new Error('40.6.14 API gate missing');
+
+          level='NORMAL';
+          const foundation=api.self_test();
+          if(foundation.pass!==true) throw new Error('foundation self_test failed: '+JSON.stringify(foundation));
+
+          level='PAUSE';
+          const blockedCreate=api.create({decision_id:'GATE-CREATE',trade_id:'PAPER-GATE-CREATE',authorized_notional_eur:50});
+          if(blockedCreate.state!=='REJECTED' || blockedCreate.reason!=='SAFETY_GOVERNOR_BLOCK_CREATE') throw new Error('PAUSE create not blocked');
+
+          level='NORMAL';
+          let blockedSubmit=api.create({decision_id:'GATE-SUBMIT',trade_id:'PAPER-GATE-SUBMIT',authorized_notional_eur:50});
+          blockedSubmit=api.risk_approve(blockedSubmit,'ACCEPT');
+          level='PAUSE';
+          blockedSubmit=api.submit(blockedSubmit);
+          if(blockedSubmit.state!=='REJECTED' || blockedSubmit.reason!=='SAFETY_GOVERNOR_BLOCK_SUBMIT') throw new Error('PAUSE submit not blocked');
+
+          level='NORMAL';
+          let inFlight=api.create({decision_id:'INFLIGHT',trade_id:'PAPER-INFLIGHT',authorized_notional_eur:50});
+          inFlight=api.risk_approve(inFlight,'ACCEPT');
+          inFlight=api.submit(inFlight);
+          inFlight=api.acknowledge(inFlight);
+          level='PAUSE';
+          inFlight=api.fill(inFlight,50,68000);
+          inFlight=api.reconcile(inFlight,{state:'FILLED',filled_notional_eur:50});
+          inFlight=api.protect(inFlight,true);
+          inFlight=api.close(inFlight,'SAFETY_PAUSE_MONITORING_TEST');
+          if(inFlight.state!=='CLOSED') throw new Error('in-flight Paper was stranded under PAUSE: '+JSON.stringify(inFlight));
+
+          const snap=api.safety_gate_snapshot();
+          if(snap.allowed!==false || snap.level!=='PAUSE') throw new Error('gate snapshot truth mismatch');
+          console.log(JSON.stringify({ok:true,foundation:true,create_block:true,submit_block:true,inflight_close:true}));
+          NODE
+
+      - name: Anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+
+          # Hard-frozen files: absolutely zero diff.
+          git diff --exit-code -- \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/style.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/oracle-presentation-405010.css" \
+            "$ROOT/oracle-fx-406013.css" \
+            "$ROOT/js/oracle-fx-406013.js" \
+            "$ROOT/js/strategy-a-safety-certification-404299.js" \
+            "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js"
+
+          grep -q '<meta name="administrator-build" content="40.6.14" />' "$ROOT/index.html"
+          grep -q 'oracle-presentation-405010.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.js?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'grid-template-columns:minmax(128px,.66fr) minmax(124px,.66fr) minmax(170px,.94fr) minmax(255px,1.35fr) minmax(410px,2.05fr)!important;' "$ROOT/index.html"
+          grep -q 'common_safety_gate_406014: true' "$ROOT/js/strategy-a-paper-lifecycle-404295.js"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-lifecycle-404295.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_14.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_14_PAPER_COMMON_SAFETY_GATE_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_14_PAPER_COMMON_SAFETY_GATE_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            p=line[3:]
+            if ' -> ' in p:p=p.split(' -> ',1)[1]
+            changed.add(p)
+          extra=changed-expected; missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.14 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.14 missing files: {sorted(missing)}')
+          print('40.6.14 bounded diff OK')
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_14_PAPER_COMMON_SAFETY_GATE_CLEAN_UPLOAD_8_FILES.zip
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/js/strategy-a-paper-lifecycle-404295.js"
+          git add "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_14.md"
+          git add "$ZIP" "$ZIP.sha256"
+          git diff --cached --quiet && { echo 'STOP 40.6.14 no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): paper common safety gate 40.6.14"
+          git pull --rebase origin main
+          git push origin HEAD:main
