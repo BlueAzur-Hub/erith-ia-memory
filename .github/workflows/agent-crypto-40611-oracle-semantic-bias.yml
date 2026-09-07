@@ -1,0 +1,117 @@
+name: Agent-Crypto 40.6.11 Oracle Semantic Bias Surface
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/agent-crypto-40611-oracle-semantic-bias.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40611-oracle-semantic-bias
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded Oracle semantic-bias surgery
+        run: python .github/scripts/agent_crypto_40611_oracle_semantic_bias.py
+
+      - name: Syntax and anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          node --check "$ROOT/js/oracle-semantic-bias-406011.js"
+          node --check "$ROOT/js/version-truth.js"
+          git diff --check
+
+          # Accepted frozen owners must remain byte-for-byte.
+          test "$(git show HEAD:$ROOT/admin-chronos.css | sha256sum | cut -d' ' -f1)" = "$(sha256sum "$ROOT/admin-chronos.css" | cut -d' ' -f1)"
+          test "$(git show HEAD:$ROOT/js/version-truth.js | sha256sum | cut -d' ' -f1)" = "$(sha256sum "$ROOT/js/version-truth.js" | cut -d' ' -f1)"
+          test "$(git show HEAD:$ROOT/js/app.js | sha256sum | cut -d' ' -f1)" = "$(sha256sum "$ROOT/js/app.js" | cut -d' ' -f1)"
+
+          # Protected surfaces must have zero diff.
+          git diff --exit-code -- \
+            "$ROOT/style.css" \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/app.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/version-truth.js"
+
+          python - <<'PY'
+          import subprocess
+
+          expected = {
+              'public/agent_crypto_erith_ia/administrator/index.html',
+              'public/agent_crypto_erith_ia/administrator/oracle-presentation-405010.css',
+              'public/agent_crypto_erith_ia/administrator/js/oracle-semantic-bias-406011.js',
+              'public/agent_crypto_erith_ia/administrator/build.json',
+              'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+              'public/agent_crypto_erith_ia/administrator/version.json',
+              'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_11.md',
+              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_11_ORACLE_SEMANTIC_BIAS_SURFACE_CLEAN_UPLOAD_7_FILES.zip',
+              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_11_ORACLE_SEMANTIC_BIAS_SURFACE_CLEAN_UPLOAD_7_FILES.zip.sha256',
+          }
+
+          # Include modified AND untracked release files.
+          status = subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'], text=True)
+          changed = set()
+          for line in status.splitlines():
+              if not line.strip():
+                  continue
+              path = line[3:]
+              if ' -> ' in path:
+                  path = path.split(' -> ', 1)[1]
+              changed.add(path)
+
+          extra = changed - expected
+          missing = expected - changed
+          if extra:
+              raise SystemExit(f'STOP 40.6.11: unexpected changed files: {sorted(extra)}')
+          if missing:
+              raise SystemExit(f'STOP 40.6.11: expected release files missing: {sorted(missing)}')
+          print('40.6.11 bounded diff OK:', sorted(changed))
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+
+          git add "$ROOT/index.html"
+          git add "$ROOT/oracle-presentation-405010.css"
+          git add "$ROOT/js/oracle-semantic-bias-406011.js"
+          git add "$ROOT/build.json"
+          git add "$ROOT/administrator-version.json"
+          git add "$ROOT/version.json"
+          git add "$ROOT/RELEASE_40_6_11.md"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_11_ORACLE_SEMANTIC_BIAS_SURFACE_CLEAN_UPLOAD_7_FILES.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_11_ORACLE_SEMANTIC_BIAS_SURFACE_CLEAN_UPLOAD_7_FILES.zip.sha256
+
+          git diff --cached --quiet && { echo "STOP 40.6.11: no changes"; exit 1; }
+          git commit -m "feat(agent-crypto): add Oracle semantic bias surface 40.6.11"
+          git pull --rebase origin main
+          git push origin HEAD:main
