@@ -176,3 +176,33 @@
    The proven 40.5.2 container-fit rules above remain authoritative:
    one centered semantic line, progressively smaller type at <=620/520px.
    ChronosXP calculation, planetary day/hour semantics and runtime are untouched. */
+
+/* 40.6.3 — CHRONOS TRUE CENTER / SINGLE LINE FINAL LOCK
+   Presentation-only correction.
+   The Chronos semantic group now owns its intrinsic width and the parent card
+   centers that complete group as one object. This avoids "100%-wide flex"
+   optical drift while preserving the exact single-line ChronosXP semantics.
+   No Chronos calculation, timer, market, Atlas, Oracle, News, Aether, Strategy A,
+   Window Manager, storage, WebSocket or Market Core ownership is changed. */
+#sourceTimeCard{
+  justify-items:center !important;
+}
+
+#atlasCelestialClockHeader{
+  display:inline-flex !important;
+  justify-self:center !important;
+  width:max-content !important;
+  inline-size:max-content !important;
+  max-width:100% !important;
+  max-inline-size:100% !important;
+  box-sizing:border-box !important;
+  justify-content:flex-start !important;
+}
+
+/* On normal desktop widths keep each semantic fragment intrinsic.
+   Narrow cards retain the existing 40.5.2 shrink/fit behavior. */
+@container (min-width:621px){
+  #atlasCelestialClockHeader > span{
+    flex:0 0 auto !important;
+  }
+}
