@@ -35856,11 +35856,47 @@ function strategyAAutoStop404265(reason="Arrêt opérateur · position Paper év
   try{renderStrategySandboxExtensions404261();}catch(_){}
   return strategyAAutoSnapshot404265();
 }
+/* 40.4.297 — actual Auto A/Paper must have the corrected Lifecycle bridge ready
+   before a NEW automatic Paper entry. Existing Paper positions remain monitored
+   by the canonical 40.4.263/40.4.264 owners even if bridge evidence later faults. */
+function strategyAAutoLifecyclePreflight404297(){
+  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297?.preflight?.()||{ready:false,blocked_reason:"BRIDGE_UNAVAILABLE"};}
+  catch(error){return {ready:false,blocked_reason:String(error?.message||error)};}
+}
+function strategyAAutoLifecycleOpen404297(proposal,risk,fill){
+  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297?.on_open?.({proposal,risk,fill})||{ok:false,reason:"BRIDGE_UNAVAILABLE"};}
+  catch(error){return {ok:false,reason:String(error?.message||error)};}
+}
+function strategyAAutoLifecycleClose404297(reconciliation){
+  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297?.on_close?.({reconciliation})||{ok:false,reason:"BRIDGE_UNAVAILABLE"};}
+  catch(error){return {ok:false,reason:String(error?.message||error)};}
+}
+/* 40.4.299 — Safety is now the governor for NEW Auto A entries.
+   It never prevents monitoring/reconciliation of an already-open Paper position. */
+function strategyAAutoSafetySnapshot404299(){
+  try{return globalThis.AgentCryptoStrategyASafetyCertification404299?.snapshot?.()||{level:"UNAVAILABLE",new_trades_allowed:false,auto_a_governor_connected:false};}
+  catch(error){return {level:"ERROR",reason:String(error?.message||error),new_trades_allowed:false,auto_a_governor_connected:false};}
+}
+function strategyAAutoSafetySignal404299(kind,detail={}){
+  try{return globalThis.AgentCryptoStrategyASafetyCertification404299?.signal?.(kind,detail)||null;}catch(_){return null;}
+}
 function strategyAAutoStart404265(){
   const s=STRATEGY_A_AUTO_STATE_404265;let local=null;
   try{local=strategyALocalContext404261();}catch(_){}
   if(String(local?.active_workspace||"")!=="strategy_a"){
     s.enabled=false;s.phase="BLOCKED";s.last_action="Activer STRATÉGIE A avant l’Auto Paper Runner.";
+    try{renderStrategySandboxExtensions404261();}catch(_){}
+    return strategyAAutoSnapshot404265();
+  }
+  const lifecycleBridge=strategyAAutoLifecyclePreflight404297();
+  if(lifecycleBridge?.ready!==true){
+    s.enabled=false;s.phase="LIFECYCLE_BRIDGE_BLOCKED";s.last_action=`Auto A non armé : Lifecycle bridge indisponible · ${lifecycleBridge?.blocked_reason||"preuve absente"}.`;
+    try{renderStrategySandboxExtensions404261();}catch(_){}
+    return strategyAAutoSnapshot404265();
+  }
+  const safety=strategyAAutoSafetySnapshot404299();
+  if(safety?.auto_a_governor_connected!==true||safety?.new_trades_allowed!==true){
+    s.enabled=false;s.phase="SAFETY_GOVERNOR_BLOCKED";s.last_action=`Auto A non armé : Safety ${safety?.level||"UNAVAILABLE"} · ${safety?.reason||"nouveaux trades interdits"}.`;
     try{renderStrategySandboxExtensions404261();}catch(_){}
     return strategyAAutoSnapshot404265();
   }
@@ -36179,9 +36215,13 @@ function strategyAAutoCycle404265(trigger="timer"){
         const rec=strategyAReconcile404264();
         if(rec?.status==="RECONCILED"){
           s.closed+=1;s.last_closed_signal_404271=s.last_entry_signal_404271||null;s.last_entry_signal_404271=null;s.cooldown_until=Date.now()+STRATEGY_A_REENTRY_POLICY_404271.cooldown_ms;s.phase="CLOSED_REENTRY_COOLDOWN";
+          if(rec?.trade?.lifecycle_bridge_404297?.ok===false)strategyAAutoSafetySignal404299("LIFECYCLE_BRIDGE_FAILURE",{execution_id:rec?.trade?.execution_id,reason:rec?.trade?.lifecycle_bridge_404297?.reason});
+          if(rec?.trade?.after_cost_404298?.ok===false)strategyAAutoSafetySignal404299("EVIDENCE_PIPELINE_FAILURE",{execution_id:rec?.trade?.execution_id,reason:rec?.trade?.after_cost_404298?.reason});
           s.last_action=`Paper clôturé · ${exitV2.reason} · P/L net ${Number(rec?.trade?.net_pnl_eur||0).toFixed(2)} € · échantillon ${Number(rec?.metrics?.sample_size||0)}.`;
         }else{
-          s.phase=String(rec?.status||"RECONCILIATION_BLOCKED");s.last_action=String(rec?.reason||"Réconciliation non disponible.");
+          const reason=String(rec?.reason||"Réconciliation non disponible.");
+          s.phase=String(rec?.status||"RECONCILIATION_BLOCKED");s.last_action=reason;
+          strategyAAutoSafetySignal404299(/prix BTC/i.test(reason)?"DATA_STALE":"UNKNOWN_EXECUTION_STATE",{status:rec?.status||null,reason,execution_id:open?.execution_id||null});
         }
       }else{
         s.phase="MONITORING_OPEN";s.last_action=`Paper ouvert ${open.execution_id} · ${(ageMs/60000).toFixed(1)} min · ${exitV2.reason}.`;
@@ -36200,12 +36240,19 @@ function strategyAAutoCycle404265(trigger="timer"){
       s.last_action=`Coût d'abord : potentiel Oracle ${exp} · seuil ${Number(cg.costs.required_move_pct).toFixed(2)} % (coûts ${Number(cg.costs.total_pct).toFixed(2)} % + marge). Aucun trade Paper.`;
     }else if(proposal?.proposal_id&&proposal.proposal_id===s.last_executed_proposal_id){
       s.phase="DUPLICATE_WAIT";s.last_action=`Proposition ${proposal.proposal_id} déjà exécutée dans cette session · attente du prochain état.`;
+    }else if(strategyAAutoSafetySnapshot404299()?.new_trades_allowed!==true){
+      const safety=strategyAAutoSafetySnapshot404299();s.no_trade+=1;s.phase="SAFETY_GOVERNOR_WAIT";s.last_action=`Nouvelle entrée Auto A bloquée par Safety · ${safety?.level||"UNAVAILABLE"} · ${safety?.reason||"aucune autorisation"}.`;
     }else{
       STRATEGY_A_LAST_RISK_404262=strategyARiskGovernor404262(proposal);
       const risk=STRATEGY_A_LAST_RISK_404262;
       if(!risk||!["ACCEPT","REDUCE"].includes(risk.decision)||!(Number(risk.authorized_notional_eur)>0)){
         s.risk_rejects+=1;s.phase="RISK_REJECT";s.last_action=`${risk?.decision||"REJECT"} · ${risk?.reason||"Risk Governor sans autorisation."}`;
       }else{
+        const lifecycleBridge=strategyAAutoLifecyclePreflight404297();
+        if(lifecycleBridge?.ready!==true){
+          s.no_trade+=1;s.phase="LIFECYCLE_BRIDGE_BLOCKED";s.last_action=`Nouvelle entrée Auto A bloquée : Lifecycle bridge · ${lifecycleBridge?.blocked_reason||"preuve absente"}.`;
+          return strategyAAutoSnapshot404265();
+        }
         const fill=strategyAPaperExecute404263(risk);
         if(fill?.status==="PAPER_OPEN"){
           s.opened+=1;s.last_executed_proposal_id=proposal.proposal_id;s.last_entry_signal_404271=strategyAReentrySignal404271(proposal);s.phase="PAPER_OPEN";
@@ -36216,6 +36263,7 @@ function strategyAAutoCycle404265(trigger="timer"){
       }
     }
   }catch(error){
+    strategyAAutoSafetySignal404299("AUTO_RUNTIME_ERROR",{error:String(error?.message||error),cycle:Number(s.cycles||0)});
     s.enabled=false;s.phase="ERROR_STOP";s.last_action=`STOP erreur Auto Paper : ${String(error?.message||error)}`;
   }finally{
     try{strategyAExperimentRecord404289(trigger);}catch(_){}
@@ -36727,7 +36775,13 @@ function strategyAPaperExecute404263(risk=STRATEGY_A_LAST_RISK_404262){
   const btc=strategyABtcContext404261();if(!btc.available)return {schema:"agent_crypto_paper_execution_envelope_v1",build:"40.4.263",status:"PAPER_REJECTED",reason:"Prix BTC indisponible.",safety:{real_order:false,kraken_network:false,workspace_mutation:false,storage_write:false}};
   const cost=strategyAPaperCostAssumptions404263(),notional=Number(risk.authorized_notional_eur),reference=Number(btc.price_eur),fill=reference*(1+cost.entry_impact_pct/100),fee=notional*cost.buy_fee_pct/100,assetCash=Math.max(0,notional-fee),qty=assetCash/fill;
   const row={schema:"agent_crypto_paper_execution_envelope_v1",build:"40.4.263",execution_id:`PAPER-A-${strategyAHash404261([risk.risk_id,reference,notional].join("|"))}`,risk_id:risk.risk_id,proposal_id:risk.proposal_id,generated_at:new Date().toISOString(),workspace:"strategy_a",kraken_mapping_reference:"erith-strategy-a",execution_venue:"LOCAL_PAPER_EMULATOR",status:"PAPER_OPEN",symbol:"BTC",side:"BUY_PAPER",authorized_notional_eur:notional,reference_price_eur:reference,fill_price_eur:fill,quantity_btc:qty,entry_fee_eur:fee,entry_impact_pct:cost.entry_impact_pct,buy_fee_pct:cost.buy_fee_pct,safety:{simulation_only:true,real_order:false,kraken_network:false,kraken_order:false,credentials:false,wallet:false,withdrawal:false,workspace_mutation:false,storage_write:false}};
-  STRATEGY_A_PAPER_LEDGER_404263.push(row);return row;
+  STRATEGY_A_PAPER_LEDGER_404263.push(row);
+  try{
+    const proposal=(typeof STRATEGY_A_LAST_PROPOSAL_404261!=="undefined"?STRATEGY_A_LAST_PROPOSAL_404261:null);
+    const bridge=strategyAAutoLifecycleOpen404297(proposal,risk,row);
+    row.lifecycle_bridge_404297={ok:bridge?.ok===true,reason:bridge?.reason||null,build:"40.4.297"};
+  }catch(error){row.lifecycle_bridge_404297={ok:false,reason:String(error?.message||error),build:"40.4.297"};}
+  return row;
 }
 function renderStrategyAPaperExecution404263(){
   const anchor=document.getElementById("strategyARiskGovernor404262");if(!anchor)return;let panel=document.getElementById("strategyAPaperExecution404263");
@@ -36754,7 +36808,13 @@ function strategyAReconcile404264(){
   const c=strategyAPaperExitCosts404264(),reference=Number(btc.price_eur),exitFill=reference*(1-c.exit_impact_pct/100),gross=Number(open.quantity_btc)*exitFill,exitFee=gross*c.sell_fee_pct/100,netExit=gross-exitFee,entryCash=Number(open.authorized_notional_eur),netPnl=netExit-entryCash,netReturn=entryCash>0?netPnl/entryCash*100:0;
   const entryImpactEur=Math.max(0,(Number(open.fill_price_eur)-Number(open.reference_price_eur))*Number(open.quantity_btc));const exitImpactEur=Math.max(0,(reference-exitFill)*Number(open.quantity_btc));
   const row={schema:"agent_crypto_paper_reconciliation_v1",build:"40.4.264",reconciliation_id:`REC-A-${strategyAHash404261([open.execution_id,reference,STRATEGY_A_CLOSED_TRADES_404264.length].join("|"))}`,execution_id:open.execution_id,closed_at:new Date().toISOString(),workspace:"strategy_a",status:"LOCAL_PAPER_EMULATION_MATCHED",symbol:"BTC",entry_reference_eur:open.reference_price_eur,entry_fill_eur:open.fill_price_eur,exit_reference_eur:reference,exit_fill_eur:exitFill,quantity_btc:open.quantity_btc,entry_cash_eur:entryCash,net_exit_eur:netExit,entry_fee_eur:open.entry_fee_eur,exit_fee_eur:exitFee,total_fees_eur:Number(open.entry_fee_eur)+exitFee,estimated_total_impact_eur:entryImpactEur+exitImpactEur,net_pnl_eur:netPnl,net_return_pct:netReturn,safety:{simulation_only:true,real_order:false,kraken_network:false,workspace_mutation:false,storage_write:false,profitability_claim:false}};
-  open.status="PAPER_CLOSED";open.closed_by=row.reconciliation_id;STRATEGY_A_CLOSED_TRADES_404264.push(row);return {status:"RECONCILED",trade:row,metrics:strategyAMetrics404264()};
+  open.status="PAPER_CLOSED";open.closed_by=row.reconciliation_id;STRATEGY_A_CLOSED_TRADES_404264.push(row);
+  try{row.lifecycle_bridge_404297=strategyAAutoLifecycleClose404297(row);}catch(error){row.lifecycle_bridge_404297={ok:false,reason:String(error?.message||error)};}
+  try{
+    const afterCost=globalThis.AgentCryptoStrategyAAfterCostMetrics404298?.from_reconciliation?.(row);
+    row.after_cost_404298=afterCost?.ok===true?{ok:true,identity:afterCost.row?.identity||row.reconciliation_id}:{ok:false,reason:afterCost?.reason||"AFTER_COST_OWNER_UNAVAILABLE"};
+  }catch(error){row.after_cost_404298={ok:false,reason:String(error?.message||error)};}
+  return {status:"RECONCILED",trade:row,metrics:strategyAMetrics404264()};
 }
 function renderStrategyAReconciliation404264(){
   const anchor=document.getElementById("strategyAPaperExecution404263");if(!anchor)return;let panel=document.getElementById("strategyAReconciliation404264");
@@ -50624,19 +50684,79 @@ function readAutoMemory() {
   }
 }
 
+/* 40.4.296 — AUTO MEMORY SAVE TRUTH LOCK
+   Legacy LocalStorage compatibility remains, but a failed write can no longer be
+   represented as the candidate state. A quota-reduced write is explicit, and a
+   double failure keeps the last actually persisted payload in the read cache. */
+const ATLAS_AUTO_MEMORY_WRITE_TRUTH_404296 = { last:null };
+function atlasAutoMemoryPersistedRows404296() {
+  try {
+    const raw = localStorage.getItem(AUTO_MEMORY_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (_) { return []; }
+}
+function atlasAutoMemoryWriteTruth404296() {
+  const row = ATLAS_AUTO_MEMORY_WRITE_TRUTH_404296.last;
+  return row ? JSON.parse(JSON.stringify(row)) : null;
+}
 function writeAutoMemory(records) {
-  let safe = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : [];
+  const requested = Array.isArray(records) ? records.slice(-AUTO_MAX_RECORDS) : [];
+  const before = atlasAutoMemoryPersistedRows404296();
+  let safe = requested.slice();
+  let ok = false, degraded = false, firstError = null, finalError = null;
+
   try {
     localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe));
-  } catch {
+    ok = true;
+  } catch (error) {
+    firstError = String(error?.message || error);
     safe = safe.slice(Math.floor(safe.length / 2));
-    try { localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe)); } catch {}
+    degraded = true;
+    try {
+      localStorage.setItem(AUTO_MEMORY_KEY, JSON.stringify(safe));
+      ok = true;
+    } catch (retryError) {
+      finalError = String(retryError?.message || retryError);
+      safe = before.slice();
+    }
   }
-  atlasAutoMemoryCache4091.records = safe;
+
+  const persisted = ok ? atlasAutoMemoryPersistedRows404296() : before.slice();
+  const same = ok && JSON.stringify(persisted) === JSON.stringify(safe);
+  if (ok && !same) {
+    ok = false;
+    finalError = "relecture LocalStorage différente de l’écriture";
+  }
+  const actual = ok ? persisted : before.slice();
+
+  atlasAutoMemoryCache4091.records = actual.slice();
   atlasAutoMemoryCache4091.loaded = true;
   atlasAutoMemoryCache4091.revision += 1;
-  return safe.slice();
+  ATLAS_AUTO_MEMORY_WRITE_TRUTH_404296.last = {
+    schema:"atlas_auto_memory_write_truth_v1",
+    build:"40.4.296",
+    at:new Date().toISOString(),
+    ok,
+    backend:"LocalStorage legacy compatibility",
+    requested_count:requested.length,
+    persisted_count:actual.length,
+    degraded:ok && degraded,
+    first_error:firstError,
+    error:ok ? null : (finalError || firstError || "écriture non vérifiée"),
+    reread_verified:ok && same,
+    unsaved_candidate_returned:false
+  };
+  return actual.slice();
 }
+try {
+  globalThis.AgentCryptoAutoMemoryWriteTruth404296 = Object.freeze({
+    build:"40.4.296",
+    last:atlasAutoMemoryWriteTruth404296,
+    read_persisted:()=>atlasAutoMemoryPersistedRows404296().slice(),
+    failed_write_never_returned_as_saved:true
+  });
+} catch (_) {}
 
 function makeAutoSnapshot() {
   const collectorId = getCollectorId();
@@ -50715,7 +50835,7 @@ function saveAutoSnapshot() {
   }
   records.push(snapshot);
   const saved = writeAutoMemory(normalizeSharedRecords(records, snapshot.collector_id));
-  const finalSnapshot = saved.find(record => record.snapshot_id === snapshot.snapshot_id) || snapshot;
+  const finalSnapshot = saved.find(record => record.snapshot_id === snapshot.snapshot_id) || null;
   queueMicrotask(renderMemoryTruth);
   queueMicrotask(atlasMemoryIntelligenceRender);
   queueMicrotask(atlasMultiCollectorOperatorRender);
@@ -54078,7 +54198,7 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.4.295";
+const ATLAS_BUILD = "40.4.299";
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -56344,40 +56464,67 @@ const ATLAS_BOOK_SHARED_MEMORY_SCHEMA_V2 = "atlas_book_shared_market_memory_v2";
 const ATLAS_BOOK_SHARED_MEMORY_MAX_RECORDS = 60;
 
 function atlasBookSharedMemoryPayloadV2() {
-  const raw = typeof readAutoMemory === "function" ? readAutoMemory() : [];
+  // 40.4.296: prefer the canonical IndexedDB Collector owner used by Shared Memory.
+  // Legacy Auto/CURRENT LocalStorage is only a compatibility fallback when the
+  // canonical owner is genuinely unavailable. CURRENT analytics stay excluded.
+  let raw = [], backend = "LocalStorage legacy compatibility";
+  try {
+    if (globalThis.AgentCryptoSharedMemory404282 && typeof readCollectorMemory === "function") {
+      raw = readCollectorMemory();
+      if (typeof atlasCollectorMarketObservationRecords === "function") raw = atlasCollectorMarketObservationRecords(raw);
+      backend = "IndexedDB Collector";
+    } else if (typeof readAutoMemory === "function") raw = readAutoMemory();
+  } catch (_) { raw = typeof readAutoMemory === "function" ? readAutoMemory() : []; }
   const normalized = typeof normalizeSharedRecords === "function"
     ? normalizeSharedRecords(raw, typeof getCollectorId === "function" ? getCollectorId() : null)
     : Array.isArray(raw) ? raw : [];
-  const records = normalized.slice(-ATLAS_BOOK_SHARED_MEMORY_MAX_RECORDS).map(record => atlasSharedSynthesisClone(record));
+  const marketOnly = normalized.filter(record => {
+    try { return !(record?.analytical_current === true || String(record?.record_kind || "").toUpperCase() === "CURRENT"); } catch (_) { return true; }
+  });
+  const records = marketOnly.slice(-ATLAS_BOOK_SHARED_MEMORY_MAX_RECORDS).map(record => atlasSharedSynthesisClone(record));
   const collectors = typeof collectorStats === "function" ? collectorStats(records).collectors : [...new Set(records.map(row => row?.collector_id).filter(Boolean))];
   return {
     schema: ATLAS_BOOK_SHARED_MEMORY_SCHEMA_V2,
     exported_at: new Date().toISOString(),
+    exporter_collector_id: typeof getCollectorId === "function" ? getCollectorId() : null,
+    backend,
+    analytical_current_included: false,
     record_count: records.length,
     collectors,
     records
   };
 }
 
-function atlasBookMergeSharedMemoryV2(sharedMemory) {
+async function atlasBookMergeSharedMemoryV2(sharedMemory) {
   const incoming = Array.isArray(sharedMemory?.records) ? sharedMemory.records.slice(-ATLAS_BOOK_SHARED_MEMORY_MAX_RECORDS) : [];
-  if (!incoming.length || typeof readAutoMemory !== "function" || typeof writeAutoMemory !== "function" || typeof normalizeSharedRecords !== "function") {
-    return { read: incoming.length, added: 0, total: typeof readAutoMemory === "function" ? readAutoMemory().length : 0 };
+  if (!incoming.length) {
+    return { ok:true, read:0, added:0, total:null, persisted:true, backend:"NOT_REQUIRED", idempotent:true };
   }
-  const before = readAutoMemory();
-  const beforeIds = new Set(before.map(row => row?.snapshot_id || row?.id || atlasMemoryCanonicalSnapshotId?.(row)).filter(Boolean));
-  const merged = normalizeSharedRecords([...before, ...incoming], typeof getCollectorId === "function" ? getCollectorId() : null);
-  const saved = writeAutoMemory(merged);
-  const added = saved.filter(row => {
-    const id = row?.snapshot_id || row?.id || (typeof atlasMemoryCanonicalSnapshotId === "function" ? atlasMemoryCanonicalSnapshotId(row) : null);
-    return id && !beforeIds.has(id);
-  }).length;
+  const owner = globalThis.AgentCryptoSharedMemory404282;
+  if (!owner?.importPayload) throw new Error("Owner Shared Memory IndexedDB 40.4.282 indisponible : import Book refusé sans mutation");
+  const payload = {
+    schema: sharedMemory?.schema || ATLAS_BOOK_SHARED_MEMORY_SCHEMA_V2,
+    exported_at: sharedMemory?.exported_at || new Date().toISOString(),
+    exporter_collector_id: sharedMemory?.exporter_collector_id || sharedMemory?.collector_id || null,
+    records: incoming
+  };
+  const result = await owner.importPayload(payload, "book_shared_memory_404296_verified_import");
+  if (!result?.ok) throw new Error("Import Book Shared Memory non vérifié");
   try { renderSharedMemory?.(); } catch {}
   try { renderAutoReader?.(); } catch {}
   try { atlasMemoryIntelligenceRender?.(); } catch {}
   try { renderDecisionBoard?.(); } catch {}
   try { atlasBookReadOnlyKnowledgeRefresh?.(); } catch {}
-  return { read: incoming.length, added, total: saved.length };
+  return {
+    ok:true,
+    read:Number(result.read || incoming.length),
+    added:Number(result.added || 0),
+    total:Number(result.records || 0),
+    persisted:true,
+    backend:"IndexedDB Collector",
+    collectors:Array.isArray(result.collectors) ? result.collectors.slice() : [],
+    idempotent:Number(result.added || 0) === 0
+  };
 }
 
 function atlasSharedSynthesisExportJson() {
@@ -56412,7 +56559,7 @@ async function atlasSharedSynthesisImportFile(event) {
     const raw = await file.text();
     const parsed = JSON.parse(raw);
     if (operation !== atlasSharedSynthesisState.operation) return false;
-    const memoryResult = atlasBookMergeSharedMemoryV2(parsed?.shared_memory || null);
+    const memoryResult = await atlasBookMergeSharedMemoryV2(parsed?.shared_memory || null);
     const handoffPayload = {
       ...parsed,
       handoff: {
@@ -56434,7 +56581,7 @@ async function atlasSharedSynthesisImportFile(event) {
     // The imported Ryzen conclusion is immediately available in the main Aerith panel.
     atlasLocalDialogueState.conclusionResponse = atlasSharedSynthesisMainConclusionResponse(clean, "import");
     atlasLocalResponseSelectView("conclusion");
-    const memoryText = memoryResult.read ? ` · mémoire ${memoryResult.added} nouveau(x) / ${memoryResult.total} total` : " · aucune mémoire jointe";
+    const memoryText = memoryResult.read ? ` · mémoire IndexedDB vérifiée ${memoryResult.added} nouveau(x) / ${memoryResult.total} total` : " · aucune mémoire jointe";
     if (saved.ok) {
       atlasSharedSynthesisSetStatus("ready", `Import terminé · IndexedDB vérifiée (${Math.max(1, Math.round(saved.bytes / 1024))} Ko)${memoryText}.`, "Importée");
     } else {
@@ -56450,6 +56597,19 @@ async function atlasSharedSynthesisImportFile(event) {
     if (input) input.value = "";
   }
 }
+
+try {
+  globalThis.AgentCryptoMemoryImportSaveTruth404296 = Object.freeze({
+    build:"40.4.296",
+    shared_memory_owner:"AgentCryptoSharedMemory404282 / IndexedDB Collector",
+    book_import_verified:true,
+    duplicate_import_expected_added_zero:true,
+    legacy_localstorage_failed_write_truth:true,
+    unsaved_candidate_never_reported_as_saved:true,
+    automatic_deletion:false,
+    market_core_changed:false
+  });
+} catch (_) {}
 
 function atlasDecisionBoardV2MemoryState() {
   const memory = typeof atlasMemoryIntelligenceCompute === "function" ? atlasMemoryIntelligenceCompute() : null;
