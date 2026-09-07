@@ -1,0 +1,108 @@
+   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+-  <script src="./app.js?v=administrator-build-40.4.284"></script>
++  <script src="./app.js?v=administrator-build-40.4.285"></script>
+   <script src="./js/market-memory.js"></script>
+   <script src="./js/analytical-memory.js"></script>
+   <script src="./js/market-memory-collector.js"></script>
+   <script src="./js/shared-memory-collector-40.4.282.js?v=administrator-build-40.4.282"></script>
+   <script src="./js/shared-memory-reader-consistency-40.4.283.js?v=administrator-build-40.4.283"></script>
+   <script src="./js/shared-memory-gap-aware-color-40.4.284.js?v=administrator-build-40.4.284"></script>
+   <script src="./js/decision-board.js"></script>
+   <script src="./js/multi-collector-concordance.js"></script>
+-  <script src="./js/aether.js?v=administrator-build-40.4.281"></script>
++  <script src="./js/aether.js?v=administrator-build-40.4.285"></script>
+@@ -4661,7 +4661,7 @@
+   <script src="./js/core/admin-window-manager.js"></script>
+   <script src="./js/views/presentation-boundaries.js"></script>
+   <script src="./js/views/view-lifecycle.js?v=administrator-build-40.4.257"></script>
+-  <script src="./js/app.js?v=administrator-build-40.4.281"></script>
++  <script src="./js/app.js?v=administrator-build-40.4.285"></script>
+   <script src="./js/atlas-heartbeat-rearm.js?v=40.4.212"></script>
+   <script src="./js/markets-domain-contract.js?v=40.4.213"></script>
+   <script src="./js/views/system-demand-residency.js?v=administrator-build-40.4.196R1"></script>
+diff --git a/public/agent_crypto_erith_ia/administrator/build.json b/public/agent_crypto_erith_ia/administrator/build.json
+--- a/public/agent_crypto_erith_ia/administrator/build.json
++++ b/public/agent_crypto_erith_ia/administrator/build.json
+@@ -1,8 +1,8 @@
+ {
+   "schema": "agent_crypto_runtime_build_truth_v1",
+-  "build": "40.4.284",
++  "build": "40.4.285",
+   "engine": "38.15.11",
+-  "release": "MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK",
++  "release": "AETHER VEILLE · CRYPTO OPERATOR RELEVANCE SCOPE LOCK",
+   "published": true,
+-  "status": "memory_coverage_gap_aware_truth_color_identity_404284"
++  "status": "aether_veille_crypto_operator_relevance_scope_lock_404285"
+ }
+diff --git a/public/agent_crypto_erith_ia/administrator/version.json b/public/agent_crypto_erith_ia/administrator/version.json
+--- a/public/agent_crypto_erith_ia/administrator/version.json
++++ b/public/agent_crypto_erith_ia/administrator/version.json
+@@ -1,9 +1,9 @@
+ {
+   "schema": "agent_crypto_version_manifest_v8",
+-  "release": "MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK",
+-  "build": "40.4.284",
+-  "asset_token": "market-core-v2.0-alpha-build-40.4.284",
+-  "status": "memory_coverage_gap_aware_truth_color_identity_404284",
+-  "prepared_at": "2026-09-07T00:35:14Z",
+-  "published_at": "2026-09-07T00:35:14Z",
++  "release": "AETHER VEILLE · CRYPTO OPERATOR RELEVANCE SCOPE LOCK",
++  "build": "40.4.285",
++  "asset_token": "market-core-v2.0-alpha-build-40.4.285",
++  "status": "aether_veille_crypto_operator_relevance_scope_lock_404285",
++  "prepared_at": "2026-09-07T01:27:17Z",
++  "published_at": "2026-09-07T01:27:17Z",
+   "mode": "Administrator",
+@@ -15 +15 @@
+-  "parent_build": "40.4.283",
++  "parent_build": "40.4.284",
+@@ -82,8 +82,8 @@
+     "files": 63,
+     "publication_identity": {
+-      "build": "40.4.279",
+-      "asset_token": "market-core-v2.0-alpha-build-40.4.279",
+-      "status": "aether_veille_crypto_operator_relevance_eligibility_404279",
++      "build": "40.4.285",
++      "asset_token": "market-core-v2.0-alpha-build-40.4.285",
++      "status": "aether_veille_crypto_operator_relevance_scope_lock_404285",
+       "app_sha256": "0b9a7962e0611afde88f37b820ac5d754e693abd2f1e365ad0897e676af4667f",
+       "administrator_version_hash_policy": "self hash intentionally omitted; payload hashes are canonical verification authority"
+     },
+diff --git a/public/agent_crypto_erith_ia/administrator/administrator-version.json b/public/agent_crypto_erith_ia/administrator/administrator-version.json
+--- a/public/agent_crypto_erith_ia/administrator/administrator-version.json
++++ b/public/agent_crypto_erith_ia/administrator/administrator-version.json
+@@ -1,9 +1,9 @@
+ {
+   "schema": "agent_crypto_administrator_mirror_manifest_v36",
+-  "build": "40.4.284",
+-  "release": "MEMORY COVERAGE GAP-AWARE TRUTH + COLOR IDENTITY LOCK",
+-  "status": "memory_coverage_gap_aware_truth_color_identity_404284",
+-  "prepared_at": "2026-09-07T00:35:14Z",
+-  "published_at": "2026-09-07T00:35:14Z",
+-  "global_versioning": "40.4.284",
++  "build": "40.4.285",
++  "release": "AETHER VEILLE · CRYPTO OPERATOR RELEVANCE SCOPE LOCK",
++  "status": "aether_veille_crypto_operator_relevance_scope_lock_404285",
++  "prepared_at": "2026-09-07T01:27:17Z",
++  "published_at": "2026-09-07T01:27:17Z",
++  "global_versioning": "40.4.285",
+   "source": "40.4.56",
+@@ -2147,2 +2147,2 @@
+-  "asset_token": "market-core-v2.0-alpha-build-40.4.284",
+-  "parent_build": "40.4.283",
++  "asset_token": "market-core-v2.0-alpha-build-40.4.285",
++  "parent_build": "40.4.284",
+@@ -2214,9 +2214,9 @@
+     "files": 7,
+     "self_hash_policy": "manifest self hash omitted; version.json records administrator-version.json candidate hash",
+     "publication_identity": {
+-      "build": "40.4.279",
+-      "asset_token": "market-core-v2.0-alpha-build-40.4.279",
+-      "status": "aether_veille_crypto_operator_relevance_eligibility_404279",
++      "build": "40.4.285",
++      "asset_token": "market-core-v2.0-alpha-build-40.4.285",
++      "status": "aether_veille_crypto_operator_relevance_scope_lock_404285",
+       "app_sha256": "0b9a7962e0611afde88f37b820ac5d754e693abd2f1e365ad0897e676af4667f",
+       "administrator_version_hash_policy": "self hash intentionally omitted; payload hashes are canonical verification authority"
+     },
