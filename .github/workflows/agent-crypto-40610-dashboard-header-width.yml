@@ -54,6 +54,7 @@ jobs:
             "$ROOT/js/app.js"
 
           # The only edited runtime/presentation owner is index.html.
+          # Include tracked modifications AND newly-created release/ZIP files.
           python - <<'PY'
           import subprocess
           allowed = {
@@ -65,15 +66,20 @@ jobs:
               'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip',
               'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip.sha256',
           }
-          changed = {p for p in subprocess.check_output(['git','diff','--name-only'], text=True).splitlines() if p}
+          tracked = {p for p in subprocess.check_output(['git','diff','--name-only'], text=True).splitlines() if p}
+          untracked = {p for p in subprocess.check_output(['git','ls-files','--others','--exclude-standard'], text=True).splitlines() if p}
+          changed = tracked | untracked
           extra = changed - allowed
-          missing = {
+          required = {
               'public/agent_crypto_erith_ia/administrator/index.html',
               'public/agent_crypto_erith_ia/administrator/build.json',
               'public/agent_crypto_erith_ia/administrator/administrator-version.json',
               'public/agent_crypto_erith_ia/administrator/version.json',
               'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_10.md',
-          } - changed
+              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip',
+              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip.sha256',
+          }
+          missing = required - changed
           if extra:
               raise SystemExit(f'STOP 40.6.10: unexpected changed files: {sorted(extra)}')
           if missing:
