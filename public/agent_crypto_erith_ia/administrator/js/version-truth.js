@@ -1,9 +1,10 @@
 /* Agent-Crypto @erith.IA — Version Truth Single Owner
-   Build 40.6.1 · CHRONOS ORIGINAL LINE · VEILLE NATIVE RETURN LOCK */
+   Build 40.6.4 · CHRONOS TRUE CENTER · VERSION SAFE REFRESH LOCK */
 (() => {
   "use strict";
-  const OWNER = "version-truth-40601";
+  const OWNER = "version-truth-40604";
   const MANIFEST = "./build.json";
+  const REFRESH_PARAM = "ac-refresh";
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
   const loaded = meta("administrator-build") || meta("atlas-build") || "UNKNOWN";
   const engine = meta("atlas-engine-build") || "UNKNOWN";
@@ -45,8 +46,11 @@
       control.dataset.versionTruthState=state.state;
       control.dataset.falsePropagation="false";
       control.setAttribute("aria-label",state.state==="update-available"
-        ?`Version Agent-Crypto chargée : Build ${state.loaded}. Build ${state.published} disponible sur GitHub.`
-        :`Version Agent-Crypto chargée : Build ${state.loaded}, mode Administrator.`);
+        ?`Version Agent-Crypto chargée : Build ${state.loaded}. Build ${state.published} disponible sur GitHub. Cliquer pour actualiser.`
+        :`Version Agent-Crypto chargée : Build ${state.loaded}, mode Administrator. Cliquer pour actualiser.`);
+      control.title=state.state==="update-available"
+        ?`Build ${state.loaded} chargé · Build ${state.published} publié · cliquer pour actualiser`
+        :`Build ${state.loaded} chargé · cliquer pour actualiser sans vider les données locales`;
       control.classList.add("ok");
       control.classList.remove("warn","bad","syncing");
     }
@@ -65,7 +69,7 @@
   let lastState=render(null);
   async function refresh(reason="manual"){
     try{
-      const url=`${MANIFEST}?v=${encodeURIComponent(loaded)}&truth=${encodeURIComponent(OWNER)}`;
+      const url=`${MANIFEST}?v=${encodeURIComponent(loaded)}&truth=${encodeURIComponent(OWNER)}&t=${Date.now()}`;
       const response=await fetch(url,{cache:"no-store",credentials:"same-origin"});
       if(!response.ok) throw new Error(`HTTP ${response.status}`);
       lastState=render(await response.json());
@@ -74,14 +78,49 @@
     }
     return Object.freeze({...lastState,reason});
   }
-  if(control) control.addEventListener("click",()=>{void refresh("manual-click");});
+
+  let navigating=false;
+  function safeReload(state=lastState){
+    if(navigating) return false;
+    navigating=true;
+    const target=String(state?.published||loaded||"current").trim()||"current";
+    if(control){
+      control.setAttribute("aria-busy","true");
+      control.dataset.versionTruthState="reloading";
+    }
+    if(text) text.textContent=`Build ${loaded} · actualisation…`;
+    try{
+      const url=new URL(location.href);
+      url.searchParams.set(REFRESH_PARAM,`${target}-${Date.now()}`);
+      /* Unique document URL + build-versioned changed assets in index.html.
+         This is the practical Firefox-safe refresh used by the historical
+         Version Awareness contract; it does not erase cookies, localStorage,
+         IndexedDB, Window Manager state or Paper data. */
+      location.replace(url.toString());
+      return true;
+    }catch(error){
+      navigating=false;
+      if(control) control.removeAttribute("aria-busy");
+      lastState=render(null,error);
+      return false;
+    }
+  }
+
+  async function onControlClick(){
+    const state=await refresh("manual-click");
+    safeReload(state);
+  }
+  if(control) control.addEventListener("click",()=>{void onControlClick();});
   void refresh("startup");
+
   globalThis.ErithVersionTruth=Object.freeze({
     owner:OWNER,build:loaded,engine,manifest:MANIFEST,
-    snapshot:()=>Object.freeze({...lastState}),refresh,
+    snapshot:()=>Object.freeze({...lastState}),refresh,safeReload,
     visible_control_id:"atlasVersionTruthControl",visible_text_id:"atlasVersionTruthText",
     legacy_sink_control_id:"atlasVersionControl",legacy_sink_text_id:"atlasVersionControlText",
     single_visible_owner:true,false_propagation_lock:true,distinguishes_loaded_from_published:true,
+    manual_click_safe_reload:true,refresh_param:REFRESH_PARAM,
+    clears_local_storage:false,clears_indexed_db:false,clears_cookies:false,
     recurring_timer:false,observer:false,startup_network_calls:1
   });
 })();

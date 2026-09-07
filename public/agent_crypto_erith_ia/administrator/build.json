@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.2",
+  "build": "40.6.4",
   "engine": "38.15.11",
-  "release": "COLD BOOT WARM START · VEILLE NATIVE HOLD LOCK",
+  "release": "CHRONOS TRUE CENTER · VERSION SAFE REFRESH LOCK",
   "published": true,
-  "status": "cold_boot_warm_start_veille_native_hold_lock_406002",
-  "parent_build": "40.6.0",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.1",
-  "administrator_build": "40.6.2",
-  "build_label": "Build 40.6.2",
-  "release_status": "COLD BOOT WARM START · VEILLE NATIVE HOLD LOCK",
-  "timestamp": "2026-09-07T17:19:00Z",
+  "status": "chronos_true_center_version_safe_refresh_lock_406004",
+  "parent_build": "40.6.2",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.4",
+  "administrator_build": "40.6.4",
+  "build_label": "Build 40.6.4",
+  "release_status": "CHRONOS TRUE CENTER · VERSION SAFE REFRESH LOCK",
+  "timestamp": "2026-09-07T18:35:00Z",
   "cascade_40_5_18": {
     "read_only_foundation": true,
     "market_core": "38.15.11",
@@ -49,10 +49,11 @@
   },
   "current_version_truth": {
     "visible_owner": "js/version-truth.js",
-    "loaded_build": "40.6.2",
+    "loaded_build": "40.6.4",
     "published_manifest": "build.json",
     "false_propagation_lock": true,
-    "legacy_ids_hidden_sink": true
+    "legacy_ids_hidden_sink": true,
+    "manual_click_safe_reload": true
   },
   "cascade_40_5_21": {
     "parent_build": "40.5.20",
@@ -161,5 +162,38 @@
     "automatic_order": false,
     "version_truth_single_visible_owner": true,
     "false_propagation_lock_preserved": true
+  },
+  "cascade_40_6_3": {
+    "parent_runtime_build": "40.6.2",
+    "release": "CHRONOS TRUE CENTER · SINGLE LINE FINAL LOCK",
+    "status": "candidate_absorbed_by_40_6_4",
+    "owner": "admin-chronos.css",
+    "scope": "presentation_only",
+    "chronos_math_modified": false,
+    "market_core_modified": false,
+    "strategy_a_modified": false,
+    "web_classic_modified": false
+  },
+  "cascade_40_6_4": {
+    "parent_runtime_build": "40.6.2",
+    "absorbs_candidate": "40.6.3",
+    "release": "CHRONOS TRUE CENTER · VERSION SAFE REFRESH LOCK",
+    "status": "chronos_true_center_version_safe_refresh_lock_406004",
+    "version_owner": "js/version-truth.js",
+    "manual_click_reloads_document": true,
+    "safe_refresh": "unique document URL via ac-refresh + location.replace",
+    "clears_local_storage": false,
+    "clears_indexed_db": false,
+    "clears_cookies": false,
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "new_storage_owner": false,
+    "market_core_modified": false,
+    "strategy_a_modified": false,
+    "web_classic_modified": false,
+    "chronos_math_modified": false,
+    "automatic_order": false,
+    "real_order": false
   }
 }
