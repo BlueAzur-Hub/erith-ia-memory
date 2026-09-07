@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_status_v1",
   "version": "V1.1-alpha.26.47.5",
-  "updated_at": "2026-09-06T21:29:56.040620+00:00",
+  "updated_at": "2026-09-07T00:01:34.965318+00:00",
   "status": "ok",
   "events_count": 120,
   "events_24h": 3,
@@ -13,7 +13,7 @@
   "driver_coverage_build": "40.3.89",
   "driver_coverage": {
     "macro_liquidity": {
-      "events_72h": 4,
+      "events_72h": 5,
       "distinct_sources": 4
     },
     "institutional_flows": {
@@ -21,8 +21,8 @@
       "distinct_sources": 3
     },
     "regulation": {
-      "events_72h": 1,
-      "distinct_sources": 1
+      "events_72h": 3,
+      "distinct_sources": 3
     },
     "leverage": {
       "events_72h": 0,
@@ -41,8 +41,8 @@
     "editorial_layer": "deterministic_domain_v2",
     "quality_gate": {
       "minimum": 72,
-      "pass": 117,
-      "warn": 3
+      "pass": 118,
+      "warn": 2
     },
     "display_coverage": 120,
     "engine": "argos-translate",
@@ -52,16 +52,16 @@
     "browser_translation": false,
     "external_llm": false,
     "events": 120,
-    "translated": 8,
+    "translated": 7,
     "retranslated_v2": 0,
-    "reused_v2": 110,
+    "reused_v2": 111,
     "source_fr": 2,
     "fallback_en": 0,
     "missing": 0,
     "normalized_before_mt": 0,
-    "quality_pass": 117,
-    "quality_warn": 3,
-    "editorialized": 39,
+    "quality_pass": 118,
+    "quality_warn": 2,
+    "editorialized": 38,
     "coverage": 120,
     "coverage_ratio": 1.0
   }
