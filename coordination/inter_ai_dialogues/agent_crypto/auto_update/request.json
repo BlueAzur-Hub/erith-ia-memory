@@ -1,0 +1,20 @@
+{
+  "schema": "agent_crypto_auto_update_patch_request_v2",
+  "critical": false,
+  "build": "40.4.285",
+  "parent_build": "40.4.284",
+  "files": [
+    "js/aether.js",
+    "app.js",
+    "js/app.js",
+    "index.html",
+    "build.json",
+    "version.json",
+    "administrator-version.json"
+  ],
+  "patch_file": "update.patch",
+  "patch_sha256": "080e4e3e6fc1027d82eb51e535483e59eb2d7847ae5a79196f3314fd8c3fc656",
+  "manifest_hashes_autofill": true,
+  "delete": [],
+  "intent": "Restore the previously designed Aether operator relevance gate at the correct scope; preserve NEWS-only rotation and the canonical News Sentinel archive; align cache/version truth only."
+}
