@@ -1,0 +1,59 @@
+name: Agent-Crypto 40.6.9 Chronos Validated Checkpoint Restore
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/agent-crypto-40609-chronos-checkpoint-restore.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40609-chronos-checkpoint-restore
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded validated checkpoint restore
+        run: python .github/scripts/agent_crypto_40609_chronos_checkpoint_restore.py
+
+      - name: Syntax JSON and freeze gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          node --check "$ROOT/js/version-truth.js"
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          git diff --check
+          test "$(git show HEAD:public/agent_crypto_erith_ia/administrator/js/version-truth.js | sha256sum | cut -d' ' -f1)" = "$(sha256sum "$ROOT/js/version-truth.js" | cut -d' ' -f1)"
+
+      - name: Commit restored build
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git add public/agent_crypto_erith_ia/administrator/admin-chronos.css
+          git add public/agent_crypto_erith_ia/administrator/build.json
+          git add public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git add public/agent_crypto_erith_ia/administrator/version.json
+          git add public/agent_crypto_erith_ia/administrator/RELEASE_40_6_9.md
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_9_CHRONOS_VALIDATED_CHECKPOINT_RESTORE_CLEAN_UPLOAD_7_FILES.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_9_CHRONOS_VALIDATED_CHECKPOINT_RESTORE_CLEAN_UPLOAD_7_FILES.zip.sha256
+          git diff --cached --quiet && { echo "STOP 40.6.9: no changes"; exit 1; }
+          git commit -m "fix(agent-crypto): restore validated Chronos checkpoint 40.6.9"
+          git pull --rebase origin main
+          git push origin HEAD:main
