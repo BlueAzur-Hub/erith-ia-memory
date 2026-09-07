@@ -1,5 +1,5 @@
 name: Atlas News Sentinel World-to-Market Live Feed
-# 40.4.114 — canonical collector → domain-normalized offline French translation → editorial quality gate → validated archive publication.
+# 40.4.287 — raw collector → canonical News FR contract → quality gate → publication.
 
 on:
   workflow_dispatch:
@@ -8,6 +8,7 @@ on:
     paths:
       - ".github/workflows/atlas_news_collector.yml"
       - "public/agent_crypto_erith_ia/tools/atlas_news_collector.py"
+      - "public/agent_crypto_erith_ia/tools/atlas_news_fr_contract.py"
       - "public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py"
   schedule:
     - cron: "17 * * * *"
@@ -41,26 +42,28 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .argos-cache
-          key: atlas-news-argos-en-fr-v2
+          key: atlas-news-argos-en-fr-v3
 
       - name: Install French translation runtime
         run: python -m pip install --disable-pip-version-check --quiet argostranslate==1.11.0
 
-      - name: Validate collector
+      - name: Validate raw collector
         run: python public/agent_crypto_erith_ia/tools/atlas_news_collector.py --self-test
 
-      - name: Validate French translation and editorial quality layer
-        run: python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py --self-test
+      - name: Validate canonical News FR contract
+        run: |
+          python public/agent_crypto_erith_ia/tools/atlas_news_fr_contract.py
+          python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py --self-test
 
-      - name: Collect qualified world, macro, flow and crypto news
+      - name: Collect immutable source evidence
         id: collect_news
         run: python public/agent_crypto_erith_ia/tools/atlas_news_collector.py
 
-      - name: Add French presentation headlines with domain quality gate
+      - name: Build canonical French display contract
         id: translate_news_fr
-        run: python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py --require-french
+        run: python public/agent_crypto_erith_ia/tools/atlas_news_translate_fr.py --require-canonical
 
-      - name: Validate French publication payload
+      - name: Validate canonical publication payload
         run: |
           python - <<'PY'
           import json
@@ -68,15 +71,19 @@ jobs:
           p=Path("public/agent_crypto_erith_ia/data/news/latest.json")
           data=json.loads(p.read_text(encoding="utf-8"))
           events=[e for e in data.get("events",[]) if isinstance(e,dict) and str(e.get("headline") or "").strip()]
-          missing=[str(e.get("event_id") or e.get("id") or "?") for e in events if not str(e.get("headline_fr") or "").strip()]
           summary=data.get("translation_fr") if isinstance(data.get("translation_fr"),dict) else {}
-          if str(summary.get("build")) != "40.4.114": raise SystemExit("French translation build marker missing")
-          if str(summary.get("schema")) != "atlas_news_translation_fr_v2": raise SystemExit("French translation schema v2 missing")
-          if missing: raise SystemExit(f"headline_fr missing for {len(missing)} events: {missing[:5]}")
-          display_missing=[str(e.get("event_id") or e.get("id") or "?") for e in events if not str(e.get("headline_fr_display") or "").strip()]
-          if display_missing: raise SystemExit(f"headline_fr_display missing for {len(display_missing)} events: {display_missing[:5]}")
-          quality=summary.get("quality_gate") if isinstance(summary.get("quality_gate"),dict) else {}
-          print(f"FRENCH NEWS V2 PUBLICATION PASS · {len(events)}/{len(events)} display · quality pass={quality.get('pass',0)} warn={quality.get('warn',0)}")
+          if str(summary.get("build")) != "40.4.287": raise SystemExit("News FR contract build marker missing")
+          if str(summary.get("schema")) != "atlas_news_translation_fr_v3": raise SystemExit("News FR contract schema v3 missing")
+          allowed={"ORIGINAL_FR","TRANSLATED_OK","FALLBACK_ORIGINAL","TRANSLATION_REJECTED"}
+          missing=[e.get("event_id") for e in events if not str(e.get("display_headline") or "").strip()]
+          invalid=[e.get("event_id") for e in events if e.get("translation_status") not in allowed]
+          mutation=[e.get("event_id") for e in events if str(e.get("headline_original") or "").strip()!=str(e.get("headline") or "").strip()]
+          bad=[e.get("event_id") for e in events if "appuyez sur" in str(e.get("display_headline") or "").lower()]
+          low=[e.get("event_id") for e in events if e.get("translation_status")=="TRANSLATED_OK" and int(e.get("translation_quality_score") or 0)<82]
+          fallback=[e.get("event_id") for e in events if e.get("translation_status") in {"FALLBACK_ORIGINAL","TRANSLATION_REJECTED"} and not str(e.get("display_headline") or "").startswith("[EN] ")]
+          if any((missing,invalid,mutation,bad,low,fallback)):
+              raise SystemExit(f"News FR canonical validation failed: missing={missing[:3]} invalid={invalid[:3]} mutation={mutation[:3]} bad={bad[:3]} low={low[:3]} fallback={fallback[:3]}")
+          print(f"NEWS FR CANONICAL V3 PASS · events={len(events)} · FR accepted={summary.get('accepted_french')} · display={summary.get('display_coverage')}")
           PY
 
       - name: Commit News Sentinel archive
@@ -90,7 +97,6 @@ jobs:
             echo "No News Sentinel archive change"
             exit 0
           fi
-          git commit -m "archive news sentinel world to market feed"
+          git commit -m "archive news sentinel canonical display feed"
           git pull --rebase origin main
           git push origin HEAD:main
-
