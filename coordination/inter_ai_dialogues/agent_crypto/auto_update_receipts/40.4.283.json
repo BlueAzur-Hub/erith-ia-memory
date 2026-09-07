@@ -1,9 +1,10 @@
 {
-  "schema": "agent_crypto_auto_update_patch_request_v2",
-  "critical": false,
-  "delete": false,
+  "schema": "agent_crypto_auto_update_receipt_v2",
+  "request_schema": "agent_crypto_auto_update_patch_request_v2",
   "build": "40.4.283",
   "parent_build": "40.4.282",
+  "status": "PASS",
+  "market_core": "38.15.11",
   "files": [
     "app.js",
     "build.json",
@@ -13,9 +14,6 @@
     "version.json",
     "administrator-version.json"
   ],
-  "patch_parts": [
-    "patch-01.patch"
-  ],
   "patch_sha256": "556f052ba261b63e98bca2c6882b3e148389b8a77e2f7417850afa358b1c4b0e",
-  "manifest_hashes_autofill": true
+  "critical_stop": false
 }

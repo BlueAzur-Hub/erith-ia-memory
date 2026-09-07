@@ -1,7 +1,7 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.282";
-  const ADMIN_RELEASE = "SHARED MEMORY · COLLECTOR INDEXEDDB OWNER REALIGNMENT LOCK";
+  const ADMIN_BUILD = "40.4.283";
+  const ADMIN_RELEASE = "SHARED MEMORY · READER CONSISTENCY LOCK";
   const ENGINE_BUILD = "38.15.11";
   const CLASSIC_WEB_BUILD = "38.15.13";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
