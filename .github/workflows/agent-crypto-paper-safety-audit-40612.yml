@@ -1,0 +1,61 @@
+name: Agent-Crypto Paper Safety Owner Audit 40.6.12
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-paper-safety-audit-40612.yml
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Extract exact Paper owners
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('public/agent_crypto_erith_ia/administrator/app.js')
+          s = p.read_text(encoding='utf-8')
+          pats = [
+            r'strategyAPaperFill404265', r'strategyAPaperAllowed404265',
+            r'strategyAPolicyGate404262', r'Auto A', r'strategyA.*Auto',
+            r'paperConfirmed', r'paperStatus', r'authorization', r'authorisation',
+            r'close.*Paper', r'Paper.*close', r'paper.*close', r'ledger',
+            r'After.?Cost', r'after.?cost', r'simSecurity', r'security.*gate',
+            r'fill.*Paper', r'Paper.*fill'
+          ]
+          rx = re.compile('|'.join(f'(?:{x})' for x in pats), re.I)
+          lines = s.splitlines()
+          hits = []
+          for i, line in enumerate(lines):
+            if rx.search(line):
+              a=max(0,i-12); b=min(len(lines),i+18)
+              hits.append((i+1,a,b))
+          # merge overlapping windows
+          merged=[]
+          for _,a,b in hits:
+            if not merged or a > merged[-1][1]+1:
+              merged.append([a,b])
+            else:
+              merged[-1][1]=max(merged[-1][1],b)
+          out=[]
+          out.append(f'FILE={p}\nTOTAL_LINES={len(lines)}\nMATCH_WINDOWS={len(merged)}\n')
+          for a,b in merged:
+            out.append(f'\n===== LINES {a+1}-{b} =====\n')
+            for n in range(a,b):
+              out.append(f'{n+1:06d}: {lines[n]}\n')
+          Path('/tmp/paper-safety-audit-40612.txt').write_text(''.join(out),encoding='utf-8')
+          print(f'extracted {len(merged)} windows')
+      - name: Upload audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-paper-safety-audit-40612
+          path: /tmp/paper-safety-audit-40612.txt
+          retention-days: 7
