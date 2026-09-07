@@ -1,6 +1,6 @@
 /*
   Agent-Crypto Administrator — Strategy A Paper V2 lifecycle + common safety gate
-  Build: 40.6.14
+  Build: 40.6.15
   Responsibility: deterministic Paper-only execution/reconciliation lifecycle.
   Adds a fail-closed common Safety Governor gate for NEW Paper entries only.
   Existing submitted Paper positions remain monitorable/reconcilable/closable.
@@ -9,11 +9,14 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.14";
+  const BUILD = "40.6.15";
   const SCHEMA = "agent_crypto_strategy_a_paper_lifecycle_v2";
   const MAX_AUDIT_ROWS = 160;
   const TERMINAL = new Set(["CLOSED", "REJECTED", "CANCELED", "STOP_UNPROTECTED", "RECONCILED_NO_ORDER"]);
   const LIVE_IDS = new Set();
+  // Authorization identities are consumed exactly once at successful Paper SUBMIT.
+  // They are intentionally never released by close/reject/cancel.
+  const CONSUMED_AUTHORIZATIONS = new Set();
   const AUDIT = [];
 
   const clone = value => { try { return JSON.parse(JSON.stringify(value)); } catch (_) { return null; } };
@@ -73,6 +76,48 @@
     for (const c of String(text || "")) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
     return (h >>> 0).toString(16).padStart(8, "0");
   };
+
+  // 40.6.15 — canonical one-shot authorization identity.
+  // Prefer the explicit Risk authorization. If the current caller does not
+  // provide one, decision/proposal identity remains a deterministic fail-safe.
+  function authorizationKey(envelope) {
+    const clean = value => {
+      const v = String(value ?? "").trim();
+      if (!v || /^(UNKNOWN|NONE|NULL|N\/A)$/i.test(v) || /-UNKNOWN$/i.test(v)) return null;
+      return v;
+    };
+    const risk = clean(envelope?.risk_id);
+    if (risk) return `RISK:${risk}`;
+    const decision = clean(envelope?.decision_id);
+    if (decision) return `DECISION:${decision}`;
+    const proposal = clean(envelope?.proposal_id);
+    if (proposal) return `PROPOSAL:${proposal}`;
+    return null;
+  }
+
+  function authorizationReject(envelope, reason, key = null) {
+    envelope.state = "REJECTED";
+    envelope.reason = reason;
+    envelope.retry_allowed = false;
+    envelope.updated_at = iso();
+    envelope.authorization = {
+      key: key ? hash(key) : null,
+      source: key ? key.split(":", 1)[0] : null,
+      consumed: false,
+      rejected_at: envelope.updated_at
+    };
+    LIVE_IDS.delete(envelope.trade_id);
+    audit(envelope, reason, { authorization_key_hash: envelope.authorization.key });
+    return envelope;
+  }
+
+  function authorizationSnapshot() {
+    return {
+      build: BUILD,
+      consumed_count: CONSUMED_AUTHORIZATIONS.size,
+      consumed_key_hashes: [...CONSUMED_AUTHORIZATIONS].map(hash)
+    };
+  }
 
   function audit(envelope, action, detail = {}) {
     const row = {
@@ -186,11 +231,32 @@
     const gate = safetyGateSnapshot();
     envelope.safety_gate = clone(gate) || gate;
     if (!gate.allowed) return safetyReject(envelope, "SUBMIT", gate);
+
+    const authorizationKeyValue = authorizationKey(envelope);
+    if (!authorizationKeyValue) return authorizationReject(envelope, "AUTHORIZATION_ID_REQUIRED");
+    if (CONSUMED_AUTHORIZATIONS.has(authorizationKeyValue)) {
+      return authorizationReject(envelope, "AUTHORIZATION_ALREADY_CONSUMED", authorizationKeyValue);
+    }
+
+    // JS execution is single-threaded here: check + consume is synchronous and
+    // occurs immediately before the SUBMITTED transition. Never release this key.
+    CONSUMED_AUTHORIZATIONS.add(authorizationKeyValue);
+    envelope.authorization = {
+      key: hash(authorizationKeyValue),
+      source: authorizationKeyValue.split(":", 1)[0],
+      consumed: true,
+      consumed_at: iso()
+    };
     envelope.state = "SUBMITTED";
     envelope.submitted_notional_eur = envelope.authorized_notional_eur;
     envelope.updated_at = iso();
     envelope.retry_allowed = false;
-    audit(envelope, "SUBMIT_PAPER", { notional_eur: envelope.submitted_notional_eur });
+    audit(envelope, "SUBMIT_PAPER", {
+      notional_eur: envelope.submitted_notional_eur,
+      authorization_key_hash: envelope.authorization.key,
+      authorization_source: envelope.authorization.source,
+      authorization_consumed_once: true
+    });
     return envelope;
   }
 
@@ -409,13 +475,20 @@
   }
 
   function diagnosticSnapshot() {
-    return { build: BUILD, live_ids: [...LIVE_IDS], audit: clone(AUDIT) || [] };
+    return {
+      build: BUILD,
+      live_ids: [...LIVE_IDS],
+      consumed_authorizations: [...CONSUMED_AUTHORIZATIONS],
+      audit: clone(AUDIT) || []
+    };
   }
 
   function restoreInternal(snapshot) {
     AUDIT.splice(0, AUDIT.length, ...(clone(snapshot?.audit) || []));
     LIVE_IDS.clear();
     for (const id of snapshot?.live_ids || []) LIVE_IDS.add(id);
+    CONSUMED_AUTHORIZATIONS.clear();
+    for (const key of snapshot?.consumed_authorizations || []) CONSUMED_AUTHORIZATIONS.add(key);
   }
 
   function selfTest() {
@@ -500,7 +573,7 @@
     const panel = document.createElement("section");
     panel.id = "strategyAPaperLifecycle404291";
     panel.setAttribute("data-strategy-a-paper-lifecycle-build", BUILD);
-    panel.innerHTML = `<div class="spl-head"><div><div class="spl-title">PAPER V2 · EXECUTION / RECONCILIATION LIFECYCLE</div><div class="spl-sub">Trade Envelope unique · Safety Governor commun sur nouvelles entrées · ACK · partial fill · reconciliation · protection · clôture. Gate 40.6.14.</div></div></div><div class="spl-actions" id="strategyAPaperLifecycleActions404291"></div><div class="spl-state" id="strategyAPaperLifecycleState404291">Aucun scénario lifecycle exécuté.</div><div class="spl-grid"><div class="spl-kpi"><span>Fill</span><b id="strategyAPaperLifecycleFilled404291">—</b></div><div class="spl-kpi"><span>Reste</span><b id="strategyAPaperLifecycleRemaining404291">—</b></div><div class="spl-kpi"><span>Retry autorisé</span><b id="strategyAPaperLifecycleRetry404291">—</b></div><div class="spl-kpi"><span>Protection</span><b id="strategyAPaperLifecycleProtection404291">—</b></div></div><div class="spl-safety">PAPER ONLY · Safety Governor obligatoire pour CREATE/SUBMIT · une position déjà soumise reste réconciliable/closable · aucun réseau · aucun Kraken · aucune clé.</div>`;
+    panel.innerHTML = `<div class="spl-head"><div><div class="spl-title">PAPER V2 · EXECUTION / RECONCILIATION LIFECYCLE</div><div class="spl-sub">Trade Envelope unique · Safety Governor commun · autorisation consommable une seule fois · ACK · fill · reconciliation · protection · clôture. Gate 40.6.15.</div></div></div><div class="spl-actions" id="strategyAPaperLifecycleActions404291"></div><div class="spl-state" id="strategyAPaperLifecycleState404291">Aucun scénario lifecycle exécuté.</div><div class="spl-grid"><div class="spl-kpi"><span>Fill</span><b id="strategyAPaperLifecycleFilled404291">—</b></div><div class="spl-kpi"><span>Reste</span><b id="strategyAPaperLifecycleRemaining404291">—</b></div><div class="spl-kpi"><span>Retry autorisé</span><b id="strategyAPaperLifecycleRetry404291">—</b></div><div class="spl-kpi"><span>Protection</span><b id="strategyAPaperLifecycleProtection404291">—</b></div></div><div class="spl-safety">PAPER ONLY · Safety Governor + autorisation unique obligatoires au SUBMIT · une autorisation consommée ne renaît pas après clôture · aucun réseau · aucun Kraken.</div>`;
     anchor.insertAdjacentElement("afterend", panel);
     const actions = panel.querySelector("#strategyAPaperLifecycleActions404291");
     const labels = {
@@ -541,6 +614,7 @@
     audit: () => clone(AUDIT) || [],
     diagnostic_snapshot: diagnosticSnapshot,
     safety_gate_snapshot: safetyGateSnapshot,
+    authorization_snapshot: authorizationSnapshot,
     render,
     terminal_states: [...TERMINAL],
     paper_only: true,
@@ -555,7 +629,10 @@
     corrective_lock_404295: true,
     common_safety_gate_406014: true,
     new_entry_fail_closed: true,
-    existing_submitted_monitoring_preserved: true
+    existing_submitted_monitoring_preserved: true,
+    single_use_authorization_406015: true,
+    authorization_consumed_at_submit: true,
+    authorization_reuse_forbidden: true
   });
 
   globalThis.AgentCryptoStrategyAPaperLifecycle404295 = api;
