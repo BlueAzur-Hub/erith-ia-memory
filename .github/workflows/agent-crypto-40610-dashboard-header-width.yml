@@ -1,0 +1,100 @@
+name: Agent-Crypto 40.6.10 Dashboard Header Width Contract
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/agent-crypto-40610-dashboard-header-width.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40610-dashboard-header-width
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded header-width surgery
+        run: python .github/scripts/agent_crypto_40610_dashboard_header_width.py
+
+      - name: Syntax and anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          node --check "$ROOT/js/version-truth.js"
+          git diff --check
+
+          # Accepted 40.6.9 Chronos and 40.6.8 Version Truth must remain byte-for-byte.
+          test "$(git show HEAD:$ROOT/admin-chronos.css | sha256sum | cut -d' ' -f1)" = "$(sha256sum "$ROOT/admin-chronos.css" | cut -d' ' -f1)"
+          test "$(git show HEAD:$ROOT/js/version-truth.js | sha256sum | cut -d' ' -f1)" = "$(sha256sum "$ROOT/js/version-truth.js" | cut -d' ' -f1)"
+
+          # Protected surfaces must have zero diff.
+          git diff --exit-code -- \
+            "$ROOT/style.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/app.js" \
+            "$ROOT/js/app.js"
+
+          # The only edited runtime/presentation owner is index.html.
+          python - <<'PY'
+          import subprocess
+          allowed = {
+              'public/agent_crypto_erith_ia/administrator/index.html',
+              'public/agent_crypto_erith_ia/administrator/build.json',
+              'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+              'public/agent_crypto_erith_ia/administrator/version.json',
+              'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_10.md',
+              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip',
+              'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip.sha256',
+          }
+          changed = {p for p in subprocess.check_output(['git','diff','--name-only'], text=True).splitlines() if p}
+          extra = changed - allowed
+          missing = {
+              'public/agent_crypto_erith_ia/administrator/index.html',
+              'public/agent_crypto_erith_ia/administrator/build.json',
+              'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+              'public/agent_crypto_erith_ia/administrator/version.json',
+              'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_10.md',
+          } - changed
+          if extra:
+              raise SystemExit(f'STOP 40.6.10: unexpected changed files: {sorted(extra)}')
+          if missing:
+              raise SystemExit(f'STOP 40.6.10: expected release files missing: {sorted(missing)}')
+          print('40.6.10 bounded diff OK:', sorted(changed))
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git add public/agent_crypto_erith_ia/administrator/build.json
+          git add public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git add public/agent_crypto_erith_ia/administrator/version.json
+          git add public/agent_crypto_erith_ia/administrator/RELEASE_40_6_10.md
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_10_DASHBOARD_HEADER_WIDTH_CONTRACT_CLEAN_UPLOAD_7_FILES.zip.sha256
+          git diff --cached --quiet && { echo "STOP 40.6.10: no changes"; exit 1; }
+          git commit -m "fix(agent-crypto): remove dashboard header width overflow 40.6.10"
+          git pull --rebase origin main
+          git push origin HEAD:main
