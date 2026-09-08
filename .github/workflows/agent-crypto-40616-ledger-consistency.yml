@@ -1,0 +1,169 @@
+name: Agent-Crypto 40.6.16 After-Cost Ledger Consistency
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40616-ledger-consistency.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40616-ledger-consistency
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded After-Cost ledger surgery
+        run: python .github/scripts/agent_crypto_40616_ledger_consistency.py
+
+      - name: Syntax + ledger consistency proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          AFTER="$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          node --check "$AFTER"
+          git diff --check
+
+          node <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const path='public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics-404298.js';
+          vm.runInThisContext(fs.readFileSync(path,'utf8'),{filename:path});
+          const api=globalThis.AgentCryptoStrategyAAfterCostMetrics404298;
+          if(!api || api.build!=='40.6.16' || api.ledger_consistency_406016!==true) throw new Error('40.6.16 API missing');
+
+          const before=api.read();
+          const st1=api.self_test(),st2=api.self_test();
+          const afterSelf=api.read();
+          if(!st1.pass || !st2.pass) throw new Error('ledger self_test failed: '+JSON.stringify({st1,st2}));
+          if(JSON.stringify(before)!==JSON.stringify(afterSelf)) throw new Error('self_test mutated ledger');
+
+          // Complete identity: gross 10 - (fees 2 + impact 1 + spread 2 + slippage 1) = net 4.
+          const complete=api.record_from_reconciliation({
+            reconciliation_id:'LEDGER-COMPLETE',execution_id:'EXEC-COMPLETE',closed_at:'2026-09-08T00:00:00Z',
+            quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,
+            entry_fee_eur:1,exit_fee_eur:1,estimated_total_impact_eur:1,spread_eur:2,slippage_eur:1,net_pnl_eur:4
+          });
+          if(!complete.ok) throw new Error('complete row refused: '+JSON.stringify(complete));
+          if(complete.row.total_costs_eur!==6 || complete.row.expected_net_pnl_eur!==4) throw new Error('complete cost identity math wrong');
+          if(complete.row.accounting_identity_ok!==true || complete.row.accounting_identity_status!=='VERIFIED') throw new Error('complete identity not verified');
+
+          // Same reconciliation identity cannot create a second canonical row.
+          const dup=api.record_from_reconciliation({
+            reconciliation_id:'LEDGER-COMPLETE',execution_id:'EXEC-DUP',quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,
+            entry_fee_eur:1,exit_fee_eur:1,estimated_total_impact_eur:1,spread_eur:2,slippage_eur:1,net_pnl_eur:4
+          });
+          if(dup.reason!=='DUPLICATE_RECONCILIATION') throw new Error('duplicate identity not rejected');
+
+          // A complete but contradictory identity is rejected before ledger insertion.
+          const countBeforeMismatch=api.read().length;
+          const mismatch=api.record_from_reconciliation({
+            reconciliation_id:'LEDGER-MISMATCH',execution_id:'EXEC-MISMATCH',quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,
+            entry_fee_eur:1,exit_fee_eur:1,estimated_total_impact_eur:1,spread_eur:2,slippage_eur:1,net_pnl_eur:5
+          });
+          if(mismatch.reason!=='ACCOUNTING_IDENTITY_MISMATCH') throw new Error('complete mismatch not refused: '+JSON.stringify(mismatch));
+          if(api.read().length!==countBeforeMismatch) throw new Error('mismatched row entered ledger');
+
+          // Incomplete cost evidence is retained, but identity must be explicitly indeterminate.
+          const partial=api.record_from_reconciliation({
+            reconciliation_id:'LEDGER-PARTIAL',execution_id:'EXEC-PARTIAL',quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,
+            entry_fee_eur:1,exit_fee_eur:1,estimated_total_impact_eur:2,net_pnl_eur:6
+          });
+          if(!partial.ok) throw new Error('partial evidence refused');
+          if(partial.row.total_costs_eur!=='UNKNOWN') throw new Error('partial total costs promoted to numeric');
+          if(partial.row.accounting_identity_ok!==null || partial.row.accounting_identity_status!=='INDETERMINATE_COSTS') throw new Error('partial identity falsely verified');
+
+          const s=api.summary();
+          if(s.trades!==2 || s.verified_accounting_trades!==1 || s.indeterminate_accounting_trades!==1) throw new Error('summary consistency counts wrong: '+JSON.stringify(s));
+          if(s.cost_model_complete!==false || s.ledger_consistency_complete!==false || s.total_costs_eur!=='UNKNOWN') throw new Error('summary overstated completeness');
+          if(s.profitability_claim!==false) throw new Error('profitability claim regression');
+
+          console.log(JSON.stringify({ok:true,self_test_repeatable:true,complete_identity_verified:true,duplicate_refused:true,mismatch_refused:true,partial_identity_indeterminate:true,summary_truth:true}));
+          NODE
+
+      - name: Anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+
+          git diff --exit-code -- \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/style.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/oracle-presentation-405010.css" \
+            "$ROOT/oracle-fx-406013.css" \
+            "$ROOT/js/oracle-fx-406013.js" \
+            "$ROOT/js/strategy-a-paper-lifecycle-404295.js" \
+            "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js" \
+            "$ROOT/js/strategy-a-safety-certification-404299.js" \
+            "$ROOT/js/strategy-a-evidence-dossier-404295.js"
+
+          grep -q '<meta name="administrator-build" content="40.6.16" />' "$ROOT/index.html"
+          grep -q 'oracle-presentation-405010.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.js?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'strategy-a-paper-lifecycle-404295.js?v=administrator-build-40.6.15' "$ROOT/index.html"
+          grep -q 'strategy-a-after-cost-metrics-404298.js?v=administrator-build-40.6.16' "$ROOT/index.html"
+          grep -q 'grid-template-columns:minmax(128px,.66fr) minmax(124px,.66fr) minmax(170px,.94fr) minmax(255px,1.35fr) minmax(410px,2.05fr)!important;' "$ROOT/index.html"
+          grep -q 'ledger_consistency_406016:true' "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics-404298.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_16.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_16_AFTER_COST_LEDGER_CONSISTENCY_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_16_AFTER_COST_LEDGER_CONSISTENCY_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            p=line[3:]
+            if ' -> ' in p:p=p.split(' -> ',1)[1]
+            changed.add(p)
+          extra=changed-expected; missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.16 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.16 missing files: {sorted(missing)}')
+          print('40.6.16 bounded diff OK')
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_16_AFTER_COST_LEDGER_CONSISTENCY_CLEAN_UPLOAD_8_FILES.zip
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+          git add "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_16.md"
+          git add "$ZIP" "$ZIP.sha256"
+          git diff --cached --quiet && { echo 'STOP 40.6.16 no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): after-cost ledger consistency 40.6.16"
+          git pull --rebase origin main
+          git push origin HEAD:main
