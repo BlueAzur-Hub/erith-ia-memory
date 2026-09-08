@@ -23,6 +23,19 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m py_compile .github/scripts/agent_crypto_40639_aether_workbench_focus.py
+          # Retry guard: the 40.6.38 dataset marker exists twice by design
+          # (condition + assignment). Patch both together, then execute the
+          # exact guarded release script without weakening any runtime gate.
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('.github/scripts/agent_crypto_40639_aether_workbench_focus.py')
+          s=p.read_text(encoding='utf-8')
+          old="js = replace_once(js, 'aetherWorkbenchBound406038', 'aetherWorkbenchBound406039', 'events card binding dataset')"
+          new="require(js.count('aetherWorkbenchBound406038') == 2, f'events card binding anchor count: {js.count(\"aetherWorkbenchBound406038\")}')\njs = js.replace('aetherWorkbenchBound406038', 'aetherWorkbenchBound406039')"
+          if old not in s:
+              raise SystemExit('retry patch anchor missing')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
           python3 .github/scripts/agent_crypto_40639_aether_workbench_focus.py
 
       - name: Final anti-destruction gates
