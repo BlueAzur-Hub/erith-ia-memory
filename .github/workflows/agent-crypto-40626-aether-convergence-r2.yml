@@ -1,0 +1,60 @@
+name: Agent-Crypto 40.6.26 Aether Convergence R2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40626-aether-convergence-r2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply guarded release
+        run: python3 .github/scripts/agent_crypto_40626_release.py
+
+      - name: Syntax and contract gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          node --check "$ROOT/js/aether.js"
+          node --check "$ROOT/js/footer-version-truth-406026.js"
+          python3 -m json.tool "$ROOT/build.json" >/dev/null
+          python3 -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python3 -m json.tool "$ROOT/version.json" >/dev/null
+          grep -q '<meta name="administrator-build" content="40.6.26"' "$ROOT/index.html"
+          grep -q 'aether.js?v=administrator-build-40.6.26' "$ROOT/index.html"
+          grep -q 'admin-ribbons.css?v=administrator-build-40.6.26' "$ROOT/index.html"
+          grep -q 'footer-version-truth-406026.js?v=administrator-build-40.6.26' "$ROOT/index.html"
+          grep -q 'function aetherOperatorWatch406026' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="convergence"' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="divergence"' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="watch"' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="note"' "$ROOT/js/aether.js"
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/js/footer-version-truth-406026.js"
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/index.html"
+          ! grep -q 'setInterval' "$ROOT/js/footer-version-truth-406026.js"
+          ! grep -q 'MutationObserver' "$ROOT/js/footer-version-truth-406026.js"
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          if git diff --cached --quiet; then
+            echo 'No runtime changes to commit'
+            exit 1
+          fi
+          git commit -m "feat(agent-crypto): expand Aether Operator Watch 40.6.26"
+          git push origin HEAD:main
