@@ -871,19 +871,65 @@ function aetherNewsMarketSemantic405013(){
       return next?`${first}\n${next}`:first;
     }catch(_){return 'Prévision 5 j indisponible';}
   }
-  function aetherPanelFocus406030(mode,panel=document.getElementById('atlasAetherStatusPanel4084')){
+  /* 40.6.38 — AETHER FLOATING WORKBENCH · LAZY INTERACTION */
+  const AETHER_WORKBENCH_SRC_406038='./js/aether-workbench-406038.js?v=administrator-build-40.6.38';
+  let aetherWorkbenchPromise406038=null;
+  function aetherWorkbenchLoad406038(){
+    if(globalThis.AgentCryptoAetherWorkbench406038)return Promise.resolve(globalThis.AgentCryptoAetherWorkbench406038);
+    if(aetherWorkbenchPromise406038)return aetherWorkbenchPromise406038;
+    aetherWorkbenchPromise406038=new Promise((resolve,reject)=>{
+      const script=document.createElement('script');
+      script.src=AETHER_WORKBENCH_SRC_406038;
+      script.async=true;
+      script.dataset.aetherWorkbench406038='1';
+      script.onload=()=>globalThis.AgentCryptoAetherWorkbench406038?resolve(globalThis.AgentCryptoAetherWorkbench406038):reject(new Error('Aether Workbench API absent'));
+      script.onerror=()=>{aetherWorkbenchPromise406038=null;reject(new Error('Aether Workbench load failed'));};
+      document.head.appendChild(script);
+    });
+    return aetherWorkbenchPromise406038;
+  }
+  function aetherWorkbenchPayload406038(mode){
+    const snapshot=aetherSnapshot4084();
+    const watch=aetherOperatorWatch406026();
+    return Object.freeze({
+      build:'40.6.38',
+      mode,
+      timeline:aetherTimelineState406027.entries.map(row=>Object.freeze({...row})),
+      details:Object.freeze({
+        why:aetherOperatorWhy405012(),
+        semantic:aetherNewsMarketSemantic405013(),
+        attention:aetherAttention40133(),
+        news:snapshot.news
+      }),
+      watch:Object.freeze({...watch})
+    });
+  }
+  function aetherPanelFocusEmbedded406038(target,panel){
     if(!panel)return;
-    const target=['glance','history','details'].includes(mode)?mode:'glance';
-    panel.dataset.aetherFocus406030=target;
-    panel.querySelectorAll('[data-aether-focus-view-406030]').forEach(node=>{node.hidden=node.getAttribute('data-aether-focus-view-406030')!==target;});
+    const embedded=['glance','history','details'].includes(target)?target:'glance';
+    panel.dataset.aetherFocus406030=embedded;
+    panel.querySelectorAll('[data-aether-focus-view-406030]').forEach(node=>{node.hidden=node.getAttribute('data-aether-focus-view-406030')!==embedded;});
     panel.querySelectorAll('[data-aether-focus-button-406030]').forEach(button=>{
-      const active=button.getAttribute('data-aether-focus-button-406030')===target;
+      const active=button.getAttribute('data-aether-focus-button-406030')===embedded;
       button.setAttribute('aria-pressed',active?'true':'false');
       button.dataset.active=active?'1':'0';
     });
-    // Full history and explanatory details are intentionally materialized only on operator intent.
-    if(target==='history')aetherTimelineRender406027(panel,{includeFull:true});
-    if(target==='details')aetherDetailsRender406037(panel);
+    if(embedded==='history')aetherTimelineRender406027(panel,{includeFull:true});
+    if(embedded==='details')aetherDetailsRender406037(panel);
+  }
+  function aetherWorkbenchOpen406038(mode,panel=document.getElementById('atlasAetherStatusPanel4084')){
+    const target=mode==='details'?'details':mode==='history'?'history':'events';
+    return aetherWorkbenchLoad406038()
+      .then(api=>api.open(aetherWorkbenchPayload406038(target)))
+      .catch(()=>aetherPanelFocusEmbedded406038(target==='events'?'history':target,panel));
+  }
+  function aetherPanelFocus406030(mode,panel=document.getElementById('atlasAetherStatusPanel4084')){
+    if(!panel)return;
+    const target=['glance','history','details'].includes(mode)?mode:'glance';
+    if(target==='glance')return aetherPanelFocusEmbedded406038('glance',panel);
+    // Keep the paid artwork fully visible behind the local Workbench; rich views float above it.
+    aetherPanelFocusEmbedded406038('glance',panel);
+    void aetherWorkbenchOpen406038(target,panel);
   }
   function aetherDetailsRender406037(panel=document.getElementById('atlasAetherStatusPanel4084')){
     if(!panel)return;
@@ -901,6 +947,18 @@ function aetherNewsMarketSemantic405013(){
     document.body.appendChild(panel);
     panel.querySelector("[data-aether-close-4084]")?.addEventListener("click",()=>aetherPanelSet4084(false));
     panel.querySelectorAll("[data-aether-focus-button-406030]").forEach(button=>button.addEventListener("click",()=>aetherPanelFocus406030(button.getAttribute("data-aether-focus-button-406030"),panel)));
+    const eventsCard=panel.querySelector('[data-aether-timeline-card-406027]');
+    if(eventsCard&&eventsCard.dataset.aetherWorkbenchBound406038!=="1"){
+      eventsCard.dataset.aetherWorkbenchBound406038="1";
+      eventsCard.setAttribute('role','button');
+      eventsCard.setAttribute('tabindex','0');
+      eventsCard.setAttribute('aria-label','Ouvrir les événements récents dans Aether Workbench');
+      eventsCard.setAttribute('title','Ouvrir les événements récents');
+      eventsCard.style.cursor='pointer';
+      const openEvents=()=>void aetherWorkbenchOpen406038('events',panel);
+      eventsCard.addEventListener('click',openEvents);
+      eventsCard.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openEvents();}});
+    }
     aetherPanelFocus406030("glance",panel);
     return panel;
   }
@@ -1272,6 +1330,13 @@ function aetherNewsMarketSemantic405013(){
     aether_attention_first_glance_new_network_owner:false,
     aether_attention_graph_first_lazy:true,
     aether_attention_graph_first_lazy_build:"40.6.37",
+    aether_attention_floating_workbench:true,
+    aether_attention_floating_workbench_build:"40.6.38",
+    aether_attention_workbench_lazy_script:true,
+    aether_attention_workbench_modes:"events|history|details",
+    aether_attention_workbench_local_drag:true,
+    aether_attention_workbench_storage:false,
+    aether_attention_workbench_global_window_manager:false,
     aether_attention_boot_order:"market_graph -> aether_core -> system_weather -> news_history_on_demand",
     aether_attention_boot_eager_refresh:false,
     aether_attention_history_dom_lazy:true,
