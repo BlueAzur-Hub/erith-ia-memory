@@ -1,0 +1,90 @@
+name: Agent-Crypto 40.6.28 Aether Attention Watch Compact
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40628-aether-compact-watch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply guarded 40.6.28 release
+        run: python3 .github/scripts/agent_crypto_40628_release.py
+
+      - name: Syntax and anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_28_AETHER_ATTENTION_WATCH_COMPACT_NO_SCROLL_CLEAN_UPLOAD_7_FILES.zip
+          SHA="$ZIP.sha256"
+          node --check "$ROOT/js/aether.js"
+          python3 -m json.tool "$ROOT/build.json" >/dev/null
+          python3 -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python3 -m json.tool "$ROOT/version.json" >/dev/null
+          grep -q '<meta name="administrator-build" content="40.6.28"' "$ROOT/index.html"
+          grep -q 'aether.js?v=administrator-build-40.6.28' "$ROOT/index.html"
+          grep -q 'admin-ribbons.css?v=administrator-build-40.6.28' "$ROOT/index.html"
+          grep -q 'AETHER_TIMELINE_PREVIEW_406028=3' "$ROOT/js/aether.js"
+          grep -q 'data-aether-timeline-preview-406028' "$ROOT/js/aether.js"
+          grep -q 'data-aether-timeline-disclosure-406028' "$ROOT/js/aether.js"
+          grep -q 'data-aether-details-406028' "$ROOT/js/aether.js"
+          grep -q 'aether_attention_compact_watch:true' "$ROOT/js/aether.js"
+          grep -q 'aether_attention_compact_watch_build:"40.6.28"' "$ROOT/js/aether.js"
+          grep -q 'aether_attention_compact_new_timer:false' "$ROOT/js/aether.js"
+          grep -q 'aether_attention_compact_new_storage:false' "$ROOT/js/aether.js"
+          grep -q 'aether_attention_compact_new_network_owner:false' "$ROOT/js/aether.js"
+          grep -q '40.4.133 → 40.6.28 — AETHER ATTENTION WATCH' "$ROOT/admin-ribbons.css"
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/js/footer-version-truth-406026.js"
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/index.html"
+          grep -q '"engine": "38.15.11"' "$ROOT/build.json"
+          test -f "$ZIP"
+          test -f "$SHA"
+          (cd "$(dirname "$ZIP")" && sha256sum -c "$(basename "$SHA")")
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          p='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_28_AETHER_ATTENTION_WATCH_COMPACT_NO_SCROLL_CLEAN_UPLOAD_7_FILES.zip'
+          with ZipFile(p) as z:
+              names=z.namelist()
+              assert len(names)==7, names
+              assert 'administrator/index.html' in names
+              assert 'administrator/js/aether.js' in names
+              assert 'administrator/admin-ribbons.css' in names
+              assert 'administrator/RELEASE_40_6_28.md' in names
+              assert z.testzip() is None
+          print('ZIP 7 files PASS')
+          PY
+
+      - name: Commit released build and clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_28_AETHER_ATTENTION_WATCH_COMPACT_NO_SCROLL_CLEAN_UPLOAD_7_FILES.zip \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_28_AETHER_ATTENTION_WATCH_COMPACT_NO_SCROLL_CLEAN_UPLOAD_7_FILES.zip.sha256
+          if git diff --cached --quiet; then
+            echo 'No runtime changes to commit'
+            exit 1
+          fi
+          git commit -m "feat(agent-crypto): compact Aether Attention Watch 40.6.28"
+          git push origin HEAD:main
+
+      - name: Upload clean ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_28_AETHER_ATTENTION_WATCH_COMPACT_NO_SCROLL_CLEAN_UPLOAD_7_FILES
+          path: coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_28_AETHER_ATTENTION_WATCH_COMPACT_NO_SCROLL_CLEAN_UPLOAD_7_FILES.zip
+          if-no-files-found: error
+          compression-level: 0
