@@ -545,3 +545,60 @@
   #atlasAetherStatusPanel4084 .aether-timeline-detail-406027{grid-column:1/-1}
   #atlasAetherStatusPanel4084 .aether-details-grid-406028{grid-template-columns:minmax(0,1fr)}
 }
+
+
+/* 40.6.29 — AETHER WATCH · EXPANDED STATE CONTAINMENT
+   Firefox geometry repair only. The timeline card owns one vertical lane;
+   opening the full runtime-session history no longer creates an implicit
+   74px grid column or a giant empty surface. No data/runtime owner changed. */
+#atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027]{
+  display:block!important;
+  grid-template-columns:none!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+#atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027] > span{
+  display:block!important;
+  width:100%!important;
+  margin:0 0 5px!important;
+}
+#atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027] > [data-aether-timeline-preview-406028],
+#atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027] > [data-aether-timeline-disclosure-406028]{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+#atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027] > [data-aether-timeline-preview-406028]{
+  display:grid!important;
+}
+#atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027]:has([data-aether-timeline-disclosure-406028][open]) > [data-aether-timeline-preview-406028]{
+  display:none!important;
+}
+#atlasAetherStatusPanel4084 [data-aether-timeline-disclosure-406028][open]{
+  width:100%!important;
+  min-width:0!important;
+}
+#atlasAetherStatusPanel4084 [data-aether-timeline-disclosure-406028][open] > summary{
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+#atlasAetherStatusPanel4084 [data-aether-timeline-disclosure-406028][open] [data-aether-timeline-406027]{
+  display:grid!important;
+  width:100%!important;
+  max-width:100%!important;
+  max-height:min(210px,28vh)!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  box-sizing:border-box!important;
+  scrollbar-gutter:stable!important;
+}
+#atlasAetherStatusPanel4084 [data-aether-timeline-disclosure-406028][open] .aether-timeline-row-406027{
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+@media(max-height:760px){
+  #atlasAetherStatusPanel4084 [data-aether-timeline-disclosure-406028][open] [data-aether-timeline-406027]{max-height:170px!important}
+}
