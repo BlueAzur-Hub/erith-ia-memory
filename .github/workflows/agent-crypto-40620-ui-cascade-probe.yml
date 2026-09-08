@@ -1,0 +1,35 @@
+name: Agent-Crypto 40.6.20 UI Cascade Probe
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/agent-crypto-40620-ui-cascade-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+      - name: Probe Administrator family 02 and iframe owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          echo '=== version ==='
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path('public/agent_crypto_erith_ia/administrator/version.json')
+          print(json.loads(p.read_text(encoding='utf-8')).get('build'))
+          PY
+          echo '=== forge / atlas / memory / iframe matches ==='
+          grep -RniE --exclude='*.zip' --exclude='*.sha256' 'Forge|forge|Atlas Auto Reader|Shared Memory|local-ai-hub|iframe|notion|Intelligence, mémoire|Intelligence, m' "$ROOT" | head -n 500 || true
+          echo '=== index anchors ==='
+          grep -nE 'forge-aerith|local-ai-hub|auto-reader|shared-memory|github-memory|atlas-layout-family-intelligence' "$ROOT/index.html" | head -n 300 || true
+          echo '=== script owners with family 02 anchors ==='
+          grep -RniE --include='*.js' 'forge-aerith|local-ai-hub|auto-reader|shared-memory|github-memory' "$ROOT/js" | head -n 300 || true
