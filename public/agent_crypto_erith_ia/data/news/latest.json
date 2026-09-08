@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-08T18:46:09.133885+00:00",
+  "generated_at": "2026-09-08T21:55:10.912717+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,9 +11,9 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 18,
-    "critical_24h": 13,
-    "strong_24h": 5,
+    "events_24h": 19,
+    "critical_24h": 15,
+    "strong_24h": 4,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
@@ -21,8 +21,8 @@
     "decision": "Surveillance renforcée",
     "driver_coverage": {
       "macro_liquidity": {
-        "events_72h": 6,
-        "distinct_sources": 2
+        "events_72h": 7,
+        "distinct_sources": 3
       },
       "institutional_flows": {
         "events_72h": 7,
@@ -49,7 +49,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 1,
-      "latency_ms": 446,
+      "latency_ms": 171,
       "error": null
     },
     {
@@ -58,9 +58,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 28,
-      "qualified_count": 3,
-      "latency_ms": 247,
+      "fetched_count": 29,
+      "qualified_count": 5,
+      "latency_ms": 89,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 166,
+      "latency_ms": 114,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 202,
+      "latency_ms": 332,
       "error": null
     },
     {
@@ -93,7 +93,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 21,
-      "latency_ms": 408,
+      "latency_ms": 309,
       "error": null
     },
     {
@@ -103,8 +103,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 26,
-      "latency_ms": 277,
+      "qualified_count": 25,
+      "latency_ms": 427,
       "error": null
     },
     {
@@ -113,9 +113,9 @@
       "group": "crypto",
       "url": "https://decrypt.co/feed",
       "status": "ok",
-      "fetched_count": 38,
-      "qualified_count": 30,
-      "latency_ms": 196,
+      "fetched_count": 50,
+      "qualified_count": 40,
+      "latency_ms": 130,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 8,
-      "latency_ms": 852,
+      "latency_ms": 896,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 135,
+      "latency_ms": 117,
       "error": null
     },
     {
@@ -148,7 +148,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 3,
-      "latency_ms": 316,
+      "latency_ms": 305,
       "error": null
     },
     {
@@ -159,7 +159,7 @@
       "status": "ok",
       "fetched_count": 1,
       "qualified_count": 1,
-      "latency_ms": 264,
+      "latency_ms": 268,
       "error": null
     },
     {
@@ -170,7 +170,7 @@
       "status": "ok",
       "fetched_count": 9,
       "qualified_count": 9,
-      "latency_ms": 299,
+      "latency_ms": 366,
       "error": null
     },
     {
@@ -181,7 +181,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 237,
+      "latency_ms": 292,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 123,
+      "latency_ms": 108,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 8195,
+      "latency_ms": 9100,
       "error": null
     }
   ],
@@ -232,11 +232,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-09-08T11:06:31+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.897392+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.897392+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.840637+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.840637+00:00",
       "freshness": {
         "iso": "2026-09-08T11:06:31+00:00",
-        "hours": 7.66,
+        "hours": 10.81,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -749,11 +749,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T04:41:17+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.909390+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.909390+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.856834+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.856834+00:00",
       "freshness": {
         "iso": "2026-09-08T04:41:17+00:00",
-        "hours": 14.08,
+        "hours": 17.23,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1159,12 +1159,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T17:10:51+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.673658+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.673658+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.540427+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.540427+00:00",
       "freshness": {
         "iso": "2026-09-08T17:10:51+00:00",
-        "hours": 1.59,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.74,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -1440,6 +1440,106 @@
       ]
     },
     {
+      "id": "feed_53816351c3436c3c",
+      "event_id": "feed_53816351c3436c3c",
+      "fingerprint": "53816351c3436c3c",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "$47M Still Missing After Liquid Hack as Blockstream Bargains With 'White Hats'",
+      "body": "The hackers have returned 3,400 of the roughly 4,000 BTC drained from the sidechain, but about 600 BTC remains outstanding—and some doubt the actors' \"white hat\" claims.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/377723/liquid-hack-47m-blockstream-bargains-white-hat",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/377723/liquid-hack-47m-blockstream-bargains-white-hat"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-08T20:46:34+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.529424+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.529424+00:00",
+      "freshness": {
+        "iso": "2026-09-08T20:46:34+00:00",
+        "hours": 1.14,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 95,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "$47M Still Missing After Liquid Hack as Blockstream Bargains With 'White Hats'",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] $47M Still Missing After Liquid Hack as Blockstream Bargains With 'White Hats'",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_c883d054800ef4b7",
       "event_id": "feed_c883d054800ef4b7",
       "fingerprint": "c883d054800ef4b7",
@@ -1463,11 +1563,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-07T11:09:27+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.698499+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.698499+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.598579+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.598579+00:00",
       "freshness": {
         "iso": "2026-09-07T11:09:27+00:00",
-        "hours": 31.61,
+        "hours": 34.76,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1838,106 +1938,6 @@
       ]
     },
     {
-      "id": "feed_ca176f75ef544f40",
-      "event_id": "feed_ca176f75ef544f40",
-      "fingerprint": "ca176f75ef544f40",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Dropbox Security Breach: Hackers Access Accounts Through Authentication Flaw",
-      "body": "Attackers reportedly registered Lenovo IDs using victims’ email addresses, allowing them to sign into existing Dropbox accounts without their passwords.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/377099/dropbox-security-breach",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Decrypt"
-      ],
-      "source_urls": [
-        "https://decrypt.co/377099/dropbox-security-breach"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-01T20:01:05+00:00",
-      "first_seen_at": "2026-09-04T11:28:04.907344+00:00",
-      "last_seen_at": "2026-09-04T11:28:04.907344+00:00",
-      "freshness": {
-        "iso": "2026-09-01T20:01:05+00:00",
-        "hours": 63.45,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 60,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 94,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "security"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_original": "Dropbox Security Breach: Hackers Access Accounts Through Authentication Flaw",
-      "language_original": "en",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/377099/dropbox-security-breach",
-      "published_at": "2026-09-01T20:01:05+00:00",
-      "crypto_relevance_score": 8,
-      "relevance_reason": "thèmes=security",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "translation_source_normalized": "Dropbox Security Breach: Hackers Access Accounts Through Authentication Flaw",
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Dropbox Security Breach: Hackers Access Accounts Through Authentication Flaw",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false
-    },
-    {
       "id": "feed_85f0033e7080239f",
       "event_id": "feed_85f0033e7080239f",
       "fingerprint": "85f0033e7080239f",
@@ -2180,12 +2180,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T08:10:44+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.766335+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.766335+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.935863+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.935863+00:00",
       "freshness": {
         "iso": "2026-09-08T08:10:44+00:00",
-        "hours": 10.59,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.74,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -6064,112 +6064,6 @@
       "machine_translation": false
     },
     {
-      "id": "feed_9552a435f6e5d71b",
-      "event_id": "feed_9552a435f6e5d71b",
-      "fingerprint": "9552a435f6e5d71b",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin Climbs Back Above $79,000 as ETF Inflows and Strategy Purchase Fuel Recovery - finance.biggo.com",
-      "body": "Bitcoin Climbs Back Above $79,000 as ETF Inflows and Strategy Purchase Fuel Recovery finance.biggo.com",
-      "source_name": "Google News · ETF flows discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE81X1NPMWoxYnpXcGJjeE95OUdraEw5SHFMSjk2dnRlTUJWU1lqbHlHc0Ntd2NzUVI4NnFDRVZ4TElQaHZRamtxdmticDJFQjBWRDhreGxCSng5NzRtRzdpYjEtV1kxVWJFQkN2el9nNUU2Tm5QUnc?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News · ETF flows discovery"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMidkFVX3lxTE81X1NPMWoxYnpXcGJjeE95OUdraEw5SHFMSjk2dnRlTUJWU1lqbHlHc0Ntd2NzUVI4NnFDRVZ4TElQaHZRamtxdmticDJFQjBWRDhreGxCSng5NzRtRzdpYjEtV1kxVWJFQkN2el9nNUU2Tm5QUnc?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-09-01T18:58:29+00:00",
-      "first_seen_at": "2026-09-03T11:24:23.225025+00:00",
-      "last_seen_at": "2026-09-03T11:24:23.225025+00:00",
-      "freshness": {
-        "iso": "2026-09-01T18:58:29+00:00",
-        "hours": 40.43,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 17,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_original": "Bitcoin Climbs Back Above $79,000 as ETF Inflows and Strategy Purchase Fuel Recovery - finance.biggo.com",
-      "language_original": "en",
-      "source": "Google News · ETF flows discovery",
-      "url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE81X1NPMWoxYnpXcGJjeE95OUdraEw5SHFMSjk2dnRlTUJWU1lqbHlHc0Ntd2NzUVI4NnFDRVZ4TElQaHZRamtxdmticDJFQjBWRDhreGxCSng5NzRtRzdpYjEtV1kxVWJFQkN2el9nNUU2Tm5QUnc?oc=5",
-      "published_at": "2026-09-01T18:58:29+00:00",
-      "crypto_relevance_score": 17,
-      "relevance_reason": "actifs=BTC · drivers=institutional_flows · thèmes=money_flow/crypto/institutional",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "translation_source_normalized": "Bitcoin Climbs Back Above $79,000 as ETF Inflows and Strategy Purchase Fuel Recovery - finance.biggo.com",
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Bitcoin Climbs Back Above $79,000 as ETF Inflows and Strategy Purchase Fuel Recovery - finance.biggo.com",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false
-    },
-    {
       "id": "feed_77b5f27098698dd2",
       "event_id": "feed_77b5f27098698dd2",
       "fingerprint": "77b5f27098698dd2",
@@ -6192,13 +6086,13 @@
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-09-08T13:24:08+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.756763+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.756763+00:00",
+      "event_time": "2026-09-08T20:13:27+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.914091+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.914091+00:00",
       "freshness": {
-        "iso": "2026-09-08T13:24:08+00:00",
-        "hours": 5.36,
-        "label": "Fraîche · moins de 12 h",
+        "iso": "2026-09-08T20:13:27+00:00",
+        "hours": 1.69,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
@@ -6297,11 +6191,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-07T17:29:27+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.777392+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.777392+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.960266+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.960266+00:00",
       "freshness": {
         "iso": "2026-09-07T17:29:27+00:00",
-        "hours": 25.28,
+        "hours": 28.43,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6612,11 +6506,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-04T15:00:00+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.858004+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.858004+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.788279+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.788279+00:00",
       "freshness": {
         "iso": "2026-09-04T15:00:00+00:00",
-        "hours": 99.77,
+        "hours": 102.92,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6711,11 +6605,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-03T20:30:00+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.813831+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.813831+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.740348+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.740348+00:00",
       "freshness": {
         "iso": "2026-09-03T20:30:00+00:00",
-        "hours": 118.27,
+        "hours": 121.42,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6812,11 +6706,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-03T14:27:49+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.815203+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.815203+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.742186+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.742186+00:00",
       "freshness": {
         "iso": "2026-09-03T14:27:49+00:00",
-        "hours": 124.3,
+        "hours": 127.45,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6891,107 +6785,6 @@
       ]
     },
     {
-      "id": "feed_71a5a0c1f8dd2693",
-      "event_id": "feed_71a5a0c1f8dd2693",
-      "fingerprint": "71a5a0c1f8dd2693",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "SEC Announces Agenda and Panelists for Roundtable on Preparations for 24-Hour Trading",
-      "body": "The Securities and Exchange Commission today announced the agenda and panelists for its Sept. 17, 2026, roundtable on preparations for 24-hour trading.The roundtable will be held at the SEC’s headquarters at 100 F Street, N.E., Washington, D.C., from 10…",
-      "source_name": "U.S. SEC",
-      "source_url": "https://www.sec.gov/newsroom/press-releases/2026-83-sec-announces-agenda-panelists-roundtable-preparations-24-hour-trading",
-      "source_host": "sec.gov",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "U.S. SEC"
-      ],
-      "source_urls": [
-        "https://www.sec.gov/newsroom/press-releases/2026-83-sec-announces-agenda-panelists-roundtable-preparations-24-hour-trading"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-01T19:17:39+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.816567+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.816567+00:00",
-      "freshness": {
-        "iso": "2026-09-01T19:17:39+00:00",
-        "hours": 167.47,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [
-        "Exchanges"
-      ],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "SEC Announces Agenda and Panelists for Roundtable on Preparations for 24-Hour Trading",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] SEC Announces Agenda and Panelists for Roundtable on Preparations for 24-Hour Trading",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_83495d581147b732",
       "event_id": "feed_83495d581147b732",
       "fingerprint": "83495d581147b732",
@@ -7015,11 +6808,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T16:04:52+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.959408+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.959408+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.897054+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.897054+00:00",
       "freshness": {
         "iso": "2026-09-02T16:04:52+00:00",
-        "hours": 146.69,
+        "hours": 149.84,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7094,6 +6887,102 @@
       ]
     },
     {
+      "id": "feed_d2ccd00e888491af",
+      "event_id": "feed_d2ccd00e888491af",
+      "fingerprint": "d2ccd00e888491af",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "LIV players will have option to leave after bankruptcy case filing",
+      "body": "LIV Golf intends to starts its new league early next year after filing for bankruptcy protection in the United States.",
+      "source_name": "BBC World",
+      "source_url": "https://www.bbc.co.uk/sport/golf/articles/ce8x39wj5p1o?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 1,
+      "source_names": [
+        "BBC World"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/sport/golf/articles/ce8x39wj5p1o?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "bankruptcy",
+      "event_label": "Faillite / liquidité / retraits",
+      "event_time": "2026-09-08T21:20:22+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.501051+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.501051+00:00",
+      "freshness": {
+        "iso": "2026-09-08T21:20:22+00:00",
+        "hours": 0.58,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 74,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 6,
+      "matched_topics": [
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "LIV players will have option to leave after bankruptcy case filing",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] LIV players will have option to leave after bankruptcy case filing",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_f50b0c896da814bb",
       "event_id": "feed_f50b0c896da814bb",
       "fingerprint": "f50b0c896da814bb",
@@ -7117,12 +7006,12 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-08T09:51:01+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.901457+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.901457+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.846478+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.846478+00:00",
       "freshness": {
         "iso": "2026-09-08T09:51:01+00:00",
-        "hours": 8.92,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.07,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -7195,12 +7084,12 @@
       ]
     },
     {
-      "id": "feed_c094fc318077cac9",
-      "event_id": "feed_c094fc318077cac9",
-      "fingerprint": "c094fc318077cac9",
+      "id": "feed_ef824f2e3f4bd15c",
+      "event_id": "feed_ef824f2e3f4bd15c",
+      "fingerprint": "ef824f2e3f4bd15c",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Live updates: Bitcoin climbs from sessions lows as oil prices pull back",
+      "headline": "Live updates: Bitcoin slips below $78,500 as stocks close lower",
       "body": "Copper rushed to a new record high amid supply shortages colliding with rising AI-related demand.",
       "source_name": "CoinDesk",
       "source_url": "https://www.coindesk.com/tech/2026/09/08/live-updates",
@@ -7215,15 +7104,15 @@
         "https://www.coindesk.com/tech/2026/09/08/live-updates"
       ],
       "declared_status": "reported",
-      "event_type": "energy",
-      "event_label": "Énergie / pétrole / matières premières",
+      "event_type": "tokenomics",
+      "event_label": "Tokenomics / unlock / burn",
       "event_time": "2026-09-08T08:30:30+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.903832+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.903832+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.849224+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.849224+00:00",
       "freshness": {
         "iso": "2026-09-08T08:30:30+00:00",
-        "hours": 10.26,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.41,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -7234,7 +7123,7 @@
         "score": 90,
         "level": "Critique"
       },
-      "direction": "impact macro et liquidité potentiel",
+      "direction": "pression d’offre potentielle",
       "assets": [
         "BTC"
       ],
@@ -7257,10 +7146,9 @@
         "tone": "warn"
       },
       "confirmations": 1,
-      "relevance_score": 12,
+      "relevance_score": 8,
       "matched_topics": [
-        "crypto",
-        "energy"
+        "crypto"
       ],
       "driver_domains": [
         "macro_liquidity"
@@ -7272,7 +7160,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Live updates: Bitcoin climbs from sessions lows as oil prices pull back",
+      "headline_original": "Live updates: Bitcoin slips below $78,500 as stocks close lower",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -7287,7 +7175,7 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Live updates: Bitcoin climbs from sessions lows as oil prices pull back",
+      "display_headline": "[EN] Live updates: Bitcoin slips below $78,500 as stocks close lower",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -7323,12 +7211,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-08T07:00:00+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.905174+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.905174+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.851076+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.851076+00:00",
       "freshness": {
         "iso": "2026-09-08T07:00:00+00:00",
-        "hours": 11.77,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.92,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -8363,11 +8251,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-07T20:31:03+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.684840+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.684840+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.558361+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.558361+00:00",
       "freshness": {
         "iso": "2026-09-07T20:31:03+00:00",
-        "hours": 22.25,
+        "hours": 25.4,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8873,12 +8761,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-08T17:03:47+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.750673+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.750673+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.916569+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.916569+00:00",
       "freshness": {
         "iso": "2026-09-08T17:03:47+00:00",
-        "hours": 1.7,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.85,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -9073,12 +8961,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-08T17:46:05+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.672595+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.672595+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.539005+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.539005+00:00",
       "freshness": {
         "iso": "2026-09-08T17:46:05+00:00",
-        "hours": 1.0,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.15,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -9174,11 +9062,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-03T18:56:00+00:00",
-      "first_seen_at": "2026-09-08T18:46:01.191881+00:00",
-      "last_seen_at": "2026-09-08T18:46:01.191881+00:00",
+      "first_seen_at": "2026-09-08T21:55:02.091057+00:00",
+      "last_seen_at": "2026-09-08T21:55:02.091057+00:00",
       "freshness": {
         "iso": "2026-09-03T18:56:00+00:00",
-        "hours": 119.83,
+        "hours": 122.98,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9873,11 +9761,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-07T14:10:11+00:00",
-      "first_seen_at": "2026-09-08T18:46:01.179504+00:00",
-      "last_seen_at": "2026-09-08T18:46:01.179504+00:00",
+      "first_seen_at": "2026-09-08T21:55:02.076197+00:00",
+      "last_seen_at": "2026-09-08T21:55:02.076197+00:00",
       "freshness": {
         "iso": "2026-09-07T14:10:11+00:00",
-        "hours": 28.6,
+        "hours": 31.75,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10392,11 +10280,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-08T04:40:57+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.910641+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.910641+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.858472+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.858472+00:00",
       "freshness": {
         "iso": "2026-09-08T04:40:57+00:00",
-        "hours": 14.08,
+        "hours": 17.23,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10664,6 +10552,111 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Bitcoin back above $81,000 as hike odds fade, Zcash leads with 15% jump",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_4a348b33729eba1e",
+      "event_id": "feed_4a348b33729eba1e",
+      "fingerprint": "4a348b33729eba1e",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin Holds, Wall Street Stalls as Oil Shock Revives Fed Hike Bets",
+      "body": "Bitcoin is defending its golden zone support while the S&P 500 grinds inside its tightest range yet, both waiting on Friday's inflation report before the Fed's September 16 rate call.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/377705/bitcoin-holds-wall-street-stalls-oil-shock-fed-hike",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/377705/bitcoin-holds-wall-street-stalls-oil-shock-fed-hike"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-09-08T18:59:35+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.531394+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.531394+00:00",
+      "freshness": {
+        "iso": "2026-09-08T18:59:35+00:00",
+        "hours": 2.92,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 17,
+      "matched_topics": [
+        "crypto",
+        "macro",
+        "energy"
+      ],
+      "driver_domains": [
+        "macro_liquidity"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Bitcoin Holds, Wall Street Stalls as Oil Shock Revives Fed Hike Bets",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Bitcoin Holds, Wall Street Stalls as Oil Shock Revives Fed Hike Bets",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -10990,13 +10983,13 @@
       ]
     },
     {
-      "id": "feed_b5d8f6232e179289",
-      "event_id": "feed_b5d8f6232e179289",
-      "fingerprint": "b5d8f6232e179289",
+      "id": "feed_bc3ee394ab54dd66",
+      "event_id": "feed_bc3ee394ab54dd66",
+      "fingerprint": "bc3ee394ab54dd66",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - journaldutoken.com",
-      "body": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 journaldutoken.com",
+      "headline": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - Journal Du Token",
+      "body": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 Journal Du Token",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxNSlVXXzZnSHVFV2Qxa1BRaXNQWElRN25makdnRWJydHhGN09OUEFNWm91ZXBRdlFpa3BEU29yVU5JMFJmWGFwZkFIb19RaTVBdXpRS3BseVhhc1VmQW1ka1FHNXJtVzlHd1FUNGp6MTAyNER3Q0w2eTZRcm1wclVGb3NCZFV2aHpkMUxNMHQ3ek1LWVhnRWphU3NQNjB0Uk5wNWpaQVJ3dW9LNkk1bXpQc3lZQkFwWXB1LXh4SDBNd3hEd0pnX09FUGV6cnVyclhrc0wyU3R6Y0MxdHk0ZWFMYXo3SmFRRHMzQ29QaA?oc=5",
       "source_host": "news.google.com",
@@ -11013,11 +11006,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-06T22:23:47+00:00",
-      "first_seen_at": "2026-09-08T18:46:01.189039+00:00",
-      "last_seen_at": "2026-09-08T18:46:01.189039+00:00",
+      "first_seen_at": "2026-09-08T21:55:02.087437+00:00",
+      "last_seen_at": "2026-09-08T21:55:02.087437+00:00",
       "freshness": {
         "iso": "2026-09-06T22:23:47+00:00",
-        "hours": 44.37,
+        "hours": 47.52,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11063,7 +11056,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - journaldutoken.com",
+      "headline_original": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - Journal Du Token",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -11071,14 +11064,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - journaldutoken.com",
+      "headline_fr": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - Journal Du Token",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - journaldutoken.com",
+      "display_headline": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - Journal Du Token",
       "display_language": "fr",
-      "headline_fr_display": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - journaldutoken.com",
+      "headline_fr_display": "Analyse des prix d’Ethereum : une séquence d’entrées consécutives de neuf jours sur l’ETF maintient l’ETH à près de 2 500 - Journal Du Token",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -11110,11 +11103,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-04T19:28:13+00:00",
-      "first_seen_at": "2026-09-08T18:46:01.187105+00:00",
-      "last_seen_at": "2026-09-08T18:46:01.187105+00:00",
+      "first_seen_at": "2026-09-08T21:55:02.085650+00:00",
+      "last_seen_at": "2026-09-08T21:55:02.085650+00:00",
       "freshness": {
         "iso": "2026-09-04T19:28:13+00:00",
-        "hours": 95.3,
+        "hours": 98.45,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11207,11 +11200,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-07T12:10:22+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.782625+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.782625+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.972881+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.972881+00:00",
       "freshness": {
         "iso": "2026-09-07T12:10:22+00:00",
-        "hours": 30.59,
+        "hours": 33.74,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11705,11 +11698,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-08T10:07:10+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.762162+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.762162+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.930592+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.930592+00:00",
       "freshness": {
         "iso": "2026-09-08T10:07:10+00:00",
-        "hours": 8.65,
+        "hours": 11.8,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -11805,11 +11798,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-07T18:16:04+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.689045+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.689045+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.572880+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.572880+00:00",
       "freshness": {
         "iso": "2026-09-07T18:16:04+00:00",
-        "hours": 24.5,
+        "hours": 27.65,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11884,6 +11877,108 @@
       ]
     },
     {
+      "id": "feed_016a28866069e84c",
+      "event_id": "feed_016a28866069e84c",
+      "fingerprint": "016a28866069e84c",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "What Is LAPTOP? Hunter Biden's Meme Coin Targeting TRUMP Holders",
+      "body": "The LAPTOP token launches in September on Base, with a fifth of the supply earmarked for traders who lost money on TRUMP.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/resources/what-is-laptop-hunter-bidens-meme-coin-targeting-trump-holders",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 2,
+      "source_names": [
+        "Decrypt",
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://decrypt.co/resources/what-is-laptop-hunter-bidens-meme-coin-targeting-trump-holders",
+        "https://decrypt.co/377581/hunter-biden-laptop-meme-coin-airdrop-trump",
+        "https://www.coindesk.com/business/2026/09/07/hunter-biden-is-launching-a-memecoin-named-after-his-laptop"
+      ],
+      "declared_status": "reported",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
+      "event_time": "2026-09-08T11:33:50+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.552599+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.861268+00:00",
+      "freshness": {
+        "iso": "2026-09-08T11:33:50+00:00",
+        "hours": 10.35,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 100,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 84,
+        "level": "Fort"
+      },
+      "direction": "impact global potentiel, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
+        "tone": "warn"
+      },
+      "confirmations": 2,
+      "relevance_score": 12,
+      "matched_topics": [
+        "crypto",
+        "geopolitics"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "What Is LAPTOP? Hunter Biden's Meme Coin Targeting TRUMP Holders",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] What Is LAPTOP? Hunter Biden's Meme Coin Targeting TRUMP Holders",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_feab514dea776dac",
       "event_id": "feed_feab514dea776dac",
       "fingerprint": "feab514dea776dac",
@@ -11907,11 +12002,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T17:27:34+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.958302+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.958302+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.895412+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.895412+00:00",
       "freshness": {
         "iso": "2026-09-02T17:27:34+00:00",
-        "hours": 145.31,
+        "hours": 148.46,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11982,108 +12077,6 @@
       ]
     },
     {
-      "id": "feed_016a28866069e84c",
-      "event_id": "feed_016a28866069e84c",
-      "fingerprint": "016a28866069e84c",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "What Is LAPTOP? Hunter Biden's Meme Coin Targeting TRUMP Holders",
-      "body": "The LAPTOP token launches in September on Base, with a fifth of the supply earmarked for traders who lost money on TRUMP.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/resources/what-is-laptop-hunter-bidens-meme-coin-targeting-trump-holders",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 2,
-      "source_names": [
-        "Decrypt",
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://decrypt.co/resources/what-is-laptop-hunter-bidens-meme-coin-targeting-trump-holders",
-        "https://decrypt.co/377581/hunter-biden-laptop-meme-coin-airdrop-trump",
-        "https://www.coindesk.com/business/2026/09/07/hunter-biden-is-launching-a-memecoin-named-after-his-laptop"
-      ],
-      "declared_status": "reported",
-      "event_type": "geopolitics",
-      "event_label": "Géopolitique / guerre / sanctions",
-      "event_time": "2026-09-08T11:33:50+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.681014+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.912858+00:00",
-      "freshness": {
-        "iso": "2026-09-08T11:33:50+00:00",
-        "hours": 7.2,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 86,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 84,
-        "level": "Fort"
-      },
-      "direction": "impact global potentiel, sens à confirmer",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
-        "tone": "warn"
-      },
-      "confirmations": 2,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "geopolitics"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "What Is LAPTOP? Hunter Biden's Meme Coin Targeting TRUMP Holders",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] What Is LAPTOP? Hunter Biden's Meme Coin Targeting TRUMP Holders",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_00d037f573d6ff8e",
       "event_id": "feed_00d037f573d6ff8e",
       "fingerprint": "00d037f573d6ff8e",
@@ -12107,11 +12100,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-07T18:53:47+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.775760+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.775760+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.952765+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.952765+00:00",
       "freshness": {
         "iso": "2026-09-07T18:53:47+00:00",
-        "hours": 23.87,
+        "hours": 27.02,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12206,11 +12199,11 @@
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
       "event_time": "2026-09-08T15:41:11+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.753360+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.753360+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.920284+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.920284+00:00",
       "freshness": {
         "iso": "2026-09-08T15:41:11+00:00",
-        "hours": 3.08,
+        "hours": 6.23,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -12308,11 +12301,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-04T09:10:00+00:00",
-      "first_seen_at": "2026-09-08T18:46:01.603662+00:00",
-      "last_seen_at": "2026-09-08T18:46:01.603662+00:00",
+      "first_seen_at": "2026-09-08T21:55:02.467916+00:00",
+      "last_seen_at": "2026-09-08T21:55:02.467916+00:00",
       "freshness": {
         "iso": "2026-09-04T09:10:00+00:00",
-        "hours": 105.6,
+        "hours": 108.75,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12383,6 +12376,105 @@
       ]
     },
     {
+      "id": "feed_1d45a4eba10fb801",
+      "event_id": "feed_1d45a4eba10fb801",
+      "fingerprint": "1d45a4eba10fb801",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Paul Adams: British-Israeli relations at lowest ebb in decades",
+      "body": "Israel's response to London's trade ban with Israeli settlements in the occupied West Bank shows how important this moment is.",
+      "source_name": "BBC World",
+      "source_url": "https://www.bbc.co.uk/news/articles/c5ydlex9yn3o?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 1,
+      "source_names": [
+        "BBC World"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/c5ydlex9yn3o?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
+      "event_time": "2026-09-08T21:46:31+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.489760+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.489760+00:00",
+      "freshness": {
+        "iso": "2026-09-08T21:46:31+00:00",
+        "hours": 0.14,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 74,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "impact global potentiel, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 9,
+      "matched_topics": [
+        "regulation",
+        "geopolitics"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Paul Adams: British-Israeli relations at lowest ebb in decades",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Paul Adams: British-Israeli relations at lowest ebb in decades",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_90d6558ca792e526",
       "event_id": "feed_90d6558ca792e526",
       "fingerprint": "90d6558ca792e526",
@@ -12406,11 +12498,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-08T15:36:34+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.739146+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.739146+00:00",
+      "first_seen_at": "2026-09-08T21:55:01.508860+00:00",
+      "last_seen_at": "2026-09-08T21:55:01.508860+00:00",
       "freshness": {
         "iso": "2026-09-08T15:36:34+00:00",
-        "hours": 3.16,
+        "hours": 6.31,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -12480,101 +12572,6 @@
       "headline_fr_quality_reasons": [
         "source_not_native_french"
       ]
-    },
-    {
-      "id": "feed_f0b4788930e9a708",
-      "event_id": "feed_f0b4788930e9a708",
-      "fingerprint": "f0b4788930e9a708",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Guerre à Gaza : 12 États mettent fin au commerce avec les colons israëliens",
-      "body": "Le ministre britannique Ed Miliband a accusé le gouvernement israélien de \"fermer les yeux\" sur un \"nettoyage ethnique\" perpétré par les colons en Cisjordanie. Il a annoncé l'interdiction d'importer des produits issus des colonies dans les zones occupées. En France, le ministre Jean-Noël Barrot, déplore une \"Cisjordanie au bord de l'explosion\" et explique, lui aussi, \"mettre fin au commerce avec les colonies israéliennes en Palestine.\"",
-      "source_name": "France 24",
-      "source_url": "https://www.france24.com/fr/vid%C3%A9o/20260908-guerre-%C3%A0-gaza-12-%C3%A9tats-mettent-fin-au-commerce-avec-les-colons-isra%C3%ABliens",
-      "source_host": "france24.com",
-      "source_group": "world",
-      "source_class": "Presse mondiale reconnue",
-      "source_count": 1,
-      "source_names": [
-        "France 24"
-      ],
-      "source_urls": [
-        "https://www.france24.com/fr/vid%C3%A9o/20260908-guerre-%C3%A0-gaza-12-%C3%A9tats-mettent-fin-au-commerce-avec-les-colons-isra%C3%ABliens"
-      ],
-      "declared_status": "reported",
-      "event_type": "geopolitics",
-      "event_label": "Géopolitique / guerre / sanctions",
-      "event_time": "2026-09-08T16:06:38+00:00",
-      "first_seen_at": "2026-09-08T18:46:00.798728+00:00",
-      "last_seen_at": "2026-09-08T18:46:00.798728+00:00",
-      "freshness": {
-        "iso": "2026-09-08T16:06:38+00:00",
-        "hours": 2.66,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 72,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 80,
-        "level": "Fort"
-      },
-      "direction": "impact global potentiel, sens à confirmer",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 18,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 9,
-      "matched_topics": [
-        "regulation",
-        "geopolitics"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "fr",
-      "source_discovery_locale": "fr-FR",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Guerre à Gaza : 12 États mettent fin au commerce avec les colons israëliens",
-      "language_original": "fr",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": "Guerre à Gaza : 12 États mettent fin au commerce avec les colons israëliens",
-      "translation_engine": "native-fr-source",
-      "translation_quality_score": 100,
-      "translation_quality_flags": [],
-      "translation_status": "ORIGINAL_FR",
-      "display_headline": "Guerre à Gaza : 12 États mettent fin au commerce avec les colons israëliens",
-      "display_language": "fr",
-      "headline_fr_display": "Guerre à Gaza : 12 États mettent fin au commerce avec les colons israëliens",
-      "headline_fr_display_status": "native_fr",
-      "headline_fr_status": "original_fr",
-      "headline_fr_engine": "native-fr-source",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "native",
-      "headline_fr_quality_reasons": []
     }
   ],
   "translation_fr": {
@@ -12587,8 +12584,8 @@
     "secret_required": false,
     "paid_service": false,
     "total_events": 120,
-    "accepted_french": 9,
-    "archive_english": 111,
+    "accepted_french": 8,
+    "archive_english": 112,
     "display_coverage": 120,
     "operator_lane_rule": "native French only; English preserved as archive evidence"
   },
@@ -12602,8 +12599,8 @@
     "secret_required": false,
     "paid_service": false,
     "total_events": 120,
-    "accepted_french": 9,
-    "archive_english": 111,
+    "accepted_french": 8,
+    "archive_english": 112,
     "display_coverage": 120,
     "operator_lane_rule": "native French only; English preserved as archive evidence"
   },
