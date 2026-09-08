@@ -26,124 +26,90 @@ jobs:
           import json, hashlib, datetime
 
           root = Path('public/agent_crypto_erith_ia/administrator')
-          index = root / 'index.html'
-          app = root / 'js/app.js'
-          web_version = Path('public/agent_crypto_erith_ia/web/version.json')
+          index = root/'index.html'
+          app = root/'js/app.js'
+          classic_manifest_path = Path('public/agent_crypto_erith_ia/web/version.json')
+
+          def sha(path): return hashlib.sha256(path.read_bytes()).hexdigest()
+          def replace_once(text, old, new, label):
+              if old not in text: raise AssertionError(f'{label} not found')
+              return text.replace(old, new, 1)
 
           protected = [
-              root/'admin-chronos.css',
-              root/'js/version-truth.js',
-              root/'oracle-presentation-405010.css',
-              root/'oracle-fx-406013.css',
-              root/'js/oracle-fx-406013.js',
-              root/'js/core/admin-window-manager.js',
-              root/'views/atlas.html',
+              root/'admin-chronos.css', root/'js/version-truth.js',
+              root/'oracle-presentation-405010.css', root/'oracle-fx-406013.css',
+              root/'js/oracle-fx-406013.js', root/'js/core/admin-window-manager.js',
+              root/'views/atlas.html'
           ]
-          def sha(p):
-              return hashlib.sha256(p.read_bytes()).hexdigest()
           before = {str(p): sha(p) for p in protected}
 
-          classic_manifest = json.loads(web_version.read_text(encoding='utf-8'))
-          classic_build = str(classic_manifest.get('build') or '').strip()
-          classic_engine = str((classic_manifest.get('engine') or {}).get('reference_build') or '').strip()
-          assert classic_build, 'Web Classic version.json has no build truth'
-          assert classic_engine == '38.15.11', f'Unexpected protected Market Core reference: {classic_engine}'
+          classic = json.loads(classic_manifest_path.read_text(encoding='utf-8'))
+          classic_build = str(classic.get('build') or '').strip()
+          classic_engine = str((classic.get('engine') or {}).get('reference_build') or '').strip()
+          assert classic_build == '38.15.16', classic_build
+          assert classic_engine == '38.15.11', classic_engine
 
           html = index.read_text(encoding='utf-8')
-          assert 'content="40.6.24"' in html, '40.6.24 index checkpoint missing'
-          html = html.replace('<meta name="atlas-build" content="40.6.24" />', '<meta name="atlas-build" content="40.6.25" />', 1)
-          html = html.replace('<meta name="administrator-build" content="40.6.24" />', '<meta name="administrator-build" content="40.6.25" />', 1)
-          html = html.replace('<meta name="administrator-release" content="INTERNET RESEARCH PANEL · EXTERNAL SEARCH · SOURCE BOUNDARY LOCK" />', '<meta name="administrator-release" content="FOOTER VERSION TRUTH CLEANUP · CANONICAL OWNERS LOCK" />', 1)
-          html = html.replace('<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.24" />', '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.25" />', 1)
-          html = html.replace('<title>Agent-Crypto @erith.IA — Build 40.6.24 · Administrator</title>', '<title>Agent-Crypto @erith.IA — Build 40.6.25 · Administrator</title>', 1)
-          html = html.replace('./js/app.js?v=administrator-build-40.5.23', './js/app.js?v=administrator-build-40.6.25', 1)
-          old_footer = 'Agent-Crypto @erith.IA · Market Core · Build 40.6.4 · Chronos True Center + Version Safe Refresh'
-          assert old_footer in html, 'legacy footer fallback not found'
-          html = html.replace(old_footer, 'Agent-Crypto @erith.IA · Administrator 40.6.25 · Market Core 38.15.11 · Web Classic · manifeste', 1)
-          app_script = '<script src="./js/app.js?v=administrator-build-40.6.25"></script>'
-          truth_script = '<script src="./js/footer-version-truth-406025.js?v=administrator-build-40.6.25"></script>'
-          assert app_script in html, 'app.js script host not found'
-          if truth_script not in html:
-              html = html.replace(app_script, app_script + '\n  ' + truth_script, 1)
+          html = replace_once(html, '<meta name="atlas-build" content="40.6.24" />', '<meta name="atlas-build" content="40.6.25" />', 'atlas build meta')
+          html = replace_once(html, '<meta name="administrator-build" content="40.6.24" />', '<meta name="administrator-build" content="40.6.25" />', 'administrator build meta')
+          html = replace_once(html, '<meta name="administrator-release" content="INTERNET RESEARCH PANEL · EXTERNAL SEARCH · SOURCE BOUNDARY LOCK" />', '<meta name="administrator-release" content="FOOTER VERSION TRUTH CLEANUP · CANONICAL OWNERS LOCK" />', 'administrator release meta')
+          html = replace_once(html, '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.24" />', '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.25" />', 'asset token')
+          html = replace_once(html, '<title>Agent-Crypto @erith.IA — Build 40.6.24 · Administrator</title>', '<title>Agent-Crypto @erith.IA — Build 40.6.25 · Administrator</title>', 'title')
+          html = replace_once(html, './js/app.js?v=administrator-build-40.5.23', './js/app.js?v=administrator-build-40.6.25', 'app cache token')
+          html = replace_once(html, 'Agent-Crypto @erith.IA · Market Core · Build 40.6.4 · Chronos True Center + Version Safe Refresh', 'Agent-Crypto @erith.IA · Administrator 40.6.25 · Market Core 38.15.11 · Web Classic · manifeste', 'footer fallback')
+          app_tag = '<script src="./js/app.js?v=administrator-build-40.6.25"></script>'
+          truth_tag = '<script src="./js/footer-version-truth-406025.js?v=administrator-build-40.6.25"></script>'
+          if truth_tag not in html:
+              html = replace_once(html, app_tag, app_tag+'\n  '+truth_tag, 'footer truth script host')
           index.write_text(html, encoding='utf-8')
 
           js = app.read_text(encoding='utf-8')
-          old_consts = '''  const ADMIN_BUILD = "40.4.295";\n  const ADMIN_RELEASE = "STRATEGY A FOUNDATION INTEGRITY CORRECTIVE LOCK";\n  const ENGINE_BUILD = "38.15.11";\n  const CLASSIC_WEB_BUILD = "38.15.13";'''
-          new_consts = '''  const metaTruth406025 = name => document.querySelector(`meta[name="${name}"]`)?.content?.trim() || "";\n  const ADMIN_BUILD = metaTruth406025("administrator-build") || "UNKNOWN";\n  const ADMIN_RELEASE = metaTruth406025("administrator-release") || "UNKNOWN";\n  const ENGINE_BUILD = metaTruth406025("atlas-engine-build") || "UNKNOWN";'''
-          assert old_consts in js, 'legacy app version constants not found'
-          js = js.replace(old_consts, new_consts, 1)
-
-          old_footer_js = 'if (footer) footer.textContent = `Agent-Crypto @erith.IA · Market Core · Build ${ADMIN_BUILD} · Version : Parker Lewis Can\'t Lose`;'
-          new_footer_js = 'if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${ADMIN_BUILD} · Market Core ${ENGINE_BUILD} · Web Classic · manifeste`;'
-          assert old_footer_js in js, 'legacy runtime footer writer not found'
-          js = js.replace(old_footer_js, new_footer_js, 1)
-
-          old_classic = '''    const classic = document.createElement("a");\n    classic.href = "../web/index.html";\n    classic.textContent = `CLASSIC ${CLASSIC_WEB_BUILD}`;\n    classic.title = `Ouvrir la Web Classique ${CLASSIC_WEB_BUILD} · Engine ${ENGINE_BUILD}`;'''
-          new_classic = '''    const classic = document.createElement("a");\n    classic.id = "atlasClassicVersionTruth406025";\n    classic.href = "../web/index.html";\n    classic.textContent = "CLASSIC · manifeste";\n    classic.title = `Ouvrir la Web Classique · Engine ${ENGINE_BUILD}`;\n    classic.dataset.versionTruth = "pending";'''
-          assert old_classic in js, 'legacy Classic dock writer not found'
-          js = js.replace(old_classic, new_classic, 1)
+          js = replace_once(js,
+              '  const ADMIN_BUILD = "40.4.295";\n  const ADMIN_RELEASE = "STRATEGY A FOUNDATION INTEGRITY CORRECTIVE LOCK";\n  const ENGINE_BUILD = "38.15.11";\n  const CLASSIC_WEB_BUILD = "38.15.13";',
+              '  const metaTruth406025 = name => document.querySelector(`meta[name="${name}"]`)?.content?.trim() || "";\n  const ADMIN_BUILD = metaTruth406025("administrator-build") || "UNKNOWN";\n  const ADMIN_RELEASE = metaTruth406025("administrator-release") || "UNKNOWN";\n  const ENGINE_BUILD = metaTruth406025("atlas-engine-build") || "UNKNOWN";',
+              'legacy app version constants')
+          js = replace_once(js,
+              'if (footer) footer.textContent = `Agent-Crypto @erith.IA · Market Core · Build ${ADMIN_BUILD} · Version : Parker Lewis Can\'t Lose`;',
+              'if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${ADMIN_BUILD} · Market Core ${ENGINE_BUILD} · Web Classic · manifeste`;',
+              'legacy footer writer')
+          js = replace_once(js,
+              '    const classic = document.createElement("a");\n    classic.href = "../web/index.html";\n    classic.textContent = `CLASSIC ${CLASSIC_WEB_BUILD}`;\n    classic.title = `Ouvrir la Web Classique ${CLASSIC_WEB_BUILD} · Engine ${ENGINE_BUILD}`;',
+              '    const classic = document.createElement("a");\n    classic.id = "atlasClassicVersionTruth406025";\n    classic.href = "../web/index.html";\n    classic.textContent = "CLASSIC · manifeste";\n    classic.title = `Ouvrir la Web Classique · Engine ${ENGINE_BUILD}`;\n    classic.dataset.versionTruth = "pending";',
+              'legacy Classic dock writer')
           app.write_text(js, encoding='utf-8')
 
-          truth_js = root/'js/footer-version-truth-406025.js'
-          truth_js.write_text(r'''(() => {
+          (root/'js/footer-version-truth-406025.js').write_text(r'''(() => {
             "use strict";
             const BUILD = "40.6.25";
-            const manifestUrl = "../web/version.json";
+            const MANIFEST = "../web/version.json";
             const meta = name => document.querySelector(`meta[name="${name}"]`)?.content?.trim() || "UNKNOWN";
-            const render = async () => {
-              const adminBuild = meta("administrator-build");
-              const engineBuild = meta("atlas-engine-build");
+            async function render(){
+              const admin = meta("administrator-build");
+              const engine = meta("atlas-engine-build");
               const footer = document.getElementById("footerRelease");
               const classic = document.getElementById("atlasClassicVersionTruth406025");
-              if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${adminBuild} · Market Core ${engineBuild} · Web Classic · vérification…`;
+              if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${admin} · Market Core ${engine} · Web Classic · vérification…`;
               try {
-                const response = await fetch(manifestUrl, { cache: "no-store" });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const response = await fetch(MANIFEST,{cache:"no-store"});
+                if(!response.ok) throw new Error(`HTTP ${response.status}`);
                 const manifest = await response.json();
-                const classicBuild = String(manifest?.build || "").trim();
-                const classicEngine = String(manifest?.engine?.reference_build || "").trim() || engineBuild;
-                if (!classicBuild) throw new Error("classic build absent");
-                if (classic) {
-                  classic.textContent = `CLASSIC ${classicBuild}`;
-                  classic.title = `Ouvrir la Web Classique ${classicBuild} · Engine ${classicEngine}`;
+                const webBuild = String(manifest?.build || "").trim();
+                const webEngine = String(manifest?.engine?.reference_build || "").trim() || engine;
+                if(!webBuild) throw new Error("classic build absent");
+                if(classic){
+                  classic.textContent = `CLASSIC ${webBuild}`;
+                  classic.title = `Ouvrir la Web Classique ${webBuild} · Engine ${webEngine}`;
                   classic.dataset.versionTruth = "manifest";
                 }
-                if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${adminBuild} · Market Core ${engineBuild} · Web Classic ${classicBuild}`;
-                globalThis.__AGENT_CRYPTO_FOOTER_VERSION_TRUTH_406025__ = Object.freeze({
-                  build: BUILD,
-                  administrator_build: adminBuild,
-                  market_core: engineBuild,
-                  classic_build: classicBuild,
-                  classic_engine: classicEngine,
-                  classic_source: manifestUrl,
-                  one_shot_fetch: true,
-                  recurring_timer: false,
-                  observer: false,
-                  storage_write: false,
-                });
-              } catch (error) {
-                if (classic) {
-                  classic.textContent = "CLASSIC · version inconnue";
-                  classic.title = `Ouvrir la Web Classique · Engine ${engineBuild}`;
-                  classic.dataset.versionTruth = "unknown";
-                }
-                if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${adminBuild} · Market Core ${engineBuild} · Web Classic · version inconnue`;
-                globalThis.__AGENT_CRYPTO_FOOTER_VERSION_TRUTH_406025__ = Object.freeze({
-                  build: BUILD,
-                  administrator_build: adminBuild,
-                  market_core: engineBuild,
-                  classic_build: null,
-                  classic_source: manifestUrl,
-                  error: String(error?.message || error || "unknown"),
-                  one_shot_fetch: true,
-                  recurring_timer: false,
-                  observer: false,
-                  storage_write: false,
-                });
+                if(footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${admin} · Market Core ${engine} · Web Classic ${webBuild}`;
+                globalThis.__AGENT_CRYPTO_FOOTER_VERSION_TRUTH_406025__ = Object.freeze({build:BUILD,administrator_build:admin,market_core:engine,classic_build:webBuild,classic_engine:webEngine,classic_source:MANIFEST,one_shot_fetch:true,recurring_timer:false,observer:false,storage_write:false});
+              } catch(error) {
+                if(classic){ classic.textContent="CLASSIC · version inconnue"; classic.dataset.versionTruth="unknown"; }
+                if(footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${admin} · Market Core ${engine} · Web Classic · version inconnue`;
+                globalThis.__AGENT_CRYPTO_FOOTER_VERSION_TRUTH_406025__ = Object.freeze({build:BUILD,administrator_build:admin,market_core:engine,classic_build:null,classic_source:MANIFEST,error:String(error?.message||error||"unknown"),one_shot_fetch:true,recurring_timer:false,observer:false,storage_write:false});
               }
-            };
-            if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", render, { once: true });
-            else render();
+            }
+            if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",render,{once:true}); else render();
           })();
           ''', encoding='utf-8')
 
@@ -151,73 +117,44 @@ jobs:
           release = 'FOOTER VERSION TRUTH CLEANUP · CANONICAL OWNERS LOCK'
           status = 'footer_version_truth_cleanup_canonical_owners_lock_406025'
           cascade = {
-              'parent_build': '40.6.24',
-              'release': release,
-              'scope': 'footer_and_global_dock_version_truth_only',
-              'administrator_truth_source': 'index.html meta administrator-build',
-              'market_core_truth_source': 'index.html meta atlas-engine-build',
-              'classic_web_truth_source': '../web/version.json',
-              'classic_web_build_at_release': classic_build,
-              'classic_market_core_reference': classic_engine,
-              'classic_manifest_fetch': 'one-shot no-store',
-              'legacy_admin_fixed_constant_removed': True,
-              'legacy_classic_fixed_constant_removed': True,
-              'legacy_parker_lewis_footer_removed': True,
-              'market_core_modified': False,
-              'web_classic_modified': False,
-              'graph_modified': False,
-              'oracle_modified': False,
-              'technical_reading_modified': False,
-              'chronos_modified': False,
-              'version_truth_modified': False,
-              'window_manager_modified': False,
-              'strategy_a_modified': False,
-              'new_recurring_timer': False,
-              'new_observer': False,
-              'new_storage_owner': False,
-              'automatic_order': False,
-              'real_order': False,
+              'parent_build':'40.6.24','release':release,
+              'scope':'footer_and_global_dock_version_truth_only',
+              'administrator_truth_source':'index.html meta administrator-build',
+              'market_core_truth_source':'index.html meta atlas-engine-build',
+              'classic_web_truth_source':'../web/version.json',
+              'classic_web_build_at_release':classic_build,
+              'classic_market_core_reference':classic_engine,
+              'classic_manifest_fetch':'one-shot no-store',
+              'legacy_admin_fixed_constant_removed':True,
+              'legacy_classic_fixed_constant_removed':True,
+              'legacy_parker_lewis_footer_removed':True,
+              'market_core_modified':False,'web_classic_modified':False,'graph_modified':False,
+              'oracle_modified':False,'technical_reading_modified':False,'chronos_modified':False,
+              'version_truth_modified':False,'window_manager_modified':False,'strategy_a_modified':False,
+              'new_recurring_timer':False,'new_observer':False,'new_storage_owner':False,
+              'automatic_order':False,'real_order':False
           }
-          manifests = [root/'build.json', root/'administrator-version.json', root/'version.json']
+          manifests=[root/'build.json',root/'administrator-version.json',root/'version.json']
           for path in manifests:
-              data = json.loads(path.read_text(encoding='utf-8'))
-              data['build'] = '40.6.25'
-              data['release'] = release
-              data['status'] = status
-              data['parent_build'] = '40.6.24'
-              if 'asset_token' in data: data['asset_token'] = 'market-core-v2.0-alpha-build-40.6.25'
-              if 'administrator_build' in data: data['administrator_build'] = '40.6.25'
-              if 'build_label' in data: data['build_label'] = 'Build 40.6.25'
-              if 'release_status' in data: data['release_status'] = release
-              if 'timestamp' in data: data['timestamp'] = now
-              if 'prepared_at' in data: data['prepared_at'] = now
-              if 'published_at' in data: data['published_at'] = now
-              if isinstance(data.get('current_version_truth'), dict): data['current_version_truth']['loaded_build'] = '40.6.25'
-              data['cascade_40_6_25'] = cascade
-              if path.name == 'version.json' and isinstance(data.get('lineage'), str) and '40.6.25 footer version truth' not in data['lineage']:
+              data=json.loads(path.read_text(encoding='utf-8'))
+              data['build']='40.6.25'; data['release']=release; data['status']=status; data['parent_build']='40.6.24'
+              if 'asset_token' in data: data['asset_token']='market-core-v2.0-alpha-build-40.6.25'
+              if 'administrator_build' in data: data['administrator_build']='40.6.25'
+              if 'build_label' in data: data['build_label']='Build 40.6.25'
+              if 'release_status' in data: data['release_status']=release
+              if 'timestamp' in data: data['timestamp']=now
+              if 'prepared_at' in data: data['prepared_at']=now
+              if 'published_at' in data: data['published_at']=now
+              if isinstance(data.get('current_version_truth'),dict): data['current_version_truth']['loaded_build']='40.6.25'
+              data['cascade_40_6_25']=cascade
+              if path.name=='version.json' and isinstance(data.get('lineage'),str) and '40.6.25 footer version truth' not in data['lineage']:
                   data['lineage'] += ' → 40.6.25 footer version truth cleanup from canonical owners'
-              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
-          release_md = root/'RELEASE_40_6_25.md'
-          release_md.write_text(f'''# Agent-Crypto 40.6.25 — Footer Version Truth Cleanup\n\nParent: `40.6.24`  \nMarket Core protected: `38.15.11`  \nWeb Classic observed from its canonical manifest at release: `{classic_build}`\n\n## Scope\n\n- Administrator version comes from `index.html` meta `administrator-build`.\n- Market Core comes from `index.html` meta `atlas-engine-build`.\n- Web Classic comes from `../web/version.json` with a single `no-store` read.\n- The footer and the bottom CLASSIC dock consume those owners.\n- Removed the stale runtime constants `ADMIN_BUILD = 40.4.295` and `CLASSIC_WEB_BUILD = 38.15.13`.\n- Removed the obsolete Parker Lewis footer text.\n\n## Frozen\n\nOracle 40.6.13 + FX, Chronos, Version Truth button, dashboard width 40.6.10, Graphique, Lecture Technique, Paper/Safety 40.6.14→40.6.19, Window Manager and Market Core 38.15.11.\n\nNo recurring timer, observer, storage owner, automatic order or real order added.\n''', encoding='utf-8')
+          (root/'RELEASE_40_6_25.md').write_text(f'''# Agent-Crypto 40.6.25 — Footer Version Truth Cleanup\n\nParent: `40.6.24`  \nMarket Core protected: `38.15.11`  \nWeb Classic manifest observed at release: `{classic_build}`\n\n## Scope\n- Administrator truth: `index.html` meta `administrator-build`.\n- Market Core truth: `index.html` meta `atlas-engine-build`.\n- Web Classic truth: `../web/version.json`, one-shot `no-store`.\n- Footer and bottom CLASSIC dock consume those owners.\n- Removed stale fixed runtime values `40.4.295`, `38.15.13`, and the obsolete Parker Lewis footer label.\n\n## Frozen\nOracle 40.6.13 + FX, Chronos, Version button, width 40.6.10, Graphique, Lecture Technique, Paper/Safety 40.6.14→40.6.19, Window Manager, Market Core 38.15.11.\n''',encoding='utf-8')
 
-          # Refresh payload hashes when manifests expose a files ledger.
-          tracked = {
-              'index.html': index,
-              'js/app.js': app,
-              'js/footer-version-truth-406025.js': truth_js,
-          }
-          for path in manifests:
-              data = json.loads(path.read_text(encoding='utf-8'))
-              files = data.get('files')
-              if isinstance(files, dict):
-                  for key, file_path in tracked.items():
-                      if key in files or path.name == 'version.json':
-                          files.setdefault(key, {})['sha256'] = sha(file_path)
-                  path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-
-          after = {str(p): sha(p) for p in protected}
-          assert before == after, 'protected file checksum changed'
+          after={str(p):sha(p) for p in protected}
+          assert before==after,'protected file checksum changed'
           PY
 
       - name: Syntax and anti-destruction gates
@@ -244,9 +181,9 @@ jobs:
           root=Path('public/agent_crypto_erith_ia/administrator')
           for name in ['build.json','administrator-version.json','version.json']:
               data=json.loads((root/name).read_text(encoding='utf-8'))
-              assert data['build']=='40.6.25', (name,data.get('build'))
-              assert data['cascade_40_6_25']['market_core_modified'] is False
-              assert data['cascade_40_6_25']['window_manager_modified'] is False
+              assert data['build']=='40.6.25'
+              c=data['cascade_40_6_25']
+              assert c['market_core_modified'] is False and c['window_manager_modified'] is False
           classic=json.loads(Path('public/agent_crypto_erith_ia/web/version.json').read_text(encoding='utf-8'))
           assert classic['build']=='38.15.16'
           assert classic['engine']['reference_build']=='38.15.11'
