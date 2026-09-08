@@ -36,6 +36,9 @@ jobs:
               p=chunks/f'aether_bg_406032_part{i:02d}.b64'
               raw=p.read_text(encoding='utf-8')
               clean=''.join(re.findall(r'[A-Za-z0-9+/=]', raw))
+              if i == 10 and len(clean) == 12002 and clean.endswith('ps'):
+                  clean=clean[:-2]
+                  print('normalized known accidental suffix on', p.name)
               print(p.name, 'raw', len(raw), 'clean', len(clean), 'mod4', len(clean)%4)
               parts.append(clean)
           payload=''.join(parts)
@@ -111,4 +114,4 @@ jobs:
           if-no-files-found: error
           compression-level: 0
 
-# retry-4: strict sanitized base64 reconstruction + exact SHA gate
+# retry-5: exact payload reconstruction with known suffix normalization + exact SHA gate
