@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_public_metals_collection_manifest_v1",
   "version": "2.3.0",
-  "generated_at": "2026-09-07T22:49:21.101Z",
+  "generated_at": "2026-09-08T04:31:37.429Z",
   "build_target": "28.2.67",
-  "state": "partial",
+  "state": "ready",
   "assets": [
     "XAU",
     "XAG",
@@ -14,10 +14,8 @@
   "current_provider": "gold_api",
   "history_provider": "yahoo_finance",
   "fx_provider": "ecb",
-  "status": "partial",
-  "errors": [
-    "Gold API XAU: HTTPSConnectionPool(host='api.gold-api.com', port=443): Max retries exceeded with url: /price/XAU (Caused by NameResolutionError(\"HTTPSConnection(host='api.gold-api.com', port=443): Failed to resolve 'api.gold-api.com' ([Errno -2] Name or service not known)\"))"
-  ],
+  "status": "ready",
+  "errors": [],
   "files": {
     "latest": "data/metals/latest.json",
     "status": "data/metals/status.json",
@@ -50,5 +48,5 @@
     "spot_history_retention_hours": 48,
     "last_valid_data_preserved_on_failure": true
   },
-  "fingerprint": "sha256:7a01a9303922764024eb6ea71da4afed16e8beb88244486fb966975fa369ccda"
+  "fingerprint": "sha256:5c9bad4d331f53486599d03ca9b7f7aa1ab8d2b51a5a27b201c72ebb5c16719e"
 }
