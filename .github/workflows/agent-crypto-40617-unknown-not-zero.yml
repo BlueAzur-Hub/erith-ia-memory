@@ -1,0 +1,155 @@
+name: Agent-Crypto 40.6.17 UNKNOWN Not Zero
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40617-unknown-not-zero.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40617-unknown-not-zero
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded UNKNOWN-not-zero surgery
+        run: python .github/scripts/agent_crypto_40617_unknown_not_zero.py
+
+      - name: Syntax and strict numeric truth proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          AFTER="$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          node --check "$AFTER"
+          git diff --check
+
+          node <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const path='public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics-404298.js';
+          vm.runInThisContext(fs.readFileSync(path,'utf8'),{filename:path});
+          const api=globalThis.AgentCryptoStrategyAAfterCostMetrics404298;
+          if(!api || api.build!=='40.6.17' || api.strict_unknown_semantics_406017!==true) throw new Error('40.6.17 API missing');
+          if(api.ledger_consistency_406016!==true || api.unknown_cost_is_zero!==false) throw new Error('40.6.16 ledger gate regressed');
+
+          const before=api.read();
+          const st1=api.self_test(),st2=api.self_test();
+          if(!st1.pass || !st2.pass || st1.checks.unknown_null_blank_boolean_not_zero!==true) throw new Error('strict self-test failed: '+JSON.stringify({st1,st2}));
+          if(JSON.stringify(before)!==JSON.stringify(api.read())) throw new Error('self-test mutated canonical ledger');
+
+          const unknown=api.record_from_reconciliation({
+            reconciliation_id:'U317',execution_id:'EU317',closed_at:'2026-09-08T00:00:00Z',
+            quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,
+            entry_fee_eur:null,exit_fee_eur:'',estimated_total_impact_eur:false,spread_eur:null,slippage_eur:'   ',net_pnl_eur:10
+          });
+          if(!unknown.ok || unknown.row.known_costs_eur!=='UNKNOWN' || unknown.row.known_cost_components!==0 || unknown.row.total_costs_eur!=='UNKNOWN' || unknown.row.accounting_identity_ok!==null) throw new Error('UNKNOWN was promoted to zero: '+JSON.stringify(unknown));
+          const onlyUnknown=api.summary();
+          if(onlyUnknown.known_costs_eur!=='UNKNOWN' || onlyUnknown.total_costs_eur!=='UNKNOWN' || onlyUnknown.known_cost_rows!==0) throw new Error('summary promoted UNKNOWN to zero: '+JSON.stringify(onlyUnknown));
+
+          const complete=api.record_from_reconciliation({
+            reconciliation_id:'C317',execution_id:'EC317',closed_at:'2026-09-08T00:01:00Z',
+            quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,
+            entry_fee_eur:1,exit_fee_eur:1,estimated_total_impact_eur:1,spread_eur:2,slippage_eur:1,net_pnl_eur:4
+          });
+          if(!complete.ok || complete.row.total_costs_eur!==6 || complete.row.accounting_identity_status!=='VERIFIED') throw new Error('complete accounting gate regressed: '+JSON.stringify(complete));
+
+          const negative=api.record_from_reconciliation({
+            reconciliation_id:'N317',execution_id:'EN317',closed_at:'2026-09-08T00:02:00Z',
+            quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,
+            entry_fee_eur:-1,exit_fee_eur:1,estimated_total_impact_eur:1,spread_eur:1,slippage_eur:1,net_pnl_eur:6
+          });
+          if(!negative.ok || negative.row.costs.entry_fee_eur!==null || negative.row.total_costs_eur!=='UNKNOWN' || !negative.row.unknown_cost_components.includes('fees_eur')) throw new Error('negative fee silently clamped to zero: '+JSON.stringify(negative));
+
+          const blankRequired=api.record_from_reconciliation({reconciliation_id:'B317',execution_id:'EB317',quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,net_pnl_eur:'   '});
+          if(blankRequired.reason!=='INCOMPLETE_RECONCILIATION_FACTS') throw new Error('blank required numeric fact accepted');
+          console.log(JSON.stringify({ok:true,build:api.build,null_blank_boolean_unknown:true,negative_not_zero:true,complete_identity_preserved:true,self_test_repeatable:true}));
+          NODE
+
+      - name: Anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          git diff --exit-code -- \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/style.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/oracle-presentation-405010.css" \
+            "$ROOT/oracle-fx-406013.css" \
+            "$ROOT/js/oracle-fx-406013.js" \
+            "$ROOT/js/strategy-a-paper-lifecycle-404295.js" \
+            "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js" \
+            "$ROOT/js/strategy-a-safety-certification-404299.js" \
+            "$ROOT/js/strategy-a-evidence-dossier-404295.js"
+
+          grep -q '<meta name="administrator-build" content="40.6.17" />' "$ROOT/index.html"
+          grep -q '<meta name="atlas-build" content="40.6.17" />' "$ROOT/index.html"
+          grep -q 'oracle-presentation-405010.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.js?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'strategy-a-paper-lifecycle-404295.js?v=administrator-build-40.6.15' "$ROOT/index.html"
+          grep -q 'strategy-a-after-cost-metrics-404298.js?v=administrator-build-40.6.17' "$ROOT/index.html"
+          grep -q 'grid-template-columns:minmax(128px,.66fr) minmax(124px,.66fr) minmax(170px,.94fr) minmax(255px,1.35fr) minmax(410px,2.05fr)!important;' "$ROOT/index.html"
+          grep -q 'strict_unknown_semantics_406017:true' "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+          grep -q 'ledger_consistency_406016:true' "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics-404298.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_17.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_17_UNKNOWN_NOT_ZERO_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_17_UNKNOWN_NOT_ZERO_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            p=line[3:]
+            if ' -> ' in p:p=p.split(' -> ',1)[1]
+            changed.add(p)
+          extra=changed-expected; missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.17 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.17 missing files: {sorted(missing)}')
+          print('40.6.17 bounded diff OK')
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_17_UNKNOWN_NOT_ZERO_CLEAN_UPLOAD_8_FILES.zip
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+          git add "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_17.md"
+          git add "$ZIP" "$ZIP.sha256"
+          git diff --cached --quiet && { echo 'STOP 40.6.17 no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): strict unknown semantics 40.6.17"
+          git pull --rebase origin main
+          git push origin HEAD:main
