@@ -27,10 +27,26 @@ jobs:
           ASSET="$ROOT/assets/aether/aether-observatory-background-406032.webp"
           test "$(find "$CHUNKS" -maxdepth 1 -name 'aether_bg_406032_part*.b64' | wc -l)" -eq 13
           mkdir -p "$(dirname "$ASSET")"
-          cat "$CHUNKS"/aether_bg_406032_part{00..12}.b64 | base64 -d > "$ASSET"
-          test "$(wc -c < "$ASSET")" -eq 116838
-          printf '5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2  %s\n' "$ASSET" | sha256sum -c -
-          # The prepared script was committed before the final asset digest was known.
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, re, hashlib
+          chunks=Path('.github/assets/aether406032')
+          parts=[]
+          for i in range(13):
+              p=chunks/f'aether_bg_406032_part{i:02d}.b64'
+              raw=p.read_text(encoding='utf-8')
+              clean=''.join(re.findall(r'[A-Za-z0-9+/=]', raw))
+              print(p.name, 'raw', len(raw), 'clean', len(clean), 'mod4', len(clean)%4)
+              parts.append(clean)
+          payload=''.join(parts)
+          data=base64.b64decode(payload, validate=True)
+          out=Path('public/agent_crypto_erith_ia/administrator/assets/aether/aether-observatory-background-406032.webp')
+          out.write_bytes(data)
+          digest=hashlib.sha256(data).hexdigest()
+          print('decoded bytes',len(data),'sha256',digest)
+          assert len(data)==116838, len(data)
+          assert digest=='5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2', digest
+          PY
           sed -i 's/a081fd1695aa08c79a73eb67673141ac0b77a7b6b81402373caa9a40424fb89e/5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2/' .github/scripts/agent_crypto_40632_release.py
 
       - name: Apply guarded 40.6.32 release
@@ -95,4 +111,4 @@ jobs:
           if-no-files-found: error
           compression-level: 0
 
-# retry-3: source chunks verified/repaired
+# retry-4: strict sanitized base64 reconstruction + exact SHA gate
