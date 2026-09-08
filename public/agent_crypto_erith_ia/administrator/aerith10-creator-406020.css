@@ -10,3 +10,9 @@
 .aerith10-creator-hint{position:absolute;z-index:2;left:10px;right:10px;bottom:9px;padding:6px 9px;border-radius:9px;background:rgba(5,10,18,.82);color:#b9c8d7;font-size:10px;pointer-events:none;opacity:.72}
 .aerith10-creator-embedded{display:block;width:100%;height:100%;min-height:680px;border:0;background:#fff}
 @media(max-width:900px){.aerith10-creator-toolbar{align-items:flex-start;flex-direction:column}.aerith10-creator-stage,.aerith10-creator-embedded{min-height:620px;height:72vh}.aerith10-creator-open{width:100%;text-align:center}}
+
+/* 40.6.21 — Workspace Bridge · local context only */
+.aerith10-workspace-bridge{display:grid;gap:8px;margin:0 0 9px;padding:9px;border:1px solid rgba(128,226,255,.16);border-radius:12px;background:linear-gradient(135deg,rgba(24,44,67,.42),rgba(40,24,62,.28))}
+.aerith10-workspace-bridge-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.aerith10-workspace-bridge-head>div{display:flex;flex-direction:column;gap:2px}.aerith10-workspace-bridge-head b{color:#eaf8ff;font-size:12px}.aerith10-workspace-bridge-head span{color:#9eb7c8;font-size:10px}.aerith10-workspace-state{padding:3px 7px;border:1px solid rgba(112,255,202,.25);border-radius:999px;color:#9fffd7!important;white-space:nowrap}
+#aerith10WorkspaceContext{box-sizing:border-box;width:100%;min-height:100px;max-height:180px;resize:vertical;border:1px solid rgba(140,206,255,.16);border-radius:10px;background:rgba(2,10,18,.72);color:#cfe8f4;padding:9px;font:500 10px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}
+.aerith10-workspace-actions{display:flex;gap:7px;flex-wrap:wrap}.aerith10-workspace-bridge>small{color:#8299aa;font-size:9px}

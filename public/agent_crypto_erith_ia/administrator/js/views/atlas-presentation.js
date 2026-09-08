@@ -626,6 +626,20 @@
             </div>
             <a class="btn secondary aerith10-creator-open" href="https://sustaining-boar-5c6.notion.site/erith-10-Cr-atrice-3977754fe0848036a47cfd55786b4b40" target="_blank" rel="noopener noreferrer">Ouvrir Aerith-10 complète ↗</a>
           </div>
+
+          <section class="aerith10-workspace-bridge" id="aerith10WorkspaceBridge" aria-labelledby="aerith10WorkspaceBridgeTitle">
+            <div class="aerith10-workspace-bridge-head">
+              <div><b id="aerith10WorkspaceBridgeTitle">Passage Atlas → Aerith-10 → Forge</b><span>Lecture locale du contexte déjà affiché · aucun envoi automatique vers Notion.</span></div>
+              <span class="aerith10-workspace-state" id="aerith10WorkspaceState">PRÊT</span>
+            </div>
+            <textarea id="aerith10WorkspaceContext" readonly aria-label="Contexte Agent-Crypto prêt à copier vers Aerith-10"></textarea>
+            <div class="aerith10-workspace-actions">
+              <button type="button" class="btn small" id="btnAerith10ContextRefresh">Actualiser contexte</button>
+              <button type="button" class="btn small primary" id="btnAerith10ContextCopy">Copier vers Aerith-10</button>
+              <button type="button" class="btn small" id="btnAerith10OpenForge">Continuer vers la Forge ↓</button>
+            </div>
+            <small>Le presse-papiers est le pont volontaire : l’iframe Notion reste isolée par le navigateur et ne reçoit aucune donnée Agent-Crypto automatiquement.</small>
+          </section>
           <div class="aerith10-creator-stage" id="aerith10CreatorStage">
             <div class="aerith10-creator-hint">Page Notion publique intégrée · si le fournisseur refuse l’embarquement, utilise « Ouvrir Aerith-10 complète ↗ ».</div>
             <iframe id="aerith10CreatorEmbedded" class="aerith10-creator-embedded" src="https://sustaining-boar-5c6.notion.site/erith-10-Cr-atrice-3977754fe0848036a47cfd55786b4b40" title="Aerith-10 Créatrice — Full Matrix" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
