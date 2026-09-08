@@ -1,0 +1,164 @@
+name: Agent-Crypto 40.6.19 Evidence Readiness Truth
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40619-evidence-readiness-truth.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40619-evidence-readiness-truth
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded evidence readiness surgery
+        run: python .github/scripts/agent_crypto_40619_evidence_readiness_truth.py
+
+      - name: Syntax + strict dataset truth proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          DOSSIER="$ROOT/js/strategy-a-evidence-dossier-404295.js"
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          node --check "$DOSSIER"
+          git diff --check
+
+          node <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const root='public/agent_crypto_erith_ia/administrator/js/';
+          for(const file of [
+            'strategy-a-after-cost-metrics-404298.js',
+            'strategy-a-safety-certification-404299.js',
+            'strategy-a-evidence-dossier-404295.js'
+          ]) vm.runInThisContext(fs.readFileSync(root+file,'utf8'),{filename:root+file});
+          const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics404298;
+          const dossier=globalThis.AgentCryptoStrategyAEvidenceDossier404295;
+          if(!metrics || !dossier) throw new Error('required evidence owners missing');
+          if(dossier.build!=='40.6.19' || dossier.strict_dataset_completeness_406019!==true || dossier.after_cost_verified_identity_required!==true) throw new Error('40.6.19 API missing');
+          if(metrics.build!=='40.6.17' || metrics.strict_unknown_semantics_406017!==true || metrics.ledger_consistency_406016!==true) throw new Error('After-Cost freeze regression');
+
+          const st1=dossier.self_test(),st2=dossier.self_test();
+          if(!st1.pass || !st2.pass || st1.checks.null_blank_boolean_not_complete!==true || st1.checks.partial_unverified_not_complete!==true) throw new Error('dossier self-test failed: '+JSON.stringify({st1,st2}));
+
+          const unknown=dossier.dataset_readiness([
+            {trade_id:'U1',at:'2026-01-01T00:00:00Z',net_pnl_eur:null,total_costs_eur:'',cost_completeness:'COMPLETE',accounting_identity_status:'VERIFIED',accounting_identity_ok:true},
+            {trade_id:'U2',at:'2026-01-01T00:01:00Z',net_pnl_eur:false,total_costs_eur:0,cost_completeness:'COMPLETE',accounting_identity_status:'VERIFIED',accounting_identity_ok:true}
+          ],'after_cost');
+          if(unknown.after_cost_complete_rows!==0 || unknown.numeric_unknown_rows!==2 || unknown.monte_carlo_ready!==false) throw new Error('unknown evidence promoted: '+JSON.stringify(unknown));
+
+          const partial=dossier.dataset_readiness([
+            {trade_id:'P1',at:'2026-01-01T00:00:00Z',net_pnl_eur:1,total_costs_eur:0,cost_completeness:'PARTIAL_MODEL',accounting_identity_status:'INDETERMINATE_COSTS',accounting_identity_ok:null}
+          ],'after_cost');
+          if(partial.after_cost_complete_rows!==0 || partial.unverified_after_cost_rows!==1 || partial.monte_carlo_ready!==false) throw new Error('partial evidence promoted: '+JSON.stringify(partial));
+
+          const verified=dossier.dataset_readiness([
+            {trade_id:'V1',at:'2026-01-01T00:00:00Z',net_pnl_eur:1,total_costs_eur:0,cost_completeness:'COMPLETE',accounting_identity_status:'VERIFIED',accounting_identity_ok:true}
+          ],'after_cost');
+          if(verified.after_cost_complete_rows!==1 || verified.numeric_unknown_rows!==0 || verified.unverified_after_cost_rows!==0 || verified.monte_carlo_ready!==false) throw new Error('verified single-row truth failed: '+JSON.stringify(verified));
+
+          const sample=Array.from({length:30},(_,i)=>({
+            trade_id:`V${String(i+1).padStart(2,'0')}`,
+            at:new Date(Date.UTC(2026,0,1,0,i,0)).toISOString(),
+            net_pnl_eur:i%2?1:-1,total_costs_eur:0.1,
+            cost_completeness:'COMPLETE',accounting_identity_status:'VERIFIED',accounting_identity_ok:true
+          }));
+          const ready=dossier.dataset_readiness(sample,'after_cost');
+          if(ready.after_cost_complete_rows!==30 || ready.data_integrity_ready!==true || ready.monte_carlo_ready!==true) throw new Error('strict complete sample readiness failed: '+JSON.stringify(ready));
+
+          const snap=dossier.snapshot();
+          if(snap.passive_read!==true || snap.implicit_self_tests!==false || snap.fabricated_backtest!==false || snap.certification.certified_for_live!==false || snap.dataset.after_cost.backtest_ready!==false) throw new Error('passive/certification truth regression');
+          console.log(JSON.stringify({ok:true,build:dossier.build,unknown_not_complete:true,partial_not_complete:true,verified_required:true,monte_carlo_threshold_truth:true,passive_snapshot:true}));
+          NODE
+
+      - name: Anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          git diff --exit-code -- \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/style.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/oracle-presentation-405010.css" \
+            "$ROOT/oracle-fx-406013.css" \
+            "$ROOT/js/oracle-fx-406013.js" \
+            "$ROOT/js/strategy-a-paper-lifecycle-404295.js" \
+            "$ROOT/js/strategy-a-after-cost-metrics-404298.js" \
+            "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js" \
+            "$ROOT/js/strategy-a-safety-certification-404299.js"
+
+          grep -q '<meta name="administrator-build" content="40.6.19" />' "$ROOT/index.html"
+          grep -q '<meta name="atlas-build" content="40.6.19" />' "$ROOT/index.html"
+          grep -q 'oracle-presentation-405010.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.js?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'strategy-a-paper-lifecycle-404295.js?v=administrator-build-40.6.15' "$ROOT/index.html"
+          grep -q 'strategy-a-after-cost-metrics-404298.js?v=administrator-build-40.6.17' "$ROOT/index.html"
+          grep -q 'strategy-a-auto-lifecycle-bridge-404297.js?v=administrator-build-40.6.18' "$ROOT/index.html"
+          grep -q 'strategy-a-evidence-dossier-404295.js?v=administrator-build-40.6.19' "$ROOT/index.html"
+          grep -q 'grid-template-columns:minmax(128px,.66fr) minmax(124px,.66fr) minmax(170px,.94fr) minmax(255px,1.35fr) minmax(410px,2.05fr)!important;' "$ROOT/index.html"
+          grep -q 'strict_dataset_completeness_406019:true' "$ROOT/js/strategy-a-evidence-dossier-404295.js"
+          grep -q 'unknown_propagation_406018:true' "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js"
+          grep -q 'strict_unknown_semantics_406017:true' "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier-404295.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_19.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_19_EVIDENCE_READINESS_TRUTH_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_19_EVIDENCE_READINESS_TRUTH_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            p=line[3:]
+            if ' -> ' in p:p=p.split(' -> ',1)[1]
+            changed.add(p)
+          extra=changed-expected; missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.19 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.19 missing files: {sorted(missing)}')
+          print('40.6.19 bounded diff OK')
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_19_EVIDENCE_READINESS_TRUTH_CLEAN_UPLOAD_8_FILES.zip
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/js/strategy-a-evidence-dossier-404295.js"
+          git add "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_19.md"
+          git add "$ZIP" "$ZIP.sha256"
+          git diff --cached --quiet && { echo 'STOP 40.6.19 no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): strict evidence readiness truth 40.6.19"
+          git pull --rebase origin main
+          git push origin HEAD:main
