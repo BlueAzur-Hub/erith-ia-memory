@@ -1424,3 +1424,82 @@
     right:10px!important;
   }
 }
+
+
+/* 40.6.41 — AETHER FREE RESIZE · SHELL / 16:9 STAGE SEPARATION */
+/*
+   The Administrator window is now the resizable owner.
+   The paid Observatory artwork + calibrated live lanes remain one undistorted 16:9 inner stage.
+   No runtime/data owner, observer or parallel geometry persistence is introduced.
+*/
+@media (min-width:901px){
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized){
+    aspect-ratio:auto!important;
+    resize:both!important;
+    box-sizing:border-box!important;
+    min-width:720px!important;
+    min-height:405px!important;
+    max-width:calc(100vw - 24px)!important;
+    max-height:calc(100vh - 24px)!important;
+    overflow:hidden!important;
+    container-type:size!important;
+    container-name:aether-shell-406041!important;
+    background:
+      radial-gradient(circle at 50% 48%,rgba(16,66,104,.22),transparent 42%),
+      radial-gradient(circle at 12% 18%,rgba(62,215,255,.08),transparent 28%),
+      radial-gradient(circle at 88% 82%,rgba(149,99,255,.07),transparent 30%),
+      #010711!important;
+    border-color:rgba(73,211,255,.46)!important;
+    box-shadow:0 28px 90px rgba(0,0,0,.68),inset 0 0 0 1px rgba(92,215,255,.035)!important;
+  }
+
+  /* The image is no longer the window box. It is a centered content stage. */
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized) .aether-first-glance-grid-406030{
+    position:absolute!important;
+    inset:auto!important;
+    left:50%!important;
+    top:50%!important;
+    height:calc(100% - 14px)!important;
+    width:auto!important;
+    max-width:none!important;
+    max-height:none!important;
+    aspect-ratio:16/9!important;
+    transform:translate(-50%,-50%)!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    border-radius:15px!important;
+    background:url('./assets/aether/aether-observatory-background-406032.webp') center/100% 100% no-repeat!important;
+    box-shadow:0 0 0 1px rgba(82,210,255,.16),0 18px 55px rgba(0,0,0,.34)!important;
+    isolation:isolate!important;
+  }
+
+  /* Wide shell -> fit stage by height. Narrow/tall shell -> fit stage by width. */
+  @container aether-shell-406041 (max-aspect-ratio: 16 / 9){
+    #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized) .aether-first-glance-grid-406030{
+      width:calc(100% - 14px)!important;
+      height:auto!important;
+    }
+  }
+
+  /* Small, non-intercepting visual cue for Firefox's native bottom-right resize grip. */
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized)::after{
+    content:""!important;
+    display:block!important;
+    position:absolute!important;
+    right:3px!important;
+    bottom:3px!important;
+    width:17px!important;
+    height:17px!important;
+    z-index:170!important;
+    pointer-events:none!important;
+    opacity:.72!important;
+    background:
+      linear-gradient(135deg,transparent 0 45%,rgba(106,232,255,.72) 46% 51%,transparent 52% 63%,rgba(106,232,255,.46) 64% 69%,transparent 70%)!important;
+  }
+
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-maximized{
+    resize:none!important;
+    container-type:normal!important;
+  }
+}
