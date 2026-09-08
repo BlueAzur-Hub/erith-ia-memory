@@ -1,0 +1,102 @@
+name: Agent-Crypto 40.6.42 Aether Component Foundation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40642-aether-component-foundation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Build guarded 40.6.42
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/agent_crypto_40642_aether_component_foundation.py
+          python3 .github/scripts/agent_crypto_40642_aether_component_foundation.py
+
+      - name: Final anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_42_AETHER_COMPONENT_FOUNDATION_RESPONSIVE_INFORMATION_ARCHITECTURE_CLEAN_UPLOAD_7_FILES.zip
+          SHA="$ZIP.sha256"
+
+          node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/aether.js"
+          node --check "$ROOT/js/aether-workbench-406039.js"
+          python3 -m json.tool "$ROOT/build.json" >/dev/null
+          python3 -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python3 -m json.tool "$ROOT/version.json" >/dev/null
+
+          grep -q '<meta name="administrator-build" content="40.6.42"' "$ROOT/index.html"
+          grep -q 'admin-ribbons.css?v=administrator-build-40.6.42' "$ROOT/index.html"
+          grep -q '40.6.42 — AETHER COMPONENT FOUNDATION' "$ROOT/js/aether.js"
+          grep -q '40.6.42 — AETHER COMPONENT FOUNDATION' "$ROOT/admin-ribbons.css"
+          grep -q 'aetherComponentViewModel406042' "$ROOT/js/aether.js"
+          grep -q 'aetherComponentPaint406042' "$ROOT/js/aether.js"
+          grep -q 'data-aether-component-stage-406042' "$ROOT/js/aether.js"
+          grep -q 'grid-template-areas' "$ROOT/admin-ribbons.css"
+          grep -q 'container-name:aether-stage-406042' "$ROOT/admin-ribbons.css"
+          grep -q 'aether_attention_backplate_geometry_owner:false' "$ROOT/js/aether.js"
+
+          test "$(git hash-object "$ROOT/js/app.js")" = '1cd18ff77a2e1ae42a8aac22ca029376e9d0d393'
+          test "$(git hash-object "$ROOT/js/aether-workbench-406039.js")" = '21145af3e8695dd4cb6366423d5d8c9f62ab9aa1'
+          printf '5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2  %s\n' "$ROOT/assets/aether/aether-observatory-background-406032.webp" | sha256sum -c -
+          grep -q '"engine": "38.15.11"' "$ROOT/build.json"
+          grep -q '"build": "40.6.42"' "$ROOT/build.json"
+          grep -q 'final_wide_textless_background_pending' "$ROOT/build.json"
+
+          test -f "$ZIP"
+          test -f "$SHA"
+          (cd "$(dirname "$ZIP")" && sha256sum -c "$(basename "$SHA")")
+          git diff --check
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          p='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_42_AETHER_COMPONENT_FOUNDATION_RESPONSIVE_INFORMATION_ARCHITECTURE_CLEAN_UPLOAD_7_FILES.zip'
+          with ZipFile(p) as z:
+              files=[n for n in z.namelist() if not n.endswith('/')]
+              assert len(files)==7, files
+              assert z.testzip() is None
+              assert 'administrator/js/aether.js' in files
+              assert 'administrator/admin-ribbons.css' in files
+          print('40.6.42 ZIP 7 files PASS')
+          PY
+
+      - name: Commit and publish 40.6.42
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/build.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/admin-ribbons.css \
+                  public/agent_crypto_erith_ia/administrator/js/aether.js \
+                  public/agent_crypto_erith_ia/administrator/RELEASE_40_6_42.md \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_42_AETHER_COMPONENT_FOUNDATION_RESPONSIVE_INFORMATION_ARCHITECTURE_CLEAN_UPLOAD_7_FILES.zip \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_42_AETHER_COMPONENT_FOUNDATION_RESPONSIVE_INFORMATION_ARCHITECTURE_CLEAN_UPLOAD_7_FILES.zip.sha256
+          git commit -m "refactor(agent-crypto): rebuild Aether information architecture 40.6.42"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload clean ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_42_AETHER_COMPONENT_FOUNDATION_RESPONSIVE_INFORMATION_ARCHITECTURE_CLEAN_UPLOAD_7_FILES
+          path: coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_42_AETHER_COMPONENT_FOUNDATION_RESPONSIVE_INFORMATION_ARCHITECTURE_CLEAN_UPLOAD_7_FILES.zip
+          if-no-files-found: error
+          compression-level: 0
