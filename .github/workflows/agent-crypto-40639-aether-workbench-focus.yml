@@ -24,8 +24,9 @@ jobs:
           set -euo pipefail
           python3 -m py_compile .github/scripts/agent_crypto_40639_aether_workbench_focus.py
           # Retry guard: the 40.6.38 dataset marker exists twice by design
-          # (condition + assignment). Patch both together, then execute the
-          # exact guarded release script without weakening any runtime gate.
+          # (condition + assignment). Patch both together in the runner copy,
+          # execute the guarded release, then restore the staging script so the
+          # publish tree contains runtime changes only.
           python3 - <<'PY'
           from pathlib import Path
           p=Path('.github/scripts/agent_crypto_40639_aether_workbench_focus.py')
@@ -37,6 +38,7 @@ jobs:
           p.write_text(s.replace(old,new,1),encoding='utf-8')
           PY
           python3 .github/scripts/agent_crypto_40639_aether_workbench_focus.py
+          git checkout -- .github/scripts/agent_crypto_40639_aether_workbench_focus.py
 
       - name: Final anti-destruction gates
         shell: bash
