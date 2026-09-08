@@ -1,0 +1,162 @@
+name: Agent-Crypto 40.6.18 Unknown Propagation Bridge
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40618-unknown-propagation-bridge.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40618-unknown-propagation-bridge
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded bridge UNKNOWN propagation surgery
+        run: python .github/scripts/agent_crypto_40618_unknown_propagation_bridge.py
+
+      - name: Syntax + bridge truth proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          BRIDGE="$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js"
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          node --check "$BRIDGE"
+          git diff --check
+
+          node <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const root='public/agent_crypto_erith_ia/administrator/js/';
+          for(const file of [
+            'strategy-a-safety-certification-404299.js',
+            'strategy-a-paper-lifecycle-404295.js',
+            'strategy-a-auto-lifecycle-bridge-404297.js'
+          ]) vm.runInThisContext(fs.readFileSync(root+file,'utf8'),{filename:root+file});
+
+          const safety=globalThis.AgentCryptoStrategyASafetyCertification404299;
+          const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle404295;
+          const bridge=globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297;
+          if(!safety || !lifecycle || !bridge) throw new Error('required Paper owners missing');
+          if(bridge.build!=='40.6.18' || bridge.unknown_propagation_406018!==true || bridge.unknown_numeric_is_zero!==false) throw new Error('40.6.18 bridge API missing');
+          const st1=bridge.self_test(),st2=bridge.self_test();
+          if(!st1.pass || !st2.pass) throw new Error('bridge self-test failed: '+JSON.stringify({st1,st2}));
+
+          const pf=bridge.preflight();
+          if(pf.lifecycle_owner!=='40.6.15' || pf.paper_only!==true || pf.real_orders!==false || pf.network!==false) throw new Error('preflight truth regression: '+JSON.stringify(pf));
+
+          // Direct execution facts prove asset notional without inventing missing fee/authorized values.
+          const opened=bridge.on_open({
+            proposal:{proposal_id:'P318'},
+            risk:{proposal_id:'P318',risk_id:'R318',decision:'ACCEPT'},
+            fill:{execution_id:'E318',risk_id:'R318',symbol:'BTC',fill_price_eur:100,quantity_btc:0.5,authorized_notional_eur:null,entry_fee_eur:null}
+          });
+          if(!opened.ok || opened.state.asset_notional_eur!==50 || opened.state.asset_notional_source!=='FILL_PRICE_X_QUANTITY' || opened.state.entry_fee_eur!==null || opened.state.paper_authorized_notional_eur!==null) throw new Error('direct fact propagation failed: '+JSON.stringify(opened));
+          if(!opened.state.unknown_external_numeric_fields.includes('entry_fee_eur') || !opened.state.unknown_external_numeric_fields.includes('authorized_notional_eur')) throw new Error('unknown provenance lost');
+
+          const closed=bridge.on_close({reconciliation:{execution_id:'E318',reconciliation_id:'RC318',net_pnl_eur:2.5}});
+          if(!closed.ok || closed.state.status!=='CLOSED_SYNCED' || closed.state.net_pnl_eur!==2.5) throw new Error('close propagation failed: '+JSON.stringify(closed));
+
+          const fallback=bridge.normalize_open_facts({fill_price_eur:100,quantity_btc:null,authorized_notional_eur:51,entry_fee_eur:1});
+          if(!fallback.lifecycle_ready || fallback.asset_notional_eur!==50 || fallback.asset_notional_source!=='AUTHORIZED_MINUS_ENTRY_FEE' || fallback.quantity_btc!==null) throw new Error('known-fee fallback failed');
+
+          const incomplete=bridge.normalize_open_facts({fill_price_eur:100,quantity_btc:null,authorized_notional_eur:51,entry_fee_eur:null});
+          if(incomplete.lifecycle_ready!==false || incomplete.asset_notional_eur!==null) throw new Error('missing fee fabricated a fallback notional');
+
+          const contradiction=bridge.normalize_open_facts({fill_price_eur:100,quantity_btc:0.5,authorized_notional_eur:60,entry_fee_eur:1});
+          if(contradiction.contradictory!==true || contradiction.asset_notional_eur!==null) throw new Error('contradictory notional not fail-closed');
+
+          const blank=bridge.normalize_open_facts({fill_price_eur:'',quantity_btc:false,authorized_notional_eur:null,entry_fee_eur:'   '});
+          if(blank.fill_price_eur!==null || blank.quantity_btc!==null || blank.authorized_notional_eur!==null || blank.entry_fee_eur!==null) throw new Error('blank/null/boolean coerced to zero');
+          console.log(JSON.stringify({ok:true,build:bridge.build,direct_unknown_preserved:true,known_fee_fallback:true,missing_fee_no_zero:true,contradiction_fail_closed:true,close_truth:true}));
+          NODE
+
+      - name: Anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          git diff --exit-code -- \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/style.css" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css" \
+            "$ROOT/admin-visual-assets.css" \
+            "$ROOT/admin-visual-cache.css" \
+            "$ROOT/oracle-presentation-405010.css" \
+            "$ROOT/oracle-fx-406013.css" \
+            "$ROOT/js/oracle-fx-406013.js" \
+            "$ROOT/js/strategy-a-paper-lifecycle-404295.js" \
+            "$ROOT/js/strategy-a-after-cost-metrics-404298.js" \
+            "$ROOT/js/strategy-a-safety-certification-404299.js" \
+            "$ROOT/js/strategy-a-evidence-dossier-404295.js"
+
+          grep -q '<meta name="administrator-build" content="40.6.18" />' "$ROOT/index.html"
+          grep -q '<meta name="atlas-build" content="40.6.18" />' "$ROOT/index.html"
+          grep -q 'oracle-presentation-405010.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.css?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'oracle-fx-406013.js?v=administrator-build-40.6.13' "$ROOT/index.html"
+          grep -q 'strategy-a-paper-lifecycle-404295.js?v=administrator-build-40.6.15' "$ROOT/index.html"
+          grep -q 'strategy-a-after-cost-metrics-404298.js?v=administrator-build-40.6.17' "$ROOT/index.html"
+          grep -q 'strategy-a-auto-lifecycle-bridge-404297.js?v=administrator-build-40.6.18' "$ROOT/index.html"
+          grep -q 'grid-template-columns:minmax(128px,.66fr) minmax(124px,.66fr) minmax(170px,.94fr) minmax(255px,1.35fr) minmax(410px,2.05fr)!important;' "$ROOT/index.html"
+          grep -q 'unknown_propagation_406018:true' "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js"
+          grep -q 'strict_unknown_semantics_406017:true' "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+          grep -q 'ledger_consistency_406016:true' "$ROOT/js/strategy-a-after-cost-metrics-404298.js"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-lifecycle-bridge-404297.js',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_18.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_18_UNKNOWN_PROPAGATION_BRIDGE_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_18_UNKNOWN_PROPAGATION_BRIDGE_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            p=line[3:]
+            if ' -> ' in p:p=p.split(' -> ',1)[1]
+            changed.add(p)
+          extra=changed-expected; missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.18 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.18 missing files: {sorted(missing)}')
+          print('40.6.18 bounded diff OK')
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_18_UNKNOWN_PROPAGATION_BRIDGE_CLEAN_UPLOAD_8_FILES.zip
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/js/strategy-a-auto-lifecycle-bridge-404297.js"
+          git add "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_18.md"
+          git add "$ZIP" "$ZIP.sha256"
+          git diff --cached --quiet && { echo 'STOP 40.6.18 no changes'; exit 1; }
+          git commit -m "fix(agent-crypto): end-to-end unknown propagation 40.6.18"
+          git pull --rebase origin main
+          git push origin HEAD:main
