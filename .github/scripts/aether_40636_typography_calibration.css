@@ -1,0 +1,188 @@
+/* 40.6.36 — AETHER TYPOGRAPHY CALIBRATION · PAINTED-LANE LOCK */
+/*
+   Calibration baseline: exact 1440x810 paid Observatory artwork.
+   No image generation, no SVG, no runtime rewrite.
+   The artwork owns card geometry; live DOM only replaces baked sample values.
+*/
+@media (min-width:901px){
+  /* Retire stale geometry inherited from pre-40.6.34 layouts. */
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="convergence"]),
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="divergence"]),
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="market"]),
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="system"]),
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="sources"]),
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="atlas"]),
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="oracle"]),
+  #atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027],
+  #atlasAetherStatusPanel4084 [data-aether-weather-406030]{
+    right:auto!important;
+    bottom:auto!important;
+    transform:none!important;
+  }
+
+  /* Masks are local and almost opaque: hide baked values, preserve painted cards/icons. */
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="convergence"])::before,
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="divergence"])::before,
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="system"])::before,
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="sources"])::before,
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="oracle"])::before,
+  #atlasAetherStatusPanel4084 [data-aether-weather-406030]::before{
+    background:rgba(2,12,28,.988)!important;
+    box-shadow:0 0 12px rgba(0,0,0,.14)!important;
+  }
+
+  /* CONVERGENCE — exact painted text lane. */
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="convergence"])::before{
+    left:27%!important;right:10%!important;top:27%!important;bottom:12%!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="convergence"]{
+    left:29%!important;top:32%!important;width:61%!important;height:52%!important;
+    font-size:clamp(10.2px,.82vw,13.2px)!important;line-height:1.14!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+
+  /* DIVERGENCE — title remains painted; live sentence replaces only the sample body. */
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="divergence"])::before{
+    left:28%!important;right:9%!important;top:31%!important;bottom:12%!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="divergence"]{
+    left:30%!important;top:37%!important;width:61%!important;height:51%!important;
+    font-size:clamp(9.6px,.75vw,12px)!important;line-height:1.16!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+
+  /* SYSTEM — keep Stable / card ornaments visible; replace CPU/GPU/RAM lane only. */
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="system"])::before{
+    left:28%!important;right:10%!important;top:31%!important;bottom:23%!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="system"]{
+    left:30%!important;top:38%!important;width:58%!important;height:41%!important;
+    font-size:clamp(9.6px,.76vw,12.2px)!important;line-height:1.18!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+
+  /* SOURCES — two compact live lines, footer remains artwork. */
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="sources"])::before{
+    left:29%!important;right:7%!important;top:35%!important;bottom:22%!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="sources"]{
+    left:31%!important;top:42%!important;width:61%!important;height:38%!important;
+    font-size:clamp(9.2px,.72vw,11.6px)!important;line-height:1.17!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+
+  /* ATLAS — upper brief + one quiet resident line; hide stale correlation sample values locally. */
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="atlas"])::before{
+    left:29%!important;right:6%!important;top:25%!important;height:27%!important;background:rgba(2,12,28,.988)!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="atlas"])::after{
+    left:9%!important;right:6%!important;top:53%!important;bottom:13%!important;background:rgba(2,12,28,.978)!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="atlas"]{
+    left:31%!important;top:29%!important;width:61%!important;height:23%!important;
+    font-size:clamp(8.9px,.69vw,11px)!important;line-height:1.15!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="atlas_auto"]{
+    left:12%!important;top:70%!important;width:79%!important;height:13%!important;
+    font-size:clamp(7.7px,.59vw,9.3px)!important;line-height:1.08!important;
+    white-space:nowrap!important;text-overflow:ellipsis!important;
+  }
+
+  /* MARKET — breadth in the painted summary lane; native BTC/ETH/BNB/XRP/SOL row stays visible. */
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="market"])::before{
+    left:29%!important;right:12%!important;top:22%!important;height:32%!important;background:rgba(2,12,28,.988)!important;
+  }
+  #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="market"])::after{
+    left:5%!important;right:4%!important;top:59%!important;bottom:7%!important;background:linear-gradient(90deg,rgba(2,12,28,.985),rgba(2,12,28,.94) 76%,rgba(2,12,28,.28))!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="market"]{
+    left:31%!important;top:28%!important;width:55%!important;height:28%!important;
+    font-size:clamp(9.4px,.73vw,11.7px)!important;line-height:1.14!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+
+  /* ORACLE — replace Score / sortie sample, preserve icon and footer. */
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="oracle"])::before{
+    left:30%!important;right:12%!important;top:27%!important;bottom:18%!important;background:rgba(6,14,27,.988)!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-row-4084="oracle"]{
+    left:32%!important;top:32%!important;width:56%!important;height:48%!important;
+    font-size:clamp(8.9px,.68vw,10.9px)!important;line-height:1.14!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+
+  /* WEATHER — two-line glance + one compact risk line. */
+  #atlasAetherStatusPanel4084 [data-aether-weather-406030]::before{
+    left:29%!important;right:11%!important;top:25%!important;bottom:11%!important;background:rgba(3,14,29,.988)!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-weather-406030] > b{
+    left:31%!important;top:32%!important;width:58%!important;height:38%!important;
+    display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2!important;
+    white-space:normal!important;font-size:clamp(8.2px,.63vw,10px)!important;line-height:1.14!important;
+    overflow:hidden!important;text-overflow:ellipsis!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-weather-406030] > small{
+    left:31%!important;top:72%!important;width:58%!important;height:14%!important;
+    white-space:nowrap!important;text-overflow:ellipsis!important;
+    font-size:clamp(7.1px,.54vw,8.6px)!important;line-height:1.05!important;
+  }
+
+  /* EVENTS — kill inherited width:100%; rows now stay inside the painted card. */
+  #atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027] > [data-aether-timeline-preview-406028]{
+    position:absolute!important;left:28%!important;right:5%!important;top:36%!important;
+    width:auto!important;min-width:0!important;height:40%!important;margin:0!important;
+    display:grid!important;gap:2px!important;overflow:hidden!important;
+  }
+  #atlasAetherStatusPanel4084 article[data-aether-timeline-card-406027] > [data-aether-timeline-preview-406028] .aether-timeline-row-406027{
+    width:auto!important;min-width:0!important;grid-template-columns:44px 39px minmax(0,1fr)!important;
+    gap:4px!important;padding:1px 1px!important;font-size:clamp(7.4px,.56vw,8.8px)!important;line-height:1.08!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-timeline-card-406027]::before{
+    left:26%!important;right:4%!important;top:32%!important;height:46%!important;background:rgba(2,12,28,.982)!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-timeline-card-406027]::after{
+    left:20%!important;right:5%!important;top:80%!important;bottom:6%!important;
+  }
+
+  /* CENTER ATTENTION — one controlled value block inside the painted attention capsule. */
+  #atlasAetherStatusPanel4084 [data-aether-level-406030]{
+    left:50%!important;top:49.5%!important;width:27%!important;height:8.8%!important;
+    transform:translate(-50%,-50%)!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-level-406030]::before{
+    left:8%!important;right:8%!important;top:16%!important;bottom:5%!important;
+    background:linear-gradient(90deg,rgba(2,11,27,.42),rgba(2,11,27,.988) 19%,rgba(2,11,27,.988) 81%,rgba(2,11,27,.42))!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-level-406030] [data-aether-row-4084="level"]{
+    left:10%!important;top:28%!important;width:80%!important;height:58%!important;
+    font-size:clamp(9.3px,.70vw,11.4px)!important;line-height:1.08!important;
+    white-space:normal!important;text-overflow:clip!important;
+  }
+
+  /* CENTER WATCH — stay below the painted yellow heading; note becomes one quiet line. */
+  #atlasAetherStatusPanel4084 [data-aether-action-406030]{
+    left:50%!important;top:69.5%!important;width:30%!important;height:9.2%!important;
+    transform:translate(-50%,-50%)!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-action-406030]::before{
+    left:5%!important;right:5%!important;top:4%!important;bottom:3%!important;
+    background:linear-gradient(90deg,rgba(2,11,27,.30),rgba(2,11,27,.982) 15%,rgba(2,11,27,.982) 85%,rgba(2,11,27,.30))!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-action-406030] > b{
+    left:8%!important;top:14%!important;width:84%!important;height:56%!important;
+    font-size:clamp(7.8px,.60vw,9.5px)!important;line-height:1.10!important;
+    align-items:flex-start!important;white-space:normal!important;text-overflow:clip!important;
+  }
+  #atlasAetherStatusPanel4084 [data-aether-action-406030] > small{
+    left:10%!important;top:74%!important;width:80%!important;height:15%!important;
+    white-space:nowrap!important;text-overflow:ellipsis!important;
+    font-size:clamp(6.8px,.50vw,8px)!important;line-height:1!important;
+  }
+
+  /* Keep secondary modes isolated from Glance typography calibration. */
+  #atlasAetherStatusPanel4084 [data-aether-focus-view-406030="history"],
+  #atlasAetherStatusPanel4084 [data-aether-focus-view-406030="details"]{
+    font-size:initial!important;
+  }
+}
