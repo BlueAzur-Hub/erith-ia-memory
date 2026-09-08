@@ -1,0 +1,86 @@
+name: Agent-Crypto 40.6.31 Aether Central Observatory
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40631-aether-central-observatory.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply guarded 40.6.31 release
+        run: python3 .github/scripts/agent_crypto_40631_release.py
+
+      - name: Syntax, XML and anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_31_AETHER_CENTRAL_OBSERVATORY_LIVE_RADIAL_UI_CLEAN_UPLOAD_7_FILES.zip
+          SHA="$ZIP.sha256"
+          node --check "$ROOT/js/aether.js"
+          python3 -m json.tool "$ROOT/build.json" >/dev/null
+          python3 -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python3 -m json.tool "$ROOT/version.json" >/dev/null
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          ET.parse('public/agent_crypto_erith_ia/administrator/assets/aether/aether-observatory-radial-406031.svg')
+          print('SVG XML PASS')
+          PY
+          grep -q '<meta name="administrator-build" content="40.6.31"' "$ROOT/index.html"
+          grep -q 'admin-ribbons.css?v=administrator-build-40.6.31' "$ROOT/index.html"
+          grep -q '40.6.31 — AETHER CENTRAL OBSERVATORY' "$ROOT/admin-ribbons.css"
+          grep -q 'aether-observatory-radial-406031.svg' "$ROOT/admin-ribbons.css"
+          grep -q '"build": "40.6.31"' "$ROOT/build.json"
+          grep -q '"engine": "38.15.11"' "$ROOT/build.json"
+          grep -q '"aether_js_modified": false' "$ROOT/build.json"
+          grep -q '"new_network_owner": false' "$ROOT/build.json"
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/index.html"
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/js/footer-version-truth-406026.js"
+          test -f "$ZIP"
+          test -f "$SHA"
+          (cd "$(dirname "$ZIP")" && sha256sum -c "$(basename "$SHA")")
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          p='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_31_AETHER_CENTRAL_OBSERVATORY_LIVE_RADIAL_UI_CLEAN_UPLOAD_7_FILES.zip'
+          with ZipFile(p) as z:
+              names=z.namelist()
+              assert len(names)==7,names
+              assert 'administrator/index.html' in names
+              assert 'administrator/admin-ribbons.css' in names
+              assert 'administrator/assets/aether/aether-observatory-radial-406031.svg' in names
+              assert 'administrator/RELEASE_40_6_31.md' in names
+              assert z.testzip() is None
+          print('ZIP 7 files PASS')
+          PY
+
+      - name: Commit released build and clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_31_AETHER_CENTRAL_OBSERVATORY_LIVE_RADIAL_UI_CLEAN_UPLOAD_7_FILES.zip \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_31_AETHER_CENTRAL_OBSERVATORY_LIVE_RADIAL_UI_CLEAN_UPLOAD_7_FILES.zip.sha256
+          git diff --cached --quiet && { echo 'No runtime changes to commit'; exit 1; }
+          git commit -m "feat(agent-crypto): Aether central observatory 40.6.31"
+          git push origin HEAD:main
+
+      - name: Upload clean ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_31_AETHER_CENTRAL_OBSERVATORY_LIVE_RADIAL_UI_CLEAN_UPLOAD_7_FILES
+          path: coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_31_AETHER_CENTRAL_OBSERVATORY_LIVE_RADIAL_UI_CLEAN_UPLOAD_7_FILES.zip
+          if-no-files-found: error
+          compression-level: 0
