@@ -485,3 +485,26 @@
 #atlasAetherStatusPanel4084 [data-aether-row-4084="watch"]{color:#f5df91!important}
 #atlasAetherStatusPanel4084 [data-aether-note-406026]{border-color:rgba(236,123,197,.24)!important;background:linear-gradient(90deg,rgba(45,16,43,.24),rgba(7,23,34,.62))!important}
 #atlasAetherStatusPanel4084 [data-aether-row-4084="note"]{color:#f1c6e4!important;line-height:1.35!important}
+
+
+/* 40.6.27 — AETHER WATCH · EVENT TIMELINE
+   Runtime-session presentation only; no new timer, storage or network owner. */
+#atlasAetherStatusPanel4084 [data-aether-timeline-card-406027]{
+  border-color:rgba(136,113,228,.28)!important;
+  background:linear-gradient(90deg,rgba(112,84,205,.055),rgba(5,16,29,.08))!important;
+}
+#atlasAetherStatusPanel4084 [data-aether-timeline-406027]{display:grid;gap:6px;margin-top:7px}
+#atlasAetherStatusPanel4084 .aether-timeline-row-406027{
+  display:grid;grid-template-columns:64px 84px 92px minmax(0,1fr);gap:8px;
+  padding:6px 8px;border:1px solid rgba(125,155,210,.14);border-radius:8px;
+  background:rgba(3,12,24,.25);font-size:11px;line-height:1.28;
+}
+#atlasAetherStatusPanel4084 .aether-timeline-time-406027{color:#7fa3ba}
+#atlasAetherStatusPanel4084 .aether-timeline-type-406027{color:#a9dfff;font-weight:800}
+#atlasAetherStatusPanel4084 .aether-timeline-level-406027{color:#f5df9c;font-weight:800}
+#atlasAetherStatusPanel4084 .aether-timeline-detail-406027{color:#e8f2fb;min-width:0}
+#atlasAetherStatusPanel4084 .aether-timeline-empty-406027{color:#829aae;font-size:11px}
+@media(max-width:720px){
+  #atlasAetherStatusPanel4084 .aether-timeline-row-406027{grid-template-columns:58px 78px minmax(0,1fr)}
+  #atlasAetherStatusPanel4084 .aether-timeline-detail-406027{grid-column:1/-1}
+}
