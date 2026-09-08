@@ -1369,3 +1369,58 @@
     font-size:initial!important;
   }
 }
+
+
+/* 40.6.40 — AETHER NATIVE WINDOW · ADMINISTRATOR MANAGER INTEGRATION */
+/* Window chrome only. Paid 16:9 artwork and all 40.6.36 live embroidery coordinates remain unchanged. */
+@media (min-width:901px){
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch .atlas-aether-panel-head-4084{
+    pointer-events:none!important;
+    z-index:120!important;
+  }
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch .atlas-aether-panel-head-4084 > .admin-native-controls{
+    position:absolute!important;
+    top:7px!important;
+    right:8px!important;
+    bottom:auto!important;
+    left:auto!important;
+    width:max-content!important;
+    max-width:calc(100% - 16px)!important;
+    margin:0!important;
+    transform:none!important;
+    z-index:140!important;
+    pointer-events:auto!important;
+  }
+  /* The canonical manager owns Hide now; retire the parallel historical X. */
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch [data-aether-close-4084]{display:none!important}
+
+  /* Direct-floating manager geometry outranks the historical centered portal geometry. */
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-direct-floating{
+    right:auto!important;
+    bottom:auto!important;
+  }
+
+  /* Native maximize is intentionally a viewport workspace (97vw x 97vh).
+     Preserve the calibrated 16:9 artwork as an inner stage so no live lane stretches. */
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-maximized{
+    background:#010711!important;
+  }
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-maximized .aether-first-glance-grid-406030{
+    inset:auto!important;
+    left:50%!important;
+    top:50%!important;
+    width:min(calc(100% - 12px),calc((100vh - 36px) * 16 / 9))!important;
+    height:auto!important;
+    aspect-ratio:16/9!important;
+    transform:translate(-50%,-50%)!important;
+    border-radius:16px!important;
+    background:url('./assets/aether/aether-observatory-background-406032.webp') center/100% 100% no-repeat!important;
+    box-shadow:0 0 0 1px rgba(82,210,255,.18),0 28px 80px rgba(0,0,0,.34)!important;
+  }
+
+  /* Keep manager chrome available above the inner stage in maximized/F11 operation. */
+  #atlasAetherStatusPanel4084.admin-native-window-aether-watch.admin-native-maximized .atlas-aether-panel-head-4084 > .admin-native-controls{
+    top:8px!important;
+    right:10px!important;
+  }
+}

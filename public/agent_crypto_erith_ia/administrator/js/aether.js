@@ -962,7 +962,38 @@ function aetherNewsMarketSemantic405013(){
     aetherPanelFocus406030("glance",panel);
     return panel;
   }
-  function aetherPanelSet4084(open){const button=document.getElementById("atlasAetherStatusToggle4084");const panel=open?aetherPanelEnsure4084():document.getElementById("atlasAetherStatusPanel4084");if(panel)panel.hidden=!open;if(button)button.setAttribute("aria-expanded",open?"true":"false");if(open){aetherPanelFocus406030("glance",panel);aetherCorePaint406037();if(aetherMarketDataReady406037())aetherMarkMarketReady406037("operator-open");}}
+  /* 40.6.40 — AETHER NATIVE WINDOW MANAGER BRIDGE */
+  function aetherNativeWindowManager406040(){
+    const manager=globalThis.ErithAdministratorWindows;
+    return manager?.getWindow?.('aether-watch')?manager:null;
+  }
+  function aetherPanelSet4084(open){
+    const button=document.getElementById("atlasAetherStatusToggle4084");
+    const panel=open?aetherPanelEnsure4084():document.getElementById("atlasAetherStatusPanel4084");
+    const manager=aetherNativeWindowManager406040();
+    if(panel){
+      if(manager){
+        // HTML hidden is bootstrap-only. From here the canonical Administrator
+        // manager owns hide/minimize/float/maximize/z-order and persisted geometry.
+        panel.hidden=false;
+        if(open){
+          manager.hide('aether-watch',false);
+          manager.minimize('aether-watch',false);
+          manager.focus('aether-watch');
+        }else{
+          manager.hide('aether-watch',true);
+        }
+      }else{
+        panel.hidden=!open;
+      }
+    }
+    if(button)button.setAttribute("aria-expanded",open?"true":"false");
+    if(open){
+      aetherPanelFocus406030("glance",panel);
+      aetherCorePaint406037();
+      if(aetherMarketDataReady406037())aetherMarkMarketReady406037("operator-open");
+    }
+  }
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
@@ -1133,7 +1164,12 @@ function aetherNewsMarketSemantic405013(){
     const button=document.getElementById("atlasAetherStatusToggle4084");
     if(button&&button.dataset.aetherBound!=="1"){
       button.dataset.aetherBound="1";
-      button.addEventListener("click",()=>aetherPanelSet4084(button.getAttribute("aria-expanded")!=="true"));
+      button.addEventListener("click",()=>{
+        const manager=aetherNativeWindowManager406040();
+        const win=manager?.getWindow?.('aether-watch');
+        const shouldOpen=win?Boolean(win.hidden||win.minimized):button.getAttribute("aria-expanded")!=="true";
+        aetherPanelSet4084(shouldOpen);
+      });
     }
     const quickPanel=document.getElementById("atlasAetherSystem4086");
     if(quickPanel&&quickPanel.dataset.aetherDetailBound404134!=="1"){
@@ -1332,6 +1368,15 @@ function aetherNewsMarketSemantic405013(){
     aether_attention_graph_first_lazy_build:"40.6.37",
     aether_attention_floating_workbench:true,
     aether_attention_floating_workbench_build:"40.6.39",
+    aether_attention_native_window_manager:true,
+    aether_attention_native_window_build:"40.6.40",
+    aether_attention_native_window_id:"aether-watch",
+    aether_attention_native_window_direct_fixed:true,
+    aether_attention_native_window_controls:"move|minimize|dock|maximize|hide",
+    aether_attention_native_window_default:"floating-hidden",
+    aether_attention_native_window_geometry_persistence:"existing-admin-window-manager",
+    aether_attention_native_window_fullscreen_path:"native maximize 97vw x 97vh / Firefox F11 viewport",
+    aether_attention_final_wide_textless_background_pending:true,
     aether_attention_workbench_lazy_script:true,
     aether_attention_workbench_modes:"events|history|details",
     aether_attention_workbench_local_drag:true,
@@ -1360,6 +1405,11 @@ function aetherNewsMarketSemantic405013(){
   globalThis.AgentCryptoAether=api;
   /* Compatibility read-only alias for diagnostics that knew the R6/R7 object. */
   globalThis.AgentCryptoAetherSystem4086=api;
+
+  /* 40.6.40 — DOM shell preseed only. This runs before app.js initializes the
+     canonical Administrator Window Manager. No Aether data, weather, news or
+     history hydration is started here; 40.6.37 graph-first scheduling remains intact. */
+  try{aetherPanelEnsure4084();}catch(_){}
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAether,{once:true});
   else bindAether();

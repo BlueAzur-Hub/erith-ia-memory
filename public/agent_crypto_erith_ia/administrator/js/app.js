@@ -512,6 +512,31 @@
   function nativeDefinitions() {
     return [
       {
+        id: "aether-watch",
+        title: "Aether · Attention Watch",
+        tone: "cyan",
+        directFixed: true,
+        geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true },
+        preferredFloatGeometry: () => {
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
+          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
+          const fittedWidth = Math.min(width, height * 16 / 9);
+          const fittedHeight = fittedWidth * 9 / 16;
+          return {
+            x: Math.max(12, Math.round((vw - fittedWidth) / 2)),
+            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
+            width: Math.round(fittedWidth),
+            height: Math.round(fittedHeight)
+          };
+        },
+        resolveEntries: () => [entry(byId("atlasAetherStatusPanel4084"))].filter(Boolean),
+        resolveAnchor: nodes => nodes[0],
+        resolveControlHosts: nodes => [nodes[0]?.querySelector(".atlas-aether-panel-head-4084")].filter(Boolean),
+        placeholderPolicy: "preserve"
+      },
+      {
         id: "graphique",
         title: "Graphique + Lecture technique · Crypto",
         tone: "cyan",
@@ -2197,7 +2222,24 @@
     });
 
     const bootRole40312 = presentationRole40312();
+    let aetherNativeStateExists406040 = false;
+    try { aetherNativeStateExists406040 = localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) !== null; } catch {}
     const state = manager.init({ restorePersistedPresentation: bootRole40312 === "administrator" });
+    // 40.6.40 — the shell is pre-created by aether.js solely so the canonical
+    // Window Manager can register it during this one normal init pass.
+    // HTML hidden is then released; the manager becomes the only presentation owner.
+    const aetherPanel406040 = byId("atlasAetherStatusPanel4084");
+    const aetherWindow406040 = manager.getWindow("aether-watch");
+    if (aetherPanel406040 && aetherWindow406040) {
+      aetherPanel406040.hidden = false;
+      if (!aetherNativeStateExists406040) {
+        // Aether is already conceptually a portal. First registration therefore
+        // starts as a hidden floating native window, preserving the old closed boot
+        // while giving the first operator open the complete five-button menu.
+        manager.float("aether-watch", true);
+        manager.hide("aether-watch", true);
+      }
+    }
     // 40.3.14 — init already applied the correct presentation exactly once.
     // Do not immediately replay the same neutralize/restore transaction.
     activeWindowPresentationRole40314 = bootRole40312;
