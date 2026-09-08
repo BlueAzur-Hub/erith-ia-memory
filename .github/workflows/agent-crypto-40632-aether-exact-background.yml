@@ -1,0 +1,96 @@
+name: Agent-Crypto 40.6.32 Aether Exact Background
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40632-aether-exact-background.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Reconstruct exact selected Aether background
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          CHUNKS=.github/assets/aether406032
+          ASSET="$ROOT/assets/aether/aether-observatory-background-406032.webp"
+          test "$(find "$CHUNKS" -maxdepth 1 -name 'aether_bg_406032_part*.b64' | wc -l)" -eq 13
+          mkdir -p "$(dirname "$ASSET")"
+          cat "$CHUNKS"/aether_bg_406032_part{00..12}.b64 | base64 -d > "$ASSET"
+          test "$(wc -c < "$ASSET")" -eq 116838
+          printf '5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2  %s\n' "$ASSET" | sha256sum -c -
+          # The prepared script was committed before the final asset digest was known.
+          sed -i 's/a081fd1695aa08c79a73eb67673141ac0b77a7b6b81402373caa9a40424fb89e/5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2/' .github/scripts/agent_crypto_40632_release.py
+
+      - name: Apply guarded 40.6.32 release
+        run: python3 .github/scripts/agent_crypto_40632_release.py
+
+      - name: Syntax, asset and anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ASSET="$ROOT/assets/aether/aether-observatory-background-406032.webp"
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES.zip
+          SHA="$ZIP.sha256"
+          node --check "$ROOT/js/aether.js"
+          python3 -m json.tool "$ROOT/build.json" >/dev/null
+          python3 -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python3 -m json.tool "$ROOT/version.json" >/dev/null
+          grep -q '<meta name="administrator-build" content="40.6.32"' "$ROOT/index.html"
+          grep -q 'admin-ribbons.css?v=administrator-build-40.6.32' "$ROOT/index.html"
+          grep -q 'aether-observatory-background-406032.webp' "$ROOT/admin-ribbons.css"
+          ! grep -q 'aether-observatory-radial-406031.svg' "$ROOT/admin-ribbons.css"
+          test -f "$ASSET"
+          test ! -f "$ROOT/assets/aether/aether-observatory-radial-406031.svg"
+          printf '5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2  %s\n' "$ASSET" | sha256sum -c -
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/js/footer-version-truth-406026.js"
+          grep -q '"engine": "38.15.11"' "$ROOT/build.json"
+          test -f "$ZIP"
+          test -f "$SHA"
+          (cd "$(dirname "$ZIP")" && sha256sum -c "$(basename "$SHA")")
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          p='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES.zip'
+          with ZipFile(p) as z:
+              names=z.namelist()
+              assert len(names)==7, names
+              assert 'administrator/assets/aether/aether-observatory-background-406032.webp' in names
+              assert 'administrator/index.html' in names
+              assert 'administrator/admin-ribbons.css' in names
+              assert 'administrator/RELEASE_40_6_32.md' in names
+              assert z.testzip() is None
+          print('ZIP 7 files PASS')
+          PY
+
+      - name: Commit released build and clean ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A public/agent_crypto_erith_ia/administrator \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES.zip \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES.zip.sha256
+          git commit -m "fix(agent-crypto): use exact Aether background 40.6.32"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload clean ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES
+          path: coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES.zip
+          if-no-files-found: error
+          compression-level: 0
