@@ -99,6 +99,8 @@ jobs:
           set -euo pipefail
           git config user.name "Seven Release Bot"
           git config user.email "actions@users.noreply.github.com"
+          # Revert the temporary digest patch; the release script itself is not part of the runtime release.
+          git restore .github/scripts/agent_crypto_40632_release.py
           git add -A public/agent_crypto_erith_ia/administrator \
                   coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES.zip \
                   coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_32_AETHER_EXACT_BACKGROUND_LIVE_OVERLAY_CLEAN_UPLOAD_7_FILES.zip.sha256
@@ -114,4 +116,4 @@ jobs:
           if-no-files-found: error
           compression-level: 0
 
-# retry-5: exact payload reconstruction with known suffix normalization + exact SHA gate
+# retry-6: clean temporary script patch before rebase/push
