@@ -1,0 +1,98 @@
+name: Agent-Crypto 40.6.41 Aether Free Resize
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40641-aether-free-resize.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Build guarded 40.6.41
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/agent_crypto_40641_aether_free_resize.py
+          python3 .github/scripts/agent_crypto_40641_aether_free_resize.py
+
+      - name: Final anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_41_AETHER_FREE_RESIZE_SHELL_STAGE_SEPARATION_CLEAN_UPLOAD_7_FILES.zip
+          SHA="$ZIP.sha256"
+
+          node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/aether.js"
+          node --check "$ROOT/js/aether-workbench-406039.js"
+          python3 -m json.tool "$ROOT/build.json" >/dev/null
+          python3 -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python3 -m json.tool "$ROOT/version.json" >/dev/null
+
+          grep -q '<meta name="administrator-build" content="40.6.41"' "$ROOT/index.html"
+          grep -q 'admin-ribbons.css?v=administrator-build-40.6.41' "$ROOT/index.html"
+          grep -q '40.6.41 — AETHER FREE RESIZE' "$ROOT/admin-ribbons.css"
+          grep -q 'resize:both!important' "$ROOT/admin-ribbons.css"
+          grep -q 'container-name:aether-shell-406041!important' "$ROOT/admin-ribbons.css"
+          grep -q '@container aether-shell-406041 (max-aspect-ratio: 16 / 9)' "$ROOT/admin-ribbons.css"
+          grep -q 'aether-observatory-background-406032.webp' "$ROOT/admin-ribbons.css"
+
+          test "$(git hash-object "$ROOT/js/app.js")" = '1cd18ff77a2e1ae42a8aac22ca029376e9d0d393'
+          test "$(git hash-object "$ROOT/js/aether.js")" = 'cd627cbdf454be000a414d9ff185b55fb2fde5fe'
+          test "$(git hash-object "$ROOT/js/aether-workbench-406039.js")" = '21145af3e8695dd4cb6366423d5d8c9f62ab9aa1'
+          printf '5c4d61e9410d4a701372e2d30640d6523938dfe603f65902d493b354c5f2e7b2  %s\n' "$ROOT/assets/aether/aether-observatory-background-406032.webp" | sha256sum -c -
+          grep -q '"engine": "38.15.11"' "$ROOT/build.json"
+          grep -q '"build": "40.6.41"' "$ROOT/build.json"
+
+          test -f "$ZIP"
+          test -f "$SHA"
+          (cd "$(dirname "$ZIP")" && sha256sum -c "$(basename "$SHA")")
+          git diff --check
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          p='coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_41_AETHER_FREE_RESIZE_SHELL_STAGE_SEPARATION_CLEAN_UPLOAD_7_FILES.zip'
+          with ZipFile(p) as z:
+              files=[n for n in z.namelist() if not n.endswith('/')]
+              assert len(files)==7, files
+              assert z.testzip() is None
+              assert 'administrator/admin-ribbons.css' in files
+              assert 'administrator/js/app.js' in files
+          print('40.6.41 ZIP 7 files PASS')
+          PY
+
+      - name: Commit and publish 40.6.41
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/build.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/admin-ribbons.css \
+                  public/agent_crypto_erith_ia/administrator/RELEASE_40_6_41.md \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_41_AETHER_FREE_RESIZE_SHELL_STAGE_SEPARATION_CLEAN_UPLOAD_7_FILES.zip \
+                  coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_41_AETHER_FREE_RESIZE_SHELL_STAGE_SEPARATION_CLEAN_UPLOAD_7_FILES.zip.sha256
+          git commit -m "fix(agent-crypto): free-resize Aether shell 40.6.41"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Upload clean ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_41_AETHER_FREE_RESIZE_SHELL_STAGE_SEPARATION_CLEAN_UPLOAD_7_FILES
+          path: coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_41_AETHER_FREE_RESIZE_SHELL_STAGE_SEPARATION_CLEAN_UPLOAD_7_FILES.zip
+          if-no-files-found: error
+          compression-level: 0
