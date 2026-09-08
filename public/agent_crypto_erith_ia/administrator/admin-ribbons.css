@@ -602,3 +602,70 @@
 @media(max-height:760px){
   #atlasAetherStatusPanel4084 [data-aether-timeline-disclosure-406028][open] [data-aether-timeline-406027]{max-height:170px!important}
 }
+
+
+/* 40.6.30 — AETHER WATCH · FIRST GLANCE · LARGE TEXT · WEATHER · SINGLE DETAIL ZONE
+   One readable dashboard at rest. History and Details replace the same bounded focus viewport.
+   Desktop panel itself does not scroll; only the active secondary view may own internal scroll. */
+#atlasAetherStatusPanel4084{
+  width:min(840px,calc(100vw - 34px))!important;
+  max-height:calc(100vh - 30px)!important;
+  overflow:hidden!important;
+}
+#atlasAetherStatusPanel4084 .atlas-aether-panel-head-4084 b{font-size:16px!important;letter-spacing:.08em!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:8px!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article{grid-column:span 2!important;padding:9px 10px!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article[data-aether-wide-4084],
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > section[data-aether-wide-4084]{grid-column:1/-1!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article > span,
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article > span,
+#atlasAetherStatusPanel4084 [data-aether-weather-406030] > span,
+#atlasAetherStatusPanel4084 [data-aether-timeline-card-406027] > span{
+  font-size:11.5px!important;line-height:1.2!important;letter-spacing:.045em!important
+}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article > b,
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article > b{
+  font-size:13.5px!important;line-height:1.28!important
+}
+#atlasAetherStatusPanel4084 [data-aether-level-406030] [data-aether-row-4084="level"]{font-size:15px!important;line-height:1.3!important}
+#atlasAetherStatusPanel4084 [data-aether-action-406030]{display:grid!important;grid-template-columns:150px minmax(0,1fr)!important;column-gap:10px!important;row-gap:4px!important;align-items:start!important}
+#atlasAetherStatusPanel4084 [data-aether-action-406030] > span{grid-row:1/3!important}
+#atlasAetherStatusPanel4084 [data-aether-action-406030] > b{font-size:13.5px!important;color:#f5df91!important}
+#atlasAetherStatusPanel4084 [data-aether-action-406030] > small{font-size:12.5px!important;line-height:1.3!important;color:#f1c6e4!important;font-weight:700!important}
+#atlasAetherStatusPanel4084 [data-aether-focus-shell-406030]{min-width:0!important;border:1px solid rgba(125,155,210,.18);border-radius:10px;background:rgba(3,12,24,.18);overflow:hidden!important}
+#atlasAetherStatusPanel4084 .aether-focus-toolbar-406030{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 9px;border-bottom:1px solid rgba(125,155,210,.16)}
+#atlasAetherStatusPanel4084 .aether-focus-toolbar-406030 > b{font-size:11.5px!important;color:#a9dfff!important;letter-spacing:.06em!important}
+#atlasAetherStatusPanel4084 .aether-focus-toolbar-406030 > div{display:flex;gap:6px;flex-wrap:wrap}
+#atlasAetherStatusPanel4084 [data-aether-focus-button-406030]{appearance:none;border:1px solid rgba(125,155,210,.28);border-radius:8px;background:rgba(7,23,34,.72);color:#d9e8f5;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer}
+#atlasAetherStatusPanel4084 [data-aether-focus-button-406030][data-active="1"]{border-color:rgba(127,240,223,.65);background:rgba(25,96,101,.36);color:#bffff2}
+#atlasAetherStatusPanel4084 .aether-focus-viewport-406030{height:246px;min-height:246px;max-height:246px;padding:8px;box-sizing:border-box;overflow:hidden!important}
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030][hidden]{display:none!important}
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="glance"]{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(270px,.88fr);gap:8px;height:100%;min-height:0}
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="glance"] > article{min-width:0;min-height:0;margin:0!important;padding:8px 9px!important;border:1px solid rgba(125,155,210,.16);border-radius:9px;background:rgba(3,12,24,.24)}
+#atlasAetherStatusPanel4084 [data-aether-timeline-preview-406028]{display:grid!important;gap:6px!important;margin-top:6px!important}
+#atlasAetherStatusPanel4084 .aether-timeline-row-406027{grid-template-columns:58px 64px 68px minmax(0,1fr)!important;gap:7px!important;padding:6px 8px!important;font-size:12.5px!important;line-height:1.28!important}
+#atlasAetherStatusPanel4084 .aether-timeline-time-406027{font-size:11.5px!important}
+#atlasAetherStatusPanel4084 .aether-timeline-type-406027,
+#atlasAetherStatusPanel4084 .aether-timeline-level-406027{font-size:12px!important}
+#atlasAetherStatusPanel4084 .aether-timeline-detail-406027{font-size:12.5px!important;line-height:1.28!important}
+#atlasAetherStatusPanel4084 [data-aether-weather-406030]{display:flex!important;flex-direction:column!important;gap:8px!important}
+#atlasAetherStatusPanel4084 [data-aether-weather-406030] > b{white-space:pre-line!important;font-size:13.5px!important;line-height:1.5!important;color:#eef7ff!important}
+#atlasAetherStatusPanel4084 [data-aether-weather-406030] > small{font-size:12.5px!important;line-height:1.42!important;color:#bfe9ff!important;font-weight:700!important}
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="history"],
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="details"]{height:100%;min-height:0;overflow:hidden!important}
+#atlasAetherStatusPanel4084 .aether-focus-view-head-406030{font-size:11.5px;font-weight:800;color:#a9dfff;letter-spacing:.04em;margin:0 0 6px}
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="history"] [data-aether-timeline-406027]{height:calc(100% - 24px);max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;scrollbar-gutter:stable!important;padding-right:4px}
+#atlasAetherStatusPanel4084 .aether-details-grid-406030{height:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;overflow-y:auto!important;overflow-x:hidden!important;scrollbar-gutter:stable!important;padding-right:4px;box-sizing:border-box}
+#atlasAetherStatusPanel4084 .aether-details-grid-406030 article{min-width:0;margin:0!important;padding:8px 9px!important;border:1px solid rgba(125,155,210,.16);border-radius:8px;background:rgba(3,12,24,.22)}
+#atlasAetherStatusPanel4084 .aether-details-grid-406030 article > span{font-size:11.5px!important;line-height:1.2!important}
+#atlasAetherStatusPanel4084 .aether-details-grid-406030 article > b{font-size:13px!important;line-height:1.35!important}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030]{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;min-width:0}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article{min-width:0;margin:0!important;padding:8px 9px!important;border:1px solid rgba(125,155,210,.16);border-radius:8px;background:rgba(3,12,24,.2)}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article > small{display:block;margin-top:4px;font-size:11.5px!important;line-height:1.25!important;color:#8dffd0!important;font-weight:700!important}
+@media(max-width:980px){
+  #atlasAetherStatusPanel4084{width:min(760px,calc(100vw - 24px))!important}
+  #atlasAetherStatusPanel4084 [data-aether-focus-view-406030="glance"]{grid-template-columns:minmax(0,1fr)!important;overflow-y:auto!important}
+  #atlasAetherStatusPanel4084 .aether-focus-viewport-406030{height:300px;min-height:300px;max-height:300px}
+  #atlasAetherStatusPanel4084 [data-aether-status-grid-406030]{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-height:760px){#atlasAetherStatusPanel4084{overflow-y:auto!important;max-height:calc(100vh - 20px)!important}}

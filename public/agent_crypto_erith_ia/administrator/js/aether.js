@@ -852,19 +852,46 @@ function aetherNewsMarketSemantic405013(){
     const entries=aetherTimelineState406027.entries;
     aetherTimelineFill406028(preview,entries.slice(0,AETHER_TIMELINE_PREVIEW_406028));
     aetherTimelineFill406028(full,entries);
-    const disclosure=panel?.querySelector('[data-aether-timeline-disclosure-406028]');
-    const count=panel?.querySelector('[data-aether-timeline-count-406028]');
-    const hasMore=entries.length>AETHER_TIMELINE_PREVIEW_406028;
-    if(disclosure){disclosure.hidden=!hasMore;if(!hasMore)disclosure.open=false;}
-    if(count)count.textContent=hasMore?`Voir les ${entries.length}`:`${entries.length} événement${entries.length>1?"s":""}`;
+    const count=panel?.querySelector('[data-aether-history-count-406030]');
+    if(count)count.textContent=`${entries.length}/${aetherTimelineState406027.max}`;
+  }
+  function aetherWeatherFirstGlance406030(){
+    try{
+      const days=Array.isArray(aetherSystemState4086.weather?.daily)?aetherSystemState4086.weather.daily:[];
+      if(!days.length)return 'Prévision 5 j indisponible';
+      const compact=(value,today=false)=>{
+        let text=String(value||'').replace(/\s+/g,' ').trim();
+        if(today)text=text.replace(/^[^\s]+\s+\d{2}\s+/,'AUJ. ');
+        else text=text.replace(/\s+·\s+raf\.\s+\d+\s+km\/h.*$/i,'').replace(/\s+·\s+pluie\s+(\d+)%/i,' · $1%');
+        return text;
+      };
+      const first=compact(days[0]?.text,true);
+      const next=days.slice(1,4).map(day=>compact(day?.text,false)).join('  ·  ');
+      return next?`${first}\n${next}`:first;
+    }catch(_){return 'Prévision 5 j indisponible';}
+  }
+  function aetherPanelFocus406030(mode,panel=document.getElementById('atlasAetherStatusPanel4084')){
+    if(!panel)return;
+    const target=['glance','history','details'].includes(mode)?mode:'glance';
+    panel.dataset.aetherFocus406030=target;
+    panel.querySelectorAll('[data-aether-focus-view-406030]').forEach(node=>{node.hidden=node.getAttribute('data-aether-focus-view-406030')!==target;});
+    panel.querySelectorAll('[data-aether-focus-button-406030]').forEach(button=>{
+      const active=button.getAttribute('data-aether-focus-button-406030')===target;
+      button.setAttribute('aria-pressed',active?'true':'false');
+      button.dataset.active=active?'1':'0';
+    });
   }
   function aetherPanelEnsure4084(){
     let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel)return panel;
     panel=document.createElement("section");panel.id="atlasAetherStatusPanel4084";panel.hidden=true;panel.setAttribute("aria-label","Synthèse Aether");
-    panel.innerHTML=`<div class="atlas-aether-panel-head-4084"><b>♥ AETHER · ATTENTION WATCH</b><button type="button" data-aether-close-4084 aria-label="Fermer">×</button></div><div class="atlas-aether-panel-grid-4084"><article data-aether-wide-4084 data-aether-watch-summary-406026><span>Niveau d’attention</span><b data-aether-row-4084="level">—</b></article><article data-aether-half-406028><span>Convergence</span><b data-aether-row-4084="convergence">—</b></article><article data-aether-half-406028><span>Divergence</span><b data-aether-row-4084="divergence">—</b></article><article data-aether-wide-4084><span>À surveiller maintenant</span><b data-aether-row-4084="watch">—</b></article><article data-aether-wide-4084 data-aether-note-406026><span>Aether Note</span><b data-aether-row-4084="note">—</b></article><article data-aether-wide-4084 data-aether-timeline-card-406027><span>Événements récents</span><div data-aether-timeline-preview-406028 aria-live="polite"></div><details data-aether-timeline-disclosure-406028><summary data-aether-timeline-count-406028>Voir les événements</summary><div data-aether-timeline-406027></div></details></article><article><span>Marché</span><b data-aether-row-4084="market">—</b></article><article><span>Atlas AUTO</span><b data-aether-row-4084="atlas_auto">—</b></article><article><span>Atlas</span><b data-aether-row-4084="atlas">—</b></article><article><span>Oracle</span><b data-aether-row-4084="oracle">—</b></article><article><span>Sources</span><b data-aether-row-4084="sources">—</b></article><article><span>Système</span><b data-aether-row-4084="system">—</b></article><details data-aether-wide-4084 data-aether-details-406028><summary>Détails · météo · veille · diagnostic</summary><div class="aether-details-grid-406028"><article><span>Pourquoi Aether attire ton attention ?</span><b data-aether-row-4084="why">—</b></article><article><span>Lecture News → Marché</span><b data-aether-row-4084="semantic">—</b></article><article><span>Attention</span><b data-aether-row-4084="attention">—</b></article><article><span>Météo 5 j</span><b data-aether-row-4084="weather">—</b></article><article><span>Risque météo</span><b data-aether-row-4084="weather_risk">—</b></article><article><span>Dernière veille</span><b data-aether-row-4084="news">—</b></article></div></details></div>`;
-    document.body.appendChild(panel);panel.querySelector("[data-aether-close-4084]")?.addEventListener("click",()=>aetherPanelSet4084(false));return panel;
+    panel.innerHTML=`<div class="atlas-aether-panel-head-4084"><b>♥ AETHER · ATTENTION WATCH</b><button type="button" data-aether-close-4084 aria-label="Fermer">×</button></div><div class="atlas-aether-panel-grid-4084 aether-first-glance-grid-406030"><article data-aether-wide-4084 data-aether-watch-summary-406026 data-aether-level-406030><span>Niveau d’attention</span><b data-aether-row-4084="level">—</b></article><article data-aether-third-406030><span>Convergence</span><b data-aether-row-4084="convergence">—</b></article><article data-aether-third-406030><span>Divergence</span><b data-aether-row-4084="divergence">—</b></article><article data-aether-third-406030><span>Marché</span><b data-aether-row-4084="market">—</b></article><article data-aether-wide-4084 data-aether-action-406030><span>À surveiller maintenant</span><b data-aether-row-4084="watch">—</b><small data-aether-row-4084="note">—</small></article><section data-aether-wide-4084 data-aether-focus-shell-406030><div class="aether-focus-toolbar-406030"><b>VUE AETHER</b><div><button type="button" data-aether-focus-button-406030="glance" aria-pressed="true">Vue</button><button type="button" data-aether-focus-button-406030="history" aria-pressed="false">Historique <span data-aether-history-count-406030>0/8</span></button><button type="button" data-aether-focus-button-406030="details" aria-pressed="false">Détails</button></div></div><div class="aether-focus-viewport-406030"><div data-aether-focus-view-406030="glance"><article data-aether-timeline-card-406027><span>Événements récents</span><div data-aether-timeline-preview-406028 aria-live="polite"></div></article><article data-aether-weather-406030><span>☁ Météo 5 j · Maintenon</span><b data-aether-row-4084="weather">—</b><small data-aether-row-4084="weather_risk">—</small></article></div><div data-aether-focus-view-406030="history" hidden><div class="aether-focus-view-head-406030">Historique de session · 8 événements maximum</div><div data-aether-timeline-406027 aria-live="polite"></div></div><div data-aether-focus-view-406030="details" hidden><div class="aether-details-grid-406030"><article><span>Pourquoi Aether attire ton attention ?</span><b data-aether-row-4084="why">—</b></article><article><span>Lecture News → Marché</span><b data-aether-row-4084="semantic">—</b></article><article><span>Attention</span><b data-aether-row-4084="attention">—</b></article><article><span>Dernière veille</span><b data-aether-row-4084="news">—</b></article></div></div></div></section><section data-aether-wide-4084 data-aether-status-grid-406030><article><span>Atlas</span><b data-aether-row-4084="atlas">—</b><small data-aether-row-4084="atlas_auto">—</small></article><article><span>Oracle</span><b data-aether-row-4084="oracle">—</b></article><article><span>Sources</span><b data-aether-row-4084="sources">—</b></article><article><span>Système</span><b data-aether-row-4084="system">—</b></article></section></div>`;
+    document.body.appendChild(panel);
+    panel.querySelector("[data-aether-close-4084]")?.addEventListener("click",()=>aetherPanelSet4084(false));
+    panel.querySelectorAll("[data-aether-focus-button-406030]").forEach(button=>button.addEventListener("click",()=>aetherPanelFocus406030(button.getAttribute("data-aether-focus-button-406030"),panel)));
+    aetherPanelFocus406030("glance",panel);
+    return panel;
   }
-  function aetherPanelSet4084(open){const button=document.getElementById("atlasAetherStatusToggle4084");const panel=open?aetherPanelEnsure4084():document.getElementById("atlasAetherStatusPanel4084");if(panel)panel.hidden=!open;if(button)button.setAttribute("aria-expanded",open?"true":"false");if(open)renderAether4084();}
+  function aetherPanelSet4084(open){const button=document.getElementById("atlasAetherStatusToggle4084");const panel=open?aetherPanelEnsure4084():document.getElementById("atlasAetherStatusPanel4084");if(panel)panel.hidden=!open;if(button)button.setAttribute("aria-expanded",open?"true":"false");if(open){aetherPanelFocus406030("glance",panel);renderAether4084();}}
   function renderAether4084(){
     const s=aetherSnapshot4084();
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
@@ -877,7 +904,7 @@ function aetherNewsMarketSemantic405013(){
     put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
     renderAetherVeille4087();
     let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent4087();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
-    const watch406027=aetherOperatorWatch406026();aetherTimelineCapture406027(watch406027);const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("why",aetherOperatorWhy405012());row("semantic",aetherNewsMarketSemantic405013());const watch406026=aetherOperatorWatch406026();row("level",watch406026.level);row("convergence",watch406026.convergence);row("divergence",watch406026.divergence);row("watch",watch406026.watch);row("note",watch406026.note);aetherTimelineRender406027(panel);row("attention",aetherAttention40133());row("market",aetherMarketBreadth40133());row("atlas_auto",aetherAtlasAuto40133());row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("system",aetherSystemBrief40133());row("weather",aetherWeatherOutlook40133());row("weather_risk",aetherWeatherRisk40133());row("news",s.news);}
+    const watch406027=aetherOperatorWatch406026();aetherTimelineCapture406027(watch406027);const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};row("why",aetherOperatorWhy405012());row("semantic",aetherNewsMarketSemantic405013());const watch406026=aetherOperatorWatch406026();row("level",watch406026.level);row("convergence",watch406026.convergence);row("divergence",watch406026.divergence);row("watch",watch406026.watch);row("note",watch406026.note);aetherTimelineRender406027(panel);row("attention",aetherAttention40133());row("market",aetherMarketBreadth40133());row("atlas_auto",aetherAtlasAuto40133());row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("system",aetherSystemBrief40133());row("weather",aetherWeatherFirstGlance406030());row("weather_risk",aetherWeatherRisk40133());row("news",s.news);}
   }
 
   const AETHER_SYSTEM_BACKEND_4086="http://127.0.0.1:8790/system";
@@ -1184,6 +1211,16 @@ function aetherNewsMarketSemantic405013(){
     aether_attention_compact_new_timer:false,
     aether_attention_compact_new_storage:false,
     aether_attention_compact_new_network_owner:false,
+    aether_attention_first_glance:true,
+    aether_attention_first_glance_build:"40.6.30",
+    aether_attention_large_text:true,
+    aether_attention_weather_first_glance:true,
+    aether_attention_single_detail_zone:true,
+    aether_attention_focus_modes:"glance|history|details",
+    aether_attention_panel_resets_to_glance_on_open:true,
+    aether_attention_first_glance_new_timer:false,
+    aether_attention_first_glance_new_storage:false,
+    aether_attention_first_glance_new_network_owner:false,
     aether_attention_timeline_max:8,
     aether_attention_timeline_persistence:"runtime-session-only",
     aether_attention_timeline_new_timer:false,
