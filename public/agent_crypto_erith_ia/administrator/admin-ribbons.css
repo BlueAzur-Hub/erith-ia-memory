@@ -669,3 +669,83 @@
   #atlasAetherStatusPanel4084 [data-aether-status-grid-406030]{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-height:760px){#atlasAetherStatusPanel4084{overflow-y:auto!important;max-height:calc(100vh - 20px)!important}}
+
+
+/* 40.6.31 — AETHER CENTRAL OBSERVATORY · BACKGROUND LAYER · LIVE RADIAL UI
+   Presentation-only remap. Existing Aether DOM/runtime remains the live data owner. */
+#atlasAetherStatusPanel4084{
+  position:fixed!important;left:10px!important;right:10px!important;top:202px!important;bottom:10px!important;
+  width:auto!important;height:auto!important;max-height:none!important;overflow:hidden!important;
+  padding:0!important;border:1px solid rgba(92,208,255,.28)!important;border-radius:16px!important;
+  background:#020914!important;box-shadow:0 24px 80px rgba(0,0,0,.52)!important;isolation:isolate!important;
+}
+#atlasAetherStatusPanel4084::before{content:"";position:absolute;inset:0;z-index:-3;background:url('./assets/aether/aether-observatory-radial-406031.svg') center 58%/cover no-repeat;opacity:.9}
+#atlasAetherStatusPanel4084::after{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 50% 54%,rgba(1,8,20,.08) 0 28%,rgba(1,8,20,.26) 55%,rgba(1,8,20,.48) 100%),linear-gradient(180deg,rgba(2,9,20,.15),rgba(2,9,20,.34))}
+#atlasAetherStatusPanel4084 .atlas-aether-panel-head-4084{position:absolute!important;left:22px;right:22px;top:14px;z-index:8;background:transparent!important;border:0!important;padding:0!important;pointer-events:none}
+#atlasAetherStatusPanel4084 .atlas-aether-panel-head-4084 b{font-size:15px!important;letter-spacing:.12em!important;color:#d8ddff!important;text-shadow:0 0 14px rgba(119,164,255,.65)}
+#atlasAetherStatusPanel4084 [data-aether-close-4084]{pointer-events:auto!important;position:absolute!important;right:0!important;top:-3px!important;width:30px!important;height:30px!important;border-radius:50%!important;background:rgba(2,12,25,.72)!important;border:1px solid rgba(91,210,255,.35)!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030{position:absolute!important;inset:0!important;display:block!important;margin:0!important;padding:0!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article,
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article,
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="glance"] > article{position:absolute!important;margin:0!important;box-sizing:border-box!important;border:1px solid rgba(69,202,255,.34)!important;border-radius:18px!important;background:linear-gradient(145deg,rgba(4,20,38,.90),rgba(2,12,26,.78))!important;box-shadow:0 10px 28px rgba(0,0,0,.28),inset 0 0 28px rgba(29,139,220,.05)!important;backdrop-filter:blur(5px)!important;padding:10px 13px!important;overflow:hidden!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 article > span,
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article > span{display:block!important;margin:0 0 5px!important;font-size:10.5px!important;line-height:1.15!important;letter-spacing:.08em!important;color:#63ddff!important;text-transform:uppercase!important;font-weight:800!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 article > b,
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article > b{font-size:12.5px!important;line-height:1.28!important;color:#f1f7ff!important}
+/* central hub */
+#atlasAetherStatusPanel4084 [data-aether-level-406030]{left:50%!important;top:39%!important;transform:translate(-50%,-50%)!important;width:330px!important;height:188px!important;z-index:5!important;text-align:center!important;border:0!important;background:radial-gradient(circle,rgba(4,18,42,.82),rgba(2,10,24,.54) 72%,transparent)!important;box-shadow:none!important;padding:38px 18px 8px!important}
+#atlasAetherStatusPanel4084 [data-aether-level-406030]::before{content:"AETHER\A ATTENTION WATCH";white-space:pre;display:block;margin-bottom:9px;font-family:Georgia,serif;font-size:21px;line-height:1.03;letter-spacing:.08em;color:#dce8ff;text-shadow:0 0 15px rgba(80,177,255,.75)}
+#atlasAetherStatusPanel4084 [data-aether-level-406030] > span{font-size:9.5px!important;color:#f4cc69!important}
+#atlasAetherStatusPanel4084 [data-aether-level-406030] [data-aether-row-4084="level"]{font-size:17px!important;line-height:1.15!important;color:#ffd875!important}
+#atlasAetherStatusPanel4084 [data-aether-action-406030]{left:50%!important;top:58%!important;transform:translate(-50%,-50%)!important;width:330px!important;height:116px!important;z-index:5!important;text-align:center!important;border:0!important;background:rgba(2,10,24,.45)!important;box-shadow:none!important;padding:9px 14px!important;display:block!important}
+#atlasAetherStatusPanel4084 [data-aether-action-406030] > span{font-size:9.5px!important;color:#f4cc69!important}
+#atlasAetherStatusPanel4084 [data-aether-action-406030] > b{display:block!important;font-size:11.5px!important;line-height:1.25!important;color:#8deeff!important;max-height:44px;overflow:hidden}
+#atlasAetherStatusPanel4084 [data-aether-action-406030] > small{display:block!important;margin-top:4px;font-size:10.5px!important;line-height:1.2!important;color:#ffc4e5!important;max-height:30px;overflow:hidden}
+/* top orbit */
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="convergence"]){left:50%!important;top:8%!important;transform:translateX(-50%)!important;width:330px!important;height:104px!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="divergence"]){right:8%!important;top:15%!important;width:300px!important;height:118px!important}
+#atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article:has([data-aether-row-4084="market"]){right:5.5%!important;top:36%!important;width:320px!important;height:132px!important}
+/* status grid flattened into orbit */
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030]{display:contents!important}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="system"]){left:8%!important;top:15%!important;width:300px!important;height:112px!important}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="sources"]){left:5.5%!important;top:36%!important;width:300px!important;height:120px!important}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="atlas"]){left:7%!important;top:58%!important;width:300px!important;height:126px!important}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article:has([data-aether-row-4084="oracle"]){left:26%!important;bottom:3%!important;width:300px!important;height:92px!important}
+#atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article > small{display:block!important;margin-top:4px;font-size:9.5px!important;line-height:1.2!important;color:#76f0ce!important}
+/* focus shell is transparent plumbing in default radial view */
+#atlasAetherStatusPanel4084 [data-aether-focus-shell-406030]{position:static!important;border:0!important;background:transparent!important;overflow:visible!important}
+#atlasAetherStatusPanel4084 .aether-focus-toolbar-406030{position:absolute!important;right:18px!important;bottom:12px!important;z-index:9!important;border:0!important;background:rgba(2,12,25,.64)!important;border-radius:10px!important;padding:4px!important}
+#atlasAetherStatusPanel4084 .aether-focus-toolbar-406030 > b{display:none!important}
+#atlasAetherStatusPanel4084 [data-aether-focus-button-406030]{font-size:10px!important;padding:5px 8px!important}
+#atlasAetherStatusPanel4084 .aether-focus-viewport-406030{position:static!important;width:auto!important;height:auto!important;min-height:0!important;max-height:none!important;padding:0!important;overflow:visible!important}
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="glance"]{display:contents!important}
+#atlasAetherStatusPanel4084 [data-aether-timeline-card-406027]{right:7%!important;top:58%!important;width:315px!important;height:126px!important}
+#atlasAetherStatusPanel4084 [data-aether-weather-406030]{right:27%!important;bottom:3%!important;width:300px!important;height:92px!important;display:block!important}
+#atlasAetherStatusPanel4084 [data-aether-weather-406030] > b{white-space:pre-line!important;font-size:11px!important;line-height:1.28!important}
+#atlasAetherStatusPanel4084 [data-aether-weather-406030] > small{font-size:9.5px!important;line-height:1.2!important;color:#b8eaff!important}
+#atlasAetherStatusPanel4084 [data-aether-timeline-preview-406028]{display:grid!important;gap:3px!important;margin-top:3px!important}
+#atlasAetherStatusPanel4084 .aether-timeline-row-406027{grid-template-columns:48px 47px 50px minmax(0,1fr)!important;gap:4px!important;padding:3px 4px!important;font-size:9.5px!important;line-height:1.12!important;background:rgba(1,9,20,.3)!important}
+#atlasAetherStatusPanel4084 .aether-timeline-detail-406027{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;font-size:9.5px!important}
+/* History/Details reuse one bounded central overlay; never stack */
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="history"],
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="details"]{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(680px,54vw)!important;height:300px!important;z-index:12!important;padding:12px!important;border:1px solid rgba(81,210,255,.42)!important;border-radius:16px!important;background:rgba(2,12,27,.95)!important;box-shadow:0 18px 55px rgba(0,0,0,.55)!important;overflow:hidden!important}
+#atlasAetherStatusPanel4084 [data-aether-focus-view-406030="history"] [data-aether-timeline-406027],
+#atlasAetherStatusPanel4084 .aether-details-grid-406030{height:calc(100% - 25px)!important;overflow-y:auto!important;scrollbar-gutter:stable!important}
+#atlasAetherStatusPanel4084 .aether-details-grid-406030{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#atlasAetherStatusPanel4084 .aether-details-grid-406030 article{position:static!important;padding:8px!important}
+/* compact fallback: radial becomes scroll-safe cards */
+@media(max-width:1180px),(max-height:720px){
+ #atlasAetherStatusPanel4084{top:165px!important;overflow-y:auto!important}
+ #atlasAetherStatusPanel4084::before{background-position:center 58%!important;opacity:.62!important}
+ #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030{position:relative!important;inset:auto!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:52px 10px 12px!important}
+ #atlasAetherStatusPanel4084 .aether-first-glance-grid-406030 > article,
+ #atlasAetherStatusPanel4084 [data-aether-status-grid-406030] article,
+ #atlasAetherStatusPanel4084 [data-aether-focus-view-406030="glance"] > article{position:static!important;transform:none!important;width:auto!important;height:auto!important;min-height:82px!important}
+ #atlasAetherStatusPanel4084 [data-aether-level-406030],#atlasAetherStatusPanel4084 [data-aether-action-406030]{grid-column:1/-1!important}
+ #atlasAetherStatusPanel4084 [data-aether-level-406030]{padding-top:14px!important;text-align:left!important}
+ #atlasAetherStatusPanel4084 [data-aether-level-406030]::before{font-size:16px!important}
+ #atlasAetherStatusPanel4084 [data-aether-status-grid-406030]{display:contents!important}
+ #atlasAetherStatusPanel4084 [data-aether-focus-shell-406030]{display:contents!important}
+ #atlasAetherStatusPanel4084 [data-aether-focus-view-406030="glance"]{display:contents!important}
+ #atlasAetherStatusPanel4084 .aether-focus-toolbar-406030{position:static!important;grid-column:1/-1!important;justify-self:end!important}
+}
