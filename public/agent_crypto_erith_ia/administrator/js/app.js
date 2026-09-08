@@ -1,9 +1,9 @@
 (() => {
   "use strict";
-  const ADMIN_BUILD = "40.4.295";
-  const ADMIN_RELEASE = "STRATEGY A FOUNDATION INTEGRITY CORRECTIVE LOCK";
-  const ENGINE_BUILD = "38.15.11";
-  const CLASSIC_WEB_BUILD = "38.15.13";
+  const metaTruth406025 = name => document.querySelector(`meta[name="${name}"]`)?.content?.trim() || "";
+  const ADMIN_BUILD = metaTruth406025("administrator-build") || "UNKNOWN";
+  const ADMIN_RELEASE = metaTruth406025("administrator-release") || "UNKNOWN";
+  const ENGINE_BUILD = metaTruth406025("atlas-engine-build") || "UNKNOWN";
   const STORAGE_PREFIX = "erith_admin_portal_39_2_9";
 
   const WORKSPACE_RUNTIME_CONTRACT_40227 = Object.freeze({
@@ -732,7 +732,7 @@
     byId("administratorMirrorIdentity")?.remove();
 
     const footer = byId("footerRelease");
-    if (footer) footer.textContent = `Agent-Crypto @erith.IA · Market Core · Build ${ADMIN_BUILD} · Version : Parker Lewis Can't Lose`;
+    if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${ADMIN_BUILD} · Market Core ${ENGINE_BUILD} · Web Classic · manifeste`;
   }
 
   function updateLayoutButton(button, free) {
@@ -785,9 +785,11 @@
     reset.addEventListener("click", () => manager.reset());
 
     const classic = document.createElement("a");
+    classic.id = "atlasClassicVersionTruth406025";
     classic.href = "../web/index.html";
-    classic.textContent = `CLASSIC ${CLASSIC_WEB_BUILD}`;
-    classic.title = `Ouvrir la Web Classique ${CLASSIC_WEB_BUILD} · Engine ${ENGINE_BUILD}`;
+    classic.textContent = "CLASSIC · manifeste";
+    classic.title = `Ouvrir la Web Classique · Engine ${ENGINE_BUILD}`;
+    classic.dataset.versionTruth = "pending";
 
     bar.append(brand, layout, deck, profiles, cascade, reset, classic);
     document.body.appendChild(bar);
