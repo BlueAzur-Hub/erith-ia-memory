@@ -165,10 +165,9 @@ new_bind = '''    panel.querySelector("[data-aether-close-4084]")?.addEventListe
 js = replace_once(js, old_bind, new_bind, 'events card workbench binding')
 
 old_api = '''    aether_attention_graph_first_lazy_build:"40.6.37",
-    aether_attention_graph_first_signal:"existing atlasAfterLivecheck completion",
+    aether_attention_boot_order:"market_graph -> aether_core -> system_weather -> news_history_on_demand",
 '''
 new_api = '''    aether_attention_graph_first_lazy_build:"40.6.37",
-    aether_attention_graph_first_signal:"existing atlasAfterLivecheck completion",
     aether_attention_floating_workbench:true,
     aether_attention_floating_workbench_build:"40.6.38",
     aether_attention_workbench_lazy_script:true,
@@ -176,6 +175,7 @@ new_api = '''    aether_attention_graph_first_lazy_build:"40.6.37",
     aether_attention_workbench_local_drag:true,
     aether_attention_workbench_storage:false,
     aether_attention_workbench_global_window_manager:false,
+    aether_attention_boot_order:"market_graph -> aether_core -> system_weather -> news_history_on_demand",
 '''
 js = replace_once(js, old_api, new_api, 'API workbench contract')
 AETHER_JS.write_text(js, encoding='utf-8')
