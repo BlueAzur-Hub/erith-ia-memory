@@ -1,0 +1,98 @@
+name: Agent-Crypto 40.6.20 Aerith-10 Notion Iframe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-40620-aerith10-notion-iframe.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-40620-aerith10-notion
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Apply bounded family 02 insertion
+        run: python .github/scripts/agent_crypto_40620_aerith10_notion_iframe.py
+      - name: Anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          python -m json.tool "$ROOT/build.json" >/dev/null
+          python -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python -m json.tool "$ROOT/version.json" >/dev/null
+          git diff --check
+
+          # Hard freeze on validated runtime owners.
+          for f in \
+            "$ROOT/admin-chronos.css" \
+            "$ROOT/js/version-truth.js" \
+            "$ROOT/oracle-presentation-405010.css" \
+            "$ROOT/oracle-fx-406013.css" \
+            "$ROOT/js/oracle-fx-406013.js" \
+            "$ROOT/js/app.js" \
+            "$ROOT/app.js" \
+            "$ROOT/js/core/admin-window-manager.js" \
+            "$ROOT/parallel-markets.css" \
+            "$ROOT/market-reading-depth.css"; do
+              git diff --exit-code -- "$f"
+          done
+
+          # Canonical insertion and Forge preservation evidence.
+          grep -q 'id="aerith10-creator"' "$ROOT/views/atlas.html"
+          grep -q 'id="aerith10-creator"' "$ROOT/js/views/atlas-presentation.js"
+          test "$(grep -c 'id="aerith10-creator"' "$ROOT/views/atlas.html")" = 1
+          test "$(grep -c 'id="aerith10-creator"' "$ROOT/js/views/atlas-presentation.js")" = 1
+          grep -q 'sustaining-boar-5c6.notion.site/erith-10-Cr-atrice-3977754fe0848036a47cfd55786b4b40' "$ROOT/views/atlas.html"
+          grep -q 'src="../atlas_10_full/index.html#unifiedForge"' "$ROOT/views/atlas.html"
+
+          python - <<'PY'
+          import subprocess
+          expected={
+            'public/agent_crypto_erith_ia/administrator/index.html',
+            'public/agent_crypto_erith_ia/administrator/views/atlas.html',
+            'public/agent_crypto_erith_ia/administrator/js/views/atlas-presentation.js',
+            'public/agent_crypto_erith_ia/administrator/aerith10-creator-406020.css',
+            'public/agent_crypto_erith_ia/administrator/build.json',
+            'public/agent_crypto_erith_ia/administrator/administrator-version.json',
+            'public/agent_crypto_erith_ia/administrator/version.json',
+            'public/agent_crypto_erith_ia/administrator/RELEASE_40_6_20.md',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_20_AERITH10_CREATRICE_NOTION_IFRAME_CLEAN_UPLOAD_8_FILES.zip',
+            'coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_20_AERITH10_CREATRICE_NOTION_IFRAME_CLEAN_UPLOAD_8_FILES.zip.sha256',
+          }
+          status=subprocess.check_output(['git','status','--porcelain=v1','--untracked-files=all'],text=True)
+          changed=set()
+          for line in status.splitlines():
+            if not line.strip(): continue
+            path=line[3:]
+            if ' -> ' in path: path=path.split(' -> ',1)[1]
+            changed.add(path)
+          extra=changed-expected; missing=expected-changed
+          if extra: raise SystemExit(f'STOP 40.6.20 unexpected files: {sorted(extra)}')
+          if missing: raise SystemExit(f'STOP 40.6.20 missing files: {sorted(missing)}')
+          print('40.6.20 bounded diff OK')
+          PY
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add "$ROOT/index.html" "$ROOT/views/atlas.html" "$ROOT/js/views/atlas-presentation.js" "$ROOT/aerith10-creator-406020.css" "$ROOT/build.json" "$ROOT/administrator-version.json" "$ROOT/version.json" "$ROOT/RELEASE_40_6_20.md"
+          git add coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_BUILD_40_6_20_AERITH10_CREATRICE_NOTION_IFRAME_CLEAN_UPLOAD_8_FILES.zip*
+          git diff --cached --quiet && { echo 'STOP 40.6.20: no changes'; exit 1; }
+          git commit -m "feat(agent-crypto): embed Aerith-10 Notion in family 02 40.6.20"
+          git pull --rebase origin main
+          git push origin HEAD:main
