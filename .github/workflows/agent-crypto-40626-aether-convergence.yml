@@ -1,0 +1,298 @@
+name: Agent-Crypto 40.6.26 Aether Operator Watch Convergence Matrix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-40626-aether-convergence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded Aether Operator Watch upgrade
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, hashlib, datetime, re
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          index = root/'index.html'
+          aether = root/'js/aether.js'
+          ribbons = root/'admin-ribbons.css'
+
+          protected = [
+            root/'admin-chronos.css',
+            root/'js/version-truth.js',
+            root/'oracle-presentation-405010.css',
+            root/'oracle-fx-406013.css',
+            root/'js/oracle-fx-406013.js',
+            root/'js/core/admin-window-manager.js',
+            root/'views/atlas.html',
+            root/'js/strategy-a-paper-lifecycle-404295.js',
+            root/'js/strategy-a-after-cost-metrics-404298.js',
+          ]
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          before = {str(p): sha(p) for p in protected if p.exists()}
+
+          html = index.read_text(encoding='utf-8')
+          assert '<meta name="administrator-build" content="40.6.25"' in html, '40.6.25 checkpoint missing'
+          html = html.replace('<meta name="atlas-build" content="40.6.25" />','<meta name="atlas-build" content="40.6.26" />',1)
+          html = html.replace('<meta name="administrator-build" content="40.6.25" />','<meta name="administrator-build" content="40.6.26" />',1)
+          html = html.replace('<meta name="administrator-release" content="FOOTER VERSION TRUTH CLEANUP · CANONICAL OWNERS LOCK" />','<meta name="administrator-release" content="AETHER OPERATOR WATCH · CONVERGENCE MATRIX · READ-ONLY SYNTHESIS LOCK" />',1)
+          html = html.replace('<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.25" />','<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.26" />',1)
+          html = html.replace('<title>Agent-Crypto @erith.IA — Build 40.6.25 · Administrator</title>','<title>Agent-Crypto @erith.IA — Build 40.6.26 · Administrator</title>',1)
+          html, n = re.subn(r'(\./admin-ribbons\.css\?v=administrator-build-)[^"\']+', r'\g<1>40.6.26', html, count=1)
+          assert n == 1, 'admin-ribbons cache owner not found'
+          html, n = re.subn(r'(\./js/aether\.js\?v=administrator-build-)[^"\']+', r'\g<1>40.6.26', html, count=1)
+          if n == 0:
+            html, n = re.subn(r'(\./js/aether\.js)(["\'])', r'\1?v=administrator-build-40.6.26\2', html, count=1)
+          assert n == 1, 'aether.js script owner not found'
+          html = html.replace('./js/footer-version-truth-406025.js?v=administrator-build-40.6.25','./js/footer-version-truth-406026.js?v=administrator-build-40.6.26',1)
+          index.write_text(html,encoding='utf-8')
+
+          js = aether.read_text(encoding='utf-8')
+          marker = '  function aetherPanelEnsure4084(){\n'
+          assert marker in js, 'Aether panel owner marker missing'
+          helper = r'''  function aetherDirectionalWord406026(value){
+    const text=String(value||"").toLowerCase();
+    if(/hauss|bull|positive|risk-on|risk on|inflow|entrants?/.test(text))return 1;
+    if(/baiss|bear|negative|risk-off|risk off|outflow|sortants?/.test(text))return -1;
+    if(/mixte|partag|neutre|stable|lat[ée]ral|non [ée]tablie/.test(text))return 0;
+    return null;
+  }
+  function aetherOracleDirection406026(){
+    try{
+      const host=document.getElementById("atlasOracleV0");
+      const text=String(host?.textContent||"").replace(/\s+/g," ");
+      const up=Number((text.match(/HAUSSE\s*(\d+)\s*\/\s*100/i)||[])[1]);
+      const down=Number((text.match(/BAISSE\s*(\d+)\s*\/\s*100/i)||[])[1]);
+      if(Number.isFinite(up)&&Number.isFinite(down)){
+        if(up>=down+2)return 1;
+        if(down>=up+2)return -1;
+        return 0;
+      }
+      return aetherDirectionalWord406026(aetherText4084("atlasOracleOperatorBias","")||aetherText4084("atlasOracleBias",""));
+    }catch(_){return null;}
+  }
+  function aetherMarketDirection406026(){
+    try{
+      const coins=(typeof state!=="undefined"&&Array.isArray(state?.coins))?state.coins:[];
+      const values=coins.map(row=>aetherSystemNumber4086(row?.change24h)).filter(v=>v!==null);
+      if(!values.length)return null;
+      const up=values.filter(v=>v>.05).length,down=values.filter(v=>v<-.05).length;
+      if(up>=down*1.25&&up-down>=3)return 1;
+      if(down>=up*1.25&&down-up>=3)return -1;
+      return 0;
+    }catch(_){return null;}
+  }
+  function aetherNewsDirection406026(){
+    try{
+      const feed=aetherVeilleCurrent4087();
+      const event=feed?.event||null;
+      if(!event)return null;
+      const owner=globalThis.AtlasNewsToMarketOperatorIntelligence40235;
+      const narrative=owner&&typeof owner.compute==="function"?owner.compute(event):null;
+      const fields=[narrative?.mechanism?.direction,narrative?.flow?.direction,narrative?.market_confirmation?.focus,narrative?.verdict?.direction,feed?.tone];
+      const votes=fields.map(aetherDirectionalWord406026).filter(v=>v!==null&&v!==0);
+      if(votes.length){const sum=votes.reduce((a,b)=>a+b,0);return sum>0?1:sum<0?-1:0;}
+      return aetherDirectionalWord406026([event?.event_label,event?.decision?.tone,event?.sentiment].filter(Boolean).join(" "));
+    }catch(_){return null;}
+  }
+  function aetherAtlasDirection406026(){
+    try{return aetherDirectionalWord406026(`${aetherAtlasBrief4088()} ${aetherText4084("atlasOracleAtlas","")}`);}catch(_){return null;}
+  }
+  function aetherOperatorWatch406026(){
+    const layers=[
+      {name:"News",value:aetherNewsDirection406026()},
+      {name:"Marché",value:aetherMarketDirection406026()},
+      {name:"Atlas",value:aetherAtlasDirection406026()},
+      {name:"Oracle",value:aetherOracleDirection406026()},
+    ];
+    const known=layers.filter(row=>row.value!==null);
+    const positive=known.filter(row=>row.value===1),negative=known.filter(row=>row.value===-1),neutral=known.filter(row=>row.value===0);
+    const dominant=positive.length>negative.length?1:negative.length>positive.length?-1:0;
+    const aligned=dominant===0?neutral.length:known.filter(row=>row.value===dominant||row.value===0).length;
+    const pct=known.length?Math.round(aligned/known.length*100):0;
+    const sourceReady=!/attente|aucune|requis|indisponible/i.test(aetherSourcesBrief4088());
+    const systemText=aetherSystemBrief40133();
+    const systemReady=!/N\/D|indisponible/i.test(systemText);
+    const feed=aetherVeilleCurrent4087();
+    const impact=Number(feed?.event?.impact?.score);
+    const evidence=Number(feed?.event?.evidence?.score);
+    const attentionBase=aetherAttention40133();
+    let level="MODÉRÉ";
+    if(/danger|critique|non armé|indisponible/i.test(attentionBase)||(Number.isFinite(impact)&&impact>=95&&Number.isFinite(evidence)&&evidence>=85))level="CRITIQUE";
+    else if((Number.isFinite(impact)&&impact>=85)||pct>=75&&known.length>=3)level="ÉLEVÉ";
+    else if(!known.length||(!sourceReady&&!systemReady))level="FAIBLE";
+    const dirLabel=dominant>0?"HAUSSIÈRE":dominant<0?"BAISSIÈRE":"PARTAGÉE";
+    const convergence=known.length?`${aligned}/${known.length} couches · ${pct}% · dominante ${dirLabel}`:"Données directionnelles insuffisantes";
+    const opposed=dominant===0?[]:known.filter(row=>row.value===-dominant).map(row=>row.name);
+    const divergence=opposed.length?`${opposed.join(" + ")} en contradiction avec la dominante`:neutral.length&&dominant!==0?`${neutral.map(row=>row.name).join(" + ")} restent neutres`:`Aucune divergence directionnelle forte détectée`;
+    const watch=[];
+    const oracle=aetherOracleDirection406026();
+    if(oracle===0)watch.push("Oracle : sortie du 50/50");
+    else watch.push("Oracle : bascule ou renforcement ≥ 60/40");
+    if(aetherMarketDirection406026()===0)watch.push("Largeur marché : rupture de l’équilibre");
+    if(Number.isFinite(impact)&&impact>=80)watch.push("News : nouvelle preuve ou changement de ton");
+    if(!sourceReady)watch.push("Sources : retour à un état complet");
+    if(!watch.length)watch.push("Changement significatif d’une couche");
+    let note="Lecture encore partagée : surveiller la prochaine confirmation avant toute interprétation forte.";
+    if(dominant>0&&pct>=75)note="Convergence plutôt constructive, mais Aether reste en observation : confirmer par le marché et les sources.";
+    else if(dominant<0&&pct>=75)note="Convergence plutôt défensive : risque prioritaire, aucune exécution automatique.";
+    else if(opposed.length)note=`Divergence active : ${opposed.join(" / ")} ne confirme pas la lecture dominante.`;
+    return {
+      level:`${level} · ${sourceReady?"sources prêtes":"sources partielles"} · ${systemReady?"système lisible":"système partiel"}`,
+      convergence,
+      divergence,
+      watch:watch.slice(0,4).join(" · "),
+      note,
+    };
+  }
+'''
+          js = js.replace(marker, helper + marker, 1)
+
+          old_semantic = '<article data-aether-wide-4084><span>Lecture News → Marché</span><b data-aether-row-4084="semantic">—</b></article><article data-aether-wide-4084><span>Attention</span><b data-aether-row-4084="attention">—</b></article>'
+          new_semantic = '<article data-aether-wide-4084><span>Lecture News → Marché</span><b data-aether-row-4084="semantic">—</b></article><article data-aether-wide-4084 data-aether-watch-summary-406026><span>Niveau d’attention</span><b data-aether-row-4084="level">—</b></article><article><span>Convergence</span><b data-aether-row-4084="convergence">—</b></article><article><span>Divergence</span><b data-aether-row-4084="divergence">—</b></article><article data-aether-wide-4084><span>À surveiller maintenant</span><b data-aether-row-4084="watch">—</b></article><article data-aether-wide-4084 data-aether-note-406026><span>Aether Note</span><b data-aether-row-4084="note">—</b></article><article data-aether-wide-4084><span>Attention</span><b data-aether-row-4084="attention">—</b></article>'
+          assert old_semantic in js, 'Aether panel semantic insertion point missing'
+          js = js.replace(old_semantic,new_semantic,1)
+
+          old_render = 'row("why",aetherOperatorWhy405012());row("semantic",aetherNewsMarketSemantic405013());row("attention",aetherAttention40133());'
+          new_render = 'row("why",aetherOperatorWhy405012());row("semantic",aetherNewsMarketSemantic405013());const watch406026=aetherOperatorWatch406026();row("level",watch406026.level);row("convergence",watch406026.convergence);row("divergence",watch406026.divergence);row("watch",watch406026.watch);row("note",watch406026.note);row("attention",aetherAttention40133());'
+          assert old_render in js, 'Aether render insertion point missing'
+          js = js.replace(old_render,new_render,1)
+          aether.write_text(js,encoding='utf-8')
+
+          css = ribbons.read_text(encoding='utf-8')
+          css += r'''
+
+/* 40.6.26 — AETHER OPERATOR WATCH · CONVERGENCE MATRIX
+   Presentation only. Existing Aether render cadence and data owners are preserved. */
+#atlasAetherStatusPanel4084 [data-aether-watch-summary-406026]{
+  border-color:rgba(245,184,96,.28)!important;
+  background:linear-gradient(90deg,rgba(64,42,15,.22),rgba(7,23,34,.62))!important;
+}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="level"]{color:#ffd98a!important;font-size:11px!important;letter-spacing:.02em!important}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="convergence"]{color:#9fe7ff!important}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="divergence"]{color:#e7c6ff!important}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="watch"]{color:#f5df91!important}
+#atlasAetherStatusPanel4084 [data-aether-note-406026]{
+  border-color:rgba(236,123,197,.24)!important;
+  background:linear-gradient(90deg,rgba(45,16,43,.24),rgba(7,23,34,.62))!important;
+}
+#atlasAetherStatusPanel4084 [data-aether-row-4084="note"]{color:#f1c6e4!important;line-height:1.35!important}
+'''
+          ribbons.write_text(css,encoding='utf-8')
+
+          footer_truth = root/'js/footer-version-truth-406026.js'
+          footer_truth.write_text(r'''(() => {
+  "use strict";
+  const BUILD="40.6.26", MANIFEST="../web/version.json", SIGNATURE="Version : Parker Lewis Can't Lose";
+  const meta=name=>document.querySelector(`meta[name="${name}"]`)?.content?.trim()||"UNKNOWN";
+  async function render(){
+    const admin=meta("administrator-build"),engine=meta("atlas-engine-build"),footer=document.getElementById("footerRelease"),classic=document.getElementById("atlasClassicVersionTruth406025");
+    const base=web=>`Administrator ${admin} · Market Core ${engine} · Web Classic ${web} · ${SIGNATURE}`;
+    if(footer)footer.textContent=base("vérification…");
+    try{
+      const response=await fetch(MANIFEST,{cache:"no-store"}); if(!response.ok)throw new Error(`HTTP ${response.status}`);
+      const manifest=await response.json(),web=String(manifest?.build||"").trim(),webEngine=String(manifest?.engine?.reference_build||"").trim()||engine;
+      if(!web)throw new Error("classic build absent");
+      if(classic){classic.textContent=`CLASSIC ${web}`;classic.title=`Ouvrir la Web Classique ${web} · Engine ${webEngine}`;classic.dataset.versionTruth="manifest";}
+      if(footer)footer.textContent=base(web);
+      globalThis.__AGENT_CRYPTO_FOOTER_VERSION_TRUTH_406026__=Object.freeze({build:BUILD,administrator_build:admin,market_core:engine,classic_build:web,classic_engine:webEngine,signature:SIGNATURE,one_shot_fetch:true,recurring_timer:false,observer:false,storage_write:false});
+    }catch(error){
+      if(classic){classic.textContent="CLASSIC · version inconnue";classic.dataset.versionTruth="unknown";}
+      if(footer)footer.textContent=base("version inconnue");
+      globalThis.__AGENT_CRYPTO_FOOTER_VERSION_TRUTH_406026__=Object.freeze({build:BUILD,administrator_build:admin,market_core:engine,classic_build:null,signature:SIGNATURE,error:String(error?.message||error||"unknown"),one_shot_fetch:true,recurring_timer:false,observer:false,storage_write:false});
+    }
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render,{once:true});else render();
+})();
+''',encoding='utf-8')
+
+          now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+          release='AETHER OPERATOR WATCH · CONVERGENCE MATRIX · READ-ONLY SYNTHESIS LOCK'
+          cascade={
+            'parent_build':'40.6.25','release':release,'scope':'aether_operator_watch_and_footer_signature_only',
+            'aether_attention_level':True,'aether_convergence_matrix':True,'aether_divergence':True,'aether_watch_conditions':True,'aether_note':True,
+            'existing_sources_only':True,'new_network_owner':False,'new_recurring_timer':False,'new_observer':False,'new_storage_owner':False,
+            'automatic_order':False,'real_order':False,'oracle_modified':False,'graph_modified':False,'technical_reading_modified':False,
+            'chronos_modified':False,'version_truth_button_modified':False,'window_manager_modified':False,'market_core_modified':False,
+            'footer_signature_verbatim':"Version : Parker Lewis Can't Lose",
+          }
+          manifests=[root/'build.json',root/'administrator-version.json',root/'version.json']
+          for path in manifests:
+            data=json.loads(path.read_text(encoding='utf-8'))
+            data['build']='40.6.26'; data['release']=release; data['status']='aether_operator_watch_convergence_matrix_406026'; data['parent_build']='40.6.25'
+            if 'asset_token' in data:data['asset_token']='market-core-v2.0-alpha-build-40.6.26'
+            if 'administrator_build' in data:data['administrator_build']='40.6.26'
+            if 'build_label' in data:data['build_label']='Build 40.6.26'
+            if 'release_status' in data:data['release_status']=release
+            for k in ('timestamp','prepared_at','published_at'):
+              if k in data:data[k]=now
+            if isinstance(data.get('current_version_truth'),dict):data['current_version_truth']['loaded_build']='40.6.26'
+            data['cascade_40_6_26']=cascade
+            path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          (root/'RELEASE_40_6_26.md').write_text('''# Agent-Crypto 40.6.26 — Aether Operator Watch · Convergence Matrix\n\nParent: `40.6.25`\n\n## Added\n- Attention level using existing Aether inputs only.\n- Directional convergence: News / Marché / Atlas / Oracle.\n- Explicit divergence summary.\n- Deterministic watch conditions.\n- Deterministic Aether Note.\n- Footer signature restored verbatim: `Version : Parker Lewis Can\'t Lose`.\n\n## Frozen\nOracle 40.6.13 + FX, Graphique, Lecture Technique, Chronos, Version Truth button, dashboard width 40.6.10, Window Manager, Paper/Safety 40.6.14→40.6.19 and Market Core 38.15.11.\n\nNo new timer, observer, network owner, storage owner, automatic order or real order.\n''',encoding='utf-8')
+
+          after={str(p):sha(p) for p in protected if p.exists()}
+          assert before==after,'protected checksum changed'
+          PY
+
+      - name: Syntax and anti-destruction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          node --check "$ROOT/js/aether.js"
+          node --check "$ROOT/js/footer-version-truth-406026.js"
+          python3 -m json.tool "$ROOT/build.json" >/dev/null
+          python3 -m json.tool "$ROOT/administrator-version.json" >/dev/null
+          python3 -m json.tool "$ROOT/version.json" >/dev/null
+          grep -q '<meta name="administrator-build" content="40.6.26"' "$ROOT/index.html"
+          grep -q 'admin-ribbons.css?v=administrator-build-40.6.26' "$ROOT/index.html"
+          grep -q 'aether.js?v=administrator-build-40.6.26' "$ROOT/index.html"
+          grep -q 'footer-version-truth-406026.js?v=administrator-build-40.6.26' "$ROOT/index.html"
+          grep -q 'function aetherOperatorWatch406026' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="convergence"' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="divergence"' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="watch"' "$ROOT/js/aether.js"
+          grep -q 'data-aether-row-4084="note"' "$ROOT/js/aether.js"
+          grep -q "Version : Parker Lewis Can't Lose" "$ROOT/js/footer-version-truth-406026.js"
+          ! grep -q 'setInterval' "$ROOT/js/footer-version-truth-406026.js"
+          ! grep -q 'MutationObserver' "$ROOT/js/footer-version-truth-406026.js"
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          for name in ['build.json','administrator-version.json','version.json']:
+            d=json.loads((root/name).read_text(encoding='utf-8'))
+            assert d['build']=='40.6.26'
+            c=d['cascade_40_6_26']
+            assert c['market_core_modified'] is False
+            assert c['new_recurring_timer'] is False
+            assert c['new_network_owner'] is False
+            assert c['automatic_order'] is False
+            assert c['footer_signature_verbatim']=="Version : Parker Lewis Can't Lose"
+          PY
+
+      - name: Commit released build
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Seven Release Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator
+          if git diff --cached --quiet; then echo 'No runtime changes to commit'; exit 1; fi
+          git commit -m "feat(agent-crypto): expand Aether Operator Watch 40.6.26"
+          git push origin HEAD:main
