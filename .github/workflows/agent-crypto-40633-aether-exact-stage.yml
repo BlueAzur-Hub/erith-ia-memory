@@ -22,8 +22,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile .github/scripts/agent_crypto_40633_release.py
-          python3 .github/scripts/agent_crypto_40633_release.py
+          cp .github/scripts/agent_crypto_40633_release.py /tmp/agent_crypto_40633_release.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/agent_crypto_40633_release.py')
+          s=p.read_text(encoding='utf-8')
+          old='MARKER = "/* 40.6.33 — AETHER EXACT ARTWORK STAGE · RESPONSIVE ALIGNMENT LOCK */"'
+          new='MARKER = "/* 40.6.33 — AETHER EXACT ARTWORK STAGE · RESPONSIVE ALIGNMENT LOCK"'
+          if s.count(old) != 1:
+              raise SystemExit('release marker assignment not uniquely found')
+          p.write_text(s.replace(old,new),encoding='utf-8')
+          PY
+          python3 -m py_compile /tmp/agent_crypto_40633_release.py
+          python3 /tmp/agent_crypto_40633_release.py
 
       - name: Final anti-destruction gates
         shell: bash
