@@ -1120,8 +1120,8 @@ function aetherNewsMarketSemantic405013(){
   }
 
   function aetherPanelEnsure4084(){
-    let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel){if(!panel.dataset.aetherOperatorOpen406044)panel.dataset.aetherOperatorOpen406044="0";aetherComponentEnsure406042(panel);return panel;}
-    panel=document.createElement("section");panel.id="atlasAetherStatusPanel4084";panel.hidden=true;panel.dataset.aetherOperatorOpen406044="0";panel.setAttribute("aria-label","Synthèse Aether");
+    let panel=document.getElementById("atlasAetherStatusPanel4084");if(panel){if(!panel.dataset.aetherOperatorOpen406045)panel.dataset.aetherOperatorOpen406045="0";aetherComponentEnsure406042(panel);return panel;}
+    panel=document.createElement("section");panel.id="atlasAetherStatusPanel4084";panel.hidden=true;panel.dataset.aetherOperatorOpen406045="0";panel.setAttribute("aria-label","Synthèse Aether");
     panel.innerHTML=`<div class="atlas-aether-panel-head-4084"><b>♥ AETHER · ATTENTION WATCH</b><button type="button" data-aether-close-4084 aria-label="Fermer">×</button></div><div class="atlas-aether-panel-grid-4084 aether-first-glance-grid-406030"><article data-aether-wide-4084 data-aether-watch-summary-406026 data-aether-level-406030><span>Niveau d’attention</span><b data-aether-row-4084="level">—</b></article><article data-aether-third-406030><span>Convergence</span><b data-aether-row-4084="convergence">—</b></article><article data-aether-third-406030><span>Divergence</span><b data-aether-row-4084="divergence">—</b></article><article data-aether-third-406030><span>Marché</span><b data-aether-row-4084="market">—</b></article><article data-aether-wide-4084 data-aether-action-406030><span>À surveiller maintenant</span><b data-aether-row-4084="watch">—</b><small data-aether-row-4084="note">—</small></article><section data-aether-wide-4084 data-aether-focus-shell-406030><div class="aether-focus-toolbar-406030"><b>VUE AETHER</b><div><button type="button" data-aether-focus-button-406030="glance" aria-pressed="true">Vue</button><button type="button" data-aether-focus-button-406030="history" aria-pressed="false">Historique <span data-aether-history-count-406030>0/8</span></button><button type="button" data-aether-focus-button-406030="details" aria-pressed="false">Détails</button></div></div><div class="aether-focus-viewport-406030"><div data-aether-focus-view-406030="glance"><article data-aether-timeline-card-406027><span>Événements récents</span><div data-aether-timeline-preview-406028 aria-live="polite"></div></article><article data-aether-weather-406030><span>☁ Météo 5 j · Maintenon</span><b data-aether-row-4084="weather">—</b><small data-aether-row-4084="weather_risk">—</small></article></div><div data-aether-focus-view-406030="history" hidden><div class="aether-focus-view-head-406030">Historique de session · 8 événements maximum</div><div data-aether-timeline-406027 aria-live="polite"></div></div><div data-aether-focus-view-406030="details" hidden><div class="aether-details-grid-406030"><article><span>Pourquoi Aether attire ton attention ?</span><b data-aether-row-4084="why">—</b></article><article><span>Lecture News → Marché</span><b data-aether-row-4084="semantic">—</b></article><article><span>Attention</span><b data-aether-row-4084="attention">—</b></article><article><span>Dernière veille</span><b data-aether-row-4084="news">—</b></article></div></div></div></section><section data-aether-wide-4084 data-aether-status-grid-406030><article><span>Atlas</span><b data-aether-row-4084="atlas">—</b><small data-aether-row-4084="atlas_auto">—</small></article><article><span>Oracle</span><b data-aether-row-4084="oracle">—</b></article><article><span>Sources</span><b data-aether-row-4084="sources">—</b></article><article><span>Système</span><b data-aether-row-4084="system">—</b></article></section></div>`;
     document.body.appendChild(panel);
     aetherComponentEnsure406042(panel);
@@ -1152,10 +1152,9 @@ function aetherNewsMarketSemantic405013(){
     const panel=open?aetherPanelEnsure4084():document.getElementById("atlasAetherStatusPanel4084");
     const manager=aetherNativeWindowManager406040();
     if(panel){
-      panel.dataset.aetherOperatorOpen406044=open?"1":"0";
+      panel.dataset.aetherOperatorOpen406045=open?"1":"0";
       if(manager){
-        // HTML hidden is bootstrap-only. From here the canonical Administrator
-        // manager owns hide/minimize/float/maximize/z-order and persisted geometry.
+        // 40.6.45: Window Manager keeps geometry only; visibility is operator-owned.
         panel.hidden=false;
         if(open){
           manager.hide('aether-watch',false);
@@ -1345,14 +1344,10 @@ function aetherNewsMarketSemantic405013(){
     const button=document.getElementById("atlasAetherStatusToggle4084");
     if(button&&button.dataset.aetherBound!=="1"){
       button.dataset.aetherBound="1";
-      const bootstrapPanel=document.getElementById("atlasAetherStatusPanel4084");
-      if(bootstrapPanel?.dataset.aetherOperatorOpen406044!=="1")button.setAttribute("aria-expanded","false");
       button.addEventListener("click",()=>{
         const manager=aetherNativeWindowManager406040();
-        const win=manager?.getWindow?.('aether-watch');
         const panel=document.getElementById("atlasAetherStatusPanel4084");
-        const operatorClosed=panel?.dataset.aetherOperatorOpen406044!=="1";
-        const shouldOpen=operatorClosed||(win?Boolean(win.hidden||win.minimized):button.getAttribute("aria-expanded")!=="true");
+        const shouldOpen=panel?.dataset?.aetherOperatorOpen406045!=="1";
         aetherPanelSet4084(shouldOpen);
       });
     }
@@ -1561,12 +1556,6 @@ function aetherNewsMarketSemantic405013(){
     aether_attention_native_window_default:"floating-hidden",
     aether_attention_native_window_geometry_persistence:"existing-admin-window-manager",
     aether_attention_native_window_fullscreen_path:"native maximize 97vw x 97vh / Firefox F11 viewport",
-    /* 40.6.44 — AETHER EXPLICIT OPERATOR OPEN */
-    aether_attention_explicit_open_build:"40.6.44",
-    aether_attention_startup_closed:true,
-    aether_attention_persisted_visibility_ignored_until_operator_open:true,
-    aether_attention_visual_base_build:"40.6.43",
-    aether_attention_visual_reconstruction_406044:false,
     aether_attention_component_foundation:true,
     aether_attention_component_foundation_build:"40.6.42",
     aether_attention_component_layout:"responsive-grid",
@@ -1606,6 +1595,24 @@ function aetherNewsMarketSemantic405013(){
      canonical Administrator Window Manager. No Aether data, weather, news or
      history hydration is started here; 40.6.37 graph-first scheduling remains intact. */
   try{aetherPanelEnsure4084();}catch(_){}
+
+
+  /* 40.6.45 — TRUE EXPLICIT OPEN. Geometry may be restored; visibility never is. */
+  function aetherBootClosed406045(){
+    const panel=document.getElementById("atlasAetherStatusPanel4084");
+    const button=document.getElementById("atlasAetherStatusToggle4084");
+    if(panel)panel.dataset.aetherOperatorOpen406045="0";
+    if(button)button.setAttribute("aria-expanded","false");
+    const manager=aetherNativeWindowManager406040();
+    if(manager){
+      if(panel)panel.hidden=false;
+      manager.hide('aether-watch',true);
+      return true;
+    }
+    if(panel)panel.hidden=true;
+    return false;
+  }
+  window.addEventListener("erith:administrator-mirror-ready",aetherBootClosed406045,{once:true});
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindAether,{once:true});
   else bindAether();
