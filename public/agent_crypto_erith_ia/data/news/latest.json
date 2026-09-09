@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-09T00:19:42.104355+00:00",
+  "generated_at": "2026-09-09T06:03:44.966727+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,9 +11,9 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 20,
+    "events_24h": 21,
     "critical_24h": 15,
-    "strong_24h": 5,
+    "strong_24h": 6,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
@@ -25,7 +25,7 @@
         "distinct_sources": 3
       },
       "institutional_flows": {
-        "events_72h": 7,
+        "events_72h": 8,
         "distinct_sources": 3
       },
       "regulation": {
@@ -49,7 +49,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 3,
-      "latency_ms": 358,
+      "latency_ms": 107,
       "error": null
     },
     {
@@ -58,9 +58,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 29,
-      "qualified_count": 6,
-      "latency_ms": 339,
+      "fetched_count": 31,
+      "qualified_count": 7,
+      "latency_ms": 93,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 85,
+      "latency_ms": 131,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 271,
+      "latency_ms": 290,
       "error": null
     },
     {
@@ -92,8 +92,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 21,
-      "latency_ms": 296,
+      "qualified_count": 20,
+      "latency_ms": 362,
       "error": null
     },
     {
@@ -104,7 +104,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 25,
-      "latency_ms": 223,
+      "latency_ms": 199,
       "error": null
     },
     {
@@ -115,7 +115,7 @@
       "status": "ok",
       "fetched_count": 38,
       "qualified_count": 29,
-      "latency_ms": 132,
+      "latency_ms": 186,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 8,
-      "latency_ms": 683,
+      "latency_ms": 849,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 142,
+      "latency_ms": 311,
       "error": null
     },
     {
@@ -147,8 +147,8 @@
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 3,
-      "latency_ms": 270,
+      "qualified_count": 2,
+      "latency_ms": 356,
       "error": null
     },
     {
@@ -159,7 +159,7 @@
       "status": "ok",
       "fetched_count": 1,
       "qualified_count": 1,
-      "latency_ms": 246,
+      "latency_ms": 252,
       "error": null
     },
     {
@@ -170,7 +170,7 @@
       "status": "ok",
       "fetched_count": 9,
       "qualified_count": 9,
-      "latency_ms": 297,
+      "latency_ms": 275,
       "error": null
     },
     {
@@ -181,7 +181,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 289,
+      "latency_ms": 247,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 216,
+      "latency_ms": 128,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 9180,
+      "latency_ms": 10418,
       "error": null
     }
   ],
@@ -232,11 +232,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-09-08T11:06:31+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.849195+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.849195+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.545014+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.545014+00:00",
       "freshness": {
         "iso": "2026-09-08T11:06:31+00:00",
-        "hours": 13.22,
+        "hours": 18.95,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -749,11 +749,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T04:41:17+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.873412+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.873412+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.561640+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.561640+00:00",
       "freshness": {
         "iso": "2026-09-08T04:41:17+00:00",
-        "hours": 19.64,
+        "hours": 25.37,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1159,12 +1159,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T17:10:51+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.615842+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.615842+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.312007+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.312007+00:00",
       "freshness": {
         "iso": "2026-09-08T17:10:51+00:00",
-        "hours": 7.14,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.88,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -1463,11 +1463,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T20:46:34+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.608921+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.608921+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.305180+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.305180+00:00",
       "freshness": {
         "iso": "2026-09-08T20:46:34+00:00",
-        "hours": 3.55,
+        "hours": 9.28,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1563,11 +1563,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-07T11:09:27+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.649682+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.649682+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.354144+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.354144+00:00",
       "freshness": {
         "iso": "2026-09-07T11:09:27+00:00",
-        "hours": 37.17,
+        "hours": 42.9,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1638,107 +1638,6 @@
       "headline_fr_quality_reasons": [
         "source_not_native_french"
       ]
-    },
-    {
-      "id": "feed_bb51c3cd38bcecd2",
-      "event_id": "feed_bb51c3cd38bcecd2",
-      "fingerprint": "bb51c3cd38bcecd2",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "OpenAI says its new 'Astra' AI can build attacks without human help",
-      "body": "Astra is the first OpenAI model to reach its “Critical” cybersecurity threshold, meaning it can find previously unknown vulnerabilities and develop ways to exploit them across hardened systems.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/tech/2026/09/02/openai-says-its-new-astra-ai-can-build-attacks-without-human-help",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/tech/2026/09/02/openai-says-its-new-astra-ai-can-build-attacks-without-human-help"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-02T05:28:51+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.901830+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.901830+00:00",
-      "freshness": {
-        "iso": "2026-09-02T05:28:51+00:00",
-        "hours": 24.44,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 94,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "IA",
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "security"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_original": "OpenAI says its new 'Astra' AI can build attacks without human help",
-      "language_original": "en",
-      "source": "CoinDesk",
-      "url": "https://www.coindesk.com/tech/2026/09/02/openai-says-its-new-astra-ai-can-build-attacks-without-human-help",
-      "published_at": "2026-09-02T05:28:51+00:00",
-      "crypto_relevance_score": 8,
-      "relevance_reason": "thèmes=security",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "translation_source_normalized": "OpenAI says its new 'Astra' AI can build attacks without human help",
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] OpenAI says its new 'Astra' AI can build attacks without human help",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false
     },
     {
       "id": "feed_3bb1ffa265f0a2f9",
@@ -2180,11 +2079,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T08:10:44+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.735583+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.735583+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.406151+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.406151+00:00",
       "freshness": {
         "iso": "2026-09-08T08:10:44+00:00",
-        "hours": 16.15,
+        "hours": 21.88,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6086,13 +5985,13 @@
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-09-08T20:13:27+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.703039+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.703039+00:00",
+      "event_time": "2026-09-09T05:51:21+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.374198+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.374198+00:00",
       "freshness": {
-        "iso": "2026-09-08T20:13:27+00:00",
-        "hours": 4.1,
-        "label": "Fraîche · moins de 12 h",
+        "iso": "2026-09-09T05:51:21+00:00",
+        "hours": 0.2,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
@@ -6191,11 +6090,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-07T17:29:27+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.752176+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.752176+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.419847+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.419847+00:00",
       "freshness": {
         "iso": "2026-09-07T17:29:27+00:00",
-        "hours": 30.83,
+        "hours": 36.57,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6506,11 +6405,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-04T15:00:00+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.018644+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.018644+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.568277+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.568277+00:00",
       "freshness": {
         "iso": "2026-09-04T15:00:00+00:00",
-        "hours": 105.33,
+        "hours": 111.06,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6605,11 +6504,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-03T20:30:00+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.927222+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.927222+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.427499+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.427499+00:00",
       "freshness": {
         "iso": "2026-09-03T20:30:00+00:00",
-        "hours": 123.83,
+        "hours": 129.56,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6706,11 +6605,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-03T14:27:49+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.929021+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.929021+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.429214+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.429214+00:00",
       "freshness": {
         "iso": "2026-09-03T14:27:49+00:00",
-        "hours": 129.86,
+        "hours": 135.6,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6808,11 +6707,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T16:04:52+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.049775+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.049775+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.481549+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.481549+00:00",
       "freshness": {
         "iso": "2026-09-02T16:04:52+00:00",
-        "hours": 152.24,
+        "hours": 157.98,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6910,11 +6809,11 @@
       "event_type": "bankruptcy",
       "event_label": "Faillite / liquidité / retraits",
       "event_time": "2026-09-08T21:20:22+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.909208+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.909208+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.233859+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.233859+00:00",
       "freshness": {
         "iso": "2026-09-08T21:20:22+00:00",
-        "hours": 2.99,
+        "hours": 8.72,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -6983,6 +6882,108 @@
       ]
     },
     {
+      "id": "feed_956a1b67d789c463",
+      "event_id": "feed_956a1b67d789c463",
+      "fingerprint": "956a1b67d789c463",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Hunter Biden defends LAPTOP ahead of Wednesday launch, calls TRUMP a ‘grift’",
+      "body": "Biden says the token is about “resilience, redemption and recovery” and will give coins to nearly one million wallets that lost money on TRUMP.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/09/09/hunter-biden-defends-laptop-ahead-of-wednesday-launch-calls-trump-a-grift",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/09/09/hunter-biden-defends-laptop-ahead-of-wednesday-launch-calls-trump-a-grift"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf_flow",
+      "event_label": "ETF / flux institutionnels",
+      "event_time": "2026-09-09T05:22:57+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.522454+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.522454+00:00",
+      "freshness": {
+        "iso": "2026-09-09T05:22:57+00:00",
+        "hours": 0.68,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 19,
+      "matched_topics": [
+        "money_flow",
+        "crypto",
+        "geopolitics"
+      ],
+      "driver_domains": [
+        "institutional_flows"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Hunter Biden defends LAPTOP ahead of Wednesday launch, calls TRUMP a ‘grift’",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Hunter Biden defends LAPTOP ahead of Wednesday launch, calls TRUMP a ‘grift’",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_f50b0c896da814bb",
       "event_id": "feed_f50b0c896da814bb",
       "fingerprint": "f50b0c896da814bb",
@@ -7006,11 +7007,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-08T09:51:01+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.856496+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.856496+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.551037+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.551037+00:00",
       "freshness": {
         "iso": "2026-09-08T09:51:01+00:00",
-        "hours": 14.48,
+        "hours": 20.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7107,11 +7108,11 @@
       "event_type": "tokenomics",
       "event_label": "Tokenomics / unlock / burn",
       "event_time": "2026-09-08T08:30:30+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.859249+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.859249+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.554323+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.554323+00:00",
       "freshness": {
         "iso": "2026-09-08T08:30:30+00:00",
-        "hours": 15.82,
+        "hours": 21.55,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7211,11 +7212,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-08T07:00:00+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.861943+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.861943+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.555965+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.555965+00:00",
       "freshness": {
         "iso": "2026-09-08T07:00:00+00:00",
-        "hours": 17.33,
+        "hours": 23.06,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8017,114 +8018,6 @@
       "machine_translation": false
     },
     {
-      "id": "feed_095ed0aad966db58",
-      "event_id": "feed_095ed0aad966db58",
-      "fingerprint": "095ed0aad966db58",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin withstands $90 oil and rising yields while gold slides. A firm dollar is the catch",
-      "body": "BTC trades choppy as $90 oil and rising bond yields weigh on stocks and gold.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/09/02/bitcoin-withstands-usd90-oil-and-rising-yields-as-gold-slides-a-firm-dollar-is-the-catch",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/09/02/bitcoin-withstands-usd90-oil-and-rising-yields-as-gold-slides-a-firm-dollar-is-the-catch"
-      ],
-      "declared_status": "reported",
-      "event_type": "treasury_liquidity",
-      "event_label": "Trésor US / liquidité obligataire",
-      "event_time": "2026-09-02T04:40:36+00:00",
-      "first_seen_at": "2026-09-03T05:55:08.905064+00:00",
-      "last_seen_at": "2026-09-03T05:55:08.905064+00:00",
-      "freshness": {
-        "iso": "2026-09-02T04:40:36+00:00",
-        "hours": 25.24,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "contexte de liquidité macro à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 24,
-      "matched_topics": [
-        "treasury_liquidity",
-        "crypto",
-        "macro",
-        "energy"
-      ],
-      "driver_domains": [
-        "macro_liquidity"
-      ],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_original": "Bitcoin withstands $90 oil and rising yields while gold slides. A firm dollar is the catch",
-      "language_original": "en",
-      "source": "CoinDesk",
-      "url": "https://www.coindesk.com/markets/2026/09/02/bitcoin-withstands-usd90-oil-and-rising-yields-as-gold-slides-a-firm-dollar-is-the-catch",
-      "published_at": "2026-09-02T04:40:36+00:00",
-      "crypto_relevance_score": 24,
-      "relevance_reason": "actifs=BTC · drivers=macro_liquidity · thèmes=treasury_liquidity/crypto/macro/energy",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "translation_source_normalized": "Bitcoin withstands $90 oil and rising yields while gold slides. A firm dollar is the catch",
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Bitcoin withstands $90 oil and rising yields while gold slides. A firm dollar is the catch",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false
-    },
-    {
       "id": "feed_544f7d3a7cb85916",
       "event_id": "feed_544f7d3a7cb85916",
       "fingerprint": "544f7d3a7cb85916",
@@ -8148,11 +8041,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-07T20:31:03+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.631096+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.631096+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.331709+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.331709+00:00",
       "freshness": {
         "iso": "2026-09-07T20:31:03+00:00",
-        "hours": 27.81,
+        "hours": 33.54,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8658,12 +8551,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-08T17:03:47+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.706240+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.706240+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.385849+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.385849+00:00",
       "freshness": {
         "iso": "2026-09-08T17:03:47+00:00",
-        "hours": 7.26,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.0,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -8722,6 +8615,107 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Robinhood takes stakes in Crypto.com, OG.com in prediction markets deal",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_16f89adace31fe3b",
+      "event_id": "feed_16f89adace31fe3b",
+      "fingerprint": "16f89adace31fe3b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Bitcoin recovers toward $79,000 as Zcash records a $500 million ETF haul",
+      "body": "Bitcoin fell to nearly $77,600 on Tuesday before clawing most of it back, leaving it little changed on the day while zcash gained roughly 43% on the week and Grayscale's new fund crossed half a billion dollars.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/09/09/bitcoin-recovers-toward-usd79-000-as-zcash-records-a-usd500-million-etf-haul",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/09/09/bitcoin-recovers-toward-usd79-000-as-zcash-records-a-usd500-million-etf-haul"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf",
+      "event_label": "ETF / institutionnels",
+      "event_time": "2026-09-09T04:35:55+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.525105+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.525105+00:00",
+      "freshness": {
+        "iso": "2026-09-09T04:35:55+00:00",
+        "hours": 1.46,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 89,
+        "level": "Critique"
+      },
+      "direction": "catalyseur potentiel, sens à confirmer",
+      "assets": [
+        "BTC"
+      ],
+      "sectors": [
+        "Layer 1"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 12,
+      "matched_topics": [
+        "crypto",
+        "institutional"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Bitcoin recovers toward $79,000 as Zcash records a $500 million ETF haul",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Bitcoin recovers toward $79,000 as Zcash records a $500 million ETF haul",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -8858,12 +8852,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-08T17:46:05+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.614356+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.614356+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.310573+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.310573+00:00",
       "freshness": {
         "iso": "2026-09-08T17:46:05+00:00",
-        "hours": 6.56,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.29,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -8959,11 +8953,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-03T18:56:00+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.146875+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.146875+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.766009+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.766009+00:00",
       "freshness": {
         "iso": "2026-09-03T18:56:00+00:00",
-        "hours": 125.39,
+        "hours": 131.13,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9033,111 +9027,6 @@
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "native",
       "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_13de6beeaeae353a",
-      "event_id": "feed_13de6beeaeae353a",
-      "fingerprint": "13de6beeaeae353a",
-      "version": "V1.1-alpha.26.47.5",
-      "origin": "github_news_collector",
-      "headline": "Institutional money shifts from bitcoin to XRP and Solana, Wintermute says altcoin rotation clear - 디지털투데이",
-      "body": "Institutional money shifts from bitcoin to XRP and Solana, Wintermute says altcoin rotation clear 디지털투데이",
-      "source_name": "Google News · ETF flows discovery",
-      "source_url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOcTBxNm92RHBtVHVmaWVldHQ3NGFUM1lzTXdwQ09CSnBNS1J3cnpxZXIwS21VWlhZTmszbXQ5NTI5ZDZpVDNIZ0UwNkM4ckFSbUFDMllQcDZOWTlYX3FnYWU2YWpJR1ZEd181TVNibnBsV0Q3ZGt4MFpkaHZWVThnVkd3c1diZk1CTVJiS1k1V0NUUTRIbmNpaU9OMElmUHVnMzI0Q3lWUXdZT0JWR09BUC1CNFl0NFM4ZTMxNXhOZmU0WlZZOHRuODFrVWN4YXE5QlUxQ2l6ZVE?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News · ETF flows discovery"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOcTBxNm92RHBtVHVmaWVldHQ3NGFUM1lzTXdwQ09CSnBNS1J3cnpxZXIwS21VWlhZTmszbXQ5NTI5ZDZpVDNIZ0UwNkM4ckFSbUFDMllQcDZOWTlYX3FnYWU2YWpJR1ZEd181TVNibnBsV0Q3ZGt4MFpkaHZWVThnVkd3c1diZk1CTVJiS1k1V0NUUTRIbmNpaU9OMElmUHVnMzI0Q3lWUXdZT0JWR09BUC1CNFl0NFM4ZTMxNXhOZmU0WlZZOHRuODFrVWN4YXE5QlUxQ2l6ZVE?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf",
-      "event_label": "ETF / institutionnels",
-      "event_time": "2026-09-02T01:42:29+00:00",
-      "first_seen_at": "2026-09-07T05:35:36.030154+00:00",
-      "last_seen_at": "2026-09-07T05:35:36.030154+00:00",
-      "freshness": {
-        "iso": "2026-09-02T01:42:29+00:00",
-        "hours": 123.89,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 89,
-        "level": "Critique"
-      },
-      "direction": "catalyseur potentiel, sens à confirmer",
-      "assets": [
-        "BTC",
-        "SOL",
-        "XRP"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 10,
-      "matched_topics": [
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.3.89",
-      "causal_claim": false,
-      "observation_only": true,
-      "headline_original": "Institutional money shifts from bitcoin to XRP and Solana, Wintermute says altcoin rotation clear - 디지털투데이",
-      "language_original": "en",
-      "source": "Google News · ETF flows discovery",
-      "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOcTBxNm92RHBtVHVmaWVldHQ3NGFUM1lzTXdwQ09CSnBNS1J3cnpxZXIwS21VWlhZTmszbXQ5NTI5ZDZpVDNIZ0UwNkM4ckFSbUFDMllQcDZOWTlYX3FnYWU2YWpJR1ZEd181TVNibnBsV0Q3ZGt4MFpkaHZWVThnVkd3c1diZk1CTVJiS1k1V0NUUTRIbmNpaU9OMElmUHVnMzI0Q3lWUXdZT0JWR09BUC1CNFl0NFM4ZTMxNXhOZmU0WlZZOHRuODFrVWN4YXE5QlUxQ2l6ZVE?oc=5",
-      "published_at": "2026-09-02T01:42:29+00:00",
-      "crypto_relevance_score": 10,
-      "relevance_reason": "actifs=BTC/SOL/XRP · thèmes=crypto/institutional",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "translation_source_normalized": "Institutional money shifts from bitcoin to XRP and Solana, Wintermute says altcoin rotation clear - 디지털투데이",
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Institutional money shifts from bitcoin to XRP and Solana, Wintermute says altcoin rotation clear - 디지털투데이",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ],
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false
     },
     {
       "id": "feed_f704012459cea267",
@@ -9658,11 +9547,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-07T14:10:11+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.132520+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.132520+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.751475+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.751475+00:00",
       "freshness": {
         "iso": "2026-09-07T14:10:11+00:00",
-        "hours": 34.16,
+        "hours": 39.89,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10177,11 +10066,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-08T04:40:57+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.876687+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.876687+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.563573+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.563573+00:00",
       "freshness": {
         "iso": "2026-09-08T04:40:57+00:00",
-        "hours": 19.64,
+        "hours": 25.38,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10484,11 +10373,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-08T18:59:35+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.610690+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.610690+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.306798+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.306798+00:00",
       "freshness": {
         "iso": "2026-09-08T18:59:35+00:00",
-        "hours": 5.33,
+        "hours": 11.07,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -10903,11 +10792,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-06T22:23:47+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.143367+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.143367+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.762460+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.762460+00:00",
       "freshness": {
         "iso": "2026-09-06T22:23:47+00:00",
-        "hours": 49.93,
+        "hours": 55.66,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11000,11 +10889,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-04T19:28:13+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.141613+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.141613+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.760648+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.760648+00:00",
       "freshness": {
         "iso": "2026-09-04T19:28:13+00:00",
-        "hours": 100.86,
+        "hours": 106.59,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11595,11 +11484,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-08T10:07:10+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.726393+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.726393+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.400567+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.400567+00:00",
       "freshness": {
         "iso": "2026-09-08T10:07:10+00:00",
-        "hours": 14.21,
+        "hours": 19.94,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11695,11 +11584,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-07T18:16:04+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.636773+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.636773+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.340094+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.340094+00:00",
       "freshness": {
         "iso": "2026-09-07T18:16:04+00:00",
-        "hours": 30.06,
+        "hours": 35.79,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11800,11 +11689,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-08T11:33:50+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.625783+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.882206+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.325288+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.566348+00:00",
       "freshness": {
         "iso": "2026-09-08T11:33:50+00:00",
-        "hours": 12.76,
+        "hours": 18.5,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11899,11 +11788,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-02T17:27:34+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.048333+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.048333+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.479847+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.479847+00:00",
       "freshness": {
         "iso": "2026-09-02T17:27:34+00:00",
-        "hours": 150.87,
+        "hours": 156.6,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11997,11 +11886,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-07T18:53:47+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.747881+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.747881+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.417725+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.417725+00:00",
       "freshness": {
         "iso": "2026-09-07T18:53:47+00:00",
-        "hours": 29.43,
+        "hours": 35.16,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12096,12 +11985,12 @@
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
       "event_time": "2026-09-08T15:41:11+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.709983+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.709983+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.389599+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.389599+00:00",
       "freshness": {
         "iso": "2026-09-08T15:41:11+00:00",
-        "hours": 8.64,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.37,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -12198,11 +12087,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-04T09:10:00+00:00",
-      "first_seen_at": "2026-09-09T00:19:33.438016+00:00",
-      "last_seen_at": "2026-09-09T00:19:33.438016+00:00",
+      "first_seen_at": "2026-09-09T06:03:35.154651+00:00",
+      "last_seen_at": "2026-09-09T06:03:35.154651+00:00",
       "freshness": {
         "iso": "2026-09-04T09:10:00+00:00",
-        "hours": 111.16,
+        "hours": 116.89,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12273,13 +12162,13 @@
       ]
     },
     {
-      "id": "feed_7ef18fc6109a2e57",
-      "event_id": "feed_7ef18fc6109a2e57",
-      "fingerprint": "7ef18fc6109a2e57",
+      "id": "feed_e7fcf32c010983cb",
+      "event_id": "feed_e7fcf32c010983cb",
+      "fingerprint": "e7fcf32c010983cb",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "US slaps import ban on Canadian alcohol and other goods",
-      "body": "It is the latest escalation in a trade war between the two countries, and comes as Canadian retaliatory tariffs on US goods come into force.",
+      "headline": "US slaps import ban on Canadian alcohol, motorbikes and other goods",
+      "body": "It is the latest strike in a long trade war, and comes as Canadian counter-tariffs on US goods come into force.",
       "source_name": "BBC World",
       "source_url": "https://www.bbc.co.uk/news/articles/c99dm1000p7o?at_medium=RSS&at_campaign=rss",
       "source_host": "bbc.co.uk",
@@ -12297,17 +12186,17 @@
       "declared_status": "reported",
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
-      "event_time": "2026-09-09T00:01:53+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.899689+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.982550+00:00",
+      "event_time": "2026-09-09T03:03:32+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.218002+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.250953+00:00",
       "freshness": {
-        "iso": "2026-09-09T00:01:53+00:00",
-        "hours": 0.29,
-        "label": "Immédiate · moins de 2 h",
+        "iso": "2026-09-09T03:03:32+00:00",
+        "hours": 3.0,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
-        "score": 86,
+        "score": 91,
         "level": "Élevé"
       },
       "impact": {
@@ -12346,7 +12235,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "US slaps import ban on Canadian alcohol and other goods",
+      "headline_original": "US slaps import ban on Canadian alcohol, motorbikes and other goods",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -12361,7 +12250,106 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] US slaps import ban on Canadian alcohol and other goods",
+      "display_headline": "[EN] US slaps import ban on Canadian alcohol, motorbikes and other goods",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_b8722f1c8f66ca35",
+      "event_id": "feed_b8722f1c8f66ca35",
+      "fingerprint": "b8722f1c8f66ca35",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Trump hits Canada with import ban on alcohol and other goods",
+      "body": "Trump targets booze, motor vehicles, and cheese, while Canada aims tariffs at nearly $20bn of US products, from steel to T-shirts.",
+      "source_name": "BBC Business",
+      "source_url": "https://www.bbc.co.uk/news/articles/c8jdev0422jo?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "BBC Business"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/c8jdev0422jo?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
+      "event_time": "2026-09-08T14:46:16+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.264298+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.264298+00:00",
+      "freshness": {
+        "iso": "2026-09-08T14:46:16+00:00",
+        "hours": 15.29,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 76,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "impact global potentiel, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 9,
+      "matched_topics": [
+        "regulation",
+        "geopolitics"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Trump hits Canada with import ban on alcohol and other goods",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Trump hits Canada with import ban on alcohol and other goods",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -12397,11 +12385,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-08T21:46:31+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.898063+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.898063+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.216281+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.216281+00:00",
       "freshness": {
         "iso": "2026-09-08T21:46:31+00:00",
-        "hours": 2.55,
+        "hours": 8.28,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -12496,12 +12484,12 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-08T15:36:34+00:00",
-      "first_seen_at": "2026-09-09T00:19:32.915977+00:00",
-      "last_seen_at": "2026-09-09T00:19:32.915977+00:00",
+      "first_seen_at": "2026-09-09T06:03:34.239062+00:00",
+      "last_seen_at": "2026-09-09T06:03:34.239062+00:00",
       "freshness": {
         "iso": "2026-09-08T15:36:34+00:00",
-        "hours": 8.72,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.45,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
