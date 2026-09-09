@@ -26,6 +26,20 @@ jobs:
           git config user.name "Seven Release Bot"
           git config user.email "actions@users.noreply.github.com"
 
+      - name: Correct staged checkpoint typo
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path=Path('.github/scripts/agent_crypto_40643_release.py')
+          text=path.read_text(encoding='utf-8')
+          old='1cd18fb77a2e1ae42a8aac22ca029376e9d0d393'
+          new='1cd18ff77a2e1ae42a8aac22ca029376e9d0d393'
+          if old not in text:
+              raise SystemExit('expected staged checkpoint typo absent')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          PY
+
       - name: Apply guarded 40.6.43 release
         run: python .github/scripts/agent_crypto_40643_release.py
 
