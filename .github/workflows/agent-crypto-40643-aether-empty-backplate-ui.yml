@@ -123,6 +123,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          sed -i 's/[[:space:]]\+$//' public/agent_crypto_erith_ia/administrator/RELEASE_40_6_43.md
           git add \
             public/agent_crypto_erith_ia/administrator/index.html \
             public/agent_crypto_erith_ia/administrator/admin-ribbons.css \
