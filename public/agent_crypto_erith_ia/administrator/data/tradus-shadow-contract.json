@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_tradus_shadow_adapter_contract_v1",
-  "build": "40.6.65",
-  "parent_build": "40.6.64",
-  "release": "TRADUS SHADOW · MOUNT + STATE TRUTH",
+  "build": "40.6.66",
+  "parent_build": "40.6.65",
+  "release": "MULTI-STRATEGY SHADOW LEDGER · STRATEGY A ↔ TRADUS",
   "source": {
     "name": "TRADUS V1.0",
     "source_bundle": "trad.zip",
@@ -31,7 +31,10 @@
     "paper_fill": false,
     "real_order": false,
     "credentials": false,
-    "wallet": false
+    "wallet": false,
+    "observation_event": "agentcrypto:tradus-shadow-observation",
+    "shadow_ledger": "js/tradus-shadow-ledger-406066.js",
+    "session_storage_only": true
   },
   "protected": {
     "market_core": "38.15.11",
@@ -56,7 +59,8 @@
     ],
     "double_request_animation_frame_after_event": true,
     "recurring_polling": false,
-    "mutation_observer": false
+    "mutation_observer": false,
+    "panel_id": "tradusShadow406066"
   },
   "comparison_truth": {
     "STOP_plus_directional_tradus": "OPPOSITION SÉCURITÉ",
