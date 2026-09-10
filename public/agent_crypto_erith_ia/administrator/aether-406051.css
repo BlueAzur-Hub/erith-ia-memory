@@ -625,3 +625,190 @@
   .aether46-oracle-metrics strong { font-size:7px !important; }
 }
 
+
+
+/* ========================================================================== 
+   40.6.54 — AETHER LEGIBILITY · RESPONSIVE DENSITY LOCK
+   Presentation-only finishing layer appended after 40.6.53.
+   NO radial coordinate, backplate, runtime, data, Window Manager or business
+   owner change. The 1672×941 choreography remains authoritative.
+
+   Contract:
+   - immersive/F11 keeps the complete 40.6.53 information density;
+   - normal Administrator workspace drops transient/tertiary text BEFORE
+     shrinking primary facts below a useful reading floor;
+   - compact radial workspace remains the same Observatory, never a dashboard.
+   ========================================================================== */
+
+/* Shared readable floors. These affect text only, never painted-card geometry. */
+.aether46-card header span {
+  text-rendering:optimizeLegibility !important;
+  -webkit-font-smoothing:antialiased;
+}
+.aether46-core,
+.aether46-card {
+  font-variant-numeric:tabular-nums;
+}
+
+/* WORKSPACE DENSITY — typical Administrator composition with another window
+   beside Aether. Secondary state chips yield; titles and primary values grow. */
+@container aether49 (max-width: 1450px) {
+  .aether46-card header { margin-bottom:4px !important; }
+  .aether46-card header span {
+    font-size:clamp(11px,.86cqw,14px) !important;
+    line-height:1.04 !important;
+    letter-spacing:.018em !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+  }
+  /* Dynamic status is useful in immersive mode, but it is the first thing to
+     yield in a shared workspace. Its underlying fact remains in the body. */
+  .aether46-card header b { display:none !important; }
+  .aether46-card footer { display:none !important; }
+
+  .aether46-system-metrics { margin:.02cqw 0 0 !important; }
+  .aether46-system-metrics small { font-size:clamp(7px,.47cqw,8.5px) !important; }
+  .aether46-system-metrics strong { font-size:clamp(12px,.78cqw,15px) !important; }
+
+  .aether46-source-metrics {
+    grid-template-columns:.86fr .82fr .86fr 1.18fr !important;
+    gap:.08cqw !important;
+    margin:.04cqw 0 0 !important;
+  }
+  .aether46-source-metrics small {
+    font-size:clamp(6.4px,.40cqw,7.5px) !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+  }
+  .aether46-source-metrics strong { font-size:clamp(8.8px,.57cqw,10.8px) !important; }
+
+  .aether46-atlas-main {
+    display:grid !important;
+    grid-template-columns:auto minmax(0,1fr) !important;
+    align-items:start !important;
+    gap:.30cqw !important;
+  }
+  .aether46-atlas-main > strong { font-size:clamp(17px,1.08cqw,21px) !important; }
+  .aether46-atlas-main > span {
+    padding-top:2px !important;
+    font-size:clamp(8px,.53cqw,10px) !important;
+    white-space:normal !important;
+    line-height:1.08 !important;
+    max-height:2.16em !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+  }
+  .aether46-atlas-sub { margin-top:3px !important; }
+  .aether46-atlas-sub b { font-size:clamp(8.5px,.55cqw,10.5px) !important; }
+  .aether46-atlas-sub span { display:none !important; }
+
+  .aether46-convergence-main > strong { font-size:clamp(20px,1.30cqw,25px) !important; }
+  .aether46-convergence-main > span { font-size:clamp(8.5px,.59cqw,11px) !important; }
+  .aether46-card[data-aether-card-406046="convergence"] footer {
+    display:block !important;
+    margin-top:3px !important;
+    font-size:clamp(7.5px,.48cqw,9px) !important;
+  }
+
+  .aether46-card[data-aether-card-406046="divergence"] p {
+    margin:0 !important;
+    max-height:2.22em !important;
+    font-size:clamp(9px,.61cqw,11.5px) !important;
+    line-height:1.11 !important;
+  }
+
+  .aether46-breadth {
+    gap:3px !important;
+    font-size:clamp(7.5px,.49cqw,9px) !important;
+  }
+  .aether46-breadth strong { font-size:clamp(9px,.59cqw,11px) !important; }
+  .aether46-coins { margin-top:4px !important; padding-top:3px !important; }
+  .aether46-coins b { font-size:clamp(6.3px,.40cqw,7.5px) !important; }
+  .aether46-coins strong { font-size:clamp(7.2px,.46cqw,8.8px) !important; }
+
+  /* Two readable headlines beat three microscopic ones in first-glance mode. */
+  .aether46-event-row:nth-child(n+3) { display:none !important; }
+  .aether46-events [data-aether46-events] { gap:3px !important; max-height:3.45cqw !important; }
+  .aether46-event-row {
+    grid-template-columns:2.10cqw 2.45cqw minmax(0,1fr) !important;
+    gap:.16cqw !important;
+  }
+  .aether46-event-row time,
+  .aether46-event-row b,
+  .aether46-event-row span {
+    font-size:clamp(7px,.45cqw,8.5px) !important;
+    line-height:1.05 !important;
+  }
+
+  .aether46-oracle-metrics {
+    grid-template-columns:.62fr 1.16fr .92fr 1.02fr !important;
+    gap:.08cqw !important;
+  }
+  .aether46-oracle-metrics small { font-size:clamp(6.2px,.39cqw,7.3px) !important; }
+  .aether46-oracle-metrics strong { font-size:clamp(8.2px,.53cqw,10px) !important; }
+
+  .aether46-weather-metrics { gap:.12cqw !important; }
+  .aether46-weather-metrics small { font-size:clamp(6.2px,.39cqw,7.3px) !important; }
+  .aether46-weather-metrics strong { font-size:clamp(8.5px,.55cqw,10.5px) !important; }
+
+  /* Central nucleus: preserve the complete operator sequence before decoration. */
+  .aether46-core > span { font-size:clamp(9px,.59cqw,11px) !important; }
+  .aether46-core > strong { font-size:clamp(27px,1.95cqw,36px) !important; }
+  .aether46-core > small,
+  .aether46-core > b { font-size:clamp(7.5px,.48cqw,9px) !important; }
+  .aether46-core > p {
+    font-size:clamp(7.3px,.45cqw,8.5px) !important;
+    line-height:1.08 !important;
+  }
+  .aether46-core > footer { display:none !important; }
+
+  /* The status/time strip stays readable but never competes with the nucleus. */
+  .aether46-system-banner > div:first-child b { font-size:clamp(7px,.47cqw,8.5px) !important; }
+  .aether46-system-banner > div:first-child span { font-size:clamp(6.8px,.44cqw,8px) !important; }
+  .aether46-clock small { font-size:clamp(6.5px,.39cqw,7.5px) !important; }
+  .aether46-clock strong { font-size:clamp(13px,.86cqw,16px) !important; }
+}
+
+/* COMPACT RADIAL DENSITY — still the same Observatory. More context yields,
+   but no primary title, score, breadth or central attention state disappears. */
+@container aether49 (max-width: 1180px) {
+  .aether46-card header span { font-size:11px !important; }
+
+  .aether46-source-metrics small { font-size:6.4px !important; }
+  .aether46-source-metrics strong { font-size:8.4px !important; }
+
+  .aether46-atlas-main > strong { font-size:17px !important; }
+  .aether46-atlas-main > span { display:none !important; }
+  .aether46-atlas-sub b { font-size:9px !important; }
+
+  .aether46-convergence-main > strong { font-size:20px !important; }
+  .aether46-convergence-main > span { font-size:8px !important; }
+  .aether46-card[data-aether-card-406046="convergence"] footer { font-size:7.5px !important; }
+
+  .aether46-card[data-aether-card-406046="divergence"] p { font-size:9px !important; }
+  .aether46-card[data-aether-card-406046="divergence"] footer { display:none !important; }
+
+  .aether46-breadth { font-size:7.5px !important; }
+  .aether46-breadth strong { font-size:9px !important; }
+  .aether46-coins b { font-size:6.2px !important; }
+  .aether46-coins strong { font-size:7.2px !important; }
+
+  .aether46-event-row time,
+  .aether46-event-row b,
+  .aether46-event-row span { font-size:7px !important; }
+
+  .aether46-oracle-metrics small,
+  .aether46-weather-metrics small { font-size:6px !important; }
+  .aether46-oracle-metrics strong,
+  .aether46-weather-metrics strong { font-size:7.8px !important; }
+
+  .aether46-core > strong { font-size:27px !important; }
+  .aether46-core > span { font-size:9px !important; }
+  .aether46-core > small { font-size:7.2px !important; }
+  .aether46-core > p:first-of-type { font-size:7px !important; }
+
+  .aether46-bottom-center { font-size:7.5px !important; letter-spacing:.15em !important; }
+}
+
+/* IMMERSIVE/F11 is intentionally not overridden above 1450px: the complete
+   40.6.53 information density remains the field reference. */
