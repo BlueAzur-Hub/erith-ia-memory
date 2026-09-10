@@ -80,5 +80,14 @@
   }
   const api=Object.freeze({build:BUILD,expected:clone(EXPECTED),run,normalize,render,export_json:exportJson,automatic_run:false,paper_only:true,real_orders:false,network:false,storage_write:false,recurring_timer:false,observer:false});
   globalThis.AgentCryptoStrategyAReplayAcceptance406057=api;
-  if(typeof document!=='undefined'){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render,{once:true});else render();}
+  if(typeof document!=='undefined'){
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded',render,{once:true});
+      // Later Strategy A lifecycle modules render after this script and may rebuild the host area.
+      // Re-mount once after all page resources/listeners have settled; no timer/observer is retained.
+      window.addEventListener('load',render,{once:true});
+    }else{
+      render();
+    }
+  }
 })();
