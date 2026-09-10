@@ -791,7 +791,7 @@ function aetherNewsMarketSemantic405013(){
     else if(Number.isFinite(impact)&&impact>=85){level="ÉLEVÉ";cause="News";proof=`impact ${Math.round(impact)}/100${Number.isFinite(evidence)?` · preuve ${Math.round(evidence)}/100`:''}`;}
     else if(m.alignmentPct!==null&&m.alignmentPct>=75&&m.directional.length>=2){level="ÉLEVÉ";cause="Convergence";proof=`${m.leaders.map(x=>x.name).join(' · ')} · ${m.alignmentPct}% des couches directionnelles`;}
     else if(!m.coverage||(!sourceReady&&!systemReady)){level="FAIBLE";cause="Couverture";proof=`${m.coverage}/${m.total} couches · ${sourcesModel.status.toLowerCase()}`;}
-    const dirLabel=m.dominant>0?"HAUSSIÈRE":m.dominant<0?"BAISSIÈRE":m.opposition?"OPPOSÉE":"PARTAGÉE";
+    const dirLabel=m.opposition?"OPPOSÉE":m.directional.length>=2&&m.dominant>0?"HAUSSIÈRE":m.directional.length>=2&&m.dominant<0?"BAISSIÈRE":m.directional.length===1?"DIRECTION SEULE":m.coverage>=2?"NEUTRE":"INSUFFISANTE";
     const convergence=m.coverage?`couverture ${m.coverage}/${m.total} · ${m.directional.length} directionnelle${m.directional.length>1?'s':''} · ${dirLabel}`:"Données directionnelles insuffisantes";
     let divergence="Aucune opposition directionnelle démontrée";
     if(m.opposition)divergence=`Opposition ${m.positive.map(x=>x.name).join(' + ')} / ${m.negative.map(x=>x.name).join(' + ')}`;
@@ -802,7 +802,7 @@ function aetherNewsMarketSemantic405013(){
     if(!sourceReady)watch.push("Sources : retour à un état complet et frais");
     if(Number.isFinite(impact)&&impact>=80)watch.push("News : nouvelle preuve ou changement de ton");
     if(!watch.length)watch.push("Prochaine variation directionnelle significative");
-    const note=m.coverage<2?"Comparaison insuffisante : ne pas interpréter un pourcentage d’accord.":m.opposition?"Divergence réelle : aucune synthèse directionnelle unique.":"Lecture descriptive : aucune probabilité de gain n’est déduite de cette convergence.";
+    const note=m.coverage<2?"Comparaison insuffisante : ne pas interpréter un pourcentage d’accord.":m.opposition?"Divergence réelle : aucune synthèse directionnelle unique.":m.directional.length<2?"Couverture présente mais comparaison directionnelle insuffisante.":"Lecture descriptive : aucune probabilité de gain n’est déduite de cette convergence.";
     return {level:`${level} · ${sourceReady?"sources prêtes":"sources partielles"} · ${systemReady?"système lisible":"système partiel"}`,convergence,divergence,watch:watch.slice(0,4).join(" · "),note,why:`${cause} · ${proof}`,cause,proof,evaluated_at:Date.now(),matrix:m};
   }
   const aetherTimelineState406027={entries:[],last:null,max:8};
@@ -1057,12 +1057,26 @@ function aetherNewsMarketSemantic405013(){
   }
   function aetherConvergenceModel406042(watch){
     const m=watch?.matrix||aetherDirectionMatrix406058();
-    const dominant=m.dominant>0?'HAUSSIÈRE':m.dominant<0?'BAISSIÈRE':m.opposition?'OPPOSITION':'PARTAGÉE';
-    const confirm=m.leaders.length?m.leaders.map(row=>row.name).join(' · '):'Aucune confirmation directionnelle';
+    const coveragePct=m.total?Math.round((m.coverage/m.total)*100):0;
+    const comparable=m.directional.length>=2;
+    let dominant='COUVERTURE FAIBLE';
+    if(m.opposition)dominant='OPPOSITION';
+    else if(comparable&&m.dominant>0)dominant='HAUSSIÈRE';
+    else if(comparable&&m.dominant<0)dominant='BAISSIÈRE';
+    else if(m.directional.length===1)dominant='DIRECTION SEULE';
+    else if(m.coverage>=2)dominant='NEUTRE';
+    const confirm=m.opposition
+      ?'Aucune synthèse unique'
+      :m.leaders.length>=2
+        ?m.leaders.map(row=>row.name).join(' · ')
+        :m.directional.length===1
+          ?`${m.directional[0].name} seule`
+          :'Aucune confirmation directionnelle';
+    const confirmLabel=m.opposition?'opposition':m.leaders.length>=2?'confirment':m.directional.length===1?'direction seule':'direction';
     const oppose=m.opposition?`${m.positive.map(x=>x.name).join(' + ')} / ${m.negative.map(x=>x.name).join(' + ')}`:'Aucune';
-    const pct=m.alignmentPct===null?'N/D':`${m.alignmentPct}%`;
-    const tone=m.opposition?'warn':m.alignmentPct!==null&&m.alignmentPct>=75&&m.directional.length>=2?(m.dominant<0?'warn':'good'):'neutral';
-    return {ratio:`${m.coverage}/${m.total}`,pct,dominant,confirm,oppose,neutral:m.neutral.map(x=>x.name).join(' · ')||'Aucune',tone,raw:String(watch?.convergence||''),coverage:m.coverage,total:m.total};
+    const pct=`${coveragePct}% couv.`;
+    const tone=m.opposition?'warn':comparable&&m.alignmentPct!==null&&m.alignmentPct>=75?(m.dominant<0?'warn':'good'):'neutral';
+    return {ratio:`${m.coverage}/${m.total}`,pct,coveragePct,alignmentPct:m.alignmentPct,dominant,confirm,confirmLabel,oppose,neutral:m.neutral.map(x=>x.name).join(' · ')||'Aucune',tone,raw:String(watch?.convergence||''),coverage:m.coverage,total:m.total};
   }
   function aetherDivergenceModel406042(watch,convergence){
     const m=watch?.matrix||aetherDirectionMatrix406058();
@@ -1155,6 +1169,7 @@ function aetherNewsMarketSemantic405013(){
     aetherSet406042(stage,'convergence_ratio',vm.convergence.ratio);
     aetherSet406042(stage,'convergence_pct',vm.convergence.pct,vm.convergence.tone);
     aetherSet406042(stage,'convergence_dominant',vm.convergence.dominant);
+    aetherSet406042(stage,'convergence_confirm_label',vm.convergence.confirmLabel);
     aetherSet406042(stage,'convergence_confirm',vm.convergence.confirm);
     aetherSet406042(stage,'convergence_oppose',vm.convergence.oppose);
     aetherCardTone406042(stage,'convergence',vm.convergence.tone);
@@ -1224,7 +1239,7 @@ function aetherNewsMarketSemantic405013(){
         <article class="aether46-card" data-aether-card-406046="convergence">
           <header><span>CONVERGENCE</span><b data-aether46="convergence_dominant">—</b></header>
           <div class="aether46-convergence-main"><strong data-aether46="convergence_ratio">—</strong><span>couches · <b data-aether46="convergence_pct">—</b></span></div>
-          <footer>confirment · <b data-aether46="convergence_confirm">—</b></footer>
+          <footer><span data-aether46="convergence_confirm_label">direction</span> · <b data-aether46="convergence_confirm">—</b></footer>
         </article>
 
         <article class="aether46-card" data-aether-card-406046="divergence">
@@ -1258,7 +1273,6 @@ function aetherNewsMarketSemantic405013(){
           <span>NIVEAU D’ATTENTION</span><strong data-aether46="attention_level">—</strong>
           <small>Cause principale</small><p data-aether46="attention_why">—</p>
           <b>À surveiller maintenant</b><p data-aether46="attention_watch">—</p>
-          <footer data-aether46="attention_note">—</footer>
         </article>
       </main>
 
