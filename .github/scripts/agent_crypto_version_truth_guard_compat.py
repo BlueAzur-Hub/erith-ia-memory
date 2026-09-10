@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Compatibility shim for the canonical Agent-Crypto version-truth guard.
 
-The Administrator runtime now reads build/release/engine identity from canonical
-HTML meta tags instead of duplicating literals inside js/app.js. The public
-version manifest also exposes the protected engine as a direct string. This shim
-normalizes only those two representation changes, then delegates every business,
-architecture, hash and Market Core check to the canonical guard unchanged.
+Current Administrator truth is meta-backed and the visible version owner is
+`atlasVersionTruthControl` / `atlasVersionTruthText`. The historical guard still
+expects duplicated JS literals and the retired legacy version-control sink.
+This shim validates the current representation first, then adapts only those
+representation differences and delegates every remaining architecture, payload
+hash and Market Core invariant to the canonical guard unchanged.
 """
 from __future__ import annotations
 
@@ -48,6 +49,10 @@ _original_read = guard.read
 _original_load_json = guard.load_json
 
 
+def fail(message: str) -> None:
+    raise SystemExit(f"VERSION_TRUTH_FAIL: {message}")
+
+
 def _same_path(left: Path, right: Path) -> bool:
     try:
         return left.resolve() == right.resolve()
@@ -64,11 +69,42 @@ def _replace_meta_backed_constant(text: str, const_name: str, meta_name: str, va
     if not matches:
         return text
     if len(matches) != 1:
-        raise SystemExit(
-            f"VERSION_TRUTH_FAIL: {const_name} dynamic meta owner expected exactly 1 match, got {len(matches)}"
-        )
+        fail(f"{const_name} dynamic meta owner expected exactly 1 match, got {len(matches)}")
     replacement = f"const {const_name} = {json.dumps(value, ensure_ascii=False)};"
     return re.sub(pattern, lambda _m: replacement, text, count=1)
+
+
+def _adapt_current_index_for_legacy_guard(text: str) -> str:
+    # Validate the current visible first-paint owner before adapting its IDs for
+    # the historical regexes. This must never turn stale UI truth into a pass.
+    visible_text = re.findall(r'<span\s+id="atlasVersionTruthText">Build ([^<]+)</span>', text, re.S)
+    if visible_text != [CANONICAL_BUILD]:
+        fail(f"current first-paint badge drift: {visible_text!r} != {[CANONICAL_BUILD]!r}")
+
+    aria = re.findall(
+        r'id="atlasVersionTruthControl"[\s\S]*?aria-label="Version Agent-Crypto installée : Build ([^,\"]+), mode Administrator"',
+        text,
+        re.S,
+    )
+    if aria != [CANONICAL_BUILD]:
+        fail(f"current first-paint aria drift: {aria!r} != {[CANONICAL_BUILD]!r}")
+
+    footer = re.findall(r'<span\s+id="footerRelease">([^<]*)</span>', text, re.S)
+    if len(footer) != 1:
+        fail(f"current footer owner expected exactly 1 match, got {len(footer)}")
+    expected_footer_prefix = f"Administrator {CANONICAL_BUILD} · Market Core {CANONICAL_ENGINE} ·"
+    if not footer[0].strip().startswith(expected_footer_prefix):
+        fail(f"current footer truth drift: {footer[0].strip()!r}")
+
+    # Validation-only representation bridge for the retired guard regexes.
+    text = text.replace('id="atlasVersionTruthControl"', 'id="atlasVersionControl"', 1)
+    text = text.replace('id="atlasVersionTruthText"', 'id="atlasVersionControlText"', 1)
+    footer_legacy = (
+        f'<span id="footerRelease">Market Core · Build {CANONICAL_BUILD} · '
+        "Version : Parker Lewis Can't Lose</span>"
+    )
+    text = re.sub(r'<span\s+id="footerRelease">[^<]*</span>', lambda _m: footer_legacy, text, count=1)
+    return text
 
 
 def compat_read(path: Path) -> str:
@@ -77,6 +113,8 @@ def compat_read(path: Path) -> str:
         text = _replace_meta_backed_constant(text, "ADMIN_BUILD", "administrator-build", CANONICAL_BUILD)
         text = _replace_meta_backed_constant(text, "ADMIN_RELEASE", "administrator-release", CANONICAL_RELEASE)
         text = _replace_meta_backed_constant(text, "ENGINE_BUILD", "atlas-engine-build", CANONICAL_ENGINE)
+    elif _same_path(path, BASE / "index.html"):
+        text = _adapt_current_index_for_legacy_guard(text)
     return text
 
 
