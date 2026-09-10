@@ -1,84 +1,74 @@
-name: Agent-Crypto 40.6.67 R1 Truth Seal
+name: Agent Crypto 40.6.67 R1 Truth Seal
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - '.github/workflows/agent-crypto-406067-r1-truth-seal.yml'
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
-  truth-seal:
-    if: github.event.head_commit.message == 'chore(agent-crypto): bootstrap 40.6.67 R1 truth seal'
+  truth_seal:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Patch only 40.6.67 manifest truth
+      - name: Patch manifest truth
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           import json
           from pathlib import Path
 
-          p = Path('public/agent_crypto_erith_ia/administrator/build.json')
-          data = json.loads(p.read_text(encoding='utf-8'))
-
-          assert data['build'] == '40.6.67', data['build']
-          assert data['engine'] == '38.15.11', data['engine']
-          assert data['parent_build'] == '40.6.66', data['parent_build']
-
-          data['asset_token'] = 'market-core-v2.0-alpha-build-40.6.67'
-          data['administrator_build'] = '40.6.67'
-          data['build_label'] = 'Build 40.6.67 · Administrator'
-          data['release_status'] = 'tradus_paper_shadow_independent'
-          data['current_version_truth']['loaded_build'] = '40.6.67'
-
-          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          p = Path("public/agent_crypto_erith_ia/administrator/build.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+          assert data["build"] == "40.6.67"
+          assert data["engine"] == "38.15.11"
+          assert data["parent_build"] == "40.6.66"
+          data["asset_token"] = "market-core-v2.0-alpha-build-40.6.67"
+          data["administrator_build"] = "40.6.67"
+          data["build_label"] = "Build 40.6.67 · Administrator"
+          data["release_status"] = "tradus_paper_shadow_independent"
+          data["current_version_truth"]["loaded_build"] = "40.6.67"
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           PY
 
-      - name: Validate canonical version truth
+      - name: Validate truth and scope
+        shell: bash
         run: |
-          python - <<'PY'
-          import json, re
+          python3 - <<'PY'
+          import json
           from pathlib import Path
 
-          root = Path('public/agent_crypto_erith_ia/administrator')
-          b = json.loads((root/'build.json').read_text(encoding='utf-8'))
-          v = json.loads((root/'version.json').read_text(encoding='utf-8'))
-          av = json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
-          html = (root/'index.html').read_text(encoding='utf-8')
-
-          expected = '40.6.67'
-          engine = '38.15.11'
-
-          assert b['build'] == expected
-          assert b['administrator_build'] == expected
-          assert b['build_label'] == f'Build {expected} · Administrator'
-          assert b['asset_token'].endswith(expected)
-          assert b['current_version_truth']['loaded_build'] == expected
-          assert b['engine'] == engine
-          assert b['parent_build'] == '40.6.66'
-          assert v['build'] == expected
-          assert v['engine'] == engine
-          assert av['build'] == expected
-          assert av['engine'] == engine
-          assert f'content="{expected}"' in html
-          assert f'Build {expected} · Administrator' in html
-          assert 'market-core-v2.0-alpha-build-40.6.67' in html
-          print('40.6.67 R1 VERSION TRUTH PASS')
+          root = Path("public/agent_crypto_erith_ia/administrator")
+          b = json.loads((root / "build.json").read_text(encoding="utf-8"))
+          v = json.loads((root / "version.json").read_text(encoding="utf-8"))
+          av = json.loads((root / "administrator-version.json").read_text(encoding="utf-8"))
+          html = (root / "index.html").read_text(encoding="utf-8")
+          expected = "40.6.67"
+          engine = "38.15.11"
+          assert b["build"] == expected
+          assert b["administrator_build"] == expected
+          assert b["build_label"] == "Build 40.6.67 · Administrator"
+          assert b["asset_token"] == "market-core-v2.0-alpha-build-40.6.67"
+          assert b["current_version_truth"]["loaded_build"] == expected
+          assert b["release_status"] == "tradus_paper_shadow_independent"
+          assert b["engine"] == engine
+          assert b["parent_build"] == "40.6.66"
+          assert v["build"] == expected and v["engine"] == engine
+          assert av["build"] == expected and av["engine"] == engine
+          assert "Build 40.6.67 · Administrator" in html
+          assert "market-core-v2.0-alpha-build-40.6.67" in html
+          print("40.6.67 R1 VERSION TRUTH PASS")
           PY
+          test "$(git diff --name-only)" = "public/agent_crypto_erith_ia/administrator/build.json"
 
-      - name: Guard bounded scope
-        run: |
-          changed="$(git diff --name-only)"
-          test "$changed" = "public/agent_crypto_erith_ia/administrator/build.json"
-          echo "Bounded scope PASS: $changed"
-
-      - name: Commit truth seal and remove one-shot workflow
+      - name: Commit and remove one shot workflow
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
