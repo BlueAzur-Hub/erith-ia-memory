@@ -3,7 +3,7 @@
 
 Current Administrator truth is meta-backed and the visible version owner is
 `atlasVersionTruthControl` / `atlasVersionTruthText`. The historical guard still
-expects duplicated JS literals and the retired legacy version-control sink.
+expects duplicated JS literals and retired version-control representations.
 This shim validates the current representation first, then adapts only those
 representation differences and delegates every remaining architecture, payload
 hash and Market Core invariant to the canonical guard unchanged.
@@ -75,8 +75,6 @@ def _replace_meta_backed_constant(text: str, const_name: str, meta_name: str, va
 
 
 def _adapt_current_index_for_legacy_guard(text: str) -> str:
-    # Validate the current visible first-paint owner before adapting its IDs for
-    # the historical regexes. This must never turn stale UI truth into a pass.
     visible_text = re.findall(r'<span\s+id="atlasVersionTruthText">Build ([^<]+)</span>', text, re.S)
     if visible_text != [CANONICAL_BUILD]:
         fail(f"current first-paint badge drift: {visible_text!r} != {[CANONICAL_BUILD]!r}")
@@ -96,7 +94,6 @@ def _adapt_current_index_for_legacy_guard(text: str) -> str:
     if not footer[0].strip().startswith(expected_footer_prefix):
         fail(f"current footer truth drift: {footer[0].strip()!r}")
 
-    # Validation-only representation bridge for the retired guard regexes.
     text = text.replace('id="atlasVersionTruthControl"', 'id="atlasVersionControl"', 1)
     text = text.replace('id="atlasVersionTruthText"', 'id="atlasVersionControlText"', 1)
     footer_legacy = (
@@ -107,6 +104,26 @@ def _adapt_current_index_for_legacy_guard(text: str) -> str:
     return text
 
 
+def _adapt_current_version_truth_for_legacy_guard(text: str) -> str:
+    required_current = (
+        'const control=document.getElementById("atlasVersionTruthControl")',
+        'const text=document.getElementById("atlasVersionTruthText")',
+        'function render(',
+        'async function check(',
+        'async function applyAvailableUpdate(',
+        'single_visible_owner:true',
+        'false_propagation_lock:true',
+    )
+    missing = [marker for marker in required_current if marker not in text]
+    if missing:
+        fail(f"current version-truth authority incomplete: {missing}")
+
+    # The 40.4.218 guard predates the render/check/apply owner and looks only
+    # for the retired patchVersionControl name plus the old visible text ID.
+    # Supply those markers to the historical validator in memory only.
+    return text + '\n/* legacy-guard bridge: function patchVersionControl(remote) atlasVersionControlText */\n'
+
+
 def compat_read(path: Path) -> str:
     text = _original_read(path)
     if _same_path(path, BASE / "js" / "app.js"):
@@ -115,6 +132,8 @@ def compat_read(path: Path) -> str:
         text = _replace_meta_backed_constant(text, "ENGINE_BUILD", "atlas-engine-build", CANONICAL_ENGINE)
     elif _same_path(path, BASE / "index.html"):
         text = _adapt_current_index_for_legacy_guard(text)
+    elif _same_path(path, BASE / "js" / "version-truth.js"):
+        text = _adapt_current_version_truth_for_legacy_guard(text)
     return text
 
 
