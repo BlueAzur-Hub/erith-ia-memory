@@ -1,0 +1,206 @@
+name: Agent Crypto 40.6.69 Finalize
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/agent-crypto-406069-finalize.yml'
+
+permissions:
+  contents: write
+
+env:
+  BUILD: '40.6.69'
+  PARENT: '40.6.68'
+  ENGINE: '38.15.11'
+  RELEASE: 'AETHER × TRADUS SURFACE · PAPER CONTEXT BRIDGE'
+  STATUS: 'aether_tradus_surface_paper_context_bridge_406069'
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch version owners and load order
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, hashlib
+          from pathlib import Path
+          from datetime import datetime, timezone
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          build='40.6.69'; parent='40.6.68'; engine='38.15.11'
+          release='AETHER × TRADUS SURFACE · PAPER CONTEXT BRIDGE'
+          status='aether_tradus_surface_paper_context_bridge_406069'
+          now=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+
+          bridge=root/'js/aether-tradus-bridge-406069.js'
+          notes=root/'RELEASE_40_6_69.md'
+          assert bridge.exists() and notes.exists()
+
+          # HTML publication identity + additive load after 40.6.68 observability.
+          ip=root/'index.html'
+          html=ip.read_text(encoding='utf-8')
+          assert 'Build 40.6.68 · Administrator' in html
+          assert 'TRADUS PAPER OBSERVABILITY · DURABLE EVALUATION ARCHIVE' in html
+          assert 'tradus-paper-observability-406068.js' in html
+          assert 'aether-tradus-bridge-406069.js' not in html
+          html=html.replace('40.6.68','40.6.69')
+          html=html.replace('TRADUS PAPER OBSERVABILITY · DURABLE EVALUATION ARCHIVE',release)
+          needle='<script defer src="./js/tradus-paper-observability-406068.js?v=administrator-build-40.6.69"></script>'
+          assert needle in html
+          html=html.replace(needle, needle+'\n  <script defer src="./js/aether-tradus-bridge-406069.js?v=administrator-build-40.6.69"></script>',1)
+          ip.write_text(html,encoding='utf-8')
+
+          # Runtime build truth.
+          bp=root/'build.json'
+          b=json.loads(bp.read_text(encoding='utf-8'))
+          assert b['build']==parent and b['engine']==engine
+          b.update({
+            'build':build,'engine':engine,'release':release,'status':status,'parent_build':parent,
+            'asset_token':f'market-core-v2.0-alpha-build-{build}','administrator_build':build,
+            'build_label':f'Build {build} · Administrator','release_status':'aether_tradus_surface_paper_context_bridge',
+            'timestamp':now
+          })
+          if isinstance(b.get('current_version_truth'),dict): b['current_version_truth']['loaded_build']=build
+          b['cascade_40_6_69']={
+            'parent_build':parent,'release':release,'status':status,
+            'tradus_observability_owner':'js/tradus-paper-observability-406068.js',
+            'aether_runtime_owner':'js/aether.js',
+            'aether_visual_owner':'aether-406051.css',
+            'bridge_owner':'js/aether-tradus-bridge-406069.js',
+            'bridge_scope':'read-only PAPER status + Aether Workbench context/history decoration',
+            'meaningful_event_scope':'initial link | PAPER open | PAPER close/archive increment | signal transition',
+            'bridge_history_persistence':'memory-only bounded 24 events',
+            'durable_trade_archive_owner':'40.6.68 observability localStorage archive unchanged',
+            'new_observer':True,
+            'observer_scope':'Aether Workbench DOM appearance/body rerender only; no market/data observation',
+            'new_recurring_timer':False,'new_network_owner':False,'new_storage_owner':False,
+            'aether_geometry_modified':False,'aether_business_truth_modified':False,
+            'technical_reading_modified':False,'strategy_a_modified':False,
+            'market_core':'38.15.11','market_core_modified':False,
+            'automatic_order':False,'real_order':False,'credentials':False,'wallet':False
+          }
+          bp.write_text(json.dumps(b,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          # Publication manifest.
+          vp=root/'version.json'
+          v=json.loads(vp.read_text(encoding='utf-8'))
+          assert v['build']==parent and v['engine']==engine
+          v.update({'build':build,'engine':engine,'release':release,'status':status,'parent_build':parent,
+                    'asset_token':f'market-core-v2.0-alpha-build-{build}','prepared_at':now,'published_at':now})
+          suffix=f' → {build} Aether × TRADUS PAPER context bridge; 40.6.68 observability + durable closed-trade archive preserved'
+          if isinstance(v.get('lineage'),str) and build not in v['lineage']: v['lineage']+=suffix
+          files=v.setdefault('files',{})
+          for rel in ['js/aether-tradus-bridge-406069.js','RELEASE_40_6_69.md']:
+            files[rel]=hashlib.sha256((root/rel).read_bytes()).hexdigest()
+          if isinstance(v.get('integrity'),dict): v['integrity']['files']=len(files)
+          vp.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          # Administrator mirror manifest.
+          ap=root/'administrator-version.json'
+          av=json.loads(ap.read_text(encoding='utf-8'))
+          assert av['build']==parent
+          av.update({'build':build,'release':release,'status':status,'prepared_at':now,'published_at':now,'global_versioning':build})
+          av['aether_tradus_surface_bridge_406069']={
+            'source_observability_build':'40.6.68','source_observability_modified':False,
+            'aether_runtime_modified':False,'aether_css_modified':False,'aether_backplate_modified':False,
+            'surface':'discreet status pill in existing Aether action lane',
+            'workbench':'read-only Details + History/Events decoration',
+            'bridge_events':'bounded memory-only significant transitions',
+            'durable_storage_added':False,'new_observer':True,'new_timer':False,'new_network_owner':False,
+            'technical_reading_modified':False,'strategy_a_modified':False,'market_core_modified':False,
+            'real_order':False,'credentials':False,'wallet':False
+          }
+          ap.write_text(json.dumps(av,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Validate 40.6.69
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          node --check "$ROOT/js/aether-tradus-bridge-406069.js"
+          node - <<'NODE'
+          require('./public/agent_crypto_erith_ia/administrator/js/aether-tradus-bridge-406069.js');
+          const r=globalThis.AgentCryptoAetherTradusBridge406069.self_test();
+          if(!r.pass) throw new Error(JSON.stringify(r));
+          if(r.real_orders!==false || r.network_owner!==false || r.recurring_timer!==false || r.durable_storage!==false) throw new Error('safety contract failed');
+          console.log('40.6.69 AETHER × TRADUS SELF-TEST PASS', r);
+          NODE
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          expected='40.6.69'; parent='40.6.68'; engine='38.15.11'
+          b=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          v=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          av=json.loads((root/'administrator-version.json').read_text(encoding='utf-8'))
+          html=(root/'index.html').read_text(encoding='utf-8')
+          assert b['build']==expected and b['parent_build']==parent and b['engine']==engine
+          assert b['administrator_build']==expected and b['current_version_truth']['loaded_build']==expected
+          assert v['build']==expected and v['parent_build']==parent and v['engine']==engine
+          assert av['build']==expected and av['global_versioning']==expected
+          assert f'Build {expected} · Administrator' in html
+          assert f'market-core-v2.0-alpha-build-{expected}' in html
+          assert html.index('tradus-paper-observability-406068.js') < html.index('aether-tradus-bridge-406069.js')
+          assert b['cascade_40_6_69']['market_core_modified'] is False
+          assert b['cascade_40_6_69']['aether_geometry_modified'] is False
+          print('40.6.69 VERSION + LOAD ORDER + OWNER LOCK PASS')
+          PY
+          ! grep -q 'fetch(' "$ROOT/js/aether-tradus-bridge-406069.js"
+          ! grep -q 'setInterval' "$ROOT/js/aether-tradus-bridge-406069.js"
+          ! grep -q 'localStorage' "$ROOT/js/aether-tradus-bridge-406069.js"
+          ! grep -q 'sessionStorage' "$ROOT/js/aether-tradus-bridge-406069.js"
+          git diff --exit-code -- "$ROOT/js/aether.js"
+          git diff --exit-code -- "$ROOT/aether-406051.css"
+          git diff --exit-code -- "$ROOT/js/tradus-paper-observability-406068.js"
+          git diff --exit-code -- "$ROOT/js/tradus-paper-shadow-406067.js"
+          echo 'PROTECTED AETHER/TRADUS OWNERS UNCHANGED PASS'
+
+      - name: Build clean upload ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          ZIP=/tmp/AGENT_CRYPTO_BUILD_40_6_69_AETHER_TRADUS_SURFACE_PAPER_CONTEXT_BRIDGE_CLEAN_UPLOAD.zip
+          rm -f "$ZIP"
+          zip -j "$ZIP" \
+            "$ROOT/index.html" \
+            "$ROOT/build.json" \
+            "$ROOT/version.json" \
+            "$ROOT/administrator-version.json" \
+            "$ROOT/js/aether-tradus-bridge-406069.js" \
+            "$ROOT/RELEASE_40_6_69.md"
+          mkdir -p artifact
+          cp "$ZIP" artifact/
+          sha256sum "$ZIP" | tee artifact/SHA256SUMS.txt
+
+      - name: Upload clean package
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_69_AETHER_TRADUS_SURFACE_PAPER_CONTEXT_BRIDGE_CLEAN_UPLOAD
+          path: artifact/*
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit feature and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/build.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json
+          git rm .github/workflows/agent-crypto-406069-finalize.yml
+          git commit -m "feat(agent-crypto): bridge Aether and TRADUS PAPER 40.6.69"
+          git pull --rebase origin main
+          git push origin HEAD:main
