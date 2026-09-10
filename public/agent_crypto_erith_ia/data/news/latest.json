@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-10T19:46:51.291348+00:00",
+  "generated_at": "2026-09-10T22:39:28.302617+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,9 +11,9 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 24,
-    "critical_24h": 19,
-    "strong_24h": 5,
+    "events_24h": 27,
+    "critical_24h": 21,
+    "strong_24h": 6,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
@@ -29,8 +29,8 @@
         "distinct_sources": 2
       },
       "regulation": {
-        "events_72h": 10,
-        "distinct_sources": 3
+        "events_72h": 13,
+        "distinct_sources": 6
       },
       "leverage": {
         "events_72h": 0,
@@ -49,7 +49,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 5,
-      "latency_ms": 186,
+      "latency_ms": 424,
       "error": null
     },
     {
@@ -60,7 +60,7 @@
       "status": "ok",
       "fetched_count": 23,
       "qualified_count": 2,
-      "latency_ms": 162,
+      "latency_ms": 314,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 190,
+      "latency_ms": 119,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 361,
+      "latency_ms": 211,
       "error": null
     },
     {
@@ -93,7 +93,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 21,
-      "latency_ms": 344,
+      "latency_ms": 183,
       "error": null
     },
     {
@@ -104,7 +104,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 26,
-      "latency_ms": 421,
+      "latency_ms": 318,
       "error": null
     },
     {
@@ -114,8 +114,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 35,
-      "qualified_count": 29,
-      "latency_ms": 240,
+      "qualified_count": 28,
+      "latency_ms": 123,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 5,
-      "latency_ms": 869,
+      "latency_ms": 805,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 138,
+      "latency_ms": 160,
       "error": null
     },
     {
@@ -148,7 +148,7 @@
       "status": "ok",
       "fetched_count": 23,
       "qualified_count": 3,
-      "latency_ms": 245,
+      "latency_ms": 162,
       "error": null
     },
     {
@@ -156,10 +156,10 @@
       "name": "Google News FR · réglementation crypto",
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+crypto+r%C3%A9glementation+MiCA+SEC+CFTC+stablecoin+march%C3%A9s+when%3A7d&hl=fr&gl=FR&ceid=FR:fr",
-      "status": "ok",
-      "fetched_count": 1,
-      "qualified_count": 1,
-      "latency_ms": 301,
+      "status": "empty",
+      "fetched_count": 0,
+      "qualified_count": 0,
+      "latency_ms": 274,
       "error": null
     },
     {
@@ -169,8 +169,8 @@
       "url": "https://news.google.com/rss/search?q=bitcoin+ethereum+ETF+flux+entrants+sorties+institutionnels+when%3A7d&hl=fr&gl=FR&ceid=FR:fr",
       "status": "ok",
       "fetched_count": 9,
-      "qualified_count": 9,
-      "latency_ms": 353,
+      "qualified_count": 8,
+      "latency_ms": 336,
       "error": null
     },
     {
@@ -181,7 +181,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 301,
+      "latency_ms": 262,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 208,
+      "latency_ms": 126,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 8341,
+      "latency_ms": 9141,
       "error": null
     }
   ],
@@ -737,11 +737,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-10T05:34:21+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.011374+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.011374+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.134020+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.134020+00:00",
       "freshness": {
         "iso": "2026-09-10T05:34:21+00:00",
-        "hours": 14.21,
+        "hours": 17.08,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -941,11 +941,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T17:10:51+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.807214+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.807214+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.936672+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.936672+00:00",
       "freshness": {
         "iso": "2026-09-08T17:10:51+00:00",
-        "hours": 50.6,
+        "hours": 53.47,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1239,12 +1239,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-08T20:46:34+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.800402+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.800402+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.929999+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.929999+00:00",
       "freshness": {
         "iso": "2026-09-08T20:46:34+00:00",
-        "hours": 47.0,
-        "label": "Récente · moins de 48 h",
+        "hours": 49.88,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -1636,11 +1636,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-10T16:38:16+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.988486+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.988486+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.107336+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.107336+00:00",
       "freshness": {
         "iso": "2026-09-10T16:38:16+00:00",
-        "hours": 3.14,
+        "hours": 6.02,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1930,11 +1930,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-10T05:30:15+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.911620+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.911620+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.007042+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.007042+00:00",
       "freshness": {
         "iso": "2026-09-10T05:30:15+00:00",
-        "hours": 14.27,
+        "hours": 17.15,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2358,12 +2358,12 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-10T09:59:32+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.006301+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.006301+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.128424+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.128424+00:00",
       "freshness": {
         "iso": "2026-09-10T09:59:32+00:00",
-        "hours": 9.79,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.66,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -2646,113 +2646,6 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false
-    },
-    {
-      "id": "feed_6317291ba30be948",
-      "event_id": "feed_6317291ba30be948",
-      "fingerprint": "6317291ba30be948",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "CFTC files to dismiss CME lawsuit over crypto perpetual futures",
-      "body": "The CFTC’s lawyers called the lawsuit “much ado about nothing,“ claiming that the CME Group lacked standing to file and argued against its claims over crypto perpetual futures.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/cftc-dismiss-cme-lawsuit-crypto-perpetual-futures",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 3,
-      "source_names": [
-        "Cointelegraph",
-        "Decrypt",
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/cftc-dismiss-cme-lawsuit-crypto-perpetual-futures",
-        "https://decrypt.co/377315/cftc-dismiss-cme-lawsuit-crypto-perpetual-futures",
-        "https://www.coindesk.com/policy/2026/09/03/cftc-asks-judge-to-dismiss-cme-lawsuit-over-crypto-perpetual-futures"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-03T21:09:13+00:00",
-      "first_seen_at": "2026-09-07T10:26:44.674938+00:00",
-      "last_seen_at": "2026-09-07T10:26:44.674938+00:00",
-      "freshness": {
-        "iso": "2026-09-03T21:09:13+00:00",
-        "hours": 85.29,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 100,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "3 sources concordantes. Vérifier la source primaire et la réaction du marché.",
-        "tone": "warn"
-      },
-      "confirmations": 3,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "CFTC files to dismiss CME lawsuit over crypto perpetual futures",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] CFTC files to dismiss CME lawsuit over crypto perpetual futures",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
     },
     {
       "id": "feed_c767c91423cf61ee",
@@ -3837,13 +3730,13 @@
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-09-10T13:20:26+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.997086+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.997086+00:00",
+      "event_time": "2026-09-10T21:30:00+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.101797+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.101797+00:00",
       "freshness": {
-        "iso": "2026-09-10T13:20:26+00:00",
-        "hours": 6.44,
-        "label": "Fraîche · moins de 12 h",
+        "iso": "2026-09-10T21:30:00+00:00",
+        "hours": 1.16,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
@@ -3942,11 +3835,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-09T16:28:19+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.022490+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.022490+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.144782+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.144782+00:00",
       "freshness": {
         "iso": "2026-09-09T16:28:19+00:00",
-        "hours": 27.31,
+        "hours": 30.18,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4339,6 +4232,107 @@
       ]
     },
     {
+      "id": "feed_72db2f20ef797f07",
+      "event_id": "feed_72db2f20ef797f07",
+      "fingerprint": "72db2f20ef797f07",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "SEC Charges Founder and His Two New Jersey-Based Companies in Alleged $16 Million Ponzi Scheme",
+      "body": "The Securities and Exchange Commission today charged Ernest Ossei Boateng and two New Jersey-based companies he controls, Intercontinental Wealth Network LLC and I Wealth Network LP, for allegedly raising approximately $16 million from more than 200…",
+      "source_name": "U.S. SEC",
+      "source_url": "https://www.sec.gov/newsroom/press-releases/2026-86-sec-charges-founder-his-two-new-jersey-based-companies-alleged-16-million-ponzi-scheme",
+      "source_host": "sec.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "U.S. SEC"
+      ],
+      "source_urls": [
+        "https://www.sec.gov/newsroom/press-releases/2026-86-sec-charges-founder-his-two-new-jersey-based-companies-alleged-16-million-ponzi-scheme"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-10T17:45:22+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.011808+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.011808+00:00",
+      "freshness": {
+        "iso": "2026-09-10T17:45:22+00:00",
+        "hours": 4.9,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 96,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [
+        "Exchanges"
+      ],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "SEC Charges Founder and His Two New Jersey-Based Companies in Alleged $16 Million Ponzi Scheme",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] SEC Charges Founder and His Two New Jersey-Based Companies in Alleged $16 Million Ponzi Scheme",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_5e14134330ceb329",
       "event_id": "feed_5e14134330ceb329",
       "fingerprint": "5e14134330ceb329",
@@ -4362,11 +4356,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-04T15:00:00+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.842748+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.842748+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.158644+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.158644+00:00",
       "freshness": {
         "iso": "2026-09-04T15:00:00+00:00",
-        "hours": 148.78,
+        "hours": 151.66,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4426,107 +4420,6 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Federal Reserve Board announces termination of enforcement actions with United Texas Bank, Quontic Bank Acquisition Corp., and Quontic Bank Holdings Corp.",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_c78dd0dfbae381a0",
-      "event_id": "feed_c78dd0dfbae381a0",
-      "fingerprint": "c78dd0dfbae381a0",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "SEC Proposes Rescission of Political Contribution Rule for Investment Advisers",
-      "body": "The Securities and Exchange Commission today issued a proposal to rescind its “pay-to-play” rule that prohibits investment advisers from providing compensated investment advisory services to a government client for two years…",
-      "source_name": "U.S. SEC",
-      "source_url": "https://www.sec.gov/newsroom/press-releases/2026-85-sec-proposes-rescission-political-contribution-rule-investment-advisers",
-      "source_host": "sec.gov",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "U.S. SEC"
-      ],
-      "source_urls": [
-        "https://www.sec.gov/newsroom/press-releases/2026-85-sec-proposes-rescission-political-contribution-rule-investment-advisers"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-03T20:30:00+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.917876+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.917876+00:00",
-      "freshness": {
-        "iso": "2026-09-03T20:30:00+00:00",
-        "hours": 167.28,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [
-        "Exchanges"
-      ],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "SEC Proposes Rescission of Political Contribution Rule for Investment Advisers",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] SEC Proposes Rescission of Political Contribution Rule for Investment Advisers",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -4658,12 +4551,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T18:38:39+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.820452+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.820452+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.949188+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.949188+00:00",
       "freshness": {
         "iso": "2026-09-10T18:38:39+00:00",
-        "hours": 1.13,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.01,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -4754,11 +4647,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T16:28:15+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.833260+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.833260+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.962482+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.962482+00:00",
       "freshness": {
         "iso": "2026-09-10T16:28:15+00:00",
-        "hours": 3.31,
+        "hours": 6.18,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4850,11 +4743,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T17:03:34+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.878008+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.878008+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.972661+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.972661+00:00",
       "freshness": {
         "iso": "2026-09-10T17:03:34+00:00",
-        "hours": 2.72,
+        "hours": 5.6,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4947,11 +4840,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T13:00:00+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.891682+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.891682+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.985267+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.985267+00:00",
       "freshness": {
         "iso": "2026-09-10T13:00:00+00:00",
-        "hours": 6.78,
+        "hours": 9.66,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5044,11 +4937,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-10T07:45:46+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.906023+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.906023+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.001510+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.001510+00:00",
       "freshness": {
         "iso": "2026-09-10T07:45:46+00:00",
-        "hours": 12.02,
+        "hours": 14.89,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6271,11 +6164,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-10T14:52:15+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.993594+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.993594+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.113411+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.113411+00:00",
       "freshness": {
         "iso": "2026-09-10T14:52:15+00:00",
-        "hours": 4.91,
+        "hours": 7.78,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -6377,11 +6270,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T04:05:03+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.012970+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.012970+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.135598+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.135598+00:00",
       "freshness": {
         "iso": "2026-09-10T04:05:03+00:00",
-        "hours": 15.69,
+        "hours": 18.57,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6477,11 +6370,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-09T15:57:07+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.025787+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.025787+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.148580+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.148580+00:00",
       "freshness": {
         "iso": "2026-09-09T15:57:07+00:00",
-        "hours": 27.83,
+        "hours": 30.7,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6673,11 +6566,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-10T11:47:41+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.895686+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.895686+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.989520+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.989520+00:00",
       "freshness": {
         "iso": "2026-09-10T11:47:41+00:00",
-        "hours": 7.98,
+        "hours": 10.86,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -7075,11 +6968,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-09T15:07:24+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.788749+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.788749+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.915180+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.915180+00:00",
       "freshness": {
         "iso": "2026-09-09T15:07:24+00:00",
-        "hours": 28.66,
+        "hours": 31.53,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7176,11 +7069,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-08T17:46:05+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.805886+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.805886+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.935303+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.935303+00:00",
       "freshness": {
         "iso": "2026-09-08T17:46:05+00:00",
-        "hours": 50.01,
+        "hours": 52.89,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7277,11 +7170,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-09T15:00:36+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.240592+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.240592+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.410672+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.410672+00:00",
       "freshness": {
         "iso": "2026-09-09T15:00:36+00:00",
-        "hours": 28.77,
+        "hours": 31.65,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7376,11 +7269,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-09T18:47:32+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.016520+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.016520+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.139281+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.139281+00:00",
       "freshness": {
         "iso": "2026-09-09T18:47:32+00:00",
-        "hours": 24.99,
+        "hours": 27.86,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7946,8 +7839,8 @@
       "fingerprint": "9c83666e2d9e42a9",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
-      "body": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi Yellow.com",
+      "headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
+      "body": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi yellow.com",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxORnRwUmNGN2hqN0JrdnJUcEZHeHY4UlVrVmkzb2VXR0hFdExmbmpiWFkzZUZWR0M2aHN4RG03NkNocTZiS2p1RXlXcEp3djkwaFBLdTVnVWVTSGVNWmpYSDRJbTdWczc0OTh6cTdjM2VfandqeUpIOHFXaTJIQ3dKQVJQS0hpb3l6bnNOQUpZaTZyblI0enR1S0cwaGtDRXlGa0c2VWN3OXgtM3VhQjIxWEJwUEFPNDNoZzM4NDBYaGZZNDdKMmN0Y2tuOWlJM1FO?oc=5",
       "source_host": "news.google.com",
@@ -7964,11 +7857,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-07T14:10:11+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.242226+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.242226+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.412373+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.412373+00:00",
       "freshness": {
         "iso": "2026-09-07T14:10:11+00:00",
-        "hours": 77.61,
+        "hours": 80.49,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8015,7 +7908,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
+      "headline_original": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -8023,14 +7916,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
+      "headline_fr": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
+      "display_headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
       "display_language": "fr",
-      "headline_fr_display": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
+      "headline_fr_display": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -8140,6 +8033,107 @@
       ]
     },
     {
+      "id": "feed_7de44926f82959c4",
+      "event_id": "feed_7de44926f82959c4",
+      "fingerprint": "7de44926f82959c4",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "New Clarity Act text tweaks DeFi, credit union provisions, but road ahead for bill remains murky",
+      "body": "The Clarity Act needs 60 votes when the Senate returns from its recess next week. Republicans circulated a fresh draft on Thursday ahead of the vote.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/policy/2026/09/10/new-clarity-act-text-tweaks-defi-credit-union-provisions-but-road-ahead-for-bill-remains-murky",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/policy/2026/09/10/new-clarity-act-text-tweaks-defi-credit-union-provisions-but-road-ahead-for-bill-remains-murky"
+      ],
+      "declared_status": "reported",
+      "event_type": "market_structure_regulation",
+      "event_label": "Réglementation / structure de marché",
+      "event_time": "2026-09-10T20:21:57+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.965226+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.965226+00:00",
+      "freshness": {
+        "iso": "2026-09-10T20:21:57+00:00",
+        "hours": 2.29,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
+      "assets": [],
+      "sectors": [
+        "DeFi"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "regulation_market",
+        "crypto"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "New Clarity Act text tweaks DeFi, credit union provisions, but road ahead for bill remains murky",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] New Clarity Act text tweaks DeFi, credit union provisions, but road ahead for bill remains murky",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_816796efd6318269",
       "event_id": "feed_816796efd6318269",
       "fingerprint": "816796efd6318269",
@@ -8163,11 +8157,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-10T11:15:00+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.901065+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.901065+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.995152+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.995152+00:00",
       "freshness": {
         "iso": "2026-09-10T11:15:00+00:00",
-        "hours": 8.53,
+        "hours": 11.41,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -8261,11 +8255,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-10T05:05:41+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.913251+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.913251+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.008889+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.008889+00:00",
       "freshness": {
         "iso": "2026-09-10T05:05:41+00:00",
-        "hours": 14.68,
+        "hours": 17.56,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8670,12 +8664,12 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-10T18:46:04+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.759007+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.759007+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.880122+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.880122+00:00",
       "freshness": {
         "iso": "2026-09-10T18:46:04+00:00",
-        "hours": 1.01,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.89,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -8772,11 +8766,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-09T18:56:58+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.775211+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.775211+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.896280+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.896280+00:00",
       "freshness": {
         "iso": "2026-09-09T18:56:58+00:00",
-        "hours": 24.83,
+        "hours": 27.71,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8871,11 +8865,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-08T18:59:35+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.801996+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.801996+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.931782+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.931782+00:00",
       "freshness": {
         "iso": "2026-09-08T18:59:35+00:00",
-        "hours": 48.79,
+        "hours": 51.66,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9282,11 +9276,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-07T21:59:08+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.248978+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.248978+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.417605+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.417605+00:00",
       "freshness": {
         "iso": "2026-09-07T21:59:08+00:00",
-        "hours": 69.79,
+        "hours": 72.67,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9379,11 +9373,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-07T04:16:00+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.250526+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.250526+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.419248+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.419248+00:00",
       "freshness": {
         "iso": "2026-09-07T04:16:00+00:00",
-        "hours": 87.51,
+        "hours": 90.39,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9573,11 +9567,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-04T19:28:13+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.245530+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.245530+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.415783+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.415783+00:00",
       "freshness": {
         "iso": "2026-09-04T19:28:13+00:00",
-        "hours": 144.31,
+        "hours": 147.19,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9670,12 +9664,12 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-10T10:20:00+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.003232+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.003232+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.124602+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.124602+00:00",
       "freshness": {
         "iso": "2026-09-10T10:20:00+00:00",
-        "hours": 9.45,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.32,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -10271,12 +10265,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T18:06:47+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.825519+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.825519+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.954239+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.954239+00:00",
       "freshness": {
         "iso": "2026-09-10T18:06:47+00:00",
-        "hours": 1.67,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.54,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -10869,11 +10863,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-09T16:40:50+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.781534+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.781534+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.904932+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.904932+00:00",
       "freshness": {
         "iso": "2026-09-09T16:40:50+00:00",
-        "hours": 27.1,
+        "hours": 29.97,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10933,6 +10927,202 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] What Is LAPTOP? Hunter Biden's Meme Coin Targeting TRUMP Holders",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_6d35cbda859a5af4",
+      "event_id": "feed_6d35cbda859a5af4",
+      "fingerprint": "6d35cbda859a5af4",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Agencies reduce regulatory burden for community banks, increase eligibility for 18-month exam cycle",
+      "body": "Agencies reduce regulatory burden for community banks, increase eligibility for 18-month exam cycle",
+      "source_name": "Federal Reserve",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260910a.htm",
+      "source_host": "federalreserve.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "Federal Reserve"
+      ],
+      "source_urls": [
+        "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260910a.htm"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-10T20:00:00+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.157019+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.157019+00:00",
+      "freshness": {
+        "iso": "2026-09-10T20:00:00+00:00",
+        "hours": 2.66,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 96,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 84,
+        "level": "Fort"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Agencies reduce regulatory burden for community banks, increase eligibility for 18-month exam cycle",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Agencies reduce regulatory burden for community banks, increase eligibility for 18-month exam cycle",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_1df86598367d86f7",
+      "event_id": "feed_1df86598367d86f7",
+      "fingerprint": "1df86598367d86f7",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "CFTC Chairman Selig and Kansas State University Announce Agenda for October 22-23 AgCon Conference in Overland Park",
+      "body": "",
+      "source_name": "U.S. CFTC",
+      "source_url": "https://www.cftc.gov/PressRoom/PressReleases/9295-26",
+      "source_host": "cftc.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "U.S. CFTC"
+      ],
+      "source_urls": [
+        "https://www.cftc.gov/PressRoom/PressReleases/9295-26"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-10T20:36:53+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.192945+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.192945+00:00",
+      "freshness": {
+        "iso": "2026-09-10T20:36:53+00:00",
+        "hours": 2.04,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 94,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 84,
+        "level": "Fort"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "CFTC Chairman Selig and Kansas State University Announce Agenda for October 22-23 AgCon Conference in Overland Park",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] CFTC Chairman Selig and Kansas State University Announce Agenda for October 22-23 AgCon Conference in Overland Park",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -11061,12 +11251,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T19:01:30+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.874699+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.874699+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.967739+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.967739+00:00",
       "freshness": {
         "iso": "2026-09-10T19:01:30+00:00",
-        "hours": 0.75,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 3.63,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -11159,11 +11349,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T15:53:24+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.881725+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.881725+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.976843+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.976843+00:00",
       "freshness": {
         "iso": "2026-09-10T15:53:24+00:00",
-        "hours": 3.89,
+        "hours": 6.77,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -11458,11 +11648,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T15:33:11+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.764148+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.764148+00:00",
+      "first_seen_at": "2026-09-10T22:39:18.883588+00:00",
+      "last_seen_at": "2026-09-10T22:39:18.883588+00:00",
       "freshness": {
         "iso": "2026-09-10T15:33:11+00:00",
-        "hours": 4.23,
+        "hours": 7.1,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -12055,11 +12245,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-09T20:08:09+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.014634+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.014634+00:00",
+      "first_seen_at": "2026-09-10T22:39:19.137338+00:00",
+      "last_seen_at": "2026-09-10T22:39:19.137338+00:00",
       "freshness": {
         "iso": "2026-09-09T20:08:09+00:00",
-        "hours": 23.64,
+        "hours": 26.52,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12116,205 +12306,6 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] DoubleZero adds Kalshi election market data ahead of US midterms",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_43c61837aa64b566",
-      "event_id": "feed_43c61837aa64b566",
-      "fingerprint": "43c61837aa64b566",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "US to ban imports of some Canadian alcohol, dairy goods and motorbikes",
-      "body": "It is the latest strike in a long trade war, and comes after Canadian counter-tariffs on US goods come into force.",
-      "source_name": "BBC Business",
-      "source_url": "https://www.bbc.co.uk/news/articles/c99dm1000p7o?at_medium=RSS&at_campaign=rss",
-      "source_host": "bbc.co.uk",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 2,
-      "source_names": [
-        "BBC Business",
-        "BBC World"
-      ],
-      "source_urls": [
-        "https://www.bbc.co.uk/news/articles/c99dm1000p7o?at_medium=RSS&at_campaign=rss",
-        "https://www.bbc.co.uk/news/articles/c8jdev0422jo?at_medium=RSS&at_campaign=rss"
-      ],
-      "declared_status": "reported",
-      "event_type": "geopolitics",
-      "event_label": "Géopolitique / guerre / sanctions",
-      "event_time": "2026-09-09T10:20:40+00:00",
-      "first_seen_at": "2026-09-10T19:46:42.723771+00:00",
-      "last_seen_at": "2026-09-10T19:46:42.723771+00:00",
-      "freshness": {
-        "iso": "2026-09-09T10:20:40+00:00",
-        "hours": 33.43,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 100,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 80,
-        "level": "Fort"
-      },
-      "direction": "impact global potentiel, sens à confirmer",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
-        "tone": "warn"
-      },
-      "confirmations": 2,
-      "relevance_score": 9,
-      "matched_topics": [
-        "regulation",
-        "geopolitics"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "US to ban imports of some Canadian alcohol, dairy goods and motorbikes",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] US to ban imports of some Canadian alcohol, dairy goods and motorbikes",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_76811770d3a70ef7",
-      "event_id": "feed_76811770d3a70ef7",
-      "fingerprint": "76811770d3a70ef7",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Philip R. Lane: Diversity at the European Central Bank",
-      "body": "",
-      "source_name": "Banque centrale européenne",
-      "source_url": "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260904~7b9257099b.en.pdf",
-      "source_host": "ecb.europa.eu",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "Banque centrale européenne"
-      ],
-      "source_urls": [
-        "https://www.ecb.europa.eu//press/key/date/2026/html/ecb.sp260904~7b9257099b.en.pdf"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "macro",
-      "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-09-04T09:10:00+00:00",
-      "first_seen_at": "2026-09-10T19:46:43.629874+00:00",
-      "last_seen_at": "2026-09-10T19:46:43.629874+00:00",
-      "freshness": {
-        "iso": "2026-09-04T09:10:00+00:00",
-        "hours": 154.61,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 80,
-        "level": "Fort"
-      },
-      "direction": "impact de marché large, sens à confirmer",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 7,
-      "matched_topics": [
-        "macro"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Philip R. Lane: Diversity at the European Central Bank",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Philip R. Lane: Diversity at the European Central Bank",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
