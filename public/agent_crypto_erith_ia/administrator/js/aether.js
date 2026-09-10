@@ -1157,7 +1157,7 @@ function aetherNewsMarketSemantic405013(){
     const existing=panel.querySelector('[data-aether-component-stage-406046]');
     if(existing)return existing;
 
-    // 40.6.48 keeps the 40.6.46 CLEAN REBUILD runtime: old Aether presentation is not hidden under the new one;
+    // 40.6.49 keeps the 40.6.46 CLEAN REBUILD runtime: old Aether presentation is not hidden under the new one;
     // it is removed from this runtime panel. Data owners/functions remain untouched.
     panel.querySelectorAll('.aether-first-glance-grid-406030,[data-aether-component-stage-406042],.aether42-backplate,.aether42-surface').forEach(node=>node.remove());
     panel.dataset.aetherComponentFoundation406046='1';
