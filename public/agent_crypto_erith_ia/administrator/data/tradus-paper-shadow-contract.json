@@ -1,0 +1,43 @@
+{
+  "schema": "agent_crypto_tradus_paper_shadow_contract_v1",
+  "build": "40.6.67",
+  "parent_build": "40.6.66",
+  "engine": "38.15.11",
+  "responsibility": "Independent local PAPER lifecycle for TRADUS/Yohan shadow signals",
+  "inputs": {
+    "event": "agentcrypto:tradus-shadow-observation",
+    "symbol": "BTCEUR",
+    "book_required": true,
+    "directional_signals": ["BUY", "SELL"]
+  },
+  "portfolio": {
+    "initial_capital_eur": 1000,
+    "ticket_eur": 50,
+    "max_exposure_eur": 100,
+    "max_open_positions": 1,
+    "same_direction_stack": false,
+    "opposite_signal": "close_only_no_same_tick_flip"
+  },
+  "cost_model": {
+    "fee_bps_per_side": 10,
+    "slippage_bps_per_side": 5,
+    "spread": "observed top-of-book",
+    "note": "simulation assumptions; not an exchange tariff claim"
+  },
+  "storage": {
+    "scope": "sessionStorage",
+    "max_fills": 100,
+    "max_processed_observations": 160
+  },
+  "safety": {
+    "paper_only": true,
+    "real_orders": false,
+    "api_key": false,
+    "wallet": false,
+    "exchange_order_endpoint": false,
+    "recurring_timer": false,
+    "strategy_a_mutation": false,
+    "historical_strategy_b_mutation": false,
+    "profitability_claim": false
+  }
+}
