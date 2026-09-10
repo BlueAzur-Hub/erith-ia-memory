@@ -25,6 +25,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import hashlib
+          import json
           import re
 
           base = Path('public/agent_crypto_erith_ia/administrator')
@@ -94,7 +95,52 @@ jobs:
               manifest, count = re.subn(pattern, lambda m, d=digest: m.group(1) + d + m.group(2), manifest, count=1)
               if count != 1:
                   raise SystemExit(f'REPAIR_FAIL: version.json hash owner {rel!r} count={count}')
-          version_path.write_text(manifest, encoding='utf-8')
+
+          manifest_obj = json.loads(manifest)
+          files = manifest_obj.get('files')
+          if not isinstance(files, dict) or not files:
+              raise SystemExit('REPAIR_FAIL: version.json files hash map missing')
+
+          loaded_local = set()
+          for asset_url in re.findall(r'<(?:script|link)\b[^>]*(?:src|href)=["\']([^"\']+)["\'][^>]*>', index, re.I):
+              value = str(asset_url or '').strip()
+              if value.startswith(('http://', 'https://', '//', '#', 'data:')):
+                  continue
+              raw = value.split('?', 1)[0].split('#', 1)[0]
+              if raw.startswith('./'):
+                  raw = raw[2:]
+              elif raw.startswith('/'):
+                  raw = raw[1:]
+              if raw.lower().endswith(('.js', '.css')):
+                  loaded_local.add(raw)
+
+          expected_missing = {
+              'aether-406051.css',
+              'js/aether-operator-bridge-406002.js',
+              'js/aether-role-visibility-406050.js',
+              'js/aether-trust-return-406049.js',
+              'js/canonical-freeze-405023.js',
+              'js/capital-survival-405018.js',
+              'js/cross-market-owner-map-405022.js',
+              'js/decision-explainability-405021.js',
+              'js/decision-intelligence-acceptance-405020.js',
+              'js/event-memory-405014.js',
+              'js/footer-version-truth-406026.js',
+              'js/historical-analog-engine-405015.js',
+              'js/horizon-calibration-405017.js',
+              'js/regime-qualified-analogs-405016.js',
+          }
+          missing = loaded_local - set(map(str, files.keys()))
+          if missing != expected_missing:
+              raise SystemExit(f'REPAIR_FAIL: unexpected loaded asset hash gap: {sorted(missing)!r}')
+          for rel in sorted(expected_missing):
+              payload = base / rel
+              if not payload.is_file():
+                  raise SystemExit(f'REPAIR_FAIL: missing loaded asset: {rel}')
+              files[rel] = hashlib.sha256(payload.read_bytes()).hexdigest()
+              print(f'HASH_AUTHORITY_ADD {rel}={files[rel]}')
+
+          version_path.write_text(json.dumps(manifest_obj, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           for rel, digest in digests.items():
               print(f'REPAIR_OK {rel}={digest}')
           PY
