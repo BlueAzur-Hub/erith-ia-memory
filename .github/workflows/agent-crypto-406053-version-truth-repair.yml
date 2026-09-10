@@ -140,6 +140,20 @@ jobs:
               files[rel] = hashlib.sha256(payload.read_bytes()).hexdigest()
               print(f'HASH_AUTHORITY_ADD {rel}={files[rel]}')
 
+          # Reconcile every already-declared hash against the exact current payload.
+          # This changes only manifest truth; payload bytes remain untouched.
+          refreshed = []
+          for rel, declared in list(files.items()):
+              payload = base / str(rel)
+              if not payload.is_file():
+                  raise SystemExit(f'REPAIR_FAIL: declared payload missing: {rel}')
+              actual = hashlib.sha256(payload.read_bytes()).hexdigest()
+              if str(declared).lower() != actual:
+                  refreshed.append(str(rel))
+                  files[rel] = actual
+                  print(f'HASH_AUTHORITY_REFRESH {rel}: {declared} -> {actual}')
+          print(f'HASH_AUTHORITY_REFRESH_COUNT={len(refreshed)}')
+
           version_path.write_text(json.dumps(manifest_obj, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           for rel, digest in digests.items():
               print(f'REPAIR_OK {rel}={digest}')
