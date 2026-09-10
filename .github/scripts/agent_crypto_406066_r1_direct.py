@@ -31,6 +31,7 @@ engine = manifest.get('engine')
 engine_value = str(engine.get('reference_build') if isinstance(engine, dict) else engine)
 if engine_value != ENGINE:
     raise SystemExit(f'R1 refuses Market Core drift {engine!r}')
+expected_token = f'market-core-v2.0-alpha-build-{BUILD}'
 
 index_path = ROOT / 'index.html'
 index = read(index_path)
@@ -90,6 +91,18 @@ truth['OFF_plus_directional_tradus'] = 'NON COMPARABLE'
 truth['OFF_plus_no_trade_tradus'] = 'NON COMPARABLE'
 write(contract_path, json.dumps(contract, ensure_ascii=False, indent=2) + '\n')
 
+# Align the Administrator mirror with the canonical manifest. This is release identity only.
+mirror_path = ROOT / 'administrator-version.json'
+mirror = json.loads(read(mirror_path))
+mirror['build'] = BUILD
+mirror['global_versioning'] = BUILD
+mirror['release'] = str(manifest.get('release') or '')
+mirror['asset_token'] = expected_token
+mirror['parent_build'] = str(manifest.get('parent_build') or '')
+if str(manifest.get('revision') or '').strip():
+    mirror['revision'] = str(manifest.get('revision')).strip()
+write(mirror_path, json.dumps(mirror, ensure_ascii=False, indent=2) + '\n')
+
 r1_path = ROOT / 'RELEASE_40_6_66_R1.md'
 write(r1_path, '''# Agent-Crypto Administrator — 40.6.66 R1
 
@@ -104,6 +117,7 @@ R1 is a bounded correction, not a new feature release:
 - `OFF` + TRADUS directional/waiting signal = `NON COMPARABLE`, never `DIVERGENCE`;
 - first-paint badge, ARIA, footer and root app cache identity are aligned on 40.6.66;
 - root `ATLAS_BUILD` runtime identity is aligned on 40.6.66;
+- Administrator mirror release/token/parent/revision identity is aligned to the canonical manifest;
 - dead manifest references `RELEASE_40_6_58.md` and `RELEASE_40_6_59.md` are removed;
 - SHA-256 manifest authority is recalculated from the files actually present;
 - every loaded local JS/CSS remains covered by manifest hash authority.
@@ -132,7 +146,7 @@ for match in re.finditer(r'(?:src|href)="\./([^"?]+\.(?:js|css))(?:\?[^\"]*)?"',
     files[rel] = sha256(path)
 
 for rel in (
-    'index.html','app.js','RELEASE_40_6_66.md','RELEASE_40_6_66_R1.md',
+    'index.html','app.js','administrator-version.json','RELEASE_40_6_66.md','RELEASE_40_6_66_R1.md',
     'data/tradus-shadow-contract.json','data/tradus-shadow-ledger-contract.json',
     'js/tradus-shadow-adapter-406066.js','js/tradus-shadow-ledger-406066.js',
 ):
@@ -155,6 +169,7 @@ manifest['r1'] = {
     'strategy_a_off_comparison': 'NON COMPARABLE',
     'root_runtime_build_truth_repaired': True,
     'first_paint_truth_repaired': True,
+    'administrator_mirror_truth_repaired': True,
     'dead_release_refs_removed': ['RELEASE_40_6_58.md', 'RELEASE_40_6_59.md'],
     'loaded_hash_authority_count': len(loaded),
     'market_core_modified': False,
@@ -168,6 +183,8 @@ assert f'<span id="atlasVersionTruthText">Build {BUILD}</span>' in index
 assert f'const ATLAS_BUILD = "{BUILD}";' in root_app
 assert 'return "OFF";' in adapter
 assert 'state:"NON COMPARABLE"' in adapter
+assert mirror['asset_token'] == expected_token
+assert mirror['parent_build'] == '40.6.65'
 assert truth['OFF_plus_directional_tradus'] == 'NON COMPARABLE'
 assert truth['OFF_plus_no_trade_tradus'] == 'NON COMPARABLE'
 assert all(isinstance(v, str) and re.fullmatch(r'[0-9a-f]{64}', v) for v in manifest['files'].values())
