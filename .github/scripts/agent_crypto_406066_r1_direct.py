@@ -48,7 +48,7 @@ index = sub1(index,
     r'\./app\.js\?v=administrator-build-[0-9]+\.[0-9]+\.[0-9]+',
     f'./app.js?v=administrator-build-{BUILD}', 'root app cache token')
 index = sub1(index,
-    r'(\./js/system-presentation\.js\?v=administrator-build-)[0-9]+\.[0-9]+\.[0-9]+',
+    r'(\./js/views/system-presentation\.js\?v=administrator-build-)[0-9]+\.[0-9]+\.[0-9]+',
     rf'\g<1>{BUILD}', 'system presentation cache token')
 if './js/version-truth.js?v=' in index:
     index = sub1(index,
@@ -63,7 +63,7 @@ root_app = sub1(root_app,
     f'const ATLAS_BUILD = "{BUILD}";', 'root ATLAS_BUILD')
 write(root_app_path, root_app)
 
-system_presentation_path = ROOT / 'js/system-presentation.js'
+system_presentation_path = ROOT / 'js/views/system-presentation.js'
 system_presentation = read(system_presentation_path)
 system_presentation = sub1(system_presentation,
     r'const SOURCE="\./views/system\.html\?v=administrator-build-[0-9]+\.[0-9]+\.[0-9]+";',
@@ -158,7 +158,7 @@ for match in re.finditer(r'(?:src|href)="\./([^"?]+\.(?:js|css))(?:\?[^\"]*)?"',
 
 for rel in (
     'index.html','app.js','administrator-version.json','RELEASE_40_6_66.md','RELEASE_40_6_66_R1.md',
-    'views/system.html','js/system-presentation.js',
+    'views/system.html','js/views/system-presentation.js',
     'data/tradus-shadow-contract.json','data/tradus-shadow-ledger-contract.json',
     'js/tradus-shadow-adapter-406066.js','js/tradus-shadow-ledger-406066.js',
 ):
