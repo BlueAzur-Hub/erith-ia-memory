@@ -2,11 +2,11 @@
   "schema": "agent_crypto_runtime_build_truth_v1",
   "build": "40.6.67",
   "engine": "38.15.11",
-  "release": "TRADUS PAPER SHADOW · INDEPENDENT MICRO-TRANSACTION LIFECYCLE",
+  "release": "TRADUS PAPER SHADOW · INDEPENDENT PAPER LIFECYCLE",
   "published": true,
-  "status": "tradus_paper_shadow_406067",
+  "status": "tradus_paper_shadow_independent_406067",
   "parent_build": "40.6.66",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.67",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.66",
   "administrator_build": "40.6.66",
   "build_label": "Build 40.6.66 · Administrator",
   "release_status": "multi_strategy_shadow_ledger_candidate",
@@ -1644,8 +1644,8 @@
     "market_core_modified": false,
     "real_order": false
   },
-  "prepared_at": "2026-09-10T20:57:25Z",
-  "published_at": "2026-09-10T20:57:25Z",
+  "prepared_at": "2026-09-10T20:36:00Z",
+  "published_at": "2026-09-10T20:36:00Z",
   "tradus_shadow_406064": {
     "parent_build": "40.6.63",
     "source": "TRADUS V1.0",
@@ -1691,6 +1691,18 @@
     "mutation_observer": false,
     "real_order": false
   },
-  "global_versioning": "40.6.67",
-  "revision": "V8"
+  "revision": "V8",
+  "tradus_paper_shadow_406067": {
+    "paper_lifecycle": true,
+    "capital_start_eur": 1000,
+    "ticket_eur": 50,
+    "max_positions": 1,
+    "fee_assumption_per_fill": 0.001,
+    "spread_cost_via_executable_side": true,
+    "session_journal": true,
+    "strategy_a_modified": false,
+    "historical_strategy_b_modified": false,
+    "market_core_modified": false,
+    "real_order": false
+  }
 }

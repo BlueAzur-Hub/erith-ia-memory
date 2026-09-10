@@ -139,7 +139,6 @@
     if (aState === "OFF") {
       return { state:"NON COMPARABLE", text:`A OFF · TRADUS ${bAction === "NO_TRADE" ? "attend" : bAction}` };
     }
-
     if (aState === "STOP" && bDirectional) {
       return { state:"OPPOSITION SÉCURITÉ", text:`A STOP · TRADUS ${bAction}` };
     }
