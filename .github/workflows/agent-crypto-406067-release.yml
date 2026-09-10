@@ -1,0 +1,151 @@
+name: Agent-Crypto 40.6.67 TRADUS Paper Shadow
+'on':
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-406067-release.yml
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build 40.6.67
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import datetime, hashlib, json, re, shutil
+          ROOT=Path('public/agent_crypto_erith_ia/administrator')
+          BUILD='40.6.67'; PARENT='40.6.66'; ENGINE='38.15.11'
+          RELEASE='TRADUS PAPER SHADOW · INDEPENDENT MICRO-TRANSACTION LIFECYCLE'
+          STATUS='tradus_paper_shadow_406067'; REVISION='V8'
+          def read(p): return p.read_text(encoding='utf-8')
+          def write(p,s): p.write_text(s,encoding='utf-8',newline='\n')
+          def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+          def sub1(s,pat,repl,label):
+              out,n=re.subn(pat,repl,s,count=1)
+              if n!=1: raise SystemExit(f'40.6.67 FAIL {label}: {n} matches')
+              return out
+
+          vp=ROOT/'version.json'; manifest=json.loads(read(vp))
+          if str(manifest.get('build'))!=PARENT: raise SystemExit(f'wrong parent build {manifest.get("build")}')
+          if str(manifest.get('engine'))!=ENGINE: raise SystemExit(f'Market Core drift {manifest.get("engine")}')
+          if str((manifest.get('r1') or {}).get('label') or '')!='40.6.66 R1': raise SystemExit('40.6.66 R1 checkpoint absent')
+          for rel in ('js/tradus-paper-shadow-406067.js','data/tradus-paper-shadow-contract.json','RELEASE_40_6_67.md'):
+              if not (ROOT/rel).is_file(): raise SystemExit(f'missing staged .67 payload: {rel}')
+
+          ip=ROOT/'index.html'; s=read(ip)
+          s=sub1(s,r'(<meta name="atlas-build" content=")[^"]+',rf'\g<1>{BUILD}','meta atlas-build')
+          s=sub1(s,r'(<meta name="administrator-build" content=")[^"]+',rf'\g<1>{BUILD}','meta administrator-build')
+          s=sub1(s,r'(<meta name="administrator-revision" content=")[^"]+',rf'\g<1>{REVISION}','meta revision')
+          s=sub1(s,r'(<meta name="administrator-release" content=")[^"]+',rf'\g<1>{RELEASE}','meta release')
+          s=sub1(s,r'(<meta name="atlas-asset-token" content=")[^"]+',rf'\g<1>market-core-v2.0-alpha-build-{BUILD}','meta token')
+          s=sub1(s,r'<title>Agent-Crypto @erith\.IA — Build [^<]+ · Administrator</title>',f'<title>Agent-Crypto @erith.IA — Build {BUILD} · Administrator</title>','title')
+          s=sub1(s,r'(aria-label="Version Agent-Crypto installée : Build )[^,\"]+(, mode Administrator")',rf'\g<1>{BUILD}\g<2>','first paint aria')
+          s=sub1(s,r'(<span id="atlasVersionTruthText">Build )[^<]+',rf'\g<1>{BUILD}','first paint badge')
+          s=sub1(s,r'(<span id="footerRelease">Administrator )[^ ]+( · Market Core 38\.15\.11)',rf'\g<1>{BUILD}\g<2>','footer')
+          s=sub1(s,r'\./app\.js\?v=administrator-build-[0-9.]+',f'./app.js?v=administrator-build-{BUILD}','root app token')
+          s=sub1(s,r'\./js/app\.js\?v=administrator-build-[0-9.]+',f'./js/app.js?v=administrator-build-{BUILD}','internal app token')
+          s=sub1(s,r'\./js/views/system-presentation\.js\?v=administrator-build-[0-9.]+',f'./js/views/system-presentation.js?v=administrator-build-{BUILD}','system owner token')
+          s=sub1(s,r'\./js/version-truth\.js\?v=[^\"]+',f'./js/version-truth.js?v={BUILD}','version truth token')
+          needle='<script src="./js/tradus-shadow-ledger-406066.js?v=administrator-build-40.6.66"></script>'
+          if needle not in s: raise SystemExit('TRADUS ledger owner missing')
+          if 'tradus-paper-shadow-406067.js' not in s:
+              s=s.replace(needle,needle+f'\n  <script src="./js/tradus-paper-shadow-406067.js?v=administrator-build-{BUILD}"></script>',1)
+          write(ip,s)
+
+          ap=ROOT/'app.js'; a=read(ap)
+          a=sub1(a,r'const\s+ATLAS_BUILD\s*=\s*["\'][^"\']+["\']\s*;',f'const ATLAS_BUILD = "{BUILD}";','root ATLAS_BUILD')
+          write(ap,a)
+
+          sp=ROOT/'js/views/system-presentation.js'; ss=read(sp)
+          ss=sub1(ss,r'const SOURCE="\./views/system\.html\?v=administrator-build-[0-9.]+";',f'const SOURCE="./views/system.html?v=administrator-build-{BUILD}";','system source token')
+          write(sp,ss)
+
+          vendor=ROOT/'vendor/tradus-v1.0-r1'
+          if vendor.exists():
+              for p in list(vendor.rglob('*')):
+                  if p.is_dir() and p.name in {'__pycache__','.pytest_cache'}: shutil.rmtree(p,ignore_errors=True)
+                  elif p.is_file() and p.suffix=='.pyc': p.unlink(missing_ok=True)
+
+          now=datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+          manifest['build']=BUILD; manifest['global_versioning']=BUILD; manifest['release']=RELEASE
+          manifest['asset_token']=f'market-core-v2.0-alpha-build-{BUILD}'; manifest['status']=STATUS
+          manifest['parent_build']=PARENT; manifest['engine']=ENGINE; manifest['revision']=REVISION
+          manifest['prepared_at']=now; manifest['published_at']=now; manifest.pop('r1',None)
+          manifest['tradus_paper_shadow']={'build':BUILD,'initial_capital_eur':1000,'ticket_eur':50,'max_exposure_eur':100,'fee_bps_per_side':10,'slippage_bps_per_side':5,'paper_only':True,'real_orders':False,'recurring_timer':False,'strategy_a_modified':False,'market_core_modified':False}
+
+          for name in ('build.json','administrator-version.json'):
+              p=ROOT/name; d=json.loads(read(p)); d['build']=BUILD; d['global_versioning']=BUILD; d['release']=RELEASE
+              d['asset_token']=f'market-core-v2.0-alpha-build-{BUILD}'; d['status']=STATUS; d['parent_build']=PARENT
+              d['engine']=ENGINE; d['revision']=REVISION; d['prepared_at']=now; d['published_at']=now
+              write(p,json.dumps(d,ensure_ascii=False,indent=2)+'\n')
+
+          files=dict(manifest.get('files') or {})
+          for dead in ('RELEASE_40_6_58.md','RELEASE_40_6_59.md'): files.pop(dead,None)
+          missing=[rel for rel in files if not (ROOT/str(rel)).is_file()]
+          if missing: raise SystemExit(f'manifest missing targets: {missing}')
+          for rel in list(files): files[rel]=sha(ROOT/str(rel))
+          loaded=set()
+          for m in re.finditer(r'(?:src|href)="\./([^"?]+\.(?:js|css))(?:\?[^\"]*)?"',s):
+              rel=m.group(1); p=ROOT/rel
+              if not p.is_file(): raise SystemExit(f'loaded asset missing: {rel}')
+              loaded.add(rel); files[rel]=sha(p)
+          for rel in ('index.html','app.js','js/views/system-presentation.js','build.json','administrator-version.json','RELEASE_40_6_67.md','data/tradus-paper-shadow-contract.json','js/tradus-paper-shadow-406067.js'):
+              p=ROOT/rel
+              if not p.is_file(): raise SystemExit(f'.67 payload missing: {rel}')
+              files[rel]=sha(p)
+          manifest['files']=files
+          write(vp,json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          assert f'<span id="atlasVersionTruthText">Build {BUILD}</span>' in s
+          assert f'const ATLAS_BUILD = "{BUILD}";' in a
+          assert 'tradus-paper-shadow-406067.js' in s
+          assert all(re.fullmatch(r'[0-9a-f]{64}',v or '') for v in manifest['files'].values())
+          assert loaded.issubset(set(manifest['files']))
+          print(f'40.6.67 prepared: {len(files)} manifest files / {len(loaded)} loaded JS+CSS authorized')
+          PY
+
+      - name: JavaScript syntax and Paper self-test
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/tradus-paper-shadow-406067.js
+          node -e "require('./public/agent_crypto_erith_ia/administrator/js/tradus-paper-shadow-406067.js'); const r=globalThis.AgentCryptoTradusPaperShadow406067.self_test(); console.log(r); if(!r.pass) process.exit(1)"
+
+      - name: TRADUS Python regression suite
+        run: |
+          cd public/agent_crypto_erith_ia/administrator/vendor/tradus-v1.0-r1
+          python -m pytest -q
+
+      - name: Canonical version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Package full Administrator
+        run: |
+          cd public/agent_crypto_erith_ia
+          zip -qr /tmp/AGENT_CRYPTO_BUILD_40_6_67_TRADUS_PAPER_SHADOW_CUMULATIVE_CLEAN_UPLOAD.zip administrator -x '*/__pycache__/*' '*/.pytest_cache/*' '*.pyc'
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_67_TRADUS_PAPER_SHADOW_CUMULATIVE_CLEAN_UPLOAD
+          path: /tmp/AGENT_CRYPTO_BUILD_40_6_67_TRADUS_PAPER_SHADOW_CUMULATIVE_CLEAN_UPLOAD.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit verified 40.6.67
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/agent-crypto-406067-release.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat(agent-crypto): TRADUS independent Paper Shadow 40.6.67"
+          git pull --rebase origin main
+          git push origin HEAD:main
