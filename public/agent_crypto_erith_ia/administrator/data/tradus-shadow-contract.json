@@ -1,0 +1,45 @@
+{
+  "schema": "agent_crypto_tradus_shadow_adapter_contract_v1",
+  "build": "40.6.64",
+  "parent_build": "40.6.63",
+  "release": "TRADUS SHADOW ADAPTER · MARKET MICROSTRUCTURE",
+  "source": {
+    "name": "TRADUS V1.0",
+    "source_bundle": "trad.zip",
+    "source_sha256": "1d8770b2bfb643a2f6886455670b40bffad5b9372624975e8efd9d9f0805a2be",
+    "vendor_copy": "vendor/tradus-v1.0-r1"
+  },
+  "correctives": {
+    "stale_clock": "time.time() when now omitted",
+    "sell_accounting": "signed long/short close and flip accounting",
+    "test_spread": "test changed; strategy max spread unchanged"
+  },
+  "strategy": {
+    "name": "ORDER_IMBALANCE",
+    "imbalance_threshold": 0.25,
+    "max_spread_ratio": 0.002,
+    "symbol": "BTCEUR",
+    "book_level": "best bid/ask quantity"
+  },
+  "runtime": {
+    "mode": "SHADOW_SIGNAL_ONLY",
+    "source": "Binance public depth",
+    "initial_read": true,
+    "host_refresh_hook": true,
+    "recurring_timer": false,
+    "strategy_a_mutation": false,
+    "paper_fill": false,
+    "real_order": false,
+    "credentials": false,
+    "wallet": false
+  },
+  "protected": {
+    "market_core": "38.15.11",
+    "aether": "40.6.61 checkpoint",
+    "strategy_a_thresholds": true,
+    "graph": true,
+    "technical_reading": true,
+    "oracle": true,
+    "atlas": true
+  }
+}
