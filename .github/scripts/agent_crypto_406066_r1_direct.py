@@ -47,6 +47,9 @@ index = sub1(index,
 index = sub1(index,
     r'\./app\.js\?v=administrator-build-[0-9]+\.[0-9]+\.[0-9]+',
     f'./app.js?v=administrator-build-{BUILD}', 'root app cache token')
+index = sub1(index,
+    r'(\./js/system-presentation\.js\?v=administrator-build-)[0-9]+\.[0-9]+\.[0-9]+',
+    rf'\g<1>{BUILD}', 'system presentation cache token')
 if './js/version-truth.js?v=' in index:
     index = sub1(index,
         r'\./js/version-truth\.js\?v=[^\"]+',
@@ -59,6 +62,14 @@ root_app = sub1(root_app,
     r'const\s+ATLAS_BUILD\s*=\s*[\"\'][^\"\']+[\"\']\s*;',
     f'const ATLAS_BUILD = "{BUILD}";', 'root ATLAS_BUILD')
 write(root_app_path, root_app)
+
+system_presentation_path = ROOT / 'js/system-presentation.js'
+system_presentation = read(system_presentation_path)
+system_presentation = sub1(system_presentation,
+    r'const SOURCE="\./views/system\.html\?v=administrator-build-[0-9]+\.[0-9]+\.[0-9]+";',
+    f'const SOURCE="./views/system.html?v=administrator-build-{BUILD}";',
+    'System source cache token')
+write(system_presentation_path, system_presentation)
 
 adapter_path = ROOT / 'js/tradus-shadow-adapter-406066.js'
 adapter = read(adapter_path)
@@ -91,7 +102,6 @@ truth['OFF_plus_directional_tradus'] = 'NON COMPARABLE'
 truth['OFF_plus_no_trade_tradus'] = 'NON COMPARABLE'
 write(contract_path, json.dumps(contract, ensure_ascii=False, indent=2) + '\n')
 
-# Align the Administrator mirror with the canonical manifest. This is release identity only.
 mirror_path = ROOT / 'administrator-version.json'
 mirror = json.loads(read(mirror_path))
 mirror['build'] = BUILD
@@ -117,6 +127,7 @@ R1 is a bounded correction, not a new feature release:
 - `OFF` + TRADUS directional/waiting signal = `NON COMPARABLE`, never `DIVERGENCE`;
 - first-paint badge, ARIA, footer and root app cache identity are aligned on 40.6.66;
 - root `ATLAS_BUILD` runtime identity is aligned on 40.6.66;
+- System presentation and System source cache identities are aligned on 40.6.66;
 - Administrator mirror release/token/parent/revision identity is aligned to the canonical manifest;
 - dead manifest references `RELEASE_40_6_58.md` and `RELEASE_40_6_59.md` are removed;
 - SHA-256 manifest authority is recalculated from the files actually present;
@@ -147,6 +158,7 @@ for match in re.finditer(r'(?:src|href)="\./([^"?]+\.(?:js|css))(?:\?[^\"]*)?"',
 
 for rel in (
     'index.html','app.js','administrator-version.json','RELEASE_40_6_66.md','RELEASE_40_6_66_R1.md',
+    'views/system.html','js/system-presentation.js',
     'data/tradus-shadow-contract.json','data/tradus-shadow-ledger-contract.json',
     'js/tradus-shadow-adapter-406066.js','js/tradus-shadow-ledger-406066.js',
 ):
@@ -169,6 +181,7 @@ manifest['r1'] = {
     'strategy_a_off_comparison': 'NON COMPARABLE',
     'root_runtime_build_truth_repaired': True,
     'first_paint_truth_repaired': True,
+    'system_cache_truth_repaired': True,
     'administrator_mirror_truth_repaired': True,
     'dead_release_refs_removed': ['RELEASE_40_6_58.md', 'RELEASE_40_6_59.md'],
     'loaded_hash_authority_count': len(loaded),
@@ -181,6 +194,7 @@ write(manifest_path, json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
 
 assert f'<span id="atlasVersionTruthText">Build {BUILD}</span>' in index
 assert f'const ATLAS_BUILD = "{BUILD}";' in root_app
+assert f'const SOURCE="./views/system.html?v=administrator-build-{BUILD}";' in system_presentation
 assert 'return "OFF";' in adapter
 assert 'state:"NON COMPARABLE"' in adapter
 assert mirror['asset_token'] == expected_token
