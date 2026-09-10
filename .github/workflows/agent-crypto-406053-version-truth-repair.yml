@@ -5,6 +5,7 @@ on:
     branches: [agent-crypto-406053-version-truth-fix]
     paths:
       - '.github/workflows/agent-crypto-406053-version-truth-repair.yml'
+      - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
 
 permissions:
   contents: write
