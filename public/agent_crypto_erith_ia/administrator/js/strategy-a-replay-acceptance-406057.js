@@ -83,11 +83,7 @@
   if(typeof document!=='undefined'){
     if(document.readyState==='loading'){
       document.addEventListener('DOMContentLoaded',render,{once:true});
-      // Later Strategy A lifecycle modules render after this script and may rebuild the host area.
-      // Re-mount once after all page resources/listeners have settled; no timer/observer is retained.
       window.addEventListener('load',render,{once:true});
-    }else{
-      render();
-    }
+    }else render();
   }
 })();
