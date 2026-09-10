@@ -31,15 +31,18 @@ jobs:
           index_path = base / 'index.html'
           root_app_path = base / 'app.js'
           mirror_path = base / 'administrator-version.json'
+          system_presentation_path = base / 'js/views/system-presentation.js'
           version_path = base / 'version.json'
           index = index_path.read_text(encoding='utf-8')
           root_app = root_app_path.read_text(encoding='utf-8')
           mirror = mirror_path.read_text(encoding='utf-8')
+          system_presentation = system_presentation_path.read_text(encoding='utf-8')
 
           index_replacements = (
               ('<script src="./app.js?v=administrator-build-40.5.23"></script>', '<script src="./app.js?v=administrator-build-40.6.53"></script>'),
               ('<script src="./js/app.js?v=administrator-build-40.6.40"></script>', '<script src="./js/app.js?v=administrator-build-40.6.53"></script>'),
               ('<script src="./js/version-truth.js?v=40.6.8"></script>', '<script src="./js/version-truth.js?v=40.6.53"></script>'),
+              ('<script src="./js/views/system-presentation.js?v=administrator-build-40.4.281"></script>', '<script src="./js/views/system-presentation.js?v=administrator-build-40.6.53"></script>'),
               ('<span id="atlasVersionTruthText">Build 40.6.24</span>', '<span id="atlasVersionTruthText">Build 40.6.53</span>'),
               ('aria-label="Version Agent-Crypto installée : Build 40.6.24, mode Administrator"', 'aria-label="Version Agent-Crypto installée : Build 40.6.53, mode Administrator"'),
               ("<span id=\"footerRelease\">Administrator 40.6.26 · Market Core 38.15.11 · Web Classic · vérification… · Version : Parker Lewis Can't Lose</span>", "<span id=\"footerRelease\">Administrator 40.6.53 · Market Core 38.15.11 · Web Classic · vérification… · Version : Parker Lewis Can't Lose</span>"),
@@ -67,14 +70,23 @@ jobs:
                   raise SystemExit(f'REPAIR_FAIL: expected exactly one mirror occurrence: {old!r}; got {count}')
               mirror = mirror.replace(old, new, 1)
 
+          old_system_source = 'const SOURCE="./views/system.html?v=administrator-build-40.4.278";'
+          new_system_source = 'const SOURCE="./views/system.html?v=administrator-build-40.6.53";'
+          system_count = system_presentation.count(old_system_source)
+          if system_count != 1:
+              raise SystemExit(f'REPAIR_FAIL: System SOURCE owner count={system_count}')
+          system_presentation = system_presentation.replace(old_system_source, new_system_source, 1)
+
           index_path.write_text(index, encoding='utf-8')
           root_app_path.write_text(root_app, encoding='utf-8')
           mirror_path.write_text(mirror, encoding='utf-8')
+          system_presentation_path.write_text(system_presentation, encoding='utf-8')
 
           digests = {
               'index.html': hashlib.sha256(index_path.read_bytes()).hexdigest(),
               'app.js': hashlib.sha256(root_app_path.read_bytes()).hexdigest(),
               'administrator-version.json': hashlib.sha256(mirror_path.read_bytes()).hexdigest(),
+              'js/views/system-presentation.js': hashlib.sha256(system_presentation_path.read_bytes()).hexdigest(),
           }
           manifest = version_path.read_text(encoding='utf-8')
           for rel, digest in digests.items():
@@ -91,6 +103,7 @@ jobs:
         run: |
           node --check public/agent_crypto_erith_ia/administrator/app.js
           node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js
 
       - name: Canonical version truth
         run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
@@ -99,7 +112,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/administrator-version.json public/agent_crypto_erith_ia/administrator/version.json
+          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/administrator-version.json public/agent_crypto_erith_ia/administrator/js/views/system-presentation.js public/agent_crypto_erith_ia/administrator/version.json
           git diff --cached --quiet && exit 0
           git commit -m "fix(agent-crypto): align 40.6.53 version truth owners"
           git push origin HEAD:agent-crypto-406053-version-truth-fix
