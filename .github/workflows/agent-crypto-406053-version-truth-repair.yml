@@ -1,0 +1,77 @@
+name: Agent-Crypto 40.6.53 Version Truth Repair
+
+on:
+  push:
+    branches: [agent-crypto-406053-version-truth-fix]
+    paths:
+      - '.github/workflows/agent-crypto-406053-version-truth-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent-crypto-406053-version-truth-fix
+          fetch-depth: 1
+
+      - name: Align 40.6.53 first-paint version truth only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import re
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          index_path = base / 'index.html'
+          version_path = base / 'version.json'
+          index = index_path.read_text(encoding='utf-8')
+
+          replacements = (
+              ('<script src="./app.js?v=administrator-build-40.5.23"></script>', '<script src="./app.js?v=administrator-build-40.6.53"></script>'),
+              ('<script src="./js/app.js?v=administrator-build-40.6.40"></script>', '<script src="./js/app.js?v=administrator-build-40.6.53"></script>'),
+              ('<script src="./js/version-truth.js?v=40.6.8"></script>', '<script src="./js/version-truth.js?v=40.6.53"></script>'),
+              ('<span id="atlasVersionTruthText">Build 40.6.24</span>', '<span id="atlasVersionTruthText">Build 40.6.53</span>'),
+              ('aria-label="Version Agent-Crypto installée : Build 40.6.24, mode Administrator"', 'aria-label="Version Agent-Crypto installée : Build 40.6.53, mode Administrator"'),
+              ("<span id=\"footerRelease\">Administrator 40.6.26 · Market Core 38.15.11 · Web Classic · vérification… · Version : Parker Lewis Can't Lose</span>", "<span id=\"footerRelease\">Administrator 40.6.53 · Market Core 38.15.11 · Web Classic · vérification… · Version : Parker Lewis Can't Lose</span>"),
+          )
+
+          for old, new in replacements:
+              count = index.count(old)
+              if count != 1:
+                  raise SystemExit(f'REPAIR_FAIL: expected exactly one occurrence: {old!r}; got {count}')
+              index = index.replace(old, new, 1)
+
+          index_path.write_text(index, encoding='utf-8')
+          digest = hashlib.sha256(index_path.read_bytes()).hexdigest()
+
+          manifest = version_path.read_text(encoding='utf-8')
+          pattern = r'("index\.html"\s*:\s*")[0-9a-f]{64}("\s*,)'
+          manifest, count = re.subn(pattern, lambda m: m.group(1) + digest + m.group(2), manifest, count=1)
+          if count != 1:
+              raise SystemExit(f'REPAIR_FAIL: version.json index hash owner count={count}')
+          version_path.write_text(manifest, encoding='utf-8')
+
+          print('REPAIR_OK index_sha256=' + digest)
+          PY
+
+      - name: JavaScript syntax
+        run: |
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+
+      - name: Canonical version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Commit bounded repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/version.json
+          git diff --cached --quiet && exit 0
+          git commit -m "fix(agent-crypto): align 40.6.53 first-paint version truth"
+          git push origin HEAD:agent-crypto-406053-version-truth-fix
