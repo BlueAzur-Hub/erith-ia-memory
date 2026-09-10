@@ -11,6 +11,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
       - '.github/scripts/agent_crypto_version_truth_guard.py'
+      - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
       - '.github/workflows/agent-crypto-version-truth-guard.yml'
   pull_request:
     paths:
@@ -21,6 +22,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
       - '.github/scripts/agent_crypto_version_truth_guard.py'
+      - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
       - '.github/workflows/agent-crypto-version-truth-guard.yml'
 
 permissions:
@@ -39,4 +41,4 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/app.js
 
       - name: Canonical version truth
-        run: python .github/scripts/agent_crypto_version_truth_guard.py
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
