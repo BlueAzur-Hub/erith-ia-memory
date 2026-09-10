@@ -126,7 +126,8 @@
     const state = String(a?.decision || a?.phase || "INCONNU").toUpperCase();
     if (/STOP|REJECT|REFUS|BLOCK/.test(state)) return "STOP";
     if (/PAPER|SIMUL/.test(state)) return "PAPER";
-    if (/NO TRADE|OFF|WAIT|INCONNU/.test(state)) return "WAIT";
+    if (/^OFF$|ARR[ÊE]T[ÉE]?|INACTIF/.test(state)) return "OFF";
+    if (/NO TRADE|WAIT|INCONNU/.test(state)) return "WAIT";
     return "ACTIVE";
   }
 
@@ -134,6 +135,10 @@
     const aState = classifyStrategyA(a);
     const bAction = String(b?.action || "NO_TRADE").toUpperCase();
     const bDirectional = bAction === "BUY" || bAction === "SELL";
+
+    if (aState === "OFF") {
+      return { state:"NON COMPARABLE", text:`A OFF · TRADUS ${bAction === "NO_TRADE" ? "attend" : bAction}` };
+    }
 
     if (aState === "STOP" && bDirectional) {
       return { state:"OPPOSITION SÉCURITÉ", text:`A STOP · TRADUS ${bAction}` };
@@ -294,11 +299,12 @@
     const balanced=evaluateTick(make(99.95,100.05,50,50),now);
     const wide=evaluateTick(make(99,100,100,10),now);
     const stale=evaluateTick(make(99.95,100.05,100,10,now-20),now);
+    const offBuy=compare({decision:"OFF"},buy);
     const stopBuy=compare({decision:"STOP"},buy);
     const waitBuy=compare({decision:"NO TRADE"},buy);
     const paperBuy=compare({decision:"PAPER"},buy);
-    const pass=buy.action==="BUY"&&sell.action==="SELL"&&balanced.action==="NO_TRADE"&&balanced.reason==="INSUFFICIENT_EDGE"&&wide.reason==="SPREAD_TOO_WIDE"&&stale.reason==="STALE_DATA"&&stopBuy.state==="OPPOSITION SÉCURITÉ"&&waitBuy.state==="DIVERGENCE"&&paperBuy.state==="CONVERGENCE POTENTIELLE";
-    return {build:BUILD,pass,checks:{buy:buy.action,sell:sell.action,balanced:balanced.reason,wide:wide.reason,stale:stale.reason,stop_buy:stopBuy.state,wait_buy:waitBuy.state,paper_buy:paperBuy.state},threshold:THRESHOLD,max_spread_ratio:MAX_SPREAD_RATIO};
+    const pass=buy.action==="BUY"&&sell.action==="SELL"&&balanced.action==="NO_TRADE"&&balanced.reason==="INSUFFICIENT_EDGE"&&wide.reason==="SPREAD_TOO_WIDE"&&stale.reason==="STALE_DATA"&&offBuy.state==="NON COMPARABLE"&&stopBuy.state==="OPPOSITION SÉCURITÉ"&&waitBuy.state==="DIVERGENCE"&&paperBuy.state==="CONVERGENCE POTENTIELLE";
+    return {build:BUILD,pass,checks:{buy:buy.action,sell:sell.action,balanced:balanced.reason,wide:wide.reason,stale:stale.reason,off_buy:offBuy.state,stop_buy:stopBuy.state,wait_buy:waitBuy.state,paper_buy:paperBuy.state},threshold:THRESHOLD,max_spread_ratio:MAX_SPREAD_RATIO};
   }
 
   const api=Object.freeze({build:BUILD,symbol:SYMBOL,threshold:THRESHOLD,max_spread_ratio:MAX_SPREAD_RATIO,observation_event:OBS_EVENT,validate_tick:validateTick,evaluate_tick:evaluateTick,read:()=>clone(last),refresh,mount,self_test:selfTest,paper_only:true,shadow_only:true,real_orders:false,credentials:false,wallet:false,recurring_timer:false});
