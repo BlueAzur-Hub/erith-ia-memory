@@ -1,63 +1,119 @@
-/* Agent-Crypto @erith.IA — 40.6.50
-   Aether role visibility corrective lock.
-   Responsibility: visibility only. Geometry remains owned by the canonical Administrator Window Manager.
-   Contract: Aether is CLOSED on boot and after any view/role transition (Classique, Intermédiaire, Administrator).
-   Opening remains explicit through the existing Aether operator controls. No timer, observer, storage or network owner. */
 (() => {
   "use strict";
-  const BUILD = "40.6.50";
-  const WINDOW_ID = "aether-watch";
-  const PANEL_ID = "atlasAetherStatusPanel4084";
-  const TOGGLE_ID = "atlasAetherStatusToggle4084";
 
-  function closeAether(reason = "role-visibility") {
-    const panel = document.getElementById(PANEL_ID);
-    const toggle = document.getElementById(TOGGLE_ID);
-    if (panel) panel.dataset.aetherOperatorOpen406046 = "0";
-    if (toggle) toggle.setAttribute("aria-expanded", "false");
+  const PROFILE = Object.freeze({
+    id: "yohan-operator-admin-406052",
+    defaultRole: "operator",
+    administratorUnlock: "local",
+    hideProjects: true,
+    publicSecretEmbedded: false,
+  });
 
-    const manager = globalThis.ErithAdministratorWindows;
-    if (manager?.getWindow?.(WINDOW_ID)) {
-      // Window Manager keeps geometry/persistence; operator intent owns visibility.
-      if (panel) panel.hidden = false;
-      manager.hide(WINDOW_ID, true);
-    } else if (panel) {
-      panel.hidden = true;
-    }
+  const qs = (selector, root = document) => root.querySelector(selector);
+  const qsa = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
-    document.documentElement.dataset.aetherRoleVisibility406050 = reason;
-    return true;
+  function textIncludes(node, value) {
+    return String(node?.textContent || "").toLowerCase().includes(String(value).toLowerCase());
   }
 
-  const closeAfterOwner = reason => queueMicrotask(() => closeAether(reason));
+  function hideProjectsSurface() {
+    qsa("button, a, [role='button'], article, span").forEach((node) => {
+      const text = String(node.textContent || "").trim();
+      if (!text) return;
+      if (/^projets?\b/i.test(text) || /portfolio/i.test(text)) {
+        const target = node.closest("button, a, article, [role='button']") || node;
+        target.hidden = true;
+        target.setAttribute("aria-hidden", "true");
+        target.dataset.yohanHidden406052 = "1";
+      }
+    });
+  }
 
-  // Covers the case where js/app.js already completed synchronously before this script executes.
-  closeAether("script-load");
+  function adaptAccessPortal() {
+    const dialog = qs("#atlasAccessDialog") || qs("dialog");
+    if (!dialog) return;
 
-  // Canonical Window Manager ready: close after its own initialization transaction.
-  window.addEventListener("erith:administrator-mirror-ready", () => closeAfterOwner("window-manager-ready"), { once: true });
+    const profiles = qs(".atlas-access-profiles", dialog);
+    if (profiles) {
+      const cards = qsa("article", profiles);
+      const owner = cards.find((card) => textIncludes(card, "Propriétaire") || textIncludes(card, "Christophe"));
+      const operator = cards.find((card) => textIncludes(card, "Opérateur") || card.id === "atlasAccessOperatorProfile404140");
 
-  // Every real view/role transition starts with Aether closed. This is especially important
-  // for view=intermediate (operator), whose neutralized window presentation must not POP Aether.
-  window.addEventListener("atlas:v2mode", () => closeAfterOwner("role-transition"), { passive: true });
+      if (owner) {
+        const label = qs("span", owner);
+        const name = qs("b", owner);
+        const small = qs("small", owner);
+        if (label) label.textContent = "Administration · accès déverrouillable";
+        if (name) name.textContent = "Administration";
+        if (small) small.textContent = "Accès local protégé · capacités administrateur après validation";
+        owner.classList.remove("is-active");
+      }
 
-  // BFCache restore must not resurrect a previously visible Aether window.
-  window.addEventListener("pageshow", event => {
-    if (event.persisted) closeAfterOwner("bfcache-restore");
-  }, { passive: true });
+      if (operator) {
+        const label = qs("span", operator);
+        const name = qs("b", operator);
+        const small = qs("small", operator);
+        if (label) label.textContent = "Opérateur principal";
+        if (name) name.textContent = "Yohan";
+        if (small) small.textContent = "Cockpit opérateur · Atlas · Oracle · Sources · Analyse · Décision · Système · Command";
+        operator.classList.add("is-active");
+        operator.setAttribute("aria-label", "Ouvrir le poste Opérateur Yohan");
+      }
+    }
 
-  globalThis.ErithAetherRoleVisibility406050 = Object.freeze({
-    build: BUILD,
-    window_id: WINDOW_ID,
-    boot_closed: true,
-    intermediate_boot_closed: true,
-    role_transition_closed: true,
-    explicit_operator_open_preserved: true,
-    geometry_owner: "ErithAdministratorWindows",
-    new_timer: false,
-    new_observer: false,
-    new_storage_owner: false,
-    new_network_owner: false,
-    close: closeAether
+    const intro = qs("#atlasAccessIntro", dialog);
+    if (intro) intro.textContent = "Poste Yohan : Opérateur par défaut. L’administration se déverrouille localement sur ce navigateur.";
+
+    const submit = qs("#atlasAccessSubmit", dialog);
+    if (submit && /Christophe/i.test(submit.textContent || "")) submit.textContent = "Créer l’accès administrateur local";
+
+    const footer = qs(".atlas-access-footer, footer", dialog);
+    if (footer) {
+      qsa("span", footer).forEach((item) => {
+        if (textIncludes(item, "PROJETS") || textIncludes(item, "PORTFOLIO")) {
+          item.hidden = true;
+          item.setAttribute("aria-hidden", "true");
+          item.dataset.yohanHidden406052 = "1";
+        }
+      });
+    }
+  }
+
+  function ensureOperatorDefault() {
+    let owner = false;
+    try { owner = sessionStorage.getItem("agent_crypto_local_access_session_v1") === "owner"; } catch {}
+    if (owner) return;
+
+    try {
+      if (localStorage.getItem("agent_crypto_erith_ia_v2_interface_mode") !== "intermediate") {
+        localStorage.setItem("agent_crypto_erith_ia_v2_interface_mode", "intermediate");
+      }
+    } catch {}
+
+    document.documentElement.dataset.yohanProfile406052 = "operator";
+    if (document.body) document.body.dataset.yohanProfile406052 = "operator";
+  }
+
+  function apply() {
+    ensureOperatorDefault();
+    adaptAccessPortal();
+    hideProjectsSurface();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", apply, { once: true });
+  } else {
+    apply();
+  }
+
+  document.addEventListener("click", () => queueMicrotask(apply), true);
+  document.addEventListener("atlas:v2mode", () => queueMicrotask(apply));
+  document.addEventListener("erith:admin-access-open", () => queueMicrotask(apply));
+
+  globalThis.ErithYohanOperatorAdmin406052 = Object.freeze({
+    profile: PROFILE,
+    apply,
+    hideProjectsSurface,
+    adaptAccessPortal,
   });
 })();
