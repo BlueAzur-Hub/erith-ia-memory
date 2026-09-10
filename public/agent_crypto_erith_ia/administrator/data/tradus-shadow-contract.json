@@ -1,8 +1,8 @@
 {
   "schema": "agent_crypto_tradus_shadow_adapter_contract_v1",
-  "build": "40.6.64",
-  "parent_build": "40.6.63",
-  "release": "TRADUS SHADOW ADAPTER · MARKET MICROSTRUCTURE",
+  "build": "40.6.65",
+  "parent_build": "40.6.64",
+  "release": "TRADUS SHADOW · MOUNT + STATE TRUTH",
   "source": {
     "name": "TRADUS V1.0",
     "source_bundle": "trad.zip",
@@ -41,5 +41,29 @@
     "technical_reading": true,
     "oracle": true,
     "atlas": true
+  },
+  "mount_authority": {
+    "late_hydration_safe": true,
+    "primary_anchor": "strategyAPaperAfterCostProof406063",
+    "fallback_anchor": "strategyAReplaySandbox404290",
+    "event_driven_retry": [
+      "DOMContentLoaded",
+      "load",
+      "pageshow",
+      "click",
+      "focusin",
+      "visibilitychange"
+    ],
+    "double_request_animation_frame_after_event": true,
+    "recurring_polling": false,
+    "mutation_observer": false
+  },
+  "comparison_truth": {
+    "STOP_plus_directional_tradus": "OPPOSITION SÉCURITÉ",
+    "STOP_plus_no_trade_tradus": "ACCORD PRUDENT",
+    "WAIT_plus_directional_tradus": "DIVERGENCE",
+    "WAIT_plus_no_trade_tradus": "CONVERGENCE",
+    "PAPER_plus_BUY_tradus": "CONVERGENCE POTENTIELLE",
+    "PAPER_plus_SELL_tradus": "OPPOSITION"
   }
 }

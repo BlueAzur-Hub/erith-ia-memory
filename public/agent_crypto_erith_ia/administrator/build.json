@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.64",
+  "build": "40.6.65",
   "engine": "38.15.11",
-  "release": "TRADUS SHADOW ADAPTER · MARKET MICROSTRUCTURE",
+  "release": "TRADUS SHADOW · MOUNT + STATE TRUTH",
   "published": true,
-  "status": "tradus_shadow_adapter_market_microstructure_406064",
-  "parent_build": "40.6.63",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.64",
-  "administrator_build": "40.6.64",
-  "build_label": "Build 40.6.64 · Administrator",
-  "release_status": "tradus_shadow_candidate",
-  "timestamp": "2026-09-10T18:17:57Z",
+  "status": "tradus_shadow_mount_state_truth_406065",
+  "parent_build": "40.6.64",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.65",
+  "administrator_build": "40.6.65",
+  "build_label": "Build 40.6.65 · Administrator",
+  "release_status": "tradus_shadow_corrective_candidate",
+  "timestamp": "2026-09-10T18:47:01Z",
   "cascade_40_5_18": {
     "read_only_foundation": true,
     "market_core": "38.15.11",
@@ -49,7 +49,7 @@
   },
   "current_version_truth": {
     "visible_owner": "js/version-truth.js",
-    "loaded_build": "40.6.64",
+    "loaded_build": "40.6.65",
     "published_manifest": "build.json",
     "false_propagation_lock": true,
     "legacy_ids_hidden_sink": true,
@@ -1644,8 +1644,8 @@
     "market_core_modified": false,
     "real_order": false
   },
-  "prepared_at": "2026-09-10T18:17:57Z",
-  "published_at": "2026-09-10T18:17:57Z",
+  "prepared_at": "2026-09-10T18:47:01Z",
+  "published_at": "2026-09-10T18:47:01Z",
   "tradus_shadow_406064": {
     "parent_build": "40.6.63",
     "source": "TRADUS V1.0",
@@ -1665,5 +1665,16 @@
     "credentials": false,
     "wallet": false,
     "python_tests": "........                                                                 [100%]\n8 passed in 0.15s"
+  },
+  "tradus_shadow_406065": {
+    "parent_build": "40.6.64",
+    "mount_late_hydration_safe": true,
+    "strategy_a_stop_semantics_fixed": true,
+    "panel_duplicate_guard": true,
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "real_order": false,
+    "aether_modified": false,
+    "market_core_modified": false
   }
 }
