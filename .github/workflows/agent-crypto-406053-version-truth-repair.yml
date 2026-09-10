@@ -29,9 +29,11 @@ jobs:
           base = Path('public/agent_crypto_erith_ia/administrator')
           index_path = base / 'index.html'
           root_app_path = base / 'app.js'
+          mirror_path = base / 'administrator-version.json'
           version_path = base / 'version.json'
           index = index_path.read_text(encoding='utf-8')
           root_app = root_app_path.read_text(encoding='utf-8')
+          mirror = mirror_path.read_text(encoding='utf-8')
 
           index_replacements = (
               ('<script src="./app.js?v=administrator-build-40.5.23"></script>', '<script src="./app.js?v=administrator-build-40.6.53"></script>'),
@@ -41,7 +43,6 @@ jobs:
               ('aria-label="Version Agent-Crypto installée : Build 40.6.24, mode Administrator"', 'aria-label="Version Agent-Crypto installée : Build 40.6.53, mode Administrator"'),
               ("<span id=\"footerRelease\">Administrator 40.6.26 · Market Core 38.15.11 · Web Classic · vérification… · Version : Parker Lewis Can't Lose</span>", "<span id=\"footerRelease\">Administrator 40.6.53 · Market Core 38.15.11 · Web Classic · vérification… · Version : Parker Lewis Can't Lose</span>"),
           )
-
           for old, new in index_replacements:
               count = index.count(old)
               if count != 1:
@@ -55,22 +56,34 @@ jobs:
               raise SystemExit(f'REPAIR_FAIL: ATLAS_BUILD owner count={runtime_count}')
           root_app = root_app.replace(old_runtime, new_runtime, 1)
 
+          mirror_replacements = (
+              ('"global_versioning": "40.4.291"', '"global_versioning": "40.6.53"'),
+              ('"asset_token": "market-core-v2.0-alpha-build-40.6.52"', '"asset_token": "market-core-v2.0-alpha-build-40.6.53"'),
+          )
+          for old, new in mirror_replacements:
+              count = mirror.count(old)
+              if count != 1:
+                  raise SystemExit(f'REPAIR_FAIL: expected exactly one mirror occurrence: {old!r}; got {count}')
+              mirror = mirror.replace(old, new, 1)
+
           index_path.write_text(index, encoding='utf-8')
           root_app_path.write_text(root_app, encoding='utf-8')
+          mirror_path.write_text(mirror, encoding='utf-8')
 
-          index_digest = hashlib.sha256(index_path.read_bytes()).hexdigest()
-          app_digest = hashlib.sha256(root_app_path.read_bytes()).hexdigest()
+          digests = {
+              'index.html': hashlib.sha256(index_path.read_bytes()).hexdigest(),
+              'app.js': hashlib.sha256(root_app_path.read_bytes()).hexdigest(),
+              'administrator-version.json': hashlib.sha256(mirror_path.read_bytes()).hexdigest(),
+          }
           manifest = version_path.read_text(encoding='utf-8')
-
-          for rel, digest in (('index.html', index_digest), ('app.js', app_digest)):
+          for rel, digest in digests.items():
               pattern = rf'("{re.escape(rel)}"\s*:\s*")[0-9a-f]{{64}}("\s*,)'
               manifest, count = re.subn(pattern, lambda m, d=digest: m.group(1) + d + m.group(2), manifest, count=1)
               if count != 1:
                   raise SystemExit(f'REPAIR_FAIL: version.json hash owner {rel!r} count={count}')
-
           version_path.write_text(manifest, encoding='utf-8')
-          print('REPAIR_OK index_sha256=' + index_digest)
-          print('REPAIR_OK app_sha256=' + app_digest)
+          for rel, digest in digests.items():
+              print(f'REPAIR_OK {rel}={digest}')
           PY
 
       - name: JavaScript syntax
@@ -85,7 +98,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/version.json
+          git add public/agent_crypto_erith_ia/administrator/app.js public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/administrator-version.json public/agent_crypto_erith_ia/administrator/version.json
           git diff --cached --quiet && exit 0
           git commit -m "fix(agent-crypto): align 40.6.53 version truth owners"
           git push origin HEAD:agent-crypto-406053-version-truth-fix
