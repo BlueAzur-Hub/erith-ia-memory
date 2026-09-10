@@ -143,10 +143,22 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          vendor='public/agent_crypto_erith_ia/administrator/vendor/tradus-v1.0-r1'
+          find "$vendor" -type d \( -name __pycache__ -o -name .pytest_cache \) -prune -exec rm -rf {} + || true
+          find "$vendor" -type f -name '*.pyc' -delete || true
           rm -f .github/workflows/agent-crypto-406067-release.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "feat(agent-crypto): TRADUS independent Paper Shadow 40.6.67"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          pushed=0
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              pushed=1
+              break
+            fi
+            sleep 2
+          done
+          test "$pushed" = 1
