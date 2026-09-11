@@ -42,6 +42,17 @@ jobs:
           if old not in s:
               raise SystemExit('STOP: self-hash surgery anchor missing')
           s=s.replace(old,new,1)
+          anchor="files[f'index-{BUILD}.html'] = sha(immutable_path)\nfor rel in list(files):"
+          injected="""files[f'index-{BUILD}.html'] = sha(immutable_path)
+asset_pattern = re.compile(r'(?:src|href)=[\"\\\']\\./([^\"\\\']+\\.(?:js|css))(?:\\?[^\"\\\']*)?[\"\\\']')
+for rel in sorted(set(asset_pattern.findall(index))):
+    p = ROOT / rel
+    if p.is_file():
+        files[rel] = sha(p)
+for rel in list(files):"""
+          if anchor not in s:
+              raise SystemExit('STOP: loaded-asset hash anchor missing')
+          s=s.replace(anchor,injected,1)
           p.write_text(s,encoding='utf-8')
           PY
           python .github/scripts/agent_crypto_release_406086.py
