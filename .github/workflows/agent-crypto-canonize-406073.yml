@@ -1,0 +1,147 @@
+name: Agent-Crypto canonize 40.6.73
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-canonize-406073.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  canonize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Canonize Administrator 40.6.73
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          from datetime import datetime, timezone
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          old = '40.6.72'
+          new = '40.6.73'
+          release = 'CANONICAL CHECKPOINT · ADMINISTRATOR / OPERATOR SYNC BASE'
+
+          # build.json — canonical metadata only; protected list retained verbatim by JSON round-trip.
+          p = root / 'build.json'
+          data = json.loads(p.read_text(encoding='utf-8'))
+          assert data.get('build') == old, data.get('build')
+          assert data.get('parent') == '40.6.71', data.get('parent')
+          assert data.get('market_core') == '38.15.11', data.get('market_core')
+          data['build'] = new
+          data['parent'] = old
+          data['label'] = release
+          data['timestamp'] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # version.json
+          p = root / 'version.json'
+          data = json.loads(p.read_text(encoding='utf-8'))
+          assert data.get('version') == old
+          assert data.get('build') == old
+          data.update(version=new, parent=old, release=release, build=new)
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # administrator-version.json — patch top-level truth only; preserve huge module map formatting/content.
+          p = root / 'administrator-version.json'
+          s = p.read_text(encoding='utf-8')
+          replacements = [
+            ('  "build": "40.6.72",', '  "build": "40.6.73",'),
+            ('  "global_versioning": "40.6.72",', '  "global_versioning": "40.6.73",'),
+            ('  "parent": "40.6.71",', '  "parent": "40.6.72",'),
+            ('  "release": "LIFECYCLE / VERSION TRUTH CONSOLIDATION",', f'  "release": "{release}",'),
+            ('  "status": "40.6.72 · lifecycle / version truth consolidation",', '  "status": "40.6.73 · canonical checkpoint · administrator / operator sync base",'),
+          ]
+          for before, after in replacements:
+            count = s.count(before)
+            assert count == 1, (before, count)
+            s = s.replace(before, after, 1)
+          p.write_text(s, encoding='utf-8')
+
+          # index.html — only root/version-truth metadata; historical module cache tokens stay untouched.
+          p = root / 'index.html'
+          s = p.read_text(encoding='utf-8')
+          replacements = [
+            ('data-atlas-build="40.6.72"', 'data-atlas-build="40.6.73"'),
+            ('data-administrator-build="40.6.72"', 'data-administrator-build="40.6.73"'),
+            ('data-administrator-parent="40.6.71"', 'data-administrator-parent="40.6.72"'),
+            ('data-administrator-name="LIFECYCLE / VERSION TRUTH CONSOLIDATION"', f'data-administrator-name="{release}"'),
+            ('data-release="LIFECYCLE / VERSION TRUTH CONSOLIDATION"', f'data-release="{release}"'),
+            ('data-atlas-asset-token="market-core-v2.0-alpha-build-40.6.72"', 'data-atlas-asset-token="market-core-v2.0-alpha-build-40.6.73"'),
+            ('<title>Agent-Crypto @erith.IA — Build 40.6.72 Administrator</title>', '<title>Agent-Crypto @erith.IA — Build 40.6.73 Administrator</title>'),
+          ]
+          for before, after in replacements:
+            count = s.count(before)
+            assert count == 1, (before, count)
+            s = s.replace(before, after, 1)
+          p.write_text(s, encoding='utf-8')
+
+          # Large root app.js — canonical build string is intentionally unique. Abort rather than broad-patch on drift.
+          p = root / 'app.js'
+          s = p.read_text(encoding='utf-8')
+          count = s.count(old)
+          assert count == 1, f'app.js expected exactly one {old}, found {count}'
+          s = s.replace(old, new, 1)
+          p.write_text(s, encoding='utf-8')
+
+          note = root / 'RELEASE_40_6_73.md'
+          note.write_text(f'''# Agent-Crypto 40.6.73 — Canonical Checkpoint
+
+**Parent:** 40.6.72  
+**Market Core:** 38.15.11  
+**Release:** {release}
+
+## Purpose
+
+Canonicalize the stable Administrator state validated after the 40.6.72 lifecycle/version-truth consolidation, and establish the exact source baseline for the Yohan Operator synchronization.
+
+## Functional change
+
+None. This release is a version-truth and distribution checkpoint only.
+
+## Protected and unchanged
+
+- Market Core 38.15.11
+- Target Top 5 / Market Flow / Market Snapshot
+- Graph engine semantics
+- Aether Watch geometry, backplate and 40.6.70 performance pass
+- Atlas HOT / CURRENT-PENDING
+- Oracle
+- TRADUS / Paper behavior
+- Strategy A
+- Lecture Technique
+- Window Manager
+- Forge iframe/runtime
+
+## Validation contract
+
+Administrator remains the owner profile after an authenticated hard reload unless `?view=intermediate` is explicitly requested. No new timer, observer, polling loop, network owner, storage owner, wallet or real-order path is introduced by this checkpoint.
+''', encoding='utf-8')
+
+          # Final truth assertions.
+          assert json.loads((root/'build.json').read_text(encoding='utf-8'))['build'] == new
+          assert json.loads((root/'version.json').read_text(encoding='utf-8'))['version'] == new
+          assert 'data-administrator-build="40.6.73"' in (root/'index.html').read_text(encoding='utf-8')
+          assert (root/'app.js').read_text(encoding='utf-8').count('40.6.73') == 1
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/app.js
+
+      - name: Commit canonical checkpoint and self-remove workflow
+        shell: bash
+        run: |
+          rm -f .github/workflows/agent-crypto-canonize-406073.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/agent_crypto_erith_ia/administrator .github/workflows/agent-crypto-canonize-406073.yml
+          git diff --cached --name-only
+          git commit -m 'chore(agent-crypto): canonize administrator checkpoint 40.6.73'
+          git push origin HEAD:main
