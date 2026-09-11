@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.79",
+  "build": "40.6.80",
   "engine": "38.15.11",
-  "release": "AETHER V2 · ATLAS SCORE EXPLAINABILITY LOCK",
+  "release": "AETHER V2 · WEATHER STATE GLYPH LOCK",
   "published": true,
-  "status": "aether_v2_atlas_score_explainability_406079",
-  "parent_build": "40.6.78",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.79",
-  "administrator_build": "40.6.79",
-  "build_label": "Build 40.6.79 · Administrator",
-  "release_status": "aether_v2_atlas_score_explainability_406079",
+  "status": "aether_v2_weather_state_glyph_406080",
+  "parent_build": "40.6.79",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.80",
+  "administrator_build": "40.6.80",
+  "build_label": "Build 40.6.80 · Administrator",
+  "release_status": "aether_v2_weather_state_glyph_406080",
   "timestamp": "2026-09-11T21:00:25Z",
   "cascade_40_5_18": {
     "read_only_foundation": true,
@@ -49,7 +49,7 @@
   },
   "current_version_truth": {
     "visible_owner": "js/version-truth.js",
-    "loaded_build": "40.6.79",
+    "loaded_build": "40.6.80",
     "published_manifest": "build.json",
     "false_propagation_lock": true,
     "legacy_ids_hidden_sink": true,
@@ -1931,6 +1931,14 @@
     "scope": "aether_atlas_score_explainability_only",
     "atlas_math_modified": false,
     "score_semantics": "direction -100..+100, not probability/confidence",
+    "market_core_modified": false
+  },
+  "cascade_40_6_80": {
+    "parent_build": "40.6.79",
+    "scope": "weather_visual_state_only",
+    "uses_existing_weather_dom": true,
+    "new_weather_fetch": false,
+    "image_generation": false,
     "market_core_modified": false
   }
 }
