@@ -33,12 +33,11 @@ jobs:
           token = 'market-core-v2.0-alpha-build-40.6.73'
           now = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
 
-          # Runtime build truth: patch only current top-level owner fields and current_version_truth.
           p = root / 'build.json'
           data = json.loads(p.read_text(encoding='utf-8'))
-          assert data.get('build') == old, data.get('build')
-          assert data.get('parent_build') == '40.6.71', data.get('parent_build')
-          assert data.get('engine') == '38.15.11', data.get('engine')
+          assert data.get('build') == old
+          assert data.get('parent_build') == '40.6.71'
+          assert data.get('engine') == '38.15.11'
           data['build'] = new
           data['release'] = release
           data['status'] = status
@@ -73,12 +72,11 @@ jobs:
           }
           p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-          # Public version truth.
           p = root / 'version.json'
           data = json.loads(p.read_text(encoding='utf-8'))
-          assert data.get('build') == old, data.get('build')
-          assert data.get('parent_build') == '40.6.71', data.get('parent_build')
-          assert data.get('engine') == '38.15.11', data.get('engine')
+          assert data.get('build') == old
+          assert data.get('parent_build') == '40.6.71'
+          assert data.get('engine') == '38.15.11'
           data['release'] = release
           data['build'] = new
           data['asset_token'] = token
@@ -88,7 +86,6 @@ jobs:
           data['parent_build'] = old
           p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-          # Huge Administrator mirror manifest: patch current top-level prefix only, preserve nested history byte-for-byte.
           p = root / 'administrator-version.json'
           s = p.read_text(encoding='utf-8')
           prefix = s[:2000]
@@ -105,7 +102,6 @@ jobs:
           s = s.replace('  "published_at": "2026-09-11T10:47:17Z",', f'  "published_at": "{now}",', 1)
           p.write_text(s, encoding='utf-8')
 
-          # HTML root metadata only. Historical module cache tokens remain historical.
           p = root / 'index.html'
           s = p.read_text(encoding='utf-8')
           pairs = [
@@ -118,14 +114,6 @@ jobs:
           for before, after in pairs:
             assert s.count(before) == 1, (before, s.count(before))
             s = s.replace(before, after, 1)
-          p.write_text(s, encoding='utf-8')
-
-          # Large root runtime: the current root build string is intentionally unique in app.js.
-          p = root / 'app.js'
-          s = p.read_text(encoding='utf-8')
-          count = s.count(old)
-          assert count == 1, f'app.js expected exactly one {old}, found {count}'
-          s = s.replace(old, new, 1)
           p.write_text(s, encoding='utf-8')
 
           note = [
@@ -143,16 +131,12 @@ jobs:
           ]
           (root / 'RELEASE_40_6_73.md').write_text('\n'.join(note), encoding='utf-8')
 
-          # Assertions before publication.
           b = json.loads((root/'build.json').read_text(encoding='utf-8'))
           v = json.loads((root/'version.json').read_text(encoding='utf-8'))
           assert b['build'] == new and b['engine'] == '38.15.11' and b['parent_build'] == old
           assert v['build'] == new and v['engine'] == '38.15.11' and v['parent_build'] == old
           assert '<meta name="administrator-build" content="40.6.73" />' in (root/'index.html').read_text(encoding='utf-8')
-          assert (root/'app.js').read_text(encoding='utf-8').count(new) == 1
           PY
-
-          node --check public/agent_crypto_erith_ia/administrator/app.js
 
       - name: Commit canonical checkpoint and self-remove workflow
         shell: bash
