@@ -61,3 +61,42 @@
     close: closeAether
   });
 })();
+
+/* ==========================================================================
+   40.6.73 R4 — ACTIVE MARKET FICHE ABOVE AETHER LOCK
+   ========================================================================== */
+(() => {
+  "use strict";
+
+  const BUILD = "40.6.73 R4";
+  const STYLE_ID = "atlasMarketFicheAboveAether406073R4";
+  const ACTIVE_FICHE_SELECTOR = ".atlas-help-layer[data-market-help-coin-id]:not([hidden])";
+
+  function install() {
+    if (document.getElementById(STYLE_ID)) return true;
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = `${ACTIVE_FICHE_SELECTOR}{z-index:2147483647!important;}`;
+    document.head.appendChild(style);
+    document.documentElement.dataset.marketFicheAboveAether406073R4 = "1";
+    return true;
+  }
+
+  install();
+
+  globalThis.ErithMarketFicheAboveAether406073R4 = Object.freeze({
+    build: BUILD,
+    selector: ACTIVE_FICHE_SELECTOR,
+    z_index: 2147483647,
+    scope: "active floating crypto fiche only",
+    aether_geometry_changed: false,
+    aether_visibility_changed: false,
+    window_manager_changed: false,
+    market_core_changed: false,
+    new_timer: false,
+    new_observer: false,
+    new_storage_owner: false,
+    new_network_owner: false,
+    install
+  });
+})();
