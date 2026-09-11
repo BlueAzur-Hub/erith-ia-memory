@@ -30,6 +30,13 @@ jobs:
       - name: Apply 40.6.86 version authority surgery
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('.github/scripts/agent_crypto_release_406086.py')
+          lines=p.read_text(encoding='utf-8').splitlines()
+          lines=[line for line in lines if not ('replace_one(root_app' in line and ("'ATLAS_RELEASE')" in line or "'ATLAS_ASSET_TOKEN')" in line))]
+          p.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
           python .github/scripts/agent_crypto_release_406086.py
 
       - name: Syntax and canonical version gates
