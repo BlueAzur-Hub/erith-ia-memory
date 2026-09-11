@@ -1,7 +1,7 @@
 /* Agent-Crypto @erith.IA — 40.6.8 historical version-control contract restore */
 (() => {
   "use strict";
-  const OWNER="version-truth-40608";
+  const OWNER="version-truth-406085";
   const MANIFEST="./build.json";
   const INDEX="./index.html";
   const REFRESH_PARAM="ac-refresh";
@@ -85,13 +85,6 @@
       return false;
     }finally{busy=false;}
   }
-  async function publishedIndexMatches(build){
-    const response=await fetch(`${INDEX}?_version_check=${Date.now()}`,{cache:"no-store",credentials:"same-origin"});
-    if(!response.ok)return false;
-    const html=await response.text();
-    const match=html.match(/<meta\s+name="administrator-build"\s+content="([^"]+)"/i)||html.match(/<meta\s+name="atlas-build"\s+content="([^"]+)"/i);
-    return String(match?.[1]||"").trim()===build;
-  }
   async function applyAvailableUpdate(){
     if(busy||state!=="update-available")return false;
     busy=true;
@@ -100,7 +93,6 @@
       const result=await fetchManifest();
       const published=String(result.build||"").trim();
       if(compare(published,loaded)<=0){render(result);return false;}
-      if(!(await publishedIndexMatches(published))){render(result);return false;}
       const url=new URL(location.href);
       url.searchParams.set(REFRESH_PARAM,`${published}-${Date.now()}`);
       location.replace(url.toString());
@@ -127,6 +119,8 @@
     single_visible_owner:true,false_propagation_lock:true,
     historical_click_contract_restored:true,
     current_click_reloads:false,update_available_click_reloads:true,
+    update_available_click_requires_index_preflight:false,
+    update_available_click_navigation:"cache-busted-location-replace",
     recurring_timer:false,observer:false
   });
 })();

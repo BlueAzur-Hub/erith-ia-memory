@@ -525,7 +525,7 @@
           const fittedWidth = Math.min(width, height * 16 / 9);
           const fittedHeight = fittedWidth * 9 / 16;
           return {
-            x: Math.max(12, Math.round((vw - fittedWidth) / 2)),
+            x: 12,
             y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
             width: Math.round(fittedWidth),
             height: Math.round(fittedHeight)
@@ -2190,6 +2190,43 @@
     return { directFamily, staged, skipped, failed };
   }
 
+
+  // 40.6.85 — Aether left-boot repair.
+  // Scope is exactly one persisted Aether presentation record, one time.
+  // A non-centered operator position is never rewritten.
+  const AETHER_LEFT_406085_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406085`;
+  function migrateAetherCenteredState406085() {
+    try {
+      if (localStorage.getItem(AETHER_LEFT_406085_MIGRATION_KEY) === "1") return "already";
+      const key = `${STORAGE_PREFIX}:window:aether-watch`;
+      const raw = JSON.parse(localStorage.getItem(key) || "null");
+      if (!raw || typeof raw !== "object") {
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        return "no-state";
+      }
+      const x = Number(raw.x), y = Number(raw.y), width = Number(raw.width), height = Number(raw.height);
+      if (![x, y, width, height].every(Number.isFinite)) {
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        return "invalid-state-preserved";
+      }
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const centeredX = Math.max(12, Math.round((vw - width) / 2));
+      const centered = x > 26 && Math.abs(x - centeredX) <= 14;
+      if (centered && raw.maximized !== true) {
+        localStorage.setItem(key, JSON.stringify({ ...raw, x: 12 }));
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        document.documentElement.dataset.aetherLeftMigration406085 = "migrated";
+        return "migrated";
+      }
+      localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+      document.documentElement.dataset.aetherLeftMigration406085 = "preserved";
+      return "preserved";
+    } catch (_) {
+      document.documentElement.dataset.aetherLeftMigration406085 = "storage-unavailable";
+      return "storage-unavailable";
+    }
+  }
+
   function boot() {
     installGlobalVersionIdentity();
     initAtlasMemoryResidency40353();
@@ -2207,6 +2244,7 @@
     migrateFamilyTopologyWindowState40303();
     migrateFamilyRoleReturnWindowState40322();
     stageAdministratorDefaultFamilyCollapse40361();
+    migrateAetherCenteredState406085();
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
