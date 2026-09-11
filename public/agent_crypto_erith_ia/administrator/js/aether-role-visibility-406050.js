@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.50 + Build 40.6.76 canonical Aether integration
+/* Agent-Crypto @erith.IA — 40.6.50 + Build 40.6.77 canonical Aether integration
    Aether role visibility corrective lock.
    Responsibility: visibility only. Geometry remains owned by the canonical Administrator Window Manager.
    Contract: Aether is CLOSED on boot and after any view/role transition (Classique, Intermédiaire, Administrator).
@@ -147,7 +147,7 @@
 })();
 
 /* ========================================================================== 
-   BUILD 40.6.76 — AETHER V2 NATIVE POSITION LOCK
+   BUILD 40.6.77 — AETHER V2 PRE-REVEAL POSITION LOCK
    The C1→C5 candidate chain is retired. This integration only:
    - publishes the 40.6.76 version truth in the running Administrator shell;
    - reuses the field-validated 40.6.75 Aether V2 visual stylesheet unchanged;
@@ -157,13 +157,13 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.76";
-  const REVISION = "V11";
-  const RELEASE = "AETHER V2 · NATIVE POSITION LOCK";
+  const BUILD = "40.6.77";
+  const REVISION = "V12";
+  const RELEASE = "AETHER V2 · PRE-REVEAL POSITION LOCK";
   const STYLE_ID = "aetherV2406075Canonical";
-  const SCRIPT_ID = "aetherFrame406076Canonical";
+  const SCRIPT_ID = "aetherFrame406077Canonical";
   const STYLE_HREF = "./aether-v2-406075.css?v=administrator-build-40.6.75";
-  const SCRIPT_SRC = "./js/aether-frame-406076.js?v=administrator-build-40.6.76";
+  const SCRIPT_SRC = "./js/aether-frame-406077.js?v=administrator-build-40.6.77";
   const RETIRED_LINK_IDS = Object.freeze([
     "aetherReadability406074",
     "aetherV2Stabilization406074C21",
@@ -181,9 +181,9 @@
 
     setMeta("atlas-build", BUILD);
     setMeta("administrator-build", BUILD);
-    setMeta("administrator-revision", "V11");
+    setMeta("administrator-revision", "V12");
     setMeta("administrator-release", RELEASE);
-    setMeta("atlas-asset-token", "market-core-v2.0-alpha-build-40.6.76");
+    setMeta("atlas-asset-token", "market-core-v2.0-alpha-build-40.6.77");
 
     const truth = document.getElementById("atlasVersionTruthText");
     if (truth) truth.textContent = `Build ${BUILD}`;
@@ -194,7 +194,7 @@
 
     document.title = `Agent-Crypto @erith.IA — Build ${BUILD} · Administrator`;
     document.documentElement.dataset.administratorBuild = BUILD;
-    document.documentElement.dataset.aetherV2406074 = "canonical-40.6.76";
+    document.documentElement.dataset.aetherV2406074 = "canonical-40.6.77";
     document.documentElement.dataset.aetherRevision406074 = REVISION;
     return true;
   }
@@ -226,9 +226,9 @@
     script.id = SCRIPT_ID;
     script.src = SCRIPT_SRC;
     script.defer = true;
-    script.dataset.aether406074 = "native-position-40.6.76";
+    script.dataset.aether406074 = "pre-reveal-position-40.6.77";
     script.addEventListener("load", () => {
-      document.documentElement.dataset.aetherFrameLoader406074 = "ready-40.6.76";
+      document.documentElement.dataset.aetherFrameLoader406074 = "ready-40.6.77";
     }, { once: true });
     script.addEventListener("error", () => {
       document.documentElement.dataset.aetherFrameLoader406074 = "error";
