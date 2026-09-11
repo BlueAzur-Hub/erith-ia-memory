@@ -157,49 +157,54 @@
 })();
 
 /* ==========================================================================
-   40.6.74 C3.1 — AETHER WATCH V2 ACTIVATION + FIELD REFINEMENT
+   40.6.74 C4 — AETHER WATCH V2 REFRAME REWRITE
 
-   Safety contract:
-   - visible/global runtime remains 40.6.73 until Christophe validates Firefox;
-   - V2 geometry activates only after the exact V2 image loads AND decodes;
-   - missing/undecodable asset => validated 40.6.73 geometry remains active;
-   - spatial, stabilization and C3.1 replacement refinement load deterministically;
-   - C3.1 replaces the C3 refinement sheet; it does not add another active layer;
-   - no timer, MutationObserver, storage owner, network API owner or Market Core edit.
+   C4 is deliberately a rewrite, not another active CSS tail:
+   - the exact V2 PNG is unchanged;
+   - C2 / C2.1 / C3 / C3.1 candidate links are removed before C4 is attached;
+   - one C4 stylesheet owns V2 geometry, card framing and responsive typography;
+   - maximized Aether is reframed to the largest 16:9 rectangle available in the
+     current browser/F11 viewport, so the 1672×941 scene is never stretched;
+   - restore geometry remains owned by the existing Administrator Window Manager;
+   - no timer, MutationObserver, storage owner, network owner or Market Core edit.
    ========================================================================== */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.74-candidate-3.1";
-  const LINK_ID = "aetherReadability406074";
-  const HREF = "./aether-readability-406074.css?v=406074-candidate-3.1";
-  const STABILIZATION_ID = "aetherV2Stabilization406074C21";
-  const STABILIZATION_HREF = "./aether-v2-stabilization-406074-c21.css?v=406074-candidate-3.1";
-  const REFINEMENT_ID = "aetherV2Refinement406074C31";
-  const REFINEMENT_HREF = "./aether-v2-refinement-406074-c31.css?v=406074-candidate-3.1";
+  const BUILD = "40.6.74-candidate-4";
+  const PANEL_ID = "atlasAetherStatusPanel4084";
   const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
   const ATTR = "data-aether-backplate-v2-406074";
+  const STYLE_ID = "aetherV2Reframe406074C4";
+  const STYLE_HREF = "./aether-v2-reframe-406074-c4.css?v=406074-candidate-4";
+  const LEGACY_CANDIDATE_LINK_IDS = Object.freeze([
+    "aetherReadability406074",
+    "aetherV2Stabilization406074C21",
+    "aetherV2Refinement406074C3",
+    "aetherV2Refinement406074C31"
+  ]);
   const root = document.documentElement;
 
-  function ensureStylesheet(id, href, marker) {
-    let link = document.getElementById(id);
+  function retireCandidateLinks() {
+    for (const id of LEGACY_CANDIDATE_LINK_IDS) {
+      document.getElementById(id)?.remove();
+    }
+    return true;
+  }
+
+  function ensureC4Stylesheet() {
+    retireCandidateLinks();
+    let link = document.getElementById(STYLE_ID);
     if (!link) {
       link = document.createElement("link");
-      link.id = id;
+      link.id = STYLE_ID;
       link.rel = "stylesheet";
       document.head.appendChild(link);
     }
-    link.href = href;
-    link.dataset.aetherCandidate406074 = marker;
+    link.href = STYLE_HREF;
+    link.dataset.aetherCandidate406074 = "candidate-4-single-owner";
+    root.dataset.aetherReadability406074 = "c4-styles-requested";
     return link;
-  }
-
-  function loadStylesheets() {
-    ensureStylesheet(LINK_ID, HREF, "candidate-3.1-spatial");
-    ensureStylesheet(STABILIZATION_ID, STABILIZATION_HREF, "candidate-3.1-stabilization");
-    ensureStylesheet(REFINEMENT_ID, REFINEMENT_HREF, "candidate-3.1-refinement");
-    root.dataset.aetherReadability406074 = "styles-requested";
-    return true;
   }
 
   function setBackplateState(state) {
@@ -215,12 +220,12 @@
 
     const activate = () => {
       setBackplateState("ready");
-      root.dataset.aetherReadability406074 = "candidate-3.1-ready";
+      root.dataset.aetherReadability406074 = "candidate-4-ready";
       return true;
     };
     const fallback = () => {
       setBackplateState("fallback-40.6.73");
-      root.dataset.aetherReadability406074 = "candidate-3.1-fallback";
+      root.dataset.aetherReadability406074 = "candidate-4-fallback";
       return false;
     };
 
@@ -234,33 +239,88 @@
     return { image, src };
   }
 
-  loadStylesheets();
+  function maximizedFrame() {
+    const panel = document.getElementById(PANEL_ID);
+    if (!(panel instanceof HTMLElement) || !panel.classList.contains("admin-native-maximized")) return false;
+
+    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    const margin = 12;
+    const maxWidth = Math.max(720, vw - margin * 2);
+    const maxHeight = Math.max(405, vh - margin * 2);
+
+    let width = Math.min(maxWidth, maxHeight * 16 / 9);
+    let height = width * 9 / 16;
+    if (height > maxHeight) {
+      height = maxHeight;
+      width = height * 16 / 9;
+    }
+
+    const left = Math.max(margin, (vw - width) / 2);
+    const top = Math.max(margin, (vh - height) / 2);
+
+    panel.style.setProperty("left", `${Math.round(left)}px`, "important");
+    panel.style.setProperty("top", `${Math.round(top)}px`, "important");
+    panel.style.setProperty("right", "auto", "important");
+    panel.style.setProperty("bottom", "auto", "important");
+    panel.style.setProperty("width", `${Math.round(width)}px`, "important");
+    panel.style.setProperty("height", `${Math.round(height)}px`, "important");
+    panel.dataset.aetherReframe406074C4 = `${Math.round(width)}x${Math.round(height)}`;
+    root.dataset.aetherMaximizedReframe406074C4 = "16x9";
+    return true;
+  }
+
+  function scheduleMaximizedFrame() {
+    queueMicrotask(maximizedFrame);
+  }
+
+  function captureWindowControl(event) {
+    const target = event.target instanceof Element
+      ? event.target.closest(`#${PANEL_ID} .admin-native-maximize`)
+      : null;
+    if (!target) return;
+    // Capture schedules the frame after the canonical Window Manager click handler.
+    scheduleMaximizedFrame();
+  }
+
+  ensureC4Stylesheet();
   const warm = warmV2Backplate();
+
+  document.addEventListener("click", captureWindowControl, true);
+  window.addEventListener("resize", () => {
+    if (document.getElementById(PANEL_ID)?.classList.contains("admin-native-maximized")) {
+      maximizedFrame();
+    }
+  }, { passive: true });
+  window.addEventListener("pageshow", scheduleMaximizedFrame, { passive: true });
+  scheduleMaximizedFrame();
 
   globalThis.ErithAetherReadability406074 = Object.freeze({
     build: BUILD,
-    href: HREF,
-    stabilization_href: STABILIZATION_HREF,
-    refinement_href: REFINEMENT_HREF,
+    stylesheet: STYLE_HREF,
     backplate: warm.src,
     activation_attribute: ATTR,
     candidate_only: true,
     global_build_promoted: false,
+    single_candidate_stylesheet: true,
+    retired_candidate_links: LEGACY_CANDIDATE_LINK_IDS,
     backplate_changed: true,
+    backplate_binary_modified: false,
     painted_geometry_changed: true,
-    activation_requires_asset_decode: true,
-    decode_failure_falls_back: true,
-    fallback_runtime: "40.6.73",
-    window_manager_changed: false,
+    maximize_reframe: "largest-16:9-inside-current-viewport",
+    canonical_restore_geometry_preserved: true,
+    window_manager_core_changed: false,
     market_core_changed: false,
     new_timer: false,
     new_observer: false,
     new_storage_owner: false,
     new_network_owner: false,
-    state: () => ({
+    reframeMaximized: maximizedFrame,
+    state: () => Object.freeze({
       backplate: root.getAttribute(ATTR) || "unset",
       readability: root.dataset.aetherReadability406074 || "unset",
-      refinement: document.getElementById(REFINEMENT_ID)?.dataset?.aetherCandidate406074 || "missing"
+      stylesheet: document.getElementById(STYLE_ID)?.dataset?.aetherCandidate406074 || "missing",
+      frame: document.getElementById(PANEL_ID)?.dataset?.aetherReframe406074C4 || "native"
     })
   });
 })();
