@@ -1,0 +1,72 @@
+name: Agent-Crypto 40.6.86 Version Owner Maintenance Lock
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/triggers/agent-crypto-406086-version-owner-lock.trigger'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: agent-crypto-406086-version-owner-lock
+  cancel-in-progress: false
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize main
+        run: |
+          set -euo pipefail
+          git pull --ff-only origin main
+
+      - name: Apply 40.6.86 version owner maintenance surgery
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_406086_version_owner_lock.py
+
+      - name: Acceptance gates
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          node --check "$ROOT/js/version-truth-406086-authority-lock.js"
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          build=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          version=json.loads((root/'version.json').read_text(encoding='utf-8'))
+          assert build['build']=='40.6.86'
+          assert version['build']=='40.6.86'
+          assert build['engine']=='38.15.11'
+          assert version['engine']=='38.15.11'
+          assert build['current_version_truth']['visible_owner']=='js/version-truth-406086-authority-lock.js'
+          assert version['current_version_truth']['loaded_build']=='40.6.86'
+          for name in ('index.html','index-40.6.86.html'):
+              html=(root/name).read_text(encoding='utf-8')
+              assert './js/version-truth-406086-authority-lock.js?v=maint-1' in html
+              assert './js/version-truth.js?v=40.6.86' not in html
+          print('VERSION_OWNER_406086_MAINTENANCE_PASS')
+          PY
+          git diff --check
+
+      - name: Commit maintenance in-place
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven Release Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            public/agent_crypto_erith_ia/administrator/index.html \
+            public/agent_crypto_erith_ia/administrator/index-40.6.86.html \
+            public/agent_crypto_erith_ia/administrator/js/version-truth-406086-authority-lock.js \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/administrator/version.json
+          git commit -m 'fix(agent-crypto): repair 40.6.86 visible version owner without build bump'
+          git push origin HEAD:main
