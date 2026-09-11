@@ -147,17 +147,17 @@
 })();
 
 /* ==========================================================================
-   BUILD 40.6.80 — AETHER V2 CANONICAL INTEGRATION
+   BUILD 40.6.81 — AETHER V2 CANONICAL INTEGRATION
    ========================================================================== */
 (() => {
   "use strict";
-  const BUILD = "40.6.80";
-  const REVISION = "V15";
-  const RELEASE = "AETHER V2 · WEATHER STATE GLYPH LOCK";
+  const BUILD = "40.6.81";
+  const REVISION = "V16";
+  const RELEASE = "AETHER V2 · READABILITY MICRO-TUNE LOCK";
   const STYLE_ID = "aetherV2Canonical";
   const SCRIPT_ID = "aetherV2RuntimeCanonical";
-  const STYLE_HREF = "./aether-v2-406075.css?v=administrator-build-40.6.80";
-  const SCRIPT_SRC = "./js/aether-v2-406080.js?v=administrator-build-40.6.80";
+  const STYLE_HREF = "./aether-v2-406081.css?v=administrator-build-40.6.81";
+  const SCRIPT_SRC = "./js/aether-v2-406081.js?v=administrator-build-40.6.81";
   const RETIRED_LINK_IDS = Object.freeze([
     "aetherReadability406074","aetherV2Stabilization406074C21","aetherV2Refinement406074C3",
     "aetherV2Refinement406074C31","aetherV2Reframe406074C4","aetherV2Reframe406074C5",
