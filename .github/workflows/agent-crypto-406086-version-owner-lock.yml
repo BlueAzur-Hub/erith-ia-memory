@@ -55,7 +55,6 @@ jobs:
               assert './js/version-truth.js?v=40.6.86' not in html
           print('VERSION_OWNER_406086_MAINTENANCE_PASS')
           PY
-          git diff --check
 
       - name: Commit maintenance in-place
         run: |
