@@ -30,31 +30,6 @@ jobs:
       - name: Apply 40.6.86 version authority surgery
         run: |
           set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('.github/scripts/agent_crypto_release_406086.py')
-          s=p.read_text(encoding='utf-8')
-          lines=s.splitlines()
-          lines=[line for line in lines if not ('replace_one(root_app' in line and ("'ATLAS_RELEASE')" in line or "'ATLAS_ASSET_TOKEN')" in line))]
-          s='\n'.join(lines)+'\n'
-          old="if 'version.json' in files:\n    raise SystemExit('STOP: version.json cannot hash itself')\nfiles[f'index-{BUILD}.html'] = sha(immutable_path)"
-          new="files.pop('version.json', None)\nfiles[f'index-{BUILD}.html'] = sha(immutable_path)"
-          if old not in s:
-              raise SystemExit('STOP: self-hash surgery anchor missing')
-          s=s.replace(old,new,1)
-          anchor="files[f'index-{BUILD}.html'] = sha(immutable_path)\nfor rel in list(files):"
-          injected="""files[f'index-{BUILD}.html'] = sha(immutable_path)
-asset_pattern = re.compile(r'(?:src|href)=[\"\\\']\\./([^\"\\\']+\\.(?:js|css))(?:\\?[^\"\\\']*)?[\"\\\']')
-for rel in sorted(set(asset_pattern.findall(index))):
-    p = ROOT / rel
-    if p.is_file():
-        files[rel] = sha(p)
-for rel in list(files):"""
-          if anchor not in s:
-              raise SystemExit('STOP: loaded-asset hash anchor missing')
-          s=s.replace(anchor,injected,1)
-          p.write_text(s,encoding='utf-8')
-          PY
           python .github/scripts/agent_crypto_release_406086.py
 
       - name: Syntax and canonical version gates
@@ -69,18 +44,6 @@ for rel in list(files):"""
             --base "$ROOT" \
             --expected-build 40.6.86 \
             --expected-release 'VERSION AUTHORITY CONSOLIDATION · IMMUTABLE ENTRY LOCK'
-          python - <<'PY'
-          from pathlib import Path
-          import json, re
-          root=Path('public/agent_crypto_erith_ia/administrator')
-          build=json.loads((root/'version.json').read_text(encoding='utf-8'))['build']
-          p=root/f'index-{build}.html'
-          if not p.is_file(): raise SystemExit('immutable entry missing')
-          html=p.read_text(encoding='utf-8')
-          if re.findall(r'<meta\s+name="administrator-build"\s+content="([^"]+)"',html)!=[build]: raise SystemExit('immutable meta drift')
-          if re.findall(r'<span\s+id="atlasVersionTruthText">Build ([^<]+)</span>',html)!=[build]: raise SystemExit('immutable badge drift')
-          print('IMMUTABLE_ENTRY_PASS', p.name)
-          PY
 
       - name: Commit 40.6.86 release
         run: |
