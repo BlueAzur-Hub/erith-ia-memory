@@ -182,7 +182,7 @@
     "js/tradus-data-ui-decoupling-406071.js": "b9efbb010c58fd13d6c16b905ed4952cc241881734f27fc26c62eaf5dd844c12",
     "RELEASE_40_6_71.md": "e0bd7d83a5287f8f62b49431a9da2f6a64e0fba2f453d5eced1a17c5428df7de",
     "RELEASE_40_6_72.md": "64d5cf8446996231d4c96424e9b345f9d11a8cf3852e1d02c7cd96be72c81f57",
-    "index-40.6.86.html": "e2f304ea18cc4d24b51efb4a72e0f57fe194eef73d6f8163cb68a1058579d577",
+    "index-40.6.86.html": "5e0cf782fea8fcd9974453d3d0493c8bbfaa14f27b60eb2a476a5f4a34098f81",
     "js/aether-operator-bridge-406002.js": "a30cb03c2c753e6cfec2b0064ed3148fa7c371b2bf178fedf08db3bc4e3327a5",
     "js/canonical-freeze-405023.js": "29491f83a44ccce192487cfb77fb98b3a1a210cf6dc5870480270e9d432e99cf",
     "js/capital-survival-405018.js": "4001fc23a0198169bbb22fc62d9f7014021cce8e0f579823eff4c3c8ae22e379",
@@ -193,7 +193,8 @@
     "js/footer-version-truth-406026.js": "ece612ec6b77d6fe365f9587c956ed068a256525a26f04a45ace5c61fb471fea",
     "js/historical-analog-engine-405015.js": "e44b8ac44659dd23f53b8a14bafb868088978c9829cba9893a2326c557fe6a1a",
     "js/horizon-calibration-405017.js": "f8d504603d0edaa65b0f48f8dc5f51699fed8cc5a0b7ab2f6f1a49aceec4441f",
-    "js/regime-qualified-analogs-405016.js": "435240912ab9fc03b8f3bd0111345d0711cefe3cee3ea564b3268e4b5643d771"
+    "js/regime-qualified-analogs-405016.js": "435240912ab9fc03b8f3bd0111345d0711cefe3cee3ea564b3268e4b5643d771",
+    "js/version-truth-406086-authority-lock.js": "b248431457ee238c1a36854306625d33741116cc8b7c2616817939594753e4a4"
   },
   "integrity": {
     "files": 172,
@@ -12476,8 +12477,8 @@
     "false_propagation_lock_preserved": true
   },
   "current_version_truth": {
-    "visible_owner": "js/version-truth.js",
-    "loaded_build": "40.6.64",
+    "visible_owner": "js/version-truth-406086-authority-lock.js",
+    "loaded_build": "40.6.86",
     "published_manifest": "build.json",
     "false_propagation_lock": true,
     "legacy_ids_hidden_sink": true,
@@ -12488,7 +12489,11 @@
     "manual_update_click_rechecks_manifest": true,
     "manual_update_click_requires_published_index_match": true,
     "recurring_timer": false,
-    "observer": false
+    "observer": false,
+    "maintenance_revision": "V21.1",
+    "loaded_build_authority": "hardcoded immutable owner script for 40.6.86",
+    "dom_meta_is_not_loaded_build_authority": true,
+    "legacy_visible_listener_detached": true
   },
   "cascade_40_5_21": {
     "parent_build": "40.5.20",
