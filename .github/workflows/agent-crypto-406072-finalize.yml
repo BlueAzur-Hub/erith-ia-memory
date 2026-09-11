@@ -1,0 +1,298 @@
+name: Agent Crypto 40.6.72 Lifecycle Version Truth Finalize
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-406072-finalize.yml'
+
+permissions:
+  contents: write
+
+env:
+  BUILD: '40.6.72'
+  PARENT: '40.6.71'
+  ENGINE: '38.15.11'
+  RELEASE: 'LIFECYCLE / VERSION TRUTH CONSOLIDATION'
+  STATUS: 'lifecycle_version_truth_consolidation_406072'
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Canonicalize lifecycle integration and publication truth
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, re, hashlib
+          from pathlib import Path
+          from datetime import datetime, timezone
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          build='40.6.72'; parent='40.6.71'; engine='38.15.11'
+          release='LIFECYCLE / VERSION TRUTH CONSOLIDATION'
+          status='lifecycle_version_truth_consolidation_406072'
+          now=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+
+          # --- Release note first so the manifest can hash the final payload. ---
+          note=root/'RELEASE_40_6_72.md'
+          note.write_text('''# Agent-Crypto Administrator — Build 40.6.72\n\n## LIFECYCLE / VERSION TRUTH CONSOLIDATION\n\nParent: **40.6.71**  \nMarket Core: **38.15.11** unchanged.\n\n### Purpose\n\n40.6.72 consolidates the two validated 40.6.71 maintenance repairs without changing market, Atlas CURRENT, Aether, TRADUS, Strategy A, Technical Reading or Window Manager behavior.\n\n- absorbs **40.6.71 R1**: late-boot rearm for System, Secondary News and Atlas Family demand residency;\n- absorbs **40.6.71 R2**: authenticated owner hard-reload reconciliation;\n- aligns the cache tokens of the touched lifecycle/residency/auth presentation assets with the canonical Administrator build;\n- preserves historical module-origin build numbers while adding an explicit 40.6.72 integration truth where needed;\n- preserves explicit `?view=intermediate` as authoritative;\n- preserves Atlas HOT cockpit and Forge iframe residency exclusions.\n\n### Safety locks\n\n- Market Core **38.15.11** unchanged.\n- Web Classic unchanged.\n- Atlas CURRENT / PENDING ownership unchanged.\n- Aether runtime, backplate and geometry unchanged.\n- TRADUS Paper and Strategy A unchanged.\n- Technical Reading unchanged.\n- Window Manager unchanged.\n- No new recurring timer.\n- No new MutationObserver.\n- No new network owner.\n- No new persistent storage owner.\n- No automatic or real order path.\n\n### Firefox acceptance\n\n1. Authenticate as Christophe / Administrator.\n2. `Ctrl+F5`: Administration must remain selected.\n3. Explicit `?view=intermediate`: Intermédiaire must remain authoritative.\n4. Open/close/reopen Auto Reader, Shared Memory and GitHub Memory.\n5. Open/close/reopen News secondary panels and Simulation.\n6. Atlas HOT cockpit remains alive; Forge must not reload because of demand-residency.\n7. Aether / TRADUS / Lecture Technique remain visually and functionally unchanged.\n''',encoding='utf-8')
+
+          # --- index.html: only publication truth + cache tokens for touched assets. ---
+          ip=root/'index.html'
+          html=ip.read_text(encoding='utf-8')
+          def meta(name,value,text):
+            pattern=rf'(<meta name="{re.escape(name)}" content=")[^"]*("\s*/?>)'
+            out,n=re.subn(pattern,rf'\g<1>{value}\g<2>',text,count=1)
+            assert n==1, f'missing meta {name}'
+            return out
+          html=meta('atlas-build',build,html)
+          html=meta('administrator-build',build,html)
+          html=meta('administrator-release',release,html)
+          html=meta('atlas-asset-token',f'market-core-v2.0-alpha-build-{build}',html)
+          html,n=re.subn(r'<title>Agent-Crypto @erith\.IA — Build [^<]+ · Administrator</title>',f'<title>Agent-Crypto @erith.IA — Build {build} · Administrator</title>',html,count=1)
+          assert n==1
+
+          replacements={
+            './js/views/view-lifecycle.js?v=administrator-build-40.4.257':f'./js/views/view-lifecycle.js?v=administrator-build-{build}',
+            './js/views/system-demand-residency.js?v=administrator-build-40.4.196R1':f'./js/views/system-demand-residency.js?v=administrator-build-{build}',
+            './js/views/atlas-family-demand-residency.js?v=administrator-build-40.4.196R1':f'./js/views/atlas-family-demand-residency.js?v=administrator-build-{build}',
+            './js/admin-theme-glass-404300.js?v=administrator-build-40.5.23':f'./js/admin-theme-glass-404300.js?v=administrator-build-{build}'
+          }
+          for old,new in replacements.items():
+            assert old in html, f'missing cache token {old}'
+            html=html.replace(old,new,1)
+          old='./js/views/secondary-domain-demand-residency.js'
+          new=f'./js/views/secondary-domain-demand-residency.js?v=administrator-build-{build}'
+          assert old in html and new not in html
+          html=html.replace(old,new,1)
+          ip.write_text(html,encoding='utf-8')
+
+          # --- Lifecycle owner: preserve historical source build; expose canonical integration build. ---
+          p=root/'js/views/view-lifecycle.js'
+          text=p.read_text(encoding='utf-8')
+          assert 'const BUILD="40.4.99 R1";' in text
+          assert 'const INTEGRATION_BUILD=' not in text
+          text=text.replace('const MACHINE_BUILD="40.4.99.1";','const MACHINE_BUILD="40.4.99.1";\n  const INTEGRATION_BUILD="40.6.72";',1)
+          old='const api=Object.freeze({build:BUILD,machine_build:MACHINE_BUILD,mode:'
+          new='const api=Object.freeze({build:BUILD,machine_build:MACHINE_BUILD,integration_build:INTEGRATION_BUILD,mode:'
+          assert old in text
+          text=text.replace(old,new,1)
+          p.write_text(text,encoding='utf-8')
+
+          # --- Canonicalize the three validated R1 residency repairs, keeping provenance. ---
+          for rel in ['js/views/system-demand-residency.js','js/views/secondary-domain-demand-residency.js','js/views/atlas-family-demand-residency.js']:
+            p=root/rel
+            text=p.read_text(encoding='utf-8')
+            assert 'const BOOT_FIX="40.6.71 R1";' in text
+            text=text.replace('const BOOT_FIX="40.6.71 R1";','const BOOT_FIX="40.6.72";\n  const BOOT_FIX_SOURCE="40.6.71 R1";',1)
+            assert 'boot_fix:BOOT_FIX,' in text
+            text=text.replace('boot_fix:BOOT_FIX,','boot_fix:BOOT_FIX,\n      boot_fix_source:BOOT_FIX_SOURCE,',1)
+            p.write_text(text,encoding='utf-8')
+
+          # --- Canonicalize authenticated owner hard-reload R2 metadata only. ---
+          p=root/'js/admin-theme-glass-404300.js'
+          text=p.read_text(encoding='utf-8')
+          assert 'const BUILD="40.6.71 R2";' in text
+          text=text.replace('/* 40.6.71 R2 — AUTHENTICATED OWNER RELOAD MODE RECONCILIATION','/* 40.6.72 — AUTHENTICATED OWNER RELOAD MODE RECONCILIATION\n   Canonical integration of validated 40.6.71 R2.',1)
+          text=text.replace('const BUILD="40.6.71 R2";','const BUILD="40.6.72";\n  const SOURCE_FIX="40.6.71 R2";',1)
+          assert 'build:BUILD,' in text
+          # Replace the first build:BUILD after the R2 marker, not the theme API above.
+          marker='globalThis.ErithAdminOwnerReloadReconcile406071R2=Object.freeze({'
+          before,after=text.split(marker,1)
+          assert 'build:BUILD,' in after
+          after=after.replace('build:BUILD,','build:BUILD,\n      source_fix:SOURCE_FIX,',1)
+          text=before+marker+after
+          p.write_text(text,encoding='utf-8')
+
+          # --- build.json canonical runtime truth. ---
+          bp=root/'build.json'
+          b=json.loads(bp.read_text(encoding='utf-8'))
+          assert b['build']==parent and b['engine']==engine
+          b.update({
+            'build':build,'engine':engine,'release':release,'published':True,'status':status,
+            'parent_build':parent,'asset_token':f'market-core-v2.0-alpha-build-{build}',
+            'administrator_build':build,'build_label':f'Build {build} · Administrator',
+            'release_status':'lifecycle_version_truth_consolidation','timestamp':now
+          })
+          if isinstance(b.get('current_version_truth'),dict): b['current_version_truth']['loaded_build']=build
+          b['cascade_40_6_72']={
+            'parent_build':parent,'release':release,'status':status,
+            'absorbs_40_6_71_r1':'lifecycle late-boot demand-residency rearm',
+            'absorbs_40_6_71_r2':'authenticated owner hard-reload mode reconciliation',
+            'view_lifecycle_historical_build':'40.4.99 R1',
+            'view_lifecycle_integration_build':build,
+            'cache_tokens_aligned':[ 'view-lifecycle','system-demand-residency','secondary-domain-demand-residency','atlas-family-demand-residency','admin-theme-glass' ],
+            'explicit_intermediate_query_preserved':True,
+            'atlas_hot_cockpit_resident_preserved':True,
+            'forge_iframe_detach_excluded':True,
+            'market_core':'38.15.11','market_core_modified':False,'web_classic_modified':False,
+            'aether_modified':False,'tradus_modified':False,'strategy_a_modified':False,
+            'technical_reading_modified':False,'window_manager_modified':False,
+            'atlas_current_owner_modified':False,'atlas_pending_owner_modified':False,
+            'new_recurring_timer':False,'new_observer':False,'new_network_owner':False,'new_storage_owner':False,
+            'automatic_order':False,'real_order':False
+          }
+          bp.write_text(json.dumps(b,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          # --- version.json publication manifest + hashes. ---
+          vp=root/'version.json'
+          v=json.loads(vp.read_text(encoding='utf-8'))
+          assert v['build']==parent and v['engine']==engine
+          v.update({'build':build,'engine':engine,'release':release,'status':status,'parent_build':parent,
+                    'asset_token':f'market-core-v2.0-alpha-build-{build}','prepared_at':now,'published_at':now})
+          suffix=f' → {build} lifecycle/version-truth consolidation; 40.6.71 R1/R2 absorbed; Market Core 38.15.11 preserved'
+          if isinstance(v.get('lineage'),str) and build not in v['lineage']: v['lineage']+=suffix
+          files=v.setdefault('files',{})
+          touched=[
+            'index.html','build.json','administrator-version.json',
+            'js/views/view-lifecycle.js','js/views/system-demand-residency.js',
+            'js/views/secondary-domain-demand-residency.js','js/views/atlas-family-demand-residency.js',
+            'js/admin-theme-glass-404300.js','RELEASE_40_6_72.md'
+          ]
+          # administrator-version is hashed after it is written below; do a second hash pass later.
+          for rel in [x for x in touched if x!='administrator-version.json']:
+            files[rel]=hashlib.sha256((root/rel).read_bytes()).hexdigest()
+          vp.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          # --- administrator mirror. ---
+          ap=root/'administrator-version.json'
+          av=json.loads(ap.read_text(encoding='utf-8'))
+          assert av['build']==parent
+          av.update({'build':build,'release':release,'status':status,'prepared_at':now,'published_at':now,'global_versioning':build})
+          av['lifecycle_version_truth_consolidation_406072']={
+            'r1_lifecycle_rearm_absorbed':True,'r2_owner_reload_reconcile_absorbed':True,
+            'historical_module_builds_preserved':True,'canonical_integration_build':build,
+            'cache_tokens_aligned':True,'explicit_intermediate_query_preserved':True,
+            'atlas_hot_cockpit_resident_preserved':True,'forge_iframe_detach_excluded':True,
+            'market_core':'38.15.11','market_core_modified':False,'web_classic_modified':False,
+            'aether_modified':False,'tradus_modified':False,'strategy_a_modified':False,
+            'technical_reading_modified':False,'window_manager_modified':False,
+            'new_timer':False,'new_observer':False,'new_network_owner':False,'new_storage_owner':False,
+            'real_order':False
+          }
+          ap.write_text(json.dumps(av,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          # Final hashes after every payload file exists in final form.
+          v=json.loads(vp.read_text(encoding='utf-8'))
+          files=v.setdefault('files',{})
+          for rel in touched:
+            files[rel]=hashlib.sha256((root/rel).read_bytes()).hexdigest()
+          files['version.json']='SELF_MANAGED_MANIFEST'
+          if isinstance(v.get('integrity'),dict): v['integrity']['files']=len(files)
+          vp.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+
+      - name: Validate syntax, version truth and protected owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          for f in \
+            "$ROOT/js/views/view-lifecycle.js" \
+            "$ROOT/js/views/system-demand-residency.js" \
+            "$ROOT/js/views/secondary-domain-demand-residency.js" \
+            "$ROOT/js/views/atlas-family-demand-residency.js" \
+            "$ROOT/js/admin-theme-glass-404300.js"; do
+            node --check "$f"
+          done
+
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          build='40.6.72'; parent='40.6.71'; engine='38.15.11'
+          b=json.loads((root/'build.json').read_text())
+          v=json.loads((root/'version.json').read_text())
+          a=json.loads((root/'administrator-version.json').read_text())
+          h=(root/'index.html').read_text()
+          assert b['build']==v['build']==a['build']==build
+          assert b['engine']==v['engine']==engine
+          assert b['parent_build']==v['parent_build']==parent
+          assert b['administrator_build']==build
+          assert b['current_version_truth']['loaded_build']==build
+          assert a['global_versioning']==build
+          assert f'<meta name="atlas-build" content="{build}"' in h
+          assert f'<meta name="administrator-build" content="{build}"' in h
+          assert f'<title>Agent-Crypto @erith.IA — Build {build} · Administrator</title>' in h
+          for asset in ['view-lifecycle.js','system-demand-residency.js','secondary-domain-demand-residency.js','atlas-family-demand-residency.js','admin-theme-glass-404300.js']:
+            assert f'{asset}?v=administrator-build-{build}' in h, asset
+          lifecycle=(root/'js/views/view-lifecycle.js').read_text()
+          assert 'const BUILD="40.4.99 R1";' in lifecycle
+          assert 'const INTEGRATION_BUILD="40.6.72";' in lifecycle
+          assert 'integration_build:INTEGRATION_BUILD' in lifecycle
+          for rel in ['js/views/system-demand-residency.js','js/views/secondary-domain-demand-residency.js','js/views/atlas-family-demand-residency.js']:
+            t=(root/rel).read_text()
+            assert 'const BOOT_FIX="40.6.72";' in t
+            assert 'const BOOT_FIX_SOURCE="40.6.71 R1";' in t
+            assert 'boot_fix_source:BOOT_FIX_SOURCE' in t
+          theme=(root/'js/admin-theme-glass-404300.js').read_text()
+          assert 'const BUILD="40.6.72";' in theme
+          assert 'const SOURCE_FIX="40.6.71 R2";' in theme
+          assert 'sessionStorage.getItem(SESSION_KEY)!=="owner"' in theme
+          assert 'searchParams.get("view")==="intermediate"' in theme
+          c=b['cascade_40_6_72']
+          assert c['market_core_modified'] is False and c['aether_modified'] is False and c['atlas_current_owner_modified'] is False
+          print('40.6.72 VERSION TRUTH + LIFECYCLE CONSOLIDATION PASS')
+          PY
+
+          # Protected business/visual owners must remain untouched by this release.
+          git diff --exit-code -- "$ROOT/js/aether.js"
+          git diff --exit-code -- "$ROOT/aether-406051.css"
+          git diff --exit-code -- "$ROOT/aether-performance-406070.css"
+          git diff --exit-code -- "$ROOT/js/tradus-paper-shadow-406067.js"
+          git diff --exit-code -- "$ROOT/js/tradus-paper-observability-406068.js"
+          git diff --exit-code -- "$ROOT/js/aether-tradus-bridge-406069.js"
+          echo 'PROTECTED AETHER / TRADUS OWNERS UNCHANGED PASS'
+
+      - name: Build clean upload package
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT=public/agent_crypto_erith_ia/administrator
+          TMP=/tmp/agent_crypto_406072
+          ZIP=/tmp/AGENT_CRYPTO_BUILD_40_6_72_LIFECYCLE_VERSION_TRUTH_CONSOLIDATION_CLEAN_UPLOAD_10_FILES.zip
+          rm -rf "$TMP" "$ZIP"
+          mkdir -p "$TMP/js/views" "$TMP/js"
+          cp "$ROOT/index.html" "$TMP/"
+          cp "$ROOT/build.json" "$ROOT/version.json" "$ROOT/administrator-version.json" "$ROOT/RELEASE_40_6_72.md" "$TMP/"
+          cp "$ROOT/js/views/view-lifecycle.js" "$ROOT/js/views/system-demand-residency.js" "$ROOT/js/views/secondary-domain-demand-residency.js" "$ROOT/js/views/atlas-family-demand-residency.js" "$TMP/js/views/"
+          cp "$ROOT/js/admin-theme-glass-404300.js" "$TMP/js/"
+          (cd "$TMP" && zip -qr "$ZIP" .)
+          mkdir -p artifact
+          cp "$ZIP" artifact/
+          sha256sum "$ZIP" | tee artifact/SHA256SUMS.txt
+
+      - name: Upload clean package
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_72_LIFECYCLE_VERSION_TRUTH_CONSOLIDATION_CLEAN_UPLOAD
+          path: artifact/*
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit canonical 40.6.72 and retire one-shot finalizer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html \
+                  public/agent_crypto_erith_ia/administrator/build.json \
+                  public/agent_crypto_erith_ia/administrator/version.json \
+                  public/agent_crypto_erith_ia/administrator/administrator-version.json \
+                  public/agent_crypto_erith_ia/administrator/js/views/view-lifecycle.js \
+                  public/agent_crypto_erith_ia/administrator/js/views/system-demand-residency.js \
+                  public/agent_crypto_erith_ia/administrator/js/views/secondary-domain-demand-residency.js \
+                  public/agent_crypto_erith_ia/administrator/js/views/atlas-family-demand-residency.js \
+                  public/agent_crypto_erith_ia/administrator/js/admin-theme-glass-404300.js \
+                  public/agent_crypto_erith_ia/administrator/RELEASE_40_6_72.md
+          git rm .github/workflows/agent-crypto-406072-finalize.yml
+          git commit -m "fix(agent-crypto): consolidate lifecycle and version truth 40.6.72"
+          git pull --rebase origin main
+          git push origin HEAD:main
