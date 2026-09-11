@@ -1,14 +1,20 @@
-/* Agent-Crypto @erith.IA — 40.4.99 R1
+/* Agent-Crypto @erith.IA — 40.4.99 R1 + 40.6.73 R1
    PRESENTATION VIEW LIFECYCLE REGISTRY / RESIDENT WAKEUP REFINEMENT
    40.4.99 R1 keeps the canonical market pulse as the single recurring owner.
    The pulse sleeps only while the document is actually hidden; loss of window
    focus alone must not destroy the already-armed canonical market wakeup.
-   No new fetch, recurring timer, observer, storage write or engine OFF. */
+
+   40.6.73 R1 — OPERATIONS RESIDENCY BOOT REPAIR
+   Family 03 Operations shells are mounted before this file by operations-presentation.js.
+   Register their closed-body residency here, after the canonical lifecycle exists,
+   so the historical 40.4.13 owner cannot silently no-op because of parser order.
+   No new fetch, recurring timer, observer, storage write, engine OFF, clone or
+   duplicate business owner is introduced. */
 (()=>{
   "use strict";
   const BUILD="40.4.99 R1";
   const MACHINE_BUILD="40.4.99.1";
-  const INTEGRATION_BUILD="40.6.72";
+  const INTEGRATION_BUILD="40.6.73 R1";
 
   /* 40.4.99 R1 — CURRENT resident lost-wakeup repair.
      app.js remains owner of scheduleAutoRead(), refreshMarketOnly(), runLivecheck()
@@ -135,4 +141,38 @@ const DEFINITIONS=Object.freeze([
   }
   const api=Object.freeze({build:BUILD,machine_build:MACHINE_BUILD,integration_build:INTEGRATION_BUILD,mode:"measurement-plus-resident-wakeup-refinement",definitions:DEFINITIONS,measurementSnapshot,residencySnapshot,registerClosedBodyFamily,restoreForHash,activeRegistrations:()=>registrations.length,clone_used:false,fetch_added:false,timer_added:false,observer_added:false,storage_write_added:false,engine_state_changed:false,technical_reading_protected:true,protected_cockpit_selectors:PROTECTED_COCKPIT_SELECTORS,market_pulse_wakeup:MARKET_PULSE_WAKEUP_R1,market_pulse_wakeup_installed:marketPulseWakeupInstalled});
   globalThis.ErithPresentationLifecycle=api;globalThis.ErithPresentationLifecycle40411=api;
+
+  /* 40.6.73 R1 — Operations 03 shells already exist here because
+     operations-presentation.js mounted them earlier in parser order. Registering
+     the family at the lifecycle source removes the historical silent no-op of the
+     standalone 40.4.13 residency script without adding a second lifecycle owner. */
+  const OPERATIONS_RESIDENCY_SELECTORS_406073_R1=Object.freeze([
+    'details[data-collapse-key="situation"][data-layout-family="operations"]',
+    'details[data-collapse-key="questionnaire"][data-layout-family="operations"]',
+    'details[data-collapse-key="briefing"][data-layout-family="operations"]',
+    'details[data-collapse-key="planning"][data-layout-family="operations"]'
+  ]);
+  const operationsRegistration406073R1=registerClosedBodyFamily({
+    id:"operations",
+    label:"03 · Préparation & opérations",
+    selectors:OPERATIONS_RESIDENCY_SELECTORS_406073_R1
+  });
+  globalThis.ErithOperationsDemandResidency40413=Object.freeze({
+    build:"40.4.13",
+    integration_build:INTEGRATION_BUILD,
+    strategy:"closed-body-same-node-detach",
+    selectors:OPERATIONS_RESIDENCY_SELECTORS_406073_R1,
+    registered:!!operationsRegistration406073R1,
+    canonical_registration_owner:"view-lifecycle.js",
+    parser_order_silent_noop_repaired:true,
+    operations_lazy_hydration_owner:"js/views/operations-presentation.js",
+    engine_state_changed:false,
+    clone_used:false,
+    fetch_added:false,
+    timer_added:false,
+    observer_added:false,
+    storage_write_added:false,
+    snapshot:()=>residencySnapshot()
+  });
+  try{document.documentElement.dataset.operationsDemandResidency406073R1=operationsRegistration406073R1?"ready":"registered-empty";}catch(_){}
 })();
