@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.50 + Build 40.6.74 canonical Aether integration
+/* Agent-Crypto @erith.IA — 40.6.50 + Build 40.6.74 R1 canonical Aether integration
    Aether role visibility corrective lock.
    Responsibility: visibility only. Geometry remains owned by the canonical Administrator Window Manager.
    Contract: Aether is CLOSED on boot and after any view/role transition (Classique, Intermédiaire, Administrator).
@@ -147,22 +147,23 @@
 })();
 
 /* ========================================================================== 
-   BUILD 40.6.74 — AETHER V2 CANONICAL INTEGRATION
+   BUILD 40.6.74 R1 — AETHER V2 CANONICAL INTEGRATION
    The C1→C5 candidate chain is retired. This integration only:
    - publishes the 40.6.74 version truth in the running Administrator shell;
-   - loads one final Aether V2 stylesheet;
-   - loads one canonical Window-Manager bridge for Aether geometry;
+   - loads one final Aether V2 stylesheet with the R1 optical fix;
+   - loads one canonical Window-Manager bridge with first-paint preframing;
    - never creates a timer, observer, network owner or Market Core owner.
    ========================================================================== */
 (() => {
   "use strict";
 
   const BUILD = "40.6.74";
-  const RELEASE = "AETHER V2 · CANONICAL FRAME / READABILITY";
+  const REVISION = "R1";
+  const RELEASE = "AETHER V2 · CANONICAL FRAME / READABILITY · R1";
   const STYLE_ID = "aetherV2406074Canonical";
   const SCRIPT_ID = "aetherFrame406074Canonical";
-  const STYLE_HREF = "./aether-v2-406074.css?v=administrator-build-40.6.74";
-  const SCRIPT_SRC = "./js/aether-frame-406074.js?v=administrator-build-40.6.74";
+  const STYLE_HREF = "./aether-v2-406074.css?v=administrator-build-40.6.74-r1";
+  const SCRIPT_SRC = "./js/aether-frame-406074.js?v=administrator-build-40.6.74-r1";
   const RETIRED_LINK_IDS = Object.freeze([
     "aetherReadability406074",
     "aetherV2Stabilization406074C21",
@@ -193,7 +194,8 @@
 
     document.title = `Agent-Crypto @erith.IA — Build ${BUILD} · Administrator`;
     document.documentElement.dataset.administratorBuild = BUILD;
-    document.documentElement.dataset.aetherV2406074 = "canonical";
+    document.documentElement.dataset.aetherV2406074 = "canonical-r1";
+    document.documentElement.dataset.aetherRevision406074 = REVISION;
     return true;
   }
 
@@ -212,7 +214,7 @@
       document.head.appendChild(link);
     }
     link.href = STYLE_HREF;
-    link.dataset.aether406074 = "canonical";
+    link.dataset.aether406074 = "canonical-r1";
     return link;
   }
 
@@ -224,9 +226,9 @@
     script.id = SCRIPT_ID;
     script.src = SCRIPT_SRC;
     script.defer = true;
-    script.dataset.aether406074 = "canonical";
+    script.dataset.aether406074 = "canonical-r1";
     script.addEventListener("load", () => {
-      document.documentElement.dataset.aetherFrameLoader406074 = "ready";
+      document.documentElement.dataset.aetherFrameLoader406074 = "ready-r1";
     }, { once: true });
     script.addEventListener("error", () => {
       document.documentElement.dataset.aetherFrameLoader406074 = "error";
@@ -241,9 +243,12 @@
 
   globalThis.ErithAetherCanonical406074 = Object.freeze({
     build: BUILD,
+    revision: REVISION,
     release: RELEASE,
     style_id: STYLE_ID,
     script_id: SCRIPT_ID,
+    style_href: STYLE_HREF,
+    script_src: SCRIPT_SRC,
     retired_candidate_links: RETIRED_LINK_IDS,
     runtime_version_truth: true,
     recurring_timer: false,
