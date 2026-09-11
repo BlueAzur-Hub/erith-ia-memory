@@ -1,0 +1,116 @@
+name: Agent-Crypto 40.6.75 Version Manifest Repair
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-406075-version-manifest-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Synchronize main
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Repair published version truth
+        shell: python
+        run: |
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import json
+
+          path = Path('public/agent_crypto_erith_ia/administrator/build.json')
+          text = path.read_text(encoding='utf-8')
+          # Prove the source is the stale manifest observed in the field.
+          parsed = json.loads(text)
+          if parsed.get('build') != '40.6.73':
+              raise SystemExit(f"Unexpected manifest source build: {parsed.get('build')}")
+          if parsed.get('engine') != '38.15.11':
+              raise SystemExit(f"Unexpected engine: {parsed.get('engine')}")
+
+          replacements = [
+              ('  "build": "40.6.73",', '  "build": "40.6.75",'),
+              ('  "release": "CANONICAL CHECKPOINT · ADMINISTRATOR / OPERATOR SYNC BASE",', '  "release": "AETHER V2 · ICON-SAFE LANES / TYPOGRAPHIC ALIGNMENT",'),
+              ('  "status": "canonical_checkpoint_administrator_operator_sync_base_406073",', '  "status": "aether_v2_icon_safe_lanes_typographic_alignment_406075",'),
+              ('  "parent_build": "40.6.72",', '  "parent_build": "40.6.74",'),
+              ('  "asset_token": "market-core-v2.0-alpha-build-40.6.73",', '  "asset_token": "market-core-v2.0-alpha-build-40.6.75",'),
+              ('  "administrator_build": "40.6.73",', '  "administrator_build": "40.6.75",'),
+              ('  "build_label": "Build 40.6.73 · Administrator",', '  "build_label": "Build 40.6.75 · Administrator",'),
+              ('  "release_status": "canonical_checkpoint_administrator_operator_sync_base",', '  "release_status": "aether_v2_icon_safe_lanes_typographic_alignment",'),
+              ('    "loaded_build": "40.6.73",', '    "loaded_build": "40.6.75",'),
+          ]
+          for old, new in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"Manifest token count {count}: {old}")
+              text = text.replace(old, new, 1)
+
+          import re
+          now = datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+          text, n = re.subn(r'^  "timestamp": "[^"]+",$', f'  "timestamp": "{now}",', text, count=1, flags=re.M)
+          if n != 1:
+              raise SystemExit('Top-level timestamp not found exactly once')
+
+          # Add a compact repair ledger without rewriting the historical manifest.
+          marker = '\n  "cascade_40_5_21": {'
+          if marker not in text:
+              raise SystemExit('Insertion marker missing')
+          repair = '''\n  "version_manifest_repair_40_6_75": {\n    "repair_only": true,\n    "manifest_repaired_from": "40.6.73",\n    "published_build": "40.6.75",\n    "runtime_build": "40.6.75",\n    "version_owner": "js/version-truth.js",\n    "published_truth_owner": "build.json",\n    "version_truth_js_modified": false,\n    "manual_click_current_reloads": false,\n    "manual_click_update_available_reloads": true,\n    "published_index_match_required": true,\n    "market_core": "38.15.11",\n    "market_core_modified": false,\n    "operator_runtime_modified": false,\n    "new_recurring_timer": false,\n    "new_observer": false,\n    "new_network_owner": false,\n    "new_storage_owner": false\n  },\n'''
+          text = text.replace(marker, repair + marker, 1)
+
+          # Final structural proof.
+          final = json.loads(text)
+          assert final['build'] == '40.6.75'
+          assert final['administrator_build'] == '40.6.75'
+          assert final['engine'] == '38.15.11'
+          assert final['current_version_truth']['loaded_build'] == '40.6.75'
+          assert final['version_manifest_repair_40_6_75']['version_truth_js_modified'] is False
+          path.write_text(text, encoding='utf-8')
+
+          release = Path('public/agent_crypto_erith_ia/administrator/RELEASE_40_6_75.md')
+          body = release.read_text(encoding='utf-8')
+          note = '''\n## Version manifest repair\n\nThe published `build.json` manifest had remained at **40.6.73** while the runtime/index had already reached **40.6.75**. This prevented the canonical version button from advertising 40.6.75 to a browser still running 40.6.74. The manifest is resynchronized to 40.6.75; `js/version-truth.js` itself is unchanged.\n'''
+          if '## Version manifest repair' not in body:
+              release.write_text(body.rstrip() + '\n' + note, encoding='utf-8')
+
+      - name: Validate selective-update contract
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          manifest = json.loads((root/'build.json').read_text(encoding='utf-8'))
+          index = (root/'index.html').read_text(encoding='utf-8')
+          owner = (root/'js/version-truth.js').read_text(encoding='utf-8')
+          assert manifest['build'] == '40.6.75'
+          assert manifest['engine'] == '38.15.11'
+          assert '<meta name="administrator-build" content="40.6.75" />' in index
+          assert 'const MANIFEST="./build.json"' in owner
+          assert 'cache:"no-store"' in owner
+          assert 'state!=="update-available"' in owner
+          assert 'location.replace(url.toString())' in owner
+          print('OK: stale 40.6.74 -> published 40.6.75 will become update-available; click then reloads the 40.6.75 index.')
+
+      - name: Remove one-shot workflow and commit repair
+        run: |
+          git rm .github/workflows/agent-crypto-406075-version-manifest-repair.yml
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+          git add \
+            public/agent_crypto_erith_ia/administrator/build.json \
+            public/agent_crypto_erith_ia/administrator/RELEASE_40_6_75.md
+          git diff --cached --check
+          git commit -m "fix(agent-crypto): resync 40.6.75 published version manifest"
+          git push origin HEAD:main
