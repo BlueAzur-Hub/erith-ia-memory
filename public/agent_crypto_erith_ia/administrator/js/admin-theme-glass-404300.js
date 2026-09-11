@@ -10,7 +10,8 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 
-/* 40.6.71 R2 — AUTHENTICATED OWNER RELOAD MODE RECONCILIATION
+/* 40.6.72 — AUTHENTICATED OWNER RELOAD MODE RECONCILIATION
+   Canonical integration of validated 40.6.71 R2.
    Ctrl+F5 preserves sessionStorage. When the local owner session is already valid,
    a stale persisted Intermediate mode must not demote the authenticated owner on
    a normal reload. Explicit ?view=intermediate remains authoritative.
@@ -18,7 +19,8 @@
    observer, Market Core, Atlas CURRENT or Window Manager ownership is added. */
 (() => {
   "use strict";
-  const BUILD="40.6.71 R2";
+  const BUILD="40.6.72";
+  const SOURCE_FIX="40.6.71 R2";
   const MODE_KEY="agent_crypto_erith_ia_v2_interface_mode";
   const SESSION_KEY="agent_crypto_local_access_session_v1";
   try {
@@ -36,6 +38,7 @@
 
     globalThis.ErithAdminOwnerReloadReconcile406071R2=Object.freeze({
       build:BUILD,
+      source_fix:SOURCE_FIX,
       authenticated_owner_required:true,
       explicit_intermediate_preserved:true,
       mode:"advanced",

@@ -12,7 +12,8 @@
 (()=>{
   "use strict";
   const BUILD="40.4.89";
-  const BOOT_FIX="40.6.71 R1";
+  const BOOT_FIX="40.6.72";
+  const BOOT_FIX_SOURCE="40.6.71 R1";
   const selectors=Object.freeze([
     'details[data-collapse-key="simulation"]'
   ]);
@@ -32,6 +33,7 @@
     const api=Object.freeze({
       build:BUILD,
       boot_fix:BOOT_FIX,
+      boot_fix_source:BOOT_FIX_SOURCE,
       restored_contract:"40.4.14-simulation-only",
       strategy:"closed-body-same-node-detach",
       selectors,

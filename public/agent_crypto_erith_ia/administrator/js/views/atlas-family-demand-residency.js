@@ -10,7 +10,8 @@
 (()=>{
   "use strict";
   const BUILD="40.4.139";
-  const BOOT_FIX="40.6.71 R1";
+  const BOOT_FIX="40.6.72";
+  const BOOT_FIX_SOURCE="40.6.71 R1";
   const HOT_ROOT="#atlas-local-ai-collapse";
   const selectors=Object.freeze([
     'details[data-collapse-key="auto-reader"][data-layout-family="intelligence"]',
@@ -61,6 +62,7 @@
     globalThis.ErithAtlasFamilyDemandResidency40415=Object.freeze({
       build:BUILD,
       boot_fix:BOOT_FIX,
+      boot_fix_source:BOOT_FIX_SOURCE,
       parent_owner:"40.4.15",
       strategy:"hot-core-resident + peripheral-closed-body-demand-residency",
       hot_root:HOT_ROOT,

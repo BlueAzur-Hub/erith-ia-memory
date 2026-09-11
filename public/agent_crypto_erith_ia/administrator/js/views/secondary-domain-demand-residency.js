@@ -12,7 +12,8 @@
 (()=>{
   "use strict";
   const BUILD="40.4.94";
-  const BOOT_FIX="40.6.71 R1";
+  const BOOT_FIX="40.6.72";
+  const BOOT_FIX_SOURCE="40.6.71 R1";
   const selectors=Object.freeze([
     '#news-sentinel',
     '#news-market-explanation',
@@ -52,6 +53,7 @@
     globalThis.ErithSecondaryDomainDemand40494=Object.freeze({
       build:BUILD,
       boot_fix:BOOT_FIX,
+      boot_fix_source:BOOT_FIX_SOURCE,
       strategy:"closed-body-same-node-detach-at-domcontentloaded",
       selectors,
       registered:!!registration,

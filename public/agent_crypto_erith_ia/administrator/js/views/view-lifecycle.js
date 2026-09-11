@@ -8,6 +8,7 @@
   "use strict";
   const BUILD="40.4.99 R1";
   const MACHINE_BUILD="40.4.99.1";
+  const INTEGRATION_BUILD="40.6.72";
 
   /* 40.4.99 R1 — CURRENT resident lost-wakeup repair.
      app.js remains owner of scheduleAutoRead(), refreshMarketOnly(), runLivecheck()
@@ -132,6 +133,6 @@ const DEFINITIONS=Object.freeze([
       })))
     })));
   }
-  const api=Object.freeze({build:BUILD,machine_build:MACHINE_BUILD,mode:"measurement-plus-resident-wakeup-refinement",definitions:DEFINITIONS,measurementSnapshot,residencySnapshot,registerClosedBodyFamily,restoreForHash,activeRegistrations:()=>registrations.length,clone_used:false,fetch_added:false,timer_added:false,observer_added:false,storage_write_added:false,engine_state_changed:false,technical_reading_protected:true,protected_cockpit_selectors:PROTECTED_COCKPIT_SELECTORS,market_pulse_wakeup:MARKET_PULSE_WAKEUP_R1,market_pulse_wakeup_installed:marketPulseWakeupInstalled});
+  const api=Object.freeze({build:BUILD,machine_build:MACHINE_BUILD,integration_build:INTEGRATION_BUILD,mode:"measurement-plus-resident-wakeup-refinement",definitions:DEFINITIONS,measurementSnapshot,residencySnapshot,registerClosedBodyFamily,restoreForHash,activeRegistrations:()=>registrations.length,clone_used:false,fetch_added:false,timer_added:false,observer_added:false,storage_write_added:false,engine_state_changed:false,technical_reading_protected:true,protected_cockpit_selectors:PROTECTED_COCKPIT_SELECTORS,market_pulse_wakeup:MARKET_PULSE_WAKEUP_R1,market_pulse_wakeup_installed:marketPulseWakeupInstalled});
   globalThis.ErithPresentationLifecycle=api;globalThis.ErithPresentationLifecycle40411=api;
 })();
