@@ -53,9 +53,8 @@ jobs:
           replacements = [
             ('  "build": "40.6.72",', '  "build": "40.6.73",'),
             ('  "global_versioning": "40.6.72",', '  "global_versioning": "40.6.73",'),
-            ('  "parent": "40.6.71",', '  "parent": "40.6.72",'),
             ('  "release": "LIFECYCLE / VERSION TRUTH CONSOLIDATION",', f'  "release": "{release}",'),
-            ('  "status": "40.6.72 · lifecycle / version truth consolidation",', '  "status": "40.6.73 · canonical checkpoint · administrator / operator sync base",'),
+            ('  "status": "lifecycle_version_truth_consolidation_406072",', '  "status": "canonical_checkpoint_administrator_operator_sync_base_406073",'),
           ]
           for before, after in replacements:
             count = s.count(before)
