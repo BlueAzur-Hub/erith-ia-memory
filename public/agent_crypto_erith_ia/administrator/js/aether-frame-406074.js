@@ -1,5 +1,5 @@
-/* Agent-Crypto @erith.IA — Build 40.6.74
-   AETHER WATCH V2 — CANONICAL FRAME OWNER
+/* Agent-Crypto @erith.IA — Build 40.6.74 R1
+   AETHER WATCH V2 — CANONICAL FRAME OWNER / FIRST-PAINT STABILIZATION
 
    Presentation-only bridge between the existing Administrator Window Manager
    and the 1672×941 V2 Aether backplate.
@@ -7,6 +7,7 @@
    Contract:
    - Window Manager remains the only geometry/storage owner;
    - stale Aether floating geometry is normalized even while the window is hidden;
+   - explicit Aether intent is preframed before the canonical click can reveal it;
    - the frame uses the largest complete 16:9 rectangle left of Lecture Technique;
    - explicit maximize/minimize states are never cancelled;
    - no recurring timer, MutationObserver, fetch, WebSocket, market or trading owner.
@@ -14,7 +15,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.74";
+  const BUILD = "40.6.74 R1";
   const WINDOW_ID = "aether-watch";
   const PANEL_ID = "atlasAetherStatusPanel4084";
   const TOGGLE_ID = "atlasAetherStatusToggle4084";
@@ -135,14 +136,12 @@
     return true;
   }
 
-  function afterCanonicalOpen() {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const { win } = managerState();
-        if (!win || win.minimized || win.maximized) return;
-        normalizeFloatingGeometry({ force: false, persist: true });
-      });
-    });
+  function preframeCanonicalOpen(reason = "intent") {
+    const { win } = managerState();
+    if (!win || win.minimized || win.maximized) return false;
+    const changed = normalizeFloatingGeometry({ force: false, persist: true });
+    root.dataset.aetherFirstPaint406074R1 = changed ? `${reason}-normalized` : `${reason}-ready`;
+    return true;
   }
 
   function warmBackplate() {
@@ -168,7 +167,19 @@
 
   function captureAetherIntent(event) {
     if (!(event.target instanceof Element)) return;
-    if (event.target.closest(`#${TOGGLE_ID}`)) afterCanonicalOpen();
+    if (!event.target.closest(`#${TOGGLE_ID}`)) return;
+
+    // Capture phase runs before the canonical click handler can reveal Aether.
+    // Apply the target while the Window Manager still owns a hidden window so
+    // Firefox never paints the historical small centered rectangle first.
+    preframeCanonicalOpen(event.type === "pointerdown" ? "pointerdown" : "click-capture");
+
+    // The canonical handler may touch the window state later in the same event.
+    // A microtask executes before the browser paints, so this is a no-flash
+    // safety reassertion rather than the old two-requestAnimationFrame recadre.
+    if (event.type === "click") {
+      queueMicrotask(() => preframeCanonicalOpen("post-click-microtask"));
+    }
   }
 
   function scheduleResize() {
@@ -182,14 +193,16 @@
   }
 
   const warm = warmBackplate();
+  document.addEventListener("pointerdown", captureAetherIntent, { capture: true, passive: true });
   document.addEventListener("click", captureAetherIntent, true);
   window.addEventListener("resize", scheduleResize, { passive: true });
   window.addEventListener("pageshow", () => requestAnimationFrame(() => normalizeFloatingGeometry({ force: false, persist: true })), { passive: true });
-  window.addEventListener("erith:administrator-mirror-ready", () => requestAnimationFrame(() => normalizeFloatingGeometry({ force: false, persist: true })), { once: true });
+  window.addEventListener("erith:administrator-mirror-ready", () => queueMicrotask(() => normalizeFloatingGeometry({ force: false, persist: true })), { once: true });
 
-  // Crucial 40.6.74 change: migrate stale geometry while Aether is still hidden.
-  // C5 skipped hidden windows, so the old ~950 px rectangle survived every reload.
-  requestAnimationFrame(() => normalizeFloatingGeometry({ force: false, persist: true }));
+  // First synchronous attempt: when the dynamically loaded bridge arrives after
+  // the Window Manager, the hidden geometry is corrected immediately, not one
+  // animation frame later. The mirror-ready hook above remains the safe fallback.
+  normalizeFloatingGeometry({ force: false, persist: true });
 
   globalThis.ErithAetherFrame406074 = Object.freeze({
     build: BUILD,
@@ -197,6 +210,8 @@
     ratio: RATIO,
     max_float_width: MAX_FLOAT_WIDTH,
     hidden_geometry_migration: true,
+    prepaint_intent_frame: true,
+    post_click_microtask_reassert: true,
     explicit_maximize_preserved: true,
     recurring_timer: false,
     observer: false,
@@ -206,6 +221,7 @@
     backplate: warm.src,
     target: targetFloatingGeometry,
     normalize: normalizeFloatingGeometry,
+    preframe: preframeCanonicalOpen,
     status: () => {
       const { win, snapshot, saved } = managerState();
       return Object.freeze({
@@ -214,6 +230,7 @@
         hidden: saved?.hidden ?? win?.hidden ?? null,
         maximized: saved?.maximized ?? win?.maximized ?? null,
         geometry: saved?.geometry || null,
+        first_paint: root.dataset.aetherFirstPaint406074R1 || "idle",
         dataset: root.dataset.aetherFrame406074 || "idle"
       });
     }
