@@ -1,0 +1,312 @@
+/* Agent-Crypto @erith.IA — Aether Readability candidate 40.6.74
+   Parent runtime: Administrator 40.6.73.
+   Presentation-only candidate: improve live text hierarchy inside the approved
+   1672×941 Aether master backplate without changing the painted capsule geometry.
+   No image, Window Manager, runtime/data, Market Core, timer, observer, storage
+   or network ownership change. */
+
+/* --------------------------------------------------------------------------
+   1. Semantic lane expansion
+   Reclaim a small amount of the transparent DOM lane around the baked icons.
+   Painted capsule left/top/width/height coordinates remain untouched.
+   -------------------------------------------------------------------------- */
+.aether46-card[data-aether-card-406046="system"] {
+  padding: .82% .90% .48% 5.08% !important;
+}
+.aether46-card[data-aether-card-406046="sources"] {
+  padding: .84% .76% .48% 4.82% !important;
+}
+.aether46-card[data-aether-card-406046="atlas"] {
+  padding: .82% .76% .48% 4.82% !important;
+}
+.aether46-card[data-aether-card-406046="convergence"] {
+  padding: .78% .76% .46% 5.28% !important;
+}
+.aether46-card[data-aether-card-406046="divergence"] {
+  padding: .82% .90% .48% 5.08% !important;
+}
+.aether46-card[data-aether-card-406046="market"] {
+  padding: .82% .72% .46% 4.72% !important;
+}
+.aether46-card[data-aether-card-406046="events"] {
+  padding: .80% .72% .46% 4.72% !important;
+}
+.aether46-card[data-aether-card-406046="oracle"] {
+  padding: .74% .66% .42% 4.92% !important;
+}
+.aether46-card[data-aether-card-406046="weather"] {
+  padding: .74% .66% .42% 4.88% !important;
+}
+
+/* Stronger first-glance contrast without adding a painted surface. */
+.aether46-card header span,
+.aether46-system-metrics strong,
+.aether46-source-metrics strong,
+.aether46-atlas-main > strong,
+.aether46-convergence-main > strong,
+.aether46-breadth strong,
+.aether46-coins strong,
+.aether46-oracle-metrics strong,
+.aether46-weather-metrics strong {
+  text-shadow: 0 1px 2px rgba(0,0,0,.92), 0 0 8px rgba(56,210,255,.16) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. Normal Administrator / floating Aether window
+   Primary facts are enlarged. Tertiary prose yields before primary values.
+   -------------------------------------------------------------------------- */
+@container aether49 (max-width: 1450px) {
+  .aether46-card header {
+    margin-bottom: clamp(3px,.30cqw,5px) !important;
+    gap: clamp(3px,.26cqw,5px) !important;
+  }
+  .aether46-card header span {
+    font-size: clamp(12px,.92cqw,15px) !important;
+    line-height: 1.04 !important;
+    font-weight: 900 !important;
+  }
+  .aether46-card header b {
+    font-size: clamp(8px,.52cqw,9.5px) !important;
+    line-height: 1.04 !important;
+    max-width: 44% !important;
+  }
+  .aether46-card footer {
+    font-size: clamp(8px,.50cqw,9.5px) !important;
+    line-height: 1.12 !important;
+  }
+
+  /* System */
+  .aether46-system-metrics {
+    gap: .24cqw !important;
+    margin: .04cqw 0 .24cqw !important;
+  }
+  .aether46-system-metrics small {
+    font-size: clamp(8.5px,.53cqw,10px) !important;
+  }
+  .aether46-system-metrics strong {
+    font-size: clamp(13px,.84cqw,16px) !important;
+    font-weight: 900 !important;
+  }
+
+  /* Sources — keep the accepted 2×2 information architecture. */
+  .aether46-source-metrics {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 4px 8px !important;
+    margin-top: 3px !important;
+  }
+  .aether46-source-metrics small {
+    font-size: clamp(8px,.50cqw,9.5px) !important;
+    line-height: 1.04 !important;
+  }
+  .aether46-source-metrics strong {
+    font-size: clamp(10.5px,.68cqw,13px) !important;
+    line-height: 1.04 !important;
+    font-weight: 900 !important;
+  }
+
+  /* Atlas */
+  .aether46-atlas-main {
+    gap: 6px !important;
+  }
+  .aether46-atlas-main > strong {
+    font-size: clamp(20px,1.18cqw,24px) !important;
+    font-weight: 900 !important;
+  }
+  .aether46-atlas-main > span {
+    font-size: clamp(9px,.60cqw,11.5px) !important;
+    line-height: 1.08 !important;
+    max-height: 2.2em !important;
+  }
+  .aether46-atlas-sub {
+    margin-top: .22cqw !important;
+  }
+  .aether46-atlas-sub b,
+  .aether46-atlas-sub span {
+    font-size: clamp(9px,.57cqw,10.5px) !important;
+  }
+
+  /* Convergence */
+  .aether46-convergence-main > strong {
+    font-size: clamp(22px,1.38cqw,28px) !important;
+    font-weight: 900 !important;
+  }
+  .aether46-convergence-main > span {
+    font-size: clamp(9.5px,.63cqw,12px) !important;
+    line-height: 1.06 !important;
+  }
+  .aether46-card[data-aether-card-406046="convergence"] footer {
+    display: block !important;
+    font-size: clamp(8.5px,.52cqw,10px) !important;
+  }
+
+  /* Divergence */
+  .aether46-card[data-aether-card-406046="divergence"] p {
+    margin: 0 0 2px !important;
+    font-size: clamp(10.5px,.68cqw,13px) !important;
+    line-height: 1.12 !important;
+    max-height: 3.4em !important;
+  }
+
+  /* Market */
+  .aether46-card[data-aether-card-406046="market"] header b {
+    max-width: 38% !important;
+  }
+  .aether46-breadth {
+    font-size: clamp(9.5px,.60cqw,11.5px) !important;
+    line-height: 1.05 !important;
+  }
+  .aether46-breadth strong {
+    font-size: clamp(10.5px,.68cqw,12.5px) !important;
+  }
+  .aether46-coins {
+    margin-top: .28cqw !important;
+    padding-top: .20cqw !important;
+  }
+  .aether46-coins b {
+    font-size: clamp(8px,.50cqw,9.5px) !important;
+  }
+  .aether46-coins strong {
+    font-size: clamp(9.2px,.58cqw,11px) !important;
+    font-weight: 900 !important;
+  }
+
+  /* Events — two richer rows beat three microscopic rows. */
+  .aether46-event-row:nth-child(n+3) {
+    display: none !important;
+  }
+  .aether46-events [data-aether46-events] {
+    gap: 4px !important;
+    max-height: none !important;
+  }
+  .aether46-event-row {
+    grid-template-columns: 34px 46px minmax(0,1fr) !important;
+    gap: 4px !important;
+  }
+  .aether46-event-row time,
+  .aether46-event-row b,
+  .aether46-event-row span {
+    font-size: clamp(8.5px,.54cqw,10.5px) !important;
+    line-height: 1.10 !important;
+  }
+
+  /* Oracle — accepted 2×2 layout, larger values. */
+  .aether46-oracle-metrics {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 4px 8px !important;
+    margin-top: 2px !important;
+  }
+  .aether46-oracle-metrics small {
+    font-size: clamp(7.8px,.48cqw,9px) !important;
+    line-height: 1.03 !important;
+  }
+  .aether46-oracle-metrics strong {
+    font-size: clamp(10px,.65cqw,12.5px) !important;
+    line-height: 1.04 !important;
+    font-weight: 900 !important;
+  }
+
+  /* Weather */
+  .aether46-weather-metrics {
+    gap: 5px !important;
+  }
+  .aether46-weather-metrics small {
+    font-size: clamp(7.8px,.48cqw,9px) !important;
+  }
+  .aether46-weather-metrics strong {
+    font-size: clamp(10px,.64cqw,12.5px) !important;
+    font-weight: 900 !important;
+  }
+  .aether46-card[data-aether-card-406046="weather"] footer {
+    font-size: clamp(7.5px,.46cqw,8.5px) !important;
+  }
+
+  /* Top operational strip */
+  .aether46-system-banner > div:first-child b {
+    font-size: clamp(8px,.52cqw,9.5px) !important;
+  }
+  .aether46-system-banner > div:first-child span {
+    font-size: clamp(7.5px,.48cqw,9px) !important;
+  }
+  .aether46-clock small {
+    font-size: clamp(7px,.43cqw,8px) !important;
+  }
+  .aether46-clock strong {
+    font-size: clamp(14px,.88cqw,17px) !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Smaller floating window
+   Keep the same radial composition. Remove tertiary labels before shrinking
+   the facts that Christophe actually reads at a glance.
+   -------------------------------------------------------------------------- */
+@container aether49 (max-width: 1180px) {
+  .aether46-card header span {
+    font-size: 11.5px !important;
+    line-height: 1.02 !important;
+  }
+  .aether46-card header b {
+    font-size: 7.5px !important;
+  }
+  .aether46-card footer {
+    font-size: 7.5px !important;
+  }
+
+  .aether46-system-metrics small { font-size: 8px !important; }
+  .aether46-system-metrics strong { font-size: 13px !important; }
+
+  .aether46-source-metrics small,
+  .aether46-oracle-metrics small,
+  .aether46-weather-metrics small { font-size: 7.4px !important; }
+  .aether46-source-metrics strong,
+  .aether46-oracle-metrics strong,
+  .aether46-weather-metrics strong { font-size: 9.5px !important; }
+
+  .aether46-atlas-main > strong { font-size: 18px !important; }
+  .aether46-atlas-main > span { font-size: 8.5px !important; }
+  .aether46-atlas-sub b { font-size: 8.5px !important; }
+  .aether46-atlas-sub span { display: none !important; }
+
+  .aether46-convergence-main > strong { font-size: 20px !important; }
+  .aether46-convergence-main > span { font-size: 8.5px !important; }
+  .aether46-card[data-aether-card-406046="convergence"] footer { font-size: 7.5px !important; }
+
+  .aether46-card[data-aether-card-406046="divergence"] p {
+    font-size: 9px !important;
+    line-height: 1.08 !important;
+  }
+
+  .aether46-breadth { font-size: 8px !important; }
+  .aether46-breadth strong { font-size: 9.2px !important; }
+  .aether46-coins b { font-size: 7px !important; }
+  .aether46-coins strong { font-size: 8px !important; }
+
+  .aether46-event-row time,
+  .aether46-event-row b,
+  .aether46-event-row span { font-size: 7.6px !important; }
+
+  .aether46-core > strong { font-size: 27px !important; }
+  .aether46-core > span { font-size: 9.5px !important; }
+}
+
+/* At very compact width, state badges/tertiary prose yield to semantic titles. */
+@container aether49 (max-width: 1040px) {
+  .aether46-card header b { display: none !important; }
+  .aether46-card header span { font-size: 11.5px !important; }
+  .aether46-card footer { display: none !important; }
+
+  .aether46-card[data-aether-card-406046="events"] header b { display: none !important; }
+  .aether46-event-row:nth-child(n+2) { display: none !important; }
+
+  .aether46-source-metrics strong,
+  .aether46-oracle-metrics strong,
+  .aether46-weather-metrics strong { font-size: 9.2px !important; }
+  .aether46-system-metrics strong { font-size: 12.5px !important; }
+  .aether46-atlas-main > strong { font-size: 18px !important; }
+  .aether46-convergence-main > strong { font-size: 20px !important; }
+}
+
+/* Candidate marker for forensic Firefox checks. */
+#atlasAetherStatusPanel4084 {
+  --aether-readability-candidate: 406074;
+}
