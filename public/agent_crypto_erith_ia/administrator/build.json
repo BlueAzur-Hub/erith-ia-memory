@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.82",
+  "build": "40.6.83",
   "engine": "38.15.11",
-  "release": "AETHER V2 · OWNER CONSOLIDATION LOCK",
+  "release": "AETHER V2 · FINAL PREBOOT + ACCEPTANCE LOCK",
   "published": true,
-  "status": "aether_v2_owner_consolidation_406082",
-  "parent_build": "40.6.81",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.82",
-  "administrator_build": "40.6.82",
-  "build_label": "Build 40.6.82 · Administrator",
-  "release_status": "aether_v2_owner_consolidation_406082",
+  "status": "aether_v2_final_preboot_acceptance_lock_406083",
+  "parent_build": "40.6.82",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.83",
+  "administrator_build": "40.6.83",
+  "build_label": "Build 40.6.83 · Administrator",
+  "release_status": "aether_v2_final_preboot_acceptance_lock_406083",
   "timestamp": "2026-09-11T21:00:25Z",
   "cascade_40_5_18": {
     "read_only_foundation": true,
@@ -49,7 +49,7 @@
   },
   "current_version_truth": {
     "visible_owner": "js/version-truth.js",
-    "loaded_build": "40.6.82",
+    "loaded_build": "40.6.83",
     "published_manifest": "build.json",
     "false_propagation_lock": true,
     "legacy_ids_hidden_sink": true,
@@ -1954,6 +1954,18 @@
     "visual_owner": "aether-v2-406082.css",
     "runtime_owner": "aether-v2-406082.js",
     "candidate_chain_retired_from_active_loader": true,
+    "market_core_modified": false
+  },
+  "cascade_40_6_83": {
+    "parent_build": "40.6.82",
+    "scope": "final_aether_v2_consolidated_acceptance",
+    "preboot_legacy_center_migration": true,
+    "runtime_geometry_writer": false,
+    "window_manager_geometry_owner": true,
+    "visual_owner": "aether-v2-406083.css",
+    "runtime_owner": "aether-v2-406083.js",
+    "atlas_math_modified": false,
+    "weather_fetch_added": false,
     "market_core_modified": false
   }
 }
