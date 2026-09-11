@@ -31,7 +31,7 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import json
+          import base64, json
           from datetime import datetime, timezone
 
           root = Path('public/agent_crypto_erith_ia/administrator')
@@ -42,240 +42,17 @@ jobs:
           build_json = root / 'build.json'
           release = root / 'RELEASE_40_6_76.md'
 
-          # ------------------------------------------------------------------
-          # 1. REAL OWNER: Aether preferred floating geometry in js/app.js.
-          #    Preserve the validated 40.6.75 size/y contract, but stop forcing
-          #    x=center. Existing Window Manager storage is read-only here and
-          #    wins when it represents an operator position.
-          # ------------------------------------------------------------------
-          text = app.read_text(encoding='utf-8')
-          old = '''        preferredFloatGeometry: () => {
-          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
-          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
-          const fittedWidth = Math.min(width, height * 16 / 9);
-          const fittedHeight = fittedWidth * 9 / 16;
-          return {
-            x: Math.max(12, Math.round((vw - fittedWidth) / 2)),
-            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
-            width: Math.round(fittedWidth),
-            height: Math.round(fittedHeight)
-          };
-        },'''
-          new = '''        preferredFloatGeometry: () => {
-          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
-          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
-          const fittedWidth = Math.min(width, height * 16 / 9);
-          const fittedHeight = fittedWidth * 9 / 16;
-          const fallback = {
-            x: 12,
-            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
-            width: Math.round(fittedWidth),
-            height: Math.round(fittedHeight)
-          };
+          frame_b64 = 'LyogQWdlbnQtQ3J5cHRvIEBlcml0aC5JQSDigJQgQnVpbGQgNDAuNi43NgogICBBRVRIRVIgV0FUQ0ggVjIg4oCUIE5BVElWRSBQT1NJVElPTiBMT0NLCgogICBSZXNwb25zaWJpbGl0eToKICAgLSB3YXJtL3ZhbGlkYXRlIHRoZSBhbHJlYWR5IGFwcHJvdmVkIFYyIGJhY2twbGF0ZTsKICAgLSBtaWdyYXRlIG9ubHkgdGhlIGhpc3RvcmljYWwgPD00MC42Ljc1IGF1dG8tY2VudGVyZWQgZmxvYXRpbmcgcG9zaXRpb247CiAgIC0gYWZ0ZXIgbWlncmF0aW9uLCBsZWF2ZSB4L3kvc2l6ZS9kcmFnL3Jlc2l6ZS9wZXJzaXN0ZW5jZSBlbnRpcmVseSB0byB0aGUKICAgICBjYW5vbmljYWwgQWRtaW5pc3RyYXRvciBXaW5kb3cgTWFuYWdlci4KCiAgIE5vIENTUyBnZW9tZXRyeSBvd25lciwgbm8gcmVzaXplIHJlZnJhbWUsIG5vIHBhZ2VzaG93IHJlZnJhbWUsIG5vIHRpbWVyLAogICBubyBNdXRhdGlvbk9ic2VydmVyLCBubyBzdG9yYWdlIHdyaXRlIG93bmVyLCBubyBuZXR3b3JrIG93bmVyLCBubyBNYXJrZXQgQ29yZSBlZGl0LiAqLwooKCkgPT4gewogICJ1c2Ugc3RyaWN0IjsKCiAgY29uc3QgQlVJTEQgPSAiNDAuNi43NiI7CiAgY29uc3QgV0lORE9XX0lEID0gImFldGhlci13YXRjaCI7CiAgY29uc3QgVE9HR0xFX0lEID0gImF0bGFzQWV0aGVyU3RhdHVzVG9nZ2xlNDA4NCI7CiAgY29uc3QgQkFDS1BMQVRFID0gIi4vYXNzZXRzL2FldGhlci9hZXRoZXItb2JzZXJ2YXRvcnktbWFzdGVyLXYyLTQwNjA3NC5wbmciOwogIGNvbnN0IFJPT1RfQVRUUiA9ICJkYXRhLWFldGhlci1iYWNrcGxhdGUtdjItNDA2MDc0IjsKICBjb25zdCBNQVJHSU4gPSAxMjsKICBjb25zdCBDRU5URVJfRVBTSUxPTiA9IDE0OwogIGNvbnN0IHJvb3QgPSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQ7CiAgbGV0IG1pZ3JhdGlvbkNoZWNrZWQgPSBmYWxzZTsKCiAgZnVuY3Rpb24gdmlld3BvcnQoKSB7CiAgICByZXR1cm4gewogICAgICB3aWR0aDogTWF0aC5tYXgoZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LmNsaWVudFdpZHRoLCB3aW5kb3cuaW5uZXJXaWR0aCB8fCAwKSwKICAgICAgaGVpZ2h0OiBNYXRoLm1heChkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQuY2xpZW50SGVpZ2h0LCB3aW5kb3cuaW5uZXJIZWlnaHQgfHwgMCkKICAgIH07CiAgfQoKICBmdW5jdGlvbiB3YXJtQmFja3BsYXRlKCkgewogICAgcm9vdC5zZXRBdHRyaWJ1dGUoUk9PVF9BVFRSLCAibG9hZGluZyIpOwogICAgY29uc3QgaW1hZ2UgPSBuZXcgSW1hZ2UoKTsKICAgIGltYWdlLmRlY29kaW5nID0gImFzeW5jIjsKICAgIGNvbnN0IHNyYyA9IG5ldyBVUkwoQkFDS1BMQVRFLCBkb2N1bWVudC5iYXNlVVJJKS5ocmVmOwogICAgY29uc3QgcmVhZHkgPSAoKSA9PiB7CiAgICAgIHJvb3Quc2V0QXR0cmlidXRlKFJPT1RfQVRUUiwgInJlYWR5Iik7CiAgICAgIHJvb3QuZGF0YXNldC5hZXRoZXJOYXRpdmVQb3NpdGlvbjQwNjA3NiA9ICJ2aXN1YWwtcmVhZHkiOwogICAgfTsKICAgIGNvbnN0IGZhbGxiYWNrID0gKCkgPT4gewogICAgICByb290LnNldEF0dHJpYnV0ZShST09UX0FUVFIsICJmYWxsYmFjay00MC42LjczIik7CiAgICAgIHJvb3QuZGF0YXNldC5hZXRoZXJOYXRpdmVQb3NpdGlvbjQwNjA3NiA9ICJ2aXN1YWwtZmFsbGJhY2siOwogICAgfTsKICAgIGltYWdlLmFkZEV2ZW50TGlzdGVuZXIoImxvYWQiLCAoKSA9PiB7CiAgICAgIGNvbnN0IGRlY29kZWQgPSB0eXBlb2YgaW1hZ2UuZGVjb2RlID09PSAiZnVuY3Rpb24iID8gaW1hZ2UuZGVjb2RlKCkgOiBQcm9taXNlLnJlc29sdmUoKTsKICAgICAgUHJvbWlzZS5yZXNvbHZlKGRlY29kZWQpLnRoZW4ocmVhZHkpLmNhdGNoKGZhbGxiYWNrKTsKICAgIH0sIHsgb25jZTogdHJ1ZSB9KTsKICAgIGltYWdlLmFkZEV2ZW50TGlzdGVuZXIoImVycm9yIiwgZmFsbGJhY2ssIHsgb25jZTogdHJ1ZSB9KTsKICAgIGltYWdlLnNyYyA9IHNyYzsKICAgIHJldHVybiB7IGltYWdlLCBzcmMgfTsKICB9CgogIGZ1bmN0aW9uIG1hbmFnZXJTdGF0ZSgpIHsKICAgIGNvbnN0IG1hbmFnZXIgPSBnbG9iYWxUaGlzLkVyaXRoQWRtaW5pc3RyYXRvcldpbmRvd3M7CiAgICBjb25zdCB3aW4gPSBtYW5hZ2VyPy5nZXRXaW5kb3c/LihXSU5ET1dfSUQpIHx8IG51bGw7CiAgICBjb25zdCBzbmFwc2hvdCA9IG1hbmFnZXI/LnNuYXBzaG90Py4oKSB8fCBudWxsOwogICAgY29uc3Qgc2F2ZWQgPSBzbmFwc2hvdD8ud2luZG93cz8uW1dJTkRPV19JRF0gfHwgbnVsbDsKICAgIHJldHVybiB7IG1hbmFnZXIsIHdpbiwgc25hcHNob3QsIHNhdmVkIH07CiAgfQoKICBmdW5jdGlvbiBnZW9tZXRyeU9mKHdpbiwgc2F2ZWQpIHsKICAgIGNvbnN0IHJhdyA9IHNhdmVkPy5nZW9tZXRyeSB8fCB3aW4/Lmdlb21ldHJ5IHx8IG51bGw7CiAgICBpZiAoIXJhdykgcmV0dXJuIG51bGw7CiAgICBjb25zdCBnZW9tZXRyeSA9IHsKICAgICAgeDogTnVtYmVyKHJhdy54KSwgeTogTnVtYmVyKHJhdy55KSwgd2lkdGg6IE51bWJlcihyYXcud2lkdGgpLCBoZWlnaHQ6IE51bWJlcihyYXcuaGVpZ2h0KQogICAgfTsKICAgIHJldHVybiBPYmplY3QudmFsdWVzKGdlb21ldHJ5KS5ldmVyeShOdW1iZXIuaXNGaW5pdGUpID8gZ2VvbWV0cnkgOiBudWxsOwogIH0KCiAgZnVuY3Rpb24gbG9va3NMZWdhY3lBdXRvQ2VudGVyZWQoZ2VvbWV0cnkpIHsKICAgIGlmICghZ2VvbWV0cnkpIHJldHVybiBmYWxzZTsKICAgIGNvbnN0IHsgd2lkdGg6IHZ3IH0gPSB2aWV3cG9ydCgpOwogICAgY29uc3QgY2VudGVyZWRYID0gTWF0aC5tYXgoTUFSR0lOLCBNYXRoLnJvdW5kKCh2dyAtIGdlb21ldHJ5LndpZHRoKSAvIDIpKTsKICAgIHJldHVybiBnZW9tZXRyeS54ID4gTUFSR0lOICsgQ0VOVEVSX0VQU0lMT04KICAgICAgJiYgTWF0aC5hYnMoZ2VvbWV0cnkueCAtIGNlbnRlcmVkWCkgPD0gQ0VOVEVSX0VQU0lMT047CiAgfQoKICBmdW5jdGlvbiBtaWdyYXRlTGVnYWN5Q2VudGVyKHJlYXNvbiA9ICJwb3N0LW9wZW4iKSB7CiAgICBpZiAobWlncmF0aW9uQ2hlY2tlZCkgcmV0dXJuIGZhbHNlOwogICAgY29uc3QgeyBtYW5hZ2VyLCB3aW4sIHNuYXBzaG90LCBzYXZlZCB9ID0gbWFuYWdlclN0YXRlKCk7CiAgICBpZiAoIW1hbmFnZXIgfHwgIXdpbiB8fCAhc25hcHNob3QpIHJldHVybiBmYWxzZTsKICAgIGlmICh3aW4uaGlkZGVuIHx8IHdpbi5taW5pbWl6ZWQgfHwgd2luLm1heGltaXplZCB8fCBzYXZlZD8uZmxvYXRpbmcgIT09IHRydWUpIHJldHVybiBmYWxzZTsKCiAgICBjb25zdCBnZW9tZXRyeSA9IGdlb21ldHJ5T2Yod2luLCBzYXZlZCk7CiAgICBpZiAoIWdlb21ldHJ5KSByZXR1cm4gZmFsc2U7CiAgICBtaWdyYXRpb25DaGVja2VkID0gdHJ1ZTsKCiAgICBpZiAoIWxvb2tzTGVnYWN5QXV0b0NlbnRlcmVkKGdlb21ldHJ5KSkgewogICAgICByb290LmRhdGFzZXQuYWV0aGVyTmF0aXZlUG9zaXRpb240MDYwNzYgPSAib3BlcmF0b3ItcG9zaXRpb24tcHJlc2VydmVkIjsKICAgICAgcmV0dXJuIGZhbHNlOwogICAgfQoKICAgIG1hbmFnZXIuYXBwbHlTbmFwc2hvdCh7CiAgICAgIHNjaGVtYTogc25hcHNob3Quc2NoZW1hIHx8ICJlcml0aC5hZG1pbi53b3Jrc3BhY2Uud2luZG93LXN0YXRlLnYxIiwKICAgICAgd2luZG93czogewogICAgICAgIFtXSU5ET1dfSURdOiB7CiAgICAgICAgICBmbG9hdGluZzogdHJ1ZSwKICAgICAgICAgIG1pbmltaXplZDogZmFsc2UsCiAgICAgICAgICBoaWRkZW46IGZhbHNlLAogICAgICAgICAgbWF4aW1pemVkOiBmYWxzZSwKICAgICAgICAgIGdlb21ldHJ5OiB7CiAgICAgICAgICAgIHg6IE1BUkdJTiwKICAgICAgICAgICAgeTogZ2VvbWV0cnkueSwKICAgICAgICAgICAgd2lkdGg6IGdlb21ldHJ5LndpZHRoLAogICAgICAgICAgICBoZWlnaHQ6IGdlb21ldHJ5LmhlaWdodAogICAgICAgICAgfQogICAgICAgIH0KICAgICAgfQogICAgfSwgeyBwZXJzaXN0OiB0cnVlLCBjYXB0dXJlUmVzdWx0OiBmYWxzZSB9KTsKCiAgICByb290LmRhdGFzZXQuYWV0aGVyTmF0aXZlUG9zaXRpb240MDYwNzYgPSBgbGVnYWN5LWNlbnRlci1taWdyYXRlZDoke3JlYXNvbn1gOwogICAgcmV0dXJuIHRydWU7CiAgfQoKICBmdW5jdGlvbiBjYXB0dXJlQWV0aGVyT3BlbihldmVudCkgewogICAgaWYgKCEoZXZlbnQudGFyZ2V0IGluc3RhbmNlb2YgRWxlbWVudCkpIHJldHVybjsKICAgIGlmICghZXZlbnQudGFyZ2V0LmNsb3Nlc3QoYCMke1RPR0dMRV9JRH1gKSkgcmV0dXJuOwogICAgcXVldWVNaWNyb3Rhc2soKCkgPT4gbWlncmF0ZUxlZ2FjeUNlbnRlcigib3BlcmF0b3Itb3BlbiIpKTsKICB9CgogIGNvbnN0IHdhcm0gPSB3YXJtQmFja3BsYXRlKCk7CiAgZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcigiY2xpY2siLCBjYXB0dXJlQWV0aGVyT3BlbiwgdHJ1ZSk7CgogIGNvbnN0IGFwaSA9IE9iamVjdC5mcmVlemUoewogICAgYnVpbGQ6IEJVSUxELAogICAgd2luZG93X2lkOiBXSU5ET1dfSUQsCiAgICBtb2RlOiAibmF0aXZlLXBvc2l0aW9uLWxvY2siLAogICAgZ2VvbWV0cnlfb3duZXI6ICJFcml0aEFkbWluaXN0cmF0b3JXaW5kb3dzIiwKICAgIHZpc3VhbF9vd25lcjogImFldGhlci12Mi00MDYwNzUuY3NzIiwKICAgIGZpcnN0X29wZW5fb3duZXI6ICJqcy9hcHAuanMgcHJlZmVycmVkRmxvYXRHZW9tZXRyeSIsCiAgICBsZWdhY3lfY2VudGVyX21pZ3JhdGlvbl9vbmx5OiB0cnVlLAogICAgb3BlcmF0b3JfcG9zaXRpb25fcHJlc2VydmVkOiB0cnVlLAogICAgcmVzaXplX3JlZnJhbWU6IGZhbHNlLAogICAgcGFnZXNob3dfcmVmcmFtZTogZmFsc2UsCiAgICBleHBsaWNpdF9tYXhpbWl6ZV9wcmVzZXJ2ZWQ6IHRydWUsCiAgICByZWN1cnJpbmdfdGltZXI6IGZhbHNlLAogICAgb2JzZXJ2ZXI6IGZhbHNlLAogICAgc3RvcmFnZV93cml0ZV9vd25lcjogZmFsc2UsCiAgICBuZXR3b3JrX293bmVyOiBmYWxzZSwKICAgIG1hcmtldF9jb3JlX2NoYW5nZWQ6IGZhbHNlLAogICAgb3BlcmF0b3JfcnVudGltZV9jaGFuZ2VkOiBmYWxzZSwKICAgIGJhY2twbGF0ZTogd2FybS5zcmMsCiAgICBtaWdyYXRlOiBtaWdyYXRlTGVnYWN5Q2VudGVyLAogICAgc3RhdHVzOiAoKSA9PiB7CiAgICAgIGNvbnN0IHsgd2luLCBzYXZlZCB9ID0gbWFuYWdlclN0YXRlKCk7CiAgICAgIHJldHVybiBPYmplY3QuZnJlZXplKHsKICAgICAgICBidWlsZDogQlVJTEQsCiAgICAgICAgc3RhdGU6IHJvb3QuZGF0YXNldC5hZXRoZXJOYXRpdmVQb3NpdGlvbjQwNjA3NiB8fCAiaWRsZSIsCiAgICAgICAgZmxvYXRpbmc6IHdpbj8uZmxvYXRpbmcgPT09IHRydWUsCiAgICAgICAgaGlkZGVuOiB3aW4/LmhpZGRlbiA9PT0gdHJ1ZSwKICAgICAgICBtYXhpbWl6ZWQ6IHdpbj8ubWF4aW1pemVkID09PSB0cnVlLAogICAgICAgIGdlb21ldHJ5OiBnZW9tZXRyeU9mKHdpbiwgc2F2ZWQpCiAgICAgIH0pOwogICAgfQogIH0pOwoKICBnbG9iYWxUaGlzLkVyaXRoQWV0aGVyRnJhbWU0MDYwNzYgPSBhcGk7CiAgZ2xvYmFsVGhpcy5Fcml0aEFldGhlckZyYW1lNDA2MDc0ID0gYXBpOwp9KSgpOwo='
+          release_b64 = 'IyBBZ2VudC1DcnlwdG8gQWRtaW5pc3RyYXRvciDigJQgNDAuNi43NgoKIyMgQWV0aGVyIFdhdGNoIFYyIOKAlCBOYXRpdmUgUG9zaXRpb24gTG9jawoKQ2Fub25pY2FsIHBhcmVudDogKio0MC42Ljc1KiouIEVuZ2luZTogKipNYXJrZXQgQ29yZSAzOC4xNS4xMSoqIHVuY2hhbmdlZC4KCiMjIyBGaWVsZCB2YWxpZGF0aW9uIGluaGVyaXRlZCBmcm9tIDQwLjYuNzUKClRoZSBWMiBiYWNrcGxhdGUsIHRoZSBuaW5lLWNlbGwgZ2VvbWV0cnkgYW5kIHRoZSA0MC42Ljc1IGljb24tc2FmZSB0eXBvZ3JhcGh5IGFyZSBub3cgZnJvemVuLiBgYWV0aGVyLXYyLTQwNjA3NS5jc3NgIGlzIHJldXNlZCBieXRlLWZvci1ieXRlIGJ5IHRoaXMgcmVsZWFzZS4gTm8gdmlzdWFsIGRlbnNpdHksIHR5cG9ncmFwaHksIHBhZGRpbmcsIGNhcmQgZ2VvbWV0cnkgb3IgYmFja2dyb3VuZCBjaGFuZ2UgaXMgaW50cm9kdWNlZC4KCiMjIyBEZWZlY3QgY29ycmVjdGVkCgo0MC42Ljc1IHN0aWxsIGhhZCB0d28gcG9zaXRpb24gYXV0aG9yaXRpZXM6IHRoZSBBZXRoZXIgV2luZG93IE1hbmFnZXIgZGVmaW5pdGlvbiBhbmQgYGFldGhlci1mcmFtZS00MDYwNzUuanNgLCB3aGljaCByZWNvbXB1dGVkIGFuZCByZWFwcGxpZWQgYSBjZW50ZXJlZC9ib3R0b20tYWxpZ25lZCB0YXJnZXQgb24gb3BlbiwgcmVzaXplLCBwYWdlc2hvdyBhbmQgQWRtaW5pc3RyYXRvci1yZWFkeS4gVGhlIG9wZXJhdG9yIGNvdWxkIHRoZXJlZm9yZSBzZWUgQWV0aGVyIHJldHVybiB0byBhbiBhdXRvbWF0aWMgcG9zaXRpb24gZXZlbiB0aG91Z2ggY2VudGVyaW5nIGhhZCBuZXZlciBiZWVuIHJlcXVlc3RlZC4KCjQwLjYuNzYgcmV0aXJlcyB0aGF0IGJlaGF2aW9yLgoKIyMjIE5hdGl2ZSBwb3NpdGlvbiBjb250cmFjdAoKLSBganMvYXBwLmpzYCByZW1haW5zIHRoZSByZWFsIGZpcnN0LW9wZW4gZ2VvbWV0cnkgZGVmaW5pdGlvbiBvd25lci4KLSBGaXJzdCBvcGVuIHdpdGhvdXQgc2F2ZWQgZ2VvbWV0cnkgdXNlcyB0aGUgbmF0aXZlIGxlZnQgd29ya3NwYWNlIGFuY2hvciAoYHggPSAxMmApIHdoaWxlIHByZXNlcnZpbmcgdGhlIHZhbGlkYXRlZCB3aWR0aCwgaGVpZ2h0IGFuZCB2ZXJ0aWNhbCBmb3JtdWxhLgotIEV4aXN0aW5nIFdpbmRvdyBNYW5hZ2VyIGdlb21ldHJ5IGlzIHJlYWQtb25seSByZXVzZWQgYWZ0ZXIgcmVsb2FkLgotIEEgZ2VudWluZSBvcGVyYXRvci1tb3ZlZCBgeC95L3dpZHRoL2hlaWdodGAgd2lucyB1bmNoYW5nZWQuCi0gVGhlIGV4YWN0IGxlZ2FjeSA8PTQwLjYuNzUgYXV0by1jZW50ZXJlZCBnZW9tZXRyeSBpcyBtaWdyYXRlZCBvbmNlIHRvIGB4ID0gMTJgOyB3aWR0aCwgaGVpZ2h0IGFuZCB5IGFyZSBwcmVzZXJ2ZWQuCi0gQWZ0ZXIgdGhhdCBtaWdyYXRpb24gdGhlcmUgaXMgbm8gQWV0aGVyIHJlc2l6ZSBsaXN0ZW5lciwgcGFnZXNob3cgcmVmcmFtZSBvciBjb250aW51b3VzIGdlb21ldHJ5IG5vcm1hbGl6YXRpb24uCi0gRHJhZywgcmVzaXplLCBwZXJzaXN0ZW5jZSwgei1vcmRlciwgbWluaW1pemUsIGhpZGUgYW5kIG1heGltaXplIHJlbWFpbiBvd25lZCBieSB0aGUgY2Fub25pY2FsIEFkbWluaXN0cmF0b3IgV2luZG93IE1hbmFnZXIuCi0gRXhwbGljaXQgbWF4aW1pemUga2VlcHMgdGhlIGhpc3RvcmljYWwgV2luZG93IE1hbmFnZXIgbWF4aW1pemUvcmVzdG9yZSBjb250cmFjdC4KCiMjIyBQcm90ZWN0ZWQKCi0gTWFya2V0IENvcmUgKiozOC4xNS4xMSoqIHVuY2hhbmdlZDsKLSBWMiBQTkcgdW5jaGFuZ2VkOwotIGBhZXRoZXItdjItNDA2MDc1LmNzc2AgdW5jaGFuZ2VkOwotIEFkbWluaXN0cmF0b3IgV2luZG93IE1hbmFnZXIgY29yZSB1bmNoYW5nZWQ7Ci0gR3JhcGhpcXVlIHVuY2hhbmdlZDsKLSBMZWN0dXJlIFRlY2huaXF1ZSB1bmNoYW5nZWQ7Ci0gQXRsYXMgLyBPcmFjbGUgLyBTb3VyY2VzIGRhdGEgb3duZXJzIHVuY2hhbmdlZDsKLSBhY3RpdmUgbWFya2V0IGZpY2hlIGZvcmVncm91bmQgUjUgcHJlc2VydmVkOwotIE9wZXJhdG9yIC8gWW9oYW4gcnVudGltZSB1bmNoYW5nZWQ7Ci0gbm8gbmV3IHJlY3VycmluZyB0aW1lcjsKLSBubyBNdXRhdGlvbk9ic2VydmVyOwotIG5vIG5ldyBzdG9yYWdlIG93bmVyOwotIG5vIG5ldyBuZXR3b3JrIG93bmVyOwotIG5vIHRyYWRpbmcgYWN0aW9uLgoKIyMjIEZpcmVmb3ggYWNjZXB0YW5jZQoKMS4gRnJvbSA0MC42Ljc1IGNsaWNrIHRoZSBCdWlsZCBiYWRnZTogYGJ1aWxkLmpzb25gIG11c3QgYWR2ZXJ0aXNlIDQwLjYuNzYgd2l0aG91dCByZXF1aXJpbmcgQ3RybCtGNS4KMi4gT3BlbiBBZXRoZXIgbm9ybWFsbHkuIEl0IG11c3Qgbm90IGJlIGdsb2JhbGx5IGF1dG8tY2VudGVyZWQgYnkgdGhlIEFldGhlciBicmlkZ2UuCjMuIE1vdmUgQWV0aGVyIG1hbnVhbGx5LCBjbG9zZSBpdCwgcmVvcGVuIGl0IGluIHRoZSBzYW1lIHNlc3Npb246IHRoZSBvcGVyYXRvciBwb3NpdGlvbiBtdXN0IHJlbWFpbiBhdXRob3JpdGF0aXZlLgo0LiBSZWxvYWQsIG9wZW4gQWV0aGVyOiB0aGUgV2luZG93IE1hbmFnZXIgc2F2ZWQgZ2VvbWV0cnkgbXVzdCBiZSByZXVzZWQgd2hlbiB2YWxpZC4KNS4gSWYgdGhlIG9ubHkgc2F2ZWQgZ2VvbWV0cnkgaXMgdGhlIGhpc3RvcmljYWwgYXV0by1jZW50ZXJlZCA0MC42Ljc1IHBvc2l0aW9uLCBpdCBtYXkgbWlncmF0ZSBvbmNlIHRvIHRoZSBuYXRpdmUgbGVmdCBhbmNob3IuCjYuIE1heGltaXplIHRoZW4gcmVzdG9yZTogdGhlIFdpbmRvdyBNYW5hZ2VyIG11c3QgcmVzdG9yZSB0aGUgZmxvYXRpbmcgZ2VvbWV0cnkuCjcuIENvbmZpcm0gdGhlIDQwLjYuNzUgdmlzdWFsIGNvbXBvc2l0aW9uIGlzIHVuY2hhbmdlZC4K'
 
-          // 40.6.76 — Native Position Lock. Read the Window Manager's own saved
-          // geometry only to seed a hidden Aether window after reload. This does
-          // not create a second storage owner: no write happens here. A real
-          // operator-moved position wins. The exact legacy auto-centered position
-          // from <=40.6.75 is migrated once to the native left workspace anchor.
-          try {
-            const raw = JSON.parse(localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) || 'null');
-            const saved = raw && typeof raw === 'object' ? {
-              x: Number(raw.x), y: Number(raw.y), width: Number(raw.width), height: Number(raw.height)
-            } : null;
-            if (saved && [saved.x, saved.y, saved.width, saved.height].every(Number.isFinite)) {
-              const centeredX = Math.max(12, Math.round((vw - saved.width) / 2));
-              const legacyAutoCenter = saved.x > 26 && Math.abs(saved.x - centeredX) <= 14;
-              return {
-                x: legacyAutoCenter ? 12 : saved.x,
-                y: saved.y,
-                width: saved.width,
-                height: saved.height
-              };
-            }
-          } catch (_) {}
-          return fallback;
-        },'''
+          text = app.read_text(encoding='utf-8')
+          old = '''        preferredFloatGeometry: () => {\n          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);\n          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);\n          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));\n          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));\n          const fittedWidth = Math.min(width, height * 16 / 9);\n          const fittedHeight = fittedWidth * 9 / 16;\n          return {\n            x: Math.max(12, Math.round((vw - fittedWidth) / 2)),\n            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),\n            width: Math.round(fittedWidth),\n            height: Math.round(fittedHeight)\n          };\n        },'''
+          new = '''        preferredFloatGeometry: () => {\n          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);\n          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);\n          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));\n          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));\n          const fittedWidth = Math.min(width, height * 16 / 9);\n          const fittedHeight = fittedWidth * 9 / 16;\n          const fallback = {\n            x: 12,\n            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),\n            width: Math.round(fittedWidth),\n            height: Math.round(fittedHeight)\n          };\n          try {\n            const raw = JSON.parse(localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) || 'null');\n            const saved = raw && typeof raw === 'object' ? {\n              x: Number(raw.x), y: Number(raw.y), width: Number(raw.width), height: Number(raw.height)\n            } : null;\n            if (saved && [saved.x, saved.y, saved.width, saved.height].every(Number.isFinite)) {\n              const centeredX = Math.max(12, Math.round((vw - saved.width) / 2));\n              const legacyAutoCenter = saved.x > 26 && Math.abs(saved.x - centeredX) <= 14;\n              return {\n                x: legacyAutoCenter ? 12 : saved.x,\n                y: saved.y,\n                width: saved.width,\n                height: saved.height\n              };\n            }\n          } catch (_) {}\n          return fallback;\n        },'''
           if text.count(old) != 1:
             raise SystemExit(f'Aether preferredFloatGeometry owner mismatch: {text.count(old)}')
-          text = text.replace(old, new, 1)
-          app.write_text(text, encoding='utf-8')
+          app.write_text(text.replace(old, new, 1), encoding='utf-8')
+          frame.write_bytes(base64.b64decode(frame_b64))
 
-          # ------------------------------------------------------------------
-          # 2. Migration bridge only. No ongoing geometry normalization.
-          # ------------------------------------------------------------------
-          frame.write_text(r'''/* Agent-Crypto @erith.IA — Build 40.6.76
-   AETHER WATCH V2 — NATIVE POSITION LOCK
-
-   Responsibility:
-   - warm/validate the already approved V2 backplate;
-   - migrate only the historical <=40.6.75 auto-centered floating position;
-   - after migration, leave x/y/size/drag/resize/persistence entirely to the
-     canonical Administrator Window Manager.
-
-   No CSS geometry owner, no resize reframe, no pageshow reframe, no timer,
-   no MutationObserver, no storage write owner, no network owner, no Market Core edit. */
-(() => {
-  "use strict";
-
-  const BUILD = "40.6.76";
-  const WINDOW_ID = "aether-watch";
-  const TOGGLE_ID = "atlasAetherStatusToggle4084";
-  const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
-  const ROOT_ATTR = "data-aether-backplate-v2-406074";
-  const MARGIN = 12;
-  const CENTER_EPSILON = 14;
-  const root = document.documentElement;
-  let migrationChecked = false;
-
-  function viewport() {
-    return {
-      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-    };
-  }
-
-  function warmBackplate() {
-    root.setAttribute(ROOT_ATTR, "loading");
-    const image = new Image();
-    image.decoding = "async";
-    const src = new URL(BACKPLATE, document.baseURI).href;
-    const ready = () => {
-      root.setAttribute(ROOT_ATTR, "ready");
-      root.dataset.aetherNativePosition406076 = "visual-ready";
-    };
-    const fallback = () => {
-      root.setAttribute(ROOT_ATTR, "fallback-40.6.73");
-      root.dataset.aetherNativePosition406076 = "visual-fallback";
-    };
-    image.addEventListener("load", () => {
-      const decoded = typeof image.decode === "function" ? image.decode() : Promise.resolve();
-      Promise.resolve(decoded).then(ready).catch(fallback);
-    }, { once: true });
-    image.addEventListener("error", fallback, { once: true });
-    image.src = src;
-    return { image, src };
-  }
-
-  function managerState() {
-    const manager = globalThis.ErithAdministratorWindows;
-    const win = manager?.getWindow?.(WINDOW_ID) || null;
-    const snapshot = manager?.snapshot?.() || null;
-    const saved = snapshot?.windows?.[WINDOW_ID] || null;
-    return { manager, win, snapshot, saved };
-  }
-
-  function geometryOf(win, saved) {
-    const raw = saved?.geometry || win?.geometry || null;
-    if (!raw) return null;
-    const geometry = {
-      x: Number(raw.x), y: Number(raw.y), width: Number(raw.width), height: Number(raw.height)
-    };
-    return Object.values(geometry).every(Number.isFinite) ? geometry : null;
-  }
-
-  function looksLegacyAutoCentered(geometry) {
-    if (!geometry) return false;
-    const { width: vw } = viewport();
-    const centeredX = Math.max(MARGIN, Math.round((vw - geometry.width) / 2));
-    return geometry.x > MARGIN + CENTER_EPSILON
-      && Math.abs(geometry.x - centeredX) <= CENTER_EPSILON;
-  }
-
-  function migrateLegacyCenter(reason = "post-open") {
-    if (migrationChecked) return false;
-    const { manager, win, snapshot, saved } = managerState();
-    if (!manager || !win || !snapshot) return false;
-    if (win.hidden || win.minimized || win.maximized || saved?.floating !== true) return false;
-
-    const geometry = geometryOf(win, saved);
-    if (!geometry) return false;
-    migrationChecked = true;
-
-    if (!looksLegacyAutoCentered(geometry)) {
-      root.dataset.aetherNativePosition406076 = "operator-position-preserved";
-      return false;
-    }
-
-    manager.applySnapshot({
-      schema: snapshot.schema || "erith.admin.workspace.window-state.v1",
-      windows: {
-        [WINDOW_ID]: {
-          floating: true,
-          minimized: false,
-          hidden: false,
-          maximized: false,
-          geometry: {
-            x: MARGIN,
-            y: geometry.y,
-            width: geometry.width,
-            height: geometry.height
-          }
-        }
-      }
-    }, { persist: true, captureResult: false });
-
-    root.dataset.aetherNativePosition406076 = `legacy-center-migrated:${reason}`;
-    return true;
-  }
-
-  function captureAetherOpen(event) {
-    if (!(event.target instanceof Element)) return;
-    if (!event.target.closest(`#${TOGGLE_ID}`)) return;
-    // The canonical Aether click runs first; this microtask executes before the
-    // next paint and only migrates the legacy auto-center if it is actually present.
-    queueMicrotask(() => migrateLegacyCenter("operator-open"));
-  }
-
-  const warm = warmBackplate();
-  document.addEventListener("click", captureAetherOpen, true);
-
-  const api = Object.freeze({
-    build: BUILD,
-    window_id: WINDOW_ID,
-    mode: "native-position-lock",
-    geometry_owner: "ErithAdministratorWindows",
-    visual_owner: "aether-v2-406075.css",
-    first_open_owner: "js/app.js preferredFloatGeometry",
-    legacy_center_migration_only: true,
-    operator_position_preserved: true,
-    resize_reframe: false,
-    pageshow_reframe: false,
-    explicit_maximize_preserved: true,
-    recurring_timer: false,
-    observer: false,
-    storage_write_owner: false,
-    network_owner: false,
-    market_core_changed: false,
-    operator_runtime_changed: false,
-    backplate: warm.src,
-    migrate: migrateLegacyCenter,
-    status: () => {
-      const { win, saved } = managerState();
-      return Object.freeze({
-        build: BUILD,
-        state: root.dataset.aetherNativePosition406076 || "idle",
-        floating: win?.floating === true,
-        hidden: win?.hidden === true,
-        maximized: win?.maximized === true,
-        geometry: geometryOf(win, saved)
-      });
-    }
-  });
-
-  globalThis.ErithAetherFrame406076 = api;
-  // Compatibility alias for the historical loader/diagnostic name only.
-  globalThis.ErithAetherFrame406074 = api;
-})();
-''', encoding='utf-8')
-
-          # ------------------------------------------------------------------
-          # 3. Canonical Aether integration: .75 visual owner is frozen and reused.
-          # ------------------------------------------------------------------
           js = role.read_text(encoding='utf-8')
           replacements = [
             ('40.6.50 + Build 40.6.75 canonical Aether integration', '40.6.50 + Build 40.6.76 canonical Aether integration'),
@@ -288,24 +65,18 @@ jobs:
             ('setMeta("administrator-revision", "V10");', 'setMeta("administrator-revision", "V11");'),
             ('setMeta("atlas-asset-token", "market-core-v2.0-alpha-build-40.6.75");', 'setMeta("atlas-asset-token", "market-core-v2.0-alpha-build-40.6.76");'),
             ('document.documentElement.dataset.aetherV2406074 = "canonical-40.6.75";', 'document.documentElement.dataset.aetherV2406074 = "canonical-40.6.76";'),
-            ('document.documentElement.dataset.aetherRevision406074 = REVISION;', 'document.documentElement.dataset.aetherRevision406074 = REVISION;'),
             ('link.dataset.aether406074 = "canonical-40.6.75";', 'link.dataset.aether406074 = "visual-lock-40.6.75";'),
             ('script.dataset.aether406074 = "canonical-40.6.75";', 'script.dataset.aether406074 = "native-position-40.6.76";'),
             ('document.documentElement.dataset.aetherFrameLoader406074 = "ready-r1";', 'document.documentElement.dataset.aetherFrameLoader406074 = "ready-40.6.76";'),
           ]
           for old, new in replacements:
-            count = js.count(old)
-            if count != 1:
-              raise SystemExit(f'role integration token count {count}: {old}')
+            if js.count(old) != 1:
+              raise SystemExit(f'role token mismatch: {old}')
             js = js.replace(old, new, 1)
           js = js.replace('   - publishes the 40.6.74 version truth in the running Administrator shell;\n   - loads one final Aether V2 stylesheet with the R1 optical fix;\n   - loads one canonical Window-Manager bridge with first-paint preframing;',
                           '   - publishes the 40.6.76 version truth in the running Administrator shell;\n   - reuses the field-validated 40.6.75 Aether V2 visual stylesheet unchanged;\n   - loads one migration bridge that retires forced centering and returns position ownership to the Window Manager;')
-          # Keep the validated .75 CSS bytes and filename deliberately.
           role.write_text(js, encoding='utf-8')
 
-          # ------------------------------------------------------------------
-          # 4. Static entry truth.
-          # ------------------------------------------------------------------
           html = index.read_text(encoding='utf-8')
           html_replacements = [
             ('<meta name="atlas-build" content="40.6.75" />', '<meta name="atlas-build" content="40.6.76" />'),
@@ -317,15 +88,11 @@ jobs:
             ('./js/aether-role-visibility-406050.js?v=administrator-build-40.6.75', './js/aether-role-visibility-406050.js?v=administrator-build-40.6.76'),
           ]
           for old, new in html_replacements:
-            count = html.count(old)
-            if count != 1:
-              raise SystemExit(f'index token count {count}: {old}')
+            if html.count(old) != 1:
+              raise SystemExit(f'index token mismatch: {old}')
             html = html.replace(old, new, 1)
           index.write_text(html, encoding='utf-8')
 
-          # ------------------------------------------------------------------
-          # 5. Published manifest / update-button truth.
-          # ------------------------------------------------------------------
           data = json.loads(build_json.read_text(encoding='utf-8'))
           if data.get('build') != '40.6.75':
             raise SystemExit(f'build.json parent mismatch: {data.get("build")}')
@@ -342,8 +109,7 @@ jobs:
             'release_status': 'aether_v2_native_position_lock',
             'timestamp': datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z'),
           })
-          truth = data.setdefault('current_version_truth', {})
-          truth['loaded_build'] = '40.6.76'
+          data.setdefault('current_version_truth', {})['loaded_build'] = '40.6.76'
           data['cascade_40_6_76'] = {
             'parent_build': '40.6.75',
             'release': 'AETHER V2 · NATIVE POSITION LOCK',
@@ -368,27 +134,18 @@ jobs:
             'real_order': False
           }
           build_json.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          release.write_bytes(base64.b64decode(release_b64))
 
-          # ------------------------------------------------------------------
-          # 6. Release note.
-          # ------------------------------------------------------------------
-          release.write_text('''# Agent-Crypto Administrator — 40.6.76\n\n## Aether Watch V2 — Native Position Lock\n\nCanonical parent: **40.6.75**. Engine: **Market Core 38.15.11** unchanged.\n\n### Field validation inherited from 40.6.75\n\nThe V2 backplate, the nine-cell geometry and the 40.6.75 icon-safe typography are now frozen. `aether-v2-406075.css` is reused byte-for-byte by this release. No visual density, typography, padding, card geometry or background change is introduced.\n\n### Defect corrected\n\n40.6.75 still had two position authorities: the Aether Window Manager definition and `aether-frame-406075.js`, which recomputed and reapplied a centered/bottom-aligned target on open, resize, pageshow and Administrator-ready. The operator could therefore see Aether return to an automatic position even though centering had never been requested.\n\n40.6.76 retires that behavior.\n\n### Native position contract\n\n- `js/app.js` remains the real first-open geometry definition owner.\n- First open without saved geometry uses the native left workspace anchor (`x = 12`) while preserving the validated width, height and vertical formula.\n- Existing Window Manager geometry is read-only reused after reload.\n- A genuine operator-moved `x/y/width/height` wins unchanged.\n- The exact legacy <=40.6.75 auto-centered geometry is migrated once to `x = 12`; width, height and y are preserved.\n- After that migration there is no Aether resize listener, pageshow reframe or continuous geometry normalization.\n- Drag, resize, persistence, z-order, minimize, hide and maximize remain owned by the canonical Administrator Window Manager.\n- Explicit maximize keeps the historical Window Manager maximize/restore contract.\n\n### Protected\n\n- Market Core **38.15.11** unchanged;\n- V2 PNG unchanged;\n- `aether-v2-406075.css` unchanged;\n- Administrator Window Manager core unchanged;\n- Graphique unchanged;\n- Lecture Technique unchanged;\n- Atlas / Oracle / Sources data owners unchanged;\n- active market fiche foreground R5 preserved;\n- Operator / Yohan runtime unchanged;\n- no new recurring timer;\n- no MutationObserver;\n- no new storage owner;\n- no new network owner;\n- no trading action.\n\n### Firefox acceptance\n\n1. From 40.6.75 click the Build badge: `build.json` must advertise 40.6.76 without requiring Ctrl+F5.\n2. Open Aether normally. It must not be globally auto-centered by the Aether bridge.\n3. Move Aether manually, close it, reopen it in the same session: the operator position must remain authoritative.\n4. Reload, open Aether: the Window Manager saved geometry must be reused when valid.\n5. If the only saved geometry is the historical auto-centered 40.6.75 position, it may migrate once to the native left anchor.\n6. Maximize then restore: the Window Manager must restore the floating geometry.\n7. Confirm the 40.6.75 visual composition is unchanged.\n''', encoding='utf-8')
-
-          # ------------------------------------------------------------------
-          # 7. Release assertions.
-          # ------------------------------------------------------------------
           app_body = app.read_text(encoding='utf-8')
           frame_body = frame.read_text(encoding='utf-8')
           role_body = role.read_text(encoding='utf-8')
           index_body = index.read_text(encoding='utf-8')
           manifest = json.loads(build_json.read_text(encoding='utf-8'))
-
           assert 'x: 12,' in app_body
           assert 'legacyAutoCenter ? 12 : saved.x' in app_body
           assert 'Math.round((vw - fittedWidth) / 2)' not in app_body
           assert 'window.addEventListener("resize"' not in frame_body
           assert 'window.addEventListener("pageshow"' not in frame_body
-          assert 'MutationObserver' in frame_body  # documentation says no MutationObserver
           assert 'new MutationObserver' not in frame_body
           assert 'setInterval' not in frame_body
           assert 'setTimeout' not in frame_body
@@ -404,36 +161,17 @@ jobs:
         run: |
           from pathlib import Path
           import hashlib, json, zipfile
-
           base = Path('public/agent_crypto_erith_ia/administrator')
-          paths = [
-            base / 'index.html',
-            base / 'build.json',
-            base / 'aether-v2-406075.css',
-            base / 'js/app.js',
-            base / 'js/aether-frame-406076.js',
-            base / 'js/aether-role-visibility-406050.js',
-            base / 'RELEASE_40_6_76.md',
-          ]
-          manifest = {
-            'package': 'AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK',
-            'build': '40.6.76',
-            'engine': '38.15.11',
-            'files': []
-          }
+          paths = [base/'index.html', base/'build.json', base/'aether-v2-406075.css', base/'js/app.js', base/'js/aether-frame-406076.js', base/'js/aether-role-visibility-406050.js', base/'RELEASE_40_6_76.md']
+          manifest = {'package':'AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK','build':'40.6.76','engine':'38.15.11','files':[]}
           for p in paths:
             raw = p.read_bytes()
-            manifest['files'].append({
-              'path': p.as_posix(),
-              'bytes': len(raw),
-              'sha256': hashlib.sha256(raw).hexdigest()
-            })
-          Path('PATCH_MANIFEST_40_6_76.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            manifest['files'].append({'path':p.as_posix(),'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest()})
+          Path('PATCH_MANIFEST_40_6_76.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
           out = Path('AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK.zip')
-          with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
-            for p in paths:
-              z.write(p, p.as_posix())
-            z.write('PATCH_MANIFEST_40_6_76.json', 'PATCH_MANIFEST.json')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
+            for p in paths: z.write(p,p.as_posix())
+            z.write('PATCH_MANIFEST_40_6_76.json','PATCH_MANIFEST.json')
           sha = hashlib.sha256(out.read_bytes()).hexdigest()
           Path('AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK.sha256').write_text(f'{sha}  {out.name}\n', encoding='utf-8')
           print(out.name, out.stat().st_size, sha)
@@ -443,13 +181,7 @@ jobs:
           git rm .github/workflows/agent-crypto-406076-release.yml
           git config user.name "BlueAzur-Hub"
           git config user.email "Blue.Azur@protonmail.com"
-          git add \
-            "$ADMIN/index.html" \
-            "$ADMIN/build.json" \
-            "$ADMIN/js/app.js" \
-            "$ADMIN/js/aether-frame-406076.js" \
-            "$ADMIN/js/aether-role-visibility-406050.js" \
-            "$ADMIN/RELEASE_40_6_76.md"
+          git add "$ADMIN/index.html" "$ADMIN/build.json" "$ADMIN/js/app.js" "$ADMIN/js/aether-frame-406076.js" "$ADMIN/js/aether-role-visibility-406050.js" "$ADMIN/RELEASE_40_6_76.md"
           git diff --cached --check
           git commit -m "release(agent-crypto): promote Administrator 40.6.76 Aether native position lock"
           git fetch origin main
