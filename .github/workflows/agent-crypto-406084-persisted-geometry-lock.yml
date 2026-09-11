@@ -22,7 +22,7 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Patch 40.6.84 surgically
+      - name: Synchronize main
         shell: bash
         run: |
           set -euo pipefail
@@ -31,238 +31,27 @@ jobs:
           git config user.name "BlueAzur-Hub"
           git config user.email "Blue.Azur@protonmail.com"
 
-          python - <<'PY'
-          from pathlib import Path
-          from datetime import datetime, timezone
-          import hashlib, json, re
-
-          root = Path('public/agent_crypto_erith_ia/administrator')
-          index = root / 'index.html'
-          admin_app = root / 'js/app.js'
-          manifest = root / 'build.json'
-          release_note = root / 'RELEASE_40_6_84.md'
-
-          BUILD = '40.6.84'
-          PARENT = '40.6.83'
-          ENGINE = '38.15.11'
-          RELEASE = 'AETHER V2 · PERSISTED GEOMETRY OWNERSHIP LOCK'
-          STATUS = 'aether_v2_persisted_geometry_ownership_lock_406084'
-
-          protected_paths = [
-              root / 'app.js',
-              root / 'js/core/admin-window-manager.js',
-              root / 'js/aether.js',
-              root / 'assets/aether/aether-observatory-master-v2-406074.png',
-              root / 'aether-v2-406075.css',
-          ]
-          protected = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in protected_paths}
-
-          data = json.loads(manifest.read_text(encoding='utf-8'))
-          assert data.get('build') == PARENT, data.get('build')
-          assert data.get('engine') == ENGINE, data.get('engine')
-
-          html = index.read_text(encoding='utf-8')
-          assert '<meta name="administrator-build" content="40.6.83"' in html
-          assert '<meta name="atlas-engine-build" content="38.15.11"' in html
-          assert html.count('id="aetherLegacyCenterPreboot406083"') == 1
-
-          # 40.6.84: retire the preboot storage mutation completely. No replacement migration.
-          preboot_re = re.compile(
-              r'\n\s*<!-- 40\.6\.83 — one-time stale Aether center migration before Window Manager init\. -->\s*'
-              r'<script id="aetherLegacyCenterPreboot406083">.*?</script>\s*',
-              re.S,
-          )
-          html, n = preboot_re.subn('\n', html, count=1)
-          assert n == 1, f'preboot removal count={n}'
-          assert 'aetherLegacyCenterPreboot406083' not in html
-          assert 'migration:aether-watch-left-406083' not in html
-
-          pairs = {
-              'atlas-build': BUILD,
-              'administrator-build': BUILD,
-              'administrator-revision': 'V19',
-              'administrator-release': RELEASE,
-              'atlas-asset-token': f'market-core-v2.0-alpha-build-{BUILD}',
-          }
-          for name, value in pairs.items():
-              html, n = re.subn(
-                  rf'(<meta name="{re.escape(name)}" content=")[^"]*("\s*/>)',
-                  rf'\g<1>{value}\2',
-                  html,
-                  count=1,
-              )
-              assert n == 1, f'meta {name} count={n}'
-
-          html, n = re.subn(
-              r'<title>Agent-Crypto @erith\.IA — Build [^<]+ · Administrator</title>',
-              f'<title>Agent-Crypto @erith.IA — Build {BUILD} · Administrator</title>',
-              html,
-              count=1,
-          )
-          assert n == 1, 'title replacement failed'
-          html = html.replace('administrator-build-40.6.83', f'administrator-build-{BUILD}')
-          index.write_text(html, encoding='utf-8')
-
-          js = admin_app.read_text(encoding='utf-8')
-          anchor = 'id: "aether-watch"'
-          pos = js.find(anchor)
-          assert pos >= 0, 'aether-watch definition missing'
-          pref = js.find('preferredFloatGeometry: () => {', pos)
-          assert pref >= 0, 'aether preferredFloatGeometry missing'
-          next_marker = js.find('\n      content: () =>', pref)
-          if next_marker < 0:
-              next_marker = js.find('\n      content:', pref)
-          assert next_marker > pref, 'aether preferred geometry block boundary missing'
-          old_block = js[pref:next_marker]
-          assert 'localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`)' in old_block, 'legacy Aether storage read not found'
-          assert 'legacyAutoCenter' in old_block, 'legacy center heuristic not found'
-
-          new_block = '''preferredFloatGeometry: () => {
-        const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
-        const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
-        const fittedWidth = Math.min(width, height * 16 / 9);
-        const fittedHeight = fittedWidth * 9 / 16;
-        return {
-          x: Math.max(12, Math.round((vw - fittedWidth) / 2)),
-          y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
-          width: Math.round(fittedWidth),
-          height: Math.round(fittedHeight)
-        };
-      },'''
-          js = js[:pref] + new_block + js[next_marker:]
-          admin_app.write_text(js, encoding='utf-8')
-
-          # Build truth: only current release metadata + one bounded cascade entry.
-          data.update({
-              'build': BUILD,
-              'engine': ENGINE,
-              'release': RELEASE,
-              'published': True,
-              'status': STATUS,
-              'parent_build': PARENT,
-              'asset_token': f'market-core-v2.0-alpha-build-{BUILD}',
-              'administrator_build': BUILD,
-              'build_label': f'Build {BUILD} · Administrator',
-              'release_status': STATUS,
-              'timestamp': datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z'),
-          })
-          if isinstance(data.get('current_version_truth'), dict):
-              data['current_version_truth']['loaded_build'] = BUILD
-          data['cascade_40_6_84'] = {
-              'parent_build': PARENT,
-              'release': RELEASE,
-              'status': STATUS,
-              'scope': 'aether_window_geometry_ownership_only',
-              'preboot_geometry_migration_removed': True,
-              'preferred_geometry_storage_read_removed': True,
-              'saved_operator_geometry_authority': 'ErithAdministratorWindows',
-              'default_geometry_only_when_no_saved_geometry': True,
-              'boot_open_focus_recenter_of_saved_geometry': False,
-              'market_core_modified': False,
-              'market_core': ENGINE,
-              'window_manager_modified': False,
-              'aether_visual_modified': False,
-              'aether_backplate_modified': False,
-              'technical_reading_modified': False,
-              'web_classic_business_runtime_modified': False,
-              'new_recurring_timer': False,
-              'new_observer': False,
-              'new_network_owner': False,
-              'new_storage_owner': False,
-          }
-          manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-
-          release_note.write_text(f'''# Administrator {BUILD} — Aether V2 persisted geometry ownership lock
-
-Parent: {PARENT}  
-Market Core: {ENGINE} — unchanged.
-
-## Correction
-
-- Supprime la migration préboot 40.6.83 qui pouvait réécrire la géométrie Aether sauvegardée avant l'initialisation du Window Manager.
-- `aether-watch.preferredFloatGeometry()` ne lit plus le stockage et ne fournit qu'une géométrie initiale lorsqu'aucune géométrie opérateur valide n'existe.
-- Une géométrie opérateur valide (`x`, `y`, `width`, `height`) reste la vérité et est restaurée exclusivement par `ErithAdministratorWindows`.
-- Aucun recentrage ni forçage à gauche n'est appliqué au boot, à l'ouverture, au focus ou après F5 quand une géométrie sauvegardée existe.
-
-## Protections
-
-- Market Core {ENGINE} inchangé.
-- Window Manager canonique inchangé.
-- Visuel Aether / backplate inchangé.
-- Lecture Technique inchangée.
-- Web Classique / moteur métier inchangé.
-- Aucun nouveau timer, observer, fetch, propriétaire de stockage ou migration.
-
-## Test opérateur attendu
-
-1. Ouvrir Aether.
-2. Déplacer la fenêtre à une position volontairement non centrée.
-3. Recharger avec F5.
-4. Vérifier que `x`, `y`, largeur et hauteur reviennent à la géométrie sauvegardée.
-5. Fermer/réouvrir Aether et vérifier qu'aucun recentrage n'intervient.
-''', encoding='utf-8')
-
-          # Surgical acceptance checks before commit.
-          html2 = index.read_text(encoding='utf-8')
-          js2 = admin_app.read_text(encoding='utf-8')
-          data2 = json.loads(manifest.read_text(encoding='utf-8'))
-          assert f'administrator-build" content="{BUILD}' in html2
-          assert f'atlas-build" content="{BUILD}' in html2
-          assert 'atlas-engine-build" content="38.15.11' in html2
-          assert 'aetherLegacyCenterPreboot406083' not in html2
-          assert 'migration:aether-watch-left-406083' not in html2
-          aether_pos = js2.find(anchor)
-          aether_pref = js2.find('preferredFloatGeometry: () => {', aether_pos)
-          aether_end = js2.find('\n      content:', aether_pref)
-          block = js2[aether_pref:aether_end]
-          assert 'legacyAutoCenter' not in block
-          assert 'localStorage' not in block
-          assert 'STORAGE_PREFIX' not in block
-          assert 'x: Math.max(12, Math.round((vw - fittedWidth) / 2))' in block
-          assert data2['build'] == BUILD and data2['engine'] == ENGINE
-
-          for p, digest in protected.items():
-              now = hashlib.sha256(Path(p).read_bytes()).hexdigest()
-              assert now == digest, f'protected file changed: {p}'
-
-          # Guard the known protected visual references inside index.
-          assert './assets/aether/aether-observatory-master-v2-406074.png' in html2
-          assert 'admin-tech-portrait-r3' in html2
-          print('40.6.84 surgical acceptance: OK')
-          PY
-
+      - name: Apply and verify 40.6.84 surgery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python .github/scripts/agent_crypto_406084.py
           git diff --check
           git diff -- "$ADMIN/index.html" "$ADMIN/js/app.js" "$ADMIN/build.json" "$ADMIN/RELEASE_40_6_84.md"
+
+      - name: Commit release
+        shell: bash
+        run: |
+          set -euo pipefail
           git add "$ADMIN/index.html" "$ADMIN/js/app.js" "$ADMIN/build.json" "$ADMIN/RELEASE_40_6_84.md"
           git commit -m "fix(agent-crypto): 40.6.84 lock Aether persisted geometry ownership"
 
-      - name: Build clean upload archive
+      - name: Retire one-shot release files and publish
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p dist
-          python - <<'PY'
-          from pathlib import Path
-          import hashlib, zipfile
-          root=Path('public/agent_crypto_erith_ia/administrator')
-          out=Path('dist/AGENT_CRYPTO_BUILD_40_6_84_AETHER_PERSISTED_GEOMETRY_LOCK_CLEAN_UPLOAD.zip')
-          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
-              for p in sorted(root.rglob('*')):
-                  if p.is_file(): z.write(p,p.relative_to(root.parent))
-          digest=hashlib.sha256(out.read_bytes()).hexdigest()
-          Path(str(out)+'.sha256').write_text(f'{digest}  {out.name}\n',encoding='utf-8')
-          print(out, digest)
-          PY
-
-      - name: Retire one-shot workflow and publish
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -f .github/workflows/agent-crypto-406084-persisted-geometry-lock.yml
-          git add -A
-          git commit -m "chore(agent-crypto): retire 40.6.84 one-shot release workflow"
+          git rm .github/workflows/agent-crypto-406084-persisted-geometry-lock.yml .github/scripts/agent_crypto_406084.py
+          git commit -m "chore(agent-crypto): retire 40.6.84 one-shot release tooling"
           git push origin HEAD:main
 
       - name: Upload 40.6.84 clean package
