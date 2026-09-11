@@ -100,3 +100,70 @@
     install
   });
 })();
+
+/* ==========================================================================
+   40.6.73 R5 — ACTIVE MARKET FICHE BODY-TOP PORTAL
+   R4 proved that z-index alone is insufficient in the live Administrator stack.
+   The fiche is already position:fixed and a direct body child. When it becomes
+   active, move that existing node to the end of <body> so equal/clamped extreme
+   z-index values resolve in favor of the operator's foreground fiche.
+   No clone, no geometry owner, no observer, no timer, no storage/network owner.
+   ========================================================================== */
+(() => {
+  "use strict";
+
+  const BUILD = "40.6.73 R5";
+  const LAYER_ID = "atlasHelpLayer";
+  const MAX_Z = "2147483647";
+  const EVENT_TYPES = ["pointerover", "focusin", "click", "keydown"];
+
+  function activeFiche() {
+    const layer = document.getElementById(LAYER_ID);
+    if (!(layer instanceof HTMLElement)) return null;
+    if (layer.hidden || layer.getAttribute("aria-hidden") === "true") return null;
+    if (!layer.dataset.marketHelpCoinId) return null;
+    return layer;
+  }
+
+  function promote(reason = "operator-market-fiche") {
+    const layer = activeFiche();
+    if (!layer || !document.body) return false;
+
+    // Preserve the existing fixed geometry while escaping equal-z paint order.
+    layer.style.setProperty("z-index", MAX_Z, "important");
+    if (layer.parentElement !== document.body || layer !== document.body.lastElementChild) {
+      document.body.append(layer);
+    }
+
+    layer.dataset.marketFicheForeground406073R5 = reason;
+    document.documentElement.dataset.marketFicheForeground406073R5 = "1";
+    return true;
+  }
+
+  function schedulePromote(event) {
+    // app.js owns opening/positioning first. This microtask runs after the current
+    // interaction dispatch, then only promotes if a real Crypto fiche is visible.
+    queueMicrotask(() => promote(event?.type || "interaction"));
+  }
+
+  EVENT_TYPES.forEach(type => document.addEventListener(type, schedulePromote, { passive: true }));
+  queueMicrotask(() => promote("install"));
+
+  globalThis.ErithMarketFicheForeground406073R5 = Object.freeze({
+    build: BUILD,
+    layer_id: LAYER_ID,
+    z_index: Number(MAX_Z),
+    strategy: "existing-node-body-tail-portal",
+    events: Object.freeze([...EVENT_TYPES]),
+    aether_geometry_changed: false,
+    aether_visibility_changed: false,
+    window_manager_changed: false,
+    market_core_changed: false,
+    clone_added: false,
+    new_timer: false,
+    new_observer: false,
+    new_storage_owner: false,
+    new_network_owner: false,
+    promote
+  });
+})();
