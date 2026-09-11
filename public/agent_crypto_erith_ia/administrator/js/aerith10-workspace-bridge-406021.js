@@ -34,3 +34,71 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
   globalThis.ErithAerith10WorkspaceBridge406021=Object.freeze({build:BUILD,refresh,current_context:currentContext,open_creator:openCreator,open_forge:openForge,network:false,storage_write:false,financial_action:false,iframe_dom_access:false});
 })();
+
+/* ==========================================================================
+   40.6.73 R3 — ADMINISTRATOR RETURN STATE LOCK
+   ========================================================================== */
+(() => {
+  "use strict";
+
+  const BUILD = "40.6.73 R3";
+  const MODE_KEY = "agent_crypto_erith_ia_v2_interface_mode";
+  const SESSION_KEY = "agent_crypto_local_access_session_v1";
+  const ADMIN_BUTTON_ID = "btnAdminAccountToggle";
+
+  function ownerSession() {
+    try { return sessionStorage.getItem(SESSION_KEY) === "owner"; }
+    catch (_) { return false; }
+  }
+
+  function persistAdministratorReturn() {
+    if (!ownerSession()) return false;
+    try {
+      if (localStorage.getItem(MODE_KEY) !== "advanced") {
+        localStorage.setItem(MODE_KEY, "advanced");
+      }
+      document.documentElement.dataset.adminReturnLock406073R3 = "advanced";
+      return true;
+    } catch (_) {
+      document.documentElement.dataset.adminReturnLock406073R3 = "storage-unavailable";
+      return false;
+    }
+  }
+
+  function captureAdministratorIntent(event) {
+    if (event?.isTrusted !== true) return;
+    const target = event.target instanceof Element
+      ? event.target.closest(`#${ADMIN_BUTTON_ID}`)
+      : null;
+    if (!target || !ownerSession()) return;
+
+    // Persist before the historical first-click intent gate can stop propagation.
+    persistAdministratorReturn();
+
+    // Re-assert after the canonical click transaction so an older stored
+    // Intermediate value cannot win the next reload/return.
+    queueMicrotask(persistAdministratorReturn);
+  }
+
+  window.addEventListener("click", captureAdministratorIntent, { capture: true, passive: true });
+
+  globalThis.ErithAdministratorReturnLock406073R3 = Object.freeze({
+    build: BUILD,
+    mode_key: MODE_KEY,
+    session_key: SESSION_KEY,
+    explicit_admin_click_only: true,
+    owner_session_required: true,
+    intermediate_url_override_preserved: true,
+    recurring_timer: false,
+    observer: false,
+    network_owner: false,
+    market_core_changed: false,
+    operator_runtime_changed: false,
+    persist: persistAdministratorReturn,
+    status: () => Object.freeze({
+      owner: ownerSession(),
+      stored_mode: (() => { try { return localStorage.getItem(MODE_KEY); } catch (_) { return null; } })(),
+      dataset: document.documentElement.dataset.adminReturnLock406073R3 || "idle"
+    })
+  });
+})();
