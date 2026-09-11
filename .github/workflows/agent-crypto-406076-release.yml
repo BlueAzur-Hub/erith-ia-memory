@@ -1,0 +1,467 @@
+name: Agent-Crypto 40.6.76 Aether Native Position Release
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-406076-release.yml'
+
+permissions:
+  contents: write
+
+env:
+  ADMIN: public/agent_crypto_erith_ia/administrator
+
+jobs:
+  release:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Synchronize main before surgery
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Build canonical 40.6.76
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+          from datetime import datetime, timezone
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          app = root / 'js/app.js'
+          frame = root / 'js/aether-frame-406076.js'
+          role = root / 'js/aether-role-visibility-406050.js'
+          index = root / 'index.html'
+          build_json = root / 'build.json'
+          release = root / 'RELEASE_40_6_76.md'
+
+          # ------------------------------------------------------------------
+          # 1. REAL OWNER: Aether preferred floating geometry in js/app.js.
+          #    Preserve the validated 40.6.75 size/y contract, but stop forcing
+          #    x=center. Existing Window Manager storage is read-only here and
+          #    wins when it represents an operator position.
+          # ------------------------------------------------------------------
+          text = app.read_text(encoding='utf-8')
+          old = '''        preferredFloatGeometry: () => {
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
+          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
+          const fittedWidth = Math.min(width, height * 16 / 9);
+          const fittedHeight = fittedWidth * 9 / 16;
+          return {
+            x: Math.max(12, Math.round((vw - fittedWidth) / 2)),
+            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
+            width: Math.round(fittedWidth),
+            height: Math.round(fittedHeight)
+          };
+        },'''
+          new = '''        preferredFloatGeometry: () => {
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
+          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
+          const fittedWidth = Math.min(width, height * 16 / 9);
+          const fittedHeight = fittedWidth * 9 / 16;
+          const fallback = {
+            x: 12,
+            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
+            width: Math.round(fittedWidth),
+            height: Math.round(fittedHeight)
+          };
+
+          // 40.6.76 — Native Position Lock. Read the Window Manager's own saved
+          // geometry only to seed a hidden Aether window after reload. This does
+          // not create a second storage owner: no write happens here. A real
+          // operator-moved position wins. The exact legacy auto-centered position
+          // from <=40.6.75 is migrated once to the native left workspace anchor.
+          try {
+            const raw = JSON.parse(localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) || 'null');
+            const saved = raw && typeof raw === 'object' ? {
+              x: Number(raw.x), y: Number(raw.y), width: Number(raw.width), height: Number(raw.height)
+            } : null;
+            if (saved && [saved.x, saved.y, saved.width, saved.height].every(Number.isFinite)) {
+              const centeredX = Math.max(12, Math.round((vw - saved.width) / 2));
+              const legacyAutoCenter = saved.x > 26 && Math.abs(saved.x - centeredX) <= 14;
+              return {
+                x: legacyAutoCenter ? 12 : saved.x,
+                y: saved.y,
+                width: saved.width,
+                height: saved.height
+              };
+            }
+          } catch (_) {}
+          return fallback;
+        },'''
+          if text.count(old) != 1:
+            raise SystemExit(f'Aether preferredFloatGeometry owner mismatch: {text.count(old)}')
+          text = text.replace(old, new, 1)
+          app.write_text(text, encoding='utf-8')
+
+          # ------------------------------------------------------------------
+          # 2. Migration bridge only. No ongoing geometry normalization.
+          # ------------------------------------------------------------------
+          frame.write_text(r'''/* Agent-Crypto @erith.IA — Build 40.6.76
+   AETHER WATCH V2 — NATIVE POSITION LOCK
+
+   Responsibility:
+   - warm/validate the already approved V2 backplate;
+   - migrate only the historical <=40.6.75 auto-centered floating position;
+   - after migration, leave x/y/size/drag/resize/persistence entirely to the
+     canonical Administrator Window Manager.
+
+   No CSS geometry owner, no resize reframe, no pageshow reframe, no timer,
+   no MutationObserver, no storage write owner, no network owner, no Market Core edit. */
+(() => {
+  "use strict";
+
+  const BUILD = "40.6.76";
+  const WINDOW_ID = "aether-watch";
+  const TOGGLE_ID = "atlasAetherStatusToggle4084";
+  const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
+  const ROOT_ATTR = "data-aether-backplate-v2-406074";
+  const MARGIN = 12;
+  const CENTER_EPSILON = 14;
+  const root = document.documentElement;
+  let migrationChecked = false;
+
+  function viewport() {
+    return {
+      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+    };
+  }
+
+  function warmBackplate() {
+    root.setAttribute(ROOT_ATTR, "loading");
+    const image = new Image();
+    image.decoding = "async";
+    const src = new URL(BACKPLATE, document.baseURI).href;
+    const ready = () => {
+      root.setAttribute(ROOT_ATTR, "ready");
+      root.dataset.aetherNativePosition406076 = "visual-ready";
+    };
+    const fallback = () => {
+      root.setAttribute(ROOT_ATTR, "fallback-40.6.73");
+      root.dataset.aetherNativePosition406076 = "visual-fallback";
+    };
+    image.addEventListener("load", () => {
+      const decoded = typeof image.decode === "function" ? image.decode() : Promise.resolve();
+      Promise.resolve(decoded).then(ready).catch(fallback);
+    }, { once: true });
+    image.addEventListener("error", fallback, { once: true });
+    image.src = src;
+    return { image, src };
+  }
+
+  function managerState() {
+    const manager = globalThis.ErithAdministratorWindows;
+    const win = manager?.getWindow?.(WINDOW_ID) || null;
+    const snapshot = manager?.snapshot?.() || null;
+    const saved = snapshot?.windows?.[WINDOW_ID] || null;
+    return { manager, win, snapshot, saved };
+  }
+
+  function geometryOf(win, saved) {
+    const raw = saved?.geometry || win?.geometry || null;
+    if (!raw) return null;
+    const geometry = {
+      x: Number(raw.x), y: Number(raw.y), width: Number(raw.width), height: Number(raw.height)
+    };
+    return Object.values(geometry).every(Number.isFinite) ? geometry : null;
+  }
+
+  function looksLegacyAutoCentered(geometry) {
+    if (!geometry) return false;
+    const { width: vw } = viewport();
+    const centeredX = Math.max(MARGIN, Math.round((vw - geometry.width) / 2));
+    return geometry.x > MARGIN + CENTER_EPSILON
+      && Math.abs(geometry.x - centeredX) <= CENTER_EPSILON;
+  }
+
+  function migrateLegacyCenter(reason = "post-open") {
+    if (migrationChecked) return false;
+    const { manager, win, snapshot, saved } = managerState();
+    if (!manager || !win || !snapshot) return false;
+    if (win.hidden || win.minimized || win.maximized || saved?.floating !== true) return false;
+
+    const geometry = geometryOf(win, saved);
+    if (!geometry) return false;
+    migrationChecked = true;
+
+    if (!looksLegacyAutoCentered(geometry)) {
+      root.dataset.aetherNativePosition406076 = "operator-position-preserved";
+      return false;
+    }
+
+    manager.applySnapshot({
+      schema: snapshot.schema || "erith.admin.workspace.window-state.v1",
+      windows: {
+        [WINDOW_ID]: {
+          floating: true,
+          minimized: false,
+          hidden: false,
+          maximized: false,
+          geometry: {
+            x: MARGIN,
+            y: geometry.y,
+            width: geometry.width,
+            height: geometry.height
+          }
+        }
+      }
+    }, { persist: true, captureResult: false });
+
+    root.dataset.aetherNativePosition406076 = `legacy-center-migrated:${reason}`;
+    return true;
+  }
+
+  function captureAetherOpen(event) {
+    if (!(event.target instanceof Element)) return;
+    if (!event.target.closest(`#${TOGGLE_ID}`)) return;
+    // The canonical Aether click runs first; this microtask executes before the
+    // next paint and only migrates the legacy auto-center if it is actually present.
+    queueMicrotask(() => migrateLegacyCenter("operator-open"));
+  }
+
+  const warm = warmBackplate();
+  document.addEventListener("click", captureAetherOpen, true);
+
+  const api = Object.freeze({
+    build: BUILD,
+    window_id: WINDOW_ID,
+    mode: "native-position-lock",
+    geometry_owner: "ErithAdministratorWindows",
+    visual_owner: "aether-v2-406075.css",
+    first_open_owner: "js/app.js preferredFloatGeometry",
+    legacy_center_migration_only: true,
+    operator_position_preserved: true,
+    resize_reframe: false,
+    pageshow_reframe: false,
+    explicit_maximize_preserved: true,
+    recurring_timer: false,
+    observer: false,
+    storage_write_owner: false,
+    network_owner: false,
+    market_core_changed: false,
+    operator_runtime_changed: false,
+    backplate: warm.src,
+    migrate: migrateLegacyCenter,
+    status: () => {
+      const { win, saved } = managerState();
+      return Object.freeze({
+        build: BUILD,
+        state: root.dataset.aetherNativePosition406076 || "idle",
+        floating: win?.floating === true,
+        hidden: win?.hidden === true,
+        maximized: win?.maximized === true,
+        geometry: geometryOf(win, saved)
+      });
+    }
+  });
+
+  globalThis.ErithAetherFrame406076 = api;
+  // Compatibility alias for the historical loader/diagnostic name only.
+  globalThis.ErithAetherFrame406074 = api;
+})();
+''', encoding='utf-8')
+
+          # ------------------------------------------------------------------
+          # 3. Canonical Aether integration: .75 visual owner is frozen and reused.
+          # ------------------------------------------------------------------
+          js = role.read_text(encoding='utf-8')
+          replacements = [
+            ('40.6.50 + Build 40.6.75 canonical Aether integration', '40.6.50 + Build 40.6.76 canonical Aether integration'),
+            ('BUILD 40.6.75 — AETHER V2 ICON-SAFE CANONICAL INTEGRATION', 'BUILD 40.6.76 — AETHER V2 NATIVE POSITION LOCK'),
+            ('const BUILD = "40.6.75";', 'const BUILD = "40.6.76";'),
+            ('const REVISION = "V10";', 'const REVISION = "V11";'),
+            ('const RELEASE = "AETHER V2 · ICON-SAFE LANES / TYPOGRAPHIC ALIGNMENT";', 'const RELEASE = "AETHER V2 · NATIVE POSITION LOCK";'),
+            ('const SCRIPT_ID = "aetherFrame406075Canonical";', 'const SCRIPT_ID = "aetherFrame406076Canonical";'),
+            ('const SCRIPT_SRC = "./js/aether-frame-406075.js?v=administrator-build-40.6.75";', 'const SCRIPT_SRC = "./js/aether-frame-406076.js?v=administrator-build-40.6.76";'),
+            ('setMeta("administrator-revision", "V10");', 'setMeta("administrator-revision", "V11");'),
+            ('setMeta("atlas-asset-token", "market-core-v2.0-alpha-build-40.6.75");', 'setMeta("atlas-asset-token", "market-core-v2.0-alpha-build-40.6.76");'),
+            ('document.documentElement.dataset.aetherV2406074 = "canonical-40.6.75";', 'document.documentElement.dataset.aetherV2406074 = "canonical-40.6.76";'),
+            ('document.documentElement.dataset.aetherRevision406074 = REVISION;', 'document.documentElement.dataset.aetherRevision406074 = REVISION;'),
+            ('link.dataset.aether406074 = "canonical-40.6.75";', 'link.dataset.aether406074 = "visual-lock-40.6.75";'),
+            ('script.dataset.aether406074 = "canonical-40.6.75";', 'script.dataset.aether406074 = "native-position-40.6.76";'),
+            ('document.documentElement.dataset.aetherFrameLoader406074 = "ready-r1";', 'document.documentElement.dataset.aetherFrameLoader406074 = "ready-40.6.76";'),
+          ]
+          for old, new in replacements:
+            count = js.count(old)
+            if count != 1:
+              raise SystemExit(f'role integration token count {count}: {old}')
+            js = js.replace(old, new, 1)
+          js = js.replace('   - publishes the 40.6.74 version truth in the running Administrator shell;\n   - loads one final Aether V2 stylesheet with the R1 optical fix;\n   - loads one canonical Window-Manager bridge with first-paint preframing;',
+                          '   - publishes the 40.6.76 version truth in the running Administrator shell;\n   - reuses the field-validated 40.6.75 Aether V2 visual stylesheet unchanged;\n   - loads one migration bridge that retires forced centering and returns position ownership to the Window Manager;')
+          # Keep the validated .75 CSS bytes and filename deliberately.
+          role.write_text(js, encoding='utf-8')
+
+          # ------------------------------------------------------------------
+          # 4. Static entry truth.
+          # ------------------------------------------------------------------
+          html = index.read_text(encoding='utf-8')
+          html_replacements = [
+            ('<meta name="atlas-build" content="40.6.75" />', '<meta name="atlas-build" content="40.6.76" />'),
+            ('<meta name="administrator-build" content="40.6.75" />', '<meta name="administrator-build" content="40.6.76" />'),
+            ('<meta name="administrator-revision" content="V10" />', '<meta name="administrator-revision" content="V11" />'),
+            ('<meta name="administrator-release" content="AETHER V2 · ICON-SAFE LANES / TYPOGRAPHIC ALIGNMENT" />', '<meta name="administrator-release" content="AETHER V2 · NATIVE POSITION LOCK" />'),
+            ('<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.75" />', '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.76" />'),
+            ('<title>Agent-Crypto @erith.IA — Build 40.6.75 · Administrator</title>', '<title>Agent-Crypto @erith.IA — Build 40.6.76 · Administrator</title>'),
+            ('./js/aether-role-visibility-406050.js?v=administrator-build-40.6.75', './js/aether-role-visibility-406050.js?v=administrator-build-40.6.76'),
+          ]
+          for old, new in html_replacements:
+            count = html.count(old)
+            if count != 1:
+              raise SystemExit(f'index token count {count}: {old}')
+            html = html.replace(old, new, 1)
+          index.write_text(html, encoding='utf-8')
+
+          # ------------------------------------------------------------------
+          # 5. Published manifest / update-button truth.
+          # ------------------------------------------------------------------
+          data = json.loads(build_json.read_text(encoding='utf-8'))
+          if data.get('build') != '40.6.75':
+            raise SystemExit(f'build.json parent mismatch: {data.get("build")}')
+          data.update({
+            'build': '40.6.76',
+            'engine': '38.15.11',
+            'release': 'AETHER V2 · NATIVE POSITION LOCK',
+            'published': True,
+            'status': 'aether_v2_native_position_lock_406076',
+            'parent_build': '40.6.75',
+            'asset_token': 'market-core-v2.0-alpha-build-40.6.76',
+            'administrator_build': '40.6.76',
+            'build_label': 'Build 40.6.76 · Administrator',
+            'release_status': 'aether_v2_native_position_lock',
+            'timestamp': datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z'),
+          })
+          truth = data.setdefault('current_version_truth', {})
+          truth['loaded_build'] = '40.6.76'
+          data['cascade_40_6_76'] = {
+            'parent_build': '40.6.75',
+            'release': 'AETHER V2 · NATIVE POSITION LOCK',
+            'status': 'aether_v2_native_position_lock_406076',
+            'visual_owner': 'aether-v2-406075.css',
+            'visual_owner_modified': False,
+            'position_owner': 'canonical Administrator Window Manager',
+            'first_open_geometry_owner': 'js/app.js preferredFloatGeometry',
+            'legacy_auto_center_migration_only': True,
+            'operator_position_persistence_reused': True,
+            'maximize_contract_preserved': True,
+            'market_core': '38.15.11',
+            'market_core_modified': False,
+            'graph_modified': False,
+            'technical_reading_modified': False,
+            'operator_runtime_modified': False,
+            'new_recurring_timer': False,
+            'new_observer': False,
+            'new_network_owner': False,
+            'new_storage_owner': False,
+            'automatic_order': False,
+            'real_order': False
+          }
+          build_json.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # ------------------------------------------------------------------
+          # 6. Release note.
+          # ------------------------------------------------------------------
+          release.write_text('''# Agent-Crypto Administrator — 40.6.76\n\n## Aether Watch V2 — Native Position Lock\n\nCanonical parent: **40.6.75**. Engine: **Market Core 38.15.11** unchanged.\n\n### Field validation inherited from 40.6.75\n\nThe V2 backplate, the nine-cell geometry and the 40.6.75 icon-safe typography are now frozen. `aether-v2-406075.css` is reused byte-for-byte by this release. No visual density, typography, padding, card geometry or background change is introduced.\n\n### Defect corrected\n\n40.6.75 still had two position authorities: the Aether Window Manager definition and `aether-frame-406075.js`, which recomputed and reapplied a centered/bottom-aligned target on open, resize, pageshow and Administrator-ready. The operator could therefore see Aether return to an automatic position even though centering had never been requested.\n\n40.6.76 retires that behavior.\n\n### Native position contract\n\n- `js/app.js` remains the real first-open geometry definition owner.\n- First open without saved geometry uses the native left workspace anchor (`x = 12`) while preserving the validated width, height and vertical formula.\n- Existing Window Manager geometry is read-only reused after reload.\n- A genuine operator-moved `x/y/width/height` wins unchanged.\n- The exact legacy <=40.6.75 auto-centered geometry is migrated once to `x = 12`; width, height and y are preserved.\n- After that migration there is no Aether resize listener, pageshow reframe or continuous geometry normalization.\n- Drag, resize, persistence, z-order, minimize, hide and maximize remain owned by the canonical Administrator Window Manager.\n- Explicit maximize keeps the historical Window Manager maximize/restore contract.\n\n### Protected\n\n- Market Core **38.15.11** unchanged;\n- V2 PNG unchanged;\n- `aether-v2-406075.css` unchanged;\n- Administrator Window Manager core unchanged;\n- Graphique unchanged;\n- Lecture Technique unchanged;\n- Atlas / Oracle / Sources data owners unchanged;\n- active market fiche foreground R5 preserved;\n- Operator / Yohan runtime unchanged;\n- no new recurring timer;\n- no MutationObserver;\n- no new storage owner;\n- no new network owner;\n- no trading action.\n\n### Firefox acceptance\n\n1. From 40.6.75 click the Build badge: `build.json` must advertise 40.6.76 without requiring Ctrl+F5.\n2. Open Aether normally. It must not be globally auto-centered by the Aether bridge.\n3. Move Aether manually, close it, reopen it in the same session: the operator position must remain authoritative.\n4. Reload, open Aether: the Window Manager saved geometry must be reused when valid.\n5. If the only saved geometry is the historical auto-centered 40.6.75 position, it may migrate once to the native left anchor.\n6. Maximize then restore: the Window Manager must restore the floating geometry.\n7. Confirm the 40.6.75 visual composition is unchanged.\n''', encoding='utf-8')
+
+          # ------------------------------------------------------------------
+          # 7. Release assertions.
+          # ------------------------------------------------------------------
+          app_body = app.read_text(encoding='utf-8')
+          frame_body = frame.read_text(encoding='utf-8')
+          role_body = role.read_text(encoding='utf-8')
+          index_body = index.read_text(encoding='utf-8')
+          manifest = json.loads(build_json.read_text(encoding='utf-8'))
+
+          assert 'x: 12,' in app_body
+          assert 'legacyAutoCenter ? 12 : saved.x' in app_body
+          assert 'Math.round((vw - fittedWidth) / 2)' not in app_body
+          assert 'window.addEventListener("resize"' not in frame_body
+          assert 'window.addEventListener("pageshow"' not in frame_body
+          assert 'MutationObserver' in frame_body  # documentation says no MutationObserver
+          assert 'new MutationObserver' not in frame_body
+          assert 'setInterval' not in frame_body
+          assert 'setTimeout' not in frame_body
+          assert 'aether-frame-406076.js?v=administrator-build-40.6.76' in role_body
+          assert 'aether-v2-406075.css?v=administrator-build-40.6.75' in role_body
+          assert 'Build 40.6.76 · Administrator' in index_body
+          assert manifest['build'] == '40.6.76'
+          assert manifest['engine'] == '38.15.11'
+          print('40.6.76 assertions: PASS')
+
+      - name: Build exact release ZIP
+        shell: python
+        run: |
+          from pathlib import Path
+          import hashlib, json, zipfile
+
+          base = Path('public/agent_crypto_erith_ia/administrator')
+          paths = [
+            base / 'index.html',
+            base / 'build.json',
+            base / 'aether-v2-406075.css',
+            base / 'js/app.js',
+            base / 'js/aether-frame-406076.js',
+            base / 'js/aether-role-visibility-406050.js',
+            base / 'RELEASE_40_6_76.md',
+          ]
+          manifest = {
+            'package': 'AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK',
+            'build': '40.6.76',
+            'engine': '38.15.11',
+            'files': []
+          }
+          for p in paths:
+            raw = p.read_bytes()
+            manifest['files'].append({
+              'path': p.as_posix(),
+              'bytes': len(raw),
+              'sha256': hashlib.sha256(raw).hexdigest()
+            })
+          Path('PATCH_MANIFEST_40_6_76.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          out = Path('AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK.zip')
+          with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
+            for p in paths:
+              z.write(p, p.as_posix())
+            z.write('PATCH_MANIFEST_40_6_76.json', 'PATCH_MANIFEST.json')
+          sha = hashlib.sha256(out.read_bytes()).hexdigest()
+          Path('AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK.sha256').write_text(f'{sha}  {out.name}\n', encoding='utf-8')
+          print(out.name, out.stat().st_size, sha)
+
+      - name: Commit one canonical runtime build
+        run: |
+          git rm .github/workflows/agent-crypto-406076-release.yml
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+          git add \
+            "$ADMIN/index.html" \
+            "$ADMIN/build.json" \
+            "$ADMIN/js/app.js" \
+            "$ADMIN/js/aether-frame-406076.js" \
+            "$ADMIN/js/aether-role-visibility-406050.js" \
+            "$ADMIN/RELEASE_40_6_76.md"
+          git diff --cached --check
+          git commit -m "release(agent-crypto): promote Administrator 40.6.76 Aether native position lock"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+
+      - name: Upload exact 40.6.76 ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK
+          path: |
+            AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK.zip
+            AGENT_CRYPTO_BUILD_40_6_76_AETHER_NATIVE_POSITION_LOCK.sha256
+          if-no-files-found: error
+          retention-days: 30
