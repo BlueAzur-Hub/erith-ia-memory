@@ -1,0 +1,260 @@
+name: Agent-Crypto Aether 40.6.78-40.6.83 Cumulative Consolidation
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-406083-aether-cascade.yml'
+
+permissions:
+  contents: write
+
+env:
+  ADMIN: public/agent_crypto_erith_ia/administrator
+
+jobs:
+  cascade:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Synchronize and verify parent
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git reset --hard origin/main
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          data=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          assert data.get('build')=='40.6.77', data.get('build')
+          assert data.get('engine')=='38.15.11', data.get('engine')
+          html=(root/'index.html').read_text(encoding='utf-8')
+          assert 'administrator-build" content="40.6.77' in html
+          assert 'atlas-engine-build" content="38.15.11' in html
+          PY
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+
+      - name: Build cumulative cascade
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import hashlib, json, re, subprocess
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          index=root/'index.html'
+          manifest=root/'build.json'
+          role=root/'js/aether-role-visibility-406050.js'
+          base_css=root/'aether-v2-406075.css'
+          aether_core=root/'js/aether.js'
+          app=root/'js/app.js'
+          backplate=root/'assets/aether/aether-observatory-master-v2-406074.png'
+          workflow=Path('.github/workflows/agent-crypto-406083-aether-cascade.yml')
+
+          protected={
+            'js/aether.js': hashlib.sha256(aether_core.read_bytes()).hexdigest(),
+            'js/app.js': hashlib.sha256(app.read_bytes()).hexdigest(),
+            'assets/aether/aether-observatory-master-v2-406074.png': hashlib.sha256(backplate.read_bytes()).hexdigest(),
+            'aether-v2-406075.css': hashlib.sha256(base_css.read_bytes()).hexdigest(),
+          }
+
+          def sh(*args):
+            subprocess.run(args, check=True)
+
+          def commit(message, paths):
+            sh('git','add',*map(str,paths))
+            sh('git','commit','-m',message)
+
+          def publish_index(build, revision, release):
+            html=index.read_text(encoding='utf-8')
+            pairs={
+              'atlas-build': build,
+              'administrator-build': build,
+              'administrator-revision': revision,
+              'administrator-release': release,
+              'atlas-asset-token': f'market-core-v2.0-alpha-build-{build}',
+            }
+            for name,value in pairs.items():
+              html,n=re.subn(rf'(<meta name="{re.escape(name)}" content=")[^"]*("\s*/>)',rf'\g<1>{value}\2',html,count=1)
+              if n!=1: raise SystemExit(f'meta {name} count={n}')
+            html,n=re.subn(r'<title>Agent-Crypto @erith\.IA — Build [^<]+ · Administrator</title>',f'<title>Agent-Crypto @erith.IA — Build {build} · Administrator</title>',html,count=1)
+            if n!=1: raise SystemExit('title replacement failed')
+            html=re.sub(r'administrator-build-40\.6\.\d+',f'administrator-build-{build}',html)
+            index.write_text(html,encoding='utf-8')
+
+          def publish_manifest(build,parent,release,status,cascade):
+            data=json.loads(manifest.read_text(encoding='utf-8'))
+            data.update({
+              'build':build,'engine':'38.15.11','release':release,'published':True,
+              'status':status,'parent_build':parent,
+              'asset_token':f'market-core-v2.0-alpha-build-{build}',
+              'administrator_build':build,'build_label':f'Build {build} · Administrator',
+              'release_status':status,
+              'timestamp':datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+            })
+            if isinstance(data.get('current_version_truth'),dict): data['current_version_truth']['loaded_build']=build
+            data[f'cascade_{build.replace(".","_")}']=cascade
+            manifest.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+          def loader_block(build,revision,release,style_name,runtime_name):
+            return f'''/* ==========================================================================\n   BUILD {build} — AETHER V2 CANONICAL INTEGRATION\n   ========================================================================== */\n(() => {{\n  "use strict";\n  const BUILD = "{build}";\n  const REVISION = "{revision}";\n  const RELEASE = "{release}";\n  const STYLE_ID = "aetherV2Canonical";\n  const SCRIPT_ID = "aetherV2RuntimeCanonical";\n  const STYLE_HREF = "./{style_name}?v=administrator-build-{build}";\n  const SCRIPT_SRC = "./js/{runtime_name}?v=administrator-build-{build}";\n  const RETIRED_LINK_IDS = Object.freeze([\n    "aetherReadability406074","aetherV2Stabilization406074C21","aetherV2Refinement406074C3",\n    "aetherV2Refinement406074C31","aetherV2Reframe406074C4","aetherV2Reframe406074C5",\n    "aetherV2406075Canonical"\n  ]);\n  const RETIRED_SCRIPT_IDS = Object.freeze([\n    "aetherFrame406076Canonical","aetherFrame406077Canonical","aetherFrame406078Canonical",\n    "aetherV2Operator406079Canonical","aetherV2Operator406080Canonical"\n  ]);\n\n  function publishVersionTruth() {{\n    const setMeta=(name,value)=>document.querySelector(`meta[name="${{name}}"]`)?.setAttribute("content",value);\n    setMeta("atlas-build",BUILD); setMeta("administrator-build",BUILD); setMeta("administrator-revision",REVISION);\n    setMeta("administrator-release",RELEASE); setMeta("atlas-asset-token",`market-core-v2.0-alpha-build-${{BUILD}}`);\n    const truth=document.getElementById("atlasVersionTruthText"); if(truth) truth.textContent=`Build ${{BUILD}}`;\n    const badge=document.getElementById("atlasVersionTruthBadge"); if(badge) badge.setAttribute("aria-label",`Build ${{BUILD}}`);\n    const hidden=document.getElementById("atlasReleaseBadge"); if(hidden) hidden.textContent=`BUILD ${{BUILD}}`;\n    document.title=`Agent-Crypto @erith.IA — Build ${{BUILD}} · Administrator`;\n    document.documentElement.dataset.administratorBuild=BUILD;\n    return true;\n  }}\n  function retireLegacyAssets() {{\n    for(const id of RETIRED_LINK_IDS) if(id!==STYLE_ID) document.getElementById(id)?.remove();\n    for(const id of RETIRED_SCRIPT_IDS) if(id!==SCRIPT_ID) document.getElementById(id)?.remove();\n  }}\n  function ensureStyle() {{\n    retireLegacyAssets();\n    let link=document.getElementById(STYLE_ID);\n    if(!link){{ link=document.createElement("link"); link.id=STYLE_ID; link.rel="stylesheet"; document.head.appendChild(link); }}\n    link.href=STYLE_HREF; link.dataset.aetherCanonicalBuild=BUILD; return link;\n  }}\n  function ensureRuntime() {{\n    if(globalThis.ErithAetherV2Canonical?.build===BUILD) return true;\n    let script=document.getElementById(SCRIPT_ID);\n    if(!script){{ script=document.createElement("script"); script.id=SCRIPT_ID; script.src=SCRIPT_SRC; script.defer=true; script.dataset.aetherCanonicalBuild=BUILD; document.head.appendChild(script); }}\n    return true;\n  }}\n  publishVersionTruth(); ensureStyle(); ensureRuntime();\n  globalThis.ErithAetherCanonical406074=Object.freeze({{\n    build:BUILD,revision:REVISION,release:RELEASE,style_href:STYLE_HREF,script_src:SCRIPT_SRC,\n    one_visual_owner:true,one_runtime_owner:true,recurring_timer:false,observer:false,network_owner:false,\n    market_core_changed:false,operator_runtime_changed:false,publishVersionTruth\n  }});\n}})();\n'''
+
+          def set_loader(build,revision,release,style_name,runtime_name):
+            js=role.read_text(encoding='utf-8')
+            marker='/* ========================================================================== \n   BUILD '
+            pos=js.rfind(marker)
+            if pos<0:
+              marker='/* ==========================================================================\n   BUILD '
+              pos=js.rfind(marker)
+            if pos<0: raise SystemExit('canonical Aether loader marker not found')
+            js=js[:pos]+loader_block(build,revision,release,style_name,runtime_name)
+            role.write_text(js,encoding='utf-8')
+
+          def runtime_source(build, geometry=True, atlas=False, weather=False, final=False):
+            extra_atlas='''\n  function explainAtlas(){\n    const card=document.querySelector('.aether46-card[data-aether-card-406046="atlas"]');\n    const score=card?.querySelector('[data-aether46="atlas_score"]');\n    if(!card||!score) return false;\n    const value=String(score.textContent||"N/D").trim();\n    const explanation=`${value} · score directionnel Atlas de -100 à +100 : signe = direction, amplitude = intensité relative du momentum mesuré. Ce n’est ni une probabilité ni une confiance.`;\n    card.dataset.aetherAtlasScoreKind="direction";\n    card.title=explanation; score.title=explanation; score.setAttribute("aria-label",explanation);\n    return true;\n  }\n''' if atlas else ''
+            extra_weather='''\n  function weatherGlyph(){\n    const card=document.querySelector('.aether46-card[data-aether-card-406046="weather"]');\n    if(!card) return false;\n    const status=String(card.querySelector('[data-aether46="weather_status"]')?.textContent||"").toUpperCase();\n    const detail=String(card.querySelector('[data-aether46="weather_detail"]')?.textContent||"").toUpperCase();\n    const rainText=String(card.querySelector('[data-aether46="weather_rain"]')?.textContent||"");\n    const rain=Number((rainText.match(/\\d+(?:[.,]\\d+)?/)||[])[0]?.replace(',','.'));\n    const hour=new Date().getHours();\n    const night=hour>=21||hour<6;\n    let glyph=night?'☾':'☀'; let label=night?'Nuit':'Éclaircies';\n    if(/ORAGE|THUNDER|ÉCLAIR/.test(`${status} ${detail}`)){glyph='⚡';label='Orage';}\n    else if(Number.isFinite(rain)&&rain>=60){glyph='☂';label='Pluie';}\n    else if((Number.isFinite(rain)&&rain>=25)||/NUAGE|COUVERT|PARTIEL/.test(`${status} ${detail}`)){glyph='☁';label='Nuageux';}\n    card.dataset.aetherWeatherGlyph=glyph; card.dataset.aetherWeatherLabel=label;\n    card.setAttribute('aria-label',`Météo 5 jours · ${label}`);\n    return true;\n  }\n''' if weather else ''
+            geometry_code='''\n  const STORAGE_KEY="erith_admin_portal_39_2_9:window:aether-watch";\n  const MARGIN=12, CENTER_EPSILON=14;\n  let migrationResolved=false;\n  function viewportWidth(){return Math.max(document.documentElement.clientWidth,window.innerWidth||0);}\n  function legacyCentered(g){if(!g)return false;const cx=Math.max(MARGIN,Math.round((viewportWidth()-g.width)/2));return g.x>MARGIN+CENTER_EPSILON&&Math.abs(g.x-cx)<=CENTER_EPSILON;}\n  function storageGeometry(raw){const src=raw?.geometry&&typeof raw.geometry==='object'?raw.geometry:raw;if(!src||typeof src!=='object')return null;const g={x:Number(src.x),y:Number(src.y),width:Number(src.width),height:Number(src.height)};return Object.values(g).every(Number.isFinite)?g:null;}\n  function migrateStored(reason='storage-preflight'){\n    try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');const g=storageGeometry(raw);if(!g)return false;if(!legacyCentered(g)){document.documentElement.dataset.aetherPositionMigration=`preserved:${reason}`;return false;}const next={...raw};if(raw?.geometry&&typeof raw.geometry==='object')next.geometry={...raw.geometry,x:MARGIN};else next.x=MARGIN;localStorage.setItem(STORAGE_KEY,JSON.stringify(next));document.documentElement.dataset.aetherPositionMigration=`stored-left:${reason}`;return true;}catch(_){return false;}\n  }\n  function migrateManager(reason='manager-preflight'){\n    const manager=globalThis.ErithAdministratorWindows;const win=manager?.getWindow?.('aether-watch');const snap=manager?.snapshot?.();const saved=snap?.windows?.['aether-watch'];if(!manager||!win||!snap)return false;const raw=saved?.geometry||win?.geometry;const g=storageGeometry(raw);if(!g)return false;if(!legacyCentered(g)){migrationResolved=true;return false;}const floating=saved?.floating===true||win?.floating===true;const hidden=saved?.hidden===true||win?.hidden===true;const minimized=saved?.minimized===true||win?.minimized===true;const maximized=saved?.maximized===true||win?.maximized===true;if(minimized||maximized)return false;manager.applySnapshot({schema:snap.schema||'erith.admin.workspace.window-state.v1',windows:{'aether-watch':{floating,minimized:false,hidden,maximized:false,geometry:{x:MARGIN,y:g.y,width:g.width,height:g.height}}}},{persist:true,captureResult:false});migrationResolved=true;document.documentElement.dataset.aetherPositionMigration=`manager-left:${reason}`;return true;\n  }\n  function migrate(reason='pre-reveal'){if(migrationResolved)return false;const a=migrateStored(reason);const b=migrateManager(reason);if(a||b)migrationResolved=true;return a||b;}\n''' if geometry else ''
+            geometry_install='''\n  migrate('runtime-load');\n  window.addEventListener('erith:administrator-mirror-ready',()=>migrate('manager-ready'),{once:true});\n''' if geometry else ''
+            click_geom="migrate('operator-pre-open');" if geometry else ''
+            return f'''/* Agent-Crypto @erith.IA — Build {build}\n   AETHER WATCH V2 — {'FINAL CONSOLIDATED RUNTIME' if final else 'CUMULATIVE RUNTIME'}\n   No recurring timer, no MutationObserver, no network owner, no Market Core edit. */\n(() => {{\n  "use strict";\n  const BUILD="{build}";\n  const BACKPLATE="./assets/aether/aether-observatory-master-v2-406074.png";\n  const root=document.documentElement;\n  function warmBackplate(){{\n    root.setAttribute('data-aether-backplate-v2-406074','loading');\n    const image=new Image(); image.decoding='async'; const src=new URL(BACKPLATE,document.baseURI).href;\n    const ready=()=>{{root.setAttribute('data-aether-backplate-v2-406074','ready');root.dataset.aetherCanonicalVisualBuild=BUILD;}};\n    const fallback=()=>{{root.setAttribute('data-aether-backplate-v2-406074','fallback-40.6.73');root.dataset.aetherCanonicalVisualBuild='fallback';}};\n    image.addEventListener('load',()=>{{const decoded=typeof image.decode==='function'?image.decode():Promise.resolve();Promise.resolve(decoded).then(ready).catch(fallback);}},{{once:true}});\n    image.addEventListener('error',fallback,{{once:true}}); image.src=src; return src;\n  }}\n{geometry_code}{extra_atlas}{extra_weather}\n  function enhance(reason='runtime'){{\n    {'explainAtlas();' if atlas else ''}\n    {'weatherGlyph();' if weather else ''}\n    root.dataset.aetherOperatorEnhancement=`${{BUILD}}:${{reason}}`;\n    return true;\n  }}\n  function afterPaint(reason){{queueMicrotask(()=>requestAnimationFrame(()=>enhance(reason)));}}\n  function captureIntent(event){{if(!(event.target instanceof Element))return;if(!event.target.closest('#atlasAetherStatusToggle4084'))return;{click_geom}afterPaint('operator-open');}}\n  const backplate=warmBackplate();\n{geometry_install}  document.addEventListener('click',captureIntent,true);\n  window.addEventListener('erith:administrator-mirror-ready',()=>afterPaint('manager-ready'),{{once:true}});\n  document.addEventListener('pointerover',event=>{{if(event.target instanceof Element&&event.target.closest('#atlasAetherStatusPanel4084'))enhance('panel-interaction');}},{{passive:true}});\n  afterPaint('load');\n  globalThis.ErithAetherV2Canonical=Object.freeze({{build:BUILD,backplate,geometry_owner:'ErithAdministratorWindows',legacy_migration:{str(geometry).lower()},atlas_explainability:{str(atlas).lower()},weather_glyph:{str(weather).lower()},recurring_timer:false,observer:false,network_owner:false,market_core_changed:false,enhance{',migrate' if geometry else ''}}});\n}})();\n'''
+
+          def write_runtime(build,**flags):
+            p=root/f'js/aether-v2-{build.replace(".","")}.js'
+            p.write_text(runtime_source(build,**flags),encoding='utf-8')
+            return p
+
+          def release_note(build,parent,title,points):
+            p=root/f'RELEASE_{build.replace(".","_")}.md'
+            text=[f'# Agent-Crypto Administrator — {build}','',f'## {title}','',f'Parent canonique : **{parent}**. Engine : **Market Core 38.15.11** inchangé.','']
+            text += ['### Cumul','']+[f'- {x}' for x in points]+['','### Protections','', '- aucun ordre réel ;','- aucun nouveau timer récurrent ;','- aucun MutationObserver ;','- aucun nouveau propriétaire réseau ;','- Graphique, Lecture Technique et Operator/Yohan non modifiés ;','- V2 PNG inchangé.','']
+            p.write_text('\n'.join(text),encoding='utf-8')
+            return p
+
+          # 40.6.78 — fix the actual .77 field regression: storage truth before reveal.
+          b='40.6.78'; parent='40.6.77'; rev='V13'; rel='AETHER V2 · PRE-REVEAL STORAGE TRUTH LOCK'
+          rt78=write_runtime(b,geometry=True,atlas=False,weather=False)
+          set_loader(b,rev,rel,'aether-v2-406075.css',rt78.name)
+          publish_index(b,rev,rel)
+          publish_manifest(b,parent,rel,'aether_v2_pre_reveal_storage_truth_lock_406078',{
+            'parent_build':parent,'scope':'legacy_center_storage_and_manager_preflight','one_time_storage_migration':True,'visual_owner':'aether-v2-406075.css','market_core_modified':False,'app_js_modified':False,'aether_core_modified':False})
+          r78=release_note(b,parent,rel,['corrige le défaut Firefox observé de 40.6.77 : une géométrie centrée persistée est migrée avant révélation ;','préserve toute position opérateur qui ne correspond pas au vieux centrage automatique ;','Window Manager reste propriétaire de x/y/taille après migration.'])
+          commit('fix(agent-crypto): 40.6.78 lock Aether pre-reveal stored position',[rt78,role,index,manifest,r78])
+
+          # 40.6.79 — explain Atlas score, no math change.
+          b='40.6.79'; parent='40.6.78'; rev='V14'; rel='AETHER V2 · ATLAS SCORE EXPLAINABILITY LOCK'
+          rt79=write_runtime(b,geometry=True,atlas=True,weather=False)
+          set_loader(b,rev,rel,'aether-v2-406075.css',rt79.name)
+          publish_index(b,rev,rel)
+          publish_manifest(b,parent,rel,'aether_v2_atlas_score_explainability_406079',{
+            'parent_build':parent,'scope':'aether_atlas_score_explainability_only','atlas_math_modified':False,'score_semantics':'direction -100..+100, not probability/confidence','market_core_modified':False})
+          r79=release_note(b,parent,rel,['conserve le +N/100 Atlas existant ;','ajoute une explication opérateur accessible : score directionnel -100..+100, signe = direction, amplitude = intensité relative ;','ne modifie ni le calcul Atlas ni ses données.'])
+          commit('feat(agent-crypto): 40.6.79 explain Aether Atlas directional score',[rt79,role,index,manifest,r79])
+
+          # 40.6.80 — dynamic code-only weather glyph overlay.
+          b='40.6.80'; parent='40.6.79'; rev='V15'; rel='AETHER V2 · WEATHER STATE GLYPH LOCK'
+          rt80=write_runtime(b,geometry=True,atlas=True,weather=True)
+          set_loader(b,rev,rel,'aether-v2-406075.css',rt80.name)
+          publish_index(b,rev,rel)
+          publish_manifest(b,parent,rel,'aether_v2_weather_state_glyph_406080',{
+            'parent_build':parent,'scope':'weather_visual_state_only','uses_existing_weather_dom':True,'new_weather_fetch':False,'image_generation':False,'market_core_modified':False})
+          r80=release_note(b,parent,rel,['ajoute un état visuel météo code-only ☀ / ☁ / ☂ / ⚡ / ☾ à partir des valeurs déjà présentes ;','aucune image générée, aucun nouvel appel météo, aucune géolocalisation ;','Atlas explainability et correction de position hérités.'])
+          commit('feat(agent-crypto): 40.6.80 add code-only Aether weather state glyph',[rt80,role,index,manifest,r80])
+
+          # 40.6.81 — readability micro-tune without changing nine-cell geometry.
+          b='40.6.81'; parent='40.6.80'; rev='V16'; rel='AETHER V2 · READABILITY MICRO-TUNE LOCK'
+          css81=root/'aether-v2-406081.css'
+          css=base_css.read_text(encoding='utf-8').replace('Build 40.6.75','Build 40.6.81',1)
+          css += r'''\n\n/* 40.6.81 — READABILITY MICRO-TUNE. Geometry is intentionally unchanged. */\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-card header span{font-size:clamp(12px,.86cqw,16px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-card header b{font-size:clamp(9px,.54cqw,11px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-card footer{font-size:clamp(9px,.52cqw,11px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-system-metrics small,\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-source-metrics small,\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-oracle-metrics small,\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-weather-metrics small{font-size:clamp(8px,.51cqw,10.5px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-source-metrics strong,\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-oracle-metrics strong,\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-weather-metrics strong{font-size:clamp(10px,.69cqw,14px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-atlas-main>span{font-size:clamp(10px,.62cqw,13px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-atlas-sub b{font-size:clamp(9px,.63cqw,12.5px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-atlas-sub span{font-size:clamp(8px,.52cqw,11px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="divergence"] p{font-size:clamp(10px,.66cqw,13px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-breadth{font-size:clamp(9px,.58cqw,12px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-event-row time,\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-event-row b,\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-event-row span{font-size:clamp(8px,.51cqw,10.5px)!important;}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="weather"]::before{\n  content:attr(data-aether-weather-glyph); position:absolute; left:1.4%; top:50%; transform:translateY(-50%);\n  width:4.8cqw; height:4.8cqw; display:grid; place-items:center; pointer-events:none; z-index:2;\n  color:#c8f7ff; font-size:clamp(18px,1.65cqw,30px); line-height:1; text-shadow:0 0 7px #00d8ff,0 0 16px #0077ff;\n}\nhtml[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="atlas"] [data-aether46="atlas_score"]{cursor:help;}\n'''
+          css81.write_text(css,encoding='utf-8')
+          rt81=write_runtime(b,geometry=True,atlas=True,weather=True)
+          set_loader(b,rev,rel,css81.name,rt81.name)
+          publish_index(b,rev,rel)
+          publish_manifest(b,parent,rel,'aether_v2_readability_micro_tune_406081',{
+            'parent_build':parent,'scope':'aether_typography_and_weather_glyph_presentation','nine_cell_geometry_modified':False,'backplate_modified':False,'market_core_modified':False})
+          r81=release_note(b,parent,rel,['augmente modestement les textes secondaires qui t’étaient encore trop petits ;','conserve exactement les neuf cellules et leurs coordonnées ;','affiche le glyph météo par-dessus la zone icône sans remettre du texte sur les logos.'])
+          commit('style(agent-crypto): 40.6.81 improve Aether V2 readability without geometry drift',[css81,rt81,role,index,manifest,r81])
+
+          # 40.6.82 — consolidate active Aether assets into one CSS + one JS owner.
+          b='40.6.82'; parent='40.6.81'; rev='V17'; rel='AETHER V2 · OWNER CONSOLIDATION LOCK'
+          css82=root/'aether-v2-406082.css'; css82.write_text(css81.read_text(encoding='utf-8').replace('Build 40.6.81','Build 40.6.82',1),encoding='utf-8')
+          rt82=write_runtime(b,geometry=True,atlas=True,weather=True,final=True)
+          set_loader(b,rev,rel,css82.name,rt82.name)
+          publish_index(b,rev,rel)
+          publish_manifest(b,parent,rel,'aether_v2_owner_consolidation_406082',{
+            'parent_build':parent,'scope':'one_active_css_one_active_runtime','visual_owner':css82.name,'runtime_owner':rt82.name,'candidate_chain_retired_from_active_loader':True,'market_core_modified':False})
+          r82=release_note(b,parent,rel,['consolide les acquis .78 → .81 dans un seul CSS actif et un seul runtime actif ;','les anciens candidats restent dans Git pour rollback mais ne sont plus propriétaires actifs ;','aucun nettoyage opportuniste hors Aether.'])
+          commit('refactor(agent-crypto): 40.6.82 consolidate Aether V2 active owners',[css82,rt82,role,index,manifest,r82])
+
+          # 40.6.83 — final reread: move stale-center migration before all runtime and remove runtime geometry writing.
+          b='40.6.83'; parent='40.6.82'; rev='V18'; rel='AETHER V2 · FINAL PREBOOT + ACCEPTANCE LOCK'
+          css83=root/'aether-v2-406083.css'; css83.write_text(css82.read_text(encoding='utf-8').replace('Build 40.6.82','Build 40.6.83',1),encoding='utf-8')
+          rt83=write_runtime(b,geometry=False,atlas=True,weather=True,final=True)
+          publish_index(b,rev,rel)
+          html=index.read_text(encoding='utf-8')
+          anchor='  <meta name="description" content="Observatoire crypto prudent @erith.IA : livecheck, marché, risques, modèle mathématique, anti-FOMO." />\n'
+          preboot=r'''\n  <!-- 40.6.83 — one-time stale Aether center migration before Window Manager init. -->\n  <script id="aetherLegacyCenterPreboot406083">\n  (()=>{\n    "use strict";\n    const KEY="erith_admin_portal_39_2_9:window:aether-watch";\n    const MARK="erith_admin_portal_39_2_9:migration:aether-watch-left-406083";\n    const MARGIN=12, EPS=14;\n    try{\n      if(localStorage.getItem(MARK)==="1")return;\n      const raw=JSON.parse(localStorage.getItem(KEY)||"null");\n      const src=raw?.geometry&&typeof raw.geometry==="object"?raw.geometry:raw;\n      if(!src||typeof src!=="object"){localStorage.setItem(MARK,"1");return;}\n      const x=Number(src.x),y=Number(src.y),width=Number(src.width),height=Number(src.height);\n      if(![x,y,width,height].every(Number.isFinite)){localStorage.setItem(MARK,"1");return;}\n      const vw=Math.max(document.documentElement.clientWidth,window.innerWidth||0);\n      const centered=Math.max(MARGIN,Math.round((vw-width)/2));\n      if(x>MARGIN+EPS&&Math.abs(x-centered)<=EPS){\n        const next={...raw};\n        if(raw?.geometry&&typeof raw.geometry==="object")next.geometry={...raw.geometry,x:MARGIN}; else next.x=MARGIN;\n        localStorage.setItem(KEY,JSON.stringify(next));\n        document.documentElement.dataset.aetherLegacyCenterPreboot406083="migrated";\n      }else document.documentElement.dataset.aetherLegacyCenterPreboot406083="preserved";\n      localStorage.setItem(MARK,"1");\n    }catch(_){document.documentElement.dataset.aetherLegacyCenterPreboot406083="storage-unavailable";}\n  })();\n  </script>\n'''
+          if 'id="aetherLegacyCenterPreboot406083"' not in html:
+            if anchor not in html: raise SystemExit('preboot anchor missing')
+            html=html.replace(anchor,anchor+preboot,1)
+          index.write_text(html,encoding='utf-8')
+          set_loader(b,rev,rel,css83.name,rt83.name)
+          publish_manifest(b,parent,rel,'aether_v2_final_preboot_acceptance_lock_406083',{
+            'parent_build':parent,'scope':'final_aether_v2_consolidated_acceptance','preboot_legacy_center_migration':True,'runtime_geometry_writer':False,'window_manager_geometry_owner':True,'visual_owner':css83.name,'runtime_owner':rt83.name,'atlas_math_modified':False,'weather_fetch_added':False,'market_core_modified':False})
+          r83=release_note(b,parent,rel,['relecture finale : la migration du vieux centrage est exécutée une seule fois dans le head avant l’initialisation du Window Manager ;','le runtime final ne réécrit plus x/y/taille : après migration, le Window Manager est l’unique propriétaire géométrique ;','conserve Atlas explainability, glyph météo et lisibilité cumulés ;','un seul CSS actif + un seul runtime Aether actif.'])
+
+          # Final static acceptance / protected hashes.
+          for relpath,expected in protected.items():
+            actual=hashlib.sha256((root/relpath).read_bytes()).hexdigest()
+            if actual!=expected: raise SystemExit(f'protected drift {relpath}: {actual} != {expected}')
+          for jsfile in [rt78,rt79,rt80,rt81,rt82,rt83]: sh('node','--check',str(jsfile))
+          final_html=index.read_text(encoding='utf-8'); final_role=role.read_text(encoding='utf-8'); final_manifest=json.loads(manifest.read_text(encoding='utf-8'))
+          assert 'content="40.6.83"' in final_html and 'Build 40.6.83 · Administrator' in final_html
+          assert final_manifest['build']=='40.6.83' and final_manifest['engine']=='38.15.11'
+          assert 'aether-v2-406083.css' in final_role and 'aether-v2-406083.js' in final_role
+          assert 'aether-frame-406077.js?v=' not in final_role
+          assert 'setInterval' not in rt83.read_text(encoding='utf-8')
+          assert 'MutationObserver' not in rt83.read_text(encoding='utf-8')
+          assert 'fetch(' not in rt83.read_text(encoding='utf-8')
+          assert 'WebSocket' not in rt83.read_text(encoding='utf-8')
+          assert 'localStorage.setItem(STORAGE_KEY' not in rt83.read_text(encoding='utf-8')
+
+          # Remove the one-shot workflow in the final product commit.
+          if workflow.exists(): workflow.unlink()
+          commit('release(agent-crypto): 40.6.83 finalize cumulative Aether V2 acceptance',[css83,rt83,role,index,manifest,r83,workflow])
+
+          # Final reread after commit: no dirty product tree.
+          if subprocess.check_output(['git','status','--porcelain'],text=True).strip():
+            raise SystemExit('dirty tree after final commit')
+          PY
+
+      - name: Push cumulative commit history
+        run: |
+          set -euo pipefail
+          git push origin HEAD:main
+
+      - name: Package final Administrator clean copy
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          zip -qr dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.zip "$ADMIN"
+          sha256sum dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.zip | tee dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.sha256
+          git log -7 --oneline | tee dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_COMMITS.txt
+
+      - name: Upload final clean copy
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD
+          path: |
+            dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.zip
+            dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.sha256
+            dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_COMMITS.txt
+          if-no-files-found: error
+          retention-days: 30
