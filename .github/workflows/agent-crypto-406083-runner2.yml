@@ -1,0 +1,125 @@
+name: Agent-Crypto Aether 40.6.83 Final Runner
+
+on:
+  push:
+    paths:
+      - .github/workflows/agent-crypto-406083-runner2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  final-cascade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Execute corrected cumulative cascade
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git reset --hard origin/main
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          data=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          assert data.get('build')=='40.6.77', data.get('build')
+          assert data.get('engine')=='38.15.11', data.get('engine')
+
+          source=Path('.github/workflows/agent-crypto-406083-aether-cascade.yml').read_text(encoding='utf-8')
+          marker="          python - <<'PY'\n          from pathlib import Path\n          from datetime import datetime, timezone"
+          start=source.index(marker)+len("          python - <<'PY'\n")
+          end=source.index("\n          PY",start)
+          block=source[start:end]
+          lines=[line[10:] if line.startswith('          ') else line for line in block.splitlines()]
+          script='\n'.join(lines)+'\n'
+
+          # Canonical runtime names: 40.6.78 -> 406078, ... 40.6.83 -> 406083.
+          old="p=root/f'js/aether-v2-{build.replace(\".\",\"\")}.js'"
+          new="p=root/f'js/aether-v2-406{int(build.split(\".\")[-1]):03d}.js'"
+          if old not in script:
+              raise SystemExit('runtime generator signature missing')
+          script=script.replace(old,new,1)
+
+          # Intermediate checkpoints must be valid CSS too, not only the final build.
+          old="css81.write_text(css,encoding='utf-8')"
+          new="css=css.replace('\\\\n','\\n')\ncss81.write_text(css,encoding='utf-8')"
+          if old not in script:
+              raise SystemExit('CSS checkpoint signature missing')
+          script=script.replace(old,new,1)
+
+          # Final preboot block must be actual HTML/JS before its commit.
+          old="if 'id=\"aetherLegacyCenterPreboot406083\"' not in html:"
+          new="preboot=preboot.replace('\\\\n','\\n')\nif 'id=\"aetherLegacyCenterPreboot406083\"' not in html:"
+          if old not in script:
+              raise SystemExit('preboot signature missing')
+          script=script.replace(old,new,1)
+
+          Path('/tmp/aether_cascade_406083.py').write_text(script,encoding='utf-8')
+          PY
+
+          python /tmp/aether_cascade_406083.py
+
+          # Final reread/correction of the final cumulative build.
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          css=root/'aether-v2-406083.css'
+          runtime=root/'js/aether-v2-406083.js'
+          index=root/'index.html'
+          manifest=root/'build.json'
+          role=root/'js/aether-role-visibility-406050.js'
+
+          css_text=css.read_text(encoding='utf-8')
+          if '\\n' in css_text:
+              css.write_text(css_text.replace('\\n','\n'),encoding='utf-8')
+
+          html=index.read_text(encoding='utf-8')
+          data=json.loads(manifest.read_text(encoding='utf-8'))
+          loader=role.read_text(encoding='utf-8')
+          js=runtime.read_text(encoding='utf-8')
+
+          assert '<meta name="administrator-build" content="40.6.83" />' in html
+          assert '<meta name="atlas-engine-build" content="38.15.11" />' in html
+          assert 'Build 40.6.83 · Administrator' in html
+          assert 'id="aetherLegacyCenterPreboot406083"' in html
+          assert data.get('build')=='40.6.83' and data.get('engine')=='38.15.11'
+          assert 'aether-v2-406083.css' in loader and 'aether-v2-406083.js' in loader
+          assert 'aether-frame-406077.js?v=' not in loader
+          for forbidden in ('setInterval','MutationObserver','fetch(','WebSocket'):
+              assert forbidden not in js, forbidden
+          PY
+
+          node --check public/agent_crypto_erith_ia/administrator/js/aether-v2-406083.js
+
+          # Remove both temporary runners and fold the final reread into .83 itself.
+          git add public/agent_crypto_erith_ia/administrator/aether-v2-406083.css public/agent_crypto_erith_ia/administrator/index.html public/agent_crypto_erith_ia/administrator/build.json public/agent_crypto_erith_ia/administrator/js/aether-v2-406083.js public/agent_crypto_erith_ia/administrator/js/aether-role-visibility-406050.js public/agent_crypto_erith_ia/administrator/RELEASE_40_6_83.md
+          git rm -f .github/workflows/agent-crypto-406083-runner.yml .github/workflows/agent-crypto-406083-runner2.yml
+          git commit --amend --no-edit
+          git push origin HEAD:main
+
+      - name: Package final Administrator clean copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          zip -qr dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.zip public/agent_crypto_erith_ia/administrator
+          sha256sum dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.zip > dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.sha256
+          git log -9 --oneline > dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_COMMITS.txt
+
+      - name: Upload final clean copy
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD
+          path: dist/
+          retention-days: 30
