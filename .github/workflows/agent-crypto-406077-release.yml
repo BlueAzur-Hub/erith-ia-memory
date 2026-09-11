@@ -28,8 +28,8 @@ jobs:
           git reset --hard origin/main
 
       - name: Build canonical 40.6.77
-        shell: python
         run: |
+          python - <<'PY'
           from pathlib import Path
           from datetime import datetime, timezone
           import hashlib, json
@@ -38,203 +38,56 @@ jobs:
           index = root / 'index.html'
           manifest = root / 'build.json'
           role = root / 'js/aether-role-visibility-406050.js'
-          frame = root / 'js/aether-frame-406077.js'
+          frame76 = root / 'js/aether-frame-406076.js'
+          frame77 = root / 'js/aether-frame-406077.js'
           css = root / 'aether-v2-406075.css'
           app = root / 'js/app.js'
           release = root / 'RELEASE_40_6_77.md'
 
-          css_sha_before = hashlib.sha256(css.read_bytes()).hexdigest()
-          app_sha_before = hashlib.sha256(app.read_bytes()).hexdigest()
+          css_sha = hashlib.sha256(css.read_bytes()).hexdigest()
+          app_sha = hashlib.sha256(app.read_bytes()).hexdigest()
 
-          # --- 40.6.77 owner: pre-reveal migration only. ---
-          frame.write_text(r'''/* Agent-Crypto @erith.IA — Build 40.6.77
-   AETHER WATCH V2 — PRE-REVEAL POSITION LOCK
+          # Build 40.6.77 from the validated 40.6.76 bridge, changing only lifecycle ownership.
+          frame = frame76.read_text(encoding='utf-8')
+          frame = frame.replace('Build 40.6.76', 'Build 40.6.77', 1)
+          frame = frame.replace('AETHER WATCH V2 — NATIVE POSITION LOCK', 'AETHER WATCH V2 — PRE-REVEAL POSITION LOCK', 1)
+          frame = frame.replace('const BUILD = "40.6.76";', 'const BUILD = "40.6.77";', 1)
+          frame = frame.replace('let migrationChecked = false;', 'let migrationResolved = false;', 1)
+          frame = frame.replace('if (migrationChecked) return false;', 'if (migrationResolved) return false;', 1)
+          old_guard = 'if (win.hidden || win.minimized || win.maximized || saved?.floating !== true) return false;'
+          new_guard = 'if (win.minimized || win.maximized || saved?.minimized === true || saved?.maximized === true) return false;\n    if (saved?.floating !== true && win?.floating !== true) return false;'
+          if old_guard not in frame:
+            raise SystemExit('40.6.76 guard not found')
+          frame = frame.replace(old_guard, new_guard, 1)
+          old_resolution = '    migrationChecked = true;\n\n    if (!looksLegacyAutoCentered(geometry)) {\n      root.dataset.aetherNativePosition406076 = "operator-position-preserved";'
+          new_resolution = '    if (!looksLegacyAutoCentered(geometry)) {\n      migrationResolved = true;\n      root.dataset.aetherPreRevealPosition406077 = "operator-position-preserved";'
+          if old_resolution not in frame:
+            raise SystemExit('legacy resolution block not found')
+          frame = frame.replace(old_resolution, new_resolution, 1)
+          old_apply = '    manager.applySnapshot({\n      schema: snapshot.schema || "erith.admin.workspace.window-state.v1",'
+          new_apply = '    const hidden = win.hidden === true || saved?.hidden === true;\n\n    manager.applySnapshot({\n      schema: snapshot.schema || "erith.admin.workspace.window-state.v1",'
+          if old_apply not in frame:
+            raise SystemExit('applySnapshot anchor not found')
+          frame = frame.replace(old_apply, new_apply, 1)
+          frame = frame.replace('          hidden: false,', '          hidden,', 1)
+          old_done = '    root.dataset.aetherNativePosition406076 = `legacy-center-migrated:${reason}`;\n    return true;'
+          new_done = '    migrationResolved = true;\n    root.dataset.aetherPreRevealPosition406077 = `legacy-center-migrated:${reason}:${hidden ? "hidden" : "visible"}`;\n    return true;'
+          if old_done not in frame:
+            raise SystemExit('migration completion block not found')
+          frame = frame.replace(old_done, new_done, 1)
+          frame = frame.replace('queueMicrotask(() => migrateLegacyCenter("operator-open"));', 'migrateLegacyCenter("operator-pre-open");', 1)
+          old_install = '  const warm = warmBackplate();\n  document.addEventListener("click", captureAetherOpen, true);'
+          new_install = '  const warm = warmBackplate();\n  migrateLegacyCenter("frame-load");\n  window.addEventListener("erith:administrator-mirror-ready", () => migrateLegacyCenter("window-manager-ready"), { once: true });\n  document.addEventListener("click", captureAetherOpen, true);'
+          if old_install not in frame:
+            raise SystemExit('install anchor not found')
+          frame = frame.replace(old_install, new_install, 1)
+          frame = frame.replace('mode: "native-position-lock",', 'mode: "pre-reveal-position-lock",', 1)
+          frame = frame.replace('legacy_center_migration_only: true,', 'hidden_migration_supported: true,\n    legacy_center_migration_only: true,', 1)
+          frame = frame.replace('root.dataset.aetherNativePosition406076 || "idle"', 'root.dataset.aetherPreRevealPosition406077 || "idle"', 1)
+          frame = frame.replace('globalThis.ErithAetherFrame406076 = api;', 'globalThis.ErithAetherFrame406077 = api;\n  globalThis.ErithAetherFrame406076 = api;', 1)
+          frame77.write_text(frame, encoding='utf-8')
 
-   Responsibility:
-   - preserve the field-validated 40.6.75 visual owner byte-for-byte;
-   - migrate only historical <=40.6.76 auto-centered floating geometry;
-   - perform that migration while Aether may still be hidden, before first reveal;
-   - after migration, return x/y/size/drag/resize/persistence to the canonical
-     Administrator Window Manager.
-
-   No CSS geometry owner, no resize reframe, no pageshow reframe, no timer,
-   no MutationObserver, no network owner, no Market Core edit. */
-(() => {
-  "use strict";
-
-  const BUILD = "40.6.77";
-  const WINDOW_ID = "aether-watch";
-  const TOGGLE_ID = "atlasAetherStatusToggle4084";
-  const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
-  const ROOT_ATTR = "data-aether-backplate-v2-406074";
-  const MARGIN = 12;
-  const CENTER_EPSILON = 14;
-  const root = document.documentElement;
-  let migrationResolved = false;
-
-  function viewport() {
-    return {
-      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-    };
-  }
-
-  function warmBackplate() {
-    root.setAttribute(ROOT_ATTR, "loading");
-    const image = new Image();
-    image.decoding = "async";
-    const src = new URL(BACKPLATE, document.baseURI).href;
-    const ready = () => {
-      root.setAttribute(ROOT_ATTR, "ready");
-      if (!root.dataset.aetherPreRevealPosition406077) {
-        root.dataset.aetherPreRevealPosition406077 = "visual-ready";
-      }
-    };
-    const fallback = () => {
-      root.setAttribute(ROOT_ATTR, "fallback-40.6.73");
-      root.dataset.aetherPreRevealPosition406077 = "visual-fallback";
-    };
-    image.addEventListener("load", () => {
-      const decoded = typeof image.decode === "function" ? image.decode() : Promise.resolve();
-      Promise.resolve(decoded).then(ready).catch(fallback);
-    }, { once: true });
-    image.addEventListener("error", fallback, { once: true });
-    image.src = src;
-    return { image, src };
-  }
-
-  function managerState() {
-    const manager = globalThis.ErithAdministratorWindows;
-    const win = manager?.getWindow?.(WINDOW_ID) || null;
-    const snapshot = manager?.snapshot?.() || null;
-    const saved = snapshot?.windows?.[WINDOW_ID] || null;
-    return { manager, win, snapshot, saved };
-  }
-
-  function geometryOf(win, saved) {
-    const raw = saved?.geometry || win?.geometry || null;
-    if (!raw) return null;
-    const geometry = {
-      x: Number(raw.x), y: Number(raw.y), width: Number(raw.width), height: Number(raw.height)
-    };
-    return Object.values(geometry).every(Number.isFinite) ? geometry : null;
-  }
-
-  function looksLegacyAutoCentered(geometry) {
-    if (!geometry) return false;
-    const { width: vw } = viewport();
-    const centeredX = Math.max(MARGIN, Math.round((vw - geometry.width) / 2));
-    return geometry.x > MARGIN + CENTER_EPSILON
-      && Math.abs(geometry.x - centeredX) <= CENTER_EPSILON;
-  }
-
-  function migrateLegacyCenter(reason = "pre-reveal") {
-    if (migrationResolved) return false;
-
-    const { manager, win, snapshot, saved } = managerState();
-    if (!manager || !win || !snapshot) return false;
-
-    const floating = saved?.floating === true || win?.floating === true;
-    if (!floating) return false;
-    if (win.minimized || win.maximized || saved?.minimized === true || saved?.maximized === true) return false;
-
-    const geometry = geometryOf(win, saved);
-    if (!geometry) return false;
-
-    if (!looksLegacyAutoCentered(geometry)) {
-      migrationResolved = true;
-      root.dataset.aetherPreRevealPosition406077 = "operator-position-preserved";
-      return false;
-    }
-
-    // Critical 40.6.77 correction: hidden state is preserved, not rejected.
-    // This lets the Window Manager persist x=12 before Aether is ever painted.
-    const hidden = win.hidden === true || saved?.hidden === true;
-
-    manager.applySnapshot({
-      schema: snapshot.schema || "erith.admin.workspace.window-state.v1",
-      windows: {
-        [WINDOW_ID]: {
-          floating: true,
-          minimized: false,
-          hidden,
-          maximized: false,
-          geometry: {
-            x: MARGIN,
-            y: geometry.y,
-            width: geometry.width,
-            height: geometry.height
-          }
-        }
-      }
-    }, { persist: true, captureResult: false });
-
-    migrationResolved = true;
-    root.dataset.aetherPreRevealPosition406077 = `legacy-center-migrated:${reason}:${hidden ? "hidden" : "visible"}`;
-    return true;
-  }
-
-  function preflight(reason) {
-    return migrateLegacyCenter(reason);
-  }
-
-  function captureAetherIntent(event) {
-    if (!(event.target instanceof Element)) return;
-    if (!event.target.closest(`#${TOGGLE_ID}`)) return;
-    // Capture phase runs before the historical Aether toggle handler.
-    // No microtask: geometry must already be final before reveal.
-    preflight("operator-pre-open");
-  }
-
-  const warm = warmBackplate();
-
-  // Cover both lifecycle orders without polling:
-  // 1) manager already exists when this bridge loads;
-  // 2) manager announces readiness after this bridge loads.
-  preflight("frame-load");
-  window.addEventListener("erith:administrator-mirror-ready", () => preflight("window-manager-ready"), { once: true });
-  document.addEventListener("click", captureAetherIntent, true);
-
-  const api = Object.freeze({
-    build: BUILD,
-    window_id: WINDOW_ID,
-    mode: "pre-reveal-position-lock",
-    geometry_owner: "ErithAdministratorWindows",
-    visual_owner: "aether-v2-406075.css",
-    first_open_owner: "js/app.js preferredFloatGeometry",
-    hidden_migration_supported: true,
-    legacy_center_migration_only: true,
-    operator_position_preserved: true,
-    resize_reframe: false,
-    pageshow_reframe: false,
-    explicit_maximize_preserved: true,
-    recurring_timer: false,
-    observer: false,
-    network_owner: false,
-    market_core_changed: false,
-    operator_runtime_changed: false,
-    backplate: warm.src,
-    migrate: migrateLegacyCenter,
-    status: () => {
-      const { win, saved } = managerState();
-      return Object.freeze({
-        build: BUILD,
-        state: root.dataset.aetherPreRevealPosition406077 || "idle",
-        floating: win?.floating === true,
-        hidden: win?.hidden === true,
-        maximized: win?.maximized === true,
-        geometry: geometryOf(win, saved)
-      });
-    }
-  });
-
-  globalThis.ErithAetherFrame406077 = api;
-  globalThis.ErithAetherFrame406076 = api;
-  globalThis.ErithAetherFrame406074 = api;
-})();
-''', encoding='utf-8')
-
-          # --- Runtime integration/version truth. ---
+          # Runtime loader/version truth. Visual owner remains .75 unchanged.
           js = role.read_text(encoding='utf-8')
           replacements = [
             ('40.6.50 + Build 40.6.76 canonical Aether integration', '40.6.50 + Build 40.6.77 canonical Aether integration'),
@@ -249,7 +102,6 @@ jobs:
             ('document.documentElement.dataset.aetherV2406074 = "canonical-40.6.76";', 'document.documentElement.dataset.aetherV2406074 = "canonical-40.6.77";'),
             ('script.dataset.aether406074 = "native-position-40.6.76";', 'script.dataset.aether406074 = "pre-reveal-position-40.6.77";'),
             ('document.documentElement.dataset.aetherFrameLoader406074 = "ready-40.6.76";', 'document.documentElement.dataset.aetherFrameLoader406074 = "ready-40.6.77";'),
-            ('reuses the field-validated 40.6.75 Aether V2 visual stylesheet unchanged;\n   - loads one migration bridge that retires forced centering and returns position ownership to the Window Manager;', 'reuses the field-validated 40.6.75 Aether V2 visual stylesheet unchanged;\n   - loads one pre-reveal migration bridge that removes the legacy centered first paint while preserving operator-owned positions;'),
           ]
           for old, new in replacements:
             count = js.count(old)
@@ -258,7 +110,7 @@ jobs:
             js = js.replace(old, new, 1)
           role.write_text(js, encoding='utf-8')
 
-          # --- Static entry point: truth before runtime JS. ---
+          # Static entry point truth before runtime JS.
           html = index.read_text(encoding='utf-8')
           replacements = [
             ('<meta name="atlas-build" content="40.6.76" />', '<meta name="atlas-build" content="40.6.77" />'),
@@ -270,13 +122,12 @@ jobs:
             ('administrator-build-40.6.76', 'administrator-build-40.6.77'),
           ]
           for old, new in replacements:
-            count = html.count(old)
-            if count < 1:
+            if old not in html:
               raise SystemExit(f'index replacement missing: {old}')
             html = html.replace(old, new)
           index.write_text(html, encoding='utf-8')
 
-          # --- Published version manifest: keep Safe Refresh coherent. ---
+          # Published manifest: Safe Refresh must see .77 without Ctrl+F5.
           data = json.loads(manifest.read_text(encoding='utf-8'))
           data.update({
             'build': '40.6.77',
@@ -289,11 +140,10 @@ jobs:
             'administrator_build': '40.6.77',
             'build_label': 'Build 40.6.77 · Administrator',
             'release_status': 'aether_v2_pre_reveal_position_lock',
-            'timestamp': datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z'),
+            'timestamp': datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z'),
           })
-          truth = data.get('current_version_truth')
-          if isinstance(truth, dict):
-            truth['loaded_build'] = '40.6.77'
+          if isinstance(data.get('current_version_truth'), dict):
+            data['current_version_truth']['loaded_build'] = '40.6.77'
           data['cascade_40_6_77'] = {
             'parent_build': '40.6.76',
             'release': 'AETHER V2 · PRE-REVEAL POSITION LOCK',
@@ -315,31 +165,73 @@ jobs:
           }
           manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
-          release.write_text(f'''# Agent-Crypto Administrator — 40.6.77\n\n## Aether Watch V2 — Pre-Reveal Position Lock\n\nCanonical parent: **40.6.76**. Engine: **Market Core 38.15.11** unchanged.\n\n### Field defect corrected\n\n40.6.76 correctly retired forced centering for new/manual positions, but its legacy-center migration rejected the Aether window while it was hidden. The Administrator Window Manager could therefore reveal one frame at the old centered geometry before the later migration.\n\n40.6.77 moves that migration to the pre-reveal lifecycle. Hidden is now a state to preserve, not a reason to abort.\n\n### Canonical behavior\n\n- existing <=40.6.76 auto-centered geometry is migrated to `x = 12` while Aether may still be hidden;\n- the hidden flag is preserved during migration;\n- if the operator already moved Aether, its x/y/size are preserved;\n- first-open fallback in `js/app.js` remains native-left;\n- maximize / restore remains owned by the Administrator Window Manager;\n- no resize or pageshow reframe;\n- no timer and no MutationObserver.\n\n### Visual lock\n\nThe field-validated visual owner is unchanged: `aether-v2-406075.css`.\nSHA-256: `{css_sha_before}`.\n\n`js/app.js` is also unchanged in this release.\nSHA-256: `{app_sha_before}`.\n\n### Protected\n\n- Market Core **38.15.11** unchanged;\n- V2 PNG unchanged;\n- Aether cell geometry and typography unchanged;\n- Administrator Window Manager core unchanged;\n- Graphique unchanged;\n- Lecture Technique unchanged;\n- Atlas / Oracle / Sources data owners unchanged;\n- no new recurring timer;\n- no MutationObserver;\n- no network owner;\n- no trading action;\n- Operator / Yohan unchanged.\n\n### Acceptance\n\nReload Administrator, then open Aether. Aether must appear directly at its stored/native position without one centered paint first. Manually move Aether, close/reopen and reload: that operator position must remain authoritative.\n''', encoding='utf-8')
+          lines = [
+            '# Agent-Crypto Administrator — 40.6.77',
+            '',
+            '## Aether Watch V2 — Pre-Reveal Position Lock',
+            '',
+            'Canonical parent: **40.6.76**. Engine: **Market Core 38.15.11** unchanged.',
+            '',
+            '### Field defect corrected',
+            '',
+            '40.6.76 retired forced centering for new/manual positions, but its legacy-center migration rejected Aether while hidden. The Window Manager could therefore reveal one frame at the old centered geometry before the later migration.',
+            '',
+            '40.6.77 performs the same migration before reveal. Hidden is preserved instead of treated as an abort condition.',
+            '',
+            '### Canonical behavior',
+            '',
+            '- historical auto-centered geometry migrates to `x = 12` while Aether may still be hidden;',
+            '- the hidden flag is preserved during migration;',
+            '- operator-owned x/y/size is preserved when it is not the legacy center;',
+            '- first-open fallback in `js/app.js` remains native-left;',
+            '- maximize / restore remains owned by the canonical Window Manager;',
+            '- no resize reframe, pageshow reframe, timer or MutationObserver.',
+            '',
+            '### Visual lock',
+            '',
+            'The field-validated visual owner is unchanged: `aether-v2-406075.css`.',
+            f'SHA-256: `{css_sha}`.',
+            '',
+            '`js/app.js` is unchanged in this release.',
+            f'SHA-256: `{app_sha}`.',
+            '',
+            '### Protected',
+            '',
+            '- Market Core **38.15.11** unchanged;',
+            '- V2 PNG unchanged;',
+            '- Aether cells and typography unchanged;',
+            '- Administrator Window Manager core unchanged;',
+            '- Graphique and Lecture Technique unchanged;',
+            '- Atlas / Oracle / Sources data owners unchanged;',
+            '- Operator / Yohan unchanged.',
+            '',
+            '### Acceptance',
+            '',
+            'Reload Administrator, then open Aether. It must appear directly at its stored/native position without one centered paint first. Manually moved positions remain authoritative across close/reopen and reload.',
+          ]
+          release.write_text('\n'.join(lines) + '\n', encoding='utf-8')
 
-          # --- Assertions: no accidental visual/code drift. ---
-          if hashlib.sha256(css.read_bytes()).hexdigest() != css_sha_before:
+          # Freeze assertions.
+          if hashlib.sha256(css.read_bytes()).hexdigest() != css_sha:
             raise SystemExit('visual owner drifted')
-          if hashlib.sha256(app.read_bytes()).hexdigest() != app_sha_before:
+          if hashlib.sha256(app.read_bytes()).hexdigest() != app_sha:
             raise SystemExit('app.js drifted')
-
-          required = {
-            frame: ['const BUILD = "40.6.77";', 'hidden_migration_supported: true', 'preflight("frame-load")', 'operator-pre-open'],
+          checks = {
+            frame77: ['const BUILD = "40.6.77";', 'hidden_migration_supported: true', 'migrateLegacyCenter("frame-load")', 'operator-pre-open'],
             role: ['const BUILD = "40.6.77";', 'const REVISION = "V12";', 'aether-frame-406077.js?v=administrator-build-40.6.77'],
             index: ['content="40.6.77"', 'content="V12"', 'Build 40.6.77 · Administrator', 'administrator-build-40.6.77'],
             manifest: ['"build": "40.6.77"', '"parent_build": "40.6.76"', '"cascade_40_6_77"'],
-            release: ['40.6.77', 'Pre-Reveal Position Lock', 'Market Core 38.15.11'],
           }
-          for path, tokens in required.items():
+          for path, tokens in checks.items():
             body = path.read_text(encoding='utf-8')
             for token in tokens:
               if token not in body:
                 raise SystemExit(f'validation failed: {path} missing {token}')
+          PY
 
       - name: Validate release diff
         run: |
           git diff --check
-          echo '--- changed files before workflow self-removal ---'
           git status --short
 
       - name: Build exact release ZIP
