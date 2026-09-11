@@ -146,119 +146,59 @@
   });
 })();
 
-/* ========================================================================== 
-   BUILD 40.6.77 — AETHER V2 PRE-REVEAL POSITION LOCK
-   The C1→C5 candidate chain is retired. This integration only:
-   - publishes the 40.6.76 version truth in the running Administrator shell;
-   - reuses the field-validated 40.6.75 Aether V2 visual stylesheet unchanged;
-   - loads one migration bridge that retires forced centering and returns position ownership to the Window Manager;
-   - never creates a timer, observer, network owner or Market Core owner.
+/* ==========================================================================
+   BUILD 40.6.78 — AETHER V2 CANONICAL INTEGRATION
    ========================================================================== */
 (() => {
   "use strict";
-
-  const BUILD = "40.6.77";
-  const REVISION = "V12";
-  const RELEASE = "AETHER V2 · PRE-REVEAL POSITION LOCK";
-  const STYLE_ID = "aetherV2406075Canonical";
-  const SCRIPT_ID = "aetherFrame406077Canonical";
-  const STYLE_HREF = "./aether-v2-406075.css?v=administrator-build-40.6.75";
-  const SCRIPT_SRC = "./js/aether-frame-406077.js?v=administrator-build-40.6.77";
+  const BUILD = "40.6.78";
+  const REVISION = "V13";
+  const RELEASE = "AETHER V2 · PRE-REVEAL STORAGE TRUTH LOCK";
+  const STYLE_ID = "aetherV2Canonical";
+  const SCRIPT_ID = "aetherV2RuntimeCanonical";
+  const STYLE_HREF = "./aether-v2-406075.css?v=administrator-build-40.6.78";
+  const SCRIPT_SRC = "./js/aether-v2-406078.js?v=administrator-build-40.6.78";
   const RETIRED_LINK_IDS = Object.freeze([
-    "aetherReadability406074",
-    "aetherV2Stabilization406074C21",
-    "aetherV2Refinement406074C3",
-    "aetherV2Refinement406074C31",
-    "aetherV2Reframe406074C4",
-    "aetherV2Reframe406074C5"
+    "aetherReadability406074","aetherV2Stabilization406074C21","aetherV2Refinement406074C3",
+    "aetherV2Refinement406074C31","aetherV2Reframe406074C4","aetherV2Reframe406074C5",
+    "aetherV2406075Canonical"
+  ]);
+  const RETIRED_SCRIPT_IDS = Object.freeze([
+    "aetherFrame406076Canonical","aetherFrame406077Canonical","aetherFrame406078Canonical",
+    "aetherV2Operator406079Canonical","aetherV2Operator406080Canonical"
   ]);
 
   function publishVersionTruth() {
-    const setMeta = (name, value) => {
-      const node = document.querySelector(`meta[name="${name}"]`);
-      if (node) node.setAttribute("content", value);
-    };
-
-    setMeta("atlas-build", BUILD);
-    setMeta("administrator-build", BUILD);
-    setMeta("administrator-revision", "V12");
-    setMeta("administrator-release", RELEASE);
-    setMeta("atlas-asset-token", "market-core-v2.0-alpha-build-40.6.77");
-
-    const truth = document.getElementById("atlasVersionTruthText");
-    if (truth) truth.textContent = `Build ${BUILD}`;
-    const badge = document.getElementById("atlasVersionTruthBadge");
-    if (badge) badge.setAttribute("aria-label", `Build ${BUILD}`);
-    const hiddenBadge = document.getElementById("atlasReleaseBadge");
-    if (hiddenBadge) hiddenBadge.textContent = `BUILD ${BUILD}`;
-
-    document.title = `Agent-Crypto @erith.IA — Build ${BUILD} · Administrator`;
-    document.documentElement.dataset.administratorBuild = BUILD;
-    document.documentElement.dataset.aetherV2406074 = "canonical-40.6.77";
-    document.documentElement.dataset.aetherRevision406074 = REVISION;
+    const setMeta=(name,value)=>document.querySelector(`meta[name="${name}"]`)?.setAttribute("content",value);
+    setMeta("atlas-build",BUILD); setMeta("administrator-build",BUILD); setMeta("administrator-revision",REVISION);
+    setMeta("administrator-release",RELEASE); setMeta("atlas-asset-token",`market-core-v2.0-alpha-build-${BUILD}`);
+    const truth=document.getElementById("atlasVersionTruthText"); if(truth) truth.textContent=`Build ${BUILD}`;
+    const badge=document.getElementById("atlasVersionTruthBadge"); if(badge) badge.setAttribute("aria-label",`Build ${BUILD}`);
+    const hidden=document.getElementById("atlasReleaseBadge"); if(hidden) hidden.textContent=`BUILD ${BUILD}`;
+    document.title=`Agent-Crypto @erith.IA — Build ${BUILD} · Administrator`;
+    document.documentElement.dataset.administratorBuild=BUILD;
     return true;
   }
-
-  function retireCandidates() {
-    for (const id of RETIRED_LINK_IDS) document.getElementById(id)?.remove();
-    return true;
+  function retireLegacyAssets() {
+    for(const id of RETIRED_LINK_IDS) if(id!==STYLE_ID) document.getElementById(id)?.remove();
+    for(const id of RETIRED_SCRIPT_IDS) if(id!==SCRIPT_ID) document.getElementById(id)?.remove();
   }
-
   function ensureStyle() {
-    retireCandidates();
-    let link = document.getElementById(STYLE_ID);
-    if (!link) {
-      link = document.createElement("link");
-      link.id = STYLE_ID;
-      link.rel = "stylesheet";
-      document.head.appendChild(link);
-    }
-    link.href = STYLE_HREF;
-    link.dataset.aether406074 = "visual-lock-40.6.75";
-    return link;
+    retireLegacyAssets();
+    let link=document.getElementById(STYLE_ID);
+    if(!link){ link=document.createElement("link"); link.id=STYLE_ID; link.rel="stylesheet"; document.head.appendChild(link); }
+    link.href=STYLE_HREF; link.dataset.aetherCanonicalBuild=BUILD; return link;
   }
-
-  function ensureFrameScript() {
-    if (globalThis.ErithAetherFrame406074) return true;
-    let script = document.getElementById(SCRIPT_ID);
-    if (script) return true;
-    script = document.createElement("script");
-    script.id = SCRIPT_ID;
-    script.src = SCRIPT_SRC;
-    script.defer = true;
-    script.dataset.aether406074 = "pre-reveal-position-40.6.77";
-    script.addEventListener("load", () => {
-      document.documentElement.dataset.aetherFrameLoader406074 = "ready-40.6.77";
-    }, { once: true });
-    script.addEventListener("error", () => {
-      document.documentElement.dataset.aetherFrameLoader406074 = "error";
-    }, { once: true });
-    document.head.appendChild(script);
+  function ensureRuntime() {
+    if(globalThis.ErithAetherV2Canonical?.build===BUILD) return true;
+    let script=document.getElementById(SCRIPT_ID);
+    if(!script){ script=document.createElement("script"); script.id=SCRIPT_ID; script.src=SCRIPT_SRC; script.defer=true; script.dataset.aetherCanonicalBuild=BUILD; document.head.appendChild(script); }
     return true;
   }
-
-  publishVersionTruth();
-  ensureStyle();
-  ensureFrameScript();
-
-  globalThis.ErithAetherCanonical406074 = Object.freeze({
-    build: BUILD,
-    revision: REVISION,
-    release: RELEASE,
-    style_id: STYLE_ID,
-    script_id: SCRIPT_ID,
-    style_href: STYLE_HREF,
-    script_src: SCRIPT_SRC,
-    retired_candidate_links: RETIRED_LINK_IDS,
-    runtime_version_truth: true,
-    recurring_timer: false,
-    observer: false,
-    network_owner: false,
-    market_core_changed: false,
-    operator_runtime_changed: false,
-    publishVersionTruth,
-    retireCandidates,
-    ensureStyle,
-    ensureFrameScript
+  publishVersionTruth(); ensureStyle(); ensureRuntime();
+  globalThis.ErithAetherCanonical406074=Object.freeze({
+    build:BUILD,revision:REVISION,release:RELEASE,style_href:STYLE_HREF,script_src:SCRIPT_SRC,
+    one_visual_owner:true,one_runtime_owner:true,recurring_timer:false,observer:false,network_owner:false,
+    market_core_changed:false,operator_runtime_changed:false,publishVersionTruth
   });
 })();
