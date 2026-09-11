@@ -1,27 +1,34 @@
 /*
   Agent-Crypto Administrator — Aether × TRADUS Surface Bridge
   Build: 40.6.69
+  Patch: R1 — PASSIVE WORKBENCH BIND HOTFIX
   Parent: 40.6.68
   Responsibility: expose the existing TRADUS PAPER observability snapshot inside Aether as a discreet status surface
   and read-only Workbench context/history. No trading decision ownership, no order endpoint, no market polling,
   no recurring timer, no durable storage, no mutation of Aether business truth or Strategy A.
+
+  R1 hotfix:
+  - removes every MutationObserver introduced by 40.6.69;
+  - never observes document.documentElement/body/workbench continuously;
+  - binds the Workbench only after an explicit operator click;
+  - decorates only on explicit Workbench mode changes or TRADUS snapshot publication.
 */
 (() => {
   "use strict";
 
   const BUILD = "40.6.69";
+  const PATCH = "R1";
   const SOURCE_BUILD = "40.6.68";
   const SNAPSHOT_EVENT = "agentcrypto:tradus-paper-snapshot";
   const PILL_ID = "aetherTradusPill406069";
   const STYLE_ID = "aetherTradusBridgeStyle406069";
   const WORKBENCH_ROOT_ID = "atlasAetherWorkbench406039";
+  const BOUND_ATTR = "data-aether-tradus-passive-bound-406069";
   const MAX_EVENTS = 24;
 
   let lastSnapshot = null;
   let previousMeaningful = null;
   const events = [];
-  let rootObserver = null;
-  let workbenchObserver = null;
   let decorating = false;
 
   const clone = value => { try { return JSON.parse(JSON.stringify(value)); } catch (_) { return null; } };
@@ -70,7 +77,7 @@
     };
   }
 
-  function transitionEvent(prev, next, snapshot) {
+  function transitionEvent(prev, next) {
     if (!next) return null;
     let kind = null;
     let detail = null;
@@ -109,6 +116,7 @@
       observed_at: next.observed_at,
       source_build: SOURCE_BUILD,
       bridge_build: BUILD,
+      bridge_patch: PATCH,
       paper_only: true,
       real_orders: false
     });
@@ -116,7 +124,7 @@
 
   function capture(snapshot) {
     const next = meaningful(snapshot);
-    const event = transitionEvent(previousMeaningful, next, snapshot);
+    const event = transitionEvent(previousMeaningful, next);
     previousMeaningful = next;
     if (event) {
       const last = events[0];
@@ -183,6 +191,7 @@
       host.dataset.tradusPaper406069 = vm.side || "N/D";
       host.dataset.tradusSignal406069 = vm.signal || "N/D";
       host.dataset.tradusArchiveTrades406069 = String(vm.trades ?? 0);
+      host.dataset.tradusBridgePatch406069 = PATCH;
     } else {
       pill.textContent = "TRADUS · N/D";
       pill.title = "TRADUS PAPER indisponible";
@@ -209,7 +218,7 @@
       <p class="atb69-summary"></p>
       <div class="atb69-meta"></div>`;
     block.querySelector(".atb69-summary").textContent = `${vm.side || "N/D"} · signal ${vm.signal || "N/D"} · équité si clôture ${money(vm.equity)} · archive ${vm.trades || 0} trade(s) · net archive ${money(snapshot?.archive?.net)}.`;
-    block.querySelector(".atb69-meta").textContent = `Observation ${age === null ? "N/D" : `${age.toFixed(1)} s`} · imbalance ${pct(snapshot?.imbalance)} · spread ${pct(snapshot?.spread_ratio)} · drawdown archive ${money(snapshot?.archive?.max_drawdown)} · PAPER ONLY.`;
+    block.querySelector(".atb69-meta").textContent = `Observation ${age === null ? "N/D" : `${age.toFixed(1)} s`} · imbalance ${pct(snapshot?.imbalance)} · spread ${pct(snapshot?.spread_ratio)} · drawdown archive ${money(snapshot?.archive?.max_drawdown)} · PAPER ONLY · bridge ${BUILD} ${PATCH}.`;
     return block;
   }
 
@@ -265,36 +274,30 @@
     } finally { decorating = false; }
   }
 
-  function bindWorkbench(root = document.getElementById(WORKBENCH_ROOT_ID)) {
+  function bindWorkbenchPassive() {
+    if (typeof document === "undefined") return false;
+    const root = document.getElementById(WORKBENCH_ROOT_ID);
     if (!root) return false;
-    const body = root.querySelector(".awb-body");
-    if (!body) return false;
-    if (!workbenchObserver && typeof MutationObserver !== "undefined") {
-      workbenchObserver = new MutationObserver(mutations => {
-        if (decorating) return;
-        const external = mutations.some(m => Array.from(m.addedNodes || []).some(n => !(n instanceof Element) || !n.matches?.("[data-aether-tradus-workbench-406069]")));
-        if (external) queueMicrotask(decorateWorkbench);
+
+    if (root.getAttribute(BOUND_ATTR) !== "1") {
+      root.setAttribute(BOUND_ATTR, "1");
+      root.addEventListener("click", event => {
+        if (!event.target?.closest?.("[data-awb-mode]")) return;
+        requestAnimationFrame(() => decorateWorkbench());
       });
-      workbenchObserver.observe(body, {childList:true});
     }
-    root.addEventListener("click", event => {
-      if (event.target?.closest?.("[data-awb-mode]")) requestAnimationFrame(() => decorateWorkbench());
-    }, {capture:true});
-    queueMicrotask(decorateWorkbench);
+
+    decorateWorkbench();
     return true;
   }
 
-  function watchWorkbenchRoot() {
-    if (typeof document === "undefined" || typeof MutationObserver === "undefined" || rootObserver) return;
-    const existing = document.getElementById(WORKBENCH_ROOT_ID);
-    if (existing) { bindWorkbench(existing); return; }
-    rootObserver = new MutationObserver(() => {
-      const root = document.getElementById(WORKBENCH_ROOT_ID);
-      if (!root) return;
-      rootObserver.disconnect(); rootObserver = null;
-      bindWorkbench(root);
+  function bindAfterExplicitOpen() {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        mountSurface();
+        bindWorkbenchPassive();
+      });
     });
-    rootObserver.observe(document.documentElement, {childList:true, subtree:true});
   }
 
   function publish(snapshot, source = "event") {
@@ -304,7 +307,7 @@
     capture(lastSnapshot);
     mountSurface(lastSnapshot);
     decorateWorkbench();
-    return Object.freeze({ build:BUILD, source, surface:surfaceModel(lastSnapshot), events:events.length, snapshot:clone(lastSnapshot) });
+    return Object.freeze({ build:BUILD, patch:PATCH, source, surface:surfaceModel(lastSnapshot), events:events.length, snapshot:clone(lastSnapshot) });
   }
 
   function selfTest() {
@@ -319,36 +322,72 @@
     const closed = mk("FLAT","NO_TRADE",1,1000,0.35,"CLÔTURE LONG · EDGE_DISPARU");
     const vmFlat = surfaceModel(flat);
     const vmOpen = surfaceModel(opened);
-    const eOpen = transitionEvent(meaningful(flat), meaningful(opened), opened);
-    const eClose = transitionEvent(meaningful(opened), meaningful(closed), closed);
+    const eOpen = transitionEvent(meaningful(flat), meaningful(opened));
+    const eClose = transitionEvent(meaningful(opened), meaningful(closed));
     const pass = vmFlat.label.includes("FLAT") && vmOpen.label.includes("LONG PAPER") && eOpen?.type === "TRADUS OPEN" && eClose?.type === "TRADUS CLOSE";
-    return Object.freeze({ build:BUILD, pass, checks:{flat:vmFlat.label, open:vmOpen.label, open_event:eOpen?.type, close_event:eClose?.type}, paper_only:true, real_orders:false, network_owner:false, recurring_timer:false, durable_storage:false });
+    return Object.freeze({
+      build:BUILD,
+      patch:PATCH,
+      pass,
+      checks:{flat:vmFlat.label, open:vmOpen.label, open_event:eOpen?.type, close_event:eClose?.type},
+      paper_only:true,
+      real_orders:false,
+      network_owner:false,
+      recurring_timer:false,
+      durable_storage:false,
+      mutation_observer:false,
+      global_dom_observer:false,
+      passive_workbench_bind:true
+    });
   }
 
   const api = Object.freeze({
-    build:BUILD, source_build:SOURCE_BUILD, snapshot_event:SNAPSHOT_EVENT,
-    read:()=>clone(lastSnapshot), events:()=>clone(events), publish, mount_surface:mountSurface,
-    decorate_workbench:decorateWorkbench, self_test:selfTest,
-    paper_only:true, real_orders:false, credentials:false, wallet:false,
-    strategy_a_mutated:false, aether_truth_mutated:false, aether_geometry_owner:false,
-    network_owner:false, recurring_timer:false, durable_storage:false
+    build:BUILD,
+    patch:PATCH,
+    source_build:SOURCE_BUILD,
+    snapshot_event:SNAPSHOT_EVENT,
+    read:()=>clone(lastSnapshot),
+    events:()=>clone(events),
+    publish,
+    mount_surface:mountSurface,
+    bind_workbench_passive:bindWorkbenchPassive,
+    decorate_workbench:decorateWorkbench,
+    self_test:selfTest,
+    paper_only:true,
+    real_orders:false,
+    credentials:false,
+    wallet:false,
+    strategy_a_mutated:false,
+    aether_truth_mutated:false,
+    aether_geometry_owner:false,
+    network_owner:false,
+    recurring_timer:false,
+    durable_storage:false,
+    mutation_observer:false,
+    global_dom_observer:false
   });
   globalThis.AgentCryptoAetherTradusBridge406069 = api;
 
   if (typeof document !== "undefined") {
     document.addEventListener(SNAPSHOT_EVENT, event => queueMicrotask(() => publish(event?.detail, "tradus_snapshot")));
+
     document.addEventListener("click", event => {
-      const target = event.target?.closest?.("#atlasAetherStatusToggle4084,[data-aether46-open],[data-aether-card-406046=\"events\"]");
+      const target = event.target?.closest?.(
+        "#atlasAetherStatusToggle4084,[data-aether46-open],.aether46-actions button,[data-aether-card-406046=\"events\"]"
+      );
       if (!target) return;
-      requestAnimationFrame(() => { mountSurface(); watchWorkbenchRoot(); decorateWorkbench(); });
+      bindAfterExplicitOpen();
     }, {capture:true});
+
     const boot = () => {
       const current = sourceRead();
       if (current) publish(current, "boot_read");
       mountSurface(current);
-      watchWorkbenchRoot();
     };
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, {once:true}); else boot();
-    window.addEventListener("pageshow", () => { mountSurface(); decorateWorkbench(); });
+
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, {once:true});
+    else boot();
+
+    window.addEventListener("pageshow", () => mountSurface());
   }
 })();
