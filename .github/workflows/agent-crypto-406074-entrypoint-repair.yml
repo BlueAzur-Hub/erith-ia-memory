@@ -1,0 +1,69 @@
+name: Agent-Crypto 40.6.74 Entry-Point Repair
+
+on:
+  push:
+    paths:
+      - '.github/workflows/agent-crypto-406074-entrypoint-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Promote Administrator index to 40.6.74
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('public/agent_crypto_erith_ia/administrator/index.html')
+          text = path.read_text(encoding='utf-8')
+
+          replacements = [
+              ('<meta name="atlas-build" content="40.6.73" />', '<meta name="atlas-build" content="40.6.74" />'),
+              ('<meta name="administrator-build" content="40.6.73" />', '<meta name="administrator-build" content="40.6.74" />'),
+              ('<meta name="administrator-revision" content="V8" />', '<meta name="administrator-revision" content="V9" />'),
+              ('<meta name="administrator-release" content="CANONICAL CHECKPOINT · ADMINISTRATOR / OPERATOR SYNC BASE" />', '<meta name="administrator-release" content="AETHER V2 · CANONICAL FRAME / READABILITY" />'),
+              ('<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.73" />', '<meta name="atlas-asset-token" content="market-core-v2.0-alpha-build-40.6.74" />'),
+              ('<title>Agent-Crypto @erith.IA — Build 40.6.73 · Administrator</title>', '<title>Agent-Crypto @erith.IA — Build 40.6.74 · Administrator</title>'),
+              ('./assets/aether/aether-observatory-master-fidelity-406049.png', './assets/aether/aether-observatory-master-v2-406074.png'),
+              ('./js/aether-role-visibility-406050.js?v=administrator-build-40.6.51', './js/aether-role-visibility-406050.js?v=administrator-build-40.6.74'),
+          ]
+
+          for old, new in replacements:
+              count = text.count(old)
+              if count < 1:
+                  raise SystemExit(f'missing expected index token: {old}')
+              text = text.replace(old, new)
+
+          path.write_text(text, encoding='utf-8')
+
+          checks = [
+              'meta name="atlas-build" content="40.6.74"',
+              'meta name="administrator-build" content="40.6.74"',
+              'administrator-build-40.6.74',
+              'aether-observatory-master-v2-406074.png',
+              'Build 40.6.74 · Administrator',
+          ]
+          for token in checks:
+              if token not in text:
+                  raise SystemExit(f'post-repair check failed: {token}')
+
+      - name: Self-remove one-shot workflow
+        run: git rm .github/workflows/agent-crypto-406074-entrypoint-repair.yml
+
+      - name: Commit repaired entry point
+        run: |
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+          git add public/agent_crypto_erith_ia/administrator/index.html
+          git commit -m "fix(agent-crypto): align 40.6.74 Administrator entry point"
+          git push origin HEAD:main
