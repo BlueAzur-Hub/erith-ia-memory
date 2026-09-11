@@ -18,7 +18,6 @@
 
     const manager = globalThis.ErithAdministratorWindows;
     if (manager?.getWindow?.(WINDOW_ID)) {
-      // Window Manager keeps geometry/persistence; operator intent owns visibility.
       if (panel) panel.hidden = false;
       manager.hide(WINDOW_ID, true);
     } else if (panel) {
@@ -31,17 +30,9 @@
 
   const closeAfterOwner = reason => queueMicrotask(() => closeAether(reason));
 
-  // Covers the case where js/app.js already completed synchronously before this script executes.
   closeAether("script-load");
-
-  // Canonical Window Manager ready: close after its own initialization transaction.
   window.addEventListener("erith:administrator-mirror-ready", () => closeAfterOwner("window-manager-ready"), { once: true });
-
-  // Every real view/role transition starts with Aether closed. This is especially important
-  // for view=intermediate (operator), whose neutralized window presentation must not POP Aether.
   window.addEventListener("atlas:v2mode", () => closeAfterOwner("role-transition"), { passive: true });
-
-  // BFCache restore must not resurrect a previously visible Aether window.
   window.addEventListener("pageshow", event => {
     if (event.persisted) closeAfterOwner("bfcache-restore");
   }, { passive: true });
@@ -129,7 +120,6 @@
     const layer = activeFiche();
     if (!layer || !document.body) return false;
 
-    // Preserve the existing fixed geometry while escaping equal-z paint order.
     layer.style.setProperty("z-index", MAX_Z, "important");
     if (layer.parentElement !== document.body || layer !== document.body.lastElementChild) {
       document.body.append(layer);
@@ -141,8 +131,6 @@
   }
 
   function schedulePromote(event) {
-    // app.js owns opening/positioning first. This microtask runs after the current
-    // interaction dispatch, then only promotes if a real Crypto fiche is visible.
     queueMicrotask(() => promote(event?.type || "interaction"));
   }
 
@@ -169,64 +157,73 @@
 })();
 
 /* ==========================================================================
-   40.6.74 CANDIDATE 2 — AETHER WATCH V2 BACKPLATE + SPATIAL CONTRACT LOADER
+   40.6.74 C2.1 — AETHER WATCH V2 ACTIVATION + RESPONSIVE STABILIZATION
 
    Safety contract:
-   - global runtime remains 40.6.73 until Christophe validates the visual D;
-   - the new geometry is activated only after the V2 image really loads/decodes;
-   - missing asset => validated 40.6.73 geometry remains active;
+   - visible/global runtime remains 40.6.73 until Christophe validates Firefox;
+   - V2 geometry activates only after the exact V2 image loads AND decodes;
+   - missing/undecodable asset => validated 40.6.73 geometry remains active;
+   - the small C2.1 responsive sheet loads after Candidate 2 to reclaim the
+     headroom created by the larger painted capsules;
    - no timer, MutationObserver, storage owner, network API owner or Market Core edit.
    ========================================================================== */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.74-candidate-2";
+  const BUILD = "40.6.74-candidate-2.1";
   const LINK_ID = "aetherReadability406074";
-  const HREF = "./aether-readability-406074.css?v=406074-candidate-2";
+  const HREF = "./aether-readability-406074.css?v=406074-candidate-2.1";
+  const STABILIZATION_ID = "aetherV2Stabilization406074C21";
+  const STABILIZATION_HREF = "./aether-v2-stabilization-406074-c21.css?v=406074-c2.1";
   const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
+  const ATTR = "data-aether-backplate-v2-406074";
   const root = document.documentElement;
 
-  function loadStylesheet() {
-    const existing = document.getElementById(LINK_ID);
-    if (existing) {
-      existing.href = HREF;
-      existing.dataset.aetherReadability406074 = "candidate-2";
-      return true;
+  function ensureStylesheet(id, href, marker) {
+    let link = document.getElementById(id);
+    if (!link) {
+      link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      document.head.appendChild(link);
     }
-    const link = document.createElement("link");
-    link.id = LINK_ID;
-    link.rel = "stylesheet";
-    link.href = HREF;
-    link.dataset.aetherReadability406074 = "candidate-2";
-    link.addEventListener("load", () => {
-      root.dataset.aetherReadability406074 = "ready";
-    }, { once: true });
-    link.addEventListener("error", () => {
-      root.dataset.aetherReadability406074 = "error";
-    }, { once: true });
-    document.head.appendChild(link);
-    root.dataset.aetherReadability406074 = "loading";
+    link.href = href;
+    link.dataset.aetherCandidate406074 = marker;
+    return link;
+  }
+
+  function loadStylesheets() {
+    ensureStylesheet(LINK_ID, HREF, "candidate-2.1-spatial");
+    ensureStylesheet(STABILIZATION_ID, STABILIZATION_HREF, "candidate-2.1-responsive");
+    root.dataset.aetherReadability406074 = "styles-requested";
     return true;
   }
 
+  function setBackplateState(state) {
+    root.setAttribute(ATTR, state);
+    return state;
+  }
+
   function warmV2Backplate() {
-    root.dataset.aetherBackplateV2406074 = "loading";
+    setBackplateState("loading");
     const image = new Image();
     image.decoding = "async";
     const src = new URL(BACKPLATE, document.baseURI).href;
 
     const activate = () => {
-      root.dataset.aetherBackplateV2406074 = "ready";
-      root.dataset.aetherReadability406074 = "candidate-2-ready";
+      setBackplateState("ready");
+      root.dataset.aetherReadability406074 = "candidate-2.1-ready";
+      return true;
     };
     const fallback = () => {
-      root.dataset.aetherBackplateV2406074 = "fallback-40.6.73";
-      root.dataset.aetherReadability406074 = "candidate-2-waiting-asset";
+      setBackplateState("fallback-40.6.73");
+      root.dataset.aetherReadability406074 = "candidate-2.1-fallback";
+      return false;
     };
 
     image.addEventListener("load", () => {
       const decoded = typeof image.decode === "function" ? image.decode() : Promise.resolve();
-      Promise.resolve(decoded).then(activate).catch(activate);
+      Promise.resolve(decoded).then(activate).catch(fallback);
     }, { once: true });
     image.addEventListener("error", fallback, { once: true });
     image.src = src;
@@ -234,24 +231,31 @@
     return { image, src };
   }
 
-  loadStylesheet();
+  loadStylesheets();
   const warm = warmV2Backplate();
 
   globalThis.ErithAetherReadability406074 = Object.freeze({
     build: BUILD,
     href: HREF,
+    stabilization_href: STABILIZATION_HREF,
     backplate: warm.src,
+    activation_attribute: ATTR,
     candidate_only: true,
     global_build_promoted: false,
     backplate_changed: true,
     painted_geometry_changed: true,
     activation_requires_asset_decode: true,
+    decode_failure_falls_back: true,
     fallback_runtime: "40.6.73",
     window_manager_changed: false,
     market_core_changed: false,
     new_timer: false,
     new_observer: false,
     new_storage_owner: false,
-    new_network_owner: false
+    new_network_owner: false,
+    state: () => ({
+      backplate: root.getAttribute(ATTR) || "unset",
+      readability: root.dataset.aetherReadability406074 || "unset"
+    })
   });
 })();
