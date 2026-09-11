@@ -62,15 +62,13 @@ write(index_path, index)
 immutable_path = ROOT / f'index-{BUILD}.html'
 write(immutable_path, index)
 
-# Root runtime identity only. Business logic untouched.
+# Root runtime identity only. Release/token are already derived from ATLAS_BUILD.
 root_app_path = ROOT / 'app.js'
 root_app = read(root_app_path)
 root_app = replace_one(root_app, r'(const\s+ATLAS_BUILD\s*=\s*["\'])[^"\']+(["\']\s*;)', rf'\g<1>{BUILD}\g<2>', 'ATLAS_BUILD')
-root_app = replace_one(root_app, r'(const\s+ATLAS_RELEASE\s*=\s*["\'])[^"\']+(["\']\s*;)', lambda m: m.group(1) + RELEASE + m.group(2), 'ATLAS_RELEASE')
-root_app = replace_one(root_app, r'(const\s+ATLAS_ASSET_TOKEN\s*=\s*["\'])[^"\']+(["\']\s*;)', rf'\g<1>{TOKEN}\g<2>', 'ATLAS_ASSET_TOKEN')
 write(root_app_path, root_app)
 
-# Existing System lazy-source cache token is part of the canonical version guard.
+# Existing System lazy-source cache token is part of canonical version delivery.
 system_path = ROOT / 'js/views/system-presentation.js'
 system = read(system_path)
 system = replace_one(system, r'(const\s+SOURCE="\./views/system\.html\?v=administrator-build-)[^"]+(";)', rf'\g<1>{BUILD}\g<2>', 'System presentation source token')
@@ -295,7 +293,7 @@ if isinstance(mirror_files, dict):
     mirror_files[f'index-{BUILD}.html'] = sha(immutable_path)
 write(mirror_path, json.dumps(mirror, ensure_ascii=False, indent=2) + '\n')
 
-# Canonical manifest. Preserve history, repair current identity and every payload digest.
+# Canonical manifest. Preserve history, repair current identity and payload digests.
 manifest_path = ROOT / 'version.json'
 manifest = json.loads(read(manifest_path))
 manifest.update({
@@ -317,9 +315,15 @@ else:
 files = manifest.get('files')
 if not isinstance(files, dict) or not files:
     raise SystemExit('STOP: version.json files hash map missing')
-if 'version.json' in files:
-    raise SystemExit('STOP: version.json cannot hash itself')
+# A manifest cannot hash its own final bytes. Historical impossible self-reference is retired.
+files.pop('version.json', None)
 files[f'index-{BUILD}.html'] = sha(immutable_path)
+# Every local JS/CSS loaded by the canonical entry belongs to the same hash authority.
+asset_pattern = re.compile(r'(?:src|href)=["\']\./([^"\']+\.(?:js|css))(?:\?[^"\']*)?["\']')
+for rel in sorted(set(asset_pattern.findall(index))):
+    p = ROOT / rel
+    if p.is_file():
+        files[rel] = sha(p)
 for rel in list(files):
     p = ROOT / rel
     if not p.is_file():
