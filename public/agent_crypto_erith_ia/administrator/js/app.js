@@ -524,12 +524,29 @@
           const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
           const fittedWidth = Math.min(width, height * 16 / 9);
           const fittedHeight = fittedWidth * 9 / 16;
-          return {
-            x: Math.max(12, Math.round((vw - fittedWidth) / 2)),
+          const fallback = {
+            x: 12,
             y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
             width: Math.round(fittedWidth),
             height: Math.round(fittedHeight)
           };
+          try {
+            const raw = JSON.parse(localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) || 'null');
+            const saved = raw && typeof raw === 'object' ? {
+              x: Number(raw.x), y: Number(raw.y), width: Number(raw.width), height: Number(raw.height)
+            } : null;
+            if (saved && [saved.x, saved.y, saved.width, saved.height].every(Number.isFinite)) {
+              const centeredX = Math.max(12, Math.round((vw - saved.width) / 2));
+              const legacyAutoCenter = saved.x > 26 && Math.abs(saved.x - centeredX) <= 14;
+              return {
+                x: legacyAutoCenter ? 12 : saved.x,
+                y: saved.y,
+                width: saved.width,
+                height: saved.height
+              };
+            }
+          } catch (_) {}
+          return fallback;
         },
         resolveEntries: () => [entry(byId("atlasAetherStatusPanel4084"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
