@@ -662,3 +662,77 @@ html[data-aether-backplate-v2-406074="ready"] .aether46-clock strong {
   margin-top:14px !important;
   padding:15px 17px !important;
 }
+
+/* ==========================================================================
+   40.6.74 R1 — OPTICAL TEXT ALIGNMENT / C5 LESSON RESTORED
+
+   Firefox field validation showed that canonical consolidation kept the enlarged
+   V2 capsule geometry but accidentally dropped C5's vertical breathing rule.
+   Result: live facts cling to the top edge while the painted capsules leave an
+   obvious empty lower half. Restore the validated optical centering only for
+   non-streaming cells. Market and Recent Events keep their dense top flow.
+   Presentation only: no data, geometry, storage, network or Market Core owner.
+   ========================================================================== */
+html[data-aether-backplate-v2-406074="ready"] .aether46-card {
+  box-sizing:border-box !important;
+}
+
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="system"],
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="sources"],
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="atlas"],
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="convergence"],
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="divergence"],
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="oracle"],
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="weather"] {
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+}
+
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="system"] {
+  padding:1.05% 1.05% .92% 5.15% !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="sources"] {
+  padding:1.06% 1.00% .94% 5.00% !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="atlas"] {
+  padding:1.05% 1.00% .92% 5.05% !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="convergence"] {
+  padding:1.02% 1.12% .90% 5.80% !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="divergence"] {
+  padding:1.04% 1.05% .90% 5.20% !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="oracle"] {
+  padding:.92% 1.00% .82% 5.30% !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="weather"] {
+  padding:.92% 1.00% .82% 5.20% !important;
+}
+
+html[data-aether-backplate-v2-406074="ready"] .aether46-card header {
+  gap:clamp(4px,.34cqw,7px) !important;
+  margin:0 0 clamp(4px,.36cqw,7px) !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card footer {
+  margin-top:clamp(3px,.34cqw,6px) !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-system-metrics {
+  margin:.04cqw 0 .08cqw !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-source-metrics {
+  margin:.04cqw 0 .05cqw !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-atlas-main {
+  margin-top:.02cqw !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-atlas-sub {
+  margin-top:.44cqw !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-convergence-main {
+  margin-top:.02cqw !important;
+}
+html[data-aether-backplate-v2-406074="ready"] .aether46-card[data-aether-card-406046="divergence"] p {
+  margin:.02cqw 0 0 !important;
+}
