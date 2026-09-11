@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/agent-crypto-406084-persisted-geometry-lock.yml'
+      - '.github/scripts/agent_crypto_406084.trigger'
 
 permissions:
   contents: write
@@ -50,7 +51,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git rm .github/workflows/agent-crypto-406084-persisted-geometry-lock.yml .github/scripts/agent_crypto_406084.py
+          git rm .github/workflows/agent-crypto-406084-persisted-geometry-lock.yml .github/scripts/agent_crypto_406084.py .github/scripts/agent_crypto_406084.trigger
           git commit -m "chore(agent-crypto): retire 40.6.84 one-shot release tooling"
           git push origin HEAD:main
 
