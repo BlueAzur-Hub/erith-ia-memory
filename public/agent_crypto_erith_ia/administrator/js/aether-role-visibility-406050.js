@@ -169,50 +169,89 @@
 })();
 
 /* ==========================================================================
-   40.6.74 CANDIDATE — AETHER CARD READABILITY CSS LOADER
-   The global runtime remains 40.6.73 until Christophe validates the visual D.
-   Load one isolated presentation sheet after the historical Aether cascade.
+   40.6.74 CANDIDATE 2 — AETHER WATCH V2 BACKPLATE + SPATIAL CONTRACT LOADER
+
+   Safety contract:
+   - global runtime remains 40.6.73 until Christophe validates the visual D;
+   - the new geometry is activated only after the V2 image really loads/decodes;
+   - missing asset => validated 40.6.73 geometry remains active;
+   - no timer, MutationObserver, storage owner, network API owner or Market Core edit.
    ========================================================================== */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.74-candidate";
+  const BUILD = "40.6.74-candidate-2";
   const LINK_ID = "aetherReadability406074";
-  const HREF = "./aether-readability-406074.css?v=406074-candidate-1";
+  const HREF = "./aether-readability-406074.css?v=406074-candidate-2";
+  const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
+  const root = document.documentElement;
 
-  function install() {
-    if (document.getElementById(LINK_ID)) return true;
+  function loadStylesheet() {
+    const existing = document.getElementById(LINK_ID);
+    if (existing) {
+      existing.href = HREF;
+      existing.dataset.aetherReadability406074 = "candidate-2";
+      return true;
+    }
     const link = document.createElement("link");
     link.id = LINK_ID;
     link.rel = "stylesheet";
     link.href = HREF;
-    link.dataset.aetherReadability406074 = "candidate";
+    link.dataset.aetherReadability406074 = "candidate-2";
     link.addEventListener("load", () => {
-      document.documentElement.dataset.aetherReadability406074 = "ready";
+      root.dataset.aetherReadability406074 = "ready";
     }, { once: true });
     link.addEventListener("error", () => {
-      document.documentElement.dataset.aetherReadability406074 = "error";
+      root.dataset.aetherReadability406074 = "error";
     }, { once: true });
     document.head.appendChild(link);
-    document.documentElement.dataset.aetherReadability406074 = "loading";
+    root.dataset.aetherReadability406074 = "loading";
     return true;
   }
 
-  install();
+  function warmV2Backplate() {
+    root.dataset.aetherBackplateV2406074 = "loading";
+    const image = new Image();
+    image.decoding = "async";
+    const src = new URL(BACKPLATE, document.baseURI).href;
+
+    const activate = () => {
+      root.dataset.aetherBackplateV2406074 = "ready";
+      root.dataset.aetherReadability406074 = "candidate-2-ready";
+    };
+    const fallback = () => {
+      root.dataset.aetherBackplateV2406074 = "fallback-40.6.73";
+      root.dataset.aetherReadability406074 = "candidate-2-waiting-asset";
+    };
+
+    image.addEventListener("load", () => {
+      const decoded = typeof image.decode === "function" ? image.decode() : Promise.resolve();
+      Promise.resolve(decoded).then(activate).catch(activate);
+    }, { once: true });
+    image.addEventListener("error", fallback, { once: true });
+    image.src = src;
+
+    return { image, src };
+  }
+
+  loadStylesheet();
+  const warm = warmV2Backplate();
 
   globalThis.ErithAetherReadability406074 = Object.freeze({
     build: BUILD,
     href: HREF,
+    backplate: warm.src,
     candidate_only: true,
     global_build_promoted: false,
-    backplate_changed: false,
-    painted_geometry_changed: false,
+    backplate_changed: true,
+    painted_geometry_changed: true,
+    activation_requires_asset_decode: true,
+    fallback_runtime: "40.6.73",
     window_manager_changed: false,
     market_core_changed: false,
     new_timer: false,
     new_observer: false,
     new_storage_owner: false,
-    new_network_owner: false,
-    install
+    new_network_owner: false
   });
 })();
