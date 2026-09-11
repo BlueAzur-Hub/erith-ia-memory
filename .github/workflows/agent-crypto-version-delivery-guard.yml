@@ -1,0 +1,86 @@
+name: Agent-Crypto Version Delivery Guard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/index-*.html'
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth.js'
+      - 'public/agent_crypto_erith_ia/administrator/version.json'
+      - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+  pull_request:
+    paths:
+      - 'public/agent_crypto_erith_ia/administrator/index.html'
+      - 'public/agent_crypto_erith_ia/administrator/index-*.html'
+      - 'public/agent_crypto_erith_ia/administrator/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/app.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth.js'
+      - 'public/agent_crypto_erith_ia/administrator/version.json'
+      - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
+      - 'public/agent_crypto_erith_ia/administrator/build.json'
+
+permissions:
+  contents: read
+
+jobs:
+  version-delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Canonical version truth
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
+
+      - name: Immutable entry truth
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          manifest = json.loads((root / 'version.json').read_text(encoding='utf-8'))
+          mirror = json.loads((root / 'administrator-version.json').read_text(encoding='utf-8'))
+          build_truth = json.loads((root / 'build.json').read_text(encoding='utf-8'))
+          build = str(manifest.get('build') or '').strip()
+          release = str(manifest.get('release') or '').strip()
+
+          if not re.fullmatch(r'\d+\.\d+\.\d+', build):
+              raise SystemExit(f'VERSION_DELIVERY_FAIL: invalid build {build!r}')
+          if str(mirror.get('build') or '').strip() != build:
+              raise SystemExit('VERSION_DELIVERY_FAIL: administrator-version drift')
+          if str(mirror.get('global_versioning') or '').strip() != build:
+              raise SystemExit('VERSION_DELIVERY_FAIL: global_versioning drift')
+          if str(build_truth.get('build') or '').strip() != build:
+              raise SystemExit('VERSION_DELIVERY_FAIL: build.json drift')
+          if str(build_truth.get('release') or '').strip() != release:
+              raise SystemExit('VERSION_DELIVERY_FAIL: release drift')
+
+          immutable = root / f'index-{build}.html'
+          if not immutable.is_file():
+              raise SystemExit(f'VERSION_DELIVERY_FAIL: missing immutable entry {immutable.name}')
+
+          for path in (root / 'index.html', immutable):
+              html = path.read_text(encoding='utf-8')
+              def one(pattern, label):
+                  values = re.findall(pattern, html, re.S)
+                  if values != [build]:
+                      raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} {label}={values!r}, expected {build}')
+              one(r'<meta\s+name="administrator-build"\s+content="([^"]+)"', 'administrator-build')
+              one(r'<meta\s+name="atlas-build"\s+content="([^"]+)"', 'atlas-build')
+              one(r'<span\s+id="atlasVersionTruthText">Build ([^<]+)</span>', 'first-paint badge')
+              one(r'id="atlasVersionTruthControl"[\s\S]*?aria-label="Version Agent-Crypto installée : Build ([^,\"]+), mode Administrator"', 'first-paint aria')
+              one(r'<script\s+src="\./js/version-truth\.js\?v=([^"]+)"', 'version-truth cache token')
+              footer = re.findall(r'<span\s+id="footerRelease">([^<]*)</span>', html, re.S)
+              expected_prefix = f'Administrator {build} · Market Core 38.15.11 ·'
+              if len(footer) != 1 or not footer[0].strip().startswith(expected_prefix):
+                  raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} footer drift')
+
+          print(f'VERSION_DELIVERY_PASS build={build} immutable={immutable.name}')
+          PY
