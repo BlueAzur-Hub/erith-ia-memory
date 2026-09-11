@@ -1,0 +1,91 @@
+name: Agent-Crypto Aether 40.6.78-40.6.83 Runner
+
+on:
+  push:
+    paths:
+      - .github/workflows/agent-crypto-406083-runner.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cascade:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Run cumulative cascade
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git reset --hard origin/main
+          git config user.name "BlueAzur-Hub"
+          git config user.email "Blue.Azur@protonmail.com"
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          data=json.loads((root/'build.json').read_text(encoding='utf-8'))
+          assert data.get('build')=='40.6.77', data.get('build')
+          assert data.get('engine')=='38.15.11', data.get('engine')
+          source=Path('.github/workflows/agent-crypto-406083-aether-cascade.yml').read_text(encoding='utf-8')
+          marker="          python - <<'PY'\n          from pathlib import Path\n          from datetime import datetime, timezone"
+          start=source.index(marker)+len("          python - <<'PY'\n")
+          end=source.index("\n          PY",start)
+          block=source[start:end]
+          lines=[]
+          for line in block.splitlines():
+              lines.append(line[10:] if line.startswith('          ') else line)
+          Path('/tmp/aether_cascade_406083.py').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+          python /tmp/aether_cascade_406083.py
+
+          # Final re-read correction: normalize the two generated raw-string blocks,
+          # then amend the final .83 commit rather than stacking another patch.
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          css=root/'aether-v2-406083.css'
+          text=css.read_text(encoding='utf-8')
+          if '\\n' in text:
+              text=text.replace('\\n','\n')
+              css.write_text(text,encoding='utf-8')
+          index=root/'index.html'
+          html=index.read_text(encoding='utf-8')
+          start=html.find('\\n  <!-- 40.6.83 — one-time stale Aether center migration')
+          if start>=0:
+              end=html.find('</script>\\n',start)
+              if end<0: raise SystemExit('preboot raw block end missing')
+              end += len('</script>\\n')
+              fixed=html[start:end].replace('\\n','\n')
+              html=html[:start]+fixed+html[end:]
+              index.write_text(html,encoding='utf-8')
+          assert 'id="aetherLegacyCenterPreboot406083"' in index.read_text(encoding='utf-8')
+          assert 'Build 40.6.83 · Administrator' in index.read_text(encoding='utf-8')
+          PY
+          node --check public/agent_crypto_erith_ia/administrator/js/aether-v2-406083.js
+          git add public/agent_crypto_erith_ia/administrator/aether-v2-406083.css public/agent_crypto_erith_ia/administrator/index.html
+          git rm .github/workflows/agent-crypto-406083-runner.yml
+          git commit --amend --no-edit
+          git push origin HEAD:main
+
+      - name: Package final Administrator copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          zip -qr dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.zip public/agent_crypto_erith_ia/administrator
+          sha256sum dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.zip > dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD.sha256
+          git log -8 --oneline > dist/AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_COMMITS.txt
+
+      - name: Upload final clean copy
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_BUILD_40_6_83_AETHER_V2_FINAL_CLEAN_UPLOAD
+          path: dist/
+          retention-days: 30
