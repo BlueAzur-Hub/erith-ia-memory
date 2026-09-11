@@ -157,24 +157,25 @@
 })();
 
 /* ==========================================================================
-   40.6.74 C2.1 — AETHER WATCH V2 ACTIVATION + RESPONSIVE STABILIZATION
+   40.6.74 C3 — AETHER WATCH V2 ACTIVATION + PRESENTATION REFINEMENT
 
    Safety contract:
    - visible/global runtime remains 40.6.73 until Christophe validates Firefox;
    - V2 geometry activates only after the exact V2 image loads AND decodes;
    - missing/undecodable asset => validated 40.6.73 geometry remains active;
-   - the small C2.1 responsive sheet loads after Candidate 2 to reclaim the
-     headroom created by the larger painted capsules;
+   - spatial, stabilization and C3 refinement stylesheets load in deterministic order;
    - no timer, MutationObserver, storage owner, network API owner or Market Core edit.
    ========================================================================== */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.74-candidate-2.1";
+  const BUILD = "40.6.74-candidate-3";
   const LINK_ID = "aetherReadability406074";
-  const HREF = "./aether-readability-406074.css?v=406074-candidate-2.1";
+  const HREF = "./aether-readability-406074.css?v=406074-candidate-3";
   const STABILIZATION_ID = "aetherV2Stabilization406074C21";
-  const STABILIZATION_HREF = "./aether-v2-stabilization-406074-c21.css?v=406074-c2.1";
+  const STABILIZATION_HREF = "./aether-v2-stabilization-406074-c21.css?v=406074-candidate-3";
+  const REFINEMENT_ID = "aetherV2Refinement406074C3";
+  const REFINEMENT_HREF = "./aether-v2-refinement-406074-c3.css?v=406074-candidate-3";
   const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
   const ATTR = "data-aether-backplate-v2-406074";
   const root = document.documentElement;
@@ -193,8 +194,9 @@
   }
 
   function loadStylesheets() {
-    ensureStylesheet(LINK_ID, HREF, "candidate-2.1-spatial");
-    ensureStylesheet(STABILIZATION_ID, STABILIZATION_HREF, "candidate-2.1-responsive");
+    ensureStylesheet(LINK_ID, HREF, "candidate-3-spatial");
+    ensureStylesheet(STABILIZATION_ID, STABILIZATION_HREF, "candidate-3-stabilization");
+    ensureStylesheet(REFINEMENT_ID, REFINEMENT_HREF, "candidate-3-refinement");
     root.dataset.aetherReadability406074 = "styles-requested";
     return true;
   }
@@ -212,12 +214,12 @@
 
     const activate = () => {
       setBackplateState("ready");
-      root.dataset.aetherReadability406074 = "candidate-2.1-ready";
+      root.dataset.aetherReadability406074 = "candidate-3-ready";
       return true;
     };
     const fallback = () => {
       setBackplateState("fallback-40.6.73");
-      root.dataset.aetherReadability406074 = "candidate-2.1-fallback";
+      root.dataset.aetherReadability406074 = "candidate-3-fallback";
       return false;
     };
 
@@ -238,6 +240,7 @@
     build: BUILD,
     href: HREF,
     stabilization_href: STABILIZATION_HREF,
+    refinement_href: REFINEMENT_HREF,
     backplate: warm.src,
     activation_attribute: ATTR,
     candidate_only: true,
@@ -255,7 +258,8 @@
     new_network_owner: false,
     state: () => ({
       backplate: root.getAttribute(ATTR) || "unset",
-      readability: root.dataset.aetherReadability406074 || "unset"
+      readability: root.dataset.aetherReadability406074 || "unset",
+      refinement: document.getElementById(REFINEMENT_ID)?.dataset?.aetherCandidate406074 || "missing"
     })
   });
 })();
