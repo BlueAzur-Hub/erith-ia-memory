@@ -1,12 +1,12 @@
-/* Agent-Crypto @erith.IA — 40.4.86
+/* Agent-Crypto @erith.IA — 40.6.87
    PRIVATE BACKEND / SOURCE INTELLIGENCE SCRIPT DEMAND LOADER
-   The existing private-backend-sources.js owner is unchanged and is no longer parser-loaded on Crypto cold boot.
-   It is injected once after explicit operator demand for Sources or Backend/API.
+   The existing private-backend-sources.js owner remains the single Source Truth owner and is not parser-loaded on Crypto cold boot.
+   40.6.87 cache-busts the owner for OKX Wave 1 only.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
 (()=>{
   "use strict";
-  const BUILD="40.4.86";
-  const SRC="./js/views/private-backend-sources.js?v=administrator-build-40.4.62";
+  const BUILD="40.6.87";
+  const SRC="./js/views/private-backend-sources.js?v=administrator-build-40.6.87";
   let state="idle",promise=null,reason="",loadedAt=0,lastError="";
 
   function ensure(why="operator"){

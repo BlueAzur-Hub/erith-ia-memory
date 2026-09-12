@@ -1,7 +1,7 @@
 {
-  "schema": "agent_crypto_private_backend_sources_v5",
-  "build": "40.4.62",
-  "backend_version": "1.4.0",
+  "schema": "agent_crypto_private_backend_sources_v6",
+  "build": "40.6.87",
+  "backend_version": "1.4.2",
   "endpoint": "http://127.0.0.1:8790",
   "binding": "loopback_only",
   "mode": "READ_ONLY_PUBLIC_MARKET_DATA",
@@ -30,6 +30,13 @@
       "id": "coinbase",
       "role": "secondary_spot_eur_control",
       "endpoint_family": "https://api.exchange.coinbase.com/products/{product_id}/stats",
+      "authentication": "none",
+      "write_capability": false
+    },
+    {
+      "id": "okx",
+      "role": "secondary_spot_eur_control",
+      "endpoint_family": "https://www.okx.com/api/v5/market/ticker?instId={asset}-EUR",
       "authentication": "none",
       "write_capability": false
     },
@@ -85,7 +92,8 @@
     },
     "controls": [
       "kraken",
-      "coinbase"
+      "coinbase",
+      "okx"
     ],
     "merge_owner": "js/views/private-backend-sources.js",
     "canonical_price_created": false,
@@ -122,7 +130,7 @@
     "owner": "js/views/private-backend-sources.js",
     "inputs": [
       "Binance live primary",
-      "Kraken/Coinbase CEX controls",
+      "Kraken/Coinbase/OKX CEX controls",
       "DEX Screener/GeckoTerminal context",
       "DefiLlama chain context"
     ],
@@ -237,5 +245,21 @@
     "source_intelligence_contract_changed": false,
     "scanner_persistence_owner": "app.js",
     "purpose": "keep private backend acceptance intact while moving Scanner serialization out of the interactive hot path"
+  },
+  "okx_wave_1_406087": {
+    "owner": "Private Backend V1.4.2 + js/views/private-backend-sources.js",
+    "source": "OKX public spot EUR market data",
+    "assets": ["BTC", "ETH", "BNB", "XRP", "SOL"],
+    "mode": "READ_ONLY_PUBLIC_MARKET_DATA",
+    "authentication": "none",
+    "controls_after_wave": ["kraken", "coinbase", "okx"],
+    "primary_unchanged": "binance",
+    "eur_only": true,
+    "synthetic_usdt_to_eur_conversion": false,
+    "proof": "Ryzen backend V1.4.2 returned OKX status=ok for 5/5 assets; global backend source matrix 14/15 because Coinbase BNB-EUR is unavailable",
+    "canonical_price_created": false,
+    "financial_signal": false,
+    "trading_endpoint": false,
+    "private_exchange_api": false
   }
 }
