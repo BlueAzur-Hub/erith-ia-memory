@@ -2,6 +2,7 @@
    40.6.96: Strategy A Paper V2 self-proof runs once automatically after page load.
    40.6.97: existing retrospective-validation.js is activated after its dependencies exist.
    40.6.98: Source Truth/Source Intelligence gains a read-side per-provider freshness gate.
+   40.6.98 hotfix: retrospective reader can mount directly in Decision Board without legacy anchors.
    No trading, wallet, private API, recurring timer, MutationObserver, or storage owner. */
 (()=>{
   "use strict";
@@ -37,22 +38,56 @@
   }
 
   let retrospectiveRenderFrame=0;
+  let retrospectiveLastReason="boot";
+
+  function ensureRetrospectiveStandaloneHost(){
+    let root=document.getElementById("decisionRetrospective3960");
+    if(root)return root;
+    const board=document.getElementById("decision-board");
+    if(!board)return null;
+
+    root=document.createElement("div");
+    root.id="decisionRetrospective3960";
+    root.className="decision-memory-v2";
+    root.dataset.fallbackMount406098="true";
+    root.setAttribute("aria-label","Decision Board 39.6.0 · Validation rétrospective en lecture seule");
+    root.innerHTML=`
+      <article><span>Validation rétrospective</span><b id="retroStatus3960">En attente</b><small id="retroStatusDetail3960">Le lecteur attend un CURRENT vérifié suivi d’un snapshot marché canonique.</small></article>
+      <article><span>CURRENT évaluables</span><b id="retroCount3960">0 / 0</b><small id="retroCountDetail3960">Seuls les CURRENT vérifiés avec payload détaillé sont comparables.</small></article>
+      <article><span>Dernier CURRENT</span><b id="retroCurrent3960">—</b><small id="retroCurrentDetail3960">Analyse figée et jamais réécrite.</small></article>
+      <article><span>Premier marché postérieur</span><b id="retroFirst3960">—</b><small id="retroFirstDetail3960">L’observation doit être strictement postérieure à la fermeture analytique.</small></article>
+      <article><span>TOP5 observé après CURRENT</span><b id="retroTop53960">—</b><small id="retroTop5Detail3960">Rendement EUR observé depuis les prix figés du CURRENT.</small></article>
+      <article><span>Largeur post-CURRENT</span><b id="retroBreadth3960">—</b><small id="retroBreadthDetail3960">Description du mouvement, pas validation d’une prévision.</small></article>
+      <article class="decision-memory-v2-action"><span>Contrat</span><b>OBSERVATION ≠ PRÉDICTION</b><small id="retroContract3960">Aucun score de réussite, aucune réécriture mémoire, aucun lancement Atlas.</small></article>`;
+    board.appendChild(root);
+    document.documentElement.dataset.retrospectiveValidation406097="host-mounted";
+    return root;
+  }
+
   function renderRetrospectiveBounded(){
     try{globalThis.atlasDecisionBoardDualMemory3950?.render?.();}catch(_){}
     const api=globalThis.atlasRetrospectiveValidation3960;
-    const anchor=document.getElementById("decisionDualMemory395")||document.getElementById("decisionMemoryV2");
-    if(api&&typeof api.render==="function"&&anchor){
+    let anchor=document.getElementById("decisionDualMemory395")||document.getElementById("decisionMemoryV2");
+    let root=document.getElementById("decisionRetrospective3960");
+
+    if(!root&&!anchor)root=ensureRetrospectiveStandaloneHost();
+
+    if(api&&typeof api.render==="function"&&(anchor||root)){
       try{
         api.render();
         document.documentElement.dataset.retrospectiveValidation406097="active";
+        document.documentElement.dataset.retrospectiveValidationReason406098=retrospectiveLastReason;
         return true;
-      }catch(_){
+      }catch(error){
         document.documentElement.dataset.retrospectiveValidation406097="render-error";
+        document.documentElement.dataset.retrospectiveValidationError406098=String(error?.message||error).slice(0,180);
         return false;
       }
     }
-    if(retrospectiveRenderFrame>=60){
-      document.documentElement.dataset.retrospectiveValidation406097="dependency-timeout";
+
+    if(retrospectiveRenderFrame>=180){
+      document.documentElement.dataset.retrospectiveValidation406097=
+        document.getElementById("decision-board")?"waiting-reader":"waiting-decision-board";
       return false;
     }
     retrospectiveRenderFrame+=1;
@@ -61,28 +96,60 @@
     return false;
   }
 
+  function scheduleRetrospectiveRender(reason="runtime"){
+    retrospectiveLastReason=String(reason||"runtime");
+    retrospectiveRenderFrame=0;
+    try{requestAnimationFrame(()=>requestAnimationFrame(renderRetrospectiveBounded));}
+    catch(_){queueMicrotask(renderRetrospectiveBounded);}
+  }
+
   function activateRetrospective(){
     retrospectiveRenderFrame=0;
     if(globalThis.atlasRetrospectiveValidation3960){
-      renderRetrospectiveBounded();
+      scheduleRetrospectiveRender("api-present");
       return true;
     }
     const existing=document.querySelector('script[data-retrospective-activation-406097="true"]');
     if(existing){
-      renderRetrospectiveBounded();
+      scheduleRetrospectiveRender("script-present");
       return true;
     }
     const script=document.createElement("script");
     script.src=`./js/retrospective-validation.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
     script.async=false;
     script.dataset.retrospectiveActivation406097="true";
-    script.addEventListener("load",()=>{
-      retrospectiveRenderFrame=0;
-      renderRetrospectiveBounded();
-    },{once:true});
+    script.addEventListener("load",()=>scheduleRetrospectiveRender("reader-loaded"),{once:true});
     script.addEventListener("error",()=>{document.documentElement.dataset.retrospectiveValidation406097="load-error";},{once:true});
     document.head.appendChild(script);
     return true;
+  }
+
+  function bindRetrospectiveMountTriggers(){
+    if(document.documentElement.dataset.retrospectiveMountTriggers406098==="1")return;
+    document.documentElement.dataset.retrospectiveMountTriggers406098="1";
+
+    document.addEventListener("click",event=>{
+      const target=event.target instanceof Element?event.target:null;
+      if(!target)return;
+      const decisionIntent=target.closest(
+        '[data-admin-cluster-target="decision"],a[href="#decision-board"],[data-atlas-essential-target="decision"],#decision-board'
+      );
+      if(decisionIntent||document.getElementById("decision-board")){
+        scheduleRetrospectiveRender(decisionIntent?"decision-intent":"document-interaction");
+      }
+    },true);
+
+    window.addEventListener("hashchange",()=>{
+      if(String(location.hash||"")==="#decision-board")scheduleRetrospectiveRender("hash-decision");
+    },{passive:true});
+
+    window.addEventListener("pageshow",()=>scheduleRetrospectiveRender("pageshow"),{passive:true});
+    document.addEventListener("visibilitychange",()=>{
+      if(document.visibilityState==="visible")scheduleRetrospectiveRender("visible");
+    },{passive:true});
+
+    document.addEventListener("agentcrypto:current-finalized",()=>scheduleRetrospectiveRender("current-finalized"),{passive:true});
+    window.addEventListener("erith:system-hydrated",()=>scheduleRetrospectiveRender("system-hydrated"),{passive:true});
   }
 
   const observedMs=value=>{
@@ -190,7 +257,10 @@
   }
 
   if(atLeast("40.6.96"))onReady(runStrategyProofOnce);
-  if(atLeast("40.6.97"))onReady(activateRetrospective);
+  if(atLeast("40.6.97")){
+    bindRetrospectiveMountTriggers();
+    onReady(activateRetrospective);
+  }
   if(atLeast("40.6.98")){
     onReady(()=>{installSourceGuard();applySourceUiGuard();});
     window.addEventListener("erith:private-source-runtime-loaded",()=>{installSourceGuard();applySourceUiGuard();},{once:true});
@@ -205,10 +275,13 @@
     build:BUILD,
     strategy_auto_proof:atLeast("40.6.96"),
     retrospective_activation:atLeast("40.6.97"),
+    retrospective_direct_board_mount:true,
     source_freshness_guard:atLeast("40.6.98"),
     strategyReceipt:()=>strategyReceipt,
     runStrategyProofOnce,
     activateRetrospective,
+    scheduleRetrospectiveRender,
+    ensureRetrospectiveStandaloneHost,
     installSourceGuard,
     applySourceUiGuard,
     recurring_timer:false,
