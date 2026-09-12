@@ -1,16 +1,16 @@
-/* Agent-Crypto @erith.IA — 40.6.91
-   PRIVATE BACKEND / SOURCE INTELLIGENCE SCRIPT DEMAND LOADER
-   RESTORATION: keep Source Truth in its canonical Backend / API host.
-   The existing private-backend-sources.js owner remains the single Source Truth owner.
-   Sources may demand-load the owner, but never reparents its panel.
+/* Agent-Crypto @erith.IA — stable Source Truth demand loader
+   40.6.93 removes build-specific ownership from the loader.
+   Source Truth stays in its canonical Backend / API host.
+   private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
 (()=>{
   "use strict";
-  const INSTANCE_KEY="__ERITH_PRIVATE_SOURCE_DEMAND_406091_BOUND__";
+  const INSTANCE_KEY="__ERITH_PRIVATE_SOURCE_DEMAND_STABLE_BOUND__";
   if(globalThis[INSTANCE_KEY])return;
   globalThis[INSTANCE_KEY]=true;
-  const BUILD="40.6.91";
-  const SRC="./js/views/private-backend-sources.js?v=administrator-build-40.6.91-source-restore-1";
+  const metaBuild=()=>String(document.querySelector('meta[name="administrator-build"]')?.content||"").trim();
+  const BUILD=String(globalThis.ErithVersionTruth?.build||metaBuild()||"runtime").trim();
+  const SRC=`./js/views/private-backend-sources.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
   let state="idle",promise=null,reason="",loadedAt=0,lastError="";
 
   function settleReady(){state="ready";loadedAt=Date.now();lastError="";return true;}
@@ -21,7 +21,7 @@
     if(promise)return promise;
     state="loading";
     promise=new Promise(resolve=>{
-      const existing=document.querySelector('script[data-private-source-demand-40486="true"]');
+      const existing=document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand-40486="true"]');
       if(existing){
         if(globalThis.ErithPrivateBackendSources4054||existing.dataset.loaded==="true"){resolve(settleReady());return;}
         existing.addEventListener("load",()=>{existing.dataset.loaded="true";resolve(settleReady());},{once:true});
@@ -31,7 +31,7 @@
       const script=document.createElement("script");
       script.src=SRC;
       script.async=true;
-      script.dataset.privateSourceDemand40486="true";
+      script.dataset.privateSourceDemandStable="true";
       script.addEventListener("load",()=>{script.dataset.loaded="true";settleReady();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:BUILD,reason}}));}catch(_){}resolve(true);},{once:true});
       script.addEventListener("error",()=>{state="error";lastError="script-load-error";resolve(false);},{once:true});
       document.head.appendChild(script);
@@ -56,10 +56,11 @@
   const hash=String(location.hash||"");
   if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence4056"].includes(hash))void ensure("direct-hash");
 
-  globalThis.ErithPrivateSourceDemand40486=Object.freeze({
+  const API=Object.freeze({
     build:BUILD,
     ensure,
     snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend"}),
+    stable_owner:true,
     source_truth_backend_placement_restored:true,
     sources_reparenting:false,
     new_timer:false,
@@ -67,4 +68,6 @@
     new_storage_owner:false,
     new_network_owner:false
   });
+  globalThis.ErithPrivateSourceDemand=API;
+  globalThis.ErithPrivateSourceDemand40486=API;
 })();
