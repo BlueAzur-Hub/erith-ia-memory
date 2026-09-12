@@ -1,12 +1,12 @@
-# Agent-Crypto · Operator 40.6.99
+# Agent-Crypto · Operator 40.6.100
 
 Cette livraison donne à Operator une entrée stable et directe sans dupliquer le runtime Administrator.
 
 ## Entrée
 
-- Entrée canonique Operator : `public/agent_crypto_erith_ia/operator/index-40.6.99.html`
+- Entrée canonique Operator : `public/agent_crypto_erith_ia/operator/index-40.6.100.html`
 - Entrée courante Operator : `public/agent_crypto_erith_ia/operator/index.html`
-- Runtime partagé : `../administrator/index-40.6.99.html?view=intermediate`
+- Runtime partagé : `../administrator/index-40.6.100.html?view=intermediate&operator-entry=40.6.100`
 - Market Core : `38.15.11`
 
 ## Bridge
@@ -29,8 +29,6 @@ Operator ne reçoit pas de Bridge write, d'écriture fichiers/GitHub, de wallet,
 
 ## Version
 
-Cette livraison reste sur le runtime validé `40.6.99`. Elle ne crée volontairement pas `40.6.100` : aucun changement du moteur partagé n'est nécessaire pour donner à Operator son entrée et son contrat Bridge propres.
+Operator est aligné sur le runtime Administrator publié `40.6.100`. Cette synchronisation ne crée pas de second moteur et ne modifie pas Market Core `38.15.11`.
 
-## Canonical delivery commit
-
-`21dcca7b6784325b960edccddc69cd25cda45025`
+Le changement fonctionnel de `40.6.100` reste celui du runtime Administrator : **Decision Board Market Memory Count Truth Lock**. L'entrée Operator ne fait que rejoindre cette vérité de livraison.
