@@ -1,7 +1,6 @@
 /* Agent-Crypto @erith.IA — Version Truth Entry Authority V2
    Stable generic owner for canonical + immutable entries.
-   Immutable entry pathname is authoritative when present.
-   Canonical index.html may carry an explicit ac-build handoff after a validated manifest update.
+   40.6.91 adds footer truth synchronization and cache-busted Source demand repair.
    Published-build authority remains build.json.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -21,6 +20,7 @@
   const BUILD = String(entryMatch?.[1] || (BUILD_RE.test(requestedBuild) ? requestedBuild : embeddedBuild) || "UNKNOWN").trim();
   const parts = value => String(value || "").split(".").map(x => Number.parseInt(x, 10) || 0);
   const compare = (a, b) => { const A = parts(a), B = parts(b), n = Math.max(A.length, B.length); for (let i = 0; i < n; i += 1) { const d = (A[i] || 0) - (B[i] || 0); if (d) return d; } return 0; };
+
   const forceMetaTruth = () => {
     const admin = document.querySelector('meta[name="administrator-build"]');
     const atlas = document.querySelector('meta[name="atlas-build"]');
@@ -30,6 +30,32 @@
     if (engine && !String(engine.content || "").trim()) engine.content = ENGINE;
     if (/Build\s+\d+\.\d+\.\d+/i.test(document.title)) document.title = document.title.replace(/Build\s+\d+\.\d+\.\d+/i, `Build ${BUILD}`);
   };
+
+  const syncFooterTruth = () => {
+    const footer = document.getElementById("footerRelease");
+    if (!footer) return false;
+    const current = String(footer.textContent || "").trim();
+    let next = current;
+    next = next.replace(/Administrator\s+\d+\.\d+\.\d+/gi, `Administrator ${BUILD}`);
+    next = next.replace(/Build\s+\d+\.\d+\.\d+/gi, `Build ${BUILD}`);
+    if (next === current && !/\d+\.\d+\.\d+/.test(current)) next = `Agent-Crypto @erith.IA · Administrator ${BUILD} · Market Core ${ENGINE}`;
+    footer.textContent = next;
+    footer.dataset.versionTruthOwner = OWNER;
+    footer.dataset.loadedBuild = BUILD;
+    return true;
+  };
+
+  const ensureSourceDemandRepair406091 = () => {
+    if (globalThis.ErithPrivateSourceDemand40486?.build === "40.6.91") return true;
+    if (document.querySelector('script[data-version-truth-source-loader-406091="true"]')) return true;
+    const script = document.createElement("script");
+    script.src = "./js/views/private-source-demand-loader.js?v=administrator-build-40.6.91-source-debug-1";
+    script.async = false;
+    script.dataset.versionTruthSourceLoader406091 = "true";
+    document.head.appendChild(script);
+    return true;
+  };
+
   forceMetaTruth();
   const previous = document.getElementById("atlasVersionTruthControl");
   const control = previous ? previous.cloneNode(true) : null;
@@ -39,8 +65,10 @@
   const legacyText = document.getElementById("atlasVersionControlText");
   if (legacyControl) { legacyControl.hidden = true; legacyControl.setAttribute("aria-hidden", "true"); legacyControl.style.display = "none"; legacyControl.dataset.versionTruthLegacySink = "true"; }
   if (legacyText) legacyText.dataset.versionTruthLegacySink = "true";
+
   let remote = null, state = "current", busy = false;
   const validRemote = value => !!value && typeof value === "object" && BUILD_RE.test(String(value.build || "").trim()) && String(value.engine || "").trim() === ENGINE;
+
   function render(next = remote, error = null, mode = null) {
     remote = validRemote(next) ? next : null;
     const published = remote ? String(remote.build).trim() : BUILD;
@@ -65,8 +93,10 @@
     document.documentElement.dataset.versionTruthPublished = published;
     document.documentElement.dataset.versionTruthState = state;
     document.documentElement.dataset.versionTruthAuthority = OWNER;
+    syncFooterTruth();
     return Object.freeze({ loaded: BUILD, published, state, update_available: newer });
   }
+
   async function fetchManifest() {
     const response = await fetch(`${MANIFEST}?v=${encodeURIComponent(BUILD)}&t=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -74,6 +104,7 @@
     if (!validRemote(result)) throw new Error("manifest-invalide");
     return result;
   }
+
   async function check(show = false) {
     if (busy) return false;
     busy = true;
@@ -82,6 +113,7 @@
     catch (error) { render(remote, error); return false; }
     finally { busy = false; }
   }
+
   const entryUrl = build => new URL(`./index-${build}.html`, location.href);
   async function probeEntry(url, build) {
     try {
@@ -95,12 +127,14 @@
       return pathnameProof && String(engineMatch?.[1] || "").trim() === ENGINE && ownerPresent;
     } catch (_) { return false; }
   }
+
   function canonicalFallbackUrl(build) {
     const target = new URL("./index.html", location.href);
     target.searchParams.set(BUILD_PARAM, build);
     target.searchParams.set(REFRESH_PARAM, `${build}-${Date.now()}`);
     return target;
   }
+
   async function applyAvailableUpdate() {
     if (busy || state !== "update-available") return false;
     busy = true; render(remote, null, "applying");
@@ -118,10 +152,16 @@
     } catch (error) { render(remote, error); return false; }
     finally { busy = false; }
   }
+
   async function onClick(event) { event?.preventDefault?.(); event?.stopPropagation?.(); event?.stopImmediatePropagation?.(); if (busy) return false; if (state === "update-available") return applyAvailableUpdate(); return check(true); }
+
   render();
+  ensureSourceDemandRepair406091();
   control?.addEventListener("click", onClick, { capture: true });
+  window.addEventListener("erith:system-hydrated", syncFooterTruth, { passive: true });
+  document.addEventListener("agentcrypto:current-finalized", syncFooterTruth, { passive: true });
   void check(false);
+
   globalThis.ErithVersionTruth = Object.freeze({
     owner: OWNER,
     build: BUILD,
@@ -133,6 +173,8 @@
     snapshot: () => Object.freeze({ loaded: BUILD, published: String(remote?.build || BUILD), state }),
     refresh: check,
     applyAvailableUpdate,
+    syncFooterTruth,
+    source_demand_repair_406091: true,
     single_visible_owner: true,
     immutable_entry_path_authority: true,
     canonical_build_param_fallback: true,
