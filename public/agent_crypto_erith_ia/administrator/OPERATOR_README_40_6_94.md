@@ -4,6 +4,14 @@
 **Market Core:** 38.15.11  
 **Runtime:** shared Administrator document, Operator presentation role.
 
+## Superseded
+
+This historical contract is preserved for continuity. The current Operator delivery contract is:
+
+`OPERATOR_README_40_6_99.md`
+
+The runtime principles below remain valid.
+
 ## Entry
 
 Use the existing Agent-Crypto entry with `?view=intermediate` to request the Operator view.
