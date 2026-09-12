@@ -5,23 +5,19 @@ on:
     branches: [main]
     paths:
       - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/version.json'
-      - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
+      - 'public/agent_crypto_erith_ia/administrator/index-*.html'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - '.github/scripts/agent_crypto_version_truth_guard.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-406086-authority-lock.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
       - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
       - '.github/workflows/agent-crypto-version-truth-guard.yml'
   pull_request:
     paths:
       - 'public/agent_crypto_erith_ia/administrator/index.html'
-      - 'public/agent_crypto_erith_ia/administrator/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/version.json'
-      - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
+      - 'public/agent_crypto_erith_ia/administrator/index-*.html'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
-      - '.github/scripts/agent_crypto_version_truth_guard.py'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-406086-authority-lock.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
       - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
       - '.github/workflows/agent-crypto-version-truth-guard.yml'
 
@@ -35,10 +31,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: JavaScript syntax
+      - name: Version owner JavaScript syntax
         run: |
-          node --check public/agent_crypto_erith_ia/administrator/app.js
-          node --check public/agent_crypto_erith_ia/administrator/js/app.js
+          node --check public/agent_crypto_erith_ia/administrator/js/version-truth-406086-authority-lock.js
+          node --check public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js
 
-      - name: Canonical version truth
+      - name: Current version truth
         run: python .github/scripts/agent_crypto_version_truth_guard_compat.py

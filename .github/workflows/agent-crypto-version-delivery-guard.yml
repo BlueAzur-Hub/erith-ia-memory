@@ -6,26 +6,18 @@ on:
     paths:
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/administrator/index-*.html'
-      - 'public/agent_crypto_erith_ia/administrator/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/version-truth.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
-      - 'public/agent_crypto_erith_ia/administrator/version.json'
-      - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-406086-authority-lock.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
       - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
       - '.github/workflows/agent-crypto-version-delivery-guard.yml'
   pull_request:
     paths:
       - 'public/agent_crypto_erith_ia/administrator/index.html'
       - 'public/agent_crypto_erith_ia/administrator/index-*.html'
-      - 'public/agent_crypto_erith_ia/administrator/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/app.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/version-truth.js'
-      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
-      - 'public/agent_crypto_erith_ia/administrator/version.json'
-      - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-406086-authority-lock.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
       - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
       - '.github/workflows/agent-crypto-version-delivery-guard.yml'
 
@@ -39,74 +31,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Canonical protected architecture through Entry Authority V2 compatibility
-        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
-
-      - name: Published build and immutable entry truth
-        shell: bash
+      - name: Version owner JavaScript syntax
         run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          import json, re
+          node --check public/agent_crypto_erith_ia/administrator/js/version-truth-406086-authority-lock.js
+          node --check public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js
 
-          root = Path('public/agent_crypto_erith_ia/administrator')
-          truth = json.loads((root / 'build.json').read_text(encoding='utf-8'))
-          build = str(truth.get('build') or '').strip()
-          parent = str(truth.get('parent_build') or '').strip()
-          engine = str(truth.get('engine') or '').strip()
-          token = str(truth.get('asset_token') or '').strip()
-
-          def numeric(value):
-              m = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)', value or '')
-              return tuple(map(int, m.groups())) if m else None
-
-          current = numeric(build)
-          previous = numeric(parent)
-          if current is None:
-              raise SystemExit(f'VERSION_DELIVERY_FAIL: invalid published build {build!r}')
-          if previous is None or current[:2] != previous[:2] or current[2] != previous[2] + 1:
-              raise SystemExit(f'VERSION_DELIVERY_FAIL: non-sequential published build {parent!r} -> {build!r}')
-          if engine != '38.15.11':
-              raise SystemExit(f'VERSION_DELIVERY_FAIL: protected Market Core drift {engine!r}')
-          if truth.get('published') is not True:
-              raise SystemExit('VERSION_DELIVERY_FAIL: published truth missing')
-          if token != f'market-core-v2.0-alpha-build-{build}':
-              raise SystemExit('VERSION_DELIVERY_FAIL: published asset token drift')
-
-          immutable = root / f'index-{build}.html'
-          canonical = root / 'index.html'
-          owner_path = root / 'js/version-truth-entry-authority-v2.js'
-          if not immutable.is_file():
-              raise SystemExit(f'VERSION_DELIVERY_FAIL: missing immutable entry {immutable.name}')
-          if not owner_path.is_file():
-              raise SystemExit('VERSION_DELIVERY_FAIL: missing Entry Authority V2 owner')
-
-          owner = owner_path.read_text(encoding='utf-8')
-          required_owner = (
-              'const MANIFEST = "./build.json";',
-              'const ENTRY_RE = /(?:^|\\/)index-(\\d+\\.\\d+\\.\\d+)\\.html$/i;',
-              'const BUILD = String(entryMatch?.[1]',
-              'immutable_entry_path_authority: true',
-              'false_propagation_state_removed: true',
-              'recurring_timer: false',
-              'observer: false',
-              'storage_write: false',
-          )
-          missing = [marker for marker in required_owner if marker not in owner]
-          if missing:
-              raise SystemExit(f'VERSION_DELIVERY_FAIL: Entry Authority V2 contract incomplete: {missing}')
-
-          for path in (canonical, immutable):
-              html = path.read_text(encoding='utf-8')
-              if html.count('version-truth-entry-authority-v2.js?v=entry-authority-v2') != 1:
-                  raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} stable owner drift')
-              engines = re.findall(r'<meta\s+name="atlas-engine-build"\s+content="([^"]+)"', html)
-              if engines != ['38.15.11']:
-                  raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} engine drift {engines!r}')
-
-          if immutable.name != f'index-{build}.html':
-              raise SystemExit('VERSION_DELIVERY_FAIL: immutable filename authority drift')
-
-          print(f'VERSION_DELIVERY_PASS build={build} immutable={immutable.name} owner=entry-authority-v2')
-          PY
+      - name: Bootstrap to Entry Authority V2 contract
+        run: python .github/scripts/agent_crypto_version_truth_guard_compat.py

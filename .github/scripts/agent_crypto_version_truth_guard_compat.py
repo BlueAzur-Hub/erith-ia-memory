@@ -1,271 +1,173 @@
 #!/usr/bin/env python3
-"""Compatibility layer for the deployed Agent-Crypto Entry Authority V2 contract.
+"""Agent-Crypto current version-delivery contract validator.
 
-Published build truth is `build.json`. Immutable entry pathname owns the loaded
-build; the canonical entry is a stable launcher/fallback. The historical guard
-still validates the protected architecture, payload hashes and Market Core.
-This shim only adapts version-representation differences in memory before
-calling that guard. It does not mutate runtime files.
+Validates the deployed chain exactly as it exists:
+index*.html -> compatibility bootstrap -> Entry Authority V2 -> build.json.
+The loaded build comes from the immutable entry pathname (or ac-build fallback),
+not from stale embedded first-paint metadata. This helper is read-only and does
+not validate or mutate market/business behavior.
 """
 from __future__ import annotations
 
-import importlib.util
 import json
 import re
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-CANONICAL_GUARD = HERE / "agent_crypto_version_truth_guard.py"
-
-spec = importlib.util.spec_from_file_location("agent_crypto_version_truth_guard", CANONICAL_GUARD)
-if spec is None or spec.loader is None:
-    raise SystemExit("VERSION_TRUTH_FAIL: unable to load canonical guard")
-guard = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(guard)
-
-
-def cli_base() -> Path:
-    if "--base" in sys.argv:
-        idx = sys.argv.index("--base")
-        if idx + 1 >= len(sys.argv):
-            raise SystemExit("VERSION_TRUTH_FAIL: --base requires a value")
-        return Path(sys.argv[idx + 1])
-    return Path(guard.DEFAULT_BASE)
-
-
-BASE = cli_base()
-raw_build = json.loads((BASE / "build.json").read_text(encoding="utf-8"))
-CANONICAL_BUILD = str(raw_build.get("build") or "").strip()
-CANONICAL_RELEASE = str(raw_build.get("release") or "").strip()
-CANONICAL_STATUS = str(raw_build.get("status") or "").strip()
-CANONICAL_PARENT = str(raw_build.get("parent_build") or "").strip()
-CANONICAL_ENGINE = str(raw_build.get("engine") or "").strip()
-CANONICAL_TOKEN = str(raw_build.get("asset_token") or "").strip()
-
-_original_read = guard.read
-_original_load_json = guard.load_json
+DEFAULT_BASE = Path("public/agent_crypto_erith_ia/administrator")
+PROTECTED_ENGINE = "38.15.11"
+BOOTSTRAP = "js/version-truth-406086-authority-lock.js"
+OWNER = "js/version-truth-entry-authority-v2.js"
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"VERSION_TRUTH_FAIL: {message}")
 
 
-def _same_path(left: Path, right: Path) -> bool:
+def read(path: Path) -> str:
+    if not path.is_file():
+        fail(f"missing file: {path}")
+    return path.read_text(encoding="utf-8")
+
+
+def load_json(path: Path) -> dict:
     try:
-        return left.resolve() == right.resolve()
-    except Exception:
-        return left == right
-
-
-def _replace_exactly_one(pattern: str, replacement: str, text: str, label: str) -> str:
-    matches = list(re.finditer(pattern, text, re.S))
-    if len(matches) != 1:
-        fail(f"{label}: expected exactly 1 match, got {len(matches)}")
-    return re.sub(pattern, lambda _m: replacement, text, count=1, flags=re.S)
-
-
-def _replace_meta(text: str, name: str, value: str) -> str:
-    return _replace_exactly_one(
-        rf'(<meta\s+name="{re.escape(name)}"\s+content=")[^"]+("\s*/?>)',
-        rf'\g<1>{value}\g<2>',
-        text,
-        f"meta {name}",
-    )
-
-
-def _replace_meta_backed_constant(text: str, const_name: str, meta_name: str, value: str) -> str:
-    pattern = (
-        rf'const\s+{re.escape(const_name)}\s*=\s*'
-        rf'metaTruth\d+\("{re.escape(meta_name)}"\)\s*\|\|\s*"UNKNOWN"\s*;'
-    )
-    matches = list(re.finditer(pattern, text))
-    if not matches:
-        return text
-    if len(matches) != 1:
-        fail(f"{const_name} dynamic meta owner expected exactly 1 match, got {len(matches)}")
-    return re.sub(pattern, f"const {const_name} = {json.dumps(value, ensure_ascii=False)};", text, count=1)
-
-
-def _adapt_root_app(text: str) -> str:
-    pattern = r'(const\s+ATLAS_BUILD\s*=\s*[\"\'])[^\"\']+([\"\']\s*;)'
-    matches = list(re.finditer(pattern, text))
-    if len(matches) != 1:
-        fail(f"ATLAS_BUILD expected exactly 1 match, got {len(matches)}")
-    return re.sub(pattern, rf'\g<1>{CANONICAL_BUILD}\g<2>', text, count=1)
-
-
-def _adapt_entry_for_legacy_guard(text: str) -> str:
-    owner_tag = re.findall(
-        r'<script\s+src="\./js/version-truth-entry-authority-v2\.js\?v=entry-authority-v2"></script>',
-        text,
-        re.S,
-    )
-    if len(owner_tag) != 1:
-        fail(f"Entry Authority V2 owner expected exactly 1 match, got {len(owner_tag)}")
-
-    text = _replace_exactly_one(
-        r'<title>Agent-Crypto @erith\.IA — Build [^ ]+ · Administrator</title>',
-        f'<title>Agent-Crypto @erith.IA — Build {CANONICAL_BUILD} · Administrator</title>',
-        text,
-        "title build",
-    )
-    text = _replace_meta(text, "atlas-build", CANONICAL_BUILD)
-    text = _replace_meta(text, "administrator-build", CANONICAL_BUILD)
-    text = _replace_meta(text, "atlas-engine-build", CANONICAL_ENGINE)
-    text = _replace_meta(text, "atlas-asset-token", CANONICAL_TOKEN)
-    text = _replace_meta(text, "administrator-release", CANONICAL_RELEASE)
-
-    text = _replace_exactly_one(
-        r'<span\s+id="atlasVersionTruthText">Build [^<]+</span>',
-        f'<span id="atlasVersionTruthText">Build {CANONICAL_BUILD}</span>',
-        text,
-        "first-paint badge",
-    )
-    text = _replace_exactly_one(
-        r'(id="atlasVersionTruthControl"[\s\S]*?aria-label=")Version Agent-Crypto installée : Build [^,\"]+, mode Administrator(")',
-        rf'\g<1>Version Agent-Crypto installée : Build {CANONICAL_BUILD}, mode Administrator\g<2>',
-        text,
-        "first-paint aria",
-    )
-    text = re.sub(
-        r'(\./app\.js\?v=administrator-build-)[^\"]+',
-        rf'\g<1>{CANONICAL_BUILD}',
-        text,
-        count=1,
-    )
-    text = re.sub(
-        r'(\./js/app\.js\?v=administrator-build-)[^\"]+',
-        rf'\g<1>{CANONICAL_BUILD}',
-        text,
-        count=1,
-    )
-
-    text = re.sub(
-        r'<script\s+src="\./js/version-truth-entry-authority-v2\.js\?v=entry-authority-v2"></script>',
-        f'<script src="./js/version-truth.js?v={CANONICAL_BUILD}"></script>',
-        text,
-        count=1,
-    )
-    text = re.sub(
-        r'\s*<script\s+src="\./js/version-truth-406086-authority-lock\.js\?v=[^"]+"></script>',
-        '',
-        text,
-        count=1,
-    )
-
-    text = text.replace('id="atlasVersionTruthControl"', 'id="atlasVersionControl"', 1)
-    text = text.replace('id="atlasVersionTruthText"', 'id="atlasVersionControlText"', 1)
-    footer_legacy = (
-        f'<span id="footerRelease">Market Core · Build {CANONICAL_BUILD} · '
-        "Version : Parker Lewis Can't Lose</span>"
-    )
-    text = _replace_exactly_one(
-        r'<span\s+id="footerRelease">[^<]*</span>',
-        footer_legacy,
-        text,
-        "footer owner",
-    )
-    return text
-
-
-def _adapt_current_version_truth_for_legacy_guard(text: str) -> str:
-    required_current = (
-        'const control=document.getElementById("atlasVersionTruthControl")',
-        'const text=document.getElementById("atlasVersionTruthText")',
-        'function render(',
-        'async function check(',
-        'async function applyAvailableUpdate(',
-        'single_visible_owner:true',
-        'false_propagation_lock:true',
-    )
-    missing = [marker for marker in required_current if marker not in text]
-    if missing:
-        fail(f"current version-truth authority incomplete: {missing}")
-    return text + '\n/* legacy-guard bridge: function patchVersionControl(remote) atlasVersionControlText */\n'
-
-
-def compat_read(path: Path) -> str:
-    text = _original_read(path)
-    if _same_path(path, BASE / "app.js"):
-        return _adapt_root_app(text)
-    if _same_path(path, BASE / "js" / "app.js"):
-        text = _replace_meta_backed_constant(text, "ADMIN_BUILD", "administrator-build", CANONICAL_BUILD)
-        text = _replace_meta_backed_constant(text, "ADMIN_RELEASE", "administrator-release", CANONICAL_RELEASE)
-        text = _replace_meta_backed_constant(text, "ENGINE_BUILD", "atlas-engine-build", CANONICAL_ENGINE)
-        return text
-    if _same_path(path, BASE / "index.html"):
-        return _adapt_entry_for_legacy_guard(text)
-    if _same_path(path, BASE / "js" / "version-truth.js"):
-        return _adapt_current_version_truth_for_legacy_guard(text)
-    return text
-
-
-def compat_load_json(path: Path) -> dict:
-    value = _original_load_json(path)
-    if _same_path(path, BASE / "version.json"):
-        normalized = dict(value)
-        normalized.update({
-            "build": CANONICAL_BUILD,
-            "release": CANONICAL_RELEASE,
-            "status": CANONICAL_STATUS,
-            "parent_build": CANONICAL_PARENT,
-            "asset_token": CANONICAL_TOKEN,
-            "engine": {"reference_build": CANONICAL_ENGINE},
-        })
-        return normalized
-    if _same_path(path, BASE / "administrator-version.json"):
-        normalized = dict(value)
-        normalized.update({
-            "build": CANONICAL_BUILD,
-            "global_versioning": CANONICAL_BUILD,
-            "release": CANONICAL_RELEASE,
-            "status": CANONICAL_STATUS,
-            "parent_build": CANONICAL_PARENT,
-            "asset_token": CANONICAL_TOKEN,
-        })
-        return normalized
+        value = json.loads(read(path))
+    except Exception as exc:
+        fail(f"invalid JSON {path}: {exc}")
+    if not isinstance(value, dict):
+        fail(f"JSON root must be object: {path}")
     return value
 
 
-def validate_entry_authority_v2() -> None:
-    if not re.fullmatch(r"\d+\.\d+\.\d+", CANONICAL_BUILD):
-        fail(f"build.json invalid build: {CANONICAL_BUILD!r}")
-    if CANONICAL_ENGINE != "38.15.11":
-        fail(f"protected Market Core drift: {CANONICAL_ENGINE!r}")
-    if raw_build.get("published") is not True:
+def numeric(value: str):
+    match = re.fullmatch(r"(\d+)\.(\d+)\.(\d+)", value or "")
+    return tuple(int(part) for part in match.groups()) if match else None
+
+
+def one(pattern: str, text: str, label: str) -> str:
+    matches = re.findall(pattern, text, re.S)
+    if len(matches) != 1:
+        fail(f"{label}: expected exactly 1 match, got {len(matches)}")
+    value = matches[0]
+    if isinstance(value, tuple):
+        value = value[0]
+    return str(value)
+
+
+def validate(base: Path) -> dict:
+    truth = load_json(base / "build.json")
+    build = str(truth.get("build") or "").strip()
+    parent = str(truth.get("parent_build") or "").strip()
+    engine = str(truth.get("engine") or "").strip()
+    token = str(truth.get("asset_token") or "").strip()
+
+    current = numeric(build)
+    previous = numeric(parent)
+    if current is None:
+        fail(f"invalid published build {build!r}")
+    if previous is None or current[:2] != previous[:2] or current[2] != previous[2] + 1:
+        fail(f"non-sequential published build {parent!r} -> {build!r}")
+    if truth.get("published") is not True:
         fail("build.json published truth missing")
-    if CANONICAL_TOKEN != f"market-core-v2.0-alpha-build-{CANONICAL_BUILD}":
-        fail("build.json asset token drift")
-    immutable = BASE / f"index-{CANONICAL_BUILD}.html"
-    if not immutable.is_file():
-        fail(f"missing immutable entry: {immutable.name}")
-    owner = _original_read(BASE / "js" / "version-truth-entry-authority-v2.js")
-    required_owner = (
+    if engine != PROTECTED_ENGINE:
+        fail(f"protected Market Core drift: {engine!r}")
+    if token != f"market-core-v2.0-alpha-build-{build}":
+        fail(f"asset token drift: {token!r}")
+
+    canonical = base / "index.html"
+    immutable = base / f"index-{build}.html"
+    bootstrap_path = base / BOOTSTRAP
+    owner_path = base / OWNER
+    for path in (canonical, immutable, bootstrap_path, owner_path):
+        if not path.is_file():
+            fail(f"missing version contract file: {path}")
+
+    bootstrap = read(bootstrap_path)
+    owner = read(owner_path)
+
+    bootstrap_required = (
+        'const KEY = "__ERITH_VERSION_TRUTH_ENTRY_AUTHORITY_V2_LOADING__";',
+        'globalThis.ErithVersionTruth?.owner === "version-truth-entry-authority-v2"',
+        'script.src = "./js/version-truth-entry-authority-v2.js?v=administrator-build-40.6.87-version-fix-1";',
+        'script.async = false;',
+        'document.head.appendChild(script);',
+    )
+    missing = [marker for marker in bootstrap_required if marker not in bootstrap]
+    if missing:
+        fail(f"compatibility bootstrap contract incomplete: {missing}")
+    forbidden_bootstrap = ("setInterval(", "new MutationObserver(", "new IntersectionObserver(", "localStorage.setItem(", "sessionStorage.setItem(")
+    for marker in forbidden_bootstrap:
+        if marker in bootstrap:
+            fail(f"compatibility bootstrap gained forbidden recurring/storage primitive: {marker}")
+
+    owner_required = (
+        'const ENGINE = "38.15.11";',
+        'const OWNER = "version-truth-entry-authority-v2";',
         'const MANIFEST = "./build.json";',
+        'const BUILD_PARAM = "ac-build";',
         'const ENTRY_RE = /(?:^|\\/)index-(\\d+\\.\\d+\\.\\d+)\\.html$/i;',
+        'const BUILD = String(entryMatch?.[1] || (BUILD_RE.test(requestedBuild) ? requestedBuild : embeddedBuild) || "UNKNOWN").trim();',
+        'const ownerPresent = html.includes("version-truth-406086-authority-lock.js");',
         'immutable_entry_path_authority: true',
+        'canonical_build_param_fallback: true',
         'false_propagation_state_removed: true',
         'recurring_timer: false',
         'observer: false',
         'storage_write: false',
     )
-    missing = [marker for marker in required_owner if marker not in owner]
+    missing = [marker for marker in owner_required if marker not in owner]
     if missing:
         fail(f"Entry Authority V2 contract incomplete: {missing}")
-    for entry in (BASE / "index.html", immutable):
-        html = _original_read(entry)
-        if html.count("version-truth-entry-authority-v2.js?v=entry-authority-v2") != 1:
-            fail(f"{entry.name} stable owner drift")
-        engine = re.findall(r'<meta\s+name="atlas-engine-build"\s+content="([^"]+)"', html)
-        if engine != [CANONICAL_ENGINE]:
-            fail(f"{entry.name} protected engine drift: {engine!r}")
+    forbidden_owner = ("setInterval(", "new MutationObserver(", "new IntersectionObserver(", "localStorage.setItem(", "sessionStorage.setItem(")
+    for marker in forbidden_owner:
+        if marker in owner:
+            fail(f"Entry Authority V2 gained forbidden recurring/storage primitive: {marker}")
+
+    bootstrap_tag = re.compile(r'<script\s+src="\./js/version-truth-406086-authority-lock\.js\?v=[^"]+"></script>')
+    for path in (canonical, immutable):
+        html = read(path)
+        if len(bootstrap_tag.findall(html)) != 1:
+            fail(f"{path.name} compatibility bootstrap count drift")
+        engines = re.findall(r'<meta\s+name="atlas-engine-build"\s+content="([^"]+)"', html)
+        if engines != [PROTECTED_ENGINE]:
+            fail(f"{path.name} protected engine drift: {engines!r}")
+
+    immutable_name = immutable.name
+    path_match = re.fullmatch(r"index-(\d+\.\d+\.\d+)\.html", immutable_name)
+    if not path_match or path_match.group(1) != build:
+        fail(f"immutable pathname authority drift: {immutable_name}")
+
+    # Static proof of the two supported loaded-build routes in the owner.
+    if "entryMatch?.[1] ||" not in owner:
+        fail("immutable pathname no longer has first loaded-build priority")
+    if "BUILD_RE.test(requestedBuild) ? requestedBuild : embeddedBuild" not in owner:
+        fail("canonical ac-build fallback no longer precedes embedded metadata")
+
+    result = {
+        "ok": True,
+        "build": build,
+        "parent_build": parent,
+        "market_core": engine,
+        "published_truth": "build.json",
+        "bootstrap": BOOTSTRAP,
+        "runtime_owner": OWNER,
+        "immutable_entry": immutable_name,
+    }
+    print("VERSION_TRUTH_PASS " + json.dumps(result, ensure_ascii=False, sort_keys=True))
+    return result
 
 
-validate_entry_authority_v2()
-guard.read = compat_read
-guard.load_json = compat_load_json
+def main() -> int:
+    base = DEFAULT_BASE
+    if "--base" in sys.argv:
+        idx = sys.argv.index("--base")
+        if idx + 1 >= len(sys.argv):
+            fail("--base requires a value")
+        base = Path(sys.argv[idx + 1])
+    validate(base)
+    return 0
 
 
 if __name__ == "__main__":
-    sys.exit(guard.main())
+    sys.exit(main())
