@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.93",
+  "build": "40.6.94",
   "engine": "38.15.11",
-  "release": "GENERIC VERSION TRUTH V3 · SOURCE DEMAND STABILIZATION",
+  "release": "OPERATOR ROLE CONTRACT FINAL",
   "published": true,
-  "status": "generic_version_truth_v3_source_demand_stabilization_406093",
-  "parent_build": "40.6.92",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.93",
-  "administrator_build": "40.6.93",
-  "build_label": "Build 40.6.93 · Administrator",
-  "release_status": "generic_version_truth_v3_source_demand_stabilization_406093",
-  "timestamp": "2026-09-12T05:00:00Z",
+  "status": "operator_role_contract_final_406094",
+  "parent_build": "40.6.93",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.94",
+  "administrator_build": "40.6.94",
+  "build_label": "Build 40.6.94 · Administrator",
+  "release_status": "operator_role_contract_final_406094",
+  "timestamp": "2026-09-12T05:10:00Z",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,7 +29,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v3.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.93.html",
+    "immutable_entry": "index-40.6.94.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -109,8 +109,18 @@
   "okx_wave_1_406087": {
     "backend_version": "1.4.2",
     "source_truth_primary": "binance",
-    "controls": ["kraken", "coinbase", "okx"],
-    "assets": ["BTC", "ETH", "BNB", "XRP", "SOL"],
+    "controls": [
+      "kraken",
+      "coinbase",
+      "okx"
+    ],
+    "assets": [
+      "BTC",
+      "ETH",
+      "BNB",
+      "XRP",
+      "SOL"
+    ],
     "okx_backend_proof": "5/5",
     "global_backend_quotes": "14/15",
     "coinbase_bnb_eur": "unavailable",
@@ -127,5 +137,30 @@
     "path": "architecture/build-history-through-40.6.86.json",
     "preserved_byte_for_byte": true,
     "reason": "keep published build manifest compact while preserving the complete historical cascade"
+  },
+  "operator_runtime_contract": {
+    "path": "architecture/operator-runtime-contract-40.6.94.json",
+    "operator_view_request": "?view=intermediate",
+    "shared_runtime": "administrator",
+    "query_parameter_is_authorization": false,
+    "grants_administrator_session": false,
+    "grants_trading": false,
+    "grants_private_exchange_api": false
+  },
+  "debug_406094": {
+    "scope": "Operator role contract only",
+    "corrections": [
+      "formalize Operator as presentation/workspace role over shared Administrator runtime",
+      "state role precedence and explicit authorization boundary",
+      "preserve read-only Source Truth and protected Market Core 38.15.11"
+    ],
+    "runtime_code_changed": false,
+    "business_logic_changed": false,
+    "market_data_changed": false,
+    "market_core_changed": false,
+    "aether_changed": false,
+    "oracle_changed": false,
+    "trading_changed": false,
+    "expected_operator": "?view=intermediate requests Operator when no valid local Administrator session is active"
   }
 }
