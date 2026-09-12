@@ -8,7 +8,7 @@
   if (globalThis.ErithVersionTruth?.owner === "version-truth-entry-authority-v2" || globalThis[KEY]) return;
   globalThis[KEY] = true;
   const script = document.createElement("script");
-  script.src = "./js/version-truth-entry-authority-v2.js?v=administrator-build-40.6.87";
+  script.src = "./js/version-truth-entry-authority-v2.js?v=administrator-build-40.6.87-version-fix-1";
   script.async = false;
   script.dataset.versionTruthCompatibilityBootstrap = "40.6.86-to-entry-authority-v2";
   script.addEventListener("load", () => { globalThis[KEY] = false; }, { once: true });
