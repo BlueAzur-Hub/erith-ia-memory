@@ -1,5 +1,6 @@
 /* Agent-Crypto @erith.IA — stable Source Truth demand loader
    40.6.93 removes build-specific ownership from the loader.
+   40.6.96+ loads the bounded post-handoff stabilization layer by immutable entry build.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
@@ -9,9 +10,25 @@
   if(globalThis[INSTANCE_KEY])return;
   globalThis[INSTANCE_KEY]=true;
   const metaBuild=()=>String(document.querySelector('meta[name="administrator-build"]')?.content||"").trim();
-  const BUILD=String(globalThis.ErithVersionTruth?.build||metaBuild()||"runtime").trim();
+  const pathBuild=()=>String(location.pathname||"").match(/(?:^|\/)index-(\d+\.\d+\.\d+)\.html$/i)?.[1]||"";
+  const BUILD=String(globalThis.ErithVersionTruth?.build||pathBuild()||metaBuild()||"runtime").trim();
   const SRC=`./js/views/private-backend-sources.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
   let state="idle",promise=null,reason="",loadedAt=0,lastError="";
+
+  const parts=value=>String(value||"").split(".").map(x=>Number.parseInt(x,10)||0);
+  const atLeast=target=>{const A=parts(BUILD),B=parts(target),n=Math.max(A.length,B.length);for(let i=0;i<n;i+=1){const d=(A[i]||0)-(B[i]||0);if(d)return d>0;}return true;};
+
+  function ensurePostHandoff(){
+    if(!atLeast("40.6.96"))return false;
+    if(globalThis.__AGENT_CRYPTO_POST_HANDOFF_406096__)return true;
+    if(document.querySelector('script[data-agent-crypto-post-handoff-406096="true"]'))return true;
+    const script=document.createElement("script");
+    script.src=`./js/agent-crypto-post-handoff-406096.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.async=false;
+    script.dataset.agentCryptoPostHandoff406096="true";
+    document.head.appendChild(script);
+    return true;
+  }
 
   function settleReady(){state="ready";loadedAt=Date.now();lastError="";return true;}
 
@@ -55,14 +72,17 @@
 
   const hash=String(location.hash||"");
   if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence4056"].includes(hash))void ensure("direct-hash");
+  ensurePostHandoff();
 
   const API=Object.freeze({
     build:BUILD,
     ensure,
+    ensurePostHandoff,
     snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend"}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
     sources_reparenting:false,
+    post_handoff_stabilization:atLeast("40.6.96"),
     new_timer:false,
     new_observer:false,
     new_storage_owner:false,
