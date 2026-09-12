@@ -3,6 +3,7 @@
    40.6.97: existing retrospective-validation.js is activated after its dependencies exist.
    40.6.98: Source Truth/Source Intelligence gains a read-side per-provider freshness gate.
    40.6.98 hotfix: retrospective reader can mount directly in Decision Board without legacy anchors.
+   40.6.98 hotfix: freshness UI reflects current CEX ages and requests one bounded recovery refresh when stale.
    No trading, wallet, private API, recurring timer, MutationObserver, or storage owner. */
 (()=>{
   "use strict";
@@ -169,6 +170,13 @@
     const verdict=spread!==null&&spread<=0.25?"coherent":spread!==null&&spread<=0.75?"watch":"divergent";
     return {providers:vals.length,spread_pct:spread,verdict};
   };
+  const freshnessText=seconds=>{
+    const n=numeric(seconds);
+    if(n===null)return "—";
+    if(n<60)return `${Math.round(n)}s`;
+    if(n<3600)return `${Math.round(n/60)} min`;
+    return `${(n/3600).toFixed(1)} h`;
+  };
 
   function freshnessLimitSeconds(api){
     try{
@@ -214,24 +222,65 @@
     const gate=truth?.freshness_gate||null;
     if(!gate)return raw;
     const cex=Object.freeze({...raw.cex,comparable_assets:Math.min(Number(raw?.cex?.comparable_assets||0),Number(gate.comparable_assets||0)),freshness_gate:true});
-    const freshness=Object.freeze({...raw.freshness,cex_max_age_seconds:gate.max_age_seconds,cex_limit_seconds:gate.limit_seconds,cex_stale_providers:gate.stale_providers});
+    const freshness=Object.freeze({...raw.freshness,max_age_seconds:gate.max_age_seconds,cex_max_age_seconds:gate.max_age_seconds,cex_limit_seconds:gate.limit_seconds,cex_stale_providers:gate.stale_providers,current_age_recomputed:true});
     const rules=Object.freeze({...raw.rules,per_provider_freshness_gate:true,stale_cex_excluded_from_comparison:true});
     return Object.freeze({...raw,state:gate.ready?raw.state:"partial",cex,freshness,rules,freshness_gate:gate});
   }
 
   let sourceRaw=null,sourceGuard=null;
+  let freshnessRecoveryInflight=false,freshnessRecoveryLastAt=0;
+
+  function sourceGridArticle(label){
+    const grid=document.getElementById("privateSourceIntelligenceGrid4056");
+    if(!grid)return null;
+    return Array.from(grid.querySelectorAll(":scope > article")).find(article=>String(article.querySelector("span")?.textContent||"").trim()===label)||null;
+  }
+
+  function requestFreshnessRecovery(gate){
+    if(!sourceRaw||!gate||gate.ready||typeof sourceRaw.autoRefresh!=="function")return false;
+    const now=Date.now();
+    const cooldown=Math.max(60000,Number(gate.limit_seconds||300)*1000);
+    if(freshnessRecoveryInflight||now-freshnessRecoveryLastAt<cooldown)return false;
+    freshnessRecoveryInflight=true;
+    freshnessRecoveryLastAt=now;
+    document.documentElement.dataset.sourceFreshnessRecovery406098="running";
+    Promise.resolve(sourceRaw.autoRefresh("freshness-guard",{force:true}))
+      .then(result=>{document.documentElement.dataset.sourceFreshnessRecovery406098=result?"refreshed":"no-result";})
+      .catch(error=>{document.documentElement.dataset.sourceFreshnessRecovery406098="error";document.documentElement.dataset.sourceFreshnessRecoveryError406098=String(error?.message||error).slice(0,180);})
+      .finally(()=>{freshnessRecoveryInflight=false;try{applySourceUiGuard();}catch(_){}});
+    return true;
+  }
+
   function applySourceUiGuard(){
     if(!sourceGuard)return null;
     const truth=sourceGuard.snapshot?.()||null;
     const intel=sourceGuard.sourceIntelligence?.()||null;
     const gate=truth?.freshness_gate||intel?.freshness_gate||null;
-    if(!gate||gate.ready)return gate;
+    if(!gate)return null;
+
+    const cexArticle=sourceGridArticle("CEX");
+    if(cexArticle){
+      const b=cexArticle.querySelector("b"),small=cexArticle.querySelector("small");
+      if(b)b.textContent=`${gate.comparable_assets}/${gate.total_assets}`;
+      if(small)small.textContent=gate.ready?"comparaisons CEX fraîches":`${Math.max(0,gate.known_samples-gate.stale_providers)}/${gate.known_samples} cotation(s) fraîche(s) · ${gate.stale_providers} périmée(s)`;
+    }
+    const freshnessArticle=sourceGridArticle("Fraîcheur");
+    if(freshnessArticle){
+      const b=freshnessArticle.querySelector("b"),small=freshnessArticle.querySelector("small");
+      if(b)b.textContent=freshnessText(gate.max_age_seconds);
+      if(small)small.textContent=`âge CEX recalculé maintenant · TTL ${gate.limit_seconds}s · ${gate.known_samples} horodatage(s)`;
+    }
+
+    document.documentElement.dataset.sourceFreshnessGateState406098=gate.ready?"ready":"stale";
+    if(gate.ready)return gate;
+
     const badge=document.getElementById("privateSourceIntelligenceStatus4056");
     if(badge){badge.className="pill warn";badge.textContent="FRAÎCHEUR PARTIELLE";}
     const detail=document.getElementById("privateSourceIntelligenceDetail4056");
-    if(detail)detail.textContent=`CEX frais ${gate.comparable_assets}/${gate.total_assets} · ${gate.stale_providers} cotation(s) périmée(s) exclue(s) · TTL ${gate.limit_seconds}s · lecture seule`;
+    if(detail)detail.textContent=`CEX frais ${gate.comparable_assets}/${gate.total_assets} · ${gate.stale_providers} cotation(s) périmée(s) exclue(s) · TTL ${gate.limit_seconds}s · récupération auto bornée`;
     const backendBadge=document.getElementById("privateBackendStatus4053");
     if(backendBadge){backendBadge.className="pill warn";backendBadge.textContent="CEX À RAFRAÎCHIR";}
+    requestFreshnessRecovery(gate);
     return gate;
   }
 
@@ -277,6 +326,8 @@
     retrospective_activation:atLeast("40.6.97"),
     retrospective_direct_board_mount:true,
     source_freshness_guard:atLeast("40.6.98"),
+    source_freshness_ui_live_age:true,
+    source_freshness_auto_recovery:true,
     strategyReceipt:()=>strategyReceipt,
     runStrategyProofOnce,
     activateRetrospective,
@@ -284,6 +335,7 @@
     ensureRetrospectiveStandaloneHost,
     installSourceGuard,
     applySourceUiGuard,
+    requestFreshnessRecovery,
     recurring_timer:false,
     observer:false,
     storage_write:false,
