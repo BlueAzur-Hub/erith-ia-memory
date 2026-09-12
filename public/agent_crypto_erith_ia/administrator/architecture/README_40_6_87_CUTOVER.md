@@ -1,1 +1,0 @@
-Cutover transaction follows immediately in the next commit: publish build.json 40.6.87, create immutable index-40.6.87.html from the validated 40.6.86 snapshot, and preserve the complete prior build manifest byte-for-byte.
