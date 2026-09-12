@@ -73,6 +73,36 @@
     return Number.isFinite(t) ? new Date(t).toLocaleString("fr-FR") : String(value);
   }
 
+  /* 40.6.100 — compact Decision Board count truth lock.
+     The legacy compact shell may expose summary.split.marketRecords, which is
+     not the canonical Market Memory counter. Reconcile presentation only after
+     the canonical Dual Memory reader has resolved its own read-only stats. */
+  function syncCompactMarketCount406100(market) {
+    const canonical = Number(market?.canonical || 0);
+    const status = byId("decisionBoardStatus");
+    const verdict = byId("decisionBoardVerdict");
+
+    if (status) {
+      const value = String(status.textContent || "");
+      if (/^CURRENT · mémoire \d+$/.test(value)) {
+        status.textContent = `CURRENT · mémoire ${canonical}`;
+      } else if (/^Détails à la demande · \d+ mémoire$/.test(value)) {
+        status.textContent = `Détails à la demande · ${canonical} mémoire`;
+      }
+    }
+
+    if (verdict) {
+      const value = String(verdict.textContent || "");
+      if (value.includes("Decision Board compact")) {
+        verdict.textContent = value.replace(/\d+ observation\(s\) marché/, `${canonical} observation(s) marché`);
+      }
+    }
+
+    const board = byId("decision-board");
+    if (board) board.dataset.compactMarketCountSource = "market-memory-canonical-406100";
+    return canonical;
+  }
+
   function ensureRoot() {
     let root = byId(ROOT_ID);
     if (root) return root;
@@ -146,6 +176,8 @@
       board.dataset.marketMemory = String(market.canonical);
       board.dataset.analyticalMemory = String(analytical.count);
     }
+
+    syncCompactMarketCount406100(market);
 
     const compareTitle = byId("decisionMemoryCompare")?.querySelector?.(".decision-memory-compare-head b");
     if (compareTitle) compareTitle.textContent = "Comparer les deux derniers relevés Market Memory";
@@ -232,7 +264,8 @@
     writes_memory: false,
     new_fetch: false,
     new_timer: false,
-    new_websocket: false
+    new_websocket: false,
+    compact_market_count_truth_406100: true
   });
   globalThis.atlasDecisionBoardDualMemory3950 = Object.freeze({ render, markdown });
 
