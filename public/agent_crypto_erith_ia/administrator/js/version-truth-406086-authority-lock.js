@@ -2,6 +2,7 @@
    40.6.93 advances the stable generic owner to Version Truth Entry Authority V3.
    40.6.103 adds a gated generated-report truth patch after the V3 owner is ready.
    40.6.104 adds a gated pedagogy truth patch for the reproduced stale interface label.
+   40.6.105 adds a gated TRADUS/Strategy A read-side comparison reconciliation.
    The path stays stable so validated index entries do not need document rewrites.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -26,24 +27,37 @@
       return true;
     };
 
-    if (atLeast("40.6.103")
-      && globalThis.AgentCryptoGeneratedReportVersionTruth406103?.build !== build
-      && !document.querySelector('script[data-generated-report-version-truth-406103="true"]')) {
-      const reportTruth = document.createElement("script");
-      reportTruth.src = `./js/generated-report-version-truth-406103.js?v=generated-report-version-truth-${encodeURIComponent(build)}`;
-      reportTruth.async = false;
-      reportTruth.dataset.generatedReportVersionTruth406103 = "true";
-      document.head.appendChild(reportTruth);
+    const loadPatch = (selector, src, datasetName) => {
+      if (document.querySelector(selector)) return;
+      const patch = document.createElement("script");
+      patch.src = src;
+      patch.async = false;
+      patch.dataset[datasetName] = "true";
+      document.head.appendChild(patch);
+    };
+
+    if (atLeast("40.6.103") && globalThis.AgentCryptoGeneratedReportVersionTruth406103?.build !== build) {
+      loadPatch(
+        'script[data-generated-report-version-truth-406103="true"]',
+        `./js/generated-report-version-truth-406103.js?v=generated-report-version-truth-${encodeURIComponent(build)}`,
+        "generatedReportVersionTruth406103"
+      );
     }
 
-    if (atLeast("40.6.104")
-      && globalThis.AgentCryptoPedagogyVersionTruth406104?.build !== build
-      && !document.querySelector('script[data-pedagogy-version-truth-406104="true"]')) {
-      const pedagogyTruth = document.createElement("script");
-      pedagogyTruth.src = `./js/pedagogy-version-truth-406104.js?v=pedagogy-version-truth-${encodeURIComponent(build)}`;
-      pedagogyTruth.async = false;
-      pedagogyTruth.dataset.pedagogyVersionTruth406104 = "true";
-      document.head.appendChild(pedagogyTruth);
+    if (atLeast("40.6.104") && globalThis.AgentCryptoPedagogyVersionTruth406104?.build !== build) {
+      loadPatch(
+        'script[data-pedagogy-version-truth-406104="true"]',
+        `./js/pedagogy-version-truth-406104.js?v=pedagogy-version-truth-${encodeURIComponent(build)}`,
+        "pedagogyVersionTruth406104"
+      );
+    }
+
+    if (atLeast("40.6.105") && !globalThis.AgentCryptoTradusStrategyReconcile406105) {
+      loadPatch(
+        'script[data-tradus-strategy-reconcile-406105="true"]',
+        `./js/tradus-strategy-a-reconcile-406105.js?v=tradus-strategy-reconcile-${encodeURIComponent(build)}`,
+        "tradusStrategyReconcile406105"
+      );
     }
   }, { once: true });
   script.addEventListener("error", () => {
