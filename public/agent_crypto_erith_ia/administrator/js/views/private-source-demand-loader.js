@@ -2,7 +2,7 @@
    40.6.93 removes build-specific ownership from the loader.
    40.6.95 hotfix loads the Strategy A Paper proof trigger repair without a build bump.
    40.6.96+ loads the bounded post-handoff stabilization layer by immutable entry build.
-   40.6.98 loads DEX exclusion diagnostics as a read-only observability layer.
+   40.6.98+ loads DEX exclusion diagnostics as a read-only observability layer.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
@@ -45,11 +45,11 @@
   }
 
   function ensureDexDiagnostics(){
-    if(BUILD!=="40.6.98")return false;
+    if(!atLeast("40.6.98"))return false;
     if(globalThis.AgentCryptoDexExclusionDiagnostics406098)return true;
     if(document.querySelector('script[data-dex-exclusion-diagnostics-406098="true"]'))return true;
     const script=document.createElement("script");
-    script.src="./js/dex-exclusion-diagnostics-406098.js?v=hotfix-dex-observability-1";
+    script.src=`./js/dex-exclusion-diagnostics-406098.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
     script.async=false;
     script.dataset.dexExclusionDiagnostics406098="true";
     document.head.appendChild(script);
@@ -114,7 +114,7 @@
     sources_reparenting:false,
     strategy_paper_proof_hotfix:BUILD==="40.6.95",
     post_handoff_stabilization:atLeast("40.6.96"),
-    dex_exclusion_diagnostics:BUILD==="40.6.98",
+    dex_exclusion_diagnostics:atLeast("40.6.98"),
     new_timer:false,
     new_observer:false,
     new_storage_owner:false,

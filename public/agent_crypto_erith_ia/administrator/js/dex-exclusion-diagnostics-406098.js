@@ -1,9 +1,12 @@
-/* Agent-Crypto @erith.IA — DEX exclusion diagnostics · 40.6.98
+/* Agent-Crypto @erith.IA — DEX exclusion diagnostics · 40.6.98+
    Read-only observability over the existing private backend Source Intelligence owner.
+   Build identity follows the immutable loaded entry / Version Truth owner.
    No network owner, timer, MutationObserver, storage write, canonical price, wallet or trade. */
 (()=>{
   "use strict";
-  const BUILD="40.6.98";
+  const metaBuild=()=>String(document.querySelector('meta[name="administrator-build"]')?.content||"").trim();
+  const pathBuild=()=>String(location.pathname||"").match(/(?:^|\/)index-(\d+\.\d+\.\d+)\.html$/i)?.[1]||"";
+  const BUILD=String(globalThis.ErithVersionTruth?.build||pathBuild()||metaBuild()||"runtime").trim();
   const ASSETS=Object.freeze(["BTC","ETH","BNB","XRP","SOL"]);
   const ROOT_ID="privateDexExclusionDiagnostics406098";
   let lastReport=null;
@@ -133,6 +136,7 @@
     render,
     report:()=>lastReport,
     read_only:true,
+    source_build_dynamic:true,
     new_network_owner:false,
     recurring_timer:false,
     observer:false,
