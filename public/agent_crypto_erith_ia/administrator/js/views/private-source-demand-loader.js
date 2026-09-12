@@ -1,5 +1,6 @@
 /* Agent-Crypto @erith.IA — stable Source Truth demand loader
    40.6.93 removes build-specific ownership from the loader.
+   40.6.95 hotfix loads the Strategy A Paper proof trigger repair without a build bump.
    40.6.96+ loads the bounded post-handoff stabilization layer by immutable entry build.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
@@ -17,6 +18,18 @@
 
   const parts=value=>String(value||"").split(".").map(x=>Number.parseInt(x,10)||0);
   const atLeast=target=>{const A=parts(BUILD),B=parts(target),n=Math.max(A.length,B.length);for(let i=0;i<n;i+=1){const d=(A[i]||0)-(B[i]||0);if(d)return d>0;}return true;};
+
+  function ensureStrategyProofHotfix(){
+    if(BUILD!=="40.6.95")return false;
+    if(globalThis.__ERITH_STRATEGY_A_PAPER_PROOF_HOTFIX_406095__)return true;
+    if(document.querySelector('script[data-strategy-a-paper-proof-hotfix-406095="true"]'))return true;
+    const script=document.createElement("script");
+    script.src="./js/strategy-a-paper-proof-hotfix-406095.js?v=hotfix-1";
+    script.async=false;
+    script.dataset.strategyAPaperProofHotfix406095="true";
+    document.head.appendChild(script);
+    return true;
+  }
 
   function ensurePostHandoff(){
     if(!atLeast("40.6.96"))return false;
@@ -72,16 +85,19 @@
 
   const hash=String(location.hash||"");
   if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence4056"].includes(hash))void ensure("direct-hash");
+  ensureStrategyProofHotfix();
   ensurePostHandoff();
 
   const API=Object.freeze({
     build:BUILD,
     ensure,
+    ensureStrategyProofHotfix,
     ensurePostHandoff,
     snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend"}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
     sources_reparenting:false,
+    strategy_paper_proof_hotfix:BUILD==="40.6.95",
     post_handoff_stabilization:atLeast("40.6.96"),
     new_timer:false,
     new_observer:false,
