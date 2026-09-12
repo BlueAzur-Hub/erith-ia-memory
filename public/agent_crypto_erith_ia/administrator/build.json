@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.94",
+  "build": "40.6.95",
   "engine": "38.15.11",
-  "release": "OPERATOR ROLE CONTRACT FINAL",
+  "release": "FINAL ADMINISTRATOR + OPERATOR HANDOFF",
   "published": true,
-  "status": "operator_role_contract_final_406094",
-  "parent_build": "40.6.93",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.94",
-  "administrator_build": "40.6.94",
-  "build_label": "Build 40.6.94 · Administrator",
-  "release_status": "operator_role_contract_final_406094",
-  "timestamp": "2026-09-12T05:10:00Z",
+  "status": "final_administrator_operator_handoff_406095",
+  "parent_build": "40.6.94",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.95",
+  "administrator_build": "40.6.95",
+  "build_label": "Build 40.6.95 · Administrator",
+  "release_status": "final_administrator_operator_handoff_406095",
+  "timestamp": "2026-09-12T04:55:00Z",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,7 +29,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v3.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.94.html",
+    "immutable_entry": "index-40.6.95.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -38,6 +38,31 @@
     "recurring_timer": false,
     "observer": false,
     "storage_write": false
+  },
+  "final_handoff_406095": {
+    "scope": "Administrator + Operator final handoff and CI V3 alignment",
+    "cascade": [
+      "40.6.93: generic Version Truth Entry Authority V3 + stable Source Truth demand loader",
+      "40.6.94: Operator role/authorization contract over shared Administrator runtime",
+      "40.6.95: current Version Truth and Version Delivery workflows aligned to V3 + final handoff"
+    ],
+    "release_document": "RELEASE_40_6_95_FINAL_HANDOFF.md",
+    "restart_prompt": "PROMPT_REPRISE_AERITH_7_AGENT_CRYPTO_40_6_95.md",
+    "operator_contract": "architecture/operator-runtime-contract-40.6.94.json",
+    "operator_readme": "OPERATOR_README_40_6_94.md",
+    "version_truth_guard": "Agent-Crypto Version Truth Guard",
+    "version_delivery_guard": "Agent-Crypto Version Delivery Guard",
+    "firefox_terrain_proof_pending": true,
+    "expected_firefox": "Build 40.6.95 · Administrator",
+    "business_logic_changed": false,
+    "market_data_changed": false,
+    "market_core_changed": false,
+    "web_classic_changed": false,
+    "aether_changed": false,
+    "oracle_changed": false,
+    "lecture_technique_changed": false,
+    "strategy_a_changed": false,
+    "trading_changed": false
   },
   "debug_406093": {
     "scope": "version truth + Source Truth loader ownership only",
@@ -55,8 +80,7 @@
     "market_core_changed": false,
     "aether_changed": false,
     "oracle_changed": false,
-    "trading_changed": false,
-    "expected_firefox": "header Build 40.6.93 · Administrator; Source Truth remains under System → Backend / API"
+    "trading_changed": false
   },
   "debug_406092": {
     "scope": "visible version truth only",
@@ -73,8 +97,7 @@
     "market_core_changed": false,
     "aether_changed": false,
     "oracle_changed": false,
-    "trading_changed": false,
-    "expected_firefox": "header Build 40.6.92 · Administrator; footer Administrator 40.6.92; bottom mirror AGENT-CRYPTO 40.6.92 · ADMINISTRATOR"
+    "trading_changed": false
   },
   "debug_406091": {
     "scope": "version/footer + Sources discoverability debug",
@@ -98,8 +121,7 @@
     "business_logic_changed": false,
     "market_data_changed": false,
     "ui_changed": false,
-    "market_core_changed": false,
-    "expected_firefox": "Build 40.6.90 · Administrator"
+    "market_core_changed": false
   },
   "version_guard_406089": {
     "scope": "versioning only",
@@ -109,18 +131,8 @@
   "okx_wave_1_406087": {
     "backend_version": "1.4.2",
     "source_truth_primary": "binance",
-    "controls": [
-      "kraken",
-      "coinbase",
-      "okx"
-    ],
-    "assets": [
-      "BTC",
-      "ETH",
-      "BNB",
-      "XRP",
-      "SOL"
-    ],
+    "controls": ["kraken", "coinbase", "okx"],
+    "assets": ["BTC", "ETH", "BNB", "XRP", "SOL"],
     "okx_backend_proof": "5/5",
     "global_backend_quotes": "14/15",
     "coinbase_bnb_eur": "unavailable",
@@ -132,12 +144,6 @@
     "trading_endpoint": false,
     "private_exchange_api": false
   },
-  "history": {
-    "through_build": "40.6.86",
-    "path": "architecture/build-history-through-40.6.86.json",
-    "preserved_byte_for_byte": true,
-    "reason": "keep published build manifest compact while preserving the complete historical cascade"
-  },
   "operator_runtime_contract": {
     "path": "architecture/operator-runtime-contract-40.6.94.json",
     "operator_view_request": "?view=intermediate",
@@ -147,20 +153,18 @@
     "grants_trading": false,
     "grants_private_exchange_api": false
   },
-  "debug_406094": {
-    "scope": "Operator role contract only",
-    "corrections": [
-      "formalize Operator as presentation/workspace role over shared Administrator runtime",
-      "state role precedence and explicit authorization boundary",
-      "preserve read-only Source Truth and protected Market Core 38.15.11"
-    ],
-    "runtime_code_changed": false,
-    "business_logic_changed": false,
-    "market_data_changed": false,
-    "market_core_changed": false,
-    "aether_changed": false,
-    "oracle_changed": false,
-    "trading_changed": false,
-    "expected_operator": "?view=intermediate requests Operator when no valid local Administrator session is active"
+  "residual_debts": {
+    "analytical_memory_to_decision_board_p1": "incomplete",
+    "localstorage_quota_historical": "open_environment_debt_indexeddb_v7_working_path_preserved",
+    "strategy_a_paper_v2_self_tests": "not_recertified_here",
+    "coingecko_coverage": "249/250 historical observation",
+    "dex_identity": "partial",
+    "final_firefox_terrain_proof": "pending_user_validation"
+  },
+  "history": {
+    "through_build": "40.6.86",
+    "path": "architecture/build-history-through-40.6.86.json",
+    "preserved_byte_for_byte": true,
+    "reason": "keep published build manifest compact while preserving the complete historical cascade"
   }
 }
