@@ -1,0 +1,119 @@
+name: Atlas Public Crypto Coverage Diagnostics
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/atlas-public-crypto-coverage-diagnostics.yml"
+      - "public/agent_crypto_erith_ia/tools/diagnose_public_crypto_coverage.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: atlas-public-crypto-coverage-diagnostics-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install diagnostic dependency
+        run: python -m pip install --disable-pip-version-check requests==2.32.5
+
+      - name: Diagnose CoinGecko rank coverage
+        run: >-
+          python public/agent_crypto_erith_ia/tools/diagnose_public_crypto_coverage.py
+          --root public/agent_crypto_erith_ia
+          --timeout 25
+
+      - name: Validate diagnostic contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("public/agent_crypto_erith_ia/data/crypto/coverage_diagnostics.json")
+          if not path.is_file():
+              raise SystemExit("coverage_diagnostics.json missing")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          if payload.get("schema") != "agent_crypto_public_coverage_diagnostics_v1":
+              raise SystemExit("invalid coverage diagnostics schema")
+          if payload.get("build_context") != "40.6.98":
+              raise SystemExit("unexpected build context")
+          if payload.get("security", {}).get("canonical_snapshot_mutated") is not False:
+              raise SystemExit("canonical mutation lock missing")
+
+          for key in ("core_1_250", "extended_251_1000"):
+              block = payload.get(key)
+              if block is None:
+                  continue
+              raw = int(block.get("raw_rows_received") or 0)
+              accepted = int(block.get("accepted_rows") or 0)
+              rejected = int(block.get("rejected_rows") or 0)
+              if raw != accepted + rejected:
+                  raise SystemExit(f"coverage accounting mismatch: {key}")
+              if accepted != int(block.get("accepted_unique_ids") or 0):
+                  raise SystemExit(f"accepted id uniqueness mismatch: {key}")
+
+          print({
+              "core": (payload.get("core_1_250") or {}).get("accepted_rows"),
+              "extended": (payload.get("extended_251_1000") or {}).get("accepted_rows"),
+              "unique": payload.get("combined_1_1000", {}).get("unique_ids"),
+              "page_errors": payload.get("page_errors"),
+          })
+          PY
+
+      - name: Publish coverage diagnostics only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          bash .github/scripts/agent_crypto_publish_live_data.sh \
+            dual \
+            public/agent_crypto_erith_ia/data/crypto \
+            "archive public crypto coverage diagnostics" \
+            "publish live crypto coverage diagnostics" \
+            coverage_diagnostics.json
+
+      - name: Write summary
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          path = Path("public/agent_crypto_erith_ia/data/crypto/coverage_diagnostics.json")
+          if not path.is_file():
+              print("## CoinGecko coverage diagnostics\n- No diagnostic payload produced.")
+              raise SystemExit(0)
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          core = payload.get("core_1_250") or {}
+          ext = payload.get("extended_251_1000") or {}
+          combined = payload.get("combined_1_1000") or {}
+          print("## CoinGecko coverage diagnostics · 40.6.98")
+          print(f"- Core raw/accepted/rejected: **{core.get('raw_rows_received', 0)}/{core.get('accepted_rows', 0)}/{core.get('rejected_rows', 0)}**")
+          print(f"- Extended raw/accepted/rejected: **{ext.get('raw_rows_received', 0)}/{ext.get('accepted_rows', 0)}/{ext.get('rejected_rows', 0)}**")
+          print(f"- Combined unique IDs: **{combined.get('unique_ids', 0)}**")
+          print(f"- Distinct rank labels: **{combined.get('distinct_ranks', 0)}**")
+          print(f"- Tied rank labels: **{combined.get('tied_rank_labels', 0)}**")
+          print(f"- Page errors: **{payload.get('page_errors') or 'none'}**")
+          print("- Diagnostic only: no canonical price, wallet, order or runtime mutation.")
+          PY
