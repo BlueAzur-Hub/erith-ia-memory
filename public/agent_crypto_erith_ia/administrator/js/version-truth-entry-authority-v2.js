@@ -1,6 +1,6 @@
 /* Agent-Crypto @erith.IA — Version Truth Entry Authority V2
    Stable generic owner for canonical + immutable entries.
-   40.6.91 adds footer truth synchronization and cache-busted Source demand repair.
+   40.6.92 closes the remaining visible-version races: footer + Administrator mirror bar.
    Published-build authority remains build.json.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -45,11 +45,27 @@
     return true;
   };
 
+  const syncMirrorTruth = () => {
+    const brand = document.querySelector(".admin-mirror-brand");
+    if (!brand) return false;
+    brand.innerHTML = `AGENT-CRYPTO <b>${BUILD}</b> · ADMINISTRATOR`;
+    brand.dataset.versionTruthOwner = OWNER;
+    brand.dataset.loadedBuild = BUILD;
+    return true;
+  };
+
+  const syncVisibleTruth = () => {
+    forceMetaTruth();
+    const footer = syncFooterTruth();
+    const mirror = syncMirrorTruth();
+    return footer || mirror;
+  };
+
   const ensureSourceDemandRepair406091 = () => {
     if (globalThis.ErithPrivateSourceDemand40486?.build === "40.6.91") return true;
     if (document.querySelector('script[data-version-truth-source-loader-406091="true"]')) return true;
     const script = document.createElement("script");
-    script.src = "./js/views/private-source-demand-loader.js?v=administrator-build-40.6.91-source-debug-1";
+    script.src = "./js/views/private-source-demand-loader.js?v=administrator-build-40.6.91-source-restore-1";
     script.async = false;
     script.dataset.versionTruthSourceLoader406091 = "true";
     document.head.appendChild(script);
@@ -93,7 +109,7 @@
     document.documentElement.dataset.versionTruthPublished = published;
     document.documentElement.dataset.versionTruthState = state;
     document.documentElement.dataset.versionTruthAuthority = OWNER;
-    syncFooterTruth();
+    syncVisibleTruth();
     return Object.freeze({ loaded: BUILD, published, state, update_available: newer });
   }
 
@@ -158,8 +174,8 @@
   render();
   ensureSourceDemandRepair406091();
   control?.addEventListener("click", onClick, { capture: true });
-  window.addEventListener("erith:system-hydrated", syncFooterTruth, { passive: true });
-  document.addEventListener("agentcrypto:current-finalized", syncFooterTruth, { passive: true });
+  window.addEventListener("erith:system-hydrated", syncVisibleTruth, { passive: true });
+  document.addEventListener("agentcrypto:current-finalized", syncVisibleTruth, { passive: true });
   void check(false);
 
   globalThis.ErithVersionTruth = Object.freeze({
@@ -174,7 +190,11 @@
     refresh: check,
     applyAvailableUpdate,
     syncFooterTruth,
+    syncMirrorTruth,
+    syncVisibleTruth,
     source_demand_repair_406091: true,
+    source_truth_backend_placement_restored: true,
+    visible_truth_sync_406092: true,
     single_visible_owner: true,
     immutable_entry_path_authority: true,
     canonical_build_param_fallback: true,
@@ -186,4 +206,5 @@
     observer: false,
     storage_write: false
   });
+  syncVisibleTruth();
 })();

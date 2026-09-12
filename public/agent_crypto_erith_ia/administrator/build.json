@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.91",
+  "build": "40.6.92",
   "engine": "38.15.11",
-  "release": "VERSION TRUTH FOOTER + SOURCES DISCOVERABILITY DEBUG",
+  "release": "VISIBLE VERSION TRUTH CONSOLIDATION",
   "published": true,
-  "status": "version_truth_footer_sources_debug_406091",
-  "parent_build": "40.6.90",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.91",
-  "administrator_build": "40.6.91",
-  "build_label": "Build 40.6.91 · Administrator",
-  "release_status": "version_truth_footer_sources_debug_406091",
-  "timestamp": "2026-09-12T03:45:00Z",
+  "status": "visible_version_truth_consolidation_406092",
+  "parent_build": "40.6.91",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.92",
+  "administrator_build": "40.6.92",
+  "build_label": "Build 40.6.92 · Administrator",
+  "release_status": "visible_version_truth_consolidation_406092",
+  "timestamp": "2026-09-12T04:20:00Z",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,7 +29,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v2.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.91.html",
+    "immutable_entry": "index-40.6.92.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -38,20 +38,38 @@
     "observer": false,
     "storage_write": false
   },
-  "debug_406091": {
-    "scope": "version/footer + Sources discoverability only",
+  "debug_406092": {
+    "scope": "visible version truth only",
     "corrections": [
-      "footer version truth is synchronized from the loaded immutable build instead of the stale parser-time ADMIN_BUILD",
-      "opening the Sources accordion demand-loads Source Truth CEX and places its panel inside Sources",
-      "existing-script load race is handled and Source Truth owner is cache-busted to 40.6.91"
+      "footer async Web Classic render hands final ownership back to the loaded Version Truth runtime so stale parser-time 40.6.86 cannot win the race",
+      "Administrator mirror/status bar is synchronized from the immutable loaded build instead of the parser-time ADMIN_BUILD constant",
+      "40.6.92 immutable entry is published through the existing pathname authority while preserving the 40.6.91 Source Truth backend-placement restoration"
     ],
+    "source_truth_host": "backend",
+    "sources_reparenting": false,
+    "historical_archive_versions_rewritten": false,
     "business_logic_changed": false,
     "market_data_changed": false,
     "market_core_changed": false,
     "aether_changed": false,
     "oracle_changed": false,
     "trading_changed": false,
-    "expected_firefox": "Build 40.6.91 · Administrator; footer 40.6.91; Sources shows Binance/Kraken/Coinbase/OKX when backend is available"
+    "expected_firefox": "header Build 40.6.92 · Administrator; footer Administrator 40.6.92; bottom mirror AGENT-CRYPTO 40.6.92 · ADMINISTRATOR"
+  },
+  "debug_406091": {
+    "scope": "version/footer + Sources discoverability debug",
+    "corrections": [
+      "footer version truth synchronization introduced",
+      "Sources demand-load race handled",
+      "Source Truth cache-busted for the 40.6.91 debug pass"
+    ],
+    "post_debug_restoration": "Source Truth CEX + DEX/DeFi + Source Intelligence restored to canonical System → Backend / API host; Sources may demand-load but never reparent the panel",
+    "business_logic_changed": false,
+    "market_data_changed": false,
+    "market_core_changed": false,
+    "aether_changed": false,
+    "oracle_changed": false,
+    "trading_changed": false
   },
   "version_guard_406090": {
     "scope": "versioning only",
