@@ -3,6 +3,7 @@
    40.6.95 hotfix loads the Strategy A Paper proof trigger repair without a build bump.
    40.6.96+ loads the bounded post-handoff stabilization layer by immutable entry build.
    40.6.98+ loads DEX exclusion diagnostics as a read-only observability layer.
+   40.6.101+ loads the fresh-CEX divergence fail-closed quality gate.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
@@ -56,18 +57,30 @@
     return true;
   }
 
+  function ensureCexDivergenceGuard(){
+    if(!atLeast("40.6.101"))return false;
+    if(globalThis.AgentCryptoCexDivergenceGuard406101)return true;
+    if(document.querySelector('script[data-cex-divergence-guard-406101="true"]'))return true;
+    const script=document.createElement("script");
+    script.src=`./js/cex-divergence-guard-406101.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.async=false;
+    script.dataset.cexDivergenceGuard406101="true";
+    document.head.appendChild(script);
+    return true;
+  }
+
   function settleReady(){state="ready";loadedAt=Date.now();lastError="";return true;}
 
   function ensure(why="operator"){
     reason=String(why||"operator");
-    if(state==="ready"||globalThis.ErithPrivateBackendSources4054||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){settleReady();ensureDexDiagnostics();return Promise.resolve(true);}
+    if(state==="ready"||globalThis.ErithPrivateBackendSources4054||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){settleReady();ensureDexDiagnostics();ensureCexDivergenceGuard();return Promise.resolve(true);}
     if(promise)return promise;
     state="loading";
     promise=new Promise(resolve=>{
       const existing=document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand-40486="true"]');
       if(existing){
-        if(globalThis.ErithPrivateBackendSources4054||existing.dataset.loaded==="true"){ensureDexDiagnostics();resolve(settleReady());return;}
-        existing.addEventListener("load",()=>{existing.dataset.loaded="true";ensureDexDiagnostics();resolve(settleReady());},{once:true});
+        if(globalThis.ErithPrivateBackendSources4054||existing.dataset.loaded==="true"){ensureDexDiagnostics();ensureCexDivergenceGuard();resolve(settleReady());return;}
+        existing.addEventListener("load",()=>{existing.dataset.loaded="true";ensureDexDiagnostics();ensureCexDivergenceGuard();resolve(settleReady());},{once:true});
         existing.addEventListener("error",()=>{state="error";lastError="load-error";resolve(false);},{once:true});
         return;
       }
@@ -75,7 +88,7 @@
       script.src=SRC;
       script.async=true;
       script.dataset.privateSourceDemandStable="true";
-      script.addEventListener("load",()=>{script.dataset.loaded="true";settleReady();ensureDexDiagnostics();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:BUILD,reason}}));}catch(_){}resolve(true);},{once:true});
+      script.addEventListener("load",()=>{script.dataset.loaded="true";settleReady();ensureDexDiagnostics();ensureCexDivergenceGuard();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:BUILD,reason}}));}catch(_){}resolve(true);},{once:true});
       script.addEventListener("error",()=>{state="error";lastError="script-load-error";resolve(false);},{once:true});
       document.head.appendChild(script);
     }).finally(()=>{promise=null;});
@@ -101,6 +114,7 @@
   ensureStrategyProofHotfix();
   ensurePostHandoff();
   ensureDexDiagnostics();
+  ensureCexDivergenceGuard();
 
   const API=Object.freeze({
     build:BUILD,
@@ -108,6 +122,7 @@
     ensureStrategyProofHotfix,
     ensurePostHandoff,
     ensureDexDiagnostics,
+    ensureCexDivergenceGuard,
     snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend"}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
@@ -115,6 +130,7 @@
     strategy_paper_proof_hotfix:BUILD==="40.6.95",
     post_handoff_stabilization:atLeast("40.6.96"),
     dex_exclusion_diagnostics:atLeast("40.6.98"),
+    cex_divergence_fail_closed:atLeast("40.6.101"),
     new_timer:false,
     new_observer:false,
     new_storage_owner:false,
