@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.102",
+  "build": "40.6.103",
   "engine": "38.15.11",
-  "release": "VISIBLE VERSION TRUTH LATE-WRITER LOCK",
+  "release": "GENERATED REPORT VERSION TRUTH",
   "published": true,
-  "status": "visible_version_truth_late_writer_lock_406102",
-  "parent_build": "40.6.101",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.102",
-  "administrator_build": "40.6.102",
-  "build_label": "Build 40.6.102 · Administrator",
-  "release_status": "visible_version_truth_late_writer_lock_406102",
-  "timestamp": "2026-09-12T12:12:00Z",
+  "status": "generated_report_version_truth_406103",
+  "parent_build": "40.6.102",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.103",
+  "administrator_build": "40.6.103",
+  "build_label": "Build 40.6.103 · Administrator",
+  "release_status": "generated_report_version_truth_406103",
+  "timestamp": "2026-09-12T12:20:00Z",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,7 +29,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v3.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.102.html",
+    "immutable_entry": "index-40.6.103.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -39,7 +39,46 @@
     "deferred_event_turn_resync": true,
     "recurring_timer": false,
     "observer": false,
-    "storage_write": false
+    "storage_write": false,
+    "generated_report_version_truth_406103": true,
+    "generated_report_runtime_patch": "js/generated-report-version-truth-406103.js"
+  },
+  "generated_report_version_truth_406103": {
+    "scope": "correct user-facing generated Markdown/report build labels that still stringify legacy ATLAS_RELEASE 40.6.86",
+    "release_document": "RELEASE_40_6_103.md",
+    "test_evidence": "architecture/generated-report-version-truth-40.6.103.json",
+    "immutable_entry": "index-40.6.103.html",
+    "parent_entry_blob_reused": "index-40.6.102.html",
+    "runtime_patch": "js/generated-report-version-truth-406103.js",
+    "runtime_loader": "js/version-truth-406086-authority-lock.js",
+    "legacy_app_rewritten": false,
+    "legacy_atlas_build_constant_changed": false,
+    "analytical_fingerprint_changed": false,
+    "generated_markdown_build_label_normalized": true,
+    "visible_loaded_journal_normalized": true,
+    "target_builders": [
+      "atlasMemoryIntelligenceMarkdown",
+      "buildLearningJournalMarkdown",
+      "buildMemoryReportMarkdown",
+      "buildAutomaticLearningJournalMarkdown",
+      "buildWakePlanText",
+      "buildCollectionPlanMarkdown"
+    ],
+    "business_logic_changed": false,
+    "market_data_changed": false,
+    "market_core_changed": false,
+    "web_classic_changed": false,
+    "aether_changed": false,
+    "atlas_current_changed": false,
+    "oracle_changed": false,
+    "lecture_technique_changed": false,
+    "strategy_a_changed": false,
+    "source_truth_changed": false,
+    "trading_changed": false,
+    "recurring_timer": false,
+    "observer": false,
+    "storage_write": false,
+    "version_truth_owner": "js/version-truth-entry-authority-v3.js"
   },
   "visible_version_truth_late_writer_lock_406102": {
     "scope": "prevent late parser-time legacy build labels from remaining visible after immutable Version Truth has synchronized the current build",
@@ -158,7 +197,11 @@
     ],
     "runtime_patch": "js/agent-crypto-post-handoff-406096.js",
     "loader": "js/views/private-source-demand-loader.js",
-    "release_documents": ["RELEASE_40_6_96.md", "RELEASE_40_6_97.md", "RELEASE_40_6_98.md"],
+    "release_documents": [
+      "RELEASE_40_6_96.md",
+      "RELEASE_40_6_97.md",
+      "RELEASE_40_6_98.md"
+    ],
     "test_evidence": "architecture/post-handoff-stabilization-40.6.98.json",
     "strategy_auto_proof": true,
     "strategy_proof_once_per_page": true,
@@ -210,7 +253,7 @@
   "debug_406093": {
     "scope": "version truth + Source Truth loader ownership only",
     "corrections": [
-      "Entry Authority V3 removes the 40.6.91-specific Source Truth repair and uses a generic demand-loader contract",
+      "Entry Authority V3 removes the last build-specific Source Truth repair and uses a generic demand-loader contract",
       "compatibility bootstrap advances from Entry Authority V2 to V3 without rewriting the validated Administrator document",
       "Source Truth demand loader resolves the loaded build dynamically and exports a stable API while preserving the legacy alias",
       "stale falsePropagation=true UI marker is deleted instead of asserted"
@@ -275,8 +318,18 @@
   "okx_wave_1_406087": {
     "backend_version": "1.4.2",
     "source_truth_primary": "binance",
-    "controls": ["kraken", "coinbase", "okx"],
-    "assets": ["BTC", "ETH", "BNB", "XRP", "SOL"],
+    "controls": [
+      "kraken",
+      "coinbase",
+      "okx"
+    ],
+    "assets": [
+      "BTC",
+      "ETH",
+      "BNB",
+      "XRP",
+      "SOL"
+    ],
     "okx_backend_proof": "5/5",
     "global_backend_quotes": "14/15",
     "coinbase_bnb_eur": "unavailable",
@@ -306,13 +359,14 @@
     "cex_divergence": "fail_closed_read_side_quality_gate_40.6.101_firefox_observation_pending",
     "cex_freshness": "fail_closed_read_side_guard_40.6.98_active_terrain_observation_pending",
     "visible_version_footer": "late_writer_lock_40.6.102_firefox_proof_pending",
-    "final_firefox_terrain_proof": "40.6.102_required_after_deployment"
+    "final_firefox_terrain_proof": "40.6.103_required_after_deployment",
+    "generated_report_version_truth": "40.6.103_static_fix_firefox_export_proof_pending"
   },
   "history": {
     "through_build": "40.6.95",
     "legacy_history_path": "architecture/build-history-through-40.6.86.json",
     "handoff_parent": "RELEASE_40_6_95_FINAL_HANDOFF.md",
     "preserved": true,
-    "reason": "40.6.96-40.6.102 extend the validated 40.6.95 runtime without rewriting protected business owners"
+    "reason": "40.6.96-40.6.103 extend the validated 40.6.95 runtime without rewriting protected business owners"
   }
 }
