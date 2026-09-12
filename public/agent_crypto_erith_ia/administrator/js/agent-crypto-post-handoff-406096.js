@@ -36,19 +36,49 @@
     }
   }
 
+  let retrospectiveRenderFrame=0;
+  function renderRetrospectiveBounded(){
+    try{globalThis.atlasDecisionBoardDualMemory3950?.render?.();}catch(_){}
+    const api=globalThis.atlasRetrospectiveValidation3960;
+    const anchor=document.getElementById("decisionDualMemory395")||document.getElementById("decisionMemoryV2");
+    if(api&&typeof api.render==="function"&&anchor){
+      try{
+        api.render();
+        document.documentElement.dataset.retrospectiveValidation406097="active";
+        return true;
+      }catch(_){
+        document.documentElement.dataset.retrospectiveValidation406097="render-error";
+        return false;
+      }
+    }
+    if(retrospectiveRenderFrame>=60){
+      document.documentElement.dataset.retrospectiveValidation406097="dependency-timeout";
+      return false;
+    }
+    retrospectiveRenderFrame+=1;
+    try{requestAnimationFrame(renderRetrospectiveBounded);}
+    catch(_){queueMicrotask(renderRetrospectiveBounded);}
+    return false;
+  }
+
   function activateRetrospective(){
-    if(globalThis.atlasDecisionBoardRetrospective3960){
-      try{globalThis.atlasDecisionBoardRetrospective3960.render?.();}catch(_){}
+    retrospectiveRenderFrame=0;
+    if(globalThis.atlasRetrospectiveValidation3960){
+      renderRetrospectiveBounded();
       return true;
     }
-    if(document.querySelector('script[data-retrospective-activation-406097="true"]'))return true;
+    const existing=document.querySelector('script[data-retrospective-activation-406097="true"]');
+    if(existing){
+      renderRetrospectiveBounded();
+      return true;
+    }
     const script=document.createElement("script");
     script.src=`./js/retrospective-validation.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
     script.async=false;
     script.dataset.retrospectiveActivation406097="true";
     script.addEventListener("load",()=>{
-      try{globalThis.atlasDecisionBoardRetrospective3960?.render?.();}catch(_){}
-      document.documentElement.dataset.retrospectiveValidation406097="active";
+      retrospectiveRenderFrame=0;
+      renderRetrospectiveBounded();
     },{once:true});
     script.addEventListener("error",()=>{document.documentElement.dataset.retrospectiveValidation406097="load-error";},{once:true});
     document.head.appendChild(script);
