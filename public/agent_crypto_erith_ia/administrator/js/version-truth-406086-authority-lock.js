@@ -1,6 +1,7 @@
 /* Agent-Crypto @erith.IA — compatibility bootstrap retained at the historical 40.6.86 path.
    40.6.93 advances the stable generic owner to Version Truth Entry Authority V3.
    40.6.103 adds a gated generated-report truth patch after the V3 owner is ready.
+   40.6.104 adds a gated pedagogy truth patch for the reproduced stale interface label.
    The path stays stable so validated index entries do not need document rewrites.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -24,14 +25,26 @@
       }
       return true;
     };
-    if (!atLeast("40.6.103")) return;
-    if (globalThis.AgentCryptoGeneratedReportVersionTruth406103?.build === build) return;
-    if (document.querySelector('script[data-generated-report-version-truth-406103="true"]')) return;
-    const reportTruth = document.createElement("script");
-    reportTruth.src = `./js/generated-report-version-truth-406103.js?v=generated-report-version-truth-${encodeURIComponent(build)}`;
-    reportTruth.async = false;
-    reportTruth.dataset.generatedReportVersionTruth406103 = "true";
-    document.head.appendChild(reportTruth);
+
+    if (atLeast("40.6.103")
+      && globalThis.AgentCryptoGeneratedReportVersionTruth406103?.build !== build
+      && !document.querySelector('script[data-generated-report-version-truth-406103="true"]')) {
+      const reportTruth = document.createElement("script");
+      reportTruth.src = `./js/generated-report-version-truth-406103.js?v=generated-report-version-truth-${encodeURIComponent(build)}`;
+      reportTruth.async = false;
+      reportTruth.dataset.generatedReportVersionTruth406103 = "true";
+      document.head.appendChild(reportTruth);
+    }
+
+    if (atLeast("40.6.104")
+      && globalThis.AgentCryptoPedagogyVersionTruth406104?.build !== build
+      && !document.querySelector('script[data-pedagogy-version-truth-406104="true"]')) {
+      const pedagogyTruth = document.createElement("script");
+      pedagogyTruth.src = `./js/pedagogy-version-truth-406104.js?v=pedagogy-version-truth-${encodeURIComponent(build)}`;
+      pedagogyTruth.async = false;
+      pedagogyTruth.dataset.pedagogyVersionTruth406104 = "true";
+      document.head.appendChild(pedagogyTruth);
+    }
   }, { once: true });
   script.addEventListener("error", () => {
     globalThis[KEY] = false;
