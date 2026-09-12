@@ -1,6 +1,8 @@
 /* Agent-Crypto @erith.IA — Version Truth Entry Authority V3
    Stable generic owner for canonical + immutable entries.
    40.6.93 removes the last build-specific Source Truth repair from the version owner.
+   40.6.102 hardens visible truth against late legacy writers by deferring the
+   canonical resync until the current DOM/event turn has fully completed.
    Published-build authority remains build.json.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -60,6 +62,11 @@
     const mirror = syncMirrorTruth();
     return footer || mirror;
   };
+
+  // Late legacy writers (notably app.js boot identity) can run in the same
+  // DOM/event turn after a synchronous Version Truth listener. A microtask
+  // resync executes after all listeners from that turn, without polling.
+  const deferVisibleTruth = () => queueMicrotask(() => { try { syncVisibleTruth(); } catch (_) {} });
 
   const ensureSourceDemandLoader = () => {
     if (typeof globalThis.ErithPrivateSourceDemand?.ensure === "function") return true;
@@ -176,8 +183,12 @@
   render();
   ensureSourceDemandLoader();
   control?.addEventListener("click", onClick, { capture: true });
-  window.addEventListener("erith:system-hydrated", syncVisibleTruth, { passive: true });
-  document.addEventListener("agentcrypto:current-finalized", syncVisibleTruth, { passive: true });
+  window.addEventListener("erith:system-hydrated", deferVisibleTruth, { passive: true });
+  document.addEventListener("agentcrypto:current-finalized", deferVisibleTruth, { passive: true });
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", deferVisibleTruth, { once: true });
+  else deferVisibleTruth();
+  window.addEventListener("load", deferVisibleTruth, { once: true, passive: true });
+  window.addEventListener("pageshow", deferVisibleTruth, { passive: true });
   void check(false);
 
   globalThis.ErithVersionTruth = Object.freeze({
@@ -197,6 +208,8 @@
     source_demand_loader_generic: true,
     source_truth_backend_placement_restored: true,
     visible_truth_sync_406092_preserved: true,
+    late_writer_lock_406102: compare(BUILD, "40.6.102") >= 0,
+    deferred_event_turn_resync: true,
     single_visible_owner: true,
     immutable_entry_path_authority: true,
     canonical_build_param_fallback: true,
