@@ -11,6 +11,7 @@ on:
     paths:
       - ".github/workflows/atlas-public-crypto-market.yml"
       - "public/agent_crypto_erith_ia/tools/collect_public_crypto.py"
+      - "public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py"
 
 permissions:
   contents: write
@@ -41,9 +42,9 @@ jobs:
       - name: Install collector dependency
         run: python -m pip install --disable-pip-version-check requests==2.32.5
 
-      - name: Collect CoinGecko USD and convert with ECB EUR rate
+      - name: Collect rank-complete CoinGecko USD and convert with ECB EUR rate
         run: >-
-          python public/agent_crypto_erith_ia/tools/collect_public_crypto.py
+          python public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py
           --root public/agent_crypto_erith_ia
           --timeout 25
           --minimum-assets 40
@@ -94,11 +95,16 @@ jobs:
               raise SystemExit("invalid FX pair")
 
           ids = set()
+          ranks = set()
           for coin in coins:
               coin_id = str(coin.get("id") or "")
+              rank = int(coin.get("rank") or 0)
               if not coin_id or coin_id in ids:
                   raise SystemExit("missing or duplicate coin id")
               ids.add(coin_id)
+              if not (1 <= rank <= 250):
+                  raise SystemExit(f"rank outside Top-250 contract: {coin_id}={rank}")
+              ranks.add(rank)
               price_usd = float(coin.get("priceUsd") or 0)
               price_eur = float(coin.get("priceEur") or 0)
               if not all(math.isfinite(value) and value > 0 for value in (price_usd, price_eur)):
@@ -108,6 +114,9 @@ jobs:
                   raise SystemExit(f"FX mismatch for {coin_id}")
               if coin.get("source") != "CoinGecko" or coin.get("sourceMode") != "github-public":
                   raise SystemExit(f"invalid provenance for {coin_id}")
+
+          if 250 not in ranks:
+              raise SystemExit("rank 250 is not represented after rank-complete collection")
 
           integrity = latest.get("integrity") or {}
           required_true = (
@@ -133,6 +142,7 @@ jobs:
           print({
               "status": status.get("status"),
               "assets": len(coins),
+              "rank_250": 250 in ranks,
               "snapshot": latest.get("snapshot_id"),
               "fx_date": fx.get("source_date"),
           })
@@ -149,9 +159,11 @@ jobs:
           status = json.loads((root / "status.json").read_text(encoding="utf-8"))
           latest_path = root / "latest.json"
           latest = json.loads(latest_path.read_text(encoding="utf-8")) if latest_path.is_file() else {}
-          print("## Atlas Public Crypto Market · Canonical Snapshot Publication Recovery R1")
+          ranks = {int(x.get("rank") or 0) for x in (latest.get("coins") or [])}
+          print("## Atlas Public Crypto Market · Rank-complete Top-250")
           print(f"- Collector state: **{status.get('status')}**")
-          print(f"- Assets published: **{latest.get('assets_count', 0)}/250**")
+          print(f"- Assets published: **{latest.get('assets_count', 0)}**")
+          print(f"- Rank 250 represented: **{250 in ranks}**")
           print(f"- Canonical snapshot: **{latest.get('snapshot_id', '—')}**")
           print(f"- Schedule: **11 and 41 Europe/Paris each hour**")
           print(f"- Market source: **CoinGecko USD**")
@@ -191,11 +203,14 @@ jobs:
           payload = json.loads(path.read_text(encoding="utf-8"))
           status = json.loads(status_path.read_text(encoding="utf-8"))
           count = int(payload.get("assets_count") or 0)
+          ranks = {int(x.get("rank") or 0) for x in (payload.get("coins") or [])}
           if count < 40:
               raise SystemExit(f"Public crypto snapshot incomplete: {count}/250")
           if status.get("status") != "ready":
               raise SystemExit(
                   "Collector did not publish a fresh snapshot; the last valid public snapshot was preserved"
               )
-          print(f"Public crypto snapshot ready: {count}/250 · {payload.get('snapshot_id')}")
+          if 250 not in ranks:
+              raise SystemExit("Rank-complete Top-250 contract not satisfied: rank 250 missing")
+          print(f"Public crypto snapshot ready: {count} assets · rank250 yes · {payload.get('snapshot_id')}")
           PY

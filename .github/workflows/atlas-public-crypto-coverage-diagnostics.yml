@@ -8,6 +8,10 @@ on:
     paths:
       - ".github/workflows/atlas-public-crypto-coverage-diagnostics.yml"
       - "public/agent_crypto_erith_ia/tools/diagnose_public_crypto_coverage.py"
+      - ".github/workflows/atlas-public-crypto-market.yml"
+      - ".github/workflows/atlas-public-crypto-extended.yml"
+      - "public/agent_crypto_erith_ia/tools/collect_public_crypto_rank_complete.py"
+      - "public/agent_crypto_erith_ia/tools/collect_public_crypto_extended_rank_complete.py"
 
 permissions:
   contents: write

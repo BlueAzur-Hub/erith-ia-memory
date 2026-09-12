@@ -10,6 +10,7 @@ on:
     paths:
       - ".github/workflows/atlas-public-crypto-extended.yml"
       - "public/agent_crypto_erith_ia/tools/collect_public_crypto_extended.py"
+      - "public/agent_crypto_erith_ia/tools/collect_public_crypto_extended_rank_complete.py"
 
 permissions:
   contents: write
@@ -37,9 +38,9 @@ jobs:
       - name: Install collector dependency
         run: python -m pip install --disable-pip-version-check requests==2.32.5
 
-      - name: Collect CoinGecko ranks 251 to 1000
+      - name: Collect CoinGecko ranks 251 to 1000 · rank complete
         run: >-
-          python public/agent_crypto_erith_ia/tools/collect_public_crypto_extended.py
+          python public/agent_crypto_erith_ia/tools/collect_public_crypto_extended_rank_complete.py
           --root public/agent_crypto_erith_ia
           --timeout 25
 
@@ -74,6 +75,7 @@ jobs:
               raise SystemExit("invalid extended rank range")
 
           ids = set()
+          ranks = set()
           for coin in coins:
               coin_id = str(coin.get("id") or "")
               rank = int(coin.get("rank") or 0)
@@ -82,8 +84,12 @@ jobs:
               ids.add(coin_id)
               if not (251 <= rank <= 1000):
                   raise SystemExit(f"rank outside extended contract: {coin_id}={rank}")
+              ranks.add(rank)
               if coin.get("source") != "CoinGecko" or coin.get("sourceMode") != "github-public-extended":
                   raise SystemExit(f"invalid provenance: {coin_id}")
+
+          if 1000 not in ranks:
+              raise SystemExit("rank 1000 is not represented after rank-complete collection")
 
           integrity = payload.get("integrity") or {}
           if integrity.get("canonical_top250_mutated") is not False:
@@ -102,6 +108,7 @@ jobs:
           print({
               "status": status.get("status"),
               "assets": len(coins),
+              "rank_1000": 1000 in ranks,
               "range": "251-1000",
               "snapshot": payload.get("snapshot_id"),
           })
@@ -134,7 +141,10 @@ jobs:
               raise SystemExit("No usable extended crypto snapshot")
           payload = json.loads(path.read_text(encoding="utf-8"))
           coins = payload.get("coins") or []
+          ranks = {int(x.get("rank") or 0) for x in coins}
           if len(coins) < 400:
               raise SystemExit(f"Extended snapshot incomplete: {len(coins)}")
-          print(f"Extended snapshot ready: {len(coins)} assets · ranks 251-1000")
+          if 1000 not in ranks:
+              raise SystemExit("Rank-complete extended contract not satisfied: rank 1000 missing")
+          print(f"Extended snapshot ready: {len(coins)} assets · ranks 251-1000 complete through rank label 1000")
           PY
