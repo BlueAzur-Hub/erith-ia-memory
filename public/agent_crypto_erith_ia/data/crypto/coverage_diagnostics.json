@@ -1,0 +1,307 @@
+{
+  "schema": "agent_crypto_public_coverage_diagnostics_v1",
+  "version": "1.0.0",
+  "build_context": "40.6.98",
+  "generated_at": "2026-09-12T08:08:17.088Z",
+  "source": {
+    "provider": "CoinGecko",
+    "endpoint_family": "coins/markets",
+    "pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "per_page": 250,
+    "quote_currency": "USD",
+    "purpose": "coverage_diagnostics_only"
+  },
+  "page_rows_received": {
+    "1": 250,
+    "2": 250,
+    "3": 250,
+    "4": 250
+  },
+  "page_errors": {},
+  "core_1_250": {
+    "contract": {
+      "rank_min": 1,
+      "rank_max": 250
+    },
+    "raw_rows_received": 250,
+    "accepted_rows": 249,
+    "rejected_rows": 1,
+    "rejected_by_reason": {
+      "missing_or_invalid_rank": 1
+    },
+    "rejected_samples": [
+      {
+        "source_index": 250,
+        "id": "tradable-singapore-fintech-ssl-2",
+        "symbol": "PC0000023",
+        "name": "Tradable Singapore Fintech SSL",
+        "rank": null,
+        "current_price": 1.0,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      }
+    ],
+    "accepted_unique_ids": 249,
+    "distinct_ranks": 249,
+    "unrepresented_ranks": [
+      250
+    ],
+    "tied_ranks": {},
+    "duplicate_rank_rows": 0,
+    "min_rank_observed": 1,
+    "max_rank_observed": 249,
+    "note": "unrepresented_ranks are rank labels absent from accepted rows, not proof that CoinGecko failed to return an asset; market_cap_rank can be tied or non-contiguous."
+  },
+  "extended_251_1000": {
+    "contract": {
+      "rank_min": 251,
+      "rank_max": 1000
+    },
+    "raw_rows_received": 750,
+    "accepted_rows": 744,
+    "rejected_rows": 6,
+    "rejected_by_reason": {
+      "missing_or_invalid_rank": 5,
+      "rank_outside_contract": 1
+    },
+    "rejected_samples": [
+      {
+        "source_index": 1,
+        "id": "alpha-bulgaria-warrants",
+        "symbol": "ALFW",
+        "name": "Alpha Bulgaria Warrants",
+        "rank": 250,
+        "current_price": 3.20124,
+        "reasons": [
+          "rank_outside_contract"
+        ]
+      },
+      {
+        "source_index": 48,
+        "id": "baby-claw",
+        "symbol": "BABYCLAW",
+        "name": "Baby Claw",
+        "rank": null,
+        "current_price": 0.0913762935833182,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 334,
+        "id": "latam-residential-sstl",
+        "symbol": "PC0000089",
+        "name": "Tradable LatAm Residential SSTL",
+        "rank": null,
+        "current_price": 1.0,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 532,
+        "id": "whiteheart",
+        "symbol": "WHITE",
+        "name": "Whiteheart",
+        "rank": null,
+        "current_price": 2694.759643823629,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 568,
+        "id": "myonion-fun",
+        "symbol": "$ONION",
+        "name": "MyOnion.fun",
+        "rank": null,
+        "current_price": 0.031861049693236124,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      },
+      {
+        "source_index": 615,
+        "id": "ubs_umint_eth",
+        "symbol": "UMINT",
+        "name": "UBS USD Money Market Investment Fund Token",
+        "rank": null,
+        "current_price": 106.199,
+        "reasons": [
+          "missing_or_invalid_rank"
+        ]
+      }
+    ],
+    "accepted_unique_ids": 744,
+    "distinct_ranks": 710,
+    "unrepresented_ranks": [
+      961,
+      962,
+      963,
+      964,
+      965,
+      966,
+      967,
+      968,
+      969,
+      970,
+      971,
+      972,
+      973,
+      974,
+      975,
+      976,
+      977,
+      978,
+      979,
+      980,
+      981,
+      982,
+      983,
+      984,
+      985,
+      986,
+      987,
+      988,
+      989,
+      990,
+      991,
+      992,
+      993,
+      994,
+      995,
+      996,
+      997,
+      998,
+      999,
+      1000
+    ],
+    "tied_ranks": {
+      "260": 2,
+      "316": 2,
+      "348": 2,
+      "370": 2,
+      "400": 2,
+      "405": 2,
+      "421": 2,
+      "429": 2,
+      "430": 2,
+      "462": 2,
+      "495": 2,
+      "544": 2,
+      "546": 2,
+      "570": 2,
+      "573": 2,
+      "605": 2,
+      "644": 2,
+      "655": 2,
+      "658": 2,
+      "664": 2,
+      "718": 2,
+      "736": 2,
+      "790": 2,
+      "791": 2,
+      "802": 2,
+      "831": 2,
+      "840": 2,
+      "842": 2,
+      "882": 2,
+      "888": 2,
+      "919": 2,
+      "922": 2,
+      "926": 2,
+      "932": 2
+    },
+    "duplicate_rank_rows": 34,
+    "min_rank_observed": 251,
+    "max_rank_observed": 960,
+    "note": "unrepresented_ranks are rank labels absent from accepted rows, not proof that CoinGecko failed to return an asset; market_cap_rank can be tied or non-contiguous."
+  },
+  "combined_1_1000": {
+    "accepted_rows": 993,
+    "unique_ids": 993,
+    "duplicate_ids_across_scopes": [],
+    "distinct_ranks": 959,
+    "tied_rank_labels": 34,
+    "duplicate_rank_rows": 34,
+    "unrepresented_ranks_1_1000": [
+      250,
+      961,
+      962,
+      963,
+      964,
+      965,
+      966,
+      967,
+      968,
+      969,
+      970,
+      971,
+      972,
+      973,
+      974,
+      975,
+      976,
+      977,
+      978,
+      979,
+      980,
+      981,
+      982,
+      983,
+      984,
+      985,
+      986,
+      987,
+      988,
+      989,
+      990,
+      991,
+      992,
+      993,
+      994,
+      995,
+      996,
+      997,
+      998,
+      999,
+      1000
+    ],
+    "max_rank_observed": 960
+  },
+  "persisted_snapshots": {
+    "core": {
+      "schema": "agent_crypto_public_market_snapshot_v1",
+      "generated_at": "2026-09-12T06:29:07.014Z",
+      "snapshot_id": "coingecko-top250-usd-ecb-eur-github_2026-09-12T06:29:07.014Z",
+      "assets_count": 249,
+      "requested_assets": 250
+    },
+    "extended": {
+      "schema": "agent_crypto_public_extended_market_snapshot_v1",
+      "generated_at": "2026-09-12T06:29:05.957Z",
+      "snapshot_id": "coingecko-ranks-251-1000_2026-09-12T06:29:05.957Z",
+      "assets_count": 744,
+      "rank_min": 251,
+      "rank_max": 1000
+    }
+  },
+  "interpretation": {
+    "accepted_count_is_not_expected_to_equal_rank_span": true,
+    "reason": "CoinGecko market_cap_rank may contain ties/gaps and canonical collectors reject missing IDs, duplicate IDs, invalid/out-of-scope ranks, and missing/non-positive prices.",
+    "no_synthetic_fill": true
+  },
+  "security": {
+    "api_key_required": false,
+    "wallet_action_allowed": false,
+    "exchange_order_allowed": false,
+    "canonical_snapshot_mutated": false,
+    "browser_runtime_changed": false
+  }
+}
