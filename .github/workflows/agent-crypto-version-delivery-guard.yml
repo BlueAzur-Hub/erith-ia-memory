@@ -9,9 +9,12 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/app.js'
       - 'public/agent_crypto_erith_ia/administrator/js/app.js'
       - 'public/agent_crypto_erith_ia/administrator/js/version-truth.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
       - 'public/agent_crypto_erith_ia/administrator/version.json'
       - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
+      - '.github/workflows/agent-crypto-version-delivery-guard.yml'
   pull_request:
     paths:
       - 'public/agent_crypto_erith_ia/administrator/index.html'
@@ -19,9 +22,12 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/app.js'
       - 'public/agent_crypto_erith_ia/administrator/js/app.js'
       - 'public/agent_crypto_erith_ia/administrator/js/version-truth.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/version-truth-entry-authority-v2.js'
       - 'public/agent_crypto_erith_ia/administrator/version.json'
       - 'public/agent_crypto_erith_ia/administrator/administrator-version.json'
       - 'public/agent_crypto_erith_ia/administrator/build.json'
+      - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
+      - '.github/workflows/agent-crypto-version-delivery-guard.yml'
 
 permissions:
   contents: read
@@ -33,10 +39,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Canonical version truth
+      - name: Canonical protected architecture through Entry Authority V2 compatibility
         run: python .github/scripts/agent_crypto_version_truth_guard_compat.py
 
-      - name: Immutable entry truth
+      - name: Published build and immutable entry truth
         shell: bash
         run: |
           set -euo pipefail
@@ -45,42 +51,62 @@ jobs:
           import json, re
 
           root = Path('public/agent_crypto_erith_ia/administrator')
-          manifest = json.loads((root / 'version.json').read_text(encoding='utf-8'))
-          mirror = json.loads((root / 'administrator-version.json').read_text(encoding='utf-8'))
-          build_truth = json.loads((root / 'build.json').read_text(encoding='utf-8'))
-          build = str(manifest.get('build') or '').strip()
-          release = str(manifest.get('release') or '').strip()
+          truth = json.loads((root / 'build.json').read_text(encoding='utf-8'))
+          build = str(truth.get('build') or '').strip()
+          parent = str(truth.get('parent_build') or '').strip()
+          engine = str(truth.get('engine') or '').strip()
+          token = str(truth.get('asset_token') or '').strip()
 
-          if not re.fullmatch(r'\d+\.\d+\.\d+', build):
-              raise SystemExit(f'VERSION_DELIVERY_FAIL: invalid build {build!r}')
-          if str(mirror.get('build') or '').strip() != build:
-              raise SystemExit('VERSION_DELIVERY_FAIL: administrator-version drift')
-          if str(mirror.get('global_versioning') or '').strip() != build:
-              raise SystemExit('VERSION_DELIVERY_FAIL: global_versioning drift')
-          if str(build_truth.get('build') or '').strip() != build:
-              raise SystemExit('VERSION_DELIVERY_FAIL: build.json drift')
-          if str(build_truth.get('release') or '').strip() != release:
-              raise SystemExit('VERSION_DELIVERY_FAIL: release drift')
+          def numeric(value):
+              m = re.fullmatch(r'(\d+)\.(\d+)\.(\d+)', value or '')
+              return tuple(map(int, m.groups())) if m else None
+
+          current = numeric(build)
+          previous = numeric(parent)
+          if current is None:
+              raise SystemExit(f'VERSION_DELIVERY_FAIL: invalid published build {build!r}')
+          if previous is None or current[:2] != previous[:2] or current[2] != previous[2] + 1:
+              raise SystemExit(f'VERSION_DELIVERY_FAIL: non-sequential published build {parent!r} -> {build!r}')
+          if engine != '38.15.11':
+              raise SystemExit(f'VERSION_DELIVERY_FAIL: protected Market Core drift {engine!r}')
+          if truth.get('published') is not True:
+              raise SystemExit('VERSION_DELIVERY_FAIL: published truth missing')
+          if token != f'market-core-v2.0-alpha-build-{build}':
+              raise SystemExit('VERSION_DELIVERY_FAIL: published asset token drift')
 
           immutable = root / f'index-{build}.html'
+          canonical = root / 'index.html'
+          owner_path = root / 'js/version-truth-entry-authority-v2.js'
           if not immutable.is_file():
               raise SystemExit(f'VERSION_DELIVERY_FAIL: missing immutable entry {immutable.name}')
+          if not owner_path.is_file():
+              raise SystemExit('VERSION_DELIVERY_FAIL: missing Entry Authority V2 owner')
 
-          for path in (root / 'index.html', immutable):
+          owner = owner_path.read_text(encoding='utf-8')
+          required_owner = (
+              'const MANIFEST = "./build.json";',
+              'const ENTRY_RE = /(?:^|\\/)index-(\\d+\\.\\d+\\.\\d+)\\.html$/i;',
+              'const BUILD = String(entryMatch?.[1]',
+              'immutable_entry_path_authority: true',
+              'false_propagation_state_removed: true',
+              'recurring_timer: false',
+              'observer: false',
+              'storage_write: false',
+          )
+          missing = [marker for marker in required_owner if marker not in owner]
+          if missing:
+              raise SystemExit(f'VERSION_DELIVERY_FAIL: Entry Authority V2 contract incomplete: {missing}')
+
+          for path in (canonical, immutable):
               html = path.read_text(encoding='utf-8')
-              def one(pattern, label):
-                  values = re.findall(pattern, html, re.S)
-                  if values != [build]:
-                      raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} {label}={values!r}, expected {build}')
-              one(r'<meta\s+name="administrator-build"\s+content="([^"]+)"', 'administrator-build')
-              one(r'<meta\s+name="atlas-build"\s+content="([^"]+)"', 'atlas-build')
-              one(r'<span\s+id="atlasVersionTruthText">Build ([^<]+)</span>', 'first-paint badge')
-              one(r'id="atlasVersionTruthControl"[\s\S]*?aria-label="Version Agent-Crypto installée : Build ([^,\"]+), mode Administrator"', 'first-paint aria')
-              one(r'<script\s+src="\./js/version-truth\.js\?v=([^"]+)"', 'version-truth cache token')
-              footer = re.findall(r'<span\s+id="footerRelease">([^<]*)</span>', html, re.S)
-              expected_prefix = f'Administrator {build} · Market Core 38.15.11 ·'
-              if len(footer) != 1 or not footer[0].strip().startswith(expected_prefix):
-                  raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} footer drift')
+              if html.count('version-truth-entry-authority-v2.js?v=entry-authority-v2') != 1:
+                  raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} stable owner drift')
+              engines = re.findall(r'<meta\s+name="atlas-engine-build"\s+content="([^"]+)"', html)
+              if engines != ['38.15.11']:
+                  raise SystemExit(f'VERSION_DELIVERY_FAIL: {path.name} engine drift {engines!r}')
 
-          print(f'VERSION_DELIVERY_PASS build={build} immutable={immutable.name}')
+          if immutable.name != f'index-{build}.html':
+              raise SystemExit('VERSION_DELIVERY_FAIL: immutable filename authority drift')
+
+          print(f'VERSION_DELIVERY_PASS build={build} immutable={immutable.name} owner=entry-authority-v2')
           PY
