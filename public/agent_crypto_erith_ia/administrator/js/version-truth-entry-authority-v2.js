@@ -1,7 +1,7 @@
 /* Agent-Crypto @erith.IA — Version Truth Entry Authority V2
-   Stable generic owner for immutable entries.
-   Loaded-build authority is the immutable entry pathname when present.
-   Canonical index.html falls back to its embedded meta build.
+   Stable generic owner for canonical + immutable entries.
+   Immutable entry pathname is authoritative when present.
+   Canonical index.html may carry an explicit ac-build handoff after a validated manifest update.
    Published-build authority remains build.json.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -10,11 +10,15 @@
   const OWNER = "version-truth-entry-authority-v2";
   const MANIFEST = "./build.json";
   const REFRESH_PARAM = "ac-refresh";
+  const BUILD_PARAM = "ac-build";
   const ENTRY_RE = /(?:^|\/)index-(\d+\.\d+\.\d+)\.html$/i;
+  const BUILD_RE = /^\d+\.\d+\.\d+$/;
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
   const entryMatch = String(location.pathname || "").match(ENTRY_RE);
+  const params = new URLSearchParams(location.search || "");
+  const requestedBuild = String(params.get(BUILD_PARAM) || "").trim();
   const embeddedBuild = meta("administrator-build") || meta("atlas-build") || "UNKNOWN";
-  const BUILD = String(entryMatch?.[1] || embeddedBuild || "UNKNOWN").trim();
+  const BUILD = String(entryMatch?.[1] || (BUILD_RE.test(requestedBuild) ? requestedBuild : embeddedBuild) || "UNKNOWN").trim();
   const parts = value => String(value || "").split(".").map(x => Number.parseInt(x, 10) || 0);
   const compare = (a, b) => { const A = parts(a), B = parts(b), n = Math.max(A.length, B.length); for (let i = 0; i < n; i += 1) { const d = (A[i] || 0) - (B[i] || 0); if (d) return d; } return 0; };
   const forceMetaTruth = () => {
@@ -36,20 +40,24 @@
   if (legacyControl) { legacyControl.hidden = true; legacyControl.setAttribute("aria-hidden", "true"); legacyControl.style.display = "none"; legacyControl.dataset.versionTruthLegacySink = "true"; }
   if (legacyText) legacyText.dataset.versionTruthLegacySink = "true";
   let remote = null, state = "current", busy = false;
-  const validRemote = value => !!value && typeof value === "object" && String(value.build || "").trim() && String(value.engine || "").trim() === ENGINE;
+  const validRemote = value => !!value && typeof value === "object" && BUILD_RE.test(String(value.build || "").trim()) && String(value.engine || "").trim() === ENGINE;
   function render(next = remote, error = null, mode = null) {
     remote = validRemote(next) ? next : null;
     const published = remote ? String(remote.build).trim() : BUILD;
     const newer = !!remote && compare(published, BUILD) > 0;
     state = mode || ((error && !newer) ? "failed" : newer ? "update-available" : "current");
-    const label = state === "checking" ? `Build ${BUILD} · vérification…` : state === "applying" ? `Build ${published} · chargement…` : state === "propagating" ? `Build ${BUILD} · ${published} en propagation` : state === "update-available" ? `Build ${BUILD} · ${published} disponible` : state === "failed" ? `Build ${BUILD} · vérification indisponible` : `Build ${BUILD} · Administrator`;
+    const label = state === "checking" ? `Build ${BUILD} · vérification…` : state === "applying" ? `Build ${published} · chargement…` : state === "update-available" ? `Build ${BUILD} · ${published} disponible` : state === "failed" ? `Build ${BUILD} · vérification indisponible` : `Build ${BUILD} · Administrator`;
     if (text) text.textContent = label;
     if (control) {
-      control.dataset.versionTruthOwner = OWNER; control.dataset.loadedBuild = BUILD; control.dataset.publishedBuild = published; control.dataset.versionTruthState = state; control.dataset.falsePropagation = "false";
+      control.dataset.versionTruthOwner = OWNER;
+      control.dataset.loadedBuild = BUILD;
+      control.dataset.publishedBuild = published;
+      control.dataset.versionTruthState = state;
+      control.dataset.falsePropagation = "true";
       control.disabled = state === "checking" || state === "applying";
       control.toggleAttribute("aria-busy", control.disabled);
-      control.classList.toggle("warn", state === "update-available" || state === "propagating");
-      control.classList.toggle("ok", state !== "update-available" && state !== "propagating");
+      control.classList.toggle("warn", state === "update-available");
+      control.classList.toggle("ok", state !== "update-available");
       control.setAttribute("aria-label", state === "update-available" ? `Version chargée ${BUILD}. Version ${published} disponible. Cliquer pour charger.` : `Version Agent-Crypto chargée : Build ${BUILD}, mode Administrator.`);
       control.title = state === "update-available" ? `Build ${published} disponible · cliquer pour mettre à jour` : `Build ${BUILD} chargé · aucune mise à jour détectée`;
     }
@@ -87,15 +95,26 @@
       return pathnameProof && String(engineMatch?.[1] || "").trim() === ENGINE && ownerPresent;
     } catch (_) { return false; }
   }
+  function canonicalFallbackUrl(build) {
+    const target = new URL("./index.html", location.href);
+    target.searchParams.set(BUILD_PARAM, build);
+    target.searchParams.set(REFRESH_PARAM, `${build}-${Date.now()}`);
+    return target;
+  }
   async function applyAvailableUpdate() {
     if (busy || state !== "update-available") return false;
     busy = true; render(remote, null, "applying");
     try {
       const result = await fetchManifest(); const published = String(result.build || "").trim();
       if (compare(published, BUILD) <= 0) { render(result); return false; }
-      const target = entryUrl(published);
-      if (!await probeEntry(target, published)) { render(result, null, "propagating"); return false; }
-      target.searchParams.set(REFRESH_PARAM, `${published}-${Date.now()}`); location.replace(target.toString()); return true;
+      const immutable = entryUrl(published);
+      if (await probeEntry(immutable, published)) {
+        immutable.searchParams.set(REFRESH_PARAM, `${published}-${Date.now()}`);
+        location.replace(immutable.toString());
+        return true;
+      }
+      location.replace(canonicalFallbackUrl(published).toString());
+      return true;
     } catch (error) { render(remote, error); return false; }
     finally { busy = false; }
   }
@@ -103,5 +122,26 @@
   render();
   control?.addEventListener("click", onClick, { capture: true });
   void check(false);
-  globalThis.ErithVersionTruth = Object.freeze({ owner: OWNER, build: BUILD, engine: ENGINE, manifest: MANIFEST, loaded_from_immutable_entry_path: !!entryMatch, embedded_build: embeddedBuild, snapshot: () => Object.freeze({ loaded: BUILD, published: String(remote?.build || BUILD), state }), refresh: check, applyAvailableUpdate, single_visible_owner: true, immutable_entry_path_authority: true, canonical_meta_fallback: true, dom_meta_is_not_loaded_build_authority_on_immutable_entry: true, stale_listener_detached_by_node_replacement: true, current_click_reloads: false, update_available_click_reloads: true, recurring_timer: false, observer: false, storage_write: false });
+  globalThis.ErithVersionTruth = Object.freeze({
+    owner: OWNER,
+    build: BUILD,
+    engine: ENGINE,
+    manifest: MANIFEST,
+    loaded_from_immutable_entry_path: !!entryMatch,
+    loaded_from_canonical_build_param: !entryMatch && BUILD_RE.test(requestedBuild),
+    embedded_build: embeddedBuild,
+    snapshot: () => Object.freeze({ loaded: BUILD, published: String(remote?.build || BUILD), state }),
+    refresh: check,
+    applyAvailableUpdate,
+    single_visible_owner: true,
+    immutable_entry_path_authority: true,
+    canonical_build_param_fallback: true,
+    false_propagation_state_removed: true,
+    stale_listener_detached_by_node_replacement: true,
+    current_click_reloads: false,
+    update_available_click_reloads: true,
+    recurring_timer: false,
+    observer: false,
+    storage_write: false
+  });
 })();
