@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.107",
+  "build": "40.6.108",
   "engine": "38.15.11",
-  "release": "VISIBLE VERSION SURFACE TRUTH",
+  "release": "LOCAL DIALOGUE PRESENTATION TRUTH",
   "published": true,
-  "status": "visible_version_surface_truth_406107",
-  "parent_build": "40.6.106",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.107",
-  "administrator_build": "40.6.107",
-  "build_label": "Build 40.6.107 · Administrator",
-  "release_status": "visible_version_surface_truth_406107",
-  "timestamp": "2026-09-13T08:58:00Z",
+  "status": "local_dialogue_presentation_truth_406108",
+  "parent_build": "40.6.107",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.108",
+  "administrator_build": "40.6.108",
+  "build_label": "Build 40.6.108 · Administrator",
+  "release_status": "local_dialogue_presentation_truth_406108",
+  "timestamp": "2026-09-13T09:02:00Z",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,7 +29,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v3.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.107.html",
+    "immutable_entry": "index-40.6.108.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -49,7 +49,42 @@
     "local_ai_contract_consistency_406106": true,
     "local_ai_contract_consistency_runtime_patch": "js/local-ai-contract-consistency-406106.js",
     "visible_version_surface_truth_406107": true,
-    "visible_version_surface_truth_runtime_patch": "js/visible-version-surface-truth-406107.js"
+    "visible_version_surface_truth_runtime_patch": "js/visible-version-surface-truth-406107.js",
+    "local_dialogue_presentation_406108": true,
+    "local_dialogue_presentation_runtime_patch": "js/local-dialogue-presentation-406108.js"
+  },
+  "local_dialogue_presentation_406108": {
+    "scope": "visual/readability only for existing local Atlas/Aerith dialogue and analytical provenance",
+    "release_document": "RELEASE_40_6_108.md",
+    "test_evidence": "architecture/local-dialogue-presentation-40.6.108.json",
+    "immutable_entry": "index-40.6.108.html",
+    "parent_entry_blob_reused": "index-40.6.107.html",
+    "runtime_patch": "js/local-dialogue-presentation-406108.js",
+    "runtime_loader": "js/version-truth-406086-authority-lock.js",
+    "atlas_progress_card": true,
+    "six_stage_chips": true,
+    "provenance_readability_increased": true,
+    "market_snapshot_time_labeled": true,
+    "current_produced_time_source": "atlasAnalyticalMemoryStats394.latestAt",
+    "wall_clock_now_used_as_analytical_time": false,
+    "historical_snapshot_time_preserved": true,
+    "self_test_expected": "4/4",
+    "analytical_state_changed": false,
+    "market_data_changed": false,
+    "market_core_changed": false,
+    "web_classic_changed": false,
+    "aether_changed": false,
+    "atlas_current_algorithm_changed": false,
+    "oracle_changed": false,
+    "lecture_technique_changed": false,
+    "strategy_a_changed": false,
+    "trading_changed": false,
+    "wallet_changed": false,
+    "recurring_timer": false,
+    "observer": false,
+    "storage_write": false,
+    "network_request": false,
+    "firefox_terrain_proof": "pending Administrator 40.6.108 visual review"
   },
   "visible_version_surface_truth_406107": {
     "scope": "current runtime visible version surfaces only; preserve historical provenance",
@@ -79,7 +114,7 @@
     "observer": false,
     "storage_write": false,
     "network_request": false,
-    "firefox_terrain_proof": "pending Administrator 40.6.107 export"
+    "firefox_terrain_proof": "pending Administrator 40.6.108 inherited proof"
   },
   "local_ai_contract_consistency_406106": {
     "scope": "reject local Atlas/Aerith comments that contradict deterministic facts already present in the same CURRENT strict_contract",
@@ -180,14 +215,7 @@
     "analytical_fingerprint_changed": false,
     "generated_markdown_build_label_normalized": true,
     "visible_loaded_journal_normalized": true,
-    "target_builders": [
-      "atlasMemoryIntelligenceMarkdown",
-      "buildLearningJournalMarkdown",
-      "buildMemoryReportMarkdown",
-      "buildAutomaticLearningJournalMarkdown",
-      "buildWakePlanText",
-      "buildCollectionPlanMarkdown"
-    ],
+    "target_builders": ["atlasMemoryIntelligenceMarkdown", "buildLearningJournalMarkdown", "buildMemoryReportMarkdown", "buildAutomaticLearningJournalMarkdown", "buildWakePlanText", "buildCollectionPlanMarkdown"],
     "business_logic_changed": false,
     "market_data_changed": false,
     "market_core_changed": false,
@@ -314,11 +342,7 @@
   },
   "post_handoff_stabilization_406098": {
     "scope": "bounded automation, retrospective reader activation, Source Truth freshness fail-closed read-side guard",
-    "cascade": [
-      "40.6.96: Strategy A Paper V2 acceptance self-proof auto-runs once after page load; no trade, network, storage or recurring timer",
-      "40.6.97: existing retrospective-validation.js 39.6.0 is activated after Decision Board dependencies are loaded",
-      "40.6.98: per-provider CEX timestamps gate read-side comparison; stale providers are excluded and Source Intelligence downgrades to partial"
-    ],
+    "cascade": ["40.6.96: Strategy A Paper V2 acceptance self-proof auto-runs once after page load; no trade, network, storage or recurring timer", "40.6.97: existing retrospective-validation.js 39.6.0 is activated after Decision Board dependencies are loaded", "40.6.98: per-provider CEX timestamps gate read-side comparison; stale providers are excluded and Source Intelligence downgrades to partial"],
     "runtime_patch": "js/agent-crypto-post-handoff-406096.js",
     "loader": "js/views/private-source-demand-loader.js",
     "release_documents": ["RELEASE_40_6_96.md", "RELEASE_40_6_97.md", "RELEASE_40_6_98.md"],
@@ -346,11 +370,7 @@
   },
   "final_handoff_406095": {
     "scope": "Administrator + Operator final handoff and CI V3 alignment",
-    "cascade": [
-      "40.6.93: generic Version Truth Entry Authority V3 + stable Source Truth demand loader",
-      "40.6.94: Operator role/authorization contract over shared Administrator runtime",
-      "40.6.95: current Version Truth and Version Delivery workflows aligned to V3 + final handoff"
-    ],
+    "cascade": ["40.6.93: generic Version Truth Entry Authority V3 + stable Source Truth demand loader", "40.6.94: Operator role/authorization contract over shared Administrator runtime", "40.6.95: current Version Truth and Version Delivery workflows aligned to V3 + final handoff"],
     "release_document": "RELEASE_40_6_95_FINAL_HANDOFF.md",
     "restart_prompt": "PROMPT_REPRISE_AERITH_7_AGENT_CRYPTO_40_6_95.md",
     "operator_contract": "architecture/operator-runtime-contract-40.6.94.json",
@@ -372,12 +392,7 @@
   },
   "debug_406093": {
     "scope": "version truth + Source Truth loader ownership only",
-    "corrections": [
-      "Entry Authority V3 removes the last build-specific Source Truth repair and uses a generic demand-loader contract",
-      "compatibility bootstrap advances from Entry Authority V2 to V3 without rewriting the validated Administrator document",
-      "Source Truth demand loader resolves the loaded build dynamically and exports a stable API while preserving the legacy alias",
-      "stale falsePropagation=true UI marker is deleted instead of asserted"
-    ],
+    "corrections": ["Entry Authority V3 removes the last build-specific Source Truth repair and uses a generic demand-loader contract", "compatibility bootstrap advances from Entry Authority V2 to V3 without rewriting the validated Administrator document", "Source Truth demand loader resolves the loaded build dynamically and exports a stable API while preserving the legacy alias", "stale falsePropagation=true UI marker is deleted instead of asserted"],
     "source_truth_host": "backend",
     "sources_reparenting": false,
     "historical_archive_versions_rewritten": false,
@@ -390,11 +405,7 @@
   },
   "debug_406092": {
     "scope": "version truth visible sync baseline",
-    "corrections": [
-      "footer async Web Classic render hands final ownership back to the loaded Version Truth runtime so stale parser-time 40.6.86 cannot win the race",
-      "Administrator mirror/status bar is synchronized from the immutable loaded build instead of the parser-time ADMIN_BUILD constant",
-      "40.6.92 immutable entry is published through the existing pathname authority while preserving the 40.6.91 Source Truth backend-placement restoration"
-    ],
+    "corrections": ["footer async Web Classic render hands final ownership back to the loaded Version Truth runtime so stale parser-time 40.6.86 cannot win the race", "Administrator mirror/status bar is synchronized from the immutable loaded build instead of the parser-time ADMIN_BUILD constant", "40.6.92 immutable entry is published through the existing pathname authority while preserving the 40.6.91 Source Truth backend-placement restoration"],
     "superseded_timing_hardening": "40.6.102 adds deferred event-turn resync after the stale footer was reproduced again",
     "source_truth_host": "backend",
     "sources_reparenting": false,
@@ -408,11 +419,7 @@
   },
   "debug_406091": {
     "scope": "version/footer + Sources discoverability debug",
-    "corrections": [
-      "footer version truth synchronization introduced",
-      "Sources demand-load race handled",
-      "Source Truth cache-busted for the 40.6.91 debug pass"
-    ],
+    "corrections": ["footer version truth synchronization introduced", "Sources demand-load race handled", "Source Truth cache-busted for the 40.6.91 debug pass"],
     "post_debug_restoration": "Source Truth CEX + DEX/DeFi + Source Intelligence restored to canonical System → Backend / API host; Sources may demand-load but never reparent the panel",
     "business_logic_changed": false,
     "market_data_changed": false,
@@ -468,20 +475,20 @@
     "dex_identity": "partial_observed_with_read_only_exclusion_diagnostics_40.6.99",
     "cex_divergence": "fail_closed_read_side_quality_gate_40.6.101_firefox_observation_pending",
     "cex_freshness": "fail_closed_read_side_guard_40.6.98_active_terrain_observation_pending",
-    "visible_version_footer": "40.6.107_runtime_patch_targets_current_footer; terrain proof pending",
+    "visible_version_footer": "40.6.107 guard inherited by 40.6.108; Firefox proof pending",
     "generated_report_version_truth": "40.6.103_user_report_proven",
     "pedagogy_version_truth": "40.6.105_export_no_longer_reproduces_pedagogy_Interface_40.6.86_label",
     "tradus_strategy_a_comparison_truth": "40.6.105_user_firefox_export_accepted",
     "local_ai_contract_consistency": "40.6.106_user_firefox_CURRENT_10:36:33_accepted_no_false_absence_claims",
-    "final_firefox_terrain_proof": "40.6.107_required_after_deployment",
-    "visible_version_auto_reader": "40.6.107_runtime_patch_published; Firefox proof pending",
-    "local_dialogue_presentation": "planned_after_40.6.107_version_truth_closure"
+    "final_firefox_terrain_proof": "40.6.108_required_after_deployment",
+    "visible_version_auto_reader": "40.6.107 guard inherited by 40.6.108; Firefox proof pending",
+    "local_dialogue_presentation": "40.6.108 published; visual terrain proof pending"
   },
   "history": {
     "through_build": "40.6.95",
     "legacy_history_path": "architecture/build-history-through-40.6.86.json",
     "handoff_parent": "RELEASE_40_6_95_FINAL_HANDOFF.md",
     "preserved": true,
-    "reason": "40.6.96-40.6.107 extend the validated 40.6.95 runtime without rewriting protected business owners"
+    "reason": "40.6.96-40.6.108 extend the validated 40.6.95 runtime without rewriting protected business owners"
   }
 }
