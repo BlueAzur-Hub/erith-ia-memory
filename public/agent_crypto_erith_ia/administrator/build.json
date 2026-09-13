@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.106",
+  "build": "40.6.107",
   "engine": "38.15.11",
-  "release": "LOCAL AI ANALYTICAL CONTRACT CONSISTENCY",
+  "release": "VISIBLE VERSION SURFACE TRUTH",
   "published": true,
-  "status": "local_ai_contract_consistency_406106",
-  "parent_build": "40.6.105",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.106",
-  "administrator_build": "40.6.106",
-  "build_label": "Build 40.6.106 · Administrator",
-  "release_status": "local_ai_contract_consistency_406106",
-  "timestamp": "2026-09-13T08:15:00Z",
+  "status": "visible_version_surface_truth_406107",
+  "parent_build": "40.6.106",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.107",
+  "administrator_build": "40.6.107",
+  "build_label": "Build 40.6.107 · Administrator",
+  "release_status": "visible_version_surface_truth_406107",
+  "timestamp": "2026-09-13T08:58:00Z",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,7 +29,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v3.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.106.html",
+    "immutable_entry": "index-40.6.107.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -47,7 +47,39 @@
     "tradus_strategy_a_comparison_truth_406105": true,
     "tradus_strategy_a_runtime_patch": "js/tradus-strategy-a-reconcile-406105.js",
     "local_ai_contract_consistency_406106": true,
-    "local_ai_contract_consistency_runtime_patch": "js/local-ai-contract-consistency-406106.js"
+    "local_ai_contract_consistency_runtime_patch": "js/local-ai-contract-consistency-406106.js",
+    "visible_version_surface_truth_406107": true,
+    "visible_version_surface_truth_runtime_patch": "js/visible-version-surface-truth-406107.js"
+  },
+  "visible_version_surface_truth_406107": {
+    "scope": "current runtime visible version surfaces only; preserve historical provenance",
+    "release_document": "RELEASE_40_6_107.md",
+    "test_evidence": "architecture/visible-version-surface-truth-40.6.107.json",
+    "immutable_entry": "index-40.6.107.html",
+    "parent_entry_blob_reused": "index-40.6.106.html",
+    "runtime_patch": "js/visible-version-surface-truth-406107.js",
+    "runtime_loader": "js/version-truth-406086-authority-lock.js",
+    "version_authority": "globalThis.ErithVersionTruth / immutable pathname",
+    "auto_reader_current_build_normalized": true,
+    "interface_build_truth_pass_requires_consistency": true,
+    "footer_current_build_resynced": true,
+    "historical_provenance_rewritten": false,
+    "self_test_expected": "4/4",
+    "market_data_changed": false,
+    "market_core_changed": false,
+    "web_classic_changed": false,
+    "aether_changed": false,
+    "atlas_current_algorithm_changed": false,
+    "oracle_changed": false,
+    "lecture_technique_changed": false,
+    "strategy_a_changed": false,
+    "trading_changed": false,
+    "wallet_changed": false,
+    "recurring_timer": false,
+    "observer": false,
+    "storage_write": false,
+    "network_request": false,
+    "firefox_terrain_proof": "pending Administrator 40.6.107 export"
   },
   "local_ai_contract_consistency_406106": {
     "scope": "reject local Atlas/Aerith comments that contradict deterministic facts already present in the same CURRENT strict_contract",
@@ -76,7 +108,7 @@
     "recurring_timer": false,
     "observer": false,
     "storage_write": false,
-    "firefox_terrain_proof": "pending_new_CURRENT_or_full_export_on_40.6.106"
+    "firefox_terrain_proof": "accepted 2026-09-13: new CURRENT 10:36:33, 4/4 Atlas -> NØX -> Aerith, no reproduced false Top5/price-volume/math claims, contradictions 0"
   },
   "tradus_strategy_a_comparison_truth_406105": {
     "scope": "reconcile the displayed TRADUS comparison with current Strategy A truth without changing either business owner",
@@ -289,11 +321,7 @@
     ],
     "runtime_patch": "js/agent-crypto-post-handoff-406096.js",
     "loader": "js/views/private-source-demand-loader.js",
-    "release_documents": [
-      "RELEASE_40_6_96.md",
-      "RELEASE_40_6_97.md",
-      "RELEASE_40_6_98.md"
-    ],
+    "release_documents": ["RELEASE_40_6_96.md", "RELEASE_40_6_97.md", "RELEASE_40_6_98.md"],
     "test_evidence": "architecture/post-handoff-stabilization-40.6.98.json",
     "strategy_auto_proof": true,
     "strategy_proof_once_per_page": true,
@@ -410,18 +438,8 @@
   "okx_wave_1_406087": {
     "backend_version": "1.4.2",
     "source_truth_primary": "binance",
-    "controls": [
-      "kraken",
-      "coinbase",
-      "okx"
-    ],
-    "assets": [
-      "BTC",
-      "ETH",
-      "BNB",
-      "XRP",
-      "SOL"
-    ],
+    "controls": ["kraken", "coinbase", "okx"],
+    "assets": ["BTC", "ETH", "BNB", "XRP", "SOL"],
     "okx_backend_proof": "5/5",
     "global_backend_quotes": "14/15",
     "coinbase_bnb_eur": "unavailable",
@@ -450,19 +468,20 @@
     "dex_identity": "partial_observed_with_read_only_exclusion_diagnostics_40.6.99",
     "cex_divergence": "fail_closed_read_side_quality_gate_40.6.101_firefox_observation_pending",
     "cex_freshness": "fail_closed_read_side_guard_40.6.98_active_terrain_observation_pending",
-    "visible_version_footer": "late_writer_lock_proven_current_in_user_40.6.103_report",
+    "visible_version_footer": "40.6.107_runtime_patch_targets_current_footer; terrain proof pending",
     "generated_report_version_truth": "40.6.103_user_report_proven",
     "pedagogy_version_truth": "40.6.105_export_no_longer_reproduces_pedagogy_Interface_40.6.86_label",
     "tradus_strategy_a_comparison_truth": "40.6.105_user_firefox_export_accepted",
-    "local_ai_contract_consistency": "40.6.106_published_static_6_of_6_terrain_CURRENT_pending",
-    "final_firefox_terrain_proof": "40.6.106_required_after_deployment",
-    "visible_version_auto_reader": "40.6.105_export_still_reports_ATLAS_AUTO_READER_V4_Build_40.6.86_and_interface_build_truth_FAIL"
+    "local_ai_contract_consistency": "40.6.106_user_firefox_CURRENT_10:36:33_accepted_no_false_absence_claims",
+    "final_firefox_terrain_proof": "40.6.107_required_after_deployment",
+    "visible_version_auto_reader": "40.6.107_runtime_patch_published; Firefox proof pending",
+    "local_dialogue_presentation": "planned_after_40.6.107_version_truth_closure"
   },
   "history": {
     "through_build": "40.6.95",
     "legacy_history_path": "architecture/build-history-through-40.6.86.json",
     "handoff_parent": "RELEASE_40_6_95_FINAL_HANDOFF.md",
     "preserved": true,
-    "reason": "40.6.96-40.6.106 extend the validated 40.6.95 runtime without rewriting protected business owners"
+    "reason": "40.6.96-40.6.107 extend the validated 40.6.95 runtime without rewriting protected business owners"
   }
 }
