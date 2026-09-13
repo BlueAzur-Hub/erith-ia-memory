@@ -1,7 +1,8 @@
 /* Agent-Crypto @erith.IA — Strategy A ↔ TRADUS Comparative Intelligence
    Administrator 40.6.115.
    Visible read-only synthesis mounted directly under the existing TRADUS panel.
-   It reads existing Strategy A, TRADUS, comparative ledger and TRADUS Paper observability owners.
+   It reads the canonical current Strategy A read truth, TRADUS, comparative ledger
+   and TRADUS Paper observability owners.
    No fetch, timer, observer, storage write, strategy mutation, wallet or order path. */
 (()=>{
   "use strict";
@@ -20,13 +21,19 @@
   const safe=(fn,fallback=null)=>{try{return typeof fn==="function"?fn():fallback;}catch(_){return fallback;}};
 
   function readStrategy(){
-    const owner=globalThis.AgentCryptoTradusStrategyReconcile406105;
-    const raw=safe(owner?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null})||{decision:"INCONNU"};
-    const state=globalThis.AgentCryptoTradusStrategyFailClosed?.stateOf?.(raw)||"UNKNOWN";
+    const canonical=globalThis.AgentCryptoTradusStrategyFailClosed;
+    const historical=globalThis.AgentCryptoTradusStrategyReconcile406105;
+    const raw=safe(canonical?.readStrategyA,null)
+      ||safe(historical?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null})
+      ||{decision:"INCONNU"};
+    const state=canonical?.stateOf?.(raw)||"UNKNOWN";
     return Object.freeze({
       decision:String(raw.decision||"INCONNU"),
       phase:raw.phase||null,
       direction_score:finite(raw.direction_score),
+      blocker:raw.blocker||null,
+      reason:raw.reason||null,
+      source:raw.source||"HISTORICAL_RECONCILE",
       state
     });
   }
@@ -102,7 +109,7 @@
     const tradus=readTradus();
     const compare=comparison(strategy,tradus);
     const memory=readMemory();
-    const blocker=firstBlocker();
+    const blocker=strategy.blocker||firstBlocker();
     let verdict="OBSERVER";
     if(!tradus.available)verdict="EN ATTENTE";
     else if(!tradus.fresh)verdict="RAFRAÎCHIR TRADUS";
@@ -190,6 +197,7 @@
     if(!root)return null;
     const m=model();lastModel=m;
     root.dataset.verdict=m.verdict;
+    root.dataset.strategyATruthSource=m.strategy.source||"unknown";
     set(root,"verdict",m.verdict);
     set(root,"strategy",`${m.strategy.decision}${m.strategy.state?` · ${m.strategy.state}`:""}`);
     set(root,"strategy-detail",`${Number.isFinite(m.strategy.direction_score)?`direction ${m.strategy.direction_score}/100`:"direction non lue"}${m.blocker?` · verrou ${m.blocker}`:""}`);
@@ -217,10 +225,12 @@
   function selfTest(){
     const compareOwner=globalThis.AgentCryptoTradusStrategyFailClosed;
     const fake=(decision,action)=>compareOwner?.compare?.({decision},{action})||{state:"NON COMPARABLE"};
+    const currentReader=compareOwner?.readStrategyA;
     const checks=[
       upper(fake("NO TRADE","NO_TRADE").state).includes("CONVERGENCE"),
       upper(fake("NO TRADE","SELL").state).includes("DIVERGENCE"),
       upper(fake("OFF","SELL").state).includes("NON COMPARABLE"),
+      typeof currentReader==="function",
       model().contract.financial_signal===false,
       model().contract.real_order===false
     ];
