@@ -16,6 +16,7 @@
   const BUILD_3950 = "39.5.0";
   const ROOT_ID = "decisionDualMemory395";
   const EXPORT_ID = "btnDecisionBoardDualMemoryExport395";
+  const WRAP_MARKER_406117 = "__agentCryptoDualMemoryWrapped406117";
 
   const byId = id => document.getElementById(id);
   const text = (id, value) => {
@@ -238,15 +239,46 @@
     return body;
   }
 
+  /* 40.6.117 R4 — late legacy-renderer rebind.
+     Some late-loaded Administrator layers can replace renderDecisionBoard after
+     this reader first executes. When that happens the compact shell can fall
+     back to its historic counter while the canonical Dual Memory cards remain
+     correct. Rebind once after full load: no timer, observer, fetch or write. */
+  function bindLegacyDecisionRenderer406117() {
+    const current = globalThis.renderDecisionBoard;
+    if (typeof current !== "function") {
+      try { render(); } catch (_) {}
+      return false;
+    }
+    if (current[WRAP_MARKER_406117] === true) {
+      try { render(); } catch (_) {}
+      return true;
+    }
+    const base = current;
+    const wrapped = function renderDecisionBoard3950LateTruth(...args) {
+      const result = base.apply(this, args);
+      try { render(); } catch (_) {}
+      return result;
+    };
+    try { Object.defineProperty(wrapped, WRAP_MARKER_406117, { value: true }); }
+    catch (_) { wrapped[WRAP_MARKER_406117] = true; }
+    globalThis.renderDecisionBoard = wrapped;
+    try { render(); } catch (_) {}
+    return true;
+  }
+
   const baseRenderDecisionBoard = typeof globalThis.renderDecisionBoard === "function"
     ? globalThis.renderDecisionBoard
     : null;
   if (baseRenderDecisionBoard) {
-    globalThis.renderDecisionBoard = function renderDecisionBoard3950(...args) {
+    const wrapped = function renderDecisionBoard3950(...args) {
       const result = baseRenderDecisionBoard.apply(this, args);
       try { render(); } catch (_) {}
       return result;
     };
+    try { Object.defineProperty(wrapped, WRAP_MARKER_406117, { value: true }); }
+    catch (_) { wrapped[WRAP_MARKER_406117] = true; }
+    globalThis.renderDecisionBoard = wrapped;
   }
 
   document.addEventListener("click", event => {
@@ -265,9 +297,12 @@
     new_fetch: false,
     new_timer: false,
     new_websocket: false,
-    compact_market_count_truth_406100: true
+    compact_market_count_truth_406100: true,
+    late_legacy_renderer_rebind_406117: true
   });
   globalThis.atlasDecisionBoardDualMemory3950 = Object.freeze({ render, markdown });
 
   queueMicrotask(() => { try { render(); } catch (_) {} });
+  if (document.readyState === "complete") bindLegacyDecisionRenderer406117();
+  else window.addEventListener("load", bindLegacyDecisionRenderer406117, { once:true, passive:true });
 })();
