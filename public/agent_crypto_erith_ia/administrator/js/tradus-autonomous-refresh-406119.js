@@ -1,6 +1,7 @@
 /*
   Agent-Crypto Administrator — TRADUS Autonomous Shadow Refresh
-  Build: 40.6.119 candidate
+  Build: 40.6.119
+  Parent: 40.6.118
   Responsibility: refresh the existing TRADUS shadow lane without operator clicks.
 
   Safety / scope:
@@ -19,6 +20,7 @@
   const START_DELAY_MS = 1_500;
   const RETRY_MS = 2_000;
   const API_KEY = "AgentCryptoTradusAutonomousRefresh406119";
+  const PANEL_ID = "tradusShadow406066";
 
   if (globalThis[API_KEY]) return;
 
@@ -40,6 +42,19 @@
     timer = null;
   }
 
+  function syncVisibleContract() {
+    if (typeof document === "undefined") return false;
+    const panel = document.getElementById(PANEL_ID);
+    if (!panel) return false;
+    panel.dataset.autonomousRefresh = BUILD;
+    panel.dataset.autonomousRefreshInterval = String(INTERVAL_MS);
+    const foot = panel.querySelector(".ts-foot");
+    if (foot) {
+      foot.textContent = "SHADOW ONLY · AUTO 60 S ACTIF PAGE VISIBLE · aucun ordre · aucune clé · aucun wallet · aucune mutation Strategy A · signal comparatif uniquement.";
+    }
+    return true;
+  }
+
   function schedule(delay = INTERVAL_MS) {
     clearTimer();
     if (!running || typeof document === "undefined" || document.hidden) return false;
@@ -58,6 +73,7 @@
     }
 
     try { owner.mount?.(); } catch (_) {}
+    syncVisibleContract();
 
     try {
       await owner.refresh(trigger);
@@ -65,6 +81,12 @@
       lastAt = new Date().toISOString();
       lastTrigger = trigger;
       lastError = null;
+      syncVisibleContract();
+      try {
+        document.dispatchEvent(new CustomEvent("agentcrypto:tradus-autonomous-refresh", {
+          detail: { build: BUILD, cycles, at: lastAt, trigger }
+        }));
+      } catch (_) {}
       return true;
     } catch (error) {
       lastError = String(error?.message || error || "TRADUS_REFRESH_FAILED");
@@ -75,9 +97,13 @@
   }
 
   function start(source = "start") {
-    if (running) return false;
+    if (running) {
+      syncVisibleContract();
+      return false;
+    }
     running = true;
     lastTrigger = source;
+    syncVisibleContract();
     schedule(START_DELAY_MS);
     return true;
   }
@@ -100,6 +126,7 @@
       last_trigger: lastTrigger,
       last_error: lastError,
       owner_available: !!shadow(),
+      visible_contract_synced: syncVisibleContract(),
       paper_only: true,
       shadow_only: true,
       real_orders: false,
@@ -137,6 +164,7 @@
     stop,
     run_once: () => cycle("explicit_run_once"),
     status,
+    sync_visible_contract: syncVisibleContract,
     self_test: selfTest,
     paper_only: true,
     shadow_only: true,
@@ -152,8 +180,12 @@
   if (typeof document !== "undefined") {
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) clearTimer();
-      else if (running) schedule(250);
+      else if (running) {
+        syncVisibleContract();
+        schedule(250);
+      }
     }, { passive: true });
+    document.addEventListener("agentcrypto:tradus-shadow-observation", syncVisibleContract, { passive: true });
     window.addEventListener("pagehide", () => stop("pagehide"), { passive: true });
     window.addEventListener("pageshow", () => start("pageshow"), { passive: true });
 
