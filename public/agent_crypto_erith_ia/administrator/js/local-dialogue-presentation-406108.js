@@ -129,18 +129,27 @@
 
   function parseConservedLine(text) {
     const clean = String(text || "").replace(/\s+/g, " ").trim();
-    const match = clean.match(/SYNTHÈSE CONSERVÉE\s*·\s*lecture seule\s*·\s*source\s+([^·]+)\s*·\s*(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2})/i);
-    return match ? { source: match[1].trim(), marketAt: match[2].trim() } : null;
+    const original = clean.match(/SYNTHÈSE CONSERVÉE\s*·\s*lecture seule\s*·\s*source\s+([^·]+)\s*·\s*(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2})/i);
+    if (original) return { source: original[1].trim(), marketAt: original[2].trim() };
+    const market = clean.match(/snapshot marché\s*:\s*(\d{2}\/\d{2}\/\d{4}\s+\d{2}:\d{2}:\d{2})/i)?.[1] || "";
+    const source = clean.match(/source\s*:\s*([^·]+)/i)?.[1] || "";
+    return market && source ? { source: source.trim(), marketAt: market.trim() } : null;
   }
 
   function syncConservedTimeTruth() {
     const node = smallestContaining(["SYNTHÈSE CONSERVÉE", "ne compte jamais comme CURRENT local"]);
     if (!node) return false;
-    const parsed = parseConservedLine(node.textContent || "");
-    if (!parsed) return false;
+    const parsed = {
+      source: node.dataset.marketSnapshotSource406108 || "",
+      marketAt: node.dataset.marketSnapshotAt406108 || ""
+    };
+    const discovered = parsed.source && parsed.marketAt ? parsed : parseConservedLine(node.textContent || "");
+    if (!discovered) return false;
+    node.dataset.marketSnapshotSource406108 = discovered.source;
+    node.dataset.marketSnapshotAt406108 = discovered.marketAt;
     const currentAt = formatTimestamp(analyticalLatestAt());
     const currentPart = currentAt !== "—" ? ` · CURRENT produit : ${currentAt}` : "";
-    node.textContent = `SYNTHÈSE CONSERVÉE · snapshot marché : ${parsed.marketAt}${currentPart} · source : ${parsed.source} · lecture seule · ne compte jamais comme CURRENT local si le fingerprint diffère`;
+    node.textContent = `SYNTHÈSE CONSERVÉE · snapshot marché : ${discovered.marketAt}${currentPart} · source : ${discovered.source} · lecture seule · ne compte jamais comme CURRENT local si le fingerprint diffère`;
     node.classList.add("ac-conserved-synthesis-time-406108");
     node.dataset.localDialoguePresentationOwner = OWNER;
     return true;
@@ -161,10 +170,11 @@
   function selfTest() {
     const p = parseAtlasProgress("Dialogue local prêt avec gpt-oss:20b-32k · Atlas-10 75 % · 3/4 rapports prêts.");
     const c = parseConservedLine("SYNTHÈSE CONSERVÉE · lecture seule · source ryzen7-christophe · 13/09/2026 08:45:07 · ne compte jamais comme CURRENT local si le fingerprint diffère");
+    const rewritten = parseConservedLine("SYNTHÈSE CONSERVÉE · snapshot marché : 13/09/2026 08:45:07 · CURRENT produit : 13/09/2026 10:36:33 · source : ryzen7-christophe · lecture seule · ne compte jamais comme CURRENT local si le fingerprint diffère");
     const checks = Object.freeze({
       atlas_progress_3_of_4: p.reports === 3 && p.percent === 75,
       market_snapshot_time_parsed: c?.marketAt === "13/09/2026 08:45:07",
-      source_parsed: c?.source === "ryzen7-christophe",
+      source_and_rewritten_line_stable: c?.source === "ryzen7-christophe" && rewritten?.source === "ryzen7-christophe" && rewritten?.marketAt === c?.marketAt,
       historical_time_not_replaced_by_now: formatTimestamp("13/09/2026 08:45:07") === "13/09/2026 08:45:07"
     });
     return Object.freeze({ pass: Object.values(checks).every(Boolean), checks });
