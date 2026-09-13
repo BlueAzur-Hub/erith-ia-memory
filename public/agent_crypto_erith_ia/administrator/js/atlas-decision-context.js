@@ -1,5 +1,6 @@
 /* Agent-Crypto @erith.IA — Atlas Decision Context
    Introduced by Administrator 40.6.114.
+   40.6.117 repair: canonical current readers + late-runtime rebind.
    Purpose: compose existing read-only truths into one descriptive operator context.
    Sources: market/oracle presentation, CEX+DEX Source Intelligence, News Event Intelligence,
    Strategy A state and TRADUS shadow state.
@@ -9,35 +10,73 @@
   "use strict";
 
   const OWNER="atlas-decision-context";
+  const REPAIR="40.6.117";
   const ROOT_ID="atlasDecisionContext";
   const STYLE_ID="atlasDecisionContextStyle";
   let lastModel=null;
 
   const upper=value=>String(value??"").trim().toUpperCase();
-  const finite=value=>{const n=Number(value);return Number.isFinite(n)?n:null;};
-  const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  const finite=value=>{
+    if(value===null||value===undefined)return null;
+    if(typeof value==="string"&&!value.trim())return null;
+    const n=Number(value);
+    return Number.isFinite(n)?n:null;
+  };
   const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
   const runtimeBuild=()=>String(globalThis.ErithVersionTruth?.build||new URLSearchParams(location.search).get("ac-build")||document.querySelector('meta[name="administrator-build"]')?.content||"runtime").trim();
+  const bodyText=()=>String(document.body?.innerText||"").replace(/\u00a0/g," ");
 
   function safeCall(fn,fallback=null){try{return typeof fn==="function"?fn():fallback;}catch(_){return fallback;}}
+  function firstMatch(texts,patterns,group=1){
+    for(const text of texts){
+      if(!text)continue;
+      for(const pattern of patterns){
+        const match=String(text).match(pattern);
+        if(match?.[group]!=null)return match[group];
+      }
+    }
+    return null;
+  }
 
   function readOracleAndMarket(){
     const oracleNode=document.getElementById("atlasOracleV0")||document.querySelector('[data-atlas-oracle], [aria-label*="Oracle"]');
     const local=String(oracleNode?.innerText||"").replace(/\u00a0/g," ");
-    const body=String(document.body?.innerText||"").replace(/\u00a0/g," ");
-    const text=local||body;
-    const bias=text.match(/Biais mesur[ée]\s*:\s*([A-ZÀ-Ü_-]+)/i)?.[1]||text.match(/ORACLE\s+(?:OP[ÉE]RATEUR\s*)?.*?\b(MIXTE|HAUSSIER|BAISSIER|NEUTRE)\b/i)?.[1]||null;
-    const confidence=finite(text.match(/Confiance donn[ée]es\s*(\d+)\s*\/\s*100/i)?.[1]||text.match(/CONF\.?\s*(\d+)\s*\/\s*100/i)?.[1]);
-    const direction=finite(text.match(/Atlas\s*:\s*[^\n]*?score direction\s*(-?\d+)\s*\/\s*100/i)?.[1]);
+    const body=bodyText();
+    const texts=[local,body];
+
+    const bias=firstMatch(texts,[
+      /Biais mesur[ée]\s*:\s*(MIXTE|HAUSSIER|BAISSIER|NEUTRE)/i,
+      /ORACLE\s+(?:OP[ÉE]RATEUR\s*)?.*?\b(MIXTE|HAUSSIER|BAISSIER|NEUTRE)\b/i,
+      /R[ÉE]GIME\s*(MIXTE|HAUSSIER|BAISSIER|NEUTRE)/i
+    ]);
+    const confidence=finite(firstMatch(texts,[
+      /Confiance donn[ée]es\s*(\d+)\s*\/\s*100/i,
+      /CONF\.?\s*(\d+)\s*\/\s*100/i,
+      /Confiance\s*(\d+)\s*\/\s*100/i
+    ]));
+    const direction=finite(firstMatch(texts,[
+      /Atlas\s*:\s*[^\n]*?score direction\s*([+-]?\d+)\s*\/\s*100/i,
+      /score direction\s*([+-]?\d+)\s*\/\s*100/i
+    ]));
 
     let positive=null,negative=null,stable=null;
-    const breadth=body.match(/Top\s*5\s*:\s*(\d+)\s*\/\s*5\s*positifs?\s*[·\-–—,; ]+\s*(\d+)\s*n[ée]gatifs?/i);
-    if(breadth){positive=finite(breadth[1]);negative=finite(breadth[2]);stable=positive!==null&&negative!==null?Math.max(0,5-positive-negative):null;}
-    const broadMarket=body.match(/(\d+)\s*hausses?\s*[·\-–—,; ]+\s*(\d+)\s*baisses?\s*[·\-–—,; ]+\s*(\d+)\s*stables?/i);
+    const top5=body.match(/Top\s*5\s*[:·-]?\s*(\d+)\s*(?:\/\s*5\s*)?positifs?[\s\S]{0,40}?(\d+)\s*n[ée]gatifs?/i)
+      ||body.match(/Target\s*Top\s*5[\s\S]{0,120}?(\d+)\s*actifs?\s*positifs?[\s\S]{0,40}?(\d+)\s*actifs?\s*n[ée]gatifs?[\s\S]{0,40}?(\d+)\s*actifs?\s*stables?/i);
+    if(top5){
+      positive=finite(top5[1]);
+      negative=finite(top5[2]);
+      stable=finite(top5[3]);
+      if(stable===null&&positive!==null&&negative!==null)stable=Math.max(0,5-positive-negative);
+    }
+
+    const broadMarket=body.match(/(\d+)\s*hausses?[\s\S]{0,40}?(\d+)\s*baisses?[\s\S]{0,40}?(\d+)\s*stables?/i);
     const marketUp=finite(broadMarket?.[1]),marketDown=finite(broadMarket?.[2]),marketStable=finite(broadMarket?.[3]);
+    const explicitTone=firstMatch([body],[/largeur\s+(n[ée]gative|positive|partag[ée]e)/i]);
     const marketTone=marketUp!==null&&marketDown!==null
-      ? (marketUp>marketDown?"POSITIVE":marketDown>marketUp?"NÉGATIVE":"PARTAGÉE")
-      : (positive!==null&&negative!==null?(positive>negative?"POSITIVE":negative>positive?"NÉGATIVE":"PARTAGÉE"):"INCONNUE");
+      ?(marketUp>marketDown?"POSITIVE":marketDown>marketUp?"NÉGATIVE":"PARTAGÉE")
+      :(positive!==null&&negative!==null
+        ?(positive>negative?"POSITIVE":negative>positive?"NÉGATIVE":"PARTAGÉE")
+        :explicitTone?upper(explicitTone).replace("NEGATIVE","NÉGATIVE"):"INCONNUE");
 
     return Object.freeze({
       oracle:Object.freeze({bias:bias?upper(bias):"INCONNU",confidence,direction_score:direction}),
@@ -50,10 +89,15 @@
     const intel=safeCall(api?.sourceIntelligence,null);
     const cex=safeCall(api?.snapshot,null);
     const dexDiag=safeCall(globalThis.AgentCryptoDexExclusionDiagnostics?.report,null);
+    const body=bodyText();
+    const cexVisible=body.match(/Binance[^\d\n]{0,24}(\d+)\s*\/\s*(\d+)/i);
+    const visibleReady=/TOUTES\s+LES\s+SOURCES\s+PR[ÊE]TES|SOURCES\s+PR[ÊE]TES/i.test(body);
+    const intelState=String(intel?.state||"unknown").toLowerCase();
+    const state=intelState!=="unknown"?intelState:(visibleReady?"visible-ready":"unknown");
     return Object.freeze({
-      state:String(intel?.state||"unknown").toLowerCase(),
-      cex_comparable:finite(intel?.cex?.comparable_assets),
-      cex_total:finite(intel?.cex?.total_assets),
+      state,
+      cex_comparable:finite(intel?.cex?.comparable_assets??cexVisible?.[1]),
+      cex_total:finite(intel?.cex?.total_assets??cexVisible?.[2]),
       cex_max_spread_pct:finite(intel?.cex?.max_spread_pct),
       dex_eligible:finite(intel?.dex?.atlas_eligible),
       dex_total:finite(intel?.dex?.total_assets),
@@ -64,47 +108,85 @@
       freshness_seconds:finite(intel?.freshness?.max_age_seconds),
       dex_excluded:finite(dexDiag?.excluded_assets),
       dex_reasons:clone(dexDiag?.reasons)||{},
-      cex_available:Boolean(cex)
+      cex_available:Boolean(cex||cexVisible),
+      visible_fallback:!intel&&visibleReady
     });
   }
 
   function readNews(){
     const current=safeCall(globalThis.AtlasEventIntelligence405000?.current,null);
-    if(!current)return Object.freeze({state:"NO_DATA",headline:null,evidence:null,impact:null,action:null,causal_claim:false});
-    return Object.freeze({
-      state:"READY",
-      headline:String(current?.language?.display_headline||current?.language?.headline_original||current?.event_label||"Événement qualifié"),
-      family:String(current?.event_family||"market_event"),
-      evidence:finite(current?.evidence?.score),
-      impact:finite(current?.impact?.score),
-      action:String(current?.decision?.action||"OBSERVATION"),
-      causal_claim:current?.causal_claim===true
-    });
+    if(current){
+      return Object.freeze({
+        state:"READY",
+        headline:String(current?.language?.display_headline||current?.language?.headline_original||current?.event_label||"Événement qualifié"),
+        family:String(current?.event_family||"market_event"),
+        evidence:finite(current?.evidence?.score),
+        impact:finite(current?.impact?.score),
+        action:String(current?.decision?.action||"OBSERVATION"),
+        causal_claim:current?.causal_claim===true,
+        source:"event-intelligence"
+      });
+    }
+
+    const body=bodyText();
+    const visible=/News\s*Sentinel\s*[:·]?\s*(?:op[ée]rationnel|ok)|NEWS\s*\d+\s*QUALIFI[ÉE]S/i.test(body);
+    if(!visible)return Object.freeze({state:"NO_DATA",headline:null,evidence:null,impact:null,action:null,causal_claim:false,source:"none"});
+    const headline=firstMatch([body],[/Év[ée]nement directeur\s*:\s*([^\n]+)/i])||"News Sentinel opérationnel";
+    const evidence=finite(firstMatch([body],[/News[^\n]{0,180}?preuve\s*(\d+)\s*\/\s*100/i]));
+    const impact=finite(firstMatch([body],[/News[^\n]{0,180}?impact\s*(\d+)\s*\/\s*100/i]));
+    return Object.freeze({state:"VISIBLE",headline:String(headline),family:"news_visible",evidence,impact,action:"OBSERVATION",causal_claim:false,source:"visible-runtime"});
   }
 
-  function readStrategy(){
-    const reader=globalThis.AgentCryptoTradusStrategyReconcile406105;
-    const raw=safeCall(reader?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null})||{decision:"INCONNU"};
-    const state=globalThis.AgentCryptoTradusStrategyFailClosed?.stateOf?.(raw)||"UNKNOWN";
-    return Object.freeze({decision:String(raw.decision||"INCONNU"),phase:raw.phase||null,direction_score:finite(raw.direction_score),state});
-  }
+  function readStrategyTradus(){
+    const comparative=safeCall(globalThis.AgentCryptoStrategyTradusComparativeIntelligence?.model,null);
+    if(comparative?.strategy&&comparative?.tradus){
+      const strategy=Object.freeze({
+        decision:String(comparative.strategy.decision||"INCONNU"),
+        phase:comparative.strategy.phase||null,
+        direction_score:finite(comparative.strategy.direction_score),
+        state:String(comparative.strategy.state||"UNKNOWN"),
+        blocker:comparative.strategy.blocker||comparative.blocker||null,
+        source:comparative.strategy.source||"comparative-intelligence"
+      });
+      const tradusState=comparative.tradus.available?(comparative.tradus.fresh?"FRESH":"STALE"):"NO_DATA";
+      const tradus=Object.freeze({
+        state:tradusState,
+        action:upper(comparative.tradus.action||"NO_TRADE")||"NO_TRADE",
+        imbalance:finite(comparative.tradus.imbalance),
+        spread:finite(comparative.tradus.spread),
+        comparison:String(comparative.comparison?.state||"NON COMPARABLE"),
+        comparison_text:String(comparative.comparison?.plain||comparative.comparison?.raw_text||""),
+        fresh:Boolean(comparative.tradus.fresh),
+        source:"comparative-intelligence"
+      });
+      return Object.freeze({strategy,tradus});
+    }
 
-  function readTradus(strategy){
+    const canonical=globalThis.AgentCryptoTradusStrategyFailClosed;
+    const historical=globalThis.AgentCryptoTradusStrategyReconcile406105;
+    const raw=safeCall(canonical?.readStrategyA,null)
+      ||safeCall(historical?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null})
+      ||{decision:"INCONNU"};
+    const state=canonical?.stateOf?.(raw)||"UNKNOWN";
+    const strategy=Object.freeze({decision:String(raw.decision||"INCONNU"),phase:raw.phase||null,direction_score:finite(raw.direction_score),state,blocker:raw.blocker||null,source:raw.source||"fallback"});
+
     const row=clone(safeCall(globalThis.AgentCryptoTradusShadow406066?.read,null));
-    if(!row)return Object.freeze({state:"NO_DATA",action:"NO_TRADE",imbalance:null,spread:null,comparison:"EN ATTENTE",fresh:false});
+    if(!row)return Object.freeze({strategy,tradus:Object.freeze({state:"NO_DATA",action:"NO_TRADE",imbalance:null,spread:null,comparison:"EN ATTENTE",comparison_text:"",fresh:false,source:"none"})});
     const action=upper(row?.signal?.action||"NO_TRADE")||"NO_TRADE";
     const age=(()=>{const at=Date.parse(String(row?.at||""));return Number.isFinite(at)?Math.max(0,(Date.now()-at)/1000):null;})();
     const fresh=row?.ok===true&&age!==null&&age<=15;
-    const comparison=globalThis.AgentCryptoTradusStrategyFailClosed?.compare?.(strategy,row?.signal)||row?.comparison||{state:"NON COMPARABLE"};
-    return Object.freeze({
+    const comparison=canonical?.compare?.(strategy,row?.signal)||historical?.compare?.(strategy,row?.signal)||row?.comparison||{state:"NON COMPARABLE"};
+    const tradus=Object.freeze({
       state:row?.ok===true?(fresh?"FRESH":"STALE"):"UNAVAILABLE",
       action,
       imbalance:finite(row?.signal?.imbalance),
       spread:finite(row?.signal?.spread_ratio),
       comparison:String(comparison?.state||"NON COMPARABLE"),
       comparison_text:String(comparison?.text||""),
-      fresh
+      fresh,
+      source:"tradus-shadow"
     });
+    return Object.freeze({strategy,tradus});
   }
 
   function descriptiveDirection(market,tradus,oracle){
@@ -125,7 +207,8 @@
     if(upper(oracle.bias)==="MIXTE"||upper(oracle.bias)==="NEUTRE")divergences.push(`Oracle ${upper(oracle.bias)}`);
     if(["WAIT","OFF","STOP","UNKNOWN"].includes(upper(strategy.state))&&["BUY","SELL"].includes(upper(tradus.action)))divergences.push(`Strategy A ${strategy.decision||strategy.state} ne confirme pas TRADUS ${tradus.action}`);
     if(tradus.state==="STALE")blockers.push("TRADUS à rafraîchir");
-    if(sources.state!=="ready")blockers.push("Source Intelligence partielle");
+    if(sources.state==="unknown")blockers.push("Source Intelligence indisponible");
+    else if(sources.state==="partial")blockers.push("Source Intelligence partielle");
     if(Number.isFinite(sources.dex_total)&&Number.isFinite(sources.dex_eligible)&&sources.dex_eligible<sources.dex_total)blockers.push(`DEX ${sources.dex_eligible}/${sources.dex_total} éligibles Atlas`);
     if(news.state==="NO_DATA")blockers.push("News Intelligence indisponible");
     if(upper(strategy.state)==="STOP")blockers.push("Strategy A en STOP");
@@ -143,11 +226,12 @@
     if(oracle.bias&&upper(oracle.bias)!=="INCONNU")summary.push(`Oracle ${oracle.bias}${Number.isFinite(oracle.confidence)?` ${oracle.confidence}/100`:""}`);
     if(strategy.decision)summary.push(`Strategy A ${strategy.decision}`);
     if(tradus.action)summary.push(`TRADUS ${tradus.action}`);
-    if(sources.state!=="unknown")summary.push(`sources ${sources.state==="ready"?"prêtes":"partielles"}`);
+    if(sources.state!=="unknown")summary.push(`sources ${sources.state==="ready"?"prêtes":sources.state==="visible-ready"?"visibles prêtes":"partielles"}`);
 
     return Object.freeze({
-      schema:"agent_crypto_atlas_decision_context_v1",
+      schema:"agent_crypto_atlas_decision_context_v2",
       owner:OWNER,
+      repair:REPAIR,
       build:runtimeBuild(),
       generated_at_utc:new Date().toISOString(),
       market:Object.freeze({...market}),oracle:Object.freeze({...oracle}),sources:Object.freeze({...sources}),news:Object.freeze({...news}),strategy:Object.freeze({...strategy}),tradus:Object.freeze({...tradus}),
@@ -162,8 +246,8 @@
 
   function snapshot(){
     const om=readOracleAndMarket();
-    const strategy=readStrategy();
-    return buildModel({market:om.market,oracle:om.oracle,sources:readSources(),news:readNews(),strategy,tradus:readTradus(strategy)});
+    const pair=readStrategyTradus();
+    return buildModel({market:om.market,oracle:om.oracle,sources:readSources(),news:readNews(),strategy:pair.strategy,tradus:pair.tradus});
   }
 
   function ensureStyle(){
@@ -225,49 +309,54 @@
     const model=snapshot();lastModel=model;
     root.dataset.verdict=model.verdict;
     root.dataset.owner=OWNER;
+    root.dataset.repair=REPAIR;
     set(root,"verdict",model.verdict);
     const m=model.market;
     set(root,"market",m.tone||"INCONNU");
     set(root,"market-detail",Number.isFinite(m.breadth_up)?`${m.breadth_up} hausses · ${m.breadth_down} baisses · ${m.breadth_stable} stables`:Number.isFinite(m.top5_positive)?`Top 5 · ${m.top5_positive} positifs · ${m.top5_negative} négatifs`:"largeur non lue");
     set(root,"oracle",`${model.oracle.bias}${Number.isFinite(model.oracle.confidence)?` · ${model.oracle.confidence}/100`:""}`);
     set(root,"oracle-detail",Number.isFinite(model.oracle.direction_score)?`score direction ${model.oracle.direction_score}/100`:"direction non lue");
-    set(root,"sources",model.sources.state==="ready"?"CEX/DEX FILTRÉS":"PARTIEL");
-    set(root,"sources-detail",`${Number.isFinite(model.sources.cex_comparable)?`CEX ${model.sources.cex_comparable}/${model.sources.cex_total}`:"CEX —"} · ${Number.isFinite(model.sources.dex_eligible)?`DEX ${model.sources.dex_eligible}/${model.sources.dex_total} Atlas`:"DEX —"}`);
-    set(root,"news",model.news.state==="READY"?(model.news.action||"OBSERVATION"):"INDISPONIBLE");
-    set(root,"news-detail",model.news.state==="READY"?`${model.news.family}${Number.isFinite(model.news.evidence)?` · preuve ${model.news.evidence}/100`:""}`:"aucun événement courant structuré");
+    const sourceReady=model.sources.state==="ready"||model.sources.state==="visible-ready";
+    set(root,"sources",model.sources.state==="ready"?"CEX/DEX FILTRÉS":sourceReady?"SOURCES PRÊTES":"PARTIEL");
+    set(root,"sources-detail",`${Number.isFinite(model.sources.cex_comparable)?`CEX ${model.sources.cex_comparable}/${model.sources.cex_total}`:"CEX —"} · ${Number.isFinite(model.sources.dex_eligible)?`DEX ${model.sources.dex_eligible}/${model.sources.dex_total} Atlas`:sourceReady?"DEX détail non chargé":"DEX —"}`);
+    set(root,"news",model.news.state!=="NO_DATA"?(model.news.action||"OBSERVATION"):"INDISPONIBLE");
+    set(root,"news-detail",model.news.state!=="NO_DATA"?`${model.news.family}${Number.isFinite(model.news.evidence)?` · preuve ${model.news.evidence}/100`:""}`:"aucun événement courant structuré");
     set(root,"strategy",`${model.strategy.decision||"INCONNU"}`);
-    set(root,"strategy-detail",Number.isFinite(model.strategy.direction_score)?`direction ${model.strategy.direction_score}/100 · état ${model.strategy.state}`:`état ${model.strategy.state}`);
+    set(root,"strategy-detail",upper(model.strategy.state)!=="UNKNOWN"&&Number.isFinite(model.strategy.direction_score)?`direction ${model.strategy.direction_score}/100 · état ${model.strategy.state}`:`état ${model.strategy.state}`);
     set(root,"tradus",`${model.tradus.action||"NO_TRADE"}`);
     set(root,"tradus-detail",`${model.tradus.state}${Number.isFinite(model.tradus.imbalance)?` · imbalance ${(model.tradus.imbalance*100).toFixed(1)} %`:""} · ${model.tradus.comparison}`);
     set(root,"convergence",model.convergence.length?model.convergence.join(" · "):"Aucune convergence directionnelle suffisante.");
     set(root,"divergences",[...model.divergences,...model.blockers].length?[...model.divergences,...model.blockers].join(" · "):"Aucune contradiction majeure détectée.");
     set(root,"stop",`${model.stop_point} · Aucun ordre automatique.`);
     document.documentElement.dataset.atlasDecisionContext=model.verdict.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+    document.documentElement.dataset.atlasDecisionContextReaderRepair=REPAIR;
     try{document.dispatchEvent(new CustomEvent("agentcrypto:atlas-decision-context",{detail:model}));}catch(_){}
     return model;
   }
 
   function schedule(){queueMicrotask(()=>{try{requestAnimationFrame(()=>render());}catch(_){try{render();}catch(__){}}});}
 
-  ["erith:source-intelligence","agentcrypto:dex-exclusion-diagnostics","agentcrypto:tradus-shadow-observation","agentcrypto:strategy-a-auto-cycle","agentcrypto:current-finalized"].forEach(name=>document.addEventListener(name,schedule,{passive:true}));
+  ["erith:source-intelligence","erith:private-source-runtime-loaded","agentcrypto:dex-exclusion-diagnostics","agentcrypto:tradus-shadow-observation","agentcrypto:strategy-a-auto-cycle","agentcrypto:strategy-tradus-comparative-intelligence","agentcrypto:current-finalized"].forEach(name=>document.addEventListener(name,schedule,{passive:true}));
   window.addEventListener("erith:system-hydrated",schedule,{passive:true});
   window.addEventListener("pageshow",schedule,{passive:true});
   document.addEventListener("click",event=>{const label=upper(event.target instanceof Element?event.target.closest("button")?.innerText:"");if(/RAFRAÎCHIR|RELANCER|FORCER|TRADUS|D[ÉE]CISION/.test(label))schedule();},true);
   if(document.readyState==="complete")schedule();else window.addEventListener("load",schedule,{once:true,passive:true});
 
   function selfTest(){
-    const base={market:{tone:"NÉGATIVE"},oracle:{bias:"MIXTE",confidence:87,direction_score:-4},sources:{state:"partial",dex_eligible:3,dex_total:5},news:{state:"READY"},strategy:{decision:"NO TRADE",state:"WAIT"},tradus:{state:"FRESH",action:"SELL"}};
+    const base={market:{tone:"NÉGATIVE"},oracle:{bias:"MIXTE",confidence:87,direction_score:-4},sources:{state:"visible-ready"},news:{state:"VISIBLE"},strategy:{decision:"NO TRADE",state:"WAIT"},tradus:{state:"FRESH",action:"SELL"}};
     const a=buildModel(base);
     const b=buildModel({market:{tone:"INCONNUE"},oracle:{bias:"INCONNU"},sources:{state:"unknown"},news:{state:"NO_DATA"},strategy:{decision:"INCONNU",state:"UNKNOWN"},tradus:{state:"NO_DATA",action:"NO_TRADE"}});
     const c=buildModel({market:{tone:"POSITIVE"},oracle:{bias:"HAUSSIER",confidence:90,direction_score:20},sources:{state:"ready",dex_eligible:5,dex_total:5},news:{state:"READY"},strategy:{decision:"PAPER",state:"PAPER"},tradus:{state:"FRESH",action:"BUY"}});
     const checks=[
-      a.verdict.includes("OBSERVER")&&a.convergence.length===1&&a.contract.financial_signal===false,
+      finite(null)===null&&finite("")===null,
+      a.verdict.includes("OBSERVER")&&a.contract.financial_signal===false,
       b.verdict==="INCOMPLET"&&b.contract.automatic_order===false,
       c.verdict==="COHÉRENCE DESCRIPTIVE"&&c.contract.strategy_mutation===false,
-      c.contract.fetch===false&&c.contract.recurring_timer===false&&c.contract.storage_write===false
+      c.contract.fetch===false&&c.contract.recurring_timer===false&&c.contract.storage_write===false,
+      ["visible-ready","ready"].includes(base.sources.state)&&base.news.state==="VISIBLE"
     ];
     return Object.freeze({pass:checks.every(Boolean),total:checks.length,passed:checks.filter(Boolean).length,checks:Object.freeze(checks)});
   }
 
-  globalThis.AgentCryptoAtlasDecisionContext=Object.freeze({owner:OWNER,build:runtimeBuild(),snapshot,render,selfTest,read_only:true,descriptive_only:true,financial_signal:false,automatic_order:false,fetch:false,recurring_timer:false,observer:false,storage_write:false,strategy_mutation:false,trading:false,wallet:false});
+  globalThis.AgentCryptoAtlasDecisionContext=Object.freeze({owner:OWNER,repair:REPAIR,build:runtimeBuild(),snapshot,render,read:()=>lastModel,selfTest,read_only:true,descriptive_only:true,financial_signal:false,automatic_order:false,fetch:false,recurring_timer:false,observer:false,storage_write:false,strategy_mutation:false,trading:false,wallet:false,canonical_strategy_reader:true,late_runtime_rebind:true});
 })();
