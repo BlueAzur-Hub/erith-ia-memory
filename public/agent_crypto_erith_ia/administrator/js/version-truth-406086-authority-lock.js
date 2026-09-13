@@ -6,6 +6,9 @@
    40.6.106 extends the existing local-AI deterministic comment truth guard.
    40.6.107 closes residual current-runtime version leaks in Auto Reader/footer surfaces.
    40.6.108 improves local Atlas/Aerith dialogue readability and separates market-snapshot time from CURRENT production time.
+   40.6.109 separates price/volume evidence and requires 4/4 Math measures before rejecting a correct reserve.
+   40.6.110 makes unknown Strategy A fail closed in TRADUS comparison.
+   40.6.111 fail-closes stale/unknown DEX observations and verifies pending-before-REPOS Aether truth.
    The path stays stable so validated index entries do not need document rewrites.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -40,51 +43,31 @@
     };
 
     if (atLeast("40.6.103") && globalThis.AgentCryptoGeneratedReportVersionTruth406103?.build !== build) {
-      loadPatch(
-        'script[data-generated-report-version-truth-406103="true"]',
-        `./js/generated-report-version-truth-406103.js?v=generated-report-version-truth-${encodeURIComponent(build)}`,
-        "generatedReportVersionTruth406103"
-      );
+      loadPatch('script[data-generated-report-version-truth-406103="true"]',`./js/generated-report-version-truth-406103.js?v=generated-report-version-truth-${encodeURIComponent(build)}`,"generatedReportVersionTruth406103");
     }
-
     if (atLeast("40.6.104") && globalThis.AgentCryptoPedagogyVersionTruth406104?.build !== build) {
-      loadPatch(
-        'script[data-pedagogy-version-truth-406104="true"]',
-        `./js/pedagogy-version-truth-406104.js?v=pedagogy-version-truth-${encodeURIComponent(build)}`,
-        "pedagogyVersionTruth406104"
-      );
+      loadPatch('script[data-pedagogy-version-truth-406104="true"]',`./js/pedagogy-version-truth-406104.js?v=pedagogy-version-truth-${encodeURIComponent(build)}`,"pedagogyVersionTruth406104");
     }
-
     if (atLeast("40.6.105") && !globalThis.AgentCryptoTradusStrategyReconcile406105) {
-      loadPatch(
-        'script[data-tradus-strategy-reconcile-406105="true"]',
-        `./js/tradus-strategy-a-reconcile-406105.js?v=tradus-strategy-reconcile-${encodeURIComponent(build)}`,
-        "tradusStrategyReconcile406105"
-      );
+      loadPatch('script[data-tradus-strategy-reconcile-406105="true"]',`./js/tradus-strategy-a-reconcile-406105.js?v=tradus-strategy-reconcile-${encodeURIComponent(build)}`,"tradusStrategyReconcile406105");
     }
-
     if (atLeast("40.6.106") && !globalThis.AgentCryptoLocalAIContractConsistency406106) {
-      loadPatch(
-        'script[data-local-ai-contract-consistency-406106="true"]',
-        `./js/local-ai-contract-consistency-406106.js?v=local-ai-contract-consistency-${encodeURIComponent(build)}`,
-        "localAiContractConsistency406106"
-      );
+      loadPatch('script[data-local-ai-contract-consistency-406106="true"]',`./js/local-ai-contract-consistency-406106.js?v=local-ai-contract-consistency-${encodeURIComponent(build)}`,"localAiContractConsistency406106");
     }
-
     if (atLeast("40.6.107") && !globalThis.AgentCryptoVisibleVersionSurfaceTruth406107) {
-      loadPatch(
-        'script[data-visible-version-surface-truth-406107="true"]',
-        `./js/visible-version-surface-truth-406107.js?v=visible-version-surface-truth-${encodeURIComponent(build)}`,
-        "visibleVersionSurfaceTruth406107"
-      );
+      loadPatch('script[data-visible-version-surface-truth-406107="true"]',`./js/visible-version-surface-truth-406107.js?v=visible-version-surface-truth-${encodeURIComponent(build)}`,"visibleVersionSurfaceTruth406107");
     }
-
     if (atLeast("40.6.108") && !globalThis.AgentCryptoLocalDialoguePresentation406108) {
-      loadPatch(
-        'script[data-local-dialogue-presentation-406108="true"]',
-        `./js/local-dialogue-presentation-406108.js?v=local-dialogue-presentation-${encodeURIComponent(build)}`,
-        "localDialoguePresentation406108"
-      );
+      loadPatch('script[data-local-dialogue-presentation-406108="true"]',`./js/local-dialogue-presentation-406108.js?v=local-dialogue-presentation-${encodeURIComponent(build)}`,"localDialoguePresentation406108");
+    }
+    if (atLeast("40.6.109") && !globalThis.AgentCryptoLocalAIReserveTruth406109) {
+      loadPatch('script[data-local-ai-reserve-truth-406109="true"]',`./js/local-ai-reserve-truth-406109.js?v=local-ai-reserve-truth-${encodeURIComponent(build)}`,"localAiReserveTruth406109");
+    }
+    if (atLeast("40.6.110") && !globalThis.AgentCryptoTradusStrategyAFailClosed406110) {
+      loadPatch('script[data-tradus-strategy-a-fail-closed-406110="true"]',`./js/tradus-strategy-a-fail-closed-406110.js?v=tradus-strategy-a-fail-closed-${encodeURIComponent(build)}`,"tradusStrategyAFailClosed406110");
+    }
+    if (atLeast("40.6.111") && !globalThis.AgentCryptoDexAetherFreshnessTruth406111) {
+      loadPatch('script[data-dex-aether-freshness-truth-406111="true"]',`./js/dex-aether-freshness-truth-406111.js?v=dex-aether-freshness-truth-${encodeURIComponent(build)}`,"dexAetherFreshnessTruth406111");
     }
   }, { once: true });
   script.addEventListener("error", () => {
