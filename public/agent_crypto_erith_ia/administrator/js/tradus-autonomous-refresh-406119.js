@@ -11,6 +11,10 @@
   - no Strategy A mutation;
   - no storage writes;
   - stops while hidden and on pagehide.
+
+  Compatibility routing:
+  - from runtime 40.6.120, load the bounded Strategy A Auto session-continuity
+    layer. The TRADUS owner itself remains unchanged.
 */
 (() => {
   "use strict";
@@ -36,6 +40,37 @@
     try { return JSON.parse(JSON.stringify(value)); }
     catch (_) { return null; }
   };
+
+  function runtimeBuild() {
+    const fromTruth = String(globalThis.ErithVersionTruth?.build || "").trim();
+    if (fromTruth) return fromTruth;
+    const meta = String(document.querySelector('meta[name="administrator-build"]')?.content || "").trim();
+    return meta || "0.0.0";
+  }
+
+  function runtimeAtLeast(target) {
+    const parts = value => String(value || "").split(".").map(x => Number.parseInt(x, 10) || 0);
+    const A = parts(runtimeBuild());
+    const B = parts(target);
+    const n = Math.max(A.length, B.length);
+    for (let i = 0; i < n; i += 1) {
+      const delta = (A[i] || 0) - (B[i] || 0);
+      if (delta) return delta > 0;
+    }
+    return true;
+  }
+
+  function ensureStrategyAAutoSessionContinuity406120() {
+    if (!runtimeAtLeast("40.6.120")) return false;
+    if (globalThis.AgentCryptoStrategyAAutoSessionContinuity406120) return true;
+    if (document.querySelector('script[data-strategy-a-auto-session-continuity-406120="true"]')) return true;
+    const script = document.createElement("script");
+    script.src = `./js/strategy-a-auto-session-continuity-406120.js?v=${encodeURIComponent(runtimeBuild())}`;
+    script.async = false;
+    script.dataset.strategyAAutoSessionContinuity406120 = "true";
+    document.head.appendChild(script);
+    return true;
+  }
 
   function clearTimer() {
     if (timer !== null) clearTimeout(timer);
@@ -178,6 +213,7 @@
   globalThis[API_KEY] = api;
 
   if (typeof document !== "undefined") {
+    ensureStrategyAAutoSessionContinuity406120();
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) clearTimer();
       else if (running) {
@@ -187,9 +223,15 @@
     }, { passive: true });
     document.addEventListener("agentcrypto:tradus-shadow-observation", syncVisibleContract, { passive: true });
     window.addEventListener("pagehide", () => stop("pagehide"), { passive: true });
-    window.addEventListener("pageshow", () => start("pageshow"), { passive: true });
+    window.addEventListener("pageshow", () => {
+      ensureStrategyAAutoSessionContinuity406120();
+      start("pageshow");
+    }, { passive: true });
 
-    const boot = () => start("boot");
+    const boot = () => {
+      ensureStrategyAAutoSessionContinuity406120();
+      start("boot");
+    };
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
     else boot();
   }
