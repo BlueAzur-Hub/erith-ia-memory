@@ -6,6 +6,7 @@
    40.6.101+ loads the fresh-CEX divergence fail-closed quality gate.
    40.6.113+ routes DEX exclusion diagnostics to the canonical unversioned owner.
    40.6.114+ loads the canonical read-only Atlas Decision Context composer.
+   40.6.115+ loads the visible Strategy A ↔ TRADUS comparative intelligence owner.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
@@ -93,12 +94,25 @@
     return true;
   }
 
+  function ensureStrategyTradusComparative(){
+    if(!atLeast("40.6.115"))return false;
+    if(globalThis.AgentCryptoStrategyTradusComparativeIntelligence?.owner==="strategy-tradus-comparative-intelligence")return true;
+    if(document.querySelector('script[data-strategy-tradus-comparative-intelligence="true"]'))return true;
+    const script=document.createElement("script");
+    script.src=`./js/strategy-tradus-comparative-intelligence.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.async=false;
+    script.dataset.strategyTradusComparativeIntelligence="true";
+    document.head.appendChild(script);
+    return true;
+  }
+
   function settleReady(){state="ready";loadedAt=Date.now();lastError="";return true;}
 
   function afterSourceOwners(){
     ensureDexDiagnostics();
     ensureCexDivergenceGuard();
     ensureAtlasDecisionContext();
+    ensureStrategyTradusComparative();
   }
 
   function ensure(why="operator"){
@@ -146,6 +160,7 @@
   ensureDexDiagnostics();
   ensureCexDivergenceGuard();
   ensureAtlasDecisionContext();
+  ensureStrategyTradusComparative();
 
   const API=Object.freeze({
     build:BUILD,
@@ -155,6 +170,7 @@
     ensureDexDiagnostics,
     ensureCexDivergenceGuard,
     ensureAtlasDecisionContext,
+    ensureStrategyTradusComparative,
     snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend"}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
@@ -165,6 +181,7 @@
     dex_exclusion_diagnostics_canonical:atLeast("40.6.113"),
     cex_divergence_fail_closed:atLeast("40.6.101"),
     atlas_decision_context:atLeast("40.6.114"),
+    strategy_tradus_comparative_intelligence:atLeast("40.6.115"),
     new_timer:false,
     new_observer:false,
     new_storage_owner:false,
