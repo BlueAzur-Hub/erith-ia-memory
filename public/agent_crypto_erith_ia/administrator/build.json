@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.109",
+  "build": "40.6.110",
   "engine": "38.15.11",
-  "release": "LOCAL AI RESERVE TRUTH",
+  "release": "TRADUS STRATEGY A FAIL-CLOSED",
   "published": true,
-  "status": "local_ai_reserve_truth_406109",
-  "parent_build": "40.6.108",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.109",
-  "administrator_build": "40.6.109",
-  "build_label": "Build 40.6.109 · Administrator",
-  "release_status": "local_ai_reserve_truth_406109",
+  "status": "tradus_strategy_a_fail_closed_406110",
+  "parent_build": "40.6.109",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.110",
+  "administrator_build": "40.6.110",
+  "build_label": "Build 40.6.110 · Administrator",
+  "release_status": "tradus_strategy_a_fail_closed_406110",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -28,7 +28,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v3.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.109.html",
+    "immutable_entry": "index-40.6.110.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -40,38 +40,47 @@
   },
   "local_ai_reserve_truth": {
     "introduced_in": "40.6.109",
-    "scope": "refine local Atlas/Aerith comment truth without rejecting truthful data limitations",
     "runtime_patch": "js/local-ai-contract-consistency.js",
-    "historical_predecessor": "js/local-ai-contract-consistency-406106.js",
-    "versioned_406109_candidate_retired": true,
     "price_volume_evidence_separated": true,
     "math_completeness_requires_4_of_4": true,
-    "top5_false_absence_guard_preserved": true,
-    "fallback_owner_unchanged": "atlasLocalFrenchCommentFallback",
-    "self_test_expected": "6/6",
+    "versioned_406109_candidate_retired": true
+  },
+  "tradus_strategy_a_fail_closed": {
+    "introduced_in": "40.6.110",
+    "scope": "fail closed when Strategy A state is unknown or unreadable",
+    "runtime_patch": "js/tradus-strategy-a-reconcile.js",
+    "historical_predecessor": "js/tradus-strategy-a-reconcile-406105.js",
+    "versioned_406110_candidate_retired": true,
+    "unknown_is_wait": false,
+    "unknown_can_converge": false,
+    "known_no_trade_is_wait": true,
+    "self_test_expected": "4/4",
+    "strategy_a_business_logic_changed": false,
+    "strategy_a_paper_changed": false,
     "market_data_changed": false,
     "market_core_changed": false,
     "web_classic_changed": false,
     "aether_changed": false,
-    "atlas_current_algorithm_changed": false,
+    "atlas_current_changed": false,
     "oracle_changed": false,
     "lecture_technique_changed": false,
-    "strategy_a_changed": false,
     "trading_changed": false,
     "wallet_changed": false,
+    "fetch": false,
     "recurring_timer": false,
     "observer": false,
     "storage_write": false,
-    "network_request": false,
     "firefox_terrain_proof": "pending"
   },
   "versioning_cleanup": {
-    "phase": "1_of_3",
+    "phase": "2_of_3",
     "rule": "Git carries history; active functional filenames are canonical and do not gain build suffixes",
     "canonicalized_now": [
-      "js/local-ai-contract-consistency.js"
+      "js/local-ai-contract-consistency.js",
+      "js/tradus-strategy-a-reconcile.js"
     ],
     "active_versioned_109_patch_removed": true,
+    "active_versioned_110_patch_removed": true,
     "immutable_release_entry_remains_versioned": true,
     "global_build_owner_consolidation_target": "40.6.111"
   },
@@ -82,13 +91,13 @@
     "40.6.106 LOCAL AI ANALYTICAL CONTRACT CONSISTENCY",
     "40.6.107 VISIBLE VERSION SURFACE TRUTH",
     "40.6.108 LOCAL DIALOGUE PRESENTATION TRUTH",
-    "40.6.109 LOCAL AI RESERVE TRUTH"
+    "40.6.109 LOCAL AI RESERVE TRUTH",
+    "40.6.110 TRADUS STRATEGY A FAIL-CLOSED"
   ],
   "history": {
     "authority": "git",
     "previous_full_manifest_build": "40.6.108",
     "previous_full_manifest_blob": "245ff6d3f259ee54eeaa40525555d3c996a5a959",
-    "do_not_duplicate_release_history_in_active_manifest": true,
-    "reason": "active build manifest stays compact; Git preserves prior manifests and release history"
+    "do_not_duplicate_release_history_in_active_manifest": true
   }
 }
