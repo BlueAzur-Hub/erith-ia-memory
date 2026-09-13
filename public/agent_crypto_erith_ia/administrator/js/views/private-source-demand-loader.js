@@ -18,14 +18,15 @@
   const metaBuild=()=>String(document.querySelector('meta[name="administrator-build"]')?.content||"").trim();
   const pathBuild=()=>String(location.pathname||"").match(/(?:^|\/)index-(\d+\.\d+\.\d+)\.html$/i)?.[1]||"";
   const BUILD=String(globalThis.ErithVersionTruth?.build||pathBuild()||metaBuild()||"runtime").trim();
+  const runtimeBuild=()=>String(globalThis.ErithVersionTruth?.build||pathBuild()||new URLSearchParams(location.search||"").get("ac-build")||metaBuild()||BUILD||"runtime").trim();
   const SRC=`./js/views/private-backend-sources.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
   let state="idle",promise=null,reason="",loadedAt=0,lastError="";
 
   const parts=value=>String(value||"").split(".").map(x=>Number.parseInt(x,10)||0);
-  const atLeast=target=>{const A=parts(BUILD),B=parts(target),n=Math.max(A.length,B.length);for(let i=0;i<n;i+=1){const d=(A[i]||0)-(B[i]||0);if(d)return d>0;}return true;};
+  const atLeast=target=>{const A=parts(runtimeBuild()),B=parts(target),n=Math.max(A.length,B.length);for(let i=0;i<n;i+=1){const d=(A[i]||0)-(B[i]||0);if(d)return d>0;}return true;};
 
   function ensureStrategyProofHotfix(){
-    if(BUILD!=="40.6.95")return false;
+    if(runtimeBuild()!=="40.6.95")return false;
     if(globalThis.__ERITH_STRATEGY_A_PAPER_PROOF_HOTFIX_406095__)return true;
     if(document.querySelector('script[data-strategy-a-paper-proof-hotfix-406095="true"]'))return true;
     const script=document.createElement("script");
@@ -41,7 +42,7 @@
     if(globalThis.__AGENT_CRYPTO_POST_HANDOFF_406096__)return true;
     if(document.querySelector('script[data-agent-crypto-post-handoff-406096="true"]'))return true;
     const script=document.createElement("script");
-    script.src=`./js/agent-crypto-post-handoff-406096.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.src=`./js/agent-crypto-post-handoff-406096.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
     script.dataset.agentCryptoPostHandoff406096="true";
     document.head.appendChild(script);
@@ -54,7 +55,7 @@
       if(globalThis.AgentCryptoDexExclusionDiagnostics?.owner==="dex-exclusion-diagnostics")return true;
       if(document.querySelector('script[data-dex-exclusion-diagnostics-canonical="true"]'))return true;
       const script=document.createElement("script");
-      script.src=`./js/dex-exclusion-diagnostics.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+      script.src=`./js/dex-exclusion-diagnostics.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
       script.async=false;
       script.dataset.dexExclusionDiagnosticsCanonical="true";
       document.head.appendChild(script);
@@ -63,7 +64,7 @@
     if(globalThis.AgentCryptoDexExclusionDiagnostics406098)return true;
     if(document.querySelector('script[data-dex-exclusion-diagnostics-406098="true"]'))return true;
     const script=document.createElement("script");
-    script.src=`./js/dex-exclusion-diagnostics-406098.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.src=`./js/dex-exclusion-diagnostics-406098.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
     script.dataset.dexExclusionDiagnostics406098="true";
     document.head.appendChild(script);
@@ -75,7 +76,7 @@
     if(globalThis.AgentCryptoCexDivergenceGuard406101)return true;
     if(document.querySelector('script[data-cex-divergence-guard-406101="true"]'))return true;
     const script=document.createElement("script");
-    script.src=`./js/cex-divergence-guard-406101.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.src=`./js/cex-divergence-guard-406101.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
     script.dataset.cexDivergenceGuard406101="true";
     document.head.appendChild(script);
@@ -87,7 +88,7 @@
     if(globalThis.AgentCryptoAtlasDecisionContext?.owner==="atlas-decision-context")return true;
     if(document.querySelector('script[data-atlas-decision-context="true"]'))return true;
     const script=document.createElement("script");
-    script.src=`./js/atlas-decision-context.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.src=`./js/atlas-decision-context.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
     script.dataset.atlasDecisionContext="true";
     document.head.appendChild(script);
@@ -99,7 +100,7 @@
     if(globalThis.AgentCryptoStrategyTradusComparativeIntelligence?.owner==="strategy-tradus-comparative-intelligence")return true;
     if(document.querySelector('script[data-strategy-tradus-comparative-intelligence="true"]'))return true;
     const script=document.createElement("script");
-    script.src=`./js/strategy-tradus-comparative-intelligence.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.src=`./js/strategy-tradus-comparative-intelligence.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
     script.dataset.strategyTradusComparativeIntelligence="true";
     document.head.appendChild(script);
@@ -132,7 +133,7 @@
       script.src=SRC;
       script.async=true;
       script.dataset.privateSourceDemandStable="true";
-      script.addEventListener("load",()=>{script.dataset.loaded="true";settleReady();afterSourceOwners();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:BUILD,reason}}));}catch(_){}resolve(true);},{once:true});
+      script.addEventListener("load",()=>{script.dataset.loaded="true";settleReady();afterSourceOwners();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:runtimeBuild(),reason}}));}catch(_){}resolve(true);},{once:true});
       script.addEventListener("error",()=>{state="error";lastError="script-load-error";resolve(false);},{once:true});
       document.head.appendChild(script);
     }).finally(()=>{promise=null;});
@@ -161,9 +162,13 @@
   ensureCexDivergenceGuard();
   ensureAtlasDecisionContext();
   ensureStrategyTradusComparative();
+  queueMicrotask(()=>ensureStrategyTradusComparative());
+  window.addEventListener("load",()=>ensureStrategyTradusComparative(),{once:true,passive:true});
+  window.addEventListener("pageshow",()=>ensureStrategyTradusComparative(),{passive:true});
 
   const API=Object.freeze({
     build:BUILD,
+    active_build:runtimeBuild,
     ensure,
     ensureStrategyProofHotfix,
     ensurePostHandoff,
@@ -171,11 +176,11 @@
     ensureCexDivergenceGuard,
     ensureAtlasDecisionContext,
     ensureStrategyTradusComparative,
-    snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend"}),
+    snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
     sources_reparenting:false,
-    strategy_paper_proof_hotfix:BUILD==="40.6.95",
+    strategy_paper_proof_hotfix:runtimeBuild()==="40.6.95",
     post_handoff_stabilization:atLeast("40.6.96"),
     dex_exclusion_diagnostics:atLeast("40.6.98"),
     dex_exclusion_diagnostics_canonical:atLeast("40.6.113"),
