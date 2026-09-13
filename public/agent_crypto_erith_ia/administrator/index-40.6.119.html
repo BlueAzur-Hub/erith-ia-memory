@@ -8,18 +8,31 @@
   <meta name="atlas-engine-build" content="38.15.11" />
   <meta name="administrator-release" content="TRADUS AUTONOMOUS SHADOW REFRESH CANDIDATE" />
   <title>Agent-Crypto @erith.IA — Build 40.6.119 · Administrator</title>
-  <script src="./js/version-truth-406086-authority-lock.js?v=406119-bootstrap-1"></script>
   <script>
     (() => {
-      const target = new URL('./index.html', location.href);
-      const source = new URLSearchParams(location.search || '');
-      for (const [key, value] of source.entries()) {
-        if (key === 'ac-probe' || key === 'ac-build') continue;
-        target.searchParams.set(key, value);
-      }
-      target.searchParams.set('ac-build', '40.6.119');
-      target.searchParams.set('ac-refresh', source.get('ac-refresh') || `40.6.119-${Date.now()}`);
-      location.replace(target.toString());
+      const FALLBACK = () => {
+        const target = new URL('./index.html', location.href);
+        target.searchParams.set('ac-build', '40.6.119');
+        target.searchParams.set('ac-refresh', `40.6.119-${Date.now()}`);
+        location.replace(target.toString());
+      };
+
+      fetch(`./index.html?ac-bootstrap=40.6.119-${Date.now()}`, {
+        cache: 'no-store',
+        credentials: 'same-origin'
+      }).then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      }).then(html => {
+        const freshShim = '<script src="./js/version-truth-406086-authority-lock.js?v=406119-bootstrap-2"><\/script>';
+        const patched = html
+          .replace('<script src="./js/version-truth-406086-authority-lock.js?v=maint-1"><\/script>', freshShim)
+          .replace(/content="40\.6\.86"/g, 'content="40.6.119"')
+          .replace(/Build 40\.6\.86/g, 'Build 40.6.119');
+        document.open();
+        document.write(patched);
+        document.close();
+      }).catch(FALLBACK);
     })();
   </script>
 </head>
