@@ -7,7 +7,7 @@
    40.6.107 closes residual current-runtime version leaks in Auto Reader/footer surfaces.
    40.6.108 improves local Atlas/Aerith dialogue readability and separates market-snapshot time from CURRENT production time.
    40.6.109 starts canonical functional filenames: Local AI reserve truth loads from js/local-ai-contract-consistency.js.
-   40.6.110 makes unknown Strategy A fail closed in TRADUS comparison.
+   40.6.110 moves the active TRADUS / Strategy A fail-closed layer to js/tradus-strategy-a-reconcile.js.
    40.6.111 fail-closes stale/unknown DEX observations and verifies pending-before-REPOS Aether truth.
    The historical bootstrap path remains compatible during the staged consolidation.
    No recurring timer. No observer. No storage write. */
@@ -63,8 +63,8 @@
     if (atLeast("40.6.109") && !globalThis.AgentCryptoLocalAIReserveTruth) {
       loadPatch('script[data-local-ai-contract-consistency="true"]',`./js/local-ai-contract-consistency.js?v=${encodeURIComponent(build)}`,"localAiContractConsistency");
     }
-    if (atLeast("40.6.110") && !globalThis.AgentCryptoTradusStrategyAFailClosed406110) {
-      loadPatch('script[data-tradus-strategy-a-fail-closed-406110="true"]',`./js/tradus-strategy-a-fail-closed-406110.js?v=tradus-strategy-a-fail-closed-${encodeURIComponent(build)}`,"tradusStrategyAFailClosed406110");
+    if (atLeast("40.6.110") && !globalThis.AgentCryptoTradusStrategyFailClosed) {
+      loadPatch('script[data-tradus-strategy-a-reconcile="true"]',`./js/tradus-strategy-a-reconcile.js?v=${encodeURIComponent(build)}`,"tradusStrategyAReconcile");
     }
     if (atLeast("40.6.111") && !globalThis.AgentCryptoDexAetherFreshnessTruth406111) {
       loadPatch('script[data-dex-aether-freshness-truth-406111="true"]',`./js/dex-aether-freshness-truth-406111.js?v=dex-aether-freshness-truth-${encodeURIComponent(build)}`,"dexAetherFreshnessTruth406111");
