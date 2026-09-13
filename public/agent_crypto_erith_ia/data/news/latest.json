@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-13T16:25:19.954136+00:00",
+  "generated_at": "2026-09-13T19:31:29.176848+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,13 +11,13 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 6,
-    "critical_24h": 4,
+    "events_24h": 7,
+    "critical_24h": 5,
     "strong_24h": 2,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
-    "lead_event_id": "feed_3f7087e722335167",
+    "lead_event_id": "feed_77b5f27098698dd2",
     "decision": "Surveillance renforcée",
     "driver_coverage": {
       "macro_liquidity": {
@@ -29,8 +29,8 @@
         "distinct_sources": 1
       },
       "regulation": {
-        "events_72h": 10,
-        "distinct_sources": 5
+        "events_72h": 8,
+        "distinct_sources": 4
       },
       "leverage": {
         "events_72h": 0,
@@ -49,7 +49,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 8,
-      "latency_ms": 411,
+      "latency_ms": 444,
       "error": null
     },
     {
@@ -60,7 +60,7 @@
       "status": "ok",
       "fetched_count": 23,
       "qualified_count": 0,
-      "latency_ms": 387,
+      "latency_ms": 379,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 87,
+      "latency_ms": 172,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 0,
-      "latency_ms": 106,
+      "latency_ms": 255,
       "error": null
     },
     {
@@ -92,8 +92,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 19,
-      "latency_ms": 441,
+      "qualified_count": 20,
+      "latency_ms": 412,
       "error": null
     },
     {
@@ -104,7 +104,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 22,
-      "latency_ms": 99,
+      "latency_ms": 343,
       "error": null
     },
     {
@@ -115,7 +115,7 @@
       "status": "ok",
       "fetched_count": 35,
       "qualified_count": 23,
-      "latency_ms": 220,
+      "latency_ms": 201,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 3,
-      "latency_ms": 858,
+      "latency_ms": 732,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 16,
-      "latency_ms": 136,
+      "latency_ms": 179,
       "error": null
     },
     {
@@ -148,7 +148,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 1,
-      "latency_ms": 134,
+      "latency_ms": 311,
       "error": null
     },
     {
@@ -159,7 +159,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 241,
+      "latency_ms": 296,
       "error": null
     },
     {
@@ -170,7 +170,7 @@
       "status": "ok",
       "fetched_count": 9,
       "qualified_count": 9,
-      "latency_ms": 362,
+      "latency_ms": 356,
       "error": null
     },
     {
@@ -181,7 +181,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 240,
+      "latency_ms": 243,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 76,
+      "latency_ms": 335,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 10081,
+      "latency_ms": 8251,
       "error": null
     }
   ],
@@ -737,11 +737,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-11T14:17:38+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.723023+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.723023+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.617897+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.617897+00:00",
       "freshness": {
         "iso": "2026-09-11T14:17:38+00:00",
-        "hours": 50.13,
+        "hours": 53.23,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1542,11 +1542,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-10T16:38:16+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.628038+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.628038+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.786189+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.786189+00:00",
       "freshness": {
         "iso": "2026-09-10T16:38:16+00:00",
-        "hours": 71.78,
+        "hours": 74.88,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1846,11 +1846,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-11T12:10:23+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.724579+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.724579+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.619323+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.619323+00:00",
       "freshness": {
         "iso": "2026-09-11T12:10:23+00:00",
-        "hours": 52.25,
+        "hours": 55.35,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1949,11 +1949,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-11T12:33:38+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.601806+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.601806+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.761442+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.761442+00:00",
       "freshness": {
         "iso": "2026-09-11T12:33:38+00:00",
-        "hours": 51.86,
+        "hours": 54.96,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2259,11 +2259,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-12T16:00:00+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.986004+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.986004+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.826484+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.826484+00:00",
       "freshness": {
         "iso": "2026-09-12T16:00:00+00:00",
-        "hours": 24.42,
+        "hours": 27.52,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2574,13 +2574,13 @@
       "declared_status": "reported",
       "event_type": "regulation",
       "event_label": "Régulation / justice",
-      "event_time": "2026-09-12T16:09:41+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.586377+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.586377+00:00",
+      "event_time": "2026-09-13T16:47:53+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.744642+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.744642+00:00",
       "freshness": {
-        "iso": "2026-09-12T16:09:41+00:00",
-        "hours": 24.26,
-        "label": "Récente · moins de 48 h",
+        "iso": "2026-09-13T16:47:53+00:00",
+        "hours": 2.72,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -2679,11 +2679,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-11T08:43:19+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.612407+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.612407+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.772296+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.772296+00:00",
       "freshness": {
         "iso": "2026-09-11T08:43:19+00:00",
-        "hours": 55.7,
+        "hours": 58.8,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3096,11 +3096,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T17:45:22+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.662506+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.662506+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.939260+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.939260+00:00",
       "freshness": {
         "iso": "2026-09-10T17:45:22+00:00",
-        "hours": 70.66,
+        "hours": 73.77,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4702,12 +4702,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-11T18:45:15+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.593824+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.593824+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.753513+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.753513+00:00",
       "freshness": {
         "iso": "2026-09-11T18:45:15+00:00",
-        "hours": 45.67,
-        "label": "Récente · moins de 48 h",
+        "hours": 48.77,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -4801,11 +4801,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-11T16:03:37+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.596790+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.596790+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.756495+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.756495+00:00",
       "freshness": {
         "iso": "2026-09-11T16:03:37+00:00",
-        "hours": 48.36,
+        "hours": 51.46,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6106,11 +6106,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-11T06:17:31+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.008263+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.008263+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.853419+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.853419+00:00",
       "freshness": {
         "iso": "2026-09-11T06:17:31+00:00",
-        "hours": 58.13,
+        "hours": 61.23,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6203,11 +6203,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-13T08:32:49+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.235915+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.235915+00:00",
+      "first_seen_at": "2026-09-13T19:31:21.257316+00:00",
+      "last_seen_at": "2026-09-13T19:31:21.257316+00:00",
       "freshness": {
         "iso": "2026-09-13T08:32:49+00:00",
-        "hours": 7.87,
+        "hours": 10.98,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -6302,11 +6302,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-11T06:28:11+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.229062+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.229062+00:00",
+      "first_seen_at": "2026-09-13T19:31:21.250521+00:00",
+      "last_seen_at": "2026-09-13T19:31:21.250521+00:00",
       "freshness": {
         "iso": "2026-09-11T06:28:11+00:00",
-        "hours": 57.95,
+        "hours": 61.05,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6382,8 +6382,8 @@
       "fingerprint": "9c83666e2d9e42a9",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
-      "body": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi yellow.com",
+      "headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
+      "body": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi Yellow.com",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxORnRwUmNGN2hqN0JrdnJUcEZHeHY4UlVrVmkzb2VXR0hFdExmbmpiWFkzZUZWR0M2aHN4RG03NkNocTZiS2p1RXlXcEp3djkwaFBLdTVnVWVTSGVNWmpYSDRJbTdWczc0OTh6cTdjM2VfandqeUpIOHFXaTJIQ3dKQVJQS0hpb3l6bnNOQUpZaTZyblI0enR1S0cwaGtDRXlGa0c2VWN3OXgtM3VhQjIxWEJwUEFPNDNoZzM4NDBYaGZZNDdKMmN0Y2tuOWlJM1FO?oc=5",
       "source_host": "news.google.com",
@@ -6400,11 +6400,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-07T14:10:11+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.230665+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.230665+00:00",
+      "first_seen_at": "2026-09-13T19:31:21.252113+00:00",
+      "last_seen_at": "2026-09-13T19:31:21.252113+00:00",
       "freshness": {
         "iso": "2026-09-07T14:10:11+00:00",
-        "hours": 146.25,
+        "hours": 149.35,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6451,7 +6451,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
+      "headline_original": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -6459,14 +6459,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
+      "headline_fr": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
+      "display_headline": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
       "display_language": "fr",
-      "headline_fr_display": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - yellow.com",
+      "headline_fr_display": "Ethereum dépasse Bitcoin avec un gain hebdomadaire de 25% avant la publication du CPI mardi - Yellow.com",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -6498,11 +6498,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-11T16:05:15+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.595438+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.595438+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.755089+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.755089+00:00",
       "freshness": {
         "iso": "2026-09-11T16:05:15+00:00",
-        "hours": 48.33,
+        "hours": 51.43,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6597,11 +6597,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-13T12:00:00+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.979319+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.979319+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.819355+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.819355+00:00",
       "freshness": {
         "iso": "2026-09-13T12:00:00+00:00",
-        "hours": 4.42,
+        "hours": 7.52,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -6696,11 +6696,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-11T11:20:26+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.001695+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.001695+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.846500+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.846500+00:00",
       "freshness": {
         "iso": "2026-09-11T11:20:26+00:00",
-        "hours": 53.08,
+        "hours": 56.18,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6795,11 +6795,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-11T11:04:12+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.003190+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.003190+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.848100+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.848100+00:00",
       "freshness": {
         "iso": "2026-09-11T11:04:12+00:00",
-        "hours": 53.35,
+        "hours": 56.45,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7408,11 +7408,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-11T15:32:08+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.721681+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.721681+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.616594+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.616594+00:00",
       "freshness": {
         "iso": "2026-09-11T15:32:08+00:00",
-        "hours": 48.88,
+        "hours": 51.99,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7508,11 +7508,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-10T18:46:04+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.736633+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.736633+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.634115+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.634115+00:00",
       "freshness": {
         "iso": "2026-09-10T18:46:04+00:00",
-        "hours": 69.65,
+        "hours": 72.75,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7610,11 +7610,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-09T18:56:58+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.751766+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.751766+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.649185+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.649185+00:00",
       "freshness": {
         "iso": "2026-09-09T18:56:58+00:00",
-        "hours": 93.47,
+        "hours": 96.57,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7814,11 +7814,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-13T02:46:40+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.237506+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.237506+00:00",
+      "first_seen_at": "2026-09-13T19:31:21.258886+00:00",
+      "last_seen_at": "2026-09-13T19:31:21.258886+00:00",
       "freshness": {
         "iso": "2026-09-13T02:46:40+00:00",
-        "hours": 13.64,
+        "hours": 16.74,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7985,13 +7985,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_b2d523b3a79bea33",
-      "event_id": "feed_b2d523b3a79bea33",
-      "fingerprint": "b2d523b3a79bea33",
+      "id": "feed_2c6d63441184cffd",
+      "event_id": "feed_2c6d63441184cffd",
+      "fingerprint": "2c6d63441184cffd",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - news.bitcoin.com",
-      "body": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars news.bitcoin.com",
+      "headline": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - Bitcoin News",
+      "body": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars Bitcoin News",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMimwJBVV95cUxQZ21xcVMwODBpelQ0SnBqcy03S0NMcURCV0lYdUJKMER2NWItYlVmc1JmNy1ETGJjZ0dXYlBTbXE4WV9yc1NYNFdfcnA5Q2xvbVJaYVljd1RzMmN6eTBBVlh0bjJJaVJBdm5QOTJsanhZRWNLWFFqQ2tSbTBWZy1zbHhERVlmOTJJXzdjTUpkUnJneU1EblJ6cllBQ01vZ3YtSXdjOFlEX2tMcHdqeGVrYVBEUnNMQ2dJbHhrYzZLODVzNmNTZlVzQVROU3VJMFlGMS1KNnZGTGRyX3VRVFNNT2MxUTZFMjNGRkl2cjVUNTdsdW9sSGRBOE51OXlLVUhYQXhnLUNwWVd0Z0ZkcVhzV0ZldE5jejdIY1FF?oc=5",
       "source_host": "news.google.com",
@@ -8008,11 +8008,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-07T21:59:08+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.239159+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.239159+00:00",
+      "first_seen_at": "2026-09-13T19:31:21.260545+00:00",
+      "last_seen_at": "2026-09-13T19:31:21.260545+00:00",
       "freshness": {
         "iso": "2026-09-07T21:59:08+00:00",
-        "hours": 138.43,
+        "hours": 141.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8058,7 +8058,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - news.bitcoin.com",
+      "headline_original": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - Bitcoin News",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -8066,14 +8066,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - news.bitcoin.com",
+      "headline_fr": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - Bitcoin News",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - news.bitcoin.com",
+      "display_headline": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - Bitcoin News",
       "display_language": "fr",
-      "headline_fr_display": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - news.bitcoin.com",
+      "headline_fr_display": "Le bitcoin représente 79 % des entrées hebdomadaires des ETF sur cryptomonnaies, alors que les fonds ont enregistré une hausse de 1,24 milliard de dollars - Bitcoin News",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -8082,13 +8082,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_9621d51e36b50043",
-      "event_id": "feed_9621d51e36b50043",
-      "fingerprint": "9621d51e36b50043",
+      "id": "feed_5057aefbef32fa97",
+      "event_id": "feed_5057aefbef32fa97",
+      "fingerprint": "5057aefbef32fa97",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - invezz.com",
-      "body": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 invezz.com",
+      "headline": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - Invezz",
+      "body": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 Invezz",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQYVBGSnlzT3pfZzFkZ2l1RnNzVUtqc1gtUzVfUjFhLTRBeklaak5VWk9Wa2ZxWDVPa200S1hCcTJVMDJLSm1XYnpxZ3hZa0tsWkhYZTFGSTNrYUFMU2Z1Nk1DUUstZmNET0t1QlZkRzkxOURqZFR4cFhmLXgyNGtzOVdZeW1CTkd1UGtLSTdtOEhadVhaV0lPMGlLWl9HZ0ZiYUhRV2s5cUZWeDd4VEdsa09OeFp3Y3dRREtNaDJsdXlQZkZsdkE?oc=5",
       "source_host": "news.google.com",
@@ -8105,11 +8105,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-07T04:16:00+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.240707+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.240707+00:00",
+      "first_seen_at": "2026-09-13T19:31:21.262202+00:00",
+      "last_seen_at": "2026-09-13T19:31:21.262202+00:00",
       "freshness": {
         "iso": "2026-09-07T04:16:00+00:00",
-        "hours": 156.15,
+        "hours": 159.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8155,7 +8155,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - invezz.com",
+      "headline_original": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - Invezz",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -8163,14 +8163,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - invezz.com",
+      "headline_fr": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - Invezz",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - invezz.com",
+      "display_headline": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - Invezz",
       "display_language": "fr",
-      "headline_fr_display": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - invezz.com",
+      "headline_fr_display": "Wall Street s'engouffre dans les ETF Bitcoin : pourquoi le BTC reste sous $80,000 - Invezz",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -8299,11 +8299,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-11T06:08:26+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.616738+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.616738+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.776363+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.776363+00:00",
       "freshness": {
         "iso": "2026-09-11T06:08:26+00:00",
-        "hours": 58.28,
+        "hours": 61.38,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8699,11 +8699,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-11T15:00:00+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.660749+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.660749+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.937606+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.937606+00:00",
       "freshness": {
         "iso": "2026-09-11T15:00:00+00:00",
-        "hours": 49.42,
+        "hours": 52.52,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8800,11 +8800,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-13T09:41:11+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.643546+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.643546+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.729246+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.729246+00:00",
       "freshness": {
         "iso": "2026-09-13T09:41:11+00:00",
-        "hours": 6.73,
+        "hours": 9.84,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -9186,11 +9186,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-07T04:30:02+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.242327+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.242327+00:00",
+      "first_seen_at": "2026-09-13T19:31:21.263950+00:00",
+      "last_seen_at": "2026-09-13T19:31:21.263950+00:00",
       "freshness": {
         "iso": "2026-09-07T04:30:02+00:00",
-        "hours": 155.92,
+        "hours": 159.02,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9688,11 +9688,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T20:00:00+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.760817+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.760817+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.906560+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.906560+00:00",
       "freshness": {
         "iso": "2026-09-10T20:00:00+00:00",
-        "hours": 68.42,
+        "hours": 71.52,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9786,12 +9786,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-11T18:08:58+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.792102+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.792102+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.982728+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.982728+00:00",
       "freshness": {
         "iso": "2026-09-11T18:08:58+00:00",
-        "hours": 46.27,
-        "label": "Récente · moins de 48 h",
+        "hours": 49.37,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -9884,11 +9884,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T20:36:53+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.794619+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.794619+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.985115+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.985115+00:00",
       "freshness": {
         "iso": "2026-09-10T20:36:53+00:00",
-        "hours": 67.8,
+        "hours": 70.91,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10472,11 +10472,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-10T15:33:11+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.739919+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.739919+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.637417+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.637417+00:00",
       "freshness": {
         "iso": "2026-09-10T15:33:11+00:00",
-        "hours": 72.87,
+        "hours": 75.97,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10965,11 +10965,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-11T16:16:05+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.720165+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.720165+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.615125+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.615125+00:00",
       "freshness": {
         "iso": "2026-09-11T16:16:05+00:00",
-        "hours": 48.15,
+        "hours": 51.25,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11063,11 +11063,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-11T07:47:13+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.614324+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.614324+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.774076+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.774076+00:00",
       "freshness": {
         "iso": "2026-09-11T07:47:13+00:00",
-        "hours": 56.63,
+        "hours": 59.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11361,11 +11361,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-09T10:20:40+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.954095+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.954095+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.880912+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.880912+00:00",
       "freshness": {
         "iso": "2026-09-09T10:20:40+00:00",
-        "hours": 102.07,
+        "hours": 105.18,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11460,11 +11460,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-13T13:00:00+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.975959+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.975959+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.815857+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.815857+00:00",
       "freshness": {
         "iso": "2026-09-13T13:00:00+00:00",
-        "hours": 3.42,
+        "hours": 6.52,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -11556,11 +11556,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-11T15:45:56+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.995450+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.995450+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.836412+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.836412+00:00",
       "freshness": {
         "iso": "2026-09-11T15:45:56+00:00",
-        "hours": 48.65,
+        "hours": 51.76,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11656,11 +11656,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-11T12:32:25+00:00",
-      "first_seen_at": "2026-09-13T16:25:10.000320+00:00",
-      "last_seen_at": "2026-09-13T16:25:10.000320+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.841774+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.841774+00:00",
       "freshness": {
         "iso": "2026-09-11T12:32:25+00:00",
-        "hours": 51.88,
+        "hours": 54.98,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11756,12 +11756,12 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-13T06:01:53+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.968753+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.968753+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.898032+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.898032+00:00",
       "freshness": {
         "iso": "2026-09-13T06:01:53+00:00",
-        "hours": 10.39,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.49,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -11855,11 +11855,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-10T17:38:31+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.939770+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.939770+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.866449+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.866449+00:00",
       "freshness": {
         "iso": "2026-09-10T17:38:31+00:00",
-        "hours": 70.78,
+        "hours": 73.88,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11954,11 +11954,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-09T12:20:40+00:00",
-      "first_seen_at": "2026-09-13T16:25:09.946785+00:00",
-      "last_seen_at": "2026-09-13T16:25:09.946785+00:00",
+      "first_seen_at": "2026-09-13T19:31:20.873238+00:00",
+      "last_seen_at": "2026-09-13T19:31:20.873238+00:00",
       "freshness": {
         "iso": "2026-09-09T12:20:40+00:00",
-        "hours": 100.07,
+        "hours": 103.18,
         "label": "Cette semaine",
         "inferred": false
       },
