@@ -137,6 +137,9 @@
     if (atLeast("40.6.111") && !globalThis.AgentCryptoDexFreshnessGuard) {
       loadPatch('script[data-dex-freshness-guard="true"]', `./js/dex-freshness-guard.js?v=${encodeURIComponent(BUILD)}`, "dexFreshnessGuard");
     }
+    if (atLeast("40.6.119") && !globalThis.AgentCryptoTradusAutonomousRefresh406119) {
+      loadPatch('script[data-tradus-autonomous-refresh-406119="true"]', `./js/tradus-autonomous-refresh-406119.js?v=${encodeURIComponent(BUILD)}`, "tradusAutonomousRefresh406119");
+    }
   };
 
   forceMetaTruth();
