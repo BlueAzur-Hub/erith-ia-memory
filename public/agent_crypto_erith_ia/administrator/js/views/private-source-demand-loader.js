@@ -8,9 +8,10 @@
    40.6.114+ loads the canonical read-only Atlas Decision Context composer.
    40.6.115+ loads the visible Strategy A ↔ TRADUS comparative intelligence owner.
    40.6.116 visual hotfix: Operator Cockpit injection removed; 40.6.115 presentation restored.
+   40.6.117 bounded hotfix: loads derived Strategy A ↔ TRADUS Outcome Memory without a new panel.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
-   No polling, observer, storage write, wallet or trading endpoint is introduced. */
+   No polling, observer, loader storage write, wallet or trading endpoint is introduced. */
 (()=>{
   "use strict";
   const INSTANCE_KEY="__ERITH_PRIVATE_SOURCE_DEMAND_STABLE_BOUND__";
@@ -108,6 +109,18 @@
     return true;
   }
 
+  function ensureStrategyTradusOutcomeMemory(){
+    if(!atLeast("40.6.117"))return false;
+    if(globalThis.AgentCryptoStrategyTradusOutcomeMemory?.owner==="strategy-tradus-outcome-memory")return true;
+    if(document.querySelector('script[data-strategy-tradus-outcome-memory="true"]'))return true;
+    const script=document.createElement("script");
+    script.src=`./js/strategy-tradus-outcome-memory.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
+    script.async=false;
+    script.dataset.strategyTradusOutcomeMemory="true";
+    document.head.appendChild(script);
+    return true;
+  }
+
   function settleReady(){state="ready";loadedAt=Date.now();lastError="";return true;}
 
   function afterSourceOwners(){
@@ -115,6 +128,7 @@
     ensureCexDivergenceGuard();
     ensureAtlasDecisionContext();
     ensureStrategyTradusComparative();
+    ensureStrategyTradusOutcomeMemory();
   }
 
   function ensure(why="operator"){
@@ -163,9 +177,10 @@
   ensureCexDivergenceGuard();
   ensureAtlasDecisionContext();
   ensureStrategyTradusComparative();
-  queueMicrotask(()=>{ensureStrategyTradusComparative();});
-  window.addEventListener("load",()=>{ensureStrategyTradusComparative();},{once:true,passive:true});
-  window.addEventListener("pageshow",()=>{ensureStrategyTradusComparative();},{passive:true});
+  ensureStrategyTradusOutcomeMemory();
+  queueMicrotask(()=>{ensureStrategyTradusComparative();ensureStrategyTradusOutcomeMemory();});
+  window.addEventListener("load",()=>{ensureStrategyTradusComparative();ensureStrategyTradusOutcomeMemory();},{once:true,passive:true});
+  window.addEventListener("pageshow",()=>{ensureStrategyTradusComparative();ensureStrategyTradusOutcomeMemory();},{passive:true});
 
   const API=Object.freeze({
     build:BUILD,
@@ -177,6 +192,7 @@
     ensureCexDivergenceGuard,
     ensureAtlasDecisionContext,
     ensureStrategyTradusComparative,
+    ensureStrategyTradusOutcomeMemory,
     snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend",active_build:runtimeBuild()}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
@@ -188,6 +204,7 @@
     cex_divergence_fail_closed:atLeast("40.6.101"),
     atlas_decision_context:atLeast("40.6.114"),
     strategy_tradus_comparative_intelligence:atLeast("40.6.115"),
+    strategy_tradus_outcome_memory:atLeast("40.6.117"),
     operator_cockpit:false,
     new_timer:false,
     new_observer:false,
