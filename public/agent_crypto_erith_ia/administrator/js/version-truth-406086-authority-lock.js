@@ -4,6 +4,7 @@
    40.6.104 adds a gated pedagogy truth patch for the reproduced stale interface label.
    40.6.105 adds a gated TRADUS/Strategy A read-side comparison reconciliation.
    40.6.106 extends the existing local-AI deterministic comment truth guard.
+   40.6.107 closes residual current-runtime version leaks in Auto Reader/footer surfaces.
    The path stays stable so validated index entries do not need document rewrites.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -66,6 +67,14 @@
         'script[data-local-ai-contract-consistency-406106="true"]',
         `./js/local-ai-contract-consistency-406106.js?v=local-ai-contract-consistency-${encodeURIComponent(build)}`,
         "localAiContractConsistency406106"
+      );
+    }
+
+    if (atLeast("40.6.107") && !globalThis.AgentCryptoVisibleVersionSurfaceTruth406107) {
+      loadPatch(
+        'script[data-visible-version-surface-truth-406107="true"]',
+        `./js/visible-version-surface-truth-406107.js?v=visible-version-surface-truth-${encodeURIComponent(build)}`,
+        "visibleVersionSurfaceTruth406107"
       );
     }
   }, { once: true });
