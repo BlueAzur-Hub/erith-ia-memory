@@ -3,6 +3,7 @@
    40.6.103 adds a gated generated-report truth patch after the V3 owner is ready.
    40.6.104 adds a gated pedagogy truth patch for the reproduced stale interface label.
    40.6.105 adds a gated TRADUS/Strategy A read-side comparison reconciliation.
+   40.6.106 extends the existing local-AI deterministic comment truth guard.
    The path stays stable so validated index entries do not need document rewrites.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -57,6 +58,14 @@
         'script[data-tradus-strategy-reconcile-406105="true"]',
         `./js/tradus-strategy-a-reconcile-406105.js?v=tradus-strategy-reconcile-${encodeURIComponent(build)}`,
         "tradusStrategyReconcile406105"
+      );
+    }
+
+    if (atLeast("40.6.106") && !globalThis.AgentCryptoLocalAIContractConsistency406106) {
+      loadPatch(
+        'script[data-local-ai-contract-consistency-406106="true"]',
+        `./js/local-ai-contract-consistency-406106.js?v=local-ai-contract-consistency-${encodeURIComponent(build)}`,
+        "localAiContractConsistency406106"
       );
     }
   }, { once: true });
