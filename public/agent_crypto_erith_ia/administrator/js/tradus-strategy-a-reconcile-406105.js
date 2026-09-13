@@ -2,6 +2,8 @@
    TRADUS ↔ Strategy A comparison truth reconciliation.
    Reproduced defect: TRADUS could retain a frozen Strategy A=OFF comparison
    while the current Strategy A lane was visibly AUTO ACTIVE / NO TRADE.
+   40.6.115 hotfix: the read-side owner now follows the live Strategy A pilot
+   instead of treating the replay sandbox as the primary truth scope.
    Presentation-only reconciliation. No fetch, recurring timer, observer,
    storage owner, Strategy mutation, order, wallet or credential path. */
 (() => {
@@ -12,23 +14,57 @@
 
   const clone = value => { try { return JSON.parse(JSON.stringify(value)); } catch (_) { return null; } };
   const upper = value => String(value ?? "").trim().toUpperCase();
+  const scopeText = node => String(node?.innerText || "").replace(/\u00a0/g, " ");
+
+  function isLiveStrategyAScope(node) {
+    const text = scopeText(node);
+    return /STRAT[ÉE]GIE A/i.test(text)
+      && /PILOTE DE SIMULATION/i.test(text)
+      && /TRACE D[ÉE]CISION V2/i.test(text)
+      && /EXPERIMENT LEDGER/i.test(text);
+  }
 
   function findStrategyAScope() {
     const replay = document.getElementById("strategyAReplaySandbox404290");
     let node = replay;
-    for (let i = 0; node && i < 7; i += 1, node = node.parentElement) {
-      const text = String(node.innerText || "");
-      if (text.includes("STRATÉGIE A") && text.includes("TRACE DÉCISION V2") && text.includes("EXPERIMENT LEDGER")) return node;
+    let boundedFallback = null;
+
+    // The replay sandbox is inside the Strategy A workspace. Climb only its
+    // ancestor chain and keep the smallest ancestor that contains the live pilot.
+    for (let i = 0; node && i < 16; i += 1, node = node.parentElement) {
+      const text = scopeText(node);
+      if (!boundedFallback && /TRACE D[ÉE]CISION V2/i.test(text) && /EXPERIMENT LEDGER/i.test(text)) boundedFallback = node;
+      if (isLiveStrategyAScope(node)) return node;
     }
-    return replay?.parentElement || null;
+
+    // If the replay block has not mounted yet, inspect only semantic containers.
+    // No MutationObserver and no recurring scan are introduced.
+    const candidates = document.querySelectorAll("section,article");
+    for (const candidate of candidates) {
+      if (isLiveStrategyAScope(candidate)) return candidate;
+    }
+
+    return boundedFallback || replay?.parentElement || null;
   }
 
   function readStrategyA() {
-    const text = String(findStrategyAScope()?.innerText || "").replace(/\u00a0/g, " ");
-    const phase = text.match(/PHASE\s+(NO TRADE|OFF|PAPER|STOP|WAIT)/i)?.[1]?.toUpperCase() || null;
-    const decision = phase || text.match(/D[ÉE]CISION\s*(NO TRADE|OFF|PAPER[^\n]*|STOP|WAIT)/i)?.[1]?.trim()?.toUpperCase() || "INCONNU";
-    const direction = text.match(/DIRECTION\s*(?:WAIT|PASS)?\s*(-?\d+)\/100/i)?.[1] || null;
-    return Object.freeze({ decision, phase, direction_score: direction === null ? null : Number(direction) });
+    const scope = findStrategyAScope();
+    const text = scopeText(scope);
+    const decision = text.match(/\bD[ÉE]CISION\s*(?:[:·\-]\s*)?(NO TRADE|OFF|PAPER|STOP|WAIT)\b/i)?.[1]?.trim()?.toUpperCase()
+      || text.match(/\bPHASE\s+(NO TRADE|OFF|PAPER|STOP|WAIT)\b/i)?.[1]?.trim()?.toUpperCase()
+      || "INCONNU";
+    const phase = text.match(/\bPHASE\s+(NO TRADE|OFF|PAPER|STOP|WAIT)\b/i)?.[1]?.trim()?.toUpperCase() || null;
+    const direction = text.match(/\bDIRECTION\s*(?:WAIT|PASS)?\s*(-?\d+)\s*\/\s*100\b/i)?.[1] ?? null;
+    const blocker = text.match(/1er verrou\s*:\s*([^\n·]+)/i)?.[1]?.trim()
+      || text.match(/Dernier verrou\s*:?\s*([^\n·]+)/i)?.[1]?.trim()
+      || null;
+    return Object.freeze({
+      decision,
+      phase,
+      direction_score: direction === null ? null : Number(direction),
+      blocker,
+      source: scope ? "LIVE_STRATEGY_A_SCOPE" : "UNAVAILABLE"
+    });
   }
 
   function classifyStrategyA(a) {
