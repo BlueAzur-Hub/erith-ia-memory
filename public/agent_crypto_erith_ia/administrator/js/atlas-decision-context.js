@@ -1,6 +1,6 @@
 /* Agent-Crypto @erith.IA — Atlas Decision Context
    Introduced by Administrator 40.6.114.
-   40.6.117 repair: canonical current readers + late-runtime rebind.
+   40.6.117 R2 repair: canonical readers + presentation-independent DOM fallbacks.
    Purpose: compose existing read-only truths into one descriptive operator context.
    Sources: market/oracle presentation, CEX+DEX Source Intelligence, News Event Intelligence,
    Strategy A state and TRADUS shadow state.
@@ -10,7 +10,7 @@
   "use strict";
 
   const OWNER="atlas-decision-context";
-  const REPAIR="40.6.117";
+  const REPAIR="40.6.117-r2";
   const ROOT_ID="atlasDecisionContext";
   const STYLE_ID="atlasDecisionContextStyle";
   let lastModel=null;
@@ -24,7 +24,9 @@
   };
   const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
   const runtimeBuild=()=>String(globalThis.ErithVersionTruth?.build||new URLSearchParams(location.search).get("ac-build")||document.querySelector('meta[name="administrator-build"]')?.content||"runtime").trim();
-  const bodyText=()=>String(document.body?.innerText||"").replace(/\u00a0/g," ");
+  // textContent is intentional: Decision Context must read canonical DOM truth even when
+  // an Administrator window is collapsed, offscreen or temporarily display:none.
+  const bodyText=()=>String(document.body?.textContent||"").replace(/\u00a0/g," ");
 
   function safeCall(fn,fallback=null){try{return typeof fn==="function"?fn():fallback;}catch(_){return fallback;}}
   function firstMatch(texts,patterns,group=1){
@@ -40,7 +42,7 @@
 
   function readOracleAndMarket(){
     const oracleNode=document.getElementById("atlasOracleV0")||document.querySelector('[data-atlas-oracle], [aria-label*="Oracle"]');
-    const local=String(oracleNode?.innerText||"").replace(/\u00a0/g," ");
+    const local=String(oracleNode?.textContent||oracleNode?.innerText||"").replace(/\u00a0/g," ");
     const body=bodyText();
     const texts=[local,body];
 
@@ -90,26 +92,34 @@
     const cex=safeCall(api?.snapshot,null);
     const dexDiag=safeCall(globalThis.AgentCryptoDexExclusionDiagnostics?.report,null);
     const body=bodyText();
-    const cexVisible=body.match(/Binance[^\d\n]{0,24}(\d+)\s*\/\s*(\d+)/i);
+    const cexVisible=body.match(/\bCEX\s*(\d+)\s*\/\s*(\d+)/i)
+      ||body.match(/Binance[^\d\n]{0,24}(\d+)\s*\/\s*(\d+)/i);
+    const dexVisible=body.match(/[ée]ligibles?\s+Atlas\s*(\d+)\s*\/\s*(\d+)/i)
+      ||body.match(/(\d+)\s*\/\s*(\d+)\s*[ée]ligibles?\s+Atlas/i);
+    const freshnessVisible=finite(firstMatch([body],[/Fra[îi]cheur\s*(\d+)\s*s\b/i]));
     const visibleReady=/TOUTES\s+LES\s+SOURCES\s+PR[ÊE]TES|SOURCES\s+PR[ÊE]TES/i.test(body);
     const intelState=String(intel?.state||"unknown").toLowerCase();
-    const state=intelState!=="unknown"?intelState:(visibleReady?"visible-ready":"unknown");
+    const visibleCex=finite(cexVisible?.[1]),visibleCexTotal=finite(cexVisible?.[2]);
+    const visibleDex=finite(dexVisible?.[1]),visibleDexTotal=finite(dexVisible?.[2]);
+    const visiblePartial=Number.isFinite(visibleDex)&&Number.isFinite(visibleDexTotal)&&visibleDex<visibleDexTotal;
+    const visibleSourceTruth=Boolean(cexVisible||dexVisible||visibleReady);
+    const state=intelState!=="unknown"?intelState:(visiblePartial?"partial":visibleSourceTruth?"visible-ready":"unknown");
     return Object.freeze({
       state,
-      cex_comparable:finite(intel?.cex?.comparable_assets??cexVisible?.[1]),
-      cex_total:finite(intel?.cex?.total_assets??cexVisible?.[2]),
+      cex_comparable:finite(intel?.cex?.comparable_assets??visibleCex),
+      cex_total:finite(intel?.cex?.total_assets??visibleCexTotal),
       cex_max_spread_pct:finite(intel?.cex?.max_spread_pct),
-      dex_eligible:finite(intel?.dex?.atlas_eligible),
-      dex_total:finite(intel?.dex?.total_assets),
+      dex_eligible:finite(intel?.dex?.atlas_eligible??visibleDex),
+      dex_total:finite(intel?.dex?.total_assets??visibleDexTotal),
       dex_proved:finite(intel?.dex?.identity_proved),
       dex_bounded:finite(intel?.dex?.identity_bounded),
       dex_mismatch:finite(intel?.dex?.address_mismatch),
       dex_anomalies:finite(intel?.dex?.liquidity_review),
-      freshness_seconds:finite(intel?.freshness?.max_age_seconds),
+      freshness_seconds:finite(intel?.freshness?.max_age_seconds??freshnessVisible),
       dex_excluded:finite(dexDiag?.excluded_assets),
       dex_reasons:clone(dexDiag?.reasons)||{},
       cex_available:Boolean(cex||cexVisible),
-      visible_fallback:!intel&&visibleReady
+      visible_fallback:!intel&&visibleSourceTruth
     });
   }
 
@@ -138,6 +148,9 @@
   }
 
   function readStrategyTradus(){
+    const body=bodyText();
+    const compareAt=body.search(/COMPARATEUR\s+STRAT[ÉE]GIE\s+A\s*[↔<>\-]*\s*TRADUS/i);
+    const compareText=compareAt>=0?body.slice(compareAt,compareAt+3200):"";
     const comparative=safeCall(globalThis.AgentCryptoStrategyTradusComparativeIntelligence?.model,null);
     if(comparative?.strategy&&comparative?.tradus){
       const strategy=Object.freeze({
@@ -168,10 +181,43 @@
       ||safeCall(historical?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null})
       ||{decision:"INCONNU"};
     const state=canonical?.stateOf?.(raw)||"UNKNOWN";
-    const strategy=Object.freeze({decision:String(raw.decision||"INCONNU"),phase:raw.phase||null,direction_score:finite(raw.direction_score),state,blocker:raw.blocker||null,source:raw.source||"fallback"});
+    let strategy=Object.freeze({decision:String(raw.decision||"INCONNU"),phase:raw.phase||null,direction_score:finite(raw.direction_score),state,blocker:raw.blocker||null,source:raw.source||"fallback"});
+
+    if(upper(strategy.state)==="UNKNOWN"&&compareText){
+      const visibleDecision=firstMatch([compareText],[/Strategy\s*A\s*(NO\s*TRADE|PAPER|BUY|SELL|OFF|STOP)\b/i]);
+      const visibleState=firstMatch([compareText],[/Strategy\s*A\s*(?:NO\s*TRADE|PAPER|BUY|SELL|OFF|STOP)?\s*[·|\-]?\s*(WAIT|PAPER|BUY|SELL|OFF|STOP)\b/i]);
+      const visibleDirection=finite(firstMatch([compareText],[/Strategy\s*A[\s\S]{0,120}?direction\s*([+-]?\d+)\s*\/\s*100/i]));
+      if(visibleDecision){
+        strategy=Object.freeze({
+          decision:String(visibleDecision).toUpperCase(),
+          phase:null,
+          direction_score:visibleDirection,
+          state:String(visibleState||(/NO\s*TRADE/i.test(visibleDecision)?"WAIT":visibleDecision)).toUpperCase().replace(/\s+/g,"_"),
+          blocker:firstMatch([compareText],[/verrou\s+([^\n·]+)/i])||null,
+          source:"visible-comparative-runtime"
+        });
+      }
+    }
 
     const row=clone(safeCall(globalThis.AgentCryptoTradusShadow406066?.read,null));
-    if(!row)return Object.freeze({strategy,tradus:Object.freeze({state:"NO_DATA",action:"NO_TRADE",imbalance:null,spread:null,comparison:"EN ATTENTE",comparison_text:"",fresh:false,source:"none"})});
+    if(!row){
+      const visibleAction=firstMatch([compareText],[/TRADUS\s*(BUY|SELL|NO[_\s-]?TRADE)\b/i]);
+      if(!visibleAction)return Object.freeze({strategy,tradus:Object.freeze({state:"NO_DATA",action:"NO_TRADE",imbalance:null,spread:null,comparison:"EN ATTENTE",comparison_text:"",fresh:false,source:"none"})});
+      const visibleImbalance=finite(firstMatch([compareText],[/imbalance\s*([+-]?\d+(?:[.,]\d+)?)\s*%/i])?.replace?.(",","."));
+      const visibleSpread=finite(firstMatch([compareText],[/spread\s*([+-]?\d+(?:[.,]\d+)?)\s*%/i])?.replace?.(",","."));
+      const visibleComparison=firstMatch([compareText],[/Comparaison\s+maintenant\s*(CONVERGENCE|DIVERGENCE|NON\s+COMPARABLE|ACCORD|D[ÉE]SACCORD)/i])||"VISIBLE";
+      const visibleFresh=/\bFRAIS\b/i.test(compareText);
+      return Object.freeze({strategy,tradus:Object.freeze({
+        state:visibleFresh?"FRESH":"VISIBLE",
+        action:upper(visibleAction).replace(/[\s-]+/g,"_"),
+        imbalance:Number.isFinite(visibleImbalance)?visibleImbalance/100:null,
+        spread:Number.isFinite(visibleSpread)?visibleSpread/100:null,
+        comparison:String(visibleComparison).toUpperCase(),
+        comparison_text:"lecture comparative visible",
+        fresh:visibleFresh,
+        source:"visible-comparative-runtime"
+      })});
+    }
     const action=upper(row?.signal?.action||"NO_TRADE")||"NO_TRADE";
     const age=(()=>{const at=Date.parse(String(row?.at||""));return Number.isFinite(at)?Math.max(0,(Date.now()-at)/1000):null;})();
     const fresh=row?.ok===true&&age!==null&&age<=15;
@@ -358,5 +404,5 @@
     return Object.freeze({pass:checks.every(Boolean),total:checks.length,passed:checks.filter(Boolean).length,checks:Object.freeze(checks)});
   }
 
-  globalThis.AgentCryptoAtlasDecisionContext=Object.freeze({owner:OWNER,repair:REPAIR,build:runtimeBuild(),snapshot,render,read:()=>lastModel,selfTest,read_only:true,descriptive_only:true,financial_signal:false,automatic_order:false,fetch:false,recurring_timer:false,observer:false,storage_write:false,strategy_mutation:false,trading:false,wallet:false,canonical_strategy_reader:true,late_runtime_rebind:true});
+  globalThis.AgentCryptoAtlasDecisionContext=Object.freeze({owner:OWNER,repair:REPAIR,build:runtimeBuild(),snapshot,render,read:()=>lastModel,selfTest,read_only:true,descriptive_only:true,financial_signal:false,automatic_order:false,fetch:false,recurring_timer:false,observer:false,storage_write:false,strategy_mutation:false,trading:false,wallet:false,canonical_strategy_reader:true,late_runtime_rebind:true,presentation_independent_dom_fallback:true});
 })();
