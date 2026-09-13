@@ -1,16 +1,16 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.105",
+  "build": "40.6.106",
   "engine": "38.15.11",
-  "release": "TRADUS STRATEGY A COMPARISON TRUTH",
+  "release": "LOCAL AI ANALYTICAL CONTRACT CONSISTENCY",
   "published": true,
-  "status": "tradus_strategy_a_comparison_truth_406105",
-  "parent_build": "40.6.104",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.105",
-  "administrator_build": "40.6.105",
-  "build_label": "Build 40.6.105 · Administrator",
-  "release_status": "tradus_strategy_a_comparison_truth_406105",
-  "timestamp": "2026-09-13T07:50:00Z",
+  "status": "local_ai_contract_consistency_406106",
+  "parent_build": "40.6.105",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.106",
+  "administrator_build": "40.6.106",
+  "build_label": "Build 40.6.106 · Administrator",
+  "release_status": "local_ai_contract_consistency_406106",
+  "timestamp": "2026-09-13T08:15:00Z",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,7 +29,7 @@
     "runtime_owner": "js/version-truth-entry-authority-v3.js",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname index-X.Y.Z.html; canonical index.html may use explicit ac-build handoff",
-    "immutable_entry": "index-40.6.105.html",
+    "immutable_entry": "index-40.6.106.html",
     "bootstrap_to_owner_chain": true,
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
@@ -45,7 +45,38 @@
     "pedagogy_version_truth_406104": true,
     "pedagogy_version_truth_runtime_patch": "js/pedagogy-version-truth-406104.js",
     "tradus_strategy_a_comparison_truth_406105": true,
-    "tradus_strategy_a_runtime_patch": "js/tradus-strategy-a-reconcile-406105.js"
+    "tradus_strategy_a_runtime_patch": "js/tradus-strategy-a-reconcile-406105.js",
+    "local_ai_contract_consistency_406106": true,
+    "local_ai_contract_consistency_runtime_patch": "js/local-ai-contract-consistency-406106.js"
+  },
+  "local_ai_contract_consistency_406106": {
+    "scope": "reject local Atlas/Aerith comments that contradict deterministic facts already present in the same CURRENT strict_contract",
+    "release_document": "RELEASE_40_6_106.md",
+    "test_evidence": "architecture/local-ai-contract-consistency-40.6.106.json",
+    "immutable_entry": "index-40.6.106.html",
+    "parent_entry_blob_reused": "index-40.6.105.html",
+    "runtime_patch": "js/local-ai-contract-consistency-406106.js",
+    "runtime_loader": "js/version-truth-406086-authority-lock.js",
+    "deterministic_comment_guard_owner": "atlasLocalBoundedCommentTruthGuard",
+    "fallback_owner": "atlasLocalFrenchCommentFallback",
+    "self_test_expected": "6/6",
+    "top5_false_absence_rejected": true,
+    "market_price_volume_false_absence_rejected": true,
+    "math_false_degradation_rejected": true,
+    "market_data_changed": false,
+    "market_core_changed": false,
+    "web_classic_changed": false,
+    "aether_changed": false,
+    "atlas_current_algorithm_changed": false,
+    "oracle_changed": false,
+    "lecture_technique_changed": false,
+    "strategy_a_changed": false,
+    "trading_changed": false,
+    "wallet_changed": false,
+    "recurring_timer": false,
+    "observer": false,
+    "storage_write": false,
+    "firefox_terrain_proof": "pending_new_CURRENT_or_full_export_on_40.6.106"
   },
   "tradus_strategy_a_comparison_truth_406105": {
     "scope": "reconcile the displayed TRADUS comparison with current Strategy A truth without changing either business owner",
@@ -71,7 +102,9 @@
     "trading_changed": false,
     "recurring_timer": false,
     "observer": false,
-    "storage_write": false
+    "storage_write": false,
+    "firefox_terrain_proof": "user 40.6.105 export: Strategy A OFF => NON COMPARABLE; prior NO TRADE observation => CONVERGENCE; no stale À RAFRAÎCHIR state reproduced",
+    "firefox_terrain_proof_status": "accepted_2026-09-13"
   },
   "pedagogy_version_truth_406104": {
     "scope": "reconcile the reproduced stale pedagogical interface build label with the loaded immutable Version Truth build",
@@ -419,16 +452,17 @@
     "cex_freshness": "fail_closed_read_side_guard_40.6.98_active_terrain_observation_pending",
     "visible_version_footer": "late_writer_lock_proven_current_in_user_40.6.103_report",
     "generated_report_version_truth": "40.6.103_user_report_proven",
-    "pedagogy_version_truth": "40.6.104_user_report_reproduced_stale_label_owner_followup_needed",
-    "tradus_strategy_a_comparison_truth": "40.6.105_firefox_terrain_proof_pending",
-    "local_ai_contract_consistency": "proven_in_40.6.104_report_followup_required",
-    "final_firefox_terrain_proof": "40.6.105_required_after_deployment"
+    "pedagogy_version_truth": "40.6.105_export_no_longer_reproduces_pedagogy_Interface_40.6.86_label",
+    "tradus_strategy_a_comparison_truth": "40.6.105_user_firefox_export_accepted",
+    "local_ai_contract_consistency": "40.6.106_published_static_6_of_6_terrain_CURRENT_pending",
+    "final_firefox_terrain_proof": "40.6.106_required_after_deployment",
+    "visible_version_auto_reader": "40.6.105_export_still_reports_ATLAS_AUTO_READER_V4_Build_40.6.86_and_interface_build_truth_FAIL"
   },
   "history": {
     "through_build": "40.6.95",
     "legacy_history_path": "architecture/build-history-through-40.6.86.json",
     "handoff_parent": "RELEASE_40_6_95_FINAL_HANDOFF.md",
     "preserved": true,
-    "reason": "40.6.96-40.6.105 extend the validated 40.6.95 runtime without rewriting protected business owners"
+    "reason": "40.6.96-40.6.106 extend the validated 40.6.95 runtime without rewriting protected business owners"
   }
 }
