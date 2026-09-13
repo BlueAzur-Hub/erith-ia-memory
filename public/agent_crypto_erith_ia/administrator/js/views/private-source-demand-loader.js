@@ -4,6 +4,7 @@
    40.6.96+ loads the bounded post-handoff stabilization layer by immutable entry build.
    40.6.98+ loads DEX exclusion diagnostics as a read-only observability layer.
    40.6.101+ loads the fresh-CEX divergence fail-closed quality gate.
+   40.6.113+ routes DEX exclusion diagnostics to the canonical unversioned owner.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
@@ -47,6 +48,16 @@
 
   function ensureDexDiagnostics(){
     if(!atLeast("40.6.98"))return false;
+    if(atLeast("40.6.113")){
+      if(globalThis.AgentCryptoDexExclusionDiagnostics?.owner==="dex-exclusion-diagnostics")return true;
+      if(document.querySelector('script[data-dex-exclusion-diagnostics-canonical="true"]'))return true;
+      const script=document.createElement("script");
+      script.src=`./js/dex-exclusion-diagnostics.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+      script.async=false;
+      script.dataset.dexExclusionDiagnosticsCanonical="true";
+      document.head.appendChild(script);
+      return true;
+    }
     if(globalThis.AgentCryptoDexExclusionDiagnostics406098)return true;
     if(document.querySelector('script[data-dex-exclusion-diagnostics-406098="true"]'))return true;
     const script=document.createElement("script");
@@ -130,6 +141,7 @@
     strategy_paper_proof_hotfix:BUILD==="40.6.95",
     post_handoff_stabilization:atLeast("40.6.96"),
     dex_exclusion_diagnostics:atLeast("40.6.98"),
+    dex_exclusion_diagnostics_canonical:atLeast("40.6.113"),
     cex_divergence_fail_closed:atLeast("40.6.101"),
     new_timer:false,
     new_observer:false,
