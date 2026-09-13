@@ -2,6 +2,8 @@
    Introduced as the active canonical filename in Build 40.6.110.
    40.6.115 terrain repair: the current visible Strategy A pilot is the runtime read-side truth
    when the historical 40.6.105 DOM scope is stale, absent or contradictory.
+   40.6.117 R3: preserve innerText when usable, then fall back to textContent so collapsed
+   Strategy A truth cannot silently fall through to historical OFF / UNKNOWN state.
    Git carries history; the active functional filename does not carry a build number.
 
    Contract:
@@ -14,7 +16,7 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.115";
+  const RELEASE = "40.6.117-r3";
   const PANEL_ID = "tradusShadow406066";
   const MAX_COMPARISON_AGE_SECONDS = 15;
   const upper = value => String(value ?? "").trim().toUpperCase();
@@ -30,10 +32,10 @@
     return "ACTIVE";
   }
 
-  function visibleStrategyAText() {
-    const body = String(document.body?.innerText || "").replace(/\u00a0/g, " ");
-    if (!body) return "";
-    const normalized = upper(body);
+  function sliceStrategyAText(body) {
+    const source = String(body || "").replace(/\u00a0/g, " ");
+    if (!source) return "";
+    const normalized = upper(source);
     const markers = ["STRATÉGIE A · PAPER AUTOMATIQUE", "STRATEGIE A · PAPER AUTOMATIQUE"];
     let start = -1;
     for (const marker of markers) {
@@ -44,15 +46,22 @@
     const ends = ["TRADUS / YOHAN", "MULTI-STRATEGY SHADOW LEDGER"]
       .map(marker => normalized.indexOf(marker, start + 1))
       .filter(index => index > start);
-    const end = ends.length ? Math.min(...ends) : Math.min(body.length, start + 14000);
-    return body.slice(start, end);
+    const end = ends.length ? Math.min(...ends) : Math.min(source.length, start + 14000);
+    return source.slice(start, end);
+  }
+
+  function visibleStrategyAText() {
+    const visible = sliceStrategyAText(document.body?.innerText || "");
+    if (/D[ÉE]CISION\s*(NO TRADE|OFF|PAPER|STOP|WAIT)|PHASE\s+(NO TRADE|OFF|PAPER|STOP|WAIT)/i.test(visible)) return visible;
+    const complete = sliceStrategyAText(document.body?.textContent || "");
+    return complete || visible;
   }
 
   function parseVisibleStrategyA(text) {
     const source = String(text || "").replace(/\u00a0/g, " ");
     const decision = source.match(/D[ÉE]CISION\s*(NO TRADE|OFF|PAPER|STOP|WAIT)/i)?.[1]?.trim()?.toUpperCase() || null;
     const phase = source.match(/PHASE\s+(NO TRADE|OFF|PAPER|STOP|WAIT)/i)?.[1]?.trim()?.toUpperCase() || null;
-    const directionRaw = source.match(/DIRECTION\s*(?:WAIT|PASS)?\s*(-?\d+)\s*\/\s*100/i)?.[1] || null;
+    const directionRaw = source.match(/DIRECTION\s*(?:WAIT|PASS)?\s*([+-]?\d+)\s*\/\s*100/i)?.[1] || null;
     const blocker = source.match(/1er verrou\s*:\s*([^\n·]+)/i)?.[1]?.trim()
       || source.match(/Dernier verrou\s*([^\n·]+)/i)?.[1]?.trim()
       || null;
@@ -214,6 +223,7 @@
     enforce,
     selfTest,
     visible_runtime_truth_preferred: true,
+    hidden_runtime_truth_fallback: true,
     unknown_is_wait: false,
     unknown_can_converge: false,
     fetch: false,
