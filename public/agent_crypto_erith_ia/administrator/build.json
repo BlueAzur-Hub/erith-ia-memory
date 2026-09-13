@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.117",
+  "build": "40.6.118",
   "engine": "38.15.11",
-  "release": "ATLAS DECISION CONTEXT CANONICAL READERS",
+  "release": "READ-SIDE TRUTH CONSOLIDATION",
   "published": true,
-  "status": "atlas_decision_context_canonical_readers_406117",
-  "parent_build": "40.6.116",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.117",
-  "administrator_build": "40.6.117",
-  "build_label": "Build 40.6.117 · Administrator",
-  "release_status": "atlas_decision_context_canonical_readers_406117",
+  "status": "read_side_truth_consolidation_406118",
+  "parent_build": "40.6.117",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.118",
+  "administrator_build": "40.6.118",
+  "build_label": "Build 40.6.118 · Administrator",
+  "release_status": "read_side_truth_consolidation_406118",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
     "runtime_owner_name": "version-truth",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname or explicit ac-build handoff on canonical index.html; embedded metadata is legacy fallback only",
-    "immutable_entry": "index-40.6.117.html",
-    "immutable_entry_mode": "bounded canonical handoff to index.html?ac-build=40.6.117",
+    "immutable_entry": "index-40.6.118.html",
+    "immutable_entry_mode": "bounded canonical handoff to index.html?ac-build=40.6.118",
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
     "source_demand_loader_generic": true,
@@ -143,6 +143,7 @@
   "atlas_decision_context": {
     "introduced_in": "40.6.114",
     "repaired_in": "40.6.117",
+    "consolidated_in": "40.6.118",
     "scope": "read-only descriptive composition of existing market, Oracle, Source Truth, News, Strategy A and TRADUS states",
     "runtime_owner": "js/atlas-decision-context.js",
     "loader": "js/views/private-source-demand-loader.js",
@@ -188,7 +189,7 @@
     "observer": false,
     "storage_write": false,
     "self_test_expected": "6/6",
-    "firefox_terrain_proof": "pending 40.6.117; 40.6.116 export reproduced INCOMPLET despite visible market/oracle/source/news truth"
+    "firefox_terrain_proof": "pending 40.6.118; 40.6.117 terrain proved Strategy A/TRADUS truth but Decision Context still required clean asset reload"
   },
   "strategy_tradus_comparative_intelligence": {
     "introduced_in": "40.6.115",
@@ -224,7 +225,7 @@
     "storage_write": false,
     "wallet": false,
     "self_test_expected": "5/5",
-    "firefox_terrain_proof": "validated visible in 40.6.115 terrain; Strategy A NO TRADE and TRADUS convergence/divergence readable after root-reader hotfix"
+    "firefox_terrain_proof": "validated in 40.6.117 terrain: Strategy A NO TRADE / WAIT and TRADUS NO_TRADE convergence are readable"
   },
   "operator_cockpit": {
     "introduced_in": "40.6.116",
@@ -243,6 +244,35 @@
     "storage_write": false,
     "wallet": false,
     "firefox_terrain_proof": "40.6.116 export confirms cockpit injection absent after hotfix"
+  },
+  "read_side_truth_consolidation": {
+    "introduced_in": "40.6.118",
+    "scope": "publish the repaired canonical read-side owners behind a fresh runtime build token after bounded 40.6.117 hotfixes",
+    "hotfix_commits": [
+      "2c0202078a02a017b8c61578fb94c3681a78cec0",
+      "3186143f462a86439e30791f811e86251ba0823d",
+      "357a640a464b7d1f7ec773487c4ddf71c0fe8c16"
+    ],
+    "dynamic_owner_cache_token": "administrator-build-40.6.118",
+    "atlas_decision_context_fresh_asset": true,
+    "strategy_tradus_comparative_fresh_asset": true,
+    "strategy_tradus_outcome_memory_fresh_asset": true,
+    "decision_board_compact_market_memory_truth": true,
+    "market_core_changed": false,
+    "graph_changed": false,
+    "lecture_technique_changed": false,
+    "aether_changed": false,
+    "oracle_changed": false,
+    "atlas_current_changed": false,
+    "strategy_a_engine_changed": false,
+    "tradus_engine_changed": false,
+    "automatic_order": false,
+    "real_order": false,
+    "fetch": false,
+    "recurring_timer": false,
+    "observer": false,
+    "storage_write": false,
+    "firefox_terrain_proof": "pending"
   },
   "versioning_cleanup": {
     "phase": "canonical_active_owner_extension",
@@ -288,12 +318,13 @@
     "40.6.114 ATLAS DECISION CONTEXT",
     "40.6.115 STRATEGY A TRADUS COMPARATIVE INTELLIGENCE",
     "40.6.116 OPERATOR COCKPIT + VISUAL HOTFIX RESTORE",
-    "40.6.117 ATLAS DECISION CONTEXT CANONICAL READERS"
+    "40.6.117 ATLAS DECISION CONTEXT CANONICAL READERS",
+    "40.6.118 READ-SIDE TRUTH CONSOLIDATION"
   ],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.116",
-    "previous_full_manifest_blob": "2f3bd1819bf914bfd40d9e1ad699f4c127a61187",
+    "previous_full_manifest_build": "40.6.117",
+    "previous_full_manifest_blob": "a1dcb6fb39898ff783e376cdfc2a10e1626175e7",
     "do_not_duplicate_release_history_in_active_manifest": true
   }
 }
