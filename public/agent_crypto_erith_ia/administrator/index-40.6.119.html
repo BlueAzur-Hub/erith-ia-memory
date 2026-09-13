@@ -11,6 +11,7 @@
   <script>
     (() => {
       "use strict";
+      const closeScript = "</" + "script>";
       const failClosed = error => {
         console.error("[40.6.119] bootstrap failed", error);
         document.body.innerHTML = '<main style="font-family:system-ui;padding:24px;background:#07131e;color:#eef7ff;min-height:100vh"><h1>Agent-Crypto 40.6.119</h1><p>Chargement interrompu : le runtime canonique n’a pas pu être relu proprement.</p><p><a style="color:#7defff" href="./index-40.6.119.html">Réessayer 40.6.119</a></p></main>';
@@ -23,17 +24,18 @@
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.text();
       }).then(html => {
-        const freshShim = '<script src="./js/version-truth-406086-authority-lock.js?v=406119-release-1"><\\/script>';
-        const autoTradus = '<script src="./js/tradus-autonomous-refresh-406119.js?v=406119-release-1"><\\/script>';
+        const oldShim = '<script src="./js/version-truth-406086-authority-lock.js?v=maint-1">' + closeScript;
+        const freshShim = '<script src="./js/version-truth-406086-authority-lock.js?v=406119-release-2">' + closeScript;
+        const autoTradus = '<script src="./js/tradus-autonomous-refresh-406119.js?v=406119-release-2">' + closeScript;
         let patched = html
-          .replace('<script src="./js/version-truth-406086-authority-lock.js?v=maint-1"><\\/script>', freshShim)
-          .replace(/content="40\\.6\\.86"/g, 'content="40.6.119"')
-          .replace(/Build 40\\.6\\.86/g, 'Build 40.6.119');
+          .replace(oldShim, freshShim)
+          .replaceAll('content="40.6.86"', 'content="40.6.119"')
+          .replaceAll('Build 40.6.86', 'Build 40.6.119');
 
         if (!patched.includes("tradus-autonomous-refresh-406119.js")) {
           patched = patched.includes("</body>")
-            ? patched.replace("</body>", `${autoTradus}</body>`)
-            : `${patched}${autoTradus}`;
+            ? patched.replace("</body>", autoTradus + "</body>")
+            : patched + autoTradus;
         }
 
         document.open();
