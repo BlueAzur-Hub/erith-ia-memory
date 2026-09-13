@@ -5,6 +5,7 @@
    40.6.98+ loads DEX exclusion diagnostics as a read-only observability layer.
    40.6.101+ loads the fresh-CEX divergence fail-closed quality gate.
    40.6.113+ routes DEX exclusion diagnostics to the canonical unversioned owner.
+   40.6.114+ loads the canonical read-only Atlas Decision Context composer.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, storage write, wallet or trading endpoint is introduced. */
@@ -80,18 +81,36 @@
     return true;
   }
 
+  function ensureAtlasDecisionContext(){
+    if(!atLeast("40.6.114"))return false;
+    if(globalThis.AgentCryptoAtlasDecisionContext?.owner==="atlas-decision-context")return true;
+    if(document.querySelector('script[data-atlas-decision-context="true"]'))return true;
+    const script=document.createElement("script");
+    script.src=`./js/atlas-decision-context.js?v=administrator-build-${encodeURIComponent(BUILD)}`;
+    script.async=false;
+    script.dataset.atlasDecisionContext="true";
+    document.head.appendChild(script);
+    return true;
+  }
+
   function settleReady(){state="ready";loadedAt=Date.now();lastError="";return true;}
+
+  function afterSourceOwners(){
+    ensureDexDiagnostics();
+    ensureCexDivergenceGuard();
+    ensureAtlasDecisionContext();
+  }
 
   function ensure(why="operator"){
     reason=String(why||"operator");
-    if(state==="ready"||globalThis.ErithPrivateBackendSources4054||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){settleReady();ensureDexDiagnostics();ensureCexDivergenceGuard();return Promise.resolve(true);}
+    if(state==="ready"||globalThis.ErithPrivateBackendSources4054||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){settleReady();afterSourceOwners();return Promise.resolve(true);}
     if(promise)return promise;
     state="loading";
     promise=new Promise(resolve=>{
       const existing=document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand-40486="true"]');
       if(existing){
-        if(globalThis.ErithPrivateBackendSources4054||existing.dataset.loaded==="true"){ensureDexDiagnostics();ensureCexDivergenceGuard();resolve(settleReady());return;}
-        existing.addEventListener("load",()=>{existing.dataset.loaded="true";ensureDexDiagnostics();ensureCexDivergenceGuard();resolve(settleReady());},{once:true});
+        if(globalThis.ErithPrivateBackendSources4054||existing.dataset.loaded==="true"){afterSourceOwners();resolve(settleReady());return;}
+        existing.addEventListener("load",()=>{existing.dataset.loaded="true";afterSourceOwners();resolve(settleReady());},{once:true});
         existing.addEventListener("error",()=>{state="error";lastError="load-error";resolve(false);},{once:true});
         return;
       }
@@ -99,7 +118,7 @@
       script.src=SRC;
       script.async=true;
       script.dataset.privateSourceDemandStable="true";
-      script.addEventListener("load",()=>{script.dataset.loaded="true";settleReady();ensureDexDiagnostics();ensureCexDivergenceGuard();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:BUILD,reason}}));}catch(_){}resolve(true);},{once:true});
+      script.addEventListener("load",()=>{script.dataset.loaded="true";settleReady();afterSourceOwners();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:BUILD,reason}}));}catch(_){}resolve(true);},{once:true});
       script.addEventListener("error",()=>{state="error";lastError="script-load-error";resolve(false);},{once:true});
       document.head.appendChild(script);
     }).finally(()=>{promise=null;});
@@ -126,6 +145,7 @@
   ensurePostHandoff();
   ensureDexDiagnostics();
   ensureCexDivergenceGuard();
+  ensureAtlasDecisionContext();
 
   const API=Object.freeze({
     build:BUILD,
@@ -134,6 +154,7 @@
     ensurePostHandoff,
     ensureDexDiagnostics,
     ensureCexDivergenceGuard,
+    ensureAtlasDecisionContext,
     snapshot:()=>Object.freeze({state,reason,loaded_at:loadedAt,last_error:lastError,parser_boot_loaded:false,source:SRC,source_truth_host:"backend"}),
     stable_owner:true,
     source_truth_backend_placement_restored:true,
@@ -143,6 +164,7 @@
     dex_exclusion_diagnostics:atLeast("40.6.98"),
     dex_exclusion_diagnostics_canonical:atLeast("40.6.113"),
     cex_divergence_fail_closed:atLeast("40.6.101"),
+    atlas_decision_context:atLeast("40.6.114"),
     new_timer:false,
     new_observer:false,
     new_storage_owner:false,
