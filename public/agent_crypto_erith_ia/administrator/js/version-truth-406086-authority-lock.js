@@ -5,6 +5,7 @@
    40.6.105 adds a gated TRADUS/Strategy A read-side comparison reconciliation.
    40.6.106 extends the existing local-AI deterministic comment truth guard.
    40.6.107 closes residual current-runtime version leaks in Auto Reader/footer surfaces.
+   40.6.108 improves local Atlas/Aerith dialogue readability and separates market-snapshot time from CURRENT production time.
    The path stays stable so validated index entries do not need document rewrites.
    No recurring timer. No observer. No storage write. */
 (() => {
@@ -75,6 +76,14 @@
         'script[data-visible-version-surface-truth-406107="true"]',
         `./js/visible-version-surface-truth-406107.js?v=visible-version-surface-truth-${encodeURIComponent(build)}`,
         "visibleVersionSurfaceTruth406107"
+      );
+    }
+
+    if (atLeast("40.6.108") && !globalThis.AgentCryptoLocalDialoguePresentation406108) {
+      loadPatch(
+        'script[data-local-dialogue-presentation-406108="true"]',
+        `./js/local-dialogue-presentation-406108.js?v=local-dialogue-presentation-${encodeURIComponent(build)}`,
+        "localDialoguePresentation406108"
       );
     }
   }, { once: true });
