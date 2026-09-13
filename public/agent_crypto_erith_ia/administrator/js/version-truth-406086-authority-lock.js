@@ -6,10 +6,10 @@
    40.6.106 extends the existing local-AI deterministic comment truth guard.
    40.6.107 closes residual current-runtime version leaks in Auto Reader/footer surfaces.
    40.6.108 improves local Atlas/Aerith dialogue readability and separates market-snapshot time from CURRENT production time.
-   40.6.109 separates price/volume evidence and requires 4/4 Math measures before rejecting a correct reserve.
+   40.6.109 starts canonical functional filenames: Local AI reserve truth loads from js/local-ai-contract-consistency.js.
    40.6.110 makes unknown Strategy A fail closed in TRADUS comparison.
    40.6.111 fail-closes stale/unknown DEX observations and verifies pending-before-REPOS Aether truth.
-   The path stays stable so validated index entries do not need document rewrites.
+   The historical bootstrap path remains compatible during the staged consolidation.
    No recurring timer. No observer. No storage write. */
 (() => {
   "use strict";
@@ -60,8 +60,8 @@
     if (atLeast("40.6.108") && !globalThis.AgentCryptoLocalDialoguePresentation406108) {
       loadPatch('script[data-local-dialogue-presentation-406108="true"]',`./js/local-dialogue-presentation-406108.js?v=local-dialogue-presentation-${encodeURIComponent(build)}`,"localDialoguePresentation406108");
     }
-    if (atLeast("40.6.109") && !globalThis.AgentCryptoLocalAIReserveTruth406109) {
-      loadPatch('script[data-local-ai-reserve-truth-406109="true"]',`./js/local-ai-reserve-truth-406109.js?v=local-ai-reserve-truth-${encodeURIComponent(build)}`,"localAiReserveTruth406109");
+    if (atLeast("40.6.109") && !globalThis.AgentCryptoLocalAIReserveTruth) {
+      loadPatch('script[data-local-ai-contract-consistency="true"]',`./js/local-ai-contract-consistency.js?v=${encodeURIComponent(build)}`,"localAiContractConsistency");
     }
     if (atLeast("40.6.110") && !globalThis.AgentCryptoTradusStrategyAFailClosed406110) {
       loadPatch('script[data-tradus-strategy-a-fail-closed-406110="true"]',`./js/tradus-strategy-a-fail-closed-406110.js?v=tradus-strategy-a-fail-closed-${encodeURIComponent(build)}`,"tradusStrategyAFailClosed406110");
