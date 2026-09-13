@@ -12,6 +12,10 @@
   - never creates a second recurring runner or market fetch;
   - STOP in the Strategy A panel clears the session opt-in;
   - no localStorage write, credential, wallet or real-order capability.
+
+  Compatibility routing:
+  - runtime 40.6.121+ loads the v2 continuity owner, which defaults PAPER Auto A
+    to running while preserving an explicit STOP for the browser session.
 */
 (() => {
   "use strict";
@@ -27,6 +31,36 @@
   let lastRestore = "never";
 
   const norm = value => String(value || "").replace(/\s+/g, " ").trim().toUpperCase();
+
+  function runtimeBuild() {
+    const fromTruth = String(globalThis.ErithVersionTruth?.build || "").trim();
+    if (fromTruth) return fromTruth;
+    return String(document.querySelector('meta[name="administrator-build"]')?.content || "0.0.0").trim();
+  }
+
+  function runtimeAtLeast(target) {
+    const parts = value => String(value || "").split(".").map(x => Number.parseInt(x, 10) || 0);
+    const A = parts(runtimeBuild());
+    const B = parts(target);
+    const n = Math.max(A.length, B.length);
+    for (let i = 0; i < n; i += 1) {
+      const delta = (A[i] || 0) - (B[i] || 0);
+      if (delta) return delta > 0;
+    }
+    return true;
+  }
+
+  function ensureSuccessor406121() {
+    if (!runtimeAtLeast("40.6.121")) return false;
+    if (globalThis.AgentCryptoStrategyAAutoSessionContinuity406121) return true;
+    if (document.querySelector('script[data-strategy-a-auto-session-continuity-406121="true"]')) return true;
+    const script = document.createElement("script");
+    script.src = `./js/strategy-a-auto-session-continuity-406121.js?v=${encodeURIComponent(runtimeBuild())}`;
+    script.async = false;
+    script.dataset.strategyAAutoSessionContinuity406121 = "true";
+    document.head.appendChild(script);
+    return true;
+  }
 
   function optedIn() {
     try { return sessionStorage.getItem(SESSION_KEY) === "1"; }
@@ -138,15 +172,28 @@
   }
 
   document.addEventListener("click", captureOptIn, true);
+  ensureSuccessor406121();
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => scheduleRestore("dom-ready"), { once: true });
+    document.addEventListener("DOMContentLoaded", () => {
+      ensureSuccessor406121();
+      scheduleRestore("dom-ready");
+    }, { once: true });
   } else {
     scheduleRestore("boot");
   }
-  window.addEventListener("load", () => scheduleRestore("load"), { once: true, passive: true });
-  window.addEventListener("pageshow", () => scheduleRestore("pageshow"), { passive: true });
-  window.addEventListener("erith:system-hydrated", () => scheduleRestore("system-hydrated"), { passive: true });
+  window.addEventListener("load", () => {
+    ensureSuccessor406121();
+    scheduleRestore("load");
+  }, { once: true, passive: true });
+  window.addEventListener("pageshow", () => {
+    ensureSuccessor406121();
+    scheduleRestore("pageshow");
+  }, { passive: true });
+  window.addEventListener("erith:system-hydrated", () => {
+    ensureSuccessor406121();
+    scheduleRestore("system-hydrated");
+  }, { passive: true });
 
   globalThis[API_KEY] = Object.freeze({
     build: BUILD,
@@ -155,12 +202,14 @@
     opted_in: optedIn,
     restore,
     clear: () => setOptIn(false),
+    ensure_successor_406121: ensureSuccessor406121,
     snapshot: () => Object.freeze({
       build: BUILD,
       opted_in: optedIn(),
       active: state().active,
       restored_this_document: restoredThisDocument,
-      last_restore: lastRestore
+      last_restore: lastRestore,
+      successor_406121_loaded: !!globalThis.AgentCryptoStrategyAAutoSessionContinuity406121
     }),
     contract: Object.freeze({
       paper_only: true,
