@@ -37,7 +37,6 @@
     "source_demand_loader_generic": true,
     "single_visible_owner": true,
     "false_propagation_state_removed": true,
-    "presentation_handoff_after_version_truth": "js/local-dialogue-presentation.js",
     "recurring_timer": false,
     "observer": false,
     "storage_write": false
@@ -86,7 +85,8 @@
     "introduced_in": "40.6.112",
     "scope": "visual/readability only for existing local Atlas/Aerith dialogue and analytical provenance",
     "runtime_owner": "js/local-dialogue-presentation.js",
-    "historical_406108_owner_preserved": "js/local-dialogue-presentation-406108.js",
+    "historical_406108_path": "js/local-dialogue-presentation-406108.js",
+    "historical_406108_role": "compatibility shim to canonical presentation owner",
     "terrain_defect_reproduced": true,
     "atlas_progress_card": true,
     "six_stage_chips": true,
@@ -125,7 +125,7 @@
       "js/local-dialogue-presentation.js"
     ],
     "historical_406086_path": "compatibility bootstrap only",
-    "historical_406108_path": "historical presentation implementation only",
+    "historical_406108_path": "compatibility bootstrap to canonical presentation owner",
     "immutable_release_entry_remains_versioned": true,
     "active_presentation_filename_is_unversioned": true,
     "git_is_implementation_history_authority": true
