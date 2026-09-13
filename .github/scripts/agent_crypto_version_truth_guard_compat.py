@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Agent-Crypto current version-delivery contract validator.
 
-Validates the deployed chain:
-index*.html -> compatibility bootstrap -> Entry Authority V3 -> build.json,
-plus the stable Source Truth demand loader introduced in 40.6.93.
-The loaded build comes from the immutable entry pathname (or ac-build fallback),
-not from stale embedded first-paint metadata. This helper is read-only and does
-not validate or mutate market/business behavior.
+From 40.6.111 the active version owner has one stable canonical filename:
+    js/version-truth.js
+
+Historical immutable documents may still reference the 40.6.86 compatibility
+shim, but that shim owns no version logic. It may only load the canonical owner.
+Git carries implementation history; functional filenames do not gain a new build
+suffix at each release.
 """
 from __future__ import annotations
 
@@ -18,8 +19,18 @@ from pathlib import Path
 DEFAULT_BASE = Path("public/agent_crypto_erith_ia/administrator")
 PROTECTED_ENGINE = "38.15.11"
 BOOTSTRAP = "js/version-truth-406086-authority-lock.js"
-OWNER = "js/version-truth-entry-authority-v3.js"
+OWNER = "js/version-truth.js"
 SOURCE_LOADER = "js/views/private-source-demand-loader.js"
+CANONICAL_LAYERS = {
+    (40, 6, 109): "js/local-ai-contract-consistency.js",
+    (40, 6, 110): "js/tradus-strategy-a-reconcile.js",
+    (40, 6, 111): "js/dex-freshness-guard.js",
+}
+RETIRED_ACTIVE_NAMES = {
+    (40, 6, 109): "js/local-ai-reserve-truth-406109.js",
+    (40, 6, 110): "js/tradus-strategy-a-fail-closed-406110.js",
+    (40, 6, 111): "js/dex-aether-freshness-truth-406111.js",
+}
 
 
 def fail(message: str) -> None:
@@ -81,26 +92,27 @@ def validate(base: Path) -> dict:
     loader = read(loader_path)
 
     bootstrap_required = (
-        'const KEY = "__ERITH_VERSION_TRUTH_ENTRY_AUTHORITY_V3_LOADING__";',
-        'globalThis.ErithVersionTruth?.owner === "version-truth-entry-authority-v3"',
-        'script.src = "./js/version-truth-entry-authority-v3.js?v=entry-authority-v3-1";',
+        'const KEY = "__ERITH_VERSION_TRUTH_CANONICAL_LOADING__";',
+        'globalThis.ErithVersionTruth?.owner === "version-truth"',
+        'script.src = "./js/version-truth.js?v=canonical-owner-1";',
         'script.async = false;',
         'document.head.appendChild(script);',
     )
     missing = [marker for marker in bootstrap_required if marker not in bootstrap]
     if missing:
-        fail(f"compatibility bootstrap contract incomplete: {missing}")
+        fail(f"compatibility shim contract incomplete: {missing}")
 
     owner_required = (
         'const ENGINE = "38.15.11";',
-        'const OWNER = "version-truth-entry-authority-v3";',
+        'const OWNER = "version-truth";',
         'const MANIFEST = "./build.json";',
         'const BUILD_PARAM = "ac-build";',
         'const ENTRY_RE = /(?:^|\\/)index-(\\d+\\.\\d+\\.\\d+)\\.html$/i;',
         'const BUILD = String(entryMatch?.[1] || (BUILD_RE.test(requestedBuild) ? requestedBuild : embeddedBuild) || "UNKNOWN").trim();',
-        'const ownerPresent = html.includes("version-truth-406086-authority-lock.js");',
         'ensureSourceDemandLoader();',
-        'source_demand_loader_generic: true',
+        'ensureRuntimeLayers();',
+        'canonical_active_filename: "js/version-truth.js"',
+        'single_visible_owner: true',
         'immutable_entry_path_authority: true',
         'canonical_build_param_fallback: true',
         'false_propagation_state_removed: true',
@@ -110,7 +122,7 @@ def validate(base: Path) -> dict:
     )
     missing = [marker for marker in owner_required if marker not in owner]
     if missing:
-        fail(f"Entry Authority V3 contract incomplete: {missing}")
+        fail(f"canonical Version Truth contract incomplete: {missing}")
 
     loader_required = (
         'const INSTANCE_KEY="__ERITH_PRIVATE_SOURCE_DEMAND_STABLE_BOUND__";',
@@ -126,17 +138,38 @@ def validate(base: Path) -> dict:
     if missing:
         fail(f"stable Source Truth loader contract incomplete: {missing}")
 
-    forbidden = ("setInterval(", "new MutationObserver(", "new IntersectionObserver(", "localStorage.setItem(", "sessionStorage.setItem(")
+    forbidden = (
+        "setInterval(",
+        "new MutationObserver(",
+        "new IntersectionObserver(",
+        "localStorage.setItem(",
+        "sessionStorage.setItem(",
+    )
     for label, text in (("bootstrap", bootstrap), ("owner", owner), ("loader", loader)):
         for marker in forbidden:
             if marker in text:
                 fail(f"{label} gained forbidden recurring/storage primitive: {marker}")
-    if "40.6.91" in owner or "source_demand_repair_406091" in owner:
-        fail("Entry Authority V3 retained build-specific 40.6.91 Source Truth repair")
+
+    if "version-truth-entry-authority-v3.js" in bootstrap:
+        fail("historical bootstrap still loads the versioned V3 owner")
     if 'falsePropagation = "true"' in owner:
-        fail("Entry Authority V3 retained stale falsePropagation=true marker")
+        fail("canonical owner retained stale falsePropagation=true marker")
     if "40.6.91" in loader:
         fail("stable Source Truth loader retained build-specific 40.6.91 token")
+
+    for minimum, relpath in CANONICAL_LAYERS.items():
+        if current >= minimum and not (base / relpath).is_file():
+            fail(f"missing canonical functional owner for {build}: {relpath}")
+    for minimum, relpath in RETIRED_ACTIVE_NAMES.items():
+        if current >= minimum and (base / relpath).is_file():
+            fail(f"retired build-numbered active owner still present: {relpath}")
+
+    if current >= (40, 6, 109) and "./js/local-ai-contract-consistency.js" not in owner:
+        fail("canonical Local AI owner is not loaded by version-truth.js")
+    if current >= (40, 6, 110) and "./js/tradus-strategy-a-reconcile.js" not in owner:
+        fail("canonical TRADUS owner is not loaded by version-truth.js")
+    if current >= (40, 6, 111) and "./js/dex-freshness-guard.js" not in owner:
+        fail("canonical DEX freshness owner is not loaded by version-truth.js")
 
     bootstrap_tag = re.compile(r'<script\s+src="\./js/version-truth-406086-authority-lock\.js\?v=[^"]+"></script>')
     for path in (canonical, immutable):
@@ -162,10 +195,11 @@ def validate(base: Path) -> dict:
         "parent_build": parent,
         "market_core": engine,
         "published_truth": "build.json",
-        "bootstrap": BOOTSTRAP,
+        "compatibility_shim": BOOTSTRAP,
         "runtime_owner": OWNER,
         "source_loader": SOURCE_LOADER,
         "immutable_entry": immutable_name,
+        "git_is_history_authority": True,
     }
     print("VERSION_TRUTH_PASS " + json.dumps(result, ensure_ascii=False, sort_keys=True))
     return result
