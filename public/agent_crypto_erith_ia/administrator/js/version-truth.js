@@ -1,6 +1,6 @@
 /* Agent-Crypto Administrator — canonical Version Truth owner.
-   build.json is the only release authority. The runtime graph is stable and is
-   loaded by runtime-modules.js; no historical release comparison lives here. */
+   build.json is the only release authority. Runtime modules have stable names
+   and are loaded from one registry without release-number branching. */
 (() => {
   "use strict";
 
@@ -20,6 +20,7 @@
     }
     node.content = String(value ?? "");
   };
+
   const initialBuild = meta("agent-crypto-boot-build") || meta("administrator-build") || "UNKNOWN";
   let truth = null;
   let state = "booting";
@@ -127,7 +128,7 @@
         return;
       }
       const script = document.createElement("script");
-      script.src = RUNTIME_REGISTRY;
+      script.src = `${RUNTIME_REGISTRY}?reload=${Date.now()}`;
       script.async = false;
       script.dataset.agentCryptoRuntimeRegistry = "true";
       script.addEventListener("load", () => resolve(globalThis.AgentCryptoRuntimeModules), { once: true });
@@ -140,7 +141,7 @@
   async function ensureRuntimeLayers() {
     const registry = await ensureRegistryScript();
     if (!registry?.load) throw new Error("registre runtime invalide");
-    return registry.load(truth?.build || initialBuild);
+    return registry.load();
   }
 
   async function check(show = false) {
@@ -175,7 +176,7 @@
       await ensureRuntimeLayers();
       try {
         document.dispatchEvent(new CustomEvent("agent-crypto:version-truth-ready", { detail: { build: truth.build, engine: truth.engine } }));
-        document.dispatchEvent(new CustomEvent("agent-crypto:runtime-layers-ready", { detail: { build: truth.build } }));
+        document.dispatchEvent(new CustomEvent("agent-crypto:runtime-layers-ready", { detail: { modules: globalThis.AgentCryptoRuntimeModules?.modules || [] } }));
       } catch (_) {}
     } catch (error) {
       state = "failed";
@@ -206,21 +207,19 @@
 
   globalThis.ErithVersionTruth = Object.freeze({
     owner: OWNER,
-    legacy_owner_alias: "version-truth-entry-authority-v3",
     get build() { return truth?.build || initialBuild; },
     engine: MARKET_CORE,
     manifest: MANIFEST,
     snapshot: () => Object.freeze({ loaded: truth?.build || initialBuild, published: truth?.build || initialBuild, state }),
     refresh: check,
-    applyAvailableUpdate: async () => check(true),
     syncFooterTruth: () => truth ? syncFooter(truth.build, truth.engine) : false,
     syncMirrorTruth: () => truth ? syncMirror(truth.build) : false,
     syncVisibleTruth,
     ensureRuntimeLayers,
-    source_demand_loader_generic: true,
     single_visible_owner: true,
     build_json_authority: true,
     version_branching: false,
+    versioned_runtime_filenames: false,
     canonical_active_filename: "js/version-truth.js",
     recurring_timer: false,
     observer: false,
