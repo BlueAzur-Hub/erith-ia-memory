@@ -1,4 +1,4 @@
-/* ==========================================================================
+/* ========================================================================== 
    Agent-Crypto @erith.IA — canonical Chronos / planetary presentation owner
    Presentation only · no runtime, storage, market, Oracle or Atlas ownership.
    Stable DOM contract: data-chrono / data-planet.
@@ -78,14 +78,13 @@
   letter-spacing:.025em !important;
   text-shadow:0 0 7px rgba(255,255,255,.13) !important;
 }
-#atlasCelestialClockHeader .atlas-chrono-sep{
+#atlasCelestialClockHeader .atlas-chrono-separator{
   color:#71899a !important;
   font-size:8.6px !important;
   font-weight:700 !important;
   opacity:.72 !important;
 }
-#atlasCelestialClockHeader .atlas-chrono-day,
-#atlasCelestialClockHeader .atlas-chrono-hour{
+#atlasCelestialClockHeader .atlas-chrono-planet{
   color:var(--astro-planet,#d7e2ea) !important;
   font-size:clamp(9.5px,.60vw,10.9px) !important;
   font-weight:950 !important;
@@ -137,7 +136,6 @@
   #atlasCelestialClockHeader{gap:3px !important;font-size:9.15px !important}
   #atlasCelestialClockHeader .atlas-chrono-date{font-size:9.6px !important}
   #atlasCelestialClockHeader .atlas-chrono-time{font-size:12.4px !important}
-  #atlasCelestialClockHeader .atlas-chrono-sep{font-size:8px !important}
-  #atlasCelestialClockHeader .atlas-chrono-day,
-  #atlasCelestialClockHeader .atlas-chrono-hour{font-size:8.9px !important}
+  #atlasCelestialClockHeader .atlas-chrono-separator{font-size:8px !important}
+  #atlasCelestialClockHeader .atlas-chrono-planet{font-size:8.9px !important}
 }
