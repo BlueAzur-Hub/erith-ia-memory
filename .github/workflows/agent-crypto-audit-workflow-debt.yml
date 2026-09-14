@@ -1,0 +1,165 @@
+name: Agent Crypto audit workflow debt and triggers
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/agent-crypto-audit-workflow-debt.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Audit workflow triggers and historical debt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+
+          ROOT=Path('.github/workflows')
+          SELF=Path('agent-crypto-audit-workflow-debt.yml')
+          workflows=[]
+
+          PROTECTED_WORDS={
+            'aether':'AETHER','oracle':'ORACLE','atlas':'ATLAS','market':'MARKET',
+            'strategy':'STRATEGY','paper':'PAPER','version':'VERSION_TRUTH',
+            'collector':'COLLECTOR','youtube':'YOUTUBE','auto-update':'AUTO_UPDATE',
+            'canonical-archive':'CANONICAL_ARCHIVE'
+          }
+
+          def trigger_block(text):
+              lines=text.splitlines()
+              start=None
+              for i,line in enumerate(lines):
+                  if re.match(r'^on\s*:',line):
+                      start=i;break
+              if start is None:return ''
+              out=[lines[start]]
+              for line in lines[start+1:]:
+                  if line and not line[0].isspace():break
+                  out.append(line)
+              return '\n'.join(out)
+
+          def paths_from_trigger(block):
+              paths=[]
+              lines=block.splitlines()
+              in_paths=False; indent=None
+              for line in lines:
+                  m=re.match(r'^(\s*)paths\s*:\s*$',line)
+                  if m:
+                      in_paths=True;indent=len(m.group(1));continue
+                  if in_paths:
+                      cur=len(line)-len(line.lstrip())
+                      if line.strip() and cur<=indent:
+                          in_paths=False;indent=None
+                      elif line.strip().startswith('-'):
+                          v=line.strip()[1:].strip().strip('"\'')
+                          if v:paths.append(v)
+              return paths
+
+          for p in sorted(ROOT.glob('*.y*ml')):
+              if p.name==SELF.name:continue
+              text=p.read_text(encoding='utf-8',errors='replace')
+              low=(p.name+'\n'+text).lower()
+              block=trigger_block(text)
+              bl=block.lower()
+              protected=[]
+              for word,label in PROTECTED_WORDS.items():
+                  if word in p.name.lower():protected.append(label)
+              # Also protect workflows whose content directly targets protected runtime families.
+              if not protected:
+                  for word,label in [('aether','AETHER'),('oracle','ORACLE'),('atlas','ATLAS'),('strategy-a','STRATEGY'),('market-core','MARKET_CORE')]:
+                      if word in text.lower():protected.append(label)
+
+              has_schedule=bool(re.search(r'^\s*schedule\s*:',block,re.M)) or 'cron:' in bl
+              has_dispatch='workflow_dispatch' in bl
+              has_workflow_run='workflow_run' in bl
+              has_repo_dispatch='repository_dispatch' in bl
+              has_pull_request=bool(re.search(r'^\s*pull_request(?:_target)?\s*:',block,re.M))
+              has_push=bool(re.search(r'^\s*push\s*:',block,re.M))
+              paths=paths_from_trigger(block)
+              own_path=f'.github/workflows/{p.name}'
+              self_only_paths=bool(paths) and all(x in {own_path,p.name} for x in paths)
+              broad_push=has_push and not paths
+
+              old_build_refs=sorted(set(re.findall(r'40[.-](?:3|4|5|6)[.-]\d+(?:[.-]\d+)?',text)))[:12]
+              current_ref='40.6.124' in text
+              mutation_signals=[]
+              for sig,label in [
+                ('git push','GIT_PUSH'),('git commit','GIT_COMMIT'),('git rm','GIT_RM'),
+                ('sed -i','INPLACE_EDIT'),('python -','PYTHON_MUTATOR_POSSIBLE'),
+                ('contents: write','CONTENTS_WRITE'),('gh release','RELEASE')
+              ]:
+                  if sig in text.lower():mutation_signals.append(label)
+
+              if protected:
+                  cls='PROTECTED_OR_OPERATIONAL'
+              elif has_schedule or has_dispatch or has_workflow_run or has_repo_dispatch or has_pull_request:
+                  cls='ACTIVE_TRIGGER_REVIEW'
+              elif broad_push:
+                  cls='BROAD_PUSH_REVIEW'
+              elif self_only_paths:
+                  cls='SELF_TRIGGERED_HISTORICAL_CANDIDATE'
+              elif has_push and paths:
+                  cls='SCOPED_PUSH_REVIEW'
+              else:
+                  cls='INERT_OR_MANUAL_REVIEW'
+
+              workflows.append({
+                'path':str(p),'bytes':p.stat().st_size,'classification':cls,
+                'protected':sorted(set(protected)),
+                'triggers':{
+                  'push':has_push,'schedule':has_schedule,'workflow_dispatch':has_dispatch,
+                  'workflow_run':has_workflow_run,'repository_dispatch':has_repo_dispatch,
+                  'pull_request':has_pull_request,'broad_push':broad_push,'self_only_paths':self_only_paths,
+                  'paths':paths[:20]
+                },
+                'current_build_40_6_124_ref':current_ref,
+                'old_build_refs_sample':old_build_refs,
+                'mutation_signals':mutation_signals,
+              })
+
+          counts={}
+          for w in workflows:counts[w['classification']]=counts.get(w['classification'],0)+1
+          candidates=[w for w in workflows if w['classification']=='SELF_TRIGGERED_HISTORICAL_CANDIDATE']
+          broad=[w for w in workflows if w['classification']=='BROAD_PUSH_REVIEW']
+          active=[w for w in workflows if w['classification'] in {'ACTIVE_TRIGGER_REVIEW','SCOPED_PUSH_REVIEW'} and not w['protected']]
+          print(json.dumps({
+            'workflow_count':len(workflows),
+            'classification_counts':counts,
+            'self_triggered_historical_candidates':candidates,
+            'unprotected_broad_push_review':broad,
+            'unprotected_active_or_scoped_review':active,
+            'protected_or_operational_count':sum(1 for w in workflows if w['classification']=='PROTECTED_OR_OPERATIONAL'),
+            'mutation':'none'
+          },indent=2,ensure_ascii=False))
+          PY
+
+      - name: Retire one-shot audit workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven Refactor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f .github/workflows/agent-crypto-audit-workflow-debt.yml
+          git commit -m 'chore(agent-crypto): retire workflow debt audit tooling'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              exit 1
+            fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
