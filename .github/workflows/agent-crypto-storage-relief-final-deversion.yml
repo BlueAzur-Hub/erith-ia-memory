@@ -1,0 +1,107 @@
+name: Storage Relief final functional de-versioning
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-crypto-storage-relief-final-deversion.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refactor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Rewrite only canonical runtime contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          R='public/agent_crypto_erith_ia/administrator/runtime-shell.html'
+          OLD='AtlasStorageRelief40278'
+          NEW='AtlasStorageRelief'
+
+          git update-index --no-assume-unchanged "$R" 2>/dev/null || true
+          git update-index --no-skip-worktree "$R" 2>/dev/null || true
+
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('public/agent_crypto_erith_ia/administrator/runtime-shell.html')
+          old = 'AtlasStorageRelief40278'
+          new = 'AtlasStorageRelief'
+          text = p.read_text(encoding='utf-8')
+          old_count = text.count(old)
+          stable_only_before = text.replace(old, '').count(new)
+          print(f'OLD_BEFORE={old_count} STABLE_ONLY_BEFORE={stable_only_before}')
+          if old_count != 8:
+              raise SystemExit(f'Expected exactly 8 canonical old usages, found {old_count}; refusing mutation')
+          if stable_only_before != 0:
+              raise SystemExit(f'Unexpected mixed stable contract before rewrite: {stable_only_before}')
+          updated = text.replace(old, new)
+          if updated == text:
+              raise SystemExit('Rewrite produced no content change')
+          p.write_text(updated, encoding='utf-8')
+          check = p.read_text(encoding='utf-8')
+          old_after = check.count(old)
+          stable_only_after = check.replace(old, '').count(new)
+          print(f'OLD_AFTER={old_after} STABLE_ONLY_AFTER={stable_only_after}')
+          if old_after != 0 or stable_only_after != 8:
+              raise SystemExit(f'Post-rewrite contract proof failed: old={old_after}, stable={stable_only_after}')
+          PY
+
+          if git diff --quiet -- "$R"; then
+            echo 'ERROR: runtime rewrite not visible to git'
+            exit 1
+          fi
+
+          echo 'WORKTREE_DIFF:'
+          git diff --stat -- "$R"
+          git diff --numstat -- "$R"
+
+          grep -Fq 'span.dataset.chrono=key' "$R"
+          grep -Fq 'data-chrono="${key}"' "$R"
+          grep -Fq '__AGENT_CRYPTO_ASTROCYCLE__' "$R"
+          grep -Fq '__AGENT_CRYPTO_CELESTIAL_SENTINEL__' "$R"
+          grep -Fq '__AGENT_CRYPTO_CELESTIAL_CADENCE__' "$R"
+          grep -Fq '38.15.11' "$R"
+          ! grep -Fq 'AtlasStorageRelief40278' "$R"
+          grep -Fq 'AtlasStorageRelief' "$R"
+          git diff --check -- "$R"
+
+      - name: Stage and prove exact runtime delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          R='public/agent_crypto_erith_ia/administrator/runtime-shell.html'
+          git add -f "$R"
+          git diff --cached --name-only | grep -Fx "$R"
+          git diff --cached --check
+          echo 'STAGED_DIFF:'
+          git diff --cached --stat -- "$R"
+          git diff --cached --numstat -- "$R"
+          git show :"$R" | grep -Fq 'AtlasStorageRelief'
+          if git show :"$R" | grep -Fq 'AtlasStorageRelief40278'; then
+            echo 'ERROR: old Storage Relief identifier still staged'
+            exit 1
+          fi
+
+      - name: Commit canonical cleanup and remove one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          R='public/agent_crypto_erith_ia/administrator/runtime-shell.html'
+          W='.github/workflows/agent-crypto-storage-relief-final-deversion.yml'
+          git config user.name 'BlueAzur-Hub'
+          git config user.email 'Blue.Azur@protonmail.com'
+          git rm "$W"
+          git add -f "$R"
+          git diff --cached --check
+          git diff --cached --name-status
+          git commit -m 'refactor(storage): de-version canonical Storage Relief runtime'
+          git push origin HEAD:main
