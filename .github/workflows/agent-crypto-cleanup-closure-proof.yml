@@ -1,0 +1,155 @@
+name: Agent Crypto cleanup closure proof
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/agent-crypto-cleanup-closure-proof.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Global cleanup closure proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          find public/agent_crypto_erith_ia/administrator -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+
+          ROOT=Path('public/agent_crypto_erith_ia/administrator')
+          ENTRY=Path('runtime-shell.html')
+          build=json.loads((ROOT/'build.json').read_text(encoding='utf-8'))
+          if str(build.get('build'))!='40.6.124':raise SystemExit(f"Build drifted: {build.get('build')!r}")
+          core=str(build.get('market_core') or build.get('engine') or '')
+          if '38.15.11' not in core:raise SystemExit(f'Market Core drifted: {core!r}')
+
+          HTML_JS_RE=re.compile(r'(?:src|href)=["\'](?P<ref>[^"\']+\.js(?:\?[^"\']*)?)["\']',re.I)
+          JS_PATH_RE=re.compile(r'(?P<ref>(?:\.\.?/|/)?js/[A-Za-z0-9_./-]+\.js)(?:\?[^"\'`\s)]*)?',re.I)
+          REL_JS_RE=re.compile(r'(?P<ref>\.\.?/[A-Za-z0-9_./-]+\.js)(?:\?[^"\'`\s)]*)?',re.I)
+          def stripq(ref):return ref.split('?',1)[0].split('#',1)[0]
+          def resolve(src,ref):
+              clean=stripq(ref).replace('\\','/');out=[]
+              if clean.startswith('/'):out.append(Path(clean.lstrip('/')))
+              elif clean.startswith('js/'):out.append(Path(clean))
+              elif clean.startswith('./js/'):
+                  out.append(Path(clean[2:]))
+                  try:out.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+                  except Exception:pass
+              elif clean.startswith(('./','../')):
+                  try:out.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+                  except Exception:pass
+                  if clean.startswith('./'):out.append(Path(clean[2:]))
+              return {x for x in out if (ROOT/x).is_file()}
+          def refs(text):
+              out=[m.group('ref') for m in HTML_JS_RE.finditer(text)]
+              out += [m.group('ref') for m in JS_PATH_RE.finditer(text)]
+              out += [m.group('ref') for m in REL_JS_RE.finditer(text)]
+              return list(dict.fromkeys(out))
+
+          q=[ENTRY];seen=set();texts={}
+          while q:
+              rel=q.pop(0)
+              if rel in seen:continue
+              p=ROOT/rel
+              if not p.is_file() or p.suffix.lower() not in {'.html','.js'}:continue
+              t=p.read_text(encoding='utf-8')
+              seen.add(rel);texts[rel]=t
+              targets=set()
+              for ref in refs(t):targets.update(resolve(rel,ref))
+              for x in sorted(targets,key=str):
+                  if x.suffix.lower() in {'.html','.js'} and x not in seen:q.append(x)
+          if len(seen)!=101:raise SystemExit(f'Runtime graph drifted: {len(seen)}')
+
+          # Every direct shell src/href must resolve.
+          shell=(ROOT/ENTRY).read_text(encoding='utf-8')
+          missing=[]
+          for ref in re.findall(r'(?:src|href)=["\'](\./[^"\']+)["\']',shell):
+              clean=ref.split('?',1)[0]
+              if not (ROOT/clean[2:]).exists():missing.append(clean)
+          if missing:raise SystemExit('Missing shell references: '+', '.join(sorted(set(missing))))
+
+          # Shell IDs remain unique.
+          import collections
+          ids=re.findall(r'\bid=["\']([^"\']+)["\']',shell,re.I)
+          dup=[x for x,n in collections.Counter(ids).items() if n>1]
+          if dup:raise SystemExit('Duplicate shell DOM ids: '+', '.join(sorted(dup)))
+
+          # Current canonical active file list must point to existing files.
+          cleanup=build.get('versioning_cleanup') or {}
+          active=list(cleanup.get('canonical_active_files') or [])
+          active_missing=[]
+          for item in active:
+              item=str(item)
+              p=ROOT/item
+              if not p.exists():active_missing.append(item)
+          if active_missing:raise SystemExit('Missing canonical_active_files: '+', '.join(active_missing))
+
+          retired=[
+            'visible-version-surface-truth-406107.js','operator-cockpit.js','admin-offscreen-paint-gate.js',
+            'admin-offscreen-paint-gate.css','admin-learning-journey-recovery-40422.css','admin-book-comfort.css',
+            'js/core/admin-layout.js','js/core/event-bus.js','js/core/module-manager.js',
+            'js/modules/analysis.js','js/modules/analytical-memory.js','js/modules/decision-board.js',
+            'js/modules/erith.js','js/modules/market-memory.js','js/modules/market.js','js/modules/observability.js',
+            'js/modules/simulation.js','js/modules/system.js','js/modules/module-utils.js'
+          ]
+          runtime_mentions={}
+          for name in retired:
+              hits=[str(src) for src,t in texts.items() if name in t or Path(name).name in t]
+              if hits:runtime_mentions[name]=hits
+          if runtime_mentions:raise SystemExit('Retired file still mentioned by runtime: '+json.dumps(runtime_mentions))
+
+          temp_workflows=[
+            'agent-crypto-audit-workflow-debt.yml','agent-crypto-audit-orphan-scripts.yml',
+            'agent-crypto-audit-explicit-tombstones.yml','agent-crypto-audit-static-assets.yml',
+            'agent-crypto-audit-unreachable-css.yml','agent-crypto-audit-residual-unreachable-js.yml',
+            'agent-crypto-audit-all-unreachable-js.yml','agent-crypto-audit-legacy-39-skeleton.yml',
+            'agent-crypto-retire-visible-version-surface.yml','agent-crypto-retire-legacy-39-skeleton.yml',
+            'agent-crypto-retire-disabled-operator-cockpit.yml'
+          ]
+          leftovers=[x for x in temp_workflows if (Path('.github/workflows')/x).exists()]
+          if leftovers:raise SystemExit('Temporary cleanup workflows remain: '+', '.join(leftovers))
+
+          protected_checks={
+            'aether_css':(ROOT/'admin-aether.css').exists(),
+            'oracle_js':(ROOT/'js/oracle-fx.js').exists(),
+            'atlas_current':any('atlas' in p.name.lower() for p in (ROOT/'js').glob('*.js')),
+            'strategy_a':(ROOT/'js/strategy-a-auto-start.js').exists(),
+            'boot':(ROOT/'js/boot.js').exists(),
+          }
+          if not all(protected_checks.values()):raise SystemExit('Protected owner missing: '+json.dumps(protected_checks))
+
+          print(json.dumps({
+            'build':build.get('build'),'market_core':core,'runtime_nodes':len(seen),
+            'shell_direct_refs':'OK','shell_dom_ids':'UNIQUE','js_syntax':'OK',
+            'canonical_active_files_count':len(active),'canonical_active_files_missing':[],
+            'retired_runtime_mentions':{},'temporary_cleanup_workflows_remaining':[],
+            'protected_owner_checks':protected_checks,'status':'CLEANUP_CLOSURE_PASS'
+          },indent=2,ensure_ascii=False))
+          PY
+
+      - name: Retire closure proof workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven Refactor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f .github/workflows/agent-crypto-cleanup-closure-proof.yml
+          git commit -m 'chore(agent-crypto): retire cleanup closure proof tooling'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then git rebase --abort || true; exit 1; fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
