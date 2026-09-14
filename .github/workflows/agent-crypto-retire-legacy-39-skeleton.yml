@@ -1,0 +1,219 @@
+name: Agent Crypto retire legacy 39 module skeleton
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/agent-crypto-retire-legacy-39-skeleton.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize
+        run: git pull --ff-only origin main
+
+      - name: Revalidate and retire detached legacy 39 skeleton
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          ROOT=Path('public/agent_crypto_erith_ia/administrator')
+          ENTRY=Path('runtime-shell.html')
+          TARGETS=[
+            Path('js/core/admin-layout.js'),
+            Path('js/core/event-bus.js'),
+            Path('js/core/module-manager.js'),
+            Path('js/modules/analysis.js'),
+            Path('js/modules/analytical-memory.js'),
+            Path('js/modules/decision-board.js'),
+            Path('js/modules/erith.js'),
+            Path('js/modules/market-memory.js'),
+            Path('js/modules/market.js'),
+            Path('js/modules/observability.js'),
+            Path('js/modules/simulation.js'),
+            Path('js/modules/system.js'),
+            Path('js/modules/module-utils.js'),
+          ]
+          TARGET_SET=set(TARGETS)
+          HTML_JS_RE=re.compile(r'(?:src|href)=["\'](?P<ref>[^"\']+\.js(?:\?[^"\']*)?)["\']',re.I)
+          JS_PATH_RE=re.compile(r'(?P<ref>(?:\.\.?/|/)?js/[A-Za-z0-9_./-]+\.js)(?:\?[^"\'`\s)]*)?',re.I)
+          REL_JS_RE=re.compile(r'(?P<ref>\.\.?/[A-Za-z0-9_./-]+\.js)(?:\?[^"\'`\s)]*)?',re.I)
+
+          def stripq(ref): return ref.split('?',1)[0].split('#',1)[0]
+          def resolve(src,ref):
+            clean=stripq(ref).replace('\\','/')
+            c=[]
+            if clean.startswith('/'): c.append(Path(clean.lstrip('/')))
+            elif clean.startswith('js/'): c.append(Path(clean))
+            elif clean.startswith('./js/'):
+              c.append(Path(clean[2:]))
+              try:c.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+              except Exception:pass
+            elif clean.startswith(('./','../')):
+              try:c.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+              except Exception:pass
+              if clean.startswith('./'): c.append(Path(clean[2:]))
+            return {x for x in c if (ROOT/x).is_file()}
+          def refs(text):
+            out=[m.group('ref') for m in HTML_JS_RE.finditer(text)]
+            out += [m.group('ref') for m in JS_PATH_RE.finditer(text)]
+            out += [m.group('ref') for m in REL_JS_RE.finditer(text)]
+            return list(dict.fromkeys(out))
+          def graph():
+            q=[ENTRY];seen=set();edges={};texts={}
+            while q:
+              rel=q.pop(0)
+              if rel in seen:continue
+              p=ROOT/rel
+              if not p.is_file() or p.suffix.lower() not in {'.html','.js'}:continue
+              try:t=p.read_text(encoding='utf-8')
+              except UnicodeDecodeError:continue
+              seen.add(rel);texts[rel]=t
+              tg=set()
+              for ref in refs(t):tg.update(resolve(rel,ref))
+              edges[rel]=tg
+              for x in sorted(tg,key=str):
+                if x.suffix.lower() in {'.html','.js'} and x not in seen:q.append(x)
+            return seen,edges,texts
+
+          build=json.loads((ROOT/'build.json').read_text(encoding='utf-8'))
+          if str(build.get('build'))!='40.6.124':raise SystemExit(f"Build drifted: {build.get('build')!r}")
+          market_core=str(build.get('market_core') or build.get('engine') or '')
+          if '38.15.11' not in market_core:raise SystemExit(f'Market Core drifted: {market_core!r}')
+
+          before,edges,texts=graph()
+          if len(before)!=101:raise SystemExit(f'Runtime graph drifted before cleanup: {len(before)}')
+
+          all_text={}
+          for p in ROOT.rglob('*'):
+            if p.is_file() and p.suffix.lower() in {'.js','.html','.json'}:
+              try:all_text[p.relative_to(ROOT)]=p.read_text(encoding='utf-8')
+              except UnicodeDecodeError:pass
+
+          proof=[]
+          total_bytes=0;total_lines=0
+          for target in TARGETS:
+            p=ROOT/target
+            if not p.is_file():raise SystemExit(f'Expected legacy target missing: {target}')
+            inbound_runtime=sorted(str(src) for src,tg in edges.items() if target in tg and src not in TARGET_SET)
+            inbound_external=[]
+            for src,t in all_text.items():
+              if src in TARGET_SET:continue
+              for ref in refs(t):
+                if target in resolve(src,ref):
+                  inbound_external.append(str(src));break
+            if target in before or inbound_runtime or inbound_external:
+              raise SystemExit('Legacy target is no longer detached: '+json.dumps({
+                'path':str(target),'reachable':target in before,
+                'inbound_runtime':inbound_runtime,'inbound_external':inbound_external
+              },ensure_ascii=False))
+            lines=len(p.read_text(encoding='utf-8').splitlines())
+            size=p.stat().st_size
+            total_bytes+=size;total_lines+=lines
+            proof.append({'path':str(target),'bytes':size,'lines':lines})
+
+          # No runtime dynamic loader may point toward this old module tree.
+          dynamic=[]
+          patterns=[
+            re.compile(r'\bimport\s*\('),
+            re.compile(r'js/modules/\s*["\'`]?\s*\$\{',re.I),
+            re.compile(r'js/core/\s*["\'`]?\s*\$\{',re.I),
+            re.compile(r'(?:modules|core)/\s*["\'`]?\s*\+',re.I),
+            re.compile(r'new\s+URL\s*\([^\n]*(?:modules|core)/',re.I),
+          ]
+          for src,t in texts.items():
+            for i,line in enumerate(t.splitlines(),1):
+              if any(p.search(line) for p in patterns):
+                dynamic.append({'source':str(src),'line':i,'text':line.strip()[:300]})
+          if dynamic:raise SystemExit('Dynamic loader appeared: '+json.dumps(dynamic,ensure_ascii=False))
+
+          for target in TARGETS:(ROOT/target).unlink()
+
+          after,_,_=graph()
+          if len(after)!=len(before):raise SystemExit(f'Runtime graph changed: {len(before)} -> {len(after)}')
+
+          print(json.dumps({
+            'build':build.get('build'),'market_core':market_core,
+            'retired_count':len(TARGETS),'retired_bytes':total_bytes,'retired_lines':total_lines,
+            'runtime_nodes_before':len(before),'runtime_nodes_after':len(after),
+            'retired':proof,
+            'protected_not_touched':['Aether','Oracle','Atlas','Market Core 38.15.11','Web Classique','Graphique','Lecture Technique','version-truth-entry-authority-v2.js'],
+          },indent=2,ensure_ascii=False))
+          PY
+
+      - name: JavaScript syntax check
+        run: |
+          find public/agent_crypto_erith_ia/administrator -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Runtime shell direct reference sanity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          shell=(root/'runtime-shell.html').read_text(encoding='utf-8')
+          missing=[]
+          for ref in re.findall(r'(?:src|href)=["\'](\./[^"\']+)["\']',shell):
+            clean=ref.split('?',1)[0]
+            if not (root/clean[2:]).exists():missing.append(clean)
+          if missing:raise SystemExit('Missing runtime references: '+', '.join(sorted(set(missing))))
+          print('Runtime shell references OK')
+          PY
+
+      - name: Duplicate shell DOM id guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import collections,re
+          shell=Path('public/agent_crypto_erith_ia/administrator/runtime-shell.html').read_text(encoding='utf-8')
+          ids=re.findall(r'\bid=["\']([^"\']+)["\']',shell,re.I)
+          dup=[x for x,n in collections.Counter(ids).items() if n>1]
+          if dup:raise SystemExit('Duplicate shell DOM ids: '+', '.join(sorted(dup)))
+          print('Shell DOM ids unique')
+          PY
+
+      - name: Build and Market Core lock guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          d=json.loads(Path('public/agent_crypto_erith_ia/administrator/build.json').read_text(encoding='utf-8'))
+          if str(d.get('build'))!='40.6.124':raise SystemExit(f'Build drifted: {d.get("build")!r}')
+          e=str(d.get('market_core') or d.get('engine') or '')
+          if '38.15.11' not in e:raise SystemExit(f'Market Core drifted: {e!r}')
+          print('Build 40.6.124 unchanged · Market Core 38.15.11 locked')
+          PY
+
+      - name: Commit cleanup and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven Refactor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A public/agent_crypto_erith_ia/administrator
+          git rm -f .github/workflows/agent-crypto-retire-legacy-39-skeleton.yml
+          git commit -m 'refactor(agent-crypto): retire detached legacy 39 module skeleton'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'Rebase conflict; refusing force-push'
+              exit 1
+            fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          echo 'Push remained contested after safe retries'
+          exit 1
