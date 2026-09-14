@@ -1,1 +1,0 @@
-(() => { const api = globalThis.AgentCryptoStrategyAOwnerAutoStart; globalThis.AgentCryptoStrategyAOwnerAutoStart406124SelfTest = () => ({ present: !!api, snapshot: api?.snapshot?.() || null }); })();
