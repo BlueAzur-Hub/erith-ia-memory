@@ -69,7 +69,11 @@ jobs:
 
           print('CANONICAL PRODUCERS:', ', '.join(map(str, producers)) or 'NONE (fallback contract)')
 
-          mixed = [(path, text.count(new)) for path, _, text in canonical_hits if new in text]
+          mixed = []
+          for path, _, text in canonical_hits:
+              stable_only_count = text.replace(old, '').count(new)
+              if stable_only_count:
+                  mixed.append((path, stable_only_count))
           if mixed:
               raise SystemExit(f'Stable identifier already mixed into canonical old-token files: {mixed}')
 
