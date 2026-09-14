@@ -524,10 +524,9 @@
 
   function ensureStyle() {
     if (typeof document === "undefined") return;
-    if (document.getElementById("strategyAPaperLifecycleStyle404295")) return;
-    document.getElementById("strategyAPaperLifecycleStyle404291")?.remove();
+    if (document.getElementById("strategyAPaperLifecycleStyle")) return;
     const style = document.createElement("style");
-    style.id = "strategyAPaperLifecycleStyle404295";
+    style.id = "strategyAPaperLifecycleStyle";
     style.textContent = `
       #strategyAPaperLifecycle{margin-top:10px;padding:10px;border:1px solid rgba(255,211,112,.22);border-radius:10px;background:rgba(26,18,5,.45)}
       #strategyAPaperLifecycle .spl-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}

@@ -211,48 +211,48 @@
 
   function ensureStyle() {
     if (typeof document === "undefined") return;
-    if (document.getElementById("strategyAPaperAfterCostProofStyle406063")) return;
+    if (document.getElementById("strategyAPaperAfterCostProofStyle")) return;
 
     const style = document.createElement("style");
-    style.id = "strategyAPaperAfterCostProofStyle406063";
+    style.id = "strategyAPaperAfterCostProofStyle";
     style.textContent = `
-      #strategyAPaperAfterCostProof406063{
+      #strategyAPaperAfterCostProof{
         margin-top:10px;padding:11px;border:1px solid rgba(118,217,255,.23);
         border-radius:10px;background:rgba(5,18,31,.52)
       }
-      #strategyAPaperAfterCostProof406063 .pap-head{
+      #strategyAPaperAfterCostProof .pap-head{
         display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap
       }
-      #strategyAPaperAfterCostProof406063 .pap-title{
+      #strategyAPaperAfterCostProof .pap-title{
         font-size:10px;font-weight:950;letter-spacing:.08em;text-transform:uppercase
       }
-      #strategyAPaperAfterCostProof406063 .pap-sub{
+      #strategyAPaperAfterCostProof .pap-sub{
         margin-top:3px;font-size:8px;line-height:1.4;opacity:.78
       }
-      #strategyAPaperAfterCostProof406063 .pap-actions{
+      #strategyAPaperAfterCostProof .pap-actions{
         display:flex;gap:6px;flex-wrap:wrap
       }
-      #strategyAPaperAfterCostProof406063 .pap-grid{
+      #strategyAPaperAfterCostProof .pap-grid{
         display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:9px
       }
-      #strategyAPaperAfterCostProof406063 .pap-k{
+      #strategyAPaperAfterCostProof .pap-k{
         padding:7px;border:1px solid rgba(255,255,255,.07);border-radius:8px
       }
-      #strategyAPaperAfterCostProof406063 .pap-k span{
+      #strategyAPaperAfterCostProof .pap-k span{
         display:block;font-size:7px;letter-spacing:.06em;text-transform:uppercase;opacity:.65;font-weight:900
       }
-      #strategyAPaperAfterCostProof406063 .pap-k b{
+      #strategyAPaperAfterCostProof .pap-k b{
         display:block;margin-top:3px;font-size:9px;overflow-wrap:anywhere
       }
-      #strategyAPaperAfterCostProof406063 .pap-verdict{
+      #strategyAPaperAfterCostProof .pap-verdict{
         margin-top:8px;padding:8px;border:1px solid rgba(255,255,255,.07);
         border-radius:8px;font-size:9px;font-weight:900
       }
-      #strategyAPaperAfterCostProof406063 .pap-foot{
+      #strategyAPaperAfterCostProof .pap-foot{
         margin-top:7px;font-size:8px;line-height:1.4;opacity:.72
       }
       @media(max-width:950px){
-        #strategyAPaperAfterCostProof406063 .pap-grid{
+        #strategyAPaperAfterCostProof .pap-grid{
           grid-template-columns:repeat(2,minmax(0,1fr))
         }
       }
@@ -262,7 +262,7 @@
 
   function renderReceipt() {
     if (typeof document === "undefined") return false;
-    const panel = document.getElementById("strategyAPaperAfterCostProof406063");
+    const panel = document.getElementById("strategyAPaperAfterCostProof");
     if (!panel) return false;
 
     const receipt = LAST_RECEIPT;
@@ -312,10 +312,10 @@
 
     if (!anchor) return false;
 
-    let panel = document.getElementById("strategyAPaperAfterCostProof406063");
+    let panel = document.getElementById("strategyAPaperAfterCostProof");
     if (!panel) {
       panel = document.createElement("section");
-      panel.id = "strategyAPaperAfterCostProof406063";
+      panel.id = "strategyAPaperAfterCostProof";
       panel.dataset.strategyAPaperAfterCostProofBuild = BUILD;
       panel.innerHTML = `
         <div class="pap-head">
@@ -328,8 +328,8 @@
             </div>
           </div>
           <div class="pap-actions">
-            <button class="btn small" type="button" id="strategyAPaperAfterCostRun406063">EXÉCUTER PREUVE PAPER</button>
-            <button class="btn small" type="button" id="strategyAPaperAfterCostExport406063">EXPORTER RECEIPT</button>
+            <button class="btn small" type="button" id="strategyAPaperAfterCostRun">EXÉCUTER PREUVE PAPER</button>
+            <button class="btn small" type="button" id="strategyAPaperAfterCostExport">EXPORTER RECEIPT</button>
           </div>
         </div>
         <div class="pap-grid">
@@ -347,9 +347,9 @@
       anchor.insertAdjacentElement("afterend", panel);
     }
 
-    panel.querySelector("#strategyAPaperAfterCostRun406063")
+    panel.querySelector("#strategyAPaperAfterCostRun")
       ?.addEventListener("click", runProof, { once: false });
-    panel.querySelector("#strategyAPaperAfterCostExport406063")
+    panel.querySelector("#strategyAPaperAfterCostExport")
       ?.addEventListener("click", exportReceipt, { once: false });
 
     renderReceipt();
