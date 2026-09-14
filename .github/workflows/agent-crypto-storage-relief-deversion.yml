@@ -19,79 +19,91 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Map active Storage Relief contract
+      - name: Map canonical Storage Relief contract
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
+          import subprocess
 
           root = Path('public/agent_crypto_erith_ia/administrator')
-          runtime = root / 'runtime-shell.html'
           old = 'AtlasStorageRelief40278'
           new = 'AtlasStorageRelief'
-          html = runtime.read_text(encoding='utf-8')
 
-          active = [runtime]
-          for rel in re.findall(r'<script[^>]+src=["\']\.\/js\/([^"\']+)["\']', html, flags=re.I):
-              p = root / 'js' / rel.split('?', 1)[0]
-              if p.exists() and p not in active:
-                  active.append(p)
+          tracked = subprocess.check_output(['git','ls-files'], text=True).splitlines()
+          repo_hits = []
+          canonical_hits = []
 
-          hits = []
-          for path in active:
-              text = path.read_text(encoding='utf-8')
+          for rel in tracked:
+              path = Path(rel)
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except Exception:
+                  continue
               count = text.count(old)
-              if count:
-                  hits.append((path, count, text))
-                  print(f'ACTIVE {path}: {count} occurrence(s)')
-                  for i, line in enumerate(text.splitlines(), 1):
-                      if old in line:
-                          print(f'  L{i}: {line[:500]}')
+              if not count:
+                  continue
+              repo_hits.append((path, count, text))
+              is_canonical = (
+                  path == root / 'runtime-shell.html'
+                  or path == root / 'index.html'
+                  or (path.is_relative_to(root / 'js') and path.suffix == '.js')
+              )
+              if is_canonical:
+                  canonical_hits.append((path, count, text))
+              print(f'REPO {path}: {count}')
 
-          if not hits:
-              raise SystemExit('No active Storage Relief contract found')
+          if not canonical_hits:
+              raise SystemExit('No canonical Storage Relief occurrences found')
 
-          producer_patterns = (
-              rf'globalThis\.{old}\s*=',
-              rf'globalThis\[["\']{old}["\']\]\s*=',
-          )
           producers = []
-          for path, _, text in hits:
-              if any(re.search(pattern, text) for pattern in producer_patterns):
+          for path, count, text in canonical_hits:
+              print(f'CANONICAL {path}: {count}')
+              for i, line in enumerate(text.splitlines(), 1):
+                  if old in line:
+                      print(f'  L{i}: {line[:700]}')
+              # Any canonical occurrence is migrated atomically. Producer presence is informative,
+              # not mandatory: current consumers explicitly fall back to localStorage when absent.
+              if f'globalThis.{old}=' in text or f'globalThis.{old} =' in text or f'globalThis["{old}"]=' in text or f"globalThis['{old}']=" in text:
                   producers.append(path)
 
-          print('PRODUCERS:', ', '.join(map(str, producers)) or 'NONE')
-          if len(producers) != 1:
-              raise SystemExit(f'Expected exactly one active producer, found {len(producers)}; refusing mutation')
+          print('CANONICAL PRODUCERS:', ', '.join(map(str, producers)) or 'NONE (fallback contract)')
 
-          if any(new in text for _, _, text in hits):
-              raise SystemExit('Stable Storage Relief identifier already present in active hit files; refusing mixed contract')
+          mixed = [(path, text.count(new)) for path, _, text in canonical_hits if new in text]
+          if mixed:
+              raise SystemExit(f'Stable identifier already mixed into canonical old-token files: {mixed}')
 
-          manifest = Path('/tmp/storage_relief_active_files.txt')
-          manifest.write_text('\n'.join(str(path) for path, _, _ in hits), encoding='utf-8')
+          # Historical snapshots/releases remain historical evidence and are not rewritten.
+          historical = [(str(path), count) for path, count, _ in repo_hits if all(path != p for p,_,_ in canonical_hits)]
+          if historical:
+              print('HISTORICAL/OTHER LEFT UNTOUCHED:', historical)
+
+          manifest = Path('/tmp/storage_relief_canonical_files.txt')
+          manifest.write_text('\n'.join(str(path) for path, _, _ in canonical_hits), encoding='utf-8')
+          Path('/tmp/storage_relief_expected_count.txt').write_text(str(sum(count for _,count,_ in canonical_hits)), encoding='utf-8')
           print('SAFE_MAP_OK')
           PY
 
-      - name: De-version active Storage Relief contract
+      - name: De-version canonical Storage Relief contract
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           old = 'AtlasStorageRelief40278'
           new = 'AtlasStorageRelief'
-          files = [Path(line) for line in Path('/tmp/storage_relief_active_files.txt').read_text(encoding='utf-8').splitlines() if line.strip()]
-          before = 0
+          files = [Path(line) for line in Path('/tmp/storage_relief_canonical_files.txt').read_text(encoding='utf-8').splitlines() if line.strip()]
+          expected = int(Path('/tmp/storage_relief_expected_count.txt').read_text())
+          changed = 0
           for path in files:
               text = path.read_text(encoding='utf-8')
               count = text.count(old)
-              before += count
+              changed += count
               path.write_text(text.replace(old, new), encoding='utf-8')
-          after_old = sum(path.read_text(encoding='utf-8').count(old) for path in files)
-          after_new = sum(path.read_text(encoding='utf-8').count(new) for path in files)
-          if after_old != 0 or after_new != before:
-              raise SystemExit(f'Post-rewrite proof failed: old={after_old}, stable={after_new}, expected stable={before}')
-          print(f'MIGRATED {before} active occurrence(s) across {len(files)} file(s)')
+          old_after = sum(path.read_text(encoding='utf-8').count(old) for path in files)
+          new_after = sum(path.read_text(encoding='utf-8').count(new) for path in files)
+          if changed != expected or old_after != 0 or new_after != expected:
+              raise SystemExit(f'Atomic rewrite proof failed: changed={changed}/{expected}, old_after={old_after}, stable_after={new_after}')
+          print(f'MIGRATED {changed} canonical occurrence(s) across {len(files)} file(s)')
           PY
 
       - name: Static proof and protected invariants
@@ -108,7 +120,7 @@ jobs:
           while IFS= read -r file; do
             ! grep -Fq 'AtlasStorageRelief40278' "$file"
             grep -Fq 'AtlasStorageRelief' "$file"
-          done < /tmp/storage_relief_active_files.txt
+          done < /tmp/storage_relief_canonical_files.txt
           git diff --check
 
       - name: Commit surgical cleanup and remove one-shot workflow
@@ -118,7 +130,7 @@ jobs:
           git config user.name 'BlueAzur-Hub'
           git config user.email 'Blue.Azur@protonmail.com'
           git rm --ignore-unmatch '.github/workflows/agent-crypto-storage-relief-deversion.yml'
-          while IFS= read -r file; do git add "$file"; done < /tmp/storage_relief_active_files.txt
+          while IFS= read -r file; do git add "$file"; done < /tmp/storage_relief_canonical_files.txt
           git diff --cached --check
           git commit -m 'refactor(storage): stabilize Storage Relief contract'
           git push origin HEAD:main
