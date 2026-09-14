@@ -130,7 +130,7 @@ jobs:
           if leftovers:raise SystemExit('Temporary cleanup workflows remain: '+', '.join(leftovers))
 
           protected_checks={
-            'aether_css':(ROOT/'admin-aether.css').exists(),
+            'aether_css':(ROOT/'aether.css').exists(),
             'oracle_js':(ROOT/'js/oracle-fx.js').exists(),
             'atlas_current':any('atlas' in p.name.lower() for p in (ROOT/'js').glob('*.js')),
             'strategy_a':(ROOT/'js/strategy-a-auto-start.js').exists(),
