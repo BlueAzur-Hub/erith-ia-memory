@@ -21705,7 +21705,7 @@ function newsFeedCanonicalDisplayHeadline(event, fallback="Événement sans titr
   return original ? `[EN] ${original}` : fallback;
 }
 
-globalThis.AgentCryptoNewsDisplayContract404288 = Object.freeze({
+globalThis.AgentCryptoNewsDisplayContract = Object.freeze({
   headline: newsFeedCanonicalDisplayHeadline,
   preferred_field: "display_headline",
   fallback_policy: "explicit [EN] only — never silent raw headline fallback",
@@ -21716,7 +21716,6 @@ globalThis.AgentCryptoNewsDisplayContract404288 = Object.freeze({
   browser_translation: false,
   browser_editorial_repair: false
 });
-globalThis.AgentCryptoNewsDisplayContract404291 = globalThis.AgentCryptoNewsDisplayContract404288;
 
 const newsFeedState = {
   status: "idle",
@@ -51340,7 +51339,7 @@ function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConf
   atlasMemoryIntelligenceRender();
  try { atlasMultiCollectorOperatorRender(); } catch (_) {} }
 
-function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const celestialApi = globalThis.AgentCryptoCelestialPortable40288 || globalThis.AgentCryptoCelestialPortable40272; const celestialCandidate = celestialApi?.snapshot?.() || null; const celestial = celestialCandidate?.fetched_at ? celestialCandidate : null; const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, celestial_handoff: celestial ? "ryzen_to_book_readonly" : null, celestial, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
+function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const celestialApi = globalThis.AgentCryptoCelestialPortable || globalThis.AgentCryptoCelestialPortable; const celestialCandidate = celestialApi?.snapshot?.() || null; const celestial = celestialCandidate?.fetched_at ? celestialCandidate : null; const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, celestial_handoff: celestial ? "ryzen_to_book_readonly" : null, celestial, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
 }
 
 async function importAutoMemoryFile(file) {
@@ -51370,7 +51369,7 @@ async function importAutoMemoryFile(file) {
       throw new Error(`provenance multi-machine non conservée (${proof.failures.join(", ")})`);
     }
 
-    const celestialApi = globalThis.AgentCryptoCelestialPortable40288 || globalThis.AgentCryptoCelestialPortable40272;
+    const celestialApi = globalThis.AgentCryptoCelestialPortable || globalThis.AgentCryptoCelestialPortable;
     const celestialImported = celestial ? (celestialApi?.importSnapshot?.(celestial) === true) : false;
     const celestialProducer = celestial ? String(celestial.producer_collector_id || "provenance inconnue") : "absent";
     const afterStats = collectorStats(saved);
