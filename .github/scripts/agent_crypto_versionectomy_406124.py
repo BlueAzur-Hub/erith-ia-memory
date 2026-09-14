@@ -6,11 +6,13 @@ ROOT = Path('public/agent_crypto_erith_ia/administrator')
 shell_path = ROOT / 'runtime-shell.html'
 app_path = ROOT / 'app.js'
 js_app_path = ROOT / 'js/app.js'
+visual_cache_path = ROOT / 'js/admin-visual-cache.js'
 build_path = ROOT / 'build.json'
 
 shell = shell_path.read_text(encoding='utf-8')
 app = app_path.read_text(encoding='utf-8')
 js_app = js_app_path.read_text(encoding='utf-8')
+visual_cache = visual_cache_path.read_text(encoding='utf-8')
 build = json.loads(build_path.read_text(encoding='utf-8'))
 
 if build.get('build') != '40.6.124' or build.get('engine') != '38.15.11':
@@ -46,6 +48,17 @@ if legacy_js_footer not in js_app:
     raise SystemExit('STOP js/app.js footer writer not found')
 js_app = js_app.replace(legacy_js_footer, '    // Footer version is owned exclusively by js/version-truth.js.', 1)
 
+# Remove the temporary 40.6.124 PREBOOT VERSION AUTHORITY IIFE from the visual-cache file.
+# js/boot.js already hydrates build.json into the shell before any application script executes.
+preboot_marker = '/* Agent-Crypto @erith.IA — 40.6.124 maintenance: PREBOOT VERSION AUTHORITY.'
+visual_owner_marker = '(() => {\n  "use strict";\n\n  const BUILD = "40.4.254";'
+if not visual_cache.startswith(preboot_marker):
+    raise SystemExit('STOP visual-cache preboot authority marker missing')
+visual_start = visual_cache.find(visual_owner_marker)
+if visual_start < 0:
+    raise SystemExit('STOP visual-cache canonical owner marker missing')
+visual_cache = '/* Visual cache only. Application version authority: build.json -> js/boot.js -> js/version-truth.js. */\n' + visual_cache[visual_start:]
+
 replacements = {
     'aria-label="Version Agent-Crypto installée : Build 40.6.86, mode Administrator"': 'aria-label="Version Agent-Crypto en initialisation"',
     '<span id="atlasVersionTruthText">Build 40.6.86</span>': '<span id="atlasVersionTruthText">Build —</span>',
@@ -73,6 +86,7 @@ cvt.update({
     'footer_owner': 'js/version-truth.js',
     'legacy_runtime_version_awareness_active': False,
     'legacy_footer_version_truth_active': False,
+    'legacy_preboot_version_authority_active': False,
     'current_build_hardcoded_in_runtime': False,
     'single_visible_owner': True,
     'recurring_timer': False,
@@ -83,12 +97,14 @@ cvt.update({
 shell_path.write_text(shell, encoding='utf-8')
 app_path.write_text(app, encoding='utf-8')
 js_app_path.write_text(js_app, encoding='utf-8')
+visual_cache_path.write_text(visual_cache, encoding='utf-8')
 build_path.write_text(json.dumps(build, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
 
 # Static proof after surgery.
 shell = shell_path.read_text(encoding='utf-8')
 app = app_path.read_text(encoding='utf-8')
 js_app = js_app_path.read_text(encoding='utf-8')
+visual_cache = visual_cache_path.read_text(encoding='utf-8')
 build = json.loads(build_path.read_text(encoding='utf-8'))
 
 assert build['build'] == '40.6.124'
@@ -99,6 +115,9 @@ assert 'const ATLAS_BUILD = "40.6.86";' not in app
 assert '\natlasVersionAwarenessInit();\n' not in app
 assert 'Agent-Crypto @erith.IA · Market Core · Build ${ATLAS_BUILD} · Version : Parker Lewis Can\'t Lose' not in app
 assert 'footerRelease' not in js_app
+assert 'PREBOOT VERSION AUTHORITY' not in visual_cache
+assert 'footerRelease' not in visual_cache
+assert 'const CURRENT_BUILD = "40.6.124";' not in visual_cache
 
 script_srcs = re.findall(r'<script[^>]+src=["\']([^"\']+)["\']', shell, flags=re.I)
 writers = []
@@ -118,6 +137,7 @@ assert cvt['boot_owner'] == 'js/boot.js'
 assert cvt['footer_owner'] == 'js/version-truth.js'
 assert cvt['legacy_runtime_version_awareness_active'] is False
 assert cvt['legacy_footer_version_truth_active'] is False
+assert cvt['legacy_preboot_version_authority_active'] is False
 assert 'compatibility_shim' not in cvt
 
 print('VERSIONECTOMY_STATIC_PASS', build['build'], writers)
