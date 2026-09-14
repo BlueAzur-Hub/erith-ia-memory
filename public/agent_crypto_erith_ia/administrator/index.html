@@ -97,7 +97,6 @@
         `<span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build ${truth.build} · Version : Parker Lewis Can't Lose</span>`);
       out = out.replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi,
         `AGENT-CRYPTO ${truth.build} · ADMINISTRATOR`);
-      out = out.replace(/data-chrono40341/g, "data-chrono");
 
       return stampLocalAssets(out, truth.build);
     }
