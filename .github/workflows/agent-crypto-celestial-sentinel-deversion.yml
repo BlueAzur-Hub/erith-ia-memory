@@ -19,44 +19,29 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: De-version Celestial Sentinel global contract
+      - name: De-version active Celestial Sentinel contract
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          root = Path('.')
           runtime = Path('public/agent_crypto_erith_ia/administrator/runtime-shell.html')
+          freeze = Path('public/agent_crypto_erith_ia/administrator/js/architecture-freeze.js')
           old = '__AGENT_CRYPTO_CELESTIAL_SENTINEL_40268__'
           new = '__AGENT_CRYPTO_CELESTIAL_SENTINEL__'
 
-          # Repository-wide proof: the old token must have exactly one live occurrence.
-          hits = []
-          for p in root.rglob('*'):
-              if not p.is_file() or '.git' in p.parts:
-                  continue
-              try:
-                  text = p.read_text(encoding='utf-8')
-              except Exception:
-                  continue
-              count = text.count(old)
-              if count:
-                  hits.append((str(p), count))
+          active = [runtime, freeze]
+          for path in active:
+              text = path.read_text(encoding='utf-8')
+              if text.count(old) != 1:
+                  raise SystemExit(f'{path}: expected exactly one active old identifier, got {text.count(old)}')
+              if text.count(new) != 0:
+                  raise SystemExit(f'{path}: stable identifier already exists unexpectedly')
 
-          total = sum(count for _, count in hits)
-          if total != 1 or hits != [(str(runtime), 1)]:
-              raise SystemExit(f'Expected exactly one repository-wide occurrence in runtime-shell.html, found {hits}')
+          runtime_text = runtime.read_text(encoding='utf-8').replace(old, new, 1)
+          freeze_text = freeze.read_text(encoding='utf-8').replace(old, new, 1)
 
-          text = runtime.read_text(encoding='utf-8')
-          if text.count(new) != 0:
-              raise SystemExit(f'Stable target already exists unexpectedly: {new}')
-
-          text = text.replace(old, new, 1)
-          if old in text or text.count(new) != 1:
-              raise SystemExit('Celestial Sentinel de-versioning proof failed after replacement')
-
-          # Preserve the already-validated Chronos stable contracts.
-          required = (
+          required_runtime = (
               'span.dataset.chrono=key',
               '[data-chrono="${key}"]',
               'day.dataset.planet=astroPlanetTone',
@@ -64,12 +49,17 @@ jobs:
               '__AGENT_CRYPTO_ASTROCYCLE__',
               '__AGENT_CRYPTO_CELESTIAL_CADENCE__',
           )
-          for token in required:
-              if token not in text:
+          for token in required_runtime:
+              if token not in runtime_text:
                   raise SystemExit(f'Validated Chronos contract missing: {token}')
 
-          runtime.write_text(text, encoding='utf-8')
-          print('Celestial Sentinel global contract:', old, '->', new)
+          required_freeze = 'const sentinel=globalThis.__AGENT_CRYPTO_CELESTIAL_SENTINEL__;'
+          if required_freeze not in freeze_text:
+              raise SystemExit('Architecture freeze did not migrate to stable Sentinel contract')
+
+          runtime.write_text(runtime_text, encoding='utf-8')
+          freeze.write_text(freeze_text, encoding='utf-8')
+          print('Active Celestial Sentinel contract migrated in runtime + architecture freeze')
           PY
 
       - name: Static proof
@@ -77,8 +67,11 @@ jobs:
         run: |
           set -euo pipefail
           R='public/agent_crypto_erith_ia/administrator/runtime-shell.html'
+          F='public/agent_crypto_erith_ia/administrator/js/architecture-freeze.js'
           ! grep -Fq '__AGENT_CRYPTO_CELESTIAL_SENTINEL_40268__' "$R"
+          ! grep -Fq '__AGENT_CRYPTO_CELESTIAL_SENTINEL_40268__' "$F"
           test "$(grep -Fo '__AGENT_CRYPTO_CELESTIAL_SENTINEL__' "$R" | wc -l)" -eq 1
+          test "$(grep -Fo '__AGENT_CRYPTO_CELESTIAL_SENTINEL__' "$F" | wc -l)" -eq 1
           grep -Fq 'data-chrono="${key}"' "$R"
           grep -Fq '__AGENT_CRYPTO_ASTROCYCLE__' "$R"
           grep -Fq '__AGENT_CRYPTO_CELESTIAL_CADENCE__' "$R"
@@ -90,7 +83,8 @@ jobs:
           git config user.name 'BlueAzur-Hub'
           git config user.email 'Blue.Azur@protonmail.com'
           git rm --ignore-unmatch '.github/workflows/agent-crypto-celestial-sentinel-deversion.yml'
-          git add 'public/agent_crypto_erith_ia/administrator/runtime-shell.html'
+          git add 'public/agent_crypto_erith_ia/administrator/runtime-shell.html' \
+                  'public/agent_crypto_erith_ia/administrator/js/architecture-freeze.js'
           git diff --cached --check
-          git commit -m 'refactor(celestial): remove Sentinel versioned global identifier'
+          git commit -m 'refactor(celestial): stabilize Sentinel global contract'
           git push origin HEAD:main
