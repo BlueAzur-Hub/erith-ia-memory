@@ -4,8 +4,9 @@
   Parent: 40.6.119
 
   Compatibility routing:
-  - runtime 40.6.121+ loads the v2 continuity owner, which defaults PAPER Auto A
-    to running while preserving an explicit STOP for the browser session.
+  - runtime 40.6.121 through 40.6.123 loads the v2 UI continuity owner;
+  - runtime 40.6.124+ loads the owner-API autostart and no longer depends on
+    Simulation being expanded or on a visible ACTIVER AUTO A control.
 */
 (() => {
   "use strict";
@@ -28,7 +29,19 @@
     for (let i = 0; i < n; i += 1) { const d = (A[i] || 0) - (B[i] || 0); if (d) return d > 0; }
     return true;
   }
+  function ensureSuccessor406124() {
+    if (!runtimeAtLeast("40.6.124")) return false;
+    if (globalThis.AgentCryptoStrategyAOwnerAutoStart406124) return true;
+    if (document.querySelector('script[data-strategy-a-owner-autostart-406124="true"]')) return true;
+    const script = document.createElement("script");
+    script.src = `./js/strategy-a-auto-owner-autostart-406124.js?v=${encodeURIComponent(runtimeBuild())}`;
+    script.async = false;
+    script.dataset.strategyAOwnerAutostart406124 = "true";
+    document.head.appendChild(script);
+    return true;
+  }
   function ensureSuccessor406121() {
+    if (runtimeAtLeast("40.6.124")) return ensureSuccessor406124();
     if (!runtimeAtLeast("40.6.121")) return false;
     if (globalThis.AgentCryptoStrategyAAutoSessionContinuity406121) return true;
     if (document.querySelector('script[data-strategy-a-auto-session-continuity-406121="true"]')) return true;
@@ -55,16 +68,20 @@
   }
   function state() { const activate=activateButton(), panel=strategyPanel(activate), text=norm(panel?.textContent); return {activate,panel,active:text.includes("AUTO A ACTIF")||(text.includes("PILOTE PAPER ACTIF")&&!text.includes("PILOTE PAPER INACTIF"))}; }
   function restore(reason="runtime") {
+    if (runtimeAtLeast("40.6.124")) return ensureSuccessor406124();
     if (restoring || restoredThisDocument || !optedIn() || document.hidden) return false;
     const current=state(); if(!current.activate){lastRestore=`waiting:${reason}`;return false;} if(current.active){restoredThisDocument=true;lastRestore=`already-active:${reason}`;return true;}
     restoring=true; try{lastRestore=`activate-existing-runner:${reason}`;current.activate.click();restoredThisDocument=true;return true;}catch(error){lastRestore=`error:${reason}:${String(error?.message||error)}`;return false;}finally{queueMicrotask(()=>{restoring=false;});}
   }
-  function captureOptIn(event){const element=event.target instanceof Element?event.target.closest('button,[role="button"]'):null;if(!element)return;const label=norm(element.textContent);if(label==="ACTIVER AUTO A"){setOptIn(true);restoredThisDocument=true;lastRestore="operator-enabled";return;}if(label!=="STOP")return;const current=state();if(current.panel&&current.panel.contains(element)){setOptIn(false);restoredThisDocument=false;lastRestore="operator-stop";}}
+  function captureOptIn(event){
+    if (runtimeAtLeast("40.6.124")) return;
+    const element=event.target instanceof Element?event.target.closest('button,[role="button"]'):null;if(!element)return;const label=norm(element.textContent);if(label==="ACTIVER AUTO A"){setOptIn(true);restoredThisDocument=true;lastRestore="operator-enabled";return;}if(label!=="STOP")return;const current=state();if(current.panel&&current.panel.contains(element)){setOptIn(false);restoredThisDocument=false;lastRestore="operator-stop";}
+  }
   function scheduleRestore(reason){const run=()=>{try{requestAnimationFrame(()=>requestAnimationFrame(()=>restore(reason)));}catch(_){queueMicrotask(()=>restore(reason));}};run();}
   document.addEventListener("click",captureOptIn,true); ensureSuccessor406121();
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>{ensureSuccessor406121();scheduleRestore("dom-ready");},{once:true});else scheduleRestore("boot");
   window.addEventListener("load",()=>{ensureSuccessor406121();scheduleRestore("load");},{once:true,passive:true});
   window.addEventListener("pageshow",()=>{ensureSuccessor406121();scheduleRestore("pageshow");},{passive:true});
   window.addEventListener("erith:system-hydrated",()=>{ensureSuccessor406121();scheduleRestore("system-hydrated");},{passive:true});
-  globalThis[API_KEY]=Object.freeze({build:BUILD,storage:"sessionStorage",key:SESSION_KEY,opted_in:optedIn,restore,clear:()=>setOptIn(false),ensure_successor_406121:ensureSuccessor406121,snapshot:()=>Object.freeze({build:BUILD,opted_in:optedIn(),active:state().active,restored_this_document:restoredThisDocument,last_restore:lastRestore,successor_406121_loaded:!!globalThis.AgentCryptoStrategyAAutoSessionContinuity406121}),contract:Object.freeze({paper_only:true,reuses_existing_runner:true,new_recurring_timer:false,new_market_fetch:false,real_order:false,wallet:false,credentials:false,local_storage_write:false,session_storage_write:true})});
+  globalThis[API_KEY]=Object.freeze({build:BUILD,storage:"sessionStorage",key:SESSION_KEY,opted_in:optedIn,restore,clear:()=>setOptIn(false),ensure_successor_406121:ensureSuccessor406121,ensure_successor_406124:ensureSuccessor406124,snapshot:()=>Object.freeze({build:BUILD,opted_in:optedIn(),active:state().active,restored_this_document:restoredThisDocument,last_restore:lastRestore,successor_406121_loaded:!!globalThis.AgentCryptoStrategyAAutoSessionContinuity406121,successor_406124_loaded:!!globalThis.AgentCryptoStrategyAOwnerAutoStart406124}),contract:Object.freeze({paper_only:true,reuses_existing_runner:true,new_recurring_timer:false,new_market_fetch:false,real_order:false,wallet:false,credentials:false,local_storage_write:false,session_storage_write:true})});
 })();
