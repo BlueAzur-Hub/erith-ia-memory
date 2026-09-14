@@ -4,31 +4,41 @@
    when the historical 40.6.105 DOM scope is stale, absent or contradictory.
    40.6.117 R3: preserve innerText when usable, then fall back to textContent so collapsed
    Strategy A truth cannot silently fall through to historical OFF / UNKNOWN state.
+   40.6.122: Proposal Truth — PROPOSED and COST GATE WAIT are first-class read-side states;
+   a proposal blocked by a WAIT gate remains WAIT for comparison and never becomes BUY/SELL
+   from its direction score alone. Canonical comparison no longer delegates to 40.6.105 semantics.
    Git carries history; the active functional filename does not carry a build number.
 
    Contract:
    - UNKNOWN is not WAIT;
    - UNKNOWN cannot yield CONVERGENCE or DIVERGENCE;
    - a known NO TRADE remains a legitimate WAIT state;
+   - PROPOSED / COST GATE WAIT remains WAIT until an execution-capable state exists;
+   - direction_score is descriptive evidence, never an inferred BUY/SELL order;
    - visible current Strategy A truth wins over historical/frozen OFF state;
    - presentation/read-side only: no fetch, timer, observer, storage, strategy mutation,
      order, wallet or credential path. */
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.117-r3";
+  const RELEASE = "40.6.122";
   const PANEL_ID = "tradusShadow406066";
   const MAX_COMPARISON_AGE_SECONDS = 15;
   const upper = value => String(value ?? "").trim().toUpperCase();
   const prior = globalThis.AgentCryptoTradusStrategyReconcile406105;
+  const unknownToken = value => !value || value === "INCONNU" || value === "UNKNOWN" || value === "N/D" || value === "—";
 
   function stateOf(a) {
-    const value = upper(a?.decision || a?.phase || "");
-    if (!value || value === "INCONNU" || value === "UNKNOWN" || value === "N/D" || value === "—") return "UNKNOWN";
+    const decision = upper(a?.decision || "");
+    const phase = upper(a?.phase || "");
+    const known = [decision, phase].filter(value => !unknownToken(value));
+    if (!known.length) return "UNKNOWN";
+    const value = known.join(" · ");
     if (/STOP|REJECT|REFUS|BLOCK/.test(value)) return "STOP";
+    if (/^OFF$|ARR[ÊE]T[ÉE]?|INACTIF/.test(decision) || /^OFF$|ARR[ÊE]T[ÉE]?|INACTIF/.test(phase)) return "OFF";
+    if (/PROPOSED|PROPOSAL/.test(value)) return "WAIT";
+    if (/NO TRADE|WAIT|COST GATE/.test(value)) return "WAIT";
     if (/PAPER|SIMUL/.test(value)) return "PAPER";
-    if (/^OFF$|ARR[ÊE]T[ÉE]?|INACTIF/.test(value)) return "OFF";
-    if (/NO TRADE|WAIT/.test(value)) return "WAIT";
     return "ACTIVE";
   }
 
@@ -50,23 +60,31 @@
     return source.slice(start, end);
   }
 
+  function hasRecognizedVisibleTruth(text) {
+    const source = String(text || "");
+    return /D[ÉE]CISION\s*(?:[:·\-]\s*)?(NO TRADE|PROPOSED|OFF|PAPER|STOP|WAIT)\b/i.test(source)
+      || /PHASE\s+[^\n·]*(?:NO TRADE|PROPOSED|OFF|PAPER|STOP|WAIT|COST GATE)\b/i.test(source);
+  }
+
   function visibleStrategyAText() {
     const visible = sliceStrategyAText(document.body?.innerText || "");
-    if (/D[ÉE]CISION\s*(NO TRADE|OFF|PAPER|STOP|WAIT)|PHASE\s+(NO TRADE|OFF|PAPER|STOP|WAIT)/i.test(visible)) return visible;
+    if (hasRecognizedVisibleTruth(visible)) return visible;
     const complete = sliceStrategyAText(document.body?.textContent || "");
     return complete || visible;
   }
 
   function parseVisibleStrategyA(text) {
     const source = String(text || "").replace(/\u00a0/g, " ");
-    const decision = source.match(/D[ÉE]CISION\s*(NO TRADE|OFF|PAPER|STOP|WAIT)/i)?.[1]?.trim()?.toUpperCase() || null;
-    const phase = source.match(/PHASE\s+(NO TRADE|OFF|PAPER|STOP|WAIT)/i)?.[1]?.trim()?.toUpperCase() || null;
-    const directionRaw = source.match(/DIRECTION\s*(?:WAIT|PASS)?\s*([+-]?\d+)\s*\/\s*100/i)?.[1] || null;
-    const blocker = source.match(/1er verrou\s*:\s*([^\n·]+)/i)?.[1]?.trim()
-      || source.match(/Dernier verrou\s*([^\n·]+)/i)?.[1]?.trim()
+    const decision = source.match(/\bD[ÉE]CISION\s*(?:[:·\-]\s*)?(NO TRADE|PROPOSED|OFF|PAPER|STOP|WAIT)\b/i)?.[1]?.trim()?.toUpperCase() || null;
+    const phase = source.match(/\bPHASE\s+([^\n·]+)/i)?.[1]?.trim()?.toUpperCase() || null;
+    const directionRaw = source.match(/\bDIRECTION\s*(?:WAIT|PASS|PROPOSED)?\s*([+-]?\d+)\s*\/\s*100\b/i)?.[1] || null;
+    const explicitBlocker = source.match(/1er verrou\s*:\s*([^\n·]+)/i)?.[1]?.trim()
+      || source.match(/Dernier verrou\s*:?\s*([^\n·]+)/i)?.[1]?.trim()
       || null;
+    const blocker = explicitBlocker || (/COST GATE/i.test(phase || "") ? "COST GATE" : null);
     const reason = source.match(/Lecture\s*([^\n]+)/i)?.[1]?.trim() || null;
-    const resolvedDecision = decision || phase || "INCONNU";
+    const phaseStateKnown = phase && /NO TRADE|PROPOSED|OFF|PAPER|STOP|WAIT|COST GATE/i.test(phase);
+    const resolvedDecision = decision || (phaseStateKnown ? phase : null) || "INCONNU";
     return Object.freeze({
       decision: resolvedDecision,
       phase: phase || decision || null,
@@ -110,6 +128,7 @@
   function compareFailClosed(a, signal) {
     const state = stateOf(a);
     const action = upper(signal?.action || "NO_TRADE") || "NO_TRADE";
+    const directional = action === "BUY" || action === "SELL";
     if (state === "UNKNOWN") {
       return Object.freeze({
         state: "NON COMPARABLE",
@@ -117,10 +136,6 @@
         fail_closed: true
       });
     }
-    if (prior?.compare) {
-      try { return Object.freeze({ ...prior.compare(a, signal), fail_closed: false }); } catch (_) {}
-    }
-    const directional = action === "BUY" || action === "SELL";
     if (state === "OFF") return Object.freeze({ state:"NON COMPARABLE", text:`A OFF · TRADUS ${directional ? action : "attend"}`, fail_closed:false });
     if (state === "STOP" && directional) return Object.freeze({ state:"OPPOSITION SÉCURITÉ", text:`A STOP · TRADUS ${action}`, fail_closed:false });
     if (state === "STOP") return Object.freeze({ state:"ACCORD PRUDENT", text:"A STOP · TRADUS attend", fail_closed:false });
@@ -196,12 +211,16 @@
   else window.addEventListener("load", () => schedule("load"), { once: true, passive: true });
 
   function selfTest() {
-    const parsed = parseVisibleStrategyA("STRATÉGIE A · PAPER AUTOMATIQUE\nPilote de simulation\nAUTO A ACTIF\nDécision NO TRADE\nTRACE DÉCISION V2 · LECTURE SEULE\nPHASE NO TRADE · PROPOSAL NO_TRADE · 1er verrou : DIRECTION\nDIRECTION WAIT\n-6/100");
+    const noTrade = parseVisibleStrategyA("STRATÉGIE A · PAPER AUTOMATIQUE\nPilote de simulation\nAUTO A ACTIF\nDécision NO TRADE\nTRACE DÉCISION V2 · LECTURE SEULE\nPHASE NO TRADE · PROPOSAL NO_TRADE · 1er verrou : DIRECTION\nDIRECTION WAIT\n-6/100");
+    const proposed = parseVisibleStrategyA("STRATÉGIE A · PAPER AUTOMATIQUE\nPilote de simulation\nAUTO A ACTIF\nDécision PROPOSED\nTRACE DÉCISION V2 · LECTURE SEULE\nPHASE COST GATE WAIT · PROPOSAL LONG · 1er verrou : COST GATE\nDIRECTION PASS\n+17/100");
     const checks = [
-      parsed.decision === "NO TRADE" && parsed.direction_score === -6 && parsed.blocker === "DIRECTION" && parsed.auto_active === true,
+      noTrade.decision === "NO TRADE" && noTrade.direction_score === -6 && noTrade.blocker === "DIRECTION" && noTrade.auto_active === true,
+      proposed.decision === "PROPOSED" && proposed.phase === "COST GATE WAIT" && proposed.direction_score === 17 && proposed.blocker === "COST GATE",
+      stateOf(proposed) === "WAIT",
+      compareFailClosed(proposed, { action: "SELL" }).state === "DIVERGENCE",
+      compareFailClosed(proposed, { action: "NO_TRADE" }).state === "CONVERGENCE",
       compareFailClosed({ decision: "INCONNU" }, { action: "SELL" }).state === "NON COMPARABLE",
       stateOf({ decision: "NO TRADE" }) === "WAIT",
-      compareFailClosed({ decision: "NO TRADE" }, { action: "SELL" }).state === "DIVERGENCE",
       stateOf({ decision: "OFF" }) === "OFF"
     ];
     return Object.freeze({
@@ -224,6 +243,10 @@
     selfTest,
     visible_runtime_truth_preferred: true,
     hidden_runtime_truth_fallback: true,
+    proposed_is_wait: true,
+    cost_gate_wait_preserved: true,
+    direction_score_is_not_directional_order: true,
+    legacy_compare_delegation: false,
     unknown_is_wait: false,
     unknown_can_converge: false,
     fetch: false,
