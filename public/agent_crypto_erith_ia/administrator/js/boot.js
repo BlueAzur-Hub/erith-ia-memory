@@ -51,7 +51,15 @@
     replaceMeta("agent-crypto-boot-build", build);
     replaceMeta("agent-crypto-version-owner", "build.json");
 
+    // First-paint visible truth comes from the same manifest as the title/meta.
+    // js/version-truth.js remains the runtime owner after the shell has parsed.
     out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>Agent-Crypto @erith.IA — Build ${build} · Administrator</title>`);
+    out = out.replace(/(<button\b[^>]*\bid=["']atlasVersionTruthControl["'][^>]*\baria-label=["'])[^"']*(["'])/i,
+      `$1Version Agent-Crypto installée : Build ${build}, mode Administrator$2`);
+    out = out.replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,
+      `<span id="atlasVersionTruthText">Build ${build} · Administrator</span>`);
+    out = out.replace(/<span\s+id=["']footerRelease["'][^>]*>[\s\S]*?<\/span>/i,
+      `<span id="footerRelease">Agent-Crypto @erith.IA · Administrator ${build} · Market Core ${engine}</span>`);
     return out;
   }
 
