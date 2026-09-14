@@ -66,7 +66,6 @@ jobs:
               out += [m.group('ref') for m in REL_JS_RE.finditer(text)]
               return list(dict.fromkeys(out))
 
-          # Real runtime graph.
           queue = [ENTRY]
           reachable, runtime_edges, runtime_texts = set(), {}, {}
           while queue:
@@ -99,7 +98,6 @@ jobs:
           if len(reachable) != 101:
               raise SystemExit(f'Runtime graph drifted: {len(reachable)}')
 
-          # Full textual/dependency view, including historical files.
           all_sources = {}
           for path in sorted(ROOT.rglob('*')):
               if not path.is_file() or path.suffix.lower() not in {'.html', '.js', '.json'}:
@@ -151,9 +149,9 @@ jobs:
               if rel in reachable:
                   continue
               inbound_runtime = sorted(str(src) for src, tg in runtime_edges.items() if rel in tg and src != rel)
-              inbound_all = sorted(src for src, tg in full_edges.items() if rel in tg and src != rel, key=str)
+              inbound_all = sorted((src for src, tg in full_edges.items() if rel in tg and src != rel), key=str)
               literal_runtime = sorted(str(src) for src, text in runtime_texts.items() if rel.name in text and src != rel)
-              literal_all = sorted(src for src, text in all_sources.items() if rel.name in text and src != rel, key=str)
+              literal_all = sorted((src for src, text in all_sources.items() if rel.name in text and src != rel), key=str)
               prot = protection(rel)
               kind_counts = {}
               for src in inbound_all:
