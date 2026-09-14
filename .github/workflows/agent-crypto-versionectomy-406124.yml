@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/agent-crypto-versionectomy-406124.yml
+      - .github/scripts/agent_crypto_versionectomy_406124.py
   workflow_dispatch:
 
 permissions:
@@ -28,6 +29,7 @@ jobs:
           ROOT='public/agent_crypto_erith_ia/administrator'
           node --check "$ROOT/app.js"
           node --check "$ROOT/js/app.js"
+          node --check "$ROOT/js/admin-visual-cache.js"
           node --check "$ROOT/js/boot.js"
           node --check "$ROOT/js/version-truth.js"
 
