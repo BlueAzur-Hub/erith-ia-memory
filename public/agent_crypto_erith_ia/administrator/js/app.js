@@ -756,8 +756,7 @@
     // geometry and version indicators only.
     byId("administratorMirrorIdentity")?.remove();
 
-    const footer = byId("footerRelease");
-    if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${ADMIN_BUILD} · Market Core ${ENGINE_BUILD} · Web Classic · manifeste`;
+    // Footer version is owned exclusively by js/version-truth.js.
   }
 
   function updateLayoutButton(button, free) {

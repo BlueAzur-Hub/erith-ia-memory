@@ -54253,7 +54253,11 @@ try { globalThis.__AGENT_CRYPTO_ATLAS_TRUTH_404160__ = Object.freeze({
   oracle_changed:false, bridge_changed:false
 }); } catch (_) {}
 
-const ATLAS_BUILD = "40.6.86";
+const ATLAS_BUILD = String(
+  document.querySelector('meta[name="administrator-build"]')?.content
+  || document.querySelector('meta[name="atlas-build"]')?.content
+  || "UNKNOWN"
+).trim();
 // 40.4.101: UI build identity must not create a new CURRENT for an unchanged market snapshot.
 // Preserve the exact 40.4.98 canonical payload value until a deliberate fingerprint-v3 migration.
 const ATLAS_ANALYTICAL_INTERFACE_FINGERPRINT_COMPAT = "Build 40.4.98 · Administrator";
@@ -55025,10 +55029,7 @@ function atlasSyncReleaseLabels() {
     document.getElementById("situationReleaseBadge"),
     `${ATLAS_RELEASE} · Math Core V3`
   );
-  setText(
-    document.getElementById("footerRelease"),
-    `Agent-Crypto @erith.IA · Market Core · Build ${ATLAS_BUILD} · Version : Parker Lewis Can't Lose`
-  );
+  // Footer version is rendered only by js/version-truth.js from build.json.
 }
 
 const ATLAS_STORAGE_SCHEMA_VERSION = 28113;
@@ -56432,7 +56433,7 @@ atlasParallelMarketInit();
 
 atlasAnalyticalTruthInit();
 
-atlasVersionAwarenessInit();
+// Legacy version-awareness runtime disabled: build.json/js/version-truth.js are authoritative.
 window.setTimeout(() => atlasCurrentRenderBanner(atlasCurrentStateRead()), 0);
 
 
