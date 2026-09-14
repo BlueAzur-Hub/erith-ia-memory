@@ -1,0 +1,208 @@
+name: Agent Crypto retire disabled Operator Cockpit
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/agent-crypto-retire-disabled-operator-cockpit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize
+        run: git pull --ff-only origin main
+
+      - name: Revalidate and retire disabled Operator Cockpit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          ROOT=Path('public/agent_crypto_erith_ia/administrator')
+          ENTRY=Path('runtime-shell.html')
+          TARGET=Path('js/operator-cockpit.js')
+          LOADER=Path('js/views/private-source-demand-loader.js')
+          HTML_JS_RE=re.compile(r'(?:src|href)=["\'](?P<ref>[^"\']+\.js(?:\?[^"\']*)?)["\']',re.I)
+          JS_PATH_RE=re.compile(r'(?P<ref>(?:\.\.?/|/)?js/[A-Za-z0-9_./-]+\.js)(?:\?[^"\'`\s)]*)?',re.I)
+          REL_JS_RE=re.compile(r'(?P<ref>\.\.?/[A-Za-z0-9_./-]+\.js)(?:\?[^"\'`\s)]*)?',re.I)
+
+          def stripq(ref): return ref.split('?',1)[0].split('#',1)[0]
+          def resolve(src,ref):
+              clean=stripq(ref).replace('\\','/')
+              c=[]
+              if clean.startswith('/'): c.append(Path(clean.lstrip('/')))
+              elif clean.startswith('js/'): c.append(Path(clean))
+              elif clean.startswith('./js/'):
+                  c.append(Path(clean[2:]))
+                  try:c.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+                  except Exception:pass
+              elif clean.startswith(('./','../')):
+                  try:c.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+                  except Exception:pass
+                  if clean.startswith('./'): c.append(Path(clean[2:]))
+              return {x for x in c if (ROOT/x).is_file()}
+          def refs(text):
+              out=[m.group('ref') for m in HTML_JS_RE.finditer(text)]
+              out += [m.group('ref') for m in JS_PATH_RE.finditer(text)]
+              out += [m.group('ref') for m in REL_JS_RE.finditer(text)]
+              return list(dict.fromkeys(out))
+          def graph():
+              q=[ENTRY];seen=set();edges={};texts={}
+              while q:
+                  rel=q.pop(0)
+                  if rel in seen: continue
+                  p=ROOT/rel
+                  if not p.is_file() or p.suffix.lower() not in {'.html','.js'}: continue
+                  try:t=p.read_text(encoding='utf-8')
+                  except UnicodeDecodeError: continue
+                  seen.add(rel);texts[rel]=t
+                  tg=set()
+                  for ref in refs(t): tg.update(resolve(rel,ref))
+                  edges[rel]=tg
+                  for x in sorted(tg,key=str):
+                      if x.suffix.lower() in {'.html','.js'} and x not in seen:q.append(x)
+              return seen,edges,texts
+
+          build_path=ROOT/'build.json'
+          build=json.loads(build_path.read_text(encoding='utf-8'))
+          if str(build.get('build'))!='40.6.124': raise SystemExit(f"Build drifted: {build.get('build')!r}")
+          market_core=str(build.get('market_core') or build.get('engine') or '')
+          if '38.15.11' not in market_core: raise SystemExit(f'Market Core drifted: {market_core!r}')
+          target_path=ROOT/TARGET
+          if not target_path.is_file(): raise SystemExit('Operator Cockpit already absent; refusing ambiguous cleanup')
+
+          before,edges,texts=graph()
+          if len(before)!=101: raise SystemExit(f'Runtime graph drifted before cleanup: {len(before)}')
+          inbound=sorted(str(src) for src,tg in edges.items() if TARGET in tg)
+          literal_runtime=sorted(str(src) for src,text in texts.items() if TARGET.name in text and src!=TARGET)
+          if TARGET in before or inbound or literal_runtime:
+              raise SystemExit('Operator Cockpit unexpectedly runtime-reachable: '+json.dumps({'reachable':TARGET in before,'inbound':inbound,'literal_runtime':literal_runtime}))
+
+          loader=(ROOT/LOADER).read_text(encoding='utf-8')
+          if 'operator_cockpit:false' not in loader:
+              raise SystemExit('Loader no longer declares operator_cockpit:false')
+          if TARGET.name in loader or str(TARGET) in loader:
+              raise SystemExit('Loader contains an Operator Cockpit file route')
+          if 'Operator Cockpit injection removed' not in loader:
+              raise SystemExit('Expected 40.6.116 removal marker missing from loader')
+
+          op=build.get('operator_cockpit')
+          if not isinstance(op,dict): raise SystemExit('build.json operator_cockpit block missing')
+          if op.get('runtime_owner')!=str(TARGET): raise SystemExit(f"Unexpected operator runtime_owner: {op.get('runtime_owner')!r}")
+          if op.get('runtime_injection_active') is not False: raise SystemExit('Operator Cockpit is not marked inactive')
+          cleanup=build.get('versioning_cleanup')
+          if not isinstance(cleanup,dict): raise SystemExit('build.json versioning_cleanup block missing')
+          active=list(cleanup.get('canonical_active_files') or [])
+          if str(TARGET) not in active: raise SystemExit('Operator Cockpit already absent from canonical_active_files')
+          if cleanup.get('source_demand_loader_operator_cockpit_active') is not False:
+              raise SystemExit('Source demand loader metadata no longer marks Operator Cockpit inactive')
+
+          old_bytes=target_path.stat().st_size
+          old_lines=len(target_path.read_text(encoding='utf-8').splitlines())
+          op['historical_runtime_owner']=str(TARGET)
+          op['runtime_owner']='retired'
+          op['loader']='retired'
+          op['runtime_owner_present']=False
+          cleanup['canonical_active_files']=[x for x in active if x!=str(TARGET)]
+          cleanup['active_operator_cockpit_filename_is_unversioned']=False
+          build_path.write_text(json.dumps(build,separators=(',',':'),ensure_ascii=False)+'\n',encoding='utf-8')
+          target_path.unlink()
+
+          build_after=json.loads(build_path.read_text(encoding='utf-8'))
+          if str(build_after.get('build'))!='40.6.124': raise SystemExit('Build changed during metadata cleanup')
+          if str(build_after.get('market_core') or build_after.get('engine') or '')!=market_core: raise SystemExit('Market Core changed during metadata cleanup')
+          after,_,_=graph()
+          if len(after)!=len(before): raise SystemExit(f'Runtime graph changed: {len(before)} -> {len(after)}')
+          if str(TARGET) in (build_after.get('versioning_cleanup',{}).get('canonical_active_files') or []): raise SystemExit('Operator Cockpit still listed active')
+          if build_after.get('operator_cockpit',{}).get('runtime_owner')!='retired': raise SystemExit('Operator Cockpit runtime_owner not retired')
+          if build_after.get('operator_cockpit',{}).get('historical_runtime_owner')!=str(TARGET): raise SystemExit('Historical owner path not preserved')
+
+          print(json.dumps({
+              'build':build_after.get('build'),
+              'market_core':market_core,
+              'retired':str(TARGET),
+              'retired_bytes':old_bytes,
+              'retired_lines':old_lines,
+              'runtime_nodes_before':len(before),
+              'runtime_nodes_after':len(after),
+              'loader_operator_cockpit':False,
+              'manifest_runtime_owner':'retired',
+              'historical_runtime_owner':str(TARGET),
+              'protected_not_touched':['Aether','Oracle','Atlas','Market Core 38.15.11','Web Classique','Graphique','Lecture Technique','Strategy A runtime']
+          },indent=2,ensure_ascii=False))
+          PY
+
+      - name: JavaScript syntax check
+        run: find public/agent_crypto_erith_ia/administrator -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+
+      - name: Runtime shell direct reference sanity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          shell=(root/'runtime-shell.html').read_text(encoding='utf-8')
+          missing=[]
+          for ref in re.findall(r'(?:src|href)=["\'](\./[^"\']+)["\']',shell):
+              clean=ref.split('?',1)[0]
+              if not (root/clean[2:]).exists():missing.append(clean)
+          if missing:raise SystemExit('Missing runtime references: '+', '.join(sorted(set(missing))))
+          print('Runtime shell references OK')
+          PY
+
+      - name: Duplicate shell DOM id guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import collections,re
+          shell=Path('public/agent_crypto_erith_ia/administrator/runtime-shell.html').read_text(encoding='utf-8')
+          ids=re.findall(r'\bid=["\']([^"\']+)["\']',shell,re.I)
+          dup=[x for x,n in collections.Counter(ids).items() if n>1]
+          if dup:raise SystemExit('Duplicate shell DOM ids: '+', '.join(sorted(dup)))
+          print('Shell DOM ids unique')
+          PY
+
+      - name: Build and Market Core lock guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          d=json.loads(Path('public/agent_crypto_erith_ia/administrator/build.json').read_text(encoding='utf-8'))
+          if str(d.get('build'))!='40.6.124':raise SystemExit(f'Build drifted: {d.get("build")!r}')
+          e=str(d.get('market_core') or d.get('engine') or '')
+          if '38.15.11' not in e:raise SystemExit(f'Market Core drifted: {e!r}')
+          print('Build 40.6.124 unchanged · Market Core 38.15.11 locked')
+          PY
+
+      - name: Commit cleanup and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven Refactor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A public/agent_crypto_erith_ia/administrator
+          git rm -f .github/workflows/agent-crypto-retire-disabled-operator-cockpit.yml
+          git commit -m 'refactor(agent-crypto): retire disabled operator cockpit owner'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'Rebase conflict; refusing force-push'
+              exit 1
+            fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          echo 'Push remained contested after safe retries'
+          exit 1
