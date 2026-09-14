@@ -15,7 +15,7 @@
   const BUILD = "40.6.77";
   const WINDOW_ID = "aether-watch";
   const TOGGLE_ID = "atlasAetherStatusToggle";
-  const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
+  const BACKPLATE = "./assets/aether/aether-observatory-master-v2.png";
   const ROOT_ATTR = "data-aether-backplate-v2";
   const MARGIN = 12;
   const CENTER_EPSILON = 14;

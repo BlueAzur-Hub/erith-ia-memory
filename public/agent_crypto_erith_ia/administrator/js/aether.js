@@ -896,7 +896,7 @@ function aetherNewsMarketSemantic(){
     }catch(_){return 'Prévision 5 j indisponible';}
   }
   /* 40.6.39 — AETHER WORKBENCH FOCUS · READABILITY · Z-ORDER LOCK */
-  const AETHER_WORKBENCH_SRC='./js/aether-workbench-406039.js?v=administrator-build-40.6.39';
+  const AETHER_WORKBENCH_SRC='./js/aether-workbench.js?v=administrator-build-40.6.39';
   let aetherWorkbenchPromise=null;
   function aetherWorkbenchLoad(){
     if(globalThis.AgentCryptoAetherWorkbench406039)return Promise.resolve(globalThis.AgentCryptoAetherWorkbench406039);

@@ -24,7 +24,7 @@ Improve the readability of the LIVE DOM inside the nine painted Aether Observato
 ### What does not change
 
 - no generated/replaced image;
-- no change to `aether-observatory-master-fidelity-406049.png`;
+- no change to `aether-observatory-master-fidelity.png`;
 - no painted capsule left/top/width/height coordinate change;
 - no Aether window geometry owner change;
 - no Administrator Window Manager change;

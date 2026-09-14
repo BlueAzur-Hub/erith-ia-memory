@@ -19,7 +19,7 @@ Code review found a bounded compositor cost that can be reduced without changing
 
 ### 40.6.70 scope
 
-New presentation owner: `aether-performance-406070.css`.
+New presentation owner: `aether-performance.css`.
 
 Firefox Administrator only:
 

@@ -62965,7 +62965,7 @@ async function atlasAccessPortalRefresh40382(){
   atlasAccessPortalState("atlasAccessBridgeAuthState",configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",configured?"ok":"warn");
   atlasAccessPortalState("atlasAccessBookMirrorState","APRÈS AUTH","warn");
 }
-try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40382__=Object.freeze({build:"40.3.82",parent:"40.3.81",background:"assets/visual/admin-auth-aether-trust-sanctuary-40382.png",background_source:"approved_existing_asset",background_byte_preserved:true,ui_authority:"DOM/CSS/JS",dynamic_bridge_version:true,hardcoded_bridge_version_in_portal:false,hardcoded_bridge_port_in_portal:false,hardcoded_model_in_portal:false,book_mirror_truth:true,rich_code_dock:true,central_portal_preserved:true,image_generated_in_build:false,image_edited_in_build:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
+try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40382__=Object.freeze({build:"40.3.82",parent:"40.3.81",background:"assets/visual/admin-auth-aether-trust-sanctuary.png",background_source:"approved_existing_asset",background_byte_preserved:true,ui_authority:"DOM/CSS/JS",dynamic_bridge_version:true,hardcoded_bridge_version_in_portal:false,hardcoded_bridge_port_in_portal:false,hardcoded_model_in_portal:false,book_mirror_truth:true,rich_code_dock:true,central_portal_preserved:true,image_generated_in_build:false,image_edited_in_build:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
 
 
 /* 40.3.83 — persistent Bridge trust + legacy publisher retirement truth. */

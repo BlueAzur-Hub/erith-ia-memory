@@ -32,7 +32,7 @@
     if(globalThis.__ERITH_STRATEGY_A_PAPER_PROOF_HOTFIX_406095__)return true;
     if(document.querySelector('script[data-strategy-a-paper-proof-hotfix="true"]'))return true;
     const script=document.createElement("script");
-    script.src="./js/strategy-a-paper-proof-hotfix-406095.js?v=hotfix-1";
+    script.src="./js/strategy-a-paper-proof-hotfix.js?v=hotfix-1";
     script.async=false;
     script.dataset.strategyAPaperProofHotfix="true";
     document.head.appendChild(script);

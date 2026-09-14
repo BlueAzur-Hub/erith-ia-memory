@@ -4,7 +4,7 @@
 (() => {
   "use strict";
   const BUILD="40.6.79";
-  const BACKPLATE="./assets/aether/aether-observatory-master-v2-406074.png";
+  const BACKPLATE="./assets/aether/aether-observatory-master-v2.png";
   const root=document.documentElement;
   function warmBackplate(){
     root.setAttribute('data-aether-backplate-v2','loading');

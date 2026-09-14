@@ -679,7 +679,7 @@
   padding:0!important;border:1px solid rgba(92,208,255,.28)!important;border-radius:16px!important;
   background:#020914!important;box-shadow:0 24px 80px rgba(0,0,0,.52)!important;isolation:isolate!important;
 }
-#atlasAetherStatusPanel::before{content:"";position:absolute;inset:0;z-index:-3;background:url('./assets/aether/aether-observatory-background-406032.webp') center 56%/cover no-repeat;opacity:1;filter:saturate(.96) brightness(.86)}
+#atlasAetherStatusPanel::before{content:"";position:absolute;inset:0;z-index:-3;background:url('./assets/aether/aether-observatory-background.webp') center 56%/cover no-repeat;opacity:1;filter:saturate(.96) brightness(.86)}
 #atlasAetherStatusPanel::after{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 50% 54%,rgba(1,8,20,.08) 0 28%,rgba(1,8,20,.26) 55%,rgba(1,8,20,.48) 100%),linear-gradient(180deg,rgba(2,9,20,.15),rgba(2,9,20,.34))}
 #atlasAetherStatusPanel .atlas-aether-panel-head{position:absolute!important;left:22px;right:22px;top:14px;z-index:8;background:transparent!important;border:0!important;padding:0!important;pointer-events:none}
 #atlasAetherStatusPanel .atlas-aether-panel-head b{font-size:15px!important;letter-spacing:.12em!important;color:#d8ddff!important;text-shadow:0 0 14px rgba(119,164,255,.65)}
@@ -788,7 +788,7 @@
   }
   #atlasAetherStatusPanel::before{
     content:""!important;display:block!important;position:absolute!important;inset:-28px!important;z-index:-4!important;
-    background:url('./assets/aether/aether-observatory-background-406032.webp') center 56%/cover no-repeat!important;
+    background:url('./assets/aether/aether-observatory-background.webp') center 56%/cover no-repeat!important;
     opacity:.62!important;filter:blur(15px) brightness(.30) saturate(.88)!important;transform:scale(1.045)!important;
   }
   #atlasAetherStatusPanel::after{
@@ -808,7 +808,7 @@
     height:calc(100% - 18px)!important;width:auto!important;max-width:calc(100% - 18px)!important;aspect-ratio:16/9!important;
     transform:translate(-50%,-50%)!important;display:block!important;margin:0!important;padding:0!important;gap:0!important;
     overflow:hidden!important;border-radius:15px!important;isolation:isolate!important;
-    background:linear-gradient(180deg,rgba(2,10,23,.10),rgba(2,10,23,.18)),url('./assets/aether/aether-observatory-background-406032.webp') center/100% 100% no-repeat!important;
+    background:linear-gradient(180deg,rgba(2,10,23,.10),rgba(2,10,23,.18)),url('./assets/aether/aether-observatory-background.webp') center/100% 100% no-repeat!important;
     box-shadow:0 0 0 1px rgba(82,210,255,.14),0 24px 60px rgba(0,0,0,.30)!important;
   }
   #atlasAetherStatusPanel .aether-first-glance-grid::after{
@@ -934,7 +934,7 @@
     padding:0!important;
     border:1px solid rgba(73,211,255,.40)!important;
     border-radius:18px!important;
-    background:url('./assets/aether/aether-observatory-background-406032.webp') center/100% 100% no-repeat!important;
+    background:url('./assets/aether/aether-observatory-background.webp') center/100% 100% no-repeat!important;
     box-shadow:0 28px 90px rgba(0,0,0,.68),0 0 0 1px rgba(94,210,255,.08)!important;
     isolation:isolate!important;
     z-index:2147483000!important;
@@ -1414,7 +1414,7 @@
     aspect-ratio:16/9!important;
     transform:translate(-50%,-50%)!important;
     border-radius:16px!important;
-    background:url('./assets/aether/aether-observatory-background-406032.webp') center/100% 100% no-repeat!important;
+    background:url('./assets/aether/aether-observatory-background.webp') center/100% 100% no-repeat!important;
     box-shadow:0 0 0 1px rgba(82,210,255,.18),0 28px 80px rgba(0,0,0,.34)!important;
   }
 
@@ -1469,7 +1469,7 @@
     padding:0!important;
     overflow:hidden!important;
     border-radius:15px!important;
-    background:url('./assets/aether/aether-observatory-background-406032.webp') center/100% 100% no-repeat!important;
+    background:url('./assets/aether/aether-observatory-background.webp') center/100% 100% no-repeat!important;
     box-shadow:0 0 0 1px rgba(82,210,255,.16),0 18px 55px rgba(0,0,0,.34)!important;
     isolation:isolate!important;
   }
@@ -1511,7 +1511,7 @@
 #atlasAetherStatusPanel[data-aether-component-foundation="1"]>.atlas-aether-panel-head{z-index:180!important;background:linear-gradient(180deg,rgba(1,8,17,.96),rgba(1,8,17,.72))!important;border-bottom:1px solid rgba(89,214,255,.14)!important;backdrop-filter:blur(12px)!important}
 #atlasAetherStatusPanel[data-aether-component-foundation="1"]>.atlas-aether-panel-head>b{font-size:11px!important;letter-spacing:.18em!important;color:#9edfff!important}
 .aether-component-stage{position:absolute!important;inset:42px 7px 7px!important;z-index:20!important;overflow:auto!important;border-radius:15px!important;container-type:inline-size!important;container-name:aether-stage-406042!important;background:#020a13!important;color:#eefaff!important;isolation:isolate!important;scrollbar-width:thin;scrollbar-color:rgba(87,218,255,.32) transparent}
-.aether42-backplate{position:fixed!important;inset:42px 7px 7px!important;z-index:-3!important;pointer-events:none!important;border-radius:15px!important;background:url('./assets/aether/aether-observatory-background-406032.webp') center/cover no-repeat!important;opacity:.19!important;filter:saturate(.85) contrast(.92)!important}
+.aether42-backplate{position:fixed!important;inset:42px 7px 7px!important;z-index:-3!important;pointer-events:none!important;border-radius:15px!important;background:url('./assets/aether/aether-observatory-background.webp') center/cover no-repeat!important;opacity:.19!important;filter:saturate(.85) contrast(.92)!important}
 .aether-component-stage::before{content:"";position:fixed;inset:42px 7px 7px;z-index:-2;pointer-events:none;border-radius:15px;background:radial-gradient(circle at 50% 45%,rgba(6,37,73,.18),rgba(1,7,16,.76) 62%,rgba(1,6,13,.91) 100%),linear-gradient(135deg,rgba(1,12,22,.55),rgba(2,9,18,.28));backdrop-filter:blur(1.2px)}
 .aether42-surface{position:relative;z-index:2;min-height:100%;padding:16px;display:flex;flex-direction:column;gap:13px}
 .aether42-masthead{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:62px;padding:10px 12px;border:1px solid rgba(85,220,255,.2);border-radius:14px;background:linear-gradient(135deg,rgba(3,17,31,.90),rgba(4,12,24,.72));box-shadow:inset 0 0 0 1px rgba(255,255,255,.018),0 12px 28px rgba(0,0,0,.20)}
@@ -1553,7 +1553,7 @@
     border-radius:16px!important;
     background:
       linear-gradient(rgba(1,7,17,.12),rgba(1,7,17,.12)),
-      url('./assets/aether/aether-observatory-empty-ui-406043.webp') center/100% 100% no-repeat!important;
+      url('./assets/aether/aether-observatory-empty-ui.webp') center/100% 100% no-repeat!important;
     color:#eefaff!important;
     isolation:isolate!important;
   }
@@ -1745,7 +1745,7 @@
     overflow:auto!important;
     background:
       linear-gradient(rgba(1,7,17,.34),rgba(1,7,17,.34)),
-      url('./assets/aether/aether-observatory-empty-ui-406043.webp') center top/cover no-repeat!important;
+      url('./assets/aether/aether-observatory-empty-ui.webp') center top/cover no-repeat!important;
   }
   #atlasAetherStatusPanel .aether42-surface{position:relative!important;inset:auto!important;padding:10px!important;display:flex!important;flex-direction:column!important;gap:9px!important}
   #atlasAetherStatusPanel .aether42-masthead{position:relative!important;left:auto!important;right:auto!important;top:auto!important;min-height:0!important;align-items:flex-start!important;flex-direction:column!important}

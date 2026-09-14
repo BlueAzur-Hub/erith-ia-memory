@@ -11,7 +11,7 @@ Make the approved Aether Observatory remain readable when it shares the Administ
 
 ## Single surgery
 
-Presentation owner only: `administrator/aether-406051.css`.
+Presentation owner only: `administrator/aether.css`.
 
 - Above 1450 px stage width: the complete 40.6.53 immersive density is preserved.
 - At or below 1450 px: transient header states and tertiary prose yield first; semantic titles and primary values receive readable floors.

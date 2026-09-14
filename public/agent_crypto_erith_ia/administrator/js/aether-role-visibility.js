@@ -158,8 +158,8 @@
   const RELEASE = "AETHER V2 · FINAL PREBOOT + ACCEPTANCE LOCK";
   const STYLE_ID = "aetherV2Canonical";
   const SCRIPT_ID = "aetherV2RuntimeCanonical";
-  const STYLE_HREF = "./aether-v2-406083.css?v=administrator-build-40.6.83";
-  const SCRIPT_SRC = "./js/aether-v2-406083.js?v=administrator-build-40.6.83";
+  const STYLE_HREF = "./aether-v2.css?v=administrator-build-40.6.83";
+  const SCRIPT_SRC = "./js/aether-v2.js?v=administrator-build-40.6.83";
   const RETIRED_LINK_IDS = Object.freeze([
     "aetherReadability","aetherV2Stabilization406074C21","aetherV2Refinement406074C3",
     "aetherV2Refinement406074C31","aetherV2Reframe406074C4","aetherV2Reframe406074C5",

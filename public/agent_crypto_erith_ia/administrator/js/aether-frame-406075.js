@@ -20,7 +20,7 @@
   const PANEL_ID = "atlasAetherStatusPanel";
   const TOGGLE_ID = "atlasAetherStatusToggle";
   const DETAIL_ID = "detailPanel";
-  const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
+  const BACKPLATE = "./assets/aether/aether-observatory-master-v2.png";
   const ROOT_ATTR = "data-aether-backplate-v2";
   const MARGIN = 12;
   const MIN_WIDTH = 720;
