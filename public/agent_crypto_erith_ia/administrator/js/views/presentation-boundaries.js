@@ -54,7 +54,7 @@
       canonical_fragment:"./views/projects.html",
       transport:"./js/views/projects-presentation.js",
       anchors:Object.freeze(["missions-vie","fonds-erith-ia","association-erith-ia","aerith-enfance","aerith-animaux","aerith-terre-vivante"]),
-      rule:"Missions hero + five detail shells exist at boot for missionEntries40302; project bodies hydrate on first own disclosure from views/projects.html; Audience and Sources remain independent"
+      rule:"Missions hero + five detail shells exist at boot for missionEntries; project bodies hydrate on first own disclosure from views/projects.html; Audience and Sources remain independent"
     }),
     invariants:Object.freeze([
       "one document",

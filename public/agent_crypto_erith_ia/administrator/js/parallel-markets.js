@@ -746,7 +746,7 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => sync(document.documentElement.dataset.cyclicMarketDomain || "crypto"), {once:true});
   else sync(document.documentElement.dataset.cyclicMarketDomain || "crypto");
 
-  function measuredSnapshot404199(domain, requestedPeriod=null) {
+  function measuredSnapshot(domain, requestedPeriod=null) {
     const cfg = CONFIG[domain];
     if (!cfg || !ACTIVE.has(domain)) return { loaded:false, domain, period:requestedPeriod || null, reason:"domain_inactive" };
     const period = requestedPeriod || state.period.get(domain) || cfg.defaultPeriod;
@@ -768,9 +768,9 @@
   }
 
   async function ensureHistorical404199(domain, period) {
-    if (!longDomainEnabled(domain) || !isLongPeriod(period)) return measuredSnapshot404199(domain,period);
+    if (!longDomainEnabled(domain) || !isLongPeriod(period)) return measuredSnapshot(domain,period);
     await loadHistorical(domain,period);
-    return measuredSnapshot404199(domain,period);
+    return measuredSnapshot(domain,period);
   }
 
   globalThis.ErithParallelMarketsRuntime = Object.freeze({
@@ -807,7 +807,7 @@
     new_observer:false,
     storage_owner:false,
     orders_allowed:false,
-    snapshot:measuredSnapshot404199,
+    snapshot:measuredSnapshot,
     ensureHistorical:ensureHistorical404199,
     refresh:domain=>{state.data.delete(domain);for(const key of [...state.history.keys()]) if(key.startsWith(`${domain}:`)) state.history.delete(key);return sync(domain);}
   });

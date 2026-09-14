@@ -248,7 +248,7 @@
   function render() {
     if (typeof document === "undefined") return false;
     ensureStyle();
-    const anchor = document.getElementById("strategyAExperimentLedger404289") || document.getElementById("strategyADecisionTrace404278");
+    const anchor = document.getElementById("strategyAExperimentLedger404289") || document.getElementById("strategyADecisionTrace");
     if (!anchor) return false;
     let panel = document.getElementById("strategyAReplaySandbox404290");
     if (!panel) {

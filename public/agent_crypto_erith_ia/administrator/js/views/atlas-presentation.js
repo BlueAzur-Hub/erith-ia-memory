@@ -354,7 +354,7 @@
                   <span class="pill warn" id="atlasAnalyticalMemoryBadge394">En attente</span>
                   <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
                 </summary>
-                <div class="atlas-collapse-body" id="atlasAnalyticalMemoryMount40353" data-atlas-analytical-memory-mounted-40353="0">
+                <div class="atlas-collapse-body" id="atlasAnalyticalMemoryMount" data-atlas-analytical-memory-mounted-40353="0">
                   <p class="atlas-local-response-empty" data-atlas-analytical-memory-placeholder-40353="1">Analytical Memory conservée · ouvrir pour matérialiser les CURRENT détaillés.</p>
                 </div>
               </details>
@@ -399,7 +399,7 @@
           </span>
           <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
         </summary>
-        <div class="atlas-decision-detail-body" id="atlasDecisionBoardDeepMount40353" data-atlas-decision-detail-mounted-40353="0">
+        <div class="atlas-decision-detail-body" id="atlasDecisionBoardDeepMount" data-atlas-decision-detail-mounted-40353="0">
           <p class="atlas-local-response-empty" data-atlas-decision-detail-placeholder-40353="1">Decision Board compact · ouvrir pour matérialiser les cartes et le contexte News.</p>
         </div>
       </details>
@@ -484,7 +484,7 @@
                   <span class="pill warn" id="atlasCurrentJournal33Badge">0 CURRENT</span>
                   <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
                 </summary>
-                <div class="atlas-collapse-body" id="atlasCurrentJournalMount40352" data-atlas-current-journal-mounted-40352="0">
+                <div class="atlas-collapse-body" id="atlasCurrentJournalMount" data-atlas-current-journal-mounted-40352="0">
                   <p class="atlas-local-response-empty" data-atlas-current-journal-placeholder-40352="1">Journal CURRENT fermé · index conservé en mémoire locale.</p>
                 </div>
                 <p class="atlas-current-journal-33-status" id="atlasCurrentJournal33Status">Journal local prêt · contenu détaillé chargé uniquement à l’ouverture.</p>

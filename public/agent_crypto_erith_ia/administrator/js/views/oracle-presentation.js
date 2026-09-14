@@ -69,23 +69,23 @@
 
   function reconcile(key){
     try{globalThis.atlasV2ClassifySections?.();}catch(_){}
-    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation40312?.(mode);}catch(_){}
+    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation?.(mode);}catch(_){}
     if(key==="models"){
       try{globalThis.atlasOracleBackupInit?.();}catch(_){}
-      try{globalThis.atlasOracleLabRefreshOnDemand40384?.(true)?.catch?.(()=>{});}catch(_){}
+      try{globalThis.atlasOracleLabRefreshOnDemand?.(true)?.catch?.(()=>{});}catch(_){}
       try{globalThis.atlasOracleLabDashboardRefresh?.(true)?.catch?.(()=>{});}catch(_){}
       try{globalThis.atlasOracleIntegrityRefresh?.(true)?.catch?.(()=>{});}catch(_){}
     }else if(key==="sources"){
-      try{globalThis.atlasOracleInfrastructureRender4020?.();}catch(_){}
-      try{globalThis.atlasOracleSourceHealthPerformanceRefresh4027?.()?.catch?.(()=>{});}catch(_){}
-      try{globalThis.atlasOracleThirdSourceReadinessRender4028?.();}catch(_){}
+      try{globalThis.atlasOracleInfrastructureRender?.();}catch(_){}
+      try{globalThis.atlasOracleSourceHealthPerformanceRefresh?.()?.catch?.(()=>{});}catch(_){}
+      try{globalThis.atlasOracleThirdSourceReadinessRender?.();}catch(_){}
     }else if(key==="evidence"){
       const root=document.getElementById("oracle-evidence-explorer");
       try{if(root)delete root.dataset.oracleExplorerInit;}catch(_){}
       try{globalThis.atlasOracleEvidenceExplorerInit?.();}catch(_){}
       try{globalThis.atlasOracleEvidenceExplorerRefresh?.()?.catch?.(()=>{});}catch(_){}
     }
-    try{globalThis.atlasOracleSuiteSummarySync40216?.();}catch(_){}
+    try{globalThis.atlasOracleSuiteSummarySync?.();}catch(_){}
     try{window.dispatchEvent(new CustomEvent("erith:oracle-hydrated",{detail:{build:BUILD,key}}));}catch(_){}
   }
 

@@ -61,7 +61,7 @@
     return footer || mirror;
   };
 
-  const ensureSourceDemandRepair406091 = () => {
+  const ensureSourceDemandRepair = () => {
     if (globalThis.ErithPrivateSourceDemand40486?.build === "40.6.91") return true;
     if (document.querySelector('script[data-version-truth-source-loader-406091="true"]')) return true;
     const script = document.createElement("script");
@@ -172,7 +172,7 @@
   async function onClick(event) { event?.preventDefault?.(); event?.stopPropagation?.(); event?.stopImmediatePropagation?.(); if (busy) return false; if (state === "update-available") return applyAvailableUpdate(); return check(true); }
 
   render();
-  ensureSourceDemandRepair406091();
+  ensureSourceDemandRepair();
   control?.addEventListener("click", onClick, { capture: true });
   window.addEventListener("erith:system-hydrated", syncVisibleTruth, { passive: true });
   document.addEventListener("agentcrypto:current-finalized", syncVisibleTruth, { passive: true });

@@ -568,7 +568,7 @@ body.atlas-section-air-40292 #news-market-explanation > .news-market-report-body
   background:transparent!important;
   box-shadow:none!important;
 }
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 {
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence {
   margin:0!important;
   padding:8px 6px 6px!important;
   border:0!important;
@@ -578,9 +578,9 @@ body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 {
 }
 
 /* Secondary report sections become rails/dividers; their inner metric cards stay intact. */
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236,
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-role-quality-40237,
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238 {
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence .news-reaction-timeline-40236,
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence .news-role-quality-40237,
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence .news-cross-layer-40238 {
   margin:8px 0!important;
   padding:10px 10px 9px 12px!important;
   border-radius:0!important;
@@ -590,18 +590,18 @@ body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-cross-la
   background:linear-gradient(90deg,rgba(126,224,255,.022),transparent 48%)!important;
   box-shadow:none!important;
 }
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236 {
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence .news-reaction-timeline-40236 {
   border-left:2px solid rgba(112,211,255,.52)!important;
 }
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-role-quality-40237 {
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence .news-role-quality-40237 {
   border-left:2px solid rgba(185,167,255,.54)!important;
 }
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238 {
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence .news-cross-layer-40238 {
   border-left:2px solid rgba(115,240,209,.56)!important;
 }
 
 /* Keep verdict visually distinct, but lighter than a full nested panel. */
-body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-market-verdict-40235 {
+body.atlas-section-air-40292 #newsMarketOperatorIntelligence .news-market-verdict-40235 {
   margin-top:8px!important;
   border-width:1px 0 0 2px!important;
   border-radius:0!important;
@@ -609,7 +609,7 @@ body.atlas-section-air-40292 #newsMarketOperatorIntelligence40235 .news-market-v
 }
 
 /* Generic nested panels get air: one less shadow and slightly tighter vertical rhythm. */
-body.atlas-section-air-40292 details.atlas-collapse[data-layout-family] > .atlas-collapse-body > section.panel.glass:not(#newsMarketOperatorIntelligence40235) {
+body.atlas-section-air-40292 details.atlas-collapse[data-layout-family] > .atlas-collapse-body > section.panel.glass:not(#newsMarketOperatorIntelligence) {
   box-shadow:none!important;
 }
 
@@ -794,12 +794,12 @@ body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-infra-modu
 body.atlas-section-density-40293 #news-market-explanation > .news-market-report-body-40241{
   padding:5px 7px 7px!important;
 }
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235{
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence{
   padding:5px 3px 3px!important;
 }
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236,
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-role-quality-40237,
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238{
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-reaction-timeline-40236,
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-role-quality-40237,
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-cross-layer-40238{
   margin:6px 0!important;
   padding:8px 9px!important;
   border:1px solid rgba(126,224,255,.16)!important;
@@ -807,10 +807,10 @@ body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cros
   background:rgba(3,12,20,.20)!important;
   box-shadow:none!important;
 }
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236{border-left:2px solid rgba(112,211,255,.56)!important}
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-role-quality-40237{border-left:2px solid rgba(185,167,255,.58)!important}
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238{border-left:2px solid rgba(115,240,209,.60)!important}
-body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-market-verdict-40235{
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-reaction-timeline-40236{border-left:2px solid rgba(112,211,255,.56)!important}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-role-quality-40237{border-left:2px solid rgba(185,167,255,.58)!important}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-cross-layer-40238{border-left:2px solid rgba(115,240,209,.60)!important}
+body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-market-verdict-40235{
   margin-top:6px!important;
   padding-top:8px!important;
   padding-bottom:8px!important;
@@ -846,9 +846,9 @@ body.atlas-section-density-40293 #local-ai-hub.atlas-analysis-running-40293 .atl
   body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection{margin-bottom:5px!important;border-radius:9px!important}
   body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-summary{min-height:42px!important;padding:6px 8px!important}
   body.atlas-section-density-40293 #oracle-analysis-suite .atlas-oracle-suite-subsection > .atlas-collapse-body{padding:5px 6px 7px!important}
-  body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-reaction-timeline-40236,
-  body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-role-quality-40237,
-  body.atlas-section-density-40293 #newsMarketOperatorIntelligence40235 .news-cross-layer-40238{margin:5px 0!important;padding:7px 8px!important}
+  body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-reaction-timeline-40236,
+  body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-role-quality-40237,
+  body.atlas-section-density-40293 #newsMarketOperatorIntelligence .news-cross-layer-40238{margin:5px 0!important;padding:7px 8px!important}
 }
 
 

@@ -16,7 +16,7 @@
   const BUILD_3950 = "39.5.0";
   const ROOT_ID = "decisionDualMemory395";
   const EXPORT_ID = "btnDecisionBoardDualMemoryExport395";
-  const WRAP_MARKER_406117 = "__agentCryptoDualMemoryWrapped406117";
+  const WRAP_MARKER = "__agentCryptoDualMemoryWrapped406117";
 
   const byId = id => document.getElementById(id);
   const text = (id, value) => {
@@ -78,7 +78,7 @@
      The legacy compact shell may expose summary.split.marketRecords, which is
      not the canonical Market Memory counter. Reconcile presentation only after
      the canonical Dual Memory reader has resolved its own read-only stats. */
-  function syncCompactMarketCount406100(market) {
+  function syncCompactMarketCount(market) {
     const canonical = Number(market?.canonical || 0);
     const status = byId("decisionBoardStatus");
     const verdict = byId("decisionBoardVerdict");
@@ -178,7 +178,7 @@
       board.dataset.analyticalMemory = String(analytical.count);
     }
 
-    syncCompactMarketCount406100(market);
+    syncCompactMarketCount(market);
 
     const compareTitle = byId("decisionMemoryCompare")?.querySelector?.(".decision-memory-compare-head b");
     if (compareTitle) compareTitle.textContent = "Comparer les deux derniers relevés Market Memory";
@@ -244,13 +244,13 @@
      this reader first executes. When that happens the compact shell can fall
      back to its historic counter while the canonical Dual Memory cards remain
      correct. Rebind once after full load: no timer, observer, fetch or write. */
-  function bindLegacyDecisionRenderer406117() {
+  function bindLegacyDecisionRenderer() {
     const current = globalThis.renderDecisionBoard;
     if (typeof current !== "function") {
       try { render(); } catch (_) {}
       return false;
     }
-    if (current[WRAP_MARKER_406117] === true) {
+    if (current[WRAP_MARKER] === true) {
       try { render(); } catch (_) {}
       return true;
     }
@@ -260,8 +260,8 @@
       try { render(); } catch (_) {}
       return result;
     };
-    try { Object.defineProperty(wrapped, WRAP_MARKER_406117, { value: true }); }
-    catch (_) { wrapped[WRAP_MARKER_406117] = true; }
+    try { Object.defineProperty(wrapped, WRAP_MARKER, { value: true }); }
+    catch (_) { wrapped[WRAP_MARKER] = true; }
     globalThis.renderDecisionBoard = wrapped;
     try { render(); } catch (_) {}
     return true;
@@ -276,8 +276,8 @@
       try { render(); } catch (_) {}
       return result;
     };
-    try { Object.defineProperty(wrapped, WRAP_MARKER_406117, { value: true }); }
-    catch (_) { wrapped[WRAP_MARKER_406117] = true; }
+    try { Object.defineProperty(wrapped, WRAP_MARKER, { value: true }); }
+    catch (_) { wrapped[WRAP_MARKER] = true; }
     globalThis.renderDecisionBoard = wrapped;
   }
 
@@ -303,6 +303,6 @@
   globalThis.atlasDecisionBoardDualMemory3950 = Object.freeze({ render, markdown });
 
   queueMicrotask(() => { try { render(); } catch (_) {} });
-  if (document.readyState === "complete") bindLegacyDecisionRenderer406117();
-  else window.addEventListener("load", bindLegacyDecisionRenderer406117, { once:true, passive:true });
+  if (document.readyState === "complete") bindLegacyDecisionRenderer();
+  else window.addEventListener("load", bindLegacyDecisionRenderer, { once:true, passive:true });
 })();

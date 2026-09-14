@@ -16,7 +16,7 @@
   // Preserve the bounded cold-path contract from 40.4.60.
   const CEX_TIMEOUT_MS=16000, CONTEXT_TIMEOUT_MS=32000;
   let mounted=false,inflight=null,lastHealth=null,lastQuotesPayload=null,lastTruth=null,lastContext=null,lastIntelligence=null;
-  const operatorPriorityActive40461=()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}};
+  const operatorPriorityActive=()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}};
 
   const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const num=value=>(value===null||value===undefined||value==="")?null:(Number.isFinite(Number(value))?Number(value):null);
@@ -192,11 +192,11 @@
   }
 
   async function refreshAll(options={}){
-    if(options?.automatic===true&&operatorPriorityActive40461())return null;
+    if(options?.automatic===true&&operatorPriorityActive())return null;
     const quotes=await refresh();
-    if(options?.automatic===true&&operatorPriorityActive40461())return null;
+    if(options?.automatic===true&&operatorPriorityActive())return null;
     const context=await refreshContext();
-    if(options?.automatic===true&&operatorPriorityActive40461())return null;
+    if(options?.automatic===true&&operatorPriorityActive())return null;
     if(!quotes||!context)return renderSourceIntelligence();
     return renderSourceIntelligence();
   }
@@ -215,7 +215,7 @@
   async function autoRefresh(reason="automatic",options={}){
     const fingerprint=String(options?.fingerprint||"").trim();
     if(fingerprint&&fingerprint===autoState.lastFingerprint&&lastIntelligence)return lastIntelligence;
-    if(operatorPriorityActive40461()){autoState.pending={reason,fingerprint};return null;}
+    if(operatorPriorityActive()){autoState.pending={reason,fingerprint};return null;}
     if(autoState.running){autoState.pending={reason,fingerprint};return lastIntelligence;}
     const now=Date.now();
     if(options?.force!==true&&autoState.lastSuccessAt&&(now-autoState.lastSuccessAt)<AUTO_MIN_INTERVAL_MS)return lastIntelligence;
@@ -223,7 +223,7 @@
     try{
       const health=await getJson("/health",3500);
       if(health?.status!=="ready"||health?.read_only!==true)return null;
-      if(operatorPriorityActive40461()){autoState.pending={reason,fingerprint};return null;}
+      if(operatorPriorityActive()){autoState.pending={reason,fingerprint};return null;}
       const truthBefore=lastTruth,contextBefore=lastContext;
       const intel=await refreshAll({automatic:true});
       const truthFresh=!!lastTruth&&lastTruth!==truthBefore;
@@ -239,14 +239,14 @@
   }
   function scheduleStartupRetry(index){
     if(index>=AUTO_STARTUP_RETRY_MS.length||autoState.lastSuccessAt)return false;
-    if(operatorPriorityActive40461()){autoState.pending={reason:"startup-retry",fingerprint:""};return true;}
+    if(operatorPriorityActive()){autoState.pending={reason:"startup-retry",fingerprint:""};return true;}
     if(autoState.retryTimer)window.clearTimeout(autoState.retryTimer);
     autoState.retryTimer=window.setTimeout(async()=>{autoState.retryTimer=0;const intel=await autoRefresh("startup-retry",{force:true});if(!intel)scheduleStartupRetry(index+1);},AUTO_STARTUP_RETRY_MS[index]);
     return true;
   }
   function startAutomatic(){
     if(autoState.started)return false;autoState.started=true;
-    const first=async()=>{if(operatorPriorityActive40461()){autoState.pending={reason:"startup",fingerprint:""};return;}const intel=await autoRefresh("startup",{force:true});if(!intel)scheduleStartupRetry(0);};
+    const first=async()=>{if(operatorPriorityActive()){autoState.pending={reason:"startup",fingerprint:""};return;}const intel=await autoRefresh("startup",{force:true});if(!intel)scheduleStartupRetry(0);};
     if(typeof window.requestIdleCallback==="function")window.requestIdleCallback(()=>void first(),{timeout:2500});
     else window.setTimeout(()=>void first(),900);
     return true;

@@ -74,7 +74,7 @@
       expected_net_pnl_eur:expectedNet,accounting_identity_error_eur:identityError,accounting_identity_ok:accountingOk,
       accounting_identity_status:accountingStatus,accounting_tolerance_eur:ACCOUNTING_TOLERANCE_EUR,
       ledger_consistency_status:complete?"VERIFIED":"PARTIAL_COST_MODEL",
-      profitability_claim:false,source_owner:"strategyAReconcile404264"
+      profitability_claim:false,source_owner:"strategyAReconcile"
     };
     ROWS.push(out);render();return {ok:true,row:clone(out)};
   }

@@ -277,8 +277,8 @@
 
   const src=h=>{try{return typeof h==="function"?Function.prototype.toString.call(h):"";}catch{return "";}};
   const quiet=(h,a)=>idle(()=>{if(document.hidden||clock()-lastInput<1400||clock()<resumeUntil||busy())return;try{h(...a);}catch{}},3500);
-  globalThis.setInterval=function(h,d,...a){const s=src(h),ms=Number(d)||0;if(typeof h==="function"&&ms===15000&&s.includes("atlasOracleOutcomeRun")&&s.includes("atlasOracleLongShadowRun40273")){stats.oracleRetimed++;return setI(()=>quiet(h,a),60000);}return setI(h,d,...a);};
-  globalThis.setTimeout=function(h,d,...a){const s=src(h),ms=Number(d)||0;if(typeof h==="function"&&ms===2500&&s.includes("atlasOracleOutcomeRun")&&s.includes("atlasOracleLongShadowRun40273")){stats.bootRetimed++;return setT(()=>quiet(h,a),6500);}if(typeof h==="function"&&ms===3500&&s.includes("atlasOracleLongShadowRun40273(true)")){stats.bootRetimed++;return setT(()=>quiet(h,a),70000);}return setT(h,d,...a);};
+  globalThis.setInterval=function(h,d,...a){const s=src(h),ms=Number(d)||0;if(typeof h==="function"&&ms===15000&&s.includes("atlasOracleOutcomeRun")&&s.includes("atlasOracleLongShadowRun")){stats.oracleRetimed++;return setI(()=>quiet(h,a),60000);}return setI(h,d,...a);};
+  globalThis.setTimeout=function(h,d,...a){const s=src(h),ms=Number(d)||0;if(typeof h==="function"&&ms===2500&&s.includes("atlasOracleOutcomeRun")&&s.includes("atlasOracleLongShadowRun")){stats.bootRetimed++;return setT(()=>quiet(h,a),6500);}if(typeof h==="function"&&ms===3500&&s.includes("atlasOracleLongShadowRun(true)")){stats.bootRetimed++;return setT(()=>quiet(h,a),70000);}return setT(h,d,...a);};
   window.setInterval=globalThis.setInterval;window.setTimeout=globalThis.setTimeout;
 
   function coalesce(name,ms=2000,normalize=null){const base=globalThis[name];if(typeof base!=="function"||base.__perf40363)return;let at=-Infinity,result,gen=-1;const f=function(...a){const t=clock(),res=t<resumeUntil;if((res&&gen===resumeGen)||t-at<ms){stats.coalesced++;return result;}at=t;if(res)gen=resumeGen;if(normalize)a=normalize(a,res);result=base.apply(this,a);return result;};Object.defineProperty(f,"__perf40363",{value:true});globalThis[name]=f;}

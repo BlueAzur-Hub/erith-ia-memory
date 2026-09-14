@@ -260,7 +260,7 @@
     };
   }
 
-  function graphToolbarStateContract40289() {
+  function graphToolbarStateContract() {
     const toolbar = document.querySelector?.("#analyste .chart-v2-toolbar.atlas-graph-toolbar-metallic-40289");
     const reading = toolbar?.querySelector?.(".chart-v2-toolbar-reading");
     const period = toolbar?.querySelector?.(".chart-v2-toolbar-period");
@@ -280,7 +280,7 @@
     };
   }
 
-  function sectionAirEmblemContract40292() {
+  function sectionAirEmblemContract() {
     const bodyOk = document.body?.classList?.contains("atlas-section-air-40292") === true;
     const oracle = document.getElementById("oracle-analysis-suite");
     const news = document.getElementById("news-market-explanation");
@@ -294,12 +294,12 @@
     };
   }
 
-  function sectionDensityAtlasViewportContract40293() {
+  function sectionDensityAtlasViewportContract() {
     const bodyOk = document.body?.classList?.contains("atlas-section-density-40293") === true;
     const progress = document.getElementById("atlasAnalysisProgressCard");
     const localHub = document.getElementById("local-ai-hub");
     const oracleSubsections = Number(document.querySelectorAll?.("#oracle-analysis-suite .atlas-oracle-suite-subsection")?.length || 0);
-    const news = document.getElementById("newsMarketOperatorIntelligence40235");
+    const news = document.getElementById("newsMarketOperatorIntelligence");
     return {
       ok: bodyOk && !!progress && !!localHub && oracleSubsections >= 2 && !!news,
       detail:`body=${String(bodyOk)} · progress=${String(!!progress)} · hub=${String(!!localHub)} · oracleSubsections=${oracleSubsections} · news=${String(!!news)}`
@@ -307,7 +307,7 @@
   }
 
 
-  function familyBoundaryContract40298() {
+  function familyBoundaryContract() {
     const bodyOk = document.body?.classList?.contains("atlas-family-boundaries-40298") === true;
     const shell = document.querySelector("main.shell");
     const operations = document.querySelector(".atlas-layout-family-operations");
@@ -324,7 +324,7 @@
   }
 
 
-  function bookNavigationContract40299() {
+  function bookNavigationContract() {
     const bodyOk = document.body?.classList?.contains("atlas-book-nav-40299") === true;
     const dock = document.querySelector(".atlas-v2-nav-essential.atlas-quick-dock");
     const buttons = [...(dock?.querySelectorAll?.("button[data-atlas-essential-target]") || [])];
@@ -340,7 +340,7 @@
     };
   }
 
-  function adminFamilyOrderMenuContract40300() {
+  function adminFamilyOrderMenuContract() {
     const bodyOk = document.body?.classList?.contains("atlas-family-order-40300") === true;
     const systemHeader = document.querySelector(".atlas-layout-family-system");
     const audience = document.getElementById("mesure-audience");
@@ -360,7 +360,7 @@
     };
   }
 
-  function atomicFamilyCommandlineContract40302() {
+  function atomicFamilyCommandlineContract() {
     const bodyAtomic = document.body?.classList?.contains("atlas-family-atomic-40302") === true;
     const bodyCommand = document.body?.classList?.contains("atlas-commandline-compact-40302") === true;
     const shell = document.querySelector("main.shell");
@@ -402,7 +402,7 @@
     };
   }
 
-  function canonicalAdminSequenceContract40304() {
+  function canonicalAdminSequenceContract() {
     const bodyOk = document.body?.classList?.contains("atlas-canonical-admin-sequence-40304") === true;
     const shell = document.querySelector("main.shell");
     const direct = node => !!node && node.parentElement === shell;
@@ -431,7 +431,7 @@
     };
   }
 
-  function family04TrailingHeaderContract40305() {
+  function family04TrailingHeaderContract() {
     // 40.3.05 is retained as a recorded rejected topology, never as a current invariant.
     const oldMarkerPresent = document.body?.classList?.contains("atlas-family04-trailing-header-40305") === true;
     const currentMarker = document.body?.classList?.contains("atlas-family04-canonical-header-40306") === true;
@@ -446,7 +446,7 @@
     };
   }
 
-  function family04TrailingBoundaryContract40307() {
+  function family04TrailingBoundaryContract() {
     const bodyOk = document.body?.classList?.contains("atlas-family04-trailing-boundary-40307") === true;
     const shell = document.querySelector("main.shell");
     const direct = node => !!node && node.parentElement === shell;
@@ -476,7 +476,7 @@
     };
   }
 
-  function family04OwnershipOrderContract40308() {
+  function family04OwnershipOrderContract() {
     const bodyOk = document.body?.classList?.contains("atlas-family04-owner-order-40308") === true;
     const shell = document.querySelector("main.shell");
     const direct = node => !!node && node.parentElement === shell;
@@ -512,7 +512,7 @@
     };
   }
 
-  function canonicalSectionsAutofitContract40320() {
+  function canonicalSectionsAutofitContract() {
     const bodyOk = document.body?.classList?.contains("atlas-family04-canonical-hierarchy-40320") === true;
     const shell = document.querySelector("main.shell");
     const direct = node => !!node && node.parentElement === shell;
@@ -547,7 +547,7 @@
     };
   }
 
-  function roleTransitionPerformanceContract40314() {
+  function roleTransitionPerformanceContract() {
     const bodyOk = document.body?.classList?.contains("atlas-role-transition-performance-40314") === true;
     const transition = globalThis.ErithWindowRoleTransition40314;
     const wm = globalThis.ErithAdminWindowManager?.contract;
@@ -569,7 +569,7 @@
     };
   }
 
-  function surfacePerformanceContract40315() {
+  function surfacePerformanceContract() {
     const bodyOk = document.body?.classList?.contains("atlas-surface-performance-40315") === true;
     const c = globalThis.ErithSurfacePerformance40315;
     const wm = globalThis.ErithAdminWindowManager?.contract;
@@ -592,7 +592,7 @@
     };
   }
 
-  function bridgePassivePerformanceContract40317() {
+  function bridgePassivePerformanceContract() {
     const bodyOk = document.body?.classList?.contains("atlas-bridge-passive-performance-40317") === true;
     const c = globalThis.ErithBridgePassivePerformance40317;
     const wm = globalThis.ErithAdminWindowManager?.contract || globalThis.ErithAdminWindowManagerContract || {};
@@ -605,7 +605,7 @@
     };
   }
 
-  function technicalImageContinuityContract40321() {
+  function technicalImageContinuityContract() {
     const contract = globalThis.ErithTechnicalImageContinuity40321 || globalThis.ErithTechnicalLoadPriority40307;
     const portraitCount = document.querySelectorAll("#detailPanel .admin-tech-portrait-r3").length;
     const noChartPreloadDuplicate = !document.querySelector('link[rel="preload"][href*="admin-chart-office.png"]');
@@ -637,7 +637,7 @@
     };
   }
 
-  function commandCenterPortalContract40321() {
+  function commandCenterPortalContract() {
     const drawer = byId("atlasAdminCenterDrawer");
     const styleNode = document.querySelector("style[data-atlas-command-center-portal-40321]");
     const css = String(styleNode?.textContent || "");
@@ -657,7 +657,7 @@
     };
   }
 
-  function familyRoleReturnContract40322() {
+  function familyRoleReturnContract() {
     const isolation = globalThis.ErithRoleIsolation40312;
     const migration = globalThis.ErithFamilyRoleReturnMigration40322;
     const expected = ["analyse-decision","intelligence-memoire-creation","preparation-operations","experimentation-systeme","missions-de-vie"];
@@ -679,7 +679,7 @@
     };
   }
 
-  function commandCenterExplicitContract40322() {
+  function commandCenterExplicitContract() {
     const contract = globalThis.ErithCommandCenterExplicit40322;
     return {
       ok: contract?.build === "40.3.22"
@@ -697,7 +697,7 @@
     };
   }
 
-  function essentialNavigationContract40309() {
+  function essentialNavigationContract() {
     const contract = globalThis.ErithEssentialNavigation40309;
     const atlasButton = document.querySelector('.atlas-v2-nav-essential [data-atlas-essential-target="atlas-local-ai-collapse"]');
     const atlasTarget = document.getElementById("atlas-local-ai-collapse");
@@ -718,7 +718,7 @@
     };
   }
 
-  function adminPresentationAuthorityContract40309() {
+  function adminPresentationAuthorityContract() {
     const bodyOk = document.body?.classList?.contains("atlas-admin-presentation-authority-40309") === true;
     const shell = document.querySelector("main.shell");
     const planning = document.querySelector('details[data-collapse-key="planning"]');
@@ -738,7 +738,7 @@
     };
   }
 
-  function passiveViewportRoleContract40311() {
+  function passiveViewportRoleContract() {
     const contract = globalThis.ErithPassiveViewportAuthority40310;
     const intermediateHidden = globalThis.ATLAS_V2_INTERMEDIATE_HIDDEN_IDS || null;
     const missionIds = ["fonds-erith-ia", "association-erith-ia", "aerith-enfance", "aerith-animaux", "aerith-terre-vivante"];
@@ -755,7 +755,7 @@
     };
   }
 
-  function roleIsolationViewportOwnershipContract40312() {
+  function roleIsolationViewportOwnershipContract() {
     const bodyOk = document.body?.classList?.contains("atlas-role-isolation-viewport-ownership-40312") === true;
     const role = globalThis.ErithRoleIsolation40312;
     const windows = globalThis.ErithWindowRoleIsolation40312;
@@ -800,7 +800,7 @@
     };
   }
 
-  function familyStateMigrationContract40303() {
+  function familyStateMigrationContract() {
     const bodyOk = document.body?.classList?.contains("atlas-family-state-migration-40303") === true;
     const contract = globalThis.ErithFamilyTopologyStateMigration40303;
     const expected = [
@@ -828,7 +828,7 @@
   }
 
 
-  function familyCompactReduceContract40301() {
+  function familyCompactReduceContract() {
     const bodyOk = document.body?.classList?.contains("atlas-family-compact-reduce-40301") === true;
     const wm = globalThis.ErithAdminWindowManager?.contract;
     const manager = globalThis.ErithAdministratorWindows;
@@ -849,7 +849,7 @@
     };
   }
 
-  function astroPlanetColorContract40291() {
+  function astroPlanetColorContract() {
     const bodyOk = document.body?.classList?.contains("atlas-astro-planet-colors-40291") === true;
     const timeline = [...(document.querySelectorAll?.("#atlasAstroTimeline4055 .atlas-astro-hour-4055") || [])];
     const tones = new Set(timeline.map(node => String(node.dataset.planet40291 || "")).filter(Boolean));
@@ -863,7 +863,7 @@
     };
   }
 
-  function semanticColorIconContract40290() {
+  function semanticColorIconContract() {
     const body = document.body;
     const shortcuts = Number(document.querySelectorAll?.("#atlasAdminCommandBar .atlas-admin-shortcut-icon-40290")?.length || 0);
     const headings = Number(document.querySelectorAll?.(".atlas-icon-heading-40290 .atlas-heading-icon-40290")?.length || 0);
@@ -876,7 +876,7 @@
     };
   }
 
-  function celestialRyzenBookContract40288() {
+  function celestialRyzenBookContract() {
     const root=document.getElementById("atlasCelestialHandoff40288");
     const exportButton=document.getElementById("atlasCelestialExport40288");
     const importButton=document.getElementById("atlasCelestialImport40288");
@@ -1620,7 +1620,7 @@
           && globalThis.ErithNewsToMarketOperatorIntelligenceContract40235?.explanatory_layer_added === true
           && globalThis.ErithNewsToMarketOperatorIntelligenceContract40235?.causal_claim_allowed === false
           && globalThis.AtlasNewsToMarketOperatorIntelligence40235?.external_ai_used === false
-          && Boolean(document.getElementById("newsMarketOperatorIntelligence40235")),
+          && Boolean(document.getElementById("newsMarketOperatorIntelligence")),
         "faits + mécanisme + ce que cela explique/n’explique pas + contexte demande + verdict · aucune IA externe"),
 
       check("Event Reaction Timeline 40.2.36",
@@ -1628,14 +1628,14 @@
           && globalThis.ErithEventReactionTimelineContract40236?.fetch_added === false
           && globalThis.ErithEventReactionTimelineContract40236?.causality_inferred === false
           && globalThis.AtlasNewsMarketReactionTimeline40236?.local_cache_only === true
-          && Boolean(document.getElementById("newsMarketReactionTimeline40236")),
+          && Boolean(document.getElementById("newsMarketReactionTimeline")),
         "T−15/T0/+15/+1h/+4h depuis cache historique existant · aucun fetch · causalité non inférée"),
 
       check("Role Evidence Quality 40.2.37",
         globalThis.ErithRoleEvidenceQualityContract40237?.role_quality_not_causal_probability === true
           && globalThis.ErithRoleEvidenceQualityContract40237?.causal_probability_calculated === false
           && globalThis.AtlasNewsMarketRoleQuality40237?.causal_probability_calculated === false
-          && Boolean(document.getElementById("newsMarketRoleQuality40237")),
+          && Boolean(document.getElementById("newsMarketRoleQuality")),
         "solidité transparente du rôle · probabilité de causalité NON CALCULÉE"),
 
       check("Cross-Layer Market Explanation 40.2.38",
@@ -1643,7 +1643,7 @@
           && globalThis.ErithCrossLayerMarketExplanationContract40238?.news_market_oracle_atlas_compared_not_fused === true
           && globalThis.ErithCrossLayerMarketExplanationContract40238?.causal_claim_allowed === false
           && globalThis.AtlasNewsMarketCrossLayer40238?.independent_layers === true
-          && Boolean(document.getElementById("newsMarketCrossLayer40238")),
+          && Boolean(document.getElementById("newsMarketCrossLayer")),
         "News + réaction + marché + Oracle + Atlas comparés sans fusion/recalibrage · convergence descriptive seulement"),
 
       check("Oracle News Context Integration 40.2.39",
@@ -1671,7 +1671,7 @@
           && globalThis.ErithOracleRestoreNewsPlacementContract40241?.window_manager_modified === false
           && !Boolean(document.getElementById("atlasOracleNewsContext40234"))
           && Boolean(document.getElementById("news-market-explanation"))
-          && Boolean(document.getElementById("newsMarketOperatorIntelligence40235")),
+          && Boolean(document.getElementById("newsMarketOperatorIntelligence")),
         "super Oracle restauré · rapport complet News→Marché déplacé dans son accordéon News · icônes inline existantes réutilisées · CODE ONLY"),
       check("Workspace Runtime Contract 40.2.27",
         globalThis.ErithWorkspaceRuntimeContract40227?.checkpoint_only === true
@@ -1693,30 +1693,30 @@
       check("Aucun override chrome R1/R2 chargé", forbiddenOverrides.length === 0, forbiddenOverrides.length ? forbiddenOverrides.map(row => row.raw).join(" · ") : "anciens overrides R1/R2 absents"),
       check("Base CSS historique lisible", chromeCss.ok === true, chromeCss.detail || "contrat CSS historique absent"),
       check("Menu métallique uniforme", uniformMenuCss.ok === true, uniformMenuCss.detail || "contrat uniforme absent"),
-      check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract40289().ok === true, graphToolbarStateContract40289().detail),
-      check("Sections · air + emblèmes transparents 40.2.92", sectionAirEmblemContract40292().ok === true, sectionAirEmblemContract40292().detail),
-      check("Sections · hiérarchie compacte + sous-sections bordées + Atlas viewport 40.2.93", sectionDensityAtlasViewportContract40293().ok === true, sectionDensityAtlasViewportContract40293().detail),
-      check("Sections · frontières familles + emblèmes sur axe signal 40.2.98", familyBoundaryContract40298().ok === true, familyBoundaryContract40298().detail),
-      check("Navigation · Book 2×3 + boutons internes + ADMIN unique 40.2.99", bookNavigationContract40299().ok === true, bookNavigationContract40299().detail),
-      check("Familles · 04 devant Mesure d’audience + menus 02/03/04 à droite 40.3.00", adminFamilyOrderMenuContract40300().ok === true, adminFamilyOrderMenuContract40300().detail),
-      check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract40301().ok === true, familyCompactReduceContract40301().detail),
-      check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract40302().ok === true, atomicFamilyCommandlineContract40302().detail),
-      check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract40303().ok === true, familyStateMigrationContract40303().detail),
-      check("Parcours · séquence canonique 01→02→03→04→Missions→Audience→Sources 40.3.04", canonicalAdminSequenceContract40304().ok === true, canonicalAdminSequenceContract40304().detail),
-      check("Sections + fenêtres · 03/04 canoniques + auto-fit natif 40.3.20", canonicalSectionsAutofitContract40320().ok === true, canonicalSectionsAutofitContract40320().detail),
-      check("Navigation · intention Atlas/Oracle restaure la famille réduite 40.3.09", essentialNavigationContract40309().ok === true, essentialNavigationContract40309().detail),
-      check("Viewport passif · Market/Spot sans restauration document + Missions privées 40.3.11", passiveViewportRoleContract40311().ok === true, passiveViewportRoleContract40311().detail),
-      check("Rôles + viewport · isolation Basic/Intermédiaire et propriétaire unique 40.3.12", roleIsolationViewportOwnershipContract40312().ok === true, roleIsolationViewportOwnershipContract40312().detail),
-      check("Performance · transition rôle unique + reflow Window Deck borné 40.3.14", roleTransitionPerformanceContract40314().ok === true, roleTransitionPerformanceContract40314().detail),
-      check("Surface Firefox héritée · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract40315().ok === true, surfacePerformanceContract40315().detail),
-      check("Performance · Bridge passif + placeholders famille compacts 40.3.17", bridgePassivePerformanceContract40317().ok === true, bridgePassivePerformanceContract40317().detail),
-      check("Lecture Technique · image conservée en vue réduite + priorité basse 40.3.21", technicalImageContinuityContract40321().ok === true, technicalImageContinuityContract40321().detail),
-      check("Command Center · portail fixe au body + atmosphère non propriétaire 40.3.21", commandCenterPortalContract40321().ok === true, commandCenterPortalContract40321().detail),
-      check("Familles Admin · retour Basic→Admin restaure 01/02/03/04 + reset présentation ciblé 40.3.22", familyRoleReturnContract40322().ok === true, familyRoleReturnContract40322().detail),
-      check("Command Center · ouverture uniquement sur intention opérateur 40.3.22", commandCenterExplicitContract40322().ok === true, commandCenterExplicitContract40322().detail),
-      check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract40291().ok === true, astroPlanetColorContract40291().detail),
-      check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract40290().ok === true, semanticColorIconContract40290().detail),
-      check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract40288().ok === true, celestialRyzenBookContract40288().detail),
+      check("Graphique · actif turquoise/blanc · désactivé gris 40.2.89", graphToolbarStateContract().ok === true, graphToolbarStateContract().detail),
+      check("Sections · air + emblèmes transparents 40.2.92", sectionAirEmblemContract().ok === true, sectionAirEmblemContract().detail),
+      check("Sections · hiérarchie compacte + sous-sections bordées + Atlas viewport 40.2.93", sectionDensityAtlasViewportContract().ok === true, sectionDensityAtlasViewportContract().detail),
+      check("Sections · frontières familles + emblèmes sur axe signal 40.2.98", familyBoundaryContract().ok === true, familyBoundaryContract().detail),
+      check("Navigation · Book 2×3 + boutons internes + ADMIN unique 40.2.99", bookNavigationContract().ok === true, bookNavigationContract().detail),
+      check("Familles · 04 devant Mesure d’audience + menus 02/03/04 à droite 40.3.00", adminFamilyOrderMenuContract().ok === true, adminFamilyOrderMenuContract().detail),
+      check("Familles · Réduire conserve bandeau natif + Oracle/Atlas compact 40.3.01", familyCompactReduceContract().ok === true, familyCompactReduceContract().detail),
+      check("Familles · topologie atomique + commandline sans saut document 40.3.02", atomicFamilyCommandlineContract().ok === true, atomicFamilyCommandlineContract().detail),
+      check("Fenêtres · migration ciblée états familles 40.3.03", familyStateMigrationContract().ok === true, familyStateMigrationContract().detail),
+      check("Parcours · séquence canonique 01→02→03→04→Missions→Audience→Sources 40.3.04", canonicalAdminSequenceContract().ok === true, canonicalAdminSequenceContract().detail),
+      check("Sections + fenêtres · 03/04 canoniques + auto-fit natif 40.3.20", canonicalSectionsAutofitContract().ok === true, canonicalSectionsAutofitContract().detail),
+      check("Navigation · intention Atlas/Oracle restaure la famille réduite 40.3.09", essentialNavigationContract().ok === true, essentialNavigationContract().detail),
+      check("Viewport passif · Market/Spot sans restauration document + Missions privées 40.3.11", passiveViewportRoleContract().ok === true, passiveViewportRoleContract().detail),
+      check("Rôles + viewport · isolation Basic/Intermédiaire et propriétaire unique 40.3.12", roleIsolationViewportOwnershipContract().ok === true, roleIsolationViewportOwnershipContract().detail),
+      check("Performance · transition rôle unique + reflow Window Deck borné 40.3.14", roleTransitionPerformanceContract().ok === true, roleTransitionPerformanceContract().detail),
+      check("Surface Firefox héritée · menu 100% + contenu 97% + shell sans blur 40.3.15", surfacePerformanceContract().ok === true, surfacePerformanceContract().detail),
+      check("Performance · Bridge passif + placeholders famille compacts 40.3.17", bridgePassivePerformanceContract().ok === true, bridgePassivePerformanceContract().detail),
+      check("Lecture Technique · image conservée en vue réduite + priorité basse 40.3.21", technicalImageContinuityContract().ok === true, technicalImageContinuityContract().detail),
+      check("Command Center · portail fixe au body + atmosphère non propriétaire 40.3.21", commandCenterPortalContract().ok === true, commandCenterPortalContract().detail),
+      check("Familles Admin · retour Basic→Admin restaure 01/02/03/04 + reset présentation ciblé 40.3.22", familyRoleReturnContract().ok === true, familyRoleReturnContract().detail),
+      check("Command Center · ouverture uniquement sur intention opérateur 40.3.22", commandCenterExplicitContract().ok === true, commandCenterExplicitContract().detail),
+      check("AstroCycle · couleurs planétaires 40.2.91", astroPlanetColorContract().ok === true, astroPlanetColorContract().detail),
+      check("Interface · couleurs sémantiques + icônes code-only 40.2.90", semanticColorIconContract().ok === true, semanticColorIconContract().detail),
+      check("Celestial · Ryzen → Book lecture seule 40.2.88", celestialRyzenBookContract().ok === true, celestialRyzenBookContract().detail),
       check("Aucun CSS destructeur des menus", destructiveMenuHideRules().length === 0, destructiveMenuHideRules().length ? destructiveMenuHideRules().join(" · ") : "aucun display:none sur les menus opérationnels"),
       check("Graphique direct window controls", !!graphChrome && graphChrome.complete && graphChrome.interactive, graphChrome ? `5/5=${String(graphChrome.complete)} · interactif=${String(graphChrome.interactive)} · opacity runtime=${Number.isFinite(graphChrome.computedOpacity) ? graphChrome.computedOpacity.toFixed(2) : "—"}` : "chrome Graphique absent"),
       check("Graphique · historique pur + LIVE hors canvas",
@@ -1882,7 +1882,7 @@
     };
   }
 
-  const FREEZE_BODY_TEMPLATE_40352 = `
+  const FREEZE_BODY_TEMPLATE = `
       <div class="atlas-memory-ledger-35">
         <article><span>Contrôles</span><b id="architectureFreezeCount">—</b><small>PASS réellement exécutés dans ce navigateur.</small></article>
         <article><span>Critiques</span><b id="architectureFreezeCritical">—</b><small>Un seul FAIL critique invalide le candidat stable.</small></article>
@@ -1896,7 +1896,7 @@
       </div>
       <p id="architectureFreezeContract">Audit matérialisé à la demande uniquement.</p>`;
 
-  function releaseFreezeBody40352(root = byId(ROOT_ID)) {
+  function releaseFreezeBody(root = byId(ROOT_ID)) {
     const mount = byId("architectureFreezeMount40352");
     if (!root || !mount) return false;
     if (mount.dataset.freezeMounted40352 === "0"
@@ -1912,11 +1912,11 @@
     return true;
   }
 
-  function ensureFreezeBody40352(root = byId(ROOT_ID)) {
+  function ensureFreezeBody(root = byId(ROOT_ID)) {
     const mount = byId("architectureFreezeMount40352");
     if (!root || !mount) return false;
     if (mount.dataset.freezeMounted40352 !== "1") {
-      mount.innerHTML = FREEZE_BODY_TEMPLATE_40352;
+      mount.innerHTML = FREEZE_BODY_TEMPLATE;
       mount.dataset.freezeMounted40352 = "1";
     }
     // Refresh remains owned by the existing delegated document click listener.
@@ -1961,10 +1961,10 @@
       const state = root.querySelector(":scope > summary .atlas-collapse-state");
       if (state) state.textContent = root.open ? (state.dataset.openLabel || "Replier") : (state.dataset.closedLabel || "Déplier");
       if (root.open) {
-        ensureFreezeBody40352(root);
+        ensureFreezeBody(root);
         render({ force: true });
       } else {
-        releaseFreezeBody40352(root);
+        releaseFreezeBody(root);
       }
     });
     return root;
@@ -1975,10 +1975,10 @@
     if (!root) return null;
     const force = options?.force === true;
     if (!root.open && !force) {
-      releaseFreezeBody40352(root);
+      releaseFreezeBody(root);
       return { build: BUILD_CURRENT, deferred: true, checks: [], criticalFails: [], warnings: [] };
     }
-    ensureFreezeBody40352(root);
+    ensureFreezeBody(root);
     const data = derive();
     const passed = data.checks.filter(row => row.ok).length;
     setText("architectureFreezeCount", `${passed}/${data.checks.length} PASS`);

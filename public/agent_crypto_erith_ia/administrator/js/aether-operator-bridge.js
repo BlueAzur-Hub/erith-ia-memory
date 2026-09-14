@@ -16,19 +16,19 @@
     return String(document.getElementById(id)?.textContent || "").replace(/\s+/g, " ").trim();
   }
 
-  function nativeNodes406002() {
+  function nativeNodes() {
     return NATIVE_IDS.map(id => document.getElementById(id)).filter(Boolean);
   }
 
-  function aetherNodes406002() {
+  function aetherNodes() {
     return AETHER_IDS.map(id => document.getElementById(id)).filter(Boolean);
   }
 
-  function setImportant406002(node, name, value) {
+  function setImportant(node, name, value) {
     if (node) node.style.setProperty(name, value, "important");
   }
 
-  function clearManualVisibility406002(node) {
+  function clearManualVisibility(node) {
     if (!node) return;
     for (const name of ["animation", "opacity", "visibility", "pointer-events"]) node.style.removeProperty(name);
   }
@@ -37,17 +37,17 @@
     const bar = document.getElementById("livecheck");
     if (!bar) return false;
 
-    for (const node of nativeNodes406002()) {
-      setImportant406002(node, "animation", "none");
-      setImportant406002(node, "opacity", "1");
-      setImportant406002(node, "visibility", "visible");
-      setImportant406002(node, "pointer-events", "auto");
+    for (const node of nativeNodes()) {
+      setImportant(node, "animation", "none");
+      setImportant(node, "opacity", "1");
+      setImportant(node, "visibility", "visible");
+      setImportant(node, "pointer-events", "auto");
     }
-    for (const node of aetherNodes406002()) {
-      setImportant406002(node, "animation", "none");
-      setImportant406002(node, "opacity", "0");
-      setImportant406002(node, "visibility", "hidden");
-      setImportant406002(node, "pointer-events", "none");
+    for (const node of aetherNodes()) {
+      setImportant(node, "animation", "none");
+      setImportant(node, "opacity", "0");
+      setImportant(node, "visibility", "hidden");
+      setImportant(node, "pointer-events", "none");
     }
 
     bar.dataset[HOLD_KEY] = "native";
@@ -57,14 +57,14 @@
   function releaseNative406002() {
     const bar = document.getElementById("livecheck");
     if (!bar) return false;
-    for (const node of [...nativeNodes406002(), ...aetherNodes406002()]) clearManualVisibility406002(node);
+    for (const node of [...nativeNodes(), ...aetherNodes()]) clearManualVisibility(node);
     delete bar.dataset[HOLD_KEY];
     // Restoring the CSS animation property restarts the existing canonical phase owner.
     void bar.offsetWidth;
     return true;
   }
 
-  function bindVeilleEscape406002() {
+  function bindVeilleEscape() {
     const feed = document.getElementById("atlasAetherVeille4087");
     const brand = feed?.querySelector(".atlas-aether-veille-brand-4087");
     if (!feed || !brand || brand.dataset.aetherNativeBound406002 === "1") return false;
@@ -74,7 +74,7 @@
     brand.setAttribute("tabindex", "0");
     brand.setAttribute("aria-label", "Revenir au menu normal");
     brand.setAttribute("title", "Revenir au menu normal");
-    setImportant406002(brand, "pointer-events", "auto");
+    setImportant(brand, "pointer-events", "auto");
     brand.style.cursor = "pointer";
 
     const escape = event => {
@@ -99,7 +99,7 @@
     return true;
   }
 
-  function isColdBootEmpty406002() {
+  function isColdBootEmpty() {
     const live = text406002("liveStatus");
     const decision = text406002("tableDecision");
     const source = text406002("sourceName");
@@ -120,7 +120,7 @@
     const button = document.getElementById("btnLivecheck");
     if (!bar || !button || document.hidden) return false;
     if (bar.dataset[BOOT_KEY] === "attempted") return false;
-    if (!isColdBootEmpty406002()) return false;
+    if (!isColdBootEmpty()) return false;
 
     // One attempt only. The canonical button remains the sole business/network owner.
     bar.dataset[BOOT_KEY] = "attempted";
@@ -130,7 +130,7 @@
   }
 
   function bind406002() {
-    bindVeilleEscape406002();
+    bindVeilleEscape();
     // DOMContentLoaded fires only after the existing synchronous scripts have executed.
     // Two paint turns let their canonical listeners settle without adding a timer/retry loop.
     requestAnimationFrame(() => requestAnimationFrame(() => warmColdBootOnce406002()));

@@ -44,7 +44,7 @@
 
   function reconcileAfterHydration(key){
     try{globalThis.atlasV2ClassifySections?.();}catch(_ ){}
-    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation40312?.(mode);}catch(_ ){}
+    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation?.(mode);}catch(_ ){}
     try{window.dispatchEvent(new CustomEvent("erith:projects-hydrated",{detail:{build:BUILD,key}}));}catch(_ ){}
   }
 

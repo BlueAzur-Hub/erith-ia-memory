@@ -308,7 +308,7 @@
     const anchor =
       document.getElementById("strategyAReplaySandbox404290") ||
       document.getElementById("strategyAExperimentLedger404289") ||
-      document.getElementById("strategyADecisionTrace404278") ||
+      document.getElementById("strategyADecisionTrace") ||
       document.getElementById("strategyAAfterCost404292") ||
       document.getElementById("strategyAPaperLifecycle404291");
 

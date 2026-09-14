@@ -359,7 +359,7 @@
     try {
       if (typeof renderSharedMemory === "function" && renderSharedMemory.__coverage404284 !== true) {
         const base = renderSharedMemory;
-        const wrapped = function sharedMemoryCoverageTruth404284(...args) {
+        const wrapped = function sharedMemoryCoverageTruth(...args) {
           const result = base.apply(this, args);
           Promise.resolve(
             typeof atlasCollectorInitializeStorage === "function"

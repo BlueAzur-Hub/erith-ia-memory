@@ -141,11 +141,11 @@
       h.setAttribute("aria-live", "polite");
       metalsDetail.appendChild(h);
     }
-    ensureGraphToolbarParity404195();
+    ensureGraphToolbarParity();
     return true;
   }
 
-  function ensureGraphToolbarParity404195(){
+  function ensureGraphToolbarParity(){
     const metals=byId("atlasMetalsUnifiedToolbar");
     if(metals){
       const groups=Array.from(metals.children).filter(n=>n instanceof Element&&n.matches('div[role="group"]'));
@@ -172,7 +172,7 @@
     if(detailTitle) detailTitle.textContent = `Lecture ${s.title}`;
   }
 
-  function syncMetalsSemanticTruth404204(parallel, metalsDetail, parallelRailHost){
+  function syncMetalsSemanticTruth(parallel, metalsDetail, parallelRailHost){
     /* 40.4.204 — semantic truth without geometry mutation.
        Metals remains the physical rail/shell owner, but its native content must
        leave the accessibility/export tree while a parallel domain owns the view.
@@ -224,7 +224,7 @@
     if(metalsDetail){
       metalsDetail.setAttribute("aria-label", parallel ? `Lecture ${specFor(domain).title}` : "Lecture Métaux");
     }
-    syncMetalsSemanticTruth404204(parallel, metalsDetail, parallelRailHost);
+    syncMetalsSemanticTruth(parallel, metalsDetail, parallelRailHost);
 
     forceHidden(cryptoToolbar, domain !== "crypto");
     forceHidden(metalsToolbar, domain !== "metals");

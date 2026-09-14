@@ -28,7 +28,7 @@
       pending_id: callText("atlasAutomation341ReadPendingMarket"),
       last_done_id: callText("atlasAutomation341ReadLastCurrentMarketId"),
       pending_owner_available: typeof globalThis.atlasCurrentPendingMarket137 === "function",
-      bridge_rearm_owner_available: typeof globalThis.atlasCurrentPendingAutoKick4051 === "function"
+      bridge_rearm_owner_available: typeof globalThis.atlasCurrentPendingAutoKick === "function"
     });
   }
   function classify(before, result, error) {
@@ -54,8 +54,8 @@
     try {
       if (typeof globalThis.atlasCurrentPendingMarket137 === "function") {
         result = Boolean(globalThis.atlasCurrentPendingMarket137(`heartbeat-${String(reason || "manual")}`));
-      } else if (typeof globalThis.atlasCurrentPendingAutoKick4051 === "function") {
-        result = Boolean(globalThis.atlasCurrentPendingAutoKick4051(`heartbeat-${String(reason || "manual")}`));
+      } else if (typeof globalThis.atlasCurrentPendingAutoKick === "function") {
+        result = Boolean(globalThis.atlasCurrentPendingAutoKick(`heartbeat-${String(reason || "manual")}`));
       }
     } catch (exc) { error = String(exc?.message || exc || "unknown"); }
     last = Object.freeze({build:BUILD,state:classify(before,result,error),reason:String(reason||"manual"),result,error,before,after:inspect()});
@@ -75,7 +75,7 @@
     build:BUILD,
     strategy:"boot-complete-one-shot-canonical-rearm",
     canonical_pending_owner:"atlasCurrentPendingMarket137",
-    fallback_existing_owner:"atlasCurrentPendingAutoKick4051",
+    fallback_existing_owner:"atlasCurrentPendingAutoKick",
     ui_disclosure_dependency:false,
     new_timer:false,
     new_observer:false,

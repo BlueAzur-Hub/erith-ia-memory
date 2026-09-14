@@ -7,7 +7,7 @@
   const BUILD = "40.6.1";
   const RETURN_ATTR = "aetherNativeReturn406001";
 
-  function phaseNodes406001(bar){
+  function phaseNodes(bar){
     const ids = [
       "btnLivecheck","btnRefresh","decisionCard","sourceActiveCard","sourceTimeCard",
       "atlasAetherRibbon4084","atlasAetherRibbonMarket4088","atlasAetherRibbonAtlas4084",
@@ -24,7 +24,7 @@
     const bar = document.getElementById("livecheck");
     if(!bar) return false;
     const nativeIds = new Set(["btnLivecheck","btnRefresh","decisionCard","sourceActiveCard","sourceTimeCard"]);
-    const nodes = phaseNodes406001(bar);
+    const nodes = phaseNodes(bar);
 
     // One-frame restart of the EXISTING 270 s CSS phase owner. This does not create
     // a second cadence: it only returns that owner to its 0% NORMAL state.

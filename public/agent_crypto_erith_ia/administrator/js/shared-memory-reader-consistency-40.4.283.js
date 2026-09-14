@@ -282,7 +282,7 @@
     try {
       if (typeof renderSharedMemory === "function" && renderSharedMemory.__reader404283 !== true) {
         const base = renderSharedMemory;
-        const wrapped = function sharedMemoryReaderConsistency404283(...args) {
+        const wrapped = function sharedMemoryReaderConsistency(...args) {
           const result = base.apply(this, args);
           Promise.resolve(
             typeof atlasCollectorInitializeStorage === "function"

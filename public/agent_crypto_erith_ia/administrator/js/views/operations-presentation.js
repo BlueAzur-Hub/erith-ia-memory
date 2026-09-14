@@ -67,7 +67,7 @@
     bindRuntimeActions(key,body);
     if(key==="situation"){try{globalThis.atlasSyncReleaseLabels?.();}catch(_){}}
     try{globalThis.atlasV2ClassifySections?.();}catch(_){}
-    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation40312?.(mode);}catch(_){}
+    try{const mode=globalThis.atlasV2Mode?.()||document.documentElement.dataset.atlasView||"essential";globalThis.atlasV2ApplySectionVisibility?.(mode);globalThis.atlasV2ApplySemanticRoleIsolation?.(mode);}catch(_){}
     try{window.dispatchEvent(new CustomEvent("erith:operations-hydrated",{detail:{build:BUILD,key}}));}catch(_){}
   }
 

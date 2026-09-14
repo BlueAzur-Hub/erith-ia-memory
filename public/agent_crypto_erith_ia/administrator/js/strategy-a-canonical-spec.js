@@ -53,7 +53,7 @@
   }
   function render(){
     if(typeof document==='undefined')return false; ensureStyle();
-    const anchor=document.getElementById('strategyAReplaySandbox404290')||document.getElementById('strategyAExperimentLedger404289')||document.getElementById('strategyADecisionTrace404278');
+    const anchor=document.getElementById('strategyAReplaySandbox404290')||document.getElementById('strategyAExperimentLedger404289')||document.getElementById('strategyADecisionTrace');
     if(!anchor)return false;
     let panel=document.getElementById('strategyACanonicalSpec406056');
     if(!panel){panel=document.createElement('section');panel.id='strategyACanonicalSpec406056';anchor.insertAdjacentElement('beforebegin',panel);}
