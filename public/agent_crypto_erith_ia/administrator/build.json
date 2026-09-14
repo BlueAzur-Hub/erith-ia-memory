@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.120",
+  "build": "40.6.121",
   "engine": "38.15.11",
-  "release": "STRATEGY A AUTO SESSION CONTINUITY",
+  "release": "STRATEGY A PAPER AUTO CONTINUITY V2",
   "published": true,
-  "status": "strategy_a_auto_session_continuity_406120",
-  "parent_build": "40.6.119",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.120",
-  "administrator_build": "40.6.120",
-  "build_label": "Build 40.6.120 · Administrator",
-  "release_status": "strategy_a_auto_session_continuity_406120",
+  "status": "strategy_a_paper_auto_continuity_v2_406121",
+  "parent_build": "40.6.120",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.121",
+  "administrator_build": "40.6.121",
+  "build_label": "Build 40.6.121 · Administrator",
+  "release_status": "strategy_a_paper_auto_continuity_v2_406121",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
     "runtime_owner_name": "version-truth",
     "published_truth_source": "build.json",
     "loaded_build_authority": "immutable entry pathname or explicit ac-build handoff on canonical index.html; embedded metadata is legacy fallback only",
-    "immutable_entry": "index-40.6.120.html",
-    "immutable_entry_mode": "bounded immutable bootstrap of canonical index.html with 40.6.120 Strategy A Auto session continuity layer",
+    "immutable_entry": "index-40.6.121.html",
+    "immutable_entry_mode": "bounded immutable bootstrap of canonical index.html with 40.6.121 Strategy A Paper Auto continuity v2 layer",
     "immutable_entry_path_authority": true,
     "canonical_build_param_fallback": true,
     "source_demand_loader_generic": true,
@@ -65,7 +65,6 @@
     "stale_observation_is_eligible": false,
     "diagnostic_observability_preserved": true,
     "canonical_price_changed": false,
-    "market_core_changed": false,
     "market_data_fabricated": false,
     "trading_changed": false,
     "wallet_changed": false,
@@ -154,7 +153,7 @@
     "strategy_a_read_side": true,
     "tradus_read_side": true,
     "strategy_a_primary_reader": "AgentCryptoStrategyTradusComparativeIntelligence.model -> AgentCryptoTradusStrategyFailClosed.readStrategyA",
-    "tradus_primary_reader": "AgentCryptoStrategyTradusComparativeIntelligence.model -> AgentCryptoTradusShadow406066.read",
+    "tradus_primary_reader": "AgentCryptoStrategyTradusComparativeIntelligence.model -> AgentCryptoTradusStrategyFailClosed.read -> AgentCryptoTradusShadow406066.read",
     "market_oracle_visible_fallback": true,
     "source_visible_ready_fallback": true,
     "news_visible_runtime_fallback": true,
@@ -189,7 +188,7 @@
     "observer": false,
     "storage_write": false,
     "self_test_expected": "6/6",
-    "firefox_terrain_proof": "40.6.118 terrain exported; read-side remains protected in 40.6.120"
+    "firefox_terrain_proof": "40.6.118 terrain exported; read-side remains protected in 40.6.121"
   },
   "strategy_tradus_comparative_intelligence": {
     "introduced_in": "40.6.115",
@@ -301,7 +300,7 @@
     "recurring_timer": true,
     "observer": false,
     "self_test_expected": "6/6",
-    "firefox_terrain_proof": "validated in 40.6.119 terrain: AUTO 60 S active and 15 comparative observations accumulated without operator refresh clicks"
+    "firefox_terrain_proof": "validated in 40.6.119 terrain: AUTO 60 S active and comparative observations accumulated without operator refresh clicks"
   },
   "strategy_a_auto_session_continuity": {
     "introduced_in": "40.6.120",
@@ -329,6 +328,34 @@
     "session_storage_write": true,
     "new_recurring_timer": false,
     "observer": false,
+    "firefox_terrain_proof": "FAILED: after F5 terrain returned to ARRÊTÉ; superseded by 40.6.121"
+  },
+  "strategy_a_paper_auto_continuity_v2": {
+    "introduced_in": "40.6.121",
+    "scope": "self-start the existing Strategy A PAPER Auto runner after reload/version transition without requiring repeated operator clicks; explicit STOP persists for the browser session",
+    "runtime_patch": "js/strategy-a-auto-session-continuity-406121.js",
+    "loader": "40.6.120 compatibility layer -> 40.6.121 owner",
+    "existing_runner_reused": true,
+    "default_auto_start": true,
+    "manual_stop_session_key": "agent_crypto_strategy_a_auto_manual_stop_v1",
+    "explicit_stop_persists_for_session": true,
+    "bounded_bootstrap_retry": true,
+    "bootstrap_retry_limit": 12,
+    "bootstrap_retry_ms": 500,
+    "new_recurring_market_timer": false,
+    "strategy_a_engine_changed": false,
+    "market_core_changed": false,
+    "graph_changed": false,
+    "lecture_technique_changed": false,
+    "aether_changed": false,
+    "oracle_changed": false,
+    "atlas_current_changed": false,
+    "automatic_order": false,
+    "real_order": false,
+    "credentials": false,
+    "wallet": false,
+    "local_storage_write": false,
+    "session_storage_write": true,
     "firefox_terrain_proof": "pending"
   },
   "versioning_cleanup": {
@@ -378,12 +405,13 @@
     "40.6.117 ATLAS DECISION CONTEXT CANONICAL READERS",
     "40.6.118 READ-SIDE TRUTH CONSOLIDATION",
     "40.6.119 TRADUS AUTONOMOUS SHADOW REFRESH",
-    "40.6.120 STRATEGY A AUTO SESSION CONTINUITY"
+    "40.6.120 STRATEGY A AUTO SESSION CONTINUITY",
+    "40.6.121 STRATEGY A PAPER AUTO CONTINUITY V2"
   ],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.119",
-    "previous_full_manifest_blob": "48a318cd8f8a78aa3fb1248cdb7e1891fcdae05e",
+    "previous_full_manifest_build": "40.6.120",
+    "previous_full_manifest_blob": "5e80cfa8f7ab6c076c0aaee59b4fd66695636e5c",
     "do_not_duplicate_release_history_in_active_manifest": true
   }
 }
