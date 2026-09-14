@@ -1,332 +1,231 @@
-/* Agent-Crypto @erith.IA — canonical Version Truth owner.
-   Active canonical filename from Build 40.6.111.
-   Git carries history; the active owner filename does not carry a build number.
-
-   Loaded-build authority:
-   1. immutable pathname index-X.Y.Z.html;
-   2. explicit ac-build handoff on canonical index.html;
-   3. embedded metadata only as legacy fallback.
-
-   Published-build authority: build.json.
-   No recurring timer. No observer. No storage write. */
+/* Agent-Crypto Administrator — canonical Version Truth owner.
+   build.json is the only release authority. The runtime graph is stable and is
+   loaded by runtime-modules.js; no historical release comparison lives here. */
 (() => {
   "use strict";
 
-  const ENGINE = "38.15.11";
   const OWNER = "version-truth";
   const MANIFEST = "./build.json";
-  const REFRESH_PARAM = "ac-refresh";
-  const BUILD_PARAM = "ac-build";
-  const ENTRY_RE = /(?:^|\/)index-(\d+\.\d+\.\d+)\.html$/i;
+  const RUNTIME_REGISTRY = "./js/runtime-modules.js";
   const BUILD_RE = /^\d+\.\d+\.\d+$/;
+  const MARKET_CORE = "38.15.11";
+
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
-  const entryMatch = String(location.pathname || "").match(ENTRY_RE);
-  const params = new URLSearchParams(location.search || "");
-  const requestedBuild = String(params.get(BUILD_PARAM) || "").trim();
-  const embeddedBuild = meta("administrator-build") || meta("atlas-build") || "UNKNOWN";
-  const BUILD = String(entryMatch?.[1] || (BUILD_RE.test(requestedBuild) ? requestedBuild : embeddedBuild) || "UNKNOWN").trim();
-  const parts = value => String(value || "").split(".").map(x => Number.parseInt(x, 10) || 0);
-  const compare = (a, b) => {
-    const A = parts(a), B = parts(b), n = Math.max(A.length, B.length);
-    for (let i = 0; i < n; i += 1) {
-      const d = (A[i] || 0) - (B[i] || 0);
-      if (d) return d;
+  const setMeta = (name, value) => {
+    let node = document.querySelector(`meta[name="${name}"]`);
+    if (!node) {
+      node = document.createElement("meta");
+      node.name = name;
+      document.head.appendChild(node);
     }
-    return 0;
+    node.content = String(value ?? "");
   };
-  const atLeast = target => compare(BUILD, target) >= 0;
-
-  const forceMetaTruth = () => {
-    const admin = document.querySelector('meta[name="administrator-build"]');
-    const atlas = document.querySelector('meta[name="atlas-build"]');
-    const engine = document.querySelector('meta[name="atlas-engine-build"]');
-    if (admin) admin.content = BUILD;
-    if (atlas) atlas.content = BUILD;
-    if (engine && !String(engine.content || "").trim()) engine.content = ENGINE;
-    if (/Build\s+\d+\.\d+\.\d+/i.test(document.title)) {
-      document.title = document.title.replace(/Build\s+\d+\.\d+\.\d+/i, `Build ${BUILD}`);
-    }
-  };
-
-  const syncFooterTruth = () => {
-    const footer = document.getElementById("footerRelease");
-    if (!footer) return false;
-    const current = String(footer.textContent || "").trim();
-    let next = current;
-    next = next.replace(/Administrator\s+\d+\.\d+\.\d+/gi, `Administrator ${BUILD}`);
-    next = next.replace(/Build\s+\d+\.\d+\.\d+/gi, `Build ${BUILD}`);
-    if (next === current && !/\d+\.\d+\.\d+/.test(current)) {
-      next = `Agent-Crypto @erith.IA · Administrator ${BUILD} · Market Core ${ENGINE}`;
-    }
-    footer.textContent = next;
-    footer.dataset.versionTruthOwner = OWNER;
-    footer.dataset.loadedBuild = BUILD;
-    return true;
-  };
-
-  const syncMirrorTruth = () => {
-    const brand = document.querySelector(".admin-mirror-brand");
-    if (!brand) return false;
-    brand.innerHTML = `AGENT-CRYPTO <b>${BUILD}</b> · ADMINISTRATOR`;
-    brand.dataset.versionTruthOwner = OWNER;
-    brand.dataset.loadedBuild = BUILD;
-    return true;
-  };
-
-  const syncVisibleTruth = () => {
-    forceMetaTruth();
-    const footer = syncFooterTruth();
-    const mirror = syncMirrorTruth();
-    return footer || mirror;
-  };
-
-  const deferVisibleTruth = () => queueMicrotask(() => {
-    try { syncVisibleTruth(); } catch (_) {}
-  });
-
-  const ensureSourceDemandLoader = () => {
-    if (typeof globalThis.ErithPrivateSourceDemand?.ensure === "function") return true;
-    if (typeof globalThis.ErithPrivateSourceDemand40486?.ensure === "function") return true;
-    if (document.querySelector('script[data-version-truth-source-loader="true"]')) return true;
-    const script = document.createElement("script");
-    script.src = `./js/views/private-source-demand-loader.js?v=version-truth-${encodeURIComponent(BUILD)}`;
-    script.async = false;
-    script.dataset.versionTruthSourceLoader = "true";
-    document.head.appendChild(script);
-    return true;
-  };
-
-  const loadPatch = (selector, src, datasetName) => {
-    if (document.querySelector(selector)) return false;
-    const patch = document.createElement("script");
-    patch.src = src;
-    patch.async = false;
-    patch.dataset[datasetName] = "true";
-    document.head.appendChild(patch);
-    return true;
-  };
-
-  const ensureRuntimeLayers = () => {
-    // Historical compatibility layers remain readable for older immutable entries.
-    if (atLeast("40.6.103") && globalThis.AgentCryptoGeneratedReportVersionTruth406103?.build !== BUILD) {
-      loadPatch('script[data-generated-report-version-truth-406103="true"]', `./js/generated-report-version-truth-406103.js?v=${encodeURIComponent(BUILD)}`, "generatedReportVersionTruth406103");
-    }
-    if (atLeast("40.6.104") && globalThis.AgentCryptoPedagogyVersionTruth406104?.build !== BUILD) {
-      loadPatch('script[data-pedagogy-version-truth-406104="true"]', `./js/pedagogy-version-truth-406104.js?v=${encodeURIComponent(BUILD)}`, "pedagogyVersionTruth406104");
-    }
-    if (atLeast("40.6.105") && !globalThis.AgentCryptoTradusStrategyReconcile406105) {
-      loadPatch('script[data-tradus-strategy-reconcile-406105="true"]', `./js/tradus-strategy-a-reconcile-406105.js?v=${encodeURIComponent(BUILD)}`, "tradusStrategyReconcile406105");
-    }
-    if (atLeast("40.6.106") && !globalThis.AgentCryptoLocalAIContractConsistency406106) {
-      loadPatch('script[data-local-ai-contract-consistency-406106="true"]', `./js/local-ai-contract-consistency-406106.js?v=${encodeURIComponent(BUILD)}`, "localAiContractConsistency406106");
-    }
-    if (atLeast("40.6.107") && !globalThis.AgentCryptoVisibleVersionSurfaceTruth406107) {
-      loadPatch('script[data-visible-version-surface-truth-406107="true"]', `./js/visible-version-surface-truth-406107.js?v=${encodeURIComponent(BUILD)}`, "visibleVersionSurfaceTruth406107");
-    }
-    if (atLeast("40.6.108") && !globalThis.AgentCryptoLocalDialoguePresentation406108) {
-      loadPatch('script[data-local-dialogue-presentation-406108="true"]', `./js/local-dialogue-presentation-406108.js?v=${encodeURIComponent(BUILD)}`, "localDialoguePresentation406108");
-    }
-
-    // Canonical functional owners from 40.6.109 onward.
-    if (atLeast("40.6.109") && !globalThis.AgentCryptoLocalAIReserveTruth) {
-      loadPatch('script[data-local-ai-contract-consistency="true"]', `./js/local-ai-contract-consistency.js?v=${encodeURIComponent(BUILD)}`, "localAiContractConsistency");
-    }
-    if (atLeast("40.6.110") && !globalThis.AgentCryptoTradusStrategyFailClosed) {
-      loadPatch('script[data-tradus-strategy-a-reconcile="true"]', `./js/tradus-strategy-a-reconcile.js?v=${encodeURIComponent(BUILD)}`, "tradusStrategyAReconcile");
-    }
-    if (atLeast("40.6.111") && !globalThis.AgentCryptoDexFreshnessGuard) {
-      loadPatch('script[data-dex-freshness-guard="true"]', `./js/dex-freshness-guard.js?v=${encodeURIComponent(BUILD)}`, "dexFreshnessGuard");
-    }
-    if (atLeast("40.6.119") && !globalThis.AgentCryptoTradusAutonomousRefresh406119) {
-      loadPatch('script[data-tradus-autonomous-refresh-406119="true"]', `./js/tradus-autonomous-refresh-406119.js?v=${encodeURIComponent(BUILD)}`, "tradusAutonomousRefresh406119");
-    }
-  };
-
-  forceMetaTruth();
-  const previous = document.getElementById("atlasVersionTruthControl");
-  const control = previous ? previous.cloneNode(true) : null;
-  if (previous && control) previous.replaceWith(control);
-  const text = control?.querySelector("#atlasVersionTruthText") || document.getElementById("atlasVersionTruthText");
-  const legacyControl = document.getElementById("atlasVersionControl");
-  const legacyText = document.getElementById("atlasVersionControlText");
-  if (legacyControl) {
-    legacyControl.hidden = true;
-    legacyControl.setAttribute("aria-hidden", "true");
-    legacyControl.style.display = "none";
-    legacyControl.dataset.versionTruthLegacySink = "true";
-  }
-  if (legacyText) legacyText.dataset.versionTruthLegacySink = "true";
-
-  let remote = null;
-  let state = "current";
+  const initialBuild = meta("agent-crypto-boot-build") || meta("administrator-build") || "UNKNOWN";
+  let truth = null;
+  let state = "booting";
   let busy = false;
-  const validRemote = value => !!value
-    && typeof value === "object"
-    && BUILD_RE.test(String(value.build || "").trim())
-    && String(value.engine || "").trim() === ENGINE;
+  let runtimePromise = null;
 
-  function render(next = remote, error = null, mode = null) {
-    remote = validRemote(next) ? next : null;
-    const published = remote ? String(remote.build).trim() : BUILD;
-    const newer = !!remote && compare(published, BUILD) > 0;
-    state = mode || ((error && !newer) ? "failed" : newer ? "update-available" : "current");
-    const label = state === "checking" ? `Build ${BUILD} · vérification…`
-      : state === "applying" ? `Build ${published} · chargement…`
-      : state === "update-available" ? `Build ${BUILD} · ${published} disponible`
-      : state === "failed" ? `Build ${BUILD} · vérification indisponible`
-      : `Build ${BUILD} · Administrator`;
-    if (text) text.textContent = label;
-    if (control) {
-      control.dataset.versionTruthOwner = OWNER;
-      control.dataset.loadedBuild = BUILD;
-      control.dataset.publishedBuild = published;
-      control.dataset.versionTruthState = state;
-      delete control.dataset.falsePropagation;
-      control.dataset.falsePropagationState = "removed";
-      control.disabled = state === "checking" || state === "applying";
-      control.toggleAttribute("aria-busy", control.disabled);
-      control.classList.toggle("warn", state === "update-available");
-      control.classList.toggle("ok", state !== "update-available");
-      control.setAttribute("aria-label", state === "update-available"
-        ? `Version chargée ${BUILD}. Version ${published} disponible. Cliquer pour charger.`
-        : `Version Agent-Crypto chargée : Build ${BUILD}, mode Administrator.`);
-      control.title = state === "update-available"
-        ? `Build ${published} disponible · cliquer pour mettre à jour`
-        : `Build ${BUILD} chargé · aucune mise à jour détectée`;
-    }
-    document.documentElement.dataset.versionTruthBuild = BUILD;
-    document.documentElement.dataset.versionTruthPublished = published;
-    document.documentElement.dataset.versionTruthState = state;
-    document.documentElement.dataset.versionTruthAuthority = OWNER;
-    syncVisibleTruth();
-    return Object.freeze({ loaded: BUILD, published, state, update_available: newer });
+  function validateManifest(value) {
+    const build = String(value?.build || "").trim();
+    const engine = String(value?.engine || value?.market_core_build || value?.market_core || "").trim();
+    if (!BUILD_RE.test(build)) throw new Error("manifest build invalide");
+    if (engine !== MARKET_CORE) throw new Error(`Market Core inattendu: ${engine || "absent"}`);
+    return Object.freeze({ ...value, build, engine });
   }
 
   async function fetchManifest() {
-    const response = await fetch(`${MANIFEST}?v=${encodeURIComponent(BUILD)}&t=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const result = await response.json();
-    if (!validRemote(result)) throw new Error("manifest-invalide");
-    return result;
+    const response = await fetch(`${MANIFEST}?t=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
+    if (!response.ok) throw new Error(`build.json HTTP ${response.status}`);
+    return validateManifest(await response.json());
+  }
+
+  function syncFooter(build, engine) {
+    const footer = document.getElementById("footerRelease");
+    if (!footer) return false;
+    const current = String(footer.textContent || "").trim();
+    let next = current
+      .replace(/Administrator\s+\d+\.\d+\.\d+/gi, `Administrator ${build}`)
+      .replace(/Build\s+\d+\.\d+\.\d+/gi, `Build ${build}`);
+    if (next === current && !/\d+\.\d+\.\d+/.test(current)) next = `Agent-Crypto @erith.IA · Administrator ${build} · Market Core ${engine}`;
+    footer.textContent = next;
+    footer.dataset.versionTruthOwner = OWNER;
+    footer.dataset.loadedBuild = build;
+    return true;
+  }
+
+  function syncMirror(build) {
+    const brand = document.querySelector(".admin-mirror-brand");
+    if (!brand) return false;
+    brand.innerHTML = `AGENT-CRYPTO <b>${build}</b> · ADMINISTRATOR`;
+    brand.dataset.versionTruthOwner = OWNER;
+    brand.dataset.loadedBuild = build;
+    return true;
+  }
+
+  function applyTruth(value) {
+    truth = validateManifest(value);
+    const { build, engine } = truth;
+    const release = String(truth.release || truth.release_status || "Administrator").trim();
+
+    setMeta("administrator-build", build);
+    setMeta("atlas-build", build);
+    setMeta("atlas-engine-build", engine);
+    setMeta("administrator-release", release);
+    setMeta("agent-crypto-version-owner", "build.json");
+    document.title = `Agent-Crypto @erith.IA — Build ${build} · Administrator`;
+
+    globalThis.AGENT_CRYPTO_EMBEDDED_BUILD = initialBuild;
+    globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD = build;
+    globalThis.AGENT_CRYPTO_BUILD = build;
+    globalThis.ATLAS_ENGINE_BUILD = engine;
+
+    document.documentElement.dataset.versionTruthBuild = build;
+    document.documentElement.dataset.versionTruthPublished = build;
+    document.documentElement.dataset.versionTruthState = state;
+    document.documentElement.dataset.versionTruthAuthority = OWNER;
+    document.documentElement.dataset.versionTruthSource = "build.json";
+    syncFooter(build, engine);
+    syncMirror(build);
+    return truth;
+  }
+
+  function renderControl(mode = state, error = null) {
+    const build = truth?.build || initialBuild;
+    const control = document.getElementById("atlasVersionTruthControl");
+    const text = control?.querySelector("#atlasVersionTruthText") || document.getElementById("atlasVersionTruthText");
+    const label = mode === "checking" ? `Build ${build} · vérification…`
+      : mode === "failed" ? `Build ${build} · vérité indisponible`
+      : `Build ${build} · Administrator`;
+    if (text) text.textContent = label;
+    if (control) {
+      control.dataset.versionTruthOwner = OWNER;
+      control.dataset.loadedBuild = build;
+      control.dataset.publishedBuild = truth?.build || build;
+      control.dataset.versionTruthState = mode;
+      control.disabled = mode === "checking";
+      control.toggleAttribute("aria-busy", control.disabled);
+      control.classList.toggle("warn", mode === "failed");
+      control.classList.toggle("ok", mode !== "failed");
+      control.title = error ? String(error?.message || error) : `Build ${build} · source build.json`;
+    }
+    document.documentElement.dataset.versionTruthState = mode;
+  }
+
+  function ensureRegistryScript() {
+    if (globalThis.AgentCryptoRuntimeModules?.load) return Promise.resolve(globalThis.AgentCryptoRuntimeModules);
+    if (runtimePromise) return runtimePromise;
+    runtimePromise = new Promise((resolve, reject) => {
+      const existing = Array.from(document.scripts).find(script => {
+        try { return script.src && new URL(script.src, document.baseURI).pathname.endsWith("/js/runtime-modules.js"); }
+        catch (_) { return false; }
+      });
+      if (existing) {
+        if (globalThis.AgentCryptoRuntimeModules?.load) return resolve(globalThis.AgentCryptoRuntimeModules);
+        existing.addEventListener("load", () => resolve(globalThis.AgentCryptoRuntimeModules), { once: true });
+        existing.addEventListener("error", () => reject(new Error("runtime-modules.js indisponible")), { once: true });
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = RUNTIME_REGISTRY;
+      script.async = false;
+      script.dataset.agentCryptoRuntimeRegistry = "true";
+      script.addEventListener("load", () => resolve(globalThis.AgentCryptoRuntimeModules), { once: true });
+      script.addEventListener("error", () => reject(new Error("runtime-modules.js indisponible")), { once: true });
+      document.head.appendChild(script);
+    });
+    return runtimePromise;
+  }
+
+  async function ensureRuntimeLayers() {
+    const registry = await ensureRegistryScript();
+    if (!registry?.load) throw new Error("registre runtime invalide");
+    return registry.load(truth?.build || initialBuild);
   }
 
   async function check(show = false) {
     if (busy) return false;
     busy = true;
-    if (show) render(remote, null, "checking");
+    if (show) { state = "checking"; renderControl(state); }
     try {
-      const result = await fetchManifest();
-      const snapshot = render(result);
-      return snapshot.update_available;
+      const next = await fetchManifest();
+      const changed = !!truth && next.build !== truth.build;
+      state = "current";
+      applyTruth(next);
+      renderControl(state);
+      if (changed) location.reload();
+      return changed;
     } catch (error) {
-      render(remote, error);
+      state = "failed";
+      renderControl(state, error);
+      console.error("[Version Truth]", error);
       return false;
     } finally {
       busy = false;
     }
   }
 
-  const entryUrl = build => new URL(`./index-${build}.html`, location.href);
-  async function probeEntry(url, build) {
+  async function init() {
     try {
-      const probe = new URL(url);
-      probe.searchParams.set("ac-probe", `${build}-${Date.now()}`);
-      const response = await fetch(probe.toString(), { cache: "no-store", credentials: "same-origin" });
-      if (!response.ok) return false;
-      const html = await response.text();
-      const pathnameProof = new URL(response.url || probe.toString(), location.href).pathname.endsWith(`/index-${build}.html`);
-      const engineMatch = html.match(/<meta\s+name="atlas-engine-build"\s+content="([^"]+)"/i);
-      const compatibilityShimPresent = html.includes("version-truth-406086-authority-lock.js");
-      return pathnameProof && String(engineMatch?.[1] || "").trim() === ENGINE && compatibilityShimPresent;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  function canonicalFallbackUrl(build) {
-    const target = new URL("./index.html", location.href);
-    target.searchParams.set(BUILD_PARAM, build);
-    target.searchParams.set(REFRESH_PARAM, `${build}-${Date.now()}`);
-    return target;
-  }
-
-  async function applyAvailableUpdate() {
-    if (busy || state !== "update-available") return false;
-    busy = true;
-    render(remote, null, "applying");
-    try {
-      const result = await fetchManifest();
-      const published = String(result.build || "").trim();
-      if (compare(published, BUILD) <= 0) {
-        render(result);
-        return false;
-      }
-      const immutable = entryUrl(published);
-      if (await probeEntry(immutable, published)) {
-        immutable.searchParams.set(REFRESH_PARAM, `${published}-${Date.now()}`);
-        location.replace(immutable.toString());
-        return true;
-      }
-      location.replace(canonicalFallbackUrl(published).toString());
-      return true;
+      state = "checking";
+      const manifest = await fetchManifest();
+      state = "current";
+      applyTruth(manifest);
+      renderControl(state);
+      await ensureRuntimeLayers();
+      try {
+        document.dispatchEvent(new CustomEvent("agent-crypto:version-truth-ready", { detail: { build: truth.build, engine: truth.engine } }));
+        document.dispatchEvent(new CustomEvent("agent-crypto:runtime-layers-ready", { detail: { build: truth.build } }));
+      } catch (_) {}
     } catch (error) {
-      render(remote, error);
-      return false;
-    } finally {
-      busy = false;
+      state = "failed";
+      renderControl(state, error);
+      console.error("[Version Truth init]", error);
     }
   }
 
-  async function onClick(event) {
-    event?.preventDefault?.();
-    event?.stopPropagation?.();
-    event?.stopImmediatePropagation?.();
-    if (busy) return false;
-    if (state === "update-available") return applyAvailableUpdate();
-    return check(true);
-  }
+  const control = document.getElementById("atlasVersionTruthControl");
+  control?.addEventListener("click", event => {
+    event.preventDefault();
+    event.stopPropagation();
+    void check(true);
+  }, { capture: true });
 
-  render();
-  ensureSourceDemandLoader();
-  ensureRuntimeLayers();
-  control?.addEventListener("click", onClick, { capture: true });
+  const syncVisibleTruth = () => {
+    if (!truth) return false;
+    syncFooter(truth.build, truth.engine);
+    syncMirror(truth.build);
+    return true;
+  };
+  const deferVisibleTruth = () => queueMicrotask(() => { try { syncVisibleTruth(); } catch (_) {} });
   window.addEventListener("erith:system-hydrated", deferVisibleTruth, { passive: true });
   document.addEventListener("agentcrypto:current-finalized", deferVisibleTruth, { passive: true });
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", deferVisibleTruth, { once: true });
-  else deferVisibleTruth();
   window.addEventListener("load", deferVisibleTruth, { once: true, passive: true });
   window.addEventListener("pageshow", deferVisibleTruth, { passive: true });
-  void check(false);
 
   globalThis.ErithVersionTruth = Object.freeze({
     owner: OWNER,
     legacy_owner_alias: "version-truth-entry-authority-v3",
-    build: BUILD,
-    engine: ENGINE,
+    get build() { return truth?.build || initialBuild; },
+    engine: MARKET_CORE,
     manifest: MANIFEST,
-    loaded_from_immutable_entry_path: !!entryMatch,
-    loaded_from_canonical_build_param: !entryMatch && BUILD_RE.test(requestedBuild),
-    embedded_build: embeddedBuild,
-    snapshot: () => Object.freeze({ loaded: BUILD, published: String(remote?.build || BUILD), state }),
+    snapshot: () => Object.freeze({ loaded: truth?.build || initialBuild, published: truth?.build || initialBuild, state }),
     refresh: check,
-    applyAvailableUpdate,
-    syncFooterTruth,
-    syncMirrorTruth,
+    applyAvailableUpdate: async () => check(true),
+    syncFooterTruth: () => truth ? syncFooter(truth.build, truth.engine) : false,
+    syncMirrorTruth: () => truth ? syncMirror(truth.build) : false,
     syncVisibleTruth,
     ensureRuntimeLayers,
     source_demand_loader_generic: true,
-    source_truth_backend_placement_restored: true,
     single_visible_owner: true,
-    immutable_entry_path_authority: true,
-    canonical_build_param_fallback: true,
-    false_propagation_state_removed: true,
-    stale_listener_detached_by_node_replacement: true,
-    current_click_reloads: false,
-    update_available_click_reloads: true,
+    build_json_authority: true,
+    version_branching: false,
     canonical_active_filename: "js/version-truth.js",
     recurring_timer: false,
     observer: false,
     storage_write: false
   });
-  syncVisibleTruth();
+
+  void init();
 })();
