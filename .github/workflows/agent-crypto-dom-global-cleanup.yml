@@ -29,6 +29,68 @@ jobs:
       - name: Canonicalize DOM and global identifiers
         run: python .github/scripts/agent_crypto_cleanup_dom_globals.py
 
+      - name: Reconcile uniquely renamed runtime resources
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root=Path('public/agent_crypto_erith_ia/administrator')
+          shell=root/'runtime-shell.html'
+          text_suffixes={'.html','.js','.css','.json','.md','.txt'}
+          ref_re=re.compile(r'(?:src|href)=["\'](\./[^"\']+)["\']',re.I)
+          version_suffixes=(
+              re.compile(r'^(?P<base>.+)-(?P<v>(?:39|40)\d{2,4})$'),
+              re.compile(r'^(?P<base>.+)-(?P<v>40\.\d+\.\d+)$'),
+          )
+
+          def refs():
+              text=shell.read_text(encoding='utf-8')
+              return sorted(set(x.split('?',1)[0] for x in ref_re.findall(text)))
+
+          renamed=[]
+          for ref in refs():
+              target=root/ref[2:]
+              if target.exists():
+                  continue
+              candidates=[]
+              for candidate in target.parent.glob('*'+target.suffix):
+                  if candidate == target:
+                      continue
+                  for pattern in version_suffixes:
+                      m=pattern.match(candidate.stem)
+                      if m and m.group('base') == target.stem:
+                          candidates.append(candidate)
+                          break
+              candidates=sorted(set(candidates))
+              if len(candidates) != 1:
+                  raise SystemExit(f'Cannot reconcile {ref}: candidates={[str(x.relative_to(root)) for x in candidates]}')
+              old=candidates[0]
+              old_rel=str(old.relative_to(root)).replace('\\','/')
+              new_rel=str(target.relative_to(root)).replace('\\','/')
+              old.rename(target)
+              renamed.append((old_rel,new_rel,old.name,target.name))
+
+          for path in root.rglob('*'):
+              if not path.is_file() or path.suffix.lower() not in text_suffixes:
+                  continue
+              try:
+                  text=path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              original=text
+              for old_rel,new_rel,old_name,new_name in renamed:
+                  text=text.replace('./'+old_rel,'./'+new_rel)
+                  text=text.replace(old_rel,new_rel)
+                  text=text.replace(old_name,new_name)
+              if text != original:
+                  path.write_text(text,encoding='utf-8')
+
+          print(f'Reconciled resources: {len(renamed)}')
+          for old_rel,new_rel,_,_ in renamed:
+              print(f'  {old_rel} -> {new_rel}')
+          PY
+
       - name: JavaScript syntax check
         run: |
           find public/agent_crypto_erith_ia/administrator -type f -name '*.js' -print0 \
