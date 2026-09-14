@@ -63,7 +63,8 @@
         if (!/\.(?:js|css)(?:$|\?)/i.test(url)) return `${prefix}${url}${suffix}`;
         const clean = url.replace(/([?&])release=[^&"']*/i, "$1").replace(/[?&]$/, "");
         const join = clean.includes("?") ? "&" : "?";
-        return `${prefix}${clean}${join}release=${encodeURIComponent(build)}${suffix}`;
+        const chronos = /^\.\/admin-chronos\.css(?:[?#]|$)/i.test(clean) ? "&chronos=canonical" : "";
+        return `${prefix}${clean}${join}release=${encodeURIComponent(build)}${chronos}${suffix}`;
       };
       return html
         .replace(/(\bsrc=["'])([^"']+)(["'])/gi, (_, a, u, q) => stamp(a, u, q))
