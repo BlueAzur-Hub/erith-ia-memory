@@ -85,8 +85,9 @@ jobs:
           echo 'STAGED_DIFF:'
           git diff --cached --stat -- "$R"
           git diff --cached --numstat -- "$R"
-          git show :"$R" | grep -Fq 'AtlasStorageRelief'
-          if git show :"$R" | grep -Fq 'AtlasStorageRelief40278'; then
+          git show :"$R" > /tmp/runtime-staged.html
+          grep -Fq 'AtlasStorageRelief' /tmp/runtime-staged.html
+          if grep -Fq 'AtlasStorageRelief40278' /tmp/runtime-staged.html; then
             echo 'ERROR: old Storage Relief identifier still staged'
             exit 1
           fi
