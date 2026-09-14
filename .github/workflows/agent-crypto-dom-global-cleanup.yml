@@ -135,4 +135,19 @@ jobs:
           git rm -f .github/workflows/agent-crypto-dom-global-cleanup.yml
           git rm -f .github/scripts/agent_crypto_cleanup_dom_globals.py
           git commit -m 'refactor(agent-crypto): canonicalize DOM and global identifiers'
-          git push origin HEAD:main
+
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Published cleanup on attempt ${attempt}"
+              exit 0
+            fi
+            echo "main moved during publication; rebasing attempt ${attempt}"
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo "Rebase conflict: refusing force-push"
+              exit 1
+            fi
+          done
+          echo "Publication race persisted after 5 attempts"
+          exit 1
