@@ -36,6 +36,13 @@ jobs:
           runtime = runtime_path.read_text(encoding='utf-8')
           index = index_path.read_text(encoding='utf-8')
 
+          start_token = '<script id="atlasDebtSettlement4055Runtime">'
+          if runtime.count(start_token) != 1:
+              raise SystemExit(f'Expected one Chronos runtime block, found {runtime.count(start_token)}')
+          start = runtime.index(start_token)
+          end = runtime.index('</script>', start) + len('</script>')
+          block = runtime[start:end]
+
           replacements = [
               ('atlasDebtSettlement4055Runtime', 'atlasDebtSettlementRuntime', 1),
               ('[data-chrono40341="${key}"]', '[data-chrono="${key}"]', 1),
@@ -48,17 +55,19 @@ jobs:
           ]
 
           for old, new, expected in replacements:
-              count = runtime.count(old)
+              count = block.count(old)
               if count != expected:
-                  raise SystemExit(f'Expected {expected} runtime occurrence(s) for {old!r}, found {count}')
-              runtime = runtime.replace(old, new)
+                  raise SystemExit(f'Expected {expected} Chronos-block occurrence(s) for {old!r}, found {count}')
+              block = block.replace(old, new)
+
+          runtime = runtime[:start] + block + runtime[end:]
 
           shim = '      out = out.replace(/data-chrono40341/g, "data-chrono");\n'
           if index.count(shim) != 1:
               raise SystemExit(f'Expected exactly one index Chronos shim, found {index.count(shim)}')
           index = index.replace(shim, '', 1)
 
-          forbidden = (
+          forbidden_block = (
               'data-chrono40341',
               'atlasDebtSettlement4055Runtime',
               '__AGENT_CRYPTO_ASTROCYCLE_4055__',
@@ -68,9 +77,9 @@ jobs:
               'const BUILD="40.3.14";',
               'build:"40.4.94",open_cadence_ms',
           )
-          for token in forbidden:
-              if token in runtime:
-                  raise SystemExit(f'Forbidden Chronos fossil remains in runtime: {token}')
+          for token in forbidden_block:
+              if token in block:
+                  raise SystemExit(f'Forbidden Chronos fossil remains in Chronos block: {token}')
           if 'data-chrono40341' in index:
               raise SystemExit('Chronos boot shim/fossil still present in index.html')
 
@@ -85,9 +94,10 @@ jobs:
               'lastCelestialRole',
               'lastMultiCollectorMinute',
               'build:BUILD,open_cadence_ms',
+              'globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD',
           )
           for token in required:
-              if token not in runtime:
+              if token not in block:
                   raise SystemExit(f'Required stable Chronos contract missing: {token}')
 
           if '<meta name="agent-crypto-loaded-build" content="40.6.124" />' not in index:
