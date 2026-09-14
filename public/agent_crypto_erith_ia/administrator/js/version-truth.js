@@ -1,116 +1,172 @@
-/* Agent-Crypto Administrator — canonical Version Truth owner.
-   build.json is the only release authority. Runtime modules have stable names
-   and are loaded from one registry without release-number branching. */
+/* Agent-Crypto Administrator — update control, not runtime authority.
+   Loaded build = immutable release entry.
+   Published build = build.json.
+   The checker never rewrites the loaded build and never reloads a current build. */
 (() => {
   "use strict";
 
-  const OWNER = "version-truth";
-  const MANIFEST = "./build.json";
+  const OWNER = "version-update-control";
   const RUNTIME_REGISTRY = "./js/runtime-modules.js";
   const BUILD_RE = /^\d+\.\d+\.\d+$/;
-  const MARKET_CORE = "38.15.11";
 
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
-  const setMeta = (name, value) => {
-    let node = document.querySelector(`meta[name="${name}"]`);
-    if (!node) {
-      node = document.createElement("meta");
-      node.name = name;
-      document.head.appendChild(node);
-    }
-    node.content = String(value ?? "");
-  };
+  const bootTruth = globalThis.AgentCryptoBootTruth || {};
+  const loadedBuild = String(bootTruth.loaded_build || bootTruth.build || meta("agent-crypto-loaded-build") || meta("agent-crypto-boot-build") || "").trim();
+  const engine = String(bootTruth.engine || meta("atlas-engine-build") || "").trim();
+  const MANIFEST = meta("agent-crypto-published-manifest") || "./build.json";
 
-  const initialBuild = meta("agent-crypto-boot-build") || meta("administrator-build") || "UNKNOWN";
-  let truth = null;
-  let state = "booting";
+  let publishedTruth = null;
+  let state = "checking";
   let busy = false;
   let runtimePromise = null;
 
+  function assertLoadedBuild() {
+    if (!BUILD_RE.test(loadedBuild)) throw new Error("loaded build invalide");
+    return loadedBuild;
+  }
+
   function validateManifest(value) {
     const build = String(value?.build || "").trim();
-    const engine = String(value?.engine || value?.market_core_build || value?.market_core || "").trim();
-    if (!BUILD_RE.test(build)) throw new Error("manifest build invalide");
-    if (engine !== MARKET_CORE) throw new Error(`Market Core inattendu: ${engine || "absent"}`);
-    return Object.freeze({ ...value, build, engine });
+    if (!BUILD_RE.test(build)) throw new Error("published build invalide");
+    return Object.freeze({ ...value, build });
+  }
+
+  function buildTuple(value) {
+    return String(value).split(".").map(n => Number.parseInt(n, 10));
+  }
+
+  function compareBuilds(a, b) {
+    const aa = buildTuple(a);
+    const bb = buildTuple(b);
+    for (let i = 0; i < Math.max(aa.length, bb.length); i += 1) {
+      const x = aa[i] || 0;
+      const y = bb[i] || 0;
+      if (x > y) return 1;
+      if (x < y) return -1;
+    }
+    return 0;
   }
 
   async function fetchManifest() {
-    const response = await fetch(`${MANIFEST}?t=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
+    const separator = MANIFEST.includes("?") ? "&" : "?";
+    const response = await fetch(`${MANIFEST}${separator}t=${Date.now()}`, {
+      cache: "no-store",
+      credentials: "same-origin"
+    });
     if (!response.ok) throw new Error(`build.json HTTP ${response.status}`);
     return validateManifest(await response.json());
   }
 
-  function syncFooter(build, engine) {
-    const footer = document.getElementById("footerRelease");
-    if (!footer) return false;
-    const current = String(footer.textContent || "").trim();
-    let next = current
-      .replace(/Administrator\s+\d+\.\d+\.\d+/gi, `Administrator ${build}`)
-      .replace(/Build\s+\d+\.\d+\.\d+/gi, `Build ${build}`);
-    if (next === current && !/\d+\.\d+\.\d+/.test(current)) next = `Agent-Crypto @erith.IA · Administrator ${build} · Market Core ${engine}`;
-    footer.textContent = next;
-    footer.dataset.versionTruthOwner = OWNER;
-    footer.dataset.loadedBuild = build;
-    return true;
+  function versionControl() {
+    return document.getElementById("atlasVersionTruthControl");
   }
 
-  function syncMirror(build) {
-    const brand = document.querySelector(".admin-mirror-brand");
-    if (!brand) return false;
-    brand.innerHTML = `AGENT-CRYPTO <b>${build}</b> · ADMINISTRATOR`;
-    brand.dataset.versionTruthOwner = OWNER;
-    brand.dataset.loadedBuild = build;
-    return true;
+  function versionText() {
+    return document.getElementById("atlasVersionTruthText");
   }
 
-  function applyTruth(value) {
-    truth = validateManifest(value);
-    const { build, engine } = truth;
-    const release = String(truth.release || truth.release_status || "Administrator").trim();
+  function render() {
+    const control = versionControl();
+    const text = versionText();
+    const publishedBuild = publishedTruth?.build || "";
+    const available = state === "available" && BUILD_RE.test(publishedBuild);
 
-    setMeta("administrator-build", build);
-    setMeta("atlas-build", build);
-    setMeta("atlas-engine-build", engine);
-    setMeta("administrator-release", release);
-    setMeta("agent-crypto-version-owner", "build.json");
-    document.title = `Agent-Crypto @erith.IA — Build ${build} · Administrator`;
+    if (text) {
+      text.textContent = available
+        ? `Build ${loadedBuild} · ${publishedBuild} disponible`
+        : `Build ${loadedBuild} · Administrator`;
+    }
 
-    globalThis.AGENT_CRYPTO_EMBEDDED_BUILD = initialBuild;
-    globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD = build;
-    globalThis.AGENT_CRYPTO_BUILD = build;
-    globalThis.ATLAS_ENGINE_BUILD = engine;
-
-    document.documentElement.dataset.versionTruthBuild = build;
-    document.documentElement.dataset.versionTruthPublished = build;
-    document.documentElement.dataset.versionTruthState = state;
-    document.documentElement.dataset.versionTruthAuthority = OWNER;
-    document.documentElement.dataset.versionTruthSource = "build.json";
-    syncFooter(build, engine);
-    syncMirror(build);
-    return truth;
-  }
-
-  function renderControl(mode = state, error = null) {
-    const build = truth?.build || initialBuild;
-    const control = document.getElementById("atlasVersionTruthControl");
-    const text = control?.querySelector("#atlasVersionTruthText") || document.getElementById("atlasVersionTruthText");
-    const label = mode === "checking" ? `Build ${build} · vérification…`
-      : mode === "failed" ? `Build ${build} · vérité indisponible`
-      : `Build ${build} · Administrator`;
-    if (text) text.textContent = label;
     if (control) {
       control.dataset.versionTruthOwner = OWNER;
-      control.dataset.loadedBuild = build;
-      control.dataset.publishedBuild = truth?.build || build;
-      control.dataset.versionTruthState = mode;
-      control.disabled = mode === "checking";
-      control.toggleAttribute("aria-busy", control.disabled);
-      control.classList.toggle("warn", mode === "failed");
-      control.classList.toggle("ok", mode !== "failed");
-      control.title = error ? String(error?.message || error) : `Build ${build} · source build.json`;
+      control.dataset.loadedBuild = loadedBuild;
+      control.dataset.publishedBuild = publishedBuild;
+      control.dataset.versionTruthState = state;
+      control.disabled = !available;
+      control.toggleAttribute("aria-busy", state === "checking");
+      control.classList.toggle("warn", available);
+      control.classList.toggle("ok", !available);
+      control.setAttribute("aria-label", available
+        ? `Build ${loadedBuild} chargée. Build ${publishedBuild} disponible. Cliquer pour mettre à jour.`
+        : `Build ${loadedBuild} chargée.`);
+      control.title = available
+        ? `Nouvelle version disponible : ${publishedBuild}`
+        : state === "check-failed"
+          ? `Build ${loadedBuild} chargée · contrôle de mise à jour indisponible`
+          : `Build ${loadedBuild} chargée`;
     }
-    document.documentElement.dataset.versionTruthState = mode;
+
+    document.documentElement.dataset.versionLoadedBuild = loadedBuild;
+    document.documentElement.dataset.versionPublishedBuild = publishedBuild;
+    document.documentElement.dataset.versionUpdateState = state;
+  }
+
+  function manifestBaseUrl() {
+    return new URL(MANIFEST, document.baseURI);
+  }
+
+  function publishedEntry(manifest) {
+    const explicit = String(manifest?.entry || manifest?.published_entry || manifest?.release_entry || "").trim();
+    const base = manifestBaseUrl();
+    if (explicit) return new URL(explicit, base);
+
+    /* From the next genuine release onward, immutable releases live under
+       administrator/releases/<build>/. build.json is flipped only after that
+       directory is fully published and verified. */
+    return new URL(`./releases/${manifest.build}/`, base);
+  }
+
+  async function preflightRelease(manifest) {
+    const target = publishedEntry(manifest);
+    target.searchParams.set("preflight", String(Date.now()));
+    const response = await fetch(target.href, {
+      cache: "no-store",
+      credentials: "same-origin",
+      redirect: "follow"
+    });
+    if (!response.ok) throw new Error(`release ${manifest.build} indisponible: HTTP ${response.status}`);
+    return publishedEntry(manifest);
+  }
+
+  async function navigateToPublished() {
+    if (busy || state !== "available" || !publishedTruth) return false;
+    busy = true;
+    const control = versionControl();
+    control?.setAttribute("aria-busy", "true");
+    try {
+      const target = await preflightRelease(publishedTruth);
+      target.searchParams.set("from", loadedBuild);
+      target.searchParams.set("t", String(Date.now()));
+      location.assign(target.href);
+      return true;
+    } catch (error) {
+      console.error("[Version Update]", error);
+      state = "check-failed";
+      render();
+      return false;
+    } finally {
+      busy = false;
+      control?.removeAttribute("aria-busy");
+    }
+  }
+
+  async function refresh() {
+    if (busy) return false;
+    busy = true;
+    try {
+      const next = await fetchManifest();
+      publishedTruth = next;
+      state = compareBuilds(next.build, loadedBuild) > 0 ? "available" : "current";
+      render();
+      return state === "available";
+    } catch (error) {
+      console.error("[Version Update]", error);
+      state = "check-failed";
+      render();
+      return false;
+    } finally {
+      busy = false;
+    }
   }
 
   function ensureRegistryScript() {
@@ -128,7 +184,7 @@
         return;
       }
       const script = document.createElement("script");
-      script.src = `${RUNTIME_REGISTRY}?reload=${Date.now()}`;
+      script.src = `${RUNTIME_REGISTRY}?release=${encodeURIComponent(loadedBuild)}&t=${Date.now()}`;
       script.async = false;
       script.dataset.agentCryptoRuntimeRegistry = "true";
       script.addEventListener("load", () => resolve(globalThis.AgentCryptoRuntimeModules), { once: true });
@@ -144,87 +200,75 @@
     return registry.load();
   }
 
-  async function check(show = false) {
-    if (busy) return false;
-    busy = true;
-    if (show) { state = "checking"; renderControl(state); }
-    try {
-      const next = await fetchManifest();
-      const changed = !!truth && next.build !== truth.build;
-      state = "current";
-      applyTruth(next);
-      renderControl(state);
-      if (changed) location.reload();
-      return changed;
-    } catch (error) {
-      state = "failed";
-      renderControl(state, error);
-      console.error("[Version Truth]", error);
-      return false;
-    } finally {
-      busy = false;
-    }
-  }
-
-  async function init() {
-    try {
-      state = "checking";
-      const manifest = await fetchManifest();
-      state = "current";
-      applyTruth(manifest);
-      renderControl(state);
-      await ensureRuntimeLayers();
+  function startRuntimeIndependently() {
+    void ensureRuntimeLayers().then(() => {
       try {
-        document.dispatchEvent(new CustomEvent("agent-crypto:version-truth-ready", { detail: { build: truth.build, engine: truth.engine } }));
-        document.dispatchEvent(new CustomEvent("agent-crypto:runtime-layers-ready", { detail: { modules: globalThis.AgentCryptoRuntimeModules?.modules || [] } }));
+        document.dispatchEvent(new CustomEvent("agent-crypto:runtime-layers-ready", {
+          detail: { modules: globalThis.AgentCryptoRuntimeModules?.modules || [] }
+        }));
       } catch (_) {}
-    } catch (error) {
-      state = "failed";
-      renderControl(state, error);
-      console.error("[Version Truth init]", error);
-    }
+    }).catch(error => console.error("[Runtime Layers]", error));
   }
 
-  const control = document.getElementById("atlasVersionTruthControl");
-  control?.addEventListener("click", event => {
+  function init() {
+    assertLoadedBuild();
+
+    /* Loaded identity is fixed before any update check. Update failure cannot
+       block the application and cannot turn into a fake build number. */
+    globalThis.AGENT_CRYPTO_EMBEDDED_BUILD = loadedBuild;
+    globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD = loadedBuild;
+    globalThis.AGENT_CRYPTO_BUILD = loadedBuild;
+    if (engine) globalThis.ATLAS_ENGINE_BUILD = engine;
+
+    render();
+    startRuntimeIndependently();
+    void refresh().finally(() => {
+      try {
+        document.dispatchEvent(new CustomEvent("agent-crypto:version-truth-ready", {
+          detail: {
+            loaded: loadedBuild,
+            published: publishedTruth?.build || null,
+            engine,
+            state
+          }
+        }));
+      } catch (_) {}
+    });
+  }
+
+  versionControl()?.addEventListener("click", event => {
     event.preventDefault();
     event.stopPropagation();
-    void check(true);
+    if (state === "available") void navigateToPublished();
   }, { capture: true });
-
-  const syncVisibleTruth = () => {
-    if (!truth) return false;
-    syncFooter(truth.build, truth.engine);
-    syncMirror(truth.build);
-    return true;
-  };
-  const deferVisibleTruth = () => queueMicrotask(() => { try { syncVisibleTruth(); } catch (_) {} });
-  window.addEventListener("erith:system-hydrated", deferVisibleTruth, { passive: true });
-  document.addEventListener("agentcrypto:current-finalized", deferVisibleTruth, { passive: true });
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", deferVisibleTruth, { once: true });
-  window.addEventListener("load", deferVisibleTruth, { once: true, passive: true });
-  window.addEventListener("pageshow", deferVisibleTruth, { passive: true });
 
   globalThis.ErithVersionTruth = Object.freeze({
     owner: OWNER,
-    get build() { return truth?.build || initialBuild; },
-    engine: MARKET_CORE,
+    get build() { return loadedBuild; },
+    get publishedBuild() { return publishedTruth?.build || null; },
+    engine,
     manifest: MANIFEST,
-    snapshot: () => Object.freeze({ loaded: truth?.build || initialBuild, published: truth?.build || initialBuild, state }),
-    refresh: check,
-    syncFooterTruth: () => truth ? syncFooter(truth.build, truth.engine) : false,
-    syncMirrorTruth: () => truth ? syncMirror(truth.build) : false,
-    syncVisibleTruth,
+    snapshot: () => Object.freeze({
+      loaded: loadedBuild,
+      published: publishedTruth?.build || null,
+      state
+    }),
+    refresh,
+    navigateToPublished,
     ensureRuntimeLayers,
-    single_visible_owner: true,
-    build_json_authority: true,
-    version_branching: false,
-    versioned_runtime_filenames: false,
-    canonical_active_filename: "js/version-truth.js",
+    loaded_build_authority: "release-entry",
+    published_build_authority: "build.json",
+    reload_current_build: false,
     recurring_timer: false,
     observer: false,
     storage_write: false
   });
 
-  void init();
+  try { init(); }
+  catch (error) {
+    console.error("[Version Update init]", error);
+    state = "check-failed";
+    render();
+    startRuntimeIndependently();
+  }
 })();
