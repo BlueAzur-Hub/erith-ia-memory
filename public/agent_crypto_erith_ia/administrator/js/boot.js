@@ -59,7 +59,7 @@
     out = out.replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,
       `<span id="atlasVersionTruthText">Build ${build} · Administrator</span>`);
     out = out.replace(/<span\s+id=["']footerRelease["'][^>]*>[\s\S]*?<\/span>/i,
-      `<span id="footerRelease">Agent-Crypto @erith.IA · Administrator ${build} · Market Core ${engine}</span>`);
+      `<span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build ${build} · Version : Parker Lewis Can't Lose</span>`);
     return out;
   }
 
