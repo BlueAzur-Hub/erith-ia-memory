@@ -1,0 +1,171 @@
+name: Agent Crypto retire neutral versioned orphans
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/agent-crypto-retire-neutral-versioned-orphans.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Synchronize
+        run: git pull --ff-only origin main
+
+      - name: Revalidate and retire proven neutral orphans
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          js = root / 'js'
+          runtime = (js / 'runtime-modules.js').read_text(encoding='utf-8')
+          shell = (root / 'runtime-shell.html').read_text(encoding='utf-8')
+          build = json.loads((root / 'build.json').read_text(encoding='utf-8'))
+
+          pairs = {
+              'footer-version-truth-406025.js': 'footer-version-truth.js',
+              'generated-report-version-truth-406103.js': 'generated-report-version-truth.js',
+              'local-ai-contract-consistency-406106.js': 'local-ai-contract-consistency.js',
+              'local-dialogue-presentation-406108.js': 'local-dialogue-presentation.js',
+              'pedagogy-version-truth-406104.js': 'pedagogy-version-truth.js',
+          }
+
+          if str(build.get('build')) != '40.6.124':
+              raise SystemExit(f"Build drifted: {build.get('build')!r}")
+          market_core = str(build.get('market_core') or build.get('engine') or '')
+          if '38.15.11' not in market_core:
+              raise SystemExit(f'Market Core drifted: {market_core!r}')
+          if 'versioned_filenames: false' not in runtime:
+              raise SystemExit('Stable filename registry contract missing')
+
+          report = []
+          for old, canonical in pairs.items():
+              old_path = js / old
+              canonical_path = js / canonical
+              if not old_path.exists():
+                  raise SystemExit(f'Expected orphan missing before cleanup: {old}')
+              if not canonical_path.exists():
+                  raise SystemExit(f'Canonical successor missing: {canonical}')
+              canonical_ref = f'./js/{canonical}'
+              if canonical_ref not in runtime:
+                  raise SystemExit(f'Canonical successor not loaded by runtime registry: {canonical_ref}')
+
+              refs = []
+              for path in root.rglob('*'):
+                  if not path.is_file() or path == old_path:
+                      continue
+                  if path.suffix.lower() not in {'.js', '.html', '.json'}:
+                      continue
+                  try:
+                      text = path.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:
+                      continue
+                  if old in text or f'./js/{old}' in text:
+                      refs.append(str(path.relative_to(root)))
+              if refs:
+                  raise SystemExit(f'Active/literal references remain for {old}: {refs}')
+
+              old_size = old_path.stat().st_size
+              canonical_size = canonical_path.stat().st_size
+              old_path.unlink()
+              report.append({
+                  'retired': f'js/{old}',
+                  'canonical': f'js/{canonical}',
+                  'old_bytes': old_size,
+                  'canonical_bytes': canonical_size,
+                  'literal_refs_before_delete': 0,
+                  'canonical_loaded': True,
+              })
+
+          # Runtime references must still resolve after cleanup.
+          missing = []
+          for ref in re.findall(r'(?:src|href)=["\'](\./[^"\']+)["\']', shell):
+              clean = ref.split('?', 1)[0]
+              if not (root / clean[2:]).exists():
+                  missing.append(clean)
+          if missing:
+              raise SystemExit('Missing runtime references after cleanup: ' + ', '.join(sorted(set(missing))))
+
+          print(json.dumps({
+              'build': build.get('build'),
+              'market_core': market_core,
+              'retired_count': len(report),
+              'retired': report,
+              'protected_not_touched': [
+                  'Aether versioned siblings',
+                  'oracle-fx-406012.js',
+                  'dex-exclusion-diagnostics-406098.js'
+              ]
+          }, indent=2, ensure_ascii=False))
+          PY
+
+      - name: JavaScript syntax check
+        run: |
+          find public/agent_crypto_erith_ia/administrator -type f -name '*.js' -print0 \
+            | xargs -0 -n1 node --check
+
+      - name: Runtime stable registry guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          t = Path('public/agent_crypto_erith_ia/administrator/js/runtime-modules.js').read_text(encoding='utf-8')
+          required = [
+              './js/footer-version-truth.js',
+              './js/generated-report-version-truth.js',
+              './js/local-ai-contract-consistency.js',
+              './js/local-dialogue-presentation.js',
+              './js/pedagogy-version-truth.js',
+              'versioned_filenames: false',
+          ]
+          missing = [x for x in required if x not in t]
+          if missing:
+              raise SystemExit('Runtime registry guard failed: ' + ', '.join(missing))
+          print('Neutral canonical runtime owners OK')
+          PY
+
+      - name: Build and Market Core lock guard
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          d = json.loads(Path('public/agent_crypto_erith_ia/administrator/build.json').read_text(encoding='utf-8'))
+          if str(d.get('build')) != '40.6.124': raise SystemExit(f'Build drifted: {d.get("build")!r}')
+          e = str(d.get('market_core') or d.get('engine') or '')
+          if '38.15.11' not in e: raise SystemExit(f'Market Core drifted: {e!r}')
+          print('Build 40.6.124 unchanged · Market Core 38.15.11 locked')
+          PY
+
+      - name: Commit cleanup and retire one-shot workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven Refactor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A public/agent_crypto_erith_ia/administrator
+          git rm -f .github/workflows/agent-crypto-retire-neutral-versioned-orphans.yml
+          git commit -m 'refactor(agent-crypto): retire proven neutral versioned orphans'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'Rebase conflict; refusing force-push'
+              exit 1
+            fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          echo 'Push remained contested after safe retries'
+          exit 1
