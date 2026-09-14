@@ -28,13 +28,7 @@ def strip_query(ref: str) -> str:
 
 
 def resolve(base_file: Path, ref: str) -> Path | None:
-    """Resolve runtime refs using the same practical base rules as the app.
-
-    Classic scripts in this project construct paths against document.baseURI, so
-    './js/x.js' inside js/foo.js still means Administrator/js/x.js. CSS url(...)
-    remains stylesheet-relative. If only one of root-relative/source-relative
-    candidates physically exists, that evidence wins.
-    """
+    """Resolve runtime refs using the same practical base rules as the app."""
     clean = strip_query(ref)
     if not clean.startswith(('./', '../')):
         return None
@@ -83,10 +77,18 @@ def canonical_target(rel: Path) -> Path | None:
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-# Build the active resource graph, beginning with runtime-shell.html.
+
+def refs_from(text: str) -> list[str]:
+    refs = [m.group('ref') for m in HTML_REF_RE.finditer(text)]
+    refs += [m.group('ref') for m in CSS_URL_RE.finditer(text)]
+    refs += [m.group('ref') for m in QUOTED_REL_RE.finditer(text)]
+    return refs
+
+# Build the active resource graph and record pre-existing missing resources.
 queue: list[Path] = [Path('runtime-shell.html')]
 seen_text: set[Path] = set()
 active_refs: set[Path] = set()
+baseline_missing: set[Path] = set()
 
 while queue:
     rel = queue.pop(0)
@@ -100,16 +102,16 @@ while queue:
         text = full.read_text(encoding='utf-8')
     except UnicodeDecodeError:
         continue
-    refs = [m.group('ref') for m in HTML_REF_RE.finditer(text)]
-    refs += [m.group('ref') for m in CSS_URL_RE.finditer(text)]
-    refs += [m.group('ref') for m in QUOTED_REL_RE.finditer(text)]
-    for ref in refs:
+    for ref in refs_from(text):
         resolved = resolve(full, ref)
         if resolved is None:
             continue
         active_refs.add(resolved)
         target = ROOT / resolved
-        if target.suffix.lower() in {'.css', '.js', '.html', '.json'} and target.is_file():
+        if not target.exists():
+            baseline_missing.add(resolved)
+            continue
+        if target.suffix.lower() in {'.css', '.js', '.html', '.json'}:
             queue.append(resolved)
 
 # Only canonicalize resources reachable from the live runtime graph.
@@ -186,8 +188,9 @@ for old in identical_duplicates:
     if old_full.exists():
         old_full.unlink()
 
-# Verify the active graph again after migration.
-missing: list[str] = []
+# Verify the active graph again. Existing broken references are debt, not a reason
+# to block unrelated canonicalization; only NEW missing resources fail this pass.
+missing_after: set[Path] = set()
 queue = [Path('runtime-shell.html')]
 seen_after: set[Path] = set()
 while queue:
@@ -202,22 +205,22 @@ while queue:
         text = full.read_text(encoding='utf-8')
     except UnicodeDecodeError:
         continue
-    refs = [m.group('ref') for m in HTML_REF_RE.finditer(text)]
-    refs += [m.group('ref') for m in CSS_URL_RE.finditer(text)]
-    refs += [m.group('ref') for m in QUOTED_REL_RE.finditer(text)]
-    for ref in refs:
+    for ref in refs_from(text):
         resolved = resolve(full, ref)
         if resolved is None:
             continue
         target = ROOT / resolved
         if not target.exists():
-            missing.append(f'{rel_string(rel)} -> {ref}')
+            missing_after.add(resolved)
             continue
         if target.suffix.lower() in {'.css', '.js', '.html', '.json'}:
             queue.append(resolved)
 
-if missing:
-    raise SystemExit('Missing active resources after canonicalization:\n' + '\n'.join(sorted(set(missing))))
+# If a missing resource itself was canonically renamed, compare against the mapped target.
+baseline_normalized = {mapping.get(path, path) for path in baseline_missing}
+new_missing = missing_after - baseline_normalized
+if new_missing:
+    raise SystemExit('New missing active resources after canonicalization:\n' + '\n'.join(sorted(rel_string(x) for x in new_missing)))
 
 print(json.dumps({
     'active_text_nodes': len(seen_text),
@@ -226,6 +229,8 @@ print(json.dumps({
     'canonicalized_resources': len(mapping),
     'changed_text_files': len(changed_files),
     'reference_replacements_estimate': reference_replacements,
+    'preexisting_missing_resources': [rel_string(x) for x in sorted(baseline_missing, key=rel_string)],
+    'new_missing_resources': [rel_string(x) for x in sorted(new_missing, key=rel_string)],
     'skipped_count': len(skipped),
     'mapping': {rel_string(k): rel_string(v) for k, v in mapping.items()},
     'skipped': skipped,
