@@ -23,10 +23,8 @@
     return {
       lifecycle:
         globalThis.AgentCryptoStrategyAPaperLifecycle ||
-        globalThis.AgentCryptoStrategyAPaperLifecycle ||
         null,
       afterCost:
-        globalThis.AgentCryptoStrategyAAfterCostMetrics ||
         globalThis.AgentCryptoStrategyAAfterCostMetrics ||
         null
     };

@@ -30,8 +30,6 @@
   // an already-submitted Paper position that still needs reconciliation/closure.
   function safetyGovernor() {
     return globalThis.AgentCryptoStrategyASafetyCertification
-      || globalThis.AgentCryptoStrategyASafetyCertification
-      || globalThis.AgentCryptoStrategyASafetyCertification
       || null;
   }
 

@@ -99,7 +99,7 @@
       if(details.id===key)details.removeAttribute("id");
       body.replaceChildren(template.content.cloneNode(true));
       body.dataset.atlasHydrated="1"; details.dataset.atlasHydration="ready"; hydrated.add(key);
-      try{(globalThis.AgentCryptoAtlasPeripheralRebind||globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.(key);}catch(error){console.warn("[40.4.99] Atlas peripheral rebind",error);}
+      try{(globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.(key);}catch(error){console.warn("[40.4.99] Atlas peripheral rebind",error);}
       try{details.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key,build:BUILD}}));}catch(_){}
       return true;
     }catch(error){
@@ -117,7 +117,7 @@
     try{
       const source=await sourceText(),template=document.createElement("template"); template.innerHTML=auditInnerHtml(source,spec);
       root.replaceChildren(template.content.cloneNode(true)); root.dataset.atlasAuditHydration="ready"; auditHydrated.add(key);
-      try{(globalThis.AgentCryptoAtlasPeripheralRebind||globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.("current-audit");}catch(error){console.warn("[40.4.99] Atlas CURRENT audit rebind",error);}
+      try{(globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.("current-audit");}catch(error){console.warn("[40.4.99] Atlas CURRENT audit rebind",error);}
       try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`current-audit:${key}`,build:BUILD}}));}catch(_){}
       return true;
     }catch(error){

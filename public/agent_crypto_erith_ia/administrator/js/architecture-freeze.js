@@ -880,7 +880,7 @@
     const root=document.getElementById("atlasCelestialHandoff");
     const exportButton=document.getElementById("atlasCelestialExport");
     const importButton=document.getElementById("atlasCelestialImport");
-    const api=globalThis.AgentCryptoCelestialPortable || globalThis.AgentCryptoCelestialPortable;
+    const api=globalThis.AgentCryptoCelestialPortable;
     const sentinel=globalThis.__AGENT_CRYPTO_CELESTIAL_SENTINEL_40268__;
     const transport=api?.transport === "manual_shared_memory_json";
     const readonly=api?.read_only_on_book === true;

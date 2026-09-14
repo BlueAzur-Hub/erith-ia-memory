@@ -33,7 +33,7 @@
 
   function certificationMatrix(){
     const replay=globalThis.AgentCryptoStrategyAReplay;
-    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle;
+    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle;
     const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics;
     const m=metrics?.summary?.()||{trades:0,sample_state:"INSUFFICIENT_SAMPLE",sample_min:30};
     const tested=lastFoundationTest?.pass===true;
@@ -62,7 +62,7 @@
 
   function runFoundationTests(){
     const replay=globalThis.AgentCryptoStrategyAReplay;
-    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle;
+    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle;
     const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics;
     const call=(api)=>{try{return api?.self_test?.()||{pass:false,reason:"UNAVAILABLE"};}catch(error){return {pass:false,error:String(error?.message||error)}}};
     const modules={deterministic_replay:call(replay),paper_lifecycle:call(lifecycle),after_cost_metrics:call(metrics)};

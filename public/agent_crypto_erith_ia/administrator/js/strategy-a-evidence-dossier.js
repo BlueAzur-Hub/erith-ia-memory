@@ -55,9 +55,9 @@
   function snapshot(){
     const experiment=globalThis.AgentCryptoStrategyAExperimentLedger;
     const replay=globalThis.AgentCryptoStrategyAReplay;
-    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle;
+    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle;
     const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics;
-    const safety=globalThis.AgentCryptoStrategyASafetyCertification||globalThis.AgentCryptoStrategyASafetyCertification;
+    const safety=globalThis.AgentCryptoStrategyASafetyCertification;
     const experimentRows=safeCall(experiment?.read,[])||[];
     const afterRows=safeCall(metrics?.read,[])||[];
     const safetyMatrix=safeCall(safety?.certification_matrix,{gates:[]})||{gates:[]};
@@ -81,9 +81,9 @@
     const bad=datasetReadiness([{trade_id:"A",at:"2026-01-01T00:00:00Z",net_pnl_eur:1,total_costs_eur:.1,cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true},{trade_id:"A",at:"",net_pnl_eur:-1,total_costs_eur:.1,cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true}],"after_cost");
     const unknown=datasetReadiness([{trade_id:"U1",at:"2026-01-01T00:00:00Z",net_pnl_eur:null,total_costs_eur:"",cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true},{trade_id:"U2",at:"2026-01-01T00:01:00Z",net_pnl_eur:false,total_costs_eur:0,cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true}],"after_cost");
     const partial=datasetReadiness([{trade_id:"P1",at:"2026-01-01T00:00:00Z",net_pnl_eur:1,total_costs_eur:0,cost_completeness:"PARTIAL_MODEL",accounting_identity_status:"INDETERMINATE_COSTS",accounting_identity_ok:null}],"after_cost");
-    const before=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification||globalThis.AgentCryptoStrategyASafetyCertification)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics?.read?.()||[]});
+    const before=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics?.read?.()||[]});
     const d=snapshot();
-    const after=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification||globalThis.AgentCryptoStrategyASafetyCertification)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics?.read?.()||[]});
+    const after=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics?.read?.()||[]});
     const strictUnknown=unknown.after_cost_complete_rows===0&&unknown.numeric_unknown_rows===2&&unknown.monte_carlo_ready===false;
     const strictVerified=partial.after_cost_complete_rows===0&&partial.unverified_after_cost_rows===1&&partial.monte_carlo_ready===false;
     const pass=bad.data_integrity_ready===false&&bad.monte_carlo_ready===false&&strictUnknown&&strictVerified&&d.certification.certified_for_live===false&&d.fabricated_backtest===false&&d.paper_only===true&&before===after;

@@ -34294,7 +34294,7 @@ function scrollToLearningTarget(targetId, options = {}) {
   // 40.4.43 — Learning presentation may be absent until its shell opens.
   // Ask the canonical presentation owner to hydrate once, then reuse the
   // existing scheduled positioning path. No timer/observer/storage owner is added.
-  const learningPresentation = globalThis.ErithLearningPresentation || globalThis.ErithLearningPresentation40444 || globalThis.ErithLearningPresentation40443;
+  const learningPresentation = globalThis.ErithLearningPresentation40444 || globalThis.ErithLearningPresentation40443;
   if (!document.getElementById(id) && typeof learningPresentation?.ensure === "function") {
     learningPresentation.ensure(id).then(ok => {
       if (ok) atlasLearningScheduleTarget(() => document.getElementById(id), options);
@@ -51339,7 +51339,7 @@ function renderSharedMemory() { const id = getCollectorId(); if (isCollectorConf
   atlasMemoryIntelligenceRender();
  try { atlasMultiCollectorOperatorRender(); } catch (_) {} }
 
-function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const celestialApi = globalThis.AgentCryptoCelestialPortable || globalThis.AgentCryptoCelestialPortable; const celestialCandidate = celestialApi?.snapshot?.() || null; const celestial = celestialCandidate?.fetched_at ? celestialCandidate : null; const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, celestial_handoff: celestial ? "ryzen_to_book_readonly" : null, celestial, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
+function exportAutoMemory() { const records = normalizeSharedRecords(readAutoMemory(), getCollectorId()); const celestialApi = globalThis.AgentCryptoCelestialPortable; const celestialCandidate = celestialApi?.snapshot?.() || null; const celestial = celestialCandidate?.fetched_at ? celestialCandidate : null; const payload = { schema: "atlas_shared_market_memory_v1", exported_at: new Date().toISOString(), exporter_collector_id: getCollectorId(), record_count: records.length, collectors: collectorStats(records).collectors, celestial_handoff: celestial ? "ryzen_to_book_readonly" : null, celestial, records }; const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-"); downloadTextFile(`atlas_shared_market_memory_${getCollectorId()}_${stamp}.json`, "application/json", JSON.stringify(payload, null, 2)); renderSharedMemory();
 }
 
 async function importAutoMemoryFile(file) {
@@ -51369,7 +51369,7 @@ async function importAutoMemoryFile(file) {
       throw new Error(`provenance multi-machine non conservée (${proof.failures.join(", ")})`);
     }
 
-    const celestialApi = globalThis.AgentCryptoCelestialPortable || globalThis.AgentCryptoCelestialPortable;
+    const celestialApi = globalThis.AgentCryptoCelestialPortable;
     const celestialImported = celestial ? (celestialApi?.importSnapshot?.(celestial) === true) : false;
     const celestialProducer = celestial ? String(celestial.producer_collector_id || "provenance inconnue") : "absent";
     const afterStats = collectorStats(saved);
