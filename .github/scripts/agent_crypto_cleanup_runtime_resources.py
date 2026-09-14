@@ -28,11 +28,36 @@ def strip_query(ref: str) -> str:
 
 
 def resolve(base_file: Path, ref: str) -> Path | None:
+    """Resolve runtime refs using the same practical base rules as the app.
+
+    Classic scripts in this project construct paths against document.baseURI, so
+    './js/x.js' inside js/foo.js still means Administrator/js/x.js. CSS url(...)
+    remains stylesheet-relative. If only one of root-relative/source-relative
+    candidates physically exists, that evidence wins.
+    """
     clean = strip_query(ref)
     if not clean.startswith(('./', '../')):
         return None
     try:
-        return (base_file.parent / clean).resolve().relative_to(ROOT.resolve())
+        root_abs = ROOT.resolve()
+        if clean.startswith('../'):
+            return (base_file.parent / clean).resolve().relative_to(root_abs)
+
+        root_candidate = (ROOT / clean[2:]).resolve()
+        source_candidate = (base_file.parent / clean).resolve()
+        root_exists = root_candidate.exists()
+        source_exists = source_candidate.exists()
+
+        if root_exists and not source_exists:
+            return root_candidate.relative_to(root_abs)
+        if source_exists and not root_exists:
+            return source_candidate.relative_to(root_abs)
+        if root_exists and source_exists:
+            preferred = source_candidate if base_file.suffix.lower() == '.css' else root_candidate
+            return preferred.relative_to(root_abs)
+
+        preferred = source_candidate if base_file.suffix.lower() == '.css' else root_candidate
+        return preferred.relative_to(root_abs)
     except Exception:
         return None
 
