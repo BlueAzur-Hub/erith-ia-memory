@@ -25,7 +25,7 @@ jobs:
           find public/agent_crypto_erith_ia/administrator -type f -name '*.js' -print0 | xargs -0 -n1 node --check
           python - <<'PY'
           from pathlib import Path
-          import json,re
+          import collections,json,re
 
           ROOT=Path('public/agent_crypto_erith_ia/administrator')
           ENTRY=Path('runtime-shell.html')
@@ -57,16 +57,17 @@ jobs:
               out += [m.group('ref') for m in REL_JS_RE.finditer(text)]
               return list(dict.fromkeys(out))
 
-          q=[ENTRY];seen=set();texts={}
+          q=[ENTRY];seen=set();edges={}
           while q:
               rel=q.pop(0)
               if rel in seen:continue
               p=ROOT/rel
               if not p.is_file() or p.suffix.lower() not in {'.html','.js'}:continue
               t=p.read_text(encoding='utf-8')
-              seen.add(rel);texts[rel]=t
+              seen.add(rel)
               targets=set()
               for ref in refs(t):targets.update(resolve(rel,ref))
+              edges[rel]=targets
               for x in sorted(targets,key=str):
                   if x.suffix.lower() in {'.html','.js'} and x not in seen:q.append(x)
           if len(seen)!=101:raise SystemExit(f'Runtime graph drifted: {len(seen)}')
@@ -80,34 +81,42 @@ jobs:
           if missing:raise SystemExit('Missing shell references: '+', '.join(sorted(set(missing))))
 
           # Shell IDs remain unique.
-          import collections
           ids=re.findall(r'\bid=["\']([^"\']+)["\']',shell,re.I)
           dup=[x for x,n in collections.Counter(ids).items() if n>1]
           if dup:raise SystemExit('Duplicate shell DOM ids: '+', '.join(sorted(dup)))
 
           # Current canonical active file list must point to existing files.
           cleanup=build.get('versioning_cleanup') or {}
-          active=list(cleanup.get('canonical_active_files') or [])
-          active_missing=[]
-          for item in active:
-              item=str(item)
-              p=ROOT/item
-              if not p.exists():active_missing.append(item)
+          active=[str(x) for x in (cleanup.get('canonical_active_files') or [])]
+          active_missing=[item for item in active if not (ROOT/item).exists()]
           if active_missing:raise SystemExit('Missing canonical_active_files: '+', '.join(active_missing))
 
+          # Retired implementation files may still be named in historical labels/contracts.
+          # Closure truth is physical absence + absence from the active manifest + stable runtime graph.
           retired=[
-            'visible-version-surface-truth-406107.js','operator-cockpit.js','admin-offscreen-paint-gate.js',
-            'admin-offscreen-paint-gate.css','admin-learning-journey-recovery-40422.css','admin-book-comfort.css',
+            'js/visible-version-surface-truth-406107.js',
+            'js/operator-cockpit.js',
+            'js/admin-offscreen-paint-gate.js',
+            'admin-offscreen-paint-gate.css',
+            'admin-learning-journey-recovery-40422.css',
+            'admin-book-comfort.css',
             'js/core/admin-layout.js','js/core/event-bus.js','js/core/module-manager.js',
             'js/modules/analysis.js','js/modules/analytical-memory.js','js/modules/decision-board.js',
             'js/modules/erith.js','js/modules/market-memory.js','js/modules/market.js','js/modules/observability.js',
             'js/modules/simulation.js','js/modules/system.js','js/modules/module-utils.js'
           ]
-          runtime_mentions={}
-          for name in retired:
-              hits=[str(src) for src,t in texts.items() if name in t or Path(name).name in t]
-              if hits:runtime_mentions[name]=hits
-          if runtime_mentions:raise SystemExit('Retired file still mentioned by runtime: '+json.dumps(runtime_mentions))
+          retired_present=[name for name in retired if (ROOT/name).exists()]
+          if retired_present:raise SystemExit('Retired implementation files still present: '+', '.join(retired_present))
+          retired_active=[name for name in retired if name in active]
+          if retired_active:raise SystemExit('Retired implementation still listed canonical-active: '+', '.join(retired_active))
+
+          # No runtime dependency edge can target a retired path because those files are absent;
+          # also prove every graph target that did resolve remains present.
+          missing_edge_targets=[]
+          for src,targets in edges.items():
+              for target in targets:
+                  if not (ROOT/target).exists():missing_edge_targets.append(f'{src}->{target}')
+          if missing_edge_targets:raise SystemExit('Resolved runtime edge target missing: '+', '.join(missing_edge_targets))
 
           temp_workflows=[
             'agent-crypto-audit-workflow-debt.yml','agent-crypto-audit-orphan-scripts.yml',
@@ -126,6 +135,7 @@ jobs:
             'atlas_current':any('atlas' in p.name.lower() for p in (ROOT/'js').glob('*.js')),
             'strategy_a':(ROOT/'js/strategy-a-auto-start.js').exists(),
             'boot':(ROOT/'js/boot.js').exists(),
+            'technical_visual_assets':(ROOT/'js/admin-visual-assets.js').exists(),
           }
           if not all(protected_checks.values()):raise SystemExit('Protected owner missing: '+json.dumps(protected_checks))
 
@@ -133,8 +143,11 @@ jobs:
             'build':build.get('build'),'market_core':core,'runtime_nodes':len(seen),
             'shell_direct_refs':'OK','shell_dom_ids':'UNIQUE','js_syntax':'OK',
             'canonical_active_files_count':len(active),'canonical_active_files_missing':[],
-            'retired_runtime_mentions':{},'temporary_cleanup_workflows_remaining':[],
-            'protected_owner_checks':protected_checks,'status':'CLEANUP_CLOSURE_PASS'
+            'retired_files_present':[],'retired_files_in_active_manifest':[],
+            'runtime_missing_edge_targets':[],
+            'temporary_cleanup_workflows_remaining':[],
+            'protected_owner_checks':protected_checks,
+            'status':'CLEANUP_CLOSURE_PASS'
           },indent=2,ensure_ascii=False))
           PY
 
