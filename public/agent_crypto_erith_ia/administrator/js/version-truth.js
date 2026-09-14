@@ -5,7 +5,7 @@
 (() => {
   "use strict";
 
-  const OWNER = "version-update-control";
+  const OWNER = "version-truth";
   const RUNTIME_REGISTRY = "./js/runtime-modules.js";
   const BUILD_RE = /^\d+\.\d+\.\d+$/;
 
@@ -96,6 +96,11 @@
           : `Build ${loadedBuild} chargée`;
     }
 
+    document.documentElement.dataset.versionTruthBuild = loadedBuild;
+    document.documentElement.dataset.versionTruthPublished = publishedBuild;
+    document.documentElement.dataset.versionTruthState = state;
+    document.documentElement.dataset.versionTruthAuthority = OWNER;
+    document.documentElement.dataset.versionTruthSource = "release-entry+build.json";
     document.documentElement.dataset.versionLoadedBuild = loadedBuild;
     document.documentElement.dataset.versionPublishedBuild = publishedBuild;
     document.documentElement.dataset.versionUpdateState = state;
@@ -226,6 +231,7 @@
       try {
         document.dispatchEvent(new CustomEvent("agent-crypto:version-truth-ready", {
           detail: {
+            build: loadedBuild,
             loaded: loadedBuild,
             published: publishedTruth?.build || null,
             engine,
@@ -242,6 +248,8 @@
     if (state === "available") void navigateToPublished();
   }, { capture: true });
 
+  const noWriteCompatibilitySync = () => true;
+
   globalThis.ErithVersionTruth = Object.freeze({
     owner: OWNER,
     get build() { return loadedBuild; },
@@ -256,6 +264,14 @@
     refresh,
     navigateToPublished,
     ensureRuntimeLayers,
+    syncFooterTruth: noWriteCompatibilitySync,
+    syncMirrorTruth: noWriteCompatibilitySync,
+    syncVisibleTruth: noWriteCompatibilitySync,
+    single_visible_owner: true,
+    build_json_authority: false,
+    version_branching: false,
+    versioned_runtime_filenames: false,
+    canonical_active_filename: "js/version-truth.js",
     loaded_build_authority: "release-entry",
     published_build_authority: "build.json",
     reload_current_build: false,
