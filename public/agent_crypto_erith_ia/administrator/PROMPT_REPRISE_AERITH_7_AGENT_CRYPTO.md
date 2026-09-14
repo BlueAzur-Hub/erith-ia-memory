@@ -38,7 +38,7 @@ Checkpoint courant :
 - **entrée Operator : `operator/index-40.6.100.html`** ;
 - **entrée Operator courante : `operator/index.html`** ;
 - **runtime Operator : Administrator partagé avec `?view=intermediate&operator-entry=40.6.100`** ;
-- **Bridge Operator d’interface : `administrator/js/aether-operator-bridge-406002.js`** ;
+- **Bridge Operator d’interface : `administrator/js/aether-operator-bridge.js`** ;
 - Source Truth CEX : `Binance primary → Kraken control → Coinbase control → OKX control`, lecture seule, EUR direct ;
 - DEX : observabilité / motifs d’exclusion, aucune cotation canonique DEX fabriquée ;
 - Strategy A : Paper V2 et lecteur rétrospectif présents, aucun ordre réel.
@@ -168,7 +168,7 @@ Operator ne gagne pas de session Administrator, écriture GitHub/fichiers, walle
 
 # 7. NE PAS CONFONDRE LES DEUX BRIDGE
 
-`administrator/js/aether-operator-bridge-406002.js` est le **Bridge d’interface Aether / Operator**. Il réutilise le Livecheck canonique au cold boot vide et permet le retour VEILLE vers la ligne opérateur native. Il n’ajoute aucun timer récurrent, observer, fetch owner, storage write, état de trading ou algorithme marché.
+`administrator/js/aether-operator-bridge.js` est le **Bridge d’interface Aether / Operator**. Il réutilise le Livecheck canonique au cold boot vide et permet le retour VEILLE vers la ligne opérateur native. Il n’ajoute aucun timer récurrent, observer, fetch owner, storage write, état de trading ou algorithme marché.
 
 Ce fichier n’est pas le futur Bridge local propre au poste de Yohan.
 

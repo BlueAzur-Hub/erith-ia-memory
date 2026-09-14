@@ -13,7 +13,7 @@ Role precedence remains conservative: a valid local Administrator session keeps 
 
 ## Aether Operator Bridge
 
-The shared runtime already loads `js/aether-operator-bridge-406002.js`.
+The shared runtime already loads `js/aether-operator-bridge.js`.
 
 Its bounded responsibilities are preserved:
 - reuse the existing Livecheck button once on an empty cold boot;

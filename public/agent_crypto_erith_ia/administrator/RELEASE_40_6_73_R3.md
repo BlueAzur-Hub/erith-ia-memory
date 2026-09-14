@@ -14,7 +14,7 @@ The first-paint preseed reads `agent_crypto_erith_ia_v2_interface_mode`; an olde
 
 ## Single surgery
 
-Carrier: `administrator/js/aerith10-workspace-bridge-406021.js`.
+Carrier: `administrator/js/aerith10-workspace-bridge.js`.
 
 A strictly isolated `40.6.73 R3` block now captures a trusted click on `#btnAdminAccountToggle` at `window` capture phase and, only when the local access session is `owner`, persists:
 

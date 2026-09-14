@@ -13,7 +13,7 @@ The 40.6.68 observability owner already knows how to build a snapshot directly f
 
 ### 40.6.71 scope
 
-New additive runtime owner: `js/tradus-data-ui-decoupling-406071.js`.
+New additive runtime owner: `js/tradus-data-ui-decoupling.js`.
 
 - publish TRADUS observability truth at boot independently of visual panel mounting;
 - repeat the same bounded truth publication on `pageshow`;

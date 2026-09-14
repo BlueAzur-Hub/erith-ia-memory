@@ -16,7 +16,7 @@ Promouvoir Aether Watch V2 en build réel, sans conserver C1→C5 comme chaîne 
 - La géométrie persistée est normalisée **pendant qu'Aether est encore masquée**, en conservant `hidden` et en laissant le Window Manager propriétaire de la persistance.
 - Quand Lecture Technique est visible, Aether utilise le plus grand rectangle 16:9 complet à gauche de son rail. Sans rail, Aether est centré.
 - Les états explicites `minimized` / `maximized` ne sont pas annulés.
-- `js/aether-role-visibility-406050.js` conserve le runtime R5 sain (fermeture de rôle + fiche active au-dessus d'Aether), retire les liens candidats C1→C5, charge uniquement la feuille V2 finale et le pont canonique 40.6.74.
+- `js/aether-role-visibility.js` conserve le runtime R5 sain (fermeture de rôle + fiche active au-dessus d'Aether), retire les liens candidats C1→C5, charge uniquement la feuille V2 finale et le pont canonique 40.6.74.
 - La même intégration publie la vérité visible **Build 40.6.74 · Administrator** dans le shell en cours d'exécution, ainsi que les métadonnées Administrator V9.
 - Le runtime C5 n'est plus actif.
 
@@ -54,7 +54,7 @@ Les screenshots de validation locale sont des tests de rendu isolés ; ils ne pr
 
 - `public/agent_crypto_erith_ia/administrator/aether-v2-406074.css`
 - `public/agent_crypto_erith_ia/administrator/js/aether-frame-406074.js`
-- `public/agent_crypto_erith_ia/administrator/js/aether-role-visibility-406050.js`
+- `public/agent_crypto_erith_ia/administrator/js/aether-role-visibility.js`
 - `public/agent_crypto_erith_ia/administrator/RELEASE_40_6_74.md`
 
 ## Validation terrain attendue

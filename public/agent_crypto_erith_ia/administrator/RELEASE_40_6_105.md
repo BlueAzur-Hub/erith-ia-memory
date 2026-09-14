@@ -34,7 +34,7 @@ New read-side reconciliation layer: `js/tradus-strategy-a-reconcile-406105.js`.
 - Aether business truth unchanged.
 - Atlas CURRENT and Oracle unchanged.
 - Strategy A business logic, lifecycle, Paper V2 and ledgers unchanged.
-- TRADUS market fetch owner unchanged (`tradus-shadow-adapter-406066.js`).
+- TRADUS market fetch owner unchanged (`tradus-shadow-adapter.js`).
 - No new fetch, timer, observer, storage owner, wallet, key or real order path.
 
 ## Acceptance
