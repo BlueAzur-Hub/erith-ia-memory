@@ -35929,11 +35929,11 @@ function strategyAAutoLifecycleClose(reconciliation){
 /* 40.4.299 — Safety is now the governor for NEW Auto A entries.
    It never prevents monitoring/reconciliation of an already-open Paper position. */
 function strategyAAutoSafetySnapshot(){
-  try{return globalThis.AgentCryptoStrategyASafetyCertification404299?.snapshot?.()||{level:"UNAVAILABLE",new_trades_allowed:false,auto_a_governor_connected:false};}
+  try{return globalThis.AgentCryptoStrategyASafetyCertification?.snapshot?.()||{level:"UNAVAILABLE",new_trades_allowed:false,auto_a_governor_connected:false};}
   catch(error){return {level:"ERROR",reason:String(error?.message||error),new_trades_allowed:false,auto_a_governor_connected:false};}
 }
 function strategyAAutoSafetySignal(kind,detail={}){
-  try{return globalThis.AgentCryptoStrategyASafetyCertification404299?.signal?.(kind,detail)||null;}catch(_){return null;}
+  try{return globalThis.AgentCryptoStrategyASafetyCertification?.signal?.(kind,detail)||null;}catch(_){return null;}
 }
 function strategyAAutoStart(){
   const s=STRATEGY_A_AUTO_STATE;let local=null;
@@ -36866,7 +36866,7 @@ function strategyAReconcile(){
   open.status="PAPER_CLOSED";open.closed_by=row.reconciliation_id;STRATEGY_A_CLOSED_TRADES.push(row);
   try{row.lifecycle_bridge_404297=strategyAAutoLifecycleClose(row);}catch(error){row.lifecycle_bridge_404297={ok:false,reason:String(error?.message||error)};}
   try{
-    const afterCost=globalThis.AgentCryptoStrategyAAfterCostMetrics404298?.from_reconciliation?.(row);
+    const afterCost=globalThis.AgentCryptoStrategyAAfterCostMetrics?.from_reconciliation?.(row);
     row.after_cost_404298=afterCost?.ok===true?{ok:true,identity:afterCost.row?.identity||row.reconciliation_id}:{ok:false,reason:afterCost?.reason||"AFTER_COST_OWNER_UNAVAILABLE"};
   }catch(error){row.after_cost_404298={ok:false,reason:String(error?.message||error)};}
   return {status:"RECONCILED",trade:row,metrics:strategyAMetrics()};

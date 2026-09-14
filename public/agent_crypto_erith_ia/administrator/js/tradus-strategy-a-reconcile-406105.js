@@ -119,7 +119,7 @@
 
   function reconcile(reason = "runtime") {
     const panel = document.getElementById(PANEL_ID);
-    const api = globalThis.AgentCryptoTradusShadow406066;
+    const api = globalThis.AgentCryptoTradusShadow;
     if (!panel || !api?.read) return Object.freeze({ applied:false, reason:"OWNER_NOT_READY" });
     const row = clone(api.read());
     const strategyA = readStrategyA();

@@ -158,7 +158,7 @@
 
   function enforce(reason = "runtime") {
     const panel = document.getElementById(PANEL_ID);
-    const shadow = globalThis.AgentCryptoTradusShadow406066;
+    const shadow = globalThis.AgentCryptoTradusShadow;
     if (!panel || !shadow?.read) {
       return Object.freeze({ applied: false, reason: "OWNER_NOT_READY" });
     }

@@ -8,7 +8,7 @@
 
   let autoRan=false;
   let lastReason="";
-  const api=()=>globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance406063||null;
+  const api=()=>globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance||null;
 
   function mark(state,reason=""){
     document.documentElement.dataset.strategyAPaperProofHotfix=state;

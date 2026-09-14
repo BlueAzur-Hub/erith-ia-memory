@@ -418,7 +418,7 @@
     kraken_network: false
   });
 
-  globalThis.AgentCryptoStrategyAPaperLifecycle404291 = api;
+  globalThis.AgentCryptoStrategyAPaperLifecycle = api;
   if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => render(), { once: true });
     else render();

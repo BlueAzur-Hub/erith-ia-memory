@@ -29,9 +29,9 @@
   // this lifecycle owner. Fail closed for creation/submission, but never strand
   // an already-submitted Paper position that still needs reconciliation/closure.
   function safetyGovernor() {
-    return globalThis.AgentCryptoStrategyASafetyCertification404299
-      || globalThis.AgentCryptoStrategyASafetyCertification404295
-      || globalThis.AgentCryptoStrategyASafetyCertification404293
+    return globalThis.AgentCryptoStrategyASafetyCertification
+      || globalThis.AgentCryptoStrategyASafetyCertification
+      || globalThis.AgentCryptoStrategyASafetyCertification
       || null;
   }
 
@@ -635,9 +635,8 @@
     authorization_reuse_forbidden: true
   });
 
-  globalThis.AgentCryptoStrategyAPaperLifecycle404295 = api;
+  globalThis.AgentCryptoStrategyAPaperLifecycle = api;
   // Compatibility owner: downstream .292/.293/.294 modules already address the .291 symbol.
-  globalThis.AgentCryptoStrategyAPaperLifecycle404291 = api;
   if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => render(), { once: true });
     else render();

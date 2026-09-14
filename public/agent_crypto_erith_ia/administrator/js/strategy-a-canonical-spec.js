@@ -19,10 +19,10 @@
       mixed_btc24_min_pct:num(live?.mixed_btc24_min_pct ?? p?.mixed_btc24_min_pct),
       bullish_confidence_min:num(p?.bullish_confidence_min),
       cost_required_move_pct:num(live?.cost_absolute_min_expected_move_pct ?? p?.cost_required_move_pct),
-      paper_lifecycle_build:globalThis.AgentCryptoStrategyAPaperLifecycle404295?.build||null,
+      paper_lifecycle_build:globalThis.AgentCryptoStrategyAPaperLifecycle?.build||null,
       auto_lifecycle_bridge_build:globalThis.AgentCryptoStrategyAAutoLifecycleBridge?.build||null,
-      safety_build:globalThis.AgentCryptoStrategyASafetyCertification404299?.build||null,
-      after_cost_build:globalThis.AgentCryptoStrategyAAfterCostMetrics404298?.build||null
+      safety_build:globalThis.AgentCryptoStrategyASafetyCertification?.build||null,
+      after_cost_build:globalThis.AgentCryptoStrategyAAfterCostMetrics?.build||null
     });
   }
   function audit(){

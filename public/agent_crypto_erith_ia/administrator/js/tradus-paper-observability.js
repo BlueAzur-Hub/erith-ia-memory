@@ -121,7 +121,7 @@
   function buildSnapshot(row = null, source = "read") {
     const paperApi = globalThis.AgentCryptoTradusPaperShadow;
     const paperState = paperApi?.read?.() || null;
-    const sourceRow = row || globalThis.AgentCryptoTradusShadow406066?.read?.() || null;
+    const sourceRow = row || globalThis.AgentCryptoTradusShadow?.read?.() || null;
     if (!paperState) return null;
     captureClosedTrades(paperState);
 

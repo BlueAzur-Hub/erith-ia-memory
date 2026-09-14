@@ -21,7 +21,7 @@
   const positive=v=>{const n=num(v);return n!==null&&n>0?n:null;};
   const nonnegative=v=>{const n=num(v);return n!==null&&n>=0?n:null;};
   const NOTIONAL_TOLERANCE_EUR=0.01;
-  const lifecycle=()=>globalThis.AgentCryptoStrategyAPaperLifecycle404295||null;
+  const lifecycle=()=>globalThis.AgentCryptoStrategyAPaperLifecycle||null;
   function apiReady(){const a=lifecycle();return !!(a?.create&&a?.risk_approve&&a?.submit&&a?.acknowledge&&a?.fill&&a?.reconcile&&a?.protect&&a?.close);}
   function preflight(){const a=lifecycle();return {schema:SCHEMA,build:BUILD,ready:apiReady()&&!blockedReason,api_available:apiReady(),blocked_reason:blockedReason,paper_only:true,accounting_owner:"40.4.263/40.4.264",lifecycle_owner:a?.build||null,real_orders:false,network:false};}
   function fail(reason,error=null){blockedReason=String(reason||"LIFECYCLE_BRIDGE_ERROR");return {ok:false,reason:blockedReason,error:error?String(error?.message||error):null,bridge_blocked:true};}

@@ -11,7 +11,7 @@
   const BUILD="40.6.119",INTERVAL_MS=60_000,START_DELAY_MS=1_500,RETRY_MS=2_000,API_KEY="AgentCryptoTradusAutonomousRefresh406119",PANEL_ID="tradusShadow406066";
   if(globalThis[API_KEY])return;
   let timer=null,running=false,cycles=0,lastAt=null,lastTrigger=null,lastError=null;
-  const shadow=()=>globalThis.AgentCryptoTradusShadow406066||null;
+  const shadow=()=>globalThis.AgentCryptoTradusShadow||null;
   const canonicalReader=()=>globalThis.AgentCryptoTradusCanonicalStrategyReader406123||null;
   const clone=value=>{try{return JSON.parse(JSON.stringify(value));}catch(_){return null;}};
   function canonicalReaderReady(){const api=canonicalReader();if(!api||typeof api.ready!=="function")return false;try{return api.ready()===true;}catch(_){return false;}}

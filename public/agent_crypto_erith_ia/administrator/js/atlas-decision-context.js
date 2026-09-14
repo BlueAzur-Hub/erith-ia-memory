@@ -199,7 +199,7 @@
       }
     }
 
-    const row=clone(safeCall(globalThis.AgentCryptoTradusShadow406066?.read,null));
+    const row=clone(safeCall(globalThis.AgentCryptoTradusShadow?.read,null));
     if(!row){
       const visibleAction=firstMatch([compareText],[/TRADUS\s*(BUY|SELL|NO[_\s-]?TRADE)\b/i]);
       if(!visibleAction)return Object.freeze({strategy,tradus:Object.freeze({state:"NO_DATA",action:"NO_TRADE",imbalance:null,spread:null,comparison:"EN ATTENTE",comparison_text:"",fresh:false,source:"none"})});

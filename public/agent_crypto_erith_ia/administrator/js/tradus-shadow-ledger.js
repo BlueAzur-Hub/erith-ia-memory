@@ -192,7 +192,7 @@
     p.querySelector("#multiStrategyShadowExport")?.addEventListener("click",exportLedger);
     mounted=true; render();
     try {
-      const current=globalThis.AgentCryptoTradusShadow406066?.read?.();
+      const current=globalThis.AgentCryptoTradusShadow?.read?.();
       if(current)capture(current,"mount_snapshot");
     } catch (_) {}
     return true;

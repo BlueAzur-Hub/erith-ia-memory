@@ -22,12 +22,12 @@
   function owners() {
     return {
       lifecycle:
-        globalThis.AgentCryptoStrategyAPaperLifecycle404295 ||
-        globalThis.AgentCryptoStrategyAPaperLifecycle404291 ||
+        globalThis.AgentCryptoStrategyAPaperLifecycle ||
+        globalThis.AgentCryptoStrategyAPaperLifecycle ||
         null,
       afterCost:
-        globalThis.AgentCryptoStrategyAAfterCostMetrics404298 ||
-        globalThis.AgentCryptoStrategyAAfterCostMetrics404292 ||
+        globalThis.AgentCryptoStrategyAAfterCostMetrics ||
+        globalThis.AgentCryptoStrategyAAfterCostMetrics ||
         null
     };
   }
@@ -372,7 +372,7 @@
     profitability_claim: false
   });
 
-  globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance406062 = api;
+  globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance = api;
 
   if (typeof document !== "undefined") {
     if (document.readyState === "loading") {

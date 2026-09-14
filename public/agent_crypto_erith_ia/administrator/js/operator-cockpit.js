@@ -34,7 +34,7 @@
   }
 
   function tradusFallback(){
-    const row=safe(globalThis.AgentCryptoTradusShadow406066?.read,null);
+    const row=safe(globalThis.AgentCryptoTradusShadow?.read,null);
     if(!row)return Object.freeze({available:false,fresh:false,action:"NO_TRADE",imbalance:null,spread:null,age_seconds:null,row:null});
     const at=Date.parse(String(row.at||""));
     const age=Number.isFinite(at)?Math.max(0,(Date.now()-at)/1000):null;

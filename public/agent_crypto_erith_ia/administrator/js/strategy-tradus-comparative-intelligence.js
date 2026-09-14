@@ -39,7 +39,7 @@
   }
 
   function readTradus(){
-    const row=safe(globalThis.AgentCryptoTradusShadow406066?.read,null);
+    const row=safe(globalThis.AgentCryptoTradusShadow?.read,null);
     if(!row)return Object.freeze({available:false,fresh:false,age_seconds:null,action:"NO_TRADE",reason:"NO_DATA",imbalance:null,spread:null,row:null});
     const at=Date.parse(String(row.at||""));
     const age=Number.isFinite(at)?Math.max(0,(Date.now()-at)/1000):null;

@@ -23,7 +23,7 @@
   let strategyReceipt=null;
   function runStrategyProofOnce(){
     if(strategyReceipt)return strategyReceipt;
-    const api=globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance406063;
+    const api=globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance;
     if(!api||typeof api.run!=="function")return null;
     try{
       const receipt=api.run();

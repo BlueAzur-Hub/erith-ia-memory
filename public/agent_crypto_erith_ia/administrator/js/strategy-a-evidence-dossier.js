@@ -55,9 +55,9 @@
   function snapshot(){
     const experiment=globalThis.AgentCryptoStrategyAExperimentLedger;
     const replay=globalThis.AgentCryptoStrategyAReplay;
-    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle404295||globalThis.AgentCryptoStrategyAPaperLifecycle404291;
-    const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics404292;
-    const safety=globalThis.AgentCryptoStrategyASafetyCertification404295||globalThis.AgentCryptoStrategyASafetyCertification404293;
+    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle;
+    const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics;
+    const safety=globalThis.AgentCryptoStrategyASafetyCertification||globalThis.AgentCryptoStrategyASafetyCertification;
     const experimentRows=safeCall(experiment?.read,[])||[];
     const afterRows=safeCall(metrics?.read,[])||[];
     const safetyMatrix=safeCall(safety?.certification_matrix,{gates:[]})||{gates:[]};
@@ -81,9 +81,9 @@
     const bad=datasetReadiness([{trade_id:"A",at:"2026-01-01T00:00:00Z",net_pnl_eur:1,total_costs_eur:.1,cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true},{trade_id:"A",at:"",net_pnl_eur:-1,total_costs_eur:.1,cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true}],"after_cost");
     const unknown=datasetReadiness([{trade_id:"U1",at:"2026-01-01T00:00:00Z",net_pnl_eur:null,total_costs_eur:"",cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true},{trade_id:"U2",at:"2026-01-01T00:01:00Z",net_pnl_eur:false,total_costs_eur:0,cost_completeness:"COMPLETE",accounting_identity_status:"VERIFIED",accounting_identity_ok:true}],"after_cost");
     const partial=datasetReadiness([{trade_id:"P1",at:"2026-01-01T00:00:00Z",net_pnl_eur:1,total_costs_eur:0,cost_completeness:"PARTIAL_MODEL",accounting_identity_status:"INDETERMINATE_COSTS",accounting_identity_ok:null}],"after_cost");
-    const before=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle404295||globalThis.AgentCryptoStrategyAPaperLifecycle404291)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification404295||globalThis.AgentCryptoStrategyASafetyCertification404293)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics404292?.read?.()||[]});
+    const before=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification||globalThis.AgentCryptoStrategyASafetyCertification)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics?.read?.()||[]});
     const d=snapshot();
-    const after=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle404295||globalThis.AgentCryptoStrategyAPaperLifecycle404291)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification404295||globalThis.AgentCryptoStrategyASafetyCertification404293)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics404292?.read?.()||[]});
+    const after=JSON.stringify({life:(globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle)?.diagnostic_snapshot?.()||null,safety:(globalThis.AgentCryptoStrategyASafetyCertification||globalThis.AgentCryptoStrategyASafetyCertification)?.snapshot?.()||null,metrics:globalThis.AgentCryptoStrategyAAfterCostMetrics?.read?.()||[]});
     const strictUnknown=unknown.after_cost_complete_rows===0&&unknown.numeric_unknown_rows===2&&unknown.monte_carlo_ready===false;
     const strictVerified=partial.after_cost_complete_rows===0&&partial.unverified_after_cost_rows===1&&partial.monte_carlo_ready===false;
     const pass=bad.data_integrity_ready===false&&bad.monte_carlo_ready===false&&strictUnknown&&strictVerified&&d.certification.certified_for_live===false&&d.fabricated_backtest===false&&d.paper_only===true&&before===after;
@@ -95,7 +95,6 @@
   function render(){if(typeof document==="undefined")return false;ensureStyle();const anchor=document.getElementById("strategyASafety")||document.getElementById("strategyAAfterCost");if(!anchor)return false;document.getElementById("strategyADossier")?.remove();const p=document.createElement("section");p.id="strategyADossier";p.innerHTML=`<div class="sad-head"><div><div class="sad-title">STRATEGY A · PAPER V2 · EVIDENCE DOSSIER</div><div class="sad-sub">Lecture strictement passive : aucune consultation n'exécute les autotests du laboratoire.</div></div><button class="btn small" id="strategyADossierExport" type="button">EXPORTER DOSSIER</button></div><div class="sad-grid"><div class="sad-k"><span>Fondation déterministe</span><b data-sad="det">—</b></div><div class="sad-k"><span>Cycles réels</span><b data-sad="cycles">0</b></div><div class="sad-k"><span>Trades après coûts</span><b data-sad="trades">0</b></div><div class="sad-k"><span>Gates non soldés</span><b data-sad="pending">—</b></div><div class="sad-k"><span>Micro-live</span><b data-sad="live">LOCKED</b></div></div><div class="sad-foot">Aucun backtest inventé · aucun résultat fabriqué · dataset incomplet/dupliqué jamais promu · PAPER ONLY.</div>`;anchor.insertAdjacentElement("afterend",p);p.querySelector("#strategyADossierExport")?.addEventListener("click",exportJson);const d=snapshot();const set=(k,v)=>{const n=p.querySelector(`[data-sad="${k}"]`);if(n)n.textContent=v;};set("det",d.deterministic_foundation.pass?"PASS":"EVIDENCE_REQUIRED");set("cycles",num(d.experiment_ledger?.summary?.cycles));set("trades",num(d.after_cost?.summary?.trades));set("pending",d.certification.unresolved.length);set("live","LOCKED");return true;}
 
   const api=Object.freeze({build:BUILD,schema:SCHEMA,snapshot,dataset_readiness:datasetReadiness,self_test:selfTest,export_json:exportJson,render,paper_only:true,real_orders:false,network:false,profitability_claim:false,fabricated_backtest:false,passive_read:true,implicit_self_tests:false,strict_dataset_completeness_406019:true,null_blank_boolean_complete_row:false,after_cost_verified_identity_required:true});
-  globalThis.AgentCryptoStrategyAEvidenceDossier404295=api;
-  globalThis.AgentCryptoStrategyAEvidenceDossier404294=api;
+  globalThis.AgentCryptoStrategyAEvidenceDossier=api;
   if(typeof document!=="undefined"){if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render,{once:true});else render();}
 })();

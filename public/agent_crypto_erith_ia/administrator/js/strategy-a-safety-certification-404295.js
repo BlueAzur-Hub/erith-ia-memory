@@ -33,8 +33,8 @@
 
   function certificationMatrix(){
     const replay=globalThis.AgentCryptoStrategyAReplay;
-    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle404295||globalThis.AgentCryptoStrategyAPaperLifecycle404291;
-    const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics404292;
+    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle;
+    const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics;
     const m=metrics?.summary?.()||{trades:0,sample_state:"INSUFFICIENT_SAMPLE",sample_min:30};
     const tested=lastFoundationTest?.pass===true;
     return {
@@ -62,8 +62,8 @@
 
   function runFoundationTests(){
     const replay=globalThis.AgentCryptoStrategyAReplay;
-    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle404295||globalThis.AgentCryptoStrategyAPaperLifecycle404291;
-    const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics404292;
+    const lifecycle=globalThis.AgentCryptoStrategyAPaperLifecycle||globalThis.AgentCryptoStrategyAPaperLifecycle;
+    const metrics=globalThis.AgentCryptoStrategyAAfterCostMetrics;
     const call=(api)=>{try{return api?.self_test?.()||{pass:false,reason:"UNAVAILABLE"};}catch(error){return {pass:false,error:String(error?.message||error)}}};
     const modules={deterministic_replay:call(replay),paper_lifecycle:call(lifecycle),after_cost_metrics:call(metrics)};
     const pass=Object.values(modules).every(x=>x?.pass===true);
@@ -93,7 +93,6 @@
   function render(){if(typeof document==="undefined")return false;ensureStyle();const anchor=document.getElementById("strategyAAfterCost")||document.getElementById("strategyAPaperLifecycle");if(!anchor)return false;document.getElementById("strategyASafety")?.remove();const p=document.createElement("section");p.id="strategyASafety";p.innerHTML=`<div class="sac-head"><div><div class="sac-title">STRATEGY A · SAFETY / CERTIFICATION MATRIX</div><div class="sac-sub">Circuit breaker sandbox · lecture passive · aucun autotest implicite · Auto A non raccordé.</div></div><button class="btn small" id="strategyASafetyExport404293" type="button">EXPORTER MATRICE</button></div><div class="sac-actions"><button class="btn small" data-safety="DATA_STALE">DATA STALE</button><button class="btn small" data-safety="UNKNOWN_EXECUTION_STATE">UNKNOWN</button><button class="btn small" data-safety="PROTECTION_FAILURE">PROTECTION FAIL</button><button class="btn small" data-safety="RUN_TESTS">TESTS EXPLICITES</button><button class="btn small" data-safety="RESET">RESET SANDBOX</button></div><div class="sac-level" data-safety-level>—</div><div class="sac-gates" data-safety-gates></div>`;anchor.insertAdjacentElement("afterend",p);p.querySelectorAll("[data-safety]").forEach(b=>b.addEventListener("click",()=>b.dataset.safety==="RESET"?manualReset():b.dataset.safety==="RUN_TESTS"?runFoundationTests():signal(b.dataset.safety)));p.querySelector("#strategyASafetyExport404293")?.addEventListener("click",exportJson);const snap=snapshot(),matrix=certificationMatrix();p.querySelector("[data-safety-level]").textContent=`${snap.level} · ${snap.reason} · Auto A raccordé : NON · reprise LIVE automatique : NON`;const g=p.querySelector("[data-safety-gates]");for(const row of matrix.gates){const d=document.createElement("div");d.className="sac-g";d.innerHTML=`<span>GATE ${row.gate} · ${row.label}</span><b>${row.state}</b>`;g.appendChild(d);}return true;}
 
   const api=Object.freeze({build:BUILD,schema:SCHEMA,signal,manual_reset_sandbox:manualReset,snapshot,certification_matrix:certificationMatrix,run_foundation_tests:runFoundationTests,self_test:selfTest,export_json:exportJson,render,levels:LEVELS,automatic_live_resume:false,paper_only:true,real_orders:false,network:false,storage_write:false,passive_read:true,implicit_self_tests:false,auto_a_governor_connected:false});
-  globalThis.AgentCryptoStrategyASafetyCertification404295=api;
-  globalThis.AgentCryptoStrategyASafetyCertification404293=api;
+  globalThis.AgentCryptoStrategyASafetyCertification=api;
   if(typeof document!=="undefined"){if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render,{once:true});else render();}
 })();

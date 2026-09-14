@@ -4,7 +4,7 @@ Parent: 40.6.95
 Engine: Market Core 38.15.11 (unchanged)
 
 ## Scope
-- Run the existing `AgentCryptoStrategyAPaperAfterCostAcceptance406063.run()` once automatically after page load.
+- Run the existing `AgentCryptoStrategyAPaperAfterCostAcceptance.run()` once automatically after page load.
 - Preserve the existing lifecycle and after-cost owners.
 - No forced Paper trade.
 - No real order, Kraken order, wallet, credential, network call, storage write, recurring timer, or observer added by this layer.

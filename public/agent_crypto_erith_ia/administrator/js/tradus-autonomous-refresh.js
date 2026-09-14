@@ -18,7 +18,7 @@
   let lastTrigger = null;
   let lastError = null;
 
-  const shadow = () => globalThis.AgentCryptoTradusShadow406066 || null;
+  const shadow = () => globalThis.AgentCryptoTradusShadow || null;
   const canonicalReader = () => globalThis.AgentCryptoTradusCanonicalStrategyReader || null;
   const clone = value => { try { return JSON.parse(JSON.stringify(value)); } catch (_) { return null; } };
 

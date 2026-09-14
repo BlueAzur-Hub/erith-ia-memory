@@ -244,7 +244,7 @@
   }
 
   const api=Object.freeze({build:BUILD,symbol:SYMBOL,threshold:THRESHOLD,max_spread_ratio:MAX_SPREAD_RATIO,validate_tick:validateTick,evaluate_tick:evaluateTick,read:()=>clone(last),refresh,mount,self_test:selfTest,paper_only:true,shadow_only:true,real_orders:false,credentials:false,wallet:false,recurring_timer:false});
-  globalThis.AgentCryptoTradusShadow406064=api;
+  globalThis.AgentCryptoTradusShadow=api;
 
   if(typeof document!=="undefined"){
     const boot=()=>{ if(!mount()) requestAnimationFrame(()=>mount()); };
