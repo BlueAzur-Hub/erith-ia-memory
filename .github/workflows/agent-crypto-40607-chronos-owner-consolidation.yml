@@ -37,21 +37,21 @@ jobs:
           index = index_path.read_text(encoding='utf-8')
 
           replacements = [
-              ('atlasDebtSettlement4055Runtime', 'atlasDebtSettlementRuntime'),
-              ('[data-chrono40341="${key}"]', '[data-chrono="${key}"]'),
-              ('__AGENT_CRYPTO_ASTROCYCLE_4055__', '__AGENT_CRYPTO_ASTROCYCLE__'),
-              ('lastCelestialRole40288', 'lastCelestialRole'),
-              ('lastMultiCollectorMinute40465', 'lastMultiCollectorMinute'),
-              ('__AGENT_CRYPTO_CELESTIAL_CADENCE_40465__', '__AGENT_CRYPTO_CELESTIAL_CADENCE__'),
-              ('const BUILD="40.3.14";', 'const BUILD=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||"runtime");'),
-              ('build:"40.4.94",open_cadence_ms', 'build:BUILD,open_cadence_ms'),
+              ('atlasDebtSettlement4055Runtime', 'atlasDebtSettlementRuntime', 1),
+              ('[data-chrono40341="${key}"]', '[data-chrono="${key}"]', 1),
+              ('__AGENT_CRYPTO_ASTROCYCLE_4055__', '__AGENT_CRYPTO_ASTROCYCLE__', 1),
+              ('lastCelestialRole40288', 'lastCelestialRole', 3),
+              ('lastMultiCollectorMinute40465', 'lastMultiCollectorMinute', 3),
+              ('__AGENT_CRYPTO_CELESTIAL_CADENCE_40465__', '__AGENT_CRYPTO_CELESTIAL_CADENCE__', 1),
+              ('const BUILD="40.3.14";', 'const BUILD=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||"runtime");', 1),
+              ('build:"40.4.94",open_cadence_ms', 'build:BUILD,open_cadence_ms', 1),
           ]
 
-          for old, new in replacements:
+          for old, new, expected in replacements:
               count = runtime.count(old)
-              if count != 1:
-                  raise SystemExit(f'Expected exactly one runtime occurrence for {old!r}, found {count}')
-              runtime = runtime.replace(old, new, 1)
+              if count != expected:
+                  raise SystemExit(f'Expected {expected} runtime occurrence(s) for {old!r}, found {count}')
+              runtime = runtime.replace(old, new)
 
           shim = '      out = out.replace(/data-chrono40341/g, "data-chrono");\n'
           if index.count(shim) != 1:
@@ -84,6 +84,7 @@ jobs:
               '__AGENT_CRYPTO_CELESTIAL_CADENCE__',
               'lastCelestialRole',
               'lastMultiCollectorMinute',
+              'build:BUILD,open_cadence_ms',
           )
           for token in required:
               if token not in runtime:
