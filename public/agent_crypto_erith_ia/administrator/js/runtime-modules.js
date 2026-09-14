@@ -1,6 +1,6 @@
-/* Agent-Crypto Administrator — stable runtime module registry.
-   The release number never selects modules here. Git carries history; this file
-   describes the one runtime graph that is current. */
+/* Agent-Crypto Administrator — canonical runtime module registry.
+   Stable filenames only. Release history belongs to Git and build.json; module
+   selection never branches on a release number. */
 (() => {
   "use strict";
 
@@ -8,18 +8,15 @@
 
   const MODULES = Object.freeze([
     "./js/views/private-source-demand-loader.js",
-    "./js/generated-report-version-truth-406103.js",
-    "./js/pedagogy-version-truth-406104.js",
-    "./js/tradus-strategy-a-reconcile-406105.js",
-    "./js/local-ai-contract-consistency-406106.js",
-    "./js/visible-version-surface-truth-406107.js",
-    "./js/local-dialogue-presentation-406108.js",
+    "./js/generated-report-version-truth.js",
+    "./js/pedagogy-version-truth.js",
     "./js/local-ai-contract-consistency.js",
     "./js/tradus-strategy-a-reconcile.js",
     "./js/dex-freshness-guard.js",
-    "./js/tradus-canonical-strategy-reader-406123.js",
-    "./js/strategy-a-auto-owner-autostart-406124.js",
-    "./js/tradus-autonomous-refresh-406119.js"
+    "./js/local-dialogue-presentation.js",
+    "./js/tradus-canonical-strategy-reader.js",
+    "./js/strategy-a-auto-start.js",
+    "./js/tradus-autonomous-refresh.js"
   ]);
 
   const loaded = new Set();
@@ -30,14 +27,14 @@
   }
 
   function alreadyPresent(src) {
-    const wanted = absolute(src);
+    const wanted = absolute(src).split("?")[0];
     return Array.from(document.scripts).some(script => {
-      try { return script.src && new URL(script.src, document.baseURI).href.split("?")[0] === wanted.split("?")[0]; }
+      try { return script.src && new URL(script.src, document.baseURI).href.split("?")[0] === wanted; }
       catch (_) { return false; }
     });
   }
 
-  function loadOne(src, token) {
+  function loadOne(src) {
     if (loaded.has(src) || alreadyPresent(src)) {
       loaded.add(src);
       return Promise.resolve(src);
@@ -45,7 +42,7 @@
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
       const url = new URL(src, document.baseURI);
-      if (token) url.searchParams.set("v", token);
+      url.searchParams.set("reload", String(Date.now()));
       script.src = url.href;
       script.async = false;
       script.dataset.agentCryptoRuntimeModule = src;
@@ -55,14 +52,13 @@
     });
   }
 
-  async function load(build = "") {
+  async function load() {
     if (loading) return loading;
-    const token = build ? `administrator-build-${build}` : "administrator-runtime";
     loading = (async () => {
-      for (const src of MODULES) await loadOne(src, token);
+      for (const src of MODULES) await loadOne(src);
       try {
         document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready", {
-          detail: { build, modules: MODULES.slice() }
+          detail: { modules: MODULES.slice() }
         }));
       } catch (_) {}
       return MODULES.slice();
@@ -76,6 +72,7 @@
     load,
     loaded: () => Object.freeze(Array.from(loaded)),
     version_branching: false,
+    versioned_filenames: false,
     owner: "runtime-modules"
   });
 })();
