@@ -148,6 +148,8 @@
 
 /* ==========================================================================
    BUILD 40.6.83 — AETHER V2 CANONICAL INTEGRATION
+   Historical Aether component build only.
+   IMPORTANT: this component no longer owns or mutates Administrator Version Truth.
    ========================================================================== */
 (() => {
   "use strict";
@@ -169,14 +171,9 @@
   ]);
 
   function publishVersionTruth() {
-    const setMeta=(name,value)=>document.querySelector(`meta[name="${name}"]`)?.setAttribute("content",value);
-    setMeta("atlas-build",BUILD); setMeta("administrator-build",BUILD); setMeta("administrator-revision",REVISION);
-    setMeta("administrator-release",RELEASE); setMeta("atlas-asset-token",`market-core-v2.0-alpha-build-${BUILD}`);
-    const truth=document.getElementById("atlasVersionTruthText"); if(truth) truth.textContent=`Build ${BUILD}`;
-    const badge=document.getElementById("atlasVersionTruthBadge"); if(badge) badge.setAttribute("aria-label",`Build ${BUILD}`);
-    const hidden=document.getElementById("atlasReleaseBadge"); if(hidden) hidden.textContent=`BUILD ${BUILD}`;
-    document.title=`Agent-Crypto @erith.IA — Build ${BUILD} · Administrator`;
-    document.documentElement.dataset.administratorBuild=BUILD;
+    /* RETIRED GLOBAL WRITE OWNER.
+       Version Truth belongs to ErithBuildAuthority / ErithVersionTruth.
+       Kept as a compatibility method because older callers may reference it. */
     return true;
   }
   function retireLegacyAssets() {
@@ -195,10 +192,10 @@
     if(!script){ script=document.createElement("script"); script.id=SCRIPT_ID; script.src=SCRIPT_SRC; script.defer=true; script.dataset.aetherCanonicalBuild=BUILD; document.head.appendChild(script); }
     return true;
   }
-  publishVersionTruth(); ensureStyle(); ensureRuntime();
+  ensureStyle(); ensureRuntime();
   globalThis.ErithAetherCanonical406074=Object.freeze({
     build:BUILD,revision:REVISION,release:RELEASE,style_href:STYLE_HREF,script_src:SCRIPT_SRC,
     one_visual_owner:true,one_runtime_owner:true,recurring_timer:false,observer:false,network_owner:false,
-    market_core_changed:false,operator_runtime_changed:false,publishVersionTruth
+    market_core_changed:false,operator_runtime_changed:false,global_version_truth_owner:false,publishVersionTruth
   });
 })();
