@@ -1,0 +1,132 @@
+name: Agent Crypto audit static asset ownership
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/agent-crypto-audit-static-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Audit asset references and duplicates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,json,re
+
+          ROOT=Path('public/agent_crypto_erith_ia/administrator')
+          ASSETS=ROOT/'assets'
+          build=json.loads((ROOT/'build.json').read_text(encoding='utf-8'))
+          if str(build.get('build'))!='40.6.124':raise SystemExit(f"Build drifted: {build.get('build')!r}")
+          core=str(build.get('market_core') or build.get('engine') or '')
+          if '38.15.11' not in core:raise SystemExit(f'Market Core drifted: {core!r}')
+
+          text_exts={'.html','.js','.css','.json','.md','.txt','.yml','.yaml'}
+          texts={}
+          for p in ROOT.rglob('*'):
+              if p.is_file() and p.suffix.lower() in text_exts:
+                  try:texts[p.relative_to(ROOT)]=p.read_text(encoding='utf-8')
+                  except UnicodeDecodeError:pass
+
+          # Reachable source graph: runtime-shell plus literal JS/CSS references.
+          js_re=re.compile(r'(?P<ref>(?:\.\.?/|/)?(?:js/)?[A-Za-z0-9_./-]+\.js)(?:\?[^"\'`\s)>]*)?',re.I)
+          css_re=re.compile(r'(?P<ref>(?:\.\.?/|/)?[A-Za-z0-9_./-]+\.css)(?:\?[^"\'`\s)>]*)?',re.I)
+          def resolve(src,ref):
+              clean=ref.split('?',1)[0].split('#',1)[0].replace('\\','/')
+              out=[]
+              if clean.startswith('/'):
+                  out.append(Path(clean.lstrip('/')))
+              elif clean.startswith('./'):
+                  out.append(Path(clean[2:]))
+                  try:out.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+                  except Exception:pass
+              elif clean.startswith('../'):
+                  try:out.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+                  except Exception:pass
+              else:
+                  out.append(Path(clean))
+                  try:out.append(((ROOT/src).parent/clean).resolve().relative_to(ROOT.resolve()))
+                  except Exception:pass
+              return {x for x in out if (ROOT/x).is_file()}
+
+          q=[Path('runtime-shell.html')];reachable=set()
+          while q:
+              rel=q.pop(0)
+              if rel in reachable:continue
+              p=ROOT/rel
+              if not p.is_file() or p.suffix.lower() not in {'.html','.js','.css'}:continue
+              try:t=p.read_text(encoding='utf-8')
+              except UnicodeDecodeError:continue
+              reachable.add(rel)
+              for rx in (js_re,css_re):
+                  for m in rx.finditer(t):
+                      for x in resolve(rel,m.group('ref')):
+                          if x.suffix.lower() in {'.js','.css'} and x not in reachable:q.append(x)
+
+          active_text={rel:texts[rel] for rel in reachable if rel in texts}
+          files=[p for p in ASSETS.rglob('*') if p.is_file()]
+          sha_groups={}
+          for p in files:
+              h=hashlib.sha256(p.read_bytes()).hexdigest()
+              sha_groups.setdefault(h,[]).append(p)
+
+          rows=[]
+          for p in sorted(files):
+              rel=p.relative_to(ROOT)
+              rels=str(rel).replace('\\','/')
+              name=p.name
+              active_refs=[];all_refs=[]
+              for src,t in active_text.items():
+                  if rels in t or ('./'+rels) in t or name in t:active_refs.append(str(src))
+              for src,t in texts.items():
+                  if rels in t or ('./'+rels) in t or name in t:all_refs.append(str(src))
+              low=rels.lower();prot=[]
+              if low.startswith('assets/aether/'):prot.append('AETHER')
+              if low.startswith('assets/learning/'):prot.append('LEARNING')
+              if low.startswith('assets/visual/'):prot.append('VISUAL_LECTURE_TECHNIQUE')
+              if any(x in low for x in ('oracle','atlas','technical','lecture')):prot.append('SUBJECT_PROTECTED')
+              h=hashlib.sha256(p.read_bytes()).hexdigest()
+              dups=[str(x.relative_to(ROOT)).replace('\\','/') for x in sha_groups[h] if x!=p]
+              if prot:cls='PROTECTED'
+              elif active_refs:cls='ACTIVE_RUNTIME_REFERENCED'
+              elif all_refs:cls='HISTORY_OR_NONRUNTIME_REFERENCED'
+              else:cls='UNREFERENCED_NEUTRAL_REVIEW'
+              rows.append({'path':rels,'bytes':p.stat().st_size,'sha256':h,'classification':cls,'protection':sorted(set(prot)),'active_refs':sorted(set(active_refs))[:12],'all_refs_count':len(set(all_refs)),'all_refs_sample':sorted(set(all_refs))[:12],'duplicate_paths':dups})
+
+          counts={}
+          for r in rows:counts[r['classification']]=counts.get(r['classification'],0)+1
+          neutral=[r for r in rows if r['classification']=='UNREFERENCED_NEUTRAL_REVIEW']
+          dup_groups=[]
+          for h,group in sha_groups.items():
+              if len(group)>1:
+                  dup_groups.append({'sha256':h,'paths':[str(x.relative_to(ROOT)).replace('\\','/') for x in group],'bytes':group[0].stat().st_size})
+          print(json.dumps({'build':build.get('build'),'market_core':core,'asset_file_count':len(files),'classification_counts':counts,'unreferenced_neutral':neutral,'duplicate_groups':dup_groups,'mutation':'none'},indent=2,ensure_ascii=False))
+          PY
+
+      - name: Retire one-shot audit workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Seven Heaven Refactor'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -f .github/workflows/agent-crypto-audit-static-assets.yml
+          git commit -m 'chore(agent-crypto): retire static asset audit tooling'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then git rebase --abort || true; exit 1; fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt*2))
+          done
+          exit 1
