@@ -224,7 +224,7 @@
     });
   }
 
-  globalThis.AgentCryptoVisualCache40326 = Object.freeze({
+  globalThis.AgentCryptoVisualCache = Object.freeze({
     build: BUILD,
     database: DB_NAME,
     generation: GENERATION,
@@ -282,6 +282,6 @@
   window.setInterval=globalThis.setInterval;window.setTimeout=globalThis.setTimeout;
 
   function coalesce(name,ms=2000,normalize=null){const base=globalThis[name];if(typeof base!=="function"||base.__perf40363)return;let at=-Infinity,result,gen=-1;const f=function(...a){const t=clock(),res=t<resumeUntil;if((res&&gen===resumeGen)||t-at<ms){stats.coalesced++;return result;}at=t;if(res)gen=resumeGen;if(normalize)a=normalize(a,res);result=base.apply(this,a);return result;};Object.defineProperty(f,"__perf40363",{value:true});globalThis[name]=f;}
-  function install(){coalesce("atlasBookMirrorFetch36",5000);coalesce("atlasExchangeRefreshDirectRest383",4000,(a,res)=>res&&a[0]&&typeof a[0]==="object"?[{...a[0],force:false},...a.slice(1)]:a);coalesce("atlasCurrentJournalHydrate3814",2200);coalesce("atlasRuntimeTruthApply3813",1800);coalesce("atlasCurrentMemoryEventReconcile3813",2200);coalesce("atlasBookRoleUiLock3812",1800);coalesce("atlasRestoreRuntimeUi",1400);document.documentElement.dataset.firefoxFreezeRecovery40363="1";globalThis.ErithFirefoxFreezeRecovery40363=Object.freeze({build:BUILD,parent:"40.3.62",visibility_resume:"serial_idle",oracle_background_ms:60000,full_snapshot_semantics_changed:false,market_core_changed:false,oracle_math_changed:false,window_manager_changed:false,stats:()=>Object.freeze({...stats,queue:jobs.length})});}
+  function install(){coalesce("atlasBookMirrorFetch36",5000);coalesce("atlasExchangeRefreshDirectRest383",4000,(a,res)=>res&&a[0]&&typeof a[0]==="object"?[{...a[0],force:false},...a.slice(1)]:a);coalesce("atlasCurrentJournalHydrate3814",2200);coalesce("atlasRuntimeTruthApply3813",1800);coalesce("atlasCurrentMemoryEventReconcile3813",2200);coalesce("atlasBookRoleUiLock3812",1800);coalesce("atlasRestoreRuntimeUi",1400);document.documentElement.dataset.firefoxFreezeRecovery="1";globalThis.ErithFirefoxFreezeRecovery=Object.freeze({build:BUILD,parent:"40.3.62",visibility_resume:"serial_idle",oracle_background_ms:60000,full_snapshot_semantics_changed:false,market_core_changed:false,oracle_math_changed:false,window_manager_changed:false,stats:()=>Object.freeze({...stats,queue:jobs.length})});}
   if(document.readyState==="loading")add.call(document,"DOMContentLoaded",()=>requestAnimationFrame(()=>idle(install,1200)),{once:true});else requestAnimationFrame(()=>idle(install,1200));
 })();

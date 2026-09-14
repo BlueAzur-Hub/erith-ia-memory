@@ -7,10 +7,10 @@
   const BACKPLATE="./assets/aether/aether-observatory-master-v2-406074.png";
   const root=document.documentElement;
   function warmBackplate(){
-    root.setAttribute('data-aether-backplate-v2-406074','loading');
+    root.setAttribute('data-aether-backplate-v2','loading');
     const image=new Image(); image.decoding='async'; const src=new URL(BACKPLATE,document.baseURI).href;
-    const ready=()=>{root.setAttribute('data-aether-backplate-v2-406074','ready');root.dataset.aetherCanonicalVisualBuild=BUILD;};
-    const fallback=()=>{root.setAttribute('data-aether-backplate-v2-406074','fallback-40.6.73');root.dataset.aetherCanonicalVisualBuild='fallback';};
+    const ready=()=>{root.setAttribute('data-aether-backplate-v2','ready');root.dataset.aetherCanonicalVisualBuild=BUILD;};
+    const fallback=()=>{root.setAttribute('data-aether-backplate-v2','fallback-40.6.73');root.dataset.aetherCanonicalVisualBuild='fallback';};
     image.addEventListener('load',()=>{const decoded=typeof image.decode==='function'?image.decode():Promise.resolve();Promise.resolve(decoded).then(ready).catch(fallback);},{once:true});
     image.addEventListener('error',fallback,{once:true}); image.src=src; return src;
   }
@@ -51,11 +51,11 @@
     return true;
   }
   function afterPaint(reason){queueMicrotask(()=>requestAnimationFrame(()=>enhance(reason)));}
-  function captureIntent(event){if(!(event.target instanceof Element))return;if(!event.target.closest('#atlasAetherStatusToggle4084'))return;afterPaint('operator-open');}
+  function captureIntent(event){if(!(event.target instanceof Element))return;if(!event.target.closest('#atlasAetherStatusToggle'))return;afterPaint('operator-open');}
   const backplate=warmBackplate();
   document.addEventListener('click',captureIntent,true);
   window.addEventListener('erith:administrator-mirror-ready',()=>afterPaint('manager-ready'),{once:true});
-  document.addEventListener('pointerover',event=>{if(event.target instanceof Element&&event.target.closest('#atlasAetherStatusPanel4084'))enhance('panel-interaction');},{passive:true});
+  document.addEventListener('pointerover',event=>{if(event.target instanceof Element&&event.target.closest('#atlasAetherStatusPanel'))enhance('panel-interaction');},{passive:true});
   afterPaint('load');
   globalThis.ErithAetherV2Canonical=Object.freeze({build:BUILD,backplate,geometry_owner:'ErithAdministratorWindows',legacy_migration:false,atlas_explainability:true,weather_glyph:true,recurring_timer:false,observer:false,network_owner:false,market_core_changed:false,enhance});
 })();

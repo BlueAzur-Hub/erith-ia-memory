@@ -97,7 +97,7 @@
   function sync(reason = "manual") {
     const autoReader = syncAutoReader();
     const footer = syncFooter();
-    document.documentElement.dataset.visibleVersionSurfaceTruth406107 = autoReader.consistent ? "PASS" : "CHECK";
+    document.documentElement.dataset.visibleVersionSurfaceTruth = autoReader.consistent ? "PASS" : "CHECK";
     document.documentElement.dataset.visibleVersionSurfaceTruthReason = String(reason || "manual").slice(0, 64);
     return Object.freeze({ build: currentBuild(), autoReader, footer, reason });
   }
@@ -127,7 +127,7 @@
     defer("interactive-surface");
   }, { capture: true, passive: true });
 
-  globalThis.AgentCryptoVisibleVersionSurfaceTruth406107 = Object.freeze({
+  globalThis.AgentCryptoVisibleVersionSurfaceTruth = Object.freeze({
     build: RELEASE,
     owner: OWNER,
     currentBuild,

@@ -33,8 +33,8 @@
     closeDefaultDisclosure(document.querySelector(HOT_ROOT));
     selectors.forEach(selector=>document.querySelectorAll(selector).forEach(closeDefaultDisclosure));
     try{
-      document.documentElement.dataset.atlasDefaultCollapsed404138="true";
-      document.documentElement.dataset.atlasHotCoreResident404138="true";
+      document.documentElement.dataset.atlasDefaultCollapsed="true";
+      document.documentElement.dataset.atlasHotCoreResident="true";
     }catch(_){}
   };
 
@@ -59,7 +59,7 @@
     if(document.readyState==="complete")enforceCollapsedDefaults();
     else window.addEventListener("load",enforceCollapsedDefaults,{once:true});
 
-    globalThis.ErithAtlasFamilyDemandResidency40415=Object.freeze({
+    globalThis.ErithAtlasFamilyDemandResidency=Object.freeze({
       build:BUILD,
       boot_fix:BOOT_FIX,
       boot_fix_source:BOOT_FIX_SOURCE,

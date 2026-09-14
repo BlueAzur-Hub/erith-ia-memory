@@ -325,50 +325,50 @@
     const style = document.createElement("style");
     style.id = "strategyAPaperLifecycleStyle404291";
     style.textContent = `
-      #strategyAPaperLifecycle404291{margin-top:10px;padding:10px;border:1px solid rgba(255,211,112,.22);border-radius:10px;background:rgba(26,18,5,.45)}
-      #strategyAPaperLifecycle404291 .spl-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
-      #strategyAPaperLifecycle404291 .spl-title{font-size:9px;font-weight:950;letter-spacing:.09em;text-transform:uppercase;color:#ffe3a3}
-      #strategyAPaperLifecycle404291 .spl-sub{margin-top:3px;font-size:8px;line-height:1.35;color:#a99b7c}
-      #strategyAPaperLifecycle404291 .spl-actions{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}
-      #strategyAPaperLifecycle404291 .spl-actions button{font-size:8px!important;min-height:28px!important}
-      #strategyAPaperLifecycle404291 .spl-state{padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(0,0,0,.15);font-size:9px;color:#f5eee0}
-      #strategyAPaperLifecycle404291 .spl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:7px}
-      #strategyAPaperLifecycle404291 .spl-kpi{padding:6px 7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;background:rgba(255,255,255,.018)}
-      #strategyAPaperLifecycle404291 .spl-kpi span{display:block;font-size:7px;letter-spacing:.06em;color:#8d8370;text-transform:uppercase;font-weight:900}
-      #strategyAPaperLifecycle404291 .spl-kpi b{display:block;margin-top:3px;font-size:9px;color:#fff5dc;overflow-wrap:anywhere}
-      #strategyAPaperLifecycle404291 .spl-safety{margin-top:7px;font-size:8px;line-height:1.35;color:#8f8a7c}
-      @media(max-width:950px){#strategyAPaperLifecycle404291 .spl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      #strategyAPaperLifecycle{margin-top:10px;padding:10px;border:1px solid rgba(255,211,112,.22);border-radius:10px;background:rgba(26,18,5,.45)}
+      #strategyAPaperLifecycle .spl-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+      #strategyAPaperLifecycle .spl-title{font-size:9px;font-weight:950;letter-spacing:.09em;text-transform:uppercase;color:#ffe3a3}
+      #strategyAPaperLifecycle .spl-sub{margin-top:3px;font-size:8px;line-height:1.35;color:#a99b7c}
+      #strategyAPaperLifecycle .spl-actions{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}
+      #strategyAPaperLifecycle .spl-actions button{font-size:8px!important;min-height:28px!important}
+      #strategyAPaperLifecycle .spl-state{padding:8px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(0,0,0,.15);font-size:9px;color:#f5eee0}
+      #strategyAPaperLifecycle .spl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-top:7px}
+      #strategyAPaperLifecycle .spl-kpi{padding:6px 7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;background:rgba(255,255,255,.018)}
+      #strategyAPaperLifecycle .spl-kpi span{display:block;font-size:7px;letter-spacing:.06em;color:#8d8370;text-transform:uppercase;font-weight:900}
+      #strategyAPaperLifecycle .spl-kpi b{display:block;margin-top:3px;font-size:9px;color:#fff5dc;overflow-wrap:anywhere}
+      #strategyAPaperLifecycle .spl-safety{margin-top:7px;font-size:8px;line-height:1.35;color:#8f8a7c}
+      @media(max-width:950px){#strategyAPaperLifecycle .spl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     `;
     document.head.appendChild(style);
   }
 
   function renderResult(envelope) {
     if (typeof document === "undefined") return false;
-    const panel = document.getElementById("strategyAPaperLifecycle404291");
+    const panel = document.getElementById("strategyAPaperLifecycle");
     if (!panel) return false;
-    const state = panel.querySelector("#strategyAPaperLifecycleState404291");
+    const state = panel.querySelector("#strategyAPaperLifecycleState");
     if (state) state.textContent = envelope ? `${envelope.trade_id || "—"} · ${envelope.state || "—"}${envelope.reason ? ` · ${envelope.reason}` : ""}` : "Aucun scénario lifecycle exécuté.";
     const set = (id, value) => { const n = panel.querySelector(id); if (n) n.textContent = value; };
-    set("#strategyAPaperLifecycleFilled404291", envelope ? `${num(envelope.filled_notional_eur).toFixed(2)} / ${num(envelope.authorized_notional_eur).toFixed(2)} €` : "—");
-    set("#strategyAPaperLifecycleRemaining404291", envelope ? `${num(envelope.remaining_notional_eur).toFixed(2)} €` : "—");
-    set("#strategyAPaperLifecycleRetry404291", envelope ? (envelope.retry_allowed ? "OUI" : "NON") : "—");
-    set("#strategyAPaperLifecycleProtection404291", envelope?.protection?.state || "—");
+    set("#strategyAPaperLifecycleFilled", envelope ? `${num(envelope.filled_notional_eur).toFixed(2)} / ${num(envelope.authorized_notional_eur).toFixed(2)} €` : "—");
+    set("#strategyAPaperLifecycleRemaining", envelope ? `${num(envelope.remaining_notional_eur).toFixed(2)} €` : "—");
+    set("#strategyAPaperLifecycleRetry", envelope ? (envelope.retry_allowed ? "OUI" : "NON") : "—");
+    set("#strategyAPaperLifecycleProtection", envelope?.protection?.state || "—");
     return true;
   }
 
   function render() {
     if (typeof document === "undefined") return false;
     ensureStyle();
-    const anchor = document.getElementById("strategyAReplaySandbox404290") || document.getElementById("strategyAExperimentLedger404289");
+    const anchor = document.getElementById("strategyAReplaySandbox") || document.getElementById("strategyAExperimentLedger");
     if (!anchor) return false;
-    let panel = document.getElementById("strategyAPaperLifecycle404291");
+    let panel = document.getElementById("strategyAPaperLifecycle");
     if (!panel) {
       panel = document.createElement("section");
-      panel.id = "strategyAPaperLifecycle404291";
+      panel.id = "strategyAPaperLifecycle";
       panel.setAttribute("data-strategy-a-paper-lifecycle-build", BUILD);
-      panel.innerHTML = `<div class="spl-head"><div><div class="spl-title">PAPER V2 · EXECUTION / RECONCILIATION LIFECYCLE</div><div class="spl-sub">Trade Envelope unique · ACK · partial fill · timeout sans retry aveugle · reconciliation · protection · clôture. Sandbox déterministe, isolé du Paper live.</div></div></div><div class="spl-actions" id="strategyAPaperLifecycleActions404291"></div><div class="spl-state" id="strategyAPaperLifecycleState404291">Aucun scénario lifecycle exécuté.</div><div class="spl-grid"><div class="spl-kpi"><span>Fill</span><b id="strategyAPaperLifecycleFilled404291">—</b></div><div class="spl-kpi"><span>Reste</span><b id="strategyAPaperLifecycleRemaining404291">—</b></div><div class="spl-kpi"><span>Retry autorisé</span><b id="strategyAPaperLifecycleRetry404291">—</b></div><div class="spl-kpi"><span>Protection</span><b id="strategyAPaperLifecycleProtection404291">—</b></div></div><div class="spl-safety">PAPER ONLY · aucun réseau · aucun Kraken · aucune clé · aucun wallet · aucune écriture dans le ledger Auto A · UNKNOWN/TIMEOUT = réconciliation, jamais retry aveugle.</div>`;
+      panel.innerHTML = `<div class="spl-head"><div><div class="spl-title">PAPER V2 · EXECUTION / RECONCILIATION LIFECYCLE</div><div class="spl-sub">Trade Envelope unique · ACK · partial fill · timeout sans retry aveugle · reconciliation · protection · clôture. Sandbox déterministe, isolé du Paper live.</div></div></div><div class="spl-actions" id="strategyAPaperLifecycleActions"></div><div class="spl-state" id="strategyAPaperLifecycleState">Aucun scénario lifecycle exécuté.</div><div class="spl-grid"><div class="spl-kpi"><span>Fill</span><b id="strategyAPaperLifecycleFilled">—</b></div><div class="spl-kpi"><span>Reste</span><b id="strategyAPaperLifecycleRemaining">—</b></div><div class="spl-kpi"><span>Retry autorisé</span><b id="strategyAPaperLifecycleRetry">—</b></div><div class="spl-kpi"><span>Protection</span><b id="strategyAPaperLifecycleProtection">—</b></div></div><div class="spl-safety">PAPER ONLY · aucun réseau · aucun Kraken · aucune clé · aucun wallet · aucune écriture dans le ledger Auto A · UNKNOWN/TIMEOUT = réconciliation, jamais retry aveugle.</div>`;
       anchor.insertAdjacentElement("afterend", panel);
-      const actions = panel.querySelector("#strategyAPaperLifecycleActions404291");
+      const actions = panel.querySelector("#strategyAPaperLifecycleActions");
       const labels = {
         HAPPY_PATH: "CYCLE COMPLET",
         PARTIAL_FILL: "PARTIAL FILL",

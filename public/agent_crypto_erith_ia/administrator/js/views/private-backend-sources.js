@@ -16,7 +16,7 @@
   // Preserve the bounded cold-path contract from 40.4.60.
   const CEX_TIMEOUT_MS=16000, CONTEXT_TIMEOUT_MS=32000;
   let mounted=false,inflight=null,lastHealth=null,lastQuotesPayload=null,lastTruth=null,lastContext=null,lastIntelligence=null;
-  const operatorPriorityActive=()=>{try{return globalThis.ErithOperatorPriority40461?.active?.()===true;}catch(_){return false;}};
+  const operatorPriorityActive=()=>{try{return globalThis.ErithOperatorPriority?.active?.()===true;}catch(_){return false;}};
 
   const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const num=value=>(value===null||value===undefined||value==="")?null:(Number.isFinite(Number(value))?Number(value):null);
@@ -27,18 +27,18 @@
   const backendBody=()=>backendDetails()?.querySelector(":scope > .atlas-collapse-body")||backendDetails()?.querySelector(".atlas-collapse-body")||null;
 
   function shell(){return `
-    <section class="private-backend-v1" id="privateBackendV1" data-build="${BUILD}" aria-labelledby="privateBackendTitle4054">
+    <section class="private-backend-v1" id="privateBackendV1" data-build="${BUILD}" aria-labelledby="privateBackendTitle">
       <div class="private-backend-head"><div>
         <p class="eyebrow">SOURCE TRUTH CEX · READ ONLY</p>
-        <h3 id="privateBackendTitle4054">Binance + Kraken + Coinbase + OKX · concordance EUR</h3>
+        <h3 id="privateBackendTitle">Binance + Kraken + Coinbase + OKX · concordance EUR</h3>
         <p>Binance reste la cotation LIVE primaire. Kraken, Coinbase et OKX sont trois contrôles indépendants via le backend privé local.</p>
-      </div><span class="pill warn" id="privateBackendStatus4053">NON TESTÉ</span></div>
+      </div><span class="pill warn" id="privateBackendStatus">NON TESTÉ</span></div>
       <div class="private-backend-actions">
-        <button class="btn" type="button" id="privateBackendHealth4053">Tester backend</button>
-        <button class="btn primary" type="button" id="privateBackendRefresh4053">Forcer Source Truth CEX</button>
-        <span id="privateBackendDetail4053">Binance runtime + 127.0.0.1:8790 · AUTO borné · secours opérateur</span>
+        <button class="btn" type="button" id="privateBackendHealth">Tester backend</button>
+        <button class="btn primary" type="button" id="privateBackendRefresh">Forcer Source Truth CEX</button>
+        <span id="privateBackendDetail">Binance runtime + 127.0.0.1:8790 · AUTO borné · secours opérateur</span>
       </div>
-      <div class="private-backend-source-grid" id="privateBackendSources4053" aria-live="polite">
+      <div class="private-backend-source-grid" id="privateBackendSources" aria-live="polite">
         <article><span>Binance Direct</span><b>LIVE RUNTIME</b><small>Source primaire · WebSocket EUR</small></article>
         <article><span>Kraken Public</span><b>EN ATTENTE</b><small>Contrôle spot EUR</small></article>
         <article><span>Coinbase Exchange</span><b>EN ATTENTE</b><small>Contrôle market data EUR</small></article>
@@ -47,20 +47,20 @@
       </div>
       <div class="private-backend-table-wrap"><table class="private-backend-table">
         <thead><tr><th>Actif</th><th>Binance LIVE</th><th>Kraken</th><th>Coinbase</th><th>OKX</th><th>Écart max</th><th>Verdict</th></tr></thead>
-        <tbody id="privateBackendRows4053">${ASSETS.map(a=>`<tr><th>${a}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>EN ATTENTE</td></tr>`).join("")}</tbody>
+        <tbody id="privateBackendRows">${ASSETS.map(a=>`<tr><th>${a}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>EN ATTENTE</td></tr>`).join("")}</tbody>
       </table></div>
-      <p class="private-backend-note" id="privateBackendNote4053">La concordance compare des observations indépendantes ; Binance reste la source LIVE primaire d'Agent-Crypto et aucune médiane ne remplace son prix.</p>
-      <section class="private-context-v2" id="privateDexDefiContext4055" aria-labelledby="privateDexDefiTitle4055">
-        <div class="private-context-head"><div><p class="eyebrow">DEX / DEFI CONTEXT · READ ONLY</p><h4 id="privateDexDefiTitle4055">DEX Screener + GeckoTerminal + DefiLlama</h4><p>Contexte de liquidité et d'activité décentralisée séparé de la vérité CEX. Aucun prix DEX n'est promu prix canonique.</p></div><span class="pill warn" id="privateDexDefiStatus4055">NON LU</span></div>
-        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateDexDefiRefresh4055">Forcer contexte DEX / DeFi</button><span id="privateDexDefiDetail4055">À la demande · cache local 90 s · aucune boucle</span></div>
-        <div class="private-defi-grid" id="privateDefiSummary4055"><article><span>DefiLlama</span><b>EN ATTENTE</b><small>DEX volume par chaîne</small></article><article><span>DEX Screener</span><b>EN ATTENTE</b><small>pool liquide découvert</small></article><article><span>GeckoTerminal</span><b>EN ATTENTE</b><small>pool liquide recoupé</small></article></div>
-        <div class="private-backend-table-wrap"><table class="private-backend-table private-context-table"><thead><tr><th>Actif</th><th>DEX Screener</th><th>Liquidité</th><th>GeckoTerminal</th><th>Réserve</th><th>Rôle</th></tr></thead><tbody id="privateDexDefiRows4055">${ASSETS.map(a=>`<tr><th>${a}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>CONTEXTE</td></tr>`).join("")}</tbody></table></div>
+      <p class="private-backend-note" id="privateBackendNote">La concordance compare des observations indépendantes ; Binance reste la source LIVE primaire d'Agent-Crypto et aucune médiane ne remplace son prix.</p>
+      <section class="private-context-v2" id="privateDexDefiContext" aria-labelledby="privateDexDefiTitle">
+        <div class="private-context-head"><div><p class="eyebrow">DEX / DEFI CONTEXT · READ ONLY</p><h4 id="privateDexDefiTitle">DEX Screener + GeckoTerminal + DefiLlama</h4><p>Contexte de liquidité et d'activité décentralisée séparé de la vérité CEX. Aucun prix DEX n'est promu prix canonique.</p></div><span class="pill warn" id="privateDexDefiStatus">NON LU</span></div>
+        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateDexDefiRefresh">Forcer contexte DEX / DeFi</button><span id="privateDexDefiDetail">À la demande · cache local 90 s · aucune boucle</span></div>
+        <div class="private-defi-grid" id="privateDefiSummary"><article><span>DefiLlama</span><b>EN ATTENTE</b><small>DEX volume par chaîne</small></article><article><span>DEX Screener</span><b>EN ATTENTE</b><small>pool liquide découvert</small></article><article><span>GeckoTerminal</span><b>EN ATTENTE</b><small>pool liquide recoupé</small></article></div>
+        <div class="private-backend-table-wrap"><table class="private-backend-table private-context-table"><thead><tr><th>Actif</th><th>DEX Screener</th><th>Liquidité</th><th>GeckoTerminal</th><th>Réserve</th><th>Rôle</th></tr></thead><tbody id="privateDexDefiRows">${ASSETS.map(a=>`<tr><th>${a}</th><td>—</td><td>—</td><td>—</td><td>—</td><td>CONTEXTE</td></tr>`).join("")}</tbody></table></div>
         <p class="private-backend-note">Découverte par symbole/pool : utile pour le contexte de liquidité, mais insuffisante pour prouver l'identité d'un actif. Binance/Kraken/Coinbase/OKX restent la couche CEX.</p>
       </section>
-      <section class="private-intelligence-v1" id="privateSourceIntelligence4056" aria-labelledby="privateSourceIntelligenceTitle4056">
-        <div class="private-context-head"><div><p class="eyebrow">SOURCE INTELLIGENCE V1.3 · ADDRESS PROOF GATE · AUTO READ ONLY</p><h4 id="privateSourceIntelligenceTitle4056">Fraîcheur · provenance · preuve adresse inter-source · anomalies</h4><p>Les pools DEX sont filtrés par chaîne + alias puis recoupés par adresse token entre fournisseurs quand disponible. Aucun prix canonique supplémentaire, aucune prévision, aucune exécution.</p></div><span class="pill warn" id="privateSourceIntelligenceStatus4056">EN ATTENTE</span></div>
-        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateSourceIntelligenceRefresh4056">Forcer actualisation</button><span id="privateSourceIntelligenceDetail4056">AUTO · démarrage borné + CURRENT fermé · bouton = secours manuel · Atlas lecture seule optionnelle</span></div>
-        <div class="private-intelligence-grid" id="privateSourceIntelligenceGrid4056">
+      <section class="private-intelligence-v1" id="privateSourceIntelligence" aria-labelledby="privateSourceIntelligenceTitle">
+        <div class="private-context-head"><div><p class="eyebrow">SOURCE INTELLIGENCE V1.3 · ADDRESS PROOF GATE · AUTO READ ONLY</p><h4 id="privateSourceIntelligenceTitle">Fraîcheur · provenance · preuve adresse inter-source · anomalies</h4><p>Les pools DEX sont filtrés par chaîne + alias puis recoupés par adresse token entre fournisseurs quand disponible. Aucun prix canonique supplémentaire, aucune prévision, aucune exécution.</p></div><span class="pill warn" id="privateSourceIntelligenceStatus">EN ATTENTE</span></div>
+        <div class="private-backend-actions"><button class="btn primary" type="button" id="privateSourceIntelligenceRefresh">Forcer actualisation</button><span id="privateSourceIntelligenceDetail">AUTO · démarrage borné + CURRENT fermé · bouton = secours manuel · Atlas lecture seule optionnelle</span></div>
+        <div class="private-intelligence-grid" id="privateSourceIntelligenceGrid">
           <article><span>CEX</span><b>EN ATTENTE</b><small>concordance</small></article>
           <article><span>DEX</span><b>EN ATTENTE</b><small>couverture contexte</small></article>
           <article><span>Identité DEX</span><b>EN ATTENTE</b><small>adresse recoupée ou bornée</small></article>
@@ -68,13 +68,13 @@
           <article><span>DeFi</span><b>EN ATTENTE</b><small>chaînes</small></article>
           <article><span>Fraîcheur</span><b>EN ATTENTE</b><small>âge maximal mesuré</small></article>
         </div>
-        <p class="private-backend-note" id="privateSourceIntelligenceNote4056">PROUVÉE = même réseau autorisé + même adresse token observée par DEX Screener et GeckoTerminal. BORNÉE = chaîne + alias sans preuve d’adresse. INFORMATION MANQUANTE reste information manquante.</p>
+        <p class="private-backend-note" id="privateSourceIntelligenceNote">PROUVÉE = même réseau autorisé + même adresse token observée par DEX Screener et GeckoTerminal. BORNÉE = chaîne + alias sans preuve d’adresse. INFORMATION MANQUANTE reste information manquante.</p>
       </section>
     </section>`;}
 
   function setStatus(text,tone="warn",detail=""){
-    const badge=document.getElementById("privateBackendStatus4053");if(badge){badge.className=`pill ${tone}`;badge.textContent=text;}
-    const d=document.getElementById("privateBackendDetail4053");if(d&&detail)d.textContent=detail;
+    const badge=document.getElementById("privateBackendStatus");if(badge){badge.className=`pill ${tone}`;badge.textContent=text;}
+    const d=document.getElementById("privateBackendDetail");if(d&&detail)d.textContent=detail;
   }
   async function getJson(path,timeoutMs=6500){
     const controller=new AbortController(),abort=setTimeout(()=>controller.abort(),timeoutMs);
@@ -87,7 +87,7 @@
     lastHealth=data||null;
     const ready=data?.status==="ready"&&data?.read_only===true;
     setStatus(ready?"LOCAL READY":"À VÉRIFIER",ready?"ok":"warn",ready?`Backend ${data.version||"?"} · READ ONLY · ${data.cache_ttl_seconds||"?"} s cache`:"Réponse locale reçue mais contrat inattendu");
-    const grid=document.getElementById("privateBackendSources4053");
+    const grid=document.getElementById("privateBackendSources");
     if(grid&&Array.isArray(data?.sources)){
       grid.innerHTML=`<article><span>Binance Direct</span><b>LIVE RUNTIME</b><small>Source primaire · WebSocket EUR</small></article>`+
         data.sources.map(src=>`<article><span>${esc(src.label||src.id)}</span><b>${esc(String(src.mode||"READ ONLY").toUpperCase())}</b><small>${esc(src.role||"")}</small></article>`).join("")+
@@ -96,7 +96,7 @@
   }
   function providerQuote(asset,provider,quotes){return (quotes||[]).find(q=>q.asset===asset&&q.provider===provider&&q.status==="ok")||null;}
   function providerPrice(asset,provider,quotes){return num(providerQuote(asset,provider,quotes)?.price_eur);}
-  function binance(asset){try{return globalThis.ErithCexPrimary4054?.quote?.(asset)||null;}catch{return null;}}
+  function binance(asset){try{return globalThis.ErithCexPrimary?.quote?.(asset)||null;}catch{return null;}}
   function consensus(prices){
     const vals=prices.map(num).filter(v=>v!==null&&v>0);if(vals.length<2)return {providers:vals.length,spread_pct:null,verdict:"insufficient"};
     const mean=vals.reduce((a,b)=>a+b,0)/vals.length;const spread=mean?((Math.max(...vals)-Math.min(...vals))/mean*100):null;
@@ -105,7 +105,7 @@
   }
   function renderQuotes(data,emit=true){
     lastQuotesPayload=data||null;
-    const tbody=document.getElementById("privateBackendRows4053");
+    const tbody=document.getElementById("privateBackendRows");
     const rows=data?.assets||[];let binanceOk=0,krakenOk=0,coinbaseOk=0,okxOk=0;
     const truthAssets=ASSETS.map(asset=>{
       const row=rows.find(r=>r.asset===asset)||{},bq=binance(asset),bp=num(bq?.price_eur),kq=providerQuote(asset,"kraken",row.quotes),cq=providerQuote(asset,"coinbase",row.quotes),oq=providerQuote(asset,"okx",row.quotes),kp=num(kq?.price_eur),cp=num(cq?.price_eur),op=num(oq?.price_eur);
@@ -116,7 +116,7 @@
     const providers=[binanceOk,krakenOk,coinbaseOk,okxOk].filter(n=>n>0).length;
     setStatus(providers>=2?"CEX READY":"PARTIEL",providers>=2?"ok":"warn",`Binance ${binanceOk}/5 · Kraken ${krakenOk}/5 · Coinbase ${coinbaseOk}/5 · OKX ${okxOk}/5 · ${providers}/4 source(s)`);
     lastTruth=Object.freeze({schema:"agent_crypto_cex_source_truth_v1",build:BUILD,observed_at_utc:data?.observed_at_utc||new Date().toISOString(),primary:"binance",controls:CEX_CONTROLS,assets:Object.freeze(truthAssets.map(x=>Object.freeze(x))),canonical_price_created:false,financial_signal:false});
-    const note=document.getElementById("privateBackendNote4053");if(note)note.textContent=`Source Truth CEX · écart cohérent ≤ ${COHERENT} % · surveillance ≤ ${WATCH} % · Binance reste primaire · aucune exécution.`;
+    const note=document.getElementById("privateBackendNote");if(note)note.textContent=`Source Truth CEX · écart cohérent ≤ ${COHERENT} % · surveillance ≤ ${WATCH} % · Binance reste primaire · aucune exécution.`;
     if(emit){try{document.dispatchEvent(new CustomEvent("erith:cex-source-truth",{detail:lastTruth}));}catch(_){}}
     renderSourceIntelligence(emit);
   }
@@ -134,7 +134,7 @@
     return {text:"INDISP.",tone:"warn"};
   }
   function renderContext(data,emit=true){
-    const tbody=document.getElementById("privateDexDefiRows4055");
+    const tbody=document.getElementById("privateDexDefiRows");
     const rows=Array.isArray(data?.assets)?data.assets:[];let dsOk=0,gtOk=0,proved=0,bounded=0,reviews=0,mismatches=0,eligible=0;
     const renderedRows=ASSETS.map(asset=>{
       const row=rows.find(r=>r.asset===asset)||{},ds=row.dexscreener||{},gt=row.geckoterminal||{},identity=row.identity||{},label=identityLabel(row);
@@ -144,13 +144,13 @@
     }).join("");
     if(tbody)tbody.innerHTML=renderedRows;
     const llama=data?.defillama||{},chains=Array.isArray(llama.chains)?llama.chains:[];
-    const summary=document.getElementById("privateDefiSummary4055");
+    const summary=document.getElementById("privateDefiSummary");
     if(summary){
       const chainCards=chains.map(c=>`<article><span>DefiLlama · ${esc(c.chain)}</span><b>${esc(usd(c.dex_volume_24h_usd))}</b><small>volume DEX 24 h · contexte</small></article>`).join("");
       summary.innerHTML=chainCards+`<article><span>DEX Screener</span><b>${dsOk}/${ASSETS.length}</b><small>pools bornés trouvés</small></article><article><span>GeckoTerminal</span><b>${gtOk}/${ASSETS.length}</b><small>pools bornés recoupés</small></article><article><span>Identité</span><b>${proved}P + ${bounded}B</b><small>${mismatches} mismatch · ${reviews} anomalie(s)</small></article>`;
     }
-    const status=document.getElementById("privateDexDefiStatus4055");if(status){status.className=`pill ${(bounded>0||chains.length)?"ok":"warn"}`;status.textContent=eligible===ASSETS.length&&!reviews&&!mismatches?"CONTEXT ÉLIGIBLE":"CONTEXT À RELIRE";}
-    const detail=document.getElementById("privateDexDefiDetail4055");if(detail)detail.textContent=`DEX DS ${dsOk}/5 · GT ${gtOk}/5 · preuve ${proved}/5 · bornée ${bounded}/5 · éligible Atlas ${eligible}/5 · mismatch ${mismatches} · anomalies ${reviews} · DeFi ${chains.length}/3`;
+    const status=document.getElementById("privateDexDefiStatus");if(status){status.className=`pill ${(bounded>0||chains.length)?"ok":"warn"}`;status.textContent=eligible===ASSETS.length&&!reviews&&!mismatches?"CONTEXT ÉLIGIBLE":"CONTEXT À RELIRE";}
+    const detail=document.getElementById("privateDexDefiDetail");if(detail)detail.textContent=`DEX DS ${dsOk}/5 · GT ${gtOk}/5 · preuve ${proved}/5 · bornée ${bounded}/5 · éligible Atlas ${eligible}/5 · mismatch ${mismatches} · anomalies ${reviews} · DeFi ${chains.length}/3`;
     lastContext=data||null;
     if(emit){try{document.dispatchEvent(new CustomEvent("erith:dex-defi-context",{detail:data}));}catch(_){}}
     renderSourceIntelligence(emit);
@@ -184,9 +184,9 @@
   }
   function renderSourceIntelligence(emit=true){
     const intel=buildSourceIntelligence();if(!intel)return null;lastIntelligence=intel;
-    const badge=document.getElementById("privateSourceIntelligenceStatus4056");if(badge){badge.className=`pill ${intel.state==="ready"?"ok":"warn"}`;badge.textContent=intel.state==="ready"?"INTELLIGENCE FILTRÉE":"PARTIEL";}
-    const grid=document.getElementById("privateSourceIntelligenceGrid4056");if(grid){grid.innerHTML=`<article><span>CEX</span><b>${intel.cex.comparable_assets}/${intel.cex.total_assets}</b><small>4 sources · écart max ${pct(intel.cex.max_spread_pct)}</small></article><article><span>DEX</span><b>${intel.dex.dexscreener_ok}/${intel.dex.total_assets} + ${intel.dex.geckoterminal_ok}/${intel.dex.total_assets}</b><small>DS + GeckoTerminal</small></article><article><span>Identité DEX</span><b>${intel.dex.identity_proved}P + ${intel.dex.identity_bounded}B</b><small>${intel.dex.atlas_eligible}/${intel.dex.total_assets} éligibles Atlas</small></article><article><span>Anomalies</span><b>${intel.dex.liquidity_review}</b><small>ratio liquidité/réserve ≥ 20×</small></article><article><span>DeFi</span><b>${intel.defi.chains_ok}/3</b><small>${esc(intel.defi.chains.join(" · ")||"—")}</small></article><article><span>Fraîcheur</span><b>${freshnessText(intel.freshness.max_age_seconds)}</b><small>${intel.freshness.samples} observation(s) horodatée(s)</small></article>`;}
-    const d=document.getElementById("privateSourceIntelligenceDetail4056");if(d)d.textContent=`CEX ${intel.cex.comparable_assets}/5 · contrôles Kraken/Coinbase/OKX · preuve DEX ${intel.dex.identity_proved}/5 · bornée ${intel.dex.identity_bounded}/5 · éligible Atlas ${intel.dex.atlas_eligible}/5 · mismatch ${intel.dex.address_mismatch} · anomalies ${intel.dex.liquidity_review} · DeFi ${intel.defi.chains_ok}/3 · Atlas AUTO FILTRÉ READ ONLY`;
+    const badge=document.getElementById("privateSourceIntelligenceStatus");if(badge){badge.className=`pill ${intel.state==="ready"?"ok":"warn"}`;badge.textContent=intel.state==="ready"?"INTELLIGENCE FILTRÉE":"PARTIEL";}
+    const grid=document.getElementById("privateSourceIntelligenceGrid");if(grid){grid.innerHTML=`<article><span>CEX</span><b>${intel.cex.comparable_assets}/${intel.cex.total_assets}</b><small>4 sources · écart max ${pct(intel.cex.max_spread_pct)}</small></article><article><span>DEX</span><b>${intel.dex.dexscreener_ok}/${intel.dex.total_assets} + ${intel.dex.geckoterminal_ok}/${intel.dex.total_assets}</b><small>DS + GeckoTerminal</small></article><article><span>Identité DEX</span><b>${intel.dex.identity_proved}P + ${intel.dex.identity_bounded}B</b><small>${intel.dex.atlas_eligible}/${intel.dex.total_assets} éligibles Atlas</small></article><article><span>Anomalies</span><b>${intel.dex.liquidity_review}</b><small>ratio liquidité/réserve ≥ 20×</small></article><article><span>DeFi</span><b>${intel.defi.chains_ok}/3</b><small>${esc(intel.defi.chains.join(" · ")||"—")}</small></article><article><span>Fraîcheur</span><b>${freshnessText(intel.freshness.max_age_seconds)}</b><small>${intel.freshness.samples} observation(s) horodatée(s)</small></article>`;}
+    const d=document.getElementById("privateSourceIntelligenceDetail");if(d)d.textContent=`CEX ${intel.cex.comparable_assets}/5 · contrôles Kraken/Coinbase/OKX · preuve DEX ${intel.dex.identity_proved}/5 · bornée ${intel.dex.identity_bounded}/5 · éligible Atlas ${intel.dex.atlas_eligible}/5 · mismatch ${intel.dex.address_mismatch} · anomalies ${intel.dex.liquidity_review} · DeFi ${intel.defi.chains_ok}/3 · Atlas AUTO FILTRÉ READ ONLY`;
     if(emit){try{document.dispatchEvent(new CustomEvent("erith:source-intelligence",{detail:intel}));}catch(_){}}
     return intel;
   }
@@ -202,8 +202,8 @@
   }
 
   async function refreshContext(){
-    const badge=document.getElementById("privateDexDefiStatus4055");if(badge){badge.className="pill warn";badge.textContent="LECTURE…";}
-    try{const data=await getJson(`/context?assets=${encodeURIComponent(ASSETS.join(","))}`,CONTEXT_TIMEOUT_MS);renderContext(data);return data;}catch(error){if(badge){badge.className="pill warn";badge.textContent="INDISPONIBLE";}const d=document.getElementById("privateDexDefiDetail4055");if(d)d.textContent=`Contexte DEX / DeFi indisponible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`;return null;}
+    const badge=document.getElementById("privateDexDefiStatus");if(badge){badge.className="pill warn";badge.textContent="LECTURE…";}
+    try{const data=await getJson(`/context?assets=${encodeURIComponent(ASSETS.join(","))}`,CONTEXT_TIMEOUT_MS);renderContext(data);return data;}catch(error){if(badge){badge.className="pill warn";badge.textContent="INDISPONIBLE";}const d=document.getElementById("privateDexDefiDetail");if(d)d.textContent=`Contexte DEX / DeFi indisponible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`;return null;}
   }
 
   async function probe(){if(inflight)return inflight;setStatus("TEST…","warn","Connexion à 127.0.0.1:8790…");inflight=getJson("/health").then(data=>{renderHealth(data);return data;}).catch(error=>{setStatus("OFFLINE","warn",`Backend local indisponible · ${error?.name==="AbortError"?"timeout":String(error?.message||error)}`);return null;}).finally(()=>{inflight=null;});return inflight;}
@@ -251,14 +251,14 @@
     else window.setTimeout(()=>void first(),900);
     return true;
   }
-  function mount(){if(mounted&&document.getElementById("privateBackendV1"))return true;const body=backendBody();if(!body)return false;if(!document.getElementById("privateBackendV1"))body.insertAdjacentHTML("beforeend",shell());document.getElementById("privateBackendHealth4053")?.addEventListener("click",probe);document.getElementById("privateBackendRefresh4053")?.addEventListener("click",refresh);document.getElementById("privateDexDefiRefresh4055")?.addEventListener("click",refreshContext);document.getElementById("privateSourceIntelligenceRefresh4056")?.addEventListener("click",refreshAll);mounted=true;
+  function mount(){if(mounted&&document.getElementById("privateBackendV1"))return true;const body=backendBody();if(!body)return false;if(!document.getElementById("privateBackendV1"))body.insertAdjacentHTML("beforeend",shell());document.getElementById("privateBackendHealth")?.addEventListener("click",probe);document.getElementById("privateBackendRefresh")?.addEventListener("click",refresh);document.getElementById("privateDexDefiRefresh")?.addEventListener("click",refreshContext);document.getElementById("privateSourceIntelligenceRefresh")?.addEventListener("click",refreshAll);mounted=true;
     if(lastHealth)renderHealth(lastHealth);
     if(lastQuotesPayload)renderQuotes(lastQuotesPayload,false);
     if(lastContext)renderContext(lastContext,false);
     else if(lastIntelligence)renderSourceIntelligence(false);
     if(!lastHealth)probe();
     return true;}
-  function bind(){const detail=backendDetails();if(!detail)return false;if(detail.dataset.privateBackend4054!=="1"){detail.dataset.privateBackend4054="1";detail.addEventListener("toggle",()=>{if(detail.open)mount();});}if(detail.open)mount();return true;}
+  function bind(){const detail=backendDetails();if(!detail)return false;if(detail.dataset.privateBackend!=="1"){detail.dataset.privateBackend="1";detail.addEventListener("toggle",()=>{if(detail.open)mount();});}if(detail.open)mount();return true;}
   bind();
   window.addEventListener("erith:system-hydrated",event=>{
     if(String(event?.detail?.key||"")!=="backend")return;
@@ -282,5 +282,5 @@
     void autoRefresh("current-finalized",{fingerprint,force:true});
   });
   startAutomatic();
-  globalThis.ErithPrivateBackendSources4054=Object.freeze({build:BUILD,backend_version:"1.4.2",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,autoRefresh,automationSnapshot:autoSnapshot,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,automatic_startup:true,automatic_current_finalized:true,operator_click_required:false,polling:false,bounded_startup_retry:true,cold_path_timeout_aligned:true,lazy_state_replay:true,operator_priority_aware:true,operator_priority_build:"40.4.62",cex_timeout_ms:CEX_TIMEOUT_MS,context_timeout_ms:CONTEXT_TIMEOUT_MS,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY_FILTERED",okx_wave1:true,cex_controls:CEX_CONTROLS});
+  globalThis.ErithPrivateBackendSources=Object.freeze({build:BUILD,backend_version:"1.4.2",api:API,mode:"READ_ONLY",mount,probe,refresh,refreshContext,refreshAll,autoRefresh,automationSnapshot:autoSnapshot,snapshot:()=>lastTruth,contextSnapshot:()=>lastContext,sourceIntelligence:()=>lastIntelligence,system_hydration_rebind:true,automatic_startup:true,automatic_current_finalized:true,operator_click_required:false,polling:false,bounded_startup_retry:true,cold_path_timeout_aligned:true,lazy_state_replay:true,operator_priority_aware:true,operator_priority_build:"40.4.62",cex_timeout_ms:CEX_TIMEOUT_MS,context_timeout_ms:CONTEXT_TIMEOUT_MS,new_observer:false,storage_owner_added:false,trade_endpoint:false,canonical_price_created:false,atlas_consumer_enabled:true,atlas_consumer_mode:"OPTIONAL_READ_ONLY_FILTERED",okx_wave1:true,cex_controls:CEX_CONTROLS});
 })();

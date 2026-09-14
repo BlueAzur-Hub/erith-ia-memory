@@ -50,7 +50,7 @@
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",earlyDetachClosedBodies,{once:true});
     else earlyDetachClosedBodies();
 
-    globalThis.ErithSecondaryDomainDemand40494=Object.freeze({
+    globalThis.ErithSecondaryDomainDemand=Object.freeze({
       build:BUILD,
       boot_fix:BOOT_FIX,
       boot_fix_source:BOOT_FIX_SOURCE,

@@ -23,7 +23,7 @@
   const SNAPSHOT_EVENT = "agentcrypto:tradus-paper-snapshot";
   const PILL_ID = "aetherTradusPill406069";
   const STAGE_SELECTOR = "[data-aether-component-stage-406046]";
-  const OPEN_SELECTOR = "#atlasAetherStatusToggle4084,[data-aether46-open],.aether46-actions button,[data-aether-card-406046=\"events\"]";
+  const OPEN_SELECTOR = "#atlasAetherStatusToggle,[data-aether46-open],.aether46-actions button,[data-aether-card-406046=\"events\"]";
 
   let lastActivation = null;
   let activationCount = 0;
@@ -33,9 +33,9 @@
     catch (_) { return null; }
   };
 
-  const observability = () => globalThis.AgentCryptoTradusPaperObservability406068 || null;
-  const paperOwner = () => globalThis.AgentCryptoTradusPaperShadow406067 || null;
-  const aetherBridge = () => globalThis.AgentCryptoAetherTradusBridge406069 || null;
+  const observability = () => globalThis.AgentCryptoTradusPaperObservability || null;
+  const paperOwner = () => globalThis.AgentCryptoTradusPaperShadow || null;
+  const aetherBridge = () => globalThis.AgentCryptoAetherTradusBridge || null;
 
   function classify(snapshot = null) {
     const paper = paperOwner();
@@ -69,9 +69,9 @@
     if (typeof document === "undefined") return false;
     const stage = document.querySelector(STAGE_SELECTOR);
     if (!stage) return false;
-    stage.dataset.tradusTruth406071 = state;
-    stage.dataset.tradusDataUiDecoupling406071 = "active";
-    stage.dataset.tradusObserved406071 = snapshot?.observed_at ? "1" : "0";
+    stage.dataset.tradusTruth = state;
+    stage.dataset.tradusDataUiDecoupling = "active";
+    stage.dataset.tradusObserved = snapshot?.observed_at ? "1" : "0";
     return true;
   }
 
@@ -139,12 +139,12 @@
   }
 
   function selfTest() {
-    const savedPaper = globalThis.AgentCryptoTradusPaperShadow406067;
+    const savedPaper = globalThis.AgentCryptoTradusPaperShadow;
     let syntheticOwnerInstalled = false;
     try {
       if (!savedPaper) {
         syntheticOwnerInstalled = true;
-        globalThis.AgentCryptoTradusPaperShadow406067 = Object.freeze({ read:() => ({ paper_only:true }) });
+        globalThis.AgentCryptoTradusPaperShadow = Object.freeze({ read:() => ({ paper_only:true }) });
       }
       const waiting = semanticModel({ observed_at:null });
       const observed = semanticModel({ observed_at:"2026-09-11T09:00:00.000Z", side:"FLAT", signal:"NO_TRADE" });
@@ -164,7 +164,7 @@
       });
     } finally {
       if (syntheticOwnerInstalled) {
-        try { delete globalThis.AgentCryptoTradusPaperShadow406067; } catch (_) {}
+        try { delete globalThis.AgentCryptoTradusPaperShadow; } catch (_) {}
       }
     }
   }
@@ -189,7 +189,7 @@
     global_dom_observer:false,
     aether_geometry_owner:false
   });
-  globalThis.AgentCryptoTradusDataUiDecoupling406071 = api;
+  globalThis.AgentCryptoTradusDataUiDecoupling = api;
 
   if (typeof document !== "undefined") {
     // 40.6.68 publishes all later book observations normally. We only normalize

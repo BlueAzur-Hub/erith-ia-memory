@@ -52,11 +52,11 @@
   }
   function canonical(members){return [...members].sort((a,b)=>Number(Boolean(b?.source?.primary))-Number(Boolean(a?.source?.primary))||Number(b?.evidence?.score||0)-Number(a?.evidence?.score||0)||(timeMs(a)||0)-(timeMs(b)||0))[0];}
   function clusters(){
-    const enriched=(globalThis.AtlasEventIntelligence405000?.archive?.()||[]).map(enrich).filter(Boolean);const groups=[];
+    const enriched=(globalThis.AtlasEventIntelligence?.archive?.()||[]).map(enrich).filter(Boolean);const groups=[];
     for(const event of enriched){let group=groups.find(g=>g.some(x=>sameEvent(event,x)));if(!group){group=[];groups.push(group);}group.push(event);}
     return Object.freeze(groups.map((members,i)=>{const c=canonical(members);const sources=[];for(const e of members){const key=[e?.source?.name,e?.source?.url].filter(Boolean).join("|");if(key&&!sources.some(s=>s.key===key))sources.push({key,name:e?.source?.name||null,url:e?.source?.url||null,primary:Boolean(e?.source?.primary)});}return Object.freeze({schema:"atlas_event_cluster_v1",build:BUILD,cluster_id:`cluster-${c?.event_id||i}`,canonical_event_id:c?.event_id||null,canonical:c,member_event_ids:members.map(e=>e.event_id).filter(Boolean),member_count:members.length,sources:sources.map(({key,...s})=>s),dedup_rule:"family + time<=36h + conservative headline/assets/action/amount similarity",causal_claim:false});}));
   }
-  function archive(){return Object.freeze((globalThis.AtlasEventIntelligence405000?.archive?.()||[]).map(enrich).filter(Boolean));}
-  function current(){return enrich(globalThis.AtlasEventIntelligence405000?.current?.()||null);}
-  globalThis.AtlasEventSemanticEnrichment405007=Object.freeze({build:BUILD,schema:SCHEMA,enrich,archive,current,clusters,same_event:sameEvent,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,unknown_fields_stay_null:true,causal_claim:false,financial_signal:false,automatic_order:false});
+  function archive(){return Object.freeze((globalThis.AtlasEventIntelligence?.archive?.()||[]).map(enrich).filter(Boolean));}
+  function current(){return enrich(globalThis.AtlasEventIntelligence?.current?.()||null);}
+  globalThis.AtlasEventSemanticEnrichment=Object.freeze({build:BUILD,schema:SCHEMA,enrich,archive,current,clusters,same_event:sameEvent,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,unknown_fields_stay_null:true,causal_claim:false,financial_signal:false,automatic_order:false});
 })();

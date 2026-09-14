@@ -54,8 +54,8 @@
     for (const name of TARGETS) if (wrap(name)) wrapped += 1;
     const visibleJournalCorrected = syncVisibleGeneratedJournal();
     document.documentElement.dataset.generatedReportVersionTruth406103 = wrapped === TARGETS.length ? "active" : "partial";
-    document.documentElement.dataset.generatedReportVersionTruthBuild406103 = BUILD;
-    document.documentElement.dataset.generatedReportVersionTruthWrapped406103 = String(wrapped);
+    document.documentElement.dataset.generatedReportVersionTruthBuild = BUILD;
+    document.documentElement.dataset.generatedReportVersionTruthWrapped = String(wrapped);
     return Object.freeze({ build: BUILD, label: LABEL, wrapped, expected: TARGETS.length, visible_journal_corrected: visibleJournalCorrected });
   }
 

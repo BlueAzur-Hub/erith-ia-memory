@@ -56,7 +56,7 @@
   }
 
   function buildReport(){
-    const api=globalThis.ErithPrivateBackendSources4054;
+    const api=globalThis.ErithPrivateBackendSources;
     const context=api?.contextSnapshot?.();
     if(!context||!Array.isArray(context.assets))return null;
     const rows=ASSETS.map(asset=>{
@@ -101,7 +101,7 @@
   }
 
   function ensureHost(){
-    const section=document.getElementById("privateSourceIntelligence4056");
+    const section=document.getElementById("privateSourceIntelligence");
     if(!section)return null;
     let root=document.getElementById(ROOT_ID);
     if(root)return root;
@@ -111,8 +111,8 @@
     root.dataset.dexDiagnosticsOwner=OWNER;
     root.innerHTML=`
       <summary><strong>Diagnostic DEX · éligibilité Atlas</strong> · lecture seule</summary>
-      <div id="privateDexExclusionDiagnosticsSummary406098">En attente du contexte DEX.</div>
-      <div id="privateDexExclusionDiagnosticsRows406098"></div>`;
+      <div id="privateDexExclusionDiagnosticsSummary">En attente du contexte DEX.</div>
+      <div id="privateDexExclusionDiagnosticsRows"></div>`;
     section.appendChild(root);
     return root;
   }
@@ -121,8 +121,8 @@
     const report=buildReport();
     if(!report)return null;
     ensureHost();
-    const summary=document.getElementById("privateDexExclusionDiagnosticsSummary406098");
-    const rows=document.getElementById("privateDexExclusionDiagnosticsRows406098");
+    const summary=document.getElementById("privateDexExclusionDiagnosticsSummary");
+    const rows=document.getElementById("privateDexExclusionDiagnosticsRows");
     if(summary){
       summary.textContent=`${report.eligible_assets}/${report.total_assets} éligibles Atlas · ${report.excluded_assets} exclu(s) · aucune promotion de prix DEX`;
     }

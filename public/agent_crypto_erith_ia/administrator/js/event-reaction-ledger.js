@@ -7,8 +7,8 @@
   const text=v=>String(v??"").replace(/\s+/g," ").trim();
   const finite=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
   const clone=v=>{try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}};
-  const eventApi=()=>globalThis.AtlasEventIntelligence405000||null;
-  const reactionApi=()=>globalThis.AtlasEventReactionMemory405005||null;
+  const eventApi=()=>globalThis.AtlasEventIntelligence||null;
+  const reactionApi=()=>globalThis.AtlasEventReactionMemory||null;
   function windowMap(memory){
     const out={};
     for(const row of Array.isArray(memory?.windows)?memory.windows:[]){
@@ -54,5 +54,5 @@
   }
   function current(){return project(eventApi()?.current?.()||null);}
   function snapshot(){return Object.freeze({schema:SCHEMA,build:BUILD,captured_at:new Date().toISOString(),rows:archive(),current:current(),read_only:true});}
-  globalThis.AtlasEventReactionLedger405006=Object.freeze({build:BUILD,schema:SCHEMA,project,archive,current,snapshot,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false,source_owners:["AtlasEventIntelligence405000","AtlasEventReactionMemory405005"]});
+  globalThis.AtlasEventReactionLedger=Object.freeze({build:BUILD,schema:SCHEMA,project,archive,current,snapshot,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false,source_owners:["AtlasEventIntelligence","AtlasEventReactionMemory"]});
 })();

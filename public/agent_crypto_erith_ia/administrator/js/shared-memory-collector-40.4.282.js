@@ -238,14 +238,14 @@
 
   function install() {
     const exportButton = document.getElementById("btnExportAutoMemory");
-    if (exportButton && exportButton.dataset.sharedOwner404282 !== "1") {
-      exportButton.dataset.sharedOwner404282 = "1";
+    if (exportButton && exportButton.dataset.sharedOwner !== "1") {
+      exportButton.dataset.sharedOwner = "1";
       exportButton.addEventListener("click", event => { event.preventDefault(); event.stopImmediatePropagation(); void exportShared().catch(() => null); }, true);
       exportButton.title = "Exporter Market Memory depuis IndexedDB Collector";
     }
     const input = document.getElementById("autoMemoryImport");
-    if (input && input.dataset.sharedOwner404282 !== "1") {
-      input.dataset.sharedOwner404282 = "1";
+    if (input && input.dataset.sharedOwner !== "1") {
+      input.dataset.sharedOwner = "1";
       input.addEventListener("change", event => { event.stopImmediatePropagation(); const file = event.target?.files?.[0]; void importFile(file).catch(() => null).finally(() => { try { event.target.value = ""; } catch (_) {} }); }, true);
     }
     const clear = document.getElementById("btnClearAutoMemory");
@@ -253,7 +253,7 @@
     try { exportAutoMemory = exportShared; } catch (_) {}
     try { importAutoMemoryFile = importFile; } catch (_) {}
     try { renderSharedMemory = render; } catch (_) {}
-    globalThis.AgentCryptoSharedMemory404282 = Object.freeze({ build: BUILD, schema: SCHEMA, importPayload: mergePayload, importFile, exportPayload: exportShared, render, adapt, identity, proof });
+    globalThis.AgentCryptoSharedMemory = Object.freeze({ build: BUILD, schema: SCHEMA, importPayload: mergePayload, importFile, exportPayload: exportShared, render, adapt, identity, proof });
     render();
   }
 

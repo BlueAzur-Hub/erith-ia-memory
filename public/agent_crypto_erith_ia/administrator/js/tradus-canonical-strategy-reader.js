@@ -6,7 +6,7 @@
 
   const OWNER = "tradus-canonical-strategy-reader";
   const SHADOW_KEY = "AgentCryptoTradusShadow406066";
-  const LEDGER_KEY = "AgentCryptoTradusShadowLedger406066";
+  const LEDGER_KEY = "AgentCryptoTradusShadowLedger";
   const OBS_EVENT = "agentcrypto:tradus-shadow-observation";
   const SHADOW_MARK = "agentCryptoCanonicalStrategyReader";
   const LEDGER_MARK = "agentCryptoCanonicalStrategyReader";

@@ -104,7 +104,7 @@
   }
 
   function findStrategyAScope() {
-    const replay = document.getElementById("strategyAReplaySandbox404290");
+    const replay = document.getElementById("strategyAReplaySandbox");
     let node = replay;
     for (let i=0; node && i<7; i++, node=node.parentElement) {
       const text = String(node.innerText || "");
@@ -242,7 +242,7 @@
     const existing=document.getElementById(PANEL_ID);
     if(existing){ mounted=true; bindHostRefresh(); render(); return true; }
 
-    const anchor=document.getElementById("strategyAPaperAfterCostProof406063") || document.getElementById("strategyAReplaySandbox404290");
+    const anchor=document.getElementById("strategyAPaperAfterCostProof406063") || document.getElementById("strategyAReplaySandbox");
     if(!anchor) return false;
 
     ensureStyle();

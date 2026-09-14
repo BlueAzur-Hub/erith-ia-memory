@@ -9,7 +9,7 @@
   "use strict";
 
   const BUILD = "40.6.66";
-  const PANEL_ID = "multiStrategyShadowLedger406066";
+  const PANEL_ID = "multiStrategyShadowLedger";
   const STYLE_ID = "multiStrategyShadowLedgerStyle406066";
   const STORAGE_KEY = "agent_crypto_multi_strategy_shadow_ledger_406066";
   const EVENT_NAME = "agentcrypto:tradus-shadow-observation";
@@ -176,7 +176,7 @@
     p.innerHTML=`
       <div class="ms-head">
         <div><div class="ms-kicker">MULTI-STRATEGY SHADOW LEDGER</div><div class="ms-title">Mémoire comparative Strategy A ↔ TRADUS</div><div class="ms-sub">Une ligne par lecture TRADUS · session locale · maximum ${MAX_ROWS} observations · aucune exécution réelle.</div></div>
-        <button type="button" class="btn small" id="multiStrategyShadowExport406066">EXPORTER LEDGER</button>
+        <button type="button" class="btn small" id="multiStrategyShadowExport">EXPORTER LEDGER</button>
       </div>
       <div class="ms-grid">
         <div class="ms-card"><span>Observations</span><b data-ms="observations">0</b></div>
@@ -189,7 +189,7 @@
       <div class="ms-list" data-ms-list></div>
       <div class="ms-foot">STOCKAGE <b data-ms="storage">${storageMode}</b> · session uniquement · aucune mutation Strategy A · aucun timer · aucun ordre · export JSON opérateur.</div>`;
     anchor.insertAdjacentElement("afterend",p);
-    p.querySelector("#multiStrategyShadowExport406066")?.addEventListener("click",exportLedger);
+    p.querySelector("#multiStrategyShadowExport")?.addEventListener("click",exportLedger);
     mounted=true; render();
     try {
       const current=globalThis.AgentCryptoTradusShadow406066?.read?.();
@@ -204,7 +204,7 @@
   }
 
   const api=Object.freeze({build:BUILD,event:EVENT_NAME,max_rows:MAX_ROWS,capture,read:()=>clone(rows),summary,export_ledger:exportLedger,mount,storage:()=>storageMode,paper_only:true,shadow_only:true,real_orders:false,recurring_timer:false,network_owner:false});
-  globalThis.AgentCryptoTradusShadowLedger406066=api;
+  globalThis.AgentCryptoTradusShadowLedger=api;
   load();
 
   if(typeof document!=="undefined"){

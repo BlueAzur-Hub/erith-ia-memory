@@ -3,7 +3,7 @@
   Build: 40.6.68
   Parent: 40.6.67 R1
   Responsibility: expose a read-only Paper Shadow snapshot and a bounded local evaluation archive of CLOSED paper trades.
-  Source owner remains AgentCryptoTradusPaperShadow406067. No order endpoint, key, wallet, market polling, timer or Strategy A mutation.
+  Source owner remains AgentCryptoTradusPaperShadow. No order endpoint, key, wallet, market polling, timer or Strategy A mutation.
 */
 (() => {
   "use strict";
@@ -109,7 +109,7 @@
     if (qty === null || entry === null) return null;
     const mark = String(position.side).toUpperCase() === "LONG" ? bid : ask;
     const gross = String(position.side).toUpperCase() === "LONG" ? (mark - entry) * qty : (entry - mark) * qty;
-    const feeRate = num(globalThis.AgentCryptoTradusPaperShadow406067?.assumptions?.fee_rate_per_fill) || 0.001;
+    const feeRate = num(globalThis.AgentCryptoTradusPaperShadow?.assumptions?.fee_rate_per_fill) || 0.001;
     const exitFee = Math.abs(qty * mark) * feeRate;
     return {
       mark, gross, exit_fee:exitFee,
@@ -119,7 +119,7 @@
   }
 
   function buildSnapshot(row = null, source = "read") {
-    const paperApi = globalThis.AgentCryptoTradusPaperShadow406067;
+    const paperApi = globalThis.AgentCryptoTradusPaperShadow;
     const paperState = paperApi?.read?.() || null;
     const sourceRow = row || globalThis.AgentCryptoTradusShadow406066?.read?.() || null;
     if (!paperState) return null;
@@ -221,20 +221,20 @@
     if (typeof document === "undefined") return false;
     const existing = document.getElementById(PANEL_ID);
     if (existing) { mounted = true; if (lastSnapshot) render(); return true; }
-    const anchor = document.getElementById("tradusPaperShadow406067");
+    const anchor = document.getElementById("tradusPaperShadow");
     if (!anchor) return false;
     ensureStyle();
     const panel = document.createElement("section");
     panel.id = PANEL_ID; panel.dataset.tradusPaperObservabilityBuild = BUILD;
     panel.innerHTML = `
-      <div class="tpo-head"><div><div class="tpo-kicker">TRADUS PAPER · OBSERVABILITÉ 40.6.68</div><div class="tpo-title">Équité exécutable + archive locale des trades clôturés</div><div class="tpo-sub">Le moteur 40.6.67 reste propriétaire du lifecycle. Cette couche lit son état, mesure l’équité si clôture maintenant et conserve uniquement les trades PAPER clôturés pour évaluation multi-session.</div></div><div class="tpo-actions"><button type="button" class="btn small" id="tradusPaperObsExport406068">EXPORTER ÉVALUATION</button><button type="button" class="btn small" id="tradusPaperObsClear406068">EFFACER ARCHIVE</button></div></div>
+      <div class="tpo-head"><div><div class="tpo-kicker">TRADUS PAPER · OBSERVABILITÉ 40.6.68</div><div class="tpo-title">Équité exécutable + archive locale des trades clôturés</div><div class="tpo-sub">Le moteur 40.6.67 reste propriétaire du lifecycle. Cette couche lit son état, mesure l’équité si clôture maintenant et conserve uniquement les trades PAPER clôturés pour évaluation multi-session.</div></div><div class="tpo-actions"><button type="button" class="btn small" id="tradusPaperObsExport">EXPORTER ÉVALUATION</button><button type="button" class="btn small" id="tradusPaperObsClear">EFFACER ARCHIVE</button></div></div>
       <div class="tpo-grid"><div class="tpo-card"><span>Signal TRADUS</span><b data-tpo="signal">N/D</b></div><div class="tpo-card"><span>Fraîcheur</span><b data-tpo="freshness">N/D</b></div><div class="tpo-card"><span>Position PAPER</span><b data-tpo="position">FLAT</b></div><div class="tpo-card"><span>Équité si clôture</span><b data-tpo="equity">1 000,00 €</b></div><div class="tpo-card"><span>Archive clôturée</span><b data-tpo="archiveTrades">0 · 0G/0P</b></div><div class="tpo-card"><span>Net archive</span><b data-tpo="archiveNet">0,00 €</b></div></div>
       <div class="tpo-status" data-tpo="status">En attente d’une observation TRADUS.</div>
       <div class="tpo-list" data-tpo-list></div>
       <div class="tpo-foot">SESSION net <b data-tpo="sessionNet">0,00 €</b> · frais session <b data-tpo="sessionFees">0,00 €</b> · drawdown archive <b data-tpo="drawdown">0,00 €</b> · PAPER ONLY · aucun ordre réel · aucune clé · aucun wallet · aucun polling · Strategy A inchangée.</div>`;
     anchor.insertAdjacentElement("afterend", panel);
-    panel.querySelector("#tradusPaperObsExport406068")?.addEventListener("click", exportEvaluation);
-    panel.querySelector("#tradusPaperObsClear406068")?.addEventListener("click", clearArchive);
+    panel.querySelector("#tradusPaperObsExport")?.addEventListener("click", exportEvaluation);
+    panel.querySelector("#tradusPaperObsClear")?.addEventListener("click", clearArchive);
     mounted = true;
     return true;
   }
@@ -255,7 +255,7 @@
     const payload = {
       schema:"agent_crypto_tradus_paper_evaluation_export_v1", build:BUILD, source_build:SOURCE_BUILD,
       exported_at:new Date().toISOString(), snapshot:clone(lastSnapshot), archive:clone(archive), stats:archiveStats(),
-      assumptions:clone(globalThis.AgentCryptoTradusPaperShadow406067?.assumptions || null),
+      assumptions:clone(globalThis.AgentCryptoTradusPaperShadow?.assumptions || null),
       paper_only:true, real_orders:false, credentials:false, wallet:false
     };
     if (typeof document !== "undefined") {
@@ -293,7 +293,7 @@
     paper_only:true, real_orders:false, credentials:false, wallet:false, strategy_a_mutated:false,
     network_owner:false, recurring_timer:false, persistent_evaluation_storage:true
   });
-  globalThis.AgentCryptoTradusPaperObservability406068 = api;
+  globalThis.AgentCryptoTradusPaperObservability = api;
 
   if (typeof document !== "undefined") {
     document.addEventListener(SOURCE_EVENT, event => queueMicrotask(() => publish(event?.detail, "tradus_event")));

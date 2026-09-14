@@ -25,7 +25,7 @@
   }
 
   function findStrategyAScope() {
-    const replay = document.getElementById("strategyAReplaySandbox404290");
+    const replay = document.getElementById("strategyAReplaySandbox");
     let node = replay;
     let boundedFallback = null;
 
@@ -129,17 +129,17 @@
     setText(panel,"compare",current.comparison.state);
     if (current.stale) {
       setText(panel,"status",`${current.comparison.text} · comparaison Strategy A suspendue tant que le carnet TRADUS n'est pas rafraîchi.`);
-      panel.dataset.comparisonFreshness406105 = "stale";
+      panel.dataset.comparisonFreshness = "stale";
     } else {
       const suffix = row?.tick && Number.isFinite(Number(row.tick.bid)) && Number.isFinite(Number(row.tick.ask))
         ? ` · bid ${Number(row.tick.bid).toFixed(2)} / ask ${Number(row.tick.ask).toFixed(2)} €`
         : "";
       setText(panel,"status",`${current.comparison.text}${suffix}`);
-      panel.dataset.comparisonFreshness406105 = "fresh";
+      panel.dataset.comparisonFreshness = "fresh";
     }
     panel.dataset.strategyATruth406105 = strategyA.decision;
     panel.dataset.reconcileReason406105 = String(reason || "runtime");
-    document.documentElement.dataset.tradusStrategyReconcile406105 = "active";
+    document.documentElement.dataset.tradusStrategyReconcile = "active";
     return Object.freeze({applied:true,reason,current,row});
   }
 
@@ -175,7 +175,7 @@
     return Object.freeze({pass:checks.every(Boolean),checks:Object.freeze(checks),total:checks.length,passed:checks.filter(Boolean).length});
   }
 
-  globalThis.AgentCryptoTradusStrategyReconcile406105 = Object.freeze({
+  globalThis.AgentCryptoTradusStrategyReconcile = Object.freeze({
     patch:PATCH,
     max_comparison_age_seconds:MAX_COMPARISON_AGE_SECONDS,
     readStrategyA,

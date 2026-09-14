@@ -143,7 +143,7 @@
 }
 
 .atlas-v2-interface-bar .atlas-quick-icon,
-.atlas-admin-shortcut-icon-40290{
+.atlas-admin-shortcut-icon{
   width:16px !important;
   height:16px !important;
   min-width:16px !important;
@@ -265,7 +265,7 @@
    Build/Engine/Live status share one header line. Update availability must not
    force a second mode row. Icons visually lead the labels while remaining
    geometrically inside the page frame. */
-body.atlas-header-single-row-40428 .hero-top{
+body.atlas-header-single-row .hero-top{
   display:grid !important;
   grid-template-columns:minmax(0,1fr) auto !important;
   align-items:end !important;
@@ -273,27 +273,27 @@ body.atlas-header-single-row-40428 .hero-top{
   row-gap:5px !important;
   flex-wrap:nowrap !important;
 }
-body.atlas-header-single-row-40428 .title-block{min-width:0 !important;width:auto !important;}
-body.atlas-header-single-row-40428 .brand-account-row{
+body.atlas-header-single-row .title-block{min-width:0 !important;width:auto !important;}
+body.atlas-header-single-row .brand-account-row{
   display:flex !important;
   flex-wrap:nowrap !important;
   align-items:center !important;
   gap:8px !important;
   min-width:0 !important;
 }
-body.atlas-header-single-row-40428 .brandline{
+body.atlas-header-single-row .brandline{
   flex:0 1 auto !important;
   min-width:0 !important;
   white-space:nowrap !important;
 }
-body.atlas-header-single-row-40428 .atlas-view-switcher{
+body.atlas-header-single-row .atlas-view-switcher{
   flex:0 1 auto !important;
   flex-wrap:nowrap !important;
   padding-left:7px !important;
   gap:7px !important;
   overflow:visible !important;
 }
-body.atlas-header-single-row-40428 .atlas-view-switcher .atlas-view-button{
+body.atlas-header-single-row .atlas-view-switcher .atlas-view-button{
   min-height:34px !important;
   padding:4px 9px 4px 4px !important;
   gap:0 !important;
@@ -301,7 +301,7 @@ body.atlas-header-single-row-40428 .atlas-view-switcher .atlas-view-button{
   flex:0 1 auto !important;
   overflow:visible !important;
 }
-body.atlas-header-single-row-40428 .atlas-view-switcher .atlas-view-button-icon{
+body.atlas-header-single-row .atlas-view-switcher .atlas-view-button-icon{
   position:relative !important;
   left:-7px !important;
   z-index:1 !important;
@@ -312,7 +312,7 @@ body.atlas-header-single-row-40428 .atlas-view-switcher .atlas-view-button-icon{
   margin-right:-2px !important;
   padding:5px !important;
 }
-body.atlas-header-single-row-40428 .status-stack{
+body.atlas-header-single-row .status-stack{
   display:flex !important;
   flex-wrap:nowrap !important;
   align-items:center !important;
@@ -324,45 +324,45 @@ body.atlas-header-single-row-40428 .status-stack{
   max-width:100% !important;
   white-space:nowrap !important;
 }
-body.atlas-header-single-row-40428 #atlasVersionControl{
+body.atlas-header-single-row #atlasVersionControl{
   min-width:0 !important;
   max-width:190px !important;
   flex:0 1 auto !important;
   overflow:hidden !important;
 }
-body.atlas-header-single-row-40428 #atlasVersionControlText{
+body.atlas-header-single-row #atlasVersionControlText{
   display:block !important;
   min-width:0 !important;
   overflow:hidden !important;
   text-overflow:ellipsis !important;
   white-space:nowrap !important;
 }
-body.atlas-header-single-row-40428 .status-stack .pill{
+body.atlas-header-single-row .status-stack .pill{
   padding-inline:10px !important;
   min-width:0 !important;
   flex:0 1 auto !important;
 }
-body.atlas-header-single-row-40428 .status-stack .sigil{flex:0 0 auto !important;}
+body.atlas-header-single-row .status-stack .sigil{flex:0 0 auto !important;}
 
 @media (max-width:1450px){
-  body.atlas-header-single-row-40428 .brand-account-row{gap:5px !important;}
-  body.atlas-header-single-row-40428 .atlas-view-switcher{gap:5px !important;padding-left:6px !important;}
-  body.atlas-header-single-row-40428 .atlas-view-switcher .atlas-view-button{font-size:11.25px !important;padding-right:7px !important;}
-  body.atlas-header-single-row-40428 #atlasVersionControl{max-width:150px !important;}
-  body.atlas-header-single-row-40428 .status-stack{gap:4px !important;}
-  body.atlas-header-single-row-40428 .status-stack .pill{padding-inline:8px !important;font-size:10.5px !important;}
+  body.atlas-header-single-row .brand-account-row{gap:5px !important;}
+  body.atlas-header-single-row .atlas-view-switcher{gap:5px !important;padding-left:6px !important;}
+  body.atlas-header-single-row .atlas-view-switcher .atlas-view-button{font-size:11.25px !important;padding-right:7px !important;}
+  body.atlas-header-single-row #atlasVersionControl{max-width:150px !important;}
+  body.atlas-header-single-row .status-stack{gap:4px !important;}
+  body.atlas-header-single-row .status-stack .pill{padding-inline:8px !important;font-size:10.5px !important;}
 }
 @media (max-width:1180px){
-  body.atlas-header-single-row-40428 .hero-top{
+  body.atlas-header-single-row .hero-top{
     grid-template-columns:minmax(0,1fr) !important;
     align-items:start !important;
   }
-  body.atlas-header-single-row-40428 .status-stack{
+  body.atlas-header-single-row .status-stack{
     width:100% !important;
     justify-content:flex-start !important;
     flex-wrap:wrap !important;
   }
-  body.atlas-header-single-row-40428 .brand-account-row{flex-wrap:wrap !important;}
+  body.atlas-header-single-row .brand-account-row{flex-wrap:wrap !important;}
 }
 
 /* 40.4.29 — header geometry from 40.4.28 preserved byte-for-behavior; runtime change is limited to auth-transition paint handoff + canonical viewport settle. */

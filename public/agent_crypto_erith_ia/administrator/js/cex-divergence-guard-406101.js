@@ -72,7 +72,7 @@
   }
 
   function sourceGridArticle(label){
-    const grid=document.getElementById("privateSourceIntelligenceGrid4056");
+    const grid=document.getElementById("privateSourceIntelligenceGrid");
     if(!grid)return null;
     return Array.from(grid.querySelectorAll(":scope > article")).find(article=>String(article.querySelector("span")?.textContent||"").trim()===label)||null;
   }
@@ -82,8 +82,8 @@
     const truth=guardApi.snapshot?.()||null;
     const intel=guardApi.sourceIntelligence?.()||null;
     const quality=intel?.cex_quality_gate||qualityFromTruth(truth);
-    document.documentElement.dataset.cexDivergenceGuard406101=quality.ready?"ready":"divergent";
-    document.documentElement.dataset.cexDivergenceCount406101=String(quality.divergent_count||0);
+    document.documentElement.dataset.cexDivergenceGuard=quality.ready?"ready":"divergent";
+    document.documentElement.dataset.cexDivergenceCount=String(quality.divergent_count||0);
 
     if(quality.ready)return quality;
 
@@ -95,17 +95,17 @@
       if(small)small.textContent=`${symbols} · écart frais max ${quality.max_fresh_spread_pct===null?"—":quality.max_fresh_spread_pct.toFixed(3)+" %"}`;
     }
 
-    const badge=document.getElementById("privateSourceIntelligenceStatus4056");
+    const badge=document.getElementById("privateSourceIntelligenceStatus");
     if(badge){badge.className="pill warn";badge.textContent="CEX DIVERGENT";}
-    const detail=document.getElementById("privateSourceIntelligenceDetail4056");
+    const detail=document.getElementById("privateSourceIntelligenceDetail");
     if(detail)detail.textContent=`Source Intelligence PARTIEL · divergence CEX fraîche : ${symbols} · Binance reste primaire · aucune promotion de prix`;
-    const backendBadge=document.getElementById("privateBackendStatus4053");
+    const backendBadge=document.getElementById("privateBackendStatus");
     if(backendBadge){backendBadge.className="pill warn";backendBadge.textContent="CEX DIVERGENT";}
     return quality;
   }
 
   function install(){
-    const api=globalThis.ErithPrivateBackendSources4054;
+    const api=globalThis.ErithPrivateBackendSources;
     if(!api)return false;
     if(api[MARKER]===true){guardApi=api;return true;}
     // 40.6.101 must compose after the 40.6.98 per-provider freshness gate.
@@ -131,7 +131,7 @@
 
     guardApi=Object.freeze(wrapper);
     globalThis.__ERITH_PRIVATE_BACKEND_SOURCES_FRESHNESS_406101__=sourceApi;
-    globalThis.ErithPrivateBackendSources4054=guardApi;
+    globalThis.ErithPrivateBackendSources=guardApi;
     applyUi();
     return true;
   }
@@ -143,7 +143,7 @@
   document.addEventListener("agentcrypto:current-finalized",installAfterCurrentTurn,{passive:true});
   window.addEventListener("pageshow",installAfterCurrentTurn,{passive:true});
 
-  globalThis.AgentCryptoCexDivergenceGuard406101=Object.freeze({
+  globalThis.AgentCryptoCexDivergenceGuard=Object.freeze({
     build:BUILD,
     install,
     applyUi,

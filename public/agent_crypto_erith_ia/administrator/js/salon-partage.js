@@ -10,5 +10,5 @@
   function openSalon(e){if(e)e.preventDefault();const d=document.getElementById('salon-partage');if(!d)return false;d.open=true;d.scrollIntoView({behavior:'smooth',block:'start'});return true;}
   function bind(){document.getElementById('btnSalonPartageSend')?.addEventListener('click',send);document.getElementById('btnSalonPartageClear')?.addEventListener('click',clearAll);document.getElementById('btnSalonPartageExport')?.addEventListener('click',exportRows);document.getElementById('salonPartageMessage')?.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();send();}});document.querySelectorAll('a[href="#salon-partage"]').forEach(a=>a.addEventListener('click',openSalon));if(location.hash==='#salon-partage')setTimeout(()=>openSalon(),0);render();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-  globalThis.ErithLocalSalon406022=Object.freeze({build:BUILD,scope:'THIS_FIREFOX_ONLY',multi_user:false,backend:false,network:false,storage:'localStorage',render});
+  globalThis.ErithLocalSalon=Object.freeze({build:BUILD,scope:'THIS_FIREFOX_ONLY',multi_user:false,backend:false,network:false,storage:'localStorage',render});
 })();

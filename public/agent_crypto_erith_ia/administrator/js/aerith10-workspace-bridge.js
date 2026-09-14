@@ -32,7 +32,7 @@
     refresh();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-  globalThis.ErithAerith10WorkspaceBridge406021=Object.freeze({build:BUILD,refresh,current_context:currentContext,open_creator:openCreator,open_forge:openForge,network:false,storage_write:false,financial_action:false,iframe_dom_access:false});
+  globalThis.ErithAerith10WorkspaceBridge=Object.freeze({build:BUILD,refresh,current_context:currentContext,open_creator:openCreator,open_forge:openForge,network:false,storage_write:false,financial_action:false,iframe_dom_access:false});
 })();
 
 /* ==========================================================================

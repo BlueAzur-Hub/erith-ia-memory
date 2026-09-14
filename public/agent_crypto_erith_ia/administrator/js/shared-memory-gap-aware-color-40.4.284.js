@@ -285,7 +285,7 @@
     const horizons = renderHorizons(times, last, model.continuity);
 
     try {
-      globalThis.AgentCryptoSharedMemoryReader404283?.renderIdentity?.();
+      globalThis.AgentCryptoSharedMemoryReader?.renderIdentity?.();
     } catch (_) {}
     const collectorRoot = byId("memoryCollectorQuality");
     if (collectorRoot) {
@@ -379,7 +379,7 @@
         : null
     ).then(renderAll).catch(applyColorIdentity);
 
-    globalThis.AgentCryptoMemoryTruth404284 = Object.freeze({
+    globalThis.AgentCryptoMemoryTruth = Object.freeze({
       build: BUILD,
       render: renderAll,
       renderCoverage,

@@ -6,12 +6,12 @@
   const BUILD="40.5.20",SCHEMA="atlas_decision_intelligence_acceptance_matrix_v1";
   const owner=(name)=>globalThis[name]||null;
   const REQUIRED=Object.freeze([
-    ["Event Intelligence","AtlasEventIntelligence405000"],
-    ["Event Memory","AtlasEventMemory405014"],
+    ["Event Intelligence","AtlasEventIntelligence"],
+    ["Event Memory","AtlasEventMemory"],
     ["Historical Analogs","AtlasHistoricalAnalogEngine405015"],
-    ["Regime Qualified Analogs","AtlasRegimeQualifiedAnalogs405016"],
-    ["Horizon Calibration","AtlasHorizonCalibration405017"],
-    ["Capital Survival","AtlasCapitalSurvival405018"]
+    ["Regime Qualified Analogs","AtlasRegimeQualifiedAnalogs"],
+    ["Horizon Calibration","AtlasHorizonCalibration"],
+    ["Capital Survival","AtlasCapitalSurvival"]
   ]);
   const bool=(v)=>v===true;
   const falseIfDeclared=(api,key)=>!(key in api)||api[key]===false;
@@ -33,11 +33,11 @@
   function matrix(){
     const owners=REQUIRED.map(([label,name])=>{const api=owner(name);return {label,name,available:!!api,build:api?.build||null,safety:safety(api,label)};});
     const ownerPass=owners.every(x=>x.available),safetyPass=owners.every(x=>x.safety.pass);
-    const memory=safeCall(owner("AtlasEventMemory405014")?.current);
+    const memory=safeCall(owner("AtlasEventMemory")?.current);
     const analog=safeCall(owner("AtlasHistoricalAnalogEngine405015")?.current);
-    const regime=safeCall(owner("AtlasRegimeQualifiedAnalogs405016")?.current);
-    const calibration=safeCall(owner("AtlasHorizonCalibration405017")?.current);
-    const survival=safeCall(owner("AtlasCapitalSurvival405018")?.current);
+    const regime=safeCall(owner("AtlasRegimeQualifiedAnalogs")?.current);
+    const calibration=safeCall(owner("AtlasHorizonCalibration")?.current);
+    const survival=safeCall(owner("AtlasCapitalSurvival")?.current);
     const currentEvent=memory && !memory.__error ? memory : null;
     const dataState=!currentEvent?"NO_CURRENT_EVENT":currentEvent.status||"EVENT_AVAILABLE";
     const runtime=[
@@ -52,5 +52,5 @@
     const architecturePass=ownerPass&&safetyPass&&versionLock;
     return Object.freeze({schema:SCHEMA,build:BUILD,status:architecturePass?"PASS":"FAIL",architecture_pass:architecturePass,owners,safety_pass:safetyPass,version_truth:{available:!!version,single_visible_owner:owner("ErithVersionTruth")?.single_visible_owner===true,false_propagation_locked:version?.false_propagation===false,loaded:version?.loaded||null,published:version?.published||null},current_data_status:dataState,runtime,acceptance_scope:"architecture_and_safety_contracts; data sufficiency reported separately",models_modified:false,new_source:false,new_fetch:false,new_timer:false,new_observer:false,storage_write:false,automatic_order:false,financial_advice:false});
   }
-  globalThis.AtlasDecisionIntelligenceAcceptance405020=Object.freeze({build:BUILD,schema:SCHEMA,matrix,snapshot:matrix,required_owners:REQUIRED,read_only:true,models_modified:false,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,financial_signal:false,investment_recommendation:false,automatic_order:false});
+  globalThis.AtlasDecisionIntelligenceAcceptance=Object.freeze({build:BUILD,schema:SCHEMA,matrix,snapshot:matrix,required_owners:REQUIRED,read_only:true,models_modified:false,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,financial_signal:false,investment_recommendation:false,automatic_order:false});
 })();

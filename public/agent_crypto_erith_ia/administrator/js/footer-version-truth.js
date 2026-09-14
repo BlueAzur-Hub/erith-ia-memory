@@ -5,7 +5,7 @@
   const adminTruth=()=>String(globalThis.ErithVersionTruth?.build||meta("administrator-build")||"UNKNOWN").trim();
   const handBackToRuntimeTruth=()=>{try{globalThis.ErithVersionTruth?.syncVisibleTruth?.();}catch(_){}};
   async function render(){
-    const engine=meta("atlas-engine-build"),footer=document.getElementById("footerRelease"),classic=document.getElementById("atlasClassicVersionTruth406025");
+    const engine=meta("atlas-engine-build"),footer=document.getElementById("footerRelease"),classic=document.getElementById("atlasClassicVersionTruth");
     const base=web=>`Administrator ${adminTruth()} · Market Core ${engine} · Web Classic ${web} · ${SIGNATURE}`;
     if(footer)footer.textContent=base("vérification…");
     try{

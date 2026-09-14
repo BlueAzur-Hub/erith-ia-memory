@@ -7,9 +7,9 @@
   const finite=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
   const median=a=>{const v=a.filter(Number.isFinite).sort((x,y)=>x-y);if(!v.length)return null;const m=Math.floor(v.length/2);return v.length%2?v[m]:(v[m-1]+v[m])/2;};
   const mean=a=>{const v=a.filter(Number.isFinite);return v.length?v.reduce((s,x)=>s+x,0)/v.length:null;};
-  function memoryApi(){return globalThis.AtlasEventMemory405014||null;}
+  function memoryApi(){return globalThis.AtlasEventMemory||null;}
   function similarityApi(){return globalThis.AtlasHistoricalAnalogEngine405008||null;}
-  function enrichApi(){return globalThis.AtlasEventSemanticEnrichment405007||null;}
+  function enrichApi(){return globalThis.AtlasEventSemanticEnrichment||null;}
   function clusterMap(){const map=new Map();for(const c of enrichApi()?.clusters?.()||[])for(const id of c?.member_event_ids||[])map.set(String(id),String(c.cluster_id||""));return map;}
   function reaction(memory,horizon,asset){return finite(memory?.reaction_windows?.[horizon]?.reactions?.[asset]?.change_from_t0_pct);}
   function distribution(values){

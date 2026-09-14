@@ -25,7 +25,7 @@
   const PANEL_ID = "tradusShadow406066";
   const MAX_COMPARISON_AGE_SECONDS = 15;
   const upper = value => String(value ?? "").trim().toUpperCase();
-  const prior = globalThis.AgentCryptoTradusStrategyReconcile406105;
+  const prior = globalThis.AgentCryptoTradusStrategyReconcile;
   const unknownToken = value => !value || value === "INCONNU" || value === "UNKNOWN" || value === "N/D" || value === "—";
 
   function stateOf(a) {
@@ -176,13 +176,13 @@
 
     if (stale) {
       setText(panel, "status", `${comparison.text} · comparaison Strategy A suspendue tant que le carnet TRADUS n'est pas rafraîchi.`);
-      panel.dataset.comparisonFreshness406105 = "stale";
+      panel.dataset.comparisonFreshness = "stale";
     } else {
       const suffix = row?.tick && Number.isFinite(Number(row.tick.bid)) && Number.isFinite(Number(row.tick.ask))
         ? ` · bid ${Number(row.tick.bid).toFixed(2)} / ask ${Number(row.tick.ask).toFixed(2)} €`
         : "";
       setText(panel, "status", `${comparison.text}${suffix}`);
-      panel.dataset.comparisonFreshness406105 = "fresh";
+      panel.dataset.comparisonFreshness = "fresh";
     }
 
     panel.dataset.strategyATruth406105 = a.decision;

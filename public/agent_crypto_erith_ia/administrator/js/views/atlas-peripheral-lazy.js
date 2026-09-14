@@ -89,7 +89,7 @@
   async function hydrate(key){
     if(hydrated.has(key))return true;
     const details=targetDetails(key); if(!details)return false;
-    details.dataset.atlasHydration40425="loading";
+    details.dataset.atlasHydration="loading";
     try{
       const source=await sourceText(); if(!details.open)return false;
       const body=details.querySelector(":scope > .atlas-collapse-body"); if(!body)return false;
@@ -98,12 +98,12 @@
       // Release it immediately before insertion so the document never contains duplicate ids.
       if(details.id===key)details.removeAttribute("id");
       body.replaceChildren(template.content.cloneNode(true));
-      body.dataset.atlasHydrated40425="1"; details.dataset.atlasHydration40425="ready"; hydrated.add(key);
+      body.dataset.atlasHydrated="1"; details.dataset.atlasHydration="ready"; hydrated.add(key);
       try{(globalThis.AgentCryptoAtlasPeripheralRebind||globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.(key);}catch(error){console.warn("[40.4.99] Atlas peripheral rebind",error);}
       try{details.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key,build:BUILD}}));}catch(_){}
       return true;
     }catch(error){
-      details.dataset.atlasHydration40425="error";
+      details.dataset.atlasHydration="error";
       const body=details.querySelector(":scope > .atlas-collapse-body");
       if(body)body.innerHTML=`<p class="atlas-local-response-empty">Chargement différé indisponible · ${String(error?.message||error)}</p>`;
       emitResidencyFailure(details,key,error);
@@ -113,16 +113,16 @@
   async function hydrateAudit(key){
     if(auditHydrated.has(key))return true;
     const spec=AUDIT_SECTIONS[key],root=spec&&document.getElementById(spec.id); if(!spec||!root)return false;
-    root.dataset.atlasAuditHydration40431="loading";
+    root.dataset.atlasAuditHydration="loading";
     try{
       const source=await sourceText(),template=document.createElement("template"); template.innerHTML=auditInnerHtml(source,spec);
-      root.replaceChildren(template.content.cloneNode(true)); root.dataset.atlasAuditHydration40431="ready"; auditHydrated.add(key);
+      root.replaceChildren(template.content.cloneNode(true)); root.dataset.atlasAuditHydration="ready"; auditHydrated.add(key);
       try{(globalThis.AgentCryptoAtlasPeripheralRebind||globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.("current-audit");}catch(error){console.warn("[40.4.99] Atlas CURRENT audit rebind",error);}
       try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`current-audit:${key}`,build:BUILD}}));}catch(_){}
       return true;
     }catch(error){
-      root.dataset.atlasAuditHydration40431="error";
-      const note=root.querySelector("[data-atlas-current-audit-shell-40431] .planning-intro"); if(note)note.textContent=`Chargement différé indisponible · ${String(error?.message||error)}`;
+      root.dataset.atlasAuditHydration="error";
+      const note=root.querySelector("[data-atlas-current-audit-shell] .planning-intro"); if(note)note.textContent=`Chargement différé indisponible · ${String(error?.message||error)}`;
       emitResidencyFailure(root,`current-audit:${key}`,error);
       return false;
     }
@@ -131,12 +131,12 @@
     if(bookKnowledgeHydrated)return true;
     const roots=Object.entries(BOOK_KNOWLEDGE_SECTIONS).map(([key,spec])=>[key,spec,document.getElementById(spec.id)]);
     if(roots.some(([, ,root])=>!root))return false;
-    roots.forEach(([, ,root])=>root.dataset.atlasBookKnowledgeHydration40434="loading");
+    roots.forEach(([, ,root])=>root.dataset.atlasBookKnowledgeHydration="loading");
     try{
       const source=await sourceText();
       for(const [key,spec,root] of roots){
         const template=document.createElement("template"); template.innerHTML=auditInnerHtml(source,spec);
-        root.replaceChildren(template.content.cloneNode(true)); root.dataset.atlasBookKnowledgeHydration40434="ready";
+        root.replaceChildren(template.content.cloneNode(true)); root.dataset.atlasBookKnowledgeHydration="ready";
       }
       bookKnowledgeHydrated=true;
       try{globalThis.AgentCryptoAtlasPeripheralRebind?.rebind?.("book-knowledge");}catch(error){console.warn("[40.4.99] Atlas Book/Knowledge rebind",error);}
@@ -144,7 +144,7 @@
       return true;
     }catch(error){
       roots.forEach(([key, ,root])=>{
-        root.dataset.atlasBookKnowledgeHydration40434="error";
+        root.dataset.atlasBookKnowledgeHydration="error";
         emitResidencyFailure(root,`book-knowledge:${key}`,error);
       });
       return false;
@@ -152,24 +152,24 @@
   }
   function attachPeripheral(){
     for(const key of Object.keys(TARGETS)){
-      const details=targetDetails(key); if(!details||details.dataset.atlasPeripheralLazyReady40425==="1")continue;
-      details.dataset.atlasPeripheralLazyReady40425="1";
+      const details=targetDetails(key); if(!details||details.dataset.atlasPeripheralLazyReady==="1")continue;
+      details.dataset.atlasPeripheralLazyReady="1";
       details.addEventListener("toggle",()=>{if(details.open)hydrate(key);});
       if(details.open)hydrate(key);
     }
   }
   function attachAudit(){
     for(const [key,spec] of Object.entries(AUDIT_SECTIONS)){
-      const root=document.getElementById(spec.id); if(!root||root.dataset.atlasCurrentAuditReady40431==="1")continue;
-      root.dataset.atlasCurrentAuditReady40431="1";
-      root.querySelector(`[data-atlas-current-audit-open-40431="${key}"]`)?.addEventListener("click",()=>hydrateAudit(key));
+      const root=document.getElementById(spec.id); if(!root||root.dataset.atlasCurrentAuditReady==="1")continue;
+      root.dataset.atlasCurrentAuditReady="1";
+      root.querySelector(`[data-atlas-current-audit-open="${key}"]`)?.addEventListener("click",()=>hydrateAudit(key));
     }
   }
   function attachBookKnowledge(){
     for(const [key,spec] of Object.entries(BOOK_KNOWLEDGE_SECTIONS)){
-      const root=document.getElementById(spec.id); if(!root||root.dataset.atlasBookKnowledgeReady40434==="1")continue;
-      root.dataset.atlasBookKnowledgeReady40434="1";
-      root.querySelector(`[data-atlas-current-audit-open-40431="${key}"]`)?.addEventListener("click",()=>hydrateBookKnowledge());
+      const root=document.getElementById(spec.id); if(!root||root.dataset.atlasBookKnowledgeReady==="1")continue;
+      root.dataset.atlasBookKnowledgeReady="1";
+      root.querySelector(`[data-atlas-current-audit-open="${key}"]`)?.addEventListener("click",()=>hydrateBookKnowledge());
     }
   }
   function attach(){attachPeripheral();attachAudit();attachBookKnowledge(); return true;}
@@ -181,7 +181,7 @@
     terminal_success_event:"erith:presentation-resident",terminal_failure_event:"erith:presentation-residency-error",source_retry_after_transport_failure:true,
     new_timer:false,new_observer:false,new_scheduler:false,storage_owner_added:false,attach
   });
-  globalThis.AgentCryptoAtlasColdRouter40499=contract;
+  globalThis.AgentCryptoAtlasColdRouter=contract;
   globalThis.AgentCryptoAtlasPeripheralLazy=contract;
   globalThis.__AGENT_CRYPTO_ATLAS_PERIPHERAL_LAZY_40425__=contract;
   globalThis.__AGENT_CRYPTO_ATLAS_CURRENT_AUDIT_LAZY_40431__=contract;

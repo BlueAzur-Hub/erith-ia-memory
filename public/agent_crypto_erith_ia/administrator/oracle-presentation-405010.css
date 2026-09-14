@@ -65,7 +65,7 @@ body.atlas-administrator-mirror #oracle-analysis-suite .atlas-oracle-suite-subse
 
 /* Keep the validated M/G theme owner compact.
    M = Metal, G = Glass; handler and storage ownership remain unchanged. */
-body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300{
+body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle{
   flex:0 0 42px!important;
   width:42px!important;
   min-width:42px!important;
@@ -83,21 +83,21 @@ body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle
   line-height:1!important;
   letter-spacing:0!important;
 }
-body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300::before{
+body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle::before{
   content:"M";
   display:block;
   font:950 12px/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   letter-spacing:.04em;
   color:#e8edf1;
 }
-body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300[aria-pressed="true"]::before{
+body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle[aria-pressed="true"]::before{
   content:"G";
   color:#eaffff;
 }
 body.atlas-administrator-mirror .hero-top .status-stack > .sigil{display:none!important;}
 
 @media (max-width:1200px){
-  body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle404300{
+  body.atlas-administrator-mirror .hero-top .status-stack > #atlasThemeGlassToggle{
     flex-basis:38px!important;
     width:38px!important;
     min-width:38px!important;

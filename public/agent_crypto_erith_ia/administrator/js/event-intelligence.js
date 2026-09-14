@@ -81,7 +81,7 @@
   }
   function sourceSnapshot(){
     try{
-      const owner=globalThis.AgentCryptoNewsEventSource405000;
+      const owner=globalThis.AgentCryptoNewsEventSource;
       return owner&&typeof owner.snapshot==="function"?(owner.snapshot()||null):null;
     }catch(_){return null;}
   }
@@ -94,11 +94,11 @@
     const source=sourceSnapshot();
     return normalize(source?.current||null);
   }
-  globalThis.AtlasEventIntelligence405000=Object.freeze({
+  globalThis.AtlasEventIntelligence=Object.freeze({
     build:BUILD,schema:SCHEMA,normalize,archive,current,reaction_windows:WINDOWS,
     read_only:true,new_fetch:false,new_timer:false,new_storage_owner:false,storage_write:false,
     causal_claim:false,financial_signal:false,automatic_order:false,
-    source_owner:"AgentCryptoNewsEventSource405000 read-only bridge over News Sentinel canonical archive",
+    source_owner:"AgentCryptoNewsEventSource read-only bridge over News Sentinel canonical archive",
     next_owner_required:"Event Reaction Memory persistence must reuse a validated memory owner before 40.5.1"
   });
 })();

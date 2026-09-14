@@ -14,9 +14,9 @@
 
   const BUILD = "40.6.76";
   const WINDOW_ID = "aether-watch";
-  const TOGGLE_ID = "atlasAetherStatusToggle4084";
+  const TOGGLE_ID = "atlasAetherStatusToggle";
   const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
-  const ROOT_ATTR = "data-aether-backplate-v2-406074";
+  const ROOT_ATTR = "data-aether-backplate-v2";
   const MARGIN = 12;
   const CENTER_EPSILON = 14;
   const root = document.documentElement;
@@ -36,11 +36,11 @@
     const src = new URL(BACKPLATE, document.baseURI).href;
     const ready = () => {
       root.setAttribute(ROOT_ATTR, "ready");
-      root.dataset.aetherNativePosition406076 = "visual-ready";
+      root.dataset.aetherNativePosition = "visual-ready";
     };
     const fallback = () => {
       root.setAttribute(ROOT_ATTR, "fallback-40.6.73");
-      root.dataset.aetherNativePosition406076 = "visual-fallback";
+      root.dataset.aetherNativePosition = "visual-fallback";
     };
     image.addEventListener("load", () => {
       const decoded = typeof image.decode === "function" ? image.decode() : Promise.resolve();
@@ -87,7 +87,7 @@
     migrationChecked = true;
 
     if (!looksLegacyAutoCentered(geometry)) {
-      root.dataset.aetherNativePosition406076 = "operator-position-preserved";
+      root.dataset.aetherNativePosition = "operator-position-preserved";
       return false;
     }
 
@@ -109,7 +109,7 @@
       }
     }, { persist: true, captureResult: false });
 
-    root.dataset.aetherNativePosition406076 = `legacy-center-migrated:${reason}`;
+    root.dataset.aetherNativePosition = `legacy-center-migrated:${reason}`;
     return true;
   }
 
@@ -146,7 +146,7 @@
       const { win, saved } = managerState();
       return Object.freeze({
         build: BUILD,
-        state: root.dataset.aetherNativePosition406076 || "idle",
+        state: root.dataset.aetherNativePosition || "idle",
         floating: win?.floating === true,
         hidden: win?.hidden === true,
         maximized: win?.maximized === true,

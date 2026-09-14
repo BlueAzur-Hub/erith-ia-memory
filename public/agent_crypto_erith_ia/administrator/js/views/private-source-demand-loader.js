@@ -30,11 +30,11 @@
   function ensureStrategyProofHotfix(){
     if(runtimeBuild()!=="40.6.95")return false;
     if(globalThis.__ERITH_STRATEGY_A_PAPER_PROOF_HOTFIX_406095__)return true;
-    if(document.querySelector('script[data-strategy-a-paper-proof-hotfix-406095="true"]'))return true;
+    if(document.querySelector('script[data-strategy-a-paper-proof-hotfix="true"]'))return true;
     const script=document.createElement("script");
     script.src="./js/strategy-a-paper-proof-hotfix-406095.js?v=hotfix-1";
     script.async=false;
-    script.dataset.strategyAPaperProofHotfix406095="true";
+    script.dataset.strategyAPaperProofHotfix="true";
     document.head.appendChild(script);
     return true;
   }
@@ -42,11 +42,11 @@
   function ensurePostHandoff(){
     if(!atLeast("40.6.96"))return false;
     if(globalThis.__AGENT_CRYPTO_POST_HANDOFF_406096__)return true;
-    if(document.querySelector('script[data-agent-crypto-post-handoff-406096="true"]'))return true;
+    if(document.querySelector('script[data-agent-crypto-post-handoff="true"]'))return true;
     const script=document.createElement("script");
     script.src=`./js/agent-crypto-post-handoff-406096.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
-    script.dataset.agentCryptoPostHandoff406096="true";
+    script.dataset.agentCryptoPostHandoff="true";
     document.head.appendChild(script);
     return true;
   }
@@ -64,23 +64,23 @@
       return true;
     }
     if(globalThis.AgentCryptoDexExclusionDiagnostics406098)return true;
-    if(document.querySelector('script[data-dex-exclusion-diagnostics-406098="true"]'))return true;
+    if(document.querySelector('script[data-dex-exclusion-diagnostics="true"]'))return true;
     const script=document.createElement("script");
     script.src=`./js/dex-exclusion-diagnostics-406098.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
-    script.dataset.dexExclusionDiagnostics406098="true";
+    script.dataset.dexExclusionDiagnostics="true";
     document.head.appendChild(script);
     return true;
   }
 
   function ensureCexDivergenceGuard(){
     if(!atLeast("40.6.101"))return false;
-    if(globalThis.AgentCryptoCexDivergenceGuard406101)return true;
-    if(document.querySelector('script[data-cex-divergence-guard-406101="true"]'))return true;
+    if(globalThis.AgentCryptoCexDivergenceGuard)return true;
+    if(document.querySelector('script[data-cex-divergence-guard="true"]'))return true;
     const script=document.createElement("script");
     script.src=`./js/cex-divergence-guard-406101.js?v=administrator-build-${encodeURIComponent(runtimeBuild())}`;
     script.async=false;
-    script.dataset.cexDivergenceGuard406101="true";
+    script.dataset.cexDivergenceGuard="true";
     document.head.appendChild(script);
     return true;
   }
@@ -133,13 +133,13 @@
 
   function ensure(why="operator"){
     reason=String(why||"operator");
-    if(state==="ready"||globalThis.ErithPrivateBackendSources4054||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){settleReady();afterSourceOwners();return Promise.resolve(true);}
+    if(state==="ready"||globalThis.ErithPrivateBackendSources||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){settleReady();afterSourceOwners();return Promise.resolve(true);}
     if(promise)return promise;
     state="loading";
     promise=new Promise(resolve=>{
-      const existing=document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand-40486="true"]');
+      const existing=document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand="true"]');
       if(existing){
-        if(globalThis.ErithPrivateBackendSources4054||existing.dataset.loaded==="true"){afterSourceOwners();resolve(settleReady());return;}
+        if(globalThis.ErithPrivateBackendSources||existing.dataset.loaded==="true"){afterSourceOwners();resolve(settleReady());return;}
         existing.addEventListener("load",()=>{existing.dataset.loaded="true";afterSourceOwners();resolve(settleReady());},{once:true});
         existing.addEventListener("error",()=>{state="error";lastError="load-error";resolve(false);},{once:true});
         return;
@@ -170,7 +170,7 @@
   window.addEventListener("erith:system-hydrated",event=>{if(String(event?.detail?.key||"")==="backend"&&document.querySelector('details[data-collapse-key="backend"]')?.open)void ensure("backend-hydrated");},{passive:true});
 
   const hash=String(location.hash||"");
-  if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence4056"].includes(hash))void ensure("direct-hash");
+  if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence"].includes(hash))void ensure("direct-hash");
   ensureStrategyProofHotfix();
   ensurePostHandoff();
   ensureDexDiagnostics();

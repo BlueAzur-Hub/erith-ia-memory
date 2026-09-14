@@ -1099,8 +1099,8 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "math", level: "essential", target: "self", group: "analysis" },
   { id: "oracle-analysis-suite", level: "advanced", target: "self", group: "analysis" },
   { id: "multi-horizon", level: "advanced", target: "self", group: "analysis" },
-  { id: "astrocycle-4055", level: "advanced", target: "self", group: "analysis" },
-  { id: "celestial-sentinel-4055", level: "advanced", target: "self", group: "analysis" },
+  { id: "astrocycle", level: "advanced", target: "self", group: "analysis" },
+  { id: "celestial-sentinel", level: "advanced", target: "self", group: "analysis" },
   { id: "lecture-froide", level: "advanced", target: "closest-collapse", group: "analysis" },
   { id: "risques", level: "advanced", target: "closest-collapse", group: "analysis" },
   { id: "debutant", level: "advanced", target: "closest-collapse", group: "analysis" },
@@ -1128,7 +1128,7 @@ const ATLAS_V2_SECTION_MANIFEST = Object.freeze([
   { id: "sources", level: "adaptive", target: "closest-collapse", group: "system" },
   { id: "mesure-audience", level: "diagnostic", target: "self", group: "system" },
   { id: "local-ai-hub", level: "advanced", target: "closest-collapse", group: "system" },
-  { id: "atlasStorageHealth40198", level: "advanced", target: "self", group: "system" },
+  { id: "atlasStorageHealth", level: "advanced", target: "self", group: "system" },
 
   { id: "missions-vie", level: "project", target: "self", group: "projects" },
   { id: "forge-aerith", level: "project", target: "self", group: "projects" },
@@ -1299,7 +1299,7 @@ function atlasRestoreUiContinuity(snapshot, options = {}) {
   });
 }
 
-globalThis.ErithPassiveViewportAuthority40310 = Object.freeze({
+globalThis.ErithPassiveViewportAuthority = Object.freeze({
   build: "40.3.10",
   passive_market_patch_document_scroll: false,
   passive_spot_patch_document_scroll: false,
@@ -1357,19 +1357,19 @@ function atlasRebindSystemCommandRuntime(root = document) {
   if (run) els.btnRunCommand = run;
 
   let bound = 0;
-  if (run && run.dataset.systemRuntimeBound40424 !== "1") {
-    run.dataset.systemRuntimeBound40424 = "1";
+  if (run && run.dataset.systemRuntimeBound !== "1") {
+    run.dataset.systemRuntimeBound = "1";
     run.addEventListener("click", () => runCommandFromInput());
     bound += 1;
   }
-  if (input && input.dataset.systemRuntimeBound40424 !== "1") {
-    input.dataset.systemRuntimeBound40424 = "1";
+  if (input && input.dataset.systemRuntimeBound !== "1") {
+    input.dataset.systemRuntimeBound = "1";
     input.addEventListener("keydown", event => { if (event.key === "Enter") runCommandFromInput(); });
     bound += 1;
   }
   scope.querySelectorAll?.(".cmd-preset[data-command]").forEach(button => {
-    if (button.dataset.systemRuntimeBound40424 === "1") return;
-    button.dataset.systemRuntimeBound40424 = "1";
+    if (button.dataset.systemRuntimeBound === "1") return;
+    button.dataset.systemRuntimeBound = "1";
     button.addEventListener("click", () => runCommandFromInput(button.dataset.command));
     bound += 1;
   });
@@ -1442,7 +1442,7 @@ function initAtlasCollapsibleLayout() {
   // frame, then scroll again +220 ms.  It is deliberately retired here.
   // Explicit operator navigation is owned by the modern V2/essential routers;
   // boot, hash restoration and passive recomposition never drive the document.
-  globalThis.ErithLegacyHashRouter40312 = Object.freeze({
+  globalThis.ErithLegacyHashRouter = Object.freeze({
     build: "40.3.12",
     retired: true,
     automatic_hash_scroll: false,
@@ -1714,7 +1714,7 @@ function atlasVisibilityResumePageShow(event, key, fn, priority = 100) {
   return false;
 }
 
-globalThis.AtlasVisibilityResume40397 = Object.freeze({
+globalThis.AtlasVisibilityResume = Object.freeze({
   build: ATLAS_VISIBILITY_RESUME_40397_BUILD,
   queue: atlasVisibilityResumeQueue,
   state: () => ({
@@ -1849,7 +1849,7 @@ function atlasOperatorPriorityRelease(reason = "operator") {
   return true;
 }
 try {
-  globalThis.ErithOperatorPriority40461 = Object.freeze({
+  globalThis.ErithOperatorPriority = Object.freeze({
     build: "40.4.61",
     mode: "COOPERATIVE_OPERATOR_PRIORITY",
     active: atlasOperatorPriorityActive,
@@ -2025,9 +2025,9 @@ async function atlasAccessSubmit(event) {
 
     atlasAccessSetStatus("Mot de passe local validé · vérification Bridge…");
     try {
-      atlasAccessPortalState("atlasAccessBridgeState40380","VÉRIFICATION…","warn");
-      atlasAccessPortalState("atlasAccessBridgeAuthState40380","AUTHENTIFICATION…","warn");
-      atlasAccessPortalText("atlasAccessTopBridge40380","VÉRIFICATION…");
+      atlasAccessPortalState("atlasAccessBridgeState","VÉRIFICATION…","warn");
+      atlasAccessPortalState("atlasAccessBridgeAuthState","AUTHENTIFICATION…","warn");
+      atlasAccessPortalText("atlasAccessTopBridge","VÉRIFICATION…");
     } catch (_) {}
     // Let Firefox paint the acknowledged local validation before network/auth work.
     await new Promise(resolve => requestAnimationFrame(resolve));
@@ -2142,7 +2142,7 @@ function atlasInitLocalAccess() {
   document.getElementById("atlasAccessForm")?.addEventListener("submit", atlasAccessSubmit);
   document.getElementById("atlasAccessClose")?.addEventListener("click", atlasAccessClose);
   document.getElementById("atlasAccessCancel")?.addEventListener("click", atlasAccessClose);
-  const operatorProfile = document.getElementById("atlasAccessOperatorProfile404140");
+  const operatorProfile = document.getElementById("atlasAccessOperatorProfile");
   operatorProfile?.addEventListener("click", atlasAccessEnterOperator);
   operatorProfile?.addEventListener("keydown", event => {
     if (event.key === "Enter" || event.key === " ") atlasAccessEnterOperator(event);
@@ -3013,24 +3013,24 @@ function atlasV2ApplySemanticRoleIsolation(mode) {
       // Snapshot only once: repeated Essential-mode applications must not turn
       // the original visible state into "hidden" merely because our own guard
       // already hid the node during the first pass.
-      if (node.dataset.atlasRoleIsolation40312 !== "public-blocked") {
-        node.dataset.atlasRoleIsolationPreviousHidden40322 = node.hidden ? "1" : "0";
+      if (node.dataset.atlasRoleIsolation !== "public-blocked") {
+        node.dataset.atlasRoleIsolationPreviousHidden = node.hidden ? "1" : "0";
       }
-      atlasSetDataset(node, "atlasRoleIsolation40312", "public-blocked");
+      atlasSetDataset(node, "atlasRoleIsolation", "public-blocked");
       atlasSetHiddenAria(node, true);
-    } else if (node.dataset.atlasRoleIsolation40312 === "public-blocked") {
-      const previousHidden = node.dataset.atlasRoleIsolationPreviousHidden40322 === "1";
+    } else if (node.dataset.atlasRoleIsolation === "public-blocked") {
+      const previousHidden = node.dataset.atlasRoleIsolationPreviousHidden === "1";
       if (!previousHidden) {
         atlasSetHiddenAria(node, false);
       }
-      delete node.dataset.atlasRoleIsolation40312;
-      delete node.dataset.atlasRoleIsolationPreviousHidden40322;
+      delete node.dataset.atlasRoleIsolation;
+      delete node.dataset.atlasRoleIsolationPreviousHidden;
     }
   }
   return semanticMembers.length;
 }
 
-globalThis.ErithRoleIsolation40312 = Object.freeze({
+globalThis.ErithRoleIsolation = Object.freeze({
   build: "40.3.22",
   base_build: "40.3.12",
   public_semantic_family_block: true,
@@ -3322,7 +3322,7 @@ function atlasInitV2Shell() {
   // The header can receive trusted input before the parser-blocking shared
   // runtime has installed this canonical handler. Consume that one queued
   // intent after the access form/close handlers are ready; no timer/retry loop.
-  const queuedAdminIntent = globalThis.ErithAdminEntryIntentGate40449?.consume?.() === true;
+  const queuedAdminIntent = globalThis.ErithAdminEntryIntentGate?.consume?.() === true;
   if (queuedAdminIntent) queueMicrotask(atlasAdminAccountToggleAction);
 
   document.getElementById("btnBasicViewToggle")?.addEventListener("click", () => {
@@ -3391,7 +3391,7 @@ function atlasInitV2Shell() {
     requestAnimationFrame(() => requestAnimationFrame(() => target.scrollIntoView({ behavior, block: "start" })));
     return true;
   };
-  globalThis.ErithEssentialNavigation40309 = Object.freeze({
+  globalThis.ErithEssentialNavigation = Object.freeze({
     build: "40.3.09",
     explicit_operator_intent: true,
     restore_hidden_owner: true,
@@ -3745,7 +3745,7 @@ function atlasInitRuntimeStability() {
   });
 }
 
-globalThis.AtlasRuntimeReturn40332 = Object.freeze({
+globalThis.AtlasRuntimeReturn = Object.freeze({
   build: "40.3.32",
   policy: "ordinary visibility/pageshow return = no DOM rebuild when viewport/mode/dock unchanged",
   state: () => ({ ...atlasRuntimeReturn, snapshot: atlasRuntimeReturn.snapshot ? { ...atlasRuntimeReturn.snapshot } : null }),
@@ -4254,7 +4254,7 @@ function initAtlasAdminCommandCenter() {
   window.requestAnimationFrame(restoreCenter);
 }
 
-globalThis.ErithCommandCenterExplicit40322 = Object.freeze({
+globalThis.ErithCommandCenterExplicit = Object.freeze({
   build: "40.3.22",
   parent_build: "40.3.21",
   automatic_boot_open: false,
@@ -4759,7 +4759,7 @@ function atlasComparisonCompletionKey(ids = atlasComparisonIds(), period = Numbe
 }
 
 function atlasSetComparisonIds(ids, primaryId = null, options = {}) {
-  if(globalThis.__atlasExternalChartContext403113?.active === true){
+  if(globalThis.__atlasExternalChartContext?.active === true){
     atlasExternalChartClear("canonical-comparison");
   }
   if (atlasScannerTransaction && options.keepScanner !== true) {
@@ -5365,7 +5365,7 @@ async function atlasStorageReliefRetireVerified(){const rows=[];for(const key of
 
 
 try{
-  globalThis.AtlasStorageReliefBulkPreload403101=Object.freeze({
+  globalThis.AtlasStorageReliefBulkPreload=Object.freeze({
     build:"40.3.101",
     active_database:ATLAS_STORAGE_RELIEF_40278_DB,
     active_preload_keys:[...ATLAS_STORAGE_RELIEF_PRELOAD],
@@ -6280,7 +6280,7 @@ function atlasChartV2EffectiveScale(){
 function atlasChartV2OraclePresentationAllowed(){
   // 40.3.117: Basic is a presentation preset, not an Oracle engine stop.
   // External Market history keeps exclusive canvas ownership while active.
-  return globalThis.__atlasExternalChartContext403113?.active !== true;
+  return globalThis.__atlasExternalChartContext?.active !== true;
 }
 
 function atlasChartV2OracleVisible(){
@@ -6289,7 +6289,7 @@ function atlasChartV2OracleVisible(){
 }
 
 try{
-  globalThis.AtlasViewParity403112=Object.freeze({
+  globalThis.AtlasViewParity=Object.freeze({
     build:"40.3.112",
     base:"40.3.111",
     basic_top_navigation:Object.freeze(["Livecheck","Marché","Graphique","Sources"]),
@@ -7883,7 +7883,7 @@ function atlasOracleLabRefreshOnDemand(force=true){
   if(typeof atlasOracleIntegrityRefresh==="function")tasks.push(atlasRuntimeDeferPresentationalRefresh("ondemand:integrity","oracle-models-calibration",()=>atlasOracleIntegrityRefresh(force)));
   return Promise.allSettled(tasks);
 }
-globalThis.AtlasHiddenRuntimeResidency40384=Object.freeze({state:()=>({total:atlasRuntimeDeferredRefreshState.total,by_name:{...atlasRuntimeDeferredRefreshState.by_name},by_visibility:{...atlasRuntimeDeferredRefreshState.by_visibility}}),refreshLab:atlasOracleLabRefreshOnDemand,new_timer:false,new_observer:false,new_scheduler:false});
+globalThis.AtlasHiddenRuntimeResidency=Object.freeze({state:()=>({total:atlasRuntimeDeferredRefreshState.total,by_name:{...atlasRuntimeDeferredRefreshState.by_name},by_visibility:{...atlasRuntimeDeferredRefreshState.by_visibility}}),refreshLab:atlasOracleLabRefreshOnDemand,new_timer:false,new_observer:false,new_scheduler:false});
 
 /* ============================================================
    40.3.119 — HIDDEN ORACLE UI SLIM / ENGINE-PRESENTATION SPLIT
@@ -7896,7 +7896,7 @@ const atlasOracleHiddenUiSlim={adaptive_compute:0,adaptive_render:0,adaptive_ren
 function atlasOraclePresentationVisible(targetId){
   return atlasRuntimeTargetVisibility(targetId).state==="visible";
 }
-try{globalThis.AtlasOracleHiddenUiSlim403119=Object.freeze({build:"40.3.119",state:()=>({...atlasOracleHiddenUiSlim}),engine_continues_hidden:true,hidden_dom_sleeps:true,evidence_source:"retained synchronized mirror",new_timer:false,new_observer:false,new_scheduler:false});}catch(_){}
+try{globalThis.AtlasOracleHiddenUiSlim=Object.freeze({build:"40.3.119",state:()=>({...atlasOracleHiddenUiSlim}),engine_continues_hidden:true,hidden_dom_sleeps:true,evidence_source:"retained synchronized mirror",new_timer:false,new_observer:false,new_scheduler:false});}catch(_){}
 
 function atlasRuntimeWindowSnapshot(){
   const manager=globalThis.ErithAdministratorWindows;let snapshot=null;
@@ -7926,7 +7926,7 @@ function atlasRuntimeVisibilityAttribution(refreshByName,state,limit=5){
 }
 function atlasRuntimeTopHidden(refreshByName){const row=atlasRuntimeVisibilityAttribution(refreshByName,"hidden",1)[0]||null;return row?{name:row.name,hidden:row.calls,hidden_ms:row.total_ms}:null;}
 function atlasRuntimeAttributionLabel(row){return row?`${row.name} ${Number(row.calls||0)}×/${atlasRuntimeFmtMs(row.total_ms)}`:"—";}
-function atlasRuntimeRender(){const stateNode=document.getElementById("atlasRuntimeState40214"),note=document.getElementById("atlasRuntimeNote40214");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow());const r=atlasRuntimeSnapshot();const view={essential:"CLASSIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"} · W ${r.windows.visible}/${r.windows.minimized}/${r.windows.hidden}`;if(note){const o=r.oracle,n=r.navigation,v=o.refresh_visibility||{},top=atlasRuntimeTopHidden(o.refresh_by_name),rTop=atlasRuntimeVisibilityAttribution(o.refresh_by_name,"minimized",1)[0]||null,cTop=atlasRuntimeVisibilityAttribution(o.refresh_by_name,"collapsed",1)[0]||null;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs(o.outcome_max_ms)} · Evidence ${o.evidence_reads} req · DB ${o.evidence_db_scans}× μ${atlasRuntimeFmtMs(o.evidence_db_mean_ms)}/max ${atlasRuntimeFmtMs(o.evidence_db_max_ms)} · reuse ${o.evidence_cache_hits+o.evidence_inflight_hits} · Explorer ${o.evidence_explorer_rendered?"ON":"OFF"}/${o.evidence_explorer_deferred_skips} skip · Flow ${r.market_flow_runtime?`${String(r.market_flow_runtime.profile||"—").toUpperCase()}/${String(r.market_flow_runtime.state||"—").toUpperCase()}`:"—"} · UI V ${atlasRuntimeVisibilityLabel(v.visible)} · R ${atlasRuntimeVisibilityLabel(v.minimized)} · X ${atlasRuntimeVisibilityLabel(v.hidden)} · C ${atlasRuntimeVisibilityLabel(v.collapsed)}${rTop?` · R top ${atlasRuntimeAttributionLabel(rTop)}`:""}${cTop?` · C top ${atlasRuntimeAttributionLabel(cTop)}`:""}${top?` · X top ${top.name} ${top.hidden}×/${atlasRuntimeFmtMs(top.hidden_ms)}`:""}`;}return r;}
+function atlasRuntimeRender(){const stateNode=document.getElementById("atlasRuntimeState"),note=document.getElementById("atlasRuntimeNote");if(!stateNode&&!note)return null;const s=atlasRuntimeObservatoryState;if(s.first_render_ms===null)s.first_render_ms=Math.max(0,atlasRuntimeNow());const r=atlasRuntimeSnapshot();const view={essential:"CLASSIQUE",intermediate:"INTERMÉDIAIRE",advanced:"ADMIN"}[r.view]||String(r.view||"—").toUpperCase();if(stateNode)stateNode.textContent=`${view} · DOM ${Number.isFinite(r.dom_nodes)?r.dom_nodes:"—"} · W ${r.windows.visible}/${r.windows.minimized}/${r.windows.hidden}`;if(note){const o=r.oracle,n=r.navigation,v=o.refresh_visibility||{},top=atlasRuntimeTopHidden(o.refresh_by_name),rTop=atlasRuntimeVisibilityAttribution(o.refresh_by_name,"minimized",1)[0]||null,cTop=atlasRuntimeVisibilityAttribution(o.refresh_by_name,"collapsed",1)[0]||null;note.textContent=`nav ${n.type} · DCL ${atlasRuntimeFmtMs(n.dom_content_loaded_ms)} · load ${atlasRuntimeFmtMs(n.load_ms)} · Outcome ${o.outcome_runs}× μ${atlasRuntimeFmtMs(o.outcome_mean_ms)}/max ${atlasRuntimeFmtMs(o.outcome_max_ms)} · Evidence ${o.evidence_reads} req · DB ${o.evidence_db_scans}× μ${atlasRuntimeFmtMs(o.evidence_db_mean_ms)}/max ${atlasRuntimeFmtMs(o.evidence_db_max_ms)} · reuse ${o.evidence_cache_hits+o.evidence_inflight_hits} · Explorer ${o.evidence_explorer_rendered?"ON":"OFF"}/${o.evidence_explorer_deferred_skips} skip · Flow ${r.market_flow_runtime?`${String(r.market_flow_runtime.profile||"—").toUpperCase()}/${String(r.market_flow_runtime.state||"—").toUpperCase()}`:"—"} · UI V ${atlasRuntimeVisibilityLabel(v.visible)} · R ${atlasRuntimeVisibilityLabel(v.minimized)} · X ${atlasRuntimeVisibilityLabel(v.hidden)} · C ${atlasRuntimeVisibilityLabel(v.collapsed)}${rTop?` · R top ${atlasRuntimeAttributionLabel(rTop)}`:""}${cTop?` · C top ${atlasRuntimeAttributionLabel(cTop)}`:""}${top?` · X top ${top.name} ${top.hidden}×/${atlasRuntimeFmtMs(top.hidden_ms)}`:""}`;}return r;}
 window.addEventListener("pageshow",event=>{
   const s=atlasRuntimeObservatoryState;
   s.pageshow_count+=1;
@@ -7936,7 +7936,7 @@ window.addEventListener("pageshow",event=>{
     atlasRuntimeRender();
   }
 },{passive:true});
-globalThis.AtlasRuntimeObservatory40214=Object.freeze({snapshot:atlasRuntimeSnapshot,render:atlasRuntimeRender,passive_only:true,storage_write:false,network_request_added:false,business_runtime_changed:false});
+globalThis.AtlasRuntimeObservatory=Object.freeze({snapshot:atlasRuntimeSnapshot,render:atlasRuntimeRender,passive_only:true,storage_write:false,network_request_added:false,business_runtime_changed:false});
 
 function atlasOracleEvidenceOpen() {
   if (atlasOracleEvidenceDbPromise) return atlasOracleEvidenceDbPromise;
@@ -8224,7 +8224,7 @@ async function atlasOracleEvidenceAll(options = null) {
 
 
 try{
-  globalThis.AtlasOracleEvidenceColdStatus403107=Object.freeze({
+  globalThis.AtlasOracleEvidenceColdStatus=Object.freeze({
     build:"40.3.107",
     cold_status_strategy:"IndexedDB count() + t0 index openKeyCursor(prev)",
     full_evidence_payload_required_for_status:false,
@@ -8239,7 +8239,7 @@ try{
 }catch(_){}
 
 try{
-  globalThis.AtlasOracleEvidenceWarmMirror403101=Object.freeze({
+  globalThis.AtlasOracleEvidenceWarmMirror=Object.freeze({
     build:"40.3.101",
     cache_window_ms:ATLAS_ORACLE_EVIDENCE_READ_CACHE_MS,
     state:()=>({
@@ -8340,7 +8340,7 @@ async function atlasOracleEvidenceRefreshStatus() {
 
 
 try{
-  globalThis.AtlasOracleEvidenceStatusO1403103=Object.freeze({
+  globalThis.AtlasOracleEvidenceStatusO1=Object.freeze({
     build:"40.3.103",
     strategy:"cache summary count/lastAt; no full-array reduce on every status refresh",
     cold_cache_behavior:"one atlasOracleEvidenceAll scan, then summary",
@@ -8642,7 +8642,7 @@ function atlasOracleEvidenceBackgroundRows(){
 }
 
 try{
-  globalThis.AtlasOracleEvidenceBackground403111=Object.freeze({
+  globalThis.AtlasOracleEvidenceBackground=Object.freeze({
     build:"40.3.111",
     strategy:"retained synchronized Evidence snapshot for scheduled background resolvers",
     outcome_scheduler_uses_retained_rows:true,
@@ -8745,7 +8745,7 @@ globalThis.AtlasOracleOutcome = Object.freeze({ run:atlasOracleOutcomeRun, statu
 
 
 try{
-  globalThis.AtlasOracleOutcomePending403108=Object.freeze({
+  globalThis.AtlasOracleOutcomePending=Object.freeze({
     build:"40.3.108",
     strategy:"pending-id set synchronized with Evidence warm mirror",
     full_rows_checked_every_tick:false,
@@ -8786,9 +8786,9 @@ function atlasOracleLongMedian(values){const a=(values||[]).map(Number).filter(N
 function atlasOracleLongFmtT0(ms){const v=Number(ms);if(!(v>0))return "—";try{return new Intl.DateTimeFormat("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).format(new Date(v));}catch(_){return new Date(v).toISOString().slice(5,16).replace("T"," ");}}
 function atlasOracleLongShadowCompute40282(rows,now=Date.now()){const out={};for(const [key,spec] of Object.entries(ATLAS_ORACLE_LONG_SHADOW)){let eligible=0,resolved=0,waiting=0,due_missing=0,hits=0,sum=0,absSum=0,firstT0=Infinity,lastT0=0;const returns=[],lags=[],methods={},directions={up:0,down:0,flat:0,unknown:0};for(const row of rows||[]){if(row?.long_shadow?.schema!=="atlas.oracle.long-shadow.v1"||row?.long_shadow?.prospective!==true)continue;const t0=Number(row.t0||0);if(!(t0>0))continue;eligible++;firstT0=Math.min(firstT0,t0);lastT0=Math.max(lastT0,t0);const actual=row?.long_shadow_outcomes?.[key],pred=String(row?.long_shadow?.predictions?.[key]||"");if(!actual){if(now<t0+Number(spec.ms||0))waiting++;else due_missing++;continue;}resolved++;const ret=Number(actual.realized_return_pct);if(Number.isFinite(ret)){sum+=ret;absSum+=Math.abs(ret);returns.push(ret);}const dir=String(actual.direction||"unknown");directions[dir]=(directions[dir]||0)+1;if(pred&&pred===dir)hits++;const method=String(actual.resolution_method||"unknown");methods[method]=(methods[method]||0)+1;for(const c of Array.isArray(actual.constituents)?actual.constituents:[]){const lag=Number(c?.lag_ms);if(Number.isFinite(lag))lags.push(Math.abs(lag)/60000);}}const matured=resolved+due_missing,coverage=matured?resolved/matured*100:null;out[key]={label:spec.label,eligible,resolved,waiting,due_missing,matured,coverage,hit_rate:resolved?hits/resolved*100:null,avg_return:resolved?sum/resolved:null,median_return:atlasOracleLongMedian(returns),avg_abs_return:resolved?absSum/resolved:null,median_lag_min:atlasOracleLongMedian(lags),methods,directions,first_t0:Number.isFinite(firstT0)?firstT0:null,last_t0:lastT0||null};}return out;}
 function atlasOracleLongShadowCompute40273(rows){return atlasOracleLongShadowCompute40282(rows,Date.now());}
-function atlasOracleLongShadowRender(rows=null){const apply=source=>{const h=atlasOracleLongShadowCompute40282(source||[],Date.now());atlasOracleLongShadowState={...atlasOracleLongShadowState,horizons:h};const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};const pct=v=>Number.isFinite(Number(v))?`${Number(v).toFixed(1)} %`:"—",ret=v=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(3)} %`:"—";const status=x=>{if(!x?.matured)return "EN COLLECTE";if(Number(x.coverage)>=95)return "COUVERTURE FORTE";if(Number(x.coverage)>=80)return "COUVERTURE BONNE";return "COUVERTURE À SURVEILLER";};const methodText=x=>{const m=Object.entries(x?.methods||{}).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${k} ×${n}`).slice(0,2).join(" · ")||"—";const lag=Number.isFinite(Number(x?.median_lag_min))?` · retard médian ${Number(x.median_lag_min).toFixed(1)} min`:"";return m+lag;};const directionText=x=>`↑ ${x?.directions?.up||0} · ↓ ${x?.directions?.down||0} · = ${x?.directions?.flat||0}`;const f=(k,p)=>{const x=h[k]||{};set(`atlasOracleLong${p}Resolved40273`,String(x.resolved||0));set(`atlasOracleLong${p}Pending40273`,String(x.waiting||0));set(`atlasOracleLong${p}Missing40282`,String(x.due_missing||0));set(`atlasOracleLong${p}Coverage40282`,pct(x.coverage));set(`atlasOracleLong${p}Hit40273`,pct(x.hit_rate));set(`atlasOracleLong${p}Return40273`,ret(x.avg_return));set(`atlasOracleLong${p}Median40282`,ret(x.median_return));set(`atlasOracleLong${p}Abs40282`,ret(x.avg_abs_return)?.replace(/^\+/,""));set(`atlasOracleLong${p}Directions40282`,directionText(x));set(`atlasOracleLong${p}Method40282`,methodText(x));set(`atlasOracleLong${p}Window40282`,x.first_t0&&x.last_t0?`${atlasOracleLongFmtT0(x.first_t0)} → ${atlasOracleLongFmtT0(x.last_t0)}`:"—");set(`atlasOracleLong${p}Status40282`,status(x));};f("30m","30");f("1h","1h");const vals=Object.values(h),eligible=vals.reduce((s,x)=>s+(x.eligible||0),0),resolved=vals.reduce((s,x)=>s+(x.resolved||0),0),waiting=vals.reduce((s,x)=>s+(x.waiting||0),0),missing=vals.reduce((s,x)=>s+(x.due_missing||0),0),matured=resolved+missing,coverage=matured?resolved/matured*100:null;set("atlasOracleLongEligible40282",String(eligible));set("atlasOracleLongResolved40282",String(resolved));set("atlasOracleLongWaiting40282",String(waiting));set("atlasOracleLongMissing40282",String(missing));set("atlasOracleLongCoverage40282",pct(coverage));const stateNode=document.getElementById("atlasOracleLongShadowState");if(stateNode)stateNode.textContent=resolved?`PROSPECTIF · ${resolved} résolution(s)`:`PROSPECTIF · n0`;return h;};if(Array.isArray(rows))return apply(rows);return atlasOracleEvidenceAll().then(apply).catch(()=>null);}
+function atlasOracleLongShadowRender(rows=null){const apply=source=>{const h=atlasOracleLongShadowCompute40282(source||[],Date.now());atlasOracleLongShadowState={...atlasOracleLongShadowState,horizons:h};const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};const pct=v=>Number.isFinite(Number(v))?`${Number(v).toFixed(1)} %`:"—",ret=v=>Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(3)} %`:"—";const status=x=>{if(!x?.matured)return "EN COLLECTE";if(Number(x.coverage)>=95)return "COUVERTURE FORTE";if(Number(x.coverage)>=80)return "COUVERTURE BONNE";return "COUVERTURE À SURVEILLER";};const methodText=x=>{const m=Object.entries(x?.methods||{}).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${k} ×${n}`).slice(0,2).join(" · ")||"—";const lag=Number.isFinite(Number(x?.median_lag_min))?` · retard médian ${Number(x.median_lag_min).toFixed(1)} min`:"";return m+lag;};const directionText=x=>`↑ ${x?.directions?.up||0} · ↓ ${x?.directions?.down||0} · = ${x?.directions?.flat||0}`;const f=(k,p)=>{const x=h[k]||{};set(`atlasOracleLong${p}Resolved40273`,String(x.resolved||0));set(`atlasOracleLong${p}Pending40273`,String(x.waiting||0));set(`atlasOracleLong${p}Missing40282`,String(x.due_missing||0));set(`atlasOracleLong${p}Coverage40282`,pct(x.coverage));set(`atlasOracleLong${p}Hit40273`,pct(x.hit_rate));set(`atlasOracleLong${p}Return40273`,ret(x.avg_return));set(`atlasOracleLong${p}Median40282`,ret(x.median_return));set(`atlasOracleLong${p}Abs40282`,ret(x.avg_abs_return)?.replace(/^\+/,""));set(`atlasOracleLong${p}Directions40282`,directionText(x));set(`atlasOracleLong${p}Method40282`,methodText(x));set(`atlasOracleLong${p}Window40282`,x.first_t0&&x.last_t0?`${atlasOracleLongFmtT0(x.first_t0)} → ${atlasOracleLongFmtT0(x.last_t0)}`:"—");set(`atlasOracleLong${p}Status40282`,status(x));};f("30m","30");f("1h","1h");const vals=Object.values(h),eligible=vals.reduce((s,x)=>s+(x.eligible||0),0),resolved=vals.reduce((s,x)=>s+(x.resolved||0),0),waiting=vals.reduce((s,x)=>s+(x.waiting||0),0),missing=vals.reduce((s,x)=>s+(x.due_missing||0),0),matured=resolved+missing,coverage=matured?resolved/matured*100:null;set("atlasOracleLongEligible",String(eligible));set("atlasOracleLongResolved",String(resolved));set("atlasOracleLongWaiting",String(waiting));set("atlasOracleLongMissing",String(missing));set("atlasOracleLongCoverage",pct(coverage));const stateNode=document.getElementById("atlasOracleLongShadowState");if(stateNode)stateNode.textContent=resolved?`PROSPECTIF · ${resolved} résolution(s)`:`PROSPECTIF · n0`;return h;};if(Array.isArray(rows))return apply(rows);return atlasOracleEvidenceAll().then(apply).catch(()=>null);}
 async function atlasOracleLongShadowRun(force=false){const now=Date.now();if(atlasOracleLongShadowState.running)return atlasOracleLongShadowState;if(!force&&now-Number(atlasOracleLongShadowState.last_run_at||0)<60_000)return atlasOracleLongShadowState;atlasOracleLongShadowState.running=true;try{const rows=await atlasOracleEvidenceBackgroundRows();let changed=0;for(const row of rows){if(row?.long_shadow?.schema!=="atlas.oracle.long-shadow.v1")continue;let next=null;for(const key of Object.keys(ATLAS_ORACLE_LONG_SHADOW)){const outcome=atlasOracleLongShadowResolveRow(next||row,key,now);if(!outcome)continue;if(!next)next={...row,long_shadow_outcomes:{...(row.long_shadow_outcomes||{})}};next.long_shadow_outcomes[key]=outcome;}if(next){await atlasOracleEvidencePut(next);changed++;}}const fresh=changed?(Array.isArray(atlasOracleEvidenceReadCache.rows)?atlasOracleEvidenceReadCache.rows:rows):rows;atlasOracleLongShadowState.last_run_at=now;await atlasOracleLongShadowRender(fresh);return {...atlasOracleLongShadowState,changed};}finally{atlasOracleLongShadowState.running=false;}}
-globalThis.AtlasOracleLongShadow40273=Object.freeze({build:"40.2.73",operator_view_build:"40.2.82",run:atlasOracleLongShadowRun,render:atlasOracleLongShadowRender,state:()=>atlasOracleLongShadowState,horizons:Object.keys(ATLAS_ORACLE_LONG_SHADOW),prospective_only:true,retrofit_old_rows:false,oracle_v1_changed:false,ensemble_changed:false,weights_changed:false,evaluation_gate_changed:false});
+globalThis.AtlasOracleLongShadow=Object.freeze({build:"40.2.73",operator_view_build:"40.2.82",run:atlasOracleLongShadowRun,render:atlasOracleLongShadowRender,state:()=>atlasOracleLongShadowState,horizons:Object.keys(ATLAS_ORACLE_LONG_SHADOW),prospective_only:true,retrofit_old_rows:false,oracle_v1_changed:false,ensemble_changed:false,weights_changed:false,evaluation_gate_changed:false});
 /* 40.3.84: Long Shadow boot scan is owned by atlasOracleOutcomeSchedule after explicit Oracle initialization. */
 
 /* ============================================================
@@ -9617,7 +9617,7 @@ function atlasOracleV2EvalFmt(value,suffix="%"){
 function atlasOracleV2EvalDelta(value){const n=Number(value);return Number.isFinite(n)?`${n>=0?"+":""}${n.toFixed(1)} pt`:"—";}
 
 function atlasOracleV2EvaluationRender(state=atlasOracleV2EvaluationState){
-  const root=document.getElementById("atlasOracleV2EvaluationGate40231"),status=document.getElementById("atlasOracleV2EvalState40231"),body=document.getElementById("atlasOracleV2EvalRows40231"),note=document.getElementById("atlasOracleV2EvalNote40231");
+  const root=document.getElementById("atlasOracleV2EvaluationGate"),status=document.getElementById("atlasOracleV2EvalState"),body=document.getElementById("atlasOracleV2EvalRows"),note=document.getElementById("atlasOracleV2EvalNote");
   if(root)root.dataset.evalState=String(state?.status||"IDLE").toLowerCase();
   if(status){
     const label=state?.status==="ADVANTAGE_COHERENT"?"AVANTAGE COHÉRENT · PROMOTION TOUJOURS BLOQUÉE":state?.status==="MIXED"?"RÉSULTAT MIXTE · RESTE SHADOW":state?.status==="INSUFFICIENT"?"ÉCHANTILLON INSUFFISANT · RESTE SHADOW":"NON LANCÉ · PROMOTION BLOQUÉE";
@@ -9634,20 +9634,20 @@ function atlasOracleV2EvaluationRender(state=atlasOracleV2EvaluationState){
 }
 
 async function atlasOracleV2EvaluationRun(){
-  const button=document.getElementById("btnAtlasOracleV2Eval40231"); if(button)button.disabled=true;
+  const button=document.getElementById("btnAtlasOracleV2Eval"); if(button)button.disabled=true;
   try{
     const rows=await atlasOracleEvidenceAll();
     atlasOracleV2EvaluationState=atlasOracleV2EvaluationCompute(rows);
     return atlasOracleV2EvaluationRender(atlasOracleV2EvaluationState);
   }catch(error){
     atlasOracleV2EvaluationState={...atlasOracleV2EvaluationState,status:"ERROR",captured_at:new Date().toISOString(),error:String(error?.message||error)};
-    const node=document.getElementById("atlasOracleV2EvalState40231");if(node)node.textContent=`ÉVALUATION INDISPONIBLE · ${atlasOracleV2EvaluationState.error}`;
+    const node=document.getElementById("atlasOracleV2EvalState");if(node)node.textContent=`ÉVALUATION INDISPONIBLE · ${atlasOracleV2EvaluationState.error}`;
     return atlasOracleV2EvaluationState;
   }finally{if(button)button.disabled=false;}
 }
 
-document.getElementById("btnAtlasOracleV2Eval40231")?.addEventListener("click",()=>void atlasOracleV2EvaluationRun());
-globalThis.AtlasOracleV2Evaluation40231=Object.freeze({run:atlasOracleV2EvaluationRun,compute:atlasOracleV2EvaluationCompute,render:atlasOracleV2EvaluationRender,state:()=>atlasOracleV2EvaluationState,read_only:true,same_t0_required:true,prospective_shadow_only:true,automatic_promotion:false,model_weights_changed:false,oracle_v1_changed:false,shadow_snapshot_changed:false});
+document.getElementById("btnAtlasOracleV2Eval")?.addEventListener("click",()=>void atlasOracleV2EvaluationRun());
+globalThis.AtlasOracleV2Evaluation=Object.freeze({run:atlasOracleV2EvaluationRun,compute:atlasOracleV2EvaluationCompute,render:atlasOracleV2EvaluationRender,state:()=>atlasOracleV2EvaluationState,read_only:true,same_t0_required:true,prospective_shadow_only:true,automatic_promotion:false,model_weights_changed:false,oracle_v1_changed:false,shadow_snapshot_changed:false});
 
 
 /* ============================================================
@@ -9797,7 +9797,7 @@ async function atlasOracleOperatorTruthReconcile(model=null,regime=null,ensemble
   try{return await run;}finally{if(atlasOracleOperatorTruthState.in_flight===run)atlasOracleOperatorTruthState.in_flight=null;}
 }
 
-globalThis.AtlasOracleOperatorTruth40392=Object.freeze({
+globalThis.AtlasOracleOperatorTruth=Object.freeze({
   reconcile:atlasOracleOperatorTruthReconcile,
   state:()=>({...atlasOracleOperatorTruthState,in_flight:Boolean(atlasOracleOperatorTruthState.in_flight)}),
   owner:"atlasOracleV0",
@@ -9830,18 +9830,18 @@ function atlasOracleSuiteSummarySync(){
 /* 40.2.98 — ORACLE COLLAPSED BIAS PREVIEW
    UI-only mirror of existing Oracle V1 DOM values; no model/network/storage writes. */
 function atlasOracleCollapsedPreviewSync(){
-  const preview=document.getElementById("atlasOracleCollapsedPreview40296");
+  const preview=document.getElementById("atlasOracleCollapsedPreview");
   if(!preview)return false;
   const text=id=>String(document.getElementById(id)?.textContent||"—").trim()||"—";
   const set=(id,value)=>{const n=document.getElementById(id);if(n)n.textContent=value;};
-  set("atlasOracleCollapsedBias40296",text("atlasOracleBias"));
-  set("atlasOracleCollapsedConfidence40296",text("atlasOracleConfidence"));
-  set("atlasOracleCollapsedHorizon40296",text("atlasOracleHeroHorizon"));
-  set("atlasOracleCollapsedBull40296",text("atlasOracleBull"));
-  set("atlasOracleCollapsedBear40296",text("atlasOracleBear"));
+  set("atlasOracleCollapsedBias",text("atlasOracleBias"));
+  set("atlasOracleCollapsedConfidence",text("atlasOracleConfidence"));
+  set("atlasOracleCollapsedHorizon",text("atlasOracleHeroHorizon"));
+  set("atlasOracleCollapsedBull",text("atlasOracleBull"));
+  set("atlasOracleCollapsedBear",text("atlasOracleBear"));
   const copyWidth=(fromId,toId)=>{const from=document.getElementById(fromId),to=document.getElementById(toId);if(from&&to)to.style.width=from.style.width||"0%";};
-  copyWidth("atlasOracleBullMeter","atlasOracleCollapsedBullMeter40296");
-  copyWidth("atlasOracleBearMeter","atlasOracleCollapsedBearMeter40296");
+  copyWidth("atlasOracleBullMeter","atlasOracleCollapsedBullMeter");
+  copyWidth("atlasOracleBearMeter","atlasOracleCollapsedBearMeter");
   const raw=(document.getElementById("atlasOracleV0")?.dataset?.bias||text("atlasOracleBias")).toLowerCase();
   preview.dataset.bias=raw.includes("hauss")?"haussier":raw.includes("baiss")?"baissier":raw.includes("mixte")?"mixte":"unknown";
   return true;
@@ -9979,14 +9979,14 @@ function atlasOracleSourceObservationForCoin(coin,now=Date.now()){
 function atlasOracleSourceFabricCompute(now=Date.now()){const assets=atlasOracleInfrastructureScopeCoins().map(c=>atlasOracleSourceObservationForCoin(c,now));const deviations=assets.map(x=>x.deviation_pct).filter(Number.isFinite),ages=assets.map(x=>x.max_age_ms).filter(Number.isFinite);return {updated_at:now,assets,summary:{asset_count:assets.length,dual_fresh:assets.filter(x=>x.fresh_count>=2).length,dual_usable:assets.filter(x=>x.usable_count>=2).length,max_deviation_pct:deviations.length?Math.max(...deviations):null,max_age_ms:ages.length?Math.max(...ages):null}};}
 function atlasOracleInfrastructureAgeLabel(ms){if(!Number.isFinite(Number(ms)))return "—";const sec=Math.max(0,Number(ms))/1000;if(sec<90)return `${Math.round(sec)} s`;const min=sec/60;if(min<90)return `${Math.round(min)} min`;return `${(min/60).toFixed(1)} h`;}
 function atlasOracleInfrastructureRender(){const root=document.getElementById("oracle-infrastructure-observatory");if(!root)return null;const r=atlasOracleSourceFabricCompute();atlasOracleInfrastructureState4020=r;const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};const sum=r.summary;set("atlasOracleInfraAssets",String(sum.asset_count||0));set("atlasOracleInfraDual",`${sum.dual_fresh||0}/${sum.asset_count||0}`);set("atlasOracleInfraDeviation",Number.isFinite(Number(sum.max_deviation_pct))?`${Number(sum.max_deviation_pct).toFixed(3)} %`:"—");set("atlasOracleInfraAge",atlasOracleInfrastructureAgeLabel(sum.max_age_ms));const rows=document.getElementById("atlasOracleInfraRows");if(rows)rows.innerHTML=r.assets.map(x=>`<tr><td><b>${atlasOracleEscapeHtml(x.symbol)}</b></td><td>${x.usable_count}/2 <small>${x.sources.filter(q=>q.usable).map(q=>`${q.family} ${atlasQuoteStatusLabel(q)}`).join(" · ")||"aucune"}</small></td><td>${x.fresh_count}/2</td><td>${Number.isFinite(Number(x.deviation_pct))?Number(x.deviation_pct).toFixed(3)+" %":"—"}</td><td>${atlasOracleInfrastructureAgeLabel(x.max_age_ms)}</td></tr>`).join("")||'<tr><td colspan="5">Aucun actif exploitable.</td></tr>';const status=document.getElementById("atlasOracleInfrastructureState");if(status)status.textContent=sum.asset_count?`QUORUM FRAIS ${sum.dual_fresh}/${sum.asset_count}`:"AUCUN ACTIF";if(typeof atlasOracleSourceRiskRender==="function")atlasOracleSourceRiskRender(r);if(typeof atlasOracleResourceBudgetRender==="function")atlasOracleResourceBudgetRender();if(typeof atlasOracleSourceHistoryMaybeRecord==="function")atlasOracleSourceHistoryMaybeRecord(r);if(typeof atlasOracleRobustAggregateRender==="function")atlasOracleRobustAggregateRender(r);if(typeof atlasOracleSuiteSummarySync==="function")atlasOracleSuiteSummarySync();return r;}
-globalThis.AtlasOracleSourceFabric4020=Object.freeze({compute:atlasOracleSourceFabricCompute,render:atlasOracleInfrastructureRender,state:()=>atlasOracleInfrastructureState4020,new_network_requests:false,model_input:false});
+globalThis.AtlasOracleSourceFabric=Object.freeze({compute:atlasOracleSourceFabricCompute,render:atlasOracleInfrastructureRender,state:()=>atlasOracleInfrastructureState4020,new_network_requests:false,model_input:false});
 
 /* 40.2.1 — SOURCE RISK + HEARTBEAT/DEVIATION ADVISORY LOCK
    Inspired by heartbeat/deviation oracle patterns, but never auto-refreshes or gates V1/V2. */
 const ATLAS_ORACLE_SOURCE_DEVIATION_LAB_PCT=0.75;
 function atlasOracleSourceRiskCompute(fabric=atlasOracleInfrastructureState4020){const s=fabric?.summary||{},assets=Number(s.asset_count||0),dual=Number(s.dual_fresh||0),dev=Number(s.max_deviation_pct),age=Number(s.max_age_ms);const flags=[];if(!assets)flags.push("aucun actif source");if(assets&&dual<assets)flags.push(`quorum frais ${dual}/${assets}`);if(Number.isFinite(dev)&&dev>=ATLAS_ORACLE_SOURCE_DEVIATION_LAB_PCT)flags.push(`écart ${dev.toFixed(3)}%`);if(Number.isFinite(age)&&age>ATLAS_MARKET_REFRESH_MS)flags.push(`source âgée ${atlasOracleInfrastructureAgeLabel(age)}`);const level=!assets?"ALERTE":flags.length?"SURVEILLANCE":"OK";let action="ATTENDRE";if(!assets)action="VÉRIFIER SOURCES";else if(Number.isFinite(age)&&age>ATLAS_MARKET_REFRESH_MS)action="RAFRAÎCHIR MARCHÉ";else if(Number.isFinite(dev)&&dev>=ATLAS_ORACLE_SOURCE_DEVIATION_LAB_PCT)action="VÉRIFIER SOURCES";else if(dual<assets)action="SURVEILLER QUORUM";return {level,action,flags,heartbeat_ms:ATLAS_MARKET_REFRESH_MS,deviation_lab_pct:ATLAS_ORACLE_SOURCE_DEVIATION_LAB_PCT,automatic:false,model_gate:false,evidence_gate:false};}
 function atlasOracleSourceRiskRender(fabric=atlasOracleInfrastructureState4020){const r=atlasOracleSourceRiskCompute(fabric),stateNode=document.getElementById("atlasOracleRiskState"),note=document.getElementById("atlasOracleRiskNote"),hb=document.getElementById("atlasOracleHeartbeatState"),hbNote=document.getElementById("atlasOracleHeartbeatNote");if(stateNode)stateNode.textContent=r.level;if(note)note.textContent=r.flags.length?r.flags.join(" · "):"Quorum et fraîcheur dans la fenêtre observée.";if(hb)hb.textContent=r.action;if(hbNote)hbNote.textContent=`heartbeat ${Math.round(r.heartbeat_ms/60000)} min · seuil LAB ${r.deviation_lab_pct.toFixed(2)}% · aucune action automatique`;return r;}
-globalThis.AtlasOracleSourceRisk4021=Object.freeze({compute:atlasOracleSourceRiskCompute,render:atlasOracleSourceRiskRender,advisory_only:true});
+globalThis.AtlasOracleSourceRisk=Object.freeze({compute:atlasOracleSourceRiskCompute,render:atlasOracleSourceRiskRender,advisory_only:true});
 
 /* 40.2.2 — RESOURCE BUDGET OBSERVATORY LOCK
    Activity/performance proxy only. Never converts browser activity to watts/Wh/CO2. */
@@ -10001,7 +10001,7 @@ document.addEventListener("visibilitychange",()=>{
 try{if(typeof PerformanceObserver==="function"&&Array.isArray(PerformanceObserver.supportedEntryTypes)&&PerformanceObserver.supportedEntryTypes.includes("longtask")){const obs=new PerformanceObserver(list=>{for(const e of list.getEntries()){atlasOracleResourceBudgetState.long_tasks+=1;atlasOracleResourceBudgetState.long_task_ms+=Number(e.duration||0);}atlasOracleResourceBudgetRender();});obs.observe({type:"longtask",buffered:true});}}catch{}
 function atlasOracleResourceBudgetSnapshot(){const now=Date.now(),delta=Math.max(0,now-atlasOracleResourceBudgetState.last_visibility_at),visible=atlasOracleResourceBudgetState.visible_ms+(atlasOracleResourceBudgetState.last_visibility==="visible"?delta:0),hidden=atlasOracleResourceBudgetState.hidden_ms+(atlasOracleResourceBudgetState.last_visibility==="hidden"?delta:0);let entries=[];try{entries=performance.getEntriesByType("resource")||[];}catch{}const relevant=entries.filter(e=>/binance|coingecko|githubusercontent|github\.io|ecb|eurofxref/i.test(String(e?.name||"")));const sizes=relevant.map(e=>Number(e.transferSize)).filter(v=>Number.isFinite(v)&&v>0);return {started_at:atlasOracleResourceBudgetState.started_at,visible_ms:visible,hidden_ms:hidden,resource_requests:relevant.length,measured_transfer_bytes:sizes.reduce((a,b)=>a+b,0),measured_transfer_entries:sizes.length,long_tasks:atlasOracleResourceBudgetState.long_tasks,long_task_ms:atlasOracleResourceBudgetState.long_task_ms,longtask_supported:typeof PerformanceObserver==="function"&&Array.isArray(PerformanceObserver.supportedEntryTypes)&&PerformanceObserver.supportedEntryTypes.includes("longtask"),websocket_bytes_measured:false,watts:null,wh:null};}
 function atlasOracleResourceBudgetRender(){const root=document.getElementById("oracle-infrastructure-observatory");if(!root)return null;const r=atlasOracleResourceBudgetSnapshot(),stateNode=document.getElementById("atlasOracleResourceState"),note=document.getElementById("atlasOracleResourceNote");if(stateNode)stateNode.textContent=`${r.resource_requests} req · ${typeof atlasStorageHealthBytesLabel==="function"?atlasStorageHealthBytesLabel(r.measured_transfer_bytes):Math.round(r.measured_transfer_bytes/1024)+" Kio"}`;if(note)note.textContent=`visible ${Math.round(r.visible_ms/60000)} min · masqué ${Math.round(r.hidden_ms/60000)} min · long tasks ${r.longtask_supported?r.long_tasks:"non exposées"} · WebSocket non mesuré · pas des Wh`;if(typeof atlasRuntimeRender==="function")atlasRuntimeRender();return r;}
-globalThis.AtlasOracleResourceBudget4022=Object.freeze({snapshot:atlasOracleResourceBudgetSnapshot,render:atlasOracleResourceBudgetRender,watts_estimated:false,wh_estimated:false,background_collection_changed:false});
+globalThis.AtlasOracleResourceBudget=Object.freeze({snapshot:atlasOracleResourceBudgetSnapshot,render:atlasOracleResourceBudgetRender,watts_estimated:false,wh_estimated:false,background_collection_changed:false});
 
 
 /* 40.2.4 — SOURCE DISAGREEMENT HISTORY LOCK
@@ -10016,19 +10016,19 @@ async function atlasOracleSourceHistoryAll(){const db=await atlasOracleSourceHis
 async function atlasOracleSourceHistoryPut(row){const db=await atlasOracleSourceHistoryOpen();await new Promise((resolve,reject)=>{const tx=db.transaction(ATLAS_SOURCE_HISTORY_STORE,"readwrite");tx.objectStore(ATLAS_SOURCE_HISTORY_STORE).put(row);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});return row;}
 function atlasOracleSourceHistorySnapshot(fabric){const t0=Number(fabric?.updated_at||Date.now());return {schema:"atlas.oracle.source_disagreement.v1",id:`${t0}`,t0,created_at_utc:new Date(t0).toISOString(),build:String(ATLAS_BUILD),summary:{...(fabric?.summary||{})},assets:(fabric?.assets||[]).map(a=>({coin_id:a.coin_id,symbol:a.symbol,usable_count:a.usable_count,fresh_count:a.fresh_count,deviation_pct:Number.isFinite(Number(a.deviation_pct))?Number(a.deviation_pct):null,max_age_ms:Number.isFinite(Number(a.max_age_ms))?Number(a.max_age_ms):null,sources:(a.sources||[]).map(q=>({family:q.family,usable:q.usable===true,fresh:q.fresh===true,price:Number.isFinite(Number(q.price))?Number(q.price):null,timestamp:q.timestamp||null,age_ms:Number.isFinite(Number(q.age_ms))?Number(q.age_ms):null}))})),model_input:false};}
 async function atlasOracleSourceHistoryPrune(){const rows=await atlasOracleSourceHistoryAll();if(rows.length<=ATLAS_SOURCE_HISTORY_MAX)return 0;rows.sort((a,b)=>Number(a.t0)-Number(b.t0));const ids=rows.slice(0,rows.length-ATLAS_SOURCE_HISTORY_MAX).map(r=>r.id),db=await atlasOracleSourceHistoryOpen();await new Promise((resolve,reject)=>{const tx=db.transaction(ATLAS_SOURCE_HISTORY_STORE,"readwrite"),st=tx.objectStore(ATLAS_SOURCE_HISTORY_STORE);ids.forEach(id=>st.delete(id));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});return ids.length;}
-function atlasOracleSourceHistoryRenderStatus(count,last){const n=document.getElementById("atlasOracleSourceHistoryState4024"),note=document.getElementById("atlasOracleSourceHistoryNote4024");if(n)n.textContent=`${count} échantillon(s)`;if(note)note.textContent=last?`dernier ${new Date(last).toLocaleTimeString("fr-FR")} · IndexedDB · passif`:`IndexedDB · en attente du premier échantillon`;}
-async function atlasOracleSourceHistoryRefresh(){try{const rows=await atlasOracleSourceHistoryAll();const last=rows.reduce((m,r)=>Math.max(m,Number(r.t0||0)),0);atlasOracleSourceHistoryRenderStatus(rows.length,last);return rows;}catch(error){const n=document.getElementById("atlasOracleSourceHistoryState4024");if(n)n.textContent="DB indisponible";return[];}}
+function atlasOracleSourceHistoryRenderStatus(count,last){const n=document.getElementById("atlasOracleSourceHistoryState"),note=document.getElementById("atlasOracleSourceHistoryNote");if(n)n.textContent=`${count} échantillon(s)`;if(note)note.textContent=last?`dernier ${new Date(last).toLocaleTimeString("fr-FR")} · IndexedDB · passif`:`IndexedDB · en attente du premier échantillon`;}
+async function atlasOracleSourceHistoryRefresh(){try{const rows=await atlasOracleSourceHistoryAll();const last=rows.reduce((m,r)=>Math.max(m,Number(r.t0||0)),0);atlasOracleSourceHistoryRenderStatus(rows.length,last);return rows;}catch(error){const n=document.getElementById("atlasOracleSourceHistoryState");if(n)n.textContent="DB indisponible";return[];}}
 function atlasOracleSourceHistoryMaybeRecord(fabric){const now=Date.now();if(now-atlasSourceHistoryLast4024<ATLAS_SOURCE_HISTORY_MIN_MS)return false;const row=atlasOracleSourceHistorySnapshot(fabric);if(!row.assets.length)return false;atlasSourceHistoryLast4024=now;atlasOracleSourceHistoryPut(row).then(async()=>{const rows=await atlasOracleSourceHistoryRefresh();if(rows.length>ATLAS_SOURCE_HISTORY_MAX)atlasOracleSourceHistoryPrune().catch(()=>{});}).catch(()=>{atlasSourceHistoryLast4024=0;});return true;}
 queueMicrotask(()=>void atlasOracleSourceHistoryRefresh());
-globalThis.AtlasOracleSourceHistory4024=Object.freeze({list:atlasOracleSourceHistoryAll,refresh:atlasOracleSourceHistoryRefresh,database:ATLAS_SOURCE_HISTORY_DB,max_rows:ATLAS_SOURCE_HISTORY_MAX,model_input:false,new_timer:false});
+globalThis.AtlasOracleSourceHistory=Object.freeze({list:atlasOracleSourceHistoryAll,refresh:atlasOracleSourceHistoryRefresh,database:ATLAS_SOURCE_HISTORY_DB,max_rows:ATLAS_SOURCE_HISTORY_MAX,model_input:false,new_timer:false});
 
 
 /* 40.2.5 — ROBUST AGGREGATE LAB LOCK
    Two-source exploratory center only. With n=2 this is a midpoint/median,
    not enough sources for outlier-resistant consensus. Binance display unchanged. */
 function atlasOracleRobustAggregateCompute(fabric=atlasOracleInfrastructureState4020){return {updated_at:Date.now(),assets:(fabric?.assets||[]).map(a=>{const usable=(a.sources||[]).filter(q=>q.usable&&Number.isFinite(Number(q.price))).map(q=>({family:q.family,price:Number(q.price)}));const prices=usable.map(q=>q.price);const center=atlasOracleInfrastructureMedian(prices);const min=prices.length?Math.min(...prices):null,max=prices.length?Math.max(...prices):null;const halfBand=Number.isFinite(center)&&prices.length>=2?(max-min)/2:null;return {coin_id:a.coin_id,symbol:a.symbol,n:prices.length,center_eur:center,min_eur:min,max_eur:max,half_band_eur:halfBand,deviation_pct:a.deviation_pct,method:prices.length>=3?"median":"midpoint/median n≤2",consensus_robust:prices.length>=3};}),model_input:false,display_price_changed:false};}
-function atlasOracleRobustAggregateRender(fabric=atlasOracleInfrastructureState4020){const r=atlasOracleRobustAggregateCompute(fabric),body=document.getElementById("atlasOracleRobustRows4025"),stateNode=document.getElementById("atlasOracleRobustState4025");if(body)body.innerHTML=r.assets.map(a=>`<tr><td><b>${atlasOracleEscapeHtml(a.symbol)}</b></td><td>${a.n}</td><td>${Number.isFinite(a.center_eur)?atlasOracleEscapeHtml(fmtEUR.format(a.center_eur)):"—"}</td><td>${Number.isFinite(a.half_band_eur)?"± "+atlasOracleEscapeHtml(fmtEUR.format(a.half_band_eur)):"—"}</td><td>${Number.isFinite(Number(a.deviation_pct))?Number(a.deviation_pct).toFixed(3)+" %":"—"}</td><td>${a.consensus_robust?"médiane":"exploratoire n≤2"}</td></tr>`).join("")||'<tr><td colspan="6">Aucune paire de source exploitable.</td></tr>';if(stateNode)stateNode.textContent=r.assets.some(a=>a.n>=2)?"LAB ACTIF · PRIX BINANCE INCHANGÉ":"ATTENTE QUORUM";return r;}
-globalThis.AtlasOracleRobustAggregate4025=Object.freeze({compute:atlasOracleRobustAggregateCompute,render:atlasOracleRobustAggregateRender,model_input:false,display_price_changed:false,outlier_resistant_with_two_sources:false});
+function atlasOracleRobustAggregateRender(fabric=atlasOracleInfrastructureState4020){const r=atlasOracleRobustAggregateCompute(fabric),body=document.getElementById("atlasOracleRobustRows"),stateNode=document.getElementById("atlasOracleRobustState");if(body)body.innerHTML=r.assets.map(a=>`<tr><td><b>${atlasOracleEscapeHtml(a.symbol)}</b></td><td>${a.n}</td><td>${Number.isFinite(a.center_eur)?atlasOracleEscapeHtml(fmtEUR.format(a.center_eur)):"—"}</td><td>${Number.isFinite(a.half_band_eur)?"± "+atlasOracleEscapeHtml(fmtEUR.format(a.half_band_eur)):"—"}</td><td>${Number.isFinite(Number(a.deviation_pct))?Number(a.deviation_pct).toFixed(3)+" %":"—"}</td><td>${a.consensus_robust?"médiane":"exploratoire n≤2"}</td></tr>`).join("")||'<tr><td colspan="6">Aucune paire de source exploitable.</td></tr>';if(stateNode)stateNode.textContent=r.assets.some(a=>a.n>=2)?"LAB ACTIF · PRIX BINANCE INCHANGÉ":"ATTENTE QUORUM";return r;}
+globalThis.AtlasOracleRobustAggregate=Object.freeze({compute:atlasOracleRobustAggregateCompute,render:atlasOracleRobustAggregateRender,model_input:false,display_price_changed:false,outlier_resistant_with_two_sources:false});
 
 
 /* 40.2.6 — EVIDENCE SOURCE-HEALTH T0 LOCK
@@ -10045,9 +10045,9 @@ function atlasOracleEvidenceSourceHealthT0(constituents,now=Date.now()){
   return {schema:"atlas.oracle.source_health_t0.v1",prospective:true,captured_at:now,build:String(ATLAS_BUILD),asset_count:assets.length,dual_fresh:dual,quorum_ratio:assets.length?dual/assets.length:null,max_deviation_pct:devs.length?Math.max(...devs):null,mean_deviation_pct:devs.length?devs.reduce((a,b)=>a+b,0)/devs.length:null,max_age_ms:ages.length?Math.max(...ages):null,level:risk.level,flags:[...risk.flags],heartbeat_ms:risk.heartbeat_ms,deviation_lab_pct:risk.deviation_lab_pct,assets:assets.map(a=>({coin_id:a.coin_id,symbol:a.symbol,usable_count:a.usable_count,fresh_count:a.fresh_count,deviation_pct:Number.isFinite(Number(a.deviation_pct))?Number(a.deviation_pct):null,max_age_ms:Number.isFinite(Number(a.max_age_ms))?Number(a.max_age_ms):null}))};
 }
 function atlasOracleEvidenceSourceHealthCoverage(rows){const all=Array.isArray(rows)?rows:[];const annotated=all.filter(r=>r?.source_health_t0?.schema==="atlas.oracle.source_health_t0.v1"&&r?.source_health_t0?.prospective===true);return {all:all.length,annotated:annotated.length,ratio:all.length?annotated.length/all.length:null,first_t0:annotated.reduce((m,r)=>!m||Number(r.t0)<m?Number(r.t0):m,0)};}
-async function atlasOracleEvidenceSourceHealthRender(){try{const c=atlasOracleEvidenceSourceHealthCoverage(await atlasOracleEvidenceAll()),n=document.getElementById("atlasOracleEvidenceSourceHealthState4026"),note=document.getElementById("atlasOracleEvidenceSourceHealthNote4026");if(n)n.textContent=`${c.annotated} T0 annoté(s)`;if(note)note.textContent=`prospectif uniquement · anciens cas ${Math.max(0,c.all-c.annotated)} non rétrofabriqués`;return c;}catch{return null;}}
+async function atlasOracleEvidenceSourceHealthRender(){try{const c=atlasOracleEvidenceSourceHealthCoverage(await atlasOracleEvidenceAll()),n=document.getElementById("atlasOracleEvidenceSourceHealthState"),note=document.getElementById("atlasOracleEvidenceSourceHealthNote");if(n)n.textContent=`${c.annotated} T0 annoté(s)`;if(note)note.textContent=`prospectif uniquement · anciens cas ${Math.max(0,c.all-c.annotated)} non rétrofabriqués`;return c;}catch{return null;}}
 queueMicrotask(()=>void atlasOracleEvidenceSourceHealthRender());
-globalThis.AtlasOracleEvidenceSourceHealth4026=Object.freeze({snapshot:atlasOracleEvidenceSourceHealthT0,coverage:atlasOracleEvidenceSourceHealthCoverage,render:atlasOracleEvidenceSourceHealthRender,prospective_only:true,backfill:false,model_gate:false});
+globalThis.AtlasOracleEvidenceSourceHealth=Object.freeze({snapshot:atlasOracleEvidenceSourceHealthT0,coverage:atlasOracleEvidenceSourceHealthCoverage,render:atlasOracleEvidenceSourceHealthRender,prospective_only:true,backfill:false,model_gate:false});
 
 
 /* 40.2.7 — SOURCE-HEALTH PERFORMANCE MATRIX LOCK
@@ -10059,19 +10059,19 @@ function atlasOracleSourceHealthPerformanceCompute(rows){
   ["1m","5m","15m"].forEach(h=>{horizons[h]={};for(const [key,set] of Object.entries(buckets)){const cal=atlasOracleCalibrationComputeRows(set,h),proof=atlasOracleProofComputeRows(set,h);horizons[h][key]={rows:set.length,oracle_cases:Number(cal.cases||0),oracle_hit:Number.isFinite(Number(cal.hit_rate))?Number(cal.hit_rate):null,proof_cases:Number(proof.cases||0),ensemble_hit:Number.isFinite(Number(proof.models?.ensemble?.hit_rate))?Number(proof.models.ensemble.hit_rate):null,best_naive:Number.isFinite(Number(proof.best_naive?.hit_rate))?Number(proof.best_naive.hit_rate):null,edge:Number.isFinite(Number(proof.ensemble_advantage))?Number(proof.ensemble_advantage):null};}});
   return {updated_at:Date.now(),annotated:source.length,ok: buckets.ok.length,degraded:buckets.degraded.length,horizons,descriptive_only:true,model_gate:false};
 }
-function atlasOracleSourceHealthPerformanceRender(r){const body=document.getElementById("atlasOracleSourceHealthPerfRows4027"),stateNode=document.getElementById("atlasOracleSourceHealthPerfState4027");if(body){const rows=[];["1m","5m","15m"].forEach(h=>["ok","degraded"].forEach(k=>{const x=r.horizons[h][k],label=k==="ok"?"SOURCE OK":"SOURCE DÉGRADÉE";rows.push(`<tr><td>${h.toUpperCase()}</td><td>${label}</td><td>${Number.isFinite(x.oracle_hit)?x.oracle_hit.toFixed(0)+"%":"—"}</td><td>${Number.isFinite(x.ensemble_hit)?x.ensemble_hit.toFixed(0)+"%":"—"}</td><td>${Number.isFinite(x.best_naive)?x.best_naive.toFixed(0)+"%":"—"}</td><td>${Number.isFinite(x.edge)?(x.edge>=0?"+":"")+x.edge.toFixed(0)+" pt":"—"}</td><td>n${x.proof_cases||x.oracle_cases||0}</td></tr>`);}));body.innerHTML=rows.join("");}if(stateNode)stateNode.textContent=r.annotated?`PROSPECTIF n${r.annotated} · OK ${r.ok} · DÉGRADÉ ${r.degraded}`:"EN ATTENTE DE NOUVELLES EVIDENCE";return r;}
-async function atlasOracleSourceHealthPerformanceRefresh(){try{return atlasOracleSourceHealthPerformanceRender(atlasOracleSourceHealthPerformanceCompute(await atlasOracleEvidenceAll()));}catch(error){const n=document.getElementById("atlasOracleSourceHealthPerfState4027");if(n)n.textContent="MATRICE INDISPONIBLE";return null;}}
+function atlasOracleSourceHealthPerformanceRender(r){const body=document.getElementById("atlasOracleSourceHealthPerfRows"),stateNode=document.getElementById("atlasOracleSourceHealthPerfState");if(body){const rows=[];["1m","5m","15m"].forEach(h=>["ok","degraded"].forEach(k=>{const x=r.horizons[h][k],label=k==="ok"?"SOURCE OK":"SOURCE DÉGRADÉE";rows.push(`<tr><td>${h.toUpperCase()}</td><td>${label}</td><td>${Number.isFinite(x.oracle_hit)?x.oracle_hit.toFixed(0)+"%":"—"}</td><td>${Number.isFinite(x.ensemble_hit)?x.ensemble_hit.toFixed(0)+"%":"—"}</td><td>${Number.isFinite(x.best_naive)?x.best_naive.toFixed(0)+"%":"—"}</td><td>${Number.isFinite(x.edge)?(x.edge>=0?"+":"")+x.edge.toFixed(0)+" pt":"—"}</td><td>n${x.proof_cases||x.oracle_cases||0}</td></tr>`);}));body.innerHTML=rows.join("");}if(stateNode)stateNode.textContent=r.annotated?`PROSPECTIF n${r.annotated} · OK ${r.ok} · DÉGRADÉ ${r.degraded}`:"EN ATTENTE DE NOUVELLES EVIDENCE";return r;}
+async function atlasOracleSourceHealthPerformanceRefresh(){try{return atlasOracleSourceHealthPerformanceRender(atlasOracleSourceHealthPerformanceCompute(await atlasOracleEvidenceAll()));}catch(error){const n=document.getElementById("atlasOracleSourceHealthPerfState");if(n)n.textContent="MATRICE INDISPONIBLE";return null;}}
 queueMicrotask(()=>void atlasOracleSourceHealthPerformanceRefresh());
-globalThis.AtlasOracleSourceHealthPerformance4027=Object.freeze({compute:atlasOracleSourceHealthPerformanceCompute,refresh:atlasOracleSourceHealthPerformanceRefresh,prospective_only:true,descriptive_only:true,model_gate:false});
+globalThis.AtlasOracleSourceHealthPerformance=Object.freeze({compute:atlasOracleSourceHealthPerformanceCompute,refresh:atlasOracleSourceHealthPerformanceRefresh,prospective_only:true,descriptive_only:true,model_gate:false});
 
 
 /* 40.2.8 — OPTIONAL THIRD SOURCE ADAPTER READINESS LOCK
    Research gate only. No Pyth/Hermes network request is made from the public page.
    Current Hermes access requires authentication; secrets must never be embedded here. */
 const ATLAS_THIRD_SOURCE_READINESS=Object.freeze({candidate:"Pyth Hermes",status:"BLOQUÉ · BACKEND PRIVÉ REQUIS",network_enabled:false,reasons:["Hermes authentifié : aucune clé API dans la page publique","feed BTC/USD/ETH/USD : conversion EUR cohérente à définir","timestamps/publish_time à aligner sur T0","conditions d’usage et quota à valider côté backend"],next_step:"proxy privé lecture seule + secrets serveur, puis laboratoire OFF par défaut"});
-function atlasOracleThirdSourceReadinessRender(){const s=document.getElementById("atlasOracleThirdSourceState4028"),n=document.getElementById("atlasOracleThirdSourceNote4028");if(s)s.textContent=ATLAS_THIRD_SOURCE_READINESS.status;if(n)n.textContent=ATLAS_THIRD_SOURCE_READINESS.reasons.join(" · ");return ATLAS_THIRD_SOURCE_READINESS;}
+function atlasOracleThirdSourceReadinessRender(){const s=document.getElementById("atlasOracleThirdSourceState"),n=document.getElementById("atlasOracleThirdSourceNote");if(s)s.textContent=ATLAS_THIRD_SOURCE_READINESS.status;if(n)n.textContent=ATLAS_THIRD_SOURCE_READINESS.reasons.join(" · ");return ATLAS_THIRD_SOURCE_READINESS;}
 queueMicrotask(()=>atlasOracleThirdSourceReadinessRender());
-globalThis.AtlasOracleThirdSource4028=Object.freeze({...ATLAS_THIRD_SOURCE_READINESS,render:atlasOracleThirdSourceReadinessRender});
+globalThis.AtlasOracleThirdSource=Object.freeze({...ATLAS_THIRD_SOURCE_READINESS,render:atlasOracleThirdSourceReadinessRender});
 
 /* ============================================================
    40.1.74 — ORACLE EVIDENCE BACKUP / EXPORT
@@ -10568,7 +10568,7 @@ function atlasOracleIndependentRefresh(reason="runtime"){
 }
 
 try{
-  globalThis.AtlasOracleIndependentEngine403117=Object.freeze({
+  globalThis.AtlasOracleIndependentEngine=Object.freeze({
     build:"40.3.117",refresh:atlasOracleIndependentRefresh,resolveHistory:atlasOracleHistoricalResult,historyMemory:atlasOracleHistoryMemory,
     state:()=>({active:atlasOracleEngine.active,last_refresh_at:atlasOracleEngine.lastRefreshAt,last_refresh_reason:atlasOracleEngine.lastRefreshReason,candidates:[...atlasOracleEngine.lastCandidateIds],ready_count:atlasOracleEngine.readyCount,historical_ready_count:atlasOracleEngine.historicalReadyCount,refresh_count:atlasOracleEngine.refreshCount,skipped_refresh_count:atlasOracleEngine.skippedRefreshCount,evidence_capture_attempts:atlasOracleEngine.evidenceCaptureAttempts,retained_history_assets:[...atlasOracleHistoryMemory.keys()],local_store_reads:atlasOracleLocalStoreSnapshot.reads,local_store_hits:atlasOracleLocalStoreSnapshot.hits,last_error:atlasOracleEngine.lastError||null}),
     basic_oracle_available:true,oracle_on_is_engine_authority:true,visible_chart_primary_history_authority:false,visible_chart_last_resort_only:true,new_timer:false,new_observer:false,network_request_added:false,storage_write_added:false,synthetic_history:false,oracle_math_changed:false
@@ -11151,7 +11151,7 @@ function atlasOracleRuntimeStethoscope40232D(model = null) {
   };
   const oracleVisible = state?.chartViewV2?.oracle !== false && document.getElementById("atlasOracleV0")?.hidden !== true;
   const oracleExplicitOn = state?.chartViewV2?.oracle !== false;
-  const engineState=globalThis.AtlasOracleIndependentEngine403117?.state?.()||null;
+  const engineState=globalThis.AtlasOracleIndependentEngine?.state?.()||null;
   const engineReady=oracleExplicitOn&&Number(engineState?.ready_count||0)>0;
   setState("atlasOracleRuntimeOracle40232D", oracleExplicitOn ? (engineReady?`ACTIVE · ${Number(engineState.ready_count||0)}/5`:(model?.status==="ready"?"ACTIVE":"WARM")) : "OFF", oracleExplicitOn ? (engineReady||oracleVisible?"ok":"warn") : "off");
 
@@ -12572,7 +12572,7 @@ function atlasScheduleChartAutoRetry(c, period, reason = "réponse réseau tardi
 
 function atlasPrepareChartSelection(coin, period = 1, options = {}) {
   if (!coin?.id) return;
-  if(globalThis.__atlasExternalChartContext403113?.active === true){
+  if(globalThis.__atlasExternalChartContext?.active === true){
     atlasExternalChartClear("canonical-chart-selection");
   }
   if (state.chartEngineV2?.controller) {
@@ -12594,7 +12594,7 @@ function atlasPrepareChartSelection(coin, period = 1, options = {}) {
 }
 
 async function renderAnalystPanel(options = {}) {
-  if(globalThis.__atlasExternalChartContext403113?.active === true && options.external403113 !== true){
+  if(globalThis.__atlasExternalChartContext?.active === true && options.external403113 !== true){
     return atlasExternalChartRender(
       atlasExternalChartPeriod(),
       {forceRefresh:false}
@@ -12977,7 +12977,7 @@ function atlasChartCacheCoverageByPeriod() {
 function atlasApplyRequestedPeriod(period) {
   const nextPeriod = Number(period || 1);
 
-  if(globalThis.__atlasExternalChartContext403113?.active === true){
+  if(globalThis.__atlasExternalChartContext?.active === true){
     void atlasExternalChartRender(nextPeriod,{forceRefresh:false});
     return;
   }
@@ -14279,7 +14279,7 @@ function atlasSyncTargetTopFiveCycleLabel() {
     ? `${symbolLine || manualTop5Drift.selectedSymbols.join(" · ")} · manque ${manualTop5Drift.missingSymbols.join("/")}`
     : (symbolLine || "BTC · ETH · BNB · XRP · SOL");
 
-  root.dataset.top5Recovery40370 = manualTop5Drift ? "true" : "false";
+  root.dataset.top5Recovery = manualTop5Drift ? "true" : "false";
   root.title = manualTop5Drift
     ? `Sélection libre ${manualTop5Drift.selectedIds.length}/5 du Top 5 · manquant ${manualTop5Drift.missingSymbols.join("/")} · cliquer pour restaurer Target Top 5`
     : `Mode affiché : ${display.shortLabel}`
@@ -14431,7 +14431,7 @@ function atlasV2ThreeViewCoherenceSnapshot() {
   }));
 }
 
-globalThis.ErithThreeViewCoherence404155 = Object.freeze({
+globalThis.ErithThreeViewCoherence = Object.freeze({
   build: "40.4.155",
   contract: "Classique → Intermédiaire → Administration",
   generic_detached_collapse_resolution: true,
@@ -14534,19 +14534,19 @@ function atlasTop5NativeFicheApplyTitles() {
   const cards = document.querySelectorAll("#top5Track [data-top5-id]");
   cards.forEach(card => {
     if (atlasTop5NativeFicheHoverEnabled) {
-      const currentTitle = card.getAttribute("title") || card.dataset.atlasTop5NativeTitle40284 || "";
-      if (currentTitle) card.dataset.atlasTop5NativeTitle40284 = currentTitle;
+      const currentTitle = card.getAttribute("title") || card.dataset.atlasTop5NativeTitle || "";
+      if (currentTitle) card.dataset.atlasTop5NativeTitle = currentTitle;
       card.removeAttribute("title");
-    } else if ("atlasTop5NativeTitle40284" in card.dataset) {
-      const value = card.dataset.atlasTop5NativeTitle40284;
+    } else if ("atlasTop5NativeTitle" in card.dataset) {
+      const value = card.dataset.atlasTop5NativeTitle;
       if (value) card.setAttribute("title", value); else card.removeAttribute("title");
-      delete card.dataset.atlasTop5NativeTitle40284;
+      delete card.dataset.atlasTop5NativeTitle;
     }
   });
 }
 
 function atlasTop5NativeFicheUpdateToggle() {
-  const button = document.getElementById("atlasTop5NativeFicheToggle40284");
+  const button = document.getElementById("atlasTop5NativeFicheToggle");
   if (!button) return;
   const enabled = atlasTop5NativeFicheHoverEnabled;
   button.setAttribute("aria-pressed", enabled ? "true" : "false");
@@ -14576,7 +14576,7 @@ function atlasTop5NativeFicheSet(enabled, remember = true) {
 }
 
 function atlasInitTop5NativeFicheHover() {
-  const button = document.getElementById("atlasTop5NativeFicheToggle40284");
+  const button = document.getElementById("atlasTop5NativeFicheToggle");
   const track = document.getElementById("top5Track");
   if (!button || !track) return false;
   // New v2 preference key intentionally starts OFF even if the misplaced 40.2.83 control was tested ON.
@@ -14620,7 +14620,7 @@ function atlasInitTop5NativeFicheHover() {
   return true;
 }
 
-globalThis.AtlasTop5NativeFicheHover40284 = Object.freeze({
+globalThis.AtlasTop5NativeFicheHover = Object.freeze({
   build:"40.2.84",
   toolbar_owner:"Graphique > Lecture > Afficher > Fiche",
   reuses_native_fiche:true,
@@ -15616,7 +15616,7 @@ function atlasPatchTickerSpot(changedIds = []) {
       item.dataset.quoteStatus = usable ? quote.status : "unavailable";
       const liveTitle = atlasCurrentQuoteTitle(quote);
       if (atlasTop5NativeFicheHoverEnabled) {
-        item.dataset.atlasTop5NativeTitle40284 = liveTitle;
+        item.dataset.atlasTop5NativeTitle = liveTitle;
         item.removeAttribute("title");
       } else {
         item.title = liveTitle;
@@ -16703,7 +16703,7 @@ function atlasMarketSearchTruth(rawQuery) {
 }
 
 try {
-  globalThis.AtlasMarketSearch40398 = Object.freeze({
+  globalThis.AtlasMarketSearch = Object.freeze({
     build: "40.3.98",
     exact_ticker_first: true,
     prefix_before_substring: true,
@@ -16899,7 +16899,7 @@ async function atlasExtendedMarketSnapshot(signal){
   return atlasExtendedMarketIndex(payload);
 }
 
-globalThis.AtlasExtendedMarketWarmIndex403103=Object.freeze({
+globalThis.AtlasExtendedMarketWarmIndex=Object.freeze({
   build:"40.3.103",
   state:()=>({
     loaded:Boolean(atlasExtendedMarketCache.payload),
@@ -17042,7 +17042,7 @@ const atlasExternalChartContext = {
   suppressedRedraws403114:0
 };
 
-globalThis.__atlasExternalChartContext403113 = atlasExternalChartContext;
+globalThis.__atlasExternalChartContext = atlasExternalChartContext;
 
 function atlasExternalChartActive(){
   return atlasExternalChartContext.active === true
@@ -17134,7 +17134,7 @@ function atlasExternalChartSetPresentation(kind,value){
 }
 
 try{
-  globalThis.AtlasExternalPresentation403114=Object.freeze({
+  globalThis.AtlasExternalPresentation=Object.freeze({
     build:"40.3.114",
     presentation:atlasExternalPresentation,
     set:atlasExternalChartSetPresentation,
@@ -17456,7 +17456,7 @@ function atlasExternalChartOpen(coin,period=365){
   return true;
 }
 
-globalThis.AtlasExternalChart403113=Object.freeze({
+globalThis.AtlasExternalChart=Object.freeze({
   build:"40.3.113",
   open:atlasExternalChartOpen,
   render:atlasExternalChartRender,
@@ -17503,7 +17503,7 @@ function atlasMarketExternalRowMarkup(rawQuery) {
 
   const active403116=atlasMarketExtendedActive(c.id);
 
-  return `<tr class="asset-row atlas-market-external-row-403104 ${active403116?"is-selected is-compared":""}"
+  return `<tr class="asset-row atlas-market-external-row ${active403116?"is-selected is-compared":""}"
     data-market-external403100="${escapeHtml(c.id)}"
     data-market-extended-toggle403116="${escapeHtml(c.id)}"
     data-market-help-id="${escapeHtml(c.id)}"
@@ -17529,7 +17529,7 @@ function atlasMarketExternalRowMarkup(rawQuery) {
   </tr>`;
 }
 
-globalThis.AtlasMarketExtendedLookup403100 = Object.freeze({
+globalThis.AtlasMarketExtendedLookup = Object.freeze({
   build: "40.3.100",
   search: atlasMarketExtendedLookup,
   state: () => ({
@@ -17620,7 +17620,7 @@ function atlasPatchMarketTableSnapshot() {
   const desired = atlasMarketRowsForCurrentView();
   const existing = [...els.marketRows.querySelectorAll("tr[data-market-row-id403115]")];
   const sameOrder = existing.length === desired.length
-    && existing.every((row,index)=>row.dataset.marketRowId403115===desired[index]?.id);
+    && existing.every((row,index)=>row.dataset.marketRowId===desired[index]?.id);
 
   if (!sameOrder) {
     renderMarketTable();
@@ -18167,7 +18167,7 @@ atlasEnsureMarketDomIntegrity=function(){
 };
 
 try{
-  globalThis.AtlasMarketRenderHealth403116=Object.freeze({
+  globalThis.AtlasMarketRenderHealth=Object.freeze({
     build:"40.3.116",
     state:()=>({...atlasMarketRenderHealth}),
     expected_1000_view_rows:"1..100 visible rows count as valid Market DOM",
@@ -18975,7 +18975,7 @@ function atlasMarketUniverseCoverageTruth(limit=atlasMarketUniverseLimit()){
   });
 }
 
-globalThis.ErithMarketUniverseCoverageTruth404215=Object.freeze({
+globalThis.ErithMarketUniverseCoverageTruth=Object.freeze({
   build:"40.4.215",
   derive:(limit)=>atlasMarketUniverseCoverageTruth(limit),
   rank_cap_is_not_exact_cardinality:true,
@@ -19135,8 +19135,8 @@ function atlasMarketUniversePageShift(delta){
    ============================================================ */
 
 function atlasMarketExtendedActive(coinId){
-  return globalThis.__atlasExternalChartContext403113?.active===true
-    && String(globalThis.__atlasExternalChartContext403113?.coin?.id||"")===String(coinId||"");
+  return globalThis.__atlasExternalChartContext?.active===true
+    && String(globalThis.__atlasExternalChartContext?.coin?.id||"")===String(coinId||"");
 }
 
 function atlasMarketExtendedVisual(coinId,active){
@@ -19161,12 +19161,12 @@ function atlasMarketExtendedToggle(coin){
 
     // Restore only the already-existing canonical graph state.
     requestAnimationFrame(()=>{
-      void renderAnalystPanel({marketExtendedToggle403116:true});
+      void renderAnalystPanel({marketExtendedToggle:true});
     });
     return true;
   }
 
-  const previous=globalThis.__atlasExternalChartContext403113?.coin?.id||null;
+  const previous=globalThis.__atlasExternalChartContext?.coin?.id||null;
   if(previous)atlasMarketExtendedVisual(previous,false);
 
   const opened=atlasExternalChartOpen(coin,365);
@@ -19175,7 +19175,7 @@ function atlasMarketExtendedToggle(coin){
 }
 
 function atlasMarketExtendedEnsureDelegation(){
-  if(!els.marketRows||els.marketRows.dataset.extendedDelegation403116==="1")return;
+  if(!els.marketRows||els.marketRows.dataset.extendedDelegation==="1")return;
 
   const activate=event=>{
     const row=event.target?.closest?.("[data-market-extended-toggle403116]");
@@ -19189,7 +19189,7 @@ function atlasMarketExtendedEnsureDelegation(){
       event.preventDefault();
     }
 
-    const id=String(row.dataset.marketExtendedToggle403116||"");
+    const id=String(row.dataset.marketExtendedToggle||"");
     const coin=atlasMarketUniverseFind(id);
     if(!coin)return;
 
@@ -19199,11 +19199,11 @@ function atlasMarketExtendedEnsureDelegation(){
 
   els.marketRows.addEventListener("click",activate);
   els.marketRows.addEventListener("keydown",activate);
-  els.marketRows.dataset.extendedDelegation403116="1";
+  els.marketRows.dataset.extendedDelegation="1";
 }
 
 try{
-  globalThis.AtlasMarketExtendedNativeClick403116=Object.freeze({
+  globalThis.AtlasMarketExtendedNativeClick=Object.freeze({
     build:"40.3.116",
     toggle:atlasMarketExtendedToggle,
     active:atlasMarketExtendedActive,
@@ -19230,7 +19230,7 @@ function atlasMarketExtendedUniverseRowMarkup(c){
 
   const active403116=atlasMarketExtendedActive(c.id);
 
-  return `<tr class="asset-row atlas-market-external-row-403104 atlas-market-extended-row-403115 ${active403116?"is-selected is-compared":""}"
+  return `<tr class="asset-row atlas-market-external-row atlas-market-extended-row ${active403116?"is-selected is-compared":""}"
     data-market-row-id403115="${escapeHtml(c.id)}"
     data-market-extended-id403115="${escapeHtml(c.id)}"
     data-market-extended-toggle403116="${escapeHtml(c.id)}"
@@ -19258,10 +19258,10 @@ function atlasMarketExtendedUniverseRowMarkup(c){
 }
 
 function atlasMarketUniversePagerRender(filtered,pageInfo){
-  const pager=document.getElementById("marketUniversePager403115");
-  const prev=document.getElementById("marketUniversePrev403115");
-  const next=document.getElementById("marketUniverseNext403115");
-  const label=document.getElementById("marketUniversePage403115");
+  const pager=document.getElementById("marketUniversePager");
+  const prev=document.getElementById("marketUniversePrev");
+  const next=document.getElementById("marketUniverseNext");
+  const label=document.getElementById("marketUniversePage");
   if(!pager||!prev||!next||!label)return;
 
   const limit=atlasMarketUniverseLimit();
@@ -19279,7 +19279,7 @@ function atlasMarketUniversePagerRender(filtered,pageInfo){
 }
 
 try{
-  globalThis.AtlasMarketUniverse1000_403115=Object.freeze({
+  globalThis.AtlasMarketUniverse1000=Object.freeze({
     build:"40.3.115",
     limits:Object.freeze([50,100,250,500,1000]),
     page_size_extended:ATLAS_MARKET_EXTENDED_PAGE_SIZE,
@@ -19318,7 +19318,7 @@ try{
    No timer, observer, network owner, storage owner or Window Manager rewrite.
    ============================================================ */
 function atlasMarketTableWindowBody(){
-  return document.getElementById("marketTableWindowBody40493");
+  return document.getElementById("marketTableWindowBody");
 }
 function atlasMarketTableWindowState(){
   const panel=document.getElementById("marketSnapshotPanel");
@@ -19340,7 +19340,7 @@ function atlasMarketTableWindowSummary(reason="window-reduced"){
   const count=Number(state.coins?.length||0);
   const selected=typeof atlasComparisonIds==="function"?atlasComparisonIds().length:0;
   const panel=document.getElementById("marketSnapshotPanel");
-  if(panel)panel.dataset.marketTableWindow40493="reduced";
+  if(panel)panel.dataset.marketTableWindow="reduced";
   setText(els.tableNote,`Market Snapshot réduit · Market Core 38.15.11 actif · ${count}/250 actifs en mémoire · sélection ${selected}/${ATLAS_COMPARISON_MAX_SERIES} · ${String(reason||"window-reduced")}.`);
 }
 function atlasMarketTableWindowSync(reason="window-manager"){
@@ -19352,19 +19352,19 @@ function atlasMarketTableWindowSync(reason="window-manager"){
   if(!active){
     body.hidden=true;
     if(els.marketRows)els.marketRows.replaceChildren();
-    if(panel)panel.dataset.marketTableWindow40493="reduced";
+    if(panel)panel.dataset.marketTableWindow="reduced";
     atlasMarketTableWindowSummary(reason);
     return false;
   }
   const wasHidden=body.hidden===true;
   body.hidden=false;
-  if(panel)panel.dataset.marketTableWindow40493="active";
+  if(panel)panel.dataset.marketTableWindow="active";
   const hasRows=!!els.marketRows?.querySelector?.("tr.asset-row, tr[data-market-row-id403115]");
   if(wasHidden||!hasRows)renderMarketTable();
   return true;
 }
 try{
-  globalThis.AgentCryptoMarketTablePresentation40493=Object.freeze({
+  globalThis.AgentCryptoMarketTablePresentation=Object.freeze({
     build:"40.4.93",
     owner:"existing Window Manager market window",
     normal_presentation:"visible",
@@ -19521,7 +19521,7 @@ function renderMarketTable() {
    Extended path. No data, ranking, chart, Atlas or Market Core change.
    ============================================================ */
 function atlasMarketCoreEnsureDelegation(){
-  if(!els.marketRows||els.marketRows.dataset.coreDelegation404217==="1")return;
+  if(!els.marketRows||els.marketRows.dataset.coreDelegation==="1")return;
 
   const activate=event=>{
     const actionButton=event.target?.closest?.("[data-market-action]");
@@ -19552,7 +19552,7 @@ function atlasMarketCoreEnsureDelegation(){
 
   els.marketRows.addEventListener("click",activate);
   els.marketRows.addEventListener("keydown",activate);
-  els.marketRows.dataset.coreDelegation404217="1";
+  els.marketRows.dataset.coreDelegation="1";
 }
 
 function renderEmptyMarket(message) { if (els.marketRows) { els.marketRows.innerHTML = `<tr><td colspan="11" class="empty">${escapeHtml(message)}</td></tr>`; } setText(els.tableNote, "Pas de source live, pas de prix.");
@@ -19786,7 +19786,7 @@ function atlasKnowledgeLibraryRelease() {
   const grid = document.getElementById("atlasKnowledgeLibraryGrid");
   if (grid) {
     grid.replaceChildren();
-    grid.dataset.atlasKnowledgeResident40357 = "0";
+    grid.dataset.atlasKnowledgeResident = "0";
   }
   return atlasKnowledgeLibraryUpdateSummary();
 }
@@ -19798,7 +19798,7 @@ function atlasKnowledgeLibraryRender(filterValue = null) {
   const state = atlasKnowledgeLibraryUpdateSummary(filterValue);
   if (details && !details.open) {
     grid.replaceChildren();
-    grid.dataset.atlasKnowledgeResident40357 = "0";
+    grid.dataset.atlasKnowledgeResident = "0";
     return state.rows.length;
   }
   grid.replaceChildren();
@@ -19813,7 +19813,7 @@ function atlasKnowledgeLibraryRender(filterValue = null) {
     fragment.appendChild(article);
   });
   grid.appendChild(fragment);
-  grid.dataset.atlasKnowledgeResident40357 = "1";
+  grid.dataset.atlasKnowledgeResident = "1";
   setText(document.getElementById("atlasKnowledgeLibraryStatus"), state.query
     ? `${state.rows.length} terme(s) correspondent à « ${state.raw} ». Aucun moteur local n’est utilisé.`
     : `${state.total} définitions permanentes chargées · disponibles même en STOP / lecture seule.`);
@@ -22409,7 +22409,7 @@ function newsEventIntelligenceSource() {
   };
 }
 
-globalThis.AgentCryptoNewsEventSource405000 = Object.freeze({
+globalThis.AgentCryptoNewsEventSource = Object.freeze({
   build: "40.5.0",
   snapshot: newsEventIntelligenceSource,
   read_only: true,
@@ -23071,21 +23071,21 @@ function newsMarketRoleEvidenceLine(role) {
 function renderNewsMarketDrivers(current = null) {
   const analysis = newsMarketCausalRole(current);
   const set = (id, value) => { const node = document.getElementById(id); if (node) node.textContent = String(value ?? "—"); };
-  const root = document.getElementById("newsMarketDrivers40234");
+  const root = document.getElementById("newsMarketDrivers");
   if (!root) return analysis;
 
   if (analysis.status === "no-event") {
-    set("newsMarketAmplifier40234", "NON QUALIFIÉ");
-    set("newsMarketAmplifierNote40234", "Aucun événement News Sentinel sélectionné.");
-    set("newsMarketCatalyst40234", "NON IDENTIFIÉ");
-    set("newsMarketCatalystNote40234", "Aucune source actuelle ne démontre un déclencheur initial.");
-    set("newsMarketFlow40234", "NON QUALIFIÉ");
-    set("newsMarketFlowNote40234", "Aucun flux demande/offre qualifié dans l’archive chargée.");
+    set("newsMarketAmplifier", "NON QUALIFIÉ");
+    set("newsMarketAmplifierNote", "Aucun événement News Sentinel sélectionné.");
+    set("newsMarketCatalyst", "NON IDENTIFIÉ");
+    set("newsMarketCatalystNote", "Aucune source actuelle ne démontre un déclencheur initial.");
+    set("newsMarketFlow", "NON QUALIFIÉ");
+    set("newsMarketFlowNote", "Aucun flux demande/offre qualifié dans l’archive chargée.");
     set("newsMarketReaction", "MARCHÉ À COMPARER");
-    set("newsMarketReactionNote40234", analysis.reaction?.breadth || "Top 5 indisponible");
-    set("newsMarketCausality40234", "NON ÉVALUABLE");
-    set("newsMarketCausalityNote40234", "Aucun rôle marché classé pour l’événement courant.");
-    set("decisionNewsRole40234", "Événement News Sentinel en attente de classification");
+    set("newsMarketReactionNote", analysis.reaction?.breadth || "Top 5 indisponible");
+    set("newsMarketCausality", "NON ÉVALUABLE");
+    set("newsMarketCausalityNote", "Aucun rôle marché classé pour l’événement courant.");
+    set("decisionNewsRole", "Événement News Sentinel en attente de classification");
     root.dataset.state = "no-event";
     root.dataset.semanticConflict = "false";
     return analysis;
@@ -23099,26 +23099,26 @@ function renderNewsMarketDrivers(current = null) {
   const macro40372 = truth40372.macro_liquidity || null;
   const institutional40372 = truth40372.institutional_flows || null;
   const leverage40372 = truth40372.leverage || null;
-  set("newsMarketAmplifier40234", amplifier ? `${amplifier.label} · ${amplifier.direction} PLAUSIBLE` : leverage40372?.event ? `LEVIER / LIQUIDATIONS · ${leverage40372.status}` : "AUCUN AMPLIFICATEUR PROUVÉ");
-  set("newsMarketAmplifierNote40234", amplifier ? newsMarketRoleEvidenceLine(amplifier) : newsMarketDriverTruthLine(leverage40372, "Aucun mécanisme d’amplification positivement qualifié."));
-  set("newsMarketCatalyst40234", catalyst ? `${catalyst.label}` : macro40372?.event ? `CONTEXTE MACRO / LIQUIDITÉ · ${macro40372.status}` : "NON IDENTIFIÉ");
-  set("newsMarketCatalystNote40234", catalyst
+  set("newsMarketAmplifier", amplifier ? `${amplifier.label} · ${amplifier.direction} PLAUSIBLE` : leverage40372?.event ? `LEVIER / LIQUIDATIONS · ${leverage40372.status}` : "AUCUN AMPLIFICATEUR PROUVÉ");
+  set("newsMarketAmplifierNote", amplifier ? newsMarketRoleEvidenceLine(amplifier) : newsMarketDriverTruthLine(leverage40372, "Aucun mécanisme d’amplification positivement qualifié."));
+  set("newsMarketCatalyst", catalyst ? `${catalyst.label}` : macro40372?.event ? `CONTEXTE MACRO / LIQUIDITÉ · ${macro40372.status}` : "NON IDENTIFIÉ");
+  set("newsMarketCatalystNote", catalyst
     ? newsMarketRoleEvidenceLine(catalyst)
     : technical
       ? `${technical.label} · elle décrit un déclencheur de marché plausible, pas une cause externe. ${newsMarketRoleEvidenceLine(technical)}`
       : macro40372?.event
         ? `${newsMarketDriverTruthLine(macro40372)} · contexte observé, pas déclencheur causal démontré.`
         : "Aucune source actuelle ne démontre le déclencheur initial.");
-  set("newsMarketFlow40234", flow ? `${flow.label} · ${flow.direction}` : institutional40372?.event ? `FLUX INSTITUTIONNELS · ${institutional40372.status}` : "NON QUALIFIÉ");
-  set("newsMarketFlowNote40234", flow ? newsMarketRoleEvidenceLine(flow) : newsMarketDriverTruthLine(institutional40372, "Aucun flux demande/offre positivement détecté dans les événements liés."));
+  set("newsMarketFlow", flow ? `${flow.label} · ${flow.direction}` : institutional40372?.event ? `FLUX INSTITUTIONNELS · ${institutional40372.status}` : "NON QUALIFIÉ");
+  set("newsMarketFlowNote", flow ? newsMarketRoleEvidenceLine(flow) : newsMarketDriverTruthLine(institutional40372, "Aucun flux demande/offre positivement détecté dans les événements liés."));
   set("newsMarketReaction", analysis.reaction?.count ? `TOP 5 · ${analysis.reaction.breadth}` : "RÉACTION PARTIELLE");
-  set("newsMarketReactionNote40234", `${analysis.reaction?.focus || "Actif non comparable"} · ${analysis.reaction?.reaction_label || "réaction non qualifiée"}`);
-  set("newsMarketCausality40234", "CHAÎNE OBSERVÉE");
+  set("newsMarketReactionNote", `${analysis.reaction?.focus || "Actif non comparable"} · ${analysis.reaction?.reaction_label || "réaction non qualifiée"}`);
+  set("newsMarketCausality", "CHAÎNE OBSERVÉE");
   const chainTruth = `Macro ${macro40372?.status || "—"} · Flux ${institutional40372?.status || (flow ? "PARTIEL" : "—")} · Levier ${leverage40372?.status || (amplifier ? "PARTIEL" : "—")}`;
-  set("newsMarketCausalityNote40234", analysis.semantic_conflict_with_legacy_direction
+  set("newsMarketCausalityNote", analysis.semantic_conflict_with_legacy_direction
     ? `Contradiction de taxonomie : « ${analysis.legacy_direction || "—"} » / rôle marché détecté · ${chainTruth}`
     : chainTruth);
-  set("decisionNewsRole40234", analysis.primary_role
+  set("decisionNewsRole", analysis.primary_role
     ? `${analysis.primary_role.type} · ${analysis.primary_role.label}`
     : "Rôle marché non classé");
   root.dataset.state = "observed";
@@ -23136,9 +23136,9 @@ function newsMarketEventForOracle(symbol = null) {
 }
 
 function atlasRenderOracleNewsContext40234(model = null, coin = null) {
-  const root = document.getElementById("atlasOracleNewsContext40234");
-  const roleNode = document.getElementById("atlasOracleNewsRole40234");
-  const noteNode = document.getElementById("atlasOracleNewsCausality40234");
+  const root = document.getElementById("atlasOracleNewsContext");
+  const roleNode = document.getElementById("atlasOracleNewsRole");
+  const noteNode = document.getElementById("atlasOracleNewsCausality");
   if (!root || !roleNode || !noteNode) return null;
   let symbol = null;
   try {
@@ -23164,7 +23164,7 @@ function atlasRenderOracleNewsContext40234(model = null, coin = null) {
   return analysis;
 }
 
-globalThis.AtlasNewsToMarketCausalRole40234 = Object.freeze({
+globalThis.AtlasNewsToMarketCausalRole = Object.freeze({
   compute: newsMarketCausalRole,
   render: renderNewsMarketDrivers,
   oracle_context: atlasRenderOracleNewsContext40234,
@@ -23346,14 +23346,14 @@ function newsMarketDriverTruthLine(row, fallback = "Aucune source liée qualifi�
 }
 
 function renderNewsMacroFlowCoverage() {
-  const root=document.getElementById("newsMacroFlowCoverage40367");
+  const root=document.getElementById("newsMacroFlowCoverage");
   if(!root)return null;
   const coverage=newsMarketDriverCoverage();
   const targets={
-    macro_liquidity:["newsDriverMacro40367","newsDriverMacroNote40367"],
-    institutional_flows:["newsDriverFlows40367","newsDriverFlowsNote40367"],
-    regulation:["newsDriverReg40367","newsDriverRegNote40367"],
-    leverage:["newsDriverLeverage40367","newsDriverLeverageNote40367"]
+    macro_liquidity:["newsDriverMacro","newsDriverMacroNote"],
+    institutional_flows:["newsDriverFlows","newsDriverFlowsNote"],
+    regulation:["newsDriverReg","newsDriverRegNote"],
+    leverage:["newsDriverLeverage","newsDriverLeverageNote"]
   };
   for(const [key,[valueId,noteId]] of Object.entries(targets)){
     const row=coverage[key];
@@ -23538,26 +23538,26 @@ function renderNewsMarketOperatorIntelligence(current=null){
   const root=document.getElementById("newsMarketOperatorIntelligence"); if(!root)return n;
   const set=(id,v)=>{const node=document.getElementById(id);if(node)node.textContent=String(v??"—");};
   if(n.status!=="observed"){
-    set("newsMarketEventFact40235","Aucun événement principal qualifié.");set("newsMarketEventProof40235","News Sentinel en attente.");
-    set("newsMarketMechanismTitle40235","MÉCANISME NON QUALIFIÉ");set("newsMarketExplains40235","Aucune explication produite sans événement.");set("newsMarketDoesNotExplain40235","Aucune causalité inventée.");
-    set("newsMarketDemand40235","NON QUALIFIÉ");set("newsMarketDemandNote40235","Aucun contexte de flux détecté.");set("newsMarketMarketConfirmation40235","Marché à comparer.");set("newsMarketVerdict40235","INFORMATION INSUFFISANTE");set("newsMarketVerdictNote40235","Causalité non évaluable.");
-    const steps=document.getElementById("newsMarketMechanismSteps40235");if(steps)steps.replaceChildren(); root.dataset.state="no-event"; return n;
+    set("newsMarketEventFact","Aucun événement principal qualifié.");set("newsMarketEventProof","News Sentinel en attente.");
+    set("newsMarketMechanismTitle","MÉCANISME NON QUALIFIÉ");set("newsMarketExplains","Aucune explication produite sans événement.");set("newsMarketDoesNotExplain","Aucune causalité inventée.");
+    set("newsMarketDemand","NON QUALIFIÉ");set("newsMarketDemandNote","Aucun contexte de flux détecté.");set("newsMarketMarketConfirmation","Marché à comparer.");set("newsMarketVerdict","INFORMATION INSUFFISANTE");set("newsMarketVerdictNote","Causalité non évaluable.");
+    const steps=document.getElementById("newsMarketMechanismSteps");if(steps)steps.replaceChildren(); root.dataset.state="no-event"; return n;
   }
   const proof=n.base?.amplifier?.evidence||newsMarketEvidence(n.event);
-  set("newsMarketEventFact40235",(n.facts?.facts||[]).join(" ")||newsFeedCanonicalDisplayHeadline(n.event,"Événement qualifié"));
-  set("newsMarketEventProof40235",`${n.event?.source_name||n.event?.source_host||"Source"} · preuve ${String(proof?.level||"inconnue").toLowerCase()}${proof?.score!=null?` · ${proof.score}/100`:""} · ${newsMarketSupportingAmountLine(n)}`);
-  set("newsMarketMechanismTitle40235",`${n.mechanism.title} · ${n.mechanism.direction}`);
-  const steps=document.getElementById("newsMarketMechanismSteps40235"); if(steps){steps.replaceChildren();(n.mechanism.steps||[]).forEach((label,index)=>{const li=document.createElement("li");li.dataset.step=String(index+1);const span=document.createElement("span");span.textContent=label;li.appendChild(span);steps.appendChild(li);});}
-  set("newsMarketExplains40235",n.mechanism.explains);
+  set("newsMarketEventFact",(n.facts?.facts||[]).join(" ")||newsFeedCanonicalDisplayHeadline(n.event,"Événement qualifié"));
+  set("newsMarketEventProof",`${n.event?.source_name||n.event?.source_host||"Source"} · preuve ${String(proof?.level||"inconnue").toLowerCase()}${proof?.score!=null?` · ${proof.score}/100`:""} · ${newsMarketSupportingAmountLine(n)}`);
+  set("newsMarketMechanismTitle",`${n.mechanism.title} · ${n.mechanism.direction}`);
+  const steps=document.getElementById("newsMarketMechanismSteps"); if(steps){steps.replaceChildren();(n.mechanism.steps||[]).forEach((label,index)=>{const li=document.createElement("li");li.dataset.step=String(index+1);const span=document.createElement("span");span.textContent=label;li.appendChild(span);steps.appendChild(li);});}
+  set("newsMarketExplains",n.mechanism.explains);
   const macroTruth=n.driver_truth_40_3_72?.macro_liquidity||null;
   const flowDomainTruth=n.driver_truth_40_3_72?.institutional_flows||null;
-  set("newsMarketDoesNotExplain40235",n.initial_catalyst?`Un catalyseur distinct est seulement classé POSSIBLE : ${n.initial_catalyst.label}. Cela ne prouve pas qu’il a déclenché le mouvement.`:macroTruth?.event?`${newsMarketDriverTruthLine(macroTruth)} · contexte macro/liquidité observé, pas cause initiale démontrée.`:n.mechanism.does_not_explain);
-  set("newsMarketDemand40235",n.flow?`${n.flow.label} · ${n.flow.direction} · ${n.verdict.context}`:flowDomainTruth?.event?`FLUX INSTITUTIONNELS · ${flowDomainTruth.status}`:"NON QUALIFIÉ");
-  set("newsMarketDemandNote40235",n.flow?`${newsMarketRoleEvidenceLine(n.flow)} · facteur de contexte possible, pas cause démontrée.`:newsMarketDriverTruthLine(flowDomainTruth,"Aucun flux demande/offre explicite suffisamment lié à l’actif n’est détecté dans l’archive chargée."));
-  set("newsMarketMarketConfirmation40235",`${n.market_confirmation.breadth} · ${n.market_confirmation.focus} · ${n.market_confirmation.tone}.`);
-  set("newsMarketVerdict40235",`${n.verdict.role} · ${n.mechanism.direction}`);
+  set("newsMarketDoesNotExplain",n.initial_catalyst?`Un catalyseur distinct est seulement classé POSSIBLE : ${n.initial_catalyst.label}. Cela ne prouve pas qu’il a déclenché le mouvement.`:macroTruth?.event?`${newsMarketDriverTruthLine(macroTruth)} · contexte macro/liquidité observé, pas cause initiale démontrée.`:n.mechanism.does_not_explain);
+  set("newsMarketDemand",n.flow?`${n.flow.label} · ${n.flow.direction} · ${n.verdict.context}`:flowDomainTruth?.event?`FLUX INSTITUTIONNELS · ${flowDomainTruth.status}`:"NON QUALIFIÉ");
+  set("newsMarketDemandNote",n.flow?`${newsMarketRoleEvidenceLine(n.flow)} · facteur de contexte possible, pas cause démontrée.`:newsMarketDriverTruthLine(flowDomainTruth,"Aucun flux demande/offre explicite suffisamment lié à l’actif n’est détecté dans l’archive chargée."));
+  set("newsMarketMarketConfirmation",`${n.market_confirmation.breadth} · ${n.market_confirmation.focus} · ${n.market_confirmation.tone}.`);
+  set("newsMarketVerdict",`${n.verdict.role} · ${n.mechanism.direction}`);
   const chain40372=n.causal_chain_40_3_72||{};
-  set("newsMarketVerdictNote40235",`Macro/liquidité ${chain40372.macro_liquidity||"NON QUALIFIÉ"} → flux ${chain40372.institutional_flows||"NON QUALIFIÉ"} → cassure ${chain40372.technical_trigger||"NON QUALIFIÉ"} → levier ${chain40372.leverage_amplifier||"NON QUALIFIÉ"} → marché ${chain40372.market_reaction||"NON QUALIFIÉ"}.`);
+  set("newsMarketVerdictNote",`Macro/liquidité ${chain40372.macro_liquidity||"NON QUALIFIÉ"} → flux ${chain40372.institutional_flows||"NON QUALIFIÉ"} → cassure ${chain40372.technical_trigger||"NON QUALIFIÉ"} → levier ${chain40372.leverage_amplifier||"NON QUALIFIÉ"} → marché ${chain40372.market_reaction||"NON QUALIFIÉ"}.`);
   root.dataset.state="observed"; root.dataset.direction=String(n.mechanism.direction||"indéterminé").toLowerCase();
   if(typeof renderNewsMarketReactionTimeline==="function") renderNewsMarketReactionTimeline(n.event,n);
   if(typeof renderNewsMarketRoleQuality==="function") renderNewsMarketRoleQuality(n.event,n);
@@ -23568,14 +23568,14 @@ function renderNewsMarketOperatorIntelligence(current=null){
 function atlasRenderOracleNewsContext40235(model=null,coin=null){
   if(typeof atlasRenderOracleNewsContext40239==="function") return atlasRenderOracleNewsContext40239(model,coin);
   const base=atlasRenderOracleNewsContext40234(model,coin);
-  const detail=document.getElementById("atlasOracleNewsDetail40235"); if(!detail)return base;
+  const detail=document.getElementById("atlasOracleNewsDetail"); if(!detail)return base;
   let symbol=null; try{const aggregate=atlasOracleV0AssetId===ATLAS_ORACLE_TOP5_FOCUS||Boolean(model?.aggregate);const selected=coin||(!aggregate&&typeof atlasOracleSelectCoin==="function"?atlasOracleSelectCoin():null);symbol=aggregate?"TOP 5":String(selected?.symbol||selected?.name||"").toUpperCase();}catch{}
   const event=newsMarketEventForOracle(symbol); const n=newsMarketOperatorIntelligence(event);
   detail.textContent=n.status==="observed"?`${n.mechanism.explains} Catalyseur initial : ${n.verdict.initial_catalyst}. Causalité : ${n.verdict.causality}.`:"Aucune explication News→Marché qualifiée.";
   return n;
 }
 
-globalThis.AtlasNewsToMarketOperatorIntelligence40235=Object.freeze({compute:newsMarketOperatorIntelligence,render:renderNewsMarketOperatorIntelligence,oracle_context:atlasRenderOracleNewsContext40235,deterministic:true,code_only:true,external_ai_used:false,causal_claim:false,network_request_added:false,timer_added:false,websocket_added:false,storage_write_added:false});
+globalThis.AtlasNewsToMarketOperatorIntelligence=Object.freeze({compute:newsMarketOperatorIntelligence,render:renderNewsMarketOperatorIntelligence,oracle_context:atlasRenderOracleNewsContext40235,deterministic:true,code_only:true,external_ai_used:false,causal_claim:false,network_request_added:false,timer_added:false,websocket_added:false,storage_write_added:false});
 
 
 
@@ -23609,30 +23609,30 @@ function newsMarketReactionTimeline(event=null,narrative=null){
 }
 function newsMarketFmtTimelinePct(v){return Number.isFinite(Number(v))?`${Number(v)>=0?"+":""}${Number(v).toFixed(2)} %`:"—";}
 function newsMarketFmtTimelinePrice(v){return Number.isFinite(Number(v))?new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:Number(v)<10?4:2}).format(Number(v)):"—";}
-function renderNewsMarketReactionTimeline(event=null,narrative=null){const root=document.getElementById("newsMarketReactionTimeline");if(!root)return null;const t=newsMarketReactionTimeline(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");}; if(t.status!=="ready"){set("newsMarketTimelineState40236","DONNÉES HISTORIQUES INSUFFISANTES");set("newsMarketTimelineMeta40236",`${t.symbol||"Actif"} · ${t.status} · aucun fetch ajouté`);for(const key of ["M15","T0","P15","P60","P240"])set(`newsMarketTimeline${key}40236`,"—");set("newsMarketTimelineAlignment40236","NON QUALIFIÉ");set("newsMarketTimelineAlignmentNote40236","La série déjà en cache ne couvre pas suffisamment le timestamp ; aucune réaction n’est inventée.");root.dataset.state="missing";return t;} set("newsMarketTimelineState40236",`${t.symbol} · réaction autour de T0`);set("newsMarketTimelineMeta40236",`${new Date(t.event_time).toLocaleString("fr-FR")} · cache ${t.source_family} · pas médian ${Math.round((t.median_step_ms||0)/60000)||"—"} min`);const map={"-15":"M15","0":"T0","15":"P15","60":"P60","240":"P240"};for(const p of t.points||[]){const key=map[String(p.minutes)];if(!key)continue;set(`newsMarketTimeline${key}40236`,p.minutes===0?`${newsMarketFmtTimelinePrice(p.price)} · base`:newsMarketFmtTimelinePct(p.delta_pct));}set("newsMarketTimelineAlignment40236",t.alignment);set("newsMarketTimelineAlignmentNote40236",`${t.alignment_basis||"Fenêtre"} ${newsMarketFmtTimelinePct(t.alignment_delta_pct)} · direction attendue ${t.expected_direction.toLowerCase()} · proximité temporelle ≠ causalité.`);root.dataset.state="ready";root.dataset.alignment=String(t.alignment||"").toLowerCase();return t;}
-globalThis.AtlasNewsMarketReactionTimeline40236=Object.freeze({compute:newsMarketReactionTimeline,render:renderNewsMarketReactionTimeline,local_cache_only:true,fetch_added:false,causal_claim:false,timer_added:false,storage_write_added:false});
+function renderNewsMarketReactionTimeline(event=null,narrative=null){const root=document.getElementById("newsMarketReactionTimeline");if(!root)return null;const t=newsMarketReactionTimeline(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");}; if(t.status!=="ready"){set("newsMarketTimelineState","DONNÉES HISTORIQUES INSUFFISANTES");set("newsMarketTimelineMeta",`${t.symbol||"Actif"} · ${t.status} · aucun fetch ajouté`);for(const key of ["M15","T0","P15","P60","P240"])set(`newsMarketTimeline${key}40236`,"—");set("newsMarketTimelineAlignment","NON QUALIFIÉ");set("newsMarketTimelineAlignmentNote","La série déjà en cache ne couvre pas suffisamment le timestamp ; aucune réaction n’est inventée.");root.dataset.state="missing";return t;} set("newsMarketTimelineState",`${t.symbol} · réaction autour de T0`);set("newsMarketTimelineMeta",`${new Date(t.event_time).toLocaleString("fr-FR")} · cache ${t.source_family} · pas médian ${Math.round((t.median_step_ms||0)/60000)||"—"} min`);const map={"-15":"M15","0":"T0","15":"P15","60":"P60","240":"P240"};for(const p of t.points||[]){const key=map[String(p.minutes)];if(!key)continue;set(`newsMarketTimeline${key}40236`,p.minutes===0?`${newsMarketFmtTimelinePrice(p.price)} · base`:newsMarketFmtTimelinePct(p.delta_pct));}set("newsMarketTimelineAlignment",t.alignment);set("newsMarketTimelineAlignmentNote",`${t.alignment_basis||"Fenêtre"} ${newsMarketFmtTimelinePct(t.alignment_delta_pct)} · direction attendue ${t.expected_direction.toLowerCase()} · proximité temporelle ≠ causalité.`);root.dataset.state="ready";root.dataset.alignment=String(t.alignment||"").toLowerCase();return t;}
+globalThis.AtlasNewsMarketReactionTimeline=Object.freeze({compute:newsMarketReactionTimeline,render:renderNewsMarketReactionTimeline,local_cache_only:true,fetch_added:false,causal_claim:false,timer_added:false,storage_write_added:false});
 
 
 
 /* 40.2.37 — ROLE EVIDENCE QUALITY · quality of the reading, never causal probability. */
 function newsMarketUniqueRoleSources(narrative){const set=new Set();for(const r of narrative?.supporting_amplifiers||[]){const s=String(r?.source_name||"").trim().toLowerCase();if(s)set.add(s);}if(!set.size&&narrative?.event?.source_name)set.add(String(narrative.event.source_name).toLowerCase());return set.size;}
 function newsMarketRoleQuality(event=null,narrative=null){const n=narrative||newsMarketOperatorIntelligence(event);if(n?.status!=="observed")return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"no-event",causal_probability:null};const e=n.base?.amplifier?.evidence||newsMarketEvidence(n.event);const sourceEvidence=Math.max(0,Math.min(30,(Number(e?.score)||0)*.30));const independentSources=newsMarketUniqueRoleSources(n);const confirmations=Math.min(15,(Math.min(independentSources,3)/3)*15);const timestamp=newsMarketEventTime(n.event)?10:0;const asset=(n.event?.assets||[]).length?10:0;const mechanism=n.base?.amplifier||n.flow||n.technical_trigger?15:0;const timeline=typeof newsMarketReactionTimeline==="function"?newsMarketReactionTimeline(n.event,n):null;const timelinePoints=timeline?.status==="ready"?(timeline.points||[]).filter(p=>Number.isFinite(p?.price)).length:0;const timelineScore=timelinePoints>=4?10:timelinePoints>=2?5:0;const market=n.market_confirmation?.count>=5?10:n.market_confirmation?.count?5:0;const total=Math.round((sourceEvidence+confirmations+timestamp+asset+mechanism+timelineScore+market)*10)/10;const label=total>=85?"FORTE":total>=65?"ÉLEVÉE":total>=45?"MOYENNE":"FAIBLE";return {schema:"atlas.news_market.role_quality.v1",build:"40.2.37",status:"ready",score:total,label,components:{source_evidence:{points:sourceEvidence,max:30,detail:`preuve source ${e?.score??"—"}/100`},independent_sources:{points:confirmations,max:15,detail:`${independentSources} source${independentSources>1?"s":""} distincte${independentSources>1?"s":""} détectée${independentSources>1?"s":""}`},timestamp:{points:timestamp,max:10,detail:timestamp?"timestamp exploitable":"timestamp absent"},asset:{points:asset,max:10,detail:asset?"actif explicite":"actif absent"},mechanism:{points:mechanism,max:15,detail:mechanism?n.mechanism?.title||"mécanisme explicite":"mécanisme non qualifié"},timeline:{points:timelineScore,max:10,detail:`${timelinePoints}/5 points temporels disponibles`},market:{points:market,max:10,detail:n.market_confirmation?.breadth||"marché indisponible"}},causal_probability:null,causal_probability_calculated:false,causal_claim:false};}
-function renderNewsMarketRoleQuality(event=null,narrative=null){const root=document.getElementById("newsMarketRoleQuality");if(!root)return null;const q=newsMarketRoleQuality(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(q.status!=="ready"){set("newsMarketRoleQualityScore40237","INFORMATION INSUFFISANTE");set("newsMarketRoleQualityNote40237","Aucun score causal n’est calculé.");root.dataset.state="missing";return q;}set("newsMarketRoleQualityScore40237",`${q.label} · ${q.score.toFixed(1)}/100`);set("newsMarketRoleQualityNote40237","Solidité de la lecture du rôle · ce score n’est PAS une probabilité de causalité.");for(const [key,row] of Object.entries(q.components)){set(`newsMarketRoleQuality_${key}_40237`,`${row.points.toFixed(1)}/${row.max}`);set(`newsMarketRoleQuality_${key}_note_40237`,row.detail);}set("newsMarketCausalProbability40237","NON CALCULÉE");root.dataset.state="ready";root.dataset.quality=q.label.toLowerCase();return q;}
-globalThis.AtlasNewsMarketRoleQuality40237=Object.freeze({compute:newsMarketRoleQuality,render:renderNewsMarketRoleQuality,causal_probability_calculated:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
+function renderNewsMarketRoleQuality(event=null,narrative=null){const root=document.getElementById("newsMarketRoleQuality");if(!root)return null;const q=newsMarketRoleQuality(event,narrative);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(q.status!=="ready"){set("newsMarketRoleQualityScore","INFORMATION INSUFFISANTE");set("newsMarketRoleQualityNote","Aucun score causal n’est calculé.");root.dataset.state="missing";return q;}set("newsMarketRoleQualityScore",`${q.label} · ${q.score.toFixed(1)}/100`);set("newsMarketRoleQualityNote","Solidité de la lecture du rôle · ce score n’est PAS une probabilité de causalité.");for(const [key,row] of Object.entries(q.components)){set(`newsMarketRoleQuality_${key}_40237`,`${row.points.toFixed(1)}/${row.max}`);set(`newsMarketRoleQuality_${key}_note_40237`,row.detail);}set("newsMarketCausalProbability","NON CALCULÉE");root.dataset.state="ready";root.dataset.quality=q.label.toLowerCase();return q;}
+globalThis.AtlasNewsMarketRoleQuality=Object.freeze({compute:newsMarketRoleQuality,render:renderNewsMarketRoleQuality,causal_probability_calculated:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
 
 
 
 /* 40.2.38 — CROSS-LAYER MARKET EXPLANATION · compare independent layers, never force agreement. */
 function newsMarketText(id){return String(document.getElementById(id)?.textContent||"").trim();}
 function newsMarketCrossLayer(event=null,context={}){const n=context?.narrative||newsMarketOperatorIntelligence(event);if(n?.status!=="observed")return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"no-event",causal_claim:false};const timeline=typeof newsMarketReactionTimeline==="function"?newsMarketReactionTimeline(n.event,n):null;const quality=typeof newsMarketRoleQuality==="function"?newsMarketRoleQuality(n.event,n):null;const model=context?.model||null;const oracleBias=String(model?.bias||newsMarketText("atlasOracleHeroBias")||"INDISPONIBLE").toUpperCase();const oracleBull=Number.isFinite(Number(model?.bullStrength))?`Force hausse ${model.bullStrength}/100`:newsMarketText("atlasOracleBull")||"Oracle indisponible";const oracleRegime=newsMarketText("atlasOracleRegimeStatus")||"Régime indisponible";const atlasLine=Number.isFinite(Number(model?.directionScore))?`Momentum ${model?.atlas||""} · direction ${model.directionScore>=0?"+":""}${model.directionScore}/100`:newsMarketText("atlasOracleAtlas")||"Atlas indisponible";const newsDir=String(n.mechanism?.direction||"").toUpperCase();const marketPositive=Number(n.market_confirmation?.positive||0)>Number(n.market_confirmation?.negative||0);const newsBull=newsDir.includes("HAUSS");const newsBear=newsDir.includes("BAISS");const oracleBullish=oracleBias.includes("HAUSS");const oracleBearish=oracleBias.includes("BAISS");const atlasBullish=/momentum positif|direction \+/i.test(atlasLine);const atlasBearish=/momentum négatif|direction -/i.test(atlasLine);let convergence="COUVERTURE PARTIELLE";if(newsBull&&marketPositive&&oracleBullish&&atlasBullish)convergence="CONVERGENCE DESCRIPTIVE HAUSSIÈRE";else if(newsBear&&!marketPositive&&oracleBearish&&atlasBearish)convergence="CONVERGENCE DESCRIPTIVE BAISSIÈRE";else if((newsBull&&oracleBearish)||(newsBear&&oracleBullish))convergence="LECTURE MIXTE / CONTRADICTOIRE";else if(newsBull||newsBear)convergence="CONVERGENCE PARTIELLE";return {schema:"atlas.news_market.cross_layer.v1",build:"40.2.38",status:"ready",layers:{news:`${n.mechanism?.title||"Rôle non qualifié"} · ${n.mechanism?.direction||"indéterminé"}`,reaction:timeline?.status==="ready"?`${timeline.alignment} · ${timeline.alignment_basis||"fenêtre"} ${newsMarketFmtTimelinePct(timeline.alignment_delta_pct)}`:"Timeline indisponible",market:`${n.market_confirmation?.breadth||"Top 5 indisponible"} · ${n.market_confirmation?.focus||"actif indisponible"}`,oracle:`${oracleBias} · ${oracleRegime} · ${oracleBull}`,atlas:atlasLine},quality:quality?.status==="ready"?`${quality.label} · ${quality.score.toFixed(1)}/100`:"non qualifiée",convergence,conclusion:`${convergence} · ${n.market_confirmation?.breadth||"Top 5"} · ${timeline?.status==="ready"?timeline.alignment:"timeline —"}`,causal_claim:false};}
-function renderNewsMarketCrossLayer(event=null,context={}){const root=document.getElementById("newsMarketCrossLayer");if(!root)return null;const x=newsMarketCrossLayer(event,context);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(x.status!=="ready"){set("newsMarketCrossLayerVerdict40238","INFORMATION INSUFFISANTE");root.dataset.state="missing";return x;}for(const key of ["news","reaction","market","oracle","atlas"])set(`newsMarketCrossLayer_${key}_40238`,x.layers[key]);set("newsMarketCrossLayerQuality40238",x.quality);set("newsMarketCrossLayerVerdict40238",x.convergence);set("newsMarketCrossLayerNote40238",x.conclusion);set("decisionNewsExplanation40238",`${x.convergence} · ${x.layers.market}`);root.dataset.state="ready";root.dataset.convergence=x.convergence.toLowerCase();return x;}
-globalThis.AtlasNewsMarketCrossLayer40238=Object.freeze({compute:newsMarketCrossLayer,render:renderNewsMarketCrossLayer,independent_layers:true,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
+function renderNewsMarketCrossLayer(event=null,context={}){const root=document.getElementById("newsMarketCrossLayer");if(!root)return null;const x=newsMarketCrossLayer(event,context);const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};if(x.status!=="ready"){set("newsMarketCrossLayerVerdict","INFORMATION INSUFFISANTE");root.dataset.state="missing";return x;}for(const key of ["news","reaction","market","oracle","atlas"])set(`newsMarketCrossLayer_${key}_40238`,x.layers[key]);set("newsMarketCrossLayerQuality",x.quality);set("newsMarketCrossLayerVerdict",x.convergence);set("newsMarketCrossLayerNote",x.conclusion);set("decisionNewsExplanation",`${x.convergence} · ${x.layers.market}`);root.dataset.state="ready";root.dataset.convergence=x.convergence.toLowerCase();return x;}
+globalThis.AtlasNewsMarketCrossLayer=Object.freeze({compute:newsMarketCrossLayer,render:renderNewsMarketCrossLayer,independent_layers:true,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
 
 
 
 /* 40.2.39 — ORACLE NEWS CONTEXT INTEGRATION · compact context, News Sentinel remains source of truth. */
-function atlasRenderOracleNewsContext40239(model=null,coin=null){const root=document.getElementById("atlasOracleNewsContext40234"),role=document.getElementById("atlasOracleNewsRole40234"),causal=document.getElementById("atlasOracleNewsCausality40234"),detail=document.getElementById("atlasOracleNewsDetail40235"),qualityNode=document.getElementById("atlasOracleNewsQuality40239"),timelineNode=document.getElementById("atlasOracleNewsTimeline40239");if(!root||!role||!causal)return null;let symbol=null;try{const aggregate=atlasOracleV0AssetId===ATLAS_ORACLE_TOP5_FOCUS||Boolean(model?.aggregate);const selected=coin||(!aggregate&&typeof atlasOracleSelectCoin==="function"?atlasOracleSelectCoin():null);symbol=aggregate?"TOP 5":String(selected?.symbol||selected?.name||"").toUpperCase();}catch{}const event=newsMarketEventForOracle(symbol);const n=newsMarketOperatorIntelligence(event);if(n.status!=="observed"){role.textContent=symbol?`Aucune news classée pour ${symbol}`:"Aucune news classée";if(detail)detail.textContent="News Sentinel · aucun mécanisme ou flux classé pour cet actif.";if(qualityNode)qualityNode.textContent="Preuve —";if(timelineNode)timelineNode.textContent="Timeline —";causal.textContent="Marché courant · données News à venir";root.dataset.state="neutral";return n;}const t=newsMarketReactionTimeline(n.event,n);const q=newsMarketRoleQuality(n.event,n);const x=newsMarketCrossLayer(n.event,{narrative:n,model});role.textContent=`${n.mechanism.title} · ${n.verdict.role}`;const amounts=[];for(const r of n.supporting_amplifiers||[])for(const a of r?.facts?.amounts||[])if(!amounts.includes(a))amounts.push(a);const preferredAmounts=(amounts.filter(a=>/Md\$/.test(a)).length?amounts.filter(a=>/Md\$/.test(a)):amounts).slice(0,3);if(detail)detail.textContent=`${preferredAmounts.length?`${preferredAmounts.join(" · ")} mentionné${preferredAmounts.length>1?"s":""} · `:""}${n.mechanism.explains} Catalyseur initial : ${n.verdict.initial_catalyst}.`;if(qualityNode)qualityNode.textContent=q.status==="ready"?`Preuve ${q.label} · ${q.score.toFixed(1)}/100`:"Preuve —";if(timelineNode)timelineNode.textContent=t.status==="ready"?`Réaction ${t.alignment.toLowerCase()} · ${t.alignment_basis||"fenêtre"} ${newsMarketFmtTimelinePct(t.alignment_delta_pct)}`:"Réaction temporelle non disponible";causal.textContent=`${x.status==="ready"?`${x.convergence} · ${n.market_confirmation?.breadth||"Top 5"}`:`${n.market_confirmation?.breadth||"Top 5"}`}`;root.dataset.state="active";if(typeof renderNewsMarketCrossLayer==="function")renderNewsMarketCrossLayer(n.event,{narrative:n,model});return {narrative:n,timeline:t,quality:q,cross_layer:x};}
-globalThis.AtlasOracleNewsContextIntegration40239=Object.freeze({render:atlasRenderOracleNewsContext40239,source_of_truth:"news-sentinel",compact_summary_only:true,oracle_model_modified:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
+function atlasRenderOracleNewsContext40239(model=null,coin=null){const root=document.getElementById("atlasOracleNewsContext"),role=document.getElementById("atlasOracleNewsRole"),causal=document.getElementById("atlasOracleNewsCausality"),detail=document.getElementById("atlasOracleNewsDetail"),qualityNode=document.getElementById("atlasOracleNewsQuality"),timelineNode=document.getElementById("atlasOracleNewsTimeline");if(!root||!role||!causal)return null;let symbol=null;try{const aggregate=atlasOracleV0AssetId===ATLAS_ORACLE_TOP5_FOCUS||Boolean(model?.aggregate);const selected=coin||(!aggregate&&typeof atlasOracleSelectCoin==="function"?atlasOracleSelectCoin():null);symbol=aggregate?"TOP 5":String(selected?.symbol||selected?.name||"").toUpperCase();}catch{}const event=newsMarketEventForOracle(symbol);const n=newsMarketOperatorIntelligence(event);if(n.status!=="observed"){role.textContent=symbol?`Aucune news classée pour ${symbol}`:"Aucune news classée";if(detail)detail.textContent="News Sentinel · aucun mécanisme ou flux classé pour cet actif.";if(qualityNode)qualityNode.textContent="Preuve —";if(timelineNode)timelineNode.textContent="Timeline —";causal.textContent="Marché courant · données News à venir";root.dataset.state="neutral";return n;}const t=newsMarketReactionTimeline(n.event,n);const q=newsMarketRoleQuality(n.event,n);const x=newsMarketCrossLayer(n.event,{narrative:n,model});role.textContent=`${n.mechanism.title} · ${n.verdict.role}`;const amounts=[];for(const r of n.supporting_amplifiers||[])for(const a of r?.facts?.amounts||[])if(!amounts.includes(a))amounts.push(a);const preferredAmounts=(amounts.filter(a=>/Md\$/.test(a)).length?amounts.filter(a=>/Md\$/.test(a)):amounts).slice(0,3);if(detail)detail.textContent=`${preferredAmounts.length?`${preferredAmounts.join(" · ")} mentionné${preferredAmounts.length>1?"s":""} · `:""}${n.mechanism.explains} Catalyseur initial : ${n.verdict.initial_catalyst}.`;if(qualityNode)qualityNode.textContent=q.status==="ready"?`Preuve ${q.label} · ${q.score.toFixed(1)}/100`:"Preuve —";if(timelineNode)timelineNode.textContent=t.status==="ready"?`Réaction ${t.alignment.toLowerCase()} · ${t.alignment_basis||"fenêtre"} ${newsMarketFmtTimelinePct(t.alignment_delta_pct)}`:"Réaction temporelle non disponible";causal.textContent=`${x.status==="ready"?`${x.convergence} · ${n.market_confirmation?.breadth||"Top 5"}`:`${n.market_confirmation?.breadth||"Top 5"}`}`;root.dataset.state="active";if(typeof renderNewsMarketCrossLayer==="function")renderNewsMarketCrossLayer(n.event,{narrative:n,model});return {narrative:n,timeline:t,quality:q,cross_layer:x};}
+globalThis.AtlasOracleNewsContextIntegration=Object.freeze({render:atlasRenderOracleNewsContext40239,source_of_truth:"news-sentinel",compact_summary_only:true,oracle_model_modified:false,causal_claim:false,network_request_added:false,timer_added:false,storage_write_added:false});
 
 
 function newsCurrentEvent(manualEvent = null) {
@@ -23980,8 +23980,8 @@ function initNewsSentinelV1() {
   });
 
   const newsDetails = $("news-sentinel");
-  if (newsDetails && newsDetails.dataset.newsCountdownGate40464 !== "1") {
-    newsDetails.dataset.newsCountdownGate40464 = "1";
+  if (newsDetails && newsDetails.dataset.newsCountdownGate !== "1") {
+    newsDetails.dataset.newsCountdownGate = "1";
     newsDetails.addEventListener("toggle", () => {
       newsFeedSyncCountdownTimer();
       if (newsDetails.open) {
@@ -24351,7 +24351,7 @@ function atlasMemoryIntelligenceRender() {
   set("atlasMemoryConfidenceDetail", `${data.records} snapshots distincts · ${data.collectors_count} collecteur(s) · fil principal ${data.primary_records} relevés · ce score mesure la continuité des données, jamais la probabilité d’un gain.`);
   const badge=document.getElementById("atlasMemoryIntelligenceBadge");
   if(badge){badge.textContent=`${data.records} SNAPSHOTS`;badge.className=`pill ${data.records>=3?"ok":"warn"}`;}
-  const compactSubtitle=document.getElementById("atlasMarketMemorySummarySubtitle40354");
+  const compactSubtitle=document.getElementById("atlasMarketMemorySummarySubtitle");
   if(compactSubtitle) compactSubtitle.textContent=`Confiance ${data.confidence.label} · ${data.collectors_count} collecteur(s) · détails à la demande · CURRENT séparés.`;
   set("atlasMemoryIntelligenceStatus", data.records>=3
     ? `Memory Intelligence active · dernier relevé ${data.latest_at?new Date(data.latest_at).toLocaleString("fr-FR"):"—"} · observation uniquement.`
@@ -26305,7 +26305,7 @@ function atlasAtlasStateTruth(snapshot,completed=0,auth="OK",detail=""){
   const suffix=detail?` · ${detail}`:"";
   const line=`${snap} · ${current} · ${bridge} · AUTH ${auth} · ${model} · ATLAS ${Number(completed||0)}/4${suffix}`;
   setText(document.getElementById("atlasLocalReportsMeta"),line);
-  try{document.documentElement.dataset.atlasStateTruth404273=auth==="OK"?"ready":"auth-required";}catch(_){}
+  try{document.documentElement.dataset.atlasStateTruth=auth==="OK"?"ready":"auth-required";}catch(_){}
   return line;
 }
 function atlasBridgeAuthRequireTrust(reason="bridge-auth-required",pendingHash="#local-ai-hub",error=null){
@@ -26330,10 +26330,10 @@ function atlasBridgeAuthRecoveryResolved(){
   atlasLocalReportsState.authBlockedReason404273="";
   atlasLocalReportsState.authBlockedAt404273=0;
   atlasLocalReportsState.authBlockedFingerprint404273="";
-  try{delete document.documentElement.dataset.atlasStateTruth404273;}catch(_){}
+  try{delete document.documentElement.dataset.atlasStateTruth;}catch(_){}
   return true;
 }
-try{globalThis.ErithAtlasStateTruth404273=Object.freeze({
+try{globalThis.ErithAtlasStateTruth=Object.freeze({
   build:"40.4.273",parent:"40.4.272",auth_state:atlasBridgeAuthLocalState,
   auth_required:atlasBridgeAuthNeedsTrust,state_truth:atlasAtlasStateTruth,
   pending_current_preserved:true,post_auth_rearm_reuses_existing_owner:true,
@@ -26538,7 +26538,7 @@ function atlasLocalSetReport(node, markdown) {
    ============================================================ */
 
 const ATLAS_LOCAL_REPORT_DEFERRED_PLACEHOLDER =
-  '<p class="atlas-local-response-empty" data-atlas-report-deferred-40351="1">Rapport prêt · ouvrir cette lecture pour matérialiser son contenu.</p>';
+  '<p class="atlas-local-response-empty" data-atlas-report-deferred="1">Rapport prêt · ouvrir cette lecture pour matérialiser son contenu.</p>';
 
 function atlasLocalReportCard(mode) {
   return document.querySelector(`[data-atlas-report-card="${mode}"]`);
@@ -26550,12 +26550,12 @@ function atlasLocalReportReleaseDom(mode) {
   if (!node) return false;
   const hasReport = !!atlasLocalReportResult(mode)?.answer;
   if (hasReport
-      && node.dataset.atlasReportResident40351 === "0"
-      && node.querySelector("[data-atlas-report-deferred-40351]")) return true;
+      && node.dataset.atlasReportResident === "0"
+      && node.querySelector("[data-atlas-report-deferred]")) return true;
   node.innerHTML = hasReport
     ? ATLAS_LOCAL_REPORT_DEFERRED_PLACEHOLDER
     : '<p class="atlas-local-response-empty">Aucun rapport généré.</p>';
-  node.dataset.atlasReportResident40351 = "0";
+  node.dataset.atlasReportResident = "0";
   return true;
 }
 
@@ -26568,13 +26568,13 @@ function atlasLocalReportRenderOnDemand(mode, { force = false } = {}) {
     if (!String(node.textContent || "").trim()) {
       node.innerHTML = '<p class="atlas-local-response-empty">Aucun rapport généré.</p>';
     }
-    node.dataset.atlasReportResident40351 = "0";
+    node.dataset.atlasReportResident = "0";
     return false;
   }
   const card = atlasLocalReportCard(mode);
   if (!force && !card?.open) return atlasLocalReportReleaseDom(mode);
   const rendered = atlasLocalSetReport(node, report.answer);
-  node.dataset.atlasReportResident40351 = rendered ? "1" : "0";
+  node.dataset.atlasReportResident = rendered ? "1" : "0";
   return rendered;
 }
 
@@ -26593,7 +26593,7 @@ function atlasLocalReportResidencyInit() {
   });
 }
 
-globalThis.AtlasReportDeferredResidency40351 = Object.freeze({
+globalThis.AtlasReportDeferredResidency = Object.freeze({
   build: "40.3.51",
   scope: "four_atlas_local_report_bodies_only",
   closed_card_full_report_dom: false,
@@ -26619,22 +26619,22 @@ globalThis.AtlasReportDeferredResidency40351 = Object.freeze({
    ============================================================ */
 
 const ATLAS_SHARED_CONCLUSION_DEFERRED_PLACEHOLDER =
-  '<p class="atlas-local-response-empty" data-atlas-shared-conclusion-deferred-40352="1">Conclusion Aerith conservée · ouvrir pour matérialiser la lecture complète.</p>';
+  '<p class="atlas-local-response-empty" data-atlas-shared-conclusion-deferred="1">Conclusion Aerith conservée · ouvrir pour matérialiser la lecture complète.</p>';
 
 function atlasSharedConclusionReleaseDom() {
   const node = document.getElementById("atlasSharedConclusionContent");
   if (!node) return false;
   const hasConclusion = !!atlasSharedSynthesisState?.package?.conclusion?.answer;
   if (hasConclusion
-      && node.dataset.atlasConclusionResident40352 === "0"
-      && node.querySelector("[data-atlas-shared-conclusion-deferred-40352]")) return true;
+      && node.dataset.atlasConclusionResident === "0"
+      && node.querySelector("[data-atlas-shared-conclusion-deferred]")) return true;
   if (!hasConclusion
-      && node.dataset.atlasConclusionResident40352 === "0"
+      && node.dataset.atlasConclusionResident === "0"
       && String(node.textContent || "").trim() === "Aucune conclusion conservée.") return true;
   node.innerHTML = hasConclusion
     ? ATLAS_SHARED_CONCLUSION_DEFERRED_PLACEHOLDER
     : '<p class="atlas-local-response-empty">Aucune conclusion conservée.</p>';
-  node.dataset.atlasConclusionResident40352 = "0";
+  node.dataset.atlasConclusionResident = "0";
   return true;
 }
 
@@ -26645,12 +26645,12 @@ function atlasSharedConclusionRenderOnDemand({ force = false } = {}) {
   if (!node) return false;
   if (!answer) {
     node.innerHTML = '<p class="atlas-local-response-empty">Aucune conclusion conservée.</p>';
-    node.dataset.atlasConclusionResident40352 = "0";
+    node.dataset.atlasConclusionResident = "0";
     return false;
   }
   if (!force && !details?.open) return atlasSharedConclusionReleaseDom();
   atlasSharedSynthesisRenderMarkdown(node, answer);
-  node.dataset.atlasConclusionResident40352 = "1";
+  node.dataset.atlasConclusionResident = "1";
   return true;
 }
 
@@ -26666,7 +26666,7 @@ function atlasSharedConclusionResidencyInit() {
   return true;
 }
 
-globalThis.AtlasInternalProgressiveResidency40352 = Object.freeze({
+globalThis.AtlasInternalProgressiveResidency = Object.freeze({
   build: "40.3.52",
   parent: "40.3.51",
   scope: Object.freeze([
@@ -26833,27 +26833,27 @@ function atlasAnalysisViewportAdapt(card, phase) {
 
   if (!running) {
     if (["idle", "history", "observer", "done", "error"].includes(String(phase || ""))) {
-      delete card.dataset.viewportFocused40293;
+      delete card.dataset.viewportFocused;
     }
     return false;
   }
 
   // 40.3.12 — CURRENT computes and renders; it never drives the camera or
   // opens its owner.  Only a deliberate operator navigation may do that.
-  card.dataset.viewportFocused40293 = "1";
+  card.dataset.viewportFocused = "1";
   return true;
 }
 
 function atlasCollapsedCurrentSync() {
   const sourceCard = document.getElementById("atlasAnalysisProgressCard");
-  const preview = document.getElementById("atlasCollapsedCurrentPreview40295");
+  const preview = document.getElementById("atlasCollapsedCurrentPreview");
   if (!sourceCard || !preview) return false;
   preview.dataset.phase = String(sourceCard.dataset.phase || "idle");
   const copyText = (fromId, toId) => { const from=document.getElementById(fromId); const to=document.getElementById(toId); if(from&&to) to.textContent=from.textContent||"—"; };
-  copyText("atlasAnalysisProgressTitle","atlasCollapsedCurrentTitle40295");
-  copyText("atlasAnalysisProgressPercent","atlasCollapsedCurrentPercent40295");
-  copyText("atlasAnalysisProgressState","atlasCollapsedCurrentState40295");
-  const sourceBar=document.getElementById("atlasAnalysisProgressBar"); const previewBar=document.getElementById("atlasCollapsedCurrentBar40295");
+  copyText("atlasAnalysisProgressTitle","atlasCollapsedCurrentTitle");
+  copyText("atlasAnalysisProgressPercent","atlasCollapsedCurrentPercent");
+  copyText("atlasAnalysisProgressState","atlasCollapsedCurrentState");
+  const sourceBar=document.getElementById("atlasAnalysisProgressBar"); const previewBar=document.getElementById("atlasCollapsedCurrentBar");
   if(sourceBar&&previewBar) previewBar.style.width=sourceBar.style.width||"0%";
   return true;
 }
@@ -27022,12 +27022,12 @@ atlasLocalReportsSetBusy = function atlasLocalReportsSetBusy403100(busy) {
   atlasActivityChurnState.busySignature = signature;
   const result = atlasLocalReportsSetBusy403100Base(busy);
   try {
-    document.body.dataset.atlasActivity403100 = busy ? "running" : "rest";
+    document.body.dataset.atlasActivity = busy ? "running" : "rest";
   } catch (_) {}
   return result;
 };
 
-globalThis.AtlasActivityChurn403100 = Object.freeze({
+globalThis.AtlasActivityChurn = Object.freeze({
   build: "40.3.100",
   state: () => ({ ...atlasActivityChurnState }),
   analysis_compute_changed: false,
@@ -27253,7 +27253,7 @@ function atlasLocalConclusionTruthPolish(answer, snapshot) {
    ============================================================ */
 function atlasSourceIntelligenceTransport() {
   try {
-    const api = globalThis.ErithPrivateBackendSources4054;
+    const api = globalThis.ErithPrivateBackendSources;
     const intel = api?.sourceIntelligence?.();
     if (!intel || String(intel.schema || "") !== "agent_crypto_source_intelligence_v3") return null;
     return {
@@ -27310,7 +27310,7 @@ try {
   globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_ATLAS_40458__ = Object.freeze({
     build: "40.4.66",
     mode: "OPTIONAL_READ_ONLY_CONTEXT",
-    owner: "app.js transport copy + ErithPrivateBackendSources4054",
+    owner: "app.js transport copy + ErithPrivateBackendSources",
     atlas_direct_internet_access: false,
     current_fingerprint_participation: false,
     current_cadence_unchanged: true,
@@ -29071,11 +29071,11 @@ function atlasAnalyticalSourceSummary(sourceTruth) {
 function atlasAnalyticalTruthProofMount() {
   const details = document.getElementById("atlasAnalyticalTruthDetails");
   const mount = document.getElementById("atlasAnalyticalTruthProofMount");
-  const template = document.getElementById("atlasAnalyticalTruthProofTemplate40358");
+  const template = document.getElementById("atlasAnalyticalTruthProofTemplate");
   if (!details || !mount || !template || !details.open) return false;
-  if (mount.dataset.atlasProofMounted40358 === "1") return true;
+  if (mount.dataset.atlasProofMounted === "1") return true;
   mount.replaceChildren(template.content.cloneNode(true));
-  mount.dataset.atlasProofMounted40358 = "1";
+  mount.dataset.atlasProofMounted = "1";
   return true;
 }
 
@@ -29083,14 +29083,14 @@ function atlasAnalyticalTruthProofRelease() {
   const mount = document.getElementById("atlasAnalyticalTruthProofMount");
   if (!mount) return false;
   mount.replaceChildren();
-  mount.dataset.atlasProofMounted40358 = "0";
+  mount.dataset.atlasProofMounted = "0";
   return true;
 }
 
 function atlasAnalyticalTruthProofInit() {
   const details = document.getElementById("atlasAnalyticalTruthDetails");
-  if (!details || details.dataset.atlasProofReady40358 === "1") return !!details;
-  details.dataset.atlasProofReady40358 = "1";
+  if (!details || details.dataset.atlasProofReady === "1") return !!details;
+  details.dataset.atlasProofReady = "1";
   details.addEventListener("toggle", () => {
     if (details.open) {
       atlasAnalyticalTruthProofMount();
@@ -30861,7 +30861,7 @@ async function atlasLearningRuntimeDemandEnsure(reason = "simulation_open") {
 }
 
 try {
-  globalThis.ErithLearningRuntimeDemand40482 = Object.freeze({
+  globalThis.ErithLearningRuntimeDemand = Object.freeze({
     build:"40.4.82",
     ensure:atlasLearningRuntimeDemandEnsure,
     snapshot:atlasLearningRuntimeDemandSnapshot,
@@ -35359,7 +35359,7 @@ function atlasMarketHelpCoinResolve(coinId) {
   const id = String(coinId || "").trim();
   if (!id) return null;
 
-  const cumulative403115 = globalThis.AtlasMarketUniverse1000_403115?.find?.(id);
+  const cumulative403115 = globalThis.AtlasMarketUniverse1000?.find?.(id);
   if (cumulative403115) return cumulative403115;
 
   const canonical = state.coins.find(item => item.id === id);
@@ -35426,7 +35426,7 @@ function atlasMarketHelpSnapshot(coin) {
 }
 
 try {
-  globalThis.AtlasExtendedNativeFiche403104 = Object.freeze({
+  globalThis.AtlasExtendedNativeFiche = Object.freeze({
     build: "40.3.104",
     native_fiche_reused: true,
     duplicate_fiche_created: false,
@@ -35622,12 +35622,12 @@ function paperWorkspaceComparisonPayload(){
   };
 }
 function renderPaperWorkspaceComparison(){
-  const switcher=document.getElementById("simPaperWorkspace404142");
+  const switcher=document.getElementById("simPaperWorkspace");
   if(!switcher) return;
-  let panel=document.getElementById("simPaperWorkspaceCompare404143");
+  let panel=document.getElementById("simPaperWorkspaceCompare");
   if(!panel){
     panel=document.createElement("div");
-    panel.id="simPaperWorkspaceCompare404143";
+    panel.id="simPaperWorkspaceCompare";
     panel.setAttribute("data-paper-compare-build","40.4.143");
     panel.style.cssText="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 0 9px 0";
     switcher.insertAdjacentElement("afterend",panel);
@@ -35638,7 +35638,7 @@ function renderPaperWorkspaceComparison(){
     return `<div style="border:1px solid ${row.active?'rgba(98,236,255,.55)':'rgba(159,176,197,.20)'};border-radius:10px;padding:8px 10px;background:${row.active?'rgba(9,54,72,.30)':'rgba(7,18,30,.32)'}">
       <div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><strong>${escapeHtml(row.label)}</strong><span class="${pnl>=0?'pnl-pos':'pnl-neg'}">${escapeHtml(atlasSignedEUR(pnl))}</span></div>
       <div style="font-size:11px;color:var(--muted,#9fb0c5);margin-top:4px">LOCAL · TOTAL ${escapeHtml(fmtEUR.format(atlasZeroCurrency(row.total_eur)))} · CASH ${escapeHtml(fmtEUR.format(atlasZeroCurrency(row.cash_eur)))} · POS ${row.positions} · PREUVES ${row.proofs}</div>
-      ${(()=>{const kraken=krakenPaperWorkspaceLabel(row.key);const color=kraken.state==="connected"?"#7ef4bc":kraken.state==="missing"?"#ffb878":"var(--muted,#9fb0c5)";return `<div data-kraken-paper-map-404147="${escapeHtml(row.key)}" style="font-size:10px;color:${color};margin-top:5px">${escapeHtml(kraken.text)}</div>`;})()}
+      ${(()=>{const kraken=krakenPaperWorkspaceLabel(row.key);const color=kraken.state==="connected"?"#7ef4bc":kraken.state==="missing"?"#ffb878":"var(--muted,#9fb0c5)";return `<div data-kraken-paper-map="${escapeHtml(row.key)}" style="font-size:10px;color:${color};margin-top:5px">${escapeHtml(kraken.text)}</div>`;})()}
     </div>`;
   }).join("");
 }
@@ -35795,22 +35795,22 @@ function simulationReadinessPayload(){
   };
 }
 function renderSimulationReadiness(){
-  const anchor=document.getElementById("krakenCliLab404144")||document.getElementById("simPaperWorkspaceCompare404143");
+  const anchor=document.getElementById("krakenCliLab")||document.getElementById("simPaperWorkspaceCompare");
   if(!anchor) return;
-  let panel=document.getElementById("simulationReadiness404152");
+  let panel=document.getElementById("simulationReadiness");
   if(!panel){
     panel=document.createElement("section");
-    panel.id="simulationReadiness404152";
+    panel.id="simulationReadiness";
     panel.setAttribute("data-simulation-readiness-build","40.4.152");
     panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(126,244,188,.28);border-radius:12px;padding:10px 12px;background:rgba(5,28,31,.48)";
-    panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><strong style="letter-spacing:.08em">SIMULATION · ÉTAT D’EXPÉRIENCE</strong><span id="simulationReadinessStatus404152" style="font-size:10px;color:var(--muted,#9fb0c5)">Lecture…</span><span style="flex:1"></span><button type="button" class="btn small" id="simulationReadinessRefresh404152">ACTUALISER KRAKEN</button><button type="button" class="btn small" id="simulationReadinessProof404152">PREUVE SESSION</button></div><div id="simulationReadinessDetail404152" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:6px"></div>`;
+    panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><strong style="letter-spacing:.08em">SIMULATION · ÉTAT D’EXPÉRIENCE</strong><span id="simulationReadinessStatus" style="font-size:10px;color:var(--muted,#9fb0c5)">Lecture…</span><span style="flex:1"></span><button type="button" class="btn small" id="simulationReadinessRefresh">ACTUALISER KRAKEN</button><button type="button" class="btn small" id="simulationReadinessProof">PREUVE SESSION</button></div><div id="simulationReadinessDetail" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:6px"></div>`;
     anchor.insertAdjacentElement("afterend",panel);
-    panel.querySelector("#simulationReadinessRefresh404152")?.addEventListener("click",()=>void krakenCliWorkspaceList());
-    panel.querySelector("#simulationReadinessProof404152")?.addEventListener("click",()=>krakenCliOutput(simulationReadinessPayload()));
+    panel.querySelector("#simulationReadinessRefresh")?.addEventListener("click",()=>void krakenCliWorkspaceList());
+    panel.querySelector("#simulationReadinessProof")?.addEventListener("click",()=>krakenCliOutput(simulationReadinessPayload()));
   }
   const payload=simulationReadinessPayload();
-  const status=document.getElementById("simulationReadinessStatus404152");
-  const detail=document.getElementById("simulationReadinessDetail404152");
+  const status=document.getElementById("simulationReadinessStatus");
+  const detail=document.getElementById("simulationReadinessDetail");
   if(status) status.textContent=`LOCAL ${payload.local_workspace_count}/3 · KRAKEN PAPER ${payload.mapping_coverage} · ${payload.mapping_runtime_state}`;
   if(detail) detail.textContent=`Actif : ${payload.active_workspace.local_label} → ${payload.active_workspace.expected_kraken_workspace} · simulation locale canonique · lecture seule Kraken · aucun ordre réel.`;
 }
@@ -35862,20 +35862,20 @@ function simulationAcceptance(){
   };
 }
 function renderSimulationAcceptance(){
-  const panel=document.getElementById("simulationReadiness404152");
+  const panel=document.getElementById("simulationReadiness");
   if(!panel) return;
-  let button=document.getElementById("simulationAcceptanceBtn404153");
-  let badge=document.getElementById("simulationAcceptanceState404153");
+  let button=document.getElementById("simulationAcceptanceBtn");
+  let badge=document.getElementById("simulationAcceptanceState");
   if(!button){
     button=document.createElement("button");
-    button.type="button"; button.className="btn small"; button.id="simulationAcceptanceBtn404153"; button.textContent="AUDIT SIMULATION";
-    panel.querySelector("#simulationReadinessProof404152")?.insertAdjacentElement("afterend",button);
-    badge=document.createElement("span"); badge.id="simulationAcceptanceState404153"; badge.style.cssText="font-size:10px;font-weight:700";
+    button.type="button"; button.className="btn small"; button.id="simulationAcceptanceBtn"; button.textContent="AUDIT SIMULATION";
+    panel.querySelector("#simulationReadinessProof")?.insertAdjacentElement("afterend",button);
+    badge=document.createElement("span"); badge.id="simulationAcceptanceState"; badge.style.cssText="font-size:10px;font-weight:700";
     button.insertAdjacentElement("afterend",badge);
     button.addEventListener("click",()=>{ const audit=simulationAcceptance(); krakenCliOutput(audit); renderSimulationAcceptance(); });
   }
   const audit=simulationAcceptance();
-  badge=document.getElementById("simulationAcceptanceState404153");
+  badge=document.getElementById("simulationAcceptanceState");
   if(badge){
     badge.textContent=audit.ok ? "SIMULATION PASS" : (audit.static_ok && audit.runtime_kraken_mapping==="UNTESTED" ? "WORKSPACES À TESTER" : "SIMULATION À VÉRIFIER");
     badge.style.color=audit.ok ? "#7ef4bc" : (audit.runtime_kraken_mapping==="FAIL" ? "#ff9f9f" : "#ffd27a");
@@ -35916,15 +35916,15 @@ function strategyAAutoStop(reason="Arrêt opérateur · position Paper éventuel
    before a NEW automatic Paper entry. Existing Paper positions remain monitored
    by the canonical 40.4.263/40.4.264 owners even if bridge evidence later faults. */
 function strategyAAutoLifecyclePreflight(){
-  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297?.preflight?.()||{ready:false,blocked_reason:"BRIDGE_UNAVAILABLE"};}
+  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge?.preflight?.()||{ready:false,blocked_reason:"BRIDGE_UNAVAILABLE"};}
   catch(error){return {ready:false,blocked_reason:String(error?.message||error)};}
 }
 function strategyAAutoLifecycleOpen(proposal,risk,fill){
-  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297?.on_open?.({proposal,risk,fill})||{ok:false,reason:"BRIDGE_UNAVAILABLE"};}
+  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge?.on_open?.({proposal,risk,fill})||{ok:false,reason:"BRIDGE_UNAVAILABLE"};}
   catch(error){return {ok:false,reason:String(error?.message||error)};}
 }
 function strategyAAutoLifecycleClose(reconciliation){
-  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297?.on_close?.({reconciliation})||{ok:false,reason:"BRIDGE_UNAVAILABLE"};}
+  try{return globalThis.AgentCryptoStrategyAAutoLifecycleBridge?.on_close?.({reconciliation})||{ok:false,reason:"BRIDGE_UNAVAILABLE"};}
   catch(error){return {ok:false,reason:String(error?.message||error)};}
 }
 /* 40.4.299 — Safety is now the governor for NEW Auto A entries.
@@ -35936,7 +35936,7 @@ function strategyAAutoSafetySnapshot(){
 function strategyAAutoSafetySignal(kind,detail={}){
   try{return globalThis.AgentCryptoStrategyASafetyCertification404299?.signal?.(kind,detail)||null;}catch(_){return null;}
 }
-function strategyAAutoStart404265(){
+function strategyAAutoStart(){
   const s=STRATEGY_A_AUTO_STATE;let local=null;
   try{local=strategyALocalContext();}catch(_){}
   if(String(local?.active_workspace||"")!=="strategy_a"){
@@ -35984,7 +35984,7 @@ function strategyAReentryFresh(proposal){
   const btcFresh=Number.isFinite(btcDelta)&&btcDelta>=STRATEGY_A_REENTRY_POLICY.min_btc24_improvement_pct;
   return {eligible:bullish||directionFresh||btcFresh,reason:bullish?"BULLISH_REGIME":directionFresh?"DIRECTION_IMPROVED":btcFresh?"BTC24_IMPROVED":"STALE_MIXED_SIGNAL",current,last,direction_improvement:dirDelta,btc24_improvement:btcDelta,direction_fresh:directionFresh,btc24_fresh:btcFresh,bullish};
 }
-try{globalThis.AgentCryptoStrategyAReentryGuard404271=Object.freeze({build:"40.4.271",policy:STRATEGY_A_REENTRY_POLICY,evaluate:strategyAReentryFresh,state:()=>({last_entry_signal:STRATEGY_A_AUTO_STATE.last_entry_signal_404271||null,last_closed_signal:STRATEGY_A_AUTO_STATE.last_closed_signal_404271||null,reentry_waits:Number(STRATEGY_A_AUTO_STATE.reentry_waits_404271||0),cooldown_until:STRATEGY_A_AUTO_STATE.cooldown_until||0}),paper_only:true,session_local:true,auto_runner_logic_changed:true,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAReentryGuard=Object.freeze({build:"40.4.271",policy:STRATEGY_A_REENTRY_POLICY,evaluate:strategyAReentryFresh,state:()=>({last_entry_signal:STRATEGY_A_AUTO_STATE.last_entry_signal_404271||null,last_closed_signal:STRATEGY_A_AUTO_STATE.last_closed_signal_404271||null,reentry_waits:Number(STRATEGY_A_AUTO_STATE.reentry_waits_404271||0),cooldown_until:STRATEGY_A_AUTO_STATE.cooldown_until||0}),paper_only:true,session_local:true,auto_runner_logic_changed:true,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
 /* 40.4.272 — STRATEGY A V2 · COST-AWARE ENTRY + PATIENT EXIT + OPERATOR RESULTS LOCK */
 /* Paper-only V2 learned from the first 10 closed 40.4.271 trades.
@@ -36033,12 +36033,12 @@ function strategyAPatientExit(open,proposal,ageMs){
   return {should_close:false,reason:`patient exit · brut ${Number.isFinite(grossMove)?grossMove.toFixed(2):"—"} % / objectif ${costs.required_move_pct.toFixed(2)} %`,gross_move_pct:grossMove,required_move_pct:costs.required_move_pct};
 }
 function strategyAExportTrades(){
-  let rows=[];try{rows=AgentCryptoPaperMetrics404264.closed()||[];}catch(_){}
+  let rows=[];try{rows=AgentCryptoPaperMetrics.closed()||[];}catch(_){}
   const payload={schema:"agent_crypto_strategy_a_trade_export_v2",build:"40.4.272",exported_at:new Date().toISOString(),paper_only:true,trades:rows};
   const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
   a.href=url;a.download=`STRATEGY_A_TRADES_40_4_272_${new Date().toISOString().slice(0,10)}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);return rows.length;
 }
-try{globalThis.AgentCryptoStrategyAV2404272=Object.freeze({build:"40.4.272",policy:STRATEGY_A_V2_POLICY,costs:strategyARoundTripCosts,cost_gate:strategyACostGate,patient_exit:strategyAPatientExit,export_trades:strategyAExportTrades,paper_only:true,real_orders:false,kraken_network:false,market_core_changed:false,risk_governor_changed:false,reconciliation_math_changed:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAV2=Object.freeze({build:"40.4.272",policy:STRATEGY_A_V2_POLICY,costs:strategyARoundTripCosts,cost_gate:strategyACostGate,patient_exit:strategyAPatientExit,export_trades:strategyAExportTrades,paper_only:true,real_orders:false,kraken_network:false,market_core_changed:false,risk_governor_changed:false,reconciliation_math_changed:false});}catch(_){}
 
 /* 40.4.278 — STRATEGY A V2 · GATE TRACE · DECISION TRUTH LOCK */
 /* Read-only operator truth layer. It evaluates every existing Strategy A gate for
@@ -36111,60 +36111,60 @@ function strategyADecisionTrace(){
   };
 }
 function strategyAEnsureDecisionTraceStyle(){
-  let style=document.getElementById("strategyADecisionTraceStyle404278");
+  let style=document.getElementById("strategyADecisionTraceStyle");
   if(style)return style;
-  style=document.createElement("style");style.id="strategyADecisionTraceStyle404278";
+  style=document.createElement("style");style.id="strategyADecisionTraceStyle";
   style.textContent=`
     #strategyADecisionTrace{margin-top:10px!important;padding:10px!important;border:1px solid rgba(120,207,255,.13)!important;border-radius:10px!important;background:rgba(2,13,22,.62)!important}
-    #strategyADecisionTrace .sadt-head-404278{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:8px!important}
-    #strategyADecisionTrace .sadt-title-404278{font-size:9px!important;font-weight:950!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#b9ddeb!important}
-    #strategyADecisionTrace .sadt-summary-404278{font-size:9px!important;line-height:1.35!important;color:#8aa6b4!important;text-align:right!important}
-    #strategyADecisionTrace .sadt-grid-404278{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
-    #strategyADecisionTrace .sadt-gate-404278{min-width:0!important;padding:7px 8px!important;border:1px solid rgba(255,255,255,.065)!important;border-radius:8px!important;background:rgba(255,255,255,.018)!important}
-    #strategyADecisionTrace .sadt-gate-404278[data-state="pass"]{border-color:rgba(91,219,171,.23)!important;background:rgba(34,153,114,.055)!important}
-    #strategyADecisionTrace .sadt-gate-404278[data-state="wait"]{border-color:rgba(234,192,93,.24)!important;background:rgba(179,126,25,.055)!important}
-    #strategyADecisionTrace .sadt-gate-404278[data-state="stop"]{border-color:rgba(255,112,112,.25)!important;background:rgba(160,44,44,.055)!important}
-    #strategyADecisionTrace .sadt-gate-label-404278{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;font-size:7px!important;font-weight:950!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#7895a3!important}
-    #strategyADecisionTrace .sadt-gate-state-404278{font-size:7px!important;font-weight:950!important;color:#9fb5bf!important}
-    #strategyADecisionTrace .sadt-gate-404278[data-state="pass"] .sadt-gate-state-404278{color:#83edc8!important}
-    #strategyADecisionTrace .sadt-gate-404278[data-state="wait"] .sadt-gate-state-404278{color:#f0d27d!important}
-    #strategyADecisionTrace .sadt-gate-404278[data-state="stop"] .sadt-gate-state-404278{color:#ff9f9f!important}
-    #strategyADecisionTrace .sadt-gate-value-404278{display:block!important;margin-top:4px!important;font-size:10px!important;font-weight:900!important;line-height:1.25!important;color:#ecf7fb!important;overflow-wrap:anywhere!important}
-    #strategyADecisionTrace .sadt-gate-threshold-404278,#strategyADecisionTrace .sadt-gate-path-404278{display:block!important;margin-top:3px!important;font-size:7px!important;line-height:1.3!important;color:#6f8997!important;overflow-wrap:anywhere!important}
-    #strategyADecisionTrace .sadt-gate-path-404278{color:#809aa7!important}
-    @media(max-width:1080px){#strategyADecisionTrace .sadt-grid-404278{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-    @media(max-width:700px){#strategyADecisionTrace .sadt-grid-404278{grid-template-columns:1fr!important}#strategyADecisionTrace .sadt-summary-404278{text-align:left!important}}
+    #strategyADecisionTrace .sadt-head{display:flex!important;align-items:flex-start!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:8px!important}
+    #strategyADecisionTrace .sadt-title{font-size:9px!important;font-weight:950!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#b9ddeb!important}
+    #strategyADecisionTrace .sadt-summary{font-size:9px!important;line-height:1.35!important;color:#8aa6b4!important;text-align:right!important}
+    #strategyADecisionTrace .sadt-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+    #strategyADecisionTrace .sadt-gate{min-width:0!important;padding:7px 8px!important;border:1px solid rgba(255,255,255,.065)!important;border-radius:8px!important;background:rgba(255,255,255,.018)!important}
+    #strategyADecisionTrace .sadt-gate[data-state="pass"]{border-color:rgba(91,219,171,.23)!important;background:rgba(34,153,114,.055)!important}
+    #strategyADecisionTrace .sadt-gate[data-state="wait"]{border-color:rgba(234,192,93,.24)!important;background:rgba(179,126,25,.055)!important}
+    #strategyADecisionTrace .sadt-gate[data-state="stop"]{border-color:rgba(255,112,112,.25)!important;background:rgba(160,44,44,.055)!important}
+    #strategyADecisionTrace .sadt-gate-label{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:6px!important;font-size:7px!important;font-weight:950!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#7895a3!important}
+    #strategyADecisionTrace .sadt-gate-state{font-size:7px!important;font-weight:950!important;color:#9fb5bf!important}
+    #strategyADecisionTrace .sadt-gate[data-state="pass"] .sadt-gate-state{color:#83edc8!important}
+    #strategyADecisionTrace .sadt-gate[data-state="wait"] .sadt-gate-state{color:#f0d27d!important}
+    #strategyADecisionTrace .sadt-gate[data-state="stop"] .sadt-gate-state{color:#ff9f9f!important}
+    #strategyADecisionTrace .sadt-gate-value{display:block!important;margin-top:4px!important;font-size:10px!important;font-weight:900!important;line-height:1.25!important;color:#ecf7fb!important;overflow-wrap:anywhere!important}
+    #strategyADecisionTrace .sadt-gate-threshold,#strategyADecisionTrace .sadt-gate-path{display:block!important;margin-top:3px!important;font-size:7px!important;line-height:1.3!important;color:#6f8997!important;overflow-wrap:anywhere!important}
+    #strategyADecisionTrace .sadt-gate-path{color:#809aa7!important}
+    @media(max-width:1080px){#strategyADecisionTrace .sadt-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+    @media(max-width:700px){#strategyADecisionTrace .sadt-grid{grid-template-columns:1fr!important}#strategyADecisionTrace .sadt-summary{text-align:left!important}}
   `;
   document.head.appendChild(style);return style;
 }
 function strategyARenderDecisionTrace(){
-  const body=document.querySelector("#strategyAVisualConsole404269 .avc-body-404269");if(!body)return false;
+  const body=document.querySelector("#strategyAVisualConsole .avc-body");if(!body)return false;
   strategyAEnsureDecisionTraceStyle();
   let panel=document.getElementById("strategyADecisionTrace");
   if(!panel){
     panel=document.createElement("section");panel.id="strategyADecisionTrace";panel.setAttribute("data-decision-trace-build","40.4.278");
-    panel.innerHTML=`<div class="sadt-head-404278"><div class="sadt-title-404278">TRACE DÉCISION V2 · LECTURE SEULE</div><div class="sadt-summary-404278" id="strategyADecisionTraceSummary404278">Lecture des gates…</div></div><div class="sadt-grid-404278" id="strategyADecisionTraceGrid404278"></div>`;
-    const foot=body.querySelector(".avc-foot-404269");if(foot)body.insertBefore(panel,foot);else body.appendChild(panel);
+    panel.innerHTML=`<div class="sadt-head"><div class="sadt-title">TRACE DÉCISION V2 · LECTURE SEULE</div><div class="sadt-summary" id="strategyADecisionTraceSummary">Lecture des gates…</div></div><div class="sadt-grid" id="strategyADecisionTraceGrid"></div>`;
+    const foot=body.querySelector(".avc-foot");if(foot)body.insertBefore(panel,foot);else body.appendChild(panel);
   }
   const trace=strategyADecisionTrace();
-  const summary=document.getElementById("strategyADecisionTraceSummary404278");
+  const summary=document.getElementById("strategyADecisionTraceSummary");
   if(summary)summary.textContent=`PHASE ${trace.phase.replaceAll("_"," ")} · PROPOSAL ${trace.proposal_status} · ${trace.first_blocker_label?`1er verrou : ${trace.first_blocker_label}`:"aucun verrou mesuré"}`;
-  const grid=document.getElementById("strategyADecisionTraceGrid404278");if(!grid)return true;
+  const grid=document.getElementById("strategyADecisionTraceGrid");if(!grid)return true;
   for(const gate of trace.gates){
     let card=grid.querySelector(`[data-trace-gate="${gate.key}"]`);
     if(!card){
-      card=document.createElement("div");card.className="sadt-gate-404278";card.setAttribute("data-trace-gate",gate.key);
-      card.innerHTML=`<div class="sadt-gate-label-404278"><span class="sadt-label-404278"></span><span class="sadt-gate-state-404278"></span></div><b class="sadt-gate-value-404278"></b><small class="sadt-gate-threshold-404278"></small><small class="sadt-gate-path-404278"></small>`;
+      card=document.createElement("div");card.className="sadt-gate";card.setAttribute("data-trace-gate",gate.key);
+      card.innerHTML=`<div class="sadt-gate-label"><span class="sadt-label"></span><span class="sadt-gate-state"></span></div><b class="sadt-gate-value"></b><small class="sadt-gate-threshold"></small><small class="sadt-gate-path"></small>`;
       grid.appendChild(card);
     }
     card.setAttribute("data-state",gate.state);
     const stateLabel=gate.state==="pass"?"PASS":gate.state==="wait"?"WAIT":gate.state==="stop"?"STOP":"NON ATTEINT";
-    const label=card.querySelector(".sadt-label-404278"),state=card.querySelector(".sadt-gate-state-404278"),value=card.querySelector(".sadt-gate-value-404278"),threshold=card.querySelector(".sadt-gate-threshold-404278"),path=card.querySelector(".sadt-gate-path-404278");
+    const label=card.querySelector(".sadt-label"),state=card.querySelector(".sadt-gate-state"),value=card.querySelector(".sadt-gate-value"),threshold=card.querySelector(".sadt-gate-threshold"),path=card.querySelector(".sadt-gate-path");
     if(label)label.textContent=gate.label;if(state)state.textContent=stateLabel;if(value)value.textContent=gate.value;if(threshold)threshold.textContent=gate.threshold;if(path)path.textContent=gate.path;
   }
   return true;
 }
-try{globalThis.AgentCryptoStrategyAGateTrace404278=Object.freeze({build:"40.4.278",read:strategyADecisionTrace,render:strategyARenderDecisionTrace,presentation_only:true,decision_logic_changed:false,policy_changed:false,risk_governor_called:false,paper_execution_called:false,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAGateTrace=Object.freeze({build:"40.4.278",read:strategyADecisionTrace,render:strategyARenderDecisionTrace,presentation_only:true,decision_logic_changed:false,policy_changed:false,risk_governor_called:false,paper_execution_called:false,new_timer:false,new_fetch:false,new_websocket:false,new_observer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
 /* 40.4.289 — STRATEGY A · PAPER V2 EXPERIMENT LEDGER LOCK
    One bounded browser-local audit ledger records the REAL Auto A decision path.
@@ -36224,28 +36224,28 @@ function strategyAExperimentExport(){
   a.href=url;a.download="STRATEGY_A_EXPERIMENT_LEDGER.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);return payload.cycles.length;
 }
 function strategyAEnsureExperimentLedgerStyle(){
-  let style=document.getElementById("strategyAExperimentLedgerStyle404289");if(style)return style;
-  style=document.createElement("style");style.id="strategyAExperimentLedgerStyle404289";style.textContent=`
-    #strategyAExperimentLedger404289{margin-top:10px!important;padding:10px!important;border:1px solid rgba(103,233,200,.16)!important;border-radius:10px!important;background:rgba(4,24,23,.48)!important}
-    #strategyAExperimentLedger404289 .sael-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:8px!important}
-    #strategyAExperimentLedger404289 .sael-title{font-size:9px!important;font-weight:950!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#9cebd6!important}
-    #strategyAExperimentLedger404289 .sael-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}
-    #strategyAExperimentLedger404289 .sael-kpi{padding:7px 8px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:8px!important;background:rgba(0,0,0,.12)!important}
-    #strategyAExperimentLedger404289 .sael-kpi span{display:block!important;font-size:7px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#78958e!important;font-weight:900!important}
-    #strategyAExperimentLedger404289 .sael-kpi b{display:block!important;margin-top:3px!important;font-size:10px!important;color:#eef9f6!important;overflow-wrap:anywhere!important}
-    #strategyAExperimentLedger404289 .sael-last{margin-top:7px!important;font-size:8px!important;line-height:1.35!important;color:#8da9a2!important;overflow-wrap:anywhere!important}
-    @media(max-width:900px){#strategyAExperimentLedger404289 .sael-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+  let style=document.getElementById("strategyAExperimentLedgerStyle");if(style)return style;
+  style=document.createElement("style");style.id="strategyAExperimentLedgerStyle";style.textContent=`
+    #strategyAExperimentLedger{margin-top:10px!important;padding:10px!important;border:1px solid rgba(103,233,200,.16)!important;border-radius:10px!important;background:rgba(4,24,23,.48)!important}
+    #strategyAExperimentLedger .sael-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-bottom:8px!important}
+    #strategyAExperimentLedger .sael-title{font-size:9px!important;font-weight:950!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#9cebd6!important}
+    #strategyAExperimentLedger .sael-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}
+    #strategyAExperimentLedger .sael-kpi{padding:7px 8px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:8px!important;background:rgba(0,0,0,.12)!important}
+    #strategyAExperimentLedger .sael-kpi span{display:block!important;font-size:7px!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#78958e!important;font-weight:900!important}
+    #strategyAExperimentLedger .sael-kpi b{display:block!important;margin-top:3px!important;font-size:10px!important;color:#eef9f6!important;overflow-wrap:anywhere!important}
+    #strategyAExperimentLedger .sael-last{margin-top:7px!important;font-size:8px!important;line-height:1.35!important;color:#8da9a2!important;overflow-wrap:anywhere!important}
+    @media(max-width:900px){#strategyAExperimentLedger .sael-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
   `;document.head.appendChild(style);return style;
 }
 function strategyARenderExperimentLedger(){
-  const body=document.querySelector("#strategyAVisualConsole404269 .avc-body-404269");if(!body)return false;strategyAEnsureExperimentLedgerStyle();
-  let panel=document.getElementById("strategyAExperimentLedger404289");
-  if(!panel){panel=document.createElement("section");panel.id="strategyAExperimentLedger404289";panel.setAttribute("data-experiment-ledger-build","40.4.289");panel.innerHTML=`<div class="sael-head"><div class="sael-title">EXPERIMENT LEDGER · PAPER V2 · CYCLES RÉELS</div><button type="button" class="btn small" id="strategyAExperimentExport">EXPORTER LE LEDGER</button></div><div class="sael-grid"><div class="sael-kpi"><span>Cycles tracés</span><b id="strategyAExperimentCycles404289">0</b></div><div class="sael-kpi"><span>Cost waits</span><b id="strategyAExperimentCost404289">0</b></div><div class="sael-kpi"><span>Paper</span><b id="strategyAExperimentPaper404289">0</b></div><div class="sael-kpi"><span>Risk rejects</span><b id="strategyAExperimentRisk404289">0</b></div><div class="sael-kpi"><span>Dernier verrou</span><b id="strategyAExperimentBlocker404289">—</b></div></div><div class="sael-last" id="strategyAExperimentLast404289">Aucun cycle Auto A enregistré.</div>`;const foot=body.querySelector(".avc-foot-404269");if(foot)body.insertBefore(panel,foot);else body.appendChild(panel);panel.querySelector("#strategyAExperimentExport")?.addEventListener("click",()=>strategyAExperimentExport());}
+  const body=document.querySelector("#strategyAVisualConsole .avc-body");if(!body)return false;strategyAEnsureExperimentLedgerStyle();
+  let panel=document.getElementById("strategyAExperimentLedger");
+  if(!panel){panel=document.createElement("section");panel.id="strategyAExperimentLedger";panel.setAttribute("data-experiment-ledger-build","40.4.289");panel.innerHTML=`<div class="sael-head"><div class="sael-title">EXPERIMENT LEDGER · PAPER V2 · CYCLES RÉELS</div><button type="button" class="btn small" id="strategyAExperimentExport">EXPORTER LE LEDGER</button></div><div class="sael-grid"><div class="sael-kpi"><span>Cycles tracés</span><b id="strategyAExperimentCycles">0</b></div><div class="sael-kpi"><span>Cost waits</span><b id="strategyAExperimentCost">0</b></div><div class="sael-kpi"><span>Paper</span><b id="strategyAExperimentPaper">0</b></div><div class="sael-kpi"><span>Risk rejects</span><b id="strategyAExperimentRisk">0</b></div><div class="sael-kpi"><span>Dernier verrou</span><b id="strategyAExperimentBlocker">—</b></div></div><div class="sael-last" id="strategyAExperimentLast">Aucun cycle Auto A enregistré.</div>`;const foot=body.querySelector(".avc-foot");if(foot)body.insertBefore(panel,foot);else body.appendChild(panel);panel.querySelector("#strategyAExperimentExport")?.addEventListener("click",()=>strategyAExperimentExport());}
   const s=strategyAExperimentSummary(),last=s.latest||null,set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=String(v??"—");};
-  set("strategyAExperimentCycles404289",s.cycles);set("strategyAExperimentCost404289",s.cost_wait);set("strategyAExperimentPaper404289",s.paper_open);set("strategyAExperimentRisk404289",s.risk_reject);set("strategyAExperimentBlocker404289",last?.first_blocker_label||"—");
-  set("strategyAExperimentLast404289",last?`${last.cycle_id} · ${last.phase} · ${last.proposal_status} · ${last.last_action}`:"Aucun cycle Auto A enregistré.");return true;
+  set("strategyAExperimentCycles",s.cycles);set("strategyAExperimentCost",s.cost_wait);set("strategyAExperimentPaper",s.paper_open);set("strategyAExperimentRisk",s.risk_reject);set("strategyAExperimentBlocker",last?.first_blocker_label||"—");
+  set("strategyAExperimentLast",last?`${last.cycle_id} · ${last.phase} · ${last.proposal_status} · ${last.last_action}`:"Aucun cycle Auto A enregistré.");return true;
 }
-try{globalThis.AgentCryptoStrategyAExperimentLedger404289=Object.freeze({build:"40.4.289",read:()=>strategyAExperimentClone(STRATEGY_A_EXPERIMENT_LEDGER_404289)||[],summary:strategyAExperimentSummary,export_json:strategyAExperimentExport,render:strategyARenderExperimentLedger,storage_key:STRATEGY_A_EXPERIMENT_LEDGER_KEY,max_rows:STRATEGY_A_EXPERIMENT_LEDGER_MAX,paper_only:true,policy_changed:false,cost_threshold_changed:false,oracle_engine_changed:false,risk_governor_changed:false,paper_math_changed:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAExperimentLedger=Object.freeze({build:"40.4.289",read:()=>strategyAExperimentClone(STRATEGY_A_EXPERIMENT_LEDGER_404289)||[],summary:strategyAExperimentSummary,export_json:strategyAExperimentExport,render:strategyARenderExperimentLedger,storage_key:STRATEGY_A_EXPERIMENT_LEDGER_KEY,max_rows:STRATEGY_A_EXPERIMENT_LEDGER_MAX,paper_only:true,policy_changed:false,cost_threshold_changed:false,oracle_engine_changed:false,risk_governor_changed:false,paper_math_changed:false,real_orders:false,kraken_network:false});}catch(_){}
 
 function strategyAAutoCycle(trigger="timer"){
   const s=STRATEGY_A_AUTO_STATE;if(!s.enabled)return strategyAAutoSnapshot();
@@ -36332,17 +36332,17 @@ function strategyAAutoCycle(trigger="timer"){
   return strategyAAutoSnapshot();
 }
 function renderStrategyAAutoPaperRunner(){
-  const anchor=document.getElementById("strategyAReconciliation404264");if(!anchor)return;
-  let panel=document.getElementById("strategyAAutoPaperRunner404265");
+  const anchor=document.getElementById("strategyAReconciliation");if(!anchor)return;
+  let panel=document.getElementById("strategyAAutoPaperRunner");
   if(!panel){
-    panel=document.createElement("section");panel.id="strategyAAutoPaperRunner404265";panel.setAttribute("data-auto-paper-runner-build","40.4.265");
+    panel=document.createElement("section");panel.id="strategyAAutoPaperRunner";panel.setAttribute("data-auto-paper-runner-build","40.4.265");
     panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(112,214,255,.30);border-radius:12px;padding:10px 12px;background:rgba(7,28,36,.48);grid-column:1/-1;flex:1 1 100%";
-    panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>AUTO PAPER RUNNER V1 · STRATÉGIE A</strong><span style="font-size:10px;color:#8be8ff">SESSION-LOCAL · 5 MIN · DEFAULT OFF</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAAutoStart404265">ACTIVER AUTO A</button><button type="button" class="btn small" id="strategyAAutoStop">STOP AUTO</button></div><div id="strategyAAutoSummary404265" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">OFF · activation opérateur requise · reload = OFF.</div>`;
+    panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>AUTO PAPER RUNNER V1 · STRATÉGIE A</strong><span style="font-size:10px;color:#8be8ff">SESSION-LOCAL · 5 MIN · DEFAULT OFF</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAAutoStart">ACTIVER AUTO A</button><button type="button" class="btn small" id="strategyAAutoStop">STOP AUTO</button></div><div id="strategyAAutoSummary" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">OFF · activation opérateur requise · reload = OFF.</div>`;
     anchor.insertAdjacentElement("afterend",panel);
-    panel.querySelector("#strategyAAutoStart404265")?.addEventListener("click",()=>strategyAAutoStart404265());
+    panel.querySelector("#strategyAAutoStart")?.addEventListener("click",()=>strategyAAutoStart());
     panel.querySelector("#strategyAAutoStop")?.addEventListener("click",()=>strategyAAutoStop());
   }
-  const s=STRATEGY_A_AUTO_STATE,out=panel.querySelector("#strategyAAutoSummary404265"),start=panel.querySelector("#strategyAAutoStart404265"),stop=panel.querySelector("#strategyAAutoStop");
+  const s=STRATEGY_A_AUTO_STATE,out=panel.querySelector("#strategyAAutoSummary"),start=panel.querySelector("#strategyAAutoStart"),stop=panel.querySelector("#strategyAAutoStop");
   if(start){start.disabled=s.enabled;start.textContent=s.enabled?"AUTO A ACTIF":"ACTIVER AUTO A";}if(stop)stop.disabled=!s.enabled;
   if(!out)return;const next=s.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";
   out.textContent=`${s.phase} · cycles ${s.cycles} · NO_TRADE ${s.no_trade} · risk reject ${s.risk_rejects} · ouverts ${s.opened} · clôturés ${s.closed} · prochain ${next} · ${s.last_action}`;
@@ -36355,28 +36355,28 @@ function renderStrategyAAutoPaperRunner(){
    an operator-facing dashboard. No fetch, WebSocket, observer, timer, storage write,
    Kraken network call or financial execution is added. */
 function strategyAEnsureHumanReadabilityStyle(){
-  let style=document.getElementById("strategyAHumanReadabilityStyle404267");
+  let style=document.getElementById("strategyAHumanReadabilityStyle");
   if(style)return style;
   style=document.createElement("style");
-  style.id="strategyAHumanReadabilityStyle404267";
+  style.id="strategyAHumanReadabilityStyle";
   style.textContent=`
-    #strategyAHumanCockpit404267{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;display:grid!important;gap:12px!important;margin:8px 0 12px!important;padding:0!important}
-    #strategyAHumanCockpit404267 .strategy-a-human-title-404267{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 6px;padding:0 2px;color:#dcecf4;font-size:11px;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
-    #strategyAHumanContext404267,#strategyAHumanPipeline404267{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;gap:10px!important;align-items:stretch!important;width:100%!important;min-width:0!important}
-    #strategyAHumanPipeline404267{grid-template-columns:repeat(2,minmax(280px,1fr))!important}
-    #strategyAHumanContext404267>* ,#strategyAHumanPipeline404267>* ,#strategyAHumanAuto404267>*{min-width:0!important;max-width:none!important;width:auto!important;margin:0!important;box-sizing:border-box!important;writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important}
-    #strategyAHumanContext404267 * ,#strategyAHumanPipeline404267 * ,#strategyAHumanAuto404267 *{writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important}
-    #strategyAHumanAuto404267{width:100%!important;min-width:0!important}
-    #strategyAAutoPaperRunner404265{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important}
-    #strategyAAutoSummary404265.strategy-a-auto-readable-404267{display:grid!important;grid-template-columns:repeat(4,minmax(130px,1fr))!important;gap:8px!important;margin-top:10px!important;color:#dcecf4!important}
-    #strategyAAutoSummary404265 .strategy-a-auto-kpi-404267{display:grid;gap:3px;padding:8px 10px;border:1px solid rgba(139,232,255,.16);border-radius:9px;background:rgba(6,20,28,.42);min-width:0}
-    #strategyAAutoSummary404265 .strategy-a-auto-kpi-404267 span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#8098a7;font-weight:900}
-    #strategyAAutoSummary404265 .strategy-a-auto-kpi-404267 b{font-size:11px;line-height:1.25;color:#eef8fb;white-space:normal}
-    #strategyAAutoSummary404265 .strategy-a-auto-reason-404267{grid-column:1/-1;display:grid;gap:3px;padding:9px 11px;border:1px solid rgba(255,210,122,.15);border-radius:9px;background:rgba(24,20,10,.34)}
-    #strategyAAutoSummary404265 .strategy-a-auto-reason-404267 span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#9f9274;font-weight:900}
-    #strategyAAutoSummary404265 .strategy-a-auto-reason-404267 b{font-size:11px;line-height:1.35;color:#f2dfb4;font-weight:800;white-space:normal}
-    @media(max-width:1180px){#strategyAHumanPipeline404267{grid-template-columns:1fr!important}#strategyAAutoSummary404265.strategy-a-auto-readable-404267{grid-template-columns:repeat(2,minmax(130px,1fr))!important}}
-    @media(max-width:720px){#strategyAHumanContext404267,#strategyAHumanPipeline404267{grid-template-columns:1fr!important}#strategyAAutoSummary404265.strategy-a-auto-readable-404267{grid-template-columns:1fr!important}}
+    #strategyAHumanCockpit{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;display:grid!important;gap:12px!important;margin:8px 0 12px!important;padding:0!important}
+    #strategyAHumanCockpit .strategy-a-human-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 6px;padding:0 2px;color:#dcecf4;font-size:11px;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+    #strategyAHumanContext,#strategyAHumanPipeline{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;gap:10px!important;align-items:stretch!important;width:100%!important;min-width:0!important}
+    #strategyAHumanPipeline{grid-template-columns:repeat(2,minmax(280px,1fr))!important}
+    #strategyAHumanContext>* ,#strategyAHumanPipeline>* ,#strategyAHumanAuto>*{min-width:0!important;max-width:none!important;width:auto!important;margin:0!important;box-sizing:border-box!important;writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important;white-space:normal!important}
+    #strategyAHumanContext * ,#strategyAHumanPipeline * ,#strategyAHumanAuto *{writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important}
+    #strategyAHumanAuto{width:100%!important;min-width:0!important}
+    #strategyAAutoPaperRunner{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important}
+    #strategyAAutoSummary.strategy-a-auto-readable-404267{display:grid!important;grid-template-columns:repeat(4,minmax(130px,1fr))!important;gap:8px!important;margin-top:10px!important;color:#dcecf4!important}
+    #strategyAAutoSummary .strategy-a-auto-kpi{display:grid;gap:3px;padding:8px 10px;border:1px solid rgba(139,232,255,.16);border-radius:9px;background:rgba(6,20,28,.42);min-width:0}
+    #strategyAAutoSummary .strategy-a-auto-kpi span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#8098a7;font-weight:900}
+    #strategyAAutoSummary .strategy-a-auto-kpi b{font-size:11px;line-height:1.25;color:#eef8fb;white-space:normal}
+    #strategyAAutoSummary .strategy-a-auto-reason{grid-column:1/-1;display:grid;gap:3px;padding:9px 11px;border:1px solid rgba(255,210,122,.15);border-radius:9px;background:rgba(24,20,10,.34)}
+    #strategyAAutoSummary .strategy-a-auto-reason span{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:#9f9274;font-weight:900}
+    #strategyAAutoSummary .strategy-a-auto-reason b{font-size:11px;line-height:1.35;color:#f2dfb4;font-weight:800;white-space:normal}
+    @media(max-width:1180px){#strategyAHumanPipeline{grid-template-columns:1fr!important}#strategyAAutoSummary.strategy-a-auto-readable-404267{grid-template-columns:repeat(2,minmax(130px,1fr))!important}}
+    @media(max-width:720px){#strategyAHumanContext,#strategyAHumanPipeline{grid-template-columns:1fr!important}#strategyAAutoSummary.strategy-a-auto-readable-404267{grid-template-columns:1fr!important}}
   `;
   document.head.appendChild(style);
   return style;
@@ -36393,28 +36393,28 @@ function strategyATopChild(node,parent){
 }
 function strategyAApplyHumanReadability(){
   strategyAEnsureHumanReadabilityStyle();
-  const readiness=document.getElementById("simulationReadiness404152");
+  const readiness=document.getElementById("simulationReadiness");
   const proposal=document.getElementById("strategyATradeProposal");
   const risk=document.getElementById("strategyARiskGovernor");
-  const paper=document.getElementById("strategyAPaperExecution404263");
-  const reconciliation=document.getElementById("strategyAReconciliation404264");
-  const auto=document.getElementById("strategyAAutoPaperRunner404265");
+  const paper=document.getElementById("strategyAPaperExecution");
+  const reconciliation=document.getElementById("strategyAReconciliation");
+  const auto=document.getElementById("strategyAAutoPaperRunner");
   if(!proposal||!risk||!paper||!reconciliation||!auto)return false;
 
-  let cockpit=document.getElementById("strategyAHumanCockpit404267");
+  let cockpit=document.getElementById("strategyAHumanCockpit");
   if(!cockpit){
     const parent=proposal.parentElement;if(!parent)return false;
     const direct=Array.from(parent.children);
     const proposalTop=strategyATopChild(proposal,parent)||proposal;
     const proposalIndex=direct.indexOf(proposalTop);
     if(proposalIndex<0)return false;
-    cockpit=document.createElement("section");cockpit.id="strategyAHumanCockpit404267";cockpit.setAttribute("data-human-readability-build","40.4.267");
-    cockpit.innerHTML=`<div><div class="strategy-a-human-title-404267">CONTEXTE PAPER · WORKSPACE · KRAKEN LECTURE SEULE · ÉTAT</div><div id="strategyAHumanContext404267"></div></div><div><div class="strategy-a-human-title-404267">CHAÎNE STRATÉGIE A · PROPOSITION → RISQUE → PAPER → MESURE</div><div id="strategyAHumanPipeline404267"></div></div><div><div class="strategy-a-human-title-404267">PILOTE AUTOMATIQUE PAPER</div><div id="strategyAHumanAuto404267"></div></div>`;
+    cockpit=document.createElement("section");cockpit.id="strategyAHumanCockpit";cockpit.setAttribute("data-human-readability-build","40.4.267");
+    cockpit.innerHTML=`<div><div class="strategy-a-human-title">CONTEXTE PAPER · WORKSPACE · KRAKEN LECTURE SEULE · ÉTAT</div><div id="strategyAHumanContext"></div></div><div><div class="strategy-a-human-title">CHAÎNE STRATÉGIE A · PROPOSITION → RISQUE → PAPER → MESURE</div><div id="strategyAHumanPipeline"></div></div><div><div class="strategy-a-human-title">PILOTE AUTOMATIQUE PAPER</div><div id="strategyAHumanAuto"></div></div>`;
     proposalTop.insertAdjacentElement("beforebegin",cockpit);
 
-    const context=document.getElementById("strategyAHumanContext404267");
-    const pipeline=document.getElementById("strategyAHumanPipeline404267");
-    const autoHost=document.getElementById("strategyAHumanAuto404267");
+    const context=document.getElementById("strategyAHumanContext");
+    const pipeline=document.getElementById("strategyAHumanPipeline");
+    const autoHost=document.getElementById("strategyAHumanAuto");
     const liveChildren=Array.from(parent.children);
     const readinessTop=strategyATopChild(readiness,parent);
     const readinessIndex=readinessTop?liveChildren.indexOf(readinessTop):-1;
@@ -36428,7 +36428,7 @@ function strategyAApplyHumanReadability(){
     if(auto&&autoHost)autoHost.appendChild(auto);
   }
 
-  const out=document.getElementById("strategyAAutoSummary404265");
+  const out=document.getElementById("strategyAAutoSummary");
   if(out&&typeof STRATEGY_A_AUTO_STATE!=="undefined"){
     const s=STRATEGY_A_AUTO_STATE;
     const next=s.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";
@@ -36437,7 +36437,7 @@ function strategyAApplyHumanReadability(){
     const confidence=Number.isFinite(Number(p?.oracle?.confidence))?`${Number(p.oracle.confidence)}/100`:"—";
     const decision=String(p?.status||s.phase||"OFF").replaceAll("_"," ");
     out.classList.add("strategy-a-auto-readable-404267");
-    out.innerHTML=`<div class="strategy-a-auto-kpi-404267"><span>État</span><b>${strategyAHumanPhaseLabel(s.phase)}</b></div><div class="strategy-a-auto-kpi-404267"><span>Décision</span><b>${decision}</b></div><div class="strategy-a-auto-kpi-404267"><span>Oracle</span><b>${regime} · ${confidence}</b></div><div class="strategy-a-auto-kpi-404267"><span>Prochain contrôle</span><b>${next}</b></div><div class="strategy-a-auto-kpi-404267"><span>Cycles</span><b>${Number(s.cycles||0)}</b></div><div class="strategy-a-auto-kpi-404267"><span>NO TRADE</span><b>${Number(s.no_trade||0)}</b></div><div class="strategy-a-auto-kpi-404267"><span>Ouverts</span><b>${Number(s.opened||0)}</b></div><div class="strategy-a-auto-kpi-404267"><span>Clôturés</span><b>${Number(s.closed||0)}</b></div><div class="strategy-a-auto-reason-404267"><span>Pourquoi ?</span><b>${String(s.last_action||"Aucune action enregistrée.")}</b></div>`;
+    out.innerHTML=`<div class="strategy-a-auto-kpi"><span>État</span><b>${strategyAHumanPhaseLabel(s.phase)}</b></div><div class="strategy-a-auto-kpi"><span>Décision</span><b>${decision}</b></div><div class="strategy-a-auto-kpi"><span>Oracle</span><b>${regime} · ${confidence}</b></div><div class="strategy-a-auto-kpi"><span>Prochain contrôle</span><b>${next}</b></div><div class="strategy-a-auto-kpi"><span>Cycles</span><b>${Number(s.cycles||0)}</b></div><div class="strategy-a-auto-kpi"><span>NO TRADE</span><b>${Number(s.no_trade||0)}</b></div><div class="strategy-a-auto-kpi"><span>Ouverts</span><b>${Number(s.opened||0)}</b></div><div class="strategy-a-auto-kpi"><span>Clôturés</span><b>${Number(s.closed||0)}</b></div><div class="strategy-a-auto-reason"><span>Pourquoi ?</span><b>${String(s.last_action||"Aucune action enregistrée.")}</b></div>`;
   }
   return true;
 }
@@ -36448,45 +36448,45 @@ function strategyAApplyHumanReadability(){
    intact inside a closed advanced-details disclosure. No fetch, WebSocket, timer,
    observer, storage write, Kraken network request or real order is added. */
 function strategyAEnsureOperatorBoardStyle(){
-  let style=document.getElementById("strategyAOperatorBoardStyle404268");
+  let style=document.getElementById("strategyAOperatorBoardStyle");
   if(style)return style;
   style=document.createElement("style");
-  style.id="strategyAOperatorBoardStyle404268";
+  style.id="strategyAOperatorBoardStyle";
   style.textContent=`
-    #strategyAOperatorBoard404268{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:10px 0 14px!important;padding:14px!important;border:1px solid rgba(87,220,190,.30)!important;border-radius:16px!important;background:linear-gradient(135deg,rgba(7,27,31,.92),rgba(8,18,25,.90))!important;color:#eaf6f4!important}
-    #strategyAOperatorBoard404268 *{box-sizing:border-box!important;writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important}
-    #strategyAOperatorBoard404268 .aop-head-404268{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:18px!important;align-items:center!important;padding:4px 2px 14px!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
-    #strategyAOperatorBoard404268 .aop-kicker-404268{font-size:10px!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#72f1d1!important;font-weight:900!important;margin:0 0 4px!important}
-    #strategyAOperatorBoard404268 h3{font-size:21px!important;line-height:1.15!important;margin:0!important;color:#fff!important}
-    #strategyAOperatorBoard404268 .aop-sub-404268{display:block!important;margin-top:6px!important;font-size:12px!important;line-height:1.45!important;color:#9fb4bd!important}
-    #strategyAOperatorBoard404268 .aop-actions-404268{display:flex!important;gap:9px!important;flex-wrap:wrap!important;justify-content:flex-end!important}
-    #strategyAOperatorBoard404268 .aop-actions-404268 button{min-width:165px!important;min-height:42px!important;padding:9px 14px!important;font-size:12px!important;font-weight:900!important;white-space:normal!important}
-    #strategyAOperatorBoard404268 .aop-status-404268{display:grid!important;grid-template-columns:190px minmax(0,1fr)!important;gap:14px!important;align-items:center!important;margin:14px 0!important;padding:13px 15px!important;border-radius:12px!important;border:1px solid rgba(105,225,255,.20)!important;background:rgba(4,18,25,.58)!important}
-    #strategyAOperatorBoard404268 .aop-status-label-404268{font-size:10px!important;text-transform:uppercase!important;letter-spacing:.10em!important;color:#7f98a4!important;font-weight:900!important}
-    #strategyAOperatorBoard404268 .aop-status-value-404268{display:block!important;margin-top:3px!important;font-size:18px!important;line-height:1.2!important;color:#75f5d4!important;font-weight:950!important}
-    #strategyAOperatorBoard404268 .aop-status-reason-404268{font-size:12px!important;line-height:1.45!important;color:#d4e2e7!important}
-    #strategyAOperatorBoard404268 .aop-grid-404268{display:grid!important;grid-template-columns:repeat(4,minmax(180px,1fr))!important;gap:10px!important;margin:0 0 14px!important}
-    #strategyAOperatorBoard404268 .aop-card-404268{min-width:0!important;min-height:86px!important;padding:11px 12px!important;border:1px solid rgba(255,255,255,.09)!important;border-radius:11px!important;background:rgba(255,255,255,.035)!important}
-    #strategyAOperatorBoard404268 .aop-card-404268 span{display:block!important;font-size:9px!important;text-transform:uppercase!important;letter-spacing:.09em!important;color:#7f98a4!important;font-weight:900!important;margin-bottom:6px!important}
-    #strategyAOperatorBoard404268 .aop-card-404268 b{display:block!important;font-size:14px!important;line-height:1.3!important;color:#f3fbfd!important}
-    #strategyAOperatorBoard404268 .aop-card-404268 small{display:block!important;margin-top:5px!important;font-size:10px!important;line-height:1.35!important;color:#9eb1b9!important}
-    #strategyAOperatorBoard404268 .aop-section-title-404268{margin:3px 0 8px!important;font-size:11px!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#d9e8eb!important;font-weight:950!important}
-    #strategyAOperatorBoard404268 .aop-flow-404268{display:grid!important;grid-template-columns:repeat(4,minmax(180px,1fr))!important;gap:10px!important;margin-bottom:14px!important}
-    #strategyAOperatorBoard404268 .aop-step-404268{display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;gap:9px!important;align-items:start!important;padding:10px 11px!important;border-radius:11px!important;border:1px solid rgba(105,225,255,.13)!important;background:rgba(8,29,38,.38)!important}
-    #strategyAOperatorBoard404268 .aop-step-num-404268{display:grid!important;place-items:center!important;width:32px!important;height:32px!important;border-radius:50%!important;background:rgba(73,213,190,.12)!important;border:1px solid rgba(73,213,190,.28)!important;color:#72f1d1!important;font-size:13px!important;font-weight:950!important}
-    #strategyAOperatorBoard404268 .aop-step-404268 b{display:block!important;font-size:12px!important;line-height:1.3!important;color:#edf8fa!important}
-    #strategyAOperatorBoard404268 .aop-step-404268 small{display:block!important;margin-top:3px!important;font-size:10px!important;line-height:1.35!important;color:#92a7b0!important}
-    #strategyAOperatorBoard404268 .aop-decision-404268{display:grid!important;grid-template-columns:repeat(5,minmax(130px,1fr))!important;gap:9px!important;margin-bottom:12px!important}
-    #strategyAOperatorBoard404268 .aop-decision-404268>div{padding:9px 10px!important;border-radius:10px!important;border:1px solid rgba(255,255,255,.08)!important;background:rgba(0,0,0,.16)!important;min-width:0!important}
-    #strategyAOperatorBoard404268 .aop-decision-404268 span{display:block!important;font-size:8px!important;text-transform:uppercase!important;letter-spacing:.08em!important;color:#7d929d!important;font-weight:900!important;margin-bottom:4px!important}
-    #strategyAOperatorBoard404268 .aop-decision-404268 b{display:block!important;font-size:12px!important;line-height:1.3!important;color:#edf8fa!important}
-    #strategyAOperatorBoard404268 .aop-note-404268{padding:10px 12px!important;border-radius:10px!important;border-left:3px solid #72f1d1!important;background:rgba(40,121,108,.10)!important;font-size:11px!important;line-height:1.45!important;color:#c8d8dd!important}
-    #strategyAOperatorBoard404268 .aop-tech-404268{margin-top:12px!important;border-top:1px solid rgba(255,255,255,.07)!important;padding-top:9px!important}
-    #strategyAOperatorBoard404268 .aop-tech-404268>summary{cursor:pointer!important;font-size:10px!important;font-weight:900!important;letter-spacing:.07em!important;text-transform:uppercase!important;color:#7f98a4!important;padding:6px 0!important}
-    #strategyAHumanCockpit404267{display:none!important}
-    #strategyAOperatorBoard404268 .aop-tech-404268[open] #strategyAHumanCockpit404267{display:grid!important;margin-top:10px!important}
-    @media(max-width:1280px){#strategyAOperatorBoard404268 .aop-grid-404268,#strategyAOperatorBoard404268 .aop-flow-404268{grid-template-columns:repeat(2,minmax(220px,1fr))!important}#strategyAOperatorBoard404268 .aop-decision-404268{grid-template-columns:repeat(2,minmax(160px,1fr))!important}}
-    @media(max-width:760px){#strategyAOperatorBoard404268 .aop-head-404268{grid-template-columns:1fr!important}#strategyAOperatorBoard404268 .aop-actions-404268{justify-content:stretch!important}#strategyAOperatorBoard404268 .aop-actions-404268 button{width:100%!important}#strategyAOperatorBoard404268 .aop-status-404268{grid-template-columns:1fr!important}#strategyAOperatorBoard404268 .aop-grid-404268,#strategyAOperatorBoard404268 .aop-flow-404268,#strategyAOperatorBoard404268 .aop-decision-404268{grid-template-columns:1fr!important}}
+    #strategyAOperatorBoard{grid-column:1/-1!important;flex:1 1 100%!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:10px 0 14px!important;padding:14px!important;border:1px solid rgba(87,220,190,.30)!important;border-radius:16px!important;background:linear-gradient(135deg,rgba(7,27,31,.92),rgba(8,18,25,.90))!important;color:#eaf6f4!important}
+    #strategyAOperatorBoard *{box-sizing:border-box!important;writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important}
+    #strategyAOperatorBoard .aop-head{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:18px!important;align-items:center!important;padding:4px 2px 14px!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
+    #strategyAOperatorBoard .aop-kicker{font-size:10px!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#72f1d1!important;font-weight:900!important;margin:0 0 4px!important}
+    #strategyAOperatorBoard h3{font-size:21px!important;line-height:1.15!important;margin:0!important;color:#fff!important}
+    #strategyAOperatorBoard .aop-sub{display:block!important;margin-top:6px!important;font-size:12px!important;line-height:1.45!important;color:#9fb4bd!important}
+    #strategyAOperatorBoard .aop-actions{display:flex!important;gap:9px!important;flex-wrap:wrap!important;justify-content:flex-end!important}
+    #strategyAOperatorBoard .aop-actions button{min-width:165px!important;min-height:42px!important;padding:9px 14px!important;font-size:12px!important;font-weight:900!important;white-space:normal!important}
+    #strategyAOperatorBoard .aop-status{display:grid!important;grid-template-columns:190px minmax(0,1fr)!important;gap:14px!important;align-items:center!important;margin:14px 0!important;padding:13px 15px!important;border-radius:12px!important;border:1px solid rgba(105,225,255,.20)!important;background:rgba(4,18,25,.58)!important}
+    #strategyAOperatorBoard .aop-status-label{font-size:10px!important;text-transform:uppercase!important;letter-spacing:.10em!important;color:#7f98a4!important;font-weight:900!important}
+    #strategyAOperatorBoard .aop-status-value{display:block!important;margin-top:3px!important;font-size:18px!important;line-height:1.2!important;color:#75f5d4!important;font-weight:950!important}
+    #strategyAOperatorBoard .aop-status-reason{font-size:12px!important;line-height:1.45!important;color:#d4e2e7!important}
+    #strategyAOperatorBoard .aop-grid{display:grid!important;grid-template-columns:repeat(4,minmax(180px,1fr))!important;gap:10px!important;margin:0 0 14px!important}
+    #strategyAOperatorBoard .aop-card{min-width:0!important;min-height:86px!important;padding:11px 12px!important;border:1px solid rgba(255,255,255,.09)!important;border-radius:11px!important;background:rgba(255,255,255,.035)!important}
+    #strategyAOperatorBoard .aop-card span{display:block!important;font-size:9px!important;text-transform:uppercase!important;letter-spacing:.09em!important;color:#7f98a4!important;font-weight:900!important;margin-bottom:6px!important}
+    #strategyAOperatorBoard .aop-card b{display:block!important;font-size:14px!important;line-height:1.3!important;color:#f3fbfd!important}
+    #strategyAOperatorBoard .aop-card small{display:block!important;margin-top:5px!important;font-size:10px!important;line-height:1.35!important;color:#9eb1b9!important}
+    #strategyAOperatorBoard .aop-section-title{margin:3px 0 8px!important;font-size:11px!important;letter-spacing:.09em!important;text-transform:uppercase!important;color:#d9e8eb!important;font-weight:950!important}
+    #strategyAOperatorBoard .aop-flow{display:grid!important;grid-template-columns:repeat(4,minmax(180px,1fr))!important;gap:10px!important;margin-bottom:14px!important}
+    #strategyAOperatorBoard .aop-step{display:grid!important;grid-template-columns:34px minmax(0,1fr)!important;gap:9px!important;align-items:start!important;padding:10px 11px!important;border-radius:11px!important;border:1px solid rgba(105,225,255,.13)!important;background:rgba(8,29,38,.38)!important}
+    #strategyAOperatorBoard .aop-step-num{display:grid!important;place-items:center!important;width:32px!important;height:32px!important;border-radius:50%!important;background:rgba(73,213,190,.12)!important;border:1px solid rgba(73,213,190,.28)!important;color:#72f1d1!important;font-size:13px!important;font-weight:950!important}
+    #strategyAOperatorBoard .aop-step b{display:block!important;font-size:12px!important;line-height:1.3!important;color:#edf8fa!important}
+    #strategyAOperatorBoard .aop-step small{display:block!important;margin-top:3px!important;font-size:10px!important;line-height:1.35!important;color:#92a7b0!important}
+    #strategyAOperatorBoard .aop-decision{display:grid!important;grid-template-columns:repeat(5,minmax(130px,1fr))!important;gap:9px!important;margin-bottom:12px!important}
+    #strategyAOperatorBoard .aop-decision>div{padding:9px 10px!important;border-radius:10px!important;border:1px solid rgba(255,255,255,.08)!important;background:rgba(0,0,0,.16)!important;min-width:0!important}
+    #strategyAOperatorBoard .aop-decision span{display:block!important;font-size:8px!important;text-transform:uppercase!important;letter-spacing:.08em!important;color:#7d929d!important;font-weight:900!important;margin-bottom:4px!important}
+    #strategyAOperatorBoard .aop-decision b{display:block!important;font-size:12px!important;line-height:1.3!important;color:#edf8fa!important}
+    #strategyAOperatorBoard .aop-note{padding:10px 12px!important;border-radius:10px!important;border-left:3px solid #72f1d1!important;background:rgba(40,121,108,.10)!important;font-size:11px!important;line-height:1.45!important;color:#c8d8dd!important}
+    #strategyAOperatorBoard .aop-tech{margin-top:12px!important;border-top:1px solid rgba(255,255,255,.07)!important;padding-top:9px!important}
+    #strategyAOperatorBoard .aop-tech>summary{cursor:pointer!important;font-size:10px!important;font-weight:900!important;letter-spacing:.07em!important;text-transform:uppercase!important;color:#7f98a4!important;padding:6px 0!important}
+    #strategyAHumanCockpit{display:none!important}
+    #strategyAOperatorBoard .aop-tech[open] #strategyAHumanCockpit{display:grid!important;margin-top:10px!important}
+    @media(max-width:1280px){#strategyAOperatorBoard .aop-grid,#strategyAOperatorBoard .aop-flow{grid-template-columns:repeat(2,minmax(220px,1fr))!important}#strategyAOperatorBoard .aop-decision{grid-template-columns:repeat(2,minmax(160px,1fr))!important}}
+    @media(max-width:760px){#strategyAOperatorBoard .aop-head{grid-template-columns:1fr!important}#strategyAOperatorBoard .aop-actions{justify-content:stretch!important}#strategyAOperatorBoard .aop-actions button{width:100%!important}#strategyAOperatorBoard .aop-status{grid-template-columns:1fr!important}#strategyAOperatorBoard .aop-grid,#strategyAOperatorBoard .aop-flow,#strategyAOperatorBoard .aop-decision{grid-template-columns:1fr!important}}
   `;
   document.head.appendChild(style);
   return style;
@@ -36503,16 +36503,16 @@ function strategyAOperatorPhase(s,p,open){
 }
 function strategyAApplyOperatorBoard(){
   strategyAEnsureOperatorBoardStyle();
-  const old=document.getElementById("strategyAHumanCockpit404267");
+  const old=document.getElementById("strategyAHumanCockpit");
   if(!old)return false;
-  let board=document.getElementById("strategyAOperatorBoard404268");
+  let board=document.getElementById("strategyAOperatorBoard");
   if(!board){
-    board=document.createElement("section");board.id="strategyAOperatorBoard404268";board.setAttribute("data-operator-board-build","40.4.268");
-    board.innerHTML=`<div class="aop-head-404268"><div><div class="aop-kicker-404268">SIMULATION · STRATÉGIE A</div><h3>Auto Paper — vue simple</h3><span class="aop-sub-404268">Un seul bouton pour démarrer. Ensuite : observation → décision → risque → trade fictif → mesure, automatiquement toutes les 5 minutes.</span></div><div class="aop-actions-404268"><button type="button" class="btn" id="strategyAOperatorStart404268">DÉMARRER AUTO A</button><button type="button" class="btn small" id="strategyAOperatorStop404268">ARRÊTER AUTO</button></div></div><div class="aop-status-404268"><div><span class="aop-status-label-404268">État actuel</span><b class="aop-status-value-404268" id="strategyAOperatorStatus404268">—</b></div><div class="aop-status-reason-404268" id="strategyAOperatorReason404268">Lecture de l'état…</div></div><div class="aop-grid-404268"><div class="aop-card-404268"><span>Capital simulé</span><b id="strategyAOperatorCapital404268">—</b><small>Argent virtuel uniquement</small></div><div class="aop-card-404268"><span>Workspace</span><b>STRATÉGIE A</b><small>isolée de CONTROL et STRATÉGIE B</small></div><div class="aop-card-404268"><span>Sécurité</span><b>AUCUN ORDRE RÉEL</b><small>aucune clé API · aucun wallet</small></div><div class="aop-card-404268"><span>Kraken</span><b>LECTURE SEULE</b><small>le moteur Paper local reste indépendant</small></div></div><div class="aop-section-title-404268">Ce que fait Auto A</div><div class="aop-flow-404268"><div class="aop-step-404268"><div class="aop-step-num-404268">1</div><div><b>Observe BTC</b><small>prix + variation 24 h</small></div></div><div class="aop-step-404268"><div class="aop-step-num-404268">2</div><div><b>Consulte Oracle</b><small>régime + confiance</small></div></div><div class="aop-step-404268"><div class="aop-step-num-404268">3</div><div><b>Vérifie le risque</b><small>autorise, réduit ou refuse</small></div></div><div class="aop-step-404268"><div class="aop-step-num-404268">4</div><div><b>Simule et mesure</b><small>Paper fictif + P/L de test</small></div></div></div><div class="aop-section-title-404268">Dernière décision</div><div class="aop-decision-404268"><div><span>Décision</span><b id="strategyAOperatorDecision404268">—</b></div><div><span>BTC 24 h</span><b id="strategyAOperatorBtc404268">—</b></div><div><span>Oracle</span><b id="strategyAOperatorOracle404268">—</b></div><div><span>Paper</span><b id="strategyAOperatorPaper404268">—</b></div><div><span>Prochain cycle</span><b id="strategyAOperatorNext404268">—</b></div></div><div class="aop-note-404268" id="strategyAOperatorMetrics404268">Aucune mesure disponible pour le moment.</div><details class="aop-tech-404268" id="strategyAOperatorTech404268"><summary>Détails techniques — ouvrir seulement si nécessaire</summary><div id="strategyAOperatorTechHost404268"></div></details>`;
+    board=document.createElement("section");board.id="strategyAOperatorBoard";board.setAttribute("data-operator-board-build","40.4.268");
+    board.innerHTML=`<div class="aop-head"><div><div class="aop-kicker">SIMULATION · STRATÉGIE A</div><h3>Auto Paper — vue simple</h3><span class="aop-sub">Un seul bouton pour démarrer. Ensuite : observation → décision → risque → trade fictif → mesure, automatiquement toutes les 5 minutes.</span></div><div class="aop-actions"><button type="button" class="btn" id="strategyAOperatorStart">DÉMARRER AUTO A</button><button type="button" class="btn small" id="strategyAOperatorStop">ARRÊTER AUTO</button></div></div><div class="aop-status"><div><span class="aop-status-label">État actuel</span><b class="aop-status-value" id="strategyAOperatorStatus">—</b></div><div class="aop-status-reason" id="strategyAOperatorReason">Lecture de l'état…</div></div><div class="aop-grid"><div class="aop-card"><span>Capital simulé</span><b id="strategyAOperatorCapital">—</b><small>Argent virtuel uniquement</small></div><div class="aop-card"><span>Workspace</span><b>STRATÉGIE A</b><small>isolée de CONTROL et STRATÉGIE B</small></div><div class="aop-card"><span>Sécurité</span><b>AUCUN ORDRE RÉEL</b><small>aucune clé API · aucun wallet</small></div><div class="aop-card"><span>Kraken</span><b>LECTURE SEULE</b><small>le moteur Paper local reste indépendant</small></div></div><div class="aop-section-title">Ce que fait Auto A</div><div class="aop-flow"><div class="aop-step"><div class="aop-step-num">1</div><div><b>Observe BTC</b><small>prix + variation 24 h</small></div></div><div class="aop-step"><div class="aop-step-num">2</div><div><b>Consulte Oracle</b><small>régime + confiance</small></div></div><div class="aop-step"><div class="aop-step-num">3</div><div><b>Vérifie le risque</b><small>autorise, réduit ou refuse</small></div></div><div class="aop-step"><div class="aop-step-num">4</div><div><b>Simule et mesure</b><small>Paper fictif + P/L de test</small></div></div></div><div class="aop-section-title">Dernière décision</div><div class="aop-decision"><div><span>Décision</span><b id="strategyAOperatorDecision">—</b></div><div><span>BTC 24 h</span><b id="strategyAOperatorBtc">—</b></div><div><span>Oracle</span><b id="strategyAOperatorOracle">—</b></div><div><span>Paper</span><b id="strategyAOperatorPaper">—</b></div><div><span>Prochain cycle</span><b id="strategyAOperatorNext">—</b></div></div><div class="aop-note" id="strategyAOperatorMetrics">Aucune mesure disponible pour le moment.</div><details class="aop-tech" id="strategyAOperatorTech"><summary>Détails techniques — ouvrir seulement si nécessaire</summary><div id="strategyAOperatorTechHost"></div></details>`;
     old.insertAdjacentElement("beforebegin",board);
-    board.querySelector("#strategyAOperatorTechHost404268")?.appendChild(old);
-    board.querySelector("#strategyAOperatorStart404268")?.addEventListener("click",()=>{strategyAAutoStart404265();});
-    board.querySelector("#strategyAOperatorStop404268")?.addEventListener("click",()=>{strategyAAutoStop();});
+    board.querySelector("#strategyAOperatorTechHost")?.appendChild(old);
+    board.querySelector("#strategyAOperatorStart")?.addEventListener("click",()=>{strategyAAutoStart();});
+    board.querySelector("#strategyAOperatorStop")?.addEventListener("click",()=>{strategyAAutoStop();});
   }
 
   const s=typeof STRATEGY_A_AUTO_STATE!=="undefined"?STRATEGY_A_AUTO_STATE:null;
@@ -36525,17 +36525,17 @@ function strategyAApplyOperatorBoard(){
   try{metrics=strategyAMetrics();}catch(_){}
   const phase=strategyAOperatorPhase(s,p,open);
   const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
-  set("strategyAOperatorStatus404268",phase.label);
-  set("strategyAOperatorReason404268",phase.reason);
-  const cash=Number(local?.cash_eur);set("strategyAOperatorCapital404268",Number.isFinite(cash)?`${cash.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €`:"—");
-  set("strategyAOperatorDecision404268",String(p?.status||s?.phase||"—").replaceAll("_"," "));
-  const h24=Number(p?.market?.change_24h_pct);set("strategyAOperatorBtc404268",Number.isFinite(h24)?`${h24>=0?"+":""}${h24.toFixed(2)} %`:"—");
-  const conf=Number(p?.oracle?.confidence);set("strategyAOperatorOracle404268",p?.oracle?.regime?`${p.oracle.regime}${Number.isFinite(conf)?` · ${conf}/100`:""}`:"—");
-  set("strategyAOperatorPaper404268",open?`OUVERT · ${Number(open.authorized_notional_eur||0).toFixed(2)} €`:"AUCUNE POSITION");
-  const next=s?.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";set("strategyAOperatorNext404268",next);
+  set("strategyAOperatorStatus",phase.label);
+  set("strategyAOperatorReason",phase.reason);
+  const cash=Number(local?.cash_eur);set("strategyAOperatorCapital",Number.isFinite(cash)?`${cash.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2})} €`:"—");
+  set("strategyAOperatorDecision",String(p?.status||s?.phase||"—").replaceAll("_"," "));
+  const h24=Number(p?.market?.change_24h_pct);set("strategyAOperatorBtc",Number.isFinite(h24)?`${h24>=0?"+":""}${h24.toFixed(2)} %`:"—");
+  const conf=Number(p?.oracle?.confidence);set("strategyAOperatorOracle",p?.oracle?.regime?`${p.oracle.regime}${Number.isFinite(conf)?` · ${conf}/100`:""}`:"—");
+  set("strategyAOperatorPaper",open?`OUVERT · ${Number(open.authorized_notional_eur||0).toFixed(2)} €`:"AUCUNE POSITION");
+  const next=s?.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";set("strategyAOperatorNext",next);
   const sample=Number(metrics?.sample_size||0),pnl=Number(metrics?.cumulative_net_pnl_eur||0),fees=Number(metrics?.total_fees_eur||0);
-  set("strategyAOperatorMetrics404268",`Tests clôturés : ${sample} · P/L Paper cumulé : ${pnl.toFixed(2)} € · frais simulés : ${fees.toFixed(2)} € · échantillon minimal avant toute conclusion : 30 trades.`);
-  const start=document.getElementById("strategyAOperatorStart404268"),stop=document.getElementById("strategyAOperatorStop404268");
+  set("strategyAOperatorMetrics",`Tests clôturés : ${sample} · P/L Paper cumulé : ${pnl.toFixed(2)} € · frais simulés : ${fees.toFixed(2)} € · échantillon minimal avant toute conclusion : 30 trades.`);
+  const start=document.getElementById("strategyAOperatorStart"),stop=document.getElementById("strategyAOperatorStop");
   if(start){start.disabled=!!s?.enabled;start.textContent=s?.enabled?"AUTO A ACTIF":"DÉMARRER AUTO A";}
   if(stop)stop.disabled=!s?.enabled;
   return true;
@@ -36548,50 +36548,50 @@ function strategyAApplyOperatorBoard(){
    genuinely closed technical disclosure. No business engine, fetch, WebSocket, timer,
    storage, Kraken request or real-order behavior is added or changed. */
 function strategyAEnsureVisualHarmonyStyle(){
-  let style=document.getElementById("strategyAVisualHarmonyStyle404269");
+  let style=document.getElementById("strategyAVisualHarmonyStyle");
   if(style)return style;
   style=document.createElement("style");
-  style.id="strategyAVisualHarmonyStyle404269";
+  style.id="strategyAVisualHarmonyStyle";
   style.textContent=`
-    #strategyAOperatorBoard404268{display:none!important}
-    #strategyAVisualConsole404269{width:100%!important;min-width:0!important;margin:12px 0 14px!important;border:1px solid rgba(65,189,219,.28)!important;border-radius:14px!important;background:linear-gradient(180deg,rgba(3,17,27,.88),rgba(3,12,20,.94))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 14px 36px rgba(0,0,0,.18)!important;overflow:hidden!important;color:#eaf5fa!important}
-    #strategyAVisualConsole404269 *{box-sizing:border-box!important;writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important}
-    #strategyAVisualConsole404269 .avc-head-404269{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;padding:12px 14px!important;border-bottom:1px solid rgba(255,255,255,.07)!important;background:linear-gradient(90deg,rgba(16,55,75,.30),rgba(30,20,62,.16) 60%,rgba(8,33,29,.14))!important}
-    #strategyAVisualConsole404269 .avc-title-404269{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important}
-    #strategyAVisualConsole404269 .avc-mark-404269{display:grid!important;place-items:center!important;width:36px!important;height:36px!important;border:1px solid rgba(92,224,255,.30)!important;border-radius:10px!important;background:rgba(37,145,179,.12)!important;color:#7ce8ff!important;font-size:18px!important;flex:0 0 auto!important}
-    #strategyAVisualConsole404269 .avc-kicker-404269{display:block!important;margin-bottom:2px!important;font-size:8px!important;font-weight:900!important;letter-spacing:.13em!important;text-transform:uppercase!important;color:#72dff5!important}
-    #strategyAVisualConsole404269 h3{margin:0!important;font-size:16px!important;line-height:1.15!important;color:#f5fbff!important;font-weight:950!important;letter-spacing:.01em!important}
-    #strategyAVisualConsole404269 .avc-actions-404269{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;justify-content:flex-end!important}
-    #strategyAVisualConsole404269 .avc-state-pill-404269{display:inline-flex!important;align-items:center!important;min-height:32px!important;padding:6px 10px!important;border-radius:999px!important;border:1px solid rgba(116,238,208,.24)!important;background:rgba(32,142,115,.10)!important;color:#8af2d7!important;font-size:10px!important;font-weight:950!important;letter-spacing:.04em!important;text-transform:uppercase!important}
-    #strategyAVisualConsole404269 .avc-actions-404269 button{min-height:34px!important;padding:7px 12px!important;font-size:10px!important;font-weight:950!important;white-space:nowrap!important}
-    #strategyAVisualConsole404269 .avc-body-404269{padding:12px 14px 13px!important}
-    #strategyAVisualConsole404269 .avc-reason-404269{display:flex!important;align-items:center!important;gap:10px!important;min-height:42px!important;margin-bottom:11px!important;padding:9px 11px!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:10px!important;background:rgba(255,255,255,.025)!important}
-    #strategyAVisualConsole404269 .avc-reason-label-404269{flex:0 0 auto!important;font-size:8px!important;font-weight:900!important;letter-spacing:.10em!important;text-transform:uppercase!important;color:#7894a3!important}
-    #strategyAVisualConsole404269 .avc-reason-404269 b{font-size:11px!important;line-height:1.35!important;color:#dce9ef!important;font-weight:800!important}
-    #strategyAVisualConsole404269 .avc-flow-404269{display:grid!important;grid-template-columns:1fr 22px 1fr 22px 1fr 22px 1fr!important;gap:7px!important;align-items:center!important;margin-bottom:11px!important}
-    #strategyAVisualConsole404269 .avc-arrow-404269{text-align:center!important;color:#536d7c!important;font-size:15px!important;font-weight:900!important}
-    #strategyAVisualConsole404269 .avc-stage-404269{display:grid!important;grid-template-columns:30px minmax(0,1fr)!important;gap:8px!important;align-items:center!important;min-height:58px!important;padding:8px 10px!important;border-radius:10px!important;background:rgba(7,24,33,.62)!important;border:1px solid rgba(255,255,255,.075)!important;min-width:0!important}
-    #strategyAVisualConsole404269 .avc-stage-num-404269{display:grid!important;place-items:center!important;width:28px!important;height:28px!important;border-radius:8px!important;font-size:10px!important;font-weight:950!important}
-    #strategyAVisualConsole404269 .avc-stage-404269 b{display:block!important;font-size:11px!important;line-height:1.2!important;color:#f0f7fb!important}
-    #strategyAVisualConsole404269 .avc-stage-404269 small{display:block!important;margin-top:3px!important;font-size:9px!important;line-height:1.25!important;color:#8199a7!important}
-    #strategyAVisualConsole404269 .avc-market-404269{border-color:rgba(71,203,236,.19)!important}.avc-market-404269 .avc-stage-num-404269{background:rgba(40,170,205,.13)!important;color:#6be5ff!important;border:1px solid rgba(71,203,236,.22)!important}
-    #strategyAVisualConsole404269 .avc-oracle-404269{border-color:rgba(162,118,239,.18)!important}.avc-oracle-404269 .avc-stage-num-404269{background:rgba(124,75,203,.13)!important;color:#c9a7ff!important;border:1px solid rgba(162,118,239,.23)!important}
-    #strategyAVisualConsole404269 .avc-risk-404269{border-color:rgba(234,192,93,.18)!important}.avc-risk-404269 .avc-stage-num-404269{background:rgba(179,126,25,.12)!important;color:#f4d27f!important;border:1px solid rgba(234,192,93,.22)!important}
-    #strategyAVisualConsole404269 .avc-paper-404269{border-color:rgba(91,219,171,.18)!important}.avc-paper-404269 .avc-stage-num-404269{background:rgba(34,153,114,.12)!important;color:#82efc6!important;border:1px solid rgba(91,219,171,.22)!important}
-    #strategyAVisualConsole404269 .avc-kpis-404269{display:grid!important;grid-template-columns:1.15fr .9fr 1fr .9fr 1fr!important;gap:8px!important}
-    #strategyAVisualConsole404269 .avc-kpi-404269{min-width:0!important;padding:8px 9px!important;border-radius:9px!important;border:1px solid rgba(255,255,255,.065)!important;background:rgba(0,0,0,.15)!important}
-    #strategyAVisualConsole404269 .avc-kpi-404269 span{display:block!important;margin-bottom:3px!important;font-size:7px!important;font-weight:900!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#718b99!important}
-    #strategyAVisualConsole404269 .avc-kpi-404269 b{display:block!important;font-size:10px!important;line-height:1.3!important;color:#eef7fb!important;font-weight:900!important}
-    #strategyAVisualConsole404269 .avc-foot-404269{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-top:10px!important;padding-top:9px!important;border-top:1px solid rgba(255,255,255,.055)!important}
-    #strategyAVisualConsole404269 .avc-safety-404269{font-size:8px!important;line-height:1.3!important;color:#6f8997!important;font-weight:800!important;letter-spacing:.04em!important;text-transform:uppercase!important}
-    #strategyAVisualConsole404269 .avc-metrics-404269{font-size:9px!important;line-height:1.3!important;color:#aac0cb!important;text-align:right!important}
-    #strategyATechDetails404269{width:100%!important;margin:0 0 12px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:10px!important;background:rgba(3,12,18,.40)!important;overflow:hidden!important}
-    #strategyATechDetails404269>summary{cursor:pointer!important;padding:9px 12px!important;font-size:9px!important;font-weight:900!important;letter-spacing:.07em!important;text-transform:uppercase!important;color:#718b99!important;list-style-position:inside!important}
-    #strategyATechDetails404269[open]>summary{border-bottom:1px solid rgba(255,255,255,.06)!important}
-    #strategyATechHost404269{padding:10px!important}
-    #strategyATechHost404269 #strategyAHumanCockpit404267{display:grid!important;margin:0!important;width:100%!important}
-    @media(max-width:1080px){#strategyAVisualConsole404269 .avc-flow-404269{grid-template-columns:1fr 1fr!important}#strategyAVisualConsole404269 .avc-arrow-404269{display:none!important}#strategyAVisualConsole404269 .avc-kpis-404269{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-    @media(max-width:700px){#strategyAVisualConsole404269 .avc-head-404269{align-items:flex-start!important;flex-direction:column!important}#strategyAVisualConsole404269 .avc-actions-404269{width:100%!important;justify-content:stretch!important}#strategyAVisualConsole404269 .avc-actions-404269 button{flex:1 1 auto!important}#strategyAVisualConsole404269 .avc-flow-404269,#strategyAVisualConsole404269 .avc-kpis-404269{grid-template-columns:1fr!important}}
+    #strategyAOperatorBoard{display:none!important}
+    #strategyAVisualConsole{width:100%!important;min-width:0!important;margin:12px 0 14px!important;border:1px solid rgba(65,189,219,.28)!important;border-radius:14px!important;background:linear-gradient(180deg,rgba(3,17,27,.88),rgba(3,12,20,.94))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 14px 36px rgba(0,0,0,.18)!important;overflow:hidden!important;color:#eaf5fa!important}
+    #strategyAVisualConsole *{box-sizing:border-box!important;writing-mode:horizontal-tb!important;word-break:normal!important;overflow-wrap:break-word!important}
+    #strategyAVisualConsole .avc-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:16px!important;padding:12px 14px!important;border-bottom:1px solid rgba(255,255,255,.07)!important;background:linear-gradient(90deg,rgba(16,55,75,.30),rgba(30,20,62,.16) 60%,rgba(8,33,29,.14))!important}
+    #strategyAVisualConsole .avc-title{display:flex!important;align-items:center!important;gap:10px!important;min-width:0!important}
+    #strategyAVisualConsole .avc-mark{display:grid!important;place-items:center!important;width:36px!important;height:36px!important;border:1px solid rgba(92,224,255,.30)!important;border-radius:10px!important;background:rgba(37,145,179,.12)!important;color:#7ce8ff!important;font-size:18px!important;flex:0 0 auto!important}
+    #strategyAVisualConsole .avc-kicker{display:block!important;margin-bottom:2px!important;font-size:8px!important;font-weight:900!important;letter-spacing:.13em!important;text-transform:uppercase!important;color:#72dff5!important}
+    #strategyAVisualConsole h3{margin:0!important;font-size:16px!important;line-height:1.15!important;color:#f5fbff!important;font-weight:950!important;letter-spacing:.01em!important}
+    #strategyAVisualConsole .avc-actions{display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important;justify-content:flex-end!important}
+    #strategyAVisualConsole .avc-state-pill{display:inline-flex!important;align-items:center!important;min-height:32px!important;padding:6px 10px!important;border-radius:999px!important;border:1px solid rgba(116,238,208,.24)!important;background:rgba(32,142,115,.10)!important;color:#8af2d7!important;font-size:10px!important;font-weight:950!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+    #strategyAVisualConsole .avc-actions button{min-height:34px!important;padding:7px 12px!important;font-size:10px!important;font-weight:950!important;white-space:nowrap!important}
+    #strategyAVisualConsole .avc-body{padding:12px 14px 13px!important}
+    #strategyAVisualConsole .avc-reason{display:flex!important;align-items:center!important;gap:10px!important;min-height:42px!important;margin-bottom:11px!important;padding:9px 11px!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:10px!important;background:rgba(255,255,255,.025)!important}
+    #strategyAVisualConsole .avc-reason-label{flex:0 0 auto!important;font-size:8px!important;font-weight:900!important;letter-spacing:.10em!important;text-transform:uppercase!important;color:#7894a3!important}
+    #strategyAVisualConsole .avc-reason b{font-size:11px!important;line-height:1.35!important;color:#dce9ef!important;font-weight:800!important}
+    #strategyAVisualConsole .avc-flow{display:grid!important;grid-template-columns:1fr 22px 1fr 22px 1fr 22px 1fr!important;gap:7px!important;align-items:center!important;margin-bottom:11px!important}
+    #strategyAVisualConsole .avc-arrow{text-align:center!important;color:#536d7c!important;font-size:15px!important;font-weight:900!important}
+    #strategyAVisualConsole .avc-stage{display:grid!important;grid-template-columns:30px minmax(0,1fr)!important;gap:8px!important;align-items:center!important;min-height:58px!important;padding:8px 10px!important;border-radius:10px!important;background:rgba(7,24,33,.62)!important;border:1px solid rgba(255,255,255,.075)!important;min-width:0!important}
+    #strategyAVisualConsole .avc-stage-num{display:grid!important;place-items:center!important;width:28px!important;height:28px!important;border-radius:8px!important;font-size:10px!important;font-weight:950!important}
+    #strategyAVisualConsole .avc-stage b{display:block!important;font-size:11px!important;line-height:1.2!important;color:#f0f7fb!important}
+    #strategyAVisualConsole .avc-stage small{display:block!important;margin-top:3px!important;font-size:9px!important;line-height:1.25!important;color:#8199a7!important}
+    #strategyAVisualConsole .avc-market{border-color:rgba(71,203,236,.19)!important}.avc-market .avc-stage-num{background:rgba(40,170,205,.13)!important;color:#6be5ff!important;border:1px solid rgba(71,203,236,.22)!important}
+    #strategyAVisualConsole .avc-oracle{border-color:rgba(162,118,239,.18)!important}.avc-oracle .avc-stage-num{background:rgba(124,75,203,.13)!important;color:#c9a7ff!important;border:1px solid rgba(162,118,239,.23)!important}
+    #strategyAVisualConsole .avc-risk{border-color:rgba(234,192,93,.18)!important}.avc-risk .avc-stage-num{background:rgba(179,126,25,.12)!important;color:#f4d27f!important;border:1px solid rgba(234,192,93,.22)!important}
+    #strategyAVisualConsole .avc-paper{border-color:rgba(91,219,171,.18)!important}.avc-paper .avc-stage-num{background:rgba(34,153,114,.12)!important;color:#82efc6!important;border:1px solid rgba(91,219,171,.22)!important}
+    #strategyAVisualConsole .avc-kpis{display:grid!important;grid-template-columns:1.15fr .9fr 1fr .9fr 1fr!important;gap:8px!important}
+    #strategyAVisualConsole .avc-kpi{min-width:0!important;padding:8px 9px!important;border-radius:9px!important;border:1px solid rgba(255,255,255,.065)!important;background:rgba(0,0,0,.15)!important}
+    #strategyAVisualConsole .avc-kpi span{display:block!important;margin-bottom:3px!important;font-size:7px!important;font-weight:900!important;letter-spacing:.08em!important;text-transform:uppercase!important;color:#718b99!important}
+    #strategyAVisualConsole .avc-kpi b{display:block!important;font-size:10px!important;line-height:1.3!important;color:#eef7fb!important;font-weight:900!important}
+    #strategyAVisualConsole .avc-foot{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;flex-wrap:wrap!important;margin-top:10px!important;padding-top:9px!important;border-top:1px solid rgba(255,255,255,.055)!important}
+    #strategyAVisualConsole .avc-safety{font-size:8px!important;line-height:1.3!important;color:#6f8997!important;font-weight:800!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+    #strategyAVisualConsole .avc-metrics{font-size:9px!important;line-height:1.3!important;color:#aac0cb!important;text-align:right!important}
+    #strategyATechDetails{width:100%!important;margin:0 0 12px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:10px!important;background:rgba(3,12,18,.40)!important;overflow:hidden!important}
+    #strategyATechDetails>summary{cursor:pointer!important;padding:9px 12px!important;font-size:9px!important;font-weight:900!important;letter-spacing:.07em!important;text-transform:uppercase!important;color:#718b99!important;list-style-position:inside!important}
+    #strategyATechDetails[open]>summary{border-bottom:1px solid rgba(255,255,255,.06)!important}
+    #strategyATechHost{padding:10px!important}
+    #strategyATechHost #strategyAHumanCockpit{display:grid!important;margin:0!important;width:100%!important}
+    @media(max-width:1080px){#strategyAVisualConsole .avc-flow{grid-template-columns:1fr 1fr!important}#strategyAVisualConsole .avc-arrow{display:none!important}#strategyAVisualConsole .avc-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+    @media(max-width:700px){#strategyAVisualConsole .avc-head{align-items:flex-start!important;flex-direction:column!important}#strategyAVisualConsole .avc-actions{width:100%!important;justify-content:stretch!important}#strategyAVisualConsole .avc-actions button{flex:1 1 auto!important}#strategyAVisualConsole .avc-flow,#strategyAVisualConsole .avc-kpis{grid-template-columns:1fr!important}}
   `;
   document.head.appendChild(style);
   return style;
@@ -36612,28 +36612,28 @@ function strategyAApplyVisualHarmony(){
   strategyAEnsureVisualHarmonyStyle();
   const simulation=document.getElementById("simulation");
   const feedback=document.getElementById("actionFeedback");
-  const oldBoard=document.getElementById("strategyAOperatorBoard404268");
-  const oldCockpit=document.getElementById("strategyAHumanCockpit404267");
+  const oldBoard=document.getElementById("strategyAOperatorBoard");
+  const oldCockpit=document.getElementById("strategyAHumanCockpit");
   if(!simulation||!feedback||!oldBoard||!oldCockpit)return false;
 
-  let board=document.getElementById("strategyAVisualConsole404269");
+  let board=document.getElementById("strategyAVisualConsole");
   if(!board){
     board=document.createElement("section");
-    board.id="strategyAVisualConsole404269";
+    board.id="strategyAVisualConsole";
     board.setAttribute("data-visual-harmony-build","40.4.269");
-    board.innerHTML=`<div class="avc-head-404269"><div class="avc-title-404269"><span class="avc-mark-404269" aria-hidden="true">◇</span><div><span class="avc-kicker-404269">STRATÉGIE A · PAPER AUTOMATIQUE</span><h3>Pilote de simulation</h3></div></div><div class="avc-actions-404269"><span class="avc-state-pill-404269" id="strategyAVisualState404269">ARRÊTÉ</span><button type="button" class="btn" id="strategyAVisualStart404269">ACTIVER AUTO A</button><button type="button" class="btn small" id="strategyAVisualStop404269">STOP</button></div></div><div class="avc-body-404269"><div class="avc-reason-404269"><span class="avc-reason-label-404269">Lecture</span><b id="strategyAVisualReason404269">Lecture de l'état…</b></div><div class="avc-flow-404269"><div class="avc-stage-404269 avc-market-404269"><span class="avc-stage-num-404269">01</span><div><b>BTC</b><small>prix + variation 24 h</small></div></div><span class="avc-arrow-404269">→</span><div class="avc-stage-404269 avc-oracle-404269"><span class="avc-stage-num-404269">02</span><div><b>Oracle</b><small>régime + confiance</small></div></div><span class="avc-arrow-404269">→</span><div class="avc-stage-404269 avc-risk-404269"><span class="avc-stage-num-404269">03</span><div><b>Risk Governor</b><small>accepte · réduit · refuse</small></div></div><span class="avc-arrow-404269">→</span><div class="avc-stage-404269 avc-paper-404269"><span class="avc-stage-num-404269">04</span><div><b>Paper + mesure</b><small>fill fictif · P/L · frais</small></div></div></div><div class="avc-kpis-404269"><div class="avc-kpi-404269"><span>Décision</span><b id="strategyAVisualDecision404269">—</b></div><div class="avc-kpi-404269"><span>BTC 24 h</span><b id="strategyAVisualBtc404269">—</b></div><div class="avc-kpi-404269"><span>Oracle</span><b id="strategyAVisualOracle404269">—</b></div><div class="avc-kpi-404269"><span>Paper</span><b id="strategyAVisualPaper404269">—</b></div><div class="avc-kpi-404269"><span>Prochain cycle</span><b id="strategyAVisualNext404269">—</b></div></div><div class="avc-foot-404269"><div class="avc-safety-404269">SESSION LOCALE · 5 MIN · AUCUN ORDRE RÉEL · KRAKEN LECTURE SEULE</div><div class="avc-metrics-404269" id="strategyAVisualMetrics404269">0 trade · P/L 0,00 € · frais 0,00 €</div></div></div>`;
+    board.innerHTML=`<div class="avc-head"><div class="avc-title"><span class="avc-mark" aria-hidden="true">◇</span><div><span class="avc-kicker">STRATÉGIE A · PAPER AUTOMATIQUE</span><h3>Pilote de simulation</h3></div></div><div class="avc-actions"><span class="avc-state-pill" id="strategyAVisualState">ARRÊTÉ</span><button type="button" class="btn" id="strategyAVisualStart">ACTIVER AUTO A</button><button type="button" class="btn small" id="strategyAVisualStop">STOP</button></div></div><div class="avc-body"><div class="avc-reason"><span class="avc-reason-label">Lecture</span><b id="strategyAVisualReason">Lecture de l'état…</b></div><div class="avc-flow"><div class="avc-stage avc-market"><span class="avc-stage-num">01</span><div><b>BTC</b><small>prix + variation 24 h</small></div></div><span class="avc-arrow">→</span><div class="avc-stage avc-oracle"><span class="avc-stage-num">02</span><div><b>Oracle</b><small>régime + confiance</small></div></div><span class="avc-arrow">→</span><div class="avc-stage avc-risk"><span class="avc-stage-num">03</span><div><b>Risk Governor</b><small>accepte · réduit · refuse</small></div></div><span class="avc-arrow">→</span><div class="avc-stage avc-paper"><span class="avc-stage-num">04</span><div><b>Paper + mesure</b><small>fill fictif · P/L · frais</small></div></div></div><div class="avc-kpis"><div class="avc-kpi"><span>Décision</span><b id="strategyAVisualDecision">—</b></div><div class="avc-kpi"><span>BTC 24 h</span><b id="strategyAVisualBtc">—</b></div><div class="avc-kpi"><span>Oracle</span><b id="strategyAVisualOracle">—</b></div><div class="avc-kpi"><span>Paper</span><b id="strategyAVisualPaper">—</b></div><div class="avc-kpi"><span>Prochain cycle</span><b id="strategyAVisualNext">—</b></div></div><div class="avc-foot"><div class="avc-safety">SESSION LOCALE · 5 MIN · AUCUN ORDRE RÉEL · KRAKEN LECTURE SEULE</div><div class="avc-metrics" id="strategyAVisualMetrics">0 trade · P/L 0,00 € · frais 0,00 €</div></div></div>`;
     feedback.insertAdjacentElement("afterend",board);
-    board.querySelector("#strategyAVisualStart404269")?.addEventListener("click",()=>{strategyAAutoStart404265();renderStrategySandboxExtensions();});
-    board.querySelector("#strategyAVisualStop404269")?.addEventListener("click",()=>{strategyAAutoStop();renderStrategySandboxExtensions();});
+    board.querySelector("#strategyAVisualStart")?.addEventListener("click",()=>{strategyAAutoStart();renderStrategySandboxExtensions();});
+    board.querySelector("#strategyAVisualStop")?.addEventListener("click",()=>{strategyAAutoStop();renderStrategySandboxExtensions();});
   }
 
-  let tech=document.getElementById("strategyATechDetails404269");
+  let tech=document.getElementById("strategyATechDetails");
   if(!tech){
-    tech=document.createElement("details");tech.id="strategyATechDetails404269";
-    tech.innerHTML=`<summary>Mode technique · Proposal / Risk / Paper / Reconciliation / Kraken</summary><div id="strategyATechHost404269"></div>`;
+    tech=document.createElement("details");tech.id="strategyATechDetails";
+    tech.innerHTML=`<summary>Mode technique · Proposal / Risk / Paper / Reconciliation / Kraken</summary><div id="strategyATechHost"></div>`;
     board.insertAdjacentElement("afterend",tech);
   }
-  const host=document.getElementById("strategyATechHost404269");
+  const host=document.getElementById("strategyATechHost");
   if(host&&oldCockpit.parentElement!==host)host.appendChild(oldCockpit);
   /* 40.4.272 · preserve operator-open technical disclosure across rerenders. */
 
@@ -36645,33 +36645,33 @@ function strategyAApplyVisualHarmony(){
   const metrics=typeof strategyAMetrics==="function"?strategyAMetrics():null;
   const phase=strategyAVisualPhase(s,p,open);
   const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
-  set("strategyAVisualState404269",phase.label);
-  set("strategyAVisualReason404269",phase.reason);
-  set("strategyAVisualDecision404269",String(p?.status||s?.phase||"—").replaceAll("_"," "));
-  const h24=Number(p?.market?.change_24h_pct);set("strategyAVisualBtc404269",Number.isFinite(h24)?`${h24>=0?"+":""}${h24.toFixed(2)} %`:"—");
-  const conf=Number(p?.oracle?.confidence);set("strategyAVisualOracle404269",p?.oracle?.regime?`${p.oracle.regime}${Number.isFinite(conf)?` · ${conf}/100`:""}`:"—");
-  set("strategyAVisualPaper404269",open?`OUVERT · ${Number(open.authorized_notional_eur||0).toFixed(2)} €`:"AUCUNE POSITION");
-  const next=s?.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";set("strategyAVisualNext404269",next);
+  set("strategyAVisualState",phase.label);
+  set("strategyAVisualReason",phase.reason);
+  set("strategyAVisualDecision",String(p?.status||s?.phase||"—").replaceAll("_"," "));
+  const h24=Number(p?.market?.change_24h_pct);set("strategyAVisualBtc",Number.isFinite(h24)?`${h24>=0?"+":""}${h24.toFixed(2)} %`:"—");
+  const conf=Number(p?.oracle?.confidence);set("strategyAVisualOracle",p?.oracle?.regime?`${p.oracle.regime}${Number.isFinite(conf)?` · ${conf}/100`:""}`:"—");
+  set("strategyAVisualPaper",open?`OUVERT · ${Number(open.authorized_notional_eur||0).toFixed(2)} €`:"AUCUNE POSITION");
+  const next=s?.next_cycle_at?new Date(s.next_cycle_at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"—";set("strategyAVisualNext",next);
   const sample=Number(metrics?.sample_size||0),pnl=Number(metrics?.cumulative_net_pnl_eur||0),fees=Number(metrics?.total_fees_eur||0),impact=Number(metrics?.estimated_total_impact_eur||0),wins=Number(metrics?.wins||0),losses=Number(metrics?.losses||0),gross=pnl+fees+impact;
   const euro=v=>Number(v||0).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
-  set("strategyAVisualMetrics404269",`TRADES ${sample} · GAGNANTS ${wins} · PERDANTS ${losses} · BRUT ${gross>=0?"+":""}${euro(gross)} € · FRAIS -${euro(fees)} € · IMPACT -${euro(impact)} € · NET ${pnl>=0?"+":""}${euro(pnl)} €`);
-  const metricsEl=document.getElementById("strategyAVisualMetrics404269");if(metricsEl){metricsEl.style.fontSize="12px";metricsEl.style.fontWeight="900";metricsEl.style.lineHeight="1.45";metricsEl.style.color="#eaf5fa";metricsEl.style.whiteSpace="normal";}
+  set("strategyAVisualMetrics",`TRADES ${sample} · GAGNANTS ${wins} · PERDANTS ${losses} · BRUT ${gross>=0?"+":""}${euro(gross)} € · FRAIS -${euro(fees)} € · IMPACT -${euro(impact)} € · NET ${pnl>=0?"+":""}${euro(pnl)} €`);
+  const metricsEl=document.getElementById("strategyAVisualMetrics");if(metricsEl){metricsEl.style.fontSize="12px";metricsEl.style.fontWeight="900";metricsEl.style.lineHeight="1.45";metricsEl.style.color="#eaf5fa";metricsEl.style.whiteSpace="normal";}
   try{strategyARenderDecisionTrace();}catch(_){}
   try{strategyARenderExperimentLedger();}catch(_){}
-  try{globalThis.AgentCryptoStrategyAReplay404290?.render?.();}catch(_){}
-  let exportBtn=document.getElementById("strategyAExportTrades");if(!exportBtn){exportBtn=document.createElement("button");exportBtn.type="button";exportBtn.className="btn small";exportBtn.id="strategyAExportTrades";exportBtn.textContent="TÉLÉCHARGER JOURNAL TRADES";exportBtn.addEventListener("click",()=>strategyAExportTrades());const actions=document.querySelector("#strategyAVisualConsole404269 .avc-actions-404269");const stop=document.getElementById("strategyAVisualStop404269");if(actions)actions.insertBefore(exportBtn,stop||null);}
-  const start=document.getElementById("strategyAVisualStart404269"),stop=document.getElementById("strategyAVisualStop404269");
+  try{globalThis.AgentCryptoStrategyAReplay?.render?.();}catch(_){}
+  let exportBtn=document.getElementById("strategyAExportTrades");if(!exportBtn){exportBtn=document.createElement("button");exportBtn.type="button";exportBtn.className="btn small";exportBtn.id="strategyAExportTrades";exportBtn.textContent="TÉLÉCHARGER JOURNAL TRADES";exportBtn.addEventListener("click",()=>strategyAExportTrades());const actions=document.querySelector("#strategyAVisualConsole .avc-actions");const stop=document.getElementById("strategyAVisualStop");if(actions)actions.insertBefore(exportBtn,stop||null);}
+  const start=document.getElementById("strategyAVisualStart"),stop=document.getElementById("strategyAVisualStop");
   if(start){start.disabled=!!s?.enabled;start.textContent=s?.enabled?"AUTO A ACTIF":"ACTIVER AUTO A";}
   if(stop)stop.disabled=!s?.enabled;
   return true;
 }
-try{globalThis.AgentCryptoStrategyAVisualHarmony404269=Object.freeze({build:"40.4.269",apply:strategyAApplyVisualHarmony,presentation_only:true,native_simulation_mount:true,technical_default_closed:true,engines_changed:false,auto_runner_logic_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAVisualHarmony=Object.freeze({build:"40.4.269",apply:strategyAApplyVisualHarmony,presentation_only:true,native_simulation_mount:true,technical_default_closed:true,engines_changed:false,auto_runner_logic_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
-try{globalThis.AgentCryptoStrategyAOperatorBoard404268=Object.freeze({build:"40.4.268",apply:strategyAApplyOperatorBoard,presentation_only:true,old_technical_ui_preserved:true,technical_default_closed:true,engines_changed:false,auto_runner_logic_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAOperatorBoard=Object.freeze({build:"40.4.268",apply:strategyAApplyOperatorBoard,presentation_only:true,old_technical_ui_preserved:true,technical_default_closed:true,engines_changed:false,auto_runner_logic_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
-try{globalThis.AgentCryptoStrategyAHumanReadability404267=Object.freeze({build:"40.4.267",apply:strategyAApplyHumanReadability,presentation_only:true,engines_changed:false,auto_runner_logic_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAHumanReadability=Object.freeze({build:"40.4.267",apply:strategyAApplyHumanReadability,presentation_only:true,engines_changed:false,auto_runner_logic_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
-try{globalThis.AgentCryptoAutoPaperRunner404265=Object.freeze({build:"40.4.265",start:strategyAAutoStart404265,stop:strategyAAutoStop,tick:()=>strategyAAutoCycle("operator_api"),state:strategyAAutoSnapshot,paper_only:true,session_local:true,default_off:true,cadence_ms:300000,min_hold_ms:300000,max_open_positions:1,real_orders:false,kraken_network:false,storage_write:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:true});}catch(_){}
+try{globalThis.AgentCryptoAutoPaperRunner=Object.freeze({build:"40.4.265",start:strategyAAutoStart,stop:strategyAAutoStop,tick:()=>strategyAAutoCycle("operator_api"),state:strategyAAutoSnapshot,paper_only:true,session_local:true,default_off:true,cadence_ms:300000,min_hold_ms:300000,max_open_positions:1,real_orders:false,kraken_network:false,storage_write:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:true});}catch(_){}
 
 /* 40.4.261 — STRATEGY A TRADE PROPOSAL ENVELOPE FOUNDATION LOCK */
 /* One responsibility: expose a deterministic BTC candidate for the isolated Strategy A
@@ -36715,18 +36715,18 @@ function strategyAOracleContext(){
     return {available:true,active:true,regime:modelRegime,confidence:modelConfidence,informational_only:true,source:"atlasOracleBuildModel",asset_id:String(coin?.id||"bitcoin"),h24:strategyAReadNumber(model?.h24),direction_score:strategyAReadNumber(model?.directionScore)};
   }
 
-  const preview=document.getElementById("atlasOracleCollapsedPreview40296");
-  const biasText=String(document.getElementById("atlasOracleCollapsedBias40296")?.textContent||preview?.dataset?.bias||"").replace(/\s+/g," ").trim().toUpperCase();
+  const preview=document.getElementById("atlasOracleCollapsedPreview");
+  const biasText=String(document.getElementById("atlasOracleCollapsedBias")?.textContent||preview?.dataset?.bias||"").replace(/\s+/g," ").trim().toUpperCase();
   const previewBias=String(preview?.dataset?.bias||biasText).toUpperCase();
   const regime=/HAUSSI/.test(previewBias)?"TENDANCE HAUSSIÈRE":/BAISS/.test(previewBias)?"TENDANCE BAISSIÈRE":/MIXTE|CONTRADICT/.test(previewBias)?"MIXTE":"UNKNOWN";
-  const confText=String(document.getElementById("atlasOracleCollapsedConfidence40296")?.textContent||"").replace(/\s+/g," ");
+  const confText=String(document.getElementById("atlasOracleCollapsedConfidence")?.textContent||"").replace(/\s+/g," ");
   const confMatch=confText.match(/(\d{1,3})\s*\/\s*100/);
   const confidence=confMatch?Number(confMatch[1]):null;
   const available=!!preview;
   const active=available&&regime!=="UNKNOWN"&&Number.isFinite(confidence);
   return {available,active,regime,confidence,informational_only:true,source:"oracle_collapsed_preview_40296",asset_id:String(coin?.id||"bitcoin"),h24:null,direction_score:null};
 }
-try{globalThis.AgentCryptoStrategyASignalInput404266=Object.freeze({build:"40.4.266",btc:strategyABtcContext,oracle:strategyAOracleContext,market_owner:"atlasCurrentQuoteForCoin.change24h",oracle_owner:"atlasOracleBuildModel",oracle_presentation_fallback:"atlasOracleCollapsedPreview40296",market_core_changed:false,oracle_engine_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyASignalInput=Object.freeze({build:"40.4.266",btc:strategyABtcContext,oracle:strategyAOracleContext,market_owner:"atlasCurrentQuoteForCoin.change24h",oracle_owner:"atlasOracleBuildModel",oracle_presentation_fallback:"atlasOracleCollapsedPreview",market_core_changed:false,oracle_engine_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
 function strategyALocalContext(){
   let comparison=null,integration=null,acceptance=null;
@@ -36755,7 +36755,7 @@ function strategyAMeasuredMixedBias(oracle,btc){
   const btcOk=Number.isFinite(btc24)&&btc24>=STRATEGY_A_MIXED_BIAS_GATE.min_btc_24h_pct;
   return {eligible:mixed&&directionOk&&confidenceOk&&btcOk,mixed,direction_score:Number.isFinite(direction)?direction:null,confidence:Number.isFinite(confidence)?confidence:null,btc_24h_pct:Number.isFinite(btc24)?btc24:null,direction_ok:directionOk,confidence_ok:confidenceOk,btc_ok:btcOk,thresholds:STRATEGY_A_MIXED_BIAS_GATE};
 }
-try{globalThis.AgentCryptoStrategyAMeasuredMixedBias404270=Object.freeze({build:"40.4.270",evaluate:strategyAMeasuredMixedBias,thresholds:STRATEGY_A_MIXED_BIAS_GATE,paper_only:true,risk_governor_required:true,market_core_changed:false,oracle_engine_changed:false,risk_governor_changed:false,paper_execution_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAMeasuredMixedBias=Object.freeze({build:"40.4.270",evaluate:strategyAMeasuredMixedBias,thresholds:STRATEGY_A_MIXED_BIAS_GATE,paper_only:true,risk_governor_required:true,market_core_changed:false,oracle_engine_changed:false,risk_governor_changed:false,paper_execution_changed:false,new_fetch:false,new_websocket:false,new_observer:false,new_timer:false,storage_write:false,real_orders:false,kraken_network:false});}catch(_){}
 
 function strategyATradeProposal(){
   const btc=strategyABtcContext(),oracle=strategyAOracleContext(),local=strategyALocalContext();
@@ -36772,10 +36772,10 @@ function strategyATradeProposal(){
   return {schema:"agent_crypto_trade_proposal_v1",build:"40.4.261",proposal_id:`STRAT-A-BTC-${strategyAHash(fingerprint)}`,decision_fingerprint:fingerprint,generated_at:new Date().toISOString(),strategy:"STRATEGY_A_V1",strategy_label:"BTC CONTINUATION BASELINE",workspace:"strategy_a",kraken_workspace:"erith-strategy-a",mode:"paper_proposal_only",asset_id:btc.asset_id,symbol:"BTC",status,direction:status==="PROPOSED"?"LONG":"NO_TRADE",horizon:"5m",market:btc,oracle,atlas:{context:"READ_ONLY_EXISTING_STATE",pipeline_mutation:false},data_quality:{critical_price_available:btc.available,simulation_static_safety_ok:local.static_safety_ok,kraken_mapping_state:local.kraken_mapping_state},entry_condition:"BTC 24h > 0 + Oracle actif + [régime haussier + confiance ≥ 55/100 OU MIXTE + direction ≥ +12/100 + confiance ≥ 70/100 + BTC 24h ≥ +0.10%]",invalidation_condition:"Donnée critique absente/dégradée, Oracle inactif, confiance insuffisante, régime baissier/contradictoire ou MIXTE sans biais mesuré suffisant",entry_gate:{build:"40.4.270",mode:bullishRegime?"BULLISH_BASELINE":"MEASURED_MIXED_BIAS",mixed_bias:mixedGate},requested_notional_eur:null,authorized_notional_eur:null,exposure_before_eur:local.exposure_before_eur,exposure_after_eur:null,theoretical_stop:null,stop_state:"REQUIRES_RISK_GOVERNOR",position_sizing_owner:"RISK_GOVERNOR_NOT_IMPLEMENTED",cost_model:{state:"UNKNOWN",source:"not_bound_in_40.4.261",execution_allowed:false},reason:reasons.join(" "),safety:{simulation_only:true,proposal_only:true,real_order:false,kraken_order:false,credentials:false,wallet:false,withdrawal:false,storage_write:false,final_authorization:false}};
 }
 function renderStrategyATradeProposal(){
-  const anchor=document.getElementById("simulationReadiness404152");if(!anchor)return;
+  const anchor=document.getElementById("simulationReadiness");if(!anchor)return;
   let panel=document.getElementById("strategyATradeProposal");
-  if(!panel){panel=document.createElement("section");panel.id="strategyATradeProposal";panel.setAttribute("data-strategy-a-proposal-build","40.4.261");panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(98,236,255,.30);border-radius:12px;padding:10px 12px;background:rgba(4,22,32,.52)";panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><strong style="letter-spacing:.08em">STRATÉGIE A · TRADE PROPOSAL V1</strong><span style="font-size:10px;color:#7ef4bc">PAPER PROPOSAL ONLY · ZÉRO ORDRE</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAGenerate404261">GÉNÉRER PROPOSITION A</button></div><div id="strategyASummary404261" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">Aucune proposition générée · BTC uniquement · Risk Governor non implémenté.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAGenerate404261")?.addEventListener("click",()=>{STRATEGY_A_LAST_PROPOSAL=strategyATradeProposal();renderStrategySandboxExtensions();});}
-  const summary=document.getElementById("strategyASummary404261");if(!summary)return;const p=STRATEGY_A_LAST_PROPOSAL;
+  if(!panel){panel=document.createElement("section");panel.id="strategyATradeProposal";panel.setAttribute("data-strategy-a-proposal-build","40.4.261");panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(98,236,255,.30);border-radius:12px;padding:10px 12px;background:rgba(4,22,32,.52)";panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><strong style="letter-spacing:.08em">STRATÉGIE A · TRADE PROPOSAL V1</strong><span style="font-size:10px;color:#7ef4bc">PAPER PROPOSAL ONLY · ZÉRO ORDRE</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAGenerate">GÉNÉRER PROPOSITION A</button></div><div id="strategyASummary" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">Aucune proposition générée · BTC uniquement · Risk Governor non implémenté.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAGenerate")?.addEventListener("click",()=>{STRATEGY_A_LAST_PROPOSAL=strategyATradeProposal();renderStrategySandboxExtensions();});}
+  const summary=document.getElementById("strategyASummary");if(!summary)return;const p=STRATEGY_A_LAST_PROPOSAL;
   if(!p){summary.textContent="Aucune proposition générée · BTC uniquement · Risk Governor non implémenté.";return;}
   const price=Number.isFinite(p.market?.price_eur)?fmtEUR.format(p.market.price_eur):"prix inconnu",conf=Number.isFinite(p.oracle?.confidence)?`${p.oracle.confidence}/100`:"—";
   summary.textContent=`${p.status} · ${p.proposal_id} · BTC ${price} · Oracle ${p.oracle?.regime||"UNKNOWN"} · conf. ${conf} · ${p.reason}`;summary.style.color=p.status==="PROPOSED"?"#7ef4bc":(p.status==="REJECTED"?"#ff9f9f":"#ffd27a");
@@ -36790,7 +36790,7 @@ function renderStrategySandboxExtensions(){
   if(typeof strategyAApplyOperatorBoard==="function")strategyAApplyOperatorBoard();
   if(typeof strategyAApplyVisualHarmony==="function")strategyAApplyVisualHarmony();
 }
-try{globalThis.AgentCryptoStrategyAProposal404261=Object.freeze({build:"40.4.261",generate:strategyATradeProposal,last:()=>STRATEGY_A_LAST_PROPOSAL,paper_proposal_only:true,real_orders:false,kraken_orders:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false});}catch(_){}
+try{globalThis.AgentCryptoStrategyAProposal=Object.freeze({build:"40.4.261",generate:strategyATradeProposal,last:()=>STRATEGY_A_LAST_PROPOSAL,paper_proposal_only:true,real_orders:false,kraken_orders:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false});}catch(_){}
 
 /* 40.4.262 — RISK GOVERNOR V1 · STRATEGY A PAPER AUTHORIZATION LOCK */
 let STRATEGY_A_LAST_RISK=null;
@@ -36814,10 +36814,10 @@ function strategyARiskGovernor(proposal=STRATEGY_A_LAST_PROPOSAL){
 }
 function renderStrategyARiskGovernor(){
   const anchor=document.getElementById("strategyATradeProposal");if(!anchor)return;let panel=document.getElementById("strategyARiskGovernor");
-  if(!panel){panel=document.createElement("section");panel.id="strategyARiskGovernor";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(178,255,112,.26);border-radius:12px;padding:10px 12px;background:rgba(10,30,24,.46)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>RISK GOVERNOR V1 · STRATÉGIE A</strong><span style="font-size:10px;color:#b8ff90">PAPER AUTHORIZATION ONLY</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyARiskEvaluate404262">ÉVALUER RISQUE</button></div><div id="strategyARiskSummary404262" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">En attente d’une proposition A.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyARiskEvaluate404262")?.addEventListener("click",()=>{STRATEGY_A_LAST_RISK=strategyARiskGovernor();renderStrategySandboxExtensions();});}
-  const out=document.getElementById("strategyARiskSummary404262");if(!out)return;const r=STRATEGY_A_LAST_RISK;if(!r){out.textContent="En attente d’une proposition A.";return;}out.textContent=`${r.decision} · autorisé ${Number(r.authorized_notional_eur||0).toFixed(2)} € / demandé ${Number(r.requested_notional_eur||0).toFixed(2)} € · ${r.reason}`;out.style.color=r.decision==="ACCEPT"?"#9cff9c":(r.decision==="REDUCE"?"#ffd27a":"#ff9f9f");
+  if(!panel){panel=document.createElement("section");panel.id="strategyARiskGovernor";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(178,255,112,.26);border-radius:12px;padding:10px 12px;background:rgba(10,30,24,.46)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>RISK GOVERNOR V1 · STRATÉGIE A</strong><span style="font-size:10px;color:#b8ff90">PAPER AUTHORIZATION ONLY</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyARiskEvaluate">ÉVALUER RISQUE</button></div><div id="strategyARiskSummary" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">En attente d’une proposition A.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyARiskEvaluate")?.addEventListener("click",()=>{STRATEGY_A_LAST_RISK=strategyARiskGovernor();renderStrategySandboxExtensions();});}
+  const out=document.getElementById("strategyARiskSummary");if(!out)return;const r=STRATEGY_A_LAST_RISK;if(!r){out.textContent="En attente d’une proposition A.";return;}out.textContent=`${r.decision} · autorisé ${Number(r.authorized_notional_eur||0).toFixed(2)} € / demandé ${Number(r.requested_notional_eur||0).toFixed(2)} € · ${r.reason}`;out.style.color=r.decision==="ACCEPT"?"#9cff9c":(r.decision==="REDUCE"?"#ffd27a":"#ff9f9f");
 }
-try{globalThis.AgentCryptoRiskGovernor404262=Object.freeze({build:"40.4.262",evaluate:strategyARiskGovernor,last:()=>STRATEGY_A_LAST_RISK,paper_only:true,real_orders:false,storage_write:false});}catch(_){}
+try{globalThis.AgentCryptoRiskGovernor=Object.freeze({build:"40.4.262",evaluate:strategyARiskGovernor,last:()=>STRATEGY_A_LAST_RISK,paper_only:true,real_orders:false,storage_write:false});}catch(_){}
 
 /* 40.4.263 — STRATEGY A · PAPER EXECUTION ENVELOPE EMULATION LOCK */
 const STRATEGY_A_PAPER_LEDGER=[];
@@ -36840,11 +36840,11 @@ function strategyAPaperExecute(risk=STRATEGY_A_LAST_RISK){
   return row;
 }
 function renderStrategyAPaperExecution(){
-  const anchor=document.getElementById("strategyARiskGovernor");if(!anchor)return;let panel=document.getElementById("strategyAPaperExecution404263");
-  if(!panel){panel=document.createElement("section");panel.id="strategyAPaperExecution404263";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(255,201,91,.25);border-radius:12px;padding:10px 12px;background:rgba(35,25,8,.42)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>PAPER EXECUTION ENVELOPE · STRATÉGIE A</strong><span style="font-size:10px;color:#ffd77a">LOCAL EMULATION · AUCUN APPEL KRAKEN</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAPaperFill404263">SIMULER FILL PAPER</button></div><div id="strategyAPaperSummary404263" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">Aucun fill paper.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAPaperFill404263")?.addEventListener("click",()=>{strategyAPaperExecute();renderStrategySandboxExtensions();});}
-  const out=document.getElementById("strategyAPaperSummary404263");if(!out)return;const p=STRATEGY_A_PAPER_LEDGER.at(-1);if(!p){out.textContent="Aucun fill paper.";return;}out.textContent=`${p.status} · ${p.execution_id} · ${Number(p.authorized_notional_eur||0).toFixed(2)} € · fill ${Number(p.fill_price_eur||0).toFixed(2)} € · frais ${Number(p.entry_fee_eur||0).toFixed(2)} € · zéro réseau Kraken.`;out.style.color=p.status==="PAPER_OPEN"?"#ffd77a":"#ff9f9f";
+  const anchor=document.getElementById("strategyARiskGovernor");if(!anchor)return;let panel=document.getElementById("strategyAPaperExecution");
+  if(!panel){panel=document.createElement("section");panel.id="strategyAPaperExecution";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(255,201,91,.25);border-radius:12px;padding:10px 12px;background:rgba(35,25,8,.42)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>PAPER EXECUTION ENVELOPE · STRATÉGIE A</strong><span style="font-size:10px;color:#ffd77a">LOCAL EMULATION · AUCUN APPEL KRAKEN</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAPaperFill">SIMULER FILL PAPER</button></div><div id="strategyAPaperSummary" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">Aucun fill paper.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAPaperFill")?.addEventListener("click",()=>{strategyAPaperExecute();renderStrategySandboxExtensions();});}
+  const out=document.getElementById("strategyAPaperSummary");if(!out)return;const p=STRATEGY_A_PAPER_LEDGER.at(-1);if(!p){out.textContent="Aucun fill paper.";return;}out.textContent=`${p.status} · ${p.execution_id} · ${Number(p.authorized_notional_eur||0).toFixed(2)} € · fill ${Number(p.fill_price_eur||0).toFixed(2)} € · frais ${Number(p.entry_fee_eur||0).toFixed(2)} € · zéro réseau Kraken.`;out.style.color=p.status==="PAPER_OPEN"?"#ffd77a":"#ff9f9f";
 }
-try{globalThis.AgentCryptoPaperExecution404263=Object.freeze({build:"40.4.263",execute:strategyAPaperExecute,ledger:()=>STRATEGY_A_PAPER_LEDGER.map(row=>({...row})),kraken_network:false,real_orders:false,workspace_mutation:false,storage_write:false});}catch(_){}
+try{globalThis.AgentCryptoPaperExecution=Object.freeze({build:"40.4.263",execute:strategyAPaperExecute,ledger:()=>STRATEGY_A_PAPER_LEDGER.map(row=>({...row})),kraken_network:false,real_orders:false,workspace_mutation:false,storage_write:false});}catch(_){}
 
 /* 40.4.264 — STRATEGY A · PAPER RECONCILIATION AND METRICS FOUNDATION LOCK */
 const STRATEGY_A_CLOSED_TRADES=[];
@@ -36873,11 +36873,11 @@ function strategyAReconcile(){
   return {status:"RECONCILED",trade:row,metrics:strategyAMetrics()};
 }
 function renderStrategyAReconciliation(){
-  const anchor=document.getElementById("strategyAPaperExecution404263");if(!anchor)return;let panel=document.getElementById("strategyAReconciliation404264");
-  if(!panel){panel=document.createElement("section");panel.id="strategyAReconciliation404264";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(190,158,255,.25);border-radius:12px;padding:10px 12px;background:rgba(24,14,40,.42)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>RECONCILIATION + METRICS · STRATÉGIE A</strong><span style="font-size:10px;color:#d7b9ff">PAPER LOCAL · PAS DE PREUVE DE RENTABILITÉ</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAReconcile">RÉCONCILIER / CLÔTURER PAPER</button></div><div id="strategyAMetricsSummary404264" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">0 trade clôturé · échantillon insuffisant.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAReconcile")?.addEventListener("click",()=>{strategyAReconcile();renderStrategySandboxExtensions();});}
-  const out=document.getElementById("strategyAMetricsSummary404264");if(!out)return;const m=strategyAMetrics();out.textContent=`${m.sample_size} trade(s) · ${m.status} · expectancy ${m.expectancy_eur.toFixed(2)} € · P/L cumulé ${m.cumulative_net_pnl_eur.toFixed(2)} € · frais ${m.total_fees_eur.toFixed(2)} € · max drawdown ${m.max_drawdown_eur.toFixed(2)} € · aucune conclusion de rentabilité.`;out.style.color=m.sample_size>=30?"#d7b9ff":"#ffd27a";
+  const anchor=document.getElementById("strategyAPaperExecution");if(!anchor)return;let panel=document.getElementById("strategyAReconciliation");
+  if(!panel){panel=document.createElement("section");panel.id="strategyAReconciliation";panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(190,158,255,.25);border-radius:12px;padding:10px 12px;background:rgba(24,14,40,.42)";panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong>RECONCILIATION + METRICS · STRATÉGIE A</strong><span style="font-size:10px;color:#d7b9ff">PAPER LOCAL · PAS DE PREUVE DE RENTABILITÉ</span><span style="flex:1"></span><button type="button" class="btn small" id="strategyAReconcile">RÉCONCILIER / CLÔTURER PAPER</button></div><div id="strategyAMetricsSummary" style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:7px">0 trade clôturé · échantillon insuffisant.</div>`;anchor.insertAdjacentElement("afterend",panel);panel.querySelector("#strategyAReconcile")?.addEventListener("click",()=>{strategyAReconcile();renderStrategySandboxExtensions();});}
+  const out=document.getElementById("strategyAMetricsSummary");if(!out)return;const m=strategyAMetrics();out.textContent=`${m.sample_size} trade(s) · ${m.status} · expectancy ${m.expectancy_eur.toFixed(2)} € · P/L cumulé ${m.cumulative_net_pnl_eur.toFixed(2)} € · frais ${m.total_fees_eur.toFixed(2)} € · max drawdown ${m.max_drawdown_eur.toFixed(2)} € · aucune conclusion de rentabilité.`;out.style.color=m.sample_size>=30?"#d7b9ff":"#ffd27a";
 }
-try{globalThis.AgentCryptoPaperMetrics404264=Object.freeze({build:"40.4.264",reconcile:strategyAReconcile,metrics:strategyAMetrics,closed:()=>STRATEGY_A_CLOSED_TRADES.map(row=>({...row})),real_orders:false,kraken_network:false,storage_write:false,profitability_claim:false});}catch(_){}
+try{globalThis.AgentCryptoPaperMetrics=Object.freeze({build:"40.4.264",reconcile:strategyAReconcile,metrics:strategyAMetrics,closed:()=>STRATEGY_A_CLOSED_TRADES.map(row=>({...row})),real_orders:false,kraken_network:false,storage_write:false,profitability_claim:false});}catch(_){}
 
 /* 40.4.144 — KRAKEN CLI LOCAL READ-ONLY HANDSHAKE · WSL ADAPTER BOUNDARY LOCK
    On-demand only. No boot fetch, no timer, no API key, no order, no workspace mutation.
@@ -36904,13 +36904,13 @@ function krakenCliSafePair(pair){
   return /^[A-Z0-9]{5,16}$/.test(value) ? value : "BTCUSD";
 }
 function krakenCliOutput(payload){
-  const out=document.getElementById("krakenCliLabOutput404144");
+  const out=document.getElementById("krakenCliLabOutput");
   if(!out) return;
   out.textContent=typeof payload === "string" ? payload : JSON.stringify(payload,null,2);
 }
 function krakenCliSetStatus(next){
   KRAKEN_CLI_LAST=Object.freeze({ ...KRAKEN_CLI_LAST, ...next, tested:true });
-  const status=document.getElementById("krakenCliLabStatus404144");
+  const status=document.getElementById("krakenCliLabStatus");
   if(status){
     const x=KRAKEN_CLI_LAST;
     status.textContent=`ADAPTER ${x.adapter?"PRÊT":"N/D"} · CLI ${x.cli?"DÉTECTÉ":"N/D"} · TRANSPORT ${x.transport||"N/D"} · MCP NON DÉMARRÉ · CLÉS NON REQUISES`;
@@ -36950,30 +36950,30 @@ async function krakenCliWorkspaceList(){
   }catch(error){ krakenCliOutput({ ok:false, command:"workspace list", error:String(error?.message||error), mutation:false, real_order:false }); return null; }
 }
 function renderKrakenCliLab(){
-  const compare=document.getElementById("simPaperWorkspaceCompare404143");
-  const switcher=document.getElementById("simPaperWorkspace404142");
+  const compare=document.getElementById("simPaperWorkspaceCompare");
+  const switcher=document.getElementById("simPaperWorkspace");
   const anchor=compare||switcher;
   if(!anchor) return;
-  let panel=document.getElementById("krakenCliLab404144");
+  let panel=document.getElementById("krakenCliLab");
   if(!panel){
     panel=document.createElement("section");
-    panel.id="krakenCliLab404144";
+    panel.id="krakenCliLab";
     panel.setAttribute("data-kraken-cli-build","40.4.144");
     panel.style.cssText="margin:0 0 10px 0;border:1px solid rgba(108,197,255,.28);border-radius:12px;padding:10px 12px;background:rgba(5,20,34,.50)";
     panel.innerHTML=`<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
       <strong style="letter-spacing:.08em">KRAKEN CLI LAB · LECTURE SEULE</strong>
-      <span id="krakenCliLabStatus404144" style="font-size:10px;color:var(--muted,#9fb0c5)">ADAPTER NON TESTÉ · CLI NON TESTÉ · MCP NON DÉMARRÉ · CLÉS NON REQUISES</span>
+      <span id="krakenCliLabStatus" style="font-size:10px;color:var(--muted,#9fb0c5)">ADAPTER NON TESTÉ · CLI NON TESTÉ · MCP NON DÉMARRÉ · CLÉS NON REQUISES</span>
       <span style="flex:1"></span>
-      <button type="button" class="btn small" id="krakenCliProbeBtn404144">TESTER CLI</button>
-      <button type="button" class="btn small" id="krakenCliTickerBtn404144">BTCUSD</button>
-      <button type="button" class="btn small" id="krakenCliWorkspaceBtn404144">WORKSPACES</button>
+      <button type="button" class="btn small" id="krakenCliProbeBtn">TESTER CLI</button>
+      <button type="button" class="btn small" id="krakenCliTickerBtn">BTCUSD</button>
+      <button type="button" class="btn small" id="krakenCliWorkspaceBtn">WORKSPACES</button>
     </div>
     <div style="font-size:10px;color:var(--muted,#9fb0c5);margin-top:6px">Port 8791 · localhost uniquement · GET allowlist · aucune clé · aucun ordre · aucune création/reset/promotion de workspace.</div>
-    <pre id="krakenCliLabOutput404144" style="white-space:pre-wrap;max-height:170px;overflow:auto;margin:8px 0 0;padding:8px;border-radius:8px;background:rgba(0,0,0,.22);font-size:10px">Adapter non testé. Le moteur paper local 40.4.142/143 reste indépendant.</pre>`;
+    <pre id="krakenCliLabOutput" style="white-space:pre-wrap;max-height:170px;overflow:auto;margin:8px 0 0;padding:8px;border-radius:8px;background:rgba(0,0,0,.22);font-size:10px">Adapter non testé. Le moteur paper local 40.4.142/143 reste indépendant.</pre>`;
     anchor.insertAdjacentElement("afterend",panel);
-    panel.querySelector('#krakenCliProbeBtn404144')?.addEventListener('click',()=>void krakenCliProbe());
-    panel.querySelector('#krakenCliTickerBtn404144')?.addEventListener('click',()=>void krakenCliTicker('BTCUSD'));
-    panel.querySelector('#krakenCliWorkspaceBtn404144')?.addEventListener('click',()=>void krakenCliWorkspaceList());
+    panel.querySelector('#krakenCliProbeBtn')?.addEventListener('click',()=>void krakenCliProbe());
+    panel.querySelector('#krakenCliTickerBtn')?.addEventListener('click',()=>void krakenCliTicker('BTCUSD'));
+    panel.querySelector('#krakenCliWorkspaceBtn')?.addEventListener('click',()=>void krakenCliWorkspaceList());
   }
 }
 
@@ -37011,23 +37011,23 @@ function switchPaperWorkspace(workspaceKey, options={}){
 }
 function ensurePaperWorkspaceControls(){
   const anchor=els.simProfileStatus;
-  if(!anchor || document.getElementById("simPaperWorkspace404142")) return;
+  if(!anchor || document.getElementById("simPaperWorkspace")) return;
   const wrap=document.createElement("div");
-  wrap.id="simPaperWorkspace404142";
+  wrap.id="simPaperWorkspace";
   wrap.setAttribute("data-paper-workspace-build","40.4.142");
   wrap.style.cssText="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:7px 0;padding:7px 8px;border:1px solid rgba(98,236,255,.22);border-radius:10px;background:rgba(4,16,29,.42)";
-  wrap.innerHTML=`<strong style="font-size:10px;letter-spacing:.08em">PAPER WORKSPACE</strong>${Object.values(PAPER_WORKSPACES).map(item=>`<button type="button" class="btn small" data-paper-workspace-404142="${item.key}">${item.label}</button>`).join("")}<span id="simPaperWorkspaceTruth404142" style="font-size:10px;color:var(--muted,#9fb0c5)"></span>`;
+  wrap.innerHTML=`<strong style="font-size:10px;letter-spacing:.08em">PAPER WORKSPACE</strong>${Object.values(PAPER_WORKSPACES).map(item=>`<button type="button" class="btn small" data-paper-workspace="${item.key}">${item.label}</button>`).join("")}<span id="simPaperWorkspaceTruth" style="font-size:10px;color:var(--muted,#9fb0c5)"></span>`;
   anchor.parentNode?.insertBefore(wrap,anchor);
-  wrap.querySelectorAll("[data-paper-workspace-404142]").forEach(button=>button.addEventListener("click",()=>switchPaperWorkspace(button.getAttribute("data-paper-workspace-404142"))));
+  wrap.querySelectorAll("[data-paper-workspace]").forEach(button=>button.addEventListener("click",()=>switchPaperWorkspace(button.getAttribute("data-paper-workspace"))));
 }
 function renderPaperWorkspaceControls(){
   ensurePaperWorkspaceControls();
-  document.querySelectorAll("[data-paper-workspace-404142]").forEach(button=>{
-    const active=button.getAttribute("data-paper-workspace-404142")===PAPER_WORKSPACE;
+  document.querySelectorAll("[data-paper-workspace]").forEach(button=>{
+    const active=button.getAttribute("data-paper-workspace")===PAPER_WORKSPACE;
     button.classList.toggle("active",active);
     button.setAttribute("aria-pressed",active?"true":"false");
   });
-  const truth=document.getElementById("simPaperWorkspaceTruth404142");
+  const truth=document.getElementById("simPaperWorkspaceTruth");
   if(truth){
     const integration=paperWorkspaceIntegrationTruth();
     const stateText=integration.kraken_mapping_state==="mapped_read_only" ? "KRAKEN PAPER MAPPÉ · LECTURE SEULE" : (integration.kraken_mapping_state==="missing" ? "KRAKEN PAPER ABSENT" : "KRAKEN PAPER NON CHARGÉ");
@@ -42350,7 +42350,7 @@ function atlasParallelMarketEnsureMetalsRuntime(reason = "operator") {
   return atlasParallelMarketDemandRuntime.promise;
 }
 
-globalThis.AtlasParallelMarketDemand40465 = Object.freeze({
+globalThis.AtlasParallelMarketDemand = Object.freeze({
   build: "40.4.66",
   ensure: atlasParallelMarketEnsureMetalsRuntime,
   snapshot: () => ({
@@ -47888,7 +47888,7 @@ function atlasCexPrimaryBinanceQuote(symbol, now=Date.now()) {
   });
 }
 try {
-  globalThis.ErithCexPrimary4054=Object.freeze({
+  globalThis.ErithCexPrimary=Object.freeze({
     build:"40.4.66",
     mode:"READ_ONLY",
     source:"Binance direct EUR WebSocket",
@@ -50806,7 +50806,7 @@ function writeAutoMemory(records) {
   return actual.slice();
 }
 try {
-  globalThis.AgentCryptoAutoMemoryWriteTruth404296 = Object.freeze({
+  globalThis.AgentCryptoAutoMemoryWriteTruth = Object.freeze({
     build:"40.4.296",
     last:atlasAutoMemoryWriteTruth,
     read_persisted:()=>atlasAutoMemoryPersistedRows().slice(),
@@ -51036,8 +51036,8 @@ function atlasAutoCountdownPresentationActive() {
 
 function atlasSyncAutoCountdownTimer() {
   const details = document.querySelector('details[data-collapse-key="auto-reader"]');
-  if (details && details.dataset.atlasAutoCountdownGate40464 !== "1") {
-    details.dataset.atlasAutoCountdownGate40464 = "1";
+  if (details && details.dataset.atlasAutoCountdownGate !== "1") {
+    details.dataset.atlasAutoCountdownGate = "1";
     details.addEventListener("toggle", atlasSyncAutoCountdownTimer);
   }
   const active = atlasAutoCountdownPresentationActive();
@@ -51940,8 +51940,8 @@ function atlasAudiencePresentationActive() {
 
 function atlasAudienceSyncRenderTimer() {
   const details = document.getElementById("mesure-audience");
-  if (details && details.dataset.atlasAudienceRenderGate40464 !== "1") {
-    details.dataset.atlasAudienceRenderGate40464 = "1";
+  if (details && details.dataset.atlasAudienceRenderGate !== "1") {
+    details.dataset.atlasAudienceRenderGate = "1";
     details.addEventListener("toggle", atlasAudienceSyncRenderTimer);
   }
   const active = atlasAudiencePresentationActive();
@@ -52808,7 +52808,7 @@ const atlasScannerCollectorRuntime = {
 };
 
 function atlasScannerOperatorPriorityActive() {
-  try { return globalThis.ErithOperatorPriority40461?.active?.() === true; }
+  try { return globalThis.ErithOperatorPriority?.active?.() === true; }
   catch (_) { return false; }
 }
 
@@ -53276,7 +53276,7 @@ function atlasScannerCollectorInit() {
 }
 
 try {
-  globalThis.AtlasScannerPersistence40462 = Object.freeze({
+  globalThis.AtlasScannerPersistence = Object.freeze({
     build: "40.4.62",
     mode: "QUIET_IDLE_COALESCED_SERIALIZATION",
     snapshot: () => Object.freeze({
@@ -53460,26 +53460,26 @@ async function atlasStorageHealthCompute(){
   try{if(navigator.storage?.persisted)persisted=await navigator.storage.persisted();}catch{}
   const graph=await atlasStorageHealthGraphV7();return {checked_at:new Date().toISOString(),local,probe,estimate,persisted,graph};
 }
-async function atlasStorageHealthRender(){const root=document.getElementById("atlasStorageHealth40198");if(!root)return null;const r=await atlasStorageHealthCompute();const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};
+async function atlasStorageHealthRender(){const root=document.getElementById("atlasStorageHealth");if(!root)return null;const r=await atlasStorageHealthCompute();const set=(id,v)=>{const n=document.getElementById(id);if(n)n.textContent=v;};
   const usage=Number(r.estimate?.usage),quota=Number(r.estimate?.quota),pct=Number.isFinite(usage)&&Number.isFinite(quota)&&quota>0?usage/quota*100:null;
-  set("atlasStorageOriginUsage40198",Number.isFinite(usage)?atlasStorageHealthBytesLabel(usage):"Non exposé");set("atlasStorageOriginQuota40198",Number.isFinite(quota)?`quota ${atlasStorageHealthBytesLabel(quota)}${Number.isFinite(pct)?` · ${pct.toFixed(2)} %`:""}`:"quota non exposé");
-  set("atlasStorageLocal40198",`${r.local.count} clés · ${atlasStorageHealthBytesLabel(r.local.total_bytes)}`);set("atlasStorageLocalProbe40198",r.probe.ok?"écriture test OK":`écriture refusée · ${r.probe.label}`);
-  set("atlasStorageGraphV740198",r.graph.ok?`${r.graph.surface}/${r.graph.preset} · seq ${r.graph.sequence}`:"Ligne V7 absente");set("atlasStorageGraphV7Detail40198",r.graph.ok?`DB relue · ${r.graph.savedAt||"heure —"}`:(r.graph.error||"IndexedDB sans ligne V7"));
-  set("atlasStoragePersisted40198",r.persisted===true?"OUI":r.persisted===false?"NON":"INCONNU");
-  const largest=document.getElementById("atlasStorageLargest40198");if(largest){const top=r.local.rows.slice(0,8).map((x,i)=>`${i+1}. ${x.key} · ${atlasStorageHealthBytesLabel(x.bytes)}`);const retired=r.local.retired_graph.reduce((s,x)=>s+x.bytes,0);largest.textContent=[`Plus grosses clés localStorage (approx.) :`,...top,``, `Mémoires graphe héritées détectées : ${r.local.retired_graph.length} · ${atlasStorageHealthBytesLabel(retired)}`].join("\n");}
-  const stateNode=document.getElementById("atlasStorageHealthState40198");if(stateNode)stateNode.textContent=r.probe.ok?"STOCKAGE ÉCRIVABLE":`${r.probe.label}`;
+  set("atlasStorageOriginUsage",Number.isFinite(usage)?atlasStorageHealthBytesLabel(usage):"Non exposé");set("atlasStorageOriginQuota",Number.isFinite(quota)?`quota ${atlasStorageHealthBytesLabel(quota)}${Number.isFinite(pct)?` · ${pct.toFixed(2)} %`:""}`:"quota non exposé");
+  set("atlasStorageLocal",`${r.local.count} clés · ${atlasStorageHealthBytesLabel(r.local.total_bytes)}`);set("atlasStorageLocalProbe",r.probe.ok?"écriture test OK":`écriture refusée · ${r.probe.label}`);
+  set("atlasStorageGraphV7",r.graph.ok?`${r.graph.surface}/${r.graph.preset} · seq ${r.graph.sequence}`:"Ligne V7 absente");set("atlasStorageGraphV7Detail",r.graph.ok?`DB relue · ${r.graph.savedAt||"heure —"}`:(r.graph.error||"IndexedDB sans ligne V7"));
+  set("atlasStoragePersisted",r.persisted===true?"OUI":r.persisted===false?"NON":"INCONNU");
+  const largest=document.getElementById("atlasStorageLargest");if(largest){const top=r.local.rows.slice(0,8).map((x,i)=>`${i+1}. ${x.key} · ${atlasStorageHealthBytesLabel(x.bytes)}`);const retired=r.local.retired_graph.reduce((s,x)=>s+x.bytes,0);largest.textContent=[`Plus grosses clés localStorage (approx.) :`,...top,``, `Mémoires graphe héritées détectées : ${r.local.retired_graph.length} · ${atlasStorageHealthBytesLabel(retired)}`].join("\n");}
+  const stateNode=document.getElementById("atlasStorageHealthState");if(stateNode)stateNode.textContent=r.probe.ok?"STOCKAGE ÉCRIVABLE":`${r.probe.label}`;
   globalThis.__AGENT_CRYPTO_STORAGE_HEALTH_LAST_40198__=r;return r;
 }
-async function atlasStorageRequestPersistence(){const button=document.getElementById("btnAtlasStoragePersist40198");if(button)button.disabled=true;try{if(!navigator.storage?.persist)throw new Error("StorageManager.persist indisponible");const ok=await navigator.storage.persist();await atlasStorageHealthRender();const note=document.getElementById("atlasStorageHealthNote40198");if(note)note.textContent=ok?"Stockage persistant accordé par le navigateur. Aucun contenu n’a été effacé.":"Le navigateur n’a pas accordé le mode persistant. Les données restent en mode best-effort.";return ok;}catch(error){const note=document.getElementById("atlasStorageHealthNote40198");if(note)note.textContent=`Demande impossible : ${String(error?.message||error)}`;return false;}finally{if(button)button.disabled=false;}}
-document.getElementById("btnAtlasStorageHealthRefresh40198")?.addEventListener("click",()=>void atlasStorageHealthRender());
-document.getElementById("btnAtlasStoragePersist40198")?.addEventListener("click",()=>void atlasStorageRequestPersistence());
-const atlasStorageHealthState=document.getElementById("atlasStorageHealthState40198");if(atlasStorageHealthState)atlasStorageHealthState.textContent="À LA DEMANDE";
-const atlasStorageHealthNote=document.getElementById("atlasStorageHealthNote40198");if(atlasStorageHealthNote)atlasStorageHealthNote.textContent="40.3.31 : diagnostic stockage différé pour ne plus relire plusieurs Mio de localStorage au démarrage. Utilise « Actualiser stockage » quand tu veux le mesurer. Aucun effacement automatique.";
-globalThis.AtlasStorageHealth40198=Object.freeze({compute:atlasStorageHealthCompute,render:atlasStorageHealthRender,build:ATLAS_STORAGE_HEALTH_40198_BUILD,automatic_boot_scan:false,operator_triggered:true,automatic_cleanup:false});
+async function atlasStorageRequestPersistence(){const button=document.getElementById("btnAtlasStoragePersist");if(button)button.disabled=true;try{if(!navigator.storage?.persist)throw new Error("StorageManager.persist indisponible");const ok=await navigator.storage.persist();await atlasStorageHealthRender();const note=document.getElementById("atlasStorageHealthNote");if(note)note.textContent=ok?"Stockage persistant accordé par le navigateur. Aucun contenu n’a été effacé.":"Le navigateur n’a pas accordé le mode persistant. Les données restent en mode best-effort.";return ok;}catch(error){const note=document.getElementById("atlasStorageHealthNote");if(note)note.textContent=`Demande impossible : ${String(error?.message||error)}`;return false;}finally{if(button)button.disabled=false;}}
+document.getElementById("btnAtlasStorageHealthRefresh")?.addEventListener("click",()=>void atlasStorageHealthRender());
+document.getElementById("btnAtlasStoragePersist")?.addEventListener("click",()=>void atlasStorageRequestPersistence());
+const atlasStorageHealthState=document.getElementById("atlasStorageHealthState");if(atlasStorageHealthState)atlasStorageHealthState.textContent="À LA DEMANDE";
+const atlasStorageHealthNote=document.getElementById("atlasStorageHealthNote");if(atlasStorageHealthNote)atlasStorageHealthNote.textContent="40.3.31 : diagnostic stockage différé pour ne plus relire plusieurs Mio de localStorage au démarrage. Utilise « Actualiser stockage » quand tu veux le mesurer. Aucun effacement automatique.";
+globalThis.AtlasStorageHealth=Object.freeze({compute:atlasStorageHealthCompute,render:atlasStorageHealthRender,build:ATLAS_STORAGE_HEALTH_40198_BUILD,automatic_boot_scan:false,operator_triggered:true,automatic_cleanup:false});
 
 /* 40.2.78 — operator UI for verified storage relief. */
 async function atlasStorageReliefRender40278(message=""){
-  const node=document.getElementById("atlasStorageReliefStatus40278");if(!node)return null;
+  const node=document.getElementById("atlasStorageReliefStatus");if(!node)return null;
   const bulkRows403110=await atlasStorageReliefBulkRead().catch(()=>new Map());
   const rows=[];
   for(const key of ATLAS_STORAGE_RELIEF_TARGETS){
@@ -53496,12 +53496,12 @@ async function atlasStorageReliefRender40278(message=""){
   ].join("\n");
   return rows;
 }
-async function atlasStorageReliefCopyUi(){const btn=document.getElementById("btnAtlasStorageReliefCopy40278");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefCopyTargets();await atlasStorageReliefRender40278(`COPIE TERMINÉE · ${r.rows.filter(x=>x.state==="VÉRIFIÉ").length}/${r.rows.length} vérifiée(s)`);await atlasStorageHealthRender();return r;}finally{if(btn)btn.disabled=false;}}
-async function atlasStorageReliefRetireUi(){const ok=window.confirm("Retirer uniquement les copies localStorage dont la copie IndexedDB vient d’être vérifiée SHA-256 ? Les clés non vérifiées resteront intactes.");if(!ok)return null;const btn=document.getElementById("btnAtlasStorageReliefRetire40278");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefRetireVerified();await atlasStorageReliefRender40278("RETRAIT OPÉRATEUR CONTRÔLÉ");await atlasStorageHealthRender();return r;}finally{if(btn)btn.disabled=false;}}
+async function atlasStorageReliefCopyUi(){const btn=document.getElementById("btnAtlasStorageReliefCopy");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefCopyTargets();await atlasStorageReliefRender40278(`COPIE TERMINÉE · ${r.rows.filter(x=>x.state==="VÉRIFIÉ").length}/${r.rows.length} vérifiée(s)`);await atlasStorageHealthRender();return r;}finally{if(btn)btn.disabled=false;}}
+async function atlasStorageReliefRetireUi(){const ok=window.confirm("Retirer uniquement les copies localStorage dont la copie IndexedDB vient d’être vérifiée SHA-256 ? Les clés non vérifiées resteront intactes.");if(!ok)return null;const btn=document.getElementById("btnAtlasStorageReliefRetire");if(btn)btn.disabled=true;try{const r=await atlasStorageReliefRetireVerified();await atlasStorageReliefRender40278("RETRAIT OPÉRATEUR CONTRÔLÉ");await atlasStorageHealthRender();return r;}finally{if(btn)btn.disabled=false;}}
 
 
 try{
-  globalThis.AtlasStorageOwnership403110=Object.freeze({
+  globalThis.AtlasStorageOwnership=Object.freeze({
     build:"40.3.110",
     database:ATLAS_STORAGE_RELIEF_40278_DB,
     classification:"ACTIVE PRIMARY/MIRROR",
@@ -53520,9 +53520,9 @@ try{
   });
 }catch(_){}
 
-document.getElementById("btnAtlasStorageReliefCopy40278")?.addEventListener("click",()=>void atlasStorageReliefCopyUi());
-document.getElementById("btnAtlasStorageReliefRetire40278")?.addEventListener("click",()=>void atlasStorageReliefRetireUi());
-window.addEventListener("atlas:storage-relief-ready",()=>{const node=document.getElementById("atlasStorageReliefStatus40278");if(node)node.textContent=atlasStorageReliefRuntime.primaryActive?"STORAGE RELIEF 40.2.78 + 40.3.31 · IDB PRIMARY ACTIF · gros payloads hors écriture localStorage synchrone · copies locales conservées":"STORAGE RELIEF 40.2.78 + 40.3.31 · activation IDB différée · copies locales conservées";},{passive:true});
+document.getElementById("btnAtlasStorageReliefCopy")?.addEventListener("click",()=>void atlasStorageReliefCopyUi());
+document.getElementById("btnAtlasStorageReliefRetire")?.addEventListener("click",()=>void atlasStorageReliefRetireUi());
+window.addEventListener("atlas:storage-relief-ready",()=>{const node=document.getElementById("atlasStorageReliefStatus");if(node)node.textContent=atlasStorageReliefRuntime.primaryActive?"STORAGE RELIEF 40.2.78 + 40.3.31 · IDB PRIMARY ACTIF · gros payloads hors écriture localStorage synchrone · copies locales conservées":"STORAGE RELIEF 40.2.78 + 40.3.31 · activation IDB différée · copies locales conservées";},{passive:true});
 
 
 
@@ -53555,9 +53555,9 @@ function atlasStorageRetirementRender(){
   node.textContent=[`PLAN DE RETRAIT · ${plan.candidate_count} candidate(s) · ${atlasStorageHealthBytesLabel(plan.candidate_bytes)}`,...lines,"","Règle : backup → validation V7 → suppression ciblée dans une version ultérieure seulement."].join("\n");
   return plan;
 }
-document.getElementById("btnAtlasStorageRetirementRefresh4023")?.addEventListener("click",()=>atlasStorageRetirementRender());
-document.getElementById("btnAtlasStorageBackup4023")?.addEventListener("click",()=>atlasStorageBackupExport());
-globalThis.AtlasStorageRetirement4023=Object.freeze({plan:atlasStorageRetirementPlan,render:atlasStorageRetirementRender,exportBackup:atlasStorageBackupExport,candidates:ATLAS_STORAGE_RETIREMENT_CANDIDATES,automatic_boot_scan:false,operator_triggered:true,automatic_cleanup:false,deletion_enabled:false});
+document.getElementById("btnAtlasStorageRetirementRefresh")?.addEventListener("click",()=>atlasStorageRetirementRender());
+document.getElementById("btnAtlasStorageBackup")?.addEventListener("click",()=>atlasStorageBackupExport());
+globalThis.AtlasStorageRetirement=Object.freeze({plan:atlasStorageRetirementPlan,render:atlasStorageRetirementRender,exportBackup:atlasStorageBackupExport,candidates:ATLAS_STORAGE_RETIREMENT_CANDIDATES,automatic_boot_scan:false,operator_triggered:true,automatic_cleanup:false,deletion_enabled:false});
 
 
 /* ============================================================
@@ -53595,7 +53595,7 @@ function atlasStorageLineageAudit(snapshot=atlasStorageHealthLocalSnapshot()){
   return {schema:ATLAS_STORAGE_LINEAGE_SCHEMA,build:String(ATLAS_BUILD),captured_at:new Date().toISOString(),automatic_cleanup:false,deletion_enabled:false,requires_code_trace_before_retirement:true,count:rows.length,total_bytes:rows.reduce((s,r)=>s+r.bytes,0),families,rows:rows.sort((a,b)=>b.bytes-a.bytes)};
 }
 function atlasStorageLineageRender(){
-  const node=document.getElementById("atlasStorageLineage40224");if(!node)return null;
+  const node=document.getElementById("atlasStorageLineage");if(!node)return null;
   const audit=atlasStorageLineageAudit();
   const top=audit.rows.slice(0,20).map((r,i)=>`${i+1}. ${r.key} · ${atlasStorageHealthBytesLabel(r.bytes)} · ${r.family} · ${r.status} · ${r.owner_proof}`);
   node.textContent=[`LINEAGE V2 · ${audit.count} clé(s) · ${atlasStorageHealthBytesLabel(audit.total_bytes)}`,"Lecture seule · aucune suppression · owner_hint = famille probable, jamais preuve de propriétaire.","",...top,"", "Règle : toute clé REVIEW_REQUIRED doit être tracée dans le code avant retrait."].join("\n");
@@ -53606,7 +53606,7 @@ function atlasStorageLineageExport(){
   atlasOracleBackupDownload(`agent_crypto_storage_lineage_v2_${String(ATLAS_BUILD).replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(audit,null,2));
   return audit;
 }
-globalThis.AtlasStorageLineage40224=Object.freeze({audit:atlasStorageLineageAudit,render:atlasStorageLineageRender,exportJson:atlasStorageLineageExport,automatic_cleanup:false,deletion_enabled:false});
+globalThis.AtlasStorageLineage=Object.freeze({audit:atlasStorageLineageAudit,render:atlasStorageLineageRender,exportJson:atlasStorageLineageExport,automatic_cleanup:false,deletion_enabled:false});
 
 /* ============================================================
    40.2.28 — STORAGE LINEAGE DECISION LOCK
@@ -53668,7 +53668,7 @@ function atlasStorageLineageDecisionAudit(snapshot=atlasStorageHealthLocalSnapsh
   };
 }
 function atlasStorageLineageDecisionRender(){
-  const node=document.getElementById("atlasStorageLineage40224");if(!node)return null;
+  const node=document.getElementById("atlasStorageLineage");if(!node)return null;
   const audit=atlasStorageLineageDecisionAudit();
   const summary=ATLAS_STORAGE_LINEAGE_DECISION_STATES.map(state=>{const x=audit.summary[state];return `${state} ${x.count} · ${atlasStorageHealthBytesLabel(x.bytes)}`;});
   const top=audit.rows.slice(0,20).map((r,i)=>`${i+1}. ${r.key} · ${atlasStorageHealthBytesLabel(r.bytes)} · ${r.decision} · ${r.family} · ${r.owner_proof}`);
@@ -53681,7 +53681,7 @@ function atlasStorageLineageBundleExport(){
   atlasOracleBackupDownload(`agent_crypto_storage_lineage_decision_${String(ATLAS_BUILD).replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
   return payload;
 }
-globalThis.AtlasStorageLineageDecision40228=Object.freeze({audit:atlasStorageLineageDecisionAudit,render:atlasStorageLineageDecisionRender,exportJson:atlasStorageLineageBundleExport,states:ATLAS_STORAGE_LINEAGE_DECISION_STATES,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
+globalThis.AtlasStorageLineageDecision=Object.freeze({audit:atlasStorageLineageDecisionAudit,render:atlasStorageLineageDecisionRender,exportJson:atlasStorageLineageBundleExport,states:ATLAS_STORAGE_LINEAGE_DECISION_STATES,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
 
 /* ============================================================
    40.2.29 — STORAGE OWNERSHIP PROOF LOCK
@@ -53739,7 +53739,7 @@ function atlasStorageOwnershipProofAudit(snapshot=atlasStorageHealthLocalSnapsho
   };
 }
 function atlasStorageOwnershipProofRender(){
-  const node=document.getElementById("atlasStorageLineage40224");if(!node)return null;
+  const node=document.getElementById("atlasStorageLineage");if(!node)return null;
   const audit=atlasStorageOwnershipProofAudit();
   const summary=ATLAS_STORAGE_LINEAGE_DECISION_STATES.map(state=>{const x=audit.summary[state];return `${state} ${x.count} · ${atlasStorageHealthBytesLabel(x.bytes)}`;});
   const top=audit.rows.slice(0,20).map((r,i)=>`${i+1}. ${r.key} · ${atlasStorageHealthBytesLabel(r.bytes)} · ${r.decision} · ${r.family} · ${r.proof_grade||"—"} · ${r.owner_proof}`);
@@ -53752,9 +53752,9 @@ function atlasStorageOwnershipProofExport(){
   atlasOracleBackupDownload(`agent_crypto_storage_ownership_proof_${String(ATLAS_BUILD).replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
   return payload;
 }
-document.getElementById("btnAtlasStorageLineage40224")?.addEventListener("click",()=>atlasStorageOwnershipProofRender());
-document.getElementById("btnAtlasStorageLineageExport40224")?.addEventListener("click",()=>atlasStorageOwnershipProofExport());
-globalThis.AtlasStorageOwnershipProof40229=Object.freeze({audit:atlasStorageOwnershipProofAudit,render:atlasStorageOwnershipProofRender,exportJson:atlasStorageOwnershipProofExport,ledger:ATLAS_STORAGE_OWNERSHIP_PROOF_LEDGER,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
+document.getElementById("btnAtlasStorageLineage")?.addEventListener("click",()=>atlasStorageOwnershipProofRender());
+document.getElementById("btnAtlasStorageLineageExport")?.addEventListener("click",()=>atlasStorageOwnershipProofExport());
+globalThis.AtlasStorageOwnershipProof=Object.freeze({audit:atlasStorageOwnershipProofAudit,render:atlasStorageOwnershipProofRender,exportJson:atlasStorageOwnershipProofExport,ledger:ATLAS_STORAGE_OWNERSHIP_PROOF_LEDGER,operator_triggered_only:true,read_only:true,automatic_boot_scan:false,automatic_cleanup:false,deletion_enabled:false,migration_enabled:false,retirement_gate:"CLOSED"});
 
 
 /* ============================================================
@@ -53903,7 +53903,7 @@ async function atlasStorageMeasurementCompute(){
   };
 }
 function atlasStorageMeasurementRender(result){
-  const node=document.getElementById("atlasStorageMeasurement40390");if(!node)return result;
+  const node=document.getElementById("atlasStorageMeasurement");if(!node)return result;
   const r=result||globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__;
   if(!r){node.textContent="STORAGE MEASUREMENT 40.3.91 · aucune mesure disponible.";return null;}
   if(r.status!=="MEASURED"){
@@ -53926,7 +53926,7 @@ function atlasStorageMeasurementRender(result){
   node.textContent=lines.join("\n");return r;
 }
 async function atlasStorageMeasurementRun(){
-  const btn=document.getElementById("btnAtlasStorageMeasure40390"),node=document.getElementById("atlasStorageMeasurement40390");
+  const btn=document.getElementById("btnAtlasStorageMeasure"),node=document.getElementById("atlasStorageMeasurement");
   if(btn)btn.disabled=true;if(node)node.textContent="STORAGE MEASUREMENT 40.3.91 · mesure manuelle en cours…";
   try{
     const result=await atlasStorageMeasurementCompute();
@@ -53940,13 +53940,13 @@ async function atlasStorageMeasurementRun(){
 }
 function atlasStorageMeasurementExport(){
   const payload=globalThis.__AGENT_CRYPTO_STORAGE_MEASUREMENT_LAST_40390__;
-  if(!payload){const node=document.getElementById("atlasStorageMeasurement40390");if(node)node.textContent="STORAGE MEASUREMENT 40.3.91 · lancer « Mesurer IndexedDB » avant export.";return null;}
+  if(!payload){const node=document.getElementById("atlasStorageMeasurement");if(node)node.textContent="STORAGE MEASUREMENT 40.3.91 · lancer « Mesurer IndexedDB » avant export.";return null;}
   atlasOracleBackupDownload(`agent_crypto_storage_measurement_${ATLAS_STORAGE_MEASUREMENT_40390_BUILD.replaceAll(".","_")}.json`,"application/json;charset=utf-8",JSON.stringify(payload,null,2));
   return payload;
 }
-document.getElementById("btnAtlasStorageMeasure40390")?.addEventListener("click",()=>void atlasStorageMeasurementRun());
-document.getElementById("btnAtlasStorageMeasureExport40390")?.addEventListener("click",()=>atlasStorageMeasurementExport());
-globalThis.AtlasStorageMeasurement40390=Object.freeze({
+document.getElementById("btnAtlasStorageMeasure")?.addEventListener("click",()=>void atlasStorageMeasurementRun());
+document.getElementById("btnAtlasStorageMeasureExport")?.addEventListener("click",()=>atlasStorageMeasurementExport());
+globalThis.AtlasStorageMeasurement=Object.freeze({
   measure:atlasStorageMeasurementRun,compute:atlasStorageMeasurementCompute,render:atlasStorageMeasurementRender,exportJson:atlasStorageMeasurementExport,
   build:ATLAS_STORAGE_MEASUREMENT_40390_BUILD,schema:ATLAS_STORAGE_MEASUREMENT_40390_SCHEMA,sample_max_per_store:ATLAS_STORAGE_MEASUREMENT_40390_SAMPLE_MAX,
   read_only:true,operator_triggered_only:true,automatic_boot_scan:false,deletion_enabled:false,clear_enabled:false,migration_enabled:false,new_timer:false,new_observer:false,network_request_added:false
@@ -54008,7 +54008,7 @@ async function atlasStorageReliefPlan(){
   };
 }
 function atlasStorageReliefRender40391(report){
-  const node=document.getElementById("atlasStorageRelief40391");if(!node)return report;
+  const node=document.getElementById("atlasStorageRelief");if(!node)return report;
   const r=report||atlasStorageReliefLast;
   if(!r){node.textContent="RELIEF 40.3.91 · EN ATTENTE · aucune suppression automatique.";return null;}
   const lines=[
@@ -54020,7 +54020,7 @@ function atlasStorageReliefRender40391(report){
   node.textContent=lines.join("\n");return r;
 }
 async function atlasStorageReliefRun(){
-  const btn=document.getElementById("btnAtlasStorageRelief40391");if(btn)btn.disabled=true;
+  const btn=document.getElementById("btnAtlasStorageRelief");if(btn)btn.disabled=true;
   try{
     const beforeHealth=atlasStorageHealthLocalSnapshot();
     const copy=await atlasStorageReliefCopyTargets();
@@ -54060,7 +54060,7 @@ async function atlasStorageReliefRun(){
     return result;
   }finally{if(btn)btn.disabled=false;}
 }
-document.getElementById("btnAtlasStorageRelief40391")?.addEventListener("click",()=>void atlasStorageReliefRun());
+document.getElementById("btnAtlasStorageRelief")?.addEventListener("click",()=>void atlasStorageReliefRun());
 globalThis.AtlasStorageRelief40391=Object.freeze({
   build:ATLAS_STORAGE_RELIEF_40391_BUILD,
   schema:ATLAS_STORAGE_RELIEF_40391_SCHEMA,
@@ -55561,7 +55561,7 @@ function atlasMultiCollectorAgeLabel(time, newest) {
 }
 let atlasMultiCollectorDraft = null;
 function atlasMultiCollectorOperatorDetails() {
-  return document.getElementById("atlasMultiCollectorDetails40357");
+  return document.getElementById("atlasMultiCollectorDetails");
 }
 function atlasMultiCollectorOperatorCaptureDraft() {
   const alias = document.getElementById("atlasOperatorAlias");
@@ -55583,13 +55583,13 @@ function atlasMultiCollectorOperatorBindMounted() {
 }
 function atlasMultiCollectorOperatorMount() {
   const details = atlasMultiCollectorOperatorDetails();
-  const mount = document.getElementById("atlasMultiCollectorMount40357");
-  const template = document.getElementById("atlasMultiCollectorTemplate40357");
+  const mount = document.getElementById("atlasMultiCollectorMount");
+  const template = document.getElementById("atlasMultiCollectorTemplate");
   if (!details?.open || !mount || !template) return null;
   let root = document.getElementById("atlasMultiCollectorOperator");
   if (!root) {
     mount.replaceChildren(template.content.cloneNode(true));
-    mount.dataset.atlasMultiCollectorMounted40357 = "1";
+    mount.dataset.atlasMultiCollectorMounted = "1";
     atlasMultiCollectorOperatorBindMounted();
     root = document.getElementById("atlasMultiCollectorOperator");
   }
@@ -55597,10 +55597,10 @@ function atlasMultiCollectorOperatorMount() {
 }
 function atlasMultiCollectorOperatorRelease() {
   atlasMultiCollectorOperatorCaptureDraft();
-  const mount = document.getElementById("atlasMultiCollectorMount40357");
+  const mount = document.getElementById("atlasMultiCollectorMount");
   if (mount) {
     mount.replaceChildren();
-    mount.dataset.atlasMultiCollectorMounted40357 = "0";
+    mount.dataset.atlasMultiCollectorMounted = "0";
   }
 }
 function atlasMultiCollectorOperatorRender() {
@@ -55690,10 +55690,10 @@ function atlasOperatorExportHandoff() {
 function atlasMultiCollectorOperatorInit() {
   const details = atlasMultiCollectorOperatorDetails();
   if (!details) return null;
-  if (details.dataset.atlasMultiCollectorReady40357 === "1") {
+  if (details.dataset.atlasMultiCollectorReady === "1") {
     return details.open ? atlasMultiCollectorOperatorRender() : null;
   }
-  details.dataset.atlasMultiCollectorReady40357 = "1";
+  details.dataset.atlasMultiCollectorReady = "1";
   details.addEventListener("toggle", () => {
     if (details.open) {
       atlasMultiCollectorOperatorMount();
@@ -55940,7 +55940,7 @@ $("btnAnalyzeNews")?.addEventListener("click", analyzeNews);
 $("btnAnalyzeFomo")?.addEventListener("click", analyzeFomo);
 
 els.searchInput?.addEventListener("input", () => {
-  if(globalThis.AtlasMarketUniverse1000_403115){
+  if(globalThis.AtlasMarketUniverse1000){
     atlasMarketUniverseState.page=0;
   }
   const q = String(els.searchInput?.value || "").trim();
@@ -56031,7 +56031,7 @@ function atlasColdBootStart() {
   });
 }
 
-globalThis.AtlasColdBoot40398 = Object.freeze({
+globalThis.AtlasColdBoot = Object.freeze({
   build: "40.3.98",
   state: () => ({
     queued: atlasColdBootState.queue.map(row => row.label),
@@ -56375,11 +56375,11 @@ document.querySelectorAll("[data-market-limit]").forEach(button => {
   });
 });
 
-document.getElementById("marketUniversePrev403115")?.addEventListener("click",()=>{
+document.getElementById("marketUniversePrev")?.addEventListener("click",()=>{
   atlasMarketUniversePageShift(-1);
 });
 
-document.getElementById("marketUniverseNext403115")?.addEventListener("click",()=>{
+document.getElementById("marketUniverseNext")?.addEventListener("click",()=>{
   atlasMarketUniversePageShift(1);
 });
 
@@ -56414,7 +56414,7 @@ window.setTimeout(atlasR3EnsureMathPresence, 0);
 
 window.setTimeout(atlasR3EnsureMathPresence, 900);
 
-globalThis.ErithViewportOwnership40312 = Object.freeze({
+globalThis.ErithViewportOwnership = Object.freeze({
   build: "40.3.12",
   mode_change_document_scroll: false,
   authentication_document_scroll: false,
@@ -56525,7 +56525,7 @@ function atlasBookSharedMemoryPayloadV2() {
   // canonical owner is genuinely unavailable. CURRENT analytics stay excluded.
   let raw = [], backend = "LocalStorage legacy compatibility";
   try {
-    if (globalThis.AgentCryptoSharedMemory404282 && typeof readCollectorMemory === "function") {
+    if (globalThis.AgentCryptoSharedMemory && typeof readCollectorMemory === "function") {
       raw = readCollectorMemory();
       if (typeof atlasCollectorMarketObservationRecords === "function") raw = atlasCollectorMarketObservationRecords(raw);
       backend = "IndexedDB Collector";
@@ -56556,7 +56556,7 @@ async function atlasBookMergeSharedMemoryV2(sharedMemory) {
   if (!incoming.length) {
     return { ok:true, read:0, added:0, total:null, persisted:true, backend:"NOT_REQUIRED", idempotent:true };
   }
-  const owner = globalThis.AgentCryptoSharedMemory404282;
+  const owner = globalThis.AgentCryptoSharedMemory;
   if (!owner?.importPayload) throw new Error("Owner Shared Memory IndexedDB 40.4.282 indisponible : import Book refusé sans mutation");
   const payload = {
     schema: sharedMemory?.schema || ATLAS_BOOK_SHARED_MEMORY_SCHEMA_V2,
@@ -56655,9 +56655,9 @@ async function atlasSharedSynthesisImportFile(event) {
 }
 
 try {
-  globalThis.AgentCryptoMemoryImportSaveTruth404296 = Object.freeze({
+  globalThis.AgentCryptoMemoryImportSaveTruth = Object.freeze({
     build:"40.4.296",
-    shared_memory_owner:"AgentCryptoSharedMemory404282 / IndexedDB Collector",
+    shared_memory_owner:"AgentCryptoSharedMemory / IndexedDB Collector",
     book_import_verified:true,
     duplicate_import_expected_added_zero:true,
     legacy_localstorage_failed_write_truth:true,
@@ -58354,15 +58354,15 @@ const ATLAS_CURRENT_JOURNAL_BODY_TEMPLATE = `
   <div class="atlas-current-journal-33-list" id="atlasCurrentJournal33List" aria-live="polite">
     <p class="atlas-local-response-empty">Chargement de l’index CURRENT…</p>
   </div>
-  <section class="atlas-current-journal-detail-35" id="atlasAetherAnalyticalMemory403100" aria-live="polite">
+  <section class="atlas-current-journal-detail-35" id="atlasAetherAnalyticalMemory" aria-live="polite">
     <div class="atlas-current-journal-detail-35-head">
       <div>
         <span class="eyebrow">AETHER ANALYTICAL MEMORY · DELTA V1</span>
-        <b id="atlasAetherAnalyticalMemoryTitle403100">En attente de deux CURRENT</b>
-        <small id="atlasAetherAnalyticalMemoryMeta403100">Lecture dérivée du Journal CURRENT existant · aucune nouvelle base.</small>
+        <b id="atlasAetherAnalyticalMemoryTitle">En attente de deux CURRENT</b>
+        <small id="atlasAetherAnalyticalMemoryMeta">Lecture dérivée du Journal CURRENT existant · aucune nouvelle base.</small>
       </div>
     </div>
-    <div class="atlas-current-journal-detail-35-body" id="atlasAetherAnalyticalMemoryBody403100">
+    <div class="atlas-current-journal-detail-35-body" id="atlasAetherAnalyticalMemoryBody">
       <p>Deux cycles CURRENT vérifiés permettent de comparer ce qui change et ce qui se répète.</p>
     </div>
   </section>
@@ -58377,17 +58377,17 @@ const ATLAS_CURRENT_JOURNAL_BODY_TEMPLATE = `
 function atlasCurrentJournalReleaseDom() {
   const mount = document.getElementById("atlasCurrentJournalMount");
   if (!mount) return false;
-  if (mount.dataset.atlasCurrentJournalMounted40352 === "0"
-      && mount.querySelector("[data-atlas-current-journal-placeholder-40352]")) return true;
-  mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-current-journal-placeholder-40352="1">Journal CURRENT fermé · index conservé en mémoire locale.</p>';
-  mount.dataset.atlasCurrentJournalMounted40352 = "0";
+  if (mount.dataset.atlasCurrentJournalMounted === "0"
+      && mount.querySelector("[data-atlas-current-journal-placeholder]")) return true;
+  mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-current-journal-placeholder="1">Journal CURRENT fermé · index conservé en mémoire locale.</p>';
+  mount.dataset.atlasCurrentJournalMounted = "0";
   return true;
 }
 
 function atlasCurrentJournalBindInteractions() {
   const list = document.getElementById("atlasCurrentJournal33List");
-  if (list && list.dataset.atlasCurrentJournalBound40352 !== "1") {
-    list.dataset.atlasCurrentJournalBound40352 = "1";
+  if (list && list.dataset.atlasCurrentJournalBound !== "1") {
+    list.dataset.atlasCurrentJournalBound = "1";
     list.addEventListener("click", event => {
       const article = event.target?.closest?.("article[data-fingerprint]");
       if (article) void atlasCurrentJournalOpen35(article.dataset.fingerprint);
@@ -58402,8 +58402,8 @@ function atlasCurrentJournalBindInteractions() {
   }
 
   const close = document.getElementById("btnAtlasCurrentJournalClose35");
-  if (close && close.dataset.atlasCurrentJournalBound40352 !== "1") {
-    close.dataset.atlasCurrentJournalBound40352 = "1";
+  if (close && close.dataset.atlasCurrentJournalBound !== "1") {
+    close.dataset.atlasCurrentJournalBound = "1";
     close.addEventListener("click", () => {
       const detail = document.getElementById("atlasCurrentJournalDetail35");
       if (detail) {
@@ -58415,14 +58415,14 @@ function atlasCurrentJournalBindInteractions() {
   }
 
   const refresh = document.getElementById("btnAtlasCurrentJournalRefresh33");
-  if (refresh && refresh.dataset.atlasCurrentJournalBound40352 !== "1") {
-    refresh.dataset.atlasCurrentJournalBound40352 = "1";
+  if (refresh && refresh.dataset.atlasCurrentJournalBound !== "1") {
+    refresh.dataset.atlasCurrentJournalBound = "1";
     refresh.addEventListener("click", atlasCurrentJournalRender33);
   }
 
   const exporter = document.getElementById("btnAtlasCurrentJournalExport33");
-  if (exporter && exporter.dataset.atlasCurrentJournalBound40352 !== "1") {
-    exporter.dataset.atlasCurrentJournalBound40352 = "1";
+  if (exporter && exporter.dataset.atlasCurrentJournalBound !== "1") {
+    exporter.dataset.atlasCurrentJournalBound = "1";
     exporter.addEventListener("click", atlasCurrentJournalExportMarkdown33);
   }
 }
@@ -58431,9 +58431,9 @@ function atlasCurrentJournalMount() {
   const root = document.getElementById("atlasCurrentJournal33");
   const mount = document.getElementById("atlasCurrentJournalMount");
   if (!root || !mount) return false;
-  if (mount.dataset.atlasCurrentJournalMounted40352 !== "1") {
+  if (mount.dataset.atlasCurrentJournalMounted !== "1") {
     mount.innerHTML = ATLAS_CURRENT_JOURNAL_BODY_TEMPLATE;
-    mount.dataset.atlasCurrentJournalMounted40352 = "1";
+    mount.dataset.atlasCurrentJournalMounted = "1";
   }
   atlasCurrentJournalBindInteractions();
   try { atlasCurrentJournalRender33(); } catch (_) {}
@@ -58444,8 +58444,8 @@ function atlasCurrentJournalInit35() {
   const root = document.getElementById("atlasCurrentJournal33");
   if (!root) return false;
 
-  if (root.dataset.atlasCurrentJournalToggleBound40352 !== "1") {
-    root.dataset.atlasCurrentJournalToggleBound40352 = "1";
+  if (root.dataset.atlasCurrentJournalToggleBound !== "1") {
+    root.dataset.atlasCurrentJournalToggleBound = "1";
     root.addEventListener("toggle", () => {
       const state = root.querySelector(":scope > summary .atlas-collapse-state");
       if (state) state.textContent = root.open ? (state.dataset.openLabel || "Replier") : (state.dataset.closedLabel || "Déplier");
@@ -58970,22 +58970,22 @@ function atlasScannerTruthRows37(kind,hostId,titleId) {
    DOM is neither built nor rewritten until the operator opens details.
    ============================================================ */
 function atlasScannerTruthDetailMount() {
-  const details=document.getElementById("atlasScannerTruthDetails40358");
-  const mount=document.getElementById("atlasScannerTruthMount40358");
-  const template=document.getElementById("atlasScannerTruthTemplate40358");
+  const details=document.getElementById("atlasScannerTruthDetails");
+  const mount=document.getElementById("atlasScannerTruthMount");
+  const template=document.getElementById("atlasScannerTruthTemplate");
   if (!details || !mount || !template || !details.open) return false;
-  if (mount.dataset.atlasScannerMounted40358 === "1") return true;
+  if (mount.dataset.atlasScannerMounted === "1") return true;
   mount.replaceChildren(template.content.cloneNode(true));
-  mount.dataset.atlasScannerMounted40358="1";
+  mount.dataset.atlasScannerMounted="1";
   document.getElementById("btnAtlasScannerTruthRefresh37")?.addEventListener("click",atlasScannerTruthRender37);
   return true;
 }
 
 function atlasScannerTruthDetailRelease() {
-  const mount=document.getElementById("atlasScannerTruthMount40358");
+  const mount=document.getElementById("atlasScannerTruthMount");
   if (!mount) return false;
   mount.replaceChildren();
-  mount.dataset.atlasScannerMounted40358="0";
+  mount.dataset.atlasScannerMounted="0";
   return true;
 }
 
@@ -59005,7 +59005,7 @@ function atlasScannerTruthSummary() {
     badge.textContent=ready?"3 scanners lisibles":latest?"Partiel":"En attente";
     badge.className=`pill ${ready?"ok":"warn"}`;
   }
-  const detailBadge=document.getElementById("atlasScannerTruthDetailBadge40358");
+  const detailBadge=document.getElementById("atlasScannerTruthDetailBadge");
   if (detailBadge) {
     detailBadge.textContent=ready?"5 / 5 / 5":latest?"Partiel":"À la demande";
     detailBadge.className=`pill ${ready?"ok":"warn"}`;
@@ -59018,9 +59018,9 @@ function atlasScannerTruthSummary() {
 }
 
 function atlasScannerTruthDetailInit() {
-  const details=document.getElementById("atlasScannerTruthDetails40358");
-  if (!details || details.dataset.atlasScannerReady40358 === "1") return !!details;
-  details.dataset.atlasScannerReady40358="1";
+  const details=document.getElementById("atlasScannerTruthDetails");
+  if (!details || details.dataset.atlasScannerReady === "1") return !!details;
+  details.dataset.atlasScannerReady="1";
   details.addEventListener("toggle",()=>{
     const stateNode=details.querySelector(":scope > summary .atlas-collapse-state");
     if (stateNode) stateNode.textContent=details.open ? (stateNode.dataset.openLabel||"Replier") : (stateNode.dataset.closedLabel||"Déplier");
@@ -59041,7 +59041,7 @@ function atlasScannerTruthRender37() {
   const root=document.getElementById("atlasScannerTruth37");
   if (!root) return null;
   const summary=atlasScannerTruthSummary();
-  const details=document.getElementById("atlasScannerTruthDetails40358");
+  const details=document.getElementById("atlasScannerTruthDetails");
   if (!details?.open) {
     atlasScannerTruthDetailRelease();
     return {...(summary||{}),deferred:true};
@@ -62332,9 +62332,9 @@ function atlasAetherAnalyticalDelta(records = atlasCurrentJournalRead33()) {
 }
 
 function atlasAetherAnalyticalMemoryRender403100(records = atlasCurrentJournalRead33()) {
-  const title = document.getElementById("atlasAetherAnalyticalMemoryTitle403100");
-  const meta = document.getElementById("atlasAetherAnalyticalMemoryMeta403100");
-  const body = document.getElementById("atlasAetherAnalyticalMemoryBody403100");
+  const title = document.getElementById("atlasAetherAnalyticalMemoryTitle");
+  const meta = document.getElementById("atlasAetherAnalyticalMemoryMeta");
+  const body = document.getElementById("atlasAetherAnalyticalMemoryBody");
   if (!title || !meta || !body) return null;
 
   const delta = atlasAetherAnalyticalDelta(records);
@@ -62373,7 +62373,7 @@ document.addEventListener("agentcrypto:current-finalized", () => {
   });
 });
 
-globalThis.AtlasAetherAnalyticalMemory403100 = Object.freeze({
+globalThis.AtlasAetherAnalyticalMemory = Object.freeze({
   build: "40.3.100",
   compute: atlasAetherAnalyticalDelta,
   render: atlasAetherAnalyticalMemoryRender403100,
@@ -62809,7 +62809,7 @@ queueMicrotask(()=>{if(atlasDeviceComputeAllowed()&&atlasAccessIsAuthorized())vo
 
 
 /* 40.3.78 — Bridge / Control Center operator truth, no new runtime owner. */
-try{globalThis.AtlasBookMirrorReconcile40466=Object.freeze({
+try{globalThis.AtlasBookMirrorReconcile=Object.freeze({
   build:"40.4.66",
   run:(reason="manual")=>atlasBookMirrorBridgeReconcile(reason),
   snapshot:()=>Object.freeze({...atlasBookMirrorBridgeState}),
@@ -62827,7 +62827,7 @@ const ATLAS_BRIDGE_CONTROL_CENTER=Object.freeze({control_center:"2.3.2R12",bridg
    Bridge/API behavior remains 40.3.75→40.3.78.
    ============================================================ */
 function atlasAccessPortalEnsureBackground(){
-  const image=document.getElementById("atlasAccessPortalBg40380");
+  const image=document.getElementById("atlasAccessPortalBg");
   if(!image||image.getAttribute("src"))return false;
   const src=String(image.dataset.src||"").trim();
   if(!src)return false;
@@ -62843,27 +62843,27 @@ function atlasAccessPortalState(id,text,state=""){
 }
 async function atlasAccessPortalRefresh40380(){
   const ryzen=atlasDeviceComputeAllowed();
-  atlasAccessPortalState("atlasAccessInterfaceState40380",atlasAccessIsAuthorized()?"AUTHENTIFIÉE":"VERROUILLÉE",atlasAccessIsAuthorized()?"ok":"warn");
-  atlasAccessPortalState("atlasAccessDeviceState40380",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
-  const top=document.getElementById("atlasAccessTopBridge40380");
+  atlasAccessPortalState("atlasAccessInterfaceState",atlasAccessIsAuthorized()?"AUTHENTIFIÉE":"VERROUILLÉE",atlasAccessIsAuthorized()?"ok":"warn");
+  atlasAccessPortalState("atlasAccessDeviceState",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
+  const top=document.getElementById("atlasAccessTopBridge");
   if(!ryzen){
     if(top)top.textContent="BOOK · LECTURE SEULE";
-    atlasAccessPortalState("atlasAccessBridgeState40380","AUCUN · BOOK","warn");
-    atlasAccessPortalState("atlasAccessBridgeAuthState40380","NON REQUIS","warn");
+    atlasAccessPortalState("atlasAccessBridgeState","AUCUN · BOOK","warn");
+    atlasAccessPortalState("atlasAccessBridgeAuthState","NON REQUIS","warn");
     return;
   }
   if(top)top.textContent="BRIDGE LOCAL · V1.9.9";
   let result=null;
   try{result=await atlasBridgeAuthFetch("/auth/status",{method:"GET"},2600);}catch(_){}
   if(!result?.reachable){
-    atlasAccessPortalState("atlasAccessBridgeState40380","HORS LIGNE","error");
-    atlasAccessPortalState("atlasAccessBridgeAuthState40380","INDISPONIBLE","error");
+    atlasAccessPortalState("atlasAccessBridgeState","HORS LIGNE","error");
+    atlasAccessPortalState("atlasAccessBridgeAuthState","INDISPONIBLE","error");
     return;
   }
-  atlasAccessPortalState("atlasAccessBridgeState40380","CONNECTÉ · V1.9.9","ok");
+  atlasAccessPortalState("atlasAccessBridgeState","CONNECTÉ · V1.9.9","ok");
   const token=atlasBridgeAuthToken();
-  if(token){atlasAccessPortalState("atlasAccessBridgeAuthState40380","SESSION VALIDÉE","ok");return;}
-  atlasAccessPortalState("atlasAccessBridgeAuthState40380",result.payload?.configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",result.payload?.configured?"ok":"warn");
+  if(token){atlasAccessPortalState("atlasAccessBridgeAuthState","SESSION VALIDÉE","ok");return;}
+  atlasAccessPortalState("atlasAccessBridgeAuthState",result.payload?.configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",result.payload?.configured?"ok":"warn");
 }
 try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40380__=Object.freeze({build:"40.3.80",background:"assets/visual/admin-auth-aether-trust-portal-40380.png",ui_authority:"DOM/CSS",background_mutated:false,new_image_generated:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
 
@@ -62888,27 +62888,27 @@ function atlasAccessPortalPrimeLocal(){
   try{atlasAccessPortalEnsureBackground();}catch(_){}
   const ryzen=atlasDeviceComputeAllowed();
   const authorized=atlasAccessIsAuthorized();
-  atlasAccessPortalState("atlasAccessInterfaceState40380",authorized?"AUTHENTIFIÉE":"VERROUILLÉE",authorized?"ok":"warn");
-  atlasAccessPortalState("atlasAccessDeviceState40380",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
-  atlasAccessPortalText("atlasAccessDeviceTop40382",ryzen?"RYZEN PRODUCTEUR":"BOOK · LECTURE SEULE");
-  atlasAccessPortalText("atlasAccessSystemState40382",ryzen?"LOCAL":"LECTURE SEULE");
-  atlasAccessPortalSetDot("atlasAccessSystemDot40382",ryzen?"ok":"");
+  atlasAccessPortalState("atlasAccessInterfaceState",authorized?"AUTHENTIFIÉE":"VERROUILLÉE",authorized?"ok":"warn");
+  atlasAccessPortalState("atlasAccessDeviceState",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
+  atlasAccessPortalText("atlasAccessDeviceTop",ryzen?"RYZEN PRODUCTEUR":"BOOK · LECTURE SEULE");
+  atlasAccessPortalText("atlasAccessSystemState",ryzen?"LOCAL":"LECTURE SEULE");
+  atlasAccessPortalSetDot("atlasAccessSystemDot",ryzen?"ok":"");
   if(!ryzen){
-    atlasAccessPortalText("atlasAccessTopBridge40380","NON REQUIS");
-    atlasAccessPortalState("atlasAccessBridgeState40380","AUCUN · BOOK","warn");
-    atlasAccessPortalState("atlasAccessBridgeAuthState40380","NON REQUIS","warn");
-    atlasAccessPortalState("atlasAccessBookMirrorState40382","LECTURE SEULE","ok");
-    atlasAccessPortalText("atlasAccessBridgeMeta40382","AUCUN BRIDGE LOCAL REQUIS");
+    atlasAccessPortalText("atlasAccessTopBridge","NON REQUIS");
+    atlasAccessPortalState("atlasAccessBridgeState","AUCUN · BOOK","warn");
+    atlasAccessPortalState("atlasAccessBridgeAuthState","NON REQUIS","warn");
+    atlasAccessPortalState("atlasAccessBookMirrorState","LECTURE SEULE","ok");
+    atlasAccessPortalText("atlasAccessBridgeMeta","AUCUN BRIDGE LOCAL REQUIS");
     return true;
   }
   const token=atlasBridgeAuthToken();
-  atlasAccessPortalText("atlasAccessTopBridge40380",token?"SESSION LOCALE":"APRÈS VALIDATION");
-  atlasAccessPortalSetDot("atlasAccessBridgeDot40382",token?"ok":"");
-  atlasAccessPortalState("atlasAccessBridgeState40380",token?"SESSION CONNUE · À REVÉRIFIER":"VÉRIFICATION À LA VALIDATION",token?"ok":"warn");
-  atlasAccessPortalState("atlasAccessBridgeAuthState40380",token?"SESSION LOCALE":"APRÈS MOT DE PASSE",token?"ok":"warn");
-  atlasAccessPortalState("atlasAccessBookMirrorState40382","APRÈS AUTH","warn");
-  atlasAccessPortalText("atlasAccessBridgeMeta40382","AUCUNE REQUÊTE BRIDGE PENDANT LA SAISIE");
-  atlasAccessPortalText("atlasAccessBridgePolicy40382","Validation Bridge au clic · capacités bornées · audit local");
+  atlasAccessPortalText("atlasAccessTopBridge",token?"SESSION LOCALE":"APRÈS VALIDATION");
+  atlasAccessPortalSetDot("atlasAccessBridgeDot",token?"ok":"");
+  atlasAccessPortalState("atlasAccessBridgeState",token?"SESSION CONNUE · À REVÉRIFIER":"VÉRIFICATION À LA VALIDATION",token?"ok":"warn");
+  atlasAccessPortalState("atlasAccessBridgeAuthState",token?"SESSION LOCALE":"APRÈS MOT DE PASSE",token?"ok":"warn");
+  atlasAccessPortalState("atlasAccessBookMirrorState","APRÈS AUTH","warn");
+  atlasAccessPortalText("atlasAccessBridgeMeta","AUCUNE REQUÊTE BRIDGE PENDANT LA SAISIE");
+  atlasAccessPortalText("atlasAccessBridgePolicy","Validation Bridge au clic · capacités bornées · audit local");
   return true;
 }
 
@@ -62916,54 +62916,54 @@ async function atlasAccessPortalRefresh40382(){
   try{atlasAccessPortalEnsureBackground();}catch(_){}
   const ryzen=atlasDeviceComputeAllowed();
   const authorized=atlasAccessIsAuthorized();
-  atlasAccessPortalState("atlasAccessInterfaceState40380",authorized?"AUTHENTIFIÉE":"VERROUILLÉE",authorized?"ok":"warn");
-  atlasAccessPortalState("atlasAccessDeviceState40380",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
-  atlasAccessPortalText("atlasAccessDeviceTop40382",ryzen?"RYZEN PRODUCTEUR":"BOOK · LECTURE SEULE");
-  atlasAccessPortalText("atlasAccessSystemState40382",ryzen?"LOCAL":"LECTURE SEULE");
-  atlasAccessPortalSetDot("atlasAccessSystemDot40382",ryzen?"ok":"");
+  atlasAccessPortalState("atlasAccessInterfaceState",authorized?"AUTHENTIFIÉE":"VERROUILLÉE",authorized?"ok":"warn");
+  atlasAccessPortalState("atlasAccessDeviceState",ryzen?"RYZEN PRODUCTEUR":"TRANSFORMER BOOK",ryzen?"ok":"warn");
+  atlasAccessPortalText("atlasAccessDeviceTop",ryzen?"RYZEN PRODUCTEUR":"BOOK · LECTURE SEULE");
+  atlasAccessPortalText("atlasAccessSystemState",ryzen?"LOCAL":"LECTURE SEULE");
+  atlasAccessPortalSetDot("atlasAccessSystemDot",ryzen?"ok":"");
   if(!ryzen){
-    atlasAccessPortalText("atlasAccessTopBridge40380","NON REQUIS");
-    atlasAccessPortalSetDot("atlasAccessBridgeDot40382","");
-    atlasAccessPortalState("atlasAccessBridgeState40380","AUCUN · BOOK","warn");
-    atlasAccessPortalState("atlasAccessBridgeAuthState40380","NON REQUIS","warn");
-    atlasAccessPortalState("atlasAccessBookMirrorState40382","LECTURE SEULE","ok");
-    atlasAccessPortalText("atlasAccessBridgeMeta40382","AUCUN BRIDGE LOCAL REQUIS");
-    atlasAccessPortalText("atlasAccessBridgePolicy40382","Le Transformer Book consomme seulement les données partagées.");
+    atlasAccessPortalText("atlasAccessTopBridge","NON REQUIS");
+    atlasAccessPortalSetDot("atlasAccessBridgeDot","");
+    atlasAccessPortalState("atlasAccessBridgeState","AUCUN · BOOK","warn");
+    atlasAccessPortalState("atlasAccessBridgeAuthState","NON REQUIS","warn");
+    atlasAccessPortalState("atlasAccessBookMirrorState","LECTURE SEULE","ok");
+    atlasAccessPortalText("atlasAccessBridgeMeta","AUCUN BRIDGE LOCAL REQUIS");
+    atlasAccessPortalText("atlasAccessBridgePolicy","Le Transformer Book consomme seulement les données partagées.");
     return;
   }
   let result=null;
   try{result=await atlasBridgeAuthFetch("/auth/status",{method:"GET"},2600);}catch(_){}
   if(!result?.reachable){
-    atlasAccessPortalText("atlasAccessTopBridge40380","HORS LIGNE");
-    atlasAccessPortalSetDot("atlasAccessBridgeDot40382","error");
-    atlasAccessPortalState("atlasAccessBridgeState40380","HORS LIGNE","error");
-    atlasAccessPortalState("atlasAccessBridgeAuthState40380","INDISPONIBLE","error");
-    atlasAccessPortalState("atlasAccessBookMirrorState40382","INDISPONIBLE","error");
-    atlasAccessPortalText("atlasAccessBridgeMeta40382","BRIDGE NON JOIGNABLE");
-    atlasAccessPortalText("atlasAccessBridgePolicy40382","Loopback local attendu · aucun état distant supposé.");
+    atlasAccessPortalText("atlasAccessTopBridge","HORS LIGNE");
+    atlasAccessPortalSetDot("atlasAccessBridgeDot","error");
+    atlasAccessPortalState("atlasAccessBridgeState","HORS LIGNE","error");
+    atlasAccessPortalState("atlasAccessBridgeAuthState","INDISPONIBLE","error");
+    atlasAccessPortalState("atlasAccessBookMirrorState","INDISPONIBLE","error");
+    atlasAccessPortalText("atlasAccessBridgeMeta","BRIDGE NON JOIGNABLE");
+    atlasAccessPortalText("atlasAccessBridgePolicy","Loopback local attendu · aucun état distant supposé.");
     return;
   }
   const bridgeVersion=String(result.payload?.bridge_version||result.payload?.version||"").trim();
   const bridgeLabel=bridgeVersion?`CONNECTÉ · ${bridgeVersion}`:"CONNECTÉ";
-  atlasAccessPortalText("atlasAccessTopBridge40380",bridgeLabel);
-  atlasAccessPortalSetDot("atlasAccessBridgeDot40382","ok");
-  atlasAccessPortalState("atlasAccessBridgeState40380",bridgeLabel,"ok");
-  atlasAccessPortalText("atlasAccessBridgeMeta40382",bridgeVersion?`VERSION ${bridgeVersion} · LOOPBACK LOCAL`:"VERSION DÉTECTÉE · LOOPBACK LOCAL");
-  atlasAccessPortalText("atlasAccessBridgePolicy40382","Capacités restreintes · refus par défaut · audit local");
+  atlasAccessPortalText("atlasAccessTopBridge",bridgeLabel);
+  atlasAccessPortalSetDot("atlasAccessBridgeDot","ok");
+  atlasAccessPortalState("atlasAccessBridgeState",bridgeLabel,"ok");
+  atlasAccessPortalText("atlasAccessBridgeMeta",bridgeVersion?`VERSION ${bridgeVersion} · LOOPBACK LOCAL`:"VERSION DÉTECTÉE · LOOPBACK LOCAL");
+  atlasAccessPortalText("atlasAccessBridgePolicy","Capacités restreintes · refus par défaut · audit local");
   const token=atlasBridgeAuthToken();
   if(token){
-    atlasAccessPortalState("atlasAccessBridgeAuthState40380","SESSION VALIDÉE","ok");
+    atlasAccessPortalState("atlasAccessBridgeAuthState","SESSION VALIDÉE","ok");
     let mirrorReady=null;
     try{
       await atlasBookMirrorBridgeStatus();
       mirrorReady=atlasBookMirrorBridgeState.credentialReady;
     }catch(_){}
-    atlasAccessPortalState("atlasAccessBookMirrorState40382",mirrorReady===true?"PRÊT · BORNÉ":mirrorReady===false?"CREDENTIAL LOCAL REQUIS":"CAPACITÉ BORNÉE",mirrorReady===true?"ok":"warn");
+    atlasAccessPortalState("atlasAccessBookMirrorState",mirrorReady===true?"PRÊT · BORNÉ":mirrorReady===false?"CREDENTIAL LOCAL REQUIS":"CAPACITÉ BORNÉE",mirrorReady===true?"ok":"warn");
     return;
   }
   const configured=result.payload?.configured===true;
-  atlasAccessPortalState("atlasAccessBridgeAuthState40380",configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",configured?"ok":"warn");
-  atlasAccessPortalState("atlasAccessBookMirrorState40382","APRÈS AUTH","warn");
+  atlasAccessPortalState("atlasAccessBridgeAuthState",configured?"PRÊT À AUTHENTIFIER":"À CONFIGURER",configured?"ok":"warn");
+  atlasAccessPortalState("atlasAccessBookMirrorState","APRÈS AUTH","warn");
 }
 try{globalThis.__AGENT_CRYPTO_ADMIN_PORTAL_40382__=Object.freeze({build:"40.3.82",parent:"40.3.81",background:"assets/visual/admin-auth-aether-trust-sanctuary-40382.png",background_source:"approved_existing_asset",background_byte_preserved:true,ui_authority:"DOM/CSS/JS",dynamic_bridge_version:true,hardcoded_bridge_version_in_portal:false,hardcoded_bridge_port_in_portal:false,hardcoded_model_in_portal:false,book_mirror_truth:true,rich_code_dock:true,central_portal_preserved:true,image_generated_in_build:false,image_edited_in_build:false,new_timer:false,new_observer:false,new_scheduler:false,bridge_runtime_modified:false,window_manager_modified:false});}catch(_){}
 
@@ -63270,7 +63270,7 @@ function atlasGreyProbeCapture(trigger="button"){
   let windows=null;
   let animations=null;
 
-  try{runtime=globalThis.AtlasRuntimeObservatory40214?.snapshot?.()||null;}catch(_){}
+  try{runtime=globalThis.AtlasRuntimeObservatory?.snapshot?.()||null;}catch(_){}
   try{windows=globalThis.ErithAdministratorWindows?.snapshot?.()||null;}catch(_){}
   try{
     const rows=document.getAnimations?.()||[];
@@ -63311,7 +63311,7 @@ function atlasGreyProbeCapture(trigger="button"){
     dom_probe:sample,
     animations,
     paint_isolation_40394:{
-      enabled:document.body?.classList.contains("atlas-paint-isolation-40394")===true,
+      enabled:document.body?.classList.contains("atlas-paint-isolation")===true,
       scope:"family 02 · intelligence-memory-creation",
       strategy:"contain:paint on bounded internal surfaces + isolation on two major semantic shells",
       content_visibility:false,
@@ -63319,7 +63319,7 @@ function atlasGreyProbeCapture(trigger="button"){
       will_change:false
     },
     document_background_40395:{
-      safe_mode:document.body?.classList.contains("atlas-safe-document-background-40395")===true,
+      safe_mode:document.body?.classList.contains("atlas-safe-document-background")===true,
       scope:"BODY background only",
       safe_background:"#06101d",
       decorative_body_background_disabled_in_safe_mode:true,
@@ -63345,9 +63345,9 @@ function atlasGreyProbeCapture(trigger="button"){
 
 function atlasGreyProbeRender(report=null){
   const stateNode=document.getElementById("atlasGreyProbeState");
-  const out=document.getElementById("atlasGreyProbeOutput40393");
-  const arm=document.getElementById("btnAtlasGreyProbeArm40393");
-  const disarm=document.getElementById("btnAtlasGreyProbeDisarm40393");
+  const out=document.getElementById("atlasGreyProbeOutput");
+  const arm=document.getElementById("btnAtlasGreyProbeArm");
+  const disarm=document.getElementById("btnAtlasGreyProbeDisarm");
 
   if(arm)arm.disabled=atlasGreyProbeState.armed;
   if(disarm)disarm.disabled=!atlasGreyProbeState.armed;
@@ -63399,13 +63399,13 @@ function atlasGreyProbeExport(){
   return report;
 }
 
-document.getElementById("btnAtlasGreyProbeArm40393")?.addEventListener("click",()=>atlasGreyProbeArm());
-document.getElementById("btnAtlasGreyProbeCapture40393")?.addEventListener("click",()=>atlasGreyProbeCapture("button"));
-document.getElementById("btnAtlasGreyProbeDisarm40393")?.addEventListener("click",()=>atlasGreyProbeDisarm());
-document.getElementById("btnAtlasGreyProbeExport40393")?.addEventListener("click",()=>atlasGreyProbeExport());
+document.getElementById("btnAtlasGreyProbeArm")?.addEventListener("click",()=>atlasGreyProbeArm());
+document.getElementById("btnAtlasGreyProbeCapture")?.addEventListener("click",()=>atlasGreyProbeCapture("button"));
+document.getElementById("btnAtlasGreyProbeDisarm")?.addEventListener("click",()=>atlasGreyProbeDisarm());
+document.getElementById("btnAtlasGreyProbeExport")?.addEventListener("click",()=>atlasGreyProbeExport());
 atlasGreyProbeRender();
 
-globalThis.AtlasGreyPlateForensic40393=Object.freeze({
+globalThis.AtlasGreyPlateForensic=Object.freeze({
   build:ATLAS_GREY_PROBE_40393_BUILD,
   schema:ATLAS_GREY_PROBE_40393_SCHEMA,
   arm:atlasGreyProbeArm,
@@ -63464,14 +63464,14 @@ try{
    No timer / observer / scheduler / storage / network.
    ============================================================ */
 const ATLAS_PAINT_ISOLATION_40394_BUILD="40.3.94";
-const ATLAS_PAINT_ISOLATION_40394_CLASS="atlas-paint-isolation-40394";
+const ATLAS_PAINT_ISOLATION_40394_CLASS="atlas-paint-isolation";
 
 function atlasPaintIsolationState(){
   return document.body?.classList.contains(ATLAS_PAINT_ISOLATION_40394_CLASS)===true;
 }
 function atlasPaintIsolationRender(){
   const enabled=atlasPaintIsolationState();
-  const btn=document.getElementById("btnAtlasPaintIsolationToggle40394");
+  const btn=document.getElementById("btnAtlasPaintIsolationToggle");
   if(btn){
     btn.setAttribute("aria-pressed",enabled?"true":"false");
     btn.textContent=`Isolation paint 02 · ${enabled?"ON":"OFF"}`;
@@ -63486,11 +63486,11 @@ function atlasPaintIsolationToggle(){
   return atlasPaintIsolationSet(!atlasPaintIsolationState());
 }
 
-document.getElementById("btnAtlasPaintIsolationToggle40394")
+document.getElementById("btnAtlasPaintIsolationToggle")
   ?.addEventListener("click",atlasPaintIsolationToggle);
 atlasPaintIsolationRender();
 
-globalThis.AtlasPaintIsolation40394=Object.freeze({
+globalThis.AtlasPaintIsolation=Object.freeze({
   build:ATLAS_PAINT_ISOLATION_40394_BUILD,
   family:"02-intelligence-memory-creation",
   enabled:atlasPaintIsolationState,
@@ -63540,14 +63540,14 @@ try{
    No storage / timer / observer / scheduler / network.
    ============================================================ */
 const ATLAS_DOCUMENT_BACKGROUND_40395_BUILD="40.3.95";
-const ATLAS_DOCUMENT_BACKGROUND_40395_CLASS="atlas-safe-document-background-40395";
+const ATLAS_DOCUMENT_BACKGROUND_40395_CLASS="atlas-safe-document-background";
 
 function atlasDocumentBackgroundSafe(){
   return document.body?.classList.contains(ATLAS_DOCUMENT_BACKGROUND_40395_CLASS)===true;
 }
 function atlasDocumentBackgroundRender(){
   const safe=atlasDocumentBackgroundSafe();
-  const btn=document.getElementById("btnAtlasDocumentBackgroundToggle40395");
+  const btn=document.getElementById("btnAtlasDocumentBackgroundToggle");
   if(btn){
     btn.setAttribute("aria-pressed",safe?"true":"false");
     btn.textContent=`Fond pleine-page · ${safe?"SAFE":"ORIGINAL"}`;
@@ -63562,11 +63562,11 @@ function atlasDocumentBackgroundToggle(){
   return atlasDocumentBackgroundSet(!atlasDocumentBackgroundSafe());
 }
 
-document.getElementById("btnAtlasDocumentBackgroundToggle40395")
+document.getElementById("btnAtlasDocumentBackgroundToggle")
   ?.addEventListener("click",atlasDocumentBackgroundToggle);
 atlasDocumentBackgroundRender();
 
-globalThis.AtlasDocumentBackground40395=Object.freeze({
+globalThis.AtlasDocumentBackground=Object.freeze({
   build:ATLAS_DOCUMENT_BACKGROUND_40395_BUILD,
   safe:atlasDocumentBackgroundSafe,
   setSafe:atlasDocumentBackgroundSet,
@@ -63875,7 +63875,7 @@ async function atlasAetherAnalyticalMemoryV2(records=atlasCurrentJournalRead33()
 }
 
 async function atlasAetherAnalyticalMemoryV2Render(records=atlasCurrentJournalRead33()){
-  const body=document.getElementById("atlasAetherAnalyticalMemoryBody403100");
+  const body=document.getElementById("atlasAetherAnalyticalMemoryBody");
   if(!body)return null;
 
   let result=null;
@@ -63935,7 +63935,7 @@ atlasAetherAnalyticalMemoryRender403100=function atlasAetherAnalyticalMemoryRend
   return result;
 };
 
-globalThis.AtlasAetherAnalyticalMemoryV2403101=Object.freeze({
+globalThis.AtlasAetherAnalyticalMemoryV2=Object.freeze({
   build:"40.3.101",
   compare:atlasAetherArchivePackageCompare,
   run:atlasAetherAnalyticalMemoryV2,
@@ -64034,13 +64034,13 @@ function atlasAetherRecurrence(records=atlasCurrentJournalRead33()){
 }
 
 function atlasAetherRecurrenceRender(records=atlasCurrentJournalRead33()){
-  const body=document.getElementById("atlasAetherAnalyticalMemoryBody403100");
+  const body=document.getElementById("atlasAetherAnalyticalMemoryBody");
   if(!body)return null;
 
-  let node=document.getElementById("atlasAetherAnalyticalMemoryV3403103");
+  let node=document.getElementById("atlasAetherAnalyticalMemoryV3");
   if(!node){
     node=document.createElement("section");
-    node.id="atlasAetherAnalyticalMemoryV3403103";
+    node.id="atlasAetherAnalyticalMemoryV3";
     node.className="atlas-current-journal-detail-35-grid";
     body.appendChild(node);
   }
@@ -64089,7 +64089,7 @@ atlasAetherAnalyticalMemoryRender403100=function atlasAetherAnalyticalMemoryRend
   return result;
 };
 
-globalThis.AtlasAetherAnalyticalMemoryV3403103=Object.freeze({
+globalThis.AtlasAetherAnalyticalMemoryV3=Object.freeze({
   build:"40.3.103",
   window:ATLAS_AETHER_RECURRENCE_WINDOW,
   compute:atlasAetherRecurrence,
@@ -64214,13 +64214,13 @@ function atlasAetherTransitionLedger(records=atlasCurrentJournalRead33()){
 }
 
 function atlasAetherTransitionRender(records=atlasCurrentJournalRead33()){
-  const body=document.getElementById("atlasAetherAnalyticalMemoryBody403100");
+  const body=document.getElementById("atlasAetherAnalyticalMemoryBody");
   if(!body)return null;
 
-  let node=document.getElementById("atlasAetherAnalyticalMemoryV4403109");
+  let node=document.getElementById("atlasAetherAnalyticalMemoryV4");
   if(!node){
     node=document.createElement("section");
-    node.id="atlasAetherAnalyticalMemoryV4403109";
+    node.id="atlasAetherAnalyticalMemoryV4";
     node.className="atlas-current-journal-detail-35-grid";
     body.appendChild(node);
   }
@@ -64270,7 +64270,7 @@ atlasAetherAnalyticalMemoryRender403100=function atlasAetherAnalyticalMemoryRend
   return result;
 };
 
-globalThis.AtlasAetherAnalyticalMemoryV4403109=Object.freeze({
+globalThis.AtlasAetherAnalyticalMemoryV4=Object.freeze({
   build:"40.3.109",
   window:ATLAS_AETHER_TRANSITION_WINDOW,
   compute:atlasAetherTransitionLedger,
@@ -64363,7 +64363,7 @@ try{
    Intermediate/Admin keep the operator/admin command surface.
    ============================================================ */
 try{
-  globalThis.AtlasNavigationFirstPaint403101=Object.freeze({
+  globalThis.AtlasNavigationFirstPaint=Object.freeze({
     build:"40.3.101",
     structural_fix:true,
     extra_css_override_added:false,
@@ -64391,7 +64391,7 @@ try{
    40.3.101 uses exactly one attempt for each explicit Enter lookup.
    No polling/retry loop/background fetch is added. */
 try{
-  globalThis.AtlasMarketExtendedLookupFix403101=Object.freeze({
+  globalThis.AtlasMarketExtendedLookupFix=Object.freeze({
     build:"40.3.101",
     root_cause:"fetchJsonWithRetry attempts=0 => request loop never executes",
     search_attempts:1,
@@ -64422,7 +64422,7 @@ try{
    - no polling/storage/Oracle/Math mutation
    ============================================================ */
 try{
-  globalThis.AtlasPublicExtendedMarket403102=Object.freeze({
+  globalThis.AtlasPublicExtendedMarket=Object.freeze({
     build:"40.3.102",
     canonical_top250_path:ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.latest,
     extended_path:ATLAS_PUBLIC_CRYPTO_MARKET_PATHS.extended,
@@ -64521,7 +64521,7 @@ try {
    No external historical graph integration exists in this build.
    ============================================================ */
 try {
-  globalThis.AetherRecovery403106 = Object.freeze({
+  globalThis.AetherRecovery = Object.freeze({
     build: "40.3.106",
     rejected_build: "40.3.105",
     restored_behavior_base: "40.3.104",
@@ -65286,7 +65286,7 @@ function atlasPatchMarketSelectionState() {
   const selection = atlasComparisonIds();
   const ids = new Set(selection);
   els.marketRows.querySelectorAll("tr.is-compared,tr.is-selected").forEach(row => {
-    const id = String(row.dataset.id || row.dataset.marketRowId403115 || "");
+    const id = String(row.dataset.id || row.dataset.marketRowId || "");
     if (id) ids.add(id);
   });
   ids.forEach(id => {
@@ -66036,7 +66036,7 @@ try {
 
 /* 40.4.140 — AETHER TRUST OPERATOR ROLE REARM · SHARED COCKPIT LOCK */
 try {
-  globalThis.ErithOperatorRoleRearm404140 = Object.freeze({
+  globalThis.ErithOperatorRoleRearm = Object.freeze({
     build: "40.4.140",
     parent: "40.4.139",
     role: "operator",
@@ -66059,7 +66059,7 @@ try {
 
 /* 40.4.141 — INTERMEDIATE VIEW LABEL RESTORE · OPERATOR ROLE SEPARATION LOCK */
 try {
-  globalThis.ErithIntermediateRoleSeparation404141 = Object.freeze({
+  globalThis.ErithIntermediateRoleSeparation = Object.freeze({
     build: "40.4.141",
     parent: "40.4.140",
     view_label: "Intermédiaire",
@@ -66081,7 +66081,7 @@ try {
 
 /* 40.4.142 — PAPER MULTI-SANDBOX FOUNDATION · KRAKEN CLI BOUNDARY LOCK */
 try {
-  globalThis.ErithPaperMultiSandbox404142 = Object.freeze({
+  globalThis.ErithPaperMultiSandbox = Object.freeze({
     build:"40.4.142",
     parent:"40.4.141",
     workspaces:Object.freeze(["control","strategy_a","strategy_b"]),
@@ -66109,7 +66109,7 @@ try {
 
 
 /* 40.4.143 — PAPER WORKSPACE COMPARISON · READ-ONLY EXPERIMENT LEDGER */
-try{globalThis.ErithPaperWorkspaceCompare404143=Object.freeze({
+try{globalThis.ErithPaperWorkspaceCompare=Object.freeze({
   build:"40.4.143",parent:"40.4.142",schema:"agent_crypto_paper_workspace_compare_v1",
   compare:paperWorkspaceComparisonPayload,render:renderPaperWorkspaceComparison,
   workspace_storage_changed:false,simulation_execution_changed:false,binance_execution_gate_changed:false,
@@ -66244,7 +66244,7 @@ try{globalThis.ERITH_BUILD_40_4_153_SIMULATION_FINAL=Object.freeze({
 
 /* 40.4.274 — ATLAS RESIDENT CURRENT SNAPSHOT · SOURCE-STATE VISIBILITY DECOUPLING LOCK */
 try {
-  globalThis.ErithAtlasResidentCurrent404274 = Object.freeze({
+  globalThis.ErithAtlasResidentCurrent = Object.freeze({
     build:"40.4.274",
     parent:"40.4.273",
     canonical_source_owner:"runLivecheck -> SourceAdapter.publicCryptoMarket",
@@ -66304,7 +66304,7 @@ try {
     }catch(_){records=[];}
     return clone({schema:"atlas_event_reaction_source_v1",build:BUILD,captured_at:new Date().toISOString(),records});
   }
-  globalThis.AgentCryptoEventReactionSource405005=Object.freeze({
+  globalThis.AgentCryptoEventReactionSource=Object.freeze({
     build:BUILD,snapshot,read_only:true,canonical_owner:"IndexedDB Collector / readCollectorMemory",
     new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,
     causal_claim:false,financial_signal:false,automatic_order:false

@@ -63,11 +63,11 @@
 
   const ensureSourceDemandRepair = () => {
     if (globalThis.ErithPrivateSourceDemand40486?.build === "40.6.91") return true;
-    if (document.querySelector('script[data-version-truth-source-loader-406091="true"]')) return true;
+    if (document.querySelector('script[data-version-truth-source-loader="true"]')) return true;
     const script = document.createElement("script");
     script.src = "./js/views/private-source-demand-loader.js?v=administrator-build-40.6.91-source-restore-1";
     script.async = false;
-    script.dataset.versionTruthSourceLoader406091 = "true";
+    script.dataset.versionTruthSourceLoader = "true";
     document.head.appendChild(script);
     return true;
   };

@@ -302,7 +302,7 @@
         : null
     ).then(renderAll).catch(() => renderIdentity());
 
-    globalThis.AgentCryptoSharedMemoryReader404283 = Object.freeze({
+    globalThis.AgentCryptoSharedMemoryReader = Object.freeze({
       build: BUILD,
       render: renderAll,
       renderCoverage,

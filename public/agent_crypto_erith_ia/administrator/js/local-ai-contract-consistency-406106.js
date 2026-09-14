@@ -9,7 +9,7 @@
   const PATCH = "40.6.106";
   const previous = globalThis.atlasLocalBoundedCommentTruthGuard;
   if (typeof previous !== "function") {
-    globalThis.AgentCryptoLocalAIContractConsistency406106 = Object.freeze({
+    globalThis.AgentCryptoLocalAIContractConsistency = Object.freeze({
       patch: PATCH,
       active: false,
       reason: "canonical_guard_missing",
@@ -134,7 +134,7 @@
   }
 
   globalThis.atlasLocalBoundedCommentTruthGuard = extendedGuard;
-  globalThis.AgentCryptoLocalAIContractConsistency406106 = Object.freeze({
+  globalThis.AgentCryptoLocalAIContractConsistency = Object.freeze({
     patch: PATCH,
     active: true,
     owner: "atlasLocalBoundedCommentTruthGuard",

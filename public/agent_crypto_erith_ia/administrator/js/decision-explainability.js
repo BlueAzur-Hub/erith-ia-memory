@@ -6,10 +6,10 @@
   const BUILD="40.5.21",SCHEMA="atlas_horizon_explainability_no_advice_v1";
   const finite=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
   const uniq=a=>[...new Set((a||[]).filter(Boolean))];
-  function memoryApi(){return globalThis.AtlasEventMemory405014||null;}
-  function calibrationApi(){return globalThis.AtlasHorizonCalibration405017||null;}
-  function survivalApi(){return globalThis.AtlasCapitalSurvival405018||null;}
-  function acceptanceApi(){return globalThis.AtlasDecisionIntelligenceAcceptance405020||null;}
+  function memoryApi(){return globalThis.AtlasEventMemory||null;}
+  function calibrationApi(){return globalThis.AtlasHorizonCalibration||null;}
+  function survivalApi(){return globalThis.AtlasCapitalSurvival||null;}
+  function acceptanceApi(){return globalThis.AtlasDecisionIntelligenceAcceptance||null;}
   function direction(h){
     const n=Number(h?.directional_sample_size||0),up=finite(h?.empirical_up_frequency_pct),down=finite(h?.empirical_down_frequency_pct);
     if(n<8||up===null||down===null)return {code:"INSUFFICIENT_SAMPLE",label:"Échantillon insuffisant",strength:"NONE"};
@@ -56,5 +56,5 @@
     return Object.freeze({schema:SCHEMA,build:BUILD,status:"EXPLAINED",asset,event_id:target.event_id||null,event_label:target.event_label||null,operator_action:"CONSULTATION_ONLY",orientation_24_48:orientation,horizons:{"+24h":h24,"+48h":h48},for:uniq(forReasons),against:uniq(against),invalidation:uniq(invalidation),missing_data:uniq(missing),capital_survival:survival,architecture_acceptance:acceptance?.status||null,wording_lock:"historical orientation, never buy/sell instruction",investment_advice:false,execution_authorized:false,automatic_order:false,financial_signal:false,forecast_probability:false});
   }
   function current(options={}){return explain(null,options);}
-  globalThis.AtlasDecisionExplainability405021=Object.freeze({build:BUILD,schema:SCHEMA,explain,current,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,investment_recommendation:false,execution_authorized:false,automatic_order:false,financial_signal:false,forecast_probability:false});
+  globalThis.AtlasDecisionExplainability=Object.freeze({build:BUILD,schema:SCHEMA,explain,current,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,investment_recommendation:false,execution_authorized:false,automatic_order:false,financial_signal:false,forecast_probability:false});
 })();

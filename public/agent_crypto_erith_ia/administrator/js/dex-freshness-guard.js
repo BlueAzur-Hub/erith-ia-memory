@@ -141,7 +141,7 @@
 
   function bindSourceApi() {
     if (wrapped) return true;
-    const api = globalThis.ErithPrivateBackendSources4054;
+    const api = globalThis.ErithPrivateBackendSources;
     if (!api || typeof api.contextSnapshot !== "function") return false;
     originalApi = api;
     const originalContext = api.contextSnapshot.bind(api);
@@ -158,7 +158,7 @@
           return Reflect.get(target, prop, receiver);
         }
       });
-      globalThis.ErithPrivateBackendSources4054 = proxy;
+      globalThis.ErithPrivateBackendSources = proxy;
       wrapped = true;
       document.documentElement.dataset.dexFreshnessGuard = "active";
       return true;

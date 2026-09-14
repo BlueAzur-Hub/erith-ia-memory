@@ -8,9 +8,9 @@
 
   const BUILD = "40.6.2";
   const HOLD_KEY = "aetherManualNative406002";
-  const BOOT_KEY = "aetherColdBoot406002";
+  const BOOT_KEY = "aetherColdBoot";
   const NATIVE_IDS = ["btnLivecheck", "btnRefresh", "decisionCard", "sourceActiveCard", "sourceTimeCard"];
-  const AETHER_IDS = ["atlasAetherRibbon4084", "atlasAetherVeille4087", "atlasAetherSystem4086"];
+  const AETHER_IDS = ["atlasAetherRibbon", "atlasAetherVeille", "atlasAetherSystem"];
 
   function text406002(id) {
     return String(document.getElementById(id)?.textContent || "").replace(/\s+/g, " ").trim();
@@ -65,11 +65,11 @@
   }
 
   function bindVeilleEscape() {
-    const feed = document.getElementById("atlasAetherVeille4087");
-    const brand = feed?.querySelector(".atlas-aether-veille-brand-4087");
-    if (!feed || !brand || brand.dataset.aetherNativeBound406002 === "1") return false;
+    const feed = document.getElementById("atlasAetherVeille");
+    const brand = feed?.querySelector(".atlas-aether-veille-brand");
+    if (!feed || !brand || brand.dataset.aetherNativeBound === "1") return false;
 
-    brand.dataset.aetherNativeBound406002 = "1";
+    brand.dataset.aetherNativeBound = "1";
     brand.setAttribute("role", "button");
     brand.setAttribute("tabindex", "0");
     brand.setAttribute("aria-label", "Revenir au menu normal");
@@ -89,9 +89,9 @@
       if (event.key === "Enter" || event.key === " ") escape(event);
     }, true);
 
-    const aetherToggle = document.getElementById("atlasAetherStatusToggle4084");
-    if (aetherToggle && aetherToggle.dataset.aetherResumeBound406002 !== "1") {
-      aetherToggle.dataset.aetherResumeBound406002 = "1";
+    const aetherToggle = document.getElementById("atlasAetherStatusToggle");
+    if (aetherToggle && aetherToggle.dataset.aetherResumeBound !== "1") {
+      aetherToggle.dataset.aetherResumeBound = "1";
       aetherToggle.addEventListener("click", () => {
         if (document.getElementById("livecheck")?.dataset?.[HOLD_KEY] === "native") releaseNative406002();
       }, true);
@@ -124,7 +124,7 @@
 
     // One attempt only. The canonical button remains the sole business/network owner.
     bar.dataset[BOOT_KEY] = "attempted";
-    button.dataset.aetherColdBoot406002 = "1";
+    button.dataset.aetherColdBoot = "1";
     button.click();
     return true;
   }
@@ -140,7 +140,7 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind406002, { once: true });
   else bind406002();
 
-  globalThis.ErithAetherOperatorBridge406002 = Object.freeze({
+  globalThis.ErithAetherOperatorBridge = Object.freeze({
     build: BUILD,
     holdNative: holdNative406002,
     releaseNative: releaseNative406002,

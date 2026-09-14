@@ -105,7 +105,7 @@
   }
 
   function findStrategyAScope() {
-    const replay = document.getElementById("strategyAReplaySandbox404290");
+    const replay = document.getElementById("strategyAReplaySandbox");
     let node = replay;
     for (let i=0; node && i<7; i++, node=node.parentElement) {
       const text = String(node.innerText || "");
@@ -174,7 +174,7 @@
 
   function emitObservation(row) {
     if (!row) return;
-    try { globalThis.AgentCryptoTradusShadowLedger406066?.capture?.(clone(row), "adapter_direct"); } catch (_) {}
+    try { globalThis.AgentCryptoTradusShadowLedger?.capture?.(clone(row), "adapter_direct"); } catch (_) {}
     try {
       document.dispatchEvent(new CustomEvent(OBS_EVENT, { detail: clone(row) }));
     } catch (_) {}
@@ -259,7 +259,7 @@
     const existing=document.getElementById(PANEL_ID);
     if(existing){ mounted=true; bindHostRefresh(); render(); return true; }
 
-    const anchor=document.getElementById("strategyAPaperAfterCostProof406063") || document.getElementById("strategyAReplaySandbox404290");
+    const anchor=document.getElementById("strategyAPaperAfterCostProof406063") || document.getElementById("strategyAReplaySandbox");
     if(!anchor) return false;
 
     ensureStyle();

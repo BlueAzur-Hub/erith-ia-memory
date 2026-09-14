@@ -12,5 +12,5 @@
   function openPanel(e){if(e)e.preventDefault();const d=document.getElementById('internet-research');if(!d)return false;d.open=true;d.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(()=>document.getElementById('internetResearchQuery')?.focus(),250);return true;}
   function bind(){document.getElementById('internetResearchForm')?.addEventListener('submit',e=>{e.preventDefault();openExternal('google');});document.querySelectorAll('[data-internet-engine]').forEach(b=>b.addEventListener('click',()=>openExternal(b.dataset.internetEngine)));document.querySelectorAll('a[href="#internet-research"]').forEach(a=>a.addEventListener('click',openPanel));if(location.hash==='#internet-research')setTimeout(()=>openPanel(),0);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-  globalThis.ErithInternetResearch406024=Object.freeze({build:BUILD,open:openExternal,engines:Object.keys(engines),page_fetch:false,result_ingestion:false,storage_write:false,timer:false,observer:false,financial_action:false});
+  globalThis.ErithInternetResearch=Object.freeze({build:BUILD,open:openExternal,engines:Object.keys(engines),page_fetch:false,result_ingestion:false,storage_write:false,timer:false,observer:false,financial_action:false});
 })();

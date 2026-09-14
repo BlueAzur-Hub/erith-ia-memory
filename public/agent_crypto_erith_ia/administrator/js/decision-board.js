@@ -300,7 +300,7 @@
     compact_market_count_truth_406100: true,
     late_legacy_renderer_rebind_406117: true
   });
-  globalThis.atlasDecisionBoardDualMemory3950 = Object.freeze({ render, markdown });
+  globalThis.atlasDecisionBoardDualMemory = Object.freeze({ render, markdown });
 
   queueMicrotask(() => { try { render(); } catch (_) {} });
   if (document.readyState === "complete") bindLegacyDecisionRenderer();

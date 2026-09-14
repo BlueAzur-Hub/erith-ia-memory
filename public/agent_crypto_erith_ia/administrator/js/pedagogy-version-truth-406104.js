@@ -37,9 +37,9 @@
       }
     }
     document.documentElement.dataset.pedagogyVersionTruth406104 = matches ? "active" : "not-found";
-    document.documentElement.dataset.pedagogyVersionTruthBuild406104 = BUILD;
-    document.documentElement.dataset.pedagogyVersionTruthMatches406104 = String(matches);
-    document.documentElement.dataset.pedagogyVersionTruthChanged406104 = String(changed);
+    document.documentElement.dataset.pedagogyVersionTruthBuild = BUILD;
+    document.documentElement.dataset.pedagogyVersionTruthMatches = String(matches);
+    document.documentElement.dataset.pedagogyVersionTruthChanged = String(changed);
     return Object.freeze({ build: BUILD, matches, changed });
   }
 

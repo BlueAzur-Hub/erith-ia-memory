@@ -16,8 +16,8 @@
   const finite=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
   const time=v=>{const t=Date.parse(String(v||""));return Number.isFinite(t)?t:null;};
   const pct=(a,b)=>Number.isFinite(a)&&a>0&&Number.isFinite(b)?((b-a)/a)*100:null;
-  function source(){try{return globalThis.AgentCryptoEventReactionSource405005?.snapshot?.()||null;}catch(_){return null;}}
-  function eventApi(){return globalThis.AtlasEventIntelligence405000||null;}
+  function source(){try{return globalThis.AgentCryptoEventReactionSource?.snapshot?.()||null;}catch(_){return null;}}
+  function eventApi(){return globalThis.AtlasEventIntelligence||null;}
   function nearest(records,target,tolerance){
     let best=null,bestDelta=Infinity;
     for(const row of records){const t=time(row?.timestamp);if(t===null)continue;const d=Math.abs(t-target);if(d<=tolerance&&d<bestDelta){best=row;bestDelta=d;}}
@@ -38,5 +38,5 @@
   }
   function current(){return derive(eventApi()?.current?.()||null);}
   function archive(){const events=eventApi()?.archive?.()||[];return Object.freeze(events.map(derive).filter(Boolean));}
-  globalThis.AtlasEventReactionMemory405005=Object.freeze({build:BUILD,schema:SCHEMA,windows:WINDOWS,derive,current,archive,read_only:true,source_owner:"AgentCryptoEventReactionSource405005 over existing Collector snapshots",new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,financial_signal:false,automatic_order:false});
+  globalThis.AtlasEventReactionMemory=Object.freeze({build:BUILD,schema:SCHEMA,windows:WINDOWS,derive,current,archive,read_only:true,source_owner:"AgentCryptoEventReactionSource over existing Collector snapshots",new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,financial_signal:false,automatic_order:false});
 })();

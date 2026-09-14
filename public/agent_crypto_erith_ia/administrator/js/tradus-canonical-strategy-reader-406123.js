@@ -21,7 +21,7 @@
   const BUILD = "40.6.123";
   const API_KEY = "AgentCryptoTradusCanonicalStrategyReader406123";
   const SHADOW_KEY = "AgentCryptoTradusShadow406066";
-  const LEDGER_KEY = "AgentCryptoTradusShadowLedger406066";
+  const LEDGER_KEY = "AgentCryptoTradusShadowLedger";
   const OBS_EVENT = "agentcrypto:tradus-shadow-observation";
   const SHADOW_MARK = "canonical_strategy_reader_406123";
   const LEDGER_MARK = "canonical_strategy_reader_406123";

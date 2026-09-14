@@ -3,7 +3,7 @@
   "use strict";
 
   const BUILD = "40.6.39";
-  const ROOT_ID = "atlasAetherWorkbench406039";
+  const ROOT_ID = "atlasAetherWorkbench";
   const STYLE_ID = "atlasAetherWorkbenchStyle406039";
   const SCRIM_ID = "atlasAetherWorkbenchScrim406039";
   const MARGIN = 10;

@@ -17,11 +17,11 @@
 
   const BUILD = "40.6.74 R1";
   const WINDOW_ID = "aether-watch";
-  const PANEL_ID = "atlasAetherStatusPanel4084";
-  const TOGGLE_ID = "atlasAetherStatusToggle4084";
+  const PANEL_ID = "atlasAetherStatusPanel";
+  const TOGGLE_ID = "atlasAetherStatusToggle";
   const DETAIL_ID = "detailPanel";
   const BACKPLATE = "./assets/aether/aether-observatory-master-v2-406074.png";
-  const ROOT_ATTR = "data-aether-backplate-v2-406074";
+  const ROOT_ATTR = "data-aether-backplate-v2";
   const MARGIN = 12;
   const MIN_WIDTH = 720;
   const MAX_FLOAT_WIDTH = 1450;
@@ -131,8 +131,8 @@
       }
     }, { persist, captureResult: false });
 
-    root.dataset.aetherFrame406074 = `${target.width}x${target.height}@${target.x},${target.y}`;
-    root.dataset.aetherFrameMode406074 = target.railReserved ? "left-of-detail" : "centered";
+    root.dataset.aetherFrame = `${target.width}x${target.height}@${target.x},${target.y}`;
+    root.dataset.aetherFrameMode = target.railReserved ? "left-of-detail" : "centered";
     return true;
   }
 
@@ -149,12 +149,12 @@
     const image = new Image();
     const ready = () => {
       root.setAttribute(ROOT_ATTR, "ready");
-      root.dataset.aetherReadability406074 = "canonical-ready";
+      root.dataset.aetherReadability = "canonical-ready";
       return true;
     };
     const fallback = () => {
       root.setAttribute(ROOT_ATTR, "fallback-40.6.73");
-      root.dataset.aetherReadability406074 = "canonical-fallback";
+      root.dataset.aetherReadability = "canonical-fallback";
       return false;
     };
     image.decoding = "async";
@@ -231,7 +231,7 @@
         maximized: saved?.maximized ?? win?.maximized ?? null,
         geometry: saved?.geometry || null,
         first_paint: root.dataset.aetherFirstPaint406074R1 || "idle",
-        dataset: root.dataset.aetherFrame406074 || "idle"
+        dataset: root.dataset.aetherFrame || "idle"
       });
     }
   });

@@ -22,7 +22,7 @@
 
   function readStrategy(){
     const canonical=globalThis.AgentCryptoTradusStrategyFailClosed;
-    const historical=globalThis.AgentCryptoTradusStrategyReconcile406105;
+    const historical=globalThis.AgentCryptoTradusStrategyReconcile;
     const raw=safe(canonical?.readStrategyA,null)
       ||safe(historical?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null})
       ||{decision:"INCONNU"};
@@ -60,7 +60,7 @@
     if(!tradus.available)return Object.freeze({state:"EN ATTENTE",plain:"TRADUS n’a pas encore de lecture exploitable."});
     if(!tradus.fresh)return Object.freeze({state:"À RAFRAÎCHIR",plain:"La lecture TRADUS est trop ancienne pour être comparée à Strategy A."});
     const raw=globalThis.AgentCryptoTradusStrategyFailClosed?.compare?.(strategy,tradus.row?.signal)
-      || globalThis.AgentCryptoTradusStrategyReconcile406105?.compare?.(strategy,tradus.row?.signal)
+      || globalThis.AgentCryptoTradusStrategyReconcile?.compare?.(strategy,tradus.row?.signal)
       || {state:"NON COMPARABLE",text:"Comparaison indisponible"};
     const state=upper(raw.state||"NON COMPARABLE");
     let plain=String(raw.text||"");
@@ -86,8 +86,8 @@
   }
 
   function readMemory(){
-    const summary=safe(globalThis.AgentCryptoTradusShadowLedger406066?.summary,{observations:0,buy:0,sell:0,no_trade:0,convergence:0,divergence:0,opposition:0})||{};
-    const paper=safe(globalThis.AgentCryptoTradusPaperObservability406068?.stats,{trades:0,wins:0,losses:0,flats:0,net:0,fees:0,max_drawdown:0})||{};
+    const summary=safe(globalThis.AgentCryptoTradusShadowLedger?.summary,{observations:0,buy:0,sell:0,no_trade:0,convergence:0,divergence:0,opposition:0})||{};
+    const paper=safe(globalThis.AgentCryptoTradusPaperObservability?.stats,{trades:0,wins:0,losses:0,flats:0,net:0,fees:0,max_drawdown:0})||{};
     return Object.freeze({
       observations:finite(summary.observations)||0,
       buy:finite(summary.buy)||0,

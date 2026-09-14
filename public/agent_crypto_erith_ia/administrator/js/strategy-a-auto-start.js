@@ -16,7 +16,7 @@
   let lastAction = "boot";
   let attempts = 0;
 
-  const paperRunner = () => globalThis.AgentCryptoAutoPaperRunner404265 || null;
+  const paperRunner = () => globalThis.AgentCryptoAutoPaperRunner || null;
 
   function manualStop() {
     try { return sessionStorage.getItem(STOP_KEY) === "1"; }

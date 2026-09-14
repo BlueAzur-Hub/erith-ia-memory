@@ -24,7 +24,7 @@
     storage_retirement_added: false,
     evidence_basis: Object.freeze(["40.2.25 runtime visibility", "40.2.26 reduced/collapsed attribution"])
   });
-  globalThis.ErithWorkspaceRuntimeContract40227 = WORKSPACE_RUNTIME_CONTRACT;
+  globalThis.ErithWorkspaceRuntimeContract = WORKSPACE_RUNTIME_CONTRACT;
 
   const STORAGE_LINEAGE_DECISION_CONTRACT = Object.freeze({
     build: "40.2.28",
@@ -46,7 +46,7 @@
     window_manager_modified: false,
     runtime_checkpoint_40_2_27_preserved: true
   });
-  globalThis.ErithStorageLineageDecisionContract40228 = STORAGE_LINEAGE_DECISION_CONTRACT;
+  globalThis.ErithStorageLineageDecisionContract = STORAGE_LINEAGE_DECISION_CONTRACT;
 
   const STORAGE_OWNERSHIP_PROOF_CONTRACT = Object.freeze({
     build: "40.2.29",
@@ -67,7 +67,7 @@
     window_manager_modified: false,
     parent_decision_40_2_28_preserved: true
   });
-  globalThis.ErithStorageOwnershipProofContract40229 = STORAGE_OWNERSHIP_PROOF_CONTRACT;
+  globalThis.ErithStorageOwnershipProofContract = STORAGE_OWNERSHIP_PROOF_CONTRACT;
 
 
   const VISUAL_CONTINUITY_CONTRACT = Object.freeze({
@@ -87,7 +87,7 @@
     window_manager_modified: false,
     market_flow_modified: false
   });
-  globalThis.ErithVisualContinuityContract40230 = VISUAL_CONTINUITY_CONTRACT;
+  globalThis.ErithVisualContinuityContract = VISUAL_CONTINUITY_CONTRACT;
 
   function applyVisualContinuity() {
     const intelligence = document.querySelector(".atlas-layout-family-intelligence");
@@ -111,15 +111,15 @@
   }
 
   function bindVisualContinuity() {
-    if (document.documentElement.dataset.visualContinuity40230 === "1") return;
-    document.documentElement.dataset.visualContinuity40230 = "1";
+    if (document.documentElement.dataset.visualContinuity === "1") return;
+    document.documentElement.dataset.visualContinuity = "1";
     applyVisualContinuity();
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindVisualContinuity, { once: true });
   else bindVisualContinuity();
 
-  globalThis.ErithVisualContinuity40230 = Object.freeze({
+  globalThis.ErithVisualContinuity = Object.freeze({
     build: "40.2.30",
     apply: applyVisualContinuity,
     visual_only: true,
@@ -152,7 +152,7 @@
     timer_added: false,
     window_manager_modified: false
   });
-  globalThis.ErithOracleV2EvaluationContract40231 = ORACLE_V2_EVALUATION_CONTRACT;
+  globalThis.ErithOracleV2EvaluationContract = ORACLE_V2_EVALUATION_CONTRACT;
 
   const ORACLE_VERDICT_HIERARCHY_CONTRACT_40232A = Object.freeze({
     build: "40.2.32A",
@@ -224,7 +224,7 @@
     storage_write_added: false,
     window_manager_modified: false,
   });
-  globalThis.ErithOracleOperatorVisualStackContract40232 = ORACLE_OPERATOR_VISUAL_STACK_CONTRACT;
+  globalThis.ErithOracleOperatorVisualStackContract = ORACLE_OPERATOR_VISUAL_STACK_CONTRACT;
 
   const ORACLE_OPERATOR_CONSOLE_FINAL_CONTRACT = Object.freeze({
     build: "40.2.33",
@@ -240,7 +240,7 @@
     storage_write_added: false,
     window_manager_modified: false,
   });
-  globalThis.ErithOracleOperatorConsoleFinalContract40233 = ORACLE_OPERATOR_CONSOLE_FINAL_CONTRACT;
+  globalThis.ErithOracleOperatorConsoleFinalContract = ORACLE_OPERATOR_CONSOLE_FINAL_CONTRACT;
 
   const NEWS_TO_MARKET_CAUSAL_ROLE_CONTRACT = Object.freeze({
     build: "40.2.34",
@@ -262,7 +262,7 @@
     evidence_capture_changed: false,
     window_manager_modified: false,
   });
-  globalThis.ErithNewsToMarketCausalRoleContract40234 = NEWS_TO_MARKET_CAUSAL_ROLE_CONTRACT;
+  globalThis.ErithNewsToMarketCausalRoleContract = NEWS_TO_MARKET_CAUSAL_ROLE_CONTRACT;
 
 
   const NEWS_TO_MARKET_OPERATOR_INTELLIGENCE_CONTRACT = Object.freeze({
@@ -285,7 +285,7 @@
     evidence_capture_changed: false,
     window_manager_modified: false,
   });
-  globalThis.ErithNewsToMarketOperatorIntelligenceContract40235 = NEWS_TO_MARKET_OPERATOR_INTELLIGENCE_CONTRACT;
+  globalThis.ErithNewsToMarketOperatorIntelligenceContract = NEWS_TO_MARKET_OPERATOR_INTELLIGENCE_CONTRACT;
 
 
 
@@ -296,7 +296,7 @@
     timer_added: false, websocket_added: false, storage_write_added: false,
     oracle_model_modified: false, evidence_capture_changed: false, window_manager_modified: false,
   });
-  globalThis.ErithEventReactionTimelineContract40236 = EVENT_REACTION_TIMELINE_CONTRACT;
+  globalThis.ErithEventReactionTimelineContract = EVENT_REACTION_TIMELINE_CONTRACT;
 
 
 
@@ -307,7 +307,7 @@
     new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false,
     oracle_model_modified:false, evidence_capture_changed:false, window_manager_modified:false,
   });
-  globalThis.ErithRoleEvidenceQualityContract40237 = ROLE_EVIDENCE_QUALITY_CONTRACT;
+  globalThis.ErithRoleEvidenceQualityContract = ROLE_EVIDENCE_QUALITY_CONTRACT;
 
 
 
@@ -318,7 +318,7 @@
     new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false,
     evidence_capture_changed:false, window_manager_modified:false,
   });
-  globalThis.ErithCrossLayerMarketExplanationContract40238 = CROSS_LAYER_MARKET_EXPLANATION_CONTRACT;
+  globalThis.ErithCrossLayerMarketExplanationContract = CROSS_LAYER_MARKET_EXPLANATION_CONTRACT;
 
 
 
@@ -328,7 +328,7 @@
     oracle_v2_changed:false, evidence_capture_changed:false, causal_claim_allowed:false,
     new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false, window_manager_modified:false,
   });
-  globalThis.ErithOracleNewsContextIntegrationContract40239 = ORACLE_NEWS_CONTEXT_INTEGRATION_CONTRACT;
+  globalThis.ErithOracleNewsContextIntegrationContract = ORACLE_NEWS_CONTEXT_INTEGRATION_CONTRACT;
 
 
 
@@ -339,7 +339,7 @@
     atlas_model_modified:false, evidence_capture_changed:false, causal_claim_allowed:false,
     new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false, window_manager_modified:false,
   });
-  globalThis.ErithNewsToMarketFinalLockContract40240 = NEWS_TO_MARKET_FINAL_LOCK_CONTRACT;
+  globalThis.ErithNewsToMarketFinalLockContract = NEWS_TO_MARKET_FINAL_LOCK_CONTRACT;
 
 
   const ORACLE_RESTORE_NEWS_PLACEMENT_CONTRACT = Object.freeze({
@@ -352,7 +352,7 @@
     atlas_model_modified:false, evidence_capture_changed:false, window_manager_modified:false,
     new_network_request_added:false, timer_added:false, websocket_added:false, storage_write_added:false
   });
-  globalThis.ErithOracleRestoreNewsPlacementContract40241 = ORACLE_RESTORE_NEWS_PLACEMENT_CONTRACT;
+  globalThis.ErithOracleRestoreNewsPlacementContract = ORACLE_RESTORE_NEWS_PLACEMENT_CONTRACT;
 
 
   const byId = id => document.getElementById(id);
@@ -416,7 +416,7 @@
   function systemEntriesCanonical40320() {
     const shell = q("main.shell");
     const header = q(".atlas-layout-family-system");
-    const storage = byId("atlasStorageHealth40198");
+    const storage = byId("atlasStorageHealth");
     if (!shell || !(header instanceof HTMLElement)) return [];
     const details = [...ADMIN_SYSTEM_KEYS]
       .map(key => shell.querySelector(`:scope > details[data-collapse-key="${key}"]`))
@@ -434,8 +434,8 @@
   function systemEntriesCanonical40404() {
     const shell = q("main.shell");
     const header = q(".atlas-layout-family-system");
-    const storage = byId("atlasStorageHealth40198");
-    const greyForensic = byId("atlasGreyPlateForensic40393");
+    const storage = byId("atlasStorageHealth");
+    const greyForensic = byId("atlasGreyPlateForensic");
     if (!shell || !(header instanceof HTMLElement)) return [];
     const details = [...ADMIN_SYSTEM_KEYS]
       .map(key => shell.querySelector(`:scope > details[data-collapse-key="${key}"]`))
@@ -531,9 +531,9 @@
             height: Math.round(fittedHeight)
           };
         },
-        resolveEntries: () => [entry(byId("atlasAetherStatusPanel4084"))].filter(Boolean),
+        resolveEntries: () => [entry(byId("atlasAetherStatusPanel"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
-        resolveControlHosts: nodes => [nodes[0]?.querySelector(".atlas-aether-panel-head-4084")].filter(Boolean),
+        resolveControlHosts: nodes => [nodes[0]?.querySelector(".atlas-aether-panel-head")].filter(Boolean),
         placeholderPolicy: "preserve"
       },
       {
@@ -687,9 +687,9 @@
   }
 
   function installOracleGraphWindowChrome() {
-    if (document.getElementById("atlasOracleGraphWindowChrome404156")) return true;
+    if (document.getElementById("atlasOracleGraphWindowChrome")) return true;
     const style = document.createElement("style");
-    style.id = "atlasOracleGraphWindowChrome404156";
+    style.id = "atlasOracleGraphWindowChrome";
     style.textContent = `
       #atlasOracleV0.admin-native-anchor{--native-accent:#b890ff}
       #atlasOracleV0.admin-native-anchor>.admin-native-controls{top:6px!important;right:8px!important;z-index:80!important;opacity:.84}
@@ -704,7 +704,7 @@
     return true;
   }
 
-  globalThis.ErithOracleGraphWindow404156 = Object.freeze({
+  globalThis.ErithOracleGraphWindow = Object.freeze({
     build: "40.4.156",
     window_id: "oracle-graph",
     owner: "existing Administrator Window Manager",
@@ -810,7 +810,7 @@
     reset.addEventListener("click", () => manager.reset());
 
     const classic = document.createElement("a");
-    classic.id = "atlasClassicVersionTruth406025";
+    classic.id = "atlasClassicVersionTruth";
     classic.href = "../web/index.html";
     classic.textContent = "CLASSIC · manifeste";
     classic.title = `Ouvrir la Web Classique · Engine ${ENGINE_BUILD}`;
@@ -1578,7 +1578,7 @@
     }
   }
 
-  globalThis.ErithFamilyTopologyStateMigration40303 = Object.freeze({
+  globalThis.ErithFamilyTopologyStateMigration = Object.freeze({
     build: ADMIN_BUILD,
     key: FAMILY_TOPOLOGY_40303_MIGRATION_KEY,
     window_ids: FAMILY_TOPOLOGY_40303_WINDOW_IDS,
@@ -1607,7 +1607,7 @@
     }
   }
 
-  globalThis.ErithFamilyRoleReturnMigration40322 = Object.freeze({
+  globalThis.ErithFamilyRoleReturnMigration = Object.freeze({
     build: "40.3.22",
     parent_build: "40.3.21",
     key: FAMILY_ROLE_RETURN_40322_MIGRATION_KEY,
@@ -1709,10 +1709,10 @@
       dockActions.insertBefore(controls, firstDockButton);
     }
 
-    let separator = dockActions.querySelector(".atlas-math-inline-window-separator-40148");
+    let separator = dockActions.querySelector(".atlas-math-inline-window-separator");
     if (!separator) {
       separator = document.createElement("span");
-      separator.className = "atlas-math-inline-window-separator-40148";
+      separator.className = "atlas-math-inline-window-separator";
       separator.textContent = "|";
       separator.setAttribute("aria-hidden", "true");
       separator.style.cssText = "display:inline-flex;align-items:center;justify-content:center;color:rgba(255,226,161,.58);font-weight:900;line-height:1;padding:0 1px;flex:0 0 auto;";
@@ -1779,7 +1779,7 @@
     } else manager.neutralizePresentation?.();
 
     activeWindowPresentationRole = nextRole;
-    document.documentElement.dataset.adminWindowPresentationRole40314 = nextRole;
+    document.documentElement.dataset.adminWindowPresentationRole = nextRole;
     return nextRole;
   }
 
@@ -1856,8 +1856,8 @@
       <div><span>Contexte News Sentinel</span><b id="decisionNewsState">Chargement de l’archive mondiale</b></div>
       <div><span>Impact / preuve</span><b id="decisionNewsImpact">En attente</b></div>
       <div><span>Décision événementielle</span><b id="decisionNewsAction">Collecte à vérifier</b></div>
-      <div><span>Rôle News → marché</span><b id="decisionNewsRole40234">Rôle causal non qualifié</b></div>
-      <div><span>Lecture croisée</span><b id="decisionNewsExplanation40238">Convergence non évaluée</b></div>
+      <div><span>Rôle News → marché</span><b id="decisionNewsRole">Rôle causal non qualifié</b></div>
+      <div><span>Lecture croisée</span><b id="decisionNewsExplanation">Convergence non évaluée</b></div>
     </div>`;
 
   function atlasCollapseState(root) {
@@ -1867,33 +1867,33 @@
   }
 
   function atlasMarketMemoryRelease() {
-    const mount = document.getElementById("atlasMemoryIntelligenceMount40353");
+    const mount = document.getElementById("atlasMemoryIntelligenceMount");
     if (!mount) return false;
-    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-memory-placeholder-40353="1">Market Memory conservée · ouvrir pour matérialiser les horizons, la continuité et les diagnostics.</p>';
-    mount.dataset.atlasMemoryMounted40353 = "0";
+    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-memory-placeholder="1">Market Memory conservée · ouvrir pour matérialiser les horizons, la continuité et les diagnostics.</p>';
+    mount.dataset.atlasMemoryMounted = "0";
     return true;
   }
 
   function atlasMarketMemoryMount() {
-    const mount = document.getElementById("atlasMemoryIntelligenceMount40353");
+    const mount = document.getElementById("atlasMemoryIntelligenceMount");
     if (!mount) return false;
-    if (mount.dataset.atlasMemoryMounted40353 !== "1") {
+    if (mount.dataset.atlasMemoryMounted !== "1") {
       mount.innerHTML = ATLAS_MARKET_MEMORY_BODY_TEMPLATE;
-      mount.dataset.atlasMemoryMounted40353 = "1";
+      mount.dataset.atlasMemoryMounted = "1";
     }
     const refresh = document.getElementById("btnAtlasMemoryRefresh");
-    if (refresh && refresh.dataset.atlasDeferred40353 !== "1") {
-      refresh.dataset.atlasDeferred40353 = "1";
+    if (refresh && refresh.dataset.atlasDeferred !== "1") {
+      refresh.dataset.atlasDeferred = "1";
       refresh.addEventListener("click", () => { try { globalThis.atlasMemoryIntelligenceRender?.(); } catch (_) {} });
     }
     const reconcile = document.getElementById("btnAtlasMemoryReconcile34");
-    if (reconcile && reconcile.dataset.atlasDeferred40353 !== "1") {
-      reconcile.dataset.atlasDeferred40353 = "1";
+    if (reconcile && reconcile.dataset.atlasDeferred !== "1") {
+      reconcile.dataset.atlasDeferred = "1";
       reconcile.addEventListener("click", () => { try { globalThis.atlasMemoryCurrentReconcileManual34?.(); } catch (_) {} });
     }
     const exporter = document.getElementById("btnAtlasMemoryExport");
-    if (exporter && exporter.dataset.atlasDeferred40353 !== "1") {
-      exporter.dataset.atlasDeferred40353 = "1";
+    if (exporter && exporter.dataset.atlasDeferred !== "1") {
+      exporter.dataset.atlasDeferred = "1";
       exporter.addEventListener("click", () => { try { globalThis.atlasMemoryIntelligenceExport?.(); } catch (_) {} });
     }
     try { globalThis.atlasAutomation341UiPolish?.(); } catch (_) {}
@@ -1904,8 +1904,8 @@
   function atlasAnalyticalMemoryRelease() {
     const mount = document.getElementById("atlasAnalyticalMemoryMount");
     if (!mount) return false;
-    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-analytical-memory-placeholder-40353="1">Analytical Memory conservée · ouvrir pour matérialiser les CURRENT détaillés.</p>';
-    mount.dataset.atlasAnalyticalMemoryMounted40353 = "0";
+    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-analytical-memory-placeholder="1">Analytical Memory conservée · ouvrir pour matérialiser les CURRENT détaillés.</p>';
+    mount.dataset.atlasAnalyticalMemoryMounted = "0";
     return true;
   }
 
@@ -1951,18 +1951,18 @@
   function atlasAnalyticalMemoryMount() {
     const mount = document.getElementById("atlasAnalyticalMemoryMount");
     if (!mount) return false;
-    if (mount.dataset.atlasAnalyticalMemoryMounted40353 !== "1") {
+    if (mount.dataset.atlasAnalyticalMemoryMounted !== "1") {
       mount.innerHTML = ATLAS_ANALYTICAL_MEMORY_BODY_TEMPLATE;
-      mount.dataset.atlasAnalyticalMemoryMounted40353 = "1";
+      mount.dataset.atlasAnalyticalMemoryMounted = "1";
     }
     const refresh = document.getElementById("btnAtlasAnalyticalMemoryRefresh394");
-    if (refresh && refresh.dataset.atlasDeferred40353 !== "1") {
-      refresh.dataset.atlasDeferred40353 = "1";
+    if (refresh && refresh.dataset.atlasDeferred !== "1") {
+      refresh.dataset.atlasDeferred = "1";
       refresh.addEventListener("click", () => { try { globalThis.atlasAnalyticalMemoryRender394?.(); } catch (_) {} });
     }
     const exporter = document.getElementById("btnAtlasAnalyticalMemoryExport394");
-    if (exporter && exporter.dataset.atlasDeferred40353 !== "1") {
-      exporter.dataset.atlasDeferred40353 = "1";
+    if (exporter && exporter.dataset.atlasDeferred !== "1") {
+      exporter.dataset.atlasDeferred = "1";
       exporter.addEventListener("click", atlasAnalyticalMemoryExport);
     }
     try { globalThis.atlasAnalyticalMemoryRender394?.(); } catch (_) {}
@@ -1972,20 +1972,20 @@
   function atlasDecisionBoardDeepRelease() {
     const mount = document.getElementById("atlasDecisionBoardDeepMount");
     if (!mount) return false;
-    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-decision-detail-placeholder-40353="1">Decision Board compact · ouvrir pour matérialiser les cartes et le contexte News.</p>';
-    mount.dataset.atlasDecisionDetailMounted40353 = "0";
+    mount.innerHTML = '<p class="atlas-local-response-empty" data-atlas-decision-detail-placeholder="1">Decision Board compact · ouvrir pour matérialiser les cartes et le contexte News.</p>';
+    mount.dataset.atlasDecisionDetailMounted = "0";
     return true;
   }
 
   function atlasDecisionBoardDeepMount() {
     const mount = document.getElementById("atlasDecisionBoardDeepMount");
     if (!mount) return false;
-    if (mount.dataset.atlasDecisionDetailMounted40353 !== "1") {
+    if (mount.dataset.atlasDecisionDetailMounted !== "1") {
       mount.innerHTML = ATLAS_DECISION_BOARD_DEEP_TEMPLATE;
-      mount.dataset.atlasDecisionDetailMounted40353 = "1";
+      mount.dataset.atlasDecisionDetailMounted = "1";
     }
     try { globalThis.renderDecisionBoard?.(); } catch (_) {}
-    try { globalThis.atlasDecisionBoardDualMemory3950?.render?.(); } catch (_) {}
+    try { globalThis.atlasDecisionBoardDualMemory?.render?.(); } catch (_) {}
     return true;
   }
 
@@ -2030,8 +2030,8 @@
   function initAtlasMemoryResidency() {
     atlasDecisionBoardWrap();
     const market = document.getElementById("atlasMemoryIntelligence");
-    if (market && market.dataset.atlasResidencyBound40353 !== "1") {
-      market.dataset.atlasResidencyBound40353 = "1";
+    if (market && market.dataset.atlasResidencyBound !== "1") {
+      market.dataset.atlasResidencyBound = "1";
       market.addEventListener("toggle", () => {
         atlasCollapseState(market);
         if (market.open) atlasMarketMemoryMount();
@@ -2042,8 +2042,8 @@
     }
 
     const analytical = document.getElementById("atlasAnalyticalMemory394");
-    if (analytical && analytical.dataset.atlasResidencyBound40353 !== "1") {
-      analytical.dataset.atlasResidencyBound40353 = "1";
+    if (analytical && analytical.dataset.atlasResidencyBound !== "1") {
+      analytical.dataset.atlasResidencyBound = "1";
       analytical.addEventListener("toggle", () => {
         atlasCollapseState(analytical);
         if (analytical.open) atlasAnalyticalMemoryMount();
@@ -2054,8 +2054,8 @@
     }
 
     const decision = document.getElementById("atlasDecisionBoardDetails");
-    if (decision && decision.dataset.atlasResidencyBound40353 !== "1") {
-      decision.dataset.atlasResidencyBound40353 = "1";
+    if (decision && decision.dataset.atlasResidencyBound !== "1") {
+      decision.dataset.atlasResidencyBound = "1";
       decision.addEventListener("toggle", () => {
         atlasCollapseState(decision);
         if (decision.open) atlasDecisionBoardDeepMount();
@@ -2065,7 +2065,7 @@
       if (decision.open) atlasDecisionBoardDeepMount(); else atlasDecisionBoardDeepRelease();
     }
 
-    globalThis.AtlasMemoryPresentationResidency40353 = Object.freeze({
+    globalThis.AtlasMemoryPresentationResidency = Object.freeze({
       build: "40.3.53",
       parent: "40.3.52",
       scope: Object.freeze(["market_memory_presentation", "analytical_memory_presentation", "decision_board_deep_details"]),
@@ -2161,10 +2161,10 @@
       }
     });
 
-    document.documentElement.dataset.adminDefaultFamilyCollapse40361 = "1";
-    document.documentElement.dataset.adminDefaultFamilyDirectHash40361 = directFamily || "none";
+    document.documentElement.dataset.adminDefaultFamilyCollapse = "1";
+    document.documentElement.dataset.adminDefaultFamilyDirectHash = directFamily || "none";
 
-    globalThis.ErithAdministratorDefaultFamilyCollapse40361 = Object.freeze({
+    globalThis.ErithAdministratorDefaultFamilyCollapse = Object.freeze({
       build: "40.3.61",
       parent: "40.3.60",
       families: ADMIN_DEFAULT_COLLAPSED_FAMILY_IDS,
@@ -2215,14 +2215,14 @@
       if (centered && raw.maximized !== true) {
         localStorage.setItem(key, JSON.stringify({ ...raw, x: 12 }));
         localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-        document.documentElement.dataset.aetherLeftMigration406085 = "migrated";
+        document.documentElement.dataset.aetherLeftMigration = "migrated";
         return "migrated";
       }
       localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-      document.documentElement.dataset.aetherLeftMigration406085 = "preserved";
+      document.documentElement.dataset.aetherLeftMigration = "preserved";
       return "preserved";
     } catch (_) {
-      document.documentElement.dataset.aetherLeftMigration406085 = "storage-unavailable";
+      document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
       return "storage-unavailable";
     }
   }
@@ -2266,7 +2266,7 @@
     // 40.6.40 — the shell is pre-created by aether.js solely so the canonical
     // Window Manager can register it during this one normal init pass.
     // HTML hidden is then released; the manager becomes the only presentation owner.
-    const aetherPanel = byId("atlasAetherStatusPanel4084");
+    const aetherPanel = byId("atlasAetherStatusPanel");
     const aetherWindow = manager.getWindow("aether-watch");
     if (aetherPanel && aetherWindow) {
       aetherPanel.hidden = false;
@@ -2281,7 +2281,7 @@
     // 40.3.14 — init already applied the correct presentation exactly once.
     // Do not immediately replay the same neutralize/restore transaction.
     activeWindowPresentationRole = bootRole;
-    document.documentElement.dataset.adminWindowPresentationRole40314 = bootRole;
+    document.documentElement.dataset.adminWindowPresentationRole = bootRole;
     if (bootRole === "administrator") ensureAdministratorAtlasVisible(manager, "administrator-boot");
     installOracleGraphWindowChrome();
     installMathCoreInlineWindowControls();
@@ -2305,7 +2305,7 @@
     // No extra Market visibility control: normal/restored = rows present;
     // reduced/hidden = generated rows released. The manager remains unchanged.
     const syncMarketWindow = reason => {
-      try { globalThis.AgentCryptoMarketTablePresentation40493?.syncFromWindow?.(reason); } catch (error) {
+      try { globalThis.AgentCryptoMarketTablePresentation?.syncFromWindow?.(reason); } catch (error) {
         console.warn("[40.4.93] Market window presentation sync", error);
       }
     };
@@ -2329,7 +2329,7 @@
         : presentationRole();
       syncWindowPresentationRole(manager, role);
     });
-    globalThis.ErithWindowRoleIsolation40312 = Object.freeze({
+    globalThis.ErithWindowRoleIsolation = Object.freeze({
       build: "40.3.12",
       basic_restores_admin_geometry: false,
       intermediate_restores_admin_geometry: false,
@@ -2337,7 +2337,7 @@
       neutralization_persists: false,
       manager_api: "restorePersistedPresentation/neutralizePresentation"
     });
-    globalThis.ErithWindowRoleTransition40314 = Object.freeze({
+    globalThis.ErithWindowRoleTransition = Object.freeze({
       build: "40.3.14",
       same_role_transition_is_noop: true,
       boot_replay_removed: true,
@@ -2365,7 +2365,7 @@
       storage_owner_added: false,
       reconcile: reason => ensureAdministratorAtlasVisible(manager, reason || "manual-diagnostic")
     });
-    globalThis.ErithSurfacePerformance40315 = Object.freeze({
+    globalThis.ErithSurfacePerformance = Object.freeze({
       build: "40.3.15",
       header_surface: "100%",
       content_surface: "97%",
@@ -2376,7 +2376,7 @@
       floating_repeating_background: false,
       parent_build: "40.3.14"
     });
-    globalThis.ErithFamily04GreyForensic40404 = Object.freeze({
+    globalThis.ErithFamily04GreyForensic = Object.freeze({
       build: "40.4.4",
       parent_build: "40.4.3",
       canonical_order: Object.freeze(["04", "storage", "grey-plate-forensic", "simulation", "commandes", "backend", "safety", "physical-security"]),
@@ -2387,7 +2387,7 @@
       ownership_definition_owner: "js/app.js",
       system_presentation_fragment: "./views/system.html"
     });
-    globalThis.ErithBridgePassivePerformance40317 = Object.freeze({
+    globalThis.ErithBridgePassivePerformance = Object.freeze({
       build: "40.3.17",
       parent_build: "40.3.15",
       bridge_health_is_analysis_trigger: false,
@@ -2398,7 +2398,7 @@
       compact_family_placeholder_policy: true,
       preserved_full_placeholder_windows: ["market", "graphique", "target-top", "market-flow", "math-core"]
     });
-    globalThis.ErithCanonicalSectionsAutofit40320 = Object.freeze({
+    globalThis.ErithCanonicalSectionsAutofit = Object.freeze({
       build: "40.3.20",
       parent_build: "40.3.19",
       family03_order: ["03", "situation", "questionnaire", "briefing", "planning"],
@@ -2442,39 +2442,39 @@
      ============================================================ */
   function initAtlasMemoryHealthDeferred() {
     const originalApi = globalThis.atlasMemoryHealth3980R2;
-    const source = document.getElementById("atlasMemoryHealth3980");
+    const source = document.getElementById("atlasMemoryHealth");
     if (!originalApi || typeof originalApi.derive !== "function" || typeof originalApi.render !== "function" || !source) return false;
-    if (source.dataset.atlasMemoryHealthDeferred40355 === "1") return true;
+    if (source.dataset.atlasMemoryHealthDeferred === "1") return true;
 
     const originalBodyTemplate = source.innerHTML;
     const details = document.createElement("details");
-    details.id = "atlasMemoryHealth3980";
+    details.id = "atlasMemoryHealth";
     details.className = `${source.className || "atlas-memory-intelligence"} atlas-collapse glass atlas-tone-intelligence atlas-memory-health-deferred-40355`;
     details.dataset.state = source.dataset.state || "waiting";
-    details.dataset.atlasMemoryHealthDeferred40355 = "1";
+    details.dataset.atlasMemoryHealthDeferred = "1";
     details.setAttribute("aria-labelledby", "atlasMemoryHealthCompactTitle40355");
     details.innerHTML = `
-      <summary class="atlas-collapse-summary atlas-memory-health-summary-40355">
+      <summary class="atlas-collapse-summary atlas-memory-health-summary">
         <span class="atlas-collapse-icon" aria-hidden="true">▶</span>
         <span class="atlas-collapse-copy">
           <span class="eyebrow">MEMORY HEALTH · 39.8.0R2 · READ ONLY</span>
           <span class="atlas-collapse-title" id="atlasMemoryHealthTitle3980R2">Structure · couverture · continuité</span>
-          <span class="atlas-collapse-subtitle" id="atlasMemoryHealthCompactSubtitle40355">Diagnostic mémoire détaillé uniquement à l’ouverture.</span>
+          <span class="atlas-collapse-subtitle" id="atlasMemoryHealthCompactSubtitle">Diagnostic mémoire détaillé uniquement à l’ouverture.</span>
         </span>
-        <span class="pill warn" id="atlasMemoryHealthCompactBadge40355">EN ATTENTE</span>
+        <span class="pill warn" id="atlasMemoryHealthCompactBadge">EN ATTENTE</span>
         <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
       </summary>
-      <div class="atlas-collapse-body" id="atlasMemoryHealthMount40355" data-atlas-memory-health-mounted-40355="0"></div>`;
+      <div class="atlas-collapse-body" id="atlasMemoryHealthMount" data-atlas-memory-health-mounted="0"></div>`;
     source.replaceWith(details);
 
-    const mount = () => document.getElementById("atlasMemoryHealthMount40355");
+    const mount = () => document.getElementById("atlasMemoryHealthMount");
     const stateNode = () => details.querySelector(":scope > summary > .atlas-collapse-state");
     const iconNode = () => details.querySelector(":scope > summary > .atlas-collapse-icon");
     const compact = (data = null) => {
       let truth = data;
       try { if (!truth) truth = originalApi.derive(); } catch (_) { truth = null; }
-      const badge = document.getElementById("atlasMemoryHealthCompactBadge40355");
-      const subtitle = document.getElementById("atlasMemoryHealthCompactSubtitle40355");
+      const badge = document.getElementById("atlasMemoryHealthCompactBadge");
+      const subtitle = document.getElementById("atlasMemoryHealthCompactSubtitle");
       const structure = truth?.verdicts?.structure?.label || truth?.status?.label || "EN ATTENTE";
       const coverage = truth?.verdicts?.coverage?.label || "—";
       const continuity = truth?.verdicts?.continuity?.label || "—";
@@ -2500,9 +2500,9 @@
     };
     const mountBody = () => {
       const host = mount();
-      if (!host || host.dataset.atlasMemoryHealthMounted40355 === "1") return;
+      if (!host || host.dataset.atlasMemoryHealthMounted === "1") return;
       host.innerHTML = originalBodyTemplate;
-      host.dataset.atlasMemoryHealthMounted40355 = "1";
+      host.dataset.atlasMemoryHealthMounted = "1";
       try { originalApi.render(); } catch (_) {}
       bindMountedActions();
       compact();
@@ -2511,7 +2511,7 @@
       const host = mount();
       if (!host) return;
       host.replaceChildren();
-      host.dataset.atlasMemoryHealthMounted40355 = "0";
+      host.dataset.atlasMemoryHealthMounted = "0";
       compact();
     };
     const syncState = () => {
@@ -2538,13 +2538,13 @@
       }
     });
     globalThis.atlasMemoryHealth3980R2 = wrappedApi;
-    globalThis.atlasMemoryHealth3980 = wrappedApi;
+    globalThis.atlasMemoryHealth = wrappedApi;
 
     details.addEventListener("toggle", syncState);
     compact();
     syncState();
 
-    globalThis.AtlasMemoryHealthDeferredResidency40355 = Object.freeze({
+    globalThis.AtlasMemoryHealthDeferredResidency = Object.freeze({
       build: "40.3.55",
       parent: "40.3.54",
       scope: "memory_health_presentation_only",

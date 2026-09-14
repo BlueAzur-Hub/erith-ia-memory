@@ -22,7 +22,7 @@
   const SNAPSHOT_EVENT = "agentcrypto:tradus-paper-snapshot";
   const PILL_ID = "aetherTradusPill406069";
   const STYLE_ID = "aetherTradusBridgeStyle406069";
-  const WORKBENCH_ROOT_ID = "atlasAetherWorkbench406039";
+  const WORKBENCH_ROOT_ID = "atlasAetherWorkbench";
   const BOUND_ATTR = "data-aether-tradus-passive-bound-406069";
   const MAX_EVENTS = 24;
 
@@ -40,7 +40,7 @@
 
   function sourceRead() {
     try {
-      return globalThis.AgentCryptoTradusPaperObservability406068?.read?.() || null;
+      return globalThis.AgentCryptoTradusPaperObservability?.read?.() || null;
     } catch (_) { return null; }
   }
 
@@ -151,16 +151,16 @@
       #${PILL_ID}[data-tone="long"]{color:#78ffd2;border-color:rgba(92,255,207,.36)}
       #${PILL_ID}[data-tone="short"]{color:#ff9ba6;border-color:rgba(255,122,143,.36)}
       #${PILL_ID}[data-tone="wait"]{color:#ffe09a;border-color:rgba(255,210,103,.28)}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069{margin-top:16px;padding-top:14px;border-top:1px solid rgba(103,232,255,.16)}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 h4{margin:0 0 10px;color:#75edff;font-size:12px;letter-spacing:.13em;text-transform:uppercase}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-summary{margin:0 0 10px;color:#eff9fc;font-size:14px;line-height:1.55;font-weight:650}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-meta{color:#91adbd;font-size:11px;line-height:1.45}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-list{display:grid;gap:8px;margin-top:10px}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-row{display:grid;grid-template-columns:86px 116px 80px minmax(0,1fr);gap:10px;padding:10px 12px;border:1px solid rgba(85,203,232,.18);border-radius:10px;background:rgba(5,26,40,.52);font-size:12px;line-height:1.4}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-row time{color:#8be5ff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-row b{color:#e8f8ff}
-      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-row span:nth-child(3){color:#ffd86d;font-weight:850}
-      @media(max-width:980px){#${PILL_ID}{max-width:28cqw}#${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-row{grid-template-columns:72px 92px minmax(0,1fr)}#${WORKBENCH_ROOT_ID} .aether-tradus-bridge-406069 .atb69-row span:nth-child(3){display:none}}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge{margin-top:16px;padding-top:14px;border-top:1px solid rgba(103,232,255,.16)}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge h4{margin:0 0 10px;color:#75edff;font-size:12px;letter-spacing:.13em;text-transform:uppercase}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-summary{margin:0 0 10px;color:#eff9fc;font-size:14px;line-height:1.55;font-weight:650}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-meta{color:#91adbd;font-size:11px;line-height:1.45}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-list{display:grid;gap:8px;margin-top:10px}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-row{display:grid;grid-template-columns:86px 116px 80px minmax(0,1fr);gap:10px;padding:10px 12px;border:1px solid rgba(85,203,232,.18);border-radius:10px;background:rgba(5,26,40,.52);font-size:12px;line-height:1.4}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-row time{color:#8be5ff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-row b{color:#e8f8ff}
+      #${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-row span:nth-child(3){color:#ffd86d;font-weight:850}
+      @media(max-width:980px){#${PILL_ID}{max-width:28cqw}#${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-row{grid-template-columns:72px 92px minmax(0,1fr)}#${WORKBENCH_ROOT_ID} .aether-tradus-bridge .atb69-row span:nth-child(3){display:none}}
     `;
     document.head.appendChild(style);
   }
@@ -191,7 +191,7 @@
       host.dataset.tradusPaper406069 = vm.side || "N/D";
       host.dataset.tradusSignal406069 = vm.signal || "N/D";
       host.dataset.tradusArchiveTrades406069 = String(vm.trades ?? 0);
-      host.dataset.tradusBridgePatch406069 = PATCH;
+      host.dataset.tradusBridgePatch = PATCH;
     } else {
       pill.textContent = "TRADUS · N/D";
       pill.title = "TRADUS PAPER indisponible";
@@ -209,8 +209,8 @@
 
   function makeDetailsBlock(snapshot) {
     const block = document.createElement("section");
-    block.className = "aether-tradus-bridge-406069";
-    block.dataset.aetherTradusWorkbench406069 = "details";
+    block.className = "aether-tradus-bridge";
+    block.dataset.aetherTradusWorkbench = "details";
     const vm = surfaceModel(snapshot);
     const age = num(snapshot?.observation_age_seconds);
     block.innerHTML = `
@@ -224,8 +224,8 @@
 
   function makeHistoryBlock(snapshot) {
     const block = document.createElement("section");
-    block.className = "aether-tradus-bridge-406069";
-    block.dataset.aetherTradusWorkbench406069 = "history";
+    block.className = "aether-tradus-bridge";
+    block.dataset.aetherTradusWorkbench = "history";
     const title = document.createElement("h4");
     title.textContent = "TRADUS PAPER · ÉVÉNEMENTS AETHER";
     block.appendChild(title);
@@ -265,7 +265,7 @@
     if (!root || !body || root.hidden) return false;
     decorating = true;
     try {
-      body.querySelectorAll("[data-aether-tradus-workbench-406069]").forEach(node => node.remove());
+      body.querySelectorAll("[data-aether-tradus-workbench]").forEach(node => node.remove());
       const snapshot = lastSnapshot || sourceRead();
       if (!snapshot) return false;
       const mode = workbenchMode(root);
@@ -366,14 +366,14 @@
     mutation_observer:false,
     global_dom_observer:false
   });
-  globalThis.AgentCryptoAetherTradusBridge406069 = api;
+  globalThis.AgentCryptoAetherTradusBridge = api;
 
   if (typeof document !== "undefined") {
     document.addEventListener(SNAPSHOT_EVENT, event => queueMicrotask(() => publish(event?.detail, "tradus_snapshot")));
 
     document.addEventListener("click", event => {
       const target = event.target?.closest?.(
-        "#atlasAetherStatusToggle4084,[data-aether46-open],.aether46-actions button,[data-aether-card-406046=\"events\"]"
+        "#atlasAetherStatusToggle,[data-aether46-open],.aether46-actions button,[data-aether-card-406046=\"events\"]"
       );
       if (!target) return;
       bindAfterExplicitOpen();

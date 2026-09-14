@@ -7,13 +7,13 @@
   "use strict";
   const BUILD = "40.6.50";
   const WINDOW_ID = "aether-watch";
-  const PANEL_ID = "atlasAetherStatusPanel4084";
-  const TOGGLE_ID = "atlasAetherStatusToggle4084";
+  const PANEL_ID = "atlasAetherStatusPanel";
+  const TOGGLE_ID = "atlasAetherStatusToggle";
 
   function closeAether(reason = "role-visibility") {
     const panel = document.getElementById(PANEL_ID);
     const toggle = document.getElementById(TOGGLE_ID);
-    if (panel) panel.dataset.aetherOperatorOpen406046 = "0";
+    if (panel) panel.dataset.aetherOperatorOpen = "0";
     if (toggle) toggle.setAttribute("aria-expanded", "false");
 
     const manager = globalThis.ErithAdministratorWindows;
@@ -24,7 +24,7 @@
       panel.hidden = true;
     }
 
-    document.documentElement.dataset.aetherRoleVisibility406050 = reason;
+    document.documentElement.dataset.aetherRoleVisibility = reason;
     return true;
   }
 
@@ -37,7 +37,7 @@
     if (event.persisted) closeAfterOwner("bfcache-restore");
   }, { passive: true });
 
-  globalThis.ErithAetherRoleVisibility406050 = Object.freeze({
+  globalThis.ErithAetherRoleVisibility = Object.freeze({
     build: BUILD,
     window_id: WINDOW_ID,
     boot_closed: true,
@@ -161,7 +161,7 @@
   const STYLE_HREF = "./aether-v2-406083.css?v=administrator-build-40.6.83";
   const SCRIPT_SRC = "./js/aether-v2-406083.js?v=administrator-build-40.6.83";
   const RETIRED_LINK_IDS = Object.freeze([
-    "aetherReadability406074","aetherV2Stabilization406074C21","aetherV2Refinement406074C3",
+    "aetherReadability","aetherV2Stabilization406074C21","aetherV2Refinement406074C3",
     "aetherV2Refinement406074C31","aetherV2Reframe406074C4","aetherV2Reframe406074C5",
     "aetherV2406075Canonical"
   ]);
@@ -193,7 +193,7 @@
     return true;
   }
   ensureStyle(); ensureRuntime();
-  globalThis.ErithAetherCanonical406074=Object.freeze({
+  globalThis.ErithAetherCanonical=Object.freeze({
     build:BUILD,revision:REVISION,release:RELEASE,style_href:STYLE_HREF,script_src:SCRIPT_SRC,
     one_visual_owner:true,one_runtime_owner:true,recurring_timer:false,observer:false,network_owner:false,
     market_core_changed:false,operator_runtime_changed:false,global_version_truth_owner:false,publishVersionTruth

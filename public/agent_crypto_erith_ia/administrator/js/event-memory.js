@@ -18,9 +18,9 @@
   const time=v=>{const n=Date.parse(String(v||""));return Number.isFinite(n)?n:null;};
   const pct=(a,b)=>Number.isFinite(a)&&a>0&&Number.isFinite(b)?((b-a)/a)*100:null;
   const clone=v=>{try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}};
-  function source(){try{return globalThis.AgentCryptoEventReactionSource405005?.snapshot?.()||null;}catch(_){return null;}}
-  function eventApi(){return globalThis.AtlasEventSemanticEnrichment405007||globalThis.AtlasEventIntelligence405000||null;}
-  function regimeApi(){return globalThis.AtlasMarketRegimeContext405009||null;}
+  function source(){try{return globalThis.AgentCryptoEventReactionSource?.snapshot?.()||null;}catch(_){return null;}}
+  function eventApi(){return globalThis.AtlasEventSemanticEnrichment||globalThis.AtlasEventIntelligence||null;}
+  function regimeApi(){return globalThis.AtlasMarketRegimeContext||null;}
   function nearest(records,target,tolerance){
     let best=null,bestDelta=Infinity;
     for(const row of records||[]){
@@ -93,5 +93,5 @@
   }
   function current(options={}){return derive(eventApi()?.current?.()||null,options);}
   function snapshot(options={}){return Object.freeze({schema:SCHEMA,build:BUILD,captured_at:new Date().toISOString(),rows:archive(options),current:current(options),read_only:true});}
-  globalThis.AtlasEventMemory405014=Object.freeze({build:BUILD,schema:SCHEMA,windows:WINDOWS,derive,archive,current,snapshot,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false});
+  globalThis.AtlasEventMemory=Object.freeze({build:BUILD,schema:SCHEMA,windows:WINDOWS,derive,archive,current,snapshot,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false});
 })();

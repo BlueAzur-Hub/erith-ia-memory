@@ -289,7 +289,7 @@ function aetherNewsCanonicalEvent(event){
   }
   function aetherNewsMarketContext(currentEvent=null){
     try{
-      const owner=globalThis.AtlasNewsToMarketOperatorIntelligence40235;
+      const owner=globalThis.AtlasNewsToMarketOperatorIntelligence;
       if(!owner||typeof owner.compute!=="function")return null;
       const n=currentEvent?owner.compute(currentEvent):owner.compute();
       if(!n||n.status!=="observed")return null;
@@ -436,9 +436,9 @@ function aetherNewsCanonicalEvent(event){
     });
   }
   function renderAetherVeille(){
-    const host=document.getElementById("atlasAetherVeille4087"),meta=document.getElementById("atlasAetherVeilleMeta4087"),viewport=document.getElementById("atlasAetherVeilleViewport4087");
+    const host=document.getElementById("atlasAetherVeille"),meta=document.getElementById("atlasAetherVeilleMeta"),viewport=document.getElementById("atlasAetherVeilleViewport");
     if(!host||!meta||!viewport)return null;
-    const current=aetherVeilleCurrent(),copy=host.querySelector("[data-aether-veille-copy-4087]"),brand=host.querySelector(".atlas-aether-veille-brand-4087"),marquee=host.querySelector(".atlas-aether-veille-marquee-4087");
+    const current=aetherVeilleCurrent(),copy=host.querySelector("[data-aether-veille-copy]"),brand=host.querySelector(".atlas-aether-veille-brand"),marquee=host.querySelector(".atlas-aether-veille-marquee");
     if(meta.textContent!==current.meta)meta.textContent=current.meta;
     meta.title=current.fullMeta||current.meta||"";
     if(brand&&brand.textContent!==current.brand)brand.textContent=current.brand;
@@ -689,7 +689,7 @@ function aetherNewsMarketSemantic(){
     const feed=aetherVeilleCurrent();
     const event=feed?.event||null;
     if(!event)return "News Sentinel · aucun événement prioritaire qualifié.";
-    const owner=globalThis.AtlasNewsToMarketOperatorIntelligence40235;
+    const owner=globalThis.AtlasNewsToMarketOperatorIntelligence;
     const narrative=owner&&typeof owner.compute==="function"?owner.compute(event):null;
     if(!narrative||narrative.status!=="observed")return "Événement qualifié · réaction marché à observer · causalité non établie.";
     const parts=[];
@@ -747,7 +747,7 @@ function aetherNewsMarketSemantic(){
       const feed=aetherVeilleCurrent();
       const event=feed?.event||null;
       if(!event)return null;
-      const owner=globalThis.AtlasNewsToMarketOperatorIntelligence40235;
+      const owner=globalThis.AtlasNewsToMarketOperatorIntelligence;
       const narrative=owner&&typeof owner.compute==="function"?owner.compute(event):null;
       const fields=[narrative?.mechanism?.direction,narrative?.flow?.direction,narrative?.market_confirmation?.focus,narrative?.verdict?.direction,feed?.tone];
       const votes=fields.map(aetherDirectionalWord).filter(v=>v!==null&&v!==0);
@@ -854,30 +854,30 @@ function aetherNewsMarketSemantic(){
   }
   const AETHER_TIMELINE_PREVIEW=3;
   function aetherTimelineRow(entry){
-    const row=document.createElement("div");row.className="aether-timeline-row-406027";
-    const time=document.createElement("span");time.className="aether-timeline-time-406027";time.textContent=new Date(entry.at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
-    const type=document.createElement("b");type.className="aether-timeline-type-406027";type.textContent=entry.type;
-    const level=document.createElement("span");level.className="aether-timeline-level-406027";level.textContent=entry.level;
-    const detail=document.createElement("span");detail.className="aether-timeline-detail-406027";detail.textContent=entry.detail;
+    const row=document.createElement("div");row.className="aether-timeline-row";
+    const time=document.createElement("span");time.className="aether-timeline-time";time.textContent=new Date(entry.at).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    const type=document.createElement("b");type.className="aether-timeline-type";type.textContent=entry.type;
+    const level=document.createElement("span");level.className="aether-timeline-level";level.textContent=entry.level;
+    const detail=document.createElement("span");detail.className="aether-timeline-detail";detail.textContent=entry.detail;
     row.append(time,type,level,detail);return row;
   }
   function aetherTimelineFill(host,entries){
     if(!host)return;
     host.replaceChildren();
     if(!entries.length){
-      const empty=document.createElement("span");empty.className="aether-timeline-empty-406027";empty.textContent="Aucun changement significatif enregistré dans cette session.";host.appendChild(empty);return;
+      const empty=document.createElement("span");empty.className="aether-timeline-empty";empty.textContent="Aucun changement significatif enregistré dans cette session.";host.appendChild(empty);return;
     }
     entries.forEach(entry=>host.appendChild(aetherTimelineRow(entry)));
   }
   /* 40.6.37 — GRAPH-FIRST LAZY HYDRATION · INTERACTION-ON-DEMAND LOCK */
   function aetherTimelineRender(panel,{includeFull=false}={}){
-    const preview=panel?.querySelector('[data-aether-timeline-preview-406028]');
-    const full=panel?.querySelector('[data-aether-timeline-406027]');
+    const preview=panel?.querySelector('[data-aether-timeline-preview]');
+    const full=panel?.querySelector('[data-aether-timeline]');
     if(!preview&&!full)return;
     const entries=aetherTimelineState.entries;
     aetherTimelineFill(preview,entries.slice(0,AETHER_TIMELINE_PREVIEW));
     if(includeFull)aetherTimelineFill(full,entries);
-    const count=panel?.querySelector('[data-aether-history-count-406030]');
+    const count=panel?.querySelector('[data-aether-history-count]');
     if(count)count.textContent=`${entries.length}/${aetherTimelineState.max}`;
   }
   function aetherWeatherFirstGlance(){
@@ -905,7 +905,7 @@ function aetherNewsMarketSemantic(){
       const script=document.createElement('script');
       script.src=AETHER_WORKBENCH_SRC;
       script.async=true;
-      script.dataset.aetherWorkbench406039='1';
+      script.dataset.aetherWorkbench='1';
       script.onload=()=>globalThis.AgentCryptoAetherWorkbench406039?resolve(globalThis.AgentCryptoAetherWorkbench406039):reject(new Error('Aether Workbench API absent'));
       script.onerror=()=>{aetherWorkbenchPromise=null;reject(new Error('Aether Workbench load failed'));};
       document.head.appendChild(script);
@@ -931,23 +931,23 @@ function aetherNewsMarketSemantic(){
   function aetherPanelFocusEmbedded(target,panel){
     if(!panel)return;
     const embedded=['glance','history','details'].includes(target)?target:'glance';
-    panel.dataset.aetherFocus406030=embedded;
-    panel.querySelectorAll('[data-aether-focus-view-406030]').forEach(node=>{node.hidden=node.getAttribute('data-aether-focus-view-406030')!==embedded;});
-    panel.querySelectorAll('[data-aether-focus-button-406030]').forEach(button=>{
-      const active=button.getAttribute('data-aether-focus-button-406030')===embedded;
+    panel.dataset.aetherFocus=embedded;
+    panel.querySelectorAll('[data-aether-focus-view]').forEach(node=>{node.hidden=node.getAttribute('data-aether-focus-view')!==embedded;});
+    panel.querySelectorAll('[data-aether-focus-button]').forEach(button=>{
+      const active=button.getAttribute('data-aether-focus-button')===embedded;
       button.setAttribute('aria-pressed',active?'true':'false');
       button.dataset.active=active?'1':'0';
     });
     if(embedded==='history')aetherTimelineRender(panel,{includeFull:true});
     if(embedded==='details')aetherDetailsRender(panel);
   }
-  function aetherWorkbenchOpen(mode,panel=document.getElementById('atlasAetherStatusPanel4084')){
+  function aetherWorkbenchOpen(mode,panel=document.getElementById('atlasAetherStatusPanel')){
     const target=mode==='details'?'details':mode==='history'?'history':'events';
     return aetherWorkbenchLoad()
       .then(api=>api.open(aetherWorkbenchPayload(target)))
       .catch(()=>aetherPanelFocusEmbedded(target==='events'?'history':target,panel));
   }
-  function aetherPanelFocus(mode,panel=document.getElementById('atlasAetherStatusPanel4084')){
+  function aetherPanelFocus(mode,panel=document.getElementById('atlasAetherStatusPanel')){
     if(!panel)return;
     const target=['glance','history','details'].includes(mode)?mode:'glance';
     if(target==='glance')return aetherPanelFocusEmbedded('glance',panel);
@@ -955,14 +955,14 @@ function aetherNewsMarketSemantic(){
     aetherPanelFocusEmbedded('glance',panel);
     void aetherWorkbenchOpen(target,panel);
   }
-  function aetherDetailsRender(panel=document.getElementById('atlasAetherStatusPanel4084')){
+  function aetherDetailsRender(panel=document.getElementById('atlasAetherStatusPanel')){
     if(!panel)return;
-    const row=(key,value)=>{const node=panel.querySelector(`[data-aether-row-4084="${key}"]`);if(node)node.textContent=value;};
+    const row=(key,value)=>{const node=panel.querySelector(`[data-aether-row="${key}"]`);if(node)node.textContent=value;};
     row('why',aetherOperatorWhy());
     row('semantic',aetherNewsMarketSemantic());
     row('attention',aetherAttention());
     row('news',aetherSnapshot().news);
-    panel.dataset.aetherDetailsHydrated406037='1';
+    panel.dataset.aetherDetailsHydrated='1';
   }
 
   /* 40.6.42 — AETHER COMPONENT FOUNDATION · RESPONSIVE INFORMATION ARCHITECTURE */
@@ -1203,7 +1203,7 @@ function aetherNewsMarketSemantic(){
 
     // 40.6.49 keeps the 40.6.46 CLEAN REBUILD runtime: old Aether presentation is not hidden under the new one;
     // it is removed from this runtime panel. Data owners/functions remain untouched.
-    panel.querySelectorAll('.aether-first-glance-grid-406030,[data-aether-component-stage-406042],.aether42-backplate,.aether42-surface').forEach(node=>node.remove());
+    panel.querySelectorAll('.aether-first-glance-grid,[data-aether-component-stage-406042],.aether42-backplate,.aether42-surface').forEach(node=>node.remove());
     panel.dataset.aetherComponentFoundation406046='1';
     delete panel.dataset.aetherComponentFoundation406042;
 
@@ -1292,21 +1292,21 @@ function aetherNewsMarketSemantic(){
   }
 
   function aetherPanelEnsure(){
-    let panel=document.getElementById("atlasAetherStatusPanel4084");
+    let panel=document.getElementById("atlasAetherStatusPanel");
     if(panel){
-      if(!panel.dataset.aetherOperatorOpen406046)panel.dataset.aetherOperatorOpen406046="0";
+      if(!panel.dataset.aetherOperatorOpen)panel.dataset.aetherOperatorOpen="0";
       aetherComponentEnsure(panel);
       return panel;
     }
     panel=document.createElement("section");
-    panel.id="atlasAetherStatusPanel4084";
+    panel.id="atlasAetherStatusPanel";
     panel.hidden=true;
-    panel.dataset.aetherOperatorOpen406046="0";
+    panel.dataset.aetherOperatorOpen="0";
     panel.setAttribute("aria-label","Synthèse Aether");
-    panel.innerHTML=`<div class="atlas-aether-panel-head-4084"><b>AETHER · ATTENTION WATCH</b><button type="button" data-aether-close-4084 aria-label="Fermer Aether">×</button></div>`;
+    panel.innerHTML=`<div class="atlas-aether-panel-head"><b>AETHER · ATTENTION WATCH</b><button type="button" data-aether-close aria-label="Fermer Aether">×</button></div>`;
     document.body.appendChild(panel);
     aetherComponentEnsure(panel);
-    panel.querySelector("[data-aether-close-4084]")?.addEventListener("click",()=>aetherPanelSet(false));
+    panel.querySelector("[data-aether-close]")?.addEventListener("click",()=>aetherPanelSet(false));
     return panel;
   }
   /* 40.6.40 — AETHER NATIVE WINDOW MANAGER BRIDGE */
@@ -1315,11 +1315,11 @@ function aetherNewsMarketSemantic(){
     return manager?.getWindow?.('aether-watch')?manager:null;
   }
   function aetherPanelSet(open){
-    const button=document.getElementById("atlasAetherStatusToggle4084");
-    const panel=open?aetherPanelEnsure():document.getElementById("atlasAetherStatusPanel4084");
+    const button=document.getElementById("atlasAetherStatusToggle");
+    const panel=open?aetherPanelEnsure():document.getElementById("atlasAetherStatusPanel");
     const manager=aetherNativeWindowManager();
     if(panel){
-      panel.dataset.aetherOperatorOpen406046=open?"1":"0";
+      panel.dataset.aetherOperatorOpen=open?"1":"0";
       if(manager){
         // 40.6.46: Window Manager keeps geometry only; visibility is operator-owned.
         panel.hidden=false;
@@ -1346,14 +1346,14 @@ function aetherNewsMarketSemantic(){
     const put=(id,value)=>{const n=document.getElementById(id);if(n&&n.textContent!==value)n.textContent=value;};
     // 40.4.130 — restore the healthy semantic INFO contract. No global INFO marquee.
     // Long News text belongs only to the dedicated VEILLE phase.
-    put("atlasAetherRibbonMarket4088","");
-    put("atlasAetherRibbonAtlas4084",`Atlas · ${s.atlas}`);
-    put("atlasAetherRibbonOracle4084",`Oracle · ${s.oracle}`);
-    put("atlasAetherRibbonSources4084",`Sources · ${s.sources}`);
-    put("atlasAetherRibbonBook4084",`Book · ${s.book}`);
+    put("atlasAetherRibbonMarket","");
+    put("atlasAetherRibbonAtlas",`Atlas · ${s.atlas}`);
+    put("atlasAetherRibbonOracle",`Oracle · ${s.oracle}`);
+    put("atlasAetherRibbonSources",`Sources · ${s.sources}`);
+    put("atlasAetherRibbonBook",`Book · ${s.book}`);
     renderAetherVeille();
-    let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel4084",`Aether · ${stateLabel}`);
-    const watch406027=aetherOperatorWatch();aetherTimelineCapture(watch406027);const panel=document.getElementById("atlasAetherStatusPanel4084");if(panel&&panel.dataset.aetherOperatorOpen406046==="1"&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row-4084="${k}"]`);if(n)n.textContent=v;};const watch406026=aetherOperatorWatch();row("level",watch406026.level);row("convergence",watch406026.convergence);row("divergence",watch406026.divergence);row("watch",watch406026.watch);row("note",watch406026.note);aetherTimelineRender(panel,{includeFull:panel.dataset.aetherFocus406030==="history"});row("market",aetherMarketBreadth());row("atlas_auto",aetherAtlasAuto());row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("system",aetherSystemBrief());row("weather",aetherWeatherFirstGlance());row("weather_risk",aetherWeatherRisk());if(panel.dataset.aetherFocus406030==="details")aetherDetailsRender(panel);aetherComponentPaint(panel,s,watch406026);}
+    let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel",`Aether · ${stateLabel}`);
+    const watch406027=aetherOperatorWatch();aetherTimelineCapture(watch406027);const panel=document.getElementById("atlasAetherStatusPanel");if(panel&&panel.dataset.aetherOperatorOpen==="1"&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row="${k}"]`);if(n)n.textContent=v;};const watch406026=aetherOperatorWatch();row("level",watch406026.level);row("convergence",watch406026.convergence);row("divergence",watch406026.divergence);row("watch",watch406026.watch);row("note",watch406026.note);aetherTimelineRender(panel,{includeFull:panel.dataset.aetherFocus==="history"});row("market",aetherMarketBreadth());row("atlas_auto",aetherAtlasAuto());row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("system",aetherSystemBrief());row("weather",aetherWeatherFirstGlance());row("weather_risk",aetherWeatherRisk());if(panel.dataset.aetherFocus==="details")aetherDetailsRender(panel);aetherComponentPaint(panel,s,watch406026);}
   }
 
   const AETHER_SYSTEM_BACKEND="http://127.0.0.1:8790/system";
@@ -1368,9 +1368,9 @@ function aetherNewsMarketSemantic(){
   const aetherSystemPercent=value=>{const n=aetherSystemNumber(value);return n!==null&&n>=0&&n<=100?n:null;};
   const aetherSystemTemperature=value=>{const n=aetherSystemNumber(value);return n!==null&&n>0&&n<150?n:null;};
   function aetherSystemSet(key,value,{icon=null,tone=null,title=null}={}){
-    const item=document.querySelector(`#atlasAetherSystem4086 [data-aether-system-4086="${key}"]`);if(!item)return;
-    const out=item.querySelector(".atlas-aether-system-value-4086");if(out&&out.textContent!==String(value))out.textContent=String(value);
-    if(icon){const node=item.querySelector(".atlas-aether-system-icon-4086");if(node&&node.textContent!==icon)node.textContent=icon;}
+    const item=document.querySelector(`#atlasAetherSystem [data-aether-system="${key}"]`);if(!item)return;
+    const out=item.querySelector(".atlas-aether-system-value");if(out&&out.textContent!==String(value))out.textContent=String(value);
+    if(icon){const node=item.querySelector(".atlas-aether-system-icon");if(node&&node.textContent!==icon)node.textContent=icon;}
     if(title)item.title=title;
     if(key==="btc")item.dataset.tone=tone||"flat";
   }
@@ -1508,21 +1508,21 @@ function aetherNewsMarketSemantic(){
   }
 
   function bindAether(){
-    const button=document.getElementById("atlasAetherStatusToggle4084");
+    const button=document.getElementById("atlasAetherStatusToggle");
     if(button&&button.dataset.aetherBound!=="1"){
       button.dataset.aetherBound="1";
       button.addEventListener("click",()=>{
         const manager=aetherNativeWindowManager();
-        const panel=document.getElementById("atlasAetherStatusPanel4084");
+        const panel=document.getElementById("atlasAetherStatusPanel");
         let nativeHidden=false;
         try{nativeHidden=Boolean(panel&&(panel.hidden||getComputedStyle(panel).display==='none'||panel.getClientRects().length===0));}catch(_){}
-        const shouldOpen=!panel||panel.dataset?.aetherOperatorOpen406046!=="1"||nativeHidden;
+        const shouldOpen=!panel||panel.dataset?.aetherOperatorOpen!=="1"||nativeHidden;
         aetherPanelSet(shouldOpen);
       });
     }
-    const quickPanel=document.getElementById("atlasAetherSystem4086");
-    if(quickPanel&&quickPanel.dataset.aetherDetailBound404134!=="1"){
-      quickPanel.dataset.aetherDetailBound404134="1";
+    const quickPanel=document.getElementById("atlasAetherSystem");
+    if(quickPanel&&quickPanel.dataset.aetherDetailBound!=="1"){
+      quickPanel.dataset.aetherDetailBound="1";
       quickPanel.setAttribute("role","button");
       quickPanel.setAttribute("tabindex","0");
       quickPanel.setAttribute("aria-label","Ouvrir Aether : météo Maintenon 5 jours, risque météo, système et Atlas AUTO");
@@ -1533,9 +1533,9 @@ function aetherNewsMarketSemantic(){
       quickPanel.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openDetail();}});
     }
     window.addEventListener("erith:operator-priority-release",()=>{renderAether();renderAetherSystem();renderAetherVeille();},{passive:true});
-    const feed=document.getElementById("atlasAetherVeille4087");
-    if(feed&&feed.dataset.aetherNewsNavBound404292!=="1"){
-      feed.dataset.aetherNewsNavBound404292="1";
+    const feed=document.getElementById("atlasAetherVeille");
+    if(feed&&feed.dataset.aetherNewsNavBound!=="1"){
+      feed.dataset.aetherNewsNavBound="1";
       feed.setAttribute("role","button");
       feed.setAttribute("tabindex","0");
       feed.setAttribute("aria-label","Ouvrir News Sentinel · actualités françaises et anglaises qualifiées");
@@ -1561,8 +1561,8 @@ function aetherNewsMarketSemantic(){
       feed.addEventListener("click",openNews);
       feed.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openNews();}});
     }
-    if(feed&&feed.dataset.aetherFeedPulseBound40120!=="1"){
-      feed.dataset.aetherFeedPulseBound40120="1";
+    if(feed&&feed.dataset.aetherFeedPulseBound!=="1"){
+      feed.dataset.aetherFeedPulseBound="1";
       feed.addEventListener("animationiteration",event=>{
         if(event.target!==feed||event.animationName!=="atlasAetherFeedPulse40112"||document.hidden)return;
         const style=getComputedStyle(feed);
@@ -1631,7 +1631,7 @@ function aetherNewsMarketSemantic(){
     veille_marquee_phase_synced:true,
     veille_marquee_constant_speed_px_s:AETHER_MARQUEE_SPEED_PX_S,
     info_operator_fact_cells:true,
-    explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence40235 (read-only compute)",
+    explanatory_context_owner:"AtlasNewsToMarketOperatorIntelligence (read-only compute)",
     explanatory_context_alternation:false,
     explanatory_context_new_fetch:false,
     explanatory_context_new_timer:false,
@@ -1758,7 +1758,7 @@ function aetherNewsMarketSemantic(){
   });
   globalThis.AgentCryptoAether=api;
   /* Compatibility read-only alias for diagnostics that knew the R6/R7 object. */
-  globalThis.AgentCryptoAetherSystem4086=api;
+  globalThis.AgentCryptoAetherSystem=api;
 
   /* 40.6.40 — DOM shell preseed only. This runs before app.js initializes the
      canonical Administrator Window Manager. No Aether data, weather, news or
@@ -1768,9 +1768,9 @@ function aetherNewsMarketSemantic(){
 
   /* 40.6.46 — CLEAN REBUILD · TRUE EXPLICIT OPEN. Geometry may be restored; visibility never is. */
   function aetherBootClosed(){
-    const panel=document.getElementById("atlasAetherStatusPanel4084");
-    const button=document.getElementById("atlasAetherStatusToggle4084");
-    if(panel)panel.dataset.aetherOperatorOpen406046="0";
+    const panel=document.getElementById("atlasAetherStatusPanel");
+    const button=document.getElementById("atlasAetherStatusToggle");
+    if(panel)panel.dataset.aetherOperatorOpen="0";
     if(button)button.setAttribute("aria-expanded","false");
     const manager=aetherNativeWindowManager();
     if(manager){

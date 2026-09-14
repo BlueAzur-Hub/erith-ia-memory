@@ -87,7 +87,7 @@
   }
 
   function readSources(){
-    const api=globalThis.ErithPrivateBackendSources4054;
+    const api=globalThis.ErithPrivateBackendSources;
     const intel=safeCall(api?.sourceIntelligence,null);
     const cex=safeCall(api?.snapshot,null);
     const dexDiag=safeCall(globalThis.AgentCryptoDexExclusionDiagnostics?.report,null);
@@ -124,7 +124,7 @@
   }
 
   function readNews(){
-    const current=safeCall(globalThis.AtlasEventIntelligence405000?.current,null);
+    const current=safeCall(globalThis.AtlasEventIntelligence?.current,null);
     if(current){
       return Object.freeze({
         state:"READY",
@@ -176,7 +176,7 @@
     }
 
     const canonical=globalThis.AgentCryptoTradusStrategyFailClosed;
-    const historical=globalThis.AgentCryptoTradusStrategyReconcile406105;
+    const historical=globalThis.AgentCryptoTradusStrategyReconcile;
     const raw=safeCall(canonical?.readStrategyA,null)
       ||safeCall(historical?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null})
       ||{decision:"INCONNU"};

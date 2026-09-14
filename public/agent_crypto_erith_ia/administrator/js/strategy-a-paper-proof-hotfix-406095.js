@@ -11,8 +11,8 @@
   const api=()=>globalThis.AgentCryptoStrategyAPaperAfterCostAcceptance406063||null;
 
   function mark(state,reason=""){
-    document.documentElement.dataset.strategyAPaperProofHotfix406095=state;
-    if(reason)document.documentElement.dataset.strategyAPaperProofHotfixReason406095=reason;
+    document.documentElement.dataset.strategyAPaperProofHotfix=state;
+    if(reason)document.documentElement.dataset.strategyAPaperProofHotfixReason=reason;
   }
 
   function run(reason="auto"){
@@ -71,7 +71,7 @@
     build:"40.6.95-hotfix",
     run,
     boot,
-    snapshot:()=>Object.freeze({auto_ran:autoRan,last_reason:lastReason,state:document.documentElement.dataset.strategyAPaperProofHotfix406095||"idle"}),
+    snapshot:()=>Object.freeze({auto_ran:autoRan,last_reason:lastReason,state:document.documentElement.dataset.strategyAPaperProofHotfix||"idle"}),
     delegated_click:true,
     automatic_once:true,
     recurring_timer:false,

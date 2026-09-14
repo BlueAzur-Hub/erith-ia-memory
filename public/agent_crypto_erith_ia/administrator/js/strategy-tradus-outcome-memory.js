@@ -71,7 +71,7 @@
 
   function readLedger(){
     try{
-      const rows=globalThis.AgentCryptoTradusShadowLedger406066?.read?.();
+      const rows=globalThis.AgentCryptoTradusShadowLedger?.read?.();
       return Array.isArray(rows)?rows.slice():[];
     }catch(_){return [];}
   }
@@ -132,11 +132,11 @@
 
   function readBtcHistory(){
     try{
-      const api=globalThis.AtlasOracleIndependentEngine403117;
+      const api=globalThis.AtlasOracleIndependentEngine;
       if(typeof api?.resolveHistory!=="function")return normalizeHistory([],{source:"oracle_history_api_unavailable"});
       const resolved=api.resolveHistory({id:"bitcoin",symbol:"BTC"});
       const result=resolved?.result||null;
-      return normalizeHistory(result?.series||[],{source:resolved?.source||result?.source||"AtlasOracleIndependentEngine403117",source_mode:result?.sourceMode||""});
+      return normalizeHistory(result?.series||[],{source:resolved?.source||result?.source||"AtlasOracleIndependentEngine",source_mode:result?.sourceMode||""});
     }catch(error){
       return Object.freeze({...normalizeHistory([],{source:"oracle_history_read_error"}),error:String(error?.message||error||"history read error")});
     }
@@ -219,7 +219,7 @@
       history:Object.freeze({available:history.available,dense_enough:history.dense_enough,source:history.source,source_mode:history.source_mode,point_count:history.point_count,median_step_ms:history.median_step_ms,first_at:history.first_at,last_at:history.last_at,error:history.error||null}),
       observations:Object.freeze(observations),horizons:Object.freeze(horizonSummary),
       interpretation:"Outcome Memory V2 resolves each due horizon from the nearest bounded real BTC historical point when available. The exact TRADUS top-of-book midpoint remains the T0 baseline. The shadow-ledger first-later quote is only a fallback and remains explicitly late when late. Directional alignment is descriptive evidence, not after-cost profitability.",
-      contract:Object.freeze({derived_read_only:true,source_owner:"AgentCryptoTradusShadowLedger406066 + AtlasOracleIndependentEngine403117",paper_shadow_only:true,financial_signal:false,automatic_order:false,real_order:false,fetch:false,recurring_timer:false,mutation_observer:false,storage_write:false,strategy_mutation:false,tradus_mutation:false,wallet:false,graph_mutation:false,oracle_model_mutation:false})
+      contract:Object.freeze({derived_read_only:true,source_owner:"AgentCryptoTradusShadowLedger + AtlasOracleIndependentEngine",paper_shadow_only:true,financial_signal:false,automatic_order:false,real_order:false,fetch:false,recurring_timer:false,mutation_observer:false,storage_write:false,strategy_mutation:false,tradus_mutation:false,wallet:false,graph_mutation:false,oracle_model_mutation:false})
     });
   }
 
@@ -238,7 +238,7 @@
     const model=modelFromRows();
     lastModel=model;
     if(typeof document!=="undefined"){
-      const host=document.querySelector("#multiStrategyShadowLedger406066 .ms-foot")||document.querySelector("#strategyTradusComparativeIntelligence .sti-foot");
+      const host=document.querySelector("#multiStrategyShadowLedger .ms-foot")||document.querySelector("#strategyTradusComparativeIntelligence .sti-foot");
       if(host){
         let node=document.getElementById(STATUS_ID);
         if(!node){node=document.createElement("span");node.id=STATUS_ID;node.dataset.owner=OWNER;host.append(document.createTextNode(" · "),node);}

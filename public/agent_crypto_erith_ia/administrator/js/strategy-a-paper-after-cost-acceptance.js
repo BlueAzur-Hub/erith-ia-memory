@@ -306,11 +306,11 @@
     ensureStyle();
 
     const anchor =
-      document.getElementById("strategyAReplaySandbox404290") ||
-      document.getElementById("strategyAExperimentLedger404289") ||
+      document.getElementById("strategyAReplaySandbox") ||
+      document.getElementById("strategyAExperimentLedger") ||
       document.getElementById("strategyADecisionTrace") ||
-      document.getElementById("strategyAAfterCost404292") ||
-      document.getElementById("strategyAPaperLifecycle404291");
+      document.getElementById("strategyAAfterCost") ||
+      document.getElementById("strategyAPaperLifecycle");
 
     if (!anchor) return false;
 

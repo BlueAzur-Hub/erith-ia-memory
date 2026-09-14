@@ -9,5 +9,5 @@
     authority: "build.json -> js/version-truth.js",
     ready: () => Promise.resolve(globalThis.ErithVersionTruth || null)
   });
-  globalThis.AgentCryptoVersionTruthAuthority406086 = api;
+  globalThis.AgentCryptoVersionTruthAuthority = api;
 })();

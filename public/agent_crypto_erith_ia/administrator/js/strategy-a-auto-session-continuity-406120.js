@@ -31,24 +31,24 @@
   }
   function ensureSuccessor406124() {
     if (!runtimeAtLeast("40.6.124")) return false;
-    if (globalThis.AgentCryptoStrategyAOwnerAutoStart406124) return true;
-    if (document.querySelector('script[data-strategy-a-owner-autostart-406124="true"]')) return true;
+    if (globalThis.AgentCryptoStrategyAOwnerAutoStart) return true;
+    if (document.querySelector('script[data-strategy-a-owner-autostart="true"]')) return true;
     const script = document.createElement("script");
     script.src = `./js/strategy-a-auto-owner-autostart-406124.js?v=${encodeURIComponent(runtimeBuild())}`;
     script.async = false;
-    script.dataset.strategyAOwnerAutostart406124 = "true";
+    script.dataset.strategyAOwnerAutostart = "true";
     document.head.appendChild(script);
     return true;
   }
   function ensureSuccessor406121() {
     if (runtimeAtLeast("40.6.124")) return ensureSuccessor406124();
     if (!runtimeAtLeast("40.6.121")) return false;
-    if (globalThis.AgentCryptoStrategyAAutoSessionContinuity406121) return true;
-    if (document.querySelector('script[data-strategy-a-auto-session-continuity-406121="true"]')) return true;
+    if (globalThis.AgentCryptoStrategyAAutoSessionContinuity) return true;
+    if (document.querySelector('script[data-strategy-a-auto-session-continuity="true"]')) return true;
     const script = document.createElement("script");
     script.src = `./js/strategy-a-auto-session-continuity-406121.js?v=${encodeURIComponent(runtimeBuild())}`;
     script.async = false;
-    script.dataset.strategyAAutoSessionContinuity406121 = "true";
+    script.dataset.strategyAAutoSessionContinuity = "true";
     document.head.appendChild(script);
     return true;
   }
@@ -83,5 +83,5 @@
   window.addEventListener("load",()=>{ensureSuccessor406121();scheduleRestore("load");},{once:true,passive:true});
   window.addEventListener("pageshow",()=>{ensureSuccessor406121();scheduleRestore("pageshow");},{passive:true});
   window.addEventListener("erith:system-hydrated",()=>{ensureSuccessor406121();scheduleRestore("system-hydrated");},{passive:true});
-  globalThis[API_KEY]=Object.freeze({build:BUILD,storage:"sessionStorage",key:SESSION_KEY,opted_in:optedIn,restore,clear:()=>setOptIn(false),ensure_successor_406121:ensureSuccessor406121,ensure_successor_406124:ensureSuccessor406124,snapshot:()=>Object.freeze({build:BUILD,opted_in:optedIn(),active:state().active,restored_this_document:restoredThisDocument,last_restore:lastRestore,successor_406121_loaded:!!globalThis.AgentCryptoStrategyAAutoSessionContinuity406121,successor_406124_loaded:!!globalThis.AgentCryptoStrategyAOwnerAutoStart406124}),contract:Object.freeze({paper_only:true,reuses_existing_runner:true,new_recurring_timer:false,new_market_fetch:false,real_order:false,wallet:false,credentials:false,local_storage_write:false,session_storage_write:true})});
+  globalThis[API_KEY]=Object.freeze({build:BUILD,storage:"sessionStorage",key:SESSION_KEY,opted_in:optedIn,restore,clear:()=>setOptIn(false),ensure_successor_406121:ensureSuccessor406121,ensure_successor_406124:ensureSuccessor406124,snapshot:()=>Object.freeze({build:BUILD,opted_in:optedIn(),active:state().active,restored_this_document:restoredThisDocument,last_restore:lastRestore,successor_406121_loaded:!!globalThis.AgentCryptoStrategyAAutoSessionContinuity,successor_406124_loaded:!!globalThis.AgentCryptoStrategyAOwnerAutoStart}),contract:Object.freeze({paper_only:true,reuses_existing_runner:true,new_recurring_timer:false,new_market_fetch:false,real_order:false,wallet:false,credentials:false,local_storage_write:false,session_storage_write:true})});
 })();

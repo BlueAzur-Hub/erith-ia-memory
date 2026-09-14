@@ -12,7 +12,7 @@
 
   const BUILD="40.6.67";
   const EVENT_NAME="agentcrypto:tradus-shadow-observation";
-  const PANEL_ID="tradusPaperShadow406067";
+  const PANEL_ID="tradusPaperShadow";
   const STYLE_ID="tradusPaperShadowStyle406067";
   const STORAGE_KEY="agent_crypto_tradus_paper_shadow_406067";
   const START_CAPITAL=1000;
@@ -134,16 +134,16 @@
 
   function reset(){state=freshState();persist();render();return clone(state);}
 
-  function mount(){if(typeof document==="undefined")return false;const old=document.getElementById(PANEL_ID);if(old){mounted=true;render();return true;}const anchor=document.getElementById("multiStrategyShadowLedger406066")||document.getElementById("tradusShadow406066");if(!anchor)return false;ensureStyle();const p=document.createElement("section");p.id=PANEL_ID;p.dataset.tradusPaperBuild=BUILD;p.innerHTML=`
-    <div class="tp-head"><div><div class="tp-kicker">TRADUS PAPER SHADOW · INDÉPENDANT</div><div class="tp-title">Simulation micro-transactions · lifecycle + P/L après coûts</div><div class="tp-sub">Capital virtuel 1 000 € · ticket 50 € · une position max · LONG/SHORT synthétique PAPER · frais locaux supposés 0,10 %/fill · spread payé par le côté exécutable du carnet.</div></div><button type="button" class="btn small" id="tradusPaperExport406067">EXPORTER JOURNAL</button></div>
+  function mount(){if(typeof document==="undefined")return false;const old=document.getElementById(PANEL_ID);if(old){mounted=true;render();return true;}const anchor=document.getElementById("multiStrategyShadowLedger")||document.getElementById("tradusShadow406066");if(!anchor)return false;ensureStyle();const p=document.createElement("section");p.id=PANEL_ID;p.dataset.tradusPaperBuild=BUILD;p.innerHTML=`
+    <div class="tp-head"><div><div class="tp-kicker">TRADUS PAPER SHADOW · INDÉPENDANT</div><div class="tp-title">Simulation micro-transactions · lifecycle + P/L après coûts</div><div class="tp-sub">Capital virtuel 1 000 € · ticket 50 € · une position max · LONG/SHORT synthétique PAPER · frais locaux supposés 0,10 %/fill · spread payé par le côté exécutable du carnet.</div></div><button type="button" class="btn small" id="tradusPaperExport">EXPORTER JOURNAL</button></div>
     <div class="tp-grid"><div class="tp-card"><span>Capital PAPER</span><b data-tp="capital">1 000,00 €</b></div><div class="tp-card"><span>Position</span><b data-tp="position">FLAT</b></div><div class="tp-card"><span>Entrée</span><b data-tp="entry">—</b></div><div class="tp-card"><span>Mark exécutable</span><b data-tp="mark">—</b></div><div class="tp-card"><span>P/L net</span><b data-tp="pnl">0,00 €</b></div><div class="tp-card"><span>Trades</span><b data-tp="trades">0 · 0G/0P</b></div></div>
-    <div class="tp-status" data-tp="status">EN ATTENTE D'UNE OBSERVATION TRADUS.</div><div class="tp-foot">PAPER ONLY · frais cumulés <b data-tp="fees">0,00 €</b> · aucun Kraken · aucune clé · aucun wallet · aucun ordre réel · Strategy A et ancien workspace « STRATÉGIE B » non modifiés.</div>`;anchor.insertAdjacentElement("afterend",p);p.querySelector("#tradusPaperExport406067")?.addEventListener("click",exportJournal);mounted=true;render();return true;}
+    <div class="tp-status" data-tp="status">EN ATTENTE D'UNE OBSERVATION TRADUS.</div><div class="tp-foot">PAPER ONLY · frais cumulés <b data-tp="fees">0,00 €</b> · aucun Kraken · aucune clé · aucun wallet · aucun ordre réel · Strategy A et ancien workspace « STRATÉGIE B » non modifiés.</div>`;anchor.insertAdjacentElement("afterend",p);p.querySelector("#tradusPaperExport")?.addEventListener("click",exportJournal);mounted=true;render();return true;}
 
   function onObservation(e){if(!mounted)mount();process(e?.detail,"tradus_event");}
 
   function selfTest(){const row=(action,bid,ask,imb=0)=>({ok:true,at:new Date().toISOString(),tick:{bid,ask},signal:{action,reason:action==="NO_TRADE"?"INSUFFICIENT_EDGE":action==="BUY"?"POSITIVE_IMBALANCE":"NEGATIVE_IMBALANCE",imbalance:imb}});const saved=clone(state);state=freshState();const a=process(row("BUY",99.9,100.0,.3),"test");const opened=state.position?.side==="LONG";const b=process(row("NO_TRADE",100.5,100.6,0),"test");const closed=!state.position&&state.trades.length===1;const netLong=state.trades[0]?.net_pnl_after_all_fees;const c=process(row("SELL",100.0,100.1,-.3),"test");const shortOpened=state.position?.side==="SHORT";const d=process(row("BUY",99.4,99.5,.3),"test");const shortClosed=!state.position&&state.trades.length===2;const netShort=state.trades[1]?.net_pnl_after_all_fees;const pass=opened&&closed&&finite(netLong)&&netLong>0&&shortOpened&&shortClosed&&finite(netShort)&&netShort>0;const receipt={build:BUILD,pass,checks:{long_open:opened,long_close:closed,long_net:netLong,short_open:shortOpened,short_close_on_reverse:shortClosed,short_net:netShort},fee_rate:FEE_RATE,ticket_eur:TICKET_EUR,real_orders:false};state=saved||freshState();persist();render();return receipt;}
 
   const api=Object.freeze({build:BUILD,process_observation:process,read:()=>clone(state),summary:()=>summary(),mount,export_journal:exportJournal,reset,self_test:selfTest,assumptions:Object.freeze({start_capital_eur:START_CAPITAL,ticket_eur:TICKET_EUR,fee_rate_per_fill:FEE_RATE}),paper_only:true,real_orders:false,credentials:false,wallet:false,recurring_timer:false,network_owner:false});
-  globalThis.AgentCryptoTradusPaperShadow406067=api;load();
+  globalThis.AgentCryptoTradusPaperShadow=api;load();
   if(typeof document!=="undefined"){document.addEventListener(EVENT_NAME,onObservation);const boot=()=>{mount();};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();window.addEventListener("load",boot,{once:true});window.addEventListener("pageshow",boot);document.addEventListener("click",()=>{if(!mounted)mount();},{capture:true});}
 })();

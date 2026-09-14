@@ -7,7 +7,7 @@
     const admin = meta("administrator-build");
     const engine = meta("atlas-engine-build");
     const footer = document.getElementById("footerRelease");
-    const classic = document.getElementById("atlasClassicVersionTruth406025");
+    const classic = document.getElementById("atlasClassicVersionTruth");
     if (footer) footer.textContent = `Agent-Crypto @erith.IA · Administrator ${admin} · Market Core ${engine} · Web Classic · vérification…`;
     try {
       const response = await fetch(MANIFEST,{cache:"no-store"});

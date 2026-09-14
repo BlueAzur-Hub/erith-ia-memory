@@ -101,5 +101,5 @@
   function read(){return [...BRIDGED.values()].map(clone);}
   function summary(){const rows=read();return {schema:SCHEMA,build:BUILD,total:rows.length,open:rows.filter(r=>r.status==="OPEN_SYNCED").length,closed:rows.filter(r=>r.status==="CLOSED_SYNCED").length,blocked_reason:blockedReason,ready:apiReady()&&!blockedReason,paper_only:true,real_orders:false};}
   const api=Object.freeze({build:BUILD,schema:SCHEMA,preflight,on_open:onOpen,on_close:onClose,normalize_open_facts:normalizeOpenFacts,self_test:selfTest,read,summary,operator_clear_bridge_block:clearBlockForOperatorReview,paper_only:true,real_orders:false,network:false,storage_write:false,accounting_owner_changed:false,lifecycle_shadow_connected:true,unknown_propagation_406018:true,unknown_numeric_is_zero:false,contradictory_notional_fails_closed:true});
-  globalThis.AgentCryptoStrategyAAutoLifecycleBridge404297=api;
+  globalThis.AgentCryptoStrategyAAutoLifecycleBridge=api;
 })();

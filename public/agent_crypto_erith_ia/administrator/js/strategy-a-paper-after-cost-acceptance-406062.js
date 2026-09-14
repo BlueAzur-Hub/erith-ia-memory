@@ -306,9 +306,9 @@
     ensureStyle();
 
     const anchor =
-      document.getElementById("strategyAAfterCost404292") ||
-      document.getElementById("strategyAPaperLifecycle404291") ||
-      document.getElementById("strategyAExperimentLedger404289");
+      document.getElementById("strategyAAfterCost") ||
+      document.getElementById("strategyAPaperLifecycle") ||
+      document.getElementById("strategyAExperimentLedger");
 
     if (!anchor) return false;
 

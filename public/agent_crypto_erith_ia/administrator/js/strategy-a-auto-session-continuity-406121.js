@@ -19,7 +19,7 @@
   "use strict";
 
   const BUILD = "40.6.121";
-  const API_KEY = "AgentCryptoStrategyAAutoSessionContinuity406121";
+  const API_KEY = "AgentCryptoStrategyAAutoSessionContinuity";
   const STOP_KEY = "agent_crypto_strategy_a_auto_manual_stop_v1";
   const MAX_RETRIES = 12;
   const RETRY_MS = 500;
@@ -43,10 +43,10 @@
     try {
       if (enabled) sessionStorage.setItem(STOP_KEY, "1");
       else sessionStorage.removeItem(STOP_KEY);
-      document.documentElement.dataset.strategyAAutoManualStop406121 = enabled ? "stopped" : "run";
+      document.documentElement.dataset.strategyAAutoManualStop = enabled ? "stopped" : "run";
       return true;
     } catch (_) {
-      document.documentElement.dataset.strategyAAutoManualStop406121 = "storage-unavailable";
+      document.documentElement.dataset.strategyAAutoManualStop = "storage-unavailable";
       return false;
     }
   }
@@ -86,7 +86,7 @@
   }
 
   function mark(value) {
-    document.documentElement.dataset.strategyAAutoContinuity406121 = value;
+    document.documentElement.dataset.strategyAAutoContinuity = value;
   }
 
   function ensureActive(reason = "runtime") {

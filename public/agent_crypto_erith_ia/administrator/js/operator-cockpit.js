@@ -19,7 +19,7 @@
   const runtimeBuild=()=>String(globalThis.ErithVersionTruth?.build||new URLSearchParams(location.search).get("ac-build")||document.querySelector('meta[name="administrator-build"]')?.content||"40.6.116").trim();
 
   function strategyFallback(){
-    const owner=globalThis.AgentCryptoTradusStrategyFailClosed||globalThis.AgentCryptoTradusStrategyReconcile406105;
+    const owner=globalThis.AgentCryptoTradusStrategyFailClosed||globalThis.AgentCryptoTradusStrategyReconcile;
     const raw=safe(owner?.readStrategyA,{decision:"INCONNU",phase:null,direction_score:null,blocker:null,reason:null})||{};
     const state=globalThis.AgentCryptoTradusStrategyFailClosed?.stateOf?.(raw)
       ||(/STOP|REFUS|REJECT|BLOCK/.test(upper(raw.decision||raw.phase))?"STOP":/PAPER|SIMUL/.test(upper(raw.decision||raw.phase))?"PAPER":/NO TRADE|WAIT/.test(upper(raw.decision||raw.phase))?"WAIT":/^OFF$/.test(upper(raw.decision||raw.phase))?"OFF":"UNKNOWN");
@@ -53,13 +53,13 @@
     if(!tradus.available)return Object.freeze({state:"EN ATTENTE",plain:"TRADUS n’a pas encore de lecture exploitable."});
     if(!tradus.fresh)return Object.freeze({state:"À RAFRAÎCHIR",plain:"La lecture TRADUS est ancienne. Strategy A reste la référence de prudence et aucune action n’est confirmée."});
     const raw=globalThis.AgentCryptoTradusStrategyFailClosed?.compare?.(strategy,tradus.row?.signal)
-      ||globalThis.AgentCryptoTradusStrategyReconcile406105?.compare?.(strategy,tradus.row?.signal)
+      ||globalThis.AgentCryptoTradusStrategyReconcile?.compare?.(strategy,tradus.row?.signal)
       ||{state:"NON COMPARABLE",text:"Comparaison indisponible"};
     return Object.freeze({state:upper(raw.state||"NON COMPARABLE"),plain:String(raw.text||"")});
   }
 
   function paperFallback(){
-    const paper=safe(globalThis.AgentCryptoTradusPaperObservability406068?.stats,{trades:0,wins:0,losses:0,net:0,fees:0,max_drawdown:0})||{};
+    const paper=safe(globalThis.AgentCryptoTradusPaperObservability?.stats,{trades:0,wins:0,losses:0,net:0,fees:0,max_drawdown:0})||{};
     return Object.freeze({
       trades:finite(paper.trades)||0,
       wins:finite(paper.wins)||0,
@@ -310,7 +310,7 @@
   document.addEventListener("click",event=>{
     const action=event.target instanceof Element?event.target.closest("button")?.dataset?.ocAction:null;
     if(action==="comparison")document.getElementById("strategyTradusComparativeIntelligence")?.scrollIntoView?.({behavior:"smooth",block:"center"});
-    if(action==="paper")document.getElementById("strategyAReplaySandbox404290")?.scrollIntoView?.({behavior:"smooth",block:"start"});
+    if(action==="paper")document.getElementById("strategyAReplaySandbox")?.scrollIntoView?.({behavior:"smooth",block:"start"});
   });
   if(document.readyState==="loading")window.addEventListener("load",schedule,{once:true,passive:true});else schedule();
 

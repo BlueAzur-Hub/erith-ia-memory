@@ -62,8 +62,8 @@
   const number = (value, fallback = null) => finite(value) ? Number(value) : fallback;
 
   function livePolicyProbe() {
-    const mixed = globalThis.AgentCryptoStrategyAMeasuredMixedBias404270?.thresholds || null;
-    const v2 = globalThis.AgentCryptoStrategyAV2404272?.policy || null;
+    const mixed = globalThis.AgentCryptoStrategyAMeasuredMixedBias?.thresholds || null;
+    const v2 = globalThis.AgentCryptoStrategyAV2?.policy || null;
     return {
       mixed_direction_min: number(mixed?.min_direction_score),
       mixed_confidence_min: number(mixed?.min_oracle_confidence),
@@ -176,29 +176,29 @@
 
   function ensureStyle() {
     if (typeof document === "undefined") return null;
-    let style = document.getElementById("strategyAReplayStyle404290");
+    let style = document.getElementById("strategyAReplayStyle");
     if (style) return style;
     style = document.createElement("style");
-    style.id = "strategyAReplayStyle404290";
+    style.id = "strategyAReplayStyle";
     style.textContent = `
-      #strategyAReplaySandbox404290{margin-top:10px;padding:10px;border:1px solid rgba(127,183,255,.20);border-radius:10px;background:rgba(5,13,25,.62)}
-      #strategyAReplaySandbox404290 .sar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
-      #strategyAReplaySandbox404290 .sar-title{font-size:9px;font-weight:950;letter-spacing:.09em;text-transform:uppercase;color:#b7d8ff}
-      #strategyAReplaySandbox404290 .sar-sub{margin-top:3px;font-size:8px;line-height:1.35;color:#8298ad}
-      #strategyAReplaySandbox404290 .sar-actions{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}
-      #strategyAReplaySandbox404290 .sar-actions button{font-size:8px!important;min-height:28px!important}
-      #strategyAReplaySandbox404290 .sar-status{padding:7px 8px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(0,0,0,.14);font-size:9px;color:#d9e9f6}
-      #strategyAReplaySandbox404290 .sar-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:7px}
-      #strategyAReplaySandbox404290 .sar-gate{padding:6px 7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;background:rgba(255,255,255,.018)}
-      #strategyAReplaySandbox404290 .sar-gate[data-state="pass"]{border-color:rgba(91,219,171,.25)}
-      #strategyAReplaySandbox404290 .sar-gate[data-state="wait"]{border-color:rgba(234,192,93,.28)}
-      #strategyAReplaySandbox404290 .sar-gate[data-state="stop"]{border-color:rgba(255,114,114,.30)}
-      #strategyAReplaySandbox404290 .sar-gate[data-state="not_reached"]{opacity:.45}
-      #strategyAReplaySandbox404290 .sar-gate span{display:block;font-size:7px;letter-spacing:.06em;color:#7d91a4;text-transform:uppercase;font-weight:900}
-      #strategyAReplaySandbox404290 .sar-gate b{display:block;margin-top:3px;font-size:9px;color:#eef7ff;overflow-wrap:anywhere}
-      #strategyAReplaySandbox404290 .sar-gate small{display:block;margin-top:2px;font-size:7px;color:#748696}
-      #strategyAReplaySandbox404290 .sar-safety{margin-top:7px;font-size:8px;line-height:1.35;color:#7f989f}
-      @media(max-width:950px){#strategyAReplaySandbox404290 .sar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      #strategyAReplaySandbox{margin-top:10px;padding:10px;border:1px solid rgba(127,183,255,.20);border-radius:10px;background:rgba(5,13,25,.62)}
+      #strategyAReplaySandbox .sar-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+      #strategyAReplaySandbox .sar-title{font-size:9px;font-weight:950;letter-spacing:.09em;text-transform:uppercase;color:#b7d8ff}
+      #strategyAReplaySandbox .sar-sub{margin-top:3px;font-size:8px;line-height:1.35;color:#8298ad}
+      #strategyAReplaySandbox .sar-actions{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0}
+      #strategyAReplaySandbox .sar-actions button{font-size:8px!important;min-height:28px!important}
+      #strategyAReplaySandbox .sar-status{padding:7px 8px;border:1px solid rgba(255,255,255,.07);border-radius:8px;background:rgba(0,0,0,.14);font-size:9px;color:#d9e9f6}
+      #strategyAReplaySandbox .sar-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:7px}
+      #strategyAReplaySandbox .sar-gate{padding:6px 7px;border:1px solid rgba(255,255,255,.06);border-radius:7px;background:rgba(255,255,255,.018)}
+      #strategyAReplaySandbox .sar-gate[data-state="pass"]{border-color:rgba(91,219,171,.25)}
+      #strategyAReplaySandbox .sar-gate[data-state="wait"]{border-color:rgba(234,192,93,.28)}
+      #strategyAReplaySandbox .sar-gate[data-state="stop"]{border-color:rgba(255,114,114,.30)}
+      #strategyAReplaySandbox .sar-gate[data-state="not_reached"]{opacity:.45}
+      #strategyAReplaySandbox .sar-gate span{display:block;font-size:7px;letter-spacing:.06em;color:#7d91a4;text-transform:uppercase;font-weight:900}
+      #strategyAReplaySandbox .sar-gate b{display:block;margin-top:3px;font-size:9px;color:#eef7ff;overflow-wrap:anywhere}
+      #strategyAReplaySandbox .sar-gate small{display:block;margin-top:2px;font-size:7px;color:#748696}
+      #strategyAReplaySandbox .sar-safety{margin-top:7px;font-size:8px;line-height:1.35;color:#7f989f}
+      @media(max-width:950px){#strategyAReplaySandbox .sar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     `;
     document.head.appendChild(style);
     return style;
@@ -206,10 +206,10 @@
 
   function renderResult(result) {
     if (typeof document === "undefined") return false;
-    const panel = document.getElementById("strategyAReplaySandbox404290");
+    const panel = document.getElementById("strategyAReplaySandbox");
     if (!panel) return false;
-    const status = panel.querySelector("#strategyAReplayStatus404290");
-    const grid = panel.querySelector("#strategyAReplayGrid404290");
+    const status = panel.querySelector("#strategyAReplayStatus");
+    const grid = panel.querySelector("#strategyAReplayGrid");
     if (status) status.textContent = result
       ? `${result.scenario} · ${result.final_state}${result.first_blocker ? ` · 1er verrou ${result.first_blocker.toUpperCase()}` : " · pipeline complet"}`
       : "Aucun replay exécuté.";
@@ -248,23 +248,23 @@
   function render() {
     if (typeof document === "undefined") return false;
     ensureStyle();
-    const anchor = document.getElementById("strategyAExperimentLedger404289") || document.getElementById("strategyADecisionTrace");
+    const anchor = document.getElementById("strategyAExperimentLedger") || document.getElementById("strategyADecisionTrace");
     if (!anchor) return false;
-    let panel = document.getElementById("strategyAReplaySandbox404290");
+    let panel = document.getElementById("strategyAReplaySandbox");
     if (!panel) {
       panel = document.createElement("section");
-      panel.id = "strategyAReplaySandbox404290";
+      panel.id = "strategyAReplaySandbox";
       panel.setAttribute("data-strategy-a-replay-build", BUILD);
-      panel.innerHTML = `<div class="sar-head"><div><div class="sar-title">REPLAY SANDBOX · DÉTERMINISTE · ISOLÉ DU LIVE</div><div class="sar-sub">Scénarios figés pour traverser volontairement les gates Strategy A sans falsifier le marché réel ni contaminer le ledger Auto A.</div></div><button type="button" class="btn small" id="strategyAReplayExport404290">EXPORTER REPLAY</button></div><div class="sar-actions" id="strategyAReplayActions404290"></div><div class="sar-status" id="strategyAReplayStatus404290">Aucun replay exécuté.</div><div class="sar-grid" id="strategyAReplayGrid404290"></div><div class="sar-safety">PAPER ONLY · zéro ordre réel · zéro Kraken · zéro wallet · zéro clé · zéro écriture localStorage · aucun état live Strategy A modifié.</div>`;
+      panel.innerHTML = `<div class="sar-head"><div><div class="sar-title">REPLAY SANDBOX · DÉTERMINISTE · ISOLÉ DU LIVE</div><div class="sar-sub">Scénarios figés pour traverser volontairement les gates Strategy A sans falsifier le marché réel ni contaminer le ledger Auto A.</div></div><button type="button" class="btn small" id="strategyAReplayExport">EXPORTER REPLAY</button></div><div class="sar-actions" id="strategyAReplayActions"></div><div class="sar-status" id="strategyAReplayStatus">Aucun replay exécuté.</div><div class="sar-grid" id="strategyAReplayGrid"></div><div class="sar-safety">PAPER ONLY · zéro ordre réel · zéro Kraken · zéro wallet · zéro clé · zéro écriture localStorage · aucun état live Strategy A modifié.</div>`;
       anchor.insertAdjacentElement("afterend", panel);
-      const actions = panel.querySelector("#strategyAReplayActions404290");
+      const actions = panel.querySelector("#strategyAReplayActions");
       for (const [name, scenario] of Object.entries(SCENARIOS)) {
         const button = document.createElement("button");
         button.type = "button"; button.className = "btn small"; button.dataset.replayScenario = name; button.textContent = scenario.label;
         button.addEventListener("click", () => replayScenario(name));
         actions?.appendChild(button);
       }
-      panel.querySelector("#strategyAReplayExport404290")?.addEventListener("click", exportResults);
+      panel.querySelector("#strategyAReplayExport")?.addEventListener("click", exportResults);
     }
     renderResult(RESULTS.at(-1) || null);
     return true;
@@ -294,7 +294,7 @@
     real_orders: false,
     kraken_network: false
   });
-  globalThis.AgentCryptoStrategyAReplay404290 = api;
+  globalThis.AgentCryptoStrategyAReplay = api;
 
   if (typeof document !== "undefined") {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => render(), { once: true });

@@ -40,7 +40,7 @@
     if (!bull) return false;
     observer = new MutationObserver(apply);
     observer.observe(bull, { childList: true, subtree: true, characterData: true });
-    document.documentElement.dataset.oracleSemanticBias406011 = "ready";
+    document.documentElement.dataset.oracleSemanticBias = "ready";
     return true;
   }
 
@@ -50,7 +50,7 @@
     bind();
   }
 
-  globalThis.ErithOracleSemanticBias406011 = Object.freeze({
+  globalThis.ErithOracleSemanticBias = Object.freeze({
     build: BUILD,
     apply,
     rule: ">50 bull · =50 neutral · <50 bear",

@@ -78,8 +78,8 @@
     applyEnabled(readEnabled());
     lastPrice = parsePrice(p.textContent);
 
-    if (btn.dataset.oracleFxBound406012 !== "1") {
-      btn.dataset.oracleFxBound406012 = "1";
+    if (btn.dataset.oracleFxBound !== "1") {
+      btn.dataset.oracleFxBound = "1";
       btn.addEventListener("click", () => {
         const next = !readEnabled();
         writeEnabled(next);

@@ -52,7 +52,7 @@
     const board = byId("decision-board");
     const primary = byId("decisionMemoryV2");
     const dual = byId("decisionDualMemory395");
-    const retro = byId("decisionRetrospective3960");
+    const retro = byId("decisionRetrospective");
     const host = ensureHost(board);
     let movedDual = false;
     let movedRetro = false;
@@ -354,7 +354,7 @@
       classObserver.observe(node, { attributes: true, attributeFilter: ["class"] });
     }
 
-    globalThis.ErithGraphDirectFloatRepair404158 = Object.freeze({
+    globalThis.ErithGraphDirectFloatRepair = Object.freeze({
       build: BUILD,
       graph_id: GRAPH_ID,
       body_portal_only_while_floating: true,
@@ -431,7 +431,7 @@
   };
 
   function role() {
-    return String(document.documentElement.dataset.adminWindowPresentationRole40314 || "").trim().toLowerCase();
+    return String(document.documentElement.dataset.adminWindowPresentationRole || "").trim().toLowerCase();
   }
 
   function normalizeGeometry(raw) {
@@ -499,11 +499,11 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
       lastSignature = nextSignature;
-      document.documentElement.dataset.operatorFamilyPersistence404162 = "saved";
-      document.documentElement.dataset.operatorFamilyPersistenceSaved404162 = payload.saved_at;
+      document.documentElement.dataset.operatorFamilyPersistence = "saved";
+      document.documentElement.dataset.operatorFamilyPersistenceSaved = payload.saved_at;
       return true;
     } catch (_) {
-      document.documentElement.dataset.operatorFamilyPersistence404162 = "storage-unavailable";
+      document.documentElement.dataset.operatorFamilyPersistence = "storage-unavailable";
       return false;
     }
   }
@@ -513,7 +513,7 @@
     const saved = readSaved();
     if (!saved) {
       lastSignature = signature(currentFamilySnapshot());
-      document.documentElement.dataset.operatorFamilyPersistence404162 = "default-compact";
+      document.documentElement.dataset.operatorFamilyPersistence = "default-compact";
       return false;
     }
 
@@ -521,11 +521,11 @@
     try {
       manager.applySnapshot(saved.snapshot, { persist: false, captureResult: false });
       lastSignature = signature(currentFamilySnapshot());
-      document.documentElement.dataset.operatorFamilyPersistence404162 = "restored";
-      document.documentElement.dataset.operatorFamilyPersistenceRestoreReason404162 = String(reason || "boot");
+      document.documentElement.dataset.operatorFamilyPersistence = "restored";
+      document.documentElement.dataset.operatorFamilyPersistenceRestoreReason = String(reason || "boot");
       return true;
     } catch (_) {
-      document.documentElement.dataset.operatorFamilyPersistence404162 = "restore-failed";
+      document.documentElement.dataset.operatorFamilyPersistence = "restore-failed";
       return false;
     } finally {
       restoring = false;
@@ -576,7 +576,7 @@
     window.addEventListener("hashchange", () => postInteraction("hashchange"), true);
 
     document.documentElement.dataset.operatorFamilyPersistenceBuild = BUILD;
-    globalThis.ErithOperatorFamilyPersistence404162 = Object.freeze({
+    globalThis.ErithOperatorFamilyPersistence = Object.freeze({
       build: BUILD,
       schema: SCHEMA,
       storage_key: STORAGE_KEY,
@@ -595,7 +595,7 @@
       status: () => Object.freeze({
         role: role(),
         saved: !!readSaved(),
-        state: document.documentElement.dataset.operatorFamilyPersistence404162 || "idle",
+        state: document.documentElement.dataset.operatorFamilyPersistence || "idle",
         signature: lastSignature
       }),
       capture: reason => writeSaved(reason || "manual"),

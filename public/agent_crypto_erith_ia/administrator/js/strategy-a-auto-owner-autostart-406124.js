@@ -8,7 +8,7 @@
   - never depend on Simulation being expanded, rendered, or on a button text/click.
 
   Safety:
-  - reuses AgentCryptoAutoPaperRunner404265 only;
+  - reuses AgentCryptoAutoPaperRunner only;
   - no second market runner;
   - no real order, wallet or credentials;
   - explicit operator STOP remains authoritative for the current browser session.
@@ -17,7 +17,7 @@
   "use strict";
 
   const BUILD = "40.6.124";
-  const API_KEY = "AgentCryptoStrategyAOwnerAutoStart406124";
+  const API_KEY = "AgentCryptoStrategyAOwnerAutoStart";
   const STOP_KEY = "agent_crypto_strategy_a_auto_manual_stop_v1";
   const RETRY_MS = 250;
   const MAX_WAIT_MS = 30000;
@@ -29,7 +29,7 @@
   let lastAction = "boot";
   let attempts = 0;
 
-  const owner = () => globalThis.AgentCryptoAutoPaperRunner404265 || null;
+  const owner = () => globalThis.AgentCryptoAutoPaperRunner || null;
 
   function manualStop() {
     try { return sessionStorage.getItem(STOP_KEY) === "1"; }
@@ -37,7 +37,7 @@
   }
 
   function mark(value) {
-    try { document.documentElement.dataset.strategyAOwnerAutoStart406124 = value; }
+    try { document.documentElement.dataset.strategyAOwnerAutoStart = value; }
     catch (_) {}
   }
 

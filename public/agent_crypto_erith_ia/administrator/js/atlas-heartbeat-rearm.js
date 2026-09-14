@@ -44,7 +44,7 @@
   }
   function publish(state) {
     try {
-      document.documentElement.dataset.atlasHeartbeat404212 = state.state.toLowerCase();
+      document.documentElement.dataset.atlasHeartbeat = state.state.toLowerCase();
       document.documentElement.dataset.atlasHeartbeatBuild = BUILD;
     } catch (_) {}
   }
@@ -71,7 +71,7 @@
   if (document.readyState === "complete") autoRearm();
   else window.addEventListener("load", autoRearm, {once:true});
 
-  globalThis.ErithAtlasHeartbeat404212 = Object.freeze({
+  globalThis.ErithAtlasHeartbeat = Object.freeze({
     build:BUILD,
     strategy:"boot-complete-one-shot-canonical-rearm",
     canonical_pending_owner:"atlasCurrentPendingMarket137",

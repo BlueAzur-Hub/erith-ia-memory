@@ -100,7 +100,7 @@
   }
 
   function findStrategyAScope() {
-    const replay = document.getElementById("strategyAReplaySandbox404290");
+    const replay = document.getElementById("strategyAReplaySandbox");
     let node = replay;
     for (let i=0; node && i<7; i++, node=node.parentElement) {
       const text = String(node.innerText || "");
@@ -140,9 +140,9 @@
   }
 
   function ensureStyle() {
-    if (document.getElementById("tradusShadowStyle406064")) return;
+    if (document.getElementById("tradusShadowStyle")) return;
     const style=document.createElement("style");
-    style.id="tradusShadowStyle406064";
+    style.id="tradusShadowStyle";
     style.textContent=`
       #tradusShadow406064{margin-top:10px;padding:12px;border:1px solid rgba(93,226,190,.32);border-radius:12px;background:rgba(4,25,29,.62);box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
       #tradusShadow406064 .ts-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
@@ -202,7 +202,7 @@
 
   function mount() {
     if (mounted || typeof document==="undefined") return mounted;
-    const anchor=document.getElementById("strategyAPaperAfterCostProof406063") || document.getElementById("strategyAReplaySandbox404290");
+    const anchor=document.getElementById("strategyAPaperAfterCostProof406063") || document.getElementById("strategyAReplaySandbox");
     if(!anchor) return false;
     ensureStyle();
     const p=document.createElement("section");
