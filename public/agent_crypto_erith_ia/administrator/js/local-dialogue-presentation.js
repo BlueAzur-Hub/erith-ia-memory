@@ -72,8 +72,8 @@
 
   function dialogueHost() {
     const anchor = smallestContaining(["Interroger Atlas-10 ou Aerith-10"]);
-    if (!anchor) return document;
-    return anchor.closest("section,article,.admin-window,.admin-card,.admin-subsection") || anchor.parentElement?.parentElement || document;
+    if (!anchor) return null;
+    return anchor.closest("section,article,.admin-window,.admin-card,.admin-subsection") || anchor.parentElement?.parentElement || null;
   }
 
   function currentStateText(root) {
@@ -115,19 +115,24 @@
     if (!root) return false;
     const sourceText = currentStateText(root);
     const state = parseProgress(sourceText);
-    let host = root.querySelector?.(`.${SUMMARY_CLASS}`);
+    const status = [...root.querySelectorAll?.("p,small,div,output,strong") || []]
+      .filter(node => /Dialogue local prêt avec/i.test(cleanText(node)))
+      .sort((a, b) => cleanText(a).length - cleanText(b).length)[0]
+      || smallestContaining(["Dialogue local prêt avec"], root)
+      || smallestContaining(["CURRENT validé", "moteur local au repos"], root);
+    if (!status?.parentNode) return false;
+
+    const hosts = [...document.querySelectorAll(`.${SUMMARY_CLASS}`)];
+    let host = root.querySelector?.(`.${SUMMARY_CLASS}`) || hosts[0] || null;
     if (!host) {
-      const status = [...root.querySelectorAll?.("p,small,div,output,strong") || []]
-        .filter(node => /Dialogue local prêt avec/i.test(cleanText(node)))
-        .sort((a, b) => cleanText(a).length - cleanText(b).length)[0]
-        || smallestContaining(["Dialogue local prêt avec"])
-        || smallestContaining(["CURRENT validé", "moteur local au repos"], root);
-      if (!status?.parentNode) return false;
       host = document.createElement("div");
       host.className = SUMMARY_CLASS;
       host.dataset.localDialoguePresentationOwner = OWNER;
+    }
+    if (host.parentNode !== status.parentNode || status.nextElementSibling !== host) {
       status.insertAdjacentElement("afterend", host);
     }
+    hosts.filter(node => node !== host).forEach(node => node.remove());
 
     const steps = ["01 · Marché", "02 · Top 5", "03 · Math", "04 · Contradictions", "NØX", "Aerith"];
     const stepHtml = steps.map((label, index) => {
