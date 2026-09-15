@@ -1,4 +1,4 @@
-/* 40.6.23 — Aerith-10 Creator portal fallback · presentation only */
+/* 40.6.134 — Aerith-10 Creator portal + ChatGPT Full Matrix guide · presentation only */
 .aerith10-creator-stage{min-height:0!important;height:auto!important;background:linear-gradient(145deg,rgba(12,18,32,.96),rgba(18,15,31,.94))!important;border-color:rgba(223,166,255,.22)!important;padding:0!important}
 .aerith10-creator-hint{display:none!important}
 .aerith10-portal{position:relative;display:grid;gap:15px;min-height:330px;padding:28px clamp(18px,4vw,54px);overflow:hidden;background:radial-gradient(circle at 82% 16%,rgba(233,135,255,.14),transparent 28%),radial-gradient(circle at 16% 84%,rgba(81,220,255,.10),transparent 30%),linear-gradient(135deg,rgba(20,27,49,.96),rgba(12,18,31,.98));color:#dcecf6}
@@ -11,5 +11,23 @@
 .aerith10-portal-flow b{display:grid;place-items:center;flex:0 0 24px;height:24px;border-radius:999px;border:1px solid rgba(255,187,231,.28);color:#ffd0ec;background:rgba(194,92,210,.12)}
 .aerith10-portal-actions{position:relative;display:flex;gap:9px;flex-wrap:wrap}.aerith10-portal-actions .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}.aerith10-portal-forge{border-color:rgba(255,211,118,.24)!important;color:#ffe7a7!important}
 .aerith10-portal-truth{position:relative;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);color:#7f94a7;font-size:9px;letter-spacing:.05em}.aerith10-portal-truth span{color:#d7a6ff;font-weight:900}
+
+.aerith10-loader-card{position:relative;display:grid;gap:14px;margin-top:5px;padding:18px;border:1px solid rgba(255,177,231,.24);border-radius:16px;background:radial-gradient(circle at 92% 8%,rgba(255,128,214,.10),transparent 30%),linear-gradient(135deg,rgba(18,22,42,.88),rgba(21,15,38,.90));box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 16px 32px rgba(0,0,0,.15)}
+.aerith10-loader-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.aerith10-loader-kicker{display:block;margin-bottom:6px;color:#ffb9e9;font:950 10px/1 system-ui,sans-serif;letter-spacing:.17em;text-transform:uppercase}
+.aerith10-loader-head h4{margin:0 0 5px;color:#fff1d0;font:950 clamp(18px,1.8vw,25px)/1.15 system-ui,sans-serif}
+.aerith10-loader-head p{margin:0;max-width:760px;color:#9fb2c5;font:750 11px/1.5 system-ui,sans-serif}
+.aerith10-loader-state{padding:6px 10px;border:1px solid rgba(111,242,210,.28);border-radius:999px;background:rgba(46,178,139,.10);color:#b9ffe7;font:950 9px/1 system-ui,sans-serif;letter-spacing:.09em;white-space:nowrap}
+.aerith10-loader-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.aerith10-loader-flow article{display:flex;align-items:center;gap:10px;min-height:62px;padding:11px 12px;border:1px solid rgba(255,255,255,.085);border-radius:12px;background:rgba(4,10,22,.38)}
+.aerith10-loader-flow article>b{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:999px;border:1px solid rgba(255,180,231,.30);background:rgba(198,89,205,.13);color:#ffd4ef;font:950 12px/1 system-ui,sans-serif}
+.aerith10-loader-flow strong{display:block;color:#e8f7ff;font:950 11px/1.2 system-ui,sans-serif}.aerith10-loader-flow small{display:block;margin-top:3px;color:#7894a8;font:750 9px/1.35 system-ui,sans-serif}
+.aerith10-loader-sources{display:flex;gap:8px;flex-wrap:wrap}.aerith10-loader-sources a{display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;border:1px solid rgba(119,222,255,.20);border-radius:999px;background:rgba(48,155,196,.08);color:#bfefff;text-decoration:none;font:900 10px/1 system-ui,sans-serif}.aerith10-loader-sources a:hover{border-color:rgba(147,233,255,.42);background:rgba(48,155,196,.14)}
+.aerith10-loader-prompt{display:grid;gap:7px;padding:12px 13px;border:1px solid rgba(255,218,120,.17);border-radius:12px;background:rgba(17,14,24,.48)}
+.aerith10-loader-prompt>span{color:#ffe1a0;font:950 9px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.aerith10-loader-prompt code{display:block;color:#d6e7f1;font:760 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:normal;overflow-wrap:anywhere}
+.aerith10-loader-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.aerith10-loader-actions .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;min-height:38px}.aerith10-loader-chatgpt{border-color:rgba(112,237,207,.25)!important;color:#c4ffea!important}.aerith10-loader-copy{border-color:rgba(255,193,231,.26)!important;color:#ffd4ef!important}.aerith10-loader-actions>span{flex:1 1 320px;color:#7894a8;font:750 9px/1.4 system-ui,sans-serif}
+
 @media(max-width:1100px){.aerith10-portal-flow{grid-template-columns:repeat(4,minmax(100px,1fr))}}
-@media(max-width:700px){.aerith10-portal{padding:20px 14px}.aerith10-portal-flow{grid-template-columns:repeat(2,minmax(110px,1fr))}.aerith10-portal-actions .btn{width:100%}}
+@media(max-width:800px){.aerith10-loader-flow{grid-template-columns:1fr}.aerith10-loader-actions .btn{width:100%}}
+@media(max-width:700px){.aerith10-portal{padding:20px 14px}.aerith10-portal-flow{grid-template-columns:repeat(2,minmax(110px,1fr))}.aerith10-portal-actions .btn{width:100%}.aerith10-loader-card{padding:14px}}
