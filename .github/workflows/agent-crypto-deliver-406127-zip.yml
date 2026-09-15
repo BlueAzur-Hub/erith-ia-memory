@@ -1,0 +1,43 @@
+name: Agent-Crypto deliver 40.6.127 zip
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-deliver-406127-zip.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify published build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('public/agent_crypto_erith_ia/administrator/build.json').read_text(encoding='utf-8'))
+          assert d['build']=='40.6.127'
+          assert d['engine']=='38.15.11'
+          print('40.6.127 ZIP SOURCE PASS')
+          PY
+      - name: Package Administrator
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd public/agent_crypto_erith_ia
+          zip -qr "$GITHUB_WORKSPACE/AGENT_CRYPTO_ADMINISTRATOR_40.6.127.zip" administrator -x 'administrator/releases/40.6.127/*.zip'
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_ADMINISTRATOR_40.6.127
+          path: AGENT_CRYPTO_ADMINISTRATOR_40.6.127.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
