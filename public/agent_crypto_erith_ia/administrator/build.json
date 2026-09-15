@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.133",
+  "build": "40.6.134",
   "engine": "38.15.11",
-  "release": "ATLAS CURRENT LIVE VISUAL TRUTH",
+  "release": "AERITH-10 CHATGPT FULL MATRIX GUIDE",
   "published": true,
-  "status": "terrain_pending_406133",
-  "parent_build": "40.6.132",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.133",
-  "administrator_build": "40.6.133",
-  "build_label": "Build 40.6.133 · Administrator",
-  "release_status": "terrain_pending_406133",
+  "status": "terrain_pending_406134",
+  "parent_build": "40.6.133",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.134",
+  "administrator_build": "40.6.134",
+  "build_label": "Build 40.6.134 · Administrator",
+  "release_status": "terrain_pending_406134",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -58,6 +58,21 @@
     "bounded_one_shot_resync": true,
     "recurring_timer": false,
     "observer": false,
+    "firefox_terrain_proof": "PENDING"
+  },
+  "aerith10_chatgpt_full_matrix_guide": {
+    "introduced_in": "40.6.134",
+    "owners": ["js/aerith10-workspace-bridge.js", "aerith10-portal.css"],
+    "scope": "add a visual three-step ChatGPT activation guide inside the Aerith-10 Creator subsection",
+    "forge_changed": false,
+    "notion_portal_changed": false,
+    "private_content_embedded": false,
+    "private_tokens_embedded": false,
+    "canonical_source_links": [
+      "core/AERITH_10_CREATRICE_FULL_MATRIX_MULTI_AGENT_CORE.md",
+      "core/AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md",
+      "core/AERITH_LIVING_REFLECTION_HEART.md"
+    ],
     "firefox_terrain_proof": "PENDING"
   },
   "dex_freshness_contract_lock": {
@@ -134,16 +149,19 @@
     "40.6.132 CONSOLIDATION HANDOFF"
   ],
   "terrain_pending": [
-    "40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH"
+    "40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH",
+    "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE"
   ],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.132",
+    "previous_full_manifest_build": "40.6.133",
     "do_not_duplicate_release_history_in_active_manifest": true
   },
   "release_notes": [
-    "Presentation only: last closed CURRENT and newer Atlas AUTO cycle are no longer presented as one state.",
-    "No Atlas engine, Market Core, Oracle, Lecture Technique, Strategy A or TRADUS algorithm change.",
+    "40.6.133 separates the last closed CURRENT from a newer Atlas AUTO cycle without modifying Atlas business logic.",
+    "40.6.134 adds a dedicated Aerith-10 ChatGPT Full Matrix guide inside the Creator subsection.",
+    "Forge and Notion portal remain separate and unchanged.",
+    "No private Core content or authentication token is embedded in the public Administrator.",
     "Firefox terrain proof remains required before validation."
   ]
 }
