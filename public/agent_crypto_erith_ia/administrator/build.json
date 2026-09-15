@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.141",
+  "build": "40.6.142",
   "engine": "38.15.11",
-  "release": "MEMORY BOUNDARY TRUTH",
+  "release": "MEMORY BOUNDARY DEDUPE",
   "published": true,
-  "status": "terrain_pending_406141",
-  "parent_build": "40.6.140",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.141",
-  "administrator_build": "40.6.141",
-  "build_label": "Build 40.6.141 · Administrator",
-  "release_status": "terrain_pending_406141",
+  "status": "terrain_pending_406142",
+  "parent_build": "40.6.141",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.142",
+  "administrator_build": "40.6.142",
+  "build_label": "Build 40.6.142 · Administrator",
+  "release_status": "terrain_pending_406142",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -156,10 +156,10 @@
     "rule": "one debt per version; release first, verify, then promote; cold boot + F5 + proof + stop"
   },
   "recent_validated_lineage": ["40.6.126 ATLAS FINAL STATE REBIND", "40.6.127 DEX FRESHNESS CONTRACT LOCK", "40.6.128 DEX FROZEN API FACADE", "40.6.129 AUTO A MANUAL STOP OWNER", "40.6.130 TRADUS CAPTURE TIME LOCK", "40.6.131 VERSIONING RECOVERY", "40.6.132 CONSOLIDATION HANDOFF"],
-  "terrain_pending": ["40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH", "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE", "40.6.135 AERITH-10 CHATGPT PORTABLE FLOW", "40.6.136 AERITH-10 CHATGPT DEEP-LINK CARDS", "40.6.137 AERITH-10 FULL MATRIX VISUAL POLISH", "40.6.138 SALON LOCAL FIRST TRUTH", "40.6.139 INTERNET RESEARCH SOURCE BOUNDARY", "40.6.140 LOCAL AI UX CLARITY", "40.6.141 MEMORY BOUNDARY TRUTH"],
+  "terrain_pending": ["40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH", "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE", "40.6.135 AERITH-10 CHATGPT PORTABLE FLOW", "40.6.136 AERITH-10 CHATGPT DEEP-LINK CARDS", "40.6.137 AERITH-10 FULL MATRIX VISUAL POLISH", "40.6.138 SALON LOCAL FIRST TRUTH", "40.6.139 INTERNET RESEARCH SOURCE BOUNDARY", "40.6.140 LOCAL AI UX CLARITY", "40.6.141 MEMORY BOUNDARY TRUTH", "40.6.142 MEMORY BOUNDARY DEDUPE"],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.140",
+    "previous_full_manifest_build": "40.6.141",
     "do_not_duplicate_release_history_in_active_manifest": true
   },
   "release_notes": [
@@ -167,11 +167,12 @@
     "40.6.134 adds a dedicated Aerith-10 ChatGPT Full Matrix guide inside the Creator subsection.",
     "40.6.135 finalizes the guide as a three-gesture portable flow: minimal Aerith-10 ZIP, copy/open ChatGPT, optional Seven Heaven portable continuity.",
     "40.6.136 makes the three numbered cards themselves actionable links/actions and restores Christophe's full master activation prompt verbatim.",
-    "40.6.137 is presentation-only: it adds a Full Matrix banner and preserves master-prompt line breaks in a bounded reading surface.",
+    "40.6.137 is presentation-only: it adds a Full Matrix banner and preserves master-prompt line breaks in a bounded scrollable reading surface.",
     "40.6.138 makes the Salon Local First contract explicit: local-only identity/history, backend disconnected, zero network sends and voluntary sync unavailable until a backend is connected.",
     "40.6.139 makes the Internet Research boundary explicit: external navigation only, voluntary opening, zero ingestion, zero memory write, not an Atlas source, evidence must be qualified.",
     "40.6.140 adds a presentation-only Local AI map: CURRENT, Bridge, Atlas, Aerith and LIVE are separated without changing Atlas business logic.",
     "40.6.141 adds presentation-only memory boundaries: Shared Memory remains IndexedDB + voluntary JSON transfer; GitHub Memory remains a versioned source, distinct from runtime memory and without invented automatic sync.",
+    "40.6.142 makes the memory-boundary presentation semantically idempotent: repeated render/hydration keeps one Shared boundary and one GitHub boundary without changing memory logic.",
     "Forge and Notion portal remain separate and unchanged.",
     "Market Core 38.15.11 and version-truth.js remain unchanged.",
     "No private Core content or authentication token is embedded in the public Administrator.",
@@ -283,6 +284,22 @@
     "market_core_changed": false,
     "version_truth_changed": false,
     "immutable_release_entry": "releases/40.6.141/index.html",
+    "firefox_terrain_proof": "PENDING"
+  },
+  "memory_boundary_dedupe": {
+    "introduced_in": "40.6.142",
+    "owner": "js/memory-boundary-presentation.js",
+    "scope": "semantic idempotence for Shared/GitHub memory-boundary presentation across repeated render and hydration",
+    "shared_boundary_single_instance": true,
+    "github_boundary_single_instance": true,
+    "memory_logic_changed": false,
+    "presentation_only": true,
+    "new_timer": false,
+    "new_observer": false,
+    "new_storage_owner": false,
+    "market_core_changed": false,
+    "version_truth_changed": false,
+    "immutable_release_entry": "releases/40.6.142/index.html",
     "firefox_terrain_proof": "PENDING"
   }
 }
