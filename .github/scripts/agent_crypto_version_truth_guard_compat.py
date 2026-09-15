@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Agent-Crypto versioning guard.
+"""Agent-Crypto canonical versioning guard.
 
 Contract:
-- loaded build belongs to the release entry being executed;
-- published build belongs to build.json;
-- the update control may compare them, but must never rewrite the loaded build;
-- a published successor must exist as an immutable release directory before it
-  can become the published pointer;
-- no current-build click may reload the application.
+- /administrator/ is the only executable update target;
+- build.json is the published truth and is resolved before runtime-shell boots;
+- the resolved build becomes immutable for the current document;
+- version-truth.js may detect a newer build, but never rewrites the running one;
+- historical /releases/ entries are archives/compatibility only, never required
+  for a successful update;
+- Market Core 38.15.11 remains protected.
 """
 from __future__ import annotations
 
@@ -18,7 +19,6 @@ from pathlib import Path
 BASE = Path("public/agent_crypto_erith_ia/administrator")
 PROTECTED_ENGINE = "38.15.11"
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
-LOADED_META = re.compile(r'<meta\s+name=["\']agent-crypto-loaded-build["\']\s+content=["\']([^"\']+)["\']', re.I)
 
 
 def fail(message: str) -> None:
@@ -47,57 +47,68 @@ def require(text: str, markers: tuple[str, ...], label: str) -> None:
         fail(f"{label} missing markers: {missing}")
 
 
-def loaded_build_from_index(index: str, label: str) -> str:
-    match = LOADED_META.search(index)
-    if not match:
-        fail(f"{label} has no agent-crypto-loaded-build meta")
-    build = match.group(1).strip()
-    if not SEMVER.fullmatch(build):
-        fail(f"{label} loaded build invalid: {build!r}")
-    return build
-
-
 def main() -> int:
     manifest = load_json(BASE / "build.json")
     published = str(manifest.get("build") or "").strip()
     engine = str(manifest.get("engine") or manifest.get("market_core") or "").strip()
+    entry = str(manifest.get("entry") or "./").strip() or "./"
+
     if not SEMVER.fullmatch(published):
         fail(f"invalid published build: {published!r}")
     if manifest.get("published") is not True:
         fail("build.json must be published=true")
     if engine != PROTECTED_ENGINE:
         fail(f"protected Market Core drift: {engine!r}")
+    if entry not in {"./", "."}:
+        fail(f"published entry must stay canonical Administrator root: {entry!r}")
+
+    current_truth = manifest.get("current_version_truth") or {}
+    if current_truth.get("release_subfolder_required_for_update") not in {False, None}:
+        fail("build.json still requires a release subfolder for update")
 
     index = read(BASE / "index.html")
     shell = read(BASE / "runtime-shell.html")
     version = read(BASE / "js/version-truth.js")
     modules = read(BASE / "js/runtime-modules.js")
 
-    loaded = loaded_build_from_index(index, "index.html")
-
     require(index, (
         'name="agent-crypto-loaded-build"',
         'name="agent-crypto-published-manifest" content="./build.json"',
-        'build.json is never consulted to decide the loaded build',
+        'async function canonicalIdentity()',
+        'const truth = await canonicalIdentity();',
+        'source: "canonical-build.json"',
+        'agent-crypto-version-owner", "canonical-entry"',
         'globalThis.AgentCryptoBootTruth = truth;',
         'document.write(shell);',
     ), "index.html")
-    if '<script src="./js/boot.js"></script>' in index:
-        fail("index.html still delegates loaded-build identity to cacheable boot.js")
+
+    for forbidden in (
+        'build.json is never consulted to decide the loaded build',
+        '<script src="./js/boot.js"></script>',
+        'CANONICAL ENTRY 40.',
+    ):
+        if forbidden in index:
+            fail(f"index.html retained obsolete version contract: {forbidden}")
+
     if "Build —" in index or "Build --" in index:
         fail("index.html contains a visible fake build placeholder")
-
     if not shell.lstrip().lower().startswith("<!doctype html>"):
         fail("runtime-shell.html is not a document")
 
     require(version, (
         'const MANIFEST = meta("agent-crypto-published-manifest") || "./build.json";',
-        'loaded_build_authority: "release-entry"',
+        'loaded_build_authority: "canonical-entry"',
         'published_build_authority: "build.json"',
+        'update_navigation_target: "canonical-administrator-root"',
+        'release_subfolder_required: false',
         'reload_current_build: false',
+        'recurring_timer: false',
         'state === "available"',
         'control.disabled = !available',
-        './releases/${manifest.build}/',
+        'function canonicalEntry(manifest)',
+        'window.addEventListener("pageshow"',
+        'window.addEventListener("focus"',
+        'visibilitychange',
     ), "version-truth.js")
 
     for forbidden in (
@@ -105,6 +116,9 @@ def main() -> int:
         "syncFooter(",
         "syncMirror(",
         "applyTruth(",
+        './releases/${manifest.build}/',
+        'loaded_build_authority: "release-entry"',
+        'release_subfolder_required: true',
         'const BUILD = "40.',
         'const ATLAS_BUILD = "40.',
         'const ADMIN_BUILD = "40.',
@@ -114,30 +128,17 @@ def main() -> int:
 
     require(modules, ('version_branching: false', 'versioned_filenames: false'), "runtime-modules.js")
 
-    # Current 40.6.124 is the transition release at root. Every published
-    # successor must be fully materialized as an immutable directory before
-    # build.json can point to it.
-    if published != loaded:
-        release_dir = BASE / "releases" / published
-        release_index_path = release_dir / "index.html"
-        release_index = read(release_index_path)
-        release_loaded = loaded_build_from_index(release_index, str(release_index_path))
-        if release_loaded != published:
-            fail(f"published release entry mismatch: {release_loaded!r} != {published!r}")
-        if not (release_dir / "runtime-shell.html").is_file():
-            fail(f"published immutable release missing runtime-shell.html: {release_dir}")
-        if not (release_dir / "js" / "version-truth.js").is_file():
-            fail(f"published immutable release missing js/version-truth.js: {release_dir}")
-
     print(json.dumps({
         "ok": True,
-        "loaded_build": loaded,
         "published_build": published,
         "market_core": engine,
-        "loaded_authority": "release-entry",
+        "boot_authority": "administrator/index.html -> build.json",
+        "loaded_authority": "canonical-entry",
         "published_authority": "build.json",
+        "update_target": "administrator-root",
+        "release_subfolder_required": False,
         "current_click_reload": False,
-        "immutable_successor_required": published != loaded,
+        "recurring_timer": False,
     }, ensure_ascii=False, sort_keys=True))
     return 0
 
