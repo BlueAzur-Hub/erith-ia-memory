@@ -14,10 +14,12 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.127";
+  const RELEASE = "40.6.128";
   const FALLBACK_MAX_AGE_SECONDS = 600;
   let wrapped = false;
   let originalApi = null;
+  let sourceFacade = null;
+  const FUTURE_TOLERANCE_SECONDS = 30;
 
   const toMs = value => {
     if (value === null || value === undefined || value === "") return null;
@@ -94,14 +96,16 @@
           return { name, ok: false, stale: false, age_seconds: null, reason: "NOT_OK" };
         }
         const timestamp = providerTimestamp(provider);
-        const age = timestamp === null ? null : Math.max(0, (now - timestamp) / 1000);
-        const isStale = age === null || age > limit;
+        const rawAge = timestamp === null ? null : (now - timestamp) / 1000;
+        const future = rawAge !== null && rawAge < -FUTURE_TOLERANCE_SECONDS;
+        const age = rawAge === null ? null : Math.max(0, rawAge);
+        const isStale = age === null || future || age > limit;
         return {
           name,
           ok: true,
           stale: isStale,
           age_seconds: age,
-          reason: age === null ? "FRESHNESS_UNKNOWN" : isStale ? "STALE" : "FRESH"
+          reason: age === null ? "FRESHNESS_UNKNOWN" : future ? "FUTURE_TIMESTAMP" : isStale ? "STALE" : "FRESH"
         };
       });
       const staleProviders = providerState.filter(provider => provider.ok && provider.stale);
@@ -141,9 +145,24 @@
     return out;
   }
 
+  function buildSourceFacade(api, originalContext, originalIntelligence) {
+    const facade = {};
+    for (const key of Reflect.ownKeys(api)) {
+      if (key === "contextSnapshot" || key === "sourceIntelligence") continue;
+      try { facade[key] = api[key]; } catch (_) {}
+    }
+    facade.contextSnapshot = () => sanitizeContext(originalContext());
+    if (originalIntelligence) {
+      facade.sourceIntelligence = () => sanitizeIntelligence(originalIntelligence(), originalContext());
+    }
+    facade.dex_freshness_facade = true;
+    facade.dex_freshness_facade_owner = "AgentCryptoDexFreshnessGuard";
+    return Object.freeze(facade);
+  }
+
   function bindSourceApi() {
-    if (wrapped) return true;
     const api = globalThis.ErithPrivateBackendSources;
+    if (sourceFacade && api === sourceFacade) { wrapped = true; return true; }
     if (!api || typeof api.contextSnapshot !== "function") return false;
     originalApi = api;
     const originalContext = api.contextSnapshot.bind(api);
@@ -151,20 +170,15 @@
       ? api.sourceIntelligence.bind(api)
       : null;
     try {
-      const proxy = new Proxy(api, {
-        get(target, prop, receiver) {
-          if (prop === "contextSnapshot") return () => sanitizeContext(originalContext());
-          if (prop === "sourceIntelligence" && originalIntelligence) {
-            return () => sanitizeIntelligence(originalIntelligence(), originalContext());
-          }
-          return Reflect.get(target, prop, receiver);
-        }
-      });
-      globalThis.ErithPrivateBackendSources = proxy;
+      sourceFacade = buildSourceFacade(api, originalContext, originalIntelligence);
+      globalThis.ErithPrivateBackendSources = sourceFacade;
       wrapped = true;
       document.documentElement.dataset.dexFreshnessGuard = "active";
+      document.documentElement.dataset.dexFreshnessFacade = "frozen-compatible";
       return true;
     } catch (_) {
+      sourceFacade = null;
+      wrapped = false;
       return false;
     }
   }
@@ -200,7 +214,8 @@
       assets: [
         { asset: "BTC", dexscreener: { status: "ok", observed_at_utc: fresh }, geckoterminal: { status: "ok", observed_at_utc: fresh }, identity: { atlas_eligible: true } },
         { asset: "ETH", dexscreener: { status: "ok", observed_at_utc: stale }, geckoterminal: { status: "ok", observed_at_utc: fresh }, identity: { atlas_eligible: true } },
-        { asset: "SOL", dexscreener: { status: "ok" }, geckoterminal: { status: "ok", updated_at: fresh }, identity: { atlas_eligible: true } }
+        { asset: "SOL", dexscreener: { status: "ok" }, geckoterminal: { status: "ok", updated_at: fresh }, identity: { atlas_eligible: true } },
+        { asset: "XRP", dexscreener: { status: "ok", observed_at_utc: new Date(now + 120_000).toISOString() }, geckoterminal: { status: "ok", observed_at_utc: fresh }, identity: { atlas_eligible: true } }
       ]
     };
     const out = sanitizeContext(ctx, now);
@@ -209,7 +224,9 @@
       by.BTC.identity.atlas_eligible === true,
       by.ETH.identity.atlas_eligible === false,
       by.SOL.identity.atlas_eligible === false,
-      out.dex_freshness.stale_assets === 2
+      by.XRP.identity.atlas_eligible === false,
+      by.XRP.dex_freshness.some(provider => provider.reason === "FUTURE_TIMESTAMP"),
+      out.dex_freshness.stale_assets === 3
     ];
     return Object.freeze({ pass: checks.every(Boolean), total: checks.length, passed: checks.filter(Boolean).length, checks: Object.freeze(checks) });
   }
@@ -220,9 +237,13 @@
     active: true,
     context_wrapped: () => wrapped,
     max_age_fallback_seconds: FALLBACK_MAX_AGE_SECONDS,
+    future_tolerance_seconds: FUTURE_TOLERANCE_SECONDS,
+    proxy_used: false,
+    frozen_source_api_compatible: true,
     sanitizeContext,
     sanitizeIntelligence,
     bindSourceApi,
+    buildSourceFacade,
     aetherInvariant,
     selfTest,
     dex_fail_closed: true,
