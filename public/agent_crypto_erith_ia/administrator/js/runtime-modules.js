@@ -23,16 +23,14 @@
     "./js/tradus-canonical-strategy-reader.js",
     "./js/strategy-a-auto-start.js",
     "./js/strategy-a-paper-v2-proof-bridge.js",
+    "./js/strategy-a-evidence-gate-audit.js",
     "./js/tradus-autonomous-refresh.js"
   ]);
 
   const loaded = new Set();
   let loading = null;
 
-  function absolute(src) {
-    return new URL(src, document.baseURI).href;
-  }
-
+  function absolute(src) { return new URL(src, document.baseURI).href; }
   function alreadyPresent(src) {
     const wanted = absolute(src).split("?")[0];
     return Array.from(document.scripts).some(script => {
@@ -40,46 +38,26 @@
       catch (_) { return false; }
     });
   }
-
   function loadOne(src) {
-    if (loaded.has(src) || alreadyPresent(src)) {
-      loaded.add(src);
-      return Promise.resolve(src);
-    }
+    if (loaded.has(src) || alreadyPresent(src)) { loaded.add(src); return Promise.resolve(src); }
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
       const url = new URL(src, document.baseURI);
       url.searchParams.set("reload", String(Date.now()));
-      script.src = url.href;
-      script.async = false;
-      script.dataset.agentCryptoRuntimeModule = src;
+      script.src = url.href; script.async = false; script.dataset.agentCryptoRuntimeModule = src;
       script.addEventListener("load", () => { loaded.add(src); resolve(src); }, { once: true });
       script.addEventListener("error", () => reject(new Error(`runtime module failed: ${src}`)), { once: true });
       document.head.appendChild(script);
     });
   }
-
   async function load() {
     if (loading) return loading;
     loading = (async () => {
       for (const src of MODULES) await loadOne(src);
-      try {
-        document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready", {
-          detail: { modules: MODULES.slice() }
-        }));
-      } catch (_) {}
+      try { document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready", { detail: { modules: MODULES.slice() } })); } catch (_) {}
       return MODULES.slice();
     })();
-    try { return await loading; }
-    finally { loading = null; }
+    try { return await loading; } finally { loading = null; }
   }
-
-  globalThis.AgentCryptoRuntimeModules = Object.freeze({
-    modules: MODULES,
-    load,
-    loaded: () => Object.freeze(Array.from(loaded)),
-    version_branching: false,
-    versioned_filenames: false,
-    owner: "runtime-modules"
-  });
+  globalThis.AgentCryptoRuntimeModules = Object.freeze({ modules: MODULES, load, loaded: () => Object.freeze(Array.from(loaded)), version_branching: false, versioned_filenames: false, owner: "runtime-modules" });
 })();
