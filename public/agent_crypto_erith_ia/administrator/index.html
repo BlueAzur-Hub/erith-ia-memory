@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
-  <meta name="agent-crypto-loaded-build" content="40.6.124" />
+  <meta name="agent-crypto-loaded-build" content="" />
   <meta name="agent-crypto-engine-build" content="38.15.11" />
   <meta name="agent-crypto-published-manifest" content="./build.json" />
   <title>Agent-Crypto Administrator — Initialisation</title>
@@ -19,15 +19,30 @@
   (() => {
     "use strict";
 
-    /* VERSIONECTOMY 40.6.124
-       Loaded build and published build are deliberately separate truths.
-       This entry owns only the build actually being executed.
-       build.json is never consulted to decide the loaded build. */
+    /* CANONICAL ENTRY 40.6.131
+       The canonical Administrator URL resolves the published build from build.json
+       before runtime-shell is executed. Historical release entries stay immutable. */
     const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
-    const LOADED_BUILD = meta("agent-crypto-loaded-build");
+    let LOADED_BUILD = meta("agent-crypto-loaded-build");
     const ENGINE = meta("agent-crypto-engine-build");
     const SHELL_URL = "./runtime-shell.html";
     const BUILD_RE = /^\d+\.\d+\.\d+$/;
+    const MANIFEST_URL = meta("agent-crypto-published-manifest") || "./build.json";
+
+    async function canonicalIdentity() {
+      const separator = MANIFEST_URL.includes("?") ? "&" : "?";
+      const response = await fetch(`${MANIFEST_URL}${separator}t=${Date.now()}`, {
+        cache: "no-store", credentials: "same-origin"
+      });
+      if (!response.ok) throw new Error(`build.json: HTTP ${response.status}`);
+      const manifest = await response.json();
+      const build = String(manifest?.build || "").trim();
+      const engine = String(manifest?.engine || ENGINE || "").trim();
+      if (!BUILD_RE.test(build)) throw new Error("published build invalide");
+      if (!engine) throw new Error("Market Core absent du manifeste");
+      LOADED_BUILD = build;
+      return Object.freeze({ build, loaded_build: build, engine, source: "canonical-build.json" });
+    }
 
     const statusNode = () => document.getElementById("bootStatus");
 
@@ -113,7 +128,7 @@
     async function boot() {
       document.documentElement.dataset.agentCryptoBoot = "loading";
       try {
-        const truth = requireReleaseIdentity();
+        const truth = await canonicalIdentity();
         const shell = patchShell(await fetchShell(), truth);
 
         globalThis.AgentCryptoBootTruth = truth;

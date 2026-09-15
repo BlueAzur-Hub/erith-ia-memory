@@ -25,7 +25,7 @@
     const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
     const LOADED_BUILD = meta("agent-crypto-loaded-build");
     const ENGINE = meta("agent-crypto-engine-build");
-    const SHELL_URL = "./runtime-shell.html";
+    const SHELL_URL = "../../runtime-shell.html";
     const BUILD_RE = /^\d+\.\d+\.\d+$/;
 
     const statusNode = () => document.getElementById("bootStatus");
