@@ -1,0 +1,220 @@
+name: Agent-Crypto 40.6.127 DEX freshness contract lock
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/agent-crypto-406127-dex-freshness-contract-lock.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply bounded 40.6.127 surgery
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import json, shutil
+
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          guard_path = root / 'js/dex-freshness-guard.js'
+          build_path = root / 'build.json'
+          src_release = root / 'releases/40.6.126'
+          dst_release = root / 'releases/40.6.127'
+
+          build = json.loads(build_path.read_text(encoding='utf-8'))
+          if build.get('build') != '40.6.126' or build.get('engine') != '38.15.11':
+              raise SystemExit(f"STOP build truth drift: {build.get('build')} / {build.get('engine')}")
+
+          text = guard_path.read_text(encoding='utf-8')
+          required = [
+              'const RELEASE = "40.6.111";',
+              'provider.observed_at,',
+              'provider?.meta?.observed_at,',
+              'const fresh = new Date(now - 60_000).toISOString();',
+          ]
+          for token in required:
+              if token not in text:
+                  raise SystemExit(f'STOP dex guard drift: missing {token}')
+
+          text = text.replace('const RELEASE = "40.6.111";', 'const RELEASE = "40.6.127";', 1)
+          text = text.replace(
+              '      provider.observed_at,\n      provider.fetched_at,',
+              '      provider.observed_at,\n      provider.observed_at_utc,\n      provider.fetched_at,',
+              1,
+          )
+          text = text.replace(
+              '      provider?.meta?.observed_at,\n      provider?.meta?.fetched_at,',
+              '      provider?.meta?.observed_at,\n      provider?.meta?.observed_at_utc,\n      provider?.meta?.fetched_at,',
+              1,
+          )
+          text = text.replace(
+              '{ asset: "BTC", dexscreener: { status: "ok", updated_at: fresh }, geckoterminal: { status: "ok", updated_at: fresh }, identity: { atlas_eligible: true } },\n        { asset: "ETH", dexscreener: { status: "ok", updated_at: stale }, geckoterminal: { status: "ok", updated_at: fresh }, identity: { atlas_eligible: true } },',
+              '{ asset: "BTC", dexscreener: { status: "ok", observed_at_utc: fresh }, geckoterminal: { status: "ok", observed_at_utc: fresh }, identity: { atlas_eligible: true } },\n        { asset: "ETH", dexscreener: { status: "ok", observed_at_utc: stale }, geckoterminal: { status: "ok", observed_at_utc: fresh }, identity: { atlas_eligible: true } },',
+              1,
+          )
+          guard_path.write_text(text, encoding='utf-8')
+
+          if dst_release.exists():
+              raise SystemExit('STOP release 40.6.127 already exists')
+          shutil.copytree(src_release, dst_release)
+          index_path = dst_release / 'index.html'
+          index_text = index_path.read_text(encoding='utf-8').replace('40.6.126', '40.6.127')
+          index_path.write_text(index_text, encoding='utf-8')
+
+          build.update({
+              'build': '40.6.127',
+              'release': 'DEX FRESHNESS CONTRACT LOCK',
+              'status': 'dex_freshness_contract_lock_406127',
+              'parent_build': '40.6.126',
+              'asset_token': 'market-core-v2.0-alpha-build-40.6.127',
+              'administrator_build': '40.6.127',
+              'build_label': 'Build 40.6.127 · Administrator',
+              'release_status': 'dex_freshness_contract_lock_406127',
+              'entry': './releases/40.6.127/',
+              'released_at': datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace('+00:00', 'Z'),
+              'market_core_modified': False,
+              'web_classic_modified': False,
+              'aether_modified': False,
+              'atlas_current_modified': False,
+              'oracle_modified': False,
+              'lecture_technique_modified': False,
+              'strategy_a_modified': False,
+              'automatic_order': False,
+              'real_order': False,
+              'new_recurring_timer': False,
+              'new_observer': False,
+              'new_storage_owner': False,
+          })
+
+          dex = build.setdefault('dex_freshness_fail_closed', {})
+          dex.update({
+              'introduced_in': dex.get('introduced_in', '40.6.111'),
+              'repaired_in': '40.6.127',
+              'runtime_patch': 'js/dex-freshness-guard.js',
+              'fallback_max_age_seconds': 600,
+              'timestamp_contract': ['observed_at', 'observed_at_utc', 'fetched_at', 'updated_at', 'timestamp', 'as_of', 'data_timestamp', 'quote_timestamp', 'last_seen_at', 'meta.observed_at', 'meta.observed_at_utc', 'meta.fetched_at', 'meta.updated_at', 'meta.timestamp'],
+              'source_intelligence_contract_aligned': True,
+              'observed_at_utc_supported': True,
+              'unknown_freshness_is_eligible': False,
+              'stale_observation_is_eligible': False,
+              'diagnostic_observability_preserved': True,
+              'canonical_price_changed': False,
+              'market_data_fabricated': False,
+              'trading_changed': False,
+              'wallet_changed': False,
+              'fetch': False,
+              'recurring_timer': False,
+              'observer': False,
+              'storage_write': False,
+          })
+
+          build['dex_freshness_contract_lock'] = {
+              'introduced_in': '40.6.127',
+              'scope': 'align canonical DEX freshness parsing with Source Intelligence observed_at_utc fields without weakening fail-closed semantics',
+              'runtime_patch': 'js/dex-freshness-guard.js',
+              'source_contract': 'js/views/private-backend-sources.js',
+              'accepted_utc_field': 'observed_at_utc',
+              'accepted_meta_utc_field': 'meta.observed_at_utc',
+              'fresh_observation_keeps_atlas_eligibility': True,
+              'stale_or_missing_freshness_remains_fail_closed': True,
+              'threshold_seconds_unchanged': 600,
+              'self_test_observed_at_utc': True,
+              'market_core_changed': False,
+              'graph_changed': False,
+              'lecture_technique_changed': False,
+              'aether_changed': False,
+              'oracle_changed': False,
+              'atlas_current_algorithm_changed': False,
+              'strategy_a_changed': False,
+              'tradus_changed': False,
+              'canonical_price_changed': False,
+              'trading_changed': False,
+              'wallet_changed': False,
+              'fetch': False,
+              'recurring_timer': False,
+              'observer': False,
+              'storage_write': False,
+              'firefox_terrain_proof': 'pending: open Sources/DEX diagnostics and verify fresh observed_at_utc no longer degrades to FRESHNESS_UNKNOWN'
+          }
+
+          cleanup = build.setdefault('versioning_cleanup', {})
+          active = list(cleanup.get('canonical_active_files') or [])
+          if 'js/dex-freshness-guard.js' not in active:
+              active.append('js/dex-freshness-guard.js')
+          cleanup['canonical_active_files'] = active
+          cleanup['dex_freshness_runtime_owner'] = 'js/dex-freshness-guard.js'
+
+          lineage = list(build.get('recent_validated_lineage') or [])
+          item = '40.6.127 DEX FRESHNESS CONTRACT LOCK'
+          if item not in lineage:
+              lineage.append(item)
+          build['recent_validated_lineage'] = lineage
+
+          history = build.setdefault('history', {})
+          history.update({
+              'authority': 'git',
+              'previous_full_manifest_build': '40.6.126',
+              'do_not_duplicate_release_history_in_active_manifest': True,
+          })
+
+          build_path.write_text(json.dumps(build, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+          PY
+
+      - name: Verify bounded contract and syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT='public/agent_crypto_erith_ia/administrator'
+          node --check "$ROOT/js/dex-freshness-guard.js"
+          grep -F 'provider.observed_at_utc' "$ROOT/js/dex-freshness-guard.js"
+          grep -F 'provider?.meta?.observed_at_utc' "$ROOT/js/dex-freshness-guard.js"
+          grep -F 'observed_at_utc: fresh' "$ROOT/js/dex-freshness-guard.js"
+          grep -F 'const RELEASE = "40.6.127";' "$ROOT/js/dex-freshness-guard.js"
+          grep -F 'content="40.6.127"' "$ROOT/releases/40.6.127/index.html"
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root = Path('public/agent_crypto_erith_ia/administrator')
+          d = json.loads((root / 'build.json').read_text(encoding='utf-8'))
+          assert d['build'] == '40.6.127'
+          assert d['parent_build'] == '40.6.126'
+          assert d['engine'] == '38.15.11'
+          assert d['entry'] == './releases/40.6.127/'
+          c = d['dex_freshness_contract_lock']
+          assert c['accepted_utc_field'] == 'observed_at_utc'
+          assert c['threshold_seconds_unchanged'] == 600
+          assert c['recurring_timer'] is False
+          assert c['observer'] is False
+          assert c['storage_write'] is False
+          assert c['canonical_price_changed'] is False
+          print('40.6.127 CONTRACT PASS')
+          PY
+
+      - name: Commit published 40.6.127 and self-clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Aether Release'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/agent-crypto-406127-dex-freshness-contract-lock.yml
+          git add public/agent_crypto_erith_ia/administrator/js/dex-freshness-guard.js
+          git add public/agent_crypto_erith_ia/administrator/build.json
+          git add public/agent_crypto_erith_ia/administrator/releases/40.6.127
+          git diff --cached --check
+          git commit -m 'release(agent-crypto): publish 40.6.127 dex freshness contract lock'
+          git pull --rebase origin main
+          git push origin HEAD:main
