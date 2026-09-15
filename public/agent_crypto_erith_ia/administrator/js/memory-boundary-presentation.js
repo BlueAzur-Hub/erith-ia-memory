@@ -1,11 +1,15 @@
-/* Agent-Crypto @erith.IA — 40.6.141 MEMORY BOUNDARY PRESENTATION
+/* Agent-Crypto @erith.IA — 40.6.142 MEMORY BOUNDARY DEDUPE
    Presentation only. Clarifies Shared Memory vs GitHub Memory without adding
-   synchronization, upload, network, storage ownership or automatic import. */
+   synchronization, upload, network, storage ownership or automatic import.
+   40.6.142 makes the presentation idempotent across repeated render/hydration. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.141";
+  const BUILD = "40.6.142";
+  const OWNER = "memory-boundary-presentation";
+  /* Keep the 40.6.141 style/id names for cache/release compatibility. */
   const STYLE_ID = "agentCryptoMemoryBoundary141Style";
+  const PANEL_CLASS = "ac-memory-boundary-141";
 
   const normalize = value => String(value || "").replace(/\s+/g, " ").trim().toLowerCase();
 
@@ -50,10 +54,10 @@
   function makePanel(kind) {
     const shared = kind === "shared";
     const panel = document.createElement("section");
-    panel.className = "ac-memory-boundary-141";
+    panel.className = PANEL_CLASS;
     panel.dataset.kind = kind;
     panel.dataset.presentationOnly = "true";
-    panel.dataset.owner = "memory-boundary-presentation";
+    panel.dataset.owner = OWNER;
 
     if (shared) {
       const stats = sharedStats();
@@ -82,19 +86,43 @@
     return panel;
   }
 
+  function ownedPanels(kind) {
+    return [...document.querySelectorAll(`.${PANEL_CLASS}[data-kind="${kind}"]`)]
+      .filter(node => node.dataset.owner === OWNER || node.id === `agentCryptoMemoryBoundary141-${kind}`);
+  }
+
+  function placePanel(root, panel) {
+    const summary = root.matches("details") ? root.querySelector(":scope > summary") : null;
+    if (summary?.nextSibling) root.insertBefore(panel, summary.nextSibling);
+    else root.prepend(panel);
+  }
+
   function attach(kind, id, label) {
     const root = findRoot(id, label);
     if (!root) return false;
     const panelId = `agentCryptoMemoryBoundary141-${kind}`;
-    let panel = document.getElementById(panelId);
-    if (!panel) {
-      panel = makePanel(kind);
-      panel.id = panelId;
-      const summary = root.matches("details") ? root.querySelector(":scope > summary") : null;
-      if (summary?.nextSibling) root.insertBefore(panel, summary.nextSibling);
-      else root.prepend(panel);
-    }
+    const matches = ownedPanels(kind);
+    let panel = matches.find(node => root.contains(node)) || matches[0] || null;
+
+    if (!panel) panel = makePanel(kind);
+    for (const extra of matches) if (extra !== panel) extra.remove();
+
+    /* Keep the legacy id so a stale 40.6.141 script cannot append a second panel. */
+    panel.id = panelId;
+    panel.dataset.kind = kind;
+    panel.dataset.owner = OWNER;
+    panel.dataset.presentationOnly = "true";
+    const fresh = makePanel(kind);
+    panel.innerHTML = fresh.innerHTML;
+
+    const summary = root.matches("details") ? root.querySelector(":scope > summary") : null;
+    if (panel.parentElement !== root || (summary && panel.previousElementSibling !== summary)) placePanel(root, panel);
+
+    /* Final semantic sweep closes duplicate panels left by a previous hydration owner. */
+    for (const extra of ownedPanels(kind)) if (extra !== panel) extra.remove();
+
     root.dataset.memoryBoundary141 = "true";
+    root.dataset.memoryBoundaryDedupe = BUILD;
     return true;
   }
 
@@ -102,15 +130,15 @@
     installStyle();
     const shared = attach("shared", "shared-memory", "Shared Memory");
     const github = attach("github", "github-memory", "GitHub Memory");
-    return Object.freeze({ shared, github });
+    return Object.freeze({ shared, github, shared_panels: ownedPanels("shared").length, github_panels: ownedPanels("github").length });
   }
 
   function bind() {
     const result = render();
     for (const [id, label] of [["shared-memory","Shared Memory"],["github-memory","GitHub Memory"]]) {
       const root = findRoot(id, label);
-      if (root?.matches("details") && root.dataset.memoryBoundary141Bound !== "true") {
-        root.dataset.memoryBoundary141Bound = "true";
+      if (root?.matches("details") && root.dataset.memoryBoundaryDedupeBound !== "true") {
+        root.dataset.memoryBoundaryDedupeBound = "true";
         root.addEventListener("toggle", () => { if (root.open) render(); });
       }
     }
@@ -122,8 +150,9 @@
 
   globalThis.AgentCryptoMemoryBoundaryPresentation = Object.freeze({
     build: BUILD,
-    owner: "memory-boundary-presentation",
+    owner: OWNER,
     presentation_only: true,
+    semantic_dedupe: true,
     synchronization_added: false,
     upload_added: false,
     network_added: false,
