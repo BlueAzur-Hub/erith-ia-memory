@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.137",
+  "build": "40.6.138",
   "engine": "38.15.11",
-  "release": "AERITH-10 FULL MATRIX VISUAL POLISH",
+  "release": "SALON LOCAL FIRST TRUTH",
   "published": true,
-  "status": "terrain_pending_406137",
-  "parent_build": "40.6.136",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.137",
-  "administrator_build": "40.6.137",
-  "build_label": "Build 40.6.137 · Administrator",
-  "release_status": "terrain_pending_406137",
+  "status": "terrain_pending_406138",
+  "parent_build": "40.6.137",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.138",
+  "administrator_build": "40.6.138",
+  "build_label": "Build 40.6.138 · Administrator",
+  "release_status": "terrain_pending_406138",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -180,11 +180,12 @@
     "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE",
     "40.6.135 AERITH-10 CHATGPT PORTABLE FLOW",
     "40.6.136 AERITH-10 CHATGPT DEEP-LINK CARDS",
-    "40.6.137 AERITH-10 FULL MATRIX VISUAL POLISH"
+    "40.6.137 AERITH-10 FULL MATRIX VISUAL POLISH",
+    "40.6.138 SALON LOCAL FIRST TRUTH"
   ],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.136",
+    "previous_full_manifest_build": "40.6.137",
     "do_not_duplicate_release_history_in_active_manifest": true
   },
   "release_notes": [
@@ -201,7 +202,8 @@
     "Firefox terrain proof remains required before validation.",
     "40.6.137 is presentation-only: it adds a Full Matrix banner to the existing Aerith-10 ChatGPT loader card.",
     "The existing master prompt is unchanged; CSS now preserves its line breaks and constrains it to a readable scrollable surface.",
-    "No JavaScript owner, Market Core, Atlas CURRENT, Oracle, Lecture Technique, Strategy A, TRADUS, Forge or Notion behavior is modified."
+    "No JavaScript owner, Market Core, Atlas CURRENT, Oracle, Lecture Technique, Strategy A, TRADUS, Forge or Notion behavior is modified.",
+    "40.6.138 makes the Salon Local First contract explicit: local-only identity/history, backend disconnected, zero network sends and voluntary sync unavailable until a backend is connected."
   ],
   "aerith10_chatgpt_deep_link_cards": {
     "introduced_in": "40.6.136",
@@ -242,6 +244,24 @@
     "new_observer": false,
     "new_storage_owner": false,
     "immutable_release_entry": "releases/40.6.137/index.html",
+    "firefox_terrain_proof": "PENDING"
+  },
+  "salon_local_first_truth": {
+    "introduced_in": "40.6.138",
+    "owners": ["js/salon-partage.js", "salon-partage.css"],
+    "scope": "surface the existing local-only contract without creating a backend or network path",
+    "local_identity_visible": true,
+    "local_history_count_visible": true,
+    "backend_state": "DISCONNECTED",
+    "network_send": false,
+    "sync_state": "VOLUNTARY_UNAVAILABLE",
+    "existing_local_storage_preserved": true,
+    "new_storage_owner": false,
+    "new_timer": false,
+    "new_observer": false,
+    "market_core_changed": false,
+    "version_truth_changed": false,
+    "immutable_release_entry": "releases/40.6.138/index.html",
     "firefox_terrain_proof": "PENDING"
   }
 }
