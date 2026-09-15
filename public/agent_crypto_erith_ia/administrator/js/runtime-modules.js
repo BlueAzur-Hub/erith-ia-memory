@@ -18,6 +18,7 @@
     "./js/memory-boundary-presentation.js",
     "./js/auto-reader-presentation.js",
     "./js/analysis-subsection-presentation.js",
+    "./js/retrospective-history-presentation.js",
     "./js/current-final-state-rebind.js",
     "./js/tradus-canonical-strategy-reader.js",
     "./js/strategy-a-auto-start.js",
