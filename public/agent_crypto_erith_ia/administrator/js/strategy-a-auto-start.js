@@ -6,6 +6,7 @@
 
   const OWNER = "strategy-a-auto-start";
   const STOP_KEY = "agent_crypto_strategy_a_auto_manual_stop_v1";
+  const STOP_REASON_KEY = "agent_crypto_strategy_a_auto_manual_stop_reason_v1";
   const RETRY_MS = 250;
   const MAX_WAIT_MS = 30000;
 
@@ -122,6 +123,7 @@
       runner_available: !!paperRunner(),
       runner_state: runnerState(),
       manual_stop: manualStop(),
+      manual_stop_reason: (() => { try { return sessionStorage.getItem(STOP_REASON_KEY); } catch (_) { return null; } })(),
       attempts,
       elapsed_ms: Date.now() - startedAt,
       last_action: lastAction
@@ -133,6 +135,8 @@
       button_click: false,
       simulation_open_required: false,
       existing_runner_reused: true,
+      operator_stop_owner_persists: true,
+      explicit_owner_start_clears_stop: true,
       new_recurring_market_timer: false,
       real_order: false,
       wallet: false,

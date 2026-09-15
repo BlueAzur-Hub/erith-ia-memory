@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <meta name="agent-crypto-loaded-build" content="40.6.129" />
+  <meta name="agent-crypto-engine-build" content="38.15.11" />
+  <meta name="agent-crypto-published-manifest" content="./build.json" />
+  <title>Agent-Crypto Administrator — Build 40.6.129</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#071018;color:#dbe7ef;font:14px/1.45 system-ui,sans-serif}
+    #bootStatus{min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box;text-align:center}
+  </style>
+</head>
+<body>
+  <main id="bootStatus" role="status" aria-live="polite">Initialisation Agent-Crypto 40.6.129…</main>
+  <script>
+  (() => {
+    "use strict";
+
+    /* Immutable release entry 40.6.129.
+       Loaded identity belongs to this entry. Published identity remains the
+       canonical administrator/build.json reached through the release base. */
+    const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
+    const LOADED_BUILD = meta("agent-crypto-loaded-build");
+    const ENGINE = meta("agent-crypto-engine-build");
+    const SHELL_URL = "./runtime-shell.html";
+    const BUILD_RE = /^\d+\.\d+\.\d+$/;
+
+    const statusNode = () => document.getElementById("bootStatus");
+    function fail(message) {
+      document.documentElement.dataset.agentCryptoBoot = "failed";
+      const node = statusNode();
+      if (node) {
+        node.setAttribute("role", "alert");
+        node.textContent = `Agent-Crypto indisponible — ${message}`;
+      }
+    }
+
+    function requireReleaseIdentity() {
+      if (!BUILD_RE.test(LOADED_BUILD)) throw new Error("identité de release chargée invalide");
+      if (!ENGINE) throw new Error("Market Core absent de l'identité de release");
+      return Object.freeze({ build: LOADED_BUILD, loaded_build: LOADED_BUILD, engine: ENGINE, source: "release-entry" });
+    }
+
+    function replaceMeta(html, name, value) {
+      const re = new RegExp(`<meta\\s+name=["']${name}["']\\s+content=["'][^"']*["']\\s*\\/?\\s*>`, "i");
+      const tag = `<meta name="${name}" content="${String(value).replace(/"/g, "&quot;")}" />`;
+      return re.test(html) ? html.replace(re, tag) : html.replace(/<head>/i, `<head>\n  ${tag}`);
+    }
+
+    function stampLocalAssets(html, build) {
+      const stamp = (prefix, url, suffix) => {
+        if (!/^\.\//.test(url)) return `${prefix}${url}${suffix}`;
+        if (!/\.(?:js|css)(?:$|\?)/i.test(url)) return `${prefix}${url}${suffix}`;
+        const clean = url.replace(/([?&])release=[^&"']*/i, "$1").replace(/[?&]$/, "");
+        const join = clean.includes("?") ? "&" : "?";
+        const chronos = /^\.\/admin-chronos\.css(?:[?#]|$)/i.test(clean) ? "&chronos=canonical" : "";
+        return `${prefix}${clean}${join}release=${encodeURIComponent(build)}${chronos}${suffix}`;
+      };
+      return html
+        .replace(/(\bsrc=["'])([^"']+)(["'])/gi, (_, a, u, q) => stamp(a, u, q))
+        .replace(/(\bhref=["'])([^"']+)(["'])/gi, (_, a, u, q) => stamp(a, u, q));
+    }
+
+    function patchShell(raw, truth) {
+      let out = String(raw || "");
+      if (!/^\s*<!doctype html>/i.test(out)) throw new Error("runtime-shell.html invalide");
+
+      /* The immutable shell lives two levels below Administrator. Its stable
+         functional assets remain canonical at Administrator root. */
+      out = out.replace(/<head>/i, '<head>\n  <base href="../../" />');
+      out = out.replace(/administrator-build-\d+\.\d+\.\d+/g, `administrator-build-${truth.build}`);
+      out = out.replace(/market-core-v2\.0-alpha-build-\d+\.\d+\.\d+/g, `market-core-v2.0-alpha-build-${truth.build}`);
+      out = replaceMeta(out, "administrator-build", truth.build);
+      out = replaceMeta(out, "atlas-build", truth.build);
+      out = replaceMeta(out, "atlas-engine-build", truth.engine);
+      out = replaceMeta(out, "agent-crypto-boot-build", truth.build);
+      out = replaceMeta(out, "agent-crypto-loaded-build", truth.build);
+      out = replaceMeta(out, "agent-crypto-version-owner", "release-entry");
+      out = replaceMeta(out, "agent-crypto-published-manifest", meta("agent-crypto-published-manifest") || "./build.json");
+      out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>Agent-Crypto @erith.IA — Build ${truth.build} · Administrator</title>`);
+      out = out.replace(/(<button\b[^>]*\bid=["']atlasVersionTruthControl["'][^>]*\baria-label=["'])[^"']*(["'])/i,
+        `$1Version Agent-Crypto chargée : Build ${truth.build}, mode Administrator$2`);
+      out = out.replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,
+        `<span id="atlasVersionTruthText">Build ${truth.build} · Administrator</span>`);
+      out = out.replace(/<span\s+id=["']footerRelease["'][^>]*>[\s\S]*?<\/span>/i,
+        `<span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build ${truth.build} · Version : Parker Lewis Can't Lose</span>`);
+      out = out.replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi, `AGENT-CRYPTO ${truth.build} · ADMINISTRATOR`);
+      return stampLocalAssets(out, truth.build);
+    }
+
+    async function fetchShell() {
+      const response = await fetch(`${SHELL_URL}?release=${encodeURIComponent(LOADED_BUILD)}&t=${Date.now()}`, {
+        cache: "no-store", credentials: "same-origin"
+      });
+      if (!response.ok) throw new Error(`runtime-shell.html: HTTP ${response.status}`);
+      return response.text();
+    }
+
+    async function boot() {
+      document.documentElement.dataset.agentCryptoBoot = "loading";
+      try {
+        const truth = requireReleaseIdentity();
+        const shell = patchShell(await fetchShell(), truth);
+        globalThis.AgentCryptoBootTruth = truth;
+        globalThis.AGENT_CRYPTO_EMBEDDED_BUILD = truth.build;
+        globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD = truth.build;
+        globalThis.AGENT_CRYPTO_BUILD = truth.build;
+        globalThis.ATLAS_ENGINE_BUILD = truth.engine;
+        document.documentElement.dataset.agentCryptoLoadedBuild = truth.build;
+        document.documentElement.dataset.agentCryptoBoot = "ready";
+        document.open();
+        document.write(shell);
+        document.close();
+      } catch (error) {
+        console.error("[Agent-Crypto release boot]", error);
+        fail(String(error?.message || error || "initialisation impossible"));
+      }
+    }
+
+    void boot();
+  })();
+  </script>
+</body>
+</html>

@@ -35906,6 +35906,12 @@ function strategyAAutoSchedule(delay=STRATEGY_A_AUTO_STATE.cadence_ms){
   s.timer=setTimeout(()=>{s.timer=null;strategyAAutoCycle("timer");},bounded);
 }
 function strategyAAutoStop(reason="Arrêt opérateur · position Paper éventuelle laissée intacte."){
+  // 40.6.129 MANUAL STOP OWNER — operator STOP persists across pageshow/rehydration.
+  try {
+    sessionStorage.setItem("agent_crypto_strategy_a_auto_manual_stop_v1", "1");
+    sessionStorage.setItem("agent_crypto_strategy_a_auto_manual_stop_reason_v1", JSON.stringify({ reason: "operator-stop", at: new Date().toISOString() }));
+  } catch (_) {}
+
   const s=STRATEGY_A_AUTO_STATE;
   s.enabled=false;if(s.timer){clearTimeout(s.timer);s.timer=null;}s.next_cycle_at=null;s.phase="OFF";s.last_action=reason;
   try{renderStrategySandboxExtensions();}catch(_){}
@@ -35936,6 +35942,12 @@ function strategyAAutoSafetySignal(kind,detail={}){
   try{return globalThis.AgentCryptoStrategyASafetyCertification?.signal?.(kind,detail)||null;}catch(_){return null;}
 }
 function strategyAAutoStart(){
+  // 40.6.129 EXPLICIT START CLEARS MANUAL STOP — only an actual owner start can lift operator STOP.
+  try {
+    sessionStorage.removeItem("agent_crypto_strategy_a_auto_manual_stop_v1");
+    sessionStorage.removeItem("agent_crypto_strategy_a_auto_manual_stop_reason_v1");
+  } catch (_) {}
+
   const s=STRATEGY_A_AUTO_STATE;let local=null;
   try{local=strategyALocalContext();}catch(_){}
   if(String(local?.active_workspace||"")!=="strategy_a"){
