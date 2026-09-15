@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.156 STRATEGY A EVIDENCE GATE AUDIT
+/* Agent-Crypto @erith.IA — 40.6.157 STRATEGY A FOUNDATION PROOF ACTION
    Read-only evidence audit companion inside PREUVES CROISÉES.
    It classifies what already exists, what is explicitly testable, what remains missing,
    and what is deliberately locked. It never promotes a certification gate.
@@ -6,7 +6,8 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.156";
+  const RELEASE = "40.6.157";
+  let LAST_FOUNDATION_RUN = null;
   const OWNER = "strategy-a-evidence-gate-audit";
   const ROOT_ID = "strategyAEvidenceGateAudit";
   const STYLE_ID = "strategyAEvidenceGateAuditStyle";
@@ -129,9 +130,29 @@
       paper_acceptance_receipt: paperProof,
       passive_read: true,
       certification_changed: false,
+      explicit_foundation_test_action: true,
+      automatic_tests: false,
       paper_only: true,
       real_order: false
     });
+  }
+
+  function runFoundationProof() {
+    const safetyApi = globalThis.AgentCryptoStrategyASafetyCertification || null;
+    if (typeof safetyApi?.run_foundation_tests !== "function") {
+      LAST_FOUNDATION_RUN = Object.freeze({ pass: false, reason: "FOUNDATION_TEST_OWNER_UNAVAILABLE", at: new Date().toISOString() });
+      render();
+      return LAST_FOUNDATION_RUN;
+    }
+    try {
+      const result = safetyApi.run_foundation_tests();
+      LAST_FOUNDATION_RUN = Object.freeze({ ...(result || {}), at: result?.at || new Date().toISOString() });
+    } catch (error) {
+      LAST_FOUNDATION_RUN = Object.freeze({ pass: false, reason: String(error?.message || error), at: new Date().toISOString() });
+    }
+    try { globalThis.AgentCryptoStrategyAPaperV2ProofBridge?.render?.(); } catch (_) {}
+    try { requestAnimationFrame(() => render()); } catch (_) { render(); }
+    return LAST_FOUNDATION_RUN;
   }
 
   function installStyle() {
@@ -144,6 +165,11 @@
       #${ROOT_ID} .saga-title{font:950 9px/1.25 system-ui,sans-serif;letter-spacing:.08em;color:#b8d8ff;text-transform:uppercase}
       #${ROOT_ID} .saga-sub{margin-top:3px;font:600 8px/1.4 system-ui,sans-serif;color:#829ab0}
       #${ROOT_ID} .saga-counts{font:850 8px/1.25 system-ui,sans-serif;color:#b7c7d3}
+      #${ROOT_ID} .saga-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+      #${ROOT_ID} .saga-run{white-space:nowrap}
+      #${ROOT_ID} .saga-receipt{margin-top:7px;padding:7px 8px;border:1px solid rgba(102,207,255,.18);border-radius:7px;background:rgba(37,111,146,.08);font:650 8px/1.4 system-ui,sans-serif;color:#9fcfe5}
+      #${ROOT_ID} .saga-receipt[data-pass="true"]{border-color:rgba(102,240,171,.25);color:#9be8bd}
+      #${ROOT_ID} .saga-receipt[data-pass="false"]{border-color:rgba(255,118,160,.24);color:#f5a4bd}
       #${ROOT_ID} .saga-list{display:grid;gap:5px;margin-top:8px}
       #${ROOT_ID} .saga-row{display:grid;grid-template-columns:28px minmax(160px,.75fr) minmax(0,2.2fr) auto;gap:8px;align-items:start;padding:7px 8px;border:1px solid rgba(255,255,255,.055);border-radius:7px;background:rgba(3,12,22,.48)}
       #${ROOT_ID} .saga-n{font:900 8px/1.2 system-ui,sans-serif;color:#7896aa;padding-top:2px}
@@ -186,10 +212,15 @@
       `${c.LOCKED || 0} LOCKED`
     ].join(" · ");
 
+    const foundationAvailable = typeof globalThis.AgentCryptoStrategyASafetyCertification?.run_foundation_tests === "function";
+    const receipt = LAST_FOUNDATION_RUN
+      ? `<div class="saga-receipt" data-pass="${LAST_FOUNDATION_RUN.pass === true}"><b>Dernier test fondation :</b> ${escapeHtml(LAST_FOUNDATION_RUN.pass === true ? "PASS" : "FAIL / INCOMPLET")} · ${escapeHtml(LAST_FOUNDATION_RUN.at || "—")}${LAST_FOUNDATION_RUN.reason ? ` · ${escapeHtml(LAST_FOUNDATION_RUN.reason)}` : ""}</div>`
+      : "";
+
     root.innerHTML = `
       <div class="saga-head">
         <div><div class="saga-title">AUDIT DES 9 GATES · ${RELEASE}</div><div class="saga-sub">Owner réel → preuve existante → prochaine preuve. Aucun PASS n’est créé par cet audit.</div></div>
-        <div class="saga-counts">${escapeHtml(summary)}</div>
+        <div class="saga-actions"><div class="saga-counts">${escapeHtml(summary)}</div>${foundationAvailable ? '<button type="button" class="btn small saga-run" id="strategyAEvidenceFoundationRun">EXÉCUTER TESTS FONDATION · G2/G7</button>' : ''}</div>
       </div>
       <div class="saga-list">${data.rows.map(row => `
         <div class="saga-row" data-tone="${escapeHtml(row.tone)}">
@@ -198,7 +229,9 @@
           <div class="saga-proof"><b>Preuve :</b> ${escapeHtml(row.evidence)}<span class="saga-next"><b>Suite :</b> ${escapeHtml(row.next)}</span></div>
           <span class="saga-state">${escapeHtml(row.audit_state)}</span>
         </div>`).join("")}</div>
-      <div class="saga-foot">Lecture passive uniquement · aucune gate réécrite · aucune exécution cachée · aucun ordre réel.</div>`;
+      ${receipt}
+      <div class="saga-foot">Audit passif par défaut · le bouton G2/G7 exécute uniquement les self-tests de fondation déjà existants, sur action opérateur · aucun ordre réel.</div>`;
+    root.querySelector("#strategyAEvidenceFoundationRun")?.addEventListener("click", runFoundationProof, { once: true });
     return true;
   }
 
@@ -207,8 +240,11 @@
     owner: OWNER,
     snapshot,
     render,
+    run_foundation_proof: runFoundationProof,
     passive_read: true,
     certification_changed: false,
+    explicit_foundation_test_action: true,
+    automatic_tests: false,
     thresholds_changed: false,
     business_logic_changed: false,
     paper_only: true,
