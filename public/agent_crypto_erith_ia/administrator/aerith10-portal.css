@@ -31,3 +31,43 @@
 @media(max-width:1100px){.aerith10-portal-flow{grid-template-columns:repeat(4,minmax(100px,1fr))}}
 @media(max-width:800px){.aerith10-loader-flow{grid-template-columns:1fr}.aerith10-loader-actions .btn{width:100%}}
 @media(max-width:700px){.aerith10-portal{padding:20px 14px}.aerith10-portal-flow{grid-template-columns:repeat(2,minmax(110px,1fr))}.aerith10-portal-actions .btn{width:100%}.aerith10-loader-card{padding:14px}}
+
+/* 40.6.137 — Aerith-10 Full Matrix visual polish · presentation only.
+   No runtime logic, prompt content, Market Core, Atlas, Oracle, Lecture Technique,
+   Strategy A, TRADUS, Forge or Notion behavior is changed. */
+.aerith10-loader-card::before{
+  content:"";
+  display:block;
+  grid-column:1/-1;
+  width:100%;
+  aspect-ratio:3/1;
+  min-height:150px;
+  max-height:260px;
+  border:1px solid rgba(255,196,232,.24);
+  border-radius:14px;
+  background:
+    linear-gradient(180deg,rgba(8,12,27,.02),rgba(8,12,27,.12)),
+    url("./assets/aerith10/AERITH_10_FULL_MATRIX_BANNER_40.6.137.jpg") center/cover no-repeat;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.03),0 12px 28px rgba(0,0,0,.22);
+}
+.aerith10-loader-prompt{min-width:0}
+.aerith10-loader-prompt code{
+  box-sizing:border-box;
+  max-height:min(42vh,440px);
+  overflow:auto;
+  padding:12px 13px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;
+  background:rgba(3,8,18,.44);
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,185,233,.42) rgba(255,255,255,.035);
+}
+.aerith10-loader-prompt code::-webkit-scrollbar{width:8px;height:8px}
+.aerith10-loader-prompt code::-webkit-scrollbar-track{background:rgba(255,255,255,.035);border-radius:999px}
+.aerith10-loader-prompt code::-webkit-scrollbar-thumb{background:rgba(255,185,233,.36);border-radius:999px}
+@media(max-width:700px){
+  .aerith10-loader-card::before{min-height:112px;border-radius:11px}
+  .aerith10-loader-prompt code{max-height:48vh;padding:10px;font-size:10px;line-height:1.45}
+}
