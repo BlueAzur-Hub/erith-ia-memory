@@ -15,6 +15,7 @@
     "./js/dex-freshness-guard.js",
     "./js/local-dialogue-presentation.js",
     "./js/local-ai-ux-clarity.js",
+    "./js/memory-boundary-presentation.js",
     "./js/current-final-state-rebind.js",
     "./js/tradus-canonical-strategy-reader.js",
     "./js/strategy-a-auto-start.js",
