@@ -1,191 +1,223 @@
-/* Agent-Crypto @erith.IA — 40.6.148 SUBSECTION HIERARCHY CONSOLIDATION
-   Presentation only. Extends the validated two-line hierarchy to Analysis/Oracle/
-   Sentinel plus Operations/System subsection summaries: larger title, descriptive
-   copy below, more breathing room. No data, engine, fetch, timer, storage or business logic. */
+/* Agent-Crypto @erith.IA — 40.6.149 CANONICAL SUBSECTION SUMMARY OWNER
+   Presentation only. Replaces per-key styling with one structural contract for
+   standard atlas-family-member summaries. Primary/custom summary contracts are
+   explicitly excluded. No data, engine, fetch, timer, observer, storage or business logic. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.148";
-  const STYLE_ID = "agentCryptoSubsectionPresentation148";
-  const ANALYSIS_KEYS = Object.freeze([
-    "astrocycle",
-    "celestial-sentinel",
-    "news-sentinel",
-    "news-market-explanation",
-    "news-plan",
-    "lecture-verrou",
-    "mode-debutant-avance",
-    "watch-risques",
-    "impact",
-    "nofomo-news",
-    "oracle-models-calibration",
-    "oracle-sources-runtime",
-    "oracle-evidence-explorer"
-  ]);
-  const STANDARD_KEYS = Object.freeze([
-    "situation",
-    "questionnaire",
-    "briefing",
-    "planning",
-    "simulation",
-    "commandes",
-    "backend",
-    "safety",
-    "physical-security"
-  ]);
-  const KEYS = Object.freeze([...ANALYSIS_KEYS, ...STANDARD_KEYS]);
-
-  function selectors(keys, suffix = "") {
-    return keys.map(key => `details[data-collapse-key="${key}"]${suffix}`).join(",\n");
-  }
+  const BUILD = "40.6.149";
+  const STYLE_ID = "agentCryptoCanonicalSubsectionSummary149";
+  const STANDARD = [
+    "details.atlas-family-member",
+    ":not(.atlas-local-ai-collapse)",
+    ":not(.atlas-oracle-suite)",
+    ":not(.forge-aerith-collapse)",
+    ":not(.forge-aerith-embedded-collapse)",
+    ":not(.atlas-chatgpt-workspace-collapse)"
+  ].join("");
 
   function install() {
     if (document.getElementById(STYLE_ID)) return;
+
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      ${selectors(KEYS)}{margin:11px 0!important}
+      ${STANDARD}{
+        margin:14px 0!important;
+      }
 
-      ${selectors(KEYS, " > summary.atlas-collapse-summary")}{
-        min-height:84px!important;
-        padding:14px 18px!important;
-        gap:14px!important;
+      ${STANDARD} > summary.atlas-collapse-summary{
+        min-height:96px!important;
+        padding:17px 20px!important;
+        display:grid!important;
+        grid-template-columns:42px minmax(0,1fr) auto!important;
+        grid-template-rows:auto auto!important;
+        column-gap:16px!important;
+        row-gap:5px!important;
         align-items:center!important;
         box-sizing:border-box!important;
+        border-left-width:4px!important;
+        background:linear-gradient(90deg,rgba(98,236,255,.055),rgba(255,255,255,.018) 34%,rgba(255,255,255,.008))!important;
       }
 
-      ${selectors(ANALYSIS_KEYS, " > summary .atlas-collapse-copy")}{
-        display:flex!important;
-        flex-direction:column!important;
-        align-items:flex-start!important;
-        justify-content:center!important;
-        gap:4px!important;
-        min-width:0!important;
-        text-align:left!important;
-      }
-
-      ${selectors(STANDARD_KEYS, " > summary.atlas-collapse-summary")}{
-        display:grid!important;
-        grid-template-columns:38px minmax(0,1fr) auto!important;
-        grid-template-rows:auto auto!important;
-        column-gap:14px!important;
-        row-gap:4px!important;
-      }
-      ${selectors(STANDARD_KEYS, " > summary > .atlas-collapse-icon")}{
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-collapse-icon,
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-news-report-summary-icon{
         grid-column:1!important;
         grid-row:1 / span 2!important;
         align-self:center!important;
+        justify-self:center!important;
+        width:38px!important;
+        height:38px!important;
+        min-width:38px!important;
+        flex:0 0 38px!important;
+        font-size:12px!important;
       }
-      ${selectors(STANDARD_KEYS, " > summary > .atlas-collapse-title")}{
+
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-collapse-copy{
+        grid-column:2!important;
+        grid-row:1 / span 2!important;
+        display:flex!important;
+        flex-direction:column!important;
+        justify-content:center!important;
+        align-items:flex-start!important;
+        gap:6px!important;
+        min-width:0!important;
+        width:100%!important;
+        text-align:left!important;
+      }
+
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-collapse-title{
         grid-column:2!important;
         grid-row:1!important;
         align-self:end!important;
       }
-      ${selectors(STANDARD_KEYS, " > summary > .atlas-collapse-subtitle")}{
+
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-collapse-subtitle{
         grid-column:2!important;
         grid-row:2!important;
         align-self:start!important;
       }
-      ${selectors(STANDARD_KEYS, " > summary > .atlas-collapse-state")}{
+
+      ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-title{
+        display:block!important;
+        min-width:0!important;
+        margin:0!important;
+        color:#fff4c2!important;
+        font-size:clamp(20px,1.36vw,23px)!important;
+        line-height:1.14!important;
+        font-weight:950!important;
+        letter-spacing:.005em!important;
+        white-space:normal!important;
+        overflow:visible!important;
+        text-overflow:clip!important;
+      }
+
+      ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-subtitle{
+        display:block!important;
+        min-width:0!important;
+        margin:0!important;
+        color:#b9cad8!important;
+        font-size:clamp(13.5px,.94vw,15px)!important;
+        line-height:1.42!important;
+        font-weight:520!important;
+        letter-spacing:.002em!important;
+        white-space:normal!important;
+        overflow:visible!important;
+        text-overflow:clip!important;
+      }
+
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-collapse-state{
         grid-column:3!important;
         grid-row:1 / span 2!important;
         align-self:center!important;
         justify-self:end!important;
-      }
-
-      ${selectors(KEYS, " > summary .atlas-collapse-title")}{
-        display:block!important;
-        min-width:0!important;
+        min-width:72px!important;
         margin:0!important;
-        font-size:clamp(17px,1.18vw,20px)!important;
-        line-height:1.16!important;
-        font-weight:950!important;
-        letter-spacing:.006em!important;
-        white-space:normal!important;
-        overflow:visible!important;
-        text-overflow:clip!important;
-      }
-
-      ${selectors(KEYS, " > summary .atlas-collapse-subtitle")}{
-        display:block!important;
-        min-width:0!important;
-        margin:0!important;
-        color:#aebfd1!important;
-        font-size:clamp(12px,.88vw,14px)!important;
-        line-height:1.38!important;
-        font-weight:500!important;
-        white-space:normal!important;
-        overflow:visible!important;
-        text-overflow:clip!important;
-      }
-
-      ${selectors(KEYS, " > summary > .atlas-collapse-icon")},
-      ${selectors(ANALYSIS_KEYS, " > summary > .atlas-news-report-summary-icon")}{
-        width:36px!important;
-        height:36px!important;
-        min-width:36px!important;
-        flex:0 0 36px!important;
-        align-self:center!important;
-      }
-
-      ${selectors(KEYS, " > summary .atlas-collapse-state")}{
-        min-width:64px!important;
-        margin-left:auto!important;
-        font-size:11px!important;
-      }
-
-      details[data-collapse-key="news-sentinel"] > summary .news-collapse-live{
-        align-self:center!important;
-        min-width:170px!important;
-      }
-      details[data-collapse-key="news-sentinel"] > summary .news-collapse-live b{
         font-size:12px!important;
-        line-height:1.2!important;
-      }
-      details[data-collapse-key="news-sentinel"] > summary .news-collapse-live small{
-        font-size:10.5px!important;
-        line-height:1.3!important;
+        line-height:1.15!important;
       }
 
-      @media(max-width:980px){
-        ${selectors(KEYS, " > summary.atlas-collapse-summary")}{
-          min-height:88px!important;
-          padding:13px 14px!important;
+      .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary{
+        grid-template-columns:minmax(0,1fr) auto auto!important;
+        grid-template-rows:auto!important;
+        min-height:102px!important;
+      }
+      .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-copy{
+        grid-column:1!important;
+        grid-row:1!important;
+      }
+      .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .news-collapse-live{
+        grid-column:2!important;
+        grid-row:1!important;
+        align-self:center!important;
+        min-width:190px!important;
+      }
+      .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-state{
+        grid-column:3!important;
+        grid-row:1!important;
+      }
+      .news-sentinel-collapse.atlas-family-member > summary .news-collapse-live b{
+        font-size:13px!important;
+        line-height:1.22!important;
+      }
+      .news-sentinel-collapse.atlas-family-member > summary .news-collapse-live small{
+        font-size:11px!important;
+        line-height:1.32!important;
+      }
+
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-auto-reader-summary-truth,
+      ${STANDARD} > summary.atlas-collapse-summary > .atlas-auto-reader-summary-meta{
+        align-self:center!important;
+      }
+
+      @media(max-width:1180px){
+        ${STANDARD} > summary.atlas-collapse-summary{
+          min-height:92px!important;
+          padding:15px 16px!important;
+          grid-template-columns:38px minmax(0,1fr) auto!important;
+          column-gap:13px!important;
         }
-        ${selectors(KEYS, " > summary .atlas-collapse-title")}{font-size:16px!important}
-        ${selectors(KEYS, " > summary .atlas-collapse-subtitle")}{font-size:11.5px!important}
-        ${selectors(STANDARD_KEYS, " > summary.atlas-collapse-summary")}{
+        ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-title{font-size:18px!important}
+        ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-subtitle{display:block!important;font-size:12.5px!important}
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary{
+          grid-template-columns:minmax(0,1fr) auto!important;
+          grid-template-rows:auto auto!important;
+        }
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .news-collapse-live{
+          grid-column:1!important;
+          grid-row:2!important;
+          justify-self:start!important;
+          min-width:0!important;
+          margin-top:5px!important;
+        }
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-state{
+          grid-column:2!important;
+          grid-row:1 / span 2!important;
+        }
+      }
+
+      @media(max-width:760px){
+        ${STANDARD} > summary.atlas-collapse-summary{
+          min-height:88px!important;
           grid-template-columns:34px minmax(0,1fr)!important;
           grid-template-rows:auto auto auto!important;
+          padding:13px 14px!important;
         }
-        ${selectors(STANDARD_KEYS, " > summary > .atlas-collapse-state")}{
+        ${STANDARD} > summary.atlas-collapse-summary > .atlas-collapse-state{
           grid-column:2!important;
           grid-row:3!important;
           justify-self:start!important;
-          margin:4px 0 0!important;
+          margin-top:5px!important;
         }
-        details[data-collapse-key="news-sentinel"] > summary .news-collapse-live{
-          min-width:0!important;
-          margin-top:4px!important;
+        ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-title{font-size:17px!important}
+        ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-subtitle{font-size:12px!important}
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary{
+          grid-template-columns:minmax(0,1fr)!important;
+          grid-template-rows:auto auto auto!important;
         }
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-copy,
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .news-collapse-live,
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-state{grid-column:1!important}
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-copy{grid-row:1!important}
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .news-collapse-live{grid-row:2!important}
+        .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-state{grid-row:3!important}
       }
     `;
+
     document.head.appendChild(style);
     document.documentElement.dataset.subsectionPresentation = BUILD;
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", install, { once: true });
-  } else {
-    install();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", install, { once: true });
+  else install();
 
   globalThis.AgentCryptoAnalysisSubsectionPresentation = Object.freeze({
     build: BUILD,
     owner: "analysis-subsection-presentation",
+    contract: "structural-atlas-family-summary",
     presentation_only: true,
-    analysis_keys: ANALYSIS_KEYS.slice(),
-    operations_system_keys: STANDARD_KEYS.slice(),
+    key_list_removed: true,
+    primary_contracts_excluded: true,
     business_logic_changed: false,
     engine_changed: false,
     fetch_added: false,
