@@ -1,17 +1,84 @@
-/* Agent-Crypto @erith.IA — 40.6.126
-   ATLAS FINAL STATE REBIND
-   Presentation convergence only after the canonical CURRENT closure path.
-   Reuses existing CURRENT/REPOS and analytical-memory owners; no analytical
-   mutation, timer, observer, fetch, storage, trading or wallet owner. */
+/* Agent-Crypto @erith.IA — canonical CURRENT presentation consumer
+   CONSOLIDATION 40.6.131
+
+   This module is deliberately NOT a CURRENT owner.
+   It never wraps business owners and never emits agentcrypto:current-finalized.
+   A business finalization event is consumed only when it carries a verifiable
+   CURRENT fingerprint. Boot/pageshow may repaint an already persisted state,
+   but that repaint is presentation-only and cannot create a business truth.
+
+   No analytical mutation, recurring timer, observer, fetch, storage, trading
+   or wallet owner is introduced here. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.126";
   const OWNER = "current-final-state-rebind";
-  const WRAPPED = Symbol.for("agentcrypto.currentFinalStateRebind406126");
   let queued = false;
-  let lastReason = "boot";
-  let emitted = 0;
+  let lastReason = "boot-read-only";
+  let consumed = 0;
+  let rejected = 0;
+  let lastProof = null;
+
+  function loadedBuild() {
+    return String(
+      globalThis.AgentCryptoBootTruth?.loaded_build ||
+      globalThis.AgentCryptoBootTruth?.build ||
+      document.querySelector('meta[name="agent-crypto-loaded-build"]')?.content ||
+      document.querySelector('meta[name="agent-crypto-boot-build"]')?.content ||
+      "UNKNOWN"
+    ).trim();
+  }
+
+  function normalizeFingerprint(value) {
+    const text = String(value || "").trim();
+    if (/^sha256:[a-f0-9]{16,}$/i.test(text)) return text.toLowerCase();
+    if (/^[a-f0-9]{64}$/i.test(text)) return `sha256:${text.toLowerCase()}`;
+    return "";
+  }
+
+  function proofFromDetail(detail) {
+    const row = detail && typeof detail === "object" ? detail : {};
+    const record = row.record && typeof row.record === "object" ? row.record : {};
+    const fingerprint = normalizeFingerprint(
+      row.fingerprint ||
+      row.current_fingerprint ||
+      row.currentFingerprint ||
+      row.sha256 ||
+      record.fingerprint ||
+      record.current_fingerprint ||
+      record.sha256
+    );
+    if (!fingerprint) return null;
+
+    const snapshotId = String(
+      row.snapshot_id ||
+      row.snapshotId ||
+      row.market_snapshot_id ||
+      row.marketSnapshotId ||
+      record.snapshot_id ||
+      record.snapshotId ||
+      ""
+    ).trim();
+
+    const currentAt = String(
+      row.current_at ||
+      row.currentAt ||
+      row.closed_at ||
+      row.closedAt ||
+      row.produced_at ||
+      row.producedAt ||
+      record.current_at ||
+      record.closed_at ||
+      record.created_at ||
+      ""
+    ).trim();
+
+    return Object.freeze({
+      fingerprint,
+      snapshot_id: snapshotId,
+      current_at: currentAt
+    });
+  }
 
   function presentationSync(reason) {
     try {
@@ -25,51 +92,72 @@
     try {
       if (typeof globalThis.atlasAnalyticalMemoryRender394 === "function") {
         globalThis.atlasAnalyticalMemoryRender394();
-      }
-    } catch (_) {}
-  }
-
-  function canonicalCurrentUiTruth(reason) {
-    try {
-      if (typeof globalThis.atlasCanonicalCurrentUiTruth389 === "function") {
-        globalThis.atlasCanonicalCurrentUiTruth389(`final-rebind-406126:${String(reason || "current-closed")}`);
         return true;
       }
     } catch (_) {}
     return false;
   }
 
-  function emitFinalized(reason) {
-    emitted += 1;
-    const detail = Object.freeze({
-      build: BUILD,
+  function canonicalCurrentUiTruth(reason) {
+    try {
+      if (typeof globalThis.atlasCanonicalCurrentUiTruth389 === "function") {
+        globalThis.atlasCanonicalCurrentUiTruth389(`final-presentation:${String(reason || "read-only")}`);
+        return true;
+      }
+    } catch (_) {}
+    return false;
+  }
+
+  function publishState(state, reason, proof = null) {
+    try {
+      const root = document.documentElement;
+      root.dataset.currentFinalStateRebind = state;
+      root.dataset.currentFinalStateRebindReason = String(reason || "read-only");
+      root.dataset.currentFinalStateRebindOwner = OWNER;
+      root.dataset.currentFinalStateRebindProof = proof?.fingerprint || "";
+    } catch (_) {}
+  }
+
+  function repaint(reason, proof = null) {
+    const why = String(reason || "read-only");
+    lastReason = why;
+    const uiTruth = canonicalCurrentUiTruth(why);
+    const analytical = analyticalRefresh();
+    const presentation = presentationSync(`current-final-presentation:${why}`);
+    publishState(proof ? "proof-consumed" : "read-only-sync", why, proof);
+    return Object.freeze({
       owner: OWNER,
-      reason: String(reason || "current-closed"),
-      emitted_at: new Date().toISOString(),
+      build: loadedBuild(),
+      reason: why,
+      proof,
+      ui_truth_refreshed: uiTruth,
+      analytical_refreshed: analytical,
+      presentation_result: presentation,
       presentation_only: true
     });
-    try { document.dispatchEvent(new CustomEvent("agentcrypto:current-finalized", { detail })); } catch (_) {}
-    return detail;
   }
 
-  function runRebind(reason) {
-    queued = false;
-    const uiTruth = canonicalCurrentUiTruth(reason);
-    analyticalRefresh();
-    presentationSync(`final-rebind-406126:${String(reason || "current-closed")}`);
-    const detail = emitFinalized(reason);
-    try {
-      document.documentElement.dataset.currentFinalStateRebind = "converged";
-      document.documentElement.dataset.currentFinalStateRebindReason = String(reason || "current-closed");
-    } catch (_) {}
-    return Object.freeze({ uiTruth, detail });
+  function consumeCanonicalFinalization(event) {
+    const proof = proofFromDetail(event?.detail);
+    if (!proof) {
+      rejected += 1;
+      publishState("rejected-unproven-finalization", "canonical-event-without-fingerprint", null);
+      return false;
+    }
+    consumed += 1;
+    lastProof = proof;
+    repaint("canonical-current-finalized", proof);
+    return true;
   }
 
-  function schedule(reason) {
-    lastReason = String(reason || "current-closed");
+  function scheduleReadOnly(reason = "manual-read-only") {
+    lastReason = String(reason || "manual-read-only");
     if (queued) return false;
     queued = true;
-    const finish = () => runRebind(lastReason);
+    const finish = () => {
+      queued = false;
+      repaint(lastReason, null);
+    };
     try {
       requestAnimationFrame(() => requestAnimationFrame(finish));
     } catch (_) {
@@ -78,50 +166,40 @@
     return true;
   }
 
-  function wrap(name, reason, accept) {
-    const current = globalThis[name];
-    if (typeof current !== "function" || current[WRAPPED] === true) return false;
-    const wrapped = function agentCryptoCurrentFinalStateBoundary406126(...args) {
-      const result = Reflect.apply(current, this, args);
-      const after = value => {
-        let ok = true;
-        try { ok = typeof accept === "function" ? accept(value, args) !== false : value !== false; } catch (_) {}
-        if (ok) schedule(reason);
-        return value;
-      };
-      if (result && typeof result.then === "function") return result.then(after);
-      return after(result);
-    };
-    try { Object.defineProperty(wrapped, WRAPPED, { value: true }); } catch (_) {}
-    try { Object.defineProperty(wrapped, "__agentCryptoWrappedOwner", { value: current }); } catch (_) {}
-    globalThis[name] = wrapped;
-    return globalThis[name] === wrapped;
+  function bootReadOnlySync() {
+    scheduleReadOnly("boot-read-only");
   }
 
-  const installed = Object.freeze({
-    rest_status: wrap("atlasAutomation341SetRestStatus", "rest-status"),
-    current_memory: wrap(
-      "atlasCurrentMemoryReconcile384",
-      "current-memory-reconcile",
-      value => Boolean(value?.record || value?.verified === true || value?.changed === true || value?.updated === true)
-    )
-  });
+  document.addEventListener("agentcrypto:current-finalized", consumeCanonicalFinalization);
 
-  try {
-    document.documentElement.dataset.currentFinalStateRebind = Object.values(installed).some(Boolean)
-      ? "armed"
-      : "boundary-unavailable";
-  } catch (_) {}
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootReadOnlySync, { once: true });
+  } else {
+    queueMicrotask(bootReadOnlySync);
+  }
+
+  window.addEventListener("pageshow", () => scheduleReadOnly("pageshow-read-only"), { passive: true });
+
+  publishState("consumer-armed", "awaiting-canonical-proof", null);
 
   globalThis.AgentCryptoCurrentFinalStateRebind = Object.freeze({
-    build: BUILD,
+    build: loadedBuild(),
     owner: OWNER,
     canonical_active_filename: "js/current-final-state-rebind.js",
-    installed,
-    schedule,
-    sync: runRebind,
-    emitted: () => emitted,
+    role: "presentation-consumer-only",
+    proofFromDetail,
+    consumeCanonicalFinalization,
+    sync: reason => repaint(reason || "manual-read-only", null),
+    schedule: scheduleReadOnly,
+    consumed: () => consumed,
+    rejected: () => rejected,
+    emitted: () => 0,
     lastReason: () => lastReason,
+    lastProof: () => lastProof,
+    emits_current_finalized: false,
+    wraps_business_owner: false,
+    requires_canonical_proof: true,
+    presentation_only: true,
     analytical_mutation: false,
     market_core_changed: false,
     recurring_timer: false,
