@@ -17,6 +17,8 @@
     if (!bridge || !root || !list) return false;
     if (root.previousElementSibling !== list) list.insertAdjacentElement("afterend", root);
     root.dataset.anchorRepair = RELEASE;
+    const title = root.querySelector(".saga-title");
+    if (title) title.textContent = `AUDIT DES 9 GATES · ${RELEASE}`;
     return true;
   }
 
