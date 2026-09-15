@@ -14,7 +14,7 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.111";
+  const RELEASE = "40.6.127";
   const FALLBACK_MAX_AGE_SECONDS = 600;
   let wrapped = false;
   let originalApi = null;
@@ -33,6 +33,7 @@
     if (!provider || typeof provider !== "object") return null;
     const values = [
       provider.observed_at,
+      provider.observed_at_utc,
       provider.fetched_at,
       provider.updated_at,
       provider.timestamp,
@@ -41,6 +42,7 @@
       provider.quote_timestamp,
       provider.last_seen_at,
       provider?.meta?.observed_at,
+      provider?.meta?.observed_at_utc,
       provider?.meta?.fetched_at,
       provider?.meta?.updated_at,
       provider?.meta?.timestamp
@@ -196,8 +198,8 @@
     const ctx = {
       dex_max_age_seconds: 600,
       assets: [
-        { asset: "BTC", dexscreener: { status: "ok", updated_at: fresh }, geckoterminal: { status: "ok", updated_at: fresh }, identity: { atlas_eligible: true } },
-        { asset: "ETH", dexscreener: { status: "ok", updated_at: stale }, geckoterminal: { status: "ok", updated_at: fresh }, identity: { atlas_eligible: true } },
+        { asset: "BTC", dexscreener: { status: "ok", observed_at_utc: fresh }, geckoterminal: { status: "ok", observed_at_utc: fresh }, identity: { atlas_eligible: true } },
+        { asset: "ETH", dexscreener: { status: "ok", observed_at_utc: stale }, geckoterminal: { status: "ok", observed_at_utc: fresh }, identity: { atlas_eligible: true } },
         { asset: "SOL", dexscreener: { status: "ok" }, geckoterminal: { status: "ok", updated_at: fresh }, identity: { atlas_eligible: true } }
       ]
     };
