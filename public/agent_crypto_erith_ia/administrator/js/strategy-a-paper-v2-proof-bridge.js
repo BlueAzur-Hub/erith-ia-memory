@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.154 STRATEGY A PAPER V2 ANCHOR REPAIR
+/* Agent-Crypto @erith.IA — 40.6.155 STRATEGY A PAPER V2 EVIDENCE GATE DETAIL
    Read-only presentation companion. It connects existing Strategy A PAPER truth
    with CURRENT → POST-CURRENT → retrospective history evidence.
    No threshold change, no order path, no wallet, no credentials, no fetch,
@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.154";
+  const RELEASE = "40.6.155";
   const OWNER = "strategy-a-paper-v2-proof-bridge";
   const ROOT_ID = "strategyAPaperV2ProofBridge";
   const STYLE_ID = "strategyAPaperV2ProofBridgeStyle";
@@ -66,6 +66,31 @@
   const breadthLine = data => {
     if (!Number(data?.comparable)) return "—";
     return `${Number(data.up || 0)} hausse(s) · ${Number(data.down || 0)} baisse(s) · ${Number(data.flat || 0)} stable(s)`;
+  };
+  const htmlEscape = value => String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+  const gateLabel = (gate, index) => {
+    if (typeof gate === "string") return gate;
+    if (!gate || typeof gate !== "object") return `Gate ${index + 1}`;
+    return String(gate.label || gate.name || gate.id || gate.gate || gate.key || gate.code || gate.reason || `Gate ${index + 1}`);
+  };
+  const gateReason = gate => {
+    if (!gate || typeof gate !== "object") return "preuve non soldée";
+    const value = gate.reason || gate.detail || gate.message || gate.note || gate.status_reason || gate.source || "preuve non soldée";
+    return String(value);
+  };
+  const unresolvedRowsHtml = gates => {
+    if (!Array.isArray(gates) || !gates.length) return '<div class="sapv2-gate-empty">Aucune gate non soldée signalée par Evidence Dossier.</div>';
+    return gates.map((gate, index) => `
+      <div class="sapv2-gate-row">
+        <span class="sapv2-gate-index">${String(index + 1).padStart(2, "0")}</span>
+        <div><b>${htmlEscape(gateLabel(gate, index))}</b><small>${htmlEscape(gateReason(gate))}</small></div>
+        <span class="sapv2-gate-status">WAIT</span>
+      </div>`).join("");
   };
 
   function snapshot() {
@@ -146,6 +171,18 @@
       #${ROOT_ID} .sapv2-proof b{color:#dffced}
       #${ROOT_ID} .sapv2-wait{margin-top:8px;padding:9px 10px;border-left:3px solid #ffd45c;background:rgba(255,199,56,.06);font:650 9px/1.45 system-ui,sans-serif;color:#d8c98e}
       #${ROOT_ID} .sapv2-wait strong{color:#ffe58d}
+      #${ROOT_ID} .sapv2-gates{margin-top:8px;border:1px solid rgba(255,210,92,.18);border-radius:9px;background:rgba(255,199,56,.035);overflow:hidden}
+      #${ROOT_ID} .sapv2-gates>summary{cursor:pointer;list-style:none;padding:9px 10px;font:900 9px/1.35 system-ui,sans-serif;color:#ffe08a;letter-spacing:.035em}
+      #${ROOT_ID} .sapv2-gates>summary::-webkit-details-marker{display:none}
+      #${ROOT_ID} .sapv2-gates>summary::after{content:"DÉPLIER";float:right;font-size:8px;color:#98aabb}
+      #${ROOT_ID} .sapv2-gates[open]>summary::after{content:"REPLIER"}
+      #${ROOT_ID} .sapv2-gate-list{display:grid;gap:5px;padding:0 8px 8px}
+      #${ROOT_ID} .sapv2-gate-row{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 8px;border:1px solid rgba(255,255,255,.055);border-radius:7px;background:rgba(4,15,25,.48)}
+      #${ROOT_ID} .sapv2-gate-index{font:900 8px/1 system-ui,sans-serif;color:#7896aa}
+      #${ROOT_ID} .sapv2-gate-row b{display:block;font:850 9px/1.3 system-ui,sans-serif;color:#f3f7fa;overflow-wrap:anywhere}
+      #${ROOT_ID} .sapv2-gate-row small{display:block;margin-top:2px;font:500 8px/1.35 system-ui,sans-serif;color:#879cab;overflow-wrap:anywhere}
+      #${ROOT_ID} .sapv2-gate-status{font:900 8px/1 system-ui,sans-serif;color:#ffd45c}
+      #${ROOT_ID} .sapv2-gate-empty{padding:8px;font:600 8px/1.4 system-ui,sans-serif;color:#8da0ae}
       #${ROOT_ID} .sapv2-foot{margin-top:8px;font:600 8px/1.4 system-ui,sans-serif;color:#72899b}
       @media(max-width:1200px){#${ROOT_ID} .sapv2-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
       @media(max-width:720px){#${ROOT_ID} .sapv2-grid{grid-template-columns:1fr}}
@@ -205,6 +242,10 @@
       </div>
       <div class="sapv2-proof"><b>Dernier CURRENT évaluable :</b> ${ev ? `${evFp} · ${localTime(data.latest_evaluable_first_time)} · ${returnsLine(ev.firstReturns)} · ${breadthLine(ev.firstReturns)}` : "aucun"}</div>
       <div class="sapv2-wait"><strong>Raison(s) d’attendre :</strong> ${waits}.</div>
+      <details class="sapv2-gates">
+        <summary>EVIDENCE DOSSIER · ${data.unresolved_gates.length} GATE(S) NON SOLDÉE(S) · VOIR LE DÉTAIL</summary>
+        <div class="sapv2-gate-list">${unresolvedRowsHtml(data.unresolved_gates)}</div>
+      </details>
       <div class="sapv2-foot">Owner analytique inchangé : Strategy A runtime existant + Retrospective Validation 39.6.1. Ce bridge ne modifie aucun seuil, aucune décision Risk, aucun lifecycle et aucun moteur.</div>`;
 
     byId("strategyAPaperV2ProofRefresh")?.addEventListener("click", render, { once: true });
