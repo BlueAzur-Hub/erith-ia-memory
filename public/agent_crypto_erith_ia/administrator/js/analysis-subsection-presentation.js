@@ -1,12 +1,13 @@
-/* Agent-Crypto @erith.IA — 40.6.149 CANONICAL SUBSECTION SUMMARY OWNER
-   Presentation only. Replaces per-key styling with one structural contract for
-   standard atlas-family-member summaries. Primary/custom summary contracts are
-   explicitly excluded. No data, engine, fetch, timer, observer, storage or business logic. */
+/* Agent-Crypto @erith.IA — 40.6.150 COMPACT RHYTHM
+   Presentation only. Keeps the validated 40.6.149 hierarchy and typography while
+   reducing vertical whitespace between standard subsection summaries.
+   Primary/custom summary contracts remain excluded. No data, engine, fetch,
+   timer, observer, storage or business logic. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.149";
-  const STYLE_ID = "agentCryptoCanonicalSubsectionSummary149";
+  const BUILD = "40.6.150";
+  const STYLE_ID = "agentCryptoCanonicalSubsectionSummary150";
   const STANDARD = [
     "details.atlas-family-member",
     ":not(.atlas-local-ai-collapse)",
@@ -23,17 +24,17 @@
     style.id = STYLE_ID;
     style.textContent = `
       ${STANDARD}{
-        margin:14px 0!important;
+        margin:6px 0!important;
       }
 
       ${STANDARD} > summary.atlas-collapse-summary{
-        min-height:96px!important;
-        padding:17px 20px!important;
+        min-height:80px!important;
+        padding:12px 18px!important;
         display:grid!important;
         grid-template-columns:42px minmax(0,1fr) auto!important;
         grid-template-rows:auto auto!important;
         column-gap:16px!important;
-        row-gap:5px!important;
+        row-gap:4px!important;
         align-items:center!important;
         box-sizing:border-box!important;
         border-left-width:4px!important;
@@ -60,7 +61,7 @@
         flex-direction:column!important;
         justify-content:center!important;
         align-items:flex-start!important;
-        gap:6px!important;
+        gap:4px!important;
         min-width:0!important;
         width:100%!important;
         text-align:left!important;
@@ -120,7 +121,7 @@
       .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary{
         grid-template-columns:minmax(0,1fr) auto auto!important;
         grid-template-rows:auto!important;
-        min-height:102px!important;
+        min-height:86px!important;
       }
       .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-copy{
         grid-column:1!important;
@@ -152,8 +153,8 @@
 
       @media(max-width:1180px){
         ${STANDARD} > summary.atlas-collapse-summary{
-          min-height:92px!important;
-          padding:15px 16px!important;
+          min-height:78px!important;
+          padding:11px 14px!important;
           grid-template-columns:38px minmax(0,1fr) auto!important;
           column-gap:13px!important;
         }
@@ -168,7 +169,7 @@
           grid-row:2!important;
           justify-self:start!important;
           min-width:0!important;
-          margin-top:5px!important;
+          margin-top:4px!important;
         }
         .news-sentinel-collapse.atlas-family-member > summary.atlas-collapse-summary > .atlas-collapse-state{
           grid-column:2!important;
@@ -178,16 +179,16 @@
 
       @media(max-width:760px){
         ${STANDARD} > summary.atlas-collapse-summary{
-          min-height:88px!important;
+          min-height:76px!important;
           grid-template-columns:34px minmax(0,1fr)!important;
           grid-template-rows:auto auto auto!important;
-          padding:13px 14px!important;
+          padding:10px 12px!important;
         }
         ${STANDARD} > summary.atlas-collapse-summary > .atlas-collapse-state{
           grid-column:2!important;
           grid-row:3!important;
           justify-self:start!important;
-          margin-top:5px!important;
+          margin-top:4px!important;
         }
         ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-title{font-size:17px!important}
         ${STANDARD} > summary.atlas-collapse-summary .atlas-collapse-subtitle{font-size:12px!important}
@@ -214,10 +215,12 @@
   globalThis.AgentCryptoAnalysisSubsectionPresentation = Object.freeze({
     build: BUILD,
     owner: "analysis-subsection-presentation",
-    contract: "structural-atlas-family-summary",
+    contract: "structural-atlas-family-summary-compact-rhythm",
     presentation_only: true,
     key_list_removed: true,
     primary_contracts_excluded: true,
+    desktop_summary_min_height_px: 80,
+    desktop_vertical_margin_px: 6,
     business_logic_changed: false,
     engine_changed: false,
     fetch_added: false,
