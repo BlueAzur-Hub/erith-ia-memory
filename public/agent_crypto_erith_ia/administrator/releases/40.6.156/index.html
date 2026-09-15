@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <meta name="agent-crypto-loaded-build" content="40.6.156" />
+  <meta name="agent-crypto-engine-build" content="38.15.11" />
+  <title>Agent-Crypto Administrator — Build 40.6.156</title>
+  <style>html,body{margin:0;min-height:100%;background:#071018;color:#dbe7ef;font:14px/1.45 system-ui,sans-serif}#bootStatus{min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box;text-align:center}</style>
+</head>
+<body>
+  <main id="bootStatus" role="status" aria-live="polite">Initialisation Agent-Crypto 40.6.156…</main>
+  <script>
+  (()=>{
+    "use strict";
+    const BUILD="40.6.156";
+    const ENGINE="38.15.11";
+    const SHELL="../../runtime-shell.html";
+    const replaceMeta=(html,name,value)=>{
+      const re=new RegExp(`<meta\\s+name=["']${name}["']\\s+content=["'][^"']*["']\\s*\\/?\\s*>`,"i");
+      const tag=`<meta name="${name}" content="${String(value).replace(/"/g,"&quot;")}" />`;
+      return re.test(html)?html.replace(re,tag):html.replace(/<head>/i,`<head>\n  ${tag}`);
+    };
+    const stampAssets=html=>html
+      .replace(/(\bsrc=["'])([^"']+)(["'])/gi,(_,a,u,q)=>/^\.\//.test(u)&&/\.(?:js|css)(?:$|\?)/i.test(u)?`${a}${u}${u.includes("?")?"&":"?"}release=${BUILD}${q}`:`${a}${u}${q}`)
+      .replace(/(\bhref=["'])([^"']+)(["'])/gi,(_,a,u,q)=>/^\.\//.test(u)&&/\.(?:js|css)(?:$|\?)/i.test(u)?`${a}${u}${u.includes("?")?"&":"?"}release=${BUILD}${q}`:`${a}${u}${q}`);
+    async function boot(){
+      try{
+        const r=await fetch(`${SHELL}?release=${BUILD}&t=${Date.now()}`,{cache:"no-store",credentials:"same-origin"});
+        if(!r.ok)throw new Error(`runtime-shell.html: HTTP ${r.status}`);
+        let html=await r.text();
+        if(!/^\s*<!doctype html>/i.test(html))throw new Error("runtime-shell.html invalide");
+        html=html.replace(/<head>/i,'<head>\n  <base href="../../" />');
+        for(const name of ["administrator-build","atlas-build","agent-crypto-boot-build","agent-crypto-loaded-build"])html=replaceMeta(html,name,BUILD);
+        html=replaceMeta(html,"atlas-engine-build",ENGINE);
+        html=replaceMeta(html,"agent-crypto-version-owner","release-entry");
+        html=html.replace(/administrator-build-\d+\.\d+\.\d+/g,`administrator-build-${BUILD}`)
+                 .replace(/market-core-v2\.0-alpha-build-\d+\.\d+\.\d+/g,`market-core-v2.0-alpha-build-${BUILD}`)
+                 .replace(/<title>[\s\S]*?<\/title>/i,`<title>Agent-Crypto @erith.IA — Build ${BUILD} · Administrator</title>`)
+                 .replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,`<span id="atlasVersionTruthText">Build ${BUILD} · Administrator</span>`)
+                 .replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi,`AGENT-CRYPTO ${BUILD} · ADMINISTRATOR`);
+        html=stampAssets(html);
+        globalThis.AgentCryptoBootTruth=Object.freeze({build:BUILD,loaded_build:BUILD,engine:ENGINE,source:"release-entry"});
+        globalThis.AGENT_CRYPTO_EMBEDDED_BUILD=BUILD;
+        globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD=BUILD;
+        globalThis.AGENT_CRYPTO_BUILD=BUILD;
+        globalThis.ATLAS_ENGINE_BUILD=ENGINE;
+        document.open();document.write(html);document.close();
+      }catch(error){const n=document.getElementById("bootStatus");if(n){n.setAttribute("role","alert");n.textContent=`Agent-Crypto indisponible — ${String(error?.message||error)}`;}}
+    }
+    void boot();
+  })();
+  </script>
+</body>
+</html>
