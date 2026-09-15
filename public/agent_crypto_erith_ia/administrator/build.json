@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.134",
+  "build": "40.6.135",
   "engine": "38.15.11",
-  "release": "AERITH-10 CHATGPT FULL MATRIX GUIDE",
+  "release": "AERITH-10 CHATGPT PORTABLE FLOW",
   "published": true,
-  "status": "terrain_pending_406134",
-  "parent_build": "40.6.133",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.134",
-  "administrator_build": "40.6.134",
-  "build_label": "Build 40.6.134 · Administrator",
-  "release_status": "terrain_pending_406134",
+  "status": "terrain_pending_406135",
+  "parent_build": "40.6.134",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.135",
+  "administrator_build": "40.6.135",
+  "build_label": "Build 40.6.135 · Administrator",
+  "release_status": "terrain_pending_406135",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -62,7 +62,10 @@
   },
   "aerith10_chatgpt_full_matrix_guide": {
     "introduced_in": "40.6.134",
-    "owners": ["js/aerith10-workspace-bridge.js", "aerith10-portal.css"],
+    "owners": [
+      "js/aerith10-workspace-bridge.js",
+      "aerith10-portal.css"
+    ],
     "scope": "add a visual three-step ChatGPT activation guide inside the Aerith-10 Creator subsection",
     "forge_changed": false,
     "notion_portal_changed": false,
@@ -73,6 +76,30 @@
       "core/AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md",
       "core/AERITH_LIVING_REFLECTION_HEART.md"
     ],
+    "firefox_terrain_proof": "PENDING"
+  },
+  "aerith10_chatgpt_portable_flow": {
+    "introduced_in": "40.6.135",
+    "owner": "js/aerith10-workspace-bridge.js",
+    "scope": "finalize the Aerith-10 ChatGPT activation card as minimal ZIP → copy/open ChatGPT → optional Seven Heaven continuity",
+    "minimal_pack_source": "private branch portable/aerith10-chatgpt-full-matrix",
+    "minimal_pack_files": [
+      "core/AERITH_10_CREATRICE_FULL_MATRIX_MULTI_AGENT_CORE.md",
+      "core/AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md",
+      "core/AERITH_LIVING_REFLECTION_HEART.md"
+    ],
+    "minimal_pack_exact_canonical_blobs": true,
+    "seven_heaven_portable": "packs/seven_heaven_portable/Aerith.Seven.Heaven.zip",
+    "copy_prompt_and_open_chatgpt": true,
+    "automatic_chatgpt_paste": false,
+    "browser_contract": "prompt is copied; operator attaches the ZIP and pastes explicitly in ChatGPT",
+    "forge_changed": false,
+    "notion_portal_changed": false,
+    "private_content_embedded": false,
+    "private_tokens_embedded": false,
+    "market_core_changed": false,
+    "version_truth_changed": false,
+    "immutable_release_entry": "releases/40.6.135/index.html",
     "firefox_terrain_proof": "PENDING"
   },
   "dex_freshness_contract_lock": {
@@ -150,17 +177,22 @@
   ],
   "terrain_pending": [
     "40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH",
-    "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE"
+    "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE",
+    "40.6.135 AERITH-10 CHATGPT PORTABLE FLOW"
   ],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.133",
+    "previous_full_manifest_build": "40.6.134",
     "do_not_duplicate_release_history_in_active_manifest": true
   },
   "release_notes": [
     "40.6.133 separates the last closed CURRENT from a newer Atlas AUTO cycle without modifying Atlas business logic.",
     "40.6.134 adds a dedicated Aerith-10 ChatGPT Full Matrix guide inside the Creator subsection.",
+    "40.6.135 finalizes the guide as a three-gesture portable flow: minimal Aerith-10 ZIP, copy/open ChatGPT, optional Seven Heaven portable continuity.",
+    "The minimal Aerith-10 archive is generated from a private branch containing exactly the current canonical Core, Persona and Heart blobs.",
+    "ChatGPT opens in a new tab after an explicit operator click; the prompt is copied, but automatic cross-origin paste is not claimed.",
     "Forge and Notion portal remain separate and unchanged.",
+    "Market Core 38.15.11 and version-truth.js remain unchanged.",
     "No private Core content or authentication token is embedded in the public Administrator.",
     "Firefox terrain proof remains required before validation."
   ]
