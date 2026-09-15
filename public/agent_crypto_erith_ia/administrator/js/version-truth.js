@@ -1,7 +1,9 @@
-/* Agent-Crypto Administrator — update control, not runtime authority.
-   Loaded build = immutable release entry.
-   Published build = build.json.
-   The checker never rewrites the loaded build and never reloads a current build. */
+/* Agent-Crypto Administrator — version visibility and update control.
+   Loaded build = immutable identity for the current document, resolved by the
+   canonical Administrator boot from build.json.
+   Published build = latest build.json value.
+   Updates always return to the canonical /administrator/ entry; historical
+   /releases/ folders are never an execution dependency. */
 (() => {
   "use strict";
 
@@ -11,7 +13,13 @@
 
   const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
   const bootTruth = globalThis.AgentCryptoBootTruth || {};
-  const loadedBuild = String(bootTruth.loaded_build || bootTruth.build || meta("agent-crypto-loaded-build") || meta("agent-crypto-boot-build") || "").trim();
+  const loadedBuild = String(
+    bootTruth.loaded_build ||
+    bootTruth.build ||
+    meta("agent-crypto-loaded-build") ||
+    meta("agent-crypto-boot-build") ||
+    ""
+  ).trim();
   const engine = String(bootTruth.engine || meta("atlas-engine-build") || "").trim();
   const MANIFEST = meta("agent-crypto-published-manifest") || "./build.json";
 
@@ -100,37 +108,33 @@
     document.documentElement.dataset.versionTruthPublished = publishedBuild;
     document.documentElement.dataset.versionTruthState = state;
     document.documentElement.dataset.versionTruthAuthority = OWNER;
-    document.documentElement.dataset.versionTruthSource = "release-entry+build.json";
+    document.documentElement.dataset.versionTruthSource = "canonical-entry+build.json";
     document.documentElement.dataset.versionLoadedBuild = loadedBuild;
     document.documentElement.dataset.versionPublishedBuild = publishedBuild;
     document.documentElement.dataset.versionUpdateState = state;
   }
 
-  function manifestBaseUrl() {
+  function manifestUrl() {
     return new URL(MANIFEST, document.baseURI);
   }
 
-  function publishedEntry(manifest) {
-    const explicit = String(manifest?.entry || manifest?.published_entry || manifest?.release_entry || "").trim();
-    const base = manifestBaseUrl();
-    if (explicit) return new URL(explicit, base);
-
-    /* From the next genuine release onward, immutable releases live under
-       administrator/releases/<build>/. build.json is flipped only after that
-       directory is fully published and verified. */
-    return new URL(`./releases/${manifest.build}/`, base);
+  function canonicalEntry(manifest) {
+    const base = manifestUrl();
+    const explicit = String(manifest?.entry || manifest?.published_entry || "./").trim() || "./";
+    return new URL(explicit, base);
   }
 
-  async function preflightRelease(manifest) {
-    const target = publishedEntry(manifest);
-    target.searchParams.set("preflight", String(Date.now()));
-    const response = await fetch(target.href, {
+  async function preflightCanonicalEntry(manifest) {
+    const target = canonicalEntry(manifest);
+    const check = new URL(target.href);
+    check.searchParams.set("preflight", String(Date.now()));
+    const response = await fetch(check.href, {
       cache: "no-store",
       credentials: "same-origin",
       redirect: "follow"
     });
-    if (!response.ok) throw new Error(`release ${manifest.build} indisponible: HTTP ${response.status}`);
-    return publishedEntry(manifest);
+    if (!response.ok) throw new Error(`Administrator ${manifest.build} indisponible: HTTP ${response.status}`);
+    return target;
   }
 
   async function navigateToPublished() {
@@ -139,8 +143,9 @@
     const control = versionControl();
     control?.setAttribute("aria-busy", "true");
     try {
-      const target = await preflightRelease(publishedTruth);
+      const target = await preflightCanonicalEntry(publishedTruth);
       target.searchParams.set("from", loadedBuild);
+      target.searchParams.set("to", publishedTruth.build);
       target.searchParams.set("t", String(Date.now()));
       location.assign(target.href);
       return true;
@@ -158,10 +163,11 @@
   async function refresh() {
     if (busy) return false;
     busy = true;
+    state = "checking";
+    render();
     try {
-      const next = await fetchManifest();
-      publishedTruth = next;
-      state = compareBuilds(next.build, loadedBuild) > 0 ? "available" : "current";
+      publishedTruth = await fetchManifest();
+      state = compareBuilds(publishedTruth.build, loadedBuild) > 0 ? "available" : "current";
       render();
       return state === "available";
     } catch (error) {
@@ -215,11 +221,25 @@
     }).catch(error => console.error("[Runtime Layers]", error));
   }
 
+  function schedulePassiveRefresh() {
+    if (document.visibilityState === "hidden") return;
+    void refresh();
+  }
+
+  function bindPassiveUpdateChecks() {
+    /* No polling. A long-lived tab checks only when the operator comes back. */
+    window.addEventListener("pageshow", schedulePassiveRefresh, { passive: true });
+    window.addEventListener("focus", schedulePassiveRefresh, { passive: true });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") schedulePassiveRefresh();
+    }, { passive: true });
+  }
+
   function init() {
     assertLoadedBuild();
 
-    /* Loaded identity is fixed before any update check. Update failure cannot
-       block the application and cannot turn into a fake build number. */
+    /* Identity is fixed for this document. A later build.json change may only
+       expose an update; it never rewrites the running build. */
     globalThis.AGENT_CRYPTO_EMBEDDED_BUILD = loadedBuild;
     globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD = loadedBuild;
     globalThis.AGENT_CRYPTO_BUILD = loadedBuild;
@@ -227,6 +247,7 @@
 
     render();
     startRuntimeIndependently();
+    bindPassiveUpdateChecks();
     void refresh().finally(() => {
       try {
         document.dispatchEvent(new CustomEvent("agent-crypto:version-truth-ready", {
@@ -268,14 +289,17 @@
     syncMirrorTruth: noWriteCompatibilitySync,
     syncVisibleTruth: noWriteCompatibilitySync,
     single_visible_owner: true,
-    build_json_authority: false,
+    build_json_authority: true,
     version_branching: false,
     versioned_runtime_filenames: false,
     canonical_active_filename: "js/version-truth.js",
-    loaded_build_authority: "release-entry",
+    loaded_build_authority: "canonical-entry",
     published_build_authority: "build.json",
+    update_navigation_target: "canonical-administrator-root",
+    release_subfolder_required: false,
     reload_current_build: false,
     recurring_timer: false,
+    passive_refresh_events: Object.freeze(["pageshow", "focus", "visibilitychange"]),
     observer: false,
     storage_write: false
   });
