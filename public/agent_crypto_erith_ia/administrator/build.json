@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.132",
+  "build": "40.6.133",
   "engine": "38.15.11",
-  "release": "CONSOLIDATION HANDOFF",
+  "release": "ATLAS CURRENT LIVE VISUAL TRUTH",
   "published": true,
-  "status": "consolidation_handoff_406132",
-  "parent_build": "40.6.131",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.132",
-  "administrator_build": "40.6.132",
-  "build_label": "Build 40.6.132 · Administrator",
-  "release_status": "consolidation_handoff_406132",
+  "status": "terrain_pending_406133",
+  "parent_build": "40.6.132",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.133",
+  "administrator_build": "40.6.133",
+  "build_label": "Build 40.6.133 · Administrator",
+  "release_status": "terrain_pending_406133",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -47,6 +47,18 @@
     "scope": "event-driven presentation convergence after canonical CURRENT closure; removes F5 dependency for the final local dialogue state",
     "analytical_mutation": false,
     "firefox_terrain_proof": "must remain part of regression testing"
+  },
+  "atlas_current_live_visual_truth": {
+    "introduced_in": "40.6.133",
+    "owner": "js/local-dialogue-presentation.js",
+    "scope": "separate the last closed CURRENT from a newer Atlas AUTO cycle visible below",
+    "atlas_engine_changed": false,
+    "atlas_start_added": false,
+    "analytical_mutation": false,
+    "bounded_one_shot_resync": true,
+    "recurring_timer": false,
+    "observer": false,
+    "firefox_terrain_proof": "PENDING"
   },
   "dex_freshness_contract_lock": {
     "introduced_in": "40.6.127",
@@ -110,7 +122,6 @@
     "handoff_document": "HANDOFF_40.6.132.md",
     "previous_full_manifest_build": "40.6.131",
     "previous_full_manifest_blob": "cbd6a410e8a9462ceb2b9d1ae30fa0bf0413ef01",
-    "next_functional_build": "40.6.133",
     "rule": "one debt per version; release first, verify, then promote; cold boot + F5 + proof + stop"
   },
   "recent_validated_lineage": [
@@ -122,16 +133,17 @@
     "40.6.131 VERSIONING RECOVERY",
     "40.6.132 CONSOLIDATION HANDOFF"
   ],
+  "terrain_pending": [
+    "40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH"
+  ],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.131",
-    "previous_full_manifest_blob": "cbd6a410e8a9462ceb2b9d1ae30fa0bf0413ef01",
+    "previous_full_manifest_build": "40.6.132",
     "do_not_duplicate_release_history_in_active_manifest": true
   },
   "release_notes": [
-    "No market/runtime algorithm change.",
-    "Immutable 40.6.132 release entry created before promotion.",
-    "Handoff document records protected contracts, remaining debts and acceptance tests.",
-    "40.6.131 remains the functional foundation; 40.6.133 is reserved for the next single-purpose functional change."
+    "Presentation only: last closed CURRENT and newer Atlas AUTO cycle are no longer presented as one state.",
+    "No Atlas engine, Market Core, Oracle, Lecture Technique, Strategy A or TRADUS algorithm change.",
+    "Firefox terrain proof remains required before validation."
   ]
 }
