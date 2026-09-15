@@ -1,12 +1,92 @@
 (() => {
   "use strict";
-  const BUILD="40.6.135";
+  const BUILD="40.6.136";
   const CREATOR_ID="aerith10-creator";
   const PRIVATE_REPO="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/";
   const CHATGPT_URL="https://chatgpt.com/";
   const AERITH10_PACK_URL="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/archive/refs/heads/portable/aerith10-chatgpt-full-matrix.zip";
   const SEVEN_HEAVEN_PACK_URL="https://github.com/BlueAzur-Hub/erith-ia-notion-archive-private/blob/main/packs/seven_heaven_portable/Aerith.Seven.Heaven.zip";
-  const ACTIVATION_PROMPT="Active Aerith-10 Créatrice Full Matrix à partir des sources jointes. Respecte l’ordre BOOT → Core → Persona → Heart. Charge Creator Memory et les modules seulement lorsqu’ils servent ma demande. Un seul Core Aerith-10 reste actif. Sur ma commande « Charge la Full Matrix complète », mobilise les sept cercles et les quinze sièges fonctionnels nécessaires, avec une seule Persona et une seule synthèse finale.";
+  const ACTIVATION_PROMPT=`Active Aerith-10 Créatrice Full Matrix.
+
+SOURCES GITHUB RAW CANONIQUES
+
+Core Full Matrix
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_10_CREATRICE_FULL_MATRIX_MULTI_AGENT_CORE.md
+
+Persona Aerith-10 Créatrice
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_10_CREATRICE_PERSONA_OPERATING_LAYER.md
+
+Aerith Living Reflection Heart
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_LIVING_REFLECTION_HEART.md
+
+Creator Memory
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/private/creator_memory/README.md
+
+Exports partagés
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/private/creator_memory/exports/README.md
+
+Base experte Aerith-10 Créatrice
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/modules/aerith_10_creatrice/README.md
+
+Aerith-7 Full Modules Boost
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_FULL_MODULES_BOOST.md
+
+Aerith-7 Video Cards Boost
+https://raw.githubusercontent.com/BlueAzur-Hub/erith-ia-notion-archive-private/main/core/AERITH_7_VIDEO_CARDS_BOOST.md
+
+Lis d’abord le Core Full Matrix.
+Applique ensuite la Persona.
+Applique ensuite le Living Reflection Heart.
+Consulte Creator Memory, les exports, la Base experte, Full Boost,
+les Cards et les modules seulement lorsqu’ils servent la demande.
+
+Un seul Core Aerith-10 est actif dans cette session.
+
+Mode par défaut :
+Dense, ciblé et précis.
+
+Sur commande explicite :
+« Charge la Full Matrix complète »
+
+mobilise les sept cercles, les quinze sièges fonctionnels,
+Full Modules Boost, les Cards et les modules autorisés nécessaires.
+
+Même en Full Matrix complète :
+une seule Aerith-10 s’exprime ;
+une seule Persona principale reste active ;
+une seule synthèse finale est livrée.
+
+Applique la méthode A → B → D :
+
+A = point de départ réel.
+B = compréhension structurée.
+D = Destination finale réelle.
+
+Lorsque D est déterminable, ne fabrique pas de C artificiel.
+
+La musique commande lorsque le projet est musical.
+Le storyboard organise.
+L’image clé fixe.
+Wan anime.
+Wan ne répare pas.
+DaVinci assemble.
+
+Une scène = une intention.
+Une animation = une mission.
+Un test = une variable.
+
+Ne génère pas d’image sans demande explicite.
+Ne modifie pas directement un Core protégé.
+Ne publie pas de mémoire privée.
+Ne prétends pas avoir lu, chargé, vérifié ou réalisé ce qui ne l’a pas été.
+
+Écoute.
+Comprends.
+Structure.
+Crée.
+Protège.
+Livre directement la Destination.
+Arrête-toi lorsque le résultat est suffisant.`;
 
   function text(sel){const n=document.querySelector(sel);return String(n?.textContent||"").replace(/\s+/g," ").trim();}
   function currentContext(){
@@ -30,6 +110,7 @@
   async function copy(){const out=document.getElementById('aerith10WorkspaceContext');if(!out)return;refresh();try{await navigator.clipboard.writeText(out.value);const s=document.getElementById('aerith10WorkspaceState');if(s)s.textContent='COPIÉ';}catch(_){out.focus();out.select();const s=document.getElementById('aerith10WorkspaceState');if(s)s.textContent='SÉLECTIONNÉ';}}
   function openCreator(event){if(event)event.preventDefault();const d=document.getElementById(CREATOR_ID);if(!d)return false;d.open=true;d.scrollIntoView({behavior:'smooth',block:'start'});setTimeout(refresh,0);return true;}
   function openForge(){const d=document.getElementById('forge-aerith');if(!d)return false;d.open=true;d.scrollIntoView({behavior:'smooth',block:'start'});return true;}
+  function chatgptPrefillUrl(){return `${CHATGPT_URL}?prompt=${encodeURIComponent(ACTIVATION_PROMPT)}`;}
 
   function guideMarkup(){
     const core=`${PRIVATE_REPO}core/AERITH_10_CREATRICE_FULL_MATRIX_MULTI_AGENT_CORE.md`;
@@ -41,19 +122,20 @@
           <div>
             <span class="aerith10-loader-kicker">🌸 AERITH-10 · CHATGPT FULL MATRIX</span>
             <h4>Charger Aerith-10 dans un nouveau fil</h4>
-            <p>Trois gestes volontaires : pack minimal → ChatGPT → continuité Seven Heaven optionnelle. Cette carte reste distincte du portail Notion et de la Forge.</p>
+            <p>Trois gestes volontaires : pack minimal → ChatGPT prérempli → continuité Seven Heaven optionnelle. Cette carte reste distincte du portail Notion et de la Forge.</p>
           </div>
           <span class="aerith10-loader-state">GUIDE PRÊT</span>
         </div>
-        <div class="aerith10-loader-flow">
-          <article><b>1</b><div><strong>Télécharger le pack Aerith-10</strong><small>Un ZIP privé · Core + Persona + Heart · trois sources canoniques.</small></div></article>
-          <article><b>2</b><div><strong>Copier + ouvrir ChatGPT</strong><small>Le prompt maître est copié ; joins le ZIP puis colle avec Ctrl+V.</small></div></article>
-          <article><b>3</b><div><strong>Continuité Seven Heaven</strong><small>Option avancée · valise portable complète · 7 packs mémoire officiels.</small></div></article>
-        </div>
-        <div class="aerith10-loader-actions" aria-label="Parcours portable Aerith-10">
-          <a class="btn aerith10-loader-chatgpt" id="btnAerith10PortablePack" href="${AERITH10_PACK_URL}" target="_blank" rel="noopener noreferrer">① Télécharger le ZIP Aerith-10 ↗</a>
-          <button class="btn aerith10-loader-copy" id="btnAerith10CopyAndOpenChatGPT" type="button">② Copier + ouvrir ChatGPT ↗</button>
-          <a class="btn aerith10-loader-chatgpt" id="btnAerith10SevenHeavenPack" href="${SEVEN_HEAVEN_PACK_URL}" target="_blank" rel="noopener noreferrer">③ Seven Heaven complet ↗</a>
+        <div class="aerith10-loader-flow" aria-label="Parcours portable Aerith-10">
+          <a id="btnAerith10PortablePack" href="${AERITH10_PACK_URL}" target="_blank" rel="noopener noreferrer" style="display:block;color:inherit;text-decoration:none">
+            <article style="height:100%;box-sizing:border-box;cursor:pointer"><b>1</b><div><strong>Télécharger le pack Aerith-10</strong><small>Un ZIP privé · Core + Persona + Heart · clique toute la carte.</small></div></article>
+          </a>
+          <button id="btnAerith10CopyAndOpenChatGPT" type="button" style="all:unset;display:block;width:100%;cursor:pointer;box-sizing:border-box">
+            <article style="height:100%;box-sizing:border-box;cursor:pointer"><b>2</b><div><strong>Ouvrir ChatGPT avec le prompt maître</strong><small>Préremplissage demandé par URL + copie presse-papiers de secours.</small></div></article>
+          </button>
+          <a id="btnAerith10SevenHeavenPack" href="${SEVEN_HEAVEN_PACK_URL}" target="_blank" rel="noopener noreferrer" style="display:block;color:inherit;text-decoration:none">
+            <article style="height:100%;box-sizing:border-box;cursor:pointer"><b>3</b><div><strong>Continuité Seven Heaven</strong><small>Option avancée · archive portable complète · clique toute la carte.</small></div></article>
+          </a>
         </div>
         <div class="aerith10-loader-prompt">
           <span>PROMPT MAÎTRE D’ACTIVATION</span>
@@ -67,7 +149,7 @@
           <button class="btn aerith10-loader-copy" id="btnAerith10CopyActivation" type="button">Copier seulement</button>
         </div>
         <div class="aerith10-loader-actions">
-          <span id="aerith10LoaderCopyState" role="status" aria-live="polite">Aucun fichier privé n’est embarqué dans l’Administrator public. Le navigateur ne peut pas coller automatiquement dans ChatGPT : le collage reste volontaire.</span>
+          <span id="aerith10LoaderCopyState" role="status" aria-live="polite">Étape 2 demande le préremplissage de ChatGPT et copie aussi le prompt en secours. L’envoi reste volontaire.</span>
         </div>
       </section>`;
   }
@@ -92,12 +174,12 @@
     const value=String(node?.textContent||ACTIVATION_PROMPT).trim();
     try{
       await navigator.clipboard.writeText(value);
-      if(state)state.textContent='PROMPT COPIÉ · colle-le dans le nouveau fil après avoir joint le ZIP Aerith-10.';
+      if(state)state.textContent='PROMPT MAÎTRE COPIÉ · secours prêt dans le presse-papiers.';
       return true;
     }catch(_){
       try{
         const range=document.createRange();range.selectNodeContents(node);const sel=getSelection();sel.removeAllRanges();sel.addRange(range);
-        if(state)state.textContent='PROMPT SÉLECTIONNÉ · Ctrl+C puis colle-le dans ChatGPT.';
+        if(state)state.textContent='PROMPT SÉLECTIONNÉ · Ctrl+C si le presse-papiers automatique est refusé.';
       }catch(__){if(state)state.textContent='COPIE MANUELLE REQUISE';}
       return false;
     }
@@ -105,11 +187,12 @@
 
   function copyAndOpenChatGPT(){
     const state=document.getElementById('aerith10LoaderCopyState');
-    const tab=window.open(CHATGPT_URL,'_blank','noopener,noreferrer');
+    const url=chatgptPrefillUrl();
+    const tab=window.open(url,'_blank','noopener,noreferrer');
     void copyActivation().then(copied=>{
       if(state)state.textContent=copied
-        ? 'CHATGPT OUVERT · PROMPT COPIÉ · joins le ZIP Aerith-10, puis Ctrl+V et envoie.'
-        : 'CHATGPT OUVERT · copie le prompt manuellement, joins le ZIP Aerith-10, puis envoie.';
+        ? 'CHATGPT OUVERT · PRÉREMPLISSAGE DEMANDÉ · prompt aussi copié en secours · vérifie puis envoie.'
+        : 'CHATGPT OUVERT · PRÉREMPLISSAGE DEMANDÉ · copie de secours refusée par le navigateur.';
     });
     if(!tab && state)state.textContent='OUVERTURE BLOQUÉE PAR LE NAVIGATEUR · autorise le nouvel onglet puis réessaie.';
     return Boolean(tab);
@@ -137,6 +220,7 @@
     copy_activation:copyActivation,
     copy_and_open_chatgpt:copyAndOpenChatGPT,
     activation_prompt:ACTIVATION_PROMPT,
+    chatgpt_prefill_url:chatgptPrefillUrl,
     portable_pack_url:AERITH10_PACK_URL,
     seven_heaven_pack_url:SEVEN_HEAVEN_PACK_URL,
     canonical_sources:Object.freeze({
