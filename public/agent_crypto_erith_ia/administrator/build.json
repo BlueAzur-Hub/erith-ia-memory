@@ -1,15 +1,15 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.140",
+  "build": "40.6.141",
   "engine": "38.15.11",
-  "release": "LOCAL AI UX CLARITY",
+  "release": "MEMORY BOUNDARY TRUTH",
   "published": true,
-  "status": "terrain_pending_406140",
-  "parent_build": "40.6.139",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.140",
-  "administrator_build": "40.6.140",
-  "build_label": "Build 40.6.140 · Administrator",
-  "release_status": "terrain_pending_406140",
+  "status": "terrain_pending_406141",
+  "parent_build": "40.6.140",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.141",
+  "administrator_build": "40.6.141",
+  "build_label": "Build 40.6.141 · Administrator",
+  "release_status": "terrain_pending_406141",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -156,10 +156,10 @@
     "rule": "one debt per version; release first, verify, then promote; cold boot + F5 + proof + stop"
   },
   "recent_validated_lineage": ["40.6.126 ATLAS FINAL STATE REBIND", "40.6.127 DEX FRESHNESS CONTRACT LOCK", "40.6.128 DEX FROZEN API FACADE", "40.6.129 AUTO A MANUAL STOP OWNER", "40.6.130 TRADUS CAPTURE TIME LOCK", "40.6.131 VERSIONING RECOVERY", "40.6.132 CONSOLIDATION HANDOFF"],
-  "terrain_pending": ["40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH", "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE", "40.6.135 AERITH-10 CHATGPT PORTABLE FLOW", "40.6.136 AERITH-10 CHATGPT DEEP-LINK CARDS", "40.6.137 AERITH-10 FULL MATRIX VISUAL POLISH", "40.6.138 SALON LOCAL FIRST TRUTH", "40.6.139 INTERNET RESEARCH SOURCE BOUNDARY", "40.6.140 LOCAL AI UX CLARITY"],
+  "terrain_pending": ["40.6.133 ATLAS CURRENT / LIVE CYCLE VISUAL TRUTH", "40.6.134 AERITH-10 CHATGPT FULL MATRIX GUIDE", "40.6.135 AERITH-10 CHATGPT PORTABLE FLOW", "40.6.136 AERITH-10 CHATGPT DEEP-LINK CARDS", "40.6.137 AERITH-10 FULL MATRIX VISUAL POLISH", "40.6.138 SALON LOCAL FIRST TRUTH", "40.6.139 INTERNET RESEARCH SOURCE BOUNDARY", "40.6.140 LOCAL AI UX CLARITY", "40.6.141 MEMORY BOUNDARY TRUTH"],
   "history": {
     "authority": "git",
-    "previous_full_manifest_build": "40.6.139",
+    "previous_full_manifest_build": "40.6.140",
     "do_not_duplicate_release_history_in_active_manifest": true
   },
   "release_notes": [
@@ -171,6 +171,7 @@
     "40.6.138 makes the Salon Local First contract explicit: local-only identity/history, backend disconnected, zero network sends and voluntary sync unavailable until a backend is connected.",
     "40.6.139 makes the Internet Research boundary explicit: external navigation only, voluntary opening, zero ingestion, zero memory write, not an Atlas source, evidence must be qualified.",
     "40.6.140 adds a presentation-only Local AI map: CURRENT, Bridge, Atlas, Aerith and LIVE are separated without changing Atlas business logic.",
+    "40.6.141 adds presentation-only memory boundaries: Shared Memory remains IndexedDB + voluntary JSON transfer; GitHub Memory remains a versioned source, distinct from runtime memory and without invented automatic sync.",
     "Forge and Notion portal remain separate and unchanged.",
     "Market Core 38.15.11 and version-truth.js remain unchanged.",
     "No private Core content or authentication token is embedded in the public Administrator.",
@@ -266,6 +267,22 @@
     "new_observer": false,
     "new_storage_owner": false,
     "immutable_release_entry": "releases/40.6.140/index.html",
+    "firefox_terrain_proof": "PENDING"
+  },
+  "memory_boundary_truth": {
+    "introduced_in": "40.6.141",
+    "owner": "js/memory-boundary-presentation.js",
+    "shared_memory_contract": "IndexedDB Market Memory + voluntary JSON export/import; analytical CURRENT remains separate",
+    "github_memory_contract": "versioned source distinct from Firefox runtime memory; no automatic sync asserted",
+    "presentation_only": true,
+    "automatic_sync_added": false,
+    "upload_added": false,
+    "network_added": false,
+    "automatic_import_added": false,
+    "new_storage_owner": false,
+    "market_core_changed": false,
+    "version_truth_changed": false,
+    "immutable_release_entry": "releases/40.6.141/index.html",
     "firefox_terrain_proof": "PENDING"
   }
 }
