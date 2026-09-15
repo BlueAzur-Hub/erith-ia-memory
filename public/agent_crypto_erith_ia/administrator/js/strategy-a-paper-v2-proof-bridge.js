@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.153 STRATEGY A PAPER V2 PROOF BRIDGE
+/* Agent-Crypto @erith.IA — 40.6.154 STRATEGY A PAPER V2 ANCHOR REPAIR
    Read-only presentation companion. It connects existing Strategy A PAPER truth
    with CURRENT → POST-CURRENT → retrospective history evidence.
    No threshold change, no order path, no wallet, no credentials, no fetch,
@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.153";
+  const RELEASE = "40.6.154";
   const OWNER = "strategy-a-paper-v2-proof-bridge";
   const ROOT_ID = "strategyAPaperV2ProofBridge";
   const STYLE_ID = "strategyAPaperV2ProofBridgeStyle";
@@ -155,7 +155,7 @@
 
   function render() {
     installStyle();
-    const anchor = byId("strategyADossier") || byId("strategyASafety") || byId("strategyAAfterCost") || byId("strategyAPaperLifecycle");
+    const anchor = byId("strategyAPaperAfterCostProof") || byId("strategyADossier") || byId("strategyASafety") || byId("strategyAAfterCost") || byId("strategyAPaperLifecycle");
     if (!anchor) return false;
 
     let root = byId(ROOT_ID);
@@ -229,9 +229,37 @@
     storage_write: false
   });
 
-  const boot = () => { try { render(); } catch (_) {} };
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
-  else boot();
-  document.addEventListener("agent-crypto:runtime-modules-ready", boot, { once: true });
-  document.addEventListener("erith:system-hydrated", boot, { passive: true });
+  let mounted = false;
+
+  const cleanup = () => {
+    document.removeEventListener("click", attemptMount, true);
+    document.removeEventListener("focusin", attemptMount, true);
+    window.removeEventListener("pageshow", attemptMount);
+  };
+
+  const attemptMount = () => {
+    if (mounted || byId(ROOT_ID)) { mounted = true; cleanup(); return true; }
+    try { mounted = render() === true; } catch (_) { mounted = false; }
+    if (mounted) cleanup();
+    return mounted;
+  };
+
+  const afterPaint = () => {
+    try { requestAnimationFrame(() => requestAnimationFrame(attemptMount)); }
+    catch (_) { attemptMount(); }
+  };
+
+  document.addEventListener("click", attemptMount, true);
+  document.addEventListener("focusin", attemptMount, true);
+  window.addEventListener("pageshow", attemptMount);
+  document.addEventListener("agent-crypto:runtime-modules-ready", attemptMount, { once: true });
+  document.addEventListener("erith:system-hydrated", attemptMount, { passive: true });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => { attemptMount(); afterPaint(); }, { once: true });
+    window.addEventListener("load", () => { attemptMount(); afterPaint(); }, { once: true });
+  } else {
+    attemptMount();
+    afterPaint();
+  }
 })();
