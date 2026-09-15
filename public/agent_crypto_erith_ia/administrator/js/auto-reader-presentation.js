@@ -1,13 +1,16 @@
-/* Agent-Crypto @erith.IA — 40.6.143 ATLAS AUTO READER UX TRUTH
+/* Agent-Crypto @erith.IA — 40.6.144 ATLAS AUTO READER HYDRATION REBIND
    Presentation only. Mirrors existing Auto Reader DOM truth into the collapsed
-   summary. No collector cadence, storage, fetch, timer or business logic change. */
+   summary and rebinds after Atlas lazy residency. No collector cadence, storage,
+   fetch, timer or business logic change. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.143";
+  const BUILD = "40.6.144";
   const STYLE_ID = "agentCryptoAutoReaderPresentation143Style";
   const READOUT_ID = "agentCryptoAutoReaderSummary143";
   let observer = null;
+  let detailsBound = false;
+  let residencyBound = false;
 
   const text = id => document.getElementById(id)?.textContent?.replace(/\s+/g, " ").trim() || "—";
 
@@ -61,30 +64,57 @@
     const visibilityNorm = visibility.toLowerCase();
     const active = modeNorm.includes("actif") || modeNorm.includes("on");
     const visible = visibilityNorm.includes("visible") && !visibilityNorm.includes("non visible");
-    const state = active && visible ? "live" : (!active || !visible) ? "rest" : "waiting";
+    const state = mode === "—" || visibility === "—" ? "waiting" : active && visible ? "live" : (!active || !visible) ? "rest" : "waiting";
 
     node.dataset.state = state;
     const modeNode = node.querySelector("[data-auto-reader-summary-mode]");
     const lastNode = node.querySelector("[data-auto-reader-summary-last]");
-    if (modeNode) modeNode.textContent = `${mode} · ${visibility}`;
+    if (modeNode) modeNode.textContent = mode === "—" && visibility === "—" ? "ÉTAT EN ATTENTE" : `${mode} · ${visibility}`;
     if (lastNode) lastNode.textContent = `Dernière lecture · ${last}`;
     node.title = `Atlas Auto Reader — ${mode} — ${visibility} — dernière lecture ${last}`;
     return true;
   }
 
+  function disconnectObserver() {
+    try { observer?.disconnect(); } catch (_) {}
+    observer = null;
+  }
+
   function bindObserver() {
     const details = root();
-    if (!details || observer) return;
+    if (!details) return false;
     const targets = ["autoReaderTruth", "autoVisibilityTruth", "autoLastRead", "autoNextRead"]
       .map(id => document.getElementById(id)).filter(Boolean);
-    if (!targets.length) return;
+    if (!targets.length) return false;
+
+    disconnectObserver();
     observer = new MutationObserver(render);
     for (const target of targets) observer.observe(target, { childList: true, characterData: true, subtree: true });
-    details.addEventListener("toggle", render);
-    document.addEventListener("visibilitychange", render);
+
+    if (!detailsBound) {
+      detailsBound = true;
+      details.addEventListener("toggle", () => { render(); if (details.open) bindObserver(); });
+      document.addEventListener("visibilitychange", render);
+    }
+    return true;
+  }
+
+  function onResidency(event) {
+    const detail = event?.detail || {};
+    if (detail.family !== "atlas" || detail.key !== "auto-reader") return;
+    render();
+    bindObserver();
+    queueMicrotask(render);
+  }
+
+  function bindResidency() {
+    if (residencyBound) return;
+    residencyBound = true;
+    document.addEventListener("erith:presentation-resident", onResidency);
   }
 
   function bind() {
+    bindResidency();
     const ok = render();
     bindObserver();
     return ok;
@@ -97,12 +127,14 @@
     build: BUILD,
     owner: "auto-reader-presentation",
     presentation_only: true,
+    lazy_residency_rebind: true,
     collector_logic_changed: false,
     cadence_changed: false,
     fetch_added: false,
     storage_added: false,
     timer_added: false,
     bounded_observer: true,
+    residency_event_listener: true,
     render
   });
 })();
