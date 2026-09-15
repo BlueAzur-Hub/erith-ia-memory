@@ -22,6 +22,7 @@
     "./js/current-final-state-rebind.js",
     "./js/tradus-canonical-strategy-reader.js",
     "./js/strategy-a-auto-start.js",
+    "./js/strategy-a-paper-v2-proof-bridge.js",
     "./js/tradus-autonomous-refresh.js"
   ]);
 
