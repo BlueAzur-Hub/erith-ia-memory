@@ -12,6 +12,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/js/runtime-modules.js'
       - 'public/agent_crypto_erith_ia/administrator/js/generated-report-version-truth.js'
       - 'public/agent_crypto_erith_ia/administrator/js/pedagogy-version-truth.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/current-final-state-rebind.js'
       - 'public/agent_crypto_erith_ia/administrator/js/tradus-canonical-strategy-reader.js'
       - 'public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-start.js'
       - 'public/agent_crypto_erith_ia/administrator/js/tradus-autonomous-refresh.js'
@@ -25,6 +26,7 @@ on:
       - 'public/agent_crypto_erith_ia/administrator/js/boot.js'
       - 'public/agent_crypto_erith_ia/administrator/js/version-truth.js'
       - 'public/agent_crypto_erith_ia/administrator/js/runtime-modules.js'
+      - 'public/agent_crypto_erith_ia/administrator/js/current-final-state-rebind.js'
       - '.github/scripts/agent_crypto_version_truth_guard_compat.py'
       - '.github/workflows/agent-crypto-version-delivery-guard.yml'
 
@@ -45,6 +47,7 @@ jobs:
           node --check public/agent_crypto_erith_ia/administrator/js/runtime-modules.js
           node --check public/agent_crypto_erith_ia/administrator/js/generated-report-version-truth.js
           node --check public/agent_crypto_erith_ia/administrator/js/pedagogy-version-truth.js
+          node --check public/agent_crypto_erith_ia/administrator/js/current-final-state-rebind.js
           node --check public/agent_crypto_erith_ia/administrator/js/tradus-canonical-strategy-reader.js
           node --check public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-start.js
           node --check public/agent_crypto_erith_ia/administrator/js/tradus-autonomous-refresh.js
