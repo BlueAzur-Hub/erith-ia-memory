@@ -21,7 +21,7 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.122";
+  const RELEASE = "40.6.130";
   const PANEL_ID = "tradusShadow406066";
   const MAX_COMPARISON_AGE_SECONDS = 15;
   const upper = value => String(value ?? "").trim().toUpperCase();
@@ -127,7 +127,11 @@
 
   function compareFailClosed(a, signal) {
     const state = stateOf(a);
-    const action = upper(signal?.action || "NO_TRADE") || "NO_TRADE";
+    const rawAction = upper(signal?.action || "");
+    if (!signal || unknownToken(rawAction)) {
+      return Object.freeze({ state:"NON COMPARABLE", text:"TRADUS inconnu · comparaison suspendue", fail_closed:true, reason:"TRADUS_SIGNAL_UNKNOWN" });
+    }
+    const action = rawAction;
     const directional = action === "BUY" || action === "SELL";
     if (state === "UNKNOWN") {
       return Object.freeze({
@@ -220,6 +224,7 @@
       compareFailClosed(proposed, { action: "SELL" }).state === "DIVERGENCE",
       compareFailClosed(proposed, { action: "NO_TRADE" }).state === "CONVERGENCE",
       compareFailClosed({ decision: "INCONNU" }, { action: "SELL" }).state === "NON COMPARABLE",
+      compareFailClosed({ decision: "NO TRADE" }, undefined).state === "NON COMPARABLE",
       stateOf({ decision: "NO TRADE" }) === "WAIT",
       stateOf({ decision: "OFF" }) === "OFF"
     ];

@@ -45,24 +45,53 @@
     catch (_) { return fallback; }
   }
 
-  function canonicalize(row, reason = "runtime") {
+  function signalKnown(signal) {
+    const action = upper(signal?.action || "");
+    return !unknown(action);
+  }
+
+  function nonComparable(reason = "UNKNOWN_SIDE") {
+    return Object.freeze({ state:"NON COMPARABLE", text:"Comparaison indisponible", fail_closed:true, reason });
+  }
+
+  function captureCanonical(row, reason = "capture") {
     if (!row || typeof row !== "object") return row;
     const out = clone(row) || { ...row };
     const strategyA = readCanonicalStrategyA();
-    if (!strategyA) return out;
-    out.strategy_a = clone(strategyA) || strategyA;
-    out.comparison = clone(compareCanonical(strategyA, out.signal, out.comparison)) || out.comparison;
+    const capturedAt = String(out.at || new Date().toISOString());
+    out.strategy_a = strategyA ? (clone(strategyA) || strategyA) : null;
+    out.comparison = (!strategyA || !signalKnown(out.signal))
+      ? clone(nonComparable(!strategyA ? "STRATEGY_A_UNKNOWN" : "TRADUS_SIGNAL_UNKNOWN"))
+      : (clone(compareCanonical(strategyA, out.signal, nonComparable())) || nonComparable());
     out.strategy_a_reader = "AgentCryptoTradusStrategyFailClosed";
-    out.strategy_a_reader_reason = String(reason || "runtime");
+    out.strategy_a_reader_reason = String(reason || "capture");
+    out.comparison_capture_at = capturedAt;
+    out.strategy_a_capture_at = capturedAt;
+    out.comparison_time_locked = true;
     canonicalized += 1;
-    lastReason = String(reason || "runtime");
+    lastReason = String(reason || "capture");
     return out;
+  }
+
+  function canonicalize(row, reason = "runtime") {
+    if (!row || typeof row !== "object") return row;
+    if (/shadow-read|historical-read|read/i.test(String(reason || ""))) return clone(row) || row;
+    return captureCanonical(row, reason);
+  }
+
+  function currentComparison(row) {
+    const strategyA = readCanonicalStrategyA();
+    const at = new Date().toISOString();
+    if (!row || !strategyA || !signalKnown(row.signal)) {
+      return Object.freeze({ at, strategy_a: strategyA ? clone(strategyA) : null, comparison: nonComparable(!row || !signalKnown(row?.signal) ? "TRADUS_SIGNAL_UNKNOWN" : "STRATEGY_A_UNKNOWN") });
+    }
+    return Object.freeze({ at, strategy_a: clone(strategyA) || strategyA, comparison: clone(compareCanonical(strategyA, row.signal, nonComparable())) });
   }
 
   function mutateObservationDetail(event) {
     const detail = event?.detail;
     if (!detail || typeof detail !== "object") return false;
-    const fixed = canonicalize(detail, "event_capture");
+    const fixed = captureCanonical(detail, "event_capture");
     if (!fixed || typeof fixed !== "object") return false;
     detail.strategy_a = fixed.strategy_a;
     detail.comparison = fixed.comparison;
@@ -79,7 +108,7 @@
     const capture = current.capture.bind(current);
     globalThis[LEDGER_KEY] = Object.freeze({
       ...current,
-      capture(row, source = "event") { return capture(canonicalize(row, `ledger:${source}`), source); },
+      capture(row, source = "event") { return capture(captureCanonical(row, `ledger:${source}`), source); },
       [LEDGER_MARK]: true,
       canonical_reader: OWNER
     });
@@ -96,8 +125,8 @@
     const read = current.read.bind(current);
     globalThis[SHADOW_KEY] = Object.freeze({
       ...current,
-      async refresh(trigger = "manual") { return canonicalize(await refresh(trigger), `shadow-refresh:${trigger}`); },
-      read() { return canonicalize(read(), "shadow-read"); },
+      async refresh(trigger = "manual") { return captureCanonical(await refresh(trigger), `shadow-refresh:${trigger}`); },
+      read() { return clone(read()) || read(); },
       [SHADOW_MARK]: true,
       canonical_reader: OWNER
     });
@@ -124,6 +153,8 @@
       canonicalized_rows: canonicalized,
       last_reason: lastReason,
       historical_rows_rewritten: false,
+    historical_reads_recomputed: false,
+    comparison_time_locked: true,
       strategy_a_mutated: false
     });
   }
@@ -143,6 +174,8 @@
     ready,
     install,
     canonicalize,
+    captureCanonical,
+    currentComparison,
     snapshot,
     canonical_strategy_owner: "AgentCryptoTradusStrategyFailClosed",
     shadow_owner: SHADOW_KEY,
