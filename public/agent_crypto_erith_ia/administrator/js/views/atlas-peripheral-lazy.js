@@ -1,14 +1,23 @@
-/* Agent-Crypto @erith.IA — 40.4.99 R2 CANDIDATE
+/* Agent-Crypto @erith.IA — 40.4.99 R2 CANDIDATE + 40.6.145 RELEASE-SOURCE TRUTH
    ATLAS COLD ROUTER · DEMAND HYDRATION OWNER · TERMINAL + RETRY
    40.4.98 runtime contract preserved: Atlas cockpit / Bridge / CURRENT compact truth stay HOT.
    Auto Reader, Shared/GitHub Memory, CURRENT audit details and Book/Knowledge cold bodies
    hydrate from views/atlas.html only on explicit disclosure. The old boot-time
    Element.prototype.insertAdjacentHTML interception and 73 KB markup preprocessing are retired.
+   40.6.145: the lazy source URL is bound to the loaded Administrator build and fetched no-store,
+   so a newly loaded build cannot hydrate an older cached Atlas view fragment.
    No timer, observer, storage owner, scheduler or engine is added. */
 (()=>{
   "use strict";
   const BUILD="40.4.99";
+  const PATCH="40.6.145";
   const SOURCE="./views/atlas.html";
+  const RELEASE=String(
+    globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD ||
+    globalThis.AGENT_CRYPTO_BUILD ||
+    document.querySelector('meta[name="agent-crypto-loaded-build"]')?.content ||
+    "runtime"
+  ).trim();
   const TARGETS=Object.freeze({
     "auto-reader":Object.freeze({label:"Atlas Auto Reader"}),
     "shared-memory":Object.freeze({label:"Shared Memory"}),
@@ -50,14 +59,19 @@
     return null;
   }
   function targetDetails(key){return document.querySelector(`details[data-collapse-key="${key}"]`);}
+  function sourceUrl(){
+    const url=new URL(SOURCE,document.baseURI);
+    if(RELEASE)url.searchParams.set("release",RELEASE);
+    return url.href;
+  }
   function sourceText(){
     if(!sourcePromise){
       fetchCount+=1;
-      sourcePromise=fetch(SOURCE,{cache:"force-cache",credentials:"same-origin"}).then(response=>{
+      sourcePromise=fetch(sourceUrl(),{cache:"no-store",credentials:"same-origin"}).then(response=>{
         if(!response.ok)throw new Error(`Atlas source HTTP ${response.status}`);
         return response.text();
       }).catch(error=>{
-        // 40.4.99 R2 candidate — a transport failure must not poison every later disclosure.
+        // A transport failure must not poison every later disclosure.
         sourcePromise=null;
         throw error;
       });
@@ -69,7 +83,7 @@
     try{
       node.dispatchEvent(new CustomEvent("erith:presentation-residency-error",{
         bubbles:true,
-        detail:{family:"atlas",key,build:BUILD,error:String(error?.message||error||"unknown")}
+        detail:{family:"atlas",key,build:BUILD,patch:PATCH,error:String(error?.message||error||"unknown")}
       }));
       return true;
     }catch(_){return false;}
@@ -100,7 +114,7 @@
       body.replaceChildren(template.content.cloneNode(true));
       body.dataset.atlasHydrated="1"; details.dataset.atlasHydration="ready"; hydrated.add(key);
       try{(globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.(key);}catch(error){console.warn("[40.4.99] Atlas peripheral rebind",error);}
-      try{details.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key,build:BUILD}}));}catch(_){}
+      try{details.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key,build:BUILD,patch:PATCH,release:RELEASE}}));}catch(_){}
       return true;
     }catch(error){
       details.dataset.atlasHydration="error";
@@ -118,7 +132,7 @@
       const source=await sourceText(),template=document.createElement("template"); template.innerHTML=auditInnerHtml(source,spec);
       root.replaceChildren(template.content.cloneNode(true)); root.dataset.atlasAuditHydration="ready"; auditHydrated.add(key);
       try{(globalThis.AgentCryptoAtlasPeripheralRebind40425)?.rebind?.("current-audit");}catch(error){console.warn("[40.4.99] Atlas CURRENT audit rebind",error);}
-      try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`current-audit:${key}`,build:BUILD}}));}catch(_){}
+      try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`current-audit:${key}`,build:BUILD,patch:PATCH,release:RELEASE}}));}catch(_){}
       return true;
     }catch(error){
       root.dataset.atlasAuditHydration="error";
@@ -140,7 +154,7 @@
       }
       bookKnowledgeHydrated=true;
       try{globalThis.AgentCryptoAtlasPeripheralRebind?.rebind?.("book-knowledge");}catch(error){console.warn("[40.4.99] Atlas Book/Knowledge rebind",error);}
-      roots.forEach(([key,,root])=>{try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`book-knowledge:${key}`,build:BUILD}}));}catch(_){}});
+      roots.forEach(([key,,root])=>{try{root.dispatchEvent(new CustomEvent("erith:presentation-resident",{bubbles:true,detail:{family:"atlas",key:`book-knowledge:${key}`,build:BUILD,patch:PATCH,release:RELEASE}}));}catch(_){}});
       return true;
     }catch(error){
       roots.forEach(([key, ,root])=>{
@@ -174,11 +188,11 @@
   }
   function attach(){attachPeripheral();attachAudit();attachBookKnowledge(); return true;}
   const contract=Object.freeze({
-    build:BUILD,source:SOURCE,targets:Object.keys(TARGETS),current_audit_targets:Object.keys(AUDIT_SECTIONS),book_knowledge_targets:Object.keys(BOOK_KNOWLEDGE_SECTIONS),
+    build:BUILD,patch:PATCH,source:SOURCE,source_url:sourceUrl(),source_release_token:RELEASE,source_cache:"no-store",targets:Object.keys(TARGETS),current_audit_targets:Object.keys(AUDIT_SECTIONS),book_knowledge_targets:Object.keys(BOOK_KNOWLEDGE_SECTIONS),
     boot_shell_precompiled:true,runtime_markup_preprocess:false,element_prototype_interception:false,boot_bodies_absent:true,current_audit_roots_resident:true,current_audit_bodies_absent_at_boot:true,
     fetch_count:()=>fetchCount,hydrated:()=>[...hydrated],current_audit_hydrated:()=>[...auditHydrated],book_knowledge_hydrated:()=>bookKnowledgeHydrated,
     runtime_owner:"app.js",auto_reader_runtime_preserved:true,auto_reader_collection_boot_preserved:true,github_auto_load_preserved:true,current_pipeline_runtime_preserved:true,current_audit_read_only_presentation:true,
-    terminal_success_event:"erith:presentation-resident",terminal_failure_event:"erith:presentation-residency-error",source_retry_after_transport_failure:true,
+    terminal_success_event:"erith:presentation-resident",terminal_failure_event:"erith:presentation-residency-error",source_retry_after_transport_failure:true,release_bound_source:true,
     new_timer:false,new_observer:false,new_scheduler:false,storage_owner_added:false,attach
   });
   globalThis.AgentCryptoAtlasColdRouter=contract;
