@@ -1,14 +1,12 @@
-/* Agent-Crypto @erith.IA — 40.6.204 STRATEGY A G3 EVIDENCE LIFECYCLE BINDING
-   Terrain proof from 40.6.203 showed the canonical integrator can execute before
-   the legacy Evidence Dossier has mounted. The legacy dossier itself retries on
-   click/focus/pageshow, while the supplement integrator previously gave up after
-   its early boot attempt. This repair mirrors that bounded lifecycle and keeps the
-   supplemental host in the canonical Evidence zone, outside #strategyADossier.
-   No recurring timer, MutationObserver, storage/network/order path or Gate promotion. */
+/* Agent-Crypto @erith.IA — 40.6.207 G3 EIGHT-PANEL OWNER BINDING
+   Terrain proof from 40.6.206 showed that the prospective T0 panel was loaded but
+   not owned by the same stable Evidence lifecycle as the seven validated G3 panels.
+   This release promotes it into the canonical supplemental host contract as panel 8.
+   No recurring timer, MutationObserver, business network/order path or Gate promotion. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.204";
+  const BUILD = "40.6.207";
   const DOSSIER_ID = "strategyADossier";
   const AUDIT_ID = "strategyAEvidenceGateAudit";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
@@ -22,7 +20,8 @@
     Object.freeze({id:"strategyAG3T0DecisionProof",api:"AgentCryptoStrategyAG3T0DecisionProof",title:"G3 · T0 DECISION PROOF"}),
     Object.freeze({id:"strategyAG3ReplayDataset",api:"AgentCryptoStrategyAG3ReplayDataset",title:"G3 · IMMUTABLE REPLAY DATASET"}),
     Object.freeze({id:"strategyAG3DecisionReplay",api:"AgentCryptoStrategyAG3DecisionReplay",title:"G3 · DECISION REPLAY VERIFIER"}),
-    Object.freeze({id:"strategyAG3CascadeCheckpoint",api:"AgentCryptoStrategyAG3CascadeCheckpoint",title:"G3 · CASCADE CHECKPOINT TRUTH"})
+    Object.freeze({id:"strategyAG3CascadeCheckpoint",api:"AgentCryptoStrategyAG3CascadeCheckpoint",title:"G3 · CASCADE CHECKPOINT TRUTH"}),
+    Object.freeze({id:"strategyAG3ProspectiveT0Capture",api:"AgentCryptoStrategyAG3ProspectiveT0Capture",title:"G3 · CAPTURE T0 PROSPECTIVE"})
   ]);
 
   let mountCount = 0;
@@ -65,13 +64,14 @@
     if (!host) {
       host = document.createElement("section");
       host.id = HOST_ID;
-      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · LIFECYCLE BOUND · ${BUILD}</div><div class="saesh-sub">Montage lié au cycle réel Evidence Dossier · aucun PASS créé par ce host.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
+      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · EIGHT-PANEL BOUND · ${BUILD}</div><div class="saesh-sub">Même cycle Evidence pour 8 panneaux · aucun PASS créé par ce host.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
     }
     host.dataset.build = BUILD;
     host.dataset.stableSibling = "true";
     host.dataset.lifecycleBound = "true";
+    host.dataset.eightPanelContract = "true";
     const title = host.querySelector(".saesh-title");
-    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · LIFECYCLE BOUND · ${BUILD}`;
+    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · EIGHT-PANEL BOUND · ${BUILD}`;
     if (a.nextElementSibling !== host) a.insertAdjacentElement("afterend", host);
     return host;
   }
@@ -136,11 +136,12 @@
     });
     const missingApis = PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api);
     return {
-      schema: "agent_crypto_strategy_a_g3_evidence_lifecycle_binding_v1",
+      schema: "agent_crypto_strategy_a_g3_evidence_eight_panel_binding_v1",
       build: BUILD,
       dossier_present: !!dossier,
       host_present: !!host,
       lifecycle_bound: host?.dataset?.lifecycleBound === "true",
+      eight_panel_contract: host?.dataset?.eightPanelContract === "true",
       mount_count: mountCount,
       mounting,
       bootstrap_bound: bootstrapBound,
@@ -224,7 +225,7 @@
 
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
     build: BUILD,
-    owner: "strategy-a-g3-evidence-lifecycle-binding",
+    owner: "strategy-a-g3-evidence-eight-panel-binding",
     dossier_id: DOSSIER_ID,
     host_id: HOST_ID,
     status_id: STATUS_ID,
@@ -233,6 +234,7 @@
     snapshot,
     schedule,
     lifecycle_bound: true,
+    eight_panel_contract: true,
     bounded_bootstrap_retry: true,
     dossier_hook_installed: false,
     recurring_timer: false,
@@ -248,10 +250,10 @@
   if (typeof document !== "undefined") {
     bindBootstrapLifecycle();
     document.addEventListener("agent-crypto:evidence-data-changed", schedule);
-    document.addEventListener("erith:system-hydrated", schedule, {passive:true});
-    document.addEventListener("agent-crypto:runtime-modules-ready", schedule, {once:true});
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule, {once:true});
+    document.addEventListener("erith:system-hydrated", schedule,{passive:true});
+    document.addEventListener("agent-crypto:runtime-modules-ready", schedule,{once:true});
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule,{once:true});
     else schedule();
-    window.addEventListener("load", schedule, {once:true});
+    window.addEventListener("load", schedule,{once:true});
   }
 })();
