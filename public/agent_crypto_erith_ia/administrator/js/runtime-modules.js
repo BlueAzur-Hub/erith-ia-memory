@@ -30,6 +30,7 @@
     "./js/strategy-a-time-semantics-truth.js",
     "./js/strategy-a-g3-structured-data-truth.js",
     "./js/strategy-a-g3-history-owner-discovery.js",
+    "./js/strategy-a-g3-historical-evidence-adapter.js",
     "./js/strategy-a-gate-canonical-truth.js",
     "./js/tradus-autonomous-refresh.js"
   ]);
