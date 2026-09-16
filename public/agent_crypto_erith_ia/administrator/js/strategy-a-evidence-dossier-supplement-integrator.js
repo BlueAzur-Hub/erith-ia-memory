@@ -1,14 +1,15 @@
-/* Agent-Crypto @erith.IA — 40.6.179 STRATEGY A EVIDENCE DOSSIER SUPPLEMENT INTEGRATOR
+/* Agent-Crypto @erith.IA — 40.6.181 STRATEGY A EVIDENCE DOSSIER NATIVE INTEGRATION
    Mounts the three structured G3 evidence panels directly inside the existing
-   Strategy A Evidence Dossier. No extra page-level host, no gate promotion.
-   Event-driven only: no recurring timer, no MutationObserver, no storage/network/order path. */
+   Strategy A Evidence Dossier and binds rehydration to every dossier render.
+   No extra page-level host, no gate promotion, no recurring timer, no observer,
+   no storage/network/order path. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.179";
+  const BUILD = "40.6.181";
   const DOSSIER_ID = "strategyADossier";
   const CONTRACT_ID = "strategyAG3RealisticReplayContract";
-  const STATUS_ID = "strategyAEvidenceDossierSupplements179Status";
+  const STATUS_ID = "strategyAEvidenceDossierSupplements181Status";
   const PANEL_SPECS = Object.freeze([
     Object.freeze({
       id: "strategyAG3StructuredTruth",
@@ -29,6 +30,8 @@
 
   let queued = false;
   let mountCount = 0;
+  let dossierHookInstalled = false;
+  let originalDossierApi = null;
 
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
 
@@ -48,10 +51,40 @@
     document.head.appendChild(style);
   }
 
+  function installDossierOwnerHook() {
+    if (dossierHookInstalled) return true;
+    const api = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
+    if (!api || typeof api.render !== "function") return false;
+    originalDossierApi = api;
+    const originalRender = api.render.bind(api);
+    const wrappedRender = (...args) => {
+      const result = originalRender(...args);
+      queueMicrotask(() => {
+        try { mount(); } catch (_) {}
+      });
+      return result;
+    };
+    try {
+      globalThis.AgentCryptoStrategyAEvidenceDossier = Object.freeze({
+        ...api,
+        build: BUILD,
+        render: wrappedRender,
+        native_supplement_owner: true,
+        native_supplement_owner_build: BUILD,
+        supplement_panels: PANEL_SPECS.map(spec => spec.id)
+      });
+      dossierHookInstalled = true;
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function ensureDossier() {
     let dossier = byId(DOSSIER_ID);
     if (dossier) return dossier;
-    const api = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
+    installDossierOwnerHook();
+    const api = globalThis.AgentCryptoStrategyAEvidenceDossier || originalDossierApi || null;
     if (typeof api?.render === "function") {
       try { api.render(); } catch (_) {}
     }
@@ -138,6 +171,7 @@
     mountCount += 1;
     if (typeof document === "undefined") return { mounted:false, reason:"NO_DOCUMENT" };
     ensureStyle();
+    installDossierOwnerHook();
 
     const dossier = ensureDossier();
     if (!dossier) return { mounted:false, reason:"DOSSIER_UNAVAILABLE", mount_count:mountCount };
@@ -152,10 +186,7 @@
     orderInsideDossier(dossier, status, roots);
 
     const missingApis = PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api);
-    const present = PANEL_SPECS.filter(spec => {
-      const node = byId(spec.id);
-      return !!node && node.parentElement === dossier;
-    }).length;
+    const present = PANEL_SPECS.filter(spec => byId(spec.id)?.parentElement === dossier).length;
     const hydrated = PANEL_SPECS.filter(spec => {
       const node = byId(spec.id);
       return !!node && node.parentElement === dossier && node.classList?.contains("saeds-placeholder") !== true;
@@ -171,6 +202,7 @@
     dossier.dataset.supplementPanelsPresent = String(present);
     dossier.dataset.supplementPanelsHydrated = String(hydrated);
     dossier.dataset.supplementMissingApis = String(missingApis.length);
+    dossier.dataset.supplementNativeOwner = dossierHookInstalled ? "true" : "false";
 
     return {
       mounted: true,
@@ -180,6 +212,8 @@
       hydrated,
       expected: PANEL_SPECS.length,
       missing_apis: missingApis,
+      dossier_hook_installed: dossierHookInstalled,
+      mount_count: mountCount,
       g3: "PENDING",
       g9: "LOCKED"
     };
@@ -200,11 +234,14 @@
     status_id: STATUS_ID,
     panels: PANEL_SPECS.map(spec => spec.id),
     mount,
+    install_dossier_owner_hook: installDossierOwnerHook,
     snapshot: () => {
       const dossier = byId(DOSSIER_ID);
       return {
         build: BUILD,
         dossier_present: !!dossier,
+        dossier_hook_installed: dossierHookInstalled,
+        mount_count: mountCount,
         present: PANEL_SPECS.filter(spec => byId(spec.id)?.parentElement === dossier).length,
         hydrated: PANEL_SPECS.filter(spec => {
           const node = byId(spec.id);
