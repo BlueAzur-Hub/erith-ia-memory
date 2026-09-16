@@ -26,6 +26,7 @@
     "./js/strategy-a-evidence-gate-audit.js",
     "./js/strategy-a-evidence-gate-audit-anchor-repair.js",
     "./js/strategy-a-evidence-lifecycle-truth.js",
+    "./js/strategy-a-foundation-applicability-truth.js",
     "./js/tradus-autonomous-refresh.js"
   ]);
 
