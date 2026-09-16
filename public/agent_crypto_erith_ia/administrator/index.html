@@ -28,9 +28,7 @@
 
        40.6.179: Strategy A evidence supplements remain wired by the canonical
        authority and are integrated directly inside the existing Evidence Dossier.
-       40.6.184: the canonical entry also loads a presentation-only label clarity
-       layer so visible G1..G9 tokens read GATE 1..GATE 9 without changing IDs,
-       states, gate keys or Strategy A business logic. */
+       No separate page-level evidence host is created. */
     const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
     let LOADED_BUILD = meta("agent-crypto-loaded-build");
     const ENGINE = meta("agent-crypto-engine-build");
@@ -46,8 +44,7 @@
       "./js/strategy-a-g3-history-owner-discovery.js",
       "./js/strategy-a-g3-historical-evidence-adapter.js",
       "./js/strategy-a-gate-canonical-truth.js",
-      "./js/strategy-a-evidence-dossier-supplement-integrator.js",
-      "./js/strategy-a-gate-label-clarity.js"
+      "./js/strategy-a-evidence-dossier-supplement-integrator.js"
     ]);
     const EVIDENCE_PANEL_IDS = Object.freeze([
       "strategyAG3StructuredTruth",
