@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.205 G3 PROSPECTIVE T0 CAPTURE CONTRACT
+/* Agent-Crypto @erith.IA — 40.6.206 G3 PROSPECTIVE T0 STABLE HOST BINDING
    Operator-triggered, PAPER-only capture of one NEW Strategy A decision cycle.
    Existing historical ledger rows are never backfilled. The legacy producer remains
    authoritative; this module adds a bounded prospective evidence overlay and exposes
@@ -8,11 +8,12 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.205";
+  const BUILD = "40.6.206";
   const OWNER = "strategy-a-g3-prospective-t0-capture";
   const STORAGE_KEY = "agent_crypto_erith_ia_strategy_a_g3_prospective_t0_40_6_205";
   const MAX_ROWS = 64;
   const PANEL_ID = "strategyAG3ProspectiveT0Capture";
+  const HOST_ID = "strategyAEvidenceSupplements";
   const STYLE_ID = `${PANEL_ID}Style`;
   const clone = value => { try { return JSON.parse(JSON.stringify(value)); } catch (_) { return null; } };
   const plain = value => !!value && typeof value === "object" && !Array.isArray(value);
@@ -495,19 +496,27 @@
   function render() {
     if (typeof document === "undefined") return snapshot();
     installLedgerFacade();
+    const host = document.getElementById(HOST_ID);
     const checkpoint = document.getElementById("strategyAG3CascadeCheckpoint");
-    if (!checkpoint) return snapshot();
+    if (!host || !checkpoint) return snapshot();
     ensureStyle();
     let panel = document.getElementById(PANEL_ID);
     if (!panel) {
       panel = document.createElement("section");
       panel.id = PANEL_ID;
-      checkpoint.appendChild(panel);
     }
+    // 40.6.206: the checkpoint owner rewrites its own innerHTML during refresh/export.
+    // Keep the prospective capture panel as a sibling inside the already terrain-proven
+    // stable evidence host so checkpoint rerenders cannot delete it.
+    if (panel.parentElement !== host || checkpoint.nextElementSibling !== panel) {
+      checkpoint.insertAdjacentElement("afterend", panel);
+    }
+    panel.dataset.stableEvidenceHost = HOST_ID;
+    panel.dataset.outsideCheckpointSubtree = "true";
     const s = snapshot();
     const blockers = s.latest_blockers?.length ? s.latest_blockers.join(" · ") : "AUCUN — prêt pour audit T0";
     panel.innerHTML = `
-      <div class="h"><div class="t">G3 · PROSPECTIVE T0 CAPTURE · ${BUILD}</div><button type="button" class="btn small" id="${PANEL_ID}Run">CAPTURER 1 T0 PAPER</button></div>
+      <div class="h"><div class="t">G3 · CAPTURE T0 PROSPECTIVE · ${BUILD}</div><button type="button" class="btn small" id="${PANEL_ID}Run">CAPTURER LE PROCHAIN CYCLE PAPER</button></div>
       <div class="g">
         <div class="k"><span>Source owner</span><b>${esc(s.source_owner)}</b></div>
         <div class="k"><span>Prospective rows</span><b>${esc(s.prospective_rows)}</b></div>
@@ -617,6 +626,8 @@
     fetch_added: false,
     websocket_added: false,
     storage_write: true,
+    stable_evidence_host: HOST_ID,
+    outside_checkpoint_subtree: true,
     g3: "PENDING",
     g9: "LOCKED"
   });
