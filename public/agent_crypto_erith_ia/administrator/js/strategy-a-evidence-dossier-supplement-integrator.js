@@ -1,17 +1,19 @@
-/* Agent-Crypto @erith.IA — 40.6.207 G3 EIGHT-PANEL OWNER BINDING
-   Terrain proof from 40.6.206 showed that the prospective T0 panel was loaded but
-   not owned by the same stable Evidence lifecycle as the seven validated G3 panels.
-   This release promotes it into the canonical supplemental host contract as panel 8.
-   No recurring timer, MutationObserver, business network/order path or Gate promotion. */
+/* Agent-Crypto @erith.IA — 40.6.208 G3 EIGHT-PANEL + T0 WINDOW OVERLAP PROOF
+   Terrain proof from 40.6.207 validated the eight-panel stable Evidence lifecycle.
+   The remaining blocker is now NO_T0_DECISION_INSIDE_CERTIFIED_WINDOW with one
+   certified T0 and zero joined rows. This release adds a read-only overlap proof
+   inside the already validated stable host. No business logic, Gate promotion,
+   recurring timer, MutationObserver, storage/network/order path is added. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.207";
+  const BUILD = "40.6.208";
   const DOSSIER_ID = "strategyADossier";
   const AUDIT_ID = "strategyAEvidenceGateAudit";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
   const HOST_ID = "strategyAEvidenceSupplements";
   const STATUS_ID = "strategyAEvidenceSupplementsStatus";
+  const OVERLAP_ID = "strategyAG3T0WindowOverlapProof";
 
   const PANEL_SPECS = Object.freeze([
     Object.freeze({id:"strategyAG3StructuredTruth",api:"AgentCryptoStrategyAG3StructuredDataTruth",title:"G3 · STRUCTURED DATA TRUTH"}),
@@ -31,9 +33,69 @@
   let bootstrapSettled = false;
 
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
+  const esc = value => String(value ?? "—").replace(/[&<>\"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;"}[m]));
+  const finite = value => {
+    const n = Number(value);
+    return Number.isFinite(n) ? n : null;
+  };
 
   function anchor() {
     return byId(AUDIT_ID) || byId(DOSSIER_ID) || byId(BRIDGE_ID) || null;
+  }
+
+  function t0WindowProof() {
+    let snap = null;
+    try { snap = globalThis.AgentCryptoStrategyAG3CascadeCheckpoint?.snapshot?.() || null; } catch (_) {}
+    const temporal = snap?.temporal || null;
+    const certified = Array.isArray(snap?.t0?.certified) ? snap.t0.certified.slice() : [];
+    certified.sort((a,b) => (finite(b?.market_at) ?? -Infinity) - (finite(a?.market_at) ?? -Infinity));
+    const latest = certified[0] || null;
+    const firstMs = finite(temporal?.first_ms);
+    const lastMs = finite(temporal?.last_ms);
+    const t0Ms = finite(latest?.market_at);
+    let relation = "UNPROVEN";
+    let gapMin = null;
+    let conclusion = "INSUFFICIENT_TIMESTAMP_PROOF";
+
+    if (firstMs !== null && lastMs !== null && t0Ms !== null) {
+      if (t0Ms < firstMs) {
+        relation = "T0_BEFORE_CERTIFIED_WINDOW";
+        gapMin = (firstMs - t0Ms) / 60000;
+        conclusion = "T0_OLDER_THAN_CURRENT_CERTIFIED_WINDOW";
+      } else if (t0Ms > lastMs) {
+        relation = "T0_AFTER_CERTIFIED_WINDOW";
+        gapMin = (t0Ms - lastMs) / 60000;
+        conclusion = "WAIT_SOURCE_WINDOW_TO_REACH_T0";
+      } else {
+        relation = "T0_INSIDE_CERTIFIED_WINDOW";
+        gapMin = 0;
+        conclusion = "OVERLAP_PROVEN";
+      }
+    }
+
+    return Object.freeze({
+      schema: "agent_crypto_g3_t0_window_overlap_proof_v1",
+      build: BUILD,
+      checkpoint_build: snap?.build || null,
+      temporal_certified: temporal?.certified === true,
+      window_first_at: temporal?.first_at || null,
+      window_last_at: temporal?.last_at || null,
+      latest_certified_t0_id: latest?.id || null,
+      latest_certified_t0_market_at: t0Ms === null ? null : new Date(t0Ms).toISOString(),
+      relation,
+      gap_min: gapMin === null ? null : Math.round(gapMin * 1000) / 1000,
+      conclusion,
+      certified_t0: snap?.t0?.certified_rows ?? 0,
+      joined_count: snap?.dataset?.joined_count ?? 0,
+      checkpoint_blocker: snap?.checkpoint?.blocker || null,
+      checkpoint_owner: snap?.checkpoint?.next_owner || null,
+      checkpoint_action: snap?.checkpoint?.next_action || null,
+      read_only: true,
+      paper_only: true,
+      real_order: false,
+      g3: "PENDING",
+      g9: "LOCKED"
+    });
   }
 
   function ensureStyle() {
@@ -50,6 +112,13 @@
       #${HOST_ID} .saeds-placeholder{padding:8px;border:1px dashed rgba(111,255,215,.20);border-radius:8px;background:rgba(4,20,24,.22)}
       #${HOST_ID} .saeds-placeholder-title{font-size:8px;font-weight:950;letter-spacing:.08em;color:#83ffda;text-transform:uppercase}
       #${HOST_ID} .saeds-placeholder-note{margin-top:4px;font-size:8px;color:#91b7ad}
+      #${OVERLAP_ID}{margin-top:9px;padding:8px;border:1px solid rgba(255,211,110,.28);border-radius:8px;background:rgba(48,36,7,.18)}
+      #${OVERLAP_ID} .ow-title{font-size:8px;font-weight:950;letter-spacing:.08em;color:#ffd36e;text-transform:uppercase}
+      #${OVERLAP_ID} .ow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:5px;margin-top:7px}
+      #${OVERLAP_ID} .ow-k{padding:5px;border:1px solid rgba(255,255,255,.06);border-radius:7px}
+      #${OVERLAP_ID} .ow-k span{display:block;font-size:7px;color:#9a8f70;text-transform:uppercase}
+      #${OVERLAP_ID} .ow-k b{display:block;margin-top:2px;font-size:8px;color:#fff8df;overflow-wrap:anywhere}
+      #${OVERLAP_ID} .ow-note{margin-top:6px;font-size:8px;color:#b8ae91;line-height:1.35}
     `;
     document.head.appendChild(style);
   }
@@ -64,14 +133,17 @@
     if (!host) {
       host = document.createElement("section");
       host.id = HOST_ID;
-      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · EIGHT-PANEL BOUND · ${BUILD}</div><div class="saesh-sub">Même cycle Evidence pour 8 panneaux · aucun PASS créé par ce host.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
+      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · EIGHT-PANEL BOUND · ${BUILD}</div><div class="saesh-sub">Même cycle Evidence pour 8 panneaux · preuve T0↔fenêtre ajoutée en lecture seule.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
     }
     host.dataset.build = BUILD;
     host.dataset.stableSibling = "true";
     host.dataset.lifecycleBound = "true";
     host.dataset.eightPanelContract = "true";
+    host.dataset.overlapProofBuild = BUILD;
     const title = host.querySelector(".saesh-title");
+    const sub = host.querySelector(".saesh-sub");
     if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · EIGHT-PANEL BOUND · ${BUILD}`;
+    if (sub) sub.textContent = "Même cycle Evidence pour 8 panneaux · preuve T0↔fenêtre ajoutée en lecture seule.";
     if (a.nextElementSibling !== host) a.insertAdjacentElement("afterend", host);
     return host;
   }
@@ -120,6 +192,38 @@
     return {present, hydrated};
   }
 
+  function renderOverlapProof(host) {
+    if (!host) return t0WindowProof();
+    let root = byId(OVERLAP_ID);
+    if (!root) {
+      root = document.createElement("section");
+      root.id = OVERLAP_ID;
+    }
+    const capture = byId("strategyAG3ProspectiveT0Capture");
+    if (capture?.parentElement === host) capture.insertAdjacentElement("afterend", root);
+    else if (root.parentElement !== host) host.appendChild(root);
+
+    const p = t0WindowProof();
+    root.dataset.build = BUILD;
+    root.dataset.readOnly = "true";
+    root.innerHTML = `
+      <div class="ow-title">G3 · T0 WINDOW OVERLAP PROOF · ${BUILD}</div>
+      <div class="ow-grid">
+        <div class="ow-k"><span>Window first</span><b>${esc(p.window_first_at || "NON PROUVÉ")}</b></div>
+        <div class="ow-k"><span>Window last</span><b>${esc(p.window_last_at || "NON PROUVÉ")}</b></div>
+        <div class="ow-k"><span>Certified T0</span><b>${esc(p.latest_certified_t0_market_at || "NON PROUVÉ")}</b></div>
+        <div class="ow-k"><span>T0 ID</span><b>${esc(p.latest_certified_t0_id || "—")}</b></div>
+        <div class="ow-k"><span>Relation</span><b>${esc(p.relation)}</b></div>
+        <div class="ow-k"><span>Gap min</span><b>${esc(p.gap_min ?? "—")}</b></div>
+        <div class="ow-k"><span>T0 cert.</span><b>${esc(p.certified_t0)}</b></div>
+        <div class="ow-k"><span>Jointes</span><b>${esc(p.joined_count)}</b></div>
+        <div class="ow-k"><span>Conclusion</span><b>${esc(p.conclusion)}</b></div>
+      </div>
+      <div class="ow-note">CHECKPOINT · ${esc(p.checkpoint_blocker || "INCONNU")} · OWNER · ${esc(p.checkpoint_owner || "INCONNU")} · ACTION · ${esc(p.checkpoint_action || "INCONNUE")}</div>
+      <div class="ow-note">Lecture seule : ce bloc ne modifie ni série marché, ni ledger, ni Strategy A, ni Gate.</div>`;
+    return p;
+  }
+
   function snapshot() {
     const host = byId(HOST_ID);
     const dossier = byId(DOSSIER_ID);
@@ -136,7 +240,7 @@
     });
     const missingApis = PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api);
     return {
-      schema: "agent_crypto_strategy_a_g3_evidence_eight_panel_binding_v1",
+      schema: "agent_crypto_strategy_a_g3_evidence_eight_panel_overlap_proof_v1",
       build: BUILD,
       dossier_present: !!dossier,
       host_present: !!host,
@@ -152,6 +256,7 @@
       expected: PANEL_SPECS.length,
       missing_apis: missingApis,
       panels,
+      overlap_proof: t0WindowProof(),
       legacy_dossier_owner_unchanged: true,
       recurring_timer: false,
       observer: false,
@@ -184,6 +289,7 @@
       PANEL_SPECS.forEach(spec => ensurePlaceholder(host,spec));
       renderOwners();
       const moved = movePanels(host);
+      const overlap = renderOverlapProof(host);
       const state = snapshot();
       const status = host.querySelector("[data-saesh-state]");
       if (status) status.textContent = `${moved.present} / ${PANEL_SPECS.length} PANNEAUX · ${moved.hydrated} HYDRATÉ(S)` + (state.missing_apis.length ? ` · API MANQUANTE: ${state.missing_apis.length}` : "");
@@ -191,11 +297,12 @@
       host.dataset.panelsHydrated = String(moved.hydrated);
       host.dataset.panelsExpected = String(PANEL_SPECS.length);
       host.dataset.complete = moved.present === PANEL_SPECS.length && moved.hydrated === PANEL_SPECS.length ? "true" : "false";
+      host.dataset.overlapRelation = String(overlap?.relation || "UNPROVEN");
       if (host.dataset.complete === "true") {
         bootstrapSettled = true;
         clearBootstrapListeners();
       }
-      return {...state,mounted:true,complete:host.dataset.complete === "true"};
+      return {...state,mounted:true,complete:host.dataset.complete === "true",overlap};
     } finally {
       mounting = false;
     }
@@ -225,14 +332,17 @@
 
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
     build: BUILD,
-    owner: "strategy-a-g3-evidence-eight-panel-binding",
+    owner: "strategy-a-g3-evidence-eight-panel-overlap-proof",
     dossier_id: DOSSIER_ID,
     host_id: HOST_ID,
     status_id: STATUS_ID,
+    overlap_id: OVERLAP_ID,
     panels: PANEL_SPECS.map(spec => spec.id),
     mount,
     snapshot,
     schedule,
+    t0_window_proof: t0WindowProof,
+    render_overlap_proof: renderOverlapProof,
     lifecycle_bound: true,
     eight_panel_contract: true,
     bounded_bootstrap_retry: true,
