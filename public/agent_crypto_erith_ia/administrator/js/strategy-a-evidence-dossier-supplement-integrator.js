@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.194 STRATEGY A EVIDENCE SINGLE-OWNER INTEGRATION
+/* Agent-Crypto @erith.IA — 40.6.195 STRATEGY A EVIDENCE SINGLE-OWNER INTEGRATION
    Keeps the structured G3 evidence panels inside the existing Strategy A
    Evidence Dossier without render monkey-patches or autonomous refresh listeners.
    Hydration happens only when the canonical entry or Evidence lifecycle calls
@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.194";
+  const BUILD = "40.6.195";
   const DOSSIER_ID = "strategyADossier";
   const CONTRACT_ID = "strategyAG3RealisticReplayContract";
   const STATUS_ID = "strategyAEvidenceDossierSupplements187Status";
@@ -14,7 +14,8 @@
     Object.freeze({id:"strategyAG3StructuredTruth",api:"AgentCryptoStrategyAG3StructuredDataTruth",title:"G3 · STRUCTURED DATA TRUTH"}),
     Object.freeze({id:"strategyAG3HistoryOwnerDiscovery",api:"AgentCryptoStrategyAG3HistoryOwnerDiscovery",title:"G3 · HISTORY OWNER DISCOVERY"}),
     Object.freeze({id:"strategyAG3HistoricalEvidenceAdapter",api:"AgentCryptoStrategyAG3HistoricalEvidenceAdapter",title:"G3 · HISTORICAL EVIDENCE ADAPTER"}),
-    Object.freeze({id:"strategyAG3T0DecisionProof",api:"AgentCryptoStrategyAG3T0DecisionProof",title:"G3 · T0 DECISION PROOF"})
+    Object.freeze({id:"strategyAG3T0DecisionProof",api:"AgentCryptoStrategyAG3T0DecisionProof",title:"G3 · T0 DECISION PROOF"}),
+    Object.freeze({id:"strategyAG3ReplayDataset",api:"AgentCryptoStrategyAG3ReplayDataset",title:"G3 · IMMUTABLE REPLAY DATASET"})
   ]);
 
   let mountCount = 0;
