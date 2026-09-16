@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.195 STRATEGY A EVIDENCE SINGLE-OWNER INTEGRATION
+/* Agent-Crypto @erith.IA — 40.6.196 STRATEGY A EVIDENCE SINGLE-OWNER INTEGRATION
    Keeps the structured G3 evidence panels inside the existing Strategy A
    Evidence Dossier without render monkey-patches or autonomous refresh listeners.
    Hydration happens only when the canonical entry or Evidence lifecycle calls
@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.195";
+  const BUILD = "40.6.196";
   const DOSSIER_ID = "strategyADossier";
   const CONTRACT_ID = "strategyAG3RealisticReplayContract";
   const STATUS_ID = "strategyAEvidenceDossierSupplements187Status";
@@ -15,12 +15,12 @@
     Object.freeze({id:"strategyAG3HistoryOwnerDiscovery",api:"AgentCryptoStrategyAG3HistoryOwnerDiscovery",title:"G3 · HISTORY OWNER DISCOVERY"}),
     Object.freeze({id:"strategyAG3HistoricalEvidenceAdapter",api:"AgentCryptoStrategyAG3HistoricalEvidenceAdapter",title:"G3 · HISTORICAL EVIDENCE ADAPTER"}),
     Object.freeze({id:"strategyAG3T0DecisionProof",api:"AgentCryptoStrategyAG3T0DecisionProof",title:"G3 · T0 DECISION PROOF"}),
-    Object.freeze({id:"strategyAG3ReplayDataset",api:"AgentCryptoStrategyAG3ReplayDataset",title:"G3 · IMMUTABLE REPLAY DATASET"})
+    Object.freeze({id:"strategyAG3ReplayDataset",api:"AgentCryptoStrategyAG3ReplayDataset",title:"G3 · IMMUTABLE REPLAY DATASET"}),
+    Object.freeze({id:"strategyAG3DecisionReplay",api:"AgentCryptoStrategyAG3DecisionReplay",title:"G3 · DECISION REPLAY VERIFIER"})
   ]);
 
   let mountCount = 0;
   let mounting = false;
-
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
 
   function ensureStyle() {
@@ -43,9 +43,7 @@
     let dossier = byId(DOSSIER_ID);
     if (dossier) return dossier;
     const api = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
-    if (typeof api?.render === "function") {
-      try { api.render(); } catch (_) {}
-    }
+    if (typeof api?.render === "function") { try { api.render(); } catch (_) {} }
     return byId(DOSSIER_ID);
   }
 
@@ -53,9 +51,7 @@
     let contract = byId(CONTRACT_ID);
     if (contract) return contract;
     const api = globalThis.AgentCryptoStrategyAG3RealisticReplayContract || null;
-    if (typeof api?.render === "function") {
-      try { api.render(); } catch (_) {}
-    }
+    if (typeof api?.render === "function") { try { api.render(); } catch (_) {} }
     return byId(CONTRACT_ID);
   }
 
@@ -115,13 +111,11 @@
     } else if (anchor.nextElementSibling !== status) {
       anchor.insertAdjacentElement("afterend", status);
     }
-
     anchor = status;
     for (const root of roots) {
       if (root.parentElement !== dossier || anchor.nextElementSibling !== root) anchor.insertAdjacentElement("afterend", root);
       anchor = root;
     }
-
     const foot = dossier.querySelector(".sad-foot");
     if (foot && anchor.nextElementSibling !== foot) anchor.insertAdjacentElement("afterend", foot);
   }
@@ -162,7 +156,6 @@
       ensureStyle();
       const dossier = ensureDossier();
       if (!dossier) return {mounted:false,reason:"DOSSIER_UNAVAILABLE",mount_count:mountCount};
-
       ensureContract();
       const status = ensureStatus(dossier);
       let roots = PANEL_SPECS.map(spec => ensurePlaceholder(dossier, spec));
@@ -170,7 +163,6 @@
       renderOwners();
       roots = PANEL_SPECS.map(spec => byId(spec.id)).filter(Boolean);
       orderInsideDossier(dossier, status, roots);
-
       const state = snapshot();
       const stateNode = status.querySelector("[data-saeds-state]");
       if (stateNode) stateNode.textContent = `${state.present} / ${PANEL_SPECS.length} PANNEAUX · ${state.hydrated} HYDRATÉ(S)` + (state.missing_apis.length ? ` · API MANQUANTE: ${state.missing_apis.length}` : "");
@@ -181,9 +173,7 @@
       dossier.dataset.supplementNativeOwner = "false";
       dossier.dataset.supplementSingleOwner = "true";
       return {...state,mounted:true};
-    } finally {
-      mounting = false;
-    }
+    } finally { mounting = false; }
   }
 
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
