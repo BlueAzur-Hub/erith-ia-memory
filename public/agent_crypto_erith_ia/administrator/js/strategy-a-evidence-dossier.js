@@ -1,15 +1,15 @@
 /*
   Agent-Crypto Administrator — Strategy A Paper V2 evidence dossier passive truth lock
-  Build: 40.6.161
+  Build: 40.6.162
   Responsibility: read existing evidence without executing hidden self-tests or mutating lab state.
   After-cost readiness requires strict numeric facts plus COMPLETE + VERIFIED accounting truth.
   Null, blank, boolean and partial rows never count as complete evidence.
-  40.6.161: expose G1 after-cost data truth already computed by the dossier; no gate promotion.
+  40.6.162: repair G1 dossier mounting against the terrain-proved gate audit anchor; no gate promotion.
   No backtest fabrication, no network, no exchange call, no real order.
 */
 (() => {
   "use strict";
-  const BUILD="40.6.161";
+  const BUILD="40.6.162";
   const SCHEMA="agent_crypto_strategy_a_evidence_dossier_v2";
   const clone=v=>{try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}};
   const num=(v,f=0)=>Number.isFinite(Number(v))?Number(v):f;
@@ -96,14 +96,19 @@
   function render(){
     if(typeof document==="undefined")return false;
     ensureStyle();
-    const anchor=document.getElementById("strategyASafety")||document.getElementById("strategyAAfterCost");
+    const primaryAnchor=document.getElementById("strategyASafety")||document.getElementById("strategyAAfterCost");
+    const auditAnchor=document.getElementById("strategyAEvidenceGateAudit");
+    const proofBridge=document.getElementById("strategyAPaperV2ProofBridge");
+    const bridgeAnchor=proofBridge?.querySelector?.(".sapv2-gates")||proofBridge?.querySelector?.(".sapv2-wait")||null;
+    const anchor=primaryAnchor||auditAnchor||bridgeAnchor;
     if(!anchor)return false;
+    const position=primaryAnchor?"afterend":auditAnchor?"beforebegin":"afterend";
     document.getElementById("strategyADossier")?.remove();
     const p=document.createElement("section");
     p.id="strategyADossier";
     p.dataset.strategyAG1AfterCostTruthBuild=BUILD;
     p.innerHTML=`<div class="sad-head"><div><div class="sad-title">STRATEGY A · PAPER V2 · EVIDENCE DOSSIER</div><div class="sad-sub">Lecture strictement passive : aucune consultation n'exécute les autotests du laboratoire.</div></div><button class="btn small" id="strategyADossierExport" type="button">EXPORTER DOSSIER</button></div><div class="sad-grid"><div class="sad-k"><span>Fondation déterministe</span><b data-sad="det">—</b></div><div class="sad-k"><span>Cycles réels</span><b data-sad="cycles">0</b></div><div class="sad-k"><span>Trades après coûts</span><b data-sad="trades">0</b></div><div class="sad-k"><span>Gates non soldés</span><b data-sad="pending">—</b></div><div class="sad-k"><span>Micro-live</span><b data-sad="live">LOCKED</b></div></div><div class="sad-truth"><div class="sad-truth-title">G1 · AFTER-COST DATA TRUTH</div><div class="sad-truth-sub">Diagnostic passif du propriétaire AgentCryptoStrategyAAfterCostMetrics · aucun PASS créé par cette vue.</div><div class="sad-truth-grid"><div class="sad-truth-k"><span>Lignes after-cost</span><b data-g1="rows">0</b></div><div class="sad-truth-k"><span>IDs uniques</span><b data-g1="ids">0/0</b></div><div class="sad-truth-k"><span>COMPLETE + VERIFIED</span><b data-g1="verified">0/0</b></div><div class="sad-truth-k"><span>IDs manquants</span><b data-g1="missingIds">0</b></div><div class="sad-truth-k"><span>Timestamps manquants</span><b data-g1="missingTs">0</b></div><div class="sad-truth-k"><span>Doublons</span><b data-g1="dups">0</b></div><div class="sad-truth-k"><span>Chronologie</span><b data-g1="chronology">OK</b></div><div class="sad-truth-k"><span>Numérique UNKNOWN</span><b data-g1="unknown">0</b></div><div class="sad-truth-k"><span>Non VERIFIED</span><b data-g1="unverified">0</b></div><div class="sad-truth-k"><span>Intégrité dataset</span><b data-g1="integrity">NOT READY</b></div></div><div class="sad-reason" data-g1="reason">G1 reste EVIDENCE_REQUIRED tant que la preuve owner n'est pas complète.</div></div><div class="sad-foot">Aucun backtest inventé · aucun résultat fabriqué · dataset incomplet/dupliqué jamais promu · PAPER ONLY.</div>`;
-    anchor.insertAdjacentElement("afterend",p);
+    anchor.insertAdjacentElement(position,p);
     p.querySelector("#strategyADossierExport")?.addEventListener("click",exportJson);
     const d=snapshot();
     const set=(k,v)=>{const n=p.querySelector(`[data-sad="${k}"]`);if(n)n.textContent=v;};
@@ -136,7 +141,34 @@
     return true;
   }
 
-  const api=Object.freeze({build:BUILD,schema:SCHEMA,snapshot,dataset_readiness:datasetReadiness,self_test:selfTest,export_json:exportJson,render,paper_only:true,real_orders:false,network:false,profitability_claim:false,fabricated_backtest:false,passive_read:true,implicit_self_tests:false,strict_dataset_completeness_406019:true,null_blank_boolean_complete_row:false,after_cost_verified_identity_required:true,g1_after_cost_data_truth_406161:true,g1_state_change:false,g1_certified:false});
+  const api=Object.freeze({build:BUILD,schema:SCHEMA,snapshot,dataset_readiness:datasetReadiness,self_test:selfTest,export_json:exportJson,render,paper_only:true,real_orders:false,network:false,profitability_claim:false,fabricated_backtest:false,passive_read:true,implicit_self_tests:false,strict_dataset_completeness_406019:true,null_blank_boolean_complete_row:false,after_cost_verified_identity_required:true,g1_after_cost_data_truth_406161:true,g1_mount_repair_406162:true,g1_state_change:false,g1_certified:false,recurring_timer:false,observer:false,storage_write:false});
   globalThis.AgentCryptoStrategyAEvidenceDossier=api;
-  if(typeof document!=="undefined"){if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render,{once:true});else render();}
+  if(typeof document!=="undefined"){
+    let mounted=false;
+    const cleanup=()=>{
+      document.removeEventListener("click",attemptMount,true);
+      document.removeEventListener("focusin",attemptMount,true);
+      window.removeEventListener("pageshow",attemptMount);
+    };
+    const attemptMount=()=>{
+      if(mounted&&document.getElementById("strategyADossier"))return true;
+      mounted=render()===true;
+      if(mounted)cleanup();
+      return mounted;
+    };
+    const afterPaint=()=>{
+      try{requestAnimationFrame(()=>requestAnimationFrame(attemptMount));}
+      catch(_){attemptMount();}
+    };
+    document.addEventListener("click",attemptMount,true);
+    document.addEventListener("focusin",attemptMount,true);
+    window.addEventListener("pageshow",attemptMount);
+    if(document.readyState==="loading"){
+      document.addEventListener("DOMContentLoaded",()=>{attemptMount();afterPaint();},{once:true});
+      window.addEventListener("load",()=>{attemptMount();afterPaint();},{once:true});
+    }else{
+      attemptMount();
+      afterPaint();
+    }
+  }
 })();
