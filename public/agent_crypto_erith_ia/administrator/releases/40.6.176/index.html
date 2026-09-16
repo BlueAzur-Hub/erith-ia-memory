@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <meta name="agent-crypto-loaded-build" content="40.6.176" />
+  <meta name="agent-crypto-engine-build" content="38.15.11" />
+  <title>Agent-Crypto Administrator — Build 40.6.176</title>
+  <style>html,body{margin:0;min-height:100%;background:#071018;color:#dbe7ef;font:14px/1.45 system-ui,sans-serif}#bootStatus{min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box;text-align:center}</style>
+</head>
+<body>
+  <main id="bootStatus" role="status" aria-live="polite">Initialisation Agent-Crypto 40.6.176…</main>
+  <script>
+  (()=>{
+    "use strict";
+    const BUILD="40.6.176";
+    const ENGINE="38.15.11";
+    const SHELL="../../runtime-shell.html";
+    const EVIDENCE_MODULES=Object.freeze([
+      "./js/strategy-a-evidence-lifecycle-truth.js",
+      "./js/strategy-a-foundation-applicability-truth.js",
+      "./js/strategy-a-time-semantics-truth.js",
+      "./js/strategy-a-g3-structured-data-truth.js",
+      "./js/strategy-a-g3-history-owner-discovery.js",
+      "./js/strategy-a-g3-historical-evidence-adapter.js",
+      "./js/strategy-a-gate-canonical-truth.js"
+    ]);
+    const PANEL_IDS=Object.freeze([
+      "strategyAG3StructuredTruth",
+      "strategyAG3HistoryOwnerDiscovery",
+      "strategyAG3HistoricalEvidenceAdapter"
+    ]);
+    const replaceMeta=(html,name,value)=>{
+      const re=new RegExp(`<meta\\s+name=["']${name}["']\\s+content=["'][^"']*["']\\s*\\/?\\s*>`,"i");
+      const tag=`<meta name="${name}" content="${String(value).replace(/"/g,"&quot;")}" />`;
+      return re.test(html)?html.replace(re,tag):html.replace(/<head>/i,`<head>\n  ${tag}`);
+    };
+    const stampAssets=html=>html
+      .replace(/(\bsrc=["'])([^"']+)(["'])/gi,(_,a,u,q)=>/^\.\//.test(u)&&/\.(?:js|css)(?:$|\?)/i.test(u)?`${a}${u}${u.includes("?")?"&":"?"}release=${BUILD}${q}`:`${a}${u}${q}`)
+      .replace(/(\bhref=["'])([^"']+)(["'])/gi,(_,a,u,q)=>/^\.\//.test(u)&&/\.(?:js|css)(?:$|\?)/i.test(u)?`${a}${u}${u.includes("?")?"&":"?"}release=${BUILD}${q}`:`${a}${u}${q}`);
+    const injectEvidenceTail=html=>{
+      const host=`<section id="strategyAEvidenceSupplements176" data-build="${BUILD}" style="margin:10px 16px;padding:10px;border:1px solid rgba(111,255,215,.28);border-radius:10px;background:rgba(5,23,25,.52)">
+        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:10px;font-weight:950;letter-spacing:.08em;color:#83ffda">STRATEGY A · EVIDENCE SUPPLEMENTS · ${BUILD}</div>
+            <div style="font-size:9px;color:#8db3aa;margin-top:3px">Host final visible indépendant du dossier legacy.</div>
+          </div>
+          <div id="strategyAEvidenceSupplements176State" style="font-size:9px;font-weight:900;color:#eafff8">0 / 3 PANNEAUX</div>
+        </div>
+      </section>`;
+      const moduleTags=EVIDENCE_MODULES.map(src=>`<script src="${src}" data-agent-crypto-evidence-direct="${BUILD}"><\/script>`).join("\n");
+      const finalizer=`<script data-agent-crypto-evidence-finalizer="${BUILD}">
+      (()=>{
+        "use strict";
+        const BUILD="${BUILD}";
+        const HOST_ID="strategyAEvidenceSupplements176";
+        const PANEL_IDS=${JSON.stringify(PANEL_IDS)};
+        const apis=()=>[
+          globalThis.AgentCryptoStrategyAG3StructuredDataTruth,
+          globalThis.AgentCryptoStrategyAG3HistoryOwnerDiscovery,
+          globalThis.AgentCryptoStrategyAG3HistoricalEvidenceAdapter
+        ];
+        const mount=()=>{
+          const host=document.getElementById(HOST_ID);
+          if(!host)return {host:false,present:0};
+          for(const api of apis()){if(typeof api?.render==="function"){try{api.render();}catch(_){}}}
+          let present=0;
+          for(const id of PANEL_IDS){
+            const panel=document.getElementById(id);
+            if(!panel)continue;
+            if(panel.parentElement!==host)host.appendChild(panel);
+            panel.dataset.finalHostBuild=BUILD;
+            present++;
+          }
+          const state=document.getElementById(HOST_ID+"State");
+          if(state)state.textContent=present+" / "+PANEL_IDS.length+" PANNEAUX";
+          host.dataset.panelsPresent=String(present);
+          host.dataset.complete=present===PANEL_IDS.length?"true":"false";
+          return {host:true,present,expected:PANEL_IDS.length};
+        };
+        const schedule=()=>{try{requestAnimationFrame(()=>requestAnimationFrame(mount));}catch(_){queueMicrotask(mount);}};
+        globalThis.AgentCryptoEvidenceHostFinalizer176=Object.freeze({build:BUILD,mount,snapshot:()=>({build:BUILD,host:!!document.getElementById(HOST_ID),panels:PANEL_IDS.map(id=>!!document.getElementById(id)),g3:"PENDING",g9:"LOCKED",real_order:false,paper_only:true}),recurring_timer:false,observer:false,storage_write:false,real_order:false,paper_only:true});
+        document.addEventListener("agent-crypto:evidence-view-refreshed",schedule);
+        document.addEventListener("agent-crypto:evidence-data-changed",schedule);
+        window.addEventListener("pageshow",schedule);
+        window.addEventListener("load",schedule,{once:true});
+        if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",schedule,{once:true});else schedule();
+      })();
+      <\/script>`;
+      if(!/<\/body>/i.test(html))throw new Error("runtime-shell.html sans </body>");
+      return html.replace(/<\/body>/i,`${host}\n${moduleTags}\n${finalizer}\n</body>`);
+    };
+    async function boot(){
+      try{
+        const r=await fetch(`${SHELL}?release=${BUILD}&t=${Date.now()}`,{cache:"no-store",credentials:"same-origin"});
+        if(!r.ok)throw new Error(`runtime-shell.html: HTTP ${r.status}`);
+        let html=await r.text();
+        if(!/^\s*<!doctype html>/i.test(html))throw new Error("runtime-shell.html invalide");
+        html=html.replace(/<head>/i,'<head>\n  <base href="../../" />');
+        for(const name of ["administrator-build","atlas-build","agent-crypto-boot-build","agent-crypto-loaded-build"])html=replaceMeta(html,name,BUILD);
+        html=replaceMeta(html,"atlas-engine-build",ENGINE);
+        html=replaceMeta(html,"agent-crypto-version-owner","release-entry");
+        html=html.replace(/administrator-build-\d+\.\d+\.\d+/g,`administrator-build-${BUILD}`)
+                 .replace(/market-core-v2\.0-alpha-build-\d+\.\d+\.\d+/g,`market-core-v2.0-alpha-build-${BUILD}`)
+                 .replace(/<title>[\s\S]*?<\/title>/i,`<title>Agent-Crypto @erith.IA — Build ${BUILD} · Administrator</title>`)
+                 .replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,`<span id="atlasVersionTruthText">Build ${BUILD} · Administrator</span>`)
+                 .replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi,`AGENT-CRYPTO ${BUILD} · ADMINISTRATOR`);
+        html=injectEvidenceTail(html);
+        html=stampAssets(html);
+        globalThis.AgentCryptoBootTruth=Object.freeze({build:BUILD,loaded_build:BUILD,engine:ENGINE,source:"release-entry"});
+        globalThis.AgentCryptoDirectEvidenceLoadTruth=Object.freeze({
+          build:BUILD,mode:"DIRECT_VISIBLE_HOST_FINALIZER",modules:EVIDENCE_MODULES.slice(),
+          host_id:"strategyAEvidenceSupplements176",recurring_timer:false,observer:false,storage_write:false,real_order:false,paper_only:true
+        });
+        globalThis.AGENT_CRYPTO_EMBEDDED_BUILD=BUILD;
+        globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD=BUILD;
+        globalThis.AGENT_CRYPTO_BUILD=BUILD;
+        globalThis.ATLAS_ENGINE_BUILD=ENGINE;
+        document.open();document.write(html);document.close();
+      }catch(error){
+        const n=document.getElementById("bootStatus");
+        if(n){n.setAttribute("role","alert");n.textContent=`Agent-Crypto indisponible — ${String(error?.message||error)}`;}
+      }
+    }
+    void boot();
+  })();
+  </script>
+</body>
+</html>
