@@ -88,48 +88,67 @@
   }
 })();
 
-/* 40.6.173 — LEGACY SHELL → CANONICAL RUNTIME REGISTRY BOOTSTRAP
-   The Administrator shell still loads this stable file directly. Use that existing
-   hardcoded path to activate the canonical runtime module registry after the page
-   has parsed, so supplemental evidence modules (.166+) are actually executed.
-   No timer, observer, storage, network business call or order path is added. */
+/* 40.6.173 — LEGACY SHELL → EVIDENCE SUPPLEMENT BOOTSTRAP
+   The Administrator shell loads this stable file directly. After the static shell
+   is complete, load only the supplemental Strategy A evidence modules introduced
+   after the hardcoded shell list. This avoids activating unrelated registry modules.
+   No timer, observer, storage write, business network call or order path is added. */
 (() => {
   "use strict";
   const BOOTSTRAP_BUILD="40.6.173";
-  const REGISTRY_SRC="./js/runtime-modules.js";
+  const MODULES=Object.freeze([
+    "./js/strategy-a-evidence-lifecycle-truth.js",
+    "./js/strategy-a-foundation-applicability-truth.js",
+    "./js/strategy-a-time-semantics-truth.js",
+    "./js/strategy-a-g3-structured-data-truth.js",
+    "./js/strategy-a-g3-history-owner-discovery.js",
+    "./js/strategy-a-g3-historical-evidence-adapter.js",
+    "./js/strategy-a-gate-canonical-truth.js"
+  ]);
+  const loaded=new Set();
   let started=false;
 
-  function startRegistry(){
+  function absolute(src){return new URL(src,document.baseURI).href.split("?")[0];}
+  function present(src){
+    const wanted=absolute(src);
+    return Array.from(document.scripts).some(script=>{
+      try{return script.src&&new URL(script.src,document.baseURI).href.split("?")[0]===wanted;}
+      catch(_){return false;}
+    });
+  }
+  function loadOne(src){
+    if(loaded.has(src)||present(src)){loaded.add(src);return Promise.resolve(src);}
+    return new Promise((resolve,reject)=>{
+      const script=document.createElement("script");
+      const url=new URL(src,document.baseURI);
+      url.searchParams.set("supplement",BOOTSTRAP_BUILD);
+      script.src=url.href;
+      script.async=false;
+      script.dataset.agentCryptoEvidenceSupplement=src;
+      script.addEventListener("load",()=>{loaded.add(src);resolve(src);},{once:true});
+      script.addEventListener("error",()=>reject(new Error(`evidence supplement failed: ${src}`)),{once:true});
+      document.head.appendChild(script);
+    });
+  }
+  async function run(){
+    for(const src of MODULES){try{await loadOne(src);}catch(_){}}
+    try{document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready",{detail:{modules:MODULES.slice(),source:"40.6.173-evidence-supplement"}}));}catch(_){}
+    try{document.dispatchEvent(new CustomEvent("agent-crypto:evidence-data-changed",{detail:{source:"40.6.173-evidence-supplement"}}));}catch(_){}
+    return MODULES.slice();
+  }
+  function start(){
     if(started)return;
     started=true;
-    const run=()=>{
-      try{
-        const api=globalThis.AgentCryptoRuntimeModules;
-        if(api&&typeof api.load==="function"){
-          Promise.resolve(api.load()).catch(()=>{});
-          return;
-        }
-        if(document.querySelector('script[data-agent-crypto-runtime-registry-bootstrap="true"]'))return;
-        const script=document.createElement("script");
-        const url=new URL(REGISTRY_SRC,document.baseURI);
-        url.searchParams.set("bootstrap",BOOTSTRAP_BUILD);
-        script.src=url.href;
-        script.async=false;
-        script.dataset.agentCryptoRuntimeRegistryBootstrap="true";
-        script.addEventListener("load",()=>{
-          try{Promise.resolve(globalThis.AgentCryptoRuntimeModules?.load?.()).catch(()=>{});}catch(_){}
-        },{once:true});
-        document.head.appendChild(script);
-      }catch(_){}
-    };
-    if(document.readyState==="complete")run();
-    else window.addEventListener("load",run,{once:true});
+    if(document.readyState==="complete")void run();
+    else window.addEventListener("load",()=>{void run();},{once:true});
   }
 
-  globalThis.AgentCryptoRuntimeRegistryBootstrap=Object.freeze({
+  globalThis.AgentCryptoEvidenceSupplementBootstrap=Object.freeze({
     build:BOOTSTRAP_BUILD,
-    start:startRegistry,
-    registry:REGISTRY_SRC,
+    modules:MODULES,
+    start,
+    loaded:()=>Object.freeze(Array.from(loaded)),
+    unrelated_runtime_registry_loaded:false,
     recurring_timer:false,
     observer:false,
     storage_write:false,
@@ -137,5 +156,5 @@
     real_order:false,
     paper_only:true
   });
-  startRegistry();
+  start();
 })();
