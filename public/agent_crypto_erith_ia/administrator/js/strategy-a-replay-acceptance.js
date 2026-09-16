@@ -87,3 +87,55 @@
     }else render();
   }
 })();
+
+/* 40.6.173 — LEGACY SHELL → CANONICAL RUNTIME REGISTRY BOOTSTRAP
+   The Administrator shell still loads this stable file directly. Use that existing
+   hardcoded path to activate the canonical runtime module registry after the page
+   has parsed, so supplemental evidence modules (.166+) are actually executed.
+   No timer, observer, storage, network business call or order path is added. */
+(() => {
+  "use strict";
+  const BOOTSTRAP_BUILD="40.6.173";
+  const REGISTRY_SRC="./js/runtime-modules.js";
+  let started=false;
+
+  function startRegistry(){
+    if(started)return;
+    started=true;
+    const run=()=>{
+      try{
+        const api=globalThis.AgentCryptoRuntimeModules;
+        if(api&&typeof api.load==="function"){
+          Promise.resolve(api.load()).catch(()=>{});
+          return;
+        }
+        if(document.querySelector('script[data-agent-crypto-runtime-registry-bootstrap="true"]'))return;
+        const script=document.createElement("script");
+        const url=new URL(REGISTRY_SRC,document.baseURI);
+        url.searchParams.set("bootstrap",BOOTSTRAP_BUILD);
+        script.src=url.href;
+        script.async=false;
+        script.dataset.agentCryptoRuntimeRegistryBootstrap="true";
+        script.addEventListener("load",()=>{
+          try{Promise.resolve(globalThis.AgentCryptoRuntimeModules?.load?.()).catch(()=>{});}catch(_){}
+        },{once:true});
+        document.head.appendChild(script);
+      }catch(_){}
+    };
+    if(document.readyState==="complete")run();
+    else window.addEventListener("load",run,{once:true});
+  }
+
+  globalThis.AgentCryptoRuntimeRegistryBootstrap=Object.freeze({
+    build:BOOTSTRAP_BUILD,
+    start:startRegistry,
+    registry:REGISTRY_SRC,
+    recurring_timer:false,
+    observer:false,
+    storage_write:false,
+    business_network_request:false,
+    real_order:false,
+    paper_only:true
+  });
+  startRegistry();
+})();
