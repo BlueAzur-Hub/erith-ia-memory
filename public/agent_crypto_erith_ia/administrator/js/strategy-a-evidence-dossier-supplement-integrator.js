@@ -1,14 +1,17 @@
-/* Agent-Crypto @erith.IA — 40.6.203 STRATEGY A G3 EVIDENCE BODY PORTAL
-   Terrain proof from 40.6.202 showed that a sibling placed next to #strategyADossier
-   can still disappear when the wider Strategy A surface is rebuilt. This release
-   moves the supplemental G3 host to a direct document.body portal, outside the
-   destructive Strategy A subtree, while leaving every evidence owner unchanged.
-   No recurring timer, observer, storage/network/order path or Gate promotion. */
+/* Agent-Crypto @erith.IA — 40.6.204 STRATEGY A G3 EVIDENCE LIFECYCLE BINDING
+   Terrain proof from 40.6.203 showed the canonical integrator can execute before
+   the legacy Evidence Dossier has mounted. The legacy dossier itself retries on
+   click/focus/pageshow, while the supplement integrator previously gave up after
+   its early boot attempt. This repair mirrors that bounded lifecycle and keeps the
+   supplemental host in the canonical Evidence zone, outside #strategyADossier.
+   No recurring timer, MutationObserver, storage/network/order path or Gate promotion. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.203";
+  const BUILD = "40.6.204";
   const DOSSIER_ID = "strategyADossier";
+  const AUDIT_ID = "strategyAEvidenceGateAudit";
+  const BRIDGE_ID = "strategyAPaperV2ProofBridge";
   const HOST_ID = "strategyAEvidenceSupplements";
   const STATUS_ID = "strategyAEvidenceSupplementsStatus";
 
@@ -25,16 +28,22 @@
   let mountCount = 0;
   let mounting = false;
   let queued = false;
+  let bootstrapBound = false;
+  let bootstrapSettled = false;
 
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
+
+  function anchor() {
+    return byId(AUDIT_ID) || byId(DOSSIER_ID) || byId(BRIDGE_ID) || null;
+  }
 
   function ensureStyle() {
     if (typeof document === "undefined" || byId(`${HOST_ID}Style`)) return;
     const style = document.createElement("style");
     style.id = `${HOST_ID}Style`;
     style.textContent = `
-      body>#${HOST_ID}{position:relative;z-index:1;margin:12px max(12px,2vw) 24px;padding:10px;border:1px solid rgba(111,255,215,.22);border-radius:10px;background:rgba(5,23,25,.94);box-shadow:0 10px 30px rgba(0,0,0,.22)}
-      body>#${HOST_ID}>.saesh-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+      #${HOST_ID}{margin-top:10px;padding:10px;border:1px solid rgba(111,255,215,.22);border-radius:10px;background:rgba(5,23,25,.42)}
+      #${HOST_ID}>.saesh-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px}
       #${HOST_ID} .saesh-title{font-size:9px;font-weight:950;letter-spacing:.09em;color:#83ffda;text-transform:uppercase}
       #${HOST_ID} .saesh-sub{font-size:8px;color:#86aaa4;margin-top:3px}
       #${HOST_ID} .saesh-state{font-size:8px;font-weight:900;color:#dffdf5;border:1px solid rgba(111,255,215,.18);border-radius:999px;padding:4px 7px;background:rgba(111,255,215,.06)}
@@ -46,31 +55,24 @@
     document.head.appendChild(style);
   }
 
-  function ensureDossier() {
-    let dossier = byId(DOSSIER_ID);
-    if (dossier) return dossier;
-    const api = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
-    if (typeof api?.render === "function") {
-      try { api.render(); } catch (_) {}
-    }
-    return byId(DOSSIER_ID);
-  }
-
   function ensureHost() {
-    if (typeof document === "undefined" || !document.body) return null;
+    if (typeof document === "undefined") return null;
+    const a = anchor();
+    if (!a) return null;
     ensureStyle();
+
     let host = byId(HOST_ID);
     if (!host) {
       host = document.createElement("section");
       host.id = HOST_ID;
-      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · BODY PORTAL · ${BUILD}</div><div class="saesh-sub">Preuves G3 hors du subtree Strategy A destructible · aucun PASS créé par ce host.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
+      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · LIFECYCLE BOUND · ${BUILD}</div><div class="saesh-sub">Montage lié au cycle réel Evidence Dossier · aucun PASS créé par ce host.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
     }
     host.dataset.build = BUILD;
-    host.dataset.stableBodyPortal = "true";
-    host.dataset.outsideStrategyASubtree = "true";
+    host.dataset.stableSibling = "true";
+    host.dataset.lifecycleBound = "true";
     const title = host.querySelector(".saesh-title");
-    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · BODY PORTAL · ${BUILD}`;
-    if (host.parentElement !== document.body) document.body.appendChild(host);
+    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · LIFECYCLE BOUND · ${BUILD}`;
+    if (a.nextElementSibling !== host) a.insertAdjacentElement("afterend", host);
     return host;
   }
 
@@ -91,7 +93,14 @@
     for (const spec of PANEL_SPECS) {
       const api = globalThis[spec.api];
       if (typeof api?.render !== "function") continue;
-      try { api.render(); } catch (_) {}
+      try {
+        api.render();
+        const root = byId(spec.id);
+        if (root) {
+          root.classList?.remove("saeds-placeholder");
+          root.dataset.hydratedBy = spec.api;
+        }
+      } catch (_) {}
     }
   }
 
@@ -102,15 +111,10 @@
       const root = byId(spec.id);
       if (!root) continue;
       if (root.parentElement !== host) host.appendChild(root);
-      root.dataset.bodyPortalBuild = BUILD;
+      root.dataset.lifecycleHostBuild = BUILD;
       root.dataset.outsideLegacyDossier = "true";
-      root.dataset.outsideStrategyASubtree = "true";
       root.dataset.integratedBy = BUILD;
-      if (typeof globalThis[spec.api]?.render === "function") {
-        root.classList?.remove("saeds-placeholder");
-        root.dataset.hydratedBy = spec.api;
-        hydrated += 1;
-      }
+      if (typeof globalThis[spec.api]?.render === "function" && root.classList?.contains("saeds-placeholder") !== true) hydrated += 1;
       present += 1;
     }
     return {present, hydrated};
@@ -125,30 +129,29 @@
         id: spec.id,
         api: spec.api,
         present: !!node,
-        parent: node?.parentElement?.id || node?.parentElement?.tagName || null,
-        body_portal: !!host && node?.parentElement === host,
+        parent: node?.parentElement?.id || null,
+        stable: !!host && node?.parentElement === host,
         hydrated: !!node && node.classList?.contains("saeds-placeholder") !== true
       };
     });
     const missingApis = PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api);
     return {
-      schema: "agent_crypto_strategy_a_g3_evidence_body_portal_v1",
+      schema: "agent_crypto_strategy_a_g3_evidence_lifecycle_binding_v1",
       build: BUILD,
       dossier_present: !!dossier,
       host_present: !!host,
-      direct_body_child: !!host && host.parentElement === document.body,
-      stable_body_portal: host?.dataset?.stableBodyPortal === "true",
+      lifecycle_bound: host?.dataset?.lifecycleBound === "true",
       mount_count: mountCount,
       mounting,
+      bootstrap_bound: bootstrapBound,
+      bootstrap_settled: bootstrapSettled,
       present: panels.filter(p => p.present).length,
       hydrated: panels.filter(p => p.hydrated).length,
-      in_body_portal: panels.filter(p => p.body_portal).length,
+      stable: panels.filter(p => p.stable).length,
       expected: PANEL_SPECS.length,
       missing_apis: missingApis,
       panels,
       legacy_dossier_owner_unchanged: true,
-      dossier_hook_installed: false,
-      autonomous_refresh_listeners: true,
       recurring_timer: false,
       observer: false,
       storage_write: false,
@@ -160,16 +163,22 @@
     };
   }
 
+  function clearBootstrapListeners() {
+    if (!bootstrapBound || typeof document === "undefined") return;
+    document.removeEventListener("click", bootstrapAttempt, true);
+    document.removeEventListener("focusin", bootstrapAttempt, true);
+    window.removeEventListener("pageshow", bootstrapAttempt);
+    bootstrapBound = false;
+  }
+
   function mount() {
     if (mounting) return {...snapshot(),mounted:false,reason:"MOUNT_ALREADY_ACTIVE"};
     mounting = true;
     mountCount += 1;
     try {
       if (typeof document === "undefined") return {mounted:false,reason:"NO_DOCUMENT",mount_count:mountCount};
-      const dossier = ensureDossier();
-      if (!dossier) return {mounted:false,reason:"DOSSIER_UNAVAILABLE",mount_count:mountCount};
       const host = ensureHost();
-      if (!host) return {mounted:false,reason:"HOST_UNAVAILABLE",mount_count:mountCount};
+      if (!host) return {mounted:false,reason:"EVIDENCE_ANCHOR_UNAVAILABLE",mount_count:mountCount};
 
       PANEL_SPECS.forEach(spec => ensurePlaceholder(host,spec));
       renderOwners();
@@ -181,7 +190,11 @@
       host.dataset.panelsHydrated = String(moved.hydrated);
       host.dataset.panelsExpected = String(PANEL_SPECS.length);
       host.dataset.complete = moved.present === PANEL_SPECS.length && moved.hydrated === PANEL_SPECS.length ? "true" : "false";
-      return {...state,mounted:true};
+      if (host.dataset.complete === "true") {
+        bootstrapSettled = true;
+        clearBootstrapListeners();
+      }
+      return {...state,mounted:true,complete:host.dataset.complete === "true"};
     } finally {
       mounting = false;
     }
@@ -195,9 +208,23 @@
     catch (_) { queueMicrotask(run); }
   }
 
+  function bootstrapAttempt() {
+    if (bootstrapSettled) return;
+    const result = mount();
+    if (result?.mounted !== true) schedule();
+  }
+
+  function bindBootstrapLifecycle() {
+    if (bootstrapBound || bootstrapSettled || typeof document === "undefined") return;
+    bootstrapBound = true;
+    document.addEventListener("click", bootstrapAttempt, true);
+    document.addEventListener("focusin", bootstrapAttempt, true);
+    window.addEventListener("pageshow", bootstrapAttempt);
+  }
+
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
     build: BUILD,
-    owner: "strategy-a-g3-evidence-body-portal",
+    owner: "strategy-a-g3-evidence-lifecycle-binding",
     dossier_id: DOSSIER_ID,
     host_id: HOST_ID,
     status_id: STATUS_ID,
@@ -205,11 +232,9 @@
     mount,
     snapshot,
     schedule,
-    install_dossier_owner_hook: () => false,
+    lifecycle_bound: true,
+    bounded_bootstrap_retry: true,
     dossier_hook_installed: false,
-    autonomous_refresh_listeners: true,
-    stable_body_portal: true,
-    legacy_dossier_owner_unchanged: true,
     recurring_timer: false,
     observer: false,
     storage_write: false,
@@ -221,13 +246,12 @@
   });
 
   if (typeof document !== "undefined") {
-    document.addEventListener("agent-crypto:evidence-view-refreshed", schedule);
+    bindBootstrapLifecycle();
     document.addEventListener("agent-crypto:evidence-data-changed", schedule);
     document.addEventListener("erith:system-hydrated", schedule, {passive:true});
     document.addEventListener("agent-crypto:runtime-modules-ready", schedule, {once:true});
-    window.addEventListener("pageshow", schedule);
-    window.addEventListener("load", schedule, {once:true});
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule, {once:true});
     else schedule();
+    window.addEventListener("load", schedule, {once:true});
   }
 })();
