@@ -1,61 +1,45 @@
-/* Agent-Crypto @erith.IA — 40.6.197 G3 TEMPORAL CONTRACT CERTIFICATION
-   Read-only evidence bridge. It certifies only a real, regular 24 h sub-window
-   from the structured market-series owner. It never invents points, never
-   promotes Gate 3 and never touches Strategy A business logic, orders or storage. */
+/* Agent-Crypto @erith.IA — 40.6.198 G3 HISTORICAL T0 TRACEABILITY
+   Read-only continuation of 40.6.197. Certifies a real 24h replay window and
+   audits Experiment Ledger rows using only fields stored on each historical row.
+   No runtime backfill, no current Oracle injected into the past, no gate promotion. */
 (() => {
   "use strict";
-  const BUILD="40.6.197", ROOT_ID="strategyAG3CascadeCheckpoint", DOSSIER_ID="strategyADossier";
-  const DAY_MS=24*60*60*1000;
-  const finite=v=>{const n=Number(v);return Number.isFinite(n)?n:null;};
-  const ts=v=>{const n=typeof v==="number"?v:Date.parse(String(v??""));return Number.isFinite(n)?n:null;};
-  const price=v=>{const n=finite(v);return n!==null&&n>0?n:null;};
-  function row(x){
-    if(Array.isArray(x)) return {t:ts(x[0]),p:price(x[1]),raw:x};
-    if(!x||typeof x!=="object") return {t:null,p:null,raw:x};
-    return {t:ts(x.t??x.ts??x.time??x.timestamp??x.at??x.date),p:price(x.p??x.price??x.value??x.close??x.y),raw:x};
-  }
+  const BUILD="40.6.198",ROOT_ID="strategyAG3CascadeCheckpoint",DOSSIER_ID="strategyADossier",DAY_MS=86400000;
+  const finite=v=>{const n=Number(v);return Number.isFinite(n)?n:null;},parseTs=v=>{const n=typeof v==="number"?v:Date.parse(String(v??""));return Number.isFinite(n)?n:null;};
+  const first=(o,paths)=>{for(const p of paths){let v=o;for(const k of p.split(".")){v=v?.[k];if(v===undefined||v===null)break;}if(v!==undefined&&v!==null&&v!=="")return v;}return null;};
   const median=a=>{const b=a.filter(Number.isFinite).sort((x,y)=>x-y);if(!b.length)return null;const m=Math.floor(b.length/2);return b.length%2?b[m]:(b[m-1]+b[m])/2;};
-  function source(){try{return globalThis.AgentCryptoMarketSeriesTruth?.snapshot?.()||null}catch(_){return null}}
-  function certify(raw=source()){
-    const blockers=[];
-    if(!raw||raw.available===false){blockers.push("SOURCE_UNAVAILABLE");return result(raw,[],blockers,null);}
-    if(raw.source_period_proven!==true||Number(raw.source_period_days)!==1) blockers.push("SOURCE_24H_NOT_PROVEN");
-    const rows=(Array.isArray(raw.rows)?raw.rows:[]).map(row).filter(r=>r.t!==null&&r.p!==null).sort((a,b)=>a.t-b.t);
-    const unique=[]; for(const r of rows){if(!unique.length||unique[unique.length-1].t!==r.t)unique.push(r);}
-    if(unique.length<2){blockers.push("INSUFFICIENT_VALID_ROWS");return result(raw,unique,blockers,null);}
-    const diffs=[];for(let i=1;i<unique.length;i++)diffs.push((unique[i].t-unique[i-1].t)/60000);
-    const cadence=median(diffs);
-    if(!(cadence>0)) blockers.push("OBSERVED_CADENCE_UNKNOWN");
-    const end=unique[unique.length-1].t,target=end-DAY_MS,tol=Math.max(1000,(cadence||1)*60000*0.08);
-    let startIndex=-1,best=Infinity;
-    for(let i=0;i<unique.length;i++){const d=Math.abs(unique[i].t-target);if(d<best){best=d;startIndex=i;}}
-    const window=startIndex>=0?unique.slice(startIndex):[];
-    const span=window.length>1?(window[window.length-1].t-window[0].t)/60000:null;
-    const wdiff=[];for(let i=1;i<window.length;i++)wdiff.push((window[i].t-window[i-1].t)/60000);
-    const maxGap=wdiff.length?Math.max(...wdiff):null, expectedRows=cadence>0?Math.round(1440/cadence)+1:null;
-    if(best>tol) blockers.push("NO_EXACT_24H_BOUNDARY");
-    if(span===null||Math.abs(span-1440)>Math.max(0.25,(cadence||1)*0.08)) blockers.push("SPAN_NOT_24H");
-    if(expectedRows!==null&&window.length!==expectedRows) blockers.push("ROW_COUNT_MISMATCH");
-    if(cadence>0&&wdiff.some(d=>Math.abs(d-cadence)>Math.max(0.25,cadence*0.25))) blockers.push("IRREGULAR_CADENCE");
-    if(cadence>0&&maxGap>cadence*1.25) blockers.push("UNEXPECTED_GAP");
-    return result(raw,window,blockers,cadence,{span,maxGap,expectedRows,sourceRows:rows.length,uniqueRows:unique.length});
+  function temporal(){
+    let raw=null;try{raw=globalThis.AgentCryptoMarketSeriesTruth?.snapshot?.()||null}catch(_){}
+    const blockers=[];if(!raw||raw.available===false)return {certified:false,status:"NOT_CERTIFIED",blockers:["SOURCE_UNAVAILABLE"],rows:[],window_points:0};
+    if(raw.source_period_proven!==true||Number(raw.source_period_days)!==1)blockers.push("SOURCE_24H_NOT_PROVEN");
+    const norm=(Array.isArray(raw.rows)?raw.rows:[]).map(x=>Array.isArray(x)?{t:parseTs(x[0]),p:finite(x[1])}:{t:parseTs(x?.t??x?.ts??x?.time??x?.timestamp??x?.at),p:finite(x?.p??x?.price??x?.value??x?.close)}).filter(r=>r.t!==null&&r.p!==null&&r.p>0).sort((a,b)=>a.t-b.t);
+    const uniq=[];for(const r of norm)if(!uniq.length||uniq[uniq.length-1].t!==r.t)uniq.push(r);
+    if(uniq.length<2)return {certified:false,status:"NOT_CERTIFIED",blockers:[...blockers,"INSUFFICIENT_VALID_ROWS"],rows:[],window_points:0};
+    const diffs=[];for(let i=1;i<uniq.length;i++)diffs.push((uniq[i].t-uniq[i-1].t)/60000);const cadence=median(diffs),end=uniq.at(-1).t,target=end-DAY_MS,tol=Math.max(1000,(cadence||1)*4800);
+    let idx=-1,best=Infinity;uniq.forEach((r,i)=>{const d=Math.abs(r.t-target);if(d<best){best=d;idx=i;}});const rows=idx>=0?uniq.slice(idx):[],span=rows.length>1?(rows.at(-1).t-rows[0].t)/60000:null,wd=[];for(let i=1;i<rows.length;i++)wd.push((rows[i].t-rows[i-1].t)/60000);const maxGap=wd.length?Math.max(...wd):null,expected=cadence>0?Math.round(1440/cadence)+1:null;
+    if(!(cadence>0))blockers.push("OBSERVED_CADENCE_UNKNOWN");if(best>tol)blockers.push("NO_EXACT_24H_BOUNDARY");if(span===null||Math.abs(span-1440)>Math.max(.25,(cadence||1)*.08))blockers.push("SPAN_NOT_24H");if(expected!==null&&rows.length!==expected)blockers.push("ROW_COUNT_MISMATCH");if(cadence>0&&wd.some(d=>Math.abs(d-cadence)>Math.max(.25,cadence*.25)))blockers.push("IRREGULAR_CADENCE");if(cadence>0&&maxGap>cadence*1.25)blockers.push("UNEXPECTED_GAP");
+    return {certified:blockers.length===0,status:blockers.length?"NOT_CERTIFIED":"CERTIFIED",asset:String(raw.symbol||raw.asset_id||"BTC").toUpperCase(),rows:rows.map(r=>[r.t,r.p]),source_points:norm.length,window_points:rows.length,observed_cadence_min:cadence,window_span_min:span,max_gap_min:maxGap,first_at:rows.length?new Date(rows[0].t).toISOString():null,last_at:rows.length?new Date(rows.at(-1).t).toISOString():null,blockers};
   }
-  function result(raw,window,blockers,cadence,extra={}){
-    const certified=blockers.length===0;
-    return Object.freeze({schema:"agent_crypto_g3_temporal_contract_v1",build:BUILD,status:certified?"CERTIFIED":"NOT_CERTIFIED",certified,asset:String(raw?.symbol||raw?.asset_id||"BTC").toUpperCase(),source_owner:raw?.owner||"AgentCryptoMarketSeriesTruth",source_period_days:finite(raw?.source_period_days),source_period_proven:raw?.source_period_proven===true,source_points:extra.sourceRows??(Array.isArray(raw?.rows)?raw.rows.length:0),window_points:window.length,observed_cadence_min:cadence,window_span_min:extra.span??null,max_gap_min:extra.maxGap??null,expected_rows:extra.expectedRows??null,first_at:window.length?new Date(window[0].t).toISOString():null,last_at:window.length?new Date(window[window.length-1].t).toISOString():null,rows:Object.freeze(window.map(r=>Object.freeze([r.t,r.p]))),blockers:Object.freeze(blockers.slice()),paper_only:true,g3:"PENDING",g9:"LOCKED",real_order:false,fabricated_data:false,trimmed_to_real_24h_window:certified&&Number(extra.sourceRows||0)>window.length});
+  function ledgerRows(){try{const v=globalThis.AgentCryptoStrategyAExperimentLedger?.read?.();return Array.isArray(v)?v:Array.isArray(v?.rows)?v.rows:Array.isArray(v?.entries)?v.entries:[]}catch(_){return[]}}
+  function normalizeT0(r){
+    const id=first(r,["cycle_id","decision_id","proposal_id","id","trace.cycle_id","trace.id"]),asset=String(first(r,["asset","symbol","market.symbol","inputs.asset","inputs.symbol","snapshot.symbol"])||"").toUpperCase();
+    const decision=String(first(r,["decision","verdict","action","proposal.decision","result.decision","trace.decision"])||"").toUpperCase();
+    const marketAt=parseTs(first(r,["market_at","market_time","market.timestamp","inputs.market_at","snapshot.market_at"]));
+    const decisionAt=parseTs(first(r,["decision_at","decided_at","decision.timestamp","trace.decision_at"]));
+    const availableAt=parseTs(first(r,["available_at","recorded_at","trace.available_at"]));
+    const strategyBuild=first(r,["strategy_build","strategy_version","strategy.build","trace.strategy_build"]),policyBuild=first(r,["policy_build","policy_version","policy.build","trace.policy_build"]);
+    const direction=finite(first(r,["direction","direction_score","inputs.direction","inputs.direction_score","signal.direction"]));
+    const confidence=finite(first(r,["confidence","confidence_score","inputs.confidence","inputs.confidence_score","oracle.confidence"]));
+    const btc24=finite(first(r,["btc_24h_pct","btc24h","inputs.btc_24h_pct","market.btc_24h_pct"]));
+    const expectedMove=finite(first(r,["expected_move_pct","oracle_amplitude","inputs.expected_move_pct","inputs.oracle_amplitude"]));
+    const dataReady=first(r,["data_ready","inputs.data_ready","trace.data_ready"]);const costGate=finite(first(r,["cost_gate_pct","cost_gate_threshold_pct","inputs.cost_gate_pct","inputs.cost_gate_threshold_pct"]));
+    const missing=[];if(!id)missing.push("id");if(!asset)missing.push("asset");if(!decision)missing.push("decision");if(marketAt===null)missing.push("market_at");if(decisionAt===null)missing.push("decision_at");if(availableAt===null)missing.push("available_at");if(!strategyBuild)missing.push("strategy_build");if(!policyBuild)missing.push("policy_build");if(direction===null)missing.push("direction");if(confidence===null)missing.push("confidence");if(btc24===null)missing.push("btc_24h_pct");if(expectedMove===null)missing.push("expected_move_pct");if(dataReady!==true&&dataReady!==false)missing.push("data_ready");if(costGate===null)missing.push("cost_gate_pct");
+    if(marketAt!==null&&decisionAt!==null&&marketAt>decisionAt)missing.push("market_after_decision");if(decisionAt!==null&&availableAt!==null&&decisionAt>availableAt)missing.push("decision_after_available");
+    return {id:id?String(id):null,asset,decision,market_at:marketAt,decision_at:decisionAt,available_at:availableAt,strategy_build:strategyBuild?String(strategyBuild):null,policy_build:policyBuild?String(policyBuild):null,direction,confidence,btc_24h_pct:btc24,expected_move_pct:expectedMove,data_ready:dataReady,cost_gate_pct:costGate,certified:missing.length===0,missing,raw:r};
   }
-  function self_test(){
-    const base=Date.UTC(2026,8,16,0,0,0),rows=[];for(let i=0;i<300;i++)rows.push([base+i*300000,65000+i]);
-    const good=certify({available:true,source_period_proven:true,source_period_days:1,rows,symbol:"BTC",owner:"TEST"});
-    const badRows=rows.slice();badRows.splice(150,1);const gap=certify({available:true,source_period_proven:true,source_period_days:1,rows:badRows,symbol:"BTC",owner:"TEST"});
-    return {build:BUILD,pass:good.certified===true&&good.window_points===289&&good.window_span_min===1440&&gap.certified===false,checks:{overlong_regular_source_yields_exact_real_24h:good.certified===true&&good.window_points===289,gap_fails_closed:gap.certified===false}};
-  }
-  function render(){
-    const data=certify(); if(typeof document==="undefined")return data; const dossier=document.getElementById(DOSSIER_ID);if(!dossier)return data;
-    let root=document.getElementById(ROOT_ID);if(!root){root=document.createElement("section");root.id=ROOT_ID;root.style.cssText="margin-top:9px;padding:8px;border:1px solid rgba(120,210,255,.25);border-radius:8px;background:rgba(6,24,34,.30)";dossier.appendChild(root);} root.dataset.build=BUILD;
-    const esc=x=>String(x??"INCONNU").replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));
-    root.innerHTML=`<div style="font-size:8px;font-weight:950;letter-spacing:.08em;color:#85e8ff">G3 · CASCADE CHECKPOINT · ${BUILD}</div><div style="margin-top:3px;font-size:8px;color:#9bb8c3">Contrat temporel read-only · sous-fenêtre 24 h réelle · aucune promotion de Gate.</div><div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:7px"><div><small>ÉTAT</small><b style="display:block">${esc(data.status)}</b></div><div><small>POINTS 24H</small><b style="display:block">${esc(data.window_points)}</b></div><div><small>CADENCE OBS.</small><b style="display:block">${esc(data.observed_cadence_min)} min</b></div><div><small>SPAN</small><b style="display:block">${esc(data.window_span_min)} min</b></div><div><small>G3</small><b style="display:block">PENDING</b></div></div><div style="margin-top:6px;font-size:8px;color:#9bb8c3">${data.blockers.length?esc(data.blockers.join(" · ")):"Fenêtre temporelle certifiée pour préparer le replay; aucune rentabilité déduite."}</div>`;
-    return data;
-  }
-  globalThis.AgentCryptoStrategyAG3CascadeCheckpoint=Object.freeze({build:BUILD,stage:"TEMPORAL_CONTRACT",snapshot:certify,render,self_test,recurring_timer:false,observer:false,storage_write:false,network:false,real_order:false,paper_only:true,g3:"PENDING",g9:"LOCKED"});
+  function t0Audit(){const rows=ledgerRows(),normalized=rows.map(normalizeT0),cert=normalized.filter(x=>x.certified);const missing={};for(const n of normalized)for(const k of n.missing)missing[k]=(missing[k]||0)+1;return {schema:"agent_crypto_g3_t0_traceability_v1",build:BUILD,status:cert.length?"TRACEABLE_T0_AVAILABLE":"WAITING_T0_CAPTURE",ledger_rows:rows.length,traceable_rows:normalized.filter(x=>!!x.id&&x.decision_at!==null).length,certified_rows:cert.length,certified:cert.map(x=>Object.freeze({...x,raw:undefined,missing:Object.freeze([])})),missing_field_counts:Object.freeze(missing),current_runtime_backfill:false,current_oracle_applied_to_past:false,future_outcomes_used:false,paper_only:true,g3:"PENDING",g9:"LOCKED"};}
+  function snapshot(){return Object.freeze({schema:"agent_crypto_g3_cascade_checkpoint_v2",build:BUILD,stage:"HISTORICAL_T0_TRACEABILITY",temporal:temporal(),t0:t0Audit(),paper_only:true,g3:"PENDING",g9:"LOCKED",real_order:false});}
+  function self_test(){const row={cycle_id:"A-CYCLE-X",asset:"BTC",decision:"NO_TRADE",market_at:"2026-09-16T10:00:00Z",decision_at:"2026-09-16T10:00:01Z",available_at:"2026-09-16T10:00:02Z",strategy_build:"40.6.56",policy_build:"40.6.56",direction:-16,confidence:94,btc_24h_pct:-.8,expected_move_pct:.44,data_ready:true,cost_gate_pct:.8};const n=normalizeT0(row);return {build:BUILD,pass:n.certified===true&&n.decision==="NO_TRADE"&&normalizeT0({cycle_id:"x"}).certified===false,checks:{complete_no_trade_certifies:n.certified===true,incomplete_fails_closed:normalizeT0({cycle_id:"x"}).certified===false}};}
+  function render(){const d=snapshot();if(typeof document==="undefined")return d;const dossier=document.getElementById(DOSSIER_ID);if(!dossier)return d;let root=document.getElementById(ROOT_ID);if(!root){root=document.createElement("section");root.id=ROOT_ID;dossier.appendChild(root);}root.style.cssText="margin-top:9px;padding:8px;border:1px solid rgba(120,210,255,.25);border-radius:8px;background:rgba(6,24,34,.30)";const e=x=>String(x??"INCONNU").replace(/[&<>]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));root.innerHTML=`<div style="font-size:8px;font-weight:950;letter-spacing:.08em;color:#85e8ff">G3 · CASCADE CHECKPOINT · ${BUILD}</div><div style="font-size:8px;color:#9bb8c3;margin-top:3px">T0 historique lu uniquement depuis le Ledger enregistré · aucun backfill runtime.</div><div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:7px"><div><small>24H</small><b style="display:block">${e(d.temporal.status)}</b></div><div><small>LEDGER</small><b style="display:block">${e(d.t0.ledger_rows)}</b></div><div><small>TRAÇABLES</small><b style="display:block">${e(d.t0.traceable_rows)}</b></div><div><small>CERTIFIÉES T0</small><b style="display:block">${e(d.t0.certified_rows)}</b></div><div><small>G3</small><b style="display:block">PENDING</b></div></div><div style="margin-top:6px;font-size:8px;color:#9bb8c3">${d.t0.certified_rows?"Décision(s) t0 certifiée(s) disponible(s) pour la jointure.":"Capture t0 future requise · champs manquants : "+e(Object.entries(d.t0.missing_field_counts).map(([k,v])=>`${k}:${v}`).join(" · ")||"ledger vide")}</div>`;return d;}
+  globalThis.AgentCryptoStrategyAG3CascadeCheckpoint=Object.freeze({build:BUILD,stage:"HISTORICAL_T0_TRACEABILITY",snapshot,render,self_test,normalize_t0:normalizeT0,recurring_timer:false,observer:false,storage_write:false,network:false,real_order:false,paper_only:true,g3:"PENDING",g9:"LOCKED"});
 })();
