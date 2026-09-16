@@ -26,9 +26,9 @@
        entries remain archives/compatibility only and are never required for
        an update.
 
-       40.6.178: Strategy A evidence supplements remain wired by the canonical
-       authority and are now reparented beside PAPER V2 instead of the page footer.
-       The host stays outside the Proof Bridge subtree so refreshes cannot erase it. */
+       40.6.179: Strategy A evidence supplements remain wired by the canonical
+       authority and are integrated directly inside the existing Evidence Dossier.
+       No separate page-level evidence host is created. */
     const meta = name => String(document.querySelector(`meta[name="${name}"]`)?.content || "").trim();
     let LOADED_BUILD = meta("agent-crypto-loaded-build");
     const ENGINE = meta("agent-crypto-engine-build");
@@ -43,7 +43,8 @@
       "./js/strategy-a-g3-structured-data-truth.js",
       "./js/strategy-a-g3-history-owner-discovery.js",
       "./js/strategy-a-g3-historical-evidence-adapter.js",
-      "./js/strategy-a-gate-canonical-truth.js"
+      "./js/strategy-a-gate-canonical-truth.js",
+      "./js/strategy-a-evidence-dossier-supplement-integrator.js"
     ]);
     const EVIDENCE_PANEL_IDS = Object.freeze([
       "strategyAG3StructuredTruth",
@@ -106,173 +107,52 @@
 
     function injectCanonicalEvidence(html, truth) {
       if (!truth.canonical_evidence_wiring) return html;
-      if (html.includes('data-agent-crypto-canonical-evidence="')) return html;
+      if (html.includes('data-agent-crypto-canonical-evidence-modules="')) return html;
       if (!/<\/body>/i.test(html)) throw new Error("runtime-shell.html sans </body>");
 
       const build = truth.build;
-      const hostId = "strategyAEvidenceSupplements178";
-      const stateId = `${hostId}State`;
-      const host = `<section id="${hostId}" hidden data-agent-crypto-canonical-evidence="${build}" data-build="${build}" style="margin:10px 0;padding:10px;border:1px solid rgba(111,255,215,.28);border-radius:10px;background:rgba(5,23,25,.52)">
-        <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-          <div>
-            <div style="font-size:10px;font-weight:950;letter-spacing:.08em;color:#83ffda">STRATEGY A · EVIDENCE SUPPLEMENTS · ${build}</div>
-            <div style="font-size:9px;color:#8db3aa;margin-top:3px">CANONICAL ENTRY · placé après PAPER V2 · lecture passive · aucun PASS créé par ce host.</div>
-          </div>
-          <div id="${stateId}" style="font-size:9px;font-weight:900;color:#eafff8">0 / ${EVIDENCE_PANEL_IDS.length} PANNEAUX</div>
-        </div>
-      </section>`;
-
       const moduleTags = EVIDENCE_MODULES
-        .map(src => `<script src="${src}" data-agent-crypto-evidence-canonical="${build}"><\/script>`)
+        .map(src => `<script src="${src}" data-agent-crypto-canonical-evidence-modules="${build}"><\/script>`)
         .join("\n");
 
-      const finalizer = `<script data-agent-crypto-evidence-canonical-finalizer="${build}">
+      const receipt = `<script data-agent-crypto-evidence-dossier-integrator-receipt="${build}">
       (() => {
         "use strict";
-        const BUILD = ${JSON.stringify(build)};
-        const HOST_ID = ${JSON.stringify(hostId)};
-        const STATE_ID = ${JSON.stringify(stateId)};
-        const PANEL_IDS = ${JSON.stringify(EVIDENCE_PANEL_IDS)};
-        const BRIDGE_ID = "strategyAPaperV2ProofBridge";
-        const DOSSIER_ID = "strategyADossier";
-        const API_NAMES = [
-          "AgentCryptoStrategyAG3StructuredDataTruth",
-          "AgentCryptoStrategyAG3HistoryOwnerDiscovery",
-          "AgentCryptoStrategyAG3HistoricalEvidenceAdapter"
-        ];
-        let queued = false;
-
-        function placementAnchor() {
-          const bridge = document.getElementById(BRIDGE_ID);
-          if (bridge) return {node:bridge, mode:"AFTER_PROOF_BRIDGE"};
-
-          const dossier = document.getElementById(DOSSIER_ID);
-          if (dossier && !dossier.closest("#" + BRIDGE_ID)) {
-            return {node:dossier, mode:"AFTER_STANDALONE_DOSSIER"};
-          }
-          return null;
-        }
-
-        function placeHost(host) {
-          const target = placementAnchor();
-          if (!target) {
-            host.hidden = true;
-            host.dataset.placement = "WAITING_STRATEGY_A_ANCHOR";
-            return {placed:false, mode:"WAITING_STRATEGY_A_ANCHOR"};
-          }
-          if (target.node.nextElementSibling !== host) {
-            target.node.insertAdjacentElement("afterend", host);
-          }
-          host.hidden = false;
-          host.dataset.placement = target.mode;
-          host.dataset.outsideProofBridge = target.mode === "AFTER_PROOF_BRIDGE" ? "true" : "fallback";
-          return {placed:true, mode:target.mode};
-        }
-
-        function mount() {
-          const host = document.getElementById(HOST_ID);
-          if (!host) return {host:false,placed:false,present:0,expected:PANEL_IDS.length};
-
-          const placement = placeHost(host);
-          if (!placement.placed) {
-            return {host:true,placed:false,placement:placement.mode,present:0,expected:PANEL_IDS.length};
-          }
-
-          for (const name of API_NAMES) {
-            const api = globalThis[name];
-            if (typeof api?.render === "function") {
-              try { api.render(); } catch (_) {}
-            }
-          }
-
-          let present = 0;
-          for (const id of PANEL_IDS) {
-            const panel = document.getElementById(id);
-            if (!panel) continue;
-            if (panel.parentElement !== host) host.appendChild(panel);
-            panel.dataset.canonicalHostBuild = BUILD;
-            present += 1;
-          }
-
-          const missing = API_NAMES.filter(name => typeof globalThis[name]?.render !== "function");
-          const dossierPresent = !!document.getElementById(DOSSIER_ID);
-          const state = document.getElementById(STATE_ID);
-          if (state) {
-            state.textContent = present + " / " + PANEL_IDS.length + " PANNEAUX" +
-              (missing.length ? " · API MANQUANTE: " + missing.length : "") +
-              (!dossierPresent && present === 0 ? " · DOSSIER LEGACY ABSENT" : "");
-          }
-
-          host.dataset.panelsPresent = String(present);
-          host.dataset.panelsExpected = String(PANEL_IDS.length);
-          host.dataset.complete = present === PANEL_IDS.length ? "true" : "false";
-          host.dataset.missingApis = String(missing.length);
-          host.dataset.dossierPresent = dossierPresent ? "true" : "false";
-
-          return {host:true,placed:true,placement:placement.mode,present,expected:PANEL_IDS.length,missing_apis:missing,dossier_present:dossierPresent};
-        }
-
-        function schedule() {
-          if (queued) return;
-          queued = true;
-          const run = () => { queued = false; mount(); };
-          try { requestAnimationFrame(() => requestAnimationFrame(run)); }
-          catch (_) { queueMicrotask(run); }
-        }
-
         globalThis.AgentCryptoCanonicalEvidenceWiring = Object.freeze({
-          build: BUILD,
+          build: ${JSON.stringify(build)},
           owner: "administrator/index.html",
-          mode: "CANONICAL_ENTRY_STRATEGY_A_PLACEMENT",
-          host_id: HOST_ID,
-          primary_anchor_id: BRIDGE_ID,
-          fallback_anchor_id: DOSSIER_ID,
+          mode: "CANONICAL_ENTRY_DOSSIER_INTEGRATION",
           modules: ${JSON.stringify(EVIDENCE_MODULES)},
-          panels: PANEL_IDS.slice(),
-          mount,
-          snapshot: () => {
-            const host = document.getElementById(HOST_ID);
-            return {
-              build: BUILD,
-              owner: "administrator/index.html",
-              host: !!host,
-              host_hidden: host?.hidden === true,
-              placement: host?.dataset?.placement || "UNMOUNTED",
-              outside_proof_bridge: host?.dataset?.outsideProofBridge || null,
-              dossier_present: !!document.getElementById(DOSSIER_ID),
-              panels: PANEL_IDS.map(id => ({id,present:!!document.getElementById(id),parent:document.getElementById(id)?.parentElement?.id||null})),
-              g3: "PENDING",
-              g9: "LOCKED",
-              recurring_timer: false,
-              observer: false,
-              storage_write: false,
-              business_network_request: false,
-              real_order: false,
-              paper_only: true
-            };
-          },
+          panels: ${JSON.stringify(EVIDENCE_PANEL_IDS)},
+          dossier_id: "strategyADossier",
+          separate_host: false,
+          g3: "PENDING",
+          g9: "LOCKED",
           recurring_timer: false,
           observer: false,
           storage_write: false,
           business_network_request: false,
           real_order: false,
           paper_only: true,
-          g3: "PENDING",
-          g9: "LOCKED"
+          snapshot: () => ({
+            build: ${JSON.stringify(build)},
+            owner: "administrator/index.html",
+            dossier_present: !!document.getElementById("strategyADossier"),
+            integrator_available: typeof globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount === "function",
+            panels: ${JSON.stringify(EVIDENCE_PANEL_IDS)}.map(id => ({
+              id,
+              present: !!document.getElementById(id),
+              parent: document.getElementById(id)?.parentElement?.id || null
+            })),
+            g3: "PENDING",
+            g9: "LOCKED"
+          })
         });
-
-        document.addEventListener("agent-crypto:evidence-view-refreshed", schedule);
-        document.addEventListener("agent-crypto:evidence-data-changed", schedule);
-        document.addEventListener("agent-crypto:runtime-modules-ready", schedule, {once:true});
-        document.addEventListener("erith:system-hydrated", schedule, {passive:true});
-        window.addEventListener("pageshow", schedule);
-        window.addEventListener("load", schedule, {once:true});
-        if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule, {once:true});
-        else schedule();
+        try { globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount?.(); } catch (_) {}
       })();
       <\/script>`;
 
-      return html.replace(/<\/body>/i, `${host}\n${moduleTags}\n${finalizer}\n</body>`);
+      return html.replace(/<\/body>/i, `${moduleTags}\n${receipt}\n</body>`);
     }
 
     function patchShell(raw, truth) {
