@@ -37,7 +37,8 @@
       "./js/strategy-a-g3-decision-replay.js",
       "./js/strategy-a-g3-cascade-checkpoint.js",
       "./js/strategy-a-gate-canonical-truth.js",
-      "./js/strategy-a-evidence-dossier-supplement-integrator.js"
+      "./js/strategy-a-evidence-dossier-supplement-integrator.js",
+      "./js/strategy-a-g3-prospective-t0-capture.js"
     ]);
     const EVIDENCE_PANEL_IDS = Object.freeze([
       "strategyAG3StructuredTruth",
@@ -77,8 +78,9 @@
         const mountEvidence=()=>{
           try{globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount?.();}catch(_){}
           try{globalThis.AgentCryptoStrategyAG3CascadeCheckpoint?.render?.();}catch(_){}
+          try{globalThis.AgentCryptoStrategyAG3ProspectiveT0Capture?.render?.();}catch(_){}
         };
-        globalThis.AgentCryptoCanonicalEvidenceWiring=Object.freeze({build:${JSON.stringify(build)},owner:"administrator/index.html",mode:"CANONICAL_ENTRY_DOSSIER_INTEGRATION",modules:${JSON.stringify(EVIDENCE_MODULES)},panels:${JSON.stringify(EVIDENCE_PANEL_IDS)},dossier_id:"strategyADossier",separate_host:false,g3:"PENDING",g9:"LOCKED",recurring_timer:false,observer:false,storage_write:false,business_network_request:false,real_order:false,paper_only:true,mount_timing:"WINDOW_LOAD_ONCE",snapshot:()=>({build:${JSON.stringify(build)},owner:"administrator/index.html",dossier_present:!!document.getElementById("strategyADossier"),integrator_available:typeof globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount==="function",panels:${JSON.stringify(EVIDENCE_PANEL_IDS)}.map(id=>({id,present:!!document.getElementById(id),parent:document.getElementById(id)?.parentElement?.id||null})),g3:"PENDING",g9:"LOCKED"})});
+        globalThis.AgentCryptoCanonicalEvidenceWiring=Object.freeze({build:${JSON.stringify(build)},owner:"administrator/index.html",mode:"CANONICAL_ENTRY_DOSSIER_INTEGRATION",modules:${JSON.stringify(EVIDENCE_MODULES)},panels:${JSON.stringify(EVIDENCE_PANEL_IDS)},dossier_id:"strategyADossier",separate_host:false,g3:"PENDING",g9:"LOCKED",recurring_timer:false,observer:false,storage_write:true,storage_scope:"PROSPECTIVE_T0_EVIDENCE_ONLY",business_network_request:false,real_order:false,paper_only:true,mount_timing:"WINDOW_LOAD_ONCE",snapshot:()=>({build:${JSON.stringify(build)},owner:"administrator/index.html",dossier_present:!!document.getElementById("strategyADossier"),integrator_available:typeof globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount==="function",prospective_t0_capture_available:typeof globalThis.AgentCryptoStrategyAG3ProspectiveT0Capture?.capture_once==="function",panels:${JSON.stringify(EVIDENCE_PANEL_IDS)}.map(id=>({id,present:!!document.getElementById(id),parent:document.getElementById(id)?.parentElement?.id||null})),g3:"PENDING",g9:"LOCKED"})});
         if(document.readyState==="complete") mountEvidence();
         else window.addEventListener("load",mountEvidence,{once:true});
       })();
