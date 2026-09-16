@@ -1,253 +1,82 @@
-/* Agent-Crypto @erith.IA — 40.6.169 G3 STRUCTURED DATA TRUTH
-   Certification-facing G3 discovery reads structured owner APIs only.
-   Missing structured facts stay UNKNOWN/null; visible text is never parsed as evidence.
-   No backtest, no gate promotion, no timer, no observer, no storage write, no network/order path. */
+/* Agent-Crypto @erith.IA — 40.6.188 GATE 3 EXACT 24H SERIES OWNER
+   Exposes the already-loaded canonical 24h chart/comparison series as structured truth.
+   No DOM/text parsing, no new fetch, no timer, no observer, no storage write, no order path.
+   Missing facts stay UNKNOWN/null. GATE 3 remains PENDING. */
 (() => {
   "use strict";
-
-  const BUILD = "40.6.169";
+  const BUILD = "40.6.188";
   const ROOT_ID = "strategyAG3StructuredTruth";
   const DOSSIER_ID = "strategyADossier";
   const CONTRACT_ID = "strategyAG3RealisticReplayContract";
-
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
   const safeCall = (fn, fallback = null) => { try { return typeof fn === "function" ? fn() : fallback; } catch (_) { return fallback; } };
-  const finiteOrNull = value => {
-    if (value === null || value === undefined || typeof value === "boolean") return null;
-    if (typeof value === "string" && !value.trim()) return null;
-    const n = Number(value);
-    return Number.isFinite(n) ? n : null;
-  };
-  const integerOrNull = value => {
-    const n = finiteOrNull(value);
-    return n === null ? null : Math.trunc(n);
-  };
+  const finiteOrNull = value => { if (value === null || value === undefined || typeof value === "boolean") return null; if (typeof value === "string" && !value.trim()) return null; const n = Number(value); return Number.isFinite(n) ? n : null; };
+  const integerOrNull = value => { const n = finiteOrNull(value); return n === null ? null : Math.trunc(n); };
+  const isoOrNull = value => { const n = finiteOrNull(value); if (n === null) return null; const d = new Date(n); return Number.isFinite(d.getTime()) ? d.toISOString() : null; };
+  const median = values => { const rows = (Array.isArray(values) ? values : []).filter(Number.isFinite).sort((a,b)=>a-b); if (!rows.length) return null; const i = Math.floor(rows.length / 2); return rows.length % 2 ? rows[i] : (rows[i-1] + rows[i]) / 2; };
 
-  function marketOwnerSnapshot() {
-    const stats = safeCall(globalThis.atlasDecisionMemoryStats, null);
-    if (!stats || typeof stats !== "object") return null;
-    const observations = integerOrNull(stats.canonicalCount ?? stats.distinctCount ?? stats.records?.length);
-    return {
-      owner: "atlasDecisionMemoryStats",
-      available: true,
-      observations,
-      source_records: integerOrNull(stats.sourceRecordCount),
-      collectors: Array.isArray(stats.collectors) ? stats.collectors.length : null,
-      basis: String(stats.basis || stats.analyticalBasis || "MARKET")
-    };
+  function runtimeState() { try { return typeof state !== "undefined" && state && typeof state === "object" ? state : null; } catch (_) { return null; } }
+  function selectedCoin(s) {
+    try { if (typeof getSelectedCoin === "function") { const coin = getSelectedCoin(); if (coin) return coin; } } catch (_) {}
+    try { if (typeof findCoinByQuery === "function") { const coin = findCoinByQuery("BTC"); if (coin) return coin; } } catch (_) {}
+    return Array.isArray(s?.coins) ? s.coins.find(c => String(c?.symbol || "").toUpperCase() === "BTC") || null : null;
   }
-
-  function retrospectiveOwnerSnapshot() {
-    const api = globalThis.atlasRetrospectiveValidation;
-    const data = safeCall(api?.derive, null);
-    if (!data || typeof data !== "object") return null;
-    const currents = Array.isArray(data.currents) ? data.currents.length : integerOrNull(data.current_count);
-    const evaluable = Array.isArray(data.evaluable) ? data.evaluable.length : integerOrNull(data.evaluable_count);
-    return {
-      owner: "atlasRetrospectiveValidation.derive",
-      available: true,
-      strict_time_semantics: data.strict_time_semantics === true,
-      current_total: currents,
-      current_evaluable: evaluable,
-      market_rows: Array.isArray(data.markets) ? data.markets.length : null
-    };
+  function normalizeSeries(raw) {
+    let rows = Array.isArray(raw) ? raw : [];
+    try { if (typeof atlasNormalizeChartPayload === "function") rows = atlasNormalizeChartPayload({prices: rows}) || rows; } catch (_) {}
+    return (Array.isArray(rows) ? rows : []).map(row => Array.isArray(row) ? [finiteOrNull(row[0]), finiteOrNull(row[1])] : [finiteOrNull(row?.t ?? row?.time ?? row?.timestamp ?? row?.at), finiteOrNull(row?.p ?? row?.price ?? row?.value)]).filter(row => row[0] !== null && row[1] !== null && row[1] > 0).sort((a,b)=>a[0]-b[0]);
   }
-
-  function explicitSeriesOwnerSnapshot() {
-    /* No DOM/text fallback is allowed. Only use an explicit structured owner if one exists. */
-    const candidates = [
-      ["AgentCryptoMarketSeriesTruth", globalThis.AgentCryptoMarketSeriesTruth],
-      ["AgentCryptoHistoricalSeries", globalThis.AgentCryptoHistoricalSeries]
-    ];
-    for (const [name, api] of candidates) {
-      const raw = safeCall(api?.snapshot, null);
-      if (!raw || typeof raw !== "object") continue;
-      const points = integerOrNull(raw.points ?? raw.point_count ?? raw.series_points);
-      const median = finiteOrNull(raw.median_step_min ?? raw.cadence_min);
-      const completeness = finiteOrNull(raw.completeness_pct ?? raw.completeness_percent);
-      const windowLabel = raw.window ?? raw.period ?? raw.window_label ?? null;
-      return {
-        owner: name,
-        available: true,
-        window: windowLabel == null || String(windowLabel).trim() === "" ? null : String(windowLabel),
-        points,
-        median_step_min: median,
-        completeness_pct: completeness
-      };
-    }
-    return null;
+  function describeSeries(raw, meta = {}) {
+    const sourceRows = Array.isArray(raw) ? raw.length : 0;
+    const rows = normalizeSeries(raw);
+    const steps = [];
+    for (let i=1;i<rows.length;i++) { const delta = (rows[i][0]-rows[i-1][0]) / 60000; if (Number.isFinite(delta) && delta >= 0) steps.push(delta); }
+    const periodDays = finiteOrNull(meta.period_days);
+    const windowLabel = periodDays === 1 ? "24h" : meta.window_label || (periodDays !== null ? `${periodDays}j` : null);
+    const completeness = sourceRows > 0 ? Number(((rows.length / sourceRows) * 100).toFixed(1)) : null;
+    return { available:rows.length>=2, owner:meta.owner||null, owner_path:meta.owner_path||null, source_kind:meta.source_kind||null, asset_id:meta.asset_id||null, symbol:meta.symbol||null, period_days:periodDays, window:windowLabel, points:rows.length, source_points:sourceRows, median_step_min:median(steps), completeness_pct:completeness, first_at:isoOrNull(rows[0]?.[0]), last_at:isoOrNull(rows.at(-1)?.[0]), display_match:meta.display_match===true, structured_only:true, visible_text_parsing:false, rows };
   }
-
-  function buildSnapshot(overrides = {}) {
-    const market = Object.prototype.hasOwnProperty.call(overrides, "market") ? overrides.market : marketOwnerSnapshot();
-    const retrospective = Object.prototype.hasOwnProperty.call(overrides, "retrospective") ? overrides.retrospective : retrospectiveOwnerSnapshot();
-    const series = Object.prototype.hasOwnProperty.call(overrides, "series") ? overrides.series : explicitSeriesOwnerSnapshot();
-
-    const observations = integerOrNull(market?.observations);
-    const currentTotal = integerOrNull(retrospective?.current_total);
-    const currentEvaluable = integerOrNull(retrospective?.current_evaluable);
-    const points = integerOrNull(series?.points);
-    const median = finiteOrNull(series?.median_step_min);
-    const completeness = finiteOrNull(series?.completeness_pct);
-    const windowLabel = series?.window == null || String(series.window).trim() === "" ? null : String(series.window);
-
-    const structuredOwners = [market?.available ? market.owner : null, retrospective?.available ? retrospective.owner : null, series?.available ? series.owner : null].filter(Boolean);
-    return {
-      schema: "agent_crypto_strategy_a_g3_structured_data_truth_v1",
-      build: BUILD,
-      source_mode: "STRUCTURED_OWNERS_ONLY",
-      visible_text_parsing: false,
-      dom_text_fallback: false,
-      unknown_numeric_becomes_zero: false,
-      owners: structuredOwners,
-      market_memory: {
-        available: !!market?.available,
-        observations,
-        source_records: integerOrNull(market?.source_records),
-        collectors: integerOrNull(market?.collectors),
-        basis: market?.basis || null
-      },
-      retrospective: {
-        available: !!retrospective?.available,
-        strict_time_semantics: retrospective?.strict_time_semantics === true,
-        evaluable: currentEvaluable,
-        total: currentTotal,
-        market_rows: integerOrNull(retrospective?.market_rows)
-      },
-      market_series: {
-        structured_owner_available: !!series?.available,
-        window: windowLabel,
-        points,
-        median_step_min: median,
-        completeness_pct: completeness
-      },
-      certified_outcome_labels: false,
-      certified_replay_rows: 0,
-      replay_contract_ready: false,
-      backtest_ready: false,
-      g3_state: "PENDING",
-      paper_only: true,
-      real_order: false,
-      fabricated_data: false,
-      reason: !series?.available
-        ? "Structured market-memory and retrospective owners are readable; no explicit structured owner for 24h series metadata is certified yet, so those fields stay UNKNOWN."
-        : "Structured candidate facts are readable, but certified replay rows and outcome labels are still absent; G3 remains PENDING."
-    };
+  function exact24hSnapshot() {
+    const s = runtimeState();
+    const coin = selectedCoin(s);
+    if (!s || !coin) return {schema:"agent_crypto_market_series_truth_v1",build:BUILD,available:false,state:"UNAVAILABLE",owner:null,owner_path:null,window:null,points:null,median_step_min:null,completeness_pct:null,first_at:null,last_at:null,display_match:false,structured_only:true,visible_text_parsing:false,reason:"Runtime market state or selected coin unavailable.",paper_only:true,real_order:false};
+    const assetId = String(coin.id || "").trim(), symbol = String(coin.symbol || "").trim().toUpperCase(), activePeriod = finiteOrNull(s.chartPeriodDays);
+    try {
+      const comparison = s?.dataBroker?.comparison, result = comparison?.results?.[assetId], period = finiteOrNull(result?.periodDays ?? comparison?.period ?? activePeriod);
+      if (Array.isArray(result?.series) && result.series.length >= 2 && (period === 1 || activePeriod === 1)) {
+        const out = describeSeries(result.series,{owner:"AgentCryptoMarketSeriesTruth",owner_path:`state.dataBroker.comparison.results[${assetId}].series`,source_kind:"ACTIVE_COMPARISON_SERIES",asset_id:assetId,symbol,period_days:1,display_match:activePeriod===1});
+        return {...out,schema:"agent_crypto_market_series_truth_v1",build:BUILD,state:out.available?"AVAILABLE":"UNAVAILABLE",paper_only:true,real_order:false,reason:out.available?"Exact 24h comparison series read from the live structured runtime owner.":"Comparison owner present but series is not usable."};
+      }
+    } catch (_) {}
+    try {
+      const chart = s?.dataBroker?.chart, result = chart?.result, period = finiteOrNull(chart?.period ?? result?.periodDays ?? activePeriod);
+      if (chart?.status === "ready" && String(chart?.coinId || "").toLowerCase() === assetId.toLowerCase() && Array.isArray(result?.series) && result.series.length >= 2 && period === 1) {
+        const out = describeSeries(result.series,{owner:"AgentCryptoMarketSeriesTruth",owner_path:"state.dataBroker.chart.result.series",source_kind:"ACTIVE_CHART_SERIES",asset_id:assetId,symbol,period_days:1,display_match:activePeriod===1});
+        return {...out,schema:"agent_crypto_market_series_truth_v1",build:BUILD,state:out.available?"AVAILABLE":"UNAVAILABLE",paper_only:true,real_order:false,reason:out.available?"Exact 24h chart series read from the live structured runtime owner.":"Chart owner present but series is not usable."};
+      }
+    } catch (_) {}
+    try {
+      if (typeof atlasGetStoredChartResult === "function") {
+        const result = atlasGetStoredChartResult(coin, 1);
+        if (Array.isArray(result?.series) && result.series.length >= 2) {
+          const out = describeSeries(result.series,{owner:"AgentCryptoMarketSeriesTruth",owner_path:`atlasGetStoredChartResult(${assetId},1).series`,source_kind:"CANONICAL_STORED_24H_SERIES",asset_id:assetId,symbol,period_days:1,display_match:false});
+          return {...out,schema:"agent_crypto_market_series_truth_v1",build:BUILD,state:out.available?"AVAILABLE":"UNAVAILABLE",paper_only:true,real_order:false,reason:out.available?"Canonical stored 24h series exposed through the existing structured chart getter.":"Stored owner present but series is not usable."};
+        }
+      }
+    } catch (_) {}
+    return {schema:"agent_crypto_market_series_truth_v1",build:BUILD,available:false,state:"UNRESOLVED",owner:"AgentCryptoMarketSeriesTruth",owner_path:null,source_kind:null,asset_id:assetId,symbol,period_days:1,window:"24h",points:null,source_points:null,median_step_min:null,completeness_pct:null,first_at:null,last_at:null,display_match:false,structured_only:true,visible_text_parsing:false,reason:"No exact structured 24h series owner is currently readable; no DOM/text fallback is allowed.",paper_only:true,real_order:false};
   }
+  globalThis.AgentCryptoMarketSeriesTruth = Object.freeze({build:BUILD,snapshot:exact24hSnapshot,structured_only:true,visible_text_parsing:false,fetch_added:false,recurring_timer:false,observer:false,storage_write:false,network:false,real_order:false,paper_only:true,g3:"PENDING"});
 
-  function display(value, suffix = "") {
-    return value === null || value === undefined || value === "" ? "INCONNU" : `${value}${suffix}`;
-  }
-
-  function ensureStyle() {
-    if (typeof document === "undefined" || byId("strategyAG3StructuredTruthStyle")) return;
-    const style = document.createElement("style");
-    style.id = "strategyAG3StructuredTruthStyle";
-    style.textContent = `#${ROOT_ID}{margin-top:9px;padding:8px;border:1px solid rgba(117,255,206,.22);border-radius:8px;background:rgba(5,30,24,.28)}#${ROOT_ID} .g3st-title{font-size:8px;font-weight:950;letter-spacing:.08em;color:#79ffd1;text-transform:uppercase}#${ROOT_ID} .g3st-sub{font-size:8px;color:#8fb6aa;margin-top:3px}#${ROOT_ID} .g3st-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:7px}#${ROOT_ID} .g3st-k{padding:6px;border:1px solid rgba(255,255,255,.06);border-radius:7px}#${ROOT_ID} .g3st-k span{font-size:7px;color:#71998d;display:block;text-transform:uppercase}#${ROOT_ID} .g3st-k b{font-size:9px;color:#effff9;display:block;margin-top:3px}#${ROOT_ID} .g3st-note{margin-top:6px;font-size:8px;color:#99b8ae}@media(max-width:900px){#${ROOT_ID} .g3st-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}`;
-    document.head.appendChild(style);
-  }
-
-  function ensureRoot() {
-    if (typeof document === "undefined") return null;
-    const dossier = byId(DOSSIER_ID);
-    if (!dossier) return null;
-    let root = byId(ROOT_ID);
-    if (!root) {
-      root = document.createElement("section");
-      root.id = ROOT_ID;
-      root.dataset.build = BUILD;
-      const contract = byId(CONTRACT_ID);
-      if (contract && contract.parentElement === dossier) contract.insertAdjacentElement("afterend", root);
-      else dossier.appendChild(root);
-    }
-    return root;
-  }
-
-  function render() {
-    const root = ensureRoot();
-    const data = buildSnapshot();
-    if (!root) return data;
-    ensureStyle();
-    const series = data.market_series;
-    const retro = data.retrospective;
-    const market = data.market_memory;
-    root.innerHTML = `
-      <div class="g3st-title">G3 · STRUCTURED DATA TRUTH · ${BUILD}</div>
-      <div class="g3st-sub">Autorité de certification : APIs structurées uniquement · le texte affiché n'est jamais relu comme donnée.</div>
-      <div class="g3st-grid">
-        <div class="g3st-k"><span>Source G3</span><b>STRUCTURED OWNERS</b></div>
-        <div class="g3st-k"><span>Observations marché</span><b>${display(market.observations)}</b></div>
-        <div class="g3st-k"><span>CURRENT évaluables</span><b>${display(retro.evaluable)} / ${display(retro.total)}</b></div>
-        <div class="g3st-k"><span>Série points</span><b>${display(series.points)}</b></div>
-        <div class="g3st-k"><span>Fenêtre</span><b>${display(series.window)}</b></div>
-        <div class="g3st-k"><span>Pas médian</span><b>${display(series.median_step_min, " min")}</b></div>
-        <div class="g3st-k"><span>Complétude</span><b>${display(series.completeness_pct, " %")}</b></div>
-        <div class="g3st-k"><span>Text scraping</span><b>INTERDIT</b></div>
-        <div class="g3st-k"><span>UNKNOWN</span><b>≠ 0</b></div>
-        <div class="g3st-k"><span>Dataset replay</span><b>NOT READY</b></div>
-        <div class="g3st-k"><span>G3</span><b>PENDING</b></div>
-      </div>
-      <div class="g3st-note">${data.reason}</div>`;
-    root.dataset.g3State = data.g3_state;
-    root.dataset.visibleTextParsing = "false";
-    root.dataset.unknownNumericBecomesZero = "false";
-    return data;
-  }
-
-  function selfTest() {
-    const missing = buildSnapshot({
-      market:{available:true,owner:"mock-market",observations:483,source_records:500,collectors:2,basis:"MARKET"},
-      retrospective:{available:true,owner:"mock-retro",strict_time_semantics:true,current_total:2,current_evaluable:1,market_rows:483},
-      series:null
-    });
-    const explicit = buildSnapshot({
-      market:{available:true,owner:"mock-market",observations:483},
-      retrospective:{available:true,owner:"mock-retro",strict_time_semantics:true,current_total:2,current_evaluable:1},
-      series:{available:true,owner:"mock-series",window:"24h",points:300,median_step_min:5,completeness_pct:100}
-    });
-    const pass = missing.market_series.points === null
-      && missing.market_series.median_step_min === null
-      && missing.market_series.completeness_pct === null
-      && missing.market_memory.observations === 483
-      && missing.retrospective.evaluable === 1
-      && missing.retrospective.total === 2
-      && missing.unknown_numeric_becomes_zero === false
-      && missing.visible_text_parsing === false
-      && missing.backtest_ready === false
-      && missing.g3_state === "PENDING"
-      && explicit.market_series.points === 300
-      && explicit.market_series.median_step_min === 5
-      && explicit.market_series.completeness_pct === 100;
-    return {schema:"agent_crypto_strategy_a_g3_structured_data_truth_self_test_v1",build:BUILD,pass,checks:{missing_stays_null:missing.market_series.points===null&&missing.market_series.median_step_min===null&&missing.market_series.completeness_pct===null,structured_counts_preserved:missing.market_memory.observations===483&&missing.retrospective.evaluable===1&&missing.retrospective.total===2,no_text_scrape:missing.visible_text_parsing===false,unknown_not_zero:missing.unknown_numeric_becomes_zero===false,no_backtest_promotion:missing.backtest_ready===false&&missing.g3_state==="PENDING",explicit_structured_series_supported:explicit.market_series.points===300&&explicit.market_series.median_step_min===5&&explicit.market_series.completeness_pct===100}};
-  }
-
-  globalThis.AgentCryptoStrategyAG3StructuredDataTruth = Object.freeze({
-    build: BUILD,
-    snapshot: buildSnapshot,
-    render,
-    self_test: selfTest,
-    visible_text_parsing: false,
-    dom_text_fallback: false,
-    unknown_numeric_becomes_zero: false,
-    certified_replay_rows: 0,
-    backtest_ready: false,
-    g3: "PENDING",
-    recurring_timer: false,
-    observer: false,
-    storage_write: false,
-    network: false,
-    real_order: false,
-    paper_only: true
-  });
-
-  if (typeof document !== "undefined") {
-    const schedule = () => { try { requestAnimationFrame(() => render()); } catch (_) { queueMicrotask(render); } };
-    document.addEventListener("agent-crypto:evidence-view-refreshed", schedule);
-    document.addEventListener("agent-crypto:evidence-data-changed", schedule);
-    document.addEventListener("agent-crypto:runtime-modules-ready", schedule, {once:true});
-    document.addEventListener("erith:system-hydrated", schedule, {passive:true});
-    window.addEventListener("pageshow", schedule);
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule, {once:true});
-    else schedule();
-  }
+  function marketOwnerSnapshot(){const stats=safeCall(globalThis.atlasDecisionMemoryStats,null);if(!stats||typeof stats!=="object")return null;return{owner:"atlasDecisionMemoryStats",available:true,observations:integerOrNull(stats.canonicalCount??stats.distinctCount??stats.records?.length),source_records:integerOrNull(stats.sourceRecordCount),collectors:Array.isArray(stats.collectors)?stats.collectors.length:null,basis:String(stats.basis||stats.analyticalBasis||"MARKET")};}
+  function retrospectiveOwnerSnapshot(){const data=safeCall(globalThis.atlasRetrospectiveValidation?.derive,null);if(!data||typeof data!=="object")return null;return{owner:"atlasRetrospectiveValidation.derive",available:true,strict_time_semantics:data.strict_time_semantics===true,current_total:Array.isArray(data.currents)?data.currents.length:integerOrNull(data.current_count),current_evaluable:Array.isArray(data.evaluable)?data.evaluable.length:integerOrNull(data.evaluable_count),market_rows:Array.isArray(data.markets)?data.markets.length:null};}
+  function explicitSeriesOwnerSnapshot(){for(const[name,api]of[["AgentCryptoMarketSeriesTruth",globalThis.AgentCryptoMarketSeriesTruth],["AgentCryptoHistoricalSeries",globalThis.AgentCryptoHistoricalSeries]]){const raw=safeCall(api?.snapshot,null);if(!raw||typeof raw!=="object"||raw.available===false)continue;return{owner:name,available:true,owner_path:raw.owner_path||null,source_kind:raw.source_kind||null,asset_id:raw.asset_id||null,symbol:raw.symbol||null,window:raw.window??raw.period??raw.window_label??null,points:integerOrNull(raw.points??raw.point_count??raw.series_points),median_step_min:finiteOrNull(raw.median_step_min??raw.cadence_min),completeness_pct:finiteOrNull(raw.completeness_pct??raw.completeness_percent),first_at:raw.first_at||null,last_at:raw.last_at||null,display_match:raw.display_match===true};}return null;}
+  function buildSnapshot(overrides={}){const market=Object.prototype.hasOwnProperty.call(overrides,"market")?overrides.market:marketOwnerSnapshot(),retrospective=Object.prototype.hasOwnProperty.call(overrides,"retrospective")?overrides.retrospective:retrospectiveOwnerSnapshot(),series=Object.prototype.hasOwnProperty.call(overrides,"series")?overrides.series:explicitSeriesOwnerSnapshot();const observations=integerOrNull(market?.observations),currentTotal=integerOrNull(retrospective?.current_total),currentEvaluable=integerOrNull(retrospective?.current_evaluable),points=integerOrNull(series?.points),medianStep=finiteOrNull(series?.median_step_min),completeness=finiteOrNull(series?.completeness_pct),windowLabel=series?.window==null||String(series.window).trim()===""?null:String(series.window);return{schema:"agent_crypto_strategy_a_g3_structured_data_truth_v2",build:BUILD,source_mode:"STRUCTURED_OWNERS_ONLY",visible_text_parsing:false,dom_text_fallback:false,unknown_numeric_becomes_zero:false,owners:[market?.available?market.owner:null,retrospective?.available?retrospective.owner:null,series?.available?series.owner:null].filter(Boolean),market_memory:{available:!!market?.available,observations,source_records:integerOrNull(market?.source_records),collectors:integerOrNull(market?.collectors),basis:market?.basis||null},retrospective:{available:!!retrospective?.available,strict_time_semantics:retrospective?.strict_time_semantics===true,evaluable:currentEvaluable,total:currentTotal,market_rows:integerOrNull(retrospective?.market_rows)},market_series:{structured_owner_available:!!series?.available,owner:series?.owner||null,owner_path:series?.owner_path||null,source_kind:series?.source_kind||null,asset_id:series?.asset_id||null,symbol:series?.symbol||null,window:windowLabel,points,median_step_min:medianStep,completeness_pct:completeness,first_at:series?.first_at||null,last_at:series?.last_at||null,display_match:series?.display_match===true},certified_outcome_labels:false,certified_replay_rows:0,replay_contract_ready:false,backtest_ready:false,g3_state:"PENDING",paper_only:true,real_order:false,fabricated_data:false,reason:!series?.available?"Structured market-memory and retrospective owners are readable; the exact 24h market-series owner is not yet readable, so those fields stay UNKNOWN.":"Exact structured 24h series facts are readable from their runtime owner; certified replay rows and outcome labels are still absent, so GATE 3 remains PENDING."};}
+  function display(value,suffix=""){return value===null||value===undefined||value===""?"INCONNU":`${value}${suffix}`;}
+  function ensureStyle(){if(typeof document==="undefined"||byId("strategyAG3StructuredTruthStyle"))return;const s=document.createElement("style");s.id="strategyAG3StructuredTruthStyle";s.textContent=`#${ROOT_ID}{margin-top:9px;padding:8px;border:1px solid rgba(117,255,206,.22);border-radius:8px;background:rgba(5,30,24,.28)}#${ROOT_ID} .g3st-title{font-size:8px;font-weight:950;letter-spacing:.08em;color:#79ffd1;text-transform:uppercase}#${ROOT_ID} .g3st-sub,#${ROOT_ID} .g3st-note{font-size:8px;color:#8fb6aa;margin-top:3px}#${ROOT_ID} .g3st-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-top:7px}#${ROOT_ID} .g3st-k{padding:6px;border:1px solid rgba(255,255,255,.06);border-radius:7px}#${ROOT_ID} .g3st-k span{font-size:7px;color:#71998d;display:block;text-transform:uppercase}#${ROOT_ID} .g3st-k b{font-size:9px;color:#effff9;display:block;margin-top:3px}@media(max-width:900px){#${ROOT_ID} .g3st-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}`;document.head.appendChild(s);}
+  function ensureRoot(){if(typeof document==="undefined")return null;const dossier=byId(DOSSIER_ID);if(!dossier)return null;let root=byId(ROOT_ID);if(!root){root=document.createElement("section");root.id=ROOT_ID;root.dataset.build=BUILD;const contract=byId(CONTRACT_ID);if(contract&&contract.parentElement===dossier)contract.insertAdjacentElement("afterend",root);else dossier.appendChild(root);}return root;}
+  function render(){const root=ensureRoot(),data=buildSnapshot();if(!root)return data;ensureStyle();const series=data.market_series,retro=data.retrospective,market=data.market_memory;root.innerHTML=`<div class="g3st-title">G3 · STRUCTURED DATA TRUTH · ${BUILD}</div><div class="g3st-sub">APIs structurées uniquement · aucune donnée écran relue comme preuve.</div><div class="g3st-grid"><div class="g3st-k"><span>Source G3</span><b>STRUCTURED OWNERS</b></div><div class="g3st-k"><span>Observations marché</span><b>${display(market.observations)}</b></div><div class="g3st-k"><span>CURRENT évaluables</span><b>${display(retro.evaluable)} / ${display(retro.total)}</b></div><div class="g3st-k"><span>Owner série</span><b>${display(series.owner)}</b></div><div class="g3st-k"><span>Série points</span><b>${display(series.points)}</b></div><div class="g3st-k"><span>Fenêtre</span><b>${display(series.window)}</b></div><div class="g3st-k"><span>Pas médian</span><b>${display(series.median_step_min," min")}</b></div><div class="g3st-k"><span>Complétude</span><b>${display(series.completeness_pct," %")}</b></div><div class="g3st-k"><span>Text scraping</span><b>INTERDIT</b></div><div class="g3st-k"><span>Dataset replay</span><b>NOT READY</b></div><div class="g3st-k"><span>G3</span><b>PENDING</b></div></div><div class="g3st-note">${data.reason}</div>`;root.dataset.g3State=data.g3_state;root.dataset.visibleTextParsing="false";root.dataset.structuredSeriesOwner=series.owner||"unknown";return data;}
+  function selfTest(){const missing=buildSnapshot({market:{available:true,owner:"mock-market",observations:483},retrospective:{available:true,owner:"mock-retro",strict_time_semantics:true,current_total:2,current_evaluable:1},series:null}),explicit=buildSnapshot({market:{available:true,owner:"mock-market",observations:483},retrospective:{available:true,owner:"mock-retro",strict_time_semantics:true,current_total:2,current_evaluable:1},series:{available:true,owner:"AgentCryptoMarketSeriesTruth",owner_path:"mock",window:"24h",points:300,median_step_min:5,completeness_pct:100}}),pass=missing.market_series.points===null&&missing.unknown_numeric_becomes_zero===false&&missing.visible_text_parsing===false&&missing.g3_state==="PENDING"&&explicit.market_series.points===300&&explicit.market_series.median_step_min===5&&explicit.market_series.completeness_pct===100&&explicit.market_series.owner==="AgentCryptoMarketSeriesTruth";return{schema:"agent_crypto_strategy_a_g3_structured_data_truth_self_test_v2",build:BUILD,pass};}
+  globalThis.AgentCryptoStrategyAG3StructuredDataTruth=Object.freeze({build:BUILD,snapshot:buildSnapshot,render,self_test:selfTest,visible_text_parsing:false,dom_text_fallback:false,unknown_numeric_becomes_zero:false,certified_replay_rows:0,backtest_ready:false,g3:"PENDING",recurring_timer:false,observer:false,storage_write:false,network:false,real_order:false,paper_only:true});
+  if(typeof document!=="undefined"){const schedule=()=>{try{requestAnimationFrame(()=>render());}catch(_){queueMicrotask(render);}};document.addEventListener("agent-crypto:evidence-data-changed",schedule);document.addEventListener("agent-crypto:runtime-modules-ready",schedule,{once:true});window.addEventListener("pageshow",schedule);if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",schedule,{once:true});else schedule();}
 })();
