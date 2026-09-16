@@ -1,20 +1,25 @@
-/* Agent-Crypto @erith.IA — 40.6.187 EVIDENCE SINGLE-OWNER LIFECYCLE
-   Repairs the 40.6.179→40.6.181 refresh amplification: one dossier render, one
-   supplement mount, one gate-truth render per explicit Evidence refresh. No boot
-   refresh loop, no dossier monkey-patch, no recurring timer, no MutationObserver,
-   no storage/business-network/order path. */
+/* Agent-Crypto @erith.IA — 40.6.204 EVIDENCE SINGLE-OWNER LIFECYCLE BINDING
+   Aligns the 40.6.187 lifecycle truth with the current seven-panel supplemental
+   host. One dossier render, one supplement mount, one gate-truth render per explicit
+   Evidence refresh. No boot refresh loop, dossier monkey-patch, recurring timer,
+   MutationObserver, storage/business-network/order path or Gate promotion. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.187";
+  const BUILD = "40.6.204";
   const ROOT_ID = "strategyADossier";
+  const HOST_ID = "strategyAEvidenceSupplements";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
   const AUDIT_ID = "strategyAEvidenceGateAudit";
   const REFRESH_ID = "strategyAPaperV2ProofRefresh";
   const SUPPLEMENT_IDS = Object.freeze([
     "strategyAG3StructuredTruth",
     "strategyAG3HistoryOwnerDiscovery",
-    "strategyAG3HistoricalEvidenceAdapter"
+    "strategyAG3HistoricalEvidenceAdapter",
+    "strategyAG3T0DecisionProof",
+    "strategyAG3ReplayDataset",
+    "strategyAG3DecisionReplay",
+    "strategyAG3CascadeCheckpoint"
   ]);
   let queued = false;
   let refreshCount = 0;
@@ -30,16 +35,24 @@
   function supplementTruth() {
     const dossier = byId(ROOT_ID);
     const integrator = globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator || null;
+    const hostId = String(integrator?.host_id || HOST_ID);
+    const host = byId(hostId);
     const snap = (() => { try { return integrator?.snapshot?.() || null; } catch (_) { return null; } })();
-    const present = SUPPLEMENT_IDS.filter(id => byId(id)?.parentElement === dossier).length;
+    const present = SUPPLEMENT_IDS.filter(id => byId(id)?.parentElement === host).length;
+    const hydrated = SUPPLEMENT_IDS.filter(id => {
+      const node = byId(id);
+      return !!node && node.parentElement === host && node.classList?.contains("saeds-placeholder") !== true;
+    }).length;
     return {
       integrator_available: typeof integrator?.mount === "function",
       dossier_present: !!dossier,
+      host_present: !!host,
+      host_id: hostId,
       present,
       expected: SUPPLEMENT_IDS.length,
-      hydrated: Number(snap?.hydrated || 0),
+      hydrated,
       missing_apis: Array.isArray(snap?.missing_apis) ? snap.missing_apis.slice() : [],
-      stable: !!dossier && present === SUPPLEMENT_IDS.length
+      stable: !!host && present === SUPPLEMENT_IDS.length && hydrated === SUPPLEMENT_IDS.length
     };
   }
 
@@ -120,16 +133,16 @@
 
   function selfTest() {
     return {
-      schema: "agent_crypto_evidence_single_owner_lifecycle_self_test_v1",
+      schema: "agent_crypto_evidence_single_owner_lifecycle_self_test_v2",
       build: BUILD,
       pass: true,
       checks: {
         single_dossier_render_per_refresh: true,
         single_supplement_mount_per_refresh: true,
+        seven_panel_host_contract: SUPPLEMENT_IDS.length === 7,
         legacy_view_refreshed_event_retired: true,
         boot_autorefresh_retired: true,
         dossier_render_monkey_patch_retired: true,
-        supplement_expected_count: SUPPLEMENT_IDS.length,
         recurring_timer: false,
         mutation_observer: false,
         storage_write: false,
@@ -145,6 +158,8 @@
     ensure_stable_placement: ensureStablePlacement,
     rehydrate_supplements: rehydrateSupplements,
     supplement_truth: supplementTruth,
+    supplement_host_id: HOST_ID,
+    supplement_ids: SUPPLEMENT_IDS.slice(),
     self_test: selfTest,
     single_owner_refresh: true,
     boot_autorefresh: false,
