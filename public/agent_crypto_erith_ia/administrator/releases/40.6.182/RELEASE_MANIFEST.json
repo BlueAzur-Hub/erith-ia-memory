@@ -1,0 +1,42 @@
+{
+  "schema": "agent_crypto_delivery_integrity_lock_v1",
+  "build": "40.6.182",
+  "engine": "38.15.11",
+  "scope": "PATCH_CHAIN_INTEGRITY",
+  "canonical_entry": {
+    "path": "administrator/index.html",
+    "blob_sha": "9076fc9af8ad3596835d71fef54983aa89587281",
+    "authority": true
+  },
+  "strategy_a_evidence_chain": [
+    {"path":"js/strategy-a-evidence-dossier.js","blob_sha":"a122a7ca6b1fbe25bd135b53c7ef075ddc831239","role":"legacy dossier owner"},
+    {"path":"js/strategy-a-evidence-lifecycle-truth.js","blob_sha":"c68cb079b8d3af0b7c0857e13aede700c295777b","role":"refresh survival 40.6.180"},
+    {"path":"js/strategy-a-foundation-applicability-truth.js","blob_sha":"98a0e7c76db4f6ff66671dc29fffe6bacc1efdb6","role":"foundation applicability truth"},
+    {"path":"js/strategy-a-time-semantics-truth.js","blob_sha":"30e34502c25d9af2bf011f374601c1abc3d2ecfb","role":"strict time semantics"},
+    {"path":"js/strategy-a-g3-structured-data-truth.js","blob_sha":"003f3b34f03da3d128945dd2c6e5a01f96c12271","role":"structured G3 truth"},
+    {"path":"js/strategy-a-g3-history-owner-discovery.js","blob_sha":"ae6a04a87a43d6a2631d9d4066c9bed9e4dc4539","role":"history owner discovery"},
+    {"path":"js/strategy-a-g3-historical-evidence-adapter.js","blob_sha":"1ebe5fd708027cd69aa19ffe02f8ec87a3d72e1d","role":"strict historical adapter"},
+    {"path":"js/strategy-a-gate-canonical-truth.js","blob_sha":"6a19568e15892edf226f784c4933a62ded3cbd6b","role":"canonical gate labels/states"},
+    {"path":"js/strategy-a-evidence-dossier-supplement-integrator.js","blob_sha":"74a5d89825b68eaf0d1f0932bed3ed7f2d315281","role":"native dossier integration 40.6.181"}
+  ],
+  "removed_dead_file": "js/strategy-a-evidence-dossier-native-owner.js",
+  "removed_dead_file_commit": "92ab8147d51b55d64ae5ab246a78c3a3c054f346",
+  "invariants": {
+    "market_core": "38.15.11",
+    "strategy_a_business_logic_modified": false,
+    "real_order": false,
+    "paper_only": true,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "storage_owner_added": false,
+    "business_network_request_added": false,
+    "g3": "PENDING",
+    "g9": "LOCKED"
+  },
+  "terrain": {
+    "last_proven_build": "40.6.178",
+    "179_181_runtime_changes": "PENDING_FIREFOX_PROOF",
+    "no_claim_of_panel_visibility": true,
+    "no_claim_of_profitability": true
+  }
+}
