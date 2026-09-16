@@ -1,37 +1,24 @@
-/* Agent-Crypto @erith.IA — 40.6.181 STRATEGY A EVIDENCE DOSSIER NATIVE INTEGRATION
-   Mounts the three structured G3 evidence panels directly inside the existing
-   Strategy A Evidence Dossier and binds rehydration to every dossier render.
-   No extra page-level host, no gate promotion, no recurring timer, no observer,
-   no storage/network/order path. */
+/* Agent-Crypto @erith.IA — 40.6.187 STRATEGY A EVIDENCE SINGLE-OWNER INTEGRATION
+   Keeps the three structured G3 evidence panels inside the existing Strategy A
+   Evidence Dossier, but removes the 40.6.181 render monkey-patch and all autonomous
+   refresh listeners. Hydration now happens only when the canonical entry or the
+   Evidence lifecycle explicitly calls mount(). No recurring timer, observer,
+   storage/network/order path or gate promotion. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.181";
+  const BUILD = "40.6.187";
   const DOSSIER_ID = "strategyADossier";
   const CONTRACT_ID = "strategyAG3RealisticReplayContract";
-  const STATUS_ID = "strategyAEvidenceDossierSupplements181Status";
+  const STATUS_ID = "strategyAEvidenceDossierSupplements187Status";
   const PANEL_SPECS = Object.freeze([
-    Object.freeze({
-      id: "strategyAG3StructuredTruth",
-      api: "AgentCryptoStrategyAG3StructuredDataTruth",
-      title: "G3 · STRUCTURED DATA TRUTH · 40.6.169"
-    }),
-    Object.freeze({
-      id: "strategyAG3HistoryOwnerDiscovery",
-      api: "AgentCryptoStrategyAG3HistoryOwnerDiscovery",
-      title: "G3 · HISTORY OWNER DISCOVERY · 40.6.171"
-    }),
-    Object.freeze({
-      id: "strategyAG3HistoricalEvidenceAdapter",
-      api: "AgentCryptoStrategyAG3HistoricalEvidenceAdapter",
-      title: "G3 · HISTORICAL EVIDENCE ADAPTER · 40.6.172"
-    })
+    Object.freeze({id:"strategyAG3StructuredTruth",api:"AgentCryptoStrategyAG3StructuredDataTruth",title:"G3 · STRUCTURED DATA TRUTH"}),
+    Object.freeze({id:"strategyAG3HistoryOwnerDiscovery",api:"AgentCryptoStrategyAG3HistoryOwnerDiscovery",title:"G3 · HISTORY OWNER DISCOVERY"}),
+    Object.freeze({id:"strategyAG3HistoricalEvidenceAdapter",api:"AgentCryptoStrategyAG3HistoricalEvidenceAdapter",title:"G3 · HISTORICAL EVIDENCE ADAPTER"})
   ]);
 
-  let queued = false;
   let mountCount = 0;
-  let dossierHookInstalled = false;
-  let originalDossierApi = null;
+  let mounting = false;
 
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
 
@@ -51,40 +38,10 @@
     document.head.appendChild(style);
   }
 
-  function installDossierOwnerHook() {
-    if (dossierHookInstalled) return true;
-    const api = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
-    if (!api || typeof api.render !== "function") return false;
-    originalDossierApi = api;
-    const originalRender = api.render.bind(api);
-    const wrappedRender = (...args) => {
-      const result = originalRender(...args);
-      queueMicrotask(() => {
-        try { mount(); } catch (_) {}
-      });
-      return result;
-    };
-    try {
-      globalThis.AgentCryptoStrategyAEvidenceDossier = Object.freeze({
-        ...api,
-        build: BUILD,
-        render: wrappedRender,
-        native_supplement_owner: true,
-        native_supplement_owner_build: BUILD,
-        supplement_panels: PANEL_SPECS.map(spec => spec.id)
-      });
-      dossierHookInstalled = true;
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-
   function ensureDossier() {
     let dossier = byId(DOSSIER_ID);
     if (dossier) return dossier;
-    installDossierOwnerHook();
-    const api = globalThis.AgentCryptoStrategyAEvidenceDossier || originalDossierApi || null;
+    const api = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
     if (typeof api?.render === "function") {
       try { api.render(); } catch (_) {}
     }
@@ -92,6 +49,8 @@
   }
 
   function ensureContract() {
+    let contract = byId(CONTRACT_ID);
+    if (contract) return contract;
     const api = globalThis.AgentCryptoStrategyAG3RealisticReplayContract || null;
     if (typeof api?.render === "function") {
       try { api.render(); } catch (_) {}
@@ -105,10 +64,7 @@
       status = document.createElement("div");
       status.id = STATUS_ID;
       status.dataset.build = BUILD;
-      status.innerHTML = `
-        <div><div class="saeds-title">G3 · PREUVES STRUCTURÉES · ${BUILD}</div>
-        <div class="saeds-sub">Intégrées au dossier existant · aucune promotion de gate.</div></div>
-        <div class="saeds-state" data-saeds-state>0 / ${PANEL_SPECS.length} PANNEAUX</div>`;
+      status.innerHTML = `<div><div class="saeds-title">G3 · PREUVES STRUCTURÉES · ${BUILD}</div><div class="saeds-sub">Single-owner · montage explicite · aucune promotion de gate.</div></div><div class="saeds-state" data-saeds-state>0 / ${PANEL_SPECS.length} PANNEAUX</div>`;
     }
     if (status.parentElement !== dossier) dossier.appendChild(status);
     return status;
@@ -157,9 +113,7 @@
 
     anchor = status;
     for (const root of roots) {
-      if (root.parentElement !== dossier || anchor.nextElementSibling !== root) {
-        anchor.insertAdjacentElement("afterend", root);
-      }
+      if (root.parentElement !== dossier || anchor.nextElementSibling !== root) anchor.insertAdjacentElement("afterend", root);
       anchor = root;
     }
 
@@ -167,64 +121,64 @@
     if (foot && anchor.nextElementSibling !== foot) anchor.insertAdjacentElement("afterend", foot);
   }
 
-  function mount() {
-    mountCount += 1;
-    if (typeof document === "undefined") return { mounted:false, reason:"NO_DOCUMENT" };
-    ensureStyle();
-    installDossierOwnerHook();
-
-    const dossier = ensureDossier();
-    if (!dossier) return { mounted:false, reason:"DOSSIER_UNAVAILABLE", mount_count:mountCount };
-
-    ensureContract();
-    const status = ensureStatus(dossier);
-    let roots = PANEL_SPECS.map(spec => ensurePlaceholder(dossier, spec));
-    orderInsideDossier(dossier, status, roots);
-
-    renderOwners();
-    roots = PANEL_SPECS.map(spec => byId(spec.id)).filter(Boolean);
-    orderInsideDossier(dossier, status, roots);
-
-    const missingApis = PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api);
-    const present = PANEL_SPECS.filter(spec => byId(spec.id)?.parentElement === dossier).length;
-    const hydrated = PANEL_SPECS.filter(spec => {
-      const node = byId(spec.id);
-      return !!node && node.parentElement === dossier && node.classList?.contains("saeds-placeholder") !== true;
-    }).length;
-
-    const state = status.querySelector("[data-saeds-state]");
-    if (state) {
-      state.textContent = `${present} / ${PANEL_SPECS.length} PANNEAUX · ${hydrated} HYDRATÉ(S)` +
-        (missingApis.length ? ` · API MANQUANTE: ${missingApis.length}` : "");
-    }
-
-    dossier.dataset.supplementIntegratorBuild = BUILD;
-    dossier.dataset.supplementPanelsPresent = String(present);
-    dossier.dataset.supplementPanelsHydrated = String(hydrated);
-    dossier.dataset.supplementMissingApis = String(missingApis.length);
-    dossier.dataset.supplementNativeOwner = dossierHookInstalled ? "true" : "false";
-
+  function snapshot() {
+    const dossier = byId(DOSSIER_ID);
     return {
-      mounted: true,
       build: BUILD,
-      dossier: true,
-      present,
-      hydrated,
-      expected: PANEL_SPECS.length,
-      missing_apis: missingApis,
-      dossier_hook_installed: dossierHookInstalled,
+      dossier_present: !!dossier,
       mount_count: mountCount,
+      mounting,
+      present: PANEL_SPECS.filter(spec => byId(spec.id)?.parentElement === dossier).length,
+      hydrated: PANEL_SPECS.filter(spec => {
+        const node = byId(spec.id);
+        return !!node && node.parentElement === dossier && node.classList?.contains("saeds-placeholder") !== true;
+      }).length,
+      missing_apis: PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api),
+      dossier_hook_installed: false,
+      autonomous_refresh_listeners: false,
+      single_owner_mount: true,
       g3: "PENDING",
-      g9: "LOCKED"
+      g9: "LOCKED",
+      recurring_timer: false,
+      observer: false,
+      storage_write: false,
+      network: false,
+      real_order: false,
+      paper_only: true
     };
   }
 
-  function schedule() {
-    if (queued) return;
-    queued = true;
-    const run = () => { queued = false; mount(); };
-    try { requestAnimationFrame(() => requestAnimationFrame(run)); }
-    catch (_) { queueMicrotask(run); }
+  function mount() {
+    if (mounting) return {...snapshot(), mounted:false, reason:"MOUNT_ALREADY_ACTIVE"};
+    mounting = true;
+    mountCount += 1;
+    try {
+      if (typeof document === "undefined") return {mounted:false,reason:"NO_DOCUMENT",mount_count:mountCount};
+      ensureStyle();
+      const dossier = ensureDossier();
+      if (!dossier) return {mounted:false,reason:"DOSSIER_UNAVAILABLE",mount_count:mountCount};
+
+      ensureContract();
+      const status = ensureStatus(dossier);
+      let roots = PANEL_SPECS.map(spec => ensurePlaceholder(dossier, spec));
+      orderInsideDossier(dossier, status, roots);
+      renderOwners();
+      roots = PANEL_SPECS.map(spec => byId(spec.id)).filter(Boolean);
+      orderInsideDossier(dossier, status, roots);
+
+      const state = snapshot();
+      const stateNode = status.querySelector("[data-saeds-state]");
+      if (stateNode) stateNode.textContent = `${state.present} / ${PANEL_SPECS.length} PANNEAUX · ${state.hydrated} HYDRATÉ(S)` + (state.missing_apis.length ? ` · API MANQUANTE: ${state.missing_apis.length}` : "");
+      dossier.dataset.supplementIntegratorBuild = BUILD;
+      dossier.dataset.supplementPanelsPresent = String(state.present);
+      dossier.dataset.supplementPanelsHydrated = String(state.hydrated);
+      dossier.dataset.supplementMissingApis = String(state.missing_apis.length);
+      dossier.dataset.supplementNativeOwner = "false";
+      dossier.dataset.supplementSingleOwner = "true";
+      return {...state,mounted:true};
+    } finally {
+      mounting = false;
+    }
   }
 
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
@@ -234,30 +188,11 @@
     status_id: STATUS_ID,
     panels: PANEL_SPECS.map(spec => spec.id),
     mount,
-    install_dossier_owner_hook: installDossierOwnerHook,
-    snapshot: () => {
-      const dossier = byId(DOSSIER_ID);
-      return {
-        build: BUILD,
-        dossier_present: !!dossier,
-        dossier_hook_installed: dossierHookInstalled,
-        mount_count: mountCount,
-        present: PANEL_SPECS.filter(spec => byId(spec.id)?.parentElement === dossier).length,
-        hydrated: PANEL_SPECS.filter(spec => {
-          const node = byId(spec.id);
-          return !!node && node.parentElement === dossier && node.classList?.contains("saeds-placeholder") !== true;
-        }).length,
-        missing_apis: PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api),
-        g3: "PENDING",
-        g9: "LOCKED",
-        recurring_timer: false,
-        observer: false,
-        storage_write: false,
-        network: false,
-        real_order: false,
-        paper_only: true
-      };
-    },
+    snapshot,
+    install_dossier_owner_hook: () => false,
+    dossier_hook_installed: false,
+    autonomous_refresh_listeners: false,
+    single_owner_mount: true,
     recurring_timer: false,
     observer: false,
     storage_write: false,
@@ -267,16 +202,4 @@
     g3: "PENDING",
     g9: "LOCKED"
   });
-
-  document.addEventListener("agent-crypto:evidence-view-refreshed", schedule);
-  document.addEventListener("agent-crypto:evidence-data-changed", schedule);
-  document.addEventListener("agent-crypto:runtime-modules-ready", schedule, { once:true });
-  document.addEventListener("erith:system-hydrated", schedule, { passive:true });
-  window.addEventListener("pageshow", schedule);
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", schedule, { once:true });
-    window.addEventListener("load", schedule, { once:true });
-  } else {
-    schedule();
-  }
 })();

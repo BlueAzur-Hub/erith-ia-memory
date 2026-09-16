@@ -1,12 +1,12 @@
-/* Agent-Crypto @erith.IA — 40.6.180 EVIDENCE DOSSIER REFRESH SURVIVAL
-   Keeps the legacy Evidence Dossier, gate audit and replay contract stable outside
-   the Proof Bridge subtree, then rehydrates the 40.6.179 integrated G3 supplements.
-   Refresh is event-driven only: no recurring timer, no MutationObserver, no storage,
-   no business network request and no real-order path. */
+/* Agent-Crypto @erith.IA — 40.6.187 EVIDENCE SINGLE-OWNER LIFECYCLE
+   Repairs the 40.6.179→40.6.181 refresh amplification: one dossier render, one
+   supplement mount, one gate-truth render per explicit Evidence refresh. No boot
+   refresh loop, no dossier monkey-patch, no recurring timer, no MutationObserver,
+   no storage/business-network/order path. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.180";
+  const BUILD = "40.6.187";
   const ROOT_ID = "strategyADossier";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
   const AUDIT_ID = "strategyAEvidenceGateAudit";
@@ -53,44 +53,23 @@
   function ensureStablePlacement() {
     const bridge = byId(BRIDGE_ID);
     if (!bridge) return false;
-
-    const dossierApi = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
-    if (!byId(ROOT_ID) && typeof dossierApi?.render === "function") {
-      try { dossierApi.render(); } catch (_) {}
-    }
-
-    let dossier = byId(ROOT_ID);
+    const dossier = byId(ROOT_ID);
     if (dossier) {
       moveAfter(bridge, dossier);
       dossier.dataset.lifecycleTruthBuild = BUILD;
       dossier.dataset.stableSiblingOfProofBridge = "true";
     }
-
-    const auditApi = globalThis.AgentCryptoStrategyAEvidenceGateAudit || null;
-    if (!byId(AUDIT_ID) && typeof auditApi?.render === "function") {
-      try { auditApi.render(); } catch (_) {}
-    }
-
-    let audit = byId(AUDIT_ID);
+    const audit = byId(AUDIT_ID);
     const after = dossier || bridge;
     if (audit && after) {
       moveAfter(after, audit);
       audit.dataset.lifecycleTruthBuild = BUILD;
       audit.dataset.stableSiblingOfProofBridge = "true";
     }
-
-    const contractApi = globalThis.AgentCryptoStrategyAG3RealisticReplayContract || null;
-    if (typeof contractApi?.render === "function") {
-      try { contractApi.render(); } catch (_) {}
-    }
-
-    dossier = byId(ROOT_ID);
-    audit = byId(AUDIT_ID);
-    rehydrateSupplements();
     return !!(bridge && dossier && audit);
   }
 
-  function refreshEvidence() {
+  function refreshEvidence(reason = "explicit") {
     refreshCount += 1;
 
     const dossierApi = globalThis.AgentCryptoStrategyAEvidenceDossier || null;
@@ -110,26 +89,25 @@
 
     const stableLegacy = ensureStablePlacement();
     const supplements = rehydrateSupplements();
-    const stable = stableLegacy && supplements.stable;
 
+    const gateTruth = globalThis.AgentCryptoStrategyAGateCanonicalTruth || null;
+    if (typeof gateTruth?.render === "function") {
+      try { gateTruth.render(); } catch (_) {}
+    }
+
+    const stable = stableLegacy && supplements.stable;
     try {
-      document.dispatchEvent(new CustomEvent("agent-crypto:evidence-view-refreshed", {
-        detail: {
-          build: BUILD,
-          refresh_count: refreshCount,
-          stable_legacy: stableLegacy,
-          supplements,
-          stable
-        }
+      document.dispatchEvent(new CustomEvent("agent-crypto:evidence-refresh-complete", {
+        detail: {build:BUILD,refresh_count:refreshCount,reason:String(reason||"explicit"),stable_legacy:stableLegacy,supplements,stable}
       }));
     } catch (_) {}
     return stable;
   }
 
-  function afterPaint() {
+  function afterPaint(reason = "explicit") {
     if (queued) return;
     queued = true;
-    const run = () => { queued = false; refreshEvidence(); };
+    const run = () => { queued = false; refreshEvidence(reason); };
     try { requestAnimationFrame(() => requestAnimationFrame(run)); }
     catch (_) { queueMicrotask(run); }
   }
@@ -137,20 +115,21 @@
   function onClick(event) {
     const button = event?.target?.closest?.("button");
     if (!button || button.id !== REFRESH_ID) return;
-    afterPaint();
+    afterPaint("operator-refresh");
   }
 
   function selfTest() {
     return {
-      schema: "agent_crypto_evidence_refresh_survival_self_test_v1",
+      schema: "agent_crypto_evidence_single_owner_lifecycle_self_test_v1",
       build: BUILD,
       pass: true,
       checks: {
-        stable_sibling_policy: true,
-        proof_refresh_rehydrates_legacy_views: true,
-        proof_refresh_rehydrates_integrated_supplements: true,
+        single_dossier_render_per_refresh: true,
+        single_supplement_mount_per_refresh: true,
+        legacy_view_refreshed_event_retired: true,
+        boot_autorefresh_retired: true,
+        dossier_render_monkey_patch_retired: true,
         supplement_expected_count: SUPPLEMENT_IDS.length,
-        evidence_refresh_reads_owner_again: true,
         recurring_timer: false,
         mutation_observer: false,
         storage_write: false,
@@ -167,6 +146,9 @@
     rehydrate_supplements: rehydrateSupplements,
     supplement_truth: supplementTruth,
     self_test: selfTest,
+    single_owner_refresh: true,
+    boot_autorefresh: false,
+    legacy_view_refreshed_event: false,
     recurring_timer: false,
     observer: false,
     storage_write: false,
@@ -178,15 +160,6 @@
   });
 
   document.addEventListener("click", onClick, false);
-  document.addEventListener("agent-crypto:evidence-data-changed", afterPaint);
-  document.addEventListener("agent-crypto:runtime-modules-ready", afterPaint, { once: true });
-  document.addEventListener("erith:system-hydrated", afterPaint, { passive: true });
-  window.addEventListener("pageshow", afterPaint);
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", afterPaint, { once: true });
-    window.addEventListener("load", afterPaint, { once: true });
-  } else {
-    afterPaint();
-  }
+  document.addEventListener("agent-crypto:evidence-data-changed", () => afterPaint("evidence-data-changed"));
+  window.addEventListener("pageshow", event => { if (event.persisted) afterPaint("bfcache-pageshow"); });
 })();
