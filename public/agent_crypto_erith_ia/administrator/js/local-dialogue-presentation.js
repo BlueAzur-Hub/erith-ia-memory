@@ -1,17 +1,20 @@
 /* Agent-Crypto @erith.IA — canonical Local Dialogue Presentation owner.
-   40.6.133 — CURRENT / LIVE CYCLE VISUAL TRUTH LOCK
+   40.6.190 — LOCAL AI STATUS CANONICAL PLACEMENT
 
    Presentation/readability only for the existing Atlas/Aerith local dialogue.
    A completed CURRENT and a newer Atlas AUTO cycle are deliberately shown as
-   two different visual states. This module never starts Atlas and never mutates
-   analytical truth. No recurring timer, observer, storage/network write. */
+   two different visual states. The status card is owned by the dedicated
+   atlasCurrentAnalysisBannerMount between PIPELINE/RÔLE and Question libre.
+   This module never starts Atlas and never mutates analytical truth.
+   No recurring timer, observer, storage/network write. */
 (() => {
   "use strict";
 
   const OWNER = "local-dialogue-presentation";
-  const RELEASE = "40.6.133";
+  const RELEASE = "40.6.190";
   const STYLE_ID = "agentCryptoLocalDialoguePresentationStyle";
   const SUMMARY_CLASS = "ac-local-dialogue-summary";
+  const SUMMARY_MOUNT_ID = "atlasCurrentAnalysisBannerMount";
   const PROVENANCE_CLASS = "ac-local-provenance-v2";
 
   function installStyles() {
@@ -19,7 +22,7 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      .${SUMMARY_CLASS}{position:relative;margin-top:14px;padding:16px 16px 14px;border:1px solid rgba(94,228,255,.34);border-radius:14px;background:radial-gradient(circle at 88% 12%,rgba(76,213,255,.10),transparent 28%),linear-gradient(135deg,rgba(7,28,44,.97),rgba(9,23,38,.95) 58%,rgba(30,24,52,.90));box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 10px 26px rgba(0,0,0,.18);color:#e5fbff!important;font-size:15px!important;line-height:1.45!important;font-weight:820!important}
+      .${SUMMARY_CLASS}{position:relative;margin:14px 0;padding:16px 16px 14px;border:1px solid rgba(94,228,255,.34);border-radius:14px;background:radial-gradient(circle at 88% 12%,rgba(76,213,255,.10),transparent 28%),linear-gradient(135deg,rgba(7,28,44,.97),rgba(9,23,38,.95) 58%,rgba(30,24,52,.90));box-shadow:inset 0 1px 0 rgba(255,255,255,.045),0 10px 26px rgba(0,0,0,.18);color:#e5fbff!important;font-size:15px!important;line-height:1.45!important;font-weight:820!important;box-sizing:border-box;width:100%}
       .${SUMMARY_CLASS}::before{content:"LOCAL AI · ÉTAT";display:block;margin-bottom:8px;color:#93efff;font:900 10px/1.1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase}
       .ac-local-dialogue-v2-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
       .ac-local-dialogue-v2-title{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
@@ -71,9 +74,18 @@
   }
 
   function dialogueHost() {
+    const canonical = document.getElementById("atlasLocalDialogue");
+    if (canonical) return canonical;
     const anchor = smallestContaining(["Interroger Atlas-10 ou Aerith-10"]);
     if (!anchor) return null;
     return anchor.closest("section,article,.admin-window,.admin-card,.admin-subsection") || anchor.parentElement?.parentElement || null;
+  }
+
+  function summaryMount(root) {
+    if (!root) return null;
+    const mount = root.querySelector?.(`#${SUMMARY_MOUNT_ID}`) || document.getElementById(SUMMARY_MOUNT_ID);
+    if (!mount || !root.contains(mount)) return null;
+    return mount;
   }
 
   function reportHost() {
@@ -154,14 +166,10 @@
   function renderSummary() {
     const root = dialogueHost();
     if (!root) return false;
+    const mount = summaryMount(root);
+    if (!mount) return false;
     const preserved = parseProgress(currentStateText(root));
     const live = liveCycle();
-    const status = [...root.querySelectorAll?.("p,small,div,output,strong") || []]
-      .filter(node => /Dialogue local prêt avec/i.test(cleanText(node)))
-      .sort((a, b) => cleanText(a).length - cleanText(b).length)[0]
-      || smallestContaining(["Dialogue local prêt avec"], root)
-      || smallestContaining(["CURRENT validé", "moteur local au repos"], root);
-    if (!status?.parentNode) return false;
 
     const hosts = [...document.querySelectorAll(`.${SUMMARY_CLASS}`)];
     let host = root.querySelector?.(`.${SUMMARY_CLASS}`) || hosts[0] || null;
@@ -170,8 +178,9 @@
       host.className = SUMMARY_CLASS;
       host.dataset.localDialoguePresentationOwner = OWNER;
     }
-    if (host.parentNode !== status.parentNode || status.nextElementSibling !== host) status.insertAdjacentElement("afterend", host);
+    if (host.parentNode !== mount) mount.appendChild(host);
     hosts.filter(node => node !== host).forEach(node => node.remove());
+    mount.dataset.localDialogueSummaryPlacement = "pipeline-role-before-question";
 
     const splitTruth = preserved.currentClosed && live.active && live.reports < 4;
     const primary = splitTruth ? preserved : (live.active ? live : preserved);
@@ -250,7 +259,7 @@
   function sync(reason = "manual") {
     installStyles();
     const result = Object.freeze({ summary: renderSummary(), provenance: renderProvenance(), live_cycle: liveCycle(), reason });
-    document.documentElement.dataset.localDialoguePresentation = "canonical-406133";
+    document.documentElement.dataset.localDialoguePresentation = "canonical-406190";
     return result;
   }
 
@@ -262,7 +271,8 @@
       active_3_of_4_is_75: active.reports === 3 && active.percent === 75,
       completed_chain_is_100: done.reports === 4 && done.percent === 100 && done.currentClosed,
       snapshot_and_current_separated: prov.snapshot === "13/09/2026 08:45:07" && prov.current === "13/09/2026 10:36:33",
-      bridge_and_reports_preserved: prov.bridge === "Bridge validé" && prov.reports === "4"
+      bridge_and_reports_preserved: prov.bridge === "Bridge validé" && prov.reports === "4",
+      canonical_mount_id_locked: SUMMARY_MOUNT_ID === "atlasCurrentAnalysisBannerMount"
     });
     return Object.freeze({ pass: Object.values(checks).every(Boolean), checks });
   }
@@ -285,6 +295,8 @@
     build: RELEASE,
     owner: OWNER,
     canonical_active_filename: "js/local-dialogue-presentation.js",
+    summary_mount_id: SUMMARY_MOUNT_ID,
+    summary_placement: "pipeline-role-before-question",
     parseProgress,
     liveCycle,
     provenanceParts,
