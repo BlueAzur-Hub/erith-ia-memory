@@ -1,12 +1,13 @@
-/* Agent-Crypto @erith.IA — 40.6.204 EVIDENCE SINGLE-OWNER LIFECYCLE BINDING
-   Aligns the 40.6.187 lifecycle truth with the current seven-panel supplemental
-   host. One dossier render, one supplement mount, one gate-truth render per explicit
+/* Agent-Crypto @erith.IA — 40.6.207 EVIDENCE EIGHT-PANEL LIFECYCLE TRUTH
+   Aligns the lifecycle truth with the current eight-panel supplemental host:
+   the seven validated G3 evidence panels plus the prospective T0 capture owner.
+   One dossier render, one supplement mount, one gate-truth render per explicit
    Evidence refresh. No boot refresh loop, dossier monkey-patch, recurring timer,
-   MutationObserver, storage/business-network/order path or Gate promotion. */
+   MutationObserver, business-network/order path or Gate promotion. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.204";
+  const BUILD = "40.6.207";
   const ROOT_ID = "strategyADossier";
   const HOST_ID = "strategyAEvidenceSupplements";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
@@ -19,7 +20,8 @@
     "strategyAG3T0DecisionProof",
     "strategyAG3ReplayDataset",
     "strategyAG3DecisionReplay",
-    "strategyAG3CascadeCheckpoint"
+    "strategyAG3CascadeCheckpoint",
+    "strategyAG3ProspectiveT0Capture"
   ]);
   let queued = false;
   let refreshCount = 0;
@@ -133,13 +135,14 @@
 
   function selfTest() {
     return {
-      schema: "agent_crypto_evidence_single_owner_lifecycle_self_test_v2",
+      schema: "agent_crypto_evidence_eight_panel_lifecycle_self_test_v1",
       build: BUILD,
       pass: true,
       checks: {
         single_dossier_render_per_refresh: true,
         single_supplement_mount_per_refresh: true,
-        seven_panel_host_contract: SUPPLEMENT_IDS.length === 7,
+        eight_panel_host_contract: SUPPLEMENT_IDS.length === 8,
+        prospective_t0_owned_by_supplement_host: SUPPLEMENT_IDS.includes("strategyAG3ProspectiveT0Capture"),
         legacy_view_refreshed_event_retired: true,
         boot_autorefresh_retired: true,
         dossier_render_monkey_patch_retired: true,
@@ -162,6 +165,7 @@
     supplement_ids: SUPPLEMENT_IDS.slice(),
     self_test: selfTest,
     single_owner_refresh: true,
+    eight_panel_contract: true,
     boot_autorefresh: false,
     legacy_view_refreshed_event: false,
     recurring_timer: false,
