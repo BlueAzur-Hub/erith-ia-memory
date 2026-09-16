@@ -1,20 +1,20 @@
-/* Agent-Crypto @erith.IA — 40.6.187 STRATEGY A EVIDENCE SINGLE-OWNER INTEGRATION
-   Keeps the three structured G3 evidence panels inside the existing Strategy A
-   Evidence Dossier, but removes the 40.6.181 render monkey-patch and all autonomous
-   refresh listeners. Hydration now happens only when the canonical entry or the
-   Evidence lifecycle explicitly calls mount(). No recurring timer, observer,
-   storage/network/order path or gate promotion. */
+/* Agent-Crypto @erith.IA — 40.6.194 STRATEGY A EVIDENCE SINGLE-OWNER INTEGRATION
+   Keeps the structured G3 evidence panels inside the existing Strategy A
+   Evidence Dossier without render monkey-patches or autonomous refresh listeners.
+   Hydration happens only when the canonical entry or Evidence lifecycle calls
+   mount(). No recurring timer, observer, storage/network/order path or gate promotion. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.187";
+  const BUILD = "40.6.194";
   const DOSSIER_ID = "strategyADossier";
   const CONTRACT_ID = "strategyAG3RealisticReplayContract";
   const STATUS_ID = "strategyAEvidenceDossierSupplements187Status";
   const PANEL_SPECS = Object.freeze([
     Object.freeze({id:"strategyAG3StructuredTruth",api:"AgentCryptoStrategyAG3StructuredDataTruth",title:"G3 · STRUCTURED DATA TRUTH"}),
     Object.freeze({id:"strategyAG3HistoryOwnerDiscovery",api:"AgentCryptoStrategyAG3HistoryOwnerDiscovery",title:"G3 · HISTORY OWNER DISCOVERY"}),
-    Object.freeze({id:"strategyAG3HistoricalEvidenceAdapter",api:"AgentCryptoStrategyAG3HistoricalEvidenceAdapter",title:"G3 · HISTORICAL EVIDENCE ADAPTER"})
+    Object.freeze({id:"strategyAG3HistoricalEvidenceAdapter",api:"AgentCryptoStrategyAG3HistoricalEvidenceAdapter",title:"G3 · HISTORICAL EVIDENCE ADAPTER"}),
+    Object.freeze({id:"strategyAG3T0DecisionProof",api:"AgentCryptoStrategyAG3T0DecisionProof",title:"G3 · T0 DECISION PROOF"})
   ]);
 
   let mountCount = 0;
@@ -65,6 +65,10 @@
       status.id = STATUS_ID;
       status.dataset.build = BUILD;
       status.innerHTML = `<div><div class="saeds-title">G3 · PREUVES STRUCTURÉES · ${BUILD}</div><div class="saeds-sub">Single-owner · montage explicite · aucune promotion de gate.</div></div><div class="saeds-state" data-saeds-state>0 / ${PANEL_SPECS.length} PANNEAUX</div>`;
+    } else {
+      status.dataset.build = BUILD;
+      const title = status.querySelector(".saeds-title");
+      if (title) title.textContent = `G3 · PREUVES STRUCTURÉES · ${BUILD}`;
     }
     if (status.parentElement !== dossier) dossier.appendChild(status);
     return status;
