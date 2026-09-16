@@ -1,16 +1,14 @@
-/* Agent-Crypto @erith.IA — 40.6.202 STRATEGY A G3 EVIDENCE STABLE HOST
-   Root-cause repair: the legacy #strategyADossier owner removes/recreates its own
-   subtree, so supplemental G3 panels must not live inside that destructive subtree.
-   This integrator keeps the existing owner APIs unchanged, renders them once, then
-   moves their roots into a stable sibling host outside #strategyADossier.
+/* Agent-Crypto @erith.IA — 40.6.203 STRATEGY A G3 EVIDENCE BODY PORTAL
+   Terrain proof from 40.6.202 showed that a sibling placed next to #strategyADossier
+   can still disappear when the wider Strategy A surface is rebuilt. This release
+   moves the supplemental G3 host to a direct document.body portal, outside the
+   destructive Strategy A subtree, while leaving every evidence owner unchanged.
    No recurring timer, observer, storage/network/order path or Gate promotion. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.202";
+  const BUILD = "40.6.203";
   const DOSSIER_ID = "strategyADossier";
-  const AUDIT_ID = "strategyAEvidenceGateAudit";
-  const BRIDGE_ID = "strategyAPaperV2ProofBridge";
   const HOST_ID = "strategyAEvidenceSupplements";
   const STATUS_ID = "strategyAEvidenceSupplementsStatus";
 
@@ -27,6 +25,7 @@
   let mountCount = 0;
   let mounting = false;
   let queued = false;
+
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
 
   function ensureStyle() {
@@ -34,8 +33,8 @@
     const style = document.createElement("style");
     style.id = `${HOST_ID}Style`;
     style.textContent = `
-      #${HOST_ID}{margin-top:10px;padding:10px;border:1px solid rgba(111,255,215,.22);border-radius:10px;background:rgba(5,23,25,.42)}
-      #${HOST_ID}>.saesh-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+      body>#${HOST_ID}{position:relative;z-index:1;margin:12px max(12px,2vw) 24px;padding:10px;border:1px solid rgba(111,255,215,.22);border-radius:10px;background:rgba(5,23,25,.94);box-shadow:0 10px 30px rgba(0,0,0,.22)}
+      body>#${HOST_ID}>.saesh-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:4px}
       #${HOST_ID} .saesh-title{font-size:9px;font-weight:950;letter-spacing:.09em;color:#83ffda;text-transform:uppercase}
       #${HOST_ID} .saesh-sub{font-size:8px;color:#86aaa4;margin-top:3px}
       #${HOST_ID} .saesh-state{font-size:8px;font-weight:900;color:#dffdf5;border:1px solid rgba(111,255,215,.18);border-radius:999px;padding:4px 7px;background:rgba(111,255,215,.06)}
@@ -57,30 +56,21 @@
     return byId(DOSSIER_ID);
   }
 
-  function anchor() {
-    return byId(DOSSIER_ID) || byId(AUDIT_ID) || byId(BRIDGE_ID) || null;
-  }
-
   function ensureHost() {
-    if (typeof document === "undefined") return null;
-    const a = anchor();
-    if (!a) return null;
+    if (typeof document === "undefined" || !document.body) return null;
     ensureStyle();
-
     let host = byId(HOST_ID);
     if (!host) {
       host = document.createElement("section");
       host.id = HOST_ID;
-      host.dataset.build = BUILD;
-      host.dataset.stableSibling = "true";
-      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · STABLE HOST · ${BUILD}</div><div class="saesh-sub">Preuves G3 hors du subtree legacy Evidence Dossier · aucun PASS créé par ce host.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
-    } else {
-      host.dataset.build = BUILD;
-      const title = host.querySelector(".saesh-title");
-      if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · STABLE HOST · ${BUILD}`;
+      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · BODY PORTAL · ${BUILD}</div><div class="saesh-sub">Preuves G3 hors du subtree Strategy A destructible · aucun PASS créé par ce host.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
     }
-
-    if (a.nextElementSibling !== host) a.insertAdjacentElement("afterend", host);
+    host.dataset.build = BUILD;
+    host.dataset.stableBodyPortal = "true";
+    host.dataset.outsideStrategyASubtree = "true";
+    const title = host.querySelector(".saesh-title");
+    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · BODY PORTAL · ${BUILD}`;
+    if (host.parentElement !== document.body) document.body.appendChild(host);
     return host;
   }
 
@@ -112,8 +102,9 @@
       const root = byId(spec.id);
       if (!root) continue;
       if (root.parentElement !== host) host.appendChild(root);
-      root.dataset.stableHostBuild = BUILD;
+      root.dataset.bodyPortalBuild = BUILD;
       root.dataset.outsideLegacyDossier = "true";
+      root.dataset.outsideStrategyASubtree = "true";
       root.dataset.integratedBy = BUILD;
       if (typeof globalThis[spec.api]?.render === "function") {
         root.classList?.remove("saeds-placeholder");
@@ -134,28 +125,28 @@
         id: spec.id,
         api: spec.api,
         present: !!node,
-        parent: node?.parentElement?.id || null,
-        stable: node?.parentElement === host,
+        parent: node?.parentElement?.id || node?.parentElement?.tagName || null,
+        body_portal: !!host && node?.parentElement === host,
         hydrated: !!node && node.classList?.contains("saeds-placeholder") !== true
       };
     });
     const missingApis = PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api);
     return {
-      schema: "agent_crypto_strategy_a_g3_evidence_stable_host_v1",
+      schema: "agent_crypto_strategy_a_g3_evidence_body_portal_v1",
       build: BUILD,
       dossier_present: !!dossier,
       host_present: !!host,
-      stable_sibling: host?.dataset?.stableSibling === "true",
+      direct_body_child: !!host && host.parentElement === document.body,
+      stable_body_portal: host?.dataset?.stableBodyPortal === "true",
       mount_count: mountCount,
       mounting,
       present: panels.filter(p => p.present).length,
       hydrated: panels.filter(p => p.hydrated).length,
-      stable: panels.filter(p => p.stable).length,
+      in_body_portal: panels.filter(p => p.body_portal).length,
       expected: PANEL_SPECS.length,
       missing_apis: missingApis,
       panels,
       legacy_dossier_owner_unchanged: true,
-      inside_legacy_dossier: panels.filter(p => p.parent === DOSSIER_ID).length,
       dossier_hook_installed: false,
       autonomous_refresh_listeners: true,
       recurring_timer: false,
@@ -170,7 +161,7 @@
   }
 
   function mount() {
-    if (mounting) return {...snapshot(), mounted:false, reason:"MOUNT_ALREADY_ACTIVE"};
+    if (mounting) return {...snapshot(),mounted:false,reason:"MOUNT_ALREADY_ACTIVE"};
     mounting = true;
     mountCount += 1;
     try {
@@ -180,7 +171,7 @@
       const host = ensureHost();
       if (!host) return {mounted:false,reason:"HOST_UNAVAILABLE",mount_count:mountCount};
 
-      PANEL_SPECS.forEach(spec => ensurePlaceholder(host, spec));
+      PANEL_SPECS.forEach(spec => ensurePlaceholder(host,spec));
       renderOwners();
       const moved = movePanels(host);
       const state = snapshot();
@@ -206,7 +197,7 @@
 
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
     build: BUILD,
-    owner: "strategy-a-g3-evidence-stable-host",
+    owner: "strategy-a-g3-evidence-body-portal",
     dossier_id: DOSSIER_ID,
     host_id: HOST_ID,
     status_id: STATUS_ID,
@@ -217,7 +208,7 @@
     install_dossier_owner_hook: () => false,
     dossier_hook_installed: false,
     autonomous_refresh_listeners: true,
-    stable_sibling_host: true,
+    stable_body_portal: true,
     legacy_dossier_owner_unchanged: true,
     recurring_timer: false,
     observer: false,
