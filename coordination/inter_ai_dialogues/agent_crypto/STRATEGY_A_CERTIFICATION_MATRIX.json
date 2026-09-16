@@ -1,0 +1,197 @@
+{
+  "schema": "agent_crypto_strategy_a_certification_matrix_v3",
+  "build": "40.6.163",
+  "generated_at": "2026-09-16T13:58:30.808Z",
+  "modules": {
+    "deterministic_replay": {
+      "name": "deterministic_replay",
+      "available": true,
+      "build": "40.4.290",
+      "last_self_test": null
+    },
+    "paper_lifecycle": {
+      "name": "paper_lifecycle",
+      "available": true,
+      "build": "40.6.15",
+      "last_self_test": null
+    },
+    "auto_lifecycle_bridge": {
+      "name": "auto_lifecycle_bridge",
+      "available": true,
+      "build": "40.6.18",
+      "last_self_test": null
+    },
+    "after_cost_metrics": {
+      "name": "after_cost_metrics",
+      "available": true,
+      "build": "40.6.168",
+      "last_self_test": null
+    }
+  },
+  "gates": [
+    {
+      "gate": 1,
+      "label": "QUALITÉ DES DONNÉES",
+      "state": "EVIDENCE_REQUIRED"
+    },
+    {
+      "gate": 2,
+      "label": "COHÉRENCE LOGIQUE",
+      "state": "FOUNDATION_PASS",
+      "note": "Fondation : receipt terrain 40.6.159 · PASS."
+    },
+    {
+      "gate": 3,
+      "label": "BACKTEST RÉALISTE",
+      "state": "PENDING"
+    },
+    {
+      "gate": 4,
+      "label": "OUT-OF-SAMPLE",
+      "state": "PENDING"
+    },
+    {
+      "gate": 5,
+      "label": "WALK-FORWARD",
+      "state": "PENDING"
+    },
+    {
+      "gate": 6,
+      "label": "MONTE CARLO / STRESS",
+      "state": "PENDING"
+    },
+    {
+      "gate": 7,
+      "label": "CHAOS TESTING",
+      "state": "FOUNDATION_PASS",
+      "note": "Circuit breaker raccordé aux nouvelles entrées Auto A ; position Paper ouverte reste monitorable. Fondation : receipt terrain 40.6.159 · PASS."
+    },
+    {
+      "gate": 8,
+      "label": "PAPER TRADING",
+      "state": "INSUFFICIENT_SAMPLE",
+      "note": "0 trade(s) après coûts · coût complet=non."
+    },
+    {
+      "gate": 9,
+      "label": "MICRO-LIVE CONTRÔLÉ",
+      "state": "LOCKED"
+    }
+  ],
+  "foundation_proof": {
+    "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+    "build": "40.6.163",
+    "pass": true,
+    "source": "CANONICAL_TERRAIN_RECEIPT",
+    "receipt": {
+      "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+      "source_build": "40.6.159",
+      "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+      "result": "PASS",
+      "pass": true,
+      "at": "2026-09-15T23:27:11.071Z",
+      "gates": {
+        "2": "FOUNDATION_PASS",
+        "7": "FOUNDATION_PASS"
+      },
+      "terrain_proof": true,
+      "operator_action": true,
+      "automatic": false,
+      "immutable": true
+    },
+    "session_test": null,
+    "implicit_tests_executed": false,
+    "storage_write": false
+  },
+  "safety": {
+    "schema": "agent_crypto_strategy_a_safety_certification_v3",
+    "build": "40.6.163",
+    "level": "NORMAL",
+    "reason": "INITIAL",
+    "history": [],
+    "runtime_errors": 0,
+    "automatic_live_resume": false,
+    "automatic_auto_a_resume": false,
+    "new_trades_allowed": true,
+    "existing_paper_monitoring_allowed": true,
+    "paper_only": true,
+    "real_orders": false,
+    "network": false,
+    "auto_a_governor_connected": true,
+    "micro_live_locked": true,
+    "foundation_truth": {
+      "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+      "build": "40.6.163",
+      "pass": true,
+      "source": "CANONICAL_TERRAIN_RECEIPT",
+      "receipt": {
+        "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+        "source_build": "40.6.159",
+        "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+        "result": "PASS",
+        "pass": true,
+        "at": "2026-09-15T23:27:11.071Z",
+        "gates": {
+          "2": "FOUNDATION_PASS",
+          "7": "FOUNDATION_PASS"
+        },
+        "terrain_proof": true,
+        "operator_action": true,
+        "automatic": false,
+        "immutable": true
+      },
+      "session_test": null,
+      "implicit_tests_executed": false,
+      "storage_write": false
+    }
+  },
+  "profitability_claim": false,
+  "certified_for_live": false,
+  "paper_only": true,
+  "real_orders": false,
+  "passive_read": true,
+  "implicit_self_tests": false,
+  "auto_a_governor_connected": true,
+  "foundation_receipt": {
+    "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+    "source_build": "40.6.159",
+    "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+    "result": "PASS",
+    "pass": true,
+    "at": "2026-09-15T23:27:11.071Z",
+    "gates": {
+      "2": "FOUNDATION_PASS",
+      "7": "FOUNDATION_PASS"
+    },
+    "terrain_proof": true,
+    "operator_action": true,
+    "automatic": false,
+    "immutable": true
+  },
+  "foundation_truth": {
+    "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+    "build": "40.6.163",
+    "pass": true,
+    "source": "CANONICAL_TERRAIN_RECEIPT",
+    "receipt": {
+      "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+      "source_build": "40.6.159",
+      "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+      "result": "PASS",
+      "pass": true,
+      "at": "2026-09-15T23:27:11.071Z",
+      "gates": {
+        "2": "FOUNDATION_PASS",
+        "7": "FOUNDATION_PASS"
+      },
+      "terrain_proof": true,
+      "operator_action": true,
+      "automatic": false,
+      "immutable": true
+    },
+    "session_test": null,
+    "implicit_tests_executed": false,
+    "storage_write": false
+  },
+  "last_foundation_test": null
+}

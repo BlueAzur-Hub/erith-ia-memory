@@ -1,0 +1,137 @@
+{
+  "schema": "agent_crypto_strategy_a_paper_after_cost_acceptance_v1",
+  "build": "40.6.63",
+  "at": "2026-09-16T13:36:53.720Z",
+  "pass": true,
+  "error": null,
+  "owners": {
+    "lifecycle_build": "40.6.15",
+    "after_cost_build": "40.6.168"
+  },
+  "lifecycle": {
+    "pass": true,
+    "checks": [
+      {
+        "id": "HAPPY_PATH",
+        "pass": true,
+        "expected": "CLOSED",
+        "actual": "CLOSED"
+      },
+      {
+        "id": "PARTIAL_FILL",
+        "pass": true,
+        "expected": "CLOSED",
+        "actual": "CLOSED"
+      },
+      {
+        "id": "EXECUTION_REJECT",
+        "pass": true,
+        "expected": "REJECTED",
+        "actual": "REJECTED"
+      },
+      {
+        "id": "TIMEOUT_RECONCILE",
+        "pass": true,
+        "expected": "RECONCILED_NO_ORDER",
+        "actual": "RECONCILED_NO_ORDER"
+      },
+      {
+        "id": "TIMEOUT_RECONCILE_NO_BLIND_RETRY",
+        "pass": true,
+        "expected": false,
+        "actual": false
+      },
+      {
+        "id": "CANCEL_AFTER_ACK",
+        "pass": true,
+        "expected": "CANCELED",
+        "actual": "CANCELED"
+      },
+      {
+        "id": "PROTECTION_FAILURE",
+        "pass": true,
+        "expected": "STOP_UNPROTECTED",
+        "actual": "STOP_UNPROTECTED"
+      },
+      {
+        "id": "RECONCILE_CONTRADICTION",
+        "pass": true,
+        "expected": "RECONCILIATION_REQUIRED",
+        "actual": "RECONCILIATION_REQUIRED"
+      },
+      {
+        "id": "RECONCILE_CONTRADICTION_CONFLICT",
+        "pass": true,
+        "expected": true,
+        "actual": true
+      },
+      {
+        "id": "DUPLICATE_ID",
+        "pass": true,
+        "expected": "REJECTED",
+        "actual": "REJECTED"
+      },
+      {
+        "id": "PARTIAL_FILL_AVERAGE_PRICE",
+        "pass": true,
+        "expected": 13.333333333333334,
+        "actual": 13.333333333333334
+      }
+    ]
+  },
+  "after_cost": {
+    "pass": true,
+    "checks": [
+      {
+        "id": "unknown_null_blank_boolean_not_zero",
+        "pass": true
+      },
+      {
+        "id": "partial_identity_indeterminate",
+        "pass": true
+      },
+      {
+        "id": "duplicate_refused",
+        "pass": true
+      },
+      {
+        "id": "complete_identity_verified",
+        "pass": true
+      },
+      {
+        "id": "spread_slippage_in_complete_identity",
+        "pass": true
+      },
+      {
+        "id": "contradictory_complete_identity_refused",
+        "pass": true
+      },
+      {
+        "id": "mismatch_not_recorded",
+        "pass": true
+      },
+      {
+        "id": "no_profitability_claim",
+        "pass": true
+      }
+    ]
+  },
+  "state_preservation": {
+    "lifecycle": true,
+    "after_cost": true
+  },
+  "invariants": {
+    "paper_only": true,
+    "real_orders": false,
+    "network": false,
+    "storage_write": false,
+    "live_ledger_test_mutation": false,
+    "profitability_claim": false,
+    "unknown_cost_is_zero": false
+  },
+  "verdict": "PASS · PAPER LIFECYCLE + AFTER-COST PROOF",
+  "paper_only": true,
+  "real_orders": false,
+  "network": false,
+  "storage_write": false
+}

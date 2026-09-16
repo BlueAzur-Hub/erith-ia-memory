@@ -1,0 +1,2357 @@
+{
+  "schema": "agent_crypto_strategy_a_experiment_export_v1",
+  "build": "40.4.289",
+  "exported_at": "2026-09-16T13:58:22.321Z",
+  "paper_only": true,
+  "policy_unchanged": true,
+  "summary": {
+    "schema": "agent_crypto_strategy_a_experiment_summary_v1",
+    "build": "40.4.289",
+    "cycles": 15,
+    "paper_open": 0,
+    "cost_wait": 6,
+    "no_trade": 9,
+    "risk_reject": 0,
+    "error_stop": 0,
+    "latest": {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00005-c926d0f0",
+      "cycle_number": 5,
+      "captured_at": "2026-09-16T13:56:42.730Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction -8/100, seuil +12; confiance 87/100, seuil 70; BTC 24 h -0.698 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-e3f82fe1",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction -8/100, seuil +12; confiance 87/100, seuil 70; BTC 24 h -0.698 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "-8/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "87/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-0.698 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.46 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 65608.64,
+        "change_24h_pct": -0.698,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 87,
+        "direction_score": -8,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.46021965214179195,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    "persisted": true,
+    "max_rows": 240
+  },
+  "cycles": [
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-14d0e6af",
+      "cycle_number": 1,
+      "captured_at": "2026-09-07T06:06:37.224Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction 8/100, seuil +12; confiance 84/100, seuil 70; BTC 24 h -0.185 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-8a3a7d93",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction 8/100, seuil +12; confiance 84/100, seuil 70; BTC 24 h -0.185 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+8/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "84/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-0.185 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.34 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 68746.83,
+        "change_24h_pct": -0.185,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 84,
+        "direction_score": 8,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.34421446679154233,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-565f6617",
+      "cycle_number": 1,
+      "captured_at": "2026-09-07T09:11:59.951Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction 11/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.572 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-6278087d",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction 11/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.572 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+11/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "94/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-0.572 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.60 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 68439.98,
+        "change_24h_pct": -0.572,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 94,
+        "direction_score": 11,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.6037940041651055,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-1a47e140",
+      "cycle_number": 1,
+      "captured_at": "2026-09-11T13:58:47.082Z",
+      "trigger": "timer",
+      "phase": "COST_GATE_WAIT",
+      "auto_enabled_after_cycle": true,
+      "last_action": "Coût d'abord : potentiel Oracle +0.52 % · seuil 0.80 % (coûts 0.60 % + marge). Aucun trade Paper.",
+      "decision_id": "STRAT-A-BTC-ec69c39a",
+      "proposal_status": "PROPOSED",
+      "proposal_reason": "Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.",
+      "first_blocker": "cost",
+      "first_blocker_label": "COST GATE",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "TENDANCE HAUSSIÈRE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+40/100",
+          "threshold": "baseline haussier",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "93/100",
+          "threshold": "seuil 55/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+2.347 %",
+          "threshold": "strictement positif",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "FIRST_ENTRY",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "pass",
+          "path": "chemin réel"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.52 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "chemin réel"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 68044.83,
+        "change_24h_pct": 2.347,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "TENDANCE HAUSSIÈRE",
+        "confidence": 93,
+        "direction_score": 40,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.5151662437432232,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-ba299fdc",
+      "cycle_number": 1,
+      "captured_at": "2026-09-11T14:04:06.296Z",
+      "trigger": "timer",
+      "phase": "COST_GATE_WAIT",
+      "auto_enabled_after_cycle": true,
+      "last_action": "Coût d'abord : potentiel Oracle +0.51 % · seuil 0.80 % (coûts 0.60 % + marge). Aucun trade Paper.",
+      "decision_id": "STRAT-A-BTC-1e4479be",
+      "proposal_status": "PROPOSED",
+      "proposal_reason": "Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.",
+      "first_blocker": "cost",
+      "first_blocker_label": "COST GATE",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "TENDANCE HAUSSIÈRE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+32/100",
+          "threshold": "baseline haussier",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "90/100",
+          "threshold": "seuil 55/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+2.869 %",
+          "threshold": "strictement positif",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "FIRST_ENTRY",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "pass",
+          "path": "chemin réel"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.51 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "chemin réel"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 68385.22,
+        "change_24h_pct": 2.869,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "TENDANCE HAUSSIÈRE",
+        "confidence": 90,
+        "direction_score": 32,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.5050692660576425,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-4191d0ee",
+      "cycle_number": 1,
+      "captured_at": "2026-09-11T14:18:31.265Z",
+      "trigger": "timer",
+      "phase": "COST_GATE_WAIT",
+      "auto_enabled_after_cycle": true,
+      "last_action": "Coût d'abord : potentiel Oracle +0.50 % · seuil 0.80 % (coûts 0.60 % + marge). Aucun trade Paper.",
+      "decision_id": "STRAT-A-BTC-ea6f0619",
+      "proposal_status": "PROPOSED",
+      "proposal_reason": "Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.",
+      "first_blocker": "cost",
+      "first_blocker_label": "COST GATE",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "TENDANCE HAUSSIÈRE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+21/100",
+          "threshold": "baseline haussier",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "86/100",
+          "threshold": "seuil 55/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+2.831 %",
+          "threshold": "strictement positif",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "FIRST_ENTRY",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "pass",
+          "path": "chemin réel"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.50 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "chemin réel"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 68114.54,
+        "change_24h_pct": 2.831,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "TENDANCE HAUSSIÈRE",
+        "confidence": 86,
+        "direction_score": 21,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.49718313836310746,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-a7cfc602",
+      "cycle_number": 1,
+      "captured_at": "2026-09-11T15:36:38.562Z",
+      "trigger": "timer",
+      "phase": "COST_GATE_WAIT",
+      "auto_enabled_after_cycle": true,
+      "last_action": "Coût d'abord : potentiel Oracle +0.45 % · seuil 0.80 % (coûts 0.60 % + marge). Aucun trade Paper.",
+      "decision_id": "STRAT-A-BTC-ab544660",
+      "proposal_status": "PROPOSED",
+      "proposal_reason": "Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.",
+      "first_blocker": "cost",
+      "first_blocker_label": "COST GATE",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "TENDANCE HAUSSIÈRE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+24/100",
+          "threshold": "baseline haussier",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "84/100",
+          "threshold": "seuil 55/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+2.132 %",
+          "threshold": "strictement positif",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "FIRST_ENTRY",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "pass",
+          "path": "chemin réel"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.45 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "chemin réel"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 67868.39,
+        "change_24h_pct": 2.132,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "TENDANCE HAUSSIÈRE",
+        "confidence": 84,
+        "direction_score": 24,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.44568517929975343,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-126b7df4",
+      "cycle_number": 1,
+      "captured_at": "2026-09-11T16:49:48.332Z",
+      "trigger": "timer",
+      "phase": "COST_GATE_WAIT",
+      "auto_enabled_after_cycle": true,
+      "last_action": "Coût d'abord : potentiel Oracle +0.48 % · seuil 0.80 % (coûts 0.60 % + marge). Aucun trade Paper.",
+      "decision_id": "STRAT-A-BTC-86c86c07",
+      "proposal_status": "PROPOSED",
+      "proposal_reason": "Baseline admissible : BTC 24 h positif + Oracle actif + régime haussier + confiance ≥ 55/100.",
+      "first_blocker": "cost",
+      "first_blocker_label": "COST GATE",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "TENDANCE HAUSSIÈRE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+23/100",
+          "threshold": "baseline haussier",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "94/100",
+          "threshold": "seuil 55/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+1.219 %",
+          "threshold": "strictement positif",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "FIRST_ENTRY",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "pass",
+          "path": "chemin réel"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.48 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "chemin réel"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 67146.23,
+        "change_24h_pct": 1.219,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "TENDANCE HAUSSIÈRE",
+        "confidence": 94,
+        "direction_score": 23,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.4806274833744291,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00002-9e52cb0f",
+      "cycle_number": 2,
+      "captured_at": "2026-09-11T16:54:49.676Z",
+      "trigger": "timer",
+      "phase": "COST_GATE_WAIT",
+      "auto_enabled_after_cycle": true,
+      "last_action": "Coût d'abord : potentiel Oracle +0.46 % · seuil 0.80 % (coûts 0.60 % + marge). Aucun trade Paper.",
+      "decision_id": "STRAT-A-BTC-3b944545",
+      "proposal_status": "PROPOSED",
+      "proposal_reason": "Gate 40.4.270 admissible : Oracle MIXTE avec biais haussier mesuré 18/100 + confiance 87/100 + BTC 24 h 1.28 % ; validation Risk Governor requise.",
+      "first_blocker": "cost",
+      "first_blocker_label": "COST GATE",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+18/100",
+          "threshold": "seuil +12/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "87/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+1.279 %",
+          "threshold": "seuil +0.10 %",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "FIRST_ENTRY",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "pass",
+          "path": "chemin réel"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.46 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "chemin réel"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 67167.17,
+        "change_24h_pct": 1.279,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 87,
+        "direction_score": 18,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.46001931515982347,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-edce3386",
+      "cycle_number": 1,
+      "captured_at": "2026-09-11T17:47:20.677Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction 11/100, seuil +12; confiance 84/100, seuil 70; BTC 24 h 0.527 %, seuil +0.10 %).",
+      "decision_id": "STRAT-A-BTC-f72ffc25",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction 11/100, seuil +12; confiance 84/100, seuil 70; BTC 24 h 0.527 %, seuil +0.10 %).",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+11/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "84/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+0.527 %",
+          "threshold": "seuil +0.10 %",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.44 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 66893.12,
+        "change_24h_pct": 0.527,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 84,
+        "direction_score": 11,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.43844471302896026,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00002-0662a713",
+      "cycle_number": 2,
+      "captured_at": "2026-09-11T17:52:22.986Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction 6/100, seuil +12; confiance 87/100, seuil 70; BTC 24 h 0.343 %, seuil +0.10 %).",
+      "decision_id": "STRAT-A-BTC-556b6ccc",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction 6/100, seuil +12; confiance 87/100, seuil 70; BTC 24 h 0.343 %, seuil +0.10 %).",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+6/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "87/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "+0.343 %",
+          "threshold": "seuil +0.10 %",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.43 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 66846.27,
+        "change_24h_pct": 0.343,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 87,
+        "direction_score": 6,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.42705832659869614,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00001-7a77f824",
+      "cycle_number": 1,
+      "captured_at": "2026-09-16T13:36:41.838Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction -14/100, seuil +12; confiance 90/100, seuil 70; BTC 24 h -1.157 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-ae45b20a",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction -14/100, seuil +12; confiance 90/100, seuil 70; BTC 24 h -1.157 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "-14/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "90/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-1.157 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.46 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 65594.38,
+        "change_24h_pct": -1.157,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 90,
+        "direction_score": -14,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.4617695282058666,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00002-76d5ff41",
+      "cycle_number": 2,
+      "captured_at": "2026-09-16T13:41:42.413Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction -10/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.922 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-f11a85c6",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction -10/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.922 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "-10/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "94/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-0.922 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.46 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 65600.95,
+        "change_24h_pct": -0.922,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 94,
+        "direction_score": -10,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.4646202246603774,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00003-37699ae8",
+      "cycle_number": 3,
+      "captured_at": "2026-09-16T13:46:42.573Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction -12/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.782 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-98b289f4",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction -12/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.782 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "-12/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "94/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-0.782 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.46 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 65525.46,
+        "change_24h_pct": -0.782,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 94,
+        "direction_score": -12,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.4578376444830027,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00004-73a455b6",
+      "cycle_number": 4,
+      "captured_at": "2026-09-16T13:51:42.715Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction 0/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.499 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-18f99bb3",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction 0/100, seuil +12; confiance 94/100, seuil 70; BTC 24 h -0.499 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "+0/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "94/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-0.499 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.49 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 65638.78,
+        "change_24h_pct": -0.499,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 94,
+        "direction_score": 0,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.48957773511238684,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    },
+    {
+      "schema": "agent_crypto_strategy_a_experiment_ledger_v1",
+      "build": "40.4.289",
+      "cycle_id": "A-CYCLE-00005-c926d0f0",
+      "cycle_number": 5,
+      "captured_at": "2026-09-16T13:56:42.730Z",
+      "trigger": "timer",
+      "phase": "NO_TRADE",
+      "auto_enabled_after_cycle": true,
+      "last_action": "NO_TRADE · Régime Oracle MIXTE sans biais mesuré suffisant (direction -8/100, seuil +12; confiance 87/100, seuil 70; BTC 24 h -0.698 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "decision_id": "STRAT-A-BTC-e3f82fe1",
+      "proposal_status": "NO_TRADE",
+      "proposal_reason": "Régime Oracle MIXTE sans biais mesuré suffisant (direction -8/100, seuil +12; confiance 87/100, seuil 70; BTC 24 h -0.698 %, seuil +0.10 %). Variation BTC 24 h absente ou non positive.",
+      "first_blocker": "direction",
+      "first_blocker_label": "DIRECTION",
+      "gates": [
+        {
+          "key": "data",
+          "label": "DATA",
+          "value": "BTC OK · ORACLE OK · WORKSPACE OK · SAFETY OK",
+          "threshold": "données critiques + workspace + audit",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "regime",
+          "label": "RÉGIME",
+          "value": "MIXTE",
+          "threshold": "HAUSSIER ou MIXTE mesurable",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "direction",
+          "label": "DIRECTION",
+          "value": "-8/100",
+          "threshold": "seuil +12/100",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "confidence",
+          "label": "CONFIANCE",
+          "value": "87/100",
+          "threshold": "seuil 70/100",
+          "state": "pass",
+          "path": "évalué"
+        },
+        {
+          "key": "btc24",
+          "label": "BTC 24 H",
+          "value": "-0.698 %",
+          "threshold": "seuil +0.10 %",
+          "state": "wait",
+          "path": "évalué"
+        },
+        {
+          "key": "reentry",
+          "label": "RÉENTRÉE",
+          "value": "NON ATTEINT",
+          "threshold": "cooldown + signal neuf 40.4.271",
+          "state": "idle",
+          "path": "bloqué avant ce gate"
+        },
+        {
+          "key": "cost",
+          "label": "COST GATE",
+          "value": "Oracle +0.46 % · seuil 0.80 %",
+          "threshold": "coûts 0.60 % + marge 0.20 %",
+          "state": "wait",
+          "path": "trace lecture seule · source atlasOracleBuildModel(BTC).bullAmplitude"
+        },
+        {
+          "key": "risk",
+          "label": "RISK GOVERNOR",
+          "value": "NON ATTEINT",
+          "threshold": "ACCEPT/REDUCE + montant > 0",
+          "state": "idle",
+          "path": "aucune décision Risk pour la proposition courante"
+        },
+        {
+          "key": "paper",
+          "label": "PAPER",
+          "value": "AUCUNE POSITION",
+          "threshold": "fill fictif après Risk",
+          "state": "idle",
+          "path": "aucun ordre réel"
+        }
+      ],
+      "market": {
+        "symbol": "BTC",
+        "price_eur": 65608.64,
+        "change_24h_pct": -0.698,
+        "source": "Binance BTCEUR WebSocket"
+      },
+      "oracle": {
+        "regime": "MIXTE",
+        "confidence": 87,
+        "direction_score": -8,
+        "source": "atlasOracleBuildModel"
+      },
+      "cost": {
+        "eligible": false,
+        "expected_move_pct": 0.46021965214179195,
+        "required_move_pct": 0.8,
+        "total_cost_pct": 0.6000000000000001,
+        "source": "atlasOracleBuildModel(BTC).bullAmplitude"
+      },
+      "risk": {
+        "decision": "NOT_REACHED",
+        "authorized_notional_eur": null,
+        "reason": "Risk Governor non atteint pour la proposition courante.",
+        "risk_id": ""
+      },
+      "paper": {
+        "status": "NO_OPEN_POSITION",
+        "execution_id": "",
+        "proposal_id": "",
+        "authorized_notional_eur": 0,
+        "reference_price_eur": null,
+        "fill_price_eur": null
+      },
+      "metrics": {
+        "sample_size": 0,
+        "status": "INSUFFICIENT_SAMPLE",
+        "wins": 0,
+        "losses": 0,
+        "cumulative_net_pnl_eur": 0,
+        "expectancy_eur": 0,
+        "total_fees_eur": 0,
+        "estimated_total_impact_eur": 0,
+        "max_drawdown_eur": 0
+      },
+      "safety": {
+        "paper_only": true,
+        "real_orders": false,
+        "kraken_network": false,
+        "wallet": false,
+        "credentials": false,
+        "withdrawals": false,
+        "market_core_changed": false,
+        "oracle_engine_changed": false,
+        "risk_policy_changed": false,
+        "cost_threshold_changed": false
+      }
+    }
+  ]
+}

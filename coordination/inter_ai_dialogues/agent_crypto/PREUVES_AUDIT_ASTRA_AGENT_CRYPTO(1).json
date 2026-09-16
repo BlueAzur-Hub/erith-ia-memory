@@ -1,0 +1,2622 @@
+{
+  "schema": "astra_readonly_audit_evidence_v2",
+  "metadata": {
+    "date": "2026-09-16",
+    "repository": "BlueAzur-Hub/erith-ia-memory",
+    "pin": "a8ee570696f1a468003ec836a8128497b2fd2374",
+    "tree": "16119c48e9d7d3af5917799059a62754f4cf2c80",
+    "build": "40.6.165",
+    "parent": "40.6.164",
+    "pages": [
+      {
+        "id": 35043975925,
+        "url": "https://github.com/BlueAzur-Hub/erith-ia-memory/actions/runs/35043975925",
+        "conclusion": "success",
+        "head_sha": "a8ee570696f1a468003ec836a8128497b2fd2374"
+      }
+    ]
+  },
+  "scope": {
+    "read_only": true,
+    "github_modified": false,
+    "orders_executed": false,
+    "private_bridge_accessed": false,
+    "firefox_user_session_reproduced": false,
+    "test_engines": [
+      "Node.js VM with controlled fixtures",
+      "LinkeDOM 0.18.12 structural DOM only"
+    ],
+    "limitations": [
+      "Pinned repository snapshot; later commits are outside this audit.",
+      "Pages success is not whole-application certification.",
+      "No CSS layout or Firefox visual validation.",
+      "Synthetic reconciliation rows are isolated test data, not actual user trades."
+    ]
+  },
+  "summary": {
+    "archives": 10,
+    "git_files_verified": 44,
+    "internal_sha_checks": 31,
+    "syntax_and_json_checks": 38,
+    "case_count": 40
+  },
+  "report_sha256": "0d68169524160aa8f0d48b306e81256932f9822ec0abc3f28c0b206467112834",
+  "verified_git_files": [
+    {
+      "path": "AGENTS.md",
+      "sha": "5a144b89c500f10b09c20271afd2283c59fb419f",
+      "bytes": 1305,
+      "ok": true
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+      "sha": "af654c95ef16ceb7dd847128d56143cb4dc74726",
+      "bytes": 6188,
+      "ok": true
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FOUNDATION_TERRAIN_RECEIPT_40.6.159.md",
+      "sha": "40e80e1ed32a2079f9dbbf560e31850cb5011325",
+      "bytes": 1807,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/app.js",
+      "sha": "7475c95e70e82991f7fefbcfc81ac48a9c055905",
+      "bytes": 3335710,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/build.json",
+      "sha": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+      "bytes": 9941,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/index.html",
+      "sha": "b3d8235b09e7a67441ba0173f4ec06f9329df406",
+      "bytes": 7074,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/aether-tradus-bridge.js",
+      "sha": "727a963ae49ca39f5137236b2676d1193ea6134a",
+      "bytes": 17128,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/current-final-state-rebind.js",
+      "sha": "75bf6c7b46490ce009cc01b789952aaebf6cb607",
+      "bytes": 6449,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/dex-freshness-guard.js",
+      "sha": "96c625e6749aa41bd6a011c11cf6b671a3559589",
+      "bytes": 10228,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/local-ai-contract-consistency.js",
+      "sha": "95618c11ca2c6152b29d48e7db727e3d34621cfe",
+      "bytes": 6097,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/local-dialogue-presentation.js",
+      "sha": "c28c2549d5eb0cb1e6064e6c925e9170501f12a5",
+      "bytes": 19526,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/retrospective-history-presentation.js",
+      "sha": "f21865e08e2def416861d7f8038ec99592dfbb68",
+      "bytes": 12302,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/retrospective-validation.js",
+      "sha": "26f204c8410e1ef4625fda616364b637b0899a8e",
+      "bytes": 18589,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "sha": "759acea62f11d734ace9133494cf83b6ea98ea57",
+      "bytes": 2879,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-after-cost-metrics.js",
+      "sha": "28989a3a75805f1513cff7d17ba64c631b5fd247",
+      "bytes": 14110,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-lifecycle-bridge.js",
+      "sha": "e45446414143c8472bdb252c9af53e4750bedb22",
+      "bytes": 9374,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-start.js",
+      "sha": "e52ea96243a73605e3d92107f09e0fe21430607f",
+      "bytes": 4483,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-auto-start.selftest.js",
+      "sha": "4afc4c3511ec37df354e0ecd74ddcb97aa32740f",
+      "bytes": 223,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-canonical-spec.js",
+      "sha": "19b92204f4e7400cf6cd5f10c65d25c5704db424",
+      "bytes": 6888,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier.js",
+      "sha": "a122a7ca6b1fbe25bd135b53c7ef075ddc831239",
+      "bytes": 24309,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit-anchor-repair.js",
+      "sha": "bacaf15b877df115317726b5c6bbad6d3f61cbb0",
+      "bytes": 10061,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit.js",
+      "sha": "945d75b866e9d9e7436b119681dfe3e8373e9295",
+      "bytes": 15267,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-after-cost-acceptance.js",
+      "sha": "0aae52f12390ae4e550fd8a928e8ba3c51a2dcb5",
+      "bytes": 13401,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-lifecycle.js",
+      "sha": "bf4fdd02b5e11f5bc54ea50a8ad031f83caba84b",
+      "bytes": 29439,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-proof-hotfix.js",
+      "sha": "8d5212babba64da94b707fdf0be135e10e873b4c",
+      "bytes": 2946,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+      "sha": "6aee15045edfb28bfa9fa9b7d1f21eef1624d237",
+      "bytes": 18445,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-replay-acceptance.js",
+      "sha": "6c02bc89c109244d69c12fea5efa0ae68672f95f",
+      "bytes": 6772,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-replay.js",
+      "sha": "85ebd65cfea68368a970c2c5b987c67847dbf82b",
+      "bytes": 16784,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-safety-certification.js",
+      "sha": "2b4e3cf4bec5aa70e84eff43e366a18da76fd1ee",
+      "bytes": 14127,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-tradus-comparative-intelligence.js",
+      "sha": "0834480753ba9cb384d0988777d6275d191526f6",
+      "bytes": 15571,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-tradus-outcome-memory.js",
+      "sha": "801fd6fb9d9b0a0380a02f30eb66f3ddba622653",
+      "bytes": 16224,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-autonomous-refresh.js",
+      "sha": "909bf21d0c097cbfd3c9408f246c9a086d73d60c",
+      "bytes": 5250,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-canonical-strategy-reader.js",
+      "sha": "566e131ab64584f814ab54097c9da2084b0c2232",
+      "bytes": 7656,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-data-ui-decoupling.js",
+      "sha": "48f8e839710d7fd14866f6db309570dcb8392d0a",
+      "bytes": 7623,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-paper-observability.js",
+      "sha": "a00c93265c38945e2648c924e3868ad82e494b04",
+      "bytes": 18689,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-paper-shadow.js",
+      "sha": "f01145c449cb88d4dc746da31537bcdc0612a74c",
+      "bytes": 13347,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-shadow-adapter.js",
+      "sha": "369bc3fda02b9699e4b28490a84fd126a974ff92",
+      "bytes": 17166,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-shadow-ledger.js",
+      "sha": "3f723a5443cecc4748e5c6d3f0955d4d510b37d4",
+      "bytes": 10887,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/tradus-strategy-a-reconcile.js",
+      "sha": "41a96cf1bcf3b07594116fb4aed4e39585af3ba9",
+      "bytes": 13470,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/version-truth.js",
+      "sha": "e085416e83a2cad42f53f7c37a163419ee1e8fdd",
+      "bytes": 11318,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/views/private-backend-sources.js",
+      "sha": "55e3c282b3caf5f22642b833574b4ff83b183869",
+      "bytes": 30578,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/runtime-shell.html",
+      "sha": "41211e5edca08249be3810c7dcf0d63f573cbeff",
+      "bytes": 431734,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.161/index.html",
+      "sha": "9c88c1dc3eec68ac6860e3168880a26cca35216a",
+      "bytes": 3612,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.163/index.html",
+      "sha": "3b64e474ce818a80d16118288917bdb22fe9f140",
+      "bytes": 3612,
+      "ok": true
+    }
+  ],
+  "archives": [
+    {
+      "build": "40.6.152",
+      "archive": "AGENT_CRYPTO_40.6.152_RETROSPECTIVE_HISTORY(1).zip",
+      "sha256": "3933a66050a7f3df2b1508f0df5f68d7edc0eb6d3d162fc827bf48ed6dcba286",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "agent_crypto_40.6.152_work/README_40.6.152.md",
+          "bytes": 1126
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/build.json",
+          "bytes": 3252
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/js/retrospective-history-presentation.js",
+          "bytes": 12302
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/js/runtime-modules.js",
+          "bytes": 2825
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/releases/40.6.152/index.html",
+          "bytes": 3612
+        },
+        {
+          "path": "SHA256SUMS.txt",
+          "bytes": 643
+        }
+      ]
+    },
+    {
+      "build": "40.6.153",
+      "archive": "AGENT_CRYPTO_40.6.153_STRATEGY_A_PAPER_V2_PROOF_BRIDGE(1).zip",
+      "sha256": "aa58b07c31d6f4c032fb6f5270c557a3d55f2f11b665b6462c023022904e050f",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "README_40.6.153.md",
+          "bytes": 1194
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "bytes": 3504
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "bytes": 2873
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+          "bytes": 14487
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.153/index.html",
+          "bytes": 3612
+        },
+        {
+          "path": "SHA256SUMS.txt",
+          "bytes": 622
+        }
+      ]
+    },
+    {
+      "build": "40.6.155",
+      "archive": "AGENT_CRYPTO_40.6.155_STRATEGY_A_PAPER_V2_EVIDENCE_GATE_DETAIL(1).zip",
+      "sha256": "36fe20c22da5bee96335ca4901f03a670dad6d67c5179f89d6bc8be0762f7218",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "README_40.6.155.md",
+          "bytes": 1088
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "bytes": 3577
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+          "bytes": 18446
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.155/index.html",
+          "bytes": 3612
+        },
+        {
+          "path": "SHA256SUMS.txt",
+          "bytes": 491
+        }
+      ]
+    },
+    {
+      "build": "40.6.157",
+      "archive": "AGENT_CRYPTO_40.6.157_STRATEGY_A_FOUNDATION_PROOF_ACTION(1).zip",
+      "sha256": "5562a424fb235b5bb288906264c10e20bc32af0adbf58c5d65e42bf879479fc7",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "README_40.6.157.md",
+          "bytes": 1608
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "bytes": 3687
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "bytes": 2820
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit.js",
+          "bytes": 15263
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.156/index.html",
+          "bytes": 3612
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.157/index.html",
+          "bytes": 3612
+        },
+        {
+          "path": "SHA256SUMS.txt",
+          "bytes": 758
+        }
+      ]
+    },
+    {
+      "build": "40.6.158",
+      "archive": "AGENT_CRYPTO_40.6.158_STRATEGY_A_AUDIT_ANCHOR_REPAIR(1).zip",
+      "sha256": "6a8d666a24ba99189b9fe802c79eb0f0754578cc88463cd7df9f781a284c89b0",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "README_40.6.158.md",
+          "bytes": 1088
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "bytes": 4464
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "bytes": 2880
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit-anchor-repair.js",
+          "bytes": 2568
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.158/index.html",
+          "bytes": 3612
+        },
+        {
+          "path": "SHA256SUMS.txt",
+          "bytes": 634
+        }
+      ]
+    },
+    {
+      "build": "40.6.160",
+      "archive": "AGENT_CRYPTO_40.6.160_FINAL_THREAD_HANDOFF(2).zip",
+      "sha256": "ea83be5ad599ea05c10ffce47437216dfd92d6126b5561c3c9ea19378578f8cc",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+          "bytes": 1190
+        },
+        {
+          "path": "AGENT_CRYPTO_FOUNDATION_TERRAIN_RECEIPT_40.6.159.md",
+          "bytes": 840
+        },
+        {
+          "path": "COMMITS.txt",
+          "bytes": 505
+        },
+        {
+          "path": "PROMPT_RELANCE_AERITH7_AGENT_CRYPTO_40.6.160.md",
+          "bytes": 2212
+        },
+        {
+          "path": "README.md",
+          "bytes": 182
+        },
+        {
+          "path": "build.json",
+          "bytes": 1266
+        },
+        {
+          "path": "SHA256SUMS.txt",
+          "bytes": 568
+        }
+      ]
+    },
+    {
+      "build": "40.6.161",
+      "archive": "AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH(1).zip",
+      "sha256": "8fc5086e7f9b12570a9f87fa0d5ee09b83af3484be1d65685eeb415a3a141efb",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/AGENT_CRYPTO_40.6.161_RELEASE_NOTES.md",
+          "bytes": 1372
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/administrator/build.json",
+          "bytes": 4104
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/administrator/js/strategy-a-evidence-dossier.js",
+          "bytes": 15948
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/administrator/releases/40.6.161/index.html",
+          "bytes": 3607
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/manifest.json",
+          "bytes": 510
+        }
+      ]
+    },
+    {
+      "build": "40.6.162",
+      "archive": "AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR(1).zip",
+      "sha256": "566ec809965f08ba493ae30616680b7815cbd5f513e89d4d1c107c233429844f",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/AGENT_CRYPTO_40.6.162_RELEASE_NOTES.md",
+          "bytes": 1679
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/administrator/build.json",
+          "bytes": 5337
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/administrator/js/strategy-a-evidence-dossier.js",
+          "bytes": 17383
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/administrator/releases/40.6.162/index.html",
+          "bytes": 3607
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/manifest.json",
+          "bytes": 501
+        }
+      ]
+    },
+    {
+      "build": "40.6.163",
+      "archive": "AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH(1).zip",
+      "sha256": "108c5d80b40ae1c8b56bedd9e07b9c7a372607529c277cef57d734ef0fadb1ce",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/AGENT_CRYPTO_40.6.163_RELEASE_NOTES.md",
+          "bytes": 2247
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/administrator/build.json",
+          "bytes": 6308
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/administrator/js/strategy-a-safety-certification.js",
+          "bytes": 14127
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/administrator/releases/40.6.163/index.html",
+          "bytes": 3603
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/manifest.json",
+          "bytes": 719
+        }
+      ]
+    },
+    {
+      "build": "40.6.164",
+      "archive": "AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY(1).zip",
+      "sha256": "59f512153a104b5f36c534a1f922daa00f8b025a864af297488db0b469e44c0b",
+      "bad_crc": null,
+      "files": [
+        {
+          "path": "AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/AGENT_CRYPTO_40.6.164_RELEASE_NOTES.md",
+          "bytes": 1825
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/administrator/build.json",
+          "bytes": 7579
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/administrator/js/strategy-a-evidence-dossier.js",
+          "bytes": 24309
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/administrator/releases/40.6.164/README_RELEASE_ENTRY.html",
+          "bytes": 466
+        },
+        {
+          "path": "AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/manifest.json",
+          "bytes": 512
+        }
+      ]
+    }
+  ],
+  "archive_current_comparison": [
+    {
+      "version": 152,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "d1d230a4a1d33f4e2decd33a5b9dd74ddbd64231",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "same_as_current": false,
+          "archived_git_blob": "8a7674a8333becd9a5fa7eb873d34af1cb68b20a",
+          "current_git_blob": "759acea62f11d734ace9133494cf83b6ea98ea57",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/retrospective-history-presentation.js",
+          "same_as_current": true,
+          "archived_git_blob": "f21865e08e2def416861d7f8038ec99592dfbb68",
+          "current_git_blob": "f21865e08e2def416861d7f8038ec99592dfbb68",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.152/index.html",
+          "same_as_current": true,
+          "archived_git_blob": "22f11f9a3fc01d59511b7979c8da61afce6298bd",
+          "current_git_blob": "22f11f9a3fc01d59511b7979c8da61afce6298bd",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": [
+        {
+          "path": "agent_crypto_40.6.152_work/README_40.6.152.md",
+          "valid": true
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/build.json",
+          "valid": true
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/js/retrospective-history-presentation.js",
+          "valid": true
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/js/runtime-modules.js",
+          "valid": true
+        },
+        {
+          "path": "agent_crypto_40.6.152_work/administrator/releases/40.6.152/index.html",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "version": 153,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "39466edf93d6c41488c53130a8ba9bd00a1c7d1c",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "same_as_current": false,
+          "archived_git_blob": "9f2b8db53e6ca13273d64d6cda21eb284a07871d",
+          "current_git_blob": "759acea62f11d734ace9133494cf83b6ea98ea57",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+          "same_as_current": false,
+          "archived_git_blob": "f4036099688e4008d0d9ba80718f07baed8db68f",
+          "current_git_blob": "6aee15045edfb28bfa9fa9b7d1f21eef1624d237",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.153/index.html",
+          "same_as_current": true,
+          "archived_git_blob": "47e5666935b4afbd37277ea6fa30b0097236e545",
+          "current_git_blob": "47e5666935b4afbd37277ea6fa30b0097236e545",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": [
+        {
+          "path": "README_40.6.153.md",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.153/index.html",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "version": 155,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "1950b01b3c372a3413cf72ad3766bf0665fb3833",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+          "same_as_current": false,
+          "archived_git_blob": "deb32195f19a8bc627c148d1cd0eb660af621165",
+          "current_git_blob": "6aee15045edfb28bfa9fa9b7d1f21eef1624d237",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.155/index.html",
+          "same_as_current": true,
+          "archived_git_blob": "f0543b7da168cecfb8aa2c6957f8669c00c66b3d",
+          "current_git_blob": "f0543b7da168cecfb8aa2c6957f8669c00c66b3d",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": [
+        {
+          "path": "README_40.6.155.md",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.155/index.html",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "version": 157,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "fed25096a1cfb65782c6da123beb300f2e3a5b7a",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "same_as_current": false,
+          "archived_git_blob": "46a8a4c220d384e6aaa5aee20d7d8aa5d6469ef4",
+          "current_git_blob": "759acea62f11d734ace9133494cf83b6ea98ea57",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit.js",
+          "same_as_current": false,
+          "archived_git_blob": "b960a88d99ebf389f4fa92f294906879bbc45415",
+          "current_git_blob": "945d75b866e9d9e7436b119681dfe3e8373e9295",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.157/index.html",
+          "same_as_current": true,
+          "archived_git_blob": "bb7eb03aaa0bc2c0ba57bc22b537bb27e2f9e9e8",
+          "current_git_blob": "bb7eb03aaa0bc2c0ba57bc22b537bb27e2f9e9e8",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.156/index.html",
+          "same_as_current": true,
+          "archived_git_blob": "a35ab6bca49358ffd76624ba2d6a26d9f3d445fd",
+          "current_git_blob": "a35ab6bca49358ffd76624ba2d6a26d9f3d445fd",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": [
+        {
+          "path": "README_40.6.157.md",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit.js",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.156/index.html",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.157/index.html",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "version": 158,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "9ad060fe6160fdd0df55224cd0024e83654ba1a1",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "same_as_current": false,
+          "archived_git_blob": "dcf4680fdf1a681a4f0e75a2e2c0ea165366086a",
+          "current_git_blob": "759acea62f11d734ace9133494cf83b6ea98ea57",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit-anchor-repair.js",
+          "same_as_current": false,
+          "archived_git_blob": "1f54736567cf5e4653d2b3d70d7982d480ff629c",
+          "current_git_blob": "bacaf15b877df115317726b5c6bbad6d3f61cbb0",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.158/index.html",
+          "same_as_current": true,
+          "archived_git_blob": "1b7d31f662cfd581aaf0e82e1456de87ee661cde",
+          "current_git_blob": "1b7d31f662cfd581aaf0e82e1456de87ee661cde",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": [
+        {
+          "path": "README_40.6.158.md",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit-anchor-repair.js",
+          "valid": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.158/index.html",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "version": 160,
+      "files": [],
+      "internal_sha_checks": [
+        {
+          "path": "AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+          "valid": true
+        },
+        {
+          "path": "AGENT_CRYPTO_FOUNDATION_TERRAIN_RECEIPT_40.6.159.md",
+          "valid": true
+        },
+        {
+          "path": "COMMITS.txt",
+          "valid": true
+        },
+        {
+          "path": "PROMPT_RELANCE_AERITH7_AGENT_CRYPTO_40.6.160.md",
+          "valid": true
+        },
+        {
+          "path": "README.md",
+          "valid": true
+        },
+        {
+          "path": "build.json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "version": 161,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "9bc6bdfaf635a0e717bf5553f16f05fef282a0d9",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier.js",
+          "same_as_current": false,
+          "archived_git_blob": "cb51c76e679c560a2c6e1c1ce0da93fd05174a08",
+          "current_git_blob": "a122a7ca6b1fbe25bd135b53c7ef075ddc831239",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.161/index.html",
+          "same_as_current": false,
+          "archived_git_blob": "e03e18d128b512782dc999789d1402926fc224e4",
+          "current_git_blob": "9c88c1dc3eec68ac6860e3168880a26cca35216a",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": []
+    },
+    {
+      "version": 162,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "b2a3dc5e1a58f093d1845dae17f9463ec89e1509",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier.js",
+          "same_as_current": false,
+          "archived_git_blob": "85e2d764258ec21963c3ad0266af9e82db3a1861",
+          "current_git_blob": "a122a7ca6b1fbe25bd135b53c7ef075ddc831239",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.162/index.html",
+          "same_as_current": false,
+          "archived_git_blob": "9543be0ab1b3cd50ae798f52d2b871b562741b8d",
+          "current_git_blob": "8ef7f865aa0905932a27bc11cb570492aa85a7ad",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": []
+    },
+    {
+      "version": 163,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "cdce2c02a1b0adc516e6b7a072c2454adf72c01d",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-safety-certification.js",
+          "same_as_current": true,
+          "archived_git_blob": "2b4e3cf4bec5aa70e84eff43e366a18da76fd1ee",
+          "current_git_blob": "2b4e3cf4bec5aa70e84eff43e366a18da76fd1ee",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.163/index.html",
+          "same_as_current": false,
+          "archived_git_blob": "e2accaa280dc416fbe5b1dbfec375988bb834476",
+          "current_git_blob": "3b64e474ce818a80d16118288917bdb22fe9f140",
+          "present_on_github": true
+        }
+      ],
+      "internal_sha_checks": []
+    },
+    {
+      "version": 164,
+      "files": [
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/build.json",
+          "same_as_current": false,
+          "archived_git_blob": "a890e43f9beaecce62e4a48462c7871c7fb3c5ff",
+          "current_git_blob": "117a4e62b637211292c6eba15e1c16072d39d9d9",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-dossier.js",
+          "same_as_current": true,
+          "archived_git_blob": "a122a7ca6b1fbe25bd135b53c7ef075ddc831239",
+          "current_git_blob": "a122a7ca6b1fbe25bd135b53c7ef075ddc831239",
+          "present_on_github": true
+        },
+        {
+          "path": "public/agent_crypto_erith_ia/administrator/releases/40.6.164/README_RELEASE_ENTRY.html",
+          "same_as_current": false,
+          "archived_git_blob": "df7dcadcb84519d17abd16547d8c0ca25ee06790",
+          "current_git_blob": null,
+          "present_on_github": false
+        }
+      ],
+      "internal_sha_checks": []
+    }
+  ],
+  "internal_sha_checks": [
+    {
+      "manifest": "audit-406164/archives/152/SHA256SUMS.txt",
+      "file": "agent_crypto_40.6.152_work/README_40.6.152.md",
+      "expected": "3c5fedb06d7e9627153583dd68612034d0a3de2bfc622202ba38a4a332360549",
+      "actual": "3c5fedb06d7e9627153583dd68612034d0a3de2bfc622202ba38a4a332360549",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/152/SHA256SUMS.txt",
+      "file": "agent_crypto_40.6.152_work/administrator/build.json",
+      "expected": "67daa95d9048896a2fdf8dc874130e53a48f99cb2fc33276802ccfdca9a45059",
+      "actual": "67daa95d9048896a2fdf8dc874130e53a48f99cb2fc33276802ccfdca9a45059",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/152/SHA256SUMS.txt",
+      "file": "agent_crypto_40.6.152_work/administrator/js/retrospective-history-presentation.js",
+      "expected": "80c7fb53fe77c9b7d082c491272a553751aca33a2f5c48596786c90255a6cf45",
+      "actual": "80c7fb53fe77c9b7d082c491272a553751aca33a2f5c48596786c90255a6cf45",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/152/SHA256SUMS.txt",
+      "file": "agent_crypto_40.6.152_work/administrator/js/runtime-modules.js",
+      "expected": "bea09d542367c4838bbdadb692d51bdf67fe4353536b72a8d46f46b9276a2b59",
+      "actual": "bea09d542367c4838bbdadb692d51bdf67fe4353536b72a8d46f46b9276a2b59",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/152/SHA256SUMS.txt",
+      "file": "agent_crypto_40.6.152_work/administrator/releases/40.6.152/index.html",
+      "expected": "62fd04078164f290945c9afb32cc40c6a1ff565172a6d4f8bb8571b73ebcbcec",
+      "actual": "62fd04078164f290945c9afb32cc40c6a1ff565172a6d4f8bb8571b73ebcbcec",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/155/SHA256SUMS.txt",
+      "file": "README_40.6.155.md",
+      "expected": "3ef6ae7eec7ac926951fc576859d43bfd8fd72db73f5b6aa0b9ce095969a916d",
+      "actual": "3ef6ae7eec7ac926951fc576859d43bfd8fd72db73f5b6aa0b9ce095969a916d",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/155/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/build.json",
+      "expected": "59467c9f7ba52115f1e3a324f44eed30ec54eb45cbb295053325a0f0cfd678d5",
+      "actual": "59467c9f7ba52115f1e3a324f44eed30ec54eb45cbb295053325a0f0cfd678d5",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/155/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+      "expected": "4a9b9f331d5350c7a54e8ba79af7c406098b7f686cb8e2303f9a8454bdd27f9e",
+      "actual": "4a9b9f331d5350c7a54e8ba79af7c406098b7f686cb8e2303f9a8454bdd27f9e",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/155/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/releases/40.6.155/index.html",
+      "expected": "fc4380138eef9e750ac84051e29da789366738ab1d8ca452182ce0486a5af666",
+      "actual": "fc4380138eef9e750ac84051e29da789366738ab1d8ca452182ce0486a5af666",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/158/SHA256SUMS.txt",
+      "file": "README_40.6.158.md",
+      "expected": "8a81fe5d2523358672c4c88fd44347310b0f90726a7ca6db00ef468d120c451f",
+      "actual": "8a81fe5d2523358672c4c88fd44347310b0f90726a7ca6db00ef468d120c451f",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/158/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/build.json",
+      "expected": "ec7b937510bd1cada51c5dfe0ec85fd5d497035b74b33bc2468f2b248c1c4d7a",
+      "actual": "ec7b937510bd1cada51c5dfe0ec85fd5d497035b74b33bc2468f2b248c1c4d7a",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/158/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "expected": "32a1c7808dd2fd63b23f56fbc8dd710096c86e77184098f68182223bb4432277",
+      "actual": "32a1c7808dd2fd63b23f56fbc8dd710096c86e77184098f68182223bb4432277",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/158/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit-anchor-repair.js",
+      "expected": "b833211e746e76f4b98030d0424cb431cd9314278c23d20c72e00983b198df84",
+      "actual": "b833211e746e76f4b98030d0424cb431cd9314278c23d20c72e00983b198df84",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/158/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/releases/40.6.158/index.html",
+      "expected": "1c95dc71d45b134d7550eb31af20566cfb6aced8036e5bac564b5c5c39ac5d41",
+      "actual": "1c95dc71d45b134d7550eb31af20566cfb6aced8036e5bac564b5c5c39ac5d41",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/157/SHA256SUMS.txt",
+      "file": "README_40.6.157.md",
+      "expected": "828882fff822c1a2413ff6861bcc88508e7c545c8b85f70ac1a2770050d771f2",
+      "actual": "828882fff822c1a2413ff6861bcc88508e7c545c8b85f70ac1a2770050d771f2",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/157/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/build.json",
+      "expected": "7f340d434a1310ae1a1e0ad9517e9f4ac167963d8231367488e365dd7ac024c9",
+      "actual": "7f340d434a1310ae1a1e0ad9517e9f4ac167963d8231367488e365dd7ac024c9",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/157/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "expected": "a712f6026d7cda330b6504f337d1f7af36ddd98ee31d60e8db8571057a07ac44",
+      "actual": "a712f6026d7cda330b6504f337d1f7af36ddd98ee31d60e8db8571057a07ac44",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/157/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit.js",
+      "expected": "b2f942ee5d3a36b1223eaf8b02ebb55a8433885519ad651a0349ac46f76112af",
+      "actual": "b2f942ee5d3a36b1223eaf8b02ebb55a8433885519ad651a0349ac46f76112af",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/157/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/releases/40.6.156/index.html",
+      "expected": "de1c3de45cacd2c5512635566c16b0d71620aa633496156a84eebdfe3eaf534f",
+      "actual": "de1c3de45cacd2c5512635566c16b0d71620aa633496156a84eebdfe3eaf534f",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/157/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/releases/40.6.157/index.html",
+      "expected": "fb9d1efa6345134748179a73e64966c9c1e86b55c03efd50879118d3b54c4074",
+      "actual": "fb9d1efa6345134748179a73e64966c9c1e86b55c03efd50879118d3b54c4074",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/153/SHA256SUMS.txt",
+      "file": "README_40.6.153.md",
+      "expected": "a93fedc4822a19ca9847552b675aee92fb07cbf6068e991602280866824df9b3",
+      "actual": "a93fedc4822a19ca9847552b675aee92fb07cbf6068e991602280866824df9b3",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/153/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/build.json",
+      "expected": "116fabe892f48fa0d35244e8a2d31c529f49bf5b501bb1c6098280528f57e5c7",
+      "actual": "116fabe892f48fa0d35244e8a2d31c529f49bf5b501bb1c6098280528f57e5c7",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/153/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "expected": "c8c70467876c7cdf8f768e2887cb920afe8e862846af01aac42e2acc3b2390e5",
+      "actual": "c8c70467876c7cdf8f768e2887cb920afe8e862846af01aac42e2acc3b2390e5",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/153/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+      "expected": "e6717a51a03e0745c9a96e2fea4f467394d9074b94200fb1d84b67fe53b5b2e8",
+      "actual": "e6717a51a03e0745c9a96e2fea4f467394d9074b94200fb1d84b67fe53b5b2e8",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/153/SHA256SUMS.txt",
+      "file": "public/agent_crypto_erith_ia/administrator/releases/40.6.153/index.html",
+      "expected": "830a71392863b09a94d2ef9896d42bb6e1a7041437ccdaf343eb7f06e28852a1",
+      "actual": "830a71392863b09a94d2ef9896d42bb6e1a7041437ccdaf343eb7f06e28852a1",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/160/SHA256SUMS.txt",
+      "file": "AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+      "expected": "c7eaaf9db3a2d86c4da77dd02236435690336aecdb1e1a0b4ca93f8ca61a4e7d",
+      "actual": "c7eaaf9db3a2d86c4da77dd02236435690336aecdb1e1a0b4ca93f8ca61a4e7d",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/160/SHA256SUMS.txt",
+      "file": "AGENT_CRYPTO_FOUNDATION_TERRAIN_RECEIPT_40.6.159.md",
+      "expected": "f5bc8f3eb62aa51869bf6d4d61352994088feda45028c86858f93500c8beae19",
+      "actual": "f5bc8f3eb62aa51869bf6d4d61352994088feda45028c86858f93500c8beae19",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/160/SHA256SUMS.txt",
+      "file": "COMMITS.txt",
+      "expected": "9e926a80bc4ac46c5a0428e83374358e047bf1ae5a29a06d987f0eb29af3b99b",
+      "actual": "9e926a80bc4ac46c5a0428e83374358e047bf1ae5a29a06d987f0eb29af3b99b",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/160/SHA256SUMS.txt",
+      "file": "PROMPT_RELANCE_AERITH7_AGENT_CRYPTO_40.6.160.md",
+      "expected": "cf8bbabcb882fedbf8b055b0b6a727219af31172878d4ad623cbc2c48eb48499",
+      "actual": "cf8bbabcb882fedbf8b055b0b6a727219af31172878d4ad623cbc2c48eb48499",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/160/SHA256SUMS.txt",
+      "file": "README.md",
+      "expected": "92f8ccac8e48f7c98e5e06a9391a1409c10c8e7ba9f610d73a74748d30154123",
+      "actual": "92f8ccac8e48f7c98e5e06a9391a1409c10c8e7ba9f610d73a74748d30154123",
+      "valid": true
+    },
+    {
+      "manifest": "audit-406164/archives/160/SHA256SUMS.txt",
+      "file": "build.json",
+      "expected": "1e0de0921feab82c89f1558361b47217420bb460ab7604872ed851b315a1ff7e",
+      "actual": "1e0de0921feab82c89f1558361b47217420bb460ab7604872ed851b315a1ff7e",
+      "valid": true
+    }
+  ],
+  "syntax_checks": [
+    {
+      "path": "audit-406164/archives/152/agent_crypto_40.6.152_work/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/152/agent_crypto_40.6.152_work/administrator/js/retrospective-history-presentation.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/152/agent_crypto_40.6.152_work/administrator/js/runtime-modules.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/152/agent_crypto_40.6.152_work/administrator/releases/40.6.152/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/153/public/agent_crypto_erith_ia/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/153/public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/153/public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/153/public/agent_crypto_erith_ia/administrator/releases/40.6.153/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/155/public/agent_crypto_erith_ia/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/155/public/agent_crypto_erith_ia/administrator/js/strategy-a-paper-v2-proof-bridge.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/155/public/agent_crypto_erith_ia/administrator/releases/40.6.155/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/157/public/agent_crypto_erith_ia/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/157/public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/157/public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/157/public/agent_crypto_erith_ia/administrator/releases/40.6.156/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/157/public/agent_crypto_erith_ia/administrator/releases/40.6.157/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/158/public/agent_crypto_erith_ia/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/158/public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/158/public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-gate-audit-anchor-repair.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/158/public/agent_crypto_erith_ia/administrator/releases/40.6.158/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/160/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/161/AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/161/AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/administrator/js/strategy-a-evidence-dossier.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/161/AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/administrator/releases/40.6.161/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/161/AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/manifest.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/162/AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/162/AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/administrator/js/strategy-a-evidence-dossier.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/162/AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/administrator/releases/40.6.162/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/162/AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/manifest.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/163/AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/163/AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/administrator/js/strategy-a-safety-certification.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/163/AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/administrator/releases/40.6.163/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "index": 0,
+          "valid": false,
+          "error": "SyntaxError: Invalid or unexpected token",
+          "stack": "audit-406164/archives/163/AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/administrator/releases/40.6.163/index.html:22\n        html=html.replace(/<head>/i,'<head>\n                                    ^^^^^^^\n\nSyntaxError: Invalid or unexpected token"
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/163/AGENT_CRYPTO_40.6.163_FOUNDATION_RECEIPT_TRUTH/manifest.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/164/AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/administrator/build.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/164/AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/administrator/js/strategy-a-evidence-dossier.js",
+      "checks": [
+        {
+          "type": "script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/archives/164/AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/administrator/releases/40.6.164/README_RELEASE_ENTRY.html",
+      "checks": []
+    },
+    {
+      "path": "audit-406164/archives/164/AGENT_CRYPTO_40.6.164_G3_HISTORICAL_DATASET_DISCOVERY/manifest.json",
+      "checks": [
+        {
+          "type": "json",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/current/public/agent_crypto_erith_ia/administrator/releases/40.6.161/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "valid": true
+        }
+      ]
+    },
+    {
+      "path": "audit-406164/current/public/agent_crypto_erith_ia/administrator/releases/40.6.163/index.html",
+      "checks": [
+        {
+          "type": "inline_script",
+          "valid": true
+        }
+      ]
+    }
+  ],
+  "reproductions": {
+    "previous-findings-retest.json": {
+      "pin": "a8ee570696f1a468003ec836a8128497b2fd2374",
+      "scope": "Controlled fixtures; not Firefox terrain or private runtime",
+      "results": [
+        {
+          "id": "T01_COMPARISON_SELFTEST",
+          "value": {
+            "pass": true,
+            "total": 9,
+            "passed": 9,
+            "checks": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        },
+        {
+          "id": "T02_UNKNOWN_A_REJECTED",
+          "value": {
+            "state": "NON COMPARABLE",
+            "text": "Strategy A inconnue · TRADUS BUY",
+            "fail_closed": true
+          }
+        },
+        {
+          "id": "T03_PROPOSED_GATE_IS_WAIT",
+          "value": {
+            "state": "DIVERGENCE",
+            "text": "A attend · TRADUS SELL",
+            "fail_closed": false
+          }
+        },
+        {
+          "id": "T04_MISSING_TRADUS_SIGNAL",
+          "value": {
+            "state": "NON COMPARABLE",
+            "text": "TRADUS inconnu · comparaison suspendue",
+            "fail_closed": true,
+            "reason": "TRADUS_SIGNAL_UNKNOWN"
+          }
+        },
+        {
+          "id": "T05_SAME_OBSERVATION_RECOMPUTED_WITH_LATER_A",
+          "value": {
+            "first": {
+              "at": "2026-09-15T11:00:00Z",
+              "id": "frozen-1",
+              "ok": true,
+              "signal": {
+                "action": "BUY"
+              },
+              "strategy_a": {
+                "decision": "NO TRADE"
+              },
+              "comparison": {
+                "state": "DIVERGENCE"
+              }
+            },
+            "second": {
+              "at": "2026-09-15T11:00:00Z",
+              "id": "frozen-1",
+              "ok": true,
+              "signal": {
+                "action": "BUY"
+              },
+              "strategy_a": {
+                "decision": "NO TRADE"
+              },
+              "comparison": {
+                "state": "DIVERGENCE"
+              }
+            },
+            "original": {
+              "at": "2026-09-15T11:00:00Z",
+              "id": "frozen-1",
+              "ok": true,
+              "signal": {
+                "action": "BUY"
+              },
+              "strategy_a": {
+                "decision": "NO TRADE"
+              },
+              "comparison": {
+                "state": "DIVERGENCE"
+              }
+            }
+          }
+        },
+        {
+          "id": "T06_CANONICAL_UNKNOWN_KEEPS_LEGACY",
+          "value": {
+            "at": "2026-09-15T11:00:00Z",
+            "id": "frozen-1",
+            "ok": true,
+            "signal": {
+              "action": "BUY"
+            },
+            "strategy_a": null,
+            "comparison": {
+              "state": "NON COMPARABLE",
+              "text": "Comparaison indisponible",
+              "fail_closed": true,
+              "reason": "STRATEGY_A_UNKNOWN"
+            },
+            "strategy_a_reader": "AgentCryptoTradusStrategyFailClosed",
+            "strategy_a_reader_reason": "runtime",
+            "comparison_capture_at": "2026-09-15T11:00:00Z",
+            "strategy_a_capture_at": "2026-09-15T11:00:00Z",
+            "comparison_time_locked": true
+          }
+        },
+        {
+          "id": "T07_DEX_SELFTEST",
+          "value": {
+            "pass": true,
+            "total": 6,
+            "passed": 6,
+            "checks": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        },
+        {
+          "id": "T08_REAL_PRODUCER_DATE_FIELD",
+          "value": {
+            "assets": [
+              {
+                "asset": "BTC",
+                "identity": {
+                  "atlas_eligible": true
+                },
+                "dexscreener": {
+                  "status": "ok",
+                  "observed_at_utc": "2026-09-15T11:59:00.000Z"
+                },
+                "geckoterminal": {
+                  "status": "ok",
+                  "observed_at_utc": "2026-09-15T11:59:00.000Z"
+                },
+                "dex_freshness": [
+                  {
+                    "name": "dexscreener",
+                    "ok": true,
+                    "stale": false,
+                    "age_seconds": 60,
+                    "reason": "FRESH"
+                  },
+                  {
+                    "name": "geckoterminal",
+                    "ok": true,
+                    "stale": false,
+                    "age_seconds": 60,
+                    "reason": "FRESH"
+                  }
+                ]
+              }
+            ],
+            "dex_freshness": {
+              "max_age_seconds": 600,
+              "stale_assets": 0,
+              "fail_closed": true,
+              "generated_at": "2026-09-15T12:00:00.000Z"
+            }
+          }
+        },
+        {
+          "id": "T09_TEST_ONLY_DATE_FIELD",
+          "value": {
+            "assets": [
+              {
+                "asset": "BTC",
+                "identity": {
+                  "atlas_eligible": true
+                },
+                "dexscreener": {
+                  "status": "ok",
+                  "updated_at": "2026-09-15T11:59:00.000Z"
+                },
+                "geckoterminal": {
+                  "status": "ok",
+                  "updated_at": "2026-09-15T11:59:00.000Z"
+                },
+                "dex_freshness": [
+                  {
+                    "name": "dexscreener",
+                    "ok": true,
+                    "stale": false,
+                    "age_seconds": 60,
+                    "reason": "FRESH"
+                  },
+                  {
+                    "name": "geckoterminal",
+                    "ok": true,
+                    "stale": false,
+                    "age_seconds": 60,
+                    "reason": "FRESH"
+                  }
+                ]
+              }
+            ],
+            "dex_freshness": {
+              "max_age_seconds": 600,
+              "stale_assets": 0,
+              "fail_closed": true,
+              "generated_at": "2026-09-15T12:00:00.000Z"
+            }
+          }
+        },
+        {
+          "id": "T10_DEX_FROZEN_API_PROXY",
+          "value": {
+            "contextSnapshot": "NO_ERROR",
+            "sourceIntelligence": "NO_ERROR"
+          }
+        },
+        {
+          "id": "T11_LOCAL_AI_SELFTEST",
+          "value": {
+            "pass": true,
+            "total": 6,
+            "passed": 6,
+            "checks": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        },
+        {
+          "id": "T12_REAL_FALSE_MARKET_ABSENCE",
+          "value": {
+            "conflict": false,
+            "reason": "",
+            "body": "Aucune donnée de volume ou de prix n'est fournie."
+          }
+        },
+        {
+          "id": "T13_REAL_FALSE_MATH_DEGRADATION",
+          "value": {
+            "conflict": false,
+            "reason": "",
+            "body": "Certaines mesures Math Core sont dégradées."
+          }
+        },
+        {
+          "id": "T14_TOP5_NOT_PROVIDED",
+          "value": {
+            "conflict": false,
+            "reason": "",
+            "body": "Le Top 5 non fourni dans le snapshot.",
+            "available": 5,
+            "expected": 5
+          }
+        },
+        {
+          "id": "T15_STOP_THEN_AUTOSTART",
+          "value": {
+            "stopped": false,
+            "stopFlag": "1",
+            "restart": false,
+            "enabledAfter": false,
+            "starts": 0
+          }
+        },
+        {
+          "id": "T16_FINALIZED_WITHOUT_PROOF_AND_REPEATED",
+          "value": {
+            "events": [],
+            "emitted": 0,
+            "state": "consumer-armed"
+          }
+        },
+        {
+          "id": "T17_AUTO_REFRESH_ERROR_COUNTED",
+          "value": {
+            "done": true,
+            "status": {
+              "owner": "tradus-autonomous-refresh",
+              "running": true,
+              "page_visible": true,
+              "interval_ms": 60000,
+              "cycles": 1,
+              "last_at": "2026-09-15T12:00:00.000Z",
+              "last_trigger": "explicit_run_once",
+              "last_error": null,
+              "owner_available": true,
+              "canonical_reader_ready": true,
+              "visible_contract_synced": false,
+              "paper_only": true,
+              "shadow_only": true,
+              "real_orders": false,
+              "credentials": false,
+              "wallet": false,
+              "strategy_a_mutated": false,
+              "storage_write": false,
+              "recurring_timer": true
+            }
+          }
+        }
+      ]
+    },
+    "probe-new-results.json": {
+      "scope": "Node VM fixtures, no private runtime, no trading",
+      "results": [
+        {
+          "id": "N01_FOUNDATION_WITH_OWNERS_ABSENT",
+          "value": {
+            "schema": "agent_crypto_strategy_a_certification_matrix_v3",
+            "build": "40.6.163",
+            "generated_at": "2026-09-16T01:30:00.000Z",
+            "modules": {
+              "deterministic_replay": {
+                "name": "deterministic_replay",
+                "available": false,
+                "build": null,
+                "last_self_test": null
+              },
+              "paper_lifecycle": {
+                "name": "paper_lifecycle",
+                "available": false,
+                "build": null,
+                "last_self_test": null
+              },
+              "auto_lifecycle_bridge": {
+                "name": "auto_lifecycle_bridge",
+                "available": false,
+                "build": null,
+                "last_self_test": null
+              },
+              "after_cost_metrics": {
+                "name": "after_cost_metrics",
+                "available": false,
+                "build": null,
+                "last_self_test": null
+              }
+            },
+            "gates": [
+              {
+                "gate": 1,
+                "label": "QUALITÉ DES DONNÉES",
+                "state": "EVIDENCE_REQUIRED"
+              },
+              {
+                "gate": 2,
+                "label": "COHÉRENCE LOGIQUE",
+                "state": "FOUNDATION_PASS",
+                "note": "Fondation : receipt terrain 40.6.159 · PASS."
+              },
+              {
+                "gate": 3,
+                "label": "BACKTEST RÉALISTE",
+                "state": "PENDING"
+              },
+              {
+                "gate": 4,
+                "label": "OUT-OF-SAMPLE",
+                "state": "PENDING"
+              },
+              {
+                "gate": 5,
+                "label": "WALK-FORWARD",
+                "state": "PENDING"
+              },
+              {
+                "gate": 6,
+                "label": "MONTE CARLO / STRESS",
+                "state": "PENDING"
+              },
+              {
+                "gate": 7,
+                "label": "CHAOS TESTING",
+                "state": "FOUNDATION_PASS",
+                "note": "Circuit breaker raccordé aux nouvelles entrées Auto A ; position Paper ouverte reste monitorable. Fondation : receipt terrain 40.6.159 · PASS."
+              },
+              {
+                "gate": 8,
+                "label": "PAPER TRADING",
+                "state": "INSUFFICIENT_SAMPLE",
+                "note": "0 trade(s) après coûts · coût complet=non."
+              },
+              {
+                "gate": 9,
+                "label": "MICRO-LIVE CONTRÔLÉ",
+                "state": "LOCKED"
+              }
+            ],
+            "foundation_proof": {
+              "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+              "build": "40.6.163",
+              "pass": true,
+              "source": "CANONICAL_TERRAIN_RECEIPT",
+              "receipt": {
+                "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+                "source_build": "40.6.159",
+                "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+                "result": "PASS",
+                "pass": true,
+                "at": "2026-09-15T23:27:11.071Z",
+                "gates": {
+                  "2": "FOUNDATION_PASS",
+                  "7": "FOUNDATION_PASS"
+                },
+                "terrain_proof": true,
+                "operator_action": true,
+                "automatic": false,
+                "immutable": true
+              },
+              "session_test": null,
+              "implicit_tests_executed": false,
+              "storage_write": false
+            },
+            "safety": {
+              "schema": "agent_crypto_strategy_a_safety_certification_v3",
+              "build": "40.6.163",
+              "level": "NORMAL",
+              "reason": "INITIAL",
+              "history": [],
+              "runtime_errors": 0,
+              "automatic_live_resume": false,
+              "automatic_auto_a_resume": false,
+              "new_trades_allowed": true,
+              "existing_paper_monitoring_allowed": true,
+              "paper_only": true,
+              "real_orders": false,
+              "network": false,
+              "auto_a_governor_connected": true,
+              "micro_live_locked": true,
+              "foundation_truth": {
+                "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+                "build": "40.6.163",
+                "pass": true,
+                "source": "CANONICAL_TERRAIN_RECEIPT",
+                "receipt": {
+                  "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+                  "source_build": "40.6.159",
+                  "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+                  "result": "PASS",
+                  "pass": true,
+                  "at": "2026-09-15T23:27:11.071Z",
+                  "gates": {
+                    "2": "FOUNDATION_PASS",
+                    "7": "FOUNDATION_PASS"
+                  },
+                  "terrain_proof": true,
+                  "operator_action": true,
+                  "automatic": false,
+                  "immutable": true
+                },
+                "session_test": null,
+                "implicit_tests_executed": false,
+                "storage_write": false
+              }
+            },
+            "profitability_claim": false,
+            "certified_for_live": false,
+            "paper_only": true,
+            "real_orders": false,
+            "passive_read": true,
+            "implicit_self_tests": false,
+            "auto_a_governor_connected": true
+          }
+        },
+        {
+          "id": "N02_FOUNDATION_SELFTEST",
+          "value": {
+            "schema": "agent_crypto_strategy_a_safety_self_test_v4",
+            "build": "40.6.163",
+            "pass": true,
+            "checks": {
+              "data_pause": true,
+              "unknown_defensive": true,
+              "protection_emergency": true,
+              "manual_reset_does_not_autostart": true,
+              "canonical_receipt_restored_without_execution": true,
+              "explicit_session_fail_overrides_receipt": true,
+              "explicit_session_pass_overrides_receipt": true
+            }
+          }
+        },
+        {
+          "id": "N03_EXPLICIT_TEST_FAILS_WITHOUT_OWNERS",
+          "value": {
+            "at": "2026-09-16T01:30:00.000Z",
+            "pass": false,
+            "modules": {
+              "deterministic_replay": {
+                "pass": false,
+                "reason": "UNAVAILABLE"
+              },
+              "paper_lifecycle": {
+                "pass": false,
+                "reason": "UNAVAILABLE"
+              },
+              "after_cost_metrics": {
+                "pass": false,
+                "reason": "UNAVAILABLE"
+              },
+              "auto_lifecycle_bridge": {
+                "pass": false
+              }
+            },
+            "source": "EXPLICIT_OPERATOR_ACTION"
+          }
+        },
+        {
+          "id": "N04_SESSION_FAILURE_OVERRIDES_RECEIPT",
+          "value": {
+            "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+            "build": "40.6.163",
+            "pass": false,
+            "source": "SESSION_EXPLICIT_TEST",
+            "receipt": {
+              "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+              "source_build": "40.6.159",
+              "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+              "result": "PASS",
+              "pass": true,
+              "at": "2026-09-15T23:27:11.071Z",
+              "gates": {
+                "2": "FOUNDATION_PASS",
+                "7": "FOUNDATION_PASS"
+              },
+              "terrain_proof": true,
+              "operator_action": true,
+              "automatic": false,
+              "immutable": true
+            },
+            "session_test": {
+              "at": "2026-09-16T01:30:00.000Z",
+              "pass": false,
+              "modules": {
+                "deterministic_replay": {
+                  "pass": false,
+                  "reason": "UNAVAILABLE"
+                },
+                "paper_lifecycle": {
+                  "pass": false,
+                  "reason": "UNAVAILABLE"
+                },
+                "after_cost_metrics": {
+                  "pass": false,
+                  "reason": "UNAVAILABLE"
+                },
+                "auto_lifecycle_bridge": {
+                  "pass": false
+                }
+              },
+              "source": "EXPLICIT_OPERATOR_ACTION"
+            },
+            "implicit_tests_executed": false,
+            "storage_write": false
+          }
+        },
+        {
+          "id": "N05_RELOAD_LOSES_FAILURE",
+          "value": {
+            "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+            "build": "40.6.163",
+            "pass": true,
+            "source": "CANONICAL_TERRAIN_RECEIPT",
+            "receipt": {
+              "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+              "source_build": "40.6.159",
+              "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+              "result": "PASS",
+              "pass": true,
+              "at": "2026-09-15T23:27:11.071Z",
+              "gates": {
+                "2": "FOUNDATION_PASS",
+                "7": "FOUNDATION_PASS"
+              },
+              "terrain_proof": true,
+              "operator_action": true,
+              "automatic": false,
+              "immutable": true
+            },
+            "session_test": null,
+            "implicit_tests_executed": false,
+            "storage_write": false
+          }
+        },
+        {
+          "id": "N06_EXPLICIT_FOUNDATION_WITHOUT_TEST_FUNCTIONS",
+          "value": {
+            "at": "2026-09-16T01:30:00.000Z",
+            "pass": true,
+            "modules": {
+              "deterministic_replay": {
+                "pass": true,
+                "reason": "NO_SELF_TEST_REQUIRED"
+              },
+              "paper_lifecycle": {
+                "pass": true,
+                "reason": "NO_SELF_TEST_REQUIRED"
+              },
+              "after_cost_metrics": {
+                "pass": true,
+                "reason": "NO_SELF_TEST_REQUIRED"
+              },
+              "auto_lifecycle_bridge": {
+                "pass": true
+              }
+            },
+            "source": "EXPLICIT_OPERATOR_ACTION"
+          }
+        },
+        {
+          "id": "N07_DOSSIER_SELFTEST",
+          "value": {
+            "schema": "agent_crypto_strategy_a_evidence_dossier_self_test_v4",
+            "build": "40.6.164",
+            "pass": true,
+            "checks": {
+              "bad_dataset_rejected": true,
+              "null_blank_boolean_not_complete": true,
+              "partial_unverified_not_complete": true,
+              "no_fake_monte_carlo": true,
+              "no_fake_backtest": true,
+              "g3_candidates_detected_without_promotion": true,
+              "micro_live_locked": true,
+              "paper_only": true,
+              "passive_snapshot_no_state_mutation": true
+            }
+          }
+        },
+        {
+          "id": "N08_G3_NO_HISTORICAL_TEXT",
+          "value": {
+            "schema": "agent_crypto_strategy_a_historical_dataset_discovery_v1",
+            "build": "40.6.164",
+            "source": "VISIBLE_EXISTING_ADMINISTRATOR_EVIDENCE",
+            "candidates_present": false,
+            "market_series": {
+              "visible": false,
+              "window": "INCONNUE",
+              "points": 0,
+              "median_step_min": 0,
+              "completeness_pct": 0,
+              "measured_market_history": false
+            },
+            "market_memory": {
+              "visible": false,
+              "observations": 0,
+              "temporal_comparison_available": false
+            },
+            "retrospective_current": {
+              "visible": false,
+              "evaluable": 0,
+              "total": 0
+            },
+            "certified_outcome_labels": false,
+            "certified_replay_rows": 0,
+            "replay_contract_ready": false,
+            "backtest_ready": false,
+            "g3_state": "PENDING",
+            "fabricated_data": false,
+            "reason": "Aucun candidat historique visible détecté dans Administrator : G3 reste PENDING."
+          }
+        },
+        {
+          "id": "N09_G3_POINTS_ONLY",
+          "value": {
+            "schema": "agent_crypto_strategy_a_historical_dataset_discovery_v1",
+            "build": "40.6.164",
+            "source": "VISIBLE_EXISTING_ADMINISTRATOR_EVIDENCE",
+            "candidates_present": true,
+            "market_series": {
+              "visible": true,
+              "window": "24h",
+              "points": 300,
+              "median_step_min": 0,
+              "completeness_pct": 0,
+              "measured_market_history": true
+            },
+            "market_memory": {
+              "visible": false,
+              "observations": 0,
+              "temporal_comparison_available": false
+            },
+            "retrospective_current": {
+              "visible": false,
+              "evaluable": 0,
+              "total": 0
+            },
+            "certified_outcome_labels": false,
+            "certified_replay_rows": 0,
+            "replay_contract_ready": false,
+            "backtest_ready": false,
+            "g3_state": "PENDING",
+            "fabricated_data": false,
+            "reason": "Des candidats historiques réels existent, mais aucun dataset de replay Strategy A avec labels d'outcome certifiés n'est encore établi : G3 reste PENDING."
+          }
+        },
+        {
+          "id": "N10_G3_COMPLETE_TEXT",
+          "value": {
+            "schema": "agent_crypto_strategy_a_historical_dataset_discovery_v1",
+            "build": "40.6.164",
+            "source": "VISIBLE_EXISTING_ADMINISTRATOR_EVIDENCE",
+            "candidates_present": true,
+            "market_series": {
+              "visible": true,
+              "window": "24h",
+              "points": 300,
+              "median_step_min": 5,
+              "completeness_pct": 100,
+              "measured_market_history": true
+            },
+            "market_memory": {
+              "visible": true,
+              "observations": 483,
+              "temporal_comparison_available": true
+            },
+            "retrospective_current": {
+              "visible": true,
+              "evaluable": 1,
+              "total": 2
+            },
+            "certified_outcome_labels": false,
+            "certified_replay_rows": 0,
+            "replay_contract_ready": false,
+            "backtest_ready": false,
+            "g3_state": "PENDING",
+            "fabricated_data": false,
+            "reason": "Des candidats historiques réels existent, mais aucun dataset de replay Strategy A avec labels d'outcome certifiés n'est encore établi : G3 reste PENDING."
+          }
+        },
+        {
+          "id": "N11_G1_IGNORES_INVALID_ROWS",
+          "value": {
+            "schema": "agent_crypto_strategy_a_dataset_readiness_v3",
+            "build": "40.6.164",
+            "kind": "after_cost",
+            "rows": 1,
+            "unique_ids": 1,
+            "duplicate_ids": [],
+            "missing_ids": 0,
+            "missing_timestamps": 0,
+            "chronological": true,
+            "after_cost_complete_rows": 1,
+            "numeric_unknown_rows": 0,
+            "unverified_after_cost_rows": 0,
+            "data_integrity_ready": true,
+            "strict_numeric_truth": true,
+            "after_cost_requires_verified_identity": true,
+            "backtest_ready": false,
+            "out_of_sample_ready": false,
+            "walk_forward_ready": false,
+            "monte_carlo_ready": false,
+            "reason": "Evidence collected; historical market replay dataset and certified outcome labels still required.",
+            "fabricated_data": false
+          }
+        },
+        {
+          "id": "N12_AFTER_COST_SELFTEST",
+          "value": {
+            "schema": "agent_crypto_strategy_a_after_cost_self_test_v4",
+            "build": "40.6.17",
+            "pass": true,
+            "checks": {
+              "unknown_null_blank_boolean_not_zero": true,
+              "partial_identity_indeterminate": true,
+              "duplicate_refused": true,
+              "complete_identity_verified": true,
+              "spread_slippage_in_complete_identity": true,
+              "contradictory_complete_identity_refused": true,
+              "mismatch_not_recorded": true,
+              "no_profitability_claim": true
+            }
+          }
+        },
+        {
+          "id": "N13_MISSING_CLOSE_TIMES_BECOME_READY",
+          "value": {
+            "first": {
+              "schema": "agent_crypto_strategy_a_after_cost_metrics_v2",
+              "build": "40.6.17",
+              "identity": "NO-TIME-0",
+              "reconciliation_id": "NO-TIME-0",
+              "execution_id": "EXEC-0",
+              "trade_id": "EXEC-0",
+              "at": "2026-09-16T01:30:00.000Z",
+              "symbol": "BTC",
+              "paper_only": true,
+              "real_order": false,
+              "quantity_btc": 1,
+              "entry_reference_eur": 100,
+              "exit_reference_eur": 110,
+              "reference_gross_pnl_eur": 10,
+              "costs": {
+                "entry_fee_eur": 1,
+                "exit_fee_eur": 1,
+                "fees_eur": 2,
+                "impact_eur": 1,
+                "spread_eur": 2,
+                "slippage_eur": 1
+              },
+              "known_costs_eur": 6,
+              "known_cost_components": 5,
+              "total_costs_eur": 6,
+              "cost_completeness": "COMPLETE",
+              "unknown_cost_components": [],
+              "authoritative_net_pnl_eur": 4,
+              "net_pnl_eur": 4,
+              "modeled_net_known_costs_eur": 4,
+              "expected_net_pnl_eur": 4,
+              "accounting_identity_error_eur": 0,
+              "accounting_identity_ok": true,
+              "accounting_identity_status": "VERIFIED",
+              "accounting_tolerance_eur": 1e-08,
+              "ledger_consistency_status": "VERIFIED",
+              "profitability_claim": false,
+              "source_owner": "strategyAReconcile"
+            },
+            "count": 30,
+            "readiness": {
+              "schema": "agent_crypto_strategy_a_dataset_readiness_v3",
+              "build": "40.6.164",
+              "kind": "after_cost",
+              "rows": 30,
+              "unique_ids": 30,
+              "duplicate_ids": [],
+              "missing_ids": 0,
+              "missing_timestamps": 0,
+              "chronological": true,
+              "after_cost_complete_rows": 30,
+              "numeric_unknown_rows": 0,
+              "unverified_after_cost_rows": 0,
+              "data_integrity_ready": true,
+              "strict_numeric_truth": true,
+              "after_cost_requires_verified_identity": true,
+              "backtest_ready": false,
+              "out_of_sample_ready": false,
+              "walk_forward_ready": false,
+              "monte_carlo_ready": true,
+              "reason": "Evidence collected; historical market replay dataset and certified outcome labels still required.",
+              "fabricated_data": false
+            }
+          }
+        },
+        {
+          "id": "N14_CURRENT_WITH_NO_TIME",
+          "value": {
+            "currents": 1,
+            "evaluable": 1,
+            "closedAt": 946681200000,
+            "interpreted": "1999-12-31T23:00:00.000Z"
+          }
+        },
+        {
+          "id": "N15_MARKET_STORAGE_TIME_AS_EVENT_TIME",
+          "value": {
+            "evaluable": 1,
+            "market": {
+              "market_snapshot_id": "source-time-unknown",
+              "saved_at": "2026-09-16T00:30:00Z",
+              "assets": [
+                {
+                  "symbol": "BTC",
+                  "price_eur": 102
+                },
+                {
+                  "symbol": "ETH",
+                  "price_eur": 102
+                },
+                {
+                  "symbol": "BNB",
+                  "price_eur": 102
+                },
+                {
+                  "symbol": "XRP",
+                  "price_eur": 102
+                },
+                {
+                  "symbol": "SOL",
+                  "price_eur": 102
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "N16_STRICT_POST_TIME_CONTROL",
+          "value": {
+            "first": "later",
+            "evaluable": 1
+          }
+        }
+      ]
+    },
+    "probe-dom-results.json": {
+      "scope": "LinkeDOM structural fixtures; no CSS layout engine or Firefox session",
+      "results": [
+        {
+          "id": "D01_FALLBACK_MOUNT_DESTROYED_BY_REFRESH",
+          "value": {
+            "before": {
+              "dossier": true,
+              "audit": true,
+              "g3Contract": true,
+              "dossierInsideProof": true
+            },
+            "afterProofRefresh": {
+              "dossier": false,
+              "audit": false,
+              "g3Contract": false,
+              "dossierInsideProof": false
+            },
+            "afterRepairAndClick": {
+              "dossier": false,
+              "audit": true,
+              "g3Contract": false,
+              "dossierInsideProof": false
+            }
+          }
+        },
+        {
+          "id": "D02_G1_STALE_AFTER_MOUNT",
+          "value": {
+            "initialDisplay": "0",
+            "currentSnapshotRows": 1,
+            "displayAfterClickAndPageshow": "0"
+          }
+        },
+        {
+          "id": "D03_G3_UNKNOWN_RENDERED_ZERO",
+          "value": {
+            "cadence": "0 min",
+            "completeness": "0.0 %"
+          }
+        },
+        {
+          "id": "D04_ABSENT_EVIDENCE_ZERO_GATES",
+          "value": {
+            "snapshot": 0,
+            "text": "EVIDENCE DOSSIER · 0 GATE(S) NON SOLDÉE(S) · VOIR LE DÉTAIL",
+            "waits": [
+              "CURRENT analytique indisponible",
+              "aucun CURRENT rétrospectif évaluable"
+            ]
+          }
+        },
+        {
+          "id": "D05_FOUNDATION_AUDIT_G2_CONTRADICTORY_TEXT",
+          "value": {
+            "gate": 2,
+            "label": "COHÉRENCE LOGIQUE",
+            "raw_state": "FOUNDATION_PASS",
+            "audit_state": "PASS",
+            "tone": "ok",
+            "owner": "Safety Certification · run_foundation_tests",
+            "evidence": "Le test explicite de fondation existe mais n’est pas soldé dans cette session.",
+            "next": "Aucune dette sur cette gate."
+          }
+        }
+      ]
+    },
+    "probe-archive-boot-results.json": {
+      "scope": "Stubbed fetch and DOM capture; source scripts unmodified",
+      "results": [
+        {
+          "build": 161,
+          "file": "audit-406164/archives/161/AGENT_CRYPTO_40.6.161_G1_AFTER_COST_DATA_TRUTH/administrator/releases/40.6.161/index.html",
+          "metadata": [
+            "40.6.161",
+            "40.6.150"
+          ],
+          "appSource": "./app.js?release=40.6.161"
+        },
+        {
+          "build": 162,
+          "file": "audit-406164/archives/162/AGENT_CRYPTO_40.6.162_G1_MOUNT_REPAIR/administrator/releases/40.6.162/index.html",
+          "metadata": [
+            "40.6.162",
+            "40.6.150"
+          ],
+          "appSource": "./app.js?release=40.6.162"
+        }
+      ]
+    }
+  },
+  "reproduction_scripts": {
+    "probes-dom.cjs": "const fs=require('fs'),vm=require('vm');\nconst {parseHTML}=require('./test-deps/node_modules/linkedom');\nconst root='audit-406164/current/public/agent_crypto_erith_ia/administrator/';\nconst results=[],record=(id,value)=>results.push({id,value:JSON.parse(JSON.stringify(value))});\nfunction make(html){const {window,document}=parseHTML('<html><head></head><body>'+html+'</body></html>');\nObject.defineProperty(document,'readyState',{value:'complete'});\nconst c=vm.createContext({window,document,structuredClone,Date,requestAnimationFrame:()=>1,queueMicrotask:()=>{},setTimeout:()=>1,clearTimeout:()=>{},console});return c;}\nfunction run(n,c){vm.runInContext(fs.readFileSync(root+'js/'+n,'utf8'),c,{filename:n});}\nlet c=make('<section id=\"strategyAPaperAfterCostProof\"></section>');\nrun('strategy-a-safety-certification.js',c);\nrun('strategy-a-paper-v2-proof-bridge.js',c);\nrun('strategy-a-evidence-gate-audit.js',c);\nrun('strategy-a-evidence-gate-audit-anchor-repair.js',c);\nrun('strategy-a-evidence-dossier.js',c);\nc.AgentCryptoStrategyAEvidenceGateAuditAnchorRepair.repair();\nconst status=()=>({dossier:!!c.document.getElementById('strategyADossier'),audit:!!c.document.getElementById('strategyAEvidenceGateAudit'),g3Contract:!!c.document.getElementById('strategyAG3RealisticReplayContract'),dossierInsideProof:!!c.document.getElementById('strategyAPaperV2ProofBridge')?.contains(c.document.getElementById('strategyADossier'))});\nconst before=status();\nc.AgentCryptoStrategyAPaperV2ProofBridge.render();\nconst afterProofRefresh=status();\nc.AgentCryptoStrategyAEvidenceGateAuditAnchorRepair.repair();\nc.document.dispatchEvent(new c.window.Event('click',{bubbles:true}));\nconst afterRepairAndClick=status();\nrecord('D01_FALLBACK_MOUNT_DESTROYED_BY_REFRESH',{before,afterProofRefresh,afterRepairAndClick});\nc=make('<section id=\"strategyASafety\"></section>');\nlet rows=[];c.AgentCryptoStrategyAAfterCostMetrics={read:()=>rows,summary:()=>({trades:rows.length})};\nrun('strategy-a-evidence-dossier.js',c);\nconst first=c.document.querySelector('[data-g1=\"rows\"]').textContent;\nrows=[{trade_id:'REAL-CHANGE',at:'2026-09-16T01:00:00Z',net_pnl_eur:1,total_costs_eur:2,cost_completeness:'COMPLETE',accounting_identity_status:'VERIFIED',accounting_identity_ok:true}];\nc.document.dispatchEvent(new c.window.Event('click',{bubbles:true}));c.window.dispatchEvent(new c.window.Event('pageshow'));\nrecord('D02_G1_STALE_AFTER_MOUNT',{initialDisplay:first,currentSnapshotRows:c.AgentCryptoStrategyAEvidenceDossier.snapshot().dataset.after_cost.rows,displayAfterClickAndPageshow:c.document.querySelector('[data-g1=\"rows\"]').textContent});\nrecord('D03_G3_UNKNOWN_RENDERED_ZERO',{cadence:c.document.querySelector('[data-g3=\"cadence\"]').textContent,completeness:c.document.querySelector('[data-g3=\"completeness\"]').textContent});\nc=make('<section id=\"strategyAPaperAfterCostProof\"></section>');\nrun('strategy-a-paper-v2-proof-bridge.js',c);\nrecord('D04_ABSENT_EVIDENCE_ZERO_GATES',{snapshot:c.AgentCryptoStrategyAPaperV2ProofBridge.snapshot().unresolved_gates.length,text:c.document.querySelector('.sapv2-gates summary').textContent,waits:c.AgentCryptoStrategyAPaperV2ProofBridge.snapshot().reasons_to_wait});\nc=make('<section id=\"strategyAPaperAfterCostProof\"></section>');\nrun('strategy-a-safety-certification.js',c);run('strategy-a-paper-v2-proof-bridge.js',c);run('strategy-a-evidence-gate-audit.js',c);\nrecord('D05_FOUNDATION_AUDIT_G2_CONTRADICTORY_TEXT',c.AgentCryptoStrategyAEvidenceGateAudit.snapshot().rows.find(r=>r.gate===2));\nfs.writeFileSync('audit-406164/probe-dom-results.json',JSON.stringify({scope:'LinkeDOM structural fixtures; no CSS layout engine or Firefox session',results},null,2));\nconsole.log(JSON.stringify(results,null,2));\n",
+    "check-packages.cjs": "const fs=require('fs'),path=require('path'),vm=require('vm');\nfunction walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(d,e.name)):[path.join(d,e.name)]);}\nconst results=[];\nfor(const f of walk('audit-406164/archives')){\n if(!/\\.(?:js|html|json)$/.test(f))continue;\n const src=fs.readFileSync(f,'utf8');let checks=[];\n if(f.endsWith('.json')){try{JSON.parse(src);checks.push({type:'json',valid:true})}catch(e){checks.push({type:'json',valid:false,error:String(e)})}}\n if(f.endsWith('.js')){try{new vm.Script(src,{filename:f});checks.push({type:'script',valid:true})}catch(e){checks.push({type:'script',valid:false,error:String(e),stack:e.stack.split('\\n').slice(0,5).join('\\n')})}}\n if(f.endsWith('.html'))for(const [i,m] of [...src.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)].entries()){try{new vm.Script(m[1],{filename:f});checks.push({type:'inline_script',index:i,valid:true})}catch(e){checks.push({type:'inline_script',index:i,valid:false,error:String(e),stack:e.stack.split('\\n').slice(0,5).join('\\n')})}}\n results.push({path:f,checks});\n}\nfor(const v of [161,163]){const f=`audit-406164/current/public/agent_crypto_erith_ia/administrator/releases/40.6.${v}/index.html`;const src=fs.readFileSync(f,'utf8');for(const m of src.matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)){try{new vm.Script(m[1]);results.push({path:f,checks:[{type:'inline_script',valid:true}]})}catch(e){results.push({path:f,checks:[{type:'inline_script',valid:false,error:String(e)}]})}}}\nfs.writeFileSync('audit-406164/package-syntax-results.json',JSON.stringify(results,null,2));\nconsole.log(JSON.stringify({files:results.length,checks:results.reduce((n,r)=>n+r.checks.length,0),failures:results.filter(r=>r.checks.some(c=>!c.valid))},null,2));\n",
+    "probes-new.cjs": "const fs=require('fs'),vm=require('vm');\nconst root='audit-406164/current/public/agent_crypto_erith_ia/administrator/';\nconst output=[],clone=x=>JSON.parse(JSON.stringify(x)),record=(id,x)=>output.push({id,value:clone(x)});\nconst noop=()=>{},clock=Date.parse('2026-09-16T01:30:00Z');\nclass D extends Date{constructor(...a){super(...(a.length?a:[clock]));}static now(){return clock;}}\nfunction env(x={}){return vm.createContext({Date:D,structuredClone,queueMicrotask:noop,...x});}\nfunction run(file,c){vm.runInContext(fs.readFileSync(root+file,'utf8'),c,{filename:file});}\nlet c=env();run('js/strategy-a-safety-certification.js',c);let safety=c.AgentCryptoStrategyASafetyCertification;\nrecord('N01_FOUNDATION_WITH_OWNERS_ABSENT',safety.certification_matrix());\nrecord('N02_FOUNDATION_SELFTEST',safety.self_test());\nrecord('N03_EXPLICIT_TEST_FAILS_WITHOUT_OWNERS',safety.run_foundation_tests());\nrecord('N04_SESSION_FAILURE_OVERRIDES_RECEIPT',safety.foundation_truth());\nc=env();run('js/strategy-a-safety-certification.js',c);record('N05_RELOAD_LOSES_FAILURE',c.AgentCryptoStrategyASafetyCertification.foundation_truth());\nc=env({AgentCryptoStrategyAReplay:{},AgentCryptoStrategyAPaperLifecycle:{},AgentCryptoStrategyAAfterCostMetrics:{},AgentCryptoStrategyAAutoLifecycleBridge:{preflight:()=>({ready:true})}});\nrun('js/strategy-a-safety-certification.js',c);record('N06_EXPLICIT_FOUNDATION_WITHOUT_TEST_FUNCTIONS',c.AgentCryptoStrategyASafetyCertification.run_foundation_tests());\nc=env();run('js/strategy-a-evidence-dossier.js',c);let d=c.AgentCryptoStrategyAEvidenceDossier;\nrecord('N07_DOSSIER_SELFTEST',d.self_test());\nrecord('N08_G3_NO_HISTORICAL_TEXT',d.historical_evidence_from_text(''));\nrecord('N09_G3_POINTS_ONLY',d.historical_evidence_from_text('série historique 24h · 300 pts'));\nrecord('N10_G3_COMPLETE_TEXT',d.historical_evidence_from_text('Fenêtre réelle : 24h · 300 points · pas médian 5 min · complétude 100.0 %.\\nObservations marché distinctes : 483\\nHistorique rétrospectif 1 / 2 CURRENT évaluable(s)'));\nconst valid={trade_id:'A',at:'2026-09-16T00:00:00Z',net_pnl_eur:1,total_costs_eur:2,cost_completeness:'COMPLETE',accounting_identity_status:'VERIFIED',accounting_identity_ok:true};\nrecord('N11_G1_IGNORES_INVALID_ROWS',d.dataset_readiness([valid,null,false,42],'after_cost'));\nrun('js/strategy-a-after-cost-metrics.js',c);const m=c.AgentCryptoStrategyAAfterCostMetrics;\nrecord('N12_AFTER_COST_SELFTEST',m.self_test());\nfor(let i=0;i<30;i++)m.from_reconciliation({reconciliation_id:'NO-TIME-'+i,execution_id:'EXEC-'+i,quantity_btc:1,entry_reference_eur:100,exit_reference_eur:110,entry_fee_eur:1,exit_fee_eur:1,estimated_total_impact_eur:1,spread_eur:2,slippage_eur:1,net_pnl_eur:4});\nrecord('N13_MISSING_CLOSE_TIMES_BECOME_READY',{first:m.read()[0],count:m.read().length,readiness:d.dataset_readiness(m.read(),'after_cost')});\nconst doc={readyState:'loading',getElementById:()=>null,addEventListener:noop};\nconst assets=price=>['BTC','ETH','BNB','XRP','SOL'].map(symbol=>({symbol,price_eur:price}));\nlet currents=[{analysis_fingerprint:'a'.repeat(64),assets:assets(100)}];\nlet markets=[{market_snapshot_id:'m1',market_generated_at:'2026-09-16T00:30:00Z',assets:assets(102)}];\nc=env({document:doc,atlasAnalyticalMemoryStats394:()=>({verified:currents}),atlasMarketMemoryStats3944R1:()=>({canonicalRecords:markets})});\nrun('js/retrospective-validation.js',c);let r=c.atlasRetrospectiveValidation.derive();\nrecord('N14_CURRENT_WITH_NO_TIME',{currents:r.currents.length,evaluable:r.evaluable.length,closedAt:r.pairs[0]?.closedAt,interpreted:r.pairs[0]?new D(r.pairs[0].closedAt).toISOString():null});\ncurrents=[{...currents[0],closed_at:'2026-09-16T00:00:00Z'}];\nmarkets=[{market_snapshot_id:'source-time-unknown',saved_at:'2026-09-16T00:30:00Z',assets:assets(102)}];\nr=c.atlasRetrospectiveValidation.derive();record('N15_MARKET_STORAGE_TIME_AS_EVENT_TIME',{evaluable:r.evaluable.length,market:r.pairs[0]?.first});\nmarkets=[{market_snapshot_id:'before',market_generated_at:'2026-09-15T23:59:00Z',assets:assets(99)},{market_snapshot_id:'equal',market_generated_at:'2026-09-16T00:00:00Z',assets:assets(100)},{market_snapshot_id:'later',market_generated_at:'2026-09-16T00:01:00Z',assets:assets(101)}];\nr=c.atlasRetrospectiveValidation.derive();record('N16_STRICT_POST_TIME_CONTROL',{first:r.pairs[0].first.market_snapshot_id,evaluable:r.evaluable.length});\nfs.writeFileSync('audit-406164/probe-new-results.json',JSON.stringify({scope:'Node VM fixtures, no private runtime, no trading',results:output},null,2));\nconsole.log(JSON.stringify(output,null,2));\n",
+    "retest.cjs": "// Controlled, read-only probes of 40.6.126. No private backend, trading or user storage.\nconst fs=require('fs'),vm=require('vm'),parser=require('../audit-readonly/parser.cjs');\nconst root='audit-406164/current/public/agent_crypto_erith_ia/administrator/';\nconst result=[];const rec=(id,value)=>result.push({id,value:JSON.parse(JSON.stringify(value))});\nconst noop=()=>{},clock=Date.parse('2026-09-15T12:00:00Z');\nclass D extends Date{constructor(...a){super(...(a.length?a:[clock]));}static now(){return clock;}}\nfunction env(extra={}){return vm.createContext({Date:D,structuredClone,queueMicrotask:noop,window:{addEventListener:noop},document:{readyState:'loading',hidden:false,querySelector:()=>null,documentElement:{dataset:{}},body:{innerText:'',textContent:''},getElementById:()=>null,addEventListener:noop,dispatchEvent:noop},...extra});}\nfunction run(file,c){vm.runInContext(fs.readFileSync(root+file,'utf8'),c,{filename:file});}\nfunction functions(path){const src=fs.readFileSync(path,'utf8'),m=new Map();const ast=parser.babelParse(src,path,{});function visit(n){if(!n||typeof n!=='object')return;if(n.type==='FunctionDeclaration'&&n.id)m.set(n.id.name,src.slice(n.start,n.end));for(const v of Object.values(n))if(Array.isArray(v))v.forEach(visit);else if(v&&typeof v==='object')visit(v);}visit(ast);return m;}\n(async()=>{\n let c=env();run('js/tradus-strategy-a-reconcile.js',c);let a=c.AgentCryptoTradusStrategyFailClosed;\n rec('T01_COMPARISON_SELFTEST',a.selfTest());\n rec('T02_UNKNOWN_A_REJECTED',a.compare({decision:'UNKNOWN'},{action:'BUY'}));\n rec('T03_PROPOSED_GATE_IS_WAIT',a.compare({decision:'PROPOSED',phase:'COST GATE WAIT',direction_score:17},{action:'SELL'}));\n rec('T04_MISSING_TRADUS_SIGNAL',a.compare({decision:'PROPOSED',phase:'COST GATE WAIT'},undefined));\n let currentA={decision:'NO TRADE'};const row={at:'2026-09-15T11:00:00Z',id:'frozen-1',ok:true,signal:{action:'BUY'},strategy_a:{decision:'NO TRADE'},comparison:{state:'DIVERGENCE'}};\n c.AgentCryptoTradusStrategyFailClosed={readStrategyA:()=>currentA,compare:a.compare};\n c.AgentCryptoTradusShadow=Object.freeze({read:()=>row,refresh:async()=>row});\n c.AgentCryptoTradusShadowLedger=Object.freeze({capture:r=>r});run('js/tradus-canonical-strategy-reader.js',c);c.AgentCryptoTradusCanonicalStrategyReader.install();\n const first=c.AgentCryptoTradusShadow.read();currentA={decision:'PAPER'};const second=c.AgentCryptoTradusShadow.read();\n rec('T05_SAME_OBSERVATION_RECOMPUTED_WITH_LATER_A',{first,second,original:row});\n currentA={decision:'UNKNOWN'};const legacy={...row,strategy_a:{decision:'PAPER'},comparison:{state:'CONVERGENCE POTENTIELLE'}};\n rec('T06_CANONICAL_UNKNOWN_KEEPS_LEGACY',c.AgentCryptoTradusCanonicalStrategyReader.canonicalize(legacy));\n // DEX full active script: API is frozen, as in the actual source owner.\n const makeCtx=key=>({assets:[{asset:'BTC',identity:{atlas_eligible:true},dexscreener:{status:'ok',[key]:new D(clock-60000).toISOString()},geckoterminal:{status:'ok',[key]:new D(clock-60000).toISOString()}}]});\n const raw=Object.freeze({contextSnapshot:()=>makeCtx('observed_at_utc'),sourceIntelligence:()=>({state:'ready',dex:{atlas_eligible:1}})});\n c=env({ErithPrivateBackendSources:raw});run('js/dex-freshness-guard.js',c);\n const dg=c.AgentCryptoDexFreshnessGuard;rec('T07_DEX_SELFTEST',dg.selfTest());\n rec('T08_REAL_PRODUCER_DATE_FIELD',dg.sanitizeContext(makeCtx('observed_at_utc'),clock));\n rec('T09_TEST_ONLY_DATE_FIELD',dg.sanitizeContext(makeCtx('updated_at'),clock));\n let errors={};for(const key of ['contextSnapshot','sourceIntelligence'])try{c.ErithPrivateBackendSources[key]();errors[key]='NO_ERROR';}catch(e){errors[key]=String(e);}\n rec('T10_DEX_FROZEN_API_PROXY',errors);\n // Exact canonical root guard, followed by the currently registered refinement.\n const app=functions(root+'app.js');c=env();vm.runInContext(app.get('atlasLocalBoundedCommentTruthGuard'),c);run('js/local-ai-contract-consistency.js',c);\n const snap={strict_contract:{canonical_top5:{complete:true,assets:Array.from({length:5},()=>({available:true,price_eur:100}))},market:{assets_loaded:5,total_volume_24h_eur:1000},math:{historical_risk:{realized_volatility_pct:1,max_drawdown_pct:2,var_95_pct:3,expected_shortfall_95_pct:4}}}};\n rec('T11_LOCAL_AI_SELFTEST',c.AgentCryptoLocalAIReserveTruth.selfTest());\n rec('T12_REAL_FALSE_MARKET_ABSENCE',c.atlasLocalBoundedCommentTruthGuard('market',\"Aucune donnée de volume ou de prix n'est fournie.\",snap));\n rec('T13_REAL_FALSE_MATH_DEGRADATION',c.atlasLocalBoundedCommentTruthGuard('math','Certaines mesures Math Core sont dégradées.',snap));\n rec('T14_TOP5_NOT_PROVIDED',c.atlasLocalBoundedCommentTruthGuard('top5','Le Top 5 non fourni dans le snapshot.',snap));\n // Exact stop owner, mock existing runner start (no order), actual new autostart layer.\n const state={enabled:true,timer:null,phase:'PAPER'};const storage=new Map();let starts=0;\n c=env({STRATEGY_A_AUTO_STATE:state,clearTimeout:noop,setTimeout:()=>1,sessionStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)},renderStrategySandboxExtensions:noop});\n vm.runInContext(app.get('strategyAAutoSnapshot'),c);vm.runInContext(app.get('strategyAAutoStop'),c);\n c.AgentCryptoAutoPaperRunner={state:()=>c.strategyAAutoSnapshot(),start:()=>{starts++;state.enabled=true;return {enabled:true};},stop:c.strategyAAutoStop};\n run('js/strategy-a-auto-start.js',c);c.AgentCryptoAutoPaperRunner.stop();const stopped=c.strategyAAutoSnapshot();const restart=c.AgentCryptoStrategyAAutoStart.ensure_active('pageshow');\n rec('T15_STOP_THEN_AUTOSTART',{stopped:stopped.enabled,stopFlag:storage.get('agent_crypto_strategy_a_auto_manual_stop_v1')||null,restart,enabledAfter:state.enabled,starts});\n // .126 boundary rebind: missing proof and absent presentation owner, then repeated rest.\n const frames=[],events=[];class CE{constructor(type,opt){this.type=type;this.detail=opt.detail;}}\n c=env({requestAnimationFrame:f=>{frames.push(f);return frames.length;},CustomEvent:CE,atlasAutomation341SetRestStatus:noop,atlasCurrentMemoryReconcile384:()=>null,atlasCanonicalCurrentUiTruth389:()=>null});\n c.document.dispatchEvent=e=>events.push({type:e.type,detail:e.detail});run('js/current-final-state-rebind.js',c);\n const drain=()=>{for(let n=0;frames.length&&n<12;n++)frames.shift()();};\n c.atlasAutomation341SetRestStatus('N');drain();c.atlasAutomation341SetRestStatus('N');drain();\n rec('T16_FINALIZED_WITHOUT_PROOF_AND_REPEATED',{events,emitted:c.AgentCryptoCurrentFinalStateRebind.emitted(),state:c.document.documentElement.dataset.currentFinalStateRebind});\n // Existing 60s owner can resolve an error row instead of rejecting; verify the caller's accounting.\n const timers=[];c=env({setTimeout:f=>{timers.push(f);return timers.length;},clearTimeout:noop,CustomEvent:CE,AgentCryptoTradusCanonicalStrategyReader:{ready:()=>true},AgentCryptoTradusShadow:{refresh:async()=>({ok:false,error:'BOOK_UNAVAILABLE'})}});\n run('js/tradus-autonomous-refresh.js',c);c.AgentCryptoTradusAutonomousRefresh.start();const done=await c.AgentCryptoTradusAutonomousRefresh.run_once();rec('T17_AUTO_REFRESH_ERROR_COUNTED',{done,status:c.AgentCryptoTradusAutonomousRefresh.status()});\n fs.writeFileSync('audit-406164/previous-findings-retest.json',JSON.stringify({pin:'a8ee570696f1a468003ec836a8128497b2fd2374',scope:'Controlled fixtures; not Firefox terrain or private runtime',results:result},null,2));\n console.log(JSON.stringify(result,null,2));\n})().catch(e=>{console.error(e);process.exitCode=1;});\n",
+    "probes-archive-boot.cjs": "const fs=require('fs'),vm=require('vm'),path=require('path');\nconst {parseHTML}=require('./test-deps/node_modules/linkedom');\nfunction find(d){for(const e of fs.readdirSync(d,{withFileTypes:true})){let p=path.join(d,e.name);if(e.isDirectory()){const q=find(p);if(q)return q;}else if(e.name==='index.html')return p;}return null;}\n(async()=>{\n const results=[];\n for(const v of [161,162]){\n  const p=find('audit-406164/archives/'+v);const code=[...fs.readFileSync(p,'utf8').matchAll(/<script\\b[^>]*>([\\s\\S]*?)<\\/script>/gi)][0][1];let written='';\n  const shell='<!doctype html><html><head><meta name=\"agent-crypto-loaded-build\" content=\"40.6.150\" /><meta name=\"administrator-build\" content=\"40.6.150\" /></head><body><script src=\"./app.js\"></script></body></html>';\n  const c=vm.createContext({Date,fetch:async()=>({ok:true,text:async()=>shell}),document:{open(){},close(){},write(s){written=s},getElementById(){return {setAttribute(){}}}}});\n  vm.runInContext(code,c);await new Promise(resolve=>setImmediate(resolve));\n  const {document}=parseHTML(written);results.push({build:v,file:p,metadata:[...document.querySelectorAll('meta[name=\"agent-crypto-loaded-build\"]')].map(e=>e.getAttribute('content')),appSource:document.querySelector('script')?.getAttribute('src')});\n }\n fs.writeFileSync('audit-406164/probe-archive-boot-results.json',JSON.stringify({scope:'Stubbed fetch and DOM capture; source scripts unmodified',results},null,2));console.log(JSON.stringify(results,null,2));\n})();\n",
+    "parser.cjs": "const fs=require('fs'),Module=require('module');\nconst filename='/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/lib/transform/babelBundle.js';\nconst m=new Module(filename,module);m.filename=filename;m.paths=Module._nodeModulePaths(require('path').dirname(filename));\nm._compile(fs.readFileSync(filename,'utf8').replace('return babel.parse(code, { filename, ...options });','return babel.parse(code, { filename, ...options, sourceType: \"unambiguous\" });'),filename);\nmodule.exports=m.exports;\n"
+  },
+  "primary_references": [
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse",
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number"
+  ]
+}
