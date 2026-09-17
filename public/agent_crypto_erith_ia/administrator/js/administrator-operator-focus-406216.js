@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.235 G3 EVIDENCE ERA MAP · EXPLICIT DOSSIER MOUNT REPAIR
+/* Agent-Crypto @erith.IA — 40.6.238 ADMINISTRATOR PRESENTATION REFRESH · SINGLE SETTLED OWNER
    Stable operator map mounted as a sibling of the lazy Strategy A dossier.
    Replaces the fragile per-panel era badges from 40.6.230/231 with one durable map.
    No evidence value is rewritten. No Market Core or Strategy A business logic is changed.
@@ -6,14 +6,16 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.235";
+  const BUILD = "40.6.238";
   const CREATOR_ID = "administratorCreatorShortcut406219";
   const STYLE_ID = "administratorOperatorCompatibility406219Style";
   const FOUNDATION_SRC = "./js/strategy-a-foundation-delegated-certification-406219.js?release=40.6.219";
   const MAP_ID = "strategyAG3EvidenceEraMap406232";
   const OLD_LEGEND_ID = "strategyAG3EvidenceEraLegend406231";
+  const SETTLED_EVENT = "agent-crypto:administrator-presentation-settled";
   let queued = false;
   let lastReceipt = null;
+  const pendingReasons = new Set();
 
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
   const safe = (fn, fallback = null) => {
@@ -226,8 +228,8 @@
     const creator = ensureCreatorShortcut();
     const loaded = ensureFoundationLoader();
     const map = ensureEraMap(reason);
-    try { globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.(`operator-refresh:${reason}`); } catch (_) {}
-
+    // Presentation refresh must not re-run Evidence/Foundation owners.
+    // Those owners remain authoritative and are invoked by their own lifecycle.
     const truth = currentTruth();
     lastReceipt = Object.freeze({
       build: BUILD,
@@ -261,25 +263,43 @@
     return lastReceipt;
   }
 
+  function flushSettledPresentation() {
+    const reasons = [...pendingReasons];
+    pendingReasons.clear();
+    const reason = reasons.length <= 1
+      ? (reasons[0] || "settled")
+      : `settled:${reasons.join("+")}`;
+    const detail = Object.freeze({
+      build: BUILD,
+      owner: "administrator-operator-focus-406216.js",
+      reason,
+      reasons: Object.freeze(reasons),
+      recurring_timer: false,
+      observer: false
+    });
+    try {
+      document.dispatchEvent(new CustomEvent(SETTLED_EVENT, {detail}));
+    } finally {
+      queued = false;
+      if (pendingReasons.size) schedule();
+    }
+  }
+
   function schedule(reason = "event") {
+    if (reason) pendingReasons.add(String(reason));
     if (queued) return;
     queued = true;
-    const run = () => {
-      try {
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          queued = false;
-          refresh(reason);
-        }));
-      } catch (_) {
-        queueMicrotask(() => { queued = false; refresh(reason); });
-      }
-    };
-    run();
+    try {
+      requestAnimationFrame(() => requestAnimationFrame(flushSettledPresentation));
+    } catch (_) {
+      queueMicrotask(flushSettledPresentation);
+    }
   }
 
   globalThis.AgentCryptoAdministratorOperatorFocus = Object.freeze({
     build: BUILD,
     refresh,
+    requestSettled: schedule,
     ensureEraMap,
     snapshot: () => lastReceipt || refresh("snapshot"),
     map_id: MAP_ID,
@@ -290,6 +310,9 @@
     evidence_era_map: true,
     evidence_era_map_mount_repair_406235: true,
     explicit_dossier_mount_event: "agent-crypto:strategy-a-evidence-dossier-mounted",
+    presentation_settled_event: SETTLED_EVENT,
+    single_presentation_refresh_owner: true,
+    foundation_rerun_on_presentation_refresh: false,
     delegated_foundation_loader: true,
     recurring_timer: false,
     observer: false,
@@ -305,18 +328,19 @@
   });
 
   if (typeof document !== "undefined") {
+    // Raw lifecycle events only request settlement. The settled event is the
+    // single presentation refresh entrance.
+    document.addEventListener(SETTLED_EVENT, event => {
+      refresh(event?.detail?.reason || "settled");
+    }, {passive:true});
     document.addEventListener("agent-crypto:runtime-modules-ready", () => schedule("runtime-modules-ready"), {once:true});
     document.addEventListener("erith:system-hydrated", () => schedule("system-hydrated"), {passive:true});
     document.addEventListener("agent-crypto:evidence-data-changed", () => schedule("evidence-data-changed"), {passive:true});
     document.addEventListener("agent-crypto:evidence-refresh-complete", () => schedule("evidence-refresh-complete"), {passive:true});
     document.addEventListener("agent-crypto:strategy-a-evidence-dossier-mounted", () => schedule("strategy-a-evidence-dossier-mounted"), {passive:true});
-    document.addEventListener("agent-crypto:market-series-updated", () => schedule("market-series-updated"), {passive:true});
     document.addEventListener("toggle", event => {
       if (event?.target?.closest?.("#strategyADossier,#strategyAEvidenceSupplements") || event?.target?.id === "strategyADossier")
         schedule("toggle-settled");
-    }, true);
-    document.addEventListener("click", event => {
-      if (event?.target?.closest?.("#strategyADossier,#strategyAEvidenceSupplements")) schedule("click-settled");
     }, true);
     window.addEventListener("pageshow", () => schedule("pageshow"));
     window.addEventListener("load", () => schedule("load"), {once:true});
