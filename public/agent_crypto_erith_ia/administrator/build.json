@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.233",
+  "build": "40.6.234",
   "engine": "38.15.11",
-  "release": "NEWS WORKFLOW CURRENT CONTRACT REBIND",
+  "release": "NEWS WORKFLOW EXECUTION PROOF",
   "published": true,
-  "status": "news_workflow_current_contract_rebind_406233",
-  "parent_build": "40.6.232",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.233",
-  "administrator_build": "40.6.233",
-  "build_label": "Build 40.6.233 · Administrator",
+  "status": "news_workflow_execution_proof_406234",
+  "parent_build": "40.6.233",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.234",
+  "administrator_build": "40.6.234",
+  "build_label": "Build 40.6.234 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,23 +30,24 @@
   "canonical_entry_modified": false,
   "entry": "./",
   "terrain_verified": [
-    "Firefox screenshot confirms Build 40.6.232 with Market Core 38.15.11, Binance LIVE 5/5, Graphique/Oracle active and Lecture Technique present.",
+    "Firefox screenshot/export confirms Build 40.6.232 with Market Core 38.15.11, Binance LIVE 5/5, Graphique/Oracle active and Lecture Technique present.",
     "40.6.228 strict outcome truth remains current with 3 joined decisions, 9/9 strict horizons and decision_at anchoring.",
     "40.6.229 execution-realism truth remains current: lifecycle mechanism present, actual Strategy A after-cost terrain sample 0, execution latency/liquidity not proven.",
-    "Static audit identifies atlas_news_collector.yml as stale: it still requires historical Aether symbols aetherNewsOperatorReady404292 and news_bilingual_operator_lane_build:40.4.292 while current Aether owns unsuffixed semantic functions."
+    "40.6.233 workflow release commit 714af1425127abacee8d447cda40f14a1424080c is followed by GitHub Actions archive commit ef715b1d432f0fe9a9b0f4cc269e253300313b8f.",
+    "The 40.6.233 News workflow reached archive publication with status ok, 15/15 sources available and 0 failed sources; stale historical Aether markers no longer block the workflow.",
+    "The full 40.6.232 Firefox markdown export contains current 40.6.228/40.6.229 truth but does not surface the expected G3 evidence-era-map wording; the map mount remains a separate presentation debt."
   ],
   "terrain_pending": [
-    "Let the atlas_news_collector workflow triggered by the 40.6.233 commit complete.",
-    "Confirm the workflow reaches archive commit/no-change without failing on removed historical Aether markers.",
-    "Reload Administrator and confirm Build 40.6.233 is visible; Graphique, Oracle, Lecture Technique, Market Core and Strategy A behavior must remain unchanged.",
-    "Keep the separate 40.6.232 G3 evidence-era-map Firefox proof pending until that panel is explicitly observed."
+    "Reload Administrator later and confirm the canonical header advances through Build 40.6.234/40.6.235 without regressions; 40.6.234 itself is manifest/proof-only.",
+    "Repair the G3 evidence-era map lazy-mount lifecycle without changing Strategy A evidence values or Gate state.",
+    "Keep Gate 3 PENDING until real execution-realism evidence exists; do not force a PAPER trade."
   ],
   "release_notes": [
-    "Workflow-only consolidation over 40.6.232; no Administrator runtime JS/CSS/HTML business owner is modified.",
-    "Rebinds Atlas News Collector validation from historical suffixed Aether implementation names to the current semantic consumer owners.",
-    "Preserves the 40.4.291 producer schema atlas_news_native_fr_v1 and French-first / explicit-[EN] archive contract.",
-    "Rejects resurrection of obsolete aetherNewsOperatorReady404292 and aetherNewsFrenchOperatorReady404290 paths.",
-    "Does not alter Aether runtime, News ranking, Strategy A thresholds, Market Core, Atlas, Oracle, Risk, lifecycle, storage, network behavior, live unlock or real orders.",
+    "Proof-only consolidation over 40.6.233; no Administrator runtime JS/CSS/HTML business owner is modified.",
+    "Closes the News workflow execution debt using the actual GitHub Actions archive commit produced immediately after the 40.6.233 release.",
+    "Records that the current News/Aether consumer contract passed far enough to publish an archive with status ok and 15/15 sources.",
+    "Keeps the missing 40.6.232 G3 evidence-era-map terrain proof as an explicit presentation debt for the next bounded repair.",
+    "Does not alter Strategy A thresholds, Market Core, Atlas, Oracle, Risk, lifecycle, storage, network behavior, live unlock or real orders.",
     "PAPER ONLY. G3 PENDING. G9 LOCKED."
   ],
   "strategy_a_canonical_evidence_wiring": {
@@ -105,8 +106,12 @@
     "paper_only": true,
     "g3": "PENDING",
     "g9": "LOCKED",
-    "firefox_terrain_proof": "PENDING_406232_EVIDENCE_ERA_MAP",
-    "post_horizon_horizons_min": [5,15,60],
+    "firefox_terrain_proof": "ABSENT_FROM_406232_FULL_MARKDOWN_EXPORT_REPAIR_REQUIRED",
+    "post_horizon_horizons_min": [
+      5,
+      15,
+      60
+    ],
     "strict_outcome_horizon_anchor": "decision_at",
     "legacy_outcome_horizon_anchor": "market_at",
     "legacy_outcome_receipt_222_authority": "SUPERSEDED_BY_40.6.228",
@@ -131,7 +136,14 @@
     "consumer_owner": "public/agent_crypto_erith_ia/administrator/js/aether.js",
     "consumer_validation": "CURRENT_SEMANTIC_SYMBOLS_NOT_HISTORICAL_SUFFIXES",
     "historical_404292_symbol_required": false,
-    "runtime_modified": false
+    "runtime_modified": false,
+    "execution_proof_in": "40.6.234",
+    "release_commit": "714af1425127abacee8d447cda40f14a1424080c",
+    "archive_commit": "ef715b1d432f0fe9a9b0f4cc269e253300313b8f",
+    "execution_status": "PASS_ARCHIVE_COMMIT",
+    "sources_ok": 15,
+    "sources_total": 15,
+    "sources_failed": 0
   },
   "paper_only": true,
   "profitability_claim": false,
