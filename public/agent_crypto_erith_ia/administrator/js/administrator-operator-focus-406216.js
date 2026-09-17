@@ -1,120 +1,132 @@
-/* Agent-Crypto @erith.IA — 40.6.216 ADMINISTRATOR OPERATOR FOCUS REPAIR
-   Terrain 40.6.215 proved the operator strip existed but was exported at the bottom
-   of the document and could retain an early stale Gate-3 message. This repair mounts
-   the strip at the start of <body>, recomputes status from the current checkpoint
-   truth, and refreshes on existing evidence/market lifecycle events and operator
-   actions. Presentation only: no Strategy A, Market Core, storage, network or order
-   behavior is changed. */
+/* Agent-Crypto @erith.IA — 40.6.217 HEADER RESTORE + INLINE OPERATOR ACCESS
+   Compatibility path retained from 40.6.216 so the canonical entry does not require
+   another bootstrap rewrite. Terrain 40.6.216 proved the BODY_START sticky operator
+   strip displaced the canonical header visually. This repair removes the standalone
+   40.6.215/216 bars, restores the native header as the first visual navigation surface,
+   keeps Gate-3 state inside the Evidence area, and adds only a compact Créatrice
+   shortcut beside the existing Projects cluster when that canonical anchor is present.
+   Presentation only: no Market Core, Strategy A, Atlas, Oracle, Risk, Gate, storage,
+   network or order behavior is changed. */
 (() => {
   "use strict";
-  const BUILD = "40.6.216";
-  const ROOT_ID = "administratorOperatorFocus406216";
+  const BUILD = "40.6.217";
+  const ROOT_ID = "administratorOperatorFocus406217";
+  const SUMMARY_ID = "administratorOperatorEvidenceSummary406217";
+  const CREATOR_ID = "administratorCreatorShortcut406217";
   let queued = false;
 
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
   const esc = v => String(v ?? "—").replace(/[&<>\"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;"}[m]));
 
+  function cleanupLegacyBars() {
+    ["administratorOperatorFocus406215","administratorOperatorFocus406216"].forEach(id => byId(id)?.remove());
+  }
+
   function ensureStyle() {
-    if (typeof document === "undefined" || byId(`${ROOT_ID}Style`)) return;
+    if (byId(`${ROOT_ID}Style`)) return;
     const style = document.createElement("style");
     style.id = `${ROOT_ID}Style`;
     style.textContent = `
-      #${ROOT_ID}{position:sticky;top:0;z-index:1900;margin:0;padding:8px 12px;border-bottom:1px solid rgba(111,238,255,.24);background:rgba(4,15,27,.96);backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.22);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-      #${ROOT_ID} .aof-state{flex:1 1 430px;min-width:260px;font:850 11px/1.35 system-ui,sans-serif;color:#e7f8ff}
-      #${ROOT_ID} .aof-state b{color:#9fffd9}#${ROOT_ID} .aof-nav{display:flex;gap:6px;flex-wrap:wrap}
-      #${ROOT_ID} button{appearance:none;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.055);color:#ddecf4;padding:7px 10px;font:900 10px/1 system-ui,sans-serif;cursor:pointer}
-      #${ROOT_ID} button:hover{border-color:rgba(120,238,255,.42);background:rgba(73,192,226,.12)}
-      #${ROOT_ID} button[data-aof="creator"]{border-color:rgba(255,176,232,.25);color:#ffd2ef}
+      #${SUMMARY_ID}{position:static!important;margin:8px 0 10px!important;padding:8px 10px!important;border:1px solid rgba(111,238,255,.20)!important;border-radius:10px!important;background:linear-gradient(135deg,rgba(5,20,31,.62),rgba(8,22,37,.44))!important;box-shadow:none!important;display:flex!important;align-items:center!important;gap:8px!important;flex-wrap:wrap!important}
+      #${SUMMARY_ID} .aof217-state{flex:1 1 420px;font:850 10.5px/1.35 system-ui,sans-serif;color:#dfeff6}
+      #${SUMMARY_ID} .aof217-state b{color:#9fffd9}
+      #${SUMMARY_ID} .aof217-actions{display:flex;gap:6px;flex-wrap:wrap}
+      #${SUMMARY_ID} button,#${CREATOR_ID}{appearance:none;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.045);color:#ddecf4;padding:6px 9px;font:900 9px/1 system-ui,sans-serif;cursor:pointer}
+      #${SUMMARY_ID} button:hover,#${CREATOR_ID}:hover{border-color:rgba(120,238,255,.42);background:rgba(73,192,226,.12)}
+      #${CREATOR_ID}{margin-left:6px;border-color:rgba(255,176,232,.26);color:#ffd2ef;vertical-align:middle}
       #strategyAEvidenceSupplements{font-size:12px!important;line-height:1.45!important}
       #strategyAEvidenceSupplements .saesh-title{font-size:12px!important;letter-spacing:.07em!important}
       #strategyAEvidenceSupplements .saesh-sub,#strategyAEvidenceSupplements .saesh-state{font-size:10px!important}
-      #strategyAEvidenceSupplements section [style*="font-size:8px"],#strategyAEvidenceSupplements section [style*="font-size: 8px"]{font-size:10.5px!important;line-height:1.4!important}
-      #strategyAEvidenceSupplements section [style*="font-size:7px"],#strategyAEvidenceSupplements section [style*="font-size: 7px"]{font-size:9.5px!important}
-      #strategyAEvidenceSupplements small{font-size:9.5px!important}
       #strategyAG3CascadeCheckpoint,#strategyAG3DurableDecisionEvidence,#strategyAG3PostHorizonOutcome,#strategyAG3T0WindowOverlapProof{box-shadow:0 0 0 1px rgba(118,235,255,.06),0 8px 18px rgba(0,0,0,.12)}
-      #strategyAG3StructuredTruth,#strategyAG3HistoryOwnerDiscovery,#strategyAG3HistoricalEvidenceAdapter,#strategyAG3T0DecisionProof,#strategyAG3ReplayDataset,#strategyAG3DecisionReplay{opacity:.88}
       .aerith10-loader-card::before{background-size:contain!important;background-position:center top!important;background-repeat:no-repeat!important;background-color:rgba(7,10,20,.88)!important;min-height:160px!important;max-height:none!important}
-      .aerith10-creator-quick-link[data-aof-enhanced="true"]{font-weight:950!important;outline:1px solid rgba(255,177,231,.16);outline-offset:1px}
-      @media(max-width:900px){#${ROOT_ID}{padding:7px 8px}.aerith10-loader-card::before{min-height:120px!important}}
+      @media(max-width:900px){#${SUMMARY_ID}{padding:7px 8px!important}.aerith10-loader-card::before{min-height:120px!important}}
     `;
     document.head.appendChild(style);
-  }
-
-  function findSection(regex) {
-    const candidates = Array.from(document.querySelectorAll("h1,h2,h3,h4,summary,.section-title,.panel-title"));
-    const hit = candidates.find(n => regex.test(String(n.textContent || "").replace(/\s+/g," ").trim()));
-    return hit?.closest?.("section,details,article,main") || hit || null;
-  }
-
-  function resolveTarget(name) {
-    if (name === "top") return document.body;
-    if (name === "evidence") return byId("strategyAEvidenceSupplements") || byId("strategyADossier");
-    if (name === "creator") return byId("aerith10-creator");
-    if (name === "simulation") return findSection(/Simulation micro-transactions|Pilote de simulation/i);
-    if (name === "market") return findSection(/Comparaison BTC|Prix du marché des cryptomonnaies|MARKET SNAPSHOT/i);
-    return null;
-  }
-
-  function jump(name) {
-    if (name === "top") { window.scrollTo({top:0,behavior:"smooth"}); return true; }
-    const target = resolveTarget(name);
-    if (!target) return false;
-    if (name === "creator" && "open" in target) target.open = true;
-    target.scrollIntoView({behavior:"smooth",block:"start"});
-    return true;
   }
 
   function truth() {
     let cp = null, out = null;
     try { cp = globalThis.AgentCryptoStrategyAG3CascadeCheckpoint?.snapshot?.() || null; } catch (_) {}
     try { out = globalThis.AgentCryptoStrategyAG3PostHorizonOutcome?.snapshot?.() || null; } catch (_) {}
-    const temporalCertified = cp?.temporal?.certified === true || cp?.checkpoint?.temporal_contract === "CERTIFIED";
-    const certifiedT0 = Number(cp?.t0?.certified_rows ?? cp?.checkpoint?.certified_t0 ?? 0);
     const joined = Number(cp?.dataset?.joined_count ?? cp?.checkpoint?.joined_rows ?? 0);
     const replayReady = cp?.dataset?.ready === true || cp?.dataset?.status === "READY_FOR_DECISION_REPLAY" || cp?.checkpoint?.replay_dataset === "READY_FOR_DECISION_REPLAY";
     const got = Number(out?.certified_horizons || 0);
     const total = Number(out?.expected_horizons || 0);
-    return {cp,out,temporalCertified,certifiedT0,joined,replayReady,got,total};
+    return {cp,out,joined,replayReady,got,total};
   }
 
   function humanState() {
     const t = truth();
     if (t.replayReady || t.joined > 0) {
-      const outcome = t.total > 0 ? ` · résultats post-T0 ${esc(t.got)} / ${esc(t.total)}` : " · résultats post-T0 en cours";
-      return `<b>Gate 3 · dataset replay prêt.</b> ${esc(t.joined)} décision(s) raccordée(s)${outcome}.`;
+      const suffix = t.total > 0 ? ` · résultats post-T0 ${esc(t.got)} / ${esc(t.total)}` : " · résultats post-T0 en cours";
+      return `<b>Gate 3 · dataset replay prêt.</b> ${esc(t.joined)} décision(s) raccordée(s)${suffix}.`;
     }
-    if (t.temporalCertified && t.certifiedT0 > 0) return `<b>Gate 3.</b> Fenêtre 24 h certifiée · ${esc(t.certifiedT0)} T0 certifié(s) · attente de jointure.`;
-    if (t.temporalCertified) return `<b>Gate 3.</b> Fenêtre 24 h certifiée · attente d’une décision PAPER certifiée.`;
-    return `<b>Gate 3.</b> Fenêtre historique 24 h en cours de certification.`;
+    return `<b>Gate 3 · preuves.</b> État détaillé disponible dans le dossier ci-dessous.`;
   }
 
-  function ensureRoot() {
-    if (typeof document === "undefined" || !document.body) return null;
-    ensureStyle();
-    let root = byId(ROOT_ID);
+  function jump(name) {
+    let target = null;
+    if (name === "top") { window.scrollTo({top:0,behavior:"smooth"}); return true; }
+    if (name === "creator") target = byId("aerith10-creator");
+    if (name === "market") target = document.querySelector("#market-workspace,[data-window-key='market-workspace']");
+    if (!target) return false;
+    if (name === "creator" && "open" in target) target.open = true;
+    target.scrollIntoView({behavior:"smooth",block:"start"});
+    return true;
+  }
+
+  function ensureCreatorShortcut() {
+    let button = byId(CREATOR_ID);
+    const anchor = byId("atlasProjectsCluster");
+    if (!anchor?.parentElement) return null;
+    if (!button) {
+      button = document.createElement("button");
+      button.id = CREATOR_ID;
+      button.type = "button";
+      button.textContent = "Créatrice";
+      button.setAttribute("aria-label","Ouvrir Aerith-10 Créatrice");
+      button.addEventListener("click", () => jump("creator"));
+    }
+    if (button.parentElement !== anchor.parentElement || button.previousElementSibling !== anchor) anchor.insertAdjacentElement("afterend",button);
+    return button;
+  }
+
+  function ensureEvidenceSummary() {
+    const host = byId("strategyAEvidenceSupplements") || byId("strategyADossier");
+    if (!host) return null;
+    let root = byId(SUMMARY_ID);
     if (!root) {
-      root = document.createElement("nav");
-      root.id = ROOT_ID;
-      root.setAttribute("aria-label","Navigation opérateur Administrator");
-      root.innerHTML = `<div class="aof-state" data-aof-state></div><div class="aof-nav"><button type="button" data-aof="top">↑ Haut</button><button type="button" data-aof="market">Marché</button><button type="button" data-aof="simulation">Simulation</button><button type="button" data-aof="evidence">Gate 3 / preuves</button><button type="button" data-aof="creator">Créatrice</button></div>`;
+      root = document.createElement("div");
+      root.id = SUMMARY_ID;
+      root.innerHTML = `<div class="aof217-state" data-aof217-state></div><div class="aof217-actions"><button type="button" data-jump="top">↑ Haut</button><button type="button" data-jump="market">Marché</button><button type="button" data-jump="creator">Créatrice</button></div>`;
       root.addEventListener("click", event => {
-        const b = event.target.closest?.("button[data-aof]");
-        if (b) jump(b.dataset.aof);
+        const b = event.target.closest?.("button[data-jump]");
+        if (b) jump(b.dataset.jump);
       });
     }
-    if (document.body.firstElementChild !== root) document.body.prepend(root);
+    if (host.firstElementChild !== root) host.prepend(root);
     root.dataset.build = BUILD;
-    root.dataset.mount = "BODY_START";
-    const state = root.querySelector("[data-aof-state]");
+    const state = root.querySelector("[data-aof217-state]");
     if (state) state.innerHTML = humanState();
-    document.querySelectorAll('a[href="#aerith10-creator"]').forEach(a => a.dataset.aofEnhanced = "true");
     return root;
   }
 
   function refresh(reason = "explicit") {
-    const root = ensureRoot();
-    if (root) root.dataset.refreshReason = String(reason || "explicit");
-    return Object.freeze({build:BUILD,root_present:!!root,body_first:document.body?.firstElementChild===root,creator_present:!!byId("aerith10-creator"),evidence_present:!!byId("strategyAEvidenceSupplements"),state_text:root?.querySelector("[data-aof-state]")?.textContent||""});
+    if (typeof document === "undefined") return Object.freeze({build:BUILD,available:false});
+    cleanupLegacyBars();
+    ensureStyle();
+    const creator = ensureCreatorShortcut();
+    const summary = ensureEvidenceSummary();
+    if (summary) summary.dataset.refreshReason = String(reason || "explicit");
+    return Object.freeze({
+      build:BUILD,
+      legacy_bars_removed:!byId("administratorOperatorFocus406215")&&!byId("administratorOperatorFocus406216"),
+      creator_shortcut_present:!!creator,
+      evidence_summary_present:!!summary,
+      body_start_owned:false,
+      canonical_header_preserved:true,
+      state_text:summary?.querySelector("[data-aof217-state]")?.textContent||""
+    });
   }
 
   function schedule(reason = "event") {
@@ -126,9 +138,20 @@
   }
 
   globalThis.AgentCryptoAdministratorOperatorFocus = Object.freeze({
-    build:BUILD,root_id:ROOT_ID,refresh,jump,truth,
-    mount:"BODY_START",presentation_only:true,recurring_timer:false,observer:false,storage_write:false,
-    business_network_request:false,market_core_modified:false,strategy_a_business_logic_modified:false,real_order:false
+    build:BUILD,
+    root_id:SUMMARY_ID,
+    refresh,
+    jump,
+    truth,
+    mount:"EVIDENCE_INLINE_PLUS_CREATOR_SHORTCUT",
+    presentation_only:true,
+    recurring_timer:false,
+    observer:false,
+    storage_write:false,
+    business_network_request:false,
+    market_core_modified:false,
+    strategy_a_business_logic_modified:false,
+    real_order:false
   });
 
   if (typeof document !== "undefined") {
@@ -136,12 +159,6 @@
     document.addEventListener("agent-crypto:evidence-data-changed", () => schedule("evidence-data-changed"));
     document.addEventListener("agent-crypto:market-series-updated", () => schedule("market-series-updated"));
     document.addEventListener("agent-crypto:g3-post-horizon-mounted", () => schedule("post-horizon-mounted"));
-    document.addEventListener("erith:system-hydrated", () => schedule("system-hydrated"), {passive:true});
-    document.addEventListener("agent-crypto:runtime-modules-ready", () => schedule("runtime-modules-ready"), {once:true});
-    document.addEventListener("click", event => {
-      const b = event?.target?.closest?.("button");
-      if (b && /rafraîchir\s+marché|actualiser\s+preuves|enregistrer\s+la\s+prochaine\s+décision/i.test(String(b.textContent || ""))) schedule("operator-action");
-    }, false);
     window.addEventListener("pageshow", () => schedule("pageshow"));
     window.addEventListener("load", () => schedule("load"), {once:true});
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => schedule("dom-ready"), {once:true});
