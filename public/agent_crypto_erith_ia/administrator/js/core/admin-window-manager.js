@@ -29,14 +29,29 @@
     let activeDomain = clean(options.domain || document.documentElement.dataset.atlasMarketDomain || "crypto") || "crypto";
     const displayBackups = new WeakMap();
 
+    // 40.6.239 — route native-window persistence through the stable storage
+    // relief contract when available. Under quota, the relief owner provides
+    // session-only volatile continuity without deleting operator data.
+    const storageRelief = () => globalThis.AtlasStorageRelief || null;
     const readStorage = (key, fallback = null) => {
-      try { return localStorage.getItem(key) ?? fallback; } catch { return fallback; }
+      try {
+        const relief = storageRelief();
+        const value = relief?.readSync ? relief.readSync(key) : localStorage.getItem(key);
+        return value ?? fallback;
+      } catch { return fallback; }
     };
     const writeStorage = (key, value) => {
-      try { localStorage.setItem(key, value); return true; } catch { return false; }
+      try {
+        const relief = storageRelief();
+        return relief?.writeSync ? relief.writeSync(key, value) : (localStorage.setItem(key, value), true);
+      } catch { return false; }
     };
     const removeStorage = key => {
-      try { localStorage.removeItem(key); } catch {}
+      try {
+        const relief = storageRelief();
+        if (relief?.removeSync) relief.removeSync(key);
+        else localStorage.removeItem(key);
+      } catch {}
     };
     const stateKey = id => `${statePrefix}${id}`;
     const getState = id => safeJson(readStorage(stateKey(id), "{}"), {}) || {};
