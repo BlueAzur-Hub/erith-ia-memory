@@ -11,6 +11,8 @@
    40.6.117 bounded hotfix: loads derived Strategy A ↔ TRADUS Outcome Memory without a new panel.
    40.6.241 canonical repair: loads DEX freshness fail-closed guard after Source Truth and
    before the source-runtime-ready event consumed by diagnostics / Atlas readers.
+   40.6.242 hardening: removes eager source-reader boot and settles loader ready state only
+   after Source Truth -> DEX freshness -> downstream source readers are ordered.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, loader storage write, wallet or trading endpoint is introduced. */
@@ -163,13 +165,13 @@
 
   function ensure(why="operator"){
     reason=String(why||"operator");
-    if(state==="ready"||globalThis.ErithPrivateBackendSources||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){settleReady();return Promise.resolve(afterSourceOwners()).then(()=>true);}
+    if(state==="ready"||globalThis.ErithPrivateBackendSources||globalThis.__AGENT_CRYPTO_SOURCE_INTELLIGENCE_40459__){return Promise.resolve(afterSourceOwners()).then(()=>{settleReady();return true;});}
     if(promise)return promise;
     state="loading";
     promise=new Promise(resolve=>{
       const existing=document.querySelector('script[data-private-source-demand-stable="true"],script[data-private-source-demand="true"]');
       if(existing){
-        if(globalThis.ErithPrivateBackendSources||existing.dataset.loaded==="true"){afterSourceOwners();resolve(settleReady());return;}
+        if(globalThis.ErithPrivateBackendSources||existing.dataset.loaded==="true"){void (async()=>{await afterSourceOwners();resolve(settleReady());})();return;}
         existing.addEventListener("load",async()=>{existing.dataset.loaded="true";await afterSourceOwners();resolve(settleReady());},{once:true});
         existing.addEventListener("error",()=>{state="error";lastError="load-error";resolve(false);},{once:true});
         return;
@@ -178,7 +180,7 @@
       script.src=SRC;
       script.async=true;
       script.dataset.privateSourceDemandStable="true";
-      script.addEventListener("load",async()=>{script.dataset.loaded="true";settleReady();await afterSourceOwners();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:runtimeBuild(),reason}}));}catch(_){}resolve(true);},{once:true});
+      script.addEventListener("load",async()=>{script.dataset.loaded="true";await afterSourceOwners();settleReady();try{window.dispatchEvent(new CustomEvent("erith:private-source-runtime-loaded",{detail:{build:runtimeBuild(),reason}}));}catch(_){}resolve(true);},{once:true});
       script.addEventListener("error",()=>{state="error";lastError="script-load-error";resolve(false);},{once:true});
       document.head.appendChild(script);
     }).finally(()=>{promise=null;});
@@ -203,9 +205,9 @@
   if(["#sources","#backend","#privateBackendV1","#privateSourceIntelligence"].includes(hash))void ensure("direct-hash");
   ensureStrategyProofHotfix();
   ensurePostHandoff();
-  ensureDexDiagnostics();
-  ensureCexDivergenceGuard();
-  ensureAtlasDecisionContext();
+  // 40.6.242: source-derived readers are no longer booted eagerly.
+  // DEX diagnostics, CEX divergence and Atlas Decision Context are started only
+  // by afterSourceOwners(), after Source Truth + DEX freshness are ready.
   ensureStrategyTradusComparative();
   ensureStrategyTradusOutcomeMemory();
   queueMicrotask(()=>{ensureStrategyTradusComparative();ensureStrategyTradusOutcomeMemory();});
