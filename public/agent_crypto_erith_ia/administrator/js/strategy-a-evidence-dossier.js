@@ -219,6 +219,17 @@
     setG3("replay",h.replay_contract_ready===true?"OUI":"NON");
     setG3("state",h.g3_state||"PENDING");
     setG3("reason",h.reason||"G3 reste PENDING.");
+    try {
+      document.dispatchEvent(new CustomEvent("agent-crypto:strategy-a-evidence-dossier-mounted", {
+        detail: Object.freeze({
+          owner: "AgentCryptoStrategyAEvidenceDossier",
+          owner_build: BUILD,
+          repair_build: "40.6.235",
+          dossier_id: "strategyADossier",
+          paper_only: true
+        })
+      }));
+    } catch (_) {}
     return true;
   }
 
