@@ -1,16 +1,18 @@
-/* Agent-Crypto @erith.IA — 40.6.230 LEGACY EVIDENCE READABILITY
-   Preserves the existing 40.6.219 operator compatibility behavior and adds a
-   presentation-only distinction between current G3 truth and historical evidence.
-   No evidence row is deleted, collapsed, rewritten or promoted. No Market Core or
-   Strategy A business logic is changed. PAPER ONLY · G3 PENDING · G9 LOCKED. */
+/* Agent-Crypto @erith.IA — 40.6.231 LEGACY LABELS MOUNT REPAIR
+   Preserves the 40.6.219 operator compatibility behavior, the 40.6.230 evidence-era
+   labels, and repairs their mount timing after lazy hydration/render cycles.
+   No evidence value is rewritten. No Market Core or Strategy A business logic is changed.
+   PAPER ONLY · G3 PENDING · G9 LOCKED. */
 (() => {
   "use strict";
-  const BUILD = "40.6.230";
+  const BUILD = "40.6.231";
   const CREATOR_ID = "administratorCreatorShortcut406219";
   const STYLE_ID = "administratorOperatorCompatibility406219Style";
   const FOUNDATION_SRC = "./js/strategy-a-foundation-delegated-certification-406219.js?release=40.6.219";
-  const BADGE_CLASS = "aof230-evidence-era";
+  const BADGE_CLASS = "aof231-evidence-era";
+  const LEGEND_ID = "strategyAG3EvidenceEraLegend406231";
   let queued = false;
+  let lastReceipt = null;
 
   const byId = id => typeof document !== "undefined" ? document.getElementById(id) : null;
 
@@ -53,10 +55,26 @@
     byId("strategyAEvidenceSupplements")?.classList.remove("aof218-simple");
   }
 
+  function evidenceStyle() {
+    return `
+      #${LEGEND_ID}{margin:10px 0;padding:10px 12px;border:1px solid rgba(73,224,183,.30);border-radius:10px;background:rgba(8,27,31,.78);color:#dbe7ef;font:800 10px/1.45 system-ui,sans-serif}
+      #${LEGEND_ID} strong{color:#78efd0;letter-spacing:.06em}
+      #${LEGEND_ID} span{color:#9fb4c1;font-weight:700}
+      .${BADGE_CLASS}{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px;padding:6px 9px;border:1px solid rgba(122,160,184,.22);border-radius:8px;background:rgba(8,17,27,.72);font:800 9px/1.25 system-ui,sans-serif;letter-spacing:.045em;color:#9fb4c1}
+      .${BADGE_CLASS}[data-era="historical"]{border-style:dashed}
+      .${BADGE_CLASS}[data-era="superseded"]{border-color:rgba(255,190,92,.30);background:rgba(78,55,13,.16);color:#e7be70}
+      .${BADGE_CLASS}[data-era="current"]{border-color:rgba(73,224,183,.38);background:rgba(18,82,69,.18);color:#74e7c5}
+      .${BADGE_CLASS} small{font:700 9px/1.35 system-ui,sans-serif;letter-spacing:0;color:#8297a6}
+      [data-aof231-evidence-era="historical"]{border-style:dashed!important}
+      [data-aof231-evidence-era="superseded"]{border-color:rgba(255,190,92,.24)!important}
+      [data-aof231-evidence-era="current"]{box-shadow:0 0 0 1px rgba(73,224,183,.08) inset}
+    `;
+  }
+
   function ensureStyle() {
-    if (byId(STYLE_ID)) {
-      const existing = byId(STYLE_ID);
-      if (!existing.textContent.includes("aof230-evidence-era")) existing.textContent += legacyStyle();
+    const existing = byId(STYLE_ID);
+    if (existing) {
+      if (!existing.textContent.includes(BADGE_CLASS)) existing.textContent += evidenceStyle();
       return;
     }
     const style = document.createElement("style");
@@ -72,20 +90,8 @@
       #${CREATOR_ID}{margin-left:6px;border:1px solid rgba(255,176,232,.28);border-radius:999px;background:rgba(255,255,255,.045);color:#ffd2ef;padding:6px 9px;font:900 9px/1 system-ui,sans-serif;cursor:pointer}
       #${CREATOR_ID}:hover{background:rgba(255,176,232,.10)}
       @media(max-width:620px){.aerith10-loader-card::before{min-height:120px!important}}
-    ` + legacyStyle();
+    ` + evidenceStyle();
     document.head.appendChild(style);
-  }
-
-  function legacyStyle() {
-    return `
-      .${BADGE_CLASS}{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 8px;padding:6px 9px;border:1px solid rgba(122,160,184,.22);border-radius:8px;background:rgba(8,17,27,.72);font:800 9px/1.25 system-ui,sans-serif;letter-spacing:.045em;color:#9fb4c1}
-      .${BADGE_CLASS}[data-era="superseded"]{border-color:rgba(255,190,92,.30);background:rgba(78,55,13,.16);color:#e7be70}
-      .${BADGE_CLASS}[data-era="current"]{border-color:rgba(73,224,183,.38);background:rgba(18,82,69,.18);color:#74e7c5}
-      .${BADGE_CLASS} small{font:700 9px/1.35 system-ui,sans-serif;letter-spacing:0;color:#8297a6}
-      [data-aof230-evidence-era="historical"]{border-style:dashed!important}
-      [data-aof230-evidence-era="superseded"]{border-color:rgba(255,190,92,.24)!important}
-      [data-aof230-evidence-era="current"]{box-shadow:0 0 0 1px rgba(73,224,183,.08) inset}
-    `;
   }
 
   function ensureCreatorShortcut() {
@@ -123,10 +129,35 @@
     return false;
   }
 
+  function stableHost() {
+    return byId("strategyADossier")
+      || byId("strategyAEvidenceSupplements")
+      || byId("strategyAG3StrictOutcomeRevalidation406228")?.parentElement
+      || byId("strategyAG3StrictExecutionRealismRebind406229")?.parentElement
+      || null;
+  }
+
+  function ensureLegend() {
+    const host = stableHost();
+    if (!host) return null;
+    let node = byId(LEGEND_ID);
+    if (!node) {
+      node = document.createElement("div");
+      node.id = LEGEND_ID;
+      node.setAttribute("role", "note");
+    }
+    node.innerHTML = `<strong>LECTURE G3 · 40.6.231</strong> · ACTUEL = 40.6.228 / 40.6.229 · <span>PREUVE HISTORIQUE = trace conservée · SUPERSEDED = conclusion remplacée · G3 PENDING · G9 LOCKED.</span>`;
+    const anchor = byId("strategyAG3StrictOutcomeRevalidation406228") || byId("strategyAG3StrictExecutionRealismRebind406229");
+    if (anchor?.parentElement === host) {
+      if (node.parentElement !== host || node.nextElementSibling !== anchor) host.insertBefore(node, anchor);
+    } else if (node.parentElement !== host) host.prepend(node);
+    return node;
+  }
+
   function badge(node, era, title, detail) {
     if (!node) return false;
-    node.dataset.aof230EvidenceEra = era;
-    let marker = node.querySelector(`:scope > .${BADGE_CLASS}`);
+    node.dataset.aof231EvidenceEra = era;
+    let marker = Array.from(node.children || []).find(child => child?.classList?.contains(BADGE_CLASS));
     if (!marker) {
       marker = document.createElement("div");
       marker.className = BADGE_CLASS;
@@ -141,10 +172,11 @@
     let historical = 0;
     let superseded = 0;
     let current = 0;
+    let missing = 0;
 
     for (const [id, era, title] of LEGACY_EVIDENCE) {
       const node = byId(id);
-      if (!node) continue;
+      if (!node) { missing++; continue; }
       const detail = era === "superseded"
         ? "Conservé pour audit · vérité opérateur actuelle : 40.6.228 / 40.6.229."
         : "Conservé comme preuve antérieure · ne définit plus à lui seul l’état courant de Gate 3.";
@@ -155,12 +187,14 @@
     }
 
     for (const [id, title] of CURRENT_EVIDENCE) {
-      if (badge(byId(id), "current", title, "Autorité opérateur courante · G3 reste PENDING · G9 LOCKED.")) current++;
+      const node = byId(id);
+      if (!node) { missing++; continue; }
+      if (badge(node, "current", title, "Autorité opérateur courante · G3 reste PENDING · G9 LOCKED.")) current++;
     }
 
     const dossier = byId("strategyADossier");
-    if (dossier) dossier.dataset.aof230Readability = "legacy-evidence-labelled";
-    return Object.freeze({historical,superseded,current});
+    if (dossier) dossier.dataset.aof231Readability = "legacy-evidence-labelled";
+    return Object.freeze({historical,superseded,current,missing});
   }
 
   function refresh(reason = "explicit") {
@@ -169,40 +203,61 @@
     ensureStyle();
     const creator = ensureCreatorShortcut();
     const loaded = ensureFoundationLoader();
+    const legend = ensureLegend();
     const eras = markEvidenceEra();
     try { globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.(`operator-refresh:${reason}`); } catch (_) {}
-    return Object.freeze({
+    lastReceipt = Object.freeze({
       build:BUILD,
+      reason,
+      host_id:stableHost()?.id || null,
+      legend_present:!!legend,
+      evidence_eras:eras,
       canonical_header_preserved:true,
       creator_shortcut_present:!!creator,
       foundation_owner_available:!!globalThis.AgentCryptoStrategyAFoundationDelegatedCertification,
       foundation_loader_already_available:loaded,
-      readability_wrapper_removed:true,
       legacy_evidence_readability:true,
-      evidence_eras:eras,
+      mount_repair:true,
       presentation_only_except_delegated_foundation_loader:true,
       market_core_modified:false,
       strategy_a_business_logic_modified:false,
       gate_state_modified:false,
-      real_order:false
+      real_order:false,
+      paper_only:true,
+      g3:"PENDING",
+      g9:"LOCKED"
     });
+    return lastReceipt;
   }
 
   function schedule(reason = "event") {
     if (queued) return;
     queued = true;
-    const run = () => { queued=false; refresh(reason); };
-    try { requestAnimationFrame(run); } catch (_) { queueMicrotask(run); }
+    const run = () => {
+      try {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            queued = false;
+            refresh(reason);
+          });
+        });
+      } catch (_) {
+        queueMicrotask(() => { queued=false; refresh(reason); });
+      }
+    };
+    run();
   }
 
   globalThis.AgentCryptoAdministratorOperatorFocus = Object.freeze({
     build:BUILD,
     refresh,
     markEvidenceEra,
-    mount:"CANONICAL_HEADER_PRESERVED_PLUS_LEGACY_EVIDENCE_LABELS",
+    snapshot:()=>lastReceipt || refresh("snapshot"),
+    mount:"CANONICAL_HEADER_PRESERVED_PLUS_LEGACY_LABELS_MOUNT_REPAIR",
     presentation_only:false,
     delegated_foundation_loader:true,
     legacy_evidence_readability:true,
+    legacy_labels_mount_repair:true,
     recurring_timer:false,
     observer:false,
     storage_write:false,
@@ -210,16 +265,23 @@
     market_core_modified:false,
     strategy_a_business_logic_modified:false,
     gate_state_modified:false,
-    real_order:false
+    real_order:false,
+    paper_only:true,
+    g3:"PENDING",
+    g9:"LOCKED"
   });
 
   if (typeof document !== "undefined") {
     document.addEventListener("agent-crypto:runtime-modules-ready", () => schedule("runtime-modules-ready"), {once:true});
-    document.addEventListener("erith:system-hydrated", () => schedule("system-hydrated"), {once:true,passive:true});
+    document.addEventListener("erith:system-hydrated", () => schedule("system-hydrated"), {passive:true});
     document.addEventListener("agent-crypto:evidence-data-changed", () => schedule("evidence-data-changed"), {passive:true});
     document.addEventListener("agent-crypto:evidence-refresh-complete", () => schedule("evidence-refresh-complete"), {passive:true});
+    document.addEventListener("agent-crypto:market-series-updated", () => schedule("market-series-updated"), {passive:true});
     document.addEventListener("toggle", event => {
-      if (event?.target?.closest?.("#strategyADossier,#strategyAEvidenceSupplements") || event?.target?.id === "strategyADossier") schedule("toggle");
+      if (event?.target?.closest?.("#strategyADossier,#strategyAEvidenceSupplements") || event?.target?.id === "strategyADossier") schedule("toggle-settled");
+    }, true);
+    document.addEventListener("click", event => {
+      if (event?.target?.closest?.("#strategyADossier,#strategyAEvidenceSupplements")) schedule("click-settled");
     }, true);
     window.addEventListener("pageshow", () => schedule("pageshow"));
     window.addEventListener("load", () => schedule("load"), {once:true});
