@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.232 G3 EVIDENCE ERA MAP
+/* Agent-Crypto @erith.IA — 40.6.235 G3 EVIDENCE ERA MAP · EXPLICIT DOSSIER MOUNT REPAIR
    Stable operator map mounted as a sibling of the lazy Strategy A dossier.
    Replaces the fragile per-panel era badges from 40.6.230/231 with one durable map.
    No evidence value is rewritten. No Market Core or Strategy A business logic is changed.
@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.232";
+  const BUILD = "40.6.235";
   const CREATOR_ID = "administratorCreatorShortcut406219";
   const STYLE_ID = "administratorOperatorCompatibility406219Style";
   const FOUNDATION_SRC = "./js/strategy-a-foundation-delegated-certification-406219.js?release=40.6.219";
@@ -215,7 +215,7 @@
       <div class="eam-next"><b>Maintenant :</b> ne plus rouvrir la chaîne historique. Attendre un PAPER Strategy A naturellement éligible, puis conserver ses faits after-cost complets. Partial fill terrain, latence et liquidité restent à prouver sans forcer de trade.</div>
       <div class="eam-proof">ERA MAP · host=${esc(anchor.id)} · reason=${esc(reason)} · current=40.6.228+40.6.229 · no evidence rewrite · no Gate promotion · no timer · no observer.</div>`;
 
-    document.documentElement.dataset.agentCryptoG3EvidenceEraMap = "406232";
+    document.documentElement.dataset.agentCryptoG3EvidenceEraMap = "406235";
     return root;
   }
 
@@ -240,6 +240,8 @@
       current_authority: "40.6.228+40.6.229",
       legacy_badges_required: false,
       stable_sibling_mount: true,
+      explicit_dossier_mount_event: true,
+      mount_repair_build: "40.6.235",
       canonical_header_preserved: true,
       creator_shortcut_present: !!creator,
       foundation_owner_available: !!globalThis.AgentCryptoStrategyAFoundationDelegatedCertification,
@@ -286,6 +288,8 @@
     legacy_evidence_readability: true,
     legacy_labels_mount_repair: false,
     evidence_era_map: true,
+    evidence_era_map_mount_repair_406235: true,
+    explicit_dossier_mount_event: "agent-crypto:strategy-a-evidence-dossier-mounted",
     delegated_foundation_loader: true,
     recurring_timer: false,
     observer: false,
@@ -305,6 +309,7 @@
     document.addEventListener("erith:system-hydrated", () => schedule("system-hydrated"), {passive:true});
     document.addEventListener("agent-crypto:evidence-data-changed", () => schedule("evidence-data-changed"), {passive:true});
     document.addEventListener("agent-crypto:evidence-refresh-complete", () => schedule("evidence-refresh-complete"), {passive:true});
+    document.addEventListener("agent-crypto:strategy-a-evidence-dossier-mounted", () => schedule("strategy-a-evidence-dossier-mounted"), {passive:true});
     document.addEventListener("agent-crypto:market-series-updated", () => schedule("market-series-updated"), {passive:true});
     document.addEventListener("toggle", event => {
       if (event?.target?.closest?.("#strategyADossier,#strategyAEvidenceSupplements") || event?.target?.id === "strategyADossier")
