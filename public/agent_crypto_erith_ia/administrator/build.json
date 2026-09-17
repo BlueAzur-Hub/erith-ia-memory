@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.213",
+  "build": "40.6.214",
   "engine": "38.15.11",
-  "release": "STRATEGY A G3 TRUE HYDRATION CHECK",
+  "release": "STRATEGY A G3 POST-HORIZON OUTCOME OWNER",
   "published": true,
-  "status": "strategy_a_g3_true_hydration_check_406213",
-  "parent_build": "40.6.212",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.213",
-  "administrator_build": "40.6.213",
-  "build_label": "Build 40.6.213 · Administrator",
+  "status": "strategy_a_g3_post_horizon_outcome_owner_406214",
+  "parent_build": "40.6.213",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.214",
+  "administrator_build": "40.6.214",
+  "build_label": "Build 40.6.214 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -27,29 +27,26 @@
   "new_storage_owner": false,
   "new_business_network_request": false,
   "static_asset_module_load": true,
-  "canonical_entry_modified": false,
+  "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": [
-    "Firefox/export report confirms Build 40.6.212 with Market Core 38.15.11.",
-    "The durable-memory panel is now visible and reports MÉMOIRE DURABLE OK with 0 conserved decisions.",
-    "The host reported 9 / 9 PANNEAUX · 9 HYDRATÉ(S) while seven historical panels still displayed MODULE EN ATTENTE.",
-    "Therefore 40.6.212 contained a false-positive hydration counter and could settle bootstrap before real owner rendering completed."
+    "Firefox/export terrain on 40.6.213 confirms TRUE HYDRATION with 9 / 9 PANNEAUX · 9 HYDRATÉ(S) and no MODULE EN ATTENTE.",
+    "Durable PAPER evidence survives reload and keeps the recorded T0 decision without historical backfill.",
+    "The G3 chain is allowed to expose post-horizon observations only after a certified replay join exists; no Gate promotion is implied."
   ],
   "terrain_pending": [
-    "Reload Administrator until Build 40.6.213 is visible.",
-    "Export the markdown report without recording a new PAPER decision.",
-    "Verify the Evidence host title TRUE HYDRATION · 40.6.213.",
-    "Verify HYDRATÉ(S) counts only panels whose placeholder text has actually been replaced.",
-    "If owner APIs are still unavailable, the count must remain below 9 and placeholders must remain explicit rather than being declared hydrated.",
-    "If all owner APIs become available, expected final truth is 9 / 9 PANNEAUX · 9 HYDRATÉ(S) with no MODULE EN ATTENTE inside the nine-panel host."
+    "Reload Administrator until Build 40.6.214 is visible.",
+    "Verify the new G3 · RÉSULTATS APRÈS DÉCISION panel appears after the T0 overlap proof.",
+    "Verify T+5 / T+15 / T+60 remain WAITING until each post-T0 market horizon is actually available.",
+    "Verify no current Oracle is applied retrospectively and Gate 3 remains PENDING.",
+    "Export the markdown report after the post-horizon panel has rendered."
   ],
   "release_notes": [
-    "Hydration truth is now content-based rather than function-presence based.",
-    "A panel containing MODULE EN ATTENTE can no longer be counted as hydrated.",
-    "The integrator no longer removes the placeholder class unless real owner content replaced the placeholder text.",
-    "Bootstrap only settles when all nine panels are genuinely hydrated; otherwise bounded lifecycle listeners remain active for later owner availability.",
-    "Evidence lifecycle delegates hydration truth to the integrator panel_hydrated() contract and reports placeholder panels explicitly.",
-    "No Strategy A threshold, Risk Governor, PAPER lifecycle, Market Core, Atlas, Oracle, Aether, Lecture Technique, Gate state or real-order path is changed.",
+    "Adds a dedicated POST_HORIZON_OUTCOME_OWNER for descriptive T+5, T+15 and T+60 market observations after a joined PAPER T0 decision.",
+    "Outcome timestamps are strictly after T0 and are matched against the certified market series with cadence-aware tolerance.",
+    "The owner is read-only: it does not rewrite T0 inputs, does not attach current Oracle output to the past, and does not create an economic backtest or Gate PASS.",
+    "The canonical Administrator entry now loads and renders the post-horizon owner as part of the existing evidence bootstrap.",
+    "No Strategy A threshold, Risk Governor, Market Core, Atlas, Oracle, Aether, Lecture Technique, storage owner or real-order path is changed.",
     "PAPER ONLY. G3 PENDING. G9 LOCKED."
   ],
   "strategy_a_canonical_evidence_wiring": {
@@ -115,7 +112,18 @@
     "paper_only": true,
     "g3": "PENDING",
     "g9": "LOCKED",
-    "firefox_terrain_proof": "PENDING_406213_TRUE_HYDRATION"
+    "firefox_terrain_proof": "PENDING_406214_POST_HORIZON",
+    "post_horizon_outcome_owner_in": "40.6.214",
+    "post_horizon_outcome_id": "strategyAG3PostHorizonOutcome",
+    "post_horizon_outcome_owner": "js/strategy-a-g3-post-horizon-outcome.js",
+    "post_horizon_horizons_min": [
+      5,
+      15,
+      60
+    ],
+    "post_horizon_read_only": true,
+    "post_horizon_gate_promotion": false,
+    "supplemental_readonly_panel_count": 1
   },
   "paper_only": true,
   "profitability_claim": false,
