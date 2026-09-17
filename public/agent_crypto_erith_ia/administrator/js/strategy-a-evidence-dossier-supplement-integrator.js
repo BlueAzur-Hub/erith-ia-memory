@@ -1,13 +1,15 @@
-/* Agent-Crypto @erith.IA — 40.6.208 G3 EIGHT-PANEL + T0 WINDOW OVERLAP PROOF
-   Terrain proof from 40.6.207 validated the eight-panel stable Evidence lifecycle.
-   The remaining blocker is now NO_T0_DECISION_INSIDE_CERTIFIED_WINDOW with one
-   certified T0 and zero joined rows. This release adds a read-only overlap proof
-   inside the already validated stable host. No business logic, Gate promotion,
-   recurring timer, MutationObserver, storage/network/order path is added. */
+/* Agent-Crypto @erith.IA — 40.6.212 G3 NINE-PANEL DURABLE EVIDENCE BINDING
+   Terrain 40.6.211 proved that the published build loaded but the durable-decision
+   status block was still absent from the exported Evidence Dossier. The durable
+   owner is therefore promoted into the same stable supplemental host/lifecycle as
+   the eight already terrain-proven G3 panels. If the durable API is unavailable,
+   the host keeps an explicit placeholder instead of silently hiding the failure.
+   No Strategy A business logic, Gate promotion, market data, recurring timer,
+   MutationObserver, network/order path or historical backfill is added. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.208";
+  const BUILD = "40.6.212";
   const DOSSIER_ID = "strategyADossier";
   const AUDIT_ID = "strategyAEvidenceGateAudit";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
@@ -16,14 +18,15 @@
   const OVERLAP_ID = "strategyAG3T0WindowOverlapProof";
 
   const PANEL_SPECS = Object.freeze([
-    Object.freeze({id:"strategyAG3StructuredTruth",api:"AgentCryptoStrategyAG3StructuredDataTruth",title:"G3 · STRUCTURED DATA TRUTH"}),
-    Object.freeze({id:"strategyAG3HistoryOwnerDiscovery",api:"AgentCryptoStrategyAG3HistoryOwnerDiscovery",title:"G3 · HISTORY OWNER DISCOVERY"}),
-    Object.freeze({id:"strategyAG3HistoricalEvidenceAdapter",api:"AgentCryptoStrategyAG3HistoricalEvidenceAdapter",title:"G3 · HISTORICAL EVIDENCE ADAPTER"}),
-    Object.freeze({id:"strategyAG3T0DecisionProof",api:"AgentCryptoStrategyAG3T0DecisionProof",title:"G3 · T0 DECISION PROOF"}),
-    Object.freeze({id:"strategyAG3ReplayDataset",api:"AgentCryptoStrategyAG3ReplayDataset",title:"G3 · IMMUTABLE REPLAY DATASET"}),
-    Object.freeze({id:"strategyAG3DecisionReplay",api:"AgentCryptoStrategyAG3DecisionReplay",title:"G3 · DECISION REPLAY VERIFIER"}),
-    Object.freeze({id:"strategyAG3CascadeCheckpoint",api:"AgentCryptoStrategyAG3CascadeCheckpoint",title:"G3 · CASCADE CHECKPOINT TRUTH"}),
-    Object.freeze({id:"strategyAG3ProspectiveT0Capture",api:"AgentCryptoStrategyAG3ProspectiveT0Capture",title:"G3 · CAPTURE T0 PROSPECTIVE"})
+    Object.freeze({id:"strategyAG3StructuredTruth",api:"AgentCryptoStrategyAG3StructuredDataTruth",title:"G3 · STRUCTURED DATA TRUTH",method:"render"}),
+    Object.freeze({id:"strategyAG3HistoryOwnerDiscovery",api:"AgentCryptoStrategyAG3HistoryOwnerDiscovery",title:"G3 · HISTORY OWNER DISCOVERY",method:"render"}),
+    Object.freeze({id:"strategyAG3HistoricalEvidenceAdapter",api:"AgentCryptoStrategyAG3HistoricalEvidenceAdapter",title:"G3 · HISTORICAL EVIDENCE ADAPTER",method:"render"}),
+    Object.freeze({id:"strategyAG3T0DecisionProof",api:"AgentCryptoStrategyAG3T0DecisionProof",title:"G3 · T0 DECISION PROOF",method:"render"}),
+    Object.freeze({id:"strategyAG3ReplayDataset",api:"AgentCryptoStrategyAG3ReplayDataset",title:"G3 · IMMUTABLE REPLAY DATASET",method:"render"}),
+    Object.freeze({id:"strategyAG3DecisionReplay",api:"AgentCryptoStrategyAG3DecisionReplay",title:"G3 · DECISION REPLAY VERIFIER",method:"render"}),
+    Object.freeze({id:"strategyAG3CascadeCheckpoint",api:"AgentCryptoStrategyAG3CascadeCheckpoint",title:"G3 · CASCADE CHECKPOINT TRUTH",method:"render"}),
+    Object.freeze({id:"strategyAG3ProspectiveT0Capture",api:"AgentCryptoStrategyAG3ProspectiveT0Capture",title:"G3 · CAPTURE T0 PROSPECTIVE",method:"render"}),
+    Object.freeze({id:"strategyAG3DurableDecisionEvidence",api:"AgentCryptoStrategyAG3DurableDecisionEvidence",title:"G3 · DÉCISION PAPER · MÉMOIRE DURABLE",method:"refresh"})
   ]);
 
   let mountCount = 0;
@@ -37,6 +40,11 @@
   const finite = value => {
     const n = Number(value);
     return Number.isFinite(n) ? n : null;
+  };
+  const ownerMethod = spec => {
+    const api = globalThis[spec.api];
+    const method = String(spec.method || "render");
+    return typeof api?.[method] === "function" ? api[method].bind(api) : null;
   };
 
   function anchor() {
@@ -133,17 +141,17 @@
     if (!host) {
       host = document.createElement("section");
       host.id = HOST_ID;
-      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · EIGHT-PANEL BOUND · ${BUILD}</div><div class="saesh-sub">Même cycle Evidence pour 8 panneaux · preuve T0↔fenêtre ajoutée en lecture seule.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
+      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · NINE-PANEL BOUND · ${BUILD}</div><div class="saesh-sub">Même cycle Evidence pour 9 panneaux · mémoire durable intégrée au host stable.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
     }
     host.dataset.build = BUILD;
     host.dataset.stableSibling = "true";
     host.dataset.lifecycleBound = "true";
-    host.dataset.eightPanelContract = "true";
+    host.dataset.ninePanelContract = "true";
     host.dataset.overlapProofBuild = BUILD;
     const title = host.querySelector(".saesh-title");
     const sub = host.querySelector(".saesh-sub");
-    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · EIGHT-PANEL BOUND · ${BUILD}`;
-    if (sub) sub.textContent = "Même cycle Evidence pour 8 panneaux · preuve T0↔fenêtre ajoutée en lecture seule.";
+    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · NINE-PANEL BOUND · ${BUILD}`;
+    if (sub) sub.textContent = "Même cycle Evidence pour 9 panneaux · mémoire durable intégrée au host stable.";
     if (a.nextElementSibling !== host) a.insertAdjacentElement("afterend", host);
     return host;
   }
@@ -163,10 +171,10 @@
 
   function renderOwners() {
     for (const spec of PANEL_SPECS) {
-      const api = globalThis[spec.api];
-      if (typeof api?.render !== "function") continue;
+      const call = ownerMethod(spec);
+      if (!call) continue;
       try {
-        api.render();
+        call(spec.method === "refresh" ? "stable-host-mount" : undefined);
         const root = byId(spec.id);
         if (root) {
           root.classList?.remove("saeds-placeholder");
@@ -186,7 +194,7 @@
       root.dataset.lifecycleHostBuild = BUILD;
       root.dataset.outsideLegacyDossier = "true";
       root.dataset.integratedBy = BUILD;
-      if (typeof globalThis[spec.api]?.render === "function" && root.classList?.contains("saeds-placeholder") !== true) hydrated += 1;
+      if (ownerMethod(spec) && root.classList?.contains("saeds-placeholder") !== true) hydrated += 1;
       present += 1;
     }
     return {present, hydrated};
@@ -199,8 +207,10 @@
       root = document.createElement("section");
       root.id = OVERLAP_ID;
     }
+    const durable = byId("strategyAG3DurableDecisionEvidence");
     const capture = byId("strategyAG3ProspectiveT0Capture");
-    if (capture?.parentElement === host) capture.insertAdjacentElement("afterend", root);
+    if (durable?.parentElement === host) durable.insertAdjacentElement("afterend", root);
+    else if (capture?.parentElement === host) capture.insertAdjacentElement("afterend", root);
     else if (root.parentElement !== host) host.appendChild(root);
 
     const p = t0WindowProof();
@@ -232,20 +242,21 @@
       return {
         id: spec.id,
         api: spec.api,
+        method: spec.method,
         present: !!node,
         parent: node?.parentElement?.id || null,
         stable: !!host && node?.parentElement === host,
         hydrated: !!node && node.classList?.contains("saeds-placeholder") !== true
       };
     });
-    const missingApis = PANEL_SPECS.filter(spec => typeof globalThis[spec.api]?.render !== "function").map(spec => spec.api);
+    const missingApis = PANEL_SPECS.filter(spec => !ownerMethod(spec)).map(spec => `${spec.api}.${spec.method}`);
     return {
-      schema: "agent_crypto_strategy_a_g3_evidence_eight_panel_overlap_proof_v1",
+      schema: "agent_crypto_strategy_a_g3_evidence_nine_panel_durable_v1",
       build: BUILD,
       dossier_present: !!dossier,
       host_present: !!host,
       lifecycle_bound: host?.dataset?.lifecycleBound === "true",
-      eight_panel_contract: host?.dataset?.eightPanelContract === "true",
+      nine_panel_contract: host?.dataset?.ninePanelContract === "true",
       mount_count: mountCount,
       mounting,
       bootstrap_bound: bootstrapBound,
@@ -257,6 +268,7 @@
       missing_apis: missingApis,
       panels,
       overlap_proof: t0WindowProof(),
+      durable_panel_present: !!byId("strategyAG3DurableDecisionEvidence"),
       legacy_dossier_owner_unchanged: true,
       recurring_timer: false,
       observer: false,
@@ -332,7 +344,7 @@
 
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
     build: BUILD,
-    owner: "strategy-a-g3-evidence-eight-panel-overlap-proof",
+    owner: "strategy-a-g3-evidence-nine-panel-durable-binding",
     dossier_id: DOSSIER_ID,
     host_id: HOST_ID,
     status_id: STATUS_ID,
@@ -344,7 +356,7 @@
     t0_window_proof: t0WindowProof,
     render_overlap_proof: renderOverlapProof,
     lifecycle_bound: true,
-    eight_panel_contract: true,
+    nine_panel_contract: true,
     bounded_bootstrap_retry: true,
     dossier_hook_installed: false,
     recurring_timer: false,
@@ -362,6 +374,8 @@
     document.addEventListener("agent-crypto:evidence-data-changed", schedule);
     document.addEventListener("erith:system-hydrated", schedule,{passive:true});
     document.addEventListener("agent-crypto:runtime-modules-ready", schedule,{once:true});
+    document.addEventListener("agent-crypto:g3-durable-evidence-ready", schedule);
+    document.addEventListener("agent-crypto:g3-durable-evidence-written", schedule);
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule,{once:true});
     else schedule();
     window.addEventListener("load", schedule,{once:true});
