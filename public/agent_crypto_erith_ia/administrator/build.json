@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.211",
+  "build": "40.6.212",
   "engine": "38.15.11",
-  "release": "STRATEGY A G3 DURABLE DECISION EVIDENCE · ASSET REBIND",
+  "release": "STRATEGY A G3 DURABLE DECISION EVIDENCE · NINE-PANEL HOST BINDING",
   "published": true,
-  "status": "strategy_a_g3_durable_decision_evidence_asset_rebind_406211",
-  "parent_build": "40.6.210",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.211",
-  "administrator_build": "40.6.211",
-  "build_label": "Build 40.6.211 · Administrator",
+  "status": "strategy_a_g3_durable_evidence_nine_panel_binding_406212",
+  "parent_build": "40.6.211",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.212",
+  "administrator_build": "40.6.212",
+  "build_label": "Build 40.6.212 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,24 +30,23 @@
   "canonical_entry_modified": false,
   "entry": "./",
   "terrain_verified": [
-    "Firefox/export report confirms Build 40.6.210 with Market Core 38.15.11.",
-    "The 40.6.210 export still shows the 40.6.206 prospective panel with Prospective rows 0 and the 40.6.208 overlap proof with Certified T0 NON PROUVÉ.",
-    "The expected human block DÉCISION PAPER · MÉMOIRE DURABLE · 40.6.210 is absent from the export.",
-    "Therefore the durable evidence asset was not observed as active in that terrain load; no claim is made that IndexedDB persistence itself failed."
+    "Firefox/export report confirms Build 40.6.211 with Market Core 38.15.11.",
+    "The 40.6.211 export still contains the stable G3 host and the legacy prospective/overlap panels but contains no DÉCISION PAPER · MÉMOIRE DURABLE block.",
+    "Therefore durable persistence itself is not yet judged; the missing UI/export integration is the active defect."
   ],
   "terrain_pending": [
-    "Reload Administrator until Build 40.6.211 is visible.",
-    "Verify the human block DÉCISION PAPER · MÉMOIRE DURABLE · 40.6.211 appears and shows MÉMOIRE DURABLE OK.",
-    "If it shows zero conserved decisions, record exactly one new PAPER decision with the visible button ENREGISTRER LA PROCHAINE DÉCISION PAPER.",
-    "After the block shows at least one conserved decision, reload once and export the markdown report.",
-    "Expected proof after reload: APRÈS RECHARGEMENT OUI and the same conserved decision still present."
+    "Reload Administrator until Build 40.6.212 is visible.",
+    "Export the markdown report without recording another PAPER decision yet.",
+    "Expected host truth: 9 / 9 PANNEAUX · 9 HYDRATÉ(S).",
+    "Expected durable block: DÉCISION PAPER · MÉMOIRE DURABLE · 40.6.211 or newer asset identity, with an explicit memory state.",
+    "If the ninth panel remains MODULE EN ATTENTE, the report will explicitly prove the durable API is unavailable instead of hiding the failure."
   ],
   "release_notes": [
-    "40.6.211 is a minimal asset rebind: the durable evidence module is republished first with BUILD 40.6.211, then build.json is advanced so the canonical loader stamps all local JS/CSS with release=40.6.211.",
-    "This forces a distinct browser/GitHub Pages asset identity without asking the operator to clear Firefox caches manually.",
+    "Promotes strategyAG3DurableDecisionEvidence into the same stable supplemental Evidence host as the eight terrain-proven G3 panels.",
+    "The integrator now accepts owner-specific render methods: ordinary panels use render(), durable evidence uses refresh().",
+    "Evidence lifecycle truth is aligned to nine stable panels and listens to durable-ready/durable-written events.",
+    "A missing durable API now leaves an explicit ninth-panel placeholder in the export rather than a silent absence.",
     "No Strategy A threshold, Risk Governor, PAPER lifecycle, Market Core, Atlas, Oracle, Aether, Lecture Technique, Gate state or real-order path is changed.",
-    "The IndexedDB database remains agent_crypto_erith_ia_g3_evidence_v1 / prospective_t0, bounded to 64 prospective evidence rows.",
-    "No recurring timer, MutationObserver or business-network request is added.",
     "PAPER ONLY. G3 PENDING. G9 LOCKED."
   ],
   "strategy_a_canonical_evidence_wiring": {
@@ -76,6 +75,7 @@
     "t0_overlap_live_refresh_in": "40.6.209",
     "durable_decision_evidence_in": "40.6.210",
     "durable_evidence_asset_rebind_in": "40.6.211",
+    "durable_evidence_nine_panel_binding_in": "40.6.212",
     "legacy_dossier_id": "strategyADossier",
     "stable_host_id": "strategyAEvidenceSupplements",
     "overlap_proof_id": "strategyAG3T0WindowOverlapProof",
@@ -85,7 +85,7 @@
     "lifecycle_owner": "js/strategy-a-evidence-lifecycle-truth.js",
     "prospective_t0_owner": "js/strategy-a-g3-prospective-t0-capture.js",
     "durable_evidence_owner": "js/strategy-a-g3-overlap-live-refresh.js",
-    "structured_panel_count": 8,
+    "structured_panel_count": 9,
     "durable_storage_backend": "IndexedDB",
     "durable_storage_db": "agent_crypto_erith_ia_g3_evidence_v1",
     "durable_storage_store": "prospective_t0",
@@ -108,7 +108,7 @@
     "paper_only": true,
     "g3": "PENDING",
     "g9": "LOCKED",
-    "firefox_terrain_proof": "PENDING_406211_DURABLE_ASSET_REBIND"
+    "firefox_terrain_proof": "PENDING_406212_NINE_PANEL_DURABLE_HOST"
   },
   "paper_only": true,
   "profitability_claim": false,
