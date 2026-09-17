@@ -1,6 +1,7 @@
 name: Atlas News Sentinel World-to-Market Live Feed
-# 40.4.292 — French-first source routing preserved + bilingual FR/EN Aether operator lane.
-# Native FR remains preferred; qualified English evidence stays explicit [EN]. No Argos, paid provider or external secret.
+# 40.6.233 — Current News/Aether consumer contract rebind.
+# Producer data contract remains 40.4.291 / atlas_news_native_fr_v1.
+# Consumer validation follows current semantic owners instead of historical suffixed function names.
 
 on:
   workflow_dispatch:
@@ -73,19 +74,35 @@ jobs:
           print(f"NEWS NATIVE FR 40.4.291 PASS · events={len(events)} · native_fr={summary.get('accepted_french')} · en_archive={summary.get('archive_english')}")
           PY
 
-      - name: Validate Administrator bilingual operator consumer lock
+      - name: Validate current Administrator News/Aether operator consumer contract
         run: |
           python - <<'PY'
           from pathlib import Path
           app=Path("public/agent_crypto_erith_ia/administrator/app.js").read_text(encoding="utf-8")
           aether=Path("public/agent_crypto_erith_ia/administrator/js/aether.js").read_text(encoding="utf-8")
-          required_app=["atlas_news_native_fr_v1", "40.4.291", "news_feed_cache_v5_404291", "machine_translation: false"]
-          required_aether=["aetherNewsOperatorReady404292", 'news_bilingual_operator_lane_build:"40.4.292"', "news_feed_click_opens_news_sentinel:true", "news_machine_translation:false"]
-          forbidden_aether=[".filter(aetherNewsFrenchOperatorReady404290)"]
+          required_app=[
+              "atlas_news_native_fr_v1",
+              "40.4.291",
+              "news_feed_cache_v5_404291",
+              "machine_translation: false",
+          ]
+          required_aether=[
+              "function aetherNewsContractReady(event)",
+              "function aetherNewsOperatorReady(event)",
+              "function aetherVeilleOperatorEligible(event)",
+              ".filter(aetherNewsContractReady)",
+              ".filter(aetherNewsOperatorReady)",
+              "return cryptoAnchor||macroAnchor;",
+          ]
+          forbidden_aether=[
+              "aetherNewsOperatorReady404292",
+              ".filter(aetherNewsFrenchOperatorReady404290)",
+          ]
           missing=[x for x in required_app if x not in app]+[x for x in required_aether if x not in aether]
           forbidden=[x for x in forbidden_aether if x in aether]
-          if missing or forbidden: raise SystemExit(f"Administrator bilingual News consumer failed: missing={missing} forbidden={forbidden}")
-          print("ADMINISTRATOR NEWS FR+EN OPERATOR CONSUMER 40.4.292 PASS")
+          if missing or forbidden:
+              raise SystemExit(f"Administrator current News consumer failed: missing={missing} forbidden={forbidden}")
+          print("ADMINISTRATOR NEWS/AETHER CURRENT CONSUMER 40.6.233 PASS")
           PY
 
       - name: Commit News Sentinel archive
