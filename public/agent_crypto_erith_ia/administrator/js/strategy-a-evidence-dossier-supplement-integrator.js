@@ -1,15 +1,15 @@
-/* Agent-Crypto @erith.IA — 40.6.212 G3 NINE-PANEL DURABLE EVIDENCE BINDING
-   Terrain 40.6.211 proved that the published build loaded but the durable-decision
-   status block was still absent from the exported Evidence Dossier. The durable
-   owner is therefore promoted into the same stable supplemental host/lifecycle as
-   the eight already terrain-proven G3 panels. If the durable API is unavailable,
-   the host keeps an explicit placeholder instead of silently hiding the failure.
-   No Strategy A business logic, Gate promotion, market data, recurring timer,
-   MutationObserver, network/order path or historical backfill is added. */
+/* Agent-Crypto @erith.IA — 40.6.213 G3 TRUE HYDRATION CHECK
+   Terrain 40.6.212 proved the stable Evidence host and durable-memory panel are visible,
+   but the host falsely reported 9/9 hydrated while seven panels still displayed
+   MODULE EN ATTENTE. This build makes hydration truth content-based: a panel is
+   hydrated only when its owner API exists and the placeholder marker/text has been
+   replaced by real rendered content. Bootstrap settles only when all nine panels are
+   genuinely hydrated. No Strategy A business logic, Gate promotion, market data,
+   recurring timer, MutationObserver, network/order path or historical backfill is added. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.212";
+  const BUILD = "40.6.213";
   const DOSSIER_ID = "strategyADossier";
   const AUDIT_ID = "strategyAEvidenceGateAudit";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
@@ -45,6 +45,15 @@
     const api = globalThis[spec.api];
     const method = String(spec.method || "render");
     return typeof api?.[method] === "function" ? api[method].bind(api) : null;
+  };
+  const placeholderText = node => /MODULE EN ATTENTE/i.test(String(node?.textContent || ""));
+  const panelHydrated = spec => {
+    const node = byId(spec.id);
+    if (!node) return false;
+    if (!ownerMethod(spec)) return false;
+    if (node.classList?.contains("saeds-placeholder")) return false;
+    if (placeholderText(node)) return false;
+    return true;
   };
 
   function anchor() {
@@ -141,17 +150,18 @@
     if (!host) {
       host = document.createElement("section");
       host.id = HOST_ID;
-      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · NINE-PANEL BOUND · ${BUILD}</div><div class="saesh-sub">Même cycle Evidence pour 9 panneaux · mémoire durable intégrée au host stable.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
+      host.innerHTML = `<div class="saesh-head"><div><div class="saesh-title">STRATEGY A · G3 EVIDENCE SUPPLEMENTS · TRUE HYDRATION · ${BUILD}</div><div class="saesh-sub">9 panneaux · un panneau n’est hydraté que lorsque son contenu réel a remplacé le placeholder.</div></div><div id="${STATUS_ID}" class="saesh-state" data-saesh-state>0 / ${PANEL_SPECS.length} PANNEAUX</div></div>`;
     }
     host.dataset.build = BUILD;
     host.dataset.stableSibling = "true";
     host.dataset.lifecycleBound = "true";
     host.dataset.ninePanelContract = "true";
+    host.dataset.trueHydration = "true";
     host.dataset.overlapProofBuild = BUILD;
     const title = host.querySelector(".saesh-title");
     const sub = host.querySelector(".saesh-sub");
-    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · NINE-PANEL BOUND · ${BUILD}`;
-    if (sub) sub.textContent = "Même cycle Evidence pour 9 panneaux · mémoire durable intégrée au host stable.";
+    if (title) title.textContent = `STRATEGY A · G3 EVIDENCE SUPPLEMENTS · TRUE HYDRATION · ${BUILD}`;
+    if (sub) sub.textContent = "9 panneaux · un panneau n’est hydraté que lorsque son contenu réel a remplacé le placeholder.";
     if (a.nextElementSibling !== host) a.insertAdjacentElement("afterend", host);
     return host;
   }
@@ -176,9 +186,14 @@
       try {
         call(spec.method === "refresh" ? "stable-host-mount" : undefined);
         const root = byId(spec.id);
-        if (root) {
+        if (root && !placeholderText(root)) {
           root.classList?.remove("saeds-placeholder");
           root.dataset.hydratedBy = spec.api;
+          root.dataset.hydratedTruthBuild = BUILD;
+        } else if (root) {
+          root.classList?.add("saeds-placeholder");
+          delete root.dataset.hydratedBy;
+          root.dataset.hydratedTruthBuild = BUILD;
         }
       } catch (_) {}
     }
@@ -194,7 +209,8 @@
       root.dataset.lifecycleHostBuild = BUILD;
       root.dataset.outsideLegacyDossier = "true";
       root.dataset.integratedBy = BUILD;
-      if (ownerMethod(spec) && root.classList?.contains("saeds-placeholder") !== true) hydrated += 1;
+      root.dataset.hydratedTruth = panelHydrated(spec) ? "true" : "false";
+      if (panelHydrated(spec)) hydrated += 1;
       present += 1;
     }
     return {present, hydrated};
@@ -246,17 +262,19 @@
         present: !!node,
         parent: node?.parentElement?.id || null,
         stable: !!host && node?.parentElement === host,
-        hydrated: !!node && node.classList?.contains("saeds-placeholder") !== true
+        hydrated: panelHydrated(spec),
+        placeholder_text: placeholderText(node)
       };
     });
     const missingApis = PANEL_SPECS.filter(spec => !ownerMethod(spec)).map(spec => `${spec.api}.${spec.method}`);
     return {
-      schema: "agent_crypto_strategy_a_g3_evidence_nine_panel_durable_v1",
+      schema: "agent_crypto_strategy_a_g3_evidence_true_hydration_v1",
       build: BUILD,
       dossier_present: !!dossier,
       host_present: !!host,
       lifecycle_bound: host?.dataset?.lifecycleBound === "true",
       nine_panel_contract: host?.dataset?.ninePanelContract === "true",
+      true_hydration_contract: true,
       mount_count: mountCount,
       mounting,
       bootstrap_bound: bootstrapBound,
@@ -268,11 +286,9 @@
       missing_apis: missingApis,
       panels,
       overlap_proof: t0WindowProof(),
-      durable_panel_present: !!byId("strategyAG3DurableDecisionEvidence"),
       legacy_dossier_owner_unchanged: true,
       recurring_timer: false,
       observer: false,
-      storage_write: false,
       network: false,
       real_order: false,
       paper_only: true,
@@ -313,6 +329,9 @@
       if (host.dataset.complete === "true") {
         bootstrapSettled = true;
         clearBootstrapListeners();
+      } else {
+        bootstrapSettled = false;
+        bindBootstrapLifecycle();
       }
       return {...state,mounted:true,complete:host.dataset.complete === "true",overlap};
     } finally {
@@ -331,7 +350,7 @@
   function bootstrapAttempt() {
     if (bootstrapSettled) return;
     const result = mount();
-    if (result?.mounted !== true) schedule();
+    if (result?.mounted !== true || result?.complete !== true) schedule();
   }
 
   function bindBootstrapLifecycle() {
@@ -344,7 +363,7 @@
 
   globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator = Object.freeze({
     build: BUILD,
-    owner: "strategy-a-g3-evidence-nine-panel-durable-binding",
+    owner: "strategy-a-g3-evidence-true-hydration-check",
     dossier_id: DOSSIER_ID,
     host_id: HOST_ID,
     status_id: STATUS_ID,
@@ -355,13 +374,17 @@
     schedule,
     t0_window_proof: t0WindowProof,
     render_overlap_proof: renderOverlapProof,
+    panel_hydrated: id => {
+      const spec = PANEL_SPECS.find(x => x.id === id);
+      return spec ? panelHydrated(spec) : false;
+    },
     lifecycle_bound: true,
     nine_panel_contract: true,
+    true_hydration_contract: true,
     bounded_bootstrap_retry: true,
     dossier_hook_installed: false,
     recurring_timer: false,
     observer: false,
-    storage_write: false,
     network: false,
     real_order: false,
     paper_only: true,
@@ -372,10 +395,10 @@
   if (typeof document !== "undefined") {
     bindBootstrapLifecycle();
     document.addEventListener("agent-crypto:evidence-data-changed", schedule);
-    document.addEventListener("erith:system-hydrated", schedule,{passive:true});
-    document.addEventListener("agent-crypto:runtime-modules-ready", schedule,{once:true});
     document.addEventListener("agent-crypto:g3-durable-evidence-ready", schedule);
     document.addEventListener("agent-crypto:g3-durable-evidence-written", schedule);
+    document.addEventListener("erith:system-hydrated", schedule,{passive:true});
+    document.addEventListener("agent-crypto:runtime-modules-ready", schedule,{once:true});
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule,{once:true});
     else schedule();
     window.addEventListener("load", schedule,{once:true});
