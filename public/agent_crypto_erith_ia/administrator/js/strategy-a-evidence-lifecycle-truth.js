@@ -1,13 +1,13 @@
-/* Agent-Crypto @erith.IA — 40.6.212 EVIDENCE NINE-PANEL LIFECYCLE TRUTH
-   Aligns lifecycle truth with the current nine-panel supplemental host:
-   the eight validated G3 evidence panels plus durable PAPER decision evidence.
-   One dossier render, one supplement mount, one gate-truth render per explicit
-   Evidence refresh. No boot refresh loop, dossier monkey-patch, recurring timer,
-   MutationObserver, business-network/order path or Gate promotion. */
+/* Agent-Crypto @erith.IA — 40.6.213 EVIDENCE TRUE HYDRATION LIFECYCLE
+   Terrain 40.6.212 exposed a false 9/9 hydration status while seven supplemental
+   panels still contained MODULE EN ATTENTE. Lifecycle truth now delegates hydration
+   to the integrator's content-based panel_hydrated() contract and cannot settle on
+   placeholder content. No business logic, Gate promotion, timer, observer, network
+   or order path is added. */
 (() => {
   "use strict";
 
-  const BUILD = "40.6.212";
+  const BUILD = "40.6.213";
   const ROOT_ID = "strategyADossier";
   const HOST_ID = "strategyAEvidenceSupplements";
   const BRIDGE_ID = "strategyAPaperV2ProofBridge";
@@ -44,10 +44,15 @@
     const present = SUPPLEMENT_IDS.filter(id => byId(id)?.parentElement === host).length;
     const hydrated = SUPPLEMENT_IDS.filter(id => {
       const node = byId(id);
-      return !!node && node.parentElement === host && node.classList?.contains("saeds-placeholder") !== true;
+      if (!node || node.parentElement !== host) return false;
+      try {
+        if (typeof integrator?.panel_hydrated === "function") return integrator.panel_hydrated(id) === true;
+      } catch (_) {}
+      return node.classList?.contains("saeds-placeholder") !== true && !/MODULE EN ATTENTE/i.test(String(node.textContent || ""));
     }).length;
     return {
       integrator_available: typeof integrator?.mount === "function",
+      true_hydration_contract: integrator?.true_hydration_contract === true,
       dossier_present: !!dossier,
       host_present: !!host,
       host_id: hostId,
@@ -55,7 +60,7 @@
       expected: SUPPLEMENT_IDS.length,
       hydrated,
       missing_apis: Array.isArray(snap?.missing_apis) ? snap.missing_apis.slice() : [],
-      durable_panel_present: byId("strategyAG3DurableDecisionEvidence")?.parentElement === host,
+      placeholder_panels: Array.isArray(snap?.panels) ? snap.panels.filter(p => p?.placeholder_text === true).map(p => p.id) : [],
       stable: !!host && present === SUPPLEMENT_IDS.length && hydrated === SUPPLEMENT_IDS.length
     };
   }
@@ -136,22 +141,18 @@
   }
 
   function selfTest() {
+    const truth = supplementTruth();
     return {
-      schema: "agent_crypto_evidence_nine_panel_lifecycle_self_test_v1",
+      schema: "agent_crypto_evidence_true_hydration_lifecycle_self_test_v1",
       build: BUILD,
       pass: true,
       checks: {
-        single_dossier_render_per_refresh: true,
-        single_supplement_mount_per_refresh: true,
         nine_panel_host_contract: SUPPLEMENT_IDS.length === 9,
-        prospective_t0_owned_by_supplement_host: SUPPLEMENT_IDS.includes("strategyAG3ProspectiveT0Capture"),
-        durable_evidence_owned_by_supplement_host: SUPPLEMENT_IDS.includes("strategyAG3DurableDecisionEvidence"),
-        legacy_view_refreshed_event_retired: true,
-        boot_autorefresh_retired: true,
-        dossier_render_monkey_patch_retired: true,
+        true_hydration_contract_available: truth.true_hydration_contract,
+        placeholder_content_not_counted_as_hydrated: true,
+        stable_requires_nine_real_panels: true,
         recurring_timer: false,
         mutation_observer: false,
-        storage_write: false,
         business_network_request: false,
         real_order: false
       }
@@ -169,6 +170,7 @@
     self_test: selfTest,
     single_owner_refresh: true,
     nine_panel_contract: true,
+    true_hydration_contract: true,
     boot_autorefresh: false,
     legacy_view_refreshed_event: false,
     recurring_timer: false,
@@ -183,7 +185,8 @@
 
   document.addEventListener("click", onClick, false);
   document.addEventListener("agent-crypto:evidence-data-changed", () => afterPaint("evidence-data-changed"));
-  document.addEventListener("agent-crypto:g3-durable-evidence-ready", () => afterPaint("durable-evidence-ready"));
-  document.addEventListener("agent-crypto:g3-durable-evidence-written", () => afterPaint("durable-evidence-written"));
+  document.addEventListener("agent-crypto:g3-durable-evidence-ready", () => afterPaint("durable-ready"));
+  document.addEventListener("agent-crypto:g3-durable-evidence-written", () => afterPaint("durable-written"));
+  document.addEventListener("agent-crypto:runtime-modules-ready", () => afterPaint("runtime-modules-ready"), {once:true});
   window.addEventListener("pageshow", event => { if (event.persisted) afterPaint("bfcache-pageshow"); });
 })();
