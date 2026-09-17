@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.210 G3 DURABLE DECISION EVIDENCE
+/* Agent-Crypto @erith.IA — 40.6.211 G3 DURABLE DECISION EVIDENCE · ASSET REBIND
    Terrain 40.6.209 proved that an operator-created prospective PAPER decision could
    exist in-session, then disappear after a normal reload. This module keeps the
    existing capture path untouched and adds a durable IndexedDB evidence mirror.
@@ -9,7 +9,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.210";
+  const BUILD = "40.6.211";
   const OWNER = "strategy-a-g3-durable-decision-evidence";
   const BUTTON_ID = "strategyAG3ProspectiveT0CaptureRun";
   const HOST_ID = "strategyAEvidenceSupplements";
@@ -356,6 +356,8 @@
     const target = event?.target;
     if (!(target instanceof Element)) return;
     if (!target.closest(`#${BUTTON_ID}`)) return;
+    // The existing capture handler runs on the button itself before this bubble listener.
+    // Persist the resulting prospective evidence after that synchronous capture completes.
     queueMicrotask(() => { void persistCurrentCapture("operator-paper-decision"); });
   }
 
