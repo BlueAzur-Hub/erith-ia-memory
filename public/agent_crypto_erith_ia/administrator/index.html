@@ -26,7 +26,6 @@
     const MANIFEST_URL = meta("agent-crypto-published-manifest") || "./build.json";
     const STORAGE_QUOTA_MODULE = "./js/storage-quota-truth-406239.js";
     const COMMAND_CENTER_ROUTER_MODULE = "./js/command-center-routing-406240.js";
-    const DECISION_INTELLIGENCE_CURRENT_TRUTH_MODULE = "./js/decision-intelligence-current-truth-406243.js";
 
     const EVIDENCE_MODULES = Object.freeze([
       "./js/strategy-a-evidence-lifecycle-truth.js",
@@ -97,12 +96,6 @@
       if(/<head>/i.test(html))return html.replace(/<head>/i,`<head>\n  ${tag}`);
       throw new Error("runtime-shell.html sans <head>");
     }
-    function injectDecisionIntelligenceCurrentTruth(html,truth){
-      if(html.includes('data-agent-crypto-decision-intelligence-current-truth="'))return html;
-      const tag=`<script defer src="${DECISION_INTELLIGENCE_CURRENT_TRUTH_MODULE}" data-agent-crypto-decision-intelligence-current-truth="${truth.build}"><\/script>`;
-      if(/<head>/i.test(html))return html.replace(/<head>/i,`<head>\n  ${tag}`);
-      throw new Error("runtime-shell.html sans <head>");
-    }
     function injectCanonicalEvidence(html,truth){
       if(!truth.canonical_evidence_wiring)return html;
       if(html.includes('data-agent-crypto-canonical-evidence-modules="'))return html;
@@ -138,7 +131,7 @@
       <\/script>`;
       return html.replace(/<\/body>/i,`${moduleTags}\n${presentationTags}\n${receipt}\n</body>`);
     }
-    function patchShell(raw,truth){let out=String(raw||"");if(!/^\s*<!doctype html>/i.test(out))throw new Error("runtime-shell.html invalide");out=out.replace(/administrator-build-\d+\.\d+\.\d+/g,`administrator-build-${truth.build}`);out=out.replace(/market-core-v2\.0-alpha-build-\d+\.\d+\.\d+/g,`market-core-v2.0-alpha-build-${truth.build}`);out=replaceMeta(out,"administrator-build",truth.build);out=replaceMeta(out,"atlas-build",truth.build);out=replaceMeta(out,"atlas-engine-build",truth.engine);out=replaceMeta(out,"agent-crypto-boot-build",truth.build);out=replaceMeta(out,"agent-crypto-loaded-build",truth.build);out=replaceMeta(out,"agent-crypto-version-owner","canonical-entry");out=replaceMeta(out,"agent-crypto-published-manifest",MANIFEST_URL);out=out.replace(/<title>[\s\S]*?<\/title>/i,`<title>Agent-Crypto @erith.IA — Build ${truth.build} · Administrator</title>`);out=out.replace(/(<button\b[^>]*\bid=["']atlasVersionTruthControl["'][^>]*\baria-label=["'])[^"']*(["'])/i,`$1Version Agent-Crypto chargée : Build ${truth.build}, mode Administrator$2`);out=out.replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,`<span id="atlasVersionTruthText">Build ${truth.build} · Administrator</span>`);out=out.replace(/<span\s+id=["']footerRelease["'][^>]*>[\s\S]*?<\/span>/i,`<span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build ${truth.build} · Version : Parker Lewis Can't Lose</span>`);out=out.replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi,`AGENT-CRYPTO ${truth.build} · ADMINISTRATOR`);out=injectStorageQuotaTruth(out,truth);out=injectCommandCenterRouter(out,truth);out=injectDecisionIntelligenceCurrentTruth(out,truth);out=injectCanonicalEvidence(out,truth);return stampLocalAssets(out,truth.build);}
+    function patchShell(raw,truth){let out=String(raw||"");if(!/^\s*<!doctype html>/i.test(out))throw new Error("runtime-shell.html invalide");out=out.replace(/administrator-build-\d+\.\d+\.\d+/g,`administrator-build-${truth.build}`);out=out.replace(/market-core-v2\.0-alpha-build-\d+\.\d+\.\d+/g,`market-core-v2.0-alpha-build-${truth.build}`);out=replaceMeta(out,"administrator-build",truth.build);out=replaceMeta(out,"atlas-build",truth.build);out=replaceMeta(out,"atlas-engine-build",truth.engine);out=replaceMeta(out,"agent-crypto-boot-build",truth.build);out=replaceMeta(out,"agent-crypto-loaded-build",truth.build);out=replaceMeta(out,"agent-crypto-version-owner","canonical-entry");out=replaceMeta(out,"agent-crypto-published-manifest",MANIFEST_URL);out=out.replace(/<title>[\s\S]*?<\/title>/i,`<title>Agent-Crypto @erith.IA — Build ${truth.build} · Administrator</title>`);out=out.replace(/(<button\b[^>]*\bid=["']atlasVersionTruthControl["'][^>]*\baria-label=["'])[^"']*(["'])/i,`$1Version Agent-Crypto chargée : Build ${truth.build}, mode Administrator$2`);out=out.replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,`<span id="atlasVersionTruthText">Build ${truth.build} · Administrator</span>`);out=out.replace(/<span\s+id=["']footerRelease["'][^>]*>[\s\S]*?<\/span>/i,`<span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build ${truth.build} · Version : Parker Lewis Can't Lose</span>`);out=out.replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi,`AGENT-CRYPTO ${truth.build} · ADMINISTRATOR`);out=injectStorageQuotaTruth(out,truth);out=injectCommandCenterRouter(out,truth);out=injectCanonicalEvidence(out,truth);return stampLocalAssets(out,truth.build);}
     async function fetchShell(){const response=await fetch(`${SHELL_URL}?release=${encodeURIComponent(LOADED_BUILD)}&t=${Date.now()}`,{cache:"no-store",credentials:"same-origin"});if(!response.ok)throw new Error(`runtime-shell.html: HTTP ${response.status}`);return response.text();}
     async function boot(){document.documentElement.dataset.agentCryptoBoot="loading";try{const truth=await canonicalIdentity();const shell=patchShell(await fetchShell(),truth);globalThis.AgentCryptoBootTruth=truth;globalThis.AGENT_CRYPTO_EMBEDDED_BUILD=truth.build;globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD=truth.build;globalThis.AGENT_CRYPTO_BUILD=truth.build;globalThis.ATLAS_ENGINE_BUILD=truth.engine;document.documentElement.dataset.agentCryptoLoadedBuild=truth.build;document.documentElement.dataset.agentCryptoBoot="ready";document.open();document.write(shell);document.close();}catch(error){console.error("[Agent-Crypto boot]",error);fail(String(error?.message||error||"initialisation impossible"));}}
     void boot();
