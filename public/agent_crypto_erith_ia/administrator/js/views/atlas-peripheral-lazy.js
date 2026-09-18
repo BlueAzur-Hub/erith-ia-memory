@@ -193,11 +193,7 @@
     fetch_count:()=>fetchCount,hydrated:()=>[...hydrated],current_audit_hydrated:()=>[...auditHydrated],book_knowledge_hydrated:()=>bookKnowledgeHydrated,
     runtime_owner:"app.js",auto_reader_runtime_preserved:true,auto_reader_collection_boot_preserved:true,github_auto_load_preserved:true,current_pipeline_runtime_preserved:true,current_audit_read_only_presentation:true,
     terminal_success_event:"erith:presentation-resident",terminal_failure_event:"erith:presentation-residency-error",source_retry_after_transport_failure:true,release_bound_source:true,
-    new_timer:false,new_observer:false,new_scheduler:false,storage_owner_added:false,
-    attach,
-    ensureBody:hydrate,
-    ensureAudit:hydrateAudit,
-    ensureBookKnowledge:hydrateBookKnowledge
+    new_timer:false,new_observer:false,new_scheduler:false,storage_owner_added:false,attach
   });
   globalThis.AgentCryptoAtlasColdRouter=contract;
   globalThis.AgentCryptoAtlasPeripheralLazy=contract;
