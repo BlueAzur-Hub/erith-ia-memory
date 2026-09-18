@@ -1,9 +1,9 @@
 /* Agent-Crypto @erith.IA — Decision Intelligence Acceptance Matrix
-   Build 40.5.20 + 40.6.248. Integration acceptance over existing Event→Memory→Analogs→Regime→Calibration→Survival owners.
+   Build 40.6.250 stability rollback · behavior source 40.6.247. Integration acceptance over existing Event→Memory→Analogs→Regime→Calibration→Survival owners.
    No model mutation, no network, no timer, no order. */
 (() => {
   "use strict";
-  const BUILD="40.6.248",SCHEMA="atlas_decision_intelligence_acceptance_matrix_v1";
+  const BUILD="40.6.250",SCHEMA="atlas_decision_intelligence_acceptance_matrix_v1";
   const owner=(name)=>globalThis[name]||null;
   const REQUIRED=Object.freeze([
     ["Event Intelligence","AtlasEventIntelligence"],
@@ -47,17 +47,10 @@
       {stage:"Calibration",available:!!calibration&&!calibration?.__error,status:calibration?.status||(!currentEvent?"NOT_APPLICABLE":"NO_OUTPUT")},
       {stage:"Capital Survival",available:!!survival&&!survival?.__error,status:survival?.risk_gate||survival?.status||"NO_OUTPUT"}
     ];
-    const versionOwner=owner("ErithVersionTruth");
-    const version=versionOwner?.snapshot?.()||null;
-    const falsePropagationCompatible=!version||!("false_propagation" in version)||version.false_propagation===false;
-    const versionLock=!!version
-      && versionOwner?.single_visible_owner===true
-      && versionOwner?.build_json_authority===true
-      && versionOwner?.version_branching===false
-      && versionOwner?.reload_current_build===false
-      && falsePropagationCompatible;
+    const version=owner("ErithVersionTruth")?.snapshot?.()||null;
+    const versionLock=!!version && version.false_propagation===false && owner("ErithVersionTruth")?.single_visible_owner===true;
     const architecturePass=ownerPass&&safetyPass&&versionLock;
-    return Object.freeze({schema:SCHEMA,build:BUILD,status:architecturePass?"PASS":"FAIL",architecture_pass:architecturePass,owners,safety_pass:safetyPass,version_truth:{available:!!version,single_visible_owner:versionOwner?.single_visible_owner===true,build_json_authority:versionOwner?.build_json_authority===true,version_branching_disabled:versionOwner?.version_branching===false,reload_current_build_disabled:versionOwner?.reload_current_build===false,false_propagation_legacy_compatible:falsePropagationCompatible,loaded:version?.loaded||null,published:version?.published||null},current_data_status:dataState,runtime,acceptance_scope:"architecture_and_safety_contracts; data sufficiency reported separately",models_modified:false,new_source:false,new_fetch:false,new_timer:false,new_observer:false,storage_write:false,automatic_order:false,financial_advice:false});
+    return Object.freeze({schema:SCHEMA,build:BUILD,status:architecturePass?"PASS":"FAIL",architecture_pass:architecturePass,owners,safety_pass:safetyPass,version_truth:{available:!!version,single_visible_owner:owner("ErithVersionTruth")?.single_visible_owner===true,false_propagation_locked:version?.false_propagation===false,loaded:version?.loaded||null,published:version?.published||null},current_data_status:dataState,runtime,acceptance_scope:"architecture_and_safety_contracts; data sufficiency reported separately",models_modified:false,new_source:false,new_fetch:false,new_timer:false,new_observer:false,storage_write:false,automatic_order:false,financial_advice:false});
   }
   globalThis.AtlasDecisionIntelligenceAcceptance=Object.freeze({build:BUILD,schema:SCHEMA,matrix,snapshot:matrix,required_owners:REQUIRED,read_only:true,models_modified:false,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,financial_signal:false,investment_recommendation:false,automatic_order:false});
 })();
