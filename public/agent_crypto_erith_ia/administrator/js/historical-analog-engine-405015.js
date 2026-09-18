@@ -10,7 +10,13 @@
   function memoryApi(){return globalThis.AtlasEventMemory||null;}
   function similarityApi(){return globalThis.AtlasHistoricalAnalogEngine405008||null;}
   function enrichApi(){return globalThis.AtlasEventSemanticEnrichment||null;}
-  function clusterMap(){const map=new Map();for(const c of enrichApi()?.clusters?.()||[])for(const id of c?.member_event_ids||[])map.set(String(id),String(c.cluster_id||""));return map;}
+  function clusterMap(input=null){
+    if(input instanceof Map)return input;
+    const source=Array.isArray(input)?input:(enrichApi()?.clusters?.()||[]);
+    const map=new Map();
+    for(const c of source)for(const id of c?.member_event_ids||[])map.set(String(id),String(c.cluster_id||""));
+    return map;
+  }
   function reaction(memory,horizon,asset){return finite(memory?.reaction_windows?.[horizon]?.reactions?.[asset]?.change_from_t0_pct);}
   function distribution(values){
     const v=values.filter(Number.isFinite),band=.10;
@@ -21,8 +27,11 @@
     const asset=String(options.asset||target.assets?.[0]||"BTC").toUpperCase(),horizon=String(options.horizon||"+24h");
     const minScore=Number.isFinite(Number(options.min_similarity_score))?Number(options.min_similarity_score):55;
     const limit=Math.max(1,Math.min(50,Number(options.limit)||50));
-    const clusters=clusterMap(),targetCluster=clusters.get(String(target.event_id))||null,out=[];
-    for(const candidate of memoryApi()?.archive?.()||[]){
+    const clusters=clusterMap(options.cluster_map||options.semantic_clusters||null),targetCluster=clusters.get(String(target.event_id))||null,out=[];
+    const archive=Array.isArray(options.memory_archive)
+      ? options.memory_archive
+      : (memoryApi()?.archive?.(options.memory_options||{})||[]);
+    for(const candidate of archive){
       if(!candidate?.quality?.eligible_for_analog||candidate.event_id===target.event_id)continue;
       if(targetCluster&&clusters.get(String(candidate.event_id))===targetCluster)continue;
       const sim=similarityApi()?.similarity?.(target.event,candidate.event)||{score_100:0,reasons:[]};
