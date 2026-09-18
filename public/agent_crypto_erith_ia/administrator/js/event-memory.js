@@ -19,6 +19,15 @@
   const pct=(a,b)=>Number.isFinite(a)&&a>0&&Number.isFinite(b)?((b-a)/a)*100:null;
   const clone=v=>{try{return JSON.parse(JSON.stringify(v));}catch(_){return null;}};
   function source(){try{return globalThis.AgentCryptoEventReactionSource?.snapshot?.()||null;}catch(_){return null;}}
+  function sourceSnapshot(options={}){
+    if(options?.source_snapshot && typeof options.source_snapshot==="object")return options.source_snapshot;
+    return source();
+  }
+  function sourceRecords(options={}){
+    if(Array.isArray(options?.records))return options.records;
+    const snapshot=sourceSnapshot(options);
+    return Array.isArray(snapshot?.records)?snapshot.records:[];
+  }
   function eventApi(){return globalThis.AtlasEventSemanticEnrichment||globalThis.AtlasEventIntelligence||null;}
   function regimeApi(){return globalThis.AtlasMarketRegimeContext||null;}
   function nearest(records,target,tolerance){
@@ -45,7 +54,7 @@
     const now=finite(options?.now_ms)??Date.now();
     const assets=[...new Set((event?.assets||[]).map(v=>String(v||"").toUpperCase()).filter(Boolean))];
     if(eventMs===null||!eventId)return Object.freeze({schema:SCHEMA,build:BUILD,event_id:eventId||null,status:"EVENT_ID_OR_TIME_MISSING",read_only:true});
-    const records=Array.isArray(source()?.records)?source().records:[];
+    const records=sourceRecords(options);
     const observations=WINDOWS.map(w=>{
       const target=eventMs+w.offset_ms,due=now>=target;
       const hit=due?nearest(records,target,w.tolerance_ms):null;
@@ -85,13 +94,29 @@
       new_storage_owner:false,storage_write:false,read_only:true,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false
     });
   }
+  function sharedOptions(options={}){
+    const source_snapshot=sourceSnapshot(options);
+    const records=Array.isArray(options?.records)
+      ? options.records
+      : Array.isArray(source_snapshot?.records)
+        ? source_snapshot.records
+        : [];
+    return {...options,source_snapshot,records};
+  }
   function archive(options={}){
+    const shared=sharedOptions(options);
     const src=eventApi()?.archive?.()||[],seen=new Set(),out=[];
-    for(const event of src){const row=derive(event,options);if(!row?.event_id||seen.has(row.event_id))continue;seen.add(row.event_id);out.push(row);}
+    for(const event of src){const row=derive(event,shared);if(!row?.event_id||seen.has(row.event_id))continue;seen.add(row.event_id);out.push(row);}
     out.sort((a,b)=>(time(a.event_time)||0)-(time(b.event_time)||0));
     return Object.freeze(out);
   }
-  function current(options={}){return derive(eventApi()?.current?.()||null,options);}
-  function snapshot(options={}){return Object.freeze({schema:SCHEMA,build:BUILD,captured_at:new Date().toISOString(),rows:archive(options),current:current(options),read_only:true});}
+  function current(options={}){
+    const shared=sharedOptions(options);
+    return derive(eventApi()?.current?.()||null,shared);
+  }
+  function snapshot(options={}){
+    const shared=sharedOptions(options);
+    return Object.freeze({schema:SCHEMA,build:BUILD,captured_at:new Date().toISOString(),rows:archive(shared),current:current(shared),read_only:true});
+  }
   globalThis.AtlasEventMemory=Object.freeze({build:BUILD,schema:SCHEMA,windows:WINDOWS,derive,archive,current,snapshot,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false});
 })();
