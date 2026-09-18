@@ -1,10 +1,21 @@
 /* Agent-Crypto @erith.IA — Decision Intelligence Acceptance Matrix
-   Build 40.6.250 stability rollback · behavior source 40.6.247. Integration acceptance over existing Event→Memory→Analogs→Regime→Calibration→Survival owners.
-   No model mutation, no network, no timer, no order. */
+   Architecture/safety acceptance only.
+   Runtime data is supplied by the canonical Decision Intelligence owner and is never recomputed here.
+   No model mutation, network, timer or order. */
 (() => {
   "use strict";
-  const BUILD="40.6.250",SCHEMA="atlas_decision_intelligence_acceptance_matrix_v1";
-  const owner=(name)=>globalThis[name]||null;
+  const SCHEMA="atlas_decision_intelligence_acceptance_matrix_v1";
+  const owner=name=>globalThis[name]||null;
+  const runtimeBuild=()=>{
+    try{
+      return String(
+        owner("ErithVersionTruth")?.snapshot?.()?.loaded
+        || document.documentElement.dataset.agentCryptoLoadedBuild
+        || globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD
+        || ""
+      ).trim()||null;
+    }catch(_){return null;}
+  };
   const REQUIRED=Object.freeze([
     ["Event Intelligence","AtlasEventIntelligence"],
     ["Event Memory","AtlasEventMemory"],
@@ -13,7 +24,7 @@
     ["Horizon Calibration","AtlasHorizonCalibration"],
     ["Capital Survival","AtlasCapitalSurvival"]
   ]);
-  const bool=(v)=>v===true;
+  const bool=v=>v===true;
   const falseIfDeclared=(api,key)=>!(key in api)||api[key]===false;
   function safety(api,label){
     if(!api)return {label,status:"MISSING_OWNER",pass:false};
@@ -26,31 +37,81 @@
       new_storage_owner_disabled_or_not_declared:falseIfDeclared(api,"new_storage_owner"),
       automatic_order_disabled:api.automatic_order===false
     };
-    if(label==="Capital Survival"){checks.execution_not_authorized=api.execution_authorized===false;checks.no_investment_recommendation=api.investment_recommendation===false;}
-    return {label,build:api.build||null,status:Object.values(checks).every(Boolean)?"PASS":"SAFETY_CONTRACT_MISMATCH",pass:Object.values(checks).every(Boolean),checks};
+    if(label==="Capital Survival"){
+      checks.execution_not_authorized=api.execution_authorized===false;
+      checks.no_investment_recommendation=api.investment_recommendation===false;
+    }
+    return {
+      label,
+      module_build:api.build||null,
+      status:Object.values(checks).every(Boolean)?"PASS":"SAFETY_CONTRACT_MISMATCH",
+      pass:Object.values(checks).every(Boolean),
+      checks
+    };
   }
-  function safeCall(fn){try{return typeof fn==="function"?fn():null;}catch(error){return {__error:String(error?.message||error)}};}
-  function matrix(){
-    const owners=REQUIRED.map(([label,name])=>{const api=owner(name);return {label,name,available:!!api,build:api?.build||null,safety:safety(api,label)};});
-    const ownerPass=owners.every(x=>x.available),safetyPass=owners.every(x=>x.safety.pass);
-    const memory=safeCall(owner("AtlasEventMemory")?.current);
-    const analog=safeCall(owner("AtlasHistoricalAnalogEngine405015")?.current);
-    const regime=safeCall(owner("AtlasRegimeQualifiedAnalogs")?.current);
-    const calibration=safeCall(owner("AtlasHorizonCalibration")?.current);
-    const survival=safeCall(owner("AtlasCapitalSurvival")?.current);
-    const currentEvent=memory && !memory.__error ? memory : null;
-    const dataState=!currentEvent?"NO_CURRENT_EVENT":currentEvent.status||"EVENT_AVAILABLE";
-    const runtime=[
-      {stage:"Event Memory",available:!!currentEvent,status:currentEvent?.status||dataState},
-      {stage:"Historical Analogs",available:!!analog&&!analog?.__error,status:analog?.status||(!currentEvent?"NOT_APPLICABLE":"NO_OUTPUT")},
-      {stage:"Regime Qualified",available:!!regime&&!regime?.__error,status:regime?.status||(!currentEvent?"NOT_APPLICABLE":"NO_OUTPUT")},
-      {stage:"Calibration",available:!!calibration&&!calibration?.__error,status:calibration?.status||(!currentEvent?"NOT_APPLICABLE":"NO_OUTPUT")},
-      {stage:"Capital Survival",available:!!survival&&!survival?.__error,status:survival?.risk_gate||survival?.status||"NO_OUTPUT"}
-    ];
+  function matrix(options={}){
+    const owners=REQUIRED.map(([label,name])=>{
+      const api=owner(name);
+      return {label,name,available:!!api,module_build:api?.build||null,safety:safety(api,label)};
+    });
+    const ownerPass=owners.every(x=>x.available);
+    const safetyPass=owners.every(x=>x.safety.pass);
     const version=owner("ErithVersionTruth")?.snapshot?.()||null;
-    const versionLock=!!version && version.false_propagation===false && owner("ErithVersionTruth")?.single_visible_owner===true;
+    const versionOwner=owner("ErithVersionTruth");
+    const falsePropagationCompatible=!version||!("false_propagation" in version)||version.false_propagation===false;
+    const versionLock=!!version
+      && versionOwner?.single_visible_owner===true
+      && versionOwner?.build_json_authority===true
+      && versionOwner?.version_branching===false
+      && versionOwner?.reload_current_build===false
+      && falsePropagationCompatible;
     const architecturePass=ownerPass&&safetyPass&&versionLock;
-    return Object.freeze({schema:SCHEMA,build:BUILD,status:architecturePass?"PASS":"FAIL",architecture_pass:architecturePass,owners,safety_pass:safetyPass,version_truth:{available:!!version,single_visible_owner:owner("ErithVersionTruth")?.single_visible_owner===true,false_propagation_locked:version?.false_propagation===false,loaded:version?.loaded||null,published:version?.published||null},current_data_status:dataState,runtime,acceptance_scope:"architecture_and_safety_contracts; data sufficiency reported separately",models_modified:false,new_source:false,new_fetch:false,new_timer:false,new_observer:false,storage_write:false,automatic_order:false,financial_advice:false});
+    const runtime=Array.isArray(options.runtime)?options.runtime:[];
+    return Object.freeze({
+      schema:SCHEMA,
+      build:runtimeBuild(),
+      status:architecturePass?"PASS":"FAIL",
+      architecture_pass:architecturePass,
+      owners,
+      safety_pass:safetyPass,
+      version_truth:{
+        available:!!version,
+        single_visible_owner:versionOwner?.single_visible_owner===true,
+        build_json_authority:versionOwner?.build_json_authority===true,
+        version_branching_disabled:versionOwner?.version_branching===false,
+        reload_current_build_disabled:versionOwner?.reload_current_build===false,
+        false_propagation_legacy_compatible:falsePropagationCompatible,
+        loaded:version?.loaded||null,
+        published:version?.published||null
+      },
+      current_data_status:String(options.current_data_status||"NOT_EVALUATED"),
+      runtime,
+      acceptance_scope:"architecture_and_safety_contracts; runtime data supplied externally",
+      runtime_recomputed:false,
+      models_modified:false,
+      new_source:false,
+      new_fetch:false,
+      new_timer:false,
+      new_observer:false,
+      storage_write:false,
+      automatic_order:false,
+      financial_advice:false
+    });
   }
-  globalThis.AtlasDecisionIntelligenceAcceptance=Object.freeze({build:BUILD,schema:SCHEMA,matrix,snapshot:matrix,required_owners:REQUIRED,read_only:true,models_modified:false,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,financial_signal:false,investment_recommendation:false,automatic_order:false});
+  globalThis.AtlasDecisionIntelligenceAcceptance=Object.freeze({
+    schema:SCHEMA,
+    matrix,
+    snapshot:matrix,
+    required_owners:REQUIRED,
+    read_only:true,
+    models_modified:false,
+    new_storage_owner:false,
+    storage_write:false,
+    new_fetch:false,
+    new_timer:false,
+    new_observer:false,
+    financial_signal:false,
+    investment_recommendation:false,
+    automatic_order:false
+  });
 })();
