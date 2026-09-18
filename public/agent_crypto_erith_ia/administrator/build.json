@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.250",
+  "build": "40.6.251",
   "engine": "38.15.11",
-  "release": "STABILITY ROLLBACK · DECISION INTELLIGENCE 40.6.247 BEHAVIOR",
+  "release": "CANONICAL ENTRY WIRING ROLLBACK · 40.6.242 BOUNDARY",
   "published": true,
-  "status": "stability_rollback_decision_intelligence_406247_behavior_406250",
-  "parent_build": "40.6.249",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.250",
-  "administrator_build": "40.6.250",
-  "build_label": "Build 40.6.250 · Administrator",
+  "status": "canonical_entry_wiring_rollback_406242_boundary_406251",
+  "parent_build": "40.6.250",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.251",
+  "administrator_build": "40.6.251",
+  "build_label": "Build 40.6.251 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,27 +30,29 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": [
-    "40.6.247 is the last confirmed Firefox terrain PASS baseline.",
-    "40.6.248 and 40.6.249 are rejected on terrain after Firefox page-slowdown and incomplete rendering remained visible.",
-    "Repository compare from the 40.6.247 receipt to 40.6.249 shows only three Administrator runtime files changed: build.json, Decision Intelligence acceptance, and Decision Intelligence current-truth presentation.",
-    "40.6.250 restores the 40.6.247 behavior of both Decision Intelligence JavaScript owners while preserving the rest of the current repository and current market data.",
-    "The 40.6.249 delivery ZIP is not a standalone canonical build and must not be used as a repository replacement.",
-    "Market Core 38.15.11, Strategy A, News owner, Atlas CURRENT, Oracle, Lecture Technique, Aether, Window Manager and Web Classique are unchanged."
+    "40.6.242 is the last explicitly recorded Firefox terrain PASS before Decision Intelligence current-truth was introduced.",
+    "A direct source comparison proves that removing the 40.6.243 Decision Intelligence current-truth injection from the current canonical index.html makes index.html byte-for-byte identical to the 40.6.242 canonical-entry wiring.",
+    "40.6.243 introduced js/decision-intelligence-current-truth-406243.js into the canonical entry and remained PENDING_FIREFOX_406243.",
+    "40.6.244 documented the exact regression family later reproduced on terrain: live News present while Decision Intelligence and News→Market stayed frozen on startup-empty state.",
+    "40.6.247 restored the 40.6.243 runtime baseline, therefore it did not return to the last proven 40.6.242 entry boundary.",
+    "40.6.248-40.6.250 remained terrain-rejected or unstable on Firefox.",
+    "40.6.251 changes only canonical entry wiring and build metadata. The 40.6.243 module file remains preserved in the repository but is no longer loaded by administrator/index.html.",
+    "Market Core 38.15.11, News owner, Strategy A business logic, Atlas CURRENT, Oracle, Lecture Technique, Aether, Window Manager, Web Classique and current market archives are unchanged."
   ],
   "terrain_pending": [
-    "Wait until GitHub Pages exposes Build 40.6.250 · Administrator.",
+    "Wait until GitHub Pages exposes Build 40.6.251 · Administrator.",
     "Open the normal Administrator URL and perform one hard reload.",
-    "First proof: no immediate Firefox page-slowdown banner during ordinary scrolling.",
-    "Second proof: open News Sentinel and scroll through its summary; no giant blank stalled paint region.",
-    "Third proof: keep Decision Intelligence closed for this stability verification.",
-    "One screenshot of News Sentinel after the page has remained responsive is sufficient."
+    "Do not open Decision Intelligence: the 40.6.243 current-truth surface is intentionally absent from the canonical entry in this recovery build.",
+    "Scroll through the Administrator and open one previously empty/lazy subsection at a time.",
+    "Primary PASS: Firefox remains responsive, fans settle normally, no 'Cette page ralentit Firefox' banner appears, and previously resident/lazy subsections hydrate again.",
+    "If PASS, preserve 40.6.251 as the recovered stability base before reintroducing any Decision Intelligence surface."
   ],
   "release_notes": [
-    "Emergency stability rollback after 40.6.248/40.6.249 terrain rejection.",
-    "Decision Intelligence current-truth presentation returns to the known 40.6.247 behavior source.",
-    "Decision Intelligence acceptance returns to the known 40.6.247 behavior source.",
-    "No new timer, observer, fetch, storage owner, generic hydration layer, recovery wrapper or trading path.",
-    "Stability takes precedence; the Decision Intelligence functional repair is deferred until the page is proven healthy again.",
+    "Emergency recovery of the canonical Administrator entry to the last Firefox-proven 40.6.242 wiring boundary.",
+    "The only runtime wiring removal is the canonical injection of js/decision-intelligence-current-truth-406243.js.",
+    "The module file is preserved in Git history and in the repository; it is simply inert for this build.",
+    "No 40.6.244/245/246 recovery layer is reintroduced.",
+    "No new timer, observer, fetch, storage owner, hydration wrapper, recovery scheduler or trading path is added.",
     "PAPER ONLY. G3 PENDING. G9 LOCKED."
   ],
   "strategy_a_canonical_evidence_wiring": {
@@ -338,8 +340,8 @@
     "mutation_observer": false,
     "automatic_order": false,
     "execution_authorized": false,
-    "terrain_proof": "DEFERRED_UNTIL_FIREFOX_STABILITY_406250",
-    "repair_in": "40.6.250",
+    "terrain_proof": "DISABLED_FOR_FIREFOX_RECOVERY_406251",
+    "repair_in": "40.6.251",
     "surface_module": "js/decision-intelligence-current-truth-406243.js",
     "acceptance_module": "js/decision-intelligence-acceptance.js",
     "refresh_on_explicit_open": false,
@@ -351,11 +353,17 @@
     "new_observer": false,
     "new_storage_owner": false,
     "market_core_modified": false,
-    "refresh_strategy": "KNOWN_STABLE_EVENT_REFRESH_ONLY",
+    "refresh_strategy": "DISABLED_AT_CANONICAL_ENTRY",
     "details_wrapper_recreated_on_refresh": true,
     "toggle_refresh_recursion_removed": true,
     "rollback_behavior_source": "40.6.247",
-    "rollback_code_source": "40.6.243"
+    "rollback_code_source": "40.6.243",
+    "runtime_injection_enabled": false,
+    "canonical_entry_loaded": false,
+    "module_file_preserved": true,
+    "rollback_entry_boundary": "40.6.242",
+    "rollback_entry_sha": "65ac8bc4bee31e88c8288a4260d07f04f391df30",
+    "last_introduced_in": "40.6.243"
   },
   "atlas_presentation_modified": false,
   "rollback": {
@@ -399,5 +407,34 @@
     "market_core_modified": false,
     "strategy_a_modified": false,
     "news_owner_modified": false
+  },
+  "rollback_406251": {
+    "source_terrain_pass": "40.6.242",
+    "rejected_or_unproven_chain": [
+      "40.6.243",
+      "40.6.244",
+      "40.6.245",
+      "40.6.246",
+      "40.6.247",
+      "40.6.248",
+      "40.6.249",
+      "40.6.250"
+    ],
+    "scope": [
+      "index.html",
+      "build.json"
+    ],
+    "canonical_entry_exact_match_to_406242_after_single_injection_removal": true,
+    "disabled_runtime_module": "js/decision-intelligence-current-truth-406243.js",
+    "disabled_module_deleted": false,
+    "recovery_modules_406244_406246_reintroduced": false,
+    "market_core_modified": false,
+    "strategy_a_modified": false,
+    "news_owner_modified": false,
+    "atlas_current_modified": false,
+    "oracle_modified": false,
+    "lecture_technique_modified": false,
+    "aether_modified": false,
+    "web_classic_modified": false
   }
 }
