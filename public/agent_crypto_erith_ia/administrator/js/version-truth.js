@@ -280,7 +280,9 @@
     snapshot: () => Object.freeze({
       loaded: loadedBuild,
       published: publishedTruth?.build || null,
-      state
+      state,
+      false_propagation: false,
+      single_visible_owner: true
     }),
     refresh,
     navigateToPublished,
