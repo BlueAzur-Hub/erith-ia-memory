@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.249",
+  "build": "40.6.250",
   "engine": "38.15.11",
-  "release": "DECISION INTELLIGENCE NON-DESTRUCTIVE REFRESH LOCK",
+  "release": "STABILITY ROLLBACK · DECISION INTELLIGENCE 40.6.247 BEHAVIOR",
   "published": true,
-  "status": "decision_intelligence_non_destructive_refresh_lock_406249",
-  "parent_build": "40.6.248",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.249",
-  "administrator_build": "40.6.249",
-  "build_label": "Build 40.6.249 · Administrator",
+  "status": "stability_rollback_decision_intelligence_406247_behavior_406250",
+  "parent_build": "40.6.249",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.250",
+  "administrator_build": "40.6.250",
+  "build_label": "Build 40.6.250 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,27 +30,27 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": [
-    "40.6.247 remains the last Firefox terrain PASS baseline after the rejected 40.6.244-40.6.246 recovery cascade.",
-    "40.6.248 introduced an explicit-open refresh for Decision Intelligence and preserved the corrected Version Truth acceptance contract.",
-    "Firefox terrain on 40.6.248 reported a page-slowdown state while Decision Intelligence was open.",
-    "Code audit isolated a local recursion risk: the details toggle handler called refresh(), while refresh() removed and recreated the same open <details> node and restored open=true.",
-    "40.6.249 keeps the existing <details> owner stable and refreshes only the inner current-truth surface.",
-    "No Market Core, News owner, Strategy A business logic, Atlas CURRENT, Oracle, Lecture Technique, Aether, Window Manager or Web Classique owner is changed.",
-    "No timer, observer, fetch, storage owner or trading capability is added."
+    "40.6.247 is the last confirmed Firefox terrain PASS baseline.",
+    "40.6.248 and 40.6.249 are rejected on terrain after Firefox page-slowdown and incomplete rendering remained visible.",
+    "Repository compare from the 40.6.247 receipt to 40.6.249 shows only three Administrator runtime files changed: build.json, Decision Intelligence acceptance, and Decision Intelligence current-truth presentation.",
+    "40.6.250 restores the 40.6.247 behavior of both Decision Intelligence JavaScript owners while preserving the rest of the current repository and current market data.",
+    "The 40.6.249 delivery ZIP is not a standalone canonical build and must not be used as a repository replacement.",
+    "Market Core 38.15.11, Strategy A, News owner, Atlas CURRENT, Oracle, Lecture Technique, Aether, Window Manager and Web Classique are unchanged."
   ],
   "terrain_pending": [
-    "Reload Administrator until Build 40.6.249 is visible.",
-    "Open Analyse & décision → Decision Intelligence · vérité courante.",
-    "Expected: the panel opens once without Firefox entering a page-slowdown loop.",
-    "Collapse and reopen the same panel two or three times; the wrapper must remain responsive and the page must remain scrollable.",
-    "Expected: Decision Intelligence still recomputes its six current-truth cards while preserving the corrected PASS acceptance contract when its owners are healthy.",
-    "One screenshot of this single panel plus the absence of the Firefox slowdown banner is sufficient."
+    "Wait until GitHub Pages exposes Build 40.6.250 · Administrator.",
+    "Open the normal Administrator URL and perform one hard reload.",
+    "First proof: no immediate Firefox page-slowdown banner during ordinary scrolling.",
+    "Second proof: open News Sentinel and scroll through its summary; no giant blank stalled paint region.",
+    "Third proof: keep Decision Intelligence closed for this stability verification.",
+    "One screenshot of News Sentinel after the page has remained responsive is sufficient."
   ],
   "release_notes": [
-    "Single-owner repair of the 40.6.248 Decision Intelligence refresh regression.",
-    "The disclosure wrapper is no longer destroyed/recreated by its own toggle event.",
-    "Refresh is now in-place and limited to #decisionIntelligenceCurrentTruth406243.",
-    "40.6.248 Version Truth acceptance alignment is preserved unchanged.",
+    "Emergency stability rollback after 40.6.248/40.6.249 terrain rejection.",
+    "Decision Intelligence current-truth presentation returns to the known 40.6.247 behavior source.",
+    "Decision Intelligence acceptance returns to the known 40.6.247 behavior source.",
+    "No new timer, observer, fetch, storage owner, generic hydration layer, recovery wrapper or trading path.",
+    "Stability takes precedence; the Decision Intelligence functional repair is deferred until the page is proven healthy again.",
     "PAPER ONLY. G3 PENDING. G9 LOCKED."
   ],
   "strategy_a_canonical_evidence_wiring": {
@@ -338,22 +338,24 @@
     "mutation_observer": false,
     "automatic_order": false,
     "execution_authorized": false,
-    "terrain_proof": "PENDING_FIREFOX_406249",
-    "repair_in": "40.6.249",
+    "terrain_proof": "DEFERRED_UNTIL_FIREFOX_STABILITY_406250",
+    "repair_in": "40.6.250",
     "surface_module": "js/decision-intelligence-current-truth-406243.js",
     "acceptance_module": "js/decision-intelligence-acceptance.js",
-    "refresh_on_explicit_open": true,
-    "refresh_on_presentation_resident": true,
-    "version_truth_contract_aligned": true,
+    "refresh_on_explicit_open": false,
+    "refresh_on_presentation_resident": false,
+    "version_truth_contract_aligned": false,
     "version_truth_owner_modified": false,
     "new_fetch": false,
     "new_timer": false,
     "new_observer": false,
     "new_storage_owner": false,
     "market_core_modified": false,
-    "refresh_strategy": "IN_PLACE_CURRENT_TRUTH_HOST_ONLY",
-    "details_wrapper_recreated_on_refresh": false,
-    "toggle_refresh_recursion_removed": true
+    "refresh_strategy": "KNOWN_STABLE_EVENT_REFRESH_ONLY",
+    "details_wrapper_recreated_on_refresh": true,
+    "toggle_refresh_recursion_removed": true,
+    "rollback_behavior_source": "40.6.247",
+    "rollback_code_source": "40.6.243"
   },
   "atlas_presentation_modified": false,
   "rollback": {
@@ -378,5 +380,24 @@
     "atlas_current_changed": false,
     "oracle_changed": false,
     "lecture_technique_changed": false
+  },
+  "rollback_406250": {
+    "source_terrain_pass": "40.6.247",
+    "rejected_builds": [
+      "40.6.248",
+      "40.6.249"
+    ],
+    "scope": [
+      "js/decision-intelligence-current-truth-406243.js",
+      "js/decision-intelligence-acceptance.js",
+      "build.json"
+    ],
+    "current_market_data_preserved": true,
+    "index_html_modified": false,
+    "version_truth_modified": false,
+    "atlas_peripheral_lazy_modified": false,
+    "market_core_modified": false,
+    "strategy_a_modified": false,
+    "news_owner_modified": false
   }
 }
