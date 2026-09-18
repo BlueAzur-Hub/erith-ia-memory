@@ -15677,29 +15677,32 @@ function atlasResumeMarketPulse() {
   state.marketPulse.paused = false;
   if (!state.auto?.enabled || !atlasPulseVisible()) return;
 
-  /* 40.3.59 — VISIBILITY RESUME WORK COALESCING LOCK.
-     A tab return is not a market event. Reuse still-fresh market/spot/chart
-     state instead of forcing three refresh families to wake together. The
-     canonical 5 min / 30 s / 5 min cadences remain authoritative. */
+  /* 40.6.254 — RESIDENT AUTO READER REARM.
+     Local Auto Reader and canonical public-source freshness are separate clocks.
+     Returning to a visible tab rearms the single local timer without forcing a
+     new canonical market fetch unless the existing public 5 min probe is due. */
   if (!state.liveOk || !state.coins.length) {
     setTimeout(() => void runLivecheck({ reason: "visibility-resume-missing-market" }), 80);
+    scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
     return;
   }
 
-  const snapshotAt = Date.parse(state.timestamp || state.sourceLock?.timestamp || "");
-  const marketReference = Math.max(
-    Number(state.marketPulse.lastMarketSuccessAt || 0),
-    Number.isFinite(snapshotAt) ? snapshotAt : 0
+  const lastLocal = lastAutoSnapshot();
+  const localStamp = lastLocal?.last_seen_at || lastLocal?.saved_at || "";
+  const localAt = Date.parse(localStamp);
+  const localAgeMs = Number.isFinite(localAt) ? Math.max(0, Date.now() - localAt) : Infinity;
+  scheduleAutoRead(
+    localAgeMs >= ATLAS_AUTO_READER_LOCAL_REFRESH_MS
+      ? 1000
+      : Math.max(1000, ATLAS_AUTO_READER_LOCAL_REFRESH_MS - localAgeMs)
   );
-  const marketAgeMs = marketReference > 0 ? Math.max(0, Date.now() - marketReference) : Infinity;
 
-  if (marketAgeMs >= ATLAS_MARKET_REFRESH_MS) {
+  const publicReference = Number(state.marketPulse.lastMarketSuccessAt || 0);
+  const publicAgeMs = publicReference > 0 ? Math.max(0, Date.now() - publicReference) : Infinity;
+  if (publicAgeMs >= ATLAS_AUTO_READER_PUBLIC_PROBE_MS && !state.auto?.livecheckBusy) {
     setTimeout(() => void refreshMarketOnly({ reason: "visibility-resume-stale-market" }), 120);
-  } else {
-    scheduleAutoRead(Math.max(1000, ATLAS_MARKET_REFRESH_MS - marketAgeMs));
   }
 
-  // Both owners already implement their own freshness gates when force=false.
   setTimeout(() => void atlasRefreshSpotBook({ force: false }), 900);
   setTimeout(() => void atlasMaybeRefreshHistoricalChart({ force: false }), 1800);
 }
@@ -16028,6 +16031,12 @@ function atlasMarketRetryLabel(failureCount = 1) {
 }
 
 const ATLAS_MARKET_REFRESH_MS = 5 * 60 * 1000;
+
+// 40.6.254 — Auto Reader V4 cadence truth: local observation is 60 s,
+// while the canonical GitHub/CoinGecko public-source probe remains 5 min.
+// One existing state.auto timer owns the local heartbeat; no second scheduler.
+const ATLAS_AUTO_READER_LOCAL_REFRESH_MS = 60 * 1000;
+const ATLAS_AUTO_READER_PUBLIC_PROBE_MS = ATLAS_MARKET_REFRESH_MS;
 
 const ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS = 45 * 60 * 1000;
 
@@ -50862,7 +50871,7 @@ function makeAutoSnapshot() {
       fx_source_name: fx?.sourceName || null
     },
     live_ok: !!state.liveOk,
-    cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS,
+    cadence_ms: state.auto?.intervalMs || ATLAS_AUTO_READER_LOCAL_REFRESH_MS,
     global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null },
     assets: merged.map(compactCoinForAuto)
   };
@@ -50909,7 +50918,7 @@ function saveAutoSnapshot() {
   return finalSnapshot;
 }
 
-function chooseAutoIntervalMs(snapshot, previous) { return ATLAS_MARKET_REFRESH_MS;
+function chooseAutoIntervalMs(snapshot, previous) { return ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
 }
 
 function formatAutoDelay(ms) { const sec = Math.max(0, Math.round(ms / 1000)); if (sec >= 60) { const min = Math.floor(sec / 60); const rest = sec % 60; return rest ? `${min} min ${rest} s` : `${min} min`; } return `${sec} s`;
@@ -50921,6 +50930,7 @@ function renderAutoReader(snapshot = null, previous = null) {
   const memory = atlasDecisionMemoryStats();
   const records = memory.records;
   const last = snapshot || memory.last || null;
+  const lastObservationAt = last?.last_seen_at || last?.saved_at || null;
   const pulse = last
     ? autoMarketPulse(last, previous || memory.previous || null)
     : { label: "En attente", mode: "wait", lines: ["Atlas attend la première lecture."] };
@@ -50936,13 +50946,13 @@ function renderAutoReader(snapshot = null, previous = null) {
 
   if (els.btnAutoToggle) els.btnAutoToggle.textContent = state.auto?.enabled ? "Auto ON" : "Auto OFF";
   if (els.autoLastRead) {
-    els.autoLastRead.textContent = last?.saved_at
-      ? new Date(last.saved_at).toLocaleString("fr-FR")
+    els.autoLastRead.textContent = lastObservationAt
+      ? new Date(lastObservationAt).toLocaleString("fr-FR")
       : "En attente";
   }
   if (els.autoSnapshots) els.autoSnapshots.textContent = `${records.length} distincts · ${rawRecords.length} relevés`;
   if (els.autoActiveCadence) {
-    els.autoActiveCadence.textContent = `${formatAutoDelay(state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS)} · vérification snapshot public`;
+    els.autoActiveCadence.textContent = `${formatAutoDelay(state.auto?.intervalMs || ATLAS_AUTO_READER_LOCAL_REFRESH_MS)} · marché local · snapshot public 5 min`;
   }
   if (els.autoMarketPulse) els.autoMarketPulse.textContent = pulse.label;
   if (els.autoWatchStatus) {
@@ -50988,8 +50998,8 @@ function renderAutoReader(snapshot = null, previous = null) {
       `Collecteur de ce Firefox : ${getCollectorId()} (${isCollectorConfigured() ? "configuré" : "temporaire"}).`,
       `Snapshots canoniques distincts : ${records.length}.`,
       `Relevés locaux conservés : ${rawRecords.length}.`,
-      last?.saved_at
-        ? `Dernier snapshot local : ${new Date(last.saved_at).toLocaleString("fr-FR")}.`
+      lastObservationAt
+        ? `Dernier snapshot local : ${new Date(lastObservationAt).toLocaleString("fr-FR")}.`
         : "Dernier snapshot local : aucun.",
       "",
       "Lecture marché :",
@@ -51087,41 +51097,95 @@ function updateAutoCountdown() {
   setText(els.autoNextRead, formatAutoDelay(new Date(state.auto.nextAt).getTime() - Date.now()));
 }
 
+function atlasAutoReaderPublicProbeDue(now = Date.now()) {
+  const lastSuccess = Number(state.marketPulse?.lastMarketSuccessAt || 0);
+  return !state.liveOk
+    || !Array.isArray(state.coins)
+    || !state.coins.length
+    || !lastSuccess
+    || Math.max(0, Number(now) - lastSuccess) >= ATLAS_AUTO_READER_PUBLIC_PROBE_MS;
+}
+
+function atlasAutoReaderCommitLocalObservation(reason = "local-interval") {
+  if (!state.auto?.enabled || !atlasPulseVisible() || !state.liveOk || !state.coins.length) return false;
+  const snapshot = saveAutoSnapshot();
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
+  state.auto.lastLocalObservation406254 = snapshot?.last_seen_at || snapshot?.saved_at || new Date().toISOString();
+  state.auto.lastLocalObservationReason406254 = String(reason || "local-interval");
+  renderAutoReader(snapshot);
+  return !!snapshot;
+}
+
+async function atlasAutoReaderLocalTick() {
+  if (!state.auto?.enabled) return false;
+
+  if (atlasAutoReaderPublicProbeDue() && !state.auto.livecheckBusy) {
+    // runLivecheck/atlasAfterLivecheck owns the next rearm on both success and failure.
+    return refreshMarketOnly({
+      reason: "auto-reader-public-probe",
+      residentOnly: !atlasPulseVisible()
+    });
+  }
+
+  if (atlasPulseVisible()) {
+    atlasAutoReaderCommitLocalObservation("local-interval");
+  }
+
+  // Hidden tabs keep only the cheap local heartbeat; no local observation is
+  // written while hidden, but the existing timer remains armed for the next probe.
+  scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
+  return true;
+}
+
+function atlasAutoReaderManualRead() {
+  if (!state.auto?.enabled) state.auto.enabled = true;
+
+  if (atlasPulseVisible() && state.liveOk && state.coins.length) {
+    atlasAutoReaderCommitLocalObservation("manual-local-read");
+  }
+
+  scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
+
+  if (atlasAutoReaderPublicProbeDue() && !state.auto.livecheckBusy) {
+    void refreshMarketOnly({
+      reason: "manual-auto-reader",
+      residentOnly: !atlasPulseVisible()
+    });
+  }
+  return true;
+}
+
 function scheduleAutoRead(ms = null) {
   if (!state.auto?.enabled) return;
 
   if (state.auto.timer) clearTimeout(state.auto.timer);
   state.auto.timer = null;
 
-  const delay = ms ?? state.auto.intervalMs ?? ATLAS_MARKET_REFRESH_MS;
+  const delay = ms ?? state.auto.intervalMs ?? ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
   state.auto.nextAt = new Date(Date.now() + delay).toISOString();
   updateAutoCountdown();
 
   state.auto.timer = setTimeout(() => {
     state.auto.timer = null;
-    if (state.auto?.enabled) {
-      void refreshMarketOnly({
-        reason: "market-pulse",
-        residentOnly: !atlasPulseVisible()
-      });
-    }
+    if (state.auto?.enabled) void atlasAutoReaderLocalTick();
   }, delay);
 }
 
 function atlasAfterLivecheck(options = {}) {
   if (!state.liveOk || !state.coins.length) {
     renderAutoReader();
-    if (state.auto?.enabled) scheduleAutoRead(options.marketDelayMs ?? ATLAS_MARKET_REFRESH_MS);
+    if (state.auto?.enabled) scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
     return;
   }
 
   const snapshot = saveAutoSnapshot();
   const memory = atlasDecisionMemoryStats();
-  state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
-  renderAutoReader(memory.last || snapshot, memory.previous || null);
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
+  renderAutoReader(snapshot || memory.last || null, memory.previous || null);
 
+  // The local heartbeat is resident state. Spot/chart rendering remains visibility-gated.
+  if (state.auto?.enabled) scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
   if (state.auto?.enabled && atlasPulseVisible()) {
-    scheduleAutoRead(options.marketDelayMs ?? ATLAS_MARKET_REFRESH_MS);
     atlasScheduleSpotPulse(options.spotDelayMs ?? ATLAS_SPOT_REFRESH_MS);
     atlasScheduleChartPulse(ATLAS_CHART_BACKGROUND_REFRESH_MS);
   }
@@ -51140,7 +51204,8 @@ function startAutoReader() {
   atlasInitMarketPulseController();
   loadWatchIds();
 
-  state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
+  state.auto.cadence = "locked-v4";
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
   atlasPrimeMarketCacheSilently();
   atlasRenderDirectFirstStartup();
   atlasInitExchangeFeed();
@@ -51152,6 +51217,8 @@ function startAutoReader() {
 
   if (atlasPulseVisible()) {
     setTimeout(() => void atlasRunStartupLivecheck(), 50);
+  } else {
+    scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
   }
 }
 
@@ -51160,8 +51227,12 @@ function toggleAutoReader() {
 
   if (!state.auto.enabled) {
     atlasPauseMarketPulse();
-  } else if (atlasPulseVisible()) {
-    atlasResumeMarketPulse();
+    if (state.auto.timer) clearTimeout(state.auto.timer);
+    state.auto.timer = null;
+    state.auto.nextAt = null;
+  } else {
+    scheduleAutoRead(1000);
+    if (atlasPulseVisible()) atlasResumeMarketPulse();
   }
 
   renderAutoReader();
@@ -51169,10 +51240,11 @@ function toggleAutoReader() {
 }
 
 function setAutoCadence(value) {
-  state.auto.cadence = String(value || "adaptive");
-  state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
+  // V4 cadence is fixed by contract: local market 60 s, Spot 30 s, History/public 5 min.
+  state.auto.cadence = "locked-v4";
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
   renderAutoReader();
-  if (state.auto.enabled) scheduleAutoRead(ATLAS_MARKET_REFRESH_MS);
+  if (state.auto.enabled) scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
 }
 
 const COLLECTOR_ID_KEY = "agent_crypto_erith_ia_collector_id_v1";
@@ -55478,7 +55550,7 @@ window.AgentCryptoCommands = CryptoCommands;
 
 els.btnAutoToggle?.addEventListener("click", toggleAutoReader);
 
-els.btnAutoNow?.addEventListener("click", () => { atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" }); refreshMarketOnly({ reason: "manual-auto-reader" }); });
+els.btnAutoNow?.addEventListener("click", () => { atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" }); atlasAutoReaderManualRead(); });
 
 
 /* ============================================================
@@ -55764,7 +55836,7 @@ function atlasRebindDeferredMemoryPanels(scope = "all") {
     bindOnce(els.btnAutoToggle,"click","atlasBind40430",toggleAutoReader);
     bindOnce(els.btnAutoNow,"click","atlasBind40430",() => {
       atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" });
-      refreshMarketOnly({ reason: "manual-auto-reader" });
+      atlasAutoReaderManualRead();
     });
     try { renderAutoReader(); } catch (_) {}
     try { atlasRenderAutoTruthLive(); } catch (_) {}
