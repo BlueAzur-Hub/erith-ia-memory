@@ -1,5 +1,6 @@
-/* Agent-Crypto @erith.IA — 40.6.243
+/* Agent-Crypto @erith.IA — 40.6.243 + 40.6.248
    DECISION INTELLIGENCE CURRENT TRUTH SURFACE
+   40.6.248 repairs stale startup truth on explicit open/residency restore.
 
    Presentation-only integration over existing read-only owners:
    Event Intelligence -> Event Memory -> Historical Analogs -> Regime -> Calibration -> Capital Survival.
@@ -8,7 +9,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.243";
+  const BUILD = "40.6.248";
   const HOST_ID = "decisionIntelligenceCurrentTruth406243";
   const DETAILS_ID = "decisionIntelligenceCurrentTruthDetails406243";
 
@@ -106,11 +107,25 @@
       || document.querySelector('[data-layout-family="analysis"]');
   }
 
+  function bindDetails(detail){
+    if(!(detail instanceof HTMLDetailsElement)||detail.dataset.decisionTruthRefresh406248==="1") return false;
+    detail.dataset.decisionTruthRefresh406248="1";
+    detail.addEventListener("toggle",()=>{
+      if(detail.open) queueMicrotask(refresh);
+    });
+    detail.addEventListener("erith:presentation-resident",()=>{
+      if(detail.open) queueMicrotask(refresh);
+    });
+    return true;
+  }
+
   function mount(){
-    if(document.getElementById(DETAILS_ID)) return true;
+    const existing=document.getElementById(DETAILS_ID);
+    if(existing){ bindDetails(existing); return true; }
     const anchor=hostAnchor();
     if(!anchor) return false;
     anchor.insertAdjacentHTML("afterend", markup());
+    bindDetails(document.getElementById(DETAILS_ID));
     return true;
   }
 
@@ -122,12 +137,16 @@
     details.remove();
     if(anchor) anchor.insertAdjacentHTML("afterend", markup());
     const next=document.getElementById(DETAILS_ID);
-    if(next) next.open=open;
+    if(next){
+      next.open=open;
+      bindDetails(next);
+    }
     return !!next;
   }
 
   function bind(){
     mount();
+    bindDetails(document.getElementById(DETAILS_ID));
     document.addEventListener("erith:aether-news-open",()=>queueMicrotask(refresh),{passive:true});
     document.addEventListener("agentcrypto:current-finalized",()=>queueMicrotask(refresh),{passive:true});
     window.addEventListener("pageshow",()=>queueMicrotask(refresh),{passive:true});
