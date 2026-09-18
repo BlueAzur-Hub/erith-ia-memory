@@ -16,6 +16,7 @@ on:
       - "Atlas Public Indices Archive"
       - "Atlas Public Energy Archive"
       - "Atlas Public Cross Market Archive"
+      - "Atlas News Sentinel World-to-Market Live Feed"
     types:
       - completed
   schedule:
@@ -43,6 +44,8 @@ permissions:
 # - completion of the canonical/extended Crypto producers cross-checked the sibling;
 # - completion of the parallel public market archives added low-frequency fallback
 #   wake sources without adding a second recovery engine.
+# - News Sentinel completion is an independent periodic wake source so a dropped
+#   crypto schedule cannot leave the stale-snapshot watchdog asleep.
 #
 # 40.4.182 removes the remaining sleeping-princess gap:
 # - the watchdog now wakes every 10 minutes in Europe/Paris;
