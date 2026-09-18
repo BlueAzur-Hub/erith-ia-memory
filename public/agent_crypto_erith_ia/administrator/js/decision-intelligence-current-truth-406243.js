@@ -1,6 +1,7 @@
-/* Agent-Crypto @erith.IA — 40.6.243 + 40.6.248
+/* Agent-Crypto @erith.IA — 40.6.243 + 40.6.248 + 40.6.249
    DECISION INTELLIGENCE CURRENT TRUTH SURFACE
-   40.6.248 repairs stale startup truth on explicit open/residency restore.
+   40.6.248 repaired stale startup truth on explicit open/residency restore.
+   40.6.249 makes that refresh non-destructive: the <details> owner is never recreated by its own toggle.
 
    Presentation-only integration over existing read-only owners:
    Event Intelligence -> Event Memory -> Historical Analogs -> Regime -> Calibration -> Capital Survival.
@@ -9,7 +10,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.248";
+  const BUILD = "40.6.249";
   const HOST_ID = "decisionIntelligenceCurrentTruth406243";
   const DETAILS_ID = "decisionIntelligenceCurrentTruthDetails406243";
 
@@ -63,8 +64,32 @@
     return `<article><span>${esc(label)}</span><b>${esc(value)}</b><small>${esc(small)}</small></article>`;
   }
 
-  function markup(){
+  function surfaceMarkup(){
     const s=snapshot();
+    return `
+      <section id="${HOST_ID}" class="news-sentinel" data-build="${BUILD}">
+        <div class="section-head compact">
+          <div>
+            <p class="eyebrow">DECISION INTELLIGENCE · CURRENT TRUTH · ${BUILD}</p>
+            <h2>Chaîne décisionnelle observée</h2>
+          </div>
+          <span class="pill">${esc(s.acceptance)}</span>
+        </div>
+        <div class="news-live-kpis">
+          ${card("Événement", s.event_status, s.current_event || "aucun événement courant")}
+          ${card("Analogues", s.analog_status, `${s.analog_count} observé(s)`)}
+          ${card("Régime", s.regime_status, `${s.regime_count} analogue(s) qualifié(s)`)}
+          ${card("Calibration", s.calibration_status, `24h n=${s.calibration_24h_n} · 48h n=${s.calibration_48h_n}`)}
+          ${card("Capital Survival", s.capital_gate, "simulation uniquement")}
+          ${card("Sortie", s.explain_status, s.operator_action)}
+        </div>
+        <p class="private-backend-note">
+          Lecture descriptive uniquement · aucune mutation des modèles · aucun ordre · aucune autorisation d’exécution.
+        </p>
+      </section>`;
+  }
+
+  function markup(){
     return `
       <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis"
                id="${DETAILS_ID}" data-collapse-key="decision-intelligence-current-truth"
@@ -77,26 +102,7 @@
           <span class="atlas-collapse-state" data-open-label="Replier" data-closed-label="Déplier">Déplier</span>
         </summary>
         <div class="atlas-collapse-body">
-          <section id="${HOST_ID}" class="news-sentinel" data-build="${BUILD}">
-            <div class="section-head compact">
-              <div>
-                <p class="eyebrow">DECISION INTELLIGENCE · CURRENT TRUTH · ${BUILD}</p>
-                <h2>Chaîne décisionnelle observée</h2>
-              </div>
-              <span class="pill">${esc(s.acceptance)}</span>
-            </div>
-            <div class="news-live-kpis">
-              ${card("Événement", s.event_status, s.current_event || "aucun événement courant")}
-              ${card("Analogues", s.analog_status, `${s.analog_count} observé(s)`)}
-              ${card("Régime", s.regime_status, `${s.regime_count} analogue(s) qualifié(s)`)}
-              ${card("Calibration", s.calibration_status, `24h n=${s.calibration_24h_n} · 48h n=${s.calibration_48h_n}`)}
-              ${card("Capital Survival", s.capital_gate, "simulation uniquement")}
-              ${card("Sortie", s.explain_status, s.operator_action)}
-            </div>
-            <p class="private-backend-note">
-              Lecture descriptive uniquement · aucune mutation des modèles · aucun ordre · aucune autorisation d’exécution.
-            </p>
-          </section>
+          ${surfaceMarkup()}
         </div>
       </details>`;
   }
@@ -132,16 +138,17 @@
   function refresh(){
     const details=document.getElementById(DETAILS_ID);
     if(!details) return mount();
-    const open=details.open;
-    const anchor=details.previousElementSibling;
-    details.remove();
-    if(anchor) anchor.insertAdjacentHTML("afterend", markup());
-    const next=document.getElementById(DETAILS_ID);
-    if(next){
-      next.open=open;
-      bindDetails(next);
+
+    const host=document.getElementById(HOST_ID);
+    if(host){
+      host.outerHTML=surfaceMarkup();
+      return true;
     }
-    return !!next;
+
+    const body=details.querySelector(".atlas-collapse-body");
+    if(!body) return false;
+    body.innerHTML=surfaceMarkup();
+    return true;
   }
 
   function bind(){
