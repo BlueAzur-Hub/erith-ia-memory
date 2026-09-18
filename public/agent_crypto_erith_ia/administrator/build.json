@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.243",
+  "build": "40.6.244",
   "engine": "38.15.11",
-  "release": "DECISION INTELLIGENCE CURRENT TRUTH SURFACE",
+  "release": "ANALYSE DECISION CURRENT TRUTH RECOVERY",
   "published": true,
-  "status": "decision_intelligence_current_truth_surface_406243",
-  "parent_build": "40.6.242",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.243",
-  "administrator_build": "40.6.243",
-  "build_label": "Build 40.6.243 · Administrator",
+  "status": "analyse_decision_current_truth_recovery_406244",
+  "parent_build": "40.6.243",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.244",
+  "administrator_build": "40.6.244",
+  "build_label": "Build 40.6.244 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,27 +30,27 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": [
-    "Firefox export confirms Build 40.6.242 with Market Core 38.15.11.",
-    "Source Intelligence V1.3 is hydrated on 40.6.242 with CEX 5/5, DEX 5/5 + 5/5, Atlas eligibility 3/5, DeFi 3/3 and freshness 31s.",
-    "40.6.242 source-startup ordering is therefore terrain-proven.",
-    "Existing runtime already loads the full read-only chain Event Intelligence -> Event Memory -> Historical Analogs -> Regime Qualified Analogs -> Horizon Calibration -> Capital Survival.",
-    "40.6.243 adds a presentation-only current-truth surface over those existing owners.",
-    "The new surface is collapsed by default and mounts inside the existing Analyse & décision family after News Sentinel when available.",
-    "It reads existing owner APIs only and does not modify models, market data, Strategy A, Gates or execution behavior.",
-    "JavaScript syntax validation passed for the new presentation module."
+    "Firefox confirms Build 40.6.243 / Market Core 38.15.11.",
+    "Aether VEILLE visibly carries a current qualified Bitcoin news item while Decision Intelligence still reports NO_CURRENT_EVENT and News→Market remains in waiting state.",
+    "Static audit proves AgentCryptoNewsEventSource exists in canonical app.js and exposes current newsFeedLeadEvent().",
+    "Decision Intelligence acceptance expected ErithVersionTruth.snapshot().false_propagation===false, but current version-truth snapshot omitted that compatibility field.",
+    "40.6.244 restores false_propagation:false to version-truth snapshot without changing version authority.",
+    "40.6.244 adds event-driven Analyse/Decision recovery: current News owner is re-read after News load/selection and when relevant disclosures are opened/restored.",
+    "No additional News fetch owner, polling timer, observer, storage owner, market model or order path is added.",
+    "JavaScript syntax validation passed for modified/new files."
   ],
   "terrain_pending": [
-    "Reload Administrator until Build 40.6.243 is visible.",
-    "Open Analyse & décision and look for 'Decision Intelligence · vérité courante'.",
-    "Open that panel once and verify it renders without breaking News Sentinel, Atlas, Oracle or Lecture Technique.",
-    "One screenshot of that panel is sufficient to close 40.6.243."
+    "Reload Administrator until Build 40.6.244 is visible.",
+    "Open Decision Intelligence · vérité courante and News Sentinel · contexte explicatif du mouvement.",
+    "Expected: current News truth is no longer frozen at startup; acceptance no longer fails because of the removed version-truth field.",
+    "No other operator search is required."
   ],
   "release_notes": [
-    "Reopens the post-Source-Intelligence roadmap with a visible integration of the already existing Event -> Memory -> Analogs -> Regime -> Calibration -> Capital Survival chain.",
-    "No new model is created and no existing decision algorithm is changed.",
-    "The surface consumes AtlasDecisionIntelligenceAcceptance and AtlasDecisionExplainability plus the existing chain owners.",
-    "Presentation is event-driven only on existing page/news/current-finalized lifecycle events; no timer and no observer.",
-    "40.6.242 is closed by Firefox proof.",
+    "Recovery of Analyse & décision current-truth propagation after 40.6.243 exposed stale startup state.",
+    "Restores a compatibility field consumed by the existing Decision Intelligence acceptance matrix.",
+    "Reuses canonical AgentCryptoNewsEventSource, renderNewsSentinel and renderNewsMarketOperatorIntelligence owners.",
+    "No new source or model is introduced.",
+    "Market Core 38.15.11, Strategy A, Atlas CURRENT, Oracle and Lecture Technique remain unchanged.",
     "PAPER ONLY. G3 PENDING. G9 LOCKED."
   ],
   "strategy_a_canonical_evidence_wiring": {
@@ -338,6 +338,25 @@
     "mutation_observer": false,
     "automatic_order": false,
     "execution_authorized": false,
-    "terrain_proof": "PENDING_FIREFOX_406243"
+    "terrain_proof": "REGRESSION_EXPOSED_FIREFOX_406243",
+    "firefox_observed_state": "STALE_NO_CURRENT_EVENT_WHILE_AETHER_NEWS_LIVE"
+  },
+  "news_sentinel_business_logic_modified": false,
+  "analysis_family_recovery": {
+    "repair_in": "40.6.244",
+    "module": "js/analysis-family-recovery-406244.js",
+    "version_truth_compatibility_restored": true,
+    "news_source_owner": "AgentCryptoNewsEventSource",
+    "current_news_reused": true,
+    "decision_surface_refresh": true,
+    "news_market_refresh": true,
+    "new_fetch": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_storage_owner": false,
+    "model_changed": false,
+    "market_core_changed": false,
+    "strategy_a_changed": false,
+    "terrain_proof": "PENDING_FIREFOX_406244"
   }
 }
