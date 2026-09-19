@@ -27,47 +27,6 @@
     const STORAGE_QUOTA_MODULE = "./js/storage-quota-truth-406239.js";
     const COMMAND_CENTER_ROUTER_MODULE = "./js/command-center-routing-406240.js";
 
-    const EVIDENCE_MODULES = Object.freeze([
-      "./js/strategy-a-evidence-lifecycle-truth.js",
-      "./js/strategy-a-foundation-applicability-truth.js",
-      "./js/strategy-a-foundation-delegated-certification-406221.js",
-      "./js/strategy-a-time-semantics-truth.js",
-      "./js/strategy-a-g3-structured-data-truth.js",
-      "./js/strategy-a-g3-history-owner-discovery.js",
-      "./js/strategy-a-g3-historical-evidence-adapter.js",
-      "./js/strategy-a-g3-t0-decision-proof.js",
-      "./js/strategy-a-g3-replay-dataset.js",
-      "./js/strategy-a-g3-decision-replay.js",
-      "./js/strategy-a-g3-cascade-checkpoint.js",
-      "./js/strategy-a-gate-canonical-truth.js",
-      "./js/strategy-a-evidence-dossier-supplement-integrator.js",
-      "./js/strategy-a-g3-prospective-t0-capture.js",
-      "./js/strategy-a-g3-overlap-live-refresh.js",
-      "./js/strategy-a-g3-post-horizon-outcome.js",
-      "./js/strategy-a-g3-post-horizon-mount-repair-406216.js",
-      "./js/strategy-a-g3-outcome-certification-406222.js",
-      "./js/strategy-a-g3-realistic-replay-readiness-406223.js",
-      "./js/strategy-a-g3-forward-evidence-bridge-406224.js",
-      "./js/strategy-a-g3-current-truth-surface-406225.js",
-      "./js/strategy-a-g3-strict-decision-time-truth-406226.js",
-      "./js/strategy-a-g3-strict-truth-mount-proof-406227.js",
-      "./js/strategy-a-g3-strict-outcome-revalidation-406228.js",
-      "./js/strategy-a-g3-strict-execution-realism-rebind-406229.js"
-    ]);
-    const PRESENTATION_MODULES = Object.freeze([
-      "./js/administrator-operator-focus-406216.js"
-    ]);
-
-    const EVIDENCE_PANEL_IDS = Object.freeze([
-      "strategyAG3StructuredTruth",
-      "strategyAG3HistoryOwnerDiscovery",
-      "strategyAG3HistoricalEvidenceAdapter",
-      "strategyAG3T0DecisionProof",
-      "strategyAG3ReplayDataset",
-      "strategyAG3DecisionReplay",
-      "strategyAG3CascadeCheckpoint"
-    ]);
-
     async function canonicalIdentity() {
       const separator = MANIFEST_URL.includes("?") ? "&" : "?";
       const response = await fetch(`${MANIFEST_URL}${separator}t=${Date.now()}`, {cache:"no-store",credentials:"same-origin"});
@@ -106,7 +65,7 @@
       if(!truth.canonical_evidence_wiring)return html;
       if(html.includes('data-agent-crypto-evidence-demand-loader="'))return html;
       if(!/<\/body>/i.test(html))throw new Error("runtime-shell.html sans </body>");
-      const tag=`<script defer src="./js/strategy-a-evidence-demand-loader.js" data-agent-crypto-evidence-demand-loader="${truth.build}"><\/script>`;
+      const tag=`<script defer src="./js/strategy-a-evidence-demand-loader.js?v=40.6.274" data-agent-crypto-evidence-demand-loader="${truth.build}"><\/script>`;
       return html.replace(/<\/body>/i,`${tag}\n</body>`);
     }
     function patchShell(raw,truth){let out=String(raw||"");if(!/^\s*<!doctype html>/i.test(out))throw new Error("runtime-shell.html invalide");out=out.replace(/administrator-build-\d+\.\d+\.\d+/g,`administrator-build-${truth.build}`);out=out.replace(/market-core-v2\.0-alpha-build-\d+\.\d+\.\d+/g,`market-core-v2.0-alpha-build-${truth.build}`);out=replaceMeta(out,"administrator-build",truth.build);out=replaceMeta(out,"atlas-build",truth.build);out=replaceMeta(out,"atlas-engine-build",truth.engine);out=replaceMeta(out,"agent-crypto-boot-build",truth.build);out=replaceMeta(out,"agent-crypto-loaded-build",truth.build);out=replaceMeta(out,"agent-crypto-version-owner","canonical-entry");out=replaceMeta(out,"agent-crypto-published-manifest",MANIFEST_URL);out=out.replace(/<title>[\s\S]*?<\/title>/i,`<title>Agent-Crypto @erith.IA — Build ${truth.build} · Administrator</title>`);out=out.replace(/(<button\b[^>]*\bid=["']atlasVersionTruthControl["'][^>]*\baria-label=["'])[^"']*(["'])/i,`$1Version Agent-Crypto chargée : Build ${truth.build}, mode Administrator$2`);out=out.replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,`<span id="atlasVersionTruthText">Build ${truth.build} · Administrator</span>`);out=out.replace(/<span\s+id=["']footerRelease["'][^>]*>[\s\S]*?<\/span>/i,`<span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build ${truth.build} · Version : Parker Lewis Can't Lose</span>`);out=out.replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi,`AGENT-CRYPTO ${truth.build} · ADMINISTRATOR`);out=injectStorageQuotaTruth(out,truth);out=injectCommandCenterRouter(out,truth);out=injectCanonicalEvidence(out,truth);return stampLocalAssets(out,truth.build);}
