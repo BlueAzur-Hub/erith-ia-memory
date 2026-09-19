@@ -16,19 +16,23 @@ jobs:
           ref: 97abaedb2de2f8381df28471c29a0ac3eef06de1
           fetch-depth: 0
 
-      - name: Build exact release ZIP
+      - name: Build exact release delta ZIP
         shell: bash
         run: |
           set -euo pipefail
-          git archive --format=zip             --output=AGENT_CRYPTO_40.6.268_EXACT_97abaedb.zip             97abaedb2de2f8381df28471c29a0ac3eef06de1
-          sha256sum AGENT_CRYPTO_40.6.268_EXACT_97abaedb.zip             > AGENT_CRYPTO_40.6.268_EXACT_97abaedb.zip.sha256
+          PARENT=c8f7f2e260456ef63abd46ee0b552d4c10123fbc
+          TARGET=97abaedb2de2f8381df28471c29a0ac3eef06de1
+          git diff --name-only --diff-filter=ACMRT "$PARENT" "$TARGET" > /tmp/agent_crypto_406268_files.txt
+          test -s /tmp/agent_crypto_406268_files.txt
+          zip -9 AGENT_CRYPTO_40.6.268_EXACT_DELTA_97abaedb.zip -@ < /tmp/agent_crypto_406268_files.txt
+          sha256sum AGENT_CRYPTO_40.6.268_EXACT_DELTA_97abaedb.zip             > AGENT_CRYPTO_40.6.268_EXACT_DELTA_97abaedb.zip.sha256
 
-      - name: Upload release artifact
+      - name: Upload exact release delta
         uses: actions/upload-artifact@v4
         with:
-          name: AGENT_CRYPTO_40.6.268_EXACT_97abaedb
+          name: AGENT_CRYPTO_40.6.268_EXACT_DELTA_97abaedb
           path: |
-            AGENT_CRYPTO_40.6.268_EXACT_97abaedb.zip
-            AGENT_CRYPTO_40.6.268_EXACT_97abaedb.zip.sha256
+            AGENT_CRYPTO_40.6.268_EXACT_DELTA_97abaedb.zip
+            AGENT_CRYPTO_40.6.268_EXACT_DELTA_97abaedb.zip.sha256
           if-no-files-found: error
           retention-days: 7
