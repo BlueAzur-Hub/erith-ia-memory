@@ -1,0 +1,38 @@
+name: Package Agent-Crypto 40.6.269
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact recovery commit
+        uses: actions/checkout@v4
+        with:
+          ref: 1bb0f7fea57823aa84c722da22a58e65f1efe7a2
+          fetch-depth: 0
+
+      - name: Build exact recovery delta ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          PARENT=ba0a6c47205904961d36a5d0039581b9ab518fb6
+          TARGET=1bb0f7fea57823aa84c722da22a58e65f1efe7a2
+          git diff --name-only --diff-filter=ACMRT "$PARENT" "$TARGET" > /tmp/agent_crypto_406269_files.txt
+          test -s /tmp/agent_crypto_406269_files.txt
+          zip -9 AGENT_CRYPTO_40.6.269_EMERGENCY_STABILITY_RESTORE_EXACT_1bb0f7fe.zip -@ < /tmp/agent_crypto_406269_files.txt
+          sha256sum AGENT_CRYPTO_40.6.269_EMERGENCY_STABILITY_RESTORE_EXACT_1bb0f7fe.zip             > AGENT_CRYPTO_40.6.269_EMERGENCY_STABILITY_RESTORE_EXACT_1bb0f7fe.zip.sha256
+
+      - name: Upload exact recovery artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_40.6.269_EMERGENCY_STABILITY_RESTORE_EXACT_1bb0f7fe
+          path: |
+            AGENT_CRYPTO_40.6.269_EMERGENCY_STABILITY_RESTORE_EXACT_1bb0f7fe.zip
+            AGENT_CRYPTO_40.6.269_EMERGENCY_STABILITY_RESTORE_EXACT_1bb0f7fe.zip.sha256
+          if-no-files-found: error
+          retention-days: 7
