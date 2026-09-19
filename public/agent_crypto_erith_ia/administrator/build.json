@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.271",
+  "build": "40.6.272",
   "engine": "38.15.11",
-  "release": "RECOVERY · PRE-ROLLBACK FUNCTIONAL RESTORE",
+  "release": "RECOVERY · STRATEGY A DURABLE EVIDENCE · BOUNDED OWNER",
   "published": true,
-  "status": "recovery_pre_rollback_functional_restore_406271",
-  "parent_build": "40.6.270",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.271",
-  "administrator_build": "40.6.271",
-  "build_label": "Build 40.6.271 · Administrator",
+  "status": "recovery_strategy_a_durable_evidence_bounded_406272",
+  "parent_build": "40.6.271",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.272",
+  "administrator_build": "40.6.272",
+  "build_label": "Build 40.6.272 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -67,19 +67,22 @@
     "The 40.6.268 durable evidence source remains in Git history but is not loaded in this recovery build."
   ],
   "terrain_pending": [
-    "Wait until GitHub Pages exposes Build 40.6.271 · Administrator.",
+    "Wait until GitHub Pages exposes Build 40.6.272 · Administrator.",
     "Ctrl+F5 once.",
-    "Verify Decision Intelligence uses the canonical stable owner and does not show the rollback 40.6.243 owner.",
-    "Verify Oracle, Atlas, Strategy A evidence, News and Lecture Technique are present.",
-    "Open/close Decision Intelligence once and confirm Firefox remains responsive.",
-    "If repeated multi-second stalls return, stop; do not add another rollback."
+    "Confirm Decision Intelligence still opens without the former multi-second stall.",
+    "In Strategy A, confirm STRATEGY A · DURABLE EVIDENCE · 40.6.272 reports DURABLE READY.",
+    "Confirm existing 40.6.268 IndexedDB evidence, if present in this Firefox profile, is visible again.",
+    "Allow one normal Strategy A/Atlas cycle, then reload once and verify durable counts survive.",
+    "Confirm no Firefox slow-page warning returns during ordinary navigation.",
+    "If any repeated stall returns, stop and keep 40.6.271 as rollback checkpoint."
   ],
   "release_notes": [
-    "Restores the complete pre-rollback runtime/control code from 40.6.267 while keeping current data snapshots.",
-    "Restores canonical Decision Intelligence, Event Memory, Historical Analog, Regime, Calibration, Explainability/Acceptance and Strategy A proof refresh wiring.",
-    "Restores the pre-rollback Administrator entry/runtime shell instead of the 40.6.270 40.6.247 rollback.",
-    "Does not load the 40.6.268 IndexedDB durable-evidence module in this recovery pass.",
-    "Market Core 38.15.11 and real-order lock remain protected."
+    "Restores the 40.6.268 durable Strategy A evidence capability on top of the recovered 40.6.267 terrain-PASS runtime.",
+    "Reuses the exact 40.6.268 IndexedDB database/schema so evidence already written by 40.6.268 can be read again.",
+    "Removes the 40.6.268 hot market-series capture path and does not perform a full evidence capture during boot.",
+    "Evidence writes are incremental and coalesced on bounded evidence/CURRENT events plus visibility/pagehide checkpoints.",
+    "Merged durable reads are cached; no repeated full JSON clone/merge loop is attached to market ticks.",
+    "Market Core 38.15.11, Decision Intelligence logic, Oracle, Atlas CURRENT, Strategy A thresholds, Cost Gate and real-order locks are unchanged."
   ],
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
@@ -242,7 +245,7 @@
     "terrain_proof": "PASS_FIREFOX_406238",
     "firefox_proof_in": "40.6.239"
   },
-  "new_persistent_storage_owner": false,
+  "new_persistent_storage_owner": true,
   "new_volatile_fallback_owner": true,
   "local_storage_quota_truth": {
     "repair_in": "40.6.239",
@@ -916,5 +919,29 @@
   },
   "recovery_source_build": "40.6.267",
   "recovery_source_commit": "1a629a89eda07ff69665cef0cff168782c5e7748",
-  "recovery_policy": "restore functional pre-rollback runtime; preserve current market/news data; do not load 40.6.268 durable evidence owner"
-}
+  "recovery_policy": "restore functional pre-rollback runtime; preserve current market/news data; do not load 40.6.268 durable evidence owner",
+  "recovered_feature_build": "40.6.268",
+  "recovered_feature_commit": "97abaedb2de2f8381df28471c29a0ac3eef06de1",
+  "durable_evidence_recovery": {
+    "recovered_from_build": "40.6.268",
+    "recovered_from_commit": "97abaedb2de2f8381df28471c29a0ac3eef06de1",
+    "database": "agent_crypto_strategy_a_durable_evidence_v1",
+    "schema_compatible_with_406268": true,
+    "existing_406268_indexeddb_rows_reused": true,
+    "hot_market_series_listener": false,
+    "initial_full_capture": false,
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "network": false,
+    "thresholds_changed": false,
+    "real_order": false,
+    "bounded_events": [
+      "agentcrypto:current-finalized",
+      "agent-crypto:evidence-refresh-complete",
+      "agent-crypto:evidence-data-changed",
+      "visibility-hidden",
+      "pagehide"
+    ],
+    "performance_strategy": "coalesced idle capture + incremental ID writes + cached merged reads"
+  }
+}\n
