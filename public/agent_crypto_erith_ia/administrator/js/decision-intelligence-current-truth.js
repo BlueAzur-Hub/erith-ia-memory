@@ -1,6 +1,6 @@
 /* Agent-Crypto @erith.IA — Decision Intelligence Current Truth
    Canonical read-only owner.
-   40.6.258 presentation placement: family 01 · Analyse & décision, directly under its family header.
+   40.6.259 DOM parent repair: Decision Intelligence is a real child of family 01 · Analyse & décision.
    Computes the existing Event → Memory → Analogs → Regime → Calibration → Survival → Explainability chain once,
    shares prepared inputs across owners, caches the current result, and renders without recursive recomputation.
    No hard-coded runtime build, no fetch, no timer, no observer, no storage write, no order. */
@@ -220,16 +220,12 @@
       </details>`;
   }
 
-  function hostAnchor(){
-    /* 40.6.258 — presentation-only correction.
-       Decision Intelligence belongs to family 01 · Analyse & décision.
-       Mount directly after the canonical family 01 header so it is visually
-       attached to that family, before the other analysis subsections.
-       Fallbacks preserve availability if the family header is unavailable. */
-    return document.getElementById("atlasLayoutFamily01")?.closest(".atlas-layout-family")
-      || document.querySelector(".atlas-layout-family-analysis")
-      || document.getElementById("multi-horizon")
-      || document.getElementById("news-sentinel");
+  function family01Host(){
+    /* 40.6.259 — structural parent repair.
+       Family 01 is the real DOM owner. No sibling fallback is allowed:
+       if family 01 is unavailable, do not create an orphan panel. */
+    return document.getElementById("atlasLayoutFamily01")?.closest(".atlas-layout-family-analysis")
+      || document.querySelector(".atlas-layout-family-analysis");
   }
 
   function render(state){
@@ -275,13 +271,23 @@
   }
 
   function mount(){
+    const family=family01Host();
+    if(!family)return false;
+
     let details=document.getElementById(DETAILS_ID);
     if(!details){
-      const anchor=hostAnchor();
-      if(!anchor)return false;
-      anchor.insertAdjacentHTML("afterend",markup());
+      family.insertAdjacentHTML("beforeend",markup());
       details=document.getElementById(DETAILS_ID);
+    }else if(details.parentElement!==family){
+      family.append(details);
     }
+
+    if(details){
+      details.style.gridColumn="1 / -1";
+      details.style.width="100%";
+      details.style.marginTop="4px";
+    }
+
     bind(details);
     if(details?.open)queueMicrotask(()=>refresh());
     return !!details;
@@ -307,7 +313,7 @@
     financial_signal:false,
     presentation_family:"analysis",
     presentation_family_number:"01",
-    presentation_move_in:"40.6.258"
+    presentation_move_in:"40.6.259"
   });
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
