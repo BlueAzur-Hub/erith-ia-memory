@@ -1,13 +1,13 @@
-/* Agent-Crypto Administrator — 40.6.273 PERFORMANCE / BOOK CANARY
-   Canonical Strategy A evidence modules stay available, but no longer execute
-   as a parser-blocking boot wall. They load in original order on explicit
-   Strategy A demand or, after first usable paint, one module per browser idle
-   slice. No recurring timer, observer, business network request or order path. */
+/* Agent-Crypto Administrator — 40.6.274 BOOT QUIETNESS / TRUE DEMAND
+   Canonical Strategy A evidence modules stay fully available, but do not wake
+   merely because the page finished loading. They load in original order only
+   on explicit Strategy A demand, paced one module per browser idle slice.
+   No recurring timer, observer, business network request or order path. */
 (() => {
   "use strict";
   if (globalThis.AgentCryptoCanonicalEvidenceWiring?.owner === "strategy-a-evidence-demand-loader.js") return;
 
-  const BUILD = "40.6.273";
+  const BUILD = "40.6.274";
   const MODULES = Object.freeze([
     "./js/strategy-a-evidence-lifecycle-truth.js",
     "./js/strategy-a-foundation-applicability-truth.js",
@@ -79,21 +79,21 @@
   }
   function mountEvidence() {
     try{globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.("406273-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.("406274-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3CascadeCheckpoint?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3ProspectiveT0Capture?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh?.("406273-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh?.("406274-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3PostHorizonOutcome?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount?.("406273-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount?.("406274-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3OutcomeCertification?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3RealisticReplayReadiness?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3ForwardEvidenceBridge?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render?.("406273-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render?.("406273-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount?.("406273-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render?.("406273-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render?.("406273-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoAdministratorOperatorFocus?.requestSettled?.("406273-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render?.("406274-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render?.("406274-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount?.("406274-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render?.("406274-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render?.("406274-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoAdministratorOperatorFocus?.requestSettled?.("406274-demand-owner");}catch(_){}
   }
   async function load(reason="manual") {
     reasonLast=String(reason||"manual");
@@ -106,8 +106,8 @@
       }
       complete=true;
       mountEvidence();
-      try{document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready",{detail:{modules:MODULES.slice(),source:"40.6.273-demand-idle"}}));}catch(_){}
-      try{document.dispatchEvent(new CustomEvent("agent-crypto:evidence-data-changed",{detail:{source:"40.6.273-demand-idle"}}));}catch(_){}
+      try{document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready",{detail:{modules:MODULES.slice(),source:"40.6.274-demand-only"}}));}catch(_){}
+      try{document.dispatchEvent(new CustomEvent("agent-crypto:evidence-data-changed",{detail:{source:"40.6.274-demand-only"}}));}catch(_){}
       return MODULES.slice();
     })();
     try { return await loading; } finally { loading=null; }
@@ -118,30 +118,22 @@
     const anchor=target.closest('a[href*="strategyA"],a[href*="StrategyA"]');
     return !!anchor;
   }
-  function requestBackground() {
-    const run=()=>{void load("idle-after-first-paint");};
-    if (typeof requestIdleCallback === "function") requestIdleCallback(run,{timeout:20000});
-    else setTimeout(run,2500);
-  }
-
   document.addEventListener("click",event=>{if(strategyIntent(event.target))void load("operator-strategy-demand");},true);
   if (String(location.hash||"").toLowerCase().includes("strategya")) void load("strategy-hash-demand");
-  if (document.readyState === "complete") requestBackground();
-  else window.addEventListener("load",requestBackground,{once:true,passive:true});
 
   globalThis.AgentCryptoCanonicalEvidenceWiring=Object.freeze({
     build:BUILD,
     owner:"strategy-a-evidence-demand-loader.js",
-    mode:"DEMAND_OR_IDLE_PACED",
+    mode:"DEMAND_ONLY_PACED",
     modules:MODULES,
     presentation_modules:PRESENTATION,
     panels:PANEL_IDS,
     load,
     loaded:()=>Object.freeze(Array.from(loaded)),
     snapshot:()=>Object.freeze({
-      build:BUILD,owner:"strategy-a-evidence-demand-loader.js",mode:"DEMAND_OR_IDLE_PACED",
+      build:BUILD,owner:"strategy-a-evidence-demand-loader.js",mode:"DEMAND_ONLY_PACED",
       loaded:loaded.size,total:MODULES.length+PRESENTATION.length,complete,reason_last:reasonLast,
-      direct_parser_injection:false,idle_paced:true,recurring_timer:false,observer:false,
+      direct_parser_injection:false,idle_paced:true,automatic_background_load:false,recurring_timer:false,observer:false,
       business_network_request:false,real_order:false,paper_only:true,
       g3:"PENDING",g9:"LOCKED"
     })
