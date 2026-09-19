@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.273",
+  "build": "40.6.274",
   "engine": "38.15.11",
-  "release": "PERFORMANCE · BOOK CANARY · CACHE REUSE + EVIDENCE DEMAND LOAD",
+  "release": "BOOT QUIETNESS · TRUE DEMAND RESIDENCY",
   "published": true,
-  "status": "performance_book_canary_cache_evidence_demand_406273",
-  "parent_build": "40.6.272",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.273",
-  "administrator_build": "40.6.273",
-  "build_label": "Build 40.6.273 · Administrator",
+  "status": "boot_quietness_true_demand_residency_406274",
+  "parent_build": "40.6.273",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.274",
+  "administrator_build": "40.6.274",
+  "build_label": "Build 40.6.274 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -67,19 +67,21 @@
     "The 40.6.268 durable evidence source remains in Git history but is not loaded in this recovery build."
   ],
   "terrain_pending": [
-    "40.6.273 Ryzen cold/warm boot terrain timing",
-    "40.6.273 Transformer Book canary: Classic boot responsiveness and no freeze",
-    "40.6.273 Oracle + Math Core availability on Book",
-    "40.6.273 Intermediate + Administrator navigation on Book",
-    "40.6.273 Strategy A demand/idle evidence pack visibility after first usable paint"
+    "40.6.274 Ryzen: Classic boot usable; Oracle + Math Core alive; no visual regression.",
+    "40.6.274 Transformer Book: normal Classic load, no reload spam; compare time-to-usable and Firefox slow-page warning against 40.6.273.",
+    "40.6.274 Book: verify Intermediate and Administrator remain accessible.",
+    "40.6.274 Strategy A: evidence pack must remain absent before explicit Strategy A intent, then progressively appear on demand.",
+    "40.6.274 Sources/Backend: Source Truth demand still loads DEX freshness + downstream readers; Strategy A ↔ TRADUS comparative/outcome must wake on explicit Strategy A intent or explicit source demand."
   ],
   "release_notes": [
-    "40.6.273 is a bounded boot-performance surgery. No feature is removed.",
-    "Global per-release cache busting is retired because it forced byte-identical JS/CSS to be fetched/reparsed again on every build; this restores the cache-reuse principle established in the 40.4.63 performance work.",
-    "The 25-module Strategy A canonical evidence pack is no longer injected as a synchronous boot wall. A single deferred owner loads the same modules in the same order on explicit Strategy A demand or after first paint, paced one module per browser idle slice.",
-    "The legacy 40.6.192 evidence supplement bootstrap no longer auto-starts at window.load; it delegates to the canonical demand owner only when explicitly called.",
-    "Market Core 38.15.11, Oracle logic, Math Core, Shared Memory data, Atlas CURRENT, Lecture Technique, Strategy A business rules and real-order locks are unchanged.",
-    "40.6.272 remains the rollback checkpoint if Book canary terrain fails."
+    "40.6.274 is a bounded boot-quietness surgery; no business feature is removed.",
+    "Strategy A evidence no longer auto-loads after first paint. It is now true explicit-demand residency, still paced one module per browser idle slice and preserving module order.",
+    "Strategy A ↔ TRADUS comparative/outcome owners no longer wake on parser, microtask, load or pageshow. They remain available on explicit Strategy A intent and after explicit Source Truth demand.",
+    "The historical empty ./app.js parser transport is removed from runtime-shell.html; canonical Administrator runtime remains ./js/app.js.",
+    "Unused Strategy A evidence/panel tables are removed from canonical index.html; the live evidence owner remains js/strategy-a-evidence-demand-loader.js.",
+    "Only changed loaders receive targeted 40.6.274 cache identity; global per-release cache busting remains retired.",
+    "Market Core 38.15.11, Oracle, Math Core, Shared Memory, Atlas CURRENT, Lecture Technique, Strategy A thresholds/gates/order policy, IndexedDB schemas and real-order locks are unchanged.",
+    "40.6.273 remains the immediate rollback checkpoint for this surgery."
   ],
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
@@ -170,7 +172,10 @@
     "presentation_refresh_settled_event": "agent-crypto:administrator-presentation-settled",
     "presentation_refresh_foundation_rerun": false,
     "presentation_refresh_market_series_trigger": false,
-    "presentation_refresh_click_trigger": false
+    "presentation_refresh_click_trigger": false,
+    "load_mode": "DEMAND_ONLY_PACED",
+    "automatic_idle_boot": false,
+    "boot_quietness_in": "40.6.274"
   },
   "news_workflow_contract": {
     "rebound_in": "40.6.233",
@@ -969,5 +974,29 @@
       "Strategy A evidence panels load after demand/idle and G3 remains PENDING / G9 LOCKED",
       "No Firefox slow-page warning during ordinary Book boot"
     ]
+  },
+  "boot_quietness_406274": {
+    "owner": "canonical entry + demand loaders",
+    "evidence_mode": "DEMAND_ONLY_PACED",
+    "evidence_background_idle_boot": false,
+    "strategy_tradus_parser_boot": false,
+    "strategy_tradus_microtask_boot": false,
+    "strategy_tradus_window_load_boot": false,
+    "strategy_tradus_pageshow_boot": false,
+    "strategy_tradus_explicit_demand": true,
+    "empty_root_app_transport_removed": true,
+    "index_dead_evidence_tables_removed": true,
+    "targeted_cache_tokens": [
+      "js/strategy-a-evidence-demand-loader.js?v=40.6.274",
+      "js/views/private-source-demand-loader.js?v=40.6.274"
+    ],
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "math_core_modified": false,
+    "lecture_technique_modified": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "business_network_request_added": false,
+    "real_order": false
   }
 }
