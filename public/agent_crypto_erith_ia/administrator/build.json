@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.256",
+  "build": "40.6.257",
   "engine": "38.15.11",
-  "release": "ADMIN IDLE AUTH CONTINUITY · NON-BLOCKING BRIDGE EXPIRY",
+  "release": "DECISION INTELLIGENCE · FAMILY 02 PLACEMENT",
   "published": true,
-  "status": "administrator_idle_auth_continuity_nonblocking_bridge_expiry_406256",
-  "parent_build": "40.6.255",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.256",
-  "administrator_build": "40.6.256",
-  "build_label": "Build 40.6.256 · Administrator",
+  "status": "decision_intelligence_family_02_presentation_placement_406257",
+  "parent_build": "40.6.256",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.257",
+  "administrator_build": "40.6.257",
+  "build_label": "Build 40.6.257 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -51,25 +51,26 @@
     "19/09 code audit: Strategy A Paper V2 proof bridge had no live evidence refresh after mount, so its visible CURRENT could remain stale while Retrospective Validation had advanced.",
     "19/09 operator history: after several unattended hours / overnight, the privileged Bridge session expired and Aether Trust reopened even though the local Administrator cockpit should remain available.",
     "40.6.255 source audit: renewal depends on an already-validated secret held only in document JS memory; a restored/reloaded document can legitimately lose that secret while sessionStorage still remembers the local Administrator role.",
-    "Decision Intelligence placement audited: js/decision-intelligence-current-truth.js declares data-layout-family=analysis and mounts after News Sentinel; it canonically belongs to family 01 Analyse & décision and is intentionally not moved."
+    "Decision Intelligence placement audited: js/decision-intelligence-current-truth.js declares data-layout-family=analysis and mounts after News Sentinel; it canonically belongs to family 01 Analyse & décision and is intentionally not moved.",
+    "40.6.256 Firefox screenshot proved Decision Intelligence still rendered between family 01 content and the family 02 header.",
+    "Operator explicitly corrected the intended information architecture: Decision Intelligence belongs under 02 · Intelligence, mémoire & création.",
+    "Code audit identified a single placement owner: js/decision-intelligence-current-truth.js hostAnchor() still preferred #news-sentinel and markup still declared data-layout-family=analysis."
   ],
   "terrain_pending": [
-    "Wait until GitHub Pages exposes Build 40.6.256 · Administrator.",
-    "Hard reload once and authenticate Administrator normally.",
-    "Leave the Administrator tab unattended through the previous multi-hour Bridge-token expiry horizon.",
-    "Expected: privileged Bridge expiry may pause Atlas local, but MUST NOT automatically open the Aether Trust dialog or replace the Administrator cockpit.",
-    "On return, explicit local Atlas/Bridge use may request Aether Trust if renewal is genuinely required.",
-    "If the in-memory secret is still available, the existing 60 s Bridge supervisor may continue renewing as in 40.6.255.",
-    "Explicit Lock and Operator handoff must still clear credentials and change role normally.",
-    "Confirm Strategy A proof live refresh from 40.6.255 remains intact and no Firefox slowdown appears."
+    "Wait until GitHub Pages exposes Build 40.6.257 · Administrator.",
+    "Hard reload once.",
+    "Expected order: 01 · Analyse & décision finishes, then 02 · Intelligence, mémoire & création header, then Decision Intelligence · vérité courante, then Atlas-10 + Aerith-10 Crypto.",
+    "Open Decision Intelligence once; expected: same Current Truth computation/status as 40.6.256.",
+    "Expected: no Firefox slowdown, no duplicate section, no change to Atlas CURRENT, Oracle, Strategy A, Market Core or Bridge auth continuity."
   ],
   "release_notes": [
-    "Preserves the 40.6.255 pre-expiry renewal path and volatile-secret policy.",
-    "Changes only the reaction to an expired privileged Bridge token during unattended/background operation: Atlas pauses, but the local Administrator shell remains open.",
-    "Aether Trust opens automatically only for explicit/manual Atlas preflight or a protected-route failure with recent visible operator intent.",
-    "No password is persisted. No new timer, observer, storage owner, network owner or trading path is added.",
-    "Decision Intelligence remains in family 01 Analyse & décision; its canonical layout ownership is verified, not moved.",
-    "Market Core 38.15.11, Atlas CURRENT semantics, Auto Reader 40.6.254, Strategy A rules, Decision Intelligence engine, Oracle, Lecture Technique and Web Classique are unchanged.",
+    "Moves only Decision Intelligence · vérité courante from family 01 presentation placement to family 02 · Intelligence, mémoire & création.",
+    "The canonical Decision Intelligence computation/cache owner is unchanged; only its DOM anchor, family metadata and visual tone are changed.",
+    "Mount target is the canonical family 02 header; the subsection is inserted immediately after that header and before Atlas-10 + Aerith-10 Crypto.",
+    "40.6.256 Administrator idle Bridge-auth continuity remains unchanged.",
+    "40.6.255 Strategy A live evidence refresh remains unchanged.",
+    "40.6.254 Auto Reader / Atlas resident recovery remains unchanged.",
+    "Market Core 38.15.11, Atlas CURRENT, Decision Intelligence business logic, Oracle, Lecture Technique, Strategy A business rules, Aether and Web Classique are unchanged.",
     "PAPER ONLY. G3 PENDING. G9 LOCKED. No real order path is changed."
   ],
   "strategy_a_canonical_evidence_wiring": {
@@ -372,7 +373,12 @@
     "news_owner_modified": false,
     "automatic_order": false,
     "execution_authorized": false,
-    "terrain_proof": "PENDING_FIREFOX_406253"
+    "terrain_proof": "PENDING_FIREFOX_406253",
+    "presentation_family": "intelligence",
+    "presentation_family_number": "02",
+    "presentation_move_in": "40.6.257",
+    "presentation_anchor": "atlasLayoutFamily02",
+    "engine_logic_changed_in_406257": false
   },
   "atlas_presentation_modified": false,
   "rollback": {
@@ -590,6 +596,30 @@
     "canonical_family_label": "Analyse & décision",
     "anchor": "news-sentinel",
     "move_required": false,
-    "reason": "Decision Intelligence is an analysis/decision surface; screenshot placement before family 02 is canonical."
+    "reason": "Decision Intelligence is an analysis/decision surface; screenshot placement before family 02 is canonical.",
+    "superseded_by": "40.6.257",
+    "superseded_reason": "Operator clarified the intended information architecture: move Decision Intelligence under family 02."
+  },
+  "decision_intelligence_layout_move_406257": {
+    "parent": "40.6.256",
+    "module": "js/decision-intelligence-current-truth.js",
+    "from_family": "analysis",
+    "from_family_number": "01",
+    "to_family": "intelligence",
+    "to_family_number": "02",
+    "target_header_id": "atlasLayoutFamily02",
+    "insertion": "after_family_02_header_before_local_ai",
+    "class_tone": "atlas-tone-intelligence",
+    "data_layout_family": "intelligence",
+    "computation_changed": false,
+    "cache_changed": false,
+    "fetch_changed": false,
+    "timer_added": false,
+    "observer_added": false,
+    "storage_write_added": false,
+    "market_core_modified": false,
+    "atlas_current_modified": false,
+    "strategy_a_modified": false,
+    "real_orders": false
   }
 }

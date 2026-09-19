@@ -1,5 +1,6 @@
 /* Agent-Crypto @erith.IA — Decision Intelligence Current Truth
    Canonical read-only owner.
+   40.6.257 presentation placement: family 02 · Intelligence, mémoire & création.
    Computes the existing Event → Memory → Analogs → Regime → Calibration → Survival → Explainability chain once,
    shares prepared inputs across owners, caches the current result, and renders without recursive recomputation.
    No hard-coded runtime build, no fetch, no timer, no observer, no storage write, no order. */
@@ -204,10 +205,10 @@
 
   function markup(){
     return `
-      <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis"
+      <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence"
                id="${DETAILS_ID}"
                data-collapse-key="decision-intelligence-current-truth"
-               data-layout-family="analysis">
+               data-layout-family="intelligence">
         <summary class="atlas-collapse-summary">
           <span class="atlas-collapse-copy">
             <span class="atlas-collapse-title">Decision Intelligence · vérité courante</span>
@@ -220,9 +221,15 @@
   }
 
   function hostAnchor(){
-    return document.getElementById("news-sentinel")
-      || document.getElementById("multi-horizon")
-      || document.querySelector('[data-layout-family="analysis"]');
+    /* 40.6.257 — presentation-only relocation.
+       Decision Intelligence belongs to family 02. Mount directly after the
+       canonical family header, before the local Atlas/Aerith subsection.
+       Fallbacks preserve availability if family 02 is not yet mounted. */
+    return document.getElementById("atlasLayoutFamily02")?.closest(".atlas-layout-family")
+      || document.querySelector(".atlas-layout-family-intelligence")
+      || document.getElementById("atlas-local-ai-collapse")
+      || document.getElementById("news-sentinel")
+      || document.getElementById("multi-horizon");
   }
 
   function render(state){
@@ -297,7 +304,10 @@
     new_observer:false,
     automatic_order:false,
     execution_authorized:false,
-    financial_signal:false
+    financial_signal:false,
+    presentation_family:"intelligence",
+    presentation_family_number:"02",
+    presentation_move_in:"40.6.257"
   });
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
