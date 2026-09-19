@@ -1,6 +1,6 @@
 /* Agent-Crypto @erith.IA — Decision Intelligence Current Truth
    Canonical read-only owner.
-   40.6.261 structural integration: Decision Intelligence is a real child of the family 01 content container.
+   40.6.263 canonical mount: Decision Intelligence is physically contained by a dedicated top-level Section 01 family slot.
    Computes the existing Event → Memory → Analogs → Regime → Calibration → Survival → Explainability chain once,
    shares prepared inputs across owners, caches the current result, and renders without recursive recomputation.
    No hard-coded runtime build, no fetch, no timer, no observer, no storage write, no order. */
@@ -220,11 +220,13 @@
       </details>`;
   }
 
-  function section01Content(){
-    /* 40.6.261 — structural ownership.
-       Decision Intelligence is a real subsection of 01 · Analyse & décision.
-       The content container is the only valid presentation parent. */
-    return document.getElementById("atlasSection01Content");
+  function section01Slot(){
+    /* 40.6.263 — canonical Section 01 subsection slot.
+       Section 01 is owned by the Administrator Window Manager as a top-level
+       semantic family. The slot is itself a top-level analysis-family member;
+       Decision Intelligence is physically mounted inside it, so the panel is
+       contained by 01 without wrapping or restructuring the existing family. */
+    return document.getElementById("decisionIntelligenceSection01Slot");
   }
 
   function render(state){
@@ -270,15 +272,15 @@
   }
 
   function mount(){
-    const content=section01Content();
-    if(!content)return false;
+    const slot=section01Slot();
+    if(!slot)return false;
 
     let details=document.getElementById(DETAILS_ID);
     if(!details){
-      content.insertAdjacentHTML("afterbegin",markup());
+      slot.insertAdjacentHTML("beforeend",markup());
       details=document.getElementById(DETAILS_ID);
-    }else if(details.parentElement!==content){
-      content.prepend(details);
+    }else if(details.parentElement!==slot){
+      slot.append(details);
     }
 
     bind(details);
@@ -306,7 +308,7 @@
     financial_signal:false,
     presentation_family:"analysis",
     presentation_family_number:"01",
-    presentation_move_in:"40.6.261"
+    presentation_move_in:"40.6.263"
   });
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
