@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.267",
+  "build": "40.6.268",
   "engine": "38.15.11",
-  "release": "STABILITY · DECISION INTELLIGENCE SINGLE-PASS",
+  "release": "STRATEGY A · DURABLE EVIDENCE CONTINUITY",
   "published": true,
-  "status": "stability_decision_intelligence_single_pass_406267",
-  "parent_build": "40.6.266",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.267",
-  "administrator_build": "40.6.267",
-  "build_label": "Build 40.6.267 · Administrator",
+  "status": "strategy_a_durable_evidence_continuity_406268",
+  "parent_build": "40.6.267",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.268",
+  "administrator_build": "40.6.268",
+  "build_label": "Build 40.6.268 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -64,24 +64,23 @@
     "Version Truth/Delivery guard failures since 40.6.254 are caused by whitespace-sensitive string markers in the guard, not by missing canonical-entry contracts."
   ],
   "terrain_pending": [
-    "Wait until GitHub Pages exposes Build 40.6.267 · Administrator.",
+    "Wait until GitHub Pages exposes Build 40.6.268 · Administrator.",
     "Hard reload Firefox once.",
-    "Scroll to Decision Intelligence in Section 01.",
-    "Open Decision Intelligence once and verify there is no Firefox slowdown banner and no multi-second stall.",
-    "Verify the resulting status codes remain coherent with the same data (for example NO_ANALOG / NO_SAMPLE where evidence is still absent).",
-    "Close and reopen: same-event cached result must be immediate.",
-    "Verify Déplier/Replier state remains correct.",
-    "Verify Section 01 Window Manager controls remain intact.",
-    "Verify Oracle, Binance live prices, Atlas CURRENT, Auto Reader, Strategy A and Lecture Technique remain responsive."
+    "Verify STRATEGY A · DURABLE EVIDENCE · 40.6.268 appears near the Experiment/After-Cost evidence area and reports DURABLE READY.",
+    "Let Auto A produce at least one additional NO TRADE cycle.",
+    "Hard reload Firefox again and verify the durable cycle count does not return to zero.",
+    "Verify Evidence Dossier/Experiment Ledger still sees merged durable cycles rather than a fresh-session zero.",
+    "Verify no Strategy A threshold changed and no PAPER trade is forced.",
+    "Verify Oracle, Binance, Atlas CURRENT, Auto Reader, Decision Intelligence and Lecture Technique remain responsive."
   ],
   "release_notes": [
-    "Decision Intelligence single-pass stability repair; no Section 01 placement or Window Manager change.",
-    "Event Memory now derives regime_t0 directly from the T0 Collector snapshot already selected by its indexed nearest lookup.",
-    "The hidden EventReactionLedger → EventReactionMemory path is no longer invoked from Event Memory regime projection, removing repeated full-record scans.",
-    "Decision Intelligence no longer constructs semantic clusters eagerly before Historical Analog analysis.",
-    "The 40.6.266 Historical Analog short-circuit can now return NO_ANALOG without paying any semantic clustering cost when no horizon-eligible historical reaction exists.",
-    "No threshold, analog rule, regime classification rule, calibration rule, Capital Survival rule or Strategy A business rule changed.",
-    "No new timer, observer, fetch, storage owner, model mutation, trading path or automatic order."
+    "Strategy A evidence continuity is now persisted locally in IndexedDB without changing any Strategy A threshold or decision rule.",
+    "The durable owner captures Experiment Ledger cycles, actual after-cost rows, and Auto Lifecycle Bridge PAPER states on existing runtime/evidence events; no new recurring timer is added.",
+    "Existing G3 prospective localStorage rows may be imported as legacy prospective evidence only; no missing historical cycle is fabricated.",
+    "Experiment Ledger and After-Cost read facades merge durable rows with current-session rows so reload no longer resets the evidence view to zero.",
+    "Browser hidden/pagehide periods are recorded as runtime gaps; missing time remains a gap rather than invented continuity.",
+    "A durable PAPER state still marked OPEN_SYNCED after reload is exposed as REVIEW REQUIRED and is never silently converted to CLOSED.",
+    "Market Core 38.15.11, Strategy A thresholds, Risk Governor, Decision Intelligence, Oracle, Atlas CURRENT, Lecture Technique, Bridge auth and real-order paths are unchanged."
   ],
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
@@ -244,7 +243,7 @@
     "terrain_proof": "PASS_FIREFOX_406238",
     "firefox_proof_in": "40.6.239"
   },
-  "new_persistent_storage_owner": false,
+  "new_persistent_storage_owner": true,
   "new_volatile_fallback_owner": true,
   "local_storage_quota_truth": {
     "repair_in": "40.6.239",
@@ -913,6 +912,38 @@
     "new_fetch": false,
     "new_storage_owner": false,
     "automatic_order": false,
+    "real_orders": false,
+    "terrain_status": "PENDING_FIREFOX"
+  },
+  "strategy_a_durable_evidence_406268": {
+    "parent": "40.6.267",
+    "base_commit": "c8f7f2e260456ef63abd46ee0b552d4c10123fbc",
+    "owner": "js/strategy-a-durable-evidence-store.js",
+    "database": "agent_crypto_strategy_a_durable_evidence_v1",
+    "stores": [
+      "cycles",
+      "after_cost",
+      "paper_states",
+      "runtime_gaps",
+      "meta"
+    ],
+    "experiment_ledger_merge_read": true,
+    "after_cost_merge_read": true,
+    "legacy_g3_prospective_import": true,
+    "historical_backfill_fabricated": false,
+    "runtime_gap_recording": true,
+    "unresolved_open_paper_review_required": true,
+    "new_recurring_timer": false,
+    "new_observer": false,
+    "new_network": false,
+    "indexeddb_write": true,
+    "thresholds_changed": false,
+    "strategy_a_business_logic_modified": false,
+    "cost_gate_modified": false,
+    "risk_governor_modified": false,
+    "market_core_modified": false,
+    "decision_intelligence_modified": false,
+    "bridge_auth_modified": false,
     "real_orders": false,
     "terrain_status": "PENDING_FIREFOX"
   }
