@@ -3900,6 +3900,15 @@
     <div id="oracle-view-host" data-oracle-presentation-host="true-lazy" aria-hidden="true"></div>
     <script src="./js/views/oracle-presentation.js"></script>
 
+    <!-- 40.6.263 — canonical Decision Intelligence subsection slot.
+         This top-level slot is owned by Window Manager family 01 through data-layout-family="analysis".
+         The Decision Intelligence panel is physically mounted inside this slot, so it is not orphaned
+         and no new parent is created around the existing Section 01 family. -->
+    <div id="decisionIntelligenceSection01Slot"
+         class="atlas-family-member atlas-tone-analysis"
+         data-layout-family="analysis"
+         data-analysis-owner="decision-intelligence-current-truth"></div>
+
 
     <details class="atlas-collapse glass news-sentinel-collapse atlas-family-member atlas-tone-analysis" id="news-sentinel" data-collapse-key="news-sentinel" data-layout-family="analysis" data-analysis-owner="news-contexte-sources-causalite-prudente">
       <summary class="atlas-collapse-summary">
@@ -4927,6 +4936,7 @@
   <script src="./js/capital-survival.js"></script>
   <script src="./js/decision-intelligence-acceptance.js"></script>
   <script src="./js/decision-explainability.js"></script>
+  <script src="./js/decision-intelligence-current-truth.js"></script>
   <script src="./js/cross-market-owner-map.js"></script>
   <script src="./js/canonical-freeze.js"></script>
   

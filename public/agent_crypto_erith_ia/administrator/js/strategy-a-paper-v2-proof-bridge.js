@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.155 STRATEGY A PAPER V2 EVIDENCE GATE DETAIL
+/* Agent-Crypto @erith.IA — 40.6.255 STRATEGY A PAPER V2 EVIDENCE LIVE REFRESH
    Read-only presentation companion. It connects existing Strategy A PAPER truth
    with CURRENT → POST-CURRENT → retrospective history evidence.
    No threshold change, no order path, no wallet, no credentials, no fetch,
@@ -6,7 +6,7 @@
 (() => {
   "use strict";
 
-  const RELEASE = "40.6.155";
+  const RELEASE = "40.6.255";
   const OWNER = "strategy-a-paper-v2-proof-bridge";
   const ROOT_ID = "strategyAPaperV2ProofBridge";
   const STYLE_ID = "strategyAPaperV2ProofBridgeStyle";
@@ -267,10 +267,34 @@
     fetch_added: false,
     timer_added: false,
     observer_added: false,
-    storage_write: false
+    storage_write: false,
+    live_refresh_406255: true,
+    live_refresh_events: Object.freeze([
+      "agentcrypto:current-finalized",
+      "agent-crypto:evidence-data-changed",
+      "agent-crypto:evidence-refresh-complete",
+      "agent-crypto:market-series-updated",
+      "visibilitychange",
+      "pageshow"
+    ])
   });
 
   let mounted = false;
+  let liveRefreshQueued = false;
+
+  const scheduleLiveRefresh = (reason = "event") => {
+    if (liveRefreshQueued) return true;
+    liveRefreshQueued = true;
+    queueMicrotask(() => {
+      liveRefreshQueued = false;
+      if (reason === "market-series-updated" && document.visibilityState === "hidden") return;
+      try {
+        if (!mounted && !byId(ROOT_ID)) attemptMount();
+        else render();
+      } catch (_) {}
+    });
+    return true;
+  };
 
   const cleanup = () => {
     document.removeEventListener("click", attemptMount, true);
@@ -295,6 +319,16 @@
   window.addEventListener("pageshow", attemptMount);
   document.addEventListener("agent-crypto:runtime-modules-ready", attemptMount, { once: true });
   document.addEventListener("erith:system-hydrated", attemptMount, { passive: true });
+
+  // 40.6.255 — targeted proof freshness only. No polling and no observer.
+  document.addEventListener("agentcrypto:current-finalized", () => scheduleLiveRefresh("current-finalized"), { passive: true });
+  document.addEventListener("agent-crypto:evidence-data-changed", () => scheduleLiveRefresh("evidence-data-changed"), { passive: true });
+  document.addEventListener("agent-crypto:evidence-refresh-complete", () => scheduleLiveRefresh("evidence-refresh-complete"), { passive: true });
+  document.addEventListener("agent-crypto:market-series-updated", () => scheduleLiveRefresh("market-series-updated"), { passive: true });
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") scheduleLiveRefresh("visibility-return");
+  }, { passive: true });
+  window.addEventListener("pageshow", () => scheduleLiveRefresh("pageshow"));
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => { attemptMount(); afterPaint(); }, { once: true });

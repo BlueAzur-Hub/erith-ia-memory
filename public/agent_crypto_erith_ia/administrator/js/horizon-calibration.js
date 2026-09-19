@@ -12,7 +12,7 @@
     return {low_pct:Math.max(0,(centre-half)*100),high_pct:Math.min(100,(centre+half)*100)};
   }
   function horizon(target,horizon,options={}){
-    const q=qApi()?.qualify?.(target,{...options,horizon,limit:50})||null;if(!q)return null;
+    const q=options.qualified_result||qApi()?.qualify?.(target,{...options,horizon,limit:50})||null;if(!q)return null;
     const vals=(q.qualified_analogs||[]).map(x=>finite(x.reaction_pct)).filter(Number.isFinite);
     const pos=vals.filter(v=>v>BAND).length,neg=vals.filter(v=>v<-BAND).length,neu=vals.length-pos-neg,dir=pos+neg;
     const status=vals.length>=30?"CALIBRATION_CANDIDATE":vals.length>=8?"DESCRIPTIVE_SAMPLE":vals.length?"INSUFFICIENT_SAMPLE":"NO_SAMPLE";
@@ -20,7 +20,12 @@
   }
   function analyze(targetInput,options={}){
     const target=targetInput?.memory_id?targetInput:(globalThis.AtlasEventMemory?.derive?.(targetInput)||null);if(!target)return null;
-    const h24=horizon(target,"+24h",options),h48=horizon(target,"+48h",options),sample=Math.min(h24?.sample_size||0,h48?.sample_size||0);
+    const qualified=options.qualified_by_horizon||{};
+    const q24=qualified["+24h"]||qApi()?.qualify?.(target,{...options,horizon:"+24h",limit:50})||null;
+    const q48=qualified["+48h"]||qApi()?.qualify?.(target,{...options,horizon:"+48h",limit:50})||null;
+    const h24=horizon(target,"+24h",{...options,qualified_result:q24});
+    const h48=horizon(target,"+48h",{...options,qualified_result:q48});
+    const sample=Math.min(h24?.sample_size||0,h48?.sample_size||0);
     const status=sample>=30?"CALIBRATION_CANDIDATE":sample>=8?"DESCRIPTIVE_ONLY":sample?"INSUFFICIENT_SAMPLE":"NO_SAMPLE";
     return Object.freeze({schema:SCHEMA,build:BUILD,target_event_id:target.event_id,asset:String(options.asset||target.assets?.[0]||"BTC").toUpperCase(),horizons:{"+24h":h24,"+48h":h48},status,calibration_rule:"n>=30 only marks candidate for later out-of-sample calibration; it does not certify a forecast probability",calibrated_probability:false,probability_claim:false,causal_claim:false,financial_signal:false,automatic_order:false});
   }

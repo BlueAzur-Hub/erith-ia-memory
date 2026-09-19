@@ -52,8 +52,33 @@
   }
   function canonical(members){return [...members].sort((a,b)=>Number(Boolean(b?.source?.primary))-Number(Boolean(a?.source?.primary))||Number(b?.evidence?.score||0)-Number(a?.evidence?.score||0)||(timeMs(a)||0)-(timeMs(b)||0))[0];}
   function clusters(){
-    const enriched=(globalThis.AtlasEventIntelligence?.archive?.()||[]).map(enrich).filter(Boolean);const groups=[];
-    for(const event of enriched){let group=groups.find(g=>g.some(x=>sameEvent(event,x)));if(!group){group=[];groups.push(group);}group.push(event);}
+    const enriched=(globalThis.AtlasEventIntelligence?.archive?.()||[]).map(enrich).filter(Boolean);
+    const groups=[],bucketIndex=new Map(),span=36*60*60*1000;
+    const bucketKey=(family,bucket)=>`${String(family??"")}|${bucket}`;
+    const addBucket=(family,bucket,groupIndex)=>{
+      const key=bucketKey(family,bucket);
+      let set=bucketIndex.get(key);
+      if(!set){set=new Set();bucketIndex.set(key,set);}
+      set.add(groupIndex);
+    };
+    for(const event of enriched){
+      const t=timeMs(event),family=event?.event_family??"";
+      let group=null,groupIndex=-1;
+      if(t!==null){
+        const bucket=Math.floor(t/span),candidates=new Set();
+        for(const b of [bucket-1,bucket,bucket+1]){
+          for(const idx of bucketIndex.get(bucketKey(family,b))||[])candidates.add(idx);
+        }
+        const ordered=[...candidates].sort((a,b)=>a-b);
+        for(const idx of ordered){
+          const candidate=groups[idx];
+          if(candidate?.some(x=>sameEvent(event,x))){group=candidate;groupIndex=idx;break;}
+        }
+      }
+      if(!group){group=[];groupIndex=groups.length;groups.push(group);}
+      group.push(event);
+      if(t!==null)addBucket(family,Math.floor(t/span),groupIndex);
+    }
     return Object.freeze(groups.map((members,i)=>{const c=canonical(members);const sources=[];for(const e of members){const key=[e?.source?.name,e?.source?.url].filter(Boolean).join("|");if(key&&!sources.some(s=>s.key===key))sources.push({key,name:e?.source?.name||null,url:e?.source?.url||null,primary:Boolean(e?.source?.primary)});}return Object.freeze({schema:"atlas_event_cluster_v1",build:BUILD,cluster_id:`cluster-${c?.event_id||i}`,canonical_event_id:c?.event_id||null,canonical:c,member_event_ids:members.map(e=>e.event_id).filter(Boolean),member_count:members.length,sources:sources.map(({key,...s})=>s),dedup_rule:"family + time<=36h + conservative headline/assets/action/amount similarity",causal_claim:false});}));
   }
   function archive(){return Object.freeze((globalThis.AtlasEventIntelligence?.archive?.()||[]).map(enrich).filter(Boolean));}

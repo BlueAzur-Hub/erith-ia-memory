@@ -1784,6 +1784,24 @@ const ATLAS_ACCESS_OPERATOR_ROLE = "operator"; // 40.4.140 — existing Intermed
 
 let atlasAccessPendingHash = "";
 
+/* 40.6.255 — BRIDGE AUTH CONTINUITY · EPHEMERAL SECRET ONLY.
+   The already-validated Administrator secret may live in JS memory for the
+   lifetime of this document so the existing Bridge supervisor can renew a
+   loopback session before expiry. It is never written to localStorage,
+   sessionStorage, IndexedDB, GitHub or any export, and is cleared on explicit
+   lock / role handoff. */
+let atlasBridgeAuthEphemeralSecret406255 = "";
+function atlasBridgeAuthEphemeralRemember406255(secret) {
+  const value = String(secret || "");
+  if (!value) return false;
+  atlasBridgeAuthEphemeralSecret406255 = value;
+  return true;
+}
+function atlasBridgeAuthEphemeralClear406255() {
+  atlasBridgeAuthEphemeralSecret406255 = "";
+  return true;
+}
+
 /* ============================================================
    40.4.61 — AETHER TRUST OPERATOR INTERACTION PRIORITY LOCK
 
@@ -2023,6 +2041,7 @@ async function atlasAccessSubmit(event) {
       }
     }
 
+    atlasBridgeAuthEphemeralRemember406255(secret);
     atlasAccessSetStatus("Mot de passe local validé · vérification Bridge…");
     try {
       atlasAccessPortalState("atlasAccessBridgeState","VÉRIFICATION…","warn");
@@ -2033,6 +2052,7 @@ async function atlasAccessSubmit(event) {
     await new Promise(resolve => requestAnimationFrame(resolve));
     const bridgeAuth = await atlasBridgeAuthLogin(secret);
     if (bridgeAuth.reachable && !bridgeAuth.ok) {
+      atlasBridgeAuthEphemeralClear406255();
       atlasAccessSetStatus(bridgeAuth.payload?.error || "Bridge : authentification Administrator refusée.", "error");
       atlasAccessSubmitBusy = false;
       atlasAccessSetBusy(false);
@@ -2095,6 +2115,7 @@ function atlasAccessLock() {
     if (storedReturnMode === "intermediate") returnMode = "intermediate";
     sessionStorage.removeItem(ATLAS_ACCESS_RETURN_MODE_KEY);
   } catch {}
+  atlasBridgeAuthEphemeralClear406255();
   void atlasBridgeAuthLogout();
   atlasAccessClearSession();
   atlasAccessPendingHash = "";
@@ -2111,6 +2132,7 @@ function atlasAccessEnterOperator(event) {
   try { event?.stopPropagation?.(); } catch (_) {}
 
   atlasOperatorPriorityAcquire("aether-trust-operator");
+  atlasBridgeAuthEphemeralClear406255();
   // This is the already-existing local Operator/Intermediate role, not a second cockpit.
   // Keep owner authentication semantics untouched: atlasAccessIsAuthorized() remains owner-only.
   atlasAccessSetSession(ATLAS_ACCESS_OPERATOR_ROLE);
@@ -15677,29 +15699,32 @@ function atlasResumeMarketPulse() {
   state.marketPulse.paused = false;
   if (!state.auto?.enabled || !atlasPulseVisible()) return;
 
-  /* 40.3.59 — VISIBILITY RESUME WORK COALESCING LOCK.
-     A tab return is not a market event. Reuse still-fresh market/spot/chart
-     state instead of forcing three refresh families to wake together. The
-     canonical 5 min / 30 s / 5 min cadences remain authoritative. */
+  /* 40.6.254 — RESIDENT AUTO READER REARM.
+     Local Auto Reader and canonical public-source freshness are separate clocks.
+     Returning to a visible tab rearms the single local timer without forcing a
+     new canonical market fetch unless the existing public 5 min probe is due. */
   if (!state.liveOk || !state.coins.length) {
     setTimeout(() => void runLivecheck({ reason: "visibility-resume-missing-market" }), 80);
+    scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
     return;
   }
 
-  const snapshotAt = Date.parse(state.timestamp || state.sourceLock?.timestamp || "");
-  const marketReference = Math.max(
-    Number(state.marketPulse.lastMarketSuccessAt || 0),
-    Number.isFinite(snapshotAt) ? snapshotAt : 0
+  const lastLocal = lastAutoSnapshot();
+  const localStamp = lastLocal?.last_seen_at || lastLocal?.saved_at || "";
+  const localAt = Date.parse(localStamp);
+  const localAgeMs = Number.isFinite(localAt) ? Math.max(0, Date.now() - localAt) : Infinity;
+  scheduleAutoRead(
+    localAgeMs >= ATLAS_AUTO_READER_LOCAL_REFRESH_MS
+      ? 1000
+      : Math.max(1000, ATLAS_AUTO_READER_LOCAL_REFRESH_MS - localAgeMs)
   );
-  const marketAgeMs = marketReference > 0 ? Math.max(0, Date.now() - marketReference) : Infinity;
 
-  if (marketAgeMs >= ATLAS_MARKET_REFRESH_MS) {
+  const publicReference = Number(state.marketPulse.lastMarketSuccessAt || 0);
+  const publicAgeMs = publicReference > 0 ? Math.max(0, Date.now() - publicReference) : Infinity;
+  if (publicAgeMs >= ATLAS_AUTO_READER_PUBLIC_PROBE_MS && !state.auto?.livecheckBusy) {
     setTimeout(() => void refreshMarketOnly({ reason: "visibility-resume-stale-market" }), 120);
-  } else {
-    scheduleAutoRead(Math.max(1000, ATLAS_MARKET_REFRESH_MS - marketAgeMs));
   }
 
-  // Both owners already implement their own freshness gates when force=false.
   setTimeout(() => void atlasRefreshSpotBook({ force: false }), 900);
   setTimeout(() => void atlasMaybeRefreshHistoricalChart({ force: false }), 1800);
 }
@@ -16028,6 +16053,12 @@ function atlasMarketRetryLabel(failureCount = 1) {
 }
 
 const ATLAS_MARKET_REFRESH_MS = 5 * 60 * 1000;
+
+// 40.6.254 — Auto Reader V4 cadence truth: local observation is 60 s,
+// while the canonical GitHub/CoinGecko public-source probe remains 5 min.
+// One existing state.auto timer owns the local heartbeat; no second scheduler.
+const ATLAS_AUTO_READER_LOCAL_REFRESH_MS = 60 * 1000;
+const ATLAS_AUTO_READER_PUBLIC_PROBE_MS = ATLAS_MARKET_REFRESH_MS;
 
 const ATLAS_PUBLIC_MARKET_ANALYSIS_MAX_AGE_MS = 45 * 60 * 1000;
 
@@ -25769,7 +25800,10 @@ function atlasLocalBridgeAutoTick(reason = "interval") {
   atlasLocalBridgeLastAutoProbeAt = now;
   atlasLocalBridgeProbeInFlight = true;
 
-  Promise.resolve(atlasLocalBridgeProbe({ silent: true, reason }))
+  Promise.resolve()
+    .then(() => atlasBridgeAuthMaybeRenew406255(reason))
+    .catch(() => false)
+    .then(() => atlasLocalBridgeProbe({ silent: true, reason }))
     .catch(() => null)
     .finally(() => {
       atlasLocalBridgeProbeInFlight = false;
@@ -26307,7 +26341,21 @@ function atlasAtlasStateTruth(snapshot,completed=0,auth="OK",detail=""){
   try{document.documentElement.dataset.atlasStateTruth=auth==="OK"?"ready":"auth-required";}catch(_){}
   return line;
 }
-function atlasBridgeAuthRequireTrust(reason="bridge-auth-required",pendingHash="#local-ai-hub",error=null){
+const ATLAS_BRIDGE_AUTH_OPERATOR_INTENT_WINDOW_406256_MS = 15 * 1000;
+function atlasBridgeAuthOperatorIntentRecent406256(){
+  try{
+    if(document.visibilityState!=="visible")return false;
+    if(typeof document.hasFocus==="function"&&!document.hasFocus())return false;
+    if(navigator.userActivation&&navigator.userActivation.hasBeenActive!==true)return false;
+    const last=Number(atlasAudienceState?.lastActivityAt||0);
+    return Number.isFinite(last)&&last>0&&(Date.now()-last)<=ATLAS_BRIDGE_AUTH_OPERATOR_INTENT_WINDOW_406256_MS;
+  }catch(_){return false;}
+}
+function atlasBridgeAuthRequireTrust(reason="bridge-auth-required",pendingHash="#local-ai-hub",error=null,options={}){
+  const explicitInteractive=options?.interactive===true;
+  const explicitPassive=options?.interactive===false;
+  const interactive=explicitInteractive||(!explicitPassive&&atlasBridgeAuthOperatorIntentRecent406256());
+
   atlasBridgeAuthClear();
   atlasLocalReportsState.authBlocked404273=true;
   atlasLocalReportsState.authBlockedReason404273=String(reason||"bridge-auth-required");
@@ -26317,12 +26365,34 @@ function atlasBridgeAuthRequireTrust(reason="bridge-auth-required",pendingHash="
   atlasLocalReportsState.deferredRetryReason="";
   atlasLocalReportsState.deferredRetryDelayMs=0;
   atlasLocalReportsState.deferredRetryRequestedAt=0;
-  atlasLocalReportsSetSuiteStatus("AUTH BRIDGE REQUISE · Atlas en pause · Aether Trust doit rétablir la session Administrator.","wait");
-  atlasAnalysisProgressRender(0,"error","Bridge joignable mais session Administrator invalide · Atlas suspendu sans avancer vers le rapport suivant.");
-  try{atlasAtlasStateTruth(atlasBuildCryptoPageSnapshot(),0,"REQUISE","AETHER TRUST");}catch(_){}
-  try{atlasLocalDialogueSetConnection(true,"Bridge Ryzen joignable · authentification Administrator requise pour Atlas/Aerith.");}catch(_){}
-  try{atlasAccessOpen(pendingHash||"#local-ai-hub");}catch(_){}
-  return {ok:false,reason:String(reason||"bridge-auth-required"),message:String(error?.message||"")};
+
+  const suiteMessage=interactive
+    ?"AUTH BRIDGE REQUISE · Atlas en pause · Aether Trust doit rétablir la session Bridge."
+    :"AUTH BRIDGE EXPIRÉE · Atlas en pause · session Administrator conservée · réauthentification au prochain usage local.";
+  const progressMessage=interactive
+    ?"Bridge joignable mais session Administrator Bridge invalide · Atlas suspendu jusqu’à réauthentification."
+    :"Bridge joignable mais token privilégié expiré pendant l’inactivité · cockpit Administrator conservé, aucun écran d’authentification imposé.";
+
+  atlasLocalReportsSetSuiteStatus(suiteMessage,"wait");
+  atlasAnalysisProgressRender(0,"error",progressMessage);
+  try{atlasAtlasStateTruth(atlasBuildCryptoPageSnapshot(),0,"REQUISE",interactive?"AETHER TRUST":"ADMIN CONSERVÉ");}catch(_){}
+  try{atlasLocalDialogueSetConnection(true,interactive
+    ?"Bridge Ryzen joignable · authentification Administrator requise pour Atlas/Aerith."
+    :"Bridge Ryzen joignable · authentification locale à renouveler au prochain usage Atlas/Aerith.");}catch(_){}
+
+  if(interactive){
+    try{delete document.documentElement.dataset.atlasBridgeAuthIdleHold;}catch(_){}
+    try{atlasAccessOpen(pendingHash||"#local-ai-hub");}catch(_){}
+  }else{
+    try{document.documentElement.dataset.atlasBridgeAuthIdleHold="1";}catch(_){}
+  }
+  return {
+    ok:false,
+    reason:String(reason||"bridge-auth-required"),
+    message:String(error?.message||""),
+    gate_opened:interactive,
+    administrator_session_preserved:atlasAccessIsAuthorized()
+  };
 }
 function atlasBridgeAuthRecoveryResolved(){
   atlasLocalReportsState.authBlocked404273=false;
@@ -26330,6 +26400,7 @@ function atlasBridgeAuthRecoveryResolved(){
   atlasLocalReportsState.authBlockedAt404273=0;
   atlasLocalReportsState.authBlockedFingerprint404273="";
   try{delete document.documentElement.dataset.atlasStateTruth;}catch(_){}
+  try{delete document.documentElement.dataset.atlasBridgeAuthIdleHold;}catch(_){}
   return true;
 }
 try{globalThis.ErithAtlasStateTruth=Object.freeze({
@@ -26354,7 +26425,7 @@ function atlasLocalBridgeRequestFailureKind(error) {
 function atlasLocalBridgeRequestFailure(error, path = "") {
   const kind = atlasLocalBridgeRequestFailureKind(error);
   if (kind === "auth") {
-    atlasBridgeAuthRequireTrust(`protected-route:${String(path||"unknown")}`,"#local-ai-hub",error);
+    atlasBridgeAuthRequireTrust(`protected-route:${String(path||"unknown")}`,"#local-ai-hub",error,{interactive:atlasBridgeAuthOperatorIntentRecent406256()});
     return kind;
   }
   if (!["timeout", "offline"].includes(kind)) return kind;
@@ -26378,6 +26449,9 @@ async function atlasLocalBridgeRequest(path, payload, timeoutMs = ATLAS_LOCAL_BR
     const error = new Error(atlasDeviceComputeBlockedMessage());
     error.name = "AtlasDeviceObserverError";
     throw error;
+  }
+  if (atlasAccessIsAuthorized() && !atlasBridgeAuthLocalState().valid) {
+    try { await atlasBridgeAuthMaybeRenew406255(`protected-route:${String(path || "unknown")}`); } catch (_) {}
   }
   if (atlasAccessIsAuthorized() && !atlasBridgeAuthLocalState().valid) {
     const error = new Error("Authentification Administrator Bridge requise.");
@@ -27365,7 +27439,10 @@ async function atlasLocalReportsRunAll(options = {}) {
     return false;
   }
   if (!atlasBridgeAuthLocalState().valid) {
-    atlasBridgeAuthRequireTrust("atlas-preflight","#local-ai-hub");
+    try { await atlasBridgeAuthMaybeRenew406255("atlas-preflight"); } catch (_) {}
+  }
+  if (!atlasBridgeAuthLocalState().valid) {
+    atlasBridgeAuthRequireTrust("atlas-preflight","#local-ai-hub",null,{interactive:options?.automatic!==true});
     return false;
   }
   if (
@@ -50862,7 +50939,7 @@ function makeAutoSnapshot() {
       fx_source_name: fx?.sourceName || null
     },
     live_ok: !!state.liveOk,
-    cadence_ms: state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS,
+    cadence_ms: state.auto?.intervalMs || ATLAS_AUTO_READER_LOCAL_REFRESH_MS,
     global: { market_cap_eur: state.global?.total_market_cap?.eur ?? null, volume_24h_eur: state.global?.total_volume?.eur ?? null, btc_dominance_pct: state.global?.market_cap_percentage?.btc ?? null },
     assets: merged.map(compactCoinForAuto)
   };
@@ -50909,7 +50986,7 @@ function saveAutoSnapshot() {
   return finalSnapshot;
 }
 
-function chooseAutoIntervalMs(snapshot, previous) { return ATLAS_MARKET_REFRESH_MS;
+function chooseAutoIntervalMs(snapshot, previous) { return ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
 }
 
 function formatAutoDelay(ms) { const sec = Math.max(0, Math.round(ms / 1000)); if (sec >= 60) { const min = Math.floor(sec / 60); const rest = sec % 60; return rest ? `${min} min ${rest} s` : `${min} min`; } return `${sec} s`;
@@ -50921,6 +50998,7 @@ function renderAutoReader(snapshot = null, previous = null) {
   const memory = atlasDecisionMemoryStats();
   const records = memory.records;
   const last = snapshot || memory.last || null;
+  const lastObservationAt = last?.last_seen_at || last?.saved_at || null;
   const pulse = last
     ? autoMarketPulse(last, previous || memory.previous || null)
     : { label: "En attente", mode: "wait", lines: ["Atlas attend la première lecture."] };
@@ -50936,13 +51014,13 @@ function renderAutoReader(snapshot = null, previous = null) {
 
   if (els.btnAutoToggle) els.btnAutoToggle.textContent = state.auto?.enabled ? "Auto ON" : "Auto OFF";
   if (els.autoLastRead) {
-    els.autoLastRead.textContent = last?.saved_at
-      ? new Date(last.saved_at).toLocaleString("fr-FR")
+    els.autoLastRead.textContent = lastObservationAt
+      ? new Date(lastObservationAt).toLocaleString("fr-FR")
       : "En attente";
   }
   if (els.autoSnapshots) els.autoSnapshots.textContent = `${records.length} distincts · ${rawRecords.length} relevés`;
   if (els.autoActiveCadence) {
-    els.autoActiveCadence.textContent = `${formatAutoDelay(state.auto?.intervalMs || ATLAS_MARKET_REFRESH_MS)} · vérification snapshot public`;
+    els.autoActiveCadence.textContent = `${formatAutoDelay(state.auto?.intervalMs || ATLAS_AUTO_READER_LOCAL_REFRESH_MS)} · marché local · snapshot public 5 min`;
   }
   if (els.autoMarketPulse) els.autoMarketPulse.textContent = pulse.label;
   if (els.autoWatchStatus) {
@@ -50988,8 +51066,8 @@ function renderAutoReader(snapshot = null, previous = null) {
       `Collecteur de ce Firefox : ${getCollectorId()} (${isCollectorConfigured() ? "configuré" : "temporaire"}).`,
       `Snapshots canoniques distincts : ${records.length}.`,
       `Relevés locaux conservés : ${rawRecords.length}.`,
-      last?.saved_at
-        ? `Dernier snapshot local : ${new Date(last.saved_at).toLocaleString("fr-FR")}.`
+      lastObservationAt
+        ? `Dernier snapshot local : ${new Date(lastObservationAt).toLocaleString("fr-FR")}.`
         : "Dernier snapshot local : aucun.",
       "",
       "Lecture marché :",
@@ -51087,41 +51165,95 @@ function updateAutoCountdown() {
   setText(els.autoNextRead, formatAutoDelay(new Date(state.auto.nextAt).getTime() - Date.now()));
 }
 
+function atlasAutoReaderPublicProbeDue(now = Date.now()) {
+  const lastSuccess = Number(state.marketPulse?.lastMarketSuccessAt || 0);
+  return !state.liveOk
+    || !Array.isArray(state.coins)
+    || !state.coins.length
+    || !lastSuccess
+    || Math.max(0, Number(now) - lastSuccess) >= ATLAS_AUTO_READER_PUBLIC_PROBE_MS;
+}
+
+function atlasAutoReaderCommitLocalObservation(reason = "local-interval") {
+  if (!state.auto?.enabled || !atlasPulseVisible() || !state.liveOk || !state.coins.length) return false;
+  const snapshot = saveAutoSnapshot();
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
+  state.auto.lastLocalObservation406254 = snapshot?.last_seen_at || snapshot?.saved_at || new Date().toISOString();
+  state.auto.lastLocalObservationReason406254 = String(reason || "local-interval");
+  renderAutoReader(snapshot);
+  return !!snapshot;
+}
+
+async function atlasAutoReaderLocalTick() {
+  if (!state.auto?.enabled) return false;
+
+  if (atlasAutoReaderPublicProbeDue() && !state.auto.livecheckBusy) {
+    // runLivecheck/atlasAfterLivecheck owns the next rearm on both success and failure.
+    return refreshMarketOnly({
+      reason: "auto-reader-public-probe",
+      residentOnly: !atlasPulseVisible()
+    });
+  }
+
+  if (atlasPulseVisible()) {
+    atlasAutoReaderCommitLocalObservation("local-interval");
+  }
+
+  // Hidden tabs keep only the cheap local heartbeat; no local observation is
+  // written while hidden, but the existing timer remains armed for the next probe.
+  scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
+  return true;
+}
+
+function atlasAutoReaderManualRead() {
+  if (!state.auto?.enabled) state.auto.enabled = true;
+
+  if (atlasPulseVisible() && state.liveOk && state.coins.length) {
+    atlasAutoReaderCommitLocalObservation("manual-local-read");
+  }
+
+  scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
+
+  if (atlasAutoReaderPublicProbeDue() && !state.auto.livecheckBusy) {
+    void refreshMarketOnly({
+      reason: "manual-auto-reader",
+      residentOnly: !atlasPulseVisible()
+    });
+  }
+  return true;
+}
+
 function scheduleAutoRead(ms = null) {
   if (!state.auto?.enabled) return;
 
   if (state.auto.timer) clearTimeout(state.auto.timer);
   state.auto.timer = null;
 
-  const delay = ms ?? state.auto.intervalMs ?? ATLAS_MARKET_REFRESH_MS;
+  const delay = ms ?? state.auto.intervalMs ?? ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
   state.auto.nextAt = new Date(Date.now() + delay).toISOString();
   updateAutoCountdown();
 
   state.auto.timer = setTimeout(() => {
     state.auto.timer = null;
-    if (state.auto?.enabled) {
-      void refreshMarketOnly({
-        reason: "market-pulse",
-        residentOnly: !atlasPulseVisible()
-      });
-    }
+    if (state.auto?.enabled) void atlasAutoReaderLocalTick();
   }, delay);
 }
 
 function atlasAfterLivecheck(options = {}) {
   if (!state.liveOk || !state.coins.length) {
     renderAutoReader();
-    if (state.auto?.enabled) scheduleAutoRead(options.marketDelayMs ?? ATLAS_MARKET_REFRESH_MS);
+    if (state.auto?.enabled) scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
     return;
   }
 
   const snapshot = saveAutoSnapshot();
   const memory = atlasDecisionMemoryStats();
-  state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
-  renderAutoReader(memory.last || snapshot, memory.previous || null);
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
+  renderAutoReader(snapshot || memory.last || null, memory.previous || null);
 
+  // The local heartbeat is resident state. Spot/chart rendering remains visibility-gated.
+  if (state.auto?.enabled) scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
   if (state.auto?.enabled && atlasPulseVisible()) {
-    scheduleAutoRead(options.marketDelayMs ?? ATLAS_MARKET_REFRESH_MS);
     atlasScheduleSpotPulse(options.spotDelayMs ?? ATLAS_SPOT_REFRESH_MS);
     atlasScheduleChartPulse(ATLAS_CHART_BACKGROUND_REFRESH_MS);
   }
@@ -51140,7 +51272,8 @@ function startAutoReader() {
   atlasInitMarketPulseController();
   loadWatchIds();
 
-  state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
+  state.auto.cadence = "locked-v4";
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
   atlasPrimeMarketCacheSilently();
   atlasRenderDirectFirstStartup();
   atlasInitExchangeFeed();
@@ -51152,6 +51285,8 @@ function startAutoReader() {
 
   if (atlasPulseVisible()) {
     setTimeout(() => void atlasRunStartupLivecheck(), 50);
+  } else {
+    scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
   }
 }
 
@@ -51160,8 +51295,12 @@ function toggleAutoReader() {
 
   if (!state.auto.enabled) {
     atlasPauseMarketPulse();
-  } else if (atlasPulseVisible()) {
-    atlasResumeMarketPulse();
+    if (state.auto.timer) clearTimeout(state.auto.timer);
+    state.auto.timer = null;
+    state.auto.nextAt = null;
+  } else {
+    scheduleAutoRead(1000);
+    if (atlasPulseVisible()) atlasResumeMarketPulse();
   }
 
   renderAutoReader();
@@ -51169,10 +51308,11 @@ function toggleAutoReader() {
 }
 
 function setAutoCadence(value) {
-  state.auto.cadence = String(value || "adaptive");
-  state.auto.intervalMs = ATLAS_MARKET_REFRESH_MS;
+  // V4 cadence is fixed by contract: local market 60 s, Spot 30 s, History/public 5 min.
+  state.auto.cadence = "locked-v4";
+  state.auto.intervalMs = ATLAS_AUTO_READER_LOCAL_REFRESH_MS;
   renderAutoReader();
-  if (state.auto.enabled) scheduleAutoRead(ATLAS_MARKET_REFRESH_MS);
+  if (state.auto.enabled) scheduleAutoRead(ATLAS_AUTO_READER_LOCAL_REFRESH_MS);
 }
 
 const COLLECTOR_ID_KEY = "agent_crypto_erith_ia_collector_id_v1";
@@ -55478,7 +55618,7 @@ window.AgentCryptoCommands = CryptoCommands;
 
 els.btnAutoToggle?.addEventListener("click", toggleAutoReader);
 
-els.btnAutoNow?.addEventListener("click", () => { atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" }); refreshMarketOnly({ reason: "manual-auto-reader" }); });
+els.btnAutoNow?.addEventListener("click", () => { atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" }); atlasAutoReaderManualRead(); });
 
 
 /* ============================================================
@@ -55764,7 +55904,7 @@ function atlasRebindDeferredMemoryPanels(scope = "all") {
     bindOnce(els.btnAutoToggle,"click","atlasBind40430",toggleAutoReader);
     bindOnce(els.btnAutoNow,"click","atlasBind40430",() => {
       atlasTrackAudience("market_refresh_requested", { source: "auto_reader_button" });
-      refreshMarketOnly({ reason: "manual-auto-reader" });
+      atlasAutoReaderManualRead();
     });
     try { renderAutoReader(); } catch (_) {}
     try { atlasRenderAutoTruthLive(); } catch (_) {}
@@ -62714,6 +62854,41 @@ async function atlasBridgeAuthLogin(secret){
   if(result.ok)atlasBridgeAuthRemember(result.payload);
   return result;
 }
+const ATLAS_BRIDGE_AUTH_RENEW_WINDOW_406255_MS = 5 * 60 * 1000;
+let atlasBridgeAuthRenewInFlight406255 = null;
+
+async function atlasBridgeAuthMaybeRenew406255(reason = "bridge-supervision") {
+  if (!atlasAccessIsAuthorized() || !atlasDeviceComputeAllowed()) return false;
+  const secret = String(atlasBridgeAuthEphemeralSecret406255 || "");
+  if (!secret) return false;
+
+  const auth = atlasBridgeAuthLocalState();
+  const expiresAt = Number(auth?.expires_at_ms);
+  const remainingMs = Number.isFinite(expiresAt) ? expiresAt - Date.now() : Infinity;
+  const due = !auth?.token_present || auth?.expired === true || remainingMs <= ATLAS_BRIDGE_AUTH_RENEW_WINDOW_406255_MS;
+  if (!due) return false;
+  if (atlasBridgeAuthRenewInFlight406255) return atlasBridgeAuthRenewInFlight406255;
+
+  atlasBridgeAuthRenewInFlight406255 = (async () => {
+    const result = await atlasBridgeAuthLogin(secret);
+    if (result?.ok) {
+      try { atlasBridgeAuthRecoveryResolved(); } catch (_) {}
+      try {
+        document.dispatchEvent(new CustomEvent("agentcrypto:bridge-auth-renewed", {
+          detail: { reason: String(reason || "bridge-supervision"), expires_at: result?.payload?.expires_at || null }
+        }));
+      } catch (_) {}
+      return true;
+    }
+    if (result?.reachable && !result?.ok) atlasBridgeAuthEphemeralClear406255();
+    return false;
+  })().finally(() => {
+    atlasBridgeAuthRenewInFlight406255 = null;
+  });
+
+  return atlasBridgeAuthRenewInFlight406255;
+}
+
 async function atlasBridgeAuthLogout(){
   const token=atlasBridgeAuthToken();
   atlasBridgeAuthClear();
