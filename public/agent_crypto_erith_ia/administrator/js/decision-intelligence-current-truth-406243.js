@@ -1,4 +1,4 @@
-/* Agent-Crypto @erith.IA — 40.6.250 stability rollback · behavior source 40.6.243/40.6.247
+/* Agent-Crypto @erith.IA — 40.6.243
    DECISION INTELLIGENCE CURRENT TRUTH SURFACE
 
    Presentation-only integration over existing read-only owners:
@@ -8,7 +8,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.250";
+  const BUILD = "40.6.243";
   const HOST_ID = "decisionIntelligenceCurrentTruth406243";
   const DETAILS_ID = "decisionIntelligenceCurrentTruthDetails406243";
 

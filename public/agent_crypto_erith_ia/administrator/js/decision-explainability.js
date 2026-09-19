@@ -33,9 +33,9 @@
     const target=targetInput?.memory_id?targetInput:(targetInput?memoryApi()?.derive?.(targetInput):memoryApi()?.current?.())||null;
     if(!target)return Object.freeze({schema:SCHEMA,build:BUILD,status:"NO_CURRENT_EVENT",operator_action:"CONSULTATION_ONLY",for:[],against:["Aucun événement courant exploitable"],invalidation:["Attendre un événement structuré et horodaté"],missing_data:["Event Memory courant"],investment_advice:false,execution_authorized:false,automatic_order:false});
     const asset=String(options.asset||target.assets?.[0]||"BTC").toUpperCase();
-    const cal=options.calibration||calibrationApi()?.analyze?.(target,{asset})||null;
+    const cal=calibrationApi()?.analyze?.(target,{asset})||null;
     const simulation={...(options.simulation||{}),asset,calibration:cal};
-    const survival=options.survival||survivalApi()?.evaluate?.(simulation)||null;
+    const survival=survivalApi()?.evaluate?.(simulation)||null;
     const h24=horizonBlock(cal,"+24h"),h48=horizonBlock(cal,"+48h");
     const forReasons=[],against=[],invalidation=[],missing=[];
     const evidence=finite(target?.evidence_score),impact=finite(target?.impact_score);
@@ -52,7 +52,7 @@
     const orientations=[h24.direction.code,h48.direction.code];
     const same=orientations[0]===orientations[1]&&["HISTORICAL_UP_BIAS","HISTORICAL_DOWN_BIAS"].includes(orientations[0]);
     const orientation=same?orientations[0]:"MIXED_OR_UNCERTAIN";
-    const acceptance=options.acceptance||acceptanceApi()?.matrix?.()||null;
+    const acceptance=acceptanceApi()?.matrix?.()||null;
     return Object.freeze({schema:SCHEMA,build:BUILD,status:"EXPLAINED",asset,event_id:target.event_id||null,event_label:target.event_label||null,operator_action:"CONSULTATION_ONLY",orientation_24_48:orientation,horizons:{"+24h":h24,"+48h":h48},for:uniq(forReasons),against:uniq(against),invalidation:uniq(invalidation),missing_data:uniq(missing),capital_survival:survival,architecture_acceptance:acceptance?.status||null,wording_lock:"historical orientation, never buy/sell instruction",investment_advice:false,execution_authorized:false,automatic_order:false,financial_signal:false,forecast_probability:false});
   }
   function current(options={}){return explain(null,options);}

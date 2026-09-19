@@ -10,7 +10,7 @@
   function regimeApi(){return globalThis.AtlasMarketRegimeContext||null;}
   function qualify(targetInput,options={}){
     const target=targetInput?.memory_id?targetInput:memoryApi()?.derive?.(targetInput);if(!target)return null;
-    const base=options.analog_result||analogApi()?.analyze?.(target,options)||null;if(!base)return null;
+    const base=analogApi()?.analyze?.(target,options)||null;if(!base)return null;
     const minRegime=Number.isFinite(Number(options.min_regime_compatibility))?Number(options.min_regime_compatibility):0.55;
     const targetRegime=target.regime_t0||regimeApi()?.latest?.()||null,qualified=[];
     for(const row of base.analogs||[]){
