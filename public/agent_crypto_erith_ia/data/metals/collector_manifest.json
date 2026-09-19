@@ -1,9 +1,9 @@
 {
   "schema": "agent_crypto_public_metals_collection_manifest_v1",
   "version": "2.3.0",
-  "generated_at": "2026-09-18T22:33:59.480Z",
+  "generated_at": "2026-09-19T04:34:39.231Z",
   "build_target": "28.2.67",
-  "state": "partial",
+  "state": "ready",
   "assets": [
     "XAU",
     "XAG",
@@ -14,10 +14,8 @@
   "current_provider": "gold_api",
   "history_provider": "yahoo_finance",
   "fx_provider": "ecb",
-  "status": "partial",
-  "errors": [
-    "BCE USD/EUR: HTTPSConnectionPool(host='data-api.ecb.europa.eu', port=443): Max retries exceeded with url: /service/data/EXR/D.USD.EUR.SP00.A?lastNObservations=10&format=csvdata (Caused by ResponseError('too many 503 error responses'))"
-  ],
+  "status": "ready",
+  "errors": [],
   "files": {
     "latest": "data/metals/latest.json",
     "status": "data/metals/status.json",
@@ -50,5 +48,5 @@
     "spot_history_retention_hours": 48,
     "last_valid_data_preserved_on_failure": true
   },
-  "fingerprint": "sha256:b53c1de96b6d060b6f3576afb8db95489503d54a8b69d0b31abaf863105d08da"
+  "fingerprint": "sha256:f25dcca68212e18e489594cb2d36fc834b731cb510aab8bc44d6e43e415abe93"
 }
