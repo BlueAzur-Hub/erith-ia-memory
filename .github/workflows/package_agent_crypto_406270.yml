@@ -1,0 +1,38 @@
+name: Package Agent-Crypto 40.6.270
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact recovery commit
+        uses: actions/checkout@v4
+        with:
+          ref: f56031ea129c1ffedec0155a672c2ff15747d0b9
+          fetch-depth: 0
+
+      - name: Build exact release delta ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          PARENT=c17a0c2d6909508db35c273a302f356ec8a7b6b2
+          TARGET=f56031ea129c1ffedec0155a672c2ff15747d0b9
+          git diff --name-only --diff-filter=ACMRT "$PARENT" "$TARGET" > /tmp/agent_crypto_406270_files.txt
+          test -s /tmp/agent_crypto_406270_files.txt
+          zip -9 AGENT_CRYPTO_40.6.270_RECOVERY_LOCK_EXACT_f56031ea.zip -@ < /tmp/agent_crypto_406270_files.txt
+          sha256sum AGENT_CRYPTO_40.6.270_RECOVERY_LOCK_EXACT_f56031ea.zip             > AGENT_CRYPTO_40.6.270_RECOVERY_LOCK_EXACT_f56031ea.zip.sha256
+
+      - name: Upload exact release delta
+        uses: actions/upload-artifact@v4
+        with:
+          name: AGENT_CRYPTO_40.6.270_RECOVERY_LOCK_EXACT_f56031ea
+          path: |
+            AGENT_CRYPTO_40.6.270_RECOVERY_LOCK_EXACT_f56031ea.zip
+            AGENT_CRYPTO_40.6.270_RECOVERY_LOCK_EXACT_f56031ea.zip.sha256
+          if-no-files-found: error
+          retention-days: 7
