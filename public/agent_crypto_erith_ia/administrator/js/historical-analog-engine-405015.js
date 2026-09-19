@@ -27,33 +27,17 @@
     const asset=String(options.asset||target.assets?.[0]||"BTC").toUpperCase(),horizon=String(options.horizon||"+24h");
     const minScore=Number.isFinite(Number(options.min_similarity_score))?Number(options.min_similarity_score):55;
     const limit=Math.max(1,Math.min(50,Number(options.limit)||50));
+    const clusters=clusterMap(options.cluster_map||options.semantic_clusters||null),targetCluster=clusters.get(String(target.event_id))||null,out=[];
     const archive=Array.isArray(options.memory_archive)
       ? options.memory_archive
       : (memoryApi()?.archive?.(options.memory_options||{})||[]);
-    const eligible=[];
     for(const candidate of archive){
       if(!candidate?.quality?.eligible_for_analog||candidate.event_id===target.event_id)continue;
-      const value=reaction(candidate,horizon,asset);
-      if(value===null)continue;
-      eligible.push({candidate,value});
-    }
-    const out=[];
-    if(eligible.length){
-      const clusters=clusterMap(options.cluster_map||options.semantic_clusters||null);
-      const targetCluster=clusters.get(String(target.event_id))||null;
-      const similarityCache=options.similarity_cache instanceof Map?options.similarity_cache:null;
-      for(const row of eligible){
-        const candidate=row.candidate,value=row.value;
-        if(targetCluster&&clusters.get(String(candidate.event_id))===targetCluster)continue;
-        const simKey=`${String(target.event_id)}::${String(candidate.event_id)}`;
-        let sim=similarityCache?.get(simKey)||null;
-        if(!sim){
-          sim=similarityApi()?.similarity?.(target.event,candidate.event)||{score_100:0,reasons:[]};
-          if(similarityCache)similarityCache.set(simKey,sim);
-        }
-        if((sim?.score_100||0)<minScore)continue;
-        out.push({event_id:candidate.event_id,event_time:candidate.event_time,event_family:candidate.event_family,actor:candidate.semantic?.actor||null,action:candidate.semantic?.action||null,assets:candidate.assets||[],similarity:sim,reaction_pct:value,coverage:candidate.coverage,regime_t0:candidate.regime_t0||null});
-      }
+      if(targetCluster&&clusters.get(String(candidate.event_id))===targetCluster)continue;
+      const sim=similarityApi()?.similarity?.(target.event,candidate.event)||{score_100:0,reasons:[]};
+      if((sim?.score_100||0)<minScore)continue;
+      const value=reaction(candidate,horizon,asset);if(value===null)continue;
+      out.push({event_id:candidate.event_id,event_time:candidate.event_time,event_family:candidate.event_family,actor:candidate.semantic?.actor||null,action:candidate.semantic?.action||null,assets:candidate.assets||[],similarity:sim,reaction_pct:value,coverage:candidate.coverage,regime_t0:candidate.regime_t0||null});
     }
     out.sort((a,b)=>(b.similarity?.score_100||0)-(a.similarity?.score_100||0)||Math.abs(b.reaction_pct)-Math.abs(a.reaction_pct));
     const analogs=out.slice(0,limit),dist=distribution(analogs.map(x=>x.reaction_pct));

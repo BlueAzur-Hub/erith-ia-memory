@@ -1,8 +1,7 @@
 /* Agent-Crypto @erith.IA — Decision Intelligence Current Truth
    Canonical read-only owner.
-   40.6.263 canonical mount: Decision Intelligence is physically contained by a dedicated top-level Section 01 family slot.
    Computes the existing Event → Memory → Analogs → Regime → Calibration → Survival → Explainability chain once,
-   shares prepared inputs across owners, leaves semantic clustering lazy inside Historical Analog, caches the current result, and renders without recursive recomputation.
+   shares prepared inputs across owners, caches the current result, and renders without recursive recomputation.
    No hard-coded runtime build, no fetch, no timer, no observer, no storage write, no order. */
 (() => {
   "use strict";
@@ -82,11 +81,7 @@
 
     const reactionSnapshot=safe(globalThis.AgentCryptoEventReactionSource?.snapshot);
     const records=Array.isArray(reactionSnapshot?.records)?reactionSnapshot.records:[];
-    const rawMemoryOptions={source_snapshot:reactionSnapshot,records};
-    const preparedMemoryOptions=safe(()=>globalThis.AtlasEventMemory?.prepare?.(rawMemoryOptions));
-    const memoryOptions=preparedMemoryOptions&&!preparedMemoryOptions.__error
-      ? preparedMemoryOptions
-      : rawMemoryOptions;
+    const memoryOptions={source_snapshot:reactionSnapshot,records};
 
     const memory=safe(()=>globalThis.AtlasEventMemory?.derive?.(event,memoryOptions));
     if(!memory||memory.__error){
@@ -102,14 +97,14 @@
     }
 
     const memoryArchive=safe(()=>globalThis.AtlasEventMemory?.archive?.(memoryOptions),[]);
+    const semanticClusters=safe(()=>globalThis.AtlasEventSemanticEnrichment?.clusters?.(),[]);
+    const clusterMap=new Map();
+    for(const cluster of Array.isArray(semanticClusters)?semanticClusters:[]){
+      for(const id of cluster?.member_event_ids||[])clusterMap.set(String(id),String(cluster.cluster_id||""));
+    }
 
     const asset=String(memory.assets?.[0]||"BTC").toUpperCase();
-    const shared={
-      asset,
-      memory_archive:memoryArchive,
-      memory_options:memoryOptions,
-      similarity_cache:new Map()
-    };
+    const shared={asset,memory_archive:memoryArchive,cluster_map:clusterMap,memory_options:memoryOptions};
 
     const analog24=safe(()=>globalThis.AtlasHistoricalAnalogEngine405015?.analyze?.(memory,{...shared,horizon:"+24h",limit:50}));
     const analog48=safe(()=>globalThis.AtlasHistoricalAnalogEngine405015?.analyze?.(memory,{...shared,horizon:"+48h",limit:50}));
@@ -224,13 +219,10 @@
       </details>`;
   }
 
-  function section01Slot(){
-    /* 40.6.263 — canonical Section 01 subsection slot.
-       Section 01 is owned by the Administrator Window Manager as a top-level
-       semantic family. The slot is itself a top-level analysis-family member;
-       Decision Intelligence is physically mounted inside it, so the panel is
-       contained by 01 without wrapping or restructuring the existing family. */
-    return document.getElementById("decisionIntelligenceSection01Slot");
+  function hostAnchor(){
+    return document.getElementById("news-sentinel")
+      || document.getElementById("multi-horizon")
+      || document.querySelector('[data-layout-family="analysis"]');
   }
 
   function render(state){
@@ -266,39 +258,25 @@
     return true;
   }
 
-  function syncDisclosureState(details){
-    const state=details?.querySelector?.(".atlas-collapse-state");
-    if(!state)return false;
-    const label=details.open?state.dataset.openLabel:state.dataset.closedLabel;
-    if(label)state.textContent=label;
-    return true;
-  }
-
   function bind(details){
     if(!(details instanceof HTMLDetailsElement)||details.dataset.decisionTruthBound==="1")return false;
     details.dataset.decisionTruthBound="1";
-    syncDisclosureState(details);
     details.addEventListener("toggle",()=>{
-      syncDisclosureState(details);
       if(details.open)queueMicrotask(()=>refresh());
     },{passive:true});
     return true;
   }
 
   function mount(){
-    const slot=section01Slot();
-    if(!slot)return false;
-
     let details=document.getElementById(DETAILS_ID);
     if(!details){
-      slot.insertAdjacentHTML("beforeend",markup());
+      const anchor=hostAnchor();
+      if(!anchor)return false;
+      anchor.insertAdjacentHTML("afterend",markup());
       details=document.getElementById(DETAILS_ID);
-    }else if(details.parentElement!==slot){
-      slot.append(details);
     }
-
     bind(details);
-    syncDisclosureState(details);
+    if(details?.open)queueMicrotask(()=>refresh());
     return !!details;
   }
 
@@ -319,10 +297,7 @@
     new_observer:false,
     automatic_order:false,
     execution_authorized:false,
-    financial_signal:false,
-    presentation_family:"analysis",
-    presentation_family_number:"01",
-    presentation_move_in:"40.6.263"
+    financial_signal:false
   });
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});

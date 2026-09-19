@@ -1,6 +1,5 @@
 /* Agent-Crypto @erith.IA — Event Memory V1
    Build 40.5.14. Reproducible read-only event memory over existing News archive + Collector snapshots.
-   Runtime projection uses one sorted timestamp index per shared record set and derives T0 regime from the matched snapshot directly.
    No new storage owner, no causal claim, no prediction, no order. */
 (() => {
   "use strict";
@@ -29,45 +28,17 @@
     const snapshot=sourceSnapshot(options);
     return Array.isArray(snapshot?.records)?snapshot.records:[];
   }
-  function buildRecordIndex(records){
-    const out=[];
-    for(let order=0;order<(records||[]).length;order++){
-      const row=records[order],t=time(row?.timestamp);
-      if(t!==null)out.push({t,row,order});
-    }
-    out.sort((a,b)=>a.t-b.t||a.order-b.order);
-    return Object.freeze(out);
-  }
-  function lowerBound(index,target){
-    let lo=0,hi=index.length;
-    while(lo<hi){
-      const mid=(lo+hi)>>1;
-      if(index[mid].t<target)lo=mid+1;
-      else hi=mid;
-    }
-    return lo;
-  }
-  function nearest(index,target,tolerance){
-    if(!Array.isArray(index)||!index.length)return null;
-    const pos=lowerBound(index,target),times=new Set();
-    if(pos<index.length)times.add(index[pos].t);
-    if(pos>0)times.add(index[pos-1].t);
-    let best=null,bestDelta=Infinity,bestOrder=Infinity;
-    for(const candidateTime of times){
-      const delta=Math.abs(candidateTime-target);
-      if(delta>tolerance||delta>bestDelta)continue;
-      const start=lowerBound(index,candidateTime);
-      for(let i=start;i<index.length&&index[i].t===candidateTime;i++){
-        const entry=index[i];
-        if(delta<bestDelta||(delta===bestDelta&&entry.order<bestOrder)){
-          best=entry;bestDelta=delta;bestOrder=entry.order;
-        }
-      }
-    }
-    return best?{row:best.row,delta_ms:bestDelta}:null;
-  }
   function eventApi(){return globalThis.AtlasEventSemanticEnrichment||globalThis.AtlasEventIntelligence||null;}
   function regimeApi(){return globalThis.AtlasMarketRegimeContext||null;}
+  function nearest(records,target,tolerance){
+    let best=null,bestDelta=Infinity;
+    for(const row of records||[]){
+      const t=time(row?.timestamp);if(t===null)continue;
+      const d=Math.abs(t-target);
+      if(d<=tolerance&&d<bestDelta){best=row;bestDelta=d;}
+    }
+    return best?{row:best,delta_ms:bestDelta}:null;
+  }
   function priceMap(row){
     const out={};
     for(const a of row?.assets||[]){
@@ -84,12 +55,9 @@
     const assets=[...new Set((event?.assets||[]).map(v=>String(v||"").toUpperCase()).filter(Boolean))];
     if(eventMs===null||!eventId)return Object.freeze({schema:SCHEMA,build:BUILD,event_id:eventId||null,status:"EVENT_ID_OR_TIME_MISSING",read_only:true});
     const records=sourceRecords(options);
-    const recordIndex=Array.isArray(options?.record_index)?options.record_index:buildRecordIndex(records);
-    const matchedRows=new Map();
     const observations=WINDOWS.map(w=>{
       const target=eventMs+w.offset_ms,due=now>=target;
-      const hit=due?nearest(recordIndex,target,w.tolerance_ms):null;
-      if(hit?.row)matchedRows.set(w.key,hit.row);
+      const hit=due?nearest(records,target,w.tolerance_ms):null;
       return {
         key:w.key,target_time:new Date(target).toISOString(),due,tolerance_ms:w.tolerance_ms,
         observed_at:hit?.row?.timestamp||null,snapshot_id:hit?.row?.snapshot_id||null,
@@ -110,7 +78,7 @@
     const observed=Object.values(windows).filter(x=>x.snapshot_id).length;
     const due=Object.values(windows).filter(x=>x.due).length;
     const postObserved=Object.entries(windows).filter(([k,v])=>k!=="T0"&&v.snapshot_id).length;
-    let regime=null;try{regime=regimeApi()?.classify?.(matchedRows.get("T0")||null)||null;}catch(_){}
+    let regime=null;try{regime=regimeApi()?.for_event?.(event)||null;}catch(_){}
     const semantic=event?.semantic_enrichment||{};
     return Object.freeze({
       schema:SCHEMA,build:BUILD,memory_id:eventId,event_id:eventId,event_time:event.event_time||null,
@@ -133,10 +101,7 @@
       : Array.isArray(source_snapshot?.records)
         ? source_snapshot.records
         : [];
-    const record_index=Array.isArray(options?.record_index)
-      ? options.record_index
-      : buildRecordIndex(records);
-    return {...options,source_snapshot,records,record_index};
+    return {...options,source_snapshot,records};
   }
   function archive(options={}){
     const shared=sharedOptions(options);
@@ -153,5 +118,5 @@
     const shared=sharedOptions(options);
     return Object.freeze({schema:SCHEMA,build:BUILD,captured_at:new Date().toISOString(),rows:archive(shared),current:current(shared),read_only:true});
   }
-  globalThis.AtlasEventMemory=Object.freeze({build:BUILD,schema:SCHEMA,windows:WINDOWS,derive,archive,current,snapshot,prepare:sharedOptions,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false});
+  globalThis.AtlasEventMemory=Object.freeze({build:BUILD,schema:SCHEMA,windows:WINDOWS,derive,archive,current,snapshot,read_only:true,new_storage_owner:false,storage_write:false,new_fetch:false,new_timer:false,new_observer:false,causal_claim:false,prediction:false,financial_signal:false,automatic_order:false});
 })();
