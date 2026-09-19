@@ -25876,3 +25876,12 @@ html[data-atlas-device-role="book-readonly"] #atlasSharedSynthesisCard #decision
 #atlasMarketCardDockHost.atlas-market-card-dock-host[hidden] {
   display: none !important;
 }
+
+/* =========================================================
+   40.6.261 — Family 01 real structural ownership
+   DOM-only grouping: preserve the exact pre-261 box/layout tree.
+   ========================================================= */
+.atlas-section-family-analysis,
+.atlas-section-family-content-analysis {
+  display: contents;
+}
