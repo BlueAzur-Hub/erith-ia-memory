@@ -1,6 +1,6 @@
 /* Agent-Crypto @erith.IA — Decision Intelligence Current Truth
    Canonical read-only owner.
-   40.6.257 presentation placement: family 02 · Intelligence, mémoire & création.
+   40.6.258 presentation placement: family 01 · Analyse & décision, directly under its family header.
    Computes the existing Event → Memory → Analogs → Regime → Calibration → Survival → Explainability chain once,
    shares prepared inputs across owners, caches the current result, and renders without recursive recomputation.
    No hard-coded runtime build, no fetch, no timer, no observer, no storage write, no order. */
@@ -205,10 +205,10 @@
 
   function markup(){
     return `
-      <details class="atlas-collapse glass atlas-family-member atlas-tone-intelligence"
+      <details class="atlas-collapse glass atlas-family-member atlas-tone-analysis"
                id="${DETAILS_ID}"
                data-collapse-key="decision-intelligence-current-truth"
-               data-layout-family="intelligence">
+               data-layout-family="analysis">
         <summary class="atlas-collapse-summary">
           <span class="atlas-collapse-copy">
             <span class="atlas-collapse-title">Decision Intelligence · vérité courante</span>
@@ -221,15 +221,15 @@
   }
 
   function hostAnchor(){
-    /* 40.6.257 — presentation-only relocation.
-       Decision Intelligence belongs to family 02. Mount directly after the
-       canonical family header, before the local Atlas/Aerith subsection.
-       Fallbacks preserve availability if family 02 is not yet mounted. */
-    return document.getElementById("atlasLayoutFamily02")?.closest(".atlas-layout-family")
-      || document.querySelector(".atlas-layout-family-intelligence")
-      || document.getElementById("atlas-local-ai-collapse")
-      || document.getElementById("news-sentinel")
-      || document.getElementById("multi-horizon");
+    /* 40.6.258 — presentation-only correction.
+       Decision Intelligence belongs to family 01 · Analyse & décision.
+       Mount directly after the canonical family 01 header so it is visually
+       attached to that family, before the other analysis subsections.
+       Fallbacks preserve availability if the family header is unavailable. */
+    return document.getElementById("atlasLayoutFamily01")?.closest(".atlas-layout-family")
+      || document.querySelector(".atlas-layout-family-analysis")
+      || document.getElementById("multi-horizon")
+      || document.getElementById("news-sentinel");
   }
 
   function render(state){
@@ -305,9 +305,9 @@
     automatic_order:false,
     execution_authorized:false,
     financial_signal:false,
-    presentation_family:"intelligence",
-    presentation_family_number:"02",
-    presentation_move_in:"40.6.257"
+    presentation_family:"analysis",
+    presentation_family_number:"01",
+    presentation_move_in:"40.6.258"
   });
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
