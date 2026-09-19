@@ -2,7 +2,7 @@
    Canonical read-only owner.
    40.6.263 canonical mount: Decision Intelligence is physically contained by a dedicated top-level Section 01 family slot.
    Computes the existing Event → Memory → Analogs → Regime → Calibration → Survival → Explainability chain once,
-   shares prepared inputs across owners, caches the current result, and renders without recursive recomputation.
+   shares prepared inputs across owners, leaves semantic clustering lazy inside Historical Analog, caches the current result, and renders without recursive recomputation.
    No hard-coded runtime build, no fetch, no timer, no observer, no storage write, no order. */
 (() => {
   "use strict";
@@ -102,17 +102,11 @@
     }
 
     const memoryArchive=safe(()=>globalThis.AtlasEventMemory?.archive?.(memoryOptions),[]);
-    const semanticClusters=safe(()=>globalThis.AtlasEventSemanticEnrichment?.clusters?.(),[]);
-    const clusterMap=new Map();
-    for(const cluster of Array.isArray(semanticClusters)?semanticClusters:[]){
-      for(const id of cluster?.member_event_ids||[])clusterMap.set(String(id),String(cluster.cluster_id||""));
-    }
 
     const asset=String(memory.assets?.[0]||"BTC").toUpperCase();
     const shared={
       asset,
       memory_archive:memoryArchive,
-      cluster_map:clusterMap,
       memory_options:memoryOptions,
       similarity_cache:new Map()
     };

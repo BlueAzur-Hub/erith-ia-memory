@@ -1,6 +1,6 @@
 /* Agent-Crypto @erith.IA — Event Memory V1
    Build 40.5.14. Reproducible read-only event memory over existing News archive + Collector snapshots.
-   Runtime projection uses one sorted timestamp index per shared record set.
+   Runtime projection uses one sorted timestamp index per shared record set and derives T0 regime from the matched snapshot directly.
    No new storage owner, no causal claim, no prediction, no order. */
 (() => {
   "use strict";
@@ -85,9 +85,11 @@
     if(eventMs===null||!eventId)return Object.freeze({schema:SCHEMA,build:BUILD,event_id:eventId||null,status:"EVENT_ID_OR_TIME_MISSING",read_only:true});
     const records=sourceRecords(options);
     const recordIndex=Array.isArray(options?.record_index)?options.record_index:buildRecordIndex(records);
+    const matchedRows=new Map();
     const observations=WINDOWS.map(w=>{
       const target=eventMs+w.offset_ms,due=now>=target;
       const hit=due?nearest(recordIndex,target,w.tolerance_ms):null;
+      if(hit?.row)matchedRows.set(w.key,hit.row);
       return {
         key:w.key,target_time:new Date(target).toISOString(),due,tolerance_ms:w.tolerance_ms,
         observed_at:hit?.row?.timestamp||null,snapshot_id:hit?.row?.snapshot_id||null,
@@ -108,7 +110,7 @@
     const observed=Object.values(windows).filter(x=>x.snapshot_id).length;
     const due=Object.values(windows).filter(x=>x.due).length;
     const postObserved=Object.entries(windows).filter(([k,v])=>k!=="T0"&&v.snapshot_id).length;
-    let regime=null;try{regime=regimeApi()?.for_event?.(event)||null;}catch(_){}
+    let regime=null;try{regime=regimeApi()?.classify?.(matchedRows.get("T0")||null)||null;}catch(_){}
     const semantic=event?.semantic_enrichment||{};
     return Object.freeze({
       schema:SCHEMA,build:BUILD,memory_id:eventId,event_id:eventId,event_time:event.event_time||null,
