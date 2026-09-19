@@ -47,6 +47,12 @@ def require(text: str, markers: tuple[str, ...], label: str) -> None:
         fail(f"{label} missing markers: {missing}")
 
 
+def require_regex(text: str, markers: tuple[tuple[str, str], ...], label: str) -> None:
+    missing = [name for name, pattern in markers if re.search(pattern, text, re.MULTILINE) is None]
+    if missing:
+        fail(f"{label} missing markers: {missing}")
+
+
 def main() -> int:
     manifest = load_json(BASE / "build.json")
     published = str(manifest.get("build") or "").strip()
@@ -75,11 +81,13 @@ def main() -> int:
         'name="agent-crypto-loaded-build"',
         'name="agent-crypto-published-manifest" content="./build.json"',
         'async function canonicalIdentity()',
-        'const truth = await canonicalIdentity();',
-        'source: "canonical-build.json"',
-        'agent-crypto-version-owner", "canonical-entry"',
-        'globalThis.AgentCryptoBootTruth = truth;',
         'document.write(shell);',
+    ), "index.html")
+    require_regex(index, (
+        ('const truth = await canonicalIdentity();', r"const\s+truth\s*=\s*await\s+canonicalIdentity\(\)\s*;"),
+        ('source: "canonical-build.json"', r"source\s*:\s*[\"']canonical-build\.json[\"']"),
+        ('agent-crypto-version-owner", "canonical-entry"', r"[\"']agent-crypto-version-owner[\"']\s*,\s*[\"']canonical-entry[\"']"),
+        ('globalThis.AgentCryptoBootTruth = truth;', r"globalThis\.AgentCryptoBootTruth\s*=\s*truth\s*;"),
     ), "index.html")
 
     for forbidden in (

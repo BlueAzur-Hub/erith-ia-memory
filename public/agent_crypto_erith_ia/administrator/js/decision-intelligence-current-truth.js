@@ -82,7 +82,11 @@
 
     const reactionSnapshot=safe(globalThis.AgentCryptoEventReactionSource?.snapshot);
     const records=Array.isArray(reactionSnapshot?.records)?reactionSnapshot.records:[];
-    const memoryOptions={source_snapshot:reactionSnapshot,records};
+    const rawMemoryOptions={source_snapshot:reactionSnapshot,records};
+    const preparedMemoryOptions=safe(()=>globalThis.AtlasEventMemory?.prepare?.(rawMemoryOptions));
+    const memoryOptions=preparedMemoryOptions&&!preparedMemoryOptions.__error
+      ? preparedMemoryOptions
+      : rawMemoryOptions;
 
     const memory=safe(()=>globalThis.AtlasEventMemory?.derive?.(event,memoryOptions));
     if(!memory||memory.__error){
@@ -105,7 +109,13 @@
     }
 
     const asset=String(memory.assets?.[0]||"BTC").toUpperCase();
-    const shared={asset,memory_archive:memoryArchive,cluster_map:clusterMap,memory_options:memoryOptions};
+    const shared={
+      asset,
+      memory_archive:memoryArchive,
+      cluster_map:clusterMap,
+      memory_options:memoryOptions,
+      similarity_cache:new Map()
+    };
 
     const analog24=safe(()=>globalThis.AtlasHistoricalAnalogEngine405015?.analyze?.(memory,{...shared,horizon:"+24h",limit:50}));
     const analog48=safe(()=>globalThis.AtlasHistoricalAnalogEngine405015?.analyze?.(memory,{...shared,horizon:"+48h",limit:50}));
@@ -262,10 +272,20 @@
     return true;
   }
 
+  function syncDisclosureState(details){
+    const state=details?.querySelector?.(".atlas-collapse-state");
+    if(!state)return false;
+    const label=details.open?state.dataset.openLabel:state.dataset.closedLabel;
+    if(label)state.textContent=label;
+    return true;
+  }
+
   function bind(details){
     if(!(details instanceof HTMLDetailsElement)||details.dataset.decisionTruthBound==="1")return false;
     details.dataset.decisionTruthBound="1";
+    syncDisclosureState(details);
     details.addEventListener("toggle",()=>{
+      syncDisclosureState(details);
       if(details.open)queueMicrotask(()=>refresh());
     },{passive:true});
     return true;
@@ -284,7 +304,7 @@
     }
 
     bind(details);
-    if(details?.open)queueMicrotask(()=>refresh());
+    syncDisclosureState(details);
     return !!details;
   }
 

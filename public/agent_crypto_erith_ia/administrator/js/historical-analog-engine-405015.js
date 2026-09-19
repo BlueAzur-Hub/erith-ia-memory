@@ -31,10 +31,16 @@
     const archive=Array.isArray(options.memory_archive)
       ? options.memory_archive
       : (memoryApi()?.archive?.(options.memory_options||{})||[]);
+    const similarityCache=options.similarity_cache instanceof Map?options.similarity_cache:null;
     for(const candidate of archive){
       if(!candidate?.quality?.eligible_for_analog||candidate.event_id===target.event_id)continue;
       if(targetCluster&&clusters.get(String(candidate.event_id))===targetCluster)continue;
-      const sim=similarityApi()?.similarity?.(target.event,candidate.event)||{score_100:0,reasons:[]};
+      const simKey=`${String(target.event_id)}::${String(candidate.event_id)}`;
+      let sim=similarityCache?.get(simKey)||null;
+      if(!sim){
+        sim=similarityApi()?.similarity?.(target.event,candidate.event)||{score_100:0,reasons:[]};
+        if(similarityCache)similarityCache.set(simKey,sim);
+      }
       if((sim?.score_100||0)<minScore)continue;
       const value=reaction(candidate,horizon,asset);if(value===null)continue;
       out.push({event_id:candidate.event_id,event_time:candidate.event_time,event_family:candidate.event_family,actor:candidate.semantic?.actor||null,action:candidate.semantic?.action||null,assets:candidate.assets||[],similarity:sim,reaction_pct:value,coverage:candidate.coverage,regime_t0:candidate.regime_t0||null});
