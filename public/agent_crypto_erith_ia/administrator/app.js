@@ -1784,6 +1784,24 @@ const ATLAS_ACCESS_OPERATOR_ROLE = "operator"; // 40.4.140 — existing Intermed
 
 let atlasAccessPendingHash = "";
 
+/* 40.6.255 — BRIDGE AUTH CONTINUITY · EPHEMERAL SECRET ONLY.
+   The already-validated Administrator secret may live in JS memory for the
+   lifetime of this document so the existing Bridge supervisor can renew a
+   loopback session before expiry. It is never written to localStorage,
+   sessionStorage, IndexedDB, GitHub or any export, and is cleared on explicit
+   lock / role handoff. */
+let atlasBridgeAuthEphemeralSecret406255 = "";
+function atlasBridgeAuthEphemeralRemember406255(secret) {
+  const value = String(secret || "");
+  if (!value) return false;
+  atlasBridgeAuthEphemeralSecret406255 = value;
+  return true;
+}
+function atlasBridgeAuthEphemeralClear406255() {
+  atlasBridgeAuthEphemeralSecret406255 = "";
+  return true;
+}
+
 /* ============================================================
    40.4.61 — AETHER TRUST OPERATOR INTERACTION PRIORITY LOCK
 
@@ -2023,6 +2041,7 @@ async function atlasAccessSubmit(event) {
       }
     }
 
+    atlasBridgeAuthEphemeralRemember406255(secret);
     atlasAccessSetStatus("Mot de passe local validé · vérification Bridge…");
     try {
       atlasAccessPortalState("atlasAccessBridgeState","VÉRIFICATION…","warn");
@@ -2033,6 +2052,7 @@ async function atlasAccessSubmit(event) {
     await new Promise(resolve => requestAnimationFrame(resolve));
     const bridgeAuth = await atlasBridgeAuthLogin(secret);
     if (bridgeAuth.reachable && !bridgeAuth.ok) {
+      atlasBridgeAuthEphemeralClear406255();
       atlasAccessSetStatus(bridgeAuth.payload?.error || "Bridge : authentification Administrator refusée.", "error");
       atlasAccessSubmitBusy = false;
       atlasAccessSetBusy(false);
@@ -2095,6 +2115,7 @@ function atlasAccessLock() {
     if (storedReturnMode === "intermediate") returnMode = "intermediate";
     sessionStorage.removeItem(ATLAS_ACCESS_RETURN_MODE_KEY);
   } catch {}
+  atlasBridgeAuthEphemeralClear406255();
   void atlasBridgeAuthLogout();
   atlasAccessClearSession();
   atlasAccessPendingHash = "";
@@ -2111,6 +2132,7 @@ function atlasAccessEnterOperator(event) {
   try { event?.stopPropagation?.(); } catch (_) {}
 
   atlasOperatorPriorityAcquire("aether-trust-operator");
+  atlasBridgeAuthEphemeralClear406255();
   // This is the already-existing local Operator/Intermediate role, not a second cockpit.
   // Keep owner authentication semantics untouched: atlasAccessIsAuthorized() remains owner-only.
   atlasAccessSetSession(ATLAS_ACCESS_OPERATOR_ROLE);
@@ -25778,7 +25800,10 @@ function atlasLocalBridgeAutoTick(reason = "interval") {
   atlasLocalBridgeLastAutoProbeAt = now;
   atlasLocalBridgeProbeInFlight = true;
 
-  Promise.resolve(atlasLocalBridgeProbe({ silent: true, reason }))
+  Promise.resolve()
+    .then(() => atlasBridgeAuthMaybeRenew406255(reason))
+    .catch(() => false)
+    .then(() => atlasLocalBridgeProbe({ silent: true, reason }))
     .catch(() => null)
     .finally(() => {
       atlasLocalBridgeProbeInFlight = false;
@@ -26387,6 +26412,9 @@ async function atlasLocalBridgeRequest(path, payload, timeoutMs = ATLAS_LOCAL_BR
     const error = new Error(atlasDeviceComputeBlockedMessage());
     error.name = "AtlasDeviceObserverError";
     throw error;
+  }
+  if (atlasAccessIsAuthorized() && !atlasBridgeAuthLocalState().valid) {
+    try { await atlasBridgeAuthMaybeRenew406255(`protected-route:${String(path || "unknown")}`); } catch (_) {}
   }
   if (atlasAccessIsAuthorized() && !atlasBridgeAuthLocalState().valid) {
     const error = new Error("Authentification Administrator Bridge requise.");
@@ -27372,6 +27400,9 @@ async function atlasLocalReportsRunAll(options = {}) {
   if (!atlasAccessIsAuthorized()) {
     atlasAccessOpen("#local-ai-hub");
     return false;
+  }
+  if (!atlasBridgeAuthLocalState().valid) {
+    try { await atlasBridgeAuthMaybeRenew406255("atlas-preflight"); } catch (_) {}
   }
   if (!atlasBridgeAuthLocalState().valid) {
     atlasBridgeAuthRequireTrust("atlas-preflight","#local-ai-hub");
@@ -62786,6 +62817,41 @@ async function atlasBridgeAuthLogin(secret){
   if(result.ok)atlasBridgeAuthRemember(result.payload);
   return result;
 }
+const ATLAS_BRIDGE_AUTH_RENEW_WINDOW_406255_MS = 5 * 60 * 1000;
+let atlasBridgeAuthRenewInFlight406255 = null;
+
+async function atlasBridgeAuthMaybeRenew406255(reason = "bridge-supervision") {
+  if (!atlasAccessIsAuthorized() || !atlasDeviceComputeAllowed()) return false;
+  const secret = String(atlasBridgeAuthEphemeralSecret406255 || "");
+  if (!secret) return false;
+
+  const auth = atlasBridgeAuthLocalState();
+  const expiresAt = Number(auth?.expires_at_ms);
+  const remainingMs = Number.isFinite(expiresAt) ? expiresAt - Date.now() : Infinity;
+  const due = !auth?.token_present || auth?.expired === true || remainingMs <= ATLAS_BRIDGE_AUTH_RENEW_WINDOW_406255_MS;
+  if (!due) return false;
+  if (atlasBridgeAuthRenewInFlight406255) return atlasBridgeAuthRenewInFlight406255;
+
+  atlasBridgeAuthRenewInFlight406255 = (async () => {
+    const result = await atlasBridgeAuthLogin(secret);
+    if (result?.ok) {
+      try { atlasBridgeAuthRecoveryResolved(); } catch (_) {}
+      try {
+        document.dispatchEvent(new CustomEvent("agentcrypto:bridge-auth-renewed", {
+          detail: { reason: String(reason || "bridge-supervision"), expires_at: result?.payload?.expires_at || null }
+        }));
+      } catch (_) {}
+      return true;
+    }
+    if (result?.reachable && !result?.ok) atlasBridgeAuthEphemeralClear406255();
+    return false;
+  })().finally(() => {
+    atlasBridgeAuthRenewInFlight406255 = null;
+  });
+
+  return atlasBridgeAuthRenewInFlight406255;
+}
+
 async function atlasBridgeAuthLogout(){
   const token=atlasBridgeAuthToken();
   atlasBridgeAuthClear();
