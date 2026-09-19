@@ -13,9 +13,6 @@
    before the source-runtime-ready event consumed by diagnostics / Atlas readers.
    40.6.242 hardening: removes eager source-reader boot and settles loader ready state only
    after Source Truth -> DEX freshness -> downstream source readers are ordered.
-   40.6.274 boot quietness: Strategy A ↔ TRADUS comparative/outcome owners no longer
-   wake on parser, microtask, load or pageshow; they wake only on explicit Strategy A
-   intent or after Source Truth is explicitly demanded.
    Source Truth stays in its canonical Backend / API host.
    private-backend-sources.js remains the single Source Truth runtime owner.
    No polling, observer, loader storage write, wallet or trading endpoint is introduced. */
@@ -211,19 +208,11 @@
   // 40.6.242: source-derived readers are no longer booted eagerly.
   // DEX diagnostics, CEX divergence and Atlas Decision Context are started only
   // by afterSourceOwners(), after Source Truth + DEX freshness are ready.
-  function strategyTradusIntent(target){
-    if(!(target instanceof Element))return false;
-    return !!target.closest('[id^="strategyA"],[id*="StrategyA"],[data-collapse-key*="strategy"],[data-collapse-key*="Strategy"],a[href*="strategyA"],a[href*="StrategyA"]');
-  }
-  document.addEventListener("click",event=>{
-    if(!strategyTradusIntent(event.target))return;
-    ensureStrategyTradusComparative();
-    ensureStrategyTradusOutcomeMemory();
-  },true);
-  if(String(location.hash||"").toLowerCase().includes("strategya")){
-    ensureStrategyTradusComparative();
-    ensureStrategyTradusOutcomeMemory();
-  }
+  ensureStrategyTradusComparative();
+  ensureStrategyTradusOutcomeMemory();
+  queueMicrotask(()=>{ensureStrategyTradusComparative();ensureStrategyTradusOutcomeMemory();});
+  window.addEventListener("load",()=>{ensureStrategyTradusComparative();ensureStrategyTradusOutcomeMemory();},{once:true,passive:true});
+  window.addEventListener("pageshow",()=>{ensureStrategyTradusComparative();ensureStrategyTradusOutcomeMemory();},{passive:true});
 
   const API=Object.freeze({
     build:BUILD,
@@ -251,8 +240,6 @@
     atlas_decision_context:atLeast("40.6.114"),
     strategy_tradus_comparative_intelligence:atLeast("40.6.115"),
     strategy_tradus_outcome_memory:atLeast("40.6.117"),
-    strategy_tradus_boot_eager:false,
-    strategy_tradus_demand_only_406274:true,
     operator_cockpit:false,
     new_timer:false,
     new_observer:false,
