@@ -83,7 +83,13 @@
     const statusNode=()=>document.getElementById("bootStatus");
     function fail(message){document.documentElement.dataset.agentCryptoBoot="failed";const node=statusNode();if(node){node.setAttribute("role","alert");node.textContent=`Agent-Crypto indisponible — ${message}`;}}
     function replaceMeta(html,name,value){const re=new RegExp(`<meta\\s+name=["']${name}["']\\s+content=["'][^"']*["']\\s*\\/?\\s*>`,"i");const tag=`<meta name="${name}" content="${String(value).replace(/"/g,"&quot;")}" />`;return re.test(html)?html.replace(re,tag):html.replace(/<head>/i,`<head>\n  ${tag}`);}
-    function stampLocalAssets(html,build){const stamp=(prefix,url,suffix)=>{if(!/^\.\//.test(url))return `${prefix}${url}${suffix}`;if(!/\.(?:js|css)(?:$|\?)/i.test(url))return `${prefix}${url}${suffix}`;const clean=url.replace(/([?&])release=[^&"']*/i,"$1").replace(/[?&]$/,"");const join=clean.includes("?")?"&":"?";const chronos=/^\.\/admin-chronos\.css(?:[?#]|$)/i.test(clean)?"&chronos=canonical":"";return `${prefix}${clean}${join}release=${encodeURIComponent(build)}${chronos}${suffix}`;};return html.replace(/(\bsrc=["'])([^"']+)(["'])/gi,(_,a,u,q)=>stamp(a,u,q)).replace(/(\bhref=["'])([^"']+)(["'])/gi,(_,a,u,q)=>stamp(a,u,q));}
+    function stampLocalAssets(html,build){
+      const source=String(html||"");
+      return source.replace(/(\bhref=["'])(\.\/admin-chronos\.css)(["'])/gi,(all,a,u,q)=>{
+        const stable=u.includes("?")?u:`${u}?chronos=canonical`;
+        return `${a}${stable}${q}`;
+      });
+    }
     function injectStorageQuotaTruth(html,truth){
       if(html.includes('data-agent-crypto-storage-quota-truth="'))return html;
       const tag=`<script src="${STORAGE_QUOTA_MODULE}" data-agent-crypto-storage-quota-truth="${truth.build}"><\/script>`;
@@ -98,38 +104,10 @@
     }
     function injectCanonicalEvidence(html,truth){
       if(!truth.canonical_evidence_wiring)return html;
-      if(html.includes('data-agent-crypto-canonical-evidence-modules="'))return html;
+      if(html.includes('data-agent-crypto-evidence-demand-loader="'))return html;
       if(!/<\/body>/i.test(html))throw new Error("runtime-shell.html sans </body>");
-      const build=truth.build;
-      const moduleTags=EVIDENCE_MODULES.map(src=>`<script src="${src}" data-agent-crypto-canonical-evidence-modules="${build}"><\/script>`).join("\n");
-      const presentationTags=PRESENTATION_MODULES.map(src=>`<script src="${src}" data-agent-crypto-admin-presentation-modules="${build}"><\/script>`).join("\n");
-      const receipt=`<script data-agent-crypto-evidence-dossier-integrator-receipt="${build}">
-      (()=>{
-        "use strict";
-        const mountEvidence=()=>{
-          try{globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount?.();}catch(_){}
-          try{globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.("canonical-window-load");}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3CascadeCheckpoint?.render?.();}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3ProspectiveT0Capture?.render?.();}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh?.("canonical-mount");}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3PostHorizonOutcome?.render?.();}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount?.("canonical-mount");}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3OutcomeCertification?.render?.();}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3RealisticReplayReadiness?.render?.();}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3ForwardEvidenceBridge?.render?.();}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render?.("canonical-mount");}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render?.("canonical-mount");}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount?.("canonical-mount");}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render?.("canonical-mount");}catch(_){}
-          try{globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render?.("canonical-mount");}catch(_){}
-          try{globalThis.AgentCryptoAdministratorOperatorFocus?.requestSettled?.("canonical-mount");}catch(_){}
-        };
-        globalThis.AgentCryptoCanonicalEvidenceWiring=Object.freeze({build:${JSON.stringify(build)},owner:"administrator/index.html",mode:"CANONICAL_ENTRY_DOSSIER_INTEGRATION",modules:${JSON.stringify(EVIDENCE_MODULES)},presentation_modules:${JSON.stringify(PRESENTATION_MODULES)},panels:${JSON.stringify(EVIDENCE_PANEL_IDS)},dossier_id:"strategyADossier",separate_host:false,g3:"PENDING",g9:"LOCKED",recurring_timer:false,observer:false,storage_write:true,storage_scope:"PROSPECTIVE_T0_EVIDENCE_PLUS_BOUNDED_FOUNDATION_SESSION_RECEIPT",business_network_request:false,real_order:false,paper_only:true,mount_timing:"WINDOW_LOAD_ONCE",snapshot:()=>({build:${JSON.stringify(build)},owner:"administrator/index.html",dossier_present:!!document.getElementById("strategyADossier"),integrator_available:typeof globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount==="function",foundation_delegated_available:typeof globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run==="function",prospective_t0_capture_available:typeof globalThis.AgentCryptoStrategyAG3ProspectiveT0Capture?.capture_once==="function",overlap_live_refresh_available:typeof globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh==="function",post_horizon_outcome_available:typeof globalThis.AgentCryptoStrategyAG3PostHorizonOutcome?.render==="function",post_horizon_mount_repair_available:typeof globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount==="function",outcome_certification_available:typeof globalThis.AgentCryptoStrategyAG3OutcomeCertification?.render==="function",realistic_replay_readiness_available:typeof globalThis.AgentCryptoStrategyAG3RealisticReplayReadiness?.render==="function",g3_forward_bridge_available:typeof globalThis.AgentCryptoStrategyAG3ForwardEvidenceBridge?.render==="function",g3_current_truth_surface_available:typeof globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render==="function",g3_strict_decision_time_truth_available:typeof globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render==="function",g3_strict_truth_mount_proof_available:typeof globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount==="function",g3_strict_outcome_revalidation_available:typeof globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render==="function",g3_strict_execution_realism_rebind_available:typeof globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render==="function",operator_focus_available:typeof globalThis.AgentCryptoAdministratorOperatorFocus?.refresh==="function",panels:${JSON.stringify(EVIDENCE_PANEL_IDS)}.map(id=>({id,present:!!document.getElementById(id),parent:document.getElementById(id)?.parentElement?.id||null})),g3:"PENDING",g9:"LOCKED"})});
-        if(document.readyState==="complete") mountEvidence();
-        else window.addEventListener("load",mountEvidence,{once:true});
-      })();
-      <\/script>`;
-      return html.replace(/<\/body>/i,`${moduleTags}\n${presentationTags}\n${receipt}\n</body>`);
+      const tag=`<script defer src="./js/strategy-a-evidence-demand-loader.js" data-agent-crypto-evidence-demand-loader="${truth.build}"><\/script>`;
+      return html.replace(/<\/body>/i,`${tag}\n</body>`);
     }
     function patchShell(raw,truth){let out=String(raw||"");if(!/^\s*<!doctype html>/i.test(out))throw new Error("runtime-shell.html invalide");out=out.replace(/administrator-build-\d+\.\d+\.\d+/g,`administrator-build-${truth.build}`);out=out.replace(/market-core-v2\.0-alpha-build-\d+\.\d+\.\d+/g,`market-core-v2.0-alpha-build-${truth.build}`);out=replaceMeta(out,"administrator-build",truth.build);out=replaceMeta(out,"atlas-build",truth.build);out=replaceMeta(out,"atlas-engine-build",truth.engine);out=replaceMeta(out,"agent-crypto-boot-build",truth.build);out=replaceMeta(out,"agent-crypto-loaded-build",truth.build);out=replaceMeta(out,"agent-crypto-version-owner","canonical-entry");out=replaceMeta(out,"agent-crypto-published-manifest",MANIFEST_URL);out=out.replace(/<title>[\s\S]*?<\/title>/i,`<title>Agent-Crypto @erith.IA — Build ${truth.build} · Administrator</title>`);out=out.replace(/(<button\b[^>]*\bid=["']atlasVersionTruthControl["'][^>]*\baria-label=["'])[^"']*(["'])/i,`$1Version Agent-Crypto chargée : Build ${truth.build}, mode Administrator$2`);out=out.replace(/<span\s+id=["']atlasVersionTruthText["'][^>]*>[\s\S]*?<\/span>/i,`<span id="atlasVersionTruthText">Build ${truth.build} · Administrator</span>`);out=out.replace(/<span\s+id=["']footerRelease["'][^>]*>[\s\S]*?<\/span>/i,`<span id="footerRelease">Agent-Crypto @erith.IA · Market Core · Build ${truth.build} · Version : Parker Lewis Can't Lose</span>`);out=out.replace(/AGENT-CRYPTO\s+\d+\.\d+\.\d+\s+·\s+ADMINISTRATOR/gi,`AGENT-CRYPTO ${truth.build} · ADMINISTRATOR`);out=injectStorageQuotaTruth(out,truth);out=injectCommandCenterRouter(out,truth);out=injectCanonicalEvidence(out,truth);return stampLocalAssets(out,truth.build);}
     async function fetchShell(){const response=await fetch(`${SHELL_URL}?release=${encodeURIComponent(LOADED_BUILD)}&t=${Date.now()}`,{cache:"no-store",credentials:"same-origin"});if(!response.ok)throw new Error(`runtime-shell.html: HTTP ${response.status}`);return response.text();}

@@ -20,18 +20,30 @@
   if(typeof document!=='undefined'){if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',render,{once:true});window.addEventListener('load',render,{once:true});}else render();}
 })();
 
-/* 40.6.192 — LEGACY SHELL → EVIDENCE SUPPLEMENT BOOTSTRAP
-   Preserve the existing supplemental evidence wiring. */
+/* 40.6.273 — LEGACY EVIDENCE BOOTSTRAP RETIRED.
+   Canonical evidence loading is now owned by strategy-a-evidence-demand-loader.js.
+   Compatibility API remains, but it never auto-starts at window.load. */
 (() => {
   "use strict";
-  const BOOTSTRAP_BUILD="40.6.192";
-  const MODULES=Object.freeze(["./js/strategy-a-evidence-lifecycle-truth.js","./js/strategy-a-foundation-applicability-truth.js","./js/strategy-a-time-semantics-truth.js","./js/strategy-a-g3-structured-data-truth.js","./js/strategy-a-g3-history-owner-discovery.js","./js/strategy-a-g3-historical-evidence-adapter.js","./js/strategy-a-gate-canonical-truth.js"]);
-  const loaded=new Set();let started=false;
-  function absolute(src){return new URL(src,document.baseURI).href.split("?")[0];}
-  function present(src){const wanted=absolute(src);return Array.from(document.scripts).some(script=>{try{return script.src&&new URL(script.src,document.baseURI).href.split("?")[0]===wanted;}catch(_){return false;}});}
-  function loadOne(src){if(loaded.has(src)||present(src)){loaded.add(src);return Promise.resolve(src);}return new Promise((resolve,reject)=>{const script=document.createElement("script"),url=new URL(src,document.baseURI);url.searchParams.set("supplement",BOOTSTRAP_BUILD);script.src=url.href;script.async=false;script.dataset.agentCryptoEvidenceSupplement=src;script.addEventListener("load",()=>{loaded.add(src);resolve(src);},{once:true});script.addEventListener("error",()=>reject(new Error(`evidence supplement failed: ${src}`)),{once:true});document.head.appendChild(script);});}
-  async function run(){for(const src of MODULES){try{await loadOne(src);}catch(_){}}try{document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready",{detail:{modules:MODULES.slice(),source:"40.6.192-evidence-supplement"}}));}catch(_){}try{document.dispatchEvent(new CustomEvent("agent-crypto:evidence-data-changed",{detail:{source:"40.6.192-evidence-supplement"}}));}catch(_){}return MODULES.slice();}
-  function start(){if(started)return;started=true;if(document.readyState==="complete")void run();else window.addEventListener("load",()=>{void run();},{once:true});}
-  globalThis.AgentCryptoEvidenceSupplementBootstrap=Object.freeze({build:BOOTSTRAP_BUILD,modules:MODULES,start,loaded:()=>Object.freeze(Array.from(loaded)),unrelated_runtime_registry_loaded:false,recurring_timer:false,observer:false,storage_write:false,business_network_request:false,real_order:false,paper_only:true});
-  if(typeof document!=="undefined")start();
+  const BOOTSTRAP_BUILD="40.6.273";
+  function start(reason="legacy-compat-request"){
+    const owner=globalThis.AgentCryptoCanonicalEvidenceWiring;
+    if(owner&&typeof owner.load==="function")return owner.load(reason);
+    return Promise.resolve([]);
+  }
+  globalThis.AgentCryptoEvidenceSupplementBootstrap=Object.freeze({
+    build:BOOTSTRAP_BUILD,
+    modules:Object.freeze([]),
+    start,
+    loaded:()=>Object.freeze([]),
+    auto_start:false,
+    retired_to:"strategy-a-evidence-demand-loader.js",
+    unrelated_runtime_registry_loaded:false,
+    recurring_timer:false,
+    observer:false,
+    storage_write:false,
+    business_network_request:false,
+    real_order:false,
+    paper_only:true
+  });
 })();

@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.272",
+  "build": "40.6.273",
   "engine": "38.15.11",
-  "release": "RECOVERY · STRATEGY A DURABLE EVIDENCE · BOUNDED OWNER",
+  "release": "PERFORMANCE · BOOK CANARY · CACHE REUSE + EVIDENCE DEMAND LOAD",
   "published": true,
-  "status": "recovery_strategy_a_durable_evidence_bounded_406272",
-  "parent_build": "40.6.271",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.272",
-  "administrator_build": "40.6.272",
-  "build_label": "Build 40.6.272 · Administrator",
+  "status": "performance_book_canary_cache_evidence_demand_406273",
+  "parent_build": "40.6.272",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.273",
+  "administrator_build": "40.6.273",
+  "build_label": "Build 40.6.273 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -27,7 +27,7 @@
   "new_storage_owner": false,
   "new_business_network_request": false,
   "static_asset_module_load": true,
-  "canonical_entry_modified": false,
+  "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": [
     "40.6.251 proved Firefox stability when the heavy 40.6.243 Decision Intelligence surface was absent.",
@@ -67,22 +67,19 @@
     "The 40.6.268 durable evidence source remains in Git history but is not loaded in this recovery build."
   ],
   "terrain_pending": [
-    "Wait until GitHub Pages exposes Build 40.6.272 · Administrator.",
-    "Ctrl+F5 once.",
-    "Confirm Decision Intelligence still opens without the former multi-second stall.",
-    "In Strategy A, confirm STRATEGY A · DURABLE EVIDENCE · 40.6.272 reports DURABLE READY.",
-    "Confirm existing 40.6.268 IndexedDB evidence, if present in this Firefox profile, is visible again.",
-    "Allow one normal Strategy A/Atlas cycle, then reload once and verify durable counts survive.",
-    "Confirm no Firefox slow-page warning returns during ordinary navigation.",
-    "If any repeated stall returns, stop and keep 40.6.271 as rollback checkpoint."
+    "40.6.273 Ryzen cold/warm boot terrain timing",
+    "40.6.273 Transformer Book canary: Classic boot responsiveness and no freeze",
+    "40.6.273 Oracle + Math Core availability on Book",
+    "40.6.273 Intermediate + Administrator navigation on Book",
+    "40.6.273 Strategy A demand/idle evidence pack visibility after first usable paint"
   ],
   "release_notes": [
-    "Restores the 40.6.268 durable Strategy A evidence capability on top of the recovered 40.6.267 terrain-PASS runtime.",
-    "Reuses the exact 40.6.268 IndexedDB database/schema so evidence already written by 40.6.268 can be read again.",
-    "Removes the 40.6.268 hot market-series capture path and does not perform a full evidence capture during boot.",
-    "Evidence writes are incremental and coalesced on bounded evidence/CURRENT events plus visibility/pagehide checkpoints.",
-    "Merged durable reads are cached; no repeated full JSON clone/merge loop is attached to market ticks.",
-    "Market Core 38.15.11, Decision Intelligence logic, Oracle, Atlas CURRENT, Strategy A thresholds, Cost Gate and real-order locks are unchanged."
+    "40.6.273 is a bounded boot-performance surgery. No feature is removed.",
+    "Global per-release cache busting is retired because it forced byte-identical JS/CSS to be fetched/reparsed again on every build; this restores the cache-reuse principle established in the 40.4.63 performance work.",
+    "The 25-module Strategy A canonical evidence pack is no longer injected as a synchronous boot wall. A single deferred owner loads the same modules in the same order on explicit Strategy A demand or after first paint, paced one module per browser idle slice.",
+    "The legacy 40.6.192 evidence supplement bootstrap no longer auto-starts at window.load; it delegates to the canonical demand owner only when explicitly called.",
+    "Market Core 38.15.11, Oracle logic, Math Core, Shared Memory data, Atlas CURRENT, Lecture Technique, Strategy A business rules and real-order locks are unchanged.",
+    "40.6.272 remains the rollback checkpoint if Book canary terrain fails."
   ],
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
@@ -943,5 +940,34 @@
       "pagehide"
     ],
     "performance_strategy": "coalesced idle capture + incremental ID writes + cached merged reads"
+  },
+  "performance_boot_repair_406273": {
+    "diagnosis": "BOOT_AMPLIFICATION_BY_GLOBAL_CACHE_BUST_PLUS_SYNCHRONOUS_EVIDENCE_WALL",
+    "terrain_reference": "Transformer Book canary: 40.6.272 eventually loads but simple view can take >3 min; Ryzen masks the regression",
+    "cache_policy_before": "every local JS/CSS URL stamped with ?release=<build>, defeating cross-release browser reuse",
+    "cache_policy_after": "stable local asset URLs are reused across releases; only changed assets receive targeted cache identity",
+    "evidence_before": "25 Strategy A evidence modules + 1 presentation module injected into shell as direct parser-time scripts",
+    "evidence_after": "single defer demand loader; original module order preserved; one module per idle slice; explicit Strategy A interaction can start immediately",
+    "legacy_bootstrap_406192_auto_start": false,
+    "market_core_modified": false,
+    "oracle_business_logic_modified": false,
+    "math_core_modified": false,
+    "shared_memory_logic_modified": false,
+    "strategy_a_business_logic_modified": false,
+    "evidence_data_deleted": false,
+    "indexeddb_schema_changed": false,
+    "recurring_timer": false,
+    "observer": false,
+    "real_order": false,
+    "paper_only": true,
+    "rollback": "40.6.272",
+    "canary_acceptance": [
+      "Ryzen Classic view reaches usable state without new regression",
+      "Transformer Book Classic view reaches usable state without freeze",
+      "Oracle + Math Core remain available on Book",
+      "Intermediate and Administration remain accessible",
+      "Strategy A evidence panels load after demand/idle and G3 remains PENDING / G9 LOCKED",
+      "No Firefox slow-page warning during ordinary Book boot"
+    ]
   }
 }
