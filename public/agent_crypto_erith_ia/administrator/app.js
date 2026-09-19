@@ -26341,7 +26341,21 @@ function atlasAtlasStateTruth(snapshot,completed=0,auth="OK",detail=""){
   try{document.documentElement.dataset.atlasStateTruth=auth==="OK"?"ready":"auth-required";}catch(_){}
   return line;
 }
-function atlasBridgeAuthRequireTrust(reason="bridge-auth-required",pendingHash="#local-ai-hub",error=null){
+const ATLAS_BRIDGE_AUTH_OPERATOR_INTENT_WINDOW_406256_MS = 15 * 1000;
+function atlasBridgeAuthOperatorIntentRecent406256(){
+  try{
+    if(document.visibilityState!=="visible")return false;
+    if(typeof document.hasFocus==="function"&&!document.hasFocus())return false;
+    if(navigator.userActivation&&navigator.userActivation.hasBeenActive!==true)return false;
+    const last=Number(atlasAudienceState?.lastActivityAt||0);
+    return Number.isFinite(last)&&last>0&&(Date.now()-last)<=ATLAS_BRIDGE_AUTH_OPERATOR_INTENT_WINDOW_406256_MS;
+  }catch(_){return false;}
+}
+function atlasBridgeAuthRequireTrust(reason="bridge-auth-required",pendingHash="#local-ai-hub",error=null,options={}){
+  const explicitInteractive=options?.interactive===true;
+  const explicitPassive=options?.interactive===false;
+  const interactive=explicitInteractive||(!explicitPassive&&atlasBridgeAuthOperatorIntentRecent406256());
+
   atlasBridgeAuthClear();
   atlasLocalReportsState.authBlocked404273=true;
   atlasLocalReportsState.authBlockedReason404273=String(reason||"bridge-auth-required");
@@ -26351,12 +26365,34 @@ function atlasBridgeAuthRequireTrust(reason="bridge-auth-required",pendingHash="
   atlasLocalReportsState.deferredRetryReason="";
   atlasLocalReportsState.deferredRetryDelayMs=0;
   atlasLocalReportsState.deferredRetryRequestedAt=0;
-  atlasLocalReportsSetSuiteStatus("AUTH BRIDGE REQUISE · Atlas en pause · Aether Trust doit rétablir la session Administrator.","wait");
-  atlasAnalysisProgressRender(0,"error","Bridge joignable mais session Administrator invalide · Atlas suspendu sans avancer vers le rapport suivant.");
-  try{atlasAtlasStateTruth(atlasBuildCryptoPageSnapshot(),0,"REQUISE","AETHER TRUST");}catch(_){}
-  try{atlasLocalDialogueSetConnection(true,"Bridge Ryzen joignable · authentification Administrator requise pour Atlas/Aerith.");}catch(_){}
-  try{atlasAccessOpen(pendingHash||"#local-ai-hub");}catch(_){}
-  return {ok:false,reason:String(reason||"bridge-auth-required"),message:String(error?.message||"")};
+
+  const suiteMessage=interactive
+    ?"AUTH BRIDGE REQUISE · Atlas en pause · Aether Trust doit rétablir la session Bridge."
+    :"AUTH BRIDGE EXPIRÉE · Atlas en pause · session Administrator conservée · réauthentification au prochain usage local.";
+  const progressMessage=interactive
+    ?"Bridge joignable mais session Administrator Bridge invalide · Atlas suspendu jusqu’à réauthentification."
+    :"Bridge joignable mais token privilégié expiré pendant l’inactivité · cockpit Administrator conservé, aucun écran d’authentification imposé.";
+
+  atlasLocalReportsSetSuiteStatus(suiteMessage,"wait");
+  atlasAnalysisProgressRender(0,"error",progressMessage);
+  try{atlasAtlasStateTruth(atlasBuildCryptoPageSnapshot(),0,"REQUISE",interactive?"AETHER TRUST":"ADMIN CONSERVÉ");}catch(_){}
+  try{atlasLocalDialogueSetConnection(true,interactive
+    ?"Bridge Ryzen joignable · authentification Administrator requise pour Atlas/Aerith."
+    :"Bridge Ryzen joignable · authentification locale à renouveler au prochain usage Atlas/Aerith.");}catch(_){}
+
+  if(interactive){
+    try{delete document.documentElement.dataset.atlasBridgeAuthIdleHold;}catch(_){}
+    try{atlasAccessOpen(pendingHash||"#local-ai-hub");}catch(_){}
+  }else{
+    try{document.documentElement.dataset.atlasBridgeAuthIdleHold="1";}catch(_){}
+  }
+  return {
+    ok:false,
+    reason:String(reason||"bridge-auth-required"),
+    message:String(error?.message||""),
+    gate_opened:interactive,
+    administrator_session_preserved:atlasAccessIsAuthorized()
+  };
 }
 function atlasBridgeAuthRecoveryResolved(){
   atlasLocalReportsState.authBlocked404273=false;
@@ -26364,6 +26400,7 @@ function atlasBridgeAuthRecoveryResolved(){
   atlasLocalReportsState.authBlockedAt404273=0;
   atlasLocalReportsState.authBlockedFingerprint404273="";
   try{delete document.documentElement.dataset.atlasStateTruth;}catch(_){}
+  try{delete document.documentElement.dataset.atlasBridgeAuthIdleHold;}catch(_){}
   return true;
 }
 try{globalThis.ErithAtlasStateTruth=Object.freeze({
@@ -26388,7 +26425,7 @@ function atlasLocalBridgeRequestFailureKind(error) {
 function atlasLocalBridgeRequestFailure(error, path = "") {
   const kind = atlasLocalBridgeRequestFailureKind(error);
   if (kind === "auth") {
-    atlasBridgeAuthRequireTrust(`protected-route:${String(path||"unknown")}`,"#local-ai-hub",error);
+    atlasBridgeAuthRequireTrust(`protected-route:${String(path||"unknown")}`,"#local-ai-hub",error,{interactive:atlasBridgeAuthOperatorIntentRecent406256()});
     return kind;
   }
   if (!["timeout", "offline"].includes(kind)) return kind;
@@ -27405,7 +27442,7 @@ async function atlasLocalReportsRunAll(options = {}) {
     try { await atlasBridgeAuthMaybeRenew406255("atlas-preflight"); } catch (_) {}
   }
   if (!atlasBridgeAuthLocalState().valid) {
-    atlasBridgeAuthRequireTrust("atlas-preflight","#local-ai-hub");
+    atlasBridgeAuthRequireTrust("atlas-preflight","#local-ai-hub",null,{interactive:options?.automatic!==true});
     return false;
   }
   if (
