@@ -1,5 +1,6 @@
 /* Agent-Crypto @erith.IA — Event Memory V1
    Build 40.5.14. Reproducible read-only event memory over existing News archive + Collector snapshots.
+   Runtime projection uses one sorted timestamp index per shared record set.
    No new storage owner, no causal claim, no prediction, no order. */
 (() => {
   "use strict";
@@ -46,8 +47,6 @@
     }
     return lo;
   }
-  function eventApi(){return globalThis.AtlasEventSemanticEnrichment||globalThis.AtlasEventIntelligence||null;}
-  function regimeApi(){return globalThis.AtlasMarketRegimeContext||null;}
   function nearest(index,target,tolerance){
     if(!Array.isArray(index)||!index.length)return null;
     const pos=lowerBound(index,target),times=new Set();
@@ -67,6 +66,8 @@
     }
     return best?{row:best.row,delta_ms:bestDelta}:null;
   }
+  function eventApi(){return globalThis.AtlasEventSemanticEnrichment||globalThis.AtlasEventIntelligence||null;}
+  function regimeApi(){return globalThis.AtlasMarketRegimeContext||null;}
   function priceMap(row){
     const out={};
     for(const a of row?.assets||[]){
