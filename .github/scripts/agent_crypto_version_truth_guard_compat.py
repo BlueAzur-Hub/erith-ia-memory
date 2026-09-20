@@ -3,8 +3,11 @@
 
 Contract:
 - /administrator/ is the only executable update target;
-- build.json is the published truth and is resolved before runtime-shell boots;
-- the resolved build becomes immutable for the current document;
+- build.json is the published truth used by version-truth.js for update discovery;
+- the loaded build is immutable for the current document;
+- two canonical entry architectures are accepted:
+  (a) legacy bootstrap -> runtime-shell document replacement;
+  (b) direct materialized entry, which deliberately avoids document replacement;
 - version-truth.js may detect a newer build, but never rewrites the running one;
 - historical /releases/ entries are archives/compatibility only, never required
   for a successful update;
@@ -80,15 +83,41 @@ def main() -> int:
     require(index, (
         'name="agent-crypto-loaded-build"',
         'name="agent-crypto-published-manifest" content="./build.json"',
-        'async function canonicalIdentity()',
-        'document.write(shell);',
     ), "index.html")
-    require_regex(index, (
-        ('canonical identity awaited', r'(?:const\s+truth\s*=\s*await\s+canonicalIdentity\(\)\s*;|const\s*\[\s*truth\s*,\s*rawShell\s*\]\s*=\s*await\s+Promise\.all\(\s*\[\s*canonicalIdentity\(\)\s*,\s*fetchShell\(\)\s*\]\s*\)\s*;)'),
-        ('source: "canonical-build.json"', r'source\s*:\s*["\']canonical-build\.json["\']'),
-        ('agent-crypto-version-owner", "canonical-entry"', r'["\']agent-crypto-version-owner["\']\s*,\s*["\']canonical-entry["\']'),
-        ('globalThis.AgentCryptoBootTruth = truth;', r'globalThis\.AgentCryptoBootTruth\s*=\s*truth\s*;'),
-    ), "index.html")
+
+    legacy_bootstrap = (
+        'async function canonicalIdentity()' in index
+        and 'document.write(shell);' in index
+    )
+    direct_entry = (
+        'static-direct-entry' in index
+        and 'globalThis.AgentCryptoBootTruth=truth' in index.replace(" ", "")
+        and 'document.write(shell);' not in index
+        and 'document.open();' not in index
+    )
+
+    if legacy_bootstrap:
+        require_regex(index, (
+            ('canonical identity awaited', r'(?:const\s+truth\s*=\s*await\s+canonicalIdentity\(\)\s*;|const\s*\[\s*truth\s*,\s*rawShell\s*\]\s*=\s*await\s+Promise\.all\(\s*\[\s*canonicalIdentity\(\)\s*,\s*fetchShell\(\)\s*\]\s*\)\s*;)'),
+            ('source: "canonical-build.json"', r'source\s*:\s*["\']canonical-build\.json["\']'),
+            ('agent-crypto-version-owner", "canonical-entry"', r'["\']agent-crypto-version-owner["\']\s*,\s*["\']canonical-entry["\']'),
+            ('globalThis.AgentCryptoBootTruth = truth;', r'globalThis\.AgentCryptoBootTruth\s*=\s*truth\s*;'),
+        ), "index.html legacy bootstrap")
+        entry_architecture = "legacy-bootstrap-runtime-shell"
+    elif direct_entry:
+        require_regex(index, (
+            ('static loaded build matches manifest', rf'name=["\']agent-crypto-loaded-build["\']\s+content=["\']{re.escape(published)}["\']'),
+            ('static administrator build matches manifest', rf'name=["\']administrator-build["\']\s+content=["\']{re.escape(published)}["\']'),
+            ('static engine matches protected engine', rf'name=["\']atlas-engine-build["\']\s+content=["\']{re.escape(engine)}["\']'),
+            ('static direct version owner', r'name=["\']agent-crypto-version-owner["\']\s+content=["\']static-direct-entry["\']'),
+            ('direct truth build', rf'build\s*:\s*["\']{re.escape(published)}["\']'),
+            ('direct truth source', r'source\s*:\s*["\']static-direct-entry["\']'),
+        ), "index.html direct entry")
+        if "const SHELL_URL" in index or "runtime-shell.html: HTTP" in index:
+            fail("direct index.html still contains runtime-shell bootstrap fetch")
+        entry_architecture = "direct-materialized-entry"
+    else:
+        fail("index.html matches neither accepted canonical entry architecture")
 
     for forbidden in (
         'build.json is never consulted to decide the loaded build',
@@ -140,7 +169,8 @@ def main() -> int:
         "ok": True,
         "published_build": published,
         "market_core": engine,
-        "boot_authority": "administrator/index.html -> build.json",
+        "boot_authority": "administrator/index.html",
+        "entry_architecture": entry_architecture,
         "loaded_authority": "canonical-entry",
         "published_authority": "build.json",
         "update_target": "administrator-root",
