@@ -2439,6 +2439,10 @@
     }));
   }
 
+  window.addEventListener("agent-crypto:late-memory-ready", () => {
+    try { initAtlasMemoryResidency(); } catch (_) {}
+  }, { once: true, passive: true });
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
   else boot();
 
