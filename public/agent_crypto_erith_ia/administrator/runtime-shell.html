@@ -4591,6 +4591,16 @@
       }
       return out;
     }
+    let reportRenderQueued = false;
+    function queueHumanReportRender() {
+      if (reportRenderQueued) return;
+      reportRenderQueued = true;
+      queueMicrotask(() => {
+        reportRenderQueued = false;
+        const section = document.getElementById("boot-report");
+        if (section instanceof HTMLDetailsElement && section.open) renderHumanReport();
+      });
+    }
     function mark(name, detail = {}) {
       const label = String(name || "boot");
       const row = Object.freeze({
@@ -4600,6 +4610,7 @@
       });
       marks.push(row);
       try { performance.mark(`agent-crypto:${label}`); } catch (_) {}
+      queueHumanReportRender();
       return row;
     }
     function markOnce(name, detail = {}) {
@@ -4626,41 +4637,43 @@
       const snap = snapshot();
       const first = snap.first_ms || {};
       const shell = Number(first["shell-ready"] ?? 0);
-      const fmt = value => Number.isFinite(Number(value)) ? (Number(value) / 1000).toFixed(2) + " s" : "en attente";
-      const delta = (value, previous) => Number.isFinite(Number(value)) && Number.isFinite(Number(previous))
-        ? " (+" + ((Number(value) - Number(previous)) / 1000).toFixed(2) + " s)"
-        : "";
+      const fmt = value => Number.isFinite(Number(value)) ? (Number(value) / 1000).toFixed(2) + " s" : "—";
       const stages = [
-        ["shell-ready","Shell"],
-        ["chartjs-ready","Chart.js"],
-        ["core-evaluated","Core"],
-        ["coldboot-start","Cold Boot"],
-        ["auto-reader-start","Auto Reader"],
-        ["livecheck-start","Livecheck"],
-        ["market-ready","Marché"],
-        ["selected-coin-ready","Actif sélectionné"],
-        ["graph-ready","Graphique"],
-        ["detail-ready","Lecture technique"],
-        ["oracle-ready","Oracle"],
-        ["administrator-window-manager-ready","Window Manager"]
+        ["shell-ready","Shell",true],
+        ["chartjs-ready","Chart.js",true],
+        ["core-evaluated","Core",true],
+        ["coldboot-start","Cold Boot",true],
+        ["auto-reader-start","Auto Reader",true],
+        ["livecheck-start","Livecheck",true],
+        ["market-ready","Marché",true],
+        ["selected-coin-ready","Actif sélectionné",false],
+        ["graph-ready","Graphique",false],
+        ["detail-ready","Lecture technique",false],
+        ["oracle-ready","Oracle",true],
+        ["administrator-window-manager-ready","Window Manager",true]
       ];
-      const required = ["shell-ready","chartjs-ready","core-evaluated","market-ready","graph-ready","oracle-ready","administrator-window-manager-ready"];
+      const required = stages.filter(row => row[2]).map(row => row[0]);
       const complete = required.every(name => Number.isFinite(Number(first[name])));
+      const settled = complete || Number.isFinite(Number(first["administrator-window-manager-ready"]));
+      const optionalMissing = stages.filter(([name, , requiredStage]) => !requiredStage && !Number.isFinite(Number(first[name]))).map(([,label]) => label);
       const lines = [
         "BOOT REPORT · " + BUILD,
-        "État : " + (complete ? "COMPLET" : "PARTIEL · mesures encore en cours"),
+        "État : " + (complete ? "TERMINÉ" : settled ? "TERMINÉ · certaines sondes n'ont pas été observées" : "DÉMARRAGE EN COURS"),
         "Début document : " + snap.started_at,
         ""
       ];
-      let previous = shell;
       for (const [name, label] of stages) {
         const value = Number(first[name]);
         if (Number.isFinite(value)) {
-          lines.push(label.padEnd(20," ") + " " + fmt(value - shell) + delta(value, previous));
-          previous = value;
+          lines.push(label.padEnd(20," ") + " " + fmt(value - shell));
         } else {
-          lines.push(label.padEnd(20," ") + " en attente");
+          lines.push(label.padEnd(20," ") + " " + (settled ? "non observé" : "en attente"));
         }
+      }
+      if (settled && optionalMissing.length) {
+        lines.push("");
+        lines.push("Sondes non observées : " + optionalMissing.join(", ") + ".");
+        lines.push("Cela ne signifie pas que ces zones sont encore en chargement.");
       }
       const closed = Number(first["current-closed"]);
       const restored = Number(first["current-restored"]);
@@ -4681,7 +4694,7 @@
         const duration = Math.max(0, end - start);
         if (!slowest || duration > slowest.duration) slowest = { name: String(owners[i].name).slice("coldboot-owner:".length), duration };
       }
-      if (slowest) lines.push("Cold Boot le plus lent : " + slowest.name + " · ~" + slowest.duration.toFixed(0) + " ms");
+      if (slowest) lines.push("Plus grand intervalle Cold Boot observé : " + slowest.name + " · ~" + slowest.duration.toFixed(0) + " ms");
       lines.push("");
       lines.push("Aucune commande Console requise.");
       return lines.join("\n");
@@ -4693,6 +4706,11 @@
     }
     globalThis.AgentCryptoBootProbe = Object.freeze({ build: BUILD, mark, markOnce, snapshot, humanReport, renderHumanReport });
     markOnce("shell-ready", { ready_state: document.readyState });
+    const bootReportSection = document.getElementById("boot-report");
+    bootReportSection?.addEventListener("toggle", () => {
+      if (bootReportSection.open) renderHumanReport();
+    });
+    if (bootReportSection instanceof HTMLDetailsElement && bootReportSection.open) renderHumanReport();
     document.getElementById("atlasBootReportRefresh")?.addEventListener("click", () => {
       renderHumanReport();
       const state = document.getElementById("atlasBootReportCopyState");
