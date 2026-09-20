@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.281",
+  "build": "40.6.282",
   "engine": "38.15.11",
-  "release": "P0 BOOK BOOT · PARSER WALL RELIEF",
+  "release": "P0 BOOK BOOT · PARALLEL ENTRY FETCH",
   "published": true,
-  "status": "transformer_book_parser_wall_relief_406281",
-  "parent_build": "40.6.280",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.281",
-  "administrator_build": "40.6.281",
-  "build_label": "Build 40.6.281 · Administrator",
+  "status": "transformer_book_parallel_entry_fetch_406282",
+  "parent_build": "40.6.281",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.282",
+  "administrator_build": "40.6.282",
+  "build_label": "Build 40.6.282 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": "Static verification PASS. Transformer Book terrain timing required.",
-  "release_notes": "P0 Transformer Book parser wall relief. Boot Report 40.6.280 proved Shell/Core were fast but Window Manager appeared at 58.93 s from navigation, Livecheck at 70.80 s and Market at 80.90 s. 57 secondary runtimes are removed from the parser critical path and loaded in original order after market-ready with idle yields and bounded fallback. Aether shell + canonical Window Manager stay on the critical path. Late memory modules trigger an idempotent residency rebind. Same application, no Book-lite fork, no business logic or Market Core change.",
+  "release_notes": "P0 Transformer Book entry-path repair. 40.6.281 reduced the in-shell parser wall dramatically, but entry-to-shell remained 19.49 s. The canonical manifest and runtime-shell are now fetched concurrently instead of serially. runtime-shell uses conditional revalidation so freshness is preserved without unique cache-busting. No runtime order, Market Core, business logic, storage schema, Oracle, CURRENT, Lecture Technique or Strategy A rule change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1229,6 +1229,30 @@
     "rollback_checkpoint": "40.6.273",
     "no_storage_schema_change": true,
     "no_recurring_timer": true,
+    "real_order": false
+  },
+  "transformer_book_parallel_entry_fetch_406282": {
+    "priority": "P0",
+    "evidence": {
+      "build": "40.6.281",
+      "entry_to_shell_s": 19.49,
+      "shell_to_window_manager_s": 2.02,
+      "entry_to_window_manager_s": 21.51,
+      "shell_to_livecheck_s": 6.31,
+      "shell_to_market_s": 14.23
+    },
+    "diagnosis": "After parser-wall relief, the dominant remaining pre-runtime delay is the serial entry sequence build.json -> runtime-shell.html.",
+    "change": "Fetch canonical manifest and runtime-shell concurrently with Promise.all; patch shell only after both resolve.",
+    "freshness": "build.json no-cache revalidation; runtime-shell no-cache revalidation",
+    "same_application": true,
+    "book_lite": false,
+    "runtime_order_changed": false,
+    "business_logic_changed": false,
+    "market_core": "38.15.11",
+    "rollback_checkpoint": "40.6.273",
+    "no_new_timer": true,
+    "no_new_observer": true,
+    "no_storage_schema_change": true,
     "real_order": false
   }
 }
