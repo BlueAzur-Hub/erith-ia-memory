@@ -4660,6 +4660,7 @@
         "BOOT REPORT · " + BUILD,
         "État : " + (complete ? "TERMINÉ" : settled ? "TERMINÉ · certaines sondes n'ont pas été observées" : "DÉMARRAGE EN COURS"),
         "Début document : " + snap.started_at,
+        "Entrée page → Shell : " + fmt(shell),
         ""
       ];
       for (const [name, label] of stages) {
@@ -4695,6 +4696,8 @@
         if (!slowest || duration > slowest.duration) slowest = { name: String(owners[i].name).slice("coldboot-owner:".length), duration };
       }
       if (slowest) lines.push("Plus grand intervalle Cold Boot observé : " + slowest.name + " · ~" + slowest.duration.toFixed(0) + " ms");
+      const wmAbsolute = Number(first["administrator-window-manager-ready"]);
+      if (Number.isFinite(wmAbsolute)) lines.push("Entrée page → Window Manager : " + fmt(wmAbsolute));
       lines.push("");
       lines.push("Aucune commande Console requise.");
       return lines.join("\n");
