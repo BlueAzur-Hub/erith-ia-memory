@@ -509,6 +509,55 @@
     return null;
   }
 
+  // 40.6.304 — restore the field-validated 40.6.75 normal Aether frame.
+  // This is the only default geometry calculation for Aether. It uses the
+  // largest complete 16:9 rectangle available to the LEFT of Lecture Technique,
+  // then the Window Manager owns drag/resize/persistence from that point onward.
+  function aetherNormalGeometry406304() {
+    const margin = 12;
+    const minWidth = 720;
+    const minHeight = 405;
+    const maxFloatWidth = 1450;
+    const ratio = 16 / 9;
+    const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+    let rightBoundary = vw - margin;
+    const detail = document.getElementById("detailPanel");
+    if (detail instanceof HTMLElement) {
+      const style = getComputedStyle(detail);
+      const rect = detail.getBoundingClientRect();
+      const visible = !detail.hidden
+        && style.display !== "none"
+        && style.visibility !== "hidden"
+        && rect.width > 1
+        && rect.height > 1;
+      if (visible && rect.left > Math.max(minWidth + margin * 2, vw * .55)) {
+        rightBoundary = Math.max(minWidth + margin * 2, rect.left - 8);
+      }
+    }
+
+    const availableWidth = Math.max(minWidth, rightBoundary - margin);
+    const maxWidth = Math.max(minWidth, Math.min(maxFloatWidth, availableWidth, vw - margin * 2));
+    const maxHeight = Math.max(minHeight, vh - margin * 2);
+    let width = Math.min(maxWidth, maxHeight * ratio);
+    let height = width / ratio;
+    if (height > maxHeight) {
+      height = maxHeight;
+      width = height * ratio;
+    }
+
+    width = Math.max(minWidth, Math.min(width, vw - margin * 2));
+    height = Math.max(minHeight, Math.min(height, vh - margin * 2));
+
+    return {
+      x: margin,
+      y: Math.max(margin, Math.round(vh - height - margin)),
+      width: Math.round(width),
+      height: Math.round(height)
+    };
+  }
+
   function nativeDefinitions() {
     return [
       {
@@ -517,20 +566,7 @@
         tone: "cyan",
         directFixed: true,
         geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true },
-        preferredFloatGeometry: () => {
-          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
-          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
-          const fittedWidth = Math.min(width, height * 16 / 9);
-          const fittedHeight = fittedWidth * 9 / 16;
-          return {
-            x: 12,
-            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
-            width: Math.round(fittedWidth),
-            height: Math.round(fittedHeight)
-          };
-        },
+        preferredFloatGeometry: () => aetherNormalGeometry406304(),
         resolveEntries: () => [entry(byId("atlasAetherStatusPanel"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
         resolveControlHosts: nodes => [nodes[0]?.querySelector(".atlas-aether-panel-head")].filter(Boolean),
@@ -2190,35 +2226,46 @@
   }
 
 
-  // 40.6.302 — Aether LEFT restoration.
-  // Single responsibility: restore the operator's normal Aether window to the LEFT.
-  // No CSS, resize, F11, DOM, or Window Manager ownership changes are introduced here.
-  const AETHER_LEFT_406085_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406302`;
-  function migrateAetherCenteredState() {
+  // 40.6.304 — one-time NORMAL FRAME recovery.
+  // 40.6.303 proved that x=12 was correct but also proved that the surviving
+  // saved/default frame was the reduced ~1088x612 geometry. Rebase only Aether's
+  // normal window state onto the validated 40.6.75 field frame, then get out.
+  // After this migration, the Window Manager alone owns operator drag/resize,
+  // close/reopen persistence and maximize/restore.
+  const AETHER_FRAME_406304_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-normal-frame-406304`;
+  function migrateAetherNormalFrame406304() {
     try {
-      if (localStorage.getItem(AETHER_LEFT_406085_MIGRATION_KEY) === "1") return "already";
+      if (localStorage.getItem(AETHER_FRAME_406304_MIGRATION_KEY) === "1") return "already";
       const key = `${STORAGE_PREFIX}:window:aether-watch`;
       const raw = JSON.parse(localStorage.getItem(key) || "null");
+      const target = aetherNormalGeometry406304();
 
-      // No saved state: preferredFloatGeometry already owns x=12.
-      if (!raw || typeof raw !== "object") {
-        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-        document.documentElement.dataset.aetherLeftMigration = "default-x12";
-        return "default-x12";
+      if (raw && typeof raw === "object") {
+        const next = {
+          ...raw,
+          x: target.x,
+          y: target.y,
+          width: target.width,
+          height: target.height,
+          // Clear only stale presentation flags from the failed recovery chain.
+          // Aether must boot closed and normal; explicit operator open will float
+          // it through the existing canonical Window Manager path.
+          floating: false,
+          hidden: true,
+          minimized: false,
+          maximized: false,
+          restoreFloating: false,
+          restoreGeometry: null
+        };
+        localStorage.setItem(key, JSON.stringify(next));
       }
 
-      // Preserve every existing operator field except the horizontal origin.
-      const next = { ...raw, x: 12 };
-      if (raw.restoreGeometry && typeof raw.restoreGeometry === "object") {
-        next.restoreGeometry = { ...raw.restoreGeometry, x: 12 };
-      }
-
-      localStorage.setItem(key, JSON.stringify(next));
-      localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-      document.documentElement.dataset.aetherLeftMigration = "migrated-x12";
-      return "migrated-x12";
+      localStorage.setItem(AETHER_FRAME_406304_MIGRATION_KEY, "1");
+      document.documentElement.dataset.aetherFrameMigration406304 =
+        `${target.width}x${target.height}@${target.x},${target.y}`;
+      return raw && typeof raw === "object" ? "reframed" : "default-frame-ready";
     } catch (_) {
-      document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
+      document.documentElement.dataset.aetherFrameMigration406304 = "storage-unavailable";
       return "storage-unavailable";
     }
   }
@@ -2240,7 +2287,7 @@
     migrateFamilyTopologyWindowState();
     migrateFamilyRoleReturnWindowState();
     stageAdministratorDefaultFamilyCollapse();
-    migrateAetherCenteredState();
+    migrateAetherNormalFrame406304();
 const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
       console.error(`Administrator ${ADMIN_BUILD}: operational window manager unavailable.`);
