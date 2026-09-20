@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.288",
+  "build": "40.6.289",
   "engine": "38.15.11",
-  "release": "STORAGE RELIEF · VERIFIED LOCAL COPY RETIREMENT",
+  "release": "STORAGE · PRIMARY TRUTH",
   "published": true,
-  "status": "storage_relief_verified_local_copy_retirement_406288",
-  "parent_build": "40.6.287",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.288",
-  "administrator_build": "40.6.288",
-  "build_label": "Build 40.6.288 · Administrator",
+  "status": "storage_primary_truth_406289",
+  "parent_build": "40.6.288",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.289",
+  "administrator_build": "40.6.289",
+  "build_label": "Build 40.6.289 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Operator terrain: System > Storage Observatory > Relief contrôlé 40.6.288. Step 1 must verify exactly scanner archive + chart cache in IndexedDB/SHA-256. Step 2 exports full localStorage backup, requires browser confirmation, removes only verified local copies, then measure before/after and verify Book/Ryzen consultation remains intact.",
-  "release_notes": "Targeted storage relief using existing canonical Storage Relief 40.2.78/40.3.31/40.3.91 machinery. 40.6.287 proved the 2.93 MiB scanner archive is ACTIVE Scanner Collector data, already mirrored/primary in IndexedDB; it is not abandoned history. 40.6.288 adds a clear two-step operator surface: prepare/verify exactly scanner archive + the canonical large chart cache using existing IndexedDB readback and SHA-256, then export a complete localStorage backup and invoke the existing guarded relief flow with explicit browser confirmation. No generic cleanup, no REVIEW_REQUIRED Market cache retirement, no IndexedDB delete/clear/schema change, no automatic mutation.",
+  "terrain_pending": "Next thread terrain: System > Storage Observatory > Storage Primary Truth 40.6.289. Step 1 should verify IDB PRIMARY for scanner archive + chart cache and classify local divergence as expected stale backup. Step 2 is optional operator-only backup+confirm retirement. Then reload Book/Ryzen and measure localStorage.",
+  "release_notes": "Final thread handoff build. Root cause of 40.6.288 safe block is proven: both targets are async-primary IndexedDB keys, so primary writes deliberately stop refreshing the preserved localStorage backup. Legacy 40.3.91 planning required local==IDB equality, while canonical retireVerified already has a correct IDB-primary branch. 40.6.289 adds a readable operator surface using only existing copyTargets/readSync/retireVerified APIs. No app.js change, no schema change, no generic cleanup, no Market REVIEW_REQUIRED deletion.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,16 +1486,13 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "TARGETED_RELIEF_TERRAIN_PENDING",
+    "status": "PRIMARY_TRUTH_TERRAIN_PENDING",
     "audit_406287": "PASS",
-    "dominant_owner": "ACTIVE_SCANNER_ARCHIVE",
-    "dominant_owner_proved": true,
-    "relief_backend_existing": "agent_crypto_storage_relief_40278",
-    "authorized_local_copy_targets": 2,
-    "review_required_market_keys_untouched": true,
-    "automatic_delete": false,
-    "generic_cleanup": false,
-    "relief_406288_operator_only": true
+    "safe_block_406288": "PASS_PROTECTION",
+    "root_cause_406289": "PROVED_IN_CODE",
+    "local_copies": "PRESERVED_STALE_BACKUPS_BY_DESIGN",
+    "retirement_authority": "AtlasStorageRelief40278.retireVerified",
+    "generic_cleanup": false
   },
   "transformer_book_consultation_first_status": {
     "baseline": "40.6.286",
@@ -1562,5 +1559,34 @@
     "real_order": false,
     "paper_only": true,
     "next_if_pass": "40.6.289 post-boot truth only after Book/Ryzen verification"
+  },
+  "storage_primary_truth_406289": {
+    "root_cause": "LEGACY_PLAN_EQUALITY_CONFLICTS_WITH_ASYNC_PRIMARY_DESIGN",
+    "async_primary_targets": [
+      "agent_crypto_scanner_live_archive_v1",
+      "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50"
+    ],
+    "write_contract": "writeSync -> mirror + deferred IndexedDB; local=false when primary active",
+    "bootstrap_contract": "primary marker prefers IDB and skips preserved local copy",
+    "copy_contract": "copyTargets verifies existing IDB PRIMARY independently",
+    "legacy_plan_problem": "40.3.91 exact local==IDB requirement safe-blocks stale local backups",
+    "canonical_retire_contract": "retireVerified has dedicated verified-IDB-primary branch",
+    "terrain_288": {
+      "scanner_local_mib": 2.93,
+      "scanner_idb_mib": 2.93,
+      "chart_local_kib": 719.8,
+      "chart_idb_mib": 2.61,
+      "reclaimable_legacy_plan": "0/2",
+      "status": "SAFE_BLOCK"
+    },
+    "operator_only": true,
+    "backup_required": true,
+    "confirmation_required": true,
+    "app_js_modified": false,
+    "indexeddb_schema_changed": false,
+    "generic_cleanup": false,
+    "market_review_required_touched": false,
+    "real_order": false,
+    "paper_only": true
   }
 }
