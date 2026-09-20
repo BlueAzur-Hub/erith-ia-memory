@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.278",
+  "build": "40.6.279",
   "engine": "38.15.11",
-  "release": "UI REPAIR · BOOT REPORT RETURNS TO SYSTEM SECTION",
+  "release": "G3 REPAIR · REFUSAL PROPAGATION TRUTH",
   "published": true,
-  "status": "boot_report_system_section_406278",
-  "parent_build": "40.6.277",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.278",
-  "administrator_build": "40.6.278",
-  "build_label": "Build 40.6.278 · Administrator",
+  "status": "g3_refusal_propagation_truth_406279",
+  "parent_build": "40.6.278",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.279",
+  "administrator_build": "40.6.279",
+  "build_label": "Build 40.6.279 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -16,7 +16,7 @@
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
-  "strategy_a_modified": false,
+  "strategy_a_modified": true,
   "strategy_a_business_logic_modified": false,
   "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Static GitHub verification complete; Firefox terrain not yet re-run.",
-  "release_notes": "Simple UI correction: remove Boot report from Command Center overlay; place it as a normal collapsible section in 04 · Expérimentation & système; keep Actualiser/Copier and add Replier; Boot probe reports effective build dynamically. No new popup, menu, module, timer, observer, storage owner, network owner, Market Core or business-logic change. Same-build truth patch: Boot report now renders automatically when opened and refreshes as marks arrive; optional missing graph/detail marks are shown as non-observed instead of falsely implying loading; display-order deltas removed.",
+  "terrain_pending": "Static source verification and embedded G3 self-tests PASS; Firefox terrain not yet re-run.",
+  "release_notes": "G3 refusal propagation repair. Missing numeric evidence remains UNKNOWN instead of coercing to zero. Expected cadence must come from source metadata and cannot fall back to observed cadence or 5 minutes. Duplicate timestamps remain explicit; conflicting prices at one timestamp refuse temporal certification instead of being silently deduplicated. Canonical temporal refusal blockers propagate through replay and strict outcome revalidation. Changed evidence assets use targeted ?v=40.6.279 cache identity only. No Market Core, Oracle, Math, CURRENT, Lecture Technique, Aether, Web Classic, storage schema, recurring timer, observer, financial threshold or real-order change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1103,5 +1103,67 @@
     "market_core_modified": false,
     "strategy_a_modified": false,
     "real_order": false
+  },
+  "g3_refusal_propagation_406279": {
+    "parent": "40.6.278",
+    "safe_checkpoint": "40.6.273",
+    "purpose": "FAIL_CLOSED_G3_REFUSAL_PROPAGATION",
+    "changed_files": [
+      "js/strategy-a-g3-structured-data-truth.js",
+      "js/strategy-a-g3-cascade-checkpoint.js",
+      "js/strategy-a-g3-strict-decision-time-truth-406226.js",
+      "js/strategy-a-g3-strict-outcome-revalidation-406228.js",
+      "js/strategy-a-evidence-demand-loader.js",
+      "index.html",
+      "build.json"
+    ],
+    "repaired_cases": {
+      "missing_t0_numeric_input": {
+        "before": "missing/null could be coerced by permissive Number(value) paths",
+        "after": "missing/null/boolean/blank stays UNKNOWN/null and blocks certification",
+        "expected": "REJECT"
+      },
+      "cadence_contract_unknown": {
+        "before": "observed cadence or 5-minute fallback could become an implicit contract",
+        "after": "expected cadence must come from canonical source metadata; unknown cadence is CADENCE_CONTRACT_UNKNOWN",
+        "expected": "REJECT"
+      },
+      "conflicting_same_timestamp_prices": {
+        "before": "downstream checkpoint could silently keep one row and recertify",
+        "after": "duplicate/conflicting timestamps are explicit blockers and cannot be certified downstream",
+        "expected": "REJECT"
+      }
+    },
+    "refusal_sticky": true,
+    "canonical_temporal_owner_required": true,
+    "observed_cadence_is_not_contract": true,
+    "five_minute_cadence_fallback_removed": true,
+    "conflicting_duplicate_timestamp_rejected": true,
+    "missing_numeric_coercion_to_zero": false,
+    "targeted_cache_identity": true,
+    "self_tests": {
+      "structured_data_truth": "PASS",
+      "cascade_checkpoint": "PASS",
+      "strict_decision_time_truth": "PASS",
+      "strict_outcome_revalidation": "PASS"
+    },
+    "protected": {
+      "market_core": "38.15.11",
+      "oracle_business_logic": true,
+      "math_core": true,
+      "atlas_current": true,
+      "lecture_technique": true,
+      "aether": true,
+      "web_classic": true
+    },
+    "threshold_changed": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "storage_schema_changed": false,
+    "network_owner_added": false,
+    "real_order": false,
+    "paper_only": true,
+    "g3": "PENDING",
+    "g9": "LOCKED"
   }
 }
