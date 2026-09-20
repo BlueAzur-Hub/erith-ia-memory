@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.299",
+  "build": "40.6.300",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · INTERACTION LATENCY + F11 AETHER REPAIR",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER GOLDEN CODE RESTORE · LEFT",
   "published": true,
-  "status": "interaction_latency_and_f11_aether_repair_406299",
-  "parent_build": "40.6.298",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.299",
-  "administrator_build": "40.6.299",
-  "build_label": "Build 40.6.299 · Administrator",
+  "status": "aether_golden_code_restore_left_406300",
+  "parent_build": "40.6.299",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.300",
+  "administrator_build": "40.6.300",
+  "build_label": "Build 40.6.300 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: first validate basic interaction latency in normal mode. Hover/pointing must remain immediate; a subsection click must open the clicked subsection, not a neighbor; no multi-second freeze. Then validate Aether normal compact → F11 16:9 → exit restores exact compact geometry without page-end jump. Storage relief remains paused.",
-  "release_notes": "40.6.299 keeps the 40.6.298 geometry-only F11 repair and addresses a separate interaction-path regression found by field use. layout-repair.js was synchronously snapshotting all managed windows and potentially writing localStorage in capture phase for every click, even ordinary subsection clicks; that path is now limited to presentation controls only. The late 59-module post-boot loader now pauses while the operator is actively clicking, typing, scrolling or touching, so background parse/eval cannot continuously compete with direct input. No business engine, Market Core, Strategy, Oracle, Math or Technical Reading logic is changed.",
+  "terrain_pending": "Firefox: Aether restoration only. Normal window opens LEFT (golden x=12 default), remains native/free-resize/persistent, original V2 backplate is prewarmed, and no 40.6.296/40.6.298 Aether geometry patches remain. Validate normal open, drag, resize, close/reopen, F5, maximize/restore and F11 behavior before any other project work.",
+  "release_notes": "40.6.300 restores the Aether subsystem to its 40.6.273 golden code instead of adding another repair layer. js/aether.js and admin-window-manager.js are restored byte-for-byte from 40.6.273. The Aether helper region in js/app.js is restored from the same checkpoint, removing the 40.6.296 forced-left migration and 40.6.298 viewport/F11 bridge. The canonical preferredFloatGeometry already uses x=12, so the original left orientation is preserved. The original master-v2 backplate prewarm and resident Aether trust/operator/role load order are restored. The unrelated 40.6.299 interaction-latency repair remains.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_406299_INTERACTION_AND_AETHER_TERRAIN",
+    "status": "PAUSED_PENDING_406300_AETHER_RESTORE",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1889,6 +1889,24 @@
     "lecture_technique_modified": false,
     "storage_schema_modified": false,
     "aether_406298_preserved": true,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_golden_restore_406300": {
+    "checkpoint": "40.6.273",
+    "checkpoint_commit": "abb689e13c07013a149de17981566f736d0cdf1b",
+    "aether_js_byte_exact": true,
+    "window_manager_byte_exact": true,
+    "app_aether_region_restored": true,
+    "left_default": "x=12",
+    "removed_406296": true,
+    "removed_406298": true,
+    "master_v2_preload": true,
+    "aether_css_changed": false,
+    "aether_v2_css_changed": false,
+    "market_core_changed": false,
+    "strategy_changed": false,
+    "storage_schema_changed": false,
+    "interaction_latency_406299_preserved": true,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }

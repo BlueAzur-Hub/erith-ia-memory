@@ -439,30 +439,6 @@ function aetherNewsCanonicalEvent(event){
     const host=document.getElementById("atlasAetherVeille"),meta=document.getElementById("atlasAetherVeilleMeta"),viewport=document.getElementById("atlasAetherVeilleViewport");
     if(!host||!meta||!viewport)return null;
     const current=aetherVeilleCurrent(),copy=host.querySelector("[data-aether-veille-copy]"),brand=host.querySelector(".atlas-aether-veille-brand"),marquee=host.querySelector(".atlas-aether-veille-marquee");
-    // 40.6.286 — DATA-GATED FEED ACTIVATION.
-    // The operator should never see an "active" Aether feed whose only message is that News Sentinel
-    // has not loaded yet. Cached/real events are useful immediately; otherwise wait for a terminal
-    // News state (ok/partial/error), then reveal the lane once it has truthful content to show.
-    const feedStatus=String(current.status||"idle").toLowerCase();
-    const feedReady=Number(current.total||0)>0||!["idle","loading"].includes(feedStatus);
-    if(!feedReady){
-      host.dataset.feedReady="0";
-      host.hidden=true;
-      host.setAttribute("aria-hidden","true");
-      host.style.setProperty("display","none","important");
-      host.dataset.scroll="0";
-      aetherVeilleState.last=current;
-      return current;
-    }
-    const firstUseful=host.dataset.feedReady!=="1";
-    host.dataset.feedReady="1";
-    host.hidden=false;
-    host.removeAttribute("aria-hidden");
-    host.style.removeProperty("display");
-    if(firstUseful){
-      try{globalThis.AgentCryptoBootProbe?.markOnce?.("aether-feed-ready",{status:feedStatus,events:Number(current.total||0),owner:"aether.js",build:"40.6.286"});}catch(_){}
-      try{window.dispatchEvent(new CustomEvent("agent-crypto:aether-feed-ready",{detail:{build:"40.6.286",status:feedStatus,events:Number(current.total||0)}}));}catch(_){}
-    }
     if(meta.textContent!==current.meta)meta.textContent=current.meta;
     meta.title=current.fullMeta||current.meta||"";
     if(brand&&brand.textContent!==current.brand)brand.textContent=current.brand;
@@ -1349,8 +1325,6 @@ function aetherNewsMarketSemantic(){
         panel.hidden=false;
         if(open){
           manager.hide('aether-watch',false);
-          const nativeWindow=manager.getWindow?.('aether-watch');
-          if(nativeWindow && nativeWindow.floating!==true)manager.float('aether-watch',true);
           manager.minimize('aether-watch',false);
           manager.focus('aether-watch');
         }else{
@@ -1378,7 +1352,7 @@ function aetherNewsMarketSemantic(){
     put("atlasAetherRibbonSources",`Sources · ${s.sources}`);
     put("atlasAetherRibbonBook",`Book · ${s.book}`);
     renderAetherVeille();
-    let stateLabel="VEILLE";try{const feed=aetherVeilleCurrent();const feedStatus=String(feed.status||"idle").toLowerCase(),feedReady=Number(feed.total||0)>0||!["idle","loading"].includes(feedStatus);if(feedReady){if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}}catch(_){}put("atlasAetherStatusLabel",`Aether · ${stateLabel}`);
+    let stateLabel="VEILLE";if(/open|running|active|produ/i.test(s.currentStatus))stateLabel="CURRENT";else if(s.reports>=4)stateLabel="ATLAS 4/4";else if(s.oracle&&!/ATTENTE/.test(s.oracle))stateLabel="ORACLE";try{const feed=aetherVeilleCurrent();if(feed.kind==="context")stateLabel="CONTEXTE";else if(feed.tone==="danger")stateLabel="ATTENTION";}catch(_){}put("atlasAetherStatusLabel",`Aether · ${stateLabel}`);
     const watch406027=aetherOperatorWatch();aetherTimelineCapture(watch406027);const panel=document.getElementById("atlasAetherStatusPanel");if(panel&&panel.dataset.aetherOperatorOpen==="1"&&!panel.hidden){const row=(k,v)=>{const n=panel.querySelector(`[data-aether-row="${k}"]`);if(n)n.textContent=v;};const watch406026=aetherOperatorWatch();row("level",watch406026.level);row("convergence",watch406026.convergence);row("divergence",watch406026.divergence);row("watch",watch406026.watch);row("note",watch406026.note);aetherTimelineRender(panel,{includeFull:panel.dataset.aetherFocus==="history"});row("market",aetherMarketBreadth());row("atlas_auto",aetherAtlasAuto());row("atlas",`${s.atlas} · Graphe ${s.graph}`);row("oracle",s.oracle);row("sources",`${s.sources} · Book ${s.book}`);row("system",aetherSystemBrief());row("weather",aetherWeatherFirstGlance());row("weather_risk",aetherWeatherRisk());if(panel.dataset.aetherFocus==="details")aetherDetailsRender(panel);aetherComponentPaint(panel,s,watch406026);}
   }
 

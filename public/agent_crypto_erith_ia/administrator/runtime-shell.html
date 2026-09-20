@@ -16,12 +16,12 @@
 <!-- 40.6.52 — warm the existing Aether master backplate before explicit operator open.
        Static presentation asset only: no API fetch, no timer, no observer, no storage. -->
   <link rel="preload" as="image" type="image/png" fetchpriority="low"
-        href="./assets/aether/aether-observatory-master-fidelity.png"
+        href="./assets/aether/aether-observatory-master-v2.png"
         data-aether-backplate-preload="true" />
   <script id="aetherBackplateWarmCache">
     (() => {
       const root = document.documentElement;
-      const src = new URL('./assets/aether/aether-observatory-master-fidelity.png', document.baseURI).href;
+      const src = new URL('./assets/aether/aether-observatory-master-v2.png', document.baseURI).href;
       root.dataset.aetherBackplateWarm = 'warming';
       const image = new Image();
       image.decoding = 'async';
@@ -4893,11 +4893,14 @@
 })();
 </script>
 
-  <script src="./js/aether.js?v=40.6.297"></script>
-<script src="./js/core/admin-window-manager.js"></script>
+  <script src="./js/aether.js?v=40.6.300"></script>
+  <script src="./js/aether-trust-return.js"></script>
+  <script src="./js/aether-operator-bridge.js"></script>
+  <script src="./js/core/admin-window-manager.js"></script>
   <script src="./js/views/presentation-boundaries.js"></script>
   <script src="./js/views/view-lifecycle.js"></script>
-  <script src="./js/app.js?v=40.6.297"></script>
+  <script src="./js/app.js?v=40.6.300"></script>
+  <script src="./js/aether-role-visibility.js"></script>
   <script src="./js/post-boot-runtime-loader-406281.js?v=40.6.289"></script>
 \n
 <!-- 40.4.64 — read-only diagnostics are no longer parser-blocking residents.

@@ -1436,28 +1436,6 @@
       return floating.length;
     }
 
-    // 40.6.298 — geometry-only transaction for an already-floating native window.
-    // Unlike applySnapshot(), this path never normalizes through docked state.
-    // That matters for directFixed windows such as Aether: docking even briefly
-    // removes fixed positioning and can place the body-appended panel back into
-    // document flow, allowing Firefox scroll anchoring to jump to the page end.
-    function setGeometry406298(id, geometry, options = {}) {
-      const win = windows.get(id);
-      if (!win || !win.floating || win.maximized || win.minimized) return false;
-      const safe = clampWindowGeometry(win, geometry);
-      if (!safe || ![safe.x, safe.y, safe.width, safe.height].every(value => Number.isFinite(Number(value)))) return false;
-      win.geometry = { ...safe };
-      setGeometryOnTarget(win, safe);
-      if (options.persist === true) persistGeometry(win);
-      return {
-        x: Number(safe.x),
-        y: Number(safe.y),
-        width: Number(safe.width),
-        height: Number(safe.height),
-        persisted: options.persist === true
-      };
-    }
-
     // 40.2.20 — Workspace Profiles Foundation.
     // Profiles are a presentation-layer snapshot only. They do not own market
     // domain, Graph Context V7, Oracle state, selected assets or business data.
@@ -1655,7 +1633,6 @@
       setDeckOpen,
       getWindow: id => windows.get(id) || null,
       snapshot,
-      setGeometry: setGeometry406298,
       applySnapshot,
       restorePersistedPresentation,
       neutralizePresentation,
@@ -1710,9 +1687,6 @@
     hidden_deck_rebuild_deferred_40314: true,
     role_transition_capture_snapshot_disabled_40314: true,
     restore_persisted_single_pass_40314: true
-    ,geometry_only_api_406298: true
-    ,geometry_only_api_preserves_floating_state_406298: true
-    ,geometry_only_api_no_dom_reparent_406298: true
     ,drag_detach_auto_fit_disabled_40315: true
     ,placeholder_measurement_batch_40315: "all-reads-before-dom-writes"
     ,compact_family_placeholder_policy_40317: "anchor-marker-18px"

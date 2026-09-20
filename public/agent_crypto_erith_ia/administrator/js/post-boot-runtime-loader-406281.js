@@ -15,11 +15,8 @@
     "./js/shared-memory-gap-aware-color.js",
     "./js/decision-board.js",
     "./js/multi-collector-concordance.js",
-    "./js/aether-trust-return.js",
-    "./js/aether-operator-bridge.js"
   ]);
   const SECONDARY_MODULES=Object.freeze([
-    "./js/aether-role-visibility.js",
     "./js/strategy-a-replay.js",
     "./js/strategy-a-canonical-spec.js",
     "./js/strategy-a-replay-acceptance.js?v=40.6.273",
