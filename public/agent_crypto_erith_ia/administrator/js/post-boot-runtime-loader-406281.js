@@ -1,11 +1,11 @@
-/* Agent-Crypto Administrator — 40.6.284 P0 BOOK CONSULTATION FIRST
+/* Agent-Crypto Administrator — 40.6.287 STORAGE OWNERSHIP AUDIT RESIDENCY
    Same application, staged residency.
    Heavy secondary runtimes wait until the consultation surface and Aether are resident.
    This prevents background Strategy/Tradus/Admin work from competing with Book consultation.
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.284";
+  const BUILD="40.6.287";
   const MEMORY_MODULES=Object.freeze([
     "./js/market-memory.js",
     "./js/analytical-memory.js",
@@ -65,7 +65,8 @@
     "./js/cross-market-owner-map.js",
     "./js/canonical-freeze.js",
     "./js/market-reading-depth.js",
-    "./js/version-truth.js"
+    "./js/version-truth.js",
+    "./js/storage-ownership-audit-406287.js"
   ]);
 
   const state={started:false,done:false,reason:"",loaded:0,failed:[]};
@@ -122,7 +123,7 @@
     catch(_){return false;}
   }
   function consultationAetherReady(){
-    try{return globalThis.AgentCryptoConsultationFirst406284?.snapshot?.()?.aether_state==="ready";}
+    try{return globalThis.AgentCryptoConsultationFirst406286?.snapshot?.()?.aether_state==="ready";}
     catch(_){return false;}
   }
   function scheduleAfterAether(reason){setTimeout(()=>{if(!state.started)void start(reason);},1500);}
