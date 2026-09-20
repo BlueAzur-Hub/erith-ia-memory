@@ -1,4 +1,4 @@
-/* Agent-Crypto Administrator — 40.6.277 EVIDENCE LOADER STATE TRUTH
+/* Agent-Crypto Administrator — 40.6.279 G3 REFUSAL TRUTH
    Canonical Strategy A evidence modules stay available, but no longer execute
    as a parser-blocking boot wall. They load in original order on explicit
    Strategy A demand or, after first usable paint, one module per browser idle
@@ -8,8 +8,8 @@
   "use strict";
   if (globalThis.AgentCryptoCanonicalEvidenceWiring?.owner === "strategy-a-evidence-demand-loader.js") return;
 
-  const BUILD = "40.6.277";
-  const SOURCE = "40.6.277-demand-idle";
+  const BUILD = "40.6.279";
+  const SOURCE = "40.6.279-demand-idle";
   const MODULES = Object.freeze([
     "./js/strategy-a-evidence-lifecycle-truth.js",
     "./js/strategy-a-foundation-applicability-truth.js",
@@ -39,6 +39,18 @@
   ]);
   const PRESENTATION = Object.freeze(["./js/administrator-operator-focus-406216.js"]);
   const ALL = Object.freeze([...MODULES, ...PRESENTATION]);
+  const CACHE_IDENTITY = Object.freeze({
+    "./js/strategy-a-g3-structured-data-truth.js": "40.6.279",
+    "./js/strategy-a-g3-cascade-checkpoint.js": "40.6.279",
+    "./js/strategy-a-g3-strict-decision-time-truth-406226.js": "40.6.279",
+    "./js/strategy-a-g3-strict-outcome-revalidation-406228.js": "40.6.279"
+  });
+  const moduleHref = src => {
+    const url = new URL(src, document.baseURI);
+    const token = CACHE_IDENTITY[src];
+    if (token) url.searchParams.set("v", token);
+    return url.href;
+  };
   const PANEL_IDS = Object.freeze([
     "strategyAG3StructuredTruth",
     "strategyAG3HistoryOwnerDiscovery",
@@ -155,7 +167,7 @@
     failures.delete(src);
     return new Promise((resolve,reject) => {
       const script=document.createElement("script");
-      script.src=new URL(src,document.baseURI).href;
+      script.src=moduleHref(src);
       script.async=false;
       script.dataset.agentCryptoEvidenceDemandModule=src;
       script.dataset.agentCryptoEvidenceDemandState="loading";
@@ -184,21 +196,21 @@
   }
   function mountEvidence() {
     try{globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.("406277-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.("406279-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3CascadeCheckpoint?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3ProspectiveT0Capture?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh?.("406277-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh?.("406279-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3PostHorizonOutcome?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount?.("406277-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount?.("406279-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3OutcomeCertification?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3RealisticReplayReadiness?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3ForwardEvidenceBridge?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render?.("406277-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render?.("406277-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount?.("406277-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render?.("406277-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render?.("406277-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoAdministratorOperatorFocus?.requestSettled?.("406277-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoAdministratorOperatorFocus?.requestSettled?.("406279-demand-owner");}catch(_){}
   }
   function reconcileState() {
     for (const src of ALL) {
