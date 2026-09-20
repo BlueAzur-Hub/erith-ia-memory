@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.273",
+  "build": "40.6.275",
   "engine": "38.15.11",
-  "release": "PERFORMANCE · BOOK CANARY · CACHE REUSE + EVIDENCE DEMAND LOAD",
+  "release": "DIAGNOSTIC · PASSIVE BOOT INSTRUMENTATION",
   "published": true,
-  "status": "performance_book_canary_cache_evidence_demand_406273",
-  "parent_build": "40.6.272",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.273",
-  "administrator_build": "40.6.273",
-  "build_label": "Build 40.6.273 · Administrator",
+  "status": "diagnostic_passive_boot_instrumentation_406275",
+  "parent_build": "40.6.273",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.275",
+  "administrator_build": "40.6.275",
+  "build_label": "Build 40.6.275 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -27,7 +27,7 @@
   "new_storage_owner": false,
   "new_business_network_request": false,
   "static_asset_module_load": true,
-  "canonical_entry_modified": true,
+  "canonical_entry_modified": false,
   "entry": "./",
   "terrain_verified": [
     "40.6.251 proved Firefox stability when the heavy 40.6.243 Decision Intelligence surface was absent.",
@@ -67,19 +67,21 @@
     "The 40.6.268 durable evidence source remains in Git history but is not loaded in this recovery build."
   ],
   "terrain_pending": [
-    "40.6.273 Ryzen cold/warm boot terrain timing",
-    "40.6.273 Transformer Book canary: Classic boot responsiveness and no freeze",
-    "40.6.273 Oracle + Math Core availability on Book",
-    "40.6.273 Intermediate + Administrator navigation on Book",
-    "40.6.273 Strategy A demand/idle evidence pack visibility after first usable paint"
+    "40.6.275 Ryzen: first load after release, capture AgentCryptoBootProbe.snapshot().",
+    "40.6.275 Ryzen: second normal reload with cache warm, capture the same snapshot.",
+    "40.6.275 Transformer Book: normal cold boot without repeated reload, capture snapshot if the page remains responsive.",
+    "Compare shell-ready → chartjs-ready → core-evaluated → coldboot-start → auto-reader-start → livecheck-start → market-ready → graph-ready/detail-ready → oracle-ready.",
+    "Distinguish current-closed (new CURRENT computed) from current-restored (already-closed CURRENT restored).",
+    "No optimization or second repair is allowed before terrain timings identify the dominant boot owner."
   ],
   "release_notes": [
-    "40.6.273 is a bounded boot-performance surgery. No feature is removed.",
-    "Global per-release cache busting is retired because it forced byte-identical JS/CSS to be fetched/reparsed again on every build; this restores the cache-reuse principle established in the 40.4.63 performance work.",
-    "The 25-module Strategy A canonical evidence pack is no longer injected as a synchronous boot wall. A single deferred owner loads the same modules in the same order on explicit Strategy A demand or after first paint, paced one module per browser idle slice.",
-    "The legacy 40.6.192 evidence supplement bootstrap no longer auto-starts at window.load; it delegates to the canonical demand owner only when explicitly called.",
-    "Market Core 38.15.11, Oracle logic, Math Core, Shared Memory data, Atlas CURRENT, Lecture Technique, Strategy A business rules and real-order locks are unchanged.",
-    "40.6.272 remains the rollback checkpoint if Book canary terrain fails."
+    "40.6.275 measures the real Administrator boot path on top of 40.6.273; it does not attempt another performance repair.",
+    "A volatile in-memory AgentCryptoBootProbe records performance.now() marks only. It adds no storage, timer, observer, fetch, polling, UI surface or business network request.",
+    "Cold Boot 40.3.98 remains two paint frames then one existing owner per animation frame; instrumentation records that order without changing it.",
+    "Chart.js, Core, Market, selected asset, Graph, Lecture Technique detail, Oracle, CURRENT pending/closed/restored and Administrator Window Manager receive passive marks.",
+    "Only the two changed JavaScript assets receive targeted ?v=40.6.275 cache identity; the global cross-release cache reuse introduced in 40.6.273 remains intact.",
+    "Market Core 38.15.11, Oracle calculations, Math Core, Atlas CURRENT rules, Shared Memory, Lecture Technique visuals, Strategy A thresholds, Web Classic and real-order locks are unchanged.",
+    "No Notion page, database, invitation or MCP workspace artifact is created or modified by this release."
   ],
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
@@ -969,5 +971,59 @@
       "Strategy A evidence panels load after demand/idle and G3 remains PENDING / G9 LOCKED",
       "No Firefox slow-page warning during ordinary Book boot"
     ]
+  },
+  "passive_boot_instrumentation_406275": {
+    "base_build": "40.6.273",
+    "purpose": "MEASURE_REAL_BOOT_BEFORE_NEXT_OPTIMIZATION",
+    "probe": "globalThis.AgentCryptoBootProbe",
+    "clock": "performance.now",
+    "persistence": "NONE_VOLATILE_DOCUMENT_MEMORY_ONLY",
+    "marks": [
+      "shell-ready",
+      "chartjs-ready",
+      "core-evaluated",
+      "coldboot-start",
+      "coldboot-owner:<existing owner label>",
+      "auto-reader-start",
+      "livecheck-start",
+      "market-ready",
+      "selected-coin-ready",
+      "graph-ready",
+      "detail-ready",
+      "oracle-ready",
+      "current-pending",
+      "current-closed",
+      "current-restored",
+      "administrator-window-manager-ready"
+    ],
+    "changed_runtime_files": [
+      "runtime-shell.html",
+      "app.js",
+      "js/app.js"
+    ],
+    "targeted_cache_tokens": [
+      "./app.js?v=40.6.275",
+      "./js/app.js?v=40.6.275"
+    ],
+    "chartjs_cdn_unchanged": true,
+    "coldboot_scheduler_changed": false,
+    "coldboot_owner_order_changed": false,
+    "market_core_modified": false,
+    "oracle_business_logic_modified": false,
+    "math_core_modified": false,
+    "atlas_current_business_logic_modified": false,
+    "lecture_technique_modified": false,
+    "strategy_a_business_logic_modified": false,
+    "shared_memory_schema_changed": false,
+    "indexeddb_schema_changed": false,
+    "localstorage_write_added": false,
+    "sessionstorage_write_added": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "network_request_added": false,
+    "event_listener_added": false,
+    "ui_added": false,
+    "real_order": false,
+    "notion_touched": false
   }
 }

@@ -11361,6 +11361,13 @@ function atlasRenderOracleV0() {
   atlasRenderOracleNewsContext40234(model, coin);
   atlasRenderOracleNewsContext40235(model, coin);
   atlasOracleCollapsedPreviewSync();
+  atlasBootProbeMark406275("oracle-ready", {
+    asset: symbol,
+    horizon: horizon.key,
+    view: view.key,
+    confidence: Number(model.dataConfidence || 0),
+    bias: model.bias || null
+  });
   return true;
 }
 
@@ -12522,7 +12529,18 @@ function atlasRenderChartResult(c, period, result, chartKey, forceRedraw = false
   const viewFingerprint = `${fingerprint}:${atlasChartV2EffectiveView()}:${atlasChartV2EffectiveScale()}:${state.chartViewV2.volume}:${atlasChartV2ComparisonMode()?state.chartViewV2.comparisonLegend:state.chartViewV2.legend}`;
   const alreadyRendered = state.chartEngineV2.lastRenderedKey === chartKey && state.chartEngineV2.lastFingerprint === viewFingerprint && state.chartEngineV2.realChart;
   if (forceRedraw || !alreadyRendered) drawLineChart(els.mainChart, result.series, `${c.symbol} ${periodLabel}`, result, chartKey);
+  atlasBootProbeMark406275("graph-ready", {
+    coin_id: c?.id || null,
+    symbol: String(c?.symbol || "").toUpperCase() || null,
+    period_days: Number(period || 0),
+    points: Array.isArray(result?.series) ? result.series.length : 0,
+    redrawn: !!(forceRedraw || !alreadyRendered)
+  });
   atlasRenderAssetDetail(c, period, result, "valid");
+  atlasBootProbeMark406275("detail-ready", {
+    coin_id: c?.id || null,
+    period_days: Number(period || 0)
+  });
   renderMultiHorizon();
   renderAtlasMathCore();
   if (els.chartCaption) {
@@ -27796,6 +27814,12 @@ function atlasLocalReportsCloseAutomaticCycle(fingerprint = "", reason = "curren
   atlasLocalReportsState.deferredRetryDelayMs = 0;
   atlasLocalReportsState.deferredRetryRequestedAt = 0;
   atlasLocalReportsClearAutoTimer();
+  if (reason === "current-complete") {
+    atlasBootProbeMark406275("current-closed", {
+      fingerprint: String(fingerprint || ""),
+      market_id: String(atlasLocalReportsState.automaticCycleMarketId || "")
+    });
+  }
 }
 
 function atlasLocalReportsAutoReasonAllowed(reason) {
@@ -48818,6 +48842,9 @@ async function atlasRunStartupLivecheck() {
 async function runLivecheck(options = {}) {
   if (state.auto?.livecheckBusy) return false;
   const residentOnly = options.residentOnly === true || !atlasPulseVisible();
+  if (String(options?.reason || "") === "startup") {
+    atlasBootProbeMark406275("livecheck-start", { resident_only: residentOnly });
+  }
 
   state.auto.livecheckBusy = true;
   atlasSetLivecheckButtonBusy(true, "Lecture du marché public…");
@@ -48876,6 +48903,20 @@ async function runLivecheck(options = {}) {
     renderSourceGrid();
     updateSourceMetric(2);
     atlasPatchMarketSnapshotDom();
+    if (String(options?.reason || "") === "startup") {
+      atlasBootProbeMark406275("market-ready", {
+        assets: Array.isArray(state.coins) ? state.coins.length : 0,
+        source: state.mainSource || null,
+        snapshot_id: state.sourceLock?.snapshotId || null
+      });
+      const bootSelected = typeof getSelectedCoin === "function" ? getSelectedCoin() : null;
+      if (bootSelected) {
+        atlasBootProbeMark406275("selected-coin-ready", {
+          id: bootSelected.id || null,
+          symbol: String(bootSelected.symbol || "").toUpperCase() || null
+        });
+      }
+    }
     renderTrustLock(atlasAnalysisLiveReady());
 
     if (!residentOnly) {
@@ -51268,6 +51309,9 @@ function atlasAfterLivecheck(options = {}) {
 }
 
 function startAutoReader() {
+  atlasBootProbeMark406275("auto-reader-start", {
+    pulse_visible: typeof atlasPulseVisible === "function" ? !!atlasPulseVisible() : null
+  });
   state.auto.livecheckBusy = false;
   atlasInitMarketPulseController();
   loadWatchIds();
@@ -56126,6 +56170,19 @@ if (advancedButton && advancedPanel) { advancedButton.type = "button"; advancedB
 function atlasSafeBoot(label, fn) { try { return fn(); } catch (error) { console.warn(`Boot Atlas ignoré : ${label}`, error); return null; }
 }
 
+/* 40.6.275 — PASSIVE BOOT INSTRUMENTATION.
+   Measurement only: no timer, observer, storage, fetch, scheduler or business-rule change. */
+function atlasBootProbeMark406275(name, detail = {}, once = true) {
+  try {
+    const probe = globalThis.AgentCryptoBootProbe;
+    if (!probe) return null;
+    const fn = once ? probe.markOnce : probe.mark;
+    return typeof fn === "function" ? fn.call(probe, String(name || "boot"), detail || {}) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
 /* ============================================================
    40.3.98 — COLD BOOT FIRST-PAINT SERIALIZATION LOCK
    Hard reload / CTRL+F5 path is separate from 40.3.97 tab return.
@@ -56150,6 +56207,9 @@ function atlasColdBootDefer(label, fn) {
 }
 
 function atlasColdBootNext() {
+  if (atlasColdBootState.executed === 0) {
+    atlasBootProbeMark406275("coldboot-start", { queued: atlasColdBootState.queue.length });
+  }
   const task = atlasColdBootState.queue.shift();
   if (!task) {
     atlasColdBootState.running = false;
@@ -56158,6 +56218,10 @@ function atlasColdBootNext() {
 
   atlasColdBootState.lastLabel = task.label;
   try {
+    atlasBootProbeMark406275(`coldboot-owner:${task.label}`, {
+      queue_remaining: atlasColdBootState.queue.length,
+      executed_before: atlasColdBootState.executed
+    });
     const result = atlasSafeBoot(task.label, task.fn);
     if (result && typeof result.catch === "function") {
       result.catch(error => {
@@ -60813,6 +60877,11 @@ function atlasCanonicalCurrentUiTruth389(reason = "ui-truth-389") {
   try { renderDecisionBoard(); } catch (_) {}
   try { atlasSharedSynthesisRenderCore(); } catch (_) {}
   if (proofKey) runtimeDemand.currentUiTruthFingerprint = proofKey;
+  atlasBootProbeMark406275("current-restored", {
+    fingerprint: String(proof?.fingerprint || ""),
+    market_id: String(proof?.marketId || ""),
+    reason: String(reason || "ui-truth-389")
+  });
   return { proof, restored, journal };
 }
 
@@ -65998,6 +66067,11 @@ function atlasCurrentPendingMarket137(reason = "readiness-event") {
     }
 
     if (!pendingId || (lastDone && pendingId === lastDone)) return false;
+    atlasBootProbeMark406275("current-pending", {
+      market_id: pendingId,
+      reason: String(reason || "readiness-event"),
+      restored_pending: !(currentId && currentId === pendingId)
+    });
     if (typeof atlasAccessIsAuthorized === "function" && !atlasAccessIsAuthorized()) return false;
     if (!atlasClassicAnalysisIsAuto38155()) {
       atlasLocalReportsSetSuiteStatus("Mode MANUEL · nouveau snapshot conservé · analyse automatique désactivée.", "wait");

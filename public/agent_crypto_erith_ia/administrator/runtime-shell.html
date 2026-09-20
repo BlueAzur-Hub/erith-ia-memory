@@ -4576,8 +4576,60 @@
   <aside class="atlas-help-layer" id="atlasHelpLayer" role="tooltip" aria-hidden="true" hidden></aside>
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
+  <script id="agentCryptoBootProbe406275">
+  (() => {
+    "use strict";
+    const BUILD = "40.6.275";
+    const marks = [];
+    const first = new Map();
+    const origin = Number(performance.timeOrigin || (Date.now() - performance.now()));
+    function detailCopy(detail) {
+      if (!detail || typeof detail !== "object") return {};
+      const out = {};
+      for (const [key, value] of Object.entries(detail)) {
+        if (value == null || ["string","number","boolean"].includes(typeof value)) out[key] = value;
+      }
+      return out;
+    }
+    function mark(name, detail = {}) {
+      const label = String(name || "boot");
+      const row = Object.freeze({
+        name: label,
+        t_ms: Number(performance.now().toFixed(3)),
+        detail: Object.freeze(detailCopy(detail))
+      });
+      marks.push(row);
+      try { performance.mark(`agent-crypto:${label}`); } catch (_) {}
+      return row;
+    }
+    function markOnce(name, detail = {}) {
+      const label = String(name || "boot");
+      if (first.has(label)) return first.get(label);
+      const row = mark(label, detail);
+      first.set(label, row);
+      return row;
+    }
+    function snapshot() {
+      const rows = marks.map(row => ({ name: row.name, t_ms: row.t_ms, detail: { ...row.detail } }));
+      const firstByName = {};
+      for (const row of rows) if (!(row.name in firstByName)) firstByName[row.name] = row.t_ms;
+      return {
+        build: BUILD,
+        time_origin: origin,
+        started_at: new Date(origin).toISOString(),
+        now_ms: Number(performance.now().toFixed(3)),
+        marks: rows,
+        first_ms: firstByName
+      };
+    }
+    globalThis.AgentCryptoBootProbe = Object.freeze({ build: BUILD, mark, markOnce, snapshot });
+    markOnce("shell-ready", { ready_state: document.readyState });
+  })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
-  <script src="./app.js"></script>
+  <script>globalThis.AgentCryptoBootProbe?.markOnce?.("chartjs-ready", { ready_state: document.readyState });</script>
+  <script src="./app.js?v=40.6.275"></script>
+  <script>globalThis.AgentCryptoBootProbe?.markOnce?.("core-evaluated", { ready_state: document.readyState });</script>
   <script src="./js/market-memory.js"></script>
   <script src="./js/analytical-memory.js"></script>
   <script src="./js/market-memory-collector.js"></script>
@@ -4732,7 +4784,7 @@
   <script src="./js/core/admin-window-manager.js"></script>
   <script src="./js/views/presentation-boundaries.js"></script>
   <script src="./js/views/view-lifecycle.js"></script>
-  <script src="./js/app.js"></script>
+  <script src="./js/app.js?v=40.6.275"></script>
   <script src="./js/aether-role-visibility.js"></script>
   <script src="./js/strategy-a-replay.js"></script>
   <script src="./js/strategy-a-canonical-spec.js"></script>

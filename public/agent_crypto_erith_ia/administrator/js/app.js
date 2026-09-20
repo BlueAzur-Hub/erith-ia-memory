@@ -2418,6 +2418,15 @@
     installDomainObserver(manager);
     syncDomainWindows(manager);
 
+    try {
+      globalThis.AgentCryptoBootProbe?.markOnce?.("administrator-window-manager-ready", {
+        build: ADMIN_BUILD,
+        windows: Number(state.count || 0),
+        layout_free: !!state.free,
+        domain: currentDomain()
+      });
+    } catch (_) {}
+
     window.dispatchEvent(new CustomEvent("erith:administrator-mirror-ready", {
       detail: {
         build: ADMIN_BUILD,
