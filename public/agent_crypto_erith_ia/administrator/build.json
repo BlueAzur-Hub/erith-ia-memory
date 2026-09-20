@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.300",
+  "build": "40.6.301",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER GOLDEN CODE RESTORE · LEFT",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER ORIGINAL FUNCTION CONTRACT RESTORE",
   "published": true,
-  "status": "aether_golden_code_restore_left_406300",
-  "parent_build": "40.6.299",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.300",
-  "administrator_build": "40.6.300",
-  "build_label": "Build 40.6.300 · Administrator",
+  "status": "aether_original_function_contract_restore_406301",
+  "parent_build": "40.6.300",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.301",
+  "administrator_build": "40.6.301",
+  "build_label": "Build 40.6.301 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Aether restoration only. Normal window opens LEFT (golden x=12 default), remains native/free-resize/persistent, original V2 backplate is prewarmed, and no 40.6.296/40.6.298 Aether geometry patches remain. Validate normal open, drag, resize, close/reopen, F5, maximize/restore and F11 behavior before any other project work.",
-  "release_notes": "40.6.300 restores the Aether subsystem to its 40.6.273 golden code instead of adding another repair layer. js/aether.js and admin-window-manager.js are restored byte-for-byte from 40.6.273. The Aether helper region in js/app.js is restored from the same checkpoint, removing the 40.6.296 forced-left migration and 40.6.298 viewport/F11 bridge. The canonical preferredFloatGeometry already uses x=12, so the original left orientation is preserved. The original master-v2 backplate prewarm and resident Aether trust/operator/role load order are restored. The unrelated 40.6.299 interaction-latency repair remains.",
+  "terrain_pending": "Firefox terrain: restoration only. F5 keeps direct static entry/no structural white page. Aether opens left/native; drag + free resize work; F11/fullscreen behaves as before 40.6.284; leaving F11 restores usable normal geometry; close/reopen and F5/reopen remain stable. Storage/Strategy stay paused.",
+  "release_notes": "40.6.301 restores the original pre-40.6.284 Aether lifecycle instead of adding another Aether owner. Aether owner files were already restored byte-identical to the healthy 40.6.273 checkpoint in 40.6.300. This build restores the missing original residency/order: Market Memory, Analytical Memory, Market Memory Collector, Shared Memory Collector, Reader Consistency, Gap-Aware Color, Decision Board and Multi-Collector Concordance again run before Aether; Aether TRADUS is resident again; post-boot duplicates are removed; original VEILLE markup is restored. Direct static entry and the 40.6.299 interaction-latency backpressure remain.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_406300_AETHER_RESTORE",
+    "status": "PAUSED_PENDING_406301_AETHER_RESTORE",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1907,6 +1907,31 @@
     "strategy_changed": false,
     "storage_schema_changed": false,
     "interaction_latency_406299_preserved": true,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_original_contract_restore_406301": {
+    "checkpoint": "40.6.273",
+    "checkpoint_commit": "abb689e13c07013a149de17981566f736d0cdf1b",
+    "restored_resident_before_aether": [
+      "./js/market-memory.js",
+      "./js/analytical-memory.js",
+      "./js/market-memory-collector.js",
+      "./js/shared-memory-collector.js",
+      "./js/shared-memory-reader-consistency.js",
+      "./js/shared-memory-gap-aware-color.js",
+      "./js/decision-board.js",
+      "./js/multi-collector-concordance.js"
+    ],
+    "tradus_bridge_resident": true,
+    "postboot_duplicates_removed": true,
+    "original_veille_markup": true,
+    "direct_static_entry_preserved": true,
+    "interaction_latency_406299_preserved": true,
+    "market_core_modified": false,
+    "strategy_modified": false,
+    "oracle_modified": false,
+    "lecture_technique_modified": false,
+    "storage_schema_modified": false,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }

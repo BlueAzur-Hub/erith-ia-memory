@@ -7,14 +7,6 @@
   "use strict";
   const BUILD="40.6.289";
   const MEMORY_MODULES=Object.freeze([
-    "./js/market-memory.js",
-    "./js/analytical-memory.js",
-    "./js/market-memory-collector.js",
-    "./js/shared-memory-collector.js",
-    "./js/shared-memory-reader-consistency.js",
-    "./js/shared-memory-gap-aware-color.js",
-    "./js/decision-board.js",
-    "./js/multi-collector-concordance.js",
   ]);
   const SECONDARY_MODULES=Object.freeze([
     "./js/strategy-a-replay.js",
@@ -31,7 +23,6 @@
     "./js/tradus-shadow-ledger.js",
     "./js/tradus-paper-shadow.js",
     "./js/tradus-paper-observability.js",
-    "./js/aether-tradus-bridge.js",
     "./js/tradus-data-ui-decoupling.js",
     "./js/atlas-heartbeat-rearm.js",
     "./js/markets-domain-contract.js",
