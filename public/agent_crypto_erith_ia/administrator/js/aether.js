@@ -1220,21 +1220,10 @@ function aetherNewsMarketSemantic(){
     aetherSet(stage,'events_count',`${aetherTimelineState.entries.length}/${aetherTimelineState.max}`);
     stage.dataset.attention=vm.core.tone;
   }
-  function aetherBindComponentInteractions(stage,panel){
-    if(!stage||stage.dataset.aetherInteractionsBound==="1")return stage;
-    stage.dataset.aetherInteractionsBound="1";
-    stage.querySelector('[data-aether46-open="history"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('history',panel));
-    stage.querySelector('[data-aether46-open="details"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('details',panel));
-    const events=stage.querySelector('[data-aether-card-406046="events"]');
-    const openEvents=()=>void aetherWorkbenchOpen('events',panel);
-    events?.addEventListener('click',openEvents);
-    events?.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openEvents();}});
-    return stage;
-  }
   function aetherComponentEnsure(panel){
     if(!panel)return null;
     const existing=panel.querySelector('[data-aether-component-stage-406046]');
-    if(existing)return aetherBindComponentInteractions(existing,panel);
+    if(existing)return existing;
 
     // 40.6.49 keeps the 40.6.46 CLEAN REBUILD runtime: old Aether presentation is not hidden under the new one;
     // it is removed from this runtime panel. Data owners/functions remain untouched.
@@ -1317,23 +1306,19 @@ function aetherNewsMarketSemantic(){
       <nav class="aether46-actions" aria-label="Lectures Aether"><button type="button" data-aether46-open="history">Historique</button><button type="button" data-aether46-open="details">Détails</button></nav>`;
 
     panel.appendChild(stage);
-    return aetherBindComponentInteractions(stage,panel);
+    stage.querySelector('[data-aether46-open="history"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('history',panel));
+    stage.querySelector('[data-aether46-open="details"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('details',panel));
+    const events=stage.querySelector('[data-aether-card-406046="events"]');
+    const openEvents=()=>void aetherWorkbenchOpen('events',panel);
+    events?.addEventListener('click',openEvents);
+    events?.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openEvents();}});
+    return stage;
   }
 
-  function aetherBindPanelClose(panel){
-    const close=panel?.querySelector?.("[data-aether-close]");
-    if(!close||close.dataset.aetherCloseBound==="1")return;
-    close.dataset.aetherCloseBound="1";
-    close.addEventListener("click",()=>aetherPanelSet(false));
-  }
   function aetherPanelEnsure(){
     let panel=document.getElementById("atlasAetherStatusPanel");
     if(panel){
       if(!panel.dataset.aetherOperatorOpen)panel.dataset.aetherOperatorOpen="0";
-      if(!panel.querySelector(".atlas-aether-panel-head")){
-        panel.insertAdjacentHTML("afterbegin",`<div class="atlas-aether-panel-head"><b>AETHER · ATTENTION WATCH</b><button type="button" data-aether-close aria-label="Fermer Aether">×</button></div>`);
-      }
-      aetherBindPanelClose(panel);
       aetherComponentEnsure(panel);
       return panel;
     }
@@ -1344,8 +1329,8 @@ function aetherNewsMarketSemantic(){
     panel.setAttribute("aria-label","Synthèse Aether");
     panel.innerHTML=`<div class="atlas-aether-panel-head"><b>AETHER · ATTENTION WATCH</b><button type="button" data-aether-close aria-label="Fermer Aether">×</button></div>`;
     document.body.appendChild(panel);
-    aetherBindPanelClose(panel);
     aetherComponentEnsure(panel);
+    panel.querySelector("[data-aether-close]")?.addEventListener("click",()=>aetherPanelSet(false));
     return panel;
   }
   /* 40.6.40 — AETHER NATIVE WINDOW MANAGER BRIDGE */
@@ -1364,8 +1349,6 @@ function aetherNewsMarketSemantic(){
         panel.hidden=false;
         if(open){
           manager.hide('aether-watch',false);
-          const nativeWindow=manager.getWindow?.('aether-watch');
-          if(nativeWindow && nativeWindow.floating!==true)manager.float('aether-watch',true);
           manager.minimize('aether-watch',false);
           manager.focus('aether-watch');
         }else{

@@ -2226,60 +2226,6 @@
     }
   }
 
-  // 40.6.290 — Aether native-window continuity guard.
-  // 40.6.284 moved the heavy Aether runtime behind consultation-first loading,
-  // but the Window Manager still requires the lightweight panel shell to exist
-  // before manager.init(). Preseed only the shell/chrome anchor here; aether.js
-  // remains lazy and owns all data, paint, weather/news and operator content.
-  function ensureAetherNativeShellBeforeWindowManager() {
-    let panel = document.getElementById("atlasAetherStatusPanel");
-    try {
-      const ensure = globalThis.ErithAetherV2Canonical?.ensureStructure;
-      if (typeof ensure === "function") panel = ensure() || panel;
-    } catch (error) {
-      console.error("[Aether structural preseed]", error);
-    }
-    const stage = panel?.querySelector?.("[data-aether-component-stage-406046]") || null;
-    const head = panel?.querySelector?.(".atlas-aether-panel-head") || null;
-    const ready = panel instanceof HTMLElement && stage instanceof HTMLElement && head instanceof HTMLElement;
-    document.documentElement.dataset.aetherNativeStructure = ready ? "full" : "missing";
-    if (!ready) console.error("[Aether] full native structure missing before Window Manager init.");
-    return ready ? panel : null;
-  }
-
-  function repairAetherStaleNativeWindowState() {
-    try {
-      const key = `${STORAGE_PREFIX}:window:aether-watch`;
-      const raw = JSON.parse(localStorage.getItem(key) || "null");
-      if (!raw || typeof raw !== "object") return false;
-      const stale = raw.hidden === true
-        && raw.maximized === true
-        && raw.restoreFloating === true
-        && raw.floating === false;
-      if (!stale) return false;
-      const g = raw.restoreGeometry && typeof raw.restoreGeometry === "object" ? raw.restoreGeometry : raw;
-      const next = {
-        ...raw,
-        floating: false,
-        hidden: true,
-        minimized: false,
-        maximized: false,
-        restoreFloating: false,
-        restoreGeometry: null
-      };
-      for (const keyName of ["x", "y", "width", "height"]) {
-        const value = Number(g?.[keyName]);
-        if (Number.isFinite(value)) next[keyName] = value;
-      }
-      localStorage.setItem(key, JSON.stringify(next));
-      document.documentElement.dataset.aetherNativeStateRepair = "repaired";
-      return true;
-    } catch (_) {
-      document.documentElement.dataset.aetherNativeStateRepair = "unavailable";
-      return false;
-    }
-  }
-
   function boot() {
     installGlobalVersionIdentity();
     initAtlasMemoryResidency();
@@ -2298,8 +2244,6 @@
     migrateFamilyRoleReturnWindowState();
     stageAdministratorDefaultFamilyCollapse();
     migrateAetherCenteredState();
-    repairAetherStaleNativeWindowState();
-    ensureAetherNativeShellBeforeWindowManager();
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
@@ -2323,12 +2267,6 @@
     // HTML hidden is then released; the manager becomes the only presentation owner.
     const aetherPanel = byId("atlasAetherStatusPanel");
     const aetherWindow = manager.getWindow("aether-watch");
-    document.documentElement.dataset.aetherNativeWindow = aetherWindow ? "ready" : "missing";
-    try {
-      if (aetherWindow) globalThis.AgentCryptoBootProbe?.markOnce?.("aether-native-window-ready", { build: ADMIN_BUILD, registered: true });
-      else globalThis.AgentCryptoBootProbe?.markOnce?.("aether-native-window-missing", { build: ADMIN_BUILD, registered: false });
-    } catch (_) {}
-    if (!aetherWindow) console.error(`[Administrator ${ADMIN_BUILD}] Aether native window registration missing.`);
     if (aetherPanel && aetherWindow) {
       aetherPanel.hidden = false;
       if (!aetherNativeStateExists) {

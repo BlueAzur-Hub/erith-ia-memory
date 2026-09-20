@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.293",
+  "build": "40.6.294",
   "engine": "38.15.11",
-  "release": "AETHER · CONTRACT RESTORE",
+  "release": "AETHER · HISTORICAL LIFECYCLE RESTORE",
   "published": true,
-  "status": "aether_contract_restore_406293",
-  "parent_build": "40.6.292",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.293",
-  "administrator_build": "40.6.293",
-  "build_label": "Build 40.6.293 · Administrator",
+  "status": "aether_historical_lifecycle_restore_406294",
+  "parent_build": "40.6.293",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.294",
+  "administrator_build": "40.6.294",
+  "build_label": "Build 40.6.294 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: validate 40.6.293 only. Dark Initialisation paint; Aether opens left with native five-button chrome; drag; native resize smaller/larger without losing the 16:9 stage or creating the 40.6.291 black plate; close/reopen; F5; reopen; geometry retained. Storage remains paused.",
-  "release_notes": "Restores the pre-40.6.284 Aether Window Manager structural contract without reverting Consultation First. Existing canonical js/aether-v2.js preseeds the complete hidden Aether DOM structure before Window Manager init; heavy Aether data/runtime remains consultation-gated. Because the canonical Window Manager hide operation docks directFixed windows, operator-open conditionally restores floating mode only when Aether is actually docked, preserving the validated left/free-window behavior without re-detaching an already floating window. Generic admin-window-manager.js, aether.css and aether-v2.css remain unchanged from 40.6.273. Canonical entry starts the existing master-v2 image preload earlier and preserves a dark paint through runtime-shell document rewrite. No new versioned JS/CSS file.",
+  "terrain_pending": "Firefox terrain: validate only 40.6.294. Required: bootstrap behaves as 40.6.289 baseline; Aether opens without crash; native controls present; left/free geometry; drag; native resize smaller/larger; maximize then restore returns proportional geometry; F5 then reopen retains usable geometry. Storage remains paused.",
+  "release_notes": "True restoration of the pre-40.6.284 Aether lifecycle. index.html, js/app.js, js/aether.js, js/aether-v2.js and consultation-first-406286.js are restored byte-for-byte from 40.6.289. runtime-shell.html is restored from 40.6.289 and receives one historical-order change only: the restored 40.6.289 js/aether.js is loaded synchronously before the unchanged canonical admin-window-manager.js, matching the pre-40.6.284 architecture. consultation-first retains its existing AgentCryptoAether already-loaded guard, so it will not inject Aether twice. All 40.6.290/291/293 Aether preseed/geometry experiments are removed from the active path. No generic Window Manager change, no new JS/CSS file, no Storage/Market Core/Strategy/Oracle/Math business change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_AETHER_CONTRACT_RESTORE_406293",
+    "status": "PAUSED_PENDING_AETHER_406294_TERRAIN",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1702,6 +1702,37 @@
     "recurring_timer_added": false,
     "observer_added": false,
     "network_owner_added": false,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_historical_lifecycle_restore_406294": {
+    "priority": "P0_FUNCTIONAL_RESTORATION",
+    "source_baseline": "40.6.289 owners + pre-40.6.284 load order",
+    "rejected_builds": [
+      "40.6.290",
+      "40.6.291",
+      "40.6.292 operator solution",
+      "40.6.293"
+    ],
+    "exact_289_restores": {
+      "index_html": "c089ff36ae1f15bcff338f51ecca4aa9c7a7f8c7",
+      "app_js": "09ffd42006da1ffd8cdf298f4f2b1b19381a9ef9",
+      "aether_js": "9382ca74aecb949c3276e922c9cea0e65e1c08bd",
+      "aether_v2_js": "64ef40f99563f8032ee4c08d8d5f5f0413d20c20",
+      "consultation_first": "d6309cc0a81975360769c5073f9c2dd097afc1b5"
+    },
+    "runtime_shell_source_sha": "204ea764f2d07b9e49345718d60bb65830b00a16",
+    "sole_shell_architecture_change": "load restored js/aether.js synchronously before canonical admin-window-manager.js",
+    "duplicate_load_guard": "consultation-first aetherAlreadyLoaded() => AgentCryptoAether",
+    "generic_window_manager_modified": false,
+    "new_versioned_js_file": false,
+    "bootstrap_experiment_removed": true,
+    "structural_preseed_experiment_removed": true,
+    "forced_float_experiment_removed": true,
+    "storage_changed": false,
+    "market_core_modified": false,
+    "strategy_modified": false,
+    "oracle_business_logic_modified": false,
+    "math_core_modified": false,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }

@@ -8,7 +8,7 @@
   if(globalThis.AgentCryptoConsultationFirst406286)return;
 
   const BUILD="40.6.286";
-  const AETHER_SRC="./js/aether.js?v=40.6.293";
+  const AETHER_SRC="./js/aether.js?v=40.6.286";
   const MAX_CHECKS=120;
   const CHECK_MS=500;
   const state={checks:0,consultationReady:false,consultationReason:"",aetherState:"pending",aetherReason:"",signals:{}};
