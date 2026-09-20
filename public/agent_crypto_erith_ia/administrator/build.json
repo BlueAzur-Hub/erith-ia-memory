@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.277",
+  "build": "40.6.278",
   "engine": "38.15.11",
-  "release": "REPAIR · EVIDENCE LOADER STATE TRUTH",
+  "release": "UI REPAIR · BOOT REPORT RETURNS TO SYSTEM SECTION",
   "published": true,
-  "status": "evidence_loader_state_truth_406277",
-  "parent_build": "40.6.276",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.277",
-  "administrator_build": "40.6.277",
-  "build_label": "Build 40.6.277 · Administrator",
+  "status": "boot_report_system_section_406278",
+  "parent_build": "40.6.277",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.278",
+  "administrator_build": "40.6.278",
+  "build_label": "Build 40.6.278 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -16,7 +16,7 @@
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
-  "strategy_a_modified": true,
+  "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
   "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Static repair verified in GitHub; browser terrain not yet re-run. No operator action required for publication.",
-  "release_notes": "Structural repair only: Evidence demand loader no longer reports complete/ready after module failure; failed or missing modules remain partial and retryable; canonical API readiness is checked before completion; failed injected scripts are removed for retry; targeted cache identity v=40.6.277. No Market Core, Oracle, Math, CURRENT, Lecture Technique, Strategy A business rule, Aether, Web Classic, storage, network, observer, recurring timer, paper/real order change.",
+  "terrain_pending": "Static GitHub verification complete; Firefox terrain not yet re-run.",
+  "release_notes": "Simple UI correction: remove Boot report from Command Center overlay; place it as a normal collapsible section in 04 · Expérimentation & système; keep Actualiser/Copier and add Replier; Boot probe reports effective build dynamically. No new popup, menu, module, timer, observer, storage owner, network owner, Market Core or business-logic change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -221,7 +221,7 @@
     "firefox_proof_in": "40.6.240",
     "firefox_observed_state": "DB_OK_LS_OK"
   },
-  "command_center_modified": false,
+  "command_center_modified": true,
   "command_center_routing": {
     "repair_in": "40.6.240",
     "module": "js/command-center-routing-406240.js",
@@ -1057,5 +1057,37 @@
     "real_order": false,
     "g3": "PENDING",
     "g9": "LOCKED"
+  },
+  "boot_report_system_section_406278": {
+    "parent": "40.6.277",
+    "purpose": "MOVE_EXISTING_BOOT_REPORT_FROM_COMMAND_CENTER_TO_CANONICAL_SYSTEM_SECTION",
+    "old_surface": "Command Center > Système > Boot report overlay",
+    "new_surface": "04 · Expérimentation & système > Diagnostic de démarrage",
+    "old_surface_removed": true,
+    "command_center_button_removed": true,
+    "popup_panel_removed": true,
+    "native_details_section": true,
+    "controls": [
+      "Actualiser",
+      "Copier",
+      "Replier"
+    ],
+    "dynamic_effective_build_label": true,
+    "files": [
+      "runtime-shell.html",
+      "views/system.html",
+      "js/views/system-presentation.js",
+      "build.json"
+    ],
+    "new_menu": false,
+    "new_popup": false,
+    "new_module": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "storage_owner_added": false,
+    "network_request_added": false,
+    "market_core_modified": false,
+    "strategy_a_modified": false,
+    "real_order": false
   }
 }
