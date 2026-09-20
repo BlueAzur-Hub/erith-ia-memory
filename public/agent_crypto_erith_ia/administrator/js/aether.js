@@ -1315,10 +1315,20 @@ function aetherNewsMarketSemantic(){
     return stage;
   }
 
+  function aetherBindPanelClose(panel){
+    const close=panel?.querySelector?.("[data-aether-close]");
+    if(!close||close.dataset.aetherCloseBound==="1")return;
+    close.dataset.aetherCloseBound="1";
+    close.addEventListener("click",()=>aetherPanelSet(false));
+  }
   function aetherPanelEnsure(){
     let panel=document.getElementById("atlasAetherStatusPanel");
     if(panel){
       if(!panel.dataset.aetherOperatorOpen)panel.dataset.aetherOperatorOpen="0";
+      if(!panel.querySelector(".atlas-aether-panel-head")){
+        panel.insertAdjacentHTML("afterbegin",`<div class="atlas-aether-panel-head"><b>AETHER · ATTENTION WATCH</b><button type="button" data-aether-close aria-label="Fermer Aether">×</button></div>`);
+      }
+      aetherBindPanelClose(panel);
       aetherComponentEnsure(panel);
       return panel;
     }
@@ -1329,8 +1339,8 @@ function aetherNewsMarketSemantic(){
     panel.setAttribute("aria-label","Synthèse Aether");
     panel.innerHTML=`<div class="atlas-aether-panel-head"><b>AETHER · ATTENTION WATCH</b><button type="button" data-aether-close aria-label="Fermer Aether">×</button></div>`;
     document.body.appendChild(panel);
+    aetherBindPanelClose(panel);
     aetherComponentEnsure(panel);
-    panel.querySelector("[data-aether-close]")?.addEventListener("click",()=>aetherPanelSet(false));
     return panel;
   }
   /* 40.6.40 — AETHER NATIVE WINDOW MANAGER BRIDGE */
@@ -1349,6 +1359,7 @@ function aetherNewsMarketSemantic(){
         panel.hidden=false;
         if(open){
           manager.hide('aether-watch',false);
+          manager.float('aether-watch',true);
           manager.minimize('aether-watch',false);
           manager.focus('aether-watch');
         }else{

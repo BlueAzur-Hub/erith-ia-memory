@@ -1,18 +1,18 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.289",
+  "build": "40.6.290",
   "engine": "38.15.11",
-  "release": "STORAGE · PRIMARY TRUTH",
+  "release": "AETHER · NATIVE WINDOW RESTORE",
   "published": true,
-  "status": "storage_primary_truth_406289",
-  "parent_build": "40.6.288",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.289",
-  "administrator_build": "40.6.289",
-  "build_label": "Build 40.6.289 · Administrator",
+  "status": "aether_native_window_restore_406290",
+  "parent_build": "40.6.289",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.290",
+  "administrator_build": "40.6.290",
+  "build_label": "Build 40.6.290 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
-  "aether_modified": false,
+  "aether_modified": true,
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Next thread terrain: System > Storage Observatory > Storage Primary Truth 40.6.289. Step 1 should verify IDB PRIMARY for scanner archive + chart cache and classify local divergence as expected stale backup. Step 2 is optional operator-only backup+confirm retirement. Then reload Book/Ryzen and measure localStorage.",
-  "release_notes": "Final thread handoff build. Root cause of 40.6.288 safe block is proven: both targets are async-primary IndexedDB keys, so primary writes deliberately stop refreshing the preserved localStorage backup. Legacy 40.3.91 planning required local==IDB equality, while canonical retireVerified already has a correct IDB-primary branch. 40.6.289 adds a readable operator surface using only existing copyTargets/readSync/retireVerified APIs. No app.js change, no schema change, no generic cleanup, no Market REVIEW_REQUIRED deletion.",
+  "terrain_pending": "Firefox terrain: open Aether and verify native five-button Window Manager chrome is present; drag Aether; close; reopen; drag again; hard reload; reopen and drag again. Storage work remains paused until this regression is PASS.",
+  "release_notes": "Permanent Aether native-window regression repair. 40.6.284 moved heavy aether.js behind consultation-first loading, while the canonical Window Manager still required #atlasAetherStatusPanel to exist before manager.init(); Aether therefore opened later in fallback mode without native move/minimize/dock/maximize/hide controls. 40.6.290 preseeds only the lightweight Aether shell before Window Manager init, keeps heavy Aether data/runtime lazy, makes existing-shell close binding idempotent, explicitly restores floating mode on operator open, and normalizes only the proven stale hidden+maximized Aether presentation signature. No new versioned JS file, no Market Core change, no Strategy/Oracle/Math business logic change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PRIMARY_TRUTH_TERRAIN_PENDING",
+    "status": "PAUSED_PENDING_AETHER_NATIVE_WINDOW_406290_TERRAIN",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1588,5 +1588,37 @@
     "market_review_required_touched": false,
     "real_order": false,
     "paper_only": true
+  },
+  "aether_native_window_restore_406290": {
+    "priority": "P0_REGRESSION_REPAIR",
+    "introduced_by": "40.6.284 consultation-first lazy Aether ordering",
+    "symptom": "Aether opens without canonical Window Manager controls and cannot be moved",
+    "root_cause": "aether.js creates #atlasAetherStatusPanel after js/app.js manager.init(), so nativeDefinitions().aether-watch resolves zero entries and is never registered",
+    "repair": [
+      "preseed lightweight #atlasAetherStatusPanel shell in existing js/app.js before manager.init()",
+      "keep full js/aether.js lazy after consultation-first",
+      "idempotently bind preseeded Aether close control when lazy runtime arrives",
+      "explicitly float aether-watch on operator open",
+      "normalize only the proven stale hidden+maximized+restoreFloating Aether state signature",
+      "emit aether-native-window-ready or aether-native-window-missing BootProbe mark"
+    ],
+    "changed_files": [
+      "js/app.js",
+      "js/aether.js",
+      "js/consultation-first-406286.js",
+      "runtime-shell.html",
+      "build.json"
+    ],
+    "new_versioned_js_file": false,
+    "market_core_modified": false,
+    "oracle_business_logic_modified": false,
+    "math_core_modified": false,
+    "atlas_current_business_logic_modified": false,
+    "strategy_a_modified": false,
+    "storage_schema_changed": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "network_owner_added": false,
+    "terrain_proof": "PENDING_FIREFOX"
   }
 }
