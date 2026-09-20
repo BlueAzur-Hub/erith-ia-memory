@@ -11,6 +11,8 @@
   const DAY_MS = 86400000;
 
   const finite = v => {
+    if (v === null || v === undefined || typeof v === "boolean") return null;
+    if (typeof v === "string" && !v.trim()) return null;
     const n = Number(v);
     return Number.isFinite(n) ? n : null;
   };
@@ -39,34 +41,56 @@
     return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2;
   };
 
-  function temporal() {
-    let raw = null;
-    try {
-      raw = globalThis.AgentCryptoMarketSeriesTruth?.snapshot?.() || null;
-    } catch (_) {}
-
-    const blockers = [];
-    if (!raw || raw.available === false) {
-      return Object.freeze({
-        certified: false,
-        status: "NOT_CERTIFIED",
-        blockers: Object.freeze(["SOURCE_UNAVAILABLE"]),
-        rows: Object.freeze([]),
-        source_points: 0,
-        window_points: 0,
-        asset: "BTC",
-        first_ms: null,
-        last_ms: null,
-        first_at: null,
-        last_at: null,
-        observed_cadence_min: null,
-        window_span_min: null,
-        max_gap_min: null
-      });
+  function temporal(rawOverride = undefined, canonicalOverride = undefined) {
+    let raw = rawOverride;
+    if (rawOverride === undefined) {
+      try { raw = globalThis.AgentCryptoMarketSeriesTruth?.snapshot?.() || null; } catch (_) { raw = null; }
     }
 
-    if (raw.source_period_proven !== true || Number(raw.source_period_days) !== 1) {
-      blockers.push("SOURCE_24H_NOT_PROVEN");
+    let canonical = canonicalOverride;
+    if (canonicalOverride === undefined) {
+      try { canonical = globalThis.AgentCryptoStrategyAG3StructuredDataTruth?.snapshot?.()?.market_series || null; } catch (_) { canonical = null; }
+    }
+
+    const blockers = [];
+    const fail = extra => Object.freeze({
+      certified: false,
+      status: "NOT_CERTIFIED",
+      blockers: Object.freeze([...new Set([...blockers, ...(extra || [])])]),
+      rows: Object.freeze([]),
+      source_points: 0,
+      window_points: 0,
+      asset: String(raw?.symbol || raw?.asset_id || "BTC").toUpperCase(),
+      first_ms: null,
+      last_ms: null,
+      first_at: null,
+      last_at: null,
+      observed_cadence_min: null,
+      expected_cadence_min: finite(canonical?.expected_cadence_min),
+      window_span_min: null,
+      max_gap_min: null,
+      duplicate_timestamps: finite(canonical?.duplicate_timestamps),
+      conflicting_duplicate_timestamps: finite(canonical?.conflicting_duplicate_timestamps),
+      canonical_quality_state: canonical?.quality_state || null,
+      refusal_sticky: true
+    });
+
+    if (!raw || raw.available === false) return fail(["SOURCE_UNAVAILABLE"]);
+    if (!canonical || canonical.structured_owner_available === false) blockers.push("CANONICAL_TEMPORAL_OWNER_UNAVAILABLE");
+
+    const sourcePeriodDays = finite(canonical?.source_period_days ?? raw?.source_period_days);
+    const sourcePeriodProven = canonical?.source_period_proven === true || raw?.source_period_proven === true;
+    if (!sourcePeriodProven || sourcePeriodDays !== 1) blockers.push("SOURCE_24H_NOT_PROVEN");
+
+    const expectedCadence = finite(canonical?.expected_cadence_min);
+    if (!(expectedCadence > 0)) blockers.push("CADENCE_CONTRACT_UNKNOWN");
+
+    const canonicalQuality = String(canonical?.quality_state || "");
+    if (canonical?.temporal_coverage_certified !== true) {
+      if (canonicalQuality === "CONFLICTING_DUPLICATE_TIMESTAMP") blockers.push("CONFLICTING_DUPLICATE_TIMESTAMP");
+      else if (canonicalQuality === "DUPLICATE_TIMESTAMP") blockers.push("DUPLICATE_TIMESTAMP");
+      else if (canonicalQuality === "CADENCE_CONTRACT_UNKNOWN") blockers.push("CADENCE_CONTRACT_UNKNOWN");
+      else blockers.push("CANONICAL_TEMPORAL_OWNER_NOT_CERTIFIED");
     }
 
     const norm = (Array.isArray(raw.rows) ? raw.rows : [])
@@ -79,46 +103,43 @@
       .filter(r => r.t !== null && r.p !== null && r.p > 0)
       .sort((a, b) => a.t - b.t);
 
-    const uniq = [];
-    for (const r of norm) {
-      if (!uniq.length || uniq.at(-1).t !== r.t) uniq.push(r);
-    }
+    if (norm.length < 2) return fail(["INSUFFICIENT_VALID_ROWS"]);
 
-    if (uniq.length < 2) {
-      return Object.freeze({
-        certified: false,
-        status: "NOT_CERTIFIED",
-        blockers: Object.freeze([...blockers, "INSUFFICIENT_VALID_ROWS"]),
-        rows: Object.freeze([]),
-        source_points: norm.length,
-        window_points: 0,
-        asset: String(raw.symbol || raw.asset_id || "BTC").toUpperCase(),
-        first_ms: null,
-        last_ms: null,
-        first_at: null,
-        last_at: null,
-        observed_cadence_min: null,
-        window_span_min: null,
-        max_gap_min: null
-      });
+    const grouped = new Map();
+    for (const row of norm) {
+      const bucket = grouped.get(row.t) || [];
+      bucket.push(row.p);
+      grouped.set(row.t, bucket);
     }
+    let duplicateCount = 0;
+    const conflictingTimes = [];
+    for (const [t, prices] of grouped) {
+      if (prices.length <= 1) continue;
+      duplicateCount += prices.length - 1;
+      if (new Set(prices.map(value => Number(value).toPrecision(15))).size > 1) conflictingTimes.push(t);
+    }
+    if (duplicateCount > 0) blockers.push("DUPLICATE_TIMESTAMP");
+    if (conflictingTimes.length > 0) blockers.push("CONFLICTING_DUPLICATE_TIMESTAMP");
+
+    const uniq = [];
+    for (const row of norm) {
+      if (!uniq.length || uniq.at(-1).t !== row.t) uniq.push(row);
+    }
+    if (uniq.length < 2) return fail(["INSUFFICIENT_VALID_ROWS"]);
 
     const diffs = [];
     for (let i = 1; i < uniq.length; i++) diffs.push((uniq[i].t - uniq[i - 1].t) / 60000);
+    const observedCadence = median(diffs);
 
-    const cadence = median(diffs);
     const end = uniq.at(-1).t;
     const target = end - DAY_MS;
-    const tolerance = Math.max(1000, (cadence || 1) * 4800);
+    const tolerance = expectedCadence > 0 ? Math.max(1000, expectedCadence * 4800) : 1000;
 
     let idx = -1;
     let best = Infinity;
     uniq.forEach((r, i) => {
       const d = Math.abs(r.t - target);
-      if (d < best) {
-        best = d;
-        idx = i;
-      }
+      if (d < best) { best = d; idx = i; }
     });
 
     const rows = idx >= 0 ? uniq.slice(idx) : [];
@@ -126,14 +147,14 @@
     const windowDiffs = [];
     for (let i = 1; i < rows.length; i++) windowDiffs.push((rows[i].t - rows[i - 1].t) / 60000);
     const maxGap = windowDiffs.length ? Math.max(...windowDiffs) : null;
-    const expected = cadence > 0 ? Math.round(1440 / cadence) + 1 : null;
+    const expectedRows = expectedCadence > 0 ? Math.round(1440 / expectedCadence) + 1 : null;
 
-    if (!(cadence > 0)) blockers.push("OBSERVED_CADENCE_UNKNOWN");
+    if (!(observedCadence > 0)) blockers.push("OBSERVED_CADENCE_UNKNOWN");
     if (best > tolerance) blockers.push("NO_EXACT_24H_BOUNDARY");
-    if (span === null || Math.abs(span - 1440) > Math.max(.25, (cadence || 1) * .08)) blockers.push("SPAN_NOT_24H");
-    if (expected !== null && rows.length !== expected) blockers.push("ROW_COUNT_MISMATCH");
-    if (cadence > 0 && windowDiffs.some(d => Math.abs(d - cadence) > Math.max(.25, cadence * .25))) blockers.push("IRREGULAR_CADENCE");
-    if (cadence > 0 && maxGap > cadence * 1.25) blockers.push("UNEXPECTED_GAP");
+    if (span === null || expectedCadence <= 0 || Math.abs(span - 1440) > Math.max(.25, expectedCadence * .08)) blockers.push("SPAN_NOT_24H");
+    if (expectedRows !== null && rows.length !== expectedRows) blockers.push("ROW_COUNT_MISMATCH");
+    if (expectedCadence > 0 && windowDiffs.some(d => Math.abs(d - expectedCadence) > Math.max(.25, expectedCadence * .25))) blockers.push("IRREGULAR_CADENCE");
+    if (expectedCadence > 0 && maxGap > expectedCadence * 1.25) blockers.push("UNEXPECTED_GAP");
 
     return Object.freeze({
       certified: blockers.length === 0,
@@ -142,14 +163,20 @@
       rows: Object.freeze(rows.map(r => Object.freeze([r.t, r.p]))),
       source_points: norm.length,
       window_points: rows.length,
-      observed_cadence_min: cadence,
+      observed_cadence_min: observedCadence,
+      expected_cadence_min: expectedCadence,
       window_span_min: span,
       max_gap_min: maxGap,
+      duplicate_timestamps: duplicateCount,
+      conflicting_duplicate_timestamps: conflictingTimes.length,
       first_ms: rows[0]?.t ?? null,
       last_ms: rows.at(-1)?.t ?? null,
       first_at: rows.length ? new Date(rows[0].t).toISOString() : null,
       last_at: rows.length ? new Date(rows.at(-1).t).toISOString() : null,
-      blockers: Object.freeze(blockers)
+      canonical_quality_state: canonicalQuality || null,
+      canonical_temporal_certified: canonical?.temporal_coverage_certified === true,
+      refusal_sticky: true,
+      blockers: Object.freeze([...new Set(blockers)])
     });
   }
 
@@ -242,7 +269,10 @@
 
   function datasetFrom(t = t0Audit(), s = temporal()) {
     const blockers = [];
-    if (!s.certified) blockers.push("TEMPORAL_WINDOW_NOT_CERTIFIED");
+    if (!s.certified) {
+      blockers.push("TEMPORAL_WINDOW_NOT_CERTIFIED");
+      for (const blocker of Array.isArray(s?.blockers) ? s.blockers : []) blockers.push(`TEMPORAL:${blocker}`);
+    }
     if (!t.certified_rows) blockers.push("NO_CERTIFIED_T0_DECISION");
 
     const joined = [];
@@ -256,7 +286,7 @@
             asset: s.asset,
             first_at: s.first_at,
             last_at: s.last_at,
-            cadence_min: s.observed_cadence_min,
+            cadence_min: s.expected_cadence_min,
             points: s.window_points
           }),
           future_outcome: null,
@@ -368,6 +398,18 @@
       cost_gate_pct: .8
     });
     const incomplete = normalizeT0({ cycle_id: "X" });
+    const missingNumeric = normalizeT0({
+      cycle_id: "MISSING-NUMERIC", asset: "BTC", decision: "NO_TRADE",
+      market_at: "2026-09-16T10:00:00Z", decision_at: "2026-09-16T10:00:01Z", available_at: "2026-09-16T10:00:02Z",
+      strategy_build: "40.6.56", policy_build: "40.6.56",
+      confidence: 94, btc_24h_pct: -.8, expected_move_pct: .44, data_ready: true, cost_gate_pct: .8
+    });
+    const base = Date.UTC(2026,8,16,0,0,0), goodRows = [];
+    for (let i=0;i<=288;i++) goodRows.push([base+i*5*60000,65000+i]);
+    const rawGood = {available:true,symbol:"BTC",asset_id:"bitcoin",source_period_days:1,source_period_proven:true,rows:goodRows};
+    const cadenceUnknown = temporal(rawGood,{structured_owner_available:true,source_period_days:1,source_period_proven:true,expected_cadence_min:null,temporal_coverage_certified:false,quality_state:"CADENCE_CONTRACT_UNKNOWN"});
+    const conflictRows = goodRows.slice(); conflictRows.splice(10,0,[base+50*60000,99999]);
+    const conflicting = temporal({...rawGood,rows:conflictRows},{structured_owner_available:true,source_period_days:1,source_period_proven:true,expected_cadence_min:5,temporal_coverage_certified:false,quality_state:"CONFLICTING_DUPLICATE_TIMESTAMP",duplicate_timestamps:1,conflicting_duplicate_timestamps:1});
 
     const truthTemporal = checkpointTruth(
       { certified: false, status: "NOT_CERTIFIED", blockers: ["SPAN_NOT_24H"], source_points: 482, window_points: 0 },
@@ -388,6 +430,9 @@
     const checks = Object.freeze({
       complete_no_trade_certifies: full.certified === true && full.decision === "NO_TRADE",
       incomplete_fails_closed: incomplete.certified === false,
+      missing_numeric_stays_missing: missingNumeric.certified === false && missingNumeric.direction === null && missingNumeric.missing.includes("direction"),
+      cadence_contract_unknown_rejected: cadenceUnknown.certified === false && cadenceUnknown.blockers.includes("CADENCE_CONTRACT_UNKNOWN"),
+      conflicting_duplicate_rejected: conflicting.certified === false && conflicting.blockers.includes("CONFLICTING_DUPLICATE_TIMESTAMP"),
       temporal_blocker_precedence: truthTemporal.blocker === "TEMPORAL_WINDOW_NOT_CERTIFIED",
       t0_blocker_after_temporal: truthT0.blocker === "NO_CERTIFIED_T0_DECISION",
       ready_is_not_gate_pass: truthReady.blocker === "READY_FOR_DECISION_REPLAY" && truthReady.g3 === "PENDING"
