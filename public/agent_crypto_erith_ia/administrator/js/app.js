@@ -2190,36 +2190,33 @@
   }
 
 
-  // 40.6.85 — Aether left-boot repair.
-  // Scope is exactly one persisted Aether presentation record, one time.
-  // A non-centered operator position is never rewritten.
-  const AETHER_LEFT_406085_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406085`;
+  // 40.6.302 — Aether LEFT restoration.
+  // Single responsibility: restore the operator's normal Aether window to the LEFT.
+  // No CSS, resize, F11, DOM, or Window Manager ownership changes are introduced here.
+  const AETHER_LEFT_406085_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406302`;
   function migrateAetherCenteredState() {
     try {
       if (localStorage.getItem(AETHER_LEFT_406085_MIGRATION_KEY) === "1") return "already";
       const key = `${STORAGE_PREFIX}:window:aether-watch`;
       const raw = JSON.parse(localStorage.getItem(key) || "null");
+
+      // No saved state: preferredFloatGeometry already owns x=12.
       if (!raw || typeof raw !== "object") {
         localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-        return "no-state";
+        document.documentElement.dataset.aetherLeftMigration = "default-x12";
+        return "default-x12";
       }
-      const x = Number(raw.x), y = Number(raw.y), width = Number(raw.width), height = Number(raw.height);
-      if (![x, y, width, height].every(Number.isFinite)) {
-        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-        return "invalid-state-preserved";
+
+      // Preserve every existing operator field except the horizontal origin.
+      const next = { ...raw, x: 12 };
+      if (raw.restoreGeometry && typeof raw.restoreGeometry === "object") {
+        next.restoreGeometry = { ...raw.restoreGeometry, x: 12 };
       }
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const centeredX = Math.max(12, Math.round((vw - width) / 2));
-      const centered = x > 26 && Math.abs(x - centeredX) <= 14;
-      if (centered && raw.maximized !== true) {
-        localStorage.setItem(key, JSON.stringify({ ...raw, x: 12 }));
-        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-        document.documentElement.dataset.aetherLeftMigration = "migrated";
-        return "migrated";
-      }
+
+      localStorage.setItem(key, JSON.stringify(next));
       localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-      document.documentElement.dataset.aetherLeftMigration = "preserved";
-      return "preserved";
+      document.documentElement.dataset.aetherLeftMigration = "migrated-x12";
+      return "migrated-x12";
     } catch (_) {
       document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
       return "storage-unavailable";

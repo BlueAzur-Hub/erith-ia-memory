@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.301",
+  "build": "40.6.302",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER ORIGINAL FUNCTION CONTRACT RESTORE",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER ORIGINAL RESTORE · LEFT X12",
   "published": true,
-  "status": "aether_original_function_contract_restore_406301",
-  "parent_build": "40.6.300",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.301",
-  "administrator_build": "40.6.301",
-  "build_label": "Build 40.6.301 · Administrator",
+  "status": "aether_original_restore_left_x12_406302",
+  "parent_build": "40.6.301",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.302",
+  "administrator_build": "40.6.302",
+  "build_label": "Build 40.6.302 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: restoration only. F5 keeps direct static entry/no structural white page. Aether opens left/native; drag + free resize work; F11/fullscreen behaves as before 40.6.284; leaving F11 restores usable normal geometry; close/reopen and F5/reopen remain stable. Storage/Strategy stay paused.",
-  "release_notes": "40.6.301 restores the original pre-40.6.284 Aether lifecycle instead of adding another Aether owner. Aether owner files were already restored byte-identical to the healthy 40.6.273 checkpoint in 40.6.300. This build restores the missing original residency/order: Market Memory, Analytical Memory, Market Memory Collector, Shared Memory Collector, Reader Consistency, Gap-Aware Color, Decision Board and Multi-Collector Concordance again run before Aether; Aether TRADUS is resident again; post-boot duplicates are removed; original VEILLE markup is restored. Direct static entry and the 40.6.299 interaction-latency backpressure remain.",
+  "terrain_pending": "Firefox terrain: after F5, Aether normal/restored window must be LEFT at x=12. Everything else from 40.6.301 must remain unchanged: y, width, height, drag, free resize, F11/fullscreen, maximize/restore, close/reopen, lifecycle and performance. Any other regression = FAIL and STOP.",
+  "release_notes": "40.6.302 is intentionally one-dimensional. The restored 40.6.301 Aether code is preserved. No CSS is added, no Window Manager code is changed, and no new F11/resize logic is introduced. The existing historical left-boot migration is replaced in place because its 40.6.85 one-time marker was already consumed on the browser. A fresh marker forces only the saved Aether x coordinate to 12; if a maximized state contains restoreGeometry, only restoreGeometry.x is also set to 12. All other persisted state remains untouched.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1932,6 +1932,33 @@
     "oracle_modified": false,
     "lecture_technique_modified": false,
     "storage_schema_modified": false,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_left_x12_406302": {
+    "parent_contract": "40.6.301",
+    "fresh_marker": "migration:aether-left-406302",
+    "target_x": 12,
+    "fields_changed": [
+      "x",
+      "restoreGeometry.x when present"
+    ],
+    "fields_preserved": [
+      "y",
+      "width",
+      "height",
+      "floating",
+      "minimized",
+      "hidden",
+      "maximized",
+      "z",
+      "all other fields"
+    ],
+    "css_added": false,
+    "aether_css_modified": false,
+    "aether_js_modified": false,
+    "window_manager_modified": false,
+    "resize_logic_modified": false,
+    "f11_logic_modified": false,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }
