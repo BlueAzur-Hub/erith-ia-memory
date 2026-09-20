@@ -562,18 +562,37 @@
     if (lastRole === "administrator") restoreSaved("boot");
     else lastSignature = signature(currentFamilySnapshot());
 
-    // Capture the state before a possible role switch, then capture again after
-    // the click transaction. Signature dedup prevents redundant localStorage writes.
-    document.addEventListener("click", () => {
-      try { if (role() === "administrator") writeSaved("pre-click"); } catch (_) {}
-      postInteraction("click");
+    // 40.6.299 — INTERACTION LATENCY REPAIR.
+    // Do not snapshot all windows or synchronously touch localStorage for every
+    // ordinary click. Only controls that can change family presentation state
+    // are allowed to schedule family persistence.
+    const presentationSelector = [
+      ".admin-native-control",
+      ".admin-window-deck-action",
+      ".admin-window-deck-toggle",
+      "#adminWorkspaceProfilesToggle",
+      "[data-workspace-profile-load]"
+    ].join(",");
+
+    document.addEventListener("click", event => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (target?.closest?.(presentationSelector)) {
+        postInteraction("presentation-click");
+        return;
+      }
+      queueMicrotask(() => { try { reconcileRole("click-role"); } catch (_) {} });
     }, true);
 
-    // Drag, first-detach and native CSS resize finish on pointerup. Persist only
-    // if the resulting four-family snapshot actually changed.
-    window.addEventListener("pointerup", () => postInteraction("pointerup"), true);
-    window.addEventListener("popstate", () => postInteraction("popstate"), true);
-    window.addEventListener("hashchange", () => postInteraction("hashchange"), true);
+    // Persist family geometry after real window-drag chrome only, never after a
+    // generic pointerup inside content/subsections.
+    window.addEventListener("pointerup", event => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (target?.closest?.(".admin-native-move,.admin-native-floating-titlebar,.admin-native-minibar")) {
+        postInteraction("presentation-pointerup");
+      }
+    }, true);
+    window.addEventListener("popstate", () => { try { reconcileRole("popstate-role"); } catch (_) {} }, true);
+    window.addEventListener("hashchange", () => { try { reconcileRole("hashchange-role"); } catch (_) {} }, true);
 
     document.documentElement.dataset.operatorFamilyPersistenceBuild = BUILD;
     globalThis.ErithOperatorFamilyPersistence = Object.freeze({
@@ -592,6 +611,9 @@
       network_added: false,
       websocket_added: false,
       broad_observer_added: false,
+      all_click_snapshot_retired_406299: true,
+      ordinary_content_click_storage_write_406299: false,
+      presentation_control_only_persistence_406299: true,
       status: () => Object.freeze({
         role: role(),
         saved: !!readSaved(),

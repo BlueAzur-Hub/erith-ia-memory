@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.298",
+  "build": "40.6.299",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · F11 AETHER GEOMETRY TRANSACTION REPAIR",
+  "release": "PARKER LEWIS CAN'T LOSE · INTERACTION LATENCY + F11 AETHER REPAIR",
   "published": true,
-  "status": "f11_aether_geometry_transaction_repair_406298",
-  "parent_build": "40.6.297",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.298",
-  "administrator_build": "40.6.298",
-  "build_label": "Build 40.6.298 · Administrator",
+  "status": "interaction_latency_and_f11_aether_repair_406299",
+  "parent_build": "40.6.298",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.299",
+  "administrator_build": "40.6.299",
+  "build_label": "Build 40.6.299 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: validate 40.6.298 only. Normal mode must keep the operator compact geometry. Enter F11 must temporarily fit Aether 16:9 left of Lecture Technique. Exit F11 must restore the exact pre-F11 compact geometry without changing page scroll position. Drag + native resize, close/reopen and F5 remain usable. Storage stays paused.",
-  "release_notes": "40.6.297 terrain exposed a second root cause: its F11 bridge used Window Manager applySnapshot() for geometry-only changes. applySnapshot() intentionally normalizes a floating window through setFloating(false) before reapplying it. For directFixed Aether, that briefly removes fixed positioning from the body-appended panel, lets it re-enter document flow at the page end, and can trigger Firefox scroll anchoring while also destabilizing exit-F11 geometry. 40.6.298 adds one additive geometry-only Window Manager API that updates an already-floating window without docking/reparenting it, and routes Aether F11 fit/restore through that API. No Aether CSS/backplate, Market Core, Strategy, Oracle, Math, Lecture Technique or Storage schema is changed.",
+  "terrain_pending": "Firefox terrain: first validate basic interaction latency in normal mode. Hover/pointing must remain immediate; a subsection click must open the clicked subsection, not a neighbor; no multi-second freeze. Then validate Aether normal compact → F11 16:9 → exit restores exact compact geometry without page-end jump. Storage relief remains paused.",
+  "release_notes": "40.6.299 keeps the 40.6.298 geometry-only F11 repair and addresses a separate interaction-path regression found by field use. layout-repair.js was synchronously snapshotting all managed windows and potentially writing localStorage in capture phase for every click, even ordinary subsection clicks; that path is now limited to presentation controls only. The late 59-module post-boot loader now pauses while the operator is actively clicking, typing, scrolling or touching, so background parse/eval cannot continuously compete with direct input. No business engine, Market Core, Strategy, Oracle, Math or Technical Reading logic is changed.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_406298_AETHER_F11_TERRAIN",
+    "status": "PAUSED_PENDING_406299_INTERACTION_AND_AETHER_TERRAIN",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1871,6 +1871,24 @@
     "new_versioned_js_file": false,
     "recurring_timer_added": false,
     "observer_added": false,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "interaction_latency_repair_406299": {
+    "priority": "P0_USABILITY",
+    "evidence": "Firefox field report: 3-5 s pointer/click response, freezes, clicked subsection can lose to another target while layout is moving.",
+    "cause_1": "layout-repair 40.4.162 capture listener executed family snapshot + possible synchronous localStorage write on every click.",
+    "repair_1": "ordinary content/subsection clicks are storage-free; family persistence runs only after native presentation controls.",
+    "cause_2": "post-boot runtime sequentially parses/evaluates 59 late modules and could continue during active operator input.",
+    "repair_2": "operator quiet gate before each late module; pointer/keyboard/wheel/touch activity pauses background loading.",
+    "layout_repair_modified": true,
+    "post_boot_loader_modified": true,
+    "market_core_modified": false,
+    "strategy_modified": false,
+    "oracle_modified": false,
+    "math_core_modified": false,
+    "lecture_technique_modified": false,
+    "storage_schema_modified": false,
+    "aether_406298_preserved": true,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }

@@ -43,7 +43,7 @@
     "./js/views/private-source-demand-loader.js",
     "./js/views/atlas-family-demand-residency.js",
     "./js/views/analysis-aux-demand-loader.js",
-    "./js/layout-repair.js",
+    "./js/layout-repair.js?v=40.6.299",
     "./js/views/peripheral-diagnostics-loader.js",
     "./js/market-stack.js",
     "./js/parallel-markets.js",
@@ -73,6 +73,20 @@
 
   const state={started:false,done:false,reason:"",loaded:0,failed:[]};
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+  // 40.6.299 — operator-input backpressure.
+  // Late modules wait for a short quiet window before parse/eval so background
+  // loading cannot continuously compete with direct human input.
+  const OPERATOR_QUIET_MS=1400;
+  let lastOperatorInputAt=performance.now();
+  const markOperatorInput=()=>{lastOperatorInputAt=performance.now();};
+  window.addEventListener("pointerdown",markOperatorInput,{capture:true,passive:true});
+  window.addEventListener("keydown",markOperatorInput,{capture:true,passive:true});
+  window.addEventListener("wheel",markOperatorInput,{capture:true,passive:true});
+  window.addEventListener("touchstart",markOperatorInput,{capture:true,passive:true});
+  async function waitForOperatorQuiet(){
+    while(performance.now()-lastOperatorInputAt<OPERATOR_QUIET_MS) await sleep(180);
+  }
   const yieldMain=(timeout=2000)=>new Promise(resolve=>{
     if(typeof requestIdleCallback==="function"){
       requestIdleCallback(()=>requestAnimationFrame(()=>resolve()),{timeout});
@@ -97,7 +111,9 @@
     const idleTimeout=group==="memory"?1200:3000;
     for(const src of list){
       await sleep(pauseMs);
+      await waitForOperatorQuiet();
       await yieldMain(idleTimeout);
+      await waitForOperatorQuiet();
       const ok=await loadOne(src);
       state.loaded+=ok?1:0;
       if(!ok) state.failed.push(src);
@@ -141,7 +157,7 @@
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED",background_owner:"AFTER_AETHER_READY"}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED_PLUS_OPERATOR_QUIET_406299",operator_quiet_ms:OPERATOR_QUIET_MS,background_owner:"AFTER_AETHER_READY"}),
     same_application:true,
     book_lite:false,
     parser_critical_path_relieved:true,
