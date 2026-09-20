@@ -2267,29 +2267,124 @@
   // itself. Reconcile only when the viewport SHRINKS and CSS has visibly clamped
   // the saved floating geometry. The Window Manager remains the sole geometry
   // applicator/persistence owner through applySnapshot().
-  function installAetherViewportContinuity406296(manager) {
+  function installAetherViewportContinuity406297(manager) {
     if (!manager?.getWindow || !manager?.applySnapshot) return false;
     let viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     let viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     let frame = 0;
+    let expandedFitActive = false;
+    let expandedFitPending = false;
+    let preExpandedGeometry = null;
     const ratio = 1672 / 941;
+    const margin = 12;
+    const minWidth = 720;
+    const minHeight = 405;
+    const maxFloatWidth = 1450;
+
+    const finiteGeometry = value => {
+      if (!value || typeof value !== "object") return null;
+      const geometry = {
+        x: Number(value.x),
+        y: Number(value.y),
+        width: Number(value.width),
+        height: Number(value.height)
+      };
+      return Object.values(geometry).every(Number.isFinite) && geometry.width > 1 && geometry.height > 1
+        ? geometry
+        : null;
+    };
+
+    const visibleRect = node => {
+      if (!(node instanceof HTMLElement)) return null;
+      const style = getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      if (node.hidden || style.display === "none" || style.visibility === "hidden" || rect.width <= 1 || rect.height <= 1) return null;
+      return rect;
+    };
+
+    const historicalFit = (vw,vh) => {
+      const detail = visibleRect(document.getElementById("detailPanel"));
+      const rightBoundary = detail && detail.left > Math.max(minWidth + margin * 2, vw * .55)
+        ? Math.max(minWidth + margin * 2, detail.left - 8)
+        : vw - margin;
+      const availableWidth = Math.max(minWidth, rightBoundary - margin);
+      const maxWidth = Math.max(minWidth, Math.min(maxFloatWidth, availableWidth, vw - margin * 2));
+      const maxHeight = Math.max(minHeight, vh - margin * 2);
+      let width = Math.min(maxWidth, maxHeight * ratio);
+      let height = width / ratio;
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * ratio;
+      }
+      width = Math.min(width, Math.max(1, vw - margin * 2));
+      height = Math.min(height, Math.max(1, vh - margin * 2));
+      return {
+        x: margin,
+        y: Math.max(margin, Math.round(vh - height - margin)),
+        width: Math.round(width),
+        height: Math.round(height)
+      };
+    };
+
+    const applyGeometry = (win,geometry,persist,reason) => {
+      const safe = finiteGeometry(geometry);
+      if (!safe || !win || win.maximized || win.minimized) return false;
+      manager.applySnapshot({
+        windows: {
+          "aether-watch": {
+            floating: true,
+            minimized: false,
+            hidden: !!win.hidden,
+            maximized: false,
+            geometry: safe
+          }
+        }
+      }, { persist: !!persist, captureResult: false });
+      document.documentElement.dataset.aetherViewportContinuity406297 = reason;
+      return true;
+    };
     const reconcile = () => {
       frame = 0;
       const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
       const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
       const deltaW = vw - viewportWidth;
       const deltaH = vh - viewportHeight;
+      const grew = deltaW > 48 || deltaH > 48;
       const shrank = deltaW < -48 || deltaH < -48;
       viewportWidth = vw;
       viewportHeight = vh;
-      if (!shrank) return;
+      if (!grew && !shrank) return;
 
       const win = manager.getWindow("aether-watch");
       const target = win?.anchor;
-      if (!win || !win.floating || win.maximized || win.hidden || win.minimized || !(target instanceof HTMLElement)) return;
-      const rect = target.getBoundingClientRect();
-      const saved = win.geometry && typeof win.geometry === "object" ? win.geometry : null;
+      if (!win || !win.floating || win.maximized || win.minimized || !(target instanceof HTMLElement)) return;
+      const saved = finiteGeometry(win.geometry);
       if (!saved) return;
+
+      if (grew) {
+        if (win.hidden) {
+          expandedFitPending = true;
+          document.documentElement.dataset.aetherViewportContinuity406297 = "expanded-pending-open";
+          return;
+        }
+        if (!expandedFitActive) preExpandedGeometry = { ...saved };
+        expandedFitActive = true;
+        expandedFitPending = false;
+        applyGeometry(win,historicalFit(vw,vh),false,"expanded-16x9");
+        return;
+      }
+
+      if (shrank && expandedFitActive) {
+        const restore = finiteGeometry(preExpandedGeometry);
+        if (restore) applyGeometry(win,restore,true,"restored-operator-geometry");
+        expandedFitActive = false;
+        expandedFitPending = false;
+        preExpandedGeometry = null;
+        return;
+      }
+
+      if (win.hidden) return;
+      const rect = target.getBoundingClientRect();
 
       const sw = Number(saved.width), sh = Number(saved.height), sx = Number(saved.x), sy = Number(saved.y);
       if (![sw,sh,sx,sy].every(Number.isFinite)) return;
@@ -2321,19 +2416,40 @@
           }
         }
       }, { persist: true, captureResult: false });
-      document.documentElement.dataset.aetherViewportContinuity406296 = "fitted";
+      document.documentElement.dataset.aetherViewportContinuity406297 = "bounded-after-shrink";
     };
     const schedule = () => {
       if (frame) return;
       frame = requestAnimationFrame(reconcile);
     };
+    const openExpanded = event => {
+      if (!(event.target instanceof Element) || !event.target.closest("#atlasAetherStatusToggle")) return;
+      if (!expandedFitPending) return;
+      queueMicrotask(() => {
+        const win = manager.getWindow("aether-watch");
+        if (!win || !win.floating || win.hidden || win.maximized || win.minimized) return;
+        const current = finiteGeometry(win.geometry);
+        if (!current) return;
+        if (!expandedFitActive) preExpandedGeometry = { ...current };
+        expandedFitActive = true;
+        expandedFitPending = false;
+        const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        applyGeometry(win,historicalFit(vw,vh),false,"expanded-open-16x9");
+      });
+    };
     window.addEventListener("resize",schedule,{passive:true});
-    globalThis.ErithAetherViewportContinuity406296 = Object.freeze({
-      build: "40.6.296",
+    document.addEventListener("click",openExpanded,true);
+    globalThis.ErithAetherViewportContinuity406297 = Object.freeze({
+      build: "40.6.297",
       owner: "canonical-window-manager-api",
       event: "window.resize",
       coalescing: "requestAnimationFrame",
+      historical_basis: ["40.6.75 responsive fit","40.6.76 native position lock","40.6.85 left boot"],
+      normal_geometry_owner: "ErithAdministratorWindows",
+      expanded_geometry: "temporary 16:9 / persist false",
       direct_style_write: false,
+      persistent_storage_owner: false,
       timer: false,
       observer: false
     });
@@ -2414,7 +2530,7 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
-    installAetherViewportContinuity406296(manager);
+    installAetherViewportContinuity406297(manager);
 
     // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;

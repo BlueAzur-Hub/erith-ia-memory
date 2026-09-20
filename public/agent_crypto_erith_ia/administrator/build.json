@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.296",
+  "build": "40.6.297",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · DIRECT ENTRY + AETHER CONTINUITY RESTORE",
+  "release": "PARKER LEWIS CAN'T LOSE · F11 AETHER RESPONSIVE RESTORE",
   "published": true,
-  "status": "direct_entry_aether_continuity_restore_406296",
-  "parent_build": "40.6.295",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.296",
-  "administrator_build": "40.6.296",
-  "build_label": "Build 40.6.296 · Administrator",
+  "status": "f11_aether_responsive_restore_406297",
+  "parent_build": "40.6.296",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.297",
+  "administrator_build": "40.6.297",
+  "build_label": "Build 40.6.297 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: validate 40.6.296 only. F5 must never enter the former document.open/document.write white handoff; Aether fidelity artwork must be warming from initial parse; first open must be native/free and left (x=12); drag + native resize remain available; F11 enter/exit must not leave Aether CSS-clamped/disproportionate; close/reopen must preserve operator geometry. Storage cleanup remains paused.",
-  "release_notes": "P0 restoration built from 40.6.295 without touching the rejected Window Manager geometry path. Canonical /administrator/ becomes a materialized full direct entry: no runtime fetch + document.open/document.write replacement, eliminating the structural white-page handoff. The historical Aether preload now targets the actually rendered master-fidelity.png instead of stale master-v2.png and begins during first document parse. Aether operator-open conditionally restores native floating mode if canonical Hide docked it. A new one-shot 40.6.296 migration restores the explicitly requested left position x=12 while preserving saved y/size; browser viewport shrink/F11 continuity is reconciled through the existing Window Manager applySnapshot API only when CSS has clamped saved geometry. Generic Window Manager, Aether CSS, Market Core, Strategy, Oracle, Math and Storage schema remain unchanged.",
+  "terrain_pending": "Firefox terrain: validate 40.6.297 only. PASS requires no white document handoff on F5; master-fidelity preload from first parse; normal Aether native/free/left; drag + native resize preserved; F11/large viewport automatically fits floating Aether to the historical 16:9 frame left of Lecture Technique; exit F11 restores the exact pre-F11 operator geometry; maximize/restore remains canonical; close/reopen + F5 remain usable. Storage stays paused.",
+  "release_notes": "Full Crypto-thread audit isolated the remaining 40.6.296 F11 failure: its viewport bridge handled only SHRINK, but entering F11 EXPANDS the viewport. 40.6.297 keeps the successful 40.6.296 direct-entry/no-white-handoff architecture and active master-fidelity preload, leaves the generic Window Manager and Aether runtime/CSS untouched, and restores only the missing bidirectional Aether viewport transition. The fit math is taken from field-validated 40.6.75; normal geometry ownership remains the 40.6.76/40.6.85 canonical Window Manager contract. Expanded/F11 geometry is temporary and non-persistent; exiting restores the pre-expansion operator geometry.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_406296_DIRECT_ENTRY_AETHER_TERRAIN",
+    "status": "PAUSED_PENDING_406297_AETHER_F11_TERRAIN",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1814,6 +1814,36 @@
     "strategy_modified": false,
     "oracle_business_logic_modified": false,
     "math_core_modified": false,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_f11_responsive_restore_406297": {
+    "priority": "P0_FUNCTIONAL_RESTORATION",
+    "historical_contracts": [
+      "40.6.40 native Administrator window",
+      "40.6.41 free resize",
+      "40.6.52 backplate preload",
+      "40.6.74 C4 16:9 maximize/F11 framing",
+      "40.6.75 responsive viewport fit",
+      "40.6.76 native position lock",
+      "40.6.85 x=12 left boot"
+    ],
+    "root_cause": "40.6.296 viewport continuity used only the SHRINK branch; F11 entry grows inner viewport so floating Aether stayed at normal small geometry.",
+    "normal_geometry_owner": "ErithAdministratorWindows",
+    "expanded_geometry": "temporary 16:9 fit / persist false",
+    "fit_basis": "40.6.75 workspace rail + 16:9 fit + 1450px maximum",
+    "exit_behavior": "restore captured pre-expansion geometry",
+    "direct_entry_preserved": true,
+    "document_rewrite_boot": false,
+    "active_preload_asset": "assets/aether/aether-observatory-master-fidelity.png",
+    "generic_window_manager_modified": false,
+    "aether_runtime_modified": false,
+    "aether_css_modified": false,
+    "new_versioned_js_file": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "persistent_storage_owner_added": false,
+    "market_core_modified": false,
+    "strategy_modified": false,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }
