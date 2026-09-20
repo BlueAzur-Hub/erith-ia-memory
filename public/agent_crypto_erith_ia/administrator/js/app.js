@@ -2226,6 +2226,120 @@
     }
   }
 
+  // 40.6.296 — operator-requested Aether continuity restoration.
+  // The 40.6.85 one-shot left migration has already been consumed on long-lived
+  // Firefox profiles. This new one-shot explicitly restores LEFT for the current
+  // saved Aether geometry, while preserving the operator's y/size and every
+  // unrelated window state.
+  const AETHER_LEFT_406296_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406296`;
+  function restoreAetherLeft406296() {
+    try {
+      const relief = globalThis.AtlasStorageRelief || null;
+      const read = key => relief?.readSync ? relief.readSync(key) : localStorage.getItem(key);
+      const write = (key,value) => relief?.writeSync ? relief.writeSync(key,value) : (localStorage.setItem(key,value),true);
+      if (read(AETHER_LEFT_406296_MIGRATION_KEY) === "1") return "already";
+      const key = `${STORAGE_PREFIX}:window:aether-watch`;
+      const raw = JSON.parse(read(key) || "null");
+      if (!raw || typeof raw !== "object") {
+        write(AETHER_LEFT_406296_MIGRATION_KEY,"1");
+        return "no-state";
+      }
+      const next = { ...raw };
+      const geometryValid = [next.x,next.y,next.width,next.height].every(value => Number.isFinite(Number(value)));
+      if (geometryValid && next.maximized !== true) next.x = 12;
+      if (next.restoreGeometry && typeof next.restoreGeometry === "object") {
+        const rg = next.restoreGeometry;
+        if ([rg.x,rg.y,rg.width,rg.height].every(value => Number.isFinite(Number(value)))) {
+          next.restoreGeometry = { ...rg, x: 12 };
+        }
+      }
+      if (geometryValid || next.restoreGeometry) write(key,JSON.stringify(next));
+      write(AETHER_LEFT_406296_MIGRATION_KEY,"1");
+      document.documentElement.dataset.aetherLeft406296 = geometryValid ? "restored" : "preserved-invalid";
+      return geometryValid ? "restored" : "preserved-invalid";
+    } catch (_) {
+      document.documentElement.dataset.aetherLeft406296 = "storage-unavailable";
+      return "storage-unavailable";
+    }
+  }
+
+  // Browser F11 changes the viewport without resizing the native Aether DOM by
+  // itself. Reconcile only when the viewport SHRINKS and CSS has visibly clamped
+  // the saved floating geometry. The Window Manager remains the sole geometry
+  // applicator/persistence owner through applySnapshot().
+  function installAetherViewportContinuity406296(manager) {
+    if (!manager?.getWindow || !manager?.applySnapshot) return false;
+    let viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    let viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    let frame = 0;
+    const ratio = 1672 / 941;
+    const reconcile = () => {
+      frame = 0;
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const deltaW = vw - viewportWidth;
+      const deltaH = vh - viewportHeight;
+      const shrank = deltaW < -48 || deltaH < -48;
+      viewportWidth = vw;
+      viewportHeight = vh;
+      if (!shrank) return;
+
+      const win = manager.getWindow("aether-watch");
+      const target = win?.anchor;
+      if (!win || !win.floating || win.maximized || win.hidden || win.minimized || !(target instanceof HTMLElement)) return;
+      const rect = target.getBoundingClientRect();
+      const saved = win.geometry && typeof win.geometry === "object" ? win.geometry : null;
+      if (!saved) return;
+
+      const sw = Number(saved.width), sh = Number(saved.height), sx = Number(saved.x), sy = Number(saved.y);
+      if (![sw,sh,sx,sy].every(Number.isFinite)) return;
+      const maxWidth = Math.max(1, vw - 24);
+      const maxHeight = Math.max(1, vh - 24);
+      const cssClamped =
+        Math.abs(rect.width - sw) > 2 ||
+        Math.abs(rect.height - sh) > 2 ||
+        rect.right > vw - 10 ||
+        rect.bottom > vh - 10;
+      if (!cssClamped) return;
+
+      let width = Math.min(sw, maxWidth, maxHeight * ratio);
+      let height = width / ratio;
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * ratio;
+      }
+      const x = 12;
+      const y = Math.min(Math.max(12, sy), Math.max(12, vh - height - 12));
+      manager.applySnapshot({
+        windows: {
+          "aether-watch": {
+            floating: true,
+            minimized: false,
+            hidden: false,
+            maximized: false,
+            geometry: { x, y, width, height }
+          }
+        }
+      }, { persist: true, captureResult: false });
+      document.documentElement.dataset.aetherViewportContinuity406296 = "fitted";
+    };
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(reconcile);
+    };
+    window.addEventListener("resize",schedule,{passive:true});
+    globalThis.ErithAetherViewportContinuity406296 = Object.freeze({
+      build: "40.6.296",
+      owner: "canonical-window-manager-api",
+      event: "window.resize",
+      coalescing: "requestAnimationFrame",
+      direct_style_write: false,
+      timer: false,
+      observer: false
+    });
+    return true;
+  }
+
   function boot() {
     installGlobalVersionIdentity();
     initAtlasMemoryResidency();
@@ -2244,6 +2358,7 @@
     migrateFamilyRoleReturnWindowState();
     stageAdministratorDefaultFamilyCollapse();
     migrateAetherCenteredState();
+    restoreAetherLeft406296();
 
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
@@ -2299,6 +2414,7 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
+    installAetherViewportContinuity406296(manager);
 
     // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;
