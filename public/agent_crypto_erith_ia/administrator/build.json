@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.287",
+  "build": "40.6.288",
   "engine": "38.15.11",
-  "release": "STORAGE · OWNERSHIP AUDIT READ-ONLY",
+  "release": "STORAGE RELIEF · VERIFIED LOCAL COPY RETIREMENT",
   "published": true,
-  "status": "storage_ownership_audit_readonly_406287",
-  "parent_build": "40.6.286",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.287",
-  "administrator_build": "40.6.287",
-  "build_label": "Build 40.6.287 · Administrator",
+  "status": "storage_relief_verified_local_copy_retirement_406288",
+  "parent_build": "40.6.287",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.288",
+  "administrator_build": "40.6.288",
+  "build_label": "Build 40.6.288 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Run Storage Ownership Audit 40.6.287 on Book and/or Ryzen. Capture key count, approximate localStorage payload bytes, owner groups, strong historical candidates, duplicate groups and IndexedDB metadata. No deletion in 40.6.287.",
-  "release_notes": "Read-only storage ownership audit. Adds one operator-triggered diagnostic to the existing Storage Observatory after post-boot residency. It measures localStorage key/payload size, groups probable owner families, extracts top-level timestamp evidence when present, flags only strong historical/backup/build-key candidates, detects byte-identical payload groups, reads navigator.storage.estimate() and IndexedDB database metadata where supported, and exports JSON. No localStorage write/delete, no IndexedDB open/write/schema change, no migration or automatic cleanup. Also repairs the post-boot loader's stale Consultation First API reference while preserving scheduling.",
+  "terrain_pending": "Operator terrain: System > Storage Observatory > Relief contrôlé 40.6.288. Step 1 must verify exactly scanner archive + chart cache in IndexedDB/SHA-256. Step 2 exports full localStorage backup, requires browser confirmation, removes only verified local copies, then measure before/after and verify Book/Ryzen consultation remains intact.",
+  "release_notes": "Targeted storage relief using existing canonical Storage Relief 40.2.78/40.3.31/40.3.91 machinery. 40.6.287 proved the 2.93 MiB scanner archive is ACTIVE Scanner Collector data, already mirrored/primary in IndexedDB; it is not abandoned history. 40.6.288 adds a clear two-step operator surface: prepare/verify exactly scanner archive + the canonical large chart cache using existing IndexedDB readback and SHA-256, then export a complete localStorage backup and invoke the existing guarded relief flow with explicit browser confirmation. No generic cleanup, no REVIEW_REQUIRED Market cache retirement, no IndexedDB delete/clear/schema change, no automatic mutation.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,18 +1486,81 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "OPEN_MEASURED_NEXT",
-    "quota_fallback_owner": "js/storage-quota-truth-406239.js",
-    "fallback": "VOLATILE_SESSION_MEMORY_ON_QUOTA",
+    "status": "TARGETED_RELIEF_TERRAIN_PENDING",
+    "audit_406287": "PASS",
+    "dominant_owner": "ACTIVE_SCANNER_ARCHIVE",
+    "dominant_owner_proved": true,
+    "relief_backend_existing": "agent_crypto_storage_relief_40278",
+    "authorized_local_copy_targets": 2,
+    "review_required_market_keys_untouched": true,
     "automatic_delete": false,
-    "persistent_volume_reduced": false,
-    "audit_owner": "js/storage-ownership-audit-406287.js",
-    "relief_authorized": false
+    "generic_cleanup": false,
+    "relief_406288_operator_only": true
   },
   "transformer_book_consultation_first_status": {
     "baseline": "40.6.286",
     "visual_terrain": "PASS",
     "protected_order": "Menu/Chronos -> consultation -> Aether -> background",
     "changed_in_406287": false
+  },
+  "storage_relief_verified_406288": {
+    "priority": "DEBT_STORAGE_RELIEF_TARGETED",
+    "parent_build": "40.6.287",
+    "rollback": "40.6.287",
+    "canonical_relief_owner": "administrator/app.js · AtlasStorageRelief40278 + AtlasStorageRelief40391",
+    "new_ui_owner": "js/storage-relief-controlled-406288.js",
+    "terrain_287": {
+      "localstorage_keys": 214,
+      "localstorage_approx_mib": 5.01,
+      "scanner_archive_approx_mib": 2.93,
+      "scanner_share_pct": 58.5,
+      "indexeddb_databases": 15,
+      "duplicate_groups": 4,
+      "audit_status": "PASS"
+    },
+    "ownership_proof": {
+      "scanner_archive_key": "agent_crypto_scanner_live_archive_v1",
+      "scanner_owner": "ATLAS_SCANNER_COLLECTOR_ARCHIVE_KEY",
+      "scanner_reader": "atlasScannerCollectorRead -> AtlasStorageRelief40278.readSync",
+      "scanner_writer": "atlasScannerCollectorPersistRun -> AtlasStorageRelief40278.writeSync",
+      "scanner_retention_snapshots": 240,
+      "chart_cache_key": "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50",
+      "chart_owner": "ATLAS_CHART_LOCAL_CACHE_KEY",
+      "storage_relief_database": "agent_crypto_storage_relief_40278",
+      "storage_relief_primary_mode": "indexeddb-async-with-local-backup-preserved"
+    },
+    "authorized_targets": [
+      "agent_crypto_scanner_live_archive_v1",
+      "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50"
+    ],
+    "prepare_step": {
+      "operator_triggered": true,
+      "writes_indexeddb_for_copy_verification": true,
+      "removes_localstorage": false,
+      "sha256_readback": true
+    },
+    "execute_step": {
+      "operator_triggered": true,
+      "full_localstorage_backup_export": true,
+      "browser_confirmation_required": true,
+      "localstorage_removal": "VERIFIED_COPIES_ONLY",
+      "indexeddb_delete": false,
+      "indexeddb_clear": false,
+      "review_required_market_keys": false
+    },
+    "automatic_cleanup": false,
+    "generic_cleanup": false,
+    "market_cache_legacy_cleanup": false,
+    "indexeddb_schema_changed": false,
+    "new_storage_backend": false,
+    "new_storage_owner": false,
+    "business_logic_changed": false,
+    "market_core_modified": false,
+    "strategy_a_modified": false,
+    "aether_modified": false,
+    "consultation_first_changed": false,
+    "real_order": false,
+    "paper_only": true,
+    "next_if_pass": "40.6.289 post-boot truth only after Book/Ryzen verification"
   }
 }

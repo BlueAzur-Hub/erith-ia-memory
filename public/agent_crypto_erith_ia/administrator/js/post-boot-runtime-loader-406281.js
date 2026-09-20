@@ -1,11 +1,11 @@
-/* Agent-Crypto Administrator — 40.6.287 STORAGE OWNERSHIP AUDIT RESIDENCY
+/* Agent-Crypto Administrator — 40.6.288 VERIFIED LOCAL COPY RELIEF RESIDENCY
    Same application, staged residency.
    Heavy secondary runtimes wait until the consultation surface and Aether are resident.
    This prevents background Strategy/Tradus/Admin work from competing with Book consultation.
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.287";
+  const BUILD="40.6.288";
   const MEMORY_MODULES=Object.freeze([
     "./js/market-memory.js",
     "./js/analytical-memory.js",
@@ -66,7 +66,8 @@
     "./js/canonical-freeze.js",
     "./js/market-reading-depth.js",
     "./js/version-truth.js",
-    "./js/storage-ownership-audit-406287.js"
+    "./js/storage-ownership-audit-406287.js",
+    "./js/storage-relief-controlled-406288.js"
   ]);
 
   const state={started:false,done:false,reason:"",loaded:0,failed:[]};
