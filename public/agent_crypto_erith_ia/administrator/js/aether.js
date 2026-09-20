@@ -1364,6 +1364,8 @@ function aetherNewsMarketSemantic(){
         panel.hidden=false;
         if(open){
           manager.hide('aether-watch',false);
+          const nativeWindow=manager.getWindow?.('aether-watch');
+          if(nativeWindow && nativeWindow.floating!==true)manager.float('aether-watch',true);
           manager.minimize('aether-watch',false);
           manager.focus('aether-watch');
         }else{

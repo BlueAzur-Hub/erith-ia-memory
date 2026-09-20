@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": "Firefox terrain: validate 40.6.293 only. Dark Initialisation paint; Aether opens left with native five-button chrome; drag; native resize smaller/larger without losing the 16:9 stage or creating the 40.6.291 black plate; close/reopen; F5; reopen; geometry retained. Storage remains paused.",
-  "release_notes": "Restores the pre-40.6.284 Aether Window Manager contract without reverting Consultation First. Existing canonical js/aether-v2.js now preseeds the complete hidden Aether DOM structure before Window Manager init; heavy Aether data/runtime remains consultation-gated. Forced manager.float() from 40.6.290 operator open is removed. Generic admin-window-manager.js, aether.css and aether-v2.css remain unchanged from 40.6.273. Canonical entry starts the existing master-v2 image preload earlier and preserves a dark paint through runtime-shell document rewrite. No new versioned JS/CSS file.",
+  "release_notes": "Restores the pre-40.6.284 Aether Window Manager structural contract without reverting Consultation First. Existing canonical js/aether-v2.js preseeds the complete hidden Aether DOM structure before Window Manager init; heavy Aether data/runtime remains consultation-gated. Because the canonical Window Manager hide operation docks directFixed windows, operator-open conditionally restores floating mode only when Aether is actually docked, preserving the validated left/free-window behavior without re-detaching an already floating window. Generic admin-window-manager.js, aether.css and aether-v2.css remain unchanged from 40.6.273. Canonical entry starts the existing master-v2 image preload earlier and preserves a dark paint through runtime-shell document rewrite. No new versioned JS/CSS file.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1677,7 +1677,7 @@
     "root_cause_406284": "full Aether structural DOM no longer existed before Window Manager init after aether.js moved behind consultation-first",
     "incomplete_repair_406290": [
       "header-only preseed",
-      "forced manager.float on each operator open"
+      "unconditional float was compensating for a missing full pre-window structure"
     ],
     "rejected_builds": [
       "40.6.291",
@@ -1687,7 +1687,8 @@
       "full hidden Aether stage before Window Manager",
       "heavy aether.js remains consultation-gated",
       "idempotent runtime interaction binding",
-      "no forced float on open",
+      "operator-open restores floating mode only when canonical hide has docked Aether",
+      "generic Window Manager unchanged from 40.6.273 baseline",
       "entry image preload",
       "dark shell handoff"
     ],
