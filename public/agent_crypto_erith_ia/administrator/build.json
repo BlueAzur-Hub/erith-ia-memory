@@ -1,18 +1,18 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.290",
+  "build": "40.6.291",
   "engine": "38.15.11",
-  "release": "AETHER · NATIVE WINDOW RESTORE",
+  "release": "WINDOW MANAGER · GEOMETRY TRUTH REPAIR",
   "published": true,
-  "status": "aether_native_window_restore_406290",
-  "parent_build": "40.6.289",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.290",
-  "administrator_build": "40.6.290",
-  "build_label": "Build 40.6.290 · Administrator",
+  "status": "window_manager_geometry_truth_repair_406291",
+  "parent_build": "40.6.290",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.291",
+  "administrator_build": "40.6.291",
+  "build_label": "Build 40.6.291 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
-  "aether_modified": true,
+  "aether_modified": false,
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: open Aether and verify native five-button Window Manager chrome is present; drag Aether; close; reopen; drag again; hard reload; reopen and drag again. Storage work remains paused until this regression is PASS.",
-  "release_notes": "Permanent Aether native-window regression repair. 40.6.284 moved heavy aether.js behind consultation-first loading, while the canonical Window Manager still required #atlasAetherStatusPanel to exist before manager.init(); Aether therefore opened later in fallback mode without native move/minimize/dock/maximize/hide controls. 40.6.290 preseeds only the lightweight Aether shell before Window Manager init, keeps heavy Aether data/runtime lazy, makes existing-shell close binding idempotent, explicitly restores floating mode on operator open, and normalizes only the proven stale hidden+maximized Aether presentation signature. No new versioned JS file, no Market Core change, no Strategy/Oracle/Math business logic change.",
+  "terrain_pending": "Firefox terrain: Aether LIBRE -> resize smaller -> resize larger -> move to each viewport edge -> close/reopen -> hard reload -> reopen. Window must remain fully reachable and preserve the final geometry. Storage remains paused until PASS.",
+  "release_notes": "Window Manager geometry repair after 40.6.290 restored Aether native chrome. The generic directFixed owner no longer cancels geometryPolicy minima with inline min-width/min-height:0; native resize bounds now use the clamped window origin and reachable viewport. Pointer-up persistence uses the rendered post-resize width and height, reapplies the clamped geometry to the DOM, and stores that same geometry instead of resurrecting an older height. Hidden-state persistence now writes maximized/restore state coherently. No Aether-specific resize engine, no new timer/observer/storage owner, no Market Core/Oracle/Math/Strategy business change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_AETHER_NATIVE_WINDOW_406290_TERRAIN",
+    "status": "PAUSED_PENDING_WINDOW_GEOMETRY_406291_TERRAIN",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1619,6 +1619,36 @@
     "recurring_timer_added": false,
     "observer_added": false,
     "network_owner_added": false,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "window_manager_geometry_truth_repair_406291": {
+    "priority": "P0_REGRESSION_REPAIR",
+    "parent_build": "40.6.290",
+    "scope": "canonical Administrator Window Manager geometry only",
+    "symptoms": [
+      "native Aether resize can move the window upward/out of viewport",
+      "post-resize persisted height can reuse stale win.geometry height",
+      "directFixed inline min-width/min-height:0 overrides explicit Aether geometryPolicy",
+      "hidden/maximized state can be persisted incompletely"
+    ],
+    "repair": [
+      "respect geometryPolicy minWidth/minHeight for directFixed windows",
+      "bound native resize to remaining reachable viewport from clamped x/y",
+      "use real rendered post-resize width and height",
+      "reapply clamped geometry to DOM before persistence",
+      "persist one canonical x/y/width/height geometry",
+      "persist hidden/minimized/floating/maximized/restore state coherently"
+    ],
+    "aether_special_resize_engine": false,
+    "new_versioned_js_file": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "storage_owner_added": false,
+    "storage_schema_changed": false,
+    "market_core_modified": false,
+    "oracle_business_logic_modified": false,
+    "math_core_modified": false,
+    "strategy_a_modified": false,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }
