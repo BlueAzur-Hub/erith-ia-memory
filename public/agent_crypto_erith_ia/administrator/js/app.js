@@ -2397,17 +2397,8 @@
       }
       const x = 12;
       const y = Math.min(Math.max(12, sy), Math.max(12, vh - height - 12));
-      manager.applySnapshot({
-        windows: {
-          "aether-watch": {
-            floating: true,
-            minimized: false,
-            hidden: false,
-            maximized: false,
-            geometry: { x, y, width, height }
-          }
-        }
-      }, { persist: true, captureResult: false });
+      const applied = manager.setGeometry("aether-watch", { x, y, width, height }, { persist: true });
+      if (!applied) return;
       document.documentElement.dataset.aetherViewportContinuity406298 = "bounded-after-shrink";
     };
     const schedule = () => {
