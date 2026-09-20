@@ -1,11 +1,11 @@
-/* Agent-Crypto Administrator — 40.6.281 P0 TRANSFORMER BOOK PARSER WALL RELIEF
+/* Agent-Crypto Administrator — 40.6.283 P0 TRANSFORMER BOOK POST-BOOT BACKPRESSURE
    Same application, staged residency.
    Heavy secondary runtimes leave the parser critical path and are loaded in original order
    after the first market-ready mark, with a bounded fallback after startup livecheck.
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.281";
+  const BUILD="40.6.283";
   const MEMORY_MODULES=Object.freeze([
     "./js/market-memory.js",
     "./js/analytical-memory.js",
@@ -69,9 +69,13 @@
   ]);
 
   const state={started:false,done:false,reason:"",loaded:0,failed:[]};
-  const yieldMain=()=>new Promise(resolve=>{
-    if(typeof requestIdleCallback==="function") requestIdleCallback(()=>resolve(),{timeout:500});
-    else requestAnimationFrame(()=>resolve());
+  const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const yieldMain=(timeout=2000)=>new Promise(resolve=>{
+    if(typeof requestIdleCallback==="function"){
+      requestIdleCallback(()=>requestAnimationFrame(()=>resolve()),{timeout});
+    }else{
+      setTimeout(()=>requestAnimationFrame(()=>resolve()),Math.min(timeout,750));
+    }
   });
   const loadOne=src=>new Promise(resolve=>{
     const existing=[...document.scripts].find(s=>s.dataset.postBootSrc===src);
@@ -86,12 +90,15 @@
   });
 
   async function loadGroup(list,group){
+    const pauseMs=group==="memory"?180:700;
+    const idleTimeout=group==="memory"?1200:3000;
     for(const src of list){
-      await yieldMain();
+      await sleep(pauseMs);
+      await yieldMain(idleTimeout);
       const ok=await loadOne(src);
       state.loaded+=ok?1:0;
       if(!ok) state.failed.push(src);
-      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module",{group,src,ok});}catch(_){}
+      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module",{group,src,ok,loaded:state.loaded});}catch(_){}
     }
   }
 
@@ -101,6 +108,8 @@
     try{globalThis.AgentCryptoBootProbe?.markOnce?.("postboot-runtime-start",{reason:state.reason});}catch(_){}
     await loadGroup(MEMORY_MODULES,"memory");
     try{window.dispatchEvent(new CustomEvent("agent-crypto:late-memory-ready",{detail:{build:BUILD}}));}catch(_){}
+    await sleep(2500);
+    await yieldMain(4000);
     await loadGroup(SECONDARY_MODULES,"secondary");
     state.done=true;
     try{globalThis.AgentCryptoBootProbe?.markOnce?.("postboot-runtime-ready",{loaded:state.loaded,failed:state.failed.length});}catch(_){}
@@ -114,13 +123,13 @@
   }
   function onMark(event){
     const name=String(event?.detail?.name||"");
-    if(name==="market-ready"){window.removeEventListener("agent-crypto:boot-mark",onMark);void start("market-ready");}
+    if(name==="market-ready"){window.removeEventListener("agent-crypto:boot-mark",onMark);setTimeout(()=>{if(!state.started)void start("market-ready+1500ms");},1500);}
     else if(name==="livecheck-start"){
       setTimeout(()=>{if(!state.started)void start("livecheck-fallback-15s");},15000);
     }
   }
 
-  if(seen("market-ready")) void start("market-ready-already");
+  if(seen("market-ready")) setTimeout(()=>{if(!state.started)void start("market-ready-already+1500ms");},1500);
   else {
     window.addEventListener("agent-crypto:boot-mark",onMark);
     if(seen("livecheck-start")) setTimeout(()=>{if(!state.started)void start("livecheck-already-fallback-15s");},15000);
@@ -130,7 +139,7 @@
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"IDLE_PACED"}),
     same_application:true,
     book_lite:false,
     parser_critical_path_relieved:true,
