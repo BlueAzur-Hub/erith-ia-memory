@@ -4610,6 +4610,7 @@
       });
       marks.push(row);
       try { performance.mark(`agent-crypto:${label}`); } catch (_) {}
+      try { window.dispatchEvent(new CustomEvent("agent-crypto:boot-mark", { detail: { name: label, t_ms: row.t_ms, detail: { ...row.detail } } })); } catch (_) {}
       queueHumanReportRender();
       return row;
     }
@@ -4650,7 +4651,9 @@
         ["graph-ready","Graphique",false],
         ["detail-ready","Lecture technique",false],
         ["oracle-ready","Oracle",true],
-        ["administrator-window-manager-ready","Window Manager",true]
+        ["administrator-window-manager-ready","Window Manager",true],
+        ["postboot-runtime-start","Runtimes secondaires",false],
+        ["postboot-runtime-ready","Runtimes secondaires prêts",false]
       ];
       const required = stages.filter(row => row[2]).map(row => row[0]);
       const complete = required.every(name => Number.isFinite(Number(first[name])));
@@ -4739,18 +4742,8 @@
   <script>globalThis.AgentCryptoBootProbe?.markOnce?.("chartjs-ready", { ready_state: document.readyState });</script>
   <script src="./app.js?v=40.6.275"></script>
   <script>globalThis.AgentCryptoBootProbe?.markOnce?.("core-evaluated", { ready_state: document.readyState });</script>
-  <script src="./js/market-memory.js"></script>
-  <script src="./js/analytical-memory.js"></script>
-  <script src="./js/market-memory-collector.js"></script>
-  <script src="./js/shared-memory-collector.js"></script>
-  <script src="./js/shared-memory-reader-consistency.js"></script>
-  <script src="./js/shared-memory-gap-aware-color.js"></script>
-  <script src="./js/decision-board.js"></script>
-  <script src="./js/multi-collector-concordance.js"></script>
-  <script src="./js/aether.js"></script>
-  <script src="./js/aether-trust-return.js"></script>
-  <script src="./js/aether-operator-bridge.js"></script>
-  <script id="adminVisualAssets">
+<script src="./js/aether.js"></script>
+<script id="adminVisualAssets">
 (() => {
   "use strict";
   /* 40.2.69 — Technical Reading single-image authority support.
@@ -4894,33 +4887,10 @@
   <script src="./js/views/presentation-boundaries.js"></script>
   <script src="./js/views/view-lifecycle.js"></script>
   <script src="./js/app.js?v=40.6.275"></script>
-  <script src="./js/aether-role-visibility.js"></script>
-  <script src="./js/strategy-a-replay.js"></script>
-  <script src="./js/strategy-a-canonical-spec.js"></script>
-  <script src="./js/strategy-a-replay-acceptance.js?v=40.6.273"></script>
-  <script src="./js/strategy-a-paper-lifecycle.js"></script>
-  <script src="./js/strategy-a-auto-lifecycle-bridge.js"></script>
-  <script src="./js/strategy-a-after-cost-metrics.js"></script>\n  <script src="./js/strategy-a-durable-evidence-store.js"></script>
-  <script src="./js/strategy-a-safety-certification.js"></script>
-  <script src="./js/strategy-a-evidence-dossier.js"></script>
-  <script src="./js/strategy-a-paper-after-cost-acceptance.js"></script>
-  <script src="./js/tradus-shadow-adapter.js"></script>
-  <script src="./js/tradus-shadow-ledger.js"></script>
-  <script defer src="./js/tradus-paper-shadow.js"></script>
-  <script defer src="./js/tradus-paper-observability.js"></script>
-  <script defer src="./js/aether-tradus-bridge.js"></script>
-  <script defer src="./js/tradus-data-ui-decoupling.js"></script>
-  <script src="./js/atlas-heartbeat-rearm.js"></script>
-  <script src="./js/markets-domain-contract.js"></script>
-  <script src="./js/views/system-demand-residency.js"></script>
-  <script src="./js/views/secondary-domain-demand-residency.js"></script>
-  <script src="./js/views/private-source-demand-loader.js"></script>
-  <script src="./js/views/atlas-family-demand-residency.js"></script>
-  <script src="./js/views/analysis-aux-demand-loader.js"></script>
-  <script src="./js/layout-repair.js"></script>
-  <!-- 40.4.64 — read-only diagnostics are no longer parser-blocking residents.
+  <script src="./js/post-boot-runtime-loader-406281.js?v=40.6.281"></script>
+\n
+<!-- 40.4.64 — read-only diagnostics are no longer parser-blocking residents.
        residency-audit.js + architecture-freeze.js are loaded only on explicit operator request. -->
-  <script src="./js/views/peripheral-diagnostics-loader.js"></script>
 <script id="atlasTechnicalStaticThemeController">
 (() => {
   "use strict";
@@ -5080,29 +5050,6 @@
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 })();
 </script>
-
-  <script src="./js/market-stack.js"></script>
-  <script src="./js/parallel-markets.js"></script>
-  <script src="./js/admin-theme-glass.js"></script>
-  <script src="./js/event-intelligence.js"></script>
-  <script src="./js/event-reaction-memory.js"></script>
-  <script src="./js/event-reaction-ledger.js"></script>
-  <script src="./js/event-semantic-enrichment.js"></script>
-  <script src="./js/historical-analog-engine-405008.js"></script>
-  <script src="./js/market-regime-context.js"></script>
-  <script src="./js/event-memory.js"></script>
-  <script src="./js/historical-analog-engine-405015.js"></script>
-  <script src="./js/regime-qualified-analogs.js"></script>
-  <script src="./js/horizon-calibration.js"></script>
-  <script src="./js/capital-survival.js"></script>
-  <script src="./js/decision-intelligence-acceptance.js"></script>
-  <script src="./js/decision-explainability.js"></script>
-  <script src="./js/decision-intelligence-current-truth.js"></script>
-  <script src="./js/cross-market-owner-map.js"></script>
-  <script src="./js/canonical-freeze.js"></script>
-  
-  <script src="./js/market-reading-depth.js"></script>
-  <script src="./js/version-truth.js"></script>
 </body>
 </html>
 
