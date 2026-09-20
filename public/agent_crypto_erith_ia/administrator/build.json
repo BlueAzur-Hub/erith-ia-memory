@@ -1,18 +1,18 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.292",
+  "build": "40.6.293",
   "engine": "38.15.11",
-  "release": "ROLLBACK · AETHER WINDOW GEOMETRY BASELINE",
+  "release": "AETHER · CONTRACT RESTORE",
   "published": true,
-  "status": "rollback_aether_window_geometry_baseline_406292",
-  "parent_build": "40.6.291",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.292",
-  "administrator_build": "40.6.292",
-  "build_label": "Build 40.6.292 · Administrator",
+  "status": "aether_contract_restore_406293",
+  "parent_build": "40.6.292",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.293",
+  "administrator_build": "40.6.293",
+  "build_label": "Build 40.6.293 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
-  "aether_modified": false,
+  "aether_modified": true,
   "atlas_current_modified": false,
   "oracle_modified": false,
   "lecture_technique_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: confirm 40.6.292 restores 40.6.290 Aether behavior before any further resize work. Verify loader/preloader appearance, Aether open/move/close/reopen, and absence of the 40.6.291 black resize plate. Storage remains paused.",
-  "release_notes": "Emergency rollback of 40.6.291 Window Manager geometry changes. admin-window-manager.js is restored byte-for-byte from 40.6.290; runtime-shell behavior is restored from 40.6.290 with only a 40.6.292 cache-bust on the manager asset. index.html and boot.js remain untouched. No Market Core, Strategy, Oracle, Math, Storage schema, timer, observer or network-owner change.",
+  "terrain_pending": "Firefox terrain: validate 40.6.293 only. Dark Initialisation paint; Aether opens left with native five-button chrome; drag; native resize smaller/larger without losing the 16:9 stage or creating the 40.6.291 black plate; close/reopen; F5; reopen; geometry retained. Storage remains paused.",
+  "release_notes": "Restores the pre-40.6.284 Aether Window Manager contract without reverting Consultation First. Existing canonical js/aether-v2.js now preseeds the complete hidden Aether DOM structure before Window Manager init; heavy Aether data/runtime remains consultation-gated. Forced manager.float() from 40.6.290 operator open is removed. Generic admin-window-manager.js, aether.css and aether-v2.css remain unchanged from 40.6.273. Canonical entry starts the existing master-v2 image preload earlier and preserves a dark paint through runtime-shell document rewrite. No new versioned JS/CSS file.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_406292_ROLLBACK_TERRAIN",
+    "status": "PAUSED_PENDING_AETHER_CONTRACT_RESTORE_406293",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1662,6 +1662,45 @@
     "runtime_shell_semantics_restored_to_406290": true,
     "only_runtime_shell_difference": "admin-window-manager cache-bust v=40.6.292",
     "storage_paused": true,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_contract_restore_406293": {
+    "priority": "P0_FUNCTIONAL_RESTORATION",
+    "historical_contracts": [
+      "40.6.40 native window registration",
+      "40.6.52 backplate preload",
+      "40.6.75 visual lock",
+      "40.6.76 native position ownership",
+      "40.6.83 canonical V2 visual owner",
+      "40.6.85 left boot/operator geometry"
+    ],
+    "root_cause_406284": "full Aether structural DOM no longer existed before Window Manager init after aether.js moved behind consultation-first",
+    "incomplete_repair_406290": [
+      "header-only preseed",
+      "forced manager.float on each operator open"
+    ],
+    "rejected_builds": [
+      "40.6.291",
+      "40.6.292 as operator solution"
+    ],
+    "restoration": [
+      "full hidden Aether stage before Window Manager",
+      "heavy aether.js remains consultation-gated",
+      "idempotent runtime interaction binding",
+      "no forced float on open",
+      "entry image preload",
+      "dark shell handoff"
+    ],
+    "generic_window_manager_modified": false,
+    "aether_css_modified": false,
+    "aether_v2_css_modified": false,
+    "new_versioned_js_file": false,
+    "storage_changed": false,
+    "market_core_modified": false,
+    "strategy_modified": false,
+    "recurring_timer_added": false,
+    "observer_added": false,
+    "network_owner_added": false,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }

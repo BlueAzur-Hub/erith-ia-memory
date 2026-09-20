@@ -2233,15 +2233,18 @@
   // remains lazy and owns all data, paint, weather/news and operator content.
   function ensureAetherNativeShellBeforeWindowManager() {
     let panel = document.getElementById("atlasAetherStatusPanel");
-    if (panel) return panel;
-    panel = document.createElement("section");
-    panel.id = "atlasAetherStatusPanel";
-    panel.hidden = true;
-    panel.dataset.aetherOperatorOpen = "0";
-    panel.setAttribute("aria-label", "Synthèse Aether");
-    panel.innerHTML = `<div class="atlas-aether-panel-head"><b>AETHER · ATTENTION WATCH</b><button type="button" data-aether-close aria-label="Fermer Aether">×</button></div>`;
-    document.body.appendChild(panel);
-    return panel;
+    try {
+      const ensure = globalThis.ErithAetherV2Canonical?.ensureStructure;
+      if (typeof ensure === "function") panel = ensure() || panel;
+    } catch (error) {
+      console.error("[Aether structural preseed]", error);
+    }
+    const stage = panel?.querySelector?.("[data-aether-component-stage-406046]") || null;
+    const head = panel?.querySelector?.(".atlas-aether-panel-head") || null;
+    const ready = panel instanceof HTMLElement && stage instanceof HTMLElement && head instanceof HTMLElement;
+    document.documentElement.dataset.aetherNativeStructure = ready ? "full" : "missing";
+    if (!ready) console.error("[Aether] full native structure missing before Window Manager init.");
+    return ready ? panel : null;
   }
 
   function repairAetherStaleNativeWindowState() {

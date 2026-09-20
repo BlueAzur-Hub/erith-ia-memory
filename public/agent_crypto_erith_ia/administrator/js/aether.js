@@ -1220,10 +1220,21 @@ function aetherNewsMarketSemantic(){
     aetherSet(stage,'events_count',`${aetherTimelineState.entries.length}/${aetherTimelineState.max}`);
     stage.dataset.attention=vm.core.tone;
   }
+  function aetherBindComponentInteractions(stage,panel){
+    if(!stage||stage.dataset.aetherInteractionsBound==="1")return stage;
+    stage.dataset.aetherInteractionsBound="1";
+    stage.querySelector('[data-aether46-open="history"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('history',panel));
+    stage.querySelector('[data-aether46-open="details"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('details',panel));
+    const events=stage.querySelector('[data-aether-card-406046="events"]');
+    const openEvents=()=>void aetherWorkbenchOpen('events',panel);
+    events?.addEventListener('click',openEvents);
+    events?.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openEvents();}});
+    return stage;
+  }
   function aetherComponentEnsure(panel){
     if(!panel)return null;
     const existing=panel.querySelector('[data-aether-component-stage-406046]');
-    if(existing)return existing;
+    if(existing)return aetherBindComponentInteractions(existing,panel);
 
     // 40.6.49 keeps the 40.6.46 CLEAN REBUILD runtime: old Aether presentation is not hidden under the new one;
     // it is removed from this runtime panel. Data owners/functions remain untouched.
@@ -1306,13 +1317,7 @@ function aetherNewsMarketSemantic(){
       <nav class="aether46-actions" aria-label="Lectures Aether"><button type="button" data-aether46-open="history">Historique</button><button type="button" data-aether46-open="details">Détails</button></nav>`;
 
     panel.appendChild(stage);
-    stage.querySelector('[data-aether46-open="history"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('history',panel));
-    stage.querySelector('[data-aether46-open="details"]')?.addEventListener('click',()=>void aetherWorkbenchOpen('details',panel));
-    const events=stage.querySelector('[data-aether-card-406046="events"]');
-    const openEvents=()=>void aetherWorkbenchOpen('events',panel);
-    events?.addEventListener('click',openEvents);
-    events?.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openEvents();}});
-    return stage;
+    return aetherBindComponentInteractions(stage,panel);
   }
 
   function aetherBindPanelClose(panel){
@@ -1359,7 +1364,6 @@ function aetherNewsMarketSemantic(){
         panel.hidden=false;
         if(open){
           manager.hide('aether-watch',false);
-          manager.float('aether-watch',true);
           manager.minimize('aether-watch',false);
           manager.focus('aether-watch');
         }else{
