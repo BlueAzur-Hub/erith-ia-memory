@@ -2263,13 +2263,13 @@
     }
   }
 
-  // 40.6.297 — F11 / viewport continuity restored from the historical Aether
+  // 40.6.298 — F11 / viewport continuity restored from the historical Aether
   // contract. Normal operator geometry remains owned and persisted by the
   // canonical Window Manager. Significant viewport expansion gets a temporary
   // non-persistent 16:9 fit; shrink/exit restores the captured normal geometry.
   // No direct style ownership is introduced here.
-  function installAetherViewportContinuity406297(manager) {
-    if (!manager?.getWindow || !manager?.applySnapshot) return false;
+  function installAetherViewportContinuity406298(manager) {
+    if (!manager?.getWindow || !manager?.setGeometry) return false;
     let viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     let viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     let frame = 0;
@@ -2330,18 +2330,9 @@
     const applyGeometry = (win,geometry,persist,reason) => {
       const safe = finiteGeometry(geometry);
       if (!safe || !win || win.maximized || win.minimized) return false;
-      manager.applySnapshot({
-        windows: {
-          "aether-watch": {
-            floating: true,
-            minimized: false,
-            hidden: !!win.hidden,
-            maximized: false,
-            geometry: safe
-          }
-        }
-      }, { persist: !!persist, captureResult: false });
-      document.documentElement.dataset.aetherViewportContinuity406297 = reason;
+      const applied = manager.setGeometry("aether-watch", safe, { persist: !!persist });
+      if (!applied) return false;
+      document.documentElement.dataset.aetherViewportContinuity406298 = reason;
       return true;
     };
     const reconcile = () => {
@@ -2365,7 +2356,7 @@
       if (grew) {
         if (win.hidden) {
           expandedFitPending = true;
-          document.documentElement.dataset.aetherViewportContinuity406297 = "expanded-pending-open";
+          document.documentElement.dataset.aetherViewportContinuity406298 = "expanded-pending-open";
           return;
         }
         if (!expandedFitActive) preExpandedGeometry = { ...saved };
@@ -2417,7 +2408,7 @@
           }
         }
       }, { persist: true, captureResult: false });
-      document.documentElement.dataset.aetherViewportContinuity406297 = "bounded-after-shrink";
+      document.documentElement.dataset.aetherViewportContinuity406298 = "bounded-after-shrink";
     };
     const schedule = () => {
       if (frame) return;
@@ -2441,9 +2432,9 @@
     };
     window.addEventListener("resize",schedule,{passive:true});
     document.addEventListener("click",openExpanded,true);
-    globalThis.ErithAetherViewportContinuity406297 = Object.freeze({
-      build: "40.6.297",
-      owner: "canonical-window-manager-api",
+    globalThis.ErithAetherViewportContinuity406298 = Object.freeze({
+      build: "40.6.298",
+      owner: "canonical-window-manager-geometry-api",
       event: "window.resize",
       coalescing: "requestAnimationFrame",
       historical_basis: ["40.6.75 responsive fit","40.6.76 native position lock","40.6.85 left boot"],
@@ -2531,7 +2522,7 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
-    installAetherViewportContinuity406297(manager);
+    installAetherViewportContinuity406298(manager);
 
     // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;
