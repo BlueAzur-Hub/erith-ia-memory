@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-19T23:12:23.828308+00:00",
+  "generated_at": "2026-09-20T01:15:51.900332+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,8 +11,8 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 5,
-    "critical_24h": 5,
+    "events_24h": 6,
+    "critical_24h": 6,
     "strong_24h": 0,
     "sources_ok": 15,
     "sources_total": 15,
@@ -21,8 +21,8 @@
     "decision": "Surveillance renforcée",
     "driver_coverage": {
       "macro_liquidity": {
-        "events_72h": 22,
-        "distinct_sources": 5
+        "events_72h": 21,
+        "distinct_sources": 4
       },
       "institutional_flows": {
         "events_72h": 2,
@@ -49,7 +49,7 @@
       "status": "ok",
       "fetched_count": 50,
       "qualified_count": 4,
-      "latency_ms": 269,
+      "latency_ms": 276,
       "error": null
     },
     {
@@ -59,8 +59,8 @@
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 2,
-      "latency_ms": 239,
+      "qualified_count": 3,
+      "latency_ms": 279,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 120,
+      "latency_ms": 132,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 2,
-      "latency_ms": 203,
+      "latency_ms": 297,
       "error": null
     },
     {
@@ -93,7 +93,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 21,
-      "latency_ms": 902,
+      "latency_ms": 455,
       "error": null
     },
     {
@@ -104,7 +104,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 29,
-      "latency_ms": 315,
+      "latency_ms": 208,
       "error": null
     },
     {
@@ -115,7 +115,7 @@
       "status": "ok",
       "fetched_count": 37,
       "qualified_count": 30,
-      "latency_ms": 93,
+      "latency_ms": 103,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 5,
-      "latency_ms": 580,
+      "latency_ms": 572,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 17,
-      "latency_ms": 133,
+      "latency_ms": 202,
       "error": null
     },
     {
@@ -148,7 +148,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 1,
-      "latency_ms": 135,
+      "latency_ms": 280,
       "error": null
     },
     {
@@ -158,8 +158,8 @@
       "url": "https://news.google.com/rss/search?q=bitcoin+crypto+r%C3%A9glementation+MiCA+SEC+CFTC+stablecoin+march%C3%A9s+when%3A7d&hl=fr&gl=FR&ceid=FR:fr",
       "status": "ok",
       "fetched_count": 8,
-      "qualified_count": 6,
-      "latency_ms": 280,
+      "qualified_count": 7,
+      "latency_ms": 287,
       "error": null
     },
     {
@@ -168,9 +168,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+ethereum+ETF+flux+entrants+sorties+institutionnels+when%3A7d&hl=fr&gl=FR&ceid=FR:fr",
       "status": "ok",
-      "fetched_count": 9,
-      "qualified_count": 9,
-      "latency_ms": 341,
+      "fetched_count": 8,
+      "qualified_count": 8,
+      "latency_ms": 354,
       "error": null
     },
     {
@@ -181,7 +181,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 252,
+      "latency_ms": 271,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 95,
+      "latency_ms": 276,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 8111,
+      "latency_ms": 8201,
       "error": null
     }
   ],
@@ -436,11 +436,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-18T15:06:31+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.250832+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.250832+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.712204+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.712204+00:00",
       "freshness": {
         "iso": "2026-09-18T15:06:31+00:00",
-        "hours": 32.1,
+        "hours": 34.15,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -638,11 +638,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-17T22:31:03+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.459062+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.459062+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.342554+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.342554+00:00",
       "freshness": {
         "iso": "2026-09-17T22:31:03+00:00",
-        "hours": 48.69,
+        "hours": 50.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -737,11 +737,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-16T20:31:03+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.493892+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.493892+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.372029+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.372029+00:00",
       "freshness": {
         "iso": "2026-09-16T20:31:03+00:00",
-        "hours": 74.69,
+        "hours": 76.74,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -941,11 +941,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-16T14:30:51+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.635910+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.635910+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.519090+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.519090+00:00",
       "freshness": {
         "iso": "2026-09-16T14:30:51+00:00",
-        "hours": 80.69,
+        "hours": 82.75,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1037,11 +1037,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-18T04:49:17+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.272673+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.272673+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.735107+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.735107+00:00",
       "freshness": {
         "iso": "2026-09-18T04:49:17+00:00",
-        "hours": 42.38,
+        "hours": 44.44,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1247,11 +1247,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-16T19:43:24+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.495562+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.495562+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.373642+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.373642+00:00",
       "freshness": {
         "iso": "2026-09-16T19:43:24+00:00",
-        "hours": 75.48,
+        "hours": 77.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1559,11 +1559,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T21:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.714817+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.714817+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.436625+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.436625+00:00",
       "freshness": {
         "iso": "2026-09-18T21:00:00+00:00",
-        "hours": 26.2,
+        "hours": 28.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2075,11 +2075,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.670872+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.670872+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.649958+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.649958+00:00",
       "freshness": {
         "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 32.2,
+        "hours": 34.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2174,11 +2174,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.672713+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.672713+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.651664+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.651664+00:00",
       "freshness": {
         "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 32.2,
+        "hours": 34.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2273,11 +2273,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T12:55:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.528007+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.528007+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.600136+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.600136+00:00",
       "freshness": {
         "iso": "2026-09-17T12:55:00+00:00",
-        "hours": 58.29,
+        "hours": 60.35,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2373,11 +2373,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-16T14:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.529842+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.529842+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.601926+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.601926+00:00",
       "freshness": {
         "iso": "2026-09-16T14:00:00+00:00",
-        "hours": 81.2,
+        "hours": 83.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2474,11 +2474,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-14T16:47:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.531559+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.531559+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.603766+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.603766+00:00",
       "freshness": {
         "iso": "2026-09-14T16:47:00+00:00",
-        "hours": 126.42,
+        "hours": 128.48,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2575,11 +2575,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T12:57:06+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.253420+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.253420+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.715021+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.715021+00:00",
       "freshness": {
         "iso": "2026-09-18T12:57:06+00:00",
-        "hours": 34.25,
+        "hours": 36.31,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2676,11 +2676,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T21:47:22+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.276212+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.276212+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.738789+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.738789+00:00",
       "freshness": {
         "iso": "2026-09-17T21:47:22+00:00",
-        "hours": 49.42,
+        "hours": 51.47,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3280,11 +3280,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T21:01:30+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.440538+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.440538+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.325391+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.325391+00:00",
       "freshness": {
         "iso": "2026-09-18T21:01:30+00:00",
-        "hours": 26.18,
+        "hours": 28.24,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3381,11 +3381,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T20:16:04+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.464367+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.464367+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.347888+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.347888+00:00",
       "freshness": {
         "iso": "2026-09-17T20:16:04+00:00",
-        "hours": 50.94,
+        "hours": 52.99,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3480,11 +3480,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T15:21:19+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.474832+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.474832+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.357651+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.357651+00:00",
       "freshness": {
         "iso": "2026-09-17T15:21:19+00:00",
-        "hours": 55.85,
+        "hours": 57.91,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3682,11 +3682,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T19:53:54+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.716798+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.716798+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.439462+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.439462+00:00",
       "freshness": {
         "iso": "2026-09-18T19:53:54+00:00",
-        "hours": 27.31,
+        "hours": 29.36,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3783,11 +3783,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-18T15:35:59+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.722975+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.722975+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.446675+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.446675+00:00",
       "freshness": {
         "iso": "2026-09-18T15:35:59+00:00",
-        "hours": 31.6,
+        "hours": 33.66,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3888,11 +3888,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T14:04:43+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.724570+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.724570+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.450045+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.450045+00:00",
       "freshness": {
         "iso": "2026-09-18T14:04:43+00:00",
-        "hours": 33.13,
+        "hours": 35.18,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3985,11 +3985,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T08:50:38+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.735727+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.735727+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.464487+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.464487+00:00",
       "freshness": {
         "iso": "2026-09-18T08:50:38+00:00",
-        "hours": 38.36,
+        "hours": 40.42,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4086,11 +4086,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T19:30:48+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.748894+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.748894+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.476988+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.476988+00:00",
       "freshness": {
         "iso": "2026-09-17T19:30:48+00:00",
-        "hours": 51.69,
+        "hours": 53.75,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4185,11 +4185,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T13:35:57+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.758507+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.758507+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.486417+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.486417+00:00",
       "freshness": {
         "iso": "2026-09-17T13:35:57+00:00",
-        "hours": 57.61,
+        "hours": 59.66,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4588,11 +4588,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-18T10:33:05+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.258672+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.258672+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.720518+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.720518+00:00",
       "freshness": {
         "iso": "2026-09-18T10:33:05+00:00",
-        "hours": 36.65,
+        "hours": 38.71,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4691,11 +4691,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-19T19:14:38+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.704386+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.704386+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.424295+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.424295+00:00",
       "freshness": {
         "iso": "2026-09-19T19:14:38+00:00",
-        "hours": 3.96,
+        "hours": 6.02,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4794,11 +4794,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-18T12:40:04+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.726359+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.726359+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.453489+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.453489+00:00",
       "freshness": {
         "iso": "2026-09-18T12:40:04+00:00",
-        "hours": 34.54,
+        "hours": 36.59,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5091,11 +5091,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T10:07:33+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.260158+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.260158+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.722258+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.722258+00:00",
       "freshness": {
         "iso": "2026-09-18T10:07:33+00:00",
-        "hours": 37.08,
+        "hours": 39.14,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5295,11 +5295,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-19T15:01:03+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.436780+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.436780+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.321955+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.321955+00:00",
       "freshness": {
         "iso": "2026-09-19T15:01:03+00:00",
-        "hours": 8.19,
+        "hours": 10.24,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5475,13 +5475,13 @@
       ]
     },
     {
-      "id": "feed_be10fd7047656fe7",
-      "event_id": "feed_be10fd7047656fe7",
-      "fingerprint": "be10fd7047656fe7",
+      "id": "feed_a84dc1dead941b53",
+      "event_id": "feed_a84dc1dead941b53",
+      "fingerprint": "a84dc1dead941b53",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
-      "body": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act CryptoTicker",
+      "headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
+      "body": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act cryptoticker.io",
       "source_name": "Google News FR · réglementation crypto",
       "source_url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE8yZUwwVlRrM2pwYjd3VmNFWkV4WUd2U25zUzdfWFozd0VtN0RjclI4V0tlZ05QbnNPZnJUODlYY0pjS21YU20zVjVvZ1F1SUc3MDF6c3J0NWZ2MkU2UUNzRVlTLTkxQWFZRDNQSWYyZ19VWWk2Nmc?oc=5",
       "source_host": "news.google.com",
@@ -5498,11 +5498,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T09:54:01+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.102887+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.102887+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.966522+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.966522+00:00",
       "freshness": {
         "iso": "2026-09-19T09:54:01+00:00",
-        "hours": 13.3,
+        "hours": 15.36,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5552,7 +5552,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "headline_original": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -5560,14 +5560,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "headline_fr": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "display_headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "display_language": "fr",
-      "headline_fr_display": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "headline_fr_display": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -5599,11 +5599,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-18T04:49:17+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.998791+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.998791+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.982730+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.982730+00:00",
       "freshness": {
         "iso": "2026-09-18T04:49:17+00:00",
-        "hours": 42.38,
+        "hours": 44.44,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5697,11 +5697,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-16T16:07:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.008232+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.008232+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.989843+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.989843+00:00",
       "freshness": {
         "iso": "2026-09-16T16:07:00+00:00",
-        "hours": 79.09,
+        "hours": 81.15,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6100,11 +6100,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-16T21:46:03+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.491113+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.491113+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.369467+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.369467+00:00",
       "freshness": {
         "iso": "2026-09-16T21:46:03+00:00",
-        "hours": 73.44,
+        "hours": 75.49,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6201,11 +6201,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T16:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.240255+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.240255+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.700481+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.700481+00:00",
       "freshness": {
         "iso": "2026-09-19T16:00:00+00:00",
-        "hours": 7.2,
+        "hours": 9.26,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -6300,11 +6300,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T15:16:37+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.249435+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.249435+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.710357+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.710357+00:00",
       "freshness": {
         "iso": "2026-09-18T15:16:37+00:00",
-        "hours": 31.93,
+        "hours": 33.99,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6403,11 +6403,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-18T09:49:51+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.261770+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.261770+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.723880+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.723880+00:00",
       "freshness": {
         "iso": "2026-09-18T09:49:51+00:00",
-        "hours": 37.37,
+        "hours": 39.43,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6507,11 +6507,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-17T18:40:38+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.278787+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.278787+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.741497+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.741497+00:00",
       "freshness": {
         "iso": "2026-09-17T18:40:38+00:00",
-        "hours": 52.53,
+        "hours": 54.58,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7431,11 +7431,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T17:01:03+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.433010+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.433010+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.318401+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.318401+00:00",
       "freshness": {
         "iso": "2026-09-19T17:01:03+00:00",
-        "hours": 6.19,
+        "hours": 8.24,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -7531,11 +7531,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T16:08:13+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.448783+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.448783+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.332640+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.332640+00:00",
       "freshness": {
         "iso": "2026-09-18T16:08:13+00:00",
-        "hours": 31.07,
+        "hours": 33.13,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7634,11 +7634,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-17T17:01:03+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.471314+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.471314+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.354130+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.354130+00:00",
       "freshness": {
         "iso": "2026-09-17T17:01:03+00:00",
-        "hours": 54.19,
+        "hours": 56.24,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7738,11 +7738,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-17T14:52:03+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.479848+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.479848+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.359288+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.359288+00:00",
       "freshness": {
         "iso": "2026-09-17T14:52:03+00:00",
-        "hours": 56.34,
+        "hours": 58.39,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7839,11 +7839,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-17T12:13:20+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.486000+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.486000+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.364414+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.364414+00:00",
       "freshness": {
         "iso": "2026-09-17T12:13:20+00:00",
-        "hours": 58.98,
+        "hours": 61.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7942,11 +7942,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-17T10:24:21+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.489631+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.489631+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.367771+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.367771+00:00",
       "freshness": {
         "iso": "2026-09-17T10:24:21+00:00",
-        "hours": 60.8,
+        "hours": 62.86,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8348,11 +8348,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-17T17:13:15+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.996956+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.996956+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.981014+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.981014+00:00",
       "freshness": {
         "iso": "2026-09-17T17:13:15+00:00",
-        "hours": 53.98,
+        "hours": 56.04,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8445,11 +8445,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-17T14:50:58+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.101523+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.101523+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.963282+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.963282+00:00",
       "freshness": {
         "iso": "2026-09-17T14:50:58+00:00",
-        "hours": 56.36,
+        "hours": 58.41,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8517,13 +8517,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_c33e8236d842a241",
-      "event_id": "feed_c33e8236d842a241",
-      "fingerprint": "c33e8236d842a241",
+      "id": "feed_268e1d4644ca04e6",
+      "event_id": "feed_268e1d4644ca04e6",
+      "fingerprint": "268e1d4644ca04e6",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - interactivecrypto.com",
-      "body": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels interactivecrypto.com",
+      "headline": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - InteractiveCrypto",
+      "body": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels InteractiveCrypto",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPV2hSQlBPWi13ZFhCSWY1SnhFWHI1UW1RUkhQTE5qdVdseUhIeW03SFZyRmdmazZuVTRfWVhaUmIwQWFlTDZnT0dkNGlVaUViYXgxUGJuQ3o1amNMS1pwREo0NE9lRUk2QW9CUFhxdlJGNFZnUS1hZG16bVpfUG5URXJCRUhKemo5Ty1DUUQzMFhVdmxtRl96Zi1fakQ3VEpINUg4RWo3T1Fzc015MHl1TVZwZ2g?oc=5",
       "source_host": "news.google.com",
@@ -8540,11 +8540,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-15T00:08:10+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.009901+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.009901+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.991406+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.991406+00:00",
       "freshness": {
         "iso": "2026-09-15T00:08:10+00:00",
-        "hours": 119.07,
+        "hours": 121.13,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8593,7 +8593,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - interactivecrypto.com",
+      "headline_original": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - InteractiveCrypto",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -8601,14 +8601,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - interactivecrypto.com",
+      "headline_fr": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - InteractiveCrypto",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - interactivecrypto.com",
+      "display_headline": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - InteractiveCrypto",
       "display_language": "fr",
-      "headline_fr_display": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - interactivecrypto.com",
+      "headline_fr_display": "Bitcoin en tension: vote au Sénat et Fed bouleversent les flux institutionnels - InteractiveCrypto",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -8737,11 +8737,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T17:55:57+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.720074+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.720074+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.443450+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.443450+00:00",
       "freshness": {
         "iso": "2026-09-18T17:55:57+00:00",
-        "hours": 29.27,
+        "hours": 31.33,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8839,11 +8839,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T16:04:22+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.721503+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.721503+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.444900+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.444900+00:00",
       "freshness": {
         "iso": "2026-09-18T16:04:22+00:00",
-        "hours": 31.13,
+        "hours": 33.19,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8942,11 +8942,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-17T16:22:23+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.754736+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.754736+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.482574+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.482574+00:00",
       "freshness": {
         "iso": "2026-09-17T16:22:23+00:00",
-        "hours": 54.83,
+        "hours": 56.89,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9530,6 +9530,105 @@
       ]
     },
     {
+      "id": "feed_5e6abde3a786e450",
+      "event_id": "feed_5e6abde3a786e450",
+      "fingerprint": "5e6abde3a786e450",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Cultural treasures are being destroyed by war, and people want justice",
+      "body": "A cauldron of conflicts is bubbling across the world, with cultural monuments being destroyed. These people are fighting against it.",
+      "source_name": "BBC World",
+      "source_url": "https://www.bbc.co.uk/news/articles/cvgy1q2k2z0o?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 1,
+      "source_names": [
+        "BBC World"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/cvgy1q2k2z0o?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-19T23:18:18+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.552920+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.552920+00:00",
+      "freshness": {
+        "iso": "2026-09-19T23:18:18+00:00",
+        "hours": 1.96,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 74,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 86,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 9,
+      "matched_topics": [
+        "regulation",
+        "geopolitics"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Cultural treasures are being destroyed by war, and people want justice",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Cultural treasures are being destroyed by war, and people want justice",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_783feee353a4980e",
       "event_id": "feed_783feee353a4980e",
       "fingerprint": "783feee353a4980e",
@@ -10036,11 +10135,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:16:37+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.099737+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.099737+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.961578+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.961578+00:00",
       "freshness": {
         "iso": "2026-09-18T15:16:37+00:00",
-        "hours": 31.93,
+        "hours": 33.99,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10236,11 +10335,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-18T06:52:23+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.265550+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.265550+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.727903+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.727903+00:00",
       "freshness": {
         "iso": "2026-09-18T06:52:23+00:00",
-        "hours": 40.33,
+        "hours": 42.39,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10342,11 +10441,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-18T09:01:55+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.457374+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.457374+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.340887+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.340887+00:00",
       "freshness": {
         "iso": "2026-09-18T09:01:55+00:00",
-        "hours": 38.17,
+        "hours": 40.23,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10424,13 +10523,13 @@
       ]
     },
     {
-      "id": "feed_90366d1de24adf3b",
-      "event_id": "feed_90366d1de24adf3b",
-      "fingerprint": "90366d1de24adf3b",
+      "id": "feed_d1ccf130ac88ce21",
+      "event_id": "feed_d1ccf130ac88ce21",
+      "fingerprint": "d1ccf130ac88ce21",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
-      "body": "CLARITY Act rejeté : ce que changent les règles CFTC CryptoTicker",
+      "headline": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
+      "body": "CLARITY Act rejeté : ce que changent les règles CFTC cryptoticker.io",
       "source_name": "Google News FR · réglementation crypto",
       "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQNW9xLU9oVDhGQmYtbDZRQ09mQTktcHdhaE1rdVktN0RCY1FUbG5QUk5KMHJ2OVAybTRGek9tZVdwc1RmSG5SazFxOEhvSGI0akwxOFJ0bHRXSWFJUlZabkplWk9BSU5IS0hCTXNkbTB4Z1Fyc25vT3RFZ2U0aEJ6N0JLazdYbGhw?oc=5",
       "source_host": "news.google.com",
@@ -10447,11 +10546,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T21:26:06+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.096325+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.096325+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.958176+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.958176+00:00",
       "freshness": {
         "iso": "2026-09-18T21:26:06+00:00",
-        "hours": 25.77,
+        "hours": 27.83,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10495,7 +10594,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "headline_original": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -10503,14 +10602,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "headline_fr": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "display_headline": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "display_language": "fr",
-      "headline_fr_display": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "headline_fr_display": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -10542,11 +10641,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-18T01:33:54+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.745233+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.745233+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.473608+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.473608+00:00",
       "freshness": {
         "iso": "2026-09-18T01:33:54+00:00",
-        "hours": 45.64,
+        "hours": 47.7,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10850,11 +10949,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T13:08:32+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.760055+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.760055+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.685005+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.685005+00:00",
       "freshness": {
         "iso": "2026-09-17T13:08:32+00:00",
-        "hours": 58.06,
+        "hours": 60.12,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11142,11 +11241,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T12:34:50+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.453623+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.453623+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.337142+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.337142+00:00",
       "freshness": {
         "iso": "2026-09-18T12:34:50+00:00",
-        "hours": 34.62,
+        "hours": 36.68,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11240,12 +11339,12 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-17T23:49:23+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.747157+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.747157+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.475354+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.475354+00:00",
       "freshness": {
         "iso": "2026-09-17T23:49:23+00:00",
-        "hours": 47.38,
-        "label": "Récente · moins de 48 h",
+        "hours": 49.44,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -11937,11 +12036,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-18T08:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.107755+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.107755+00:00",
+      "first_seen_at": "2026-09-20T01:15:44.066241+00:00",
+      "last_seen_at": "2026-09-20T01:15:44.066241+00:00",
       "freshness": {
         "iso": "2026-09-18T08:00:00+00:00",
-        "hours": 39.2,
+        "hours": 41.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12035,11 +12134,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-16T18:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.674290+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.674290+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.653228+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.653228+00:00",
       "freshness": {
         "iso": "2026-09-16T18:00:00+00:00",
-        "hours": 77.2,
+        "hours": 79.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12133,11 +12232,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-16T18:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:15.675936+00:00",
-      "last_seen_at": "2026-09-19T23:12:15.675936+00:00",
+      "first_seen_at": "2026-09-20T01:15:43.655041+00:00",
+      "last_seen_at": "2026-09-20T01:15:43.655041+00:00",
       "freshness": {
         "iso": "2026-09-16T18:00:00+00:00",
-        "hours": 77.2,
+        "hours": 79.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12196,104 +12295,6 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_7b1485c15515aa4b",
-      "event_id": "feed_7b1485c15515aa4b",
-      "fingerprint": "7b1485c15515aa4b",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "ECB wage tracker at 2.7% in H1 2027, pointing to a modest uptick in negotiated wage growth",
-      "body": "",
-      "source_name": "Banque centrale européenne",
-      "source_url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260916~7bc58ebef4.en.html",
-      "source_host": "ecb.europa.eu",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "Banque centrale européenne"
-      ],
-      "source_urls": [
-        "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260916~7bc58ebef4.en.html"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "macro",
-      "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-09-16T08:00:00+00:00",
-      "first_seen_at": "2026-09-19T23:12:16.110197+00:00",
-      "last_seen_at": "2026-09-19T23:12:16.110197+00:00",
-      "freshness": {
-        "iso": "2026-09-16T08:00:00+00:00",
-        "hours": 87.2,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 80,
-        "level": "Fort"
-      },
-      "direction": "impact de marché large, sens à confirmer",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 7,
-      "matched_topics": [
-        "macro"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "ECB wage tracker at 2.7% in H1 2027, pointing to a modest uptick in negotiated wage growth",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] ECB wage tracker at 2.7% in H1 2027, pointing to a modest uptick in negotiated wage growth",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
