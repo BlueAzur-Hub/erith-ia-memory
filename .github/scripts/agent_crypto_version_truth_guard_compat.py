@@ -84,7 +84,7 @@ def main() -> int:
         'document.write(shell);',
     ), "index.html")
     require_regex(index, (
-        ('const truth = await canonicalIdentity();', r'const\s+truth\s*=\s*await\s+canonicalIdentity\(\)\s*;'),
+        ('canonical identity awaited', r'(?:const\s+truth\s*=\s*await\s+canonicalIdentity\(\)\s*;|const\s*\[\s*truth\s*,\s*rawShell\s*\]\s*=\s*await\s+Promise\.all\(\s*\[\s*canonicalIdentity\(\)\s*,\s*fetchShell\(\)\s*\]\s*\)\s*;)'),
         ('source: "canonical-build.json"', r'source\s*:\s*["\']canonical-build\.json["\']'),
         ('agent-crypto-version-owner", "canonical-entry"', r'["\']agent-crypto-version-owner["\']\s*,\s*["\']canonical-entry["\']'),
         ('globalThis.AgentCryptoBootTruth = truth;', r'globalThis\.AgentCryptoBootTruth\s*=\s*truth\s*;'),

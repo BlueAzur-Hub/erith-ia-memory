@@ -1,11 +1,11 @@
-/* Agent-Crypto Administrator — 40.6.283 P0 TRANSFORMER BOOK POST-BOOT BACKPRESSURE
+/* Agent-Crypto Administrator — 40.6.284 P0 BOOK CONSULTATION FIRST
    Same application, staged residency.
-   Heavy secondary runtimes leave the parser critical path and are loaded in original order
-   after the first market-ready mark, with a bounded fallback after startup livecheck.
+   Heavy secondary runtimes wait until the consultation surface and Aether are resident.
+   This prevents background Strategy/Tradus/Admin work from competing with Book consultation.
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.283";
+  const BUILD="40.6.284";
   const MEMORY_MODULES=Object.freeze([
     "./js/market-memory.js",
     "./js/analytical-memory.js",
@@ -102,7 +102,7 @@
     }
   }
 
-  async function start(reason="market-ready"){
+  async function start(reason="aether-ready"){
     if(state.started)return false;
     state.started=true; state.reason=String(reason||"unknown");
     try{globalThis.AgentCryptoBootProbe?.markOnce?.("postboot-runtime-start",{reason:state.reason});}catch(_){}
@@ -121,25 +121,24 @@
     try{return Number.isFinite(Number(globalThis.AgentCryptoBootProbe?.snapshot?.()?.first_ms?.[name]));}
     catch(_){return false;}
   }
-  function onMark(event){
-    const name=String(event?.detail?.name||"");
-    if(name==="market-ready"){window.removeEventListener("agent-crypto:boot-mark",onMark);setTimeout(()=>{if(!state.started)void start("market-ready+1500ms");},1500);}
-    else if(name==="livecheck-start"){
-      setTimeout(()=>{if(!state.started)void start("livecheck-fallback-15s");},15000);
-    }
+  function consultationAetherReady(){
+    try{return globalThis.AgentCryptoConsultationFirst406284?.snapshot?.()?.aether_state==="ready";}
+    catch(_){return false;}
   }
+  function scheduleAfterAether(reason){setTimeout(()=>{if(!state.started)void start(reason);},1500);}
+  function onAetherReady(){window.removeEventListener("agent-crypto:aether-ready",onAetherReady);scheduleAfterAether("aether-ready+1500ms");}
+  function onAetherFailed(){setTimeout(()=>{if(!state.started)void start("aether-failed-fallback+5000ms");},5000);}
 
-  if(seen("market-ready")) setTimeout(()=>{if(!state.started)void start("market-ready-already+1500ms");},1500);
+  if(seen("aether-ready")||consultationAetherReady()) scheduleAfterAether("aether-ready-already+1500ms");
   else {
-    window.addEventListener("agent-crypto:boot-mark",onMark);
-    if(seen("livecheck-start")) setTimeout(()=>{if(!state.started)void start("livecheck-already-fallback-15s");},15000);
-    window.addEventListener("load",()=>setTimeout(()=>{if(!state.started)void start("window-load-fallback-20s");},20000),{once:true,passive:true});
+    window.addEventListener("agent-crypto:aether-ready",onAetherReady,{once:true,passive:true});
+    window.addEventListener("agent-crypto:aether-failed",onAetherFailed,{once:true,passive:true});
   }
 
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"IDLE_PACED"}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED",background_owner:"AFTER_AETHER_READY"}),
     same_application:true,
     book_lite:false,
     parser_critical_path_relieved:true,

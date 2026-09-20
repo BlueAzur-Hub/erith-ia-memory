@@ -1,15 +1,15 @@
-/* Agent-Crypto Administrator — 40.6.279 G3 REFUSAL TRUTH
-   Canonical Strategy A evidence modules stay available, but no longer execute
-   as a parser-blocking boot wall. They load in original order on explicit
-   Strategy A demand or, after first usable paint, one module per browser idle
-   slice. A failed/missing module keeps the loader PARTIAL and remains retryable.
+/* Agent-Crypto Administrator — 40.6.284 BOOK CONSULTATION FIRST / G3 REFUSAL TRUTH
+   Canonical Strategy A evidence stays immediately available on explicit operator demand.
+   Automatic background residency now waits for post-boot completion, so Strategy evidence
+   never competes with Menu/Chronos/Graph/Technical/Top5/Flow/Market/Math or Aether startup.
+   A failed/missing module keeps the loader PARTIAL and remains retryable.
    No recurring timer, observer, business network request or order path. */
 (() => {
   "use strict";
   if (globalThis.AgentCryptoCanonicalEvidenceWiring?.owner === "strategy-a-evidence-demand-loader.js") return;
 
-  const BUILD = "40.6.279";
-  const SOURCE = "40.6.279-demand-idle";
+  const BUILD = "40.6.284";
+  const SOURCE = "40.6.284-postboot-idle";
   const MODULES = Object.freeze([
     "./js/strategy-a-evidence-lifecycle-truth.js",
     "./js/strategy-a-foundation-applicability-truth.js",
@@ -196,21 +196,21 @@
   }
   function mountEvidence() {
     try{globalThis.AgentCryptoStrategyAEvidenceDossierSupplementIntegrator?.mount?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAFoundationDelegatedCertification?.run?.("406284-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3CascadeCheckpoint?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3ProspectiveT0Capture?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3OverlapLiveRefresh?.refresh?.("406284-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3PostHorizonOutcome?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3PostHorizonMountRepair?.mount?.("406284-demand-owner");}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3OutcomeCertification?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3RealisticReplayReadiness?.render?.();}catch(_){}
     try{globalThis.AgentCryptoStrategyAG3ForwardEvidenceBridge?.render?.();}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render?.("406279-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render?.("406279-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount?.("406279-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render?.("406279-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render?.("406279-demand-owner");}catch(_){}
-    try{globalThis.AgentCryptoAdministratorOperatorFocus?.requestSettled?.("406279-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3CurrentTruthSurface?.render?.("406284-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictDecisionTimeTruth?.render?.("406284-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictTruthMountProof?.mount?.("406284-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictOutcomeRevalidation?.render?.("406284-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoStrategyAG3StrictExecutionRealismRebind?.render?.("406284-demand-owner");}catch(_){}
+    try{globalThis.AgentCryptoAdministratorOperatorFocus?.requestSettled?.("406284-demand-owner");}catch(_){}
   }
   function reconcileState() {
     for (const src of ALL) {
@@ -227,11 +227,12 @@
     if (loading) return loading;
 
     loading=(async()=>{
+      try{globalThis.AgentCryptoBootProbe?.markOnce?.("strategy-evidence-start",{reason:reasonLast});}catch(_){}
       const missing = ALL.filter(src => !moduleReady(src));
       for (const src of missing) {
         await yieldBrowser();
         try { await loadOne(src); }
-        catch (error) { console.warn("[40.6.277 evidence demand]", src, error); }
+        catch (error) { console.warn("[40.6.284 evidence demand]", src, error); }
       }
 
       reconcileState();
@@ -239,6 +240,7 @@
       const missingModules = ALL.filter(src => !moduleReady(src));
 
       if (complete) {
+        try{globalThis.AgentCryptoBootProbe?.markOnce?.("strategy-evidence-ready",{loaded:readyModules.length});}catch(_){}
         mountEvidence();
         try{document.dispatchEvent(new CustomEvent("agent-crypto:runtime-modules-ready",{detail:{modules:MODULES.slice(),source:SOURCE,complete:true}}));}catch(_){}
         try{document.dispatchEvent(new CustomEvent("agent-crypto:evidence-data-changed",{detail:{source:SOURCE}}));}catch(_){}
@@ -256,21 +258,28 @@
     const anchor=target.closest('a[href*="strategyA"],a[href*="StrategyA"]');
     return !!anchor;
   }
-  function requestBackground() {
-    const run=()=>{void load("idle-after-first-paint");};
-    if (typeof requestIdleCallback === "function") requestIdleCallback(run,{timeout:20000});
+  let backgroundScheduled=false;
+  function requestBackground(reason="idle-after-postboot") {
+    if(backgroundScheduled)return;
+    backgroundScheduled=true;
+    const run=()=>{void load(reason);};
+    if (typeof requestIdleCallback === "function") requestIdleCallback(run,{timeout:30000});
     else setTimeout(run,2500);
+  }
+  function postBootDone(){
+    try{return globalThis.AgentCryptoPostBootRuntime?.snapshot?.()?.done===true;}
+    catch(_){return false;}
   }
 
   document.addEventListener("click",event=>{if(strategyIntent(event.target))void load("operator-strategy-demand");},true);
   if (String(location.hash||"").toLowerCase().includes("strategya")) void load("strategy-hash-demand");
-  if (document.readyState === "complete") requestBackground();
-  else window.addEventListener("load",requestBackground,{once:true,passive:true});
+  if(postBootDone())requestBackground("idle-after-postboot-already");
+  else window.addEventListener("agent-crypto:postboot-runtime-ready",()=>requestBackground("idle-after-postboot"),{once:true,passive:true});
 
   globalThis.AgentCryptoCanonicalEvidenceWiring=Object.freeze({
     build:BUILD,
     owner:"strategy-a-evidence-demand-loader.js",
-    mode:"DEMAND_OR_IDLE_PACED_RETRYABLE",
+    mode:"DEMAND_OR_POSTBOOT_IDLE_RETRYABLE",
     modules:MODULES,
     presentation_modules:PRESENTATION,
     panels:PANEL_IDS,
@@ -280,13 +289,13 @@
     snapshot:()=>{
       reconcileState();
       return Object.freeze({
-        build:BUILD,owner:"strategy-a-evidence-demand-loader.js",mode:"DEMAND_OR_IDLE_PACED_RETRYABLE",
+        build:BUILD,owner:"strategy-a-evidence-demand-loader.js",mode:"DEMAND_OR_POSTBOOT_IDLE_RETRYABLE",
         loaded:loaded.size,total:ALL.length,complete,reason_last:reasonLast,
         missing:Object.freeze(ALL.filter(src=>!moduleReady(src))),
         failed:Object.freeze(Array.from(failures.keys())),
         states:Object.freeze(Object.fromEntries(states)),
         direct_parser_injection:false,idle_paced:true,recurring_timer:false,observer:false,
-        business_network_request:false,real_order:false,paper_only:true,
+        business_network_request:false,background_after_postboot:true,real_order:false,paper_only:true,
         g3:"PENDING",g9:"LOCKED"
       });
     }
