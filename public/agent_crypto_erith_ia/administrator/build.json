@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.291",
+  "build": "40.6.292",
   "engine": "38.15.11",
-  "release": "WINDOW MANAGER · GEOMETRY TRUTH REPAIR",
+  "release": "ROLLBACK · AETHER WINDOW GEOMETRY BASELINE",
   "published": true,
-  "status": "window_manager_geometry_truth_repair_406291",
-  "parent_build": "40.6.290",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.291",
-  "administrator_build": "40.6.291",
-  "build_label": "Build 40.6.291 · Administrator",
+  "status": "rollback_aether_window_geometry_baseline_406292",
+  "parent_build": "40.6.291",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.292",
+  "administrator_build": "40.6.292",
+  "build_label": "Build 40.6.292 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: Aether LIBRE -> resize smaller -> resize larger -> move to each viewport edge -> close/reopen -> hard reload -> reopen. Window must remain fully reachable and preserve the final geometry. Storage remains paused until PASS.",
-  "release_notes": "Window Manager geometry repair after 40.6.290 restored Aether native chrome. The generic directFixed owner no longer cancels geometryPolicy minima with inline min-width/min-height:0; native resize bounds now use the clamped window origin and reachable viewport. Pointer-up persistence uses the rendered post-resize width and height, reapplies the clamped geometry to the DOM, and stores that same geometry instead of resurrecting an older height. Hidden-state persistence now writes maximized/restore state coherently. No Aether-specific resize engine, no new timer/observer/storage owner, no Market Core/Oracle/Math/Strategy business change.",
+  "terrain_pending": "Firefox terrain: confirm 40.6.292 restores 40.6.290 Aether behavior before any further resize work. Verify loader/preloader appearance, Aether open/move/close/reopen, and absence of the 40.6.291 black resize plate. Storage remains paused.",
+  "release_notes": "Emergency rollback of 40.6.291 Window Manager geometry changes. admin-window-manager.js is restored byte-for-byte from 40.6.290; runtime-shell behavior is restored from 40.6.290 with only a 40.6.292 cache-bust on the manager asset. index.html and boot.js remain untouched. No Market Core, Strategy, Oracle, Math, Storage schema, timer, observer or network-owner change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1486,7 +1486,7 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "PAUSED_PENDING_WINDOW_GEOMETRY_406291_TERRAIN",
+    "status": "PAUSED_PENDING_406292_ROLLBACK_TERRAIN",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
@@ -1649,6 +1649,19 @@
     "oracle_business_logic_modified": false,
     "math_core_modified": false,
     "strategy_a_modified": false,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "rollback_target": "40.6.290",
+  "rollback_aether_window_geometry_baseline_406292": {
+    "priority": "P0_REGRESSION_ROLLBACK",
+    "rejected_build": "40.6.291",
+    "restore_source": "40.6.290",
+    "manager_restored_byte_identical_to_406290": true,
+    "index_html_modified": false,
+    "boot_js_modified": false,
+    "runtime_shell_semantics_restored_to_406290": true,
+    "only_runtime_shell_difference": "admin-window-manager cache-bust v=40.6.292",
+    "storage_paused": true,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }

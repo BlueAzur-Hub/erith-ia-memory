@@ -589,47 +589,16 @@
       target.style.setProperty(property, String(value), direct ? "important" : "");
     }
 
-    // 40.6.291 — directFixed geometry truth.
-    // Respect an explicit geometryPolicy instead of cancelling it with inline
-    // min-width/min-height:0. The max bounds are computed from the window's
-    // current clamped origin so native Firefox resize cannot grow past the
-    // reachable viewport edge.
     function applyDirectFixedGeometryOwnership(win, target) {
       if (!win?.directFixed || !(target instanceof HTMLElement)) return;
-      const policy = win.geometryPolicy || {};
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-      const x = Number.isFinite(Number(win.geometry?.x)) ? Number(win.geometry.x) : VIEWPORT_MARGIN;
-      const y = Number.isFinite(Number(win.geometry?.y)) ? Number(win.geometry.y) : VIEWPORT_MARGIN;
-      const viewportMaxWidth = Math.max(1, vw - Math.max(VIEWPORT_MARGIN, x) - VIEWPORT_MARGIN);
-      const viewportMaxHeight = Math.max(1, vh - Math.max(VIEWPORT_MARGIN, y) - VIEWPORT_MARGIN);
-      const configuredMaxWidth = Number(policy.maxWidth);
-      const configuredMaxHeight = Number(policy.maxHeight);
-      const maxWidth = Math.max(1, Math.min(
-        Number.isFinite(configuredMaxWidth) && configuredMaxWidth > 0 ? configuredMaxWidth : viewportMaxWidth,
-        viewportMaxWidth
-      ));
-      const maxHeight = Math.max(1, Math.min(
-        Number.isFinite(configuredMaxHeight) && configuredMaxHeight > 0 ? configuredMaxHeight : viewportMaxHeight,
-        viewportMaxHeight
-      ));
-      const configuredMinWidth = Number(policy.minWidth);
-      const configuredMinHeight = Number(policy.minHeight);
-      const minWidth = Number.isFinite(configuredMinWidth) && configuredMinWidth > 0
-        ? Math.min(configuredMinWidth, maxWidth)
-        : 0;
-      const minHeight = Number.isFinite(configuredMinHeight) && configuredMinHeight > 0
-        ? Math.min(configuredMinHeight, maxHeight)
-        : 0;
-
       setManagedFloatingStyle(win, target, "position", "fixed");
       setManagedFloatingStyle(win, target, "right", "auto");
       setManagedFloatingStyle(win, target, "bottom", "auto");
       setManagedFloatingStyle(win, target, "transform", "none");
-      setManagedFloatingStyle(win, target, "min-width", `${minWidth}px`);
-      setManagedFloatingStyle(win, target, "max-width", `${maxWidth}px`);
-      setManagedFloatingStyle(win, target, "min-height", `${minHeight}px`);
-      setManagedFloatingStyle(win, target, "max-height", `${maxHeight}px`);
+      setManagedFloatingStyle(win, target, "min-width", "0");
+      setManagedFloatingStyle(win, target, "max-width", `calc(100vw - ${VIEWPORT_MARGIN * 2}px)`);
+      setManagedFloatingStyle(win, target, "min-height", "0");
+      setManagedFloatingStyle(win, target, "max-height", `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`);
     }
 
     function setGeometryOnTarget(win, geometry) {
@@ -773,17 +742,16 @@
       return true;
     }
 
-    // 40.6.291 — one geometry after native resize.
-    // currentRect() already reads the real rendered width/height and clamps it
-    // through the window policy. Reapply that exact geometry to the DOM before
-    // persisting it; never resurrect the previous stored height after resize.
     function persistGeometry(win) {
       if (!win?.floating || win.maximized) return;
-      const measured = currentRect(win);
-      const safe = setGeometryOnTarget(win, measured);
+      const rect = currentRect(win);
+      const safe = {
+        ...rect,
+        height: win.geometry?.height || rect.height
+      };
+      win.geometry = { ...safe };
       patchState(win.id, {
         floating: true,
-        maximized: false,
         x: safe.x,
         y: safe.y,
         width: safe.width,
@@ -1166,14 +1134,7 @@
       }
       win.hidden = next;
       applyPresentationState(win);
-      if (persist) patchState(win.id, {
-        hidden: win.hidden,
-        minimized: win.minimized,
-        floating: win.floating,
-        maximized: win.maximized,
-        restoreFloating: win.restoreFloating || null,
-        restoreGeometry: win.restoreGeometry || null
-      });
+      if (persist) patchState(win.id, { hidden: win.hidden, minimized: win.minimized, floating: win.floating });
       updateDeck();
     }
 
