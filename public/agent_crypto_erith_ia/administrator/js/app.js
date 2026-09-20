@@ -2263,10 +2263,11 @@
     }
   }
 
-  // Browser F11 changes the viewport without resizing the native Aether DOM by
-  // itself. Reconcile only when the viewport SHRINKS and CSS has visibly clamped
-  // the saved floating geometry. The Window Manager remains the sole geometry
-  // applicator/persistence owner through applySnapshot().
+  // 40.6.297 — F11 / viewport continuity restored from the historical Aether
+  // contract. Normal operator geometry remains owned and persisted by the
+  // canonical Window Manager. Significant viewport expansion gets a temporary
+  // non-persistent 16:9 fit; shrink/exit restores the captured normal geometry.
+  // No direct style ownership is introduced here.
   function installAetherViewportContinuity406297(manager) {
     if (!manager?.getWindow || !manager?.applySnapshot) return false;
     let viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
