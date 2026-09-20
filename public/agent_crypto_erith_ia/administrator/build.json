@@ -31,7 +31,7 @@
   "entry": "./",
   "terrain_verified": false,
   "terrain_pending": "Static GitHub verification complete; Firefox terrain not yet re-run.",
-  "release_notes": "Simple UI correction: remove Boot report from Command Center overlay; place it as a normal collapsible section in 04 · Expérimentation & système; keep Actualiser/Copier and add Replier; Boot probe reports effective build dynamically. No new popup, menu, module, timer, observer, storage owner, network owner, Market Core or business-logic change.",
+  "release_notes": "Simple UI correction: remove Boot report from Command Center overlay; place it as a normal collapsible section in 04 · Expérimentation & système; keep Actualiser/Copier and add Replier; Boot probe reports effective build dynamically. No new popup, menu, module, timer, observer, storage owner, network owner, Market Core or business-logic change. Same-build truth patch: Boot report now renders automatically when opened and refreshes as marks arrive; optional missing graph/detail marks are shown as non-observed instead of falsely implying loading; display-order deltas removed.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -1086,6 +1086,20 @@
     "observer_added": false,
     "storage_owner_added": false,
     "network_request_added": false,
+    "market_core_modified": false,
+    "strategy_a_modified": false,
+    "real_order": false
+  },
+  "boot_report_truth_patch_406278": {
+    "build_bump": false,
+    "reason": "Same 40.6.278 UI repair candidate; no micro-version cascade for diagnostic wording/refresh correction.",
+    "auto_render_on_section_open": true,
+    "live_refresh_on_probe_marks": true,
+    "missing_optional_probe_label": "non observé",
+    "missing_optional_probe_is_not_loading": true,
+    "negative_display_delta_removed": true,
+    "coldboot_interval_label_corrected": true,
+    "business_logic_changed": false,
     "market_core_modified": false,
     "strategy_a_modified": false,
     "real_order": false
