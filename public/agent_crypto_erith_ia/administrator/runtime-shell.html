@@ -2548,6 +2548,7 @@
                   <a href="#simulation" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">◫</span><span>Simulation</span></a>
                   <a href="#commandes" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon atlas-quick-icon-code" aria-hidden="true">&gt;_</span><span>Tests</span></a>
                   <a href="#local-ai-hub" data-v2-level="advanced" class="atlas-quick-link"><span class="atlas-quick-icon" aria-hidden="true">✦</span><span>IA locale</span></a>
+                  <button type="button" id="atlasBootReportToggle" class="atlas-quick-link atlas-boot-report-trigger" aria-controls="atlasBootReportPanel" aria-expanded="false"><span class="atlas-quick-icon" aria-hidden="true">◷</span><span>Boot report</span></button>
                 </section>
 
                 <section class="atlas-admin-cluster atlas-admin-cluster-projects" id="atlasProjectsCluster" data-admin-cluster="projects" aria-label="Projets ERITH.IA">
@@ -2559,6 +2560,29 @@
                   <a href="#forge-aerith" data-v2-level="project" class="atlas-quick-link atlas-forge-quick-link"><span class="atlas-quick-icon" aria-hidden="true">✦</span><span>Forge</span></a>
                 </section>
               </div>
+              <style id="agentCryptoBootReportStyle406276">
+                .atlas-boot-report-trigger{font:inherit;cursor:pointer;text-align:left}
+                .atlas-boot-report-panel{margin:9px 0 0;padding:10px 12px;border:1px solid rgba(98,236,255,.22);border-radius:12px;background:rgba(3,16,26,.92);box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
+                .atlas-boot-report-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+                .atlas-boot-report-head>div{display:flex;flex-direction:column;gap:2px}
+                .atlas-boot-report-head span{font-size:9px;letter-spacing:.12em;color:#88aebc;font-weight:900}
+                .atlas-boot-report-head strong{font-size:13px;color:#e9fbff}
+                .atlas-boot-report-actions{display:flex;gap:6px;flex-wrap:wrap}
+                .atlas-boot-report-actions button{border:1px solid rgba(98,236,255,.22);border-radius:9px;background:rgba(98,236,255,.07);color:#dff9ff;padding:6px 9px;font:inherit;font-size:10px;font-weight:900;cursor:pointer}
+                #atlasBootReportText{margin:9px 0 0;max-height:290px;overflow:auto;white-space:pre-wrap;font:600 10px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:#cde4ec}
+                #atlasBootReportCopyState{display:block;min-height:1.2em;margin-top:5px;font-size:9px;color:#9fb7c1}
+              </style>
+              <section id="atlasBootReportPanel" class="atlas-boot-report-panel" hidden aria-live="polite">
+                <div class="atlas-boot-report-head">
+                  <div><span>DIAGNOSTIC HUMAIN</span><strong>Rapport de démarrage · 40.6.276</strong></div>
+                  <div class="atlas-boot-report-actions">
+                    <button type="button" id="atlasBootReportRefresh">Actualiser</button>
+                    <button type="button" id="atlasBootReportCopy">Copier</button>
+                  </div>
+                </div>
+                <pre id="atlasBootReportText">Mesures de démarrage en cours…</pre>
+                <small id="atlasBootReportCopyState"></small>
+              </section>
               <div class="atlas-admin-command-footer">
                 <label class="atlas-v2-module-picker atlas-admin-module-picker">
                   <span class="atlas-visually-hidden">Choisir un module administrateur</span>
@@ -4576,10 +4600,10 @@
   <aside class="atlas-help-layer" id="atlasHelpLayer" role="tooltip" aria-hidden="true" hidden></aside>
   <div class="atlas-help-live" id="atlasHelpLive" aria-live="polite" aria-atomic="true"></div>
 
-  <script id="agentCryptoBootProbe406275">
+  <script id="agentCryptoBootProbe406276">
   (() => {
     "use strict";
-    const BUILD = "40.6.275";
+    const BUILD = "40.6.276";
     const marks = [];
     const first = new Map();
     const origin = Number(performance.timeOrigin || (Date.now() - performance.now()));
@@ -4622,8 +4646,105 @@
         first_ms: firstByName
       };
     }
-    globalThis.AgentCryptoBootProbe = Object.freeze({ build: BUILD, mark, markOnce, snapshot });
+    function humanReport() {
+      const snap = snapshot();
+      const first = snap.first_ms || {};
+      const shell = Number(first["shell-ready"] ?? 0);
+      const fmt = value => Number.isFinite(Number(value)) ? (Number(value) / 1000).toFixed(2) + " s" : "en attente";
+      const delta = (value, previous) => Number.isFinite(Number(value)) && Number.isFinite(Number(previous))
+        ? " (+" + ((Number(value) - Number(previous)) / 1000).toFixed(2) + " s)"
+        : "";
+      const stages = [
+        ["shell-ready","Shell"],
+        ["chartjs-ready","Chart.js"],
+        ["core-evaluated","Core"],
+        ["coldboot-start","Cold Boot"],
+        ["auto-reader-start","Auto Reader"],
+        ["livecheck-start","Livecheck"],
+        ["market-ready","Marché"],
+        ["selected-coin-ready","Actif sélectionné"],
+        ["graph-ready","Graphique"],
+        ["detail-ready","Lecture technique"],
+        ["oracle-ready","Oracle"],
+        ["administrator-window-manager-ready","Window Manager"]
+      ];
+      const required = ["shell-ready","chartjs-ready","core-evaluated","market-ready","graph-ready","oracle-ready","administrator-window-manager-ready"];
+      const complete = required.every(name => Number.isFinite(Number(first[name])));
+      const lines = [
+        "BOOT REPORT · " + BUILD,
+        "État : " + (complete ? "COMPLET" : "PARTIEL · mesures encore en cours"),
+        "Début document : " + snap.started_at,
+        ""
+      ];
+      let previous = shell;
+      for (const [name, label] of stages) {
+        const value = Number(first[name]);
+        if (Number.isFinite(value)) {
+          lines.push(label.padEnd(20," ") + " " + fmt(value - shell) + delta(value, previous));
+          previous = value;
+        } else {
+          lines.push(label.padEnd(20," ") + " en attente");
+        }
+      }
+      const closed = Number(first["current-closed"]);
+      const restored = Number(first["current-restored"]);
+      const pending = Number(first["current-pending"]);
+      let currentState = "NON OBSERVÉ";
+      let currentAt = null;
+      if (Number.isFinite(closed)) { currentState = "NOUVEAU CURRENT FERMÉ"; currentAt = closed; }
+      else if (Number.isFinite(restored)) { currentState = "CURRENT RESTAURÉ"; currentAt = restored; }
+      else if (Number.isFinite(pending)) { currentState = "CURRENT EN ATTENTE"; currentAt = pending; }
+      lines.push("");
+      lines.push("CURRENT : " + currentState + (currentAt != null ? " · " + fmt(currentAt - shell) : ""));
+      const owners = snap.marks.filter(row => String(row.name || "").startsWith("coldboot-owner:"));
+      let slowest = null;
+      for (let i = 0; i < owners.length; i++) {
+        const start = Number(owners[i].t_ms);
+        const end = Number(owners[i + 1]?.t_ms);
+        if (!Number.isFinite(start) || !Number.isFinite(end)) continue;
+        const duration = Math.max(0, end - start);
+        if (!slowest || duration > slowest.duration) slowest = { name: String(owners[i].name).slice("coldboot-owner:".length), duration };
+      }
+      if (slowest) lines.push("Cold Boot le plus lent : " + slowest.name + " · ~" + slowest.duration.toFixed(0) + " ms");
+      lines.push("");
+      lines.push("Aucune commande Console requise.");
+      return lines.join("\n");
+    }
+    function renderHumanReport() {
+      const node = document.getElementById("atlasBootReportText");
+      if (node) node.textContent = humanReport();
+      return node?.textContent || "";
+    }
+    function setHumanReportOpen(open) {
+      const panel = document.getElementById("atlasBootReportPanel");
+      const trigger = document.getElementById("atlasBootReportToggle");
+      if (!panel || !trigger) return false;
+      panel.hidden = !open;
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) renderHumanReport();
+      return true;
+    }
+    globalThis.AgentCryptoBootProbe = Object.freeze({ build: BUILD, mark, markOnce, snapshot, humanReport, renderHumanReport });
     markOnce("shell-ready", { ready_state: document.readyState });
+    document.getElementById("atlasBootReportToggle")?.addEventListener("click", () => {
+      const panel = document.getElementById("atlasBootReportPanel");
+      setHumanReportOpen(!!panel?.hidden);
+    });
+    document.getElementById("atlasBootReportRefresh")?.addEventListener("click", () => {
+      renderHumanReport();
+      const state = document.getElementById("atlasBootReportCopyState");
+      if (state) state.textContent = "Rapport actualisé.";
+    });
+    document.getElementById("atlasBootReportCopy")?.addEventListener("click", async () => {
+      const report = renderHumanReport();
+      const state = document.getElementById("atlasBootReportCopyState");
+      try {
+        await navigator.clipboard.writeText(report);
+        if (state) state.textContent = "Rapport copié.";
+      } catch (_) {
+        if (state) state.textContent = "Copie automatique indisponible · le rapport reste lisible ci-dessus.";
+      }
+    });
   })();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
