@@ -2236,8 +2236,14 @@
         document.documentElement.dataset.aetherLeftMigration = "preserved";
       }
 
-      // Retire the historical build-numbered marker after canonical migration.
-      localStorage.removeItem(`${STORAGE_PREFIX}:migration:aether-left-406085`);
+      // Retire any historical build-numbered left marker. The runtime keeps
+      // only the canonical migration:aether-left key from now on.
+      for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+        const candidate = localStorage.key(index);
+        if (candidate?.startsWith(`${STORAGE_PREFIX}:migration:aether-left-`)) {
+          localStorage.removeItem(candidate);
+        }
+      }
       localStorage.setItem(AETHER_LEFT_MIGRATION_KEY, "1");
       return changed ? "migrated-left" : "preserved";
     } catch (_) {
