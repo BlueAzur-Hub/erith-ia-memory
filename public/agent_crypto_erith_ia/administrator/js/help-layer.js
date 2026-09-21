@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.334";
+  const BUILD = "40.6.335";
   const button = document.getElementById("atlasHelpToggle");
   const layer = document.getElementById("atlasHelpLayer");
   const live = document.getElementById("atlasHelpLive");
@@ -59,6 +59,76 @@
       attention: ""
     },
     {
+      key: "sources",
+      selector: "#sources",
+      kicker: "AIDE · SOURCES",
+      title: "Sources & fraîcheur",
+      purpose: "Montre les sources testées, leur disponibilité et le statut qui autorise ou refuse une lecture exploitable.",
+      look: "Décision source, état de chaque source, fraîcheur et éventuels refus avant d’interpréter un prix ou un graphique.",
+      action: "Ouvre le diagnostic d’une source ou relance LiveCheck si les données sont incomplètes.",
+      attention: "Une source absente, différée ou invalide doit rester un signal de prudence ; l’interface ne doit pas combler le manque."
+    },
+    {
+      key: "evidence",
+      selector: "#strategyADossier, #strategyAEvidenceSupplements",
+      kicker: "AIDE · GATES & PREUVES",
+      title: "Evidence Dossier · Strategy A",
+      purpose: "Rassemble les preuves utilisées pour évaluer les Gates de Strategy A sans promouvoir automatiquement la stratégie.",
+      look: "État de chaque Gate, décisions t0, replay, outcomes, coûts et raisons explicites d’attendre.",
+      action: "Lis le détail ou exporte les preuves quand l’interface le propose ; un état PENDING reste un résultat valide.",
+      attention: "PASS d’un panneau ou d’un self-test ≠ certification LIVE. Gate 9 reste verrouillée tant que la chaîne complète n’est pas certifiée."
+    },
+    {
+      key: "simulation",
+      selector: "#simulation",
+      kicker: "AIDE · PAPER",
+      title: "Simulation · Strategy A",
+      purpose: "Exécute la chaîne locale Proposition → Risk Governor → Paper → Mesure avec argent virtuel uniquement.",
+      look: "Décision, Oracle, Cost Gate, Risk Governor, position Paper, lifecycle, ledger et métriques après coûts.",
+      action: "Lance uniquement les actions de simulation prévues ; les boutons Paper n’envoient aucun ordre réel.",
+      attention: "Une position Paper ou un signal haussier ne prouve pas la rentabilité et n’autorise aucun passage au réel."
+    },
+    {
+      key: "storage",
+      selector: "#atlasStorageHealth",
+      kicker: "AIDE · STOCKAGE",
+      title: "Storage · vérité locale",
+      purpose: "Diagnostique quota, localStorage et IndexedDB sans effacement automatique.",
+      look: "Owner, quota, PRIMARY IndexedDB, copies locales et état des opérations manuelles.",
+      action: "Commence par Comprendre / vérifier ; backup et retrait ne viennent qu’après preuve PRIMARY.",
+      attention: "Une différence localStorage ≠ IndexedDB peut être normale. Ne supprime rien pour « faire propre » sans preuve."
+    },
+    {
+      key: "safety",
+      selector: "[data-collapse-key=\"safety\"]",
+      kicker: "AIDE · SÉCURITÉ",
+      title: "Sécurité",
+      purpose: "Regroupe les verrous qui empêchent une simulation ou une interface publique de devenir une exécution réelle par accident.",
+      look: "État des accès, Kill Switch, limites, clés et commandes autorisées.",
+      action: "Utilise les tests manuels prévus ; aucune action de cette aide ne change un verrou.",
+      attention: "Clé privée, permission de retrait, wallet réel et ordre réel restent interdits dans GitHub Pages."
+    },
+    {
+      key: "physical-security",
+      selector: "[data-collapse-key=\"physical-security\"]",
+      kicker: "AIDE · SÉCURITÉ PHYSIQUE",
+      title: "Sécurité physique",
+      purpose: "Prépare la séparation future entre machine publique, backend privé, clé physique et validation humaine.",
+      look: "Ce qui est seulement préparé, ce qui est local et ce qui reste verrouillé.",
+      action: "Consulte le plan ; aucune connexion réelle n’est créée depuis cette page.",
+      attention: "Préparé ne signifie pas connecté. Aucun secret ni accès réel ne doit être exposé dans le frontend public."
+    },
+    {
+      key: "projects",
+      selector: "#missions-vie",
+      kicker: "AIDE · PROJETS",
+      title: "Missions de vie @erith.IA",
+      purpose: "Présente les programmes et idées du projet sans les confondre avec une fonction financière active.",
+      look: "Statut de conception, objectif, périmètre et absence de paiement actif.",
+      action: "Ouvre un projet pour lire son cadre ; la navigation n’active aucun financement ni aucune transaction.",
+      attention: "Ces panneaux décrivent des projets. Ils ne promettent ni rendement, ni paiement, ni exécution automatique."
+    },
+    {
       key: "market",
       selector: "#marketSnapshotPanel",
       kicker: "AIDE · MARKET CORE",
@@ -85,9 +155,13 @@
 
   function allTargets() {
     const rows = [];
+    const seen = new Set();
     for (const item of HELP) {
-      const element = document.querySelector(item.selector);
-      if (element) rows.push([item, element]);
+      for (const element of document.querySelectorAll(item.selector)) {
+        if (seen.has(element)) continue;
+        seen.add(element);
+        rows.push([item, element]);
+      }
     }
     return rows;
   }
@@ -159,7 +233,7 @@
     if (!active || !item || !element) return;
     clearCurrent();
     currentElement = element;
-    currentElement.classList.add("agent-help-current");
+    currentElement.classList.add("agent-help-target", "agent-help-current");
     layer.innerHTML = cardHtml(item);
     layer.setAttribute("aria-hidden", "false");
     if (live) live.textContent = item.title + ". " + item.purpose;
@@ -178,7 +252,7 @@
       kicker: "AIDE · AGENT-CRYPTO",
       title: "Comprendre sans bloquer l’interface",
       purpose: "Survole les zones signalées pour obtenir une explication courte sans changer leur fonctionnement.",
-      look: "Menu, LiveCheck, Graphique, Lecture Technique, Target Top 5 / Market Flow, Market Snapshot et Math Core.",
+      look: "Menu, LiveCheck, Graphique, Lecture Technique, Top 5 / Market Flow, Market Snapshot, Math Core, Sources, Evidence, Simulation, Storage, Sécurité et Projets.",
       action: "Utilise l’interface normalement. L’aide ne lance aucune source, aucun calcul et aucune action métier.",
       attention: ""
     };
@@ -241,6 +315,9 @@
     open: () => setActive(true),
     close: () => setActive(false),
     topics: HELP.map(item => item.key),
+    availableTopics: () => HELP.filter(item => document.querySelector(item.selector)).map(item => item.key),
+    late_mount_safe: true,
+    target_resolution: "querySelectorAll + delegated closest",
     recurring_timer: false,
     observer: false,
     storage: false,
