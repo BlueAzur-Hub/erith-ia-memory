@@ -1436,27 +1436,6 @@
       return floating.length;
     }
 
-    // 40.6.305 — geometry-only transaction restored from the proven 40.6.298 path.
-    // This changes geometry on an already-floating window without normalizing
-    // through docked state, so Aether can expand for F11 and return without DOM
-    // reparenting, scroll anchoring, or a second CSS geometry owner.
-    function setGeometry406305(id, geometry, options = {}) {
-      const win = windows.get(id);
-      if (!win || !win.floating || win.maximized || win.minimized) return false;
-      const safe = clampWindowGeometry(win, geometry);
-      if (!safe || ![safe.x, safe.y, safe.width, safe.height].every(value => Number.isFinite(Number(value)))) return false;
-      win.geometry = { ...safe };
-      setGeometryOnTarget(win, safe);
-      if (options.persist === true) persistGeometry(win);
-      return {
-        x: Number(safe.x),
-        y: Number(safe.y),
-        width: Number(safe.width),
-        height: Number(safe.height),
-        persisted: options.persist === true
-      };
-    }
-
     // 40.2.20 — Workspace Profiles Foundation.
     // Profiles are a presentation-layer snapshot only. They do not own market
     // domain, Graph Context V7, Oracle state, selected assets or business data.
@@ -1654,7 +1633,6 @@
       setDeckOpen,
       getWindow: id => windows.get(id) || null,
       snapshot,
-      setGeometry: setGeometry406305,
       applySnapshot,
       restorePersistedPresentation,
       neutralizePresentation,
@@ -1709,9 +1687,6 @@
     hidden_deck_rebuild_deferred_40314: true,
     role_transition_capture_snapshot_disabled_40314: true,
     restore_persisted_single_pass_40314: true
-    ,geometry_only_api_406305: true
-    ,geometry_only_api_preserves_floating_state_406305: true
-    ,geometry_only_api_no_dom_reparent_406305: true
     ,drag_detach_auto_fit_disabled_40315: true
     ,placeholder_measurement_batch_40315: "all-reads-before-dom-writes"
     ,compact_family_placeholder_policy_40317: "anchor-marker-18px"

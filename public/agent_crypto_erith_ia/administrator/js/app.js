@@ -509,51 +509,6 @@
     return null;
   }
 
-  // 40.6.305 — restore the NORMAL window contract from 40.6.76 / 40.6.295.
-  // Normal mode is intentionally smaller than F11. The fallback leaves room for
-  // the Administrator workspace; persisted operator geometry is preserved across
-  // close/reopen and F5. Only legacy auto-centering is normalized back to x=12.
-  function aetherNormalFallback406305() {
-    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
-    const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
-    const fittedWidth = Math.min(width, height * 16 / 9);
-    const fittedHeight = fittedWidth * 9 / 16;
-    return {
-      x: 12,
-      y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
-      width: Math.round(fittedWidth),
-      height: Math.round(fittedHeight)
-    };
-  }
-
-  function aetherNormalGeometry406305() {
-    const fallback = aetherNormalFallback406305();
-    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    try {
-      const raw = JSON.parse(localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) || "null");
-      const saved = raw && typeof raw === "object" ? {
-        x: Number(raw.x),
-        y: Number(raw.y),
-        width: Number(raw.width),
-        height: Number(raw.height)
-      } : null;
-      if (saved && [saved.x, saved.y, saved.width, saved.height].every(Number.isFinite)
-          && saved.width > 1 && saved.height > 1) {
-        const centeredX = Math.max(12, Math.round((vw - saved.width) / 2));
-        const legacyAutoCenter = saved.x > 26 && Math.abs(saved.x - centeredX) <= 14;
-        return {
-          x: legacyAutoCenter ? 12 : saved.x,
-          y: saved.y,
-          width: saved.width,
-          height: saved.height
-        };
-      }
-    } catch (_) {}
-    return fallback;
-  }
-
   function nativeDefinitions() {
     return [
       {
@@ -562,7 +517,20 @@
         tone: "cyan",
         directFixed: true,
         geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true },
-        preferredFloatGeometry: () => aetherNormalGeometry406305(),
+        preferredFloatGeometry: () => {
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
+          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
+          const fittedWidth = Math.min(width, height * 16 / 9);
+          const fittedHeight = fittedWidth * 9 / 16;
+          return {
+            x: 12,
+            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
+            width: Math.round(fittedWidth),
+            height: Math.round(fittedHeight)
+          };
+        },
         resolveEntries: () => [entry(byId("atlasAetherStatusPanel"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
         resolveControlHosts: nodes => [nodes[0]?.querySelector(".atlas-aether-panel-head")].filter(Boolean),
@@ -2222,222 +2190,40 @@
   }
 
 
-  // 40.6.305 — repair ONLY the oversized geometry written by 40.6.304.
-  // Profiles that never consumed .304 keep their operator width/height/y.
-  const AETHER_NORMAL_406305_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-normal-406305`;
-  function migrateAetherNormal406305() {
+  // 40.6.85 — Aether left-boot repair.
+  // Scope is exactly one persisted Aether presentation record, one time.
+  // A non-centered operator position is never rewritten.
+  const AETHER_LEFT_406085_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406085`;
+  function migrateAetherCenteredState() {
     try {
-      if (localStorage.getItem(AETHER_NORMAL_406305_MIGRATION_KEY) === "1") return "already";
+      if (localStorage.getItem(AETHER_LEFT_406085_MIGRATION_KEY) === "1") return "already";
       const key = `${STORAGE_PREFIX}:window:aether-watch`;
       const raw = JSON.parse(localStorage.getItem(key) || "null");
-      const consumed304 = localStorage.getItem(`${STORAGE_PREFIX}:migration:aether-normal-frame-406304`) === "1";
-      const fallback = aetherNormalFallback406305();
-
-      if (raw && typeof raw === "object") {
-        const x = Number(raw.x), y = Number(raw.y), width = Number(raw.width), height = Number(raw.height);
-        const valid = [x, y, width, height].every(Number.isFinite) && width > 1 && height > 1;
-        let next = { ...raw };
-
-        if (consumed304 || !valid) {
-          next = {
-            ...next,
-            x: fallback.x,
-            y: fallback.y,
-            width: fallback.width,
-            height: fallback.height,
-            floating: false,
-            hidden: true,
-            minimized: false,
-            maximized: false,
-            restoreFloating: false,
-            restoreGeometry: null
-          };
-          document.documentElement.dataset.aetherNormalMigration406305 = consumed304
-            ? "recovered-from-406304"
-            : "recovered-invalid";
-        } else {
-          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-          const centeredX = Math.max(12, Math.round((vw - width) / 2));
-          const legacyAutoCenter = x > 26 && Math.abs(x - centeredX) <= 14;
-          if (legacyAutoCenter && raw.maximized !== true) next.x = 12;
-          document.documentElement.dataset.aetherNormalMigration406305 = legacyAutoCenter
-            ? "left-only"
-            : "operator-geometry-preserved";
-        }
-        localStorage.setItem(key, JSON.stringify(next));
-      } else {
-        document.documentElement.dataset.aetherNormalMigration406305 = "default-ready";
+      if (!raw || typeof raw !== "object") {
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        return "no-state";
       }
-
-      localStorage.setItem(AETHER_NORMAL_406305_MIGRATION_KEY, "1");
-      return document.documentElement.dataset.aetherNormalMigration406305 || "done";
+      const x = Number(raw.x), y = Number(raw.y), width = Number(raw.width), height = Number(raw.height);
+      if (![x, y, width, height].every(Number.isFinite)) {
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        return "invalid-state-preserved";
+      }
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const centeredX = Math.max(12, Math.round((vw - width) / 2));
+      const centered = x > 26 && Math.abs(x - centeredX) <= 14;
+      if (centered && raw.maximized !== true) {
+        localStorage.setItem(key, JSON.stringify({ ...raw, x: 12 }));
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        document.documentElement.dataset.aetherLeftMigration = "migrated";
+        return "migrated";
+      }
+      localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+      document.documentElement.dataset.aetherLeftMigration = "preserved";
+      return "preserved";
     } catch (_) {
-      document.documentElement.dataset.aetherNormalMigration406305 = "storage-unavailable";
+      document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
       return "storage-unavailable";
     }
-  }
-
-  // 40.6.305 — F11 is a TEMPORARY geometry state, never the normal window.
-  // Normal operator geometry stays persisted by the Window Manager. Entering
-  // browser F11 captures that geometry, uses the large historical 16:9 field,
-  // and exit restores the exact captured rectangle through the geometry-only API.
-  function installAetherF11Continuity406307(manager) {
-    if (!manager?.getWindow || !manager?.setGeometry) return false;
-
-    let frame = 0;
-    let f11Active = false;
-    let expandedPendingOpen = false;
-    let preF11Geometry = null;
-    const ratio = 1672 / 941;
-    const margin = 12;
-    const minWidth = 720;
-    const minHeight = 405;
-    const maxFloatWidth = 1450;
-
-    const finiteGeometry = value => {
-      if (!value || typeof value !== "object") return null;
-      const geometry = {
-        x: Number(value.x),
-        y: Number(value.y),
-        width: Number(value.width),
-        height: Number(value.height)
-      };
-      return Object.values(geometry).every(Number.isFinite) && geometry.width > 1 && geometry.height > 1
-        ? geometry
-        : null;
-    };
-
-    const viewport = () => ({
-      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-    });
-
-    // 40.6.307 — freeze the physical-screen reference at installation.
-    // Some browser/test environments mutate window.screen together with the
-    // viewport. Reading screen live therefore made F11 exit indistinguishable
-    // from F11 itself: screen.height collapsed to the post-exit innerHeight and
-    // the detector stayed true forever. A stable snapshot makes the transition
-    // reversible without timers or a second geometry owner.
-    const initialViewport = viewport();
-    const screenSnapshot = Object.freeze({
-      width: Number(globalThis.screen?.width) || initialViewport.width,
-      height: Number(globalThis.screen?.height) || initialViewport.height
-    });
-
-    const isBrowserF11 = () => {
-      const { width, height } = viewport();
-      return width >= screenSnapshot.width - 8 && height >= screenSnapshot.height - 12;
-    };
-
-    const visibleRect = node => {
-      if (!(node instanceof HTMLElement)) return null;
-      const style = getComputedStyle(node);
-      const rect = node.getBoundingClientRect();
-      if (node.hidden || style.display === "none" || style.visibility === "hidden" || rect.width <= 1 || rect.height <= 1) return null;
-      return rect;
-    };
-
-    const expandedGeometry = () => {
-      const { width: vw, height: vh } = viewport();
-      const detail = visibleRect(document.getElementById("detailPanel"));
-      const rightBoundary = detail && detail.left > Math.max(minWidth + margin * 2, vw * .55)
-        ? Math.max(minWidth + margin * 2, detail.left - 8)
-        : vw - margin;
-      const availableWidth = Math.max(minWidth, rightBoundary - margin);
-      const maxWidth = Math.max(minWidth, Math.min(maxFloatWidth, availableWidth, vw - margin * 2));
-      const maxHeight = Math.max(minHeight, vh - margin * 2);
-      let width = Math.min(maxWidth, maxHeight * ratio);
-      let height = width / ratio;
-      if (height > maxHeight) {
-        height = maxHeight;
-        width = height * ratio;
-      }
-      width = Math.min(width, Math.max(1, vw - margin * 2));
-      height = Math.min(height, Math.max(1, vh - margin * 2));
-      return {
-        x: margin,
-        y: Math.max(margin, Math.round(vh - height - margin)),
-        width: Math.round(width),
-        height: Math.round(height)
-      };
-    };
-
-    const apply = (geometry, reason) => {
-      const safe = finiteGeometry(geometry);
-      const win = manager.getWindow("aether-watch");
-      if (!safe || !win || !win.floating || win.hidden || win.maximized || win.minimized) return false;
-      const result = manager.setGeometry("aether-watch", safe, { persist: false });
-      if (!result) return false;
-      document.documentElement.dataset.aetherF11406307 = reason;
-      return true;
-    };
-
-    const enter = () => {
-      const win = manager.getWindow("aether-watch");
-      if (!win) return;
-      f11Active = true;
-      if (!win.floating || win.hidden || win.maximized || win.minimized) {
-        expandedPendingOpen = true;
-        document.documentElement.dataset.aetherF11406307 = "pending-open";
-        return;
-      }
-      if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
-      expandedPendingOpen = false;
-      apply(expandedGeometry(), "expanded-temporary");
-    };
-
-    const exit = () => {
-      f11Active = false;
-      expandedPendingOpen = false;
-      const restore = finiteGeometry(preF11Geometry);
-      if (restore) apply(restore, "restored-normal-exact");
-      preF11Geometry = null;
-    };
-
-    const reconcile = () => {
-      frame = 0;
-      const next = isBrowserF11();
-      if (next === f11Active) return;
-      if (next) enter();
-      else exit();
-    };
-
-    const schedule = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(reconcile);
-    };
-
-    const openWhileF11 = event => {
-      if (!(event.target instanceof Element) || !event.target.closest("#atlasAetherStatusToggle")) return;
-      if (!f11Active && !isBrowserF11()) return;
-      queueMicrotask(() => {
-        const win = manager.getWindow("aether-watch");
-        if (!win || !win.floating || win.hidden || win.maximized || win.minimized) return;
-        if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
-        f11Active = true;
-        expandedPendingOpen = false;
-        apply(expandedGeometry(), "expanded-open-temporary");
-      });
-    };
-
-    f11Active = isBrowserF11();
-    expandedPendingOpen = f11Active;
-    window.addEventListener("resize", schedule, { passive: true });
-    document.addEventListener("click", openWhileF11, true);
-
-    globalThis.ErithAetherF11Continuity406307 = Object.freeze({
-      build: "40.6.307",
-      normal: "40.6.76/40.6.295 operator geometry",
-      f11: "temporary historical 16:9 field",
-      geometry_owner: "ErithAdministratorWindows.setGeometry",
-      persistent_f11_geometry: false,
-      css_owner_added: false,
-      screen_reference: screenSnapshot,
-      reversible_screen_snapshot: true,
-      timer: false,
-      observer: false
-    });
-    return true;
   }
 
   function boot() {
@@ -2457,8 +2243,9 @@
     migrateFamilyTopologyWindowState();
     migrateFamilyRoleReturnWindowState();
     stageAdministratorDefaultFamilyCollapse();
-    migrateAetherNormal406305();
-const factory = window.ErithAdminWindowManager;
+    migrateAetherCenteredState();
+
+    const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
       console.error(`Administrator ${ADMIN_BUILD}: operational window manager unavailable.`);
       return;
@@ -2512,8 +2299,8 @@ const factory = window.ErithAdminWindowManager;
     }, true);
 
     window.ErithAdministratorWindows = manager;
-    installAetherF11Continuity406307(manager);
-// 40.4.93 — Market presentation follows the existing Window Manager.
+
+    // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;
     // reduced/hidden = generated rows released. The manager remains unchanged.
     const syncMarketWindow = reason => {
@@ -2631,15 +2418,6 @@ const factory = window.ErithAdminWindowManager;
     installDomainObserver(manager);
     syncDomainWindows(manager);
 
-    try {
-      globalThis.AgentCryptoBootProbe?.markOnce?.("administrator-window-manager-ready", {
-        build: ADMIN_BUILD,
-        windows: Number(state.count || 0),
-        layout_free: !!state.free,
-        domain: currentDomain()
-      });
-    } catch (_) {}
-
     window.dispatchEvent(new CustomEvent("erith:administrator-mirror-ready", {
       detail: {
         build: ADMIN_BUILD,
@@ -2651,10 +2429,6 @@ const factory = window.ErithAdminWindowManager;
       }
     }));
   }
-
-  window.addEventListener("agent-crypto:late-memory-ready", () => {
-    try { initAtlasMemoryResidency(); } catch (_) {}
-  }, { once: true, passive: true });
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
   else boot();

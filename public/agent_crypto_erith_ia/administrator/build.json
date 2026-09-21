@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.307",
+  "build": "40.6.308",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER F11 REVERSIBLE SCREEN SNAPSHOT",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER 40.6.273 EXACT SUBSYSTEM RESTORE",
   "published": true,
-  "status": "aether_f11_reversible_screen_snapshot_406307",
-  "parent_build": "40.6.306",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.307",
-  "administrator_build": "40.6.307",
-  "build_label": "Build 40.6.307 · Administrator",
+  "status": "aether_406273_exact_subsystem_restore_406308",
+  "parent_build": "40.6.307",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.308",
+  "administrator_build": "40.6.308",
+  "build_label": "Build 40.6.308 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Human Firefox terrain remains pending; internal headless Chromium geometry contract PASS before release.",
-  "release_notes": "40.6.307 fixes the F11 exit failure proven by the internal browser harness. The previous detector read window.screen live; in environments where screen dimensions track the viewport, F11 stayed true after exit and the large geometry could not restore. The screen reference is now frozen once at installation. Combined self-test proves: normal left geometry, no visible pre-reveal frame, F11 expansion, exact normal restore, close/reopen preservation, manual resize preservation, and exact F11 round-trip after manual resize.",
+  "terrain_pending": "Firefox terrain required only after exact SHA restoration is verified on main. Gate: NORMAL must match the proven pre-regression Aether behavior; F11 must expand and restore the previous normal geometry. Any mismatch = FAIL/STOP.",
+  "release_notes": "40.6.308 abandons the 40.6.302–40.6.307 Aether patch chain and restores the five Aether subsystem files exactly to their proven 40.6.273 Git objects: js/app.js, js/aether.js, js/core/admin-window-manager.js, admin-ribbons.css and aether.css. No new Aether CSS, F11 bridge, migration or geometry owner is added. Canonical aether-v2.css and js/aether-role-visibility.js were already byte-identical to 40.6.273 and remain untouched.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -2057,5 +2057,32 @@
       "manual_resize_f11_restore": true,
       "result": "PASS"
     }
+  },
+  "aether_406273_exact_restore_406308": {
+    "baseline_commit": "abb689e13c07013a149de17981566f736d0cdf1b",
+    "exact_restored_sha": {
+      "js/app.js": "24f069cea6aaaea0480df15a31bd55d15c833bb2",
+      "js/aether.js": "a3352825bfd333415b73f11e6915086c92447e28",
+      "js/core/admin-window-manager.js": "c1da17f67984512efa17f2a88a41e03af59822f4",
+      "admin-ribbons.css": "d003b18268f74d038f3aae14263c7e88daf73ffa",
+      "aether.css": "71dfe5275cd9c7e964d872501cdda9d7a03afd0e"
+    },
+    "already_identical_and_untouched": {
+      "aether-v2.css": "4745156d45f3ba3f51133aa541b9f810ddeeeb66",
+      "js/aether-role-visibility.js": "5d3d5925e83ac1fecaf02209228eb1cb7391b4bc"
+    },
+    "removed_patch_chain": [
+      "40.6.302",
+      "40.6.303",
+      "40.6.304",
+      "40.6.305",
+      "40.6.306",
+      "40.6.307"
+    ],
+    "new_geometry_owner_added": false,
+    "new_css_added": false,
+    "new_f11_bridge_added": false,
+    "new_migration_added": false,
+    "terrain_proof": "PENDING_FIREFOX"
   }
 }
