@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="atlas-build" content="40.6.335" />
+  <meta name="administrator-build" content="40.6.335" />
+  <meta name="atlas-engine-build" content="38.15.11" />
+  <meta name="administrator-release" content="HELP LAYER V2 · OPERATOR GUIDE CONSOLIDATION" />
+  <title>Agent-Crypto @erith.IA — Build 40.6.335 · Administrator</title>
+  <script>
+    (() => {
+      const target = new URL('./index.html', location.href);
+      const source = new URLSearchParams(location.search || '');
+      for (const [key, value] of source.entries()) {
+        if (key === 'ac-probe' || key === 'ac-build') continue;
+        target.searchParams.set(key, value);
+      }
+      target.searchParams.set('ac-build', '40.6.335');
+      target.searchParams.set('ac-refresh', source.get('ac-refresh') || `40.6.335-${Date.now()}`);
+      location.replace(target.toString());
+    })();
+  </script>
+</head>
+<body>
+  <p>Chargement Agent-Crypto Administrator 40.6.335…</p>
+  <noscript><a href="./index.html?ac-build=40.6.335">Ouvrir Administrator 40.6.335</a></noscript>
+</body>
+</html>
