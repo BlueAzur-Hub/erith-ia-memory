@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.305",
+  "build": "40.6.306",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER NORMAL / F11 CONTRACT RESTORE",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER SINGLE GEOMETRY OWNER",
   "published": true,
-  "status": "aether_normal_f11_contract_restore_406305",
-  "parent_build": "40.6.304",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.305",
-  "administrator_build": "40.6.305",
-  "build_label": "Build 40.6.305 · Administrator",
+  "status": "aether_single_geometry_owner_406306",
+  "parent_build": "40.6.305",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.306",
+  "administrator_build": "40.6.306",
+  "build_label": "Build 40.6.306 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain: Ctrl+F5 outside F11 -> open Aether. NORMAL must be the smaller 40.6.295/40.6.76-style operator window at x≈12, not the large F11 field. Then F11 must expand Aether temporarily to the large 16:9 field; exit F11 must restore the exact pre-F11 rectangle. Then drag, free resize, close/reopen and F5/reopen. Any regression = FAIL/STOP.",
-  "release_notes": "40.6.305 corrects the conceptual regression introduced by 40.6.304. The large 40.6.75 field fit belongs to temporary F11/expanded geometry, not to normal browser mode. Normal mode is restored from the 40.6.76/40.6.295 compact fallback formula and preserves saved operator x/y/width/height across close/reopen and F5. A fresh one-time migration repairs only profiles that consumed the destructive 40.6.304 oversized-frame migration. The proven 40.6.298 geometry-only Window Manager transaction is restored so F11 can expand and return without docking/reparenting Aether. No CSS, Decision Intelligence, post-boot loader, Market Core, Oracle, Lecture Technique, Storage or Strategy logic is changed.",
+  "terrain_pending": "SELF-TEST FIRST: static owner audit + headless Chromium geometry harness. Human Firefox terrain is NOT requested until self-test is PASS.",
+  "release_notes": "40.6.306 removes historical outer Aether geometry declarations from admin-ribbons.css and aether.css, leaving ErithAdministratorWindows as the sole owner of outer x/y/width/height/transform/min-max constraints. It also makes Aether open/close geometry-atomic: prepare floating geometry while hidden, reveal last; hide first, dock second. Inner Observatory composition, Aether V2 card geometry, Decision Intelligence, Market Core 38.15.11, Oracle and Lecture Technique remain protected.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -2017,5 +2017,24 @@
     "storage_business_logic_modified": false,
     "strategy_modified": false,
     "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_geometry_owner_406306": {
+    "outer_owner": "ErithAdministratorWindows",
+    "removed_from": [
+      "admin-ribbons.css outer #atlasAetherStatusPanel geometry",
+      "aether.css outer fixed/min constraints"
+    ],
+    "preserved": [
+      "Aether V2 inner stage",
+      "inner card coordinates",
+      "resize-grip decoration",
+      "Market Core 38.15.11",
+      "Decision Intelligence",
+      "Lecture Technique",
+      "Oracle"
+    ],
+    "reveal_order": "hidden -> float -> unhide manager -> DOM reveal",
+    "close_order": "DOM hide -> manager hide/dock",
+    "self_test": "PENDING"
   }
 }
