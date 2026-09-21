@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.306",
+  "build": "40.6.307",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER SINGLE GEOMETRY OWNER",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER F11 REVERSIBLE SCREEN SNAPSHOT",
   "published": true,
-  "status": "aether_single_geometry_owner_406306",
-  "parent_build": "40.6.305",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.306",
-  "administrator_build": "40.6.306",
-  "build_label": "Build 40.6.306 · Administrator",
+  "status": "aether_f11_reversible_screen_snapshot_406307",
+  "parent_build": "40.6.306",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.307",
+  "administrator_build": "40.6.307",
+  "build_label": "Build 40.6.307 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "SELF-TEST FIRST: static owner audit + headless Chromium geometry harness. Human Firefox terrain is NOT requested until self-test is PASS.",
-  "release_notes": "40.6.306 removes historical outer Aether geometry declarations from admin-ribbons.css and aether.css, leaving ErithAdministratorWindows as the sole owner of outer x/y/width/height/transform/min-max constraints. It also makes Aether open/close geometry-atomic: prepare floating geometry while hidden, reveal last; hide first, dock second. Inner Observatory composition, Aether V2 card geometry, Decision Intelligence, Market Core 38.15.11, Oracle and Lecture Technique remain protected.",
+  "terrain_pending": "Human Firefox terrain remains pending; internal headless Chromium geometry contract PASS before release.",
+  "release_notes": "40.6.307 fixes the F11 exit failure proven by the internal browser harness. The previous detector read window.screen live; in environments where screen dimensions track the viewport, F11 stayed true after exit and the large geometry could not restore. The screen reference is now frozen once at installation. Combined self-test proves: normal left geometry, no visible pre-reveal frame, F11 expansion, exact normal restore, close/reopen preservation, manual resize preservation, and exact F11 round-trip after manual resize.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -2036,5 +2036,26 @@
     "reveal_order": "hidden -> float -> unhide manager -> DOM reveal",
     "close_order": "DOM hide -> manager hide/dock",
     "self_test": "PENDING"
+  },
+  "aether_f11_contract_406307": {
+    "predecessor": "40.6.306",
+    "detected_failure": "live screen dimensions may mutate with viewport, making F11 exit undetectable",
+    "correction": "freeze screen width/height at bridge installation",
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "geometry_owner": "ErithAdministratorWindows.setGeometry",
+    "f11_persist": false,
+    "self_test": {
+      "engine": "headless Chromium",
+      "viewport_normal": "1650x760",
+      "screen_reference": "1650x900",
+      "normal_geometry": "x12 y180 930x523",
+      "f11_geometry": "x12 y169 1278x719",
+      "exact_restore": true,
+      "close_reopen": true,
+      "manual_resize_reopen": true,
+      "manual_resize_f11_restore": true,
+      "result": "PASS"
+    }
   }
 }
