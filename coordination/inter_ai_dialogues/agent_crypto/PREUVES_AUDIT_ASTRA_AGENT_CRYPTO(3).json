@@ -1,0 +1,2837 @@
+{
+  "audit_date": "2026-09-20",
+  "repository": "BlueAzur-Hub/erith-ia-memory",
+  "pinned_commit": "486ad85182d673126fa96ec51a5f2a246d3fa8e5",
+  "checkpoint": "abb689e13c07013a149de17981566f736d0cdf1b",
+  "build": "40.6.273",
+  "engine": "38.15.11",
+  "read_only": true,
+  "scope": "Targeted static audit plus controlled Node VM fixtures; no browser performance measurement and no real-order execution.",
+  "notion_urls": [
+    "https://app.notion.com/p/3e07754fe08481eb95c7cdc4fd8ff099",
+    "https://app.notion.com/p/3e07754fe08481ee9f25fc070988867d",
+    "https://app.notion.com/p/3e07754fe0848149bea6edbdef878984"
+  ],
+  "documentation_urls": [
+    "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Performance/measure"
+  ],
+  "verified_blobs": [
+    {
+      "path": "AGENTS.md",
+      "sha": "5a144b89c500f10b09c20271afd2283c59fb419f",
+      "ok": true,
+      "size": 1305
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/HANDOFF_40_6_273_PERFORMANCE_BOOK_CANARY.md",
+      "sha": "c640a89746978bf704b0a4bca60296b285f77a34",
+      "ok": true,
+      "size": 3286
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/HANDOFF_40_6_274_BOOT_QUIETNESS.md",
+      "sha": "2ef2bf5383604adee54dbbb55e39665f60b0cb2f",
+      "ok": true,
+      "size": 2380
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/RELEASE_40_6_274.md",
+      "sha": "c68f9a79d0cdb5ef961d896e310e1f38c60ea9c3",
+      "ok": true,
+      "size": 1557
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/VALIDATION_40_6_274.md",
+      "sha": "5e5aef3d150157bf12e680413535ec3df3d5c565",
+      "ok": true,
+      "size": 1715
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/index.html",
+      "sha": "fd49dad49a13affb8f743a9b05b349f27940bada",
+      "ok": true,
+      "size": 9091
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/app.js",
+      "sha": "24f069cea6aaaea0480df15a31bd55d15c833bb2",
+      "ok": true,
+      "size": 124175
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/core/admin-window-manager.js",
+      "sha": "c1da17f67984512efa17f2a88a41e03af59822f4",
+      "ok": true,
+      "size": 74296
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/runtime-modules.js",
+      "sha": "b699dc35533e0ab9b35c85c23112187c4308c379",
+      "ok": true,
+      "size": 3242
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-demand-loader.js",
+      "sha": "00ea618c47923c28d9b1a06995487da8b3912e54",
+      "ok": true,
+      "size": 7805
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-foundation-delegated-certification-406221.js",
+      "sha": "6c796d29422a827471911034121e5a2820eabb73",
+      "ok": true,
+      "size": 12278
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-cascade-checkpoint.js",
+      "sha": "67b6631561133d4cc8b7c31f738f9dafc627dbab",
+      "ok": true,
+      "size": 18340
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-decision-replay.js",
+      "sha": "42be2ae68d1f379b76af1eb3ee72d0285ab73f15",
+      "ok": true,
+      "size": 19949
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-outcome-certification-406222.js",
+      "sha": "dc1760a23a04705d0af6ef627d86bdfabbb2c6df",
+      "ok": true,
+      "size": 12620
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-post-horizon-outcome.js",
+      "sha": "84bf0e1ae122b30c4a38b76a5edafe02f7aa95c6",
+      "ok": true,
+      "size": 12852
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-realistic-replay-readiness-406223.js",
+      "sha": "a3216366c935f85e91ffffc35eac5ecd797ce65d",
+      "ok": true,
+      "size": 10799
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-replay-dataset.js",
+      "sha": "e1ad0e2cf95201160fcc2f9bd0cc9360e5e415c8",
+      "ok": true,
+      "size": 17275
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-t0-decision-proof.js",
+      "sha": "61b3c81cbe4b732446052141e0d995fbfcee99f0",
+      "ok": true,
+      "size": 24068
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/views/view-lifecycle.js",
+      "sha": "661cc60a64bde74f127fb00963fd15d1fc07ff29",
+      "ok": true,
+      "size": 14800
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/runtime-shell.html",
+      "sha": "ce5886cc91f463f99dee633e60b7b733f8b4dda0",
+      "ok": true,
+      "size": 432463
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-durable-evidence-store.js",
+      "sha": "bcb1024b905f040fd3985965eb7778e832e093fd",
+      "ok": true,
+      "size": 19980
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-current-truth-surface-406225.js",
+      "sha": "8d3b0f6745bab0e7ea18ca4dd546820d5d285c09",
+      "ok": true,
+      "size": 13257
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-strict-decision-time-truth-406226.js",
+      "sha": "d50953bf79e55b1fd92321196c95315a4e5222c6",
+      "ok": true,
+      "size": 11964
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-strict-execution-realism-rebind-406229.js",
+      "sha": "fe2e4506a2b21f1379845278541427542ec6a661",
+      "ok": true,
+      "size": 18999
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-strict-outcome-revalidation-406228.js",
+      "sha": "513efe82f19a750711fa1589e5f7c2433d79fcde",
+      "ok": true,
+      "size": 12499
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-strict-truth-mount-proof-406227.js",
+      "sha": "e6c769bba9e7ca3301d3d0087472c52b2a94fd46",
+      "ok": true,
+      "size": 8083
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-replay-acceptance.js",
+      "sha": "10e730a746640d88057d27939140e8bfc2b5892d",
+      "ok": true,
+      "size": 7889
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/views/private-source-demand-loader.js",
+      "sha": "2cb6befd1832718963e3dba2057a5ebe841b2d4e",
+      "ok": true,
+      "size": 13700
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/app.js",
+      "sha": "497f533dba427abeccdf939e202c561a617bc320",
+      "size": 3343435,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-g3-structured-data-truth.js",
+      "sha": "44ed9fb5bde130c8ec824d7f847b08459482dec3",
+      "size": 25108,
+      "ok": true
+    },
+    {
+      "path": "public/agent_crypto_erith_ia/administrator/js/strategy-a-canonical-spec.js",
+      "sha": "19b92204f4e7400cf6cd5f10c65d25c5704db424",
+      "size": 6888,
+      "ok": true
+    }
+  ],
+  "gate_fixtures": [
+    {
+      "id": "N01_COMPLETE_FIXTURE_CONTROL",
+      "value": {
+        "strict_226": {
+          "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+          "build": "40.6.226",
+          "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+          "temporal_contract": "CERTIFIED",
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "strict_pass": true,
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "asset": "BTC",
+              "decision": "NO_TRADE",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "available_at": "2026-09-17T01:00:01.000Z",
+              "decision_market_lag_sec": 1,
+              "base_at": "2026-09-17T01:00:00.000Z",
+              "base_price": 100.12,
+              "horizons": {
+                "t5": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "gap_sec": 299,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t15": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "gap_sec": 299,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t60": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "gap_sec": 299,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              },
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "pass": true,
+              "blockers": []
+            }
+          ],
+          "legacy_222": {
+            "pass": true,
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "status": "REVALIDATED_UNDER_DECISION_TIME"
+          },
+          "current_next_layer": "EXECUTION_REALISM",
+          "execution_blockers": [
+            "AFTER_COST_OWNER_UNAVAILABLE",
+            "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+            "LATENCY_MODEL_UNPROVEN",
+            "LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "historical_receipt_reopened": true,
+          "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_228": {
+          "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+          "build": "40.6.228",
+          "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+          "source_build": "40.6.226",
+          "state": "OUTCOME_LABELS_CERTIFIED_STRICT_DECISION_TIME",
+          "pass": true,
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "temporal_contract": "CERTIFIED",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "pass": true,
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "blockers": [],
+              "rows": [
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 5,
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 15,
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 60,
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 5,
+              "target_at": "2026-09-17T01:05:01.000Z",
+              "matched_at": "2026-09-17T01:10:00.000Z",
+              "price": 100.14,
+              "change_pct": 0.02,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 15,
+              "target_at": "2026-09-17T01:15:01.000Z",
+              "matched_at": "2026-09-17T01:20:00.000Z",
+              "price": 100.16,
+              "change_pct": 0.04,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 60,
+              "target_at": "2026-09-17T02:00:01.000Z",
+              "matched_at": "2026-09-17T02:05:00.000Z",
+              "price": 100.25,
+              "change_pct": 0.1298,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            }
+          ],
+          "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+          "next_layer": "EXECUTION_REALISM",
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "live_unlock": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "execution_229": {
+          "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+          "build": "40.6.229",
+          "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+          "state": "WAIT_NATURAL_PAPER_AFTER_COST_EVIDENCE",
+          "ready": false,
+          "data_layer": {
+            "strict_outcomes_ready": true,
+            "source_build": "40.6.228",
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "horizon_anchor": "decision_at"
+          },
+          "mechanism_layer": {
+            "lifecycle": {
+              "build": null,
+              "capabilities": {
+                "owner_present": false,
+                "submit": false,
+                "acknowledge": false,
+                "fill": false,
+                "reconcile": false,
+                "timeout": false,
+                "cancel": false
+              },
+              "mechanism_present": false,
+              "partial_fill_mechanism_present": false,
+              "paper_only": false,
+              "real_orders": false
+            },
+            "acceptance": {
+              "owner_present": false,
+              "build": null,
+              "receipt_present": false,
+              "receipt_pass": false,
+              "partial_fill_lab_checks_present": false,
+              "partial_fill_lab_checks_pass": false,
+              "state_preserved": false,
+              "check_count": 0
+            }
+          },
+          "terrain_layer": {
+            "after_cost": {
+              "owner_present": false,
+              "build": null,
+              "trades": 0,
+              "complete_cost_trades": 0,
+              "verified_accounting_trades": 0,
+              "sample_state": "UNKNOWN",
+              "sample_min": null,
+              "cost_model_complete": false,
+              "ledger_consistency_complete": false,
+              "rows_present": 0
+            },
+            "partial_fill_terrain_proven": false
+          },
+          "model_layer": {
+            "execution_latency": "NOT_PROVEN",
+            "execution_liquidity": "NOT_PROVEN",
+            "generic_network_latency_is_execution_proof": false,
+            "generic_market_liquidity_is_execution_proof": false
+          },
+          "blockers": [
+            "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+            "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+            "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+            "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+            "EXECUTION_LATENCY_MODEL_UNPROVEN",
+            "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+          "force_trade": false,
+          "threshold_change": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_series": {
+          "certified": true,
+          "quality": "TEMPORAL_COVERAGE_PROVEN",
+          "expectedCadence": 5,
+          "duplicates": 0
+        },
+        "strict_t0_certified": 1,
+        "strict_dataset_ready": true,
+        "checkpoint": {
+          "temporal": true,
+          "cadence": 5,
+          "t0": 1,
+          "dataset_ready": true,
+          "blockers": []
+        },
+        "outcomes": {
+          "pass": true,
+          "count": 3,
+          "expected": 3
+        },
+        "readiness": "WAIT_EXECUTION_EVIDENCE",
+        "execution_blockers": [
+          "AFTER_COST_OWNER_UNAVAILABLE",
+          "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+          "LATENCY_MODEL_UNPROVEN",
+          "LIQUIDITY_MODEL_UNPROVEN"
+        ],
+        "g3": "PENDING"
+      }
+    },
+    {
+      "id": "N02_INCOMPLETE_T0_CERTIFIED_DOWNSTREAM",
+      "value": {
+        "strict_226": {
+          "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+          "build": "40.6.226",
+          "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+          "temporal_contract": "CERTIFIED",
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "strict_pass": true,
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "asset": "BTC",
+              "decision": "NO_TRADE",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "available_at": "2026-09-17T01:00:01.000Z",
+              "decision_market_lag_sec": 1,
+              "base_at": "2026-09-17T01:00:00.000Z",
+              "base_price": 100.12,
+              "horizons": {
+                "t5": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "gap_sec": 299,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t15": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "gap_sec": 299,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t60": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "gap_sec": 299,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              },
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "pass": true,
+              "blockers": []
+            }
+          ],
+          "legacy_222": {
+            "pass": true,
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "status": "REVALIDATED_UNDER_DECISION_TIME"
+          },
+          "current_next_layer": "EXECUTION_REALISM",
+          "execution_blockers": [
+            "AFTER_COST_OWNER_UNAVAILABLE",
+            "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+            "LATENCY_MODEL_UNPROVEN",
+            "LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "historical_receipt_reopened": true,
+          "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_228": {
+          "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+          "build": "40.6.228",
+          "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+          "source_build": "40.6.226",
+          "state": "OUTCOME_LABELS_CERTIFIED_STRICT_DECISION_TIME",
+          "pass": true,
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "temporal_contract": "CERTIFIED",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "pass": true,
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "blockers": [],
+              "rows": [
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 5,
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 15,
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 60,
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 5,
+              "target_at": "2026-09-17T01:05:01.000Z",
+              "matched_at": "2026-09-17T01:10:00.000Z",
+              "price": 100.14,
+              "change_pct": 0.02,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 15,
+              "target_at": "2026-09-17T01:15:01.000Z",
+              "matched_at": "2026-09-17T01:20:00.000Z",
+              "price": 100.16,
+              "change_pct": 0.04,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 60,
+              "target_at": "2026-09-17T02:00:01.000Z",
+              "matched_at": "2026-09-17T02:05:00.000Z",
+              "price": 100.25,
+              "change_pct": 0.1298,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            }
+          ],
+          "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+          "next_layer": "EXECUTION_REALISM",
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "live_unlock": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "execution_229": {
+          "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+          "build": "40.6.229",
+          "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+          "state": "WAIT_NATURAL_PAPER_AFTER_COST_EVIDENCE",
+          "ready": false,
+          "data_layer": {
+            "strict_outcomes_ready": true,
+            "source_build": "40.6.228",
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "horizon_anchor": "decision_at"
+          },
+          "mechanism_layer": {
+            "lifecycle": {
+              "build": null,
+              "capabilities": {
+                "owner_present": false,
+                "submit": false,
+                "acknowledge": false,
+                "fill": false,
+                "reconcile": false,
+                "timeout": false,
+                "cancel": false
+              },
+              "mechanism_present": false,
+              "partial_fill_mechanism_present": false,
+              "paper_only": false,
+              "real_orders": false
+            },
+            "acceptance": {
+              "owner_present": false,
+              "build": null,
+              "receipt_present": false,
+              "receipt_pass": false,
+              "partial_fill_lab_checks_present": false,
+              "partial_fill_lab_checks_pass": false,
+              "state_preserved": false,
+              "check_count": 0
+            }
+          },
+          "terrain_layer": {
+            "after_cost": {
+              "owner_present": false,
+              "build": null,
+              "trades": 0,
+              "complete_cost_trades": 0,
+              "verified_accounting_trades": 0,
+              "sample_state": "UNKNOWN",
+              "sample_min": null,
+              "cost_model_complete": false,
+              "ledger_consistency_complete": false,
+              "rows_present": 0
+            },
+            "partial_fill_terrain_proven": false
+          },
+          "model_layer": {
+            "execution_latency": "NOT_PROVEN",
+            "execution_liquidity": "NOT_PROVEN",
+            "generic_network_latency_is_execution_proof": false,
+            "generic_market_liquidity_is_execution_proof": false
+          },
+          "blockers": [
+            "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+            "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+            "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+            "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+            "EXECUTION_LATENCY_MODEL_UNPROVEN",
+            "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+          "force_trade": false,
+          "threshold_change": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_series": {
+          "certified": true,
+          "quality": "TEMPORAL_COVERAGE_PROVEN",
+          "expectedCadence": 5,
+          "duplicates": 0
+        },
+        "strict_t0_certified": 0,
+        "strict_dataset_ready": false,
+        "checkpoint": {
+          "temporal": true,
+          "cadence": 5,
+          "t0": 1,
+          "dataset_ready": true,
+          "blockers": []
+        },
+        "outcomes": {
+          "pass": true,
+          "count": 3,
+          "expected": 3
+        },
+        "readiness": "WAIT_EXECUTION_EVIDENCE",
+        "execution_blockers": [
+          "AFTER_COST_OWNER_UNAVAILABLE",
+          "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+          "LATENCY_MODEL_UNPROVEN",
+          "LIQUIDITY_MODEL_UNPROVEN"
+        ],
+        "g3": "PENDING",
+        "normalized": {
+          "id": "T0-FIXTURE",
+          "asset": "BTC",
+          "decision": "NO_TRADE",
+          "market_at": 1789606800000,
+          "decision_at": 1789606801000,
+          "available_at": 1789606801000,
+          "strategy_build": "40.6.56",
+          "policy_build": "40.6.56",
+          "direction": 0,
+          "confidence": 0,
+          "btc_24h_pct": 0,
+          "expected_move_pct": 0,
+          "data_ready": false,
+          "cost_gate_pct": 0,
+          "certified": true,
+          "missing": []
+        }
+      }
+    },
+    {
+      "id": "N03_TWO_POINTS_24H_CHECKPOINT_CERTIFIES",
+      "value": {
+        "strict_226": {
+          "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+          "build": "40.6.226",
+          "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+          "temporal_contract": "CERTIFIED",
+          "replay_dataset": "NOT_READY",
+          "joined_decisions": 0,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 0,
+          "expected_horizons": 0,
+          "outcome_labels": "NOT_CERTIFIED_STRICT_DECISION_TIME",
+          "strict_pass": false,
+          "blockers": [
+            "REPLAY_DATASET_NOT_READY",
+            "NO_JOINED_DECISION"
+          ],
+          "decisions": [],
+          "legacy_222": {
+            "pass": false,
+            "joined_decisions": 0,
+            "certified_horizons": 0,
+            "expected_horizons": 0,
+            "status": "LEGACY_NOT_CURRENTLY_PASSING"
+          },
+          "current_next_layer": "STRICT_DECISION_TIME_OUTCOME_REVALIDATION",
+          "execution_blockers": [],
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "historical_receipt_reopened": true,
+          "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_228": {
+          "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+          "build": "40.6.228",
+          "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+          "source_build": "40.6.226",
+          "state": "STRICT_OUTCOME_REVALIDATION_REQUIRED",
+          "pass": false,
+          "replay_dataset": "NOT_READY",
+          "temporal_contract": "CERTIFIED",
+          "joined_decisions": 0,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 0,
+          "expected_horizons": 0,
+          "outcome_labels": "NOT_CERTIFIED_STRICT_DECISION_TIME",
+          "blockers": [
+            "REPLAY_DATASET_NOT_READY",
+            "NO_JOINED_DECISION",
+            "STRICT_OWNER_NOT_PASSING"
+          ],
+          "decisions": [],
+          "rows": [],
+          "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+          "next_layer": "STRICT_OUTCOME_REVALIDATION",
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "live_unlock": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "execution_229": {
+          "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+          "build": "40.6.229",
+          "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+          "state": "WAIT_STRICT_DATA_OUTCOMES",
+          "ready": false,
+          "data_layer": {
+            "strict_outcomes_ready": false,
+            "source_build": "40.6.228",
+            "joined_decisions": 0,
+            "certified_horizons": 0,
+            "expected_horizons": 0,
+            "horizon_anchor": "decision_at"
+          },
+          "mechanism_layer": {
+            "lifecycle": {
+              "build": null,
+              "capabilities": {
+                "owner_present": false,
+                "submit": false,
+                "acknowledge": false,
+                "fill": false,
+                "reconcile": false,
+                "timeout": false,
+                "cancel": false
+              },
+              "mechanism_present": false,
+              "partial_fill_mechanism_present": false,
+              "paper_only": false,
+              "real_orders": false
+            },
+            "acceptance": {
+              "owner_present": false,
+              "build": null,
+              "receipt_present": false,
+              "receipt_pass": false,
+              "partial_fill_lab_checks_present": false,
+              "partial_fill_lab_checks_pass": false,
+              "state_preserved": false,
+              "check_count": 0
+            }
+          },
+          "terrain_layer": {
+            "after_cost": {
+              "owner_present": false,
+              "build": null,
+              "trades": 0,
+              "complete_cost_trades": 0,
+              "verified_accounting_trades": 0,
+              "sample_state": "UNKNOWN",
+              "sample_min": null,
+              "cost_model_complete": false,
+              "ledger_consistency_complete": false,
+              "rows_present": 0
+            },
+            "partial_fill_terrain_proven": false
+          },
+          "model_layer": {
+            "execution_latency": "NOT_PROVEN",
+            "execution_liquidity": "NOT_PROVEN",
+            "generic_network_latency_is_execution_proof": false,
+            "generic_market_liquidity_is_execution_proof": false
+          },
+          "blockers": [
+            "STRICT_DATA_OUTCOMES_NOT_CERTIFIED",
+            "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+            "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+            "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+            "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+            "EXECUTION_LATENCY_MODEL_UNPROVEN",
+            "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+          "force_trade": false,
+          "threshold_change": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_series": {
+          "certified": false,
+          "quality": "TEMPORAL_COVERAGE_INCOMPLETE",
+          "expectedCadence": 5,
+          "duplicates": 0
+        },
+        "strict_t0_certified": 0,
+        "strict_dataset_ready": false,
+        "checkpoint": {
+          "temporal": true,
+          "cadence": 1440,
+          "t0": 0,
+          "dataset_ready": false,
+          "blockers": [
+            "NO_CERTIFIED_T0_DECISION"
+          ]
+        },
+        "outcomes": {
+          "pass": false,
+          "count": 0,
+          "expected": 0
+        },
+        "readiness": "WAIT_DATA_AND_OUTCOMES",
+        "execution_blockers": [
+          "REPLAY_DATASET_NOT_READY",
+          "OUTCOME_LABELS_NOT_CERTIFIED",
+          "AFTER_COST_OWNER_UNAVAILABLE",
+          "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+          "LATENCY_MODEL_UNPROVEN",
+          "LIQUIDITY_MODEL_UNPROVEN"
+        ],
+        "g3": "PENDING"
+      }
+    },
+    {
+      "id": "N04_CADENCE_UNKNOWN_UPSTREAM_ACCEPTED_DOWNSTREAM",
+      "value": {
+        "strict_226": {
+          "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+          "build": "40.6.226",
+          "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+          "temporal_contract": "CERTIFIED",
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "strict_pass": true,
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "asset": "BTC",
+              "decision": "NO_TRADE",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "available_at": "2026-09-17T01:00:01.000Z",
+              "decision_market_lag_sec": 1,
+              "base_at": "2026-09-17T01:00:00.000Z",
+              "base_price": 100.12,
+              "horizons": {
+                "t5": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "gap_sec": 299,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t15": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "gap_sec": 299,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t60": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "gap_sec": 299,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              },
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "pass": true,
+              "blockers": []
+            }
+          ],
+          "legacy_222": {
+            "pass": true,
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "status": "REVALIDATED_UNDER_DECISION_TIME"
+          },
+          "current_next_layer": "EXECUTION_REALISM",
+          "execution_blockers": [
+            "AFTER_COST_OWNER_UNAVAILABLE",
+            "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+            "LATENCY_MODEL_UNPROVEN",
+            "LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "historical_receipt_reopened": true,
+          "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_228": {
+          "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+          "build": "40.6.228",
+          "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+          "source_build": "40.6.226",
+          "state": "OUTCOME_LABELS_CERTIFIED_STRICT_DECISION_TIME",
+          "pass": true,
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "temporal_contract": "CERTIFIED",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "pass": true,
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "blockers": [],
+              "rows": [
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 5,
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 15,
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 60,
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 5,
+              "target_at": "2026-09-17T01:05:01.000Z",
+              "matched_at": "2026-09-17T01:10:00.000Z",
+              "price": 100.14,
+              "change_pct": 0.02,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 15,
+              "target_at": "2026-09-17T01:15:01.000Z",
+              "matched_at": "2026-09-17T01:20:00.000Z",
+              "price": 100.16,
+              "change_pct": 0.04,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 60,
+              "target_at": "2026-09-17T02:00:01.000Z",
+              "matched_at": "2026-09-17T02:05:00.000Z",
+              "price": 100.25,
+              "change_pct": 0.1298,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            }
+          ],
+          "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+          "next_layer": "EXECUTION_REALISM",
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "live_unlock": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "execution_229": {
+          "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+          "build": "40.6.229",
+          "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+          "state": "WAIT_NATURAL_PAPER_AFTER_COST_EVIDENCE",
+          "ready": false,
+          "data_layer": {
+            "strict_outcomes_ready": true,
+            "source_build": "40.6.228",
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "horizon_anchor": "decision_at"
+          },
+          "mechanism_layer": {
+            "lifecycle": {
+              "build": null,
+              "capabilities": {
+                "owner_present": false,
+                "submit": false,
+                "acknowledge": false,
+                "fill": false,
+                "reconcile": false,
+                "timeout": false,
+                "cancel": false
+              },
+              "mechanism_present": false,
+              "partial_fill_mechanism_present": false,
+              "paper_only": false,
+              "real_orders": false
+            },
+            "acceptance": {
+              "owner_present": false,
+              "build": null,
+              "receipt_present": false,
+              "receipt_pass": false,
+              "partial_fill_lab_checks_present": false,
+              "partial_fill_lab_checks_pass": false,
+              "state_preserved": false,
+              "check_count": 0
+            }
+          },
+          "terrain_layer": {
+            "after_cost": {
+              "owner_present": false,
+              "build": null,
+              "trades": 0,
+              "complete_cost_trades": 0,
+              "verified_accounting_trades": 0,
+              "sample_state": "UNKNOWN",
+              "sample_min": null,
+              "cost_model_complete": false,
+              "ledger_consistency_complete": false,
+              "rows_present": 0
+            },
+            "partial_fill_terrain_proven": false
+          },
+          "model_layer": {
+            "execution_latency": "NOT_PROVEN",
+            "execution_liquidity": "NOT_PROVEN",
+            "generic_network_latency_is_execution_proof": false,
+            "generic_market_liquidity_is_execution_proof": false
+          },
+          "blockers": [
+            "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+            "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+            "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+            "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+            "EXECUTION_LATENCY_MODEL_UNPROVEN",
+            "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+          "force_trade": false,
+          "threshold_change": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_series": {
+          "certified": false,
+          "quality": "CADENCE_CONTRACT_UNKNOWN",
+          "expectedCadence": null,
+          "duplicates": 0
+        },
+        "strict_t0_certified": 1,
+        "strict_dataset_ready": false,
+        "checkpoint": {
+          "temporal": true,
+          "cadence": 5,
+          "t0": 1,
+          "dataset_ready": true,
+          "blockers": []
+        },
+        "outcomes": {
+          "pass": true,
+          "count": 3,
+          "expected": 3
+        },
+        "readiness": "WAIT_EXECUTION_EVIDENCE",
+        "execution_blockers": [
+          "AFTER_COST_OWNER_UNAVAILABLE",
+          "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+          "LATENCY_MODEL_UNPROVEN",
+          "LIQUIDITY_MODEL_UNPROVEN"
+        ],
+        "g3": "PENDING"
+      }
+    },
+    {
+      "id": "N05_CONFLICTING_DUPLICATE_SILENTLY_DROPPED",
+      "value": {
+        "strict_226": {
+          "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+          "build": "40.6.226",
+          "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+          "temporal_contract": "CERTIFIED",
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "strict_pass": true,
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "asset": "BTC",
+              "decision": "NO_TRADE",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "available_at": "2026-09-17T01:00:01.000Z",
+              "decision_market_lag_sec": 1,
+              "base_at": "2026-09-17T01:00:00.000Z",
+              "base_price": 100.12,
+              "horizons": {
+                "t5": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "gap_sec": 299,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t15": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "gap_sec": 299,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t60": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "gap_sec": 299,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              },
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "pass": true,
+              "blockers": []
+            }
+          ],
+          "legacy_222": {
+            "pass": true,
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "status": "REVALIDATED_UNDER_DECISION_TIME"
+          },
+          "current_next_layer": "EXECUTION_REALISM",
+          "execution_blockers": [
+            "AFTER_COST_OWNER_UNAVAILABLE",
+            "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+            "LATENCY_MODEL_UNPROVEN",
+            "LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "historical_receipt_reopened": true,
+          "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_228": {
+          "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+          "build": "40.6.228",
+          "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+          "source_build": "40.6.226",
+          "state": "OUTCOME_LABELS_CERTIFIED_STRICT_DECISION_TIME",
+          "pass": true,
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "temporal_contract": "CERTIFIED",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "decision_at": "2026-09-17T01:00:01.000Z",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "pass": true,
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "blockers": [],
+              "rows": [
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 5,
+                  "target_at": "2026-09-17T01:05:01.000Z",
+                  "matched_at": "2026-09-17T01:10:00.000Z",
+                  "price": 100.14,
+                  "change_pct": 0.02,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 15,
+                  "target_at": "2026-09-17T01:15:01.000Z",
+                  "matched_at": "2026-09-17T01:20:00.000Z",
+                  "price": 100.16,
+                  "change_pct": 0.04,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 60,
+                  "target_at": "2026-09-17T02:00:01.000Z",
+                  "matched_at": "2026-09-17T02:05:00.000Z",
+                  "price": 100.25,
+                  "change_pct": 0.1298,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 5,
+              "target_at": "2026-09-17T01:05:01.000Z",
+              "matched_at": "2026-09-17T01:10:00.000Z",
+              "price": 100.14,
+              "change_pct": 0.02,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 15,
+              "target_at": "2026-09-17T01:15:01.000Z",
+              "matched_at": "2026-09-17T01:20:00.000Z",
+              "price": 100.16,
+              "change_pct": 0.04,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 60,
+              "target_at": "2026-09-17T02:00:01.000Z",
+              "matched_at": "2026-09-17T02:05:00.000Z",
+              "price": 100.25,
+              "change_pct": 0.1298,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            }
+          ],
+          "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+          "next_layer": "EXECUTION_REALISM",
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "live_unlock": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "execution_229": {
+          "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+          "build": "40.6.229",
+          "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+          "state": "WAIT_NATURAL_PAPER_AFTER_COST_EVIDENCE",
+          "ready": false,
+          "data_layer": {
+            "strict_outcomes_ready": true,
+            "source_build": "40.6.228",
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "horizon_anchor": "decision_at"
+          },
+          "mechanism_layer": {
+            "lifecycle": {
+              "build": null,
+              "capabilities": {
+                "owner_present": false,
+                "submit": false,
+                "acknowledge": false,
+                "fill": false,
+                "reconcile": false,
+                "timeout": false,
+                "cancel": false
+              },
+              "mechanism_present": false,
+              "partial_fill_mechanism_present": false,
+              "paper_only": false,
+              "real_orders": false
+            },
+            "acceptance": {
+              "owner_present": false,
+              "build": null,
+              "receipt_present": false,
+              "receipt_pass": false,
+              "partial_fill_lab_checks_present": false,
+              "partial_fill_lab_checks_pass": false,
+              "state_preserved": false,
+              "check_count": 0
+            }
+          },
+          "terrain_layer": {
+            "after_cost": {
+              "owner_present": false,
+              "build": null,
+              "trades": 0,
+              "complete_cost_trades": 0,
+              "verified_accounting_trades": 0,
+              "sample_state": "UNKNOWN",
+              "sample_min": null,
+              "cost_model_complete": false,
+              "ledger_consistency_complete": false,
+              "rows_present": 0
+            },
+            "partial_fill_terrain_proven": false
+          },
+          "model_layer": {
+            "execution_latency": "NOT_PROVEN",
+            "execution_liquidity": "NOT_PROVEN",
+            "generic_network_latency_is_execution_proof": false,
+            "generic_market_liquidity_is_execution_proof": false
+          },
+          "blockers": [
+            "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+            "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+            "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+            "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+            "EXECUTION_LATENCY_MODEL_UNPROVEN",
+            "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+          "force_trade": false,
+          "threshold_change": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_series": {
+          "certified": false,
+          "quality": "TEMPORAL_COVERAGE_INCOMPLETE",
+          "expectedCadence": 5,
+          "duplicates": 1
+        },
+        "strict_t0_certified": 1,
+        "strict_dataset_ready": false,
+        "checkpoint": {
+          "temporal": true,
+          "cadence": 5,
+          "t0": 1,
+          "dataset_ready": true,
+          "blockers": []
+        },
+        "outcomes": {
+          "pass": true,
+          "count": 3,
+          "expected": 3
+        },
+        "readiness": "WAIT_EXECUTION_EVIDENCE",
+        "execution_blockers": [
+          "AFTER_COST_OWNER_UNAVAILABLE",
+          "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+          "LATENCY_MODEL_UNPROVEN",
+          "LIQUIDITY_MODEL_UNPROVEN"
+        ],
+        "g3": "PENDING"
+      }
+    },
+    {
+      "id": "N06_STRICT_DECISION_TIME_REPAIR_CONTROL",
+      "value": {
+        "strict_226": {
+          "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+          "build": "40.6.226",
+          "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+          "temporal_contract": "CERTIFIED",
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "strict_pass": true,
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "asset": "BTC",
+              "decision": "NO_TRADE",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "decision_at": "2026-09-17T01:10:00.000Z",
+              "available_at": "2026-09-17T01:10:00.000Z",
+              "decision_market_lag_sec": 600,
+              "base_at": "2026-09-17T01:10:00.000Z",
+              "base_price": 100.14,
+              "horizons": {
+                "t5": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:15:00.000Z",
+                  "matched_at": "2026-09-17T01:15:00.000Z",
+                  "price": 100.15,
+                  "gap_sec": 0,
+                  "change_pct": 0.01,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t15": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T01:25:00.000Z",
+                  "matched_at": "2026-09-17T01:25:00.000Z",
+                  "price": 100.17,
+                  "gap_sec": 0,
+                  "change_pct": 0.03,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                "t60": {
+                  "status": "CERTIFIED",
+                  "target_at": "2026-09-17T02:10:00.000Z",
+                  "matched_at": "2026-09-17T02:10:00.000Z",
+                  "price": 100.26,
+                  "gap_sec": 0,
+                  "change_pct": 0.1198,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              },
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "pass": true,
+              "blockers": []
+            }
+          ],
+          "legacy_222": {
+            "pass": true,
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "status": "REVALIDATED_UNDER_DECISION_TIME"
+          },
+          "current_next_layer": "EXECUTION_REALISM",
+          "execution_blockers": [
+            "AFTER_COST_OWNER_UNAVAILABLE",
+            "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+            "LATENCY_MODEL_UNPROVEN",
+            "LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "historical_receipt_reopened": true,
+          "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_228": {
+          "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+          "build": "40.6.228",
+          "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+          "source_build": "40.6.226",
+          "state": "OUTCOME_LABELS_CERTIFIED_STRICT_DECISION_TIME",
+          "pass": true,
+          "replay_dataset": "READY_FOR_DECISION_REPLAY",
+          "temporal_contract": "CERTIFIED",
+          "joined_decisions": 1,
+          "horizons_min": [
+            5,
+            15,
+            60
+          ],
+          "certified_horizons": 3,
+          "expected_horizons": 3,
+          "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+          "blockers": [],
+          "decisions": [
+            {
+              "id": "T0-FIXTURE",
+              "decision_at": "2026-09-17T01:10:00.000Z",
+              "market_at": "2026-09-17T01:00:00.000Z",
+              "pass": true,
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "blockers": [],
+              "rows": [
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 5,
+                  "target_at": "2026-09-17T01:15:00.000Z",
+                  "matched_at": "2026-09-17T01:15:00.000Z",
+                  "price": 100.15,
+                  "change_pct": 0.01,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 15,
+                  "target_at": "2026-09-17T01:25:00.000Z",
+                  "matched_at": "2026-09-17T01:25:00.000Z",
+                  "price": 100.17,
+                  "change_pct": 0.03,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                },
+                {
+                  "decision_id": "T0-FIXTURE",
+                  "horizon_min": 60,
+                  "target_at": "2026-09-17T02:10:00.000Z",
+                  "matched_at": "2026-09-17T02:10:00.000Z",
+                  "price": 100.26,
+                  "change_pct": 0.1198,
+                  "direction": "UP",
+                  "certification_status": "CERTIFIED"
+                }
+              ]
+            }
+          ],
+          "rows": [
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 5,
+              "target_at": "2026-09-17T01:15:00.000Z",
+              "matched_at": "2026-09-17T01:15:00.000Z",
+              "price": 100.15,
+              "change_pct": 0.01,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 15,
+              "target_at": "2026-09-17T01:25:00.000Z",
+              "matched_at": "2026-09-17T01:25:00.000Z",
+              "price": 100.17,
+              "change_pct": 0.03,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            },
+            {
+              "decision_id": "T0-FIXTURE",
+              "horizon_min": 60,
+              "target_at": "2026-09-17T02:10:00.000Z",
+              "matched_at": "2026-09-17T02:10:00.000Z",
+              "price": 100.26,
+              "change_pct": 0.1198,
+              "direction": "UP",
+              "certification_status": "CERTIFIED"
+            }
+          ],
+          "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+          "next_layer": "EXECUTION_REALISM",
+          "horizon_anchor": "decision_at",
+          "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+          "missing_numeric_coercion_to_zero": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "live_unlock": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "execution_229": {
+          "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+          "build": "40.6.229",
+          "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+          "state": "WAIT_NATURAL_PAPER_AFTER_COST_EVIDENCE",
+          "ready": false,
+          "data_layer": {
+            "strict_outcomes_ready": true,
+            "source_build": "40.6.228",
+            "joined_decisions": 1,
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "horizon_anchor": "decision_at"
+          },
+          "mechanism_layer": {
+            "lifecycle": {
+              "build": null,
+              "capabilities": {
+                "owner_present": false,
+                "submit": false,
+                "acknowledge": false,
+                "fill": false,
+                "reconcile": false,
+                "timeout": false,
+                "cancel": false
+              },
+              "mechanism_present": false,
+              "partial_fill_mechanism_present": false,
+              "paper_only": false,
+              "real_orders": false
+            },
+            "acceptance": {
+              "owner_present": false,
+              "build": null,
+              "receipt_present": false,
+              "receipt_pass": false,
+              "partial_fill_lab_checks_present": false,
+              "partial_fill_lab_checks_pass": false,
+              "state_preserved": false,
+              "check_count": 0
+            }
+          },
+          "terrain_layer": {
+            "after_cost": {
+              "owner_present": false,
+              "build": null,
+              "trades": 0,
+              "complete_cost_trades": 0,
+              "verified_accounting_trades": 0,
+              "sample_state": "UNKNOWN",
+              "sample_min": null,
+              "cost_model_complete": false,
+              "ledger_consistency_complete": false,
+              "rows_present": 0
+            },
+            "partial_fill_terrain_proven": false
+          },
+          "model_layer": {
+            "execution_latency": "NOT_PROVEN",
+            "execution_liquidity": "NOT_PROVEN",
+            "generic_network_latency_is_execution_proof": false,
+            "generic_market_liquidity_is_execution_proof": false
+          },
+          "blockers": [
+            "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+            "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+            "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+            "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+            "EXECUTION_LATENCY_MODEL_UNPROVEN",
+            "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+          "force_trade": false,
+          "threshold_change": false,
+          "economic_backtest": false,
+          "profitability_claim": false,
+          "gate_promotion": false,
+          "current_runtime_backfill": false,
+          "current_oracle_applied_to_past": false,
+          "future_outcomes_used_as_t0_input": false,
+          "lookahead": false,
+          "recurring_timer": false,
+          "observer": false,
+          "storage_write": false,
+          "business_network_request": false,
+          "paper_only": true,
+          "real_order": false,
+          "g3": "PENDING",
+          "g9": "LOCKED"
+        },
+        "strict_series": {
+          "certified": true,
+          "quality": "TEMPORAL_COVERAGE_PROVEN",
+          "expectedCadence": 5,
+          "duplicates": 0
+        },
+        "strict_t0_certified": 1,
+        "strict_dataset_ready": true,
+        "checkpoint": {
+          "temporal": true,
+          "cadence": 5,
+          "t0": 1,
+          "dataset_ready": true,
+          "blockers": []
+        },
+        "outcomes": {
+          "pass": true,
+          "count": 3,
+          "expected": 3
+        },
+        "readiness": "WAIT_EXECUTION_EVIDENCE",
+        "execution_blockers": [
+          "AFTER_COST_OWNER_UNAVAILABLE",
+          "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+          "LATENCY_MODEL_UNPROVEN",
+          "LIQUIDITY_MODEL_UNPROVEN"
+        ],
+        "g3": "PENDING",
+        "actual_decision_at": "2026-09-17T01:10:00.000Z",
+        "market_at": "2026-09-17T01:00:00.000Z",
+        "reported_t0": "2026-09-17T01:00:00.000Z",
+        "t5": {
+          "status": "CERTIFIED",
+          "target_at": "2026-09-17T01:05:00.000Z",
+          "matched_at": "2026-09-17T01:05:00.000Z",
+          "price": 100.13,
+          "gap_sec": 0,
+          "change_pct": 0.01,
+          "direction": "UP"
+        },
+        "t5_before_actual_decision": true
+      }
+    },
+    {
+      "id": "N07_NEXT_DAY_WINDOW_LOSES_CERTIFICATION",
+      "value": {
+        "before": {
+          "strict_226": {
+            "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+            "build": "40.6.226",
+            "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+            "temporal_contract": "CERTIFIED",
+            "replay_dataset": "READY_FOR_DECISION_REPLAY",
+            "joined_decisions": 1,
+            "horizons_min": [
+              5,
+              15,
+              60
+            ],
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+            "strict_pass": true,
+            "blockers": [],
+            "decisions": [
+              {
+                "id": "T0-FIXTURE",
+                "asset": "BTC",
+                "decision": "NO_TRADE",
+                "market_at": "2026-09-17T01:00:00.000Z",
+                "decision_at": "2026-09-17T01:00:01.000Z",
+                "available_at": "2026-09-17T01:00:01.000Z",
+                "decision_market_lag_sec": 1,
+                "base_at": "2026-09-17T01:00:00.000Z",
+                "base_price": 100.12,
+                "horizons": {
+                  "t5": {
+                    "status": "CERTIFIED",
+                    "target_at": "2026-09-17T01:05:01.000Z",
+                    "matched_at": "2026-09-17T01:10:00.000Z",
+                    "price": 100.14,
+                    "gap_sec": 299,
+                    "change_pct": 0.02,
+                    "direction": "UP",
+                    "certification_status": "CERTIFIED"
+                  },
+                  "t15": {
+                    "status": "CERTIFIED",
+                    "target_at": "2026-09-17T01:15:01.000Z",
+                    "matched_at": "2026-09-17T01:20:00.000Z",
+                    "price": 100.16,
+                    "gap_sec": 299,
+                    "change_pct": 0.04,
+                    "direction": "UP",
+                    "certification_status": "CERTIFIED"
+                  },
+                  "t60": {
+                    "status": "CERTIFIED",
+                    "target_at": "2026-09-17T02:00:01.000Z",
+                    "matched_at": "2026-09-17T02:05:00.000Z",
+                    "price": 100.25,
+                    "gap_sec": 299,
+                    "change_pct": 0.1298,
+                    "direction": "UP",
+                    "certification_status": "CERTIFIED"
+                  }
+                },
+                "certified_horizons": 3,
+                "expected_horizons": 3,
+                "pass": true,
+                "blockers": []
+              }
+            ],
+            "legacy_222": {
+              "pass": true,
+              "joined_decisions": 1,
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "status": "REVALIDATED_UNDER_DECISION_TIME"
+            },
+            "current_next_layer": "EXECUTION_REALISM",
+            "execution_blockers": [
+              "AFTER_COST_OWNER_UNAVAILABLE",
+              "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+              "LATENCY_MODEL_UNPROVEN",
+              "LIQUIDITY_MODEL_UNPROVEN"
+            ],
+            "horizon_anchor": "decision_at",
+            "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+            "missing_numeric_coercion_to_zero": false,
+            "historical_receipt_reopened": true,
+            "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+            "current_runtime_backfill": false,
+            "current_oracle_applied_to_past": false,
+            "future_outcomes_used_as_t0_input": false,
+            "economic_backtest": false,
+            "profitability_claim": false,
+            "gate_promotion": false,
+            "recurring_timer": false,
+            "observer": false,
+            "storage_write": false,
+            "business_network_request": false,
+            "paper_only": true,
+            "real_order": false,
+            "g3": "PENDING",
+            "g9": "LOCKED"
+          },
+          "strict_228": {
+            "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+            "build": "40.6.228",
+            "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+            "source_build": "40.6.226",
+            "state": "OUTCOME_LABELS_CERTIFIED_STRICT_DECISION_TIME",
+            "pass": true,
+            "replay_dataset": "READY_FOR_DECISION_REPLAY",
+            "temporal_contract": "CERTIFIED",
+            "joined_decisions": 1,
+            "horizons_min": [
+              5,
+              15,
+              60
+            ],
+            "certified_horizons": 3,
+            "expected_horizons": 3,
+            "outcome_labels": "CERTIFIED_STRICT_DECISION_TIME",
+            "blockers": [],
+            "decisions": [
+              {
+                "id": "T0-FIXTURE",
+                "decision_at": "2026-09-17T01:00:01.000Z",
+                "market_at": "2026-09-17T01:00:00.000Z",
+                "pass": true,
+                "certified_horizons": 3,
+                "expected_horizons": 3,
+                "blockers": [],
+                "rows": [
+                  {
+                    "decision_id": "T0-FIXTURE",
+                    "horizon_min": 5,
+                    "target_at": "2026-09-17T01:05:01.000Z",
+                    "matched_at": "2026-09-17T01:10:00.000Z",
+                    "price": 100.14,
+                    "change_pct": 0.02,
+                    "direction": "UP",
+                    "certification_status": "CERTIFIED"
+                  },
+                  {
+                    "decision_id": "T0-FIXTURE",
+                    "horizon_min": 15,
+                    "target_at": "2026-09-17T01:15:01.000Z",
+                    "matched_at": "2026-09-17T01:20:00.000Z",
+                    "price": 100.16,
+                    "change_pct": 0.04,
+                    "direction": "UP",
+                    "certification_status": "CERTIFIED"
+                  },
+                  {
+                    "decision_id": "T0-FIXTURE",
+                    "horizon_min": 60,
+                    "target_at": "2026-09-17T02:00:01.000Z",
+                    "matched_at": "2026-09-17T02:05:00.000Z",
+                    "price": 100.25,
+                    "change_pct": 0.1298,
+                    "direction": "UP",
+                    "certification_status": "CERTIFIED"
+                  }
+                ]
+              }
+            ],
+            "rows": [
+              {
+                "decision_id": "T0-FIXTURE",
+                "horizon_min": 5,
+                "target_at": "2026-09-17T01:05:01.000Z",
+                "matched_at": "2026-09-17T01:10:00.000Z",
+                "price": 100.14,
+                "change_pct": 0.02,
+                "direction": "UP",
+                "certification_status": "CERTIFIED"
+              },
+              {
+                "decision_id": "T0-FIXTURE",
+                "horizon_min": 15,
+                "target_at": "2026-09-17T01:15:01.000Z",
+                "matched_at": "2026-09-17T01:20:00.000Z",
+                "price": 100.16,
+                "change_pct": 0.04,
+                "direction": "UP",
+                "certification_status": "CERTIFIED"
+              },
+              {
+                "decision_id": "T0-FIXTURE",
+                "horizon_min": 60,
+                "target_at": "2026-09-17T02:00:01.000Z",
+                "matched_at": "2026-09-17T02:05:00.000Z",
+                "price": 100.25,
+                "change_pct": 0.1298,
+                "direction": "UP",
+                "certification_status": "CERTIFIED"
+              }
+            ],
+            "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+            "next_layer": "EXECUTION_REALISM",
+            "horizon_anchor": "decision_at",
+            "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+            "missing_numeric_coercion_to_zero": false,
+            "current_runtime_backfill": false,
+            "current_oracle_applied_to_past": false,
+            "future_outcomes_used_as_t0_input": false,
+            "lookahead": false,
+            "economic_backtest": false,
+            "profitability_claim": false,
+            "gate_promotion": false,
+            "live_unlock": false,
+            "recurring_timer": false,
+            "observer": false,
+            "storage_write": false,
+            "business_network_request": false,
+            "paper_only": true,
+            "real_order": false,
+            "g3": "PENDING",
+            "g9": "LOCKED"
+          },
+          "execution_229": {
+            "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+            "build": "40.6.229",
+            "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+            "state": "WAIT_NATURAL_PAPER_AFTER_COST_EVIDENCE",
+            "ready": false,
+            "data_layer": {
+              "strict_outcomes_ready": true,
+              "source_build": "40.6.228",
+              "joined_decisions": 1,
+              "certified_horizons": 3,
+              "expected_horizons": 3,
+              "horizon_anchor": "decision_at"
+            },
+            "mechanism_layer": {
+              "lifecycle": {
+                "build": null,
+                "capabilities": {
+                  "owner_present": false,
+                  "submit": false,
+                  "acknowledge": false,
+                  "fill": false,
+                  "reconcile": false,
+                  "timeout": false,
+                  "cancel": false
+                },
+                "mechanism_present": false,
+                "partial_fill_mechanism_present": false,
+                "paper_only": false,
+                "real_orders": false
+              },
+              "acceptance": {
+                "owner_present": false,
+                "build": null,
+                "receipt_present": false,
+                "receipt_pass": false,
+                "partial_fill_lab_checks_present": false,
+                "partial_fill_lab_checks_pass": false,
+                "state_preserved": false,
+                "check_count": 0
+              }
+            },
+            "terrain_layer": {
+              "after_cost": {
+                "owner_present": false,
+                "build": null,
+                "trades": 0,
+                "complete_cost_trades": 0,
+                "verified_accounting_trades": 0,
+                "sample_state": "UNKNOWN",
+                "sample_min": null,
+                "cost_model_complete": false,
+                "ledger_consistency_complete": false,
+                "rows_present": 0
+              },
+              "partial_fill_terrain_proven": false
+            },
+            "model_layer": {
+              "execution_latency": "NOT_PROVEN",
+              "execution_liquidity": "NOT_PROVEN",
+              "generic_network_latency_is_execution_proof": false,
+              "generic_market_liquidity_is_execution_proof": false
+            },
+            "blockers": [
+              "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+              "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+              "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+              "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+              "EXECUTION_LATENCY_MODEL_UNPROVEN",
+              "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+            ],
+            "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+            "force_trade": false,
+            "threshold_change": false,
+            "economic_backtest": false,
+            "profitability_claim": false,
+            "gate_promotion": false,
+            "current_runtime_backfill": false,
+            "current_oracle_applied_to_past": false,
+            "future_outcomes_used_as_t0_input": false,
+            "lookahead": false,
+            "recurring_timer": false,
+            "observer": false,
+            "storage_write": false,
+            "business_network_request": false,
+            "paper_only": true,
+            "real_order": false,
+            "g3": "PENDING",
+            "g9": "LOCKED"
+          },
+          "strict_series": {
+            "certified": true,
+            "quality": "TEMPORAL_COVERAGE_PROVEN",
+            "expectedCadence": 5,
+            "duplicates": 0
+          },
+          "strict_t0_certified": 1,
+          "strict_dataset_ready": true,
+          "checkpoint": {
+            "temporal": true,
+            "cadence": 5,
+            "t0": 1,
+            "dataset_ready": true,
+            "blockers": []
+          },
+          "outcomes": {
+            "pass": true,
+            "count": 3,
+            "expected": 3
+          },
+          "readiness": "WAIT_EXECUTION_EVIDENCE",
+          "execution_blockers": [
+            "AFTER_COST_OWNER_UNAVAILABLE",
+            "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+            "LATENCY_MODEL_UNPROVEN",
+            "LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "g3": "PENDING"
+        },
+        "after": {
+          "strict_226": {
+            "schema": "agent_crypto_g3_strict_decision_time_truth_v1",
+            "build": "40.6.226",
+            "owner": "G3_STRICT_DECISION_TIME_TRUTH_OWNER",
+            "temporal_contract": "CERTIFIED",
+            "replay_dataset": "NOT_READY",
+            "joined_decisions": 0,
+            "horizons_min": [
+              5,
+              15,
+              60
+            ],
+            "certified_horizons": 0,
+            "expected_horizons": 0,
+            "outcome_labels": "NOT_CERTIFIED_STRICT_DECISION_TIME",
+            "strict_pass": false,
+            "blockers": [
+              "REPLAY_DATASET_NOT_READY",
+              "NO_JOINED_DECISION"
+            ],
+            "decisions": [],
+            "legacy_222": {
+              "pass": false,
+              "joined_decisions": 0,
+              "certified_horizons": 0,
+              "expected_horizons": 0,
+              "status": "LEGACY_NOT_CURRENTLY_PASSING"
+            },
+            "current_next_layer": "STRICT_DECISION_TIME_OUTCOME_REVALIDATION",
+            "execution_blockers": [],
+            "horizon_anchor": "decision_at",
+            "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+            "missing_numeric_coercion_to_zero": false,
+            "historical_receipt_reopened": true,
+            "historical_receipt_reason": "STRICT_DECISION_TIME_REVALIDATION",
+            "current_runtime_backfill": false,
+            "current_oracle_applied_to_past": false,
+            "future_outcomes_used_as_t0_input": false,
+            "economic_backtest": false,
+            "profitability_claim": false,
+            "gate_promotion": false,
+            "recurring_timer": false,
+            "observer": false,
+            "storage_write": false,
+            "business_network_request": false,
+            "paper_only": true,
+            "real_order": false,
+            "g3": "PENDING",
+            "g9": "LOCKED"
+          },
+          "strict_228": {
+            "schema": "agent_crypto_g3_strict_outcome_revalidation_v1",
+            "build": "40.6.228",
+            "owner": "G3_STRICT_OUTCOME_REVALIDATION_OWNER",
+            "source_build": "40.6.226",
+            "state": "STRICT_OUTCOME_REVALIDATION_REQUIRED",
+            "pass": false,
+            "replay_dataset": "NOT_READY",
+            "temporal_contract": "CERTIFIED",
+            "joined_decisions": 0,
+            "horizons_min": [
+              5,
+              15,
+              60
+            ],
+            "certified_horizons": 0,
+            "expected_horizons": 0,
+            "outcome_labels": "NOT_CERTIFIED_STRICT_DECISION_TIME",
+            "blockers": [
+              "REPLAY_DATASET_NOT_READY",
+              "NO_JOINED_DECISION",
+              "STRICT_OWNER_NOT_PASSING"
+            ],
+            "decisions": [],
+            "rows": [],
+            "legacy_222_authority": "SUPERSEDED_BY_STRICT_DECISION_TIME_REVALIDATION",
+            "next_layer": "STRICT_OUTCOME_REVALIDATION",
+            "horizon_anchor": "decision_at",
+            "source_market_time_role": "MARKET_INPUT_PROVENANCE_ONLY",
+            "missing_numeric_coercion_to_zero": false,
+            "current_runtime_backfill": false,
+            "current_oracle_applied_to_past": false,
+            "future_outcomes_used_as_t0_input": false,
+            "lookahead": false,
+            "economic_backtest": false,
+            "profitability_claim": false,
+            "gate_promotion": false,
+            "live_unlock": false,
+            "recurring_timer": false,
+            "observer": false,
+            "storage_write": false,
+            "business_network_request": false,
+            "paper_only": true,
+            "real_order": false,
+            "g3": "PENDING",
+            "g9": "LOCKED"
+          },
+          "execution_229": {
+            "schema": "agent_crypto_g3_strict_execution_realism_rebind_v1",
+            "build": "40.6.229",
+            "owner": "G3_STRICT_EXECUTION_REALISM_REBIND_OWNER",
+            "state": "WAIT_STRICT_DATA_OUTCOMES",
+            "ready": false,
+            "data_layer": {
+              "strict_outcomes_ready": false,
+              "source_build": "40.6.228",
+              "joined_decisions": 0,
+              "certified_horizons": 0,
+              "expected_horizons": 0,
+              "horizon_anchor": "decision_at"
+            },
+            "mechanism_layer": {
+              "lifecycle": {
+                "build": null,
+                "capabilities": {
+                  "owner_present": false,
+                  "submit": false,
+                  "acknowledge": false,
+                  "fill": false,
+                  "reconcile": false,
+                  "timeout": false,
+                  "cancel": false
+                },
+                "mechanism_present": false,
+                "partial_fill_mechanism_present": false,
+                "paper_only": false,
+                "real_orders": false
+              },
+              "acceptance": {
+                "owner_present": false,
+                "build": null,
+                "receipt_present": false,
+                "receipt_pass": false,
+                "partial_fill_lab_checks_present": false,
+                "partial_fill_lab_checks_pass": false,
+                "state_preserved": false,
+                "check_count": 0
+              }
+            },
+            "terrain_layer": {
+              "after_cost": {
+                "owner_present": false,
+                "build": null,
+                "trades": 0,
+                "complete_cost_trades": 0,
+                "verified_accounting_trades": 0,
+                "sample_state": "UNKNOWN",
+                "sample_min": null,
+                "cost_model_complete": false,
+                "ledger_consistency_complete": false,
+                "rows_present": 0
+              },
+              "partial_fill_terrain_proven": false
+            },
+            "model_layer": {
+              "execution_latency": "NOT_PROVEN",
+              "execution_liquidity": "NOT_PROVEN",
+              "generic_network_latency_is_execution_proof": false,
+              "generic_market_liquidity_is_execution_proof": false
+            },
+            "blockers": [
+              "STRICT_DATA_OUTCOMES_NOT_CERTIFIED",
+              "PAPER_LIFECYCLE_MECHANISM_INCOMPLETE",
+              "PARTIAL_FILL_MECHANISM_UNAVAILABLE",
+              "NO_AFTER_COST_PAPER_TERRAIN_EVIDENCE",
+              "PARTIAL_FILL_TERRAIN_EVIDENCE_UNPROVEN",
+              "EXECUTION_LATENCY_MODEL_UNPROVEN",
+              "EXECUTION_LIQUIDITY_MODEL_UNPROVEN"
+            ],
+            "next_action": "WAIT_FOR_NATURALLY_ELIGIBLE_STRATEGY_A_PAPER_AND_RECORD_COMPLETE_AFTER_COST_FACTS",
+            "force_trade": false,
+            "threshold_change": false,
+            "economic_backtest": false,
+            "profitability_claim": false,
+            "gate_promotion": false,
+            "current_runtime_backfill": false,
+            "current_oracle_applied_to_past": false,
+            "future_outcomes_used_as_t0_input": false,
+            "lookahead": false,
+            "recurring_timer": false,
+            "observer": false,
+            "storage_write": false,
+            "business_network_request": false,
+            "paper_only": true,
+            "real_order": false,
+            "g3": "PENDING",
+            "g9": "LOCKED"
+          },
+          "strict_series": {
+            "certified": true,
+            "quality": "TEMPORAL_COVERAGE_PROVEN",
+            "expectedCadence": 5,
+            "duplicates": 0
+          },
+          "strict_t0_certified": 1,
+          "strict_dataset_ready": false,
+          "checkpoint": {
+            "temporal": true,
+            "cadence": 5,
+            "t0": 1,
+            "dataset_ready": false,
+            "blockers": [
+              "NO_T0_DECISION_INSIDE_CERTIFIED_WINDOW"
+            ]
+          },
+          "outcomes": {
+            "pass": false,
+            "count": 0,
+            "expected": 0
+          },
+          "readiness": "WAIT_DATA_AND_OUTCOMES",
+          "execution_blockers": [
+            "REPLAY_DATASET_NOT_READY",
+            "OUTCOME_LABELS_NOT_CERTIFIED",
+            "AFTER_COST_OWNER_UNAVAILABLE",
+            "PARTIAL_FILL_LIFECYCLE_UNPROVEN",
+            "LATENCY_MODEL_UNPROVEN",
+            "LIQUIDITY_MODEL_UNPROVEN"
+          ],
+          "g3": "PENDING"
+        }
+      }
+    }
+  ],
+  "loader_fixtures": [
+    {
+      "fixture": "DOM/network stub; events indicate script transport only, not actual module execution",
+      "fail_first_script": false,
+      "first": {
+        "build": "40.6.273",
+        "owner": "strategy-a-evidence-demand-loader.js",
+        "mode": "DEMAND_OR_IDLE_PACED",
+        "loaded": 26,
+        "total": 26,
+        "complete": true,
+        "reason_last": "probe-first",
+        "direct_parser_injection": false,
+        "idle_paced": true,
+        "recurring_timer": false,
+        "observer": false,
+        "business_network_request": false,
+        "real_order": false,
+        "paper_only": true,
+        "g3": "PENDING",
+        "g9": "LOCKED"
+      },
+      "retry": {
+        "build": "40.6.273",
+        "owner": "strategy-a-evidence-demand-loader.js",
+        "mode": "DEMAND_OR_IDLE_PACED",
+        "loaded": 26,
+        "total": 26,
+        "complete": true,
+        "reason_last": "probe-retry",
+        "direct_parser_injection": false,
+        "idle_paced": true,
+        "recurring_timer": false,
+        "observer": false,
+        "business_network_request": false,
+        "real_order": false,
+        "paper_only": true,
+        "g3": "PENDING",
+        "g9": "LOCKED"
+      },
+      "requests_first": 26,
+      "requests_after_retry": 26,
+      "warnings": [],
+      "ready_events": [
+        {
+          "advertised_modules": 25
+        }
+      ],
+      "failed_script_still_present": false
+    },
+    {
+      "fixture": "DOM/network stub; events indicate script transport only, not actual module execution",
+      "fail_first_script": true,
+      "first": {
+        "build": "40.6.273",
+        "owner": "strategy-a-evidence-demand-loader.js",
+        "mode": "DEMAND_OR_IDLE_PACED",
+        "loaded": 25,
+        "total": 26,
+        "complete": true,
+        "reason_last": "probe-first",
+        "direct_parser_injection": false,
+        "idle_paced": true,
+        "recurring_timer": false,
+        "observer": false,
+        "business_network_request": false,
+        "real_order": false,
+        "paper_only": true,
+        "g3": "PENDING",
+        "g9": "LOCKED"
+      },
+      "retry": {
+        "build": "40.6.273",
+        "owner": "strategy-a-evidence-demand-loader.js",
+        "mode": "DEMAND_OR_IDLE_PACED",
+        "loaded": 25,
+        "total": 26,
+        "complete": true,
+        "reason_last": "probe-retry",
+        "direct_parser_injection": false,
+        "idle_paced": true,
+        "recurring_timer": false,
+        "observer": false,
+        "business_network_request": false,
+        "real_order": false,
+        "paper_only": true,
+        "g3": "PENDING",
+        "g9": "LOCKED"
+      },
+      "requests_first": 26,
+      "requests_after_retry": 26,
+      "warnings": [
+        "Error: evidence demand module failed: ./js/strategy-a-evidence-lifecycle-truth.js"
+      ],
+      "ready_events": [
+        {
+          "advertised_modules": 25
+        }
+      ],
+      "failed_script_still_present": true
+    }
+  ],
+  "reproduction_sources": {
+    "gate-probes.cjs": "const fs=require('fs'),vm=require('vm');\nconst root='audit-406273/current/public/agent_crypto_erith_ia/administrator/js/';\nconst results=[];\nconst record=(id,value)=>results.push({id,value:JSON.parse(JSON.stringify(value))});\nconst copy=x=>JSON.parse(JSON.stringify(x));\nfunction make(storage=new Map()) { return vm.createContext({Date,console,structuredClone,queueMicrotask:()=>{},sessionStorage:{getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)}}); }\nfunction load(c,...files){for(const f of files)vm.runInContext(fs.readFileSync(root+f,'utf8'),c,{filename:f});return c;}\nconst base=Date.parse('2026-09-17T00:00:00Z'),iso=n=>new Date(n).toISOString();\nconst series=(start=base)=>Array.from({length:289},(_,i)=>[start+i*300000,100+i/100]);\nconst good=()=>({cycle_id:'T0-FIXTURE',asset:'BTC',decision:'NO_TRADE',reason:'DATA',market_at:iso(base+3600000),decision_at:iso(base+3601000),available_at:iso(base+3601000),strategy_build:'40.6.56',policy_build:'40.6.56',data_ready:false,regime:'MIXTE',direction:20,direction_score:20,confidence:85,btc_24h_pct:1,btc24_pct:1,reentry_fresh:true,expected_move_pct:1,required_move_pct:.8,cost_gate_pct:.8,duplicate:false,risk_decision:'ACCEPT',authorized_notional_eur:50});\nfunction pipeline(rows,ledger,cadence=5){const c=make();c.state={chartPeriodDays:1,coins:[{id:'bitcoin',symbol:'btc'}],dataBroker:{comparison:{period:1,results:{bitcoin:{series:rows,periodDays:1,...(cadence===null?{}:{expected_cadence_min:cadence})}}}}};c.AgentCryptoStrategyAExperimentLedger={read:()=>ledger};load(c,'strategy-a-g3-structured-data-truth.js','strategy-a-g3-t0-decision-proof.js','strategy-a-g3-replay-dataset.js','strategy-a-g3-cascade-checkpoint.js','strategy-a-g3-post-horizon-outcome.js','strategy-a-g3-outcome-certification-406222.js','strategy-a-g3-realistic-replay-readiness-406223.js','strategy-a-g3-strict-decision-time-truth-406226.js','strategy-a-g3-strict-outcome-revalidation-406228.js','strategy-a-g3-strict-execution-realism-rebind-406229.js');return c;}\nfunction chain(c){const raw=c.AgentCryptoMarketSeriesTruth.snapshot(),t0=c.AgentCryptoStrategyAG3T0DecisionProof.snapshot(),ds=c.AgentCryptoStrategyAG3ReplayDataset.snapshot(),cp=c.AgentCryptoStrategyAG3CascadeCheckpoint.snapshot(),out=c.AgentCryptoStrategyAG3OutcomeCertification.snapshot(),ready=c.AgentCryptoStrategyAG3RealisticReplayReadiness.snapshot();return{strict_226:c.AgentCryptoStrategyAG3StrictDecisionTimeTruth.snapshot(),strict_228:c.AgentCryptoStrategyAG3StrictOutcomeRevalidation.snapshot(),execution_229:c.AgentCryptoStrategyAG3StrictExecutionRealismRebind.snapshot(),strict_series:{certified:raw.temporal_coverage_certified,quality:raw.quality_state,expectedCadence:raw.expected_cadence_min,duplicates:raw.duplicate_timestamps},strict_t0_certified:t0.certified_t0_rows,strict_dataset_ready:ds.replay_input_ready,checkpoint:{temporal:cp.temporal.certified,cadence:cp.temporal.observed_cadence_min,t0:cp.t0.certified_rows,dataset_ready:cp.dataset.ready,blockers:cp.dataset.blockers},outcomes:{pass:out.pass,count:out.certified_horizons,expected:out.expected_horizons},readiness:ready.state,execution_blockers:ready.blockers,g3:ready.g3};}\nlet c=pipeline(series(),[good()]);record('N01_COMPLETE_FIXTURE_CONTROL',chain(c));\nconst incomplete=good();for(const k of ['direction','direction_score','confidence','btc_24h_pct','btc24_pct','expected_move_pct','required_move_pct','cost_gate_pct','regime','reentry_fresh','risk_decision','authorized_notional_eur'])delete incomplete[k];\nc=pipeline(series(),[incomplete]);record('N02_INCOMPLETE_T0_CERTIFIED_DOWNSTREAM',{...chain(c),normalized:c.AgentCryptoStrategyAG3CascadeCheckpoint.normalize_t0(incomplete)});\nc=pipeline([[base,100],[base+86400000,102]],[],5);record('N03_TWO_POINTS_24H_CHECKPOINT_CERTIFIES',chain(c));\nc=pipeline(series(),[good()],null);record('N04_CADENCE_UNKNOWN_UPSTREAM_ACCEPTED_DOWNSTREAM',chain(c));\nconst dup=series();dup.splice(51,0,[dup[50][0],999]);c=pipeline(dup,[good()]);record('N05_CONFLICTING_DUPLICATE_SILENTLY_DROPPED',chain(c));\nconst stale=good();stale.decision_at=iso(base+4200000);stale.available_at=stale.decision_at;c=pipeline(series(),[stale]);const out=c.AgentCryptoStrategyAG3PostHorizonOutcome.snapshot();record('N06_OUTCOME_BEFORE_ACTUAL_DECISION',{...chain(c),actual_decision_at:stale.decision_at,market_at:stale.market_at,reported_t0:out.decisions[0].t0_at,t5:out.decisions[0].horizons.t5,t5_before_actual_decision:Date.parse(out.decisions[0].horizons.t5.matched_at)<Date.parse(stale.decision_at)});\nc=pipeline(series(),[good()]);const before=chain(c);c.state.dataBroker.comparison.results.bitcoin.series=series(base+86400000);record('N07_NEXT_DAY_WINDOW_LOSES_CERTIFICATION',{before,after:chain(c)});\n\nfs.writeFileSync('audit-406273/gate-probes.json',JSON.stringify(results,null,2));\nfor(const r of results){const v=r.value; console.log(JSON.stringify({id:r.id,strict_series:v.strict_series,strict_t0:v.strict_t0_certified,strict_ds:v.strict_dataset_ready,checkpoint:v.checkpoint,strict226:v.strict_226?.strict_pass,strict228:v.strict_228?.pass,blocks:v.strict_226?.blockers,window:v.before?{before:v.before.strict_226.strict_pass,after:v.after.strict_226.strict_pass}:undefined}));}\n",
+    "loader-probes.cjs": "const fs=require('fs'),vm=require('vm');\nconst source=fs.readFileSync('audit-406273/current/public/agent_crypto_erith_ia/administrator/js/strategy-a-evidence-demand-loader.js','utf8');\nasync function run(fail){\n const scripts=[],events=[],warnings=[],winListeners={};let requests=0;\n const document={baseURI:'https://example.test/administrator/',readyState:'loading',scripts,\n  addEventListener(){},dispatchEvent(e){events.push(e)},createElement(){const handlers={};return{dataset:{},addEventListener(k,fn){handlers[k]=fn},handlers}},\n  head:{appendChild(s){scripts.push(s);requests++;queueMicrotask(()=>s.handlers[fail&&requests===1?'error':'load']());}}};\n const ctx=vm.createContext({document,window:{addEventListener(k,fn){winListeners[k]=fn}},location:{hash:''},URL,\n  requestIdleCallback:fn=>queueMicrotask(fn),setTimeout:fn=>queueMicrotask(fn),Element:class {},CustomEvent:class {constructor(type,options){this.type=type;this.detail=options.detail;}},console:{warn:(...x)=>warnings.push(String(x[2]))}});\n vm.runInContext(source,ctx);const api=ctx.AgentCryptoCanonicalEvidenceWiring;\n await api.load('probe-first');const first=api.snapshot(),requestsFirst=requests;\n await api.load('probe-retry');\n return{fixture:'DOM/network stub; events indicate script transport only, not actual module execution',fail_first_script:fail,first,retry:api.snapshot(),requests_first:requestsFirst,requests_after_retry:requests,warnings,ready_events:events.filter(e=>e.type==='agent-crypto:runtime-modules-ready').map(e=>({advertised_modules:e.detail.modules.length})),failed_script_still_present:fail&&scripts.length===26};\n}\n(async()=>{const results=[await run(false),await run(true)];fs.writeFileSync('audit-406273/loader-probes.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));})();\n"
+  },
+  "notes": [
+    "The synthetic fixtures use Sept17 timestamps for reproducibility; they do not describe market prices or operator actions.",
+    "Intermediate strict PASS does not promote G3: G3 remains PENDING and G9 LOCKED.",
+    "The loader DOM stub does not execute the downloaded scripts. It isolates transport state and retry semantics.",
+    "The window rotation test does not simulate the whole IndexedDB environment."
+  ],
+  "report_sha256": "920c83bc93db1c6201eac42e149cd24926f252c8ee9089e937d3da19e4479237"
+}
