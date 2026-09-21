@@ -110,27 +110,8 @@
         Number.isFinite(configuredMaxHeight) && configuredMaxHeight > 0 ? configuredMaxHeight : viewportMaxHeight,
         viewportMaxHeight
       ));
-      let width = clamp(geometry.width || Math.min(1180, vw * .82), Math.min(minWidth, maxWidth), maxWidth);
-      let height = clamp(geometry.height || Math.min(760, vh * .80), Math.min(minHeight, maxHeight), maxHeight);
-
-      // Optional native-window aspect policy. Aether uses height as the anchor so
-      // side-letterboxing is removed by narrowing the outer frame instead of
-      // inflating it vertically. Other windows are unchanged unless they opt in.
-      const aspectRatio = Number(policy.aspectRatio);
-      if (Number.isFinite(aspectRatio) && aspectRatio > 0) {
-        const anchor = String(policy.aspectAnchor || "width").toLowerCase();
-        if (anchor === "height") width = height * aspectRatio;
-        else height = width / aspectRatio;
-
-        if (width > maxWidth) { width = maxWidth; height = width / aspectRatio; }
-        if (height > maxHeight) { height = maxHeight; width = height * aspectRatio; }
-        if (width < Math.min(minWidth, maxWidth)) { width = Math.min(minWidth, maxWidth); height = width / aspectRatio; }
-        if (height < Math.min(minHeight, maxHeight)) { height = Math.min(minHeight, maxHeight); width = height * aspectRatio; }
-
-        width = Math.min(maxWidth, Math.max(1, width));
-        height = Math.min(maxHeight, Math.max(1, height));
-      }
-
+      const width = clamp(geometry.width || Math.min(1180, vw * .82), Math.min(minWidth, maxWidth), maxWidth);
+      const height = clamp(geometry.height || Math.min(760, vh * .80), Math.min(minHeight, maxHeight), maxHeight);
       const fullyVisible = policy.keepFullyVisible === true;
       const maxX = fullyVisible
         ? Math.max(VIEWPORT_MARGIN, vw - width - VIEWPORT_MARGIN)
@@ -330,9 +311,7 @@
         }
         if (moved) {
           set.suppressNextClick = true;
-          const rect = currentRect(win);
-          if (win.transientGeometry) win.transientGeometry = { ...rect };
-          else win.geometry = { ...rect };
+          win.geometry = currentRect(win);
           persistGeometry(win);
         }
       };
@@ -407,7 +386,7 @@
           x: dragBase.x + dx,
           y: dragBase.y + dy,
           width: dragBase.width,
-          height: win.transientGeometry?.height || win.geometry?.height || dragBase.height
+          height: win.geometry?.height || dragBase.height
         });
         setManagedFloatingStyle(win, target, "left", `${safe.x}px`);
         setManagedFloatingStyle(win, target, "top", `${safe.y}px`);
@@ -524,7 +503,6 @@
         hidden: false,
         maximized: false,
         geometry: null,
-        transientGeometry: null,
         restoreGeometry: null,
         restoreFloating: false,
         directPointerUp: null,
@@ -623,14 +601,9 @@
       setManagedFloatingStyle(win, target, "max-height", `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`);
     }
 
-    function setGeometryOnTarget(win, geometry, options = {}) {
+    function setGeometryOnTarget(win, geometry) {
       const safe = clampWindowGeometry(win, geometry);
-      const transient = options.transient === true;
-      if (transient) win.transientGeometry = { ...safe };
-      else {
-        win.geometry = { ...safe };
-        win.transientGeometry = null;
-      }
+      win.geometry = { ...safe };
       const target = win.directFixed ? win.anchor : win.shell;
       if (target) {
         if (win.directFixed) applyDirectFixedGeometryOwnership(win, target);
@@ -770,21 +743,13 @@
     }
 
     function persistGeometry(win) {
-      // Temporary display geometry is never operator state.
-      // Pointer-up/native CSS resize must not promote F11/preview geometry.
-      if (!win?.floating || win.maximized || win.transientGeometry) return false;
+      if (!win?.floating || win.maximized) return;
       const rect = currentRect(win);
-      const hasAspectPolicy = Number.isFinite(Number(win.geometryPolicy?.aspectRatio))
-        && Number(win.geometryPolicy?.aspectRatio) > 0;
-      const normalized = hasAspectPolicy ? clampWindowGeometry(win, rect) : rect;
       const safe = {
-        ...normalized,
-        // Historical shell windows intentionally retain their managed height.
-        // An aspect-locked direct window must persist its actual normalized height.
-        height: hasAspectPolicy ? normalized.height : (win.geometry?.height || normalized.height)
+        ...rect,
+        height: win.geometry?.height || rect.height
       };
-      if (hasAspectPolicy) setGeometryOnTarget(win, safe);
-      else win.geometry = { ...safe };
+      win.geometry = { ...safe };
       patchState(win.id, {
         floating: true,
         x: safe.x,
@@ -793,7 +758,6 @@
         height: safe.height,
         z: Number((win.directFixed ? win.anchor : win.shell)?.style.zIndex) || zCounter
       });
-      return true;
     }
 
     // 40.3.15 — batch placeholder measurements before DOM writes.
@@ -955,8 +919,6 @@
           node.addEventListener("pointerup", win.directPointerUp, { passive: true });
         }
       } else {
-        // Dock/hide cancels display-only geometry; durable normal geometry stays.
-        win.transientGeometry = null;
         node.classList.remove("admin-native-direct-floating", "admin-native-maximized");
         [
           "position", "left", "top", "right", "bottom", "width", "height",
@@ -1146,21 +1108,16 @@
       if (minimized && win.hidden) win.hidden = false;
       if (minimized && win.floating) {
         const rect = currentRect(win);
-        if (win.transientGeometry) win.transientGeometry = { ...rect };
-        else if (!win.geometry) win.geometry = rect;
+        if (!win.geometry) win.geometry = rect;
         else win.geometry = { ...win.geometry, x: rect.x, y: rect.y, width: rect.width, height: rect.height };
       }
       if (!minimized && win.floating && win.minimizeBar?.isConnected) {
         const miniRect = win.minimizeBar.getBoundingClientRect();
-        if (win.transientGeometry) win.transientGeometry = { ...win.transientGeometry, x: miniRect.left, y: miniRect.top };
-        else if (win.geometry) win.geometry = { ...win.geometry, x: miniRect.left, y: miniRect.top };
+        if (win.geometry) win.geometry = { ...win.geometry, x: miniRect.left, y: miniRect.top };
       }
       win.minimized = !!minimized;
       applyPresentationState(win);
-      if (!win.minimized && win.floating) {
-        const geometry = win.transientGeometry || win.geometry;
-        if (geometry) setGeometryOnTarget(win, geometry, { transient: !!win.transientGeometry });
-      }
+      if (!win.minimized && win.floating && win.geometry) setGeometryOnTarget(win, win.geometry);
       if (persist) patchState(win.id, { minimized: win.minimized, hidden: win.hidden, x: win.geometry?.x, y: win.geometry?.y, width: win.geometry?.width, height: win.geometry?.height });
       updateDeck();
     }
@@ -1258,9 +1215,6 @@
         return;
       }
 
-      // Maximize starts a new explicit presentation state. Never use a
-      // display-only rectangle as its restoration source.
-      win.transientGeometry = null;
       win.restoreFloating = win.floating;
       win.restoreGeometry = win.floating ? { ...(win.geometry || currentRect(win)) } : null;
       if (win.minimized) setMinimized(win, false, false);
@@ -1482,27 +1436,6 @@
       return floating.length;
     }
 
-
-    // Geometry transaction for an already-floating native window.
-    // Durable normal geometry and display-only transient geometry are separate.
-    function setGeometry(id, geometry, options = {}) {
-      const win = windows.get(id);
-      if (!win || !win.floating || win.maximized || win.minimized) return false;
-      const safe = clampWindowGeometry(win, geometry);
-      if (!safe || ![safe.x, safe.y, safe.width, safe.height].every(value => Number.isFinite(Number(value)))) return false;
-      const transient = options.transient === true;
-      setGeometryOnTarget(win, safe, { transient });
-      const persisted = options.persist === true && !transient ? persistGeometry(win) === true : false;
-      return {
-        x: Number(safe.x),
-        y: Number(safe.y),
-        width: Number(safe.width),
-        height: Number(safe.height),
-        persisted,
-        transient
-      };
-    }
-
     // 40.2.20 — Workspace Profiles Foundation.
     // Profiles are a presentation-layer snapshot only. They do not own market
     // domain, Graph Context V7, Oracle state, selected assets or business data.
@@ -1511,10 +1444,7 @@
     function snapshot() {
       const state = {};
       windows.forEach((win, id) => {
-        // Profiles store durable geometry, never temporary F11/display geometry.
-        const rect = win.floating
-          ? (win.transientGeometry && win.geometry ? { ...win.geometry } : currentRect(win))
-          : null;
+        const rect = win.floating ? currentRect(win) : null;
         state[id] = {
           floating: win.floating === true,
           minimized: win.minimized === true,
@@ -1703,7 +1633,6 @@
       setDeckOpen,
       getWindow: id => windows.get(id) || null,
       snapshot,
-      setGeometry,
       applySnapshot,
       restorePersistedPresentation,
       neutralizePresentation,

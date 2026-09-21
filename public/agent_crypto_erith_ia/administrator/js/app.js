@@ -509,22 +509,6 @@
     return null;
   }
 
-  function aetherNormalFallback() {
-    const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    const ratio = 1672 / 941;
-    const width = Math.max(720, Math.min(1450, vw - 32, (vh * ratio) - 352));
-    const height = Math.max(405, Math.min(vh - 24, width / ratio));
-    const fittedWidth = Math.min(width, height * ratio);
-    const fittedHeight = fittedWidth / ratio;
-    return {
-      x: 12,
-      y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
-      width: Math.round(fittedWidth),
-      height: Math.round(fittedHeight)
-    };
-  }
-
   function nativeDefinitions() {
     return [
       {
@@ -533,7 +517,20 @@
         tone: "cyan",
         directFixed: true,
         geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true },
-        preferredFloatGeometry: () => aetherNormalFallback(),
+        preferredFloatGeometry: () => {
+          const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+          const width = Math.max(720, Math.min(1450, vw - 32, (vh * 1.7777777778) - 352));
+          const height = Math.max(405, Math.min(vh - 24, width * 9 / 16));
+          const fittedWidth = Math.min(width, height * 16 / 9);
+          const fittedHeight = fittedWidth * 9 / 16;
+          return {
+            x: 12,
+            y: Math.max(12, Math.round((vh * .5 + 99) - fittedHeight / 2)),
+            width: Math.round(fittedWidth),
+            height: Math.round(fittedHeight)
+          };
+        },
         resolveEntries: () => [entry(byId("atlasAetherStatusPanel"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
         resolveControlHosts: nodes => [nodes[0]?.querySelector(".atlas-aether-panel-head")].filter(Boolean),
@@ -2193,236 +2190,40 @@
   }
 
 
-  // Aether canonical normal placement.
-  // Keep the already-proven operator size. Only repair the two contaminated
-  // coordinates from the failed geometry chain: x must be left, and a top-pinned
-  // y≈12 state is returned to the historical vertical lane used by 40.6.305.
-  function reconcileAetherCanonicalLeftState(manager) {
+  // 40.6.85 — Aether left-boot repair.
+  // Scope is exactly one persisted Aether presentation record, one time.
+  // A non-centered operator position is never rewritten.
+  const AETHER_LEFT_406085_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406085`;
+  function migrateAetherCenteredState() {
     try {
-      if (!manager?.restorePersistedPresentation) return "manager-unavailable";
-
-      const markerKey = `${STORAGE_PREFIX}:migration:aether-left`;
-      const windowKey = `${STORAGE_PREFIX}:window:aether-watch`;
-      const relief = globalThis.AtlasStorageRelief || null;
-      const read = key => relief?.readSync ? relief.readSync(key) : localStorage.getItem(key);
-      const write = (key, value) => relief?.writeSync ? relief.writeSync(key, value) : (localStorage.setItem(key, value), true);
-      const remove = key => {
-        try { relief?.removeSync?.(key); } catch (_) {}
-        try { localStorage.removeItem(key); } catch (_) {}
-      };
-
-      const raw = JSON.parse(read(windowKey) || "null");
+      if (localStorage.getItem(AETHER_LEFT_406085_MIGRATION_KEY) === "1") return "already";
+      const key = `${STORAGE_PREFIX}:window:aether-watch`;
+      const raw = JSON.parse(localStorage.getItem(key) || "null");
       if (!raw || typeof raw !== "object") {
-        write(markerKey, "window-manager");
-        document.documentElement.dataset.aetherLeftMigration = "no-state";
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
         return "no-state";
       }
-
-      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-      const repairedGeometry = geometry => {
-        if (!geometry || typeof geometry !== "object") return null;
-        const x = Number(geometry.x), y = Number(geometry.y);
-        const width = Number(geometry.width), height = Number(geometry.height);
-        if (![x, y, width, height].every(Number.isFinite) || width <= 1 || height <= 1) return null;
-
-        // Historical 40.6.305 vertical lane, generalized to the CURRENT height.
-        // Width and height are deliberately preserved byte-for-byte as numbers.
-        const historicalY = Math.max(12, Math.round((vh * .5 + 99) - height / 2));
-        const topPinned = y <= 26;
-        return {
-          ...geometry,
-          x: 12,
-          y: topPinned ? historicalY : y,
-          width,
-          height
-        };
-      };
-
-      let changed = false;
-      const next = { ...raw };
-      if (raw.maximized !== true) {
-        const repaired = repairedGeometry(raw);
-        if (repaired && (Number(raw.x) !== repaired.x || Number(raw.y) !== repaired.y)) {
-          Object.assign(next, repaired);
-          changed = true;
-        }
+      const x = Number(raw.x), y = Number(raw.y), width = Number(raw.width), height = Number(raw.height);
+      if (![x, y, width, height].every(Number.isFinite)) {
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        return "invalid-state-preserved";
       }
-
-      if (raw.restoreGeometry) {
-        const repairedRestore = repairedGeometry(raw.restoreGeometry);
-        if (repairedRestore && (
-          Number(raw.restoreGeometry.x) !== repairedRestore.x ||
-          Number(raw.restoreGeometry.y) !== repairedRestore.y
-        )) {
-          next.restoreGeometry = repairedRestore;
-          changed = true;
-        }
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const centeredX = Math.max(12, Math.round((vw - width) / 2));
+      const centered = x > 26 && Math.abs(x - centeredX) <= 14;
+      if (centered && raw.maximized !== true) {
+        localStorage.setItem(key, JSON.stringify({ ...raw, x: 12 }));
+        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        document.documentElement.dataset.aetherLeftMigration = "migrated";
+        return "migrated";
       }
-
-      if (changed) {
-        write(windowKey, JSON.stringify(next));
-        // Apply through the real Window Manager after init. This moves the actual
-        // restored Aether window; preferredFloatGeometry is not relied upon.
-        manager.restorePersistedPresentation();
-        document.documentElement.dataset.aetherLeftMigration = "repaired-left-and-y";
-      } else {
-        document.documentElement.dataset.aetherLeftMigration = "preserved";
-      }
-
-      for (let index = localStorage.length - 1; index >= 0; index -= 1) {
-        const candidate = localStorage.key(index);
-        if (candidate?.startsWith(`${STORAGE_PREFIX}:migration:aether-left-`)) {
-          try { remove(candidate); } catch (_) {}
-        }
-      }
-
-      write(markerKey, "window-manager");
-      return changed ? "repaired-left-and-y" : "preserved";
+      localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+      document.documentElement.dataset.aetherLeftMigration = "preserved";
+      return "preserved";
     } catch (_) {
       document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
       return "storage-unavailable";
     }
-  }
-
-
-  // Aether browser-F11 continuity.
-  // Firefox window.fullScreen is the state truth. resize only wakes a bounded
-  // reconciliation; F11 geometry is display-only and cannot become normal state.
-  function installAetherF11Continuity(manager) {
-    if (!manager?.getWindow || !manager?.setGeometry) return false;
-
-    let frame = 0;
-    let settlePasses = 0;
-    let f11Active = window.fullScreen === true;
-    let preF11Geometry = null;
-    const ratio = 1672 / 941;
-    const margin = 12;
-    const minWidth = 720;
-    const minHeight = 405;
-    const maxFloatWidth = 1450;
-
-    const finiteGeometry = value => {
-      if (!value || typeof value !== "object") return null;
-      const geometry = { x:Number(value.x), y:Number(value.y), width:Number(value.width), height:Number(value.height) };
-      return Object.values(geometry).every(Number.isFinite) && geometry.width > 1 && geometry.height > 1 ? geometry : null;
-    };
-
-    const visibleRect = node => {
-      if (!(node instanceof HTMLElement)) return null;
-      const style = getComputedStyle(node);
-      const rect = node.getBoundingClientRect();
-      if (node.hidden || style.display === "none" || style.visibility === "hidden" || rect.width <= 1 || rect.height <= 1) return null;
-      return rect;
-    };
-
-    const f11Geometry = () => {
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-      const detail = visibleRect(document.getElementById("detailPanel"));
-      const rightBoundary = detail && detail.left > Math.max(minWidth + margin * 2, vw * .55)
-        ? Math.max(minWidth + margin * 2, detail.left - 8) : vw - margin;
-      const availableWidth = Math.max(minWidth, rightBoundary - margin);
-      const maxWidth = Math.max(minWidth, Math.min(maxFloatWidth, availableWidth, vw - margin * 2));
-      const maxHeight = Math.max(minHeight, vh - margin * 2);
-      let width = Math.min(maxWidth, maxHeight * ratio);
-      let height = width / ratio;
-      if (height > maxHeight) { height = maxHeight; width = height * ratio; }
-      width = Math.min(width, Math.max(1, vw - margin * 2));
-      height = Math.min(height, Math.max(1, vh - margin * 2));
-      return { x:margin, y:Math.max(margin, Math.round(vh - height - margin)), width:Math.round(width), height:Math.round(height) };
-    };
-
-    const applyGeometry = (geometry, { persist=false, transient=false, allowHidden=false, reason="" } = {}) => {
-      const safe = finiteGeometry(geometry);
-      const win = manager.getWindow("aether-watch");
-      if (!safe || !win || !win.floating || win.maximized || win.minimized || (!allowHidden && win.hidden)) return false;
-      const applied = manager.setGeometry("aether-watch", safe, { persist:!!persist, transient:!!transient });
-      if (!applied) return false;
-      document.documentElement.dataset.aetherF11State = reason || (transient ? "transient" : "normal");
-      return true;
-    };
-
-    const enterF11 = () => {
-      const win = manager.getWindow("aether-watch");
-      f11Active = true;
-      if (!win || !win.floating || win.hidden || win.maximized || win.minimized) {
-        document.documentElement.dataset.aetherF11State = "pending-open";
-        return;
-      }
-      if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
-      applyGeometry(f11Geometry(), { transient:true, reason:"expanded-transient" });
-    };
-
-    const exitF11 = () => {
-      f11Active = false;
-      const win = manager.getWindow("aether-watch");
-      const restore = finiteGeometry(preF11Geometry);
-      if (restore && win?.floating && !win.maximized && !win.minimized) {
-        applyGeometry(restore, { persist:true, transient:false, allowHidden:true, reason:"restored-normal-exact" });
-      }
-      preF11Geometry = null;
-    };
-
-    const reconcile = () => {
-      frame = 0;
-      const nextF11 = window.fullScreen === true;
-      if (nextF11 !== f11Active) {
-        if (nextF11) enterF11(); else exitF11();
-        settlePasses = 0;
-        return;
-      }
-      if (settlePasses > 0) {
-        settlePasses -= 1;
-        frame = requestAnimationFrame(reconcile);
-      }
-    };
-
-    const schedule = () => {
-      // Firefox can publish chrome fullscreen one paint after resize.
-      // Four RAF passes are bounded, event-driven and add no timer/observer.
-      settlePasses = Math.max(settlePasses, 4);
-      if (!frame) frame = requestAnimationFrame(reconcile);
-    };
-
-    const openWhileF11 = event => {
-      if (!(event.target instanceof Element) || !event.target.closest("#atlasAetherStatusToggle")) return;
-      if (!f11Active && window.fullScreen !== true) return;
-      queueMicrotask(() => {
-        const win = manager.getWindow("aether-watch");
-        if (!win || !win.floating || win.hidden || win.maximized || win.minimized) return;
-        if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
-        f11Active = true;
-        applyGeometry(f11Geometry(), { transient:true, reason:"expanded-open-transient" });
-      });
-    };
-
-    window.addEventListener("resize", schedule, { passive:true });
-    document.addEventListener("click", openWhileF11, true);
-
-    if (f11Active) {
-      queueMicrotask(() => {
-        const win = manager.getWindow("aether-watch");
-        if (!win || !win.floating || win.hidden || win.maximized || win.minimized) return;
-        if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
-        applyGeometry(f11Geometry(), { transient:true, reason:"expanded-boot-transient" });
-      });
-    }
-
-    globalThis.ErithAetherF11Continuity = Object.freeze({
-      state_truth:"Firefox window.fullScreen",
-      wake_event:"window.resize + bounded RAF settle",
-      temporary_geometry:"Window Manager transientGeometry",
-      pointerup_can_persist_f11:false,
-      native_resize_can_persist_f11:false,
-      workspace_snapshot_can_capture_f11:false,
-      normal_geometry_owner:"Window Manager win.geometry + persisted state",
-      f11_geometry:"temporary 1672/941 field, x=12, max 1450, left of Lecture Technique",
-      exit_restore:"exact captured normal rectangle",
-      css_owner_added:false,
-      timer:false,
-      observer:false
-    });
-    return true;
   }
 
   function boot() {
@@ -2442,6 +2243,8 @@
     migrateFamilyTopologyWindowState();
     migrateFamilyRoleReturnWindowState();
     stageAdministratorDefaultFamilyCollapse();
+    migrateAetherCenteredState();
+
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
       console.error(`Administrator ${ADMIN_BUILD}: operational window manager unavailable.`);
@@ -2457,13 +2260,8 @@
 
     const bootRole = presentationRole();
     let aetherNativeStateExists = false;
-    try {
-      const relief = globalThis.AtlasStorageRelief || null;
-      const key = `${STORAGE_PREFIX}:window:aether-watch`;
-      aetherNativeStateExists = (relief?.readSync ? relief.readSync(key) : localStorage.getItem(key)) !== null;
-    } catch {}
+    try { aetherNativeStateExists = localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) !== null; } catch {}
     const state = manager.init({ restorePersistedPresentation: bootRole === "administrator" });
-    reconcileAetherCanonicalLeftState(manager);
     // 40.6.40 — the shell is pre-created by aether.js solely so the canonical
     // Window Manager can register it during this one normal init pass.
     // HTML hidden is then released; the manager becomes the only presentation owner.
@@ -2501,7 +2299,6 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
-    installAetherF11Continuity(manager);
 
     // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;
@@ -2621,6 +2418,15 @@
     installDomainObserver(manager);
     syncDomainWindows(manager);
 
+    try {
+      globalThis.AgentCryptoBootProbe?.markOnce?.("administrator-window-manager-ready", {
+        build: ADMIN_BUILD,
+        windows: Number(state.count || 0),
+        layout_free: !!state.free,
+        domain: currentDomain()
+      });
+    } catch (_) {}
+
     window.dispatchEvent(new CustomEvent("erith:administrator-mirror-ready", {
       detail: {
         build: ADMIN_BUILD,
@@ -2632,6 +2438,10 @@
       }
     }));
   }
+
+  window.addEventListener("agent-crypto:late-memory-ready", () => {
+    try { initAtlasMemoryResidency(); } catch (_) {}
+  }, { once: true, passive: true });
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
   else boot();
