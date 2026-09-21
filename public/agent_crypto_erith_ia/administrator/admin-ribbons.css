@@ -416,12 +416,15 @@
       border:1px solid rgba(236,123,197,.30);border-radius:9px;background:rgba(25,8,28,.60);
       color:#f2b6dc;font:900 8.5px/1 system-ui,sans-serif;white-space:nowrap;cursor:pointer;
     }
-    .atlas-aether-status-toggle:hover,.atlas-aether-status-toggle[aria-expanded="true"]{border-color:rgba(236,123,197,.58);background:rgba(47,13,46,.78)}
-    #atlasAetherStatusPanel{
-      position:fixed;z-index:2147482000;top:132px;right:18px;width:min(430px,calc(100vw - 36px));
-      border:1px solid rgba(223,132,205,.34);border-radius:13px;background:rgba(3,13,23,.96);
-      box-shadow:0 18px 48px rgba(0,0,0,.48);padding:12px;color:#d9e8ef;
-    }
+    .atlas-aether-status-toggle:hover,.atlas-aether-status-toggle[aria-expanded="true"]{border-color:rgba(236,123,197,.58);background:rgba(47,13,46,.78)}#atlasAetherStatusPanel{
+  z-index:2147482000;
+  border:1px solid rgba(223,132,205,.34);
+  border-radius:13px;
+  background:rgba(3,13,23,.96);
+  box-shadow:0 18px 48px rgba(0,0,0,.48);
+  padding:12px;
+  color:#d9e8ef;
+}
     #atlasAetherStatusPanel[hidden]{display:none!important}
     .atlas-aether-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
     .atlas-aether-panel-head b{color:#f0b0da;letter-spacing:.10em}.atlas-aether-panel-head button{border:0;background:transparent;color:#9db6c3;cursor:pointer}
@@ -464,10 +467,12 @@
   body #atlasAetherRibbonOracle{flex:1.15 1 280px!important}
   body #atlasAetherRibbonSources{flex:.75 1 160px!important}
   body #atlasAetherRibbonBook{flex:0 1 170px!important}
+}/* 40.4.133 → 40.6.28 — AETHER ATTENTION WATCH · COMPACT NO-SCROLL OWNER */
+#atlasAetherStatusPanel{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  scrollbar-gutter:auto!important;
 }
-
-/* 40.4.133 → 40.6.28 — AETHER ATTENTION WATCH · COMPACT NO-SCROLL OWNER */
-#atlasAetherStatusPanel{width:min(760px,calc(100vw - 36px))!important;max-height:calc(100vh - 34px)!important;overflow-x:hidden!important;overflow-y:auto!important;scrollbar-gutter:auto!important}
 #atlasAetherStatusPanel .atlas-aether-panel-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important;align-items:start!important;gap:7px!important}
 #atlasAetherStatusPanel .atlas-aether-panel-grid article{grid-column:span 2;min-width:0!important;align-content:start!important}
 #atlasAetherStatusPanel .atlas-aether-panel-grid article[data-aether-wide],
@@ -476,7 +481,7 @@
 #atlasAetherStatusPanel [data-aether-row="attention"]{color:#ffd47f!important}
 #atlasAetherStatusPanel [data-aether-row="weather_risk"]{color:#bfe9ff!important}
 #atlasAetherStatusPanel [data-aether-row="atlas_auto"]{color:#8dffd0!important}
-@media(max-width:700px){#atlasAetherStatusPanel{top:96px!important;left:10px!important;right:10px!important;width:auto!important;max-height:calc(100vh - 116px)!important}#atlasAetherStatusPanel .atlas-aether-panel-grid{grid-template-columns:minmax(0,1fr)!important}#atlasAetherStatusPanel .atlas-aether-panel-grid article[data-aether-wide]{grid-column:1!important}}
+@media(max-width:700px){/* 40.6.306 — retired duplicate Aether outer geometry owner. */#atlasAetherStatusPanel .atlas-aether-panel-grid{grid-template-columns:minmax(0,1fr)!important}#atlasAetherStatusPanel .atlas-aether-panel-grid article[data-aether-wide]{grid-column:1!important}}
 
 
 /* 40.6.26 — AETHER OPERATOR WATCH · CONVERGENCE MATRIX */
@@ -532,8 +537,7 @@
 @media(min-width:721px) and (min-height:760px){
   #atlasAetherStatusPanel:not(:has([data-aether-details][open])):not(:has([data-aether-timeline-disclosure][open])){overflow-y:hidden!important}
 }
-@media(max-width:900px){
-  #atlasAetherStatusPanel{width:min(650px,calc(100vw - 24px))!important}
+@media(max-width:900px){/* 40.6.306 — retired duplicate Aether outer geometry owner. */
   #atlasAetherStatusPanel .atlas-aether-panel-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   #atlasAetherStatusPanel .atlas-aether-panel-grid article{grid-column:span 1!important}
   #atlasAetherStatusPanel .atlas-aether-panel-grid article[data-aether-wide],
@@ -601,15 +605,10 @@
 }
 @media(max-height:760px){
   #atlasAetherStatusPanel [data-aether-timeline-disclosure][open] [data-aether-timeline]{max-height:170px!important}
-}
-
-
-/* 40.6.30 — AETHER WATCH · FIRST GLANCE · LARGE TEXT · WEATHER · SINGLE DETAIL ZONE
+}/* 40.6.30 — AETHER WATCH · FIRST GLANCE · LARGE TEXT · WEATHER · SINGLE DETAIL ZONE
    One readable dashboard at rest. History and Details replace the same bounded focus viewport.
    Desktop panel itself does not scroll; only the active secondary view may own internal scroll. */
 #atlasAetherStatusPanel{
-  width:min(840px,calc(100vw - 34px))!important;
-  max-height:calc(100vh - 30px)!important;
   overflow:hidden!important;
 }
 #atlasAetherStatusPanel .atlas-aether-panel-head b{font-size:16px!important;letter-spacing:.08em!important}
@@ -662,22 +661,23 @@
 #atlasAetherStatusPanel [data-aether-status-grid]{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;min-width:0}
 #atlasAetherStatusPanel [data-aether-status-grid] article{min-width:0;margin:0!important;padding:8px 9px!important;border:1px solid rgba(125,155,210,.16);border-radius:8px;background:rgba(3,12,24,.2)}
 #atlasAetherStatusPanel [data-aether-status-grid] article > small{display:block;margin-top:4px;font-size:11.5px!important;line-height:1.25!important;color:#8dffd0!important;font-weight:700!important}
-@media(max-width:980px){
-  #atlasAetherStatusPanel{width:min(760px,calc(100vw - 24px))!important}
+@media(max-width:980px){/* 40.6.306 — retired duplicate Aether outer geometry owner. */
   #atlasAetherStatusPanel [data-aether-focus-view="glance"]{grid-template-columns:minmax(0,1fr)!important;overflow-y:auto!important}
   #atlasAetherStatusPanel .aether-focus-viewport{height:300px;min-height:300px;max-height:300px}
   #atlasAetherStatusPanel [data-aether-status-grid]{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media(max-height:760px){#atlasAetherStatusPanel{overflow-y:auto!important;max-height:calc(100vh - 20px)!important}}
-
-
-/* 40.6.31 — AETHER CENTRAL OBSERVATORY · BACKGROUND LAYER · LIVE RADIAL UI
+@media(max-height:760px){#atlasAetherStatusPanel{
+  overflow-y:auto!important;
+}}/* 40.6.31 — AETHER CENTRAL OBSERVATORY · BACKGROUND LAYER · LIVE RADIAL UI
    Presentation-only remap. Existing Aether DOM/runtime remains the live data owner. */
 #atlasAetherStatusPanel{
-  position:fixed!important;left:10px!important;right:10px!important;top:202px!important;bottom:10px!important;
-  width:auto!important;height:auto!important;max-height:none!important;overflow:hidden!important;
-  padding:0!important;border:1px solid rgba(92,208,255,.28)!important;border-radius:16px!important;
-  background:#020914!important;box-shadow:0 24px 80px rgba(0,0,0,.52)!important;isolation:isolate!important;
+  overflow:hidden!important;
+  padding:0!important;
+  border:1px solid rgba(92,208,255,.28)!important;
+  border-radius:16px!important;
+  background:#020914!important;
+  box-shadow:0 24px 80px rgba(0,0,0,.52)!important;
+  isolation:isolate!important;
 }
 #atlasAetherStatusPanel::before{content:"";position:absolute;inset:0;z-index:-3;background:url('./assets/aether/aether-observatory-background.webp') center 56%/cover no-repeat;opacity:1;filter:saturate(.96) brightness(.86)}
 #atlasAetherStatusPanel::after{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 50% 54%,rgba(1,8,20,.08) 0 28%,rgba(1,8,20,.26) 55%,rgba(1,8,20,.48) 100%),linear-gradient(180deg,rgba(2,9,20,.15),rgba(2,9,20,.34))}
@@ -734,8 +734,9 @@
 #atlasAetherStatusPanel .aether-details-grid-406030{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 #atlasAetherStatusPanel .aether-details-grid-406030 article{position:static!important;padding:8px!important}
 /* compact fallback: radial becomes scroll-safe cards */
-@media(max-width:1180px),(max-height:720px){
- #atlasAetherStatusPanel{top:165px!important;overflow-y:auto!important}
+@media(max-width:1180px),(max-height:720px){#atlasAetherStatusPanel{
+  overflow-y:auto!important;
+}
  #atlasAetherStatusPanel::before{background-position:center 58%!important;opacity:.62!important}
  #atlasAetherStatusPanel .aether-first-glance-grid{position:relative!important;inset:auto!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:52px 10px 12px!important}
  #atlasAetherStatusPanel .aether-first-glance-grid > article,
@@ -779,13 +780,15 @@
 /* 40.6.33 — AETHER EXACT ARTWORK STAGE · RESPONSIVE ALIGNMENT LOCK
    Presentation-only. The selected 16:9 artwork is the coordinate stage; live DOM cards stay the data owner.
    Desktop no longer falls into the historical short-height stacked-card fallback. */
-@media (min-width:901px){
-  #atlasAetherStatusPanel{
-    inset:10px!important;top:10px!important;left:10px!important;right:10px!important;bottom:10px!important;
-    width:auto!important;height:auto!important;max-height:none!important;overflow:hidden!important;
-    z-index:2147483000!important;background:#010610!important;border:1px solid rgba(66,206,255,.34)!important;
-    border-radius:18px!important;box-shadow:0 28px 90px rgba(0,0,0,.68)!important;isolation:isolate!important;
-  }
+@media (min-width:901px){#atlasAetherStatusPanel{
+  overflow:hidden!important;
+  z-index:2147483000!important;
+  background:#010610!important;
+  border:1px solid rgba(66,206,255,.34)!important;
+  border-radius:18px!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.68)!important;
+  isolation:isolate!important;
+}
   #atlasAetherStatusPanel::before{
     content:""!important;display:block!important;position:absolute!important;inset:-28px!important;z-index:-4!important;
     background:url('./assets/aether/aether-observatory-background.webp') center 56%/cover no-repeat!important;
@@ -914,31 +917,16 @@
    - History/Details stay bounded inside the same stage.
    Runtime and selected artwork remain untouched.
 */
-@media (min-width:901px){
-  #atlasAetherStatusPanel{
-    position:fixed!important;
-    left:50%!important;
-    right:auto!important;
-    top:calc(50vh + 99px)!important;
-    bottom:auto!important;
-    transform:translate(-50%,-50%)!important;
-    width:min(1450px,calc(100vw - 32px),calc(177.777vh - 352px))!important;
-    width:min(1450px,calc(100vw - 32px),calc(177.777dvh - 352px))!important;
-    height:auto!important;
-    aspect-ratio:16/9!important;
-    max-width:none!important;
-    max-height:none!important;
-    min-width:0!important;
-    min-height:0!important;
-    overflow:hidden!important;
-    padding:0!important;
-    border:1px solid rgba(73,211,255,.40)!important;
-    border-radius:18px!important;
-    background:url('./assets/aether/aether-observatory-background.webp') center/100% 100% no-repeat!important;
-    box-shadow:0 28px 90px rgba(0,0,0,.68),0 0 0 1px rgba(94,210,255,.08)!important;
-    isolation:isolate!important;
-    z-index:2147483000!important;
-  }
+@media (min-width:901px){#atlasAetherStatusPanel{
+  overflow:hidden!important;
+  padding:0!important;
+  border:1px solid rgba(73,211,255,.40)!important;
+  border-radius:18px!important;
+  background:url('./assets/aether/aether-observatory-background.webp') center/100% 100% no-repeat!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.68),0 0 0 1px rgba(94,210,255,.08)!important;
+  isolation:isolate!important;
+  z-index:2147483000!important;
+}
 
   /* Retire the 40.6.31/33 outer-image layers: there is now exactly one artwork owner. */
   #atlasAetherStatusPanel::before,
@@ -1371,6 +1359,10 @@
 }
 
 
+/* 40.6.306 — AETHER SINGLE OUTER-GEOMETRY OWNER
+   Outer x/y/width/height/transform/min-max constraints belong only to
+   ErithAdministratorWindows. Historical Aether CSS remains only as inner
+   presentation; it no longer positions or sizes #atlasAetherStatusPanel. */
 /* 40.6.40 — AETHER NATIVE WINDOW · ADMINISTRATOR MANAGER INTEGRATION */
 /* Window chrome only. Paid 16:9 artwork and all 40.6.36 live embroidery coordinates remain unchanged. */
 @media (min-width:901px){
@@ -1432,26 +1424,19 @@
    The paid Observatory artwork + calibrated live lanes remain one undistorted 16:9 inner stage.
    No runtime/data owner, observer or parallel geometry persistence is introduced.
 */
-@media (min-width:901px){
-  #atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized){
-    aspect-ratio:auto!important;
-    resize:both!important;
-    box-sizing:border-box!important;
-    min-width:720px!important;
-    min-height:405px!important;
-    max-width:calc(100vw - 24px)!important;
-    max-height:calc(100vh - 24px)!important;
-    overflow:hidden!important;
-    container-type:size!important;
-    container-name:aether-shell-406041!important;
-    background:
+@media (min-width:901px){#atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized){
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  container-type:size!important;
+  container-name:aether-shell-406041!important;
+  background:
       radial-gradient(circle at 50% 48%,rgba(16,66,104,.22),transparent 42%),
       radial-gradient(circle at 12% 18%,rgba(62,215,255,.08),transparent 28%),
       radial-gradient(circle at 88% 82%,rgba(149,99,255,.07),transparent 30%),
       #010711!important;
-    border-color:rgba(73,211,255,.46)!important;
-    box-shadow:0 28px 90px rgba(0,0,0,.68),inset 0 0 0 1px rgba(92,215,255,.035)!important;
-  }
+  border-color:rgba(73,211,255,.46)!important;
+  box-shadow:0 28px 90px rgba(0,0,0,.68),inset 0 0 0 1px rgba(92,215,255,.035)!important;
+}
 
   /* The image is no longer the window box. It is a centered content stage. */
   #atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized) .aether-first-glance-grid{
@@ -1496,12 +1481,9 @@
     opacity:.72!important;
     background:
       linear-gradient(135deg,transparent 0 45%,rgba(106,232,255,.72) 46% 51%,transparent 52% 63%,rgba(106,232,255,.46) 64% 69%,transparent 70%)!important;
-  }
-
-  #atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-maximized{
-    resize:none!important;
-    container-type:normal!important;
-  }
+  }#atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-maximized{
+  container-type:normal!important;
+}
 }
 
 
@@ -1712,16 +1694,8 @@
   }
   #atlasAetherStatusPanel .aether42-event-row time,
   #atlasAetherStatusPanel .aether42-event-row b{font-size:7.5px!important}
-  #atlasAetherStatusPanel .aether42-event-row span{font-size:8px!important}
-
-  /* Preserve native floating / maximized ownership. */
-  #atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized){
-    resize:both!important;
-    min-width:720px!important;
-    min-height:430px!important;
-    max-width:calc(100vw - 24px)!important;
-    max-height:calc(100vh - 24px)!important;
-  }
+  #atlasAetherStatusPanel .aether42-event-row span{font-size:8px!important}/* Preserve native floating / maximized ownership. */
+/* 40.6.306 — retired duplicate Aether outer geometry owner. */
 
   #atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-maximized .aether-component-stage{
     inset:42px 7px 7px!important;

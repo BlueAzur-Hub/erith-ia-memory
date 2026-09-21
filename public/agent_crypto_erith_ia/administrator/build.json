@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.310",
+  "build": "40.6.311",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER LEFT RESTORE",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER SINGLE GEOMETRY OWNER RESTORE",
   "published": true,
-  "status": "aether_left_restore",
-  "parent_build": "40.6.309",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.310",
-  "administrator_build": "40.6.310",
-  "build_label": "Build 40.6.310 · Administrator",
+  "status": "aether_single_geometry_owner_restore",
+  "parent_build": "40.6.310",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.311",
+  "administrator_build": "40.6.311",
+  "build_label": "Build 40.6.311 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox gate: Aether normal state must open at the left edge (x≈12). Any centered normal state = FAIL/STOP.",
-  "release_notes": "Aether left-only correction on the restored 40.6.273 subsystem. The former pre-init localStorage receipt is replaced by post-init reconciliation through AtlasStorageRelief + the existing Window Manager restore path. No CSS, Window Manager, F11, visual runtime, Oracle, Lecture Technique or Market Core change.",
+  "terrain_pending": "Firefox gate: outside F11, Aether normal state must render at the left edge (x≈12) with the compact normal geometry. Any centered or oversized normal state = FAIL/STOP.",
+  "release_notes": "40.6.311 restores only the proven 40.6.306 single-owner Aether presentation architecture on top of 40.6.310: admin-ribbons.css and aether.css no longer own outer x/y/width/height/inset geometry, and aether.js prepares the Window Manager floating geometry while hidden before reveal. app.js 40.6.310 left-state reconciliation, admin-window-manager.js, F11 logic, Decision Intelligence, Oracle, Lecture Technique, Storage, Strategy and Market Core 38.15.11 are unchanged.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -2092,10 +2092,13 @@
     "persistence_owner": "AtlasStorageRelief",
     "geometry_application_owner": "ErithAdministratorWindows.restorePersistedPresentation",
     "build_number_in_runtime_key": false,
-    "css_changed": false,
+    "css_changed": true,
     "window_manager_changed": false,
     "f11_changed": false,
     "preserve_non_centered_operator_position": true,
-    "terrain_proof": "PENDING_FIREFOX"
+    "terrain_proof": "PENDING_FIREFOX",
+    "outer_geometry_owner": "ErithAdministratorWindows",
+    "outer_geometry_css_removed": true,
+    "atomic_open_close": true
   }
 }
