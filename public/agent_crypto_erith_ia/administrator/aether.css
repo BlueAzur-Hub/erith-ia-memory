@@ -670,3 +670,25 @@
 }
 
 /* >1450 px intentionally inherits the validated immersive/F11 .53 geometry and density. */
+
+/* ==========================================================================
+   AETHER LARGE OPERATOR PRESENTATION
+   Operator-requested visual enlargement. The durable Window Manager rectangle
+   is left untouched; only the Observatory presentation grows to the reference field.
+   ========================================================================== */
+#atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized){
+  overflow:visible!important;
+  padding:0!important;
+}
+#atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized) .aether46-stage{
+  left:0!important;
+  top:0!important;
+  width:min(1450px,calc(100vw - 24px))!important;
+  height:auto!important;
+  aspect-ratio:1672/941!important;
+  transform:none!important;
+}
+#atlasAetherStatusPanel.admin-native-window-aether-watch.admin-native-direct-floating:not(.admin-native-maximized)>.atlas-aether-panel-head{
+  width:min(1450px,calc(100vw - 24px))!important;
+}
+
