@@ -50308,7 +50308,7 @@ function renderAutomaticLearningMemoryPanels() {
 }
 
 const COLLECTOR_STORAGE_KEY = "agent_crypto_erith_ia_collector_v1_1_alpha_13"; // legacy LocalStorage only
-const COLLECTOR_MAX_RECORDS = 500;
+const COLLECTOR_MAX_RECORDS = 1024; // 40.6.333 · Shared Memory Book→Ryzen bounded capacity; fail-closed retention preserved.
 const COLLECTOR_DB_NAME = "agent_crypto_local_memory";
 const COLLECTOR_DB_VERSION = 1;
 const COLLECTOR_DB_STORE = "memory";

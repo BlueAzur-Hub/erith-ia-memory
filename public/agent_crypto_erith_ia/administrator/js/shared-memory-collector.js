@@ -4,7 +4,7 @@
   /* 40.4.282 — Shared Market Memory uses the existing Collector IndexedDB owner.
      MARKET only. Analytical CURRENT remains in Auto/Analytical Memory.
      No Atlas/Oracle/Strategy/Paper/Bridge/network owner change. */
-  const BUILD = "40.4.282";
+  const BUILD = "40.6.333";
   const SCHEMA = "atlas_shared_market_memory_v2";
 
   const clone = value => {
@@ -98,7 +98,7 @@
         collector_id: collector,
         source_exporter_collector_id: cleanId(payload?.exporter_collector_id) || collector,
         source_record_id: String(record?.id || record?.snapshot_id || canonical),
-        imported_via: "shared_market_memory_404282"
+        imported_via: "shared_market_memory_406333"
       },
       snapshot: {
         ...clone(record?.snapshot || {}),
@@ -165,7 +165,7 @@
     if (!persisted?.ok || !sameState(before, readCollectorMemory())) throw new Error("ROLLBACK COLLECTOR NON VÉRIFIÉ");
   }
 
-  async function mergePayload(payload, reason = "shared_market_memory_404282_import") {
+  async function mergePayload(payload, reason = "shared_market_memory_406333_import") {
     await ensureCollector();
     const raw = Array.isArray(payload) ? payload : Array.isArray(payload?.records) ? payload.records : [];
     if (!raw.length) throw new Error("aucun relevé trouvé");
@@ -178,10 +178,18 @@
     const beforeIds = new Set(before.map(identity));
     const map = new Map(before.map(row => [identity(row), clone(row)]));
     for (const row of incoming) map.set(identity(row), { ...(map.get(identity(row)) || {}), ...clone(row) });
-    const candidate = normalize([...map.values()]);
+    const requested = [...map.values()];
+    const candidate = normalize(requested);
     const retained = new Set(candidate.map(identity));
-    const missing = [...new Set(incoming.map(identity))].filter(id => !retained.has(id));
-    if (missing.length) throw new Error(`capacité Collector insuffisante : ${missing.length} relevé(s) importé(s) seraient évincés ; aucune écriture`);
+    const requestedIds = new Set(requested.map(identity));
+    const incomingIds = new Set(incoming.map(identity));
+    const beforeIdsAll = new Set(before.map(identity));
+    const missingAny = [...requestedIds].filter(id => !retained.has(id));
+    if (missingAny.length) {
+      const missingIncoming = missingAny.filter(id => incomingIds.has(id)).length;
+      const missingExisting = missingAny.filter(id => beforeIdsAll.has(id)).length;
+      throw new Error(`capacité Collector insuffisante : ${missingAny.length} relevé(s) seraient évincés (${missingIncoming} importé(s), ${missingExisting} existant(s)) ; aucune écriture`);
+    }
 
     try {
       writeCollectorMemory(candidate, reason);
