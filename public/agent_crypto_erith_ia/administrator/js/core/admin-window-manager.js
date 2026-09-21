@@ -311,7 +311,9 @@
         }
         if (moved) {
           set.suppressNextClick = true;
-          win.geometry = currentRect(win);
+          const rect = currentRect(win);
+          if (win.transientGeometry) win.transientGeometry = { ...rect };
+          else win.geometry = { ...rect };
           persistGeometry(win);
         }
       };
@@ -386,7 +388,7 @@
           x: dragBase.x + dx,
           y: dragBase.y + dy,
           width: dragBase.width,
-          height: win.geometry?.height || dragBase.height
+          height: win.transientGeometry?.height || win.geometry?.height || dragBase.height
         });
         setManagedFloatingStyle(win, target, "left", `${safe.x}px`);
         setManagedFloatingStyle(win, target, "top", `${safe.y}px`);
@@ -503,6 +505,7 @@
         hidden: false,
         maximized: false,
         geometry: null,
+        transientGeometry: null,
         restoreGeometry: null,
         restoreFloating: false,
         directPointerUp: null,
@@ -601,9 +604,14 @@
       setManagedFloatingStyle(win, target, "max-height", `calc(100vh - ${VIEWPORT_MARGIN * 2}px)`);
     }
 
-    function setGeometryOnTarget(win, geometry) {
+    function setGeometryOnTarget(win, geometry, options = {}) {
       const safe = clampWindowGeometry(win, geometry);
-      win.geometry = { ...safe };
+      const transient = options.transient === true;
+      if (transient) win.transientGeometry = { ...safe };
+      else {
+        win.geometry = { ...safe };
+        win.transientGeometry = null;
+      }
       const target = win.directFixed ? win.anchor : win.shell;
       if (target) {
         if (win.directFixed) applyDirectFixedGeometryOwnership(win, target);
@@ -743,7 +751,9 @@
     }
 
     function persistGeometry(win) {
-      if (!win?.floating || win.maximized) return;
+      // Temporary display geometry is never operator state.
+      // Pointer-up/native CSS resize must not promote F11/preview geometry.
+      if (!win?.floating || win.maximized || win.transientGeometry) return false;
       const rect = currentRect(win);
       const safe = {
         ...rect,
@@ -758,6 +768,7 @@
         height: safe.height,
         z: Number((win.directFixed ? win.anchor : win.shell)?.style.zIndex) || zCounter
       });
+      return true;
     }
 
     // 40.3.15 — batch placeholder measurements before DOM writes.
@@ -919,6 +930,8 @@
           node.addEventListener("pointerup", win.directPointerUp, { passive: true });
         }
       } else {
+        // Dock/hide cancels display-only geometry; durable normal geometry stays.
+        win.transientGeometry = null;
         node.classList.remove("admin-native-direct-floating", "admin-native-maximized");
         [
           "position", "left", "top", "right", "bottom", "width", "height",
@@ -1108,16 +1121,21 @@
       if (minimized && win.hidden) win.hidden = false;
       if (minimized && win.floating) {
         const rect = currentRect(win);
-        if (!win.geometry) win.geometry = rect;
+        if (win.transientGeometry) win.transientGeometry = { ...rect };
+        else if (!win.geometry) win.geometry = rect;
         else win.geometry = { ...win.geometry, x: rect.x, y: rect.y, width: rect.width, height: rect.height };
       }
       if (!minimized && win.floating && win.minimizeBar?.isConnected) {
         const miniRect = win.minimizeBar.getBoundingClientRect();
-        if (win.geometry) win.geometry = { ...win.geometry, x: miniRect.left, y: miniRect.top };
+        if (win.transientGeometry) win.transientGeometry = { ...win.transientGeometry, x: miniRect.left, y: miniRect.top };
+        else if (win.geometry) win.geometry = { ...win.geometry, x: miniRect.left, y: miniRect.top };
       }
       win.minimized = !!minimized;
       applyPresentationState(win);
-      if (!win.minimized && win.floating && win.geometry) setGeometryOnTarget(win, win.geometry);
+      if (!win.minimized && win.floating) {
+        const geometry = win.transientGeometry || win.geometry;
+        if (geometry) setGeometryOnTarget(win, geometry, { transient: !!win.transientGeometry });
+      }
       if (persist) patchState(win.id, { minimized: win.minimized, hidden: win.hidden, x: win.geometry?.x, y: win.geometry?.y, width: win.geometry?.width, height: win.geometry?.height });
       updateDeck();
     }
@@ -1215,6 +1233,9 @@
         return;
       }
 
+      // Maximize starts a new explicit presentation state. Never use a
+      // display-only rectangle as its restoration source.
+      win.transientGeometry = null;
       win.restoreFloating = win.floating;
       win.restoreGeometry = win.floating ? { ...(win.geometry || currentRect(win)) } : null;
       if (win.minimized) setMinimized(win, false, false);
@@ -1437,23 +1458,23 @@
     }
 
 
-    // 40.6.312 — restore the proven geometry-only transaction from 40.6.305/.307.
-    // It changes only the rectangle of an already-floating native window.
-    // No dock/reparent cycle, no CSS geometry owner, no persistence unless explicit.
-    function setGeometry406312(id, geometry, options = {}) {
+    // Geometry transaction for an already-floating native window.
+    // Durable normal geometry and display-only transient geometry are separate.
+    function setGeometry(id, geometry, options = {}) {
       const win = windows.get(id);
       if (!win || !win.floating || win.maximized || win.minimized) return false;
       const safe = clampWindowGeometry(win, geometry);
       if (!safe || ![safe.x, safe.y, safe.width, safe.height].every(value => Number.isFinite(Number(value)))) return false;
-      win.geometry = { ...safe };
-      setGeometryOnTarget(win, safe);
-      if (options.persist === true) persistGeometry(win);
+      const transient = options.transient === true;
+      setGeometryOnTarget(win, safe, { transient });
+      const persisted = options.persist === true && !transient ? persistGeometry(win) === true : false;
       return {
         x: Number(safe.x),
         y: Number(safe.y),
         width: Number(safe.width),
         height: Number(safe.height),
-        persisted: options.persist === true
+        persisted,
+        transient
       };
     }
 
@@ -1465,7 +1486,10 @@
     function snapshot() {
       const state = {};
       windows.forEach((win, id) => {
-        const rect = win.floating ? currentRect(win) : null;
+        // Profiles store durable geometry, never temporary F11/display geometry.
+        const rect = win.floating
+          ? (win.transientGeometry && win.geometry ? { ...win.geometry } : currentRect(win))
+          : null;
         state[id] = {
           floating: win.floating === true,
           minimized: win.minimized === true,
@@ -1654,7 +1678,7 @@
       setDeckOpen,
       getWindow: id => windows.get(id) || null,
       snapshot,
-      setGeometry: setGeometry406312,
+      setGeometry,
       applySnapshot,
       restorePersistedPresentation,
       neutralizePresentation,
