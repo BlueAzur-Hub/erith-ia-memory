@@ -55,8 +55,10 @@ Modules préchauffés :
 - build.json : PASS ;
 - diff fonctionnel limité au loader post-boot, à l'entrée Administrator, au manifeste et à l'entrée immutable 40.6.336.
 
-## Validation Firefox demandée
-Depuis un **reload frais** :
+## Validation Firefox — PASS
+**PASS opérateur confirmé le 21/09/2026.** Le premier cycle est nettement amélioré et la boucle Lazy complète se comporte comme attendu.
+
+Depuis un **reload frais**, le test validé était :
 1. cliquer Marché immédiatement ;
 2. Crypto → Métaux peut utiliser le premier pas natif ;
 3. recliquer rapidement Métaux : **ne doit plus revenir à Crypto** ;
@@ -65,7 +67,7 @@ Depuis un **reload frais** :
 6. vérifier qu'aucun domaine ne se superpose ;
 7. de retour Crypto, vérifier que la période mémorisée **24 h** reste conservée.
 
-Si PASS : geler 40.6.336.
+**Résultat : PASS → 40.6.336 GELÉE.**
 
 ## Suite graphique
 Une fois ce routage validé :
