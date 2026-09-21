@@ -2281,7 +2281,7 @@
   // Normal operator geometry stays persisted by the Window Manager. Entering
   // browser F11 captures that geometry, uses the large historical 16:9 field,
   // and exit restores the exact captured rectangle through the geometry-only API.
-  function installAetherF11Continuity406305(manager) {
+  function installAetherF11Continuity406307(manager) {
     if (!manager?.getWindow || !manager?.setGeometry) return false;
 
     let frame = 0;
@@ -2312,11 +2312,21 @@
       height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
     });
 
+    // 40.6.307 — freeze the physical-screen reference at installation.
+    // Some browser/test environments mutate window.screen together with the
+    // viewport. Reading screen live therefore made F11 exit indistinguishable
+    // from F11 itself: screen.height collapsed to the post-exit innerHeight and
+    // the detector stayed true forever. A stable snapshot makes the transition
+    // reversible without timers or a second geometry owner.
+    const initialViewport = viewport();
+    const screenSnapshot = Object.freeze({
+      width: Number(globalThis.screen?.width) || initialViewport.width,
+      height: Number(globalThis.screen?.height) || initialViewport.height
+    });
+
     const isBrowserF11 = () => {
       const { width, height } = viewport();
-      const sw = Number(globalThis.screen?.width) || width;
-      const sh = Number(globalThis.screen?.height) || height;
-      return width >= sw - 8 && height >= sh - 12;
+      return width >= screenSnapshot.width - 8 && height >= screenSnapshot.height - 12;
     };
 
     const visibleRect = node => {
@@ -2358,7 +2368,7 @@
       if (!safe || !win || !win.floating || win.hidden || win.maximized || win.minimized) return false;
       const result = manager.setGeometry("aether-watch", safe, { persist: false });
       if (!result) return false;
-      document.documentElement.dataset.aetherF11406305 = reason;
+      document.documentElement.dataset.aetherF11406307 = reason;
       return true;
     };
 
@@ -2368,7 +2378,7 @@
       f11Active = true;
       if (!win.floating || win.hidden || win.maximized || win.minimized) {
         expandedPendingOpen = true;
-        document.documentElement.dataset.aetherF11406305 = "pending-open";
+        document.documentElement.dataset.aetherF11406307 = "pending-open";
         return;
       }
       if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
@@ -2415,13 +2425,15 @@
     window.addEventListener("resize", schedule, { passive: true });
     document.addEventListener("click", openWhileF11, true);
 
-    globalThis.ErithAetherF11Continuity406305 = Object.freeze({
-      build: "40.6.305",
+    globalThis.ErithAetherF11Continuity406307 = Object.freeze({
+      build: "40.6.307",
       normal: "40.6.76/40.6.295 operator geometry",
       f11: "temporary historical 16:9 field",
       geometry_owner: "ErithAdministratorWindows.setGeometry",
       persistent_f11_geometry: false,
       css_owner_added: false,
+      screen_reference: screenSnapshot,
+      reversible_screen_snapshot: true,
       timer: false,
       observer: false
     });
@@ -2500,7 +2512,7 @@ const factory = window.ErithAdminWindowManager;
     }, true);
 
     window.ErithAdministratorWindows = manager;
-    installAetherF11Continuity406305(manager);
+    installAetherF11Continuity406307(manager);
 // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;
     // reduced/hidden = generated rows released. The manager remains unchanged.
