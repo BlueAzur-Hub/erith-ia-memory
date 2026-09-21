@@ -1321,22 +1321,21 @@ function aetherNewsMarketSemantic(){
     if(panel){
       panel.dataset.aetherOperatorOpen=open?"1":"0";
       if(manager){
-        // 40.6.46: Window Manager keeps geometry only; visibility is operator-owned.
-        panel.hidden=false;
+        // 40.6.306 — PRE-REVEAL NATIVE GEOMETRY CONTRACT.
+        // Never expose Aether while it is docked. Prepare the native floating
+        // geometry while the DOM node is still hidden, then reveal it last.
+        // On close, hide the DOM node first so the manager may dock internally
+        // without ever repainting an obsolete portal geometry for one frame.
         if(open){
-          manager.hide('aether-watch',false);
-          // 40.6.303 — restore the native floating-open contract proven in 40.6.293.
-          // 40.6.300 restored the 40.6.273 Aether body but also removed this one
-          // lifecycle step. When hide() closes Aether, the canonical manager docks
-          // the window; reopening it without float() exposes the historical centered
-          // portal CSS, so x=12 is never the rendered outer-window position.
-          // Re-enter floating only on explicit operator open. Geometry remains owned
-          // exclusively by the existing Administrator Window Manager.
+          panel.hidden=true;
           const nativeWindow=manager.getWindow?.('aether-watch');
           if(nativeWindow && nativeWindow.floating!==true)manager.float('aether-watch',true);
           manager.minimize('aether-watch',false);
+          manager.hide('aether-watch',false);
+          panel.hidden=false;
           manager.focus('aether-watch');
         }else{
+          panel.hidden=true;
           manager.hide('aether-watch',true);
         }
       }else{
