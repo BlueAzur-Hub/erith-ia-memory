@@ -2203,12 +2203,12 @@
       const read = key => relief?.readSync ? relief.readSync(key) : localStorage.getItem(key);
       const write = (key, value) => relief?.writeSync ? relief.writeSync(key, value) : (localStorage.setItem(key, value), true);
       const remove = key => {
-        if (relief?.removeSync) relief.removeSync(key);
-        else localStorage.removeItem(key);
+        try { relief?.removeSync?.(key); } catch (_) {}
+        try { localStorage.removeItem(key); } catch (_) {}
       };
 
-      // .309 wrote "1" before manager.init through localStorage only. Treat that
-      // value as stale. "window-manager" is the canonical completion receipt.
+      // The former pre-init path wrote "1" through localStorage only. Treat
+      // that receipt as stale. "window-manager" means the real owner completed it.
       if (read(markerKey) === "window-manager") return "already";
 
       const raw = JSON.parse(read(windowKey) || "null");
