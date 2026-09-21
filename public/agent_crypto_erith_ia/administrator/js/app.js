@@ -2269,20 +2269,17 @@
   }
 
 
-  // 40.6.313 — RESTORE THE FIREFOX-PROVEN 40.6.297/.298 VIEWPORT TRANSITION.
-  // The field proof is explicit: normal stays compact; entering browser F11 grows
-  // the viewport and must temporarily apply the historical 16:9 field; leaving F11
-  // shrinks the viewport and restores the exact pre-F11 operator rectangle.
+  // Aether browser-F11 continuity.
+  // resize is only a wake-up signal; Firefox window.fullScreen is the state truth.
+  // Ordinary viewport changes (DevTools, window resize, sidebars) never enter F11.
   // Geometry is applied only through ErithAdministratorWindows.setGeometry.
-  function installAetherF11Continuity406313(manager) {
+  function installAetherF11Continuity(manager) {
     if (!manager?.getWindow || !manager?.setGeometry) return false;
 
-    let viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    let viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     let frame = 0;
-    let expandedFitActive = false;
-    let expandedFitPending = false;
-    let preExpandedGeometry = null;
+    let f11Active = window.fullScreen === true;
+    let expandedFitPending = f11Active;
+    let preF11Geometry = null;
     const ratio = 1672 / 941;
     const margin = 12;
     const minWidth = 720;
@@ -2310,7 +2307,9 @@
       return rect;
     };
 
-    const historicalFit = (vw, vh) => {
+    const f11Geometry = () => {
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
       const detail = visibleRect(document.getElementById("detailPanel"));
       const rightBoundary = detail && detail.left > Math.max(minWidth + margin * 2, vw * .55)
         ? Math.max(minWidth + margin * 2, detail.left - 8)
@@ -2334,59 +2333,44 @@
       };
     };
 
-    const applyGeometry = (win, geometry, persist, reason) => {
+    const applyGeometry = (geometry, persist, reason) => {
       const safe = finiteGeometry(geometry);
-      if (!safe || !win || !win.floating || win.maximized || win.minimized) return false;
+      const win = manager.getWindow("aether-watch");
+      if (!safe || !win || !win.floating || win.hidden || win.maximized || win.minimized) return false;
       const applied = manager.setGeometry("aether-watch", safe, { persist: !!persist });
       if (!applied) return false;
-      document.documentElement.dataset.aetherF11406313 = reason;
+      document.documentElement.dataset.aetherF11State = reason;
       return true;
+    };
+
+    const enterF11 = () => {
+      const win = manager.getWindow("aether-watch");
+      if (!win) return;
+      f11Active = true;
+      if (!win.floating || win.hidden || win.maximized || win.minimized) {
+        expandedFitPending = true;
+        document.documentElement.dataset.aetherF11State = "pending-open";
+        return;
+      }
+      if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
+      expandedFitPending = false;
+      applyGeometry(f11Geometry(), false, "expanded");
+    };
+
+    const exitF11 = () => {
+      f11Active = false;
+      expandedFitPending = false;
+      const restore = finiteGeometry(preF11Geometry);
+      if (restore) applyGeometry(restore, true, "restored-normal-exact");
+      preF11Geometry = null;
     };
 
     const reconcile = () => {
       frame = 0;
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-      const deltaW = vw - viewportWidth;
-      const deltaH = vh - viewportHeight;
-      const grew = deltaW > 48 || deltaH > 48;
-      const shrank = deltaW < -48 || deltaH < -48;
-      viewportWidth = vw;
-      viewportHeight = vh;
-      if (!grew && !shrank) return;
-
-      const win = manager.getWindow("aether-watch");
-      if (!win || !win.floating || win.maximized || win.minimized) return;
-      const saved = finiteGeometry(win.geometry);
-      if (!saved) return;
-
-      if (grew) {
-        if (win.hidden) {
-          expandedFitPending = true;
-          document.documentElement.dataset.aetherF11406313 = "expanded-pending-open";
-          return;
-        }
-        if (!expandedFitActive) preExpandedGeometry = { ...saved };
-        expandedFitActive = true;
-        expandedFitPending = false;
-        applyGeometry(win, historicalFit(vw, vh), false, "expanded-40.6.297-field");
-        return;
-      }
-
-      if (shrank && expandedFitActive) {
-        const restore = finiteGeometry(preExpandedGeometry);
-        if (restore) applyGeometry(win, restore, true, "restored-pre-f11-exact");
-        expandedFitActive = false;
-        expandedFitPending = false;
-        preExpandedGeometry = null;
-        return;
-      }
-
-      if (shrank && expandedFitPending) {
-        expandedFitPending = false;
-        preExpandedGeometry = null;
-        document.documentElement.dataset.aetherF11406313 = "pending-cancelled-on-exit";
-      }
+      const nextF11 = window.fullScreen === true;
+      if (nextF11 === f11Active) return;
+      if (nextF11) enterF11();
+      else exitF11();
     };
 
     const schedule = () => {
@@ -2394,35 +2378,41 @@
       frame = requestAnimationFrame(reconcile);
     };
 
-    const openExpanded = event => {
+    const openWhileF11 = event => {
       if (!(event.target instanceof Element) || !event.target.closest("#atlasAetherStatusToggle")) return;
-      if (!expandedFitPending) return;
+      if (!f11Active && window.fullScreen !== true) return;
       queueMicrotask(() => {
         const win = manager.getWindow("aether-watch");
         if (!win || !win.floating || win.hidden || win.maximized || win.minimized) return;
-        const current = finiteGeometry(win.geometry);
-        if (!current) return;
-        if (!expandedFitActive) preExpandedGeometry = { ...current };
-        expandedFitActive = true;
+        if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
+        f11Active = true;
         expandedFitPending = false;
-        const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-        const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-        applyGeometry(win, historicalFit(vw, vh), false, "expanded-open-40.6.297-field");
+        applyGeometry(f11Geometry(), false, "expanded-open");
       });
     };
 
     window.addEventListener("resize", schedule, { passive: true });
-    document.addEventListener("click", openExpanded, true);
+    document.addEventListener("click", openWhileF11, true);
 
-    globalThis.ErithAetherF11Continuity406313 = Object.freeze({
-      build: "40.6.313",
-      entry_detection: "40.6.297/.298 viewport grew > 48px",
-      exit_detection: "40.6.297/.298 viewport shrank > 48px",
-      visual_reference: "40.6.297 Firefox terrain PASS on F11 entry",
-      geometry_transaction: "40.6.298 ErithAdministratorWindows.setGeometry",
+    if (f11Active) {
+      queueMicrotask(() => {
+        const win = manager.getWindow("aether-watch");
+        if (!win || !win.floating || win.hidden || win.maximized || win.minimized) return;
+        if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
+        expandedFitPending = false;
+        applyGeometry(f11Geometry(), false, "expanded-boot");
+      });
+    }
+
+    globalThis.ErithAetherF11Continuity = Object.freeze({
+      state_truth: "Firefox window.fullScreen",
+      wake_event: "window.resize",
+      ordinary_resize_changes_state: false,
+      devtools_resize_changes_state: false,
       normal_geometry_owner: "current operator/Window Manager state",
       f11_geometry: "temporary 1672/941 field, x=12, max 1450, left of Lecture Technique",
       exit_restore: "exact captured pre-F11 rectangle / persist true",
+      geometry_owner: "ErithAdministratorWindows.setGeometry",
       css_owner_added: false,
       timer: false,
       observer: false
@@ -2506,7 +2496,7 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
-    installAetherF11Continuity406313(manager);
+    installAetherF11Continuity(manager);
 
     // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;
