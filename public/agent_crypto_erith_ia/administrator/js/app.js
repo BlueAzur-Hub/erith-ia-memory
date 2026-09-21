@@ -2190,19 +2190,31 @@
   }
 
 
-  // Aether canonical left-state migration.
-  // Stable key: migration:aether-left. No build number is embedded in runtime state.
-  // One responsibility only: repair a legacy auto-centered Aether state to x=12,
-  // while preserving any non-centered operator position and all other geometry.
-  const AETHER_LEFT_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left`;
-  function migrateAetherCenteredState() {
+  // Aether canonical left-state repair.
+  // Stable runtime key: migration:aether-left. No build number is embedded.
+  // The Window Manager + AtlasStorageRelief remain the only persistence owners.
+  function reconcileAetherCanonicalLeftState(manager) {
     try {
-      if (localStorage.getItem(AETHER_LEFT_MIGRATION_KEY) === "1") return "already";
+      if (!manager?.restorePersistedPresentation) return "manager-unavailable";
 
-      const key = `${STORAGE_PREFIX}:window:aether-watch`;
-      const raw = JSON.parse(localStorage.getItem(key) || "null");
+      const markerKey = `${STORAGE_PREFIX}:migration:aether-left`;
+      const windowKey = `${STORAGE_PREFIX}:window:aether-watch`;
+      const relief = globalThis.AtlasStorageRelief || null;
+      const read = key => relief?.readSync ? relief.readSync(key) : localStorage.getItem(key);
+      const write = (key, value) => relief?.writeSync ? relief.writeSync(key, value) : (localStorage.setItem(key, value), true);
+      const remove = key => {
+        try { relief?.removeSync?.(key); } catch (_) {}
+        try { localStorage.removeItem(key); } catch (_) {}
+      };
+
+      // The former pre-init path wrote "1" through localStorage only. Treat
+      // that receipt as stale. "window-manager" means the real owner completed it.
+      if (read(markerKey) === "window-manager") return "already";
+
+      const raw = JSON.parse(read(windowKey) || "null");
       if (!raw || typeof raw !== "object") {
-        localStorage.setItem(AETHER_LEFT_MIGRATION_KEY, "1");
+        write(markerKey, "window-manager");
+        document.documentElement.dataset.aetherLeftMigration = "no-state";
         return "no-state";
       }
 
@@ -2230,21 +2242,25 @@
       }
 
       if (changed) {
-        localStorage.setItem(key, JSON.stringify(next));
+        write(windowKey, JSON.stringify(next));
+        // Re-read through the real Window Manager owner after correcting the
+        // authoritative stored state. This updates a visible Aether immediately,
+        // and a hidden Aether will reopen from the corrected x=12 geometry.
+        manager.restorePersistedPresentation();
         document.documentElement.dataset.aetherLeftMigration = "migrated-left";
       } else {
         document.documentElement.dataset.aetherLeftMigration = "preserved";
       }
 
-      // Retire any historical build-numbered left marker. The runtime keeps
-      // only the canonical migration:aether-left key from now on.
+      // Retire historical build-numbered markers without creating another one.
       for (let index = localStorage.length - 1; index >= 0; index -= 1) {
         const candidate = localStorage.key(index);
         if (candidate?.startsWith(`${STORAGE_PREFIX}:migration:aether-left-`)) {
-          localStorage.removeItem(candidate);
+          try { remove(candidate); } catch (_) {}
         }
       }
-      localStorage.setItem(AETHER_LEFT_MIGRATION_KEY, "1");
+
+      write(markerKey, "window-manager");
       return changed ? "migrated-left" : "preserved";
     } catch (_) {
       document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
@@ -2269,8 +2285,6 @@
     migrateFamilyTopologyWindowState();
     migrateFamilyRoleReturnWindowState();
     stageAdministratorDefaultFamilyCollapse();
-    migrateAetherCenteredState();
-
     const factory = window.ErithAdminWindowManager;
     if (!factory?.create) {
       console.error(`Administrator ${ADMIN_BUILD}: operational window manager unavailable.`);
@@ -2286,8 +2300,13 @@
 
     const bootRole = presentationRole();
     let aetherNativeStateExists = false;
-    try { aetherNativeStateExists = localStorage.getItem(`${STORAGE_PREFIX}:window:aether-watch`) !== null; } catch {}
+    try {
+      const relief = globalThis.AtlasStorageRelief || null;
+      const key = `${STORAGE_PREFIX}:window:aether-watch`;
+      aetherNativeStateExists = (relief?.readSync ? relief.readSync(key) : localStorage.getItem(key)) !== null;
+    } catch {}
     const state = manager.init({ restorePersistedPresentation: bootRole === "administrator" });
+    reconcileAetherCanonicalLeftState(manager);
     // 40.6.40 — the shell is pre-created by aether.js solely so the canonical
     // Window Manager can register it during this one normal init pass.
     // HTML hidden is then released; the manager becomes the only presentation owner.
