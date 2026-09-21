@@ -1,0 +1,756 @@
+{
+  "schema": "agent_crypto_strategy_a_certification_matrix_v3",
+  "build": "40.6.191",
+  "generated_at": "2026-09-21T10:39:28.457Z",
+  "modules": {
+    "deterministic_replay": {
+      "name": "deterministic_replay",
+      "available": true,
+      "build": "40.6.192",
+      "required_methods": [
+        "self_test"
+      ],
+      "missing_methods": [],
+      "compatible": true,
+      "version_bindable": true
+    },
+    "paper_lifecycle": {
+      "name": "paper_lifecycle",
+      "available": true,
+      "build": "40.6.15",
+      "required_methods": [
+        "self_test"
+      ],
+      "missing_methods": [],
+      "compatible": true,
+      "version_bindable": true
+    },
+    "after_cost_metrics": {
+      "name": "after_cost_metrics",
+      "available": true,
+      "build": "40.6.168",
+      "required_methods": [
+        "self_test"
+      ],
+      "missing_methods": [],
+      "compatible": true,
+      "version_bindable": true
+    },
+    "auto_lifecycle_bridge": {
+      "name": "auto_lifecycle_bridge",
+      "available": true,
+      "build": "40.6.18",
+      "required_methods": [
+        "self_test",
+        "preflight"
+      ],
+      "missing_methods": [],
+      "compatible": true,
+      "version_bindable": true
+    }
+  },
+  "gates": [
+    {
+      "gate": 1,
+      "label": "QUALITÉ DES DONNÉES",
+      "state": "EVIDENCE_REQUIRED"
+    },
+    {
+      "gate": 2,
+      "label": "COHÉRENCE LOGIQUE",
+      "state": "FOUNDATION_PASS",
+      "note": "Fondation courante : test explicite lié aux builds chargés (EXPLICIT_TEST_EXACT_CURRENT_BUILDS)."
+    },
+    {
+      "gate": 3,
+      "label": "BACKTEST RÉALISTE",
+      "state": "PENDING"
+    },
+    {
+      "gate": 4,
+      "label": "OUT-OF-SAMPLE",
+      "state": "PENDING"
+    },
+    {
+      "gate": 5,
+      "label": "WALK-FORWARD",
+      "state": "PENDING"
+    },
+    {
+      "gate": 6,
+      "label": "MONTE CARLO / STRESS",
+      "state": "PENDING"
+    },
+    {
+      "gate": 7,
+      "label": "CHAOS TESTING",
+      "state": "FOUNDATION_PASS",
+      "note": "Fondation courante : test explicite lié aux builds chargés (EXPLICIT_TEST_EXACT_CURRENT_BUILDS)."
+    },
+    {
+      "gate": 8,
+      "label": "PAPER TRADING",
+      "state": "INSUFFICIENT_SAMPLE",
+      "note": "0 trade(s) après coûts · coût complet=non."
+    },
+    {
+      "gate": 9,
+      "label": "MICRO-LIVE CONTRÔLÉ",
+      "state": "LOCKED"
+    }
+  ],
+  "foundation_proof": {
+    "schema": "agent_crypto_foundation_applicability_truth_v2",
+    "build": "40.6.191",
+    "pass": true,
+    "source": "EXPLICIT_TEST_EXACT_CURRENT_BUILDS",
+    "historical_receipt": {
+      "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+      "source_build": "40.6.159",
+      "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+      "result": "PASS",
+      "pass": true,
+      "at": "2026-09-15T23:27:11.071Z",
+      "gates": {
+        "2": "FOUNDATION_PASS",
+        "7": "FOUNDATION_PASS"
+      },
+      "terrain_proof": true,
+      "operator_action": true,
+      "automatic": false,
+      "immutable": true
+    },
+    "historical_receipt_pass": true,
+    "historical_receipt_current_pass": false,
+    "current_modules": {
+      "deterministic_replay": {
+        "name": "deterministic_replay",
+        "available": true,
+        "build": "40.6.192",
+        "required_methods": [
+          "self_test"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      },
+      "paper_lifecycle": {
+        "name": "paper_lifecycle",
+        "available": true,
+        "build": "40.6.15",
+        "required_methods": [
+          "self_test"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      },
+      "after_cost_metrics": {
+        "name": "after_cost_metrics",
+        "available": true,
+        "build": "40.6.168",
+        "required_methods": [
+          "self_test"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      },
+      "auto_lifecycle_bridge": {
+        "name": "auto_lifecycle_bridge",
+        "available": true,
+        "build": "40.6.18",
+        "required_methods": [
+          "self_test",
+          "preflight"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      }
+    },
+    "applicability_complete": true,
+    "version_binding_complete": true,
+    "tested_builds_match_current": true,
+    "binding_reason": "EXACT_CURRENT_MODULE_BUILDS",
+    "latest_explicit_test": {
+      "schema": "agent_crypto_foundation_strict_result_v2",
+      "build": "40.6.191",
+      "at": "2026-09-21T10:34:03.888Z",
+      "pass": true,
+      "status": "PASS",
+      "modules": {
+        "deterministic_replay": {
+          "name": "deterministic_replay",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_replay_self_test_v2",
+            "build": "40.6.192",
+            "pass": true,
+            "state_unchanged": true,
+            "checks": [
+              {
+                "scenario": "PASS_TO_PAPER",
+                "expected": "PAPER_SIMULATED",
+                "actual": "PAPER_SIMULATED",
+                "pass": true
+              },
+              {
+                "scenario": "DATA_STALE_STOP",
+                "expected": "STOP",
+                "actual": "STOP",
+                "pass": true
+              },
+              {
+                "scenario": "DIRECTION_WAIT",
+                "expected": "WAIT",
+                "actual": "WAIT",
+                "pass": true
+              },
+              {
+                "scenario": "BTC24_WAIT",
+                "expected": "WAIT",
+                "actual": "WAIT",
+                "pass": true
+              },
+              {
+                "scenario": "COST_WAIT",
+                "expected": "WAIT",
+                "actual": "WAIT",
+                "pass": true
+              },
+              {
+                "scenario": "DUPLICATE_STOP",
+                "expected": "STOP",
+                "actual": "STOP",
+                "pass": true
+              },
+              {
+                "scenario": "RISK_REJECT",
+                "expected": "STOP",
+                "actual": "STOP",
+                "pass": true
+              }
+            ],
+            "integrity": {
+              "result_store_unchanged": true,
+              "replay_sequence_unchanged": true,
+              "null_numeric_inputs_rejected": true,
+              "self_test_writes_replay_history": false
+            }
+          }
+        },
+        "paper_lifecycle": {
+          "name": "paper_lifecycle",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_paper_lifecycle_self_test_v2",
+            "build": "40.6.15",
+            "pass": true,
+            "checks": [
+              {
+                "scenario": "HAPPY_PATH",
+                "expected": "CLOSED",
+                "actual": "CLOSED",
+                "pass": true
+              },
+              {
+                "scenario": "PARTIAL_FILL",
+                "expected": "CLOSED",
+                "actual": "CLOSED",
+                "pass": true
+              },
+              {
+                "scenario": "EXECUTION_REJECT",
+                "expected": "REJECTED",
+                "actual": "REJECTED",
+                "pass": true
+              },
+              {
+                "scenario": "TIMEOUT_RECONCILE",
+                "expected": "RECONCILED_NO_ORDER",
+                "actual": "RECONCILED_NO_ORDER",
+                "pass": true
+              },
+              {
+                "scenario": "TIMEOUT_RECONCILE_NO_BLIND_RETRY",
+                "expected": false,
+                "actual": false,
+                "pass": true
+              },
+              {
+                "scenario": "CANCEL_AFTER_ACK",
+                "expected": "CANCELED",
+                "actual": "CANCELED",
+                "pass": true
+              },
+              {
+                "scenario": "PROTECTION_FAILURE",
+                "expected": "STOP_UNPROTECTED",
+                "actual": "STOP_UNPROTECTED",
+                "pass": true
+              },
+              {
+                "scenario": "RECONCILE_CONTRADICTION",
+                "expected": "RECONCILIATION_REQUIRED",
+                "actual": "RECONCILIATION_REQUIRED",
+                "pass": true
+              },
+              {
+                "scenario": "RECONCILE_CONTRADICTION_CONFLICT",
+                "expected": true,
+                "actual": true,
+                "pass": true
+              },
+              {
+                "scenario": "DUPLICATE_ID",
+                "expected": "REJECTED",
+                "actual": "REJECTED",
+                "pass": true
+              },
+              {
+                "scenario": "PARTIAL_FILL_AVERAGE_PRICE",
+                "expected": 13.333333333333334,
+                "actual": 13.333333333333334,
+                "pass": true
+              }
+            ],
+            "state_preservation": true
+          }
+        },
+        "after_cost_metrics": {
+          "name": "after_cost_metrics",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_after_cost_self_test_v4",
+            "build": "40.6.17",
+            "pass": true,
+            "checks": {
+              "unknown_null_blank_boolean_not_zero": true,
+              "partial_identity_indeterminate": true,
+              "duplicate_refused": true,
+              "complete_identity_verified": true,
+              "spread_slippage_in_complete_identity": true,
+              "contradictory_complete_identity_refused": true,
+              "mismatch_not_recorded": true,
+              "no_profitability_claim": true
+            }
+          }
+        },
+        "auto_lifecycle_bridge": {
+          "name": "auto_lifecycle_bridge",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_auto_lifecycle_bridge_self_test_v2",
+            "build": "40.6.18",
+            "pass": true,
+            "checks": {
+              "direct_without_fee_preserves_unknown": true,
+              "missing_fee_cannot_fake_fallback_zero": true,
+              "known_fee_fallback": true,
+              "contradictory_notional_fails": true,
+              "blank_boolean_null_not_zero": true
+            }
+          }
+        }
+      },
+      "tested_modules": {
+        "deterministic_replay": {
+          "build": "40.6.192",
+          "required_methods": [
+            "self_test"
+          ],
+          "compatible": true
+        },
+        "paper_lifecycle": {
+          "build": "40.6.15",
+          "required_methods": [
+            "self_test"
+          ],
+          "compatible": true
+        },
+        "after_cost_metrics": {
+          "build": "40.6.168",
+          "required_methods": [
+            "self_test"
+          ],
+          "compatible": true
+        },
+        "auto_lifecycle_bridge": {
+          "build": "40.6.18",
+          "required_methods": [
+            "self_test",
+            "preflight"
+          ],
+          "compatible": true
+        }
+      },
+      "exact_build_binding_required": true,
+      "source": "EXPLICIT_OPERATOR_ACTION",
+      "historical_receipt_used_as_test_result": false
+    },
+    "explicit_result_persists_across_reload_in_session": true,
+    "explicit_result_requires_exact_current_builds": true,
+    "missing_method_is_pass": false,
+    "unbound_receipt_is_current_pass": false,
+    "implicit_tests_executed": false,
+    "storage_scope": "sessionStorage"
+  },
+  "safety": {
+    "schema": "agent_crypto_strategy_a_safety_certification_v3",
+    "build": "40.6.163",
+    "level": "NORMAL",
+    "reason": "INITIAL",
+    "history": [],
+    "runtime_errors": 0,
+    "automatic_live_resume": false,
+    "automatic_auto_a_resume": false,
+    "new_trades_allowed": true,
+    "existing_paper_monitoring_allowed": true,
+    "paper_only": true,
+    "real_orders": false,
+    "network": false,
+    "auto_a_governor_connected": true,
+    "micro_live_locked": true,
+    "foundation_truth": {
+      "schema": "agent_crypto_strategy_a_foundation_truth_v1",
+      "build": "40.6.163",
+      "pass": true,
+      "source": "CANONICAL_TERRAIN_RECEIPT",
+      "receipt": {
+        "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+        "source_build": "40.6.159",
+        "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+        "result": "PASS",
+        "pass": true,
+        "at": "2026-09-15T23:27:11.071Z",
+        "gates": {
+          "2": "FOUNDATION_PASS",
+          "7": "FOUNDATION_PASS"
+        },
+        "terrain_proof": true,
+        "operator_action": true,
+        "automatic": false,
+        "immutable": true
+      },
+      "session_test": null,
+      "implicit_tests_executed": false,
+      "storage_write": false
+    }
+  },
+  "profitability_claim": false,
+  "certified_for_live": false,
+  "paper_only": true,
+  "real_orders": false,
+  "passive_read": true,
+  "implicit_self_tests": false,
+  "auto_a_governor_connected": true,
+  "exported_at": "2026-09-21T10:39:28.457Z",
+  "foundation_truth": {
+    "schema": "agent_crypto_foundation_applicability_truth_v2",
+    "build": "40.6.191",
+    "pass": true,
+    "source": "EXPLICIT_TEST_EXACT_CURRENT_BUILDS",
+    "historical_receipt": {
+      "schema": "agent_crypto_strategy_a_foundation_receipt_v1",
+      "source_build": "40.6.159",
+      "source_handoff": "coordination/inter_ai_dialogues/agent_crypto/AGENT_CRYPTO_FINAL_HANDOFF_40.6.160.md",
+      "result": "PASS",
+      "pass": true,
+      "at": "2026-09-15T23:27:11.071Z",
+      "gates": {
+        "2": "FOUNDATION_PASS",
+        "7": "FOUNDATION_PASS"
+      },
+      "terrain_proof": true,
+      "operator_action": true,
+      "automatic": false,
+      "immutable": true
+    },
+    "historical_receipt_pass": true,
+    "historical_receipt_current_pass": false,
+    "current_modules": {
+      "deterministic_replay": {
+        "name": "deterministic_replay",
+        "available": true,
+        "build": "40.6.192",
+        "required_methods": [
+          "self_test"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      },
+      "paper_lifecycle": {
+        "name": "paper_lifecycle",
+        "available": true,
+        "build": "40.6.15",
+        "required_methods": [
+          "self_test"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      },
+      "after_cost_metrics": {
+        "name": "after_cost_metrics",
+        "available": true,
+        "build": "40.6.168",
+        "required_methods": [
+          "self_test"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      },
+      "auto_lifecycle_bridge": {
+        "name": "auto_lifecycle_bridge",
+        "available": true,
+        "build": "40.6.18",
+        "required_methods": [
+          "self_test",
+          "preflight"
+        ],
+        "missing_methods": [],
+        "compatible": true,
+        "version_bindable": true
+      }
+    },
+    "applicability_complete": true,
+    "version_binding_complete": true,
+    "tested_builds_match_current": true,
+    "binding_reason": "EXACT_CURRENT_MODULE_BUILDS",
+    "latest_explicit_test": {
+      "schema": "agent_crypto_foundation_strict_result_v2",
+      "build": "40.6.191",
+      "at": "2026-09-21T10:34:03.888Z",
+      "pass": true,
+      "status": "PASS",
+      "modules": {
+        "deterministic_replay": {
+          "name": "deterministic_replay",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_replay_self_test_v2",
+            "build": "40.6.192",
+            "pass": true,
+            "state_unchanged": true,
+            "checks": [
+              {
+                "scenario": "PASS_TO_PAPER",
+                "expected": "PAPER_SIMULATED",
+                "actual": "PAPER_SIMULATED",
+                "pass": true
+              },
+              {
+                "scenario": "DATA_STALE_STOP",
+                "expected": "STOP",
+                "actual": "STOP",
+                "pass": true
+              },
+              {
+                "scenario": "DIRECTION_WAIT",
+                "expected": "WAIT",
+                "actual": "WAIT",
+                "pass": true
+              },
+              {
+                "scenario": "BTC24_WAIT",
+                "expected": "WAIT",
+                "actual": "WAIT",
+                "pass": true
+              },
+              {
+                "scenario": "COST_WAIT",
+                "expected": "WAIT",
+                "actual": "WAIT",
+                "pass": true
+              },
+              {
+                "scenario": "DUPLICATE_STOP",
+                "expected": "STOP",
+                "actual": "STOP",
+                "pass": true
+              },
+              {
+                "scenario": "RISK_REJECT",
+                "expected": "STOP",
+                "actual": "STOP",
+                "pass": true
+              }
+            ],
+            "integrity": {
+              "result_store_unchanged": true,
+              "replay_sequence_unchanged": true,
+              "null_numeric_inputs_rejected": true,
+              "self_test_writes_replay_history": false
+            }
+          }
+        },
+        "paper_lifecycle": {
+          "name": "paper_lifecycle",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_paper_lifecycle_self_test_v2",
+            "build": "40.6.15",
+            "pass": true,
+            "checks": [
+              {
+                "scenario": "HAPPY_PATH",
+                "expected": "CLOSED",
+                "actual": "CLOSED",
+                "pass": true
+              },
+              {
+                "scenario": "PARTIAL_FILL",
+                "expected": "CLOSED",
+                "actual": "CLOSED",
+                "pass": true
+              },
+              {
+                "scenario": "EXECUTION_REJECT",
+                "expected": "REJECTED",
+                "actual": "REJECTED",
+                "pass": true
+              },
+              {
+                "scenario": "TIMEOUT_RECONCILE",
+                "expected": "RECONCILED_NO_ORDER",
+                "actual": "RECONCILED_NO_ORDER",
+                "pass": true
+              },
+              {
+                "scenario": "TIMEOUT_RECONCILE_NO_BLIND_RETRY",
+                "expected": false,
+                "actual": false,
+                "pass": true
+              },
+              {
+                "scenario": "CANCEL_AFTER_ACK",
+                "expected": "CANCELED",
+                "actual": "CANCELED",
+                "pass": true
+              },
+              {
+                "scenario": "PROTECTION_FAILURE",
+                "expected": "STOP_UNPROTECTED",
+                "actual": "STOP_UNPROTECTED",
+                "pass": true
+              },
+              {
+                "scenario": "RECONCILE_CONTRADICTION",
+                "expected": "RECONCILIATION_REQUIRED",
+                "actual": "RECONCILIATION_REQUIRED",
+                "pass": true
+              },
+              {
+                "scenario": "RECONCILE_CONTRADICTION_CONFLICT",
+                "expected": true,
+                "actual": true,
+                "pass": true
+              },
+              {
+                "scenario": "DUPLICATE_ID",
+                "expected": "REJECTED",
+                "actual": "REJECTED",
+                "pass": true
+              },
+              {
+                "scenario": "PARTIAL_FILL_AVERAGE_PRICE",
+                "expected": 13.333333333333334,
+                "actual": 13.333333333333334,
+                "pass": true
+              }
+            ],
+            "state_preservation": true
+          }
+        },
+        "after_cost_metrics": {
+          "name": "after_cost_metrics",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_after_cost_self_test_v4",
+            "build": "40.6.17",
+            "pass": true,
+            "checks": {
+              "unknown_null_blank_boolean_not_zero": true,
+              "partial_identity_indeterminate": true,
+              "duplicate_refused": true,
+              "complete_identity_verified": true,
+              "spread_slippage_in_complete_identity": true,
+              "contradictory_complete_identity_refused": true,
+              "mismatch_not_recorded": true,
+              "no_profitability_claim": true
+            }
+          }
+        },
+        "auto_lifecycle_bridge": {
+          "name": "auto_lifecycle_bridge",
+          "pass": true,
+          "status": "PASS",
+          "result": {
+            "schema": "agent_crypto_strategy_a_auto_lifecycle_bridge_self_test_v2",
+            "build": "40.6.18",
+            "pass": true,
+            "checks": {
+              "direct_without_fee_preserves_unknown": true,
+              "missing_fee_cannot_fake_fallback_zero": true,
+              "known_fee_fallback": true,
+              "contradictory_notional_fails": true,
+              "blank_boolean_null_not_zero": true
+            }
+          }
+        }
+      },
+      "tested_modules": {
+        "deterministic_replay": {
+          "build": "40.6.192",
+          "required_methods": [
+            "self_test"
+          ],
+          "compatible": true
+        },
+        "paper_lifecycle": {
+          "build": "40.6.15",
+          "required_methods": [
+            "self_test"
+          ],
+          "compatible": true
+        },
+        "after_cost_metrics": {
+          "build": "40.6.168",
+          "required_methods": [
+            "self_test"
+          ],
+          "compatible": true
+        },
+        "auto_lifecycle_bridge": {
+          "build": "40.6.18",
+          "required_methods": [
+            "self_test",
+            "preflight"
+          ],
+          "compatible": true
+        }
+      },
+      "exact_build_binding_required": true,
+      "source": "EXPLICIT_OPERATOR_ACTION",
+      "historical_receipt_used_as_test_result": false
+    },
+    "explicit_result_persists_across_reload_in_session": true,
+    "explicit_result_requires_exact_current_builds": true,
+    "missing_method_is_pass": false,
+    "unbound_receipt_is_current_pass": false,
+    "implicit_tests_executed": false,
+    "storage_scope": "sessionStorage"
+  },
+  "export_owner": "strategy-a-foundation-applicability-truth.js",
+  "export_uses_same_canonical_truth_as_ui": true
+}
