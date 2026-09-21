@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-21T06:28:22.245803+00:00",
+  "generated_at": "2026-09-21T14:17:28.143624+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,9 +11,9 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 5,
-    "critical_24h": 5,
-    "strong_24h": 0,
+    "events_24h": 12,
+    "critical_24h": 7,
+    "strong_24h": 5,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
@@ -21,15 +21,15 @@
     "decision": "Surveillance renforcée",
     "driver_coverage": {
       "macro_liquidity": {
-        "events_72h": 9,
-        "distinct_sources": 4
+        "events_72h": 5,
+        "distinct_sources": 3
       },
       "institutional_flows": {
         "events_72h": 0,
         "distinct_sources": 0
       },
       "regulation": {
-        "events_72h": 18,
+        "events_72h": 16,
         "distinct_sources": 4
       },
       "leverage": {
@@ -48,8 +48,8 @@
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
       "fetched_count": 50,
-      "qualified_count": 3,
-      "latency_ms": 265,
+      "qualified_count": 2,
+      "latency_ms": 194,
       "error": null
     },
     {
@@ -58,9 +58,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 28,
-      "qualified_count": 1,
-      "latency_ms": 258,
+      "fetched_count": 31,
+      "qualified_count": 2,
+      "latency_ms": 156,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 173,
+      "latency_ms": 120,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 2,
-      "latency_ms": 287,
+      "latency_ms": 261,
       "error": null
     },
     {
@@ -92,8 +92,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 22,
-      "latency_ms": 462,
+      "qualified_count": 23,
+      "latency_ms": 319,
       "error": null
     },
     {
@@ -103,8 +103,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 28,
-      "latency_ms": 201,
+      "qualified_count": 27,
+      "latency_ms": 473,
       "error": null
     },
     {
@@ -114,8 +114,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 50,
-      "qualified_count": 42,
-      "latency_ms": 108,
+      "qualified_count": 43,
+      "latency_ms": 101,
       "error": null
     },
     {
@@ -125,8 +125,8 @@
       "url": "https://www.ecb.europa.eu/rss/press.html",
       "status": "ok",
       "fetched_count": 15,
-      "qualified_count": 5,
-      "latency_ms": 756,
+      "qualified_count": 6,
+      "latency_ms": 714,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 17,
-      "latency_ms": 151,
+      "latency_ms": 147,
       "error": null
     },
     {
@@ -148,7 +148,7 @@
       "status": "ok",
       "fetched_count": 24,
       "qualified_count": 3,
-      "latency_ms": 410,
+      "latency_ms": 208,
       "error": null
     },
     {
@@ -159,7 +159,7 @@
       "status": "ok",
       "fetched_count": 7,
       "qualified_count": 5,
-      "latency_ms": 270,
+      "latency_ms": 331,
       "error": null
     },
     {
@@ -168,9 +168,9 @@
       "group": "finance",
       "url": "https://news.google.com/rss/search?q=bitcoin+ethereum+ETF+flux+entrants+sorties+institutionnels+when%3A7d&hl=fr&gl=FR&ceid=FR:fr",
       "status": "ok",
-      "fetched_count": 8,
-      "qualified_count": 8,
-      "latency_ms": 327,
+      "fetched_count": 9,
+      "qualified_count": 9,
+      "latency_ms": 334,
       "error": null
     },
     {
@@ -181,7 +181,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 259,
+      "latency_ms": 346,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 191,
+      "latency_ms": 226,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 9222,
+      "latency_ms": 8267,
       "error": null
     }
   ],
@@ -514,107 +514,6 @@
       ]
     },
     {
-      "id": "feed_11a847671e6da8fa",
-      "event_id": "feed_11a847671e6da8fa",
-      "fingerprint": "11a847671e6da8fa",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Symbiosis says recovered 15 BTC from bridge hack, offers 20% bounty",
-      "body": "Symbiosis is offering a 20% bounty for information leading to asset recovery after the hacker refused to return the stolen funds for the same white-hat bounty.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/symbiosis-recovered-15-btc-bridge-hack-20-bounty",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/symbiosis-recovered-15-btc-bridge-hack-20-bounty"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-14T09:55:35+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.118670+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.118670+00:00",
-      "freshness": {
-        "iso": "2026-09-14T09:55:35+00:00",
-        "hours": 4.26,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 95,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "DeFi",
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "security"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Symbiosis says recovered 15 BTC from bridge hack, offers 20% bounty",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Symbiosis says recovered 15 BTC from bridge hack, offers 20% bounty",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_33ac2997e762d770",
       "event_id": "feed_33ac2997e762d770",
       "fingerprint": "33ac2997e762d770",
@@ -638,11 +537,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-17T22:31:03+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.698027+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.698027+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.585913+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.585913+00:00",
       "freshness": {
         "iso": "2026-09-17T22:31:03+00:00",
-        "hours": 79.95,
+        "hours": 87.77,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -1118,112 +1017,6 @@
       ]
     },
     {
-      "id": "feed_c52db5f0d5c8b288",
-      "event_id": "feed_c52db5f0d5c8b288",
-      "fingerprint": "c52db5f0d5c8b288",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Bitmine adds $68 million in ether as Tom Lee sees more upside catalysts ahead",
-      "body": "The Ethereum treasury firm is closing in on its 5% accumulation goal as Lee points to a rising ETH-BTC ratio and institutional demand.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/09/14/bitmine-adds-usd68-million-in-ether-as-tom-lee-sees-more-upside-catalysts-ahead",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/09/14/bitmine-adds-usd68-million-in-ether-as-tom-lee-sees-more-upside-catalysts-ahead"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-09-14T12:58:42+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.058810+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.058810+00:00",
-      "freshness": {
-        "iso": "2026-09-14T12:58:42+00:00",
-        "hours": 1.21,
-        "label": "Immédiate · moins de 2 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 92,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC",
-        "ETH"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 19,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "macro_liquidity",
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitmine adds $68 million in ether as Tom Lee sees more upside catalysts ahead",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Bitmine adds $68 million in ether as Tom Lee sees more upside catalysts ahead",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_050e27b442255285",
       "event_id": "feed_050e27b442255285",
       "fingerprint": "050e27b442255285",
@@ -1431,111 +1224,6 @@
       ]
     },
     {
-      "id": "feed_1623d5113168ba83",
-      "event_id": "feed_1623d5113168ba83",
-      "fingerprint": "1623d5113168ba83",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Dogecoin ETFs struggled for buyers while rival XRP and Solana funds pulled in $3 billion",
-      "body": "Bitwise's BWOW dogecoin ETF will close after 10 months, adding to weak demand across DOGE funds and raising a harder question for altcoin ETFs: What problem are they actually solving?",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/09/14/dogecoin-etfs-struggled-for-buyers-while-rival-xrp-and-solana-funds-pulled-in-usd3-billion",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/09/14/dogecoin-etfs-struggled-for-buyers-while-rival-xrp-and-solana-funds-pulled-in-usd3-billion"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf",
-      "event_label": "ETF / institutionnels",
-      "event_time": "2026-09-14T12:08:35+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.060739+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.060739+00:00",
-      "freshness": {
-        "iso": "2026-09-14T12:08:35+00:00",
-        "hours": 2.05,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "catalyseur potentiel, sens à confirmer",
-      "assets": [
-        "SOL",
-        "XRP",
-        "DOGE"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Dogecoin ETFs struggled for buyers while rival XRP and Solana funds pulled in $3 billion",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Dogecoin ETFs struggled for buyers while rival XRP and Solana funds pulled in $3 billion",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_77b5f27098698dd2",
       "event_id": "feed_77b5f27098698dd2",
       "fingerprint": "77b5f27098698dd2",
@@ -1559,12 +1247,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-21T04:44:48+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.764215+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.764215+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.931340+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.931340+00:00",
       "freshness": {
         "iso": "2026-09-21T04:44:48+00:00",
-        "hours": 1.72,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 9.54,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -1948,110 +1636,6 @@
       ]
     },
     {
-      "id": "feed_231ca2751171e162",
-      "event_id": "feed_231ca2751171e162",
-      "fingerprint": "231ca2751171e162",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin ETFs shed $463M in weekly reversal as Ether ETFs gain $197M",
-      "body": "ARKB, GBTC and IBIT led Bitcoin ETF withdrawals, while BlackRock’s ETHA pushed Ether ETFs into weekly inflows.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/markets/bitcoin-etfs-shed-463m-ether-etfs-gain-197m",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/markets/bitcoin-etfs-shed-463m-ether-etfs-gain-197m"
-      ],
-      "declared_status": "reported",
-      "event_type": "etf_flow",
-      "event_label": "ETF / flux institutionnels",
-      "event_time": "2026-09-14T07:07:54+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.121789+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.121789+00:00",
-      "freshness": {
-        "iso": "2026-09-14T07:07:54+00:00",
-        "hours": 7.06,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 91,
-        "level": "Critique"
-      },
-      "direction": "flux de demande/offre à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 19,
-      "matched_topics": [
-        "money_flow",
-        "crypto",
-        "institutional"
-      ],
-      "driver_domains": [
-        "institutional_flows"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitcoin ETFs shed $463M in weekly reversal as Ether ETFs gain $197M",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Bitcoin ETFs shed $463M in weekly reversal as Ether ETFs gain $197M",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_56bc9ac6e57a0f18",
       "event_id": "feed_56bc9ac6e57a0f18",
       "fingerprint": "56bc9ac6e57a0f18",
@@ -2075,11 +1659,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.944916+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.944916+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.775830+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.775830+00:00",
       "freshness": {
         "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 63.47,
+        "hours": 71.29,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2174,11 +1758,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.946878+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.946878+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.778830+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.778830+00:00",
       "freshness": {
         "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 63.47,
+        "hours": 71.29,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2273,11 +1857,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T12:55:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.900032+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.900032+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.854257+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.854257+00:00",
       "freshness": {
         "iso": "2026-09-17T12:55:00+00:00",
-        "hours": 89.55,
+        "hours": 97.37,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2373,11 +1957,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-16T14:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.901688+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.901688+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.856203+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.856203+00:00",
       "freshness": {
         "iso": "2026-09-16T14:00:00+00:00",
-        "hours": 112.47,
+        "hours": 120.29,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2474,11 +2058,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-14T16:47:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.903601+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.903601+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.857912+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.857912+00:00",
       "freshness": {
         "iso": "2026-09-14T16:47:00+00:00",
-        "hours": 157.69,
+        "hours": 165.51,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2552,15 +2136,15 @@
       ]
     },
     {
-      "id": "feed_f9de0056019a8ac3",
-      "event_id": "feed_f9de0056019a8ac3",
-      "fingerprint": "f9de0056019a8ac3",
+      "id": "feed_3bc850883e342762",
+      "event_id": "feed_3bc850883e342762",
+      "fingerprint": "3bc850883e342762",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Kalshi faces ‘fake crypto volume’ allegations as critic flags identical $5,500 trades",
-      "body": "Kalshi clarified that its inflated headline volume stems from an industry-wide convention tracking maximum potential payouts rather than actual cash spent, emphasizing its public regulatory filings ensure absolute transparency.",
+      "headline": "Live updates: Bitcoin tops $85,000, reclaims U.S. ETF cost basis for first time since January",
+      "body": "Crypto majors climbed alongside equity futures on Monday, with Monero's XMR up 13%, as Brent fell for a fourth straight session and traders positioned for Trump-Xi summit later this week.",
       "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/09/21/kalshi-s-crypto-chief-responds-to-fake-crypto-volume-allegations-as-critic-flags-identical-usd5-500-trades",
+      "source_url": "https://www.coindesk.com/business/2026/09/21/live-updates-bitcoin-rises-above-usd82-000-as-falling-oil-lifts-risk-assets",
       "source_host": "coindesk.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
@@ -2569,18 +2153,18 @@
         "CoinDesk"
       ],
       "source_urls": [
-        "https://www.coindesk.com/markets/2026/09/21/kalshi-s-crypto-chief-responds-to-fake-crypto-volume-allegations-as-critic-flags-identical-usd5-500-trades"
+        "https://www.coindesk.com/business/2026/09/21/live-updates-bitcoin-rises-above-usd82-000-as-falling-oil-lifts-risk-assets"
       ],
       "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-21T06:20:47+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.023299+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.023299+00:00",
+      "event_type": "etf",
+      "event_label": "ETF / institutionnels",
+      "event_time": "2026-09-21T08:39:26+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.830719+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.830719+00:00",
       "freshness": {
-        "iso": "2026-09-21T06:20:47+00:00",
-        "hours": 0.12,
-        "label": "Immédiate · moins de 2 h",
+        "iso": "2026-09-21T08:39:26+00:00",
+        "hours": 5.63,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -2591,9 +2175,15 @@
         "score": 90,
         "level": "Critique"
       },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
+      "direction": "catalyseur potentiel, sens à confirmer",
+      "assets": [
+        "BTC",
+        "XMR"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Marché global"
+      ],
       "manipulation": {
         "score": 30,
         "level": "Faible"
@@ -2608,10 +2198,108 @@
         "tone": "danger"
       },
       "confirmations": 1,
-      "relevance_score": 13,
+      "relevance_score": 20,
       "matched_topics": [
         "crypto",
-        "regulation"
+        "geopolitics",
+        "energy",
+        "institutional"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Live updates: Bitcoin tops $85,000, reclaims U.S. ETF cost basis for first time since January",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Live updates: Bitcoin tops $85,000, reclaims U.S. ETF cost basis for first time since January",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_c24671990234b64d",
+      "event_id": "feed_c24671990234b64d",
+      "fingerprint": "c24671990234b64d",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Kalshi faces ‘fake crypto volume’ allegations as critic flags identical $5,500 trades",
+      "body": "A trader alleged on X that Kalshi is inflating trading volumes in its ether perpetual futures.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/09/21/kalshi-s-crypto-chief-responds-to-fake-crypto-volume-allegations-as-critic-flags-identical-usd5-500-trades",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/09/21/kalshi-s-crypto-chief-responds-to-fake-crypto-volume-allegations-as-critic-flags-identical-usd5-500-trades"
+      ],
+      "declared_status": "reported",
+      "event_type": "general",
+      "event_label": "Information de marché à qualifier",
+      "event_time": "2026-09-21T06:20:47+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.832589+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.832589+00:00",
+      "freshness": {
+        "iso": "2026-09-21T06:20:47+00:00",
+        "hours": 7.94,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "orientation indéterminée",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "crypto"
       ],
       "driver_domains": [
         "regulation"
@@ -2674,11 +2362,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-20T12:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.030557+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.030557+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.840125+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.840125+00:00",
       "freshness": {
         "iso": "2026-09-20T12:00:00+00:00",
-        "hours": 18.47,
+        "hours": 26.29,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3482,11 +3170,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T21:01:30+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.681939+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.681939+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.566641+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.566641+00:00",
       "freshness": {
         "iso": "2026-09-18T21:01:30+00:00",
-        "hours": 57.45,
+        "hours": 65.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3583,11 +3271,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T20:16:04+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.703043+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.703043+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.591202+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.591202+00:00",
       "freshness": {
         "iso": "2026-09-17T20:16:04+00:00",
-        "hours": 82.2,
+        "hours": 90.02,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3682,11 +3370,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T15:21:19+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.712972+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.712972+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.606547+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.606547+00:00",
       "freshness": {
         "iso": "2026-09-17T15:21:19+00:00",
-        "hours": 87.11,
+        "hours": 94.93,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3884,11 +3572,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T19:53:54+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.787764+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.787764+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.956291+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.956291+00:00",
       "freshness": {
         "iso": "2026-09-18T19:53:54+00:00",
-        "hours": 58.57,
+        "hours": 66.39,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3985,11 +3673,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-18T15:35:59+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.795020+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.795020+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.962460+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.962460+00:00",
       "freshness": {
         "iso": "2026-09-18T15:35:59+00:00",
-        "hours": 62.87,
+        "hours": 70.69,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4090,11 +3778,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T14:04:43+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.796638+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.796638+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.964273+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.964273+00:00",
       "freshness": {
         "iso": "2026-09-18T14:04:43+00:00",
-        "hours": 64.39,
+        "hours": 72.21,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -4565,107 +4253,6 @@
       ]
     },
     {
-      "id": "feed_29df26e51c340b6a",
-      "event_id": "feed_29df26e51c340b6a",
-      "fingerprint": "29df26e51c340b6a",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Fragmented regulations limit stablecoin adoption in international finance: WTO head",
-      "body": "Stablecoins may reduce trade finance friction, fragmented regulatory regimes limit their adoption to just 3% of global payments, according to the World Trade Organization.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/fragmented-regulations-limit-stablecoin-adoption-in-international-finance-wto-director",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/fragmented-regulations-limit-stablecoin-adoption-in-international-finance-wto-director"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-14T13:30:00+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.109977+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.109977+00:00",
-      "freshness": {
-        "iso": "2026-09-14T13:30:00+00:00",
-        "hours": 0.69,
-        "label": "Immédiate · moins de 2 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [
-        "Stablecoins"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Fragmented regulations limit stablecoin adoption in international finance: WTO head",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Fragmented regulations limit stablecoin adoption in international finance: WTO head",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_a48d00c43317c7cd",
       "event_id": "feed_a48d00c43317c7cd",
       "fingerprint": "a48d00c43317c7cd",
@@ -4893,11 +4480,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-19T19:18:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.777559+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.777559+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.946509+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.946509+00:00",
       "freshness": {
         "iso": "2026-09-19T19:18:00+00:00",
-        "hours": 35.17,
+        "hours": 42.99,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4996,11 +4583,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-18T12:40:04+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.799362+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.799362+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.965953+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.965953+00:00",
       "freshness": {
         "iso": "2026-09-18T12:40:04+00:00",
-        "hours": 65.8,
+        "hours": 73.62,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5173,6 +4760,101 @@
       "headline_fr_quality_reasons": [
         "source_not_native_french"
       ]
+    },
+    {
+      "id": "feed_d3a05d68ad3de86f",
+      "event_id": "feed_d3a05d68ad3de86f",
+      "fingerprint": "d3a05d68ad3de86f",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Prix des carburants : Macron au four et Lecornu au moulin face à la grogne sociale",
+      "body": "Le couple exécutif va s'employer cette semaine à tenter d'apaiser la grogne sociale sur les carburants, dont les prix flambent et entament le pouvoir d'achat. Interviewé jeudi à 20 h par TF1 et France 2, Emmanuel Macron devrait insister sur le fait que l'inflation tient aux tensions géopolitiques, qu'il s'agisse de la guerre en Ukraine ou celle au Moyen-Orient.",
+      "source_name": "France 24",
+      "source_url": "https://www.france24.com/fr/france/20260921-prix-carburants-macron-four-lecornu-moulin-face-grogne-sociale",
+      "source_host": "france24.com",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 1,
+      "source_names": [
+        "France 24"
+      ],
+      "source_urls": [
+        "https://www.france24.com/fr/france/20260921-prix-carburants-macron-four-lecornu-moulin-face-grogne-sociale"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-09-21T12:13:37+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.754701+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.754701+00:00",
+      "freshness": {
+        "iso": "2026-09-21T12:13:37+00:00",
+        "hours": 2.06,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 72,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 88,
+        "level": "Critique"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 9,
+      "matched_topics": [
+        "macro",
+        "geopolitics"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "fr",
+      "source_discovery_locale": "fr-FR",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Prix des carburants : Macron au four et Lecornu au moulin face à la grogne sociale",
+      "language_original": "fr",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": "Prix des carburants : Macron au four et Lecornu au moulin face à la grogne sociale",
+      "translation_engine": "native-fr-source",
+      "translation_quality_score": 100,
+      "translation_quality_flags": [],
+      "translation_status": "ORIGINAL_FR",
+      "display_headline": "Prix des carburants : Macron au four et Lecornu au moulin face à la grogne sociale",
+      "display_language": "fr",
+      "headline_fr_display": "Prix des carburants : Macron au four et Lecornu au moulin face à la grogne sociale",
+      "headline_fr_display_status": "native_fr",
+      "headline_fr_status": "original_fr",
+      "headline_fr_engine": "native-fr-source",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "native",
+      "headline_fr_quality_reasons": []
     },
     {
       "id": "feed_b7c4487ec3de4c60",
@@ -5497,11 +5179,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-19T15:01:03+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.678481+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.678481+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.562913+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.562913+00:00",
       "freshness": {
         "iso": "2026-09-19T15:01:03+00:00",
-        "hours": 39.45,
+        "hours": 47.27,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5700,12 +5382,12 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T09:54:01+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.299605+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.299605+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.255173+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.255173+00:00",
       "freshness": {
         "iso": "2026-09-19T09:54:01+00:00",
-        "hours": 44.57,
-        "label": "Récente · moins de 48 h",
+        "hours": 52.39,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -5801,11 +5483,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-18T04:49:17+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.306309+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.306309+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.109036+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.109036+00:00",
       "freshness": {
         "iso": "2026-09-18T04:49:17+00:00",
-        "hours": 73.65,
+        "hours": 81.47,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -5899,11 +5581,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-16T16:07:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.314568+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.314568+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.117720+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.117720+00:00",
       "freshness": {
         "iso": "2026-09-16T16:07:00+00:00",
-        "hours": 110.35,
+        "hours": 118.17,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -6073,112 +5755,6 @@
       ]
     },
     {
-      "id": "feed_f922b0a83b1c5a64",
-      "event_id": "feed_f922b0a83b1c5a64",
-      "fingerprint": "f922b0a83b1c5a64",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "CLARITY Act vote meets Fed rate hike: Five things to know in Bitcoin this week",
-      "body": "Bitcoin traders brace for volatility as the CLARITY Act awaits a Senate vote to move forward and the Fed is due to announce its latest rate decision.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/markets/clarity-act-vote-meets-fed-rate-hike-five-things-to-know-in-bitcoin-this-week",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/markets/clarity-act-vote-meets-fed-rate-hike-five-things-to-know-in-bitcoin-this-week"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-14T10:02:00+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.117145+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.117145+00:00",
-      "freshness": {
-        "iso": "2026-09-14T10:02:00+00:00",
-        "hours": 4.16,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 88,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 18,
-      "matched_topics": [
-        "regulation_market",
-        "crypto",
-        "macro"
-      ],
-      "driver_domains": [
-        "macro_liquidity",
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "CLARITY Act vote meets Fed rate hike: Five things to know in Bitcoin this week",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] CLARITY Act vote meets Fed rate hike: Five things to know in Bitcoin this week",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_41b4f6440168f2a9",
       "event_id": "feed_41b4f6440168f2a9",
       "fingerprint": "41b4f6440168f2a9",
@@ -6305,11 +5881,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T16:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.033918+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.033918+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.843581+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.843581+00:00",
       "freshness": {
         "iso": "2026-09-19T16:00:00+00:00",
-        "hours": 38.47,
+        "hours": 46.29,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6404,11 +5980,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T15:16:37+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.042394+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.042394+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.852532+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.852532+00:00",
       "freshness": {
         "iso": "2026-09-18T15:16:37+00:00",
-        "hours": 63.19,
+        "hours": 71.01,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7204,215 +6780,6 @@
       ]
     },
     {
-      "id": "feed_91cdc31d0b737822",
-      "event_id": "feed_91cdc31d0b737822",
-      "fingerprint": "91cdc31d0b737822",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Trump agrees to stricter ethics rules to save Clarity Act crypto bill: AP",
-      "body": "President Donald Trump agreed to expanded conflict-of-interest rules and state-level enforcement powers to secure key Senate votes for the Clarity Act.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/policy/2026/09/14/trump-agrees-to-stricter-ethics-rules-to-save-clarity-act-crypto-bill-ap",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/policy/2026/09/14/trump-agrees-to-stricter-ethics-rules-to-save-clarity-act-crypto-bill-ap"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-14T12:07:19+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.062062+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.062062+00:00",
-      "freshness": {
-        "iso": "2026-09-14T12:07:19+00:00",
-        "hours": 2.07,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 22,
-      "matched_topics": [
-        "regulation_market",
-        "crypto",
-        "regulation",
-        "geopolitics"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Trump agrees to stricter ethics rules to save Clarity Act crypto bill: AP",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Trump agrees to stricter ethics rules to save Clarity Act crypto bill: AP",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_6b6f76670c27de69",
-      "event_id": "feed_6b6f76670c27de69",
-      "fingerprint": "6b6f76670c27de69",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Live updates: Bitcoin manages small gains as stocks drop on AI concern, oil surges",
-      "body": "The Federal Reserve's two-day policy meeting begins tomorrow, with nearly all now expecting the U.S. central bank to hike its benchmark policy rate by 25 basis points.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/tech/2026/09/14/live-updates-bitcoin-manages-small-gains-as-stocks-drop-on-ai-concern-oil-surges",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/tech/2026/09/14/live-updates-bitcoin-manages-small-gains-as-stocks-drop-on-ai-concern-oil-surges"
-      ],
-      "declared_status": "reported",
-      "event_type": "macro",
-      "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-09-14T11:44:21+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.066765+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.066765+00:00",
-      "freshness": {
-        "iso": "2026-09-14T11:44:21+00:00",
-        "hours": 2.45,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "impact de marché large, sens à confirmer",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "IA",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 17,
-      "matched_topics": [
-        "crypto",
-        "macro",
-        "energy"
-      ],
-      "driver_domains": [
-        "macro_liquidity"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Live updates: Bitcoin manages small gains as stocks drop on AI concern, oil surges",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Live updates: Bitcoin manages small gains as stocks drop on AI concern, oil surges",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_864cbe094684a11a",
       "event_id": "feed_864cbe094684a11a",
       "fingerprint": "864cbe094684a11a",
@@ -7436,11 +6803,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-20T16:01:03+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.670945+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.670945+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.555028+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.555028+00:00",
       "freshness": {
         "iso": "2026-09-20T16:01:03+00:00",
-        "hours": 14.45,
+        "hours": 22.27,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7537,11 +6904,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T17:01:03+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.674941+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.674941+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.559213+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.559213+00:00",
       "freshness": {
         "iso": "2026-09-19T17:01:03+00:00",
-        "hours": 37.45,
+        "hours": 45.27,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7637,11 +7004,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T16:08:13+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.688819+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.688819+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.574477+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.574477+00:00",
       "freshness": {
         "iso": "2026-09-18T16:08:13+00:00",
-        "hours": 62.33,
+        "hours": 70.15,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7740,11 +7107,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-17T17:01:03+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.709244+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.709244+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.602589+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.602589+00:00",
       "freshness": {
         "iso": "2026-09-17T17:01:03+00:00",
-        "hours": 85.45,
+        "hours": 93.27,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7844,11 +7211,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-17T14:52:03+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.714544+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.714544+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.608156+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.608156+00:00",
       "freshness": {
         "iso": "2026-09-17T14:52:03+00:00",
-        "hours": 87.6,
+        "hours": 95.42,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7945,11 +7312,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-17T12:13:20+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.719686+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.719686+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.613807+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.613807+00:00",
       "freshness": {
         "iso": "2026-09-17T12:13:20+00:00",
-        "hours": 90.25,
+        "hours": 98.07,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8431,13 +7798,13 @@
       ]
     },
     {
-      "id": "feed_725096bde144e2c2",
-      "event_id": "feed_725096bde144e2c2",
-      "fingerprint": "725096bde144e2c2",
+      "id": "feed_b5c0d68271e9d847",
+      "event_id": "feed_b5c0d68271e9d847",
+      "fingerprint": "b5c0d68271e9d847",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - Phemex",
-      "body": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes Phemex",
+      "headline": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - phemex.com",
+      "body": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes phemex.com",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNMVUxd2hNSE8yd2FrbGxPRlJGYlQyUzZIcVM1Z1V1OGo4TlItMXQtVXFPbzdOUmZJbk85ZnZlYWhMaEJ5Q2pQZnIwZ19kbjNOaTYtTEFNb3hha1JvSVJnOWpaNW4yS0R0bjYwOUNFb0NVM0NVVHZYLWhUOEowMURHaHAydFA?oc=5",
       "source_host": "news.google.com",
@@ -8454,11 +7821,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-17T17:13:15+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.304668+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.304668+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.107261+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.107261+00:00",
       "freshness": {
         "iso": "2026-09-17T17:13:15+00:00",
-        "hours": 85.25,
+        "hours": 93.07,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8504,7 +7871,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - Phemex",
+      "headline_original": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - phemex.com",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -8512,14 +7879,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - Phemex",
+      "headline_fr": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - phemex.com",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - Phemex",
+      "display_headline": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - phemex.com",
       "display_language": "fr",
-      "headline_fr_display": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - Phemex",
+      "headline_fr_display": "Données ETF Ethereum : 13,46 Md$ d'afflux cumulés, mais 55,87 M$ de sorties quotidiennes - phemex.com",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -8551,11 +7918,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-17T14:50:58+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.298284+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.298284+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.253809+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.253809+00:00",
       "freshness": {
         "iso": "2026-09-17T14:50:58+00:00",
-        "hours": 87.62,
+        "hours": 95.44,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8646,11 +8013,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-15T17:02:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.309833+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.309833+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.112764+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.112764+00:00",
       "freshness": {
         "iso": "2026-09-15T17:02:00+00:00",
-        "hours": 133.44,
+        "hours": 141.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8743,11 +8110,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-15T00:08:10+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.311416+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.311416+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.114382+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.114382+00:00",
       "freshness": {
         "iso": "2026-09-15T00:08:10+00:00",
-        "hours": 150.33,
+        "hours": 158.15,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8843,11 +8210,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T17:55:57+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.792340+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.792340+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.959675+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.959675+00:00",
       "freshness": {
         "iso": "2026-09-18T17:55:57+00:00",
-        "hours": 60.54,
+        "hours": 68.36,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8945,11 +8312,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T16:04:22+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.793641+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.793641+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.960999+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.960999+00:00",
       "freshness": {
         "iso": "2026-09-18T16:04:22+00:00",
-        "hours": 62.4,
+        "hours": 70.22,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9636,6 +9003,105 @@
       ]
     },
     {
+      "id": "feed_e308051949bf943a",
+      "event_id": "feed_e308051949bf943a",
+      "fingerprint": "e308051949bf943a",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "CNN, MS NOW and Politico to file lawsuit against Trump's White House ban",
+      "body": "The US media outlets say they are defending \"the principle that the government does not decide what the press reports or publishes\".",
+      "source_name": "BBC World",
+      "source_url": "https://www.bbc.co.uk/news/articles/cm0e32rwvrryo?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 1,
+      "source_names": [
+        "BBC World"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/cm0e32rwvrryo?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-21T12:21:02+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.664657+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.664657+00:00",
+      "freshness": {
+        "iso": "2026-09-21T12:21:02+00:00",
+        "hours": 1.94,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 74,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 86,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 9,
+      "matched_topics": [
+        "regulation",
+        "geopolitics"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "CNN, MS NOW and Politico to file lawsuit against Trump's White House ban",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] CNN, MS NOW and Politico to file lawsuit against Trump's White House ban",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_5e6abde3a786e450",
       "event_id": "feed_5e6abde3a786e450",
       "fingerprint": "5e6abde3a786e450",
@@ -9923,111 +9389,15 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_1f2669053e04ef20",
-      "event_id": "feed_1f2669053e04ef20",
-      "fingerprint": "1f2669053e04ef20",
+      "id": "feed_1f0f411a140a76d1",
+      "event_id": "feed_1f0f411a140a76d1",
+      "fingerprint": "1f0f411a140a76d1",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Trump dénonce les \"forces négatives\" voulant ralentir le développement de l'IA",
-      "body": "Donald Trump a critiqué, dimanche 13 septembre, les \"forces négatives\" qui cherchent à freiner le développement de l’intelligence artificielle. Cette déclaration intervient alors que les appels à davantage de prudence et de régulation se multiplient, y compris parmi les figures du secteur, comme le patron d’Anthropic, Dario Amodei, ou encore Elon Musk.",
-      "source_name": "France 24",
-      "source_url": "https://www.france24.com/fr/vid%C3%A9o/20260914-trump-d%C3%A9nonce-les-forces-n%C3%A9gatives-voulant-ralentir-le-d%C3%A9veloppement-de-l-ia",
-      "source_host": "france24.com",
-      "source_group": "world",
-      "source_class": "Presse mondiale reconnue",
-      "source_count": 1,
-      "source_names": [
-        "France 24"
-      ],
-      "source_urls": [
-        "https://www.france24.com/fr/vid%C3%A9o/20260914-trump-d%C3%A9nonce-les-forces-n%C3%A9gatives-voulant-ralentir-le-d%C3%A9veloppement-de-l-ia"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-14T12:48:15+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.170332+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.170332+00:00",
-      "freshness": {
-        "iso": "2026-09-14T12:48:15+00:00",
-        "hours": 1.38,
-        "label": "Immédiate · moins de 2 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 72,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 86,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [
-        "IA",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 18,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 9,
-      "matched_topics": [
-        "regulation",
-        "geopolitics"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "fr",
-      "source_discovery_locale": "fr-FR",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Trump dénonce les \"forces négatives\" voulant ralentir le développement de l'IA",
-      "language_original": "fr",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": "Trump dénonce les \"forces négatives\" voulant ralentir le développement de l'IA",
-      "translation_engine": "native-fr-source",
-      "translation_quality_score": 100,
-      "translation_quality_flags": [],
-      "translation_status": "ORIGINAL_FR",
-      "display_headline": "Trump dénonce les \"forces négatives\" voulant ralentir le développement de l'IA",
-      "display_language": "fr",
-      "headline_fr_display": "Trump dénonce les \"forces négatives\" voulant ralentir le développement de l'IA",
-      "headline_fr_display_status": "native_fr",
-      "headline_fr_status": "original_fr",
-      "headline_fr_engine": "native-fr-source",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "native",
-      "headline_fr_quality_reasons": []
-    },
-    {
-      "id": "feed_f3082fccbdef32ef",
-      "event_id": "feed_f3082fccbdef32ef",
-      "fingerprint": "f3082fccbdef32ef",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Fed, BOE, BOJ interest-rate decisions: Crypto Week Ahead",
-      "body": "Your look at what's coming in the week starting Sept. 14.",
+      "headline": "Crypto enjoys bullish bounce post-Fed rate hike: Crypto Week Ahead",
+      "body": "Your look at what's coming in the week starting Sept. 21.",
       "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/09/14/fed-boe-boj-interest-rate-decisions-crypto-week-ahead",
+      "source_url": "https://www.coindesk.com/markets/2026/09/21/crypto-week-ahead",
       "source_host": "coindesk.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
@@ -10036,17 +9406,17 @@
         "CoinDesk"
       ],
       "source_urls": [
-        "https://www.coindesk.com/markets/2026/09/14/fed-boe-boj-interest-rate-decisions-crypto-week-ahead"
+        "https://www.coindesk.com/markets/2026/09/21/crypto-week-ahead"
       ],
       "declared_status": "reported",
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
-      "event_time": "2026-09-14T09:29:57+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.076445+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.076445+00:00",
+      "event_time": "2026-09-21T09:12:42+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.827143+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.827143+00:00",
       "freshness": {
-        "iso": "2026-09-14T09:29:57+00:00",
-        "hours": 4.69,
+        "iso": "2026-09-21T09:12:42+00:00",
+        "hours": 5.08,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -10092,7 +9462,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Fed, BOE, BOJ interest-rate decisions: Crypto Week Ahead",
+      "headline_original": "Crypto enjoys bullish bounce post-Fed rate hike: Crypto Week Ahead",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -10107,7 +9477,7 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Fed, BOE, BOJ interest-rate decisions: Crypto Week Ahead",
+      "display_headline": "[EN] Crypto enjoys bullish bounce post-Fed rate hike: Crypto Week Ahead",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -10240,11 +9610,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:16:37+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.296714+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.296714+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.252172+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.252172+00:00",
       "freshness": {
         "iso": "2026-09-18T15:16:37+00:00",
-        "hours": 63.19,
+        "hours": 71.01,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10546,11 +9916,11 @@
       "event_type": "geopolitics",
       "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-18T09:01:55+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.696461+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.696461+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.584208+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.584208+00:00",
       "freshness": {
         "iso": "2026-09-18T09:01:55+00:00",
-        "hours": 69.44,
+        "hours": 77.26,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10651,11 +10021,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T21:26:06+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.295028+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.295028+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.250397+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.250397+00:00",
       "freshness": {
         "iso": "2026-09-18T21:26:06+00:00",
-        "hours": 57.04,
+        "hours": 64.85,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -10953,11 +10323,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T13:08:32+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.006557+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.006557+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.899708+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.899708+00:00",
       "freshness": {
         "iso": "2026-09-17T13:08:32+00:00",
-        "hours": 89.33,
+        "hours": 97.15,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11123,105 +10493,6 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_4cda8a2dc44abc55",
-      "event_id": "feed_4cda8a2dc44abc55",
-      "fingerprint": "4cda8a2dc44abc55",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "FCA considers exempting tokenized gold from fund rules to defend London market",
-      "body": "The Financial Conduct Authority is exploring a bespoke regulatory framework with the Treasury to carve out digital gold from traditional fund laws.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/09/14/fca-considers-exempting-tokenized-gold-from-fund-rules-to-defend-london-market",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/09/14/fca-considers-exempting-tokenized-gold-from-fund-rules-to-defend-london-market"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-14T11:58:28+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.063682+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.063682+00:00",
-      "freshness": {
-        "iso": "2026-09-14T11:58:28+00:00",
-        "hours": 2.21,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 84,
-        "level": "Fort"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 7,
-      "matched_topics": [
-        "regulation"
-      ],
-      "driver_domains": [
-        "macro_liquidity",
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "FCA considers exempting tokenized gold from fund rules to defend London market",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] FCA considers exempting tokenized gold from fund rules to defend London market",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_bc688c06e8cd04d0",
       "event_id": "feed_bc688c06e8cd04d0",
       "fingerprint": "bc688c06e8cd04d0",
@@ -11245,11 +10516,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T12:34:50+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.693102+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.693102+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.580430+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.580430+00:00",
       "freshness": {
         "iso": "2026-09-18T12:34:50+00:00",
-        "hours": 65.89,
+        "hours": 73.71,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11710,40 +10981,40 @@
       ]
     },
     {
-      "id": "feed_3d937c090e0f67ca",
-      "event_id": "feed_3d937c090e0f67ca",
-      "fingerprint": "3d937c090e0f67ca",
+      "id": "feed_f6459daedf8bc799",
+      "event_id": "feed_f6459daedf8bc799",
+      "fingerprint": "f6459daedf8bc799",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Bitcoin climbs to $78,000 as crypto sits out the AI selloff",
-      "body": "Bitcoin rose 1.9% since midnight UTC while Nasdaq 100 index futures fell 1.65% on calls to slow AI development and crude gained almost 4% on a Saudi pipeline closure.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/09/14/bitcoin-climbs-to-usd78-000-as-crypto-sits-out-the-ai-selloff",
-      "source_host": "coindesk.com",
+      "headline": "BTC price nears eight-month high above $85K: Five things to know in Bitcoin this week",
+      "body": "Bitcoin hit $85,000 for the first time since January as markets focused on cooling oil prices.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/markets/btc-price-nears-eight-month-high-above-85k-five-things-to-know-in-bitcoin-this-week",
+      "source_host": "cointelegraph.com",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
       "source_count": 1,
       "source_names": [
-        "CoinDesk"
+        "Cointelegraph"
       ],
       "source_urls": [
-        "https://www.coindesk.com/markets/2026/09/14/bitcoin-climbs-to-usd78-000-as-crypto-sits-out-the-ai-selloff"
+        "https://cointelegraph.com/markets/btc-price-nears-eight-month-high-above-85k-five-things-to-know-in-bitcoin-this-week"
       ],
       "declared_status": "reported",
       "event_type": "energy",
       "event_label": "Énergie / pétrole / matières premières",
-      "event_time": "2026-09-14T10:09:41+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.073598+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.073598+00:00",
+      "event_time": "2026-09-21T10:15:51+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.924635+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.924635+00:00",
       "freshness": {
-        "iso": "2026-09-14T10:09:41+00:00",
-        "hours": 4.03,
+        "iso": "2026-09-21T10:15:51+00:00",
+        "hours": 4.02,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
+        "score": 54,
+        "level": "Moyen"
       },
       "impact": {
         "score": 81,
@@ -11755,109 +11026,6 @@
       ],
       "sectors": [
         "Layer 1",
-        "IA"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "crypto",
-        "energy"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitcoin climbs to $78,000 as crypto sits out the AI selloff",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Bitcoin climbs to $78,000 as crypto sits out the AI selloff",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_b7bf9828aee678b3",
-      "event_id": "feed_b7bf9828aee678b3",
-      "fingerprint": "b7bf9828aee678b3",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin bucks tech selloff as AI safety concerns weigh on stocks",
-      "body": "Bitcoin rose above $77,000 as calls to slow AI development hit technology shares, while rising oil prices added to market pressure.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/markets/2026/09/14/bitcoin-bucks-tech-selloff-as-ai-safety-concerns-weigh-on-stocks",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/markets/2026/09/14/bitcoin-bucks-tech-selloff-as-ai-safety-concerns-weigh-on-stocks"
-      ],
-      "declared_status": "reported",
-      "event_type": "energy",
-      "event_label": "Énergie / pétrole / matières premières",
-      "event_time": "2026-09-14T08:07:16+00:00",
-      "first_seen_at": "2026-09-14T14:11:20.078131+00:00",
-      "last_seen_at": "2026-09-14T14:11:20.078131+00:00",
-      "freshness": {
-        "iso": "2026-09-14T08:07:16+00:00",
-        "hours": 6.07,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 81,
-        "level": "Fort"
-      },
-      "direction": "impact macro et liquidité potentiel",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "IA",
         "Marché global"
       ],
       "manipulation": {
@@ -11869,9 +11037,9 @@
         "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
       },
       "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
       },
       "confirmations": 1,
       "relevance_score": 12,
@@ -11887,7 +11055,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitcoin bucks tech selloff as AI safety concerns weigh on stocks",
+      "headline_original": "BTC price nears eight-month high above $85K: Five things to know in Bitcoin this week",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -11902,7 +11070,7 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Bitcoin bucks tech selloff as AI safety concerns weigh on stocks",
+      "display_headline": "[EN] BTC price nears eight-month high above $85K: Five things to know in Bitcoin this week",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -12017,6 +11185,202 @@
       ]
     },
     {
+      "id": "feed_7c3bd3a1bc11366d",
+      "event_id": "feed_7c3bd3a1bc11366d",
+      "fingerprint": "7c3bd3a1bc11366d",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "ECB to invest part of own funds in tokenised securities, with settlement via Pontes",
+      "body": "",
+      "source_name": "Banque centrale européenne",
+      "source_url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260921_1~5a011ecbea.en.html",
+      "source_host": "ecb.europa.eu",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "Banque centrale européenne"
+      ],
+      "source_urls": [
+        "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260921_1~5a011ecbea.en.html"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-09-21T10:00:00+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.354099+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.354099+00:00",
+      "freshness": {
+        "iso": "2026-09-21T10:00:00+00:00",
+        "hours": 4.29,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 96,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "macro"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "ECB to invest part of own funds in tokenised securities, with settlement via Pontes",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] ECB to invest part of own funds in tokenised securities, with settlement via Pontes",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_a70293b321a84802",
+      "event_id": "feed_a70293b321a84802",
+      "fingerprint": "a70293b321a84802",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Eurosystem brings central bank money to tokenised finance",
+      "body": "",
+      "source_name": "Banque centrale européenne",
+      "source_url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+      "source_host": "ecb.europa.eu",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "Banque centrale européenne"
+      ],
+      "source_urls": [
+        "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-09-21T10:00:00+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.355617+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.355617+00:00",
+      "freshness": {
+        "iso": "2026-09-21T10:00:00+00:00",
+        "hours": 4.29,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 96,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "macro"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Eurosystem brings central bank money to tokenised finance",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Eurosystem brings central bank money to tokenised finance",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_54a739ffccef21a1",
       "event_id": "feed_54a739ffccef21a1",
       "fingerprint": "54a739ffccef21a1",
@@ -12040,11 +11404,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-18T08:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.578125+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.578125+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.357290+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.357290+00:00",
       "freshness": {
         "iso": "2026-09-18T08:00:00+00:00",
-        "hours": 70.47,
+        "hours": 78.29,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12138,11 +11502,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-16T18:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.948323+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.948323+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.780705+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.780705+00:00",
       "freshness": {
         "iso": "2026-09-16T18:00:00+00:00",
-        "hours": 108.47,
+        "hours": 116.29,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12236,11 +11600,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-16T18:00:00+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.950063+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.950063+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.782649+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.782649+00:00",
       "freshness": {
         "iso": "2026-09-16T18:00:00+00:00",
-        "hours": 108.47,
+        "hours": 116.29,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12299,6 +11663,591 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Federal Reserve Board and Federal Open Market Committee release economic projections from the September 15-16 FOMC meeting",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_7b1485c15515aa4b",
+      "event_id": "feed_7b1485c15515aa4b",
+      "fingerprint": "7b1485c15515aa4b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "ECB wage tracker at 2.7% in H1 2027, pointing to a modest uptick in negotiated wage growth",
+      "body": "",
+      "source_name": "Banque centrale européenne",
+      "source_url": "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260916~7bc58ebef4.en.html",
+      "source_host": "ecb.europa.eu",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "Banque centrale européenne"
+      ],
+      "source_urls": [
+        "https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260916~7bc58ebef4.en.html"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-09-16T08:00:00+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.359668+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.359668+00:00",
+      "freshness": {
+        "iso": "2026-09-16T08:00:00+00:00",
+        "hours": 126.29,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 96,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "macro"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "ECB wage tracker at 2.7% in H1 2027, pointing to a modest uptick in negotiated wage growth",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] ECB wage tracker at 2.7% in H1 2027, pointing to a modest uptick in negotiated wage growth",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_a3b024af890cba8b",
+      "event_id": "feed_a3b024af890cba8b",
+      "fingerprint": "a3b024af890cba8b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Using Cyber Decoys to Strengthen Detection and Response",
+      "body": "CISA developed this guidance to help defensive teams at varying levels of cybersecurity maturity plan and implement cyber decoy strategies that strengthen their detection and response capabilities. Many organizations struggle to detect adversaries who use legitimate credentials, native tools, and living off the land (LOTL) techniques to conduct discovery, move laterally, and access data. Cyber decoys are assets that appear to be legitimate systems, accounts, or data, but are designed to distract adversaries, detect their presence, or facilitate collection of cyber threat intelligence (CTI). As organizations adopt Zero Trust models, they should assume that a malicious threat actor may gain some level of access to their environment and plan accordingly. Cyber decoys complement Zero Trust by: Supporting continuous monitoring and verification, Creating high-fidelity alerts for suspicious activity, Reducing alert fatigue, and Helping defenders detect post-compromise activity, including adve",
+      "source_name": "CISA Cybersecurity Advisories",
+      "source_url": "https://www.cisa.gov/resources-tools/resources/using-cyber-decoys-strengthen-detection-and-response",
+      "source_host": "cisa.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "CISA Cybersecurity Advisories"
+      ],
+      "source_urls": [
+        "https://www.cisa.gov/resources-tools/resources/using-cyber-decoys-strengthen-detection-and-response"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "etf",
+      "event_label": "ETF / institutionnels",
+      "event_time": "2026-09-16T12:00:00+00:00",
+      "first_seen_at": "2026-09-21T14:17:20.023472+00:00",
+      "last_seen_at": "2026-09-21T14:17:20.023472+00:00",
+      "freshness": {
+        "iso": "2026-09-16T12:00:00+00:00",
+        "hours": 122.29,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 92,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "catalyseur potentiel, sens à confirmer",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 6,
+      "matched_topics": [
+        "institutional"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Using Cyber Decoys to Strengthen Detection and Response",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Using Cyber Decoys to Strengthen Detection and Response",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_53d690a33a5b7f12",
+      "event_id": "feed_53d690a33a5b7f12",
+      "fingerprint": "53d690a33a5b7f12",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "ECB deploys Pontes platform to settle wholesale tokenized assets in central-bank money",
+      "body": "The EU central bank's new wholesale platform connects DLT market infrastructure to its payment rails, separate from the retail digital euro pilot planned for 2027.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/business/2026/09/21/ecb-deploys-pontes-platform-to-settle-wholesale-tokenized-assets-in-central-bank-money",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/business/2026/09/21/ecb-deploys-pontes-platform-to-settle-wholesale-tokenized-assets-in-central-bank-money"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-09-21T11:18:55+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.821861+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.821861+00:00",
+      "freshness": {
+        "iso": "2026-09-21T11:18:55+00:00",
+        "hours": 2.97,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "macro"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "ECB deploys Pontes platform to settle wholesale tokenized assets in central-bank money",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] ECB deploys Pontes platform to settle wholesale tokenized assets in central-bank money",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_df661060601348de",
+      "event_id": "feed_df661060601348de",
+      "fingerprint": "df661060601348de",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "ECB launches Pontes to settle tokenized assets without stablecoins",
+      "body": "Pontes will expand its services and operating hours gradually, with full implementation expected by 2028 and more participants set to join.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/eurosystem-central-bank-money-tokenized-finance",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/eurosystem-central-bank-money-tokenized-finance"
+      ],
+      "declared_status": "reported",
+      "event_type": "macro",
+      "event_label": "Macroéconomie / banque centrale",
+      "event_time": "2026-09-21T11:27:00+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.922002+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.922002+00:00",
+      "freshness": {
+        "iso": "2026-09-21T11:27:00+00:00",
+        "hours": 2.84,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "impact de marché large, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "macro"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "ECB launches Pontes to settle tokenized assets without stablecoins",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] ECB launches Pontes to settle tokenized assets without stablecoins",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_40f307136cab14f7",
+      "event_id": "feed_40f307136cab14f7",
+      "fingerprint": "40f307136cab14f7",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Grayscale’s Zcash ETF files for 3-for-1 forward share split",
+      "body": "At the close of trading on Sept. 28, shareholders will receive two extra shares for each one they hold.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/grayscales-zcash-etf-files-for-3-for-1-forward-share-split",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/grayscales-zcash-etf-files-for-3-for-1-forward-share-split"
+      ],
+      "declared_status": "reported",
+      "event_type": "etf",
+      "event_label": "ETF / institutionnels",
+      "event_time": "2026-09-20T09:14:27+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.943375+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.943375+00:00",
+      "freshness": {
+        "iso": "2026-09-20T09:14:27+00:00",
+        "hours": 29.05,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 80,
+        "level": "Fort"
+      },
+      "direction": "catalyseur potentiel, sens à confirmer",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 6,
+      "matched_topics": [
+        "institutional"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Grayscale’s Zcash ETF files for 3-for-1 forward share split",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Grayscale’s Zcash ETF files for 3-for-1 forward share split",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_fb91a29c4caa9a0b",
+      "event_id": "feed_fb91a29c4caa9a0b",
+      "fingerprint": "fb91a29c4caa9a0b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "'We simply don't know' - JP Morgan struggling to forecast oil prices due to Trump's war with Iran",
+      "body": "The bank said it \"assumed\" there would be economic red lines, like oil at $100 a barrel, that the US would be unwilling the cross.",
+      "source_name": "BBC Business",
+      "source_url": "https://www.bbc.co.uk/news/articles/cq0m3gmv8n7ko?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "BBC Business"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/cq0m3gmv8n7ko?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
+      "event_time": "2026-09-18T17:57:30+00:00",
+      "first_seen_at": "2026-09-21T14:17:19.706188+00:00",
+      "last_seen_at": "2026-09-21T14:17:19.706188+00:00",
+      "freshness": {
+        "iso": "2026-09-18T17:57:30+00:00",
+        "hours": 68.33,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 76,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 78,
+        "level": "Fort"
+      },
+      "direction": "impact global potentiel, sens à confirmer",
+      "assets": [],
+      "sectors": [
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "geopolitics",
+        "energy"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "'We simply don't know' - JP Morgan struggling to forecast oil prices due to Trump's war with Iran",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] 'We simply don't know' - JP Morgan struggling to forecast oil prices due to Trump's war with Iran",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
