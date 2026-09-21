@@ -29,8 +29,9 @@
   "static_asset_module_load": true,
   "canonical_entry_modified": true,
   "entry": "./",
-  "terrain_verified": false,
-  "terrain_pending": "Firefox gate: Aether must keep the exact 40.6.321 size, vertical position, ratio, free resize, free drag, close/reopen default behavior and F11 responsiveness; only its default horizontal placement changes from centered to x=12 left.",
+  "terrain_verified": true,
+  "terrain_pending": "NONE — Firefox terrain PASS validated by Christophe on 2026-09-21: 40.6.322 preserves the recovered 40.6.321 Aether behavior and changes only the default horizontal placement to x=12.",
+  "terrain_proof": "PASS_FIREFOX_2026-09-21_AETHER_40.6.322_LEFT_ONLY_DEFAULT_PLACEMENT",
   "release_notes": "40.6.322 starts strictly from the recovered 40.6.321 pre-.284 Aether subsystem and changes only the canonical desktop default CSS placement in admin-ribbons.css: left:50% becomes left:12px and transform:translate(-50%,-50%) becomes translate(0,-50%). top, width, height, aspect ratio, Aether runtime, Window Manager, free resize, free drag, F11 behavior, Market Core 38.15.11, Oracle, Strategy, Storage and Lecture Technique remain unchanged.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
