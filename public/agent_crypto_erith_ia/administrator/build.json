@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.311",
+  "build": "40.6.312",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER SINGLE GEOMETRY OWNER RESTORE",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER F11 FIELD RESTORE",
   "published": true,
-  "status": "aether_single_geometry_owner_restore",
-  "parent_build": "40.6.310",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.311",
-  "administrator_build": "40.6.311",
-  "build_label": "Build 40.6.311 · Administrator",
+  "status": "aether_f11_field_restore_406312",
+  "parent_build": "40.6.311",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.312",
+  "administrator_build": "40.6.312",
+  "build_label": "Build 40.6.312 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox gate: outside F11, Aether normal state must render at the left edge (x≈12) with the compact normal geometry. Any centered or oversized normal state = FAIL/STOP.",
-  "release_notes": "40.6.311 restores only the proven 40.6.306 single-owner Aether presentation architecture on top of 40.6.310: admin-ribbons.css and aether.css no longer own outer x/y/width/height/inset geometry, and aether.js prepares the Window Manager floating geometry while hidden before reveal. app.js 40.6.310 left-state reconciliation, admin-window-manager.js, F11 logic, Decision Intelligence, Oracle, Lecture Technique, Storage, Strategy and Market Core 38.15.11 are unchanged.",
+  "terrain_pending": "Firefox gate: outside F11 preserve the current compact Aether at left x≈12; entering browser F11 must reproduce the field-validated 40.6.297 large 16:9 Aether field left of Lecture Technique; exiting F11 must restore the exact pre-F11 normal rectangle. Any failure = FAIL/STOP.",
+  "release_notes": "40.6.312 restores the Aether F11 behavior that existed in field-validated 40.6.297, with the reversible physical-screen snapshot correction from 40.6.307. The current 40.6.311 normal left/compact geometry is preserved. The proven geometry-only Window Manager transaction is restored only as an API for temporary F11 geometry; no Aether CSS outer-geometry owner is reintroduced. Market Core 38.15.11, Oracle, Lecture Technique, Storage and Strategy remain untouched.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -2100,5 +2100,29 @@
     "outer_geometry_owner": "ErithAdministratorWindows",
     "outer_geometry_css_removed": true,
     "atomic_open_close": true
+  },
+  "aether_f11_field_restore_406312": {
+    "priority": "P0_FUNCTIONAL_RESTORATION",
+    "demanded_reference": "40.6.297 Firefox terrain capture",
+    "normal_state": "preserve current 40.6.311 compact left geometry",
+    "f11_state": "40.6.297 historical 16:9 field left of Lecture Technique",
+    "exit_state": "exact pre-F11 rectangle",
+    "f11_detection": "40.6.307 frozen physical screen snapshot",
+    "geometry_transaction": "ErithAdministratorWindows.setGeometry / persist false",
+    "geometry_api_restored_from": [
+      "40.6.305",
+      "40.6.307"
+    ],
+    "css_outer_geometry_changed": false,
+    "aether_css_changed": false,
+    "admin_ribbons_css_changed": false,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "lecture_technique_modified": false,
+    "strategy_modified": false,
+    "storage_schema_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "terrain_proof": "PENDING_FIREFOX"
   }
 }

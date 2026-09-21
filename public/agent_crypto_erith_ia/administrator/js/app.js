@@ -2268,6 +2268,169 @@
     }
   }
 
+
+  // 40.6.312 — RESTORE THE FIELD-VALIDATED 40.6.297 F11 STATE.
+  // Normal geometry stays exactly as the current Window Manager/operator state.
+  // Browser F11 alone gets the historical 16:9 field left of Lecture Technique.
+  // Exit restores the exact pre-F11 rectangle. Expanded geometry is never persisted.
+  function installAetherF11Continuity406312(manager) {
+    if (!manager?.getWindow || !manager?.setGeometry) return false;
+
+    let frame = 0;
+    let f11Active = false;
+    let expandedPendingOpen = false;
+    let preF11Geometry = null;
+    const ratio = 1672 / 941;
+    const margin = 12;
+    const minWidth = 720;
+    const minHeight = 405;
+    const maxFloatWidth = 1450;
+
+    const finiteGeometry = value => {
+      if (!value || typeof value !== "object") return null;
+      const geometry = {
+        x: Number(value.x),
+        y: Number(value.y),
+        width: Number(value.width),
+        height: Number(value.height)
+      };
+      return Object.values(geometry).every(Number.isFinite) && geometry.width > 1 && geometry.height > 1
+        ? geometry
+        : null;
+    };
+
+    const viewport = () => ({
+      width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+    });
+
+    // Reversible F11 detector restored from 40.6.307: freeze the physical screen
+    // reference once, instead of comparing against a screen object that may mutate.
+    const initialViewport = viewport();
+    const screenSnapshot = Object.freeze({
+      width: Number(globalThis.screen?.width) || initialViewport.width,
+      height: Number(globalThis.screen?.height) || initialViewport.height
+    });
+
+    const isBrowserF11 = () => {
+      const { width, height } = viewport();
+      return width >= screenSnapshot.width - 8 && height >= screenSnapshot.height - 12;
+    };
+
+    const visibleRect = node => {
+      if (!(node instanceof HTMLElement)) return null;
+      const style = getComputedStyle(node);
+      const rect = node.getBoundingClientRect();
+      if (node.hidden || style.display === "none" || style.visibility === "hidden" || rect.width <= 1 || rect.height <= 1) return null;
+      return rect;
+    };
+
+    // Exact 40.6.297 field geometry: fill the space to the LEFT of Lecture Technique,
+    // preserve the 1672/941 stage, x=12, max 1450px, and fit vertically.
+    const expandedGeometry = () => {
+      const { width: vw, height: vh } = viewport();
+      const detail = visibleRect(document.getElementById("detailPanel"));
+      const rightBoundary = detail && detail.left > Math.max(minWidth + margin * 2, vw * .55)
+        ? Math.max(minWidth + margin * 2, detail.left - 8)
+        : vw - margin;
+      const availableWidth = Math.max(minWidth, rightBoundary - margin);
+      const maxWidth = Math.max(minWidth, Math.min(maxFloatWidth, availableWidth, vw - margin * 2));
+      const maxHeight = Math.max(minHeight, vh - margin * 2);
+      let width = Math.min(maxWidth, maxHeight * ratio);
+      let height = width / ratio;
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * ratio;
+      }
+      width = Math.min(width, Math.max(1, vw - margin * 2));
+      height = Math.min(height, Math.max(1, vh - margin * 2));
+      return {
+        x: margin,
+        y: Math.max(margin, Math.round(vh - height - margin)),
+        width: Math.round(width),
+        height: Math.round(height)
+      };
+    };
+
+    const apply = (geometry, reason) => {
+      const safe = finiteGeometry(geometry);
+      const win = manager.getWindow("aether-watch");
+      if (!safe || !win || !win.floating || win.maximized || win.minimized) return false;
+      const result = manager.setGeometry("aether-watch", safe, { persist: false });
+      if (!result) return false;
+      document.documentElement.dataset.aetherF11406312 = reason;
+      return true;
+    };
+
+    const enter = () => {
+      const win = manager.getWindow("aether-watch");
+      if (!win) return;
+      f11Active = true;
+      if (!win.floating || win.hidden || win.maximized || win.minimized) {
+        expandedPendingOpen = true;
+        document.documentElement.dataset.aetherF11406312 = "pending-open";
+        return;
+      }
+      if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
+      expandedPendingOpen = false;
+      apply(expandedGeometry(), "expanded-40.6.297-field");
+    };
+
+    const exit = () => {
+      f11Active = false;
+      expandedPendingOpen = false;
+      const restore = finiteGeometry(preF11Geometry);
+      if (restore) apply(restore, "restored-normal-exact");
+      preF11Geometry = null;
+    };
+
+    const reconcile = () => {
+      frame = 0;
+      const next = isBrowserF11();
+      if (next === f11Active) return;
+      if (next) enter();
+      else exit();
+    };
+
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(reconcile);
+    };
+
+    const openWhileF11 = event => {
+      if (!(event.target instanceof Element) || !event.target.closest("#atlasAetherStatusToggle")) return;
+      if (!f11Active && !isBrowserF11()) return;
+      queueMicrotask(() => {
+        const win = manager.getWindow("aether-watch");
+        if (!win || !win.floating || win.hidden || win.maximized || win.minimized) return;
+        if (!preF11Geometry) preF11Geometry = finiteGeometry(win.geometry);
+        f11Active = true;
+        expandedPendingOpen = false;
+        apply(expandedGeometry(), "expanded-open-40.6.297-field");
+      });
+    };
+
+    f11Active = isBrowserF11();
+    expandedPendingOpen = f11Active;
+    window.addEventListener("resize", schedule, { passive: true });
+    document.addEventListener("click", openWhileF11, true);
+
+    globalThis.ErithAetherF11Continuity406312 = Object.freeze({
+      build: "40.6.312",
+      visual_reference: "40.6.297 field-validated F11 state",
+      exit_reference: "40.6.307 reversible screen snapshot",
+      normal_geometry_owner: "current ErithAdministratorWindows/operator state",
+      f11_geometry: "temporary historical 16:9 field left of Lecture Technique",
+      geometry_owner: "ErithAdministratorWindows.setGeometry",
+      persistent_f11_geometry: false,
+      css_owner_added: false,
+      screen_reference: screenSnapshot,
+      timer: false,
+      observer: false
+    });
+    return true;
+  }
+
   function boot() {
     installGlobalVersionIdentity();
     initAtlasMemoryResidency();
@@ -2344,6 +2507,7 @@
     }, true);
 
     window.ErithAdministratorWindows = manager;
+    installAetherF11Continuity406312(manager);
 
     // 40.4.93 — Market presentation follows the existing Window Manager.
     // No extra Market visibility control: normal/restored = rows present;

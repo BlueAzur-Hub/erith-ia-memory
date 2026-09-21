@@ -1436,6 +1436,27 @@
       return floating.length;
     }
 
+
+    // 40.6.312 — restore the proven geometry-only transaction from 40.6.305/.307.
+    // It changes only the rectangle of an already-floating native window.
+    // No dock/reparent cycle, no CSS geometry owner, no persistence unless explicit.
+    function setGeometry406312(id, geometry, options = {}) {
+      const win = windows.get(id);
+      if (!win || !win.floating || win.maximized || win.minimized) return false;
+      const safe = clampWindowGeometry(win, geometry);
+      if (!safe || ![safe.x, safe.y, safe.width, safe.height].every(value => Number.isFinite(Number(value)))) return false;
+      win.geometry = { ...safe };
+      setGeometryOnTarget(win, safe);
+      if (options.persist === true) persistGeometry(win);
+      return {
+        x: Number(safe.x),
+        y: Number(safe.y),
+        width: Number(safe.width),
+        height: Number(safe.height),
+        persisted: options.persist === true
+      };
+    }
+
     // 40.2.20 — Workspace Profiles Foundation.
     // Profiles are a presentation-layer snapshot only. They do not own market
     // domain, Graph Context V7, Oracle state, selected assets or business data.
@@ -1633,6 +1654,7 @@
       setDeckOpen,
       getWindow: id => windows.get(id) || null,
       snapshot,
+      setGeometry: setGeometry406312,
       applySnapshot,
       restorePersistedPresentation,
       neutralizePresentation,
