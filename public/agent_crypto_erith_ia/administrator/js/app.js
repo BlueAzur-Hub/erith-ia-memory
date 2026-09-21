@@ -532,7 +532,7 @@
         title: "Aether · Attention Watch",
         tone: "cyan",
         directFixed: true,
-        geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true, aspectRatio: 1672 / 941, aspectAnchor: "height" },
+        geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true },
         preferredFloatGeometry: () => aetherNormalFallback(),
         resolveEntries: () => [entry(byId("atlasAetherStatusPanel"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
@@ -2193,9 +2193,10 @@
   }
 
 
-  // Aether canonical left-state repair.
-  // Stable runtime key: migration:aether-left. No build number is embedded.
-  // The Window Manager + AtlasStorageRelief remain the only persistence owners.
+  // Aether canonical normal placement.
+  // Keep the already-proven operator size. Only repair the two contaminated
+  // coordinates from the failed geometry chain: x must be left, and a top-pinned
+  // y≈12 state is returned to the historical vertical lane used by 40.6.305.
   function reconcileAetherCanonicalLeftState(manager) {
     try {
       if (!manager?.restorePersistedPresentation) return "manager-unavailable";
@@ -2210,10 +2211,6 @@
         try { localStorage.removeItem(key); } catch (_) {}
       };
 
-      // The former pre-init path wrote "1" through localStorage only. Treat
-      // that receipt as stale. "window-manager" means the real owner completed it.
-      if (read(markerKey) === "window-manager") return "already";
-
       const raw = JSON.parse(read(windowKey) || "null");
       if (!raw || typeof raw !== "object") {
         write(markerKey, "window-manager");
@@ -2221,41 +2218,57 @@
         return "no-state";
       }
 
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const isLegacyCentered = geometry => {
-        if (!geometry || typeof geometry !== "object") return false;
-        const x = Number(geometry.x);
-        const width = Number(geometry.width);
-        if (![x, width].every(Number.isFinite) || width <= 1) return false;
-        const centeredX = Math.max(12, Math.round((vw - width) / 2));
-        return x > 26 && Math.abs(x - centeredX) <= 14;
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const repairedGeometry = geometry => {
+        if (!geometry || typeof geometry !== "object") return null;
+        const x = Number(geometry.x), y = Number(geometry.y);
+        const width = Number(geometry.width), height = Number(geometry.height);
+        if (![x, y, width, height].every(Number.isFinite) || width <= 1 || height <= 1) return null;
+
+        // Historical 40.6.305 vertical lane, generalized to the CURRENT height.
+        // Width and height are deliberately preserved byte-for-byte as numbers.
+        const historicalY = Math.max(12, Math.round((vh * .5 + 99) - height / 2));
+        const topPinned = y <= 26;
+        return {
+          ...geometry,
+          x: 12,
+          y: topPinned ? historicalY : y,
+          width,
+          height
+        };
       };
 
       let changed = false;
       const next = { ...raw };
-
-      if (raw.maximized !== true && isLegacyCentered(raw)) {
-        next.x = 12;
-        changed = true;
+      if (raw.maximized !== true) {
+        const repaired = repairedGeometry(raw);
+        if (repaired && (Number(raw.x) !== repaired.x || Number(raw.y) !== repaired.y)) {
+          Object.assign(next, repaired);
+          changed = true;
+        }
       }
 
-      if (raw.restoreGeometry && isLegacyCentered(raw.restoreGeometry)) {
-        next.restoreGeometry = { ...raw.restoreGeometry, x: 12 };
-        changed = true;
+      if (raw.restoreGeometry) {
+        const repairedRestore = repairedGeometry(raw.restoreGeometry);
+        if (repairedRestore && (
+          Number(raw.restoreGeometry.x) !== repairedRestore.x ||
+          Number(raw.restoreGeometry.y) !== repairedRestore.y
+        )) {
+          next.restoreGeometry = repairedRestore;
+          changed = true;
+        }
       }
 
       if (changed) {
         write(windowKey, JSON.stringify(next));
-        // Re-read through the real Window Manager owner after correcting the
-        // authoritative stored state. This updates a visible Aether immediately,
-        // and a hidden Aether will reopen from the corrected x=12 geometry.
+        // Apply through the real Window Manager after init. This moves the actual
+        // restored Aether window; preferredFloatGeometry is not relied upon.
         manager.restorePersistedPresentation();
-        document.documentElement.dataset.aetherLeftMigration = "migrated-left";
+        document.documentElement.dataset.aetherLeftMigration = "repaired-left-and-y";
       } else {
         document.documentElement.dataset.aetherLeftMigration = "preserved";
       }
 
-      // Retire historical build-numbered markers without creating another one.
       for (let index = localStorage.length - 1; index >= 0; index -= 1) {
         const candidate = localStorage.key(index);
         if (candidate?.startsWith(`${STORAGE_PREFIX}:migration:aether-left-`)) {
@@ -2264,93 +2277,13 @@
       }
 
       write(markerKey, "window-manager");
-      return changed ? "migrated-left" : "preserved";
+      return changed ? "repaired-left-and-y" : "preserved";
     } catch (_) {
       document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
       return "storage-unavailable";
     }
   }
 
-  // Normal Aether geometry integrity.
-  // The Observatory master is 1672/941, so durable outer geometry must use the
-  // same ratio. Repair happens before Window Manager init, preserving position
-  // and height whenever possible; no CSS owner and no build-number migration key.
-  function reconcileAetherNormalGeometryIntegrity() {
-    try {
-      const key = `${STORAGE_PREFIX}:window:aether-watch`;
-      const relief = globalThis.AtlasStorageRelief || null;
-      const read = target => relief?.readSync ? relief.readSync(target) : localStorage.getItem(target);
-      const write = (target, value) => relief?.writeSync ? relief.writeSync(target, value) : (localStorage.setItem(target, value), true);
-      const raw = JSON.parse(read(key) || "null");
-      if (!raw || typeof raw !== "object") {
-        document.documentElement.dataset.aetherNormalGeometry = "no-state";
-        return "no-state";
-      }
-
-      const ratio = 1672 / 941;
-      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-      const margin = 12;
-      const minWidth = Math.min(720, Math.max(1, vw - margin * 2));
-      const minHeight = Math.min(405, Math.max(1, vh - margin * 2));
-      const maxWidth = Math.max(1, vw - margin * 2);
-      const maxHeight = Math.max(1, vh - margin * 2);
-      const fallback = aetherNormalFallback();
-
-      const normalize = geometry => {
-        if (!geometry || typeof geometry !== "object") return { ...fallback };
-        const x0 = Number(geometry.x), y0 = Number(geometry.y);
-        let height = Number(geometry.height);
-        const width0 = Number(geometry.width);
-        if (![x0, y0, width0, height].every(Number.isFinite) || width0 <= 1 || height <= 1) return { ...fallback };
-
-        height = Math.max(minHeight, Math.min(maxHeight, height));
-        let width = height * ratio;
-        if (width > maxWidth) { width = maxWidth; height = width / ratio; }
-        if (width < minWidth) { width = minWidth; height = width / ratio; }
-        if (height > maxHeight) { height = maxHeight; width = height * ratio; }
-
-        const maxX = Math.max(margin, vw - width - margin);
-        const maxY = Math.max(margin, vh - height - margin);
-        return {
-          x: Math.round(Math.max(margin, Math.min(maxX, x0))),
-          y: Math.round(Math.max(margin, Math.min(maxY, y0))),
-          width: Math.round(width),
-          height: Math.round(height)
-        };
-      };
-
-      const needsRepair = geometry => {
-        if (!geometry || typeof geometry !== "object") return true;
-        const width = Number(geometry.width), height = Number(geometry.height);
-        if (![width, height].every(Number.isFinite) || width <= 1 || height <= 1) return true;
-        return Math.abs((width / height) - ratio) > .025;
-      };
-
-      let changed = false;
-      const next = { ...raw };
-      if (raw.maximized !== true && needsRepair(raw)) {
-        Object.assign(next, normalize(raw));
-        changed = true;
-      }
-      if (raw.restoreGeometry && needsRepair(raw.restoreGeometry)) {
-        next.restoreGeometry = normalize(raw.restoreGeometry);
-        changed = true;
-      }
-
-      if (!changed) {
-        document.documentElement.dataset.aetherNormalGeometry = "preserved";
-        return "preserved";
-      }
-
-      write(key, JSON.stringify(next));
-      document.documentElement.dataset.aetherNormalGeometry = "repaired-aspect-ratio";
-      return "repaired-aspect-ratio";
-    } catch (_) {
-      document.documentElement.dataset.aetherNormalGeometry = "storage-unavailable";
-      return "storage-unavailable";
-    }
-  }
 
   // Aether browser-F11 continuity.
   // Firefox window.fullScreen is the state truth. resize only wakes a bounded
@@ -2529,7 +2462,6 @@
       const key = `${STORAGE_PREFIX}:window:aether-watch`;
       aetherNativeStateExists = (relief?.readSync ? relief.readSync(key) : localStorage.getItem(key)) !== null;
     } catch {}
-    reconcileAetherNormalGeometryIntegrity();
     const state = manager.init({ restorePersistedPresentation: bootRole === "administrator" });
     reconcileAetherCanonicalLeftState(manager);
     // 40.6.40 — the shell is pre-created by aether.js solely so the canonical
