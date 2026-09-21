@@ -532,7 +532,7 @@
         title: "Aether · Attention Watch",
         tone: "cyan",
         directFixed: true,
-        geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true },
+        geometryPolicy: { minWidth: 720, minHeight: 405, keepFullyVisible: true, aspectRatio: 1672 / 941, aspectAnchor: "height" },
         preferredFloatGeometry: () => aetherNormalFallback(),
         resolveEntries: () => [entry(byId("atlasAetherStatusPanel"))].filter(Boolean),
         resolveAnchor: nodes => nodes[0],
@@ -2272,11 +2272,11 @@
   }
 
   // Normal Aether geometry integrity.
-  // Not a version migration: every boot validates durable state and repairs only
-  // the proven oversized/non-16:9 left-side transient leak that creates black bands.
-  function reconcileAetherNormalGeometryIntegrity(manager) {
+  // The Observatory master is 1672/941, so durable outer geometry must use the
+  // same ratio. Repair happens before Window Manager init, preserving position
+  // and height whenever possible; no CSS owner and no build-number migration key.
+  function reconcileAetherNormalGeometryIntegrity() {
     try {
-      if (!manager?.restorePersistedPresentation) return "manager-unavailable";
       const key = `${STORAGE_PREFIX}:window:aether-watch`;
       const relief = globalThis.AtlasStorageRelief || null;
       const read = target => relief?.readSync ? relief.readSync(target) : localStorage.getItem(target);
@@ -2287,25 +2287,54 @@
         return "no-state";
       }
 
-      const fallback = aetherNormalFallback();
       const ratio = 1672 / 941;
-      const contaminated = geometry => {
-        if (!geometry || typeof geometry !== "object") return false;
-        const x = Number(geometry.x), width = Number(geometry.width), height = Number(geometry.height);
-        if (![x, width, height].every(Number.isFinite) || width <= 1 || height <= 1) return false;
-        const ratioError = Math.abs((width / height) - ratio);
-        const oversized = width > fallback.width + 80 || height > fallback.height + 45;
-        return x <= 40 && oversized && ratioError > .10;
+      const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+      const margin = 12;
+      const minWidth = Math.min(720, Math.max(1, vw - margin * 2));
+      const minHeight = Math.min(405, Math.max(1, vh - margin * 2));
+      const maxWidth = Math.max(1, vw - margin * 2);
+      const maxHeight = Math.max(1, vh - margin * 2);
+      const fallback = aetherNormalFallback();
+
+      const normalize = geometry => {
+        if (!geometry || typeof geometry !== "object") return { ...fallback };
+        const x0 = Number(geometry.x), y0 = Number(geometry.y);
+        let height = Number(geometry.height);
+        const width0 = Number(geometry.width);
+        if (![x0, y0, width0, height].every(Number.isFinite) || width0 <= 1 || height <= 1) return { ...fallback };
+
+        height = Math.max(minHeight, Math.min(maxHeight, height));
+        let width = height * ratio;
+        if (width > maxWidth) { width = maxWidth; height = width / ratio; }
+        if (width < minWidth) { width = minWidth; height = width / ratio; }
+        if (height > maxHeight) { height = maxHeight; width = height * ratio; }
+
+        const maxX = Math.max(margin, vw - width - margin);
+        const maxY = Math.max(margin, vh - height - margin);
+        return {
+          x: Math.round(Math.max(margin, Math.min(maxX, x0))),
+          y: Math.round(Math.max(margin, Math.min(maxY, y0))),
+          width: Math.round(width),
+          height: Math.round(height)
+        };
+      };
+
+      const needsRepair = geometry => {
+        if (!geometry || typeof geometry !== "object") return true;
+        const width = Number(geometry.width), height = Number(geometry.height);
+        if (![width, height].every(Number.isFinite) || width <= 1 || height <= 1) return true;
+        return Math.abs((width / height) - ratio) > .025;
       };
 
       let changed = false;
       const next = { ...raw };
-      if (raw.maximized !== true && contaminated(raw)) {
-        Object.assign(next, fallback);
+      if (raw.maximized !== true && needsRepair(raw)) {
+        Object.assign(next, normalize(raw));
         changed = true;
       }
-      if (contaminated(raw.restoreGeometry)) {
-        next.restoreGeometry = { ...fallback };
+      if (raw.restoreGeometry && needsRepair(raw.restoreGeometry)) {
+        next.restoreGeometry = normalize(raw.restoreGeometry);
         changed = true;
       }
 
@@ -2315,15 +2344,13 @@
       }
 
       write(key, JSON.stringify(next));
-      manager.restorePersistedPresentation();
-      document.documentElement.dataset.aetherNormalGeometry = "repaired-transient-leak";
-      return "repaired-transient-leak";
+      document.documentElement.dataset.aetherNormalGeometry = "repaired-aspect-ratio";
+      return "repaired-aspect-ratio";
     } catch (_) {
       document.documentElement.dataset.aetherNormalGeometry = "storage-unavailable";
       return "storage-unavailable";
     }
   }
-
 
   // Aether browser-F11 continuity.
   // Firefox window.fullScreen is the state truth. resize only wakes a bounded
@@ -2502,9 +2529,9 @@
       const key = `${STORAGE_PREFIX}:window:aether-watch`;
       aetherNativeStateExists = (relief?.readSync ? relief.readSync(key) : localStorage.getItem(key)) !== null;
     } catch {}
+    reconcileAetherNormalGeometryIntegrity();
     const state = manager.init({ restorePersistedPresentation: bootRole === "administrator" });
     reconcileAetherCanonicalLeftState(manager);
-    reconcileAetherNormalGeometryIntegrity(manager);
     // 40.6.40 — the shell is pre-created by aether.js solely so the canonical
     // Window Manager can register it during this one normal init pass.
     // HTML hidden is then released; the manager becomes the only presentation owner.

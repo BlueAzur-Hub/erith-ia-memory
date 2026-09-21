@@ -110,8 +110,27 @@
         Number.isFinite(configuredMaxHeight) && configuredMaxHeight > 0 ? configuredMaxHeight : viewportMaxHeight,
         viewportMaxHeight
       ));
-      const width = clamp(geometry.width || Math.min(1180, vw * .82), Math.min(minWidth, maxWidth), maxWidth);
-      const height = clamp(geometry.height || Math.min(760, vh * .80), Math.min(minHeight, maxHeight), maxHeight);
+      let width = clamp(geometry.width || Math.min(1180, vw * .82), Math.min(minWidth, maxWidth), maxWidth);
+      let height = clamp(geometry.height || Math.min(760, vh * .80), Math.min(minHeight, maxHeight), maxHeight);
+
+      // Optional native-window aspect policy. Aether uses height as the anchor so
+      // side-letterboxing is removed by narrowing the outer frame instead of
+      // inflating it vertically. Other windows are unchanged unless they opt in.
+      const aspectRatio = Number(policy.aspectRatio);
+      if (Number.isFinite(aspectRatio) && aspectRatio > 0) {
+        const anchor = String(policy.aspectAnchor || "width").toLowerCase();
+        if (anchor === "height") width = height * aspectRatio;
+        else height = width / aspectRatio;
+
+        if (width > maxWidth) { width = maxWidth; height = width / aspectRatio; }
+        if (height > maxHeight) { height = maxHeight; width = height * aspectRatio; }
+        if (width < Math.min(minWidth, maxWidth)) { width = Math.min(minWidth, maxWidth); height = width / aspectRatio; }
+        if (height < Math.min(minHeight, maxHeight)) { height = Math.min(minHeight, maxHeight); width = height * aspectRatio; }
+
+        width = Math.min(maxWidth, Math.max(1, width));
+        height = Math.min(maxHeight, Math.max(1, height));
+      }
+
       const fullyVisible = policy.keepFullyVisible === true;
       const maxX = fullyVisible
         ? Math.max(VIEWPORT_MARGIN, vw - width - VIEWPORT_MARGIN)
@@ -755,11 +774,17 @@
       // Pointer-up/native CSS resize must not promote F11/preview geometry.
       if (!win?.floating || win.maximized || win.transientGeometry) return false;
       const rect = currentRect(win);
+      const hasAspectPolicy = Number.isFinite(Number(win.geometryPolicy?.aspectRatio))
+        && Number(win.geometryPolicy?.aspectRatio) > 0;
+      const normalized = hasAspectPolicy ? clampWindowGeometry(win, rect) : rect;
       const safe = {
-        ...rect,
-        height: win.geometry?.height || rect.height
+        ...normalized,
+        // Historical shell windows intentionally retain their managed height.
+        // An aspect-locked direct window must persist its actual normalized height.
+        height: hasAspectPolicy ? normalized.height : (win.geometry?.height || normalized.height)
       };
-      win.geometry = { ...safe };
+      if (hasAspectPolicy) setGeometryOnTarget(win, safe);
+      else win.geometry = { ...safe };
       patchState(win.id, {
         floating: true,
         x: safe.x,
