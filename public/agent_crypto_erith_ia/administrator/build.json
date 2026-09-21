@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.324",
+  "build": "40.6.325",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · FACADE CASCADE 02 · GATES READABILITY",
+  "release": "PARKER LEWIS CAN'T LOSE · FACADE CASCADE 03 · TRADUS COMPARISON",
   "published": true,
-  "status": "facade_cascade_02_gates_readability",
-  "parent_build": "40.6.323",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.324",
-  "administrator_build": "40.6.324",
-  "build_label": "Build 40.6.324 · Administrator",
+  "status": "facade_cascade_03_tradus_comparison",
+  "parent_build": "40.6.324",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.325",
+  "administrator_build": "40.6.325",
+  "build_label": "Build 40.6.325 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox visual gate: verify canonical G1→G9 truth + 9-gate audit readability only. Expected: clearly larger gate rows/status chips/proof text, same gate numbers/states/owners/actions, no behavior change.",
-  "terrain_proof": "PENDING_FIREFOX_40.6.324_GATES_FACADE",
-  "release_notes": "40.6.324 is façade cascade step 02. Presentation-only Gates readability pass in index inline CSS owner agentCryptoGatesFacade406324. It makes canonical G1→G9 truth and the detailed 9-gate audit visibly easier to scan using larger typography, stronger row separation and state chips. No canonical gate number/state, owner, proof source, foundation test action, Strategy threshold, Risk, Paper, timer, storage, network, Market Core, Oracle, Aether, Tradus or Evidence behavior is changed.",
+  "terrain_pending": "Firefox visual gate: TRADUS / Yohan family readability and comparison hierarchy only.",
+  "terrain_proof": "PENDING_FIREFOX_40.6.325_TRADUS_FACADE",
+  "release_notes": "40.6.325 is façade cascade step 03. Presentation-only TRADUS/Yohan comparison readability pass. No Strategy A, TRADUS signal, paper lifecycle, network, storage, threshold, order or gate behavior changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -2188,6 +2188,15 @@
     "network_changed": false,
     "aether_changed": false,
     "market_core_changed": false,
+    "firefox_validation_required": true
+  },
+  "tradus_facade_406325": {
+    "scope": "tradus_shadow_comparison_ledger_and_paper_observability",
+    "presentation_only": true,
+    "css_owner": "index.html#agentCryptoTradusFacade406325",
+    "business_logic_changed": false,
+    "network_changed": false,
+    "strategy_a_changed": false,
     "firefox_validation_required": true
   }
 }
