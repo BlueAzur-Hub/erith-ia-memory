@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.325",
+  "build": "40.6.326",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · FACADE CASCADE 03 · TRADUS COMPARISON",
+  "release": "PARKER LEWIS CAN'T LOSE · FACADE CASCADE 04 · EVIDENCE LEDGER",
   "published": true,
-  "status": "facade_cascade_03_tradus_comparison",
-  "parent_build": "40.6.324",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.325",
-  "administrator_build": "40.6.325",
-  "build_label": "Build 40.6.325 · Administrator",
+  "status": "facade_cascade_04_evidence_ledger",
+  "parent_build": "40.6.325",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.326",
+  "administrator_build": "40.6.326",
+  "build_label": "Build 40.6.326 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox visual gate: TRADUS / Yohan family readability and comparison hierarchy only.",
-  "terrain_proof": "PENDING_FIREFOX_40.6.325_TRADUS_FACADE",
-  "release_notes": "40.6.325 is façade cascade step 03. Presentation-only TRADUS/Yohan comparison readability pass. No Strategy A, TRADUS signal, paper lifecycle, network, storage, threshold, order or gate behavior changed.",
+  "terrain_pending": "Firefox visual gate: Evidence / Ledger readability only.",
+  "terrain_proof": "PENDING_FIREFOX_40.6.326_EVIDENCE_FACADE",
+  "release_notes": "40.6.326 is façade cascade step 04. Presentation-only Evidence/Ledger readability pass. No evidence content, certification state, lifecycle, Strategy, Risk, Paper, storage or network behavior changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -2197,6 +2197,15 @@
     "business_logic_changed": false,
     "network_changed": false,
     "strategy_a_changed": false,
+    "firefox_validation_required": true
+  },
+  "evidence_facade_406326": {
+    "scope": "experiment_after_cost_durable_evidence_dossier_and_proof_bridge",
+    "presentation_only": true,
+    "css_owner": "index.html#agentCryptoEvidenceFacade406326",
+    "evidence_content_changed": false,
+    "certification_changed": false,
+    "business_logic_changed": false,
     "firefox_validation_required": true
   }
 }
