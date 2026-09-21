@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.335";
+  const BUILD = "40.6.337";
   const button = document.getElementById("atlasHelpToggle");
   const layer = document.getElementById("atlasHelpLayer");
   const live = document.getElementById("atlasHelpLive");
@@ -57,6 +57,66 @@
       look: "Symbole, prix, variation et état de la sélection graphique.",
       action: "Clique un actif pour l’ajouter ou le retirer de la comparaison. Le bouton de cycle change la vue du ruban.",
       attention: ""
+    },
+    {
+      key: "market-cycle",
+      selector: "#atlasMarketDomainSwitch",
+      kicker: "AIDE · MARCHÉS",
+      title: "Cycle des marchés",
+      purpose: "Fait circuler le même observatoire entre Crypto, Métaux, Indices, Énergie et Cross-Market sans créer cinq applications séparées.",
+      look: "Le libellé du bouton indique le prochain domaine. Crypto et Métaux sont natifs ; Indices, Énergie et Cross sont chargés en Lazy lorsque tu les demandes.",
+      action: "Clique pour avancer dans le cycle. Au premier passage, un domaine Lazy peut demander un court chargement avant d’afficher son contenu.",
+      attention: "Un chargement Lazy n’est pas une absence de données. Attends la Source Truth du domaine avant de conclure qu’un marché est indisponible."
+    },
+    {
+      key: "metals-graph",
+      selector: "#atlasMetalsEmptyChart",
+      kicker: "AIDE · MÉTAUX",
+      title: "Graphique Métaux",
+      purpose: "Compare Or, Argent, Platine, Palladium et Cuivre à partir de séries publiques réelles, avec prix lorsque les unités sont compatibles ou Base 100 pour comparer les trajectoires.",
+      look: "Période, identité couleur stable de chaque métal, couverture, point historique au survol et Source Truth Futures.",
+      action: "Sélectionne un métal ou TOUS ; change la période pour comparer les mêmes séries sans inventer de points manquants.",
+      attention: "Les Futures continus ne sont pas du spot homogène. Les matériaux critiques sans cotation comparable restent structurels et ne reçoivent jamais de faux prix live."
+    },
+    {
+      key: "metals-detail",
+      selector: "#atlasMetalsDetailPanel",
+      kicker: "AIDE · LECTURE MÉTAUX",
+      title: "Lecture Métaux",
+      purpose: "Rassemble la lecture historique de l’actif choisi et son contexte physique : famille, unité, production, réserves, usages et sources publiques.",
+      look: "Sépare toujours cotation de marché, structure industrielle et disponibilité des sources.",
+      action: "Choisis un métal depuis le panier ou le rail, puis ouvre seulement les blocs nécessaires.",
+      attention: "Une donnée structurelle annuelle n’est pas une cotation temps réel et ne doit pas être interprétée comme telle."
+    },
+    {
+      key: "parallel-graph",
+      selector: ".atlas-parallel-live-shell",
+      kicker: "AIDE · MARKETS OBSERVATORY",
+      title: "Indices · Énergie · Cross-Market",
+      purpose: "Utilise une surface graphique partagée pour comparer les domaines parallèles en Base 100 tout en conservant l’origine et l’unité de chaque série.",
+      look: "Domaine actif, période, historiques longs 5a/10a/MAX, couverture, couleurs d’actifs stables, inspection au survol et bande Source Truth.",
+      action: "Change la période ou demande un historique long. Les longues fenêtres restent Lazy et ne sont chargées qu’après action explicite.",
+      attention: "Base 100 compare des trajectoires relatives ; elle ne transforme pas des instruments différents en un même prix."
+    },
+    {
+      key: "parallel-rail",
+      selector: "#atlasParallelDomainRailHost",
+      kicker: "AIDE · LECTURE DOMAINE",
+      title: "Rail Indices / Énergie / Cross",
+      purpose: "Donne le contexte du domaine parallèle actif : actif sélectionné, fenêtre, couverture, source et lecture Observer / comparer.",
+      look: "Vérifie la couverture et la source avant la performance relative. Les actifs peuvent avoir des devises, unités et natures différentes.",
+      action: "Sélectionne un actif dans le rail pour approfondir sa lecture sans changer le moteur graphique.",
+      attention: "Le rail n’émet aucune recommandation et n’autorise aucune exécution."
+    },
+    {
+      key: "market-reading-depth",
+      selector: ".parallel-depth-sheet, .atlas-market-reading-depth-404199",
+      kicker: "AIDE · LECTURE PROFONDE",
+      title: "Market Reading Depth",
+      purpose: "Ajoute une lecture déterministe mesurée : leader, retard, dispersion, volatilité, drawdown, mémoire multi-horizon et Historical Math Core.",
+      look: "Fenêtre réellement mesurée, nombre d’observations, Source Truth, longues périodes Lazy et limites méthodologiques.",
+      action: "Ouvre la lecture détaillée seulement quand tu as besoin des mesures profondes ou des horizons longs.",
+      attention: "Corrélation ≠ causalité. Historique mesuré ≠ prévision. Les métriques ne remplacent jamais le symbole, le texte ni la décision humaine."
     },
     {
       key: "sources",
@@ -252,7 +312,7 @@
       kicker: "AIDE · AGENT-CRYPTO",
       title: "Comprendre sans bloquer l’interface",
       purpose: "Survole les zones signalées pour obtenir une explication courte sans changer leur fonctionnement.",
-      look: "Menu, LiveCheck, Graphique, Lecture Technique, Top 5 / Market Flow, Market Snapshot, Math Core, Sources, Evidence, Simulation, Storage, Sécurité et Projets.",
+      look: "Menu, LiveCheck, Graphique Crypto, cycle des marchés, Métaux, Indices / Énergie / Cross, Lecture profonde, Lecture Technique, Market Snapshot, Math Core, Sources, Evidence, Simulation, Storage, Sécurité et Projets.",
       action: "Utilise l’interface normalement. L’aide ne lance aucune source, aucun calcul et aucune action métier.",
       attention: ""
     };
