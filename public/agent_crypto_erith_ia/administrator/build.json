@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.308",
+  "build": "40.6.309",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · AETHER 40.6.273 EXACT SUBSYSTEM RESTORE",
+  "release": "PARKER LEWIS CAN'T LOSE · AETHER CANONICAL LEFT X12",
   "published": true,
-  "status": "aether_406273_exact_subsystem_restore_406308",
-  "parent_build": "40.6.307",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.308",
-  "administrator_build": "40.6.308",
-  "build_label": "Build 40.6.308 · Administrator",
+  "status": "aether_canonical_left_x12_406309",
+  "parent_build": "40.6.308",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.309",
+  "administrator_build": "40.6.309",
+  "build_label": "Build 40.6.309 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,8 +30,8 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox terrain required only after exact SHA restoration is verified on main. Gate: NORMAL must match the proven pre-regression Aether behavior; F11 must expand and restore the previous normal geometry. Any mismatch = FAIL/STOP.",
-  "release_notes": "40.6.308 abandons the 40.6.302–40.6.307 Aether patch chain and restores the five Aether subsystem files exactly to their proven 40.6.273 Git objects: js/app.js, js/aether.js, js/core/admin-window-manager.js, admin-ribbons.css and aether.css. No new Aether CSS, F11 bridge, migration or geometry owner is added. Canonical aether-v2.css and js/aether-role-visibility.js were already byte-identical to 40.6.273 and remain untouched.",
+  "terrain_pending": "Firefox terrain gate: outside F11 Aether must open on the left (x≈12) while preserving restored 40.6.273 behavior. Any non-left result = FAIL/STOP.",
+  "release_notes": "40.6.309 keeps the 40.6.308 exact 40.6.273 Aether subsystem restore and changes one responsibility only: replace the build-numbered Aether-left migration state with the stable canonical key agent-crypto-administrator:migration:aether-left. On first canonical run, a legacy auto-centered saved Aether geometry is moved to x=12; non-centered operator geometry is preserved. Historical versioned aether-left-* markers are retired generically. No CSS, Window Manager, F11 bridge, Aether visual runtime, Market Core, Oracle or Lecture Technique change.",
   "strategy_a_canonical_evidence_wiring": {
     "enabled": true,
     "single_owner_refresh_repair_in": "40.6.187",
@@ -2083,6 +2083,19 @@
     "new_css_added": false,
     "new_f11_bridge_added": false,
     "new_migration_added": false,
+    "terrain_proof": "PENDING_FIREFOX"
+  },
+  "aether_left_canonical_406309": {
+    "storage_key": "agent-crypto-administrator:migration:aether-left",
+    "window_key": "agent-crypto-administrator:window:aether-watch",
+    "target_x": 12,
+    "version_number_in_runtime_key": false,
+    "css_changed": false,
+    "window_manager_changed": false,
+    "f11_changed": false,
+    "visual_runtime_changed": false,
+    "legacy_versioned_left_markers": "retired_by_prefix",
+    "preserve_non_centered_operator_position": true,
     "terrain_proof": "PENDING_FIREFOX"
   }
 }

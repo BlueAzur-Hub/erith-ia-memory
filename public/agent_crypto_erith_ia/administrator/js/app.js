@@ -2190,36 +2190,62 @@
   }
 
 
-  // 40.6.85 — Aether left-boot repair.
-  // Scope is exactly one persisted Aether presentation record, one time.
-  // A non-centered operator position is never rewritten.
-  const AETHER_LEFT_406085_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left-406085`;
+  // Aether canonical left-state migration.
+  // Stable key: migration:aether-left. No build number is embedded in runtime state.
+  // One responsibility only: repair a legacy auto-centered Aether state to x=12,
+  // while preserving any non-centered operator position and all other geometry.
+  const AETHER_LEFT_MIGRATION_KEY = `${STORAGE_PREFIX}:migration:aether-left`;
   function migrateAetherCenteredState() {
     try {
-      if (localStorage.getItem(AETHER_LEFT_406085_MIGRATION_KEY) === "1") return "already";
+      if (localStorage.getItem(AETHER_LEFT_MIGRATION_KEY) === "1") return "already";
+
       const key = `${STORAGE_PREFIX}:window:aether-watch`;
       const raw = JSON.parse(localStorage.getItem(key) || "null");
       if (!raw || typeof raw !== "object") {
-        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
+        localStorage.setItem(AETHER_LEFT_MIGRATION_KEY, "1");
         return "no-state";
       }
-      const x = Number(raw.x), y = Number(raw.y), width = Number(raw.width), height = Number(raw.height);
-      if (![x, y, width, height].every(Number.isFinite)) {
-        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-        return "invalid-state-preserved";
-      }
+
       const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-      const centeredX = Math.max(12, Math.round((vw - width) / 2));
-      const centered = x > 26 && Math.abs(x - centeredX) <= 14;
-      if (centered && raw.maximized !== true) {
-        localStorage.setItem(key, JSON.stringify({ ...raw, x: 12 }));
-        localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-        document.documentElement.dataset.aetherLeftMigration = "migrated";
-        return "migrated";
+      const isLegacyCentered = geometry => {
+        if (!geometry || typeof geometry !== "object") return false;
+        const x = Number(geometry.x);
+        const width = Number(geometry.width);
+        if (![x, width].every(Number.isFinite) || width <= 1) return false;
+        const centeredX = Math.max(12, Math.round((vw - width) / 2));
+        return x > 26 && Math.abs(x - centeredX) <= 14;
+      };
+
+      let changed = false;
+      const next = { ...raw };
+
+      if (raw.maximized !== true && isLegacyCentered(raw)) {
+        next.x = 12;
+        changed = true;
       }
-      localStorage.setItem(AETHER_LEFT_406085_MIGRATION_KEY, "1");
-      document.documentElement.dataset.aetherLeftMigration = "preserved";
-      return "preserved";
+
+      if (raw.restoreGeometry && isLegacyCentered(raw.restoreGeometry)) {
+        next.restoreGeometry = { ...raw.restoreGeometry, x: 12 };
+        changed = true;
+      }
+
+      if (changed) {
+        localStorage.setItem(key, JSON.stringify(next));
+        document.documentElement.dataset.aetherLeftMigration = "migrated-left";
+      } else {
+        document.documentElement.dataset.aetherLeftMigration = "preserved";
+      }
+
+      // Retire any historical build-numbered left marker. The runtime keeps
+      // only the canonical migration:aether-left key from now on.
+      for (let index = localStorage.length - 1; index >= 0; index -= 1) {
+        const candidate = localStorage.key(index);
+        if (candidate?.startsWith(`${STORAGE_PREFIX}:migration:aether-left-`)) {
+          localStorage.removeItem(candidate);
+        }
+      }
+      localStorage.setItem(AETHER_LEFT_MIGRATION_KEY, "1");
+      return changed ? "migrated-left" : "preserved";
     } catch (_) {
       document.documentElement.dataset.aetherLeftMigration = "storage-unavailable";
       return "storage-unavailable";
