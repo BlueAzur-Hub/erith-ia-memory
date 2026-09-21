@@ -1,0 +1,32 @@
+{
+  "schema": "agent_crypto_operator_mirror_v1",
+  "build": "40.6.336",
+  "market_core": "38.15.11",
+  "runtime_mode": "shared-administrator",
+  "runtime_repository": "BlueAzur-Hub/erith-ia-memory",
+  "runtime_entry": "../administrator/index-40.6.336.html?view=intermediate&operator-entry=40.6.336&profile=yohan",
+  "administrator_source_build": "40.6.336",
+  "administrator_source_terrain": "PASS_FIREFOX_OPERATOR_2026-09-21_MARKET_LAZY_CYCLE",
+  "help_layer_v2": true,
+  "markets_lazy_cycle_guard": true,
+  "expected_market_cycle": [
+    "crypto",
+    "metals",
+    "indices",
+    "energy",
+    "cross-market",
+    "crypto"
+  ],
+  "operator_is_third_build_line": false,
+  "mirror_policy": "Administrator first; Operator mirrors selected checkpoints",
+  "yohan_future_personal_account": true,
+  "yohan_bridge_future": true,
+  "grants_administrator_session": false,
+  "grants_real_trading": false,
+  "grants_wallet": false,
+  "embeds_secret": false,
+  "paper_only": true,
+  "g3": "PENDING",
+  "g9": "LOCKED",
+  "published": true
+}
