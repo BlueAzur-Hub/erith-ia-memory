@@ -1,4 +1,4 @@
-/* Agent-Crypto 40.6.334 — HELP LAYER
+/* Agent-Crypto 40.6.335 — HELP LAYER V2
    Presentation only. No runtime owner, timer, observer, storage or network. */
 .agent-help-toggle{
   flex:0 0 auto;
@@ -109,6 +109,10 @@ body.agent-help-mode .agent-help-target.agent-help-current{
 @media(max-width:900px){
   .agent-help-toggle{width:28px;height:28px;font-size:18px}
   #atlasHelpLayer.atlas-help-layer{width:min(390px,calc(100vw - 20px));padding:12px}
+}
+@media(max-height:520px){
+  #atlasHelpLayer.atlas-help-layer{max-height:calc(100vh - 20px);font-size:11px}
+  #atlasHelpLayer p{font-size:11px;line-height:1.35}
 }
 @media(prefers-reduced-motion:reduce){
   .agent-help-toggle{transition:none}
