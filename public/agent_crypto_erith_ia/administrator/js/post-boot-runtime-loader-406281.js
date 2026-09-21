@@ -5,7 +5,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.289";
+  const BUILD="40.6.336";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const SECONDARY_MODULES=Object.freeze([
@@ -59,7 +59,16 @@
     "./js/storage-primary-truth-406289.js"
   ]);
 
-  const state={started:false,done:false,reason:"",loaded:0,failed:[]};
+  const MARKET_DEMAND_MODULES=Object.freeze([
+    "./js/markets-domain-contract.js",
+    "./js/market-stack.js",
+    "./js/parallel-markets.js",
+    "./js/cross-market-owner-map.js",
+    "./js/market-reading-depth.js"
+  ]);
+
+  const state={started:false,done:false,reason:"",loaded:0,failed:[],marketDemandStarted:false,marketDemandReady:false,marketDemandReason:"",marketDemandFailed:[]};
+  let marketDemandPromise=null;
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
   // 40.6.299 — operator-input backpressure.
@@ -84,7 +93,13 @@
   });
   const loadOne=src=>new Promise(resolve=>{
     const existing=[...document.scripts].find(s=>s.dataset.postBootSrc===src);
-    if(existing){resolve(existing.dataset.loaded==="1");return;}
+    if(existing){
+      if(existing.dataset.loaded==="1"){resolve(true);return;}
+      if(existing.dataset.loaded==="0"){resolve(false);return;}
+      existing.addEventListener("load",()=>resolve(true),{once:true});
+      existing.addEventListener("error",()=>resolve(false),{once:true});
+      return;
+    }
     const script=document.createElement("script");
     script.src=src;
     script.async=false;
@@ -93,6 +108,60 @@
     script.addEventListener("error",()=>{script.dataset.loaded="0";resolve(false);},{once:true});
     document.body.appendChild(script);
   });
+
+  async function loadMarketModulesNow(reason="operator-market-click"){
+    if(globalThis.ErithDomainSkeletonMirror){
+      state.marketDemandReady=true;
+      return true;
+    }
+    if(marketDemandPromise)return marketDemandPromise;
+    state.marketDemandStarted=true;
+    state.marketDemandReason=String(reason||"operator-market-click");
+    marketDemandPromise=(async()=>{
+      const failed=[];
+      for(const src of MARKET_DEMAND_MODULES){
+        const ok=await loadOne(src);
+        if(!ok)failed.push(src);
+        try{globalThis.AgentCryptoBootProbe?.mark?.("market-demand-module",{src,ok,reason:state.marketDemandReason});}catch(_){}
+        if(!ok)break;
+      }
+      state.marketDemandFailed=failed;
+      state.marketDemandReady=failed.length===0 && !!globalThis.ErithDomainSkeletonMirror;
+      try{
+        window.dispatchEvent(new CustomEvent("agent-crypto:market-demand-ready",{detail:{build:BUILD,ok:state.marketDemandReady,failed:failed.slice()}}));
+      }catch(_){}
+      return state.marketDemandReady;
+    })();
+    return marketDemandPromise;
+  }
+
+  function earlyMarketDomain(button){
+    const native=String(button?.dataset?.domain||"").toLowerCase();
+    if(native==="metals")return "metals";
+    const value=String(document.getElementById("atlasMarketDomainSwitchValue")?.textContent||"").toUpperCase();
+    return value.includes("MÉTAUX")||value.includes("METAUX")?"metals":"crypto";
+  }
+
+  function onEarlyMarketSwitch(event){
+    if(globalThis.ErithDomainSkeletonMirror)return;
+    const button=event.target instanceof Element ? event.target.closest("#atlasMarketDomainSwitch") : null;
+    if(!button)return;
+    const domain=earlyMarketDomain(button);
+    if(domain==="crypto"){
+      void loadMarketModulesNow("first-market-click-warmup");
+      return;
+    }
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    button.setAttribute("aria-busy","true");
+    document.documentElement.dataset.marketLazyTransition="loading";
+    void loadMarketModulesNow("metals-next-click").then(ok=>{
+      button.removeAttribute("aria-busy");
+      document.documentElement.dataset.marketLazyTransition=ok?"ready":"failed";
+      if(ok)globalThis.ErithDomainSkeletonMirror?.go?.("indices");
+    });
+  }
+  document.addEventListener("click",onEarlyMarketSwitch,true);
 
   async function loadGroup(list,group){
     const pauseMs=group==="memory"?180:700;
@@ -145,7 +214,10 @@
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED_PLUS_OPERATOR_QUIET_406299",operator_quiet_ms:OPERATOR_QUIET_MS,background_owner:"AFTER_AETHER_READY"}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED_PLUS_OPERATOR_QUIET_406299",operator_quiet_ms:OPERATOR_QUIET_MS,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
+    loadMarketsNow:loadMarketModulesNow,
+    marketDemandModules:MARKET_DEMAND_MODULES.slice(),
+    market_lazy_cycle_guard:true,
     same_application:true,
     book_lite:false,
     parser_critical_path_relieved:true,

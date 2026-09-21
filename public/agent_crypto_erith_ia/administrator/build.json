@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.335",
+  "build": "40.6.336",
   "engine": "38.15.11",
-  "release": "HELP LAYER V2 · OPERATOR GUIDE CONSOLIDATION",
+  "release": "MARKETS OBSERVATORY · LAZY CYCLE GUARD",
   "published": true,
-  "status": "help_layer_v2_operator_guide_consolidation",
-  "parent_build": "40.6.334",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.335",
-  "administrator_build": "40.6.335",
-  "build_label": "Build 40.6.335 · Administrator",
+  "status": "markets_observatory_lazy_cycle_guard",
+  "parent_build": "40.6.335",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.336",
+  "administrator_build": "40.6.336",
+  "build_label": "Build 40.6.336 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -29,10 +29,10 @@
   "static_asset_module_load": true,
   "canonical_entry_modified": true,
   "entry": "./",
-  "terrain_verified": true,
-  "terrain_pending": null,
-  "terrain_proof": "PASS_FIREFOX_OPERATOR_SCREENSHOTS_2026-09-21_HELP_LAYER_V2_AND_24H_PERSISTENCE",
-  "release_notes": "40.6.335 consolidates and expands the presentation-only Help Layer after 40.6.334 operator visual PASS. It fixes late-mounted target highlighting without adding MutationObserver/timers, marks all matching help targets instead of only the first, removes one stray literal \\\\n text node from the Administrator entry, refreshes the hidden first-paint release badge, and adds contextual help for Sources, Strategy A Evidence/Gates, PAPER Simulation, Storage, Security, Physical Security and Projects. Market Core, Aether, Atlas, Oracle, Strategy thresholds, Gates, Storage business logic and Shared Memory logic remain unchanged.",
+  "terrain_verified": false,
+  "terrain_pending": "Firefox: from a fresh reload, click Marché immediately. Crypto→Métaux may use native first step; the next click must warm/await the lazy route and continue to Indices, then Énergie, Cross and Crypto without the old Métaux→Crypto fallback. Recheck 24h persistence after returning to Crypto.",
+  "terrain_proof": "PENDING_FIREFOX_40.6.336_MARKET_LAZY_CYCLE",
+  "release_notes": "40.6.336 preserves the lazy multi-market architecture and fixes only the first-cycle ownership gap. Explicit operator use prewarms the five market-routing modules. If the operator clicks again on Métaux before the lazy router is resident, the old native Métaux→Crypto fallback is intercepted and the modern router continues to Indices after residency. No market data, chart engine, Market Core, Aether, Strategy, Gates, Storage or Shared Memory business logic is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -2428,5 +2428,49 @@
     "administrator_privilege_granted": false,
     "real_order": false,
     "wallet": false
+  },
+  "markets_observatory_lazy_cycle_406336": {
+    "scope": "market_selector_first_cycle_lazy_ownership_gap",
+    "observed_cycle": [
+      "crypto",
+      "metals",
+      "indices",
+      "energy",
+      "cross-market",
+      "crypto"
+    ],
+    "native_domains": [
+      "crypto",
+      "metals"
+    ],
+    "lazy_domains": [
+      "indices",
+      "energy",
+      "cross-market"
+    ],
+    "demand_modules": [
+      "./js/markets-domain-contract.js",
+      "./js/market-stack.js",
+      "./js/parallel-markets.js",
+      "./js/cross-market-owner-map.js",
+      "./js/market-reading-depth.js"
+    ],
+    "preserve_lazy": true,
+    "first_crypto_click_prewarms": true,
+    "metals_second_click_waits_for_modern_router": true,
+    "old_metals_to_crypto_fallback_blocked_only_during_lazy_gap": true,
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "storage_write": false,
+    "business_network_request": false,
+    "market_data_changed": false,
+    "chart_data_changed": false,
+    "market_core_changed": false,
+    "aether_changed": false,
+    "strategy_changed": false,
+    "gates_changed": false,
+    "storage_business_logic_changed": false,
+    "shared_memory_logic_changed": false,
+    "firefox_validation_required": true
   }
 }
