@@ -29,9 +29,9 @@
   "static_asset_module_load": true,
   "canonical_entry_modified": true,
   "entry": "./",
-  "terrain_verified": false,
-  "terrain_pending": "Firefox: from a fresh reload, click Marché immediately. Crypto→Métaux may use native first step; the next click must warm/await the lazy route and continue to Indices, then Énergie, Cross and Crypto without the old Métaux→Crypto fallback. Recheck 24h persistence after returning to Crypto.",
-  "terrain_proof": "PENDING_FIREFOX_40.6.336_MARKET_LAZY_CYCLE",
+  "terrain_verified": true,
+  "terrain_pending": null,
+  "terrain_proof": "PASS_FIREFOX_OPERATOR_2026-09-21_MARKET_LAZY_CYCLE",
   "release_notes": "40.6.336 preserves the lazy multi-market architecture and fixes only the first-cycle ownership gap. Explicit operator use prewarms the five market-routing modules. If the operator clicks again on Métaux before the lazy router is resident, the old native Métaux→Crypto fallback is intercepted and the modern router continues to Indices after residency. No market data, chart engine, Market Core, Aether, Strategy, Gates, Storage or Shared Memory business logic is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -2471,6 +2471,8 @@
     "gates_changed": false,
     "storage_business_logic_changed": false,
     "shared_memory_logic_changed": false,
-    "firefox_validation_required": true
+    "firefox_validation_required": false,
+    "terrain_verified": true,
+    "terrain_proof": "PASS_FIREFOX_OPERATOR_2026-09-21"
   }
 }
