@@ -29,9 +29,9 @@
   "static_asset_module_load": true,
   "canonical_entry_modified": true,
   "entry": "./",
-  "terrain_verified": false,
-  "terrain_pending": "Firefox visual gate: verify the existing ? Help Layer still behaves identically, then hover the new Sources, Evidence/Gates, Simulation, Storage, Security, Physical Security and Projects topics; confirm lazy-mounted targets highlight correctly, cards stay in viewport and no business behavior changes.",
-  "terrain_proof": "PENDING_FIREFOX_40.6.335_HELP_LAYER_V2",
+  "terrain_verified": true,
+  "terrain_pending": null,
+  "terrain_proof": "PASS_FIREFOX_OPERATOR_SCREENSHOTS_2026-09-21_HELP_LAYER_V2_AND_24H_PERSISTENCE",
   "release_notes": "40.6.335 consolidates and expands the presentation-only Help Layer after 40.6.334 operator visual PASS. It fixes late-mounted target highlighting without adding MutationObserver/timers, marks all matching help targets instead of only the first, removes one stray literal \\\\n text node from the Administrator entry, refreshes the hidden first-paint release badge, and adds contextual help for Sources, Strategy A Evidence/Gates, PAPER Simulation, Storage, Security, Physical Security and Projects. Market Core, Aether, Atlas, Oracle, Strategy thresholds, Gates, Storage business logic and Shared Memory logic remain unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
@@ -2413,6 +2413,20 @@
     "strategy_changed": false,
     "gates_changed": false,
     "market_core_changed": false,
-    "shared_memory_logic_changed": false
+    "shared_memory_logic_changed": false,
+    "terrain_verified": true,
+    "terrain_proof": "PASS_FIREFOX_OPERATOR_SCREENSHOTS_2026-09-21"
+  },
+  "operator_sync_406335": {
+    "runtime_build": "40.6.335",
+    "market_core": "38.15.11",
+    "same_runtime_as_administrator": true,
+    "operator_is_third_build_line": false,
+    "generic_operator_entry": "../administrator/index-40.6.335.html?view=intermediate&operator-entry=40.6.335",
+    "yohan_profile_delivery_repository": "BlueAzur-Hub/agent-crypto-operator",
+    "yohan_authentication_changed": false,
+    "administrator_privilege_granted": false,
+    "real_order": false,
+    "wallet": false
   }
 }
