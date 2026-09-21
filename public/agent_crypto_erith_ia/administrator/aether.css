@@ -1,8 +1,3 @@
-/* 40.6.306 — OUTER GEOMETRY RETIRED FROM PRESENTATION CSS
-   ErithAdministratorWindows is the sole owner of the outer Aether window
-   position, size, constraints and transform. This file owns only the inner
-   Observatory presentation and panel paint.
-
 /* Agent-Crypto 40.6.49 — AETHER MASTER FIDELITY EMBROIDERY
    D VISUEL: approved 1672×941 reference. Background owns only fixed identity/decor;
    LIVE DOM reproduces measured typography/hierarchy and adapts locally before reflow.
@@ -11,7 +6,10 @@
 
 #atlasAetherStatusPanel {
   --a49-ratio: 1.7768331562; /* 1672 / 941 */
+  position: fixed !important;
   box-sizing: border-box !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
   overflow: hidden !important;
   container-type: size !important;
   background: #01050d !important;
