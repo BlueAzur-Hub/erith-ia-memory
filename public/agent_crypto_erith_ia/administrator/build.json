@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.326",
+  "build": "40.6.327",
   "engine": "38.15.11",
-  "release": "PARKER LEWIS CAN'T LOSE · FACADE CASCADE 04 · EVIDENCE LEDGER",
+  "release": "PARKER LEWIS CAN'T LOSE · FACADE CASCADE 05 · BOOT STORAGE",
   "published": true,
-  "status": "facade_cascade_04_evidence_ledger",
-  "parent_build": "40.6.325",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.326",
-  "administrator_build": "40.6.326",
-  "build_label": "Build 40.6.326 · Administrator",
+  "status": "facade_cascade_05_boot_storage",
+  "parent_build": "40.6.326",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.327",
+  "administrator_build": "40.6.327",
+  "build_label": "Build 40.6.327 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox visual gate: Evidence / Ledger readability only.",
-  "terrain_proof": "PENDING_FIREFOX_40.6.326_EVIDENCE_FACADE",
-  "release_notes": "40.6.326 is façade cascade step 04. Presentation-only Evidence/Ledger readability pass. No evidence content, certification state, lifecycle, Strategy, Risk, Paper, storage or network behavior changed.",
+  "terrain_pending": "Firefox visual gate: Boot / Storage readability only; Storage Primary first instruction must render on two lines, not as literal backslash-n.",
+  "terrain_proof": "PENDING_FIREFOX_40.6.327_BOOT_STORAGE_FACADE",
+  "release_notes": "40.6.327 is façade cascade step 05. Presentation-only Boot/Storage readability pass plus correction of a literal \\\\n in the initial Storage Primary instruction. Storage ownership, copy/retire gates and persistence logic are unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -2206,6 +2206,15 @@
     "evidence_content_changed": false,
     "certification_changed": false,
     "business_logic_changed": false,
+    "firefox_validation_required": true
+  },
+  "storage_facade_406327": {
+    "scope": "boot_report_storage_health_primary_truth",
+    "presentation_only": true,
+    "css_owner": "index.html#agentCryptoStorageFacade406327",
+    "initial_copy_text_fix": true,
+    "storage_logic_changed": false,
+    "retirement_logic_changed": false,
     "firefox_validation_required": true
   }
 }
