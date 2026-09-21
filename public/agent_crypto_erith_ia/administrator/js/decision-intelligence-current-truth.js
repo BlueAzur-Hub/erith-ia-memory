@@ -172,7 +172,7 @@
       <section id="${HOST_ID}" class="news-sentinel" data-mode="canonical-shared-state">
         <div class="section-head compact">
           <div>
-            <p class="eyebrow">DECISION INTELLIGENCE · CURRENT TRUTH · ${esc(state?.build||runtimeBuild())}</p>
+            <p class="eyebrow">DECISION INTELLIGENCE · CURRENT TRUTH</p>
             <h2>Chaîne décisionnelle observée</h2>
           </div>
           <span class="pill">${esc(acceptance)}</span>
@@ -196,7 +196,7 @@
       <section id="${HOST_ID}" class="news-sentinel" data-mode="canonical-shared-state">
         <div class="section-head compact">
           <div>
-            <p class="eyebrow">DECISION INTELLIGENCE · CURRENT TRUTH · ${esc(runtimeBuild())}</p>
+            <p class="eyebrow">DECISION INTELLIGENCE · CURRENT TRUTH</p>
             <h2>Chaîne décisionnelle observée</h2>
           </div>
           <span class="pill">PRÊT</span>
