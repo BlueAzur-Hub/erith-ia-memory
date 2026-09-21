@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.333",
+  "build": "40.6.334",
   "engine": "38.15.11",
-  "release": "SHARED MEMORY · BOOK IMPORT CAPACITY LOCK",
+  "release": "HELP LAYER · CONTEXTUAL OPERATOR GUIDE",
   "published": true,
-  "status": "shared_memory_book_import_capacity_lock",
-  "parent_build": "40.6.332",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.333",
-  "administrator_build": "40.6.333",
-  "build_label": "Build 40.6.333 · Administrator",
+  "status": "help_layer_contextual_operator_guide",
+  "parent_build": "40.6.333",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.334",
+  "administrator_build": "40.6.334",
+  "build_label": "Build 40.6.334 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Deferred operator test: import the 230-record Transformer Book JSON, reimport identical JSON expecting 0 new, then reload Firefox and verify both collector identities persist.",
-  "terrain_proof": "PENDING_FIREFOX_40.6.333_SHARED_MEMORY_BOOK_IMPORT",
-  "release_notes": "40.6.333 is a bounded Shared Memory retention repair. Collector primary capacity increases from 500 to 1024 records so the current Ryzen memory plus the 230-record Transformer Book payload can coexist without eviction. Shared Memory preflight is strengthened to reject before mutation if normalization would evict either imported or already-existing identities. IndexedDB ownership, canonical identity, rollback, re-read verification, Strategy, Gates, Aether and Market Core remain unchanged.",
+  "terrain_pending": "Firefox visual gate: verify ? placement beside the three view buttons; toggle ON/OFF; hover Menu, LiveCheck, Graphique, Lecture Technique, Target Top/Market Flow, Market Snapshot and Math Core; confirm no layout shift and no Aether behavior change.",
+  "terrain_proof": "PENDING_FIREFOX_40.6.334_HELP_LAYER",
+  "release_notes": "40.6.334 adds a presentation-only contextual Help Layer. One cyan ? toggle beside the three view buttons activates non-blocking help cards for Menu, LiveCheck, Graphique, Lecture Technique, Target Top/Market Flow, Market Snapshot and Math Core. Blue/cyan explains; yellow marks limits. No modal, no recurring timer, no MutationObserver, no storage, no network request, no business logic change. Aether, Atlas, Oracle, Strategy, Market Core and Shared Memory logic are untouched. The 40.6.333 Shared Memory import test remains intentionally deferred.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -2324,5 +2324,42 @@
     "gates_changed": false,
     "aether_changed": false,
     "firefox_validation_deferred": true
+  },
+  "help_layer_406334": {
+    "presentation_only": true,
+    "toggle": "#atlasHelpToggle",
+    "layer": "#atlasHelpLayer",
+    "topics": [
+      "menu",
+      "livecheck",
+      "graphique",
+      "lecture-technique",
+      "target-top-market-flow",
+      "market-core",
+      "math-core"
+    ],
+    "non_blocking": true,
+    "hover_help": true,
+    "keyboard_focus_help": true,
+    "escape_closes": true,
+    "color_contract": {
+      "information": "cyan-blue",
+      "attention": "yellow"
+    },
+    "recurring_timer": false,
+    "mutation_observer": false,
+    "storage_write": false,
+    "network_request": false,
+    "business_logic_changed": false,
+    "aether_changed": false,
+    "atlas_changed": false,
+    "oracle_changed": false,
+    "strategy_changed": false,
+    "market_core_changed": false,
+    "shared_memory_logic_changed": false
+  },
+  "deferred_parent_validation_406333": {
+    "still_required": true,
+    "note": "Later operator test: import the 230-record Transformer Book JSON, reimport identical JSON expecting 0 new, reload Firefox, verify ryzen7-christophe and transformer-book identities persist."
   }
 }
