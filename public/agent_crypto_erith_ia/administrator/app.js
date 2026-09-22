@@ -5300,7 +5300,7 @@ const ATLAS_STORAGE_RELIEF_ASYNC_PRIMARY=Object.freeze([
 ]);
 const ATLAS_STORAGE_RELIEF_PRIMARY_MARKER="agent_crypto_storage_relief_40331_idb_primary_v1";
 const ATLAS_STORAGE_RELIEF_PRELOAD=Object.freeze([...new Set([...ATLAS_STORAGE_RELIEF_TARGETS,...ATLAS_STORAGE_RELIEF_ASYNC_PRIMARY,"agent_crypto_celestial_portable_v1","agent_crypto_breakout_context_v1"])]);
-const atlasStorageReliefRuntime={mirror:Object.create(null),ready:false,lastCopy:null,lastRetire:null,dbPromise:null,primaryActive:false,persistPending:Object.create(null),persistScheduled:new Set(),lastAsyncError:null};
+const atlasStorageReliefRuntime={mirror:Object.create(null),ready:false,lastCopy:null,lastRetire:null,dbPromise:null,primaryActive:false,persistPending:Object.create(null),persistScheduled:new Set(),primaryLocks:new Set(),lastAsyncError:null};
 function atlasStorageReliefOpen(){if(atlasStorageReliefRuntime.dbPromise)return atlasStorageReliefRuntime.dbPromise;atlasStorageReliefRuntime.dbPromise=new Promise((resolve,reject)=>{const req=indexedDB.open(ATLAS_STORAGE_RELIEF_40278_DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(ATLAS_STORAGE_RELIEF_40278_STORE))db.createObjectStore(ATLAS_STORAGE_RELIEF_40278_STORE,{keyPath:"id"});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error("Storage Relief IndexedDB"));}).catch(error=>{atlasStorageReliefRuntime.dbPromise=null;throw error;});return atlasStorageReliefRuntime.dbPromise;}
 async function atlasStorageReliefGet(id){const db=await atlasStorageReliefOpen();try{return await new Promise((resolve,reject)=>{const req=db.transaction(ATLAS_STORAGE_RELIEF_40278_STORE,"readonly").objectStore(ATLAS_STORAGE_RELIEF_40278_STORE).get(id);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error||new Error("Storage Relief read"));});}finally{db.close();atlasStorageReliefRuntime.dbPromise=null;}}
 async function atlasStorageReliefPut(id,payload,meta={}){const db=await atlasStorageReliefOpen();try{await new Promise((resolve,reject)=>{const tx=db.transaction(ATLAS_STORAGE_RELIEF_40278_STORE,"readwrite");tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error("Storage Relief write"));tx.objectStore(ATLAS_STORAGE_RELIEF_40278_STORE).put({id,payload:String(payload??""),bytes:new Blob([String(payload??"")]).size,updated_at:new Date().toISOString(),...meta});});return true;}finally{db.close();atlasStorageReliefRuntime.dbPromise=null;}}
@@ -5333,7 +5333,34 @@ async function atlasStorageReliefSha(payload){const buf=await crypto.subtle.dige
 function atlasStorageReliefIsAsyncPrimary(key){return ATLAS_STORAGE_RELIEF_ASYNC_PRIMARY.includes(String(key||""));}
 function atlasStorageReliefPrimaryMarkerRead(){try{return localStorage.getItem(ATLAS_STORAGE_RELIEF_PRIMARY_MARKER)==="1";}catch(_){return false;}}
 function atlasStorageReliefPrimaryMarkerWrite(){try{localStorage.setItem(ATLAS_STORAGE_RELIEF_PRIMARY_MARKER,"1");return true;}catch(_){return false;}}
-function atlasStorageReliefSchedulePut(key,payload){const id=String(key||"");const raw=String(payload??"");atlasStorageReliefRuntime.persistPending[id]=raw;if(atlasStorageReliefRuntime.persistScheduled.has(id))return true;atlasStorageReliefRuntime.persistScheduled.add(id);const run=async()=>{try{const latest=atlasStorageReliefRuntime.persistPending[id];delete atlasStorageReliefRuntime.persistPending[id];await atlasStorageReliefPut(id,latest,{verified:false,source:"async-primary-40.3.31"});atlasStorageReliefRuntime.lastAsyncError=null;}catch(error){atlasStorageReliefRuntime.lastAsyncError=String(error?.name||error||"IndexedDB write");const fallback=Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id)?atlasStorageReliefRuntime.persistPending[id]:raw;try{localStorage.setItem(id,fallback);}catch(_){}}finally{atlasStorageReliefRuntime.persistScheduled.delete(id);if(Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id))atlasStorageReliefSchedulePut(id,atlasStorageReliefRuntime.persistPending[id]);}};if(typeof requestIdleCallback==="function")requestIdleCallback(()=>void run(),{timeout:1200});else setTimeout(()=>void run(),48);return true;}
+function atlasStorageReliefSchedulePut(key,payload){
+  const id=String(key||"");
+  const raw=String(payload??"");
+  atlasStorageReliefRuntime.persistPending[id]=raw;
+  if(atlasStorageReliefRuntime.primaryLocks.has(id))return true;
+  if(atlasStorageReliefRuntime.persistScheduled.has(id))return true;
+  atlasStorageReliefRuntime.persistScheduled.add(id);
+  const run=async()=>{
+    try{
+      const latest=atlasStorageReliefRuntime.persistPending[id];
+      delete atlasStorageReliefRuntime.persistPending[id];
+      await atlasStorageReliefPut(id,latest,{verified:false,source:"async-primary-40.3.31"});
+      atlasStorageReliefRuntime.lastAsyncError=null;
+    }catch(error){
+      atlasStorageReliefRuntime.lastAsyncError=String(error?.name||error||"IndexedDB write");
+      const fallback=Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id)?atlasStorageReliefRuntime.persistPending[id]:raw;
+      try{localStorage.setItem(id,fallback);}catch(_){}
+    }finally{
+      atlasStorageReliefRuntime.persistScheduled.delete(id);
+      if(Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id)&&!atlasStorageReliefRuntime.primaryLocks.has(id)){
+        atlasStorageReliefSchedulePut(id,atlasStorageReliefRuntime.persistPending[id]);
+      }
+    }
+  };
+  if(typeof requestIdleCallback==="function")requestIdleCallback(()=>void run(),{timeout:1200});
+  else setTimeout(()=>void run(),48);
+  return true;
+}
 function atlasStorageReliefReadSync(key){if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)&&Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.mirror,key))return atlasStorageReliefRuntime.mirror[key];try{const local=localStorage.getItem(key);if(local!==null)return local;}catch(_){}return Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.mirror,key)?atlasStorageReliefRuntime.mirror[key]:null;}
 function atlasStorageReliefWriteSync(key,payload){const raw=String(payload??"");atlasStorageReliefRuntime.mirror[key]=raw;if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)){atlasStorageReliefSchedulePut(key,raw);return {ok:true,local:false,indexeddb:true,deferred:true,primary:"indexeddb"};}let localOk=false;try{localStorage.setItem(key,raw);localOk=true;}catch(_){}if(ATLAS_STORAGE_RELIEF_PRELOAD.includes(key)||!localOk){void atlasStorageReliefSha(raw).then(sha=>atlasStorageReliefPut(key,raw,{sha256:sha,verified:false,source:localOk?"mirror":"quota-fallback"})).catch(()=>{});}return {ok:true,local:localOk,indexeddb:true,deferred:false,primary:localOk?"localStorage":"indexeddb"};}
 async function atlasStorageReliefBootstrap(){
@@ -5382,8 +5409,138 @@ async function atlasStorageReliefBootstrap(){
   window.dispatchEvent(new Event("atlas:storage-relief-ready"));
   return true;
 }
-async function atlasStorageReliefCopyTargets(){const rows=[];for(const key of ATLAS_STORAGE_RELIEF_TARGETS){if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)){const existing=await atlasStorageReliefGet(key).catch(()=>null);if(!existing?.payload){rows.push({key,state:"ÉCHEC · IDB PRIMARY ABSENT",bytes:0});continue;}const sha=await atlasStorageReliefSha(existing.payload);await atlasStorageReliefPut(key,existing.payload,{sha256:sha,verified:true,verified_at:new Date().toISOString(),source:"operator-verify-idb-primary-40.3.31"});atlasStorageReliefRuntime.mirror[key]=existing.payload;rows.push({key,state:"VÉRIFIÉ · IDB PRIMARY",bytes:existing.bytes||new Blob([existing.payload]).size,sha256:sha});continue;}let raw=null;try{raw=localStorage.getItem(key);}catch(_){}if(raw===null){const existing=await atlasStorageReliefGet(key).catch(()=>null);rows.push({key,state:existing?.payload?"IDB EXISTANT":"ABSENT",bytes:existing?.bytes||0});continue;}const sha=await atlasStorageReliefSha(raw);await atlasStorageReliefPut(key,raw,{sha256:sha,verified:false,source:"operator-copy"});const readback=await atlasStorageReliefGet(key);const readSha=readback?await atlasStorageReliefSha(readback.payload):"";const verified=!!readback&&readback.payload===raw&&readSha===sha;if(verified){await atlasStorageReliefPut(key,raw,{sha256:sha,verified:true,verified_at:new Date().toISOString(),source:"operator-copy"});atlasStorageReliefRuntime.mirror[key]=raw;}rows.push({key,state:verified?"VÉRIFIÉ":"ÉCHEC",bytes:new Blob([raw]).size,sha256:sha});}atlasStorageReliefRuntime.lastCopy={at:new Date().toISOString(),rows};return atlasStorageReliefRuntime.lastCopy;}
-async function atlasStorageReliefRetireVerified(){const rows=[];for(const key of ATLAS_STORAGE_RELIEF_TARGETS){let raw=null;try{raw=localStorage.getItem(key);}catch(_){}if(raw===null){rows.push({key,state:"DÉJÀ ABSENT"});continue;}const record=await atlasStorageReliefGet(key).catch(()=>null);if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)){const idbSha=record?.payload?await atlasStorageReliefSha(record.payload):"";const verified=!!record&&record.verified===true&&record.sha256===idbSha&&typeof record.payload==="string";if(!verified){rows.push({key,state:"REFUSÉ · IDB PRIMARY NON VÉRIFIÉ"});continue;}atlasStorageReliefRuntime.mirror[key]=record.payload;try{localStorage.removeItem(key);}catch(error){rows.push({key,state:`ÉCHEC RETRAIT · ${String(error?.name||error)}`});continue;}rows.push({key,state:"RETIRÉ DU LOCALSTORAGE · IDB PRIMARY ACTIF",bytes:record.bytes||0});continue;}const localSha=await atlasStorageReliefSha(raw);const idbSha=record?await atlasStorageReliefSha(record.payload):"";const verified=!!record&&record.verified===true&&record.payload===raw&&record.sha256===localSha&&idbSha===localSha;if(!verified){rows.push({key,state:"REFUSÉ · COPIE NON VÉRIFIÉE"});continue;}atlasStorageReliefRuntime.mirror[key]=record.payload;try{localStorage.removeItem(key);}catch(error){rows.push({key,state:`ÉCHEC RETRAIT · ${String(error?.name||error)}`});continue;}const reread=atlasStorageReliefReadSync(key);let parseOk=true;try{JSON.parse(reread||"null");}catch(_){parseOk=false;}rows.push({key,state:parseOk?"RETIRÉ DU LOCALSTORAGE · IDB ACTIF":"REFUSÉ · RELECTURE INVALIDE",bytes:record.bytes||0});}atlasStorageReliefRuntime.lastRetire={at:new Date().toISOString(),rows};return atlasStorageReliefRuntime.lastRetire;}
+async function atlasStorageReliefWaitPrimaryIdle(id,timeoutMs=6000){
+  const started=Date.now();
+  while(atlasStorageReliefRuntime.persistScheduled.has(id)){
+    if(Date.now()-started>timeoutMs)return false;
+    await new Promise(resolve=>setTimeout(resolve,25));
+  }
+  return true;
+}
+async function atlasStorageReliefVerifyStoredPayload(id,payload,source){
+  const raw=String(payload??"");
+  const sha=await atlasStorageReliefSha(raw);
+  await atlasStorageReliefPut(id,raw,{sha256:sha,verified:false,source:source+"-stage"});
+  const readback=await atlasStorageReliefGet(id).catch(()=>null);
+  const readSha=readback?.payload!=null?await atlasStorageReliefSha(readback.payload):"";
+  if(!readback||readback.payload!==raw||readSha!==sha)return {ok:false,state:"REFUSÉ · PRIMARY READBACK INVALIDE"};
+  await atlasStorageReliefPut(id,raw,{sha256:sha,verified:true,verified_at:new Date().toISOString(),source});
+  const finalRecord=await atlasStorageReliefGet(id).catch(()=>null);
+  const finalSha=finalRecord?.payload!=null?await atlasStorageReliefSha(finalRecord.payload):"";
+  const ok=!!finalRecord&&finalRecord.payload===raw&&finalRecord.verified===true&&finalRecord.sha256===sha&&finalSha===sha;
+  return {ok,state:ok?"VÉRIFIÉ · IDB PRIMARY STABLE":"REFUSÉ · PRIMARY FINAL INVALIDE",record:finalRecord,sha256:sha};
+}
+async function atlasStorageReliefStabilizePrimary(key,{retireLocal=false,source="operator-primary-40.6.341"}={}){
+  const id=String(key||"");
+  if(!atlasStorageReliefRuntime.primaryActive||!atlasStorageReliefIsAsyncPrimary(id))return {ok:false,state:"REFUSÉ · CLÉ NON PRIMARY"};
+  if(atlasStorageReliefRuntime.primaryLocks.has(id))return {ok:false,state:"REFUSÉ · PRIMARY OCCUPÉ"};
+  atlasStorageReliefRuntime.primaryLocks.add(id);
+  try{
+    const idle=await atlasStorageReliefWaitPrimaryIdle(id);
+    if(!idle)return {ok:false,state:"REFUSÉ · PRIMARY EN ÉCRITURE"};
+
+    for(let attempt=0;attempt<6;attempt++){
+      if(Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id)){
+        const pending=atlasStorageReliefRuntime.persistPending[id];
+        delete atlasStorageReliefRuntime.persistPending[id];
+        const flushed=await atlasStorageReliefVerifyStoredPayload(id,pending,source+"-flush");
+        if(!flushed.ok)return flushed;
+      }
+
+      const existing=await atlasStorageReliefGet(id).catch(()=>null);
+      if(!existing||typeof existing.payload!=="string")return {ok:false,state:"REFUSÉ · IDB PRIMARY ABSENT"};
+      const proof=await atlasStorageReliefVerifyStoredPayload(id,existing.payload,source);
+      if(!proof.ok)return proof;
+
+      // Every writeSync that occurs while the lock is held lands in persistPending.
+      // If one arrived during an await above, absorb it before any local retirement.
+      if(Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id))continue;
+
+      atlasStorageReliefRuntime.mirror[id]=proof.record.payload;
+      if(!retireLocal)return proof;
+
+      try{localStorage.removeItem(id);}
+      catch(error){return {ok:false,state:`ÉCHEC RETRAIT · ${String(error?.name||error)}`,record:proof.record,sha256:proof.sha256};}
+
+      const reread=atlasStorageReliefReadSync(id);
+      if(reread!==proof.record.payload){
+        try{localStorage.setItem(id,proof.record.payload);}catch(_){}
+        return {ok:false,state:"REFUSÉ · RELECTURE PRIMARY INVALIDE · COPIE LOCALE RESTAURÉE",record:proof.record,sha256:proof.sha256};
+      }
+      return {ok:true,state:"RETIRÉ DU LOCALSTORAGE · IDB PRIMARY STABLE",record:proof.record,sha256:proof.sha256};
+    }
+    return {ok:false,state:"REFUSÉ · PRIMARY RESTÉ ACTIF PENDANT LA FENÊTRE DE STABILISATION"};
+  }finally{
+    atlasStorageReliefRuntime.primaryLocks.delete(id);
+    if(Object.prototype.hasOwnProperty.call(atlasStorageReliefRuntime.persistPending,id)&&!atlasStorageReliefRuntime.persistScheduled.has(id)){
+      atlasStorageReliefSchedulePut(id,atlasStorageReliefRuntime.persistPending[id]);
+    }
+  }
+}
+async function atlasStorageReliefCopyTargets(){
+  const rows=[];
+  for(const key of ATLAS_STORAGE_RELIEF_TARGETS){
+    if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)){
+      const stable=await atlasStorageReliefStabilizePrimary(key,{source:"operator-verify-idb-primary-40.6.341"});
+      if(!stable.ok){rows.push({key,state:stable.state||"ÉCHEC · IDB PRIMARY NON STABLE",bytes:stable.record?.bytes||0});continue;}
+      rows.push({key,state:"VÉRIFIÉ · IDB PRIMARY STABLE",bytes:stable.record?.bytes||new Blob([stable.record?.payload||""]).size,sha256:stable.sha256});
+      continue;
+    }
+    let raw=null;
+    try{raw=localStorage.getItem(key);}catch(_){}
+    if(raw===null){
+      const existing=await atlasStorageReliefGet(key).catch(()=>null);
+      rows.push({key,state:existing?.payload?"IDB EXISTANT":"ABSENT",bytes:existing?.bytes||0});
+      continue;
+    }
+    const sha=await atlasStorageReliefSha(raw);
+    await atlasStorageReliefPut(key,raw,{sha256:sha,verified:false,source:"operator-copy"});
+    const readback=await atlasStorageReliefGet(key);
+    const readSha=readback?await atlasStorageReliefSha(readback.payload):"";
+    const verified=!!readback&&readback.payload===raw&&readSha===sha;
+    if(verified){
+      await atlasStorageReliefPut(key,raw,{sha256:sha,verified:true,verified_at:new Date().toISOString(),source:"operator-copy"});
+      atlasStorageReliefRuntime.mirror[key]=raw;
+    }
+    rows.push({key,state:verified?"VÉRIFIÉ":"ÉCHEC",bytes:new Blob([raw]).size,sha256:sha});
+  }
+  atlasStorageReliefRuntime.lastCopy={at:new Date().toISOString(),rows};
+  return atlasStorageReliefRuntime.lastCopy;
+}
+async function atlasStorageReliefRetireVerified(){
+  const rows=[];
+  for(const key of ATLAS_STORAGE_RELIEF_TARGETS){
+    let raw=null;
+    try{raw=localStorage.getItem(key);}catch(_){}
+    if(raw===null){rows.push({key,state:"DÉJÀ ABSENT"});continue;}
+
+    if(atlasStorageReliefRuntime.primaryActive&&atlasStorageReliefIsAsyncPrimary(key)){
+      const stable=await atlasStorageReliefStabilizePrimary(key,{retireLocal:true,source:"operator-retire-idb-primary-40.6.341"});
+      rows.push({key,state:stable.state||"REFUSÉ · IDB PRIMARY NON STABLE",bytes:stable.record?.bytes||0});
+      continue;
+    }
+
+    const record=await atlasStorageReliefGet(key).catch(()=>null);
+    const localSha=await atlasStorageReliefSha(raw);
+    const idbSha=record?await atlasStorageReliefSha(record.payload):"";
+    const verified=!!record&&record.verified===true&&record.payload===raw&&record.sha256===localSha&&idbSha===localSha;
+    if(!verified){rows.push({key,state:"REFUSÉ · COPIE NON VÉRIFIÉE"});continue;}
+    atlasStorageReliefRuntime.mirror[key]=record.payload;
+    try{localStorage.removeItem(key);}
+    catch(error){rows.push({key,state:`ÉCHEC RETRAIT · ${String(error?.name||error)}`});continue;}
+    const reread=atlasStorageReliefReadSync(key);
+    let parseOk=true;
+    try{JSON.parse(reread||"null");}catch(_){parseOk=false;}
+    rows.push({key,state:parseOk?"RETIRÉ DU LOCALSTORAGE · IDB ACTIF":"REFUSÉ · RELECTURE INVALIDE",bytes:record.bytes||0});
+  }
+  atlasStorageReliefRuntime.lastRetire={at:new Date().toISOString(),rows};
+  return atlasStorageReliefRuntime.lastRetire;
+}
+
+
+
+try{
+  globalThis.AtlasStorageReliefBulkPreload
 
 
 try{
@@ -5406,7 +5563,7 @@ try{
 }catch(_){}
 
 const atlasStorageReliefReady=atlasStorageReliefBootstrap().catch(()=>false);
-globalThis.AtlasStorageRelief40278=Object.freeze({build:"40.2.78",performance_patch:"40.3.31",targets:ATLAS_STORAGE_RELIEF_TARGETS,async_primary_keys:ATLAS_STORAGE_RELIEF_ASYNC_PRIMARY,readSync:atlasStorageReliefReadSync,writeSync:atlasStorageReliefWriteSync,copyTargets:atlasStorageReliefCopyTargets,retireVerified:atlasStorageReliefRetireVerified,ready:atlasStorageReliefReady,automatic_deletion:false,operator_retirement_only:true,checksum:"SHA-256",read_through_indexeddb:true,heavy_localstorage_rewrite:false,primary_mode:"indexeddb-async-with-local-backup-preserved"});
+globalThis.AtlasStorageRelief40278=Object.freeze({build:"40.2.78",performance_patch:"40.3.31",stabilization_patch:"40.6.341",targets:ATLAS_STORAGE_RELIEF_TARGETS,async_primary_keys:ATLAS_STORAGE_RELIEF_ASYNC_PRIMARY,readSync:atlasStorageReliefReadSync,writeSync:atlasStorageReliefWriteSync,copyTargets:atlasStorageReliefCopyTargets,retireVerified:atlasStorageReliefRetireVerified,ready:atlasStorageReliefReady,automatic_deletion:false,operator_retirement_only:true,checksum:"SHA-256",read_through_indexeddb:true,heavy_localstorage_rewrite:false,primary_mode:"indexeddb-async-with-local-backup-preserved"});
 
 const ATLAS_CHART_LOCAL_CACHE_KEY = "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50";
 
