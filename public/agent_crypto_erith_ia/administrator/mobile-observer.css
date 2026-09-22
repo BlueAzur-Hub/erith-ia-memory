@@ -1,5 +1,13 @@
+/* 40.6.340 — Operator choice: keep Source Truth in data/diagnostics,
+   but do not render the VALID source capsule over the Crypto graph.
+   Loading/blocked messages are intentionally untouched. */
+.atlas-market-zone #analyste
+.chart-shell[data-chart-state="valid"][data-real-chart]::before {
+  display: none !important;
+}
+
 /* ==========================================================================
-   40.6.339 — MOBILE OBSERVER · CHART SOURCE BADGE GEOMETRY LOCK
+   40.6.340 — VALID CHART SOURCE BADGE · HIDDEN
 
    Owner: presentation only.
    Purpose: prevent the historical chart source ::before badge from being
