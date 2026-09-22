@@ -3,27 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="atlas-build" content="40.6.336" />
-  <meta name="administrator-build" content="40.6.336" />
   <meta name="atlas-engine-build" content="38.15.11" />
-  <meta name="administrator-release" content="MARKETS OBSERVATORY · LAZY CYCLE GUARD" />
-  <title>Agent-Crypto @erith.IA — Build 40.6.336 · Administrator</title>
+  <meta name="administrator-release" content="LEGACY COMPATIBILITY ENTRY" />
+  <title>Agent-Crypto @erith.IA — entrée historique → Administrator courant</title>
   <script>
     (() => {
+      const requested = String(location.pathname || "").match(/index-(\d+\.\d+\.\d+)\.html$/i)?.[1] || "legacy";
       const target = new URL('./index.html', location.href);
       const source = new URLSearchParams(location.search || '');
       for (const [key, value] of source.entries()) {
         if (key === 'ac-probe' || key === 'ac-build') continue;
         target.searchParams.set(key, value);
       }
-      target.searchParams.set('ac-build', '40.6.336');
-      target.searchParams.set('ac-refresh', source.get('ac-refresh') || `40.6.336-${Date.now()}`);
+      if (requested !== "legacy") target.searchParams.set('ac-build', requested);
+      target.searchParams.set('ac-refresh', source.get('ac-refresh') || `${requested}-${Date.now()}`);
       location.replace(target.toString());
     })();
   </script>
 </head>
 <body>
-  <p>Chargement Agent-Crypto Administrator 40.6.336…</p>
-  <noscript><a href="./index.html?ac-build=40.6.336">Ouvrir Administrator 40.6.336</a></noscript>
+  <p>Entrée historique — redirection vers Administrator courant.</p>
+  <noscript><a href="./index.html">Ouvrir Administrator</a></noscript>
 </body>
 </html>
