@@ -1,5 +1,5 @@
 /* ==========================================================================
-   40.6.338 — MOBILE OBSERVER · CHART SOURCE BADGE GEOMETRY LOCK
+   40.6.339 — MOBILE OBSERVER · CHART SOURCE BADGE GEOMETRY LOCK
 
    Owner: presentation only.
    Purpose: prevent the historical chart source ::before badge from being
@@ -7,12 +7,12 @@
    colliding with the later mobile bottom:52px rule.
 
    Scope:
-   - <= 620 CSS px only
+   - <= 900 CSS px only
    - Crypto real-chart source badge only
    - no chart/data/runtime/business logic
    ========================================================================== */
 
-@media (max-width: 620px) {
+@media (max-width: 900px) {
   .atlas-market-zone #analyste
   .chart-shell[data-chart-state="valid"][data-real-chart]::before {
     top: auto !important;

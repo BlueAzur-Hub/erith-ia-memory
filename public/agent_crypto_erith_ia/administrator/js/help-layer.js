@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.6.337";
+  const BUILD = "40.6.339";
   const button = document.getElementById("atlasHelpToggle");
   const layer = document.getElementById("atlasHelpLayer");
   const live = document.getElementById("atlasHelpLive");
@@ -64,7 +64,7 @@
       kicker: "AIDE · MARCHÉS",
       title: "Cycle des marchés",
       purpose: "Fait circuler le même observatoire entre Crypto, Métaux, Indices, Énergie et Cross-Market sans créer cinq applications séparées.",
-      look: "Le libellé du bouton indique le prochain domaine. Crypto et Métaux sont natifs ; Indices, Énergie et Cross sont chargés en Lazy lorsque tu les demandes.",
+      look: "Le libellé du bouton indique le domaine actif ; son infobulle indique le suivant. Crypto et Métaux sont natifs ; Indices, Énergie et Cross sont chargés en Lazy lorsque tu les demandes.",
       action: "Clique pour avancer dans le cycle. Au premier passage, un domaine Lazy peut demander un court chargement avant d’afficher son contenu.",
       attention: "Un chargement Lazy n’est pas une absence de données. Attends la Source Truth du domaine avant de conclure qu’un marché est indisponible."
     },
@@ -331,9 +331,10 @@
 
   function resolve(node) {
     if (!(node instanceof Element)) return null;
-    for (const item of HELP) {
-      const element = node.closest(item.selector);
-      if (element) return { item, element };
+    // Prefer the nearest explained zone over a broader parent topic.
+    for (let element = node; element; element = element.parentElement) {
+      const item = HELP.find(topic => element.matches(topic.selector));
+      if (item) return { item, element };
     }
     return null;
   }
@@ -344,7 +345,7 @@
     if (!active) return;
     const hit = resolve(event.target);
     if (!hit) return;
-    if (event.relatedTarget instanceof Node && hit.element.contains(event.relatedTarget)) return;
+    if (currentElement === hit.element && event.relatedTarget instanceof Node && hit.element.contains(event.relatedTarget)) return;
     show(hit.item, hit.element, { x: event.clientX, y: event.clientY });
   }, true);
 
@@ -377,7 +378,7 @@
     topics: HELP.map(item => item.key),
     availableTopics: () => HELP.filter(item => document.querySelector(item.selector)).map(item => item.key),
     late_mount_safe: true,
-    target_resolution: "querySelectorAll + delegated closest",
+    target_resolution: "querySelectorAll + delegated nearest matching ancestor",
     recurring_timer: false,
     observer: false,
     storage: false,
