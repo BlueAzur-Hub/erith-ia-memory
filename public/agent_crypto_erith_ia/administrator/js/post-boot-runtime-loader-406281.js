@@ -56,7 +56,7 @@
     "./js/version-truth.js",
     "./js/storage-ownership-audit-406287.js",
     "./js/storage-relief-controlled-406288.js",
-    "./js/storage-primary-truth-406343.js"
+    "./js/storage-primary-truth-406344.js"
   ]);
 
   const MARKET_DEMAND_MODULES=Object.freeze([
