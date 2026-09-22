@@ -1,13 +1,12 @@
 {
   "schema": "agent_crypto_coordination_archive_manifest_v1",
   "generated_at": "2026-09-22",
-  "source": "GitHub main tree",
-  "note": "Index only. Does not change retention policy. Coordination archives remain preserved while the interface is unfinished.",
+  "source": "GitHub main tree after hygiene PASS 07",
+  "note": "Navigation index only. Coordination archives are preserved while the interface is unfinished. Runtime truth is administrator/build.json; historical archive truth is explicit archive_manifests/*.",
   "counts": {
-    "files": 773,
+    "files": 778,
     "zips": 390,
-    "markdown": 138,
-    "sha256": 163
+    "markdown": 138
   },
   "zip_bytes": 352130354,
   "entries": [
@@ -5780,115 +5779,35 @@
       "build": null
     },
     {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/archive_manifests/ADMINISTRATOR_40.6.86_ARCHIVE_MANIFEST.json",
+      "name": "archive_manifests/ADMINISTRATOR_40.6.86_ARCHIVE_MANIFEST.json",
+      "size": 28841,
+      "sha": "43027cee3d213dfedfd38fc9091d6beac6fdd47b",
+      "ext": "json",
+      "build": "40.6.86"
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/archive_manifests/frozen/administrator-version-40.6.86.json",
+      "name": "archive_manifests/frozen/administrator-version-40.6.86.json",
+      "size": 628192,
+      "sha": "2f86a821e26331e1c677c6ce83ef8d0d59c4dce0",
+      "ext": "json",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/archive_manifests/frozen/version-40.6.86.json",
+      "name": "archive_manifests/frozen/version-40.6.86.json",
+      "size": 647687,
+      "sha": "9847900258b6542603c5a31cbf24b64001de97a9",
+      "ext": "json",
+      "build": null
+    },
+    {
       "path": "coordination/inter_ai_dialogues/agent_crypto/atlas_shared_market_memory_transformer-book_2026-09-19-21-44-38.json",
       "name": "atlas_shared_market_memory_transformer-book_2026-09-19-21-44-38.json",
       "size": 11003358,
       "sha": "798c47b9024dcc2d81ada5c9db66561c2d13de20",
       "ext": "json",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/part-01.patch",
-      "name": "auto_update/part-01.patch",
-      "size": 9072,
-      "sha": "3dae4041d10a6a65d05f1fc4e74e60c4df5efd8e",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/part-02.patch",
-      "name": "auto_update/part-02.patch",
-      "size": 5892,
-      "sha": "31006478556f970238655c024382d9a4575dce10",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/request.json",
-      "name": "auto_update/request.json",
-      "size": 759,
-      "sha": "a305bf2b68bbd5c3768490192807a0aa11a8ff2e",
-      "ext": "json",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/update.patch",
-      "name": "auto_update/update.patch",
-      "size": 14966,
-      "sha": "e4af016b57aa10346f9a027bb48cf040f7d088fa",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-01-aether.patch",
-      "name": "auto_update/v285-01-aether.patch",
-      "size": 5649,
-      "sha": "327452a5ac9bd222c2008e85321d2c34ec463a73",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-02-app.patch",
-      "name": "auto_update/v285-02-app.patch",
-      "size": 602,
-      "sha": "05ae0fc543736647b75d04b2706f6c912ab051c2",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-03-jsapp.patch",
-      "name": "auto_update/v285-03-jsapp.patch",
-      "size": 648,
-      "sha": "91f22f18577c7567c50168666ae785655b8b509e",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-04-index.patch",
-      "name": "auto_update/v285-04-index.patch",
-      "size": 3746,
-      "sha": "bcd5e81a28e6301f028c8e3a093c3f8c0e03ee16",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-05-build.patch",
-      "name": "auto_update/v285-05-build.patch",
-      "size": 696,
-      "sha": "231cd28755f5729312505163caee2bdac9c58170",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-06-version.patch",
-      "name": "auto_update/v285-06-version.patch",
-      "size": 1679,
-      "sha": "df0d9c19af9fdb6e2132ac8ddbff2794287faa1c",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-07-admin-version.patch",
-      "name": "auto_update/v285-07-admin-version.patch",
-      "size": 1947,
-      "sha": "b87e4c79c51568d8493e5a78cd1ca6e9ef624255",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v285-final.patch",
-      "name": "auto_update/v285-final.patch",
-      "size": 14967,
-      "sha": "dd746d57bb7e0a1e236557c15de7d9cadf056f62",
-      "ext": "patch",
-      "build": null
-    },
-    {
-      "path": "coordination/inter_ai_dialogues/agent_crypto/auto_update/v286.patch",
-      "name": "auto_update/v286.patch",
-      "size": 15168,
-      "sha": "4fc829825ffb04785e129214b6fe7dd603233fc9",
-      "ext": "patch",
       "build": null
     },
     {
@@ -6100,6 +6019,110 @@
       "build": "40.4.98"
     },
     {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/part-01.patch",
+      "name": "legacy_auto_update/40.4.286/part-01.patch",
+      "size": 9072,
+      "sha": "3dae4041d10a6a65d05f1fc4e74e60c4df5efd8e",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/part-02.patch",
+      "name": "legacy_auto_update/40.4.286/part-02.patch",
+      "size": 5892,
+      "sha": "31006478556f970238655c024382d9a4575dce10",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/request.json",
+      "name": "legacy_auto_update/40.4.286/request.json",
+      "size": 759,
+      "sha": "a305bf2b68bbd5c3768490192807a0aa11a8ff2e",
+      "ext": "json",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/update.patch",
+      "name": "legacy_auto_update/40.4.286/update.patch",
+      "size": 14966,
+      "sha": "e4af016b57aa10346f9a027bb48cf040f7d088fa",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-01-aether.patch",
+      "name": "legacy_auto_update/40.4.286/v285-01-aether.patch",
+      "size": 5649,
+      "sha": "327452a5ac9bd222c2008e85321d2c34ec463a73",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-02-app.patch",
+      "name": "legacy_auto_update/40.4.286/v285-02-app.patch",
+      "size": 602,
+      "sha": "05ae0fc543736647b75d04b2706f6c912ab051c2",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-03-jsapp.patch",
+      "name": "legacy_auto_update/40.4.286/v285-03-jsapp.patch",
+      "size": 648,
+      "sha": "91f22f18577c7567c50168666ae785655b8b509e",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-04-index.patch",
+      "name": "legacy_auto_update/40.4.286/v285-04-index.patch",
+      "size": 3746,
+      "sha": "bcd5e81a28e6301f028c8e3a093c3f8c0e03ee16",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-05-build.patch",
+      "name": "legacy_auto_update/40.4.286/v285-05-build.patch",
+      "size": 696,
+      "sha": "231cd28755f5729312505163caee2bdac9c58170",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-06-version.patch",
+      "name": "legacy_auto_update/40.4.286/v285-06-version.patch",
+      "size": 1679,
+      "sha": "df0d9c19af9fdb6e2132ac8ddbff2794287faa1c",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-07-admin-version.patch",
+      "name": "legacy_auto_update/40.4.286/v285-07-admin-version.patch",
+      "size": 1947,
+      "sha": "b87e4c79c51568d8493e5a78cd1ca6e9ef624255",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v285-final.patch",
+      "name": "legacy_auto_update/40.4.286/v285-final.patch",
+      "size": 14967,
+      "sha": "dd746d57bb7e0a1e236557c15de7d9cadf056f62",
+      "ext": "patch",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_auto_update/40.4.286/v286.patch",
+      "name": "legacy_auto_update/40.4.286/v286.patch",
+      "size": 15168,
+      "sha": "4fc829825ffb04785e129214b6fe7dd603233fc9",
+      "ext": "patch",
+      "build": null
+    },
+    {
       "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_entries/README.md",
       "name": "legacy_entries/README.md",
       "size": 575,
@@ -6113,6 +6136,22 @@
       "size": 434186,
       "sha": "79d2926602364d467727d353947536dbd5386738",
       "ext": "html",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_sources/40.6.86/js/oracle-fx-406012.js",
+      "name": "legacy_sources/40.6.86/js/oracle-fx-406012.js",
+      "size": 4434,
+      "sha": "59c657148d4afe60120121faa7d15358a4ebaf0f",
+      "ext": "js",
+      "build": null
+    },
+    {
+      "path": "coordination/inter_ai_dialogues/agent_crypto/legacy_sources/40.6.86/js/oracle-semantic-bias-406011.js",
+      "name": "legacy_sources/40.6.86/js/oracle-semantic-bias-406011.js",
+      "size": 2021,
+      "sha": "98c2f39e0172762407de20651a9a589cc52ff6e9",
+      "ext": "js",
       "build": null
     },
     {

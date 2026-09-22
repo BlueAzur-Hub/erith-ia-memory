@@ -1,13 +1,20 @@
 # Agent-Crypto Coordination Archive Index
 
-Generated 2026-09-22 from GitHub `main`.
+Generated 2026-09-22 after **Hygiène PASS 07**.
 
-> This is a navigation index, not a purge list. Coordination archives remain preserved while the interface is unfinished. Exact recovery state remains Git commit + ZIP + handoff dependent.
+> Navigation index only. Runtime truth = `administrator/build.json`. Historical manifests = `archive_manifests/`. Coordination remains preserved while the interface is unfinished.
 
-- Files indexed: **773**
+- Files indexed: **778**
 - ZIP: **390**
 - Markdown: **138**
 - ZIP volume: **335.82 MiB**
+
+## Important archive roots
+
+- `archive_manifests/` — explicit frozen historical manifests.
+- `legacy_entries/` — compacted historical Administrator entries.
+- `legacy_auto_update/` — retired guarded update staging.
+- `legacy_sources/` — retired source modules kept for direct reading.
 
 ## ZIP archives
 
