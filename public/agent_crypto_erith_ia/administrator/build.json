@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.364",
+  "build": "40.6.365",
   "engine": "38.15.11",
-  "release": "MATH CORE GLASS ALIGNMENT",
+  "release": "REDIVIDER HOVER SIGNAL",
   "published": true,
-  "status": "published_pending_firefox_math_glass_alignment",
-  "parent_build": "40.6.363",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.364",
-  "administrator_build": "40.6.364",
-  "build_label": "Build 40.6.364 · Administrator",
+  "status": "published_pending_firefox_redivider_hover",
+  "parent_build": "40.6.364",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.365",
+  "administrator_build": "40.6.365",
+  "build_label": "Build 40.6.365 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox Ryzen: verify Math NORMAL panel is visibly more transparent/airy, ATLAS MATH CORE V3 title is centered with controls still right-aligned, ring/rails/context remain centered, Math MINI unchanged, REDIVIDER normal/mini/modal 40.6.363 unchanged, no readability loss or ghost layer.",
+  "terrain_pending": "Firefox Ryzen: hover REDIVIDER in NORMAL and MINI. Expect restrained deep-crimson brightening on outer ring/core/label/glyph only, with no geometry shift, no pink cast, no effect on Math, and no regression to confirmation modal.",
   "terrain_proof": null,
-  "release_notes": "40.6.364 refines only the NORMAL Math Core presentation. The Math panel now uses a lighter, more transparent glass treatment, the title is centered independently of the right-side controls, and the ring/rails/context remain centered around the instrument. Rails are slightly softened to preserve transparency. Math MINI and the entire REDIVIDER 40.6.363 confirmation experience are frozen. No Market Core, Graph, Storage, Aether, Oracle, Lecture Technique, Strategy thresholds, Gates, wallet or real-order logic changes.",
+  "release_notes": "40.6.365 is a bounded hover feedback fix for REDIVIDER only. NORMAL and MINI REDIVIDER controls now brighten in deep crimson on pointer hover: outer ring glow, slightly warmer core, brighter REDIVIDER label and central glyph. Geometry, click/confirmation behavior, Math Core 40.6.364, REDIVIDER modal 40.6.363, Market Core 38.15.11 and all business logic remain unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -3339,6 +3339,29 @@
     "real_orders": false,
     "wallet": false,
     "syntax_gate": "PASS_V8_NEW_OPERATOR_MODULE",
+    "firefox_terrain_proof": "PENDING"
+  },
+  "operator_dashboard_406365": {
+    "scope": "operator_dashboard_redivider_hover_signal",
+    "parent_runtime": "40.6.364",
+    "module": "js/operator-dashboard-406365.js",
+    "presentation_only": true,
+    "redivider_hover_signal": true,
+    "hover_scope": [
+      "NORMAL",
+      "MINI"
+    ],
+    "hover_palette": "DEEP_CRIMSON",
+    "hover_geometry_change": false,
+    "math_406364_frozen": true,
+    "redivider_confirmation_406363_frozen": true,
+    "market_core_modified": false,
+    "app_js_modified": false,
+    "storage_modified": false,
+    "strategy_thresholds_modified": false,
+    "gates_modified": false,
+    "real_orders": false,
+    "wallet": false,
     "firefox_terrain_proof": "PENDING"
   }
 }
