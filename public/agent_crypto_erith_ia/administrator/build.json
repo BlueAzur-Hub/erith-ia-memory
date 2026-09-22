@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.341",
+  "build": "40.6.340",
   "engine": "38.15.11",
-  "release": "STORAGE PRIMARY · STABLE RETIREMENT",
+  "release": "VALID CHART SOURCE BADGE · HIDDEN",
   "published": true,
-  "status": "published_pending_storage_firefox",
-  "parent_build": "40.6.340",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.341",
-  "administrator_build": "40.6.341",
-  "build_label": "Build 40.6.341 · Administrator",
+  "status": "published_pending_operator_visual",
+  "parent_build": "40.6.339",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.340",
+  "administrator_build": "40.6.340",
+  "build_label": "Build 40.6.340 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": false,
+  "administrator_presentation_modified": true,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox Ryzen: System > Storage Observatory. Step 1 must report both async-primary targets VÉRIFIÉ · IDB PRIMARY STABLE. Step 2 must export backup, require confirmation, reclaim >0 localStorage bytes, report both targets RETIRÉ DU LOCALSTORAGE · IDB PRIMARY STABLE, then reload Firefox and verify Scanner/Graph consultation still reads PRIMARY.",
+  "terrain_pending": "PENDING_OPERATOR_40.6.340_VALID_SOURCE_BADGE_HIDDEN",
   "terrain_proof": null,
-  "release_notes": "40.6.341 repairs the proven Storage Relief race inside the canonical owner administrator/app.js. Operator verification/retirement now takes a bounded per-key PRIMARY lock, waits for any in-flight deferred write, absorbs writes queued while locked, performs SHA-256 + IndexedDB readback verification on the stabilized payload, and only then removes the localStorage backup in the same stable window. If PRIMARY remains busy or readback fails, retirement refuses and deletes nothing. No IndexedDB schema change, no generic cleanup, no automatic retirement, no new recurring timer/observer/network request. Market Core 38.15.11, Aether 40.6.322, Oracle, Lecture Technique, Strategy A, Gates and Market REVIEW_REQUIRED remain unchanged.",
+  "release_notes": "40.6.340 applies Christophe's explicit visual decision: the valid Crypto chart Source Truth badge is no longer rendered over the graph. The underlying chart source/freshness/origin data attributes remain intact for Atlas and diagnostics; loading and blocked chart messages remain available. This is presentation only. No chart data, Chart.js engine, Market Core 38.15.11, Aether 40.6.322, Oracle, Lecture Technique, Strategy A, Gates, Storage or Shared Memory business logic is changed. Blackview validation is intentionally deferred; the safe frozen global checkpoint remains 40.6.336.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -1504,14 +1504,13 @@
     "next_if_terrain_proves_candidates": "40.6.288 targeted storage relief with backup + explicit operator validation only"
   },
   "storage_debt_state": {
-    "status": "OWNER_REPAIR_PUBLISHED_TERRAIN_PENDING",
+    "status": "PAUSED_PENDING_406301_AETHER_RESTORE",
     "audit_406287": "PASS",
     "safe_block_406288": "PASS_PROTECTION",
     "root_cause_406289": "PROVED_IN_CODE",
     "local_copies": "PRESERVED_STALE_BACKUPS_BY_DESIGN",
     "retirement_authority": "AtlasStorageRelief40278.retireVerified",
-    "generic_cleanup": false,
-    "repair_406341": "BOUNDED_PRIMARY_LOCK_PLUS_STABLE_SHA256_READBACK_BEFORE_RETIREMENT"
+    "generic_cleanup": false
   },
   "transformer_book_consultation_first_status": {
     "baseline": "40.6.286",
@@ -2577,37 +2576,5 @@
     "storage_changed": false,
     "network_changed": false,
     "phone_validation": "DEFERRED_BY_OPERATOR"
-  },
-  "storage_primary_stabilization_406341": {
-    "scope": "canonical_storage_relief_owner_only",
-    "owner": "administrator/app.js",
-    "root_cause": "ASYNC_PRIMARY_WRITE_CAN_INVALIDATE_VERIFIED_FLAG_BETWEEN_OPERATOR_VERIFY_AND_RETIRE",
-    "repair": "BOUNDED_PER_KEY_PRIMARY_LOCK_DRAIN_PENDING_SHA256_READBACK_RETIRE_IN_SAME_STABLE_WINDOW",
-    "targets": [
-      "agent_crypto_scanner_live_archive_v1",
-      "agent_crypto_erith_ia_real_charts_v1_1_alpha_26_37_top50"
-    ],
-    "automatic_retirement": false,
-    "operator_only": true,
-    "backup_required": true,
-    "confirmation_required": true,
-    "generic_cleanup": false,
-    "indexeddb_schema_changed": false,
-    "indexeddb_delete": false,
-    "indexeddb_clear": false,
-    "market_review_required_touched": false,
-    "new_storage_owner": false,
-    "recurring_timer": false,
-    "mutation_observer": false,
-    "network_request": false,
-    "trading": false,
-    "real_order": false,
-    "market_core_modified": false,
-    "aether_modified": false,
-    "oracle_modified": false,
-    "lecture_technique_modified": false,
-    "strategy_modified": false,
-    "gates_modified": false,
-    "firefox_terrain_proof": "PENDING"
   }
 }
