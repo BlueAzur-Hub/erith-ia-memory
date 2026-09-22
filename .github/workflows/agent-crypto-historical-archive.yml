@@ -1,0 +1,101 @@
+name: Agent-Crypto historical archive
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        description: "Repository-relative historical archive manifest"
+        required: true
+        default: "coordination/inter_ai_dialogues/agent_crypto/archive_manifests/ADMINISTRATOR_40.6.86_ARCHIVE_MANIFEST.json"
+
+permissions:
+  contents: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build archive from explicit historical manifest
+        shell: bash
+        env:
+          MANIFEST_PATH: ${{ inputs.manifest_path }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import hashlib, json, os, posixpath, subprocess, zipfile
+
+          manifest_path = Path(os.environ["MANIFEST_PATH"])
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          if manifest.get("schema") != "agent_crypto_historical_archive_manifest_v1":
+              raise SystemExit("historical manifest schema invalide")
+          if manifest.get("runtime_truth") is not False:
+              raise SystemExit("archive manifest must be runtime_truth=false")
+
+          build = str(manifest.get("build") or "").strip()
+          source_commit = str(manifest.get("source_commit") or "").strip()
+          if not build or not source_commit:
+              raise SystemExit("build/source_commit absent")
+
+          admin_root = PurePosixPath("public/agent_crypto_erith_ia/administrator")
+          files = dict(manifest.get("files") or {})
+          required = {
+              "version.json": manifest.get("source_version_manifest_blob"),
+              "administrator-version.json": manifest.get("source_administrator_manifest_blob"),
+          }
+
+          def repo_path(rel):
+              raw = posixpath.normpath((admin_root / str(rel)).as_posix())
+              if raw.startswith("../") or raw == "..":
+                  raise SystemExit(f"chemin archive hors repo: {rel}")
+              return raw
+
+          def git_bytes(path):
+              return subprocess.check_output(["git","show",f"{source_commit}:{path}"])
+
+          out_dir = Path("historical_archive_output")
+          out_dir.mkdir(exist_ok=True)
+          safe_build = build.replace(".","_")
+          out = out_dir / f"AGENT_CRYPTO_HISTORICAL_{safe_build}.zip"
+
+          seen=set()
+          with zipfile.ZipFile(out,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as zf:
+              for rel, meta in files.items():
+                  path = repo_path(rel)
+                  if path in seen:
+                      continue
+                  data = git_bytes(path)
+                  expected = meta if isinstance(meta,str) else (meta or {}).get("sha256")
+                  if expected and hashlib.sha256(data).hexdigest() != str(expected).lower():
+                      raise SystemExit(f"SHA mismatch: {rel}")
+                  zf.writestr(path,data)
+                  seen.add(path)
+
+              for rel in required:
+                  path = repo_path(rel)
+                  if path in seen:
+                      continue
+                  zf.writestr(path,git_bytes(path))
+                  seen.add(path)
+
+              zf.writestr("ARCHIVE_MANIFEST.json",json.dumps(manifest,ensure_ascii=False,indent=2)+"\n")
+
+          digest=hashlib.sha256(out.read_bytes()).hexdigest()
+          sha=Path(str(out)+".sha256")
+          sha.write_text(f"{digest}  {out.name}\n",encoding="utf-8")
+          print(f"ARCHIVE={out}")
+          print(f"SHA256={digest}")
+          PY
+
+      - name: Upload historical archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-crypto-historical-archive
+          path: historical_archive_output/
+          if-no-files-found: error
+          compression-level: 0
