@@ -14,7 +14,18 @@
   const AETHER_MARQUEE_MIN_OVERFLOW_PX=48;
   const AETHER_MARQUEE_DELAY_S=0.55;
   const aetherVeilleState={index:0,kind:"alert",fingerprint:"",viewportWidth:0,last:null,storyEvent:null,storyContext:null,feedWasVisible:false};
-  // 40.6.386 — entity truth guard. LINK is an ambiguous English word/company token.\n  // Trust it as the Chainlink asset only when the canonical story contains an explicit Chainlink anchor.\n  // This prevents regulatory stories such as "OTC Link LLC" from entering Aether as false LINK crypto alerts.\n  function aetherVeilleTrustedAssets(event){\n    const canonical=aetherNewsCanonicalEvent(event)||event||{};\n    const assets=(Array.isArray(canonical?.assets)?canonical.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean);\n    const headline=String(canonical?.headline_original||canonical?.headline||canonical?.display_headline||canonical?.event_label||"").toLowerCase();\n    return assets.filter(symbol=>symbol!=="LINK"||/(?:\\bchainlink\\b|\\blink token\\b|\\$link\\b)/i.test(headline));\n  }\n  function aetherVeilleOperatorEligible(event){\n  const canonical=aetherNewsCanonicalEvent(event)||event||{};\n  const assets=aetherVeilleTrustedAssets(canonical);
+  // 40.6.386 — entity truth guard. LINK is an ambiguous English word/company token.
+  // Trust it as the Chainlink asset only when the canonical story contains an explicit Chainlink anchor.
+  // This prevents regulatory stories such as "OTC Link LLC" from entering Aether as false LINK crypto alerts.
+  function aetherVeilleTrustedAssets(event){
+    const canonical=aetherNewsCanonicalEvent(event)||event||{};
+    const assets=(Array.isArray(canonical?.assets)?canonical.assets:[]).map(v=>String(v||"").trim().toUpperCase()).filter(Boolean);
+    const headline=String(canonical?.headline_original||canonical?.headline||canonical?.display_headline||canonical?.event_label||"").toLowerCase();
+    return assets.filter(symbol=>symbol!=="LINK"||/(?:\\bchainlink\\b|\\blink token\\b|\\$link\\b)/i.test(headline));
+  }
+  function aetherVeilleOperatorEligible(event){
+  const canonical=aetherNewsCanonicalEvent(event)||event||{};
+  const assets=aetherVeilleTrustedAssets(canonical);
   const domains=(Array.isArray(canonical?.driver_domains)?canonical.driver_domains:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
   const topics=(Array.isArray(canonical?.matched_topics)?canonical.matched_topics:[]).map(v=>String(v||"").trim().toLowerCase()).filter(Boolean);
   const label=String(canonical?.event_label||"").toLowerCase();
@@ -245,7 +256,8 @@ function aetherNewsCanonicalEvent(event){
     for(const row of pool){if(chosen.length>=AETHER_VEILLE_TOP)break;take(row);}
     return chosen.slice(0,AETHER_VEILLE_TOP).map(row=>row.event);
   }
-  function aetherVeilleScope(event){\n    const assets=aetherVeilleTrustedAssets(event).map(v=>String(v||"").trim()).filter(Boolean);
+  function aetherVeilleScope(event){
+    const assets=aetherVeilleTrustedAssets(event).map(v=>String(v||"").trim()).filter(Boolean);
     if(assets.length)return assets.slice(0,3).join("/");
     const sectors=(Array.isArray(event?.sectors)?event.sectors:[]).map(v=>String(v||"").trim()).filter(Boolean);
     return sectors[0]||"GLOBAL";
@@ -1664,7 +1676,9 @@ function aetherNewsMarketSemantic(){
     news_feed_click_opens_news_sentinel:true,
     news_feed_selection:"representative digest: priority anchor + distinct recent families",
     news_feed_family_order:"macro + institutional + regulation + leverage + security + market",
-    news_feed_source_diversity_tiebreak:true,\n    ambiguous_asset_entity_guard_build:"40.6.386",\n    ambiguous_asset_entity_guard:"LINK requires explicit Chainlink/link-token anchor before Aether eligibility or scope",
+    news_feed_source_diversity_tiebreak:true,
+    ambiguous_asset_entity_guard_build:"40.6.386",
+    ambiguous_asset_entity_guard:"LINK requires explicit Chainlink/link-token anchor before Aether eligibility or scope",
     news_feed_recent_family_window_days:7,
     news_feed_pool_union:"canonical newsFeedState.payload.events only",
     news_feed_primary_pool:"newsFeedState.payload.events",

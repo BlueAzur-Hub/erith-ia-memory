@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.386",
+  "build": "40.6.387",
   "engine": "38.15.11",
-  "release": "AETHER VEILLE · LINK ENTITY TRUTH LOCK",
+  "release": "AETHER VEILLE · JS NEWLINE SYNTAX RECOVERY",
   "published": true,
-  "status": "published_pending_firefox_aether_entity_truth",
-  "parent_build": "40.6.385",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.386",
-  "administrator_build": "40.6.386",
-  "build_label": "Build 40.6.386 · Administrator",
+  "status": "published_pending_firefox_aether_syntax_recovery",
+  "parent_build": "40.6.386",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.387",
+  "administrator_build": "40.6.387",
+  "build_label": "Build 40.6.387 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox: Ctrl+F5 / Build 40.6.386. Confirm the SEC OTC Link LLC regulation story no longer appears in Aether VEILLE as LINK; confirm genuine crypto/macro Aether rotation remains healthy. News producer workflow and archive reclassification are already PASS.",
+  "terrain_pending": "Firefox: Ctrl+F5 / Build 40.6.387. Confirm Aether/VEILLE loads normally (no aether.js parser failure), the SEC OTC Link LLC story is not scoped as LINK, and genuine crypto/macro rotation remains healthy. No geometry test is required.",
   "terrain_proof": null,
-  "release_notes": "40.6.386 fixes one semantic owner defect found during the Aether/Veille audit. The canonical News collector no longer maps the generic word link to Chainlink (LINK); it now requires chainlink or link token. Aether adds the same bounded entity-truth guard so stale cached/archive rows such as OTC Link LLC cannot enter or scope the scarce operator lane as LINK before the next collector refresh. No translation policy change: native French remains preferred and qualified English remains explicit [EN]. No change to Market Core 38.15.11, Math Core, REDIVIDER, Lecture Technique RND, Strategy A, Gates, Storage or Aether Watch geometry.",
+  "release_notes": "40.6.387 is a surgical recovery of 40.6.386. The .386 Aether entity-truth logic was correct in intent but its insertion left literal \\\\n tokens in executable JavaScript, making aether.js fail syntax parsing. .387 converts only those accidental source tokens to real line breaks, preserves the LINK/Chainlink guard exactly, and updates the canonical entry/build truth. No Market Core, Math Core, REDIVIDER, Lecture Technique RND, Strategy/Gates, Storage, Aether Watch geometry, timer, observer, fetch owner, wallet or order logic is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -3931,7 +3931,7 @@
     "storage_modified": false,
     "real_orders": false,
     "wallet": false,
-    "firefox_transformer_proof": "PENDING"
+    "firefox_transformer_proof": "PASS_TRANSFORMER_BOOK_TO_RYZEN_2026_09_23"
   },
   "technical_reading_rnd_406385": {
     "scope": "technical_reading_rnd_library_addition",
@@ -3967,7 +3967,7 @@
     "real_orders": false,
     "wallet": false,
     "image_upload_mode": "MANUAL_GITHUB_UPLOAD_REQUESTED_BY_USER",
-    "firefox_terrain_proof": "PENDING"
+    "firefox_terrain_proof": "PASS_FIREFOX_2026_09_23_ORIGINES_AERITH"
   },
   "aether_veille_intelligence_406386": {
     "scope": "aether_veille_ambiguous_asset_entity_truth",
@@ -3994,5 +3994,31 @@
     "archive_generated_at": "2026-09-23T15:45:19.569578+00:00",
     "otc_link_llc_assets_after_refresh": [],
     "false_chainlink_asset_removed_from_archive": true
+  },
+  "aether_veille_syntax_recovery_406387": {
+    "scope": "aether_veille_js_source_syntax_recovery",
+    "parent_runtime": "40.6.386",
+    "owner": "administrator/js/aether.js",
+    "defect": "literal backslash-n tokens were inserted into executable source around the 40.6.386 LINK entity-truth guard",
+    "pre_repair_v8_syntax": "FAIL_UNEXPECTED_TOKEN_FUNCTION",
+    "repair": "convert only accidental source \\\\n tokens to real line breaks; preserve legitimate escaped newline in weather string",
+    "post_repair_v8_syntax": "PASS_NEW_FUNCTION",
+    "legitimate_escaped_newline_count_after_repair": 1,
+    "link_entity_truth_logic_changed": false,
+    "collector_changed": false,
+    "aether_watch_geometry_changed": false,
+    "market_core_modified": false,
+    "math_core_modified": false,
+    "redivider_modified": false,
+    "lecture_technique_modified": false,
+    "strategy_modified": false,
+    "gates_modified": false,
+    "storage_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_fetch_owner": false,
+    "real_order": false,
+    "wallet": false,
+    "firefox_terrain_proof": "PENDING"
   }
 }
