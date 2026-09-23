@@ -1173,8 +1173,8 @@
     if(confirmPercent)confirmPercent.textContent=action==="start"?"[ COUPÉ ]":"[ 100% ]";
     const confirmState=byId("acOperatorRedividerConfirmState406384");
     if(confirmState)confirmState.textContent=action==="start"
-      ?"[ COUPÉ ]\n- : ARRÊT : -\n— AUTO A PAPER —"
-      :"[ 100% ]\n- : PRÊT : -\n— CHARGÉ —";
+      ?"PAPER ONLY\n— ARRÊT —\n— AUTO A PAPER —"
+      :"PAPER ONLY\n— PRÊT —\n— CHARGÉ —";
     const confirmAccept=byId("acOperatorRedividerAccept406384");
     if(confirmAccept)confirmAccept.disabled=state.action_pending||!actionAvailable;
     const confirmCancel=byId("acOperatorRedividerCancel406384");
