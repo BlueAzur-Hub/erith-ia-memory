@@ -4,7 +4,7 @@
   "engine": "38.15.11",
   "release": "AETHER VEILLE · LINK ENTITY TRUTH LOCK",
   "published": true,
-  "status": "published_pending_news_workflow_and_firefox_aether_entity_truth",
+  "status": "published_pending_firefox_aether_entity_truth",
   "parent_build": "40.6.385",
   "asset_token": "market-core-v2.0-alpha-build-40.6.386",
   "administrator_build": "40.6.386",
@@ -30,7 +30,7 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Wait for the Atlas News Sentinel workflow triggered by the collector change, then Firefox: confirm the SEC OTC Link LLC regulation story is not labelled/scoped as Chainlink LINK in Aether VEILLE; confirm genuine crypto/macro rotation still works; true Chainlink stories remain eligible when the headline contains Chainlink or LINK token.",
+  "terrain_pending": "Firefox: Ctrl+F5 / Build 40.6.386. Confirm the SEC OTC Link LLC regulation story no longer appears in Aether VEILLE as LINK; confirm genuine crypto/macro Aether rotation remains healthy. News producer workflow and archive reclassification are already PASS.",
   "terrain_proof": null,
   "release_notes": "40.6.386 fixes one semantic owner defect found during the Aether/Veille audit. The canonical News collector no longer maps the generic word link to Chainlink (LINK); it now requires chainlink or link token. Aether adds the same bounded entity-truth guard so stale cached/archive rows such as OTC Link LLC cannot enter or scope the scarce operator lane as LINK before the next collector refresh. No translation policy change: native French remains preferred and qualified English remains explicit [EN]. No change to Market Core 38.15.11, Math Core, REDIVIDER, Lecture Technique RND, Strategy A, Gates, Storage or Aether Watch geometry.",
   "strategy_facade_406323": {
@@ -3987,6 +3987,12 @@
     "new_fetch": false,
     "real_order": false,
     "wallet": false,
-    "firefox_terrain_proof": "PENDING"
+    "firefox_terrain_proof": "PENDING",
+    "producer_workflow": "PASS",
+    "producer_workflow_run_id": 35883786419,
+    "archive_commit": "59266886dc8e06e7933f529f46337df3c9137e1d",
+    "archive_generated_at": "2026-09-23T15:45:19.569578+00:00",
+    "otc_link_llc_assets_after_refresh": [],
+    "false_chainlink_asset_removed_from_archive": true
   }
 }
