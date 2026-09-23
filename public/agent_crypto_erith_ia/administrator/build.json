@@ -4,7 +4,7 @@
   "engine": "38.15.11",
   "release": "TECHNICAL READING RND · AERITH ORIGINS 21",
   "published": true,
-  "status": "published_pending_firefox_rnd_aerith_origins_21",
+  "status": "published_pending_manual_png_upload_and_firefox_rnd_aerith_origins_21",
   "parent_build": "40.6.384",
   "asset_token": "market-core-v2.0-alpha-build-40.6.385",
   "administrator_build": "40.6.385",
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Ryzen 7 + Transformer Book / Firefox: click RND repeatedly until 'Origines d’Aerith' appears; verify full portrait framing without added bars/crop/distortion, anti-repeat still works, and AUTO/AUBE/JOUR/SOIR/NUIT/LUNE are unchanged.",
+  "terrain_pending": "Upload the original 1024x1536 PNG as assets/visual/technical-reading/technical-random-21.png, then Ryzen 7 + Transformer Book / Firefox: click RND until 'Origines d’Aerith' appears; verify no crop, no distortion, no added bars; anti-repeat and AUTO/AUBE/JOUR/SOIR/NUIT/LUNE unchanged.",
   "terrain_proof": null,
-  "release_notes": "40.6.385 adds one image to the existing Lecture technique RND library only: technical-random-21.webp, label 'Origines d’Aerith'. Existing RND owner and click behavior remain unchanged. No new button, timer or slideshow. AUTO/AUBE/JOUR/SOIR/NUIT/LUNE, Math Core, REDIVIDER, Strategy A, Market Core 38.15.11 and all other functional owners are unchanged.",
+  "release_notes": "40.6.385 adds one image to the existing Lecture technique RND library only: technical-random-21.png, label 'Origines d’Aerith'. The source image is preserved as the original 1024x1536 PNG with no crop, no distortion and no added bars. Existing RND owner and click behavior remain unchanged. No new button, timer or slideshow. AUTO/AUBE/JOUR/SOIR/NUIT/LUNE, Math Core, REDIVIDER, Strategy A, Market Core 38.15.11 and all other functional owners are unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -3936,10 +3936,11 @@
   "technical_reading_rnd_406385": {
     "scope": "technical_reading_rnd_library_addition",
     "parent_runtime": "40.6.384",
-    "asset": "assets/visual/technical-reading/technical-random-21.webp",
+    "asset": "assets/visual/technical-reading/technical-random-21.png",
     "label": "Origines d’Aerith",
     "source_dimensions": "1024x1536",
-    "transformed": "WEBP_DIRECT_SAME_DIMENSIONS",
+    "source_format": "PNG",
+    "transformed": false,
     "cropped": false,
     "distorted": false,
     "bars_added": false,
@@ -3965,6 +3966,7 @@
     "storage_modified": false,
     "real_orders": false,
     "wallet": false,
+    "image_upload_mode": "MANUAL_GITHUB_UPLOAD_REQUESTED_BY_USER",
     "firefox_terrain_proof": "PENDING"
   }
 }

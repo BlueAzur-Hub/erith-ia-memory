@@ -5,15 +5,26 @@ Parent: **40.6.384**
 
 ## Exact delta
 
-One addition to the existing Lecture technique RND library:
+One addition to the existing **Lecture technique / RND** library:
 
-- `technical-random-21.webp`
+- `technical-random-21.png`
 - label: **Origines d’Aerith**
-- source geometry: **1024 × 1536**
-- direct same-dimension WebP conversion
-- no crop
-- no distortion
-- no added bars
+- original geometry: **1024 × 1536**
+- original PNG preserved
+- **no crop**
+- **no distortion**
+- **no added bars**
+
+The canonical HTML is **really edited**: `RANDOM_LIBRARY` now contains the 21st entry.
+
+```js
+Object.freeze({
+  file:"technical-random-21.png",
+  label:"Origines d’Aerith",
+  x:50,
+  y:50
+})
+```
 
 ## RND behavior preserved
 
@@ -38,3 +49,9 @@ One addition to the existing Lecture technique RND library:
 - Strategy A / Gates;
 - storage / wallet / network;
 - no real orders.
+
+## Manual image upload
+
+The image is intentionally supplied in the delivery ZIP for manual GitHub upload at:
+
+`public/agent_crypto_erith_ia/administrator/assets/visual/technical-reading/technical-random-21.png`
