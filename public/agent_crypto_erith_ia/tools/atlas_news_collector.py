@@ -637,11 +637,22 @@ def deduplicate(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return clusters
 
 
+def refresh_previous_asset_derivation(event_value: Any) -> dict[str, Any]:
+    """Recompute derived asset tags from immutable story text before archive carry-forward."""
+    event = dict(event_value) if isinstance(event_value, dict) else {}
+    event["assets"] = detect_assets(f"{event.get('headline', '')} {event.get('body', '')}")
+    return event
+
+
 def load_previous() -> list[dict[str, Any]]:
     try:
         payload = json.loads((ROOT / "latest.json").read_text(encoding="utf-8"))
         events = payload.get("events", [])
-        return events if isinstance(events, list) else []
+        if not isinstance(events, list):
+            return []
+        # 40.6.386 — derived semantic tags must follow the current collector rules.
+        # Never preserve a stale asset classification merely because an older latest.json carried it.
+        return [refresh_previous_asset_derivation(event) for event in events if isinstance(event, dict)]
     except Exception:
         return []
 
@@ -762,6 +773,8 @@ def self_test() -> int:
     # "OTC Link LLC" is a company name, not Chainlink (LINK).
     assert "LINK" not in detect_assets("SEC Censures OTC Link LLC for Repeated Compliance Failures Related to Regulation SCI")
     assert "LINK" in detect_assets("Chainlink LINK token market infrastructure update")
+    stale_link = {"headline": "SEC Censures OTC Link LLC for Repeated Compliance Failures Related to Regulation SCI", "body": "", "assets": ["LINK"]}
+    assert "LINK" not in refresh_previous_asset_derivation(stale_link)["assets"]
 
     duplicate = dict(analyzed)
     duplicate["source_name"] = "Second Source"
