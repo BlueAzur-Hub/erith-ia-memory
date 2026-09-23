@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-23T20:28:14.726540+00:00",
+  "generated_at": "2026-09-23T23:46:10.913336+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -17,7 +17,7 @@
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
-    "lead_event_id": "feed_c51576b30c937b58",
+    "lead_event_id": "feed_baa67e3b083203d3",
     "decision": "Surveillance renforcée",
     "driver_coverage": {
       "macro_liquidity": {
@@ -29,7 +29,7 @@
         "distinct_sources": 3
       },
       "regulation": {
-        "events_72h": 19,
+        "events_72h": 20,
         "distinct_sources": 4
       },
       "leverage": {
@@ -48,8 +48,8 @@
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
       "fetched_count": 50,
-      "qualified_count": 4,
-      "latency_ms": 242,
+      "qualified_count": 6,
+      "latency_ms": 458,
       "error": null
     },
     {
@@ -58,9 +58,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 28,
+      "fetched_count": 22,
       "qualified_count": 1,
-      "latency_ms": 174,
+      "latency_ms": 454,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 137,
+      "latency_ms": 153,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 212,
+      "latency_ms": 315,
       "error": null
     },
     {
@@ -93,7 +93,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 24,
-      "latency_ms": 216,
+      "latency_ms": 263,
       "error": null
     },
     {
@@ -103,8 +103,8 @@
       "url": "https://cointelegraph.com/rss",
       "status": "ok",
       "fetched_count": 30,
-      "qualified_count": 27,
-      "latency_ms": 233,
+      "qualified_count": 26,
+      "latency_ms": 201,
       "error": null
     },
     {
@@ -114,8 +114,8 @@
       "url": "https://decrypt.co/feed",
       "status": "ok",
       "fetched_count": 38,
-      "qualified_count": 31,
-      "latency_ms": 116,
+      "qualified_count": 30,
+      "latency_ms": 106,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 8,
-      "latency_ms": 574,
+      "latency_ms": 620,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 17,
-      "latency_ms": 205,
+      "latency_ms": 161,
       "error": null
     },
     {
@@ -147,8 +147,8 @@
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 2,
-      "latency_ms": 220,
+      "qualified_count": 1,
+      "latency_ms": 169,
       "error": null
     },
     {
@@ -158,8 +158,8 @@
       "url": "https://news.google.com/rss/search?q=bitcoin+crypto+r%C3%A9glementation+MiCA+SEC+CFTC+stablecoin+march%C3%A9s+when%3A7d&hl=fr&gl=FR&ceid=FR:fr",
       "status": "ok",
       "fetched_count": 6,
-      "qualified_count": 5,
-      "latency_ms": 241,
+      "qualified_count": 4,
+      "latency_ms": 317,
       "error": null
     },
     {
@@ -170,7 +170,7 @@
       "status": "ok",
       "fetched_count": 8,
       "qualified_count": 7,
-      "latency_ms": 328,
+      "latency_ms": 263,
       "error": null
     },
     {
@@ -181,7 +181,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 229,
+      "latency_ms": 262,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 80,
+      "latency_ms": 201,
       "error": null
     },
     {
@@ -203,7 +203,7 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 10372,
+      "latency_ms": 9228,
       "error": null
     }
   ],
@@ -300,6 +300,110 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Revolut says no direct contact from hackers after $3M public ransom demand",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_baa67e3b083203d3",
+      "event_id": "feed_baa67e3b083203d3",
+      "fingerprint": "baa67e3b083203d3",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Former Hack VC partner Hsin-Ju Chuang found dead at 37",
+      "body": "The crypto executive and Dystopia Labs founder previously held senior roles at Stellar and Solana before joining venture capital firm Hack VC.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/former-hack-vc-partner-hsin-ju-chuang-found-dead",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 2,
+      "source_names": [
+        "Cointelegraph",
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/former-hack-vc-partner-hsin-ju-chuang-found-dead",
+        "https://www.coindesk.com/business/2026/09/23/former-hack-vc-partner-hsin-ju-chuang-found-dead-following-public-dispute-with-firm"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-23T20:43:56+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.434722+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.494708+00:00",
+      "freshness": {
+        "iso": "2026-09-23T20:43:56+00:00",
+        "hours": 3.03,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 76,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 99,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "SOL"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
+        "tone": "warn"
+      },
+      "confirmations": 2,
+      "relevance_score": 14,
+      "matched_topics": [
+        "crypto",
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Former Hack VC partner Hsin-Ju Chuang found dead at 37",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Former Hack VC partner Hsin-Ju Chuang found dead at 37",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -437,11 +541,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-22T19:31:03+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.162465+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.162465+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.377111+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.377111+00:00",
       "freshness": {
         "iso": "2026-09-22T19:31:03+00:00",
-        "hours": 24.95,
+        "hours": 28.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -618,105 +722,6 @@
       ]
     },
     {
-      "id": "feed_c51576b30c937b58",
-      "event_id": "feed_c51576b30c937b58",
-      "fingerprint": "c51576b30c937b58",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Former Hack VC partner Hsin-Ju Chuang found dead following public dispute with the firm",
-      "body": "The crypto community is seeking answers after 37-year-old growth executive Hsin-Ju Chuang was found dead in a remote California desert vehicle.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/09/23/former-hack-vc-partner-hsin-ju-chuang-found-dead-following-public-dispute-with-firm",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/business/2026/09/23/former-hack-vc-partner-hsin-ju-chuang-found-dead-following-public-dispute-with-firm"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-23T18:59:36+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.272515+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.272515+00:00",
-      "freshness": {
-        "iso": "2026-09-23T18:59:36+00:00",
-        "hours": 1.47,
-        "label": "Immédiate · moins de 2 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 98,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 14,
-      "matched_topics": [
-        "crypto",
-        "security"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Former Hack VC partner Hsin-Ju Chuang found dead following public dispute with the firm",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Former Hack VC partner Hsin-Ju Chuang found dead following public dispute with the firm",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_c7ea50fcee72e4d5",
       "event_id": "feed_c7ea50fcee72e4d5",
       "fingerprint": "c7ea50fcee72e4d5",
@@ -841,11 +846,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-23T12:15:18+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.152771+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.152771+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.363614+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.363614+00:00",
       "freshness": {
         "iso": "2026-09-23T12:15:18+00:00",
-        "hours": 8.21,
+        "hours": 11.51,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -903,6 +908,105 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] North Korea's Fake Job Interviews Drained $11M From 7,000 Crypto Wallets",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_8c45bf8df3d10cb7",
+      "event_id": "feed_8c45bf8df3d10cb7",
+      "fingerprint": "8c45bf8df3d10cb7",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "An AI Agent Just Hacked a Government Website for the First Time, Australia PM Says",
+      "body": "Anthony Albanese said the agent accessed public and non-public files on a Medicare statistics portal in June, calling OpenAI's three-month delay in disclosing the breach \"unacceptable.\"",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/379134/an-ai-agent-just-hacked-a-government-website-for-the-first-time-australia-pm-says",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/379134/an-ai-agent-just-hacked-a-government-website-for-the-first-time-australia-pm-says"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-23T22:31:45+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.340169+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.340169+00:00",
+      "freshness": {
+        "iso": "2026-09-23T22:31:45+00:00",
+        "hours": 1.24,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 94,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [
+        "IA",
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "An AI Agent Just Hacked a Government Website for the First Time, Australia PM Says",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] An AI Agent Just Hacked a Government Website for the First Time, Australia PM Says",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -1014,105 +1118,6 @@
       ]
     },
     {
-      "id": "feed_464df8ef7b0553e4",
-      "event_id": "feed_464df8ef7b0553e4",
-      "fingerprint": "464df8ef7b0553e4",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "OpenAI's Rogue AI Agents Were Probing Hugging Face Two Months Before Hack",
-      "body": "An independent researcher found the agents hijacked Hugging Face accounts and mapped the platform's defenses as early as May 13—activity OpenAI's own incident report never fully described.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/378446/openai-rogue-agents-hugging-face-two-months-before-hack",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Decrypt"
-      ],
-      "source_urls": [
-        "https://decrypt.co/378446/openai-rogue-agents-hugging-face-two-months-before-hack"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-16T20:31:03+00:00",
-      "first_seen_at": "2026-09-20T12:27:36.848963+00:00",
-      "last_seen_at": "2026-09-20T12:27:36.848963+00:00",
-      "freshness": {
-        "iso": "2026-09-16T20:31:03+00:00",
-        "hours": 87.94,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 60,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 94,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "IA",
-        "Cybersécurité"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 8,
-      "matched_topics": [
-        "security"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "OpenAI's Rogue AI Agents Were Probing Hugging Face Two Months Before Hack",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] OpenAI's Rogue AI Agents Were Probing Hugging Face Two Months Before Hack",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_0574a4ca0aa244b1",
       "event_id": "feed_0574a4ca0aa244b1",
       "fingerprint": "0574a4ca0aa244b1",
@@ -1136,11 +1141,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-22T18:46:03+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.164361+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.164361+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.379925+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.379925+00:00",
       "freshness": {
         "iso": "2026-09-22T18:46:03+00:00",
-        "hours": 25.7,
+        "hours": 29.0,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1345,11 +1350,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-22T16:41:11+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.225742+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.225742+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.544311+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.544311+00:00",
       "freshness": {
         "iso": "2026-09-22T16:41:11+00:00",
-        "hours": 27.78,
+        "hours": 31.08,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1446,11 +1451,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T15:07:21+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.276071+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.276071+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.499513+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.499513+00:00",
       "freshness": {
         "iso": "2026-09-23T15:07:21+00:00",
-        "hours": 5.35,
+        "hours": 8.64,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1758,11 +1763,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-22T21:16:03+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.158499+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.158499+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.370655+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.370655+00:00",
       "freshness": {
         "iso": "2026-09-22T21:16:03+00:00",
-        "hours": 23.2,
+        "hours": 26.5,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1859,11 +1864,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-22T14:59:37+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.167355+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.167355+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.384038+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.384038+00:00",
       "freshness": {
         "iso": "2026-09-22T14:59:37+00:00",
-        "hours": 29.47,
+        "hours": 32.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1962,11 +1967,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-21T20:16:03+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.176239+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.176239+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.395343+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.395343+00:00",
       "freshness": {
         "iso": "2026-09-21T20:16:03+00:00",
-        "hours": 48.2,
+        "hours": 51.5,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2063,12 +2068,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T19:39:24+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.322550+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.322550+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.437186+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.437186+00:00",
       "freshness": {
         "iso": "2026-09-23T19:39:24+00:00",
-        "hours": 0.81,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.11,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -2167,11 +2172,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T13:30:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.333626+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.333626+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.452266+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.452266+00:00",
       "freshness": {
         "iso": "2026-09-23T13:30:00+00:00",
-        "hours": 6.97,
+        "hours": 10.27,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2270,11 +2275,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-23T07:25:05+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.343533+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.343533+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.466645+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.466645+00:00",
       "freshness": {
         "iso": "2026-09-23T07:25:05+00:00",
-        "hours": 13.05,
+        "hours": 16.35,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -2784,11 +2789,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T18:27:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.221668+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.221668+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.540737+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.540737+00:00",
       "freshness": {
         "iso": "2026-09-23T18:27:00+00:00",
-        "hours": 2.02,
+        "hours": 5.32,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2885,11 +2890,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T16:00:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.224054+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.224054+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.542578+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.542578+00:00",
       "freshness": {
         "iso": "2026-09-23T16:00:00+00:00",
-        "hours": 4.47,
+        "hours": 7.77,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2986,11 +2991,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.411040+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.411040+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.605931+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.605931+00:00",
       "freshness": {
         "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 125.47,
+        "hours": 128.77,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3085,11 +3090,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.412199+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.412199+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.609080+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.609080+00:00",
       "freshness": {
         "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 125.47,
+        "hours": 128.77,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3184,11 +3189,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-17T12:55:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.227072+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.227072+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.546111+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.546111+00:00",
       "freshness": {
         "iso": "2026-09-17T12:55:00+00:00",
-        "hours": 151.55,
+        "hours": 154.85,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -3284,12 +3289,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T19:04:52+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.271404+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.271404+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.493211+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.493211+00:00",
       "freshness": {
         "iso": "2026-09-23T19:04:52+00:00",
-        "hours": 1.39,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 4.69,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -3384,11 +3389,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T15:26:35+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.274760+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.274760+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.497779+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.497779+00:00",
       "freshness": {
         "iso": "2026-09-23T15:26:35+00:00",
-        "hours": 5.02,
+        "hours": 8.32,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3483,12 +3488,12 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-23T11:29:30+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.279988+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.279988+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.504445+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.504445+00:00",
       "freshness": {
         "iso": "2026-09-23T11:29:30+00:00",
-        "hours": 8.98,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 12.28,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -3587,11 +3592,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-22T15:21:28+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.299041+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.299041+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.531080+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.531080+00:00",
       "freshness": {
         "iso": "2026-09-22T15:21:28+00:00",
-        "hours": 29.11,
+        "hours": 32.41,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4698,11 +4703,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T16:36:03+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.147296+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.147296+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.356137+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.356137+00:00",
       "freshness": {
         "iso": "2026-09-23T16:36:03+00:00",
-        "hours": 3.87,
+        "hours": 7.17,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -5073,6 +5078,105 @@
       ]
     },
     {
+      "id": "feed_0b5917228d797e6f",
+      "event_id": "feed_0b5917228d797e6f",
+      "fingerprint": "0b5917228d797e6f",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Ex-SEC acting chair: Agency dropped crypto cases to avoid issues with credibility",
+      "body": "SEC Commissioner Mark Uyeda said that the agency dropped many cases against crypto companies in early 2025 to avoid potential credibility problems in court.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/sec-mark-uyeda-agency-dropped-crypto-cases",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/sec-mark-uyeda-agency-dropped-crypto-cases"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-23T21:47:52+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.433281+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.433281+00:00",
+      "freshness": {
+        "iso": "2026-09-23T21:47:52+00:00",
+        "hours": 1.97,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 90,
+        "level": "Critique"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 13,
+      "matched_topics": [
+        "crypto",
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Ex-SEC acting chair: Agency dropped crypto cases to avoid issues with credibility",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Ex-SEC acting chair: Agency dropped crypto cases to avoid issues with credibility",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_3f0071423f6bf877",
       "event_id": "feed_3f0071423f6bf877",
       "fingerprint": "3f0071423f6bf877",
@@ -5096,11 +5200,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T00:18:44+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.349796+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.349796+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.478442+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.478442+00:00",
       "freshness": {
         "iso": "2026-09-23T00:18:44+00:00",
-        "hours": 20.16,
+        "hours": 23.45,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6216,11 +6320,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T15:56:03+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.149132+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.149132+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.358472+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.358472+00:00",
       "freshness": {
         "iso": "2026-09-23T15:56:03+00:00",
-        "hours": 4.53,
+        "hours": 7.83,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -6488,6 +6592,105 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Ethereum Institutional signals support for Ethlabs’ motion to reduce Ethereum block times",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_b7a223720d31427a",
+      "event_id": "feed_b7a223720d31427a",
+      "fingerprint": "b7a223720d31427a",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "OpenAI agent 'infiltrated' Australian government website, PM says",
+      "body": "Albanese said he expressed \"concern\" to OpenAI founder Sam Altman, after authorities were informed three months after the breach in June.",
+      "source_name": "BBC World",
+      "source_url": "https://www.bbc.co.uk/news/articles/c6vgy0333dppo?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 2,
+      "source_names": [
+        "BBC World",
+        "BBC Business"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/c6vgy0333dppo?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-23T23:44:58+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.693153+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.722002+00:00",
+      "freshness": {
+        "iso": "2026-09-23T23:44:58+00:00",
+        "hours": 0.02,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 81,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 88,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
+        "tone": "warn"
+      },
+      "confirmations": 2,
+      "relevance_score": 6,
+      "matched_topics": [
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "OpenAI agent 'infiltrated' Australian government website, PM says",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] OpenAI agent 'infiltrated' Australian government website, PM says",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -7097,12 +7300,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T09:17:53+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.285958+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.285958+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.513771+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.513771+00:00",
       "freshness": {
         "iso": "2026-09-23T09:17:53+00:00",
-        "hours": 11.17,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.47,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -7197,11 +7400,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-23T07:49:23+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.287422+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.287422+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.515321+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.515321+00:00",
       "freshness": {
         "iso": "2026-09-23T07:49:23+00:00",
-        "hours": 12.64,
+        "hours": 15.94,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7508,11 +7711,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T15:41:46+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.150349+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.150349+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.360113+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.360113+00:00",
       "freshness": {
         "iso": "2026-09-23T15:41:46+00:00",
-        "hours": 4.77,
+        "hours": 8.07,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -7805,11 +8008,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T09:54:01+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.649111+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.649111+00:00",
+      "first_seen_at": "2026-09-23T23:46:02.011506+00:00",
+      "last_seen_at": "2026-09-23T23:46:02.011506+00:00",
       "freshness": {
         "iso": "2026-09-19T09:54:01+00:00",
-        "hours": 106.57,
+        "hours": 109.87,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -7906,11 +8109,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-18T04:49:17+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.598961+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.598961+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.914932+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.914932+00:00",
       "freshness": {
         "iso": "2026-09-18T04:49:17+00:00",
-        "hours": 135.65,
+        "hours": 138.95,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -8003,11 +8206,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T04:33:18+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.347695+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.347695+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.474693+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.474693+00:00",
       "freshness": {
         "iso": "2026-09-23T04:33:18+00:00",
-        "hours": 15.91,
+        "hours": 19.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8179,109 +8382,6 @@
       ]
     },
     {
-      "id": "feed_41b4f6440168f2a9",
-      "event_id": "feed_41b4f6440168f2a9",
-      "fingerprint": "41b4f6440168f2a9",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Crypto Tax Bill Clears House Committee After Clarity Act Setback",
-      "body": "The bill would exempt qualifying crypto fees from gain-or-loss calculations and restrict tax-loss deductions on tokens sold and quickly repurchased.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/378449/crypto-tax-bill-clears-house-committee",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 2,
-      "source_names": [
-        "Decrypt",
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://decrypt.co/378449/crypto-tax-bill-clears-house-committee",
-        "https://www.coindesk.com/policy/2026/09/16/u-s-house-s-tax-committee-advances-crypto-tax-bill-in-wake-of-clarity-act-loss"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-16T21:46:03+00:00",
-      "first_seen_at": "2026-09-21T06:28:12.724451+00:00",
-      "last_seen_at": "2026-09-21T06:28:12.724451+00:00",
-      "freshness": {
-        "iso": "2026-09-16T21:46:03+00:00",
-        "hours": 104.7,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 100,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
-        "tone": "warn"
-      },
-      "confirmations": 2,
-      "relevance_score": 13,
-      "matched_topics": [
-        "regulation_market",
-        "crypto"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Crypto Tax Bill Clears House Committee After Clarity Act Setback",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Crypto Tax Bill Clears House Committee After Clarity Act Setback",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_10b708953454b466",
       "event_id": "feed_10b708953454b466",
       "fingerprint": "10b708953454b466",
@@ -8305,11 +8405,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-23T18:04:11+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.273558+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.273558+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.496131+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.496131+00:00",
       "freshness": {
         "iso": "2026-09-23T18:04:11+00:00",
-        "hours": 2.4,
+        "hours": 5.7,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -8407,11 +8507,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-23T04:10:08+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.292792+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.292792+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.522771+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.522771+00:00",
       "freshness": {
         "iso": "2026-09-23T04:10:08+00:00",
-        "hours": 16.3,
+        "hours": 19.6,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8510,11 +8610,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-22T21:29:05+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.295228+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.295228+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.526131+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.526131+00:00",
       "freshness": {
         "iso": "2026-09-22T21:29:05+00:00",
-        "hours": 22.98,
+        "hours": 26.28,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -8612,11 +8712,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-22T20:31:02+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.296272+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.296272+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.527568+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.527568+00:00",
       "freshness": {
         "iso": "2026-09-22T20:31:02+00:00",
-        "hours": 23.95,
+        "hours": 27.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9837,12 +9937,12 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-21T22:16:03+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.173598+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.173598+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.391865+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.391865+00:00",
       "freshness": {
         "iso": "2026-09-21T22:16:03+00:00",
-        "hours": 46.2,
-        "label": "Récente · moins de 48 h",
+        "hours": 49.5,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -10651,11 +10751,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T13:55:08+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.603225+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.603225+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.920424+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.920424+00:00",
       "freshness": {
         "iso": "2026-09-23T13:55:08+00:00",
-        "hours": 6.55,
+        "hours": 9.85,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -10748,11 +10848,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T03:44:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.597685+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.597685+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.913084+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.913084+00:00",
       "freshness": {
         "iso": "2026-09-23T03:44:00+00:00",
-        "hours": 16.73,
+        "hours": 20.03,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10845,11 +10945,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-22T17:00:00+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.595109+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.595109+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.909621+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.909621+00:00",
       "freshness": {
         "iso": "2026-09-22T17:00:00+00:00",
-        "hours": 27.47,
+        "hours": 30.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10919,13 +11019,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_76281f585807b7c5",
-      "event_id": "feed_76281f585807b7c5",
-      "fingerprint": "76281f585807b7c5",
+      "id": "feed_e18a27fd5f1aa02e",
+      "event_id": "feed_e18a27fd5f1aa02e",
+      "fingerprint": "e18a27fd5f1aa02e",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - Cryptopolitan",
-      "body": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 Cryptopolitan",
+      "headline": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - cryptopolitan.com",
+      "body": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 cryptopolitan.com",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxOTjFUZEQydWpBQlNTNDJTM3N2LWFVSjJLMEJIOE5rWmVWbjUwTEluS1ZHMVlidWtTbkZ1RWNsMXFpN2NuMjBaOUVubm9iR2ltQkU3ZUZnTTI2aU9aMXZNRDBhZWZodzVyX0p6Y283ZjdmenFsUGpuUlZBY0Z6VW1xdA?oc=5",
       "source_host": "news.google.com",
@@ -10942,11 +11042,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-22T13:30:31+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.601899+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.601899+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.918667+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.918667+00:00",
       "freshness": {
         "iso": "2026-09-22T13:30:31+00:00",
-        "hours": 30.96,
+        "hours": 34.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10992,7 +11092,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - Cryptopolitan",
+      "headline_original": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - cryptopolitan.com",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -11000,14 +11100,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - Cryptopolitan",
+      "headline_fr": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - cryptopolitan.com",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - Cryptopolitan",
+      "display_headline": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - cryptopolitan.com",
       "display_language": "fr",
-      "headline_fr_display": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - Cryptopolitan",
+      "headline_fr_display": "Les ETF Bitcoin et Ether enregistrent leur plus forte entrée de capitaux depuis octobre 2025 - cryptopolitan.com",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -11039,11 +11139,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T15:16:37+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.645864+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.645864+00:00",
+      "first_seen_at": "2026-09-23T23:46:02.007211+00:00",
+      "last_seen_at": "2026-09-23T23:46:02.007211+00:00",
       "freshness": {
         "iso": "2026-09-18T15:16:37+00:00",
-        "hours": 125.19,
+        "hours": 128.49,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11114,6 +11214,101 @@
       "headline_fr_quality_reasons": []
     },
     {
+      "id": "feed_58bfe05b3272d6e3",
+      "event_id": "feed_58bfe05b3272d6e3",
+      "fingerprint": "58bfe05b3272d6e3",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
+      "body": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs CoinDesk",
+      "source_name": "Google News FR · réglementation crypto",
+      "source_url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQbThQb2xNT2ZsQldkdENxVWNXblBjeGxtQlE4S1pBSnN2T2VzcmdPam5oUV9fV0pZRTFDLVNpZXo4am9NRWVIUU5tVFE5U0o0emhwQy1xWlJkNUJlU3ZUZlZWTkdvdXp5c0w2Qks4ZEp0bU1SWmVFZFJ3MGdMYkZ1OU5GQllKN1ozeVpjU2ZCNlZULVNxMnkwbzh1Z3ZyZnJManRvVmNGTXpvd0Q3Vjl5M2ZjOElBd3JlYnlvVDhKT21FNS1Xd0dYRkZFQTFlNXlwOGpVbURR?oc=5",
+      "source_host": "news.google.com",
+      "source_group": "finance",
+      "source_class": "Presse économique reconnue",
+      "source_count": 1,
+      "source_names": [
+        "Google News FR · réglementation crypto"
+      ],
+      "source_urls": [
+        "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQbThQb2xNT2ZsQldkdENxVWNXblBjeGxtQlE4S1pBSnN2T2VzcmdPam5oUV9fV0pZRTFDLVNpZXo4am9NRWVIUU5tVFE5U0o0emhwQy1xWlJkNUJlU3ZUZlZWTkdvdXp5c0w2Qks4ZEp0bU1SWmVFZFJ3MGdMYkZ1OU5GQllKN1ozeVpjU2ZCNlZULVNxMnkwbzh1Z3ZyZnJManRvVmNGTXpvd0Q3Vjl5M2ZjOElBd3JlYnlvVDhKT21FNS1Xd0dYRkZFQTFlNXlwOGpVbURR?oc=5"
+      ],
+      "declared_status": "reported",
+      "event_type": "market_structure_regulation",
+      "event_label": "Réglementation / structure de marché",
+      "event_time": "2026-09-17T18:15:29+00:00",
+      "first_seen_at": "2026-09-23T23:46:02.010193+00:00",
+      "last_seen_at": "2026-09-23T23:46:02.010193+00:00",
+      "freshness": {
+        "iso": "2026-09-17T18:15:29+00:00",
+        "hours": 149.51,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 58,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 87,
+        "level": "Critique"
+      },
+      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 16,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 11,
+      "matched_topics": [
+        "regulation_market",
+        "crypto"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "fr",
+      "source_discovery_locale": "fr-FR",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
+      "language_original": "fr",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
+      "translation_engine": "native-fr-source",
+      "translation_quality_score": 100,
+      "translation_quality_flags": [],
+      "translation_status": "ORIGINAL_FR",
+      "display_headline": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
+      "display_language": "fr",
+      "headline_fr_display": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
+      "headline_fr_display_status": "native_fr",
+      "headline_fr_status": "original_fr",
+      "headline_fr_engine": "native-fr-source",
+      "headline_fr_quality_score": 100,
+      "headline_fr_quality_status": "native",
+      "headline_fr_quality_reasons": []
+    },
+    {
       "id": "feed_725096bde144e2c2",
       "event_id": "feed_725096bde144e2c2",
       "fingerprint": "725096bde144e2c2",
@@ -11137,11 +11332,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-17T17:13:15+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.596409+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.596409+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.911285+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.911285+00:00",
       "freshness": {
         "iso": "2026-09-17T17:13:15+00:00",
-        "hours": 147.25,
+        "hours": 150.55,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11211,101 +11406,6 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_58bfe05b3272d6e3",
-      "event_id": "feed_58bfe05b3272d6e3",
-      "fingerprint": "58bfe05b3272d6e3",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
-      "body": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs CoinDesk",
-      "source_name": "Google News FR · réglementation crypto",
-      "source_url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQbThQb2xNT2ZsQldkdENxVWNXblBjeGxtQlE4S1pBSnN2T2VzcmdPam5oUV9fV0pZRTFDLVNpZXo4am9NRWVIUU5tVFE5U0o0emhwQy1xWlJkNUJlU3ZUZlZWTkdvdXp5c0w2Qks4ZEp0bU1SWmVFZFJ3MGdMYkZ1OU5GQllKN1ozeVpjU2ZCNlZULVNxMnkwbzh1Z3ZyZnJManRvVmNGTXpvd0Q3Vjl5M2ZjOElBd3JlYnlvVDhKT21FNS1Xd0dYRkZFQTFlNXlwOGpVbURR?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News FR · réglementation crypto"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQbThQb2xNT2ZsQldkdENxVWNXblBjeGxtQlE4S1pBSnN2T2VzcmdPam5oUV9fV0pZRTFDLVNpZXo4am9NRWVIUU5tVFE5U0o0emhwQy1xWlJkNUJlU3ZUZlZWTkdvdXp5c0w2Qks4ZEp0bU1SWmVFZFJ3MGdMYkZ1OU5GQllKN1ozeVpjU2ZCNlZULVNxMnkwbzh1Z3ZyZnJManRvVmNGTXpvd0Q3Vjl5M2ZjOElBd3JlYnlvVDhKT21FNS1Xd0dYRkZFQTFlNXlwOGpVbURR?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-17T14:50:58+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.648125+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.648125+00:00",
-      "freshness": {
-        "iso": "2026-09-17T14:50:58+00:00",
-        "hours": 149.62,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 11,
-      "matched_topics": [
-        "regulation_market",
-        "crypto"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "fr",
-      "source_discovery_locale": "fr-FR",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
-      "language_original": "fr",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
-      "translation_engine": "native-fr-source",
-      "translation_quality_score": 100,
-      "translation_quality_flags": [],
-      "translation_status": "ORIGINAL_FR",
-      "display_headline": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
-      "display_language": "fr",
-      "headline_fr_display": "L’échec de la Clarity Act pourrait freiner la crypto américaine alors que l’industrie cherche une clarté juridique ailleurs - CoinDesk",
-      "headline_fr_display_status": "native_fr",
-      "headline_fr_status": "original_fr",
-      "headline_fr_engine": "native-fr-source",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "native",
-      "headline_fr_quality_reasons": []
-    },
-    {
       "id": "feed_cc96760a9f3819de",
       "event_id": "feed_cc96760a9f3819de",
       "fingerprint": "cc96760a9f3819de",
@@ -11329,11 +11429,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-23T18:17:48+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.325167+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.325167+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.440537+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.440537+00:00",
       "freshness": {
         "iso": "2026-09-23T18:17:48+00:00",
-        "hours": 2.17,
+        "hours": 5.47,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -11430,12 +11530,12 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-23T10:06:55+00:00",
-      "first_seen_at": "2026-09-23T20:28:04.338248+00:00",
-      "last_seen_at": "2026-09-23T20:28:04.338248+00:00",
+      "first_seen_at": "2026-09-23T23:46:01.458541+00:00",
+      "last_seen_at": "2026-09-23T23:46:01.458541+00:00",
       "freshness": {
         "iso": "2026-09-23T10:06:55+00:00",
-        "hours": 10.35,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.65,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -12011,105 +12111,6 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Bitcoin absorbs Fed rate hike as officials see more tightening",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_ec50bda21879e2a5",
-      "event_id": "feed_ec50bda21879e2a5",
-      "fingerprint": "ec50bda21879e2a5",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "CLARITY Act could get another shot during lame-duck session, policy advocate says",
-      "body": "Digital Sovereignty Alliance managing director Adrian Wall said senators from both parties are considering another attempt to advance the crypto market structure bill before the current Congress ends.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/clarity-act-could-get-another-shot-during-lame-duck-session-policy-advocate-says",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/clarity-act-could-get-another-shot-during-lame-duck-session-policy-advocate-says"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-16T20:51:38+00:00",
-      "first_seen_at": "2026-09-18T06:01:13.053868+00:00",
-      "last_seen_at": "2026-09-18T06:01:13.053868+00:00",
-      "freshness": {
-        "iso": "2026-09-16T20:51:38+00:00",
-        "hours": 33.16,
-        "label": "Récente · moins de 48 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "regulation_market",
-        "crypto"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "CLARITY Act could get another shot during lame-duck session, policy advocate says",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] CLARITY Act could get another shot during lame-duck session, policy advocate says",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
