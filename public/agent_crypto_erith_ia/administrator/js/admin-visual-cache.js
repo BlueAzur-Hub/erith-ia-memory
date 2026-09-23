@@ -2,11 +2,11 @@
 (() => {
   "use strict";
 
-  const BUILD = "40.4.254";
+  const BUILD = "40.6.389";
   const DB_NAME = "agent_crypto_visual_cache_v1";
   const DB_VERSION = 1;
   const STORE = "assets";
-  const GENERATION = "administrator-visuals-2026-09-05-404254-v2";
+  const GENERATION = "administrator-visuals-2026-09-23-406389-v3";
   const CHART_OFFICE = "./assets/visual/admin-chart-office.png";
   const objectUrls = new Map();
   const stats = { memory: 0, indexeddb: 0, network: 0, miss: 0, error: 0 };
