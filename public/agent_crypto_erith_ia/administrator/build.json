@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.376",
+  "build": "40.6.377",
   "engine": "38.15.11",
-  "release": "HOVER CARD CENTER LOCK",
+  "release": "ATLAS MATH COLOR PARITY",
   "published": true,
-  "status": "published_pending_firefox_hover_card_center_lock",
-  "parent_build": "40.6.375",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.376",
-  "administrator_build": "40.6.376",
-  "build_label": "Build 40.6.376 · Administrator",
+  "status": "published_pending_firefox_math_color_parity",
+  "parent_build": "40.6.376",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.377",
+  "administrator_build": "40.6.377",
+  "build_label": "Build 40.6.377 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox Ryzen: hover Math Core and REDIVIDER in NORMAL mode. Each 3-line card must be horizontally aligned with its own instrument panel and its text visually centered. Confirm 40.6.375 STOP -> COUPÉ -> RELANCE state truth remains unchanged.",
+  "terrain_pending": "Firefox Ryzen: verify operator Math Core copies canonical Atlas Math Core color bands. Expected exact bands: 0-24 red #FF5C78; 25-54 orange #FF9F1C; 55-74 turquoise #42E8E0; 75-100 green #64EFA0. At score 51 operator must be orange; at 55 turquoise. REDIVIDER 40.6.375/376 remains unchanged.",
   "terrain_proof": null,
-  "release_notes": "40.6.376 is presentation-only. It preserves the validated 40.6.375 REDIVIDER state truth and full 360° confirmation ring, while aligning NORMAL-mode hover cards to the Math/REDIVIDER instrument widths and explicitly centering their three-line copy.",
+  "release_notes": "40.6.377 fixes Math Core visual parity only. The floating/operator Math Core now reads the canonical Atlas --math-score-color when available and falls back to the exact Atlas V3 historical band contract (0-24 red, 25-54 orange, 55-74 turquoise, 75-100 green). Score, labels, computation, REDIVIDER, Market Core and Strategy logic are unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -3657,6 +3657,50 @@
     "market_core_modified": false,
     "app_js_modified": false,
     "strategy_thresholds_modified": false,
+    "gates_modified": false,
+    "real_orders": false,
+    "wallet": false,
+    "firefox_terrain_proof": "PENDING"
+  },
+  "operator_dashboard_406377": {
+    "scope": "operator_dashboard_atlas_math_color_parity",
+    "parent_runtime": "40.6.376",
+    "module": "js/operator-dashboard-406377.js",
+    "presentation_only": true,
+    "canonical_color_owner": "Atlas Math Core V3 --math-score-color",
+    "fallback_bands": [
+      {
+        "min": 0,
+        "max": 24,
+        "id": "red",
+        "color": "#FF5C78"
+      },
+      {
+        "min": 25,
+        "max": 54,
+        "id": "orange",
+        "color": "#FF9F1C"
+      },
+      {
+        "min": 55,
+        "max": 74,
+        "id": "turquoise",
+        "color": "#42E8E0"
+      },
+      {
+        "min": 75,
+        "max": 100,
+        "id": "green",
+        "color": "#64EFA0"
+      }
+    ],
+    "score_and_label_source": "CANONICAL_MATH_DOM",
+    "math_computation_modified": false,
+    "hover_center_406376_preserved": true,
+    "redivider_state_truth_406375_preserved": true,
+    "redivider_modified": false,
+    "market_core_modified": false,
+    "strategy_modified": false,
     "gates_modified": false,
     "real_orders": false,
     "wallet": false,
