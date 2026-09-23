@@ -222,7 +222,7 @@ ASSET_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("XRP", ("xrp", "ripple")), ("USDT", ("usdt", "tether")),
     ("USDC", ("usdc", "usd coin")), ("ADA", ("cardano", "ada")),
     ("DOGE", ("dogecoin", "doge")), ("AVAX", ("avalanche", "avax")),
-    ("LINK", ("chainlink", "link")), ("SUI", ("sui",)),
+    ("LINK", ("chainlink", "link token")), ("SUI", ("sui",)),
     ("UNI", ("uniswap", "uni")), ("AAVE", ("aave",)), ("XMR", ("monero", "xmr")),
 )
 
@@ -755,9 +755,7 @@ def self_test() -> int:
     assert analyzed is not None
     assert analyzed["event_type"] in ("regulation", "etf", "etf_flow", "market_structure_regulation")
     assert "BTC" in analyzed["assets"]
-    assert analyzed["source_url"] == "https://example.com/a"
-    assert analyzed["causal_claim"] is False
-
+    assert analyzed["source_url"] == "https://example.com/a"\n    assert analyzed["causal_claim"] is False\n\n    # 40.6.386 — LINK entity truth regression lock.\n    # "OTC Link LLC" is a company name, not Chainlink (LINK).\n    assert "LINK" not in detect_assets("SEC Censures OTC Link LLC for Repeated Compliance Failures Related to Regulation SCI")\n    assert "LINK" in detect_assets("Chainlink LINK token market infrastructure update")\n
     duplicate = dict(analyzed)
     duplicate["source_name"] = "Second Source"
     duplicate["source_names"] = ["Second Source"]
