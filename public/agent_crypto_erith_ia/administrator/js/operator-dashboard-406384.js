@@ -1010,25 +1010,31 @@
 
 <div class="redivider-confirm-overlay" id="acOperatorRedividerConfirm406384" data-confirm-overlay>
   <section class="redivider-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="acOperatorRedividerConfirmTitle406384" aria-describedby="acOperatorRedividerConfirmDesc406384">
-    <div class="confirm-eyebrow">KILL SWITCH OPÉRATEUR</div>
-    <h2 class="confirm-title" id="acOperatorRedividerConfirmTitle406384">REDIVIDER</h2>
-    <p class="confirm-subtitle" id="acOperatorRedividerConfirmSubtitle406384">Confirmation de coupure</p>
-    <div class="confirm-hud" aria-hidden="true">
-      <span class="confirm-rail left"></span>
-      <span class="confirm-ring"><span class="confirm-core"><strong>REDIVIDER</strong><span class="confirm-percent" id="acOperatorRedividerConfirmPercent406384">[ 100% ]</span><span class="confirm-glyphs"><span>◈</span><b>◉</b><span>◈</span></span></span></span>
-      <span class="confirm-rail right"></span>
+    <div class="confirm-hud">
+      <div class="confirm-hud-art" aria-hidden="true"></div>
+      <div class="confirm-hud-copy">
+        <div class="confirm-eyebrow">KILL SWITCH OPÉRATEUR</div>
+        <h2 class="confirm-title" id="acOperatorRedividerConfirmTitle406384">REDIVIDER</h2>
+        <p class="confirm-subtitle" id="acOperatorRedividerConfirmSubtitle406384">Confirmation de coupure</p>
+        <div class="confirm-live">
+          <span class="confirm-percent" id="acOperatorRedividerConfirmPercent406384">[ 100% ]</span>
+          <span class="confirm-glyphs" aria-hidden="true"><span>◈</span><b>◉</b><span>◈</span></span>
+          <div class="confirm-state" id="acOperatorRedividerConfirmState406384">PAPER ONLY · PRÊT</div>
+        </div>
+      </div>
     </div>
-    <p class="confirm-question" id="acOperatorRedividerConfirmQuestion406384">Couper Auto A Paper ?</p>
-    <div class="confirm-safety" id="acOperatorRedividerConfirmDesc406384">
-      <span>Position Paper éventuelle préservée et surveillable.</span>
-      <span>Interface, Atlas, Oracle, Math Core et graphique restent lisibles.</span>
-      <span>Aucun ordre réel.</span>
-      <span>Aucun wallet ni suppression de données.</span>
-    </div>
-    <div class="confirm-state" id="acOperatorRedividerConfirmState406384">PAPER ONLY · PRÊT</div>
-    <div class="confirm-actions">
-      <button class="confirm-action cancel" id="acOperatorRedividerCancel406384" type="button" data-confirm-cancel>ANNULER</button>
-      <button class="confirm-action confirm" id="acOperatorRedividerAccept406384" type="button" data-confirm-accept>CONFIRMER</button>
+    <div class="confirm-command-deck">
+      <p class="confirm-question" id="acOperatorRedividerConfirmQuestion406384">Couper Auto A Paper ?</p>
+      <div class="confirm-safety" id="acOperatorRedividerConfirmDesc406384">
+        <span>Position Paper éventuelle préservée et surveillable.</span>
+        <span>Interface, Atlas, Oracle, Math Core et graphique restent lisibles.</span>
+        <span>Aucun ordre réel.</span>
+        <span>Aucun wallet ni suppression de données.</span>
+      </div>
+      <div class="confirm-actions">
+        <button class="confirm-action cancel" id="acOperatorRedividerCancel406384" type="button" data-confirm-cancel>ANNULER</button>
+        <button class="confirm-action confirm" id="acOperatorRedividerAccept406384" type="button" data-confirm-accept>CONFIRMER</button>
+      </div>
     </div>
   </section>
 </div>
