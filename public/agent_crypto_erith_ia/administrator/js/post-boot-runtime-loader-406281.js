@@ -5,7 +5,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.336";
+  const BUILD="40.6.397";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const SECONDARY_MODULES=Object.freeze([
@@ -75,9 +75,18 @@
   // Late modules wait for a short quiet window before parse/eval so background
   // loading cannot continuously compete with direct human input.
   const OPERATOR_QUIET_MS=1400;
+  const POINTERMOVE_SAMPLE_MS=120;
   let lastOperatorInputAt=performance.now();
+  let lastPointerMoveSampleAt=0;
   const markOperatorInput=()=>{lastOperatorInputAt=performance.now();};
+  const markOperatorPointerMove=()=>{
+    const now=performance.now();
+    if(now-lastPointerMoveSampleAt<POINTERMOVE_SAMPLE_MS)return;
+    lastPointerMoveSampleAt=now;
+    lastOperatorInputAt=now;
+  };
   window.addEventListener("pointerdown",markOperatorInput,{capture:true,passive:true});
+  window.addEventListener("pointermove",markOperatorPointerMove,{capture:true,passive:true});
   window.addEventListener("keydown",markOperatorInput,{capture:true,passive:true});
   window.addEventListener("wheel",markOperatorInput,{capture:true,passive:true});
   window.addEventListener("touchstart",markOperatorInput,{capture:true,passive:true});
@@ -214,7 +223,7 @@
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED_PLUS_OPERATOR_QUIET_406299",operator_quiet_ms:OPERATOR_QUIET_MS,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED_PLUS_OPERATOR_QUIET_POINTERMOVE_406397",operator_quiet_ms:OPERATOR_QUIET_MS,pointermove_sample_ms:POINTERMOVE_SAMPLE_MS,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
     loadMarketsNow:loadMarketModulesNow,
     marketDemandModules:MARKET_DEMAND_MODULES.slice(),
     market_lazy_cycle_guard:true,
