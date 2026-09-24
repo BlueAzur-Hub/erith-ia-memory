@@ -794,104 +794,13 @@
 #${ROOT_ID} .math-hover-readout{
   min-height:58px;line-height:1.34;letter-spacing:.06em;
 }
-#${ROOT_ID} .confirm-state{
-  white-space:pre-line;line-height:1.42;
-  font-size:9px!important;letter-spacing:.10em!important;
-}
-#${ROOT_ID} .confirm-percent{
-  white-space:nowrap;font-size:12px;
-}
-#${ROOT_ID} .confirm-question{
-  position:relative;
-}
-#${ROOT_ID} .confirm-question:before,
-#${ROOT_ID} .confirm-question:after{
-  content:"";display:inline-block;width:32px;height:1px;vertical-align:middle;margin:0 9px;
-  background:linear-gradient(90deg,transparent,rgba(174,35,49,.58));
-}
-#${ROOT_ID} .confirm-question:after{transform:scaleX(-1)}
+
 @media(max-width:620px){
   #${ROOT_ID} .redivider-hud{grid-template-columns:minmax(34px,1fr) 118px minmax(34px,1fr)}
   #${ROOT_ID} .redivider-center-stack{width:118px;height:130px}
   #${ROOT_ID} .redivider-orbit{font-size:6px;max-width:120px}
 }
 
-/* REDIVIDER CONFIRMATION — native cockpit safety dialog */
-#${ROOT_ID} .redivider-confirm-overlay{
-  display:none;position:fixed;inset:0;z-index:40;pointer-events:auto;
-  place-items:center;padding:24px;background:rgba(1,4,7,.72);
-  backdrop-filter:blur(5px) saturate(78%);
-}
-#${ROOT_ID}[data-confirm-open="true"] .redivider-confirm-overlay{display:grid}
-#${ROOT_ID} .redivider-confirm-modal{
-  width:min(620px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;
-  position:relative;border-radius:28px;padding:22px 24px 20px;color:#eee8e4;
-  border:1px solid rgba(151,35,49,.52);
-  background:radial-gradient(circle at 50% 29%,rgba(100,12,24,.18),transparent 34%),linear-gradient(160deg,rgba(12,10,13,.98),rgba(4,6,9,.98));
-  box-shadow:0 28px 80px rgba(0,0,0,.70),0 0 0 1px rgba(255,255,255,.015),0 0 44px rgba(121,10,26,.12);
-}
-#${ROOT_ID} .redivider-confirm-modal:before{
-  content:"";position:absolute;left:8%;right:8%;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(177,31,46,.70),rgba(99,15,27,.35),transparent);
-}
-#${ROOT_ID} .confirm-eyebrow{text-align:center;color:#b6aca9;font-size:9px;font-weight:1000;letter-spacing:.24em;text-transform:uppercase}
-#${ROOT_ID} .confirm-title{margin:6px 0 2px;text-align:center;color:#e9e4df;font-size:18px;font-weight:1000;letter-spacing:.15em}
-#${ROOT_ID} .confirm-subtitle{margin:0;text-align:center;color:#9d777b;font-size:9px;font-weight:900;letter-spacing:.10em;text-transform:uppercase}
-#${ROOT_ID} .confirm-hud{margin:18px auto 14px;width:min(100%,530px);display:grid;grid-template-columns:minmax(68px,1fr) 156px minmax(68px,1fr);align-items:center;gap:9px}
-#${ROOT_ID} .confirm-rail{height:48px;position:relative;overflow:hidden}
-#${ROOT_ID} .confirm-rail:before{
-  content:"";position:absolute;left:0;right:0;top:50%;height:2px;transform:translateY(-50%);
-  background:linear-gradient(90deg,transparent,rgba(103,14,27,.66) 10%,rgba(183,30,46,.94) 46%,rgba(103,14,27,.66) 90%,transparent);
-  box-shadow:0 0 8px rgba(144,12,30,.24);
-}
-#${ROOT_ID} .confirm-rail:after{
-  content:"";position:absolute;left:7px;right:7px;top:11px;height:26px;
-  border-top:1px solid rgba(164,26,41,.42);border-bottom:1px solid rgba(164,26,41,.28);
-  background:repeating-linear-gradient(90deg,transparent 0 8px,rgba(168,29,44,.29) 8px 13px,transparent 13px 20px);
-  clip-path:polygon(0 32%,90% 32%,100% 50%,90% 68%,0 68%);
-}
-#${ROOT_ID} .confirm-rail.right:after{transform:scaleX(-1)}
-#${ROOT_ID} .confirm-ring{
-  width:156px;height:156px;border-radius:50%;padding:11px;display:grid;place-items:center;
-  background:rgba(176,30,46,.94);
-  box-shadow:0 0 0 1px rgba(177,31,46,.18),0 0 24px rgba(138,12,30,.24);
-}
-#${ROOT_ID} .confirm-core{
-  width:100%;height:100%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  background:radial-gradient(circle at 50% 42%,rgba(116,13,26,.22),rgba(13,9,12,.97) 62%,rgba(4,5,7,.995));
-  border:1px solid rgba(142,41,52,.34);box-shadow:inset 0 0 28px rgba(0,0,0,.62);
-}
-#${ROOT_ID} .confirm-core strong{color:#e5dfdb;font-size:11px;letter-spacing:.21em}
-#${ROOT_ID} .confirm-percent{color:#d8636d;font-size:13px;font-weight:1000;letter-spacing:.12em;text-shadow:0 0 7px rgba(170,27,45,.24)}
-#${ROOT_ID} .confirm-glyphs{display:flex;gap:11px;align-items:center;color:#8c2631;font-size:13px;text-shadow:0 0 5px rgba(126,12,29,.32)}
-#${ROOT_ID} .confirm-glyphs b{color:#c32d3b;font-size:22px;text-shadow:0 0 9px rgba(155,13,31,.40)}
-#${ROOT_ID} .confirm-question{margin:0 auto 12px;text-align:center;color:#f1ece8;font-size:15px;font-weight:900}
-#${ROOT_ID} .confirm-safety{
-  margin:0 auto;padding:12px 16px;max-width:500px;border-radius:14px;
-  border:1px solid rgba(149,39,51,.20);background:rgba(255,255,255,.018);
-  color:#c85b65;font-size:11px;line-height:1.55;text-align:center;font-weight:800;
-}
-#${ROOT_ID} .confirm-safety span{display:block}
-#${ROOT_ID} .confirm-state{margin-top:12px;text-align:center;color:#aa6d73;font-size:8px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase}
-#${ROOT_ID} .confirm-actions{display:flex;justify-content:center;gap:12px;margin-top:18px}
-#${ROOT_ID} .confirm-action{min-width:128px;height:39px;border-radius:999px;padding:0 18px;cursor:pointer;font-size:10px;font-weight:1000;letter-spacing:.10em}
-#${ROOT_ID} .confirm-action.cancel{color:#d7d0cc;border:1px solid rgba(193,186,180,.20);background:rgba(255,255,255,.045)}
-#${ROOT_ID} .confirm-action.confirm{
-  color:#f2dddd;border:1px solid rgba(189,43,57,.58);
-  background:linear-gradient(180deg,rgba(124,20,33,.86),rgba(72,11,22,.92));
-  box-shadow:0 0 12px rgba(135,13,30,.12);
-}
-#${ROOT_ID} .confirm-action:hover{filter:brightness(1.08)}
-#${ROOT_ID} .confirm-action:focus-visible{outline:2px solid rgba(225,190,194,.72);outline-offset:3px}
-#${ROOT_ID} .confirm-action:disabled{opacity:.42;cursor:wait}
-@media(max-width:620px){
-  #${ROOT_ID} .redivider-confirm-overlay{padding:10px}
-  #${ROOT_ID} .redivider-confirm-modal{width:calc(100vw - 20px);padding:18px 14px 16px}
-  #${ROOT_ID} .confirm-hud{grid-template-columns:minmax(34px,1fr) 132px minmax(34px,1fr)}
-  #${ROOT_ID} .confirm-ring{width:132px;height:132px}
-  #${ROOT_ID} .confirm-actions{flex-direction:column}
-  #${ROOT_ID} .confirm-action{width:100%}
-}
 /* HARD EXCLUSIVITY — no ghost MINI when NORMAL */
 #${ROOT_ID}[data-math-mode="normal"] .math-wing .mini,
 #${ROOT_ID}[data-kill-mode="normal"] .kill-wing .mini{display:none!important}
