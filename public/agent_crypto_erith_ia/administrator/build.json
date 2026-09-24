@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.394",
+  "build": "40.6.395",
   "engine": "38.15.11",
-  "release": "REDIVIDER · CANONICAL MODULE NAME",
+  "release": "MATH CORE · BOOT RESTORE RESYNC",
   "published": true,
-  "status": "published_pending_firefox_redivider_394",
-  "parent_build": "40.6.393",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.394",
-  "administrator_build": "40.6.394",
-  "build_label": "Build 40.6.394 · Administrator",
+  "status": "published_pending_firefox_math_core_395",
+  "parent_build": "40.6.394",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.395",
+  "administrator_build": "40.6.395",
+  "build_label": "Build 40.6.395 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.394. Confirm REDIVIDER visual is unchanged from 40.6.393 and stylesheet loads from administrator/redivider-visual.css?v=40.6.394. Confirm no version-numbered redivider-visual-*.css remains in the active administrator directory.",
+  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.395. During boot, an absent score must remain neutral 'En attente' rather than red 'Données insuffisantes'. If a remembered canonical market snapshot is restored, the existing score must repopulate without a second F5. Confirm REDIVIDER, Lecture Technique, Oracle, Aether and Market Core 38.15.11 are unchanged.",
   "terrain_proof": null,
-  "release_notes": "40.6.394 is an administrative naming cleanup only. REDIVIDER visual behavior is unchanged. The permanent module name is now administrator/redivider-visual.css. Version numbers belong only in build metadata, cache-busters, releases and commits, never in the persistent REDIVIDER source filename. Version-numbered REDIVIDER CSS files 40.6.390 through 40.6.393 are removed from the active directory.",
+  "release_notes": "40.6.395 fixes the Math Core boot/restore synchronization in administrator/app.js only. atlasMathScoreBand no longer coerces null to numeric zero, and atlasRestoreRememberedMarket immediately reruns the canonical renderScore owner after restoring a valid remembered market snapshot. No score formula, historical-risk formula, REDIVIDER, Market Core, Oracle, Aether, Lecture Technique, Strategy A, storage owner, timer, observer, network owner, wallet or real-order behavior is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -994,7 +994,7 @@
     "notion_touched": false
   },
   "oracle_business_logic_modified": false,
-  "math_core_modified": false,
+  "math_core_modified": true,
   "atlas_current_business_logic_modified": false,
   "operator_boot_report_406276": {
     "base_build": "40.6.275",
@@ -4232,5 +4232,36 @@
     "stop_resume_logic_modified": false,
     "approved_asset_modified": false,
     "market_core_modified": false
+  },
+  "math_core_formula_modified": false,
+  "math_core_boot_recovery_406395": {
+    "scope": "math_core_boot_restore_resync",
+    "parent_runtime": "40.6.394",
+    "owner": "administrator/app.js",
+    "root_causes": [
+      "atlasMathScoreBand coerced a null score through Number(null), producing numeric 0 and the red 'Données insuffisantes' band during boot.",
+      "atlasRestoreRememberedMarket restored canonical market state without rerunning the existing renderScore owner, allowing the provisional state to persist until a later full render or reload."
+    ],
+    "repair": [
+      "Null, undefined and empty score values now remain neutral 'En attente'.",
+      "A successful remembered-market restore immediately calls renderScore on the selected/restored coin and resynchronizes the existing Math rail."
+    ],
+    "score_formula_modified": false,
+    "historical_risk_formula_modified": false,
+    "operator_dashboard_modified": false,
+    "redivider_modified": false,
+    "market_core_modified": false,
+    "oracle_modified": false,
+    "aether_modified": false,
+    "lecture_technique_modified": false,
+    "strategy_modified": false,
+    "storage_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_network_request": false,
+    "real_orders": false,
+    "wallet": false,
+    "javascript_syntax_check": "PASS_NEW_FUNCTION",
+    "firefox_terrain_proof": "PENDING"
   }
 }

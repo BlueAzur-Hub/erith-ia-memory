@@ -18193,6 +18193,13 @@ function atlasRestoreRememberedMarket(reason = "réseau temporairement indisponi
     atlasAnalysisLiveReady() ? "ok" : "warn"
   );
 
+  // 40.6.395 — the remembered snapshot is canonical again: immediately
+  // resynchronize the existing Math score owner instead of leaving the
+  // provisional boot state visible until a later full render / reload.
+  const restoredCoin = getSelectedCoin() || state.coins[0] || null;
+  renderScore(restoredCoin);
+  if (typeof atlasV2SyncMathRail === "function") atlasV2SyncMathRail();
+
   return true;
 }
 
@@ -20719,6 +20726,11 @@ function atlasMarketFrameContextForMath() {
 }
 
 function atlasMathScoreBand(score) {
+  // 40.6.395 — boot truth: an absent score is pending, never a numeric zero.
+  if (score === null || score === undefined || score === "") {
+    return { id: "neutral", color: "#8EA4BA", label: "En attente" };
+  }
+
   const value = Number(score);
 
   if (!Number.isFinite(value)) {
