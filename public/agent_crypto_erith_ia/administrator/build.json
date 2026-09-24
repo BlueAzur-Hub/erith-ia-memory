@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.393",
+  "build": "40.6.394",
   "engine": "38.15.11",
-  "release": "REDIVIDER · SINGLE CSS OWNER REPAIR",
+  "release": "REDIVIDER · CANONICAL MODULE NAME",
   "published": true,
-  "status": "published_pending_firefox_redivider_393",
-  "parent_build": "40.6.392",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.393",
-  "administrator_build": "40.6.393",
-  "build_label": "Build 40.6.393 · Administrator",
+  "status": "published_pending_firefox_redivider_394",
+  "parent_build": "40.6.393",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.394",
+  "administrator_build": "40.6.394",
+  "build_label": "Build 40.6.394 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.393 -> open REDIVIDER. Expect the 40.6.392 rebuilt layout without any late JS CSS override: no horizontal/vertical scrollbar, no 530px HUD reset, no 620px legacy modal width, all buttons visible. Cancel/reopen/STOP/explicit resume. Chrome/Blackview: CSS-only compact dialog, no PNG request. Confirm Math Core, Lecture Technique, Aether and Market Core 38.15.11 unchanged.",
+  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.394. Confirm REDIVIDER visual is unchanged from 40.6.393 and stylesheet loads from administrator/redivider-visual.css?v=40.6.394. Confirm no version-numbered redivider-visual-*.css remains in the active administrator directory.",
   "terrain_proof": null,
-  "release_notes": "40.6.393 fixes the root cause of the Firefox mismatch. All REDIVIDER confirmation presentation rules have been removed from operator-dashboard-406384.js ensureStyle(), including the legacy overflow:auto modal and 530px confirmation HUD. redivider-visual-406393.css is now the single presentation owner for desktop and compact/mobile confirmation, including display state, focus and disabled styling. The 40.6.392 rebuilt DOM and all STOP/RESUME logic remain intact.",
+  "release_notes": "40.6.394 is an administrative naming cleanup only. REDIVIDER visual behavior is unchanged. The permanent module name is now administrator/redivider-visual.css. Version numbers belong only in build metadata, cache-busters, releases and commits, never in the persistent REDIVIDER source filename. Version-numbered REDIVIDER CSS files 40.6.390 through 40.6.393 are removed from the active directory.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -2652,7 +2652,7 @@
     "syntax_gate": "PASS_V8_MODULE_AND_POST_BOOT_LOADER",
     "firefox_terrain_proof": "PENDING"
   },
-  "operator_dashboard_modified": true,
+  "operator_dashboard_modified": false,
   "storage_business_logic_modified": false,
   "operator_dashboard_406345": {
     "scope": "floating_operator_dashboard_math_core_plus_kill_switch",
@@ -4216,5 +4216,21 @@
     "forbidden_confirmation_selectors_remaining_in_injected_style": [],
     "javascript_syntax_check": "PASS",
     "firefox_terrain_proof": "PENDING"
+  },
+  "redivider_module_naming_406394": {
+    "scope": "canonical_persistent_filename",
+    "canonical_file": "administrator/redivider-visual.css",
+    "version_in_filename": false,
+    "cache_buster": "?v=40.6.394",
+    "deleted_active_versioned_files": [
+      "administrator/redivider-visual-406390.css",
+      "administrator/redivider-visual-406391.css",
+      "administrator/redivider-visual-406392.css",
+      "administrator/redivider-visual-406393.css"
+    ],
+    "visual_change": false,
+    "stop_resume_logic_modified": false,
+    "approved_asset_modified": false,
+    "market_core_modified": false
   }
 }
