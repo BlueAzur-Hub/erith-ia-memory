@@ -6,18 +6,23 @@ Market Core: **38.15.11**
 ## Scope
 Visual-only REDIVIDER refinement. Single visual owner: `administrator/redivider-visual.css`.
 
-## Change
-- white-hot / warm-white text core;
-- layered red luminous bloom;
-- strongest hierarchy on `REDIVIDER` and `[ 100% ]`;
-- softer white/red treatment for eyebrow, subtitle, state and confirmation question;
-- decorative glyphs remain red;
-- mobile receives the same language with tighter bloom.
+## Firefox refinement on the same build
+The first Firefox proof confirmed the white/red direction. The same 40.6.396 was then refined without a version bump:
+
+- `REDIVIDER`: smaller white spread, cleaner letter edges, red halo preserved;
+- `[ 100% ]`: smaller white spill, tighter red falloff;
+- no geometry, placement or component structure change.
 
 ## Frozen
 No change to PNG, DOM, STOP/RESUME, Paper logic, Math Core formulas or the 40.6.395 restore fix, Market Core **38.15.11**, Oracle, Aether, Lecture Technique, Strategy A, storage, timers, observers, network owners, wallet or real orders.
 
-## Firefox terrain validation
-Ctrl+F5 -> **Build 40.6.396** -> REDIVIDER. PASS only if the text reads as **white incandescent with red bloom**, no layout/scrollbar regression, and Math Core remains healthy without a second F5.
+## Final Firefox terrain validation
+Ctrl+F5 -> **Build 40.6.396** -> REDIVIDER.
 
-Terrain at publication: **PENDING**.
+PASS only if:
+- text remains white incandescent with red bloom;
+- `REDIVIDER` and `[100%]` are sharper than the first 40.6.396 proof;
+- no layout shift or scrollbar appears;
+- Math Core remains healthy.
+
+Terrain after refinement: **PENDING**.

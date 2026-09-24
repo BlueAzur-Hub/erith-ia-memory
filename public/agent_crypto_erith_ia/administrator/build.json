@@ -4,7 +4,7 @@
   "engine": "38.15.11",
   "release": "REDIVIDER · WHITE RED HUD BLOOM",
   "published": true,
-  "status": "published_pending_firefox_redivider_bloom_396",
+  "status": "published_pending_firefox_redivider_bloom_final_396",
   "parent_build": "40.6.395",
   "asset_token": "market-core-v2.0-alpha-build-40.6.396",
   "administrator_build": "40.6.396",
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.396. Open REDIVIDER and verify white-hot text with red bloom, no layout/scrollbar regression, Math Core still healthy from 40.6.395, Market Core still 38.15.11.",
+  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.396. Open REDIVIDER and verify REDIVIDER + [100%] keep the white-hot/red-bloom language with sharper glyph edges and less white spill. Confirm no layout/scrollbar regression, Math Core remains healthy, and Market Core remains 38.15.11.",
   "terrain_proof": null,
-  "release_notes": "40.6.396 changes only REDIVIDER presentation in administrator/redivider-visual.css: white-hot text cores with layered red bloom. No PNG, DOM, STOP/RESUME, Paper logic, Math Core formula/restore path, Market Core 38.15.11, Oracle, Aether, Lecture Technique, Strategy A, storage, timer, observer, network, wallet or real-order behavior is changed.",
+  "release_notes": "40.6.396 remains the same build and same REDIVIDER scope. After the first Firefox proof, only the bloom dosage of REDIVIDER and [100%] was tightened: smaller white spread, slightly reduced outer red falloff, sharper lettering. No PNG, DOM, STOP/RESUME, Paper logic, Math Core, Market Core 38.15.11, Oracle, Aether, Lecture Technique, Strategy A, storage, timers, observers, network, wallet or real-order behavior changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -4281,6 +4281,11 @@
     "new_observer": false,
     "new_storage_owner": false,
     "new_network_owner": false,
-    "terrain_status": "PENDING_FIREFOX"
+    "terrain_status": "PENDING_FINAL_FIREFOX",
+    "firefox_refinement": "TIGHTER_WHITE_CORE_CLEANER_RED_FALLOFF",
+    "refinement_scope": [
+      "confirm-title",
+      "confirm-percent"
+    ]
   }
 }

@@ -1,4 +1,5 @@
 /* 40.6.396 — REDIVIDER WHITE/RED HUD BLOOM
+   Firefox refinement: tighter white core, cleaner red falloff on REDIVIDER + [100%].
    Visual-only refinement: white-hot text core + red luminous bloom.
    No PNG, DOM, STOP/RESUME, Paper, Math Core or Market Core behavior change. */
 /* SINGLE OWNER BASE — formerly injected by operator-dashboard ensureStyle(). */
@@ -157,7 +158,7 @@
     font-weight:950;
     line-height:1;
     letter-spacing:.14em;
-    text-shadow:0 0 1px rgba(255,255,255,1),0 0 5px rgba(255,244,241,.86),0 0 12px var(--rv-red-core),0 0 26px var(--rv-red-bloom),0 0 44px var(--rv-red-deep),0 2px 0 rgba(0,0,0,.48);
+    text-shadow:0 0 1px rgba(255,255,255,.96),0 0 3px rgba(255,244,241,.68),0 0 9px rgba(255,76,96,.80),0 0 21px rgba(210,18,49,.54),0 0 36px rgba(118,0,24,.28),0 2px 0 rgba(0,0,0,.50);
     white-space:nowrap;
   }
 
@@ -186,7 +187,7 @@
     line-height:1;
     letter-spacing:.075em;
     white-space:nowrap;
-    text-shadow:0 0 1px rgba(255,255,255,1),0 0 5px rgba(255,245,241,.90),0 0 11px rgba(255,82,100,.88),0 0 24px rgba(216,17,51,.62),0 0 42px rgba(126,0,24,.34);
+    text-shadow:0 0 1px rgba(255,255,255,.96),0 0 3px rgba(255,245,241,.72),0 0 8px rgba(255,82,100,.82),0 0 19px rgba(216,17,51,.54),0 0 34px rgba(126,0,24,.28);
   }
 
   #agentCryptoOperatorDashboard406384 .confirm-glyphs{
