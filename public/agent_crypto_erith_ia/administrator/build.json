@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.397",
+  "build": "40.6.398",
   "engine": "38.15.11",
-  "release": "OPERATOR INPUT PRIORITY · POINTER MOVE BACKPRESSURE",
+  "release": "OPERATOR DASHBOARD · CANONICAL MODULE NAME",
   "published": true,
-  "status": "published_pending_firefox_operator_input_priority_397",
-  "parent_build": "40.6.396",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.397",
-  "administrator_build": "40.6.397",
-  "build_label": "Build 40.6.397 · Administrator",
+  "status": "published_pending_firefox_operator_dashboard_canonical_name_398",
+  "parent_build": "40.6.397",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.398",
+  "administrator_build": "40.6.398",
+  "build_label": "Build 40.6.398 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.397. Use Administrator normally: move the mouse continuously across controls, scroll, open several subsections and click buttons. Compare cursor/click responsiveness with 40.6.396. Secondary post-boot modules must remain deferred while pointer movement is active. Confirm REDIVIDER, Math Core and Market Core 38.15.11 are unchanged.",
+  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.398. Confirm Operator Dashboard / Math mini / REDIVIDER load exactly as 40.6.397, STOP/RESUME remains functional, and Network/Console show js/operator-dashboard.js with no request for js/operator-dashboard-406384.js.",
   "terrain_proof": null,
-  "release_notes": "40.6.397 is a bounded performance A/B test. It changes only the post-boot scheduler's definition of operator activity: pointer movement now refreshes the existing 1400 ms quiet window through a cheap 120 ms sampled passive listener. This prevents secondary module parse/eval from starting while the operator is actively moving the mouse toward controls. No direct-residency rollback, no Aether lifecycle change, no timer/observer/storage/network owner, no REDIVIDER, Math Core, Market Core 38.15.11, Oracle, Lecture Technique or Strategy A change.",
+  "release_notes": "40.6.398 canonicalizes the active Operator Dashboard module filename only. The exact 40.6.384 dashboard payload is preserved byte-for-byte at administrator/js/operator-dashboard.js; index.html now loads that stable filename and the active versioned filename is removed. Internal 406384 DOM/global identifiers remain unchanged to preserve contracts. No REDIVIDER, Math Core, Market Core 38.15.11, Aether, Strategy, storage, timer, observer or network behavior changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -4302,6 +4302,28 @@
     "market_core_modified": false,
     "redivider_modified": false,
     "math_core_modified": false,
+    "terrain_status": "PENDING_FIREFOX"
+  },
+  "operator_dashboard_module_naming_406398": {
+    "scope": "canonical_persistent_filename",
+    "canonical_file": "administrator/js/operator-dashboard.js",
+    "previous_active_file": "administrator/js/operator-dashboard-406384.js",
+    "version_in_filename": false,
+    "cache_buster": "?v=40.6.398",
+    "payload_byte_identical": true,
+    "internal_406384_identifiers_preserved": true,
+    "deleted_active_versioned_files": [
+      "administrator/js/operator-dashboard-406384.js"
+    ],
+    "historical_operator_dashboard_files_preserved": true,
+    "visual_change": false,
+    "stop_resume_logic_modified": false,
+    "math_core_modified": false,
+    "redivider_modified": false,
+    "market_core_modified": false,
+    "aether_modified": false,
+    "new_timer": false,
+    "new_observer": false,
     "terrain_status": "PENDING_FIREFOX"
   }
 }
