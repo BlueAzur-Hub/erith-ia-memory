@@ -1,62 +1,65 @@
-# Agent-Crypto — Boot Surgical Probe
+# Agent-Crypto — Decision Board Boot Coalescing
 
-Build **40.6.411** · parent **40.6.410** · rollback sain **40.6.407** · Market Core **38.15.11**.
+Build **40.6.412** · parent **40.6.411** · rollback sain **40.6.407** · Market Core **38.15.11**.
 
-## Pourquoi
+## Preuve 40.6.411
 
-Le terrain 40.6.410 confirme que Strategy attend désormais Aether, mais le chemin critique reste avant Strategy :
+La sonde a confirmé deux faits :
 
-- Livecheck ≈ 31,96 s ;
-- Marché ≈ 56,41 s ;
-- CURRENT restauré ≈ 64,34 s ;
-- Graphique / Consultation / Aether ≈ 76,49 s.
+- `strategy-a-canonical-spec.js` ne consomme pas 16 s de JavaScript : réseau ≈ 161 ms, attente avant eval ≈ 16,2 s, eval réelle ≈ 0 ms ;
+- `renderDecisionBoard()` est un propriétaire lourd réel : plusieurs passages synchrones observés autour de 1,2–1,4 s chacun.
 
-Le rapport 40.6.410 mélangeait aussi `responseEnd → load event` sous l'étiquette `eval/event`, ce qui pouvait accuser à tort de petits scripts.
+## Correction unique 40.6.412
 
-## Changement unique
+Le propriétaire final `renderDecisionBoard35` est enveloppé par un gate de présentation :
 
-**Instrumentation chirurgicale uniquement.**
+1. les rendus passifs Decision Board sont différés pendant le boot critique ;
+2. un rendu en attente est libéré à `agent-crypto:strategy-core-ready` ;
+3. `agent-crypto:postboot-runtime-ready` sert de fallback borné ;
+4. après ouverture du gate, deux rendus passifs sur le même état sont dédupliqués ;
+5. le bouton opérateur **Actualiser** force toujours un rendu immédiat.
 
-40.6.411 ajoute :
-
-- mesure des fonctions existantes du chemin Livecheck → Market → CURRENT → Graph ;
-- mesure exacte du timer Aether-ready → postboot : scheduled / expected / fired / drift ;
-- marques `eval-enter` / `eval-exit` dans :
-  - `private-source-demand-loader.js`,
-  - `strategy-a-canonical-spec.js`,
-  - `atlas-family-demand-residency.js` ;
-- calcul dans le Rapport :
-  `responseEnd → eval-enter → eval-exit → load-event` ;
-- trace des ressources externes précoces utiles au diagnostic.
+La signature de déduplication suit le snapshot marché, l'actif sélectionné, la révision mémoire et les fingerprints CURRENT / Shared Synthesis.
 
 ## Invariants
 
-- comportement Aether-first de 40.6.410 conservé ;
-- Strategy métier inchangée ;
-- Auto A inchangé ;
 - Market Core 38.15.11 inchangé ;
-- aucune nouvelle requête métier ;
-- aucun stockage ajouté ;
-- aucun ordre réel ;
-- aucun scheduler récurrent ajouté.
+- Strategy métier inchangée ;
+- Aether métier inchangé ;
+- Oracle / Math / Lecture Technique inchangés ;
+- aucun nouveau timer récurrent ;
+- aucun MutationObserver ;
+- aucun nouveau fetch ;
+- aucun nouveau propriétaire de stockage ;
+- aucun ordre réel.
+
+## Diagnostic conservé
+
+La sonde 40.6.411 est prolongée en **40.6.412** et ajoute :
+
+- `DECISION BOARD COALESCING · 40.6.412` ;
+- rendered / deferred / deduped / forced / errors ;
+- état du gate Strategy / Postboot ;
+- dernier coût de rendu.
+
+Les traces `FUNCTION TIMINGS`, `SCRIPT RESPONSE / EVAL / LOAD SPLIT`, `POSTBOOT TIMER`, `READINESS EVENT TRACE` et `TOP MARK GAPS` restent disponibles.
 
 ## Test Firefox
 
 1. Ctrl+F5.
-2. Vérifier **Build 40.6.411 · Administrator**.
-3. Ne pas ouvrir Evidence pendant le premier boot.
-4. Utiliser souris / scroll normalement ; ne pas rester volontairement immobile.
-5. Attendre stabilisation.
+2. Vérifier **Build 40.6.412 · Administrator**.
+3. Utiliser souris / scroll normalement.
+4. Ne pas ouvrir Evidence pendant le premier boot.
+5. Attendre Strategy Core puis stabilisation.
 6. Rapport de démarrage → **Actualiser** → **Copier**.
-7. Envoyer surtout :
-   - `SURGICAL BOOT PROBE · 40.6.411`,
-   - `FUNCTION TIMINGS`,
-   - `SCRIPT RESPONSE / EVAL / LOAD SPLIT`,
-   - `POSTBOOT TIMER`,
-   - `EXTERNAL RESOURCE TRACE`,
-   - `READINESS EVENT TRACE`,
-   - `TOP MARK GAPS`.
+7. Envoyer le rapport complet.
 
-## Stop
+## PASS attendu
 
-**Ne corriger aucun propriétaire avant lecture de cette preuve.**
+- forte baisse du nombre de rendus Decision Board pendant le boot ;
+- au plus un rendu de flush principal avant stabilisation, hors action opérateur ;
+- réduction de la contention main-thread ;
+- réduction de la dérive du timer Postboot ;
+- aucun changement fonctionnel Market / Strategy / Aether.
+
+**STOP après preuve Firefox.**
