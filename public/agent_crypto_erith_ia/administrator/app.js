@@ -57175,7 +57175,7 @@ setTimeout(() => {
   const refresh = document.getElementById("btnDecisionBoardRefresh");
   if (refresh && refresh.dataset.atlasV2Bound !== "1") {
     refresh.dataset.atlasV2Bound = "1";
-    refresh.addEventListener("click", () => renderDecisionBoard());
+    refresh.addEventListener("click", () => renderDecisionBoard({force:true,reason:"manual-refresh"}));
   }
   const exportButton = document.getElementById("btnDecisionBoardExport");
   if (exportButton && exportButton.dataset.atlasV2Bound !== "1") {
@@ -58502,6 +58502,188 @@ renderDecisionBoard = function renderDecisionBoard35() {
   try { atlasMemoryLedgerRender35(); } catch (_) {}
   return result;
 };
+
+/* ============================================================
+   40.6.412 — DECISION BOARD BOOT COALESCING
+
+   renderDecisionBoard() is presentation-only but expensive because it traverses
+   market + memory state and rebuilds large DOM fragments. During 40.6.411 the
+   surgical probe observed repeated ~1.2–1.4 s synchronous calls on the boot
+   critical path.
+
+   Contract:
+   - before Strategy Core is ready, passive Decision Board renders are deferred;
+   - one pending render is flushed after Strategy Core readiness;
+   - postboot-ready is a bounded fallback if Strategy readiness fails;
+   - after the gate opens, identical-state passive renders are deduplicated;
+   - explicit operator refresh always bypasses the gate;
+   - no market/Strategy/Aether business rule, timer cadence, storage schema,
+     network owner or order path is changed.
+   ============================================================ */
+const atlasDecisionBoardRender406412Base = renderDecisionBoard;
+const atlasDecisionBoardGate406412 = {
+  pending:false,
+  flushScheduled:false,
+  rendered:0,
+  deferred:0,
+  deduped:0,
+  forced:0,
+  errors:0,
+  lastSignature:"",
+  lastReason:"",
+  lastDurationMs:0,
+  strategyReady:false,
+  postbootReady:false
+};
+
+function atlasDecisionBoardSignature406412() {
+  let memoryRevision=0,currentFingerprint="",packageFingerprint="";
+  try { memoryRevision=Number(atlasAutoMemoryCache?.revision || 0); } catch (_) {}
+  try { currentFingerprint=String(atlasCurrentStateRead?.()?.fingerprint || ""); } catch (_) {}
+  try { packageFingerprint=String(atlasSharedSynthesisState?.package?.fingerprint || ""); } catch (_) {}
+  const lock=state?.sourceLock || {};
+  return [
+    state?.liveOk===true ? "1" : "0",
+    String(state?.timestamp || ""),
+    String(lock?.snapshotId || ""),
+    String(lock?.mode || ""),
+    lock?.valid===true ? "1" : "0",
+    String(Array.isArray(state?.coins) ? state.coins.length : 0),
+    String(state?.selectedCoinId || ""),
+    String(memoryRevision),
+    currentFingerprint,
+    packageFingerprint
+  ].join("|");
+}
+
+function atlasDecisionBoardGateOpen406412() {
+  if (atlasDecisionBoardGate406412.strategyReady || atlasDecisionBoardGate406412.postbootReady) return true;
+  try {
+    const snap=globalThis.AgentCryptoPostBootRuntime?.snapshot?.();
+    if (snap?.strategy_core_ready===true) {
+      atlasDecisionBoardGate406412.strategyReady=true;
+      return true;
+    }
+    if (snap?.done===true) {
+      atlasDecisionBoardGate406412.postbootReady=true;
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+function atlasDecisionBoardProbe406412(name,detail={}) {
+  try { globalThis.AgentCryptoBootProbe?.mark?.(name,{build:"40.6.412",...detail}); } catch (_) {}
+}
+
+function atlasDecisionBoardProbeOnce406412(name,detail={}) {
+  try { globalThis.AgentCryptoBootProbe?.markOnce?.(name,{build:"40.6.412",...detail}); } catch (_) {}
+}
+
+function atlasDecisionBoardFlush406412(reason) {
+  if (!atlasDecisionBoardGate406412.pending || atlasDecisionBoardGate406412.flushScheduled) return false;
+  atlasDecisionBoardGate406412.flushScheduled=true;
+  const run=()=>{
+    atlasDecisionBoardGate406412.flushScheduled=false;
+    if (!atlasDecisionBoardGate406412.pending) return;
+    try { renderDecisionBoard({force:true,reason:String(reason||"gate-flush")}); }
+    catch (error) { console.warn("40.6.412 Decision Board flush", error); }
+  };
+  if (typeof requestAnimationFrame==="function") requestAnimationFrame(()=>requestAnimationFrame(run));
+  else setTimeout(run,0);
+  return true;
+}
+
+renderDecisionBoard = function renderDecisionBoard406412(options = {}) {
+  const activeBuild=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");
+  if (activeBuild!=="40.6.412") return atlasDecisionBoardRender406412Base();
+  const opts=options===true ? {force:true,reason:"legacy-force"} : (options && typeof options==="object" ? options : {});
+  const force=opts.force===true;
+  const reason=String(opts.reason || (force ? "explicit-force" : "passive"));
+  const signature=atlasDecisionBoardSignature406412();
+
+  if (!force && !atlasDecisionBoardGateOpen406412()) {
+    atlasDecisionBoardGate406412.pending=true;
+    atlasDecisionBoardGate406412.deferred+=1;
+    atlasDecisionBoardGate406412.lastReason=reason;
+    atlasDecisionBoardProbeOnce406412("decision-board-deferred-406412",{reason});
+    return false;
+  }
+
+  if (!force && signature && signature===atlasDecisionBoardGate406412.lastSignature) {
+    atlasDecisionBoardGate406412.deduped+=1;
+    atlasDecisionBoardGate406412.lastReason=reason;
+    atlasDecisionBoardProbeOnce406412("decision-board-deduped-406412",{reason});
+    return false;
+  }
+
+  if (force) atlasDecisionBoardGate406412.forced+=1;
+  const started=performance.now();
+  let succeeded=false;
+  try {
+    const result=atlasDecisionBoardRender406412Base();
+    succeeded=true;
+    return result;
+  } finally {
+    const duration=Math.max(0,performance.now()-started);
+    atlasDecisionBoardGate406412.lastDurationMs=Number(duration.toFixed(3));
+    atlasDecisionBoardGate406412.lastReason=reason;
+    if (succeeded) {
+      atlasDecisionBoardGate406412.rendered+=1;
+      atlasDecisionBoardGate406412.pending=false;
+      atlasDecisionBoardGate406412.lastSignature=signature;
+      atlasDecisionBoardProbe406412("decision-board-rendered-406412",{
+        reason,
+        force,
+        duration_ms:atlasDecisionBoardGate406412.lastDurationMs,
+        rendered:atlasDecisionBoardGate406412.rendered,
+        deferred:atlasDecisionBoardGate406412.deferred,
+        deduped:atlasDecisionBoardGate406412.deduped
+      });
+    } else {
+      atlasDecisionBoardGate406412.errors+=1;
+    }
+  }
+};
+
+window.addEventListener("agent-crypto:strategy-core-ready",()=>{
+  atlasDecisionBoardGate406412.strategyReady=true;
+  atlasDecisionBoardProbeOnce406412("decision-board-gate-open-406412",{reason:"strategy-core-ready"});
+  atlasDecisionBoardFlush406412("strategy-core-ready-flush");
+},{passive:true});
+
+window.addEventListener("agent-crypto:postboot-runtime-ready",()=>{
+  atlasDecisionBoardGate406412.postbootReady=true;
+  atlasDecisionBoardProbeOnce406412("decision-board-gate-open-fallback-406412",{reason:"postboot-runtime-ready"});
+  atlasDecisionBoardFlush406412("postboot-runtime-ready-flush");
+},{passive:true});
+
+globalThis.AgentCryptoDecisionBoardGate406412=Object.freeze({
+  build:"40.6.412",
+  snapshot:()=>Object.freeze({
+    pending:atlasDecisionBoardGate406412.pending,
+    flush_scheduled:atlasDecisionBoardGate406412.flushScheduled,
+    rendered:atlasDecisionBoardGate406412.rendered,
+    deferred:atlasDecisionBoardGate406412.deferred,
+    deduped:atlasDecisionBoardGate406412.deduped,
+    forced:atlasDecisionBoardGate406412.forced,
+    errors:atlasDecisionBoardGate406412.errors,
+    last_reason:atlasDecisionBoardGate406412.lastReason,
+    last_duration_ms:atlasDecisionBoardGate406412.lastDurationMs,
+    strategy_ready:atlasDecisionBoardGate406412.strategyReady,
+    postboot_ready:atlasDecisionBoardGate406412.postbootReady,
+    active_build:String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")==="40.6.412",
+    last_signature:atlasDecisionBoardGate406412.lastSignature
+  }),
+  manual:()=>renderDecisionBoard({force:true,reason:"api-manual"}),
+  business_logic_changed:false,
+  market_core_changed:false,
+  strategy_changed:false,
+  aether_changed:false,
+  recurring_timer:false,
+  storage_write:false,
+  network:false
+});
 
 function atlasAutonomousOperatorTick35(reason = "watchdog") {
   try {
