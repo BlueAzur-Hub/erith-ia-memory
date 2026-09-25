@@ -6,8 +6,8 @@
   "provider_name": "Gold API + Yahoo Finance Futures + BCE",
   "bridge_required": false,
   "public_page_mode": "github_actions_archive_reader",
-  "last_attempt_at": "2026-09-25T13:44:17.501Z",
-  "last_success_at": "2026-09-25T13:44:17.501Z",
+  "last_attempt_at": "2026-09-25T20:01:04.236Z",
+  "last_success_at": "2026-09-25T20:01:04.236Z",
   "last_error": null,
   "assets_expected": 5,
   "assets_received": 5,
@@ -70,11 +70,11 @@
       "gold": 349,
       "silver": 349,
       "platinum": 338,
-      "palladium": 326,
+      "palladium": 320,
       "copper": 346
     },
-    "oldest_at": "2026-09-24T07:35:00.000Z",
-    "newest_at": "2026-09-25T13:34:28.000Z",
+    "oldest_at": "2026-09-24T13:55:00.000Z",
+    "newest_at": "2026-09-25T19:51:13.000Z",
     "interval": "5m",
     "window_hours": 24,
     "source_id": "yahoo_finance"
@@ -84,17 +84,17 @@
     "complete_24h": true,
     "file": "history/spot_48h.json",
     "snapshots": 6,
-    "oldest_at": "2026-09-23T19:40:23.245Z",
-    "newest_at": "2026-09-25T13:44:17.501Z",
-    "span_hours": 42.065071,
+    "oldest_at": "2026-09-23T22:56:38.767Z",
+    "newest_at": "2026-09-25T20:01:04.236Z",
+    "span_hours": 45.073741,
     "retention_hours": 48,
     "minimum_complete_hours": 20,
     "source_id": "gold_api"
   },
   "fx": {
     "pair": "USD/EUR",
-    "source_date": "2026-09-24",
-    "eur_per_usd": 0.8797395970792645
+    "source_date": "2026-09-25",
+    "eur_per_usd": 0.8769622029290537
   },
   "fallback": {
     "last_valid_snapshot_preserved": false,
@@ -116,6 +116,6 @@
     "history_never_fabricated": true,
     "intraday_futures_and_current_spot_separated": true
   },
-  "updated_at": "2026-09-25T13:44:17.501Z",
+  "updated_at": "2026-09-25T20:01:04.236Z",
   "collector": "tools/collect_public_metals.py"
 }
