@@ -1,33 +1,24 @@
-# Agent-Crypto — Readiness Trace Diagnostic
+# Agent-Crypto — Postboot Module Cost Trace
 
-Build **40.6.403** · parent **40.6.402** · Market Core **38.15.11**.
+Build **40.6.404** · parent **40.6.403** · Market Core **38.15.11**.
 
-But unique : identifier le propriétaire des grands délais de readiness qui subsistent après la récupération Cold Boot 40.6.402.
+But unique : transformer les trous anonymes de la trace 40.6.403 en propriétaires de modules nommés.
 
-40.6.402 a déjà prouvé :
-- Auto Reader remonté à l'owner 7/19 et observé à ~2,57 s sur le terrain ;
-- GitHub Shared Memory retiré du Cold Boot automatique, chemin manuel conservé ;
-- PRE-AETHER et évaluation du script Aether quasi instantanés ;
-- Strategy A / Paper runtime toujours actifs.
+Preuve 40.6.403 :
+- Cold Boot owners eux-mêmes courts ;
+- PRE-AETHER et script Aether quasi instantanés ;
+- Consultation First atteint tous ses signaux mais tardivement ;
+- grands trous entre marqueurs, notamment plusieurs postboot-module → postboot-module ;
+- symptôme compatible avec une starvation du main thread provoquée par l'évaluation/cascade de certains modules.
 
-40.6.403 ne change **aucune condition de readiness** et ne réordonne aucun moteur.
+40.6.404 ajoute uniquement de l'instrumentation :
+- strategy-core-module-cycle-start / load-start / load-end ;
+- postboot-module-cycle-start / load-start / load-end ;
+- load_ms = chargement + évaluation du script ;
+- cycle_ms = attente coopérative + chargement + évaluation ;
+- POSTBOOT MODULE COST TRACE : top 20 modules par cycle_ms ;
+- TOP MARK GAPS affiche maintenant le nom du fichier source lorsque disponible.
 
-Instrumentation ajoutée :
-- module js/readiness-trace.js sans timer, observer, réseau ni stockage ;
-- trace des événements Consultation / Aether / Strategy Core / Postboot / CURRENT / System Hydrated / présentation / Evidence ;
-- vérité détaillée des signaux Consultation First et liste des signaux manquants ;
-- TOP MARK GAPS : dix plus grands intervalles >= 250 ms entre marqueurs Boot Probe.
-
-Protections inchangées :
-- Market Core 38.15.11 ;
-- Strategy A métier / seuils / Cost Gate ;
-- Math Core ;
-- Aether métier ;
-- Oracle ;
-- Lecture Technique ;
-- REDIVIDER ;
-- Storage schemas ;
-- ordre Cold Boot 40.6.402 ;
-- GitHub Memory demand-only manuel.
+Inchangés : ordre des modules, listes de modules, scheduler, Strategy A métier, Market Core 38.15.11, Math, Aether métier, Oracle, Lecture Technique, REDIVIDER, Storage schemas et demand policy.
 
 Terrain Firefox : **PENDING**.

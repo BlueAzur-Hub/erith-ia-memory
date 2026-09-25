@@ -5,7 +5,7 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.400";
+  const BUILD="40.6.404";
   const MEMORY_MODULES=Object.freeze([
   ]);
   const STRATEGY_CORE_MODULES=Object.freeze([
@@ -157,11 +157,18 @@
     state.strategyCoreStarted=true;
     strategyCorePromise=(async()=>{
       const failed=[];
-      for(const src of STRATEGY_CORE_MODULES){
+      for(let index=0; index<STRATEGY_CORE_MODULES.length; index++){
+        const src=STRATEGY_CORE_MODULES[index];
+        const cycleStart=performance.now();
+        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-cycle-start",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,reason});}catch(_){}
         await yieldMain(160); await sleep(18);
+        const loadStart=performance.now();
+        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-load-start",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,reason});}catch(_){}
         const ok=await loadOne(src);
+        const loadEnd=performance.now();
         if(ok)state.strategyCoreLoaded+=1; else failed.push(src);
-        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module",{src,ok,loaded:state.strategyCoreLoaded,reason});}catch(_){}
+        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module-load-end",{group:"strategy",src,index:index+1,total:STRATEGY_CORE_MODULES.length,ok,loaded:state.strategyCoreLoaded,reason,load_ms:Number((loadEnd-loadStart).toFixed(3)),cycle_ms:Number((loadEnd-cycleStart).toFixed(3))});}catch(_){}
+        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module",{src,ok,loaded:state.strategyCoreLoaded,reason,index:index+1,total:STRATEGY_CORE_MODULES.length});}catch(_){}
       }
       state.strategyCoreFailed=failed; state.strategyCoreReady=failed.length===0;
       try{globalThis.AgentCryptoBootProbe?.markOnce?.("strategy-core-ready",{loaded:state.strategyCoreLoaded,failed:failed.length,reason});}catch(_){}
@@ -172,11 +179,18 @@
   }
   async function loadGroup(list,group){
     const pauseMs=group==="memory"?18:28, idleTimeout=group==="memory"?160:220;
-    for(const src of list){
+    for(let index=0; index<list.length; index++){
+      const src=list[index];
+      const cycleStart=performance.now();
+      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module-cycle-start",{group,src,index:index+1,total:list.length});}catch(_){}
       await sleep(pauseMs); await yieldMain(idleTimeout);
+      const loadStart=performance.now();
+      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module-load-start",{group,src,index:index+1,total:list.length});}catch(_){}
       const ok=await loadOne(src);
+      const loadEnd=performance.now();
       state.loaded+=ok?1:0; if(!ok)state.failed.push(src);
-      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module",{group,src,ok,loaded:state.loaded});}catch(_){}
+      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module-load-end",{group,src,index:index+1,total:list.length,ok,loaded:state.loaded,load_ms:Number((loadEnd-loadStart).toFixed(3)),cycle_ms:Number((loadEnd-cycleStart).toFixed(3))});}catch(_){}
+      try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module",{group,src,ok,loaded:state.loaded,index:index+1,total:list.length});}catch(_){}
     }
   }
 

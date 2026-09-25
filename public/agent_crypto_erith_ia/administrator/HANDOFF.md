@@ -1,24 +1,21 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.403** · rollback **40.6.402** · Market Core **38.15.11**.
+Build **40.6.404** · rollback **40.6.403** · Market Core **38.15.11**.
 
-Objectif : tracer la chaîne readiness sans modifier son comportement.
+Objectif : nommer les modules responsables des longs blocages postboot sans modifier leur comportement.
 
 Test Firefox :
-1. **Ctrl+F5** et vérifier **Build 40.6.403**.
-2. Utiliser l'interface normalement pendant le démarrage ; ne pas rester immobile.
-3. Attendre la stabilisation raisonnable du cockpit.
-4. Ouvrir **Rapport de démarrage** → **Actualiser** → **Copier**.
+1. Ctrl+F5 et vérifier **Build 40.6.404**.
+2. Utiliser l'interface normalement pendant le démarrage.
+3. Ne pas ouvrir GitHub Memory ni Strategy Evidence au premier passage.
+4. Après stabilisation : **Rapport de démarrage → Actualiser → Copier**.
 5. Fournir le rapport complet.
 
-Le rapport doit maintenant contenir :
-- **Consultation signals** ;
-- **Consultation missing** ;
-- **Consultation checks** ;
-- **READINESS EVENT TRACE** ;
+Sections prioritaires :
+- **POSTBOOT MODULE COST TRACE** ;
 - **TOP MARK GAPS · >= 250 ms** ;
-- les mesures Cold Boot .401/.402 déjà conservées.
+- **READINESS EVENT TRACE**.
 
-Critère : déterminer quel événement ou quelle condition retarde Marché / Graphique / Consultation / Aether runtime / Postboot.
+Critère : isoler les 1 à 3 fichiers dont cycle_ms/load_ms expliquent les freezes de plusieurs secondes.
 
-Aucune correction fonctionnelle n'est incluse dans 40.6.403.
+Aucune correction fonctionnelle n'est incluse dans 40.6.404.
