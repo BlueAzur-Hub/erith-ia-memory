@@ -1,7 +1,7 @@
 (()=>{
   "use strict";
   if(globalThis.AgentCryptoReadinessTrace406403)return;
-  const BUILD="40.6.404";
+  const BUILD="40.6.405";
   const EVENTS=Object.freeze([
     "agent-crypto:consultation-ready",
     "agent-crypto:aether-ready",
