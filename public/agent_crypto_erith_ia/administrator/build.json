@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.410",
+  "build": "40.6.411",
   "engine": "38.15.11",
-  "release": "RECOVERY · AETHER-FIRST STRATEGY SCHEDULER",
+  "release": "DIAGNOSTIC · BOOT SURGICAL PROBE",
   "published": true,
-  "status": "published_pending_firefox_aether_first_strategy_410",
-  "parent_build": "40.6.409",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.410",
-  "administrator_build": "40.6.410",
-  "build_label": "Build 40.6.410 · Administrator",
+  "status": "published_pending_firefox_boot_surgical_probe_411",
+  "parent_build": "40.6.410",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.411",
+  "administrator_build": "40.6.411",
+  "build_label": "Build 40.6.411 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox desktop: Ctrl+F5. Vérifier Build 40.6.410. Ne pas ouvrir Evidence au premier boot. Attendre stabilisation puis Rapport de démarrage → Actualiser → Copier. Vérifier Aether ready, Consultation ready, Strategy Core ready et RESIDENCY PIPELINE DIAGNOSTIC.",
+  "terrain_pending": "Firefox desktop: Ctrl+F5. Vérifier Build 40.6.411. Laisser le boot se stabiliser sans ouvrir Evidence. Rapport de démarrage → Actualiser → Copier. Envoyer SURGICAL BOOT PROBE, SCRIPT RESPONSE / EVAL / LOAD SPLIT, POSTBOOT TIMER, EXTERNAL RESOURCE TRACE, READINESS EVENT TRACE et TOP MARK GAPS.",
   "terrain_proof": null,
-  "release_notes": "40.6.410 removes the DOMContentLoaded Strategy Core race introduced by the boot-priority path. Strategy remains fully automatic but starts through the existing Aether-ready schedule. Between Strategy Core modules it uses a zero-delay MessageChannel task boundary instead of requestIdleCallback or artificial sleep. Module order, sequential loadOne(), Strategy business logic, Auto A, Evidence routing and Market Core 38.15.11 remain unchanged.",
+  "release_notes": "40.6.411 is a diagnostic-only surgical probe on top of 40.6.410. It measures the Livecheck→Market→CURRENT→Graph path through wrapped existing functions, records exact Aether-ready postboot timer drift, and adds eval-enter/eval-exit marks to private-source-demand-loader.js, strategy-a-canonical-spec.js and atlas-family-demand-residency.js so responseEnd→eval-enter→eval-exit→load can be separated. No market source, Strategy threshold, Market Core, storage schema or order path is changed.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -4700,5 +4700,27 @@
     "redivider_modified": false,
     "storage_schema_changed": false,
     "real_order": false
+  },
+  "boot_surgical_probe_406411": {
+    "enabled": true,
+    "module": "js/boot-surgical-probe-406411.js",
+    "scope": "diagnostic_only",
+    "livecheck_market_current_graph_wrappers": true,
+    "target_scripts": [
+      "js/views/private-source-demand-loader.js",
+      "js/strategy-a-canonical-spec.js",
+      "js/views/atlas-family-demand-residency.js"
+    ],
+    "script_split": "responseEnd -> eval-enter -> eval-exit -> load-event",
+    "postboot_timer_drift": true,
+    "external_resource_trace": true,
+    "recurring_timer_added": false,
+    "fetch_added": false,
+    "storage_write_added": false,
+    "business_logic_changed": false,
+    "strategy_thresholds_changed": false,
+    "market_core_modified": false,
+    "rollback": "40.6.407",
+    "parent_behavior": "40.6.410 Aether-first Strategy scheduler preserved"
   }
 }
