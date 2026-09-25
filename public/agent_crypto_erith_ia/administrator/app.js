@@ -56245,7 +56245,8 @@ const atlasColdBootState = {
   running: false,
   executed: 0,
   lastLabel: "",
-  lastError: ""
+  lastError: "",
+  ownerTimings: []
 };
 
 function atlasColdBootDefer(label, fn) {
@@ -56261,25 +56262,92 @@ function atlasColdBootNext() {
   const task = atlasColdBootState.queue.shift();
   if (!task) {
     atlasColdBootState.running = false;
+    atlasBootProbeMark406275("coldboot-queue-drained", {
+      executed: atlasColdBootState.executed,
+      owners: atlasColdBootState.ownerTimings.length
+    });
     return;
   }
 
   atlasColdBootState.lastLabel = task.label;
+  const ownerStartedAt = performance.now();
+  const timing = {
+    label: task.label,
+    start_ms: Number(ownerStartedAt.toFixed(3)),
+    sync_ms: null,
+    async: false,
+    settled_ms: null,
+    status: "running"
+  };
+  atlasColdBootState.ownerTimings.push(timing);
+
   try {
     atlasBootProbeMark406275(`coldboot-owner:${task.label}`, {
       queue_remaining: atlasColdBootState.queue.length,
       executed_before: atlasColdBootState.executed
     });
+    atlasBootProbeMark406275(`coldboot-owner-start:${task.label}`, {
+      queue_remaining: atlasColdBootState.queue.length,
+      executed_before: atlasColdBootState.executed
+    }, false);
+
     const result = atlasSafeBoot(task.label, task.fn);
-    if (result && typeof result.catch === "function") {
+    const syncMs = Math.max(0, performance.now() - ownerStartedAt);
+    timing.sync_ms = Number(syncMs.toFixed(3));
+    timing.async = !!(result && typeof result.then === "function");
+    timing.status = timing.async ? "pending" : "settled";
+    if (!timing.async) timing.settled_ms = timing.sync_ms;
+
+    atlasBootProbeMark406275(`coldboot-owner-sync-end:${task.label}`, {
+      sync_ms: timing.sync_ms,
+      async: timing.async
+    }, false);
+
+    if (timing.async) {
+      Promise.resolve(result).then(
+        () => {
+          const settleMs = Math.max(0, performance.now() - ownerStartedAt);
+          timing.settled_ms = Number(settleMs.toFixed(3));
+          timing.status = "fulfilled";
+          atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
+            settle_ms: timing.settled_ms,
+            status: timing.status
+          }, false);
+        },
+        error => {
+          const settleMs = Math.max(0, performance.now() - ownerStartedAt);
+          timing.settled_ms = Number(settleMs.toFixed(3));
+          timing.status = "rejected";
+          atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
+            settle_ms: timing.settled_ms,
+            status: timing.status,
+            error: String(error?.message || error || "")
+          }, false);
+        }
+      );
       result.catch(error => {
         atlasColdBootState.lastError = String(error?.message || error || "");
         console.warn(`40.3.98 deferred boot ${task.label}:`, error);
       });
+    } else {
+      atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
+        settle_ms: timing.settled_ms,
+        status: timing.status
+      }, false);
     }
+
     atlasColdBootState.executed += 1;
   } catch (error) {
+    const settleMs = Math.max(0, performance.now() - ownerStartedAt);
+    timing.sync_ms = timing.sync_ms ?? Number(settleMs.toFixed(3));
+    timing.settled_ms = Number(settleMs.toFixed(3));
+    timing.status = "threw";
     atlasColdBootState.lastError = String(error?.message || error || "");
+    atlasBootProbeMark406275(`coldboot-owner-settled:${task.label}`, {
+      settle_ms: timing.settled_ms,
+      status: timing.status,
+      error: atlasColdBootState.lastError
+    }, false);
   }
 
   requestAnimationFrame(atlasColdBootNext);
@@ -56303,8 +56371,12 @@ globalThis.AtlasColdBoot = Object.freeze({
     running: atlasColdBootState.running,
     executed: atlasColdBootState.executed,
     last_label: atlasColdBootState.lastLabel,
-    last_error: atlasColdBootState.lastError
+    last_error: atlasColdBootState.lastError,
+    owner_timings: atlasColdBootState.ownerTimings.map(row => ({ ...row }))
   }),
+  instrumentation_build: "40.6.401",
+  owner_timing_mode: "SYNC_PLUS_ASYNC_SETTLE",
+  scheduling_behavior_changed: false,
   first_paint_frames_reserved: 2,
   owners_started_per_frame: 1,
   recurring_timer: false,
