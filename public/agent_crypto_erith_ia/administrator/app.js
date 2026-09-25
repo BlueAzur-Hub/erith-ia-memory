@@ -58504,7 +58504,7 @@ renderDecisionBoard = function renderDecisionBoard35() {
 };
 
 /* ============================================================
-   40.6.412 — DECISION BOARD BOOT COALESCING
+   40.6.412 + 40.6.414 — DECISION BOARD BOOT COALESCING / CONTINUITY FIX
 
    renderDecisionBoard() is presentation-only but expensive because it traverses
    market + memory state and rebuilds large DOM fragments. During 40.6.411 the
@@ -58516,7 +58516,7 @@ renderDecisionBoard = function renderDecisionBoard35() {
    - one pending render is flushed after Strategy Core readiness;
    - postboot-ready is a bounded fallback if Strategy readiness fails;
    - after the gate opens, identical-state passive renders are deduplicated;
-   - explicit operator refresh always bypasses the gate;
+   - 40.6.414: the gate remains active on later 40.6.x builds instead of self-disabling outside 40.6.412;\n   - explicit operator refresh always bypasses the gate;
    - no market/Strategy/Aether business rule, timer cadence, storage schema,
      network owner or order path is changed.
    ============================================================ */
@@ -58554,6 +58554,11 @@ function atlasDecisionBoardSignature406412() {
     currentFingerprint,
     packageFingerprint
   ].join("|");
+}
+
+function atlasDecisionBoardCoalescingActiveBuild406414(value = "") {
+  const match=String(value||"").match(/^40\.6\.(\d+)$/);
+  return !!match && Number(match[1]) >= 412;
 }
 
 function atlasDecisionBoardGateOpen406412() {
@@ -58596,7 +58601,7 @@ function atlasDecisionBoardFlush406412(reason) {
 
 renderDecisionBoard = function renderDecisionBoard406412(options = {}) {
   const activeBuild=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");
-  if (activeBuild!=="40.6.412") return atlasDecisionBoardRender406412Base();
+  if (!atlasDecisionBoardCoalescingActiveBuild406414(activeBuild)) return atlasDecisionBoardRender406412Base();
   const opts=options===true ? {force:true,reason:"legacy-force"} : (options && typeof options==="object" ? options : {});
   const force=opts.force===true;
   const reason=String(opts.reason || (force ? "explicit-force" : "passive"));
@@ -58672,7 +58677,8 @@ globalThis.AgentCryptoDecisionBoardGate406412=Object.freeze({
     last_duration_ms:atlasDecisionBoardGate406412.lastDurationMs,
     strategy_ready:atlasDecisionBoardGate406412.strategyReady,
     postboot_ready:atlasDecisionBoardGate406412.postbootReady,
-    active_build:String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")==="40.6.412",
+    active_build:atlasDecisionBoardCoalescingActiveBuild406414(String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")),
+    continuity_fix:"40.6.414",
     last_signature:atlasDecisionBoardGate406412.lastSignature
   }),
   manual:()=>renderDecisionBoard({force:true,reason:"api-manual"}),
