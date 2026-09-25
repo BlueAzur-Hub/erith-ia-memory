@@ -4,9 +4,10 @@
 (() => {
   "use strict";
   const __PROBE_406411_SRC="strategy-a-canonical-spec.js";
-  const __PROBE_406411_ON=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")==="40.6.411";
+  const __PROBE_406411_BUILD=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");
+  const __PROBE_406411_ON=["40.6.411","40.6.412"].includes(__PROBE_406411_BUILD);
   const __PROBE_406411_T0=__PROBE_406411_ON?performance.now():0;
-  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:__PROBE_406411_SRC,build:"40.6.411"});}catch(_){}}
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:__PROBE_406411_SRC,build:__PROBE_406411_BUILD});}catch(_){}}
 
   const BUILD="40.6.56";
   const SPEC=Object.freeze({"schema":"agent_crypto_strategy_a_canonical_spec_v1","spec_version":"1.0","runtime_build":"40.6.56","strategy_id":"STRATEGY_A","mode":"PAPER_ONLY","authority":"AERITH_TRADING_RULEBOOK > Strategy A spec > runtime presentation","allowed_assets":["BTC","ETH","SOL"],"profile":{"name":"Solo Progression 1 000 €","capital_eur":1000,"ticket_eur":50,"max_operation_eur":100,"max_exposure_eur":300,"min_reserve_eur":700},"gate_order":["DATA","REGIME","DIRECTION","CONFIDENCE","BTC_24H","REENTRY","COST_GATE","IDENTITY","RISK_GOVERNOR","PAPER"],"policy":{"mixed_direction_min":12,"mixed_confidence_min":70,"mixed_btc24_min_pct":0.1,"bullish_confidence_min":55,"cost_required_move_pct":0.8,"modelled_cost_floor_pct":0.6,"cost_safety_margin_pct":0.2,"allowed_risk_decisions":["ACCEPT","REDUCE"]},"reentry":{"rule":"cooldown + fresh signal","exact_runtime_parameters":"NOT_ASSERTED_BY_SPEC"},"cost_model_note":"0.60% is the current aggregate modelled cost floor shown by the Strategy A runtime; this spec does not invent a fee/spread/slippage breakdown.","paper_contract":{"real_orders":false,"wallet":false,"credentials":false,"kraken_trading":false,"human_validation_before_real_action":true},"protected":{"market_core":"38.15.11","aether_geometry":"40.6.54 checkpoint","aether_backplate_modified":false,"window_manager_modified":false},"sources":{"replay_owner":"js/strategy-a-replay.js","paper_lifecycle_owner":"js/strategy-a-paper-lifecycle.js","auto_lifecycle_bridge":"js/strategy-a-auto-lifecycle-bridge.js","after_cost_owner":"js/strategy-a-after-cost-metrics.js","safety_owner":"js/strategy-a-safety-certification.js","evidence_owner":"js/strategy-a-evidence-dossier.js"}});
@@ -70,5 +71,5 @@
   globalThis.AgentCryptoStrategyACanonicalSpec=api;
   if(typeof document!=='undefined'){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render,{once:true});else render();}
 
-  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:__PROBE_406411_SRC,build:"40.6.411",eval_ms:Number((performance.now()-__PROBE_406411_T0).toFixed(3))});}catch(_){}}
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:__PROBE_406411_SRC,build:__PROBE_406411_BUILD,eval_ms:Number((performance.now()-__PROBE_406411_T0).toFixed(3))});}catch(_){}}
 })();
