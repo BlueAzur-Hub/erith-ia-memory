@@ -10,7 +10,7 @@
 (()=>{
   "use strict";
   const BUILD="40.4.99";
-  const PATCH="40.6.145";
+  const PATCH="40.6.400";
   const SOURCE="./views/atlas.html";
   const RELEASE=String(
     globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD ||
@@ -100,12 +100,13 @@
     const b=sectionBounds(source,spec.id); if(!b)throw new Error(`Atlas audit source missing: ${spec.id}`);
     return source.slice(b.openEnd,b.close);
   }
-  async function hydrate(key){
+  async function hydrate(key,options={}){
     if(hydrated.has(key))return true;
+    const force=options?.force===true;
     const details=targetDetails(key); if(!details)return false;
     details.dataset.atlasHydration="loading";
     try{
-      const source=await sourceText(); if(!details.open)return false;
+      const source=await sourceText(); if(!force&&!details.open)return false;
       const body=details.querySelector(":scope > .atlas-collapse-body"); if(!body)return false;
       const template=document.createElement("template"); template.innerHTML=bodyHtml(source,key);
       // R2: the HOT shell owns the canonical id only until the real cold body is ready.
@@ -168,6 +169,11 @@
     for(const key of Object.keys(TARGETS)){
       const details=targetDetails(key); if(!details||details.dataset.atlasPeripheralLazyReady==="1")continue;
       details.dataset.atlasPeripheralLazyReady="1";
+      if(key==="auto-reader"){
+        details.dataset.atlasPeripheralMode="eager-resident";
+        void hydrate(key,{force:true});
+        continue;
+      }
       details.addEventListener("toggle",()=>{if(details.open)hydrate(key);});
       if(details.open)hydrate(key);
     }
@@ -191,7 +197,7 @@
     build:BUILD,patch:PATCH,source:SOURCE,source_url:sourceUrl(),source_release_token:RELEASE,source_cache:"no-store",targets:Object.keys(TARGETS),current_audit_targets:Object.keys(AUDIT_SECTIONS),book_knowledge_targets:Object.keys(BOOK_KNOWLEDGE_SECTIONS),
     boot_shell_precompiled:true,runtime_markup_preprocess:false,element_prototype_interception:false,boot_bodies_absent:true,current_audit_roots_resident:true,current_audit_bodies_absent_at_boot:true,
     fetch_count:()=>fetchCount,hydrated:()=>[...hydrated],current_audit_hydrated:()=>[...auditHydrated],book_knowledge_hydrated:()=>bookKnowledgeHydrated,
-    runtime_owner:"app.js",auto_reader_runtime_preserved:true,auto_reader_collection_boot_preserved:true,github_auto_load_preserved:true,current_pipeline_runtime_preserved:true,current_audit_read_only_presentation:true,
+    runtime_owner:"app.js",auto_reader_runtime_preserved:true,auto_reader_collection_boot_preserved:true,auto_reader_presentation_eager:true,github_auto_load_preserved:true,current_pipeline_runtime_preserved:true,current_audit_read_only_presentation:true,
     terminal_success_event:"erith:presentation-resident",terminal_failure_event:"erith:presentation-residency-error",source_retry_after_transport_failure:true,release_bound_source:true,
     new_timer:false,new_observer:false,new_scheduler:false,storage_owner_added:false,attach
   });

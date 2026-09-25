@@ -5,10 +5,10 @@
    No feature removal, no Book-lite fork, no recurring timer, no storage schema change. */
 (()=>{
   "use strict";
-  const BUILD="40.6.399";
+  const BUILD="40.6.400";
   const MEMORY_MODULES=Object.freeze([
   ]);
-  const SECONDARY_MODULES=Object.freeze([
+  const STRATEGY_CORE_MODULES=Object.freeze([
     "./js/strategy-a-replay.js",
     "./js/strategy-a-canonical-spec.js",
     "./js/strategy-a-replay-acceptance.js?v=40.6.273",
@@ -18,7 +18,9 @@
     "./js/strategy-a-durable-evidence-store.js",
     "./js/strategy-a-safety-certification.js",
     "./js/strategy-a-evidence-dossier.js",
-    "./js/strategy-a-paper-after-cost-acceptance.js",
+    "./js/strategy-a-paper-after-cost-acceptance.js"
+  ]);
+  const SECONDARY_MODULES=Object.freeze([
     "./js/tradus-shadow-adapter.js",
     "./js/tradus-shadow-ledger.js",
     "./js/tradus-paper-shadow.js",
@@ -67,29 +69,15 @@
     "./js/market-reading-depth.js"
   ]);
 
-  const state={started:false,done:false,reason:"",loaded:0,failed:[],marketDemandStarted:false,marketDemandReady:false,marketDemandReason:"",marketDemandFailed:[]};
+  const state={started:false,done:false,reason:"",loaded:0,failed:[],strategyCoreStarted:false,strategyCoreReady:false,strategyCoreLoaded:0,strategyCoreFailed:[],marketDemandStarted:false,marketDemandReady:false,marketDemandReason:"",marketDemandFailed:[]};
   let marketDemandPromise=null;
+  let strategyCorePromise=null;
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
-  // 40.6.299 — operator-input backpressure.
-  // Late modules wait for a short quiet window before parse/eval so background
-  // loading cannot continuously compete with direct human input.
-  const OPERATOR_QUIET_MS=1400;
-  let lastOperatorInputAt=performance.now();
-  const markOperatorInput=()=>{lastOperatorInputAt=performance.now();};
-  window.addEventListener("pointerdown",markOperatorInput,{capture:true,passive:true});
-  window.addEventListener("keydown",markOperatorInput,{capture:true,passive:true});
-  window.addEventListener("wheel",markOperatorInput,{capture:true,passive:true});
-  window.addEventListener("touchstart",markOperatorInput,{capture:true,passive:true});
-  async function waitForOperatorQuiet(){
-    while(performance.now()-lastOperatorInputAt<OPERATOR_QUIET_MS) await sleep(180);
-  }
-  const yieldMain=(timeout=2000)=>new Promise(resolve=>{
-    if(typeof requestIdleCallback==="function"){
-      requestIdleCallback(()=>requestAnimationFrame(()=>resolve()),{timeout});
-    }else{
-      setTimeout(()=>requestAnimationFrame(()=>resolve()),Math.min(timeout,750));
-    }
+  // 40.6.400 — cooperative bounded residency; operator input never gates progress.
+  const yieldMain=(timeout=220)=>new Promise(resolve=>{
+    if(typeof requestIdleCallback==="function")requestIdleCallback(()=>requestAnimationFrame(()=>resolve()),{timeout});
+    else setTimeout(()=>requestAnimationFrame(()=>resolve()),Math.min(timeout,120));
   });
   const loadOne=src=>new Promise(resolve=>{
     const existing=[...document.scripts].find(s=>s.dataset.postBootSrc===src);
@@ -163,17 +151,31 @@
   }
   document.addEventListener("click",onEarlyMarketSwitch,true);
 
+  async function loadStrategyCoreNow(reason="boot-priority"){
+    if(state.strategyCoreReady)return true;
+    if(strategyCorePromise)return strategyCorePromise;
+    state.strategyCoreStarted=true;
+    strategyCorePromise=(async()=>{
+      const failed=[];
+      for(const src of STRATEGY_CORE_MODULES){
+        await yieldMain(160); await sleep(18);
+        const ok=await loadOne(src);
+        if(ok)state.strategyCoreLoaded+=1; else failed.push(src);
+        try{globalThis.AgentCryptoBootProbe?.mark?.("strategy-core-module",{src,ok,loaded:state.strategyCoreLoaded,reason});}catch(_){}
+      }
+      state.strategyCoreFailed=failed; state.strategyCoreReady=failed.length===0;
+      try{globalThis.AgentCryptoBootProbe?.markOnce?.("strategy-core-ready",{loaded:state.strategyCoreLoaded,failed:failed.length,reason});}catch(_){}
+      try{window.dispatchEvent(new CustomEvent("agent-crypto:strategy-core-ready",{detail:{build:BUILD,ok:state.strategyCoreReady,failed:failed.slice()}}));}catch(_){}
+      return state.strategyCoreReady;
+    })();
+    return strategyCorePromise;
+  }
   async function loadGroup(list,group){
-    const pauseMs=group==="memory"?180:700;
-    const idleTimeout=group==="memory"?1200:3000;
+    const pauseMs=group==="memory"?18:28, idleTimeout=group==="memory"?160:220;
     for(const src of list){
-      await sleep(pauseMs);
-      await waitForOperatorQuiet();
-      await yieldMain(idleTimeout);
-      await waitForOperatorQuiet();
+      await sleep(pauseMs); await yieldMain(idleTimeout);
       const ok=await loadOne(src);
-      state.loaded+=ok?1:0;
-      if(!ok) state.failed.push(src);
+      state.loaded+=ok?1:0; if(!ok)state.failed.push(src);
       try{globalThis.AgentCryptoBootProbe?.mark?.("postboot-module",{group,src,ok,loaded:state.loaded});}catch(_){}
     }
   }
@@ -182,10 +184,10 @@
     if(state.started)return false;
     state.started=true; state.reason=String(reason||"unknown");
     try{globalThis.AgentCryptoBootProbe?.markOnce?.("postboot-runtime-start",{reason:state.reason});}catch(_){}
+    await loadStrategyCoreNow("postboot-join");
     await loadGroup(MEMORY_MODULES,"memory");
     try{window.dispatchEvent(new CustomEvent("agent-crypto:late-memory-ready",{detail:{build:BUILD}}));}catch(_){}
-    await sleep(2500);
-    await yieldMain(4000);
+    await sleep(120); await yieldMain(220);
     await loadGroup(SECONDARY_MODULES,"secondary");
     state.done=true;
     try{globalThis.AgentCryptoBootProbe?.markOnce?.("postboot-runtime-ready",{loaded:state.loaded,failed:state.failed.length});}catch(_){}
@@ -211,11 +213,16 @@
     window.addEventListener("agent-crypto:aether-failed",onAetherFailed,{once:true,passive:true});
   }
 
+  const bootStrategyCore=()=>{void loadStrategyCoreNow("boot-priority");};
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bootStrategyCore,{once:true,passive:true});
+  else queueMicrotask(bootStrategyCore);
+
   globalThis.AgentCryptoPostBootRuntime=Object.freeze({
     build:BUILD,
     start,
-    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"CONSULTATION_THEN_AETHER_THEN_IDLE_PACED_PLUS_OPERATOR_QUIET_406299",operator_quiet_ms:OPERATOR_QUIET_MS,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
+    snapshot:()=>Object.freeze({started:state.started,done:state.done,reason:state.reason,loaded:state.loaded,total:MEMORY_MODULES.length+SECONDARY_MODULES.length,failed:Object.freeze(state.failed.slice()),strategy_core_started:state.strategyCoreStarted,strategy_core_ready:state.strategyCoreReady,strategy_core_loaded:state.strategyCoreLoaded,strategy_core_total:STRATEGY_CORE_MODULES.length,strategy_core_failed:Object.freeze(state.strategyCoreFailed.slice()),memory_modules:MEMORY_MODULES.length,secondary_modules:SECONDARY_MODULES.length,backpressure:"COOPERATIVE_BOUNDED_NO_OPERATOR_QUIET_406400",operator_quiet_ms:0,background_owner:"AFTER_AETHER_READY",market_demand_started:state.marketDemandStarted,market_demand_ready:state.marketDemandReady,market_demand_reason:state.marketDemandReason,market_demand_failed:Object.freeze(state.marketDemandFailed.slice())}),
     loadMarketsNow:loadMarketModulesNow,
+    loadStrategyCoreNow,
     marketDemandModules:MARKET_DEMAND_MODULES.slice(),
     market_lazy_cycle_guard:true,
     same_application:true,
