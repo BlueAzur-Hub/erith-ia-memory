@@ -1,7 +1,7 @@
 {
   "schema": "atlas_news_sentinel_world_to_market_v1",
   "version": "V1.1-alpha.26.47.6",
-  "generated_at": "2026-09-25T13:54:56.990006+00:00",
+  "generated_at": "2026-09-25T18:42:31.279800+00:00",
   "status": "ok",
   "observation_only": true,
   "archive_only": true,
@@ -11,21 +11,21 @@
   "causal_claim": false,
   "message": "Flux mondial et crypto filtré par pertinence marché. Aucun conseil financier, aucun ordre automatique.",
   "summary": {
-    "events_24h": 31,
-    "critical_24h": 31,
-    "strong_24h": 0,
+    "events_24h": 27,
+    "critical_24h": 26,
+    "strong_24h": 1,
     "sources_ok": 15,
     "sources_total": 15,
     "sources_failed": 0,
-    "lead_event_id": "feed_1c9fbdfff5ea5a6f",
+    "lead_event_id": "feed_87b12ca894337c1f",
     "decision": "Surveillance renforcée",
     "driver_coverage": {
       "macro_liquidity": {
-        "events_72h": 23,
+        "events_72h": 22,
         "distinct_sources": 5
       },
       "institutional_flows": {
-        "events_72h": 7,
+        "events_72h": 6,
         "distinct_sources": 3
       },
       "regulation": {
@@ -48,8 +48,8 @@
       "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
       "status": "ok",
       "fetched_count": 50,
-      "qualified_count": 4,
-      "latency_ms": 225,
+      "qualified_count": 5,
+      "latency_ms": 241,
       "error": null
     },
     {
@@ -58,9 +58,9 @@
       "group": "world",
       "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
       "status": "ok",
-      "fetched_count": 32,
-      "qualified_count": 5,
-      "latency_ms": 207,
+      "fetched_count": 31,
+      "qualified_count": 4,
+      "latency_ms": 226,
       "error": null
     },
     {
@@ -71,7 +71,7 @@
       "status": "ok",
       "fetched_count": 10,
       "qualified_count": 9,
-      "latency_ms": 124,
+      "latency_ms": 159,
       "error": null
     },
     {
@@ -82,7 +82,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 1,
-      "latency_ms": 284,
+      "latency_ms": 279,
       "error": null
     },
     {
@@ -92,8 +92,8 @@
       "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
       "status": "ok",
       "fetched_count": 25,
-      "qualified_count": 22,
-      "latency_ms": 355,
+      "qualified_count": 21,
+      "latency_ms": 371,
       "error": null
     },
     {
@@ -104,7 +104,7 @@
       "status": "ok",
       "fetched_count": 30,
       "qualified_count": 25,
-      "latency_ms": 283,
+      "latency_ms": 190,
       "error": null
     },
     {
@@ -113,9 +113,9 @@
       "group": "crypto",
       "url": "https://decrypt.co/feed",
       "status": "ok",
-      "fetched_count": 35,
-      "qualified_count": 27,
-      "latency_ms": 142,
+      "fetched_count": 34,
+      "qualified_count": 26,
+      "latency_ms": 130,
       "error": null
     },
     {
@@ -126,7 +126,7 @@
       "status": "ok",
       "fetched_count": 15,
       "qualified_count": 9,
-      "latency_ms": 727,
+      "latency_ms": 981,
       "error": null
     },
     {
@@ -137,7 +137,7 @@
       "status": "ok",
       "fetched_count": 20,
       "qualified_count": 17,
-      "latency_ms": 164,
+      "latency_ms": 255,
       "error": null
     },
     {
@@ -147,8 +147,8 @@
       "url": "https://www.france24.com/fr/rss",
       "status": "ok",
       "fetched_count": 24,
-      "qualified_count": 0,
-      "latency_ms": 298,
+      "qualified_count": 2,
+      "latency_ms": 404,
       "error": null
     },
     {
@@ -159,7 +159,7 @@
       "status": "ok",
       "fetched_count": 5,
       "qualified_count": 4,
-      "latency_ms": 253,
+      "latency_ms": 272,
       "error": null
     },
     {
@@ -170,7 +170,7 @@
       "status": "ok",
       "fetched_count": 8,
       "qualified_count": 7,
-      "latency_ms": 249,
+      "latency_ms": 289,
       "error": null
     },
     {
@@ -192,7 +192,7 @@
       "status": "ok",
       "fetched_count": 25,
       "qualified_count": 25,
-      "latency_ms": 128,
+      "latency_ms": 130,
       "error": null
     },
     {
@@ -203,18 +203,120 @@
       "status": "empty",
       "fetched_count": 0,
       "qualified_count": 0,
-      "latency_ms": 9135,
+      "latency_ms": 10192,
       "error": null
     }
   ],
   "events": [
     {
-      "id": "feed_baa67e3b083203d3",
-      "event_id": "feed_baa67e3b083203d3",
-      "fingerprint": "baa67e3b083203d3",
+      "id": "feed_87b12ca894337c1f",
+      "event_id": "feed_87b12ca894337c1f",
+      "fingerprint": "87b12ca894337c1f",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Former Hack VC partner Hsin-Ju Chuang found dead at 37",
+      "headline": "Circle and Tether step in to freeze hacker wallet after massive Bitget crypto heist",
+      "body": "The stablecoin issuer blacklisted a wallet holding about $318,000 in USDT and USDC. Most of the stolen funds sit in ether, which can't be frozen.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/markets/2026/09/25/circle-and-tether-step-in-to-freeze-hacker-wallet-after-massive-bitget-crypto-heist",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/markets/2026/09/25/circle-and-tether-step-in-to-freeze-hacker-wallet-after-massive-bitget-crypto-heist"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-25T14:41:53+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.982645+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.982645+00:00",
+      "freshness": {
+        "iso": "2026-09-25T14:41:53+00:00",
+        "hours": 4.01,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 100,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "USDT",
+        "USDC"
+      ],
+      "sectors": [
+        "Stablecoins"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Alerte prioritaire · observation",
+        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
+        "tone": "danger"
+      },
+      "confirmations": 1,
+      "relevance_score": 14,
+      "matched_topics": [
+        "crypto",
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Circle and Tether step in to freeze hacker wallet after massive Bitget crypto heist",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Circle and Tether step in to freeze hacker wallet after massive Bitget crypto heist",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_a48a01b156fffc55",
+      "event_id": "feed_a48a01b156fffc55",
+      "fingerprint": "a48a01b156fffc55",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Former Hack VC partner Hsin-Ju Chuang’s death ruled a suicide",
       "body": "The crypto executive and Dystopia Labs founder previously held senior roles at Stellar and Solana before joining venture capital firm Hack VC.",
       "source_name": "Cointelegraph",
       "source_url": "https://cointelegraph.com/news/former-hack-vc-partner-hsin-ju-chuang-found-dead",
@@ -233,13 +335,13 @@
       "declared_status": "reported",
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-23T20:43:56+00:00",
-      "first_seen_at": "2026-09-25T01:36:45.762834+00:00",
-      "last_seen_at": "2026-09-25T01:36:45.762834+00:00",
+      "event_time": "2026-09-25T18:33:49+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.794816+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.794816+00:00",
       "freshness": {
-        "iso": "2026-09-23T20:43:56+00:00",
-        "hours": 28.88,
-        "label": "Récente · moins de 48 h",
+        "iso": "2026-09-25T18:33:49+00:00",
+        "hours": 0.14,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
@@ -285,7 +387,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Former Hack VC partner Hsin-Ju Chuang found dead at 37",
+      "headline_original": "Former Hack VC partner Hsin-Ju Chuang’s death ruled a suicide",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -300,7 +402,7 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Former Hack VC partner Hsin-Ju Chuang found dead at 37",
+      "display_headline": "[EN] Former Hack VC partner Hsin-Ju Chuang’s death ruled a suicide",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -336,11 +438,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-24T15:48:20+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.895790+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.895790+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.016618+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.016618+00:00",
       "freshness": {
         "iso": "2026-09-24T15:48:20+00:00",
-        "hours": 22.11,
+        "hours": 26.9,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -505,6 +607,108 @@
       ],
       "translation_status": "FALLBACK_ORIGINAL",
       "display_headline": "[EN] Whitehats move 52 bitcoin from the Coldcard hack to a recovery trust",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_f82853e970f827bb",
+      "event_id": "feed_f82853e970f827bb",
+      "fingerprint": "f82853e970f827bb",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Magic Eden Warns Old Ethereum NFT Listings Are Exposed to Payment Processor Exploit",
+      "body": "A flaw in Limit Break's Payment Processor V2 put old Magic Eden Ethereum listings at risk, prompting a whitehat rescue of more than 23,000 NFTs.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/379342/magic-eden-old-ethereum-nft-listings-exposed-exploit",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Decrypt"
+      ],
+      "source_urls": [
+        "https://decrypt.co/379342/magic-eden-old-ethereum-nft-listings-exposed-exploit"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-25T16:17:19+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.739275+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.739275+00:00",
+      "freshness": {
+        "iso": "2026-09-25T16:17:19+00:00",
+        "hours": 2.42,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 60,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 99,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [
+        "ETH"
+      ],
+      "sectors": [
+        "Layer 1",
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 14,
+      "matched_topics": [
+        "crypto",
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Magic Eden Warns Old Ethereum NFT Listings Are Exposed to Payment Processor Exploit",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Magic Eden Warns Old Ethereum NFT Listings Are Exposed to Payment Processor Exploit",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -721,6 +925,108 @@
       ]
     },
     {
+      "id": "feed_40d53fe48e8f560b",
+      "event_id": "feed_40d53fe48e8f560b",
+      "fingerprint": "40d53fe48e8f560b",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "KelpDAO Developer Sues LayerZero Over $292M Bridge Exploit",
+      "body": "Evercrest says LayerZero approved the single-verifier configuration in writing multiple times, then warned a different developer about it.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/379288/kelpdao-developer-sues-layerzero-over-292m-bridge-exploit",
+      "source_host": "decrypt.co",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 2,
+      "source_names": [
+        "Decrypt",
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://decrypt.co/379288/kelpdao-developer-sues-layerzero-over-292m-bridge-exploit",
+        "https://cointelegraph.com/news/kelpdao-layerzero-lawsuit-rseth-exploit"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-25T11:09:52+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.749016+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.812280+00:00",
+      "freshness": {
+        "iso": "2026-09-25T11:09:52+00:00",
+        "hours": 7.54,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 75,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 98,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [
+        "DeFi",
+        "Cybersécurité",
+        "Marché global"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
+        "tone": "warn"
+      },
+      "confirmations": 2,
+      "relevance_score": 8,
+      "matched_topics": [
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "KelpDAO Developer Sues LayerZero Over $292M Bridge Exploit",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] KelpDAO Developer Sues LayerZero Over $292M Bridge Exploit",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_665c7ed114487c38",
       "event_id": "feed_665c7ed114487c38",
       "fingerprint": "665c7ed114487c38",
@@ -744,11 +1050,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-24T21:59:32+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.886834+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.886834+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.003354+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.003354+00:00",
       "freshness": {
         "iso": "2026-09-24T21:59:32+00:00",
-        "hours": 15.92,
+        "hours": 20.71,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -821,40 +1127,40 @@
       ]
     },
     {
-      "id": "feed_c7ea50fcee72e4d5",
-      "event_id": "feed_c7ea50fcee72e4d5",
-      "fingerprint": "c7ea50fcee72e4d5",
+      "id": "feed_02ca19e540553c17",
+      "event_id": "feed_02ca19e540553c17",
+      "fingerprint": "02ca19e540553c17",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Crypto tech provider Haruko hit by cyberattack affecting 15 clients, some funds lost",
-      "body": "Some smaller hedge funds with weaker security controls may have lost funds in the targeted attack, sources said.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/business/2026/09/18/crypto-tech-provider-haruko-hit-by-cyberattack-affecting-15-clients-some-funds-lost",
-      "source_host": "coindesk.com",
+      "headline": "Bitget Hack Losses Climb to $387M: Here’s What Happened, and Why North Korea Is a Suspect",
+      "body": "An attacker faked internal transfer requests to drain $387.5 million from Bitget's hot and warm wallets, and the exchange's CEO says the fingerprints look like Pyongyang's.",
+      "source_name": "Decrypt",
+      "source_url": "https://decrypt.co/379350/bitget-hack-387m-what-happened-why-north-korea-suspect",
+      "source_host": "decrypt.co",
       "source_group": "crypto",
       "source_class": "Média crypto spécialisé",
       "source_count": 1,
       "source_names": [
-        "CoinDesk"
+        "Decrypt"
       ],
       "source_urls": [
-        "https://www.coindesk.com/business/2026/09/18/crypto-tech-provider-haruko-hit-by-cyberattack-affecting-15-clients-some-funds-lost"
+        "https://decrypt.co/379350/bitget-hack-387m-what-happened-why-north-korea-suspect"
       ],
       "declared_status": "reported",
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-18T15:06:31+00:00",
-      "first_seen_at": "2026-09-21T06:28:13.043970+00:00",
-      "last_seen_at": "2026-09-21T06:28:13.043970+00:00",
+      "event_time": "2026-09-25T17:08:57+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.737651+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.737651+00:00",
       "freshness": {
-        "iso": "2026-09-18T15:06:31+00:00",
-        "hours": 63.36,
-        "label": "Cette semaine",
+        "iso": "2026-09-25T17:08:57+00:00",
+        "hours": 1.56,
+        "label": "Immédiate · moins de 2 h",
         "inferred": false
       },
       "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
+        "score": 60,
+        "level": "Moyen"
       },
       "impact": {
         "score": 98,
@@ -863,112 +1169,8 @@
       "direction": "pression négative potentielle",
       "assets": [],
       "sectors": [
-        "Cybersécurité",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 18,
-      "matched_topics": [
-        "crypto",
-        "geopolitics",
-        "security"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Crypto tech provider Haruko hit by cyberattack affecting 15 clients, some funds lost",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Crypto tech provider Haruko hit by cyberattack affecting 15 clients, some funds lost",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_40d53fe48e8f560b",
-      "event_id": "feed_40d53fe48e8f560b",
-      "fingerprint": "40d53fe48e8f560b",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "KelpDAO Developer Sues LayerZero Over $292M Bridge Exploit",
-      "body": "Evercrest says LayerZero approved the single-verifier configuration in writing multiple times, then warned a different developer about it.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/379288/kelpdao-developer-sues-layerzero-over-292m-bridge-exploit",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 2,
-      "source_names": [
-        "Decrypt",
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://decrypt.co/379288/kelpdao-developer-sues-layerzero-over-292m-bridge-exploit",
-        "https://cointelegraph.com/news/kelpdao-layerzero-lawsuit-rseth-exploit"
-      ],
-      "declared_status": "reported",
-      "event_type": "security",
-      "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-25T11:09:52+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.592017+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.810386+00:00",
-      "freshness": {
-        "iso": "2026-09-25T11:09:52+00:00",
-        "hours": 2.75,
-        "label": "Fraîche · moins de 12 h",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 65,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 98,
-        "level": "Critique"
-      },
-      "direction": "pression négative potentielle",
-      "assets": [],
-      "sectors": [
-        "DeFi",
-        "Cybersécurité",
-        "Marché global"
+        "Exchanges",
+        "Cybersécurité"
       ],
       "manipulation": {
         "score": 30,
@@ -980,12 +1182,13 @@
       },
       "decision": {
         "action": "Surveillance renforcée",
-        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
         "tone": "warn"
       },
-      "confirmations": 2,
-      "relevance_score": 8,
+      "confirmations": 1,
+      "relevance_score": 14,
       "matched_topics": [
+        "crypto",
         "security"
       ],
       "driver_domains": [],
@@ -996,7 +1199,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "KelpDAO Developer Sues LayerZero Over $292M Bridge Exploit",
+      "headline_original": "Bitget Hack Losses Climb to $387M: Here’s What Happened, and Why North Korea Is a Suspect",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -1011,7 +1214,7 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] KelpDAO Developer Sues LayerZero Over $292M Bridge Exploit",
+      "display_headline": "[EN] Bitget Hack Losses Climb to $387M: Here’s What Happened, and Why North Korea Is a Suspect",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -1047,11 +1250,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-24T21:15:38+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.599180+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.599180+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.754189+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.754189+00:00",
       "freshness": {
         "iso": "2026-09-24T21:15:38+00:00",
-        "hours": 16.65,
+        "hours": 21.45,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1243,11 +1446,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-24T23:27:17+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.822016+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.822016+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.822556+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.822556+00:00",
       "freshness": {
         "iso": "2026-09-24T23:27:17+00:00",
-        "hours": 14.46,
+        "hours": 19.25,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1342,11 +1545,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-25T08:58:03+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.880273+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.880273+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.996418+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.996418+00:00",
       "freshness": {
         "iso": "2026-09-25T08:58:03+00:00",
-        "hours": 4.95,
+        "hours": 9.74,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -1441,12 +1644,12 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-25T04:29:34+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.883169+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.883169+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.999609+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.999609+00:00",
       "freshness": {
         "iso": "2026-09-25T04:29:34+00:00",
-        "hours": 9.42,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 14.21,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -1539,11 +1742,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-23T22:31:45+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.625010+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.625010+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.778903+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.778903+00:00",
       "freshness": {
         "iso": "2026-09-23T22:31:45+00:00",
-        "hours": 39.38,
+        "hours": 44.18,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1615,6 +1818,104 @@
       ]
     },
     {
+      "id": "feed_1df5d9347b39c5a7",
+      "event_id": "feed_1df5d9347b39c5a7",
+      "fingerprint": "1df5d9347b39c5a7",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Bitget clarifies $388M in assets affected by security breach",
+      "body": "The Bitget breach announced on Thursday affected about $35 million more than previously reported, based on an analysis of assets on Zcash and TRON.",
+      "source_name": "Cointelegraph",
+      "source_url": "https://cointelegraph.com/news/bitget-clarifies-assets-affected-security-breach",
+      "source_host": "cointelegraph.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "Cointelegraph"
+      ],
+      "source_urls": [
+        "https://cointelegraph.com/news/bitget-clarifies-assets-affected-security-breach"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-25T17:17:45+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.796482+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.796482+00:00",
+      "freshness": {
+        "iso": "2026-09-25T17:17:45+00:00",
+        "hours": 1.41,
+        "label": "Immédiate · moins de 2 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 54,
+        "level": "Moyen"
+      },
+      "impact": {
+        "score": 94,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance",
+        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
+        "tone": "neutral"
+      },
+      "confirmations": 1,
+      "relevance_score": 8,
+      "matched_topics": [
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Bitget clarifies $388M in assets affected by security breach",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Bitget clarifies $388M in assets affected by security breach",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_700e3dd5a50f75f3",
       "event_id": "feed_700e3dd5a50f75f3",
       "fingerprint": "700e3dd5a50f75f3",
@@ -1638,11 +1939,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-25T00:32:46+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.820461+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.820461+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.820926+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.820926+00:00",
       "freshness": {
         "iso": "2026-09-25T00:32:46+00:00",
-        "hours": 13.37,
+        "hours": 18.16,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1736,11 +2037,11 @@
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
       "event_time": "2026-09-24T21:47:17+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.824942+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.824942+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.825268+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.825268+00:00",
       "freshness": {
         "iso": "2026-09-24T21:47:17+00:00",
-        "hours": 16.13,
+        "hours": 20.92,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -1940,11 +2241,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-22T16:41:11+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.754270+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.754270+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.938896+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.938896+00:00",
       "freshness": {
         "iso": "2026-09-22T16:41:11+00:00",
-        "hours": 69.23,
+        "hours": 74.02,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -2041,11 +2342,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-25T09:13:01+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.878700+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.878700+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.994807+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.994807+00:00",
       "freshness": {
         "iso": "2026-09-25T09:13:01+00:00",
-        "hours": 4.7,
+        "hours": 9.49,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -2762,12 +3063,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-25T13:32:49+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.799251+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.799251+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.801930+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.801930+00:00",
       "freshness": {
         "iso": "2026-09-25T13:32:49+00:00",
-        "hours": 0.37,
-        "label": "Immédiate · moins de 2 h",
+        "hours": 5.16,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
@@ -2866,11 +3167,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-25T07:41:36+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.811639+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.811639+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.813513+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.813513+00:00",
       "freshness": {
         "iso": "2026-09-25T07:41:36+00:00",
-        "hours": 6.22,
+        "hours": 11.01,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -3487,11 +3788,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-24T15:00:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.913965+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.913965+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.072630+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.072630+00:00",
       "freshness": {
         "iso": "2026-09-24T15:00:00+00:00",
-        "hours": 22.91,
+        "hours": 27.71,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -3586,12 +3887,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T18:27:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.750546+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.750546+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.935450+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.935450+00:00",
       "freshness": {
         "iso": "2026-09-23T18:27:00+00:00",
-        "hours": 43.46,
-        "label": "Récente · moins de 48 h",
+        "hours": 48.26,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -3687,12 +3988,12 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-23T16:00:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.752547+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.752547+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.937174+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.937174+00:00",
       "freshness": {
         "iso": "2026-09-23T16:00:00+00:00",
-        "hours": 45.91,
-        "label": "Récente · moins de 48 h",
+        "hours": 50.71,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -3765,204 +4066,6 @@
       ]
     },
     {
-      "id": "feed_433fdae023fd6c4d",
-      "event_id": "feed_433fdae023fd6c4d",
-      "fingerprint": "433fdae023fd6c4d",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Federal Reserve Board issues enforcement actions with former employee of Northstar Bank, former employee of American Express Travel Related Services Company, Inc., and former employee of Regions Bank",
-      "body": "Federal Reserve Board issues enforcement actions with former employee of Northstar Bank, former employee of American Express Travel Related Services Company, Inc., and former employee of Regions Bank",
-      "source_name": "Federal Reserve",
-      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260918a.htm",
-      "source_host": "federalreserve.gov",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "Federal Reserve"
-      ],
-      "source_urls": [
-        "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260918a.htm"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.917153+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.917153+00:00",
-      "freshness": {
-        "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 166.91,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "regulation",
-        "macro"
-      ],
-      "driver_domains": [
-        "macro_liquidity"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Federal Reserve Board issues enforcement actions with former employee of Northstar Bank, former employee of American Express Travel Related Services Company, Inc., and former employee of Regions Bank",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Federal Reserve Board issues enforcement actions with former employee of Northstar Bank, former employee of American Express Travel Related Services Company, Inc., and former employee of Regions Bank",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_56bc9ac6e57a0f18",
-      "event_id": "feed_56bc9ac6e57a0f18",
-      "fingerprint": "56bc9ac6e57a0f18",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Federal Reserve Board announces termination of enforcement action with SNB Bancshares and Bank of Eufaula",
-      "body": "Federal Reserve Board announces termination of enforcement action with SNB Bancshares and Bank of Eufaula",
-      "source_name": "Federal Reserve",
-      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260918b.htm",
-      "source_host": "federalreserve.gov",
-      "source_group": "primary",
-      "source_class": "Source primaire / institutionnelle",
-      "source_count": 1,
-      "source_names": [
-        "Federal Reserve"
-      ],
-      "source_urls": [
-        "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20260918b.htm"
-      ],
-      "declared_status": "confirmed",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-18T15:00:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.918765+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.918765+00:00",
-      "freshness": {
-        "iso": "2026-09-18T15:00:00+00:00",
-        "hours": 166.91,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 96,
-        "level": "Élevé"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 8,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 12,
-      "matched_topics": [
-        "regulation",
-        "macro"
-      ],
-      "driver_domains": [
-        "macro_liquidity"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Federal Reserve Board announces termination of enforcement action with SNB Bancshares and Bank of Eufaula",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Federal Reserve Board announces termination of enforcement action with SNB Bancshares and Bank of Eufaula",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_0ba916ef34d8fce0",
       "event_id": "feed_0ba916ef34d8fce0",
       "fingerprint": "0ba916ef34d8fce0",
@@ -3986,11 +4089,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-24T14:46:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.941809+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.941809+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.027819+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.027819+00:00",
       "freshness": {
         "iso": "2026-09-24T14:46:00+00:00",
-        "hours": 23.15,
+        "hours": 27.94,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4158,13 +4261,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_891e4d005750d053",
-      "event_id": "feed_891e4d005750d053",
-      "fingerprint": "891e4d005750d053",
+      "id": "feed_d5b70a723f30257b",
+      "event_id": "feed_d5b70a723f30257b",
+      "fingerprint": "d5b70a723f30257b",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Live updates: Bitcoin reverses early gains; Saylor's Strategy moves toward daily dividends",
-      "body": "Treasury yields eased from multi-decade highs and oil slipped on reports of a phased U.S.-Iran deal, with roughly $14 billion in bitcoin options set to expire on Deribit on Friday.",
+      "headline": "Live updates: Bitcoin moves to $84,000, oil slides on latest report of Middle East progress",
+      "body": "Separate reports from Axios and CBS suggest some positive movement in U.S.-Iran negotiations.",
       "source_name": "CoinDesk",
       "source_url": "https://www.coindesk.com/markets/2026/09/25/live-updates-bitcoin-steadies-near-usd84-000-as-the-bond-selloff-pauses",
       "source_host": "coindesk.com",
@@ -4178,14 +4281,14 @@
         "https://www.coindesk.com/markets/2026/09/25/live-updates-bitcoin-steadies-near-usd84-000-as-the-bond-selloff-pauses"
       ],
       "declared_status": "reported",
-      "event_type": "treasury_liquidity",
-      "event_label": "Trésor US / liquidité obligataire",
+      "event_type": "geopolitics",
+      "event_label": "Géopolitique / guerre / sanctions",
       "event_time": "2026-09-25T07:09:11+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.881680+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.881680+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.998024+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.998024+00:00",
       "freshness": {
         "iso": "2026-09-25T07:09:11+00:00",
-        "hours": 6.76,
+        "hours": 11.55,
         "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
@@ -4197,7 +4300,7 @@
         "score": 90,
         "level": "Critique"
       },
-      "direction": "contexte de liquidité macro à qualifier ; causalité non présumée",
+      "direction": "impact global potentiel, sens à confirmer",
       "assets": [
         "BTC"
       ],
@@ -4219,9 +4322,8 @@
         "tone": "danger"
       },
       "confirmations": 1,
-      "relevance_score": 23,
+      "relevance_score": 16,
       "matched_topics": [
-        "treasury_liquidity",
         "crypto",
         "geopolitics",
         "energy"
@@ -4236,7 +4338,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Live updates: Bitcoin reverses early gains; Saylor's Strategy moves toward daily dividends",
+      "headline_original": "Live updates: Bitcoin moves to $84,000, oil slides on latest report of Middle East progress",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -4251,7 +4353,7 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Live updates: Bitcoin reverses early gains; Saylor's Strategy moves toward daily dividends",
+      "display_headline": "[EN] Live updates: Bitcoin moves to $84,000, oil slides on latest report of Middle East progress",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -4287,11 +4389,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-24T20:04:46+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.890845+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.890845+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.008697+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.008697+00:00",
       "freshness": {
         "iso": "2026-09-24T20:04:46+00:00",
-        "hours": 17.83,
+        "hours": 22.63,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -4388,11 +4490,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-24T20:03:21+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.892469+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.892469+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.010416+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.010416+00:00",
       "freshness": {
         "iso": "2026-09-24T20:03:21+00:00",
-        "hours": 17.86,
+        "hours": 22.65,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -5817,11 +5919,11 @@
       "event_type": "regulation",
       "event_label": "Régulation / justice",
       "event_time": "2026-09-24T17:31:03+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.606759+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.606759+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.761516+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.761516+00:00",
       "freshness": {
         "iso": "2026-09-24T17:31:03+00:00",
-        "hours": 20.4,
+        "hours": 25.19,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6118,11 +6220,11 @@
       "event_type": "etf_flow",
       "event_label": "ETF / flux institutionnels",
       "event_time": "2026-09-24T22:10:09+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.823176+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.823176+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.823727+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.823727+00:00",
       "freshness": {
         "iso": "2026-09-24T22:10:09+00:00",
-        "hours": 15.74,
+        "hours": 20.54,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -6224,11 +6326,11 @@
       "event_type": "treasury_liquidity",
       "event_label": "Trésor US / liquidité obligataire",
       "event_time": "2026-09-24T20:32:16+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.827997+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.827997+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.831540+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.831540+00:00",
       "freshness": {
         "iso": "2026-09-24T20:32:16+00:00",
-        "hours": 17.38,
+        "hours": 22.17,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7220,208 +7322,6 @@
       ]
     },
     {
-      "id": "feed_23af673fb68d6a20",
-      "event_id": "feed_23af673fb68d6a20",
-      "fingerprint": "23af673fb68d6a20",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Bitcoin hits $81K as US bond yields rebound on global oil woes",
-      "body": "Bitcoin price action made swift gains at the start of Friday’s Wall Street trading session as US 30-year bond yields began rising again.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/markets/bitcoin-hits-81k-as-us-bond-yields-rebound-on-global-oil-woes",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/markets/bitcoin-hits-81k-as-us-bond-yields-rebound-on-global-oil-woes"
-      ],
-      "declared_status": "reported",
-      "event_type": "treasury_liquidity",
-      "event_label": "Trésor US / liquidité obligataire",
-      "event_time": "2026-09-18T15:35:59+00:00",
-      "first_seen_at": "2026-09-21T14:17:19.962460+00:00",
-      "last_seen_at": "2026-09-21T14:17:19.962460+00:00",
-      "freshness": {
-        "iso": "2026-09-18T15:35:59+00:00",
-        "hours": 70.69,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "contexte de liquidité macro à qualifier ; causalité non présumée",
-      "assets": [
-        "BTC"
-      ],
-      "sectors": [
-        "Layer 1",
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 19,
-      "matched_topics": [
-        "treasury_liquidity",
-        "crypto",
-        "energy"
-      ],
-      "driver_domains": [
-        "macro_liquidity"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitcoin hits $81K as US bond yields rebound on global oil woes",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Bitcoin hits $81K as US bond yields rebound on global oil woes",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
-      "id": "feed_7563c9ac9e2eac16",
-      "event_id": "feed_7563c9ac9e2eac16",
-      "fingerprint": "7563c9ac9e2eac16",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "Banks double on EU MiCA crypto provider list as share hits 23%",
-      "body": "Banks now represent nearly one in four providers on ESMA’s MiCA register after roughly doubling their presence since late June.",
-      "source_name": "Cointelegraph",
-      "source_url": "https://cointelegraph.com/news/banks-double-eu-mica-crypto-register-esma",
-      "source_host": "cointelegraph.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Cointelegraph"
-      ],
-      "source_urls": [
-        "https://cointelegraph.com/news/banks-double-eu-mica-crypto-register-esma"
-      ],
-      "declared_status": "reported",
-      "event_type": "regulation",
-      "event_label": "Régulation / justice",
-      "event_time": "2026-09-18T14:04:43+00:00",
-      "first_seen_at": "2026-09-21T14:17:19.964273+00:00",
-      "last_seen_at": "2026-09-21T14:17:19.964273+00:00",
-      "freshness": {
-        "iso": "2026-09-18T14:04:43+00:00",
-        "hours": 72.21,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 54,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 90,
-        "level": "Critique"
-      },
-      "direction": "orientation mixte selon la décision",
-      "assets": [],
-      "sectors": [],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance",
-        "checks": "Conserver le contexte et attendre une confirmation supplémentaire.",
-        "tone": "neutral"
-      },
-      "confirmations": 1,
-      "relevance_score": 13,
-      "matched_topics": [
-        "crypto",
-        "regulation"
-      ],
-      "driver_domains": [],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Banks double on EU MiCA crypto provider list as share hits 23%",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Banks double on EU MiCA crypto provider list as share hits 23%",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_b202f85876e7c977",
       "event_id": "feed_b202f85876e7c977",
       "fingerprint": "b202f85876e7c977",
@@ -7445,11 +7345,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-24T15:26:34+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.897428+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.897428+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.019053+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.019053+00:00",
       "freshness": {
         "iso": "2026-09-24T15:26:34+00:00",
-        "hours": 22.47,
+        "hours": 27.26,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7546,11 +7446,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-24T13:03:03+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.613791+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.613791+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.768801+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.768801+00:00",
       "freshness": {
         "iso": "2026-09-24T13:03:03+00:00",
-        "hours": 24.86,
+        "hours": 29.65,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7751,11 +7651,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-24T13:00:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.840476+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.840476+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.846578+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.846578+00:00",
       "freshness": {
         "iso": "2026-09-24T13:00:00+00:00",
-        "hours": 24.91,
+        "hours": 29.71,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -7933,6 +7833,105 @@
       ]
     },
     {
+      "id": "feed_854c7725cacf859e",
+      "event_id": "feed_854c7725cacf859e",
+      "fingerprint": "854c7725cacf859e",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Why Australia chose the world's biggest political stage to reveal OpenAI hack",
+      "body": "Australia, which has strict social media restrictions and has proposed controls on algorithms and smart glasses, announced the breach at the UN.",
+      "source_name": "BBC World",
+      "source_url": "https://www.bbc.co.uk/news/articles/cr3eqk15ld14o?at_medium=RSS&at_campaign=rss",
+      "source_host": "bbc.co.uk",
+      "source_group": "world",
+      "source_class": "Presse mondiale reconnue",
+      "source_count": 2,
+      "source_names": [
+        "BBC World",
+        "BBC Business"
+      ],
+      "source_urls": [
+        "https://www.bbc.co.uk/news/articles/cr3eqk15ld14o?at_medium=RSS&at_campaign=rss"
+      ],
+      "declared_status": "reported",
+      "event_type": "security",
+      "event_label": "Hack / exploit / sécurité",
+      "event_time": "2026-09-24T18:06:40+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.871312+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.892366+00:00",
+      "freshness": {
+        "iso": "2026-09-24T18:06:40+00:00",
+        "hours": 24.59,
+        "label": "Récente · moins de 48 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 100,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 88,
+        "level": "Critique"
+      },
+      "direction": "pression négative potentielle",
+      "assets": [],
+      "sectors": [
+        "Cybersécurité"
+      ],
+      "manipulation": {
+        "score": 18,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "2 sources concordantes. Vérifier la source primaire et la réaction du marché.",
+        "tone": "warn"
+      },
+      "confirmations": 2,
+      "relevance_score": 6,
+      "matched_topics": [
+        "security"
+      ],
+      "driver_domains": [],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Why Australia chose the world's biggest political stage to reveal OpenAI hack",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Why Australia chose the world's biggest political stage to reveal OpenAI hack",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
       "id": "feed_e8244e5fbb00603e",
       "event_id": "feed_e8244e5fbb00603e",
       "fingerprint": "e8244e5fbb00603e",
@@ -8032,15 +8031,15 @@
       ]
     },
     {
-      "id": "feed_854c7725cacf859e",
-      "event_id": "feed_854c7725cacf859e",
-      "fingerprint": "854c7725cacf859e",
+      "id": "feed_012c57467c4b3e28",
+      "event_id": "feed_012c57467c4b3e28",
+      "fingerprint": "012c57467c4b3e28",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Why Australia chose the world's biggest political stage to reveal OpenAI hack",
-      "body": "Australia, which has strict social media restrictions and has proposed controls on algorithms and smart glasses, announced the breach at the UN.",
+      "headline": "Special agents' blood and urine test results stolen in FBI hack",
+      "body": "Experts say the hack could leave agents vulnerable to scams, blackmail and targeted attacks.",
       "source_name": "BBC World",
-      "source_url": "https://www.bbc.co.uk/news/articles/cr3eqk15ld14o?at_medium=RSS&at_campaign=rss",
+      "source_url": "https://www.bbc.co.uk/news/articles/cw62me2vlj07o?at_medium=RSS&at_campaign=rss",
       "source_host": "bbc.co.uk",
       "source_group": "world",
       "source_class": "Presse mondiale reconnue",
@@ -8050,23 +8049,23 @@
         "BBC Business"
       ],
       "source_urls": [
-        "https://www.bbc.co.uk/news/articles/cr3eqk15ld14o?at_medium=RSS&at_campaign=rss"
+        "https://www.bbc.co.uk/news/articles/cw62me2vlj07o?at_medium=RSS&at_campaign=rss"
       ],
       "declared_status": "reported",
       "event_type": "security",
       "event_label": "Hack / exploit / sécurité",
-      "event_time": "2026-09-24T18:06:40+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.657631+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.700531+00:00",
+      "event_time": "2026-09-25T13:56:16+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.850055+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.886383+00:00",
       "freshness": {
-        "iso": "2026-09-24T18:06:40+00:00",
-        "hours": 19.8,
-        "label": "Récente · moins de 48 h",
+        "iso": "2026-09-25T13:56:16+00:00",
+        "hours": 4.77,
+        "label": "Fraîche · moins de 12 h",
         "inferred": false
       },
       "evidence": {
-        "score": 96,
-        "level": "Élevé"
+        "score": 81,
+        "level": "Assez élevé"
       },
       "impact": {
         "score": 88,
@@ -8103,7 +8102,7 @@
       "source_discovery_locale": "source-native",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Why Australia chose the world's biggest political stage to reveal OpenAI hack",
+      "headline_original": "Special agents' blood and urine test results stolen in FBI hack",
       "language_original": "en",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -8118,7 +8117,7 @@
         "source_not_native_french"
       ],
       "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] Why Australia chose the world's biggest political stage to reveal OpenAI hack",
+      "display_headline": "[EN] Special agents' blood and urine test results stolen in FBI hack",
       "display_language": "en",
       "headline_fr_display": null,
       "headline_fr_display_status": "not_native_fr",
@@ -9112,13 +9111,13 @@
       ]
     },
     {
-      "id": "feed_be10fd7047656fe7",
-      "event_id": "feed_be10fd7047656fe7",
-      "fingerprint": "be10fd7047656fe7",
+      "id": "feed_a84dc1dead941b53",
+      "event_id": "feed_a84dc1dead941b53",
+      "fingerprint": "a84dc1dead941b53",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
-      "body": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act CryptoTicker",
+      "headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
+      "body": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act cryptoticker.io",
       "source_name": "Google News FR · réglementation crypto",
       "source_url": "https://news.google.com/rss/articles/CBMidkFVX3lxTE8yZUwwVlRrM2pwYjd3VmNFWkV4WUd2U25zUzdfWFozd0VtN0RjclI4V0tlZ05QbnNPZnJUODlYY0pjS21YU20zVjVvZ1F1SUc3MDF6c3J0NWZ2MkU2UUNzRVlTLTkxQWFZRDNQSWYyZ19VWWk2Nmc?oc=5",
       "source_host": "news.google.com",
@@ -9135,11 +9134,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-19T09:54:01+00:00",
-      "first_seen_at": "2026-09-25T13:54:48.094761+00:00",
-      "last_seen_at": "2026-09-25T13:54:48.094761+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.326659+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.326659+00:00",
       "freshness": {
         "iso": "2026-09-19T09:54:01+00:00",
-        "hours": 148.01,
+        "hours": 152.81,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -9189,7 +9188,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "headline_original": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -9197,14 +9196,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "headline_fr": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "display_headline": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "display_language": "fr",
-      "headline_fr_display": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - CryptoTicker",
+      "headline_fr_display": "Bitcoin dépasse 80 000 dollars, Trump perd la Clarity Act - cryptoticker.io",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -9435,11 +9434,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-24T18:30:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.912462+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.912462+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.071063+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.071063+00:00",
       "freshness": {
         "iso": "2026-09-24T18:30:00+00:00",
-        "hours": 19.41,
+        "hours": 24.21,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -9539,11 +9538,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-24T22:28:49+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.885443+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.885443+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.001936+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.001936+00:00",
       "freshness": {
         "iso": "2026-09-24T22:28:49+00:00",
-        "hours": 15.43,
+        "hours": 20.23,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10329,109 +10328,6 @@
       ]
     },
     {
-      "id": "feed_99b56ec1b0bd647a",
-      "event_id": "feed_99b56ec1b0bd647a",
-      "fingerprint": "99b56ec1b0bd647a",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "CFTC sends crypto rules to White House to review as Congress stalls on Clarity Act",
-      "body": "The regulator is moving ahead with crypto market rules as the SEC also opens a new path for tokenized stock trading.",
-      "source_name": "CoinDesk",
-      "source_url": "https://www.coindesk.com/policy/2026/09/18/cftc-sends-crypto-rules-to-white-house-to-review-as-congress-stalls-on-clarity-act",
-      "source_host": "coindesk.com",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "CoinDesk"
-      ],
-      "source_urls": [
-        "https://www.coindesk.com/policy/2026/09/18/cftc-sends-crypto-rules-to-white-house-to-review-as-congress-stalls-on-clarity-act"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-18T15:16:37+00:00",
-      "first_seen_at": "2026-09-21T14:17:19.852532+00:00",
-      "last_seen_at": "2026-09-21T14:17:19.852532+00:00",
-      "freshness": {
-        "iso": "2026-09-18T15:16:37+00:00",
-        "hours": 71.01,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 66,
-        "level": "Assez élevé"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Alerte prioritaire · observation",
-        "checks": "Vérifier la source primaire, la réaction du marché et Risk Sentinel. Aucun ordre automatique.",
-        "tone": "danger"
-      },
-      "confirmations": 1,
-      "relevance_score": 22,
-      "matched_topics": [
-        "regulation_market",
-        "crypto",
-        "regulation",
-        "geopolitics"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "CFTC sends crypto rules to White House to review as Congress stalls on Clarity Act",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] CFTC sends crypto rules to White House to review as Congress stalls on Clarity Act",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_1ead3373c5ee7941",
       "event_id": "feed_1ead3373c5ee7941",
       "fingerprint": "1ead3373c5ee7941",
@@ -10455,11 +10351,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-24T21:56:03+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.597174+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.597174+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.752393+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.752393+00:00",
       "freshness": {
         "iso": "2026-09-24T21:56:03+00:00",
-        "hours": 15.98,
+        "hours": 20.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10559,11 +10455,11 @@
       "event_type": "macro",
       "event_label": "Macroéconomie / banque centrale",
       "event_time": "2026-09-24T16:01:01+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.610271+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.610271+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.765171+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.765171+00:00",
       "freshness": {
         "iso": "2026-09-24T16:01:01+00:00",
-        "hours": 21.9,
+        "hours": 26.69,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -10663,11 +10559,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-24T11:56:11+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.618556+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.618556+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.773334+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.773334+00:00",
       "freshness": {
         "iso": "2026-09-24T11:56:11+00:00",
-        "hours": 25.98,
+        "hours": 30.77,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -11040,109 +10936,6 @@
       ]
     },
     {
-      "id": "feed_fe2686dfd076be43",
-      "event_id": "feed_fe2686dfd076be43",
-      "fingerprint": "fe2686dfd076be43",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "CFTC Kicks Off Crypto Rulemaking, Bypassing a Stalled Congress",
-      "body": "The agency submitted a prerule on crypto asset transactions and markets to the White House for review, signaling it will build a derivatives framework on its own authority after the Clarity Act's collapse.",
-      "source_name": "Decrypt",
-      "source_url": "https://decrypt.co/378638/cftc-crypto-rules-white-house-congress-clarity-act",
-      "source_host": "decrypt.co",
-      "source_group": "crypto",
-      "source_class": "Média crypto spécialisé",
-      "source_count": 1,
-      "source_names": [
-        "Decrypt"
-      ],
-      "source_urls": [
-        "https://decrypt.co/378638/cftc-crypto-rules-white-house-congress-clarity-act"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-18T16:08:13+00:00",
-      "first_seen_at": "2026-09-22T18:58:43.746239+00:00",
-      "last_seen_at": "2026-09-22T18:58:43.746239+00:00",
-      "freshness": {
-        "iso": "2026-09-18T16:08:13+00:00",
-        "hours": 98.84,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 60,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 30,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 22,
-      "matched_topics": [
-        "regulation_market",
-        "crypto",
-        "regulation",
-        "geopolitics"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "en",
-      "source_discovery_locale": "source-native",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "CFTC Kicks Off Crypto Rulemaking, Bypassing a Stalled Congress",
-      "language_original": "en",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": null,
-      "translation_engine": "none-native-first",
-      "translation_quality_score": 0,
-      "translation_quality_flags": [
-        "source_not_native_french"
-      ],
-      "translation_status": "FALLBACK_ORIGINAL",
-      "display_headline": "[EN] CFTC Kicks Off Crypto Rulemaking, Bypassing a Stalled Congress",
-      "display_language": "en",
-      "headline_fr_display": null,
-      "headline_fr_display_status": "not_native_fr",
-      "headline_fr_status": "not_translated",
-      "headline_fr_engine": "none-native-first",
-      "headline_fr_quality_score": 0,
-      "headline_fr_quality_status": "archive_only",
-      "headline_fr_quality_reasons": [
-        "source_not_native_french"
-      ]
-    },
-    {
       "id": "feed_f608d5a2b008df88",
       "event_id": "feed_f608d5a2b008df88",
       "fingerprint": "f608d5a2b008df88",
@@ -11263,12 +11056,12 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T13:55:08+00:00",
-      "first_seen_at": "2026-09-25T07:56:26.841462+00:00",
-      "last_seen_at": "2026-09-25T07:56:26.841462+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.305291+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.305291+00:00",
       "freshness": {
         "iso": "2026-09-23T13:55:08+00:00",
-        "hours": 42.02,
-        "label": "Récente · moins de 48 h",
+        "hours": 52.79,
+        "label": "Cette semaine",
         "inferred": false
       },
       "evidence": {
@@ -11360,11 +11153,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-23T03:44:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:48.048700+00:00",
-      "last_seen_at": "2026-09-25T13:54:48.048700+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.297919+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.297919+00:00",
       "freshness": {
         "iso": "2026-09-23T03:44:00+00:00",
-        "hours": 58.18,
+        "hours": 62.97,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11434,13 +11227,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_62abce1e1e6ac168",
-      "event_id": "feed_62abce1e1e6ac168",
-      "fingerprint": "62abce1e1e6ac168",
+      "id": "feed_6bfb0d6ff97e27eb",
+      "event_id": "feed_6bfb0d6ff97e27eb",
+      "fingerprint": "6bfb0d6ff97e27eb",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - TradingView",
-      "body": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 TradingView",
+      "headline": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - fr.tradingview.com",
+      "body": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 fr.tradingview.com",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5OWE1MRmQyem5qN0xxYjZKT0EtMDl6R2sxTF9Sd3hlUTZKZEVoX2NQZ2tyOF9UY05RU0YwMXE0dzF3NmR4VWxmT1BKVTc3UEVzb0NfdGl2R1AtT0Y4UUNuUS1IM1NoQWRjN3JnZg?oc=5",
       "source_host": "news.google.com",
@@ -11457,11 +11250,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-22T17:00:00+00:00",
-      "first_seen_at": "2026-09-25T13:54:48.046960+00:00",
-      "last_seen_at": "2026-09-25T13:54:48.046960+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.296194+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.296194+00:00",
       "freshness": {
         "iso": "2026-09-22T17:00:00+00:00",
-        "hours": 68.91,
+        "hours": 73.71,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -11507,7 +11300,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - TradingView",
+      "headline_original": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - fr.tradingview.com",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -11515,14 +11308,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - TradingView",
+      "headline_fr": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - fr.tradingview.com",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - TradingView",
+      "display_headline": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - fr.tradingview.com",
       "display_language": "fr",
-      "headline_fr_display": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - TradingView",
+      "headline_fr_display": "Les ETF Bitcoin engrangent 999 millions de dollars, le record de l’année 2026 - fr.tradingview.com",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -11628,104 +11421,6 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_8d82d84ce5ad2e7c",
-      "event_id": "feed_8d82d84ce5ad2e7c",
-      "fingerprint": "8d82d84ce5ad2e7c",
-      "version": "V1.1-alpha.26.47.6",
-      "origin": "github_news_collector",
-      "headline": "La CFTC envoie les règles cryptographiques à la Maison Blanche pour révision alors que le Congrès bloque la Clarity Act - CoinDesk",
-      "body": "La CFTC envoie les règles cryptographiques à la Maison Blanche pour révision alors que le Congrès bloque la Clarity Act CoinDesk",
-      "source_name": "Google News FR · réglementation crypto",
-      "source_url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPYmgyTThxRk1TMXNpR0xHSkRsQXlmMUVaazhRTEl0eUNIUDZqUkJ5RHhfSm1pNmZyeTFBbzgtOE1xMUtOVU44QnlqNzZiVUc2ZUMteUVyZXAzRTZGZThBZ1JJX1ZDOHQ5dGhHNGpnYnVmOFI5SjF5bFhrdG5JN3FMNWlFZFZrX1h5aG4xc01LeldWVnp0dE9LZ1ZzM2Z6Y051d2ZDVTFtSzJDeEZGVlBOQVVka3ZmMWQ4d3J2djBJeXVmUXV1YXRn?oc=5",
-      "source_host": "news.google.com",
-      "source_group": "finance",
-      "source_class": "Presse économique reconnue",
-      "source_count": 1,
-      "source_names": [
-        "Google News FR · réglementation crypto"
-      ],
-      "source_urls": [
-        "https://news.google.com/rss/articles/CBMixwFBVV95cUxPYmgyTThxRk1TMXNpR0xHSkRsQXlmMUVaazhRTEl0eUNIUDZqUkJ5RHhfSm1pNmZyeTFBbzgtOE1xMUtOVU44QnlqNzZiVUc2ZUMteUVyZXAzRTZGZThBZ1JJX1ZDOHQ5dGhHNGpnYnVmOFI5SjF5bFhrdG5JN3FMNWlFZFZrX1h5aG4xc01LeldWVnp0dE9LZ1ZzM2Z6Y051d2ZDVTFtSzJDeEZGVlBOQVVka3ZmMWQ4d3J2djBJeXVmUXV1YXRn?oc=5"
-      ],
-      "declared_status": "reported",
-      "event_type": "market_structure_regulation",
-      "event_label": "Réglementation / structure de marché",
-      "event_time": "2026-09-18T15:16:37+00:00",
-      "first_seen_at": "2026-09-24T10:08:10.134514+00:00",
-      "last_seen_at": "2026-09-24T10:08:10.134514+00:00",
-      "freshness": {
-        "iso": "2026-09-18T15:16:37+00:00",
-        "hours": 138.86,
-        "label": "Cette semaine",
-        "inferred": false
-      },
-      "evidence": {
-        "score": 58,
-        "level": "Moyen"
-      },
-      "impact": {
-        "score": 87,
-        "level": "Critique"
-      },
-      "direction": "prime de risque réglementaire à qualifier ; causalité non présumée",
-      "assets": [],
-      "sectors": [
-        "Marché global"
-      ],
-      "manipulation": {
-        "score": 16,
-        "level": "Faible"
-      },
-      "priced": {
-        "label": "À comparer au marché",
-        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
-      },
-      "decision": {
-        "action": "Surveillance renforcée",
-        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
-        "tone": "warn"
-      },
-      "confirmations": 1,
-      "relevance_score": 14,
-      "matched_topics": [
-        "regulation_market",
-        "regulation",
-        "geopolitics"
-      ],
-      "driver_domains": [
-        "regulation"
-      ],
-      "driver_coverage_build": "40.4.291",
-      "causal_claim": false,
-      "observation_only": true,
-      "source_language": "fr",
-      "source_discovery_locale": "fr-FR",
-      "source_routing_build": "40.4.291",
-      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "La CFTC envoie les règles cryptographiques à la Maison Blanche pour révision alors que le Congrès bloque la Clarity Act - CoinDesk",
-      "language_original": "fr",
-      "translation_contract_build": "40.4.291",
-      "translation_contract_schema": "atlas_news_native_fr_v1",
-      "native_fr_contract_build": "40.4.291",
-      "native_fr_contract_schema": "atlas_news_native_fr_v1",
-      "browser_translation": false,
-      "machine_translation": false,
-      "headline_fr": "La CFTC envoie les règles cryptographiques à la Maison Blanche pour révision alors que le Congrès bloque la Clarity Act - CoinDesk",
-      "translation_engine": "native-fr-source",
-      "translation_quality_score": 100,
-      "translation_quality_flags": [],
-      "translation_status": "ORIGINAL_FR",
-      "display_headline": "La CFTC envoie les règles cryptographiques à la Maison Blanche pour révision alors que le Congrès bloque la Clarity Act - CoinDesk",
-      "display_language": "fr",
-      "headline_fr_display": "La CFTC envoie les règles cryptographiques à la Maison Blanche pour révision alors que le Congrès bloque la Clarity Act - CoinDesk",
-      "headline_fr_display_status": "native_fr",
-      "headline_fr_status": "original_fr",
-      "headline_fr_engine": "native-fr-source",
-      "headline_fr_quality_score": 100,
-      "headline_fr_quality_status": "native",
-      "headline_fr_quality_reasons": []
-    },
-    {
       "id": "feed_d59a87746ee081bb",
       "event_id": "feed_d59a87746ee081bb",
       "fingerprint": "d59a87746ee081bb",
@@ -11749,11 +11444,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-24T21:42:51+00:00",
-      "first_seen_at": "2026-09-25T13:54:47.826484+00:00",
-      "last_seen_at": "2026-09-25T13:54:47.826484+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.826752+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.826752+00:00",
       "freshness": {
         "iso": "2026-09-24T21:42:51+00:00",
-        "hours": 16.2,
+        "hours": 20.99,
         "label": "Récente · moins de 48 h",
         "inferred": false
       },
@@ -12028,13 +11723,13 @@
       ]
     },
     {
-      "id": "feed_378c0a4ed0e704dd",
-      "event_id": "feed_378c0a4ed0e704dd",
-      "fingerprint": "378c0a4ed0e704dd",
+      "id": "feed_9fcf0764f48a286a",
+      "event_id": "feed_9fcf0764f48a286a",
+      "fingerprint": "9fcf0764f48a286a",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "ETF crypto : 906 M$ d'entrées le 22 septembre - financefeeds.com",
-      "body": "ETF crypto : 906 M$ d'entrées le 22 septembre financefeeds.com",
+      "headline": "ETF crypto : 906 M$ d'entrées le 22 septembre - FinanceFeeds",
+      "body": "ETF crypto : 906 M$ d'entrées le 22 septembre FinanceFeeds",
       "source_name": "Google News FR · ETF / flux institutionnels",
       "source_url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE4tZm9iRE92bkp1eGwxZTVBY1dZQTBMZHNhY3Vyd3E2cDQyWWI1Q2NvWjRCVW5KRXFWa19nT2sxZ25JRjl3SVUyS0FJeElSTXRoeF9uazBoNGZrNV96RUpMeFNPQlJLSDFybFktVHNqQkQwOUs0Q2FTUEtPODVUQQ?oc=5",
       "source_host": "news.google.com",
@@ -12051,11 +11746,11 @@
       "event_type": "etf",
       "event_label": "ETF / institutionnels",
       "event_time": "2026-09-22T08:10:11+00:00",
-      "first_seen_at": "2026-09-25T13:54:48.052221+00:00",
-      "last_seen_at": "2026-09-25T13:54:48.052221+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.301561+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.301561+00:00",
       "freshness": {
         "iso": "2026-09-22T08:10:11+00:00",
-        "hours": 77.74,
+        "hours": 82.54,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12097,7 +11792,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "ETF crypto : 906 M$ d'entrées le 22 septembre - financefeeds.com",
+      "headline_original": "ETF crypto : 906 M$ d'entrées le 22 septembre - FinanceFeeds",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -12105,14 +11800,14 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "ETF crypto : 906 M$ d'entrées le 22 septembre - financefeeds.com",
+      "headline_fr": "ETF crypto : 906 M$ d'entrées le 22 septembre - FinanceFeeds",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "ETF crypto : 906 M$ d'entrées le 22 septembre - financefeeds.com",
+      "display_headline": "ETF crypto : 906 M$ d'entrées le 22 septembre - FinanceFeeds",
       "display_language": "fr",
-      "headline_fr_display": "ETF crypto : 906 M$ d'entrées le 22 septembre - financefeeds.com",
+      "headline_fr_display": "ETF crypto : 906 M$ d'entrées le 22 septembre - FinanceFeeds",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
@@ -12144,12 +11839,12 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-25T05:03:21+00:00",
-      "first_seen_at": "2026-09-25T13:54:48.093443+00:00",
-      "last_seen_at": "2026-09-25T13:54:48.093443+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.325330+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.325330+00:00",
       "freshness": {
         "iso": "2026-09-25T05:03:21+00:00",
-        "hours": 8.86,
-        "label": "Fraîche · moins de 12 h",
+        "hours": 13.65,
+        "label": "Récente · moins de 48 h",
         "inferred": false
       },
       "evidence": {
@@ -12219,13 +11914,13 @@
       "headline_fr_quality_reasons": []
     },
     {
-      "id": "feed_90366d1de24adf3b",
-      "event_id": "feed_90366d1de24adf3b",
-      "fingerprint": "90366d1de24adf3b",
+      "id": "feed_d1ccf130ac88ce21",
+      "event_id": "feed_d1ccf130ac88ce21",
+      "fingerprint": "d1ccf130ac88ce21",
       "version": "V1.1-alpha.26.47.6",
       "origin": "github_news_collector",
-      "headline": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
-      "body": "CLARITY Act rejeté : ce que changent les règles CFTC CryptoTicker",
+      "headline": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
+      "body": "CLARITY Act rejeté : ce que changent les règles CFTC cryptoticker.io",
       "source_name": "Google News FR · réglementation crypto",
       "source_url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQNW9xLU9oVDhGQmYtbDZRQ09mQTktcHdhaE1rdVktN0RCY1FUbG5QUk5KMHJ2OVAybTRGek9tZVdwc1RmSG5SazFxOEhvSGI0akwxOFJ0bHRXSWFJUlZabkplWk9BSU5IS0hCTXNkbTB4Z1Fyc25vT3RFZ2U0aEJ6N0JLazdYbGhw?oc=5",
       "source_host": "news.google.com",
@@ -12242,11 +11937,11 @@
       "event_type": "market_structure_regulation",
       "event_label": "Réglementation / structure de marché",
       "event_time": "2026-09-18T21:26:06+00:00",
-      "first_seen_at": "2026-09-25T13:54:48.092076+00:00",
-      "last_seen_at": "2026-09-25T13:54:48.092076+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.323901+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.323901+00:00",
       "freshness": {
         "iso": "2026-09-18T21:26:06+00:00",
-        "hours": 160.48,
+        "hours": 165.27,
         "label": "Cette semaine",
         "inferred": false
       },
@@ -12290,7 +11985,7 @@
       "source_discovery_locale": "fr-FR",
       "source_routing_build": "40.4.291",
       "source_routing_schema": "atlas_news_french_first_source_routing_v1",
-      "headline_original": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "headline_original": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "language_original": "fr",
       "translation_contract_build": "40.4.291",
       "translation_contract_schema": "atlas_news_native_fr_v1",
@@ -12298,20 +11993,316 @@
       "native_fr_contract_schema": "atlas_news_native_fr_v1",
       "browser_translation": false,
       "machine_translation": false,
-      "headline_fr": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "headline_fr": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "translation_engine": "native-fr-source",
       "translation_quality_score": 100,
       "translation_quality_flags": [],
       "translation_status": "ORIGINAL_FR",
-      "display_headline": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "display_headline": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "display_language": "fr",
-      "headline_fr_display": "CLARITY Act rejeté : ce que changent les règles CFTC - CryptoTicker",
+      "headline_fr_display": "CLARITY Act rejeté : ce que changent les règles CFTC - cryptoticker.io",
       "headline_fr_display_status": "native_fr",
       "headline_fr_status": "original_fr",
       "headline_fr_engine": "native-fr-source",
       "headline_fr_quality_score": 100,
       "headline_fr_quality_status": "native",
       "headline_fr_quality_reasons": []
+    },
+    {
+      "id": "feed_40681809c370e5ff",
+      "event_id": "feed_40681809c370e5ff",
+      "fingerprint": "40681809c370e5ff",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "CFTC Releases Staff Advisory on Mention Markets",
+      "body": "",
+      "source_name": "U.S. CFTC",
+      "source_url": "https://www.cftc.gov/PressRoom/PressReleases/9302-26",
+      "source_host": "cftc.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "U.S. CFTC"
+      ],
+      "source_urls": [
+        "https://www.cftc.gov/PressRoom/PressReleases/9302-26"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-22T20:38:00+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.029290+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.029290+00:00",
+      "freshness": {
+        "iso": "2026-09-22T20:38:00+00:00",
+        "hours": 70.07,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 94,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 84,
+        "level": "Fort"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "CFTC Releases Staff Advisory on Mention Markets",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] CFTC Releases Staff Advisory on Mention Markets",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_62185aafba557aed",
+      "event_id": "feed_62185aafba557aed",
+      "fingerprint": "62185aafba557aed",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "CFTC Innovation Task Force to Host Frontier Forum Series on Innovative Financial Technologies",
+      "body": "",
+      "source_name": "U.S. CFTC",
+      "source_url": "https://www.cftc.gov/PressRoom/PressReleases/9301-26",
+      "source_host": "cftc.gov",
+      "source_group": "primary",
+      "source_class": "Source primaire / institutionnelle",
+      "source_count": 1,
+      "source_names": [
+        "U.S. CFTC"
+      ],
+      "source_urls": [
+        "https://www.cftc.gov/PressRoom/PressReleases/9301-26"
+      ],
+      "declared_status": "confirmed",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-21T13:00:57+00:00",
+      "first_seen_at": "2026-09-25T18:42:21.030779+00:00",
+      "last_seen_at": "2026-09-25T18:42:21.030779+00:00",
+      "freshness": {
+        "iso": "2026-09-21T13:00:57+00:00",
+        "hours": 101.69,
+        "label": "Cette semaine",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 94,
+        "level": "Élevé"
+      },
+      "impact": {
+        "score": 84,
+        "level": "Fort"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [],
+      "manipulation": {
+        "score": 8,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "CFTC Innovation Task Force to Host Frontier Forum Series on Innovative Financial Technologies",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] CFTC Innovation Task Force to Host Frontier Forum Series on Innovative Financial Technologies",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
+    },
+    {
+      "id": "feed_8550c3fee58f7654",
+      "event_id": "feed_8550c3fee58f7654",
+      "fingerprint": "8550c3fee58f7654",
+      "version": "V1.1-alpha.26.47.6",
+      "origin": "github_news_collector",
+      "headline": "Tokenization is moving faster than Washington",
+      "body": "Regulatory clarity is not simply a legal or political issue, argues former New York Governor Andrew Cuomo. It is an economic one.",
+      "source_name": "CoinDesk",
+      "source_url": "https://www.coindesk.com/opinion/2026/09/25/tokenization-is-moving-faster-than-washington",
+      "source_host": "coindesk.com",
+      "source_group": "crypto",
+      "source_class": "Média crypto spécialisé",
+      "source_count": 1,
+      "source_names": [
+        "CoinDesk"
+      ],
+      "source_urls": [
+        "https://www.coindesk.com/opinion/2026/09/25/tokenization-is-moving-faster-than-washington"
+      ],
+      "declared_status": "reported",
+      "event_type": "regulation",
+      "event_label": "Régulation / justice",
+      "event_time": "2026-09-25T14:37:32+00:00",
+      "first_seen_at": "2026-09-25T18:42:20.984312+00:00",
+      "last_seen_at": "2026-09-25T18:42:20.984312+00:00",
+      "freshness": {
+        "iso": "2026-09-25T14:37:32+00:00",
+        "hours": 4.08,
+        "label": "Fraîche · moins de 12 h",
+        "inferred": false
+      },
+      "evidence": {
+        "score": 66,
+        "level": "Assez élevé"
+      },
+      "impact": {
+        "score": 84,
+        "level": "Fort"
+      },
+      "direction": "orientation mixte selon la décision",
+      "assets": [],
+      "sectors": [
+        "RWA"
+      ],
+      "manipulation": {
+        "score": 30,
+        "level": "Faible"
+      },
+      "priced": {
+        "label": "À comparer au marché",
+        "detail": "Le collecteur qualifie l'événement ; l'interface compare ensuite le contexte au snapshot courant sans prouver de causalité."
+      },
+      "decision": {
+        "action": "Surveillance renforcée",
+        "checks": "Comparer la réaction 24 h / 7 j, les confirmations et la mémoire Atlas.",
+        "tone": "warn"
+      },
+      "confirmations": 1,
+      "relevance_score": 7,
+      "matched_topics": [
+        "regulation"
+      ],
+      "driver_domains": [
+        "regulation"
+      ],
+      "driver_coverage_build": "40.4.291",
+      "causal_claim": false,
+      "observation_only": true,
+      "source_language": "en",
+      "source_discovery_locale": "source-native",
+      "source_routing_build": "40.4.291",
+      "source_routing_schema": "atlas_news_french_first_source_routing_v1",
+      "headline_original": "Tokenization is moving faster than Washington",
+      "language_original": "en",
+      "translation_contract_build": "40.4.291",
+      "translation_contract_schema": "atlas_news_native_fr_v1",
+      "native_fr_contract_build": "40.4.291",
+      "native_fr_contract_schema": "atlas_news_native_fr_v1",
+      "browser_translation": false,
+      "machine_translation": false,
+      "headline_fr": null,
+      "translation_engine": "none-native-first",
+      "translation_quality_score": 0,
+      "translation_quality_flags": [
+        "source_not_native_french"
+      ],
+      "translation_status": "FALLBACK_ORIGINAL",
+      "display_headline": "[EN] Tokenization is moving faster than Washington",
+      "display_language": "en",
+      "headline_fr_display": null,
+      "headline_fr_display_status": "not_native_fr",
+      "headline_fr_status": "not_translated",
+      "headline_fr_engine": "none-native-first",
+      "headline_fr_quality_score": 0,
+      "headline_fr_quality_status": "archive_only",
+      "headline_fr_quality_reasons": [
+        "source_not_native_french"
+      ]
     }
   ],
   "translation_fr": {
@@ -12324,8 +12315,8 @@
     "secret_required": false,
     "paid_service": false,
     "total_events": 120,
-    "accepted_french": 15,
-    "archive_english": 105,
+    "accepted_french": 14,
+    "archive_english": 106,
     "display_coverage": 120,
     "operator_lane_rule": "native French only; English preserved as archive evidence"
   },
@@ -12339,8 +12330,8 @@
     "secret_required": false,
     "paid_service": false,
     "total_events": 120,
-    "accepted_french": 15,
-    "archive_english": 105,
+    "accepted_french": 14,
+    "archive_english": 106,
     "display_coverage": 120,
     "operator_lane_rule": "native French only; English preserved as archive evidence"
   },
