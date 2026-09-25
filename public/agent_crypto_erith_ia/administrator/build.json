@@ -1,14 +1,14 @@
 {
   "schema": "agent_crypto_runtime_build_truth_v1",
-  "build": "40.6.401",
+  "build": "40.6.402",
   "engine": "38.15.11",
-  "release": "DIAGNOSTIC · COLD BOOT OWNERSHIP",
+  "release": "RECOVERY · COLD BOOT CONTENTION",
   "published": true,
-  "status": "published_pending_firefox_cold_boot_diagnostic_401",
-  "parent_build": "40.6.400",
-  "asset_token": "market-core-v2.0-alpha-build-40.6.401",
-  "administrator_build": "40.6.401",
-  "build_label": "Build 40.6.401 · Administrator",
+  "status": "published_pending_firefox_cold_boot_contention_402",
+  "parent_build": "40.6.401",
+  "asset_token": "market-core-v2.0-alpha-build-40.6.402",
+  "administrator_build": "40.6.402",
+  "build_label": "Build 40.6.402 · Administrator",
   "market_core": "38.15.11",
   "market_core_modified": false,
   "web_classic_modified": false,
@@ -18,7 +18,7 @@
   "lecture_technique_modified": false,
   "strategy_a_modified": false,
   "strategy_a_business_logic_modified": false,
-  "administrator_presentation_modified": true,
+  "administrator_presentation_modified": false,
   "aerith10_presentation_modified": false,
   "automatic_order": false,
   "real_order": false,
@@ -30,9 +30,9 @@
   "canonical_entry_modified": true,
   "entry": "./",
   "terrain_verified": false,
-  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.401. Ouvrir Rapport de démarrage, Actualiser puis Copier après stabilisation; conserver l'usage normal pendant le boot.",
+  "terrain_pending": "Firefox desktop: Ctrl+F5 -> Build 40.6.402. Utiliser l'interface immédiatement. Vérifier Auto Reader, Marché, Graphique, Aether et Rapport de démarrage; confirmer que GitHub Memory ne part plus automatiquement et reste disponible via son bouton manuel.",
   "terrain_proof": null,
-  "release_notes": "40.6.400 changes residency only: 10 existing Strategy A support modules become bounded early Strategy Core; operator-quiet gating is removed; Strategy Evidence becomes explicit-demand-only; Auto Reader presentation hydrates eagerly. Strategy A business logic/thresholds, Market Core 38.15.11, Math Core, Aether, Oracle, Lecture Technique, REDIVIDER and storage schemas remain unchanged.",
+  "release_notes": "40.6.402 uses the 40.6.401 measurements: Auto Reader start moves from Cold Boot owner 18/20 to 7/19, and the 33 s asynchronous GitHub Shared Memory auto-load is removed from Cold Boot while its existing manual demand path is preserved. Instrumentation remains active. Market Core 38.15.11, Strategy A business logic, Math, Aether, Oracle, Lecture Technique, REDIVIDER and storage schemas remain unchanged.",
   "strategy_facade_406323": {
     "scope": "strategy_a_operator_console_and_safety_governor",
     "presentation_only": true,
@@ -994,7 +994,7 @@
     "notion_touched": false
   },
   "oracle_business_logic_modified": false,
-  "math_core_modified": true,
+  "math_core_modified": false,
   "atlas_current_business_logic_modified": false,
   "operator_boot_report_406276": {
     "base_build": "40.6.275",
@@ -4390,5 +4390,35 @@
       "Storage schemas"
     ],
     "next_decision": "Choose one owner only after Firefox report: Cold Boot/Auto Reader OR PRE-AETHER/Aether."
+  },
+  "cold_boot_contention_recovery_406402": {
+    "purpose": "remove_proven_cold_boot_contention_without_business_changes",
+    "parent": "40.6.401",
+    "evidence": {
+      "github_memory_initial_state_async_settle_ms": 33095,
+      "auto_reader_start_previous_owner_position": "18/20",
+      "auto_reader_start_sync_ms": 166,
+      "pre_aether_duration_s": 0,
+      "aether_script_duration_s": 0
+    },
+    "auto_reader_start_new_owner_position": "7/19",
+    "github_memory_cold_boot_autoload": false,
+    "github_memory_manual_button_preserved": true,
+    "github_memory_manual_owner": "btnLoadGithubMemory -> loadGithubSharedMemory(true,\"manual\")",
+    "diagnostic_instrumentation_preserved": true,
+    "market_core_modified": false,
+    "strategy_a_business_logic_modified": false,
+    "math_core_modified": false,
+    "aether_modified": false,
+    "oracle_modified": false,
+    "lecture_technique_modified": false,
+    "redivider_modified": false,
+    "storage_schema_modified": false,
+    "new_timer": false,
+    "new_observer": false,
+    "new_network_owner": false,
+    "real_order": false,
+    "rollback_checkpoint": "40.6.401",
+    "terrain_status": "PENDING_FIREFOX"
   }
 }
