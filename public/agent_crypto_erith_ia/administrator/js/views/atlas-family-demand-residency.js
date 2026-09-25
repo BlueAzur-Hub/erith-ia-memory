@@ -9,6 +9,11 @@
    No engine, polling, recurring timer, observer, fetch, storage or CURRENT owner is added. */
 (()=>{
   "use strict";
+  const __PROBE_406411_SRC="atlas-family-demand-residency.js";
+  const __PROBE_406411_ON=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")==="40.6.411";
+  const __PROBE_406411_T0=__PROBE_406411_ON?performance.now():0;
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-enter",{src:__PROBE_406411_SRC,build:"40.6.411"});}catch(_){}}
+
   const BUILD="40.4.139";
   const BOOT_FIX="40.6.72";
   const BOOT_FIX_SOURCE="40.6.71 R1";
@@ -99,4 +104,6 @@
     if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",rearmAtlasFamilyResidency406071R1,{once:true});
     else if(document.readyState!=="complete")window.addEventListener("load",installAtlasFamilyResidency406071R1,{once:true});
   }
+
+  if(__PROBE_406411_ON){try{globalThis.AgentCryptoBootProbe?.mark?.("probe-script-eval-exit",{src:__PROBE_406411_SRC,build:"40.6.411",eval_ms:Number((performance.now()-__PROBE_406411_T0).toFixed(3))});}catch(_){}}
 })();
