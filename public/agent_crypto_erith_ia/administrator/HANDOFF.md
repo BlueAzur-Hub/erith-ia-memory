@@ -1,40 +1,42 @@
 # Agent-Crypto — Handoff
 
-Build **40.6.412** · parent **40.6.411** · rollback **40.6.407**.
+Build **40.6.413** · parent **40.6.412** · rollback **40.6.407**.
 
 ## Mission
 
-Retirer la tempête `renderDecisionBoard()` du chemin critique sans toucher à la logique métier.
+Séparer le vrai coût JavaScript du simple temps d'attente pour les cinq plus gros modules secondaires observés en 40.6.412.
 
-## Vérité acquise
+## Cibles
 
-40.6.411 a prouvé :
+1. `analysis-aux-demand-loader.js`
+2. `market-reading-depth.js`
+3. `layout-repair.js`
+4. `admin-theme-glass.js`
+5. `market-stack.js`
 
-- Strategy Canonical Spec est un faux coupable : l'attente est avant son eval ;
-- le thread principal reste congestionné ;
-- Decision Board possède plusieurs rendus synchrones réels de ~1,2–1,4 s.
+## Mesure
 
-## 40.6.412
+Pour chaque fichier :
 
-- rendu Decision Board passif différé jusqu'à Strategy Core ready ;
-- postboot-ready = fallback ;
-- état identique = rendu passif dédupliqué ;
-- refresh humain = force immédiate ;
-- sonde complète conservée.
+`responseEnd → eval-enter → eval-exit → load-event`
 
-## À vérifier
+Cela distingue :
+- réseau / revalidation ;
+- attente avant exécution ;
+- JavaScript réellement exécuté ;
+- délai de dispatch du `load`.
 
-Comparer 40.6.411 → 40.6.412 :
+## Protections
 
-- Livecheck ;
-- Marché ;
-- CURRENT ;
-- Graphique / Consultation / Aether ;
-- Strategy Core ;
-- drift du timer Postboot ;
-- nombre et coût des rendus Decision Board ;
-- attente `responseEnd → eval-enter` du Strategy spec.
+- Decision Board 40.6.412 conservé ;
+- Market Core 38.15.11 protégé ;
+- Strategy / Aether / Oracle / Math / Lecture Technique protégés ;
+- aucun changement métier ;
+- aucun nouveau stockage, fetch métier, observer ou ordre.
 
-Si le trou Livecheck → Marché reste dominant après cette correction, le prochain audit vise uniquement ce chemin.
+## Prochaine décision
 
-**Aucune 40.6.413 avant lecture du rapport Firefox 40.6.412.**
+- si un module possède une **eval réelle lourde**, 40.6.414 corrigera uniquement ce propriétaire ;
+- si l'eval est courte mais l'attente longue, 40.6.414 visera le propriétaire de contention, pas le petit fichier victime.
+
+**STOP après le rapport Firefox 40.6.413.**
