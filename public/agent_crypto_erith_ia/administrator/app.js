@@ -58595,6 +58595,8 @@ function atlasDecisionBoardFlush406412(reason) {
 }
 
 renderDecisionBoard = function renderDecisionBoard406412(options = {}) {
+  const activeBuild=String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"");
+  if (activeBuild!=="40.6.412") return atlasDecisionBoardRender406412Base();
   const opts=options===true ? {force:true,reason:"legacy-force"} : (options && typeof options==="object" ? options : {});
   const force=opts.force===true;
   const reason=String(opts.reason || (force ? "explicit-force" : "passive"));
@@ -58670,6 +58672,7 @@ globalThis.AgentCryptoDecisionBoardGate406412=Object.freeze({
     last_duration_ms:atlasDecisionBoardGate406412.lastDurationMs,
     strategy_ready:atlasDecisionBoardGate406412.strategyReady,
     postboot_ready:atlasDecisionBoardGate406412.postbootReady,
+    active_build:String(globalThis.AGENT_CRYPTO_EFFECTIVE_BUILD||globalThis.AGENT_CRYPTO_BUILD||document.documentElement?.dataset?.agentCryptoLoadedBuild||"")==="40.6.412",
     last_signature:atlasDecisionBoardGate406412.lastSignature
   }),
   manual:()=>renderDecisionBoard({force:true,reason:"api-manual"}),
